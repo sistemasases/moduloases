@@ -1,0 +1,84 @@
+<form>
+  <div class="row">
+    <label class="col-md-offset-3" >Consultar Categorias</label>
+  </div>
+  <div class="row">
+      <div data-spy="scroll" data-target=".navbar" data-offset="50" class="well col-md-7 col-md-offset-3" id="list_grupal_seg" name="list_grupal_seg">
+        Código Asignatura <br><input id="codigoAsignatura" class="Codigo Asignatura"/>
+      <br>
+        Grupo <br><input id="grupo" class="grupo"/>
+  </div>                           
+  <hr>
+  <!-- Button trigger modal -->
+  <div class="row">
+    <br>
+    <span class="reemplazar"></span>
+    <br>
+    <span class="btn btn-info col-md-offset-3" type="submit" id="buscarCurso" class="submit">Buscar curso </span>
+    <br>
+    <br>
+    <span class="btn btn-info col-md-offset-3" type="submit" id="añadirCategoria" class="submit" data-toggle="modal" data-target="#myModal" style="display:none;">Añadir Categorias e Items </span>
+     
+  </div>
+</form>
+
+
+<!-- Modal -->
+          <div class="modal modal_pilos" style="width:75%" id="myModal" name="seguimiento" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg" style="width:120%" role="document">
+              <div class="modal-content" style="width:80%">
+                <div class="modal-header">
+                  <h4 class="modal-title" id="myModalLabel">Categorias e Items</h4>
+                </div>
+                <!-- body -->
+        <div class="modal-body">
+        <!-- nombres de las columnas -->
+          <form>
+        <div data-spy="scroll" data-target=".navbar" data-offset="50" class="col-md-7" id="list_grupal_seg" name="list_grupal_seg">
+        <table id="mytable" class="table table-striped"> 
+            <thead> 
+                <tr> <th>Tipo item</th> <th>Nombre item</th> <th>Categoria padre</th><th>Tipo calificacion</th><th>valor</th></tr> 
+            </thead>
+            <tbody>
+                <tr> 
+                <th>
+                    <select id="tipoItem" name="tipoItem" class="tipoItem">
+                    <option id="inicio">Elemento a crear</option>
+                     <option>Categoria</option>
+                     <option>Item</option>
+                   </select>
+                </th> 
+                <th>
+                    <input type="text" id="inputNombre" name="inputNombre" class="inputNombre" placeholder="Nombre Categoria o Item">
+                </th> 
+                <th>
+                    <select id="divCategoriaPadre" name="catPadre" class="selectPadre">
+                      <option id="inicio">Seleccione categoria padre...</option>
+                    </select>
+                </th>
+                <th>
+                    <select id="tipoCalificacion" name="tipoCalificacion" class="selectTipo" disabled="true">
+                     <option id="inicio">Promedio Simple</option>
+                     <option>Promedio Ponderado</option>
+                   </select>
+                </th>
+                <th>
+                    <input type="text" diabled="true" id="inputValor" name="inputValor" class="inputValor" placeholder="valor" disabled="true">    
+                </th>
+                </tr>    
+            </tbody>
+        </table>
+      </div>
+              
+          </form>
+        <!-- fin body -->
+        </div>          
+                <div class="modal-footer" >
+                 <span type="button" formmethod='post' id = "acept" class="btn btn-default" >Guardar y Crear Nuevo</span>
+                 <span type="button" formmethod='post' id = "acepsalir" class="btn btn-default" data-dismiss="modal">Guardar y Salir</span>
+                 <span type="button" formmethod='post' id = "close" class="btn btn-default" data-dismiss="modal">Close</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          

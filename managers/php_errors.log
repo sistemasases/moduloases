@@ -1,0 +1,504 @@
+[10-Jul-2017 16:13:14 UTC] PHP Warning:  require_once(/home/ubuntu/workspace/blocks/ases/managers/ases_report/../../../config.php): failed to open stream: No such file or directory in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_graphics.php on line 2
+[10-Jul-2017 16:13:14 UTC] PHP Fatal error:  require_once(): Failed opening required '/home/ubuntu/workspace/blocks/ases/managers/ases_report/../../../config.php' (include_path='.:/usr/share/php') in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_graphics.php on line 2
+[10-Jul-2017 16:13:58 UTC] PHP Warning:  require_once(/home/ubuntu/workspace/blocks/ases/managers/ases_report/../../../config.php): failed to open stream: No such file or directory in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_graphics.php on line 2
+[10-Jul-2017 16:13:58 UTC] PHP Fatal error:  require_once(): Failed opening required '/home/ubuntu/workspace/blocks/ases/managers/ases_report/../../../config.php' (include_path='.:/usr/share/php') in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_graphics.php on line 2
+[10-Jul-2017 16:15:31 UTC] PHP Warning:  require_once(/home/ubuntu/workspace/blocks/ases/managers/ases_report/../../../config.php): failed to open stream: No such file or directory in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_graphics.php on line 2
+[10-Jul-2017 16:15:31 UTC] PHP Fatal error:  require_once(): Failed opening required '/home/ubuntu/workspace/blocks/ases/managers/ases_report/../../../config.php' (include_path='.:/usr/share/php') in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_graphics.php on line 2
+[10-Jul-2017 16:17:51 UTC] PHP Warning:  require_once(/home/ubuntu/workspace/blocks/ases/managers/ases_report/../../../config.php): failed to open stream: No such file or directory in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_graphics.php on line 2
+[10-Jul-2017 16:17:51 UTC] PHP Fatal error:  require_once(): Failed opening required '/home/ubuntu/workspace/blocks/ases/managers/ases_report/../../../config.php' (include_path='.:/usr/share/php') in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_graphics.php on line 2
+[10-Jul-2017 16:18:24 UTC] PHP Warning:  require_once(/home/ubuntu/workspace/blocks/ases/managers/ases_report/../../../config.php): failed to open stream: No such file or directory in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_graphics.php on line 2
+[10-Jul-2017 16:18:24 UTC] PHP Fatal error:  require_once(): Failed opening required '/home/ubuntu/workspace/blocks/ases/managers/ases_report/../../../config.php' (include_path='.:/usr/share/php') in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_graphics.php on line 2
+[10-Jul-2017 16:19:50 UTC] PHP Warning:  require_once(/home/ubuntu/workspace/blocks/ases/managers/ases_report/../../../config.php): failed to open stream: No such file or directory in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_graphics.php on line 2
+[10-Jul-2017 16:19:50 UTC] PHP Fatal error:  require_once(): Failed opening required '/home/ubuntu/workspace/blocks/ases/managers/ases_report/../../../config.php' (include_path='.:/usr/share/php') in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_graphics.php on line 2
+[10-Jul-2017 16:22:17 UTC] PHP Warning:  require_once(/home/ubuntu/workspace/blocks/ases/managers/ases_report/../../../config.php): failed to open stream: No such file or directory in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_graphics.php on line 2
+[10-Jul-2017 16:22:17 UTC] PHP Fatal error:  require_once(): Failed opening required '/home/ubuntu/workspace/blocks/ases/managers/ases_report/../../../config.php' (include_path='.:/usr/share/php') in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_graphics.php on line 2
+[10-Jul-2017 16:22:42 UTC] PHP Warning:  require_once(/home/ubuntu/workspace/blocks/ases/managers/ases_report/../../../config.php): failed to open stream: No such file or directory in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_graphics.php on line 2
+[10-Jul-2017 16:22:42 UTC] PHP Fatal error:  require_once(): Failed opening required '/home/ubuntu/workspace/blocks/ases/managers/ases_report/../../../config.php' (include_path='.:/usr/share/php') in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_graphics.php on line 2
+[10-Jul-2017 16:23:53 UTC] PHP Warning:  require_once(/home/ubuntu/workspace/blocks/ases/managers/ases_report/../../../config.php): failed to open stream: No such file or directory in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_graphics.php on line 2
+[10-Jul-2017 16:23:53 UTC] PHP Fatal error:  require_once(): Failed opening required '/home/ubuntu/workspace/blocks/ases/managers/ases_report/../../../config.php' (include_path='.:/usr/share/php') in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_graphics.php on line 2
+[10-Jul-2017 16:24:47 UTC] PHP Warning:  require_once(/home/ubuntu/workspace/blocks/ases/managers/ases_report/../../../config.php): failed to open stream: No such file or directory in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_graphics.php on line 2
+[10-Jul-2017 16:24:47 UTC] PHP Fatal error:  require_once(): Failed opening required '/home/ubuntu/workspace/blocks/ases/managers/ases_report/../../../config.php' (include_path='.:/usr/share/php') in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_graphics.php on line 2
+[10-Jul-2017 16:25:28 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function getGraficAge() in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_graphics_processing.php:18
+Stack trace:
+#0 {main}
+  thrown in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_graphics_processing.php on line 18
+[10-Jul-2017 16:26:02 UTC] PHP Warning:  require_once(/home/ubuntu/workspace/blocks/ases/managers/ases_report/../../../config.php): failed to open stream: No such file or directory in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_graphics.php on line 2
+[10-Jul-2017 16:26:02 UTC] PHP Fatal error:  require_once(): Failed opening required '/home/ubuntu/workspace/blocks/ases/managers/ases_report/../../../config.php' (include_path='.:/usr/share/php') in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_graphics.php on line 2
+[10-Jul-2017 16:27:38 UTC] PHP Warning:  require_once(/home/ubuntu/workspace/blocks/ases/managers/ases_report/../../../config.php): failed to open stream: No such file or directory in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_graphics.php on line 2
+[10-Jul-2017 16:27:38 UTC] PHP Fatal error:  require_once(): Failed opening required '/home/ubuntu/workspace/blocks/ases/managers/ases_report/../../../config.php' (include_path='.:/usr/share/php') in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_graphics.php on line 2
+[10-Jul-2017 16:28:09 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function getGraficAge() in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_graphics_processing.php:18
+Stack trace:
+#0 {main}
+  thrown in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_graphics_processing.php on line 18
+[10-Jul-2017 16:28:54 UTC] PHP Warning:  require_once(/home/ubuntu/workspace/blocks/ases/managers/ases_report/../../../config.php): failed to open stream: No such file or directory in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_graphics.php on line 2
+[10-Jul-2017 16:28:54 UTC] PHP Fatal error:  require_once(): Failed opening required '/home/ubuntu/workspace/blocks/ases/managers/ases_report/../../../config.php' (include_path='.:/usr/share/php') in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_graphics.php on line 2
+[10-Jul-2017 16:29:26 UTC] PHP Warning:  require_once(/home/ubuntu/workspace/blocks/ases/managers/ases_report/../../../config.php): failed to open stream: No such file or directory in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_graphics.php on line 2
+[10-Jul-2017 16:29:26 UTC] PHP Fatal error:  require_once(): Failed opening required '/home/ubuntu/workspace/blocks/ases/managers/ases_report/../../../config.php' (include_path='.:/usr/share/php') in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_graphics.php on line 2
+[10-Jul-2017 16:30:56 UTC] PHP Warning:  require_once(/home/ubuntu/workspace/blocks/ases/managers/ases_report/../../../config.php): failed to open stream: No such file or directory in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_graphics.php on line 2
+[10-Jul-2017 16:30:56 UTC] PHP Fatal error:  require_once(): Failed opening required '/home/ubuntu/workspace/blocks/ases/managers/ases_report/../../../config.php' (include_path='.:/usr/share/php') in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_graphics.php on line 2
+[10-Jul-2017 16:31:24 UTC] PHP Warning:  require_once(/home/ubuntu/workspace/blocks/ases/managers/ases_report/../../../config.php): failed to open stream: No such file or directory in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_graphics.php on line 2
+[10-Jul-2017 16:31:24 UTC] PHP Fatal error:  require_once(): Failed opening required '/home/ubuntu/workspace/blocks/ases/managers/ases_report/../../../config.php' (include_path='.:/usr/share/php') in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_graphics.php on line 2
+[10-Jul-2017 16:31:54 UTC] PHP Warning:  require_once(query.php): failed to open stream: No such file or directory in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_graphics_processing.php on line 2
+[10-Jul-2017 16:31:54 UTC] PHP Fatal error:  require_once(): Failed opening required 'query.php' (include_path='.:/usr/share/php') in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_graphics_processing.php on line 2
+[10-Jul-2017 16:33:34 UTC] PHP Warning:  require_once(/home/ubuntu/workspace/blocks/ases/managers/ases_reportasesreport_graphics.php): failed to open stream: No such file or directory in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_graphics_processing.php on line 2
+[10-Jul-2017 16:33:34 UTC] PHP Fatal error:  require_once(): Failed opening required '/home/ubuntu/workspace/blocks/ases/managers/ases_reportasesreport_graphics.php' (include_path='.:/usr/share/php') in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_graphics_processing.php on line 2
+[10-Jul-2017 16:33:53 UTC] PHP Warning:  require_once(/home/ubuntu/workspace/blocks/ases/managers/ases_report/../../../config.php): failed to open stream: No such file or directory in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_graphics.php on line 2
+[10-Jul-2017 16:33:53 UTC] PHP Fatal error:  require_once(): Failed opening required '/home/ubuntu/workspace/blocks/ases/managers/ases_report/../../../config.php' (include_path='.:/usr/share/php') in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_graphics.php on line 2
+[10-Jul-2017 16:34:07 UTC] PHP Warning:  require_once(asesreport_graphics): failed to open stream: No such file or directory in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_graphics_processing.php on line 2
+[10-Jul-2017 16:34:07 UTC] PHP Fatal error:  require_once(): Failed opening required 'asesreport_graphics' (include_path='.:/usr/share/php') in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_graphics_processing.php on line 2
+[10-Jul-2017 16:35:07 UTC] PHP Warning:  require_once(/home/ubuntu/workspace/blocks/ases/managers/ases_report/../../../config.php): failed to open stream: No such file or directory in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_graphics.php on line 2
+[10-Jul-2017 16:35:07 UTC] PHP Fatal error:  require_once(): Failed opening required '/home/ubuntu/workspace/blocks/ases/managers/ases_report/../../../config.php' (include_path='.:/usr/share/php') in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_graphics.php on line 2
+[10-Jul-2017 16:37:00 UTC] PHP Warning:  require_once(/home/ubuntu/workspace/blocks/ases/managers/ases_report/../../../config.php): failed to open stream: No such file or directory in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_graphics.php on line 2
+[10-Jul-2017 16:37:00 UTC] PHP Fatal error:  require_once(): Failed opening required '/home/ubuntu/workspace/blocks/ases/managers/ases_report/../../../config.php' (include_path='.:/usr/share/php') in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_graphics.php on line 2
+[10-Jul-2017 16:37:45 UTC] PHP Warning:  require_once(../asesreport_graphics.php): failed to open stream: No such file or directory in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_graphics_processing.php on line 2
+[10-Jul-2017 16:37:45 UTC] PHP Fatal error:  require_once(): Failed opening required '../asesreport_graphics.php' (include_path='.:/usr/share/php') in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_graphics_processing.php on line 2
+[10-Jul-2017 16:38:16 UTC] PHP Warning:  require_once(/home/ubuntu/workspace/blocks/ases/managers/ases_report/../../../config.php): failed to open stream: No such file or directory in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_graphics.php on line 2
+[10-Jul-2017 16:38:16 UTC] PHP Fatal error:  require_once(): Failed opening required '/home/ubuntu/workspace/blocks/ases/managers/ases_report/../../../config.php' (include_path='.:/usr/share/php') in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_graphics.php on line 2
+[10-Jul-2017 16:38:54 UTC] PHP Warning:  require_once(/home/ubuntu/workspace/blocks/ases/managers/ases_report/../../../config.php): failed to open stream: No such file or directory in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_graphics.php on line 2
+[10-Jul-2017 16:38:54 UTC] PHP Fatal error:  require_once(): Failed opening required '/home/ubuntu/workspace/blocks/ases/managers/ases_report/../../../config.php' (include_path='.:/usr/share/php') in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_graphics.php on line 2
+[10-Jul-2017 16:40:03 UTC] PHP Warning:  require_once(/home/ubuntu/workspace/blocks/ases/managers/ases_report/../../../config.php): failed to open stream: No such file or directory in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_graphics.php on line 2
+[10-Jul-2017 16:40:03 UTC] PHP Fatal error:  require_once(): Failed opening required '/home/ubuntu/workspace/blocks/ases/managers/ases_report/../../../config.php' (include_path='.:/usr/share/php') in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_graphics.php on line 2
+[10-Jul-2017 16:54:38 UTC] PHP Warning:  require_once(/home/ubuntu/workspace/blocks/ases/managers/ases_report/../../../config.php): failed to open stream: No such file or directory in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_graphics.php on line 2
+[10-Jul-2017 16:54:38 UTC] PHP Fatal error:  require_once(): Failed opening required '/home/ubuntu/workspace/blocks/ases/managers/ases_report/../../../config.php' (include_path='.:/usr/share/php') in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_graphics.php on line 2
+[10-Jul-2017 16:55:11 UTC] PHP Warning:  require_once(/home/ubuntu/workspace/blocks/ases/managers/ases_report/../../../config.php): failed to open stream: No such file or directory in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_graphics.php on line 2
+[10-Jul-2017 16:55:11 UTC] PHP Fatal error:  require_once(): Failed opening required '/home/ubuntu/workspace/blocks/ases/managers/ases_report/../../../config.php' (include_path='.:/usr/share/php') in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_graphics.php on line 2
+[10-Jul-2017 16:56:17 UTC] PHP Fatal error:  Cannot redeclare getGraficEstado() (previously declared in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_graphics_processing.php:165) in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_graphics.php on line 164
+[10-Jul-2017 16:56:43 UTC] PHP Fatal error:  Uncaught Error: Call to a member function get_records_sql() on null in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_graphics_processing.php:62
+Stack trace:
+#0 /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_graphics_processing.php(214): getGraficAge('TODOS')
+#1 {main}
+  thrown in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_graphics_processing.php on line 62
+[10-Jul-2017 16:57:34 UTC] PHP Warning:  require_once(/home/ubuntu/workspace/blocks/ases/managers/ases_report/../../../config.php): failed to open stream: No such file or directory in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_graphics.php on line 2
+[10-Jul-2017 16:57:34 UTC] PHP Fatal error:  require_once(): Failed opening required '/home/ubuntu/workspace/blocks/ases/managers/ases_report/../../../config.php' (include_path='.:/usr/share/php') in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_graphics.php on line 2
+[10-Jul-2017 16:58:32 UTC] PHP Warning:  require_once(/home/ubuntu/workspace/blocks/ases/managers/ases_report/../../../config.php): failed to open stream: No such file or directory in /home/ubuntu/workspace/blocks/ases/managers/ases_report/graphics.php on line 2
+[10-Jul-2017 16:58:32 UTC] PHP Fatal error:  require_once(): Failed opening required '/home/ubuntu/workspace/blocks/ases/managers/ases_report/../../../config.php' (include_path='.:/usr/share/php') in /home/ubuntu/workspace/blocks/ases/managers/ases_report/graphics.php on line 2
+[10-Jul-2017 16:59:26 UTC] PHP Warning:  require_once(/home/ubuntu/workspace/blocks/ases/managers/ases_report/../../../config.php): failed to open stream: No such file or directory in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_graphics.php on line 2
+[10-Jul-2017 16:59:26 UTC] PHP Fatal error:  require_once(): Failed opening required '/home/ubuntu/workspace/blocks/ases/managers/ases_report/../../../config.php' (include_path='.:/usr/share/php') in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_graphics.php on line 2
+[10-Jul-2017 17:03:31 UTC] PHP Warning:  require_once(/home/ubuntu/workspace/blocks/ases/managers/ases_report/../../../config.php): failed to open stream: No such file or directory in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_graphics.php on line 2
+[10-Jul-2017 17:03:31 UTC] PHP Fatal error:  require_once(): Failed opening required '/home/ubuntu/workspace/blocks/ases/managers/ases_report/../../../config.php' (include_path='.:/usr/share/php') in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_graphics.php on line 2
+[10-Jul-2017 17:04:32 UTC] PHP Warning:  require_once(/home/ubuntu/workspace/blocks/ases/managers/ases_report/../../../config.php): failed to open stream: No such file or directory in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_graphics.php on line 2
+[10-Jul-2017 17:04:32 UTC] PHP Fatal error:  require_once(): Failed opening required '/home/ubuntu/workspace/blocks/ases/managers/ases_report/../../../config.php' (include_path='.:/usr/share/php') in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_graphics.php on line 2
+[10-Jul-2017 17:57:50 UTC] PHP Warning:  require_once(/home/ubuntu/workspace/blocks/ases/managers/ases_report/../../../config.php): failed to open stream: No such file or directory in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_graphics.php on line 2
+[10-Jul-2017 17:57:50 UTC] PHP Fatal error:  require_once(): Failed opening required '/home/ubuntu/workspace/blocks/ases/managers/ases_report/../../../config.php' (include_path='.:/usr/share/php') in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_graphics.php on line 2
+[10-Jul-2017 17:58:50 UTC] PHP Warning:  require_once(/home/ubuntu/workspace/blocks/ases/managers/ases_report/../../../config.php): failed to open stream: No such file or directory in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_graphics.php on line 2
+[10-Jul-2017 17:58:50 UTC] PHP Fatal error:  require_once(): Failed opening required '/home/ubuntu/workspace/blocks/ases/managers/ases_report/../../../config.php' (include_path='.:/usr/share/php') in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_graphics.php on line 2
+[10-Jul-2017 17:59:54 UTC] PHP Warning:  require_once(/home/ubuntu/workspace/blocks/ases/managers/ases_report/../../../config.php): failed to open stream: No such file or directory in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_graphics.php on line 2
+[10-Jul-2017 17:59:54 UTC] PHP Fatal error:  require_once(): Failed opening required '/home/ubuntu/workspace/blocks/ases/managers/ases_report/../../../config.php' (include_path='.:/usr/share/php') in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_graphics.php on line 2
+[10-Jul-2017 18:01:03 UTC] PHP Warning:  require_once(/../../../config.php): failed to open stream: No such file or directory in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_graphics.php on line 2
+[10-Jul-2017 18:01:03 UTC] PHP Fatal error:  require_once(): Failed opening required '/../../../config.php' (include_path='.:/usr/share/php') in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_graphics.php on line 2
+[10-Jul-2017 18:02:14 UTC] PHP Warning:  require_once(/home/ubuntu/workspace/blocks/ases/managers/ases_report/../../../config.php): failed to open stream: No such file or directory in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_graphics.php on line 2
+[10-Jul-2017 18:02:14 UTC] PHP Fatal error:  require_once(): Failed opening required '/home/ubuntu/workspace/blocks/ases/managers/ases_report/../../../config.php' (include_path='.:/usr/share/php') in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_graphics.php on line 2
+[10-Jul-2017 18:07:28 UTC] PHP Warning:  require_once(/home/ubuntu/workspace/blocks/ases/managers/ases_report/../../../config.php): failed to open stream: No such file or directory in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_graphics.php on line 2
+[10-Jul-2017 18:07:28 UTC] PHP Fatal error:  require_once(): Failed opening required '/home/ubuntu/workspace/blocks/ases/managers/ases_report/../../../config.php' (include_path='.:/usr/share/php') in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_graphics.php on line 2
+[10-Jul-2017 18:08:07 UTC] PHP Warning:  require_once(/home/ubuntu/workspace/blocks/ases/managers/ases_report/../../../config.php): failed to open stream: No such file or directory in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_graphics.php on line 2
+[10-Jul-2017 18:08:07 UTC] PHP Fatal error:  require_once(): Failed opening required '/home/ubuntu/workspace/blocks/ases/managers/ases_report/../../../config.php' (include_path='.:/usr/share/php') in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_graphics.php on line 2
+[10-Jul-2017 18:09:16 UTC] PHP Parse error:  syntax error, unexpected 'echo' (T_ECHO) in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_graphics.php on line 3
+[10-Jul-2017 18:09:44 UTC] PHP Warning:  require_once(asesreport_graphicss.php): failed to open stream: No such file or directory in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_graphics_processing.php on line 2
+[10-Jul-2017 18:09:44 UTC] PHP Fatal error:  require_once(): Failed opening required 'asesreport_graphicss.php' (include_path='.:/usr/share/php') in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_graphics_processing.php on line 2
+[10-Jul-2017 18:10:03 UTC] PHP Parse error:  syntax error, unexpected 'echo' (T_ECHO) in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_graphics.php on line 3
+[10-Jul-2017 18:10:42 UTC] PHP Parse error:  syntax error, unexpected 'echo' (T_ECHO) in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_graphics.php on line 3
+[10-Jul-2017 18:11:20 UTC] PHP Parse error:  syntax error, unexpected 'echo' (T_ECHO) in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_graphics.php on line 3
+[10-Jul-2017 18:12:58 UTC] PHP Warning:  require_once(/home/ubuntu/workspace/blocks/ases/managers/ases_report/../../../config.php): failed to open stream: No such file or directory in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_graphics.php on line 3
+[10-Jul-2017 18:12:58 UTC] PHP Fatal error:  require_once(): Failed opening required '/home/ubuntu/workspace/blocks/ases/managers/ases_report/../../../config.php' (include_path='.:/usr/share/php') in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_graphics.php on line 3
+[10-Jul-2017 18:15:38 UTC] PHP Warning:  require_once(/home/ubuntu/workspace/blocks/ases/managers/ases_report/../../../config.php): failed to open stream: No such file or directory in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_graphics.php on line 3
+[10-Jul-2017 18:15:38 UTC] PHP Fatal error:  require_once(): Failed opening required '/home/ubuntu/workspace/blocks/ases/managers/ases_report/../../../config.php' (include_path='.:/usr/share/php') in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_graphics.php on line 3
+[10-Jul-2017 18:16:43 UTC] PHP Warning:  require_once(/home/ubuntu/workspace/blocks/ases/managers/ases_report/../../../config.php): failed to open stream: No such file or directory in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_graphics.php on line 3
+[10-Jul-2017 18:16:43 UTC] PHP Fatal error:  require_once(): Failed opening required '/home/ubuntu/workspace/blocks/ases/managers/ases_report/../../../config.php' (include_path='.:/usr/share/php') in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_graphics.php on line 3
+[10-Jul-2017 18:43:02 UTC] PHP Warning:  require_once(../managers/ases_report/asesreport_lib.php): failed to open stream: No such file or directory in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_server_processing.php on line 4
+[10-Jul-2017 18:43:02 UTC] PHP Fatal error:  require_once(): Failed opening required '../managers/ases_report/asesreport_lib.php' (include_path='.:/usr/share/php') in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_server_processing.php on line 4
+[10-Jul-2017 18:43:42 UTC] PHP Warning:  require_once(../managers/ases_report/asesreport_lib.php): failed to open stream: No such file or directory in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_server_processing.php on line 4
+[10-Jul-2017 18:43:42 UTC] PHP Fatal error:  require_once(): Failed opening required '../managers/ases_report/asesreport_lib.php' (include_path='.:/usr/share/php') in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_server_processing.php on line 4
+[10-Jul-2017 18:44:19 UTC] PHP Warning:  require_once(../managers/ases_report/asesreport_lib.php): failed to open stream: No such file or directory in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_server_processing.php on line 4
+[10-Jul-2017 18:44:19 UTC] PHP Fatal error:  require_once(): Failed opening required '../managers/ases_report/asesreport_lib.php' (include_path='.:/usr/share/php') in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_server_processing.php on line 4
+[10-Jul-2017 18:44:42 UTC] PHP Warning:  require_once(/../../managers/ases_report/asesreport_lib.php): failed to open stream: No such file or directory in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_server_processing.php on line 3
+[10-Jul-2017 18:44:42 UTC] PHP Fatal error:  require_once(): Failed opening required '/../../managers/ases_report/asesreport_lib.php' (include_path='.:/usr/share/php') in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_server_processing.php on line 3
+[10-Jul-2017 18:45:27 UTC] PHP Warning:  require_once(/../../managers/ases_report/asesreport_lib.php): failed to open stream: No such file or directory in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_server_processing.php on line 3
+[10-Jul-2017 18:45:27 UTC] PHP Fatal error:  require_once(): Failed opening required '/../../managers/ases_report/asesreport_lib.php' (include_path='.:/usr/share/php') in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_server_processing.php on line 3
+[10-Jul-2017 18:46:00 UTC] PHP Notice:  Undefined variable: riesgos_consulta in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_server_processing.php on line 59
+[10-Jul-2017 18:46:00 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function consultInstance() in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_server_processing_consult.php:14
+Stack trace:
+#0 /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_server_processing.php(59): get_usersByPopulation(Array, Array, NULL, '19')
+#1 {main}
+  thrown in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_server_processing_consult.php on line 14
+[10-Jul-2017 18:46:49 UTC] PHP Notice:  Undefined variable: riesgos_consulta in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_server_processing.php on line 59
+[10-Jul-2017 18:46:49 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function consultInstance() in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_server_processing_consult.php:14
+Stack trace:
+#0 /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_server_processing.php(59): get_usersByPopulation(Array, Array, NULL, '19')
+#1 {main}
+  thrown in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_server_processing_consult.php on line 14
+[10-Jul-2017 18:47:43 UTC] PHP Notice:  Undefined variable: riesgos_consulta in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_server_processing.php on line 58
+[10-Jul-2017 18:47:43 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function consultInstance() in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_server_processing_consult.php:14
+Stack trace:
+#0 /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_server_processing.php(58): get_usersByPopulation(Array, Array, NULL, '19')
+#1 {main}
+  thrown in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_server_processing_consult.php on line 14
+[10-Jul-2017 18:48:17 UTC] PHP Notice:  Undefined variable: riesgos_consulta in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_server_processing.php on line 58
+[10-Jul-2017 18:48:17 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function consultInstance() in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_server_processing_consult.php:15
+Stack trace:
+#0 /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_server_processing.php(58): get_usersByPopulation(Array, Array, NULL, '19')
+#1 {main}
+  thrown in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_server_processing_consult.php on line 15
+[10-Jul-2017 18:48:57 UTC] PHP Notice:  Undefined variable: riesgos_consulta in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_server_processing.php on line 59
+[10-Jul-2017 18:48:57 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function consultInstance() in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_server_processing_consult.php:14
+Stack trace:
+#0 /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_server_processing.php(59): get_usersByPopulation(Array, Array, NULL, '19')
+#1 {main}
+  thrown in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_server_processing_consult.php on line 14
+[10-Jul-2017 18:49:38 UTC] PHP Notice:  Undefined variable: riesgos_consulta in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_server_processing.php on line 58
+[10-Jul-2017 18:49:38 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function consultInstance() in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_server_processing_consult.php:14
+Stack trace:
+#0 /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_server_processing.php(58): get_usersByPopulation(Array, Array, NULL, '19')
+#1 {main}
+  thrown in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_server_processing_consult.php on line 14
+[10-Jul-2017 18:50:25 UTC] PHP Notice:  Undefined variable: riesgos_consulta in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_server_processing.php on line 58
+[10-Jul-2017 18:50:25 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function consultInstance() in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_server_processing_consult.php:14
+Stack trace:
+#0 /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_server_processing.php(58): get_usersByPopulation(Array, Array, NULL, '19')
+#1 {main}
+  thrown in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_server_processing_consult.php on line 14
+[10-Jul-2017 18:56:17 UTC] PHP Notice:  Undefined variable: riesgos_consulta in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_server_processing.php on line 58
+[10-Jul-2017 18:56:17 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function consultInstance() in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_server_processing_consult.php:14
+Stack trace:
+#0 /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_server_processing.php(58): get_usersByPopulation(Array, Array, NULL, '19')
+#1 {main}
+  thrown in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_server_processing_consult.php on line 14
+[10-Jul-2017 19:13:37 UTC] PHP Fatal error:  Uncaught Error: Call to a member function get_records_sql() on null in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_lib.php:93
+Stack trace:
+#0 /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_graphics_processing.php(18): getGraficAge('TODOS')
+#1 {main}
+  thrown in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_lib.php on line 93
+[10-Jul-2017 20:14:16 Europe/London] Default exception handler: Excepción - Call to undefined function getGraficAge() Debug: 
+Error code: generalexceptionmessage
+* line 18 of /blocks/ases/managers/ases_report/asesreport_graphics_processing.php: Error thrown
+
+[10-Jul-2017 20:14:16 Europe/London] PHP Notice:  String [myfiles,core] is deprecated. Either you should no longer be using that string, or the string has been incorrectly deprecated, in which case you should report this as a bug. Please refer to https://docs.moodle.org/dev/String_deprecation<ul style="text-align: left" data-rel="backtrace"><li>line 390 of /lib/classes/string_manager_standard.php: call to debugging()</li><li>line 7023 of /lib/moodlelib.php: call to core_string_manager_standard->get_string()</li><li>line 61 of /theme/crispclone/layout/profileblock.php: call to get_string()</li><li>line 95 of /theme/crispclone/layout/header.php: call to require()</li><li>line 33 of /theme/crispclone/layout/columns1.php: call to require()</li><li>line 1110 of /lib/outputrenderers.php: call to include()</li><li>line 1040 of /lib/outputrenderers.php: call to core_renderer->render_page_layout()</li><li>line 2771 of /lib/outputrenderers.php: call to core_renderer->header()</li><li>line 1827 of /lib/setuplib.php: call to core_renderer->fatal_error()</li><li>line 388 in /home/ubuntu/workspace/lib/weblib.php on line 3095
+[10-Jul-2017 20:15:08 Europe/London] Default exception handler: Excepción - Call to undefined function getGraficAge() Debug: 
+Error code: generalexceptionmessage
+* line 18 of /blocks/ases/managers/ases_report/asesreport_graphics_processing.php: Error thrown
+
+[10-Jul-2017 20:15:09 Europe/London] PHP Notice:  String [myfiles,core] is deprecated. Either you should no longer be using that string, or the string has been incorrectly deprecated, in which case you should report this as a bug. Please refer to https://docs.moodle.org/dev/String_deprecation<ul style="text-align: left" data-rel="backtrace"><li>line 390 of /lib/classes/string_manager_standard.php: call to debugging()</li><li>line 7023 of /lib/moodlelib.php: call to core_string_manager_standard->get_string()</li><li>line 61 of /theme/crispclone/layout/profileblock.php: call to get_string()</li><li>line 95 of /theme/crispclone/layout/header.php: call to require()</li><li>line 33 of /theme/crispclone/layout/columns1.php: call to require()</li><li>line 1110 of /lib/outputrenderers.php: call to include()</li><li>line 1040 of /lib/outputrenderers.php: call to core_renderer->render_page_layout()</li><li>line 2771 of /lib/outputrenderers.php: call to core_renderer->header()</li><li>line 1827 of /lib/setuplib.php: call to core_renderer->fatal_error()</li><li>line 388 in /home/ubuntu/workspace/lib/weblib.php on line 3095
+[10-Jul-2017 20:16:44 Europe/London] Default exception handler: Excepción - Call to undefined function getGraficAge() Debug: 
+Error code: generalexceptionmessage
+* line 19 of /blocks/ases/managers/ases_report/asesreport_graphics_processing.php: Error thrown
+
+[10-Jul-2017 20:16:45 Europe/London] PHP Notice:  String [myfiles,core] is deprecated. Either you should no longer be using that string, or the string has been incorrectly deprecated, in which case you should report this as a bug. Please refer to https://docs.moodle.org/dev/String_deprecation<ul style="text-align: left" data-rel="backtrace"><li>line 390 of /lib/classes/string_manager_standard.php: call to debugging()</li><li>line 7023 of /lib/moodlelib.php: call to core_string_manager_standard->get_string()</li><li>line 61 of /theme/crispclone/layout/profileblock.php: call to get_string()</li><li>line 95 of /theme/crispclone/layout/header.php: call to require()</li><li>line 33 of /theme/crispclone/layout/columns1.php: call to require()</li><li>line 1110 of /lib/outputrenderers.php: call to include()</li><li>line 1040 of /lib/outputrenderers.php: call to core_renderer->render_page_layout()</li><li>line 2771 of /lib/outputrenderers.php: call to core_renderer->header()</li><li>line 1827 of /lib/setuplib.php: call to core_renderer->fatal_error()</li><li>line 388 in /home/ubuntu/workspace/lib/weblib.php on line 3095
+[10-Jul-2017 20:18:08 Europe/London] Default exception handler: Excepción - Call to undefined function getGraficSex() Debug: 
+Error code: generalexceptionmessage
+* line 8 of /blocks/ases/managers/ases_report/asesreport_graphics_processing.php: Error thrown
+
+[10-Jul-2017 20:18:08 Europe/London] PHP Notice:  String [myfiles,core] is deprecated. Either you should no longer be using that string, or the string has been incorrectly deprecated, in which case you should report this as a bug. Please refer to https://docs.moodle.org/dev/String_deprecation<ul style="text-align: left" data-rel="backtrace"><li>line 390 of /lib/classes/string_manager_standard.php: call to debugging()</li><li>line 7023 of /lib/moodlelib.php: call to core_string_manager_standard->get_string()</li><li>line 61 of /theme/crispclone/layout/profileblock.php: call to get_string()</li><li>line 95 of /theme/crispclone/layout/header.php: call to require()</li><li>line 33 of /theme/crispclone/layout/columns1.php: call to require()</li><li>line 1110 of /lib/outputrenderers.php: call to include()</li><li>line 1040 of /lib/outputrenderers.php: call to core_renderer->render_page_layout()</li><li>line 2771 of /lib/outputrenderers.php: call to core_renderer->header()</li><li>line 1827 of /lib/setuplib.php: call to core_renderer->fatal_error()</li><li>line 388 in /home/ubuntu/workspace/lib/weblib.php on line 3095
+[10-Jul-2017 20:19:11 Europe/London] Default exception handler: Excepción - Call to undefined function getGraficSex() Debug: 
+Error code: generalexceptionmessage
+* line 8 of /blocks/ases/managers/ases_report/asesreport_graphics_processing.php: Error thrown
+
+[10-Jul-2017 20:19:11 Europe/London] PHP Notice:  String [myfiles,core] is deprecated. Either you should no longer be using that string, or the string has been incorrectly deprecated, in which case you should report this as a bug. Please refer to https://docs.moodle.org/dev/String_deprecation<ul style="text-align: left" data-rel="backtrace"><li>line 390 of /lib/classes/string_manager_standard.php: call to debugging()</li><li>line 7023 of /lib/moodlelib.php: call to core_string_manager_standard->get_string()</li><li>line 61 of /theme/crispclone/layout/profileblock.php: call to get_string()</li><li>line 95 of /theme/crispclone/layout/header.php: call to require()</li><li>line 33 of /theme/crispclone/layout/columns1.php: call to require()</li><li>line 1110 of /lib/outputrenderers.php: call to include()</li><li>line 1040 of /lib/outputrenderers.php: call to core_renderer->render_page_layout()</li><li>line 2771 of /lib/outputrenderers.php: call to core_renderer->header()</li><li>line 1827 of /lib/setuplib.php: call to core_renderer->fatal_error()</li><li>line 388 in /home/ubuntu/workspace/lib/weblib.php on line 3095
+[10-Jul-2017 19:35:23 UTC] PHP Warning:  require_once(asesreport.php): failed to open stream: No such file or directory in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_server_processing.php on line 2
+[10-Jul-2017 19:35:23 UTC] PHP Fatal error:  require_once(): Failed opening required 'asesreport.php' (include_path='.:/usr/share/php') in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_server_processing.php on line 2
+[10-Jul-2017 19:42:40 UTC] PHP Warning:  require_once(asesreport.php): failed to open stream: No such file or directory in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_server_processing.php on line 2
+[10-Jul-2017 19:42:40 UTC] PHP Fatal error:  require_once(): Failed opening required 'asesreport.php' (include_path='.:/usr/share/php') in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_server_processing.php on line 2
+[10-Jul-2017 19:43:21 UTC] PHP Warning:  require_once(asesreport.php): failed to open stream: No such file or directory in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_server_processing.php on line 2
+[10-Jul-2017 19:43:21 UTC] PHP Fatal error:  require_once(): Failed opening required 'asesreport.php' (include_path='.:/usr/share/php') in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_server_processing.php on line 2
+[10-Jul-2017 19:44:53 UTC] PHP Warning:  require_once(asesreport.php): failed to open stream: No such file or directory in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_server_processing.php on line 2
+[10-Jul-2017 19:44:53 UTC] PHP Fatal error:  require_once(): Failed opening required 'asesreport.php' (include_path='.:/usr/share/php') in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_server_processing.php on line 2
+[10-Jul-2017 19:45:04 UTC] PHP Warning:  require_once(asesreport.php): failed to open stream: No such file or directory in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_server_processing.php on line 2
+[10-Jul-2017 19:45:04 UTC] PHP Fatal error:  require_once(): Failed opening required 'asesreport.php' (include_path='.:/usr/share/php') in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_server_processing.php on line 2
+[10-Jul-2017 19:45:42 UTC] PHP Warning:  require_once(asesreport.php): failed to open stream: No such file or directory in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_server_processing.php on line 2
+[10-Jul-2017 19:45:42 UTC] PHP Fatal error:  require_once(): Failed opening required 'asesreport.php' (include_path='.:/usr/share/php') in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_server_processing.php on line 2
+[10-Jul-2017 19:46:05 UTC] PHP Warning:  require_once(asesreport.php): failed to open stream: No such file or directory in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_server_processing.php on line 2
+[10-Jul-2017 19:46:05 UTC] PHP Fatal error:  require_once(): Failed opening required 'asesreport.php' (include_path='.:/usr/share/php') in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_server_processing.php on line 2
+[10-Jul-2017 20:48:11 Europe/London] PHP Notice:  Undefined variable: riesgos_consulta in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_server_processing.php on line 58
+[10-Jul-2017 20:48:11 Europe/London] Default exception handler: Excepción - Call to undefined function consultInstance() Debug: 
+Error code: generalexceptionmessage
+* line 243 of /blocks/ases/managers/ases_report/asesreport_lib.php: Error thrown
+* line 58 of /blocks/ases/managers/ases_report/asesreport_server_processing.php: call to getUsersByPopulation()
+
+[10-Jul-2017 20:48:11 Europe/London] PHP Notice:  String [myfiles,core] is deprecated. Either you should no longer be using that string, or the string has been incorrectly deprecated, in which case you should report this as a bug. Please refer to https://docs.moodle.org/dev/String_deprecation<ul style="text-align: left" data-rel="backtrace"><li>line 390 of /lib/classes/string_manager_standard.php: call to debugging()</li><li>line 7023 of /lib/moodlelib.php: call to core_string_manager_standard->get_string()</li><li>line 61 of /theme/crispclone/layout/profileblock.php: call to get_string()</li><li>line 95 of /theme/crispclone/layout/header.php: call to require()</li><li>line 33 of /theme/crispclone/layout/columns1.php: call to require()</li><li>line 1110 of /lib/outputrenderers.php: call to include()</li><li>line 1040 of /lib/outputrenderers.php: call to core_renderer->render_page_layout()</li><li>line 2771 of /lib/outputrenderers.php: call to core_renderer->header()</li><li>line 1827 of /lib/setuplib.php: call to core_renderer->fatal_error()</li><li>line 388 in /home/ubuntu/workspace/lib/weblib.php on line 3095
+[10-Jul-2017 20:50:29 Europe/London] PHP Notice:  Undefined variable: riesgos_consulta in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_server_processing.php on line 59
+[10-Jul-2017 20:50:29 Europe/London] Default exception handler: Excepción - Call to undefined function consultInstance() Debug: 
+Error code: generalexceptionmessage
+* line 243 of /blocks/ases/managers/ases_report/asesreport_lib.php: Error thrown
+* line 59 of /blocks/ases/managers/ases_report/asesreport_server_processing.php: call to getUsersByPopulation()
+
+[10-Jul-2017 20:50:29 Europe/London] PHP Notice:  String [myfiles,core] is deprecated. Either you should no longer be using that string, or the string has been incorrectly deprecated, in which case you should report this as a bug. Please refer to https://docs.moodle.org/dev/String_deprecation<ul style="text-align: left" data-rel="backtrace"><li>line 390 of /lib/classes/string_manager_standard.php: call to debugging()</li><li>line 7023 of /lib/moodlelib.php: call to core_string_manager_standard->get_string()</li><li>line 61 of /theme/crispclone/layout/profileblock.php: call to get_string()</li><li>line 95 of /theme/crispclone/layout/header.php: call to require()</li><li>line 33 of /theme/crispclone/layout/columns1.php: call to require()</li><li>line 1110 of /lib/outputrenderers.php: call to include()</li><li>line 1040 of /lib/outputrenderers.php: call to core_renderer->render_page_layout()</li><li>line 2771 of /lib/outputrenderers.php: call to core_renderer->header()</li><li>line 1827 of /lib/setuplib.php: call to core_renderer->fatal_error()</li><li>line 388 in /home/ubuntu/workspace/lib/weblib.php on line 3095
+[10-Jul-2017 20:53:19 Europe/London] PHP Notice:  Undefined variable: riesgos_consulta in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_server_processing.php on line 59
+[10-Jul-2017 20:53:19 Europe/London] Default exception handler: Excepción - Call to undefined function consultInstance() Debug: 
+Error code: generalexceptionmessage
+* line 243 of /blocks/ases/managers/ases_report/asesreport_lib.php: Error thrown
+* line 59 of /blocks/ases/managers/ases_report/asesreport_server_processing.php: call to getUsersByPopulation()
+
+[10-Jul-2017 20:53:19 Europe/London] PHP Notice:  String [myfiles,core] is deprecated. Either you should no longer be using that string, or the string has been incorrectly deprecated, in which case you should report this as a bug. Please refer to https://docs.moodle.org/dev/String_deprecation<ul style="text-align: left" data-rel="backtrace"><li>line 390 of /lib/classes/string_manager_standard.php: call to debugging()</li><li>line 7023 of /lib/moodlelib.php: call to core_string_manager_standard->get_string()</li><li>line 61 of /theme/crispclone/layout/profileblock.php: call to get_string()</li><li>line 95 of /theme/crispclone/layout/header.php: call to require()</li><li>line 33 of /theme/crispclone/layout/columns1.php: call to require()</li><li>line 1110 of /lib/outputrenderers.php: call to include()</li><li>line 1040 of /lib/outputrenderers.php: call to core_renderer->render_page_layout()</li><li>line 2771 of /lib/outputrenderers.php: call to core_renderer->header()</li><li>line 1827 of /lib/setuplib.php: call to core_renderer->fatal_error()</li><li>line 388 in /home/ubuntu/workspace/lib/weblib.php on line 3095
+[10-Jul-2017 20:55:06 Europe/London] PHP Notice:  Undefined variable: riesgos_consulta in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_server_processing.php on line 59
+[10-Jul-2017 20:55:06 Europe/London] PHP Notice:  Trying to get property of non-object in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_server_processing.php on line 63
+[10-Jul-2017 20:55:06 Europe/London] PHP Notice:  Trying to get property of non-object in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_server_processing.php on line 105
+[10-Jul-2017 20:55:29 Europe/London] PHP Notice:  Undefined variable: riesgos_consulta in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_server_processing.php on line 59
+[10-Jul-2017 20:55:29 Europe/London] PHP Notice:  Trying to get property of non-object in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_server_processing.php on line 63
+[10-Jul-2017 20:55:29 Europe/London] PHP Notice:  Trying to get property of non-object in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_server_processing.php on line 105
+[10-Jul-2017 20:55:48 Europe/London] PHP Notice:  Undefined variable: riesgos_consulta in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_server_processing.php on line 59
+[10-Jul-2017 20:55:48 Europe/London] PHP Notice:  Trying to get property of non-object in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_server_processing.php on line 63
+[10-Jul-2017 20:55:48 Europe/London] PHP Notice:  Trying to get property of non-object in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_server_processing.php on line 105
+[10-Jul-2017 20:57:22 Europe/London] PHP Notice:  Undefined variable: riesgos_consulta in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_server_processing.php on line 59
+[10-Jul-2017 20:57:22 Europe/London] PHP Warning:  array_filter() expects parameter 1 to be array, null given in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_lib.php on line 276
+[10-Jul-2017 20:57:22 Europe/London] PHP Warning:  Invalid argument supplied for foreach() in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_lib.php on line 281
+[10-Jul-2017 20:57:22 Europe/London] PHP Notice:  Undefined offset: 2 in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_lib.php on line 419
+[10-Jul-2017 20:57:48 Europe/London] PHP Notice:  Undefined variable: riesgos_consulta in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_server_processing.php on line 59
+[10-Jul-2017 20:57:48 Europe/London] PHP Warning:  array_filter() expects parameter 1 to be array, null given in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_lib.php on line 276
+[10-Jul-2017 20:57:48 Europe/London] PHP Warning:  Invalid argument supplied for foreach() in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_lib.php on line 281
+[10-Jul-2017 20:57:48 Europe/London] PHP Notice:  Undefined offset: 2 in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_lib.php on line 419
+[10-Jul-2017 20:58:00 Europe/London] PHP Warning:  array_push() expects parameter 1 to be array, null given in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_server_processing.php on line 47
+[10-Jul-2017 20:58:00 Europe/London] PHP Warning:  array_filter() expects parameter 1 to be array, null given in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_lib.php on line 276
+[10-Jul-2017 20:58:00 Europe/London] PHP Warning:  Invalid argument supplied for foreach() in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_lib.php on line 281
+[10-Jul-2017 20:58:00 Europe/London] PHP Notice:  Undefined offset: 2 in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_lib.php on line 419
+[10-Jul-2017 20:58:17 Europe/London] PHP Warning:  array_push() expects parameter 1 to be array, null given in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_server_processing.php on line 47
+[10-Jul-2017 20:58:17 Europe/London] PHP Warning:  array_push() expects parameter 1 to be array, null given in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_server_processing.php on line 47
+[10-Jul-2017 20:58:17 Europe/London] PHP Warning:  array_push() expects parameter 1 to be array, null given in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_server_processing.php on line 47
+[10-Jul-2017 20:58:17 Europe/London] PHP Warning:  array_filter() expects parameter 1 to be array, null given in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_lib.php on line 276
+[10-Jul-2017 20:58:17 Europe/London] PHP Warning:  Invalid argument supplied for foreach() in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_lib.php on line 281
+[10-Jul-2017 20:58:17 Europe/London] PHP Notice:  Undefined offset: 2 in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_lib.php on line 419
+[10-Jul-2017 21:00:17 Europe/London] PHP Notice:  Undefined variable: riesgos_consulta in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_server_processing.php on line 59
+[10-Jul-2017 21:00:17 Europe/London] PHP Warning:  array_filter() expects parameter 1 to be array, null given in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_lib.php on line 283
+[10-Jul-2017 21:00:17 Europe/London] PHP Warning:  Invalid argument supplied for foreach() in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_lib.php on line 288
+[10-Jul-2017 21:00:17 Europe/London] PHP Notice:  Undefined offset: 2 in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_lib.php on line 426
+[10-Jul-2017 21:00:32 Europe/London] PHP Warning:  array_push() expects parameter 1 to be array, null given in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_server_processing.php on line 47
+[10-Jul-2017 21:00:32 Europe/London] PHP Warning:  array_filter() expects parameter 1 to be array, null given in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_lib.php on line 283
+[10-Jul-2017 21:00:32 Europe/London] PHP Warning:  Invalid argument supplied for foreach() in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_lib.php on line 288
+[10-Jul-2017 21:00:32 Europe/London] PHP Notice:  Undefined offset: 2 in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_lib.php on line 426
+[10-Jul-2017 21:01:04 Europe/London] PHP Warning:  array_push() expects parameter 1 to be array, null given in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_server_processing.php on line 47
+[10-Jul-2017 21:01:04 Europe/London] PHP Warning:  array_filter() expects parameter 1 to be array, null given in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_lib.php on line 283
+[10-Jul-2017 21:01:04 Europe/London] PHP Warning:  Invalid argument supplied for foreach() in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_lib.php on line 288
+[10-Jul-2017 21:01:04 Europe/London] PHP Notice:  Undefined offset: 2 in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_lib.php on line 426
+[10-Jul-2017 21:05:53 Europe/London] PHP Notice:  Undefined variable: riesgos_consulta in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_server_processing.php on line 59
+[10-Jul-2017 21:05:53 Europe/London] PHP Warning:  array_filter() expects parameter 1 to be array, null given in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_lib.php on line 283
+[10-Jul-2017 21:05:53 Europe/London] PHP Warning:  Invalid argument supplied for foreach() in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_lib.php on line 287
+[10-Jul-2017 21:05:53 Europe/London] PHP Notice:  Undefined offset: 2 in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_lib.php on line 423
+[10-Jul-2017 21:05:56 Europe/London] PHP Warning:  array_push() expects parameter 1 to be array, null given in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_server_processing.php on line 47
+[10-Jul-2017 21:05:56 Europe/London] PHP Warning:  array_filter() expects parameter 1 to be array, null given in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_lib.php on line 283
+[10-Jul-2017 21:05:56 Europe/London] PHP Warning:  Invalid argument supplied for foreach() in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_lib.php on line 287
+[10-Jul-2017 21:05:56 Europe/London] PHP Notice:  Undefined offset: 2 in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_lib.php on line 423
+[10-Jul-2017 21:06:39 Europe/London] PHP Warning:  array_push() expects parameter 1 to be array, null given in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_server_processing.php on line 47
+[10-Jul-2017 21:06:39 Europe/London] PHP Warning:  array_filter() expects parameter 1 to be array, null given in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_lib.php on line 283
+[10-Jul-2017 21:06:39 Europe/London] PHP Warning:  Invalid argument supplied for foreach() in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_lib.php on line 287
+[10-Jul-2017 21:06:39 Europe/London] PHP Notice:  Undefined offset: 2 in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_lib.php on line 423
+[10-Jul-2017 21:07:08 Europe/London] PHP Warning:  array_push() expects parameter 1 to be array, null given in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_server_processing.php on line 47
+[10-Jul-2017 21:07:08 Europe/London] PHP Warning:  array_filter() expects parameter 1 to be array, null given in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_lib.php on line 283
+[10-Jul-2017 21:07:08 Europe/London] PHP Warning:  Invalid argument supplied for foreach() in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_lib.php on line 287
+[10-Jul-2017 21:07:08 Europe/London] PHP Notice:  Undefined offset: 2 in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_lib.php on line 423
+[10-Jul-2017 21:07:23 Europe/London] PHP Warning:  array_push() expects parameter 1 to be array, null given in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_server_processing.php on line 47
+[10-Jul-2017 21:07:23 Europe/London] PHP Warning:  array_filter() expects parameter 1 to be array, null given in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_lib.php on line 283
+[10-Jul-2017 21:07:23 Europe/London] PHP Warning:  Invalid argument supplied for foreach() in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_lib.php on line 287
+[10-Jul-2017 21:07:23 Europe/London] PHP Notice:  Undefined offset: 2 in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_lib.php on line 423
+[10-Jul-2017 21:12:23 Europe/London] PHP Notice:  Undefined variable: riesgos_consulta in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_server_processing.php on line 59
+[10-Jul-2017 21:12:23 Europe/London] PHP Warning:  array_filter() expects parameter 1 to be array, null given in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_lib.php on line 283
+[10-Jul-2017 21:12:23 Europe/London] PHP Warning:  Invalid argument supplied for foreach() in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_lib.php on line 287
+[10-Jul-2017 21:12:23 Europe/London] PHP Notice:  Undefined offset: 2 in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_lib.php on line 423
+[10-Jul-2017 21:12:38 Europe/London] PHP Notice:  Undefined variable: riesgos_consulta in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_server_processing.php on line 59
+[10-Jul-2017 21:12:38 Europe/London] PHP Warning:  array_filter() expects parameter 1 to be array, null given in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_lib.php on line 283
+[10-Jul-2017 21:12:38 Europe/London] PHP Warning:  Invalid argument supplied for foreach() in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_lib.php on line 287
+[10-Jul-2017 21:12:38 Europe/London] PHP Notice:  Undefined offset: 2 in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_lib.php on line 423
+[10-Jul-2017 21:15:58 Europe/London] PHP Notice:  Undefined variable: riesgos_consulta in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_server_processing.php on line 59
+[10-Jul-2017 21:15:58 Europe/London] PHP Warning:  array_filter() expects parameter 1 to be array, null given in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_lib.php on line 283
+[10-Jul-2017 21:15:58 Europe/London] PHP Warning:  Invalid argument supplied for foreach() in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_lib.php on line 287
+[10-Jul-2017 21:15:58 Europe/London] PHP Notice:  Undefined offset: 2 in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_lib.php on line 423
+[10-Jul-2017 21:16:24 Europe/London] PHP Notice:  Undefined variable: riesgos_consulta in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_server_processing.php on line 59
+[10-Jul-2017 21:16:24 Europe/London] PHP Warning:  array_filter() expects parameter 1 to be array, null given in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_lib.php on line 283
+[10-Jul-2017 21:16:24 Europe/London] PHP Warning:  Invalid argument supplied for foreach() in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_lib.php on line 287
+[10-Jul-2017 21:16:24 Europe/London] PHP Notice:  Undefined offset: 2 in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_lib.php on line 423
+[10-Jul-2017 21:35:08 Europe/London] PHP Notice:  Undefined variable: riesgos_consulta in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_server_processing.php on line 59
+[10-Jul-2017 21:35:08 Europe/London] PHP Warning:  array_filter() expects parameter 1 to be array, null given in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_lib.php on line 283
+[10-Jul-2017 21:35:08 Europe/London] PHP Warning:  Invalid argument supplied for foreach() in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_lib.php on line 287
+[10-Jul-2017 21:35:08 Europe/London] PHP Notice:  Undefined offset: 2 in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_lib.php on line 423
+[10-Jul-2017 21:35:33 Europe/London] PHP Notice:  Undefined variable: riesgos_consulta in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_server_processing.php on line 59
+[10-Jul-2017 21:35:33 Europe/London] PHP Warning:  array_filter() expects parameter 1 to be array, null given in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_lib.php on line 283
+[10-Jul-2017 21:35:33 Europe/London] PHP Warning:  Invalid argument supplied for foreach() in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_lib.php on line 287
+[10-Jul-2017 21:35:33 Europe/London] PHP Notice:  Undefined offset: 2 in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_lib.php on line 423
+[10-Jul-2017 22:14:54 Europe/London] PHP Notice:  Undefined variable: riesgos_consulta in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_server_processing.php on line 59
+[10-Jul-2017 22:14:54 Europe/London] PHP Warning:  array_filter() expects parameter 1 to be array, null given in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_lib.php on line 283
+[10-Jul-2017 22:14:54 Europe/London] PHP Warning:  Invalid argument supplied for foreach() in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_lib.php on line 287
+[10-Jul-2017 22:14:54 Europe/London] PHP Notice:  Undefined offset: 2 in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_lib.php on line 423
+[10-Jul-2017 22:15:03 Europe/London] PHP Warning:  array_push() expects parameter 1 to be array, null given in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_server_processing.php on line 47
+[10-Jul-2017 22:15:03 Europe/London] PHP Warning:  array_filter() expects parameter 1 to be array, null given in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_lib.php on line 283
+[10-Jul-2017 22:15:03 Europe/London] PHP Warning:  Invalid argument supplied for foreach() in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_lib.php on line 287
+[10-Jul-2017 22:15:03 Europe/London] PHP Notice:  Undefined offset: 2 in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_lib.php on line 423
+[10-Jul-2017 22:15:23 Europe/London] PHP Warning:  array_push() expects parameter 1 to be array, null given in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_server_processing.php on line 47
+[10-Jul-2017 22:15:23 Europe/London] PHP Warning:  array_push() expects parameter 1 to be array, null given in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_server_processing.php on line 47
+[10-Jul-2017 22:15:23 Europe/London] PHP Warning:  array_push() expects parameter 1 to be array, null given in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_server_processing.php on line 47
+[10-Jul-2017 22:15:23 Europe/London] PHP Warning:  array_push() expects parameter 1 to be array, null given in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_server_processing.php on line 47
+[10-Jul-2017 22:15:23 Europe/London] PHP Warning:  array_filter() expects parameter 1 to be array, null given in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_lib.php on line 283
+[10-Jul-2017 22:15:23 Europe/London] PHP Warning:  Invalid argument supplied for foreach() in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_lib.php on line 287
+[10-Jul-2017 22:15:23 Europe/London] PHP Notice:  Undefined offset: 2 in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_lib.php on line 423
+[10-Jul-2017 21:18:15 UTC] PHP Fatal error:  Uncaught Error: Call to a member function get_record_sql() on null in /home/ubuntu/workspace/blocks/ases/managers/lib/student_lib.php:133
+Stack trace:
+#0 /home/ubuntu/workspace/blocks/ases/managers/lib/student_lib.php(141): get_assigned_monitor(6)
+#1 {main}
+  thrown in /home/ubuntu/workspace/blocks/ases/managers/lib/student_lib.php on line 133
+[10-Jul-2017 21:18:20 UTC] PHP Fatal error:  Uncaught Error: Call to a member function get_record_sql() on null in /home/ubuntu/workspace/blocks/ases/managers/lib/student_lib.php:133
+Stack trace:
+#0 /home/ubuntu/workspace/blocks/ases/managers/lib/student_lib.php(141): get_assigned_monitor(6)
+#1 {main}
+  thrown in /home/ubuntu/workspace/blocks/ases/managers/lib/student_lib.php on line 133
+[10-Jul-2017 21:18:24 UTC] PHP Fatal error:  Uncaught Error: Call to a member function get_record_sql() on null in /home/ubuntu/workspace/blocks/ases/managers/lib/student_lib.php:133
+Stack trace:
+#0 /home/ubuntu/workspace/blocks/ases/managers/lib/student_lib.php(141): get_assigned_monitor(6)
+#1 {main}
+  thrown in /home/ubuntu/workspace/blocks/ases/managers/lib/student_lib.php on line 133
+[10-Jul-2017 21:18:26 UTC] PHP Fatal error:  Uncaught Error: Call to a member function get_record_sql() on null in /home/ubuntu/workspace/blocks/ases/managers/lib/student_lib.php:133
+Stack trace:
+#0 /home/ubuntu/workspace/blocks/ases/managers/lib/student_lib.php(141): get_assigned_monitor(6)
+#1 {main}
+  thrown in /home/ubuntu/workspace/blocks/ases/managers/lib/student_lib.php on line 133
+[11-Jul-2017 15:51:16 Europe/London] PHP Warning:  array_push() expects parameter 1 to be array, null given in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_server_processing.php on line 47
+[11-Jul-2017 15:51:16 Europe/London] PHP Warning:  array_push() expects parameter 1 to be array, null given in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_server_processing.php on line 47
+[11-Jul-2017 15:51:16 Europe/London] PHP Warning:  array_push() expects parameter 1 to be array, null given in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_server_processing.php on line 47
+[11-Jul-2017 15:51:16 Europe/London] PHP Warning:  array_push() expects parameter 1 to be array, null given in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_server_processing.php on line 47
+[11-Jul-2017 15:51:16 Europe/London] PHP Warning:  array_push() expects parameter 1 to be array, null given in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_server_processing.php on line 47
+[11-Jul-2017 15:51:16 Europe/London] PHP Warning:  array_push() expects parameter 1 to be array, null given in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_server_processing.php on line 47
+[11-Jul-2017 15:51:16 Europe/London] Default exception handler: Excepción - Call to undefined function consultInstance() Debug: 
+Error code: generalexceptionmessage
+* line 248 of /blocks/ases/managers/ases_report/asesreport_lib.php: Error thrown
+* line 59 of /blocks/ases/managers/ases_report/asesreport_server_processing.php: call to getUsersByPopulation()
+
+[11-Jul-2017 15:51:16 Europe/London] PHP Notice:  String [myfiles,core] is deprecated. Either you should no longer be using that string, or the string has been incorrectly deprecated, in which case you should report this as a bug. Please refer to https://docs.moodle.org/dev/String_deprecation<ul style="text-align: left" data-rel="backtrace"><li>line 390 of /lib/classes/string_manager_standard.php: call to debugging()</li><li>line 7023 of /lib/moodlelib.php: call to core_string_manager_standard->get_string()</li><li>line 61 of /theme/crispclone/layout/profileblock.php: call to get_string()</li><li>line 95 of /theme/crispclone/layout/header.php: call to require()</li><li>line 33 of /theme/crispclone/layout/columns1.php: call to require()</li><li>line 1110 of /lib/outputrenderers.php: call to include()</li><li>line 1040 of /lib/outputrenderers.php: call to core_renderer->render_page_layout()</li><li>line 2771 of /lib/outputrenderers.php: call to core_renderer->header()</li><li>line 1827 of /lib/setuplib.php: call to core_renderer->fatal_error()</li><li>line 388 in /home/ubuntu/workspace/lib/weblib.php on line 3095
+[11-Jul-2017 15:51:37 Europe/London] PHP Warning:  array_push() expects parameter 1 to be array, null given in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_server_processing.php on line 47
+[11-Jul-2017 15:51:37 Europe/London] Default exception handler: Excepción - Call to undefined function consultInstance() Debug: 
+Error code: generalexceptionmessage
+* line 248 of /blocks/ases/managers/ases_report/asesreport_lib.php: Error thrown
+* line 59 of /blocks/ases/managers/ases_report/asesreport_server_processing.php: call to getUsersByPopulation()
+
+[11-Jul-2017 15:51:37 Europe/London] PHP Notice:  String [myfiles,core] is deprecated. Either you should no longer be using that string, or the string has been incorrectly deprecated, in which case you should report this as a bug. Please refer to https://docs.moodle.org/dev/String_deprecation<ul style="text-align: left" data-rel="backtrace"><li>line 390 of /lib/classes/string_manager_standard.php: call to debugging()</li><li>line 7023 of /lib/moodlelib.php: call to core_string_manager_standard->get_string()</li><li>line 61 of /theme/crispclone/layout/profileblock.php: call to get_string()</li><li>line 95 of /theme/crispclone/layout/header.php: call to require()</li><li>line 33 of /theme/crispclone/layout/columns1.php: call to require()</li><li>line 1110 of /lib/outputrenderers.php: call to include()</li><li>line 1040 of /lib/outputrenderers.php: call to core_renderer->render_page_layout()</li><li>line 2771 of /lib/outputrenderers.php: call to core_renderer->header()</li><li>line 1827 of /lib/setuplib.php: call to core_renderer->fatal_error()</li><li>line 388 in /home/ubuntu/workspace/lib/weblib.php on line 3095
+[11-Jul-2017 18:21:51 UTC] PHP Fatal error:  Cannot redeclare send_email_to_user() (previously declared in /home/ubuntu/workspace/blocks/ases/managers/seguimiento_pilos/seguimientopilos_report.php:67) in /home/ubuntu/workspace/blocks/ases/managers/seguimiento_pilos/seguimientopilos_lib.php on line 213
+[11-Jul-2017 18:21:51 UTC] PHP Fatal error:  Cannot redeclare send_email_to_user() (previously declared in /home/ubuntu/workspace/blocks/ases/managers/seguimiento_pilos/seguimientopilos_report.php:67) in /home/ubuntu/workspace/blocks/ases/managers/seguimiento_pilos/seguimientopilos_lib.php on line 213
+[11-Jul-2017 18:21:51 UTC] PHP Fatal error:  Cannot redeclare send_email_to_user() (previously declared in /home/ubuntu/workspace/blocks/ases/managers/seguimiento_pilos/seguimientopilos_report.php:67) in /home/ubuntu/workspace/blocks/ases/managers/seguimiento_pilos/seguimientopilos_lib.php on line 213
+[11-Jul-2017 18:21:51 UTC] PHP Fatal error:  Cannot redeclare send_email_to_user() (previously declared in /home/ubuntu/workspace/blocks/ases/managers/seguimiento_pilos/seguimientopilos_report.php:67) in /home/ubuntu/workspace/blocks/ases/managers/seguimiento_pilos/seguimientopilos_lib.php on line 213
+[11-Jul-2017 18:21:51 UTC] PHP Fatal error:  Cannot redeclare send_email_to_user() (previously declared in /home/ubuntu/workspace/blocks/ases/managers/seguimiento_pilos/seguimientopilos_report.php:67) in /home/ubuntu/workspace/blocks/ases/managers/seguimiento_pilos/seguimientopilos_lib.php on line 213
+[11-Jul-2017 18:25:07 UTC] PHP Notice:  Trying to get property of non-object in /home/ubuntu/workspace/blocks/ases/managers/seguimiento_pilos/seguimientopilos_report.php on line 8
+[11-Jul-2017 18:25:45 UTC] PHP Notice:  Trying to get property of non-object in /home/ubuntu/workspace/blocks/ases/managers/seguimiento_pilos/seguimientopilos_report.php on line 13
+[11-Jul-2017 18:25:45 UTC] PHP Notice:  Trying to get property of non-object in /home/ubuntu/workspace/blocks/ases/managers/seguimiento_pilos/seguimientopilos_report.php on line 8
+[11-Jul-2017 18:25:45 UTC] PHP Notice:  Trying to get property of non-object in /home/ubuntu/workspace/blocks/ases/managers/seguimiento_pilos/seguimientopilos_report.php on line 18
+[11-Jul-2017 18:26:46 UTC] PHP Notice:  Trying to get property of non-object in /home/ubuntu/workspace/blocks/ases/managers/seguimiento_pilos/seguimientopilos_report.php on line 13
+[11-Jul-2017 18:26:46 UTC] PHP Notice:  Undefined variable: POST in /home/ubuntu/workspace/blocks/ases/managers/seguimiento_pilos/seguimientopilos_report.php on line 22
+[11-Jul-2017 18:26:46 UTC] PHP Notice:  Trying to get property of non-object in /home/ubuntu/workspace/blocks/ases/managers/seguimiento_pilos/seguimientopilos_report.php on line 8
+[11-Jul-2017 18:26:46 UTC] PHP Notice:  Undefined variable: POST in /home/ubuntu/workspace/blocks/ases/managers/seguimiento_pilos/seguimientopilos_report.php on line 22
+[11-Jul-2017 18:26:47 UTC] PHP Notice:  Undefined variable: POST in /home/ubuntu/workspace/blocks/ases/managers/seguimiento_pilos/seguimientopilos_report.php on line 22
+[11-Jul-2017 18:26:47 UTC] PHP Notice:  Trying to get property of non-object in /home/ubuntu/workspace/blocks/ases/managers/seguimiento_pilos/seguimientopilos_report.php on line 18
+[11-Jul-2017 18:26:47 UTC] PHP Notice:  Undefined variable: POST in /home/ubuntu/workspace/blocks/ases/managers/seguimiento_pilos/seguimientopilos_report.php on line 22
+[11-Jul-2017 18:26:47 UTC] PHP Notice:  Undefined variable: POST in /home/ubuntu/workspace/blocks/ases/managers/seguimiento_pilos/seguimientopilos_report.php on line 22
+[11-Jul-2017 18:28:17 UTC] PHP Notice:  Trying to get property of non-object in /home/ubuntu/workspace/blocks/ases/managers/seguimiento_pilos/seguimientopilos_report.php on line 13
+[11-Jul-2017 18:28:17 UTC] PHP Notice:  Trying to get property of non-object in /home/ubuntu/workspace/blocks/ases/managers/seguimiento_pilos/seguimientopilos_report.php on line 8
+[11-Jul-2017 18:28:17 UTC] PHP Fatal error:  Uncaught Error: Call to a member function get_records_sql() on null in /home/ubuntu/workspace/blocks/ases/managers/seguimiento_pilos/seguimientopilos_lib.php:21
+Stack trace:
+#0 /home/ubuntu/workspace/blocks/ases/managers/seguimiento_pilos/seguimientopilos_report.php(23): get_name_rol('', '19')
+#1 {main}
+  thrown in /home/ubuntu/workspace/blocks/ases/managers/seguimiento_pilos/seguimientopilos_lib.php on line 21
+[11-Jul-2017 18:28:18 UTC] PHP Notice:  Trying to get property of non-object in /home/ubuntu/workspace/blocks/ases/managers/seguimiento_pilos/seguimientopilos_report.php on line 18
+[11-Jul-2017 18:28:49 UTC] PHP Notice:  Trying to get property of non-object in /home/ubuntu/workspace/blocks/ases/managers/seguimiento_pilos/seguimientopilos_report.php on line 13
+[11-Jul-2017 18:28:49 UTC] PHP Notice:  Trying to get property of non-object in /home/ubuntu/workspace/blocks/ases/managers/seguimiento_pilos/seguimientopilos_report.php on line 8
+[11-Jul-2017 18:28:49 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function getNameRol() in /home/ubuntu/workspace/blocks/ases/managers/seguimiento_pilos/seguimientopilos_report.php:23
+Stack trace:
+#0 {main}
+  thrown in /home/ubuntu/workspace/blocks/ases/managers/seguimiento_pilos/seguimientopilos_report.php on line 23
+[11-Jul-2017 18:28:50 UTC] PHP Notice:  Trying to get property of non-object in /home/ubuntu/workspace/blocks/ases/managers/seguimiento_pilos/seguimientopilos_report.php on line 18
+[11-Jul-2017 18:29:24 UTC] PHP Notice:  Trying to get property of non-object in /home/ubuntu/workspace/blocks/ases/managers/seguimiento_pilos/seguimientopilos_report.php on line 13
+[11-Jul-2017 18:29:24 UTC] PHP Notice:  Trying to get property of non-object in /home/ubuntu/workspace/blocks/ases/managers/seguimiento_pilos/seguimientopilos_report.php on line 8
+[11-Jul-2017 18:29:24 UTC] PHP Fatal error:  Uncaught Error: Call to a member function get_records_sql() on null in /home/ubuntu/workspace/blocks/ases/managers/seguimiento_pilos/seguimientopilos_lib.php:22
+Stack trace:
+#0 /home/ubuntu/workspace/blocks/ases/managers/seguimiento_pilos/seguimientopilos_report.php(23): get_name_rol('', '19')
+#1 {main}
+  thrown in /home/ubuntu/workspace/blocks/ases/managers/seguimiento_pilos/seguimientopilos_lib.php on line 22
+[11-Jul-2017 18:29:25 UTC] PHP Notice:  Trying to get property of non-object in /home/ubuntu/workspace/blocks/ases/managers/seguimiento_pilos/seguimientopilos_report.php on line 18
+[11-Jul-2017 18:29:50 UTC] PHP Notice:  Trying to get property of non-object in /home/ubuntu/workspace/blocks/ases/managers/seguimiento_pilos/seguimientopilos_report.php on line 13
+[11-Jul-2017 18:29:50 UTC] PHP Notice:  Trying to get property of non-object in /home/ubuntu/workspace/blocks/ases/managers/seguimiento_pilos/seguimientopilos_report.php on line 8
+[11-Jul-2017 18:29:50 UTC] PHP Fatal error:  Uncaught Error: Call to a member function get_records_sql() on null in /home/ubuntu/workspace/blocks/ases/managers/seguimiento_pilos/seguimientopilos_lib.php:21
+Stack trace:
+#0 /home/ubuntu/workspace/blocks/ases/managers/seguimiento_pilos/seguimientopilos_report.php(23): get_name_rol('', '19')
+#1 {main}
+  thrown in /home/ubuntu/workspace/blocks/ases/managers/seguimiento_pilos/seguimientopilos_lib.php on line 21
+[11-Jul-2017 18:29:50 UTC] PHP Notice:  Trying to get property of non-object in /home/ubuntu/workspace/blocks/ases/managers/seguimiento_pilos/seguimientopilos_report.php on line 18
+[11-Jul-2017 18:30:25 UTC] PHP Notice:  Trying to get property of non-object in /home/ubuntu/workspace/blocks/ases/managers/seguimiento_pilos/seguimientopilos_report.php on line 13
+[11-Jul-2017 18:30:25 UTC] PHP Notice:  Trying to get property of non-object in /home/ubuntu/workspace/blocks/ases/managers/seguimiento_pilos/seguimientopilos_report.php on line 8
+[11-Jul-2017 18:30:26 UTC] PHP Fatal error:  Uncaught Error: Call to a member function get_records_sql() on null in /home/ubuntu/workspace/blocks/ases/managers/seguimiento_pilos/seguimientopilos_lib.php:21
+Stack trace:
+#0 /home/ubuntu/workspace/blocks/ases/managers/seguimiento_pilos/seguimientopilos_report.php(23): get_name_rol('', '19')
+#1 {main}
+  thrown in /home/ubuntu/workspace/blocks/ases/managers/seguimiento_pilos/seguimientopilos_lib.php on line 21
+[11-Jul-2017 18:30:26 UTC] PHP Notice:  Trying to get property of non-object in /home/ubuntu/workspace/blocks/ases/managers/seguimiento_pilos/seguimientopilos_report.php on line 18
+[11-Jul-2017 18:32:23 UTC] PHP Notice:  Trying to get property of non-object in /home/ubuntu/workspace/blocks/ases/managers/seguimiento_pilos/seguimientopilos_report.php on line 13
+[11-Jul-2017 18:32:24 UTC] PHP Notice:  Trying to get property of non-object in /home/ubuntu/workspace/blocks/ases/managers/seguimiento_pilos/seguimientopilos_report.php on line 8
+[11-Jul-2017 18:32:24 UTC] PHP Fatal error:  Uncaught Error: Call to a member function get_records_sql() on null in /home/ubuntu/workspace/blocks/ases/managers/seguimiento_pilos/seguimientopilos_lib.php:22
+Stack trace:
+#0 /home/ubuntu/workspace/blocks/ases/managers/seguimiento_pilos/seguimientopilos_report.php(23): get_name_rol('', '19')
+#1 {main}
+  thrown in /home/ubuntu/workspace/blocks/ases/managers/seguimiento_pilos/seguimientopilos_lib.php on line 22
+[11-Jul-2017 18:32:24 UTC] PHP Notice:  Trying to get property of non-object in /home/ubuntu/workspace/blocks/ases/managers/seguimiento_pilos/seguimientopilos_report.php on line 18
+[11-Jul-2017 18:32:52 UTC] PHP Notice:  Trying to get property of non-object in /home/ubuntu/workspace/blocks/ases/managers/seguimiento_pilos/seguimientopilos_report.php on line 13
+[11-Jul-2017 18:32:52 UTC] PHP Notice:  Trying to get property of non-object in /home/ubuntu/workspace/blocks/ases/managers/seguimiento_pilos/seguimientopilos_report.php on line 8
+[11-Jul-2017 18:32:52 UTC] PHP Fatal error:  Uncaught Error: Call to a member function get_records_sql() on null in /home/ubuntu/workspace/blocks/ases/managers/seguimiento_pilos/seguimientopilos_lib.php:21
+Stack trace:
+#0 /home/ubuntu/workspace/blocks/ases/managers/seguimiento_pilos/seguimientopilos_report.php(23): get_name_rol('', '19')
+#1 {main}
+  thrown in /home/ubuntu/workspace/blocks/ases/managers/seguimiento_pilos/seguimientopilos_lib.php on line 21
+[11-Jul-2017 18:32:52 UTC] PHP Notice:  Trying to get property of non-object in /home/ubuntu/workspace/blocks/ases/managers/seguimiento_pilos/seguimientopilos_report.php on line 18
+[11-Jul-2017 18:33:46 UTC] PHP Notice:  Trying to get property of non-object in /home/ubuntu/workspace/blocks/ases/managers/seguimiento_pilos/seguimientopilos_report.php on line 13
+[11-Jul-2017 18:33:46 UTC] PHP Notice:  Undefined variable: POST in /home/ubuntu/workspace/blocks/ases/managers/seguimiento_pilos/seguimientopilos_report.php on line 21
+[11-Jul-2017 18:33:47 UTC] PHP Notice:  Trying to get property of non-object in /home/ubuntu/workspace/blocks/ases/managers/seguimiento_pilos/seguimientopilos_report.php on line 8
+[11-Jul-2017 18:33:47 UTC] PHP Notice:  Undefined variable: POST in /home/ubuntu/workspace/blocks/ases/managers/seguimiento_pilos/seguimientopilos_report.php on line 21
+[11-Jul-2017 18:33:47 UTC] PHP Notice:  Undefined variable: POST in /home/ubuntu/workspace/blocks/ases/managers/seguimiento_pilos/seguimientopilos_report.php on line 21
+[11-Jul-2017 18:33:47 UTC] PHP Fatal error:  Uncaught Error: Call to a member function get_records_sql() on null in /home/ubuntu/workspace/blocks/ases/managers/seguimiento_pilos/seguimientopilos_lib.php:21
+Stack trace:
+#0 /home/ubuntu/workspace/blocks/ases/managers/seguimiento_pilos/seguimientopilos_report.php(24): get_name_rol('', '19')
+#1 {main}
+  thrown in /home/ubuntu/workspace/blocks/ases/managers/seguimiento_pilos/seguimientopilos_lib.php on line 21
+[11-Jul-2017 18:33:47 UTC] PHP Notice:  Trying to get property of non-object in /home/ubuntu/workspace/blocks/ases/managers/seguimiento_pilos/seguimientopilos_report.php on line 18
+[11-Jul-2017 18:33:47 UTC] PHP Notice:  Undefined variable: POST in /home/ubuntu/workspace/blocks/ases/managers/seguimiento_pilos/seguimientopilos_report.php on line 21
+[11-Jul-2017 18:33:47 UTC] PHP Notice:  Undefined variable: POST in /home/ubuntu/workspace/blocks/ases/managers/seguimiento_pilos/seguimientopilos_report.php on line 21
+[11-Jul-2017 18:34:45 UTC] PHP Notice:  Trying to get property of non-object in /home/ubuntu/workspace/blocks/ases/managers/seguimiento_pilos/seguimientopilos_report.php on line 13
+[11-Jul-2017 18:34:45 UTC] PHP Notice:  Trying to get property of non-object in /home/ubuntu/workspace/blocks/ases/managers/seguimiento_pilos/seguimientopilos_report.php on line 8
+[11-Jul-2017 18:34:45 UTC] PHP Fatal error:  Uncaught Error: Call to a member function get_records_sql() on null in /home/ubuntu/workspace/blocks/ases/managers/seguimiento_pilos/seguimientopilos_lib.php:22
+Stack trace:
+#0 /home/ubuntu/workspace/blocks/ases/managers/seguimiento_pilos/seguimientopilos_report.php(23): get_name_rol('', '19')
+#1 {main}
+  thrown in /home/ubuntu/workspace/blocks/ases/managers/seguimiento_pilos/seguimientopilos_lib.php on line 22
+[11-Jul-2017 18:34:46 UTC] PHP Notice:  Trying to get property of non-object in /home/ubuntu/workspace/blocks/ases/managers/seguimiento_pilos/seguimientopilos_report.php on line 18
+[11-Jul-2017 18:35:19 UTC] PHP Notice:  Trying to get property of non-object in /home/ubuntu/workspace/blocks/ases/managers/seguimiento_pilos/seguimientopilos_report.php on line 13
+[11-Jul-2017 18:35:19 UTC] PHP Notice:  Trying to get property of non-object in /home/ubuntu/workspace/blocks/ases/managers/seguimiento_pilos/seguimientopilos_report.php on line 8
+[11-Jul-2017 18:35:19 UTC] PHP Fatal error:  Uncaught Error: Call to a member function get_records_sql() on null in /home/ubuntu/workspace/blocks/ases/managers/seguimiento_pilos/seguimientopilos_lib.php:22
+Stack trace:
+#0 /home/ubuntu/workspace/blocks/ases/managers/seguimiento_pilos/seguimientopilos_report.php(23): get_name_rol('', '19')
+#1 {main}
+  thrown in /home/ubuntu/workspace/blocks/ases/managers/seguimiento_pilos/seguimientopilos_lib.php on line 22
+[11-Jul-2017 18:35:19 UTC] PHP Notice:  Trying to get property of non-object in /home/ubuntu/workspace/blocks/ases/managers/seguimiento_pilos/seguimientopilos_report.php on line 18
+[11-Jul-2017 18:35:47 UTC] PHP Notice:  Trying to get property of non-object in /home/ubuntu/workspace/blocks/ases/managers/seguimiento_pilos/seguimientopilos_report.php on line 13
+[11-Jul-2017 18:35:47 UTC] PHP Notice:  Trying to get property of non-object in /home/ubuntu/workspace/blocks/ases/managers/seguimiento_pilos/seguimientopilos_report.php on line 8
+[11-Jul-2017 18:35:47 UTC] PHP Fatal error:  Uncaught Error: Call to a member function get_records_sql() on null in /home/ubuntu/workspace/blocks/ases/managers/seguimiento_pilos/seguimientopilos_lib.php:22
+Stack trace:
+#0 /home/ubuntu/workspace/blocks/ases/managers/seguimiento_pilos/seguimientopilos_report.php(23): get_name_rol('', '19')
+#1 {main}
+  thrown in /home/ubuntu/workspace/blocks/ases/managers/seguimiento_pilos/seguimientopilos_lib.php on line 22
+[11-Jul-2017 18:35:47 UTC] PHP Notice:  Trying to get property of non-object in /home/ubuntu/workspace/blocks/ases/managers/seguimiento_pilos/seguimientopilos_report.php on line 18
+[11-Jul-2017 18:40:17 UTC] PHP Notice:  Trying to get property of non-object in /home/ubuntu/workspace/blocks/ases/managers/seguimiento_pilos/seguimientopilos_report.php on line 13
+[11-Jul-2017 18:40:17 UTC] PHP Notice:  Undefined variable: POST in /home/ubuntu/workspace/blocks/ases/managers/seguimiento_pilos/seguimientopilos_report.php on line 21
+[11-Jul-2017 18:40:18 UTC] PHP Notice:  Trying to get property of non-object in /home/ubuntu/workspace/blocks/ases/managers/seguimiento_pilos/seguimientopilos_report.php on line 8
+[11-Jul-2017 18:40:18 UTC] PHP Notice:  Undefined variable: POST in /home/ubuntu/workspace/blocks/ases/managers/seguimiento_pilos/seguimientopilos_report.php on line 21
+[11-Jul-2017 18:40:18 UTC] PHP Notice:  Undefined variable: POST in /home/ubuntu/workspace/blocks/ases/managers/seguimiento_pilos/seguimientopilos_report.php on line 21
+[11-Jul-2017 18:40:18 UTC] PHP Fatal error:  Uncaught Error: Call to a member function get_records_sql() on null in /home/ubuntu/workspace/blocks/ases/managers/seguimiento_pilos/seguimientopilos_lib.php:22
+Stack trace:
+#0 /home/ubuntu/workspace/blocks/ases/managers/seguimiento_pilos/seguimientopilos_report.php(24): get_name_rol('es ', '19')
+#1 {main}
+  thrown in /home/ubuntu/workspace/blocks/ases/managers/seguimiento_pilos/seguimientopilos_lib.php on line 22
+[11-Jul-2017 18:40:18 UTC] PHP Notice:  Trying to get property of non-object in /home/ubuntu/workspace/blocks/ases/managers/seguimiento_pilos/seguimientopilos_report.php on line 18
+[11-Jul-2017 18:40:18 UTC] PHP Notice:  Undefined variable: POST in /home/ubuntu/workspace/blocks/ases/managers/seguimiento_pilos/seguimientopilos_report.php on line 21
+[11-Jul-2017 18:40:18 UTC] PHP Notice:  Undefined variable: POST in /home/ubuntu/workspace/blocks/ases/managers/seguimiento_pilos/seguimientopilos_report.php on line 21
+[11-Jul-2017 18:40:50 UTC] PHP Notice:  Trying to get property of non-object in /home/ubuntu/workspace/blocks/ases/managers/seguimiento_pilos/seguimientopilos_report.php on line 13
+[11-Jul-2017 18:40:50 UTC] PHP Notice:  Undefined variable: POST in /home/ubuntu/workspace/blocks/ases/managers/seguimiento_pilos/seguimientopilos_report.php on line 21
+[11-Jul-2017 18:40:50 UTC] PHP Notice:  Trying to get property of non-object in /home/ubuntu/workspace/blocks/ases/managers/seguimiento_pilos/seguimientopilos_report.php on line 8
+[11-Jul-2017 18:40:50 UTC] PHP Notice:  Undefined variable: POST in /home/ubuntu/workspace/blocks/ases/managers/seguimiento_pilos/seguimientopilos_report.php on line 21
+[11-Jul-2017 18:40:51 UTC] PHP Notice:  Undefined variable: POST in /home/ubuntu/workspace/blocks/ases/managers/seguimiento_pilos/seguimientopilos_report.php on line 21
+[11-Jul-2017 18:40:51 UTC] PHP Fatal error:  Uncaught Error: Call to a member function get_records_sql() on null in /home/ubuntu/workspace/blocks/ases/managers/seguimiento_pilos/seguimientopilos_lib.php:22
+Stack trace:
+#0 /home/ubuntu/workspace/blocks/ases/managers/seguimiento_pilos/seguimientopilos_report.php(24): get_name_rol('es ', '19')
+#1 {main}
+  thrown in /home/ubuntu/workspace/blocks/ases/managers/seguimiento_pilos/seguimientopilos_lib.php on line 22
+[11-Jul-2017 18:40:51 UTC] PHP Notice:  Trying to get property of non-object in /home/ubuntu/workspace/blocks/ases/managers/seguimiento_pilos/seguimientopilos_report.php on line 18
+[11-Jul-2017 18:40:51 UTC] PHP Notice:  Undefined variable: POST in /home/ubuntu/workspace/blocks/ases/managers/seguimiento_pilos/seguimientopilos_report.php on line 21
+[11-Jul-2017 18:40:51 UTC] PHP Notice:  Undefined variable: POST in /home/ubuntu/workspace/blocks/ases/managers/seguimiento_pilos/seguimientopilos_report.php on line 21
+[11-Jul-2017 23:23:55 Europe/London] PHP Notice:  Undefined offset: 2 in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_lib.php on line 424
+[11-Jul-2017 23:24:13 Europe/London] PHP Notice:  Undefined offset: 2 in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_lib.php on line 424
+[11-Jul-2017 23:24:16 Europe/London] PHP Notice:  Undefined offset: 2 in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_lib.php on line 424
