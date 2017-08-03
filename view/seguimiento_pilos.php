@@ -29,11 +29,12 @@
 require_once(__DIR__ . '/../../../config.php');
 require_once($CFG->libdir.'/adminlib.php');
 require_once('../managers/query.php');
+require_once('../managers/instance_management/instance_lib.php');
+
 include('../lib.php');
-// include("../classes/output/index.php");
 include("../classes/output/renderer.php");
 
-global $PAGE;
+global $PAGE, $USER;
 
 $title = "estudiantes";
 $pagetitle = $title;
@@ -43,12 +44,15 @@ $blockid = required_param('instanceid', PARAM_INT);
 require_login($courseid, false);
 
 //se culta si la instancia ya está registrada
-if(!consultInstance($blockid)){
+if(!consult_instance($blockid)){
     header("Location: /blocks/ases/view/instanceconfiguration.php?courseid=$courseid&instanceid=$blockid");
 }
 
 $contextcourse = context_course::instance($courseid);
 $contextblock =  context_block::instance($blockid);
+
+//Se obtiene el rol del usuario que se encuentra conectado.
+echo get_name_rol($USER->id,$blockid);
 
 $url = new moodle_url("/blocks/ases/view/seguimiento_pilos.php",array('courseid' => $courseid, 'instanceid' => $blockid));
 
@@ -64,6 +68,7 @@ $PAGE->set_title($title);
 //$PAGE->requires->css('/blocks/ases/style/grade_categories.css', true);
 $PAGE->requires->css('/blocks/ases/style/styles_pilos.css', true);
 $PAGE->requires->css('/blocks/ases/style/bootstrap_pilos.css', true);
+$PAGE->requires->css('/blocks/ases/style/datepicker.css', true);
 $PAGE->requires->css('/blocks/ases/style/bootstrap_pilos.min.css', true);
 $PAGE->requires->css('/blocks/ases/style/sweetalert.css', true);
 $PAGE->requires->css('/blocks/ases/style/round-about_pilos.css', true);
@@ -81,33 +86,11 @@ $PAGE->requires->css('/blocks/ases/style/sweetalert.css', true);
 //$PAGE->requires->css('/theme/base/style/core.css',true);
 
 
-//$PAGE->requires->js('/blocks/ases/js/seguimiento_pilos.js', true);
-// $PAGE->requires->js('/blocks/ases/js/jquery-2.2.4.min.js', true);
-// $PAGE->requires->js('/blocks/ases/js/DataTables-1.10.12/js/jquery.dataTables.js', true);
-// $PAGE->requires->js('/blocks/ases/js/DataTables-1.10.12/js/jquery.dataTables.min.js', true);
-// $PAGE->requires->js('/blocks/ases/js/DataTables-1.10.12/js/dataTables.jqueryui.min.js', true);
-// $PAGE->requires->js('/blocks/ases/js/DataTables-1.10.12/js/dataTables.bootstrap.min.js', true);
-// $PAGE->requires->js('/blocks/ases/js/DataTables-1.10.12/js/dataTables.bootstrap.js', true);
-// $PAGE->requires->js('/blocks/ases/js/DataTables-1.10.12/js/dataTables.tableTools.js', true);
-// $PAGE->requires->js('/blocks/ases/js/DataTables-1.10.12/js/dataTables.tableTools.min.js', true);
-// $PAGE->requires->js('/blocks/ases/js/DataTables-1.10.12/js/NewJSExport/buttons.flash.min.js', true);
-// $PAGE->requires->js('/blocks/ases/js/DataTables-1.10.12/js/NewJSExport/buttons.html5.min.js', true);
-// $PAGE->requires->js('/blocks/ases/js/DataTables-1.10.12/js/NewJSExport/buttons.print.min.js', true);
-// $PAGE->requires->js('/blocks/ases/js/DataTables-1.10.12/js/NewJSExport/dataTables.buttons.min.js', true);
-// $PAGE->requires->js('/blocks/ases/js/DataTables-1.10.12/js/NewJSExport/jszip.min.js', true);
-// $PAGE->requires->js('/blocks/ases/js/DataTables-1.10.12/js/NewJSExport/pdfmake.min.js', true);
-// $PAGE->requires->js('/blocks/ases/js/DataTables-1.10.12/js/NewJSExport/vfs_fonts.js', true);
-//$PAGE->requires->js('/blocks/ases/js/main.js', true);
-//$PAGE->requires->js('/blocks/ases/js/checkrole.js', true);
-//$PAGE->requires->js('/blocks/ases/js/bootstrap.js', true);
-//$PAGE->requires->js('/blocks/ases/js/bootstrap.min.js', true);
-//$PAGE->requires->js('/blocks/ases/js/sweetalert-dev.js', true);
-
 
 $output = $PAGE->get_renderer('block_ases');
 
 echo $output->header();
 //echo $output->standard_head_html(); 
-$seguimiento_pilos_page = new \block_ases\output\seguimiento_pilos_page('Some text');
+$seguimiento_pilos_page = new \block_ases\output\seguimiento_pilos_page();
 echo $output->render($seguimiento_pilos_page);
 echo $output->footer();

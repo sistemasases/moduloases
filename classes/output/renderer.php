@@ -16,7 +16,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Talentos Pilos
+ * Ases
  *
  * @author     Iader E. García Gómez
  * @package    block_generalreports
@@ -68,9 +68,9 @@ class renderer extends plugin_renderer_base {
         return parent::render_from_template('block_ases/psicosocial_users', $data);
     }
     
-    public function render_instanceconfiguration_page($page){
+    public function render_instance_configuration_page($page){
         $data = $page->export_for_template($this);
-        return parent::render_from_template('block_ases/instanceconfiguration', $data);
+        return parent::render_from_template('block_ases/instance_configuration', $data);
     }
     
     public function render_grade_categories_page($page){
@@ -98,5 +98,23 @@ class renderer extends plugin_renderer_base {
      return parent::render_from_template('block_ases/permisos_rol', $data);
     }
     
+    public function render_create_action_page($page){
+     $data = $page->export_for_template($this);
+     return parent::render_from_template('block_ases/create_action', $data);
+    }
     
+    public function render_create_view_page($page){
+     $data = $page->export_for_template($this);
+     return parent::render_from_template('block_ases/create_view', $data);
+    }
+    
+    public function render_no_tiene_permisos_page($page){
+        $data = $page->export_for_template($this);
+        return parent::render_from_template('block_ases/no_tiene_permisos', $data);
+    }
+    
+    public function render_calificador_page($page){
+        $data = $page->export_for_template($this);
+        return parent::render_from_template('block_ases/calificador', $data);
+    }
 }

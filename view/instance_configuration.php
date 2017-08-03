@@ -16,7 +16,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * General Reports
+ * Ases Block
  *
  * @author     Iader E. García Gómez
  * @package    block_ases
@@ -27,11 +27,11 @@
 // Standard GPL and phpdocs
 require_once(__DIR__ . '/../../../config.php');
 require_once($CFG->libdir.'/adminlib.php');
-require_once('../managers/query.php');
-include('../lib.php');
+require_once('../managers/lib/lib.php');
+
 global $PAGE;
 
-include("../classes/output/instanceconfiguration_page.php");
+include("../classes/output/instance_configuration_page.php");
 include("../classes/output/renderer.php");
 
 // Set up the page.
@@ -42,20 +42,32 @@ $blockid = required_param('instanceid', PARAM_INT);
 
 require_login($courseid, false);
 
-
 $contextcourse = context_course::instance($courseid);
 $contextblock =  context_block::instance($blockid);
 
 require_capability('block/ases:configurateintance', $contextblock);
 
-$url = new moodle_url("/blocks/ases/view/instanceconfiguration.php",array('courseid' => $courseid, 'instanceid' => $blockid));
-//$url =  $CFG->wwwroot."/blocks/ases/view/index.php?courseid=".$courseid."&instanceid=".$blockid;
+$url = new moodle_url("/blocks/ases/view/instance_configuration.php",array('courseid' => $courseid, 'instanceid' => $blockid));
 
 //Configuracion de la navegacion
 $coursenode = $PAGE->navigation->find($courseid, navigation_node::TYPE_COURSE);
 $blocknode = navigation_node::create($title,$url, null, 'block', $blockid);
 $coursenode->add_node($blocknode);
 $blocknode->make_active();
+
+$object_to_render = new stdClass();
+
+// Carga programas académicos
+$array_programs = load_programs_cali();
+
+$html_programs = ""; 
+
+foreach($array_programs as $program){
+    $html_programs .= "<option value = '$program->cod_univalle'>$program->cod_univalle - $program->nombre </option>";
+}
+
+$object_to_render->programs = $html_programs;
+
 
 $PAGE->set_url($url);
 $PAGE->set_title($title);
@@ -77,27 +89,9 @@ $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/jquery.dataTables.c
 $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/jquery.dataTables.min.css', true);
 $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/jquery.dataTables_themeroller.css', true);
 
-$PAGE->requires->js('/blocks/ases/js/jquery-2.2.4.min.js', true);
-$PAGE->requires->js('/blocks/ases/js/bootstrap.js', true);
-$PAGE->requires->js('/blocks/ases/js/bootstrap.min.js', true);
-$PAGE->requires->js('/blocks/ases/js/sweetalert-dev.js', true);
-//$PAGE->requires->js('/blocks/ases/js/checkrole.js', true);
-$PAGE->requires->js('/blocks/ases/js/jquery.validate.min.js', true);
-$PAGE->requires->js('/blocks/ases/js/npm.js', true);
-$PAGE->requires->js('/blocks/ases/js/main.js', true);
-$PAGE->requires->js('/blocks/ases/js/DataTables-1.10.12/js/jquery.dataTables.js', true);
-$PAGE->requires->js('/blocks/ases/js/DataTables-1.10.12/js/jquery.dataTables.min.js', true);
-$PAGE->requires->js('/blocks/ases/js/DataTables-1.10.12/js/dataTables.jqueryui.min.js', true);
-$PAGE->requires->js('/blocks/ases/js/DataTables-1.10.12/js/dataTables.bootstrap.min.js', true);
-$PAGE->requires->js('/blocks/ases/js/DataTables-1.10.12/js/dataTables.bootstrap.js', true);
-$PAGE->requires->js('/blocks/ases/js/instance_configuration.js', true); 
-
-
 $output = $PAGE->get_renderer('block_ases');
 
-
-//echo $output->standard_head_html(); 
 echo $output->header();
-$index_page = new \block_ases\output\instanceconfiguration_page('Some text');
-echo $output->render($index_page);
+$instance_configuration_page = new \block_ases\output\instance_configuration_page($object_to_render);
+echo $output->render($instance_configuration_page);
 echo $output->footer();

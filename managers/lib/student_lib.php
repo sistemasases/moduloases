@@ -1,5 +1,7 @@
 <?php
 
+require_once(dirname(__FILE__). '/../../../../config.php');
+
 /**
  * Función que recupera los campos de usuario de la tabla {talentospilos_usuario}
  *
@@ -27,15 +29,55 @@ function get_ases_user($id){
 function get_id_user_moodle($id_student){
      
     global $DB;
-    
+
     $sql_query = "SELECT id FROM {user_info_field} WHERE shortname = 'idtalentos'";
     $id_field = $DB->get_record_sql($sql_query)->id;
     
     $sql_query = "SELECT userid FROM {user_info_data} WHERE fieldid = $id_field AND data = '$id_student'";
                   
     $id_user_moodle = $DB->get_record_sql($sql_query)->userid;
-    
+
     return $id_user_moodle;
+}
+
+/**
+ * Función que recupera el ID de la tabla usuario de Moodle dado el ID de la tabla {talentospilos_usuario}
+ * SI ESTE SE ENCUENTRA ACTIVO
+ *
+ * @see get_id_user_moodle_active($id_student)
+ * @param id_student --> id correspondiente a la tabla {talentospilos_usuario}
+ * @return id moodle
+ */
+function get_id_user_moodle_active($id_student){
+     
+    global $DB;
+
+
+    return $id_user_moodle;
+}
+
+/**
+ * Función que recupera el usuario ASES dado el código de estudiante asociado al nombre de usuario de Moodle
+ *
+ * @see get_ases_user_by_code($code)
+ * @param $username --> Código asociado al nombre de usuario de Moodle
+ * @return Array --> Campos de la tabla talentos usuario asociados al nombre de usuario de Moodle ingresado
+ */
+function get_ases_user_by_code($code){
+    
+    global $DB;
+    
+    $sql_query = "SELECT MAX(id) as id_moodle FROM {user} WHERE username LIKE '".$code."%';";
+
+    $id_moodle = $DB->get_record_sql($sql_query)->id_moodle;
+    
+    $id_ases = get_adds_fields_mi($id_moodle)->idtalentos;
+    
+    $sql_query = "SELECT *, (now() - fecha_nac)/365 AS age FROM {talentospilos_usuario} WHERE id =".$id_ases;
+    
+    $ases_user = $DB->get_record_sql($sql_query);
+    
+    return $ases_user;
 }
 
 /**
@@ -43,7 +85,7 @@ function get_id_user_moodle($id_student){
  *
  * @see get_adds_fields_mi($id_student)
  * @param id_student --> id correspondiente a la tabla {user}
- * @return Array
+ * @return stdClass --> campos adicionales del usuario moodle 
  */
  
 function get_adds_fields_mi($id_student){
@@ -55,11 +97,11 @@ function get_adds_fields_mi($id_student){
     
     $result = $DB->get_records_sql($sql_query);
      
-    $array_result = array();
-    array_push($array_result, $result['idtalentos']);
-    array_push($array_result, $result['idprograma']);
-    array_push($array_result, $result['estado']);
-
+    $array_result = new stdClass();
+    $array_result->idtalentos = $result['idtalentos']->data;
+    $array_result->idprograma = $result['idprograma']->data;
+    $array_result->estado = $result['estado']->data;
+    
     return $array_result;
 }
 
@@ -103,7 +145,6 @@ function get_faculty($id){
  * @param $id_student --> id correspondiente a la facultad
  * @return Cohort Array
  */
- 
 function get_cohort_student($id_student){
     
     global $DB;
@@ -124,7 +165,6 @@ function get_cohort_student($id_student){
  * @parameters $id_student int ID relacionado en la tabla {talentospilos_usuario}
  * @return Array --> Contiene los nombres, apellidos y el email del monitor asignado a un estudiante.
  */
-
 function get_assigned_monitor($id_student){
      
     global $DB;
@@ -149,7 +189,6 @@ function get_assigned_monitor($id_student){
 * @parameters $id_student int Id relacionado en la tabla {talentospilos_usuario}
 * @return Array --> Contiene los nombres, apellidos y el email del practicante asignado a un estudiante.
 */
-
 function get_assigned_pract($id_student){
      
      global $DB;
@@ -190,7 +229,7 @@ function get_assigned_pract($id_student){
          $id_trainee = $DB->get_record_sql($sql_query)->id_jefe; 
          
          if($id_trainee){
-            $sql_query = "SELECT id_jefe FROM {talentospilos_user_rol} WHERE id_usuario = ".$id_practicante.";";
+            $sql_query = "SELECT id_jefe FROM {talentospilos_user_rol} WHERE id_usuario = ".$id_trainee.";";
             $id_professional = $DB->get_record_sql($sql_query)->id_jefe;
          
             $sql_query = "SELECT firstname, lastname, email FROM {user} WHERE id = ".$id_professional.";";

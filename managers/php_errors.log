@@ -502,3 +502,479 @@ Stack trace:
 [11-Jul-2017 23:23:55 Europe/London] PHP Notice:  Undefined offset: 2 in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_lib.php on line 424
 [11-Jul-2017 23:24:13 Europe/London] PHP Notice:  Undefined offset: 2 in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_lib.php on line 424
 [11-Jul-2017 23:24:16 Europe/London] PHP Notice:  Undefined offset: 2 in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_lib.php on line 424
+[12-Jul-2017 21:51:23 UTC] PHP Warning:  require_once(/home/ubuntu/workspace/blocks/ases/managers/view_management/../../../config.php): failed to open stream: No such file or directory in /home/ubuntu/workspace/blocks/ases/managers/view_management/validate_profile_action.php on line 2
+[12-Jul-2017 21:51:23 UTC] PHP Fatal error:  require_once(): Failed opening required '/home/ubuntu/workspace/blocks/ases/managers/view_management/../../../config.php' (include_path='.:/usr/share/php') in /home/ubuntu/workspace/blocks/ases/managers/view_management/validate_profile_action.php on line 2
+[12-Jul-2017 21:53:35 UTC] PHP Warning:  require_once(/home/ubuntu/workspace/blocks/ases/managers/view_management/../../../config.php): failed to open stream: No such file or directory in /home/ubuntu/workspace/blocks/ases/managers/view_management/validate_profile_action.php on line 2
+[12-Jul-2017 21:53:35 UTC] PHP Fatal error:  require_once(): Failed opening required '/home/ubuntu/workspace/blocks/ases/managers/view_management/../../../config.php' (include_path='.:/usr/share/php') in /home/ubuntu/workspace/blocks/ases/managers/view_management/validate_profile_action.php on line 2
+[12-Jul-2017 21:54:03 UTC] PHP Notice:  Undefined index: id_accion in /home/ubuntu/workspace/blocks/ases/managers/view_management/validate_profile_action.php on line 5
+[12-Jul-2017 21:54:03 UTC] PHP Notice:  Undefined index: block in /home/ubuntu/workspace/blocks/ases/managers/view_management/validate_profile_action.php on line 6
+[12-Jul-2017 21:54:36 UTC] PHP Warning:  require_once(/home/ubuntu/workspace/blocks/ases/managers/view_management../../../../config.php): failed to open stream: No such file or directory in /home/ubuntu/workspace/blocks/ases/managers/view_management/validate_profile_action.php on line 2
+[12-Jul-2017 21:54:36 UTC] PHP Fatal error:  require_once(): Failed opening required '/home/ubuntu/workspace/blocks/ases/managers/view_management../../../../config.php' (include_path='.:/usr/share/php') in /home/ubuntu/workspace/blocks/ases/managers/view_management/validate_profile_action.php on line 2
+[12-Jul-2017 23:25:23 Europe/London] PHP Notice:  Undefined index: id_accion in /home/ubuntu/workspace/blocks/ases/managers/view_management/validate_profile_action.php on line 5
+[12-Jul-2017 23:25:23 Europe/London] PHP Notice:  Undefined index: block in /home/ubuntu/workspace/blocks/ases/managers/view_management/validate_profile_action.php on line 6
+[12-Jul-2017 23:27:51 Europe/London] PHP Notice:  Undefined index: id_accion in /home/ubuntu/workspace/blocks/ases/managers/view_management/validate_profile_action.php on line 5
+[12-Jul-2017 23:27:51 Europe/London] PHP Notice:  Undefined index: block in /home/ubuntu/workspace/blocks/ases/managers/view_management/validate_profile_action.php on line 6
+[13-Jul-2017 14:34:42 Europe/London] PHP Notice:  Undefined offset: 2 in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_lib.php on line 424
+[14-Jul-2017 16:26:43 UTC] PHP Parse error:  syntax error, unexpected ']' in /home/ubuntu/workspace/blocks/ases/managers/student_profile/studentprofile_serverproc.php on line 23
+[14-Jul-2017 16:28:52 UTC] PHP Parse error:  syntax error, unexpected '{', expecting ']' in /home/ubuntu/workspace/blocks/ases/managers/student_profile/studentprofile_serverproc.php on line 22
+[14-Jul-2017 16:31:32 UTC] PHP Parse error:  syntax error, unexpected '{', expecting ']' in /home/ubuntu/workspace/blocks/ases/managers/student_profile/studentprofile_serverproc.php on line 22
+[14-Jul-2017 16:31:32 UTC] PHP Parse error:  syntax error, unexpected '{', expecting ']' in /home/ubuntu/workspace/blocks/ases/managers/student_profile/studentprofile_serverproc.php on line 22
+[14-Jul-2017 17:38:34 Europe/London] PHP Notice:  Undefined offset: 2 in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_lib.php on line 424
+[14-Jul-2017 16:40:22 UTC] PHP Notice:  Undefined index: funct in /home/ubuntu/workspace/blocks/ases/managers/student_profile/studentprofile_serverproc.php on line 6
+[14-Jul-2017 17:40:52 Europe/London] PHP Notice:  Undefined offset: 2 in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_lib.php on line 424
+[14-Jul-2017 17:41:06 Europe/London] PHP Notice:  Undefined offset: 2 in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_lib.php on line 424
+[14-Jul-2017 17:41:16 Europe/London] PHP Notice:  Undefined offset: 2 in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_lib.php on line 424
+[14-Jul-2017 17:42:04 Europe/London] PHP Notice:  Undefined offset: 2 in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_lib.php on line 424
+[14-Jul-2017 17:42:35 Europe/London] PHP Notice:  Undefined offset: 2 in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_lib.php on line 424
+[14-Jul-2017 16:48:23 UTC] PHP Notice:  Array to string conversion in /home/ubuntu/workspace/blocks/ases/managers/student_profile/studentprofile_serverproc.php on line 26
+[14-Jul-2017 16:48:23 UTC] PHP Notice:  Undefined variable: column in /home/ubuntu/workspace/blocks/ases/managers/student_profile/studentprofile_serverproc.php on line 31
+[14-Jul-2017 16:48:23 UTC] PHP Notice:  Undefined variable: iduser in /home/ubuntu/workspace/blocks/ases/managers/student_profile/studentprofile_serverproc.php on line 36
+[14-Jul-2017 16:48:23 UTC] PHP Notice:  Trying to get property of non-object in /home/ubuntu/workspace/blocks/ases/managers/student_profile/studentprofile_serverproc.php on line 36
+[14-Jul-2017 16:48:50 UTC] PHP Notice:  Use of undefined constant value - assumed 'value' in /home/ubuntu/workspace/blocks/ases/managers/student_profile/studentprofile_serverproc.php on line 25
+[14-Jul-2017 16:48:50 UTC] PHP Notice:  Undefined variable: column in /home/ubuntu/workspace/blocks/ases/managers/student_profile/studentprofile_serverproc.php on line 31
+[14-Jul-2017 16:48:50 UTC] PHP Notice:  Undefined variable: iduser in /home/ubuntu/workspace/blocks/ases/managers/student_profile/studentprofile_serverproc.php on line 36
+[14-Jul-2017 16:48:50 UTC] PHP Notice:  Trying to get property of non-object in /home/ubuntu/workspace/blocks/ases/managers/student_profile/studentprofile_serverproc.php on line 36
+[14-Jul-2017 16:49:05 UTC] PHP Notice:  Undefined variable: column in /home/ubuntu/workspace/blocks/ases/managers/student_profile/studentprofile_serverproc.php on line 31
+[14-Jul-2017 16:49:05 UTC] PHP Notice:  Undefined variable: iduser in /home/ubuntu/workspace/blocks/ases/managers/student_profile/studentprofile_serverproc.php on line 36
+[14-Jul-2017 16:49:05 UTC] PHP Notice:  Trying to get property of non-object in /home/ubuntu/workspace/blocks/ases/managers/student_profile/studentprofile_serverproc.php on line 36
+[14-Jul-2017 17:04:54 UTC] PHP Fatal error:  Uncaught Error: Call to a member function update_record() on null in /home/ubuntu/workspace/blocks/ases/managers/student_profile/studentprofile_serverproc.php:42
+Stack trace:
+#0 /home/ubuntu/workspace/blocks/ases/managers/student_profile/studentprofile_serverproc.php(8): save_profile(Array)
+#1 {main}
+  thrown in /home/ubuntu/workspace/blocks/ases/managers/student_profile/studentprofile_serverproc.php on line 42
+[14-Jul-2017 17:05:46 UTC] PHP Fatal error:  Uncaught Error: Call to a member function update_record() on null in /home/ubuntu/workspace/blocks/ases/managers/student_profile/studentprofile_serverproc.php:42
+Stack trace:
+#0 /home/ubuntu/workspace/blocks/ases/managers/student_profile/studentprofile_serverproc.php(8): save_profile(Array)
+#1 {main}
+  thrown in /home/ubuntu/workspace/blocks/ases/managers/student_profile/studentprofile_serverproc.php on line 42
+[14-Jul-2017 17:06:37 UTC] PHP Warning:  require_once(/home/ubuntu/workspace/blocks/ases/managers/student_profile/../../../config.php): failed to open stream: No such file or directory in /home/ubuntu/workspace/blocks/ases/managers/student_profile/studentprofile_serverproc.php on line 2
+[14-Jul-2017 17:06:37 UTC] PHP Fatal error:  require_once(): Failed opening required '/home/ubuntu/workspace/blocks/ases/managers/student_profile/../../../config.php' (include_path='.:/usr/share/php') in /home/ubuntu/workspace/blocks/ases/managers/student_profile/studentprofile_serverproc.php on line 2
+[17-Jul-2017 17:18:18 Europe/London] PHP Notice:  Undefined offset: 2 in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_lib.php on line 424
+[17-Jul-2017 17:18:48 Europe/London] PHP Notice:  Undefined offset: 2 in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_lib.php on line 424
+[17-Jul-2017 18:12:11 Europe/London] PHP Notice:  Undefined offset: 2 in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_lib.php on line 424
+[17-Jul-2017 17:14:35 UTC] PHP Fatal error:  Cannot redeclare save_status_icetex() (previously declared in /home/ubuntu/workspace/blocks/ases/managers/student_profile/studentprofile_serverproc.php:84) in /home/ubuntu/workspace/blocks/ases/managers/student_profile/studentprofile_serverproc.php on line 137
+[17-Jul-2017 17:15:01 UTC] PHP Fatal error:  Cannot redeclare save_status_icetex() (previously declared in /home/ubuntu/workspace/blocks/ases/managers/student_profile/studentprofile_serverproc.php:84) in /home/ubuntu/workspace/blocks/ases/managers/student_profile/studentprofile_serverproc.php on line 137
+[19-Jul-2017 16:54:15 UTC] PHP Parse error:  syntax error, unexpected '$prog' (T_VARIABLE) in /home/ubuntu/workspace/blocks/ases/managers/grade_categories/grade_categories_lib.php on line 24
+[19-Jul-2017 16:54:27 UTC] PHP Fatal error:  Uncaught Error: Call to a member function get_record_sql() on null in /home/ubuntu/workspace/blocks/ases/managers/grade_categories/grade_categories_lib.php:24
+Stack trace:
+#0 /home/ubuntu/workspace/blocks/ases/managers/grade_categories/grade_categories_lib.php(29): get_courses(19)
+#1 {main}
+  thrown in /home/ubuntu/workspace/blocks/ases/managers/grade_categories/grade_categories_lib.php on line 24
+[19-Jul-2017 16:55:19 UTC] PHP Fatal error:  Uncaught Error: Call to a member function get_record_sql() on null in /home/ubuntu/workspace/blocks/ases/managers/grade_categories/grade_categories_lib.php:24
+Stack trace:
+#0 /home/ubuntu/workspace/blocks/ases/managers/grade_categories/grade_categories_lib.php(29): get_courses(19)
+#1 {main}
+  thrown in /home/ubuntu/workspace/blocks/ases/managers/grade_categories/grade_categories_lib.php on line 24
+[19-Jul-2017 16:55:35 UTC] PHP Warning:  require_once(/home/ubuntu/workspace/blocks/ases/managers/grade_categories/../../../config.php): failed to open stream: No such file or directory in /home/ubuntu/workspace/blocks/ases/managers/grade_categories/grade_categories_lib.php on line 5
+[19-Jul-2017 16:55:35 UTC] PHP Fatal error:  require_once(): Failed opening required '/home/ubuntu/workspace/blocks/ases/managers/grade_categories/../../../config.php' (include_path='.:/usr/share/php') in /home/ubuntu/workspace/blocks/ases/managers/grade_categories/grade_categories_lib.php on line 5
+[19-Jul-2017 16:57:23 UTC] PHP Warning:  require_once(/home/ubuntu/workspace/blocks/ases/managers/grade_categories/../../../config.php): failed to open stream: No such file or directory in /home/ubuntu/workspace/blocks/ases/managers/grade_categories/grade_categories_lib.php on line 5
+[19-Jul-2017 16:57:23 UTC] PHP Fatal error:  require_once(): Failed opening required '/home/ubuntu/workspace/blocks/ases/managers/grade_categories/../../../config.php' (include_path='.:/usr/share/php') in /home/ubuntu/workspace/blocks/ases/managers/grade_categories/grade_categories_lib.php on line 5
+[19-Jul-2017 16:57:34 UTC] PHP Fatal error:  Cannot redeclare get_courses() (previously declared in /home/ubuntu/workspace/blocks/ases/managers/grade_categories/grade_categories_lib.php:16) in /home/ubuntu/workspace/lib/datalib.php on line 609
+[19-Jul-2017 17:38:47 UTC] PHP Fatal error:  Uncaught Error: Call to a member function get_record_sql() on null in /home/ubuntu/workspace/blocks/ases/managers/lib/student_lib.php:53
+Stack trace:
+#0 /home/ubuntu/workspace/blocks/ases/managers/lib/student_lib.php(66): get_ases_user_by_code('1522006')
+#1 {main}
+  thrown in /home/ubuntu/workspace/blocks/ases/managers/lib/student_lib.php on line 53
+[19-Jul-2017 17:39:46 UTC] PHP Fatal error:  Uncaught Error: Call to a member function get_record_sql() on null in /home/ubuntu/workspace/blocks/ases/managers/lib/student_lib.php:53
+Stack trace:
+#0 /home/ubuntu/workspace/blocks/ases/managers/lib/student_lib.php(66): get_ases_user_by_code('1522006')
+#1 {main}
+  thrown in /home/ubuntu/workspace/blocks/ases/managers/lib/student_lib.php on line 53
+[19-Jul-2017 17:39:49 UTC] PHP Fatal error:  Uncaught Error: Call to a member function get_record_sql() on null in /home/ubuntu/workspace/blocks/ases/managers/lib/student_lib.php:53
+Stack trace:
+#0 /home/ubuntu/workspace/blocks/ases/managers/lib/student_lib.php(66): get_ases_user_by_code('1522006')
+#1 {main}
+  thrown in /home/ubuntu/workspace/blocks/ases/managers/lib/student_lib.php on line 53
+[19-Jul-2017 17:39:49 UTC] PHP Fatal error:  Uncaught Error: Call to a member function get_record_sql() on null in /home/ubuntu/workspace/blocks/ases/managers/lib/student_lib.php:53
+Stack trace:
+#0 /home/ubuntu/workspace/blocks/ases/managers/lib/student_lib.php(66): get_ases_user_by_code('1522006')
+#1 {main}
+  thrown in /home/ubuntu/workspace/blocks/ases/managers/lib/student_lib.php on line 53
+[19-Jul-2017 17:39:50 UTC] PHP Fatal error:  Uncaught Error: Call to a member function get_record_sql() on null in /home/ubuntu/workspace/blocks/ases/managers/lib/student_lib.php:53
+Stack trace:
+#0 /home/ubuntu/workspace/blocks/ases/managers/lib/student_lib.php(66): get_ases_user_by_code('1522006')
+#1 {main}
+  thrown in /home/ubuntu/workspace/blocks/ases/managers/lib/student_lib.php on line 53
+[19-Jul-2017 17:39:58 UTC] PHP Fatal error:  Uncaught Error: Call to a member function get_record_sql() on null in /home/ubuntu/workspace/blocks/ases/managers/lib/student_lib.php:53
+Stack trace:
+#0 /home/ubuntu/workspace/blocks/ases/managers/lib/student_lib.php(66): get_ases_user_by_code('1522006')
+#1 {main}
+  thrown in /home/ubuntu/workspace/blocks/ases/managers/lib/student_lib.php on line 53
+[19-Jul-2017 17:39:58 UTC] PHP Fatal error:  Uncaught Error: Call to a member function get_record_sql() on null in /home/ubuntu/workspace/blocks/ases/managers/lib/student_lib.php:53
+Stack trace:
+#0 /home/ubuntu/workspace/blocks/ases/managers/lib/student_lib.php(66): get_ases_user_by_code('1522006')
+#1 {main}
+  thrown in /home/ubuntu/workspace/blocks/ases/managers/lib/student_lib.php on line 53
+[19-Jul-2017 17:39:58 UTC] PHP Fatal error:  Uncaught Error: Call to a member function get_record_sql() on null in /home/ubuntu/workspace/blocks/ases/managers/lib/student_lib.php:53
+Stack trace:
+#0 /home/ubuntu/workspace/blocks/ases/managers/lib/student_lib.php(66): get_ases_user_by_code('1522006')
+#1 {main}
+  thrown in /home/ubuntu/workspace/blocks/ases/managers/lib/student_lib.php on line 53
+[19-Jul-2017 17:40:03 UTC] PHP Fatal error:  Uncaught Error: Call to a member function get_record_sql() on null in /home/ubuntu/workspace/blocks/ases/managers/lib/student_lib.php:53
+Stack trace:
+#0 /home/ubuntu/workspace/blocks/ases/managers/lib/student_lib.php(66): get_ases_user_by_code('1522006')
+#1 {main}
+  thrown in /home/ubuntu/workspace/blocks/ases/managers/lib/student_lib.php on line 53
+[19-Jul-2017 17:40:04 UTC] PHP Fatal error:  Uncaught Error: Call to a member function get_record_sql() on null in /home/ubuntu/workspace/blocks/ases/managers/lib/student_lib.php:53
+Stack trace:
+#0 /home/ubuntu/workspace/blocks/ases/managers/lib/student_lib.php(66): get_ases_user_by_code('1522006')
+#1 {main}
+  thrown in /home/ubuntu/workspace/blocks/ases/managers/lib/student_lib.php on line 53
+[19-Jul-2017 17:40:04 UTC] PHP Fatal error:  Uncaught Error: Call to a member function get_record_sql() on null in /home/ubuntu/workspace/blocks/ases/managers/lib/student_lib.php:53
+Stack trace:
+#0 /home/ubuntu/workspace/blocks/ases/managers/lib/student_lib.php(66): get_ases_user_by_code('1522006')
+#1 {main}
+  thrown in /home/ubuntu/workspace/blocks/ases/managers/lib/student_lib.php on line 53
+[19-Jul-2017 17:40:04 UTC] PHP Fatal error:  Uncaught Error: Call to a member function get_record_sql() on null in /home/ubuntu/workspace/blocks/ases/managers/lib/student_lib.php:53
+Stack trace:
+#0 /home/ubuntu/workspace/blocks/ases/managers/lib/student_lib.php(66): get_ases_user_by_code('1522006')
+#1 {main}
+  thrown in /home/ubuntu/workspace/blocks/ases/managers/lib/student_lib.php on line 53
+[19-Jul-2017 17:40:04 UTC] PHP Fatal error:  Uncaught Error: Call to a member function get_record_sql() on null in /home/ubuntu/workspace/blocks/ases/managers/lib/student_lib.php:53
+Stack trace:
+#0 /home/ubuntu/workspace/blocks/ases/managers/lib/student_lib.php(66): get_ases_user_by_code('1522006')
+#1 {main}
+  thrown in /home/ubuntu/workspace/blocks/ases/managers/lib/student_lib.php on line 53
+[19-Jul-2017 17:40:05 UTC] PHP Fatal error:  Uncaught Error: Call to a member function get_record_sql() on null in /home/ubuntu/workspace/blocks/ases/managers/lib/student_lib.php:53
+Stack trace:
+#0 /home/ubuntu/workspace/blocks/ases/managers/lib/student_lib.php(66): get_ases_user_by_code('1522006')
+#1 {main}
+  thrown in /home/ubuntu/workspace/blocks/ases/managers/lib/student_lib.php on line 53
+[19-Jul-2017 17:40:47 UTC] PHP Fatal error:  Uncaught Error: Call to a member function get_record_sql() on null in /home/ubuntu/workspace/blocks/ases/managers/lib/student_lib.php:55
+Stack trace:
+#0 /home/ubuntu/workspace/blocks/ases/managers/lib/student_lib.php(68): get_ases_user_by_code('1522006')
+#1 {main}
+  thrown in /home/ubuntu/workspace/blocks/ases/managers/lib/student_lib.php on line 55
+[19-Jul-2017 17:41:10 UTC] PHP Fatal error:  Uncaught Error: Call to a member function get_record_sql() on null in /home/ubuntu/workspace/blocks/ases/managers/lib/student_lib.php:54
+Stack trace:
+#0 /home/ubuntu/workspace/blocks/ases/managers/lib/student_lib.php(69): get_ases_user_by_code('1522006')
+#1 {main}
+  thrown in /home/ubuntu/workspace/blocks/ases/managers/lib/student_lib.php on line 54
+[19-Jul-2017 17:41:11 UTC] PHP Fatal error:  Uncaught Error: Call to a member function get_record_sql() on null in /home/ubuntu/workspace/blocks/ases/managers/lib/student_lib.php:54
+Stack trace:
+#0 /home/ubuntu/workspace/blocks/ases/managers/lib/student_lib.php(69): get_ases_user_by_code('1522006')
+#1 {main}
+  thrown in /home/ubuntu/workspace/blocks/ases/managers/lib/student_lib.php on line 54
+[19-Jul-2017 17:41:37 UTC] PHP Fatal error:  Uncaught Error: Call to a member function get_record_sql() on null in /home/ubuntu/workspace/blocks/ases/managers/lib/student_lib.php:54
+Stack trace:
+#0 /home/ubuntu/workspace/blocks/ases/managers/lib/student_lib.php(69): get_ases_user_by_code('1522006')
+#1 {main}
+  thrown in /home/ubuntu/workspace/blocks/ases/managers/lib/student_lib.php on line 54
+[19-Jul-2017 17:42:33 UTC] PHP Fatal error:  Uncaught Error: Call to a member function get_record_sql() on null in /home/ubuntu/workspace/blocks/ases/managers/lib/student_lib.php:54
+Stack trace:
+#0 /home/ubuntu/workspace/blocks/ases/managers/lib/student_lib.php(69): get_ases_user_by_code('1522006')
+#1 {main}
+  thrown in /home/ubuntu/workspace/blocks/ases/managers/lib/student_lib.php on line 54
+[19-Jul-2017 17:42:34 UTC] PHP Fatal error:  Uncaught Error: Call to a member function get_record_sql() on null in /home/ubuntu/workspace/blocks/ases/managers/lib/student_lib.php:54
+Stack trace:
+#0 /home/ubuntu/workspace/blocks/ases/managers/lib/student_lib.php(69): get_ases_user_by_code('1522006')
+#1 {main}
+  thrown in /home/ubuntu/workspace/blocks/ases/managers/lib/student_lib.php on line 54
+[19-Jul-2017 17:42:35 UTC] PHP Fatal error:  Uncaught Error: Call to a member function get_record_sql() on null in /home/ubuntu/workspace/blocks/ases/managers/lib/student_lib.php:54
+Stack trace:
+#0 /home/ubuntu/workspace/blocks/ases/managers/lib/student_lib.php(69): get_ases_user_by_code('1522006')
+#1 {main}
+  thrown in /home/ubuntu/workspace/blocks/ases/managers/lib/student_lib.php on line 54
+[19-Jul-2017 17:42:44 UTC] PHP Fatal error:  Uncaught Error: Call to a member function get_record_sql() on null in /home/ubuntu/workspace/blocks/ases/managers/lib/student_lib.php:55
+Stack trace:
+#0 /home/ubuntu/workspace/blocks/ases/managers/lib/student_lib.php(70): get_ases_user_by_code('1522006')
+#1 {main}
+  thrown in /home/ubuntu/workspace/blocks/ases/managers/lib/student_lib.php on line 55
+[19-Jul-2017 17:43:22 UTC] PHP Fatal error:  Uncaught Error: Call to a member function get_record_sql() on null in /home/ubuntu/workspace/blocks/ases/managers/lib/student_lib.php:55
+Stack trace:
+#0 /home/ubuntu/workspace/blocks/ases/managers/lib/student_lib.php(70): get_ases_user_by_code('1522006')
+#1 {main}
+  thrown in /home/ubuntu/workspace/blocks/ases/managers/lib/student_lib.php on line 55
+[19-Jul-2017 17:43:23 UTC] PHP Fatal error:  Uncaught Error: Call to a member function get_record_sql() on null in /home/ubuntu/workspace/blocks/ases/managers/lib/student_lib.php:55
+Stack trace:
+#0 /home/ubuntu/workspace/blocks/ases/managers/lib/student_lib.php(70): get_ases_user_by_code('1522006')
+#1 {main}
+  thrown in /home/ubuntu/workspace/blocks/ases/managers/lib/student_lib.php on line 55
+[19-Jul-2017 17:43:23 UTC] PHP Fatal error:  Uncaught Error: Call to a member function get_record_sql() on null in /home/ubuntu/workspace/blocks/ases/managers/lib/student_lib.php:55
+Stack trace:
+#0 /home/ubuntu/workspace/blocks/ases/managers/lib/student_lib.php(70): get_ases_user_by_code('1522006')
+#1 {main}
+  thrown in /home/ubuntu/workspace/blocks/ases/managers/lib/student_lib.php on line 55
+[19-Jul-2017 17:43:23 UTC] PHP Fatal error:  Uncaught Error: Call to a member function get_record_sql() on null in /home/ubuntu/workspace/blocks/ases/managers/lib/student_lib.php:55
+Stack trace:
+#0 /home/ubuntu/workspace/blocks/ases/managers/lib/student_lib.php(70): get_ases_user_by_code('1522006')
+#1 {main}
+  thrown in /home/ubuntu/workspace/blocks/ases/managers/lib/student_lib.php on line 55
+[19-Jul-2017 17:43:24 UTC] PHP Fatal error:  Uncaught Error: Call to a member function get_record_sql() on null in /home/ubuntu/workspace/blocks/ases/managers/lib/student_lib.php:55
+Stack trace:
+#0 /home/ubuntu/workspace/blocks/ases/managers/lib/student_lib.php(70): get_ases_user_by_code('1522006')
+#1 {main}
+  thrown in /home/ubuntu/workspace/blocks/ases/managers/lib/student_lib.php on line 55
+[19-Jul-2017 17:43:24 UTC] PHP Fatal error:  Uncaught Error: Call to a member function get_record_sql() on null in /home/ubuntu/workspace/blocks/ases/managers/lib/student_lib.php:55
+Stack trace:
+#0 /home/ubuntu/workspace/blocks/ases/managers/lib/student_lib.php(70): get_ases_user_by_code('1522006')
+#1 {main}
+  thrown in /home/ubuntu/workspace/blocks/ases/managers/lib/student_lib.php on line 55
+[19-Jul-2017 17:43:24 UTC] PHP Fatal error:  Uncaught Error: Call to a member function get_record_sql() on null in /home/ubuntu/workspace/blocks/ases/managers/lib/student_lib.php:55
+Stack trace:
+#0 /home/ubuntu/workspace/blocks/ases/managers/lib/student_lib.php(70): get_ases_user_by_code('1522006')
+#1 {main}
+  thrown in /home/ubuntu/workspace/blocks/ases/managers/lib/student_lib.php on line 55
+[19-Jul-2017 18:43:58 Europe/London] Default exception handler: Detectado un error de codificación, debe ser corregido por un programador: PHP catchable fatal error Debug: Object of class stdClass could not be converted to string
+Error code: codingerror
+* line 426 of /lib/setuplib.php: coding_exception thrown
+* line 87 of /blocks/ases/managers/lib/student_lib.php: call to default_error_handler()
+* line 61 of /blocks/ases/managers/lib/student_lib.php: call to get_adds_fields_mi()
+* line 72 of /blocks/ases/managers/lib/student_lib.php: call to get_ases_user_by_code()
+
+[19-Jul-2017 18:44:58 Europe/London] PHP Notice:  Undefined index: idtalentos in /home/ubuntu/workspace/blocks/ases/managers/lib/student_lib.php on line 60
+[19-Jul-2017 18:44:58 Europe/London] Default exception handler: Error al leer de la base de datos Debug: ERROR:  syntax error at end of input
+LINE 1: SELECT * FROM mdl_talentospilos_usuario WHERE id =
+                                                          ^
+SELECT * FROM mdl_talentospilos_usuario WHERE id =
+[array (
+)]
+Error code: dmlreadexception
+* line 474 of /lib/dml/moodle_database.php: dml_read_exception thrown
+* line 242 of /lib/dml/pgsql_native_moodle_database.php: call to moodle_database->query_end()
+* line 776 of /lib/dml/pgsql_native_moodle_database.php: call to pgsql_native_moodle_database->query_end()
+* line 1527 of /lib/dml/moodle_database.php: call to pgsql_native_moodle_database->get_records_sql()
+* line 62 of /blocks/ases/managers/lib/student_lib.php: call to moodle_database->get_record_sql()
+* line 69 of /blocks/ases/managers/lib/student_lib.php: call to get_ases_user_by_code()
+
+[19-Jul-2017 18:45:05 Europe/London] PHP Notice:  Undefined index: idtalentos in /home/ubuntu/workspace/blocks/ases/managers/lib/student_lib.php on line 60
+[19-Jul-2017 18:45:05 Europe/London] Default exception handler: Error al leer de la base de datos Debug: ERROR:  syntax error at end of input
+LINE 1: SELECT * FROM mdl_talentospilos_usuario WHERE id =
+                                                          ^
+SELECT * FROM mdl_talentospilos_usuario WHERE id =
+[array (
+)]
+Error code: dmlreadexception
+* line 474 of /lib/dml/moodle_database.php: dml_read_exception thrown
+* line 242 of /lib/dml/pgsql_native_moodle_database.php: call to moodle_database->query_end()
+* line 776 of /lib/dml/pgsql_native_moodle_database.php: call to pgsql_native_moodle_database->query_end()
+* line 1527 of /lib/dml/moodle_database.php: call to pgsql_native_moodle_database->get_records_sql()
+* line 62 of /blocks/ases/managers/lib/student_lib.php: call to moodle_database->get_record_sql()
+* line 69 of /blocks/ases/managers/lib/student_lib.php: call to get_ases_user_by_code()
+
+[19-Jul-2017 18:45:46 Europe/London] PHP Notice:  Undefined index: idtalentos in /home/ubuntu/workspace/blocks/ases/managers/lib/student_lib.php on line 62
+[19-Jul-2017 18:45:46 Europe/London] Default exception handler: Error al leer de la base de datos Debug: ERROR:  syntax error at end of input
+LINE 1: SELECT * FROM mdl_talentospilos_usuario WHERE id =
+                                                          ^
+SELECT * FROM mdl_talentospilos_usuario WHERE id =
+[array (
+)]
+Error code: dmlreadexception
+* line 474 of /lib/dml/moodle_database.php: dml_read_exception thrown
+* line 242 of /lib/dml/pgsql_native_moodle_database.php: call to moodle_database->query_end()
+* line 776 of /lib/dml/pgsql_native_moodle_database.php: call to pgsql_native_moodle_database->query_end()
+* line 1527 of /lib/dml/moodle_database.php: call to pgsql_native_moodle_database->get_records_sql()
+* line 64 of /blocks/ases/managers/lib/student_lib.php: call to moodle_database->get_record_sql()
+* line 71 of /blocks/ases/managers/lib/student_lib.php: call to get_ases_user_by_code()
+
+[19-Jul-2017 18:46:11 Europe/London] PHP Notice:  Undefined variable: id_moodle in /home/ubuntu/workspace/blocks/ases/managers/lib/student_lib.php on line 55
+[19-Jul-2017 18:46:11 Europe/London] PHP Notice:  Undefined index: idtalentos in /home/ubuntu/workspace/blocks/ases/managers/lib/student_lib.php on line 63
+[19-Jul-2017 18:46:11 Europe/London] Default exception handler: Error al leer de la base de datos Debug: ERROR:  syntax error at end of input
+LINE 1: SELECT * FROM mdl_talentospilos_usuario WHERE id =
+                                                          ^
+SELECT * FROM mdl_talentospilos_usuario WHERE id =
+[array (
+)]
+Error code: dmlreadexception
+* line 474 of /lib/dml/moodle_database.php: dml_read_exception thrown
+* line 242 of /lib/dml/pgsql_native_moodle_database.php: call to moodle_database->query_end()
+* line 776 of /lib/dml/pgsql_native_moodle_database.php: call to pgsql_native_moodle_database->query_end()
+* line 1527 of /lib/dml/moodle_database.php: call to pgsql_native_moodle_database->get_records_sql()
+* line 65 of /blocks/ases/managers/lib/student_lib.php: call to moodle_database->get_record_sql()
+* line 72 of /blocks/ases/managers/lib/student_lib.php: call to get_ases_user_by_code()
+
+[19-Jul-2017 18:48:02 Europe/London] PHP Notice:  Undefined index: idtalentos in /home/ubuntu/workspace/blocks/ases/managers/lib/student_lib.php on line 65
+[19-Jul-2017 18:48:02 Europe/London] Default exception handler: Error al leer de la base de datos Debug: ERROR:  syntax error at end of input
+LINE 1: SELECT * FROM mdl_talentospilos_usuario WHERE id =
+                                                          ^
+SELECT * FROM mdl_talentospilos_usuario WHERE id =
+[array (
+)]
+Error code: dmlreadexception
+* line 474 of /lib/dml/moodle_database.php: dml_read_exception thrown
+* line 242 of /lib/dml/pgsql_native_moodle_database.php: call to moodle_database->query_end()
+* line 776 of /lib/dml/pgsql_native_moodle_database.php: call to pgsql_native_moodle_database->query_end()
+* line 1527 of /lib/dml/moodle_database.php: call to pgsql_native_moodle_database->get_records_sql()
+* line 67 of /blocks/ases/managers/lib/student_lib.php: call to moodle_database->get_record_sql()
+* line 74 of /blocks/ases/managers/lib/student_lib.php: call to get_ases_user_by_code()
+
+[19-Jul-2017 18:51:17 Europe/London] Default exception handler: Excepción - Call to undefined function get_records_sql() Debug: 
+Error code: generalexceptionmessage
+* line 77 of /blocks/ases/managers/grade_categories/grade_categories_lib.php: Error thrown
+* line 81 of /blocks/ases/managers/grade_categories/grade_categories_lib.php: call to get_courses_pilos()
+
+[19-Jul-2017 18:52:58 Europe/London] Default exception handler: Error al leer de la base de datos Debug: ERROR:  column "sp" does not exist
+LINE 42:                                   FOR 2) = SP))
+                                                    ^
+
+        SELECT DISTINCT curso.id,
+                        curso.fullname,
+                        curso.shortname,
+        
+          (SELECT concat_ws(' ',firstname,lastname) AS fullname
+           FROM
+             (SELECT usuario.firstname,
+                     usuario.lastname,
+                     userenrol.timecreated
+              FROM mdl_course cursoP
+              INNER JOIN mdl_context cont ON cont.instanceid = cursoP.id
+              INNER JOIN mdl_role_assignments rol ON cont.id = rol.contextid
+              INNER JOIN mdl_user usuario ON rol.userid = usuario.id
+              INNER JOIN mdl_enrol enrole ON cursoP.id = enrole.courseid
+              INNER JOIN mdl_user_enrolments userenrol ON (enrole.id = userenrol.enrolid
+                                                           AND usuario.id = userenrol.userid)
+              WHERE cont.contextlevel = 50
+                AND rol.roleid = 3
+                AND cursoP.id = curso.id
+              ORDER BY userenrol.timecreated ASC
+              LIMIT 1) AS subc) AS nombre_Profesor
+        FROM mdl_course curso
+        INNER JOIN mdl_enrol ROLE ON curso.id = role.courseid
+        INNER JOIN mdl_user_enrolments enrols ON enrols.enrolid = role.id
+        WHERE enrols.userid IN
+            (SELECT moodle_user.id
+             FROM mdl_user moodle_user
+             INNER JOIN mdl_user_info_data DATA ON moodle_user.id = data.userid
+             INNER JOIN mdl_user_info_field field ON field.id = data.fieldid
+             WHERE field.shortname = 'idtalentos'
+               AND data.data IN
+                 (SELECT CAST(id AS VARCHAR)
+                  FROM mdl_talentospilos_usuario)
+               AND moodle_user.id IN
+                 (SELECT user_m.id
+                  FROM mdl_user user_m
+                  INNER JOIN mdl_cohort_members memb ON user_m.id = memb.userid
+                  INNER JOIN mdl_cohort cohorte ON memb.cohortid = cohorte.id
+                  WHERE SUBSTRING(cohorte.idnumber
+                                  FROM 1
+                                  FOR 2) = SP))
+[array (
+)]
+Error code: dmlreadexception
+* line 474 of /lib/dml/moodle_database.php: dml_read_exception thrown
+* line 242 of /lib/dml/pgsql_native_moodle_database.php: call to moodle_database->query_end()
+* line 776 of /lib/dml/pgsql_native_moodle_database.php: call to pgsql_native_moodle_database->query_end()
+* line 77 of /blocks/ases/managers/grade_categories/grade_categories_lib.php: call to pgsql_native_moodle_database->get_records_sql()
+* line 81 of /blocks/ases/managers/grade_categories/grade_categories_lib.php: call to get_courses_pilos()
+
+[19-Jul-2017 20:38:44 UTC] PHP Parse error:  syntax error, unexpected '[', expecting ')' in /home/ubuntu/workspace/blocks/ases/managers/grade_categories/grade_categories_lib.php on line 82
+[25-Jul-2017 20:06:54 Europe/London] Default exception handler: Error al leer de la base de datos Debug: ERROR:  column "estado" does not exist
+LINE 24: ...number like '1008%' OR pc.idnumber LIKE 'SP%' AND estado = '...
+                                                              ^
+SELECT username,firstname,lastname,num_doc FROM mdl_cohort AS pc 
+            INNER JOIN (
+                SELECT * FROM mdl_cohort_members AS pcm 
+                INNER JOIN (
+                    SELECT * FROM (
+                        SELECT id AS id_1, * FROM (SELECT *, id AS id_user FROM mdl_user) AS userm 
+                        INNER JOIN (
+                            SELECT userid, CAST(d.data as int) as data 
+                            FROM mdl_user_info_data d 
+                            WHERE d.data <> '' 
+                            AND fieldid = (SELECT id FROM  mdl_user_info_field as f WHERE f.shortname ='idtalentos')
+                        ) AS field 
+                        ON userm. id_user = field.userid ) AS usermoodle 
+                    INNER JOIN mdl_talentospilos_usuario as usuario 
+                    ON usermoodle.data = usuario.id 
+                    WHERE usermoodle.id_user in (
+                        SELECT userid FROM mdl_user_info_data as d 
+                        INNER JOIN mdl_user_info_field as f 
+                        ON d.fieldid = f.id 
+                        WHERE f.shortname ='estado' 
+                        AND d.data ='ACTIVO')
+                    ) as usertm 
+                ON usertm.id_user = pcm.userid) as pcmuser 
+            ON pc.id = pcmuser.cohortid WHERE pc.idnumber like '1008%' OR pc.idnumber LIKE 'SP%' AND estado = 'ACTIVO';
+[array (
+)]
+Error code: dmlreadexception
+* line 474 of /lib/dml/moodle_database.php: dml_read_exception thrown
+* line 242 of /lib/dml/pgsql_native_moodle_database.php: call to moodle_database->query_end()
+* line 776 of /lib/dml/pgsql_native_moodle_database.php: call to pgsql_native_moodle_database->query_end()
+* line 373 of /blocks/ases/managers/ases_report/asesreport_lib.php: call to pgsql_native_moodle_database->get_records_sql()
+* line 62 of /blocks/ases/managers/ases_report/asesreport_server_processing.php: call to getUsersByPopulation()
+
+[25-Jul-2017 20:06:59 Europe/London] PHP Notice:  Undefined offset: 2 in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_lib.php on line 424
+[25-Jul-2017 20:11:45 Europe/London] PHP Notice:  Undefined offset: 2 in /home/ubuntu/workspace/blocks/ases/managers/ases_report/asesreport_lib.php on line 424
+[28-Jul-2017 17:13:53 Europe/London] Default exception handler: Error al leer de la base de datos Debug: ERROR:  column "pares" does not exist
+LINE 3: ...seguimiento.tipo ='' AND seguimiento.id_instancia=PARES  AND...
+                                                             ^
+SELECT *, seguimiento.id as id_seg 
+                FROM mdl_talentospilos_seguimiento AS seguimiento INNER JOIN mdl_talentospilos_seg_estudiante AS seg_estudiante  
+                                                ON seguimiento.id = seg_estudiante.id_seguimiento  where seguimiento.tipo ='' AND seguimiento.id_instancia=PARES  AND seg_estudiante.id_estudiante =2order by seguimiento.fecha desc;
+[array (
+)]
+Error code: dmlreadexception
+* line 474 of /lib/dml/moodle_database.php: dml_read_exception thrown
+* line 242 of /lib/dml/pgsql_native_moodle_database.php: call to moodle_database->query_end()
+* line 776 of /lib/dml/pgsql_native_moodle_database.php: call to pgsql_native_moodle_database->query_end()
+* line 91 of /blocks/ases/managers/student_profile/studentprofile_lib.php: call to pgsql_native_moodle_database->get_records_sql()
+* line 110 of /blocks/ases/managers/student_profile/studentprofile_lib.php: call to get_trackings_student()
+* line 193 of /blocks/ases/managers/student_profile/studentprofile_lib.php: call to get_tracking_group_by_semester()
+
+[31-Jul-2017 14:21:48 UTC] PHP Parse error:  syntax error, unexpected '}', expecting end of file in /home/ubuntu/workspace/blocks/ases/managers/student_profile/studentprofile_serverproc.php on line 24
+[31-Jul-2017 14:21:51 UTC] PHP Parse error:  syntax error, unexpected '}', expecting end of file in /home/ubuntu/workspace/blocks/ases/managers/student_profile/studentprofile_serverproc.php on line 24
+[31-Jul-2017 14:39:29 UTC] PHP Warning:  require_once(/home/ubuntu/workspace/blocks/ases/managers/seguimiento_grupal/../../../config.php): failed to open stream: No such file or directory in /home/ubuntu/workspace/blocks/ases/managers/seguimiento_grupal/seguimientogrupal_lib.php on line 2
+[31-Jul-2017 14:39:29 UTC] PHP Fatal error:  require_once(): Failed opening required '/home/ubuntu/workspace/blocks/ases/managers/seguimiento_grupal/../../../config.php' (include_path='.:/usr/share/php') in /home/ubuntu/workspace/blocks/ases/managers/seguimiento_grupal/seguimientogrupal_lib.php on line 2
+[31-Jul-2017 14:39:41 UTC] PHP Warning:  require_once(/home/ubuntu/workspace/blocks/ases/managers/seguimiento_grupal/../../../config.php): failed to open stream: No such file or directory in /home/ubuntu/workspace/blocks/ases/managers/seguimiento_grupal/seguimientogrupal_lib.php on line 2
+[31-Jul-2017 14:39:41 UTC] PHP Fatal error:  require_once(): Failed opening required '/home/ubuntu/workspace/blocks/ases/managers/seguimiento_grupal/../../../config.php' (include_path='.:/usr/share/php') in /home/ubuntu/workspace/blocks/ases/managers/seguimiento_grupal/seguimientogrupal_lib.php on line 2
+[31-Jul-2017 14:40:46 UTC] PHP Warning:  require_once(/home/ubuntu/workspace/blocks/ases/managers/seguimiento_grupal/../../../config.php): failed to open stream: No such file or directory in /home/ubuntu/workspace/blocks/ases/managers/seguimiento_grupal/seguimientogrupal_lib.php on line 2
+[31-Jul-2017 14:40:46 UTC] PHP Fatal error:  require_once(): Failed opening required '/home/ubuntu/workspace/blocks/ases/managers/seguimiento_grupal/../../../config.php' (include_path='.:/usr/share/php') in /home/ubuntu/workspace/blocks/ases/managers/seguimiento_grupal/seguimientogrupal_lib.php on line 2
+[31-Jul-2017 14:43:45 UTC] PHP Warning:  require_once(/home/ubuntu/workspace/blocks/ases/managers/seguimiento_grupal/../../../config.php): failed to open stream: No such file or directory in /home/ubuntu/workspace/blocks/ases/managers/seguimiento_grupal/seguimientogrupal_lib.php on line 2
+[31-Jul-2017 14:43:45 UTC] PHP Fatal error:  require_once(): Failed opening required '/home/ubuntu/workspace/blocks/ases/managers/seguimiento_grupal/../../../config.php' (include_path='.:/usr/share/php') in /home/ubuntu/workspace/blocks/ases/managers/seguimiento_grupal/seguimientogrupal_lib.php on line 2
+[31-Jul-2017 14:48:14 UTC] PHP Parse error:  syntax error, unexpected 'echo' (T_ECHO), expecting ';' in /home/ubuntu/workspace/blocks/ases/managers/seguimiento_grupal/seguimiento.php on line 67
+[31-Jul-2017 14:50:54 UTC] PHP Parse error:  syntax error, unexpected 'return' (T_RETURN) in /home/ubuntu/workspace/blocks/ases/managers/grade_categories/grade_categories_lib.php on line 168
+[31-Jul-2017 09:53:00 America/Bogota] PHP Notice:  Trying to get property of non-object in /home/ubuntu/workspace/blocks/ases/managers/seguimiento_grupal/seguimiento.php on line 81
+[31-Jul-2017 09:53:00 America/Bogota] PHP Fatal error:  Uncaught Error: Call to undefined function getEstudiantesSegGrupal() in /home/ubuntu/workspace/blocks/ases/managers/seguimiento_grupal/seguimiento.php:185
+Stack trace:
+#0 /home/ubuntu/workspace/blocks/ases/managers/seguimiento_grupal/seguimiento.php(25): upgradePares(1)
+#1 {main}
+  thrown in /home/ubuntu/workspace/blocks/ases/managers/seguimiento_grupal/seguimiento.php on line 185
+[31-Jul-2017 14:54:46 UTC] PHP Warning:  require_once(seguimientogrupalE_lib.php): failed to open stream: No such file or directory in /home/ubuntu/workspace/blocks/ases/managers/seguimiento_grupal/seguimiento.php on line 3
+[31-Jul-2017 14:54:46 UTC] PHP Fatal error:  require_once(): Failed opening required 'seguimientogrupalE_lib.php' (include_path='.:/usr/share/php') in /home/ubuntu/workspace/blocks/ases/managers/seguimiento_grupal/seguimiento.php on line 3
+[31-Jul-2017 16:01:01 Europe/London] PHP Warning:  require_once(/../MyException.php): failed to open stream: No such file or directory in /home/ubuntu/workspace/blocks/ases/managers/seguimiento_grupal/seguimientogrupal_lib.php on line 3
+[31-Jul-2017 16:01:01 Europe/London] PHP Fatal error:  require_once(): Failed opening required '/../MyException.php' (include_path='/home/ubuntu/workspace/lib/pear:.:/usr/share/php') in /home/ubuntu/workspace/blocks/ases/managers/seguimiento_grupal/seguimientogrupal_lib.php on line 3
+[31-Jul-2017 16:01:16 Europe/London] PHP Warning:  require(../../../../querylib.php): failed to open stream: No such file or directory in /home/ubuntu/workspace/blocks/ases/managers/grade_categories/grade_categories_lib.php on line 7
+[31-Jul-2017 16:01:16 Europe/London] PHP Fatal error:  require(): Failed opening required '../../../../querylib.php' (include_path='/home/ubuntu/workspace/lib/pear:.:/usr/share/php') in /home/ubuntu/workspace/blocks/ases/managers/grade_categories/grade_categories_lib.php on line 7
+[31-Jul-2017 16:01:54 Europe/London] PHP Warning:  require(../../../../querylib.php): failed to open stream: No such file or directory in /home/ubuntu/workspace/blocks/ases/managers/grade_categories/grade_categories_lib.php on line 7
+[31-Jul-2017 16:01:54 Europe/London] PHP Fatal error:  require(): Failed opening required '../../../../querylib.php' (include_path='/home/ubuntu/workspace/lib/pear:.:/usr/share/php') in /home/ubuntu/workspace/blocks/ases/managers/grade_categories/grade_categories_lib.php on line 7
+[31-Jul-2017 16:02:01 Europe/London] PHP Warning:  require_once(/../../../../config.php): failed to open stream: No such file or directory in /home/ubuntu/workspace/blocks/ases/managers/seguimiento_grupal/seguimientogrupal_lib.php on line 4
+[31-Jul-2017 16:02:01 Europe/London] PHP Fatal error:  require_once(): Failed opening required '/../../../../config.php' (include_path='/home/ubuntu/workspace/lib/pear:.:/usr/share/php') in /home/ubuntu/workspace/blocks/ases/managers/seguimiento_grupal/seguimientogrupal_lib.php on line 4
+[31-Jul-2017 16:22:06 Europe/London] PHP Warning:  require(../../../../querylib.php): failed to open stream: No such file or directory in /home/ubuntu/workspace/blocks/ases/managers/grade_categories/grade_categories_lib.php on line 7
+[31-Jul-2017 16:22:06 Europe/London] PHP Fatal error:  require(): Failed opening required '../../../../querylib.php' (include_path='/home/ubuntu/workspace/lib/pear:.:/usr/share/php') in /home/ubuntu/workspace/blocks/ases/managers/grade_categories/grade_categories_lib.php on line 7
+[31-Jul-2017 15:42:44 UTC] PHP Parse error:  syntax error, unexpected '}', expecting end of file in /home/ubuntu/workspace/blocks/ases/managers/student_profile/studentprofile_serverproc.php on line 24
+[31-Jul-2017 15:49:29 UTC] PHP Parse error:  syntax error, unexpected '}', expecting end of file in /home/ubuntu/workspace/blocks/ases/managers/student_profile/studentprofile_serverproc.php on line 24
+[31-Jul-2017 15:53:51 UTC] PHP Parse error:  syntax error, unexpected '}', expecting end of file in /home/ubuntu/workspace/blocks/ases/managers/student_profile/studentprofile_serverproc.php on line 24
+[31-Jul-2017 15:54:14 UTC] PHP Parse error:  syntax error, unexpected '}', expecting end of file in /home/ubuntu/workspace/blocks/ases/managers/student_profile/studentprofile_serverproc.php on line 24
+[31-Jul-2017 16:04:56 UTC] PHP Parse error:  syntax error, unexpected '}', expecting end of file in /home/ubuntu/workspace/blocks/ases/managers/student_profile/studentprofile_serverproc.php on line 24
+[31-Jul-2017 16:16:11 UTC] PHP Parse error:  syntax error, unexpected '}', expecting end of file in /home/ubuntu/workspace/blocks/ases/managers/student_profile/studentprofile_serverproc.php on line 24
+[31-Jul-2017 16:17:30 UTC] PHP Parse error:  syntax error, unexpected '}', expecting end of file in /home/ubuntu/workspace/blocks/ases/managers/student_profile/studentprofile_serverproc.php on line 24
+[31-Jul-2017 16:17:36 UTC] PHP Parse error:  syntax error, unexpected '}', expecting end of file in /home/ubuntu/workspace/blocks/ases/managers/student_profile/studentprofile_serverproc.php on line 24
+[31-Jul-2017 16:17:42 UTC] PHP Parse error:  syntax error, unexpected '}', expecting end of file in /home/ubuntu/workspace/blocks/ases/managers/student_profile/studentprofile_serverproc.php on line 24
+[31-Jul-2017 16:17:50 UTC] PHP Parse error:  syntax error, unexpected '}', expecting end of file in /home/ubuntu/workspace/blocks/ases/managers/student_profile/studentprofile_serverproc.php on line 24
+[31-Jul-2017 16:17:56 UTC] PHP Parse error:  syntax error, unexpected '}', expecting end of file in /home/ubuntu/workspace/blocks/ases/managers/student_profile/studentprofile_serverproc.php on line 24
+[31-Jul-2017 16:18:05 UTC] PHP Parse error:  syntax error, unexpected '}', expecting end of file in /home/ubuntu/workspace/blocks/ases/managers/student_profile/studentprofile_serverproc.php on line 24
+[31-Jul-2017 16:18:34 UTC] PHP Parse error:  syntax error, unexpected '}', expecting end of file in /home/ubuntu/workspace/blocks/ases/managers/student_profile/studentprofile_serverproc.php on line 24
+[31-Jul-2017 16:19:42 UTC] PHP Parse error:  syntax error, unexpected '}', expecting end of file in /home/ubuntu/workspace/blocks/ases/managers/student_profile/studentprofile_serverproc.php on line 24
+[31-Jul-2017 16:23:19 UTC] PHP Parse error:  syntax error, unexpected '}', expecting end of file in /home/ubuntu/workspace/blocks/ases/managers/student_profile/studentprofile_serverproc.php on line 24
+[31-Jul-2017 16:23:30 UTC] PHP Parse error:  syntax error, unexpected '}', expecting end of file in /home/ubuntu/workspace/blocks/ases/managers/student_profile/studentprofile_serverproc.php on line 24
+[31-Jul-2017 16:23:40 UTC] PHP Parse error:  syntax error, unexpected '}', expecting end of file in /home/ubuntu/workspace/blocks/ases/managers/student_profile/studentprofile_serverproc.php on line 24
+[31-Jul-2017 16:23:48 UTC] PHP Parse error:  syntax error, unexpected '}', expecting end of file in /home/ubuntu/workspace/blocks/ases/managers/student_profile/studentprofile_serverproc.php on line 24
+[31-Jul-2017 16:24:05 UTC] PHP Parse error:  syntax error, unexpected '}', expecting end of file in /home/ubuntu/workspace/blocks/ases/managers/student_profile/studentprofile_serverproc.php on line 24
+[31-Jul-2017 16:24:10 UTC] PHP Parse error:  syntax error, unexpected '}', expecting end of file in /home/ubuntu/workspace/blocks/ases/managers/student_profile/studentprofile_serverproc.php on line 24
+[31-Jul-2017 16:24:17 UTC] PHP Parse error:  syntax error, unexpected '}', expecting end of file in /home/ubuntu/workspace/blocks/ases/managers/student_profile/studentprofile_serverproc.php on line 24
+[31-Jul-2017 16:24:36 UTC] PHP Parse error:  syntax error, unexpected '}', expecting end of file in /home/ubuntu/workspace/blocks/ases/managers/student_profile/studentprofile_serverproc.php on line 24
+[31-Jul-2017 16:27:28 UTC] PHP Parse error:  syntax error, unexpected '}', expecting end of file in /home/ubuntu/workspace/blocks/ases/managers/student_profile/studentprofile_serverproc.php on line 24
+[31-Jul-2017 16:31:22 UTC] PHP Parse error:  syntax error, unexpected '}', expecting end of file in /home/ubuntu/workspace/blocks/ases/managers/student_profile/studentprofile_serverproc.php on line 24
+[31-Jul-2017 16:38:37 UTC] PHP Parse error:  syntax error, unexpected '}', expecting end of file in /home/ubuntu/workspace/blocks/ases/managers/student_profile/studentprofile_serverproc.php on line 24
+[31-Jul-2017 16:39:55 UTC] PHP Parse error:  syntax error, unexpected '}', expecting end of file in /home/ubuntu/workspace/blocks/ases/managers/student_profile/studentprofile_serverproc.php on line 24
+[31-Jul-2017 16:39:59 UTC] PHP Parse error:  syntax error, unexpected '}', expecting end of file in /home/ubuntu/workspace/blocks/ases/managers/student_profile/studentprofile_serverproc.php on line 24
+[31-Jul-2017 16:40:04 UTC] PHP Parse error:  syntax error, unexpected '}', expecting end of file in /home/ubuntu/workspace/blocks/ases/managers/student_profile/studentprofile_serverproc.php on line 24
+[31-Jul-2017 16:40:13 UTC] PHP Parse error:  syntax error, unexpected '}', expecting end of file in /home/ubuntu/workspace/blocks/ases/managers/student_profile/studentprofile_serverproc.php on line 24
+[31-Jul-2017 16:40:16 UTC] PHP Parse error:  syntax error, unexpected '}', expecting end of file in /home/ubuntu/workspace/blocks/ases/managers/student_profile/studentprofile_serverproc.php on line 24
+[31-Jul-2017 16:44:49 UTC] PHP Parse error:  syntax error, unexpected '}', expecting end of file in /home/ubuntu/workspace/blocks/ases/managers/student_profile/studentprofile_serverproc.php on line 24
+[31-Jul-2017 16:44:49 UTC] PHP Parse error:  syntax error, unexpected '}', expecting end of file in /home/ubuntu/workspace/blocks/ases/managers/student_profile/studentprofile_serverproc.php on line 24
+[31-Jul-2017 16:44:58 UTC] PHP Parse error:  syntax error, unexpected '}', expecting end of file in /home/ubuntu/workspace/blocks/ases/managers/student_profile/studentprofile_serverproc.php on line 24
+[01-Aug-2017 18:07:22 UTC] PHP Parse error:  syntax error, unexpected '}', expecting end of file in /home/ubuntu/workspace/blocks/ases/managers/student_profile/studentprofile_serverproc.php on line 24
+[01-Aug-2017 18:07:58 UTC] PHP Parse error:  syntax error, unexpected '}', expecting end of file in /home/ubuntu/workspace/blocks/ases/managers/student_profile/studentprofile_serverproc.php on line 24
+[01-Aug-2017 18:08:04 UTC] PHP Parse error:  syntax error, unexpected '}', expecting end of file in /home/ubuntu/workspace/blocks/ases/managers/student_profile/studentprofile_serverproc.php on line 24

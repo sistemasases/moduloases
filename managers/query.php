@@ -6,6 +6,10 @@ require('../../../grade/querylib.php');
 require_once '../../../config.php';
 require_once $CFG->dirroot.'/grade/lib.php';
 require_once $CFG->dirroot.'/grade/report/user/lib.php'; 
+require_once $CFG->dirroot.'/grade/report/grader/lib.php'; 
+require_once $CFG->dirroot.'/grade/lib.php'; 
+require_once ('lib/student_lib.php');
+
 
 /**
  * get_user_by_username()
@@ -21,6 +25,7 @@ function get_user_by_username($username){
     
     return $user;
 }
+
 
 function get_userById($column, $id){
     global $DB;
@@ -410,26 +415,45 @@ function get_permisos_role($idrol,$page){
 }
 
 /**
+ * Función que elimina un registro grupal tanto en 
+ * las tablas {talentospilos_seg_estudiante}
+ * {talentospilos_seguimientos} dado un id de seguimiento.
+ * @see delete_seguimiento_grupal($id)
+ * @return 0 o 1
+ */
+function delete_seguimiento_grupal($id){
+    
+    global $DB;
+
+    $sql_query = "DELETE FROM {talentospilos_seg_estudiante} WHERE id_seguimiento ='$id'";
+    $success = $DB->execute($sql_query);
+    $sql_query = "DELETE FROM {talentospilos_seguimiento} WHERE id = $id";
+    $success = $DB->execute($sql_query);
+    return $success;
+}
+
+
+/**
  * Función que revisa si un usuario tiene un rol asignado
  *
  * @see checking_role($username)
  * @return Boolean
  */
  
-function checking_role($username, $idinstancia){
+// function checking_role($username, $idinstancia){
      
-    global $DB;
+//     global $DB;
      
-    $sql_query = "SELECT id FROM {user} WHERE username = '$username'";
-    $id_moodle_user = $DB->get_record_sql($sql_query);
+//     $sql_query = "SELECT id FROM {user} WHERE username = '$username'";
+//     $id_moodle_user = $DB->get_record_sql($sql_query);
     
-    $semestre =  get_current_semester();
+//     $semestre =  get_current_semester();
     
-    $sql_query = "SELECT ur.id_rol as id_rol , r.nombre_rol as nombre_rol, ur.id as id, ur.id_usuario, ur.estado FROM {talentospilos_user_rol} ur INNER JOIN {talentospilos_rol} r ON r.id = ur.id_rol WHERE ur.id_usuario = ".$id_moodle_user->id." and ur.id_semestre = ".$semestre->max." and ur.id_instancia=".$idinstancia.";";
-    $role_check = $DB->get_record_sql($sql_query); 
+//     $sql_query = "SELECT ur.id_rol as id_rol , r.nombre_rol as nombre_rol, ur.id as id, ur.id_usuario, ur.estado FROM {talentospilos_user_rol} ur INNER JOIN {talentospilos_rol} r ON r.id = ur.id_rol WHERE ur.id_usuario = ".$id_moodle_user->id." and ur.id_semestre = ".$semestre->max." and ur.id_instancia=".$idinstancia.";";
+//     $role_check = $DB->get_record_sql($sql_query); 
     
-    return $role_check;
-}
+//     return $role_check;
+// }
 
 /**
  * Función que actualiza el rol de un usuario en particular
@@ -437,66 +461,66 @@ function checking_role($username, $idinstancia){
  * @see update_role_user($id_moodle_user, $id_role, $state, $id_semester, $username_boss){
  * @return Entero
  */
-function update_role_user($username, $role, $idinstancia, $state = 1, $semester = null, $username_boss = null){
+// function update_role_user($username, $role, $idinstancia, $state = 1, $semester = null, $username_boss = null){
     
-    global $DB;
+//     global $DB;
     
-    $sql_query = "SELECT id FROM {user} WHERE username='$username'";
-    $id_user_moodle = $DB->get_record_sql($sql_query);
+//     $sql_query = "SELECT id FROM {user} WHERE username='$username'";
+//     $id_user_moodle = $DB->get_record_sql($sql_query);
      
-    $sql_query = "SELECT id FROM {talentospilos_rol} WHERE nombre_rol='$role';";
-    $id_role = $DB->get_record_sql($sql_query);
+//     $sql_query = "SELECT id FROM {talentospilos_rol} WHERE nombre_rol='$role';";
+//     $id_role = $DB->get_record_sql($sql_query);
     
-    $sql_query ="select max(id) as id from {talentospilos_semestre};";
-    $id_semester = $DB->get_record_sql($sql_query);
+//     $sql_query ="select max(id) as id from {talentospilos_semestre};";
+//     $id_semester = $DB->get_record_sql($sql_query);
     
-    $array = new stdClass;
-    $id_boss = null;
-    if($username_boss != null){
-        $sql_query = "SELECT * FROM {user} WHERE username='$username_boss'";
-        $result = $DB->get_record_sql($sql_query);
-        $id_boss =  $result->id;
-    }
+//     $array = new stdClass;
+//     $id_boss = null;
+//     if($username_boss != null){
+//         $sql_query = "SELECT * FROM {user} WHERE username='$username_boss'";
+//         $result = $DB->get_record_sql($sql_query);
+//         $id_boss =  $result->id;
+//     }
     
-    $array->id_rol = $id_role->id;
-    $array->id_usuario = $id_user_moodle->id;
-    $array->estado = $state;
-    $array->id_semestre = $id_semester->id;
-    $array->id_jefe = $id_boss;
-    $array->id_instancia = $idinstancia;
+//     $array->id_rol = $id_role->id;
+//     $array->id_usuario = $id_user_moodle->id;
+//     $array->estado = $state;
+//     $array->id_semestre = $id_semester->id;
+//     $array->id_jefe = $id_boss;
+//     $array->id_instancia = $idinstancia;
     
-    $result = 0;
+//     $result = 0;
     
-    if ($checkrole = checking_role($username, $idinstancia)){
+//     if ($checkrole = checking_role($username, $idinstancia)){
         
-        if ($checkrole->nombre_rol == 'monitor_ps'){
-            $whereclause = "id_monitor = ".$id_user_moodle->id;
-            $DB->delete_records_select('talentospilos_monitor_estud',$whereclause);
+//         if ($checkrole->nombre_rol == 'monitor_ps'){
+//             $whereclause = "id_monitor = ".$id_user_moodle->id;
+//             $DB->delete_records_select('talentospilos_monitor_estud',$whereclause);
             
-        }else if($checkrole->nombre_rol == 'profesional_ps'){ 
-            $whereclause = "id_usuario = ".$id_user_moodle->id;
-            $DB->delete_records_select('talentospilos_usuario_prof',$whereclause);
-        } 
+//         }else if($checkrole->nombre_rol == 'profesional_ps'){ 
+//             $whereclause = "id_usuario = ".$id_user_moodle->id;
+//             $DB->delete_records_select('talentospilos_usuario_prof',$whereclause);
+//         } 
         
         
-        $array->id = $checkrole->id;
-        $update_record = $DB->update_record('talentospilos_user_rol', $array);
-        if($update_record){
-            $result = 3;
-        }else{
-            $result = 4;
-        }
-    }else{
-        $insert_record = $DB->insert_record('talentospilos_user_rol', $array);
-        if($insert_record){
-            $result =1;
-        }else{
-            $result = 2;
-        }
-    }
+//         $array->id = $checkrole->id;
+//         $update_record = $DB->update_record('talentospilos_user_rol', $array);
+//         if($update_record){
+//             $result = 3;
+//         }else{
+//             $result = 4;
+//         }
+//     }else{
+//         $insert_record = $DB->insert_record('talentospilos_user_rol', $array);
+//         if($insert_record){
+//             $result =1;
+//         }else{
+//             $result = 2;
+//         }
+//     }
 
-    return $result;
-}
+//     return $result;
+// }
 
 
 /**
@@ -1707,7 +1731,7 @@ function insertSegEst($id_seg, $id_est){
     return $id_seg_est;
 }
 
-function getSeguimiento($id_est = null, $id_seg = null, $tipo, $idinstancia = null){
+function getSeguimiento($id_est, $id_seg, $tipo, $idinstancia){
     global $DB;
     
     // print_r($id_est);
@@ -1830,36 +1854,24 @@ function getSeguimientoOrderBySemester($id_est = null, $tipo,$idsemester = null,
 
 //getSeguimientoOrderBySemester(169,'PARES');
 
-function updateSeguimiento_pares($object){
-    global $DB;
-   
-    //se obtiene el iddel estudiante al que pertene el seguimiento
-    $seg_estud = $DB->get_record_sql('SELECT id_estudiante FROM {talentospilos_seg_estudiante} seg_est WHERE seg_est.id_seguimiento='.$object->id);
-    
-    //se obtiene el ultimo seguimeinto perteneciente al estudiante
-    $lastSeg = $DB->get_record_sql('SELECT id_seguimiento,MAX(id) FROM {talentospilos_seg_estudiante} seg_est WHERE seg_est.id_estudiante='.$seg_estud->id_estudiante.'GROUP BY id_seguimiento ORDER BY id_seguimiento DESC');
-    
-    
-    if($lastSeg->id_seguimiento == $object->id) updateRisks($object, $seg_estud->id_estudiante );
-    
-    return $DB->update_record('talentospilos_seguimiento', $object);
-}
+
 
 
 function getSegumientoByMonitor($id_monitor, $id_seg= null, $tipo, $idinstancia){
     global $DB;
     $sql_query= "";
-        $sql_query="SELECT seg.id as id_seg, *  from {talentospilos_seguimiento} seg  where seg.id_monitor = ".$id_monitor." AND seg.tipo = '".$tipo."' AND seg.id_instancia=".$idinstancia." ;";
+        $sql_query="SELECT seg.id as id_seg, to_timestamp(fecha) as fecha_formato,*  from {talentospilos_seguimiento} seg  where seg.id_monitor = ".$id_monitor." AND seg.tipo = '".$tipo."' AND seg.id_instancia=".$idinstancia." ORDER BY fecha_formato DESC;";
 
     if($id_seg != null){
       $sql_query = trim($sql_query,";");
       $sql_query.= " AND seg.id =".$id_seg.";";
+
    
     }
-    //print_r($sql_query);
-    //print_r($DB->get_records_sql($sql_query));
    return $DB->get_records_sql($sql_query);
 }
+
+// getSegumientoByMonitor(120, null, 'PARES', 19);
 
 function getPormStatus($id, $idsemester = null){
     global $DB;
@@ -1972,7 +1984,7 @@ function getStudentsGrupal($id_monitor, $idinstancia){
 
 function getEstudiantesSegGrupal($id_seg){
     global $DB;
-    $sql_query = "SELECT id_estudiante FROM {talentospilos_seg_estudiante} WHERE id_seguimiento =".$id_seg;
+    $sql_query = "SELECT id_estudiante FROM {talentospilos_seg_estudiante} WHERE id_seguimiento ='$id_seg'";
     return $DB->get_records_sql($sql_query);
 }
 
@@ -2404,6 +2416,27 @@ function getIdLastSemester($idmoodle){
 }
 // print_r(getIdLastSemester(171));
 
+
+/**
+ * Genera el reporte de estudiantes activos o inactivos por semestra de Ser pilo paga 1, 2 y 3
+ * @param $semestre Id del semestre a buscar, si es nulo busca todos los semestres
+ * @retrun $html Table html con el reporte de estudiantes activos e inactivos
+ * @author Edgar Mauricio Ceron Florez
+ */
+  
+// function getStudentState($semestre){
+//     $sql_query = "SELECT id_semestre, 
+//                         (SELECT COUNT(*) FROM {talentospilos_academica} 
+//                             WHERE id_semestre = ".$semestre."
+//                             AND semestre_act = 1) AS activos,
+//                         (SELECT COUNT(*) FROM {talentospilos_academica} 
+//                             WHERE id_semestre = ".$semestre."
+//                             AND semestre_act = 0) AS inactivos,
+//                         (SELECT COUNT(*) FROM {talentospilos_academica} 
+//                             WHERE id_semestre = ".$semestre."
+//                         ) AS total";
+// }
+
 /**
  * Return all course info(items and categories with grades) of a student
  *
@@ -2431,7 +2464,7 @@ function getCoursegradelib($courseid, $userid){
     }
     return null;
 }
-//  getCoursegradelib(98, 5);
+//  print_r(getCoursegradelib(110, 3));
 
 
 /**
@@ -2446,30 +2479,10 @@ function getCoursegradelib($courseid, $userid){
 	$report->showrange = false; 
 	$report->showfeedback = false;
 	$report->showcontributiontocoursetotal = false;
-		
+// 	$report->showgrade = false;	
 	$report->setup_table();
 }
 
-
-/**
- * Genera el reporte de estudiantes activos o inactivos por semestra de Ser pilo paga 1, 2 y 3
- * @param $semestre Id del semestre a buscar, si es nulo busca todos los semestres
- * @retrun $html Table html con el reporte de estudiantes activos e inactivos
- * @author Edgar Mauricio Ceron Florez
- */
-  
-// function getStudentState($semestre){
-//     $sql_query = "SELECT id_semestre, 
-//                         (SELECT COUNT(*) FROM {talentospilos_academica} 
-//                             WHERE id_semestre = ".$semestre."
-//                             AND semestre_act = 1) AS activos,
-//                         (SELECT COUNT(*) FROM {talentospilos_academica} 
-//                             WHERE id_semestre = ".$semestre."
-//                             AND semestre_act = 0) AS inactivos,
-//                         (SELECT COUNT(*) FROM {talentospilos_academica} 
-//                             WHERE id_semestre = ".$semestre."
-//                         ) AS total";
-// }
 
 
 /**
@@ -2566,7 +2579,7 @@ function isTotal($string){
     }
     
 }
-
+/*
 function getweightofItem($itemid){
     global $DB;
     
@@ -2578,7 +2591,7 @@ function getweightofItem($itemid){
     $weight = $output->weight;
     
     return $weight;
-}
+}*/
 
 function getAggregationofItem($itemid,$courseid){
     global $DB;
@@ -2686,11 +2699,11 @@ function getCategories($idCourse)
          array_push($arrayAuxiliar,$tipoCalificacion);
          array_push($newArray,$arrayAuxiliar);
      }
-    //print_r($newArray);
+    // print_r($newArray);
     return $newArray;
 }
 
-//getCategories(108);
+// getCategories(2);
 
 
 /**
@@ -3117,144 +3130,144 @@ function retornarCantidadAparicionesMonitor($idmonitor)
 
 //Funciones para administración del plugion
 
-function getInfoSystemDirector($username){
-     global $DB;
+// function getInfoSystemDirector($username){
+//      global $DB;
 
-        $sql_query = "SELECT id, firstname, lastname,username FROM {user} WHERE username = '".$username."';";
-        $info_user = $DB->get_record_sql($sql_query);
+//         $sql_query = "SELECT id, firstname, lastname,username FROM {user} WHERE username = '".$username."';";
+//         $info_user = $DB->get_record_sql($sql_query);
     
-        if($info_user){
-            $sql_query = "SELECT instancia.id as id_talentosinstancia, id_director, id_programa, id_instancia, prog.cod_univalle, prog.nombre, seg_academico, seg_asistencias, seg_socioeducativo FROM {talentospilos_instancia} instancia INNER JOIN {user} usr ON usr.id = instancia.id_director INNER JOIN  {talentospilos_programa} prog ON prog.id = instancia.id_programa  WHERE usr.id = ".$info_user->id.";";
-            $rol_user = $DB->get_record_sql($sql_query);
+//         if($info_user){
+//             $sql_query = "SELECT instancia.id as id_talentosinstancia, id_director, id_programa, id_instancia, prog.cod_univalle, prog.nombre, seg_academico, seg_asistencias, seg_socioeducativo FROM {talentospilos_instancia} instancia INNER JOIN {user} usr ON usr.id = instancia.id_director INNER JOIN  {talentospilos_programa} prog ON prog.id = instancia.id_programa  WHERE usr.id = ".$info_user->id.";";
+//             $rol_user = $DB->get_record_sql($sql_query);
             
-            if(!$rol_user)
-            {
-                $info_user->cod_programa = 0;
-                $info_user->nombre_programa = "Ninguno";
-            }
-            else {
-                $info_user->cod_programa = $rol_user->cod_univalle;
-                $info_user->nombre_programa = $rol_user->nombre;
-                $info_user->id_talentosinstancia = $rol_user->id_talentosinstancia;
-                $info_user->id_instancia = $rol_user->id_instancia;
-            }
-            return $info_user;
-        }else{
-            $object =  new stdClass();
-            $object->error = "Error al consultar la base de datos. El usuario con codigo ".$username." no se encuentra en la base de datos.";
-            return $object;
-        }
-}
+//             if(!$rol_user)
+//             {
+//                 $info_user->cod_programa = 0;
+//                 $info_user->nombre_programa = "Ninguno";
+//             }
+//             else {
+//                 $info_user->cod_programa = $rol_user->cod_univalle;
+//                 $info_user->nombre_programa = $rol_user->nombre;
+//                 $info_user->id_talentosinstancia = $rol_user->id_talentosinstancia;
+//                 $info_user->id_instancia = $rol_user->id_instancia;
+//             }
+//             return $info_user;
+//         }else{
+//             $object =  new stdClass();
+//             $object->error = "Error al consultar la base de datos. El usuario con codigo ".$username." no se encuentra en la base de datos.";
+//             return $object;
+//         }
+// }
 
-function loadProgramsForSystemsAdmins(){
-    global $DB;
-    $sql_query = "SELECT cod_univalle, nombre FROM {talentospilos_programa} WHERE id NOT IN (SELECT id_programa from {talentospilos_instancia});";
-    return $DB->get_records_sql($sql_query);
-}
+// function loadProgramsForSystemsAdmins(){
+//     global $DB;
+//     $sql_query = "SELECT cod_univalle, nombre FROM {talentospilos_programa} WHERE id NOT IN (SELECT id_programa from {talentospilos_instancia});";
+//     return $DB->get_records_sql($sql_query);
+// }
 
-function updateSystemDirector($username, $codPrograma, $idinstancia, $segAca, $segAsis, $segSoc){
-    global $DB;
-    try{
+// function updateSystemDirector($username, $codPrograma, $idinstancia, $segAca, $segAsis, $segSoc){
+//     global $DB;
+//     try{
         
-        $directorinfo = getInfoSystemDirector($username);
+//         $directorinfo = getInfoSystemDirector($username);
         
-        $consultPrograma = consultProgram($codPrograma);
-        $consultIntancia = consultInstance($idinstancia);
+//         $consultPrograma = consultProgram($codPrograma);
+//         $consultIntancia = consultInstance($idinstancia);
         
-        if($directorinfo->cod_programa != 0){ //se elima la instanciade en caso de que ya tenga una
-            $DB->delete_records_select('talentospilos_instancia', 'id= '.$directorinfo->id_talentosinstancia);
-            update_role_user($directorinfo->username, "sistemas",$idinstancia,0);
-        }
+//         if($directorinfo->cod_programa != 0){ //se elima la instanciade en caso de que ya tenga una
+//             $DB->delete_records_select('talentospilos_instancia', 'id= '.$directorinfo->id_talentosinstancia);
+//             update_role_user($directorinfo->username, "sistemas",$idinstancia,0);
+//         }
         
-        if($codPrograma == 0) return true; //0->ningunprograma - previamente se ha borrado una instancia en caso de que tenga una
+//         if($codPrograma == 0) return true; //0->ningunprograma - previamente se ha borrado una instancia en caso de que tenga una
         
-        if($consultPrograma || $consultIntancia){//update 1126259 - 1144066653
-            $updateObject= new stdClass();
+//         if($consultPrograma || $consultIntancia){//update 1126259 - 1144066653
+//             $updateObject= new stdClass();
             
-            if($consultPrograma){  // se consulta si ya existe una einstancia en el tabla instancias
-                $updateObject->id = $consultPrograma->id_talentosinstancia; //
-            }else {
-                $updateObject->id = $consultIntancia->id_talentosinstancia;
-                $sql_query = "SELECT id FROM {talentospilos_programa} WHERE cod_univalle=".$codPrograma.";";
-                $programa = $DB->get_record_sql($sql_query);
-                if(!$programa) throw new Exception("NO se encontró el programa");
-                $updateObject->id_programa = $programa->id;
-            }
+//             if($consultPrograma){  // se consulta si ya existe una einstancia en el tabla instancias
+//                 $updateObject->id = $consultPrograma->id_talentosinstancia; //
+//             }else {
+//                 $updateObject->id = $consultIntancia->id_talentosinstancia;
+//                 $sql_query = "SELECT id FROM {talentospilos_programa} WHERE cod_univalle=".$codPrograma.";";
+//                 $programa = $DB->get_record_sql($sql_query);
+//                 if(!$programa) throw new Exception("NO se encontró el programa");
+//                 $updateObject->id_programa = $programa->id;
+//             }
             
             
-            $updateObject->id_instancia = $idinstancia;
-            $updateObject->id_director = $directorinfo->id;
-            $updateObject->estado = 1;
-            $updateObject->seg_academico = $segAca;
-            $updateObject->seg_asistencias = $segAsis;
-            $updateObject->seg_socioeducativo = $segSoc;
-            $DB->update_record('talentospilos_instancia', $updateObject);
-            update_role_user($directorinfo->username, "sistemas", $idinstancia); // se actualiza al rol sistemas
+//             $updateObject->id_instancia = $idinstancia;
+//             $updateObject->id_director = $directorinfo->id;
+//             $updateObject->estado = 1;
+//             $updateObject->seg_academico = $segAca;
+//             $updateObject->seg_asistencias = $segAsis;
+//             $updateObject->seg_socioeducativo = $segSoc;
+//             $DB->update_record('talentospilos_instancia', $updateObject);
+//             update_role_user($directorinfo->username, "sistemas", $idinstancia); // se actualiza al rol sistemas
             
-        }else{//insert
-            // se opbtiene el id del programa
-            $sql_query = "SELECT id FROM {talentospilos_programa} WHERE cod_univalle=".$codPrograma.";";
-            $programa = $DB->get_record_sql($sql_query);
-            if(!$programa) throw new Exception("NO se encontró el programa");
+//         }else{//insert
+//             // se opbtiene el id del programa
+//             $sql_query = "SELECT id FROM {talentospilos_programa} WHERE cod_univalle=".$codPrograma.";";
+//             $programa = $DB->get_record_sql($sql_query);
+//             if(!$programa) throw new Exception("NO se encontró el programa");
             
-            $record = new stdClass; 
-            $record->id_instancia = $idinstancia;
-            $record->id_director = $directorinfo->id; 
-            $record->id_programa = $programa->id;
-            $record->seg_academico = $segAca;
-            $record->seg_asistencias = $segAsis;
-            $record->seg_socioeducativo = $segSoc;
-            $record->estado = 1;
-            $DB->insert_record('talentospilos_instancia', $record, false);
-            update_role_user($directorinfo->username, "sistemas", $idinstancia); // se actualiza al rol sistemas
-        }
-        return true;
+//             $record = new stdClass; 
+//             $record->id_instancia = $idinstancia;
+//             $record->id_director = $directorinfo->id; 
+//             $record->id_programa = $programa->id;
+//             $record->seg_academico = $segAca;
+//             $record->seg_asistencias = $segAsis;
+//             $record->seg_socioeducativo = $segSoc;
+//             $record->estado = 1;
+//             $DB->insert_record('talentospilos_instancia', $record, false);
+//             update_role_user($directorinfo->username, "sistemas", $idinstancia); // se actualiza al rol sistemas
+//         }
+//         return true;
     
-    }catch(Exception $e){
-        $errorSqlServer = pg_last_error();
-        $result = $e->getMessage()." <br>".$errorSqlServer;
-        return $result;
-    }
-}
+//     }catch(Exception $e){
+//         $errorSqlServer = pg_last_error();
+//         $result = $e->getMessage()." <br>".$errorSqlServer;
+//         return $result;
+//     }
+// }
 
-function consultProgram($codPrograma){
-    global $DB;
-    $sql_query = "SELECT instancia.id as id_talentosinstancia , id_director, id_programa, prog.cod_univalle, prog.nombre FROM {talentospilos_instancia} instancia INNER JOIN {user} usr ON usr.id = instancia.id_director INNER JOIN  {talentospilos_programa} prog ON prog.id = instancia.id_programa  WHERE prog.cod_univalle = ".$codPrograma.";";
-    return $consultPrograma = $DB->get_record_sql($sql_query);
-}
+// function consultProgram($codPrograma){
+//     global $DB;
+//     $sql_query = "SELECT instancia.id as id_talentosinstancia , id_director, id_programa, prog.cod_univalle, prog.nombre FROM {talentospilos_instancia} instancia INNER JOIN {user} usr ON usr.id = instancia.id_director INNER JOIN  {talentospilos_programa} prog ON prog.id = instancia.id_programa  WHERE prog.cod_univalle = ".$codPrograma.";";
+//     return $consultPrograma = $DB->get_record_sql($sql_query);
+// }
 
-function consultInstance($instanceid){
-    global $DB;
-    $sql_query = "SELECT instancia.id as id_talentosinstancia ,id_instancia id_director, id_programa, prog.nombre, prog.cod_univalle FROM {talentospilos_instancia} instancia INNER JOIN  {talentospilos_programa} prog ON prog.id = instancia.id_programa   WHERE id_instancia = ".$instanceid.";";
-    $consult = $DB->get_record_sql($sql_query);
-    // print_r($consult);
-    return $consult;
-}
+// function consultInstance($instanceid){
+//     global $DB;
+//     $sql_query = "SELECT instancia.id as id_talentosinstancia ,id_instancia id_director, id_programa, prog.nombre, prog.cod_univalle FROM {talentospilos_instancia} instancia INNER JOIN  {talentospilos_programa} prog ON prog.id = instancia.id_programa   WHERE id_instancia = ".$instanceid.";";
+//     $consult = $DB->get_record_sql($sql_query);
+//     // print_r($consult);
+//     return $consult;
+// }
 
-function getSystemAdministrators(){
-    global $DB;
-    $sql_query ="SELECT instancia.id , username, firstname, lastname, prog.nombre, prog.cod_univalle, instancia.id_instancia FROM {talentospilos_instancia} instancia INNER JOIN {user} usr ON usr.id = instancia.id_director INNER JOIN  {talentospilos_programa} prog ON prog.id = instancia.id_programa  ;";
-    $result = $DB->get_records_sql($sql_query);
+// function getSystemAdministrators(){
+//     global $DB;
+//     $sql_query ="SELECT instancia.id , username, firstname, lastname, prog.nombre, prog.cod_univalle, instancia.id_instancia FROM {talentospilos_instancia} instancia INNER JOIN {user} usr ON usr.id = instancia.id_director INNER JOIN  {talentospilos_programa} prog ON prog.id = instancia.id_programa  ;";
+//     $result = $DB->get_records_sql($sql_query);
     
-    $array = array();
+//     $array = array();
     
-    foreach ($result as $r){
-        $r->programa = $r->cod_univalle." - ".$r->nombre;
-        $r->button = "<a id = \"delete_user\"  ><span  id=\"".$r->id."\" class=\"red glyphicon glyphicon-remove\"></span></a>";
-        array_push($array,$r );
-    }
-    return $array;
-}
+//     foreach ($result as $r){
+//         $r->programa = $r->cod_univalle." - ".$r->nombre;
+//         $r->button = "<a id = \"delete_user\"  ><span  id=\"".$r->id."\" class=\"red glyphicon glyphicon-remove\"></span></a>";
+//         array_push($array,$r );
+//     }
+//     return $array;
+// }
 
-function deleteSystemAdministrator($username){
-    global $DB;
-    $directorinfo = getInfoSystemDirector($username);
-    //print_r($directorinfo);
-    update_role_user($directorinfo->username, "sistemas",$directorinfo->id_instancia,0);
-    $DB->delete_records_select('talentospilos_instancia', 'id= '.$directorinfo->id_talentosinstancia);
+// function deleteSystemAdministrator($username){
+//     global $DB;
+//     $directorinfo = getInfoSystemDirector($username);
+//     //print_r($directorinfo);
+//     update_role_user($directorinfo->username, "sistemas",$directorinfo->id_instancia,0);
+//     $DB->delete_records_select('talentospilos_instancia', 'id= '.$directorinfo->id_talentosinstancia);
     
-    return true;
-}
+//     return true;
+// }
 
 //funcion para crear zip
 
@@ -3376,6 +3389,7 @@ function get_monitores_practicante($id_practicante)
 {
     global $DB;
     
+    
     $sql_query = "SELECT DISTINCT usuario_rol.id_usuario,usuario.firstname,usuario.lastname  
                   FROM {talentospilos_user_rol} as usuario_rol INNER JOIN {user} AS usuario ON 
                   (usuario.id=usuario_rol.id_usuario) WHERE id_jefe='$id_practicante'";
@@ -3411,40 +3425,157 @@ function get_monitores_practicante($id_practicante)
  * @param $id_profesional
  * @return Array 
  */
-function get_practicantes_profesional($id_profesional)
+function get_practicantes_profesional($id_profesional,$id_instancia)
 {
     global $DB;
-    
+
     $sql_query = "SELECT DISTINCT usuario_rol.id_usuario,usuario.firstname AS nombre,usuario.lastname AS apellido 
                   FROM {talentospilos_user_rol} as usuario_rol INNER JOIN {user} AS usuario ON 
                   (usuario.id=usuario_rol.id_usuario) WHERE id_jefe='$id_profesional' and id_rol<>4";
+                  
 
     $consulta=$DB->get_records_sql($sql_query);
-    
+
     $arreglo_retornar= array();
+    $arreglo_cantidades= array();
+    $total_registros_no=[];
+
+
     //por cada registro retornado se toma la informacion necesaria, se añade a un arreglo auxiliar y este se agrega 
     //al areglo que sera retornado
     foreach($consulta as $practicantes)
     {
+        
+    $monitores = get_monitores_practicante($practicantes->id_usuario);
+
+    foreach($monitores as $monitor){
+
+    $sql_query= "SELECT count(DISTINCT mdl_talentospilos_seguimiento.id) FROM {talentospilos_seguimiento} INNER JOIN {talentospilos_seg_estudiante} ON ({talentospilos_seguimiento}.id = {talentospilos_seg_estudiante}.id_seguimiento) where revisado_profesional='1' and id_monitor='$monitor[0]' and id_instancia='$id_instancia'";
+    $valorRetorno[0]=$DB->get_record_sql($sql_query);
+    $total_registros[0] +=$valorRetorno[0]->count;
+    
+    $sql_query= "SELECT count(DISTINCT mdl_talentospilos_seguimiento.id) FROM {talentospilos_seguimiento} INNER JOIN {talentospilos_seg_estudiante} ON ({talentospilos_seguimiento}.id = {talentospilos_seg_estudiante}.id_seguimiento) where (revisado_profesional='0')and id_monitor='$monitor[0]' and id_instancia='$id_instancia'";
+    $valorRetorno[1]=$DB->get_record_sql($sql_query);
+    $total_registros[1]+=$valorRetorno[1]->count;
+    
+    $sql_query= "SELECT count(DISTINCT mdl_talentospilos_seguimiento.id) FROM {talentospilos_seguimiento} INNER JOIN {talentospilos_seg_estudiante} ON ({talentospilos_seguimiento}.id = {talentospilos_seg_estudiante}.id_seguimiento) where  id_monitor='$monitor[0]' and id_instancia='$id_instancia'";
+    $valorRetorno[2]=$DB->get_record_sql($sql_query);
+    $total_registros[2] +=$valorRetorno[2]->count;
+    }
+    
         $array_auxiliar=array();
         //posicion 0
         array_push($array_auxiliar,$practicantes->id_usuario);
+
         $nombre = $practicantes->nombre ;
         $apellido = $practicantes->apellido; 
         $unir = $nombre." ".$apellido;
         //posicion 1
         array_push($array_auxiliar,$unir);
-        
+        array_push($array_auxiliar,$total_registros[0]);
+        array_push($array_auxiliar,$total_registros[1]);
+        array_push($array_auxiliar,$total_registros[2]);
+
         array_push($arreglo_retornar,$array_auxiliar);
     }
 
-    
-     //print_r($arreglo_retornar);       
-    return $arreglo_retornar;
+    return ($arreglo_retornar);
     
 }
 
 
+//Funcion para eliminar registro de seguimiento deacuerdo a un id.
+
+function eliminar_registro($id){
+
+    global $DB;
+    $whereclause = "id_seguimiento =".$id;
+    $result= $DB->delete_records_select('talentospilos_seg_estudiante',$whereclause);
+    $whereclause = "id =".$id;
+    $result= $DB->delete_records_select('talentospilos_seguimiento',$whereclause);
+
+    return $result;
+}
+
+function updateSeguimiento_pares($object){
+     global $DB;
+    $fecha_formato =str_replace( '/' , '-' , $object->fecha);
+    date_default_timezone_set('America/Los_Angeles'); 
+    $object->fecha=strtotime($fecha_formato);
+    //se obtiene el id del estudiante al que pertene el seguimiento
+    $sql_query = "select id_estudiante from {talentospilos_seg_estudiante}  where id_seguimiento=".$object->id;
+    $seg_estud = $DB->get_record_sql($sql_query);
+    
+    //se obtiene el ultimo seguimeinto perteneciente al estudiante
+    $lastSeg = $DB->get_record_sql('SELECT id_seguimiento,MAX(id) FROM {talentospilos_seg_estudiante} seg_est WHERE seg_est.id_estudiante='.$seg_estud->id_estudiante.'GROUP BY id_seguimiento ORDER BY id_seguimiento DESC limit 1');
+   
+      if($lastSeg->id_seguimiento == $object->id) updateRisks($object, $seg_estud->id_estudiante );
+     $lastinsertid = $DB->update_record('talentospilos_seguimiento', $object);
+
+     if($lastinsertid){
+         return '1';
+     }else{
+         return '0';
+     }
+
+}
+
+//Funcion para actualizar registro de seguimiento deacuerdo a un id.
+
+function actualizar_registro($id,$lugar,$tema,$objetivos,$obindividual,$riesgoIndividual,$obfamiliar,$riesgoFamiliar,$obacademico,$riesgoAcademico,
+$obeconomico,$riesgoEconomico,$obuniversitario,$riesgoUniversitario,$observacionesGeneral,$practicante,$profesional,$fecha,$h_inicial,$h_final){
+
+    global $DB;
+
+    $fecha_formato =str_replace( '/' , '-' , $fecha);
+    $record->id = $id;
+    $record->lugar = $lugar;
+    $record->tema = $tema;
+    $record->objetivos = $objetivos;
+    $record->individual = $obindividual;
+    $record->individual_riesgo = (int)$riesgoIndividual;
+    $record->familiar_desc = $obfamiliar;
+    $record->familiar_riesgo=(int)$riesgoFamiliar;
+    $record->academico=$obacademico;
+    $record->academico_riesgo=(int)$riesgoAcademico;
+    $record->economico=$obeconomico;
+    $record->economico_riesgo=(int)$riesgoEconomico;
+    $record->vida_uni=$obuniversitario;
+    $record->vida_uni_riesgo=(int)$riesgoUniversitario;
+    $record->observaciones=$observacionesGeneral;
+    $record->revisado_profesional=$profesional;
+    $record->revisado_practicante=$practicante;
+    $record->hora_ini=$h_inicial;
+    $record->hora_fin=$h_final;
+    date_default_timezone_set('America/Los_Angeles'); 
+    $record->fecha = strtotime($fecha_formato);
+    $lastinsertid = $DB->update_record('talentospilos_seguimiento', $record);
+    if($lastinsertid){
+        return '1';
+    }else{
+        return '0';
+    }
+}
+
+
+
+/*
+ * funcion que obtiene el ID dado el shortname de la tabla
+ * user_info_field
+ *
+ * @param $shortname
+ * @return number
+ */
+
+
+function get_id_info_field($shortname){
+    global $DB;
+    
+    $sql_query = "select id from {user_info_field}  where shortname='$shortname'";
+    $consulta=$DB->get_record_sql($sql_query);
+    return $consulta;
+    
+}
 
 
 //***************************************************
@@ -3460,62 +3591,141 @@ function get_practicantes_profesional($id_profesional)
  * @return Array 
  */
 
+
 function get_seguimientos_monitor($id_monitor,$id_instance){
     global $DB;
     
+
+    $id_info_field=get_id_info_field("idtalentos");
+    
+    
     $sql_query = "SELECT ROW_NUMBER() OVER(ORDER BY seguimiento.id ASC) AS number_unique,seguimiento.id AS id_seguimiento,
-                  seguimiento.tipo,usuario_monitor.id AS id_monitor_creo,usuario_monitor.firstname AS nombre_monitor_creo,nombre_usuario_estudiante.firstname 
+                  seguimiento.tipo,usuario_monitor
+                  .id AS id_monitor_creo,usuario_monitor.firstname AS nombre_monitor_creo,nombre_usuario_estudiante.firstname 
                   AS nombre_estudiante,nombre_usuario_estudiante.lastname AS apellido_estudiante,seguimiento.created,seguimiento.fecha,seguimiento.hora_ini,
-                  seguimiento.hora_fin,seguimiento.lugar,seguimiento.tema,seguimiento.objetivos,seguimiento.actividades,seguimiento.individual,
-                  seguimiento.individual_riesgo,seguimiento.familiar_desc,seguimiento.familiar_riesgo,seguimiento.academico,
+                  seguimiento.hora_fin,seguimiento.lugar,seguimiento.tema,seguimiento.objetivos,seguimiento.actividades,seguimiento.individual,seguimiento.revisado_profesional AS profesional,
+                  seguimiento.revisado_practicante AS practicante,seguimiento.individual_riesgo,seguimiento.familiar_desc,seguimiento.familiar_riesgo,seguimiento.academico,
                   seguimiento.academico_riesgo,seguimiento.economico,seguimiento.economico_riesgo, seguimiento.vida_uni,seguimiento.vida_uni_riesgo,
                   seguimiento.observaciones AS observaciones,seguimiento.id AS status,seguimiento.id AS sede, usuario_estudiante.id_tal AS id_estudiante,monitor_actual.id_monitor,
                   usuario_mon_actual.firstname AS nombre_monitor_actual,usuario_mon_actual.lastname AS apellido_monitor_actual, usuario_monitor.lastname AS apellido_monitor_creo
                   FROM {talentospilos_seg_estudiante} AS s_estudiante INNER JOIN {talentospilos_seguimiento} AS seguimiento ON 
                   (s_estudiante.id_seguimiento=seguimiento.id) INNER JOIN {user} AS usuario_monitor ON (seguimiento.id_monitor = usuario_monitor.id) 
-                  INNER JOIN (SELECT DISTINCT data.userid AS userid, data.data as id_tal FROM {talentospilos_usuario} AS usuarios_tal INNER JOIN {user_info_data} AS data 
-                  ON (CAST(usuarios_tal.id AS varchar) = data.data) WHERE data.fieldid = 1) AS usuario_estudiante ON 
+                  INNER JOIN (SELECT DISTINCT MAX(data.userid) AS userid, data.data as id_tal FROM {talentospilos_usuario} AS usuarios_tal INNER JOIN mdl_user_info_data AS data 
+                  ON (CAST(usuarios_tal.id AS varchar) = data.data) WHERE data.fieldid ='$id_info_field->id' GROUP BY id_tal) AS usuario_estudiante  ON 
                   (usuario_estudiante.id_tal=CAST(s_estudiante.id_estudiante AS varchar)) INNER JOIN {user} as nombre_usuario_estudiante ON 
                   (nombre_usuario_estudiante.id=usuario_estudiante.userid) INNER JOIN {talentospilos_monitor_estud} as monitor_actual 
                   ON (CAST(monitor_actual.id_estudiante AS text)=CAST(s_estudiante.id_estudiante AS text)) INNER JOIN {user} AS usuario_mon_actual ON (monitor_actual.id_monitor=usuario_mon_actual.id)
-                  WHERE monitor_actual.id_monitor='$id_monitor' AND seguimiento.id_instancia='$id_instance' AND monitor_actual.id_instancia='$id_instance' ORDER BY usuario_monitor.firstname";
+                  WHERE monitor_actual.id_monitor='$id_monitor' AND seguimiento.id_instancia='$id_instance' AND monitor_actual.id_instancia='$id_instance' ORDER BY usuario_monitor.firstname;
+    ";
     
     $consulta=$DB->get_records_sql($sql_query);
-    
-    //print_r($consulta);
-    return $consulta;
-}
+    $array_cantidades =[];
+    $array_estudiantes=[];
 
-// get_seguimientos_monitor(1055,534);
+    foreach($consulta as $estudiante)
+    {
+      //Crea un nuevo array con los datos obtenidos en la consulta y luego agrega :
+      //Número de registros del estudiante revisados por el profesional  no revisados por el mismo,Número total de registros del estudiante cuando son de tipo 'PARES'. 
+      $sql = "SELECT count(*) FROM {talentospilos_seguimiento}  INNER JOIN {talentospilos_seg_estudiante} ON {talentospilos_seguimiento}.id = {talentospilos_seg_estudiante}.id_seguimiento where revisado_profesional=1 and tipo='PARES' and id_estudiante='$estudiante->id_estudiante' and id_instancia='$id_instance'";
+      $estudiante->registros_estudiantes_revisados=$DB->get_record_sql($sql)->count;
+      $sql = "SELECT count(*) FROM {talentospilos_seguimiento}  INNER JOIN {talentospilos_seg_estudiante} ON {talentospilos_seguimiento}.id = {talentospilos_seg_estudiante}.id_seguimiento where revisado_profesional=0 and tipo='PARES' and id_estudiante='$estudiante->id_estudiante' and id_instancia='$id_instance'";
+      $estudiante->registros_estudiantes_norevisados=$DB->get_record_sql($sql)->count;
+      $sql = "SELECT count(*) FROM {talentospilos_seguimiento}  INNER JOIN {talentospilos_seg_estudiante} ON {talentospilos_seguimiento}.id = {talentospilos_seg_estudiante}.id_seguimiento where id_estudiante='$estudiante->id_estudiante'and tipo='PARES' and id_instancia='$id_instance'";
+      $estudiante->registros_estudiantes_total=$DB->get_record_sql($sql)->count;
+      
+      //Número de registros del estudiante revisados por el profesional  no revisados por el mismo,Número total de registros del estudiante cuando son de tipo 'PARES'. 
+
+      $sql = "SELECT count(*) FROM {talentospilos_seguimiento}  INNER JOIN {talentospilos_seg_estudiante} ON {talentospilos_seguimiento}.id = {talentospilos_seg_estudiante}.id_seguimiento where revisado_profesional=1 and tipo='GRUPAL' and id_estudiante='$estudiante->id_estudiante' and id_instancia='$id_instance'";
+      $estudiante->registros_estudiantes_revisados_grupal=$DB->get_record_sql($sql)->count;
+      $sql = "SELECT count(*) FROM {talentospilos_seguimiento}  INNER JOIN {talentospilos_seg_estudiante} ON {talentospilos_seguimiento}.id = {talentospilos_seg_estudiante}.id_seguimiento where revisado_profesional=0 and tipo='GRUPAL' and id_estudiante='$estudiante->id_estudiante' and id_instancia='$id_instance'";
+      $estudiante->registros_estudiantes_norevisados_grupal=$DB->get_record_sql($sql)->count;
+      $sql = "SELECT count(*) FROM {talentospilos_seguimiento}  INNER JOIN {talentospilos_seg_estudiante} ON {talentospilos_seguimiento}.id = {talentospilos_seg_estudiante}.id_seguimiento where id_estudiante='$estudiante->id_estudiante'and tipo='GRUPAL' and id_instancia='$id_instance'";
+      $estudiante->registros_estudiantes_total_grupal=$DB->get_record_sql($sql)->count;
+      array_push($array_estudiantes,$estudiante);
+    }
+    
+ //    print_r($array_estudiantes);
+   return $array_estudiantes;
+}
 
 function get_cantidad_seguimientos_monitor($id_monitor,$id_instance){
     global $DB;
+    $valorRetorno=[];
     
-    echo $id_monitor;
+    $sql_query= "SELECT count(DISTINCT mdl_talentospilos_seguimiento.id) FROM {talentospilos_seguimiento} INNER JOIN {talentospilos_seg_estudiante} ON ({talentospilos_seguimiento}.id = {talentospilos_seg_estudiante}.id_seguimiento) where revisado_profesional='1' and id_monitor='$id_monitor' and id_instancia='$id_instance'";
+    $valorRetorno[0]=$DB->get_record_sql($sql_query);
     
-    $sql_query = "SELECT count(*) as cantidad
-                  FROM {talentospilos_seg_estudiante} AS s_estudiante INNER JOIN {talentospilos_seguimiento} AS seguimiento ON 
-                  (s_estudiante.id_seguimiento=seguimiento.id) INNER JOIN {user} AS usuario_monitor ON (seguimiento.id_monitor = usuario_monitor.id) 
-                  INNER JOIN (SELECT DISTINCT data.userid AS userid, data.data as id_tal FROM {talentospilos_usuario} AS usuarios_tal INNER JOIN {user_info_data} AS data 
-                  ON (CAST(usuarios_tal.id AS varchar) = data.data) WHERE data.fieldid = 1
-                  ) AS usuario_estudiante ON 
-                  (usuario_estudiante.id_tal=CAST(s_estudiante.id_estudiante AS varchar)) INNER JOIN {user} as nombre_usuario_estudiante ON 
-                  (nombre_usuario_estudiante.id=usuario_estudiante.userid) INNER JOIN {talentospilos_monitor_estud} as monitor_actual 
-                  ON (CAST(monitor_actual.id_estudiante AS text)=CAST(s_estudiante.id_estudiante AS text)) INNER JOIN {user} AS usuario_mon_actual ON (monitor_actual.id_monitor=usuario_mon_actual.id)
-                  WHERE monitor_actual.id_monitor='$id_monitor' AND seguimiento.id_instancia='$id_instance' AND monitor_actual.id_instancia='$id_instance'";
+    $sql_query= "SELECT count(DISTINCT mdl_talentospilos_seguimiento.id) FROM {talentospilos_seguimiento} INNER JOIN {talentospilos_seg_estudiante} ON ({talentospilos_seguimiento}.id = {talentospilos_seg_estudiante}.id_seguimiento) where (revisado_profesional='0')and id_monitor='$id_monitor' and id_instancia='$id_instance'";
+    $valorRetorno[1]=$DB->get_record_sql($sql_query);
     
-    $consulta=$DB->get_records_sql($sql_query);
-    foreach($consulta as $tomarId)
-    {
-        $valorRetorno=$tomarId->cantidad;    
-    }
-    
-    // print_r($consulta);
-    // return $consulta;
+    $sql_query= "SELECT count(DISTINCT mdl_talentospilos_seguimiento.id) FROM {talentospilos_seguimiento} INNER JOIN {talentospilos_seg_estudiante} ON ({talentospilos_seguimiento}.id = {talentospilos_seg_estudiante}.id_seguimiento) where  id_monitor='$id_monitor' and id_instancia='$id_instance'";
+    $valorRetorno[2]=$DB->get_record_sql($sql_query);
+
     return $valorRetorno;
 }
 
-// get_cantidad_seguimientos_monitor(1055,534);
+/**
+ * Función que recupera la información de la tabla de seguimientos grupales (estudiantes
+ *  respectivos que asistieron a ella -firstname-lastname-username y id ).
+ *
+ * @see get_seguimientos($id,$tipo,$instancia)
+ * @param id --> id correspondiente a la id del estudiante.
+ * @param tipo--> tipo correspondiente a "GRUPAL".
+ * @param instancia --> instancia 
+ * @return array con información de los nombres de los estudiantes que tuvieron un seguimiento grupal dado un idseguimiento.
+ */
+
+function get_estudiantes($id,$tipo,$instancia){
+    global $DB;
+    $estudiantes=array();
+
+    $sql_query = " SELECT * FROM {talentospilos_seguimiento} AS seguimiento INNER JOIN mdl_talentospilos_seg_estudiante AS seguimiento_estudiante ON (seguimiento.id=seguimiento_estudiante.id_seguimiento) where seguimiento.id='$id' and tipo='$tipo' and id_instancia='$instancia'";
+    $registros=$DB->get_records_sql($sql_query);
+    
+    foreach($registros as $registro){
+        
+        $estudiante->id = get_id_user_moodle($registro->id_estudiante); //obtiene el id del estudiante.
+        $nombres_estudiantes = " SELECT id, username,firstname,lastname FROM {user} where id='$estudiante->id'"; //obtiene el nombre y el apellido dado el código del estudiante.
+        $registros_nombres=$DB->get_records_sql($nombres_estudiantes);
+
+        foreach($registros_nombres as $registro_nombre){
+            
+          $estudiante->username=$registro_nombre->username;
+          $estudiante->firstname=$registro_nombre->firstname;
+          $estudiante->lastname=$registro_nombre->lastname;
+          $estudiante->idtalentos =$registro->id_estudiante;
+          array_push($estudiantes,(array)$estudiante);
+        }
+    }
+    return $estudiantes;    
+}
+
+
+/**
+ * Función que recupera la información de la tabla de seguimientos grupales dado un id.
+ *
+ * @see get_seguimientos($id,$tipo,$instancia)
+ * @param id --> id correspondiente a la id del estudiante.
+ * @param tipo--> tipo correspondiente a "GRUPAL".
+ * @param instancia --> instancia 
+ * @return array con información de seguimiento grupal dado un idseguimiento.
+ */
+
+function get_seguimientos($id,$tipo,$instancia){
+    global $DB;
+    $estudiantes=array();
+
+    $sql_query = " SELECT * FROM {talentospilos_seguimiento} where id='$id' and tipo='$tipo' and id_instancia='$instancia'";
+    $registros=$DB->get_record_sql($sql_query);
+    
+    return $registros;    
+}
+
+
+
+
+
+
 
 //***************************************************
 //***************************************************
@@ -3689,6 +3899,22 @@ function save_geographic_risk($id_student, $rate_risk){
     
 }
 
+/**
+ * Función para obtener los periodos existentes
+ *
+ * @see get_periodos_semestrales(){
+ * @return bool
+ */
+ 
+ function get_periodos_semestrales(){
+     global $DB;
+     $sql_query = "SELECT * FROM mdl_talentospilos_semestre";
+     $result = $DB->get_records_sql($sql_query);
+     return $result;
+ }
+
+
+
 // save_geographic_risk(1047, 3);
 
 /**
@@ -3852,6 +4078,8 @@ function get_full_user_talentos($id){
 // get_users_role();
 // assign_role_profesional_ps('1124153-3743', 'profesional_ps'as, 1, null, null, 'psicologo')
 //manage_role_profesional_ps('1430461-3743','profesional_ps','socioeducativo');
+
+
 
 
 ?>

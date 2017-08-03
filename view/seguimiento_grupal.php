@@ -33,6 +33,7 @@ global $PAGE;
 include("../classes/output/seguimiento_grupal.php");
 include("../classes/output/renderer.php");
 require_once('../managers/query.php');
+require_once('../managers/instance_management/instance_lib.php');
 
 // Set up the page.
 $title = "Seguimiento Grupal";
@@ -43,8 +44,8 @@ $blockid = required_param('instanceid', PARAM_INT);
 require_login($courseid, false);
 
 //se culta si la instancia ya está registrada
-if(!consultInstance($blockid)){
-    header("Location: instanceconfiguration.php?courseid=$courseid&instanceid=$blockid");
+if(!consult_instance($blockid)){
+    header("Location: instance_configuration.php?courseid=$courseid&instanceid=$blockid");
 }
 
 $contextcourse = context_course::instance($courseid);
@@ -71,17 +72,17 @@ $PAGE->requires->css('/blocks/ases/style/sweetalert.css', true);
 $PAGE->requires->css('/blocks/ases/style/round-about_pilos.css', true);
 $PAGE->requires->css('/blocks/ases/style/sugerenciaspilos.css', true);
 $PAGE->requires->css('/blocks/ases/style/forms_pilos.css', true);
-$PAGE->requires->js('/blocks/ases/js/jquery-2.2.4.min.js', true);
 
-$PAGE->requires->js('/blocks/ases/js/jquery.validate.min.js', true);
-$PAGE->requires->js('/blocks/ases/js/bootstrap.min.js', true);
-$PAGE->requires->js('/blocks/ases/js/bootstrap.js', true);
-$PAGE->requires->js('/blocks/ases/js/sweetalert-dev.js', true);
-$PAGE->requires->js('/blocks/ases/js/npm.js', true);
-$PAGE->requires->js('/blocks/ases/js/checkrole.js', true);
+//$PAGE->requires->js('/blocks/ases/js/jquery-2.2.4.min.js', true);
+//$PAGE->requires->js('/blocks/ases/js/jquery.validate.min.js', true);
+// $PAGE->requires->js('/blocks/ases/js/bootstrap.min.js', true);
+// $PAGE->requires->js('/blocks/ases/js/bootstrap.js', true);
+// $PAGE->requires->js('/blocks/ases/js/sweetalert-dev.js', true);
+// $PAGE->requires->js('/blocks/ases/js/npm.js', true);
+// $PAGE->requires->js('/blocks/ases/js/checkrole.js', true);
 //$PAGE->requires->js('/blocks/ases/js/sugerenciaspilos.js', true);
-$PAGE->requires->js('/blocks/ases/js/main.js', true);
-$PAGE->requires->js('/blocks/ases/js/seguimiento_grupal.js', true);
+//$PAGE->requires->js('/blocks/ases/js/main.js', true);
+//$PAGE->requires->js('/blocks/ases/js/seguimiento_grupal.js', true);
 
 $output = $PAGE->get_renderer('block_ases');
 

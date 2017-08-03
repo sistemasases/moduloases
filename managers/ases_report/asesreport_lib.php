@@ -230,9 +230,13 @@ function getGraficEstado($cohorte){
 }
 
 /**
- * Función que recupera datos para la tabla de ases_report
+ * Función que recupera datos para la tabla de ases_report, dado el estado, la cohorte y un conjunto de campos a extraer.
  *
  * @see getUsersByPopulation()
+ * @param $column       --> Campos a seleccionar
+ * @param $population   --> Estado y cohorte
+ * @param $risk         --> Nivel de riesgo a mostrar
+ * qparam $idinstancia  --> Instancia del módulo
  * @return Array 
  */
 
@@ -252,13 +256,12 @@ function getUsersByPopulation($column, $population, $risk, $idinstancia){
     if($infoinstancia->cod_univalle == 1008){
         $asescohorts = "OR pc.idnumber LIKE 'SP%'";
     }
-    
 
     //se formatean las columnas
     $chk = array("Código","Nombre","Apellidos", "Documento", "Dirección", "Nombre acudiente", "Celular acudiente", "Grupo", "Estado", "Email","Celular");
     $name_chk_db = array("username", "firstname", "lastname", "num_doc","direccion_res","acudiente", "tel_acudiente","grupo","estado","email","celular");
     
-    //se eliminan las columnas con valores nulos: en caso de que el checkbox de grupo esté disable
+    //se eliminan las columnas con valores nulos: en caso de que el checkbox de grupo esté deshabilitado
     $column = array_filter($column, function($var){return !is_null($var);} );
     
     $columns_str= "";
@@ -277,7 +280,7 @@ function getUsersByPopulation($column, $population, $risk, $idinstancia){
      * de la siguiente forma:
      * (SELECT calificación_riesgo FROM {riesg_usuario} WHERE id_usuario = id and id_riesgo = $id_riesgo) as $nombre_riesgo
      */ 
-    //se eliminan las columnas con valores nulos: en caso de que el checkbox de grupo esté disable
+    //se eliminan las columnas con valores nulos: en caso de que el checkbox de grupo esté deshabilitado
     //Cada valor de este array representa el id de cada riesgo seleccionado
     
     $column_risk = array_filter($risk, function($var){return !is_null($var);} );
@@ -423,68 +426,7 @@ function getUsersByPopulation($column, $population, $risk, $idinstancia){
     $prueba->data= $result;
     $prueba->columns = $columns_str." y la poblacion es: ".$population[0]." - ".$population[2];
 
-    // if($risk != -1){
-        
-        // ****************
-        // Academic risk
-        // ****************
-        // if($risk == 0 || $risk == 2){
-        //     foreach($prueba->data as &$student){
-                
-        //         $sql_query = "SELECT id FROM {user} WHERE username LIKE '".$student['Código']."%';";
-        //         $id_student = $DB->get_record_sql($sql_query);
-                
-        //         // $idFirstSemester = getIdFirstSemester();
-    
-        //         // $grades_student = get_grades_courses_student_semester($id_student->id);
-                
-        //         $sql_query = "SELECT grades.finalgrade  
-        //                       FROM {grade_items} AS items INNER JOIN {grade_grades} AS grades ON items.id = grades.itemid 
-        //                       WHERE items.itemtype = 'course' AND grades.userid = $id_student->id;"; 
-                              
-        //         $grades_student = $DB->get_records_sql($sql_query);
-                
-                
-        //         // die();
-      
-        //         $risktype = 'Bajo';
-                
-        //         if($grades_student){
-        //             foreach($grades_student as $grade){
-    
-        //                 if($grade->finalgrade < 3.0){
-            
-        //                     $risktype = 'Alto';
-            
-        //                     break;
-        //                 }
-        //                 else if($grade->finalgrade > 3.0 && $grade->finalgrade < 3.5){
-        //                     $risktype = 'Medio';
-        //                 }
-        //             }
-        //         }
 
-        //         $student['academic_risk'] = $risktype;
-        //     }            
-        // }
-
-        // ****************
-        // Social risk
-        // ****************
-        // if($risk == 1 || $risk == 2){
-        //     foreach ($prueba->data as &$student){
-        //         $idtalentos = get_userById(array('idtalentos'), $student['Código']);  
-        //         $idmoodle = get_userById(array('id_user'), $student['Código']);
-        //         $lastsemestre = getIdLastSemester($idmoodle->id_user);
-        //         if($lastsemestre){
-        //              $student['social_risk'] = getRiskString(getPormStatus($idtalentos->idtalentos, $lastsemestre)->promedio);
-        //         }else{
-        //             $student['social_risk'] = "Sin registros";
-        //         }
-        //     }               
-        // }
-    // }
-    
     return $prueba;
 }
 ?>

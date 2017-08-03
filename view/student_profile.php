@@ -16,7 +16,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * General Reports
+ * ASES
  *
  * @author     Iader E. García G.
  * @package    block_ases
@@ -31,6 +31,9 @@ require_once('../managers/query.php');
 require_once('../managers/lib/student_lib.php');
 require_once('../managers/user_management/user_lib.php');
 require_once('../managers/student_profile/geographic_lib.php');
+require_once('../managers/student_profile/studentprofile_lib.php');
+require_once('../managers/instance_management/instance_lib.php');
+// require_once('../managers/view_management/validate_profile_action.php');
 require_once('../managers/dateValidator.php');
 include('../lib.php');
 global $PAGE;
@@ -43,51 +46,86 @@ $title = "Ficha estudiante";
 $pagetitle = $title;
 $courseid = required_param('courseid', PARAM_INT);
 $blockid = required_param('instanceid', PARAM_INT);
-$student_id = optional_param('student_id', 0, PARAM_INT);
+$student_code = optional_param('student_code', 0, PARAM_INT);
 
 require_login($courseid, false);
 
 // Set up the page.
-if(!consultInstance($blockid)){
+if(!consult_instance($blockid)){
     header("Location: instanceconfiguration.php?courseid=$courseid&instanceid=$blockid");
 }
 
 $contextcourse = context_course::instance($courseid);
 $contextblock =  context_block::instance($blockid);
 
-$url = new moodle_url("/blocks/ases/view/student_profile.php",array('courseid' => $courseid, 'instanceid' => $blockid,'student_id'=>$student_id));
+$url = new moodle_url("/blocks/ases/view/student_profile.php",array('courseid' => $courseid, 'instanceid' => $blockid,'student_code'=>$student_code));
 
 //set configura la navegacion
 
 $coursenode = $PAGE->navigation->find($courseid, navigation_node::TYPE_COURSE);
-$blocknode = navigation_node::create('Reporte general',new moodle_url("/blocks/ases/view/index.php",array('courseid' => $courseid, 'instanceid' => $blockid)), null, 'block', $blockid);
+$blocknode = navigation_node::create('Reporte general',new moodle_url("/blocks/ases/view/ases_report.php",array('courseid' => $courseid, 'instanceid' => $blockid)), null, 'block', $blockid);
 $coursenode->add_node($blocknode);
-$node = $blocknode->add('Ficha estudiante',new moodle_url("/blocks/ases/view/student_profile.php",array('courseid' => $courseid, 'instanceid' => $blockid,'student_id'=>$student_id)));
+$node = $blocknode->add('Ficha estudiante',new moodle_url("/blocks/ases/view/student_profile.php",array('courseid' => $courseid, 'instanceid' => $blockid,'student_code'=>$student_code)));
 $blocknode->make_active();
 $node->make_active();
 
 //cargar info de la ficha
 
 $record = 'data';
-if ($student_id != 0){ 
+
+if ($student_code != 0){ 
     
-    /**
-     * Información para la cabecera de la ficha
-     */
-    $id_user_moodle = get_id_user_moodle($student_id);
-    $user_moodle = get_moodle_user($id_user_moodle);
-    $cohort = get_cohort_student($id_user_moodle);
-    
-    $ases_student = get_ases_user($student_id);
-    
+    // Inicializa la variable a pasar por contexto
     $record = new stdClass;
     
+    $ases_student = get_ases_user_by_code($student_code);
+    
+    $student_id = $ases_student->id;
+    
+    // Carga de estados disponibles
+    
+    $ases_status_array = get_status_ases();
+    $icetex_status_array = get_status_icetex();
+    
+    $html_status_ases = "<option>NO REGISTRA</option>";
+    
+    foreach($ases_status_array as $ases_status){
+        
+        if($ases_status->nombre == $ases_student->estado_ases){
+            $html_status_ases .= "<option value='".$ases_status->id."' selected>".$ases_status->nombre."</option>";
+        }else{
+            $html_status_ases .= "<option value='".$ases_status->id."'>".$ases_status->nombre."</option>";
+        }
+    }
+    
+    $html_status_icetex = "<option>NO REGISTRA</option>";
+    
+    foreach($icetex_status_array as $icetex_status){
+        if($icetex_status->nombre == $ases_student->estado){
+            $html_status_icetex .= "<option value='".$icetex_status->id."' selected>".$icetex_status->nombre."</option>";
+        }else{
+            $html_status_icetex .= "<option value='".$icetex_status->id."'>".$icetex_status->nombre."</option>";
+        }
+    }
+    
+    $record->status_ases = $html_status_ases;
+    $record->status_icetex = $html_status_icetex;
+    
+    // Información del estudiante para la cabecera de la ficha
+    
+    $id_user_moodle = get_id_user_moodle($ases_student->id);
+    $user_moodle = get_moodle_user($id_user_moodle);
+    
+    $cohort = get_cohort_student($id_user_moodle);
+    
     $array_aditional_fields = get_adds_fields_mi($id_user_moodle);
-    $academic_program = get_program((int)$array_aditional_fields[1]->data);
+    
+    $academic_program = get_program((int)$array_aditional_fields->idprograma);
 
     $faculty = get_faculty($academic_program->id_facultad);
     
-    $record->id_user = $user_moodle->id;
+    $record->id_moodle = $id_user_moodle;
+    $record->id_ases = $student_id;
     $record->firstname = $user_moodle->firstname;
     $record->lastname = $user_moodle->lastname;
     $record->email_moodle = $user_moodle->email_moodle;
@@ -96,42 +134,6 @@ if ($student_id != 0){
     $record->program = $academic_program->nombre;
     $record->faculty = $faculty->nombre;
     $record->cohort = $cohort->name;
-    
-    switch($ases_student->estado){
-        case "ACTIVO":
-            $record->icetex_status_active = "selected";
-            break;
-        case "APLAZADO":
-            $record->icetex_status_postponed = "selected";
-            break;
-        case "EGRESADO":
-            $record->icetex_status_graduate = "selected";
-            break;
-        case "RETIRADO":
-            $record->icetex_status_retired = "selected";
-            break;
-        case "EMPTY":
-            $record->icetex_status_empty = "selected";
-            break;
-    }
-
-    switch($ases_student->estado_ases){
-        case "ACTIVO":
-            $record->ases_status_active = "selected";
-            break;
-        case "APLAZADO":
-            $record->ases_status_postponed = "selected";
-            break;
-        case "EGRESADO":
-            $record->ases_status_graduate = "selected";
-            break;
-        case "RETIRADO":
-            $record->ases_status_retired = "selected";
-            break;
-        case "EMPTY":
-            $record->ases_status_empty = "selected";
-            break;
-    }
     
     switch($ases_student->tipo_doc){
         case "T.I":
@@ -214,6 +216,27 @@ if ($student_id != 0){
     
     $risk_object = get_risk_by_student($student_id); 
     
+    $record->individual_risk = $risk_object[individual]->calificacion_riesgo;
+    $record->familiar_risk = $risk_object[familiar]->calificacion_riesgo;
+    $record->academic_risk = $risk_object[academico]->calificacion_riesgo;
+    $record->life_risk = $risk_object[vida_universitaria]->calificacion_riesgo;
+    $record->economic_risk = $risk_object[economico]->calificacion_riesgo;
+    
+    switch($risk_object[individual]->calificacion_riesgo){
+        case 1:
+            $record->individual_class = 'div_low_risk';
+            break;
+        case 2:
+            $record->individual_class = 'div_medium_risk';
+            break;
+        case 3:
+            $record->individual_class = 'div_high_risk';
+            break;
+        default:
+            $record->individual_class = 'div_no_risk';
+            break;
+     }
+        
     switch($risk_object[familiar]->calificacion_riesgo){
         case 1:
             $record->familiar_class = 'div_low_risk';
@@ -244,7 +267,7 @@ if ($student_id != 0){
             break;
      }
      
-     switch($risk_object[vida_universitaria]->calificacion_riesgo){
+    switch($risk_object[vida_universitaria]->calificacion_riesgo){
         case 1:
             $record->life_class = 'div_low_risk';
             break;
@@ -258,8 +281,8 @@ if ($student_id != 0){
             $record->life_class = 'div_no_risk';
             break;
      }
-     
-     switch($risk_object[academico]->calificacion_riesgo){
+    
+    switch($risk_object[academico]->calificacion_riesgo){
         case 1:
             $record->academic_class = 'div_low_risk';
             break;
@@ -273,55 +296,178 @@ if ($student_id != 0){
             $record->academic_class = 'div_no_risk';
             break;
      }
-    
 }
+
+/**
+ * Seguimientos asociados al estudiante
+ */
+ 
+ $html_tracking_peer = "";
+ $array_peer_trackings = get_tracking_group_by_semester($student_id, 'PARES', null, $blockid);
+
+ if($array_peer_trackings != null){
+     
+     $panel = "<div class='panel-group' id='accordion_semesters'>";
+     
+    foreach($array_peer_trackings->semesters_segumientos as $array_semester){
+        
+        print_r($array_semester);
+        $panel .= "<div class='panel panel-default'>";
+        $panel .= "<div class='panel-heading'>";
+        $panel .= "<h4 class='panel-title'>";
+        
+        $panel .= "<a data-toggle='collapse' data-parent='#accordion_semesters' href='#semester".$array_semester->id_semester."'> $array_semester->name_semester </a>";
+        
+        $panel .= "</h4>"; //End panel-title
+        $panel .= "</div>"; //End panel-heading
+        
+        $panel .= "<div id='semester$array_semester->id_semester' class='panel-collapse collapse in'>";
+        $panel .= "<div class='panel-body'>";
+        
+        // $panel .= "<div class=\"container well col-md-12\">";
+        // $panel .= "<div class=\"container-fluid col-md-10\" name=\"info\">";
+        // $panel .= "<div class=\"row\">";
+        
+        $panel .= "<div class='panel-group' id='accordion_trackings_semester'>";
+        
+        foreach($array_semester->result as $tracking){
+            
+            $monitor_object = get_moodle_user($tracking->id_monitor);
+                        
+            $panel .= "<div class='panel panel-default'>";
+            $panel .= "<div class='panel-heading'>";
+            $panel .= "<h4 class='panel-title'>";
+
+            $panel .= "<a data-toggle='collapse' data-parent='#accordion_trackings_semester' href='#".$tracking->id_seg."'> Registro $tracking->fecha </a>";
+
+            $panel .= "</h4>"; // h4 div panel-title
+            $panel .= "</div>"; // End div panel-heading
+
+            $panel .= "<div id='$tracking->id_seg' class='panel-collapse collapse'>";
+            $panel .= "<div class='panel-body'>";
+
+            if($tracking->individual != ""){
+                $panel .= "<div class='panel panel-default'>";
+                $panel .= "<div class='panel-body'>";
+                $panel .= "<div class='col-sm-12'>";
+                $panel .= "<b>Individual:</b><br>";
+                $panel .= "<span>$tracking->individual</span><br><br>";
+                $panel .= "<b>Riesgo familiar:</b><br>";
+                $panel .= "<span>$tracking->individual_riesgo</span><br><br>";
+                $panel .= "</div>"; // End div col-sm-12
+                $panel .= "</div>"; // End panel-body
+                $panel .= "</div>"; // End div panel panel-default
+            }
+            
+            if($tracking->familiar_desc != ""){
+                $panel .= "<div class='panel panel-default'>";
+                $panel .= "<div class='panel-body'>";
+                $panel .= "<div class='col-sm-12'>";
+                $panel .= "<b>Familiar:</b><br>";
+                $panel .= "<span>$tracking->familiar_desc</span><br><br>";
+                $panel .= "<b>Riesgo familiar:</b><br>";
+                $panel .= "<span>$tracking->familiar_riesgo</span><br><br>";
+                $panel .= "</div>"; // End div col-sm-12
+                $panel .= "</div>"; // End panel-body
+                $panel .= "</div>"; // End div panel panel-default
+            }
+            
+            if($tracking->academico != ""){
+                $panel .= "<div class='panel panel-default'>";
+                $panel .= "<div class='panel-body'>";
+                $panel .= "<div class='col-sm-12'>";
+                $panel .= "<b>Académico:</b><br>";
+                $panel .= "<span>$tracking->academico</span><br><br>";
+                $panel .= "<b>Riesgo familiar:</b><br>";
+                $panel .= "<span>$tracking->academico_riesgo</span><br><br>";
+                $panel .= "</div>"; // End div col-sm-12
+                $panel .= "</div>"; // End panel-body
+                $panel .= "</div>"; // End div panel panel-default
+            }
+            
+            if($tracking->economico != ""){
+                $panel .= "<div class='panel panel-default'>";
+                $panel .= "<div class='panel-body'>";
+                $panel .= "<div class='col-sm-12'>";
+                $panel .= "<b>Económico:</b><br>";
+                $panel .= "<span>$tracking->economico</span><br><br>";
+                $panel .= "<b>Riesgo familiar:</b><br>";
+                $panel .= "<span>$tracking->economico_riesgo</span><br><br>";
+                $panel .= "</div>"; // End div col-sm-12
+                $panel .= "</div>"; // End panel-body
+                $panel .= "</div>"; // End div panel panel-default
+            }
+            
+            if($tracking->vida_uni != ""){
+                $panel .= "<div class='panel panel-default'>";
+                $panel .= "<div class='panel-body'>";
+                $panel .= "<div class='col-sm-12'>";
+                $panel .= "<b>Vida universitaria:</b><br>";
+                $panel .= "<span>$tracking->vida_uni</span><br><br>";
+                $panel .= "<b>Riesgo familiar:</b><br>";
+                $panel .= "<span>$tracking->vida_uni_riesgo</span><br><br>";
+                $panel .= "</div>"; // End div col-sm-12
+                $panel .= "</div>"; // End panel-body
+                $panel .= "</div>"; // End div panel panel-default
+            }
+            // $monitor_object->firstname $monitor_object->lastname            
+            $panel .= "</div>"; // End panel-body tracking
+            $panel .= "</div>"; // End div panel-collapse tracking
+            $panel .= "</div>"; // End div panel-default
+        }
+        
+        $panel .= "</div>"; // End panel accordion_trackings_semester
+                
+        // $panel .= "</div>"; // End div class row
+        // $panel .= "</div>"; // End div class container-fluid
+        // $panel .= "</div>";  // End div class container well
+
+        $panel .= "</div>"; // End panel-body
+        $panel .= "</div>"; // End panel-collapse
+        
+        $panel .= "</div>"; //End panel panel-default
+
+
+     }
+     
+     $panel .= "</div>"; //End panel group accordion_semesters
+     
+     $html_tracking_peer .= $panel;
+
+     
+ }else{
+     $html_tracking_peer .= "<div class='col-sm-12'><center><h4>No registra seguimientos</h4></center></div>";
+ }
+ 
+ $record->peer_tracking = $html_tracking_peer;
+
+/**
+ * Se cargan los motivos de abandono o aplazamiento de los estudios
+ */
+
+$reasons_dropout = get_reasons_dropout();
+
+$html_select_reasons = "<option>Seleccione el motivo</option>";
+
+for($i = 0; $i < count($reasons_dropout); $i++){
+    $html_select_reasons .= "<option value=".$reasons_dropout[$i]->id.">";
+    $html_select_reasons .= $reasons_dropout[$i]->descripcion;
+    $html_select_reasons .= "</option>";
+}
+
+$record->reasons_options = $html_select_reasons;
 
 $PAGE->set_context($contextcourse);
 $PAGE->set_context($contextblock);
 $PAGE->set_url($url);
 $PAGE->set_title($title);
 
-// $PAGE->requires->js('/blocks/ases/js/edit_grades.js', true);
-
 $PAGE->requires->css('/blocks/ases/style/styles_pilos.css', true);
-// $PAGE->requires->css('/blocks/ases/style/bootstrap_pilos.css', true);
 $PAGE->requires->css('/blocks/ases/style/bootstrap.min.css', true);
 $PAGE->requires->css('/blocks/ases/style/sweetalert.css', true);
 $PAGE->requires->css('/blocks/ases/style/sweetalert2.css', true);
-$PAGE->requires->css('/blocks/ases/style/round-about_pilos.css', true);
 $PAGE->requires->css('/blocks/ases/style/sugerenciaspilos.css', true);
 $PAGE->requires->css('/blocks/ases/style/forms_pilos.css', true);
-$PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/dataTables.foundation.css', true);
-$PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/dataTables.foundation.min.css', true);
-$PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/dataTables.jqueryui.css', true);
-$PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/dataTables.jqueryui.min.css', true);
-$PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/jquery.dataTables.css', true);
-$PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/jquery.dataTables.min.css', true);
-$PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/jquery.dataTables_themeroller.css', true);
-
-// $PAGE->requires->js('/blocks/ases/js/jquery-2.2.4.min.js', true);
-// $PAGE->requires->js('/blocks/ases/js/DataTables-1.10.12/js/jquery.dataTables.js', true);
-// $PAGE->requires->js('/blocks/ases/js/DataTables-1.10.12/js/jquery.dataTables.min.js', true);
-// $PAGE->requires->js('/blocks/ases/js/DataTables-1.10.12/js/dataTables.jqueryui.min.js', true);
-// $PAGE->requires->js('/blocks/ases/js/DataTables-1.10.12/js/dataTables.bootstrap.min.js', true);
-// $PAGE->requires->js('/blocks/ases/js/DataTables-1.10.12/js/dataTables.bootstrap.js', true);
-// $PAGE->requires->js('/blocks/ases/js/jquery.validate.min.js', true);
-// $PAGE->requires->js('/blocks/ases/js/bootstrap.min.js', true);
-// $PAGE->requires->js('/blocks/ases/js/bootstrap.js', true);
-// $PAGE->requires->js('/blocks/ases/js/sweetalert2.js', true);
-// $PAGE->requires->js('/blocks/ases/js/sweetalert-dev.js', true);
-
-// $PAGE->requires->js('/blocks/ases/js/checkrole.js', true);
-// $PAGE->requires->js('/blocks/ases/js/sugerenciaspilos.js', true);
-// $PAGE->requires->js('/blocks/ases/js/attendance_profile.js', true);
-// $PAGE->requires->js('/blocks/ases/js/main.js', true);
-// $PAGE->requires->js('/blocks/ases/js/academic_profile.js', true);
-// $PAGE->requires->js('/blocks/ases/js/update_profile.js', true);
-// $PAGE->requires->js('/blocks/ases/js/talentos_profile.js', true);
-// $PAGE->requires->js('/blocks/ases/js/search_profile.js', true);
-// $PAGE->requires->js('/blocks/ases/js/d3.js', true);
-// $PAGE->requires->js('/blocks/ases/js/d3.min.js', true);
-// $PAGE->requires->js('/blocks/ases/js/radarChart.js', true);
 
 $output = $PAGE->get_renderer('block_ases');
 

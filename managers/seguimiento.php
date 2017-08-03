@@ -2,9 +2,12 @@
 
 require_once('query.php');
 
+
 if(isset($_POST['function'])){
-    
     switch($_POST['function']){
+        case "delete":
+              deleteSeg();
+              break;
         case "new":
             upgradePares(0);
             break;
@@ -19,6 +22,10 @@ if(isset($_POST['function'])){
             break;
         case "update":
             upgradePares(1);
+            break;
+        case "getSeguimiento":
+            //loadJustOneSeg();
+            getSeguimientos();
             break;
         case "load_grupal":
             load_students();
@@ -35,40 +42,53 @@ if(isset($_POST['function'])){
     }
     
 }else{
-    $msg =  new stdClass();
-    $msg->error = "Error :(";
-    $msg->msg = "Error al comunicarse con el servidor. No se reconoció la funcion a ejecutar";
-    echo json_encode($msg);
+        $msg =  new stdClass();
+        $msg->error = "Error :(";
+        $msg->msg = "Error al comunicarse con el servidor. No se reconoció la funcion a ejecutar".$_POST['id_seg'];
+        echo json_encode($msg);
 }
+
+function deleteSeg(){
+         if(isset($_POST['id'])){
+            $result= delete_seguimiento_grupal($_POST['id']);
+             echo json_encode($result);
+         }else{
+            $msg =  new stdClass();
+            $msg->error = "Error :(";
+            $msg->msg = "Error al eliminar el registro. ";
+            echo json_encode($msg);
+         }
+}
+
+
 
 
 function upgradePares($fun){
     try{
-    
+        
         if(isset($_POST['date']) && isset($_POST['place']) && isset($_POST['h_ini']) && isset($_POST['m_ini']) && isset($_POST['h_fin']) && isset($_POST['idtalentos']) && isset($_POST['m_fin']) && isset($_POST['tema']) && isset($_POST['objetivos']) && isset($_POST['tipo']) && isset($_POST['observaciones'])){
             global $USER;
             date_default_timezone_set("America/Bogota");
             $today = time();
             $insert_object = new stdClass();
-            
-            
-             //incio validaciones segun el tipo
+        
+             //inicio validaciones segun el tipo
             if($_POST['tipo'] == 'GRUPAL'){
                 if(!isset($_POST['actividades'])){
                     throw new Exception('No se reconocio las variblaes necesarias para actualizar un nuevo seguimiento grupal');
                 }
                 $insert_object->actividades = $_POST['actividades'];
-                
+                $insert_object->id_monitor=$USER->id;
+                $insert_object->status=1;
                 
             }elseif($_POST['tipo'] == 'PARES'){
-                if(isset($_POST['individual']) && isset($_POST['familiar']) && isset($_POST['academico']) && isset($_POST['economico']) && isset($_POST['vida_uni'])){
-                    
+                
+                    if(isset($_POST['individual']) && isset($_POST['familiar']) && isset($_POST['academico']) && isset($_POST['economico']) && isset($_POST['vida_uni'])){
                     if($_POST['individual'] != "" && !isset($_POST['riesgo_ind']))   throw new Exception('No se reconocio las variblaes necesarias para actualizar un nuevo seguimiento individual'); 
                     if($_POST['familiar'] != "" && !isset($_POST['riesgo_familiar']))   throw new Exception('No se reconocio las variblaes necesarias para actualizar un nuevo seguimiento familiar'); 
                     if($_POST['academico'] != "" && !isset($_POST['riesgo_aca']))   throw new Exception('No se reconocio las variblaes necesarias para actualizar un nuevo seguimiento academico'); 
                     if($_POST['economico'] != "" && !isset($_POST['riesgo_econom']))   throw new Exception('No se reconocio las variblaes necesarias para actualizar un nuevo seguimiento economico'); 
                     if($_POST['vida_uni'] != "" && !isset($_POST['riesgo_uni']))   throw new Exception('No se reconocio las variblaes necesarias para actualizar un nuevo seguimiento vida_uni'); 
-                    
                     
                     //se almacena el riesgo siempre y cuando haya una descripcion del campo asosiado
                     
@@ -107,6 +127,7 @@ function upgradePares($fun){
                     $insert_object->academico = $_POST['academico'];
                     $insert_object->economico = $_POST['economico'];
                     $insert_object->vida_uni = $_POST['vida_uni'];
+
  
                 }else{
                   throw new Exception('No se reconocio las variblaes necesarias para actualizar un nuevo seguimiento pares'); 
@@ -114,8 +135,6 @@ function upgradePares($fun){
             }
             
             //fin validaciones segun el tipo
-            
-            
             //comentados por esteban para evitar la modificacion del moonitor que creo el documento y la fecha creada
             // $insert_object->id_monitor = $USER->id;
             // $insert_object->created = $today;
@@ -127,9 +146,9 @@ function upgradePares($fun){
             $insert_object->objetivos = $_POST['objetivos'];
             $insert_object->observaciones = $_POST['observaciones'];
             $insert_object->tipo = $_POST['tipo'];
-            
+
             $id = explode(",", $_POST['idtalentos']);
-            
+
             $result = false;
             //si $fun es cero es insercion de lo contrario es actualización
             if($fun == 0){
@@ -232,14 +251,63 @@ function load(){
     
 }
 
+function getSeguimientos(){
+      
+        $result =  new stdClass();
+        $result->content = get_estudiantes($_POST['id'],$_POST['tipo'],$_POST['idinstancia']);
+        $result->rows = count($result->content);
+        $result->seguimiento = get_seguimientos($_POST['id'],$_POST['tipo'],$_POST['idinstancia']);
+            
+        $r->seguimiento->fecha = date('Y-m-d', $result->seguimiento->fecha);
+            
+        $hora_ini = explode(":", $result->seguimiento->hora_ini);
+        $r->h_ini = $hora_ini[0];
+        $r->m_ini = $hora_ini[1];
+        
+        $hora_fin = explode(":", $result->seguimiento->hora_fin);
+        $r->h_fin = $hora_fin[0];
+        $r->m_fin = $hora_fin[1];
+            
+        $user = getUserMoodleByid($result->seguimiento->id_monitor);
+        $r->infoMonitor = $user->firstname." ".$user->lastname;
+        
+        //Validar si es editable
+        
+        $editable = true;
+            
+        date_default_timezone_set("America/Bogota");
+        $today = new DateTime(date('Y-m-d',time()));
+        $created = new DateTime(date('Y-m-d',$result->seguimiento->created));
+        $interval = $created->diff($today);
+        $days = $interval->format('%a');
+           
+            
+        if (intval($days >= 8)){
+            $editable =  false;
+        }
+            
+        if($object_role->nombre_rol == 'sistemas' or $object_role->nombre_rol == 'profesional_ps' or $object_role->nombre_rol == 'practicante_ps'){
+            $editable =  true;
+        }
+            
+        $r->editable = $editable;
+        //se formatea la fecha de creacíón
+        $r->createdate = date('d/m/Y \a \l\a\s h:i a',$result->seguimiento->created);
+        $r->act_status = $result->seguimiento->status; //no es pendejada, la variable 'status'  hasta JQuery 3.1 es una variable reservada. Por esa razon  se renombra por 'act_status'
+        
+        $result->hour=$r;
+        echo json_encode($result);
+    
+}
+
 function loadJustOneSeg(){
     
     global $USER;
     $object_role = get_role_user($USER->id, $_POST['idinstancia']);
-    
-    if(isset($_POST['id_seg']) && isset($_POST['tipo'])){
-    
-    $result =  getSeguimiento(null, $_POST['id_seg'],$_POST['tipo']);
+
+    if(isset($_POST['id']) && isset($_POST['tipo'])){
+
+    $result =  getSeguimiento(null, $_POST['id'],$_POST['tipo']);
     
         foreach($result as $r){ 
             $r->fecha = date('Y-m-d', $r->fecha);
@@ -288,7 +356,7 @@ function loadJustOneSeg(){
             $r->createdate = date('d/m/Y \a \l\a\s h:i a',$r->created);
             $r->act_status = $r->status; //no es pendejada, la variable 'status'  hasta JQuery 3.1 es una variable reservada. Por esa razon  se renombra por 'act_status'
             
-            if($_POST['tipo'] == 'GRUPAL') $r->attendande_listid = getEstudiantesSegGrupal($_POST['id_seg']);
+            if($_POST['tipo'] == 'GRUPAL') $r->attendande_listid = getEstudiantesSegGrupal($_POST['id']);
             
         }
         
@@ -329,20 +397,27 @@ function loadbyMonitor(){
     if(isset($_POST['tipo']) && isset($_POST['idinstancia']) ){
         
         $result =  getSegumientoByMonitor($USER->id,null, $_POST['tipo'], $_POST['idinstancia']);
+        $result_array=[];
+        $array =[];
+
         foreach($result as $r){
+            
             $r->fecha = date('d-m-Y', $r->fecha);
+            $array = $r;
+            array_push($result_array,$array);
+            
 
         }
         $msg =  new stdClass();
-        $msg->result = $result;
+        $msg->result = $result_array;
         $msg->rows = count($result);
-        
+
         echo json_encode($msg);
     }else{
         $msg =  new stdClass();
         $msg->error = "Error :(";
         $msg->msg = "Error al almacenar el registro. ";
-        echo json_encode($msg);
+       echo json_encode($msg);
     }
 }
 

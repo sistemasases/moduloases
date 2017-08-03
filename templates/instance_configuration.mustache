@@ -1,3 +1,4 @@
+{{#data}}
 <div class="container">
     <div class="row">
         <h2>GESTIÓN DE ADMNISTRADORES DEL SISTEMA</h2>
@@ -28,6 +29,7 @@
                                     <li class="assignment_li">
                                         <label for="lista_programas">Programa</label>
                                         <select name="lista_programas" id="lista_programas" disabled>
+                                            {{{programs}}}
                                         </select>
                                     </li>
                                     {{!--<li class="assignment_li" style="display:none;" id="boss_li" >--}} 
@@ -101,3 +103,7 @@
         
     </div>{{!--end panel-group--}}
 </div>
+
+<script type="text/javascript" src="../amd/src/require-setup.js"></script>
+<script data-main="../amd/src/instance_configuration/amd_instance_configuration" src="../amd/scripts/require.js"></script>
+{{/data}}

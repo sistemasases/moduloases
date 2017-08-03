@@ -1,60 +1,70 @@
-{{!--<link href="../style/styles_pilos.css" rel="stylesheet" >--}}
-{{!--<link href="../style/bootstrap_pilos.css" rel="stylesheet"> --}}
-{{!--<link href="../style/sweetalert.css" rel="stylesheet">--}}
-
 <div class="container">
-    <div class="row">
-        <div class="col-lg-6 col-md-6 col-sm-12 col-lg-offset-3">
-            <h2>Carga de datos</h2>
+    <div class="col-sm-6">
+        <h2>Carga de datos</h2>
+        <hr />
+        <div class="row">
+            <form class="form-horizontal" id="upload_data_form">
+                <div class="form-group">
+                    <label class="col-sm-4" for="input_csv_file">Seleccione un archivo</label>
+                    <div class="col-sm-8">
+                        <input class="" type="file" name="csv_file" id="input_csv_file" required/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-4" for="typefile_select">Seleccione la tabla a cargar</label>
+                    <div class="col-sm-8">
+                        <select id="typefile_select" name="typefile_select">
+                            <option value="Academica">Académica</option>
+                            <option value="user">Actualizar usuario campus</option>
+                            <option value="Barrios">Barrios</option>
+                            <option value="cursos">Cursos</option>
+                            <option value="Departamento">Departamento</option>
+                            <option value="Discapacidad">Discapacidad</option>
+                            <option value="Enfasis">Enfasis</option>
+                            <option value="Facultad">Facultad</option>
+                            <option value="Financiera">Financiera</option>
+                            <option value="Funcionalidad">Funcionalidad</option>
+                            <option value="Geolocalizacion">Geolocalización</option>
+                            <option value="Municipio">Municipio</option>
+                            <option value="Permisos">Permisos</option>
+                            <option value="Permisos-Rol">Permisos/Rol</option>
+                            <option value="profesional">Profesional</option>
+                            <option value="Programa">Programa</option>
+                            <option value="Retiro">Retiro</option>
+                            <option value="Roles">Roles usuario pilos</option>
+                            <option value="Sede">Sede</option>
+                            <option value="Semestre">Semestre</option>
+                            <option value="Usuario">Usuario</option>
+                            <option value="Vocacional">Vocacional</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="bar col-sm-10 col-sm-offset-1">
+                        <div class="blue_bar" id="status_bar">
+                            <span></span>
+                        </div>
+                    </div>
+                </div>
+                <hr />
+                <div class="form-group">
+                    <button type="button" class="btn-primary col-sm-2 col-sm-offset-3" id="load_button">Cargar</button>
+                    <button type="button" class="btn-primary col-sm-2 col-sm-offset-1" id="goback_button">Atrás</button>
+                </div>
+            </form>
+        </div>  
+    </div>
+    <div class="col-sm-6">
+        <div id="response_div" hidden="hidden">
+            <h2>Respuesta del servidor</h2>
             <hr />
+            <div class="col-sm-12" id="response_span"></div>
         </div>
     </div>
-    <div class="row">
-            <div id="respuesta" class="col-lg-6 col-md-6 col-lg-offset-3">
-                <form class="form-inline" action="javascript:void(0);" role="form" method="post">
-                  <div class="form-group">
-                     {{!--<label> Nombre el archivo: </label> --}}
-                     {{!--<input type="text" name="nombre_archivo" id="nombre_archivo" />--}}
-                     <input type="file" name="archivo" id="archivo" disabled/>
-                  </div>
-                  <hr />
-                  <div class="form-group">
-                      <label>Seleccione la tabla</label>
-                      <select class="selectpicker" name="selector" id="selector" method="POST">
-                          <option value="Academica">Académica</option>
-                          <option value="user">Actualizar usuario campus</option>
-                          <option value="Barrios">Barrios</option>
-                          <option value="cursos">Cursos</option>
-                          <option value="Departamento">Departamento</option>
-                          <option value="Discapacidad">Discapacidad</option>
-                          <option value="Enfasis">Enfasis</option>
-                          <option value="Facultad">Facultad</option>
-                          <option value="Financiera">Financiera</option>
-                          <option value="Funcionalidad">Funcionalidad</option>
-                          <option value="Geolocalizacion">Geolocalización</option>
-                          <option value="Municipio">Municipio</option>
-                          <option value="Permisos">Permisos</option>
-                          <option value="Permisos-Rol">Permisos/Rol</option>
-                          <option value="profesional">Profesional</option>
-                          <option value="Programa">Programa</option>
-                          <option value="Retiro">Retiro</option>
-                          <option value="Roles">Roles usuario pilos</option>
-                          <option value="Sede">Sede</option>
-                          <option value="Semestre">Semestre</option>
-                          <option value="Usuario">Usuario</option>
-                          <option value="Vocacional">Vocacional</option>
-                       </select>
-                   </div>
-                  <hr />
-                  <div class="form-group">
-                      <input type="submit" id="boton_subir" value="Subir" class="btn btn-success" disabled/>
-                      <progress id="barra_de_progreso" value="0" max="100"></progress>
-                  </div>
-               </form>
-               <hr />
-             <div class="hide" id="archivos_subidos">
-                 
-             </div>
-        </div>
-    </div>  
 </div>
+<div class="container">
+    <!-- Espacio para mostrar los archivos ya cargados -->
+</div>
+
+<script type="text/javascript" src="../amd/src/require-setup.js"></script>
+<script data-main="../amd/src/upload_data/amd_upload_data" src="../amd/scripts/require.js"></script>

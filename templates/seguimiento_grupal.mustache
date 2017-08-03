@@ -19,7 +19,7 @@
   <div class="row">
     
     <span class="btn btn-info col-md-offset-3" id="go_back">Regresar</span>
-    <button type="submit" id="socioedu_add_grupal" class="submit" data-toggle="modal" data-target="#myModal">
+    <span class="btn btn-danger" id="socioedu_add_grupal" data-toggle="modal" data-target="#myModal">
       Adicionar nuevo
     </button>
       
@@ -49,21 +49,20 @@
                             <label for="date" class="form-control-label col-md-3">Fecha</label>
                             <div class="col-md-9">
                               <input type="date" class="form-control" id="date" name="date" >
-                                <span >(dd/mm/aaaa)</span>
                               </input>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <label for="place" class="form-control-label col-md-2">Lugar</label>
                             <div class="col-md-10">
-                              <input type="taxt" maxlength = "20" size="20" class="form-control" id="place" name="place" >
+                              <input type="text" maxlength = "20" size="20" class="form-control" id="place" name="place" >
                             </div>
                         </div>
                       </div>
                       <hr>
                       <div class= "form-group">
-                        <div data-spy="scroll" data-target=".navbar" data-offset="50" class="well col-md-7 col-md-offset-3" id="list_grupal_seg" name="list_grupal_seg">
-                          <table id="mytable" class="table table-striped"> <thead> <tr> <th>Código</th> <th>Nombre</th> <th>Apellido</th> <th>Presente</th></tr> </thead><tbody></tbody></table>
+                        <div data-spy="scroll" data-target=".navbar" data-offset="50" class="well col-md-7 col-md-offset-3" id="list_grupal_seg_consult" name="list_grupal_seg_consult">
+                          <table id="mytable_consult" class="table table-striped"> <thead> <tr> <th>Código</th> <th>Nombre</th> <th>Apellido</th> <th>Presente</th></tr> </thead><tbody id="mytbody"></tbody></table>
                         </div>
                       </div>
                       <div class= "form-group">
@@ -130,10 +129,14 @@
                     </form>
                 </div>
                 <div class="modal-footer">
-                  <button type="button" class="button btn btn-secondary" data-dismiss="modal">Close</button>
-                  <button type="button" class="button btn btn-primary hide" id="save_seg">Save changes</button>
-                 <button type="button" class="button btn btn-primary hide" id="upd_seg">Actualizar</button>
+                  <button type="button" class="button btn btn-secondary" data-dismiss="modal" id="close_seg">Cerrar</button>
+                  <button type="button" class="button btn btn-primary hide" id="save_seg">Guardar</button>
+                  <button type="button" class="button btn btn-primary hide" id="upd_seg">Editar</button>
+                  <button type="button" class="button btn btn-primary hide" id="edit_seg">Actualizar</button>
+
                 </div>
               </div>
             </div>
           </div>
+      <script type="text/javascript" src="../amd/src/require-setup.js"></script>
+     <script data-main="../amd/src/seguimiento_grupal/main" src="../amd/scripts/require.js"></script>

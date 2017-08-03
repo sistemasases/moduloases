@@ -3,7 +3,6 @@ require('query.php');
 
 global $USER;
 
-
 if(isset($_POST['type'])&&$_POST['type']=="getid") 
  {
     echo($USER->id);
@@ -27,14 +26,31 @@ if(isset($_POST['type'])&&$_POST['type']=="getRol"&&isset($_POST['instance'])&&i
 
 if(isset($_POST['type'])&&$_POST['type']=="info_monitor"&&isset($_POST['id'])&&isset($_POST['instance'])) 
  {
-    $retorno = get_seguimientos_monitor($USER->id,$_POST['instance']);
+  
+    $retorno = get_seguimientos_monitor($_POST['id'],$_POST['instance']);
     echo (json_encode($retorno));
 }
+
+if(isset($_POST['type'])&&$_POST['type']=="eliminar_registro"&&isset($_POST['id'])) 
+ {
+  
+   $retorno = eliminar_registro($_POST['id']);
+   echo $retorno;
+   
+}
+
+if(isset($_POST['type'])&&$_POST['type']=="actualizar_registro") 
+ {
+  $objeto =(object)$_POST['seguimiento'];
+  $retorno = updateSeguimiento_pares($objeto);
+  echo $retorno;
+  
+ }
 
 if(isset($_POST['type'])&&$_POST['type']=="number_seg_monitor"&&isset($_POST['id'])&&isset($_POST['instance'])) 
  {
     $retorno = get_cantidad_seguimientos_monitor($_POST['id'],$_POST['instance']);
-    echo ($retorno);
+    echo (json_encode($retorno));
 }
 
 if(isset($_POST['type'])&&$_POST['type']=="info_practicante"&&isset($_POST['id'])) 
@@ -43,9 +59,9 @@ if(isset($_POST['type'])&&$_POST['type']=="info_practicante"&&isset($_POST['id']
     echo (json_encode($retorno));
 }
 
-if(isset($_POST['type'])&&$_POST['type']=="info_profesional"&&isset($_POST['id'])) 
+if(isset($_POST['type'])&&$_POST['type']=="info_profesional"&&isset($_POST['id'])&&isset($_POST['instance'])) 
  {
-    $retorno = get_practicantes_profesional($_POST['id']);
+    $retorno = get_practicantes_profesional($_POST['id'],$_POST['instance']);
     echo (json_encode($retorno));
 }
 
@@ -112,6 +128,7 @@ function send_email_to_user($tipoSeg,$codigoEnviarN1,$codigoEnviarN2,$fecha,$nom
     $messageHtml.="<b>OBSERVACION:<b><br><br>";
     $messageHtml.="Estimado monitor $name_monitor<br><br>";
     
+    
     if($tipoSeg=="individual")
     {
       $messageHtml.="Revisando el seguimiento realizado al estudiante $nombre  el dia $fecha, mis comentarios son los siguientes:<br><br>";
@@ -123,6 +140,7 @@ function send_email_to_user($tipoSeg,$codigoEnviarN1,$codigoEnviarN2,$fecha,$nom
     $messageHtml.=$messageText."<br><br>";
     $messageHtml.="Cordialmente<br>";
     $messageHtml.="$name_prof";
+    echo $messageHtml;
     
     $email_result = email_to_user($emailToUser, $emailFromUser, $subject, $messageText, $messageHtml, ", ", true);
     if($email_result!=1)

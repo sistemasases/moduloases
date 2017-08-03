@@ -1,7 +1,6 @@
 <?php
 require_once('asesreport_lib.php');
 
-
 $columns = array();
 $poblacion = array();
 $campos_consulta = array();
@@ -18,7 +17,6 @@ if(isset($_POST['estado'])){
 
 if(isset($_POST['chk']) && isset($_POST['idinstancia'])){
 
-    $risk = -1; //Que hace esta variable??
     $counter = 0;
     
     foreach($_POST['chk'] as $chk)
@@ -30,35 +28,17 @@ if(isset($_POST['chk']) && isset($_POST['idinstancia'])){
     
     if(isset($_POST['chk_risk'])){
         
-        foreach($_POST['chk_risk'] as $chk_risk)
-        {
-            
-            // if($chk_risk == 'academic_risk'){
-            //     $title = "R.A";
-            //     $risk = 0;
-            // }
-            // else if($chk_risk == 'social_risk'){
-            //     $title = "R.S";
-            //     $risk = 1;
-            // }
-            
+        foreach($_POST['chk_risk'] as $chk_risk){
+
             $query_nombre = "SELECT * FROM {talentospilos_riesgos_ases} WHERE id =".$chk_risk;
-            // print_r($query_nombre);
-            // die();
+
             $nombre_riesgo = $DB->get_record_sql($query_nombre)->nombre;
             array_push($columns, array("title"=>'R.'.strtoupper(substr($nombre_riesgo, 0, 1)).substr($nombre_riesgo, 1, 2), "name"=>$nombre_riesgo, "data"=>$nombre_riesgo));
             array_push($riesgos_consulta, $chk_risk);
             $counter = $counter + 1;            
         }
-        // if($counter >= 2){
-        //   $risk = $counter;
-        // }
     }
-    // else{
-    //     $risk = -1;
-    // }
-    
-    //$result = get_usersByPopulation($campos_consulta, $poblacion, $risk, $_POST['idinstancia']);
+
     $result = getUsersByPopulation($campos_consulta, $poblacion, $riesgos_consulta, $_POST['idinstancia']);
     
     $data = array(

@@ -70,12 +70,15 @@ $url = new moodle_url("/blocks/ases/view/ases_report.php",array('courseid' => $c
 $coursenode = $PAGE->navigation->find($courseid, navigation_node::TYPE_COURSE);
 $blocknode = navigation_node::create('Reporte general',$url, null, 'block', $blockid);
 $coursenode->add_node($blocknode);
-$blocknode->make_active();
+//ELIMINAR $node
+// $node = $blocknode->add('Calificador',new moodle_url("/blocks/ases/view/grade_categories.php",array('courseid' => $courseid, 'instanceid' => $blockid)));
+// $blocknode->make_active();
+// $node->make_active();
 
-//se valida si la instancia ya está registrada
-// if(!consultInstance($blockid)){
-//     header("Location: instanceconfiguration.php?courseid=$courseid&instanceid=$blockid");
-// }
+// se valida si la instancia ya está registrada
+if(!consult_instance($blockid)){
+    header("Location: instance_configuration.php?courseid=$courseid&instanceid=$blockid");
+}
 
 $PAGE->requires->css('/blocks/ases/style/styles_pilos.css', true);
 $PAGE->requires->css('/blocks/ases/style/bootstrap_pilos.css', true);
@@ -84,8 +87,6 @@ $PAGE->requires->css('/blocks/ases/style/sweetalert.css', true);
 $PAGE->requires->css('/blocks/ases/style/round-about_pilos.css', true);
 $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/dataTables.foundation.css', true);
 $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/dataTables.foundation.min.css', true);
-// $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/dataTables.jqueryui.css', true);
-// $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/dataTables.jqueryui.min.css', true);
 $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/jquery.dataTables.css', true);
 $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/jquery.dataTables.min.css', true);
 $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/jquery.dataTables_themeroller.css', true);
@@ -97,13 +98,6 @@ $PAGE->set_heading($pagetitle);
 
 $output = $PAGE->get_renderer('block_ases');
 $ases_report_page = new \block_ases\output\ases_report_page($data);
-
-// if(true){
-//     $url = new moodle_url("/blocks/ases/view/instanceconfiguration.php",array('courseid' => $courseid, 'instanceid' => $blockid));
-//     $PAGE->set_url($url);
-//     $output = $PAGE->get_renderer('block_ases');
-//     $index_page = new \block_ases\output\instanceconfiguration_page('Some text');
-// }
 
 //echo $output->standard_head_html(); 
 echo $output->header();

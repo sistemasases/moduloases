@@ -1,4 +1,4 @@
- <?php /*
+<?php  
 require('query.php');
 
 global $COURSE, $USER;
@@ -76,19 +76,19 @@ if(isset($_POST['page']) && isset($_POST['block']) ){
 
 //verificar usuario administrador
  // se verifica si el usuario actual es adminnistrador
-    // $admins = get_admins();
-    // $isadmin = false; 
-    // foreach ($admins as $admin) { 
-    //     if ($USER->id == $admin->id) { 
-    //         $isadmin = true; break; 
+    $admins = get_admins();
+    $isadmin = false; 
+    foreach ($admins as $admin) { 
+        if ($USER->id == $admin->id) { 
+            $isadmin = true; break; 
             
-    //     } 
+        } 
         
-    // }
-    // //si es administrador le asigno los permisos del rol sistemas, el cual tiene todos los permisos
-    // if($isadmin){
-    //     update_role_user($USER->username, "sistemas");
+    }
+    //si es administrador le asigno los permisos del rol sistemas, el cual tiene todos los permisos
+    if($isadmin){
+        update_role_user($USER->username, "sistemas");
     
-    // }
-    */
+    }
+  
 ?>

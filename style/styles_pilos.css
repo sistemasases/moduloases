@@ -1000,14 +1000,24 @@ textarea.no-borde-fondo
   background: none;
 }
 
-.no-edit
+input.no-borde-fondo.fecha
 {
-  
+    width: 100%;
+    background: none;
+    border:0;
+    box-shadow: none;
+}
+
+input.no-borde-fondo.hora_inicial
+{
+    width: 53%;
+    border: none;
+    background: none;
 }
 
 input.no-borde-fondo.lugar
 {
-  width: 33%;
+  width: 100%;
   border: none;
   background: none;
 }
@@ -1038,6 +1048,38 @@ input.no-borde-fondo.tema
 .reporte-seguimiento .students_table .riesgo_alto
 {
   background-color: #F78181 !important;
+}
+
+/*Tabla de seguimientos_pilos y textarea*/
+
+.table-info-pilos
+{ 
+  padding-top: 1%;
+  padding-bottom: 1%;
+  padding-left: 0;
+  padding-right:0;
+
+}
+
+.riesgo_medio
+{
+  background-color: #F7BE81 !important;
+}
+
+
+.riesgo_bajo
+{
+  background-color: #BEF781 !important;
+}
+
+
+.riesgo_alto
+{
+    background-color: #F78181 !important;
+}
+
+.textarea-seguimiento-pilos{
+    width: 100% !important;
 }
 
 .reporte-seguimiento .btn.btn-info.btn-lg.botonesSeguimiento
@@ -1088,5 +1130,278 @@ input.no-borde-fondo.tema
   -webkit-border-radius: 5px 5px 5px 5px;
 }
 
+#buttons_edit_div{
+  margin-bottom: 8px;
+}
 
 
+
+/* Rules for modals */
+
+/* The Modal (background) */
+.mymodal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    margin-top: 0px;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+    overflow: auto;
+}
+
+/* Modal Content/Box */
+.mymodal-content {
+    background-color: white;
+    margin: 15% auto; /* 15% from the top and centered */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 60%;
+    margin-bottom: 20px;
+    margin-top: 15%;
+}
+
+/* The Close Button */
+.mymodal-close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.mymodal-close:hover,
+.mymodal-close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* Modal Header */
+.mymodal-header {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    margin-top: 0px;
+    margin-right: 0px;
+    background-color: #D8D8D8;
+    color: black;
+}
+
+/* Modal Body */
+.mymodal-body {
+  margin-top: 30px;
+  padding: 0px;
+}
+
+/* Modal Footer */
+.mymodal-footer {
+    padding: 0px;
+    margin-top: 2px;
+    background-color: #FAFAFA;
+    color: black;
+}
+
+#tracking_peer_form textarea{
+  resize: vertical;
+}
+
+.form-legend{
+  margin-top: 2px !important;
+  margin-bottom:5px;
+  background-color: #E6E6E6;
+  padding-top: 3px; 
+  padding-bottom: 3px;
+  padding-left: 10px;
+}
+
+.required_form_span{
+  color:red;
+  margin: 0px !important;
+  padding: 0px !important;
+  width: 5px !important;
+  position: block;
+}
+
+
+/* STATUS BAR */
+.bar{
+  background-color: #f3f3f3;
+  border-radius: 5px;
+  box-shadow: 0px 0px 5px rgba(0,0,0,.2);
+  height: 25px;
+}
+
+.blue_bar{
+  background-color: #247CC0;
+  border-radius: 10px;
+  display: block;
+  height: 25px;
+  line-height: 25px;
+  text-align: center;
+  width: 0%;
+}
+
+.green_bar{
+  background-color: #2EA265 !important;
+}
+
+.red_bar{
+  background-color: #DE3152 !important;
+}
+
+#status_bar span{
+  color: #fff;
+  font-weight: bold;
+  line-height: 25px;
+}
+
+.response_error{
+  background-color: #FF8989 !important;
+  height: 100%;
+  width: 100%;
+}
+
+.response_success{
+  background-color: #A9F5BC !important;
+  height: 100%;
+  width: 100%;
+}
+
+#peer_trackings{
+  min-height: 60px;
+}
+
+.accordion-toggle.in {
+	background: #d51b23;
+	color: whitesmoke;
+}
+
+#accordion_trackings_semester .panel-collapse{
+  padding: 0px;
+}
+
+#accordion_trackings_semester .panel-body{
+  padding: 0px;
+}
+
+#accordion_semesters .panel-collapse{
+  padding-left: 0px !important;
+  padding-right: 0px !important;
+}
+
+#accordion_semesters .panel-body{
+  padding-top: 0px;
+  padding-left: 0px !important;
+  padding-right: 0px !important;
+}
+
+
+.ir_curso:hover{
+  background-color:grey;
+}
+
+.title{
+  position: relative;
+  top:0;
+  left:0;
+  right:0;
+  bottom:0;
+  margin: auto;
+  width: 100px;
+  
+}
+
+.tabla_docentes{
+  position: relative;
+  top:0;
+  left:0;
+  right:0;
+  bottom:0;
+  margin: auto;
+  width: 50%;
+}
+
+.fondo{
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 0;
+  background-color: rgba(72, 68, 68, 0.83);
+}
+
+.btn-acept{
+  float: right;
+}
+
+.new{
+  color: white;
+}
+
+.fondo{
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 0;
+  background-color: rgba(72, 68, 68, 0.83);
+}
+
+
+.column-leader{
+  width:15px !important;
+}
+    
+.div1{
+  float:left;
+  margin-left: auto;
+  margin-right: auto;
+}
+    
+.centrarCabecera{
+  text-align:center;
+}
+    
+#inputValor{
+  width : 47px !important;
+}
+    
+#tipoCalificacion{
+  width : 168px !important;
+}
+    
+#catPadre{
+  width: 220px!important;
+}
+    
+.level1{
+  padding-left: 10px !important;
+}
+    
+.level2{
+  padding-left: 40px !important;
+}
+    
+.level3{
+  padding-left: 70px !important;
+}
+    
+.level4{
+  padding-left: 100px !important;
+}
+    
+.level5{
+  padding-left: 130px !important;
+}
+    
+.level6{
+  padding-left: 160px !important;
+}
+    
+.divForm{
+  padding-left: 30px !important;
+}

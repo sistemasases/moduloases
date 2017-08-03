@@ -5,13 +5,13 @@ require_once('MyException.php');
 require_once('dateValidator.php');
 require_once('query.php');
 
-if (isset($_FILES['archivo'])) {
+if (isset($_FILES['csv_file'])){
 
    try{
-      $archivo = $_FILES['archivo'];
+      $archivo = $_FILES['csv_file'];
       $extension = pathinfo($archivo['name'], PATHINFO_EXTENSION);
       $nombre = $archivo['name'];
-      $varSelector = $_POST['selector'];
+      $varSelector = $_POST['typefile_select'];
       if ($extension !== 'csv') throw new MyException("El archivo ".$archivo['name']." no corresponde al un archivo de tipo CSV. Por favor verifícalo"); 
       if (!move_uploaded_file($archivo['tmp_name'], "../view/archivos_subidos/$nombre")) throw new MyException("Error al cargar el archivo.");
       ini_set('auto_detect_line_endings', true);
@@ -21,8 +21,8 @@ if (isset($_FILES['archivo'])) {
        pg_query("BEGIN") or die("Could not start transaction\n");
       //$transaction = $DB->start_delegated_transaction();
 
-      if($varSelector == "Municipio")
-      {
+      if($varSelector == "Municipio"){
+         
          global $DB;
          $record = new stdClass();
          $count = 0;
@@ -57,29 +57,24 @@ if (isset($_FILES['archivo'])) {
          $respuesta = 1;
          echo $respuesta;
       }
-      else if($varSelector == "Facultad")
-      {
+      else if($varSelector == "Facultad"){
          global $DB;
          //esta tabla no depende de otra
          $record = new stdClass();
          $count = 0;
          
-        
-         while($data = fgetcsv($handle, 50, ","))
-         {
+         while($data = fgetcsv($handle, 50, ",")){
             $record->cod_univalle = $data[0];
             $record->nombre = $data[1];
             $DB->insert_record('talentospilos_facultad', $record, false);
            $count += 1;
          }
 
-         
          $respuesta = 1;
          echo $respuesta;
          
       }
-      else if($varSelector == "Departamento")
-      {
+      else if($varSelector == "Departamento"){
          global $DB;
          // esta tabla no depende de otra
          $record = new stdClass();
@@ -97,8 +92,7 @@ if (isset($_FILES['archivo'])) {
          $respuesta = 1;
          echo $respuesta;
       }
-      else if($varSelector == "Sede")
-      {
+      else if($varSelector == "Sede"){
          global $DB;
          $record = new stdClass();
          $count = 0;
@@ -131,8 +125,7 @@ if (isset($_FILES['archivo'])) {
          $respuesta = 1;
          echo $respuesta;
       }
-      else if($varSelector == "Programa")
-      {
+      else if($varSelector == "Programa"){
          global $DB;
          $record = new stdClass();
          $count = 0;
@@ -179,8 +172,7 @@ if (isset($_FILES['archivo'])) {
          $respuesta = 1;
          echo $respuesta;
       }
-      else if($varSelector == "Discapacidad")
-      {
+      else if($varSelector == "Discapacidad"){
          global $DB;
          //no depende de ninguna tabla
          $record = new stdClass();
@@ -197,8 +189,7 @@ if (isset($_FILES['archivo'])) {
          $respuesta = 1;
          echo $respuesta;
       }
-      else if($varSelector == "Usuario")
-      {
+      else if($varSelector == "Usuario"){
          global $DB;
          $record = new stdClass();
          $dateValidator = new dateValidator();
@@ -298,6 +289,7 @@ if (isset($_FILES['archivo'])) {
                $record->estamento = $data[20];
                $record->observacion = $data[21];
                $record->estado = $data[22];
+               $record->estado_icetex = 0;
                $record->grupo = $data[23];
                
                $record->ayuda_discap = $data[25];
@@ -387,8 +379,7 @@ if (isset($_FILES['archivo'])) {
          $result= $DB->get_record_sql("SELECT id FROM {user_info_field} WHERE shortname = 'estado'");
          $idestado_field = $result->id;
         
-         foreach ($array_data as $dat)
-         {  
+         foreach ($array_data as $dat){  
             $record = new stdClass();
             //se verifica si ya el campo está creado asi saber si insertar o actualizar
             $query="select  d.id, f.shortname  from {user_info_data} d inner join {user_info_field} f on d.fieldid= f.id  where (f.shortname='idtalentos' OR f.shortname='idprograma' OR f.shortname='estado') AND userid =".$dat[2]." order by shortname;";
@@ -449,8 +440,7 @@ if (isset($_FILES['archivo'])) {
          echo $respuesta;
       }
       // Carga roles
-      else if($varSelector == "Roles")
-      {
+      else if($varSelector == "Roles"){
          global $DB;
          $record = new stdClass();
       
@@ -464,8 +454,7 @@ if (isset($_FILES['archivo'])) {
          $respuesta = 1;
          echo $respuesta;
       }
-      else if($varSelector == "Funcionalidad")
-      {
+      else if($varSelector == "Funcionalidad"){
          global $DB;
          $record = new stdClass();
      
@@ -479,8 +468,7 @@ if (isset($_FILES['archivo'])) {
          $respuesta = 1;
          echo $respuesta;
       }
-      else if($varSelector == "Permisos")
-      {
+      else if($varSelector == "Permisos"){
          global $DB;
          $record = new stdClass();
 
@@ -494,8 +482,7 @@ if (isset($_FILES['archivo'])) {
          $respuesta = 1;
          echo $respuesta;
       }
-      else if($varSelector == "Permisos-Rol")
-      {
+      else if($varSelector == "Permisos-Rol"){
          global $DB;
          $record = new stdClass();
 
@@ -780,7 +767,7 @@ if (isset($_FILES['archivo'])) {
       else{
          throw new MyException("Lo sentimos la carga de archivos para la tabla ".$varSelector." esta en desarrollo.");
       }
-       //se termina la transaccion
+      //se termina la transaccion
       pg_query("COMMIT") or die("Transaction commit failed\n");
       //$transaction->allow_commit();
       fclose($handle);
@@ -802,8 +789,11 @@ if (isset($_FILES['archivo'])) {
       pg_query("ROLLBACK");
       //se captura el error sql generado por el serversql en alguna insersion cuando está en medio de una transaccion no lo hace. averiguar porque? y como hacerlo siempre
       
-      echo $e->getMessage()."<br>".$errorSqlServer."<br>".$query."<b>Consejos:</b><br><b>*</b> Por favor verifica la linea: ".intval($count+1)." en el archivo".$archivo['name'].".Asegurate de que no haya duplicidad en la información<br><b>*</b>Asegurate de que el archivo cargado contenga a la información necesaria en el formato determinado para cargar la tabla ".$varSelector.".";
+      echo $e->getMessage()."<br>".$errorSqlServer."<br>".$query."<b>Consejos:</b><br><b>*</b> Por favor verifica la linea: ".intval($count+1)." en el archivo: ".$archivo['name'].". Asegurate de que no haya duplicidad en la información<br><b>*</b>Asegurate de que el archivo cargado contenga a la información necesaria en el formato determinado para cargar la tabla ".$varSelector.".";
       
    }
+}
+else{
+   echo "El envio no se realiza sactisfactoriamente.";
 }
 ?>
