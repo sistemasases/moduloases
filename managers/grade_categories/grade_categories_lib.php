@@ -19,8 +19,7 @@ require_once $CFG->dirroot.'/grade/report/user/lib.php';
  */
 
 
-function get_courses_pilos($instanceid)
-{
+function get_courses_pilos($instanceid){
     global $DB;
     
     //Se consulta el programa al cual esta asociada la instancia
@@ -140,7 +139,7 @@ function get_info_course($id_curso){
               LIMIT 1) AS subc";
     $profesor = $DB->get_record_sql($query_teacher);
     
-    $query_students = "SELECT usuario.id, usuario.firstname, usuario.lastname
+    $query_students = "SELECT usuario.id, usuario.firstname, usuario.lastname, usuario.username
                     FROM mdl_user usuario INNER JOIN mdl_user_enrolments enrols ON usuario.id = enrols.userid 
                     INNER JOIN mdl_enrol enr ON enr.id = enrols.enrolid 
                     INNER JOIN mdl_course curso ON enr.courseid = curso.id  
@@ -162,7 +161,17 @@ function get_info_course($id_curso){
     return $curso;
 }
 
+
+/**
+ * Returns de string html table with the students, categories and his notes.
+ *
+ * @param $id_curso
+ * @return string HTML
+**/
 function get_categorias_calificador($id_curso){
+    global $USER;
+    $USER->gradeediting[$id_curso] = 1;
+
     $context = context_course::instance($id_curso);
     
     $gpr = new grade_plugin_return(array('type'=>'report', 'plugin'=>'user', 'courseid'=>$id_curso));
@@ -176,6 +185,9 @@ function get_categorias_calificador($id_curso){
 // print_r(get_categorias_curso(3));
 
 
+///*********************************///
+///*** Wizard categories methods ***///
+///*********************************///
 /**
  * It performs the insertion of a category considering whether it is of weighted type or not,
  * after which it inserts the item that represents the category. The latter is necessary for the category to have a weight.
@@ -188,7 +200,7 @@ function get_categorias_calificador($id_curso){
  * @return Int --- ok->1 || error->0
 **/
 function insertCategory($course,$father,$name,$weighted,$weight){
-     global $DB;
+    global $DB;
     
     //Instance an object category to use insert_record
     $object = new stdClass;
@@ -225,10 +237,9 @@ function insertCategory($course,$father,$name,$weighted,$weight){
  * @param $weight
  * @return int --- ok->id_cat || error->0
 **/
-function insertCategoryParcial($course,$father,$name,$weighted,$weight)
-{
-     global $DB;
-    
+function insertCategoryParcial($course,$father,$name,$weighted,$weight){
+    global $DB;
+      
     //Instance an object category to use insert_record
     $object = new stdClass;
     $object ->courseid=$course;
@@ -241,16 +252,16 @@ function insertCategoryParcial($course,$father,$name,$weighted,$weight)
     $object->aggregateoutcomes = 0;
 
     $succes=$DB->insert_record('grade_categories',$object);
-    
-    if($succes)
-    {
-      if(insertItem($course,$succes,$name,$weight,false)===1)
-      {
-        return $succes;    
-      }else{
-          return 0;
-      }
+      
+    if($succes){
+        if(insertItem($course,$succes,$name,$weight,false)===1)
+        {
+          return $succes;    
+        }else{
+            return 0;
+        }
     }
+
     return 0;
 }
 
@@ -264,8 +275,7 @@ function insertCategoryParcial($course,$father,$name,$weighted,$weight)
  * @param $weight
  * @return Int --- ok-> 1 || error-> 0
 **/
-function insertParcial($course,$father,$name,$weighted,$weight)
-{
+function insertParcial($course,$father,$name,$weighted,$weight){
     $succes = insertCategoryParcial($course,$father,$name,$weighted,$weight);
     if($succes != 0){
         if(insertItem($course,$succes,$name,0,true) === 1){
@@ -295,8 +305,7 @@ function insertParcial($course,$father,$name,$weighted,$weight)
  * @param $item
  * @return Int --- ok-> 1 || error-> 0
 **/
-function insertItem($course,$father,$name,$valsend,$item)
-{
+function insertItem($course,$father,$name,$valsend,$item){
     global $DB;
     
     //Instance an object item to use insert_record
@@ -339,8 +348,7 @@ function insertItem($course,$father,$name,$valsend,$item)
  * @param $course
  * @return int --- nextindex
 **/
-function getNextIndex($course)
-{
+function getNextIndex($course){
     global $DB;
     $sql_query = "SELECT max(sortorder) FROM {grade_items} WHERE courseid=".$course.";";
     $output=$DB->get_record_sql($sql_query);
@@ -355,8 +363,7 @@ function getNextIndex($course)
  * @param $idCourse
  * @return String hmtl
 **/
-function getCategoriesandItems($courseid)
-{            
+function getCategoriesandItems($courseid){
 
     global $DB;
    
@@ -382,8 +389,7 @@ function getCategoriesandItems($courseid)
  * Returns the HTML from the flexitable.
  * @param grade_report_user $report info of which will be shown
  * @return string
-**/
- 
+**/ 
 function print_table_categories($report){
     $maxspan = $report->maxdepth;
 
@@ -454,15 +460,15 @@ function print_table_categories($report){
  * @param &$report
  * @return null
 **/
- function reduce_table_categories(&$report) {
+function reduce_table_categories(&$report){
     $report->showpercentage = false;
-  $report->showrange = false; 
-  $report->showfeedback = false;
-  $report->showcontributiontocoursetotal = false;
-  $report->showweight = false;
-  $report->showgrade = false; 
-  $report->showtotalsifcontainhidden = false;
-  $report->setup_table();
+    $report->showrange = false; 
+    $report->showfeedback = false;
+    $report->showcontributiontocoursetotal = false;
+    $report->showweight = false;
+    $report->showgrade = false; 
+    $report->showtotalsifcontainhidden = false;
+    $report->setup_table();
 }
 
 /**
@@ -472,7 +478,7 @@ function print_table_categories($report){
  * @return boolean
 **/
 function isCategoryTotal($string){
-    if(stripos($string, "gradeitemdescriptionfiller") === false){
+    if(stripos($string, "gradeitemdescriptionfiller") === false && stripos($string, "Total") == false){
         return false;
     }else{
         return true;

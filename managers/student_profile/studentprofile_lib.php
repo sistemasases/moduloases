@@ -199,9 +199,6 @@ require_once(dirname(__FILE__). '/../../../../config.php');
     }else{
         return null;
     }
-    
-    
-    
 }
 
 /**
@@ -268,20 +265,19 @@ function get_id_first_semester($id){
      
      global $DB;
      
-     $sql_query = "SELECT id, nombre, fecha_inicio::DATE, fecha_fin::DATE FROM {talentospilos_semestre} WHERE id >= $id_first_semester ORDER BY {talentospilos_semestre}.fecha_inicio DESC";
+    $sql_query = "SELECT id, nombre, fecha_inicio::DATE, fecha_fin::DATE FROM {talentospilos_semestre} WHERE id >= $id_first_semester ORDER BY {talentospilos_semestre}.fecha_inicio DESC";
      
-     $result_query = $DB->get_records_sql($sql_query);
+    $result_query = $DB->get_records_sql($sql_query);
      
-     $semesters_array = array();
+    $semesters_array = array();
      
-     foreach ($result_query as $result){
-       array_push($semesters_array, $result);
-     }
-    //print_r($semesters_array);
+    foreach ($result_query as $result){
+      array_push($semesters_array, $result);
+    }
     return $semesters_array;
-}
+ }
 
- function compare_date($fecha_inicio, $fecha_fin, $fecha_comparar){
+function compare_date($fecha_inicio, $fecha_fin, $fecha_comparar){
     
     $fecha_inicio = new DateTime(date('Y-m-d',$fecha_inicio));
     date_add($fecha_inicio, date_interval_create_from_date_string('-30 days'));
@@ -291,7 +287,7 @@ function get_id_first_semester($id){
     // var_dump($fecha_comparar);
     //print_r(($fecha_comparar >= strtotime($fecha_inicio->format('Y-m-d'))) && ($fecha_comparar <= $fecha_fin));
     return (((int)$fecha_comparar >= strtotime($fecha_inicio->format('Y-m-d'))) && ((int)$fecha_comparar <= (int)$fecha_fin));
-}
+ }
 
  function get_id_last_semester($idmoodle){
 
@@ -303,3 +299,186 @@ function get_id_first_semester($id){
          return false;
      }
  }
+
+/**
+ * Función que guarda un seguimiento realizado a un estudiante
+ * Guarda información en la tabla tp_seguimientos y la relación de estudiante y sus
+ * seguimientos (tp_seguimiento_estud)
+ *
+ * @param $object_tracking --> Objeto con toda la información correspondiente al seguimiento de pares a almacenar
+ * @return $object_result --> Objeto que almacena el resultado de operación en la base de datos
+ */
+function save_tracking_peer($object_tracking){
+
+    global $DB;
+
+    pg_query("BEGIN") or die("Falló la conexión con la base de datos\n");
+    $result_saving = new stdClass();
+
+    // Inserta el seguimiento
+    $result_insertion_tracking = $DB->insert_record('talentospilos_seguimiento', $object_tracking, true);
+
+    // Inserta la relación de seguimiento_estudiante
+    $object_tracking_student = new stdClass();
+    $object_tracking_student->id_estudiante = $object_tracking->id_estudiante_ases;
+    $object_tracking_student->id_seguimiento = $result_insertion_tracking;
+    $result_insertion_student_tracking = $DB->insert_record('talentospilos_seg_estudiante',  $object_tracking_student, true);
+
+    // Se consultan ID riesgos
+
+    $sql_query = "SELECT id FROM {talentospilos_riesgos_ases} WHERE nombre = 'individual'";
+    $id_individual_risk = $DB->get_record_sql($sql_query)->id;
+
+    $sql_query = "SELECT id FROM {talentospilos_riesgos_ases} WHERE nombre = 'familiar'";
+    $id_familiar_risk = $DB->get_record_sql($sql_query)->id;
+
+    $sql_query = "SELECT id FROM {talentospilos_riesgos_ases} WHERE nombre = 'academico'";
+    $id_academic_risk = $DB->get_record_sql($sql_query)->id;
+
+    $sql_query = "SELECT id FROM {talentospilos_riesgos_ases} WHERE nombre = 'economico'";
+    $id_economic_risk = $DB->get_record_sql($sql_query)->id;
+
+    $sql_query = "SELECT id FROM {talentospilos_riesgos_ases} WHERE nombre = 'vida_universitaria'";
+    $id_life_u_risk = $DB->get_record_sql($sql_query)->id;
+
+    // ID relación estudiante_riesgo individual
+    $sql_query = "SELECT id 
+                  FROM {talentospilos_riesg_usuario} AS riesgo_usuario
+                  WHERE riesgo_usuario.id_usuario = $object_tracking->id_estudiante_ases
+                    AND riesgo_usuario.id_riesgo = $id_individual_risk";
+    $id_ind_risk_student = $DB->get_record_sql($sql_query)->id;
+
+    if($id_ind_risk_student){
+        if($object_tracking->individual_riesgo != 0){
+            $object_risk_individual = new stdClass();
+            $object_risk_individual->id = $id_ind_risk_student;
+            $object_risk_individual->id_usuario = $object_tracking->id_estudiante_ases;
+            $object_risk_individual->id_riesgo = $id_individual_risk;
+            $object_risk_individual->calificacion_riesgo = (int)$object_tracking->individual_riesgo;
+            $DB->update_record('talentospilos_riesg_usuario', $object_risk_individual);
+        }
+    }else{
+        $object_risk_individual = new stdClass();
+        $object_risk_individual->id_usuario = $object_tracking->id_estudiante_ases;
+        $object_risk_individual->id_riesgo = $id_individual_risk;
+        $object_risk_individual->calificacion_riesgo = 0;
+        $DB->insert_record('talentospilos_riesg_usuario', $object_risk_individual);
+    }
+        
+
+    // ID relación estudiante_riesgo familiar
+    $sql_query = "SELECT id 
+                  FROM {talentospilos_riesg_usuario} AS riesgo_usuario
+                  WHERE riesgo_usuario.id_usuario = $object_tracking->id_estudiante_ases
+                    AND riesgo_usuario.id_riesgo = $id_familiar_risk";
+    $id_fam_risk_student = $DB->get_record_sql($sql_query)->id;
+
+    if($id_fam_risk_student){
+        if($object_tracking->familiar_riesgo != 0){
+            $object_risk_familiar = new stdClass();
+            $object_risk_familiar->id = $id_fam_risk_student;
+            $object_risk_familiar->id_usuario = $object_tracking->id_estudiante_ases;
+            $object_risk_familiar->id_riesgo = $id_familiar_risk;
+            $object_risk_familiar->calificacion_riesgo = (int)$object_tracking->familiar_riesgo;
+            $DB->update_record('talentospilos_riesg_usuario', $object_risk_familiar);
+        }
+    }else{
+        $object_risk_familiar = new stdClass();
+        $object_risk_familiar->id_usuario = $object_tracking->id_estudiante_ases;
+        $object_risk_familiar->id_riesgo = $id_familiar_risk;
+        $object_risk_familiar->calificacion_riesgo = 0;
+        $DB->insert_record('talentospilos_riesg_usuario', $object_risk_familiar);
+    }
+
+    // ID relación estudiante_riesgo académico
+    $sql_query = "SELECT id 
+                  FROM {talentospilos_riesg_usuario} AS riesgo_usuario
+                  WHERE riesgo_usuario.id_usuario = $object_tracking->id_estudiante_ases
+                    AND riesgo_usuario.id_riesgo = $id_academic_risk";
+    
+    $id_acad_risk_student = $DB->get_record_sql($sql_query)->id;
+
+    if($id_acad_risk_student){
+        if($object_tracking->academico_riesgo != 0){
+            $object_risk_academic = new stdClass();
+            $object_risk_academic->id = $id_acad_risk_student;
+            $object_risk_academic->id_usuario = $object_tracking->id_estudiante_ases;
+            $object_risk_academic->id_riesgo = $id_academic_risk;
+            $object_risk_academic->calificacion_riesgo = (int)$object_tracking->academico_riesgo;
+            $DB->update_record('talentospilos_riesg_usuario', $object_risk_academic);
+        }
+    }else{
+        $object_risk_academic = new stdClass();
+        $object_risk_academic->id_usuario = $object_tracking->id_estudiante_ases;
+        $object_risk_academic->id_riesgo = $id_academic_risk;
+        $object_risk_academic->calificacion_riesgo = 0;
+        $DB->insert_record('talentospilos_riesg_usuario', $object_risk_academic);
+    }
+
+    // ID relación estudiante_riesgo económico
+    $sql_query = "SELECT id 
+                  FROM {talentospilos_riesg_usuario} AS riesgo_usuario
+                  WHERE riesgo_usuario.id_usuario = $object_tracking->id_estudiante_ases
+                    AND riesgo_usuario.id_riesgo = $id_economic_risk";
+    
+    $id_econ_risk_student = $DB->get_record_sql($sql_query)->id;
+
+    if($id_econ_risk_student){
+        if($object_tracking->economico_riesgo != 0){
+            $object_risk_economic = new stdClass();
+            $object_risk_economic->id = $id_econ_risk_student;
+            $object_risk_economic->id_usuario = $object_tracking->id_estudiante_ases;
+            $object_risk_economic->id_riesgo = $id_economic_risk;
+            $object_risk_economic->calificacion_riesgo = (int)$object_tracking->economico_riesgo;
+            $DB->update_record('talentospilos_riesg_usuario', $object_risk_economic);
+        }
+    }else{
+        $object_risk_economic = new stdClass();
+        $object_risk_economic->id_usuario = $object_tracking->id_estudiante_ases;
+        $object_risk_economic->id_riesgo = $id_economic_risk;
+        $object_risk_economic->calificacion_riesgo = 0;
+        $DB->insert_record('talentospilos_riesg_usuario', $object_risk_economic);
+    }
+
+    // ID relación estudiante_riesgo vida universitaria
+    $sql_query = "SELECT id 
+                  FROM {talentospilos_riesg_usuario} AS riesgo_usuario
+                  WHERE riesgo_usuario.id_usuario = $object_tracking->id_estudiante_ases
+                    AND riesgo_usuario.id_riesgo = $id_life_u_risk";
+    
+    $id_life_risk_student = $DB->get_record_sql($sql_query)->id;
+
+    if($id_life_risk_student){
+        if($object_tracking->vida_uni_riesgo != 0){
+            $object_risk_life = new stdClass();
+            $object_risk_life->id = $id_life_risk_student;
+            $object_risk_life->id_usuario = $object_tracking->id_estudiante_ases;
+            $object_risk_life->id_riesgo = $id_life_u_risk;
+            $object_risk_life->calificacion_riesgo = (int)$object_tracking->vida_uni_riesgo;
+            $DB->update_record('talentospilos_riesg_usuario', $object_risk_life);
+        }
+    }else{
+        $object_risk_life = new stdClass();
+        $object_risk_life->id_usuario = $object_tracking->id_estudiante_ases;
+        $object_risk_life->id_riesgo = $id_life_u_risk;
+        $object_risk_life->calificacion_riesgo = 0;
+        $DB->insert_record('talentospilos_riesg_usuario', $object_risk_life);
+    }
+
+
+    pg_query("COMMIT") or die("Falló la inserción en la base datos\n");
+
+    $result_saving = new stdClass();
+
+    if($result_insertion_tracking > 0 && $result_insertion_student_tracking > 0){
+        $result_saving->title = "Éxito";
+        $result_saving->msg = "El seguimiento ha sido almacenado correctamente";
+        $result_saving->type = "success";
+    }else{
+        $result_saving->title = "Error";
+        $result_saving->msg = "El seguimiento no ha sido almacenado";
+        $result_saving->type = "error";
+    }
+
+    return $result_saving;
+}

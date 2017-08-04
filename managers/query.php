@@ -3644,10 +3644,10 @@ function get_seguimientos_monitor($id_monitor,$id_instance){
       array_push($array_estudiantes,$estudiante);
     }
     
- //    print_r($array_estudiantes);
    return $array_estudiantes;
 }
-
+/* Obtiene la cantidad de seguimientos de cada monitor.
+*/
 function get_cantidad_seguimientos_monitor($id_monitor,$id_instance){
     global $DB;
     $valorRetorno=[];
@@ -3748,6 +3748,25 @@ function get_name_rol($userid,$instanceid)
     // print_r($idretornar);
     return $idretornar;
 }
+
+//funcion que retorna el nombre de  rol de un usuario con el fin de mostrar al correspondiente interfaz en seguimiento_pilos
+function get_name_of_rol($userid,$instanceid)
+{
+    global $DB;
+    
+    $sql_query = "SELECT nombre_rol FROM {talentospilos_user_rol} WHERE id_usuario='$userid' AND id_instancia='$instanceid'";
+    $consulta=$DB->get_records_sql($sql_query);
+    
+    foreach($consulta as $tomarId)
+    {
+
+        $idretornar=$tomarId->id_rol;
+    }
+    // print_r($idretornar);
+    return $idretornar;
+}
+
+
 
 function get_profesional_practicante($id,$instanceid)
 {

@@ -66,61 +66,24 @@ $node->make_active();
 $PAGE->set_url($url);
 $PAGE->set_title($title);
 
-//$PAGE->requires->css('/blocks/ases/style/grade_categories.css', true);
-//$PAGE->requires->css('/blocks/ases/style/bootstrap_pilos.css', true);
 $PAGE->requires->css('/blocks/ases/style/styles_pilos.css', true);
-// $PAGE->requires->css('/blocks/ases/style/bootstrap_pilos.min.css', true);
-//$PAGE->requires->css('/blocks/ases/style/sweetalert.css', true);
-//$PAGE->requires->css('/blocks/ases/style/round-about_pilos.css', true);
-//$PAGE->requires->css('/grade/report/grader/wizard_categories/style/modal.css', true);
+
 $PAGE->requires->css('/grade/report/grader/wizard_categories/style/sweetalert.css', true);
-// $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/dataTables.foundation.css', true);
-// $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/dataTables.foundation.min.css', true);
-// $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/dataTables.jqueryui.css', true);
-// $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/dataTables.jqueryui.min.css', true);
-// $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/jquery.dataTables.css', true);
-// $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/jquery.dataTables.min.css', true);
-// $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/jquery.dataTables_themeroller.css', true);
-// $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/dataTables.tableTools.css', true);
-// $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/NewCSSExport/buttons.dataTables.min.css', true);
-// $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/dataTables.tableTools.css', true);
-//$PAGE->requires->css('/theme/base/style/core.css',true);
-//$PAGE->requires->css('/blocks/ases/style/sweetalert.css', true);
-// $PAGE->requires->js('/blocks/ases/js/grade_categories.js', true);
-// $PAGE->requires->js('/blocks/ases/js/jquery-2.2.4.min.js', true);
-// $PAGE->requires->js('/blocks/ases/js/DataTables-1.10.12/js/jquery.dataTables.js', true);
-// $PAGE->requires->js('/blocks/ases/js/DataTables-1.10.12/js/jquery.dataTables.min.js', true);
-// $PAGE->requires->js('/blocks/ases/js/DataTables-1.10.12/js/dataTables.jqueryui.min.js', true);
-// $PAGE->requires->js('/blocks/ases/js/DataTables-1.10.12/js/dataTables.bootstrap.min.js', true);
-// $PAGE->requires->js('/blocks/ases/js/DataTables-1.10.12/js/dataTables.bootstrap.js', true);
-// $PAGE->requires->js('/blocks/ases/js/DataTables-1.10.12/js/dataTables.tableTools.js', true);
-// $PAGE->requires->js('/blocks/ases/js/DataTables-1.10.12/js/dataTables.tableTools.min.js', true);
-// $PAGE->requires->js('/blocks/ases/js/DataTables-1.10.12/js/NewJSExport/buttons.flash.min.js', true);
-// $PAGE->requires->js('/blocks/ases/js/DataTables-1.10.12/js/NewJSExport/buttons.html5.min.js', true);
-// $PAGE->requires->js('/blocks/ases/js/DataTables-1.10.12/js/NewJSExport/buttons.print.min.js', true);
-// $PAGE->requires->js('/blocks/ases/js/DataTables-1.10.12/js/NewJSExport/dataTables.buttons.min.js', true);
-// $PAGE->requires->js('/blocks/ases/js/DataTables-1.10.12/js/NewJSExport/jszip.min.js', true);
-// $PAGE->requires->js('/blocks/ases/js/DataTables-1.10.12/js/NewJSExport/pdfmake.min.js', true);
-// $PAGE->requires->js('/blocks/ases/js/DataTables-1.10.12/js/NewJSExport/vfs_fonts.js', true);
-// // $PAGE->requires->js('/blocks/ases/js/attendance_table.js', true);
-// $PAGE->requires->js('/blocks/ases/js/main.js', true);
-// $PAGE->requires->js('/blocks/ases/js/checkrole.js', true);
-// $PAGE->requires->js('/blocks/ases/js/bootstrap.js', true);
-// $PAGE->requires->js('/blocks/ases/js/bootstrap.min.js', true);
-// $PAGE->requires->js('/blocks/ases/js/sweetalert-dev.js', true);
-// $PAGE->requires->js('/blocks/ases/js/grade_categories.js', true);
+
 $output = $PAGE->get_renderer('block_ases');
 
 
 //Carga de informacion a mostrar
 $curso = get_info_course($id_course);
 $htmlTable = $curso->header_categories;
-// $students = " ";
-// // foreach($curso->estudiantes as $student){
-// //     $students.="<tr id = '$student->id'> <td>$student->firstname $student->lastname </td> </tr>";
-// // }
+$students = "<div id = 'students-pilos' hidden> ";
+foreach($curso->estudiantes as $student){
+	$code = substr($student->username, 0,7);
+	$id = "idmoodle_".$student->id;
+    $students.="<div id = '$id' data-code = '$code'>  </div>";
+}
 
-// $students .= "<tr><th>HOLA MUNDO</th></tr></tbody> </table> </div>";
+$students .= "</div>";
 // $number = strlen($header)-24;
 // $htmlTable =  iconv_substr($header,$number);
 // $htmlTable.=$students;
@@ -129,6 +92,7 @@ $record = new stdClass;
 $record->nombre_curso = $curso->nombre_curso;
 $record->profesor = $curso->profesor;
 $record->table = $htmlTable;
+$record->students = $students;
 echo $output->header();
 //echo $output->standard_head_html(); 
 $calificador_page = new \block_ases\output\calificador_page($record);

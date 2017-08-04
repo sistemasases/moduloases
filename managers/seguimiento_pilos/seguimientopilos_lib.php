@@ -3,8 +3,6 @@
  * Consultas modulo seguimiento_pilos.
  */
 
-
-
 /*
  * Función que retorna el rol de un usuario con el fin de mostrar al correspondiente interfaz en seguimiento_pilos
  *
@@ -14,10 +12,9 @@
  */
 
 
-function get_name_rol($userid,$instanceid)
+function get_id_rol($userid,$instanceid)
 {
     global $DB;
-    echo "esto es  : ".$instanceid;
     $sql_query = "SELECT id_rol FROM {talentospilos_user_rol} WHERE id_usuario='$userid' AND id_instancia='$instanceid'";
     $consulta=$DB->get_records_sql($sql_query);
 
@@ -25,9 +22,27 @@ function get_name_rol($userid,$instanceid)
     {
         $idretornar=$tomarId->id_rol;
     }
-     print_r($idretornar);
     return $idretornar;
 }
+
+/*
+ * Función que retorna el nombre del rol de un usuario con el fin de mostrar al correspondiente interfaz en seguimiento_pilos
+ *
+ * @param $userid
+ * @param $instanceid
+ * @return Array 
+ */
+
+
+function get_name_rol($idrol)
+{
+    global $DB;
+    $sql_query = "SELECT nombre_rol FROM {talentospilos_rol} WHERE id='$idrol'";
+    $consulta=$DB->get_record_sql($sql_query);
+    return $consulta->nombre_rol;
+}
+
+
 
 /*
  * Función que trae la información necesaria para los seguimientos considerando el monitor actual, la instancia actual asi como

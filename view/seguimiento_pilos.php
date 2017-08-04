@@ -28,7 +28,8 @@
 // Standard GPL and phpdocs
 require_once(__DIR__ . '/../../../config.php');
 require_once($CFG->libdir.'/adminlib.php');
-require_once('../managers/query.php');
+require_once('../managers/seguimiento_pilos/seguimientopilos_lib.php');
+require_once('../managers/seguimiento_pilos/seguimiento_functions.php');
 require_once('../managers/instance_management/instance_lib.php');
 
 include('../lib.php');
@@ -51,8 +52,41 @@ if(!consult_instance($blockid)){
 $contextcourse = context_course::instance($courseid);
 $contextblock =  context_block::instance($blockid);
 
-//Se obtiene el rol del usuario que se encuentra conectado.
-echo get_name_rol($USER->id,$blockid);
+//Se obtiene el rol del usuario que se encuentra conectado, username y su correo electronico respectivo.
+
+$userrole = get_id_rol($USER->id,$blockid);
+$usernamerole= get_name_rol($userrole);
+$username = $USER->username;
+$email = $USER->email;
+
+$seguimientotable ="";
+$globalArregloPares = [];
+$globalArregloGrupal =[];
+
+//Se muestra la interfaz correspondiente al usuario.
+if($usernamerole=='monitor_ps'){
+
+	//Se recupera los estudiantes de un monitor en la instancia.
+    $monitorstudents=get_seguimientos_monitor($USER->id,$blockid);
+    //Se organiza el array que será transformado en el toogle.
+	transformarConsultaMonitorArray($monitorstudents,$globalArregloPares,$globalArregloGrupal);
+
+
+
+    //$seguimientotable.=
+
+}elseif($usernamerole=='practicante_ps'){
+    //Se recupera los monitores de un practicante en la instancia.
+    //get_monitores_practicante($USER->id,$blockid);
+    //$seguimientotable.=
+}elseif($usernamerole=='profesional_ps'){
+
+
+}elseif($usernamerole=='sistemas' or $username == "administrador" or $username == "sistemas1008" or $username == "Administrador"){
+
+}
+
+
 
 $url = new moodle_url("/blocks/ases/view/seguimiento_pilos.php",array('courseid' => $courseid, 'instanceid' => $blockid));
 

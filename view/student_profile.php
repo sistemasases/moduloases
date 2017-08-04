@@ -311,15 +311,14 @@ if ($student_code != 0){
      
     foreach($array_peer_trackings->semesters_segumientos as $array_semester){
         
-        print_r($array_semester);
         $panel .= "<div class='panel panel-default'>";
+        $panel .= "<a data-toggle='collapse' data-parent='#accordion_semesters' href='#semester".$array_semester->id_semester."'>";
         $panel .= "<div class='panel-heading'>";
         $panel .= "<h4 class='panel-title'>";
-        
-        $panel .= "<a data-toggle='collapse' data-parent='#accordion_semesters' href='#semester".$array_semester->id_semester."'> $array_semester->name_semester </a>";
-        
+        $panel .= "$array_semester->name_semester";
         $panel .= "</h4>"; //End panel-title
         $panel .= "</div>"; //End panel-heading
+        $panel .= "</a>";
         
         $panel .= "<div id='semester$array_semester->id_semester' class='panel-collapse collapse in'>";
         $panel .= "<div class='panel-body'>";
@@ -417,23 +416,16 @@ if ($student_code != 0){
         }
         
         $panel .= "</div>"; // End panel accordion_trackings_semester
-                
-        // $panel .= "</div>"; // End div class row
-        // $panel .= "</div>"; // End div class container-fluid
-        // $panel .= "</div>";  // End div class container well
 
         $panel .= "</div>"; // End panel-body
         $panel .= "</div>"; // End panel-collapse
         
         $panel .= "</div>"; //End panel panel-default
-
-
      }
-     
+    
      $panel .= "</div>"; //End panel group accordion_semesters
      
      $html_tracking_peer .= $panel;
-
      
  }else{
      $html_tracking_peer .= "<div class='col-sm-12'><center><h4>No registra seguimientos</h4></center></div>";

@@ -1134,8 +1134,6 @@ input.no-borde-fondo.tema
   margin-bottom: 8px;
 }
 
-
-
 /* Rules for modals */
 
 /* The Modal (background) */
@@ -1184,7 +1182,7 @@ input.no-borde-fondo.tema
     padding-top: 10px;
     padding-bottom: 10px;
     margin-top: 0px;
-    margin-right: 0px;
+    margin-right: 10px;
     background-color: #D8D8D8;
     color: black;
 }
@@ -1192,7 +1190,7 @@ input.no-borde-fondo.tema
 /* Modal Body */
 .mymodal-body {
   margin-top: 30px;
-  padding: 0px;
+  padding: 10px;
 }
 
 /* Modal Footer */
@@ -1278,26 +1276,6 @@ input.no-borde-fondo.tema
 	color: whitesmoke;
 }
 
-#accordion_trackings_semester .panel-collapse{
-  padding: 0px;
-}
-
-#accordion_trackings_semester .panel-body{
-  padding: 0px;
-}
-
-#accordion_semesters .panel-collapse{
-  padding-left: 0px !important;
-  padding-right: 0px !important;
-}
-
-#accordion_semesters .panel-body{
-  padding-top: 0px;
-  padding-left: 0px !important;
-  padding-right: 0px !important;
-}
-
-
 .ir_curso:hover{
   background-color:grey;
 }
@@ -1365,6 +1343,9 @@ input.no-borde-fondo.tema
 .centrarCabecera{
   text-align:center;
 }
+ #modalCategories .mymodal-header{
+  padding: 5px 10px;
+}
     
 #inputValor{
   width : 47px !important;
@@ -1404,4 +1385,17 @@ input.no-borde-fondo.tema
     
 .divForm{
   padding-left: 30px !important;
+}
+
+.userfield{
+  display: none;
+} 
+.smallicon{
+  display: none;
+}
+.sorticon{
+  display: none;
+}
+.controls{
+  display: none;
 }

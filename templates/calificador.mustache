@@ -1,38 +1,32 @@
- <body>
+<body>
   {{#data}}
-	<button id = 'wizard_button'  type='button' class="btn-pilos" style="float: right" >Crear categorias/items</button>
-    <h2>
-        Curso: {{nombre_curso}}
-    </h2>
-    <h3>Profesor: {{profesor}}</h3>
-    {{{table}}}
-    <!-- Modal -->
-    <div class = 'fondo' hidden> </div>
-    <div class="mymodal" id="modalCategories" role="dialog" >
-        <div class="mymodal-dialog">
-        
-          <!-- Modal content-->
-          	<div class="mymodal-content">
-          
-          <!-- header -->
-	            <div class="mymodal-header col-sm-12">
-			        <div class="col-sm-11">
-			        	<span class="mymodal-close" aria-hidden="true" style="float: right;">&times;</span>
-			        	<h4 class="" id="myModalLabel">Creacion de Categorías e ítems</h4>
-			        </div>
-			     </div>
-	    
-	            <!-- body -->
-	            <div id = 'mymodalbody' class="mymodal-body col-sm-12">
-	        		
-	      		</div>
-    		</div>
-  		</div>          
-              
-
-    </div>
-          
-    <script type="text/javascript" src="../amd/src/require-setup.js"></script>
-    <script data-main="../amd/src/grade_categories/amd_calificador" src="../amd/scripts/require.js"></script>
+  {{{students}}}
+  <button id = 'wizard_button'  type='button' class="btn-pilos" style="float: right" >Crear categorias/items</button>
+  <h2>
+     Curso: {{nombre_curso}}
+  </h2>
+  <h3>Profesor: {{profesor}}</h3>
+  {{{table}}}
+  <!-- Modal -->
+  <div class = 'fondo' hidden> </div>
+  <div class="mymodal" id="modalCategories" role="dialog" >
+     <div class="mymodal-dialog">
+        <!-- Modal content-->
+        <div class="mymodal-content">
+           <!-- header -->
+           <div class="mymodal-header col-sm-12">
+              <div class="col-sm-11">
+                 <span class="mymodal-close" aria-hidden="true" style="float: right;">&times;</span>
+                 <h4 class="" id="myModalLabel">Creacion de Categorías e ítems</h4>
+              </div>
+           </div>
+           <!-- body -->
+           <div id = 'mymodalbody' class="mymodal-body col-sm-12">
+           </div>
+        </div>
+     </div>
+  </div>
+  <script type="text/javascript" src="../amd/src/require-setup.js"></script>
+  <script data-main="../amd/src/grade_categories/amd_calificador" src="../amd/scripts/require.js"></script>
 {{/data}}
- </body>
+</body>

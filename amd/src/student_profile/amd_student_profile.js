@@ -51,6 +51,23 @@ requirejs(['jquery', 'bootstrap', 'sweetalert', 'validator'], function($) {
         $('#save_tracking_btn').on('click', function() {
             save_tracking_peer();
         });
+
+        // Controles sobre limpiar funcionario
+        $('#clean_individual_risk').on('click', function(){
+            $('#no_value_individual').prop('checked', true);
+        });
+        $('#clean_familiar_risk').on('click', function(){
+            $('#no_value_familiar').prop('checked', true); 
+        });
+        $('#clean_academic_risk').on('click', function(){
+            $('#no_value_academic').prop('checked', true);
+        });
+        $('#clean_economic_risk').on('click', function(){
+            $('#no_value_economic').prop('checked', true);
+        });
+        $('#clean_life_risk').on('click', function(){
+            $('#no_value_life').prop('checked', true); 
+        });
     });
 
     function edit_profile_act() {
@@ -441,23 +458,6 @@ requirejs(['jquery', 'bootstrap', 'sweetalert', 'validator'], function($) {
         $('#no_value_academic').hide();
         $('#no_value_economic').hide();
         $('#no_value_life').hide();
-
-        $('#clean_individual_risk').on('click', function(){
-            $('#no_value_individual').attr('checked', 'checked');
-        });
-        $('#clean_familiar_risk').on('click', function(){
-            $('#no_value_familiar').attr('checked', 'checked'); 
-        });
-        $('#clean_academic_risk').on('click', function(){
-            $('#no_value_academic').attr('checked', 'checked');
-        });
-        $('#clean_economic_risk').on('click', function(){
-            $('#no_value_economic').attr('checked', 'checked');
-        });
-        $('#clean_life_risk').on('click', function(){
-            $('#no_value_life').attr('checked', 'checked'); 
-        });
-
     }
 
     function save_tracking_peer() {
@@ -474,39 +474,42 @@ requirejs(['jquery', 'bootstrap', 'sweetalert', 'validator'], function($) {
                 type: 'warning',
                 html: true
             });
+        }else{
+            data.push({
+                name: "func",
+                value: "save_tracking_peer"
+            });
+
+            var id_ases = $('#id_ases').val();
+
+            data.push({
+                name: "id_ases",
+                value: id_ases
+            });
+            data.push({
+                name: "id_instance",
+                value: url_parameters.instanceid
+            });
+
+            $.ajax({
+                type: "POST",
+                data: data,
+                url: "../../ases/managers/student_profile/studentprofile_serverproc.php",
+                success: function(msg) {
+                    swal(
+                        msg.title,
+                        msg.msg,
+                        msg.type
+                    );
+                    modal_peer_tracking.hide();
+                },
+                dataType: "json",
+                cache: "false",
+                error: function(msg) {
+                    console.log(msg);
+                },
+            });
         }
-
-        data.push({
-            name: "function",
-            value: "save_tracking_peer"
-        });
-
-        var id_ases = $('#id_ases').val();
-
-        data.push({
-            name: "id_ases",
-            value: id_ases
-        });
-        data.push({
-            name: "id_instance",
-            value: url_parameters.instanceid
-        });
-
-        console.log(data);
-
-        $.ajax({
-            type: "POST",
-            data: data,
-            url: "../../ases/managers/student_profile/studentprofile_serverproc.php",
-            success: function(msg) {
-
-            },
-            dataType: "json",
-            cache: "false",
-            error: function(msg) {
-                console.log(msg);
-            },
-        });
     }
 
     function validate_tracking_peer_form(form) {
@@ -579,7 +582,6 @@ requirejs(['jquery', 'bootstrap', 'sweetalert', 'validator'], function($) {
         else {
             return "success";
         }
-
     }
 
     function get_url_parameters(page) {
