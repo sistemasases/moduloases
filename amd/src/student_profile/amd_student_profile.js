@@ -110,7 +110,7 @@ requirejs(['jquery', 'bootstrap', 'sweetalert', 'validator'], function($) {
                 cancelButtonText: "No",
             },
             function(isConfirm){
-                console.log(id_tracking);
+                delete_tracking_peer(id_tracking);
             });
         });
     });
@@ -808,8 +808,31 @@ requirejs(['jquery', 'bootstrap', 'sweetalert', 'validator'], function($) {
 
     function delete_tracking_peer(id_tracking){
 
-       
+       $.ajax({
+                type: "POST",
+                data: {
+                    func: 'delete_tracking_peer',
+                    id_tracking: id_tracking
+                },
+                url: "../managers/student_profile/studentprofile_serverproc.php",
+                success: function(msg) {
 
+                    swal(
+                        msg.title,
+                        msg.msg,
+                        msg.status
+                    );
+                },
+                dataType: "json",
+                cache: "false",
+                error: function(msg) {
+                    swal(
+                        msg.title,
+                        msg.msg,
+                        msg.status
+                    );
+                },
+            });
     }
 
 })

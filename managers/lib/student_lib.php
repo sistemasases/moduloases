@@ -205,7 +205,7 @@ function get_assigned_pract($id_student){
          $id_trainee = $DB->get_record_sql($sql_query)->id_jefe; 
 
          if($id_trainee){
-            $sql_query = "SELECT id, firstname, lastname, email AS fullname FROM {user} WHERE id = ".$id_trainee;
+            $sql_query = "SELECT id, firstname, lastname, email FROM {user} WHERE id = ".$id_trainee;
             $trainee_object = $DB->get_record_sql($sql_query);
          }else{
             $trainee_object = array();

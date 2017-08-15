@@ -79,7 +79,7 @@ require_once(dirname(__FILE__). '/../../../../config.php');
  * @return Trackings array
  */
  
- function get_trackings_student($id_ases, $tracking_type, $id_instance){
+function get_trackings_student($id_ases, $tracking_type, $id_instance){
      
     global $DB;
 
@@ -115,7 +115,7 @@ require_once(dirname(__FILE__). '/../../../../config.php');
  * @return Trackings array group by semester
  */
  
- function get_tracking_group_by_semester($id_ases = null, $tracking_type, $id_semester = null, $id_instance = null){
+function get_tracking_group_by_semester($id_ases = null, $tracking_type, $id_semester = null, $id_instance = null){
      
     global $DB;
     
@@ -261,9 +261,9 @@ function get_id_first_semester($id){
  * @param string $username_student Is te username of moodlesite 
  * @return array() of stdClass object representing semesters of a student
  */
- function get_semesters_stud($id_first_semester){
+function get_semesters_stud($id_first_semester){
      
-     global $DB;
+    global $DB;
      
     $sql_query = "SELECT id, nombre, fecha_inicio::DATE, fecha_fin::DATE FROM {talentospilos_semestre} WHERE id >= $id_first_semester ORDER BY {talentospilos_semestre}.fecha_inicio DESC";
      
@@ -496,4 +496,38 @@ function save_tracking_peer($object_tracking){
     }
 
     return $result_saving;
+}
+
+/**
+ * Función que realiza un borrado lógico para un seguimiento cambiando su estado en la base de datos
+ * en la tabla de seguimientos (talentospilos_seguimiento)
+ *
+ * @param $id_tracking --> Objeto con toda la información correspondiente al seguimiento de pares a almacenar
+ * @return $object_result --> Objeto que almacena el resultado de operación en la base de datos
+ */
+
+function delete_tracking_peer($id_tracking){
+
+    global $DB;
+
+    $object_updatable = new stdClass();
+    $msg_result = new stdClass();
+
+    $object_updatable->id = $id_tracking;
+    $object_updatable->status = 0;
+
+    $result_query = $DB->update_record('talentospilos_seguimiento', $object_updatable);
+
+    if($result_query){
+        $msg_result->title = "Éxito";
+        $msg_result->msg = "El seguimiento ha sido borrado con éxito.";
+        $msg_result->type = "success";
+    }else{
+        $msg_result->title = "Error";
+        $msg_result->msg = "Ha ocurrido un error al conectarse con la base de datos.";
+        $msg_result->type = "error";
+    }
+
+    return $msg_result;
+
 }

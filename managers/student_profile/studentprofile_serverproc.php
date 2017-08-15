@@ -19,6 +19,9 @@ if(isset($_POST["func"])){
         save_status_ases($new_status, $id_ases);
     } elseif($_POST['func'] == 'save_tracking_peer'){
         save_tracking_peer_proc();
+    } elseif($_POST['func'] == 'delete_tracking_peer' && isset($_POST['id_tracking'])){
+        $id_tracking_peer = $_POST['id_tracking'];
+        delete_tracking_peer_proc($id_tracking_peer);
     } else {
         $msg->msg = "No se reconoce la función a ejecutar. Contacte al área de sistemas.";
         echo json_encode($msg);
@@ -300,4 +303,18 @@ function save_tracking_peer_proc(){
 
         echo json_encode($result_msg);
     }   
+}
+
+/**
+ * Función que realiza un borrado lógico de un seguimiento
+ * cambiando su estado en la base de datos
+ *
+ * @param Integer $id_tracking_peer --> ID del seguimiento a borrar
+ * @return String --> Resultado de la acción
+ */
+function delete_tracking_peer_proc($id_tracking_peer){
+
+    $result_delete = delete_tracking_peer((int)$id_tracking_peer);
+
+    echo json_encode($result_delete);
 }

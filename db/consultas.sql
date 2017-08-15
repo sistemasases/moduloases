@@ -129,16 +129,6 @@ WHERE SUBSTRING(cohorte.idnumber FROM 1 FOR 2) = 'SP')
           
           
           
---CATEGORIAS E ITEMS DE UN CURSO
-
-
-SELECT 
-FROM mdl_grade_items as items INNER JOIN mdl_grade_categories 
-WHERE
-
-
-
-
 --ESTUDIANTES PILOS EN UN CURSO
 SELECT usuario.firstname, usuario.lastname
 FROM mdl_user usuario INNER JOIN mdl_user_enrolments enrols ON usuario.id = enrols.userid 
@@ -147,6 +137,101 @@ INNER JOIN mdl_course curso ON enr.courseid = curso.id
 WHERE curso.id= 3q AND usuario.id IN (SELECT user_m.id
 FROM mdl_user user_m INNER JOIN mdl_cohort_members memb ON user_m.id = memb.userid INNER JOIN mdl_cohort cohorte ON memb.cohortid = cohorte.id 
 WHERE SUBSTRING(cohorte.idnumber FROM 1 FOR 2) = 'SP')
+
+
+
+
+
+--Estudiantes a los que se les hace seguimiento
+
+SELECT user_m.id
+FROM  {user} user_m
+INNER JOIN {user_info_data} data ON data.userid = user_m.id
+INNER JOIN {user_info_field} field ON data.fieldid = field.id
+INNER JOIN {talentospilos_usuario} user_t ON data.data = CAST(user_t.id AS VARCHAR)
+INNER JOIN {talentospilos_estudiante_estado_ases} estado_u ON user_t.id = estado_u.id_estudiante 
+INNER JOIN {talentospilos_estados_ases} estados ON estados.id = estado_u.estado_ases
+WHERE estados.nombre = 'ACTIVO/SEGUIMIENTO' AND field.shortname = 'idtalentos'
+
+INTERSECT
+
+SELECT user_m.id
+FROM mdl_user user_m INNER JOIN mdl_cohort_members memb ON user_m.id = memb.userid INNER JOIN mdl_cohort cohorte ON memb.cohortid = cohorte.id 
+WHERE SUBSTRING(cohorte.idnumber FROM 1 FOR 2) = 'SP'
+
+----misma para modelo anterior
+
+SELECT user_m.id
+FROM  profesionaluser} user_m
+INNER JOIN {user_info_data} data ON data.userid = user_m.id
+INNER JOIN {user_info_field} field ON data.fieldid = field.id
+INNER JOIN {talentospilos_usuario} user_t ON data.data = CAST(user_t.id AS VARCHAR)
+WHERE user_t.estado = 'ACTIVO' AND field.shortname = 'idtalentos'
+
+INTERSECT
+
+SELECT user_m.id
+FROM mdl_user user_m INNER JOIN mdl_cohort_members memb ON user_m.id = memb.userid INNER JOIN mdl_cohort cohorte ON memb.cohortid = cohorte.id 
+WHERE SUBSTRING(cohorte.idnumber FROM 1 FOR 2) = 'SP'
+
+
+
+
+
+----------------------------------- CONSULTA PARA grade_item isASES()
+
+SELECT id
+FROM (SELECT user_m.id
+      FROM  {user} user_m
+      INNER JOIN {user_info_data} data ON data.userid = user_m.id
+      INNER JOIN {user_info_field} field ON data.fieldid = field.id
+      INNER JOIN {talentospilos_usuario} user_t ON data.data = CAST(user_t.id AS VARCHAR)
+      WHERE user_t.estado = 'ACTIVO' AND field.shortname = 'idtalentos'
+
+      INTERSECT
+
+      SELECT user_m.id
+      FROM {user} user_m INNER JOIN {cohort_members} memb ON user_m.id = memb.userid INNER JOIN {cohort} cohorte ON memb.cohortid = cohorte.id 
+      WHERE SUBSTRING(cohorte.idnumber FROM 1 FOR 2) = 'SP') estudiantes_ases
+WHERE estudiantes_ases.id = $userid
+
+
+
+
+
+
+
+SELECT id
+FROM (SELECT user_m.id
+      FROM  mdl_user user_m
+      INNER JOIN mdl_user_info_data data ON data.userid = user_m.id
+      INNER JOIN mdl_user_info_field field ON data.fieldid = field.id
+      INNER JOIN mdl_talentospilos_usuario user_t ON data.data = CAST(user_t.id AS VARCHAR)
+      WHERE user_t.estado = 'ACTIVO' AND field.shortname = 'idtalentos'
+
+      INTERSECT
+
+      SELECT user_m.id
+      FROM mdl_user user_m INNER JOIN mdl_cohort_members memb ON user_m.id = memb.userid INNER JOIN mdl_cohort cohorte ON memb.cohortid = cohorte.id 
+      WHERE SUBSTRING(cohorte.idnumber FROM 1 FOR 2) = 'SP') estudiantes_ases
+WHERE estudiantes_ases.id = $userid
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

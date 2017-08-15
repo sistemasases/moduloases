@@ -207,13 +207,13 @@ function update_grades_moodle($userid, $itemid, $finalgrade,$courseid){
   }
   
   if ($grade_item->update_final_grade($userid, $finalgrade, 'gradebook', false, FORMAT_MOODLE)) {
-    if($finalgrade < 3){
-      return send_email_alert($userid, $itemid,$finalgrade,$courseid);
-    }else{
+    //if($finalgrade < 3){
+    //  return send_email_alert($userid, $itemid,$finalgrade,$courseid);
+    //}else{
       $resp = new stdClass;
       $resp->nota = true;
       return $resp;
-    }
+    //}
   } else {
 
     $resp = new stdClass;
@@ -225,147 +225,8 @@ function update_grades_moodle($userid, $itemid, $finalgrade,$courseid){
 }
 
 
-/**
- * Sends an email to the monitor, practitioner and professional assigned to a student, informing the academic alert
- *
- * @param   $userid
- *          $item
- *          $finalgrade: value of grade
-            $courseid
- *       
- * @return true if update and false if not.
- */
-function send_email_alert($userid, $itemid,$grade,$courseid){
-  global $USER;
-  global $DB;
-  
-  $id_sistemas = $DB->get_record_sql("SELECT id FROM {user} WHERE username = 'sistemas1008'");
-  $id_sistemas = $id_sistemas->id;
-  $sending_user = get_full_user($id_sistemas);
-
-  $userFromEmail = new stdClass;
-
-  $userFromEmail->email = $sending_user->email;
-  $userFromEmail->firstname = $sending_user->firstname;
-  $userFromEmail->lastname = $sending_user->lastname;
-  $userFromEmail->maildisplay = true;
-  $userFromEmail->mailformat = 1;
-  $userFromEmail->id = $sending_user->id; 
-  $userFromEmail->alternatename = '';
-  $userFromEmail->middlename = '';
-  $userFromEmail->firstnamephonetic = '';
-  $userFromEmail->lastnamephonetic = '';
-
-  $user_ases = get_adds_fields_mi($userid);
-  $id_tal = $user_ases->idtalentos;
-
-  $monitor = get_assigned_monitor($id_tal);
-  $practicante = get_assigned_pract($id_tal);
-  $profesional = get_assigned_professional($id_tal);
-  $nombre_monitor = $monitor->firstname." ".$monitor->lastname;
-  $nombre_practicante = $practicante->firstname." ".$practicante->lastname;
-  $nombre_profesional = $profesional->firstname." ".$profesional->lastname;
-
-  $monitorToEmail = new stdClass;
-  $practicanteToEmail = new stdClass;
-  $profesionalToEmail = new stdClass;
-
-  $monitorToEmail->email = $monitor->email;
-  $monitorToEmail->firstname = $monitor->firstname;
-  $monitorToEmail->lastname = $monitor->lastname;
-  $monitorToEmail->maildisplay = true;
-  $monitorToEmail->mailformat = 1;
-  $monitorToEmail->id = $monitor->id; 
-  $monitorToEmail->alternatename = '';
-  $monitorToEmail->middlename = '';
-  $monitorToEmail->firstnamephonetic = '';
-  $monitorToEmail->lastnamephonetic = '';
-
-  $practicanteToEmail->email = $practicante->email;
-  $practicanteToEmail->firstname = $practicante->firstname;
-  $practicanteToEmail->lastname = $practicante->lastname;
-  $practicanteToEmail->maildisplay = true;
-  $practicanteToEmail->mailformat = 1;
-  $practicanteToEmail->id = $practicante->id; 
-  $practicanteToEmail->alternatename = '';
-  $practicanteToEmail->middlename = '';
-  $practicanteToEmail->firstnamephonetic = '';
-  $practicanteToEmail->lastnamephonetic = '';
-
-  $profesionalToEmail->email = $profesional->email;
-  $profesionalToEmail->firstname = $profesional->firstname;
-  $profesionalToEmail->lastname = $profesional->lastname;
-  $profesionalToEmail->maildisplay = true;
-  $profesionalToEmail->mailformat = 1;
-  $profesionalToEmail->id = $profesional->id; 
-  $profesionalToEmail->alternatename = '';
-  $profesionalToEmail->middlename = '';
-  $profesionalToEmail->firstnamephonetic = '';
-  $profesionalToEmail->lastnamephonetic = '';
-
-  $user_moodle = get_full_user($userid);
-  $nombre_estudiante = $user_moodle->firstname." ".$user_moodle->lastname;
-
-  $subject = "ALERTA ACADÉMICA $nombre_estudiante";
-
-  $curso = $DB->get_record_sql("SELECT fullname, shortname FROM {course} WHERE id = $courseid");
-  $nombre_curso= $curso->fullname." ".$curso->shortname;
-  $item = $DB->get_record_sql("SELECT itemname FROM {grade_items} WHERE id = $itemid");
-  $itemname = $item->itemname;
-  $nom_may = strtoupper($nombre_curso);
-  $titulo = "<b>ALERTA ACADÉMICA CURSO $nom_may </b><br> ";
-  $saludo = "Estimado monitor $nombre_monitor<br><br>";
-  $mensaje = "Se le informa que se ha presentado una alerta académica del estudiante $nombre_estudiante en el curso $nombre_curso<br> 
-    El estudiante ha obtenido la siguiente calificación:<br> <br> $itemname<br> $grade <br><br> 
-    Cordialmente<br>
-    <b>Oficina TIC<br>
-    Estrategia ASES<br>
-    Universidad del Valle</b>";
-
-  $messageHtml = $titulo.$saludo.$mensaje ;   
-  $messageText = html_to_text($messageHtml);
-  
-  $email_result = email_to_user($monitorToEmail, $userFromEmail, $subject, $messageText, $messageHtml, ", ", true);
-  
-  $resp = new stdClass;
-   $resp->nota = true;
-
-  if($email_result!=1){
-    $resp->monitor = false;
-  }else{
-    $resp->monitor = true;
-  }
-
-  $saludo_prac = "Estimado practicante $nombre_practicante<br><br>";
-  $messageHtml_prac = $titulo.$saludo_prac.$mensaje ;   
-  $messageText_prac = html_to_text($messageHtml_prac);
-  
-  $email_result_prac = email_to_user($practicanteToEmail, $userFromEmail, $subject, $messageText_prac, $messageHtml_prac, ", ", true);
-
-  if($email_result_prac!=1){
-    $resp->practicante = false;
-  }else{
-    $resp->practicante = true;
-  }
-
-  $saludo_prof = "Estimado profesional $nombre_profesional<br><br>";
-  $messageHtml_prof = $titulo.$saludo_prof.$mensaje ;   
-  $messageText_prof = html_to_text($messageHtml_prof);
-    
-  $email_result_prof = email_to_user($profesionalToEmail, $userFromEmail, $subject, $messageText_prof, $messageHtml_prof, ", ", true);
-
-  if($email_result_prof!=1){
-    $resp->profesional = false;
-  }else{
-    $resp->profesional = true;
-  }
-  //print_r($practicante);
-  return $resp;
-  
-}
 
 
-//send_email_alert(100,62,2.5,2);
 //update_grades_moodle(92,49,5,3);
 ///*********************************///
 ///*** Wizard categories methods ***///
@@ -747,4 +608,5 @@ function getAggregationofCategory($categoryid){
 
     return $aggregation;
 }
+
 ?>
