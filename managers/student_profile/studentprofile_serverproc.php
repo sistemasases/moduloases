@@ -79,7 +79,6 @@ function save_profile($form){
         echo json_encode($msg);
        
     }
-    
 }
 
  /**
@@ -232,6 +231,10 @@ function validate_form_tracking_peer(){
         return "El campo ID ESTUDIANTE ASES no llegó al servidor.";
     }else if(!isset($_POST['id_instance'])){
         return "El campo ID INSTANCIA BLOQUE no llegó al servidor.";
+    }else if(!isset($_POST['observaciones'])){
+        return "El campo OBSERVACIONES no llegó al servidor.";
+    }else if(!isset($_POST['id_tracking_peer'])){
+        return "El campo ID SEGUIMIENTO no llegó al servidor.";
     }else{
         return "success";
     }
@@ -257,14 +260,15 @@ function save_tracking_peer_proc(){
 
         $date = new DateTime();
         $date->getTimestamp();
-        
+
         $tracking_object = new stdClass();
+        $tracking_object->id = (int)$_POST['id_tracking_peer'];
         $tracking_object->id_monitor = $USER->id;
         $tracking_object->created = time();
         $tracking_object->fecha = strtotime($_POST['date']);
         $tracking_object->lugar = $_POST['place'];
-        $tracking_object->hora_ini = $_POST['h_ini'] + $_POST['m_ini'];
-        $tracking_object->hora_fin = $_POST['h_fin'] + $_POST['m_fin'];
+        $tracking_object->hora_ini = $_POST['h_ini'].":".$_POST['m_ini'];
+        $tracking_object->hora_fin = $_POST['h_fin'].":".$_POST['m_fin'];
         $tracking_object->tema = $_POST['tema'];
         $tracking_object->objetivos = $_POST['objetivos'];
         $tracking_object->tipo = "PARES";
@@ -283,6 +287,7 @@ function save_tracking_peer_proc(){
         $tracking_object->id_instancia = $_POST['id_instance'];
         $tracking_object->revisado_profesional = 0;
         $tracking_object->revisado_practicante = 0;
+        $tracking_object->observaciones = $_POST['observaciones'];
 
         $result_saving = save_tracking_peer($tracking_object);
 

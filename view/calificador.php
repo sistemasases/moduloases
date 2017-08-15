@@ -67,8 +67,9 @@ $PAGE->set_url($url);
 $PAGE->set_title($title);
 
 $PAGE->requires->css('/blocks/ases/style/styles_pilos.css', true);
+$PAGE->requires->css('/blocks/ases/style/sweetalert.css', true);
+$PAGE->requires->css('/blocks/ases/style/sweetalert2.css', true);
 
-$PAGE->requires->css('/grade/report/grader/wizard_categories/style/sweetalert.css', true);
 
 $output = $PAGE->get_renderer('block_ases');
 

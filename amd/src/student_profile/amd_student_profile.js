@@ -2,6 +2,24 @@ requirejs(['jquery', 'bootstrap', 'sweetalert', 'validator'], function($) {
 
     $(document).ready(function() {
 
+        // Carga una determinada pestaña
+        var parameters = get_url_parameters(document.location.search);
+        var panel_collapse = $('.panel-collapse.collapse.in');
+
+        switch(parameters.tab){
+            case "socioed_tab":
+                $('#general_li').removeClass('active');
+                $('#socioed_li').addClass('active');
+                $('#general_tab').removeClass('active');
+                $('#socioed_tab').addClass('active');
+                panel_collapse.removeClass('in');
+                $('#collapseOne').addClass('in');
+                break;
+            default:
+                panel_collapse.removeClass('in');
+                break;
+        }
+
         var modal_peer_tracking = $('#modal_peer_tracking');
 
         edit_profile_act();
@@ -67,6 +85,33 @@ requirejs(['jquery', 'bootstrap', 'sweetalert', 'validator'], function($) {
         });
         $('#clean_life_risk').on('click', function(){
             $('#no_value_life').prop('checked', true); 
+        });
+
+        // Controles para editar formulario de pares
+
+        $('.btn-primary.edit_peer_tracking').on('click', function(){
+            var id_button = $(this).attr('id');
+            var id_tracking = id_button.substring(14);
+            
+            load_tracking_peer(id_tracking);           
+
+        });
+
+        $('.btn-danger.delete_peer_tracking').on('click', function(){
+            var id_button = $(this).attr('id');
+            var id_tracking = id_button.substring(21);
+
+             swal({
+                title: "Advertencia",
+                text: "¿Está seguro(a) que desea borrar este seguimiento?",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonText: "Si",
+                cancelButtonText: "No",
+            },
+            function(isConfirm){
+                console.log(id_tracking);
+            });
         });
     });
 
@@ -205,6 +250,8 @@ requirejs(['jquery', 'bootstrap', 'sweetalert', 'validator'], function($) {
         }
     }
 
+    // Funciones para la validación de formularios
+
     function has_letters(str) {
         var letters = "abcdefghyjklmnñopqrstuvwxyz";
         str = str.toLowerCase();
@@ -235,6 +282,8 @@ requirejs(['jquery', 'bootstrap', 'sweetalert', 'validator'], function($) {
             return 1;
         }
     }
+
+    // Funciones para la administración de estados
 
     function manage_icetex_status() {
         //validar cambio en estado
@@ -362,7 +411,7 @@ requirejs(['jquery', 'bootstrap', 'sweetalert', 'validator'], function($) {
         });
     }
 
-    //Functions for modal's management
+    //Funciones para el manejo de los modales
 
     function modal_manage() {
 
@@ -398,6 +447,21 @@ requirejs(['jquery', 'bootstrap', 'sweetalert', 'validator'], function($) {
         // When the user clicks on <span> (x), close the modal
         span_close.on('click', function() {
             modal_peer_tracking.hide();
+        });
+
+        var panel_heading = $('.panel-heading.heading_semester_tracking');
+
+
+
+        panel_heading.on('click', function(){
+            if($(this).parent().attr('class') == 'collapsed'){
+                $('h4>span', this).removeClass('glyphicon-chevron-left');
+                $('h4>span', this).addClass('glyphicon-chevron-down');
+            }else{
+                $('h4>span', this).removeClass('glyphicon-chevron-down');
+                $('h4>span', this).addClass('glyphicon-chevron-left');
+            }
+            
         });
     }
 
@@ -458,11 +522,32 @@ requirejs(['jquery', 'bootstrap', 'sweetalert', 'validator'], function($) {
         $('#no_value_academic').hide();
         $('#no_value_economic').hide();
         $('#no_value_life').hide();
+
+        $('#id_tracking_peer').val("");
+        $('#place').val("");
+        $('#topic_textarea').val("");
+        $('#objetivos').val("");
+        $('#individual').val("");
+        $('#familiar').val("");
+        $('#academico').val("");
+        $('#economico').val("");
+        $('#vida_uni').val("");
+        $('#observaciones').val("");
+
+        $('#no_value_individual').prop('checked', true);
+        $('#no_value_familiar').prop('checked', true); 
+        $('#no_value_academic').prop('checked', true);
+        $('#no_value_economic').prop('checked', true);
+        $('#no_value_life').prop('checked', true); 
     }
 
     function save_tracking_peer() {
         var form = $('#tracking_peer_form');
+        var modal_peer_tracking = $('#modal_peer_tracking');
         var data = form.serializeArray();
+
+        console.log(data);
+
         var url_parameters = get_url_parameters(document.location.search);
 
         var result_validation = validate_tracking_peer_form(data);
@@ -496,12 +581,20 @@ requirejs(['jquery', 'bootstrap', 'sweetalert', 'validator'], function($) {
                 data: data,
                 url: "../../ases/managers/student_profile/studentprofile_serverproc.php",
                 success: function(msg) {
-                    swal(
-                        msg.title,
-                        msg.msg,
-                        msg.type
-                    );
-                    modal_peer_tracking.hide();
+                    swal({
+                        title: msg.title,
+                        text: msg.msg,
+                        type: msg.type
+                    },function () {
+                        modal_peer_tracking.hide();
+                        var parameters = get_url_parameters(document.location.search);
+
+                        if(parameters.tab){
+                            location.reload();
+                        }else{
+                            location.href = location.search + "&tab=socioed_tab";
+                        }
+                    });
                 },
                 dataType: "json",
                 cache: "false",
@@ -515,67 +608,67 @@ requirejs(['jquery', 'bootstrap', 'sweetalert', 'validator'], function($) {
     function validate_tracking_peer_form(form) {
 
         // Validación de los datos generales
-        if (form[0].value == "") {
+        if (form[1].value == "") {
             return "Debe introducir la fecha en la cual se realizó el seguimiento";
         }
-        else if (form[1].value == "") {
+        else if (form[2].value == "") {
             return "Debe introducir el lugar donde se realizó el seguimiento";
         }
-        else if (form[6].value == "") {
+        else if (form[7].value == "") {
             return "El campo tema se encuentra vacio";
         }
-        else if (form[7].value == "") {
+        else if (form[8].value == "") {
             return "El campo objetivos se encuentra vacio";
         }
 
         //Validación de la hora
-        else if (parseInt(form[4].value) < parseInt(form[2].value)) {
+        else if (parseInt(form[5].value) < parseInt(form[3].value)) {
             return "La hora de finalización debe ser mayor a la hora inicial";
         }
-        else if ((parseInt(form[2].value) == parseInt(form[4].value)) && (parseInt(form[5].value) <= parseInt(form[3].value))) {
+        else if ((parseInt(form[3].value) == parseInt(form[5].value)) && (parseInt(form[6].value) <= parseInt(form[4].value))) {
             return "La hora de finalización debe ser mayor a la hora inicial";
         }
 
         // Validación actividades
 
         // Individual campo
-        else if (form[8].value != "" && form[9].value == 0) {
+        else if (form[9].value != "" && form[10].value == 0) {
             return "El riesgo asociado al campo Actividad Invidual no está marcado. Si usted escribió información en el campo Actividad Individual debe marcar un nivel de riesgo.";
         }
         // Familiar campo
-        else if (form[10].value != "" && form[11].value == 0) {
+        else if (form[11].value != "" && form[12].value == 0) {
             return "El riesgo asociado al campo Actividad Familiar no está marcado. Si usted escribió información en el campo Actividad Familiar debe marcar un nivel de riesgo.";
         }
         // Académico campo
-        else if(form[12].value != "" && form[13].value == 0){
+        else if(form[13].value != "" && form[14].value == 0){
             return "El riesgo asociado al campo Actividad Académico no está marcado. Si usted escribió información en el campo Actividad Académico debe marcar un nivel de riesgo.";
         }
         // Económico campo
-        else if(form[14].value != "" && form[15].value == 0){
+        else if(form[15].value != "" && form[16].value == 0){
             return "El riesgo asociado al campo Actividad Económico no está marcado. Si usted escribió información en el campo Actividad Económico debe marcar un nivel de riesgo.";
         }
         // Vida universitaria y ciudad campo
-        else if(form[16].value != "" && form[17].value == 0){
+        else if(form[17].value != "" && form[18].value == 0){
             return "El riesgo asociado al campo Actividad Vida Universitaria no está marcado. Si usted escribió información en el campo Actividad Vida Universitaria debe marcar un nivel de riesgo.";
         }
         // Individual riesgo
-        else if(form[8].value == "" && form[9].value != 0){
+        else if(form[9].value == "" && form[10].value != 0){
             return "Usted ha marcado el nivel de riesgo asociado a la actividad Individual, debe digitar información en el campo Actividad Individual. O puede utilizar el icono (<span style='color:gray;' class='glyphicon glyphicon-erase'></span>) de limpiar riesgo.";
         }
         // Familiar riesgo
-        else if(form[10].value == "" && form[11].value != 0){
+        else if(form[11].value == "" && form[12].value != 0){
             return "Usted ha marcado el nivel de riesgo asociado a la actividad Familiar, debe digitar información en el campo Actividad Familiar. O puede utilizar el icono (<span style='color:gray;' class='glyphicon glyphicon-erase'></span>) de limpiar riesgo.";
         }
         // Académico riesgo
-        else if(form[12].value == "" && form[13].value != 0){
+        else if(form[13].value == "" && form[14].value != 0){
             return "Usted ha marcado el nivel de riesgo asociado a la actividad Académico, debe digitar información en el campo Actividad Académico. O puede utilizar el icono (<span style='color:gray;' class='glyphicon glyphicon-erase'></span>) de limpiar riesgo.";
         }
         // Económico riesgo
-        else if(form[14].value == "" && form[15].value != 0){
+        else if(form[15].value == "" && form[16].value != 0){
             return "Usted ha marcado el nivel de riesgo asociado a la actividad Económico, debe digitar información en el campo Actividad Económico. O puede utilizar el icono (<span style='color:gray;' class='glyphicon glyphicon-erase'></span>) de limpiar riesgo.";
         }
         // Vida universitaria y ciudad riesgo
-        else if(form[16].value == "" && form[17].value != 0){
+        else if(form[17].value == "" && form[18].value != 0){
             return "Usted ha marcado el nivel de riesgo asociado a la actividad Vida Universitaria, debe digitar información en el campo Actividad Vida Universitaria. O puede utilizar el icono (<span style='color:gray;' class='glyphicon glyphicon-erase'></span>) de limpiar riesgo.";
         }
         // Éxito
@@ -597,4 +690,126 @@ requirejs(['jquery', 'bootstrap', 'sweetalert', 'validator'], function($) {
 
         return query_string;
     }
-});
+
+    //Functions for edit tracking peer
+
+    function load_tracking_peer(id_tracking){
+
+        init_form_tracking();
+
+        var date_tracking_peer = new Date($('#'+id_tracking+' .date_tracking_peer').text());
+        var place_tracking_peer =  $('#'+id_tracking+' .place_tracking_peer').text();
+        var init_time_tracking_peer =  $('#'+id_tracking+' .init_time_tracking_peer').text();
+        var ending_time_tracking_peer =  $('#'+id_tracking+' .ending_time_tracking_peer').text();
+        var topic_tracking_peer =  $('#'+id_tracking+' .topic_tracking_peer').text();
+        var objectives_tracking_peer =  $('#'+id_tracking+' .objectives_tracking_peer').text();
+        var individual_tracking_peer =  $('#'+id_tracking+' .individual_tracking_peer').text();
+        var ind_risk_tracking_peer =  $('#'+id_tracking+' .ind_risk_tracking_peer').text();
+        var familiar_tracking_peer = $('#'+id_tracking+' .familiar_tracking_peer').text();
+        var fam_risk_tracking_peer = $('#'+id_tracking+' .fam_risk_tracking_peer').text();
+        var academico_tracking_peer = $('#'+id_tracking+' .academico_tracking_peer').text();
+        var aca_risk_tracking_peer = $('#'+id_tracking+' .aca_risk_tracking_peer').text();
+        var economico_tracking_peer = $('#'+id_tracking+' .economico_tracking_peer').text();
+        var econ_risk_tracking_peer = $('#'+id_tracking+' .econ_risk_tracking_peer').text();
+        var lifeu_tracking_peer = $('#'+id_tracking+' .lifeu_tracking_peer').text();
+        var lifeu_risk_tracking_peer = $('#'+id_tracking+' .lifeu_risk_tracking_peer').text();
+        var observations_tracking_peer = $('#'+id_tracking+' .observations_tracking_peer').text();
+
+        var enum_risk = new Object();
+
+        enum_risk.bajo = 1;
+        enum_risk.medio = 2;
+        enum_risk.alto = 3;
+
+        //Fecha
+
+        var date = date_tracking_peer.getFullYear();
+        var month = date_tracking_peer.getMonth() + 1;
+
+        if(date_tracking_peer.getMonth() < 10){
+            date += '-0' + month;
+        }else{
+            date += '-' + month;
+        }
+
+        if(date_tracking_peer.getDate() < 10){
+            date += '-0' + date_tracking_peer.getDate();
+        }else{
+            date += '-' + date_tracking_peer.getDate();
+        }
+
+        //Hora
+
+        var hour_ini = init_time_tracking_peer.substring(0,2);
+        var min_ini = init_time_tracking_peer.substring(3,5);
+        var hour_end = ending_time_tracking_peer.substring(0,2);
+        var min_end = ending_time_tracking_peer.substring(3,5);
+
+        $('#h_ini option[value="' + hour_ini + '"]').attr("selected", true);
+        $('#m_ini option[value="'+ min_ini +'"]').attr("selected", true);
+        $('#h_fin option[value="'+ hour_end +'"]').attr("selected", true);
+        $('#m_fin option[value="'+ min_end +'"]').attr("selected", true);
+
+        //Riesgos
+
+        var individual_risk = enum_risk[ind_risk_tracking_peer.toLowerCase()];
+        var familiar_risk = enum_risk[fam_risk_tracking_peer.toLowerCase()];
+        var economic_risk = enum_risk[econ_risk_tracking_peer.toLowerCase()];
+        var academic_risk = enum_risk[aca_risk_tracking_peer.toLowerCase()];
+        var lifeu_risk = enum_risk[lifeu_risk_tracking_peer.toLowerCase()];
+
+        if(ind_risk_tracking_peer != ""){
+            $("input[name='riesgo_ind'][value='"+individual_risk+"']").prop('checked', true);
+        }else{
+            $("input[name='riesgo_ind'][value='0']").prop('checked', true);
+        }
+
+        if(fam_risk_tracking_peer != ""){
+            $("input[name='riesgo_familiar'][value='"+familiar_risk+"']").prop('checked', true);
+        }else{
+            $("input[name='riesgo_familiar'][value='0']").prop('checked', true);
+        }
+
+        if(econ_risk_tracking_peer != ""){
+            $("input[name='riesgo_econom'][value='"+economic_risk+"']").prop('checked', true);
+        }else{
+            $("input[name='riesgo_econom'][value='0']").prop('checked', true);
+        }
+
+        if(aca_risk_tracking_peer != ""){
+            $("input[name='riesgo_aca'][value='"+academic_risk+"']").prop('checked', true);
+        }else{
+            $("input[name='riesgo_aca'][value='0']").prop('checked', true);
+        }
+
+        if(lifeu_risk_tracking_peer != ""){
+            $("input[name='riesgo_uni'][value='"+lifeu_risk+"']").prop('checked', true);
+        }else{
+            $("input[name='riesgo_uni'][value='0']").prop('checked', true);
+        }
+
+        $('#date').val(date);
+        $('#place').val(place_tracking_peer);
+        $('#topic_textarea').val(topic_tracking_peer);
+        $('#objetivos').val(objectives_tracking_peer);
+        $('#individual').val(individual_tracking_peer);
+        $('#familiar').val(familiar_tracking_peer);
+        $('#academico').val(academico_tracking_peer);
+        $('#economico').val(economico_tracking_peer);
+        $('#vida_uni').val(lifeu_tracking_peer);
+        $('#observaciones').val(observations_tracking_peer);
+        $('#id_tracking_peer').val(id_tracking);
+
+        var modal_peer_tracking = $('#modal_peer_tracking');
+
+        modal_peer_tracking.show();
+
+    }
+
+    function delete_tracking_peer(id_tracking){
+
+       
+
+    }
+
+})

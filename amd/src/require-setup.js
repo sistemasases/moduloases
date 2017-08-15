@@ -21,13 +21,16 @@ var require = {
         },
         'validator': {
             deps: ["jquery"]
+        },
+        'select2':{
+         deps: ['bootstrap', 'jquery']
         }
     },
     paths: {
         'jquery': "//code.jquery.com/jquery-2.1.1.min",
         'bootstrap': "//netdna.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min",
         'bootstrap-modal': "//cdnjs.cloudflare.com/ajax/libs/bootstrap-modal/2.2.6/js/bootstrap-modal.min",
-
+        'select2':"https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min",
         //'datatables': "//cdn.datatables.net/1.10.12/js/dataTables.bootstrap",
         'datatables.net': "//cdn.datatables.net/1.10.12/js/jquery.dataTables.min", //1.10.15
         'datatables.jqueryui': "//cdn.datatables.net/1.10.12/js/dataTables.jqueryui.min",

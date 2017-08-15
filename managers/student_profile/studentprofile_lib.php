@@ -101,7 +101,7 @@ require_once(dirname(__FILE__). '/../../../../config.php');
     $sql_query .= "order by seguimiento.fecha desc;";
     
     $tracking_array = $DB->get_records_sql($sql_query);
-    
+
     return $tracking_array;
  }
  
@@ -315,14 +315,29 @@ function save_tracking_peer($object_tracking){
     pg_query("BEGIN") or die("Falló la conexión con la base de datos\n");
     $result_saving = new stdClass();
 
-    // Inserta el seguimiento
-    $result_insertion_tracking = $DB->insert_record('talentospilos_seguimiento', $object_tracking, true);
+    // Inserción o actualización del seguimiento, en caso se registre un ID de seguimiento
+    if($object_tracking->id != ""){
+
+        unset($object_tracking->id_monitor);
+        $result = $DB->update_record('talentospilos_seguimiento', $object_tracking);
+        $result_insertion_tracking = -1;  // Este valor para esta variable indica que no se realizó inserción si no actualización del seguimientos
+    }else{
+        // Inserta el seguimiento
+        unset($object_tracking->id);
+        $result_insertion_tracking = $DB->insert_record('talentospilos_seguimiento', $object_tracking, true);
+    }    
 
     // Inserta la relación de seguimiento_estudiante
-    $object_tracking_student = new stdClass();
-    $object_tracking_student->id_estudiante = $object_tracking->id_estudiante_ases;
-    $object_tracking_student->id_seguimiento = $result_insertion_tracking;
-    $result_insertion_student_tracking = $DB->insert_record('talentospilos_seg_estudiante',  $object_tracking_student, true);
+    if($result_insertion_tracking != -1){
+        $object_tracking_student = new stdClass();
+        $object_tracking_student->id_estudiante = $object_tracking->id_estudiante_ases;
+        $object_tracking_student->id_seguimiento = $result_insertion_tracking;
+        $result_insertion_student_tracking = $DB->insert_record('talentospilos_seg_estudiante',  $object_tracking_student, true);
+    }else{
+        $result_insertion_tracking = 1;
+        $result_insertion_student_tracking = 1;
+    }
+    
 
     // Se consultan ID riesgos
 

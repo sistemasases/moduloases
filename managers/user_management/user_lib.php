@@ -2,6 +2,30 @@
 
 require_once(dirname(__FILE__). '/../../../../config.php');
 
+
+/**
+ * Función que recupera los usuarios asociados al curso de ASES.
+ *
+ * @see get_course_user()
+ * @param namecourse --> tiene el nombre del curso.
+ * @return Array con usuarios asociados al curso
+ */
+function get_course_user($namecourse){
+    
+    global $DB;
+    
+    $sql_query = "SELECT usuario.username as codigo, usuario.firstname as nombre, usuario.lastname as apellido FROM {course} course INNER JOIN  {enrol} enrol ON 
+    (enrol.courseid= course.id) INNER JOIN  {user_enrolments} userenrolments ON (userenrolments.enrolid= enrol.id)INNER JOIN  {user} usuario ON (usuario.id= userenrolments.userid) where fullname='$namecourse';";
+                
+    $courseusers = $DB->get_records_sql($sql_query);
+    
+    return $courseusers;
+}
+
+
+
+
+
 /**
  * Función que recupera los campos de usuario de la tabla {user}
  *

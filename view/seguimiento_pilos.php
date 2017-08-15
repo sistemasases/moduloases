@@ -28,9 +28,9 @@
 // Standard GPL and phpdocs
 require_once(__DIR__ . '/../../../config.php');
 require_once($CFG->libdir.'/adminlib.php');
-require_once('../managers/seguimiento_pilos/seguimientopilos_lib.php');
 require_once('../managers/seguimiento_pilos/seguimiento_functions.php');
 require_once('../managers/instance_management/instance_lib.php');
+
 
 include('../lib.php');
 include("../classes/output/renderer.php");
@@ -63,23 +63,22 @@ $seguimientotable ="";
 $globalArregloPares = [];
 $globalArregloGrupal =[];
 
+//$table=semesterUser($globalArregloPares,$globalArregloGrupal,$USER->id,$blockid,$usernamerole);
+//print_r($semesters);
 //Se muestra la interfaz correspondiente al usuario.
 if($usernamerole=='monitor_ps'){
 
-	//Se recupera los estudiantes de un monitor en la instancia.
-    $monitorstudents=get_seguimientos_monitor($USER->id,$blockid);
-    //Se organiza el array que será transformado en el toogle.
-	transformarConsultaMonitorArray($monitorstudents,$globalArregloPares,$globalArregloGrupal);
-
-
-
-    //$seguimientotable.=
+	//Se recupera los estudiantes de un monitor en la instancia y se organiza el array que será transformado en el toogle.
+	$table=monitorUser($globalArregloPares,$globalArregloGrupal,$USER->id,0,$blockid,$userrole);
 
 }elseif($usernamerole=='practicante_ps'){
-    //Se recupera los monitores de un practicante en la instancia.
-    //get_monitores_practicante($USER->id,$blockid);
-    //$seguimientotable.=
+    
+    //Se recupera los estudiantes de un practicante en la instancia y se organiza el array que será transformado en el toogle.
+	$table=practicanteUser($globalArregloPares,$globalArregloGrupal,$USER->id,$blockid,$userrole);
+
 }elseif($usernamerole=='profesional_ps'){
+	//Se recupera los estudiantes de un profesional en la instancia y se organiza el array que será transformado en el toogle.
+	$table=profesionalUser($globalArregloPares,$globalArregloGrupal,$USER->id,$blockid,$userrole);
 
 
 }elseif($usernamerole=='sistemas' or $username == "administrador" or $username == "sistemas1008" or $username == "Administrador"){
@@ -87,7 +86,11 @@ if($usernamerole=='monitor_ps'){
 }
 
 
-
+$data = 'data';    
+$data = new stdClass;
+$data->table = $table;
+$contextcourse = context_course::instance($courseid);
+$contextblock =  context_block::instance($blockid);
 $url = new moodle_url("/blocks/ases/view/seguimiento_pilos.php",array('courseid' => $courseid, 'instanceid' => $blockid));
 
 //Navigation setup
@@ -119,12 +122,10 @@ $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/dataTables.tableToo
 $PAGE->requires->css('/blocks/ases/style/sweetalert.css', true);
 //$PAGE->requires->css('/theme/base/style/core.css',true);
 
-
-
 $output = $PAGE->get_renderer('block_ases');
 
 echo $output->header();
 //echo $output->standard_head_html(); 
-$seguimiento_pilos_page = new \block_ases\output\seguimiento_pilos_page();
+$seguimiento_pilos_page = new \block_ases\output\seguimiento_pilos_page($data);
 echo $output->render($seguimiento_pilos_page);
 echo $output->footer();

@@ -1,29 +1,72 @@
 <?php
-require('seguimientopilos_lib.php');
+require_once('seguimientopilos_lib.php');
 
 global $USER;
 
-if(isset($_POST['type'])&&$_POST['type']=="getid") 
+if(isset($_POST['type'])&&$_POST['type']=="getInfo"&&isset($_POST['instance'])) 
  {
-    echo($USER->id);
+    $datos=[];
+    $datos["id"]=$USER->id;
+    $datos["username"]=$USER->username;
+    $datos["email"]=$USER->email;
+    $datos["rol"]=get_id_rol($USER->id,$_POST['instance']);
+    $datos["name_rol"]=get_name_rol($datos["rol"]);
+
+    echo json_encode($datos);
 }
 
-if(isset($_POST['type'])&&$_POST['type']=="getName") 
+if(isset($_POST['type'])&&$_POST['type']=="info_monitor"&&isset($_POST['id'])&&isset($_POST['instance'])) 
  {
-    echo($USER->username);
+  
+    $retorno = get_seguimientos_monitor($_POST['id'],$_POST['instance']);
+    echo (json_encode($retorno));
 }
 
-if(isset($_POST['type'])&&$_POST['type']=="getEmail") 
+if(isset($_POST['type'])&&$_POST['type']=="eliminar_registro"&&isset($_POST['id'])) 
  {
-    echo($USER->email);
+  
+   $retorno = eliminar_registro($_POST['id']);
+   echo $retorno;
+   
 }
 
-echo "es ".$POST['id'];
-if(isset($_POST['type'])&&$_POST['type']=="getRol"&&isset($_POST['instance'])&&isset($_POST['id'])) 
+if(isset($_POST['type'])&&$_POST['type']=="actualizar_registro") 
+ {
+  $objeto =(object)$_POST['seguimiento'];
+  $retorno = updateSeguimiento_pares($objeto);
+  echo $retorno;
+  
+ }
+
+if(isset($_POST['type'])&&$_POST['type']=="number_seg_monitor"&&isset($_POST['id'])&&isset($_POST['instance'])) 
+ {
+    $retorno = get_cantidad_seguimientos_monitor($_POST['id'],$_POST['instance']);
+    echo (json_encode($retorno));
+}
+
+if(isset($_POST['type'])&&$_POST['type']=="info_practicante"&&isset($_POST['id'])) 
+ {
+    $retorno = get_monitores_practicante($_POST['id']);
+    echo (json_encode($retorno));
+}
+
+if(isset($_POST['type'])&&$_POST['type']=="info_profesional"&&isset($_POST['id'])&&isset($_POST['instance'])) 
+ {
+    $retorno = get_practicantes_profesional($_POST['id'],$_POST['instance']);
+    echo (json_encode($retorno));
+}
+
+if(isset($_POST['type'])&&$_POST['type']=="getProfesional"&&isset($_POST['instance'])&&isset($_POST['id'])) 
  { 
-   $retorno = get_name_rol($_POST['id'],$_POST['instance']);
-    echo($retorno);
+   $retorno = get_profesional_practicante($_POST['id'],$_POST['instance']);
+   echo($retorno);
 }
 
 
-// send_email_to_user("individual",1057,1122,"22 Mar 2017","LUIS ESTEBAN PEREA ANGULO","asf");
+if(isset($_POST['type'])&&$_POST['type']=="send_email_to_user"&&isset($_POST['message'])&&isset($_POST['tipoSeg'])&&isset($_POST['codigoEnviarN1'])&&isset($_POST['codigoEnviarN2'])&&isset($_POST['fecha'])&&isset($_POST['nombre'])) 
+{
+ echo send_email_to_user($_POST['tipoSeg'],$_POST['codigoEnviarN1'],$_POST['codigoEnviarN2'],$_POST['fecha'],$_POST['nombre'],$_POST['message']);
+}
+
+
+?>

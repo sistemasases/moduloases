@@ -24,11 +24,11 @@ use templatable;
 use stdClass;                                                                                                                       
  
 class seguimiento_pilos_page implements renderable, templatable {                                                                               
-    /** @var string $sometext Some text to show how to pass data to a template. */                                                  
-    var $sometext = null;                                                                                                           
+    /** @var string $data Some text to show how to pass data to a template. */                                                  
+    var $data = null;                                                                                                           
  
-    public function __construct($sometext) {                                                                                        
-        $this->sometext = $sometext;                                                                                                
+    public function __construct($data) {                                                                                        
+        $this->data = $data;                                                                                                
     }
     /**                                                                                                                             
      * Export this data so it can be used as the context for a mustache template.                                                   
@@ -37,7 +37,7 @@ class seguimiento_pilos_page implements renderable, templatable {
      */                                                                                                                             
     public function export_for_template(renderer_base $output) {                                                                    
         $data = new stdClass();                                                                                                     
-        $data->sometext = $this->sometext;                                                                                          
+        $data->data = $this->data;                                                                                          
         return $data;                                                                                                               
     }
 }

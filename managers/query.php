@@ -3415,7 +3415,6 @@ function get_monitores_practicante($id_practicante)
         array_push($arreglo_retornar,$array_auxiliar);
     }
     
-//  print_r($arreglo_retornar);
     return $arreglo_retornar;
 }
 
@@ -3479,6 +3478,7 @@ function get_practicantes_profesional($id_profesional,$id_instancia)
         array_push($arreglo_retornar,$array_auxiliar);
     }
 
+    print_r($arreglo_retornar);
     return ($arreglo_retornar);
     
 }
@@ -3998,14 +3998,14 @@ function save_geographic_risk($id_student, $rate_risk){
 // Email functions
 // ***************
 
-function get_full_user($id){
+/*function get_full_user($id){
     global $DB;
     
     $sql_query = "SELECT * FROM {user} WHERE id= ".$id;
     $user = $DB->get_record_sql($sql_query);
     
     return $user;
-}
+}*/
 
 function get_full_user_talentos($id){
     global $DB;

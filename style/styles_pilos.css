@@ -105,7 +105,7 @@ header ul li{
 
 #collapseOne{
   overflow:scroll;
-  height: 400px;
+  height: 600px;
   width: 100%;
 }
 
@@ -988,6 +988,33 @@ tr.shown td.details-control {
 
 /*seccion de reporte seguimiento pilos*/
 
+#peer_trackings{
+  padding-left: 0;
+  padding-right: 0;
+}
+
+a.panel_heading.heading_semester_tracking:-web-kit-any-link{
+  text-decoration:none;
+}
+
+a.collapsed .heading_semester_tracking{
+  background-color: #E5E5E5;
+  color: black;
+
+}
+
+a .heading_semester_tracking{
+  background-color: #D51B23;
+  color: white;
+
+}
+
+a .heading_semester_tracking:hover{
+  background-color: #D51B23;
+  color: white;
+  text-decoration:none;
+}
+
 .reporte-seguimiento .hacer-scroll
 {
   overflow: scroll;
@@ -1063,13 +1090,13 @@ input.no-borde-fondo.tema
 
 .riesgo_medio
 {
-  background-color: #F7BE81 !important;
+  background-color: #F3E2A9 !important;
 }
 
 
 .riesgo_bajo
 {
-  background-color: #BEF781 !important;
+  background-color: #A9F5D0 !important;
 }
 
 
@@ -1203,6 +1230,12 @@ input.no-borde-fondo.tema
 
 #tracking_peer_form textarea{
   resize: vertical;
+}
+
+.row-buttons-tracking{
+  margin-top: 10px;
+  margin-bottom: 5px;
+  margin-left: auto;
 }
 
 .form-legend{
@@ -1390,6 +1423,9 @@ input.no-borde-fondo.tema
 .userfield{
   display: none;
 } 
+.userreport{
+  display: none;
+}
 .smallicon{
   display: none;
 }
@@ -1398,4 +1434,11 @@ input.no-borde-fondo.tema
 }
 .controls{
   display: none;
+}
+.itemicon{
+  display: none;
+}
+
+.catlevel3{
+  text-align: left;
 }

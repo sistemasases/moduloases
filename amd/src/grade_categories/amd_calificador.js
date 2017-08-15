@@ -1,15 +1,87 @@
-requirejs(['jquery', 'bootstrap', 'sweetalert', 'buttons.flash'], function($) {
+requirejs(['jquery', 'bootstrap', 'sweetalert'], function($) {
+    var grade;
 
     $(document).ready(function() {
         var pilos = getIDs();
         deleteNoPilos(pilos);
+        bloquearTotales();
     });
 
+
+
     $(document).on('blur','.text',function(){
-        console.log("h")
+        if(validateNota($(this))){
+            var id = $(this).attr('id').split("_");
+            var userid = id[1];
+            var itemid = id[2];
+            var nota = $(this).val();
+            var curso = getCourseid();
+            var data ={user: userid,item: itemid, finalgrade: nota,course: curso};
+            $.ajax({
+            type: "POST",
+            data: data,
+            url: "../managers/grade_categories/grade_categories_processing.php",
+            async: false,
+            success: function(msg)
+            {
+                
+                var updGrade = msg.nota;
+
+                if(updGrade == true){
+                    console.log("Nota actualizada");
+
+                    if(nota<3){
+                        var menMonitor = msg.monitor;
+                        var menPracticante = msg.practicante;
+                        var menProfesional = msg.profesional;
+
+                        if(menMonitor == true){
+                            console.log("mensaje al monitor enviado correctamente");
+                        }else{
+                            console.log("error monitor");
+                            swal('Error',
+                         'Error al enviar correo al monitor',
+                         'error');
+                        }
+
+                        if(menPracticante == true){
+                            console.log("mensaje al practicante enviado correctamente");
+                        }else{
+                            console.log("error practicante");
+                            swal('Error',
+                         'Error al enviar correo al practicante',
+                         'error');
+                        }
+
+                        if(menProfesional == true){
+                            console.log("mensaje al profesional enviado correctamente");
+                        }else{
+                            console.log("error profesional");
+                            swal('Error',
+                         'Error al enviar correo al profesional',
+                         'error');
+                        }
+                    }
+                }else{
+                    swal('Error',
+                         'Error al actualizar la nota',
+                         'error');
+                }
+
+            },
+            dataType: "json",
+            cache: "false",
+            error: function(msg){console.log(msg)},
+            });
+        };
     })
 
-    $(document).on('keypress','input', function(e) {
+    $(document).on('focus','.text',function(){
+        grade = $(this).val();
+        //console.log(grade);
+    })
+
+    $(document).on('keypress','.text', function(e){
         
         tecla = (document.all) ? e.keyCode : e.which;
 
@@ -21,8 +93,60 @@ requirejs(['jquery', 'bootstrap', 'sweetalert', 'buttons.flash'], function($) {
         patron = /[0-9]/;
         tecla_final = String.fromCharCode(tecla);
         return patron.test(tecla_final);
-
     });
+
+
+    $(document).on('click','.reload', function(){
+        
+        location.reload();
+    });
+
+
+    function validateNota(selector){
+        var bool = false;
+        var nota = selector.val();
+
+        if(nota>5 || nota <0){
+            swal({
+                title: "Ingrese un valor valido, entre 0 y 5. \n\rUsted ingresó: " + nota,
+                html: true,
+                type: "warning",
+                confirmButtonColor: "#d51b23"
+            });
+            selector.val(grade);
+            bool = false;
+        }else if(nota == '' && grade != ''){
+            selector.val('0');
+            bool = true;
+        }else if(nota == '' && grade == '' || nota == grade){
+            bool = false;
+        }else{
+            bool = true;
+        }
+
+        
+
+        return bool;
+    }
+
+    function bloquearTotales(){
+        $('.cat').each(function(){
+            var input = $(this).children().next('.text'); 
+            input.attr('disabled',true);
+            input.css('font-weight','bold')
+        })
+
+        $('.course').each(function(){
+            var input = $(this).children().next('.text');
+            input.attr('disabled',true);
+            input.css('font-weight','bold');
+            input.css('font-size',16)
+        })
+
+        $('.header').children().each(function(){
+            $(this).removeAttr('href');
+        })
+    }
 
     function deleteNoPilos(pilos){
         $("#user-grades").children().children().each(function(){

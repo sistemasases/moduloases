@@ -722,30 +722,40 @@ if (isset($_FILES['csv_file'])){
          
          global $DB;
          $record = new stdClass();
+         $count = 0;
          
          while($data = fgetcsv($handle, 100, ",")){
+            $count++;
             $sql_query = "SELECT id FROM {talentospilos_barrios} WHERE cod_barrio = ".$data[0];
             $id_barrio = $DB->get_record_sql($sql_query);
             
-            $sql_query = "SELECT id FROM {user} WHERE username LIKE '".substr($data[1], 2)."%'";
+            $query = "SELECT id FROM {user} WHERE username LIKE '".substr($data[1], 2)."%'";
             
-            $id_user = $DB->get_record_sql($sql_query);
+            $id_user = $DB->get_record_sql($query);
+
+            if(!$id_user){
+               throw new MyException("El estudiante con código ".substr($data[1], 2)." no se encuentra registrado en el campus virtual");
+            }
             
-            $additional_fields = get_additional_fields((int)$id_user->id);
+            $additional_fields = get_adds_fields_mi((int)$id_user->id);
+
+            $id_user_talentos = $additional_fields->idtalentos;
+
+            if(!$id_user_talentos){
+               throw new MyException("El estudiante con código ".substr($data[1], 2)." no se encuentra enlazado a la tabla talentospilos_usuario");
+            }
             
-            $id_user_talentos = $additional_fields[0]->data;
-            
-            $sql_query = "SELECT id FROM {talentospilos_demografia} WHERE id_usuario = $id_user_talentos";
-            $id_register = $DB->get_record_sql($sql_query);
+            $query = "SELECT id FROM {talentospilos_demografia} WHERE id_usuario = $id_user_talentos";
+            $id_register = $DB->get_record_sql($query);
             
             if($id_register){
                
-               $record->id = $id_register;
+               $record->id = $id_register->id;
                $record->id_usuario = $id_user_talentos;
                $record->longitud = (float)$data[2];
                $record->latitud = (float)$data[3];
                $record->barrio = (int)$id_barrio->id;
-               
+
                $DB->update_record('talentospilos_demografia', $record);
                
             }else{

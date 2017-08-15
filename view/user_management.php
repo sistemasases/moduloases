@@ -28,6 +28,8 @@
 require_once(__DIR__ . '/../../../config.php');
 require_once($CFG->libdir.'/adminlib.php');
 require_once('../managers/query.php');
+require_once('../managers/instance_management/instance_lib.php');
+require_once('../managers/user_management/user_lib.php');
 
 global $PAGE;
 
@@ -48,11 +50,26 @@ $contextblock =  context_block::instance($blockid);
 $url = new moodle_url("/blocks/ases/view/user_management.php", array('courseid' => $courseid, 'instanceid' => $blockid));
 
 //se culta si la instancia ya está registrada
-if(!consultInstance($blockid)){
+if(!consult_instance($blockid)){
     header("Location: instanceconfiguration.php?courseid=$courseid&instanceid=$blockid");
 }
 
+//obtiene las personas asociadas al curso.
+$courseusers = get_course_user("REPORTES ASES");
 
+$table_courseuseres='';
+$table_courseuseres.='<option value=""> ---------------------------------------</option>';
+foreach ($courseusers as $courseuser) {
+    $table_courseuseres.='<option value="'.$courseuser->codigo.'">'.$courseuser->codigo.' - '.$courseuser->nombre.' '.$courseuser->apellido.'</option>';
+}
+
+
+
+
+//Crea una clase con la información que se llevará al template.
+$data = 'data';    
+$data = new stdClass;
+$data->table = $table_courseuseres;
 
 //configuracion de la navegación
 $coursenode = $PAGE->navigation->find($courseid, navigation_node::TYPE_COURSE);
@@ -80,25 +97,19 @@ $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/dataTables.jqueryui
 $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/jquery.dataTables.css', true);
 $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/jquery.dataTables.min.css', true);
 $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/jquery.dataTables_themeroller.css', true);
+$PAGE->requires->css('/blocks/ases/js/select2/css/select2.css', true);
 
-$PAGE->requires->js('/blocks/ases/js/jquery-2.2.4.min.js', true);
-$PAGE->requires->js('/blocks/ases/js/bootstrap.js', true);
-$PAGE->requires->js('/blocks/ases/js/bootstrap.min.js', true);
-$PAGE->requires->js('/blocks/ases/js/sweetalert-dev.js', true);
-$PAGE->requires->js('/blocks/ases/js/main.js', true);
-//$PAGE->requires->js('/blocks/ases/js/checkrole.js', true);
-$PAGE->requires->js('/blocks/ases/js/jquery.validate.min.js', true);
-$PAGE->requires->js('/blocks/ases/js/npm.js', true);
-$PAGE->requires->js('/blocks/ases/js/role_management.js', true);
-$PAGE->requires->js('/blocks/ases/js/DataTables-1.10.12/js/jquery.dataTables.js', true);
-$PAGE->requires->js('/blocks/ases/js/DataTables-1.10.12/js/jquery.dataTables.min.js', true);
-$PAGE->requires->js('/blocks/ases/js/DataTables-1.10.12/js/dataTables.jqueryui.min.js', true);
-$PAGE->requires->js('/blocks/ases/js/DataTables-1.10.12/js/dataTables.bootstrap.min.js', true);
-$PAGE->requires->js('/blocks/ases/js/DataTables-1.10.12/js/dataTables.bootstrap.js', true);
+
+// $PAGE->requires->js('/blocks/ases/js/main.js', true);
+// //$PAGE->requires->js('/blocks/ases/js/checkrole.js', true);
+// $PAGE->requires->js('/blocks/ases/js/jquery.validate.min.js', true);
+// $PAGE->requires->js('/blocks/ases/js/npm.js', true);
+// $PAGE->requires->js('/blocks/ases/js/role_management.js', true);
+
 
 
 $output = $PAGE->get_renderer('block_ases');
-$index_page = new \block_ases\output\user_management_page('SomeText');
+$index_page = new \block_ases\output\user_management_page($data);
 
 echo $output->header();
 

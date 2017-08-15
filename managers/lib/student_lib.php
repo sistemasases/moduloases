@@ -33,7 +33,7 @@ function get_id_user_moodle($id_student){
     $sql_query = "SELECT id FROM {user_info_field} WHERE shortname = 'idtalentos'";
     $id_field = $DB->get_record_sql($sql_query)->id;
     
-    $sql_query = "SELECT userid FROM {user_info_data} WHERE fieldid = $id_field AND data = '$id_student'";
+    $sql_query = "SELECT MAX(userid) AS userid FROM {user_info_data} WHERE fieldid = $id_field AND data = '$id_student'";
                   
     $id_user_moodle = $DB->get_record_sql($sql_query)->userid;
 
@@ -51,7 +51,6 @@ function get_id_user_moodle($id_student){
 function get_id_user_moodle_active($id_student){
      
     global $DB;
-
 
     return $id_user_moodle;
 }
@@ -148,9 +147,14 @@ function get_faculty($id){
 function get_cohort_student($id_student){
     
     global $DB;
+
+    print_r($id_student);
     
-    $sql_query = "SELECT MAX(id) AS id, cohortid AS cohort FROM {cohort_members} WHERE userid = $id_student GROUP BY cohort;";
-    $id_cohort = $DB->get_record_sql($sql_query)->cohort;
+    $sql_query = "SELECT MAX(id) AS id FROM {cohort_members} WHERE userid = $id_student;";
+    $id_cohort_member = $DB->get_record_sql($sql_query)->id;
+
+    $sql_query = "SELECT cohortid FROM {cohort_members} WHERE id = $id_cohort_member";
+    $id_cohort = $DB->get_record_sql($sql_query)->cohortid;
     
     $sql_query = "SELECT name, idnumber FROM {cohort} WHERE id = $id_cohort;";
     $cohort = $DB->get_record_sql($sql_query);
@@ -173,7 +177,7 @@ function get_assigned_monitor($id_student){
     $id_monitor = $DB->get_record_sql($sql_query)->id_monitor;
     
     if($id_monitor){
-        $sql_query = "SELECT firstname, lastname, email FROM {user} WHERE id = ".$id_monitor;
+        $sql_query = "SELECT id, firstname, lastname, email FROM {user} WHERE id = ".$id_monitor;
         $monitor_object = $DB->get_record_sql($sql_query);
     }else{
         $monitor_object = array();
@@ -199,9 +203,13 @@ function get_assigned_pract($id_student){
      if($id_monitor){
          $sql_query = "SELECT id_jefe FROM {talentospilos_user_rol} WHERE id_usuario = ".$id_monitor.";";
          $id_trainee = $DB->get_record_sql($sql_query)->id_jefe; 
-         
-         $sql_query = "SELECT firstname, lastname, email AS fullname FROM {user} WHERE id = ".$id_trainee;
-         $trainee_object = $DB->get_record_sql($sql_query);
+
+         if($id_trainee){
+            $sql_query = "SELECT id, firstname, lastname, email AS fullname FROM {user} WHERE id = ".$id_trainee;
+            $trainee_object = $DB->get_record_sql($sql_query);
+         }else{
+            $trainee_object = array();
+         }
      }else{
          $trainee_object = array();
      }
@@ -216,7 +224,7 @@ function get_assigned_pract($id_student){
  * @parameters $id_student int Id relacionado en la tabla {talentospilos_usuario}
  * @return Array --> Contiene los nombres, apellidos y el email del profesional asignado a un estudiante
  */
- function get_assigned_professional($id_student){
+function get_assigned_professional($id_student){
      
      global $DB;
      
@@ -231,9 +239,15 @@ function get_assigned_pract($id_student){
          if($id_trainee){
             $sql_query = "SELECT id_jefe FROM {talentospilos_user_rol} WHERE id_usuario = ".$id_trainee.";";
             $id_professional = $DB->get_record_sql($sql_query)->id_jefe;
-         
-            $sql_query = "SELECT firstname, lastname, email FROM {user} WHERE id = ".$id_professional.";";
-            $professional_object = $DB->get_record_sql($sql_query);
+
+            if($id_professional){
+                $sql_query = "SELECT id, firstname, lastname, email FROM {user} WHERE id = ".$id_professional.";";
+                $professional_object = $DB->get_record_sql($sql_query);    
+            }else{
+                $professional_object = array();   
+            }            
+         }else{
+            $professional_object = array();   
          }
      }else{
          $professional_object = array();
@@ -250,7 +264,7 @@ function get_assigned_pract($id_student){
  * @return Array --> Contiene los nombres, apellidos y el email del profesional asignado a un estudiante
  */
  
- function get_risk_by_student($id_student){
+function get_risk_by_student($id_student){
     
     global $DB;
 
@@ -261,4 +275,21 @@ function get_assigned_pract($id_student){
     $array_risk = $DB->get_records_sql($sql_query);
     
     return $array_risk;
+}
+
+ /**
+ * Función que un objeto USER de moodle dado un id
+ *
+ * @see get_full_user($id)
+ * @parameters $id int Id relacionado en la tabla {user}
+ * @return Object --> Contiene toda la informacion de un usuario en la tabla {user}
+ */
+ 
+function get_full_user($id){
+    global $DB;
+    
+    $sql_query = "SELECT * FROM {user} WHERE id= ".$id;
+    $user = $DB->get_record_sql($sql_query);
+    
+    return $user;
 }

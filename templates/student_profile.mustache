@@ -423,12 +423,8 @@
       <div class="mymodal-body col-sm-12">
         <form class="form-horizontal" id="tracking_peer_form" role="form">
           
-          <div class= "form-group" id="div_created">
-            <div class="col-sm-12">
-              <label type="text" class="hiden" id="created_date" name="created_daydate"></label>
-            </div>
-          </div>
-          
+          <input type="text" id="id_tracking_peer" name="id_tracking_peer" class="hide"></input>
+
           <div class="row form-legend">
             <h4>Datos generales</h4>
           </div>
@@ -436,7 +432,7 @@
           <div class="row">
             <div class="col-sm-6">
               <div class="form-group">
-                <label for="date" class="col-sm-3">Fecha <b style="color:red;">*</b></label>
+                <label for="date" class="col-sm-3">Fecha (dd/mm/aa)<b style="color:red;">*</b></label>
                 <div class="col-sm-9">
                   <input type="date" maxlength="20" class="form-control" id="date" name="date" />
                 </div>
@@ -673,7 +669,6 @@
       </div>
       <div class="mymodal-footer">
           <button type="button" class="btn-primary" id="save_tracking_btn">Guardar cambios</button>
-          <button type="button" class="btn-primary" id="upd_seg">Editar</button>
           <button type="button" class="btn-primary" id="cancel_peer_tracking">Cancelar</button>
       </div>
     </div>

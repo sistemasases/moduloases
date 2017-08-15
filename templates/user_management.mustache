@@ -19,8 +19,13 @@
                             <ul>
                                 <li>
                                     <label for="username_input">Nombre de usuario:</label> 
-                                    <input type="text" name="username_input" id="username_input"/>
-                                    <button class="submit" type="button" id="search_button" disabled>Buscar</button> 
+                                    <select name="users" id="users">
+                                     {{#data}}
+                                    {{{table}}}
+                                    {{/data}}
+                                    </select>
+                                    <button class="submit" type="button" id="search_button">Buscar</button> 
+
                                 </li>
                                 <li class="assignment_li"> 
                                     <label for="name_lastname">Nombre completo: </label>
@@ -91,5 +96,5 @@
         
     </div>{{!--end panel-group--}}
 </div>
-
-<script src="../js/checkrole.js"></script>
+<script type="text/javascript" src="../amd/src/require-setup.js"></script>
+<script data-main="../amd/src/user_management/main" src="../amd/scripts/require.js"></script>

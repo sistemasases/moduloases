@@ -2,11 +2,9 @@
 require_once(dirname(__FILE__). '/../../../config.php');
 require('query.php');
     global $DB;
-    echo "asignacion monitor";
-    echo $DB->insert_record('talentospilos_monitor_estud',array('id_estudiante'=>912,'id_monitor'=>74179,'id_instancia'=>450299));
-    
+
     echo "asignacion profesional";
-    echo $DB->insert_record('talentospilos_user_rol', array('id_rol'=>3,'id_usuario'=>90597,'estado'=>1,'id_semestre'=>5,'id_jefe'=>110954));
+    echo $DB->insert_record('talentospilos_user_rol', array('id_rol'=>3,'id_usuario'=>90597,'estado'=>1,'id_semestre'=>5,'id_jefe'=>110954,'id_instancia' => 450299));
     $update1="UPDATE {talentospilos_user_rol} SET id_jefe = 90597 WHERE id_usuario = 89004";
     $update2="UPDATE {talentospilos_user_rol} SET id_jefe = 90597 WHERE id_usuario = 85742";
     $update3="UPDATE {talentospilos_user_rol} SET id_jefe = 90597 WHERE id_usuario = 93989";
