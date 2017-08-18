@@ -1,0 +1,49 @@
+
+<body name="general_reports">
+{{#data}}
+    <div>
+        <div class = 'title'><b>REPORTES ACADEMICOS</b></div>
+
+        <div data-spy="scroll" data-target=".navbar" data-offset="50" class="well col-md-10 col-md-offset-1 reporte-seguimiento" id="reemplazarToogle" name="reemplazarToogle">
+            
+            <div class="panel-group">
+                <div class="panel panel-default">
+                    <div class="panel-heading" style="background-color: #D0C4C4;">
+                        <h4 class="panel-title">
+                            <a data-toggle="collapse" href="#collapse01">
+                                Reporte por estudiante
+                            </a>
+                        </h4>
+                    </div>
+                    <div id = "collapse01" class="panel-collapse collapse">
+                        {{{tableStudents}}}
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="panel-group">
+                <div class="panel panel-default">
+                    <div class="panel-heading" style="background-color: #D0C4C4;">
+                        <h4 class="panel-title">
+                            <a data-toggle="collapse" href="#collapse02">
+                                Reporte por docente
+                            </a>
+                        </h4>
+                    </div>
+                    <div id = "collapse02" class="panel-collapse collapse">
+                        AQUI IRA EL REPORTE2
+                    </div>
+                </div>
+
+            </div>
+        </div>
+       
+
+       
+    </div>
+    <!-- end wrapper -->
+    <script type="text/javascript" src="../amd/src/require-setup.js"></script>
+    <script data-main="../amd/src/general_reports/amd_academic_reports" src="../amd/scripts/require.js"></script>
+    {{/data}}
+</body>

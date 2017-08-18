@@ -204,6 +204,17 @@ requirejs(['jquery', 'bootstrap', 'sweetalert'], function($) {
     });
 
     $(document).on("click", ".new", function() {
+        var maxweight = $(this).prev().attr('id');
+        if(maxweight <= 0){
+            swal({
+                title: "No se pueden crear mas categorías o ítems en la categoria seleccionada.",
+                text: "\n\r El peso de los elementos dentro de ésta suma 100%.\n\r Para crear un nuevo elemento primero configure los pesos de los demas.",
+                html: true,
+                type: "warning",
+                confirmButtonColor: "#d51b23"
+            });
+            return;
+        }
         $('.new').prop('disabled', true);
 
         var newDiv = $("<div class = 'divForm'>");
@@ -222,15 +233,17 @@ requirejs(['jquery', 'bootstrap', 'sweetalert'], function($) {
                 $("#inputValor").on('blur', function() {
                     //se revisa que el elemento digitado cumpla con las restricciones
                     var numero = $(this).val();
+                    var maxPeso= parseInt($(this).parent().parent().parent().parent().children().next('.maxweight').attr('id'));
                     //si no cumple con la restriccion de estar entre 0 y 100 entonces se realiza el aviso y se pone el valor en 0
-                    if (numero < 0 || numero > 100) {
+                    if (numero < 0 || numero > maxPeso) {
                         swal({
-                            title: "El valor debe estar entre 0 y 100\n\rUsted ingresó: " + numero,
+                            title: "El valor debe estar entre 0 y el peso máximo: "+maxPeso,
+                            text: "\n\rUsted ingresó: " + numero,
                             html: true,
                             type: "warning",
                             confirmButtonColor: "#d51b23"
                         });
-                        $(this).val(0);
+                        $(this).val('');
                     }
                 });
                 $('#inputValor').on('keypress', function(e) {

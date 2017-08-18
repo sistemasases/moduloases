@@ -63,7 +63,7 @@ require_once(dirname(__FILE__). '/../../../../config.php');
  * @param $type_tracking
  * @return Array --> Datos del seguimiento
  */
- function load_tracking($id_tracking, $type_tracking, $id_instance) {
+function load_tracking($id_tracking, $type_tracking, $id_instance) {
  
      
  }
@@ -85,7 +85,7 @@ function get_trackings_student($id_ases, $tracking_type, $id_instance){
 
     $sql_query="SELECT *, seguimiento.id as id_seg 
                 FROM {talentospilos_seguimiento} AS seguimiento INNER JOIN {talentospilos_seg_estudiante} AS seg_estudiante  
-                                                ON seguimiento.id = seg_estudiante.id_seguimiento  where seguimiento.tipo ='".$tracking_type."';";
+                                                ON seguimiento.id = seg_estudiante.id_seguimiento  where seguimiento.tipo ='".$tracking_type."' AND seguimiento.status <> 0;";
     
     if($id_instance != null ){
         $sql_query =  trim($sql_query,";");    
@@ -531,3 +531,51 @@ function delete_tracking_peer($id_tracking){
     return $msg_result;
 
 }
+
+/**
+ * Función que guarda el cambio de estado ASES de un estudiante
+ * 
+ *
+ * @param $id_student --> ID correspondiente al estudiante Ases
+ * @param $id_status --> ID correspondiente al estado Ases a almacenar
+ * @param $id_reason --> ID correspondiente al motivo en caso de que el nuevo estado sea RETIRADO. Por defecto null.
+ * @return $object_result --> Objeto que almacena el resultado de operación en la base de datos
+ */
+
+function save_status_ases($id_status, $id_student, $id_reason=null){
+
+    global $DB;
+    $msg_result = new stdClass();
+
+    date_default_timezone_set('America/Bogota');
+
+    $today_timestamp = time();
+
+    $object_status = new stdClass();
+
+    $object_status->fecha = $today_timestamp;
+    $object_status->id_estado_ases = $id_status;
+    $object_status->id_estudiante = $id_student;
+
+    if($id_reason){
+        $object_status->id_motivo_retiro = $id_reason;
+    }
+
+    $result_insertion = $DB->insert_record('talentospilos_est_estadoases', $object_status);
+
+    if($result_insertion){
+
+        $msg_result->title = "Éxito";
+        $msg_result->msg = "El estado ha sido cambiado con éxito";
+        $msg_result->type = "success";
+
+    }else{
+
+        $msg_result->title = "Error";
+        $msg_result->msg = "Error al almacenar el seguimiento en la base de datos";
+        $msg_result->type = "error";
+    }
+
+    return $msg_result;
+}
+

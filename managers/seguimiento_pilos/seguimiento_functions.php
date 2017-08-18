@@ -221,6 +221,8 @@ function monitorUser(&$pares,&$grupal,$codigoMonitor, $noMonitor, $instanceid,$r
             ordenaPorColumna($arregloImprimirPares[$grupo], 19);
         }
 
+
+
          //se retorna la informacion del toogle creado desde el punto del monitor
         return crearTablaYToggle($arregloImprimirPares, $noMonitor, $arregloImprimirGrupos, $codigoMonitor, $codigoPracticante,$role);
 
@@ -233,7 +235,9 @@ function transformarConsultaMonitorArray($array,&$pares,&$grupal,$codigoMonitor,
         if ($seguimiento->tipo == "PARES") {
 
         $array_auxiliar = [];
-        $fecha = gmdate('M/d/Y', $seguimiento->fecha);
+        $fecha = gmdate('M/d/Y', ($seguimiento->fecha));
+        $fecha_calendario = new DateTime("@$seguimiento->fecha");  // convert UNIX timestamp to PHP DateTime
+
         $nombre= $seguimiento->nombre_estudiante;
         $apellido=$seguimiento->apellido_estudiante;
         $profesion=$seguimiento->profesional;
@@ -285,11 +289,15 @@ function transformarConsultaMonitorArray($array,&$pares,&$grupal,$codigoMonitor,
             array_push($array_auxiliar,$seguimiento->registros_estudiantes_total); // 26
             array_push($array_auxiliar,$seguimiento->profesional); // 27
             array_push($array_auxiliar,$seguimiento->practicante); // 28
+            array_push($array_auxiliar,$fecha_calendario->format('Y-m-d')); //29 formato fecha para el calendario
+            array_push($array_auxiliar,$seguimiento->individual_riesgo); //30 riesgo individual
+
             array_push($pares,$array_auxiliar);
 
 
        }elseif($seguimiento->tipo == "GRUPAL"){
         $array_auxiliar = [];
+
 
                // $fecha = transformarFecha(consulta[registro]["fecha"]);
                 $nombre = $seguimiento->nombre_estudiante;
@@ -455,7 +463,7 @@ function crearTablaYToggle($arregloImprimirPares, $monitorNo, $arregloImprimirGr
                 $stringRetornar .= '<div id="collapse_' .$monitorNo. $arregloImprimirPares[$student][0][20] .$tupla. '" class="panel-collapse collapse"><div class="panel-body hacer-scroll" style="overflow-y"><table class="table table-hover $students_table" id="$students_table'. $arregloImprimirPares[$student][0][20].$arregloImprimirPares[$student][0][19] .'">';
                 $stringRetornar .= '<thead><tr><th></th><th></th><th></th></tr></thead>';
                 $stringRetornar .= '<tbody id='.$tupla .'_'. $arregloImprimirPares[$student][$tupla][23] .'>';
-                $stringRetornar .= '<div class="table-info-pilos col-sm-12"><div class="col-sm-4" style="display: none" id="titulo_fecha_'. $arregloImprimirPares[$student][$tupla][23] .'"><b>FECHA :</b><input id="fecha_'. $arregloImprimirPares[$student][$tupla][23] .'" type="date" class="no-borde-fondo fecha"  value="'. $arregloImprimirPares[$student][$tupla][1] .'"/></div></div>';
+                $stringRetornar .= '<div class="table-info-pilos col-sm-12"><div class="col-sm-4" style="display: none" id="titulo_fecha_'. $arregloImprimirPares[$student][$tupla][23] .'"><b>FECHA :</b><input id="fecha_'. $arregloImprimirPares[$student][$tupla][23] .'" type="date" class="no-borde-fondo fecha"  value="'. $arregloImprimirPares[$student][$tupla][29] .'"/></div></div>';
                 $stringRetornar .= '<div class"table-info-pilos col-sm-12"><div class="col-sm-4 "><b>LUGAR:</b> <input id="lugar_'. $arregloImprimirPares[$student][$tupla][23] .'"class="no-borde-fondo editable lugar" readonly value="'. $arregloImprimirPares[$student][$tupla][4] .'"></div><div class="col-md-4" id="hora_inicial_'. $arregloImprimirPares[$student][$tupla][23] .'" style="display: "><label for="h_ini" class="select-hour">HORA INICIO</label><input class="no-borde-fondo fecha" readonly id="h_inicial_texto_'. $arregloImprimirPares[$student][$tupla][23] .'" value="'. $arregloImprimirPares[$student][$tupla][2] .' "></div><div class="col-md-4" id="mod_hora_ini_'. $arregloImprimirPares[$student][$tupla][23] .'" style="display: none"><label for="h_ini" class="form-control-label col-md-4 col-xs-4">HORA INICIO</label><select  class="select-hour" id="h_ini_'. $arregloImprimirPares[$student][$tupla][23] .'" name="h_ini" ></select><label class="col-md-1 col-xs-1" for="m_ini">:</label><select class="select-hour" id="m_ini_'. $arregloImprimirPares[$student][$tupla][23] .'"  name="m_ini"></select></div><div class="col-md-4" id="hora_final_'. $arregloImprimirPares[$student][$tupla][23] .'" style="display: "><label for="h_ini" class="form-control-label col-md-4 col-xs-4">HORA FIN </label><input class="no-borde-fondo fecha" readonly id="h_final_texto_'. $arregloImprimirPares[$student][$tupla][23] .'" value="'. $arregloImprimirPares[$student][$tupla][3] .'"></div><div class="col-md-4" id="mod_hora_final_'. $arregloImprimirPares[$student][$tupla][23] .'" style="display: none"><label for="h_fin" class="form-control-label col-md-4 col-xs-4">HORA FIN</label><select  class="select-hour" id="h_fin_'. $arregloImprimirPares[$student][$tupla][23] .'" name="h_fin" ></select><label class="col-md-1 col-xs-1" for="m_fin">:</label><select class="select-hour" id="m_fin_'. $arregloImprimirPares[$student][$tupla][23] .'"  name="m_fin"></select></div></div>';
                 $stringRetornar .= '<div class="table-info-pilos col-sm-12"><b>TEMA:</b><br><input id="tema_'. $arregloImprimirPares[$student][$tupla][23] .'" class="no-borde-fondo editable tema" readonly  value="'. $arregloImprimirPares[$student][$tupla][5] .'"></div>';
                 $stringRetornar .= '<div class="table-info-pilos col-sm-12"><b>OBJETIVOS:</b><br><textarea id="objetivos_'. $arregloImprimirPares[$student][$tupla][23] .'" class ="no-borde-fondo editable" readonly>'. $arregloImprimirPares[$student][$tupla][22] .'</textarea></div></div>';
@@ -495,6 +503,7 @@ function crearTablaYToggle($arregloImprimirPares, $monitorNo, $arregloImprimirGr
                     $stringRetornar .= '<label class="radio-inline" ><span style="color:gray;" class="glyphicon glyphicon-erase limpiar" id="clean_individual_risk"></span></label>';
                     $stringRetornar .= '</div></div>';
                     $stringRetornar .= '</td></tr>';
+                    $stringRetornar.= '<div class="col-md-12 top-buffer"></div>';
 
 
                 }
@@ -516,6 +525,8 @@ function crearTablaYToggle($arregloImprimirPares, $monitorNo, $arregloImprimirGr
                     $stringRetornar .= '<label class="radio-inline" ><span style="color:gray;" class="glyphicon glyphicon-erase limpiar" id="clean_individual_risk"></span></label>';
                     $stringRetornar .= '</div></div>';
                     $stringRetornar .= '</td></tr>';
+                    $stringRetornar.= '<div class="col-md-12 top-buffer"></div>';
+
 
 
                 }
@@ -554,6 +565,8 @@ function crearTablaYToggle($arregloImprimirPares, $monitorNo, $arregloImprimirGr
                     $stringRetornar .= '<label class="radio-inline" ><span style="color:gray;" class="glyphicon glyphicon-erase limpiar" id="clean_individual_risk"></span></label>';
                     $stringRetornar .= '</div></div>';
                     $stringRetornar .= '</td></tr>';
+                    $stringRetornar.= '<div class=" col-md-12 top-buffer"></div>';
+
 
                 }
                 else if ($riesgo == "no") {
@@ -574,6 +587,8 @@ function crearTablaYToggle($arregloImprimirPares, $monitorNo, $arregloImprimirGr
                     $stringRetornar .= '<label class="radio-inline" ><span style="color:gray;" class="glyphicon glyphicon-erase limpiar" id="clean_individual_risk"></span></label>';
                     $stringRetornar .= '</div></div>';
                     $stringRetornar .= '</td></tr>';
+                    $stringRetornar.= '<div class="col-md-12 top-buffer"></div>';
+
                 }
 
                 //se verifica el tipo de riesgo y asi mismo se añadira
@@ -610,6 +625,8 @@ function crearTablaYToggle($arregloImprimirPares, $monitorNo, $arregloImprimirGr
                     $stringRetornar .= '<label class="radio-inline" ><span style="color:gray;" class="glyphicon glyphicon-erase limpiar" id="clean_individual_risk"></span></label>';
                     $stringRetornar .= '</div></div>';
                     $stringRetornar .= '</td></tr>';
+                    $stringRetornar.= '<div class="col-md-12 top-buffer"></div>';
+
 
                 }
                 else if ($riesgo == "no") {
@@ -630,6 +647,8 @@ function crearTablaYToggle($arregloImprimirPares, $monitorNo, $arregloImprimirGr
                     $stringRetornar .= '<label class="radio-inline" ><span style="color:gray;" class="glyphicon glyphicon-erase limpiar" id="clean_individual_risk"></span></label>';
                     $stringRetornar .= '</div>';
                     $stringRetornar .= '</td></tr>';
+                    $stringRetornar.= '<div class=" col-md-12 top-buffer"></div>';
+
                 }
 
                 //se verifica el tipo de riesgo y asi mismo se añadira
@@ -665,6 +684,8 @@ function crearTablaYToggle($arregloImprimirPares, $monitorNo, $arregloImprimirGr
                     $stringRetornar .= '<label class="radio-inline" ><span style="color:gray;" class="glyphicon glyphicon-erase limpiar" id="clean_individual_risk"></span></label>';
                     $stringRetornar .= '</div></div>';
                     $stringRetornar .= '</td></tr>';
+                    $stringRetornar.= '<div class="col-md-12  top-buffer"></div>';
+
 
 
                 }
@@ -686,6 +707,8 @@ function crearTablaYToggle($arregloImprimirPares, $monitorNo, $arregloImprimirGr
                     $stringRetornar .= '<label class="radio-inline" ><span style="color:gray;" class="glyphicon glyphicon-erase limpiar" id="clean_individual_risk"></span></label>';
                     $stringRetornar .= '</div></div>';
                     $stringRetornar .= '</td></tr>';
+                    $stringRetornar.= '<div class="col-md-12 top-buffer"></div>';
+
                 }
                 //se verifica el tipo de riesgo y asi mismo se añadira
                 //la clase para la identificacion
@@ -720,6 +743,7 @@ function crearTablaYToggle($arregloImprimirPares, $monitorNo, $arregloImprimirGr
                     $stringRetornar .= '<label class="radio-inline" ><span style="color:gray;" class="glyphicon glyphicon-erase limpiar" id="clean_individual_risk"></span></label>';
                     $stringRetornar .= '</div></div>';
                     $stringRetornar .= '</td></tr>';
+                    $stringRetornar.= '<div class="col-md-12 top-buffer"></div>';
 
 
                 }
@@ -741,6 +765,8 @@ function crearTablaYToggle($arregloImprimirPares, $monitorNo, $arregloImprimirGr
                     $stringRetornar .= '<label class="radio-inline" ><span style="color:gray;" class="glyphicon glyphicon-erase limpiar" id="clean_individual_risk"></span></label>';
                     $stringRetornar .= '</div></div>';
                     $stringRetornar .= '</td></tr>';
+                    $stringRetornar.= '<div class="col-md-12 top-buffer"></div>';
+
                 }
 
                 $stringRetornar .= '<div class="table-info-pilos col-sm-12"><b>OBSERVACIONES:</b><br><textarea id="observacionesGeneral_'. $arregloImprimirPares[$student][$tupla][23] .'" class ="no-borde-fondo editable" readonly>'. $arregloImprimirPares[$student][$tupla][17] .'</textarea></div>';

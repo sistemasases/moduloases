@@ -87,7 +87,7 @@ if ($student_code != 0){
     $ases_status_array = get_status_ases();
     $icetex_status_array = get_status_icetex();
     
-    $html_status_ases = "<option>NO REGISTRA</option>";
+    $html_status_ases = "<option value=''>NO REGISTRA</option>";
     
     foreach($ases_status_array as $ases_status){
         
@@ -98,7 +98,7 @@ if ($student_code != 0){
         }
     }
     
-    $html_status_icetex = "<option>NO REGISTRA</option>";
+    $html_status_icetex = "<option value=''>NO REGISTRA</option>";
     
     foreach($icetex_status_array as $icetex_status){
         if($icetex_status->nombre == $ases_student->estado){
@@ -599,7 +599,7 @@ if ($student_code != 0){
 
 $reasons_dropout = get_reasons_dropout();
 
-$html_select_reasons = "<option>Seleccione el motivo</option>";
+$html_select_reasons = "<option value=''>Seleccione el motivo</option>";
 
 for($i = 0; $i < count($reasons_dropout); $i++){
     $html_select_reasons .= "<option value=".$reasons_dropout[$i]->id.">";

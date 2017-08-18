@@ -5,6 +5,8 @@ require_once('../student_profile/studentprofile_lib.php');
 
 date_default_timezone_set('America/Bogota');
 
+$msg_error = new stdClass();
+
 if(isset($_POST["func"])){
     if($_POST['func'] == 'save_profile'){
         $form = $_POST['form'];
@@ -14,9 +16,35 @@ if(isset($_POST["func"])){
         $new_status = $_POST['new_status'];
         save_status_icetex($new_status, $id_ases);
     } elseif($_POST['func'] == 'save_ases_status'){
-        $id_ases = $_POST['id_ases'];
-        $new_status = $_POST['new_status'];
-        save_status_ases($new_status, $id_ases);
+
+        if(isset($_POST['id_ases'])){
+            $id_ases = $_POST['id_ases'];
+        }else{
+            $msg_error->title = "Error";
+            $msg_error->msg = "Problema en la conexión al servidor. El ID del estudiante no llegó al servidor.";
+            $msg_error->type = "error";
+
+            return $msg_error;
+        }
+
+        if(isset($_POST['new_status'])){
+            $new_status = $_POST['new_status'];
+        }else{
+            $msg_error->title = "Error";
+            $msg_error->msg = "Problema en la conexión al servidor. El Nuevo Estado del estudiante no llegó al servidor.";
+            $msg_error->type = "error";
+
+            return $msg_error;
+        }
+
+        if(isset($_POST['id_reason'])){
+            $id_reason = $_POST['id_reason'];
+        }else{
+           $id_reason = null;
+        }
+
+        save_status_ases_proc($new_status, $id_ases, $id_reason);
+
     } elseif($_POST['func'] == 'save_tracking_peer'){
         save_tracking_peer_proc();
     } elseif($_POST['func'] == 'delete_tracking_peer' && isset($_POST['id_tracking'])){
@@ -126,28 +154,13 @@ function save_status_icetex($new_status, $id_ases){
  * @return stdClass 
  */
  
-function save_status_ases($new_status, $id_ases){
+function save_status_ases_proc($new_status, $id_ases, $id_reason = null){
 
     global $DB;
-    
-    $msg = new stdClass;
-    
-    $obj_updatable->id = $id_ases;
-    $obj_updatable->estado_ases = $new_status;
-    
-    $result = $DB->update_record('talentospilos_usuario', $obj_updatable);
 
-    if($result){
-        $msg->title = 'Éxito';
-        $msg->status = 'success';
-        $msg->msg = 'El estado Ases ha sido actualizado correctamente.';
-    }else{
-        $msg->title = 'Error';
-        $msg->status = 'error';
-        $msg->msg = 'El estado Ases no ha sido actualizado correctamente. Error al conectarse a la base de datos.';
-    }
+    $result = save_status_ases($new_status, $id_ases, $id_reason);
 
-    echo json_encode($msg);
+    echo json_encode($result);
 }
 
 function save_reason_dropout_student(){

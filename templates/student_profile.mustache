@@ -122,6 +122,7 @@
             		</ul>
             		
           			<div class="tab-content clearfix ">
+                  <!-- General tab -->
           			  <div class="tab-pane active p-t-100" id="general_tab" >
             			    <div class="col-md-12">
               			    <div class=" col-sm-4">
@@ -261,7 +262,7 @@
                       </div>
           				</div>
           				<!-- End general tab -->
-              		<!-- Ficha socioeducativo -->
+              		<!-- Socioed tab -->
                   <div class="tab-pane" id="socioed_tab">
                     <div id="accordion" role="tablist" aria-multiselectable="true">
                       <div class="panel panel-default" id="panelPares">
@@ -347,10 +348,11 @@
                         </div>
                         
                       </div>
+                    </div>
                   </div>
-    
-              		</div>
-              		<div class="tab-pane hide" id="geographic_tab">
+                  <!-- End socied tab -->
+                  <!-- Geographic tab-->
+              		<div class="tab-pane" id="geographic_tab">
               		  <div id="demografica" class="">
                       <div class="col-sm-4">
                         <form id="coord_form" class="horizontal-form">
@@ -400,6 +402,7 @@
                       </div>
                     </div>
               		</div>
+                  <!-- End geographic tab -->
                 </div>
             </div>
             <!-- Fin Pestañas ficha -->
@@ -674,6 +677,7 @@
     </div>
   </div>
   <!-- End modal Seguimiento pares-->
+  
   <!-- Modal Seguimiento grupal-->
   <div class="modal modal_pilos" id="myModal" name="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
@@ -779,6 +783,7 @@
     </div>
   </div>
   <!-- End modal Seguimiento grupal-->
+
   <!-- Modal Pimer Acercamiento-->
   <div class="modal modal_pilos" id="myModalPrimerAcerca" name="seguimiento" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
@@ -853,6 +858,7 @@
     </div>
   </div>
   <!-- End modal Pimer Acercamiento-->
+
   <!-- Modal Acompañamiento socioeducativo-->
   <div class="modal modal_pilos" id="myModalAcompaSocio" name="seguimiento" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
@@ -1167,6 +1173,7 @@
     </div>
   </div>
   <!-- End modal Segumiento Socioeducativo-->
+
   <!-- Graphics Modal -->
   <div class="modal modal_pilos" id="myModalGraf" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
@@ -1187,13 +1194,19 @@
     </div>
   </div>
   <!-- End graphics Modal -->
+
   <!-- Modal retiro-->
-  <div class="mymodal" id="modal_dropout" name="modal_dropout" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="mymodal" id="modal_dropout" name="modal_dropout">
     <div class="mymodal-content">
-        <div class="mymodal-header">
-          <h4 class="modal-title" id="myModalLabel">Motivo del retiro</h4>
+      <div class="mymodal-header col-sm-12">
+        <div class="col-sm-11">
+          <h4 class="" id="myModalLabel">Motivo del retiro</h4>  
         </div>
-        <div class="mymodal-body">
+        <div class="col-sm-1">
+          <span class="mymodal-close" aria-hidden="true">&times;</span>
+        </div>        
+      </div>
+      <div class="mymodal-body col-sm-12">
             <form class="form-horizontal" id = "retiroForm" role="form">
               <div class="form-group">
                 <label for="motivo" class="col-sm-2">Motivo</label>
@@ -1210,11 +1223,11 @@
                 </div>
               </div>
             </form>
-        </div>
-        <div class="mymodal-footer">
-          <center><button type="button" class="button btn btn-primary" id="save_backdrop">Guardar</button></center>
-          <center><button type="button" class="button btn btn-primary" id="goback_backdrop">Atrás</button></center>
-        </div>
+      </div>
+      <div class="mymodal-footer">
+        <button type="button" class="btn-primary" id="save_changes_dropout">Guardar</button>
+        <button type="button" class="btn-primary" id="goback_backdrop">Atrás</button>
+      </div>
     </div>
   </div>
   <!-- End modal retiro-->

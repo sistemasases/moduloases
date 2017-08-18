@@ -62,7 +62,6 @@ $email = $USER->email;
 $seguimientotable ="";
 $globalArregloPares = [];
 $globalArregloGrupal =[];
-
 //$table=semesterUser($globalArregloPares,$globalArregloGrupal,$USER->id,$blockid,$usernamerole);
 //print_r($semesters);
 //Se muestra la interfaz correspondiente al usuario.
@@ -83,6 +82,30 @@ if($usernamerole=='monitor_ps'){
 
 }elseif($usernamerole=='sistemas' or $username == "administrador" or $username == "sistemas1008" or $username == "Administrador"){
 
+	//Obtiene los periodos existentes y los roles que contengan "_ps".
+    $periods = get_semesters();
+    $roles = get_rol_ps();
+
+    //Obtiene las personas que se encuentran en el último semestre añadido y cuyos roles terminen en "_ps.
+    $people = get_people_onsemester(reset($periods)->id,$roles,$blockid);
+
+
+    //organiza el select de periodos.
+    $table.='<div class="container"><form class="form-inline">';
+    $table.='<div class="form-group"><label for="persona">Periodo</label><select class="form-control" id="periodos">';
+    foreach($periods as $period){
+   		$table.='<option value="'.$period->id.'">'.$period->nombre.'</option>';
+     }
+    $table.='</select></div>'; 
+
+
+    //organiza el select de personas.
+    $table.='<div class="form-group"><label for="persona">Persona</label><select class="form-control" id="personas">';
+    foreach($people as $person){
+    		$table.='<option value="'.$person->id_usuario.'">'.$person->username." - ".$person->firstname." ".$person->lastname.'</option>';
+     }
+    $table.='</select></div>';
+    $table.='<span class="btn btn-info" type="button">Consultar</span></form></div>';
 }
 
 
@@ -120,6 +143,8 @@ $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/dataTables.tableToo
 $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/NewCSSExport/buttons.dataTables.min.css', true);
 $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/dataTables.tableTools.css', true);
 $PAGE->requires->css('/blocks/ases/style/sweetalert.css', true);
+$PAGE->requires->css('/blocks/ases/js/select2/css/select2.css', true);
+
 //$PAGE->requires->css('/theme/base/style/core.css',true);
 
 $output = $PAGE->get_renderer('block_ases');

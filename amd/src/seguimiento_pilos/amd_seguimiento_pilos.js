@@ -1,4 +1,4 @@
-requirejs(['jquery', 'bootstrap', 'datatables.net', 'datatables.net-buttons', 'buttons.flash', 'jszip', 'pdfmake', 'vfs_fonts', 'buttons.html5', 'buttons.print', 'sweetalert', 'amd_actions'], function($) {
+requirejs(['jquery', 'bootstrap', 'datatables.net', 'datatables.net-buttons', 'buttons.flash', 'jszip', 'pdfmake', 'vfs_fonts', 'buttons.html5', 'buttons.print', 'sweetalert', 'amd_actions','select2'], function($) {
 
     var globalArregloPares = [];
     var globalArregloGrupal = [];
@@ -69,6 +69,75 @@ requirejs(['jquery', 'bootstrap', 'datatables.net', 'datatables.net-buttons', 'b
         else if (namerol == "sistemas" || name == "administrador" || name == "sistemas1008" || name == "Administrador") {
         	$('#titulo').text("Informacion Sistemas");
 
+            $("#personas").val('').change();
+
+            
+            //Se activa el select2 cuando el usuario es de sistemas.
+            $("#personas").select2({  
+                placeholder: "Seleccionar persona",
+
+                language: {
+                noResults: function() {
+                return "No hay resultado";        
+                },
+                searching: function() {
+                return "Buscando..";
+             }
+            }
+          });
+        $("#periodos").select2({    
+                language: {
+                noResults: function() {
+                return "No hay resultado";        
+                },
+                searching: function() {
+                return "Buscando..";
+             }
+            }
+          });
+
+
+
+           $("#periodos").change(function() {
+            var periodo_escogido = $( "#periodos" ).val();
+              $.ajax({
+                 type: "POST",
+                 data: {
+                    id: periodo_escogido,
+                    instance: instance,
+                    type: "actualizar_personas"
+                    },
+                    url: "../../../blocks/ases/managers/seguimiento_pilos/seguimientopilos_report.php",
+                    async: false,
+                    success: function(msg) {
+
+
+                    $('#personas').empty();
+                    $("#personas").select2({  
+                      placeholder: "Seleccionar persona",
+                      language: {
+                       noResults: function() {
+                       return "No hay resultado";        
+                     },
+                       searching: function() {
+                       return "Buscando..";
+                   }
+                }
+            });       
+                    var inicio = '<option value="">Seleccionar persona</option>';
+
+                     $("#personas").attr('selectedIndex', '-1').find("option:selected").removeAttr("selected");
+                     $('#personas').append(inicio+msg);
+
+                    },
+                    dataType: "text",
+                    cache: "false",
+                    error: function(msg) { alert("error al cargar personas");},
+                        });
+                    });
+
+
+
             //anadirEvento();
         }
 
@@ -77,7 +146,6 @@ requirejs(['jquery', 'bootstrap', 'datatables.net', 'datatables.net-buttons', 'b
         /*Cuando el usuario sea practicante o administrador */
 
         if (namerol == "practicante_ps" || (name == "administrador" || name == "sistemas1008" || name == "Administrador")) {
-
             $("input[name=profesional]").attr('disabled', true);
             $("input[name=practicante]").attr('disabled', true);
 
@@ -192,6 +260,7 @@ requirejs(['jquery', 'bootstrap', 'datatables.net', 'datatables.net-buttons', 'b
 
             //Editar seguimiento determinado.
             $('body').on('click', 'span.btn-info.btn-lg.botonesSeguimiento.botonEditarSeguimiento', function() {
+
                 var id = $(this).attr("value");
                 var $tbody = $(this).parent().parent().parent();
                 $("input[name=practicante]").attr('disabled', false);
@@ -534,6 +603,22 @@ requirejs(['jquery', 'bootstrap', 'datatables.net', 'datatables.net-buttons', 'b
             //se inicia la adicion del evento
             $("input[name=practicante]").attr('disabled', true);
             $("input[name=profesional]").attr('disabled', true);
+
+            //cambiar color cuando se cambie el radiobutton de riesgo.
+             $('input:radio').change(function() {
+                var id =$(this).parent().parent().parent().attr('id');
+                var tipo_riesgo = $(this).attr('value');
+                if(tipo_riesgo == 1){
+                $("#" + id).removeClass();
+                $("#"+id).addClass('table-info-pilos col-sm-12 riesgo_'+'bajo');
+                }else if(tipo_riesgo == 2){
+                $("#" + id).removeClass();
+                $("#"+id).addClass('table-info-pilos col-sm-12 riesgo_'+'medio');
+                }else if(tipo_riesgo == 3){
+                $("#" + id).removeClass();
+                $("#"+id).addClass('table-info-pilos col-sm-12 riesgo_'+'alto');
+                }
+        });
 
 
             //Verifica si el profesional desea marcar como revisado el seguimiento.
@@ -1269,7 +1354,7 @@ requirejs(['jquery', 'bootstrap', 'datatables.net', 'datatables.net-buttons', 'b
     }
 
 
-    //Inicializa las horas y minutos.
+      //Inicializa las horas y minutos.
     function initFormSeg(id) {
         var date = new Date();
         var minutes = date.getMinutes();
@@ -1282,7 +1367,7 @@ requirejs(['jquery', 'bootstrap', 'datatables.net', 'datatables.net-buttons', 'b
                 hora += "<option value=\"" + hour + "\" selected>" + hour + "</option>";
             }
             else if (i < 10) {
-                hora += "<option value=\"" + i + "\">0" + i + "</option>";
+                hora += "<option value=\"0" + i + "\">0" + i + "</option>";
             }
             else {
                 hora += "<option value=\"" + i + "\">" + i + "</option>";
@@ -1296,7 +1381,7 @@ requirejs(['jquery', 'bootstrap', 'datatables.net', 'datatables.net-buttons', 'b
                 min += "<option value=\"" + minutes + "\" selected>" + minutes + "</option>";
             }
             else if (i < 10) {
-                min += "<option value=\"" + i + "\">0" + i + "</option>";
+                min += "<option value=\"0" + i + "\">0" + i + "</option>";
             }
             else {
                 min += "<option value=\"" + i + "\">" + i + "</option>";
@@ -1325,6 +1410,7 @@ requirejs(['jquery', 'bootstrap', 'datatables.net', 'datatables.net-buttons', 'b
     function getFormatoFecha(fecha) {
         var fecha_array = [];
         var datos = fecha.split("/");
+        alert("fecha_inicio : "+fecha);
         var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
         var mes = datos[0].split("Registro : ");
         var fecha_final = datos[2] + "-" + (months.indexOf(mes[1])+1) + "-" + datos[1];
@@ -1348,6 +1434,7 @@ requirejs(['jquery', 'bootstrap', 'datatables.net', 'datatables.net-buttons', 'b
 
             fecha_final = fecha_array[0] + "-" + fecha_array[1] + "-" + fecha_array[2];
         }
+        alert("fecha_convertida : "+fecha_final);
         return fecha_final;
     }
 
@@ -1392,13 +1479,11 @@ requirejs(['jquery', 'bootstrap', 'datatables.net', 'datatables.net-buttons', 'b
         var array_f2 = f2.split(":");
         initFormSeg(id);
         //Seleccionamos la hora deacuerdo al sistema
+
         $("#h_ini_" + id + " option[value=" + array_f1[0] + "]").attr("selected", true);
         $("#m_ini_" + id + " option[value=" + array_f1[1] + "]").attr("selected", true);
         $("#h_fin_" + id + " option[value=" + array_f2[0] + "]").attr("selected", true);
         $("#m_fin_" + id + " option[value=" + array_f2[1] + "]").attr("selected", true);
-        var date = $("label[for='fechatext_" + id + "']").text();
-        var fecha_formateada = getFormatoFecha(date);
-        $("#fecha_" + id).val(fecha_formateada);
     }
 
 
@@ -1428,9 +1513,12 @@ requirejs(['jquery', 'bootstrap', 'datatables.net', 'datatables.net-buttons', 'b
     //Selecciona los radiobuttons correspondientes con la prioridad del riesgo.
     function seleccionarButtons(id_seguimiento) {
 
+
         //Riesgo individual
         if ($("#riesgo_individual_" + id_seguimiento).is('.riesgo_bajo')) {
-            $("input[name=riesgo_individual_" + id_seguimiento + "][value=1]").attr('checked', 'checked');
+        $("input[name=riesgo_individual_" + id_seguimiento + "][value=1]").attr('checked', 'checked');
+
+
         }
         else if ($("#riesgo_individual_" + id_seguimiento).is('.riesgo_medio')) {
             $("input[name=riesgo_individual_" + id_seguimiento + "][value=2]").attr('checked', 'checked');

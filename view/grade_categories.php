@@ -28,7 +28,6 @@
 // Standard GPL and phpdocs
 require_once(__DIR__ . '/../../../config.php');
 require_once($CFG->libdir.'/adminlib.php');
-require_once('../managers/query.php');
 require_once('../managers/instance_management/instance_lib.php');
 require_once('../managers/grade_categories/grade_categories_lib.php');
 include('../lib.php');
@@ -108,7 +107,7 @@ $output = $PAGE->get_renderer('block_ases');
 
 //Carga de informacion a mostrar
 $courses = get_courses_pilos($blockid);
-$num = sizeof($courses);
+
 $htmlTable =  "<table id = 'teachers' cellspacing='0' width='100%' border>
                 <thead> 
                     <tr>

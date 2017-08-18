@@ -14,6 +14,17 @@ if(isset($_POST['type'])&&$_POST['type']=="getInfo"&&isset($_POST['instance']))
 
     echo json_encode($datos);
 }
+if(isset($_POST['type'])&&$_POST['type']=="actualizar_personas"&&isset($_POST['id'])&&isset($_POST['instance'])) 
+ {
+    $roles = get_rol_ps();
+    $retorno = get_people_onsemester($_POST['id'],$roles,$_POST['instance']);
+    foreach($retorno as $person){
+        $table.='<option value="'.$person->id_usuario.'">'.$person->username." - ".$person->firstname." ".$person->lastname.'</option>';
+     }
+    echo $table;
+
+}
+
 
 if(isset($_POST['type'])&&$_POST['type']=="info_monitor"&&isset($_POST['id'])&&isset($_POST['instance'])) 
  {

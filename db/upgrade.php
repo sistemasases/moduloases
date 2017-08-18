@@ -9,7 +9,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     $result = true;
 
     /// Add a new column newcol to the mdl_myqtype_options
-    if ($result && $oldversion < 2017072614) {
+    if ($result && $oldversion < 201708171158) {
         
         // /**
         //  * Cambios en el modelo asociados a la gestión de acciones y permisos
@@ -216,8 +216,51 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
         // }
         
 
+         // Define table talentospilos_est_estadoases to be created.
+        $table = new xmldb_table('talentospilos_est_estadoases');
+
+        // Adding fields to table talentospilos_est_estadoases.
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        $table->add_field('id_estudiante', XMLDB_TYPE_INTEGER, '20', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('id_estado_ases', XMLDB_TYPE_INTEGER, '20', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('id_motivo_retiro', XMLDB_TYPE_INTEGER, '20', null, null, null, null);
+        $table->add_field('fecha', XMLDB_TYPE_INTEGER, '20', null, XMLDB_NOTNULL, null, null);
+
+        // Adding keys to table talentospilos_est_estadoases.
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+        $table->add_key('id_estudiante_fk', XMLDB_KEY_FOREIGN, array('id_estudiante'), 'talentospilos_usuario', array('id'));
+        $table->add_key('id_estado_ases', XMLDB_KEY_FOREIGN, array('id_estado_ases'), 'talentospilos_estados_ases', array('id'));
+        $table->add_key('id_motivo_fk', XMLDB_KEY_FOREIGN, array('id_motivo_retiro'), 'talentospilos_motivos', array('id'));
+
+        // Conditionally launch create table for talentospilos_est_estadoases.
+        if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
+        }
+
+        // Define key id_motivo_fk (foreign) to be dropped form talentospilos_est_estadoases.
+        $table = new xmldb_table('talentospilos_est_estadoases');
+        $key = new xmldb_key('id_motivo_fk', XMLDB_KEY_FOREIGN, array('id_motivo_retiro'), 'talentospilos_motivos', array('id'));
+
+        // Launch drop key id_motivo_fk.
+        $dbman->drop_key($table, $key);
+
+        // Changing nullability of field id_motivo_retiro on table talentospilos_est_estadoases to null.
+        $table = new xmldb_table('talentospilos_est_estadoases');
+        $field = new xmldb_field('id_motivo_retiro', XMLDB_TYPE_INTEGER, '20', null, null, null, null, 'id_estado_ases');
+
+        // Launch change of nullability for field id_motivo_retiro.
+        $dbman->change_field_notnull($table, $field);
+
+        // Define key id_motivo_fk (foreign) to be added to talentospilos_est_estadoases.
+        $table = new xmldb_table('talentospilos_est_estadoases');
+        $key = new xmldb_key('id_motivo_fk', XMLDB_KEY_FOREIGN, array('id_motivo_retiro'), 'talentospilos_motivos', array('id'));
+
+        // Launch add key id_motivo_fk.
+        $dbman->add_key($table, $key);
+
+
         // Ases savepoint reached.
-        upgrade_block_savepoint(true, 2017072614, 'ases');
+        upgrade_block_savepoint(true, 201708171158, 'ases');
         
     }
 

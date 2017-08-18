@@ -1,39 +1,25 @@
-<link href="../style/styles_pilos.css" rel="stylesheet">
-<link href="../style/bootstrap_pilos.css" rel="stylesheet">
-<link href="../style/sweetalert.css" rel="stylesheet">
-
-<meta http-equiv="Expires" content="0" />
-<meta http-equiv="Pragma" content="no-cache" />
 
 <body name="general_reports">
+{{#data}}
     <div id="wrapper">
         <!-- Sidebar -->
         <div id="sidebar-wrapper">
             <ul class="sidebar-nav">
-                <li class="sidebar-brand">
-                    <a href="#">
-                        Gestión de reportes
-                    </a>
+                <li style="font-size: 25px" class="sidebar-brand">
+                    Gestión de reportes
                 </li>
                 <li>
-                    <a href="#" id="div_teacher_reports">Reporte notas perdidas</a>
+                    <a style="font-size: 18px" href="#" id="academics">Reportes Academicos</a>
                 </li>
                 <li>
-                    <a href="#" id="div_item_reports">Reporte materias sin items</a>
+                    <a style="font-size: 18px" href="#" id="seguimientos">Reportes Seguimientos</a>
                 </li>
             </ul>
         </div>
-        <!-- /#sidebar-wrapper -->
-        <div id="page-content-wrapper">
-            <div class="container-fluid" id="div_reports">
-                <div class="row ">
-                    <div class="col-md-10" id="limpiarTabla">
-                        <table class="reemplazar_report_grade_google " id="reemplazar_general_reports"></table>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- /#page-content-wrapper -->
+       
     </div>
     <!-- end wrapper -->
+    <script type="text/javascript" src="../amd/src/require-setup.js"></script>
+    <script data-main="../amd/src/general_reports/amd_general_reports" src="../amd/scripts/require.js"></script>
+    {{/data}}
 </body>

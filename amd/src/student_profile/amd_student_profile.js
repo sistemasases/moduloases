@@ -101,19 +101,23 @@ requirejs(['jquery', 'bootstrap', 'sweetalert', 'validator'], function($) {
             var id_button = $(this).attr('id');
             var id_tracking = id_button.substring(21);
 
-             swal({
+            swal({
                 title: "Advertencia",
                 text: "¿Está seguro(a) que desea borrar este seguimiento?",
                 type: "warning",
                 showCancelButton: true,
                 confirmButtonText: "Si",
                 cancelButtonText: "No",
+                closeOnConfirm: false,
             },
             function(isConfirm){
-                delete_tracking_peer(id_tracking);
+
+                if (isConfirm) {
+                    delete_tracking_peer(id_tracking);
+                } 
             });
         });
-    });
+    })
 
     function edit_profile_act() {
         $("#editar_ficha").click(function() {
@@ -301,17 +305,36 @@ requirejs(['jquery', 'bootstrap', 'sweetalert', 'validator'], function($) {
         var previous;
         $('#estadoAses').on('focus', function() {
             // se guarda el valor previo con focus
-            previous = this.value;
+            previous = $('#estadoAses option:selected').text();
         }).change(function() {
-            var newstatus = $(this).val();
+            var newstatus = $('#estadoAses option:selected').text();
 
             if (newstatus == "RETIRADO") {
                 $('#modal_dropout').show();
+
+                $('#save_changes_dropout').click(function(){
+                    if($('reasons_select').val() == ''){
+                        swal({
+                            title: "Error",
+                            text: "Seleccione un mótivo",
+                            type: "error"
+                        });
+                    }else{
+                        save_ases_status();
+                    }
+                });
+                
+
             }
             else if (newstatus == "APLAZADO") {
                 $('#modal_dropout').show();
-            }
-            else {
+            }else if(newstatus == "NO REGISTRA"){
+                swal({
+                    title: "Error",
+                    text: "Por favor seleccione un Estado Ases.",
+                    type: "error"
+                });
+            }else {
                 swal({
                         title: "¿Está seguro/a de realizar este cambio?",
                         text: "El estado del estudiante pasará de " + previous + " a " + newstatus,
@@ -324,9 +347,8 @@ requirejs(['jquery', 'bootstrap', 'sweetalert', 'validator'], function($) {
                     },
                     function(isConfirm) {
                         if (isConfirm) {
-                            var id_ases = $('#id_ases').val();
 
-                            var result_status = save_ases_status(newstatus, id_ases);
+                            var result_status = save_ases_status();
 
                             swal(
                                 result_status.title,
@@ -376,9 +398,11 @@ requirejs(['jquery', 'bootstrap', 'sweetalert', 'validator'], function($) {
         });
     }
 
-    function save_ases_status(new_status, id_ases) {
+    function save_ases_status() {
         var data = new Array();
+        var new_status = $('#estadoAses').val();
         var id_ases = $('#id_ases').val();
+        var id_reason = $('#reasons_select').val();
 
         data.push({
             name: "func",
@@ -393,12 +417,24 @@ requirejs(['jquery', 'bootstrap', 'sweetalert', 'validator'], function($) {
             value: id_ases
         });
 
+        if(id_reason != ''){
+            data.push({
+                name: 'id_reason',
+                value: id_reason
+            });
+        };
+
         $.ajax({
             type: "POST",
             data: data,
             url: "../../ases/managers/student_profile/studentprofile_serverproc.php",
             success: function(msg) {
-                return msg;
+                swal({
+                    title: msg.title,
+                    text: msg.msg,
+                    type: msg.type
+                });
+                console.log(msg);
             },
             dataType: "json",
             cache: "false",
@@ -822,6 +858,14 @@ requirejs(['jquery', 'bootstrap', 'sweetalert', 'validator'], function($) {
                         msg.msg,
                         msg.status
                     );
+
+                    var parameters = get_url_parameters(document.location.search);
+
+                        if(parameters.tab){
+                            location.reload();
+                        }else{
+                            location.href = location.search + "&tab=socioed_tab";
+                        }
                 },
                 dataType: "json",
                 cache: "false",

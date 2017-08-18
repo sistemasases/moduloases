@@ -79,8 +79,8 @@ class renderer extends plugin_renderer_base {
     }
     
     public function render_general_reports_page($page){
-    $data = $page->export_for_template($this);
-     return parent::render_from_template('block_ases/general_reports', $data);
+        $data = $page->export_for_template($this);
+        return parent::render_from_template('block_ases/general_reports', $data);
     }
     
     public function render_seguimiento_pilos_page($page){
@@ -116,5 +116,10 @@ class renderer extends plugin_renderer_base {
     public function render_calificador_page($page){
         $data = $page->export_for_template($this);
         return parent::render_from_template('block_ases/calificador', $data);
+    }
+
+    public function render_academic_reports_page($page){
+        $data = $page->export_for_template($this);
+        return parent::render_from_template('block_ases/academic_reports', $data);
     }
 }
