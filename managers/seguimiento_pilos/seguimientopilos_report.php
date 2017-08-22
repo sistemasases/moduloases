@@ -1,5 +1,7 @@
 <?php
-require_once('seguimientopilos_lib.php');
+require_once('seguimiento_functions.php');
+require_once('../student_profile/studentprofile_lib.php');
+
 
 global $USER;
 
@@ -24,7 +26,26 @@ if(isset($_POST['type'])&&$_POST['type']=="actualizar_personas"&&isset($_POST['i
     echo $table;
 
 }
+if(isset($_POST['type'])&&$_POST['type']=="consulta_sistemas"&&isset($_POST['id_persona'])&&isset($_POST['id_semestre'])&&isset($_POST['instance'])) 
+ {
+    $globalArregloPares = [];
+    $globalArregloGrupal =[];
+    $retorno = get_users_rols($_POST['id_persona'],$_POST['id_semestre'],$_POST['instance']);
+    $usernamerole= get_name_rol($retorno->id_rol);
 
+    if($usernamerole == 'monitor_ps'){
+       $html = monitorUser($globalArregloPares,$globalArregloGrupal,$_POST['id_persona'],0,$_POST['instance'],$retorno->id_rol,true);
+
+    }else if ($usernamerole == 'practicante_ps'){
+       $html=practicanteUser($globalArregloPares,$globalArregloGrupal,$_POST['id_persona'],$_POST['instance'],$retorno->id_rol);
+
+    }else if ($usernamerole == 'profesional_ps'){
+       $html=profesionalUser($globalArregloPares,$globalArregloGrupal,$_POST['id_persona'],$_POST['instance'],$retorno->id_rol);
+
+    }
+
+    echo $html;
+}
 
 if(isset($_POST['type'])&&$_POST['type']=="info_monitor"&&isset($_POST['id'])&&isset($_POST['instance'])) 
  {
@@ -36,8 +57,9 @@ if(isset($_POST['type'])&&$_POST['type']=="info_monitor"&&isset($_POST['id'])&&i
 if(isset($_POST['type'])&&$_POST['type']=="eliminar_registro"&&isset($_POST['id'])) 
  {
   
-   $retorno = eliminar_registro($_POST['id']);
-   echo $retorno;
+   $retorno = delete_tracking_peer($_POST['id']);
+       echo (json_encode($retorno));
+
    
 }
 

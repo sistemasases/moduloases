@@ -1,11 +1,13 @@
 <?php
 require_once(dirname(__FILE__). '/../../../config.php');
 require_once('MyException.php');
-require_once('query.php');
+require_once('mass_management/massmanagement_lib.php');
+require_once('role_management/role_management_lib.php');
 
 if( isset($_FILES['file']) || isset($_POST['idinstancia'])){
     try {
-        
+
+
         $archivo = $_FILES['file'];
         $extension = pathinfo($archivo['name'], PATHINFO_EXTENSION);
         date_default_timezone_set("America/Bogota");
@@ -13,18 +15,17 @@ if( isset($_FILES['file']) || isset($_POST['idinstancia'])){
   
         $rootFolder    = "../view/archivos_subidos/mrm/roles/files/";
         $zipFolfer = "../view/archivos_subidos/mrm/roles/comprimidos/";
+
         
         //se limpian las carpetas
         deleteFilesFromFolder($rootFolder);
         deleteFilesFromFolder($zipFolfer);
-        
 
         
         if ($extension !== 'csv') throw new MyException("El archivo ".$archivo['name']." no corresponde al un archivo de tipo CSV. Por favor verifícalo"); 
         if (!move_uploaded_file($archivo['tmp_name'], $rootFolder.'Original_'.$nombre)) throw new MyException("Error al cargar el archivo.");
         ini_set('auto_detect_line_endings', true);
         if (!($handle = fopen($rootFolder.'Original_'.$nombre, 'r'))) throw new MyException("Error al cargar el archivo ".$archivo['name'].". Es posible que el archivo se encuentre dañado");
-        
 
         global $DB;
         
@@ -41,7 +42,6 @@ if( isset($_FILES['file']) || isset($_POST['idinstancia'])){
         $titlesPos = fgetcsv($handle, 0, ",");
         array_push($detail_erros,$titlesPos);
         array_push($success_rows,$titlesPos);
-        
         
         $associativeTitles = getAssociativeTitles($titlesPos);
         
@@ -141,9 +141,10 @@ if( isset($_FILES['file']) || isset($_POST['idinstancia'])){
                     $username_jefe = $result->username;
                 }
             }
+
+
             
             //** Fin validaciones Campos requeridos
-            
             
             if(!$isValidRow){
                 $lc_wrongFile++;
@@ -167,10 +168,11 @@ if( isset($_FILES['file']) || isset($_POST['idinstancia'])){
                 
                 $line_count++;
             }
-        
+
+
         }
 
-        
+
         if(count($wrong_rows) > 1){
            
             $filewrongname = $rootFolder.'RegistrosErroneos_'.$nombre;

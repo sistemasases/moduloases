@@ -1,14 +1,19 @@
 <form>
   <div class="row">
 
-    <label class="col-md-offset-3" id="titulo">Lista de Estudiantes a Cargo</label>
+    <label class="col-md-offset-3" id="titulo"></label>
   </div>
   <div class="row">
+
     <div id="anadir" class="selectSistemas"></div>
-      <div data-spy="scroll" data-target=".navbar" data-offset="50" class="well col-md-10 col-md-offset-1 reporte-seguimiento" id="reemplazarToogle" name="reemplazarToogle">
-         {{#data}}
-         {{{table}}}
-		    {{/data}}
+      <div data-spy="scroll" data-target=".navbar" data-offset="50" class="well col-md-10 col-md-offset-1 reporte-seguimiento">
+        {{#data}}
+        {{{table}}}
+        {{/data}}
+      </div>
+      <div id='loadingmessage'>
+      </div>
+      <div data-spy="scroll" data-target=".navbar" data-offset="50" class="well col-md-10 col-md-offset-1 reporte-seguimiento oculto" id="reemplazarToogle" name="reemplazarToogle">
       </div>
   </div>
 </form>

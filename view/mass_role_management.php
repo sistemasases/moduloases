@@ -30,6 +30,7 @@ require_once($CFG->libdir.'/adminlib.php');
 require_once('../managers/query.php');
 include('../lib.php');
 global $PAGE;
+require_once('../managers/instance_management/instance_lib.php');
 
 include("../classes/output/mass_role_management.php");
 include("../classes/output/renderer.php");
@@ -55,7 +56,7 @@ $coursenode->add_node($blocknode);
 $blocknode->make_active();
 
 //se culta si la instancia ya está registrada
-if(!consultInstance($blockid)){
+if(!consult_instance($blockid)){
     header("Location: instanceconfiguration.php?courseid=$courseid&instanceid=$blockid");
 }
 
@@ -76,16 +77,7 @@ $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/jquery.dataTables.m
 $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/jquery.dataTables_themeroller.css', true);
 
 $PAGE->requires->js('/blocks/ases/js/jquery-2.0.2.min.js', true);
-$PAGE->requires->js('/blocks/ases/js/sweetalert-dev.js', true);
-$PAGE->requires->js('/blocks/ases/js/DataTables-1.10.12/js/jquery.dataTables.js', true);
-$PAGE->requires->js('/blocks/ases/js/DataTables-1.10.12/js/jquery.dataTables.min.js', true);
-$PAGE->requires->js('/blocks/ases/js/DataTables-1.10.12/js/dataTables.jqueryui.min.js', true);
-$PAGE->requires->js('/blocks/ases/js/DataTables-1.10.12/js/dataTables.bootstrap.min.js', true);
-$PAGE->requires->js('/blocks/ases/js/DataTables-1.10.12/js/dataTables.bootstrap.js', true);
-$PAGE->requires->js('/blocks/ases/js/bootstrap.js', true);
-$PAGE->requires->js('/blocks/ases/js/bootstrap.min.js', true);
 $PAGE->requires->js('/blocks/ases/js/checkrole.js', true);
-$PAGE->requires->js('/blocks/ases/js/mass_role_management.js', true);
 
 
 $PAGE->set_url($url);

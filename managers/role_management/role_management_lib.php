@@ -1,7 +1,8 @@
 <?php
 
 require_once(dirname(__FILE__). '/../../../../config.php');
-require_once('../managers/periods_management/periods_lib.php');
+require_once(dirname(__FILE__).'/../periods_management/periods_lib.php');
+
 
 /**
  * Función que revisa si un usuario tiene un rol asignado

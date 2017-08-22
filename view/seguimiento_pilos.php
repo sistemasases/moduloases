@@ -77,6 +77,7 @@ if($usernamerole=='monitor_ps'){
 
 }elseif($usernamerole=='profesional_ps'){
 	//Se recupera los estudiantes de un profesional en la instancia y se organiza el array que será transformado en el toogle.
+
 	$table=profesionalUser($globalArregloPares,$globalArregloGrupal,$USER->id,$blockid,$userrole);
 
 
@@ -105,7 +106,7 @@ if($usernamerole=='monitor_ps'){
     		$table.='<option value="'.$person->id_usuario.'">'.$person->username." - ".$person->firstname." ".$person->lastname.'</option>';
      }
     $table.='</select></div>';
-    $table.='<span class="btn btn-info" type="button">Consultar</span></form></div>';
+    $table.='<span class="btn btn-info" id="consultar_persona" type="button">Consultar</span></form></div>';
 }
 
 
