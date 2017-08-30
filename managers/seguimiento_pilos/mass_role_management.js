@@ -42,9 +42,8 @@ function uploadFile() {
             return 0;
     }
 
-    
     $.ajax({
-        url: '../managers/'+controler,
+        url: '../managers/mass_management/'+controler,
         data: formData,
         type: 'POST',
         dataType: 'json',
@@ -72,7 +71,7 @@ function uploadFile() {
             //console.log(msj);
         },
         error: function (msj) {
-            console.log(msj);
+            alert("error");
         }
         // ... Other options like success and etc
     });

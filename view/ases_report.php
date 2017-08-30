@@ -30,6 +30,7 @@ require_once($CFG->libdir.'/adminlib.php');
 require_once('../managers/query.php');
 require_once('../managers/ases_report/asesreport_lib.php');
 require_once('../managers/instance_management/instance_lib.php');
+require_once('../managers/student_profile/studentprofile_lib.php');
 include('../lib.php');
 global $PAGE;
 
@@ -56,10 +57,20 @@ foreach ($cohortes as $cohorte) {
 }
 $tabla_cohortes.='</select><br>';
 
+
+$estados_ases = "";
+$estados_ases = "<option value='TODOS'>TODOS</option>";
+$ases_status_array = get_status_ases();
+
+foreach($ases_status_array as $ases_status){
+	$estados_ases .= "<option value='".$ases_status->id."'>".$ases_status->nombre."</option>";
+}
+
 $data = 'data';    
 $data = new stdClass;
 $data->risks_checks = $tabla_riesgos;
 $data->cohorts_checks = $tabla_cohortes;
+$data->status_ases = $estados_ases;
 $contextcourse = context_course::instance($courseid);
 $contextblock =  context_block::instance($blockid);
 

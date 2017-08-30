@@ -385,7 +385,6 @@ function load_students(){
    
   if(!isset($_POST['idinstancia'])) throw new Exception('No se reconocio las variables necesarias: idinstancia.'); 
    
-   
   $result =  new stdClass();
   $result->content = getStudentsGrupal($id_monitor,$_POST['idinstancia']);
   $result->rows = count($result->content);

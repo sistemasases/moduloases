@@ -72,18 +72,6 @@ $PAGE->requires->css('/blocks/ases/style/sweetalert.css', true);
 $PAGE->requires->css('/blocks/ases/style/round-about_pilos.css', true);
 $PAGE->requires->css('/blocks/ases/style/sugerenciaspilos.css', true);
 $PAGE->requires->css('/blocks/ases/style/forms_pilos.css', true);
-
-//$PAGE->requires->js('/blocks/ases/js/jquery-2.2.4.min.js', true);
-//$PAGE->requires->js('/blocks/ases/js/jquery.validate.min.js', true);
-// $PAGE->requires->js('/blocks/ases/js/bootstrap.min.js', true);
-// $PAGE->requires->js('/blocks/ases/js/bootstrap.js', true);
-// $PAGE->requires->js('/blocks/ases/js/sweetalert-dev.js', true);
-// $PAGE->requires->js('/blocks/ases/js/npm.js', true);
-// $PAGE->requires->js('/blocks/ases/js/checkrole.js', true);
-//$PAGE->requires->js('/blocks/ases/js/sugerenciaspilos.js', true);
-//$PAGE->requires->js('/blocks/ases/js/main.js', true);
-//$PAGE->requires->js('/blocks/ases/js/seguimiento_grupal.js', true);
-
 $output = $PAGE->get_renderer('block_ases');
 
 echo $output->header();

@@ -1,7 +1,9 @@
 <?php
-require_once(dirname(__FILE__). '/../../../config.php');
-require_once('MyException.php');
-require_once('query.php');
+require_once(dirname(__FILE__). '/../../../../config.php');
+require_once('../MyException.php');
+require_once('massmanagement_lib.php');
+require_once('../user_management/user_lib.php');
+
 
 if( isset($_FILES['file']) || isset($_POST['idinstancia'])){
     try {
@@ -12,13 +14,14 @@ if( isset($_FILES['file']) || isset($_POST['idinstancia'])){
         
         $nombre = $archivo['name'];
         
-        $rootFolder    = "../view/archivos_subidos/mrm/monitor_estud/files/";
+        $rootFolder    = "../../view/archivos_subidos/mrm/monitor_estud/files/";
         $zipFolfer = "../view/archivos_subidos/mrm/monitor_estud/comprimidos/";
         
         //se limpian las carpetas
         deleteFilesFromFolder($rootFolder);
         deleteFilesFromFolder($zipFolfer);
-        
+
+
         
         if ($extension !== 'csv') throw new MyException("El archivo ".$archivo['name']." no corresponde al un archivo de tipo CSV. Por favor verifícalo"); 
         if (!move_uploaded_file($archivo['tmp_name'], $rootFolder.'Original_'.$nombre)) throw new MyException("Error al cargar el archivo.");

@@ -236,12 +236,13 @@ function getGraficEstado($cohorte){
  * @param $column       --> Campos a seleccionar
  * @param $population   --> Estado y cohorte
  * @param $risk         --> Nivel de riesgo a mostrar
- * qparam $idinstancia  --> Instancia del módulo
+ * @param $idinstancia  --> Instancia del módulo
  * @return Array 
  */
 
 function getUsersByPopulation($column, $population, $risk, $idinstancia){
     global $DB;
+    global $USER;
     //consulta
     $sql_query = "";
     //cohorte
@@ -297,79 +298,164 @@ function getUsersByPopulation($column, $population, $risk, $idinstancia){
         $column_risk_str = $column_risk_str."id_usuario = pcmuser.data AND id_riesgo = ".$id_riesgo.") AS ".$nombre_riesgo;
     }
     $columns_str = $columns_str.$column_risk_str;
-    
-    if($ch == "TODOS"){
-        $sql_query = "SELECT ".$columns_str." FROM {cohort} AS pc 
-            INNER JOIN (
-                SELECT * FROM {cohort_members} AS pcm 
-                INNER JOIN (
-                    SELECT * FROM (
-                        SELECT id AS id_1, * FROM (SELECT *, id AS id_user FROM {user}) AS userm 
-                        INNER JOIN (
-                            SELECT userid, CAST(d.data as int) as data 
-                            FROM {user_info_data} d 
-                            WHERE d.data <> '' 
-                            AND fieldid = (SELECT id FROM  {user_info_field} as f WHERE f.shortname ='idtalentos')
-                        ) AS field 
-                        ON userm. id_user = field.userid ) AS usermoodle 
-                    INNER JOIN {talentospilos_usuario} as usuario 
-                    ON usermoodle.data = usuario.id 
-                    WHERE usermoodle.id_user in (
-                        SELECT userid FROM {user_info_data} as d 
-                        INNER JOIN {user_info_field} as f 
-                        ON d.fieldid = f.id 
-                        WHERE f.shortname ='estado' 
-                        AND d.data ='ACTIVO')
-                    ) as usertm 
-                ON usertm.id_user = pcm.userid) as pcmuser 
-            ON pc.id = pcmuser.cohortid WHERE pc.idnumber like '".$infoinstancia->cod_univalle."%' ".$asescohorts.";";
-            
-        // $sql_query = "SELECT ".$columns_str." FROM {cohort} AS pc INNER JOIN (SELECT * FROM {cohort_members} AS pcm INNER JOIN (SELECT * FROM (SELECT * FROM (SELECT *, id AS id_user FROM {user}) AS userm INNER JOIN (SELECT * FROM {user_info_data} as d INNER JOIN {user_info_field} as f ON d.fieldid = f.id WHERE f.shortname ='idtalentos' ) AS field ON userm. id_user = field.userid ) AS usermoodle INNER JOIN {talentospilos_usuario} as usuario ON CAST( usermoodle.data AS INT) = usuario.id WHERE usermoodle.id_user in (SELECT userid FROM {user_info_data} as d INNER JOIN {user_info_field} as f ON d.fieldid = f.id WHERE f.shortname ='estado' AND d.data ='ACTIVO')) as usertm ON usertm.id_user = pcm.userid) as pcmuser on pc.id = pcmuser.cohortid WHERE pc.idnumber like '%SP%';";
-        if($state != "TODOS"){
-            $sql_query = trim($sql_query,";");
-            $sql_query = $sql_query." AND estado = '".$state."';";
-        }
-    }
-    else {
-        $sql_query = "
-            SELECT ".$columns_str." 
-            FROM {cohort} AS pc INNER JOIN (
-                SELECT * FROM {cohort_members} 
-                AS pcm 
-                INNER JOIN (
-                    SELECT * FROM (
-                        SELECT id AS id_1, * FROM (SELECT *, id AS id_user FROM {user}) AS userm 
-                        INNER JOIN (SELECT userid, CAST(d.data as int) AS data 
-                        FROM {user_info_data} d 
-                        WHERE d.data <> '' and fieldid = (
-                            SELECT id 
-                            FROM  {user_info_field} as f 
-                            WHERE f.shortname ='idtalentos')) AS field 
-                        ON CAST(userm.id_user AS TEXT) = CAST(field.userid AS TEXT)) 
-                    AS usermoodle 
-                    INNER JOIN (
-                        SELECT id as idtalentos, * 
-                        FROM {talentospilos_usuario}) 
-                    AS usuario ON usermoodle.data = usuario.id 
-                    WHERE usermoodle.id_user in (
-                        SELECT userid 
-                        FROM {user_info_data} AS d 
-                        INNER JOIN {user_info_field} AS f 
-                        ON d.fieldid = f.id WHERE f.shortname ='estado' AND d.data ='ACTIVO')
-                    ) AS usertm 
-                ON usertm.id_user = pcm.userid) as pcmuser on pc.id = pcmuser.cohortid ";
-                
-    	$whereclause = "WHERE pc.idnumber ='".$ch."';";
 
-        $sql_query.=  $whereclause;
-        
-        //validar el estado
-        if($state != "TODOS"){
-            $sql_query = trim($sql_query,";");
-            $sql_query = $sql_query." AND estado = '".$state."';";
-        }
-    }
     
+
+    if(isUsuarioTodos($USER)){
+
+
+        if($state != "TODOS"){
+            $query_status = "SELECT umood.id
+                        FROM {user} umood INNER JOIN {user_info_data} udata ON umood.id = udata.userid 
+                        INNER JOIN {talentospilos_est_estadoases} estado_ases ON udata.data = CAST(estado_ases.id_estudiante as TEXT)
+                        WHERE id_estado_ases = $state AND udata.fieldid = (SELECT id FROM  {user_info_field} as f WHERE f.shortname ='idtalentos') 
+                              AND estado_ases.fecha = (SELECT MAX(fecha) FROM {talentospilos_est_estadoases} WHERE id_estudiante = estado_ases.id_estudiante)";
+        }else{
+            $query_status = "SELECT umood.id
+                        FROM {user} umood INNER JOIN {user_info_data} udata ON umood.id = udata.userid 
+                        INNER JOIN {talentospilos_est_estadoases} estado_ases ON udata.data = CAST(estado_ases.id_estudiante as TEXT)
+                        WHERE udata.fieldid = (SELECT id FROM  {user_info_field} as f WHERE f.shortname ='idtalentos')
+                         AND estado_ases.fecha = (SELECT MAX(fecha) FROM {talentospilos_est_estadoases} WHERE id_estudiante = estado_ases.id_estudiante)";
+        }
+        
+        
+        if($ch == "TODOS"){
+            $sql_query = "SELECT ".$columns_str." FROM {cohort} AS pc 
+                INNER JOIN (
+                    SELECT * FROM {cohort_members} AS pcm 
+                    INNER JOIN (
+                        SELECT * FROM (
+                            SELECT id AS id_1, * FROM (SELECT *, id AS id_user FROM {user}) AS userm 
+                            INNER JOIN (
+                                SELECT userid, CAST(d.data as int) as data 
+                                FROM {user_info_data} d 
+                                WHERE d.data <> '' 
+                                AND fieldid = (SELECT id FROM  {user_info_field} as f WHERE f.shortname ='idtalentos')
+                            ) AS field 
+                            ON userm. id_user = field.userid ) AS usermoodle 
+                        INNER JOIN {talentospilos_usuario} as usuario 
+                        ON usermoodle.data = usuario.id 
+                        WHERE usermoodle.id_user in (
+                            $query_status )
+                        ) as usertm 
+                    ON usertm.id_user = pcm.userid) as pcmuser 
+                ON pc.id = pcmuser.cohortid WHERE pc.idnumber like '".$infoinstancia->cod_univalle."%' ".$asescohorts.";";
+                
+            // $sql_query = "SELECT ".$columns_str." FROM {cohort} AS pc INNER JOIN (SELECT * FROM {cohort_members} AS pcm INNER JOIN (SELECT * FROM (SELECT * FROM (SELECT *, id AS id_user FROM {user}) AS userm INNER JOIN (SELECT * FROM {user_info_data} as d INNER JOIN {user_info_field} as f ON d.fieldid = f.id WHERE f.shortname ='idtalentos' ) AS field ON userm. id_user = field.userid ) AS usermoodle INNER JOIN {talentospilos_usuario} as usuario ON CAST( usermoodle.data AS INT) = usuario.id WHERE usermoodle.id_user in (SELECT userid FROM {user_info_data} as d INNER JOIN {user_info_field} as f ON d.fieldid = f.id WHERE f.shortname ='estado' AND d.data ='ACTIVO')) as usertm ON usertm.id_user = pcm.userid) as pcmuser on pc.id = pcmuser.cohortid WHERE pc.idnumber like '%SP%';";
+            
+        }
+        else {
+            $sql_query = "
+                SELECT ".$columns_str." 
+                FROM {cohort} AS pc INNER JOIN (
+                    SELECT * FROM {cohort_members} 
+                    AS pcm 
+                    INNER JOIN (
+                        SELECT * FROM (
+                            SELECT id AS id_1, * FROM (SELECT *, id AS id_user FROM {user}) AS userm 
+                            INNER JOIN (SELECT userid, CAST(d.data as int) AS data 
+                            FROM {user_info_data} d 
+                            WHERE d.data <> '' and fieldid = (
+                                SELECT id 
+                                FROM  {user_info_field} as f 
+                                WHERE f.shortname ='idtalentos')) AS field 
+                            ON CAST(userm.id_user AS TEXT) = CAST(field.userid AS TEXT)) 
+                        AS usermoodle 
+                        INNER JOIN (
+                            SELECT id as idtalentos, * 
+                            FROM {talentospilos_usuario}) 
+                        AS usuario ON usermoodle.data = usuario.id 
+                        WHERE usermoodle.id_user in (
+                            $query_status )
+                        ) AS usertm 
+                    ON usertm.id_user = pcm.userid) as pcmuser on pc.id = pcmuser.cohortid ";
+                    
+        	$whereclause = "WHERE pc.idnumber ='".$ch."';";
+
+            $sql_query.=  $whereclause;
+            
+        }
+    }else{
+
+        //SE EVALUAN LOS ESTUDIANTES ASIGNADOS AL USUARIO
+
+        $query_user = getQueryUser($USER);
+
+        if($state != "TODOS"){
+            $query_status = "SELECT umood.id
+                        FROM {user} umood INNER JOIN {user_info_data} udata ON umood.id = udata.userid 
+                        INNER JOIN {talentospilos_est_estadoases} estado_ases ON udata.data = CAST(estado_ases.id_estudiante as TEXT)
+                        WHERE id_estado_ases = $state AND udata.fieldid = (SELECT id FROM  {user_info_field} as f WHERE f.shortname ='idtalentos') 
+                              AND estado_ases.fecha = (SELECT MAX(fecha) FROM {talentospilos_est_estadoases} WHERE id_estudiante = estado_ases.id_estudiante)";
+        }else{
+            $query_status = "SELECT umood.id
+                        FROM {user} umood INNER JOIN {user_info_data} udata ON umood.id = udata.userid 
+                        INNER JOIN {talentospilos_est_estadoases} estado_ases ON udata.data = CAST(estado_ases.id_estudiante as TEXT)
+                        WHERE udata.fieldid = (SELECT id FROM  {user_info_field} as f WHERE f.shortname ='idtalentos')
+                         AND estado_ases.fecha = (SELECT MAX(fecha) FROM {talentospilos_est_estadoases} WHERE id_estudiante = estado_ases.id_estudiante)";
+        }
+        
+        
+        if($ch == "TODOS"){
+            $sql_query = "SELECT ".$columns_str." FROM {cohort} AS pc 
+                INNER JOIN (
+                    SELECT * FROM {cohort_members} AS pcm 
+                    INNER JOIN (
+                        SELECT * FROM (
+                            SELECT id AS id_1, * FROM (SELECT *, id AS id_user FROM {user}) AS userm 
+                            INNER JOIN (
+                                SELECT userid, CAST(d.data as int) as data 
+                                FROM {user_info_data} d 
+                                WHERE d.data <> '' 
+                                AND fieldid = (SELECT id FROM  {user_info_field} as f WHERE f.shortname ='idtalentos')
+                            ) AS field 
+                            ON userm. id_user = field.userid ) AS usermoodle 
+                        INNER JOIN {talentospilos_usuario} as usuario 
+                        ON usermoodle.data = usuario.id 
+                        WHERE usermoodle.id_user in (
+                            $query_status ) AND usermoodle.id_user in ( $query_user )
+                        ) as usertm 
+                    ON usertm.id_user = pcm.userid) as pcmuser 
+                ON pc.id = pcmuser.cohortid WHERE pc.idnumber like '".$infoinstancia->cod_univalle."%' ".$asescohorts.";";
+                
+            // $sql_query = "SELECT ".$columns_str." FROM {cohort} AS pc INNER JOIN (SELECT * FROM {cohort_members} AS pcm INNER JOIN (SELECT * FROM (SELECT * FROM (SELECT *, id AS id_user FROM {user}) AS userm INNER JOIN (SELECT * FROM {user_info_data} as d INNER JOIN {user_info_field} as f ON d.fieldid = f.id WHERE f.shortname ='idtalentos' ) AS field ON userm. id_user = field.userid ) AS usermoodle INNER JOIN {talentospilos_usuario} as usuario ON CAST( usermoodle.data AS INT) = usuario.id WHERE usermoodle.id_user in (SELECT userid FROM {user_info_data} as d INNER JOIN {user_info_field} as f ON d.fieldid = f.id WHERE f.shortname ='estado' AND d.data ='ACTIVO')) as usertm ON usertm.id_user = pcm.userid) as pcmuser on pc.id = pcmuser.cohortid WHERE pc.idnumber like '%SP%';";
+            
+        }
+        else {
+            $sql_query = "
+                SELECT ".$columns_str." 
+                FROM {cohort} AS pc INNER JOIN (
+                    SELECT * FROM {cohort_members} 
+                    AS pcm 
+                    INNER JOIN (
+                        SELECT * FROM (
+                            SELECT id AS id_1, * FROM (SELECT *, id AS id_user FROM {user}) AS userm 
+                            INNER JOIN (SELECT userid, CAST(d.data as int) AS data 
+                            FROM {user_info_data} d 
+                            WHERE d.data <> '' and fieldid = (
+                                SELECT id 
+                                FROM  {user_info_field} as f 
+                                WHERE f.shortname ='idtalentos')) AS field 
+                            ON CAST(userm.id_user AS TEXT) = CAST(field.userid AS TEXT)) 
+                        AS usermoodle 
+                        INNER JOIN (
+                            SELECT id as idtalentos, * 
+                            FROM {talentospilos_usuario}) 
+                        AS usuario ON usermoodle.data = usuario.id 
+                        WHERE usermoodle.id_user in (
+                            $query_status ) AND usermoodle.id_user in ( $query_user ) 
+                        ) AS usertm 
+                    ON usertm.id_user = pcm.userid) as pcmuser on pc.id = pcmuser.cohortid ";
+                    
+            $whereclause = "WHERE pc.idnumber ='".$ch."';";
+
+            $sql_query.=  $whereclause;
+            
+        }
+
+
+
+    }
     // print_r($sql_query);
     // die();
     
@@ -424,9 +510,47 @@ function getUsersByPopulation($column, $population, $risk, $idinstancia){
     
     $prueba =  new stdClass;
     $prueba->data= $result;
-    $prueba->columns = $columns_str." y la poblacion es: ".$population[0]." - ".$population[2];
+    $prueba->columns = $columns_str." y la poblacion es: ".$population[0]." - ".$population[1];
 
 
     return $prueba;
 }
+
+function getQueryUser($USER){
+    global $DB;
+    $id = $USER->id;
+    $query_role = "SELECT rol.nombre_rol  FROM {talentospilos_rol} rol INNER JOIN {talentospilos_user_rol} uRol ON rol.id = uRol.id_rol WHERE uRol.id_usuario = $id AND uRol.id_semestre = (SELECT max(id_semestre) FROM {talentospilos_user_rol})";
+    $rol = $DB->get_record_sql($query_role)->nombre_rol;
+
+    $query = "";
+
+    if($rol == 'monitor_ps'){
+        $query = "SELECT muser.id FROM {user} muser INNER JOIN {user_info_data} data ON muser.id = data.userid WHERE data.data IN (SELECT CAST(tpuser.id as text) FROM {talentospilos_usuario} tpuser INNER JOIN {talentospilos_monitor_estud} mon_estud ON tpuser.id = mon_estud.id_estudiante WHERE id_monitor = $id)";
+    }else if($rol == 'practicante_ps'){
+        $query = "SELECT muser.id 
+                FROM {user} muser INNER JOIN {user_info_data} data ON muser.id = data.userid 
+                WHERE data.data IN (SELECT CAST(tpuser.id as text) 
+                                    FROM {talentospilos_usuario} tpuser INNER JOIN {talentospilos_monitor_estud} mon_estud ON tpuser.id = mon_estud.id_estudiante 
+                                    WHERE id_monitor IN (SELECT urol.id_usuario
+                                                        FROM {talentospilos_user_rol} urol 
+                                                        WHERE id_jefe = $id))";
+    }
+    return $query;
+
+}
+
+function isUsuarioTodos($USER){
+    global $DB;
+    $username = $USER->username;
+    $id = $USER->id;
+    $query_role = "SELECT rol.nombre_rol  FROM {talentospilos_rol} rol INNER JOIN {talentospilos_user_rol} uRol ON rol.id = uRol.id_rol WHERE uRol.id_usuario = $id AND uRol.id_semestre = (SELECT max(id_semestre) FROM {talentospilos_user_rol})";
+    $rol = $DB->get_record_sql($query_role)->nombre_rol;
+
+    if($rol === "sistemas" || $rol == "profesional_ps"){
+        return true;
+    }else{
+        return false;
+    }
+}
+
 ?>

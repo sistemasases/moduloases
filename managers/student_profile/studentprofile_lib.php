@@ -579,3 +579,25 @@ function save_status_ases($id_status, $id_student, $id_reason=null){
     return $msg_result;
 }
 
+/**
+ * Función que busca un estudiante a partir del código de estudiante Ases.
+ *
+ * @param $id_student --> ID correspondiente al estudiante Ases
+ * @return $object_result --> Objeto que almacena el resultado de operación en la base de datos
+ */
+
+function validate_student($code_student){
+
+    global $DB;
+
+    $sql_query = "SELECT id FROM {user} WHERE username LIKE '".$code_student."%'";
+    $result_moodle_database = $DB->get_record_sql($sql_query);
+
+    if($result_moodle_database){
+        return "1";
+    }else{
+        return "0";
+    }
+
+}
+

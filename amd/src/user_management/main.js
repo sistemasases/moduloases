@@ -11,7 +11,8 @@ $("#users").select2({
 
       return "Buscando..";
     }
-  }
+  },
+  dropdownAutoWidth : true,
 });
 
 
@@ -32,7 +33,7 @@ $(document).ready(function() {
         $(".assignment_li").slideToggle("fast");
     });
     $("#ok-button").on('click', function(){
-        var rolchanged = $('#role_select').val()
+        var rolchanged = $('#role_select').val();
         userLoad(null,function(msg) {
             if (msg.rol == 'monitor_ps' && msg.rol !=  rolchanged){
                 var currentUser = new Array();
@@ -104,7 +105,7 @@ $(document).ready(function() {
         var currentUser = new Array();
         currentUser.id =  childrenid;
         currentUser.username = username;
-        
+
         swal(
             {  
                 title: "Estas seguro/a?",   
@@ -150,7 +151,7 @@ $(document).ready(function() {
 function roleLoad(){
     $.ajax({
         type: "POST",
-        url: "../managers/load_role.php",
+        url: "../managers/user_management/load_role.php",
         async: false,
         success: function(msg){
             $('#role_select').empty();
@@ -161,7 +162,7 @@ function roleLoad(){
             roleLoaded = true;
         },
         dataType: "json",
-        error: function(msg){console.log(msg);}
+        error: function(msg){alert("error al cargar roles");}
     })
 }
 
@@ -174,7 +175,7 @@ function userLoad(username, callback){
     $.ajax({
         type: "POST",
         data: {dat: dataString, idinstancia: getIdinstancia()},
-        url: "../managers/search_user.php",
+        url: "../managers/user_management/search_user.php",
         success: function(msg){
             
             if(callback){
@@ -186,8 +187,6 @@ function userLoad(username, callback){
                         if (msg.firstname == ""){
                             swal("Error", "El usuario no existe en la base de datos", "error");
                             $('#users').prop('disabled', false);
-
-
                         }
                         else{
                             $('.assignment_li').removeClass('hidden');
@@ -237,7 +236,6 @@ function userLoad(username, callback){
         },
         dataType: "json",
         error: function(msg){
-            console.log(msg);
             swal("Error", "El usuario no existe en la base de datos", "error");
             $(".assignment_li").addClass('hidden');
             $("#form_mon_student").css({display: 'none' });
@@ -262,7 +260,6 @@ function updateRolUser(){
     if(dataRole == "profesional_ps"){
         
         var dataProfessional = $('#select_prof_type').val();
-        
         if(dataProfessional == "no_asignado"){
             swal("Error", "El usuario no tiene un \"tipo de profesional\" asignado, debe asignar un \"tipo de profesional\".", "error")
         }else{
@@ -270,16 +267,15 @@ function updateRolUser(){
             $.ajax({
             type: "POST",
             data:data ,
-            url: "../managers/update_role_user.php",
+            url: "../managers/user_management/update_role_user.php",
             success: function(msg)
             {
-                //console.log(msg);
                 swal("Información!", msg, "info");
                 userLoad(dataUsername);
             },
             dataType: "text",
             cache: "false",
-            error: function(msg){swal("Error", "Ha ocurrido un error", "error")},
+            error: function(msg){swal("Error", "Ha ocurrido un error asignando profesional", "error")},
             });
         }
     }else if(dataRole == "monitor_ps"){
@@ -288,7 +284,7 @@ function updateRolUser(){
         $.ajax({
             type: "POST",
             data: {role: dataRole, username: dataUsername, students: dataStudents, boss:boss_id, idinstancia: getIdinstancia()},
-            url: "../managers/update_role_user.php",
+            url: "../managers/user_management/update_role_user.php",
             success: function(msg)
             {
                 swal({  title: "Información!",   
@@ -312,7 +308,7 @@ function updateRolUser(){
         $.ajax({
             type: "POST",
             data: {role: dataRole, username: dataUsername, boss:boss_id, idinstancia: getIdinstancia()},
-            url: "../managers/update_role_user.php",
+            url: "../managers/user_management/update_role_user.php",
             success: function(msg)
             {
                 swal({  title: "Información!",   
@@ -334,7 +330,7 @@ function updateRolUser(){
         $.ajax({
             type: "POST",
             data: {role: dataRole, username: dataUsername,  idinstancia: getIdinstancia()},
-            url: "../managers/update_role_user.php",
+            url: "../managers/user_management/update_role_user.php",
             success: function(msg)
             {
                swal("Información!", msg, "info");
@@ -410,9 +406,10 @@ function loadStudents(){
     $.ajax({
             type: "POST",
             data: data,
-            url: "../managers/seguimiento.php",
+            url: "../managers/user_management/seguimiento.php",
             success: function(msg)
             {
+
                 $('#contenedor_add_fields').html('');
                 if(msg.rows != 0){
                     
@@ -427,7 +424,7 @@ function loadStudents(){
             },
             dataType: "json",
             cache: "false",
-            error: function(msg){console.log(msg)},
+            error: function(msg){alert("error al cargar estudiantes")},
             });
 }
 
@@ -439,7 +436,7 @@ function getProfessionals(selected){
     $.ajax({
         type: "POST",
         data: data,
-        url: "../managers/search_user.php",
+        url: "../managers/user_management/search_user.php",
         success: function(msg)
         {
             $('#boss_select').html('');
@@ -463,7 +460,7 @@ function getProfessionals(selected){
         },
         dataType: "json",
         cache: "false",
-        error: function(msg){console.log(msg)},
+        error: function(msg){alert("error al cargar profesionales")},
         });
 }
 
@@ -478,14 +475,14 @@ function deleteStudent(student){
     $.ajax({
         type: "POST",
         data: data,
-        url: "../managers/update_role_user.php",
+        url: "../managers/user_management/update_role_user.php",
         success: function(msg)
         {
             
         },
         dataType: "json",
         cache: "false",
-        error: function(msg){console.log(msg)},
+        error: function(msg){alert("Error al eliminar estudiante")},
         });
 }
 
@@ -493,7 +490,7 @@ function load_users(){
     $.ajax({
         type: "POST",
         data:{idinstancia: getIdinstancia()},
-        url: "../managers/load_role_users.php",
+        url: "../managers/user_management/load_role_users.php",
         success: function(msg){
             $("#div_users").empty();
             $("#div_users").append('<table id="tableUsers" class="display" cellspacing="0" width="100%"><thead><thead></table>');
@@ -503,7 +500,7 @@ function load_users(){
         dataType: "json",
         cache: "false",
         error: function(msg){
-            console.log(msg)
+            alert("Error al cargar usuarios")
         },
     })
 }
@@ -529,7 +526,6 @@ function load_users(){
 // }
 
 function valdateStudentMonitor(currentUser, isdelete){
-    //console.log(currentUser);
     var data =  new Array();
     data.push({name:"function",value:"load_grupal"});
     data.push({name:"user_management",value:currentUser.id});
@@ -537,7 +533,7 @@ function valdateStudentMonitor(currentUser, isdelete){
     $.ajax({
         type: "POST",
         data: data,
-        url: "../managers/seguimiento.php",
+        url: "../managers/user_management/seguimiento.php",
         success: function(msg)
         {
             //console.log(msg);
@@ -603,7 +599,7 @@ function valdateStudentMonitor(currentUser, isdelete){
         },
         dataType: "json",
         cache: "false",
-        error: function(msg){console.log(msg)},
+        error: function(msg){alert("error al validar monitor")},
         });
 }
 
@@ -650,7 +646,7 @@ function changeMonitor(newUser,currentUser, isdelete){
     $.ajax({
         type: "POST",
         data: data,
-        url: "../managers/update_role_user.php",
+        url: "../managers/user_management/update_role_user.php",
         success: function(msg)
         {   
             if(msg == 1){
@@ -672,7 +668,7 @@ function changeMonitor(newUser,currentUser, isdelete){
         },
         dataType: "text",
         cache: "false",
-        error: function(msg){console.log(msg)},
+        error: function(msg){alert("Error al cambiar monitor")},
     });
 }
 
@@ -684,7 +680,7 @@ function deleteProfesional(currentUser){
     $.ajax({
         type: "POST",
         data: data,
-        url: "../managers/update_role_user.php",
+        url: "../managers/user_management/update_role_user.php",
         success: function(msg)
         {
             if(msg == 1){
@@ -696,7 +692,7 @@ function deleteProfesional(currentUser){
         },
         dataType: "json",
         cache: "false",
-        error: function(msg){console.log(msg)},
+        error: function(msg){alert("Error al eliminar profesional")},
     });
 }
 
@@ -708,9 +704,10 @@ function deleteOtheruser(currentUser){
     $.ajax({
         type: "POST",
         data: data,
-        url: "../managers/update_role_user.php",
+        url: "../managers/user_management/update_role_user.php",
         success: function(msg)
         {
+
             if(msg == 1){
                 swal("Eliminado!", "El proceso se eliminación de completó satisfactoriamente.", "success");
                 load_users();
@@ -720,7 +717,7 @@ function deleteOtheruser(currentUser){
         },
         dataType: "json",
         cache: "false",
-        error: function(msg){console.log(msg)},
+        error: function(msg){alert("Error al eliminar otros usuarios")},
     });
 }
 

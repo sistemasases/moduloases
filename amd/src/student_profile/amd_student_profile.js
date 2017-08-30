@@ -1,4 +1,4 @@
-requirejs(['jquery', 'bootstrap', 'sweetalert', 'validator'], function($) {
+requirejs(['jquery', 'bootstrap', 'sweetalert', 'validator', 'datatables.net', 'datatables.net-buttons'], function($) {
 
     $(document).ready(function() {
 
@@ -20,6 +20,13 @@ requirejs(['jquery', 'bootstrap', 'sweetalert', 'validator'], function($) {
                 break;
         }
 
+
+
+        $("#search").on('click', function(){
+            var student_code = $('#codigo').val();
+            load_student(student_code);
+        });
+
         var modal_peer_tracking = $('#modal_peer_tracking');
 
         edit_profile_act();
@@ -28,6 +35,7 @@ requirejs(['jquery', 'bootstrap', 'sweetalert', 'validator'], function($) {
         manage_ases_status();
         modal_manage();
         modal_peer_tracking_manage();
+        modal_risk_graphic_manage();
 
         $('#save').click(function() {
             save_profile();
@@ -117,7 +125,14 @@ requirejs(['jquery', 'bootstrap', 'sweetalert', 'validator'], function($) {
                 } 
             });
         });
+
+        // Controles modal gráfico de riesgos
+        $('#view_graphic_button').on('click', function(){
+            $('#modal_risk_graph').show();
+        });
     })
+
+    
 
     function edit_profile_act() {
         $("#editar_ficha").click(function() {
@@ -501,6 +516,20 @@ requirejs(['jquery', 'bootstrap', 'sweetalert', 'validator'], function($) {
         });
     }
 
+    function modal_risk_graphic_manage(){
+
+        var span_close = $('#modal_risk_span');
+        var button_close = $('#modal_risk_close');
+
+        span_close.on('click', function(){
+            $('#modal_risk_graph').hide();
+        });
+
+        button_close.on('click', function(){
+            $('#modal_risk_graph').hide();
+        });
+    }
+
     function init_form_tracking() {
 
         var current_date = new Date();
@@ -878,5 +907,132 @@ requirejs(['jquery', 'bootstrap', 'sweetalert', 'validator'], function($) {
                 },
             });
     }
+
+function load_risk_values() {
+    var idUser = $('#idtalentos').val();
+
+    $.ajax({
+        type: "POST",
+        data: {
+            id: idUser
+        },
+        url: "../managers/get_risk.php",
+        success: function(msg) {
+
+            if (msg.individual) {
+                var individual_r = parseInt(msg.individual.calificacion_riesgo);
+            }
+            else {
+                var individual_r = 0;
+                // console.log(individual_r);
+            }
+
+            if (msg.familiar) {
+                var familiar_r = parseInt(msg.familiar.calificacion_riesgo);
+            }
+            else {
+                var familiar_r = 0;
+            }
+
+            if (msg.economico) {
+                var economic_r = parseInt(msg.economico.calificacion_riesgo);
+            }
+            else {
+                var economic_r = 0;
+            }
+
+            if (msg.academico) {
+                var academic_r = parseInt(msg.academico.calificacion_riesgo);
+            }
+            else {
+                var academic_r = 0;
+            }
+
+            if (msg.vida_universitaria) {
+                var life_risk = parseInt(msg.vida_universitaria.calificacion_riesgo);
+            }
+            else {
+                var life_risk = 0;
+            }
+
+            if (msg.geografico) {
+                var geo_risk = parseInt(msg.geografico.calificacion_riesgo);
+            }
+            else {
+                var geo_risk = 0;
+            }
+
+            if (individual_r > 0) {
+                individual_r = 4 - individual_r;
+            }
+            if (familiar_r > 0) {
+                familiar_r = 4 - familiar_r;
+            }
+            if (economic_r > 0) {
+                economic_r = 4 - economic_r;
+            }
+            if (life_risk > 0) {
+                life_risk = 4 - life_risk;
+            }
+            if (academic_r > 0) {
+                academic_r = 4 - academic_r;
+            }
+
+            riskGraphic(individual_r, familiar_r, economic_r, academic_r, life_risk, geo_risk)
+
+        },
+        dataType: "json",
+        error: function(msg) {
+            console.log(msg)
+        }
+    });
+}
+
+function load_student(code_student){
+
+    $.ajax({
+        type: "POST",
+        data: {
+            func: 'is_student',
+            code_student: code_student
+        },
+        url: "../managers/student_profile/studentprofile_serverproc.php",
+        success: function(msg) {
+
+            console.log(msg);
+
+            if(msg == "1"){
+                var parameters = get_url_parameters(document.location.search);
+                var full_url = String(document.location);
+                var url = full_url.split("?");
+
+                var new_url = url[0]+"?courseid="+parameters['courseid']+"&instanceid="+parameters['instanceid']+"&student_code="+code_student;
+
+                location.href = new_url;
+            }else{
+                swal(
+                    "Error",
+                    "No se encuentra un estudiante asociado al código ingresado",
+                    "error"
+                );
+            }
+            
+        },
+        dataType: "text",
+        cache: "false",
+        error: function(msg) {
+            console.log(msg);
+            swal(
+                "Error",
+                "Error al comunicarse con el servidor, por favor intentelo nuevamente.",
+                "error"
+            );
+
+        },
+    });
+
+   
+}
+
 
 })

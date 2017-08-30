@@ -34,6 +34,7 @@ requirejs(['jquery', 'datatables.net', 'datatables.net-buttons', 'buttons.flash'
             url: "../managers/ases_report/asesreport_server_processing.php",
             success: function(msg) {
                 //alert(msg.data);
+                console.log(msg.columns);
                 $("#div_table").html('');
                 $("#div_table").fadeIn(1000).append('<table id="tableResult" class="display" cellspacing="0" width="100%"><thead> </thead></table>');
                 $("#tableResult").DataTable(msg.data);

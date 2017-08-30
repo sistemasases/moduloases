@@ -225,7 +225,7 @@
                           </div>
 
                           <div class="row" align="center">
-                            <button type="button" id="view_graphic_button" formmethod="post" data-toggle="modal" data-target="#myModalGraf" onclick="load_risk_values()">Ver gráfico</button>
+                            <button type="button" id="view_graphic_button">Ver gráfico</button>
                           </div>
                           
                           <div class="{{individual_class}} col-sm-12" id="individual_risk">
@@ -356,53 +356,46 @@
                   <!--academic tab-->
 
                   <div class="tab-pane" id="academic_tab">
-                     <div class="col-sm-10 col-sm-offset-1" id="academic_report">
-                 
-                      </div>
+                    <div class="col-sm-10 col-sm-offset-1" id="academic_report">
+                      {{{academic_semestres_table}}}
+                    </div>
                   </div>
                   <!-- End academic tab -->
-
                   <!-- Geographic tab-->
               		<div class="tab-pane" id="geographic_tab">
               		  <div id="demografica" class="">
                       <div class="col-sm-4">
-                        <form id="coord_form" class="horizontal-form">
-                            <div class="form-group">
-                              <label for="latitud" class="control-label col-sm-2">Latitud</label>
-                              <div class="col-sm-10">
-                                <input type="number" class="form-control" id="longitud" name="longitud" placeholder="longitud" readonly/>
-                              </div>
-                            </div>
-                            <div class="form-group">
-                              <label for="longitud" class="control-label col-sm-2">Longitud</label>
-                              <div class="col-sm-10">
-                                <input type="number" class="form-control" id="latitud" name="latitud" placeholder="latitud" readonly/>
-                              </div>
-                            </div>
-                          </form>
+                        <div class="row">
+                          <label for="latitud" class="control-label col-sm-4">Latitud</label>
+                          <div class="input_group col-sm-8">
+                            <input type="number" class="form-control" id="longitud" name="longitud" placeholder="longitud" readonly/>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <label for="longitud" class="control-label col-sm-4">Longitud</label>
+                          <div class="col-sm-8">
+                            <input type="number" class="form-control" id="latitud" name="latitud" placeholder="latitud" readonly/>
+                          </div>
+                        </div>
                       </div>
                       
                       <div class="col-sm-4">
-                        <form id="geographic_form" class="horizontal-form">
-                          <div class="form-group">
-                            <div class="col-sm-2">
-                              <label for="barrio" class="control-label">Barrio</label>
-                            </div>
-                            <div class="col-sm-10">
-                              <select class="form-control" id="neighborhood_select" name="id_neighborhood" disabled></select>
-                            </div>
+                        <div class="row">
+                          <label for="barrio" class="control-label col-sm-4">Barrio</label>
+                          <div class="col-sm-8">
+                            <select class="form-control" id="neighborhood_select" name="id_neighborhood" disabled></select>
                           </div>
-                          <div class="form-group">
-                            <label for="riesgo" class="control-label col-sm-2">Riesgo</label>
-                            <div class="col-sm-10">
-                               <select id="geographic_risk" name="risk" disabled>
-                                 <option value="1">Bajo</option>
-                                 <option value="2">Medio</option>
-                                 <option value="3">Alto</option>
-                               </select>
-                            </div>
+                        </div>
+                        <div class="row">
+                          <label for="riesgo" class="control-label col-sm-4">Riesgo</label>
+                          <div class="col-sm-8">
+                             <select id="geographic_risk" name="risk" disabled>
+                               <option value="1">Bajo</option>
+                               <option value="2">Medio</option>
+                               <option value="3">Alto</option>
+                             </select>
                           </div>
-                        </form>
+                        </div>
                       </div>
                       <div class="col-sm-4" id="edit_button_div">
                         <button type="button" class="btn btn-primary" id="edit_demo" onclick="edit_geographic(this)">Editar</button>
@@ -437,7 +430,7 @@
       <div class="mymodal-body col-sm-12">
         <form class="form-horizontal" id="tracking_peer_form" role="form">
           
-          <input type="text" id="id_tracking_peer" name="id_tracking_peer" class="hide"></input>
+          <input type="text" id="id_tracking_peer" name="id_tracking_peer" class="hide"/>
 
           <div class="row form-legend">
             <h4>Datos generales</h4>
@@ -678,7 +671,6 @@
               </div>
             </div>
           </div>
-          
         </form>
       </div>
       <div class="mymodal-footer">
@@ -688,519 +680,23 @@
     </div>
   </div>
   <!-- End modal Seguimiento pares-->
-  
-  <!-- Modal Seguimiento grupal-->
-  <div class="modal modal_pilos" id="myModal" name="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-          <h4 class="modal-title" id="myModalLabel">Seguimiento</h4>
-        </div>
-        <div class="modal-body">
-            <form class="form-horizontal" id = "seguimiento" role="form">
-              <div class= "form-group hide" id="div_created">
-                <div class="col-md-4">
-                      <label type="text" class="" id="created_date" name="created_daydate"></label>
-                </div>
-              </div>
-              <div class= "form-group">
-                <div class="col-md-4">
-                    <label for="date" class="form-control-label col-md-3">Fecha</label>
-                    <div class="col-md-9">
-                      <input type="date" class="form-control" id="date" name="date" >
-                        <span >(dd/mm/aaaa)</span>
-                      </input>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <label for="place" class="form-control-label col-md-2">Lugar</label>
-                    <div class="col-md-10">
-                      <input type="taxt" maxlength = "20" size="20" class="form-control" id="place" name="place" >
-                    </div>
-                </div>
-              </div>
-              <hr>
-              <div class= "form-group">
-                <div class="col-md-6">
-                    <label for="h_ini" class="form-control-label col-xs-3 col-sm-3">Hora de Inicio</label>
-                    <div class="col-xs-4 col-sm-3">
-                      <select  class="form-control" id="h_ini" name="h_ini" ></select>
-                    </div>
-                    <label class="col-xs-1 col-sm-1" for="m_ini">:</label>
-                    <div class="col-xs-4 col-sm-3">
-                      <select class="form-control" id="m_ini"  name="m_ini"></select>
-                    </div>
-                 </div>
-                 <div class="col-md-6">
-                    <label for="h_fin" class="form-control-label col-xs-3 col-sm-3">Hora finalización</label>
-                    <div class="col-xs-4 col-sm-3">
-                      <select class="form-control" id="h_fin" name="h_fin"></select>
-                    </div>
-                    <label class="col-xs-1 col-sm-1" for="m_fin">:</label>
-                    <div class="col-xs-4 col-sm-3">
-                      <select class="form-control" id="m_fin" name="m_fin" ></select>
-                    </div>
-                 </div>
-              </div>
-              <div class="form-group hide" id="infomonitor">
-                <label for="monitor" class="form-control-label col-xs-2 col-sm-2">Monitor guía</label>
-                <span class="col-sm-4" id="monitor">Pepito Perez</span>
-              </div>
-              <hr> <hr>
-              <div class= "form-group">
-                <label for="tema" class="form-control-label col-md-6">Tema</label>
-                <label for="objetivos" class="form-control-label col-md-6">Objetivos</label>
-                <div class="col-md-6">
-                    
-                    <div class="col-md-10">
-                      <textarea  class="form-control small" id="tema" name="tema" maxlength="1000"></textarea>
-                    </div>
-                 </div>
-                 <div class="col-md-6">
-                    
-                    <div class="col-md-10">
-                      <textarea class="form-control small" id="objetivos" name="objetivos" maxlength="1000"></textarea>
-                    </div>
-                 </div>
-              </div>
-              <hr>
-              <div class= "form-group">
-                <label for="actividades" class="form-control-label col-md-6">Actividades</label>
-                <label for="observaciones" class="form-control-label col-md-6">Observaciones</label>
-                <div class="col-md-6">
-                    
-                    <div class="col-md-10">
-                      <textarea  class="form-control long" id="actividades" name="actividades" maxlength="5000"></textarea>
-                    </div>
-                 </div>
-                 <div class="col-md-6">
-                    
-                    <div class="col-md-10">
-                      <textarea class="form-control long" id="observaciones" name="observaciones" maxlength="5000"></textarea>
-                    </div>
-                 </div>
-              </div>
-            </form>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="button btn btn-secondary" data-dismiss="modal">Close</button>
-          <button type="button" class="button btn btn-primary hide" id="save_seg">Save changes</button>
-         <button type="button" class="button btn btn-primary hide" id="upd_seg">Actualizar</button>
-        </div>
-      </div>
-    </div>
-  </div>
-  <!-- End modal Seguimiento grupal-->
-
-  <!-- Modal Pimer Acercamiento-->
-  <div class="modal modal_pilos" id="myModalPrimerAcerca" name="seguimiento" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-          <h4 class="modal-title" id="myModalLabel">Primer Acercamiento</h4>
-        </div>
-        <div class="modal-body">
-            <form class="form-horizontal" id = "PrimerAcercaForm" role="form">
-              <div class= "form-group hide" id="div_created">
-                <div class="col-md-4">
-                      <label type="text" class="" id="created_date" name="created_daydate"></label>
-                </div>
-              </div>
-              <hr>
-              <div class="form-group hide" id="infomonitor">
-                <label for="monitor" class="form-control-label col-xs-2 col-sm-2">Profesional</label>
-                <span class="col-sm-4" id="monitor">Pepito Perez</span>
-              </div>
-              <hr> <hr>
-              <div class= "form-group">
-                <label for="comp_familiar" class="form-control-label col-md-12">Composición Familiar</label>
-                <div class="col-md-12">
-                  <textarea  class="form-control medium-inline" id="comp_familiar" name="comp_familiar" maxlength="5000"></textarea>
-                </div>
-              </div>
-              <hr>
-              <div class= "form-group">
-                <label for="freetime" class="form-control-label col-md-12">Uso del tiempo libre</label>
-                <div class="col-md-12">
-                  <textarea  class="form-control medium-inline" id="freetime" name="freetime" maxlength="5000"></textarea>
-                </div>
-              </div>
-              <hr>
-              <div class= "form-group">
-                <label for="actividades" class="form-control-label col-md-12">Motivo de la Orientación</label>
-                <div class="col-md-12">
-                  <textarea  class="form-control medium-inline" id="motivo" name="motivo" maxlength="5000"></textarea>
-                </div>
-              </div>
-              <div class="form-group" id="radio_div">
-                <label for="actividades" class="form-control-label col-md-12">Calificación el nivel de riesgo</label>
-                <div class="col-md-12" id="radio_div">
-                  <label class="radio-inline" id="1">
-                    <input type="radio" name="optradio"  value="1">Bajo
-                  </label>
-                  <label class="radio-inline" id="2">
-                    <input type="radio" name="optradio" value="2">Medio Bajo
-                  </label>
-                  <label class="radio-inline" id="3">
-                    <input type="radio" name="optradio" value="3">Medio
-                  </label>
-                  <label class="radio-inline" id="4">
-                    <input type="radio" name="optradio" value="4">Medio Alto
-                  </label>
-                  <label class="radio-inline" id="5">
-                    <input type='radio' name='optradio' value="5">Alto
-                  </label>
-                </div>
-              </div>
-            </form>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="button btn btn-secondary" data-dismiss="modal">Close</button>
-          <button type="button" class="button btn btn-primary" id="save_seg">Save changes</button>
-         <button type="button" class="button btn btn-primary hide" id="upd_seg">Actualizar</button>
-        </div>
-      </div>
-    </div>
-  </div>
-  <!-- End modal Pimer Acercamiento-->
-
-  <!-- Modal Acompañamiento socioeducativo-->
-  <div class="modal modal_pilos" id="myModalAcompaSocio" name="seguimiento" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
-      <div class="modal-content">
-        <!-- Modal header -->
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-          <h4 class="modal-title" id="myModalLabel">Acompañamiento Socioeducativo</h4>
-        </div>
-        <!-- End modal header -->
-        <!-- Modal body -->
-        <div class="modal-body">
-            <form class="form-horizontal" id = "AcompaSocio" role="form">
-              <div class= "form-group hide" id="div_created">
-                <div class="col-md-4">
-                      <label type="text" class="" id="created_date" name="created_daydate"></label>
-                </div>
-              </div>
-              <div class= "form-group">
-                <div class="col-md-4">
-                    <label for="date" class="form-control-label col-md-3">Fecha</label>
-                    <div class="col-md-9">
-                      <input type="date" class="form-control" id="date" name="date" >
-                        <span >(dd/mm/aaaa)</span>
-                      </input>
-                    </div>
-                </div>
-              </div>
-              <hr>
-              <div class="form-group hide" id="infomonitor" >
-                <label for="monitor" class="form-control-label col-xs-2 col-sm-2">Profesional</label>
-                <span class="col-sm-4" id="monitor"></span>
-              </div>
-              <hr> <hr>
-              <div class= "form-group">
-                <label for="motivo" class="form-control-label col-md-12">ANTECEDENTES</label>
-                <div class="col-md-12">
-                  <label for="motivo" class="form-control-label col-md-5">Acompañamiento psicología</label> 
-                    <div class="col-md-2 col-md-offset-2" id="radio_ant">
-                      <label class="radio-inline" >
-                        <input class="antecedentes" type="radio" name="psicologia"  value="1">Si
-                      </label>
-                      <label class="radio-inline">
-                        <input class="antecedentes" type="radio" name="psicologia"  value="0" checked= "checked">No
-                      </label>
-                    </div>
-                </div>
-                <div class="col-md-12">
-                  <label for="motivo" class="form-control-label col-md-5">Acompañamiento desde Trabajo Social</label> 
-                    <div class="col-md-2 col-md-offset-2" id="radio_ant">
-                      <label class="radio-inline" >
-                        <input class="antecedentes" type="radio" name="tsocial"  value="1">Si
-                      </label>
-                      <label class="radio-inline">
-                        <input class="antecedentes"  type="radio" name="tsocial"  value="0"  checked= "checked">No
-                      </label>
-                    </div>
-                </div>
-                <div class="col-md-12">
-                  <label for="motivo" class="form-control-label col-md-5">Acompañamiento desde TEO</label> 
-                    <div class="col-md-2 col-md-offset-2" id="radio_ant">
-                      <label class="radio-inline" >
-                        <input class="antecedentes" type="radio" name="teo"  value="1">Si
-                      </label>
-                      <label class="radio-inline">
-                        <input class="antecedentes" type="radio" name="teo"  value="0"  checked= "checked">No
-                      </label>
-                    </div>
-                </div>
-                
-              </div>
-              <div class= "form-group">
-                <label for="motivo" class="form-control-label col-md-12">Descripción del acompañamiento</label>
-                <div class="col-md-12">
-                  <textarea  class="ScrollStyle form-control medium-inline" id="motivo" name="motivo" maxlength="5000" disabled></textarea>
-                </div>
-              </div>
-              <hr>
-              <div class= "form-group">
-                <label class="form-control-label col-md-12">CARACTERISTICAS ECONÓMICAS MENSUALES</label>
-                <div class="col-md-12">
-                  <div class="ScrollStyle well col-md-5">
-                    <label for="mytableIngresos" class="form-control-label col-md-12">Ingresos</label>
-                    <table id="mytableIngresos" class="table table-striped col-md-12"> <thead> <tr> <th>Concepto</th> <th>Monto</th></tr> </thead><tbody> </tbody></table>
-                    <span class = "btn submit" id="plusingresos" name = "plusIngresos">+</span>
-                  </div>
-                  <div class="ScrollStyle well col-md-5">
-                    <label for="mytableEgresos" class="form-control-label col-md-12">Egresos</label>
-                    <table id="mytableEgresos" class="table table-striped col-md-12"> <thead> <tr> <th>Concepto</th> <th>Monto</th></tr> </thead><tbody></tbody></table>
-                    <span class = "btn submit" id= "plusEgresos" name="plusEgresos">+</span>
-                  </div>
-                </div>
-                  <label class="form-control-label col-md-5">Total Ingresos:</label> <label class="form-control-label col-md-7" name="totalIngresos" id="totalIngresos">0</label>
-                  <label class="form-control-label col-md-5">Total Egresos:</label> <label class="form-control-label col-md-7" name="totalEgresos" id="totalEgresos">0</label>
-              </div>
-              <hr>
-              <div class= "form-group">
-                <label class="form-control-label col-md-12">Composición familiar</label>
-                <div class="col-md-12">
-                  <table id="mytablefamilia" class="table table-striped col-md-12"> <thead> <tr> <th>Nombre</th> <th>Parentesco</th> <th>Ocupación</th> <th>Telefono</th> </tr> </thead><tbody></tbody></table>
-                  <span class = "btn submit" id="plusFamilia" name = "plusFamilia">+</span> <!-- <th>Edad</th> <th>Estado Civil</th> -->
-                </div>
-              </div>
-              <hr>
-              <div class= "form-group">
-                <label for="motivo" class="form-control-label col-md-12">Descripción de la Composición Familiar</label>
-                <div class="col-md-12">
-                  <textarea  class="ScrollStyle form-control medium-inline" id="composicionFamiliar" name="composicionFamiliar" maxlength="5000"></textarea>
-                </div>
-              </div>
-              <hr>
-              <div class= "form-group">
-                <label for="motivo" class="form-control-label col-md-12">Dinámica Familiar</label>
-                <div class="col-md-12">
-                  <textarea  class="ScrollStyle form-control medium-inline" id="dinamicaFamiliar" name="dinamicaFamiliar" maxlength="5000"></textarea>
-                </div>
-              </div>
-              <hr>
-              <div class= "form-group">
-                <label for="motivo" class="form-control-label col-md-12">Redes de apoyo</label>
-                <div class="col-md-12">
-                  <div class="col-md-6">
-                    <label>Familiar</label>
-                    <textarea  class="ScrollStyle form-control small" id="apoyoFamiliar" name="apoyoFamiliar" maxlength="5000"></textarea>
-                  </div>
-                  <div class="col-md-6">
-                    <label>Educativo</label>
-                    <textarea  class="ScrollStyle form-control small" id="apoyoEducativo" name="apoyoEducativo" maxlength="5000"></textarea>
-                  </div>
-                  <div class="col-md-6">
-                    <label>Social</label>
-                    <textarea  class="ScrollStyle form-control small" id="apoyoSocial" name="apoyoSocial" maxlength="5000"></textarea>
-                  </div>
-                  <div class="col-md-6">
-                    <label>Laboral</label>
-                    <textarea  class="ScrollStyle form-control small" id="apoyoLaboral" name="apoyoLaboral" maxlength="5000"></textarea>
-                  </div>
-                </div>
-              </div>
-              <hr>
-              <div class= "form-group">
-                <label for="motivo" class="form-control-label col-md-12">Factores de riesgo</label>
-                <div class="col-md-12">
-                  <table id="mytableRiesgo" class="table table-bordered"> <thead> <tr> <th>Factor</th> <th class="col-md-7">Obervaciones</th></tr> </thead>
-                  <tbody>
-                  <tr>
-                    <td>
-                      <input type="checkbox" id="resgo1" name="riesgo1">Consumo de SPA
-                    </td>
-                    <td><input class="col-md-12" type="text" id="input_r1" name="riesgo1"  disabled/></td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <input type="checkbox" id="resgo2" name="riesgo2"  >Embarazo adolescente	
-                    </td>
-                    <td><input class="col-md-12" type="text" id="input_r2" name="riesgo2" disabled/></td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <input type="checkbox" id="resgo3" name="riesgo3"  >Maltrato Familiar	
-                    </td>
-                    <td><input class="col-md-12" type="text" id="input_r3" name="riesgo3" disabled/></td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <input  type="checkbox" id="resgo4" name="riesgo4">Abuso Sexual	
-                    </td>
-                    <td><input class="col-md-12" type="text" id="input_r4" name="riesgo4" disabled/></td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <input type="checkbox" id="resgo5" name="riesgo5">Otros	
-                    </td>
-                    <td><input class="col-md-12" type="text" id="input_r5" name="riesgo5" disabled/></td>
-                  </tr>
-                  </tbody></table>
-                </div>
-              </div>
-              <hr>
-              <div class= "form-group">
-                <label for="motivo" class="form-control-label col-md-12">Observaciones Generales</label>
-                <div class="col-md-12">
-                  <textarea  class="ScrollStyle form-control medium-inline" id="observacionGeneral" name="observacionGeneral" maxlength="5000"></textarea>
-                </div>
-              </div>
-              <hr>
-              <div class= "form-group">
-                <label for="motivo" class="form-control-label col-md-12">Acuerdos y Compromisos</label>
-                <div class="col-md-12">
-                  <textarea  class="ScrollStyle form-control medium-inline" id="acuerdos" name="acuerdos" maxlength="5000"></textarea>
-                </div>
-              </div>
-              <hr>
-              <div class= "form-group">
-                <label for="motivo" class="form-control-label col-md-12">Seguimiento</label>
-                <div class="col-md-12">
-                  <textarea  class="ScrollStyle form-control medium-inline" id="descripSeg" name="descripSeg" maxlength="5000"></textarea>
-                </div>
-              </div>
-              <hr>
-              <div class="form-group" id="radio_div">
-                <label for="actividades" class="form-control-label col-md-12">Calificación el nivel de riesgo</label>
-                <div class="col-md-12" id="radio_div">
-                  <label class="radio-inline" id="1">
-                    <input type="radio" name="optradio"  value="1">Bajo
-                  </label>
-                  <label class="radio-inline" id="2">
-                    <input type="radio" name="optradio" value="2">Medio Bajo
-                  </label>
-                  <label class="radio-inline" id="3">
-                    <input type="radio" name="optradio" value="3">Medio
-                  </label>
-                  <label class="radio-inline" id="4">
-                    <input type="radio" name="optradio" value="4">Medio Alto
-                  </label>
-                  <label class="radio-inline" id="5">
-                    <input type='radio' name='optradio' value="5">Alto
-                  </label>
-                </div>
-              </div>
-            </form>
-        </div>
-        <!-- End modal body -->
-        <!-- Modal footer -->
-        <div class="modal-footer">
-          <button type="button" class="button btn btn-secondary" data-dismiss="modal">Close</button>
-          <button type="button" class="button btn btn-primary" id="save_seg">Save changes</button>
-         <button type="button" class="button btn btn-primary hide" id="upd_seg">Actualizar</button>
-        </div>
-        <!-- End modal footer -->
-      </div>
-    </div>
-  </div>
-  <!-- End modal Pimer Acercamiento-->
-  <!-- Modal Segumiento Socioeducativo-->
-  <div class="modal modal_pilos" id="myModalSegSocio" name="seguimiento" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-          <h4 class="modal-title" id="myModalLabel">Seguimiento SocioEducativo</h4>
-        </div>
-        <div class="modal-body">
-            <form class="form-horizontal" id = "SegSocioForm" role="form">
-              <div class= "form-group hide" id="div_created">
-                <div class="col-md-4">
-                      <label type="text" class="" id="created_date" name="created_daydate"></label>
-                </div>
-              </div>
-              <div class= "form-group">
-                <div class="col-md-4">
-                    <label for="date" class="form-control-label col-md-3">Fecha</label>
-                    <div class="col-md-9">
-                      <input type="date" class="form-control" id="date" name="date" >
-                        <span >(dd/mm/aaaa)</span>
-                      </input>
-                    </div>
-                </div>
-              </div>
-              <hr>
-              <div class="form-group hide" id="infomonitor">
-                <label for="monitor" class="form-control-label col-xs-2 col-sm-2">Profesional</label>
-                <span class="col-sm-4" id="monitor"></span>
-              </div>
-              <hr> <hr>
-              <div class= "form-group">
-                <label for="motivo" class="form-control-label col-md-12">Motivo de Orientación</label>
-                <div class="col-md-12">
-                  <textarea  class="form-control medium-inline" id="motivo" name="motivo" maxlength="5000"></textarea>
-                </div>
-              </div>
-              <hr>
-              <div class= "form-group">
-                <label for="freetime" class="form-control-label col-md-12">Seguimiento</label>
-                <div class="col-md-12">
-                  <textarea  class="form-control long-inline" id="seg" name="seg" maxlength="5000"></textarea>
-                </div>
-              </div>
-              <hr>
-              <div class="form-group" id="radio_div">
-                <label for="actividades" class="form-control-label col-md-12">Calificación el nivel de riesgo</label>
-                <div class="col-md-12" id="radio_div">
-                  <label class="radio-inline" id="1">
-                    <input type="radio" name="optradio"  value="1">Bajo
-                  </label>
-                  <label class="radio-inline" id="2">
-                    <input type="radio" name="optradio" value="2">Medio Bajo
-                  </label>
-                  <label class="radio-inline" id="3">
-                    <input type="radio" name="optradio" value="3">Medio
-                  </label>
-                  <label class="radio-inline" id="4">
-                    <input type="radio" name="optradio" value="4">Medio Alto
-                  </label>
-                  <label class="radio-inline" id="5">
-                    <input type='radio' name='optradio' value="5">Alto
-                  </label>
-                </div>
-              </div>
-            </form>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="button btn btn-secondary" data-dismiss="modal">Close</button>
-          <button type="button" class="button btn btn-primary" id="save_seg">Save changes</button>
-         <button type="button" class="button btn btn-primary hide" id="upd_seg">Actualizar</button>
-        </div>
-      </div>
-    </div>
-  </div>
-  <!-- End modal Segumiento Socioeducativo-->
 
   <!-- Graphics Modal -->
-  <div class="modal modal_pilos" id="myModalGraf" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-          <h4 class="modal-title" id="myModalLabel"><b>GRÁFICA POR:</b></h4>
+  <div class="mymodal" id="modal_risk_graph">
+    <div class="mymodal-content">
+      <div class="mymodal-header col-sm-12">
+        <div class="col-sm-11">
+          <h4 class="" id="myModalLabel">Gráfica Riesgos</h4>
         </div>
-        <div  id = "myModalBody">
-           
+        <div class="col-sm-1">
+          <span class="mymodal-close" id="modal_risk_span" aria-hidden="true">&times;</span>
         </div>
-        <div class="modal-footer">
-          <button type="button" class="button btn btn-secondary" data-dismiss="modal">Cerrar</button>
-        </div>
+      </div>
+      <div class="mymodal-body col-sm-12">
+        
+      </div>
+      <div class="mymodal-footer">
+        <button type="button" class="btn-primary" id="modal_risk_close">Cerrar</button>
       </div>
     </div>
   </div>
@@ -1243,7 +739,7 @@
   </div>
   <!-- End modal retiro-->
   
-  <script type="text/javascript" src="../amd/src/require-setup.js"></script>
+  <script type="text/javascript" src="../amd/require-setup.js"></script>
   <script data-main="../amd/src/student_profile/amd_student_profile" src="../amd/scripts/require.js"></script>
 {{/data}}
 </body>  

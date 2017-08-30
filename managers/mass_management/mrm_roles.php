@@ -14,7 +14,7 @@ if( isset($_FILES['file']) || isset($_POST['idinstancia'])){
         $nombre = $archivo['name'];
   
         $rootFolder    = "../../view/archivos_subidos/mrm/roles/files/";
-        $zipFolfer = "../../view/archivos_subidos/mrm/roles/comprimidos/";
+        $zipFolfer = "../view/archivos_subidos/mrm/roles/comprimidos/";
 
         
         //se limpian las carpetas

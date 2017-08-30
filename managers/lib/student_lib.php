@@ -79,6 +79,31 @@ function get_ases_user_by_code($code){
     return $ases_user;
 }
 
+
+/**
+ * Función que recupera el estado ASES de un estudiante
+ *
+ * @see get_student_ases_status($id)
+ * @param $id --> Código asociado al estudiante en la tabla talentospilos_usuario
+ * @return Array --> Información del estado Ases del estudiante
+ */
+
+ function get_student_ases_status($id_student){
+    global $DB;
+
+    $sql_query = "SELECT MAX(id) FROM {talentospilos_est_estadoases} WHERE id_estudiante = $id_student";
+    $id_ases_status = $DB->get_record_sql($sql_query)->id;
+
+    if($id_ases_status){
+        $sql_query = "SELECT * FROM {talentospilos_estados_ases} WHERE  id = $id_ases_status";
+        $status_ases = $DB->get_record_sql($sql_query);
+    }else{
+        $status_ases = "NO REGISTRA";
+    }    
+
+    return $status_ases;
+ }
+
 /**
  * Función que recupera los datos adicionales de un estudiante dado el ID de la tabla {user}
  *

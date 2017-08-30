@@ -44,13 +44,15 @@ if(isset($_POST["func"])){
         }
 
         save_status_ases_proc($new_status, $id_ases, $id_reason);
-
     } elseif($_POST['func'] == 'save_tracking_peer'){
         save_tracking_peer_proc();
     } elseif($_POST['func'] == 'delete_tracking_peer' && isset($_POST['id_tracking'])){
         $id_tracking_peer = $_POST['id_tracking'];
         delete_tracking_peer_proc($id_tracking_peer);
-    } else {
+    } elseif($_POST['func'] == 'is_student'){
+        $code_student = $_POST['code_student'];
+        validate_student_proc($code_student);
+    }else {
         $msg->msg = "No se reconoce la función a ejecutar. Contacte al área de sistemas.";
         echo json_encode($msg);
     }
@@ -330,4 +332,19 @@ function delete_tracking_peer_proc($id_tracking_peer){
     $result_delete = delete_tracking_peer((int)$id_tracking_peer);
 
     echo json_encode($result_delete);
+}
+
+/**
+ * Función que valida si un estudiante existe en la base de datos
+ *
+ * @param $code_student --> código del estudiante
+ * @return Array --> Resultado de la acción
+ */
+
+function validate_student_proc($code_student){
+
+    $confirm_msg = validate_student($code_student);
+
+    echo $confirm_msg;
+
 }

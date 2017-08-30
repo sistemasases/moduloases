@@ -2,36 +2,145 @@
 
 require_once(dirname(__FILE__). '/../../../../config.php');
 require_once(dirname(__FILE__).'/../periods_management/periods_lib.php');
+require_once(dirname(__FILE__).'/../user_management/user_lib.php');
+require_once(dirname(__FILE__).'/../MyException.php');
+
+/**
+ * Función que relaciona a un conjunto de estudiantes con un monitor
+ *
+ * @see monitor_student_assignment()
+ * @return booleano confirmando el éxito de la operación
+ */
+function monitor_student_assignment($username_monitor, $array_students, $idinstancia)
+{
+    global $DB;
+
+    try{
+        $sql_query = "SELECT id FROM {user} WHERE username = '$username_monitor'";
+        $idmonitor = $DB->get_record_sql($sql_query);
+        
+        $first_insertion_sql = "SELECT MAX(id) FROM {talentospilos_monitor_estud};";
+        $first_insertion_id = $DB->get_record_sql($first_insertion_sql);
+        
+        $insert_record = "";
+        $array_errors = array();
+        $hadErrors = false; 
+        
+        foreach($array_students as $student)
+        {
+            
+                //$sql_query = "SELECT id FROM {user} WHERE username= '$student'";
+                //$studentid = $DB->get_record_sql($sql_query);
+                
+                //se obtiene el id en la tabla de {talentospilos_usuario} del estudiante
+                $studentid = get_userById(array('*'),$student);
+
+                if($studentid){
+                    //se valida si el estudiante ya tiene asignado un monitor
+                    $sql_query = "SELECT u.id as id, username,firstname, lastname FROM {talentospilos_monitor_estud} me INNER JOIN {user} u  ON  u.id = me.id_monitor WHERE me.id_estudiante =".$studentid->idtalentos."";
+                    $hasmonitor = $DB->get_record_sql($sql_query);
+                
+                    if(!$hasmonitor){
+                        $object = new stdClass();
+                        $object->id_monitor = $idmonitor->id;
+                        $object->id_estudiante = $studentid->idtalentos;
+                        $object->id_instancia = $idinstancia;
+              
+                        $insert_record = $DB->insert_record('talentospilos_monitor_estud', $object, true);
+                
+                        if(!$insert_record){
+                            $hadErrors = true; 
+                            array_push($array_errors, "Error al asignar el estudiante ".$student." al monitor (monitor_student_assignment). Operaciòn de asignaciòn del estudiante anulada.");
+                            
+                        }
+                
+                    }elseif($hasmonitor->id != $idmonitor->id){
+                        $hadErrors = true; 
+                        array_push($array_errors,"El estudiante con codigo ".$student." ya tiene asigando el monitor: ".$hasmonitor->username."-".$hasmonitor->firstname."-".$hasmonitor->lastname.". Operaciòn de asignaciòn del estudiante anulada.");
+                    }
+                }else{
+                    $hadErrors = true; 
+                    array_push($array_errors,"El estudiante con codigo '".$student."' no se encontro en la base de datos. Operaciòn de asignaciòn del estudiante anulada.");
+                } 
+        }
+        if(!$hadErrors){
+            return 1;
+        }else{
+            $message = "";
+            foreach ($array_errors as $error){
+                $message .= "*".$error."<br>";
+            }
+            throw new MyException("Rol Actualizado con los siguientes inconvenientes:<br><hr>".$message);
+        }
+        
+    
+    }
+    catch(MyException $ex){
+        return $ex->getMessage();
+    }
+    catch(Exception $e){
+        $error = "Error en la base de datos(monitor_student_assignment).".$e->getMessage();
+        echo $error;
+    }
+}
+
 
 
 /**
- * Función que revisa si un usuario tiene un rol asignado
+ * Función que asigna un rol a un usuario
  *
- * @see checking_role($username)
- * @return Boolean
+ * @see assign_role_user($username, $id_role, $state, $semester, $username_boss){
+ * @return Integer
  */
  
-function checking_role($username, $idinstancia){
+ function assign_role_user($username, $role, $state, $semester,$idinstancia, $username_boss = null){
      
     global $DB;
+    
+    $sql_query = "SELECT id FROM {user} WHERE username='$username'";
+    $id_user_moodle = $DB->get_record_sql($sql_query);
      
-    $sql_query = "SELECT id FROM {user} WHERE username = '$username'";
-    $id_moodle_user = $DB->get_record_sql($sql_query);
+    $sql_query = "SELECT id FROM {talentospilos_rol} WHERE nombre_rol='$role';";
+    $id_role = $DB->get_record_sql($sql_query);
     
-    $semestre =  get_current_semester();
+    $id_semester = get_current_semester();
     
-    $sql_query = "SELECT ur.id_rol as id_rol , r.nombre_rol as nombre_rol, ur.id as id, ur.id_usuario, ur.estado FROM {talentospilos_user_rol} ur INNER JOIN {talentospilos_rol} r ON r.id = ur.id_rol WHERE ur.id_usuario = ".$id_moodle_user->id." and ur.id_semestre = ".$semestre->max." and ur.id_instancia=".$idinstancia.";";
-    $role_check = $DB->get_record_sql($sql_query); 
+    if($role == "monitor_ps")
+    {
+        $sql_query = "SELECT * FROM {user} WHERE username='$username_boss'";
+        $id_boss = $DB->get_record_sql($sql_query);    
+    }
+    else{
+        $id_boss = null;
+    }
+        
+    $array = new stdClass;
+    $array->id_rol = $id_role->id;
+    $array->id_usuario = $id_user_moodle->id;
+    $array->estado = $state;
+    $array->id_semestre = $id_semester->max;
+    $array->id_jefe = $id_boss;
+    $array->id_instancia= $idinstancia;
     
-    return $role_check;
+    //print_r($array);
+    
+    $insert_user_rol = $DB->insert_record('talentospilos_user_rol', $array, false);
+        
+    if($insert_user_rol){
+        return 1;
+    }
+    else{
+        return 2;
+    }
 }
+
 /**
  * Función que actualiza el rol de un usuario en particular
  *
  * @see update_role_user($id_moodle_user, $id_role, $state, $id_semester, $username_boss){
  * @return Entero
  */
-function update_role_user($username, $role, $idinstancia, $state = 1, $semester = null, $username_boss = null){
+ function update_role_user($username, $role, $idinstancia, $state = 1, $semester = null, $username_boss = null){
     
     global $DB;
     
@@ -60,6 +169,7 @@ function update_role_user($username, $role, $idinstancia, $state = 1, $semester 
     $array->id_instancia = $idinstancia;
     
     $result = 0;
+    
     
     if ($checkrole = checking_role($username, $idinstancia)){
         

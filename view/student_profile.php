@@ -27,11 +27,12 @@
 // Standard GPL and phpdocs
 require_once(__DIR__ . '/../../../config.php');
 require_once($CFG->libdir.'/adminlib.php');
-require_once('../managers/query.php');
+//require_once('../managers/query.php');
 require_once('../managers/lib/student_lib.php');
 require_once('../managers/user_management/user_lib.php');
 require_once('../managers/student_profile/geographic_lib.php');
 require_once('../managers/student_profile/studentprofile_lib.php');
+require_once('../managers/academic_profile/academic_lib.php');
 require_once('../managers/instance_management/instance_lib.php');
 // require_once('../managers/view_management/validate_profile_action.php');
 require_once('../managers/dateValidator.php');
@@ -81,9 +82,11 @@ if ($student_code != 0){
     $ases_student = get_ases_user_by_code($student_code);
 
     $student_id = $ases_student->id;
-    
+
+    $student_status_ases = get_student_ases_status($student_id);
+
     // Carga de estados disponibles
-    
+     
     $ases_status_array = get_status_ases();
     $icetex_status_array = get_status_icetex();
     
@@ -91,7 +94,7 @@ if ($student_code != 0){
     
     foreach($ases_status_array as $ases_status){
         
-        if($ases_status->nombre == $ases_student->estado_ases){
+        if($ases_status->nombre == $student_status_ases->nombre){
             $html_status_ases .= "<option value='".$ases_status->id."' selected>".$ases_status->nombre."</option>";
         }else{
             $html_status_ases .= "<option value='".$ases_status->id."'>".$ases_status->nombre."</option>";
@@ -608,6 +611,19 @@ for($i = 0; $i < count($reasons_dropout); $i++){
 }
 
 $record->reasons_options = $html_select_reasons;
+
+
+/**
+* Carga de información academica
+**/
+
+
+$html_academic_table = "";
+
+$record->academic_semestres_table = $html_academic_table;
+
+
+
 
 $PAGE->set_context($contextcourse);
 $PAGE->set_context($contextblock);

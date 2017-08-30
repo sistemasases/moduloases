@@ -25,11 +25,7 @@
                             <br>
                             <label class="label_pilos" for="estado">Estado Ases:</label>
                             <select name="estado" id="estado">
-                              <option value="TODOS">TODOS</option>
-                              <option value="ACTIVO">Activo</option>
-                              <option value="APLAZADO">Aplazado</option>
-                              <option value="RETIRADO">Retirado</option>
-                              <option value="EGRESADO">Egresado</option>
+                              {{{status_ases}}}
                               </select><br>
                           </fieldset>
                         </div>
@@ -118,7 +114,7 @@
   </div>
 </div>
 
-     <script type="text/javascript" src="../amd/src/require-setup.js"></script>
+     <script type="text/javascript" src="../amd/require-setup.js"></script> 
      <script data-main="../amd/src/ases_report/main" src="../amd/scripts/require.js"></script>
      {{/data}}
 </body>

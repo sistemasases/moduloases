@@ -1,4 +1,4 @@
-
+----ARCHIVO CON CONSULTAS SQL AUXILIARES *NO EJECUTABLE*
 -----------------------------------------------------------------------------------------------------------------
 --- Info de todos los cursos donde hay talentos
 SELECT DISTINCT curso.id,
@@ -242,7 +242,7 @@ WHERE SUBSTRING(cohorte.idnumber FROM 1 FOR 2) = 'SP'
 ----misma para modelo anterior
 
 SELECT user_m.id
-FROM  profesionaluser} user_m
+FROM  {user} user_m
 INNER JOIN {user_info_data} data ON data.userid = user_m.id
 INNER JOIN {user_info_field} field ON data.fieldid = field.id
 INNER JOIN {talentospilos_usuario} user_t ON data.data = CAST(user_t.id AS VARCHAR)
@@ -258,9 +258,30 @@ WHERE SUBSTRING(cohorte.idnumber FROM 1 FOR 2) = 'SP'
 
 
 ----------------------------------------------------------------------------------
+--Estudiantes asignados a un monitor
+SELECT muser.id 
+FROM {user} muser INNER JOIN {user_info_data} data ON muser.id = data.userid 
+WHERE data.data IN (SELECT CAST(tpuser.id as text) 
+                    FROM {talentospilos_usuario} tpuser INNER JOIN {talentospilos_monitor_estud} mon_estud ON tpuser.id = mon_estud.id_estudiante 
+                    WHERE id_monitor = $id)
+
+
+--Estudiantes asignados a un practicante
+
+SELECT muser.id 
+FROM {user} muser INNER JOIN {user_info_data} data ON muser.id = data.userid 
+WHERE data.data IN (SELECT CAST(tpuser.id as text) 
+                    FROM {talentospilos_usuario} tpuser INNER JOIN {talentospilos_monitor_estud} mon_estud ON tpuser.id = mon_estud.id_estudiante 
+                    WHERE id_monitor IN (SELECT urol.id_usuario
+                                        FROM {talentospilos_user_rol} urol 
+                                        WHERE id_jefe = $id))
 
 
 
-
-
-
+SELECT muser.id 
+FROM mdl_user muser INNER JOIN mdl_user_info_data data ON muser.id = data.userid 
+WHERE data.data IN (SELECT CAST(tpuser.id as text) 
+                    FROM mdl_talentospilos_usuario tpuser INNER JOIN mdl_talentospilos_monitor_estud mon_estud ON tpuser.id = mon_estud.id_estudiante 
+                    WHERE id_monitor IN (SELECT urol.id_usuario
+                                        FROM mdl_talentospilos_user_rol urol 
+                                        WHERE id_jefe = $id))
