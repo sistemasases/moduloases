@@ -3,6 +3,40 @@
 require_once(dirname(__FILE__). '/../../../../config.php');
 
 
+
+/**
+ * Función que obtiene el usuario deacuerdo al id 
+ *
+ * @see get_userById()
+ * @param $column 
+ * @param $id
+ * @return Array 
+ */
+function get_userById($column, $id){
+    global $DB;
+    
+    $columns_str= "";
+    for($i = 0; $i < count($column); $i++){
+        
+        $columns_str = $columns_str.$column[$i].",";
+    }
+    
+    if(strlen($id) > 7){
+        $id = substr ($id, 0 , -5);
+    }
+    
+    $columns_str = trim($columns_str,",");
+    $sql_query = "SELECT ".$columns_str.", (now() - fecha_nac)/365 AS age  FROM (SELECT *, idnumber as idn, name as namech FROM {cohort}) AS ch INNER JOIN (SELECT * FROM {cohort_members} AS chm INNER JOIN ((SELECT * FROM (SELECT *, id AS id_user FROM {user}) AS userm INNER JOIN (SELECT userid, CAST(d.data as int) as data FROM {user_info_data} d WHERE d.data <> '' and fieldid = (SELECT id FROM  {user_info_field} as f WHERE f.shortname ='idtalentos')) AS field ON userm. id_user = field.userid ) AS usermoodle INNER JOIN (SELECT *,id AS idtalentos FROM {talentospilos_usuario}) AS usuario ON usermoodle.data = usuario.id) AS infouser ON infouser.id_user = chm.userid) AS userchm ON ch.id = userchm.cohortid WHERE userchm.id_user in (SELECT userid FROM {user_info_data} as d INNER JOIN {user_info_field} as f ON d.fieldid = f.id WHERE f.shortname ='estado' AND d.data ='ACTIVO') AND substr(userchm.username,1,7) = '".$id."';";
+    
+    $result_query = $DB->get_record_sql($sql_query);
+    //se formatea el codigo  para eliminar la info del programa
+    if($result_query) {
+        if(property_exists($result_query,'username'))  $result_query->username = substr ($result_query->username, 0 , -5);
+    }
+    //print_r($result_query);
+    return $result_query;
+}
+
 /**
  * Función que recupera los usuarios asociados al curso de ASES.
  *

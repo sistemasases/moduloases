@@ -32,6 +32,7 @@ require_once('../managers/lib/student_lib.php');
 require_once('../managers/user_management/user_lib.php');
 require_once('../managers/student_profile/geographic_lib.php');
 require_once('../managers/student_profile/studentprofile_lib.php');
+require_once('../managers/academic_profile/academic_lib.php');
 require_once('../managers/instance_management/instance_lib.php');
 // require_once('../managers/view_management/validate_profile_action.php');
 require_once('../managers/dateValidator.php');
@@ -608,6 +609,19 @@ for($i = 0; $i < count($reasons_dropout); $i++){
 }
 
 $record->reasons_options = $html_select_reasons;
+
+
+/**
+* Carga de información academica
+**/
+
+
+$html_academic_table = "";
+
+$record->academic_semestres_table = $html_academic_table;
+
+
+
 
 $PAGE->set_context($contextcourse);
 $PAGE->set_context($contextblock);

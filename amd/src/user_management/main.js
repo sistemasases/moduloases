@@ -104,7 +104,7 @@ $(document).ready(function() {
         var currentUser = new Array();
         currentUser.id =  childrenid;
         currentUser.username = username;
-        
+
         swal(
             {  
                 title: "Estas seguro/a?",   

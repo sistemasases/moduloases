@@ -225,7 +225,7 @@
                           </div>
 
                           <div class="row" align="center">
-                            <button type="button" id="view_graphic_button" formmethod="post" data-toggle="modal" data-target="#myModalGraf" onclick="load_risk_values()">Ver gráfico</button>
+                            <button type="button" id="view_graphic_button">Ver gráfico</button>
                           </div>
                           
                           <div class="{{individual_class}} col-sm-12" id="individual_risk">
@@ -356,53 +356,46 @@
                   <!--academic tab-->
 
                   <div class="tab-pane" id="academic_tab">
-                     <div class="col-sm-10 col-sm-offset-1" id="academic_report">
-                 
-                      </div>
+                    <div class="col-sm-10 col-sm-offset-1" id="academic_report">
+                      {{{academic_semestres_table}}}
+                    </div>
                   </div>
                   <!-- End academic tab -->
-
                   <!-- Geographic tab-->
               		<div class="tab-pane" id="geographic_tab">
               		  <div id="demografica" class="">
                       <div class="col-sm-4">
-                        <form id="coord_form" class="horizontal-form">
-                            <div class="form-group">
-                              <label for="latitud" class="control-label col-sm-2">Latitud</label>
-                              <div class="col-sm-10">
-                                <input type="number" class="form-control" id="longitud" name="longitud" placeholder="longitud" readonly/>
-                              </div>
-                            </div>
-                            <div class="form-group">
-                              <label for="longitud" class="control-label col-sm-2">Longitud</label>
-                              <div class="col-sm-10">
-                                <input type="number" class="form-control" id="latitud" name="latitud" placeholder="latitud" readonly/>
-                              </div>
-                            </div>
-                          </form>
+                        <div class="row">
+                          <label for="latitud" class="control-label col-sm-4">Latitud</label>
+                          <div class="input_group col-sm-8">
+                            <input type="number" class="form-control" id="longitud" name="longitud" placeholder="longitud" readonly/>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <label for="longitud" class="control-label col-sm-4">Longitud</label>
+                          <div class="col-sm-8">
+                            <input type="number" class="form-control" id="latitud" name="latitud" placeholder="latitud" readonly/>
+                          </div>
+                        </div>
                       </div>
                       
                       <div class="col-sm-4">
-                        <form id="geographic_form" class="horizontal-form">
-                          <div class="form-group">
-                            <div class="col-sm-2">
-                              <label for="barrio" class="control-label">Barrio</label>
-                            </div>
-                            <div class="col-sm-10">
-                              <select class="form-control" id="neighborhood_select" name="id_neighborhood" disabled></select>
-                            </div>
+                        <div class="row">
+                          <label for="barrio" class="control-label col-sm-4">Barrio</label>
+                          <div class="col-sm-8">
+                            <select class="form-control" id="neighborhood_select" name="id_neighborhood" disabled></select>
                           </div>
-                          <div class="form-group">
-                            <label for="riesgo" class="control-label col-sm-2">Riesgo</label>
-                            <div class="col-sm-10">
-                               <select id="geographic_risk" name="risk" disabled>
-                                 <option value="1">Bajo</option>
-                                 <option value="2">Medio</option>
-                                 <option value="3">Alto</option>
-                               </select>
-                            </div>
+                        </div>
+                        <div class="row">
+                          <label for="riesgo" class="control-label col-sm-4">Riesgo</label>
+                          <div class="col-sm-8">
+                             <select id="geographic_risk" name="risk" disabled>
+                               <option value="1">Bajo</option>
+                               <option value="2">Medio</option>
+                               <option value="3">Alto</option>
+                             </select>
                           </div>
-                        </form>
+                        </div>
                       </div>
                       <div class="col-sm-4" id="edit_button_div">
                         <button type="button" class="btn btn-primary" id="edit_demo" onclick="edit_geographic(this)">Editar</button>
@@ -1186,21 +1179,19 @@
   <!-- End modal Segumiento Socioeducativo-->
 
   <!-- Graphics Modal -->
-  <div class="modal modal_pilos" id="myModalGraf" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-          <h4 class="modal-title" id="myModalLabel"><b>GRÁFICA POR:</b></h4>
-        </div>
-        <div  id = "myModalBody">
-           
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="button btn btn-secondary" data-dismiss="modal">Cerrar</button>
-        </div>
+  <div class="mymodal" id="modal_risk_graph">
+    <div class="mymodal-content">
+      <div class="mymodal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <h4 class="mymodal-title" id="myModalLabel"><b>GRÁFICA POR:</b></h4>
+      </div>
+      <div class="mymodal-body">
+         
+      </div>
+      <div class="mymodal-footer">
+        <button type="button" class="button btn btn-secondary">Cerrar</button>
       </div>
     </div>
   </div>
@@ -1243,7 +1234,7 @@
   </div>
   <!-- End modal retiro-->
   
-  <script type="text/javascript" src="../amd/src/require-setup.js"></script>
+  <script type="text/javascript" src="../amd/require-setup.js"></script>
   <script data-main="../amd/src/student_profile/amd_student_profile" src="../amd/scripts/require.js"></script>
 {{/data}}
 </body>  

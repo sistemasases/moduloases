@@ -1,6 +1,7 @@
 <?php
 
 require_once('query.php');
+require_once('role_management/role_management_lib.php');
 
 if(isset($_POST['role']) && isset($_POST['username'])){
 

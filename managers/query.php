@@ -27,30 +27,30 @@ function get_user_by_username($username){
 }
 
 
-function get_userById($column, $id){
-    global $DB;
+// function get_userById($column, $id){
+//     global $DB;
     
-    $columns_str= "";
-    for($i = 0; $i < count($column); $i++){
+//     $columns_str= "";
+//     for($i = 0; $i < count($column); $i++){
         
-        $columns_str = $columns_str.$column[$i].",";
-    }
+//         $columns_str = $columns_str.$column[$i].",";
+//     }
     
-    if(strlen($id) > 7){
-        $id = substr ($id, 0 , -5);
-    }
+//     if(strlen($id) > 7){
+//         $id = substr ($id, 0 , -5);
+//     }
     
-    $columns_str = trim($columns_str,",");
-    $sql_query = "SELECT ".$columns_str.", (now() - fecha_nac)/365 AS age  FROM (SELECT *, idnumber as idn, name as namech FROM {cohort}) AS ch INNER JOIN (SELECT * FROM {cohort_members} AS chm INNER JOIN ((SELECT * FROM (SELECT *, id AS id_user FROM {user}) AS userm INNER JOIN (SELECT userid, CAST(d.data as int) as data FROM {user_info_data} d WHERE d.data <> '' and fieldid = (SELECT id FROM  {user_info_field} as f WHERE f.shortname ='idtalentos')) AS field ON userm. id_user = field.userid ) AS usermoodle INNER JOIN (SELECT *,id AS idtalentos FROM {talentospilos_usuario}) AS usuario ON usermoodle.data = usuario.id) AS infouser ON infouser.id_user = chm.userid) AS userchm ON ch.id = userchm.cohortid WHERE userchm.id_user in (SELECT userid FROM {user_info_data} as d INNER JOIN {user_info_field} as f ON d.fieldid = f.id WHERE f.shortname ='estado' AND d.data ='ACTIVO') AND substr(userchm.username,1,7) = '".$id."';";
+//     $columns_str = trim($columns_str,",");
+//     $sql_query = "SELECT ".$columns_str.", (now() - fecha_nac)/365 AS age  FROM (SELECT *, idnumber as idn, name as namech FROM {cohort}) AS ch INNER JOIN (SELECT * FROM {cohort_members} AS chm INNER JOIN ((SELECT * FROM (SELECT *, id AS id_user FROM {user}) AS userm INNER JOIN (SELECT userid, CAST(d.data as int) as data FROM {user_info_data} d WHERE d.data <> '' and fieldid = (SELECT id FROM  {user_info_field} as f WHERE f.shortname ='idtalentos')) AS field ON userm. id_user = field.userid ) AS usermoodle INNER JOIN (SELECT *,id AS idtalentos FROM {talentospilos_usuario}) AS usuario ON usermoodle.data = usuario.id) AS infouser ON infouser.id_user = chm.userid) AS userchm ON ch.id = userchm.cohortid WHERE userchm.id_user in (SELECT userid FROM {user_info_data} as d INNER JOIN {user_info_field} as f ON d.fieldid = f.id WHERE f.shortname ='estado' AND d.data ='ACTIVO') AND substr(userchm.username,1,7) = '".$id."';";
     
-    $result_query = $DB->get_record_sql($sql_query);
-    //se formatea el codigo  para eliminar la info del programa
-    if($result_query) {
-        if(property_exists($result_query,'username'))  $result_query->username = substr ($result_query->username, 0 , -5);
-    }
-    //print_r($result_query);
-    return $result_query;
-}
+//     $result_query = $DB->get_record_sql($sql_query);
+//     //se formatea el codigo  para eliminar la info del programa
+//     if($result_query) {
+//         if(property_exists($result_query,'username'))  $result_query->username = substr ($result_query->username, 0 , -5);
+//     }
+//     //print_r($result_query);
+//     return $result_query;
+// }
 
 // function getPrograma($id){
 //     global $DB;
@@ -567,6 +567,7 @@ function actualiza_rol_practicante($username, $role, $idinstancia, $state = 1, $
         
         $array->id = $checkrole->id;
         $update_record = $DB->update_record('talentospilos_user_rol', $array);
+        //echo $update_record;
         if($update_record){
             $result = 3;
         }else{
@@ -1978,7 +1979,7 @@ function getStudentsGrupal($id_monitor, $idinstancia){
                     where  idtalentos in (select id_estudiante from {talentospilos_monitor_estud} where id_monitor =".$id_monitor." AND id_instancia=".$idinstancia.");";
     
    $result = $DB->get_records_sql($sql_query);
-   //print_r($result);
+   print_r($result);
    return $result;
 }
 
@@ -2283,42 +2284,42 @@ function compare_dates($fecha_inicio, $fecha_fin, $fecha_comparar){
  * @return array of courses 
  */
 
-function get_courses_by_student($id_student, $coursedescripction = false){
-    //print_r("<br><br>id: ".$id_student."<br>");
-    global $DB;
+// function get_courses_by_student($id_student, $coursedescripction = false){
+//     //print_r("<br><br>id: ".$id_student."<br>");
+//     global $DB;
     
-    $sql_query = "SELECT subcourses.id_course, name_course, tgcategories.fullname, to_timestamp(subcourses.time_created)::DATE AS time_created
-                  FROM {grade_categories} as tgcategories INNER JOIN
-                     (SELECT tcourse.id AS id_course, tcourse.fullname AS name_course, tcourse.timecreated AS time_created 
-                     FROM {user}  AS tuser INNER JOIN {user_enrolments}  AS tenrolments ON tuser.id = tenrolments.userid
-                          INNER JOIN {enrol}  AS tenrol ON  tenrolments.enrolid = tenrol.id
-                          INNER JOIN {course}  AS tcourse ON tcourse.id = tenrol.courseid
-                     WHERE tuser.id = $id_student) AS subcourses
-                     ON subcourses.id_course = tgcategories.courseid
-                  ORDER BY subcourses.time_created DESC;";
-    $result_query = $DB->get_records_sql($sql_query);
+//     $sql_query = "SELECT subcourses.id_course, name_course, tgcategories.fullname, to_timestamp(subcourses.time_created)::DATE AS time_created
+//                   FROM {grade_categories} as tgcategories INNER JOIN
+//                      (SELECT tcourse.id AS id_course, tcourse.fullname AS name_course, tcourse.timecreated AS time_created 
+//                      FROM {user}  AS tuser INNER JOIN {user_enrolments}  AS tenrolments ON tuser.id = tenrolments.userid
+//                           INNER JOIN {enrol}  AS tenrol ON  tenrolments.enrolid = tenrol.id
+//                           INNER JOIN {course}  AS tcourse ON tcourse.id = tenrol.courseid
+//                      WHERE tuser.id = $id_student) AS subcourses
+//                      ON subcourses.id_course = tgcategories.courseid
+//                   ORDER BY subcourses.time_created DESC;";
+//     $result_query = $DB->get_records_sql($sql_query);
     
-    if($coursedescripction){
+//     if($coursedescripction){
         
-        $courses_array = array();
-        foreach ($result_query as $result){
+//         $courses_array = array();
+//         foreach ($result_query as $result){
             
-            $result->grade = number_format (grade_get_course_grade($id_student, $result->id_course)->grade,2);
-            $result->descriptions = getCoursegradelib($result->id_course, $id_student);
-            array_push($courses_array, $result);
-        }
-        return $courses_array;
+//             $result->grade = number_format (grade_get_course_grade($id_student, $result->id_course)->grade,2);
+//             $result->descriptions = getCoursegradelib($result->id_course, $id_student);
+//             array_push($courses_array, $result);
+//         }
+//         return $courses_array;
         
-    }else{
-        //print_r($result_query);
-        return $result_query;
-    }
-}
+//     }else{
+//         //print_r($result_query);
+//         return $result_query;
+//     }
+// }
 
-//Test
-//get_courses_by_student(3);
+// //Test
+// //get_courses_by_student(3);
 
-/**
+ /**
  * Return total of semesters 
  *
  * @param null
@@ -2444,44 +2445,44 @@ function getIdLastSemester($idmoodle){
  * @return html table
  */
 
-function getCoursegradelib($courseid, $userid){
-    /// return tracking object
-    //$courseid = 98;
-    //$userid = 5;
+// function getCoursegradelib($courseid, $userid){
+//     /// return tracking object
+//     //$courseid = 98;
+//     //$userid = 5;
     
-    $context = context_course::instance($courseid);
+//     $context = context_course::instance($courseid);
     
-    $gpr = new grade_plugin_return(array('type'=>'report', 'plugin'=>'user', 'courseid'=>$courseid, 'userid'=>$userid));
-    $report = new grade_report_user($courseid, $gpr, $context, $userid);
-    reduce_table($report);
-    //echo "si";
-    //print_grade_page_head($courseid, 'report', 'user', get_string('pluginname', 'gradereport_user'). ' - '.fullname($report->user));
+//     $gpr = new grade_plugin_return(array('type'=>'report', 'plugin'=>'user', 'courseid'=>$courseid, 'userid'=>$userid));
+//     $report = new grade_report_user($courseid, $gpr, $context, $userid);
+//     reduce_table($report);
+//     //echo "si";
+//     //print_grade_page_head($courseid, 'report', 'user', get_string('pluginname', 'gradereport_user'). ' - '.fullname($report->user));
 
-     if ($report->fill_table()) {
-        // print_r($report->gtree->top_element['object']->courseid);
-        //return $report->print_table(true);
-        return input_print_table($report);
-    }
-    return null;
-}
+//      if ($report->fill_table()) {
+//         // print_r($report->gtree->top_element['object']->courseid);
+//         //return $report->print_table(true);
+//         return input_print_table($report);
+//     }
+//     return null;
+// }
 //  print_r(getCoursegradelib(110, 3));
 
 
-/**
- * Reduce course information to display 
- *
- * @param &$report
- * @return null
- */
- function reduce_table(&$report) {
+// /**
+//  * Reduce course information to display 
+//  *
+//  * @param &$report
+//  * @return null
+//  */
+//  function reduce_table(&$report) {
 	
-	$report->showpercentage = false;
-	$report->showrange = false; 
-	$report->showfeedback = false;
-	$report->showcontributiontocoursetotal = false;
-// 	$report->showgrade = false;	
-	$report->setup_table();
-}
+// 	$report->showpercentage = false;
+// 	$report->showrange = false; 
+// 	$report->showfeedback = false;
+// 	$report->showcontributiontocoursetotal = false;
+// // 	$report->showgrade = false;	
+// 	$report->setup_table();
+// }
 
 
 
@@ -2490,95 +2491,95 @@ function getCoursegradelib($courseid, $userid){
  *
  * @param $report
  * @return html
- */
- function input_print_table($report) {
-         $maxspan = $report->maxdepth;
-         $id_c = $report->gtree->top_element['object']->courseid ;
-         $id_usuario = $report->user->id; 
-           /// Build table structure
-           $html = "
-               <table id = '$id_c-$id_usuario'  cellspacing='0'
-                      cellpadding='0'
-                      summary='" . s($report->get_lang_string('tablesummary', 'gradereport_user')) . "'
-                      class='boxaligncenter generaltable user-grade'>
-               <thead>
-                   <tr>
-                       <th id='".$report->tablecolumns[0]."' class=\"header column-{$report->tablecolumns[0]}\" colspan='$maxspan'>".$report->tableheaders[0]."</th>\n";
+//  */
+//  function input_print_table($report) {
+//          $maxspan = $report->maxdepth;
+//          $id_c = $report->gtree->top_element['object']->courseid ;
+//          $id_usuario = $report->user->id; 
+//            /// Build table structure
+//            $html = "
+//                <table id = '$id_c-$id_usuario'  cellspacing='0'
+//                       cellpadding='0'
+//                       summary='" . s($report->get_lang_string('tablesummary', 'gradereport_user')) . "'
+//                       class='boxaligncenter generaltable user-grade'>
+//                <thead>
+//                    <tr>
+//                        <th id='".$report->tablecolumns[0]."' class=\"header column-{$report->tablecolumns[0]}\" colspan='$maxspan'>".$report->tableheaders[0]."</th>\n";
    
-           for ($i = 1; $i < count($report->tableheaders); $i++) {
-               $html .= "<th id='".$report->tablecolumns[$i]."' class=\"header column-{$report->tablecolumns[$i]}\">".$report->tableheaders[$i]."</th>\n";
-           }
+//            for ($i = 1; $i < count($report->tableheaders); $i++) {
+//                $html .= "<th id='".$report->tablecolumns[$i]."' class=\"header column-{$report->tablecolumns[$i]}\">".$report->tableheaders[$i]."</th>\n";
+//            }
    
-           $html .= "
-                   </tr>
-               </thead>
-               <tbody>\n";
+//            $html .= "
+//                    </tr>
+//                </thead>
+//                <tbody>\n";
    
-           /// Print out the table data
-           for ($i = 0; $i < count($report->tabledata); $i++) {
-               $html .= "<tr>\n";
-               if (isset($report->tabledata[$i]['leader'])) {
-                   $rowspan = $report->tabledata[$i]['leader']['rowspan'];
-                   $class = $report->tabledata[$i]['leader']['class'];
-                   $html .= "<td class='$class' rowspan='$rowspan'></td>\n";
-               }
-               for ($j = 0; $j < count($report->tablecolumns); $j++) {
-                   $name = $report->tablecolumns[$j];
-				   if($name == 'grade'){
-					   $class = (isset($report->tabledata[$i][$name]['class'])) ? $report->tabledata[$i][$name]['class'] : '';
-					   $colspan = (isset($report->tabledata[$i][$name]['colspan'])) ? "colspan='".$report->tabledata[$i][$name]['colspan']."'" : '2';
-					   $content = (isset($report->tabledata[$i][$name]['content'])) ? $report->tabledata[$i][$name]['content'] : null;
-					   $celltype = (isset($report->tabledata[$i][$name]['celltype'])) ? $report->tabledata[$i][$name]['celltype'] : 'td';
-					   $id_item = explode("_", ($report->tabledata[$i]['itemname']['id']))[1];
-					   $weight = getweightofItem($id_item);
-					   $id1 = "id = '" . $id_item ."-$weight'";
+//            /// Print out the table data
+//            for ($i = 0; $i < count($report->tabledata); $i++) {
+//                $html .= "<tr>\n";
+//                if (isset($report->tabledata[$i]['leader'])) {
+//                    $rowspan = $report->tabledata[$i]['leader']['rowspan'];
+//                    $class = $report->tabledata[$i]['leader']['class'];
+//                    $html .= "<td class='$class' rowspan='$rowspan'></td>\n";
+//                }
+//                for ($j = 0; $j < count($report->tablecolumns); $j++) {
+//                    $name = $report->tablecolumns[$j];
+// 				   if($name == 'grade'){
+// 					   $class = (isset($report->tabledata[$i][$name]['class'])) ? $report->tabledata[$i][$name]['class'] : '';
+// 					   $colspan = (isset($report->tabledata[$i][$name]['colspan'])) ? "colspan='".$report->tabledata[$i][$name]['colspan']."'" : '2';
+// 					   $content = (isset($report->tabledata[$i][$name]['content'])) ? $report->tabledata[$i][$name]['content'] : null;
+// 					   $celltype = (isset($report->tabledata[$i][$name]['celltype'])) ? $report->tabledata[$i][$name]['celltype'] : 'td';
+// 					   $id_item = explode("_", ($report->tabledata[$i]['itemname']['id']))[1];
+// 					   $weight = getweightofItem($id_item);
+// 					   $id1 = "id = '" . $id_item ."-$weight'";
 					   
 					  
-					   $headers = (isset($report->tabledata[$i][$name]['headers'])) ? "headers='{$report->tabledata[$i][$name]['headers']}'" : '';
+// 					   $headers = (isset($report->tabledata[$i][$name]['headers'])) ? "headers='{$report->tabledata[$i][$name]['headers']}'" : '';
 					   
-			    		   if (isset($content)) {
+// 			    		   if (isset($content)) {
 					       
-                            if (!isTotal($report->tabledata[$i]['itemname']['content'])) {
-					          $aggregation = getAggregationofItem($id_item,$id_c);
-					          $id2 = "id = '" . $aggregation ."'";
-    						  $html .= "<$celltype $id2 $headers class='$class' $colspan> <input  $id1 onkeypress='return pulsar(event)' class='item' value=$content readonly/></$celltype>\n";//INPUT
-    						}else{
-    						  $aggregation = getAggregationofTotal($id_item,$id_c);
-    						  $id2 = "id = '" . $aggregation ."'";
-    						  $html .= "<$celltype $id2 $headers class='$class' $colspan> <input  $id1 onkeypress='return pulsar(event)' class='total' value=$content readonly/></$celltype>\n";//INPUT
-    						   //$html .= "<$celltype $id2 $headers class='$class' $colspan >$content</$celltype>\n";//INPUT
-						}}
-				   }else{
-					   $class = (isset($report->tabledata[$i][$name]['class'])) ? $report->tabledata[$i][$name]['class'] : '';
-					   $colspan = (isset($report->tabledata[$i][$name]['colspan'])) ? "colspan='".$report->tabledata[$i][$name]['colspan']."'" : '';
-					   $content = (isset($report->tabledata[$i][$name]['content'])) ? $report->tabledata[$i][$name]['content'] : null;
-					   $celltype = (isset($report->tabledata[$i][$name]['celltype'])) ? $report->tabledata[$i][$name]['celltype'] : 'td';
-					   $id = (isset($report->tabledata[$i][$name]['id'])) ? "id='{$report->tabledata[$i][$name]['id']}'" : '';
-					   $headers = (isset($report->tabledata[$i][$name]['headers'])) ? "headers='{$report->tabledata[$i][$name]['headers']}'" : '';
-					   if (isset($content)) {
-						   $html .= "<$celltype $id $headers class='$class' $colspan>$content</$celltype>\n"; 
-						}
-				   }
-               }
-               $html .= "</tr>\n";
-           }
+//                             if (!isTotal($report->tabledata[$i]['itemname']['content'])) {
+// 					          $aggregation = getAggregationofItem($id_item,$id_c);
+// 					          $id2 = "id = '" . $aggregation ."'";
+//     						  $html .= "<$celltype $id2 $headers class='$class' $colspan> <input  $id1 onkeypress='return pulsar(event)' class='item' value=$content readonly/></$celltype>\n";//INPUT
+//     						}else{
+//     						  $aggregation = getAggregationofTotal($id_item,$id_c);
+//     						  $id2 = "id = '" . $aggregation ."'";
+//     						  $html .= "<$celltype $id2 $headers class='$class' $colspan> <input  $id1 onkeypress='return pulsar(event)' class='total' value=$content readonly/></$celltype>\n";//INPUT
+//     						   //$html .= "<$celltype $id2 $headers class='$class' $colspan >$content</$celltype>\n";//INPUT
+// 						}}
+// 				   }else{
+// 					   $class = (isset($report->tabledata[$i][$name]['class'])) ? $report->tabledata[$i][$name]['class'] : '';
+// 					   $colspan = (isset($report->tabledata[$i][$name]['colspan'])) ? "colspan='".$report->tabledata[$i][$name]['colspan']."'" : '';
+// 					   $content = (isset($report->tabledata[$i][$name]['content'])) ? $report->tabledata[$i][$name]['content'] : null;
+// 					   $celltype = (isset($report->tabledata[$i][$name]['celltype'])) ? $report->tabledata[$i][$name]['celltype'] : 'td';
+// 					   $id = (isset($report->tabledata[$i][$name]['id'])) ? "id='{$report->tabledata[$i][$name]['id']}'" : '';
+// 					   $headers = (isset($report->tabledata[$i][$name]['headers'])) ? "headers='{$report->tabledata[$i][$name]['headers']}'" : '';
+// 					   if (isset($content)) {
+// 						   $html .= "<$celltype $id $headers class='$class' $colspan>$content</$celltype>\n"; 
+// 						}
+// 				   }
+//                }
+//                $html .= "</tr>\n";
+//            }
    
-           $html .= "</tbody></table>";
+//            $html .= "</tbody></table>";
    
        
-               return $html;
+//                return $html;
            
-       }
+//        }
 
 
-function isTotal($string){
-    if(stripos($string, "Total") === false){
-        return false;
-    }else{
-        return true;
-    }
+// function isTotal($string){
+//     if(stripos($string, "Total") === false){
+//         return false;
+//     }else{
+//         return true;
+//     }
     
-}
+// }
 /*
 function getweightofItem($itemid){
     global $DB;
@@ -2593,47 +2594,47 @@ function getweightofItem($itemid){
     return $weight;
 }*/
 
-function getAggregationofItem($itemid,$courseid){
-    global $DB;
+// function getAggregationofItem($itemid,$courseid){
+//     global $DB;
     
     
-    $sql_query = "
-        SELECT cat.aggregation as aggregation, cat.id as id
-        FROM {grade_items} as items INNER JOIN {grade_categories} as cat ON (items.categoryid = cat.id)
-        WHERE items.courseid = '$courseid' AND items.id = '$itemid';";
+//     $sql_query = "
+//         SELECT cat.aggregation as aggregation, cat.id as id
+//         FROM {grade_items} as items INNER JOIN {grade_categories} as cat ON (items.categoryid = cat.id)
+//         WHERE items.courseid = '$courseid' AND items.id = '$itemid';";
 
-    $output = $DB->get_record_sql($sql_query);
-    // print_r($output);
-    $aggregation = $output->aggregation ;
-    $id = $output->id;
-
-    
-    
-    $respuesta = $aggregation."-".$id;
-    
-    return $respuesta;
-}
-// getAggregationofItem('64','100');
-
-function getAggregationofTotal($itemid,$courseid){
-    global $DB;
-    
-    $sql_query = "
-        SELECT cat.aggregation as aggregation, cat.id as id
-        FROM {grade_items} as items INNER JOIN {grade_categories} as cat ON (items.iteminstance = cat.id)
-        WHERE items.courseid = '$courseid' AND items.id = '$itemid';";
-    $output = $DB->get_record_sql($sql_query);
-    // print_r($output);
-
-    $aggregation = $output->aggregation ;
-    $id = $output->id;
+//     $output = $DB->get_record_sql($sql_query);
+//     // print_r($output);
+//     $aggregation = $output->aggregation ;
+//     $id = $output->id;
 
     
     
-    $respuesta = $aggregation."-".$id;
+//     $respuesta = $aggregation."-".$id;
     
-    return $respuesta;
-}
+//     return $respuesta;
+// }
+// // getAggregationofItem('64','100');
+
+// function getAggregationofTotal($itemid,$courseid){
+//     global $DB;
+    
+//     $sql_query = "
+//         SELECT cat.aggregation as aggregation, cat.id as id
+//         FROM {grade_items} as items INNER JOIN {grade_categories} as cat ON (items.iteminstance = cat.id)
+//         WHERE items.courseid = '$courseid' AND items.id = '$itemid';";
+//     $output = $DB->get_record_sql($sql_query);
+//     // print_r($output);
+
+//     $aggregation = $output->aggregation ;
+//     $id = $output->id;
+
+    
+    
+//     $respuesta = $aggregation."-".$id;
+    
+//     return $respuesta;
+// }
 //PRUEBA
 // getAggregationofTotal('330','108');
 
