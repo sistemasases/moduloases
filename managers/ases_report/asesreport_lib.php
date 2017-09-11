@@ -2,6 +2,7 @@
 
 require_once(dirname(__FILE__).'/../../../../config.php');
 require_once(dirname(__FILE__).'/../instance_management/instance_lib.php');
+require_once(dirname(__FILE__).'/../lib/lib.php');
 
 /**
  * Función que recupera riesgos 
@@ -34,7 +35,7 @@ function get_cohortes(){
 }
 
 
-/*
+/**
  * Funcion recupera la informacion necesaria para la grafica de sexo de acuerdo al cohorte seleccionado
  * 
  * @param $cohorte
@@ -65,7 +66,7 @@ function getGraficSex($cohorte){
 }
 
 
-/*
+/**
  * Funcion recupera la informacion necesaria para la grafica de edad de acuerdo al cohorte seleccionado
  * 
  * @param $cohorte
@@ -109,7 +110,7 @@ function getGraficAge($cohorte){
 
 }
 
-/*
+/**
  * Funcion recupera la informacion necesaria para la grafica de programas de acuerdo al cohorte seleccionado
  * 
  * @param $cohorte
@@ -145,7 +146,7 @@ function getGraficPrograma($cohorte){
 }
 
 
-/*
+/**
  * Funcion recupera la informacion necesaria para la grafica de facultad de acuerdo al cohorte seleccionado
  * 
  * @param $cohorte
@@ -186,7 +187,7 @@ function getGraficFacultad($cohorte){
 }
 
 
-/*
+/**
  * Funcion recupera la informacion necesaria para la grafica de estado de acuerdo al cohorte seleccionado
  * 
  * @param $cohorte
@@ -300,8 +301,7 @@ function getUsersByPopulation($column, $population, $risk, $idinstancia){
     $columns_str = $columns_str.$column_risk_str;
 
     
-
-    if(isUsuarioTodos($USER)){
+    if(!isMonOrPract($USER)){
 
 
         if($state != "TODOS"){
@@ -462,59 +462,71 @@ function getUsersByPopulation($column, $population, $risk, $idinstancia){
     $result_query = $DB->get_records_sql($sql_query,null);
     // print_r($result_query);
     // die();
-    
-    $result  = array();
-    foreach ($result_query as $ri){
-        $temp = array();
-        foreach($column as $c){
-            $tempc;
-            if (in_array($c,$name_chk_db)){
-                $tempc = $chk [array_search($c,$name_chk_db)];
-            }
-            else{
-                $tempc = $c;
-            }
-            
-            if ($c == "username"){
-                $temp[$tempc] = substr ($ri->$c, 0 , -5);
-            }else{
-                $temp[$tempc] = $ri->$c;
-            }
-        }
-        foreach($column_risk_nombres as $c){
-            $tempc = $c;
-            if($ri->$c < 1){
-                //$temp[$tempc] = '<span style="background: #BEF781;">bajo</span>';    
-                $temp[$tempc] = '-';
-            }
-            else if($ri->$c == 1){
-                $temp[$tempc] = '<span style="background: #BEF781;">bajo</span>';    
-               // $temp[$tempc] = 'bajo';
-            }
-            else if($ri->$c == 2){
-                $temp[$tempc] = '<span style="background: #F7BE81;">medio</span>';  
-                //$temp[$tempc] = 'medio';
-            }
-            else if($ri->$c == 3){
-                $temp[$tempc] = '<span style="background: #F78181;">alto</span>';  
-                //$temp[$tempc] = 'alto';
-            }
-            else{
-                $temp[$tempc] = $ri->$c;
-            }
-            
-        }
-        array_push($result, $temp);    
-    }
-    
-    
-    $prueba =  new stdClass;
-    $prueba->data= $result;
-    $prueba->columns = $columns_str." y la poblacion es: ".$population[0]." - ".$population[1];
 
+    if($result_query){
+      
+      $result  = array();
+      foreach ($result_query as $ri){
+          $temp = array();
+          foreach($column as $c){
+              $tempc;
+              if (in_array($c,$name_chk_db)){
+                  $tempc = $chk [array_search($c,$name_chk_db)];
+              }
+              else{
+                  $tempc = $c;
+              }
+              
+              if ($c == "username"){
+                  $temp[$tempc] = substr ($ri->$c, 0 , -5);
+              }else{
+                  $temp[$tempc] = $ri->$c;
+              }
+          }
+          foreach($column_risk_nombres as $c){
+              $tempc = $c;
+              if($ri->$c < 1){
+                  //$temp[$tempc] = '<span style="background: #BEF781;">bajo</span>';    
+                  $temp[$tempc] = '-';
+              }
+              else if($ri->$c == 1){
+                  $temp[$tempc] = '<span style="background: #BEF781;">bajo</span>';    
+                 // $temp[$tempc] = 'bajo';
+              }
+              else if($ri->$c == 2){
+                  $temp[$tempc] = '<span style="background: #F7BE81;">medio</span>';  
+                  //$temp[$tempc] = 'medio';
+              }
+              else if($ri->$c == 3){
+                  $temp[$tempc] = '<span style="background: #F78181;">alto</span>';  
+                  //$temp[$tempc] = 'alto';
+              }
+              else{
+                  $temp[$tempc] = $ri->$c;
+              }
+              
+          }
+          array_push($result, $temp);    
+      }
+      
+      
+      $prueba =  new stdClass;
+      $prueba->data= $result;
+      $prueba->columns = $columns_str." y la poblacion es: ".$population[0]." - ".$population[1];
+    }else{
+      $prueba =  new stdClass;
+      $prueba->error = "No hay resultados en la consulta";
+    }     
 
-    return $prueba;
+  return $prueba;
 }
+
+/**
+ * Funcion que retorna un query especifico segun si el rol del usuario es monitor o practicante, para obtener sus estudiantes asignados
+ * 
+ * @param $USER
+ * @return query String 
+ */
 
 function getQueryUser($USER){
     global $DB;
@@ -525,32 +537,29 @@ function getQueryUser($USER){
     $query = "";
 
     if($rol == 'monitor_ps'){
-        $query = "SELECT muser.id FROM {user} muser INNER JOIN {user_info_data} data ON muser.id = data.userid WHERE data.data IN (SELECT CAST(tpuser.id as text) FROM {talentospilos_usuario} tpuser INNER JOIN {talentospilos_monitor_estud} mon_estud ON tpuser.id = mon_estud.id_estudiante WHERE id_monitor = $id)";
+        $query = "SELECT muser.id 
+                  FROM {user} muser INNER JOIN {user_info_data} data ON muser.id = data.userid 
+                  WHERE data.data IN (SELECT CAST(mon_estud.id_estudiante as text) 
+                                      FROM {talentospilos_monitor_estud} mon_estud 
+                                      WHERE id_monitor = $id AND id_semestre = (SELECT id FROM {talentospilos_semestre} WHERE fecha_inicio = (SELECT max(fecha_inicio) from {talentospilos_semestre}))) 
+                      AND data.fieldid = (SELECT id 
+                                          FROM  {user_info_field} 
+                                          WHERE shortname ='idtalentos')";
     }else if($rol == 'practicante_ps'){
         $query = "SELECT muser.id 
-                FROM {user} muser INNER JOIN {user_info_data} data ON muser.id = data.userid 
-                WHERE data.data IN (SELECT CAST(tpuser.id as text) 
-                                    FROM {talentospilos_usuario} tpuser INNER JOIN {talentospilos_monitor_estud} mon_estud ON tpuser.id = mon_estud.id_estudiante 
-                                    WHERE id_monitor IN (SELECT urol.id_usuario
-                                                        FROM {talentospilos_user_rol} urol 
-                                                        WHERE id_jefe = $id))";
+                  FROM {user} muser INNER JOIN {user_info_data} data ON muser.id = data.userid 
+                  WHERE data.data IN (SELECT CAST(mon_estud.id_estudiante as text) 
+                                      FROM {talentospilos_monitor_estud} mon_estud  
+                                      WHERE id_monitor IN (SELECT urol.id_usuario
+                                                          FROM {talentospilos_user_rol} urol 
+                                                          WHERE id_jefe = $id)
+                                      AND id_semestre = (SELECT id FROM {talentospilos_semestre} WHERE fecha_inicio = (SELECT max(fecha_inicio) from {talentospilos_semestre})))
+                      AND data.fieldid = (SELECT id 
+                                           FROM  mdl_user_info_field 
+                                           WHERE shortname ='idtalentos')";
     }
     return $query;
 
-}
-
-function isUsuarioTodos($USER){
-    global $DB;
-    $username = $USER->username;
-    $id = $USER->id;
-    $query_role = "SELECT rol.nombre_rol  FROM {talentospilos_rol} rol INNER JOIN {talentospilos_user_rol} uRol ON rol.id = uRol.id_rol WHERE uRol.id_usuario = $id AND uRol.id_semestre = (SELECT max(id_semestre) FROM {talentospilos_user_rol})";
-    $rol = $DB->get_record_sql($query_role)->nombre_rol;
-
-    if($rol === "sistemas" || $rol == "profesional_ps"){
-        return true;
-    }else{
-        return false;
-    }
 }
 
 ?>

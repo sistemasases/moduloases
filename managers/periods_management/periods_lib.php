@@ -17,3 +17,22 @@ require_once(dirname(__FILE__). '/../../../../config.php');
      $current_semester = $DB->get_record_sql($sql_query);
      return $current_semester;
  }
+
+ /**
+ * Función que retorna el intervalo que define un semestre dado su ID 
+ * 
+ * @see get_semester_interval($id)
+ * @param $id ---> id del semestre
+ * @return cadena de texto que representa el semestre actual
+ */
+ 
+ function get_semester_interval($id){
+     
+     global $DB;
+
+     $sql_query = "select * from mdl_talentospilos_semestre where id='$id'";
+     $interval = $DB->get_record_sql($sql_query);
+     return $interval;
+ }
+
+

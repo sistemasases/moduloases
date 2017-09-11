@@ -81,12 +81,16 @@ if(isset($_POST['chk']) && isset($_POST['idinstancia'])){
                             )
         );
 
+    header('Content-Type: application/json');
+    $prueba = new stdClass;
 
-header('Content-Type: application/json');
-$prueba = new stdClass();
-$prueba->data = $data;
-$prueba->columns = $result->columns;
-echo json_encode($prueba);
-
+    if(isset($result->error)){
+        $prueba->error = $result->error;
+        echo json_encode($prueba);
+    }else{
+        $prueba->data = $data;
+        $prueba->columns = $result->columns;
+        echo json_encode($prueba);
+    }
 }
 ?>

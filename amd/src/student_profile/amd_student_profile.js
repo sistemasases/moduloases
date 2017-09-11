@@ -1,4 +1,4 @@
-requirejs(['jquery', 'bootstrap', 'sweetalert', 'validator', 'datatables.net', 'datatables.net-buttons'], function($) {
+requirejs(['jquery', 'bootstrap', 'sweetalert', 'validator', 'datatables.net', 'datatables.net-buttons', 'radarchart'], function($) {
 
     $(document).ready(function() {
 
@@ -19,8 +19,6 @@ requirejs(['jquery', 'bootstrap', 'sweetalert', 'validator', 'datatables.net', '
                 panel_collapse.removeClass('in');
                 break;
         }
-
-
 
         $("#search").on('click', function(){
             var student_code = $('#codigo').val();
@@ -128,11 +126,82 @@ requirejs(['jquery', 'bootstrap', 'sweetalert', 'validator', 'datatables.net', '
 
         // Controles modal gráfico de riesgos
         $('#view_graphic_button').on('click', function(){
+
+            var array_level_risk = new Object();
+            array_level_risk['div_no_risk'] = 0;
+            array_level_risk['div_high_risk'] = 1;
+            array_level_risk['div_medium_risk'] = 2;
+            array_level_risk['div_low_risk'] = 3;
+
+            var class_list_individual = document.getElementById('individual_risk').className.split(/\s+/);
+            var class_list_familiar = document.getElementById('familiar_risk').className.split(/\s+/);
+            var class_list_academic = document.getElementById('academic_risk').className.split(/\s+/);
+            var class_list_economic = document.getElementById('economic_risk').className.split(/\s+/);
+            var class_list_life = document.getElementById('life_risk').className.split(/\s+/);
+            var class_list_geographic = document.getElementById('geo_risk').className.split(/\s+/);
+
+            var individual_risk = array_level_risk[class_list_individual[0]];
+            var familiar_risk = array_level_risk[class_list_familiar[0]];
+            var economic_risk = array_level_risk[class_list_economic[0]];
+            var academic_risk = array_level_risk[class_list_academic[0]];
+            var life_risk = array_level_risk[class_list_life[0]];
+            var geographic_risk = array_level_risk[class_list_geographic[0]];
+
+            var w = 500,
+                h = 500;
+
+            var colorscale = d3.scale.category10();
+
+            //Data
+            var d = [
+                [{
+                    axis: "Individual",
+                    value: individual_risk
+                }, {
+                    axis: "Económico",
+                    value: economic_risk
+                }, {
+                    axis: "Familiar",
+                    value: familiar_risk
+                }, {
+                    axis: "Vida Universitaria",
+                    value: 1
+                }, {
+                    axis: "Académico",
+                    value: academic_risk
+                }, {
+                    axis: "Geográfico",
+                    value: geographic_risk
+                },
+                ]
+            ];
+
+            //Options for the Radar chart, other than default
+            var mycfg = {
+                w: w,
+                h: h,
+                maxValue: 3,
+                levels: 3,
+                ExtraWidthX: 300
+            }
+
+            //Call function to draw the Radar chart
+            //Will expect that data is in %'s
+            RadarChart.draw("#modal_risk_body", d, mycfg);
+
+            ////////////////////////////////////////////
+            /////////// Initiate legend ////////////////
+            ////////////////////////////////////////////
+
+            var svg = d3.select('#body')
+                .selectAll('svg')
+                .append('svg')
+                .attr("width", w + 300)
+                .attr("height", h)
+
             $('#modal_risk_graph').show();
         });
     })
-
-    
 
     function edit_profile_act() {
         $("#editar_ficha").click(function() {
@@ -270,7 +339,6 @@ requirejs(['jquery', 'bootstrap', 'sweetalert', 'validator', 'datatables.net', '
     }
 
     // Funciones para la validación de formularios
-
     function has_letters(str) {
         var letters = "abcdefghyjklmnñopqrstuvwxyz";
         str = str.toLowerCase();
@@ -302,16 +370,86 @@ requirejs(['jquery', 'bootstrap', 'sweetalert', 'validator', 'datatables.net', '
         }
     }
 
-    // Funciones para la administración de estados
+    function clean_modal_dropout(){
+        $('#description_dropout').val('');
+        $('#no_reason_option').attr("selected", "selected");
+    }
 
+    // Funciones para la administración de estados
     function manage_icetex_status() {
         //validar cambio en estado
         var previous;
         $('#estado').on('focus', function() {
             // se guarda el valor previo con focus
-            previous = this.value;
+            previous = $('#estado option:selected').text();
         }).change(function() {
-            var newstatus = $(this).val();
+            var newstatus = $('#estado option:selected').text();
+
+            if(newstatus == "RETIRADO"){
+
+                $('#modal_dropout').show();
+
+                $('#save_changes_dropout').click(function(){
+                    if($('reasons_select').val() == ''){
+                        swal({
+                            title: "Error",
+                            text: "Seleccione un mótivo",
+                            type: "error"
+                        });
+                    }else{
+                        save_icetex_status();
+                    }
+                });
+
+            }else if(newstatus == "APLAZADO"){
+
+                $('#modal_dropout').show();
+
+                $('#save_changes_dropout').click(function(){
+                    if($('reasons_select').val() == ''){
+                        swal({
+                            title: "Error",
+                            text: "Seleccione un mótivo",
+                            type: "error"
+                        });
+                    }else{
+                        save_icetex_status();
+                    }
+                });
+
+            }else if(newstatus == "NO REGISTRA"){
+                swal({
+                    title: "Error",
+                    text: "Por favor seleccione un Estado Ases.",
+                    type: "error"
+                });
+            }else{
+                swal({
+                        title: "¿Está seguro/a de realizar este cambio?",
+                        text: "El estado Icetex del estudiante pasará de " + previous + " a " + newstatus,
+                        type: "warning",
+                        showCancelButton: true,
+                        confirmButtonColor: "#d51b23",
+                        confirmButtonText: "Si",
+                        cancelButtonText: "No",
+                        closeOnConfirm: true,
+                        allowEscapeKey: false
+                    },
+                    function(isConfirm) {
+                        if (isConfirm) {
+
+                            var result_status = save_icetex_status();
+
+                            swal(
+                                result_status.title,
+                                result_status.msg,
+                                resul_status.status);
+                        }
+                        else {
+                            $('#estado').val(previous);
+                        }
+                });
+            }
         });
     }
 
@@ -338,25 +476,36 @@ requirejs(['jquery', 'bootstrap', 'sweetalert', 'validator', 'datatables.net', '
                         save_ases_status();
                     }
                 });
-                
-
-            }
-            else if (newstatus == "APLAZADO") {
+            }else if (newstatus == "APLAZADO") {
                 $('#modal_dropout').show();
+
+                $('#save_changes_dropout').click(function(){
+                    if($('reasons_select').val() == ''){
+                        swal({
+                            title: "Error",
+                            text: "Seleccione un mótivo",
+                            type: "error"
+                        });
+                    }else{
+                        save_ases_status();
+                    }
+                });
+
             }else if(newstatus == "NO REGISTRA"){
                 swal({
                     title: "Error",
                     text: "Por favor seleccione un Estado Ases.",
                     type: "error"
                 });
-            }else {
+            }else{
                 swal({
                         title: "¿Está seguro/a de realizar este cambio?",
-                        text: "El estado del estudiante pasará de " + previous + " a " + newstatus,
+                        text: "El estado ASES del estudiante pasará de " + previous + " a " + newstatus,
                         type: "warning",
                         showCancelButton: true,
                         confirmButtonColor: "#d51b23",
-                        confirmButtonText: "Yes",
+                        confirmButtonText: "Si",
+                        cancelButtonText: "No",
                         closeOnConfirm: true,
                         allowEscapeKey: false
                     },
@@ -371,15 +520,19 @@ requirejs(['jquery', 'bootstrap', 'sweetalert', 'validator', 'datatables.net', '
                                 resul_status.status);
                         }
                         else {
-                            $('#estado').val(previous);
+                            $('#estadoAses').val(previous);
                         }
-                    });
+                });
             }
         });
     }
 
-    function save_icetex_status(new_status, id_ases) {
+    function save_icetex_status() {
         var data = new Array();
+        var new_status = $('#estado').val();
+        var id_ases = $('#id_ases').val();
+        var id_reason = $('#reasons_select').val();
+        var reasons_dropout = $('#description_dropout').val();
 
         data.push({
             name: "func",
@@ -394,12 +547,32 @@ requirejs(['jquery', 'bootstrap', 'sweetalert', 'validator', 'datatables.net', '
             value: id_ases
         });
 
+        if(id_reason != ''){
+            data.push({
+                name: 'id_reason',
+                value: id_reason
+            });
+        };
+
+        if(reasons_dropout != ''){
+            data.push({
+                name: 'observations',
+                value: reasons_dropout
+            });
+        }
+
         $.ajax({
             type: "POST",
             data: data,
             url: "../../ases/managers/student_profile/studentprofile_serverproc.php",
             success: function(msg) {
-                return msg;
+                swal({
+                    title: msg.title,
+                    text: msg.msg,
+                    type: msg.type
+                });
+                $('#modal_dropout').hide();
+                clean_modal_dropout();
             },
             dataType: "json",
             cache: "false",
@@ -418,6 +591,7 @@ requirejs(['jquery', 'bootstrap', 'sweetalert', 'validator', 'datatables.net', '
         var new_status = $('#estadoAses').val();
         var id_ases = $('#id_ases').val();
         var id_reason = $('#reasons_select').val();
+        var reasons_dropout = $('#description_dropout').val();
 
         data.push({
             name: "func",
@@ -439,6 +613,13 @@ requirejs(['jquery', 'bootstrap', 'sweetalert', 'validator', 'datatables.net', '
             });
         };
 
+        if(reasons_dropout != ''){
+            data.push({
+                name: 'observations',
+                value: reasons_dropout
+            });
+        }
+
         $.ajax({
             type: "POST",
             data: data,
@@ -449,7 +630,8 @@ requirejs(['jquery', 'bootstrap', 'sweetalert', 'validator', 'datatables.net', '
                     text: msg.msg,
                     type: msg.type
                 });
-                console.log(msg);
+                $('#modal_dropout').hide();
+                clean_modal_dropout();
             },
             dataType: "json",
             cache: "false",
@@ -528,6 +710,7 @@ requirejs(['jquery', 'bootstrap', 'sweetalert', 'validator', 'datatables.net', '
         button_close.on('click', function(){
             $('#modal_risk_graph').hide();
         });
+
     }
 
     function init_form_tracking() {

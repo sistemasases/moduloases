@@ -56,3 +56,23 @@ function load_programs_cali(){
     
     return $array_user;
  }
+
+ /**
+ * Funcion que evalua si un usuario es monitor o practicante y de ser asi retorna true.
+ * 
+ * @param $USER
+ * @return bool  
+ */
+function isMonOrPract($USER){
+    global $DB;
+    
+    $id = $USER->id;
+    $query_role = "SELECT rol.nombre_rol  FROM {talentospilos_rol} rol INNER JOIN {talentospilos_user_rol} uRol ON rol.id = uRol.id_rol WHERE uRol.id_usuario = $id AND uRol.id_semestre = (SELECT max(id_semestre) FROM {talentospilos_user_rol})";
+    $rol = $DB->get_record_sql($query_role)->nombre_rol;
+
+    if($rol != "monitor_ps" && $rol != "practicante_ps"){
+        return false;
+    }else{
+        return true;
+    }
+}

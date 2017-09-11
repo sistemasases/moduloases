@@ -23,6 +23,52 @@ function semesterUser(&$pares,&$grupal,$instanceid,$rol){
 
 }
 
+/**
+ * Función que evalua si existen seguimientos
+ * @see has_tracking($seguimientos)
+ * @param $seguimientos ---> string del html
+ * @return string
+ **/
+function has_tracking($seguimientos){
+    if($seguimientos==""){
+     $table.="<p class='text-center'><strong>No existen seguimientos en el periodo seleccionado</strong></p>";
+    }else{
+     $table.=$seguimientos;
+    }
+    return $table;
+}
+
+/**
+ * Función que obtiene el select organizado de los periodos existentes
+ * @see get_period_select($periods)
+ * @param $periods ---> periodos existentes
+ * @return Array
+ **/
+function get_period_select($periods){
+    $table.='<div class="container"><form class="form-inline">';
+    $table.='<div class="form-group"><label for="persona">Periodo</label><select class="form-control" id="periodos">';
+    foreach($periods as $period){
+        $table.='<option value="'.$period->id.'">'.$period->nombre.'</option>';
+     }
+    $table.='</select></div>';
+    return $table;
+}
+
+/**
+ * Función que obtiene el select organizado de las personas con rol _ps 
+ * @see get_people_select($periods)
+ * @param $periods ---> periodos existentes
+ * @return Array
+ **/
+function get_people_select($people){
+ $table.='<div class="form-group"><label for="persona">Persona</label><select class="form-control" id="personas">';
+    foreach($people as $person){
+            $table.='<option value="'.$person->id_usuario.'">'.$person->username." - ".$person->firstname." ".$person->lastname.'</option>';
+     }
+    $table.='</select></div>';
+    $table.='<span class="btn btn-info" id="consultar_persona" type="button">Consultar</span></form></div>';
+    return $table;
+}
 
 
 //funcion que transforma el arreglo retornado por la peticion en un arreglo que posteriormente
@@ -95,20 +141,26 @@ function get_conteo_profesional($professionalpracticants){
 }
 
 
-function profesionalUser(&$pares,&$grupal,$id_prof,$instanceid,$rol){
+function profesionalUser(&$pares,&$grupal,$id_prof,$instanceid,$rol,$semester){
     
     $arregloPracticanteYMonitor = [];
-    $professionalpracticants= get_practicantes_profesional($id_prof,$instanceid);
+    $fechas = [];
+    $fechas[0] = $semester[0];
+    $fechas[1] = $semester[1];
+    $fechas[2] = $semester[2];
+    $professionalpracticants= get_practicantes_profesional($id_prof,$instanceid,$semester[2]);
     $conteo_profesional = get_conteo_profesional($professionalpracticants);
-    $arregloPracticanteYMonitor=transformarConsultaProfesionalArray($pares,$grupal,$professionalpracticants,$instanceid,$rol);
+    $arregloPracticanteYMonitor=transformarConsultaProfesionalArray($pares,$grupal,$professionalpracticants,$instanceid,$rol,$fechas);
 
     return crearTablaYToggleProfesional($arregloPracticanteYMonitor,$conteo_profesional);
 
 }
 
+
+
 //funcion que transforma el arreglo retornado por la peticion en un arreglo que posteriormente
 //se usara para la creacion del toogle
-    function transformarConsultaProfesionalArray($pares,$grupal,$arregloPracticantes,$instanceid,$role) {
+    function transformarConsultaProfesionalArray($pares,$grupal,$arregloPracticantes,$instanceid,$role,$fechas_epoch) {
 
         $arregloPracticanteYMonitor = [];
 
@@ -119,7 +171,7 @@ function profesionalUser(&$pares,&$grupal,$id_prof,$instanceid,$rol){
             array_push($arregloAuxiliar,$arregloPracticantes[$practicante][1]);
 
             //se asigna a esta posicion un texto html correspondiente a la informacion del practicante
-            array_push($arregloAuxiliar,practicanteUser($pares,$grupal,$arregloPracticantes[$practicante][0], $instanceid,$role));
+            array_push($arregloAuxiliar,practicanteUser($pares,$grupal,$arregloPracticantes[$practicante][0], $instanceid,$role,$fechas_epoch));
             array_push($arregloAuxiliar,$arregloPracticantes[$practicante][2]);
             array_push($arregloAuxiliar,$arregloPracticantes[$practicante][3]);
             array_push($arregloAuxiliar,$arregloPracticantes[$practicante][4]);
@@ -153,11 +205,16 @@ function profesionalUser(&$pares,&$grupal,$id_prof,$instanceid,$rol){
 //******************************************************************************************************
 //******************************************************************************************************
 
-function practicanteUser(&$pares,&$grupal,$id_pract,$instanceid,$rol){
+function practicanteUser(&$pares,&$grupal,$id_pract,$instanceid,$rol,$semester){
     
     $arregloMonitorYEstudiantes = [];
-    $practicantmonitors= get_monitores_practicante($id_pract,$instanceid);
-    $arregloMonitorYEstudiantes=transformarConsultaPracticanteArray($pares,$grupal,$practicantmonitors,$instanceid,$rol,$id_pract);
+    $fechas = [];
+    $fechas[0] = $semester[0];
+    $fechas[1] = $semester[1];
+    $fechas[2] = $semester[2];
+
+    $practicantmonitors= get_monitores_practicante($id_pract,$instanceid,$semester[2]);
+    $arregloMonitorYEstudiantes=transformarConsultaPracticanteArray($pares,$grupal,$practicantmonitors,$instanceid,$rol,$id_pract,$fechas);
     return crearTablaYTogglePracticante($arregloMonitorYEstudiantes);
 
 }
@@ -165,17 +222,21 @@ function practicanteUser(&$pares,&$grupal,$id_pract,$instanceid,$rol){
 /*Función que transforma el arreglo retornado por la peticion en un arreglo que posteriormente
 se usara para la creacion del toogle.*/
 
- function transformarConsultaPracticanteArray($pares,$grupal,$arregloMonitores, $instanceid,$role,$id_pract) {
+ function transformarConsultaPracticanteArray($pares,$grupal,$arregloMonitores, $instanceid,$role,$id_pract,$fechas_epoch) {
 
         $arregloMonitorYEstudiantes = [];
+        $fechas = [];
+
 
 
         for ($monitor=0;$monitor<count($arregloMonitores);$monitor++) {
             $arregloAuxiliar = [];
             $cantidad = 0;
+
             array_push($arregloAuxiliar,$arregloMonitores[$monitor][0]);
             array_push($arregloAuxiliar,$arregloMonitores[$monitor][1]);
-            array_push($arregloAuxiliar,monitorUser($pares,$grupal,$arregloMonitores[$monitor][0], $monitor, $instanceid,$role,$sistemas,$id_pract));
+            array_push($arregloAuxiliar,monitorUser($pares,$grupal,$arregloMonitores[$monitor][0], $monitor, $instanceid,$role,$fechas_epoch,$sistemas,$id_pract));
+
 
 
             $cantidades =get_cantidad_seguimientos_monitor($arregloMonitores[$monitor][0],$instanceid);
@@ -192,7 +253,7 @@ se usara para la creacion del toogle.*/
 
 
         }
-        return $arregloMonitorYEstudiantes;
+     return $arregloMonitorYEstudiantes;
 
 }
 
@@ -201,7 +262,7 @@ se usara para la creacion del toogle.*/
     function crearTablaYTogglePracticante($arregloMonitorYEstudiantes) {
         $stringRetornar = "";
         for ($monitor=0;$monitor<count($arregloMonitorYEstudiantes);$monitor++) {
-            $stringRetornar .= '<div class="panel-group"><div class="panel panel-default" ><div class="panel-heading" style="background-color: #AEA3A3;"><h4 class="panel-title"><a data-toggle="collapse"  href="#collapse'.$arregloMonitorYEstudiantes[$monitor][0].'">'.$arregloMonitorYEstudiantes[$monitor][1] .'<span id="monitores_'.$arregloMonitorYEstudiantes[$monitor][0].'"> R.P : <b>'.$arregloMonitorYEstudiantes[$monitor][3].'</b> - NO R.P: <b>'.$arregloMonitorYEstudiantes[$monitor][4].'</b> - Total  : <b>'.$arregloMonitorYEstudiantes[$monitor][5].'</b> </span></a></h4></div>';
+            $stringRetornar .= '<div class="panel-group"><div class="panel panel-default" ><div class="panel-heading practicante" style="background-color: #AEA3A3;"><h4 class="panel-title"><a data-toggle="collapse"  href="#collapse'.$arregloMonitorYEstudiantes[$monitor][0].'">'.$arregloMonitorYEstudiantes[$monitor][1] .'</a></h4></div>';
             $stringRetornar .= '<div id="collapse'.$arregloMonitorYEstudiantes[$monitor][0].'" class="panel-collapse collapse"><div class="panel-body">';
             //en la tercer posicion del arreglo se encuentra un texto html con un formato especifico
             $stringRetornar .= $arregloMonitorYEstudiantes[$monitor][2];
@@ -225,9 +286,14 @@ se usara para la creacion del toogle.*/
 /*Realiza toda la gestión para tener un arreglo final ordenado deacuerdo a los estudiantes de un monitor*/
 
 
-function monitorUser($pares,$grupal,$codigoMonitor, $noMonitor, $instanceid,$role,$sistemas=false,$codigoPracticante=null){
+function monitorUser($pares,$grupal,$codigoMonitor, $noMonitor, $instanceid,$role,$fechas,$sistemas=false,$codigoPracticante=null){
 
-    $monitorstudents=get_seguimientos_monitor($codigoMonitor,$instanceid);
+    $fecha_epoch = [];
+    $fecha_epoch[0] =strtotime($fechas[0]);
+    $fecha_epoch[1] =strtotime($fechas[1]);
+
+    $monitorstudents=get_seguimientos_monitor($codigoMonitor,$instanceid,$fecha_epoch);
+
     transformarConsultaMonitorArray($monitorstudents,$pares,$grupal,$codigoMonitor,$noMonitor,$instanceid,$role);
     
         //metodo que agrupa informacion de los seguimientos de pares por el codigo
@@ -479,7 +545,7 @@ function crearTablaYToggle($arregloImprimirPares, $monitorNo, $arregloImprimirGr
 
         //se recorre cada estudiante
         for ($student=0;$student<count($arregloImprimirPares);$student++) {
-            $stringRetornar .= '<div class="panel-group"><div class="panel panel-default"><div class="panel-heading" style="background-color: #D0C4C4;"><h4 class="panel-title"><a data-toggle="collapse" href="#collapse' .$monitorNo. $arregloImprimirPares[$student][0][20] .'">'. $arregloImprimirPares[$student][0][0] .'<span> R.P  : <b>'. $arregloImprimirPares[$student][0][24] .'</b> - NO R.P : <b>'. $arregloImprimirPares[$student][0][25] .'</b> - Total  : <b>'. $arregloImprimirPares[$student][0][26] .'</b> </span></a></h4></div>';
+            $stringRetornar .= '<div class="panel-group"><div class="panel panel-default"><div class="panel-heading pares" style="background-color: #D0C4C4;"><h4 class="panel-title"><a data-toggle="collapse" href="#collapse' .$monitorNo. $arregloImprimirPares[$student][0][20] .'">'. $arregloImprimirPares[$student][0][0] .'<span> R.P  : <b><label for="revisado_pares_'.$codigoEnviarN1.'_'.$student.'">'. $arregloImprimirPares[$student][0][24] .'</label></b> - NO R.P : <b><label for="norevisado_pares_'.$codigoEnviarN1.'_'.$student.'">'. $arregloImprimirPares[$student][0][25] .'</label></b> - Total  : <b>'. $arregloImprimirPares[$student][0][26] .'</b> </span></a></h4></div>';
             $stringRetornar .= '<div id="collapse' .$monitorNo. $arregloImprimirPares[$student][0][20] .'" class="panel-collapse collapse"><div class="panel-body">';
 
             //se crea un toogle para cada seguimiento que presente dicho estudiante
@@ -857,7 +923,7 @@ function crearTablaYToggle($arregloImprimirPares, $monitorNo, $arregloImprimirGr
 
         //si existen seguimiento grupales
         if (count($arregloImprimirGrupos) != 0) {
-            $stringRetornar .= '<div class="panel-group"><div class="panel panel-default"><div class="panel-heading" style="background-color: #D0C4C4;"><h4 class="panel-title"><a data-toggle="collapse" href="#collapsegroup' .$monitorNo. $arregloImprimirGrupos[0][11] .'">SEGUIMIENTOS GRUPALES <span> R.P  : <b>'. $arregloImprimirPares[$student][0][14] .'</b> - NO R.P : <b>'. $arregloImprimirPares[$student][0][15] .'</b> - Total  : <b>'. $arregloImprimirPares[$student][0][16] .'</b> </span></a></h4></div>';
+            $stringRetornar .= '<div class="panel-group"><div class="panel panel-default"><div class="panel-heading grupal" style="background-color: #D0C4C4;"><h4 class="panel-title"><a data-toggle="collapse" href="#collapsegroup' .$monitorNo. $arregloImprimirGrupos[0][11] .'">SEGUIMIENTOS GRUPALES <span> R.P  : <b><label for="revisado_grupal_'.$codigoEnviarN1."_".$monitorNo.'">'.$arregloImprimirGrupos[0][14].'</label></b> - NO R.P : <b><label for="norevisado_grupal_'.$codigoEnviarN1."_".$monitorNo.'">'.$arregloImprimirGrupos[0][15].'</label></b> - Total  : <b>'. $arregloImprimirGrupos[0][16] .'</b> </span></a></h4></div>';
             $stringRetornar .= '<div id="collapsegroup' .$monitorNo. $arregloImprimirGrupos[0][11] .'" class="panel-collapse collapse"><div class="panel-body">';
             for ($grupo=0; $grupo<count($arregloImprimirGrupos);$grupo++) {
                 $stringRetornar .= '<div class="panel-group"><div class="panel panel-default"><div class="panel-heading"><h4 class="panel-title"><a data-toggle="collapse" href="#collapsegroup' .$monitorNo. $grupo .$$arregloImprimirGrupos[$grupo][11] .'">'. $arregloImprimirGrupos[$grupo][1] .'</a></h4></div>';
@@ -876,7 +942,7 @@ function crearTablaYToggle($arregloImprimirPares, $monitorNo, $arregloImprimirGr
 
                 $stringRetornar .= '<tr><td colspan="3"><b>OBSERVACIONES:</b><br>'. $arregloImprimirGrupos[$grupo][7] .'</td></tr>';
 
-                $stringRetornar .= '<tr><td colspan="3"><b>CREADO POR:</b><br>'. $arregloImprimirPares[$student][$tupla][21] .'</td></tr>';
+                $stringRetornar .= '<tr><td colspan="3"><b>CREADO POR:</b><br>'. $arregloImprimirGrupos[$grupo][13] .'</td></tr>';
 
 
                 if ($rol  == 3 or $rol  == 7 or ($name == "administrador" or $name == "sistemas1008" or $name == "Administrador")) {

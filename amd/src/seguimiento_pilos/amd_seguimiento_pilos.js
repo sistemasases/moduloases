@@ -13,8 +13,10 @@ requirejs(['jquery', 'bootstrap', 'datatables.net', 'datatables.net-buttons', 'b
     var instance = "";
     var email = "";
 
+
     $(document).ready(function() {
 
+        var usuario="";
     	//Obtenemos el ID de la instancia actual.
 
         var informacionUrl = window.location.search.split("&");
@@ -26,7 +28,7 @@ requirejs(['jquery', 'bootstrap', 'datatables.net', 'datatables.net-buttons', 'b
         }
 
         //Oculta el div de la parte de sistemas.
-        $(".well.col-md-10.col-md-offset-1.reporte-seguimiento.oculto").hide();
+        //$(".well.col-md-10.col-md-offset-1.reporte-seguimiento.oculto").hide();
         
         //Se obtiene la información correspondiente al nombre,id,email y rol de la persona conectada.
         $.ajax({
@@ -61,18 +63,28 @@ requirejs(['jquery', 'bootstrap', 'datatables.net', 'datatables.net-buttons', 'b
         name = "";
         //Se muestra la interfaz correspondiente al usuario.
         if (namerol == "monitor_ps") {
-            $('#titulo').text("Informacion Estudiantes");
+            usuario = "monitor";
+
         }
         else if (namerol == "practicante_ps") {
-            $('#titulo').text("Informacion Monitores");
+            usuario ="practicante";
         }
         else if (namerol == "profesional_ps") {
 
-            $('#titulo').text("Informacion Practicantes");
+            usuario = "profesional";
         }
         else if (namerol == "sistemas") {
-        	$('#titulo').text("Informacion Sistemas");
+            usuario = "sistemas";
         }
+
+        var usuario = [];
+        usuario["id"] = id;
+        usuario["name"] = name;
+        usuario["namerol"]= namerol;
+
+
+        crear_conteo(usuario);
+
 
         /*Cuando el usuario sea practicante = le es permitido */
         if (namerol == "practicante_ps") {
@@ -87,6 +99,8 @@ requirejs(['jquery', 'bootstrap', 'datatables.net', 'datatables.net-buttons', 'b
             modificar_seguimiento();
             actualizar_riesgo();
             enviar_correo(instance);
+            consultar_seguimientos_persona(instance,usuario);
+
 
 
         /*Cuando el usuario sea profesional = le es permitido */
@@ -100,7 +114,8 @@ requirejs(['jquery', 'bootstrap', 'datatables.net', 'datatables.net-buttons', 'b
             borrar_seguimiento(namerol);
             actualizar_riesgo();
             enviar_correo(instance);
-            verificar_profesional();
+            consultar_seguimientos_persona(instance,usuario);
+            
 
         /*Cuando el usuario sea monitor = Le es permitido : */
         }else if (namerol == "monitor_ps") {   
@@ -110,6 +125,9 @@ requirejs(['jquery', 'bootstrap', 'datatables.net', 'datatables.net-buttons', 'b
             borrar_seguimiento(namerol);
             modificar_seguimiento();
             actualizar_riesgo();
+            consultar_seguimientos_persona(instance,usuario);
+
+
         
         /*Cuando el usuario sea sistemas = Le es permitido : */
         }else if(namerol == "sistemas"){
@@ -131,20 +149,60 @@ requirejs(['jquery', 'bootstrap', 'datatables.net', 'datatables.net-buttons', 'b
 
 
 
-  
-
    
 
 //--------LISTENERS DE LOS ELEMENTOS DE LA PÁGINA.
+function consultar_seguimientos_persona(instance,usuario){
+            $("#periodos").change(function() {
+            if (namerol!='sistemas'){
+            var semestre =$("#periodos").val();
+            var id_persona = id;
+            $.ajax({
+                 type: "POST",
+                 data: {
+                    id_persona: id_persona,
+                    id_semestre: semestre,
+                    instance: instance,
+                    otro : true,
+                    type: "consulta_sistemas"
+                    },
+                    url: "../../../blocks/ases/managers/seguimiento_pilos/seguimientopilos_report.php",
+                    async: false,
 
+
+                    success: function(msg) {
+
+                    if(msg==""){
+                      $('#reemplazarToogle').html('<label> No se encontraron registros </label>' );
+                                  crear_conteo(usuario);
+
+
+                    }else{
+                    $('#reemplazarToogle').html(msg);
+                    }
+                    $(".well.col-md-10.col-md-offset-1.reporte-seguimiento.oculto").slideDown( "slow" );
+                                crear_conteo(usuario);
+
+
+
+                    },
+                    dataType: "text",
+                    cache: "false",
+                    error: function(msg) { alert("error al consultar seguimientos de personas");},
+             });
+
+            }
+
+            
+        });
+}
 /*
  * Funcion para el rol sistemas
  *
  */
 
  function anadirEvento(instance) {
-                  $("#personas").val('').change();
-
+            $("#personas").val('').change();
             
             //Se activa el select2 cuando el usuario es de sistemas.
             $("#personas").select2({  
@@ -170,50 +228,15 @@ requirejs(['jquery', 'bootstrap', 'datatables.net', 'datatables.net-buttons', 'b
             }
           });
 
+        consultar_periodos(instance,namerol);
 
-        //Llena el select con los monitores-practicantes-profesionales.
-           $("#periodos").change(function() {
-            var periodo_escogido = $( "#periodos" ).val();
-              $.ajax({
-                 type: "POST",
-                 data: {
-                    id: periodo_escogido,
-                    instance: instance,
-                    type: "actualizar_personas"
-                    },
-                    url: "../../../blocks/ases/managers/seguimiento_pilos/seguimientopilos_report.php",
-                    async: false,
-                    success: function(msg) {
-
-
-                    $('#personas').empty();
-                    $("#personas").select2({  
-                      placeholder: "Seleccionar persona",
-                      language: {
-                       noResults: function() {
-                       return "No hay resultado";        
-                     },
-                       searching: function() {
-                       return "Buscando..";
-                   }
-                }
-            });       
-                    var inicio = '<option value="">Seleccionar persona</option>';
-
-                     $("#personas").attr('selectedIndex', '-1').find("option:selected").removeAttr("selected");
-                     $('#personas').append(inicio+msg);
-
-                    },
-                    dataType: "text",
-                    cache: "false",
-                    error: function(msg) { alert("error al cargar personas");},
-                        });
-                    });
 
         $('#consultar_persona').on('click', function() {
 
             var id_persona =$("#personas").children(":selected").attr("value");
             var id_semestre =$("#periodos").children(":selected").attr("value");
+            var fechas_epoch=[];
+
 
 
             if(id_persona == undefined){
@@ -225,6 +248,7 @@ requirejs(['jquery', 'bootstrap', 'datatables.net', 'datatables.net-buttons', 'b
                     });
             }else{
                 $(".well.col-md-10.col-md-offset-1.reporte-seguimiento.oculto").show();
+
             $.ajax({
                  type: "POST",
                  data: {
@@ -259,6 +283,74 @@ requirejs(['jquery', 'bootstrap', 'datatables.net', 'datatables.net-buttons', 'b
     }
 
 
+
+function crear_conteo(usuario){
+    var periodo = $("#periodos option:selected").text();
+    var conteo = 0;
+    
+    if(usuario["namerol"] == 'monitor_ps'){
+        conteos_monitor =realizar_conteo(usuario);
+        contenedor = '<div class="row"><div class="col-sm-12"><h2>Información '+usuario["namerol"] +'- PERIODO :'+periodo+' </h2><div class="panel panel-default"> <div class="panel-body"><h4 class="panel-title"><span class="pull-left"> Revisados  :<label for="revisado_monitor_'+conteo+'">'+conteos_monitor[0]+'</label><b></b> - NO Revisados :<label for="norevisado_monitor_'+conteo+'">'+conteos_monitor[1]+'</label><b></b> - Total  :<label for="total_monitor_'+conteo+'">'+conteos_monitor[2]+'</label> <b></b> </span></h4></div></div></div></div>';
+        $("#reemplazarToogle").before(contenedor);
+
+
+    }else if (usuario["namerol"] == 'practicante_ps'){
+        var monitores = $('.panel-heading.practicante').children().length;
+        alert(monitores);
+       // contenedor = '<div class="row"><div class="col-sm-12"><h2>Información '+usuario["namerol"] +'- PERIODO :'+periodo+' </h2><div class="panel panel-default"> <div class="panel-body"><h4 class="panel-title"><span class="pull-left"> Revisados  :'+conteos_practicante[0]+' <b></b> - NO Revisados :'+conteos_practicante[1]+' <b></b> - Total  :'+conteos_practicante[2]+' <b></b> </span></h4></div></div></div></div>';
+       // $('#conteo_principal').html(contenedor);
+        //        $('a[href="#collapse'+usuario["id"]+'"]').before(contenedor);
+
+
+
+
+
+    }else if (usuario["namerol"] == 'profesional_ps'){
+        var practicantes =  $('.panel-heading.pares').children().length;
+
+    }else if(usuario["namerol" ] == 'sistemas'){
+
+
+    }
+}
+
+
+
+
+function realizar_conteo(usuario){
+
+
+    if(usuario["namerol"] == 'monitor_ps'){
+
+    var numero_pares = $('.panel-heading.pares').children().length;
+    var total_monitor_revisado = 0;
+    var total_monitor_norevisado = 0;
+    var numero_grupales = $('.panel-heading.grupal').children().length;
+    var total_grupal_revisado = 0;
+    var total_grupal_norevisado = 0;
+
+    for(var cantidad =0; cantidad<numero_pares;cantidad++){
+       total_monitor_revisado += Number($("label[for='revisado_pares_"+ usuario["id"]+"_"+cantidad+"']").text());
+       total_monitor_norevisado += Number($("label[for='norevisado_pares_"+ usuario["id"]+"_"+cantidad+"']").text());
+    }
+
+    for(var cantidad =0; cantidad<numero_grupales;cantidad++){
+       total_grupal_revisado += Number($("label[for='revisado_grupal_"+ usuario["id"]+"_"+cantidad+"']").text());
+       total_grupal_norevisado += Number($("label[for='norevisado_grupal_"+ usuario["id"]+"_"+cantidad+"']").text());
+
+    }
+
+    total = (total_monitor_revisado+total_grupal_revisado) + (total_monitor_norevisado+total_grupal_norevisado);
+    return new Array((total_monitor_revisado+total_grupal_revisado),(total_monitor_norevisado+total_grupal_norevisado), total);
+    
+    }else if (usuario["namerol" == 'practicante_ps']){
+
+    }
+
+
+
+
+}
 
 /*
  * Funcion para enviar correos.
@@ -780,6 +872,50 @@ function cancelar_edicion(namerol){
 //--------FUNCIONES AUXILIARES.
 
 
+
+function consultar_periodos(instance,namerol){
+            $("#periodos").change(function() {
+            var periodo_escogido = $( "#periodos" ).val();
+              $.ajax({
+                 type: "POST",
+                 data: {
+                    id: periodo_escogido,
+                    instance: instance,
+                    type: "actualizar_personas"
+                    },
+                    url: "../../../blocks/ases/managers/seguimiento_pilos/seguimientopilos_report.php",
+                    async: false,
+                    success: function(msg) {
+
+
+                    $('#personas').empty();
+                    $("#personas").select2({  
+                      placeholder: "Seleccionar persona",
+                      language: {
+                       noResults: function() {
+                       return "No hay resultado";        
+                     },
+                       searching: function() {
+                       return "Buscando..";
+                   }
+                }
+            });       
+                    if(namerol =='sistemas'){
+                    var inicio = '<option value="">Seleccionar persona</option>';
+
+                     $("#personas").attr('selectedIndex', '-1').find("option:selected").removeAttr("selected");
+                     $('#personas').append(inicio+msg);
+                    
+                    }
+
+                    },
+                    dataType: "text",
+                    cache: "false",
+                    error: function(msg) { alert("error al cargar personas");},
+                        });
+                    });
+
+}
 
 
 //Verifica si el profesional desea marcar como revisado el seguimiento.

@@ -9,7 +9,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     $result = true;
 
     /// Add a new column newcol to the mdl_myqtype_options
-    if ($result && $oldversion < 201708171158) {
+    if ($result && $oldversion < 201709061106) {
         
         // /**
         //  * Cambios en el modelo asociados a la gestión de acciones y permisos
@@ -217,53 +217,107 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
         
 
          // Define table talentospilos_est_estadoases to be created.
-        $table = new xmldb_table('talentospilos_est_estadoases');
+        //$table = new xmldb_table('talentospilos_est_estadoases');
 
-        // Adding fields to table talentospilos_est_estadoases.
+        // // Adding fields to table talentospilos_est_estadoases.
+        // $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        // $table->add_field('id_estudiante', XMLDB_TYPE_INTEGER, '20', null, XMLDB_NOTNULL, null, null);
+        // $table->add_field('id_estado_ases', XMLDB_TYPE_INTEGER, '20', null, XMLDB_NOTNULL, null, null);
+        // $table->add_field('id_motivo_retiro', XMLDB_TYPE_INTEGER, '20', null, null, null, null);
+        // $table->add_field('fecha', XMLDB_TYPE_INTEGER, '20', null, XMLDB_NOTNULL, null, null);
+
+        // // Adding keys to table talentospilos_est_estadoases.
+        // $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+        // $table->add_key('id_estudiante_fk', XMLDB_KEY_FOREIGN, array('id_estudiante'), 'talentospilos_usuario', array('id'));
+        // $table->add_key('id_estado_ases', XMLDB_KEY_FOREIGN, array('id_estado_ases'), 'talentospilos_estados_ases', array('id'));
+        // $table->add_key('id_motivo_fk', XMLDB_KEY_FOREIGN, array('id_motivo_retiro'), 'talentospilos_motivos', array('id'));
+
+        // // Conditionally launch create table for talentospilos_est_estadoases.
+        // if (!$dbman->table_exists($table)) {
+        //     $dbman->create_table($table);
+        // }
+
+        // // Define key id_motivo_fk (foreign) to be dropped form talentospilos_est_estadoases.
+        // $table = new xmldb_table('talentospilos_est_estadoases');
+        // $key = new xmldb_key('id_motivo_fk', XMLDB_KEY_FOREIGN, array('id_motivo_retiro'), 'talentospilos_motivos', array('id'));
+
+        // // Launch drop key id_motivo_fk.
+        // $dbman->drop_key($table, $key);
+
+        // // Changing nullability of field id_motivo_retiro on table talentospilos_est_estadoases to null.
+        // $table = new xmldb_table('talentospilos_est_estadoases');
+        // $field = new xmldb_field('id_motivo_retiro', XMLDB_TYPE_INTEGER, '20', null, null, null, null, 'id_estado_ases');
+
+        // // Launch change of nullability for field id_motivo_retiro.
+        // $dbman->change_field_notnull($table, $field);
+
+        // // Define key id_motivo_fk (foreign) to be added to talentospilos_est_estadoases.
+        // $table = new xmldb_table('talentospilos_est_estadoases');
+        // $key = new xmldb_key('id_motivo_fk', XMLDB_KEY_FOREIGN, array('id_motivo_retiro'), 'talentospilos_motivos', array('id'));
+
+        // // Launch add key id_motivo_fk.
+        // $dbman->add_key($table, $key);
+
+        // // Ases savepoint reached.
+        // upgrade_block_savepoint(true, 201709040850, 'ases');
+
+        // Define field id_semestre to be added to talentospilos_monitor_estud.
+        $table = new xmldb_table('talentospilos_monitor_estud');
+        $field = new xmldb_field('id_semestre', XMLDB_TYPE_INTEGER, '20', null, null, null, null, 'id_instancia');
+
+        // Conditionally launch add field id_semestre.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Define key mon_est_pk1 (foreign) to be added to talentospilos_monitor_estud.
+        $table = new xmldb_table('talentospilos_monitor_estud');
+        $key = new xmldb_key('semester_fk', XMLDB_KEY_FOREIGN, array('id_semestre'), 'talentospilos_semestre', array('id'));
+
+        // Launch add key mon_est_pk1.
+        $dbman->add_key($table, $key);
+
+
+        // Define key mon_est_un (unique) to be dropped form talentospilos_monitor_estud.
+        $table = new xmldb_table('talentospilos_monitor_estud');
+        $key = new xmldb_key('mon_est_un', XMLDB_KEY_UNIQUE, array('id_monitor', 'id_estudiante', 'id_instancia'));
+
+        // Launch drop key mon_est_un.
+        $dbman->drop_key($table, $key);
+
+
+         // Define key mon_est_un (unique) to be added to talentospilos_monitor_estud.
+        $table = new xmldb_table('talentospilos_monitor_estud');
+        $key = new xmldb_key('mon_est_un', XMLDB_KEY_UNIQUE, array('id_monitor', 'id_estudiante', 'id_instancia', 'id_semestre'));
+
+        // Launch add key mon_est_un.
+        $dbman->add_key($table, $key);
+
+
+        // Define table talentospilos_est_est_icetex to be created.
+        $table = new xmldb_table('talentospilos_est_est_icetex');
+
+        // Adding fields to table talentospilos_est_est_icetex.
         $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        $table->add_field('id_estado_icetex', XMLDB_TYPE_INTEGER, '20', null, XMLDB_NOTNULL, null, null);
         $table->add_field('id_estudiante', XMLDB_TYPE_INTEGER, '20', null, XMLDB_NOTNULL, null, null);
-        $table->add_field('id_estado_ases', XMLDB_TYPE_INTEGER, '20', null, XMLDB_NOTNULL, null, null);
         $table->add_field('id_motivo_retiro', XMLDB_TYPE_INTEGER, '20', null, null, null, null);
         $table->add_field('fecha', XMLDB_TYPE_INTEGER, '20', null, XMLDB_NOTNULL, null, null);
 
-        // Adding keys to table talentospilos_est_estadoases.
+        // Adding keys to table talentospilos_est_est_icetex.
         $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+        $table->add_key('estado_icetex_fk', XMLDB_KEY_FOREIGN, array('id_estado_icetex'), 'talentospilos_estados_icetex', array('id'));
         $table->add_key('id_estudiante_fk', XMLDB_KEY_FOREIGN, array('id_estudiante'), 'talentospilos_usuario', array('id'));
-        $table->add_key('id_estado_ases', XMLDB_KEY_FOREIGN, array('id_estado_ases'), 'talentospilos_estados_ases', array('id'));
-        $table->add_key('id_motivo_fk', XMLDB_KEY_FOREIGN, array('id_motivo_retiro'), 'talentospilos_motivos', array('id'));
+        $table->add_key('motivos_retiros_fk', XMLDB_KEY_FOREIGN, array('id_motivo_retiro'), 'talentospilos_motivos', array('id'));
 
-        // Conditionally launch create table for talentospilos_est_estadoases.
+        // Conditionally launch create table for talentospilos_est_est_icetex.
         if (!$dbman->table_exists($table)) {
             $dbman->create_table($table);
         }
 
-        // Define key id_motivo_fk (foreign) to be dropped form talentospilos_est_estadoases.
-        $table = new xmldb_table('talentospilos_est_estadoases');
-        $key = new xmldb_key('id_motivo_fk', XMLDB_KEY_FOREIGN, array('id_motivo_retiro'), 'talentospilos_motivos', array('id'));
-
-        // Launch drop key id_motivo_fk.
-        $dbman->drop_key($table, $key);
-
-        // Changing nullability of field id_motivo_retiro on table talentospilos_est_estadoases to null.
-        $table = new xmldb_table('talentospilos_est_estadoases');
-        $field = new xmldb_field('id_motivo_retiro', XMLDB_TYPE_INTEGER, '20', null, null, null, null, 'id_estado_ases');
-
-        // Launch change of nullability for field id_motivo_retiro.
-        $dbman->change_field_notnull($table, $field);
-
-        // Define key id_motivo_fk (foreign) to be added to talentospilos_est_estadoases.
-        $table = new xmldb_table('talentospilos_est_estadoases');
-        $key = new xmldb_key('id_motivo_fk', XMLDB_KEY_FOREIGN, array('id_motivo_retiro'), 'talentospilos_motivos', array('id'));
-
-        // Launch add key id_motivo_fk.
-        $dbman->add_key($table, $key);
-
-
         // Ases savepoint reached.
-        upgrade_block_savepoint(true, 201708171158, 'ases');
-        
+        upgrade_block_savepoint(true, 201709061106, 'ases');
     }
-
     return $result;
 }
 

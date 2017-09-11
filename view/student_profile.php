@@ -29,6 +29,7 @@ require_once(__DIR__ . '/../../../config.php');
 require_once($CFG->libdir.'/adminlib.php');
 //require_once('../managers/query.php');
 require_once('../managers/lib/student_lib.php');
+require_once('../managers/lib/lib.php');
 require_once('../managers/user_management/user_lib.php');
 require_once('../managers/student_profile/geographic_lib.php');
 require_once('../managers/student_profile/studentprofile_lib.php');
@@ -76,7 +77,7 @@ $record = 'data';
 
 if ($student_code != 0){ 
     
-    // Inicializa la variable a pasar por contexto
+    // Inicializa la vareciable a pasar por contexto
     $record = new stdClass;
     
     $ases_student = get_ases_user_by_code($student_code);
@@ -84,6 +85,7 @@ if ($student_code != 0){
     $student_id = $ases_student->id;
 
     $student_status_ases = get_student_ases_status($student_id);
+    $student_status_icetex = get_student_icetex_status($student_id);
 
     // Carga de estados disponibles
      
@@ -91,6 +93,8 @@ if ($student_code != 0){
     $icetex_status_array = get_status_icetex();
     
     $html_status_ases = "<option value=''>NO REGISTRA</option>";
+
+    //print_r($student_status_ases);
     
     foreach($ases_status_array as $ases_status){
         
@@ -104,7 +108,7 @@ if ($student_code != 0){
     $html_status_icetex = "<option value=''>NO REGISTRA</option>";
     
     foreach($icetex_status_array as $icetex_status){
-        if($icetex_status->nombre == $ases_student->estado){
+        if($icetex_status->nombre == $student_status_icetex->nombre){
             $html_status_icetex .= "<option value='".$icetex_status->id."' selected>".$icetex_status->nombre."</option>";
         }else{
             $html_status_icetex .= "<option value='".$icetex_status->id."'>".$icetex_status->nombre."</option>";
@@ -602,7 +606,7 @@ if ($student_code != 0){
 
 $reasons_dropout = get_reasons_dropout();
 
-$html_select_reasons = "<option value=''>Seleccione el motivo</option>";
+$html_select_reasons = "<option value='' id='no_reason_option'>Seleccione el motivo</option>";
 
 for($i = 0; $i < count($reasons_dropout); $i++){
     $html_select_reasons .= "<option value=".$reasons_dropout[$i]->id.">";
@@ -617,13 +621,9 @@ $record->reasons_options = $html_select_reasons;
 * Carga de información academica
 **/
 
-
 $html_academic_table = "";
 
 $record->academic_semestres_table = $html_academic_table;
-
-
-
 
 $PAGE->set_context($contextcourse);
 $PAGE->set_context($contextblock);
@@ -636,6 +636,7 @@ $PAGE->requires->css('/blocks/ases/style/sweetalert.css', true);
 $PAGE->requires->css('/blocks/ases/style/sweetalert2.css', true);
 $PAGE->requires->css('/blocks/ases/style/sugerenciaspilos.css', true);
 $PAGE->requires->css('/blocks/ases/style/forms_pilos.css', true);
+$PAGE->requires->css('/blocks/ases/style/c3.css', true);
 
 $output = $PAGE->get_renderer('block_ases');
 

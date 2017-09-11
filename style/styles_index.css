@@ -1,0 +1,44 @@
+#index h4 {
+	display: block;	
+	width: 200px;	
+	padding: 7px;
+	border: 1px solid #999999;
+	background: #DDDDDD;
+	text-align: center;
+	border-radius: 10px;
+	background: -webkit-linear-gradient(top, #FFFFFF, #DDDDDD);	
+	background: -moz-linear-gradient(top, #FFFFFF, #DDDDDD);
+}
+
+.nav-panel a {
+	color: #373a3d;
+}
+
+.panel-container {
+	display: table;
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	table-layout: fixed;
+	border-spacing: 10px;
+}
+
+
+#frame {
+	width: 90%;
+	height: 100%;
+}
+
+.nav-panel {
+	display: table-cell;
+	position: absolute;
+	padding-top: 2%;
+}
+
+.show-panel {
+	display: table-cell;
+	width: 80%;
+	height: 100%;	
+	/*border: 1px solid #999999;*/
+	
+}

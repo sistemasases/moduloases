@@ -5,6 +5,76 @@ require_once(dirname(__FILE__).'/../periods_management/periods_lib.php');
 require_once(dirname(__FILE__).'/../user_management/user_lib.php');
 require_once(dirname(__FILE__).'/../MyException.php');
 
+
+/**
+ * Función que obtiene el nombre del rol de un usuario dado su username completo
+ *
+ * @see get_user_rol()
+ * @return object rol
+ */
+function get_user_rol($username){
+   global $DB;
+    $sql_query = "SELECT nombre_rol FROM mdl_user as usuarios INNER JOIN mdl_talentospilos_user_rol as roles ON usuarios.id= roles.id_usuario INNER JOIN mdl_talentospilos_rol as nombres_roles ON nombres_roles.id= roles.id_rol where username='$username'";
+    $role_name = $DB->get_record_sql($sql_query);
+    return $role_name;
+ 
+}
+
+/**
+ * Función que obtiene el nombre de un rol dado el id 
+ *
+ * @see get_role_name()
+ * @return string
+ */
+function get_role_name($rol){
+   global $DB;
+    $sql_query = "select nombre_rol from {talentospilos_rol} where id='$rol'";
+    $rolename = $DB->get_record_sql($sql_query);
+    return $rolename;
+ 
+}
+
+/**
+ * Función que obtiene el id de un role dado un nombre
+ *
+ * @see get_role_id()
+ * @return integer
+ */
+function get_role_id($rol){
+   global $DB;
+
+    $sql_query = "SELECT id FROM {talentospilos_rol} WHERE nombre_rol = '$rol'";
+    $roleid = $DB->get_record_sql($sql_query);
+    return $roleid;
+ 
+}
+
+
+/**
+ * Función que obtiene el id jefe de un rol ingresado
+ *
+ * @see get_user_boss()
+ * @return Integer
+ */
+function get_user_boss($rol){
+
+    $boss = null;
+
+    if(get_role_name($rol)->nombre_rol=='monitor_ps'){
+      $boss = get_role_id('practicante_ps')->id;
+
+    }else if (get_role_name($rol)->nombre_rol == 'practicante_ps'){
+      $boss = get_role_id('profesional_ps')->id;
+
+    }
+
+    return $boss;
+}
+
+
+
+
+
 /**
  * Función que relaciona a un conjunto de estudiantes con un monitor
  *
@@ -29,15 +99,13 @@ function monitor_student_assignment($username_monitor, $array_students, $idinsta
         foreach($array_students as $student)
         {
             
-                //$sql_query = "SELECT id FROM {user} WHERE username= '$student'";
-                //$studentid = $DB->get_record_sql($sql_query);
-                
-                //se obtiene el id en la tabla de {talentospilos_usuario} del estudiante
                 $studentid = get_userById(array('*'),$student);
+                $semestre_act = get_current_semester();
+
 
                 if($studentid){
                     //se valida si el estudiante ya tiene asignado un monitor
-                    $sql_query = "SELECT u.id as id, username,firstname, lastname FROM {talentospilos_monitor_estud} me INNER JOIN {user} u  ON  u.id = me.id_monitor WHERE me.id_estudiante =".$studentid->idtalentos."";
+                    $sql_query = "SELECT u.id as id, username,firstname, lastname FROM {talentospilos_monitor_estud} me INNER JOIN {user} u  ON  u.id = me.id_monitor WHERE me.id_semestre =".$semestre_act->max."  AND me.id_estudiante =".$studentid->idtalentos."";
                     $hasmonitor = $DB->get_record_sql($sql_query);
                 
                     if(!$hasmonitor){
@@ -45,6 +113,7 @@ function monitor_student_assignment($username_monitor, $array_students, $idinsta
                         $object->id_monitor = $idmonitor->id;
                         $object->id_estudiante = $studentid->idtalentos;
                         $object->id_instancia = $idinstancia;
+                        $object->id_semestre = $semestre_act->max;
               
                         $insert_record = $DB->insert_record('talentospilos_monitor_estud', $object, true);
                 

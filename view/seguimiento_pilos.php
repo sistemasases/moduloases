@@ -62,56 +62,62 @@ $email = $USER->email;
 $seguimientotable ="";
 $globalArregloPares = [];
 $globalArregloGrupal =[];
-//$table=semesterUser($globalArregloPares,$globalArregloGrupal,$USER->id,$blockid,$usernamerole);
-//print_r($semesters);
-//Se muestra la interfaz correspondiente al usuario.
-if($usernamerole=='monitor_ps'){
 
-	//Se recupera los estudiantes de un monitor en la instancia y se organiza el array que será transformado en el toogle.
-	$table=monitorUser($globalArregloPares,$globalArregloGrupal,$USER->id,0,$blockid,$userrole);
+$periods = get_semesters();
+
+
+//obtiene el intervalo de fechas del ultimo semestre
+$intervalo_fechas[0] = reset($periods)->fecha_inicio;
+$intervalo_fechas[1] =reset($periods)->fecha_fin;
+$intervalo_fechas[2] =reset($periods)->id;
+
+if($usernamerole=='monitor_ps'){
+    //organiza el select de periodos.
+    $table_periods.=get_period_select($periods);
+
+    //Se recupera los estudiantes de un monitor en la instancia y se organiza el array que será transformado en el toogle.
+    $seguimientos = monitorUser($globalArregloPares,$globalArregloGrupal,$USER->id,0,$blockid,$userrole,$intervalo_fechas);
+    $table.=has_tracking($seguimientos);
 
 }elseif($usernamerole=='practicante_ps'){
+
+    //organiza el select de periodos.
+    $table_periods.=get_period_select($periods);
     
     //Se recupera los estudiantes de un practicante en la instancia y se organiza el array que será transformado en el toogle.
-	$table=practicanteUser($globalArregloPares,$globalArregloGrupal,$USER->id,$blockid,$userrole);
+    $seguimientos =practicanteUser($globalArregloPares,$globalArregloGrupal,$USER->id,$blockid,$userrole,$intervalo_fechas);
+    $table.=has_tracking($seguimientos);
 
 }elseif($usernamerole=='profesional_ps'){
+
+    //organiza el select de periodos.
+    $table_periods.=get_period_select($periods);
+    
 	//Se recupera los estudiantes de un profesional en la instancia y se organiza el array que será transformado en el toogle.
-
-	$table=profesionalUser($globalArregloPares,$globalArregloGrupal,$USER->id,$blockid,$userrole);
-
+    $seguimientos = profesionalUser($globalArregloPares,$globalArregloGrupal,$USER->id,$blockid,$userrole,$intervalo_fechas);
+    $table.=has_tracking($seguimientos);
 
 }elseif($usernamerole=='sistemas' or $username == "administrador" or $username == "sistemas1008" or $username == "Administrador"){
 
 	//Obtiene los periodos existentes y los roles que contengan "_ps".
-    $periods = get_semesters();
     $roles = get_rol_ps();
 
     //Obtiene las personas que se encuentran en el último semestre añadido y cuyos roles terminen en "_ps.
     $people = get_people_onsemester(reset($periods)->id,$roles,$blockid);
 
-
     //organiza el select de periodos.
-    $table.='<div class="container"><form class="form-inline">';
-    $table.='<div class="form-group"><label for="persona">Periodo</label><select class="form-control" id="periodos">';
-    foreach($periods as $period){
-   		$table.='<option value="'.$period->id.'">'.$period->nombre.'</option>';
-     }
-    $table.='</select></div>'; 
-
+    $table_periods.=get_period_select($periods);
 
     //organiza el select de personas.
-    $table.='<div class="form-group"><label for="persona">Persona</label><select class="form-control" id="personas">';
-    foreach($people as $person){
-    		$table.='<option value="'.$person->id_usuario.'">'.$person->username." - ".$person->firstname." ".$person->lastname.'</option>';
-     }
-    $table.='</select></div>';
-    $table.='<span class="btn btn-info" id="consultar_persona" type="button">Consultar</span></form></div>';
+    $table_periods.=get_people_select($people);
+
 }
+
 
 
 $data = 'data';    
 $data = new stdClass;
+$data->table_periods =$table_periods;
 $data->table = $table;
 $contextcourse = context_course::instance($courseid);
 $contextblock =  context_block::instance($blockid);

@@ -25,9 +25,9 @@
                 $info_user->rol = $rol_user->nombre_rol;
                 $info_user->boss = $rol_user->id_jefe;
                 $info_user->boss_name = $info_boss->firstname." ".$info_boss->lastname;
+
                 if($info_user->rol == 'profesional_ps'){
-                    $sql_query = "SELECT nombre_profesional FROM {talentospilos_profesional} prof INNER JOIN {talentospilos_usuario_prof} userprof 
-                                        ON prof.id = userprof.id_profesional  WHERE userprof.id_usuario = ".$info_user->id.";";
+                    $sql_query = "SELECT nombre_profesional FROM {talentospilos_profesional} prof INNER JOIN {talentospilos_usuario_prof} userprof ON prof.id = userprof.id_profesional  WHERE userprof.id_usuario = ".$info_user->id.";";
                     $profesion = $DB->get_record_sql($sql_query);
                     if($profesion) $info_user->profesion = $profesion->nombre_profesional;
                 }
@@ -41,6 +41,8 @@
         
         
     }else if(isset($_POST['function']) && isset($_POST['idinstancia'])){
-        echo json_encode(getProfessionals(null, $_POST['idinstancia']));
+        $jefes =  get_boss_users($_POST['role'],$_POST['idinstancia']);
+        echo json_encode($jefes);
+        //echo json_encode(get_professionals(null, $_POST['idinstancia']));
     }
 ?>

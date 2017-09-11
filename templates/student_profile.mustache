@@ -208,8 +208,8 @@
                         <div class="col-sm-6">
                           <iframe class="col-sm-12" height="396" frameborder="0" style="border:0" src="https://www.google.com/maps/embed/v1/directions?key=AIzaSyAoE-aPVfruphY4V4BbE8Gdwi93x-5tBTM&origin={{latitude}},{{longitude}}&destination=3.3759493,-76.5355789&mode=transit" allowfullscreen> </iframe>
                           <div class="row">
-                            <label for="obsevaciones" class="col-md-12">Observaciones</label>
-                            <textarea name="observacion" id="observaciones" class="col-md-12" readonly>{{observations}}</textarea>
+                            <label for="observaciones" class="col-md-12">Observaciones</label>
+                            <textarea name="observacion" id="observaciones_profile" class="col-md-12" readonly>{{observations}}</textarea>
                           </div>
                           <br>
                           <div class="row" id="div_ases_status">
@@ -684,19 +684,17 @@
   <!-- Graphics Modal -->
   <div class="mymodal" id="modal_risk_graph">
     <div class="mymodal-content">
-      <div class="mymodal-header col-sm-12">
-        <div class="col-sm-11">
-          <h4 class="" id="myModalLabel">Gráfica Riesgos</h4>
-        </div>
-        <div class="col-sm-1">
-          <span class="mymodal-close" id="modal_risk_span" aria-hidden="true">&times;</span>
-        </div>
+      <div class="mymodal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span id="modal_risk_span" aria-hidden="true">&times;</span>
+        </button>
+        <h4 class="mymodal-title" id="myModalLabel"><b>GRÁFICA POR:</b></h4>
       </div>
-      <div class="mymodal-body col-sm-12">
-        
+      <div class="mymodal-body" id="modal_risk_body">
+         
       </div>
       <div class="mymodal-footer">
-        <button type="button" class="btn-primary" id="modal_risk_close">Cerrar</button>
+        <button id="modal_risk_close" type="button" class="button btn btn-secondary">Cerrar</button>
       </div>
     </div>
   </div>
@@ -726,7 +724,7 @@
               <div class = "form-group">
                 <label for="detalle" class="col-sm-2">Descripción</label>
                 <div class="col-sm-10">
-                  <textarea  class="form-control medium-inline" id="detalle" name="detalle" maxlength="1000"></textarea>
+                  <textarea  class="form-control medium-inline" id="description_dropout" name="detalle" maxlength="1000"></textarea>
                 </div>
               </div>
             </form>

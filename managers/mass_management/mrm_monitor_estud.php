@@ -3,6 +3,7 @@ require_once(dirname(__FILE__). '/../../../../config.php');
 require_once('../MyException.php');
 require_once('massmanagement_lib.php');
 require_once('../user_management/user_lib.php');
+require_once('../periods_management/periods_lib.php');
 
 
 if( isset($_FILES['file']) || isset($_POST['idinstancia'])){
@@ -22,13 +23,13 @@ if( isset($_FILES['file']) || isset($_POST['idinstancia'])){
         deleteFilesFromFolder($zipFolfer);
 
 
+
         
         if ($extension !== 'csv') throw new MyException("El archivo ".$archivo['name']." no corresponde al un archivo de tipo CSV. Por favor verifícalo"); 
         if (!move_uploaded_file($archivo['tmp_name'], $rootFolder.'Original_'.$nombre)) throw new MyException("Error al cargar el archivo.");
         ini_set('auto_detect_line_endings', true);
         if (!($handle = fopen($rootFolder.'Original_'.$nombre, 'r'))) throw new MyException("Error al cargar el archivo ".$archivo['name'].". Es posible que el archivo se encuentre dañado");
         
-
         global $DB;
         
         $record = new stdClass();
@@ -46,7 +47,6 @@ if( isset($_FILES['file']) || isset($_POST['idinstancia'])){
         array_push($success_rows,$titlesPos);
         
         $associativeTitles = getAssociativeTitles($titlesPos);
-        
         
         
         
@@ -126,10 +126,12 @@ if( isset($_FILES['file']) || isset($_POST['idinstancia'])){
                 array_push($wrong_rows, $data);
                 continue;
             }else{
+                $last_semester = get_current_semester();
                 $record = new stdClass();
                 $record->id_estudiante = $id_estudiante;
                 $record->id_monitor = $id_monitor;
                 $record->id_instancia = $_POST['idinstancia'];
+                $record->id_semestre = $last_semester->max;
                 
                 $DB->insert_record('talentospilos_monitor_estud', $record);
                 array_push($success_rows, $data);

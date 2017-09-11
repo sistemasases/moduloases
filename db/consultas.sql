@@ -258,30 +258,92 @@ WHERE SUBSTRING(cohorte.idnumber FROM 1 FOR 2) = 'SP'
 
 
 ----------------------------------------------------------------------------------
---Estudiantes asignados a un monitor
+--Estudiantes asignados a un monitor en el ultimo semestre
 SELECT muser.id 
 FROM {user} muser INNER JOIN {user_info_data} data ON muser.id = data.userid 
-WHERE data.data IN (SELECT CAST(tpuser.id as text) 
-                    FROM {talentospilos_usuario} tpuser INNER JOIN {talentospilos_monitor_estud} mon_estud ON tpuser.id = mon_estud.id_estudiante 
-                    WHERE id_monitor = $id)
+WHERE data.data IN (SELECT CAST(mon_estud.id_estudiante as text) 
+                    FROM {talentospilos_monitor_estud} mon_estud 
+                    WHERE id_monitor = $id AND id_semestre = (SELECT id FROM {talentospilos_semestre} WHERE fecha_inicio = (SELECT max(fecha_inicio) from {talentospilos_semestre}))) 
+     AND data.fieldid = (SELECT id 
+                         FROM  {user_info_field} 
+                         WHERE shortname ='idtalentos')
 
-
---Estudiantes asignados a un practicante
-
-SELECT muser.id 
-FROM {user} muser INNER JOIN {user_info_data} data ON muser.id = data.userid 
-WHERE data.data IN (SELECT CAST(tpuser.id as text) 
-                    FROM {talentospilos_usuario} tpuser INNER JOIN {talentospilos_monitor_estud} mon_estud ON tpuser.id = mon_estud.id_estudiante 
-                    WHERE id_monitor IN (SELECT urol.id_usuario
-                                        FROM {talentospilos_user_rol} urol 
-                                        WHERE id_jefe = $id))
 
 
 
 SELECT muser.id 
 FROM mdl_user muser INNER JOIN mdl_user_info_data data ON muser.id = data.userid 
-WHERE data.data IN (SELECT CAST(tpuser.id as text) 
-                    FROM mdl_talentospilos_usuario tpuser INNER JOIN mdl_talentospilos_monitor_estud mon_estud ON tpuser.id = mon_estud.id_estudiante 
+WHERE data.data IN (SELECT CAST(mon_estud.id_estudiante as text) 
+                    FROM mdl_talentospilos_monitor_estud mon_estud 
+                    WHERE id_monitor = $id AND id_semestre = (SELECT id FROM mdl_talentospilos_semestre WHERE fecha_inicio = (SELECT max(fecha_inicio) from mdl_talentospilos_semestre))) 
+     AND data.fieldid = (SELECT id 
+                         FROM  mdl_user_info_field 
+                         WHERE shortname ='idtalentos')
+
+--Estudiantes asignados a un practicante en el ultimo semestre
+
+SELECT muser.id 
+FROM {user} muser INNER JOIN {user_info_data} data ON muser.id = data.userid 
+WHERE data.data IN (SELECT CAST(mon_estud.id_estudiante as text) 
+                    FROM {talentospilos_monitor_estud} mon_estud  
+                    WHERE id_monitor IN (SELECT urol.id_usuario
+                                        FROM {talentospilos_user_rol} urol 
+                                        WHERE id_jefe = $id)
+                    AND id_semestre = (SELECT id FROM {talentospilos_semestre} WHERE fecha_inicio = (SELECT max(fecha_inicio) from {talentospilos_semestre})))
+    AND data.fieldid = (SELECT id 
+                         FROM  mdl_user_info_field 
+                         WHERE shortname ='idtalentos')
+
+
+SELECT muser.id 
+FROM mdl_user muser INNER JOIN mdl_user_info_data data ON muser.id = data.userid 
+WHERE data.data IN (SELECT CAST(mon_estud.id_estudiante as text) 
+                    FROM mdl_talentospilos_monitor_estud mon_estud  
                     WHERE id_monitor IN (SELECT urol.id_usuario
                                         FROM mdl_talentospilos_user_rol urol 
-                                        WHERE id_jefe = $id))
+                                        WHERE id_jefe = 121)
+                    AND id_semestre = (SELECT id FROM mdl_talentospilos_semestre WHERE fecha_inicio = (SELECT max(fecha_inicio) from mdl_talentospilos_semestre)))
+    AND data.fieldid = (SELECT id 
+                         FROM  mdl_user_info_field 
+                         WHERE shortname ='idtalentos')    
+
+
+------------------------------------------------------------------------------
+
+
+---CONSULTA ESPECIFICA DESARROLLADA DE ASES_REPORT
+
+ SELECT username,firstname,lastname,num_doc FROM {cohort} AS pc 
+                INNER JOIN (
+                    SELECT * FROM {cohort_members} AS pcm 
+                    INNER JOIN (
+                        SELECT * FROM (
+                            SELECT id AS id_1, * FROM (SELECT *, id AS id_user FROM {user}) AS userm 
+                            INNER JOIN (
+                                SELECT userid, CAST(d.data as int) as data 
+                                FROM {user_info_data} d 
+                                WHERE d.data <> '' 
+                                AND fieldid = (SELECT id FROM  {user_info_field} as f WHERE f.shortname ='idtalentos')
+                            ) AS field 
+                            ON userm. id_user = field.userid ) AS usermoodle 
+                        INNER JOIN {talentospilos_usuario} as usuario 
+                        ON usermoodle.data = usuario.id 
+                        WHERE usermoodle.id_user in (
+                            SELECT umood.id
+                        FROM {user} umood INNER JOIN {user_info_data} udata ON umood.id = udata.userid 
+                        INNER JOIN {talentospilos_est_estadoases} estado_ases ON udata.data = CAST(estado_ases.id_estudiante as TEXT)
+                        WHERE udata.fieldid = (SELECT id FROM  {user_info_field} as f WHERE f.shortname ='idtalentos')
+                         AND estado_ases.fecha = (SELECT MAX(fecha) FROM {talentospilos_est_estadoases} WHERE id_estudiante = estado_ases.id_estudiante) ) AND usermoodle.id_user in ( SELECT muser.id 
+                  FROM {user} muser INNER JOIN {user_info_data} data ON muser.id = data.userid 
+                  WHERE data.data IN (SELECT CAST(mon_estud.id_estudiante as text) 
+                                      FROM {talentospilos_monitor_estud} mon_estud  
+                                      WHERE id_monitor IN (SELECT urol.id_usuario
+                                                          FROM {talentospilos_user_rol} urol 
+                                                          WHERE id_jefe = 121)
+                                      AND id_semestre = (SELECT id FROM {talentospilos_semestre} WHERE fecha_inicio = (SELECT max(fecha_inicio) from {talentospilos_semestre})))
+                      AND data.fieldid = (SELECT id 
+                                           FROM  mdl_user_info_field 
+                                           WHERE shortname ='idtalentos') )
+                        ) as usertm 
+                    ON usertm.id_user = pcm.userid) as pcmuser 
+                ON pc.id = pcmuser.cohortid WHERE pc.idnumber like '1008%' OR pc.idnumber LIKE 'SP%';

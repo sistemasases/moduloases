@@ -1,55 +1,56 @@
 <?php
 
 require_once(dirname(__FILE__). '/../../../../config.php');
+require_once(dirname(__FILE__).'/../periods_management/periods_lib.php');
+require_once(dirname(__FILE__).'/../role_management/role_management_lib.php');
 
 
+/**
+ * Función que ontiene los posibles jefes de un usuario dado el rol
+ * @see get_boss_users($rol, $idinstancia)
+ * @param $id_rol ---> rol del usuario
+ * @param $idinstancia ---> id de la instancia actual
+ * @return Array
+ **/
 
-function getProfessionals($id = null, $idinstancia){
+function get_boss_users($id_rol, $idinstancia){
     global $DB;
-    // $sql_query = "SELECT username, firstname, lastname, us.id, prof.nombre_profesional 
-    //               FROM {user} us INNER JOIN  {talentospilos_usuario_prof} p 
-    //                                     ON p.id_usuario = us.id INNER JOIN {talentospilos_profesional} prof on prof.id = p.id_profesional 
-    //                              INNER JOIN {talentospilos_user_rol} ur ON ur.id_usuario = us.id WHERE ur.id_instancia =".$idinstancia;
-    
-    $sql_query = "SELECT username, firstname, lastname, id 
-                  FROM {user} us  WHERE id IN 
-                  (SELECT id_usuario FROM {talentospilos_user_rol} ur WHERE id_rol IN (3,7) AND ur.id_instancia =".$idinstancia.")";
+
+    $boss_role = get_user_boss($id_rol);
+
+    $sql_query = "SELECT username, firstname, lastname, id FROM {user} us  WHERE id IN (SELECT id_usuario FROM {talentospilos_user_rol} ur WHERE id_rol=".$boss_role." AND ur.id_instancia =".$idinstancia.")";
+    return $DB->get_records_sql($sql_query);
+}
+
+
+/**
+ * Función que retorna los usuarios en el sistema dado la instancia
+ * @see get_professionals($id, $idinstancia)
+ * @param $id ---> id de usuario
+ * @param $idinstancia ---> id de la instancia actual
+ * @return Array
+ **/
+
+function get_professionals($id = null, $idinstancia){
+    global $DB;
+
+    $sql_query = "SELECT username, firstname, lastname, id FROM {user} us  WHERE id IN (SELECT id_usuario FROM {talentospilos_user_rol} ur WHERE id_rol IN (3,7) AND ur.id_instancia =".$idinstancia.")";
     
     if($id != null) $sql_query .= " AND us.id =".$id.";";
     return $DB->get_records_sql($sql_query);
 }
 
-
-function getStudentsGrupal($id_monitor, $idinstancia){
-    global $DB;
-    $sql_query = "SELECT * FROM (SELECT * FROM 
-                    (SELECT *, id AS id_user FROM {user}) AS userm 
-                            INNER JOIN 
-                            (SELECT * FROM {user_info_data} as d INNER JOIN {user_info_field} as f ON d.fieldid = f.id WHERE f.shortname ='idtalentos' AND data <> '') AS field 
-                            ON userm. id_user = field.userid ) AS usermoodle 
-                        INNER JOIN 
-                        (SELECT *,id AS idtalentos FROM {talentospilos_usuario}) AS usuario 
-                        ON usermoodle.data = CAST(usuario.id AS TEXT)
-                    where  idtalentos in (select id_estudiante from {talentospilos_monitor_estud} where id_monitor =".$id_monitor." AND id_instancia=".$idinstancia.");";
-    
-   $result = $DB->get_records_sql($sql_query);
-   return $result;
-}
-
-
 /**
- * Función que retorna los usuarios en el sistema
- *
- * @see get_users_role()
- * @return Array 
- */
- 
+ * Función que retorna los usuarios en el sistema dado la instancia
+ * @see get_users_role($idinstancia)
+ * @param $idinstancia ---> id de la instancia actual
+ * @return Array
+ **/
+
 function get_users_role($idinstancia)
 {
     global $DB;
-    
     $array = Array();
-    
     $sql_query = "SELECT {user}.id, {user}.username, {user}.firstname, {user}.lastname, {talentospilos_rol}.nombre_rol FROM {talentospilos_user_rol} INNER JOIN {user} ON {talentospilos_user_rol}.id_usuario = {user}.id 
                                 INNER JOIN {talentospilos_rol} ON {talentospilos_user_rol}.id_rol = {talentospilos_rol}.id INNER JOIN {talentospilos_semestre} s ON  s.id = {talentospilos_user_rol}.id_semestre 
                                 WHERE {talentospilos_user_rol}.estado = 1 AND {talentospilos_user_rol}.id_instancia=".$idinstancia." AND s.id = (SELECT MAX(id) FROM {talentospilos_semestre});";
@@ -61,6 +62,31 @@ function get_users_role($idinstancia)
     }
     return $array;
 }
+
+/**
+ * Función que elimina de base de datos la relacion monitor-estudiante
+ * @see  drop_student_of_monitor($monitor,$student)
+ * @param $monitor [string] username en moodle del ususario del monitor 
+ * @param $student [string] username en moodle del usuario estudiante
+ * @return boolean
+ **/
+ 
+function drop_student_of_monitor($monitor,$student){
+    global $DB;
+    
+    //idmonitor
+    $sql_query = "SELECT id FROM {user} WHERE username = '$monitor'";
+    $idmonitor = $DB->get_record_sql($sql_query);
+    
+    //se obtiene el id en la tabla de {talentospilos_usuario} del estudiante
+    $studentid = get_userById(array('idtalentos'),$student);
+
+    //where clause
+    $whereclause = "id_monitor = ".$idmonitor->id." AND id_estudiante =".$studentid->idtalentos;
+    return $DB->delete_records_select('talentospilos_monitor_estud',$whereclause);
+
+}
+
 
 /**
  * dropStudentofMonitor
@@ -81,18 +107,24 @@ function dropStudentofMonitor($monitor,$student){
     //se obtiene el id en la tabla de {talentospilos_usuario} del estudiante
     $studentid = get_userById(array('idtalentos'),$student);
 
-    //where clause
-    $whereclause = "id_monitor = ".$idmonitor->id." AND id_estudiante =".$studentid->idtalentos;
-    return $DB->delete_records_select('talentospilos_monitor_estud',$whereclause);
+    $semestre_act = get_current_semester();
 
+    if($studentid){
+    //where clause
+    $whereclause = "id_monitor = ".$idmonitor->id." AND id_estudiante =".$studentid->idtalentos." AND id_semestre=".$semestre_act->max;
+    return $DB->delete_records_select('talentospilos_monitor_estud',$whereclause);
+   }
 }
 
+
 function changeMonitor ($oldMonitor, $newMonitor){
-    global $DB;
-    
+    global $DB;    
+
+
     try{
+        $lastsemester = get_current_semester();
         
-        $sql_query ="SELECT  id from {talentospilos_monitor_estud} where id_monitor =".$oldMonitor;
+        $sql_query ="SELECT  id from {talentospilos_monitor_estud} where id_semestre=".$lastsemester->max." and id_monitor =".$oldMonitor;
         $result = $DB->get_records_sql($sql_query);
         
         foreach ($result as $row){
@@ -110,17 +142,17 @@ function changeMonitor ($oldMonitor, $newMonitor){
     
 }
 
-
 /**
  * Función que actualiza el rol de un usuario practicante_ps
- *
- * @see actualiza_rol_practicante($id_moodle_user, $id_role, $state, $id_semester, $username_boss){
- * @return Entero
- */
+ * @see  actualiza_rol_practicante($id_moodle_user, $id_role, $state, $id_semester, $username_boss)
+ * @param $username ---> username en moodle del usuario del monitor 
+ * @param $role     --->[string] username en moodle del usuario estudiante
+ * @return Integer
+ **/
+
 function actualiza_rol_practicante($username, $role, $idinstancia, $state = 1, $semester = null, $id_boss = null){
     
     global $DB;
-
 
     $sql_query = "SELECT id FROM {user} WHERE username='$username'";
     $id_user_moodle = $DB->get_record_sql($sql_query);
@@ -131,7 +163,6 @@ function actualiza_rol_practicante($username, $role, $idinstancia, $state = 1, $
     $sql_query ="select max(id) as id from {talentospilos_semestre};";
     $id_semester = $DB->get_record_sql($sql_query);
 
-
     $array = new stdClass;
 
     $array->id_rol = $id_role->id;
@@ -141,7 +172,6 @@ function actualiza_rol_practicante($username, $role, $idinstancia, $state = 1, $
     $array->id_jefe = (int)$id_boss;
     $array->id_instancia = $idinstancia;
 
-
     $result = 0;
 
         if($array->id_usuario == $array->id_jefe ){
@@ -149,7 +179,6 @@ function actualiza_rol_practicante($username, $role, $idinstancia, $state = 1, $
         return $result;
     }
         
-    
     if ($checkrole = checking_role($username, $idinstancia)){
 
         if ($checkrole->nombre_rol == 'monitor_ps'){
@@ -161,8 +190,7 @@ function actualiza_rol_practicante($username, $role, $idinstancia, $state = 1, $
             $whereclause = "id_usuario = ".$id_user_moodle->id;
             $DB->delete_records_select('talentospilos_usuario_prof',$whereclause);
         } 
-        
-        
+                
         $array->id = $checkrole->id;
         $update_record = $DB->update_record('talentospilos_user_rol', $array);
         //echo $update_record;
@@ -179,24 +207,27 @@ function actualiza_rol_practicante($username, $role, $idinstancia, $state = 1, $
             $result = 2;
         }
     }
-
     return $result;
 }
 
 
- /**
- * Función que retorna el monitor asignado a un estudiante
- *
- * @see get_assigned_monitor($id_student)
- * @parameters $id_student int Id relacionado en la tabla {talentospilos_usuario}
- * @return String Nombre completo del practicante asignado
- */
 /*
 *********************************************************************************
 FIN FUNCIONES RELACIONADAS CON EL ROL PROFESIONAL PSICOEDUCATIVO
 *********************************************************************************
 */
 
+/**
+ * Función encargada de actualizar el rol monitor
+ * @see  actualiza_rol_practicante($id_moodle_user, $id_role, $state, $id_semester, $username_boss)
+ * @param $username       ---> username en moodle del usuario del monitor 
+ * @param $role           --->[string] username en moodle del usuario estudiante
+ * @param $array_students ---> array estudiantes asignados al monitor actual
+ * @param $boss           ---> usuario jefe
+ * @param $idinstancia    ---> id de la instancia actual
+ * @param $state          ---> estado del usuario
+ * @return Integer
+ **/
 function update_role_monitor_ps($username, $role, $array_students, $boss,$idinstancia,$state = 1)
 {
     global $DB;
@@ -219,10 +250,8 @@ function update_role_monitor_ps($username, $role, $array_students, $boss,$idinst
     //se consulta el jefe
     $bossid = null;
     if(intval($boss)){
-        if (getProfessionals($boss, $idinstancia)) $bossid = $boss;
+        if (get_professionals($boss, $idinstancia)) $bossid = $boss;
     }
-
-    
 
     $object_role = new stdClass;
     $object_role->id_rol = $id_role->id;
@@ -242,26 +271,17 @@ function update_role_monitor_ps($username, $role, $array_students, $boss,$idinst
                 return 1;
             }else{
                 return $check_assignment;
-            }
-            
+            }        
         }
         else{
-            
             return 2;
         }
-        
     }else{
-        // if ($id_rol_actual->nombre_rol != 'monitor_ps'){
-        //     $object_role->id = $id_rol_actual->id_user_rol;
-        //     $DB->update_record('talentospilos_user_rol',$object_role);
-        // }
-        //print_r($id_rol_actual);
         if($id_rol_actual->nombre_rol == 'profesional_ps'){
             
             $whereclause = "id_usuario = ".$id_rol_actual->id_usuario;
             $DB->delete_records_select('talentospilos_usuario_prof',$whereclause);
         } 
-        
         $object_role->id = $id_rol_actual->id_user_rol;
         $DB->update_record('talentospilos_user_rol',$object_role);
         
@@ -272,20 +292,22 @@ function update_role_monitor_ps($username, $role, $array_students, $boss,$idinst
         }else{
             return $check_assignment;
         }
-        
     }
 }
+
 /**
  * Función que administra el rol profesional psicoeducativo
- *
- * @see manage_role_profesional_ps($username, $role, $professional)
- * @return booleano confirmando el éxito de la operación
- */
-
+ * @see  manage_role_profesional_ps($username, $role, $professional, $idinstancia, $state = 1)
+ * @param $username       ---> username en moodle del usuario del profesional  
+ * @param $role           ---> rol del usuario
+ * @param $professional   ---> id del usuario
+ * @param $idinstancia    ---> id de la instancia actual
+ * @param $state          ---> estado del usuario
+ * @return Integer
+ **/
 function manage_role_profesional_ps($username, $role, $professional, $idinstancia, $state = 1)
 {
     global $DB;
-
 
     try{
         // Select object user
@@ -319,8 +341,6 @@ function manage_role_profesional_ps($username, $role, $professional, $idinstanci
                             ON userrol.id_usuario = userprof.id_usuario INNER JOIN {talentospilos_rol} rol ON rol.id = userrol.id_rol  WHERE userprof.id_usuario = ".$object_user->id." AND userrol.id_semestre=".$id_current_semester->max." AND userrol.id_instancia = ".$idinstancia.";";
             $object_user_role = $DB->get_record_sql($sql_query);
 
-
-            
             if($object_user_role){
                 // Incluir el estado
                 
@@ -332,39 +352,25 @@ function manage_role_profesional_ps($username, $role, $professional, $idinstanci
                         update_professional_user($object_user->id, $professional);
                     }
                 }
-                
                 if($state == 0){
                 //se actualiza el estado en caso de que se hjaya desactivado anteriormente
                 update_role_user($username,$role,$idinstancia, $state);
                 $whereclause = "id_usuario = ".$object_user->id;
                 $DB->delete_records_select('talentospilos_usuario_prof',$whereclause);
-                
-
                 }
-
-               
             }else{
-                
-                // caso monitor
-
-
-                // Start db transaction
-                pg_query("BEGIN") or die("Could not start transaction\n");
-                
+                //case : monitor
+                pg_query("BEGIN") or die("Could not start transaction\n");                
                 if($id_current_role->nombre_rol == 'monitor_ps'){ 
-                    $whereclause = "id_monitor = ".$object_user->id;
+
+                    $lastsemester = get_current_semester();
+                    $whereclause = "id_semestre =".$lastsemester->max." and  id_monitor = ".$object_user->id;
                     $DB->delete_records_select('talentospilos_monitor_estud',$whereclause);
-
                 }
-
                 update_role_user($username, $role,$idinstancia, $state, $id_current_semester->max, null);  
                 assign_professional_user($object_user->id, $professional);
-
-                
-                // End db transaction
                 pg_query("COMMIT") or die("Transaction commit failed\n");
             }
-            
         }
     return 1;
         
@@ -375,13 +381,12 @@ function manage_role_profesional_ps($username, $role, $professional, $idinstanci
 }
 
 /**
- * Función que obtiene el usuario deacuerdo al id 
- *
- * @see get_userById()
- * @param $column 
- * @param $id
- * @return Array 
- */
+ * Función que obtiene el usuario deacuerdo al id
+ * @see  get_userById($column, $id)
+ * @param $column        
+ * @param $id           
+ * @return array usuario
+ **/
 function get_userById($column, $id){
     global $DB;
     
@@ -403,17 +408,15 @@ function get_userById($column, $id){
     if($result_query) {
         if(property_exists($result_query,'username'))  $result_query->username = substr ($result_query->username, 0 , -5);
     }
-    //print_r($result_query);
     return $result_query;
 }
 
 /**
  * Función que recupera los usuarios asociados al curso de ASES.
- *
- * @see get_course_user()
- * @param namecourse --> tiene el nombre del curso.
+ * @see  get_course_user($namecourse)
+ * @param $namecourse        
  * @return Array con usuarios asociados al curso
- */
+ **/
 function get_course_user($namecourse){
     
     global $DB;
@@ -426,51 +429,31 @@ function get_course_user($namecourse){
     return $courseusers;
 }
 
-
-
-
-
 /**
  * Función que recupera los campos de usuario de la tabla {user}
  *
  * @see get_moodle_user($id)
  * @param id_student --> id correspondiente a la tabla {user}
- * @return Array campos
+ * @return Array 
  */
 function get_moodle_user($id){
     
     global $DB;
     
     $sql_query = "SELECT SUBSTRING(username FROM 1 FOR 7) AS code, email AS email_moodle, firstname, lastname
-                  FROM {user} WHERE id = $id";
-                  
+                  FROM {user} WHERE id = $id";           
     $user = $DB->get_record_sql($sql_query);
     
     return $user;
 }
 
 /**
- * Función que recupera el id del jefe de un usuario
- *
- * @see get_boss_user($id_user)
- * @param $id_user --> id correspondiente a la tabla {user}
- * @return Array con los campos de usuario
- */
- 
- function get_boss_user($id_user){
-     
-     global $DB;
-     
-     
-     
- }
- 
-
-/**
  * Función que revisa si un usuario tiene un rol asignado
  *
  * @see checking_role($username)
- * @return Boolean
+ * @param $username    ---> username en moodle del usuario
+ * @param $idinstancia ---> id de la instacia actual
+ * @return Array (id_rol, nombre_rol, id, estado, id_usuario)
  */
  
 function checking_role($username, $idinstancia){
@@ -488,14 +471,15 @@ function checking_role($username, $idinstancia){
     return $role_check;
 }
 
-
- /**
+/**
  * Función que actualiza el tipo de profesional a un usuario con rol profesional psicoeducativo
  *
  * @see update_professional_user($id_user, $professional)
- * @return Integer
+ * @param $id_user    ---> id del usuario
+ * @param $professional
+ * @return boolean
  */
- 
+
  function update_professional_user($id_user, $professional){
      
     global $DB;
@@ -520,12 +504,12 @@ function checking_role($username, $idinstancia){
     
  }
 
-
-
 /**
  * Función que asigna un tipo de profesional a un usuario con rol profesional psicoeducativo
  *
  * @see assign_professional_user($id_user, $professional)
+ * @param $id_user    ---> id del usuario
+ * @param $professional
  * @return Integer
  */
  

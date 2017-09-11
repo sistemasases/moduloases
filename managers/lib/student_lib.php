@@ -92,16 +92,46 @@ function get_ases_user_by_code($code){
     global $DB;
 
     $sql_query = "SELECT MAX(id) FROM {talentospilos_est_estadoases} WHERE id_estudiante = $id_student";
-    $id_ases_status = $DB->get_record_sql($sql_query)->id;
+    $id_ases_status = $DB->get_record_sql($sql_query)->max;
+
+    $sql_query = "SELECT * FROM {talentospilos_est_estadoases} WHERE id = $id_ases_status";
+    $id_status = $DB->get_record_sql($sql_query)->id_estado_ases;
 
     if($id_ases_status){
-        $sql_query = "SELECT * FROM {talentospilos_estados_ases} WHERE  id = $id_ases_status";
+        $sql_query = "SELECT * FROM {talentospilos_estados_ases} WHERE  id = $id_status";
         $status_ases = $DB->get_record_sql($sql_query);
     }else{
         $status_ases = "NO REGISTRA";
     }    
 
     return $status_ases;
+ }
+
+ /**
+ * Función que recupera el estado ICETEX de un estudiante
+ *
+ * @see get_student_icetex_status($id_student)
+ * @param $id_student --> Código asociado al estudiante en la tabla talentospilos_usuario
+ * @return Array --> Información del estado Ases del estudiante
+ */
+
+  function get_student_icetex_status($id_student){
+    global $DB;
+
+    $sql_query = "SELECT MAX(id) FROM {talentospilos_est_est_icetex} WHERE id_estudiante = $id_student";
+    $id_icetex_status = $DB->get_record_sql($sql_query)->max;
+
+    $sql_query = "SELECT * FROM {talentospilos_est_est_icetex} WHERE id = $id_icetex_status";
+    $id_status = $DB->get_record_sql($sql_query)->id_estado_icetex;
+
+    if($id_icetex_status){
+        $sql_query = "SELECT * FROM {talentospilos_estados_icetex} WHERE  id = $id_status";
+        $status_icetex = $DB->get_record_sql($sql_query);
+    }else{
+        $status_icetex = "NO REGISTRA";
+    }    
+
+    return $status_icetex;
  }
 
 /**
@@ -246,7 +276,7 @@ function get_assigned_pract($id_student){
  * Función que retorna los nombres, apellidos y correo electrónico del profesional asignado a un estudiante, dado el ID del estudiante.
  *
  * @see get_assigned_professional($id_student)
- * @parameters $id_student int Id relacionado en la tabla {talentospilos_usuario}
+ * @param$id_student int Id relacionado en la tabla {talentospilos_usuario}
  * @return Array --> Contiene los nombres, apellidos y el email del profesional asignado a un estudiante
  */
 function get_assigned_professional($id_student){
@@ -285,7 +315,7 @@ function get_assigned_professional($id_student){
  * Función que retorna un arreglo de los riesgos asociados a un estudiante dado el ID del usuario de la tabla {talentospilos_usuario}
  *
  * @see get_risk_by_student($id_student)
- * @parameters $id_student int Id relacionado en la tabla {talentospilos_usuario}
+ * @param $id_student int Id relacionado en la tabla {talentospilos_usuario}
  * @return Array --> Contiene los nombres, apellidos y el email del profesional asignado a un estudiante
  */
  

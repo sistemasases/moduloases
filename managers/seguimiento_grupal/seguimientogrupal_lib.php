@@ -1,8 +1,8 @@
 <?php
-require_once(dirname(__FILE__). '/../../../../config.php');
+require_once(dirname(__FILE__).'/../../../../config.php');
 require_once('../MyException.php');
-require_once '/../../../../config.php';
-require_once ('/../lib/student_lib.php');
+require_once ('../lib/student_lib.php');
+require_once('../periods_management/periods_lib.php');
 
 
 /**
@@ -398,16 +398,10 @@ function get_seguimientos($id,$tipo,$instancia){
 }
 
 
-/**
- * Función que recupera la información de la tabla de seguimientos grupales dado un id.
- *
- * @see getStudentsGrupal($id_monitor, $idinstancia)
- * @param id monitor --> id correspondiente a la id del monitor.
- * @param instancia --> instancia 
- * @return array .
- */
-function getStudentsGrupal($id_monitor, $idinstancia){
+
+function get_grupal_students($id_monitor, $idinstancia){
     global $DB;
+    $semestre_act = get_current_semester();
     $sql_query = "SELECT * FROM (SELECT * FROM 
                     (SELECT *, id AS id_user FROM {user}) AS userm 
                             INNER JOIN 
@@ -416,7 +410,7 @@ function getStudentsGrupal($id_monitor, $idinstancia){
                         INNER JOIN 
                         (SELECT *,id AS idtalentos FROM {talentospilos_usuario}) AS usuario 
                         ON usermoodle.data = CAST(usuario.id AS TEXT)
-                    where  idtalentos in (select id_estudiante from {talentospilos_monitor_estud} where id_monitor =".$id_monitor." AND id_instancia=".$idinstancia.");";
+                    where  idtalentos in (select id_estudiante from {talentospilos_monitor_estud} where id_monitor =".$id_monitor." AND id_instancia=".$idinstancia." and id_semestre=".$semestre_act->max.")  ;";
     
    $result = $DB->get_records_sql($sql_query);
    return $result;
@@ -501,24 +495,7 @@ function get_user_by_username($username){
     return $user;
 }
 
-// ***************
-// Email functions
-// ***************
 
-/**
- * get_full_user()
- *
- * @param  $id
- * @return object
- */
-function get_full_user($id){
-    global $DB;
-    
-    $sql_query = "SELECT * FROM {user} WHERE id= ".$id;
-    $user = $DB->get_record_sql($sql_query);
-    
-    return $user;
-}
 
 
 

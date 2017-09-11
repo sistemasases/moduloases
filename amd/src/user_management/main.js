@@ -63,11 +63,11 @@ $(document).ready(function() {
     $("#form_prof_type").css({ display: 'none'});
 
     $("#role_select").on('change',function(){
-        
+
         if($("#role_select").val() == "monitor_ps"){
             $("#form_prof_type").fadeOut();
             $("#form_mon_student").fadeIn();
-            getProfessionals();
+            get_boss(4);
             $('#boss_li').fadeIn();
            
         }
@@ -75,11 +75,14 @@ $(document).ready(function() {
             $("#form_prof_type").fadeIn();
             $('#boss_li').fadeOut();
             $("#form_mon_student").fadeOut();
+
         }else if($("#role_select").val() == "practicante_ps"){
+
             $("#form_prof_type").fadeOut();
             $("#form_mon_student").fadeOut();
-            getProfessionals();
+            get_boss(7);
             $('#boss_li').fadeIn();
+
         }else{
             $('#boss_li').fadeOut();
             $("#form_mon_student").fadeOut();
@@ -171,7 +174,6 @@ function userLoad(username, callback){
     if(!dataString){
         dataString = $( "#users" ).val();
     }
-    
     $.ajax({
         type: "POST",
         data: {dat: dataString, idinstancia: getIdinstancia()},
@@ -182,8 +184,8 @@ function userLoad(username, callback){
                     callback(msg);
             }else{
                 if(!msg.error){
-                    
-                    
+                         $('#contenedor_add_fields').html('');
+
                         if (msg.firstname == ""){
                             swal("Error", "El usuario no existe en la base de datos", "error");
                             $('#users').prop('disabled', false);
@@ -205,11 +207,11 @@ function userLoad(username, callback){
                                 }
                                 else if(msg.rol == "monitor_ps"){
                                     loadStudents();
-                                    getProfessionals(msg.boss);
+                                    get_boss(4,msg.boss);
                                     $("#form_mon_student").fadeIn();
                                     $("#form_prof_type").fadeOut();
                                 }else if(msg.rol == "practicante_ps"){
-                                    getProfessionals(msg.boss);
+                                    get_boss(7,msg.boss);
                                     $("#form_mon_student").fadeOut();
                                     $("#form_prof_type").fadeOut();
                                 }else{
@@ -345,7 +347,7 @@ function updateRolUser(){
 }
 
 function student_asignment(){
-    var MaxInputs       =  10; //Número Maximo de Campos
+        var MaxInputs       =  10; //Número Maximo de Campos
         var contenedor       = $("#contenedor_add_fields"); //ID del contenedor
         var AddButton       =  $("#agregarCampo"); //ID del Botón Agregar //
 
@@ -357,7 +359,8 @@ function student_asignment(){
             if(count <= MaxInputs) //max input box allowed
             {
                 FieldCount++;
-                $("#contenedor_add_fields").append('<div><input type="text" class="inputs_students" name="array_students[]" id="campo_'+ FieldCount +'" placeholder="Estudiante '+ FieldCount +'"/></div>');
+
+                $("#contenedor_add_fields").append('<div><input type="text" class="inputs_students" name="array_students[]" id="campo_'+ FieldCount +'" placeholder="Estudiante"/></div>');
                 count++; 
             }
             return false;
@@ -396,7 +399,6 @@ function student_asignment(){
 
 function loadStudents(){
     var data =  new Array();
-  
     var user_id   =  $('#user_id').val();
 
     data.push({name:"function",value:"load_grupal"});
@@ -428,10 +430,11 @@ function loadStudents(){
             });
 }
 
-function getProfessionals(selected){
+function get_boss(role,selected){
     var data =  new Array();
     var selected_index = 0;
     data.push({name:"function",value:"cargar"});
+    data.push({name:"role",value:role});
     data.push({name:"idinstancia",value:getIdinstancia()});
     $.ajax({
         type: "POST",
@@ -439,6 +442,7 @@ function getProfessionals(selected){
         url: "../managers/user_management/search_user.php",
         success: function(msg)
         {
+
             $('#boss_select').html('');
             $('#boss_select').append('<option value="ninguno">Ninguno</option>');
             for (x in msg){
@@ -504,26 +508,6 @@ function load_users(){
         },
     })
 }
-
-// function deleteUser(username){
-//     var data =  new Array();
-//     var user_id =  $('#user_id').val();
-//     var dataUsername = $('#username_input').val();
-//     data.push({name:"deleteUser",value:"delete"});
-//     data.push({name:"username",value:username});
-//     $.ajax({
-//         type: "POST",
-//         data: data,
-//         url: "../managers/update_role_user.php",
-//         success: function(msg)
-//         {
-            
-//         },
-//         dataType: "json",
-//         cache: "false",
-//         error: function(msg){console.log(msg)},
-//         });
-// }
 
 function valdateStudentMonitor(currentUser, isdelete){
     var data =  new Array();

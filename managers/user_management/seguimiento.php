@@ -1,4 +1,7 @@
 <?php
+require_once(dirname(__FILE__). '/../../../../config.php');
+require_once(dirname(__FILE__).'/../seguimiento_grupal/seguimientogrupal_lib.php');
+require_once(dirname(__FILE__).'/../student_profile/studentprofile_lib.php');
 
 require_once('user_lib.php');
 
@@ -50,7 +53,7 @@ if(isset($_POST['function'])){
 
 function deleteSeg(){
          if(isset($_POST['id'])){
-            $result= delete_seguimiento_grupal($_POST['id']);
+            $result= delete_tracking_peer($_POST['id']);
              echo json_encode($result);
          }else{
             $msg =  new stdClass();
@@ -161,7 +164,7 @@ function upgradePares($fun){
                 $insert_object->created = $today;
                 
                
-                insertSeguimiento($insert_object,$id);
+                insert_record($insert_object,$id);
                 $msg =  new stdClass();
                 $msg->exito = "exito";
                 $msg->msg = "se ha almacenado la informacion con exito.";
@@ -175,14 +178,14 @@ function upgradePares($fun){
                 
                 if ($insert_object->tipo == 'PARES'){
                     $msg = "pares";
-                    $result = updateSeguimiento_pares($insert_object);
+                    $result = update_peer_tracking($insert_object);
                 }elseif($insert_object->tipo == 'GRUPAL'){
                     $msg="grupales";
                     $idtalentos_now = $id;
                     
                     //se define e incializa el arreglo $idtalentos_old que va contener los id de los talentos del segumiento obenidos de la base de datos
                     $idtalentos_old =  array();
-                    $result_get = getEstudiantesSegGrupal($insert_object->id);
+                    $result_get = get_group_tracking($insert_object->id);
                     
                     foreach($result_get as $r){
                         array_push($idtalentos_old,$r->id_estudiante);
@@ -192,7 +195,7 @@ function upgradePares($fun){
                     foreach ($idtalentos_old as $id_old){
                         if (!in_array($id_old,$idtalentos_now)){
                             $msg="grupales-drop";
-                            dropTalentosFromSeg($insert_object->id,$id_old);
+                            drop_talentos_from_seg($insert_object->id,$id_old);
                         }
                     }
                     
@@ -200,12 +203,12 @@ function upgradePares($fun){
                     foreach ($idtalentos_now as $id_now){
                         if(!in_array($id_now, $idtalentos_old)){
                             $msg="grupales-add";
-                            insertSegEst($insert_object->id,array($id_now));
+                            insert_record_student($insert_object->id,array($id_now));
                         }
                     }
                     
                     //se actualiza el segumiento
-                    $result = updateSeguimiento_pares($insert_object);
+                    $result = update_peer_tracking($insert_object);
                 }
                 
                 if ($result){
@@ -239,7 +242,7 @@ function upgradePares($fun){
 function load(){
     
     if((isset($_POST['idtalentos']) || isset($_POST['tipo'])) &&  isset($_POST['idinstancia'])){
-        $result =  getSeguimientoOrderBySemester($_POST['idtalentos'], $_POST['tipo'],null, $_POST['idinstancia']);
+        $result =  get_tracking_order_by_semester($_POST['idtalentos'], $_POST['tipo'],null, $_POST['idinstancia']);
         //print_r($result);
         echo json_encode($result);
     }else{
@@ -254,7 +257,7 @@ function load(){
 function getSeguimientos(){
       
         $result =  new stdClass();
-        $result->content = get_estudiantes($_POST['id'],$_POST['tipo'],$_POST['idinstancia']);
+        $result->content = get_students($_POST['id'],$_POST['tipo'],$_POST['idinstancia']);
         $result->rows = count($result->content);
         $result->seguimiento = get_seguimientos($_POST['id'],$_POST['tipo'],$_POST['idinstancia']);
             
@@ -307,7 +310,7 @@ function loadJustOneSeg(){
 
     if(isset($_POST['id']) && isset($_POST['tipo'])){
 
-    $result =  getSeguimiento(null, $_POST['id'],$_POST['tipo']);
+    $result =  get_tracking(null, $_POST['id'],$_POST['tipo']);
     
         foreach($result as $r){ 
             $r->fecha = date('Y-m-d', $r->fecha);
@@ -356,7 +359,7 @@ function loadJustOneSeg(){
             $r->createdate = date('d/m/Y \a \l\a\s h:i a',$r->created);
             $r->act_status = $r->status; //no es pendejada, la variable 'status'  hasta JQuery 3.1 es una variable reservada. Por esa razon  se renombra por 'act_status'
             
-            if($_POST['tipo'] == 'GRUPAL') $r->attendande_listid = getEstudiantesSegGrupal($_POST['id']);
+            if($_POST['tipo'] == 'GRUPAL') $r->attendande_listid = get_group_tracking($_POST['id']);
             
         }
         
@@ -386,27 +389,25 @@ function load_students(){
   if(!isset($_POST['idinstancia'])) throw new Exception('No se reconocio las variables necesarias: idinstancia.'); 
    
   $result =  new stdClass();
-  $result->content = getStudentsGrupal($id_monitor,$_POST['idinstancia']);
+  $result->content = get_grupal_students($id_monitor,$_POST['idinstancia']);
   $result->rows = count($result->content);
   echo json_encode($result);
 }
 
 function loadbyMonitor(){
     global $USER;
+
     if(isset($_POST['tipo']) && isset($_POST['idinstancia']) ){
-        
-        $result =  getSegumientoByMonitor($USER->id,null, $_POST['tipo'], $_POST['idinstancia']);
+        $result =  get_tracking_by_monitor($USER->id,null, $_POST['tipo'], $_POST['idinstancia']);
         $result_array=[];
         $array =[];
 
         foreach($result as $r){
-            
             $r->fecha = date('d-m-Y', $r->fecha);
             $array = $r;
             array_push($result_array,$array);
-            
-
         }
+
         $msg =  new stdClass();
         $msg->result = $result_array;
         $msg->rows = count($result);

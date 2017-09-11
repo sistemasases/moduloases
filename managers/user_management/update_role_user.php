@@ -1,6 +1,7 @@
 <?php
 
 require_once(dirname(__FILE__).'/../role_management/role_management_lib.php');
+require_once(dirname(__FILE__).'/user_lib.php');
 
 if(isset($_POST['role']) && isset($_POST['username'])){
 
@@ -25,7 +26,6 @@ if(isset($_POST['role']) && isset($_POST['username'])){
     }
   }else if($_POST['role'] == 'monitor_ps' && isset($_POST['students']) && isset($_POST['idinstancia'])){
     $success =  update_role_monitor_ps($_POST['username'], $_POST['role'], $_POST['students'], $_POST['boss'], $_POST['idinstancia']);
-    echo $success;
     switch($success){
       case 1:
         echo "Rol asignado con éxito";
@@ -67,6 +67,7 @@ if(isset($_POST['role']) && isset($_POST['username'])){
 
       case 5:
         echo "El usuario no puede ser su mismo jefe";
+        break;
       
       default:
         echo $success;
@@ -99,10 +100,11 @@ if(isset($_POST['role']) && isset($_POST['username'])){
   }
 }else if(isset($_POST['deleteStudent']) && isset($_POST['student']) && isset($_POST['username'])){
     echo dropStudentofMonitor($_POST['username'], $_POST['student']);
+    
 }else if(isset($_POST['changeMonitor']) && isset($_POST['oldUser']) && isset($_POST['newUser']) && isset($_POST['idinstancia']) ){
-  
-  try{
+  $user_rol = get_user_rol(json_decode($_POST['newUser'])[1]);
     $isdelete = $_POST['isdelete'];
+
     // SE ALMACENA LA INFORMACION del ususario viejo 
     $oldUserArray =  json_decode($_POST['oldUser']);
     $oldUser = new stdClass();
@@ -114,20 +116,29 @@ if(isset($_POST['role']) && isset($_POST['username'])){
     $newUser = new stdClass();
     $newUser->id = $newUserArray[0];
     $newUser->username = $newUserArray[1];
-    
+  if($user_rol->nombre_rol !='monitor_ps'){
+
     //adiciona actualiza el rol monitor para el nuevo usuario
     update_role_monitor_ps($newUser->username, 'monitor_ps', array(), null,$_POST['idinstancia'], 1);
     
-    //se actualizan el listado de estduiantes a cargo
+    //se actualizan el listado de estudiantes a cargo
     changeMonitor($oldUser->id,  $newUser->id );
     
     //se deshabilita el viejo ususario
     update_role_monitor_ps($oldUser->username, 'monitor_ps', array(), null,$_POST['idinstancia'], 0);
     echo 1;
-  }catch(Exception $e){
-    echo $e->getMessage();
-  }
 
+  }else{
+        //se actualizan el listado de estudiantes a cargo
+    changeMonitor($oldUser->id,  $newUser->id );
+    
+    //se deshabilita el viejo ususario
+    update_role_monitor_ps($oldUser->username, 'monitor_ps', array(), null,$_POST['idinstancia'], 0);
+    echo 1;
+
+  }
+    
+ 
 }else if(isset($_POST['deleteProfesional']) && isset($_POST['user']) && isset($_POST['idinstancia'])){
   try{
     

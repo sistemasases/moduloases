@@ -3,8 +3,6 @@
 // Declare this variable before loading RequireJS JavaScript library
 // To config RequireJS after it’s loaded, pass the below object into require.config();
 
-
-
 var require = {
     shim: {
         'jquery': {
@@ -21,8 +19,11 @@ var require = {
             deps: ['jquery'],
             exports: "Highcharts",
         },
-        'validator': {
+        'd3': {
             deps: ["jquery"]
+        },
+        'radarchart':{
+            deps: ["d3"]
         },
         'select2':{
          deps: ['bootstrap', 'jquery']
@@ -33,7 +34,6 @@ var require = {
         'bootstrap': "//netdna.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min",
         'bootstrap-modal': "//cdnjs.cloudflare.com/ajax/libs/bootstrap-modal/2.2.6/js/bootstrap-modal.min",
         'select2':"https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min",
-        //'datatables': "//cdn.datatables.net/1.10.12/js/dataTables.bootstrap",
         'datatables.net': "//cdn.datatables.net/1.10.12/js/jquery.dataTables.min", //1.10.15
         'datatables.jqueryui': "//cdn.datatables.net/1.10.12/js/dataTables.jqueryui.min",
         'jszip': "//cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min",
@@ -48,6 +48,8 @@ var require = {
         'sweetmodal': "../../js/sweet-modal.min.js",
         'validator': "../../scripts/jquery.validate.min",
         'jquery-picker': "//code.jquery.com/jquery-1.12.4",
-        'jqueryui-picker': "//code.jquery.com/ui/1.12.1/jquery-ui"
+        'jqueryui-picker': "//code.jquery.com/ui/1.12.1/jquery-ui",
+        'd3': "http://d3js.org/d3.v3.min",
+        'radarchart': "c3/radarchart"
     }
 };

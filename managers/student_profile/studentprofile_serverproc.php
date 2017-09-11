@@ -11,10 +11,43 @@ if(isset($_POST["func"])){
     if($_POST['func'] == 'save_profile'){
         $form = $_POST['form'];
         save_profile($form);
+
     } elseif($_POST['func'] == 'save_icetex_status') {
-        $id_ases = $_POST['id_ases'];
-        $new_status = $_POST['new_status'];
-        save_status_icetex($new_status, $id_ases);
+        
+        if(isset($_POST['id_ases'])){
+            $id_ases = $_POST['id_ases'];
+        }else{
+            $msg_error->title = "Error";
+            $msg_error->msg = "Problema en la conexión al servidor. El ID del estudiante no llegó al servidor.";
+            $msg_error->type = "error";
+
+            return $msg_error;
+        }
+
+        if(isset($_POST['new_status'])){
+            $new_status = $_POST['new_status'];
+        }else{
+            $msg_error->title = "Error";
+            $msg_error->msg = "Problema en la conexión al servidor. El Nuevo Estado del estudiante no llegó al servidor.";
+            $msg_error->type = "error";
+
+            return $msg_error;
+        }
+
+        if(isset($_POST['id_reason'])){
+            $id_reason = $_POST['id_reason'];
+        }else{
+           $id_reason = null;
+        }
+
+        if(isset($_POST['observations'])){
+            $observations = $_POST['observations'];
+        }else{
+            $observations = null;
+        }
+
+        save_status_icetex_proc($new_status, $id_ases, $id_reason, $observations);
+
     } elseif($_POST['func'] == 'save_ases_status'){
 
         if(isset($_POST['id_ases'])){
@@ -43,7 +76,14 @@ if(isset($_POST["func"])){
            $id_reason = null;
         }
 
-        save_status_ases_proc($new_status, $id_ases, $id_reason);
+        if(isset($_POST['observations'])){
+            $observations = $_POST['observations'];
+        }else{
+            $observations = null;
+        }
+
+        save_status_ases_proc($new_status, $id_ases, $id_reason, $observations);
+
     } elseif($_POST['func'] == 'save_tracking_peer'){
         save_tracking_peer_proc();
     } elseif($_POST['func'] == 'delete_tracking_peer' && isset($_POST['id_tracking'])){
@@ -119,32 +159,17 @@ function save_profile($form){
  *
  * @see save_status_icetex($new_status, $id_ases)
  * @parameters $new_status --> Nuevo estado a almacenar en el campo estado Icetex
- *             $id_ses --> ID asociado a un estudiante en la tabla {talentospilos_usuario}
+ *             $id_ases --> ID asociado a un estudiante en la tabla {talentospilos_usuario}
+ *             $id_reason -> ID de la razón del mótivo de retiro
  * @return stdClass 
  */
  
-function save_status_icetex($new_status, $id_ases){
+function save_status_icetex_proc($new_status, $id_ases, $id_reason = null,  $observations=null){
 
-    global $DB;
-    
-    $msg = new stdClass;
-    
-    $obj_updatable->id = (int)$id_ases;
-    $obj_updatable->estado = $new_status;
-    
-    $result = $DB->update_record('talentospilos_usuario', $obj_updatable);
-    
-    if($result){
-        $msg->title = 'Éxito';
-        $msg->status = 'success';
-        $msg->msg = 'El estado Icetex ha sido actualizado correctamente.';
-    }else{
-        $msg->title = 'Error';
-        $msg->status = 'error';
-        $msg->msg = 'El estado Icetex no ha sido actualizado correctamente. Error al conectarse a la base de datos.';
-    }
-    
-    echo json_encode($msg);
+    $result = save_status_icetex($new_status, $id_ases, $id_reason, $observations);
+
+    echo json_encode($result);
+
 }
 
  /**
@@ -156,11 +181,9 @@ function save_status_icetex($new_status, $id_ases){
  * @return stdClass 
  */
  
-function save_status_ases_proc($new_status, $id_ases, $id_reason = null){
+function save_status_ases_proc($new_status, $id_ases, $id_reason = null, $observations=null){
 
-    global $DB;
-
-    $result = save_status_ases($new_status, $id_ases, $id_reason);
+    $result = save_status_ases($new_status, $id_ases, $id_reason, $observations);
 
     echo json_encode($result);
 }
@@ -174,7 +197,7 @@ function save_reason_dropout_student(){
     }else{
         $msg =  new stdClass();
         $msg->error = "Error :(";
-        $msg->msg = "Error al comunicarse con el servidor. No se encuentran las variebles necesarias para guardar el motivo retiro";
+        $msg->msg = "Error al comunicarse con el servidor. No se encuentran las variables necesarias para guardar el motivo retiro";
         echo json_encode($msg);
     }
 }

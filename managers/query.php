@@ -565,6 +565,7 @@ function delete_seguimiento_grupal($id){
 //         } 
         
         
+
 //         $array->id = $checkrole->id;
 //         $update_record = $DB->update_record('talentospilos_user_rol', $array);
 //         //echo $update_record;
@@ -581,6 +582,8 @@ function delete_seguimiento_grupal($id){
 //             $result = 2;
 //         }
 //     }
+
+
 
 //     return $result;
 // }
@@ -1979,6 +1982,7 @@ function getPormStatus($id, $idsemester = null){
 //    $result = $DB->get_records_sql($sql_query);
 //    return $result;
 // }
+
 
 function getEstudiantesSegGrupal($id_seg){
     global $DB;

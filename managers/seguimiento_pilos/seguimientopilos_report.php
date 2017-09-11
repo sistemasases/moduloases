@@ -1,6 +1,7 @@
 <?php
 require_once('seguimiento_functions.php');
 require_once('../student_profile/studentprofile_lib.php');
+require_once('../periods_management/periods_lib.php');
 
 
 global $USER;
@@ -30,22 +31,31 @@ if(isset($_POST['type'])&&$_POST['type']=="consulta_sistemas"&&isset($_POST['id_
  {
     $globalArregloPares = [];
     $globalArregloGrupal =[];
-    $retorno = get_users_rols($_POST['id_persona'],$_POST['id_semestre'],$_POST['instance']);
-    $usernamerole= get_name_rol($retorno->id_rol);
+    $fechas = [];
 
+    $intervalos =get_semester_interval($_POST['id_semestre']);
+    $fechas[0] = $intervalos->fecha_inicio;
+    $fechas[1] = $intervalos->fecha_fin;
+    $fechas[2] = $intervalos->id;
+
+    $retorno = get_users_rols($_POST['id_persona'],$_POST['id_semestre'],$_POST['instance']);
+    if(empty($retorno)){
+      $html="No tiene registros en ese periodo";
+    }else{
+    $usernamerole= get_name_rol($retorno->id_rol);
     if($usernamerole == 'monitor_ps'){
-       $html = monitorUser($globalArregloPares,$globalArregloGrupal,$_POST['id_persona'],0,$_POST['instance'],$retorno->id_rol,true);
+       $html = monitorUser($globalArregloPares,$globalArregloGrupal,$_POST['id_persona'],0,$_POST['instance'],$retorno->id_rol,$fechas,true);
 
     }else if ($usernamerole == 'practicante_ps'){
-       $html=practicanteUser($globalArregloPares,$globalArregloGrupal,$_POST['id_persona'],$_POST['instance'],$retorno->id_rol);
+       $html=practicanteUser($globalArregloPares,$globalArregloGrupal,$_POST['id_persona'],$_POST['instance'],$retorno->id_rol,$fechas);
 
     }else if ($usernamerole == 'profesional_ps'){
-       $html=profesionalUser($globalArregloPares,$globalArregloGrupal,$_POST['id_persona'],$_POST['instance'],$retorno->id_rol);
+       $html=profesionalUser($globalArregloPares,$globalArregloGrupal,$_POST['id_persona'],$_POST['instance'],$retorno->id_rol,$fechas);
 
     }
 
     echo $html;
-}
+}}
 
 if(isset($_POST['type'])&&$_POST['type']=="info_monitor"&&isset($_POST['id'])&&isset($_POST['instance'])) 
  {

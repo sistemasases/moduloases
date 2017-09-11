@@ -33,46 +33,52 @@ requirejs(['jquery', 'datatables.net', 'datatables.net-buttons', 'buttons.flash'
             data: dataString,
             url: "../managers/ases_report/asesreport_server_processing.php",
             success: function(msg) {
-                //alert(msg.data);
-                console.log(msg.columns);
-                $("#div_table").html('');
-                $("#div_table").fadeIn(1000).append('<table id="tableResult" class="display" cellspacing="0" width="100%"><thead> </thead></table>');
-                $("#tableResult").DataTable(msg.data);
+                if(msg.error){
+                        alert(msg.error);
+                }else{
+                    //alert(msg.data);
+                        //console.log(msg.columns);
+                        $("#div_table").html('');
+                        $("#div_table").fadeIn(1000).append('<table id="tableResult" class="display" cellspacing="0" width="100%"><thead> </thead></table>');
+                        $("#tableResult").DataTable(msg.data);
 
-                $('#tableResult tr').each(function() {
-                    $.each(this.cells, function() {
-                        if ($(this).html() == 'bajo') {
-                            $(this).addClass('bajo');
-                        }
-                        else if ($(this).html() == 'medio') {
-                            $(this).addClass('medio');
-                        }
-                        else if ($(this).html() == 'alto') {
-                            $(this).addClass('alto');
-                        }
-                    });
-                });
-
-                $('#tableResult').bind("DOMSubtreeModified", function() {
-                    $('#tableResult tr').each(function() {
-                        $.each(this.cells, function() {
-                            if ($(this).html() == 'bajo') {
-                                $(this).addClass('bajo');
-                            }
-                            else if ($(this).html() == 'medio') {
-                                $(this).addClass('medio');
-                            }
-                            else if ($(this).html() == 'alto') {
-                                $(this).addClass('alto');
-                            }
+                        $('#tableResult tr').each(function() {
+                            $.each(this.cells, function() {
+                                if ($(this).html() == 'bajo') {
+                                    $(this).addClass('bajo');
+                                }
+                                else if ($(this).html() == 'medio') {
+                                    $(this).addClass('medio');
+                                }
+                                else if ($(this).html() == 'alto') {
+                                    $(this).addClass('alto');
+                                }
+                            });
                         });
-                    });
-                });
+
+                        $('#tableResult').bind("DOMSubtreeModified", function() {
+                            $('#tableResult tr').each(function() {
+                                $.each(this.cells, function() {
+                                    if ($(this).html() == 'bajo') {
+                                        $(this).addClass('bajo');
+                                    }
+                                    else if ($(this).html() == 'medio') {
+                                        $(this).addClass('medio');
+                                    }
+                                    else if ($(this).html() == 'alto') {
+                                        $(this).addClass('alto');
+                                    }
+                                });
+                            });
+                        });
+          
+                }
+
             },
             dataType: "json",
             cache: "false",
             error: function(msg) {
-                alert("error")
+                alert("Error al conectar con el servidor")
             },
         });
     }

@@ -533,6 +533,66 @@ function delete_tracking_peer($id_tracking){
 }
 
 /**
+ * Función que guarda el cambio de estado Icetex de un estudiante
+ * 
+ *
+ * @param $id_student --> ID correspondiente al estudiante Ases
+ * @param $id_status --> ID correspondiente al estado Ases a almacenar
+ * @param $id_reason --> ID correspondiente al motivo en caso de que el nuevo estado sea RETIRADO. Por defecto null.
+ * @return $object_result --> Objeto que almacena el resultado de operación en la base de datos
+ */
+
+function save_status_icetex($id_status, $id_student, $id_reason=null, $observations=null){
+
+    global $DB;
+    $msg_result = new stdClass();
+
+    date_default_timezone_set('America/Bogota');
+
+    $today_timestamp = time();
+
+    $object_status = new stdClass();
+
+    $object_status->fecha = $today_timestamp;
+    $object_status->id_estado_icetex = $id_status;
+    $object_status->id_estudiante = $id_student;
+
+    if($id_reason){
+        $object_status->id_motivo_retiro = $id_reason;
+    }
+
+    if($observations){
+        $sql_query = "SELECT observacion FROM {talentospilos_usuario} WHERE id = $id_student";
+        $user_observations = $DB->get_record_sql($sql_query)->observacion;
+
+        $user_observations = $user_observations."\n".date('d-m-y', $today_timestamp).": Mótivo de retiro Icetex:  $observations";
+
+        $object_updatable = new stdClass();
+        $object_updatable->id = $id_student;
+        $object_updatable->observacion = $user_observations;
+
+        $DB->update_record('talentospilos_usuario', $object_updatable);
+    }
+
+    $result_insertion = $DB->insert_record('talentospilos_est_est_icetex', $object_status);
+
+    if($result_insertion){
+
+        $msg_result->title = "Éxito";
+        $msg_result->msg = "El estado ha sido cambiado con éxito";
+        $msg_result->type = "success";
+
+    }else{
+
+        $msg_result->title = "Error";
+        $msg_result->msg = "Error al almacenar el seguimiento en la base de datos";
+        $msg_result->type = "error";
+    }
+
+    return $msg_result;
+}
+
+/**
  * Función que guarda el cambio de estado ASES de un estudiante
  * 
  *
@@ -542,7 +602,7 @@ function delete_tracking_peer($id_tracking){
  * @return $object_result --> Objeto que almacena el resultado de operación en la base de datos
  */
 
-function save_status_ases($id_status, $id_student, $id_reason=null){
+function save_status_ases($id_status, $id_student, $id_reason=null, $observations=null){
 
     global $DB;
     $msg_result = new stdClass();
@@ -559,6 +619,19 @@ function save_status_ases($id_status, $id_student, $id_reason=null){
 
     if($id_reason){
         $object_status->id_motivo_retiro = $id_reason;
+    }
+
+    if($observations){
+        $sql_query = "SELECT observacion FROM {talentospilos_usuario} WHERE id = $id_student";
+        $user_observations = $DB->get_record_sql($sql_query)->observacion;
+
+        $user_observations = $user_observations."\n".date('d-m-y', $today_timestamp).": Mótivo de retiro ASES:  $observations";
+
+        $object_updatable = new stdClass();
+        $object_updatable->id = $id_student;
+        $object_updatable->observacion = $user_observations;
+
+        $DB->update_record('talentospilos_usuario', $object_updatable);
     }
 
     $result_insertion = $DB->insert_record('talentospilos_est_estadoases', $object_status);

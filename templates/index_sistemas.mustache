@@ -1,0 +1,17 @@
+<body>
+{{#data}}
+	<div class="panel-container">
+		<div class="nav-panel">
+			<ul id="index">
+				<h4><a href="user_management.php{{params}}" target="viewFrame"> Manejo de Usuarios</a></h4>
+				<h4><a href="upload_files_form.php{{params}}" target="viewFrame"> Carga de Archivos</a></h4>
+				<h4><a href="instance_configuration.php{{params}}" target="viewFrame"> Configuración de Instancia</a></h4>
+			</ul>
+		</div>
+		<div class="show-panel">
+			<iframe id="frame" name="viewFrame">
+    	</iframe>
+		</div>
+	</div>
+{{/data}}
+</body>
