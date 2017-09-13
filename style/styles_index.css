@@ -1,4 +1,19 @@
-#index h4 {
+.wrapper {
+	overflow: hidden;
+}
+.wrapper div{
+	padding: 10px;
+}
+
+@media screen and (max-width: 400px) {
+	#nav-panel {
+		float: none;
+		margin-right: 0;
+		width: auto;
+	}
+}
+
+#nav-panel h4 {
 	display: block;	
 	width: 200px;	
 	padding: 7px;
@@ -10,35 +25,30 @@
 	background: -moz-linear-gradient(top, #FFFFFF, #DDDDDD);
 }
 
-.nav-panel a {
+#nav-panel a {
 	color: #373a3d;
 }
 
-.panel-container {
-	display: table;
-	position: absolute;
-	width: 100%;
-	height: 100%;
-	table-layout: fixed;
-	border-spacing: 10px;
-}
-
-
 #frame {
-	width: 90%;
-	height: 100%;
+	position: absolute;
+	width: 80%;
 }
 
-.nav-panel {
-	display: table-cell;
-	position: absolute;
+
+#nav-panel {
+	float: left;
+	margin-right: 100px;
+	width: 140px;
+	/*display: table-cell;*/
+	/*position: absolute;*/
 	padding-top: 2%;
 }
 
-.show-panel {
-	display: table-cell;
-	width: 80%;
-	height: 100%;	
+#show-panel {
+	/*display: table-cell;*/
+	overflow: hidden;
+	margin: 10px;
+	width: 80%;	
 	/*border: 1px solid #999999;*/
 	
 }
