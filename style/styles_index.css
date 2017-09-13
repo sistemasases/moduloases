@@ -32,8 +32,8 @@
 #frame {
 	position: absolute;
 	width: 80%;
+	min-height: 55%;
 }
-
 
 #nav-panel {
 	float: left;
@@ -45,10 +45,6 @@
 }
 
 #show-panel {
-	/*display: table-cell;*/
 	overflow: hidden;
-	margin: 10px;
-	width: 80%;	
-	/*border: 1px solid #999999;*/
-	
+	margin: 10px;	
 }
