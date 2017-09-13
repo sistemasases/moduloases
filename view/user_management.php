@@ -54,7 +54,7 @@ if(!consult_instance($blockid)){
 }
 
 //obtiene las personas asociadas al curso.
-$courseusers = get_course_user("Reportes Ases");
+$courseusers = get_course_usersby_id($courseid);
 
 $table_courseuseres='';
 $table_courseuseres.='<option value=""> ---------------------------------------</option>';

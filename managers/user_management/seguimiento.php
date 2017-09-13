@@ -164,7 +164,7 @@ function upgradePares($fun){
                 $insert_object->created = $today;
                 
                
-                insert_record($insert_object,$id);
+                insertSeguimiento($insert_object,$id);
                 $msg =  new stdClass();
                 $msg->exito = "exito";
                 $msg->msg = "se ha almacenado la informacion con exito.";
@@ -178,14 +178,14 @@ function upgradePares($fun){
                 
                 if ($insert_object->tipo == 'PARES'){
                     $msg = "pares";
-                    $result = update_peer_tracking($insert_object);
+                    $result = updateSeguimiento_pares($insert_object);
                 }elseif($insert_object->tipo == 'GRUPAL'){
                     $msg="grupales";
                     $idtalentos_now = $id;
                     
                     //se define e incializa el arreglo $idtalentos_old que va contener los id de los talentos del segumiento obenidos de la base de datos
                     $idtalentos_old =  array();
-                    $result_get = get_group_tracking($insert_object->id);
+                    $result_get = getEstudiantesSegGrupal($insert_object->id);
                     
                     foreach($result_get as $r){
                         array_push($idtalentos_old,$r->id_estudiante);
@@ -195,7 +195,7 @@ function upgradePares($fun){
                     foreach ($idtalentos_old as $id_old){
                         if (!in_array($id_old,$idtalentos_now)){
                             $msg="grupales-drop";
-                            drop_talentos_from_seg($insert_object->id,$id_old);
+                            dropTalentosFromSeg($insert_object->id,$id_old);
                         }
                     }
                     
@@ -203,12 +203,12 @@ function upgradePares($fun){
                     foreach ($idtalentos_now as $id_now){
                         if(!in_array($id_now, $idtalentos_old)){
                             $msg="grupales-add";
-                            insert_record_student($insert_object->id,array($id_now));
+                            insertSegEst($insert_object->id,array($id_now));
                         }
                     }
                     
                     //se actualiza el segumiento
-                    $result = update_peer_tracking($insert_object);
+                    $result = updateSeguimiento_pares($insert_object);
                 }
                 
                 if ($result){
@@ -257,7 +257,7 @@ function load(){
 function getSeguimientos(){
       
         $result =  new stdClass();
-        $result->content = get_students($_POST['id'],$_POST['tipo'],$_POST['idinstancia']);
+        $result->content = get_students_assistance($_POST['id'],$_POST['tipo'],$_POST['idinstancia']);
         $result->rows = count($result->content);
         $result->seguimiento = get_seguimientos($_POST['id'],$_POST['tipo'],$_POST['idinstancia']);
             

@@ -1,6 +1,7 @@
 <?php
 require_once(dirname(__FILE__). '/../../../../config.php');
 require_once(dirname(__FILE__).'/../periods_management/periods_lib.php');
+require_once(dirname(__FILE__).'/../lib/student_lib.php');
 
 
 
@@ -582,7 +583,6 @@ function get_profesional_practicante($id,$instanceid)
 }
 
 
-
 /*
  * Función para enviar mensaje al monitor que desea hacer la observación
  * 
@@ -599,6 +599,7 @@ function send_email_to_user($tipoSeg,$codigoEnviarN1,$codigoEnviarN2,$fecha,$nom
     global $USER;
     $emailToUser = new stdClass;
     $emailFromUser = new stdClass;
+    $messageHtml="";
 
     $sending_user = get_full_user($USER->id);
     $receiving_user = get_full_user($codigoEnviarN1);

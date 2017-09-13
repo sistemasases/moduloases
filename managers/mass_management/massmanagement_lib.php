@@ -3,7 +3,7 @@
 require_once(dirname(__FILE__).'/../../../../config.php');
 require_once(dirname(__FILE__).'/../instance_management/instance_lib.php');
 
-/* Función para borrar archivos de un folder */
+ //metodo apra borrar archivos de un folder
  
 function deleteFilesFromFolder($folderPath){
     $files = glob($folderPath.'/*'); // get all file names
@@ -11,9 +11,6 @@ function deleteFilesFromFolder($folderPath){
           if(is_file($file))  unlink($file); // delete file
     }
 }
-
-
-/* Función para crear ZIP.*/
 
 function createZip($patchFolder,$patchStorageZip){
     // Get real path for our folder

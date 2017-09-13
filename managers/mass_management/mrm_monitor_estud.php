@@ -34,10 +34,12 @@ if( isset($_FILES['file']) || isset($_POST['idinstancia'])){
         
         $record = new stdClass();
         $count = 0;
-        $wrong_rows = array();
-        $success_rows =  array();
-        
-        $detail_erros = array();
+        $wrong_rows = [];
+        $success_rows = [];
+        $detail_erros = [];
+
+
+
         array_push($detail_erros,['No. linea - archivo original','No. linea - archivo registros erroneos','No. columna','Nombre Columna' ,'detalle error']);
         $line_count =2;
         $lc_wrongFile =2;
@@ -106,19 +108,19 @@ if( isset($_FILES['file']) || isset($_POST['idinstancia'])){
             }else{
                 throw new MyException('El campo "username_monitor" es un campo obligatorio');    
             }
-            
+            $last_semester = get_current_semester();
+
             //validacion de duplicidad en la una intancia
-            $sql_query = "SELECT *  FROM {talentospilos_monitor_estud} where  id_estudiante='".$id_estudiante."' AND id_instancia='".$_POST['idinstancia']."'";
-            //print_r($sql_query);
+            $sql_query = "SELECT *  FROM {talentospilos_monitor_estud} where id_semestre='".$last_semester->max."' AND id_estudiante='".$id_estudiante."' AND id_instancia='".$_POST['idinstancia']."'";
             $exists = $DB->get_record_sql($sql_query);
-        
+
             if($exists){
                 $isValidRow = false;
                 array_push($detail_erros,[$line_count,$lc_wrongFile,($associativeTitles['username_estudiante'] + 1),'username_estudiante','El usuario asociado al username '.$data[ $associativeTitles['username_monitor'] ].' Ya tiene asignado un monitor' ]);
             }
             
             //** Fin validaciones Campos requeridos
-            
+
             
             if(!$isValidRow){
                 $lc_wrongFile++;
@@ -126,7 +128,6 @@ if( isset($_FILES['file']) || isset($_POST['idinstancia'])){
                 array_push($wrong_rows, $data);
                 continue;
             }else{
-                $last_semester = get_current_semester();
                 $record = new stdClass();
                 $record->id_estudiante = $id_estudiante;
                 $record->id_monitor = $id_monitor;
@@ -136,19 +137,18 @@ if( isset($_FILES['file']) || isset($_POST['idinstancia'])){
                 $DB->insert_record('talentospilos_monitor_estud', $record);
                 array_push($success_rows, $data);
                 $line_count++;
+
             }
         
         }
         
-        
         if(count($wrong_rows) > 1){
-           
             $filewrongname = $rootFolder.'RegistrosErroneos_'.$nombre;
-            
+
             $wrongfile = fopen($filewrongname, 'w');                              
             fprintf($wrongfile, chr(0xEF).chr(0xBB).chr(0xBF)); // darle formato unicode utf-8
             foreach ($wrong_rows as $row) {
-                fputcsv($wrongfile, $row);              
+                fputcsv($wrongfile,$row);              
             }
             fclose($wrongfile);
             
@@ -158,10 +158,11 @@ if( isset($_FILES['file']) || isset($_POST['idinstancia'])){
             $detailsFileHandler = fopen($detailsFilename, 'w');
             fprintf($detailsFileHandler, chr(0xEF).chr(0xBB).chr(0xBF)); // darle formato unicode utf-8
             foreach ($detail_erros as $row) {
-                fputcsv($detailsFileHandler, $row);              
+                fputcsv($detailsFileHandler, $row);    
             }
             fclose($detailsFileHandler);
-            
+
+
         }
         
         if(count($success_rows) > 1){ //porque la primera fila es corresponde a los titulos no datos

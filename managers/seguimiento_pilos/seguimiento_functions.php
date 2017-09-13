@@ -135,7 +135,7 @@ function get_conteo_profesional($professionalpracticants){
     }
 
 
-    $enunciado = '<div class="row"><div class="col-sm-6"><h2>Información profesionales </h2><div class="panel panel-default"> <div class="panel-body"><h4 class="panel-title"><span class="pull-left"> Revisados  : <b>'.$revisado_profesional.'</b> - NO Revisados : <b>'.$no_revisado_profesional.'</b> - Total  : <b>'.$total.'</b> </span></h4></div></div></div></div>';
+    //$enunciado = '<div class="row"><div class="col-sm-6"><h2>Información profesionales </h2><div class="panel panel-default"> <div class="panel-body"><h4 class="panel-title"><span class="pull-left"> Revisados  : <b>'.$revisado_profesional.'</b> - NO Revisados : <b>'.$no_revisado_profesional.'</b> - Total  : <b>'.$total.'</b> </span></h4></div></div></div></div>';
 
     return $enunciado;
 }
@@ -186,8 +186,9 @@ function profesionalUser(&$pares,&$grupal,$id_prof,$instanceid,$rol,$semester){
         $stringRetornar = "";
         $stringRetornar .=$conteo_profesional; 
         for ($practicante=0;$practicante<count($arregloPracticanteYMonitor);$practicante++) {
-            $stringRetornar .= '<div class="panel-group"><div class="panel panel-default" ><div class="panel-heading" style="background-color: #938B8B;"><h4 class="panel-title"><a data-toggle="collapse"  href="#collapse'.$arregloPracticanteYMonitor[$practicante][0].'">'.$arregloPracticanteYMonitor[$practicante][1].'</a><span> R.P  : <b>'.$arregloPracticanteYMonitor[$practicante][3].'</b> - NO R.P : <b>'.$arregloPracticanteYMonitor[$practicante][4] .'</b> - Total  : <b>'.$arregloPracticanteYMonitor[$practicante][5].'</b> </span></h4></div>';
+            $stringRetornar .= '<div class="panel-group"><div class="panel panel-default" ><div class="panel-heading" style="background-color: #938B8B;"><h4 class="panel-title"><a data-toggle="collapse"  href="#collapse'.$arregloPracticanteYMonitor[$practicante][0].'">'.$arregloPracticanteYMonitor[$practicante][1].'</a><span> </b> </span></h4></div>';
             $stringRetornar .= '<div id="collapse'.$arregloPracticanteYMonitor[$practicante][0].'" class="panel-collapse collapse"><div class="panel-body">';
+
             //en la tercer posicion del arreglo se encuentra un texto html con un formato especifico
             $stringRetornar .= $arregloPracticanteYMonitor[$practicante][2];
             $stringRetornar .= '</div></div></div></div>';
