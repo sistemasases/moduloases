@@ -205,7 +205,8 @@ requirejs(['jquery', 'bootstrap', 'sweetalert', 'validator', 'datatables.net', '
 
     function edit_profile_act() {
         $("#editar_ficha").click(function() {
-            $("#ficha_estudiante").find("input, textarea").prop("readonly", false);
+            $("#ficha_estudiante").find("input").prop("readonly", false);
+            $("#observations_profile").prop("readonly", false);
             $("#profesional_ps").prop("readonly", true);
             $("#practicante_ps").prop("readonly", true);
             $("#monitor_ps").prop("readonly", true);
