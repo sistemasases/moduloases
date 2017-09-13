@@ -174,14 +174,12 @@ function consultar_seguimientos_persona(instance,usuario){
 
                     if(msg==""){
                       $('#reemplazarToogle').html('<label> No se encontraron registros </label>' );
-                                  crear_conteo(usuario);
 
 
                     }else{
                     $('#reemplazarToogle').html(msg);
                     }
                     $(".well.col-md-10.col-md-offset-1.reporte-seguimiento.oculto").slideDown( "slow" );
-                                crear_conteo(usuario);
 
 
 
@@ -291,12 +289,11 @@ function crear_conteo(usuario){
     if(usuario["namerol"] == 'monitor_ps'){
         conteos_monitor =realizar_conteo(usuario);
         contenedor = '<div class="row"><div class="col-sm-12"><h2>Información '+usuario["namerol"] +'- PERIODO :'+periodo+' </h2><div class="panel panel-default"> <div class="panel-body"><h4 class="panel-title"><span class="pull-left"> Revisados  :<label for="revisado_monitor_'+conteo+'">'+conteos_monitor[0]+'</label><b></b> - NO Revisados :<label for="norevisado_monitor_'+conteo+'">'+conteos_monitor[1]+'</label><b></b> - Total  :<label for="total_monitor_'+conteo+'">'+conteos_monitor[2]+'</label> <b></b> </span></h4></div></div></div></div>';
-        $("#reemplazarToogle").before(contenedor);
+      //  $("#reemplazarToogle").before(contenedor);
 
 
     }else if (usuario["namerol"] == 'practicante_ps'){
         var monitores = $('.panel-heading.practicante').children().length;
-        alert(monitores);
        // contenedor = '<div class="row"><div class="col-sm-12"><h2>Información '+usuario["namerol"] +'- PERIODO :'+periodo+' </h2><div class="panel panel-default"> <div class="panel-body"><h4 class="panel-title"><span class="pull-left"> Revisados  :'+conteos_practicante[0]+' <b></b> - NO Revisados :'+conteos_practicante[1]+' <b></b> - Total  :'+conteos_practicante[2]+' <b></b> </span></h4></div></div></div></div>';
        // $('#conteo_principal').html(contenedor);
         //        $('a[href="#collapse'+usuario["id"]+'"]').before(contenedor);
@@ -359,7 +356,8 @@ function realizar_conteo(usuario){
 
 function enviar_correo(instance){
 
-                $(this).on('click', '.btn.btn-info.btn-lg.botonCorreo', function() {
+                $('body').on('click', '.btn.btn-info.btn-lg.botonCorreo', function() {
+
                 var id_registro = $(this).attr('value');
                 var texto = $("#textarea_" + id_registro);
                 if (texto.val() == "") {
@@ -396,7 +394,7 @@ function enviar_correo(instance){
                             nombre: nombre,
                             message: mensaje_enviar
                         },
-                        url: "../../../blocks/ases/managers/get_info_report.php",
+                        url: "../../../blocks/ases/managers/seguimiento_pilos/seguimientopilos_report.php",
                         async: false,
                         success: function(msg) {
                             //si el envio del mensaje fue exitoso
@@ -428,107 +426,6 @@ function enviar_correo(instance){
                             });
                         },
                     });
-                }
-            });
- 
-            //se inicia la adicion del evento
-            $(this).on('click', '.btn.btn-info.btn-lg.botonCorreo', function() {
-                var id = $(this).attr("value");
-                $("#profesional_" + id).attr("disabled", true);
-                if ($(this).parent().children('textarea').val() == "") {
-                    swal({
-                        title: "Para enviar una observación debe llenar el campo correspondiente",
-                        html: true,
-                        type: "error",
-                        confirmButtonColor: "#d51b23"
-                    });
-                }
-                else {
-
-                    //se recupera el mensaje y el id del monitor al que se va a enviar el mensaje
-                    var particionar_informacion = $(this).parent().children('textarea').attr("id").split("_");
-                    var tipo = particionar_informacion[0];
-                    var codigoN1 = particionar_informacion[1];
-                    var fecha = particionar_informacion[3];
-                    var nombre = particionar_informacion[4];
-                    var mensaje_enviar = $(this).parent().children('textarea').val();
-                    var codigoN2 = 0;
-
-                    $.ajax({
-                        type: "POST",
-                        data: {
-                            type: "getProfesional",
-                            id: id,
-                            instance: instance
-                        },
-                        url: "../../../blocks/ases/managers/get_info_report.php",
-                        async: false,
-                        success: function(msg) {
-                            codigoN2 = msg;
-                        },
-                        dataType: "text",
-                        cache: "false",
-                        error: function(msg) {
-                            swal({
-                                title: "error getrol",
-                                html: true,
-                                type: "error",
-                                confirmButtonColor: "#d51b23"
-                            })
-                        },
-                    });
-
-                    //se limpia el textarea
-                    $(this).parent.children('textarea').val("");
-                    var respuesta = "";
-
-                    //se llama el ajax para enviar el mensaje
-                    $.ajax({
-                        type: "POST",
-                        data: {
-                            type: "send_email_to_user",
-                            tipoSeg: tipo,
-                            codigoEnviarN1: codigoN1,
-                            codigoEnviarN2: codigoN2,
-                            fecha: fecha,
-                            nombre: nombre,
-                            message: mensaje_enviar
-                        },
-                        url: "../../../blocks/ases/managers/get_info_report.php",
-                        async: false,
-                        success: function(msg) {
-                            //alert("mensaje");
-                            //alert(msg);
-                            //si el envio del mensaje fue exitoso
-                            if (msg == 1) {
-                                swal({
-                                    title: "Correo enviado",
-                                    html: true,
-                                    type: "success",
-                                    confirmButtonColor: "#d51b23"
-                                });
-                            }
-                            else {
-                                swal({
-                                    title: "error al enviar el correo al monitor",
-                                    html: true,
-                                    type: "error",
-                                    confirmButtonColor: "#d51b23"
-                                });
-                            }
-                        },
-                        dataType: "text",
-                        cache: "false",
-                        error: function(msg) {
-                            swal({
-                                title: "error al enviar el correo",
-                                html: true,
-                                type: "error",
-                                confirmButtonColor: "#d51b23"
-                            })
-                        },
-                    });
-
                 }
             });
 }

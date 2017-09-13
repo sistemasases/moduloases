@@ -2,7 +2,6 @@
 
 require_once('seguimientogrupal_lib.php');
 
-echo "pass";
 
 if(isset($_POST['function'])){
     switch($_POST['function']){

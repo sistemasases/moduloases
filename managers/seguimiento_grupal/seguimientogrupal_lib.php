@@ -3,6 +3,7 @@ require_once(dirname(__FILE__).'/../../../../config.php');
 require_once('../MyException.php');
 require_once ('../lib/student_lib.php');
 require_once('../periods_management/periods_lib.php');
+require_once('../seguimiento_pilos/seguimientopilos_lib.php');
 
 
 /**
@@ -23,26 +24,6 @@ function delete_seguimiento_grupal($id){
     return $success;
 }
 
-/**
- * Función que actualiza un seguimiento de tipo PARES
- * {talentospilos_seguimientos}
- * @see updateSeguimiento_pares($object)
- * @return 0 o 1
- */
-function updateSeguimiento_pares($object){
-    global $DB;
-   
-    //se obtiene el iddel estudiante al que pertene el seguimiento
-    $seg_estud = $DB->get_record_sql('SELECT id_estudiante FROM {talentospilos_seg_estudiante} seg_est WHERE seg_est.id_seguimiento='.$object->id);
-    
-    //se obtiene el ultimo seguimeinto perteneciente al estudiante
-    $lastSeg = $DB->get_record_sql('SELECT id_seguimiento,MAX(id) FROM {talentospilos_seg_estudiante} seg_est WHERE seg_est.id_estudiante='.$seg_estud->id_estudiante.'GROUP BY id_seguimiento ORDER BY id_seguimiento DESC');
-    
-    
-    if($lastSeg->id_seguimiento == $object->id) updateRisks($object, $seg_estud->id_estudiante );
-    
-    return $DB->update_record('talentospilos_seguimiento', $object);
-}
 
 /**
  * Función que consulta el seguimiento de 
@@ -205,16 +186,22 @@ function getSeguimientoOrderBySemester($id_est = null, $tipo,$idsemester = null,
 }
 
 /**
- * Función que obtiene un seguimiento
- * dado un id del monitor {talentospilos_seguimiento}
- * @see getSegumientoByMonitor($id_monitor, $id_seg= null, $tipo, $idinstancia)
+ * Función que obtiene un seguimiento dado un id del monitor {talentospilos_seguimiento}, el tipo de seguimiento y la instancia
+ * @see get_tracking_by_monitor($id_monitor, $id_seg= null, $tipo, $idinstancia)
+ * @param $id_monitor = id de monitor
+ * @param $id_seg = id del seguimiento
+ * @param $tipo  = tipo del seguimiento
+ * @param $idinstancia  = id de la instancia
  * @return array
  */
  
-function getSegumientoByMonitor($id_monitor, $id_seg= null, $tipo, $idinstancia){
+function get_tracking_by_monitor($id_monitor, $id_seg= null, $tipo, $idinstancia){
     global $DB;
+    $current_semester = get_current_semester();
+    $semester_interval = get_semester_interval($current_semester->max);
+
     $sql_query= "";
-        $sql_query="SELECT seg.id as id_seg, to_timestamp(fecha) as fecha_formato,*  from {talentospilos_seguimiento} seg  where seg.id_monitor = ".$id_monitor." AND seg.tipo = '".$tipo."' AND seg.id_instancia=".$idinstancia." ORDER BY fecha_formato DESC;";
+    $sql_query="SELECT seg.id as id_seg, to_timestamp(fecha) as fecha_formato,*  from {talentospilos_seguimiento} seg  where seg.id_monitor = ".$id_monitor." AND seg.tipo = '".$tipo."' AND seg.id_instancia=".$idinstancia." AND (fecha between ".strtotime($semester_interval->fecha_inicio)." and ".strtotime($semester_interval->fecha_fin).") AND status<>0 ORDER BY fecha_formato DESC;";
 
     if($id_seg != null){
       $sql_query = trim($sql_query,";");
@@ -343,20 +330,20 @@ function getUserMoodleByid($id){
 
 /**
  * Función que recupera la información de la tabla de seguimientos grupales (estudiantes
- *  respectivos que asistieron a ella -firstname-lastname-username y id ).
+ * respectivos que asistieron a ella -firstname-lastname-username y id ).
  *
- * @see get_estudiantes($id,$tipo,$instancia)
+ * @see get_students_assistance($id,$tipo,$instancia)
  * @param id --> id correspondiente a la id del estudiante.
- * @param tipo--> tipo correspondiente a "GRUPAL".
- * @param instancia --> instancia 
+ * @param type--> tipo correspondiente a "GRUPAL".
+ * @param instance --> instancia 
  * @return array con información de los nombres de los estudiantes que tuvieron un seguimiento grupal dado un idseguimiento.
  */
 
-function get_estudiantes($id,$tipo,$instancia){
+function get_students_assistance($id,$type,$instance){
     global $DB;
     $estudiantes=array();
 
-    $sql_query = " SELECT * FROM {talentospilos_seguimiento} AS seguimiento INNER JOIN mdl_talentospilos_seg_estudiante AS seguimiento_estudiante ON (seguimiento.id=seguimiento_estudiante.id_seguimiento) where seguimiento.id='$id' and tipo='$tipo' and id_instancia='$instancia'";
+    $sql_query = " SELECT * FROM {talentospilos_seguimiento} AS seguimiento INNER JOIN mdl_talentospilos_seg_estudiante AS seguimiento_estudiante ON (seguimiento.id=seguimiento_estudiante.id_seguimiento) where seguimiento.id='$id' and tipo='$type' and id_instancia='$instance'";
     $registros=$DB->get_records_sql($sql_query);
     
     foreach($registros as $registro){

@@ -412,7 +412,7 @@ function get_userById($column, $id){
 }
 
 /**
- * Función que recupera los usuarios asociados al curso de ASES.
+ * Función que recupera los usuarios asociados al curso de ASES dado el nombre del curso.
  * @see  get_course_user($namecourse)
  * @param $namecourse        
  * @return Array con usuarios asociados al curso
@@ -428,6 +428,26 @@ function get_course_user($namecourse){
     
     return $courseusers;
 }
+
+/**
+ * Función que recupera los usuarios asociados al curso de ASES dado el id del curso.
+ * @see  get_course_user($idcourse)
+ * @param $idcourse        
+ * @return Array con usuarios asociados al curso
+ **/
+function get_course_usersby_id($id){
+    
+    global $DB;
+    
+    $sql_query = "SELECT usuario.username as codigo, usuario.firstname as nombre, usuario.lastname as apellido FROM {course} course INNER JOIN  {enrol} enrol ON 
+    (enrol.courseid= course.id) INNER JOIN  {user_enrolments} userenrolments ON (userenrolments.enrolid= enrol.id)INNER JOIN  {user} usuario ON (usuario.id= userenrolments.userid) where course.id='$id';";
+                
+    $courseusers = $DB->get_records_sql($sql_query);
+
+    return $courseusers;
+    
+    }
+
 
 /**
  * Función que recupera los campos de usuario de la tabla {user}
