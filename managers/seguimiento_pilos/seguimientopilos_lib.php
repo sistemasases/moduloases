@@ -1,10 +1,7 @@
 <?php
 require_once(dirname(__FILE__). '/../../../../config.php');
 require_once(dirname(__FILE__).'/../periods_management/periods_lib.php');
-
-
-
-
+require_once(dirname(__FILE__).'/../lib/student_lib.php');
 
 /*
  * Función que obtiene los semestres almacenados
@@ -360,7 +357,7 @@ function get_name_rol($idrol)
  * @return Array 
  */
 
-function get_seguimientos_monitor($id_monitor,$id_instance,$fechas_epoch){
+function get_seguimientos_monitor($id_monitor,$id_instance,$fechas_epoch,$periodo){
     global $DB;
 
     $semestre_act = get_current_semester();
@@ -383,7 +380,7 @@ function get_seguimientos_monitor($id_monitor,$id_instance,$fechas_epoch){
                   (nombre_usuario_estudiante.id=usuario_estudiante.userid) INNER JOIN {talentospilos_monitor_estud} as monitor_actual 
                   ON (CAST(monitor_actual.id_estudiante AS text)=CAST(s_estudiante.id_estudiante AS text)) INNER JOIN {user} AS usuario_mon_actual ON (monitor_actual.id_monitor=usuario_mon_actual.id)
                   WHERE monitor_actual.id_monitor='$id_monitor' AND seguimiento.id_instancia='$id_instance' AND seguimiento.status <> 0 AND
-                  (seguimiento.fecha between '$fechas_epoch[0]' and '$fechas_epoch[1]') AND monitor_actual.id_semestre='$semestre_act->max' AND monitor_actual.id_instancia='$id_instance'  ORDER BY usuario_monitor.firstname;
+                  (seguimiento.fecha between '$fechas_epoch[0]' and '$fechas_epoch[1]') AND monitor_actual.id_semestre='$periodo->max' AND monitor_actual.id_instancia='$id_instance'  ORDER BY usuario_monitor.firstname;
     ";
     
     $consulta=$DB->get_records_sql($sql_query);
@@ -582,7 +579,6 @@ function get_profesional_practicante($id,$instanceid)
 }
 
 
-
 /*
  * Función para enviar mensaje al monitor que desea hacer la observación
  * 
@@ -597,10 +593,14 @@ function get_profesional_practicante($id,$instanceid)
 function send_email_to_user($tipoSeg,$codigoEnviarN1,$codigoEnviarN2,$fecha,$nombre,$messageText){
 
     global $USER;
+
     $emailToUser = new stdClass;
     $emailFromUser = new stdClass;
+    $messageHtml="";
 
-    $sending_user = get_full_user($USER->id);
+    $id_user = $USER->id;
+
+    $sending_user = get_full_user($id_user);
     $receiving_user = get_full_user($codigoEnviarN1);
     
     $monitor = get_full_user($codigoEnviarN1);
@@ -655,7 +655,6 @@ function send_email_to_user($tipoSeg,$codigoEnviarN1,$codigoEnviarN2,$fecha,$nom
     $messageHtml.=$messageText."<br><br>";
     $messageHtml.="Cordialmente<br>";
     $messageHtml.="$name_prof";
-    echo $messageHtml;
     
     $email_result = email_to_user($emailToUser, $emailFromUser, $subject, $messageText, $messageHtml, ", ", true);
     if($email_result!=1)
@@ -709,6 +708,7 @@ function send_email_to_user($tipoSeg,$codigoEnviarN1,$codigoEnviarN2,$fecha,$nom
       $emailToUser->lastnamephonetic = '';
       
       $email_result = email_to_user($emailToUser, $emailFromUser, $subject, $messageText, $messageHtml, ", ", true);
+      
       return $email_result;
       }
     }

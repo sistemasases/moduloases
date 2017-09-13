@@ -2,6 +2,16 @@
 
 require_once(dirname(__FILE__). '/../../../../config.php');
 
+
+ function get_current_semester_byinterval($fecha_inicio,$fecha_fin){
+     
+     global $DB;
+
+     $sql_query = "SELECT id  max, nombre FROM {talentospilos_semestre} WHERE fecha_inicio ='$fecha_inicio' and fecha_fin ='$fecha_fin' ";
+     $current_semester = $DB->get_record_sql($sql_query);
+     return $current_semester;
+ }
+
 /**
  * Función que retorna el semestre actual 
  * 

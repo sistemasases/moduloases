@@ -11,6 +11,13 @@
 		margin-right: 0;
 		width: auto;
 	}
+<<<<<<< HEAD
+=======
+
+	#show-panel {
+		height: auto;
+	}
+>>>>>>> general_tab
 }
 
 #nav-panel h4 {
@@ -28,6 +35,7 @@
 #nav-panel a {
 	color: #373a3d;
 }
+<<<<<<< HEAD
 
 #frame {
 	position: absolute;
@@ -35,6 +43,27 @@
 	min-height: 55%;
 }
 
+=======
+/*
+#panel-container {
+	display: table;
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	table-layout: fixed;
+	border-spacing: 10px;
+}
+*/
+
+
+#frame {
+	position: absolute;
+	width: 82%;
+	height: 70%;
+}
+
+
+>>>>>>> general_tab
 #nav-panel {
 	float: left;
 	margin-right: 100px;
@@ -45,6 +74,15 @@
 }
 
 #show-panel {
+<<<<<<< HEAD
 	overflow: hidden;
 	margin: 10px;	
+=======
+	/*display: table-cell;*/
+	overflow: hidden;
+	margin: 10px;
+	width: 80%;
+	height: 100%;
+	
+>>>>>>> general_tab
 }

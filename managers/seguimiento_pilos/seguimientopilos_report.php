@@ -3,7 +3,6 @@ require_once('seguimiento_functions.php');
 require_once('../student_profile/studentprofile_lib.php');
 require_once('../periods_management/periods_lib.php');
 
-
 global $USER;
 
 if(isset($_POST['type'])&&$_POST['type']=="getInfo"&&isset($_POST['instance'])) 

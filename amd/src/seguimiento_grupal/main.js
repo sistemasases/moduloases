@@ -71,7 +71,7 @@ requirejs(['jquery', 'validator', 'bootstrap', 'sweetalert', 'checkrole', 'amd_f
                         var error = msg.error;
                         if (!error) {
                             swal({
-                                title: "Actualizado con exito!!",
+                                title: "Actualizado con exito!!!",
                                 html: true,
                                 type: "success",
                                 text: msg.msg,
@@ -96,7 +96,7 @@ requirejs(['jquery', 'validator', 'bootstrap', 'sweetalert', 'checkrole', 'amd_f
                     dataType: "json",
                     cache: "false",
                     error: function(msg) {
-                        alert(msg);
+                        alert("error al actualizar seguimiento");
                     },
                 });
 
@@ -151,7 +151,7 @@ requirejs(['jquery', 'validator', 'bootstrap', 'sweetalert', 'checkrole', 'amd_f
                 $.ajax({
                     type: "POST",
                     data: data,
-                    url: "../managers/seguimiento.php",
+                    url: "../managers/user_management/seguimiento.php",
                     success: function(msg) {
                         var error = msg.error;
                         if (!error) {
@@ -181,7 +181,7 @@ requirejs(['jquery', 'validator', 'bootstrap', 'sweetalert', 'checkrole', 'amd_f
                     dataType: "json",
                     cache: "false",
                     error: function(msg) {
-                        alert("error");
+                        alert("error al guardar seguimiento");
                     },
                 });
 
@@ -246,7 +246,7 @@ requirejs(['jquery', 'validator', 'bootstrap', 'sweetalert', 'checkrole', 'amd_f
         $.ajax({
             type: "POST",
             data: data,
-            url: "../managers/seguimiento.php",
+            url: "../managers/user_management/seguimiento.php",
             success: function(msg) {
                 $('#mytable tbody').html('');
                 if (msg.rows != 0) {
@@ -265,7 +265,7 @@ requirejs(['jquery', 'validator', 'bootstrap', 'sweetalert', 'checkrole', 'amd_f
             dataType: "json",
             cache: "false",
             error: function(msg) {
-                alert(msg);
+                alert("error al cargar estudiantes");
             },
         });
     }
@@ -287,7 +287,7 @@ requirejs(['jquery', 'validator', 'bootstrap', 'sweetalert', 'checkrole', 'amd_f
         $.ajax({
             type: "POST",
             data: data,
-            url: "../managers/seguimiento.php",
+            url: "../managers/user_management/seguimiento.php",
             success: function(msg) {
                 $('#seguimiento #mytable_consult tbody').html('');
 
@@ -321,7 +321,7 @@ requirejs(['jquery', 'validator', 'bootstrap', 'sweetalert', 'checkrole', 'amd_f
             dataType: "json",
             cache: "false",
             error: function(msg) {
-                alert("Error 2" + msg);
+                alert("error al cargar listado de asistencia");
             },
         });
     }
@@ -373,7 +373,7 @@ requirejs(['jquery', 'validator', 'bootstrap', 'sweetalert', 'checkrole', 'amd_f
         $.ajax({
             type: "POST",
             data: data,
-            url: "../managers/seguimiento.php",
+            url: "../managers/user_management/seguimiento.php",
             success: function(msg) {
                 var error = msg.error;
                 if (!error) {
@@ -486,7 +486,7 @@ requirejs(['jquery', 'validator', 'bootstrap', 'sweetalert', 'checkrole', 'amd_f
         $.ajax({
             type: "POST",
             data: data,
-            url: "../managers/seguimiento.php",
+            url: "../managers/user_management/seguimiento.php",
             success: function(msg) {
                 var error = msg.error;
                 if (!error) {
@@ -533,7 +533,7 @@ requirejs(['jquery', 'validator', 'bootstrap', 'sweetalert', 'checkrole', 'amd_f
             dataType: "json",
             cache: "false",
             error: function(msg) {
-                alert("error");
+                alert("error al cargar seguimiento monitor");
             },
         });
     }
@@ -560,7 +560,7 @@ requirejs(['jquery', 'validator', 'bootstrap', 'sweetalert', 'checkrole', 'amd_f
                         id: id,
                         "function": "delete",
                     },
-                    url: "../../../blocks/ases/managers/seguimiento.php",
+                    url: "../../../blocks/ases/managers/user_management/seguimiento.php",
                     async: false,
                     success: function(msg) {
                         if (msg == 0) {
@@ -584,7 +584,7 @@ requirejs(['jquery', 'validator', 'bootstrap', 'sweetalert', 'checkrole', 'amd_f
                     },
                     dataType: "text",
                     cache: "false",
-                    error: function(msg) {},
+                    error: function(msg) {alert("error al eliminar seguimiento")},
                 });
             });
     }
@@ -616,7 +616,7 @@ requirejs(['jquery', 'validator', 'bootstrap', 'sweetalert', 'checkrole', 'amd_f
         $.ajax({
             type: "POST",
             data: data,
-            url: "../managers/seguimiento.php",
+            url: "../managers/user_management/seguimiento.php",
             success: function(msg) {
                 var error = msg.error;
                 if (!error) {
@@ -655,7 +655,7 @@ requirejs(['jquery', 'validator', 'bootstrap', 'sweetalert', 'checkrole', 'amd_f
             dataType: "json",
             cache: "false",
             error: function(msg) {
-                alert("error");
+                alert("error al ver detalles de seguimientos");
             },
         });
     }
