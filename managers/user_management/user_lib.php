@@ -230,7 +230,7 @@ FIN FUNCIONES RELACIONADAS CON EL ROL PROFESIONAL PSICOEDUCATIVO
  **/
 function update_role_monitor_ps($username, $role, $array_students, $boss,$idinstancia,$state = 1)
 {
-    global $DB;
+     global $DB;
     
     $sql_query = "SELECT id FROM {user} WHERE username ='$username';";
     $id_moodle = $DB->get_record_sql($sql_query);

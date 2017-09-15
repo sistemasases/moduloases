@@ -174,12 +174,16 @@ function consultar_seguimientos_persona(instance,usuario){
 
                     if(msg==""){
                       $('#reemplazarToogle').html('<label> No se encontraron registros </label>' );
+                      crear_conteo(usuario);
+
 
 
                     }else{
                     $('#reemplazarToogle').html(msg);
                     }
                     $(".well.col-md-10.col-md-offset-1.reporte-seguimiento.oculto").slideDown( "slow" );
+                    crear_conteo(usuario);
+
 
 
 
@@ -284,47 +288,58 @@ function consultar_seguimientos_persona(instance,usuario){
 
 function crear_conteo(usuario){
     var periodo = $("#periodos option:selected").text();
-    var conteo = 0;
+    var conteo=0;
+    var contenedor="";
     
     if(usuario["namerol"] == 'monitor_ps'){
-        conteos_monitor =realizar_conteo(usuario);
-        contenedor = '<div class="row"><div class="col-sm-12"><h2>Información '+usuario["namerol"] +'- PERIODO :'+periodo+' </h2><div class="panel panel-default"> <div class="panel-body"><h4 class="panel-title"><span class="pull-left"> Revisados  :<label for="revisado_monitor_'+conteo+'">'+conteos_monitor[0]+'</label><b></b> - NO Revisados :<label for="norevisado_monitor_'+conteo+'">'+conteos_monitor[1]+'</label><b></b> - Total  :<label for="total_monitor_'+conteo+'">'+conteos_monitor[2]+'</label> <b></b> </span></h4></div></div></div></div>';
-      //  $("#reemplazarToogle").before(contenedor);
+        var conteos_monitor =realizar_conteo(usuario);
+        contenedor = '<div class="row"><div class="col-sm-12"><h2>Información monitor - PERIODO :'+periodo+' </h2><div class="panel panel-default"> <div class="panel-body"><h4 class="panel-title"><span class="pull-left"> Revisados  :<label for="revisado_monitor_'+conteo+'">'+conteos_monitor[0]+'</label><b></b> - NO Revisados :<label for="norevisado_monitor_'+conteo+'">'+conteos_monitor[1]+'</label><b></b> - Total  :<label for="total_monitor_'+conteo+'">'+conteos_monitor[2]+'</label> <b></b> </span></h4></div></div></div></div>';
+        $("#conteo_principal").empty();
+        $("#conteo_principal").html(contenedor);
 
 
     }else if (usuario["namerol"] == 'practicante_ps'){
-        var monitores = $('.panel-heading.practicante').children().length;
-       // contenedor = '<div class="row"><div class="col-sm-12"><h2>Información '+usuario["namerol"] +'- PERIODO :'+periodo+' </h2><div class="panel panel-default"> <div class="panel-body"><h4 class="panel-title"><span class="pull-left"> Revisados  :'+conteos_practicante[0]+' <b></b> - NO Revisados :'+conteos_practicante[1]+' <b></b> - Total  :'+conteos_practicante[2]+' <b></b> </span></h4></div></div></div></div>';
-       // $('#conteo_principal').html(contenedor);
-        //        $('a[href="#collapse'+usuario["id"]+'"]').before(contenedor);
-
-
-
-
+        var conteos_practicante =realizar_conteo(usuario);
+        contenedor = '<div class="row"><div class="col-sm-12"><h2>Información practicante - PERIODO :'+periodo+' </h2><div class="panel panel-default"> <div class="panel-body"><h4 class="panel-title"><span class="pull-left"> Revisados  :'+conteos_practicante[0]+' <b></b> - NO Revisados :'+conteos_practicante[1]+' <b></b> - Total  :'+conteos_practicante[2]+' <b></b> </span></h4></div></div></div></div>';
+        $("#conteo_principal").empty();
+        $("#conteo_principal").html(contenedor);
 
     }else if (usuario["namerol"] == 'profesional_ps'){
-        var practicantes =  $('.panel-heading.pares').children().length;
+        var conteos_profesional =  realizar_conteo(usuario);
+        contenedor = '<div class="row"><div class="col-sm-12"><h2>Información profesional - PERIODO :'+periodo+' </h2><div class="panel panel-default"> <div class="panel-body"><h4 class="panel-title"><span class="pull-left"> Revisados  :'+conteos_profesional[0]+' <b></b> - NO Revisados :'+conteos_profesional[1]+' <b></b> - Total  :'+conteos_profesional[2]+' <b></b> </span></h4></div></div></div></div>';
+        $("#conteo_principal").empty();
+        $("#conteo_principal").html(contenedor);
 
     }else if(usuario["namerol" ] == 'sistemas'){
 
 
     }
 }
-
-
-
-
-function realizar_conteo(usuario){
-
+function realizar_conteo(usuario,dependiente="ninguno"){
+    var conteos= [];
 
     if(usuario["namerol"] == 'monitor_ps'){
+    var numero_pares=0;
+    var numero_grupales=0;
 
-    var numero_pares = $('.panel-heading.pares').children().length;
-    var total_monitor_revisado = 0;
-    var total_monitor_norevisado = 0;
-    var numero_grupales = $('.panel-heading.grupal').children().length;
+    if (dependiente =="ninguno"){
+        alert(usuario);
+    numero_pares = $('.panel-heading.pares').children().length;
+    numero_grupales = $('.panel-heading.grupal').children().length;
+
+
+    }else{
+    numero_pares = $("#collapse"+usuario["id"]+" .panel-heading.pares").children().length;
+    numero_grupales = $("#collapse"+usuario["id"]+" .panel-heading.grupal").children().length;
+
+    }
+    $("label[for='norevisado_grupal_"+usuario["id"]+"']").html(numero_grupales);
+    $("label[for='total_grupal_"+usuario["id"]+"']").html(numero_grupales);
+
     var total_grupal_revisado = 0;
     var total_grupal_norevisado = 0;
+    var total_monitor_revisado = 0;
+    var total_monitor_norevisado = 0;
 
     for(var cantidad =0; cantidad<numero_pares;cantidad++){
        total_monitor_revisado += Number($("label[for='revisado_pares_"+ usuario["id"]+"_"+cantidad+"']").text());
@@ -332,15 +347,58 @@ function realizar_conteo(usuario){
     }
 
     for(var cantidad =0; cantidad<numero_grupales;cantidad++){
-       total_grupal_revisado += Number($("label[for='revisado_grupal_"+ usuario["id"]+"_"+cantidad+"']").text());
-       total_grupal_norevisado += Number($("label[for='norevisado_grupal_"+ usuario["id"]+"_"+cantidad+"']").text());
+       total_grupal_revisado += 0;
+       total_grupal_norevisado = numero_grupales;
 
     }
 
     total = (total_monitor_revisado+total_grupal_revisado) + (total_monitor_norevisado+total_grupal_norevisado);
     return new Array((total_monitor_revisado+total_grupal_revisado),(total_monitor_norevisado+total_grupal_norevisado), total);
     
-    }else if (usuario["namerol" == 'practicante_ps']){
+    }else if (usuario["namerol"] == 'practicante_ps'){
+      var numero_monitores=0;
+      conteos =[0,0,0];  
+
+      if(dependiente =="ninguno"){
+       numero_monitores = $('.panel-heading.practicante').children().length;
+      }else{
+        numero_monitores = $("#collapse"+usuario["id"]+" .panel-heading.practicante").children().length;
+      }
+      for(var monitor = 0;monitor<numero_monitores;monitor++){
+      var collapse_name =$( ".panel-heading.practicante:eq("+monitor+")" ).find('a').attr('href');
+      var id_monitor = collapse_name.split("#collapse")[1];
+      var usuario_monitor = [];
+      usuario_monitor["id"] = id_monitor;
+      usuario_monitor["namerol"] ="monitor_ps";
+      var conteos_monitor = realizar_conteo(usuario_monitor,"practicante");
+
+      $("label[for='revisado_monitor_"+id_monitor+"']").html(conteos_monitor[0]);
+      $("label[for='norevisado_monitor_"+id_monitor+"']").html(conteos_monitor[1]);
+      $("label[for='total_monitor_"+id_monitor+"']").html(conteos_monitor[2]);
+      conteos[0]+=conteos_monitor[0];
+      conteos[1]+=conteos_monitor[1];
+      conteos[2]+=conteos_monitor[2];
+    }
+    return conteos;
+
+    }else if(usuario["namerol"] =='profesional_ps'){
+     conteos =[0,0,0];
+     var numero_practicantes = $('.panel-heading.profesional').children().length;
+     for(var practicante=0;practicante<numero_practicantes;practicante++){
+      var collapse_name =$( ".panel-heading.profesional:eq("+practicante+")" ).find('a').attr('href');
+      var id_practicante = collapse_name.split("#collapse")[1];
+      var usuario_practicante = [];
+      usuario_practicante["id"] = id_practicante;
+      usuario_practicante["namerol"] ="practicante_ps";
+      var conteos_practicantes =realizar_conteo(usuario_practicante,"practicante");
+      $("label[for='revisado_practicante_"+id_practicante+"']").html(conteos_practicantes[0]);
+      $("label[for='norevisado_practicante_"+id_practicante+"']").html(conteos_practicantes[1]);
+      $("label[for='total_practicante_"+id_practicante+"']").html(conteos_practicantes[2]);
+      conteos[0]+=conteos_practicantes[0];
+      conteos[1]+=conteos_practicantes[1];
+      conteos[2]+=conteos_practicantes[2];
+     }
+     return conteos;
 
     }
 
@@ -398,6 +456,7 @@ function enviar_correo(instance){
                         async: false,
                         success: function(msg) {
                             //si el envio del mensaje fue exitoso
+                            alert(msg);
                             if (msg == 1) {
                                 swal({
                                     title: "Correo enviado",

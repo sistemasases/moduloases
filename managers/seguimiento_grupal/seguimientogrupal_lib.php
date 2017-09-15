@@ -6,13 +6,68 @@ require_once('../periods_management/periods_lib.php');
 require_once('../seguimiento_pilos/seguimientopilos_lib.php');
 
 
+
 /**
- * Función que elimina un registro grupal tanto en 
- * las tablas {talentospilos_seg_estudiante}
- * {talentospilos_seguimientos} dado un id de seguimiento.
- * @see delete_seguimiento_grupal($id)
- * @return 0 o 1
+ * Función que los estudiantes que están relacionados con un monitor especifico en una instancia.
+ *
+ * @see get_grupal_students($id_monitor, $idinstancia)
+ * @param  $id_monitor --> id del monitor
+ * @param  $id_monitor --> id de la instancia
+ * @return Array 
  */
+
+function get_grupal_students($id_monitor, $idinstancia){
+    global $DB;
+    $semestre_act = get_current_semester();
+    $sql_query = "SELECT * FROM (SELECT * FROM 
+                    (SELECT *, id AS id_user FROM {user}) AS userm 
+                            INNER JOIN 
+                            (SELECT * FROM {user_info_data} as d INNER JOIN {user_info_field} as f ON d.fieldid = f.id WHERE f.shortname ='idtalentos' AND data <> '') AS field 
+                            ON userm. id_user = field.userid ) AS usermoodle 
+                        INNER JOIN 
+                        (SELECT *,id AS idtalentos FROM {talentospilos_usuario}) AS usuario 
+                        ON usermoodle.data = CAST(usuario.id AS TEXT)
+                    where  idtalentos in (select id_estudiante from {talentospilos_monitor_estud} where id_monitor =".$id_monitor." AND id_instancia=".$idinstancia." and id_semestre=".$semestre_act->max.")  ;";
+    
+   $result = $DB->get_records_sql($sql_query);
+   return $result;
+}
+
+
+/**
+ * Función que obtiene un seguimiento dado un id del monitor {talentospilos_seguimiento}, el tipo de seguimiento y la instancia
+ * @see get_tracking_by_monitor($id_monitor, $id_seg= null, $tipo, $idinstancia)
+ * @param $id_monitor = id de monitor
+ * @param $id_seg = id del seguimiento
+ * @param $tipo  = tipo del seguimiento
+ * @param $idinstancia  = id de la instancia
+ * @return array
+ */
+ 
+function get_tracking_by_monitor($id_monitor, $id_seg= null, $tipo, $idinstancia){
+    global $DB;
+    $current_semester = get_current_semester();
+    $semester_interval = get_semester_interval($current_semester->max);
+
+    $sql_query= "";
+    $sql_query="SELECT seg.id as id_seg, to_timestamp(fecha) as fecha_formato,*  from {talentospilos_seguimiento} seg  where seg.id_monitor = ".$id_monitor." AND seg.tipo = '".$tipo."' AND seg.id_instancia=".$idinstancia." AND (fecha between ".strtotime($semester_interval->fecha_inicio)." and ".strtotime($semester_interval->fecha_fin).") AND status<>0 ORDER BY fecha_formato DESC;";
+
+    if($id_seg != null){
+      $sql_query = trim($sql_query,";");
+      $sql_query.= " AND seg.id =".$id_seg.";";
+
+   
+    }
+   return $DB->get_records_sql($sql_query);
+}
+
+/**
+ * Función que elimina un registro grupal tanto en las tablas {talentospilos_seg_estudiante} {talentospilos_seguimientos} dado un id de seguimiento.
+ * @see delete_seguimiento_grupal($id)
+ * @param $id = id del seguimiento
+ * @return boolean
+ */
+
 function delete_seguimiento_grupal($id){
     
     global $DB;
@@ -24,14 +79,13 @@ function delete_seguimiento_grupal($id){
     return $success;
 }
 
-
 /**
- * Función que consulta el seguimiento de 
- * tipo GRUPAL dado un id.
- * {talentospilos_seg_estudiante}
+ * Función que consulta el seguimiento de tipo GRUPAL dado un id {talentospilos_seg_estudiante}
  * @see getEstudiantesSegGrupal($id_seg)
- * @return seguimiento.
+ * @param $id_seg = id del seguimiento
+ * @return Array
  */
+
 function getEstudiantesSegGrupal($id_seg){
     global $DB;
     $sql_query = "SELECT id_estudiante FROM {talentospilos_seg_estudiante} WHERE id_seguimiento ='$id_seg'";
@@ -185,32 +239,8 @@ function getSeguimientoOrderBySemester($id_est = null, $tipo,$idsemester = null,
     return $object_seguimientos;
 }
 
-/**
- * Función que obtiene un seguimiento dado un id del monitor {talentospilos_seguimiento}, el tipo de seguimiento y la instancia
- * @see get_tracking_by_monitor($id_monitor, $id_seg= null, $tipo, $idinstancia)
- * @param $id_monitor = id de monitor
- * @param $id_seg = id del seguimiento
- * @param $tipo  = tipo del seguimiento
- * @param $idinstancia  = id de la instancia
- * @return array
- */
- 
-function get_tracking_by_monitor($id_monitor, $id_seg= null, $tipo, $idinstancia){
-    global $DB;
-    $current_semester = get_current_semester();
-    $semester_interval = get_semester_interval($current_semester->max);
 
-    $sql_query= "";
-    $sql_query="SELECT seg.id as id_seg, to_timestamp(fecha) as fecha_formato,*  from {talentospilos_seguimiento} seg  where seg.id_monitor = ".$id_monitor." AND seg.tipo = '".$tipo."' AND seg.id_instancia=".$idinstancia." AND (fecha between ".strtotime($semester_interval->fecha_inicio)." and ".strtotime($semester_interval->fecha_fin).") AND status<>0 ORDER BY fecha_formato DESC;";
 
-    if($id_seg != null){
-      $sql_query = trim($sql_query,";");
-      $sql_query.= " AND seg.id =".$id_seg.";";
-
-   
-    }
-   return $DB->get_records_sql($sql_query);
-}
 
 /**
  * Función que obtiene el rol de un usuario
@@ -386,22 +416,7 @@ function get_seguimientos($id,$tipo,$instancia){
 
 
 
-function get_grupal_students($id_monitor, $idinstancia){
-    global $DB;
-    $semestre_act = get_current_semester();
-    $sql_query = "SELECT * FROM (SELECT * FROM 
-                    (SELECT *, id AS id_user FROM {user}) AS userm 
-                            INNER JOIN 
-                            (SELECT * FROM {user_info_data} as d INNER JOIN {user_info_field} as f ON d.fieldid = f.id WHERE f.shortname ='idtalentos' AND data <> '') AS field 
-                            ON userm. id_user = field.userid ) AS usermoodle 
-                        INNER JOIN 
-                        (SELECT *,id AS idtalentos FROM {talentospilos_usuario}) AS usuario 
-                        ON usermoodle.data = CAST(usuario.id AS TEXT)
-                    where  idtalentos in (select id_estudiante from {talentospilos_monitor_estud} where id_monitor =".$id_monitor." AND id_instancia=".$idinstancia." and id_semestre=".$semestre_act->max.")  ;";
-    
-   $result = $DB->get_records_sql($sql_query);
-   return $result;
-}
+
 
 /**
  * Función que retorna el id del profesional asignado a un estudiante

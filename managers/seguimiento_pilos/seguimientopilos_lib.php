@@ -403,10 +403,10 @@ function get_seguimientos_monitor($id_monitor,$id_instance,$fechas_epoch,$period
       
       //Número de registros del estudiante revisados por el profesional, no revisados por el mismo,Número total de registros del monitor cuando son GRUPALES. 
        $sql = consult_counting_tracking(1,"GRUPAL",$id_instance,$fechas_epoch,$id_monitor);
-       $estudiante->registros_estudiantes_revisados_grupal=$DB->get_record_sql($sql)->count;
+       $estudiante->registros_estudiantes_revisados_grupal=0;
 
        $sql = consult_counting_tracking(0,"GRUPAL",$id_instance,$fechas_epoch,$id_monitor);
-       $estudiante->registros_estudiantes_norevisados_grupal=$DB->get_record_sql($sql)->count;
+       $estudiante->registros_estudiantes_norevisados_grupal=0;
 
        $estudiante->registros_estudiantes_total_grupal=($estudiante->registros_estudiantes_revisados_grupal + $estudiante->registros_estudiantes_norevisados_grupal );
        array_push($array_estudiantes,$estudiante);

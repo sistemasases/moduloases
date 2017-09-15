@@ -12,16 +12,6 @@ require_once('seguimientopilos_lib.php');
 //******************************************************************************************************
 //******************************************************************************************************
 
-function semesterUser(&$pares,&$grupal,$instanceid,$rol){
-    
-    $arregloBySemester = [];
-    $semesters= get_semesters();
-    $arregloSemestreYPersonas=transformarConsultaSemestreArray($pares,$grupal,$semesters,$instanceid,$rol);
-
-    return crearTablaYToggleSemestre($arregloSemestreYPersonas);
-
-}
-
 /**
  * Función que evalua si existen seguimientos
  * @see has_tracking($seguimientos)
@@ -92,22 +82,6 @@ function get_people_select($people){
          return $arregloSemestreYPersonas;
 
     }
-
-    //se crea el toogle del profesional el cual tiene cada uno de los practicantesr asignados al profesional
-    function crearTablaYToggleSemestre($arregloSemestre) {
-        $stringRetornar = "";
-
-        for ($semestre=0;$semestre<count($arregloSemestre);$semestre++) {
-            $stringRetornar .= '<div class="panel-group"><div class="panel panel-default" ><div class="panel-heading" style="background-color: #d9534f; color:white"><h4 class="panel-title"><a data-toggle="collapse"  href="#collapse'.$arregloSemestre[$semestre][0].'">'.$arregloSemestre[$semestre][1].'</a></h4></div>';
-            $stringRetornar .= '<div id="collapse'.$arregloSemestre[$semestre][0].'" class="panel-collapse collapse"><div class="panel-body">';
-            //en la tercer posicion del arreglo se encuentra un texto html con un formato especifico
-            $stringRetornar .= '</div></div></div></div>';
-        }
-
-        return $stringRetornar;
-    }
-
-
 
 
 //******************************************************************************************************
@@ -185,8 +159,9 @@ function profesionalUser(&$pares,&$grupal,$id_prof,$instanceid,$rol,$semester){
         $stringRetornar = "";
         $stringRetornar .=$conteo_profesional; 
         for ($practicante=0;$practicante<count($arregloPracticanteYMonitor);$practicante++) {
-            $stringRetornar .= '<div class="panel-group"><div class="panel panel-default" ><div class="panel-heading" style="background-color: #938B8B;"><h4 class="panel-title"><a data-toggle="collapse"  href="#collapse'.$arregloPracticanteYMonitor[$practicante][0].'">'.$arregloPracticanteYMonitor[$practicante][1].'</a><span> </b> </span></h4></div>';
+            $stringRetornar .= '<div class="panel-group"><div class="panel panel-default" ><div class="panel-heading profesional" style="background-color: #938B8B;"><h4 class="panel-title"><a data-toggle="collapse"  href="#collapse'.$arregloPracticanteYMonitor[$practicante][0].'">'.$arregloPracticanteYMonitor[$practicante][1].'</a><span>R.P  : <b><label for="revisado_practicante_'.$arregloPracticanteYMonitor[$practicante][0].'">0</label></b> - NO R.P : <b><label for="norevisado_practicante_'.$arregloPracticanteYMonitor[$practicante][0].'">0</label></b> - Total  : <b><label for="total_practicante_'.$arregloPracticanteYMonitor[$practicante][0].'">0</label></b> </span></h4></div>';
             $stringRetornar .= '<div id="collapse'.$arregloPracticanteYMonitor[$practicante][0].'" class="panel-collapse collapse"><div class="panel-body">';
+
 
             //en la tercer posicion del arreglo se encuentra un texto html con un formato especifico
             $stringRetornar .= $arregloPracticanteYMonitor[$practicante][2];
@@ -261,8 +236,9 @@ se usara para la creacion del toogle.*/
 
     function crearTablaYTogglePracticante($arregloMonitorYEstudiantes) {
         $stringRetornar = "";
+
         for ($monitor=0;$monitor<count($arregloMonitorYEstudiantes);$monitor++) {
-            $stringRetornar .= '<div class="panel-group"><div class="panel panel-default" ><div class="panel-heading practicante" style="background-color: #AEA3A3;"><h4 class="panel-title"><a data-toggle="collapse"  href="#collapse'.$arregloMonitorYEstudiantes[$monitor][0].'">'.$arregloMonitorYEstudiantes[$monitor][1] .'</a></h4></div>';
+            $stringRetornar .= '<div class="panel-group"><div class="panel panel-default" ><div class="panel-heading practicante" style="background-color: #AEA3A3;"><h4 class="panel-title"><a data-toggle="collapse"  href="#collapse'.$arregloMonitorYEstudiantes[$monitor][0].'">'.$arregloMonitorYEstudiantes[$monitor][1] .'</a><span> R.P  : <b><label for="revisado_monitor_'.$arregloMonitorYEstudiantes[$monitor][0].'">0</label></b> - NO R.P : <b><label for="norevisado_monitor_'.$arregloMonitorYEstudiantes[$monitor][0].'">0</label></b> - Total  : <b><label for="total_monitor_'.$arregloMonitorYEstudiantes[$monitor][0].'">0</label></b> </span></h4></div>';
             $stringRetornar .= '<div id="collapse'.$arregloMonitorYEstudiantes[$monitor][0].'" class="panel-collapse collapse"><div class="panel-body">';
             //en la tercer posicion del arreglo se encuentra un texto html con un formato especifico
             $stringRetornar .= $arregloMonitorYEstudiantes[$monitor][2];
@@ -924,7 +900,7 @@ function crearTablaYToggle($arregloImprimirPares, $monitorNo, $arregloImprimirGr
 
         //si existen seguimiento grupales
         if (count($arregloImprimirGrupos) != 0) {
-            $stringRetornar .= '<div class="panel-group"><div class="panel panel-default"><div class="panel-heading grupal" style="background-color: #D0C4C4;"><h4 class="panel-title"><a data-toggle="collapse" href="#collapsegroup' .$monitorNo. $arregloImprimirGrupos[0][11] .'">SEGUIMIENTOS GRUPALES <span> R.P  : <b><label for="revisado_grupal_'.$codigoEnviarN1."_".$monitorNo.'">'.$arregloImprimirGrupos[0][14].'</label></b> - NO R.P : <b><label for="norevisado_grupal_'.$codigoEnviarN1."_".$monitorNo.'">'.$arregloImprimirGrupos[0][15].'</label></b> - Total  : <b>'. $arregloImprimirGrupos[0][16] .'</b> </span></a></h4></div>';
+            $stringRetornar .= '<div class="panel-group"><div class="panel panel-default"><div class="panel-heading grupal" style="background-color: #D0C4C4;"><h4 class="panel-title"><a data-toggle="collapse" href="#collapsegroup' .$monitorNo. $arregloImprimirGrupos[0][11] .'">SEGUIMIENTOS GRUPALES <span> R.P  : <b><label for="revisado_grupal_'.$codigoEnviarN1.'">'.$arregloImprimirGrupos[0][14].'</label></b> - NO R.P : <b><label for="norevisado_grupal_'.$codigoEnviarN1.'">'.$arregloImprimirGrupos[0][15].'</label></b> - Total  : <b><label for="total_grupal_'.$codigoEnviarN1.'">'. $arregloImprimirGrupos[0][16] .'</b> </span></a></h4></div>';
             $stringRetornar .= '<div id="collapsegroup' .$monitorNo. $arregloImprimirGrupos[0][11] .'" class="panel-collapse collapse"><div class="panel-body">';
             for ($grupo=0; $grupo<count($arregloImprimirGrupos);$grupo++) {
                 $stringRetornar .= '<div class="panel-group"><div class="panel panel-default"><div class="panel-heading"><h4 class="panel-title"><a data-toggle="collapse" href="#collapsegroup' .$monitorNo. $grupo .$$arregloImprimirGrupos[$grupo][11] .'">'. $arregloImprimirGrupos[$grupo][1] .'</a></h4></div>';

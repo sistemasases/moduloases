@@ -126,6 +126,13 @@ function save_profile($form){
         $obj_updatable = (object) $obj_updatable;
         //se le asigna el id del usario a actualizar
         $obj_updatable->id = $id_ases;
+
+        $sql_query = "SELECT observacion FROM {talentospilos_usuario} WHERE id = $id_ases";
+        $observations = $DB->get_record_sql($sql_query)->observacion;
+
+        $conc_observations = $obj_updatable->observacion."\n".$observations;
+
+        $obj_updatable->observacion = $conc_observations;
         
         $result = $DB->update_record('talentospilos_usuario', $obj_updatable);
         

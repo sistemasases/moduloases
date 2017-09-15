@@ -251,6 +251,7 @@ function userLoad(username, callback){
 }
 
 function updateRolUser(){
+
     var dataRole = $('#role_select').val();
     var dataUsername = $('#users').val();
     var dataStudents = new Array();
@@ -272,6 +273,7 @@ function updateRolUser(){
             url: "../managers/user_management/update_role_user.php",
             success: function(msg)
             {
+
                 swal("Información!", msg, "info");
                 userLoad(dataUsername);
             },
@@ -288,8 +290,7 @@ function updateRolUser(){
             data: {role: dataRole, username: dataUsername, students: dataStudents, boss:boss_id, idinstancia: getIdinstancia()},
             url: "../managers/user_management/update_role_user.php",
             success: function(msg)
-            {
-                swal({  title: "Información!",   
+            {                swal({  title: "Información!",   
                     text: msg,   
                     type: "info",
                     html: true,
@@ -496,6 +497,7 @@ function load_users(){
         data:{idinstancia: getIdinstancia()},
         url: "../managers/user_management/load_role_users.php",
         success: function(msg){
+            alert("pasó");
             $("#div_users").empty();
             $("#div_users").append('<table id="tableUsers" class="display" cellspacing="0" width="100%"><thead><thead></table>');
             var table = $("#tableUsers").DataTable(msg);

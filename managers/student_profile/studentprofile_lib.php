@@ -565,7 +565,7 @@ function save_status_icetex($id_status, $id_student, $id_reason=null, $observati
         $sql_query = "SELECT observacion FROM {talentospilos_usuario} WHERE id = $id_student";
         $user_observations = $DB->get_record_sql($sql_query)->observacion;
 
-        $user_observations = $user_observations."\n".date('d-m-y', $today_timestamp).": Mótivo de retiro Icetex:  $observations";
+        $user_observations = date('d-m-y', $today_timestamp).": Mótivo de retiro Icetex:  $observations"."\n".$user_observations;
 
         $object_updatable = new stdClass();
         $object_updatable->id = $id_student;
@@ -625,7 +625,7 @@ function save_status_ases($id_status, $id_student, $id_reason=null, $observation
         $sql_query = "SELECT observacion FROM {talentospilos_usuario} WHERE id = $id_student";
         $user_observations = $DB->get_record_sql($sql_query)->observacion;
 
-        $user_observations = $user_observations."\n".date('d-m-y', $today_timestamp).": Mótivo de retiro ASES:  $observations";
+        $user_observations = date('d-m-y', $today_timestamp).": Mótivo de retiro ASES:  $observations"."\n".$user_observations;
 
         $object_updatable = new stdClass();
         $object_updatable->id = $id_student;

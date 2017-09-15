@@ -66,7 +66,7 @@ requirejs(['jquery', 'validator', 'bootstrap', 'sweetalert', 'checkrole', 'amd_f
                 $.ajax({
                     type: "POST",
                     data: data,
-                    url: "../managers/seguimiento.php",
+                    url: "../managers/user_management/seguimiento.php",
                     success: function(msg) {
                         var error = msg.error;
                         if (!error) {
