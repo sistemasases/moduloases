@@ -12,12 +12,15 @@
 		width: auto;
 	}
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 
 	#show-panel {
 		height: auto;
 	}
 >>>>>>> general_tab
+=======
+>>>>>>> 97c7d23d80c7365c0b40027b0d4abac40b2e33b4
 }
 
 #nav-panel h4 {
@@ -36,6 +39,7 @@
 	color: #373a3d;
 }
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 #frame {
 	position: absolute;
@@ -45,6 +49,8 @@
 }
 
 =======
+=======
+>>>>>>> 97c7d23d80c7365c0b40027b0d4abac40b2e33b4
 /*
 #panel-container {
 	display: table;
@@ -56,6 +62,7 @@
 }
 */
 
+<<<<<<< HEAD
 
 #frame {
 	position: absolute;
@@ -70,6 +77,15 @@
 >>>>>>> general_tab
 =======
 >>>>>>> 3c013b9ab91b4528b4c9d7d988fc8d2749c60b59
+=======
+#frame {
+	position: absolute;
+	width: 80%;
+	height: 55%;
+}
+
+
+>>>>>>> 97c7d23d80c7365c0b40027b0d4abac40b2e33b4
 #nav-panel {
 	float: left;
 	margin-right: 100px;
@@ -80,6 +96,7 @@
 }
 
 #show-panel {
+<<<<<<< HEAD
 <<<<<<< HEAD
 	overflow: hidden;
 	margin: 10px;	
@@ -92,3 +109,60 @@
 	
 >>>>>>> general_tab
 }
+=======
+	/*display: table-cell;*/
+	overflow: hidden;
+	margin: 10px;
+	width: 80%;	
+	/*border: 1px solid #999999;*/
+	
+}
+
+/* BACKUP CSS
+
+#index h4 {
+	display: block;	
+	width: 200px;	
+	padding: 7px;
+	border: 1px solid #999999;
+	background: #DDDDDD;
+	text-align: center;
+	border-radius: 10px;
+	background: -webkit-linear-gradient(top, #FFFFFF, #DDDDDD);	
+	background: -moz-linear-gradient(top, #FFFFFF, #DDDDDD);
+}
+
+.nav-panel a {
+	color: #373a3d;
+}
+
+.panel-container {
+	display: table;
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	table-layout: fixed;
+	border-spacing: 10px;
+}
+
+
+#frame {
+	width: 90%;
+	height: 70%;
+}
+
+.nav-panel {
+	display: table-cell;
+	position: absolute;
+	padding-top: 2%;
+}
+
+.show-panel {
+	display: table-cell;
+	width: 80%;
+	height: 100%;	
+	
+}
+
+*/
+>>>>>>> 97c7d23d80c7365c0b40027b0d4abac40b2e33b4
