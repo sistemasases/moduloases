@@ -11,17 +11,11 @@
 		margin-right: 0;
 		width: auto;
 	}
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
+
 
 	#show-panel {
 		height: auto;
 	}
->>>>>>> general_tab
-=======
->>>>>>> 97c7d23d80c7365c0b40027b0d4abac40b2e33b4
-}
 
 #nav-panel h4 {
 	display: block;	
@@ -38,19 +32,13 @@
 #nav-panel a {
 	color: #373a3d;
 }
-<<<<<<< HEAD
-<<<<<<< HEAD
 
 #frame {
 	position: absolute;
-<<<<<<< HEAD
 	width: 80%;
 	min-height: 55%;
 }
 
-=======
-=======
->>>>>>> 97c7d23d80c7365c0b40027b0d4abac40b2e33b4
 /*
 #panel-container {
 	display: table;
@@ -62,30 +50,19 @@
 }
 */
 
-<<<<<<< HEAD
 
 #frame {
 	position: absolute;
-=======
->>>>>>> 3c013b9ab91b4528b4c9d7d988fc8d2749c60b59
 	width: 82%;
 	height: 70%;
 }
 
-<<<<<<< HEAD
-
->>>>>>> general_tab
-=======
->>>>>>> 3c013b9ab91b4528b4c9d7d988fc8d2749c60b59
-=======
 #frame {
 	position: absolute;
 	width: 80%;
 	height: 55%;
 }
 
-
->>>>>>> 97c7d23d80c7365c0b40027b0d4abac40b2e33b4
 #nav-panel {
 	float: left;
 	margin-right: 100px;
@@ -96,18 +73,8 @@
 }
 
 #show-panel {
-<<<<<<< HEAD
-<<<<<<< HEAD
 	overflow: hidden;
 	margin: 10px;	
-=======
-	/*display: table-cell;*/
-	overflow: hidden;
-	margin: 10px;
-	width: 80%;
-	height: 100%;
-	
->>>>>>> general_tab
 }
 =======
 	/*display: table-cell;*/
@@ -165,4 +132,4 @@
 }
 
 */
->>>>>>> 97c7d23d80c7365c0b40027b0d4abac40b2e33b4
+

@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 <?php
 require_once(dirname(__FILE__). '/../../../config.php');
 require('query.php');
@@ -9,16 +8,4 @@ if(isset($_POST['nombre']) && isset($_POST['descripcion'])){
     $record->nombre = $_POST['nombre'];
     $record->descripcion = $_POST['descripcion'];
     $DB->insert_record('talentospilos_rol', $record, false);
-=======
-<?php
-require_once(dirname(__FILE__). '/../../../config.php');
-require('query.php');
-    
-global $DB;
-if(isset($_POST['nombre']) && isset($_POST['descripcion'])){
-    $record = new stdClass;
-    $record->nombre = $_POST['nombre'];
-    $record->descripcion = $_POST['descripcion'];
-    $DB->insert_record('talentospilos_rol', $record, false);
->>>>>>> 97c7d23d80c7365c0b40027b0d4abac40b2e33b4
 }
