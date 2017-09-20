@@ -1,0 +1,3 @@
+"No. linea - archivo original","No. linea - archivo registros erroneos","No. columna","Nombre Columna","detalle error"
+2,2,2,username,"El campo no correponde a un username en la tabla usarios Ases."
+3,3,2,username,"El campo no correponde a un username en la tabla usarios Ases."
