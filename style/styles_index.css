@@ -1,0 +1,94 @@
+.wrapper {
+	overflow: hidden;
+}
+.wrapper div{
+	padding: 10px;
+}
+
+@media screen and (max-width: 400px) {
+	#nav-panel {
+		float: none;
+		margin-right: 0;
+		width: auto;
+	}
+<<<<<<< HEAD
+=======
+
+	#show-panel {
+		height: auto;
+	}
+>>>>>>> general_tab
+}
+
+#nav-panel h4 {
+	display: block;	
+	width: 200px;	
+	padding: 7px;
+	border: 1px solid #999999;
+	background: #DDDDDD;
+	text-align: center;
+	border-radius: 10px;
+	background: -webkit-linear-gradient(top, #FFFFFF, #DDDDDD);	
+	background: -moz-linear-gradient(top, #FFFFFF, #DDDDDD);
+}
+
+#nav-panel a {
+	color: #373a3d;
+}
+<<<<<<< HEAD
+
+#frame {
+	position: absolute;
+<<<<<<< HEAD
+	width: 80%;
+	min-height: 55%;
+}
+
+=======
+/*
+#panel-container {
+	display: table;
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	table-layout: fixed;
+	border-spacing: 10px;
+}
+*/
+
+
+#frame {
+	position: absolute;
+=======
+>>>>>>> 3c013b9ab91b4528b4c9d7d988fc8d2749c60b59
+	width: 82%;
+	height: 70%;
+}
+
+<<<<<<< HEAD
+
+>>>>>>> general_tab
+=======
+>>>>>>> 3c013b9ab91b4528b4c9d7d988fc8d2749c60b59
+#nav-panel {
+	float: left;
+	margin-right: 100px;
+	width: 140px;
+	/*display: table-cell;*/
+	/*position: absolute;*/
+	padding-top: 2%;
+}
+
+#show-panel {
+<<<<<<< HEAD
+	overflow: hidden;
+	margin: 10px;	
+=======
+	/*display: table-cell;*/
+	overflow: hidden;
+	margin: 10px;
+	width: 80%;
+	height: 100%;
+	
+>>>>>>> general_tab
+}
