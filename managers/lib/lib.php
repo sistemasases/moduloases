@@ -76,3 +76,20 @@ function isMonOrPract($USER){
         return true;
     }
 }
+
+
+/**
+* Funcion que retorna el rol en ases de un usuario dado el id de moodle.
+*
+* @param $id
+* @return String-> $rol
+*/
+function get_role_ases($id){
+    global $DB;
+  
+    $query_role = "SELECT rol.nombre_rol  FROM {talentospilos_rol} rol INNER JOIN {talentospilos_user_rol} uRol ON rol.id = uRol.id_rol WHERE uRol.id_usuario = $id AND uRol.id_semestre = (SELECT max(id_semestre) FROM {talentospilos_user_rol})";
+    $rol = $DB->get_record_sql($query_role)->nombre_rol;
+  
+    return $rol;
+  }
+  
