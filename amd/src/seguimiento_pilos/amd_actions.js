@@ -1,4 +1,7 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> db_management
 // requirejs(['jquery', 'jquery-picker', 'sweetalert', 'jqueryui-picker'], function($) {
 //     //editar
 
@@ -271,6 +274,7 @@
 //         $('#seguimiento #m_fin').append(min);
 //     }
 // });
+<<<<<<< HEAD
 =======
 // requirejs(['jquery', 'jquery-picker', 'sweetalert', 'jqueryui-picker'], function($) {
 //     //editar
@@ -545,3 +549,5 @@
 //     }
 // });
 >>>>>>> 97c7d23d80c7365c0b40027b0d4abac40b2e33b4
+=======
+>>>>>>> db_management

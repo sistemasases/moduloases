@@ -1,4 +1,7 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> db_management
 <?php
 
 require_once(dirname(__FILE__). '/../../../../config.php');
@@ -548,6 +551,7 @@ function checking_role($username, $idinstancia){
     $insert_record = $DB->insert_record('talentospilos_usuario_prof', $record_professional_type, true);
     
     return $insert_record;
+<<<<<<< HEAD
 =======
 <?php
 
@@ -1099,4 +1103,6 @@ function checking_role($username, $idinstancia){
     
     return $insert_record;
 >>>>>>> 97c7d23d80c7365c0b40027b0d4abac40b2e33b4
+=======
+>>>>>>> db_management
  }

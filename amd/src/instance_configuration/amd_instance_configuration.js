@@ -1,4 +1,7 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> db_management
 requirejs(['jquery', 'sweetalert', 'datatables.net', 'datatables.net-buttons',
 'buttons.flash', 'jszip', 'pdfmake', 'vfs_fonts', 'buttons.html5', 'buttons.print'], function($) {
     $(document).ready(function() {
@@ -319,6 +322,7 @@ requirejs(['jquery', 'sweetalert', 'datatables.net', 'datatables.net-buttons',
         });
     }
 });
+<<<<<<< HEAD
 =======
 requirejs(['jquery', 'sweetalert', 'datatables.net', 'datatables.net-buttons',
 'buttons.flash', 'jszip', 'pdfmake', 'vfs_fonts', 'buttons.html5', 'buttons.print'], function($) {
@@ -641,3 +645,5 @@ requirejs(['jquery', 'sweetalert', 'datatables.net', 'datatables.net-buttons',
     }
 });
 >>>>>>> 97c7d23d80c7365c0b40027b0d4abac40b2e33b4
+=======
+>>>>>>> db_management

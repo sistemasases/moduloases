@@ -24,16 +24,28 @@
  * @copyright  2017 Camilo José Cruz Rivera <cruz.camilo@correounivalle.edu.co>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+<<<<<<< HEAD
  
+=======
+
+>>>>>>> db_management
 // Standard GPL and phpdocs
 require_once(__DIR__ . '/../../../config.php');
 require_once($CFG->libdir.'/adminlib.php');
 require_once('../managers/instance_management/instance_lib.php');
 require_once('../managers/grade_categories/grade_categories_lib.php');
+<<<<<<< HEAD
+=======
+require_once('../managers/lib/lib.php');
+>>>>>>> db_management
 include('../lib.php');
 include("../classes/output/renderer.php");
 
 global $PAGE;
+<<<<<<< HEAD
+=======
+global $USER;
+>>>>>>> db_management
 
 $title = "LISTADO DOCENTES";
 $pagetitle = $title;
@@ -77,6 +89,7 @@ $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/jquery.dataTables_t
 $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/dataTables.tableTools.css', true);
 $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/NewCSSExport/buttons.dataTables.min.css', true);
 $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/dataTables.tableTools.css', true);
+<<<<<<< HEAD
 //$PAGE->requires->css('/theme/base/style/core.css',true);
 $PAGE->requires->css('/blocks/ases/style/sweetalert.css', true);
 // $PAGE->requires->js('/blocks/ases/js/grade_categories.js', true);
@@ -102,10 +115,15 @@ $PAGE->requires->css('/blocks/ases/style/sweetalert.css', true);
 // $PAGE->requires->js('/blocks/ases/js/bootstrap.min.js', true);
 // $PAGE->requires->js('/blocks/ases/js/sweetalert-dev.js', true);
 // $PAGE->requires->js('/blocks/ases/js/grade_categories.js', true);
+=======
+$PAGE->requires->css('/blocks/ases/style/sweetalert.css', true);
+
+>>>>>>> db_management
 $output = $PAGE->get_renderer('block_ases');
 
 
 //Carga de informacion a mostrar
+<<<<<<< HEAD
 $courses = get_courses_pilos($blockid);
 
 $htmlTable =  "<table id = 'teachers' cellspacing='0' width='100%' border>
@@ -133,13 +151,86 @@ foreach($courses as $profe => $cursos){
 }
 
 $htmlTable.='</tbody></table>';
+=======
+$rol = get_role_ases($USER->id);
+$courses = get_courses_pilos($blockid);
+
+if($rol == 'sistemas'){
+    
+    $htmlTable =  "<table id = 'teachers' cellspacing='0' width='100%' border>
+                    <thead>
+                        <tr>
+                            <th style = 'border-right: none'> Nombre Completo </th>
+                            <th style='border-left: none; width: 60px;'>  </th>
+                        </tr>
+                    </thead><tbody>
+                    ";
+    $index = 0;
+    $courses_info = '';
+    foreach($courses as $profe => $cursos){
+        $htmlTable.="<tr class='cerrado' id = 'profesor_$index' ><td style='border-right: none' id = 'profe_$index'>$profe</td><td style='border-left: none'><button style='width: 100%' class = 'desplegate'><i class='glyphicon glyphicon-chevron-left'></i></button></td></tr>";
+    
+        $courses_info.="<div style = 'padding-left: 15px' id = 'curso_$index'>";
+        foreach ($cursos as $curso) {
+            $id = $curso['id'];
+            $name = $curso['nombre'];
+            $shortname = $curso['shortname'];
+            $courses_info.="<div class = 'ir_curso' id='$id'> <i class = 'glyphicon glyphicon-new-window'></i> $name $shortname </div>";
+        }
+        $courses_info.="</div>";
+        $index = $index+1;
+    }
+    
+    $htmlTable.='</tbody></table>';
+}else{
+    $user_name = "$USER->firstname $USER->lastname";
+    $htmlTable =  "<table id = 'teachers' cellspacing='0' width='100%' border>
+                    <thead>
+                        <tr>
+                            <th style = 'border-right: none'> Nombre Completo $user_name </th>
+                            <th style='border-left: none; width: 60px;'>  </th>
+                        </tr>
+                    </thead><tbody>
+                    ";
+    $index = 0;
+    $courses_info = '';
+    
+    foreach($courses as $profe => $cursos){
+        
+        if($user_name == $profe){
+            $htmlTable.="<tr class='cerrado' id = 'profesor_$index' ><td style='border-right: none' id = 'profe_$index'>$profe</td><td style='border-left: none'><button style='width: 100%' class = 'desplegate'><i class='glyphicon glyphicon-chevron-left'></i></button></td></tr>";
+            
+            $courses_info.="<div style = 'padding-left: 15px' id = 'curso_$index'>";
+            foreach ($cursos as $curso) {
+                $id = $curso['id'];
+                $name = $curso['nombre'];
+                $shortname = $curso['shortname'];
+                $courses_info.="<div class = 'ir_curso' id='$id'> <i class = 'glyphicon glyphicon-new-window'></i> $name $shortname </div>";
+            }
+            $courses_info.="</div>";
+            $index = $index+1;
+        }     
+    }
+    
+    $htmlTable.='</tbody></table>';
+}
+
+
+>>>>>>> db_management
 
 $record = new stdClass;
 $record->teachersTable = $htmlTable;
 $record->courses_info = $courses_info;
 
 echo $output->header();
+<<<<<<< HEAD
 //echo $output->standard_head_html(); 
 $grade_categories_page = new \block_ases\output\grade_categories_page($record);
 echo $output->render($grade_categories_page);
 echo $output->footer();
+=======
+//echo $output->standard_head_html();
+$grade_categories_page = new \block_ases\output\grade_categories_page($record);
+echo $output->render($grade_categories_page);
+echo $output->footer();
+>>>>>>> db_management

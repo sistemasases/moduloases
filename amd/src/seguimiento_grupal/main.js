@@ -1,4 +1,7 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> db_management
 requirejs(['jquery', 'validator', 'bootstrap', 'sweetalert', 'checkrole', 'amd_ficha'], function($) {
 
     $(document).ready(function() {
@@ -766,6 +769,7 @@ requirejs(['jquery', 'validator', 'bootstrap', 'sweetalert', 'checkrole', 'amd_f
 
 
 });
+<<<<<<< HEAD
 =======
 requirejs(['jquery', 'validator', 'bootstrap', 'sweetalert', 'checkrole', 'amd_ficha'], function($) {
 
@@ -1535,3 +1539,5 @@ requirejs(['jquery', 'validator', 'bootstrap', 'sweetalert', 'checkrole', 'amd_f
 
 });
 >>>>>>> 97c7d23d80c7365c0b40027b0d4abac40b2e33b4
+=======
+>>>>>>> db_management

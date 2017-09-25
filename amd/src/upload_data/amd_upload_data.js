@@ -1,4 +1,7 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> db_management
 requirejs(['jquery', 'bootstrap', 'sweetalert', 'validator'], function($) {
 
     $(document).ready(function() {
@@ -138,6 +141,7 @@ requirejs(['jquery', 'bootstrap', 'sweetalert', 'validator'], function($) {
         }
     }
 });
+<<<<<<< HEAD
 =======
 requirejs(['jquery', 'bootstrap', 'sweetalert', 'validator'], function($) {
 
@@ -279,3 +283,5 @@ requirejs(['jquery', 'bootstrap', 'sweetalert', 'validator'], function($) {
     }
 });
 >>>>>>> 97c7d23d80c7365c0b40027b0d4abac40b2e33b4
+=======
+>>>>>>> db_management

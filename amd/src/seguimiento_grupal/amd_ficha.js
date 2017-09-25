@@ -1,4 +1,7 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> db_management
 requirejs(['jquery', 'bootstrap', 'sweetalert'], function($) {
     /* CONTROLES PARA LA FICHA DEL ESTUDIANTE */
     $("#ficha_estudiante #editar_ficha").click(function() {
@@ -320,6 +323,7 @@ requirejs(['jquery', 'bootstrap', 'sweetalert'], function($) {
         }
     }
 });
+<<<<<<< HEAD
 =======
 requirejs(['jquery', 'bootstrap', 'sweetalert'], function($) {
     /* CONTROLES PARA LA FICHA DEL ESTUDIANTE */
@@ -643,3 +647,5 @@ requirejs(['jquery', 'bootstrap', 'sweetalert'], function($) {
     }
 });
 >>>>>>> 97c7d23d80c7365c0b40027b0d4abac40b2e33b4
+=======
+>>>>>>> db_management

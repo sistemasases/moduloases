@@ -1,4 +1,7 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> db_management
 //Practically all this code comes from https://github.com/alangrafu/radar-chart-d3
 //I only made some additions and aesthetic adjustments to make the chart look better 
 //(of course, that is only my point of view)
@@ -219,6 +222,7 @@ var RadarChart = {
 			   .style('font-family', 'sans-serif')
 			   .style('font-size', '13px');
   }
+<<<<<<< HEAD
 =======
 //Practically all this code comes from https://github.com/alangrafu/radar-chart-d3
 //I only made some additions and aesthetic adjustments to make the chart look better 
@@ -441,4 +445,6 @@ var RadarChart = {
 			   .style('font-size', '13px');
   }
 >>>>>>> 97c7d23d80c7365c0b40027b0d4abac40b2e33b4
+=======
+>>>>>>> db_management
 };

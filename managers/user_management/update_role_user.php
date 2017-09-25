@@ -1,4 +1,7 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> db_management
 <?php
 
 require_once(dirname(__FILE__).'/../role_management/role_management_lib.php');
@@ -174,6 +177,7 @@ else{
   echo "Actualización de rol fallida";
 }
 
+<<<<<<< HEAD
 =======
 <?php
 
@@ -351,4 +355,6 @@ else{
 }
 
 >>>>>>> 97c7d23d80c7365c0b40027b0d4abac40b2e33b4
+=======
+>>>>>>> db_management
 ?>

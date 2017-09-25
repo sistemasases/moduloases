@@ -1,4 +1,7 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> db_management
 requirejs(['jquery', 'bootstrap', 'datatables.net', 'datatables.net-buttons', 'buttons.flash', 'jszip', 'pdfmake', 'vfs_fonts', 'buttons.html5', 'buttons.print', 'sweetalert', 'amd_actions','select2'], function($) {
 
     var globalArregloPares = [];
@@ -1162,6 +1165,7 @@ $(document).ready(function() {
 
     }
 });
+<<<<<<< HEAD
 =======
 requirejs(['jquery', 'bootstrap', 'datatables.net', 'datatables.net-buttons', 'buttons.flash', 'jszip', 'pdfmake', 'vfs_fonts', 'buttons.html5', 'buttons.print', 'sweetalert', 'amd_actions','select2'], function($) {
 
@@ -2298,3 +2302,5 @@ $(document).ready(function() {
     }
 });
 >>>>>>> 97c7d23d80c7365c0b40027b0d4abac40b2e33b4
+=======
+>>>>>>> db_management
