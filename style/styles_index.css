@@ -11,21 +11,8 @@
 		margin-right: 0;
 		width: auto;
 	}
-<<<<<<< HEAD
 
-=======
-<<<<<<< HEAD
-=======
->>>>>>> db_management
-
-	#show-panel {
-		height: auto;
-	}
-<<<<<<< HEAD
-=======
->>>>>>> general_tab
 }
->>>>>>> db_management
 
 #nav-panel h4 {
 	display: block;	
@@ -42,25 +29,6 @@
 #nav-panel a {
 	color: #373a3d;
 }
-<<<<<<< HEAD
-
-#frame {
-	position: absolute;
-=======
-<<<<<<< HEAD
-
-#frame {
-	position: absolute;
-<<<<<<< HEAD
->>>>>>> db_management
-	width: 80%;
-	min-height: 55%;
-}
-
-<<<<<<< HEAD
-=======
-=======
->>>>>>> db_management
 /*
 #panel-container {
 	display: table;
@@ -75,111 +43,23 @@
 
 #frame {
 	position: absolute;
-<<<<<<< HEAD
-=======
-=======
->>>>>>> 3c013b9ab91b4528b4c9d7d988fc8d2749c60b59
->>>>>>> db_management
-	width: 82%;
-	height: 70%;
-}
-
-<<<<<<< HEAD
-#frame {
-	position: absolute;
 	width: 80%;
 	height: 55%;
 }
 
-=======
-<<<<<<< HEAD
 
->>>>>>> general_tab
-=======
->>>>>>> 3c013b9ab91b4528b4c9d7d988fc8d2749c60b59
->>>>>>> db_management
 #nav-panel {
 	float: left;
-	margin-right: 100px;
+	margin-right: 20px;
 	width: 140px;
-	/*display: table-cell;*/
-	/*position: absolute;*/
 	padding-top: 2%;
 }
 
 #show-panel {
-<<<<<<< HEAD
-	overflow: hidden;
-	margin: 10px;	
-}
-=======
-	/*display: table-cell;*/
+	float: right;
 	overflow: hidden;
 	margin: 10px;
 	width: 80%;	
 	/*border: 1px solid #999999;*/
 	
 }
-
-/* BACKUP CSS
-
-#index h4 {
-	display: block;	
-	width: 200px;	
-	padding: 7px;
-	border: 1px solid #999999;
-	background: #DDDDDD;
-	text-align: center;
-	border-radius: 10px;
-	background: -webkit-linear-gradient(top, #FFFFFF, #DDDDDD);	
-	background: -moz-linear-gradient(top, #FFFFFF, #DDDDDD);
-}
-
-.nav-panel a {
-	color: #373a3d;
-}
-
-.panel-container {
-	display: table;
-	position: absolute;
-	width: 100%;
-	height: 100%;
-	table-layout: fixed;
-	border-spacing: 10px;
-}
-
-
-#frame {
-	width: 90%;
-	height: 70%;
-}
-
-.nav-panel {
-	display: table-cell;
-	position: absolute;
-	padding-top: 2%;
-}
-
-.show-panel {
-	display: table-cell;
-	width: 80%;
-	height: 100%;	
-	
-}
-
-*/
-
-=======
-<<<<<<< HEAD
-	overflow: hidden;
-	margin: 10px;	
-=======
-	/*display: table-cell;*/
-	overflow: hidden;
-	margin: 10px;
-	width: 80%;
-	height: 100%;
-	
->>>>>>> general_tab
-}
->>>>>>> db_management
