@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> db_management
 requirejs(['jquery','bootstrap','amd_graphics','amd_index_table','checkrole','sweetalert'], function($){
     /*
      CONTROLES PARA EL FORMULARIO GENERAL DE CONSULTAS
@@ -578,6 +574,3 @@ function checkAsesStatus(){
     }}
 
 });
->>>>>>> 97c7d23d80c7365c0b40027b0d4abac40b2e33b4
-=======
->>>>>>> db_management
