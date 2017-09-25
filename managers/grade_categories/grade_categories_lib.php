@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 <?php
 /*
  * Consultas modulo registro de notas.
@@ -1622,4 +1621,3 @@ function getAggregationofCategory($categoryid){
 }
 
 ?>
->>>>>>> db_management
