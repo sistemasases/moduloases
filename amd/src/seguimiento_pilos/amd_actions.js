@@ -270,5 +270,3 @@
 //         $('#seguimiento #m_fin').append(min);
 //     }
 // });
-
-

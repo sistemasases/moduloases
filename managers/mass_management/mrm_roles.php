@@ -284,4 +284,5 @@ function validateRole($role){
         return false;
     }
 }
+
 ?>

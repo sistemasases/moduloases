@@ -757,8 +757,11 @@ requirejs(['jquery', 'validator', 'bootstrap', 'sweetalert', 'checkrole', 'amd_f
             isvalid: isvalid,
             detalle: detalle
         };
-        
+
+
         return result;
     }
+
+
 
 });

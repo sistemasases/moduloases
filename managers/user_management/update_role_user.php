@@ -172,4 +172,5 @@ if(isset($_POST['role']) && isset($_POST['username'])){
 else{
   echo "Actualización de rol fallida";
 }
+
 ?>

@@ -50,5 +50,9 @@
         else{
             echo "Ya existe una accion con este nombre, escoja otro nombre";
         }
-    }     
+    }
+    
+    
+    
+    
     

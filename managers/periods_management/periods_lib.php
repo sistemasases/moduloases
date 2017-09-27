@@ -44,3 +44,5 @@ require_once(dirname(__FILE__). '/../../../../config.php');
      $interval = $DB->get_record_sql($sql_query);
      return $interval;
  }
+
+

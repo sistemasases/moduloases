@@ -940,4 +940,7 @@ function crearTablaYToggle($arregloImprimirPares, $monitorNo, $arregloImprimirGr
         return $stringRetornar;
     }
    
+
+    
+                
  ?>

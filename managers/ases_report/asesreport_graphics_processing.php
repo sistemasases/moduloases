@@ -54,5 +54,4 @@ if(isset($_POST['type'])&&$_POST['type']=="estado"&&isset($_POST['cohort'])){
 // inner join prefix_talentospilos_facultad on 
 // (prefix_talentospilos_programa.id_facultad=prefix_talentospilos_facultad.id);
 
-
 ?>

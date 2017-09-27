@@ -1,4 +1,4 @@
-requirejs(['jquery','bootstrap', 'datatables.net', 'datatables.net-buttons', 'buttons.flash', 'jszip', 'pdfmake', 'vfs_fonts', 'buttons.html5', 'buttons.print', 'sweetalert'], function($) {
+ requirejs(['jquery','bootstrap', 'datatables.net', 'datatables.net-buttons', 'buttons.flash', 'jszip', 'pdfmake', 'vfs_fonts', 'buttons.html5', 'buttons.print', 'sweetalert'], function($) {
 
 $(document).ready(function (argument) {
     var val = $('#selector').val();

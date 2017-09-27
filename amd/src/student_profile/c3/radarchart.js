@@ -218,3 +218,4 @@ var RadarChart = {
 			   .style('font-family', 'sans-serif')
 			   .style('font-size', '13px');
   }
+};

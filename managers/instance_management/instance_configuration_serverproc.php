@@ -97,3 +97,5 @@ function deleteAdministrator(){
         echo "no entro";
     }
 }
+
+?>
