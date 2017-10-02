@@ -78,6 +78,9 @@ $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/jquery.dataTables_t
 
 $PAGE->requires->js('/blocks/ases/js/jquery-2.0.2.min.js', true);
 $PAGE->requires->js('/blocks/ases/js/checkrole.js', true);
+$PAGE->requires->js_call_amd('block_ases/massmanagement_main','init');
+
+
 
 
 $PAGE->set_url($url);
