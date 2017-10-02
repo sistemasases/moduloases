@@ -13,6 +13,7 @@ requirejs(['jquery', 'bootstrap', 'datatables.net', 'datatables.net-buttons', 'b
     var instance = "";
     var email = "";
 
+    //coment
 
     $(document).ready(function() {
 
@@ -359,7 +360,9 @@ function realizar_conteo(usuario,dependiente="ninguno"){
       conteos =[0,0,0];  
       var conteos_monitor =[ ];
 
+
       if(dependiente =="ninguno"){
+
        numero_monitores = $('.panel-heading.practicante').children().length;
        for(var monitor = 0;monitor<numero_monitores;monitor++){
 
@@ -383,8 +386,9 @@ function realizar_conteo(usuario,dependiente="ninguno"){
 
     
       }else{
+
         numero_monitores = $("#collapse"+usuario["id"]+" .panel-heading.practicante").children().length;
-      }
+
               for(var monitor = 0;monitor<numero_monitores;monitor++){
 
       var collapse_name =$( "#collapse"+usuario["id"]+" .panel-heading.practicante:eq("+monitor+")" ).find('a').attr('href');
@@ -403,6 +407,7 @@ function realizar_conteo(usuario,dependiente="ninguno"){
       conteos[1]+=conteos_monitor[1];
       conteos[2]+=conteos_monitor[2];
 
+      }
     }
 
 

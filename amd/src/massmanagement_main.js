@@ -1,4 +1,19 @@
-$(document).ready(function (argument) {
+// Standard license block omitted.
+/*
+ * @package    block_ases
+ * @copyright  ASES
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+ 
+ /**
+  * @module block_ases/massmanagement_main
+  */
+
+define(['jquery','core/bootstrap'], function($) {
+ 
+  return {
+      init: function() {
+         
     var val = $('#selector').val();
     addHelpMessage(val);
      $('#selector').on('change', function () {
@@ -10,7 +25,6 @@ $(document).ready(function (argument) {
         $('#informacion').empty();
         uploadFile();
     });
-});
 
 function uploadFile() {
     
@@ -40,9 +54,8 @@ function uploadFile() {
             return 0;
     }
 
-    
     $.ajax({
-        url: '../managers/'+controler,
+        url: '../managers/mass_management/'+controler,
         data: formData,
         type: 'POST',
         dataType: 'json',
@@ -70,14 +83,13 @@ function uploadFile() {
             //console.log(msj);
         },
         error: function (msj) {
-            console.log(msj);
+            alert("error");
         }
         // ... Other options like success and etc
     });
      
 }
-
-function addHelpMessage(selector){
+	function addHelpMessage(selector){
     $('#informacion').empty();
     switch (selector) {
         case 'seguimiento':
@@ -99,3 +111,6 @@ function addHelpMessage(selector){
 }
 
 
+       }
+    };
+});
