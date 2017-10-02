@@ -49,7 +49,7 @@ var require = {
         'validator': "../../scripts/jquery.validate.min",
         'jquery-picker': "//code.jquery.com/jquery-1.12.4",
         'jqueryui-picker': "//code.jquery.com/ui/1.12.1/jquery-ui",
-        'd3': "http://d3js.org/d3.v3.min",
+        'd3': "//d3js.org/d3.v3.min",
         'radarchart': "c3/radarchart"
     }
 };
