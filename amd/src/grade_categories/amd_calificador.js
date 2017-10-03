@@ -161,7 +161,7 @@ requirejs(['jquery', 'bootstrap', 'sweetalert'], function($) {
                             var code = $('#idmoodle_'+id).attr('data-code');
                             var pagina = "student_profile.php";
                             var url = pagina + location.search + "&student_code=" + code;
-                            window.open(url, '_blank');
+                            //window.open(url, '_blank');
                         })
                 });
                 }
