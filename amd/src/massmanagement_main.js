@@ -90,7 +90,7 @@ function uploadFile() {
     });
      
 }
-	function addHelpMessage(selector){
+    function addHelpMessage(selector){
     $('#informacion').empty();
     switch (selector) {
         case 'seguimiento':
