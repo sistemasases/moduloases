@@ -50,7 +50,7 @@ $url = new moodle_url("/blocks/ases/view/user_management.php", array('courseid' 
 
 //se culta si la instancia ya está registrada
 if(!consult_instance($blockid)){
-    header("Location: instanceconfiguration.php?courseid=$courseid&instanceid=$blockid");
+    header("Location: instance_configuration.php?courseid=$courseid&instanceid=$blockid");
 }
 
 //obtiene las personas asociadas al curso.
