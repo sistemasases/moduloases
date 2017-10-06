@@ -88,7 +88,7 @@ $output = $PAGE->get_renderer('block_ases');
 $rol = get_role_ases($USER->id);
 $courses = get_courses_pilos($blockid);
 
-if($rol == 'sistemas' || $rol = 'academico'){
+if($rol == 'sistemas' || $rol == 'academico'){
     
     $htmlTable =  "<table id = 'teachers' cellspacing='0' width='100%' border>
                     <thead>
@@ -120,7 +120,7 @@ if($rol == 'sistemas' || $rol = 'academico'){
     $htmlTable =  "<table id = 'teachers' cellspacing='0' width='100%' border>
                     <thead>
                         <tr>
-                            <th style = 'border-right: none'> Nombre Completo</th>
+                            <th style = 'border-right: none'> Nombre Completo </th>
                             <th style='border-left: none; width: 60px;'>  </th>
                         </tr>
                     </thead><tbody>
