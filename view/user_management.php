@@ -50,7 +50,7 @@ $url = new moodle_url("/blocks/ases/view/user_management.php", array('courseid' 
 
 //se culta si la instancia ya está registrada
 if(!consult_instance($blockid)){
-    header("Location: instanceconfiguration.php?courseid=$courseid&instanceid=$blockid");
+    header("Location: instance_configuration.php?courseid=$courseid&instanceid=$blockid");
 }
 
 //obtiene las personas asociadas al curso.
@@ -97,13 +97,7 @@ $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/jquery.dataTables.c
 $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/jquery.dataTables.min.css', true);
 $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/jquery.dataTables_themeroller.css', true);
 $PAGE->requires->css('/blocks/ases/js/select2/css/select2.css', true);
-
-
-// $PAGE->requires->js('/blocks/ases/js/main.js', true);
-// //$PAGE->requires->js('/blocks/ases/js/checkrole.js', true);
-// $PAGE->requires->js('/blocks/ases/js/jquery.validate.min.js', true);
-// $PAGE->requires->js('/blocks/ases/js/npm.js', true);
-// $PAGE->requires->js('/blocks/ases/js/role_management.js', true);
+$PAGE->requires->js_call_amd('block_ases/usermanagement_main','init');
 
 
 
