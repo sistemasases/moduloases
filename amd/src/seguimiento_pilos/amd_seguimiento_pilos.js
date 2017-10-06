@@ -200,6 +200,8 @@ function consultar_seguimientos_persona(instance,usuario){
             
         });
 }
+
+
 /*
  * Funcion para el rol sistemas
  *
@@ -472,7 +474,6 @@ function enviar_correo(instance){
                     var mensaje_enviar = texto.val();
 
                     //se limpia el textarea
-                    texto.val("");
                     var respuesta = "";
 
                     //se llama el ajax para enviar el mensaje
@@ -498,6 +499,8 @@ function enviar_correo(instance){
                                     type: "success",
                                     confirmButtonColor: "#d51b23"
                                 });
+                                texto.val("");
+
                             }
                             else {
                                 swal({
