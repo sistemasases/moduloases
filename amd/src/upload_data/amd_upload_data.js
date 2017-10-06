@@ -47,7 +47,8 @@ requirejs(['jquery', 'bootstrap', 'sweetalert', 'validator'], function($) {
         });
 
         request.addEventListener("load", () => {
-            if (request.response == '1') {
+            
+            if (request.response.trim() == '1') {
                 status_bar.classList.add('green_bar');
                 span.innerHTML = "Éxito";
                 response_div.removeAttribute('hidden');

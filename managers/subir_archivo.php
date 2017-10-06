@@ -320,7 +320,7 @@ if (isset($_FILES['csv_file'])){
          
                $count+=1;
          }
-         $respuesta = 1;
+         $respuesta = '1';
          echo $respuesta;
          
       }else if ($varSelector =="user"){
