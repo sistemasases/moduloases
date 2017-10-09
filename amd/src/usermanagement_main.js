@@ -16,255 +16,250 @@ define(['jquery','block_ases/bootstrap','block_ases/datatables.net','block_ases/
       init: function() {
     
 
-$("#users").select2({    
-  language: {
+        $("#users").select2({    
+        language: {
 
-    noResults: function() {
+            noResults: function() {
 
-      return "No hay resultado";        
-    },
-    searching: function() {
+            return "No hay resultado";        
+            },
+            searching: function() {
 
-      return "Buscando..";
-    }
-  },
-  dropdownAutoWidth : true,
-});
+            return "Buscando..";
+            }
+        },
+        dropdownAutoWidth : true,
+        });
 
+        $(document).ready(function() {
+            var roleLoaded = false;
+            $(".assignment_li").css({ display: 'none' });
 
-$(document).ready(function() {
-    var roleLoaded = false;
-    $(".assignment_li").css({ display: 'none' });
+            $("#form_mon_student").css({ display: 'none' });
+            
+            $("#search_button").on('click', function() {
 
-    $("#form_mon_student").css({ display: 'none' });
-    
-    $("#search_button").on('click', function() {
+                $("#search_button").prop( "disabled", true );
+                if(!roleLoaded){
+                roleLoad();
+                }
+                userLoad();
+                $('#users').prop('disabled', true);
+                $(".assignment_li").slideToggle("fast");
+            });
+            $("#ok-button").on('click', function(){
+                var rolchanged = $('#role_select').val();
+                userLoad(null,function(msg) {
+                    if (msg.rol == 'monitor_ps' && msg.rol !=  rolchanged){
+                        var currentUser = new Array();
+                        currentUser.id =  $('#user_id').val();
+                        currentUser.username = $( "#users" ).val();
+                        valdateStudentMonitor(currentUser, false);
+                    }else{
+                        updateRolUser();
+                        load_users();
+                    } 
+                });
+                
+            });
+            $("#cancel-button").on('click', function(){
+                $(".assignment_li").addClass('hidden');
+                $('#boss_li').fadeOut();
+                $("#form_mon_student").fadeOut();
+                $('#users').val('').trigger('change.select2');
+                $('#users').prop('disabled', false);
+                $("#search_button").prop( "disabled", false);
+                $('#name_lastname').val(" ");
+                $("#form_prof_type").fadeOut();
+                
+            });
 
-        $("#search_button").prop( "disabled", true );
-        if(!roleLoaded){
-          roleLoad();
-        }
-        userLoad();
-        $('#users').prop('disabled', true);
-        $(".assignment_li").slideToggle("fast");
-    });
-    $("#ok-button").on('click', function(){
-        var rolchanged = $('#role_select').val();
-        userLoad(null,function(msg) {
-            if (msg.rol == 'monitor_ps' && msg.rol !=  rolchanged){
-                var currentUser = new Array();
-                currentUser.id =  $('#user_id').val();
-                currentUser.username = $( "#users" ).val();
-                valdateStudentMonitor(currentUser, false);
-            }else{
-                updateRolUser();
+            $("#form_mon_estudiante").css({ display: 'none'});
+            $("#form_prof_type").css({ display: 'none'});
+
+            $("#role_select").on('change',function(){
+
+                if($("#role_select").val() == "monitor_ps"){
+                    $("#form_prof_type").fadeOut();
+                    $("#form_mon_student").fadeIn();
+                    get_boss(4);
+                    $('#boss_li').fadeIn();
+                
+                }
+                else if($("#role_select").val() == "profesional_ps"){
+                    $("#form_prof_type").fadeIn();
+                    $('#boss_li').fadeOut();
+                    $("#form_mon_student").fadeOut();
+
+                }else if($("#role_select").val() == "practicante_ps"){
+
+                    $("#form_prof_type").fadeOut();
+                    $("#form_mon_student").fadeOut();
+                    get_boss(7);
+                    $('#boss_li').fadeIn();
+
+                }else{
+                    $('#boss_li').fadeOut();
+                    $("#form_mon_student").fadeOut();
+                    $("#form_prof_type").fadeOut();
+                }
+            });
+            $("#list-users-panel").on('click', function(){
                 load_users();
-            } 
+            });
+            
+            
+            $('#div_users').on('click','#delete_user',function(){
+                
+                var table = $("#div_users #tableUsers").DataTable();
+                var td =$(this).parent();
+                var childrenid = $(this).children('span').attr('id');
+                var colIndex = table.cell(td).index().column;
+                
+                var username =  table.cell(table.row(td).index(),0).data();
+                var firstname = table.cell(table.row(td).index(),1).data();
+                var lastname = table.cell(table.row(td).index(),2).data();
+                var rol = table.cell(table.row(td).index(),3).data();
+                var currentUser = new Array();
+                currentUser.id =  childrenid;
+                currentUser.username = username;
+
+                swal(
+                    {  
+                        title: "Estas seguro/a?",   
+                        text: "Al usuario <strong>"+firstname+" "+lastname+"</strong> con código <strong>"+username+"</strong> se le inhabilitará los permisos del rol <strong>"+rol+"</strong>.<br><strong>¿Estás de acuerdo con los cambios que se efectuarán?</strong>",   
+                        type: "warning",
+                        html: true,
+                        showCancelButton: true,   
+                        confirmButtonColor: "#d51b23",   
+                        confirmButtonText: "Si!",
+                        cancelButtonText: "No", 
+                        closeOnConfirm : true, 
+                    }, 
+                    function(isConfirm){
+                        if(isConfirm){
+                            userLoad(username, function(msg) {
+                                currentUser.rol = msg.rol;
+                                var rol = msg.rol; 
+                                switch(rol){
+                                    case 'monitor_ps': 
+                                        valdateStudentMonitor(currentUser, true);
+                                        break;
+                                    case 'profesional_ps': 
+                                        deleteProfesional(currentUser);
+                                        break;
+                                    default:
+                                    deleteOtheruser(currentUser);
+                            }
+                        });
+                        }
+                    }
+                );
+
+    
         });
         
-    });
-    $("#cancel-button").on('click', function(){
-        $(".assignment_li").addClass('hidden');
-        $('#boss_li').fadeOut();
-        $("#form_mon_student").fadeOut();
-        $('#users').val('').trigger('change.select2');
-        $('#users').prop('disabled', false);
-        $("#search_button").prop( "disabled", false);
-        $('#name_lastname').val(" ");
-        $("#form_prof_type").fadeOut();
-        
+        student_asignment();
     });
 
-    $("#form_mon_estudiante").css({ display: 'none'});
-    $("#form_prof_type").css({ display: 'none'});
-
-    $("#role_select").on('change',function(){
-
-        if($("#role_select").val() == "monitor_ps"){
-            $("#form_prof_type").fadeOut();
-            $("#form_mon_student").fadeIn();
-            get_boss(4);
-            $('#boss_li').fadeIn();
-           
-        }
-        else if($("#role_select").val() == "profesional_ps"){
-            $("#form_prof_type").fadeIn();
-            $('#boss_li').fadeOut();
-            $("#form_mon_student").fadeOut();
-
-        }else if($("#role_select").val() == "practicante_ps"){
-
-            $("#form_prof_type").fadeOut();
-            $("#form_mon_student").fadeOut();
-            get_boss(7);
-            $('#boss_li').fadeIn();
-
-        }else{
-            $('#boss_li').fadeOut();
-            $("#form_mon_student").fadeOut();
-            $("#form_prof_type").fadeOut();
-        }
-    });
-    $("#list-users-panel").on('click', function(){
-        load_users();
-    });
-    
-    
-    $('#div_users').on('click','#delete_user',function(){
-        
-        var table = $("#div_users #tableUsers").DataTable();
-        var td =$(this).parent();
-        var childrenid = $(this).children('span').attr('id');
-        var colIndex = table.cell(td).index().column;
-        
-        var username =  table.cell(table.row(td).index(),0).data();
-        var firstname = table.cell(table.row(td).index(),1).data();
-        var lastname = table.cell(table.row(td).index(),2).data();
-        var rol = table.cell(table.row(td).index(),3).data();
-        var currentUser = new Array();
-        currentUser.id =  childrenid;
-        currentUser.username = username;
-
-        swal(
-            {  
-                title: "Estas seguro/a?",   
-                text: "Al usuario <strong>"+firstname+" "+lastname+"</strong> con código <strong>"+username+"</strong> se le inhabilitará los permisos del rol <strong>"+rol+"</strong>.<br><strong>¿Estás de acuerdo con los cambios que se efectuarán?</strong>",   
-                type: "warning",
-                html: true,
-                showCancelButton: true,   
-                confirmButtonColor: "#d51b23",   
-                confirmButtonText: "Si!",
-                cancelButtonText: "No", 
-                closeOnConfirm : true, 
-            }, 
-            function(isConfirm){
-                if(isConfirm){
-                    userLoad(username, function(msg) {
-                        currentUser.rol = msg.rol;
-                        var rol = msg.rol; 
-                        switch(rol){
-                            case 'monitor_ps': 
-                                valdateStudentMonitor(currentUser, true);
-                                break;
-                            case 'profesional_ps': 
-                                deleteProfesional(currentUser);
-                                break;
-                            default:
-                            deleteOtheruser(currentUser);
-                    }
-                });
+    function roleLoad(){
+        $.ajax({
+            type: "POST",
+            url: "../managers/user_management/load_role.php",
+            async: false,
+            success: function(msg){
+                $('#role_select').empty();
+                for (role in msg){
+                    var html = "<option value=\""+msg[role].nombre_rol+"\">"+msg[role].nombre_rol+"</option>";
+                    $('#role_select').append(html);
                 }
-            }
-        );
-
-    
-    });
-    
-    
-    
-    student_asignment();
-});
-
-
-
-function roleLoad(){
-    $.ajax({
-        type: "POST",
-        url: "../managers/user_management/load_role.php",
-        async: false,
-        success: function(msg){
-            $('#role_select').empty();
-            for (role in msg){
-                var html = "<option value=\""+msg[role].nombre_rol+"\">"+msg[role].nombre_rol+"</option>";
-                $('#role_select').append(html);
-            }
-            roleLoaded = true;
-        },
-        dataType: "json",
-        error: function(msg){alert("error al cargar roles");}
-    })
-}
-
-function userLoad(username, callback){
-    var dataString = username;
-    if(!dataString){
-        dataString = $( "#users" ).val();
+                roleLoaded = true;
+            },
+            dataType: "json",
+            error: function(msg){alert("error al cargar roles");}
+        })
     }
-    $.ajax({
-        type: "POST",
-        data: {dat: dataString, idinstancia: getIdinstancia()},
-        url: "../managers/user_management/search_user.php",
-        success: function(msg){
-            
-            if(callback){
-                    callback(msg);
-            }else{
-                if(!msg.error){
-                         $('#contenedor_add_fields').html('');
 
-                        if (msg.firstname == ""){
-                            swal("Error", "El usuario no existe en la base de datos", "error");
-                            $('#users').prop('disabled', false);
-                        }
-                        else{
-                            $('.assignment_li').removeClass('hidden');
-                            $('#name_lastname').val(msg.firstname + " " + msg.lastname);
-                            $('#user_id').val(msg.id);
-                            if(msg.rol == ""){
-                                $('#role_select').val("no_asignado");
+    function userLoad(username, callback){
+        var dataString = username;
+        if(!dataString){
+            dataString = $( "#users" ).val();
+        }
+        $.ajax({
+            type: "POST",
+            data: {dat: dataString, idinstancia: getIdinstancia()},
+            url: "../managers/user_management/search_user.php",
+            success: function(msg){
+                
+                if(callback){
+                        callback(msg);
+                }else{
+                    if(!msg.error){
+                            $('#contenedor_add_fields').html('');
+
+                            if (msg.firstname == ""){
+                                swal("Error", "El usuario no existe en la base de datos", "error");
+                                $('#users').prop('disabled', false);
                             }
                             else{
-                                
-                                if(msg.rol == "profesional_ps"){
-                                    $('#select_prof_type').val(msg.profesion);
-                                    $("#form_prof_type").fadeIn();
-                                    $('#boss_li').fadeOut();
-                                    $("#form_mon_student").fadeOut();
+                                $('.assignment_li').removeClass('hidden');
+                                $('#name_lastname').val(msg.firstname + " " + msg.lastname);
+                                $('#user_id').val(msg.id);
+                                if(msg.rol == ""){
+                                    $('#role_select').val("no_asignado");
                                 }
-                                else if(msg.rol == "monitor_ps"){
-                                    loadStudents();
-                                    get_boss(4,msg.boss);
-                                    $("#form_mon_student").fadeIn();
-                                    $("#form_prof_type").fadeOut();
-                                }else if(msg.rol == "practicante_ps"){
-                                    get_boss(7,msg.boss);
-                                    $("#form_mon_student").fadeOut();
-                                    $("#form_prof_type").fadeOut();
-                                }else{
-                                    $('#boss_li').fadeOut();
-                                    $("#form_mon_student").fadeOut();
-                                    $("#form_prof_type").fadeOut();
+                                else{
+                                    
+                                    if(msg.rol == "profesional_ps"){
+                                        $('#select_prof_type').val(msg.profesion);
+                                        $("#form_prof_type").fadeIn();
+                                        $('#boss_li').fadeOut();
+                                        $("#form_mon_student").fadeOut();
+                                    }
+                                    else if(msg.rol == "monitor_ps"){
+                                        loadStudents();
+                                        get_boss(4,msg.boss);
+                                        $("#form_mon_student").fadeIn();
+                                        $("#form_prof_type").fadeOut();
+                                    }else if(msg.rol == "practicante_ps"){
+                                        get_boss(7,msg.boss);
+                                        $("#form_mon_student").fadeOut();
+                                        $("#form_prof_type").fadeOut();
+                                    }else{
+                                        $('#boss_li').fadeOut();
+                                        $("#form_mon_student").fadeOut();
+                                        $("#form_prof_type").fadeOut();
+                                    }
+                                    $('#role_select').val(msg.rol);
                                 }
-                                $('#role_select').val(msg.rol);
                             }
-                        }
-                    
-                }else{
-                    swal("Error", msg.error, "error");
-                    $(".assignment_li").addClass('hidden');
-                    $("#form_mon_student").css({display: 'none' });
-                    
-                    $('#users').val('').trigger('change.select2');
-                    $('#users').prop('disabled', false);
-                    $('#name_lastname').val(" ");
-                    $("#search_button").prop( "disabled", false );
+                        
+                    }else{
+                        swal("Error", msg.error, "error");
+                        $(".assignment_li").addClass('hidden');
+                        $("#form_mon_student").css({display: 'none' });
+                        
+                        $('#users').val('').trigger('change.select2');
+                        $('#users').prop('disabled', false);
+                        $('#name_lastname').val(" ");
+                        $("#search_button").prop( "disabled", false );
+                    }
                 }
+                
+            },
+            dataType: "json",
+            error: function(msg){
+                swal("Error", "El usuario no existe en la base de datos", "error");
+                $(".assignment_li").addClass('hidden');
+                $("#form_mon_student").css({display: 'none' });
+                
+                $('#users').val('').trigger('change.select2');
+                $('#users').prop('disabled', false);
+                $('#name_lastname').val(" ");
+                $("#search_button").prop( "disabled", false );
             }
-            
-        },
-        dataType: "json",
-        error: function(msg){
-            swal("Error", "El usuario no existe en la base de datos", "error");
-            $(".assignment_li").addClass('hidden');
-            $("#form_mon_student").css({display: 'none' });
-            
-            $('#users').val('').trigger('change.select2');
-            $('#users').prop('disabled', false);
-            $('#name_lastname').val(" ");
-            $("#search_button").prop( "disabled", false );
-        }
-        });
-}
+            });
+    }
 
 function updateRolUser(){
 
