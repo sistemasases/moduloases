@@ -69,6 +69,8 @@ $PAGE->set_heading($title);
 $PAGE->requires->css('/blocks/ases/style/styles_pilos.css', true);
 $PAGE->requires->css('/blocks/ases/style/bootstrap_pilos.css', true);
 $PAGE->requires->css('/blocks/ases/style/sweetalert.css', true);
+$PAGE->requires->js_call_amd('block_ases/uploaddata_main','init');
+
 
 $output = $PAGE->get_renderer('block_ases');
 

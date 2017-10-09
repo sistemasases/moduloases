@@ -1,4 +1,20 @@
-requirejs(['jquery', 'bootstrap', 'datatables.net', 'datatables.net-buttons', 'buttons.flash', 'jszip', 'pdfmake', 'vfs_fonts', 'buttons.html5', 'buttons.print', 'sweetalert','select2'], function($) {
+// Standard license block omitted.
+/*
+ * @package    block_ases/usermanagement
+ * @copyright  ASES
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+ 
+ /**
+  * @module block_ases/usermanagement_main
+  */
+
+define(['jquery','block_ases/bootstrap','block_ases/datatables.net','block_ases/datatables.net-buttons','block_ases/buttons.flash','block_ases/jszip','block_ases/pdfmake','block_ases/buttons.html5','block_ases/buttons.print','block_ases/sweetalert','block_ases/select2'], function($,bootstrap,datatablesnet,datatablesnetbuttons,buttonsflash,jszip,pdfmake,buttonshtml5,buttonsprint,sweetalert,select2) {
+
+
+  return {
+      init: function() {
+    
 
 $("#users").select2({    
   language: {
@@ -497,7 +513,6 @@ function load_users(){
         data:{idinstancia: getIdinstancia()},
         url: "../managers/user_management/load_role_users.php",
         success: function(msg){
-            alert("pasó");
             $("#div_users").empty();
             $("#div_users").append('<table id="tableUsers" class="display" cellspacing="0" width="100%"><thead><thead></table>');
             var table = $("#tableUsers").DataTable(msg);
@@ -720,4 +735,6 @@ function getIdinstancia(){
     return 0;
 }
 
+       }
+    };
 });

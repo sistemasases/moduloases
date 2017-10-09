@@ -1,5 +1,20 @@
-requirejs(['jquery', 'bootstrap', 'sweetalert', 'validator'], function($) {
+// Standard license block omitted.
+/*
+ * @package    block_ases/uploaddata_main
+ * @copyright  ASES
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+ 
+ /**
+  * @module block_ases/uploaddata_main
+  */
 
+define(['jquery','block_ases/bootstrap','block_ases/sweetalert','block_ases/validator'], function($,bootstrap,sweetalert,validator) {
+
+
+  return {
+      init: function() {
+    
     $(document).ready(function() {
         mostrarArchivos();
         var form = document.getElementById('upload_data_form');
@@ -136,4 +151,9 @@ requirejs(['jquery', 'bootstrap', 'sweetalert', 'validator'], function($) {
 
         }
     }
+
+
+
+       }
+    };
 });

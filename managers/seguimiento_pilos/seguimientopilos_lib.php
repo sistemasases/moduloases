@@ -379,8 +379,8 @@ function get_seguimientos_monitor($id_monitor,$id_instance,$fechas_epoch,$period
                   (usuario_estudiante.id_tal=CAST(s_estudiante.id_estudiante AS varchar)) INNER JOIN {user} as nombre_usuario_estudiante ON 
                   (nombre_usuario_estudiante.id=usuario_estudiante.userid) INNER JOIN {talentospilos_monitor_estud} as monitor_actual 
                   ON (CAST(monitor_actual.id_estudiante AS text)=CAST(s_estudiante.id_estudiante AS text)) INNER JOIN {user} AS usuario_mon_actual ON (monitor_actual.id_monitor=usuario_mon_actual.id)
-                  WHERE monitor_actual.id_monitor='$id_monitor' AND seguimiento.id_instancia='$id_instance' AND seguimiento.status <> 0 AND
-                  (seguimiento.fecha between '$fechas_epoch[0]' and '$fechas_epoch[1]') AND monitor_actual.id_semestre='$periodo->max' AND monitor_actual.id_instancia='$id_instance'  ORDER BY usuario_monitor.firstname;
+                  WHERE monitor_actual.id_monitor='$id_monitor' AND seguimiento.id_instancia='$id_instance' AND seguimiento.status <> 0  AND monitor_actual.id_semestre='$periodo->max' AND
+                  (seguimiento.fecha between '$fechas_epoch[0]' and '$fechas_epoch[1]')  AND monitor_actual.id_instancia='$id_instance'  ORDER BY usuario_monitor.firstname;
     ";
     
     $consulta=$DB->get_records_sql($sql_query);

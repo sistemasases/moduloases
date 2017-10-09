@@ -1,6 +1,20 @@
- requirejs(['jquery','bootstrap', 'datatables.net', 'datatables.net-buttons', 'buttons.flash', 'jszip', 'pdfmake', 'vfs_fonts', 'buttons.html5', 'buttons.print', 'sweetalert'], function($) {
+// Standard license block omitted.
+/*
+ * @package    block_ases
+ * @copyright  ASES
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+ 
+ /**
+  * @module block_ases/massmanagement_main
+  */
 
-$(document).ready(function (argument) {
+define(['jquery','block_ases/bootstrap','block_ases/datatables.net','block_ases/datatables.net-buttons','block_ases/buttons.flash','block_ases/jszip','block_ases/pdfmake','block_ases/buttons.html5','block_ases/buttons.print','block_ases/sweetalert','block_ases/select2'], function($,bootstrap,datatables,sweetalert,select2) {
+
+
+  return {
+      init: function() {
+    
     var val = $('#selector').val();
     addHelpMessage(val);
      $('#selector').on('change', function () {
@@ -12,7 +26,6 @@ $(document).ready(function (argument) {
         $('#informacion').empty();
         uploadFile();
     });
-});
 
 function uploadFile() {
     
@@ -55,6 +68,7 @@ function uploadFile() {
             $('#response').html("<img src='../icon/facebook.gif' />");
         },
         success : function (msj) {
+
              $('#response').empty();
             
             $('#informacion').empty();
@@ -68,7 +82,6 @@ function uploadFile() {
             }
             
             $('#informacion').append(msj.urlzip);
-            //console.log(msj);
         },
         error: function (msj) {
             alert("error");
@@ -77,8 +90,7 @@ function uploadFile() {
     });
      
 }
-
-function addHelpMessage(selector){
+    function addHelpMessage(selector){
     $('#informacion').empty();
     switch (selector) {
         case 'seguimiento':
@@ -98,4 +110,8 @@ function addHelpMessage(selector){
             // code
     }
 }
+
+
+       }
+    };
 });

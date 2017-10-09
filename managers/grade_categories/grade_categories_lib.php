@@ -39,12 +39,22 @@ function get_courses_pilos($instanceid){
     }else{
         $cohort = $prog;
     }
-    
+    $query_semestre = "SELECT nombre FROM {talentospilos_semestre} WHERE id = (SELECT MAX(id) FROM {talentospilos_semestre})";
+    $sem = $DB->get_record_sql($query_semestre)->nombre;
+
+    $año = substr($sem,0,4);
+
+    if(substr($sem,4,1) == 'A'){
+        $semestre = $año.'02';
+    }else if(substr($sem,4,1) == 'B'){
+        $semestre = $año.'08';
+    }
+    //print_r($semestre);
     $query_courses = "
         SELECT DISTINCT curso.id,
                         curso.fullname,
                         curso.shortname,
-        
+
           (SELECT concat_ws(' ',firstname,lastname) AS fullname
            FROM
              (SELECT usuario.firstname,
@@ -65,27 +75,27 @@ function get_courses_pilos($instanceid){
         FROM {course} curso
         INNER JOIN {enrol} ROLE ON curso.id = role.courseid
         INNER JOIN {user_enrolments} enrols ON enrols.enrolid = role.id
-        WHERE enrols.userid IN
+        WHERE SUBSTRING(curso.shortname FROM 15 FOR 6) = '$semestre' AND enrols.userid IN
             (SELECT user_m.id
      FROM  mdl_user user_m
      INNER JOIN mdl_user_info_data data ON data.userid = user_m.id
      INNER JOIN mdl_user_info_field field ON data.fieldid = field.id
      INNER JOIN mdl_talentospilos_usuario user_t ON data.data = CAST(user_t.id AS VARCHAR)
-     INNER JOIN mdl_talentospilos_est_estadoases estado_u ON user_t.id = estado_u.id_estudiante 
+     INNER JOIN mdl_talentospilos_est_estadoases estado_u ON user_t.id = estado_u.id_estudiante
      INNER JOIN mdl_talentospilos_estados_ases estados ON estados.id = estado_u.id_estado_ases
      WHERE estados.nombre = 'ACTIVO/SEGUIMIENTO' AND field.shortname = 'idtalentos'
 
     INTERSECT
 
     SELECT user_m.id
-    FROM mdl_user user_m INNER JOIN mdl_cohort_members memb ON user_m.id = memb.userid INNER JOIN mdl_cohort cohorte ON memb.cohortid = cohorte.id 
+    FROM mdl_user user_m INNER JOIN mdl_cohort_members memb ON user_m.id = memb.userid INNER JOIN mdl_cohort cohorte ON memb.cohortid = cohorte.id
     WHERE SUBSTRING(cohorte.idnumber FROM 1 FOR 2) = '$cohort')";
     $result = $DB->get_records_sql($query_courses);
     
     $result = processInfo($result);
     return $result;
 }
-// print_r(get_courses_pilos(19));
+ //get_courses_pilos(19);
 
 /*
  * Función que retorna un arreglo de profesores, dado un objeto consulta

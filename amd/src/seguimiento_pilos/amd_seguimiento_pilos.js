@@ -13,6 +13,7 @@ requirejs(['jquery', 'bootstrap', 'datatables.net', 'datatables.net-buttons', 'b
     var instance = "";
     var email = "";
 
+    //coment
 
     $(document).ready(function() {
 
@@ -109,8 +110,9 @@ requirejs(['jquery', 'bootstrap', 'datatables.net', 'datatables.net-buttons', 'b
             $("input[name=practicante]").attr('disabled', true);
             $("input[name=profesional]").attr('disabled', true);
             limpiar_riesgos();
-            editar_seguimiento(namerol);
             cancelar_edicion(namerol);
+            editar_seguimiento(namerol);
+            modificar_seguimiento();
             borrar_seguimiento(namerol);
             actualizar_riesgo();
             enviar_correo(instance);
@@ -198,6 +200,8 @@ function consultar_seguimientos_persona(instance,usuario){
             
         });
 }
+
+
 /*
  * Funcion para el rol sistemas
  *
@@ -318,12 +322,16 @@ function crear_conteo(usuario){
 function realizar_conteo(usuario,dependiente="ninguno"){
     var conteos= [];
 
+    var total_grupal_revisado = 0;
+    var total_grupal_norevisado = 0;
+    var total_monitor_revisado = 0;
+    var total_monitor_norevisado = 0;
+
     if(usuario["namerol"] == 'monitor_ps'){
     var numero_pares=0;
     var numero_grupales=0;
 
     if (dependiente =="ninguno"){
-        alert(usuario);
     numero_pares = $('.panel-heading.pares').children().length;
     numero_grupales = $('.panel-heading.grupal').children().length;
 
@@ -331,15 +339,10 @@ function realizar_conteo(usuario,dependiente="ninguno"){
     }else{
     numero_pares = $("#collapse"+usuario["id"]+" .panel-heading.pares").children().length;
     numero_grupales = $("#collapse"+usuario["id"]+" .panel-heading.grupal").children().length;
-
     }
     $("label[for='norevisado_grupal_"+usuario["id"]+"']").html(numero_grupales);
     $("label[for='total_grupal_"+usuario["id"]+"']").html(numero_grupales);
 
-    var total_grupal_revisado = 0;
-    var total_grupal_norevisado = 0;
-    var total_monitor_revisado = 0;
-    var total_monitor_norevisado = 0;
 
     for(var cantidad =0; cantidad<numero_pares;cantidad++){
        total_monitor_revisado += Number($("label[for='revisado_pares_"+ usuario["id"]+"_"+cantidad+"']").text());
@@ -351,46 +354,80 @@ function realizar_conteo(usuario,dependiente="ninguno"){
        total_grupal_norevisado = numero_grupales;
 
     }
-
     total = (total_monitor_revisado+total_grupal_revisado) + (total_monitor_norevisado+total_grupal_norevisado);
     return new Array((total_monitor_revisado+total_grupal_revisado),(total_monitor_norevisado+total_grupal_norevisado), total);
     
     }else if (usuario["namerol"] == 'practicante_ps'){
       var numero_monitores=0;
       conteos =[0,0,0];  
+      var conteos_monitor =[ ];
+
 
       if(dependiente =="ninguno"){
+
        numero_monitores = $('.panel-heading.practicante').children().length;
-      }else{
-        numero_monitores = $("#collapse"+usuario["id"]+" .panel-heading.practicante").children().length;
-      }
-      for(var monitor = 0;monitor<numero_monitores;monitor++){
+       for(var monitor = 0;monitor<numero_monitores;monitor++){
+
       var collapse_name =$( ".panel-heading.practicante:eq("+monitor+")" ).find('a').attr('href');
       var id_monitor = collapse_name.split("#collapse")[1];
       var usuario_monitor = [];
+
       usuario_monitor["id"] = id_monitor;
       usuario_monitor["namerol"] ="monitor_ps";
-      var conteos_monitor = realizar_conteo(usuario_monitor,"practicante");
-
+      conteos_monitor = realizar_conteo(usuario_monitor,"practicante");
       $("label[for='revisado_monitor_"+id_monitor+"']").html(conteos_monitor[0]);
       $("label[for='norevisado_monitor_"+id_monitor+"']").html(conteos_monitor[1]);
       $("label[for='total_monitor_"+id_monitor+"']").html(conteos_monitor[2]);
+
+
       conteos[0]+=conteos_monitor[0];
       conteos[1]+=conteos_monitor[1];
       conteos[2]+=conteos_monitor[2];
+
     }
+
+    
+      }else{
+
+        numero_monitores = $("#collapse"+usuario["id"]+" .panel-heading.practicante").children().length;
+
+              for(var monitor = 0;monitor<numero_monitores;monitor++){
+
+      var collapse_name =$( "#collapse"+usuario["id"]+" .panel-heading.practicante:eq("+monitor+")" ).find('a').attr('href');
+      var id_monitor = collapse_name.split("#collapse")[1];
+      var usuario_monitor = [];
+
+      usuario_monitor["id"] = id_monitor;
+      usuario_monitor["namerol"] ="monitor_ps";
+      conteos_monitor = realizar_conteo(usuario_monitor,"practicante");
+      $("label[for='revisado_monitor_"+id_monitor+"']").html(conteos_monitor[0]);
+      $("label[for='norevisado_monitor_"+id_monitor+"']").html(conteos_monitor[1]);
+      $("label[for='total_monitor_"+id_monitor+"']").html(conteos_monitor[2]);
+
+
+      conteos[0]+=conteos_monitor[0];
+      conteos[1]+=conteos_monitor[1];
+      conteos[2]+=conteos_monitor[2];
+
+      }
+    }
+
+
+
     return conteos;
 
     }else if(usuario["namerol"] =='profesional_ps'){
      conteos =[0,0,0];
      var numero_practicantes = $('.panel-heading.profesional').children().length;
+     var conteos_practicantes = [];
+
      for(var practicante=0;practicante<numero_practicantes;practicante++){
-      var collapse_name =$( ".panel-heading.profesional:eq("+practicante+")" ).find('a').attr('href');
+      var collapse_name =$(".panel-heading.profesional:eq("+practicante+")" ).find('a').attr('href');
       var id_practicante = collapse_name.split("#collapse")[1];
       var usuario_practicante = [];
       usuario_practicante["id"] = id_practicante;
       usuario_practicante["namerol"] ="practicante_ps";
-      var conteos_practicantes =realizar_conteo(usuario_practicante,"practicante");
+      conteos_practicantes =realizar_conteo(usuario_practicante,"practicante");
       $("label[for='revisado_practicante_"+id_practicante+"']").html(conteos_practicantes[0]);
       $("label[for='norevisado_practicante_"+id_practicante+"']").html(conteos_practicantes[1]);
       $("label[for='total_practicante_"+id_practicante+"']").html(conteos_practicantes[2]);
@@ -437,7 +474,6 @@ function enviar_correo(instance){
                     var mensaje_enviar = texto.val();
 
                     //se limpia el textarea
-                    texto.val("");
                     var respuesta = "";
 
                     //se llama el ajax para enviar el mensaje
@@ -456,7 +492,6 @@ function enviar_correo(instance){
                         async: false,
                         success: function(msg) {
                             //si el envio del mensaje fue exitoso
-                            alert(msg);
                             if (msg == 1) {
                                 swal({
                                     title: "Correo enviado",
@@ -464,6 +499,8 @@ function enviar_correo(instance){
                                     type: "success",
                                     confirmButtonColor: "#d51b23"
                                 });
+                                texto.val("");
+
                             }
                             else {
                                 swal({
