@@ -97,6 +97,7 @@ $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/jquery.dataTables.c
 $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/jquery.dataTables.min.css', true);
 $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/jquery.dataTables_themeroller.css', true);
 $PAGE->requires->css('/blocks/ases/js/select2/css/select2.css', true);
+
 $PAGE->requires->js_call_amd('block_ases/usermanagement_main','init');
 
 
