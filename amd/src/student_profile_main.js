@@ -9,7 +9,7 @@
   * @module block_ases/student_profile_main
   */
 
-define(['jquery', 'block_ases/bootstrap', 'block_ases/d3', 'block_ases/sweetalert'], function($, bootstrap, d3, sweetalert) {
+define(['jquery', 'block_ases/bootstrap', 'block_ases/d3', 'block_ases/sweetalert', 'block_ases/moment'], function($, bootstrap, d3, sweetalert) {
     
     return {
         init: function() {
