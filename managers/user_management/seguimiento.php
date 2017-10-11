@@ -423,13 +423,14 @@ function loadbyMonitor(){
 
 function send_email($risk_array, $observations_array, $id_receiving_user, $id_student_moodle, $id_student_pilos, $date, $subject="", $messageText="", $track_url){
 
-    global $USER;
+    global $USER, $DB;
 
     $emailToUser = new stdClass;
     $emailFromUser = new stdClass;
-    
-    $id_professional = get_id_assigned_professional($id_student_pilos);
-    $id_practicante = get_id_assigned_pract($id_student_pilos);
+    $sql_query = "select id_estudiante from {talentospilos_seg_estudiante}  where id_seguimiento=".$id_student_pilos;
+    $id_student = $DB->get_record_sql($sql_query);
+    $id_professional = get_id_assigned_professional($id_student->id_estudiante);
+    $id_practicante = get_id_assigned_pract($id_student->id_estudiante);
     
     $sending_user = get_user_by_username('sistemas1008');
     $receiving_user = get_full_user($id_professional);
@@ -452,6 +453,8 @@ function send_email($risk_array, $observations_array, $id_receiving_user, $id_st
     $emailToUser->middlename = '';
     $emailToUser->firstnamephonetic = '';
     $emailToUser->lastnamephonetic = '';
+
+    echo $emailToUser->email;
     
     $emailToUserPract->email = $receiving_user_pract->email;
     $emailToUserPract->firstname = $receiving_user_pract->firstname;
