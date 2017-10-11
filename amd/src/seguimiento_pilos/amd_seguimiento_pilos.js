@@ -97,7 +97,7 @@ requirejs(['jquery', 'bootstrap', 'datatables.net', 'datatables.net-buttons', 'b
             editar_seguimiento(namerol);
             cancelar_edicion(namerol);
             borrar_seguimiento(namerol);
-            modificar_seguimiento();
+            modificar_seguimiento(id);
             actualizar_riesgo();
             enviar_correo(instance);
             consultar_seguimientos_persona(instance,usuario);
@@ -112,7 +112,7 @@ requirejs(['jquery', 'bootstrap', 'datatables.net', 'datatables.net-buttons', 'b
             limpiar_riesgos();
             cancelar_edicion(namerol);
             editar_seguimiento(namerol);
-            modificar_seguimiento();
+            modificar_seguimiento(id);
             borrar_seguimiento(namerol);
             actualizar_riesgo();
             enviar_correo(instance);
@@ -125,7 +125,7 @@ requirejs(['jquery', 'bootstrap', 'datatables.net', 'datatables.net-buttons', 'b
             editar_seguimiento(namerol);
             cancelar_edicion(namerol);
             borrar_seguimiento(namerol);
-            modificar_seguimiento();
+            modificar_seguimiento(id);
             actualizar_riesgo();
             consultar_seguimientos_persona(instance,usuario);
 
@@ -137,7 +137,7 @@ requirejs(['jquery', 'bootstrap', 'datatables.net', 'datatables.net-buttons', 'b
             editar_seguimiento(namerol);
             cancelar_edicion(namerol);
             borrar_seguimiento(namerol);
-            modificar_seguimiento();
+            modificar_seguimiento(id);
             actualizar_riesgo();
             enviar_correo(instance);
             anadirEvento(instance);
@@ -200,6 +200,8 @@ function consultar_seguimientos_persona(instance,usuario){
             
         });
 }
+
+
 /*
  * Funcion para el rol sistemas
  *
@@ -472,7 +474,6 @@ function enviar_correo(instance){
                     var mensaje_enviar = texto.val();
 
                     //se limpia el textarea
-                    texto.val("");
                     var respuesta = "";
 
                     //se llama el ajax para enviar el mensaje
@@ -498,6 +499,8 @@ function enviar_correo(instance){
                                     type: "success",
                                     confirmButtonColor: "#d51b23"
                                 });
+                                texto.val("");
+
                             }
                             else {
                                 swal({
@@ -529,7 +532,7 @@ function enviar_correo(instance){
  * Función para modificar un seguimiento determinado.
  *
  */
-function modificar_seguimiento(){
+function modificar_seguimiento(id_usuario){
 
 
         $('body').on('click', 'span.btn.btn-info.btn-lg.botonModificarSeguimiento', function() {
@@ -544,7 +547,7 @@ function modificar_seguimiento(){
         var min_inicial = combo_min_inicio.options[combo_min_inicio.selectedIndex].text;
         var min_final = combo_min_fin.options[combo_min_fin.selectedIndex].text;
         var validar = validarHoras(hora_inicial, hora_final, min_inicial, min_final);
-
+        send_email(id,id_usuario);
         if (validar == "") {
             if ($("#profesional_" + id).is(':checked')) {
                   profesional = 1;
@@ -861,6 +864,86 @@ function cancelar_edicion(namerol){
 
 //--------FUNCIONES AUXILIARES.
 
+
+function send_email(id_seguimiento,id_usuario) {
+
+    var high_risk_array = new Array();
+    var observations_array = new Array();
+
+    var high_individual_risk = $('input:radio[name=riesgo_individual_'+id_seguimiento+']:checked').val();
+    var high_familiar_risk = $('input:radio[name=riesgo_familiar_'+id_seguimiento+']:checked').val();
+    var high_academic_risk = $('input:radio[name=riesgo_academico_'+id_seguimiento+']:checked').val();
+    var high_economic_risk = $('input:radio[name=riesgo_economico_'+id_seguimiento+']:checked').val();
+    var high_life_risk = $('input:radio[name=riesgo_universitario_'+id_seguimiento+']:checked').val();
+
+    if (high_individual_risk == '3') {
+        high_risk_array.push('Individual');
+        observations_array.push($('#obindividual_'+id_seguimiento).val());
+    }
+    if (high_familiar_risk == '3') {
+        high_risk_array.push('Familiar');
+        observations_array.push($('#obfamiliar_'+id_seguimiento).val());
+    }
+    if (high_academic_risk == '3') {
+        high_risk_array.push('Académico');
+        observations_array.push($('#obacademico_'+id_seguimiento).val());
+    }
+    if (high_economic_risk == '3') {
+        high_risk_array.push('Económico');
+        observations_array.push($('#obeconomico_'+id_seguimiento).val());
+    }
+    if (high_life_risk == '3') {
+        high_risk_array.push('Vida universitaria');
+        observations_array.push($('#obuniversitario_'+id_seguimiento).val());
+    }
+
+    var data_email = new Array();
+    data_email.push({
+        name: "function",
+        value: "send_email"
+    });
+    data_email.push({
+        name: "id_student_moodle",
+        value: id_usuario
+    });
+    data_email.push({
+        name: "id_student_pilos",
+        value: id_seguimiento
+    });
+    data_email.push({
+        name: "risk_array",
+        value: high_risk_array
+    });
+    data_email.push({
+        name: "observations_array",
+        value: observations_array
+    });
+    data_email.push({
+        name: "date",
+        value: $('#fecha_'+id_seguimiento).val()
+    });
+    data_email.push({
+        name: "url",
+        value: window.location
+    });
+
+
+
+    if (high_risk_array.length != 0) {
+        $.ajax({
+            type: "POST",
+            data: data_email,
+            url: "../managers/user_management/seguimiento.php",
+            success: function(msg) {
+            },
+            dataType: "text",
+            cache: "false",
+            error: function(msg) {
+                console.log(msg)
+            }
+        });
+    }
+}
 
 
 function consultar_periodos(instance,namerol){

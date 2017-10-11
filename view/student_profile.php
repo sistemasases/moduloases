@@ -638,6 +638,9 @@ $PAGE->requires->css('/blocks/ases/style/sugerenciaspilos.css', true);
 $PAGE->requires->css('/blocks/ases/style/forms_pilos.css', true);
 $PAGE->requires->css('/blocks/ases/style/c3.css', true);
 
+$PAGE->requires->js_call_amd('block_ases/student_profile_main','init');
+//$PAGE->requires->js('/blocks/ases/amd/src/moment.js');
+
 $output = $PAGE->get_renderer('block_ases');
 
 echo $output->header();
