@@ -944,7 +944,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/d3', 'block_ases/sweetaler
 
     function init_form_tracking() {
 
-        $('#date').datepicker();
+        $('#date').datepicker({dateFormat: "yy-mm-dd"});
 
         var current_date = new Date();
         var current_day = current_date.getDate();
@@ -1020,12 +1020,11 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/d3', 'block_ases/sweetaler
         $('#no_value_life').prop('checked', true); 
     }
 
+
     function save_tracking_peer() {
         var form = $('#tracking_peer_form');
         var modal_peer_tracking = $('#modal_peer_tracking');
         var data = form.serializeArray();
-
-        console.log(data);
 
         var url_parameters = get_url_parameters(document.location.search);
 
