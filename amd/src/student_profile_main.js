@@ -9,7 +9,7 @@
   * @module block_ases/student_profile_main
   */
 
-define(['jquery', 'block_ases/bootstrap', 'block_ases/d3', 'block_ases/sweetalert'], function($, bootstrap, d3, sweetalert) {
+define(['jquery', 'block_ases/bootstrap', 'block_ases/d3', 'block_ases/sweetalert', 'block_ases/jqueryui'], function($, bootstrap, d3, sweetalert, jqueryui) {
     
     return {
         init: function() {
@@ -944,6 +944,8 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/d3', 'block_ases/sweetaler
 
     function init_form_tracking() {
 
+        $('#date').datepicker();
+
         var current_date = new Date();
         var current_day = current_date.getDate();
         var current_month = current_date.getMonth() + 1;
@@ -1087,6 +1089,8 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/d3', 'block_ases/sweetaler
         // Validación de los datos generales
         if (form[1].value == "") {
             return "Debe introducir la fecha en la cual se realizó el seguimiento";
+        //}else if(moment(form[1].value, 'DD/MM/AAAA', true)){    
+           // alert('Testing!!');
         }
         else if (form[2].value == "") {
             return "Debe introducir el lugar donde se realizó el seguimiento";
