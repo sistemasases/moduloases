@@ -1085,11 +1085,17 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/d3', 'block_ases/sweetaler
 
     function validate_tracking_peer_form(form) {
 
+        var regexp = /^\d{4}\-(0?[1-9]|1[012])\-(0?[1-9]|[12][0-9]|3[01])$/;
+        
+        var validate_date = regexp.exec(form[1].value);       
+        
+        console.log(regexp.exec(form[1].value));
+
         // Validación de los datos generales
         if (form[1].value == "") {
             return "Debe introducir la fecha en la cual se realizó el seguimiento";
-        //}else if(moment(form[1].value, 'DD/MM/AAAA', true)){    
-           // alert('Testing!!');
+        }else if(validate_date === null){    
+            return "La fecha no sigue el patron yyyy-mm-dd";
         }
         else if (form[2].value == "") {
             return "Debe introducir el lugar donde se realizó el seguimiento";
