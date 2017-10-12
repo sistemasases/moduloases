@@ -203,8 +203,6 @@ function get_cohort_student($id_student){
     
     global $DB;
 
-    print_r($id_student);
-    
     $sql_query = "SELECT MAX(id) AS id FROM {cohort_members} WHERE userid = $id_student;";
     $id_cohort_member = $DB->get_record_sql($sql_query)->id;
 
