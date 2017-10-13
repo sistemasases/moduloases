@@ -5,6 +5,21 @@ requirejs(['jquery', 'bootstrap', 'sweetalert'], function($) {
         var pilos = getIDs();
         deleteNoPilos(pilos);
         bloquearTotales();
+        if($('.gradingerror').length != 0){
+            new_page = location.origin + "/moodle32/grade/report/grader/index.php?id="+getCourseid();
+            swal({
+                title: "Redireccionando página.",
+                text: "Debido al proceso de actualización del campus virtual se debe realizar este paso.\n Una vez realizado por    favor cerrar la ventana y volver a seleccionar su curso en el listado",
+                type: "warning",
+                showCancelButton: false,
+                confirmButtonClass: "btn-danger",
+                confirmButtonText: "Continuar",
+                closeOnConfirm: false
+              },
+              function(){
+                location.href = new_page;
+              });
+        }
     });
 
 
