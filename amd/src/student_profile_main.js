@@ -1095,7 +1095,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/d3', 'block_ases/sweetaler
         if (form[1].value == "") {
             return "Debe introducir la fecha en la cual se realizó el seguimiento";
         }else if(validate_date === null){    
-            return "La fecha no sigue el patron yyyy-mm-dd";
+            return "La fecha no sigue el patrón yyyy-mm-dd. Ejemplo 2017-10-13";
         }
         else if (form[2].value == "") {
             return "Debe introducir el lugar donde se realizó el seguimiento";
