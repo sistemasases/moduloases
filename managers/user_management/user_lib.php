@@ -24,6 +24,22 @@ function get_boss_users($id_rol, $idinstancia){
 
 
 /**
+ * Función que obtiene el id de usuario dado su username
+ * @see get_userid_by_username($username)
+ * @param $username -->
+ * @return Array
+ **/
+
+function get_userid_by_username($username){
+    global $DB;
+
+    $sql_query = "SELECT * from {user} where username='$username'";
+    return $DB->get_record_sql($sql_query);
+}
+
+
+
+/**
  * Función que retorna los usuarios en el sistema dado la instancia
  * @see get_professionals($id, $idinstancia)
  * @param $id ---> id de usuario
