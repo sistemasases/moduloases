@@ -11,8 +11,8 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
 
     if ($oldversion < 2017101515448) {
         
-       //$table = new xmldb_table('talentospilos_permisos_rol');
-       //$key = new xmldb_key('permisosr_fk2', XMLDB_KEY_FOREIGN, array('id_permiso'), 'talentospilos_permisos', array('id'));
+       $table = new xmldb_table('talentospilos_permisos_rol');
+       $key = new xmldb_key('mdl_talepermrol_id_id_id__uk', XMLDB_KEY_FOREIGN, array('id_permiso'), 'talentospilos_permisos', array('id'));
        
 
        $sql_query = "DROP INDEX mdl_talepermrol_id_id_id__uk";
@@ -75,7 +75,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
 
 
    
-    return $result;
+    return $result;ermisosr_fk2'
 }
 
 }
