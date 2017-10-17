@@ -12,8 +12,8 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     if ($oldversion < 2017101515448) {
 
 
-        $sql_query = "DROP INDEX   mdl_talepermrol_id_id_id__uk";
-        $succes = $DB->execute($sql_query);
+        //$sql_query = "DROP INDEX   mdl_talepermrol_id_id_id__uk";
+       // $succes = $DB->execute($sql_query);
 
         // Define key permisosr_fk2 (foreign) to be dropped form talentospilos_permisos_rol.
        $table = new xmldb_table('talentospilos_permisos_rol');
