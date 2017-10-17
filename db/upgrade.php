@@ -11,6 +11,10 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
 
     if ($oldversion < 2017101515448) {
 
+
+        $sql_query = "DELETE FROM {talentospilos_permisos_rol}";
+        $success = $DB->execute($sql_query);
+
         // Define field id_accion to be added to talentospilos_permisos_rol.
         $table = new xmldb_table('talentospilos_permisos_rol');
         $field = new xmldb_field('id_accion', 2017101515448, '20', null, XMLDB_NOTNULL, null, null, 'id_permiso');
