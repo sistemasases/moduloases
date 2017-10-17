@@ -11,8 +11,12 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
 
     if ($oldversion < 2017101515448) {
         
-       $table = new xmldb_table('talentospilos_permisos_rol');
-       $key = new xmldb_key('mdl_talepermrol_id_id_id__uk', XMLDB_KEY_FOREIGN, array('id_permiso'), 'talentospilos_permisos', array('id'));
+       // Define key permisosr_upk (unique) to be dropped form talentospilos_permisos_rol.
+        $table = new xmldb_table('talentospilos_permisos_rol');
+        $key = new xmldb_key('permisosr_upk', XMLDB_KEY_UNIQUE, array('id_rol', 'id_permiso', 'id_funcionalidad'));
+
+        // Launch drop key permisosr_upk.
+        $dbman->drop_key($table, $key);
        
        $dbman->drop_key($table, $key);
 
