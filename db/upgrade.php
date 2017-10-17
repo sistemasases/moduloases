@@ -11,11 +11,6 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
 
     if ($oldversion < 2017101515448) {
 
-
-        $sql_query = "DROP INDEX   mdl_talepermrol_id_id_id__uix";
-        $succes = $DB->execute($sql_query);
-
-
         // Define key permisosr_fk2 (foreign) to be dropped form talentospilos_permisos_rol.
        $table = new xmldb_table('talentospilos_permisos_rol');
        $key = new xmldb_key('permisosr_fk2', XMLDB_KEY_FOREIGN, array('id_permiso'), 'talentospilos_permisos', array('id'));
@@ -46,18 +41,16 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
        // Conditionally launch drop field id_funcionalidad.
        if ($dbman->field_exists($table, $field)) {
            $dbman->drop_field($table, $field);
+
+
+            // Define field id_funcionalidad to be added to talentospilos_permisos_rol.
+       $table = new xmldb_table('talentospilos_permisos_rol');
+       $field = new xmldb_field('id_accion', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null, '');
+
+       // Conditionally launch add field id_funcionalidad.
+       if (!$dbman->field_exists($table, $field)) {
+           $dbman->add_field($table, $field);
        }
-
-        // Define field id_accion to be added to talentospilos_permisos_rol.
-        $table = new xmldb_table('talentospilos_permisos_rol');
-        $field = new xmldb_field('id_accion', 2017101515448, '20', null, XMLDB_NOTNULL, null, null, 'id_permiso');
-
-
-
-        // Conditionally launch add field id_accion.
-        if (!$dbman->field_exists($table, $field)) {
-            $dbman->add_field($table, $field);
-        }
 
 
         // Define key permisosr_fk3 (foreign) to be added to talentospilos_permisos_rol.
