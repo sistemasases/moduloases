@@ -75,7 +75,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
 
 
    
-    return $result;ermisosr_fk2'
+    return $result;
 }
 
 }
