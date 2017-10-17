@@ -1,16 +1,15 @@
 <?php
 require_once('permissions_lib.php');
     $columns = array();
-    array_push($columns, array("title"=>"Perfil", "name"=>"id_perfil", "data"=>"nombre_perfil"));
-    array_push($columns, array("title"=>"Nombre usuario", "name"=>"id_usuario", "data"=>'firstname'));
-    array_push($columns, array("title"=>"Apellido usuario", "name"=>"id_usuario", "data"=>'lastname'));
-    array_push($columns, array("title"=>"Semestre", "name"=>"id_semestre", "data"=>'nombre'));
-    array_push($columns, array("title"=>"Eliminar", "name"=>"button", "data"=>"button"));
+    array_push($columns, array("title"=>"Nombre", "name"=>"nombre_func", "data"=>"nombre_func"));
+    array_push($columns, array("title"=>"Descripción", "name"=>"descripcion", "data"=>"descripcion"));
+    //array_push($columns, array("title"=>"Modificar", "name"=>"button", "data"=>"button"));
 
         $data = array(
                 "bsort" => false,
                 "columns" => $columns,
-                "data"=> get_user_profile_table(),
+                "data"=> get_functions_table(),
+                
                 "language" => 
                  array(
                     "search"=> "Buscar:",

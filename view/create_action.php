@@ -53,6 +53,13 @@ $profiles_table_user= get_profiles_select($profiles,"profiles_user");
 $actions = get_actions();
 $actions_table = get_actions_select($actions);
 
+//obtiene funcionalidades
+$function = get_functions();
+$functions_table = get_functions_select($function,"functions");
+
+$general_table  = get_functions_actions();
+
+
 //obtiene usuarios 
 $courseusers = get_course_usersby_id($courseid);
 $table_courseuseres='<select class="form-pilos" id="users">';
@@ -70,7 +77,10 @@ $data->profiles_table =$profiles_table;
 $data->actions_table = $actions_table;
 $data->table_courseuseres=$table_courseuseres;
 $data->profiles_table_user=$profiles_table_user;
-$data->profiles = json_encode($profiles);
+$data->functions_table =$functions_table;
+$data->general_table=$general_table;
+
+
 
 $contextcourse = context_course::instance($courseid);
 $contextblock =  context_block::instance($blockid);

@@ -11,9 +11,30 @@ require_once(dirname(__FILE__). '/../../../../config.php');
 function get_profiles(){
 	global $DB;
 
-    $sql_query = "SELECT * FROM {talentospilos_perfil}";
+    $sql_query = "SELECT * FROM {talentospilos_rol}";
     return $DB->get_records_sql($sql_query);
 	}
+
+/**
+ * Función que obtiene los registros de la tabla {talentospilos_permisos_rol} dado un rol 
+ * @see  get_functions_by_role($id_role)
+ * @param $id_role
+ * @return Array
+ **/
+
+function get_functions_by_role($id_role){
+    global $DB;
+
+    $sql_query = "SELECT * FROM {talentospilos_permisos_rol} where id_rol=".$id_role;
+    $consult = $DB->get_records_sql($sql_query);
+    $array_selected = [];
+    foreach ($consult as $record) {
+    array_push($array_selected,$record->id_accion);
+    }
+
+    return $array_selected;
+    }
+
 
 /**
  * Función que obtiene las acciones de la tabla {talentospilos_accion}
@@ -27,6 +48,37 @@ function get_actions(){
     $sql_query = "SELECT * FROM {talentospilos_accion} WHERE estado=1 order by nombre_accion asc";
     return $DB->get_records_sql($sql_query);
 	}
+
+/**
+ * Función que obtiene las acciones relacionadas a una funcionalidad de la tabla {talentospilos_accion}
+ * @see get_actions()
+ * @return Array
+ **/
+
+function get_actions_function($funcionalidad){
+    global $DB;
+
+    $sql_query = "SELECT * FROM {talentospilos_accion} WHERE estado=1 and id_funcionalidad=".$funcionalidad;
+    return $DB->get_records_sql($sql_query);
+    }
+
+
+
+
+/**
+ * Función que obtiene las funcionalidades de la tabla {talentospilos_funcionalidades}
+ * @see get_functions()
+ * @return Array
+ **/
+
+function get_functions(){
+    global $DB;
+
+    $sql_query = "SELECT * FROM {talentospilos_funcionalidad} ";
+    return $DB->get_records_sql($sql_query);
+    }
+
+
 
 function get_user_profiles(){
 
@@ -62,12 +114,37 @@ function get_actions_table()
 }
 
 
+/**
+ * Función que retorna las funciones en el sistema 
+ * @see get_functions_table()
+ * @return Array
+ **/
+
+function get_functions_table()
+{
+    global $DB;
+    $array = Array();
+    $functions_array = get_functions();
+
+    foreach ($functions_array as $function){
+        $function->button = "<a id = \"modify_function\"  ><span  id=\"".$function->id."\" class=\"red glyphicon glyphicon-pencil\"></span></a>";
+        array_push($array, $function);
+    }
+    return $array;
+}
+
+
+
+
+
+
+
 function get_user_profile_table(){
     global $DB;
     $array = Array();
     $user_profiles =get_user_profiles();
     foreach ($user_profiles as $profile){
-       $profile->button = "<a id = \"delete_user_profile\"  ><span  id=\"".$profile->id."\" class=\"red glyphicon glyphicon-remove\"></span></a>";
+       $profile->button = "<a id = \"delete_user_profile\"  ><span  id=\"".$profile->id."\" class=\"red glyphicon glyphicon-pencil\"></span></a>";
         array_push($array, $profile);
     }
     return $array;
@@ -86,7 +163,7 @@ function get_profiles_table()
     $profiles_array = get_profiles();
 
     foreach ($profiles_array as $profile){
-        $profile->button = "<a id = \"delete_profiles\"  ><span  id=\"".$profile->id."\" class=\"red glyphicon glyphicon-remove\"></span></a>";
+        $profile->button = "<a id = \"delete_profiles\"  ><span  id=\"".$profile->id."\" class=\"red glyphicon glyphicon-pencil\"></span></a>";
         array_push($array, $profile);
     }
     return $array;
@@ -105,6 +182,9 @@ function get_profiles_action(){
     $sql_query = "select * from {talentospilos_perfil}";
     return $DB->get_records_sql($sql_query);
     }
+
+
+
 
 
 

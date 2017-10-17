@@ -9,12 +9,13 @@
     $msg = new stdClass();
 
 
-    if(isset($_POST['nombre']) && isset($_POST['descripcion'])){
+    if(isset($_POST['nombre']) && isset($_POST['descripcion'])&&isset($_POST['id_funcionalidad'])){
         $record = new stdClass;
         $record->nombre_accion = $_POST['nombre'];
         $record->descripcion = $_POST['descripcion'];
+        $record->id_funcionalidad = $_POST['id_funcionalidad'];
         $record->estado = true;
-        
+
         $sql_query = "SELECT * FROM {talentospilos_accion} WHERE nombre_accion = '".$record->nombre_accion."'";
         $accion = $DB->get_record_sql($sql_query);
         $repetido = false;
@@ -60,19 +61,19 @@
     }else if(isset($_POST['nombre_perfil']) && isset($_POST['descripcion_perfil'])){
 
         $record = new stdClass;
-        $record->nombre_perfil = $_POST['nombre_perfil'];
+        $record->nombre_rol = $_POST['nombre_perfil'];
         $record->descripcion = $_POST['descripcion_perfil'];
         
-        $sql_query = "SELECT * FROM {talentospilos_perfil} WHERE nombre_perfil = '".$record->nombre_perfil."'";
+        $sql_query = "SELECT * FROM {talentospilos_rol} WHERE nombre_rol = '".$record->nombre_rol."'";
         $perfil = $DB->get_record_sql($sql_query);
         $repetido = false;
-        if($perfil->nombre_perfil){
+        if($perfil->nombre_rol){
            $repetido = true;
-           echo "Ya existe un perfil con este nombre, escoja otro nombre";
+           echo "Ya existe un rol con este nombre, escoja otro nombre";
 
           }
         if(!$repetido){
-          $DB->insert_record('talentospilos_perfil', $record, true); 
+          $DB->insert_record('talentospilos_rol', $record, true); 
           echo "Perfil creado exitosamente";
         }
 
@@ -133,7 +134,7 @@
       $record = new stdClass;
       $record->nombre_func = $function_name;
       $record->descripcion = $function_description;
-      //$DB->insert_record('talentospilos_funcionalidad', $record, true); 
+      $DB->insert_record('talentospilos_funcionalidad', $record, true); 
       }catch(Exception $ex){
         echo "Se presentó un inconveniente : ".$es;
         $continuar=false;
@@ -144,10 +145,32 @@
         $msg->title="Éxito";
         $msg->text= "Funcionalidad creada exitosamente";
         $msg->type = "success";
-        return  $msg;
+        echo  $msg->text;
       }
 
 
+
+    }else if(isset($_POST['id_profile'])&&isset($_POST['actions'])&&isset($_POST['function'])){
+
+      $actions =  json_decode(stripslashes($_POST['actions']));
+      $continuar=true;
+      $whereclause = "id_rol = ".$_POST['id_profile'];
+      $DB->delete_records_select('talentospilos_permisos_rol',$whereclause);
+
+      
+      foreach($actions as $action){
+       $record = new stdClass;
+       $record->id_rol=$_POST['id_profile'];
+       $record->id_accion = $action; 
+       $DB->insert_record('talentospilos_permisos_rol', $record, true); 
+      }
+
+       if($continuar){
+        $msg->title="Éxito";
+        $msg->text= "Permisos asignados exitosamente";
+        $msg->type = "success";
+        echo  $msg->text;
+      }
     }
     
     

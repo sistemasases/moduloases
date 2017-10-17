@@ -1,8 +1,9 @@
 <?php
 require_once('permissions_lib.php');
     $columns = array();
-    array_push($columns, array("title"=>"Nombre", "name"=>"nombre_perfil", "data"=>"nombre_perfil"));
+    array_push($columns, array("title"=>"Nombre", "name"=>"nombre_rol", "data"=>"nombre_rol"));
     array_push($columns, array("title"=>"Descripción", "name"=>"descripcion", "data"=>"descripcion"));
+    //array_push($columns, array("title"=>"Modificar", "name"=>"button", "data"=>"button"));
 
 
         $data = array(
