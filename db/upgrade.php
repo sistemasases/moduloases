@@ -11,21 +11,43 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
 
     if ($oldversion < 2017101515448) {
 
+        // Define key permisosr_fk2 (foreign) to be dropped form talentospilos_permisos_rol.
+       $table = new xmldb_table('talentospilos_permisos_rol');
+       $key = new xmldb_key('permisosr_fk2', XMLDB_KEY_FOREIGN, array('id_permiso'), 'talentospilos_permisos', array('id'));
 
-        $sql_query = "DELETE FROM {talentospilos_permisos_rol}";
-        $success = $DB->execute($sql_query);
+       // Launch drop key permisosr_fk2.
+       $dbman->drop_key($table, $key);
+
+        // Define key permisosr_fk3 (foreign) to be dropped form talentospilos_permisos_rol.
+       $table = new xmldb_table('talentospilos_permisos_rol');
+       $key = new xmldb_key('permisosr_fk3', XMLDB_KEY_FOREIGN, array('id_funcionalidad'), 'talentospilos_funcionalidad', array('id'));
+
+       // Launch drop key permisosr_fk3.
+       $dbman->drop_key($table, $key);
+
+        // Define field id_permiso to be dropped from talentospilos_permisos_rol.
+       $table = new xmldb_table('talentospilos_permisos_rol');
+       $field = new xmldb_field('id_permiso');
+
+       // Conditionally launch drop field id_permiso.
+       if ($dbman->field_exists($table, $field)) {
+           $dbman->drop_field($table, $field);
+       }
+
+         // Define field id_funcionalidad to be dropped from talentospilos_permisos_rol.
+       $table = new xmldb_table('talentospilos_permisos_rol');
+       $field = new xmldb_field('id_funcionalidad');
+
+       // Conditionally launch drop field id_funcionalidad.
+       if ($dbman->field_exists($table, $field)) {
+           $dbman->drop_field($table, $field);
+       }
 
         // Define field id_accion to be added to talentospilos_permisos_rol.
         $table = new xmldb_table('talentospilos_permisos_rol');
         $field = new xmldb_field('id_accion', 2017101515448, '20', null, XMLDB_NOTNULL, null, null, 'id_permiso');
 
-         $object = new stdClass();
-          $object->id = 1;
-          $object->id_rol =4;
-          $object->id_accion=1;
-              
-        $insert_record = $DB->insert_record('talentospilos_permisos_rol', $object, true);
-                
+
 
         // Conditionally launch add field id_accion.
         if (!$dbman->field_exists($table, $field)) {
