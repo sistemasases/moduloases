@@ -14,6 +14,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
        $table = new xmldb_table('talentospilos_permisos_rol');
        $key = new xmldb_key('mdl_talepermrol_id_id_id__uk', XMLDB_KEY_FOREIGN, array('id_permiso'), 'talentospilos_permisos', array('id'));
        
+       $dbman->drop_key($table, $key);
 
        $sql_query = "DROP INDEX mdl_talepermrol_id_id_id__uk";
        $succes = $DB->execute($sql_query);
