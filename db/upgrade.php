@@ -19,6 +19,14 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
         $table = new xmldb_table('talentospilos_permisos_rol');
         $field = new xmldb_field('id_accion', 2017101515448, '20', null, XMLDB_NOTNULL, null, null, 'id_permiso');
 
+         $object = new stdClass();
+          $object->id = 1;
+          $object->id_rol =4;
+          $object->id_accion=1;
+              
+        $insert_record = $DB->insert_record('talentospilos_permisos_rol', $object, true);
+                
+
         // Conditionally launch add field id_accion.
         if (!$dbman->field_exists($table, $field)) {
             $dbman->add_field($table, $field);
