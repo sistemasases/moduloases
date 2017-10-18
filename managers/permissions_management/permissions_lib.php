@@ -58,13 +58,11 @@ function get_actions(){
 function get_actions_function($funcionalidad){
     global $DB;
 
-    $sql_query = "SELECT * FROM {talentospilos_accion} WHERE estado=1 ";
-    //and id_funcionalidad=".$funcionalidad
+    $sql_query = "SELECT * FROM {talentospilos_accion} WHERE estado=1 and id_funcionalidad=".$funcionalidad;
     return $DB->get_records_sql($sql_query);
     }
-"
 
-//and id_funcionalidad=".$funcionalidad
+
 
 
 /**
