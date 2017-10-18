@@ -359,32 +359,7 @@ function updateRolUser(){
 }
 
 
-function students_consult(){
-    var students = new Array();
-    $.ajax({
-            type: "POST",
-            data:{function: "students_consult"},
-            url: "../managers/user_management/seguimiento.php",
-            success: function(msg)
-            {
-            students =msg;
-            console.log(students);
-            var i;
-            for (i = 0; i < students.length; ++i) {
-                    console.log(students[i]);
-                    };
 
-            
-            },
-            dataType: "json",
-            cache: "false",
-            error: function(msg){alert("error al consultar estudiantes")},
-            });
-
-
- 
-
-}
 
 
 function student_asignment(){
@@ -392,11 +367,14 @@ function student_asignment(){
         var contenedor       = $("#contenedor_add_fields"); //ID del contenedor
         var AddButton       =  $("#agregarCampo"); //ID del Botón Agregar //
 
-        var students =students_consult();
-        console.log(students);
-
-    
-        var count = $("#contenedor_add_fields div").length + 1;
+            $.ajax({
+            type: "POST",
+            data:{function: "students_consult"},
+            url: "../managers/user_management/seguimiento.php",
+            success: function(msg)
+            {
+            students =JSON.stringify(msg);
+             var count = $("#contenedor_add_fields div").length + 1;
         var FieldCount = count - 1; //para el seguimiento de los campos
     
         $(AddButton).click(function (e) {
@@ -404,10 +382,13 @@ function student_asignment(){
             {
                 FieldCount++;
                 var text ="";
+                console.log(students.length);
+
                 for(student=0;student<students.length;student++){
-                   text+='<option value="'+$students[student].username+'">'+$students[student].firstname+' -'+''+$student[student].lastname+'</option>';
+                   text+='<option value="'+students[student].username+'">'+students[student].firstname+' -'+''+student[student].lastname+'</option>';
+
                 }
-                $("#contenedor_add_fields").append('<div><div class="form-group"><select class="form-control" name="array_students" id="campo_'+ FieldCount +'"">'+text+'</select></div>');
+                $("#contenedor_add_fields").append('<div><div class="form-group"><select  name="array_students" id="campo_'+ FieldCount +'"">'+text+'</select></div>');
 
                 //$("#contenedor_add_fields").append('<div><input type="text" class="inputs_students" name="array_students[]" id="campo_'+ FieldCount +'" placeholder="Estudiante"/></div>');
 
@@ -446,6 +427,16 @@ function student_asignment(){
             // }
             return false;
         });
+
+            
+            },
+            dataType: "json",
+            cache: "false",
+            error: function(msg){alert("error al consultar estudiantes")},
+            });
+
+    
+       
 }
 
 function loadStudents(){
