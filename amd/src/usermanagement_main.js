@@ -367,8 +367,14 @@ function students_consult(){
             url: "../managers/user_management/seguimiento.php",
             success: function(msg)
             {
-                 students =$.parseJSON(msg);
-                 return students;
+            students =msg;
+            console.log(students);
+            var i;
+            for (i = 0; i < students.length; ++i) {
+                    console.log(students[i]);
+                    };
+
+            
             },
             dataType: "json",
             cache: "false",
