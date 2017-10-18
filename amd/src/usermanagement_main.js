@@ -358,10 +358,36 @@ function updateRolUser(){
     
 }
 
+
+function students_consult(){
+    var students = new Array();
+    $.ajax({
+            type: "POST",
+            data:{function: "students_consult"},
+            url: "../managers/user_management/seguimiento.php",
+            success: function(msg)
+            {
+                 students =$.parseJSON(msg);
+                 return students;
+            },
+            dataType: "json",
+            cache: "false",
+            error: function(msg){alert("error al consultar estudiantes")},
+            });
+
+
+ 
+
+}
+
+
 function student_asignment(){
         var MaxInputs       =  10; //Número Maximo de Campos
         var contenedor       = $("#contenedor_add_fields"); //ID del contenedor
         var AddButton       =  $("#agregarCampo"); //ID del Botón Agregar //
+
+        var students =students_consult();
+        console.log(students);
 
     
         var count = $("#contenedor_add_fields div").length + 1;
@@ -371,8 +397,15 @@ function student_asignment(){
             if(count <= MaxInputs) //max input box allowed
             {
                 FieldCount++;
+                var text ="";
+                for(student=0;student<students.length;student++){
+                   text+='<option value="'+$students[student].username+'">'+$students[student].firstname+' -'+''+$student[student].lastname+'</option>';
+                }
+                $("#contenedor_add_fields").append('<div><div class="form-group"><select class="form-control" name="array_students" id="campo_'+ FieldCount +'"">'+text+'</select></div>');
 
-                $("#contenedor_add_fields").append('<div><input type="text" class="inputs_students" name="array_students[]" id="campo_'+ FieldCount +'" placeholder="Estudiante"/></div>');
+                //$("#contenedor_add_fields").append('<div><input type="text" class="inputs_students" name="array_students[]" id="campo_'+ FieldCount +'" placeholder="Estudiante"/></div>');
+
+               // $("#contenedor_add_fields").append('<div><input type="text" class="inputs_students" name="array_students[]" id="campo_'+ FieldCount +'" placeholder="Estudiante"/></div>');
                 count++; 
             }
             return false;

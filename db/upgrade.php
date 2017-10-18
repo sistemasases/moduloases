@@ -9,7 +9,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     $result = true;
 
     /// Add a new column newcol to the mdl_myqtype_options
-    if ($result && $oldversion < 201709200638) {
+    if ($result && $oldversion < 2017101515448) {
         
         // Define field id_semestre to be added to talentospilos_monitor_estud.
         $table = new xmldb_table('talentospilos_monitor_estud');
@@ -44,7 +44,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
 
 
         // Ases savepoint reached.
-        upgrade_block_savepoint(true, 201709200638, 'ases');
+        upgrade_block_savepoint(true, 2017101515448, 'ases');
     }
     return $result;
 }
