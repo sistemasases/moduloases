@@ -5,6 +5,27 @@ require_once(dirname(__FILE__).'/../periods_management/periods_lib.php');
 require_once(dirname(__FILE__).'/../role_management/role_management_lib.php');
 
 
+
+/**
+ * Función que obtiene los estudiantes de ases filtrado por ESTADO ASES e instancia
+ * @see get_students()
+ * @return Array
+ **/
+
+function get_students(){
+    global $DB;
+
+    $sql_query = "SELECT * FROM mdl_user umood INNER JOIN mdl_user_info_data udata ON umood.id = udata.userid 
+    INNER JOIN mdl_talentospilos_est_estadoases estado_ases ON udata.data = CAST(estado_ases.id_estudiante as TEXT)
+    WHERE id_estado_ases = (SELECT id FROM  mdl_talentospilos_estados_ases as estado WHERE estado.nombre ='ACTIVO/SEGUIMIENTO')
+    and udata.data!='' and udata.fieldid = (SELECT id FROM  mdl_user_info_field as f WHERE f.shortname ='idtalentos')";
+
+
+    return $DB->get_records_sql($sql_query);
+}
+
+
+
 /**
  * Función que ontiene los posibles jefes de un usuario dado el rol
  * @see get_boss_users($rol, $idinstancia)
