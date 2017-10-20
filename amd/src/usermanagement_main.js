@@ -268,7 +268,7 @@ function updateRolUser(){
     var dataStudents = new Array();
 
     $('input[name="array_students[]"]').each(function() {
-        dataStudents.push($(this).val());
+        dataStudents.push($(this).val().split(" - ")[0]);
     });
 
     if(dataRole == "profesional_ps"){
@@ -301,7 +301,9 @@ function updateRolUser(){
             data: {role: dataRole, username: dataUsername, students: dataStudents, boss:boss_id, idinstancia: getIdinstancia()},
             url: "../managers/user_management/update_role_user.php",
             success: function(msg)
-            {                swal({  title: "Información!",   
+            {              
+
+              swal({  title: "Información!",   
                     text: msg,   
                     type: "info",
                     html: true,
@@ -361,6 +363,25 @@ function updateRolUser(){
 
 
 
+function create_select2(name){
+
+        $("#"+name).select2({    
+        language: {
+
+            noResults: function() {
+
+            return "No hay resultado";        
+            },
+            searching: function() {
+
+            return "Buscando..";
+            }
+        },
+        dropdownAutoWidth : true,
+        });
+
+
+}
 
 function student_asignment(){
         var MaxInputs       =  10; //Número Maximo de Campos
@@ -373,22 +394,22 @@ function student_asignment(){
             url: "../managers/user_management/seguimiento.php",
             success: function(msg)
             {
-            students =JSON.stringify(msg);
+            students =msg;
              var count = $("#contenedor_add_fields div").length + 1;
-        var FieldCount = count - 1; //para el seguimiento de los campos
+             var FieldCount = count - 1; //para el seguimiento de los campos
     
         $(AddButton).click(function (e) {
             if(count <= MaxInputs) //max input box allowed
             {
                 FieldCount++;
                 var text ="";
-                console.log(students.length);
-
-                for(student=0;student<students.length;student++){
-                   text+='<option value="'+students[student].username+'">'+students[student].firstname+' -'+''+student[student].lastname+'</option>';
-
+                for(var student in students)
+                {
+                text+='<option value="'+students[student].username+'">'+students[student].username+' - '+students[student].firstname+' '+''+students[student].lastname+'</option>';
                 }
-                $("#contenedor_add_fields").append('<div><div class="form-group"><select  name="array_students" id="campo_'+ FieldCount +'"">'+text+'</select></div>');
+
+                $("#contenedor_add_fields").append('<div class="select-pilos"><select class="form-select-pilos" name="array_students[]" id="campo_'+ FieldCount +'"">'+text+'</select></div>');
+                create_select2('campo_'+ FieldCount);
 
                 //$("#contenedor_add_fields").append('<div><input type="text" class="inputs_students" name="array_students[]" id="campo_'+ FieldCount +'" placeholder="Estudiante"/></div>');
 
@@ -459,7 +480,10 @@ function loadStudents(){
                     
                     var content =  msg.content;
                     for (x in content){
-                            $('#contenedor_add_fields').append('<div id="contenedor_add_fields"> <div class="added_add_fields"> <input type="text"  class="inputs_students" name="array_students[]" id="campo_1" value="'+content[x].username+'" readonly/> <a href="#" class="eliminar_add_fields"><img src="../icon/ico_wrong.png"></a> </div> </div>');
+
+                            $('#contenedor_add_fields').append('<div id="contenedor_add_fields"> <div class="added_add_fields"> <input type="text"  class="inputs_students" name="array_students[]" id="campo_1" value="'+content[x].username+' - '+content[x].firstname+' '+content[x].lastname+'" readonly/> <a href="#" class="eliminar_add_fields"><img src="../icon/ico_wrong.png"></a> </div> </div>');
+
+                           // $('#contenedor_add_fields').append('<div id="contenedor_add_fields"> <div class="added_add_fields"> <input type="text"  class="inputs_students" name="array_students[]" id="campo_1" value="'+content[x].username+'" readonly/> <a href="#" class="eliminar_add_fields"><img src="../icon/ico_wrong.png"></a> </div> </div>');
                     }
                 
                 }else{
@@ -580,6 +604,7 @@ function valdateStudentMonitor(currentUser, isdelete){
                 }else{
                      title = "Antes de Actualizar!";
                 }
+
                 swal({
                     title: title,
                     html: true,
@@ -637,7 +662,7 @@ function confirmNewMonitor(newUser, currentUser, isdelete){
         message = 'El usuario <strong>'+newUser.firstname+' '+newUser.lastname+'</strong> con código <strong>'+newUser.username+'</strong> ya tiene el rol <strong>'+newUser.rol+'</strong>  en el sistema.<br>Perderá el presente rol y se le asiganará el rol monitor.<br> Tendrá a cargo los estudiantes del anterior monitor.<br><br><strong>¿Estás de acuerdo con los cambios que se efectuarán?</strong>';
     }
     
-    
+
     swal({
       title: "Estás seguro/a?",
       text: message,
