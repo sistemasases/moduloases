@@ -46,10 +46,10 @@ if(isset($_POST['type'])&&$_POST['type']=="consulta_sistemas"&&isset($_POST['id_
        $html = monitorUser($globalArregloPares,$globalArregloGrupal,$_POST['id_persona'],0,$_POST['instance'],$retorno->id_rol,$fechas,true);
 
     }else if ($usernamerole == 'practicante_ps'){
-       $html=practicanteUser($globalArregloPares,$globalArregloGrupal,$_POST['id_persona'],$_POST['instance'],$retorno->id_rol,$fechas);
+       $html=practicanteUser($globalArregloPares,$globalArregloGrupal,$_POST['id_persona'],$_POST['instance'],$retorno->id_rol,$fechas,true);
 
     }else if ($usernamerole == 'profesional_ps'){
-       $html=profesionalUser($globalArregloPares,$globalArregloGrupal,$_POST['id_persona'],$_POST['instance'],$retorno->id_rol,$fechas);
+       $html=profesionalUser($globalArregloPares,$globalArregloGrupal,$_POST['id_persona'],$_POST['instance'],$retorno->id_rol,$fechas,true);
 
     }
 

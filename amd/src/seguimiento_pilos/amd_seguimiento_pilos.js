@@ -274,6 +274,8 @@ function consultar_seguimientos_persona(instance,usuario){
 
                     }else{
                     $('#reemplazarToogle').html(msg);
+                    $("input[name=practicante]").attr('disabled', true);
+                    $("input[name=profesional]").attr('disabled', true);
                     }
                     $(".well.col-md-10.col-md-offset-1.reporte-seguimiento.oculto").slideDown( "slow" );
 
@@ -711,6 +713,10 @@ function editar_seguimiento(namerol){
         }else if (namerol =='profesional_ps'){
           $("input[name=profesional]").attr('disabled', false);
 
+        }else if (namerol =='sistemas'){
+          $("input[name=profesional]").attr('disabled', false);
+          $("input[name=practicante]").attr('disabled', false);
+
         }
 
 
@@ -809,7 +815,12 @@ function cancelar_edicion(namerol){
         }else if (namerol =='profesional_ps'){
           $("input[name=profesional]").attr('disabled', true);
 
+        }else if(namerol =='sistemas'){
+          $("input[name=profesional]").attr('disabled', true);
+          $("input[name=practicante]").attr('disabled', true);
+       
         }
+
              var $tbody = $(this).parent().parent().parent();
              $tbody.find('.editable').attr('readonly', true);
              $tbody.find('.botonesSeguimiento').toggleClass('ocultar');
