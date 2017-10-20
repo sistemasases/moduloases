@@ -92,7 +92,10 @@ if(isset($_POST["func"])){
     } elseif($_POST['func'] == 'is_student'){
         $code_student = $_POST['code_student'];
         validate_student_proc($code_student);
-    }else {
+    } else if($_POST['func'] == 'send_email'){
+        send_email($_POST["risk_array"], $_POST["observations_array"],'' ,$_POST["id_student_moodle"], $_POST["id_student_pilos"], $_POST["date"],'', '', $_POST["url"]);
+    }
+    else {
         $msg->msg = "No se reconoce la función a ejecutar. Contacte al área de sistemas.";
         echo json_encode($msg);
     }

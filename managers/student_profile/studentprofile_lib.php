@@ -674,3 +674,106 @@ function validate_student($code_student){
 
 }
 
+/**
+ * Función que envia correo electrónico 
+ *
+ * @param 
+ * @return
+ */
+
+
+function send_email($risk_array, $observations_array, $id_receiving_user, $id_student_moodle, $id_student_pilos, $date, $subject="", $messageText="", $track_url){
+    
+        global $USER;
+    
+        $emailToUser = new stdClass;
+        $emailFromUser = new stdClass;
+        
+        $id_professional = get_id_assigned_professional($id_student_pilos);
+        $id_practicante = get_id_assigned_pract($id_student_pilos);
+        
+        $sending_user = get_user_by_username('sistemas1008');
+        $receiving_user = get_full_user($id_professional);
+        
+        $receiving_user_pract = get_full_user($id_practicante);
+        
+        // $receiving_user = get_full_user($id_receiving_user);
+        $student_info = get_full_user($id_student_moodle);
+        
+        $risk_array = split(",",$risk_array);
+        $observations_array = split(",",$observations_array);
+        
+        $emailToUser->email = $receiving_user->email;
+        $emailToUser->firstname = $receiving_user->firstname;
+        $emailToUser->lastname = $receiving_user->lastname;
+        $emailToUser->maildisplay = true;
+        $emailToUser->mailformat = 1;
+        $emailToUser->id = $receiving_user->id; 
+        $emailToUser->alternatename = '';
+        $emailToUser->middlename = '';
+        $emailToUser->firstnamephonetic = '';
+        $emailToUser->lastnamephonetic = '';
+        
+        $emailToUserPract->email = $receiving_user_pract->email;
+        $emailToUserPract->firstname = $receiving_user_pract->firstname;
+        $emailToUserPract->lastname = $receiving_user_pract->lastname;
+        $emailToUserPract->maildisplay = true;
+        $emailToUserPract->mailformat = 1;
+        $emailToUserPract->id = $receiving_user_pract->id; 
+        $emailToUserPract->alternatename = '';
+        $emailToUserPract->middlename = '';
+        $emailToUserPract->firstnamephonetic = '';
+        $emailToUserPract->lastnamephonetic = '';
+    
+        $emailFromUser->email = $sending_user->email;
+        $emailFromUser->firstname = 'Seguimiento';
+        $emailFromUser->lastname = 'Sistema de';
+        $emailFromUser->maildisplay = false;
+        $emailFromUser->mailformat = 1;
+        $emailFromUser->id = $sending_user->id; 
+        $emailFromUser->alternatename = '';
+        $emailFromUser->middlename = '';
+        $emailFromUser->firstnamephonetic = '';
+        $emailFromUser->lastnamephonetic = '';
+        
+        $subject = "Registro riesgo alto estudiante";
+        
+        // Quien lo registro
+        // Descripción
+        // Enviar enlace ficha
+        
+        $messageHtml = "Se registra riesgo alto para el estudiante: <br><br>";
+        $messageHtml .= "<b>Nombre completo</b>: $student_info->firstname $student_info->lastname <br>";
+        $messageHtml .= "<b>Código:</b> $student_info->username <br>";
+        $messageHtml .= "<b>Correo electrónico:</b> $student_info->email <br><br>";
+    
+        if(count($risk_array) > 1){
+            $messageHtml .= "En los componentes: <br><br>";
+            $messageHtml .= "<ul>";
+            for($i = 0; $i < count($risk_array); $i++){
+                
+                $messageHtml .= "<li>";    
+                $messageHtml .= "<b>".$risk_array[$i]."</b><br>";
+                $messageHtml .= $observations_array[$i]."<br>";
+                $messageHtml .= "</li>";    
+            }
+            $messageHtml .= "</ul>";
+        }else{
+            $messageHtml .= "En el componente: ";
+            $messageHtml .= "<li>";
+            $messageHtml .= $risk_array[0]."<br>";
+            $messageHtml .= $observations_array[0]."<br>";
+            $messageHtml .= "</li>";
+            $messageHtml .= "</ul>";
+        }
+        
+        $messageHtml .= "Fecha de seguimiento: $date <br>";
+        $messageHtml .= "El registro fue realizado por: <b>$USER->firstname $USER->lastname</b><br><br>";
+        $messageHtml .= "Puede revisar el registro de seguimiento haciendo clic <a href='$track_url'>aquí</a>.";
+        
+        $email_result = email_to_user($emailToUser, $emailFromUser, $subject, $messageText, $messageHtml, ", ", true);
+        $email_result = email_to_user($emailToUserPract, $emailFromUser, $subject, $messageText, $messageHtml, ", ", true);
+        
+        return $email_result;
+    }
+

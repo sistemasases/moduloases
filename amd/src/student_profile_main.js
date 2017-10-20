@@ -15,8 +15,6 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/d3', 'block_ases/sweetaler
         init: function() {
             // Carga una determinada pestaña
 
-            radarchart();               
-            
             var parameters = get_url_parameters(document.location.search);
             var panel_collapse = $('.panel-collapse.collapse.in');
 
@@ -138,6 +136,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/d3', 'block_ases/sweetaler
                     } 
                 });
             });
+
             var RadarChart = {
                 draw: function(id, d, options){
                 var cfg = {
@@ -1329,7 +1328,8 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/d3', 'block_ases/sweetaler
             });
     }
 
-function load_risk_values() {
+
+    function load_risk_values() {
     var idUser = $('#idtalentos').val();
 
     $.ajax({
@@ -1407,64 +1407,130 @@ function load_risk_values() {
             console.log(msg)
         }
     });
-}
 
-function load_student(code_student){
-
-    $.ajax({
-        type: "POST",
-        data: {
-            func: 'is_student',
-            code_student: code_student
-        },
-        url: "../managers/student_profile/studentprofile_serverproc.php",
-        success: function(msg) {
-
-            console.log(msg);
-
-            if(msg == "1"){
-                var parameters = get_url_parameters(document.location.search);
-                var full_url = String(document.location);
-                var url = full_url.split("?");
-
-                var new_url = url[0]+"?courseid="+parameters['courseid']+"&instanceid="+parameters['instanceid']+"&student_code="+code_student;
-
-                location.href = new_url;
-            }else{
-                swal(
-                    "Error",
-                    "No se encuentra un estudiante asociado al código ingresado",
-                    "error"
-                );
-            }
-            
-        },
-        dataType: "text",
-        cache: "false",
-        error: function(msg) {
-            console.log(msg);
-            swal(
-                "Error",
-                "Error al comunicarse con el servidor, por favor intentelo nuevamente.",
-                "error"
-            );
-
-        },
-    });
-}
-
-function radarchart(){
-    //Practically all this code comes from https://github.com/alangrafu/radar-chart-d3
-    //I only made some additions and aesthetic adjustments to make the chart look better 
-    //(of course, that is only my point of view)
-    //Such as a better placement of the titles at each line end, 
-    //adding numbers that reflect what each circular level stands for
-    //Not placing the last level and slight differences in color
-    //
-    //For a bit of extra information check the blog about it:
-    //http://nbremer.blogspot.nl/2013/09/making-d3-radar-chart-look-bit-better.html
-
+    function send_email() {
+        
+        var high_risk_array = new Array();
+        var observations_array = new Array();
     
+        var high_individual_risk = $('input:radio[name=riesgo_ind]:checked').val();
+        var high_familiar_risk = $('input:radio[name=riesgo_familiar]:checked').val();
+        var high_academic_risk = $('input:radio[name=riesgo_aca]:checked').val();
+        var high_economic_risk = $('input:radio[name=riesgo_econom]:checked').val();
+        var high_life_risk = $('input:radio[name=riesgo_uni]:checked').val();
+    
+        if (high_individual_risk == '3') {
+            high_risk_array.push('Individual');
+            observations_array.push($('#individual').val());
+        }
+        if (high_familiar_risk == '3') {
+            high_risk_array.push('Familiar');
+            observations_array.push($('#familiar').val());
+        }
+        if (high_academic_risk == '3') {
+            high_risk_array.push('Académico');
+            observations_array.push($('#academico').val());
+        }
+        if (high_economic_risk == '3') {
+            high_risk_array.push('Económico');
+            observations_array.push($('#economico').val());
+        }
+        if (high_life_risk == '3') {
+            high_risk_array.push('Vida universitaria');
+            observations_array.push($('#vida_uni').val());
+        }
+    
+        var data_email = new Array();
+        data_email.push({
+            name: "function",
+            value: "send_email"
+        });
+        data_email.push({
+            name: "id_student_moodle",
+            value: $('#iduser').val()
+        });
+        data_email.push({
+            name: "id_student_pilos",
+            value: $('#idtalentos').val()
+        });
+        data_email.push({
+            name: "risk_array",
+            value: high_risk_array
+        });
+        data_email.push({
+            name: "observations_array",
+            value: observations_array
+        });
+        data_email.push({
+            name: "date",
+            value: $('#date').val()
+        });
+        data_email.push({
+            name: "url",
+            value: window.location
+        });
+    
+        console.log(observations_array);
+    
+        if (high_risk_array.length != 0) {
+            $.ajax({
+                type: "POST",
+                data: data_email,
+                url: "../managers/seguimiento.php",
+                success: function(msg) {
+                    console.log(msg);
+                },
+                dataType: "text",
+                cache: "false",
+                error: function(msg) {
+                    console.log(msg)
+                }
+            });
+        }
     }
+    
+    function load_student(code_student){
+        
+            $.ajax({
+                type: "POST",
+                data: {
+                    func: 'is_student',
+                    code_student: code_student
+                },
+                url: "../managers/student_profile/studentprofile_serverproc.php",
+                success: function(msg) {
+        
+                    console.log(msg);
+        
+                    if(msg == "1"){
+                        var parameters = get_url_parameters(document.location.search);
+                        var full_url = String(document.location);
+                        var url = full_url.split("?");
+        
+                        var new_url = url[0]+"?courseid="+parameters['courseid']+"&instanceid="+parameters['instanceid']+"&student_code="+code_student;
+        
+                        location.href = new_url;
+                    }else{
+                        swal(
+                            "Error",
+                            "No se encuentra un estudiante asociado al código ingresado",
+                            "error"
+                        );
+                    }
+                    
+                },
+                dataType: "text",
+                cache: "false",
+                error: function(msg) {
+                    console.log(msg);
+                    swal(
+                        "Error",
+                        "Error al comunicarse con el servidor, por favor intentelo nuevamente.",
+                        "error"
+                    );
+        
+                },
+            });
+        }
 
-});
+    }})
