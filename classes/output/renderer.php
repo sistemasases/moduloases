@@ -127,4 +127,9 @@ class renderer extends plugin_renderer_base {
         $data = $page->export_for_template($this);
         return parent::render_from_template('block_ases/index_sistemas', $data);
     }
+
+    public function render_periods_management_page($page){
+        $data = $page->export_for_template($this);
+        return parent::render_from_template('block_ases/periods_management', $data);
+    }
 }
