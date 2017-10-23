@@ -85,22 +85,25 @@ function monitor_student_assignment($username_monitor, $array_students, $idinsta
 {
     global $DB;
 
+
     try{
         $sql_query = "SELECT id FROM {user} WHERE username = '$username_monitor'";
         $idmonitor = $DB->get_record_sql($sql_query);
-        
+
         $first_insertion_sql = "SELECT MAX(id) FROM {talentospilos_monitor_estud};";
         $first_insertion_id = $DB->get_record_sql($first_insertion_sql);
         
         $insert_record = "";
         $array_errors = array();
         $hadErrors = false; 
+
+
         
         foreach($array_students as $student)
         {
-            
                 $studentid = get_userById(array('*'),$student);
                 $semestre_act = get_current_semester();
+
 
 
                 if($studentid){

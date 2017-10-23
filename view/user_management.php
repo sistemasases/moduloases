@@ -55,11 +55,12 @@ if(!consult_instance($blockid)){
 
 //obtiene las personas asociadas al curso y los estudiantes.
 $courseusers = get_course_usersby_id($courseid);
-$students  = get_students();
 
-$table_courseuseres = get_course_users_select($courseusers);
 
-//Crea una clase con la información que se llevará al template.
+$students  = get_students($blockid);
+ $table_courseuseres = get_course_users_select($courseusers);
+
+ //Crea una clase con la información que se llevará al template.
 $data = 'data';    
 $data = new stdClass;
 $data->table = $table_courseuseres;

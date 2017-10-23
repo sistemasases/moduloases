@@ -11,9 +11,11 @@
 
 define(['jquery','block_ases/bootstrap','block_ases/datatables.net','block_ases/datatables.net-buttons','block_ases/buttons.flash','block_ases/jszip','block_ases/pdfmake','block_ases/buttons.html5','block_ases/buttons.print','block_ases/sweetalert','block_ases/select2'], function($,bootstrap,datatablesnet,datatablesnetbuttons,buttonsflash,jszip,pdfmake,buttonshtml5,buttonsprint,sweetalert,select2) {
 
+        var students;
 
   return {
       init: function() {
+
     
 
         $("#users").select2({    
@@ -47,6 +49,7 @@ define(['jquery','block_ases/bootstrap','block_ases/datatables.net','block_ases/
                 $('#users').prop('disabled', true);
                 $(".assignment_li").slideToggle("fast");
             });
+
             $("#ok-button").on('click', function(){
                 var rolchanged = $('#role_select').val();
                 userLoad(null,function(msg) {
@@ -267,8 +270,14 @@ function updateRolUser(){
     var dataUsername = $('#users').val();
     var dataStudents = new Array();
 
-    $('input[name="array_students[]"]').each(function() {
+  $('input[name="array_students[]"]').each(function() {
         dataStudents.push($(this).val().split(" - ")[0]);
+
+    });
+
+    $('select[name="array_students[]"]').each(function() {
+        dataStudents.push($(this).val().split(" - ")[0]);
+
     });
 
     if(dataRole == "profesional_ps"){
@@ -280,6 +289,7 @@ function updateRolUser(){
             var data = {role: dataRole, username: dataUsername, professional: dataProfessional, idinstancia: getIdinstancia()};
             $.ajax({
             type: "POST",
+
             data:data ,
             url: "../managers/user_management/update_role_user.php",
             success: function(msg)
@@ -295,13 +305,16 @@ function updateRolUser(){
         }
     }else if(dataRole == "monitor_ps"){
         var boss_id = $('#boss_select').val();
-        
+
         $.ajax({
             type: "POST",
             data: {role: dataRole, username: dataUsername, students: dataStudents, boss:boss_id, idinstancia: getIdinstancia()},
             url: "../managers/user_management/update_role_user.php",
             success: function(msg)
-            {              
+            {  
+
+                alert(msg);
+
 
               swal({  title: "Información!",   
                     text: msg,   
@@ -390,10 +403,11 @@ function student_asignment(){
 
             $.ajax({
             type: "POST",
-            data:{function: "students_consult"},
+            data:{function: "students_consult",instancia:getIdinstancia()},
             url: "../managers/user_management/seguimiento.php",
             success: function(msg)
             {
+
             students =msg;
              var count = $("#contenedor_add_fields div").length + 1;
              var FieldCount = count - 1; //para el seguimiento de los campos
@@ -478,17 +492,21 @@ function loadStudents(){
                 $('#contenedor_add_fields').html('');
                 if(msg.rows != 0){
                     
-                    var content =  msg.content;
+                var text ="";
+                for(var student in students)
+                {
+                text+='<option value="'+students[student].username+'">'+students[student].username+' - '+students[student].firstname+' '+''+students[student].lastname+'</option>';
+                }
+
+                var content =  msg.content;
                     for (x in content){
 
-                            $('#contenedor_add_fields').append('<div id="contenedor_add_fields"> <div class="added_add_fields"> <input type="text"  class="inputs_students" name="array_students[]" id="campo_1" value="'+content[x].username+' - '+content[x].firstname+' '+content[x].lastname+'" readonly/> <a href="#" class="eliminar_add_fields"><img src="../icon/ico_wrong.png"></a> </div> </div>');
+                    $('#contenedor_add_fields').append('<div id="contenedor_add_fields"> <div class="added_add_fields"> <input type="text"  class="inputs_students" name="array_students[]" id="campo_1" value="'+content[x].username+' - '+content[x].firstname+' '+content[x].lastname+'" readonly/> <a href="#" class="eliminar_add_fields"><img src="../icon/ico_wrong.png"></a> </div> </div>');
 
-                           // $('#contenedor_add_fields').append('<div id="contenedor_add_fields"> <div class="added_add_fields"> <input type="text"  class="inputs_students" name="array_students[]" id="campo_1" value="'+content[x].username+'" readonly/> <a href="#" class="eliminar_add_fields"><img src="../icon/ico_wrong.png"></a> </div> </div>');
                     }
                 
                 }else{
-                    $('#contenedor_add_fields').append('<div id="contenedor_add_fields"> <div class="added_add_fields"> <input type="text"  class="inputs_students" name="array_students[]" id="campo_1" placeholder="Estudiante 1"/> <a href="#" class="eliminar_add_fields"><img src="../icon/ico_wrong.png"></a> </div> </div> ');
-                }
+            }
             },
             dataType: "json",
             cache: "false",
@@ -537,9 +555,10 @@ function get_boss(role,selected){
 function deleteStudent(student){
     var data =  new Array();
     var user_id =  $('#user_id').val();
+
     var dataUsername = $('#users').val();
     data.push({name:"deleteStudent",value:"delete"});
-    data.push({name:"student",value:student});
+    data.push({name:"student",value:student.split(" - ")[0]});
     data.push({name:"username",value:dataUsername});
     data.push({name:'idinstancia', value: getIdinstancia()});
     $.ajax({

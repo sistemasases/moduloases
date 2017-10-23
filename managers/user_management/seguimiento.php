@@ -37,7 +37,7 @@ if(isset($_POST['function'])){
             send_email($_POST["risk_array"], $_POST["observations_array"],'' ,$_POST["id_student_moodle"], $_POST["id_student_pilos"], $_POST["date"],'', '', $_POST["url"]);
             break;
         case "students_consult":
-            $students = get_students();
+            $students = get_students($_POST["instancia"]);
             echo json_encode($students);
             break;
         default:
