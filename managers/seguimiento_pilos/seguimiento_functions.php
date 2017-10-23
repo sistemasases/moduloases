@@ -114,7 +114,7 @@ function get_conteo_profesional($professionalpracticants){
 }
 
 
-function profesionalUser(&$pares,&$grupal,$id_prof,$instanceid,$rol,$semester){
+function profesionalUser(&$pares,&$grupal,$id_prof,$instanceid,$rol,$semester,$sistemas=false){
     
     $arregloPracticanteYMonitor = [];
     $fechas = [];
@@ -123,7 +123,7 @@ function profesionalUser(&$pares,&$grupal,$id_prof,$instanceid,$rol,$semester){
     $fechas[2] = $semester[2];
     $professionalpracticants= get_practicantes_profesional($id_prof,$instanceid,$semester[2]);
     $conteo_profesional = get_conteo_profesional($professionalpracticants);
-    $arregloPracticanteYMonitor=transformarConsultaProfesionalArray($pares,$grupal,$professionalpracticants,$instanceid,$rol,$fechas);
+    $arregloPracticanteYMonitor=transformarConsultaProfesionalArray($pares,$grupal,$professionalpracticants,$instanceid,$rol,$fechas,$sistemas);
 
     return crearTablaYToggleProfesional($arregloPracticanteYMonitor,$conteo_profesional);
 
@@ -133,7 +133,7 @@ function profesionalUser(&$pares,&$grupal,$id_prof,$instanceid,$rol,$semester){
 
 //funcion que transforma el arreglo retornado por la peticion en un arreglo que posteriormente
 //se usara para la creacion del toogle
-    function transformarConsultaProfesionalArray($pares,$grupal,$arregloPracticantes,$instanceid,$role,$fechas_epoch) {
+    function transformarConsultaProfesionalArray($pares,$grupal,$arregloPracticantes,$instanceid,$role,$fechas_epoch,$sistemas) {
 
         $arregloPracticanteYMonitor = [];
 
@@ -144,7 +144,7 @@ function profesionalUser(&$pares,&$grupal,$id_prof,$instanceid,$rol,$semester){
             array_push($arregloAuxiliar,$arregloPracticantes[$practicante][1]);
 
             //se asigna a esta posicion un texto html correspondiente a la informacion del practicante
-            array_push($arregloAuxiliar,practicanteUser($pares,$grupal,$arregloPracticantes[$practicante][0], $instanceid,$role,$fechas_epoch));
+            array_push($arregloAuxiliar,practicanteUser($pares,$grupal,$arregloPracticantes[$practicante][0], $instanceid,$role,$fechas_epoch,$sistemas));
             array_push($arregloAuxiliar,$arregloPracticantes[$practicante][2]);
             array_push($arregloAuxiliar,$arregloPracticantes[$practicante][3]);
             array_push($arregloAuxiliar,$arregloPracticantes[$practicante][4]);
@@ -180,7 +180,7 @@ function profesionalUser(&$pares,&$grupal,$id_prof,$instanceid,$rol,$semester){
 //******************************************************************************************************
 //******************************************************************************************************
 
-function practicanteUser(&$pares,&$grupal,$id_pract,$instanceid,$rol,$semester){
+function practicanteUser(&$pares,&$grupal,$id_pract,$instanceid,$rol,$semester,$sistemas=false){
     
     $arregloMonitorYEstudiantes = [];
     $fechas = [];
@@ -189,7 +189,7 @@ function practicanteUser(&$pares,&$grupal,$id_pract,$instanceid,$rol,$semester){
     $fechas[2] = $semester[2];
 
     $practicantmonitors= get_monitores_practicante($id_pract,$instanceid,$semester[2]);
-    $arregloMonitorYEstudiantes=transformarConsultaPracticanteArray($pares,$grupal,$practicantmonitors,$instanceid,$rol,$id_pract,$fechas);
+    $arregloMonitorYEstudiantes=transformarConsultaPracticanteArray($pares,$grupal,$practicantmonitors,$instanceid,$rol,$id_pract,$fechas,$sistemas);
     return crearTablaYTogglePracticante($arregloMonitorYEstudiantes);
 
 }
@@ -197,7 +197,7 @@ function practicanteUser(&$pares,&$grupal,$id_pract,$instanceid,$rol,$semester){
 /*Función que transforma el arreglo retornado por la peticion en un arreglo que posteriormente
 se usara para la creacion del toogle.*/
 
- function transformarConsultaPracticanteArray($pares,$grupal,$arregloMonitores, $instanceid,$role,$id_pract,$fechas_epoch) {
+ function transformarConsultaPracticanteArray($pares,$grupal,$arregloMonitores, $instanceid,$role,$id_pract,$fechas_epoch,$sistemas=false) {
 
         $arregloMonitorYEstudiantes = [];
         $fechas = [];
@@ -843,8 +843,8 @@ function crearTablaYToggle($arregloImprimirPares, $monitorNo, $arregloImprimirGr
 
                 //----en caso que tenga el rol correspondiente se añade un campo y un boton para
                 //enviar un mensaje con observaciones tanto al monitor que hizo el seguimiento como al profesional que lo envia
-                if ($rol  == 3 or $rol  == 7 or $name == "administrador" or $name == "sistemas1008" or $name == "Administrador" ) {
-                    if ($arregloImprimirPares[$student][$tupla][27] != 1) {
+                if ($rol  == 3 or $rol  == 7 or $sistemas==1) {
+                    if ($arregloImprimirPares[$student][$tupla][27] != 1 or ($arregloImprimirPares[$student][$tupla][27] == 1 && $sistemas==1)) {
 
                         $stringRetornar .= '<div class="table-info-pilos col-sm-12"><b>REPORTAR OBSERVACIÓN</b><br><textarea  id="textarea_'. $arregloImprimirPares[$student][$tupla][23] .'" class="textarea-seguimiento-pilos" name="individual_'. $codigoEnviarN1 .'_'. $codigoEnviarN2 .'_'. $arregloImprimirPares[$student][$tupla][1] .'_'. $arregloImprimirPares[$student][$tupla][0] .'" rows="4" cols="150"></textarea><br>';
 
@@ -871,14 +871,14 @@ function crearTablaYToggle($arregloImprimirPares, $monitorNo, $arregloImprimirGr
                 }
                 else {
                     if ($rol  == 4) {
-                        if ($arregloImprimirPares[$student][$tupla][27] == 1) {
+                        if ($arregloImprimirPares[$student][$tupla][27] == 1 ) {
                             $stringRetornar .= '<div class="col-sm-12"><label class="checkbox-inline"><input type="checkbox" class="hide" name="profesional"  id="profesional_'. $arregloImprimirPares[$student][$tupla][23] .'" value="1" checked></label><label class="checkbox-inline">';
                         }
                         else {
                             $stringRetornar .= '<div class="col-sm-12"><label class="checkbox-inline"><input type="checkbox" class="hide" name="profesional" id="profesional_'. $arregloImprimirPares[$student][$tupla][23] .'" value="1"></label><label class="checkbox-inline">';
                         }
 
-                        if ($arregloImprimirPares[$student][$tupla][28] == 1) {
+                        if ($arregloImprimirPares[$student][$tupla][28] == 1 ) {
                             $stringRetornar .= '<input type="checkbox" name="practicante" class="hide"   id="practicante_'. $arregloImprimirPares[$student][$tupla][23] .'" value="1" checked></label></div>';
                         }
                         else {
