@@ -9,7 +9,7 @@ requirejs(['jquery', 'bootstrap', 'sweetalert'], function($) {
             new_page = location.origin + "/moodle/grade/report/grader/index.php?id="+getCourseid();
             swal({
                 title: "Redireccionando página.",
-                text: "Debido al proceso de actualización del campus virtual, el Docente encargado del curso debe realizar este paso.\n Una vez realizado por favor cerrar la ventana y volver a seleccionar su curso en el listado",
+                text: "Debido al proceso de actualización del campus virtual se debe realizar este paso.\nSOLO EL DOCENTE ENCARGADO DEL CURSO PUEDE \n Una vez realizado por favor cerrar la ventana y volver a seleccionar su curso en el listado",
                 type: "warning",
                 showCancelButton: false,
                 confirmButtonClass: "btn-danger",
