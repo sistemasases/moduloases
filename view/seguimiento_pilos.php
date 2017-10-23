@@ -46,11 +46,12 @@ require_login($courseid, false);
 
 //se culta si la instancia ya está registrada
 if(!consult_instance($blockid)){
-    header("Location: /blocks/ases/view/instanceconfiguration.php?courseid=$courseid&instanceid=$blockid");
+   // header("Location: instance_configuration.php?courseid=$courseid&instanceid=$blockid");
 }
 
 $contextcourse = context_course::instance($courseid);
 $contextblock =  context_block::instance($blockid);
+$PAGE->set_context($contextcourse);
 
 //Se obtiene el rol del usuario que se encuentra conectado, username y su correo electronico respectivo.
 
@@ -151,6 +152,7 @@ $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/NewCSSExport/button
 $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/dataTables.tableTools.css', true);
 $PAGE->requires->css('/blocks/ases/style/sweetalert.css', true);
 $PAGE->requires->css('/blocks/ases/js/select2/css/select2.css', true);
+
 
 //$PAGE->requires->css('/theme/base/style/core.css',true);
 

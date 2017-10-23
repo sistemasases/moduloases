@@ -35,9 +35,9 @@ require_once('../managers/student_profile/geographic_lib.php');
 require_once('../managers/student_profile/studentprofile_lib.php');
 require_once('../managers/academic_profile/academic_lib.php');
 require_once('../managers/instance_management/instance_lib.php');
-// require_once('../managers/view_management/validate_profile_action.php');
 require_once('../managers/dateValidator.php');
 include('../lib.php');
+
 global $PAGE;
 
 include("../classes/output/student_profile_page.php");
@@ -62,7 +62,7 @@ $contextblock =  context_block::instance($blockid);
 
 $url = new moodle_url("/blocks/ases/view/student_profile.php",array('courseid' => $courseid, 'instanceid' => $blockid,'student_code'=>$student_code));
 
-//set configura la navegacion
+// Nav configuration
 
 $coursenode = $PAGE->navigation->find($courseid, navigation_node::TYPE_COURSE);
 $blocknode = navigation_node::create('Reporte general',new moodle_url("/blocks/ases/view/ases_report.php",array('courseid' => $courseid, 'instanceid' => $blockid)), null, 'block', $blockid);
@@ -71,13 +71,13 @@ $node = $blocknode->add('Ficha estudiante',new moodle_url("/blocks/ases/view/stu
 $blocknode->make_active();
 $node->make_active();
 
-//cargar info de la ficha
+// Load information of student's file
 
 $record = 'data';
 
 if ($student_code != 0){ 
     
-    // Inicializa la vareciable a pasar por contexto
+    // Inicializa la variable a pasar por contexto
     $record = new stdClass;
     
     $ases_student = get_ases_user_by_code($student_code);
@@ -94,8 +94,6 @@ if ($student_code != 0){
     
     $html_status_ases = "<option value=''>NO REGISTRA</option>";
 
-    //print_r($student_status_ases);
-    
     foreach($ases_status_array as $ases_status){
         
         if($ases_status->nombre == $student_status_ases->nombre){
@@ -224,13 +222,13 @@ if ($student_code != 0){
     
     $risk_object = get_risk_by_student($student_id); 
     
-    $record->individual_risk = $risk_object[individual]->calificacion_riesgo;
-    $record->familiar_risk = $risk_object[familiar]->calificacion_riesgo;
-    $record->academic_risk = $risk_object[academico]->calificacion_riesgo;
-    $record->life_risk = $risk_object[vida_universitaria]->calificacion_riesgo;
-    $record->economic_risk = $risk_object[economico]->calificacion_riesgo;
+    $record->individual_risk = $risk_object['individual']->calificacion_riesgo;
+    $record->familiar_risk = $risk_object['familiar']->calificacion_riesgo;
+    $record->academic_risk = $risk_object['academico']->calificacion_riesgo;
+    $record->life_risk = $risk_object['vida_universitaria']->calificacion_riesgo;
+    $record->economic_risk = $risk_object['economico']->calificacion_riesgo;
     
-    switch($risk_object[individual]->calificacion_riesgo){
+    switch($risk_object['individual']->calificacion_riesgo){
         case 1:
             $record->individual_class = 'div_low_risk';
             break;
@@ -245,7 +243,7 @@ if ($student_code != 0){
             break;
      }
         
-    switch($risk_object[familiar]->calificacion_riesgo){
+    switch($risk_object['familiar']->calificacion_riesgo){
         case 1:
             $record->familiar_class = 'div_low_risk';
             break;
@@ -260,7 +258,7 @@ if ($student_code != 0){
             break;
      }
 
-    switch($risk_object[economico]->calificacion_riesgo){
+    switch($risk_object['economico']->calificacion_riesgo){
         case 1:
             $record->economic_class = 'div_low_risk';
             break;
@@ -275,7 +273,7 @@ if ($student_code != 0){
             break;
      }
      
-    switch($risk_object[vida_universitaria]->calificacion_riesgo){
+    switch($risk_object['vida_universitaria']->calificacion_riesgo){
         case 1:
             $record->life_class = 'div_low_risk';
             break;
@@ -290,7 +288,7 @@ if ($student_code != 0){
             break;
      }
     
-    switch($risk_object[academico]->calificacion_riesgo){
+    switch($risk_object['academico']->calificacion_riesgo){
         case 1:
             $record->academic_class = 'div_low_risk';
             break;
@@ -616,7 +614,6 @@ for($i = 0; $i < count($reasons_dropout); $i++){
 
 $record->reasons_options = $html_select_reasons;
 
-
 /**
 * Carga de información academica
 **/
@@ -640,7 +637,6 @@ $PAGE->requires->css('/blocks/ases/style/forms_pilos.css', true);
 $PAGE->requires->css('/blocks/ases/style/c3.css', true);
 
 $PAGE->requires->js_call_amd('block_ases/student_profile_main','init');
-//$PAGE->requires->js('/blocks/ases/amd/src/moment.js');
 
 $output = $PAGE->get_renderer('block_ases');
 

@@ -8,44 +8,59 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
 
     $result = true;
 
-    /// Add a new column newcol to the mdl_myqtype_options
-    if ($result && $oldversion < 2017101515448) {
-        
-        // Define field id_semestre to be added to talentospilos_monitor_estud.
-        $table = new xmldb_table('talentospilos_monitor_estud');
-        $field = new xmldb_field('id_semestre', XMLDB_TYPE_INTEGER, '20', null, null, null, null, 'id_instancia');
+    if ($oldversion < 2017101818449) {
 
-        // Conditionally launch add field id_semestre.
+        // Define field id_funcionalidad to be added to talentospilos_accion.
+        $table = new xmldb_table('talentospilos_accion');
+        $field = new xmldb_field('id_funcionalidad', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null, 'estado');
+
+        // Conditionally launch add field id_funcionalidad.
         if (!$dbman->field_exists($table, $field)) {
             $dbman->add_field($table, $field);
         }
 
-        // Define key semester_fk (foreign) to be added to talentospilos_monitor_estud.
-        //$table = new xmldb_table('talentospilos_monitor_estud');
-        //$key = new xmldb_key('semester_fk', XMLDB_KEY_FOREIGN, array('id_semestre'), 'talentospilos_semestre', array('id'));
+        // Define key funcionalidad_fk1 (foreign) to be added to talentospilos_accion.
+        $table = new xmldb_table('talentospilos_accion');
+        $key = new xmldb_key('funcionalidad_fk1', XMLDB_KEY_FOREIGN, array('id_funcionalidad'), 'talentospilos_funcionalidad', array('id'));
 
-        // Launch add key mon_est_pk1.
-        //$dbman->add_key($table, $key);
-
-
-         // Define key mon_est_un (unique) to be added to talentospilos_monitor_estud.
-        $table = new xmldb_table('talentospilos_monitor_estud');
-        $key = new xmldb_key('unique_key_1', XMLDB_KEY_UNIQUE, array('id_monitor', 'id_estudiante', 'id_instancia', 'id_semestre'));
-
-        // Launch add key mon_est_un.
+        // Launch add key funcionalidad_fk1.
         $dbman->add_key($table, $key);
 
-        // Define key mon_est_un (unique) to be dropped form talentospilos_monitor_estud.
-        $table = new xmldb_table('talentospilos_monitor_estud');
-        $key = new xmldb_key('mon_est_un', XMLDB_KEY_UNIQUE, array('id_monitor', 'id_estudiante', 'id_instancia'));
 
-        // Launch drop key mon_est_un.
-        $dbman->drop_key($table, $key);
 
+      // Define table talentospilos_permisos_rol to be dropped.
+        $table = new xmldb_table('talentospilos_permisos_rol');
+
+        // Conditionally launch drop table for talentospilos_permisos_rol.
+        if ($dbman->table_exists($table)) {
+            $dbman->drop_table($table);
+        }
+
+      // Define table talentospilos_permisos_rol to be created.
+        $table = new xmldb_table('talentospilos_permisos_rol');
+
+        // Adding fields to table talentospilos_permisos_rol.
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        $table->add_field('id_rol', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('id_accion', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+
+        // Adding keys to table talentospilos_permisos_rol.
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+        $table->add_key('permisosr_upk', XMLDB_KEY_UNIQUE, array('id_rol', 'id_accion'));
+        $table->add_key('permisosr_fk1', XMLDB_KEY_FOREIGN, array('id_rol'), 'talentospilos_rol', array('id'));
+        $table->add_key('permisosr_fk2', XMLDB_KEY_FOREIGN, array('id_accion'), 'talentospilos_accion', array('id'));
+
+        // Conditionally launch create table for talentospilos_permisos_rol.
+        if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
+        }
 
         // Ases savepoint reached.
-        upgrade_block_savepoint(true, 2017101515448, 'ases');
+        upgrade_block_savepoint(true, 2017101818449, 'ases');
     }
+
+
+   
     return $result;
 }
 

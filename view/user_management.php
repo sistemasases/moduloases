@@ -30,6 +30,8 @@ require_once($CFG->libdir.'/adminlib.php');
 require_once('../managers/instance_management/instance_lib.php');
 require_once('../managers/user_management/user_lib.php');
 require_once('../managers/user_management/user_functions.php');
+//require_once('../managers/usermanagement_view.php');
+
 global $PAGE;
 
 include("../classes/output/user_management_page.php");
@@ -50,7 +52,7 @@ $url = new moodle_url("/blocks/ases/view/user_management.php", array('courseid' 
 
 //se culta si la instancia ya está registrada
 if(!consult_instance($blockid)){
-    header("Location: instance_configuration.php?courseid=$courseid&instanceid=$blockid");
+   // header("Location: instance_configuration.php?courseid=$courseid&instanceid=$blockid");
 }
 
 //obtiene las personas asociadas al curso y los estudiantes.
@@ -92,7 +94,6 @@ $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/jquery.dataTables.c
 $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/jquery.dataTables.min.css', true);
 $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/jquery.dataTables_themeroller.css', true);
 $PAGE->requires->css('/blocks/ases/js/select2/css/select2.css', true);
-
 $PAGE->requires->js_call_amd('block_ases/usermanagement_main','init');
 
 

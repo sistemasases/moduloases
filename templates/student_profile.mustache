@@ -355,59 +355,67 @@
                   <!-- End socied tab -->
 
                   <!--academic tab-->
-
                   <div class="tab-pane" id="academic_tab">
                     <div class="col-sm-10 col-sm-offset-1" id="academic_report">
                       {{{academic_semestres_table}}}
                     </div>
                   </div>
                   <!-- End academic tab -->
+
                   <!-- Geographic tab-->
               		<div class="tab-pane" id="geographic_tab">
-              		  <div id="demografica" class="">
+                    <div class="row">
                       <div class="col-sm-4">
-                        <div class="row">
-                          <label for="latitud" class="control-label col-sm-4">Latitud</label>
-                          <div class="input_group col-sm-8">
-                            <input type="number" class="form-control" id="longitud" name="longitud" placeholder="longitud" readonly/>
-                          </div>
-                        </div>
-                        <div class="row">
-                          <label for="longitud" class="control-label col-sm-4">Longitud</label>
-                          <div class="col-sm-8">
-                            <input type="number" class="form-control" id="latitud" name="latitud" placeholder="latitud" readonly/>
+                        <div class="form-group">
+                          <label for="latitude" class="col-sm-3">Latitud</label>
+                          <div class="col-sm-9">
+                            <input type="number" class="form-control" id="latitude" name="latitude" placeholder="Latitud" />
                           </div>
                         </div>
                       </div>
-                      
-                      <div class="col-sm-4">
-                        <div class="row">
-                          <label for="barrio" class="control-label col-sm-4">Barrio</label>
-                          <div class="col-sm-8">
-                            <select class="form-control" id="neighborhood_select" name="id_neighborhood" disabled></select>
-                          </div>
-                        </div>
-                        <div class="row">
-                          <label for="riesgo" class="control-label col-sm-4">Riesgo</label>
-                          <div class="col-sm-8">
-                             <select id="geographic_risk" name="risk" disabled>
-                               <option value="1">Bajo</option>
-                               <option value="2">Medio</option>
-                               <option value="3">Alto</option>
-                             </select>
+                      <div class="col-sm-5">
+                        <div class="form-group">
+                          <label for="select_neighborhood" class="col-sm-6">Barrio residencia</label>
+                          <div class="col-sm-6">
+                            <select class="form-control" name="select_neighborhood" id="select_neighborhood">
+                              
+                            </select>
                           </div>
                         </div>
                       </div>
-                      <div class="col-sm-4" id="edit_button_div">
-                        <button type="button" class="btn btn-primary" id="edit_demo" onclick="edit_geographic(this)">Editar</button>
-                      </div>
-                      <div class="col-sm-4" id="save_button_div" hidden>
-                        <button type="button" class="btn btn-primary" id="save_demo" onclick="save_geographic()">Guardar</button>
-                        <button type="button" class="btn btn-warning" id="cancel_demo" onclick="cancel_edition_geographic()">Cancelar</button>
+                      <div class="col-sm-3">
+                        <div class="form-group" id="div_edit_button">
+                          <button type="button" class="button btn-danger" id="button_edit_geographic">Editar</button>
+                        </div>
+                        <div class="form-group" id="div_save_buttons" hidden>
+                          <button type="button" class="button btn-success" id="button_save_geographic">Aceptar</button>
+                          <button type="button" class="button btn-danger" id="button_cancel_geographic">Cancelar</button>
+                        </div>
                       </div>
                     </div>
-              		</div>
-                  <!-- End geographic tab -->
+                    <div class="row">
+                      <div class="col-sm-4">
+                        <div class="form-group">
+                          <label for="longitude" class="col-sm-3">Longitud</label>
+                          <div class="col-sm-9">
+                            <input type="number" class="form-control" id="longitude" name="longitude" placeholder="Digite longitud" />
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-sm-5">
+                        <div class="form-group">
+                          <label for="select_geographic_risk" class="col-sm-6">Riesgo geográfico</label>
+                          <div class="col-sm-6">
+                            <select class="form-control" name="geographic_risk" id="select_geographic_risk">
+                              <option value="1">Bajo</option>
+                              <option value="2">Medio</option>
+                              <option value="3">Alto</option>
+                            </select>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- End geographic tab -->
                 </div>
             </div>
             <!-- Fin Pestañas ficha -->
@@ -442,7 +450,7 @@
               <div class="form-group">
                 <label for="date" class="col-sm-3">Fecha (aaaa-mm-dd)<b style="color:red;">*</b></label>
                 <div class="col-sm-9">
-                  <input type="" maxlength="20" class="form-control" id="date" name="date" />
+                  <input type="text" maxlength="10" class="form-control" id="date" name="date" />
                 </div>
               </div>
             </div>
