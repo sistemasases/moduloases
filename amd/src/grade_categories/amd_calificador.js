@@ -6,10 +6,10 @@ requirejs(['jquery', 'bootstrap', 'sweetalert'], function($) {
         deleteNoPilos(pilos);
         bloquearTotales();
         if($('.gradingerror').length != 0){
-            new_page = location.origin + "/moodle32/grade/report/grader/index.php?id="+getCourseid();
+            new_page = location.origin + "/moodle/grade/report/grader/index.php?id="+getCourseid();
             swal({
                 title: "Redireccionando página.",
-                text: "Debido al proceso de actualización del campus virtual se debe realizar este paso.\n Una vez realizado por    favor cerrar la ventana y volver a seleccionar su curso en el listado",
+                text: "Debido al proceso de actualización del campus virtual, en Docente encargado del curso debe realizar este paso.\n Una vez realizado por favor cerrar la ventana y volver a seleccionar su curso en el listado",
                 type: "warning",
                 showCancelButton: false,
                 confirmButtonClass: "btn-danger",
