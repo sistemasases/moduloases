@@ -11,9 +11,11 @@
 
 define(['jquery','block_ases/bootstrap','block_ases/datatables.net','block_ases/datatables.net-buttons','block_ases/buttons.flash','block_ases/jszip','block_ases/pdfmake','block_ases/buttons.html5','block_ases/buttons.print','block_ases/sweetalert','block_ases/select2'], function($,bootstrap,datatablesnet,datatablesnetbuttons,buttonsflash,jszip,pdfmake,buttonshtml5,buttonsprint,sweetalert,select2) {
 
+        var students;
 
   return {
       init: function() {
+
     
 
         $("#users").select2({    
@@ -47,6 +49,7 @@ define(['jquery','block_ases/bootstrap','block_ases/datatables.net','block_ases/
                 $('#users').prop('disabled', true);
                 $(".assignment_li").slideToggle("fast");
             });
+
             $("#ok-button").on('click', function(){
                 var rolchanged = $('#role_select').val();
                 userLoad(null,function(msg) {
@@ -267,8 +270,14 @@ function updateRolUser(){
     var dataUsername = $('#users').val();
     var dataStudents = new Array();
 
-    $('input[name="array_students[]"]').each(function() {
-        dataStudents.push($(this).val());
+  $('input[name="array_students[]"]').each(function() {
+        dataStudents.push($(this).val().split(" - ")[0]);
+
+    });
+
+    $('select[name="array_students[]"]').each(function() {
+        dataStudents.push($(this).val().split(" - ")[0]);
+
     });
 
     if(dataRole == "profesional_ps"){
@@ -280,6 +289,7 @@ function updateRolUser(){
             var data = {role: dataRole, username: dataUsername, professional: dataProfessional, idinstancia: getIdinstancia()};
             $.ajax({
             type: "POST",
+
             data:data ,
             url: "../managers/user_management/update_role_user.php",
             success: function(msg)
@@ -295,13 +305,18 @@ function updateRolUser(){
         }
     }else if(dataRole == "monitor_ps"){
         var boss_id = $('#boss_select').val();
-        
+
         $.ajax({
             type: "POST",
             data: {role: dataRole, username: dataUsername, students: dataStudents, boss:boss_id, idinstancia: getIdinstancia()},
             url: "../managers/user_management/update_role_user.php",
             success: function(msg)
-            {                swal({  title: "Información!",   
+            {  
+
+                alert(msg);
+
+
+              swal({  title: "Información!",   
                     text: msg,   
                     type: "info",
                     html: true,
@@ -358,21 +373,61 @@ function updateRolUser(){
     
 }
 
+
+
+
+function create_select2(name){
+
+        $("#"+name).select2({    
+        language: {
+
+            noResults: function() {
+
+            return "No hay resultado";        
+            },
+            searching: function() {
+
+            return "Buscando..";
+            }
+        },
+        dropdownAutoWidth : true,
+        });
+
+
+}
+
 function student_asignment(){
         var MaxInputs       =  10; //Número Maximo de Campos
         var contenedor       = $("#contenedor_add_fields"); //ID del contenedor
         var AddButton       =  $("#agregarCampo"); //ID del Botón Agregar //
 
-    
-        var count = $("#contenedor_add_fields div").length + 1;
-        var FieldCount = count - 1; //para el seguimiento de los campos
+            $.ajax({
+            type: "POST",
+            data:{function: "students_consult",instancia:getIdinstancia()},
+            url: "../managers/user_management/seguimiento.php",
+            success: function(msg)
+            {
+
+            students =msg;
+             var count = $("#contenedor_add_fields div").length + 1;
+             var FieldCount = count - 1; //para el seguimiento de los campos
     
         $(AddButton).click(function (e) {
             if(count <= MaxInputs) //max input box allowed
             {
                 FieldCount++;
+                var text ="";
+                for(var student in students)
+                {
+                text+='<option value="'+students[student].username+'">'+students[student].username+' - '+students[student].firstname+' '+''+students[student].lastname+'</option>';
+                }
 
-                $("#contenedor_add_fields").append('<div><input type="text" class="inputs_students" name="array_students[]" id="campo_'+ FieldCount +'" placeholder="Estudiante"/></div>');
+                $("#contenedor_add_fields").append('<div class="select-pilos"><select class="form-select-pilos" name="array_students[]" id="campo_'+ FieldCount +'"">'+text+'</select></div>');
+                create_select2('campo_'+ FieldCount);
+
+                //$("#contenedor_add_fields").append('<div><input type="text" class="inputs_students" name="array_students[]" id="campo_'+ FieldCount +'" placeholder="Estudiante"/></div>');
+
+               // $("#contenedor_add_fields").append('<div><input type="text" class="inputs_students" name="array_students[]" id="campo_'+ FieldCount +'" placeholder="Estudiante"/></div>');
                 count++; 
             }
             return false;
@@ -407,6 +462,16 @@ function student_asignment(){
             // }
             return false;
         });
+
+            
+            },
+            dataType: "json",
+            cache: "false",
+            error: function(msg){alert("error al consultar estudiantes")},
+            });
+
+    
+       
 }
 
 function loadStudents(){
@@ -427,14 +492,21 @@ function loadStudents(){
                 $('#contenedor_add_fields').html('');
                 if(msg.rows != 0){
                     
-                    var content =  msg.content;
+                var text ="";
+                for(var student in students)
+                {
+                text+='<option value="'+students[student].username+'">'+students[student].username+' - '+students[student].firstname+' '+''+students[student].lastname+'</option>';
+                }
+
+                var content =  msg.content;
                     for (x in content){
-                            $('#contenedor_add_fields').append('<div id="contenedor_add_fields"> <div class="added_add_fields"> <input type="text"  class="inputs_students" name="array_students[]" id="campo_1" value="'+content[x].username+'" readonly/> <a href="#" class="eliminar_add_fields"><img src="../icon/ico_wrong.png"></a> </div> </div>');
+
+                    $('#contenedor_add_fields').append('<div id="contenedor_add_fields"> <div class="added_add_fields"> <input type="text"  class="inputs_students" name="array_students[]" id="campo_1" value="'+content[x].username+' - '+content[x].firstname+' '+content[x].lastname+'" readonly/> <a href="#" class="eliminar_add_fields"><img src="../icon/ico_wrong.png"></a> </div> </div>');
+
                     }
                 
                 }else{
-                    $('#contenedor_add_fields').append('<div id="contenedor_add_fields"> <div class="added_add_fields"> <input type="text"  class="inputs_students" name="array_students[]" id="campo_1" placeholder="Estudiante 1"/> <a href="#" class="eliminar_add_fields"><img src="../icon/ico_wrong.png"></a> </div> </div> ');
-                }
+            }
             },
             dataType: "json",
             cache: "false",
@@ -483,9 +555,10 @@ function get_boss(role,selected){
 function deleteStudent(student){
     var data =  new Array();
     var user_id =  $('#user_id').val();
+
     var dataUsername = $('#users').val();
     data.push({name:"deleteStudent",value:"delete"});
-    data.push({name:"student",value:student});
+    data.push({name:"student",value:student.split(" - ")[0]});
     data.push({name:"username",value:dataUsername});
     data.push({name:'idinstancia', value: getIdinstancia()});
     $.ajax({
@@ -550,6 +623,7 @@ function valdateStudentMonitor(currentUser, isdelete){
                 }else{
                      title = "Antes de Actualizar!";
                 }
+
                 swal({
                     title: title,
                     html: true,
@@ -607,7 +681,7 @@ function confirmNewMonitor(newUser, currentUser, isdelete){
         message = 'El usuario <strong>'+newUser.firstname+' '+newUser.lastname+'</strong> con código <strong>'+newUser.username+'</strong> ya tiene el rol <strong>'+newUser.rol+'</strong>  en el sistema.<br>Perderá el presente rol y se le asiganará el rol monitor.<br> Tendrá a cargo los estudiantes del anterior monitor.<br><br><strong>¿Estás de acuerdo con los cambios que se efectuarán?</strong>';
     }
     
-    
+
     swal({
       title: "Estás seguro/a?",
       text: message,

@@ -15,6 +15,17 @@ body {
     
 } 
 
+.select-pilos{
+     margin-bottom: 10px;
+}
+
+.form-select-pilos{
+    height: 30px;
+    padding: 5px 8px;
+    margin: 20px;
+    width: 70%;
+}
+
 .form_hint, .required_notification { 
     font-size: 11px; 
 } 
@@ -50,8 +61,8 @@ body {
 
 .form-pilos input { 
     height: 30px; 
-    min-width: 220px;
-    max-width: 300px;
+    min-width: 420px;
+    max-width: 500px;
     padding: 5px 8px; 
 } 
 

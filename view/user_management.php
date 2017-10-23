@@ -29,6 +29,7 @@ require_once(__DIR__ . '/../../../config.php');
 require_once($CFG->libdir.'/adminlib.php');
 require_once('../managers/instance_management/instance_lib.php');
 require_once('../managers/user_management/user_lib.php');
+require_once('../managers/user_management/user_functions.php');
 //require_once('../managers/usermanagement_view.php');
 
 global $PAGE;
@@ -54,19 +55,14 @@ if(!consult_instance($blockid)){
    // header("Location: instance_configuration.php?courseid=$courseid&instanceid=$blockid");
 }
 
-//obtiene las personas asociadas al curso.
+//obtiene las personas asociadas al curso y los estudiantes.
 $courseusers = get_course_usersby_id($courseid);
 
-$table_courseuseres='';
-$table_courseuseres.='<option value=""> ---------------------------------------</option>';
-foreach ($courseusers as $courseuser) {
-    $table_courseuseres.='<option value="'.$courseuser->codigo.'">'.$courseuser->codigo.' - '.$courseuser->nombre.' '.$courseuser->apellido.'</option>';
-}
 
+$students  = get_students($blockid);
+ $table_courseuseres = get_course_users_select($courseusers);
 
-
-
-//Crea una clase con la información que se llevará al template.
+ //Crea una clase con la información que se llevará al template.
 $data = 'data';    
 $data = new stdClass;
 $data->table = $table_courseuseres;
