@@ -1,1 +1,1196 @@
-!function(e,t){"object"==typeof exports&&"undefined"!=typeof module?module.exports=t():"function"==typeof define&&define.amd?define(t):e.Sweetalert2=t()}(this,function(){"use strict";var e={title:"",titleText:"",text:"",html:"",type:null,customClass:"",target:"body",animation:!0,allowOutsideClick:!0,allowEscapeKey:!0,allowEnterKey:!0,showConfirmButton:!0,showCancelButton:!1,preConfirm:null,confirmButtonText:"OK",confirmButtonAriaLabel:"",confirmButtonColor:"#3085d6",confirmButtonClass:null,cancelButtonText:"Cancel",cancelButtonAriaLabel:"",cancelButtonColor:"#aaa",cancelButtonClass:null,buttonsStyling:!0,reverseButtons:!1,focusConfirm:!0,focusCancel:!1,showCloseButton:!1,closeButtonAriaLabel:"Close this dialog",showLoaderOnConfirm:!1,imageUrl:null,imageWidth:null,imageHeight:null,imageAlt:"",imageClass:null,timer:null,width:500,padding:20,background:"#fff",input:null,inputPlaceholder:"",inputValue:"",inputOptions:{},inputAutoTrim:!0,inputClass:null,inputAttributes:{},inputValidator:null,grow:!1,position:"center",progressSteps:[],currentProgressStep:null,progressStepsDistance:"40px",onBeforeOpen:null,onOpen:null,onClose:null,useRejections:!0},t=function(e){var t={};for(var n in e)t[e[n]]="swal2-"+e[n];return t},n=t(["container","shown","iosfix","modal","overlay","fade","show","hide","noanimation","close","title","content","buttonswrapper","confirm","cancel","icon","image","input","file","range","select","radio","checkbox","textarea","inputerror","validationerror","progresssteps","activeprogressstep","progresscircle","progressline","loading","styled","top","top-left","top-right","center","center-left","center-right","bottom","bottom-left","bottom-right","grow-row","grow-column","grow-fullscreen"]),o=t(["success","warning","info","question","error"]),r=function(e,t){(e=String(e).replace(/[^0-9a-f]/gi,"")).length<6&&(e=e[0]+e[0]+e[1]+e[1]+e[2]+e[2]),t=t||0;for(var n="#",o=0;o<3;o++){var r=parseInt(e.substr(2*o,2),16);n+=("00"+(r=Math.round(Math.min(Math.max(0,r+r*t),255)).toString(16))).substr(r.length)}return n},i=function(e){var t=[];for(var n in e)-1===t.indexOf(e[n])&&t.push(e[n]);return t},a=function(e){console.warn("SweetAlert2: "+e)},l=function(e){console.error("SweetAlert2: "+e)},s={previousWindowKeyDown:null,previousActiveElement:null,previousBodyPadding:null},u=function(e){var t=d();t&&t.parentNode.removeChild(t);{if("undefined"!=typeof document){var o=document.createElement("div");o.className=n.container,o.innerHTML=c,("string"==typeof e.target?document.querySelector(e.target):e.target).appendChild(o);var r=p(),i=L(r,n.input),a=L(r,n.file),s=r.querySelector("."+n.range+" input"),u=r.querySelector("."+n.range+" output"),f=L(r,n.select),m=r.querySelector("."+n.checkbox+" input"),v=L(r,n.textarea);return i.oninput=function(){J.resetValidationError()},a.onchange=function(){J.resetValidationError()},s.oninput=function(){J.resetValidationError(),u.value=s.value},s.onchange=function(){J.resetValidationError(),s.previousSibling.value=s.value},f.onchange=function(){J.resetValidationError()},m.onchange=function(){J.resetValidationError()},v.oninput=function(){J.resetValidationError()},r}l("SweetAlert2 requires document to initialize")}},c=('\n <div role="dialog" aria-modal="true" aria-labelledby="'+n.title+'" aria-describedby="'+n.content+'" class="'+n.modal+'" tabindex="-1">\n   <ul class="'+n.progresssteps+'"></ul>\n   <div class="'+n.icon+" "+o.error+'">\n     <span class="swal2-x-mark"><span class="swal2-x-mark-line-left"></span><span class="swal2-x-mark-line-right"></span></span>\n   </div>\n   <div class="'+n.icon+" "+o.question+'">?</div>\n   <div class="'+n.icon+" "+o.warning+'">!</div>\n   <div class="'+n.icon+" "+o.info+'">i</div>\n   <div class="'+n.icon+" "+o.success+'">\n     <div class="swal2-success-circular-line-left"></div>\n     <span class="swal2-success-line-tip"></span> <span class="swal2-success-line-long"></span>\n     <div class="swal2-success-ring"></div> <div class="swal2-success-fix"></div>\n     <div class="swal2-success-circular-line-right"></div>\n   </div>\n   <img class="'+n.image+'" />\n   <h2 class="'+n.title+'" id="'+n.title+'"></h2>\n   <div id="'+n.content+'" class="'+n.content+'"></div>\n   <input class="'+n.input+'" />\n   <input type="file" class="'+n.file+'" />\n   <div class="'+n.range+'">\n     <output></output>\n     <input type="range" />\n   </div>\n   <select class="'+n.select+'"></select>\n   <div class="'+n.radio+'"></div>\n   <label for="'+n.checkbox+'" class="'+n.checkbox+'">\n     <input type="checkbox" />\n   </label>\n   <textarea class="'+n.textarea+'"></textarea>\n   <div class="'+n.validationerror+'" id="'+n.validationerror+'"></div>\n   <div class="'+n.buttonswrapper+'">\n     <button type="button" class="'+n.confirm+'">OK</button>\n     <button type="button" class="'+n.cancel+'">Cancel</button>\n   </div>\n   <button type="button" class="'+n.close+'">×</button>\n </div>\n').replace(/(^|\n)\s*/g,""),d=function(){return document.body.querySelector("."+n.container)},p=function(){return d()?d().querySelector("."+n.modal):null},f=function(){return p().querySelectorAll("."+n.icon)},m=function(e){return d()?d().querySelector("."+e):null},v=function(){return m(n.title)},g=function(){return m(n.content)},h=function(){return m(n.image)},b=function(){return m(n.progresssteps)},y=function(){return m(n.validationerror)},w=function(){return m(n.confirm)},C=function(){return m(n.cancel)},k=function(){return m(n.buttonswrapper)},x=function(){return m(n.close)},S=function(){var e=Array.from(p().querySelectorAll('[tabindex]:not([tabindex="-1"]):not([tabindex="0"])')).sort(function(e,t){return e=parseInt(e.getAttribute("tabindex")),t=parseInt(t.getAttribute("tabindex")),e>t?1:e<t?-1:0}),t=Array.prototype.slice.call(p().querySelectorAll('button, input:not([type=hidden]), textarea, select, a, [tabindex="0"]'));return i(e.concat(t))},A=function(e,t){return!!e.classList&&e.classList.contains(t)},B=function(e){if(e.focus(),"file"!==e.type){var t=e.value;e.value="",e.value=t}},E=function(e,t){e&&t&&t.split(/\s+/).filter(Boolean).forEach(function(t){e.classList.add(t)})},P=function(e,t){e&&t&&t.split(/\s+/).filter(Boolean).forEach(function(t){e.classList.remove(t)})},L=function(e,t){for(var n=0;n<e.childNodes.length;n++)if(A(e.childNodes[n],t))return e.childNodes[n]},T=function(e,t){t||(t="block"),e.style.opacity="",e.style.display=t},q=function(e){e.style.opacity="",e.style.display="none"},V=function(e){for(;e.firstChild;)e.removeChild(e.firstChild)},M=function(e){return e.offsetWidth||e.offsetHeight||e.getClientRects().length},O=function(e,t){e.style.removeProperty?e.style.removeProperty(t):e.style.removeAttribute(t)},H=function(){var e=document.createElement("div"),t={WebkitAnimation:"webkitAnimationEnd",OAnimation:"oAnimationEnd oanimationend",animation:"animationend"};for(var n in t)if(t.hasOwnProperty(n)&&void 0!==e.style[n])return t[n];return!1}(),N=function(){if(window.onkeydown=s.previousWindowKeyDown,s.previousActiveElement&&s.previousActiveElement.focus){var e=window.scrollX,t=window.scrollY;s.previousActiveElement.focus(),e&&t&&window.scrollTo(e,t)}},j=function(){if("ontouchstart"in window||navigator.msMaxTouchPoints)return 0;var e=document.createElement("div");e.style.width="50px",e.style.height="50px",e.style.overflow="scroll",document.body.appendChild(e);var t=e.offsetWidth-e.clientWidth;return document.body.removeChild(e),t},I=function(e,t){var n=void 0;return function(){clearTimeout(n),n=setTimeout(function(){n=null,e()},t)}},R="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(e){return typeof e}:function(e){return e&&"function"==typeof Symbol&&e.constructor===Symbol&&e!==Symbol.prototype?"symbol":typeof e},D=(function(){function e(e){this.value=e}function t(t){function n(r,i){try{var a=t[r](i),l=a.value;l instanceof e?Promise.resolve(l.value).then(function(e){n("next",e)},function(e){n("throw",e)}):o(a.done?"return":"normal",a.value)}catch(e){o("throw",e)}}function o(e,t){switch(e){case"return":r.resolve({value:t,done:!0});break;case"throw":r.reject(t);break;default:r.resolve({value:t,done:!1})}(r=r.next)?n(r.key,r.arg):i=null}var r,i;this._invoke=function(e,t){return new Promise(function(o,a){var l={key:e,arg:t,resolve:o,reject:a,next:null};i?i=i.next=l:(r=i=l,n(e,t))})},"function"!=typeof t.return&&(this.return=void 0)}"function"==typeof Symbol&&Symbol.asyncIterator&&(t.prototype[Symbol.asyncIterator]=function(){return this}),t.prototype.next=function(e){return this._invoke("next",e)},t.prototype.throw=function(e){return this._invoke("throw",e)},t.prototype.return=function(e){return this._invoke("return",e)}}(),Object.assign||function(e){for(var t=1;t<arguments.length;t++){var n=arguments[t];for(var o in n)Object.prototype.hasOwnProperty.call(n,o)&&(e[o]=n[o])}return e}),U=D({},e),W=[],K=void 0;"undefined"==typeof Promise&&l("This package requires a Promise library, please include a shim to enable it in this browser (See: https://github.com/limonte/sweetalert2/wiki/Migration-from-SweetAlert-to-SweetAlert2#1-ie-support)");var z=function(e){("string"==typeof e.target&&!document.querySelector(e.target)||"string"!=typeof e.target&&!e.target.appendChild)&&(a('Target parameter is not valid, defaulting to "body"'),e.target="body");var t=void 0,r=p(),i="string"==typeof e.target?document.querySelector(e.target):e.target;t=r&&i&&r.parentNode!==i.parentNode?u(e):r||u(e);for(var s in e)J.isValidParameter(s)||a('Unknown parameter "'+s+'"');t.style.width="number"==typeof e.width?e.width+"px":e.width,t.style.padding=e.padding+"px",t.style.background=e.background;for(var c=t.querySelectorAll("[class^=swal2-success-circular-line], .swal2-success-fix"),m=0;m<c.length;m++)c[m].style.background=e.background;var y=d(),S=v(),A=g(),B=k(),L=w(),M=C(),H=x();if(e.titleText?S.innerText=e.titleText:S.innerHTML=e.title.split("\n").join("<br />"),e.text||e.html){if("object"===R(e.html))if(A.innerHTML="",0 in e.html)for(var N=0;N in e.html;N++)A.appendChild(e.html[N].cloneNode(!0));else A.appendChild(e.html.cloneNode(!0));else e.html?A.innerHTML=e.html:e.text&&(A.textContent=e.text);T(A)}else q(A);if(e.position in n&&E(y,n[e.position]),e.grow&&"string"==typeof e.grow){var j="grow-"+e.grow;j in n&&E(y,n[j])}e.showCloseButton?(H.setAttribute("aria-label",e.closeButtonAriaLabel),T(H)):q(H),t.className=n.modal,e.customClass&&E(t,e.customClass);var I=b(),D=parseInt(null===e.currentProgressStep?J.getQueueStep():e.currentProgressStep,10);e.progressSteps.length?(T(I),V(I),D>=e.progressSteps.length&&a("Invalid currentProgressStep parameter, it should be less than progressSteps.length (currentProgressStep like JS arrays starts from 0)"),e.progressSteps.forEach(function(t,o){var r=document.createElement("li");if(E(r,n.progresscircle),r.innerHTML=t,o===D&&E(r,n.activeprogressstep),I.appendChild(r),o!==e.progressSteps.length-1){var i=document.createElement("li");E(i,n.progressline),i.style.width=e.progressStepsDistance,I.appendChild(i)}})):q(I);for(var U=f(),W=0;W<U.length;W++)q(U[W]);if(e.type){var K=!1;for(var z in o)if(e.type===z){K=!0;break}if(!K)return l("Unknown alert type: "+e.type),!1;var _=t.querySelector("."+n.icon+"."+o[e.type]);if(T(_),e.animation)switch(e.type){case"success":E(_,"swal2-animate-success-icon"),E(_.querySelector(".swal2-success-line-tip"),"swal2-animate-success-line-tip"),E(_.querySelector(".swal2-success-line-long"),"swal2-animate-success-line-long");break;case"error":E(_,"swal2-animate-error-icon"),E(_.querySelector(".swal2-x-mark"),"swal2-animate-x-mark")}}var Z=h();e.imageUrl?(Z.setAttribute("src",e.imageUrl),Z.setAttribute("alt",e.imageAlt),T(Z),e.imageWidth?Z.setAttribute("width",e.imageWidth):Z.removeAttribute("width"),e.imageHeight?Z.setAttribute("height",e.imageHeight):Z.removeAttribute("height"),Z.className=n.image,e.imageClass&&E(Z,e.imageClass)):q(Z),e.showCancelButton?M.style.display="inline-block":q(M),e.showConfirmButton?O(L,"display"):q(L),e.showConfirmButton||e.showCancelButton?T(B):q(B),L.innerHTML=e.confirmButtonText,M.innerHTML=e.cancelButtonText,L.setAttribute("aria-label",e.confirmButtonAriaLabel),M.setAttribute("aria-label",e.cancelButtonAriaLabel),e.buttonsStyling&&(L.style.backgroundColor=e.confirmButtonColor,M.style.backgroundColor=e.cancelButtonColor),L.className=n.confirm,E(L,e.confirmButtonClass),M.className=n.cancel,E(M,e.cancelButtonClass),e.buttonsStyling?(E(L,n.styled),E(M,n.styled)):(P(L,n.styled),P(M,n.styled),L.style.backgroundColor=L.style.borderLeftColor=L.style.borderRightColor="",M.style.backgroundColor=M.style.borderLeftColor=M.style.borderRightColor=""),!0===e.animation?P(t,n.noanimation):E(t,n.noanimation),e.showLoaderOnConfirm&&!e.preConfirm&&a("showLoaderOnConfirm is set to true, but preConfirm is not defined.\nshowLoaderOnConfirm should be used together with preConfirm, see usage example:\nhttps://limonte.github.io/sweetalert2/#ajax-request")},_=function(e,t,o){var r=d(),i=p();null!==t&&"function"==typeof t&&t(i),e?(E(i,n.show),E(r,n.fade),P(i,n.hide)):P(i,n.fade),T(i),r.style.overflowY="hidden",H&&!A(i,n.noanimation)?i.addEventListener(H,function e(){i.removeEventListener(H,e),r.style.overflowY="auto"}):r.style.overflowY="auto",E(document.documentElement,n.shown),E(document.body,n.shown),E(r,n.shown),Z(),Y(),s.previousActiveElement=document.activeElement,null!==o&&"function"==typeof o&&setTimeout(function(){o(i)})},Z=function(){null===s.previousBodyPadding&&document.body.scrollHeight>window.innerHeight&&(s.previousBodyPadding=document.body.style.paddingRight,document.body.style.paddingRight=j()+"px")},Q=function(){null!==s.previousBodyPadding&&(document.body.style.paddingRight=s.previousBodyPadding,s.previousBodyPadding=null)},Y=function(){if(/iPad|iPhone|iPod/.test(navigator.userAgent)&&!window.MSStream&&!A(document.body,n.iosfix)){var e=document.body.scrollTop;document.body.style.top=-1*e+"px",E(document.body,n.iosfix)}},$=function(){if(A(document.body,n.iosfix)){var e=parseInt(document.body.style.top,10);P(document.body,n.iosfix),document.body.style.top="",document.body.scrollTop=-1*e}},J=function e(){for(var t=arguments.length,o=Array(t),i=0;i<t;i++)o[i]=arguments[i];if(void 0===o[0])return l("SweetAlert2 expects at least 1 attribute!"),!1;var a=D({},U);switch(R(o[0])){case"string":a.title=o[0],a.html=o[1],a.type=o[2];break;case"object":D(a,o[0]),a.extraParams=o[0].extraParams,"email"===a.input&&null===a.inputValidator&&(a.inputValidator=function(e){return new Promise(function(t,n){/^[a-zA-Z0-9.+_-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/.test(e)?t():n("Invalid email address")})}),"url"===a.input&&null===a.inputValidator&&(a.inputValidator=function(e){return new Promise(function(t,n){/^https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_+.~#?&//=]*)$/.test(e)?t():n("Invalid URL")})});break;default:return l('Unexpected type of argument! Expected "string" or "object", got '+R(o[0])),!1}z(a);var u=d(),c=p();return new Promise(function(t,o){a.timer&&(c.timeout=setTimeout(function(){e.closeModal(a.onClose),a.useRejections?o("timer"):t({dismiss:"timer"})},a.timer));var i=function(e){if(!(e=e||a.input))return null;switch(e){case"select":case"textarea":case"file":return L(c,n[e]);case"checkbox":return c.querySelector("."+n.checkbox+" input");case"radio":return c.querySelector("."+n.radio+" input:checked")||c.querySelector("."+n.radio+" input:first-child");case"range":return c.querySelector("."+n.range+" input");default:return L(c,n.input)}},f=function(){var e=i();if(!e)return null;switch(a.input){case"checkbox":return e.checked?1:0;case"radio":return e.checked?e.value:null;case"file":return e.files.length?e.files[0]:null;default:return a.inputAutoTrim?e.value.trim():e.value}};a.input&&setTimeout(function(){var e=i();e&&B(e)},0);for(var m=function(n){a.showLoaderOnConfirm&&e.showLoading(),a.preConfirm?a.preConfirm(n,a.extraParams).then(function(o){e.closeModal(a.onClose),t(o||n)},function(t){e.hideLoading(),t&&e.showValidationError(t)}):(e.closeModal(a.onClose),t(a.useRejections?n:{value:n}))},A=function(n){var i=n||window.event,l=i.target||i.srcElement,s=w(),u=C(),c=s&&(s===l||s.contains(l)),d=u&&(u===l||u.contains(l));switch(i.type){case"mouseover":case"mouseup":a.buttonsStyling&&(c?s.style.backgroundColor=r(a.confirmButtonColor,-.1):d&&(u.style.backgroundColor=r(a.cancelButtonColor,-.1)));break;case"mouseout":a.buttonsStyling&&(c?s.style.backgroundColor=a.confirmButtonColor:d&&(u.style.backgroundColor=a.cancelButtonColor));break;case"mousedown":a.buttonsStyling&&(c?s.style.backgroundColor=r(a.confirmButtonColor,-.2):d&&(u.style.backgroundColor=r(a.cancelButtonColor,-.2)));break;case"click":if(c&&e.isVisible())if(e.disableButtons(),a.input){var p=f();a.inputValidator?(e.disableInput(),a.inputValidator(p,a.extraParams).then(function(){e.enableButtons(),e.enableInput(),m(p)},function(t){e.enableButtons(),e.enableInput(),t&&e.showValidationError(t)})):m(p)}else m(!0);else d&&e.isVisible()&&(e.disableButtons(),e.closeModal(a.onClose),a.useRejections?o("cancel"):t({dismiss:"cancel"}))}},V=c.querySelectorAll("button"),O=0;O<V.length;O++)V[O].onclick=A,V[O].onmouseover=A,V[O].onmouseout=A,V[O].onmousedown=A;x().onclick=function(){e.closeModal(a.onClose),a.useRejections?o("close"):t({dismiss:"close"})},u.onclick=function(n){n.target===u&&a.allowOutsideClick&&(e.closeModal(a.onClose),a.useRejections?o("overlay"):t({dismiss:"overlay"}))};var H=k(),N=w(),j=C();a.reverseButtons?N.parentNode.insertBefore(j,N):N.parentNode.insertBefore(N,j);var D=function(e,t){for(var n=S(a.focusCancel),o=0;o<n.length;o++){(e+=t)===n.length?e=0:-1===e&&(e=n.length-1);var r=n[e];if(M(r))return r.focus()}},U=function(n){var r=n||window.event;if("Enter"===r.key)r.target===i()&&(e.clickConfirm(),r.preventDefault());else if("Tab"===r.key){for(var l=r.target||r.srcElement,s=S(a.focusCancel),u=-1,c=0;c<s.length;c++)if(l===s[c]){u=c;break}r.shiftKey?D(u,-1):D(u,1),r.stopPropagation(),r.preventDefault()}else["ArrowLeft","ArrowRight","ArrowUp","Arrowdown"].includes(r.key)?document.activeElement===N&&M(j)?j.focus():document.activeElement===j&&M(N)&&N.focus():"Escape"===r.key&&!0===a.allowEscapeKey&&(e.closeModal(a.onClose),a.useRejections?o("esc"):t({dismiss:"esc"}))};window.onkeydown&&window.onkeydown.toString()===U.toString()||(s.previousWindowKeyDown=window.onkeydown,window.onkeydown=U),a.buttonsStyling&&(N.style.borderLeftColor=a.confirmButtonColor,N.style.borderRightColor=a.confirmButtonColor),e.hideLoading=e.disableLoading=function(){a.showConfirmButton||(q(N),a.showCancelButton||q(k())),P(H,n.loading),P(c,n.loading),c.removeAttribute("aria-busy"),N.disabled=!1,j.disabled=!1},e.getTitle=function(){return v()},e.getContent=function(){return g()},e.getInput=function(){return i()},e.getImage=function(){return h()},e.getButtonsWrapper=function(){return k()},e.getConfirmButton=function(){return w()},e.getCancelButton=function(){return C()},e.enableButtons=function(){N.disabled=!1,j.disabled=!1},e.disableButtons=function(){N.disabled=!0,j.disabled=!0},e.enableConfirmButton=function(){N.disabled=!1},e.disableConfirmButton=function(){N.disabled=!0},e.enableInput=function(){var e=i();if(!e)return!1;if("radio"===e.type)for(var t=e.parentNode.parentNode.querySelectorAll("input"),n=0;n<t.length;n++)t[n].disabled=!1;else e.disabled=!1},e.disableInput=function(){var e=i();if(!e)return!1;if(e&&"radio"===e.type)for(var t=e.parentNode.parentNode.querySelectorAll("input"),n=0;n<t.length;n++)t[n].disabled=!0;else e.disabled=!0},e.recalculateHeight=I(function(){var e=p();if(e){var t=e.style.display;e.style.minHeight="",T(e),e.style.minHeight=e.scrollHeight+1+"px",e.style.display=t}},50),e.showValidationError=function(e){var t=y();t.innerHTML=e,T(t);var o=i();o&&(o.setAttribute("aria-invalid",!0),o.setAttribute("aria-describedBy",n.validationerror),B(o),E(o,n.inputerror))},e.resetValidationError=function(){var t=y();q(t),e.recalculateHeight();var o=i();o&&(o.removeAttribute("aria-invalid"),o.removeAttribute("aria-describedBy"),P(o,n.inputerror))},e.getProgressSteps=function(){return a.progressSteps},e.setProgressSteps=function(e){a.progressSteps=e,z(a)},e.showProgressSteps=function(){T(b())},e.hideProgressSteps=function(){q(b())},e.enableButtons(),e.hideLoading(),e.resetValidationError();for(var W=["input","file","range","select","radio","checkbox","textarea"],Z=void 0,Q=0;Q<W.length;Q++){var Y=n[W[Q]],$=L(c,Y);if(Z=i(W[Q])){for(var J in Z.attributes)if(Z.attributes.hasOwnProperty(J)){var X=Z.attributes[J].name;"type"!==X&&"value"!==X&&Z.removeAttribute(X)}for(var F in a.inputAttributes)Z.setAttribute(F,a.inputAttributes[F])}$.className=Y,a.inputClass&&E($,a.inputClass),q($)}var G=void 0;switch(a.input){case"text":case"email":case"password":case"number":case"tel":case"url":(Z=L(c,n.input)).value=a.inputValue,Z.placeholder=a.inputPlaceholder,Z.type=a.input,T(Z);break;case"file":(Z=L(c,n.file)).placeholder=a.inputPlaceholder,Z.type=a.input,T(Z);break;case"range":var ee=L(c,n.range),te=ee.querySelector("input"),ne=ee.querySelector("output");te.value=a.inputValue,te.type=a.input,ne.value=a.inputValue,T(ee);break;case"select":var oe=L(c,n.select);if(oe.innerHTML="",a.inputPlaceholder){var re=document.createElement("option");re.innerHTML=a.inputPlaceholder,re.value="",re.disabled=!0,re.selected=!0,oe.appendChild(re)}G=function(e){for(var t in e){var n=document.createElement("option");n.value=t,n.innerHTML=e[t],a.inputValue.toString()===t&&(n.selected=!0),oe.appendChild(n)}T(oe),oe.focus()};break;case"radio":var ie=L(c,n.radio);ie.innerHTML="",G=function(e){for(var t in e){var o=document.createElement("input"),r=document.createElement("label"),i=document.createElement("span");o.type="radio",o.name=n.radio,o.value=t,a.inputValue.toString()===t&&(o.checked=!0),i.innerHTML=e[t],r.appendChild(o),r.appendChild(i),r.for=o.id,ie.appendChild(r)}T(ie);var l=ie.querySelectorAll("input");l.length&&l[0].focus()};break;case"checkbox":var ae=L(c,n.checkbox),le=i("checkbox");le.type="checkbox",le.value=1,le.id=n.checkbox,le.checked=Boolean(a.inputValue);var se=ae.getElementsByTagName("span");se.length&&ae.removeChild(se[0]),(se=document.createElement("span")).innerHTML=a.inputPlaceholder,ae.appendChild(se),T(ae);break;case"textarea":var ue=L(c,n.textarea);ue.value=a.inputValue,ue.placeholder=a.inputPlaceholder,T(ue);break;case null:break;default:l('Unexpected type of input! Expected "text", "email", "password", "number", "tel", "select", "radio", "checkbox", "textarea", "file" or "url", got "'+a.input+'"')}"select"!==a.input&&"radio"!==a.input||(a.inputOptions instanceof Promise?(e.showLoading(),a.inputOptions.then(function(t){e.hideLoading(),G(t)})):"object"===R(a.inputOptions)?G(a.inputOptions):l("Unexpected type of inputOptions! Expected object or Promise, got "+R(a.inputOptions))),_(a.animation,a.onBeforeOpen,a.onOpen),a.allowEnterKey?a.focusCancel&&M(j)?j.focus():a.focusConfirm&&M(N)?N.focus():D(-1,1):document.activeElement&&document.activeElement.blur(),d().scrollTop=0,"undefined"==typeof MutationObserver||K||(K=new MutationObserver(e.recalculateHeight)).observe(c,{childList:!0,characterData:!0,subtree:!0})})};return J.isVisible=function(){return!!p()},J.queue=function(e){W=e;var t=function(){W=[],document.body.removeAttribute("data-swal2-queue-step")},n=[];return new Promise(function(e,o){!function r(i,a){i<W.length?(document.body.setAttribute("data-swal2-queue-step",i),J(W[i]).then(function(e){n.push(e),r(i+1,a)},function(e){t(),o(e)})):(t(),e(n))}(0)})},J.getQueueStep=function(){return document.body.getAttribute("data-swal2-queue-step")},J.insertQueueStep=function(e,t){return t&&t<W.length?W.splice(t,0,e):W.push(e)},J.deleteQueueStep=function(e){void 0!==W[e]&&W.splice(e,1)},J.close=J.closeModal=function(e){var t=d(),o=p();if(o){P(o,n.show),E(o,n.hide),clearTimeout(o.timeout),N();var r=function(){t.parentNode&&t.parentNode.removeChild(t),P(document.documentElement,n.shown),P(document.body,n.shown),Q(),$()};H&&!A(o,n.noanimation)?o.addEventListener(H,function e(){o.removeEventListener(H,e),A(o,n.hide)&&r()}):r(),null!==e&&"function"==typeof e&&setTimeout(function(){e(o)})}},J.clickConfirm=function(){return w().click()},J.clickCancel=function(){return C().click()},J.showLoading=J.enableLoading=function(){var e=p();e||J(""),e=p();var t=k(),o=w(),r=C();T(t),T(o,"inline-block"),E(t,n.loading),E(e,n.loading),o.disabled=!0,r.disabled=!0,e.setAttribute("aria-busy",!0),e.focus()},J.isValidParameter=function(t){return e.hasOwnProperty(t)||"extraParams"===t},J.setDefaults=function(e){if(!e||"object"!==(void 0===e?"undefined":R(e)))return l("the argument for setDefaults() is required and has to be a object");for(var t in e)J.isValidParameter(t)||(a('Unknown parameter "'+t+'"'),delete e[t]);D(U,e)},J.resetDefaults=function(){U=D({},e)},J.noop=function(){},J.version="6.11.0",J.default=J,J}),window.Sweetalert2&&(window.sweetAlert=window.swal=window.Sweetalert2);
+;(function(window, document, undefined) {
+    "use strict";
+    
+    (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+    'use strict';
+    
+    Object.defineProperty(exports, "__esModule", {
+      value: true
+    });
+    var defaultParams = {
+      title: '',
+      text: '',
+      type: null,
+      allowOutsideClick: false,
+      showConfirmButton: true,
+      showCancelButton: false,
+      closeOnConfirm: true,
+      closeOnCancel: true,
+      confirmButtonText: 'OK',
+      confirmButtonClass: 'btn-primary',
+      cancelButtonText: 'Cancel',
+      cancelButtonClass: 'btn-default',
+      containerClass: '',
+      titleClass: '',
+      textClass: '',
+      imageUrl: null,
+      imageSize: null,
+      timer: null,
+      customClass: '',
+      html: false,
+      animation: true,
+      allowEscapeKey: true,
+      inputType: 'text',
+      inputPlaceholder: '',
+      inputValue: '',
+      showLoaderOnConfirm: false
+    };
+    
+    exports.default = defaultParams;
+    
+    },{}],2:[function(require,module,exports){
+    'use strict';
+    
+    Object.defineProperty(exports, "__esModule", {
+      value: true
+    });
+    exports.handleCancel = exports.handleConfirm = exports.handleButton = undefined;
+    
+    var _handleSwalDom = require('./handle-swal-dom');
+    
+    var _handleDom = require('./handle-dom');
+    
+    /*
+     * User clicked on "Confirm"/"OK" or "Cancel"
+     */
+    var handleButton = function handleButton(event, params, modal) {
+      var e = event || window.event;
+      var target = e.target || e.srcElement;
+    
+      var targetedConfirm = target.className.indexOf('confirm') !== -1;
+      var targetedOverlay = target.className.indexOf('sweet-overlay') !== -1;
+      var modalIsVisible = (0, _handleDom.hasClass)(modal, 'visible');
+      var doneFunctionExists = params.doneFunction && modal.getAttribute('data-has-done-function') === 'true';
+    
+      // Since the user can change the background-color of the confirm button programmatically,
+      // we must calculate what the color should be on hover/active
+      var normalColor, hoverColor, activeColor;
+      if (targetedConfirm && params.confirmButtonColor) {
+        normalColor = params.confirmButtonColor;
+        hoverColor = colorLuminance(normalColor, -0.04);
+        activeColor = colorLuminance(normalColor, -0.14);
+      }
+    
+      function shouldSetConfirmButtonColor(color) {
+        if (targetedConfirm && params.confirmButtonColor) {
+          target.style.backgroundColor = color;
+        }
+      }
+    
+      switch (e.type) {
+        case 'click':
+          var clickedOnModal = modal === target;
+          var clickedOnModalChild = (0, _handleDom.isDescendant)(modal, target);
+    
+          // Ignore click outside if allowOutsideClick is false
+          if (!clickedOnModal && !clickedOnModalChild && modalIsVisible && !params.allowOutsideClick) {
+            break;
+          }
+    
+          if (targetedConfirm && doneFunctionExists && modalIsVisible) {
+            handleConfirm(modal, params);
+          } else if (doneFunctionExists && modalIsVisible || targetedOverlay) {
+            handleCancel(modal, params);
+          } else if ((0, _handleDom.isDescendant)(modal, target) && target.tagName === 'BUTTON') {
+            sweetAlert.close();
+          }
+          break;
+      }
+    };
+    
+    /*
+     *  User clicked on "Confirm"/"OK"
+     */
+    var handleConfirm = function handleConfirm(modal, params) {
+      var callbackValue = true;
+    
+      if ((0, _handleDom.hasClass)(modal, 'show-input')) {
+        callbackValue = modal.querySelector('input').value;
+    
+        if (!callbackValue) {
+          callbackValue = '';
+        }
+      }
+    
+      params.doneFunction(callbackValue);
+    
+      if (params.closeOnConfirm) {
+        sweetAlert.close();
+      }
+      // Disable cancel and confirm button if the parameter is true
+      if (params.showLoaderOnConfirm) {
+        sweetAlert.disableButtons();
+      }
+    };
+    
+    /*
+     *  User clicked on "Cancel"
+     */
+    var handleCancel = function handleCancel(modal, params) {
+      // Check if callback function expects a parameter (to track cancel actions)
+      var functionAsStr = String(params.doneFunction).replace(/\s/g, '');
+      var functionHandlesCancel = functionAsStr.substring(0, 9) === 'function(' && functionAsStr.substring(9, 10) !== ')';
+    
+      if (functionHandlesCancel) {
+        params.doneFunction(false);
+      }
+    
+      if (params.closeOnCancel) {
+        sweetAlert.close();
+      }
+    };
+    
+    exports.handleButton = handleButton;
+    exports.handleConfirm = handleConfirm;
+    exports.handleCancel = handleCancel;
+    
+    },{"./handle-dom":3,"./handle-swal-dom":5}],3:[function(require,module,exports){
+    'use strict';
+    
+    Object.defineProperty(exports, "__esModule", {
+      value: true
+    });
+    var hasClass = function hasClass(elem, className) {
+      return new RegExp(' ' + className + ' ').test(' ' + elem.className + ' ');
+    };
+    
+    var addClass = function addClass(elem, className) {
+      if (!hasClass(elem, className)) {
+        elem.className += ' ' + className;
+      }
+    };
+    
+    var removeClass = function removeClass(elem, className) {
+      var newClass = ' ' + elem.className.replace(/[\t\r\n]/g, ' ') + ' ';
+      if (hasClass(elem, className)) {
+        while (newClass.indexOf(' ' + className + ' ') >= 0) {
+          newClass = newClass.replace(' ' + className + ' ', ' ');
+        }
+        elem.className = newClass.replace(/^\s+|\s+$/g, '');
+      }
+    };
+    
+    var escapeHtml = function escapeHtml(str) {
+      var div = document.createElement('div');
+      div.appendChild(document.createTextNode(str));
+      return div.innerHTML;
+    };
+    
+    var _show = function _show(elem) {
+      elem.style.opacity = '';
+      elem.style.display = 'block';
+    };
+    
+    var show = function show(elems) {
+      if (elems && !elems.length) {
+        return _show(elems);
+      }
+      for (var i = 0; i < elems.length; ++i) {
+        _show(elems[i]);
+      }
+    };
+    
+    var _hide = function _hide(elem) {
+      elem.style.opacity = '';
+      elem.style.display = 'none';
+    };
+    
+    var hide = function hide(elems) {
+      if (elems && !elems.length) {
+        return _hide(elems);
+      }
+      for (var i = 0; i < elems.length; ++i) {
+        _hide(elems[i]);
+      }
+    };
+    
+    var isDescendant = function isDescendant(parent, child) {
+      var node = child.parentNode;
+      while (node !== null) {
+        if (node === parent) {
+          return true;
+        }
+        node = node.parentNode;
+      }
+      return false;
+    };
+    
+    var getTopMargin = function getTopMargin(elem) {
+      elem.style.left = '-9999px';
+      elem.style.display = 'block';
+    
+      var height = elem.clientHeight,
+          padding;
+      if (typeof getComputedStyle !== "undefined") {
+        // IE 8
+        padding = parseInt(getComputedStyle(elem).getPropertyValue('padding-top'), 10);
+      } else {
+        padding = parseInt(elem.currentStyle.padding);
+      }
+    
+      elem.style.left = '';
+      elem.style.display = 'none';
+      return '-' + parseInt((height + padding) / 2) + 'px';
+    };
+    
+    var fadeIn = function fadeIn(elem, interval) {
+      if (+elem.style.opacity < 1) {
+        interval = interval || 16;
+        elem.style.opacity = 0;
+        elem.style.display = 'block';
+        var last = +new Date();
+        var tick = function tick() {
+          elem.style.opacity = +elem.style.opacity + (new Date() - last) / 100;
+          last = +new Date();
+    
+          if (+elem.style.opacity < 1) {
+            setTimeout(tick, interval);
+          }
+        };
+        tick();
+      }
+      elem.style.display = 'block'; //fallback IE8
+    };
+    
+    var fadeOut = function fadeOut(elem, interval) {
+      interval = interval || 16;
+      elem.style.opacity = 1;
+      var last = +new Date();
+      var tick = function tick() {
+        elem.style.opacity = +elem.style.opacity - (new Date() - last) / 100;
+        last = +new Date();
+    
+        if (+elem.style.opacity > 0) {
+          setTimeout(tick, interval);
+        } else {
+          elem.style.display = 'none';
+        }
+      };
+      tick();
+    };
+    
+    var fireClick = function fireClick(node) {
+      // Taken from http://www.nonobtrusive.com/2011/11/29/programatically-fire-crossbrowser-click-event-with-javascript/
+      // Then fixed for today's Chrome browser.
+      if (typeof MouseEvent === 'function') {
+        // Up-to-date approach
+        var mevt = new MouseEvent('click', {
+          view: window,
+          bubbles: false,
+          cancelable: true
+        });
+        node.dispatchEvent(mevt);
+      } else if (document.createEvent) {
+        // Fallback
+        var evt = document.createEvent('MouseEvents');
+        evt.initEvent('click', false, false);
+        node.dispatchEvent(evt);
+      } else if (document.createEventObject) {
+        node.fireEvent('onclick');
+      } else if (typeof node.onclick === 'function') {
+        node.onclick();
+      }
+    };
+    
+    var stopEventPropagation = function stopEventPropagation(e) {
+      // In particular, make sure the space bar doesn't scroll the main window.
+      if (typeof e.stopPropagation === 'function') {
+        e.stopPropagation();
+        e.preventDefault();
+      } else if (window.event && window.event.hasOwnProperty('cancelBubble')) {
+        window.event.cancelBubble = true;
+      }
+    };
+    
+    exports.hasClass = hasClass;
+    exports.addClass = addClass;
+    exports.removeClass = removeClass;
+    exports.escapeHtml = escapeHtml;
+    exports._show = _show;
+    exports.show = show;
+    exports._hide = _hide;
+    exports.hide = hide;
+    exports.isDescendant = isDescendant;
+    exports.getTopMargin = getTopMargin;
+    exports.fadeIn = fadeIn;
+    exports.fadeOut = fadeOut;
+    exports.fireClick = fireClick;
+    exports.stopEventPropagation = stopEventPropagation;
+    
+    },{}],4:[function(require,module,exports){
+    'use strict';
+    
+    Object.defineProperty(exports, "__esModule", {
+      value: true
+    });
+    
+    var _handleDom = require('./handle-dom');
+    
+    var _handleSwalDom = require('./handle-swal-dom');
+    
+    var handleKeyDown = function handleKeyDown(event, params, modal) {
+      var e = event || window.event;
+      var keyCode = e.keyCode || e.which;
+    
+      var $okButton = modal.querySelector('button.confirm');
+      var $cancelButton = modal.querySelector('button.cancel');
+      var $modalButtons = modal.querySelectorAll('button[tabindex]');
+    
+      if ([9, 13, 32, 27].indexOf(keyCode) === -1) {
+        // Don't do work on keys we don't care about.
+        return;
+      }
+    
+      var $targetElement = e.target || e.srcElement;
+    
+      var btnIndex = -1; // Find the button - note, this is a nodelist, not an array.
+      for (var i = 0; i < $modalButtons.length; i++) {
+        if ($targetElement === $modalButtons[i]) {
+          btnIndex = i;
+          break;
+        }
+      }
+    
+      if (keyCode === 9) {
+        // TAB
+        if (btnIndex === -1) {
+          // No button focused. Jump to the confirm button.
+          $targetElement = $okButton;
+        } else {
+          // Cycle to the next button
+          if (btnIndex === $modalButtons.length - 1) {
+            $targetElement = $modalButtons[0];
+          } else {
+            $targetElement = $modalButtons[btnIndex + 1];
+          }
+        }
+    
+        (0, _handleDom.stopEventPropagation)(e);
+        $targetElement.focus();
+    
+        if (params.confirmButtonColor) {
+          (0, _handleSwalDom.setFocusStyle)($targetElement, params.confirmButtonColor);
+        }
+      } else {
+        if (keyCode === 13) {
+          if ($targetElement.tagName === 'INPUT') {
+            $targetElement = $okButton;
+            $okButton.focus();
+          }
+    
+          if (btnIndex === -1) {
+            // ENTER/SPACE clicked outside of a button.
+            $targetElement = $okButton;
+          } else {
+            // Do nothing - let the browser handle it.
+            $targetElement = undefined;
+          }
+        } else if (keyCode === 27 && params.allowEscapeKey === true) {
+          $targetElement = $cancelButton;
+          (0, _handleDom.fireClick)($targetElement, e);
+        } else {
+          // Fallback - let the browser handle it.
+          $targetElement = undefined;
+        }
+      }
+    };
+    
+    exports.default = handleKeyDown;
+    
+    },{"./handle-dom":3,"./handle-swal-dom":5}],5:[function(require,module,exports){
+    'use strict';
+    
+    Object.defineProperty(exports, "__esModule", {
+      value: true
+    });
+    exports.fixVerticalPosition = exports.resetInputError = exports.resetInput = exports.openModal = exports.getInput = exports.getOverlay = exports.getModal = exports.sweetAlertInitialize = undefined;
+    
+    var _handleDom = require('./handle-dom');
+    
+    var _defaultParams = require('./default-params');
+    
+    var _defaultParams2 = _interopRequireDefault(_defaultParams);
+    
+    var _injectedHtml = require('./injected-html');
+    
+    var _injectedHtml2 = _interopRequireDefault(_injectedHtml);
+    
+    function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+    
+    var modalClass = '.sweet-alert';
+    var overlayClass = '.sweet-overlay';
+    
+    /*
+     * Add modal + overlay to DOM
+     */
+    
+    
+    var sweetAlertInitialize = function sweetAlertInitialize() {
+      var sweetWrap = document.createElement('div');
+      sweetWrap.innerHTML = _injectedHtml2.default;
+    
+      // Append elements to body
+      while (sweetWrap.firstChild) {
+        document.body.appendChild(sweetWrap.firstChild);
+      }
+    };
+    
+    /*
+     * Get DOM element of modal
+     */
+    var getModal = function getModal() {
+      var $modal = document.querySelector(modalClass);
+    
+      if (!$modal) {
+        sweetAlertInitialize();
+        $modal = getModal();
+      }
+    
+      return $modal;
+    };
+    
+    /*
+     * Get DOM element of input (in modal)
+     */
+    var getInput = function getInput() {
+      var $modal = getModal();
+      if ($modal) {
+        return $modal.querySelector('input');
+      }
+    };
+    
+    /*
+     * Get DOM element of overlay
+     */
+    var getOverlay = function getOverlay() {
+      return document.querySelector(overlayClass);
+    };
+    
+    /*
+     * Animation when opening modal
+     */
+    var openModal = function openModal(callback) {
+      var $modal = getModal();
+      (0, _handleDom.fadeIn)(getOverlay(), 10);
+      (0, _handleDom.show)($modal);
+      (0, _handleDom.addClass)($modal, 'showSweetAlert');
+      (0, _handleDom.removeClass)($modal, 'hideSweetAlert');
+    
+      window.previousActiveElement = document.activeElement;
+      var $okButton = $modal.querySelector('button.confirm');
+      $okButton.focus();
+    
+      setTimeout(function () {
+        (0, _handleDom.addClass)($modal, 'visible');
+      }, 500);
+    
+      var timer = $modal.getAttribute('data-timer');
+    
+      if (timer !== 'null' && timer !== '') {
+        var timerCallback = callback;
+        $modal.timeout = setTimeout(function () {
+          var doneFunctionExists = (timerCallback || null) && $modal.getAttribute('data-has-done-function') === 'true';
+          if (doneFunctionExists) {
+            timerCallback(null);
+          } else {
+            sweetAlert.close();
+          }
+        }, timer);
+      }
+    };
+    
+    /*
+     * Reset the styling of the input
+     * (for example if errors have been shown)
+     */
+    var resetInput = function resetInput() {
+      var $modal = getModal();
+      var $input = getInput();
+    
+      (0, _handleDom.removeClass)($modal, 'show-input');
+      $input.value = _defaultParams2.default.inputValue;
+      $input.setAttribute('type', _defaultParams2.default.inputType);
+      $input.setAttribute('placeholder', _defaultParams2.default.inputPlaceholder);
+    
+      resetInputError();
+    };
+    
+    var resetInputError = function resetInputError(event) {
+      // If press enter => ignore
+      if (event && event.keyCode === 13) {
+        return false;
+      }
+    
+      var $modal = getModal();
+    
+      var $errorIcon = $modal.querySelector('.sa-input-error');
+      (0, _handleDom.removeClass)($errorIcon, 'show');
+    
+      var $errorContainer = $modal.querySelector('.form-group');
+      (0, _handleDom.removeClass)($errorContainer, 'has-error');
+    };
+    
+    /*
+     * Set "margin-top"-property on modal based on its computed height
+     */
+    var fixVerticalPosition = function fixVerticalPosition() {
+      var $modal = getModal();
+      $modal.style.marginTop = (0, _handleDom.getTopMargin)(getModal());
+    };
+    
+    exports.sweetAlertInitialize = sweetAlertInitialize;
+    exports.getModal = getModal;
+    exports.getOverlay = getOverlay;
+    exports.getInput = getInput;
+    exports.openModal = openModal;
+    exports.resetInput = resetInput;
+    exports.resetInputError = resetInputError;
+    exports.fixVerticalPosition = fixVerticalPosition;
+    
+    },{"./default-params":1,"./handle-dom":3,"./injected-html":6}],6:[function(require,module,exports){
+    "use strict";
+    
+    Object.defineProperty(exports, "__esModule", {
+      value: true
+    });
+    var injectedHTML =
+    
+    // Dark overlay
+    "<div class=\"sweet-overlay\" tabIndex=\"-1\"></div>" +
+    
+    // Modal
+    "<div class=\"sweet-alert\" tabIndex=\"-1\">" +
+    
+    // Error icon
+    "<div class=\"sa-icon sa-error\">\n      <span class=\"sa-x-mark\">\n        <span class=\"sa-line sa-left\"></span>\n        <span class=\"sa-line sa-right\"></span>\n      </span>\n    </div>" +
+    
+    // Warning icon
+    "<div class=\"sa-icon sa-warning\">\n      <span class=\"sa-body\"></span>\n      <span class=\"sa-dot\"></span>\n    </div>" +
+    
+    // Info icon
+    "<div class=\"sa-icon sa-info\"></div>" +
+    
+    // Success icon
+    "<div class=\"sa-icon sa-success\">\n      <span class=\"sa-line sa-tip\"></span>\n      <span class=\"sa-line sa-long\"></span>\n\n      <div class=\"sa-placeholder\"></div>\n      <div class=\"sa-fix\"></div>\n    </div>" + "<div class=\"sa-icon sa-custom\"></div>" +
+    
+    // Title, text and input
+    "<h2>Title</h2>\n    <p class=\"lead text-muted\">Text</p>\n    <div class=\"form-group\">\n      <input type=\"text\" class=\"form-control\" tabIndex=\"3\" />\n      <span class=\"sa-input-error help-block\">\n        <span class=\"glyphicon glyphicon-exclamation-sign\"></span> <span class=\"sa-help-text\">Not valid</span>\n      </span>\n    </div>" +
+    
+    // Cancel and confirm buttons
+    "<div class=\"sa-button-container\">\n      <button class=\"cancel btn btn-lg\" tabIndex=\"2\">Cancel</button>\n      <div class=\"sa-confirm-button-container\">\n        <button class=\"confirm btn btn-lg\" tabIndex=\"1\">OK</button>" +
+    
+    // Loading animation
+    "<div class=\"la-ball-fall\">\n          <div></div>\n          <div></div>\n          <div></div>\n        </div>\n      </div>\n    </div>" +
+    
+    // End of modal
+    "</div>";
+    
+    exports.default = injectedHTML;
+    
+    },{}],7:[function(require,module,exports){
+    'use strict';
+    
+    Object.defineProperty(exports, "__esModule", {
+      value: true
+    });
+    
+    var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+    
+    var _utils = require('./utils');
+    
+    var _handleSwalDom = require('./handle-swal-dom');
+    
+    var _handleDom = require('./handle-dom');
+    
+    var alertTypes = ['error', 'warning', 'info', 'success', 'input', 'prompt'];
+    
+    /*
+     * Set type, text and actions on modal
+     */
+    var setParameters = function setParameters(params) {
+      var modal = (0, _handleSwalDom.getModal)();
+    
+      var $title = modal.querySelector('h2');
+      var $text = modal.querySelector('p');
+      var $cancelBtn = modal.querySelector('button.cancel');
+      var $confirmBtn = modal.querySelector('button.confirm');
+    
+      /*
+       * Title
+       */
+      $title.innerHTML = params.html ? params.title : (0, _handleDom.escapeHtml)(params.title).split('\n').join('<br>');
+    
+      /*
+       * Text
+       */
+      $text.innerHTML = params.html ? params.text : (0, _handleDom.escapeHtml)(params.text || '').split('\n').join('<br>');
+      if (params.text) (0, _handleDom.show)($text);
+    
+      /*
+       * Custom class
+       */
+      if (params.customClass) {
+        (0, _handleDom.addClass)(modal, params.customClass);
+        modal.setAttribute('data-custom-class', params.customClass);
+      } else {
+        // Find previously set classes and remove them
+        var customClass = modal.getAttribute('data-custom-class');
+        (0, _handleDom.removeClass)(modal, customClass);
+        modal.setAttribute('data-custom-class', '');
+      }
+    
+      /*
+       * Icon
+       */
+      (0, _handleDom.hide)(modal.querySelectorAll('.sa-icon'));
+    
+      if (params.type && !(0, _utils.isIE8)()) {
+        var _ret = function () {
+    
+          var validType = false;
+    
+          for (var i = 0; i < alertTypes.length; i++) {
+            if (params.type === alertTypes[i]) {
+              validType = true;
+              break;
+            }
+          }
+    
+          if (!validType) {
+            logStr('Unknown alert type: ' + params.type);
+            return {
+              v: false
+            };
+          }
+    
+          var typesWithIcons = ['success', 'error', 'warning', 'info'];
+          var $icon = void 0;
+    
+          if (typesWithIcons.indexOf(params.type) !== -1) {
+            $icon = modal.querySelector('.sa-icon.' + 'sa-' + params.type);
+            (0, _handleDom.show)($icon);
+          }
+    
+          var $input = (0, _handleSwalDom.getInput)();
+    
+          // Animate icon
+          switch (params.type) {
+    
+            case 'success':
+              (0, _handleDom.addClass)($icon, 'animate');
+              (0, _handleDom.addClass)($icon.querySelector('.sa-tip'), 'animateSuccessTip');
+              (0, _handleDom.addClass)($icon.querySelector('.sa-long'), 'animateSuccessLong');
+              break;
+    
+            case 'error':
+              (0, _handleDom.addClass)($icon, 'animateErrorIcon');
+              (0, _handleDom.addClass)($icon.querySelector('.sa-x-mark'), 'animateXMark');
+              break;
+    
+            case 'warning':
+              (0, _handleDom.addClass)($icon, 'pulseWarning');
+              (0, _handleDom.addClass)($icon.querySelector('.sa-body'), 'pulseWarningIns');
+              (0, _handleDom.addClass)($icon.querySelector('.sa-dot'), 'pulseWarningIns');
+              break;
+    
+            case 'input':
+            case 'prompt':
+              $input.setAttribute('type', params.inputType);
+              $input.value = params.inputValue;
+              $input.setAttribute('placeholder', params.inputPlaceholder);
+              (0, _handleDom.addClass)(modal, 'show-input');
+              setTimeout(function () {
+                $input.focus();
+                $input.addEventListener('keyup', swal.resetInputError);
+              }, 400);
+              break;
+          }
+        }();
+    
+        if ((typeof _ret === 'undefined' ? 'undefined' : _typeof(_ret)) === "object") return _ret.v;
+      }
+    
+      /*
+       * Custom image
+       */
+      if (params.imageUrl) {
+        var $customIcon = modal.querySelector('.sa-icon.sa-custom');
+    
+        $customIcon.style.backgroundImage = 'url(' + params.imageUrl + ')';
+        (0, _handleDom.show)($customIcon);
+    
+        var _imgWidth = 80;
+        var _imgHeight = 80;
+    
+        if (params.imageSize) {
+          var dimensions = params.imageSize.toString().split('x');
+          var imgWidth = dimensions[0];
+          var imgHeight = dimensions[1];
+    
+          if (!imgWidth || !imgHeight) {
+            logStr('Parameter imageSize expects value with format WIDTHxHEIGHT, got ' + params.imageSize);
+          } else {
+            _imgWidth = imgWidth;
+            _imgHeight = imgHeight;
+          }
+        }
+    
+        $customIcon.setAttribute('style', $customIcon.getAttribute('style') + 'width:' + _imgWidth + 'px; height:' + _imgHeight + 'px');
+      }
+    
+      /*
+       * Show cancel button?
+       */
+      modal.setAttribute('data-has-cancel-button', params.showCancelButton);
+      if (params.showCancelButton) {
+        $cancelBtn.style.display = 'inline-block';
+      } else {
+        (0, _handleDom.hide)($cancelBtn);
+      }
+    
+      /*
+       * Show confirm button?
+       */
+      modal.setAttribute('data-has-confirm-button', params.showConfirmButton);
+      if (params.showConfirmButton) {
+        $confirmBtn.style.display = 'inline-block';
+      } else {
+        (0, _handleDom.hide)($confirmBtn);
+      }
+    
+      /*
+       * Custom text on cancel/confirm buttons
+       */
+      if (params.cancelButtonText) {
+        $cancelBtn.innerHTML = (0, _handleDom.escapeHtml)(params.cancelButtonText);
+      }
+      if (params.confirmButtonText) {
+        $confirmBtn.innerHTML = (0, _handleDom.escapeHtml)(params.confirmButtonText);
+      }
+    
+      /*
+       * Reset confirm buttons to default class (Ugly fix)
+       */
+      $confirmBtn.className = 'confirm btn btn-lg';
+    
+      /*
+       * Attach selected class to the sweet alert modal
+       */
+      (0, _handleDom.addClass)(modal, params.containerClass);
+    
+      /*
+       * Set confirm button to selected class
+       */
+      (0, _handleDom.addClass)($confirmBtn, params.confirmButtonClass);
+    
+      /*
+       * Set cancel button to selected class
+       */
+      (0, _handleDom.addClass)($cancelBtn, params.cancelButtonClass);
+    
+      /*
+       * Set title to selected class
+       */
+      (0, _handleDom.addClass)($title, params.titleClass);
+    
+      /*
+       * Set text to selected class
+       */
+      (0, _handleDom.addClass)($text, params.textClass);
+    
+      /*
+       * Allow outside click
+       */
+      modal.setAttribute('data-allow-outside-click', params.allowOutsideClick);
+    
+      /*
+       * Callback function
+       */
+      var hasDoneFunction = params.doneFunction ? true : false;
+      modal.setAttribute('data-has-done-function', hasDoneFunction);
+    
+      /*
+       * Animation
+       */
+      if (!params.animation) {
+        modal.setAttribute('data-animation', 'none');
+      } else if (typeof params.animation === 'string') {
+        modal.setAttribute('data-animation', params.animation); // Custom animation
+      } else {
+          modal.setAttribute('data-animation', 'pop');
+        }
+    
+      /*
+       * Timer
+       */
+      modal.setAttribute('data-timer', params.timer);
+    };
+    
+    exports.default = setParameters;
+    
+    },{"./handle-dom":3,"./handle-swal-dom":5,"./utils":8}],8:[function(require,module,exports){
+    'use strict';
+    
+    Object.defineProperty(exports, "__esModule", {
+      value: true
+    });
+    /*
+     * Allow user to pass their own params
+     */
+    var extend = function extend(a, b) {
+      for (var key in b) {
+        if (b.hasOwnProperty(key)) {
+          a[key] = b[key];
+        }
+      }
+      return a;
+    };
+    
+    /*
+     * Check if the user is using Internet Explorer 8 (for fallbacks)
+     */
+    var isIE8 = function isIE8() {
+      return window.attachEvent && !window.addEventListener;
+    };
+    
+    /*
+     * IE compatible logging for developers
+     */
+    var logStr = function logStr(string) {
+      if (window.console) {
+        // IE...
+        window.console.log('SweetAlert: ' + string);
+      }
+    };
+    
+    exports.extend = extend;
+    exports.isIE8 = isIE8;
+    exports.logStr = logStr;
+    
+    },{}],9:[function(require,module,exports){
+    'use strict';
+    
+    Object.defineProperty(exports, "__esModule", {
+      value: true
+    });
+    
+    var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; }; // SweetAlert
+    // 2014-2015 (c) - Tristan Edwards
+    // github.com/t4t5/sweetalert
+    
+    /*
+     * jQuery-like functions for manipulating the DOM
+     */
+    
+    
+    /*
+     * Handy utilities
+     */
+    
+    
+    /*
+     *  Handle sweetAlert's DOM elements
+     */
+    
+    
+    // Handle button events and keyboard events
+    
+    
+    // Default values
+    
+    
+    var _handleDom = require('./modules/handle-dom');
+    
+    var _utils = require('./modules/utils');
+    
+    var _handleSwalDom = require('./modules/handle-swal-dom');
+    
+    var _handleClick = require('./modules/handle-click');
+    
+    var _handleKey = require('./modules/handle-key');
+    
+    var _handleKey2 = _interopRequireDefault(_handleKey);
+    
+    var _defaultParams = require('./modules/default-params');
+    
+    var _defaultParams2 = _interopRequireDefault(_defaultParams);
+    
+    var _setParams = require('./modules/set-params');
+    
+    var _setParams2 = _interopRequireDefault(_setParams);
+    
+    function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+    
+    /*
+     * Remember state in cases where opening and handling a modal will fiddle with it.
+     * (We also use window.previousActiveElement as a global variable)
+     */
+    var previousWindowKeyDown;
+    var lastFocusedButton;
+    
+    /*
+     * Global sweetAlert function
+     * (this is what the user calls)
+     */
+    var sweetAlert, _swal;
+    
+    exports.default = sweetAlert = _swal = function swal() {
+      var customizations = arguments[0];
+    
+      (0, _handleDom.addClass)(document.body, 'stop-scrolling');
+      (0, _handleSwalDom.resetInput)();
+    
+      /*
+       * Use argument if defined or default value from params object otherwise.
+       * Supports the case where a default value is boolean true and should be
+       * overridden by a corresponding explicit argument which is boolean false.
+       */
+      function argumentOrDefault(key) {
+        var args = customizations;
+        return args[key] === undefined ? _defaultParams2.default[key] : args[key];
+      }
+    
+      if (customizations === undefined) {
+        (0, _utils.logStr)('SweetAlert expects at least 1 attribute!');
+        return false;
+      }
+    
+      var params = (0, _utils.extend)({}, _defaultParams2.default);
+    
+      switch (typeof customizations === 'undefined' ? 'undefined' : _typeof(customizations)) {
+    
+        // Ex: swal("Hello", "Just testing", "info");
+        case 'string':
+          params.title = customizations;
+          params.text = arguments[1] || '';
+          params.type = arguments[2] || '';
+          break;
+    
+        // Ex: swal({ title:"Hello", text: "Just testing", type: "info" });
+        case 'object':
+          if (customizations.title === undefined) {
+            (0, _utils.logStr)('Missing "title" argument!');
+            return false;
+          }
+    
+          params.title = customizations.title;
+    
+          for (var customName in _defaultParams2.default) {
+            params[customName] = argumentOrDefault(customName);
+          }
+    
+          // Show "Confirm" instead of "OK" if cancel button is visible
+          params.confirmButtonText = params.showCancelButton ? 'Confirm' : _defaultParams2.default.confirmButtonText;
+          params.confirmButtonText = argumentOrDefault('confirmButtonText');
+    
+          // Callback function when clicking on "OK"/"Cancel"
+          params.doneFunction = arguments[1] || null;
+    
+          break;
+    
+        default:
+          (0, _utils.logStr)('Unexpected type of argument! Expected "string" or "object", got ' + (typeof customizations === 'undefined' ? 'undefined' : _typeof(customizations)));
+          return false;
+    
+      }
+    
+      (0, _setParams2.default)(params);
+      (0, _handleSwalDom.fixVerticalPosition)();
+      (0, _handleSwalDom.openModal)(arguments[1]);
+    
+      // Modal interactions
+      var modal = (0, _handleSwalDom.getModal)();
+    
+      /*
+       * Make sure all modal buttons respond to all events
+       */
+      var $buttons = modal.querySelectorAll('button');
+      var buttonEvents = ['onclick'];
+      var onButtonEvent = function onButtonEvent(e) {
+        return (0, _handleClick.handleButton)(e, params, modal);
+      };
+    
+      for (var btnIndex = 0; btnIndex < $buttons.length; btnIndex++) {
+        for (var evtIndex = 0; evtIndex < buttonEvents.length; evtIndex++) {
+          var btnEvt = buttonEvents[evtIndex];
+          $buttons[btnIndex][btnEvt] = onButtonEvent;
+        }
+      }
+    
+      // Clicking outside the modal dismisses it (if allowed by user)
+      (0, _handleSwalDom.getOverlay)().onclick = onButtonEvent;
+    
+      previousWindowKeyDown = window.onkeydown;
+    
+      var onKeyEvent = function onKeyEvent(e) {
+        return (0, _handleKey2.default)(e, params, modal);
+      };
+      window.onkeydown = onKeyEvent;
+    
+      window.onfocus = function () {
+        // When the user has focused away and focused back from the whole window.
+        setTimeout(function () {
+          // Put in a timeout to jump out of the event sequence.
+          // Calling focus() in the event sequence confuses things.
+          if (lastFocusedButton !== undefined) {
+            lastFocusedButton.focus();
+            lastFocusedButton = undefined;
+          }
+        }, 0);
+      };
+    
+      // Show alert with enabled buttons always
+      _swal.enableButtons();
+    };
+    
+    /*
+     * Set default params for each popup
+     * @param {Object} userParams
+     */
+    
+    
+    sweetAlert.setDefaults = _swal.setDefaults = function (userParams) {
+      if (!userParams) {
+        throw new Error('userParams is required');
+      }
+      if ((typeof userParams === 'undefined' ? 'undefined' : _typeof(userParams)) !== 'object') {
+        throw new Error('userParams has to be a object');
+      }
+    
+      (0, _utils.extend)(_defaultParams2.default, userParams);
+    };
+    
+    /*
+     * Animation when closing modal
+     */
+    sweetAlert.close = _swal.close = function () {
+      var modal = (0, _handleSwalDom.getModal)();
+    
+      (0, _handleDom.fadeOut)((0, _handleSwalDom.getOverlay)(), 5);
+      (0, _handleDom.fadeOut)(modal, 5);
+      (0, _handleDom.removeClass)(modal, 'showSweetAlert');
+      (0, _handleDom.addClass)(modal, 'hideSweetAlert');
+      (0, _handleDom.removeClass)(modal, 'visible');
+    
+      /*
+       * Reset icon animations
+       */
+      var $successIcon = modal.querySelector('.sa-icon.sa-success');
+      (0, _handleDom.removeClass)($successIcon, 'animate');
+      (0, _handleDom.removeClass)($successIcon.querySelector('.sa-tip'), 'animateSuccessTip');
+      (0, _handleDom.removeClass)($successIcon.querySelector('.sa-long'), 'animateSuccessLong');
+    
+      var $errorIcon = modal.querySelector('.sa-icon.sa-error');
+      (0, _handleDom.removeClass)($errorIcon, 'animateErrorIcon');
+      (0, _handleDom.removeClass)($errorIcon.querySelector('.sa-x-mark'), 'animateXMark');
+    
+      var $warningIcon = modal.querySelector('.sa-icon.sa-warning');
+      (0, _handleDom.removeClass)($warningIcon, 'pulseWarning');
+      (0, _handleDom.removeClass)($warningIcon.querySelector('.sa-body'), 'pulseWarningIns');
+      (0, _handleDom.removeClass)($warningIcon.querySelector('.sa-dot'), 'pulseWarningIns');
+    
+      // Reset custom class (delay so that UI changes aren't visible)
+      setTimeout(function () {
+        var customClass = modal.getAttribute('data-custom-class');
+        (0, _handleDom.removeClass)(modal, customClass);
+      }, 300);
+    
+      // Make page scrollable again
+      (0, _handleDom.removeClass)(document.body, 'stop-scrolling');
+    
+      // Reset the page to its previous state
+      window.onkeydown = previousWindowKeyDown;
+      if (window.previousActiveElement) {
+        window.previousActiveElement.focus();
+      }
+      lastFocusedButton = undefined;
+      clearTimeout(modal.timeout);
+    
+      return true;
+    };
+    
+    /*
+     * Validation of the input field is done by user
+     * If something is wrong => call showInputError with errorMessage
+     */
+    sweetAlert.showInputError = _swal.showInputError = function (errorMessage) {
+      var modal = (0, _handleSwalDom.getModal)();
+    
+      var $errorIcon = modal.querySelector('.sa-input-error');
+      (0, _handleDom.addClass)($errorIcon, 'show');
+    
+      var $errorContainer = modal.querySelector('.form-group');
+      (0, _handleDom.addClass)($errorContainer, 'has-error');
+    
+      $errorContainer.querySelector('.sa-help-text').innerHTML = errorMessage;
+    
+      setTimeout(function () {
+        sweetAlert.enableButtons();
+      }, 1);
+    
+      modal.querySelector('input').focus();
+    };
+    
+    /*
+     * Reset input error DOM elements
+     */
+    sweetAlert.resetInputError = _swal.resetInputError = function (event) {
+      // If press enter => ignore
+      if (event && event.keyCode === 13) {
+        return false;
+      }
+    
+      var $modal = (0, _handleSwalDom.getModal)();
+    
+      var $errorIcon = $modal.querySelector('.sa-input-error');
+      (0, _handleDom.removeClass)($errorIcon, 'show');
+    
+      var $errorContainer = $modal.querySelector('.form-group');
+      (0, _handleDom.removeClass)($errorContainer, 'has-error');
+    };
+    
+    /*
+     * Disable confirm and cancel buttons
+     */
+    sweetAlert.disableButtons = _swal.disableButtons = function (event) {
+      var modal = (0, _handleSwalDom.getModal)();
+      var $confirmButton = modal.querySelector('button.confirm');
+      var $cancelButton = modal.querySelector('button.cancel');
+      $confirmButton.disabled = true;
+      $cancelButton.disabled = true;
+    };
+    
+    /*
+     * Enable confirm and cancel buttons
+     */
+    sweetAlert.enableButtons = _swal.enableButtons = function (event) {
+      var modal = (0, _handleSwalDom.getModal)();
+      var $confirmButton = modal.querySelector('button.confirm');
+      var $cancelButton = modal.querySelector('button.cancel');
+      $confirmButton.disabled = false;
+      $cancelButton.disabled = false;
+    };
+    
+    if (typeof window !== 'undefined') {
+      // The 'handle-click' module requires
+      // that 'sweetAlert' was set as global.
+      window.sweetAlert = window.swal = sweetAlert;
+    } else {
+      (0, _utils.logStr)('SweetAlert is a frontend module!');
+    }
+    
+    },{"./modules/default-params":1,"./modules/handle-click":2,"./modules/handle-dom":3,"./modules/handle-key":4,"./modules/handle-swal-dom":5,"./modules/set-params":7,"./modules/utils":8}]},{},[9]);
+    
+    /*
+     * Use SweetAlert with RequireJS
+     */
+    
+    if (typeof define === 'function' && define.amd) {
+      define(function () {
+        return sweetAlert;
+      });
+    } else if (typeof module !== 'undefined' && module.exports) {
+      module.exports = sweetAlert;
+    }
+    
+    })(window, document);

@@ -54,20 +54,20 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/d3', 'block_ases/sweetaler
             $("#cancel").click(function() {
 
                 swal({
-                title: "¿Estas seguro/a de cancelar?",
-                text: "Los cambios realizados no serán tomados en cuenta y se perderán",
-                type: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#d51b23",
-                confirmButtonText: "Si!",
-                cancelButtonText: "No",
-                closeOnConfirm: true,
-                },
-                        function(isConfirm) {
-                            if (isConfirm) {
-                                cancel_edition();
-                            }
-                        });
+                    title: "¿Estas seguro/a de cancelar?",
+                    text: "Los cambios realizados no serán tomados en cuenta y se perderán",
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#d51b23",
+                    confirmButtonText: "Si!",
+                    cancelButtonText: "No",
+                    closeOnConfirm: true,
+                    },
+                    function(isConfirm) {
+                        if (isConfirm) {
+                            cancel_edition();
+                        }
+                    });
             });
 
             // Controles para el modal: "Añadir nuevo seguimiento"
