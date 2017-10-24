@@ -137,7 +137,7 @@ GROUP by item.id)as pesos
 
 --------------------------------------------------------------------------------------
 
---prueba
+--prueba cursos donde hay pilos
 
 SELECT DISTINCT curso.id,
                 curso.fullname,
@@ -347,3 +347,50 @@ WHERE data.data IN (SELECT CAST(mon_estud.id_estudiante as text)
                         ) as usertm 
                     ON usertm.id_user = pcm.userid) as pcmuser 
                 ON pc.id = pcmuser.cohortid WHERE pc.idnumber like '1008%' OR pc.idnumber LIKE 'SP%';
+
+
+----------------------------------------------------------------
+--Consulta de todos los cursos donde hay pilos. Con la info de los estudiantes.--
+
+SELECT DISTINCT SUBSTRING(curso.shortname FROM 4 FOR 7) as "Cod Asignatura",
+				curso.fullname as "Asignatura",
+                SUBSTRING(curso.shortname FROM 12 FOR 2) as "Grupo",
+                SUBSTRING(estud.username FROM 1 FOR 7) as "Codigo",
+                concat_ws(' ',estud.firstname,estud.lastname) AS "Estudiante",
+                SUBSTRING(estud.username FROM 9 FOR 4) as "Programa Academico",
+          (SELECT concat_ws(' ',firstname,lastname) AS fullname
+           FROM
+             (SELECT usuario.firstname,
+                     usuario.lastname,
+                     userenrol.timecreated
+              FROM {course} cursoP
+              INNER JOIN {context} cont ON cont.instanceid = cursoP.id
+              INNER JOIN {role_assignments} rol ON cont.id = rol.contextid
+              INNER JOIN {user} usuario ON rol.userid = usuario.id
+              INNER JOIN {enrol} enrole ON cursoP.id = enrole.courseid
+              INNER JOIN {user_enrolments} userenrol ON (enrole.id = userenrol.enrolid
+                                                           AND usuario.id = userenrol.userid)
+              WHERE cont.contextlevel = 50
+                AND rol.roleid = 3
+                AND cursoP.id = curso.id
+              ORDER BY userenrol.timecreated ASC
+              LIMIT 1) AS subc) AS "Docente"
+        FROM {course} curso
+        INNER JOIN {enrol} ROLE ON curso.id = role.courseid
+        INNER JOIN {user_enrolments} enrols ON enrols.enrolid = role.id
+        INNER JOIN {user} estud ON enrols.userid = estud.id
+        WHERE SUBSTRING(curso.shortname FROM 15 FOR 6) = '201708' AND enrols.userid IN
+            (SELECT user_m.id
+     FROM  {user} user_m
+     INNER JOIN {user_info_data} data ON data.userid = user_m.id
+     INNER JOIN {user_info_field} field ON data.fieldid = field.id
+     INNER JOIN {talentospilos_usuario} user_t ON data.data = CAST(user_t.id AS VARCHAR)
+     INNER JOIN {talentospilos_est_estadoases} estado_u ON user_t.id = estado_u.id_estudiante
+     INNER JOIN {talentospilos_estados_ases} estados ON estados.id = estado_u.id_estado_ases
+     WHERE estados.nombre = 'ACTIVO/SEGUIMIENTO' AND field.shortname = 'idtalentos'
+
+    INTERSECT
+
+    SELECT user_m.id
+    FROM {user} user_m INNER JOIN {cohort_members} memb ON user_m.id = memb.userid INNER JOIN {cohort} cohorte ON memb.cohortid = cohorte.id
+    WHERE SUBSTRING(cohorte.idnumber FROM 1 FOR 2) = 'SP')
