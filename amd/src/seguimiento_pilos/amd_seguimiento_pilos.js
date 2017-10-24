@@ -880,6 +880,7 @@ function send_email(id_seguimiento,id_usuario) {
 
     var high_risk_array = new Array();
     var observations_array = new Array();
+    alert(id_seguimiento);
 
     var high_individual_risk = $('input:radio[name=riesgo_individual_'+id_seguimiento+']:checked').val();
     var high_familiar_risk = $('input:radio[name=riesgo_familiar_'+id_seguimiento+']:checked').val();
