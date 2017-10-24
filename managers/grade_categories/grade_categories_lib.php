@@ -77,19 +77,19 @@ function get_courses_pilos($instanceid){
         INNER JOIN {user_enrolments} enrols ON enrols.enrolid = role.id
         WHERE SUBSTRING(curso.shortname FROM 15 FOR 6) = '$semestre' AND enrols.userid IN
             (SELECT user_m.id
-     FROM  mdl_user user_m
-     INNER JOIN mdl_user_info_data data ON data.userid = user_m.id
-     INNER JOIN mdl_user_info_field field ON data.fieldid = field.id
-     INNER JOIN mdl_talentospilos_usuario user_t ON data.data = CAST(user_t.id AS VARCHAR)
-     INNER JOIN mdl_talentospilos_est_estadoases estado_u ON user_t.id = estado_u.id_estudiante
-     INNER JOIN mdl_talentospilos_estados_ases estados ON estados.id = estado_u.id_estado_ases
+     FROM  {user} user_m
+     INNER JOIN {user_info_data} data ON data.userid = user_m.id
+     INNER JOIN {user_info_field} field ON data.fieldid = field.id
+     INNER JOIN {talentospilos_usuario} user_t ON data.data = CAST(user_t.id AS VARCHAR)
+     INNER JOIN {talentospilos_est_estadoases} estado_u ON user_t.id = estado_u.id_estudiante
+     INNER JOIN {talentospilos_estados_ases} estados ON estados.id = estado_u.id_estado_ases
      WHERE estados.nombre = 'ACTIVO/SEGUIMIENTO' AND field.shortname = 'idtalentos'
 
     INTERSECT
 
     SELECT user_m.id
-    FROM mdl_user user_m INNER JOIN mdl_cohort_members memb ON user_m.id = memb.userid INNER JOIN mdl_cohort cohorte ON memb.cohortid = cohorte.id
-    WHERE SUBSTRING(cohorte.idnumber FROM 1 FOR 2) = '$cohort')";
+    FROM {user} user_m INNER JOIN {cohort_members} memb ON user_m.id = memb.userid INNER JOIN {cohort} cohorte ON memb.cohortid = cohorte.id
+    WHERE cohorte.idnumber LIKE '$cohort%')";
     $result = $DB->get_records_sql($query_courses);
     
     $result = processInfo($result);
@@ -150,22 +150,22 @@ function get_info_course($id_curso){
     $profesor = $DB->get_record_sql($query_teacher);
     
     $query_students = "SELECT usuario.id, usuario.firstname, usuario.lastname, usuario.username
-                    FROM mdl_user usuario INNER JOIN mdl_user_enrolments enrols ON usuario.id = enrols.userid 
-                    INNER JOIN mdl_enrol enr ON enr.id = enrols.enrolid 
-                    INNER JOIN mdl_course curso ON enr.courseid = curso.id  
+                    FROM {user} usuario INNER JOIN {user_enrolments} enrols ON usuario.id = enrols.userid 
+                    INNER JOIN {enrol} enr ON enr.id = enrols.enrolid 
+                    INNER JOIN {course} curso ON enr.courseid = curso.id  
                     WHERE curso.id= $id_curso AND usuario.id IN (SELECT user_m.id
-                                                                 FROM  mdl_user user_m
-                                                                 INNER JOIN mdl_user_info_data data ON data.userid = user_m.id
-                                                                 INNER JOIN mdl_user_info_field field ON data.fieldid = field.id
-                                                                 INNER JOIN mdl_talentospilos_usuario user_t ON data.data = CAST(user_t.id AS VARCHAR)
-                                                                 INNER JOIN mdl_talentospilos_est_estadoases estado_u ON user_t.id = estado_u.id_estudiante 
-                                                                 INNER JOIN mdl_talentospilos_estados_ases estados ON estados.id = estado_u.id_estado_ases
+                                                                 FROM  {user} user_m
+                                                                 INNER JOIN {user_info_data} data ON data.userid = user_m.id
+                                                                 INNER JOIN {user_info_field} field ON data.fieldid = field.id
+                                                                 INNER JOIN {talentospilos_usuario} user_t ON data.data = CAST(user_t.id AS VARCHAR)
+                                                                 INNER JOIN {talentospilos_est_estadoases} estado_u ON user_t.id = estado_u.id_estudiante 
+                                                                 INNER JOIN {talentospilos_estados_ases} estados ON estados.id = estado_u.id_estado_ases
                                                                  WHERE estados.nombre = 'ACTIVO/SEGUIMIENTO' AND field.shortname = 'idtalentos'
 
                                                                 INTERSECT
 
                                                                 SELECT user_m.id
-                                                                FROM mdl_user user_m INNER JOIN mdl_cohort_members memb ON user_m.id = memb.userid INNER JOIN mdl_cohort cohorte ON memb.cohortid = cohorte.id 
+                                                                FROM {user} user_m INNER JOIN {cohort_members} memb ON user_m.id = memb.userid INNER JOIN {cohort} cohorte ON memb.cohortid = cohorte.id 
                                                                 WHERE SUBSTRING(cohorte.idnumber FROM 1 FOR 2) = 'SP')";
 
     $estudiantes = $DB->get_records_sql($query_students);
@@ -678,13 +678,13 @@ function print_table_categories($report){
             FROM
               (SELECT id,
                       SUM(aggregationcoef) AS peso
-               FROM mdl_grade_items
+               FROM {grade_items}
                WHERE categoryid = $categoryid
                GROUP BY id
                UNION SELECT item.id,
                             SUM(item.aggregationcoef) AS peso
-               FROM mdl_grade_items item
-               INNER JOIN mdl_grade_categories cat ON item.iteminstance=cat.id
+               FROM {grade_items item}
+               INNER JOIN {grade_categories} cat ON item.iteminstance=cat.id
                WHERE cat.parent = $categoryid
                GROUP BY item.id)AS pesos";
   $result = $DB->get_record_sql($query);
