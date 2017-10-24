@@ -309,13 +309,22 @@ if (isset($_FILES['csv_file'])){
                   $record->id_ciudad_nac = $array_id_ciudadnac[$count];
                   $record->id_discapacidad = $array_id_discap[$count];
                   $id_register = $DB->insert_record('talentospilos_usuario', $record, true);
-                  $state = $DB->get_record_sql("SELECT id FROM {talentospilos_estados_ases} WHERE nombre = 'ACTIVO/SEGUIMIENTO'")->id;
+                  
+                  $state_ases = $DB->get_record_sql("SELECT id FROM {talentospilos_estados_ases} WHERE nombre = 'ACTIVO/SEGUIMIENTO'")->id;
                   
                   $record = new stdClass;
                   $record->id_estudiante = $id_register;
-                  $record->id_estado_ases = $state;
+                  $record->id_estado_ases = $state_ases;
                   $record->fecha = time(); 
-                  $DB->insert_record('talentospilos_est_estadoases',$record,false);                  
+                  $DB->insert_record('talentospilos_est_estadoases',$record,false);
+                  
+                  $state_icetex = $DB->get_record_sql("SELECT id FROM {talentospilos_estados_icetex} WHERE nombre = 'ACTIVO'")->id;
+                  
+                  $record = new stdClass;
+                  $record->id_estudiante = $id_register;
+                  $record->id_estado_ases = $state_icetex;
+                  $record->fecha = time(); 
+                  $DB->insert_record('talentospilos_est_est_icetex',$record,false);
                }
          
                $count+=1;
