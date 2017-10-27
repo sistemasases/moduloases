@@ -1,5 +1,5 @@
 <?php
-require_once('seguimientopilos_lib.php');
+require_once('pilos_tracing_lib.php');
 
 /*
  * Funciones del módulo seguimientos pilos que se utilizarán en la view. 

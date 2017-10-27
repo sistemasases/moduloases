@@ -28,7 +28,7 @@
 // Standard GPL and phpdocs
 require_once(__DIR__ . '/../../../config.php');
 require_once($CFG->libdir.'/adminlib.php');
-require_once('../managers/seguimiento_pilos/seguimiento_functions.php');
+require_once('../managers/pilos_tracing/tracing_functions.php');
 require_once('../managers/instance_management/instance_lib.php');
 
 
@@ -44,13 +44,28 @@ $blockid = required_param('instanceid', PARAM_INT);
 
 require_login($courseid, false);
 
+
 //se culta si la instancia ya está registrada
 if(!consult_instance($blockid)){
     header("Location: /blocks/ases/view/instanceconfiguration.php?courseid=$courseid&instanceid=$blockid");
 }
 
+
 $contextcourse = context_course::instance($courseid);
 $contextblock =  context_block::instance($blockid);
+
+
+$url = new moodle_url("/blocks/ases/view/seguimiento_pilos.php",array('courseid' => $courseid, 'instanceid' => $blockid));
+
+
+//Navigation setup
+$coursenode = $PAGE->navigation->find($courseid, navigation_node::TYPE_COURSE);
+$blocknode = navigation_node::create($title,$url, null, 'block', $blockid);
+$coursenode->add_node($blocknode);
+$blocknode->make_active();
+
+$data = 'data';    
+
 
 //Se obtiene el rol del usuario que se encuentra conectado, username y su correo electronico respectivo.
 
@@ -115,22 +130,12 @@ if($usernamerole=='monitor_ps'){
 
 
 
-$data = 'data';    
 $data = new stdClass;
 $data->table_periods =$table_periods;
 $data->table = $table;
-$contextcourse = context_course::instance($courseid);
-$contextblock =  context_block::instance($blockid);
-$url = new moodle_url("/blocks/ases/view/seguimiento_pilos.php",array('courseid' => $courseid, 'instanceid' => $blockid));
 
-//Navigation setup
-$coursenode = $PAGE->navigation->find($courseid, navigation_node::TYPE_COURSE);
-$blocknode = navigation_node::create($title,$url, null, 'block', $blockid);
-$coursenode->add_node($blocknode);
-$blocknode->make_active();
 
-$PAGE->set_url($url);
-$PAGE->set_title($title);
+
 
 //$PAGE->requires->css('/blocks/ases/style/grade_categories.css', true);
 $PAGE->requires->css('/blocks/ases/style/styles_pilos.css', true);
@@ -151,13 +156,20 @@ $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/NewCSSExport/button
 $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/dataTables.tableTools.css', true);
 $PAGE->requires->css('/blocks/ases/style/sweetalert.css', true);
 $PAGE->requires->css('/blocks/ases/js/select2/css/select2.css', true);
+$PAGE->requires->js_call_amd('block_ases/pilos_tracing_main','init');
+
 
 //$PAGE->requires->css('/theme/base/style/core.css',true);
+
+$PAGE->set_context($contextcourse);
+
+$PAGE->set_context($contextblock);
+$PAGE->set_url($url);
+$PAGE->set_title($title);
 
 $output = $PAGE->get_renderer('block_ases');
 
 echo $output->header();
-//echo $output->standard_head_html(); 
 $seguimiento_pilos_page = new \block_ases\output\seguimiento_pilos_page($data);
 echo $output->render($seguimiento_pilos_page);
 echo $output->footer();
