@@ -195,6 +195,10 @@ if ($student_code != 0){
     /**
      * Información geográfica
      */
+
+     $geographic_tab_html = file_get_contents('../templates/geographic_tab.html');
+
+     $record->geographic_tab = $geographic_tab_html;
      
      $geographic_object = get_geographic_info($student_id);
      
