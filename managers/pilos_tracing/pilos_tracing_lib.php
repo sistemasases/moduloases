@@ -594,16 +594,20 @@ function send_email_to_user($tipoSeg,$codigoEnviarN1,$codigoEnviarN2,$fecha,$nom
 
     global $USER;
 
+    try{
+
     $emailToUser = new stdClass;
     $emailFromUser = new stdClass;
     $messageHtml="";
+
 
     $id_user = $USER->id;
 
     $sending_user = get_full_user($id_user);
     $receiving_user = get_full_user($codigoEnviarN1);
-    
+
     $monitor = get_full_user($codigoEnviarN1);
+
     $name_monitor=$monitor->firstname;
     $name_monitor.=" ";
     $name_monitor.=$monitor->lastname;
@@ -619,6 +623,7 @@ function send_email_to_user($tipoSeg,$codigoEnviarN1,$codigoEnviarN2,$fecha,$nom
     $emailToUser->middlename = '';
     $emailToUser->firstnamephonetic = '';
     $emailToUser->lastnamephonetic = '';
+
 
     $emailFromUser->email = $sending_user->email;
     $emailFromUser->firstname = $sending_user->firstname;
@@ -655,8 +660,9 @@ function send_email_to_user($tipoSeg,$codigoEnviarN1,$codigoEnviarN2,$fecha,$nom
     $messageHtml.=$messageText."<br><br>";
     $messageHtml.="Cordialmente<br>";
     $messageHtml.="$name_prof";
-    $email_result = email_to_user($emailToUser, $emailFromUser, $subject, $messageText, $messageHtml, ", ", true);
-    return "pass";
+
+    $email_result = email_to_user($emailToUser, $emailFromUser->email, $subject, $messageText, $messageHtml, ", ", true);
+
     if($email_result!=1)
     {
      return $email_result;
@@ -706,12 +712,16 @@ function send_email_to_user($tipoSeg,$codigoEnviarN1,$codigoEnviarN2,$fecha,$nom
       $emailToUser->middlename = '';
       $emailToUser->firstnamephonetic = '';
       $emailToUser->lastnamephonetic = '';
-      
+
+
       $email_result = email_to_user($emailToUser, $emailFromUser, $subject, $messageText, $messageHtml, ", ", true);
       
       return $email_result;
-      }
+      }}
+    }catch(Exception $ex){
+      return "Error";
     }
+  
 }
 
 

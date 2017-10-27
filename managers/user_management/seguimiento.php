@@ -2,6 +2,7 @@
 require_once(dirname(__FILE__). '/../../../../config.php');
 require_once(dirname(__FILE__).'/../seguimiento_grupal/seguimientogrupal_lib.php');
 require_once(dirname(__FILE__).'/../student_profile/studentprofile_lib.php');
+require_once(dirname(__FILE__).'/../lib/student_lib.php');
 
 require_once('user_lib.php');
 
@@ -34,7 +35,7 @@ if(isset($_POST['function'])){
             load_students();
             break;
         case "send_email":
-            send_email($_POST["risk_array"], $_POST["observations_array"],'' ,$_POST["id_student_moodle"], $_POST["id_student_pilos"], $_POST["date"],'', '', $_POST["url"]);
+            echo send_email($_POST["risk_array"], $_POST["observations_array"],'' ,$_POST["id_student_moodle"], $_POST["id_student_pilos"], $_POST["date"],'', '', $_POST["url"]);
             break;
         case "students_consult":
             $students = get_students($_POST["instancia"]);
@@ -433,6 +434,7 @@ function send_email($risk_array, $observations_array, $id_receiving_user, $id_st
     $emailFromUser = new stdClass;
     $sql_query = "select id_estudiante from {talentospilos_seg_estudiante}  where id_seguimiento=".$id_student_pilos;
     $id_student = $DB->get_record_sql($sql_query);
+
     $id_professional = get_id_assigned_professional($id_student->id_estudiante);
     $id_practicante = get_id_assigned_pract($id_student->id_estudiante);
     
@@ -442,8 +444,9 @@ function send_email($risk_array, $observations_array, $id_receiving_user, $id_st
     $receiving_user_pract = get_full_user($id_practicante);
     
     // $receiving_user = get_full_user($id_receiving_user);
-    $student_info = get_full_user($id_student_moodle);
-    
+
+    $student_info = get_user_moodle($id_student->id_estudiante);
+
     $risk_array = split(",",$risk_array);
     $observations_array = split(",",$observations_array);
     
@@ -458,7 +461,6 @@ function send_email($risk_array, $observations_array, $id_receiving_user, $id_st
     $emailToUser->firstnamephonetic = '';
     $emailToUser->lastnamephonetic = '';
 
-    echo $emailToUser->email;
     
     $emailToUserPract->email = $receiving_user_pract->email;
     $emailToUserPract->firstname = $receiving_user_pract->firstname;

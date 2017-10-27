@@ -195,6 +195,8 @@ if ($student_code != 0){
     /**
      * Información geográfica
      */
+
+     
      
      $geographic_object = get_geographic_info($student_id);
      
