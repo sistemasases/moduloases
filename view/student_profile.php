@@ -200,7 +200,7 @@ if ($student_code != 0){
      //$record->geographic_tab = $geographic_tab_html;
 
      $geographic_object = load_geographic_info($student_id);
-     print_r(load_geographic_info($student_id));
+     //print_r(load_geographic_info($student_id));
 
      $neighborhoods_array = get_neighborhoods();
 

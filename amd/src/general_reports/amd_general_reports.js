@@ -9,4 +9,10 @@ requirejs(['jquery'], function($) {
         var pagina = "seguimiento_pilos.php";
         location.href = pagina + location.search;    
     })
+
+    $(document).on('click', '#general', function(){
+        var pagina = "ases_report.php";
+        location.href = pagina + location.search;    
+    })
+
 });
