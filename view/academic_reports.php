@@ -77,11 +77,12 @@ $PAGE->requires->css('/blocks/ases/style/bootstrap_pilos.css', true);
 $PAGE->requires->css('/blocks/ases/style/bootstrap_pilos.min.css', true);
 $PAGE->requires->css('/blocks/ases/style/sweetalert.css', true);
 $PAGE->requires->css('/blocks/ases/style/round-about_pilos.css', true);
+$PAGE->requires->js_call_amd('block_ases/academic_reports', 'init');
 
 //Se extrae la informacion a mostrar
 $data = new stdClass;
 
-$data->tableStudents = getReportStudents();
+$data->tableStudents = getReportStudents($blockid);
 
 $output = $PAGE->get_renderer('block_ases');
 

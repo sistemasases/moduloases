@@ -393,4 +393,52 @@ SELECT DISTINCT SUBSTRING(curso.shortname FROM 4 FOR 7) as "Cod Asignatura",
 
     SELECT user_m.id
     FROM {user} user_m INNER JOIN {cohort_members} memb ON user_m.id = memb.userid INNER JOIN {cohort} cohorte ON memb.cohortid = cohorte.id
-    WHERE SUBSTRING(cohorte.idnumber FROM 1 FOR 2) = 'SP')
+    WHERE cohorte.idnumber LIKE = 'SP%')
+
+
+-----CONSULTA DE ESTUDIANTES ASES CON EL NUMERO DE ITEMS PERDIDOS
+
+
+
+SELECT estudiantes.*, COUNT(grades.id)
+FROM (SELECT user_m.id,SUBSTRING(user_m.username FROM 1 FOR 7) as codigo, user_m.firstname, user_m.lastname
+     FROM  {user} user_m
+     INNER JOIN {user_info_data} data ON data.userid = user_m.id
+     INNER JOIN {user_info_field} field ON data.fieldid = field.id
+     INNER JOIN {talentospilos_usuario} user_t ON data.data = CAST(user_t.id AS VARCHAR)
+     INNER JOIN {talentospilos_est_estadoases} estado_u ON user_t.id = estado_u.id_estudiante
+     INNER JOIN {talentospilos_estados_ases} estados ON estados.id = estado_u.id_estado_ases
+     WHERE estados.nombre = 'ACTIVO/SEGUIMIENTO' AND field.shortname = 'idtalentos'
+
+    INTERSECT
+
+    SELECT user_m.id, SUBSTRING(user_m.username FROM 1 FOR 7) as codigo, user_m.firstname, user_m.lastname
+    FROM {user} user_m INNER JOIN {cohort_members} memb ON user_m.id = memb.userid INNER JOIN {cohort} cohorte ON memb.cohortid = cohorte.id
+    WHERE cohorte.idnumber LIKE 'SP%') estudiantes INNER JOIN {grade_grades} grades ON estudiantes.id = grades.userid
+    INNER JOIN {grade_items} items ON grades.itemid = items.id 
+    INNER JOIN {course} curso ON curso.id = items.courseid
+WHERE SUBSTRING(curso.shortname FROM 15 FOR 6) = '201708' AND
+      grades.finalgrade < 3 
+GROUP BY estudiantes.id, estudiantes.codigo, estudiantes.firstname, estudiantes.lastname
+-------------------
+
+SELECT estudiantes.*, COUNT(grades.id)
+FROM (SELECT user_m.id,SUBSTRING(user_m.username FROM 1 FOR 7) as codigo, user_m.firstname, user_m.lastname
+     FROM  mdl_user user_m
+     INNER JOIN mdl_user_info_data data ON data.userid = user_m.id
+     INNER JOIN mdl_user_info_field field ON data.fieldid = field.id
+     INNER JOIN mdl_talentospilos_usuario user_t ON data.data = CAST(user_t.id AS VARCHAR)
+     INNER JOIN mdl_talentospilos_est_estadoases estado_u ON user_t.id = estado_u.id_estudiante
+     INNER JOIN mdl_talentospilos_estados_ases estados ON estados.id = estado_u.id_estado_ases
+     WHERE estados.nombre = 'ACTIVO/SEGUIMIENTO' AND field.shortname = 'idtalentos'
+
+    INTERSECT
+
+    SELECT user_m.id, SUBSTRING(user_m.username FROM 1 FOR 7) as codigo, user_m.firstname, user_m.lastname
+    FROM mdl_user user_m INNER JOIN mdl_cohort_members memb ON user_m.id = memb.userid INNER JOIN mdl_cohort cohorte ON memb.cohortid = cohorte.id
+    WHERE cohorte.idnumber LIKE 'SP%') estudiantes INNER JOIN mdl_grade_grades grades ON estudiantes.id = grades.userid
+    INNER JOIN mdl_grade_items items ON grades.itemid = items.id 
+    INNER JOIN mdl_course curso ON curso.id = items.courseid
+WHERE SUBSTRING(curso.shortname FROM 15 FOR 6) = '201708' AND
+      grades.finalgrade < 3 
+GROUP BY estudiantes.id, estudiantes.codigo, estudiantes.firstname, estudiantes.lastname

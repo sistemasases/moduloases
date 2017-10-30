@@ -75,24 +75,10 @@ $PAGE->requires->css('/blocks/ases/style/bootstrap_pilos.min.css', true);
 $PAGE->requires->css('/blocks/ases/style/sweetalert.css', true);
 $PAGE->requires->css('/blocks/ases/style/round-about_pilos.css', true);
 
-
-// $PAGE->requires->js('/blocks/ases/js/jquery-2.2.4.min.js', true);
-// $PAGE->requires->js('/blocks/ases/js/sweetalert-dev.js', true);
-// $PAGE->requires->js('/blocks/ases/js/gr_grade_google.js', true);
-// $PAGE->requires->js('/blocks/ases/js/main.js', true);
-// $PAGE->requires->js('/blocks/ases/js/checkrole.js', true);
-// $PAGE->requires->js('/blocks/ases/js/bootstrap.js', true);
-// $PAGE->requires->js('/blocks/ases/js/bootstrap.min.js', true);
-// $PAGE->requires->js('/blocks/ases/js/DataTables-1.10.12/js/jquery.dataTables.js', true);
-// $PAGE->requires->js('/blocks/ases/js/DataTables-1.10.12/js/jquery.dataTables.min.js', true);
-// $PAGE->requires->js('/blocks/ases/js/DataTables-1.10.12/js/dataTables.jqueryui.min.js', true);
-// $PAGE->requires->js('/blocks/ases/js/DataTables-1.10.12/js/dataTables.bootstrap.min.js', true);
-// $PAGE->requires->js('/blocks/ases/js/DataTables-1.10.12/js/dataTables.bootstrap.js', true);
-
 $output = $PAGE->get_renderer('block_ases');
 
 echo $output->header();
-//echo $output->standard_head_html(); 
+
 $prueba = new \block_ases\output\general_reports_page('Some text');
 echo $output->render($prueba);
 echo $output->footer();
