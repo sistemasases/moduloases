@@ -322,7 +322,7 @@ if (isset($_FILES['csv_file'])){
                   
                   $record = new stdClass;
                   $record->id_estudiante = $id_register;
-                  $record->id_estado_ases = $state_icetex;
+                  $record->id_estado_icetex = $state_icetex;
                   $record->fecha = time(); 
                   $DB->insert_record('talentospilos_est_est_icetex',$record,false);
                }
