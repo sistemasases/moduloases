@@ -40,3 +40,35 @@ function get_geographic_info($id_ases){
  * @param 
  * @return
  */
+
+function get_neighborhoods(){
+    
+    global $DB;
+
+    $sql_query = "SELECT * FROM {talentospilos_barrios}";
+
+    $array_neighborhoods = $DB->get_records_sql($sql_query);
+
+    return $array_neighborhoods;
+    
+}
+
+/**
+ * Función 
+ *
+ * @see 
+ * @param 
+ * @return
+ */
+
+function load_geographic_info($id_ases){
+    
+    global $DB;
+
+    $sql_query = "SELECT * FROM {talentospilos_demografia} WHERE id_usuario = $id_ases";
+
+    $result = $DB->get_record_sql($sql_query);
+
+    return $result;
+
+}

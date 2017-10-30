@@ -196,9 +196,25 @@ if ($student_code != 0){
      * Información geográfica
      */
 
-     $geographic_tab_html = file_get_contents('../templates/geographic_tab.html');
+     //$geographic_tab_html = file_get_contents('../templates/geographic_tab.html');
+     //$record->geographic_tab = $geographic_tab_html;
 
-     $record->geographic_tab = $geographic_tab_html;
+     $geographic_object = load_geographic_info($student_id);
+     print_r(load_geographic_info($student_id));
+
+     $neighborhoods_array = get_neighborhoods();
+
+     $neighborhoods = "<option>No registra</option>";
+
+     for($i = 0; $i < count($neighborhoods_array); $i++){
+         if($neighborhoods_array[$i]->id == $geographic_object->barrio){
+            $neighborhoods .= "<option value='".$neighborhoods_array[$i]->id."' selected>".$neighborhoods_array[$i]->nombre."</option>";
+         }else{
+            $neighborhoods .= "<option value='".$neighborhoods_array[$i]->id."'>".$neighborhoods_array[$i]->nombre."</option>";
+         }
+     }
+
+     $record->select_neighborhoods = $neighborhoods;     
      
      $geographic_object = get_geographic_info($student_id);
      
@@ -641,6 +657,7 @@ $PAGE->requires->css('/blocks/ases/style/forms_pilos.css', true);
 $PAGE->requires->css('/blocks/ases/style/c3.css', true);
 
 $PAGE->requires->js_call_amd('block_ases/student_profile_main','init');
+$PAGE->requires->js_call_amd('block_ases/geographic_main','init');
 
 $output = $PAGE->get_renderer('block_ases');
 
