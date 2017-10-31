@@ -6,7 +6,7 @@ require_once(dirname(__FILE__) . '/../role_management/role_management_lib.php');
 
 
 /*
- * Función que retorna un arreglo de todos los cursos donde hay matriculados estudiantes de una instancia determinada organizados segun su profesor.
+ * Función que retorna un arreglo con todos los estudiantes filtrados por estado de ases activo, cohorte y que no se encuentran asignados a otro monitor.
  * @param $instanceid
  * @return Array 
  */
@@ -44,22 +44,22 @@ function get_students($instanceid)
     
     $query_courses = "SELECT *
     FROM (SELECT *
-    FROM mdl_talentospilos_monitor_estud as monitor_estud
-    INNER JOIN (select * from mdl_user_info_data where fieldid=(select id from mdl_user_info_field where shortname='idtalentos')) as info_data ON CAST(monitor_estud.id_estudiante as TEXT) = info_data.data
+    FROM {talentospilos_monitor_estud} as monitor_estud
+    INNER JOIN (select * from {user_info_data} where fieldid=(select id from {user_info_field} where shortname='idtalentos')) as info_data ON CAST(monitor_estud.id_estudiante as TEXT) = info_data.data
     ) as monitor_estud
     RIGHT JOIN (SELECT user_m.id, user_m.username,user_m.firstname,user_m.lastname
-     FROM  mdl_user user_m
-     INNER JOIN mdl_user_info_data data ON data.userid = user_m.id
-     INNER JOIN mdl_user_info_field field ON data.fieldid = field.id
-     INNER JOIN mdl_talentospilos_usuario user_t ON data.data = CAST(user_t.id AS VARCHAR)
-     INNER JOIN mdl_talentospilos_est_estadoases estado_u ON user_t.id = estado_u.id_estudiante
-     INNER JOIN mdl_talentospilos_estados_ases estados ON estados.id = estado_u.id_estado_ases
+     FROM  {user} user_m
+     INNER JOIN {user_info_data} data ON data.userid = user_m.id
+     INNER JOIN {user_info_field} field ON data.fieldid = field.id
+     INNER JOIN {talentospilos_usuario} user_t ON data.data = CAST(user_t.id AS VARCHAR)
+     INNER JOIN {talentospilos_est_estadoases} estado_u ON user_t.id = estado_u.id_estudiante
+     INNER JOIN {talentospilos_estados_ases} estados ON estados.id = estado_u.id_estado_ases
      WHERE estados.nombre = 'ACTIVO/SEGUIMIENTO' AND field.shortname = 'idtalentos'
 
     INTERSECT
 
     SELECT user_m.id, user_m.username,user_m.firstname,user_m.lastname
-    FROM mdl_user user_m INNER JOIN mdl_cohort_members memb ON user_m.id = memb.userid INNER JOIN mdl_cohort cohorte ON memb.cohortid = cohorte.id
+    FROM {user} user_m INNER JOIN {cohort_members} memb ON user_m.id = memb.userid INNER JOIN {cohort} cohorte ON memb.cohortid = cohorte.id
         WHERE cohorte.idnumber LIKE '$cohort%') as estudiantes
 
     ON monitor_estud.userid = estudiantes.id
@@ -69,26 +69,6 @@ function get_students($instanceid)
     $result = $DB->get_records_sql($query_courses);
     return $result;
 }
-
-
-
-// /**
-//  * Función que obtiene los estudiantes de ases filtrado por ESTADO ASES e instancia
-//  * @see get_students()
-//  * @return Array
-//  **/
-
-// function get_students(){
-//     global $DB;
-
-//     $sql_query = "SELECT * FROM mdl_user umood INNER JOIN mdl_user_info_data udata ON umood.id = udata.userid 
-//     INNER JOIN mdl_talentospilos_est_estadoases estado_ases ON udata.data = CAST(estado_ases.id_estudiante as TEXT)
-//     WHERE id_estado_ases = (SELECT id FROM  mdl_talentospilos_estados_ases as estado WHERE estado.nombre ='ACTIVO/SEGUIMIENTO')
-//     and udata.data!='' and udata.fieldid = (SELECT id FROM  mdl_user_info_field as f WHERE f.shortname ='idtalentos')";
-
-
-//     return $DB->get_records_sql($sql_query);
-// }
 
 
 
