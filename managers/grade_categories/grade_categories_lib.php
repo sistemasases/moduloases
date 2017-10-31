@@ -683,7 +683,7 @@ function print_table_categories($report){
                GROUP BY id
                UNION SELECT item.id,
                             SUM(item.aggregationcoef) AS peso
-               FROM {grade_items item}
+               FROM {grade_items} item
                INNER JOIN {grade_categories} cat ON item.iteminstance=cat.id
                WHERE cat.parent = $categoryid
                GROUP BY item.id)AS pesos";
