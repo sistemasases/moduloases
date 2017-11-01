@@ -25,7 +25,7 @@ function get_geographic_info($id_ases){
     $risk_grade_object =  $DB->get_record_sql($sql_query);
     
     if($risk_grade_object){
-        $result->risk = $object->risk;
+        $result->risk = $risk_grade_object->risk;
     }else{
         $result->risk = 0;
     }

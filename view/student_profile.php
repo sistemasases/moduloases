@@ -206,8 +206,8 @@ if ($student_code != 0){
 
      $neighborhoods = "<option>No registra</option>";
 
-     for($i = 0; $i < count($neighborhoods_array); $i++){
-         if($neighborhoods_array[$i]->id == $geographic_object->barrio){
+     for($i = 1; $i <= count($neighborhoods_array); $i++){
+         if($neighborhoods_array[$i]->id == (int)$geographic_object->barrio){
             $neighborhoods .= "<option value='".$neighborhoods_array[$i]->id."' selected>".$neighborhoods_array[$i]->nombre."</option>";
          }else{
             $neighborhoods .= "<option value='".$neighborhoods_array[$i]->id."'>".$neighborhoods_array[$i]->nombre."</option>";
@@ -218,10 +218,11 @@ if ($student_code != 0){
 
      $select_geographic_risk = "<option>No registra</option>";
      for($i=0; $i<3; $i++){
+         $value = $i + 1;
          if($i+1 == (int)$geographic_object->risk){
-            $select_geographic_risk .= "<option value='$i+1' selected>".$level_risk_array[$i]."</option>";
+            $select_geographic_risk .= "<option value='$value' selected>".$level_risk_array[$i]."</option>";
          }else{
-            $select_geographic_risk .= "<option value='$i+1'>".$level_risk_array[$i]."</option>";
+            $select_geographic_risk .= "<option value='$value'>".$level_risk_array[$i]."</option>";
          }
      }
 
@@ -637,11 +638,13 @@ if ($student_code != 0){
 
 $reasons_dropout = get_reasons_dropout();
 
+print_r($reasons_dropout);
+
 $html_select_reasons = "<option value='' id='no_reason_option'>Seleccione el motivo</option>";
 
-for($i = 0; $i < count($reasons_dropout); $i++){
-    $html_select_reasons .= "<option value=".$reasons_dropout[$i]->id.">";
-    $html_select_reasons .= $reasons_dropout[$i]->descripcion;
+foreach($reasons_dropout as $reason){
+    $html_select_reasons .= "<option value=".$reason->id.">";
+    $html_select_reasons .= $reason->descripcion;
     $html_select_reasons .= "</option>";
 }
 
