@@ -1163,10 +1163,10 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_as
                 initFormSeg(id);
                 //Seleccionamos la hora deacuerdo al sistema
 
-                $("#h_ini_" + id + " option[value=" + array_f1[0] + "]").attr("selected", true);
-                $("#m_ini_" + id + " option[value=" + array_f1[1] + "]").attr("selected", true);
-                $("#h_fin_" + id + " option[value=" + array_f2[0] + "]").attr("selected", true);
-                $("#m_fin_" + id + " option[value=" + array_f2[1] + "]").attr("selected", true);
+                $("#h_ini_" + id + " option[value=" + array_f1[0] + "]").prop("selected", true);
+                $("#m_ini_" + id + " option[value=" + array_f1[1] + "]").prop("selected", true);
+                $("#h_fin_" + id + " option[value=" + array_f2[0] + "]").prop("selected", true);
+                $("#m_fin_" + id + " option[value=" + array_f2[1] + "]").prop("selected", true);
                 console.log("ini 0 : "+array_f1[0]);
                 console.log("ini 1 : "+array_f1[1]);
                 console.log("fin 0 : "+array_f2[0]);
