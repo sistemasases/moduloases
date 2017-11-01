@@ -1155,6 +1155,11 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_as
                 var f2 = $("#h_final_texto_" + id).val();
                 var array_f1 = f1.split(":");
                 var array_f2 = f2.split(":");
+
+                console.log("horas :"+f1+"....."+f2);
+                console.log("array 1 :"+array_f1);
+                console.log("array 2 :"+array_f2);
+
                 initFormSeg(id);
                 //Seleccionamos la hora deacuerdo al sistema
 
@@ -1162,6 +1167,16 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_as
                 $("#m_ini_" + id + " option[value=" + array_f1[1] + "]").attr("selected", true);
                 $("#h_fin_" + id + " option[value=" + array_f2[0] + "]").attr("selected", true);
                 $("#m_fin_" + id + " option[value=" + array_f2[1] + "]").attr("selected", true);
+                console.log("ini 0 : "+array_f1[0]);
+                console.log("ini 1 : "+array_f1[1]);
+                console.log("fin 0 : "+array_f2[0]);
+                console.log("fin 1 : "+array_f2[1]);
+
+                console.log("select 0 : "+"#h_ini_" + id + " option[value=" + array_f1[0] + "]");
+                console.log("select 1 : "+"#m_ini_" + id + " option[value=" + array_f1[1] + "]");
+                console.log("select 0 : "+"#h_fin_" + id + " option[value=" + array_f2[0] + "]");
+                console.log("select 1 : "+"#m_fin_" + id + " option[value=" + array_f2[1] + "]");
+
             }
 
 
