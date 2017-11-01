@@ -638,8 +638,6 @@ if ($student_code != 0){
 
 $reasons_dropout = get_reasons_dropout();
 
-print_r($reasons_dropout);
-
 $html_select_reasons = "<option value='' id='no_reason_option'>Seleccione el motivo</option>";
 
 foreach($reasons_dropout as $reason){
