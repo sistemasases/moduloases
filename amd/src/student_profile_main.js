@@ -426,7 +426,12 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/d3', 'block_ases/sweetaler
             
                             $('#modal_risk_graph').show();
                         });
-
+            $('#view_graphic_risk_button').click(function(){
+                $('#modal_riesgos').fadeIn(200);
+            });
+            $('#mymodal-riesgo-close').click(function(){
+                $('#modal_riesgos').fadeOut(200);
+            });
         }
     };
 
@@ -1533,5 +1538,6 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/d3', 'block_ases/sweetaler
             },
         });
     }
+
 
 })

@@ -34,6 +34,7 @@ require_once('../managers/user_management/user_lib.php');
 require_once('../managers/student_profile/geographic_lib.php');
 require_once('../managers/student_profile/studentprofile_lib.php');
 require_once('../managers/academic_profile/academic_lib.php');
+require_once('../managers/student_profile/student_graphic_dimension_risk.php');
 require_once('../managers/instance_management/instance_lib.php');
 require_once('../managers/dateValidator.php');
 include('../lib.php');
@@ -642,6 +643,28 @@ $html_academic_table = "";
 
 $record->academic_semestres_table = $html_academic_table;
 
+// Obtención de datos para las gráficas de riesgos
+
+$periodoactual = getPeriodoActual();
+$idEstudiante = $student_id;
+/*La separación de la información se hace aquí, ya que mustache no permite el control avanzado de condicionales*/
+$seguimientosEstudianteIndividual = obtenerDatosSeguimientoFormateados($idEstudiante, 'individual', $periodoactual);
+$seguimientosEstudianteFamiliar = obtenerDatosSeguimientoFormateados($idEstudiante, 'familiar', $periodoactual);
+$seguimientosEstudianteAcademico = obtenerDatosSeguimientoFormateados($idEstudiante, 'academico', $periodoactual);
+$seguimientosEstudianteEconomicor = obtenerDatosSeguimientoFormateados($idEstudiante, 'economico', $periodoactual);
+$seguimientosVidaUniversitaria = obtenerDatosSeguimientoFormateados($idEstudiante, 'vida_universitaria', $periodoactual);
+
+$record->nombrePeriodoSeguimiento = $periodoactual['nombre_periodo'];
+$record->datosSeguimientoEstudianteIndividual = $seguimientosEstudianteIndividual;
+$record->datosSeguimientoEstudianteFamiliar = $seguimientosEstudianteFamiliar;
+$record->datosSeguimientoEstudianteAcademico = $seguimientosEstudianteAcademico;
+$record->datosSeguimientoEstudianteEconomico = $seguimientosEstudianteEconomicor;
+$record->datosSeguimientoEstudianteVidaUniversitaria = $seguimientosVidaUniversitaria;
+
+// Fin de obtención de datos para las gráficas de riesgos
+
+
+
 $PAGE->set_context($contextcourse);
 $PAGE->set_context($contextblock);
 $PAGE->set_url($url);
@@ -655,6 +678,7 @@ $PAGE->requires->css('/blocks/ases/style/sweetalert2.css', true);
 $PAGE->requires->css('/blocks/ases/style/sugerenciaspilos.css', true);
 $PAGE->requires->css('/blocks/ases/style/forms_pilos.css', true);
 $PAGE->requires->css('/blocks/ases/style/c3.css', true);
+$PAGE->requires->css('/blocks/ases/style/student_profile_risk_graph.css', true);
 
 $PAGE->requires->js_call_amd('block_ases/student_profile_main','init');
 $PAGE->requires->js_call_amd('block_ases/geographic_main','init');
