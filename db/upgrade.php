@@ -8,7 +8,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
 
     $result = true;
 
-    if ($oldversion < 2017101818449) {
+    if ($oldversion < 2017110116289) {
 
     //     // Define field id_funcionalidad to be added to talentospilos_accion.
     //     $table = new xmldb_table('talentospilos_accion');
@@ -66,13 +66,24 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     // Launch rename field descripcion.
     $dbman->rename_field($table, $field, 'descripcion');
 
+    $sql_query = "DELETE FROM {talentospilos_motivos}";
+
+    $result = $DB->execute($sql_query);
+    
+    $array_motivos = array('Bajo rendimiento', 'Retiro voluntario', 'Calamidad doméstica', 'Enfermedad', 'Traslado de universidad', 'Situacion económica', 'Insatisfacción con el programa', 'Falta de adaptación a la vida universitaria');
+    $data_object = new stdClass();
+
+    if($result){
+        for($i=0; $i<count($array_motivos); $i++){
+            $data_object->descripcion = $array_motivos[$i];
+            $DB->insert_record('talentospilos_motivos', $data_object, true);
+        }
+    }   
+
     // Ases savepoint reached.
-    upgrade_block_savepoint(true, 2017101818449, 'ases');
-
-
+    upgrade_block_savepoint(true, 2017110116289, 'ases');
    
     return $result;
+    }
 }
-
 ?>
-
