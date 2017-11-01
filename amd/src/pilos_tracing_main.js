@@ -100,8 +100,8 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_as
                 /*Cuando el usuario sea practicante = le es permitido */
                 if (namerol == "practicante_ps") {
 
-                    $("input[name=profesional]").attr('disabled', true);
-                    $("input[name=practicante]").attr('disabled', true);
+                    $("input[name=profesional]").prop('disabled', true);
+                    $("input[name=practicante]").prop('disabled', true);
 
                     limpiar_riesgos();
                     editar_seguimiento(namerol);
@@ -117,8 +117,8 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_as
                     /*Cuando el usuario sea profesional = le es permitido */
                 } else if (namerol == "profesional_ps") {
                     //se inicia la adicion del evento
-                    $("input[name=practicante]").attr('disabled', true);
-                    $("input[name=profesional]").attr('disabled', true);
+                    $("input[name=practicante]").prop('disabled', true);
+                    $("input[name=profesional]").prop('disabled', true);
                     limpiar_riesgos();
                     cancelar_edicion(namerol);
                     editar_seguimiento(namerol);
@@ -285,8 +285,8 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_as
 
                                 } else {
                                     $('#reemplazarToogle').html(msg);
-                                    $("input[name=practicante]").attr('disabled', true);
-                                    $("input[name=profesional]").attr('disabled', true);
+                                    $("input[name=practicante]").prop('disabled', true);
+                                    $("input[name=profesional]").prop('disabled', true);
                                 }
                                 $(".well.col-md-10.col-md-offset-1.reporte-seguimiento.oculto").slideDown("slow");
 
@@ -717,14 +717,14 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_as
                         visto_profesional = $("#profesional_" + id).is(':checked');
 
                     } else if (namerol == 'practicante_ps') {
-                        $("input[name=practicante]").attr('disabled', false);
+                        $("input[name=practicante]").prop('disabled', false);
 
                     } else if (namerol == 'profesional_ps') {
-                        $("input[name=profesional]").attr('disabled', false);
+                        $("input[name=profesional]").prop('disabled', false);
 
                     } else if (namerol == 'sistemas') {
-                        $("input[name=profesional]").attr('disabled', false);
-                        $("input[name=practicante]").attr('disabled', false);
+                        $("input[name=profesional]").prop('disabled', false);
+                        $("input[name=practicante]").prop('disabled', false);
 
                     }
 
@@ -820,14 +820,14 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_as
                     if (namerol == 'monitor_ps') {
 
                     } else if (namerol == 'practicante_ps') {
-                        $("input[name=practicante]").attr('disabled', true);
+                        $("input[name=practicante]").prop('disabled', true);
 
                     } else if (namerol == 'profesional_ps') {
-                        $("input[name=profesional]").attr('disabled', true);
+                        $("input[name=profesional]").prop('disabled', true);
 
                     } else if (namerol == 'sistemas') {
-                        $("input[name=profesional]").attr('disabled', true);
-                        $("input[name=practicante]").attr('disabled', true);
+                        $("input[name=profesional]").prop('disabled', true);
+                        $("input[name=practicante]").prop('disabled', true);
 
                     }
 
@@ -1155,13 +1155,15 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_as
                 var f2 = $("#h_final_texto_" + id).val();
                 var array_f1 = f1.split(":");
                 var array_f2 = f2.split(":");
+
                 initFormSeg(id);
                 //Seleccionamos la hora deacuerdo al sistema
 
-                $("#h_ini_" + id + " option[value=" + array_f1[0] + "]").attr("selected", true);
-                $("#m_ini_" + id + " option[value=" + array_f1[1] + "]").attr("selected", true);
-                $("#h_fin_" + id + " option[value=" + array_f2[0] + "]").attr("selected", true);
-                $("#m_fin_" + id + " option[value=" + array_f2[1] + "]").attr("selected", true);
+                $("#h_ini_" + id + " option[value=" + array_f1[0] + "]").prop("selected", true);
+                $("#m_ini_" + id + " option[value=" + array_f1[1] + "]").prop("selected", true);
+                $("#h_fin_" + id + " option[value=" + array_f2[0] + "]").prop("selected", true);
+                $("#m_fin_" + id + " option[value=" + array_f2[1] + "]").prop("selected", true);
+
             }
 
 
@@ -1194,63 +1196,63 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_as
 
                 //Riesgo individual
                 if ($("#riesgo_individual_" + id_seguimiento).is('.riesgo_bajo')) {
-                    $("input[name=riesgo_individual_" + id_seguimiento + "][value=1]").attr('checked', 'checked');
+                    $("input[name=riesgo_individual_" + id_seguimiento + "][value=1]").prop('checked', 'checked');
 
 
                 } else if ($("#riesgo_individual_" + id_seguimiento).is('.riesgo_medio')) {
-                    $("input[name=riesgo_individual_" + id_seguimiento + "][value=2]").attr('checked', 'checked');
+                    $("input[name=riesgo_individual_" + id_seguimiento + "][value=2]").prop('checked', 'checked');
                 } else if ($("#riesgo_individual_" + id_seguimiento).is('.riesgo_alto')) {
-                    $("input[name=riesgo_individual_" + id_seguimiento + "][value=3]").attr('checked', 'checked');
+                    $("input[name=riesgo_individual_" + id_seguimiento + "][value=3]").prop('checked', 'checked');
                 } else {
-                    $("input[name=riesgo_individual_" + id_seguimiento + "][value=0]").attr('checked', 'checked');
+                    $("input[name=riesgo_individual_" + id_seguimiento + "][value=0]").prop('checked', 'checked');
 
                 }
 
                 //Riesgo familiar
                 if ($("#riesgo_familiar_" + id_seguimiento).is('.riesgo_bajo')) {
-                    $("input[name=riesgo_familiar_" + id_seguimiento + "][value=1]").attr('checked', 'checked');
+                    $("input[name=riesgo_familiar_" + id_seguimiento + "][value=1]").prop('checked', 'checked');
                 } else if ($("#riesgo_familiar_" + id_seguimiento).is('.riesgo_medio')) {
-                    $("input[name=riesgo_familiar_" + id_seguimiento + "][value=2]").attr('checked', 'checked');
+                    $("input[name=riesgo_familiar_" + id_seguimiento + "][value=2]").prop('checked', 'checked');
                 } else if ($("#riesgo_familiar_" + id_seguimiento).is('.riesgo_alto')) {
-                    $("input[name=riesgo_familiar_" + id_seguimiento + "][value=3]").attr('checked', 'checked');
+                    $("input[name=riesgo_familiar_" + id_seguimiento + "][value=3]").prop('checked', 'checked');
                 } else {
-                    $("input[name=riesgo_familiar_" + id_seguimiento + "][value=0]").attr('checked', 'checked');
+                    $("input[name=riesgo_familiar_" + id_seguimiento + "][value=0]").prop('checked', 'checked');
 
                 }
 
                 //Riesgo academico
                 if ($("#riesgo_academico_" + id_seguimiento).is('.riesgo_bajo')) {
-                    $("input[name=riesgo_academico_" + id_seguimiento + "][value=1]").attr('checked', 'checked');
+                    $("input[name=riesgo_academico_" + id_seguimiento + "][value=1]").prop('checked', 'checked');
                 } else if ($("#riesgo_academico_" + id_seguimiento).is('.riesgo_medio')) {
-                    $("input[name=riesgo_academico_" + id_seguimiento + "][value=2]").attr('checked', 'checked');
+                    $("input[name=riesgo_academico_" + id_seguimiento + "][value=2]").prop('checked', 'checked');
                 } else if ($("#riesgo_academico_" + id_seguimiento).is('.riesgo_alto')) {
-                    $("input[name=riesgo_academico_" + id_seguimiento + "][value=3]").attr('checked', 'checked');
+                    $("input[name=riesgo_academico_" + id_seguimiento + "][value=3]").prop('checked', 'checked');
                 } else {
-                    $("input[name=riesgo_academico_" + id_seguimiento + "][value=0]").attr('checked', 'checked');
+                    $("input[name=riesgo_academico_" + id_seguimiento + "][value=0]").prop('checked', 'checked');
 
                 }
 
                 //Riesgo economico
                 if ($("#riesgo_economico_" + id_seguimiento).is('.riesgo_bajo')) {
-                    $("input[name=riesgo_economico_" + id_seguimiento + "][value=1]").attr('checked', 'checked');
+                    $("input[name=riesgo_economico_" + id_seguimiento + "][value=1]").prop('checked', 'checked');
                 } else if ($("#riesgo_economico_" + id_seguimiento).is('.riesgo_medio')) {
-                    $("input[name=riesgo_economico_" + id_seguimiento + "][value=2]").attr('checked', 'checked');
+                    $("input[name=riesgo_economico_" + id_seguimiento + "][value=2]").prop('checked', 'checked');
                 } else if ($("#riesgo_economico_" + id_seguimiento).is('.riesgo_alto')) {
-                    $("input[name=riesgo_economico_" + id_seguimiento + "][value=3]").attr('checked', 'checked');
+                    $("input[name=riesgo_economico_" + id_seguimiento + "][value=3]").prop('checked', 'checked');
                 } else {
-                    $("input[name=riesgo_economico_" + id_seguimiento + "][value=0]").attr('checked', 'checked');
+                    $("input[name=riesgo_economico_" + id_seguimiento + "][value=0]").prop('checked', 'checked');
 
                 }
 
                 //Riesgo universitario
                 if ($("#riesgo_universitario_" + id_seguimiento).is('.riesgo_bajo')) {
-                    $("input[name=riesgo_universitario_" + id_seguimiento + "][value=1]").attr('checked', 'checked');
+                    $("input[name=riesgo_universitario_" + id_seguimiento + "][value=1]").prop('checked', 'checked');
                 } else if ($("#riesgo_universitario_" + id_seguimiento).is('.riesgo_medio')) {
-                    $("input[name=riesgo_universitario_" + id_seguimiento + "][value=2]").attr('checked', 'checked');
+                    $("input[name=riesgo_universitario_" + id_seguimiento + "][value=2]").prop('checked', 'checked');
                 } else if ($("#riesgo_universitario_" + id_seguimiento).is('.riesgo_alto')) {
-                    $("input[name=riesgo_universitario_" + id_seguimiento + "][value=3]").attr('checked', 'checked');
+                    $("input[name=riesgo_universitario_" + id_seguimiento + "][value=3]").prop('checked', 'checked');
                 } else {
-                    $("input[name=riesgo_universitario_" + id_seguimiento + "][value=0]").attr('checked', 'checked');
+                    $("input[name=riesgo_universitario_" + id_seguimiento + "][value=0]").prop('checked', 'checked');
 
                 }
             }
