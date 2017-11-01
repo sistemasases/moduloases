@@ -201,7 +201,6 @@ if ($student_code != 0){
      //$record->geographic_tab = $geographic_tab_html;
 
      $geographic_object = load_geographic_info($student_id);
-     //print_r(load_geographic_info($student_id));
 
      $neighborhoods_array = get_neighborhoods();
 
@@ -214,6 +213,19 @@ if ($student_code != 0){
             $neighborhoods .= "<option value='".$neighborhoods_array[$i]->id."'>".$neighborhoods_array[$i]->nombre."</option>";
          }
      }
+
+     $level_risk_array = array('Bajo', 'Medio', 'Alto');
+
+     $select_geographic_risk = "<option>No registra</option>";
+     for($i=0; $i<3; $i++){
+         if($i+1 == (int)$geographic_object->risk){
+            $select_geographic_risk .= "<option value='$i+1' selected>".$level_risk_array[$i]."</option>";
+         }else{
+            $select_geographic_risk .= "<option value='$i+1'>".$level_risk_array[$i]."</option>";
+         }
+     }
+
+     $record->select_geographic_risk = $select_geographic_risk;
 
      $record->select_neighborhoods = $neighborhoods;     
      
