@@ -21,24 +21,9 @@ require_once $CFG->dirroot.'/blocks/ases/managers/lib/student_lib.php';
  * @return Array 
  */
 
-function get_courses_pilos($instanceid){
+function get_courses_pilos(){
     global $DB;
     
-    //Se consulta el programa al cual esta asociada la instancia
-    $query_prog = "
-        SELECT pgr.cod_univalle as cod
-        FROM {talentospilos_instancia} inst
-        INNER JOIN {talentospilos_programa} pgr ON inst.id_programa = pgr.id
-        WHERE inst.id_instancia= $instanceid";
-    
-    $prog = $DB->get_record_sql($query_prog)->cod;    
-   
-    //Si el código del programa es 1008 la cohorte comenzará por SP y si no, empezará por el código del programa
-    if($prog === '1008'){
-        $cohort = 'SP';
-    }else{
-        $cohort = $prog;
-    }
     $query_semestre = "SELECT nombre FROM {talentospilos_semestre} WHERE id = (SELECT MAX(id) FROM {talentospilos_semestre})";
     $sem = $DB->get_record_sql($query_semestre)->nombre;
 
@@ -83,13 +68,7 @@ function get_courses_pilos($instanceid){
      INNER JOIN {talentospilos_usuario} user_t ON data.data = CAST(user_t.id AS VARCHAR)
      INNER JOIN {talentospilos_est_estadoases} estado_u ON user_t.id = estado_u.id_estudiante
      INNER JOIN {talentospilos_estados_ases} estados ON estados.id = estado_u.id_estado_ases
-     WHERE estados.nombre = 'ACTIVO/SEGUIMIENTO' AND field.shortname = 'idtalentos'
-
-    INTERSECT
-
-    SELECT user_m.id
-    FROM {user} user_m INNER JOIN {cohort_members} memb ON user_m.id = memb.userid INNER JOIN {cohort} cohorte ON memb.cohortid = cohorte.id
-    WHERE cohorte.idnumber LIKE '$cohort%')";
+     WHERE estados.nombre = 'ACTIVO/SEGUIMIENTO' AND field.shortname = 'idtalentos')";
     $result = $DB->get_records_sql($query_courses);
     
     $result = processInfo($result);

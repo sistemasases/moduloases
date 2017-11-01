@@ -86,7 +86,7 @@ $output = $PAGE->get_renderer('block_ases');
 
 //Carga de informacion a mostrar
 $rol = get_role_ases($USER->id);
-$courses = get_courses_pilos($blockid);
+$courses = get_courses_pilos();
 
 if($rol == 'sistemas' || $rol == 'academico'){
     
