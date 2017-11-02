@@ -3,6 +3,6 @@
 
     global $DB;
 
-    $sql_query = "DELETE FROM {talentospilos_semestre} WHERE nombre = 2018A";
+    $sql_query = "DELETE FROM {talentospilos_semestre} WHERE nombre = '2018A'";
 
     echo $DB->execute($sql_query);
