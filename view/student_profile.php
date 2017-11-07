@@ -39,6 +39,7 @@ require_once('../managers/dateValidator.php');
 include('../lib.php');
 
 global $PAGE;
+global $USER;
 
 include("../classes/output/student_profile_page.php");
 include("../classes/output/renderer.php");
@@ -74,6 +75,8 @@ $node->make_active();
 // Load information of student's file
 
 $record = 'data';
+
+$rol = get_role_ases($USER->id);
 
 if ($student_code != 0){ 
     
@@ -135,7 +138,6 @@ if ($student_code != 0){
     $record->firstname = $user_moodle->firstname;
     $record->lastname = $user_moodle->lastname;
     $record->email_moodle = $user_moodle->email_moodle;
-    $record->code = $user_moodle->code;
     $record->age = substr($ases_student->age,0,2);
     $record->program = $academic_program->nombre;
     $record->faculty = $faculty->nombre;
@@ -302,6 +304,22 @@ if ($student_code != 0){
             $record->academic_class = 'div_no_risk';
             break;
      }
+
+     if($rol == 'sistemas'){
+        $record->code = "<input type='text' class='tip' id='codigo' value='$student_code' size='12' maxlength='12' required>";
+    }else{
+        $select = make_select_ficha($USER->id);
+        $record->code = $select;
+    }
+}else{
+    $record = new stdClass;
+    $student_id=-1;
+    if($rol == 'sistemas'){
+        $record->code = "<input type='text' class='tip' id='codigo' value=' ' size='12' maxlength='12' required>";
+    }else{
+         $select = make_select_ficha($USER->id);
+         $record->code = $select;
+    }
 }
 
 /**
