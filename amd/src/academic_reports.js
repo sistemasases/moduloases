@@ -33,15 +33,15 @@
                             },
                             url: "../managers/general_reports/academic_reports_processing.php",
                             success: function(msg) {
-                                alert(msg);
-                                // swal({ 
-                                    // title: "Notas Perdidas", 
-                                    // text: msg, 
-                                    // type: "info", 
-                                    // showCancelButton: false,
-                                    // confirmButtonColor: "#DD6B55", 
-                                    // confirmButtonText: "Cerrar", 
-                                    // closeOnConfirm: true })
+                                //alert(msg);
+                                swal({ 
+                                    title: "Notas Perdidas", 
+                                    text: msg, 
+                                    type: "info", 
+                                    showCancelButton: false,
+                                    confirmButtonColor: "#DD6B55", 
+                                    confirmButtonText: "Cerrar", 
+                                    closeOnConfirm: true })
                             },
                             dataType: "text",
                             cache: "false",
