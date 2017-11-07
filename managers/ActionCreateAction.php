@@ -78,27 +78,25 @@
         }
 
     }else if (isset($_POST['profile']) && isset($_POST['actions'])){
-        $profile = $_POST['profile'];
-        $acciones = $_POST['actions'];
-        $continuar = true;
+      $actions =  json_decode(stripslashes($_POST['actions']));
+      $continuar=true;
+      $whereclause = "id_rol = ".$_POST['profile'];
+      $DB->delete_records_select('talentospilos_permisos_rol',$whereclause);
 
-        try{
-        foreach ($acciones as $accion) {
-         $record = new stdClass;
-         $record->id_perfil = $profile;
-         $record->id_accion = $accion;
-         $record->habilitado =true;
-         $DB->insert_record('talentospilos_perfil_accion', $record, true); 
-        }
-    }catch(Exception $ex){
-     echo "Se presentó un inconveniente : ".$ex;
-     $continuar=false;
-    }
+      
+      foreach($actions as $action){
+       $record = new stdClass;
+       $record->id_rol=$_POST['profile'];
+       $record->id_accion = $action; 
+       $DB->insert_record('talentospilos_permisos_rol', $record, true); 
+      }
 
-    if($continuar){
-        
-        echo "Se asignaron las acciones al perfil exitosamente";
-    }
+       if($continuar){
+        $msg->title="Éxito";
+        $msg->text= "Permisos asignados exitosamente";
+        $msg->type = "success";
+        echo  $msg->text;
+      }
 
     }else if(isset($_POST['profiles_user'])&&isset($_POST['users']) &&isset($_POST['instance'])){
       $profile = $_POST['profiles_user'];

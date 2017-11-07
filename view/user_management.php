@@ -30,7 +30,7 @@ require_once($CFG->libdir.'/adminlib.php');
 require_once('../managers/instance_management/instance_lib.php');
 require_once('../managers/user_management/user_lib.php');
 require_once('../managers/user_management/user_functions.php');
-//require_once('../managers/usermanagement_view.php');
+require_once('../managers/usermanagement_view.php');
 
 global $PAGE;
 

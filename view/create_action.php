@@ -44,39 +44,20 @@ $blockid = required_param('instanceid', PARAM_INT);
 require_login($courseid, false);
 
 
-//Obtiene los perfiles.
-$profiles = get_profiles();
-$profiles_table= get_profiles_select($profiles,"profiles_prof");
-$profiles_table_user= get_profiles_select($profiles,"profiles_user");
+//Obtiene los roles.
+$roles = get_roles();
+$roles_table_user= get_roles_select($roles,"profiles_user");
 
-//obtiene acciones 
-$actions = get_actions();
-$actions_table = get_actions_select($actions);
 
 //obtiene funcionalidades
 $function = get_functions();
 $functions_table = get_functions_select($function,"functions");
-
 $general_table  = get_functions_actions();
-
-
-//obtiene usuarios 
-$courseusers = get_course_usersby_id($courseid);
-$table_courseuseres='<select class="form-pilos" id="users">';
-$table_courseuseres.='<option value=""> ---------------------------------------</option>';
-foreach ($courseusers as $courseuser) {
-    $table_courseuseres.='<option value="'.$courseuser->codigo.'">'.$courseuser->codigo.' - '.$courseuser->nombre.' '.$courseuser->apellido.'</option>';
-}
-$table_courseuseres.="</select>";
-
 
 
 $data = 'data';    
 $data = new stdClass;
-$data->profiles_table =$profiles_table;
-$data->actions_table = $actions_table;
-$data->table_courseuseres=$table_courseuseres;
-$data->profiles_table_user=$profiles_table_user;
+$data->roles_table_user=$roles_table_user;
 $data->functions_table =$functions_table;
 $data->general_table=$general_table;
 

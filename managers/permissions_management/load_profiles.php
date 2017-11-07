@@ -9,7 +9,7 @@ require_once('permissions_lib.php');
         $data = array(
                 "bsort" => false,
                 "columns" => $columns,
-                "data"=> get_profiles_table(),
+                "data"=> get_roles_table(),
                 "language" => 
                  array(
                     "search"=> "Buscar:",
