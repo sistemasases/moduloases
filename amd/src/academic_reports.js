@@ -8,6 +8,53 @@
     
             init: function() {
                 $("#students").DataTable();
+
+                $(document).on('click', '#students tbody tr td', function() {
+                    var pagina = "student_profile.php";
+                    var table = $("#students").DataTable();
+                    var colIndex = table.cell(this).index().column;
+                    var student_code = table.cell(table.row(this).index(), 0).data();
+                    var username = $(this).attr('id');
+                    // if (colIndex <= 2) {
+                    //     $("#formulario").each(function() {
+                    //         this.reset;
+                    //     });
+                    //     // document.getElementById("formulario").reset();
+                    //     location.href = pagina + location.search + "&student_code=" + student_code;
+                    // }COMENTADO MIENTRAS ESTA LA FICHA ACADEMICA
+                    
+                    if(colIndex == 3){
+                        
+                        $.ajax({
+                            type: "POST",
+                            data: {
+                                student: username,
+                                type: "load_loses"
+                            },
+                            url: "../managers/general_reports/academic_reports_processing.php",
+                            success: function(msg) {
+                                alert(msg);
+                                // swal({ 
+                                    // title: "Notas Perdidas", 
+                                    // text: msg, 
+                                    // type: "info", 
+                                    // showCancelButton: false,
+                                    // confirmButtonColor: "#DD6B55", 
+                                    // confirmButtonText: "Cerrar", 
+                                    // closeOnConfirm: true })
+                            },
+                            dataType: "text",
+                            cache: "false",
+                            error: function(msg) {
+                                console.log(msg);
+                            },
+                        });
+                        
+                    }
+
+
+                });
             }
+            
         }
     });

@@ -42,25 +42,25 @@ function studentsWithLoses($instance){
 	}
 
 	$query = "SELECT estudiantes.*, COUNT(grades.id) as cantidad
-	FROM (SELECT user_m.id,SUBSTRING(user_m.username FROM 1 FOR 7) as codigo, user_m.firstname, user_m.lastname
-		 FROM  mdl_user user_m
-		 INNER JOIN mdl_user_info_data data ON data.userid = user_m.id
-		 INNER JOIN mdl_user_info_field field ON data.fieldid = field.id
-		 INNER JOIN mdl_talentospilos_usuario user_t ON data.data = CAST(user_t.id AS VARCHAR)
-		 INNER JOIN mdl_talentospilos_est_estadoases estado_u ON user_t.id = estado_u.id_estudiante
-		 INNER JOIN mdl_talentospilos_estados_ases estados ON estados.id = estado_u.id_estado_ases
+	FROM (SELECT user_m.id,SUBSTRING(user_m.username FROM 1 FOR 7) as codigo, user_m.firstname, user_m.lastname,user_m.username
+		 FROM  {user} user_m
+		 INNER JOIN {user_info_data} data ON data.userid = user_m.id
+		 INNER JOIN {user_info_field} field ON data.fieldid = field.id
+		 INNER JOIN {talentospilos_usuario} user_t ON data.data = CAST(user_t.id AS VARCHAR)
+		 INNER JOIN {talentospilos_est_estadoases} estado_u ON user_t.id = estado_u.id_estudiante
+		 INNER JOIN {talentospilos_estados_ases} estados ON estados.id = estado_u.id_estado_ases
 		 WHERE estados.nombre = 'ACTIVO/SEGUIMIENTO' AND field.shortname = 'idtalentos'
 	
 		INTERSECT
 	
-		SELECT user_m.id, SUBSTRING(user_m.username FROM 1 FOR 7) as codigo, user_m.firstname, user_m.lastname
-		FROM mdl_user user_m INNER JOIN mdl_cohort_members memb ON user_m.id = memb.userid INNER JOIN mdl_cohort cohorte ON memb.cohortid = cohorte.id
-		WHERE cohorte.idnumber LIKE '$cohort%') estudiantes INNER JOIN mdl_grade_grades grades ON estudiantes.id = grades.userid
-		INNER JOIN mdl_grade_items items ON grades.itemid = items.id 
-		INNER JOIN mdl_course curso ON curso.id = items.courseid
+		SELECT user_m.id, SUBSTRING(user_m.username FROM 1 FOR 7) as codigo, user_m.firstname, user_m.lastname,user_m.username
+		FROM {user} user_m INNER JOIN {cohort_members} memb ON user_m.id = memb.userid INNER JOIN {cohort} cohorte ON memb.cohortid = cohorte.id
+		WHERE cohorte.idnumber LIKE '$cohort%') estudiantes INNER JOIN {grade_grades} grades ON estudiantes.id = grades.userid
+		INNER JOIN {grade_items} items ON grades.itemid = items.id 
+		INNER JOIN {course} curso ON curso.id = items.courseid
 	WHERE SUBSTRING(curso.shortname FROM 15 FOR 6) = '$semestre' AND
 		  grades.finalgrade < 3 
-	GROUP BY estudiantes.id, estudiantes.codigo, estudiantes.firstname, estudiantes.lastname";
+	GROUP BY estudiantes.id, estudiantes.codigo, estudiantes.firstname, estudiantes.lastname, estudiantes.username";
 
 	$result = $DB->get_records_sql($query);
 	return $result;
@@ -91,7 +91,7 @@ function getReportStudents($instance){
 							<td>$student->codigo</td>
 							<td>$student->firstname</td>
 							<td>$student->lastname</td>
-							<td>$student->cantidad</td>
+							<td id = '$student->username' >$student->cantidad</td>
 						</tr>";
 	}
 
@@ -99,4 +99,37 @@ function getReportStudents($instance){
 	return $string_html;
 }
 
+
+
+/**
+ * Función que retornta un string con una lista de las notas que tiene perdidas un estudiante.
+ * 
+ * @see get_loses_by_student($instance)
+ * @param $username username instancia
+ * @return String --> String Html con la tabla de estudiantes 
+ */
+function get_loses_by_student($username){
+	global $DB;
+
+	$query = "SELECT items.id, curso.fullname, items.itemname, grades.finalgrade
+			  FROM {user} user_m INNER JOIN {grade_grades} grades ON user_m.id = grades.userid
+		INNER JOIN {grade_items} items ON grades.itemid = items.id 
+		INNER JOIN {course} curso ON curso.id = items.courseid
+			  WHERE user_m.username = '$username' AND  grades.finalgrade < 3";
+
+	$result = $DB->get_records_sql($query);
+	$text = "";
+
+	foreach($result as $nota){
+		if(!$nota->itemname){
+			$query_name = "SELECT cat.fullname as name
+						   FROM {grade_items} item INNER JOIN {grade_categories} cat ON item.iteminstance = cat.id
+						   WHERE item.id = $nota->id";
+			$nota->itemname = $DB->get_record_sql($query_name)->name;
+		}
+		$note = round($nota->finalgrade,2);
+		$text.="Curso: $nota->fullname. Item: $nota->itemname. Nota: $note\n";
+	}
+	return $text;
+}	
 ?>
