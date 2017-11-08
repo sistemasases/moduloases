@@ -35,7 +35,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
                 $('#longitude').attr('disabled', true);
             });
 
-            load_geographic_info(id_ases);
+            //load_geographic_info(id_ases);
 
             $('#button_save_geographic').on('click', function(){
                 var latitude = $('#latitude').val();
