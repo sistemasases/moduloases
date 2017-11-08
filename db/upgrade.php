@@ -59,27 +59,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     //     upgrade_block_savepoint(true, 2017101818449, 'ases');
     // }
 
-    // Rename field descripcion on table talentospilos_motivos to NEWNAMEGOESHERE.
-    $table = new xmldb_table('talentospilos_motivos');
-    $field = new xmldb_field('decripcion', XMLDB_TYPE_CHAR, '100', null, XMLDB_NOTNULL, null, null, 'id');
-
-    // Launch rename field descripcion.
-    $dbman->rename_field($table, $field, 'descripcion');
-
-    $sql_query = "DELETE FROM {talentospilos_motivos}";
-
-    $result = $DB->execute($sql_query);
-    
-    $array_motivos = array('Bajo rendimiento', 'Retiro voluntario', 'Calamidad doméstica', 'Enfermedad', 'Traslado de universidad', 'Situacion económica', 'Insatisfacción con el programa', 'Falta de adaptación a la vida universitaria');
-    $data_object = new stdClass();
-
-    if($result){
-        for($i=0; $i<count($array_motivos); $i++){
-            $data_object->descripcion = $array_motivos[$i];
-            $DB->insert_record('talentospilos_motivos', $data_object, true);
-        }
-    }   
-
+   
     // Ases savepoint reached.
     upgrade_block_savepoint(true, 2017110116289, 'ases');
    
