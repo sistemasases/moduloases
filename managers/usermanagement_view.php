@@ -10,11 +10,13 @@
     require_once('permissions_management/permissions_lib.php');
     require('validate_profile_action.php');
 
-    $accion = '29';
-    global $USER;
+    function get_permission(){
 
+    global $USER;
     $message = "";
     $continue = true;
+    $accion = '29';
+
 
     $id_instancia =required_param('instanceid', PARAM_INT);
     $moodle_id = $USER->id; 
@@ -31,7 +33,6 @@
     $action =get_action_by_id($accion);
 
 
-
     /*(nombre de la vista es igual al nombre de la funcionalidad).*/
 
     $functionality= get_functions_by_name($function_name);
@@ -44,7 +45,7 @@
         $message = "No existe relación entre la acción y la funcionalidad especificada.
         acción :  ".$action->nombre_accion." and funcionalidad : ".$function_name;
         echo $message;
-        exit();
+        return $message;
 
     }else{
        // Verifica que el rol del usuario pueda realizar dicha acción.
@@ -54,14 +55,13 @@
 
    }catch(Exception $ex){
          $message = "Debe conectarse para ver la página";
-         echo $message;
-         exit();
+         return $message;
    }
 
        if(!$is_able){
          $message = "el usuario conectado no puede realizar dicha acción";
-         echo $message;
-         exit();
+
+         return $message;
 
        
        }else{
@@ -78,7 +78,7 @@
     }
 
 
-
+}
 
 
   

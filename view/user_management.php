@@ -52,20 +52,37 @@ $url = new moodle_url("/blocks/ases/view/user_management.php", array('courseid' 
 
 //se culta si la instancia ya está registrada
 if(!consult_instance($blockid)){
-   // header("Location: instance_configuration.php?courseid=$courseid&instanceid=$blockid");
+    header("Location: instance_configuration.php?courseid=$courseid&instanceid=$blockid");
 }
 
 //obtiene las personas asociadas al curso y los estudiantes.
 $courseusers = get_course_usersby_id($courseid);
 
+$validation = get_permission();
+$credentials = is_string($validation);
+$message="";
+$table_courseuseres= "";
 
-$students  = get_students($blockid);
+
+if ($credentials){
+ $message ='<h3><strong><p class="text-danger">'.get_permission().'</p></strong></h3>';
+}else{
+ $students  = get_students($blockid);
  $table_courseuseres = get_course_users_select($courseusers);
+ foreach ($validation as $key => $value) {
+ 	if($value->nombre_accion=='view_users'){
+ 		echo "pass";
+ 	}
+ }
+ $PAGE->requires->js_call_amd('block_ases/usermanagement_main','init');
+
+}
 
  //Crea una clase con la información que se llevará al template.
 $data = 'data';    
 $data = new stdClass;
 $data->table = $table_courseuseres;
+$data->message = $message;
 
 //configuracion de la navegación
 $coursenode = $PAGE->navigation->find($courseid, navigation_node::TYPE_COURSE);
@@ -94,7 +111,6 @@ $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/jquery.dataTables.c
 $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/jquery.dataTables.min.css', true);
 $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/jquery.dataTables_themeroller.css', true);
 $PAGE->requires->css('/blocks/ases/js/select2/css/select2.css', true);
-$PAGE->requires->js_call_amd('block_ases/usermanagement_main','init');
 
 
 

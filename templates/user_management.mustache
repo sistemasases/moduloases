@@ -3,7 +3,10 @@
     <div class="row">
         <h2>GESTIÓN DE USUARIOS</h2>
         <hr/>
-        <div class="panel-group">
+        {{#data}}
+        {{{message}}}
+        {{/data}}
+        <div id="collapse_div" class="panel-group hidden">
             <div class="panel panel-default">
                 <div class="panel-heading">
                   <h4 class="panel-title">
@@ -75,24 +78,7 @@
                     </div>{{!--end div buttons --}}
                 </div>{{!--end panel-body--}}
                 </form>
-            </div>{{!--end panel-collapse1--}}
-        <div class="panel panel-default">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                  <h4 class="panel-title" id="list-users-panel">
-                    <a data-toggle="collapse" href="#collapse2">Lista de usuarios</a>
-                  </h4>
-                </div>{{!--end panel-heading--}}
-                <div id="collapse2" class="panel-collapse collapse">
-                    <div class="panel-body">
-                        <h2>Lista de usuarios</h2>
-                    </div>
-                <div class="col-md-8 col-md-offset-2" id="div_users">
-                </div>
-                </div>
-            </div>
-        </div>{{!--end panel-default--}}
-        
+            </div>{{!--end panel-collapse1--}}        
     </div>{{!--end panel-group--}}
 </div>
 

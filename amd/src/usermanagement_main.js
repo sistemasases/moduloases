@@ -16,8 +16,8 @@ define(['jquery','block_ases/bootstrap','block_ases/datatables.net','block_ases/
   return {
       init: function() {
 
-    
-
+        $('#collapse_div').removeClass('hidden');
+  
         $("#users").select2({    
         language: {
 
