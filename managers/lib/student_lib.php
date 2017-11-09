@@ -281,7 +281,7 @@ function get_assigned_pract($id_student){
     $id_monitor = $DB->get_record_sql($sql_query)->id_monitor;
      
     if($id_monitor){
-        $sql_query = "SELECT id_jefe FROM {talentospilos_user_rol} WHERE id_usuario = ".$id_monitor.";";
+        $sql_query = "SELECT id_jefe FROM {talentospilos_user_rol} WHERE id_usuario = ".$id_monitor." AND id_semestre = ".$object_current_semester->id.";";
         $id_trainee = $DB->get_record_sql($sql_query)->id_jefe; 
 
         if($id_trainee){
