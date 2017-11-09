@@ -251,7 +251,9 @@ function get_assigned_monitor($id_student){
      
     global $DB;
     
-    $sql_query = "SELECT id_monitor FROM {talentospilos_monitor_estud} WHERE id_estudiante =".$id_student.";";
+    $object_current_semester = get_current_semester_today();
+
+    $sql_query = "SELECT id_monitor FROM {talentospilos_monitor_estud} WHERE id_estudiante =".$id_student." AND id_semestre = ".$object_current_semester->id.";";
     $id_monitor = $DB->get_record_sql($sql_query)->id_monitor;
     
     if($id_monitor){
@@ -273,26 +275,28 @@ function get_assigned_monitor($id_student){
 */
 function get_assigned_pract($id_student){
      
-     global $DB;
+    global $DB;
      
-     $sql_query = "SELECT id_monitor FROM {talentospilos_monitor_estud} WHERE id_estudiante =".$id_student.";";
-     $id_monitor = $DB->get_record_sql($sql_query)->id_monitor;
-     
-     if($id_monitor){
-         $sql_query = "SELECT id_jefe FROM {talentospilos_user_rol} WHERE id_usuario = ".$id_monitor.";";
-         $id_trainee = $DB->get_record_sql($sql_query)->id_jefe; 
+    $object_current_semester = get_current_semester_today();
 
-         if($id_trainee){
-            $sql_query = "SELECT id, firstname, lastname, email FROM {user} WHERE id = ".$id_trainee;
-            $trainee_object = $DB->get_record_sql($sql_query);
-         }else{
-            $trainee_object = array();
-         }
-     }else{
-         $trainee_object = array();
-     }
+    $sql_query = "SELECT id_monitor FROM {talentospilos_monitor_estud} WHERE id_estudiante =".$id_student." AND id_semestre = ".$object_current_semester->id.";";
+    $id_monitor = $DB->get_record_sql($sql_query)->id_monitor;
+     
+    if($id_monitor){
+        $sql_query = "SELECT id_jefe FROM {talentospilos_user_rol} WHERE id_usuario = ".$id_monitor.";";
+        $id_trainee = $DB->get_record_sql($sql_query)->id_jefe; 
+
+        if($id_trainee){
+           $sql_query = "SELECT id, firstname, lastname, email FROM {user} WHERE id = ".$id_trainee;
+           $trainee_object = $DB->get_record_sql($sql_query);
+        }else{
+           $trainee_object = array();
+        }
+    }else{
+        $trainee_object = array();
+    }
     
-     return $trainee_object;
+    return $trainee_object;
 }
 
 /**
