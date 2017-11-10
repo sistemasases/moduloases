@@ -62,18 +62,22 @@ $validation = get_permission();
 $credentials = is_string($validation);
 $message="";
 $table_courseuseres= "";
+$view_users ="";
+$search_users ="";
 
 
 if ($credentials){
  $message ='<h3><strong><p class="text-danger">'.get_permission().'</p></strong></h3>';
+
 }else{
  $students  = get_students($blockid);
  $table_courseuseres = get_course_users_select($courseusers);
+
  foreach ($validation as $key => $value) {
- 	if($value->nombre_accion=='view_users'){
- 		echo "pass";
- 	}
+ ${$value->nombre_accion}=true;
  }
+
+
  $PAGE->requires->js_call_amd('block_ases/usermanagement_main','init');
 
 }
@@ -83,6 +87,8 @@ $data = 'data';
 $data = new stdClass;
 $data->table = $table_courseuseres;
 $data->message = $message;
+$data->view_users=$view_users;
+$data->search_users = $search_users;
 
 //configuracion de la navegación
 $coursenode = $PAGE->navigation->find($courseid, navigation_node::TYPE_COURSE);
@@ -116,6 +122,7 @@ $PAGE->requires->css('/blocks/ases/js/select2/css/select2.css', true);
 
 $output = $PAGE->get_renderer('block_ases');
 $index_page = new \block_ases\output\user_management_page($data);
+
 
 echo $output->header();
 
