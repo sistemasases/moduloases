@@ -13,8 +13,6 @@ function get_user_moodle($id){
     
     global $DB;
 
-
-
     $sql_query = "SELECT * from {user} where id=(SELECT userid
     FROM {user_info_data} info_data INNER JOIN {user_info_field} info_field ON info_data.fieldid = info_field.id
     where info_data.fieldid=(select id from  {user_info_field} where shortname='idtalentos') and info_data.data='$id')";
@@ -251,7 +249,9 @@ function get_assigned_monitor($id_student){
      
     global $DB;
     
-    $sql_query = "SELECT id_monitor FROM {talentospilos_monitor_estud} WHERE id_estudiante =".$id_student.";";
+    $object_current_semester = get_current_semester_today();
+
+    $sql_query = "SELECT id_monitor FROM {talentospilos_monitor_estud} WHERE id_estudiante =".$id_student." AND id_semestre = ".$object_current_semester->id.";";
     $id_monitor = $DB->get_record_sql($sql_query)->id_monitor;
     
     if($id_monitor){
@@ -273,26 +273,28 @@ function get_assigned_monitor($id_student){
 */
 function get_assigned_pract($id_student){
      
-     global $DB;
+    global $DB;
      
-     $sql_query = "SELECT id_monitor FROM {talentospilos_monitor_estud} WHERE id_estudiante =".$id_student.";";
-     $id_monitor = $DB->get_record_sql($sql_query)->id_monitor;
-     
-     if($id_monitor){
-         $sql_query = "SELECT id_jefe FROM {talentospilos_user_rol} WHERE id_usuario = ".$id_monitor.";";
-         $id_trainee = $DB->get_record_sql($sql_query)->id_jefe; 
+    $object_current_semester = get_current_semester_today();
 
-         if($id_trainee){
-            $sql_query = "SELECT id, firstname, lastname, email FROM {user} WHERE id = ".$id_trainee;
-            $trainee_object = $DB->get_record_sql($sql_query);
-         }else{
-            $trainee_object = array();
-         }
-     }else{
-         $trainee_object = array();
-     }
+    $sql_query = "SELECT id_monitor FROM {talentospilos_monitor_estud} WHERE id_estudiante =".$id_student." AND id_semestre = ".$object_current_semester->id.";";
+    $id_monitor = $DB->get_record_sql($sql_query)->id_monitor;
+     
+    if($id_monitor){
+        $sql_query = "SELECT id_jefe FROM {talentospilos_user_rol} WHERE id_usuario = ".$id_monitor." AND id_semestre = ".$object_current_semester->id.";";
+        $id_trainee = $DB->get_record_sql($sql_query)->id_jefe; 
+
+        if($id_trainee){
+           $sql_query = "SELECT id, firstname, lastname, email FROM {user} WHERE id = ".$id_trainee;
+           $trainee_object = $DB->get_record_sql($sql_query);
+        }else{
+           $trainee_object = array();
+        }
+    }else{
+        $trainee_object = array();
+    }
     
-     return $trainee_object;
+    return $trainee_object;
 }
 
 /**
@@ -305,8 +307,10 @@ function get_assigned_pract($id_student){
 function get_assigned_professional($id_student){
      
      global $DB;
+
+     $object_current_semester = get_current_semester_today();
      
-     $sql_query = "SELECT id_monitor FROM {talentospilos_monitor_estud} WHERE id_estudiante =".$id_student.";";
+     $sql_query = "SELECT id_monitor FROM {talentospilos_monitor_estud} WHERE id_estudiante =".$id_student." AND id_semestre = ".$object_current_semester->id.";";
      $id_monitor = $DB->get_record_sql($sql_query)->id_monitor;
      
      if($id_monitor){

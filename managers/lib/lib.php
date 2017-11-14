@@ -77,7 +77,6 @@ function isMonOrPract($USER){
     }
 }
 
-
 /**
 * Funcion que retorna el rol en ases de un usuario dado el id de moodle.
 *
@@ -92,6 +91,7 @@ function get_role_ases($id){
   
     return $rol;
   }
+
   
 
 /**
@@ -191,4 +191,32 @@ function get_asigned_by_profesional($id){
     }
     return $asign;
 }
+
+
+
+/**
+* Función que retorna el semestre actual considerando la fecha actual
+*
+* @param void
+* @return semester array object or zero if error
+*/
+
+function get_current_semester_today(){
+
+    global $DB;
+    
+    date_default_timezone_set('America/Bogota');
+    $today = time();
+
+    $sql_query = "SELECT * FROM {talentospilos_semestre}";
+    $array_periods = $DB->get_records_sql($sql_query);
+    
+    foreach($array_periods as $period){
+        if(strtotime($period->fecha_inicio) < $today && strtotime($period->fecha_fin) > $today){
+            return $period;
+        }
+    }
+
+    return 0;
+}  
 

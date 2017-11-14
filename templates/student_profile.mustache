@@ -228,6 +228,9 @@
                           <div class="row" align="center">
                             <button type="button" id="view_graphic_button">Ver gráfico</button>
                           </div>
+                          <div class="row" align="center">
+                            <button type="button" id="view_graphic_risk_button" class="btn-grafico-riesgo">Ver gráfico de riesgo</button>
+                          </div>
                           
                           <div class="{{individual_class}} col-sm-12" id="individual_risk">
                             <span><b>INDIVIDUAL</b></span>
@@ -362,7 +365,60 @@
                   </div>
                   <!-- End academic tab -->
 
-                  {{{geographic_tab}}}
+                  <!-- Geographic tab-->
+                  <div class="tab-pane" id="geographic_tab">
+                    <div class="row">
+                      <div class="col-sm-4">
+                        <div class="form-group">
+                          <label for="latitude" class="col-sm-3">Latitud</label>
+                          <div class="col-sm-9">
+                            <input type="number" class="form-control" id="latitude" name="latitude" value={{latitude}} placeholder="Digite latitud" disabled/>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-sm-5">
+                        <div class="form-group">
+                          <label for="select_neighborhood" class="col-sm-6">Barrio residencia</label>
+                          <div class="col-sm-6">
+                            <select class="form-control" name="select_neighborhood" id="select_neighborhood" disabled>
+                                {{{select_neighborhoods}}}
+                            </select>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-sm-3">
+                        <div class="form-group" id="div_edit_button">
+                          <button type="button" class="button btn-danger" id="button_edit_geographic">Editar</button>
+                        </div>
+                        <div class="form-group" id="div_save_buttons" hidden>
+                          <button type="button" class="button btn-success" id="button_save_geographic">Aceptar</button>
+                          <button type="button" class="button btn-danger" id="button_cancel_geographic">Cancelar</button>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-sm-4">
+                        <div class="form-group">
+                          <label for="longitude" class="col-sm-3">Longitud</label>
+                          <div class="col-sm-9">
+                            <input type="number" class="form-control" id="longitude" name="longitude" value={{longitude}} placeholder="Digite longitud" disabled/>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-sm-5">
+                        <div class="form-group">
+                          <label for="select_geographic_risk" class="col-sm-6">Riesgo geográfico</label>
+                          <div class="col-sm-6">
+                            <select class="form-control" name="geographic_risk" id="select_geographic_risk" disabled>
+                              {{{select_geographic_risk}}}
+                            </select>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                
+                  <!-- End geographic tab -->
+                </div>
             </div>
             <!-- Fin Pestañas ficha -->
             </div>
@@ -691,5 +747,288 @@
     </div>
   </div>
   <!-- End modal retiro-->
+
+    <!-- Modal gráfica de riesgos-->
+  <div class="mymodal" id="modal_riesgos" name="modal_dropout">
+    <div class="mymodal-content">
+      <div class="mymodal-header col-sm-12">
+        <div class="col-sm-11">
+          <h4 class="" id="myModalLabel">Hitórico de riesgo para el periodo: {{{nombrePeriodoSeguimiento}}}</h4>  
+        </div>
+        <div class="col-sm-1">
+          <span id="mymodal-riesgo-close" class="mymodal-close" aria-hidden="true">&times;</span>
+        </div>        
+      </div>
+      <div class="mymodal-body col-sm-12">
+                <div class="graficaHistoricoDimensional" width="900" height="110">
+                    <span>Dimensión: Individual</span>
+                    <canvas id="myChart_individual" width="900" height="110"></canvas>
+                </div><br>
+                <div class="graficaHistoricoDimensional" width="900" height="110">
+                    <span>Dimensión: Familiar</span>
+                    <canvas id="myChart_familiar" width="900" height="110"></canvas>
+                </div><br>
+                <div class="graficaHistoricoDimensional" width="900" height="110">
+                    <span>Dimensión: Academico</span>
+                    <canvas id="myChart_academico" width="900" height="110"></canvas>
+                </div><br>
+                <div class="graficaHistoricoDimensional" width="900" height="110">
+                    <span>Dimensión: Económico</span>
+                    <canvas id="myChart_economico" width="900" height="110"></canvas>
+                </div><br>
+                <div class="graficaHistoricoDimensional" width="900" height="110">
+                    <span>Dimensión: Vida universitaria</span>
+                    <canvas id="myChart_vida_universitaria" width="900" height="110"></canvas>
+                </div>
+            <!--</div> -->
+      </div>
+      <div class="mymodal-footer">.</div>
+    </div>
+  </div>
+  <!-- End modal retiro-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.0/Chart.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.0/Chart.bundle.min.js"></script>
+<script>
+  var ctx_individual = document.getElementById("myChart_individual").getContext('2d');
+    var ctx_familiar = document.getElementById("myChart_familiar").getContext('2d');
+    var ctx_academico = document.getElementById("myChart_academico").getContext('2d');
+    var ctx_economico = document.getElementById("myChart_economico").getContext('2d');
+    var ctx_vida_universitaria = document.getElementById("myChart_vida_universitaria").getContext('2d');
+    var myChart_individual = new Chart(ctx_individual, {
+        type: 'line',
+        data: {
+          
+            labels: [
+              {{#datosSeguimientoEstudianteIndividual}}
+                "{{fecha}}",
+              {{/datosSeguimientoEstudianteIndividual}}
+              ],
+            datasets: [{
+                label: 'Nivel de riesgo',
+                fill: false,
+                lineTension: 0,
+                pointBackgroundColor: [
+                    {{#datosSeguimientoEstudianteIndividual}}
+                        {{#datos}}
+                            "{{color}}",
+                        {{/datos}}
+                    {{/datosSeguimientoEstudianteIndividual}}
+                    ],
+                data: [
+                  {{#datosSeguimientoEstudianteIndividual}}
+                    {{#datos}}
+                        "{{riesgo}}",
+                    {{/datos}}
+                  {{/datosSeguimientoEstudianteIndividual}}
+                  ],
+                backgroundColor: 'black',
+                borderColor: 'black',
+                borderWidth: 3,
+                pointRadius: 5,
+                pointHoverRadius: 7
+            }]
+        },
+        options: {
+            legend: {
+                display: false
+            },
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero:true
+                    }
+                }]
+            }
+        }
+    });
+    var myChart_familiar = new Chart(ctx_familiar, {
+        type: 'line',
+        data: {
+          
+            labels: [
+              {{#datosSeguimientoEstudianteFamiliar}}
+                "{{fecha}}",
+              {{/datosSeguimientoEstudianteFamiliar}}
+              ],
+            datasets: [{
+                label: 'Nivel de riesgo',
+                fill: false,
+                lineTension: 0,
+                pointBackgroundColor: [
+                    {{#datosSeguimientoEstudianteFamiliar}}
+                        {{#datos}}
+                            "{{color}}",
+                        {{/datos}}
+                    {{/datosSeguimientoEstudianteFamiliar}}
+                    ],
+                data: [
+                  {{#datosSeguimientoEstudianteFamiliar}}
+                    {{#datos}}
+                        "{{riesgo}}",
+                    {{/datos}}
+                  {{/datosSeguimientoEstudianteFamiliar}}
+                  ],
+                backgroundColor: 'black',
+                borderColor: 'black',
+                borderWidth: 3,
+                pointRadius: 5,
+                pointHoverRadius: 7
+            }]
+        },
+        options: {
+            legend: {
+                display: false
+            },
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero:true
+                    }
+                }]
+            }
+        }
+    });
+    var myChart_academico = new Chart(ctx_academico, {
+        type: 'line',
+        data: {
+          
+            labels: [
+              {{#datosSeguimientoEstudianteAcademico}}
+                "{{fecha}}",
+              {{/datosSeguimientoEstudianteAcademico}}
+              ],
+            datasets: [{
+                label: 'Nivel de riesgo',
+                fill: false,
+                lineTension: 0,
+                pointBackgroundColor: [
+                    {{#datosSeguimientoEstudianteAcademico}}
+                        {{#datos}}
+                            "{{color}}",
+                        {{/datos}}
+                    {{/datosSeguimientoEstudianteAcademico}}
+                    ],
+                data: [
+                  {{#datosSeguimientoEstudianteAcademico}}
+                    {{#datos}}
+                        "{{riesgo}}",
+                    {{/datos}}
+                  {{/datosSeguimientoEstudianteAcademico}}
+                  ],
+                backgroundColor: 'black',
+                borderColor: 'black',
+                borderWidth: 3,
+                pointRadius: 5,
+                pointHoverRadius: 7
+            }]
+        },
+        options: {
+            legend: {
+                display: false
+            },
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero:true
+                    }
+                }]
+            }
+        }
+    });
+    var myChart_economico = new Chart(ctx_economico, {
+        type: 'line',
+        data: {
+          
+            labels: [
+              {{#datosSeguimientoEstudianteEconomico}}
+                "{{fecha}}",
+              {{/datosSeguimientoEstudianteEconomico}}
+              ],
+            datasets: [{
+                label: 'Nivel de riesgo',
+                fill: false,
+                lineTension: 0,
+                pointBackgroundColor: [
+                    {{#datosSeguimientoEstudianteEconomico}}
+                        {{#datos}}
+                            "{{color}}",
+                        {{/datos}}
+                    {{/datosSeguimientoEstudianteEconomico}}
+                    ],
+                data: [
+                  {{#datosSeguimientoEstudianteEconomico}}
+                    {{#datos}}
+                        "{{riesgo}}",
+                    {{/datos}}
+                  {{/datosSeguimientoEstudianteEconomico}}
+                  ],
+                backgroundColor: 'black',
+                borderColor: 'black',
+                borderWidth: 3,
+                pointRadius: 5,
+                pointHoverRadius: 7
+            }]
+        },
+        options: {
+            legend: {
+                display: false
+            },
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero:true
+                    }
+                }]
+            }
+        }
+    });
+    var myChart_vida_universitaria = new Chart(ctx_vida_universitaria, {
+        type: 'line',
+        data: {
+          
+            labels: [
+              {{#datosSeguimientoEstudianteVidaUniversitaria}}
+                "{{fecha}}",
+              {{/datosSeguimientoEstudianteVidaUniversitaria}}
+              ],
+            datasets: [{
+                label: 'Nivel de riesgo',
+                fill: false,
+                lineTension: 0,
+                pointBackgroundColor: [
+                    {{#datosSeguimientoEstudianteVidaUniversitaria}}
+                        {{#datos}}
+                            "{{color}}",
+                        {{/datos}}
+                    {{/datosSeguimientoEstudianteVidaUniversitaria}}
+                    ],
+                data: [
+                  {{#datosSeguimientoEstudianteVidaUniversitaria}}
+                    {{#datos}}
+                        "{{riesgo}}",
+                    {{/datos}}
+                  {{/datosSeguimientoEstudianteVidaUniversitaria}}
+                  ],
+                backgroundColor: 'black',
+                borderColor: 'black',
+                borderWidth: 3,
+                pointRadius: 5,
+                pointHoverRadius: 7
+            }]
+        },
+        options: {
+            legend: {
+                display: false
+            },
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero:true
+                    }
+                }]
+            }
+        }
+    });
+</script>
 {{/data}}
 </body>  
