@@ -59,6 +59,42 @@ function get_functions_by_name($name)
 //Acciones.
 
 /**
+ * Función que obtiene las accion de la tabla {talentospilos_accion} por nombre
+ * @see  get_action_by_name($name)
+ * @param id ---> nombre de la acción
+ * @return Object
+ **/
+
+function get_action_by_name($name)
+{
+    global $DB;
+    
+    $sql_query = "SELECT * FROM {talentospilos_accion} WHERE nombre_accion ='$name'";
+    return $DB->get_record_sql($sql_query);
+}
+
+/* Función que retorna si deacuerdo al rol el usuario puede hacer una acción especifica
+* @see get_action_by_role($id_action,$id_role)
+* @param $id_action --> id de la accion
+* @param $id_role --> id del rol
+* @return Object
+*/
+function get_action_by_role($id_action,$id_role){
+    global $DB;
+    $sql_query = "SELECT id_accion,nombre_accion  FROM {talentospilos_permisos_rol}  permisos INNER JOIN {talentospilos_accion}   accion ON permisos.id_accion = accion.id where accion.id='$id_action' and id_rol='$id_role' and estado=1";
+    $consulta = $DB->get_record_sql($sql_query);
+    if($consulta){
+        return true;
+    }else{
+
+        return false;
+    }
+}
+
+
+
+
+/**
  * Función que obtiene las accion de la tabla {talentospilos_accion} por id
  * @see get_action_by_id($id)
  * @param id ---> id de acción

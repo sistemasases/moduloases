@@ -30,7 +30,7 @@ require_once($CFG->libdir.'/adminlib.php');
 require_once('../managers/instance_management/instance_lib.php');
 require_once('../managers/user_management/user_lib.php');
 require_once('../managers/user_management/user_functions.php');
-require_once('../managers/usermanagement_view.php');
+require_once('../managers/view_usermanagement.php');
 
 global $PAGE;
 
@@ -64,7 +64,8 @@ $message="";
 $table_courseuseres= "";
 $view_users ="";
 $search_users ="";
-
+$data = 'data';    
+$data = new stdClass;
 
 if ($credentials){
  $message ='<h3><strong><p class="text-danger">'.get_permission().'</p></strong></h3>';
@@ -74,21 +75,23 @@ if ($credentials){
  $table_courseuseres = get_course_users_select($courseusers);
 
  foreach ($validation as $key => $value) {
- ${$value->nombre_accion}=true;
- }
 
+ ${$value->nombre_accion}=true;
+
+ $name= $value->nombre_accion;
+ $data->$name=$name;
+ }
 
  $PAGE->requires->js_call_amd('block_ases/usermanagement_main','init');
 
 }
 
  //Crea una clase con la información que se llevará al template.
-$data = 'data';    
-$data = new stdClass;
+
 $data->table = $table_courseuseres;
 $data->message = $message;
-$data->view_users=$view_users;
-$data->search_users = $search_users;
+
+
 
 //configuracion de la navegación
 $coursenode = $PAGE->navigation->find($courseid, navigation_node::TYPE_COURSE);
