@@ -229,7 +229,7 @@
                             <button type="button" id="view_graphic_button">Ver gráfico</button>
                           </div>
                           <div class="row" align="center">
-                            <button type="button" id="view_graphic_risk_button" onclick="graficar()" class="btn-grafico-riesgo">Ver gráfico de riesgo</button>
+                            <button type="button" id="view_graphic_risk_button" class="btn-grafico-riesgo">Ver gráfico de riesgo</button>
                           </div>
                           
                           <div class="{{individual_class}} col-sm-12" id="individual_risk">
@@ -786,8 +786,8 @@
     </div>
   </div>
   <!-- End modal retiro-->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.0/Chart.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.0/Chart.bundle.min.js"></script>
+<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.0/Chart.min.js"></script>-->
+<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.0/Chart.bundle.min.js"></script>-->
   <span style="display:none;" id="datos">{ "informacion":[
     {"dimension":"individual", "datos":[
     {{#datosSeguimientoEstudianteIndividual}}
@@ -834,86 +834,14 @@
   </span>
 <script>
 
-  
-
-  var ctx_individual = document.getElementById("myChart_individual").getContext('2d');
-  var ctx_familiar = document.getElementById("myChart_familiar").getContext('2d');
-  var ctx_academico = document.getElementById("myChart_academico").getContext('2d');
-  var ctx_economico = document.getElementById("myChart_economico").getContext('2d');
-  var ctx_vida_universitaria = document.getElementById("myChart_vida_universitaria").getContext('2d');
-
-  var datos = JSON.parse(document.getElementById("datos").innerText);
+        var ctx_individual = document.getElementById("myChart_individual").getContext('2d');
+        var ctx_familiar = document.getElementById("myChart_familiar").getContext('2d');
+        var ctx_academico = document.getElementById("myChart_academico").getContext('2d');
+        var ctx_economico = document.getElementById("myChart_economico").getContext('2d');
+        var ctx_vida_universitaria = document.getElementById("myChart_vida_universitaria").getContext('2d');
+        var datos = JSON.parse(document.getElementById("datos").innerText);
+        var datosGraficables = [];
  
-  var datosGraficables = [];
-
-  for(var i = 0; i <  Object.keys(datos['informacion']).length; i++){
-    var arregloDimensionTmp = [];
-    var nombreDimensionTmp;
-    var fechasTmp = [];
-    var colorTmp = [];
-    var riesgoTmp = [];
-
-    nombreDimensionTmp = datos['informacion'][i]['dimension'];
-    var contador = 0;
-    while(datos['informacion'][i]['datos'][contador]['end'] == 'false'){
-      fechasTmp.push(datos['informacion'][i]['datos'][contador]['fecha']);
-      colorTmp.push(datos['informacion'][i]['datos'][contador]['color']);
-      riesgoTmp.push(datos['informacion'][i]['datos'][contador]['riesgo']);
-      contador = contador + 1;
-    }
-    arregloDimensionTmp.push(nombreDimensionTmp);
-    arregloDimensionTmp.push(fechasTmp);
-    arregloDimensionTmp.push(colorTmp);
-    arregloDimensionTmp.push(riesgoTmp);
-    datosGraficables.push(arregloDimensionTmp);
-  }
-
-  function graficar(){
-    var myChart_individual = generar(datosGraficables[0],ctx_individual);
-    var myChart_familiar = generar(datosGraficables[1],ctx_familiar);
-    var myChart_academico = generar(datosGraficables[2],ctx_academico);
-    var myChart_economico = generar(datosGraficables[3],ctx_economico);
-    var myChart_vida_universitaria = generar(datosGraficables[4],ctx_vida_universitaria);
-  }
-    
-
-    /*Generador de gráficas*/
-    function generar(datos, destino, canvas){
-      return new Chart(destino, {
-          type: 'line',
-          data: {
-            
-              labels: datos[1],
-              datasets: [{
-                  label: 'Nivel de riesgo',
-                  fill: false,
-                  lineTension: 0,
-                  pointBackgroundColor: datos[2],
-                  data: datos[3],
-                  backgroundColor: 'black',
-                  borderColor: 'black',
-                  borderWidth: 3,
-                  pointRadius: 5,
-                  pointHoverRadius: 7
-              }]
-          },
-          options: {
-              legend: {
-                  display: false
-              },
-              scales: {
-                  yAxes: [{
-                      ticks: {
-                          beginAtZero:true,
-                          stepSize: 1,
-                          max : 3,    
-                          min : 0
-                      }
-                  }]
-              }
-          }
-      });
-    };
 </script>
 {{/data}}
 </body>  
