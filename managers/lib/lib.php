@@ -77,7 +77,6 @@ function isMonOrPract($USER){
     }
 }
 
-
 /**
 * Funcion que retorna el rol en ases de un usuario dado el id de moodle.
 *
@@ -92,4 +91,132 @@ function get_role_ases($id){
   
     return $rol;
   }
+
   
+
+/**
+* Funcion que retorna un select con los estudiantes asignados a un usuario de rol profesional, practicante, o monitor y "ROL NO PERMITIDO" si es otro rol.
+*
+* @param $id
+* @return String-> $select
+*/
+function make_select_ficha($id){
+    global $DB;
+  
+    $rol = get_role_ases($id);
+
+    $asign = "<select name = 'asignados' id = 'asignados'>";
+
+    if($rol == 'profesional_ps'){
+        $asign .= get_asigned_by_profesional($id);
+
+    }elseif($rol == 'practicante_ps'){
+        $asign .= get_asigned_by_practicante($id);
+
+    }elseif($rol == 'monitor_ps'){
+        $asign .= get_asigned_by_monitor($id);
+    }else{
+        $asign = "ROL NO PERMITIDO";
+        return $asign;
+    }
+    $asign .= "</select>";
+    return $asign;
+  }
+
+/**
+* Funcion que retorna los estudiantes asignados a un usuario de rol monitor
+*
+* @param $id
+* @return String-> $asign
+*/
+
+function get_asigned_by_monitor($id){
+    global $DB;
+
+    $query = "SELECT user_m.username, user_m.firstname, user_m.lastname
+              FROM {user} user_m
+              INNER JOIN {user_info_data} data ON data.userid = user_m.id
+              INNER JOIN {user_info_field} field ON data.fieldid = field.id
+              INNER JOIN {talentospilos_monitor_estud} mon_es ON data.data = CAST(mon_es.id_estudiante AS VARCHAR)
+              WHERE mon_es.id_monitor = $id AND field.shortname = 'idtalentos'";
+    $asign = "";
+
+    $result = $DB->get_records_sql($query);
+    foreach($result as $student){
+        $asign .= "<option>$student->username $student->firstname $student->lastname </option>";
+    }
+    return $asign;
+}
+
+/**
+* Funcion que retorna los estudiantes asignados a un usuario de rol practicante
+*
+* @param $id
+* @return String-> $asign
+*/
+
+function get_asigned_by_practicante($id){
+    global $DB;
+    $query = "SELECT rol.id_usuario
+              FROM {talentospilos_user_rol} rol
+              WHERE rol.id_jefe = $id";
+    $asign = "";
+
+    $result = $DB->get_records_sql($query);
+
+    foreach($result as $id_mon){
+        $asign .= get_asigned_by_monitor($id_mon->id_usuario);
+    }
+    return $asign;
+}
+
+/**
+* Funcion que retorna los estudiantes asignados a un usuario de rol profesional
+*
+* @param $id
+* @return String-> $asign
+*/
+
+function get_asigned_by_profesional($id){
+    global $DB;
+    $query = "SELECT rol.id_usuario
+              FROM {talentospilos_user_rol} rol
+              WHERE rol.id_jefe = $id";
+    $asign = "";
+
+    $result = $DB->get_records_sql($query);
+
+    foreach($result as $id_prac){
+        $asign .= get_asigned_by_practicante($id_prac->id_usuario);
+    }
+    return $asign;
+}
+
+
+
+/**
+* Función que retorna el semestre actual considerando la fecha actual
+*
+* @param void
+* @return semester array object or zero if error
+*/
+
+function get_current_semester_today(){
+
+    global $DB;
+    
+    date_default_timezone_set('America/Bogota');
+    $today = time();
+
+    $sql_query = "SELECT * FROM {talentospilos_semestre}";
+    $array_periods = $DB->get_records_sql($sql_query);
+    
+    foreach($array_periods as $period){
+        if(strtotime($period->fecha_inicio) < $today && strtotime($period->fecha_fin) > $today){
+            return $period;
+        }
+    }
+
+    return 0;
+}  
+

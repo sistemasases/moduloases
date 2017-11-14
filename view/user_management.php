@@ -67,10 +67,12 @@ $search_users ="";
 $data = 'data';    
 $data = new stdClass;
 
+
 if ($credentials){
  $message ='<h3><strong><p class="text-danger">'.get_permission().'</p></strong></h3>';
 
 }else{
+
  $students  = get_students($blockid);
  $table_courseuseres = get_course_users_select($courseusers);
 
