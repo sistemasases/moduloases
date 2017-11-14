@@ -5,6 +5,37 @@ require_once(dirname(__FILE__) . '/../periods_management/periods_lib.php');
 require_once(dirname(__FILE__) . '/../role_management/role_management_lib.php');
 
 
+
+/**
+ * Función que verifica si un usuario ya tiene un rol asignado
+ * @see verify_user_assign($username, $idinstancia)
+ * @param $username ---> username del usuario
+ * @param $instancia ---> id de la instancia actual
+ * @return boolean
+ **/
+
+function verify_user_assign($username,$instancia){
+    global $DB;
+
+    $sql_query = "SELECT * FROM {user} WHERE username ='$username';";
+    $object_user = $DB->get_record_sql($sql_query);
+
+    $query_semestre = "SELECT * FROM {talentospilos_semestre} WHERE id = (SELECT MAX(id) FROM {talentospilos_semestre})";
+    $object_semester = $DB->get_record_sql($query_semestre);
+
+
+    $sql_query_user = "SELECT * from mdl_talentospilos_user_rol where id_instancia='$instancia' and id_usuario='$object_user->id' and id_semestre='$object_semester->id' and estado=0";
+    
+    $is_assign = $DB->get_record_sql($sql_query_user);
+
+
+    if($is_assign){
+        return true;
+    }else{
+        return false;
+    }
+}
+
 /*
  * Función que retorna un arreglo con todos los estudiantes filtrados por estado de ases activo, cohorte y que no se encuentran asignados a otro monitor.
  * @param $instanceid

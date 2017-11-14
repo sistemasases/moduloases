@@ -30,7 +30,7 @@ require_once($CFG->libdir.'/adminlib.php');
 require_once('../managers/instance_management/instance_lib.php');
 require_once('../managers/user_management/user_lib.php');
 require_once('../managers/user_management/user_functions.php');
-//require_once('../managers/usermanagement_view.php');
+require_once('../managers/view_usermanagement.php');
 
 global $PAGE;
 
@@ -52,20 +52,48 @@ $url = new moodle_url("/blocks/ases/view/user_management.php", array('courseid' 
 
 //se culta si la instancia ya está registrada
 if(!consult_instance($blockid)){
-   // header("Location: instance_configuration.php?courseid=$courseid&instanceid=$blockid");
+    header("Location: instance_configuration.php?courseid=$courseid&instanceid=$blockid");
 }
 
 //obtiene las personas asociadas al curso y los estudiantes.
 $courseusers = get_course_usersby_id($courseid);
 
+$validation = get_permission();
+$credentials = is_string($validation);
+$message="";
+$table_courseuseres= "";
+$view_users ="";
+$search_users ="";
+$data = 'data';    
+$data = new stdClass;
+
+
+if ($credentials){
+ $message ='<h3><strong><p class="text-danger">'.get_permission().'</p></strong></h3>';
+
+}else{
 
  $students  = get_students($blockid);
  $table_courseuseres = get_course_users_select($courseusers);
 
+ foreach ($validation as $key => $value) {
+
+ ${$value->nombre_accion}=true;
+
+ $name= $value->nombre_accion;
+ $data->$name=$name;
+ }
+
+ $PAGE->requires->js_call_amd('block_ases/usermanagement_main','init');
+
+}
+
  //Crea una clase con la información que se llevará al template.
-$data = 'data';    
-$data = new stdClass;
+
 $data->table = $table_courseuseres;
+$data->message = $message;
+
+
 
 //configuracion de la navegación
 $coursenode = $PAGE->navigation->find($courseid, navigation_node::TYPE_COURSE);
@@ -94,12 +122,12 @@ $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/jquery.dataTables.c
 $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/jquery.dataTables.min.css', true);
 $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/jquery.dataTables_themeroller.css', true);
 $PAGE->requires->css('/blocks/ases/js/select2/css/select2.css', true);
-$PAGE->requires->js_call_amd('block_ases/usermanagement_main','init');
 
 
 
 $output = $PAGE->get_renderer('block_ases');
 $index_page = new \block_ases\output\user_management_page($data);
+
 
 echo $output->header();
 

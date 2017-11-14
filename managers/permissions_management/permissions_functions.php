@@ -33,16 +33,17 @@ function get_functions_actions(){
 
 /**
  * Función que obtiene un select con un array dado.
- * @see get_profiles_table()
- * @param $profiles --> array 
+ * @see get_roles_select($roles,$nombre_rol)
+ * @param $roles --> array 
+ * @param $nombre_rol --> nombre que se designara al select
  * @return String
  **/
-function get_profiles_select($profiles,$nombre_rol){
+function get_roles_select($roles,$nombre_rol){
 	$table = "";
  	$table.='<select class="form-pilos" id="'.$nombre_rol.'">';
     $table.='<option></option>';
-    foreach($profiles as $profile){
-            $table.='<option value="'.$profile->id.'">'.$profile->nombre_rol.'</option>';
+    foreach($roles as $role){
+            $table.='<option value="'.$role->id.'">'.$role->nombre_rol.'</option>';
      }
     $table.='</select>';
     return $table;
