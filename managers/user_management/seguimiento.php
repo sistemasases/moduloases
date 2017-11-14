@@ -3,6 +3,7 @@ require_once(dirname(__FILE__). '/../../../../config.php');
 require_once(dirname(__FILE__).'/../seguimiento_grupal/seguimientogrupal_lib.php');
 require_once(dirname(__FILE__).'/../student_profile/studentprofile_lib.php');
 require_once(dirname(__FILE__).'/../lib/student_lib.php');
+require_once('user_functions.php');
 
 require_once('user_lib.php');
 
@@ -41,6 +42,13 @@ if(isset($_POST['function'])){
             $students = get_students($_POST["instancia"]);
             echo json_encode($students);
             break;
+
+        case "students_select":
+             $students = get_students($_POST["instancia"]);
+             $select_students =get_students_option($students);
+             echo $select_students;
+             break;
+
         default:
             $msg =  new stdClass();
             $msg->error = "Error";

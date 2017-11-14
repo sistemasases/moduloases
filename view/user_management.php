@@ -59,7 +59,7 @@ if(!consult_instance($blockid)){
 $courseusers = get_course_usersby_id($courseid);
 
 
-$students  = get_students($blockid);
+ $students  = get_students($blockid);
  $table_courseuseres = get_course_users_select($courseusers);
 
  //Crea una clase con la información que se llevará al template.
