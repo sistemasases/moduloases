@@ -26,37 +26,61 @@
 
 // Standard GPL and phpdocs
 require_once(__DIR__ . '/../../../config.php');
-require_once($CFG->libdir.'/adminlib.php');
+require_once($CFG->libdir . '/adminlib.php');
 require_once('../managers/instance_management/instance_lib.php');
+require_once('../managers/upload_data.php');
 
 global $PAGE;
 
 include("../classes/output/upload_files_page.php");
 include("../classes/output/renderer.php");
 require_once('../managers/query.php');
+
 // Set up the page.
-$title = "Carga de archivos";
+$title     = "Carga de archivos";
 $pagetitle = $title;
-$courseid = required_param('courseid', PARAM_INT);
-$blockid = required_param('instanceid', PARAM_INT);
+$courseid  = required_param('courseid', PARAM_INT);
+$blockid   = required_param('instanceid', PARAM_INT);
 
 require_login($courseid, false);
 
-//se culta si la instancia ya está registrada
-// if(!consult_instance($blockid)){
-//     header("Location: instanceconfiguration.php?courseid=$courseid&instanceid=$blockid");
-// }
-
 $contextcourse = context_course::instance($courseid);
-$contextblock =  context_block::instance($blockid);
+$contextblock  = context_block::instance($blockid);
+$url           = new moodle_url("/blocks/ases/view/upload_files_form.php", array(
+    'courseid' => $courseid,
+    'instanceid' => $blockid
+));
 
-require_capability('block/ases:configurateintance', $contextblock);
+//se culta si la instancia ya está registrada
+if (!consult_instance($blockid)) {
+    header("Location: instance_configuration.php?courseid=$courseid&instanceid=$blockid");
+}
 
-$url = new moodle_url("/blocks/ases/view/upload_files_form.php", array('courseid' => $courseid, 'instanceid' => $blockid));
+$validation  = get_permission();
+$credentials = is_string($validation);
+$data        = 'data';
+$data        = new stdClass;
+
+if ($credentials) {
+    $message = '<h3><strong><p class="text-danger">' . get_permission() . '</p></strong></h3>';
+    
+} else {
+    
+    foreach ($validation as $key => $value) {
+        
+        ${$value->nombre_accion} = true;
+        
+        $name        = $value->nombre_accion;
+        $data->$name = $name;
+    }
+    
+}
+
+$data->message = $message;
 
 //se configura la navegacion
 $coursenode = $PAGE->navigation->find($courseid, navigation_node::TYPE_COURSE);
-$node = $coursenode->add('Gestion de archivos',$url);
+$node       = $coursenode->add('Gestion de archivos', $url);
 $node->make_active();
 
 //Se configura la pagina
@@ -69,12 +93,12 @@ $PAGE->set_heading($title);
 $PAGE->requires->css('/blocks/ases/style/styles_pilos.css', true);
 $PAGE->requires->css('/blocks/ases/style/bootstrap_pilos.css', true);
 $PAGE->requires->css('/blocks/ases/style/sweetalert.css', true);
-$PAGE->requires->js_call_amd('block_ases/uploaddata_main','init');
+$PAGE->requires->js_call_amd('block_ases/uploaddata_main', 'init');
 
 
 $output = $PAGE->get_renderer('block_ases');
 
 echo $output->header();
-$upload_files_page = new \block_ases\output\upload_files_page('Some text');
+$upload_files_page = new \block_ases\output\upload_files_page($data);
 echo $output->render($upload_files_page);
 echo $output->footer();
