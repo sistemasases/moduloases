@@ -28,8 +28,11 @@
 require_once(__DIR__ . '/../../../config.php');
 require_once($CFG->libdir.'/adminlib.php');
 require_once('../managers/query.php');
+require_once('../managers/upload_data.php');
 include('../lib.php');
+
 global $PAGE;
+
 require_once('../managers/instance_management/instance_lib.php');
 
 include("../classes/output/mass_role_management.php");
@@ -47,7 +50,33 @@ $contextcourse = context_course::instance($courseid);
 $contextblock =  context_block::instance($blockid);
 
 $url = new moodle_url("/blocks/ases/view/mass_role_management.php",array('courseid' => $courseid, 'instanceid' => $blockid));
-//$url =  $CFG->wwwroot."/blocks/ases/view/index.php?courseid=".$courseid."&instanceid=".$blockid;
+
+//se oculta si la instancia ya está registrada
+if(!consult_instance($blockid)){
+    header("Location: instance_configuration.php?courseid=$courseid&instanceid=$blockid");
+}
+
+$validation  = get_permission();
+$credentials = is_string($validation);
+$data        = 'data';
+$data        = new stdClass;
+
+if ($credentials) {
+    $message = '<h3><strong><p class="text-danger">' . get_permission() . '</p></strong></h3>';
+    $data->message = $message;
+
+} else {
+    
+    foreach ($validation as $key => $value) {
+        
+        ${$value->nombre_accion} = true;
+        
+        $name        = $value->nombre_accion;
+        $data->$name = $name;
+    }
+    
+}
+
 
 //Configuracion de la navegacion
 $coursenode = $PAGE->navigation->find($courseid, navigation_node::TYPE_COURSE);
@@ -55,10 +84,7 @@ $blocknode = navigation_node::create('Roles y Seguimientos',$url, null, 'block',
 $coursenode->add_node($blocknode);
 $blocknode->make_active();
 
-//se culta si la instancia ya está registrada
-if(!consult_instance($blockid)){
-    header("Location: instance_configuration.php?courseid=$courseid&instanceid=$blockid");
-}
+
 
 
 $PAGE->requires->css('/blocks/ases/style/styles_pilos.css', true);
@@ -88,17 +114,7 @@ $PAGE->set_title($title);
 $PAGE->set_heading($title);
 
 $output = $PAGE->get_renderer('block_ases');
-$index_page = new \block_ases\output\mass_role_management('Some text');
-
-// if(true){
-//     $url = new moodle_url("/blocks/ases/view/instanceconfiguration.php",array('courseid' => $courseid, 'instanceid' => $blockid));
-//     $PAGE->set_url($url);
-//     $output = $PAGE->get_renderer('block_ases');
-//     $index_page = new \block_ases\output\instanceconfiguration_page('Some text');
-// }
-
-//echo $output->standard_head_html(); 
+$index_page = new \block_ases\output\mass_role_management($data);
 echo $output->header();
-
 echo $output->render($index_page);
 echo $output->footer();
