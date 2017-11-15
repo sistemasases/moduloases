@@ -3,6 +3,33 @@ require_once('permissions_lib.php');
 
 
 /**
+ * Función que crea variables dinamicamente deacuerdo al nombre de las acciones 
+ que involucran una funcionalidad especifica.
+
+ * @see create_variablebyname($validation)
+ * @return void
+ **/
+
+ function create_variablebyname($validation){
+
+    $array_variable =[];
+
+    foreach ($validation as $key => $value) {
+        
+        ${$value->nombre_accion} = true;
+        
+        $name        = $value->nombre_accion;
+        $data->$name = $name;
+        array_push($array_variable,$name);
+        array_push($array_variable,$data->$name);
+    }
+
+    return $array_variable;
+
+ }
+
+
+/**
  * Función que obtiene las funcionalidades y sus acciones asociadas
  * @see get_functions_actions()
  * @return String
@@ -24,9 +51,6 @@ function get_functions_actions(){
 
     }
     return $table;
-
-
-
 }
 
 

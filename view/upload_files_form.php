@@ -28,7 +28,7 @@
 require_once(__DIR__ . '/../../../config.php');
 require_once($CFG->libdir . '/adminlib.php');
 require_once('../managers/instance_management/instance_lib.php');
-require_once('../managers/upload_data.php');
+require_once('../managers/upload_files.php');
 
 global $PAGE;
 
@@ -51,7 +51,7 @@ $url           = new moodle_url("/blocks/ases/view/upload_files_form.php", array
     'instanceid' => $blockid
 ));
 
-//se culta si la instancia ya está registrada
+//se oculta si la instancia ya está registrada
 if (!consult_instance($blockid)) {
     header("Location: instance_configuration.php?courseid=$courseid&instanceid=$blockid");
 }
@@ -63,7 +63,8 @@ $data        = new stdClass;
 
 if ($credentials) {
     $message = '<h3><strong><p class="text-danger">' . get_permission() . '</p></strong></h3>';
-    
+    $data->message = $message;
+
 } else {
     
     foreach ($validation as $key => $value) {
@@ -76,7 +77,6 @@ if ($credentials) {
     
 }
 
-$data->message = $message;
 
 //se configura la navegacion
 $coursenode = $PAGE->navigation->find($courseid, navigation_node::TYPE_COURSE);

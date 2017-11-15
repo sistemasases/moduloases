@@ -70,6 +70,7 @@ $data = new stdClass;
 
 if ($credentials){
  $message ='<h3><strong><p class="text-danger">'.get_permission().'</p></strong></h3>';
+ $data->message = $message;
 
 }else{
 
@@ -91,7 +92,6 @@ if ($credentials){
  //Crea una clase con la información que se llevará al template.
 
 $data->table = $table_courseuseres;
-$data->message = $message;
 
 
 
