@@ -79,7 +79,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_as
                     }
                     userLoad();
                     $('#users').prop('disabled', true);
-                    $(".assignment_li").slideToggle("fast");
+                    $(".assignment_li").show();
                 });
 
                 $("#ok-button").on('click', function() {
@@ -201,8 +201,54 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_as
 
                 });
 
-                student_asignment();
             });
+
+            $("body").on("click", ".eliminar_add_fields", function(e) { //click en eliminar campo
+                    var count = $("#contenedor_add_fields div").length + 1;
+                    var student = $(this).parent('div').children('input').val();
+                    var parent = $(this).parent('div');
+                    if (student) {
+                        swal({
+                                title: "Estas seguro/a?",
+                                text: "Se desvinculará el prensente monitor del estudiante con codigo " + student,
+                                type: "warning",
+                                showCancelButton: true,
+                                confirmButtonColor: "#d51b23",
+                                confirmButtonText: "Si!",
+                                cancelButtonText: "No",
+                                closeOnConfirm: true,
+                            },
+                            function(isConfirm) {
+                                if (isConfirm) {
+                                    deleteStudent(student);
+                                    parent.remove(); //eliminar el campo
+                                    count--;
+                                }
+                            });
+                    }
+                });
+
+                $("#agregarCampo").click(function() {
+                    $.ajax({
+                        type: "POST",
+                        data: {
+                            function: "students_consult",
+                            instancia: getIdinstancia()
+                        },
+                        url: "../managers/user_management/seguimiento.php",
+                        success: function(msg) {
+                            students = msg;
+                            student_asignment(students);
+
+                        },
+                        dataType: "json",
+                        cache: "false",
+                        error: function(msg) {
+                            alert("error al consultar estudiantes")
+                        },
+                    });
+                });
+
 
             function roleLoad() {
                 $.ajax({
@@ -473,88 +519,30 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_as
 
             }
 
-            function student_asignment() {
+            function student_asignment(students) {
+
                 var MaxInputs = 10; //Número Maximo de Campos
                 var contenedor = $("#contenedor_add_fields"); //ID del contenedor
-                var AddButton = $("#agregarCampo"); //ID del Botón Agregar //
+                var count = $(".inputs_students").length + 1;
+                var FieldCount = count; //para el seguimiento de los campos
 
-                $.ajax({
-                    type: "POST",
-                    data: {
-                        function: "students_consult",
-                        instancia: getIdinstancia()
-                    },
-                    url: "../managers/user_management/seguimiento.php",
-                    success: function(msg) {
+                if (count <= MaxInputs) //max input box allowed
+                {
+                    FieldCount++;
+                    var text = "";
 
-                        students = msg;
-                        var count = $("#contenedor_add_fields div").length + 1;
-                        var FieldCount = count - 1; //para el seguimiento de los campos
+                    for (var student in students) {
+                        text += '<option value="' + students[student].username + '">' + students[student].username + ' - ' + students[student].firstname + ' ' + '' + students[student].lastname + '</option>';
+                    }
+                    $("#contenedor_add_fields").append('<div class="select-pilos"><select class="inputs_students" name="array_students[]" id="campo_' + FieldCount + '"">' + text + '</select></div>');
+                    create_select2('campo_' + FieldCount);
+                    count++;
+                }
 
-                        $(AddButton).click(function(e) {
-                            if (count <= MaxInputs) //max input box allowed
-                            {
-                                FieldCount++;
-                                var text = "";
-                                for (var student in students) {
-                                    text += '<option value="' + students[student].username + '">' + students[student].username + ' - ' + students[student].firstname + ' ' + '' + students[student].lastname + '</option>';
-                                }
-
-                                $("#contenedor_add_fields").append('<div class="select-pilos"><select class="form-select-pilos" name="array_students[]" id="campo_' + FieldCount + '"">' + text + '</select></div>');
-                                create_select2('campo_' + FieldCount);
-
-                                //$("#contenedor_add_fields").append('<div><input type="text" class="inputs_students" name="array_students[]" id="campo_'+ FieldCount +'" placeholder="Estudiante"/></div>');
-
-                                // $("#contenedor_add_fields").append('<div><input type="text" class="inputs_students" name="array_students[]" id="campo_'+ FieldCount +'" placeholder="Estudiante"/></div>');
-                                count++;
-                            }
-                            return false;
-                        });
-
-                        $("body").on("click", ".eliminar_add_fields", function(e) { //click en eliminar campo
-
-                            var student = $(this).parent('div').children('input').val();
-                            var parent = $(this).parent('div');
-                            if (student) {
-                                swal({
-                                        title: "Estas seguro/a?",
-                                        text: "Se desvinculará el prensente monitor del estudiante con codigo " + student,
-                                        type: "warning",
-                                        showCancelButton: true,
-                                        confirmButtonColor: "#d51b23",
-                                        confirmButtonText: "Si!",
-                                        cancelButtonText: "No",
-                                        closeOnConfirm: true,
-                                    },
-                                    function(isConfirm) {
-                                        if (isConfirm) {
-                                            deleteStudent(student);
-                                            parent.remove(); //eliminar el campo
-                                            count--;
-                                        }
-                                    });
-                            }
-
-                            // if( count > 1 ) {
-                            //     $(this).parent('div').remove(); //eliminar el campo
-                            //     count--;
-                            // }
-                            return false;
-                        });
-
-
-                    },
-                    dataType: "json",
-                    cache: "false",
-                    error: function(msg) {
-                        alert("error al consultar estudiantes")
-                    },
-                });
 
 
 
             }
-
             function loadStudents() {
                 var data = new Array();
                 var user_id = $('#user_id').val();
