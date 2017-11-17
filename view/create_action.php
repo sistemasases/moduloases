@@ -64,7 +64,6 @@ $data = $actions;
 $data->roles_table_user=$roles_table_user;
 $data->functions_table =$functions_table;
 $data->general_table=$general_table;
-var_dump($data);
 
 
 $contextcourse = context_course::instance($courseid);
