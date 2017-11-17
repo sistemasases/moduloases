@@ -1,10 +1,11 @@
 <?php
 require_once (dirname(__FILE__) . '/../../../config.php');
-require_once('permissions_management/permissions_lib.php');
-require_once('../managers/user_management/user_functions.php');
+
+require_once ('permissions_management/permissions_lib.php');
+
+require_once ('../managers/user_management/user_functions.php');
 
 global $USER;
-
 /*
 * Función que evalua si el rol del usuario tiene permisos en una view especifica.
 *
@@ -25,81 +26,93 @@ function authenticate_user_view($userid, $blockid)
 
     $function_name = explode(".php", $aux_function_name[5]) [0];
     $function = get_functions_by_name($function_name);
-    $role = get_id_rol($userid, $blockid);
-    $validation = get_actions_by_role($function->id, $role);
-    $credentials = empty($validation);
-    $message = "";
-    $table_courseuseres = "";
-    $view_users = "";
-    $search_users = "";
     $data = 'data';
     $data = new stdClass;
-    if ($credentials) {
-        $message = '<h3><strong><p class="text-danger">el usuario conectado no puede realizar dicha acción</p></strong></h3>';
-        $data->message = $message;
-        return $data;
+    if ($function) {
+        $role = get_id_rol($userid, $blockid);
+        $validation = get_actions_by_role($function->id, $role);
+        $credentials = empty($validation);
+        $message = "";
+        $table_courseuseres = "";
+        $view_users = "";
+        $search_users = "";
+
+
+        if ($credentials) {
+            $message = '<h3><strong><p class="text-danger">El usuario conectado no puede realizar dicha acción</p></strong></h3>';
+            $data->message = $message;
+            return $data;
+        }
+        else {
+            foreach($validation as $key => $value) {
+                $ {
+                    $value->nombre_accion
+                } = true;
+                $name = $value->nombre_accion;
+                $data->$name = $name;
+            }
+
+            return $data;
+        }
     }
     else {
-        foreach($validation as $key => $value) {
-            $ {
-                $value->nombre_accion
-            } = true;
-            $name = $value->nombre_accion;
-            $data->$name = $name;
-
-        }
-        return $data;
+        $message = '<h3><strong><p class="text-danger">La funcionalidad : '.$function_name.' no se encuentra registrada</p></strong></h3>';
+            $data->message = $message;
+            return $data;
     }
 }
 
-    /*
-    * Función que retorna el rol de un usuario
-    *
-    * @param $userid
-    * @param $instanceid
-    * @return Array
-    */
-    function get_id_rol($userid, $blockid)
-    {
-        global $DB;
-        $sql_query = "SELECT id_rol FROM {talentospilos_user_rol} WHERE id_usuario='$userid' AND id_instancia='$blockid'";
-        $consulta = $DB->get_records_sql($sql_query);
-        foreach($consulta as $tomarId) {
-            $idretornar = $tomarId->id_rol;
-        }
+/*
+* Función que retorna el rol de un usuario
+*
+* @param $userid
+* @param $instanceid
+* @return Array
+*/
 
-        return $idretornar;
+function get_id_rol($userid, $blockid)
+{
+    global $DB;
+    $sql_query = "SELECT id_rol FROM {talentospilos_user_rol} WHERE id_usuario='$userid' AND id_instancia='$blockid'";
+    $consulta = $DB->get_records_sql($sql_query);
+    foreach($consulta as $tomarId) {
+        $idretornar = $tomarId->id_rol;
     }
 
-    /* Función que retorna si un rol de usuario determinado puede hacer una acción
-    * @see role_is_able($role_id,$action_id)
-    * @param $role_id --> id del rol
-    * @param $action_id --> id de la acción
-    * @return boolean
-    */
-    function role_is_able($role_id, $action_id)
-    {
-        global $DB;
-        $sql_query = "SELECT * FROM {talentospilos_permisos_rol} where id_rol='$role_id' and id_accion='$action_id'";
-        $consulta = $DB->get_record_sql($sql_query);
-        if ($consulta) {
-            return true;
-        }
-        else {
-            return false;
-        }
-    }
+    return $idretornar;
+}
 
-    /* Función que retorna arreglo con las acciones que puede realizar un rol cuya funcionalidad es una especifica
-    * @see get_actions_by_role($id_functionality,$id_role)
-    * @param $id_functionality --> id del rol
-    * @param $id_role --> id de la acción
-    * @return Array
-    */
-    function get_actions_by_role($id_functionality, $id_role)
-    {
-        global $DB;
-        $sql_query = "SELECT id_accion,nombre_accion  FROM {talentospilos_permisos_rol}  permisos INNER JOIN {talentospilos_accion}   accion ON permisos.id_accion = accion.id where id_funcionalidad='$id_functionality' and id_rol='$id_role' and estado=1";
-        $consulta = $DB->get_records_sql($sql_query);
-        return $consulta;
+/* Función que retorna si un rol de usuario determinado puede hacer una acción
+* @see role_is_able($role_id,$action_id)
+* @param $role_id --> id del rol
+* @param $action_id --> id de la acción
+* @return boolean
+*/
+
+function role_is_able($role_id, $action_id)
+{
+    global $DB;
+    $sql_query = "SELECT * FROM {talentospilos_permisos_rol} where id_rol='$role_id' and id_accion='$action_id'";
+    $consulta = $DB->get_record_sql($sql_query);
+    if ($consulta) {
+        return true;
     }
+    else {
+        return false;
+    }
+}
+
+/* Función que retorna arreglo con las acciones que puede realizar un rol cuya funcionalidad es una especifica
+* @see get_actions_by_role($id_functionality,$id_role)
+* @param $id_functionality --> id del rol
+* @param $id_role --> id de la acción
+* @return Array
+*/
+
+function get_actions_by_role($id_functionality, $id_role)
+{
+    global $DB;
+    $sql_query = "SELECT id_accion,nombre_accion  FROM {talentospilos_permisos_rol}  permisos INNER JOIN {talentospilos_accion}   accion ON permisos.id_accion = accion.id where id_funcionalidad='$id_functionality' and id_rol='$id_role' and estado=1";
+    $consulta = $DB->get_records_sql($sql_query);
+    return $consulta;
+}

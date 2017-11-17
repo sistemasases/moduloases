@@ -26,13 +26,14 @@
 require_once(__DIR__ . '/../../../config.php');
 require_once($CFG->libdir.'/adminlib.php');
 require_once('../managers/permissions_management/permissions_functions.php');
+require_once ('../managers/permissions_management/permissions_lib.php');
+require_once ('../managers/validate_profile_action.php'); 
 include('../lib.php');
 global $PAGE;
 
 include("../classes/output/create_action_page.php");
 require_once('../managers/user_management/user_lib.php');
 include("../classes/output/renderer.php");
-//require_once('../managers/query.php');
 
 
 // Set up the page.
@@ -54,13 +55,16 @@ $function = get_functions();
 $functions_table = get_functions_select($function,"functions");
 $general_table  = get_functions_actions();
 
-
-$data = 'data';    
+//Crea una clase con la información que se llevará al template.   
 $data = new stdClass;
+
+// Evalua si el rol del usuario tiene permisos en esta view.
+$actions = authenticate_user_view($USER->id, $blockid);
+$data = $actions;
 $data->roles_table_user=$roles_table_user;
 $data->functions_table =$functions_table;
 $data->general_table=$general_table;
-
+var_dump($data);
 
 
 $contextcourse = context_course::instance($courseid);
