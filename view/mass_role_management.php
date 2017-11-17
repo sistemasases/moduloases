@@ -28,9 +28,8 @@
 require_once(__DIR__ . '/../../../config.php');
 require_once($CFG->libdir.'/adminlib.php');
 require_once('../managers/query.php');
-require_once('../managers/upload_data.php');
-include('../lib.php');
-
+require_once ('../managers/permissions_management/permissions_lib.php');
+require_once ('../managers/validate_profile_action.php');include('../lib.php');
 global $PAGE;
 
 require_once('../managers/instance_management/instance_lib.php');
@@ -56,26 +55,14 @@ if(!consult_instance($blockid)){
     header("Location: instance_configuration.php?courseid=$courseid&instanceid=$blockid");
 }
 
-$validation  = get_permission();
-$credentials = is_string($validation);
-$data        = 'data';
-$data        = new stdClass;
+// Crea una clase con la información que se llevará al template.
+$data = 'data';
+$data = new stdClass;
 
-if ($credentials) {
-    $message = '<h3><strong><p class="text-danger">' . get_permission() . '</p></strong></h3>';
-    $data->message = $message;
+// Evalua si el rol del usuario tiene permisos en esta view.
+$actions = authenticate_user_view($USER->id, $blockid);
+$data = $actions;
 
-} else {
-    
-    foreach ($validation as $key => $value) {
-        
-        ${$value->nombre_accion} = true;
-        
-        $name        = $value->nombre_accion;
-        $data->$name = $name;
-    }
-    
-}
 
 
 //Configuracion de la navegacion

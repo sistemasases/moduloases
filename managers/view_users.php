@@ -14,7 +14,7 @@
       global $USER;
       $message = '';
       $continue = true;
-      $accion = '30';
+      $accion = '29';
 
       $id_instancia =required_param('instanceid', PARAM_INT);
       $moodle_id = $USER->id; 

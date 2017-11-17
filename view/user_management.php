@@ -25,88 +25,68 @@
  */
 
 // Standard GPL and phpdocs
-require_once(__DIR__ . '/../../../config.php');
-require_once($CFG->libdir.'/adminlib.php');
-require_once('../managers/instance_management/instance_lib.php');
-require_once('../managers/user_management/user_lib.php');
-require_once('../managers/user_management/user_functions.php');
-require_once('../managers/view_usermanagement.php');
+
+require_once (__DIR__ . '/../../../config.php');
+require_once ($CFG->libdir . '/adminlib.php');
+require_once ('../managers/instance_management/instance_lib.php');
+require_once ('../managers/user_management/user_lib.php');
+require_once ('../managers/user_management/user_functions.php');
+require_once ('../managers/permissions_management/permissions_lib.php');
+require_once ('../managers/validate_profile_action.php');
 
 global $PAGE;
-
-include("../classes/output/user_management_page.php");
-include("../classes/output/renderer.php");
-
+include ("../classes/output/user_management_page.php");
+include ("../classes/output/renderer.php");
 
 // Variables for setup the page.
+
 $title = "Gestionar Roles";
 $pagetitle = $title;
 $courseid = required_param('courseid', PARAM_INT);
 $blockid = required_param('instanceid', PARAM_INT);
-
 require_login($courseid, false);
-
 $contextcourse = context_course::instance($courseid);
-$contextblock =  context_block::instance($blockid);
-$url = new moodle_url("/blocks/ases/view/user_management.php", array('courseid' => $courseid, 'instanceid' => $blockid));
+$contextblock = context_block::instance($blockid);
+$url = new moodle_url("/blocks/ases/view/user_management.php", array(
+	'courseid' => $courseid,
+	'instanceid' => $blockid
+));
 
-//se culta si la instancia ya está registrada
-if(!consult_instance($blockid)){
-    header("Location: instance_configuration.php?courseid=$courseid&instanceid=$blockid");
+// Se oculta si la instancia ya está registrada
+
+if (!consult_instance($blockid)) {
+	header("Location: instance_configuration.php?courseid=$courseid&instanceid=$blockid");
 }
 
-//obtiene las personas asociadas al curso y los estudiantes.
-$courseusers = get_course_usersby_id($courseid);
+// Obtiene las personas asociadas al curso y los estudiantes.
 
-$validation = get_permission();
-$credentials = is_string($validation);
-$message="";
-$table_courseuseres= "";
-$view_users ="";
-$search_users ="";
-$data = 'data';    
+$courseusers = get_course_usersby_id($courseid);
+$table_courseuseres = get_course_users_select($courseusers);
+
+// Crea una clase con la información que se llevará al template.
+$data = 'data';
 $data = new stdClass;
 
-
-if ($credentials){
- $message ='<h3><strong><p class="text-danger">'.get_permission().'</p></strong></h3>';
- $data->message = $message;
-
-}else{
-
- $students  = get_students($blockid);
- $table_courseuseres = get_course_users_select($courseusers);
-
- foreach ($validation as $key => $value) {
-
- ${$value->nombre_accion}=true;
-
- $name= $value->nombre_accion;
- $data->$name=$name;
- }
-
- $PAGE->requires->js_call_amd('block_ases/usermanagement_main','init');
-
-}
-
- //Crea una clase con la información que se llevará al template.
+// Evalua si el rol del usuario tiene permisos en esta view.
+$actions = authenticate_user_view($USER->id, $blockid);
+$data = $actions;
 
 $data->table = $table_courseuseres;
+$PAGE->requires->js_call_amd('block_ases/usermanagement_main', 'init');
 
+// Configuracion de la navegación
 
-
-//configuracion de la navegación
 $coursenode = $PAGE->navigation->find($courseid, navigation_node::TYPE_COURSE);
-$node = $coursenode->add('Gestion de roles del bloque',$url);
+$node = $coursenode->add('Gestion de roles del bloque', $url);
 $node->make_active();
 
 // Setup page
+
 $PAGE->set_context($contextcourse);
 $PAGE->set_context($contextblock);
 $PAGE->set_url($url);
 $PAGE->set_title($title);
 $PAGE->set_heading($title);
-
 $PAGE->requires->css('/blocks/ases/style/styles_pilos.css', true);
 $PAGE->requires->css('/blocks/ases/style/bootstrap_pilos.css', true);
 $PAGE->requires->css('/blocks/ases/style/bootstrap_pilos.min.css', true);
@@ -122,9 +102,7 @@ $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/jquery.dataTables.c
 $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/jquery.dataTables.min.css', true);
 $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/jquery.dataTables_themeroller.css', true);
 $PAGE->requires->css('/blocks/ases/js/select2/css/select2.css', true);
-
-
-
+$output = $PAGE->get_renderer('block_ases');
 $output = $PAGE->get_renderer('block_ases');
 $index_page = new \block_ases\output\user_management_page($data);
 
