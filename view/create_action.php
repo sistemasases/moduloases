@@ -26,13 +26,14 @@
 require_once(__DIR__ . '/../../../config.php');
 require_once($CFG->libdir.'/adminlib.php');
 require_once('../managers/permissions_management/permissions_functions.php');
+require_once ('../managers/permissions_management/permissions_lib.php');
+require_once ('../managers/validate_profile_action.php'); 
 include('../lib.php');
 global $PAGE;
 
 include("../classes/output/create_action_page.php");
 require_once('../managers/user_management/user_lib.php');
 include("../classes/output/renderer.php");
-//require_once('../managers/query.php');
 
 
 // Set up the page.
@@ -44,42 +45,26 @@ $blockid = required_param('instanceid', PARAM_INT);
 require_login($courseid, false);
 
 
-//Obtiene los perfiles.
-$profiles = get_profiles();
-$profiles_table= get_profiles_select($profiles,"profiles_prof");
-$profiles_table_user= get_profiles_select($profiles,"profiles_user");
+//Obtiene los roles.
+$roles = get_roles();
+$roles_table_user= get_roles_select($roles,"profiles_user");
 
-//obtiene acciones 
-$actions = get_actions();
-$actions_table = get_actions_select($actions);
 
 //obtiene funcionalidades
 $function = get_functions();
 $functions_table = get_functions_select($function,"functions");
-
 $general_table  = get_functions_actions();
 
-
-//obtiene usuarios 
-$courseusers = get_course_usersby_id($courseid);
-$table_courseuseres='<select class="form-pilos" id="users">';
-$table_courseuseres.='<option value=""> ---------------------------------------</option>';
-foreach ($courseusers as $courseuser) {
-    $table_courseuseres.='<option value="'.$courseuser->codigo.'">'.$courseuser->codigo.' - '.$courseuser->nombre.' '.$courseuser->apellido.'</option>';
-}
-$table_courseuseres.="</select>";
-
-
-
-$data = 'data';    
+//Crea una clase con la información que se llevará al template.   
 $data = new stdClass;
-$data->profiles_table =$profiles_table;
-$data->actions_table = $actions_table;
-$data->table_courseuseres=$table_courseuseres;
-$data->profiles_table_user=$profiles_table_user;
+
+// Evalua si el rol del usuario tiene permisos en esta view.
+$actions = authenticate_user_view($USER->id, $blockid);
+$data = $actions;
+$data->roles_table_user=$roles_table_user;
 $data->functions_table =$functions_table;
 $data->general_table=$general_table;
-
+var_dump($data);
 
 
 $contextcourse = context_course::instance($courseid);

@@ -3,6 +3,33 @@ require_once('permissions_lib.php');
 
 
 /**
+ * Función que crea variables dinamicamente deacuerdo al nombre de las acciones 
+ que involucran una funcionalidad especifica.
+
+ * @see create_variablebyname($validation)
+ * @return void
+ **/
+
+ function create_variablebyname($validation){
+
+    $array_variable =[];
+
+    foreach ($validation as $key => $value) {
+        
+        ${$value->nombre_accion} = true;
+        
+        $name        = $value->nombre_accion;
+        $data->$name = $name;
+        array_push($array_variable,$name);
+        array_push($array_variable,$data->$name);
+    }
+
+    return $array_variable;
+
+ }
+
+
+/**
  * Función que obtiene las funcionalidades y sus acciones asociadas
  * @see get_functions_actions()
  * @return String
@@ -24,25 +51,23 @@ function get_functions_actions(){
 
     }
     return $table;
-
-
-
 }
 
 
 
 /**
  * Función que obtiene un select con un array dado.
- * @see get_profiles_table()
- * @param $profiles --> array 
+ * @see get_roles_select($roles,$nombre_rol)
+ * @param $roles --> array 
+ * @param $nombre_rol --> nombre que se designara al select
  * @return String
  **/
-function get_profiles_select($profiles,$nombre_rol){
+function get_roles_select($roles,$nombre_rol){
 	$table = "";
  	$table.='<select class="form-pilos" id="'.$nombre_rol.'">';
     $table.='<option></option>';
-    foreach($profiles as $profile){
-            $table.='<option value="'.$profile->id.'">'.$profile->nombre_rol.'</option>';
+    foreach($roles as $role){
+            $table.='<option value="'.$role->id.'">'.$role->nombre_rol.'</option>';
      }
     $table.='</select>';
     return $table;
