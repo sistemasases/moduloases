@@ -1,11 +1,17 @@
 <div class="container">
     <div class="row">
         <div class="col-lg-6 col-md-6 col-sm-12 col-lg-offset-3">
-            <h2>Gestion Masiva de Roles y Seguimientos</h2>
+            <h2>GESTIÓN MASIVA DE ROLES Y SEGUIMIENTOS</h2>
             <hr />
+            {{#data}}
+            {{{message}}}
+            {{/data}}
         </div>
     </div>
     <div class="row">
+    {{#data}}
+       {{#upload_data}}
+
             <div id="respuesta" class="col-lg-6 col-md-6 col-lg-offset-3">
                 <form id='form' class="form-inline" role="form" >
                   <div class="form-group">
@@ -37,6 +43,8 @@
                  
              </div>
         </div>
+      {{/upload_data}}
+    {{/data}}
     </div> 
     <div class="row col-lg-6 col-md-6 col-lg-offset-3" id="informacion" style="overflow:auto; height:200px;">
   

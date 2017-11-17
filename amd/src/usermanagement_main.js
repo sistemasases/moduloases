@@ -14,7 +14,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_as
     return {
         init: function() {
 
-
+            $('#collapse_div').removeClass('hidden');
 
             $("#users").select2({
                 language: {
@@ -30,6 +30,36 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_as
                 },
                 dropdownAutoWidth: true,
             });
+
+
+            function evaluate_permission(name_permission) {
+                var result;
+                $.ajax({
+                    type: "POST",
+                    data: {
+                        data: "get_info_permission",
+                        instance: getIdinstancia(),
+                        name_permission: name_permission
+                    },
+                    url: "../managers/permissions_management/permissions_report.php",
+                    async: false,
+                    success: function(msg) {
+                        result = msg;
+                    },
+                    dataType: "text",
+                    cache: "false",
+                    error: function(msg) {
+                        swal({
+                            title: "error al evaluar permisos de la página",
+                            html: true,
+                            type: "error",
+                            confirmButtonColor: "#d51b23"
+                        });
+                    },
+                });
+
+                return result;
+            }
 
             $(document).ready(function() {
                 var roleLoaded = false;
@@ -49,22 +79,26 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_as
                     }
                     userLoad();
                     $('#users').prop('disabled', true);
-                    $(".assignment_li").slideToggle("fast");
+                    $(".assignment_li").show();
                 });
 
                 $("#ok-button").on('click', function() {
                     var rolchanged = $('#role_select').val();
                     userLoad(null, function(msg) {
+
                         if (msg.rol == 'monitor_ps' && msg.rol != rolchanged) {
                             var currentUser = new Array();
                             currentUser.id = $('#user_id').val();
                             currentUser.username = $("#users").val();
                             valdateStudentMonitor(currentUser, false);
                         } else {
-                            updateRolUser();
-                            load_users();
-                        }
 
+
+                                updateRolUser();
+                                load_users();
+                            
+
+                        }
                     });
 
                 });
@@ -163,10 +197,13 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_as
                             }
                         }
                     );
+
+
                 });
 
+            });
 
-                $("body").on("click", ".eliminar_add_fields", function(e) { //click en eliminar campo
+            $("body").on("click", ".eliminar_add_fields", function(e) { //click en eliminar campo
                     var count = $("#contenedor_add_fields div").length + 1;
                     var student = $(this).parent('div').children('input').val();
                     var parent = $(this).parent('div');
@@ -211,8 +248,6 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_as
                         },
                     });
                 });
-
-            });
 
 
             function roleLoad() {
@@ -326,133 +361,139 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_as
                 var dataUsername = $('#users').val();
                 var dataStudents = new Array();
 
-                $('input[name="array_students[]"]').each(function() {
-                    dataStudents.push($(this).val().split(" - ")[0]);
+                 var permissions = evaluate_permission("update_role");
+                    if (permissions == 'true') {
 
-                });
 
-                $('select[name="array_students[]"]').each(function() {
-                    dataStudents.push($(this).val().split(" - ")[0]);
+                    $('input[name="array_students[]"]').each(function() {
+                        dataStudents.push($(this).val().split(" - ")[0]);
 
-                });
+                    });
 
-                if (dataRole == "profesional_ps") {
+                    $('select[name="array_students[]"]').each(function() {
+                        dataStudents.push($(this).val().split(" - ")[0]);
 
-                    var dataProfessional = $('#select_prof_type').val();
-                    if (dataProfessional == "no_asignado") {
-                        swal("Error", "El usuario no tiene un \"tipo de profesional\" asignado, debe asignar un \"tipo de profesional\".", "error")
-                    } else {
-                        var data = {
-                            role: dataRole,
-                            username: dataUsername,
-                            professional: dataProfessional,
-                            idinstancia: getIdinstancia()
-                        };
+                    });
+
+                    if (dataRole == "profesional_ps") {
+
+                        var dataProfessional = $('#select_prof_type').val();
+                        if (dataProfessional == "no_asignado") {
+                            swal("Error", "El usuario no tiene un \"tipo de profesional\" asignado, debe asignar un \"tipo de profesional\".", "error")
+                        } else {
+                            var data = {
+                                role: dataRole,
+                                username: dataUsername,
+                                professional: dataProfessional,
+                                idinstancia: getIdinstancia()
+                            };
+                            $.ajax({
+                                type: "POST",
+
+                                data: data,
+                                url: "../managers/user_management/update_role_user.php",
+                                success: function(msg) {
+
+                                    swal("Información!", msg, "info");
+                                    userLoad(dataUsername);
+                                },
+                                dataType: "text",
+                                cache: "false",
+                                error: function(msg) {
+                                    swal("Error", "Ha ocurrido un error asignando profesional", "error")
+                                },
+                            });
+                        }
+                    } else if (dataRole == "monitor_ps") {
+                        var boss_id = $('#boss_select').val();
+
                         $.ajax({
                             type: "POST",
-
-                            data: data,
+                            data: {
+                                role: dataRole,
+                                username: dataUsername,
+                                students: dataStudents,
+                                boss: boss_id,
+                                idinstancia: getIdinstancia()
+                            },
                             url: "../managers/user_management/update_role_user.php",
                             success: function(msg) {
 
-                                swal("Información!", msg, "info");
+                                alert(msg);
+
+
+                                swal({
+                                    title: "Información!",
+                                    text: msg,
+                                    type: "info",
+                                    html: true,
+                                    confirmButtonColor: "#d51b23",
+                                    confirmButtonText: "Ok!",
+                                    closeOnConfirm: true
+                                });
                                 userLoad(dataUsername);
+
                             },
                             dataType: "text",
                             cache: "false",
                             error: function(msg) {
-                                swal("Error", "Ha ocurrido un error asignando profesional", "error")
+                                swal("Error", "Ha ocurrido un error", "error")
+                            },
+                        });
+                    } else if (dataRole == "practicante_ps") {
+                        var boss_id = $('#boss_select').val();
+
+                        $.ajax({
+                            type: "POST",
+                            data: {
+                                role: dataRole,
+                                username: dataUsername,
+                                boss: boss_id,
+                                idinstancia: getIdinstancia()
+                            },
+                            url: "../managers/user_management/update_role_user.php",
+                            success: function(msg) {
+                                swal({
+                                    title: "Información!",
+                                    text: msg,
+                                    type: "info",
+                                    html: true,
+                                    confirmButtonColor: "#d51b23",
+                                    confirmButtonText: "Ok!",
+                                    closeOnConfirm: true
+                                });
+                                userLoad(dataUsername);
+
+                            },
+                            dataType: "text",
+                            cache: "false",
+                            error: function(msg) {
+                                swal("Error", "Ha ocurrido un error", "error")
+                            },
+                        });
+                    } else {
+                        $.ajax({
+                            type: "POST",
+                            data: {
+                                role: dataRole,
+                                username: dataUsername,
+                                idinstancia: getIdinstancia()
+                            },
+                            url: "../managers/user_management/update_role_user.php",
+                            success: function(msg) {
+                                swal("Información!", msg, "info");
+                            },
+                            dataType: "text",
+                            cache: "false",
+                            error: function(msg) {
+                                swal("Error", "Ha ocurrido un error", "error")
                             },
                         });
                     }
-                } else if (dataRole == "monitor_ps") {
-                    var boss_id = $('#boss_select').val();
-
-                    $.ajax({
-                        type: "POST",
-                        data: {
-                            role: dataRole,
-                            username: dataUsername,
-                            students: dataStudents,
-                            boss: boss_id,
-                            idinstancia: getIdinstancia()
-                        },
-                        url: "../managers/user_management/update_role_user.php",
-                        success: function(msg) {
-
-                            alert(msg);
-
-
-                            swal({
-                                title: "Información!",
-                                text: msg,
-                                type: "info",
-                                html: true,
-                                confirmButtonColor: "#d51b23",
-                                confirmButtonText: "Ok!",
-                                closeOnConfirm: true
-                            });
-                            userLoad(dataUsername);
-
-                        },
-                        dataType: "text",
-                        cache: "false",
-                        error: function(msg) {
-                            swal("Error", "Ha ocurrido un error", "error")
-                        },
-                    });
-                } else if (dataRole == "practicante_ps") {
-                    var boss_id = $('#boss_select').val();
-
-                    $.ajax({
-                        type: "POST",
-                        data: {
-                            role: dataRole,
-                            username: dataUsername,
-                            boss: boss_id,
-                            idinstancia: getIdinstancia()
-                        },
-                        url: "../managers/user_management/update_role_user.php",
-                        success: function(msg) {
-                            swal({
-                                title: "Información!",
-                                text: msg,
-                                type: "info",
-                                html: true,
-                                confirmButtonColor: "#d51b23",
-                                confirmButtonText: "Ok!",
-                                closeOnConfirm: true
-                            });
-                            userLoad(dataUsername);
-
-                        },
-                        dataType: "text",
-                        cache: "false",
-                        error: function(msg) {
-                            swal("Error", "Ha ocurrido un error", "error")
-                        },
-                    });
-                } else {
-                    $.ajax({
-                        type: "POST",
-                        data: {
-                            role: dataRole,
-                            username: dataUsername,
-                            idinstancia: getIdinstancia()
-                        },
-                        url: "../managers/user_management/update_role_user.php",
-                        success: function(msg) {
-                            swal("Información!", msg, "info");
-                        },
-                        dataType: "text",
-                        cache: "false",
-                        error: function(msg) {
-                            swal("Error", "Ha ocurrido un error", "error")
-                        },
-                    });
+                
+                }else{
+                    swal("Error", "el usuario conectado no puede realizar dicha acción", "error")
                 }
-
-
             }
 
 
@@ -502,7 +543,6 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_as
 
 
             }
-
             function loadStudents() {
                 var data = new Array();
                 var user_id = $('#user_id').val();

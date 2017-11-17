@@ -2,6 +2,11 @@
     <div class="col-sm-6">
         <h2>Carga de datos</h2>
         <hr />
+        {{#data}}
+        {{{message}}}
+        {{/data}}
+        {{#data}}
+        {{#upload_files}}
         <div class="row">
             <form class="form-horizontal" id="upload_data_form">
                 <div class="form-group">
@@ -59,10 +64,23 @@
         <div id="response_div" hidden="hidden">
             <h2>Respuesta del servidor</h2>
             <hr />
-            <div class="col-sm-12" id="response_span"></div>
-        </div>
-    </div>
+            <div class="form-group">
+               <button type="button" class="btn-primary col-sm-2 col-sm-offset-3" id="load_button">Cargar</button>
+               <button type="button" class="btn-primary col-sm-2 col-sm-offset-1" id="goback_button">Atrás</button>
+            </div>
+         </form>
+      </div>
+   </div>
+   <div class="col-sm-6">
+      <div id="response_div" hidden="hidden">
+         <h2>Respuesta del servidor</h2>
+         <hr />
+         <div class="col-sm-12" id="response_span"></div>
+      </div>
+   </div>
 </div>
 <div class="container">
-    <!-- Espacio para mostrar los archivos ya cargados -->
+   <!-- Espacio para mostrar los archivos ya cargados -->
 </div>
+{{/upload_files}}
+{{/data}}

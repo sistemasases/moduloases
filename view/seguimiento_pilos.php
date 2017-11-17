@@ -78,9 +78,10 @@ $email = $USER->email;
 $seguimientotable ="";
 $globalArregloPares = [];
 $globalArregloGrupal =[];
+$table="";
+$table_periods="";
 
 $periods = get_semesters();
-
 
 //obtiene el intervalo de fechas del ultimo semestre
 $intervalo_fechas[0] = reset($periods)->fecha_inicio;
@@ -158,14 +159,6 @@ $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/dataTables.tableToo
 $PAGE->requires->css('/blocks/ases/style/sweetalert.css', true);
 $PAGE->requires->css('/blocks/ases/js/select2/css/select2.css', true);
 $PAGE->requires->js_call_amd('block_ases/pilos_tracing_main','init');
-
-
-
-//$PAGE->requires->css('/theme/base/style/core.css',true);
-
-$PAGE->set_context($contextcourse);
-
-$PAGE->set_context($contextblock);
 $PAGE->set_url($url);
 $PAGE->set_title($title);
 

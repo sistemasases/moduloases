@@ -28,7 +28,8 @@
 require_once(__DIR__ . '/../../../config.php');
 require_once($CFG->libdir.'/adminlib.php');
 require_once('../managers/lib/lib.php');
-
+require_once ('../managers/permissions_management/permissions_lib.php');
+require_once ('../managers/validate_profile_action.php');
 global $PAGE;
 
 include("../classes/output/instance_configuration_page.php");
@@ -45,7 +46,6 @@ require_login($courseid, false);
 $contextcourse = context_course::instance($courseid);
 $contextblock =  context_block::instance($blockid);
 
-require_capability('block/ases:configurateintance', $contextblock);
 
 $url = new moodle_url("/blocks/ases/view/instance_configuration.php",array('courseid' => $courseid, 'instanceid' => $blockid));
 
@@ -55,7 +55,13 @@ $blocknode = navigation_node::create($title,$url, null, 'block', $blockid);
 $coursenode->add_node($blocknode);
 $blocknode->make_active();
 
+// Crea una clase con la información que se llevará al template.
 $object_to_render = new stdClass();
+
+
+// Evalua si el rol del usuario tiene permisos en esta view.
+$actions = authenticate_user_view($USER->id, $blockid);
+$object_to_render = $actions;
 
 // Carga programas académicos
 $array_programs = load_programs_cali();
