@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<XMLDB PATH="blocks/ases/db" VERSION="20170906" COMMENT="XMLDB file for Moodle blocks/configurable_reports"
+<XMLDB PATH="blocks/ases/db" VERSION="20171120" COMMENT="XMLDB file for Moodle blocks/configurable_reports"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
 >
@@ -714,6 +714,16 @@
         <KEY NAME="estado_icetex_fk" TYPE="foreign" FIELDS="id_estado_icetex" REFTABLE="talentospilos_estados_icetex" REFFIELDS="id" COMMENT="Clave foránea a la tabla talentospilos_estado_icetex"/>
         <KEY NAME="id_estudiante_fk" TYPE="foreign" FIELDS="id_estudiante" REFTABLE="talentospilos_usuario" REFFIELDS="id" COMMENT="Clave foránea a la tabla talentospilos_usuario"/>
         <KEY NAME="motivos_retiros_fk" TYPE="foreign" FIELDS="id_motivo_retiro" REFTABLE="talentospilos_motivos" REFFIELDS="id" COMMENT="Clave foránea a la tabla talentospilos_motivos"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="changeme" COMMENT="Default comment for the table, please edit me">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="id_director" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="false" COMMENT="Identificador del director. Se relacina con la tabla user de Moodle."/>
+        <FIELD NAME="id_programa" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="false" COMMENT="Identificador del programa académico. Se relaciona con la tabla talentospilos_programa"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
       </KEYS>
     </TABLE>
   </TABLES>
