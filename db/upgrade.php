@@ -12,7 +12,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
 
     // Drop constraint
 
-    $sql_sentence = "ALTER TABLE {talentospilos_funcionalidad} DROP CONSTRAINT mdl_talenfunc_nom_uk";
+    $sql_sentence = "ALTER TABLE {talentospilos_funcionalidad} DROP CONSTRAINT mdl_talefunc_nom_uk";
     $DB->execute($sql_sentence);
     // Drop index
 
