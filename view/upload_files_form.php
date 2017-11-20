@@ -65,7 +65,7 @@ $data = new stdClass;
 $actions = authenticate_user_view($USER->id, $blockid);
 $data = $actions;
 
-print_r($data);
+
 
 //se configura la navegacion
 $coursenode = $PAGE->navigation->find($courseid, navigation_node::TYPE_COURSE);

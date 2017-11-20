@@ -12,8 +12,8 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
 
     // Drop index
 
-    $sql_sentence = "DROP INDEX mdl_talefunc_nom_uix";
-    $DB->execute($sql_sentence);
+    //$sql_sentence = "DROP INDEX mdl_talefunc_nom_uix";
+    //$DB->execute($sql_sentence);
 
     // Changing precision of field nombre_func on table talentospilos_funcionalidad to (200).
     $table = new xmldb_table('talentospilos_funcionalidad');
