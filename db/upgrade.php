@@ -8,7 +8,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
 
     $result = true;
 
-    if ($oldversion < 2017110116289) {
+    if ($oldversion < 2017111715539) {
 
     //     // Define field id_funcionalidad to be added to talentospilos_accion.
     //     $table = new xmldb_table('talentospilos_accion');
@@ -61,7 +61,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
 
    
     // Ases savepoint reached.
-    upgrade_block_savepoint(true, 2017110116289, 'ases');
+    upgrade_block_savepoint(true, 2017111715539, 'ases');
    
     return $result;
     }

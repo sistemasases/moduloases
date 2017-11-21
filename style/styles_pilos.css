@@ -1444,5 +1444,7 @@ input.no-borde-fondo.tema
 .top-buffer { margin-top:60px; }
 
 
-
+.select2.select2-container.select2-container--default{
+  width: 125px !important;
+}
 
