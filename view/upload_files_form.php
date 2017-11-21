@@ -65,6 +65,8 @@ $data = new stdClass;
 $actions = authenticate_user_view($USER->id, $blockid);
 $data = $actions;
 
+
+
 //se configura la navegacion
 $coursenode = $PAGE->navigation->find($courseid, navigation_node::TYPE_COURSE);
 $node       = $coursenode->add('Gestion de archivos', $url);

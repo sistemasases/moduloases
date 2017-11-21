@@ -8,60 +8,55 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
 
     $result = true;
 
-    if ($oldversion < 2017110116289) {
+    if ($oldversion < 2017111715539) {
 
-    //     // Define field id_funcionalidad to be added to talentospilos_accion.
-    //     $table = new xmldb_table('talentospilos_accion');
-    //     $field = new xmldb_field('id_funcionalidad', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null, 'estado');
+    // Drop constraint
 
-    //     // Conditionally launch add field id_funcionalidad.
-    //     if (!$dbman->field_exists($table, $field)) {
-    //         $dbman->add_field($table, $field);
-    //     }
+        // Define table talentospilos_funcionalidad to be dropped.
+        $table = new xmldb_table('talentospilos_funcionalidad');
+        
+        // Conditionally launch drop table for talentospilos_funcionalidad.
+        if ($dbman->table_exists($table)) {
+            $dbman->drop_table($table);
+        }
 
-    //     // Define key funcionalidad_fk1 (foreign) to be added to talentospilos_accion.
-    //     $table = new xmldb_table('talentospilos_accion');
-    //     $key = new xmldb_key('funcionalidad_fk1', XMLDB_KEY_FOREIGN, array('id_funcionalidad'), 'talentospilos_funcionalidad', array('id'));
+    // Define table talentospilos_funcionalidad to be created.
+    $table = new xmldb_table('talentospilos_funcionalidad');
+    
+    // Adding fields to table talentospilos_funcionalidad.
+    $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+    $table->add_field('nombre_func', XMLDB_TYPE_CHAR, '200', null, XMLDB_NOTNULL, null, null);
+    $table->add_field('descripcion', XMLDB_TYPE_CHAR, '150', null, null, null, null);
 
-    //     // Launch add key funcionalidad_fk1.
-    //     $dbman->add_key($table, $key);
+    // Adding keys to table talentospilos_funcionalidad.
+    $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+    $table->add_key('unique', XMLDB_KEY_UNIQUE, array('nombre_func'));
 
+    // Conditionally launch create table for talentospilos_funcionalidad.
+    if (!$dbman->table_exists($table)) {
+        $dbman->create_table($table);
+    }
 
+    // Define table talentospilos_director_prog to be created.
+    $table = new xmldb_table('talentospilos_director_prog');
+    
+    // Adding fields to table talentospilos_director_prog.
+    $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+    $table->add_field('id_director', XMLDB_TYPE_INTEGER, '20', null, XMLDB_NOTNULL, null, null);
+    $table->add_field('id_programa', XMLDB_TYPE_INTEGER, '20', null, XMLDB_NOTNULL, null, null);
 
-    //   // Define table talentospilos_permisos_rol to be dropped.
-    //     $table = new xmldb_table('talentospilos_permisos_rol');
+    // Adding keys to table talentospilos_director_prog.
+    $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+    $table->add_key('id_director_fk', XMLDB_KEY_FOREIGN, array('id_director'), 'user', array('id'));
+    $table->add_key('id_programa_fk', XMLDB_KEY_FOREIGN, array('id_programa'), 'talentospilos_programa', array('id'));
 
-    //     // Conditionally launch drop table for talentospilos_permisos_rol.
-    //     if ($dbman->table_exists($table)) {
-    //         $dbman->drop_table($table);
-    //     }
-
-    //   // Define table talentospilos_permisos_rol to be created.
-    //     $table = new xmldb_table('talentospilos_permisos_rol');
-
-    //     // Adding fields to table talentospilos_permisos_rol.
-    //     $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
-    //     $table->add_field('id_rol', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
-    //     $table->add_field('id_accion', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
-
-    //     // Adding keys to table talentospilos_permisos_rol.
-    //     $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
-    //     $table->add_key('permisosr_upk', XMLDB_KEY_UNIQUE, array('id_rol', 'id_accion'));
-    //     $table->add_key('permisosr_fk1', XMLDB_KEY_FOREIGN, array('id_rol'), 'talentospilos_rol', array('id'));
-    //     $table->add_key('permisosr_fk2', XMLDB_KEY_FOREIGN, array('id_accion'), 'talentospilos_accion', array('id'));
-
-    //     // Conditionally launch create table for talentospilos_permisos_rol.
-    //     if (!$dbman->table_exists($table)) {
-    //         $dbman->create_table($table);
-    //     }
-
-    //     // Ases savepoint reached.
-    //     upgrade_block_savepoint(true, 2017101818449, 'ases');
-    // }
-
+    // Conditionally launch create table for talentospilos_director_prog.
+    if (!$dbman->table_exists($table)) {
+        $dbman->create_table($table);
+    }
    
     // Ases savepoint reached.
-    upgrade_block_savepoint(true, 2017110116289, 'ases');
+    upgrade_block_savepoint(true, 2017111715539, 'ases');
    
     return $result;
     }
