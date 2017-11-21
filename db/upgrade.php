@@ -37,6 +37,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
         $dbman->create_table($table);
     }
 
+
     // Define table talentospilos_director_prog to be created.
     $table = new xmldb_table('talentospilos_director_prog');
     

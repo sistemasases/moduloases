@@ -9,7 +9,7 @@
   * @module block_ases/student_profile_main
   */
 
-define(['jquery', 'block_ases/bootstrap', 'block_ases/d3', 'block_ases/sweetalert', 'block_ases/jqueryui'], function($, bootstrap, d3, sweetalert, jqueryui) {
+define(['jquery', 'block_ases/bootstrap', 'block_ases/d3', 'block_ases/sweetalert', 'block_ases/jqueryui','block_ases/select2'], function($, bootstrap, d3, sweetalert, jqueryui, select2) {
     
     return {
         init: function() {
@@ -32,8 +32,25 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/d3', 'block_ases/sweetaler
                     break;
             }
 
+            $("#asignados").select2({
+                language: {
+
+                    noResults: function() {
+
+                        return "No hay resultado";
+                    },
+                    searching: function() {
+
+                        return "Buscando..";
+                    }
+                },
+                dropdownAutoWidth: true,
+            });
+
             $("#search").on('click', function(){
-                var student_code = $('#codigo').val();
+                var code = $('#asignados').val();
+                var student_code = code.split('-')[0];
+
                 load_student(student_code);
             });
     
