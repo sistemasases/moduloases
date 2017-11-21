@@ -1,59 +1,118 @@
 <?php
-    require_once(dirname(__FILE__). '/../../../config.php');
+require_once (dirname(__FILE__) . '/../../../config.php');
 
-    global $user;
-    $accion = $_POST["id_accion"];
-    $blockid = $_POST['block'];
-    
-    
-    //Hace falta validar que el perfil este en el periodo actual
-    function get_perfil_usuario($id_moodle, $id_instancia){
-        global $DB;
-        $current_semester = get_current_semester(); 
-       
-        $sql_query = "SELECT * FROM {talentospilos_perfil} WHERE id IN (
-                        SELECT id_perfil FROM {talentospilos_usuario_perfil} 
-                            WHERE estado = 1 
-                            AND id_semestre =".$current_semester->max."
-                            AND id_usuario = ".$id_moodle." 
-                            AND id_instancia =".$id_instancia."
-                        );";
-        $perfil_usuario = $DB->get_record_sql($sql_query);            
-        return $perfil_usuario->id;
+require_once ('permissions_management/permissions_lib.php');
+
+require_once ('../managers/user_management/user_functions.php');
+
+global $USER;
+/*
+* Función que evalua si el rol del usuario tiene permisos en una view especifica.
+*
+* @param $userid --> id de usuario
+* @param $blockid --> instancia
+* @return Object
+*/
+
+function authenticate_user_view($userid, $blockid)
+{
+
+    // Se obtiene la URL actual.
+
+    $url = $_SERVER['REQUEST_URI'];
+    $aux_function_name = explode("/", $url);
+
+    // obtiene nombre de la vista actual.
+
+    $function_name = explode(".php", $aux_function_name[5]) [0];
+    $function = get_functions_by_name($function_name);
+    $data = 'data';
+    $data = new stdClass;
+    if ($function) {
+        $role = get_id_rol($userid, $blockid);
+        $validation = get_actions_by_role($function->id, $role);
+        $credentials = empty($validation);
+        $message = "";
+        $table_courseuseres = "";
+        $view_users = "";
+        $search_users = "";
+
+
+        if ($credentials) {
+            $message = '<h3><strong><p class="text-danger">El usuario conectado no puede realizar dicha acción</p></strong></h3>';
+            $data->message = $message;
+            return $data;
+        }
+        else {
+            foreach($validation as $key => $value) {
+                $ {
+                    $value->nombre_accion
+                } = true;
+                $name = $value->nombre_accion;
+                $data->$name = $name;
+            }
+
+            return $data;
+        }
     }
-    
-    
-    /**
-     * Verifica si un rol tiene acceso a la acción especificada
-     * @param $id_perfil ID del perfil a evaluar 
-     * @param $id_accion ID de la accion a evaluar
-     * @return booelan True si tiene permisos para realizar la acción, false si nos tiene
-     * @author Edgar Mauricio Ceron Florez
-     */ 
-    
-    function validar_permisos($id_perfil, $id_accion){
-        global $DB;
-        $sql_query = "SELECT * FROM {talentospilos_perfil_accion} AS pa
-        WHERE id_perfil =".$id_perfil." AND id_accion = ".$id_accion.";";
-        $permiso = $DB->get_record_sql($sql_query);
-        return $permiso->habilitado;
+    else {
+        $message = '<h3><strong><p class="text-danger">La funcionalidad : '.$function_name.' no se encuentra registrada</p></strong></h3>';
+            $data->message = $message;
+            return $data;
+    }
+}
+
+/*
+* Función que retorna el rol de un usuario
+*
+* @param $userid
+* @param $instanceid
+* @return Array
+*/
+
+function get_id_rol($userid, $blockid)
+{
+    global $DB;
+    $sql_query = "SELECT id_rol FROM {talentospilos_user_rol} WHERE id_usuario='$userid' AND id_instancia='$blockid'";
+    $consulta = $DB->get_records_sql($sql_query);
+    foreach($consulta as $tomarId) {
+        $idretornar = $tomarId->id_rol;
     }
 
-    
-    /**
-     * Retorna el id de talentos a partir del id de moodle
-     * @param $id_moodle int con el di de moodle
-     * @return int con el id de talentos
-     */ 
-    
-    function get_talentos_id($id_moodle){
-        global $DB;
-        $sql_query = "SELECT field.shortname, data.data 
-                   FROM {user_info_data} AS data INNER JOIN {user_info_field} AS field ON data.fieldid = field.id 
-                   WHERE data.userid = $id_moodle";
-        
-        $result = $DB->get_records_sql($sql_query);
-        
-        return $result['idtalentos']->data;
+    return $idretornar;
+}
+
+/* Función que retorna si un rol de usuario determinado puede hacer una acción
+* @see role_is_able($role_id,$action_id)
+* @param $role_id --> id del rol
+* @param $action_id --> id de la acción
+* @return boolean
+*/
+
+function role_is_able($role_id, $action_id)
+{
+    global $DB;
+    $sql_query = "SELECT * FROM {talentospilos_permisos_rol} where id_rol='$role_id' and id_accion='$action_id'";
+    $consulta = $DB->get_record_sql($sql_query);
+    if ($consulta) {
+        return true;
     }
-    
+    else {
+        return false;
+    }
+}
+
+/* Función que retorna arreglo con las acciones que puede realizar un rol cuya funcionalidad es una especifica
+* @see get_actions_by_role($id_functionality,$id_role)
+* @param $id_functionality --> id del rol
+* @param $id_role --> id de la acción
+* @return Array
+*/
+
+function get_actions_by_role($id_functionality, $id_role)
+{
+    global $DB;
+    $sql_query = "SELECT id_accion,nombre_accion  FROM {talentospilos_permisos_rol}  permisos INNER JOIN {talentospilos_accion}   accion ON permisos.id_accion = accion.id where id_funcionalidad='$id_functionality' and id_rol='$id_role' and estado=1";
+    $consulta = $DB->get_records_sql($sql_query);
+    return $consulta;
+}

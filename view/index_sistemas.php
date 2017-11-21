@@ -28,8 +28,11 @@
 require_once(__DIR__ . '/../../../config.php');
 require_once($CFG->libdir.'/adminlib.php');
 require_once('../managers/instance_management/instance_lib.php');
+require_once ('../managers/permissions_management/permissions_lib.php');
+require_once ('../managers/validate_profile_action.php');
 include("../classes/output/index_sistemas_page.php");
 include("../classes/output/renderer.php");
+
 
 global $PAGE, $USER;
 
@@ -49,6 +52,13 @@ $contextcourse = context_course::instance($courseid);
 $contextblock =  context_block::instance($blockid);
 $url = new moodle_url("/blocks/ases/view/index_sistemas.php", array('courseid' => $courseid, 'instanceid' => $blockid));
 
+// Crea una clase con la información que se llevará al template.
+$data = 'data';
+$data = new stdClass;
+
+// Evalua si el rol del usuario tiene permisos en esta view.
+$actions = authenticate_user_view($USER->id, $blockid);
+$data = $actions;
 
 
 $coursenode = $PAGE->navigation->find($courseid, navigation_node::TYPE_COURSE);
@@ -68,10 +78,8 @@ $PAGE->requires->css('/blocks/ases/style/sweetalert.css', true);
 $PAGE->requires->css('/blocks/ases/style/styles_index.css', true);
 
 
-$data = new stdClass;
 
 $data->params = "?courseid=$courseid&instanceid=$blockid";
-
 $output = $PAGE->get_renderer('block_ases');
 $index_page = new \block_ases\output\index_sistemas_page($data);
 

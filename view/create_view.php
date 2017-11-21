@@ -26,6 +26,8 @@
 require_once(__DIR__ . '/../../../config.php');
 require_once($CFG->libdir.'/adminlib.php');
 require_once('../managers/query.php');
+require_once ('../managers/permissions_management/permissions_lib.php');
+require_once ('../managers/validate_profile_action.php'); 
 include('../lib.php');
 global $PAGE;
 
@@ -45,6 +47,13 @@ $contextcourse = context_course::instance($courseid);
 $contextblock =  context_block::instance($blockid);
 
 $url = new moodle_url("/blocks/ases/view/create_view.php",array('courseid' => $courseid, 'instanceid' => $blockid));
+
+//Crea una clase con la información que se llevará al template.   
+$data = new stdClass;
+
+// Evalua si el rol del usuario tiene permisos en esta view.
+$actions = authenticate_user_view($USER->id, $blockid);
+$data = $actions;
 
 //Configuracion de la navegacion
 $coursenode = $PAGE->navigation->find($courseid, navigation_node::TYPE_COURSE);
@@ -76,6 +85,6 @@ $output = $PAGE->get_renderer('block_ases');
 
 echo $output->header();
 
-$permisos_rol_page = new \block_ases\output\create_view_page('Some text');
+$permisos_rol_page = new \block_ases\output\create_view_page($data);
 echo $output->render($permisos_rol_page);
 echo $output->footer();

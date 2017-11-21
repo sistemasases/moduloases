@@ -7,5 +7,7 @@
     //$plugin->version = 201709211100;
     //    $plugin->version=201710131234;
 
-    $plugin->version=2017111715539;
+
+    $plugin->version= 2017111715539;
+
     $plugin->requires = 2010112400;
