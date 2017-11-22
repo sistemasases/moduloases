@@ -453,10 +453,12 @@ function insertItem($course,$father,$name,$valsend,$item){
 
 //DELETING
 
+function deleteItem($item){
+    
+}
 
 
-
-
+//AUXILIARY METHODS OF WIZARD
 /**
  *Make a query to find the last index of the sort element corresponding to the category that is being entered
  *
