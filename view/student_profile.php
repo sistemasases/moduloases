@@ -694,8 +694,6 @@ $record->datosSeguimientoEstudianteVidaUniversitaria = $seguimientosVidaUniversi
 
 // Fin de obtención de datos para las gráficas de riesgos
 
-
-
 $PAGE->set_context($contextcourse);
 $PAGE->set_context($contextblock);
 $PAGE->set_url($url);

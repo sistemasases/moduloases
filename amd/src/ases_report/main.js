@@ -1,11 +1,11 @@
 requirejs(['jquery','bootstrap','amd_graphics','amd_index_table','checkrole','sweetalert'], function($){
-    /*
-     CONTROLES PARA EL FORMULARIO GENERAL DE CONSULTAS
-    */
-    $("#camposContacto legend input, #camposAcudiente legend input").change(function() {
-        var $fieldset = $(this).parent().parent();
-        $fieldset.find("input[name='chk[]']").prop('checked', $(this).prop("checked"));
-    });
+/*
+    CONTROLES PARA EL FORMULARIO GENERAL DE CONSULTAS
+*/
+$("#camposContacto legend input, #camposAcudiente legend input").change(function() {
+    var $fieldset = $(this).parent().parent();
+    $fieldset.find("input[name='chk[]']").prop('checked', $(this).prop("checked"));
+});
 
 //CÓDIGO DE FICHA
 /* CONTROLES PARA LA FICHA DEL ESTUDIANTE */
@@ -85,7 +85,7 @@ $(document).on('click', 'panel-heading', function(e) {
 });
 
 /**
- * Carga dinamicamente los checkbos de riesgos a listar
+ * Carga dinamicamente los checkbox de riesgos a listar
  * @author Edgar Mauricio Ceron Florez
  */
 function loadDinamicRisk(){
@@ -127,97 +127,6 @@ function searchStudent(){
                             var search = location.search.split('&');
                             var newpage = location.href.split('?')[0] +search[0]+"&"+search[1]+"&talento_id="+msg.username;
                             location.href = newpage;
-
-                        //     var nombre = msg.firstname;
-                        //     var apellido = msg.lastname;
-                        //     var num_doc = msg.num_doc;
-                        //     var tipo_doc = msg.tipo_doc;
-                        //     var email = msg.email;
-                        //     var grupo = msg.grupo;
-                        //     var cohorte = msg.namech;
-                        //     var dir1 = msg.direccion_res;
-                        //     var tel1 = msg.tel_ini;
-                        //     var tel2 = msg.tel_res;
-                        //     var tel3 = msg.celular;
-                        //     var emailpilos = msg.emailpilos;
-                        //     var nom_acu = msg.acudiente;
-                        //     var tel_acu =msg.tel_acudiente;
-                        //     var observacion = msg.observacion;
-                        //     var estado = msg.estado;
-                        //     var username = msg.username;
-                        //     var userid = msg.id_user;
-                        //     var nom_enfasis = msg.nom_enfasis;
-                        //     var cod_programa = msg.cod_programa;
-                        //     var nom_programa = msg.nom_programa;
-                        //     var age = msg.age;
-                        //     var idtalentos = msg.idtalentos;
-                        //     var status_ases = msg.estado_ases;
-
-                        //     //se actualizan los valores
-                        //     $("#ficha_estudiante #codigo").val(username);
-                        //     $('#ficha_estudiante #nombreficha').text(nombre+" "+apellido);
-                        //     $('#ficha_estudiante #cedula').val(num_doc);
-                        //     $('#ficha_estudiante #tipo_doc').val(tipo_doc);
-                        //     $('#ficha_estudiante #email').text(email);
-                        //     $('#ficha_estudiante #grupo').val(grupo);
-                        //     $('#ficha_estudiante #fcohorte').text(cohorte);
-                        //     $('#ficha_estudiante #estado').val(estado);
-                        //     $('#ficha_estudiante #estadoAses').val(status_ases);
-                        //     $('#ficha_estudiante #dir1').val(dir1);
-                        //     $('#ficha_estudiante #tel1').val(tel1);
-                        //     $('#ficha_estudiante #tel2').val(tel2);
-                        //     $('#ficha_estudiante #ficha_estudiante #tel3').val(tel3);
-                        //     $('#ficha_estudiante #email2').val(emailpilos);
-                        //     $('#ficha_estudiante #nombre_acudiente').val(nom_acu);
-                        //     $('#ficha_estudiante #tel4').val(tel_acu);
-                        //     $('#ficha_estudiante #Observaciones').val(observacion);
-                        //     $('#ficha_estudiante #ficha_estudiante #f_enfasis').text(nom_enfasis);
-                        //     $('#ficha_estudiante #programa').text(cod_programa + " " + nom_programa);
-                        //     $('#ficha_estudiante #age').text(age);
-                        //     $('#ficha_estudiante #idtalentos').val(idtalentos);
-                        //     $('#ficha_estudiante #iduser').val(userid);
-
-                        //     checkAsesStatus();
-                        //     //se actualiza la foto
-                        //     var img = $('#photo').attr('src');
-                        //     var token = img.split('/');
-                        //     var newimg = token[0]+"/"+token[1]+"/"+token[2]+"/"+token[3]+"/"+token[4]+"/"+userid+"/f2.jpg";
-                        //     $('#photo').attr('src',newimg);
-                        //     setTimeout(
-                        //         function()
-                        //         {
-                        //             newimg = token[0]+"/"+token[1]+"/"+token[2]+"/"+token[3]+"/"+token[4]+"/"+userid+"/f1.jpg";
-                        //             $('#photo').attr('src',newimg);
-                        //          }, 1000);
-                        //         $.getScript("../js/checkrole.js", function(){
-                        //             verificarPermisosFicha(parameters);
-                        //         });
-
-                        //     //se actualiza la url location.href = ismonitor.pagina;
-                        //     var search = location.search.split('&');
-
-                        //     window.history.pushState(null, null, "talentos_profile.php"+search[0]+"&"+search[1]+"&talento_id="+$("#codigo").val());
-
-                        //     //se actualiza socioeducativo
-                        //     loadAll_trackPeer();
-                           // loadAll_segGroup();
-                           // loadAll_primerAcerca();
-                           // loadAll_AcompaSocio();
-                           // loadAll_SegSocio();
-
-                           // //se actualiza asistencia
-                           // executeAttendance();
-
-                        //     //se acualiza ficha academica
-                        //     create_semesters_panel(userid);
-
-
-                            //se habilita el metodo de psicocial encargado del antecedente
-                            // $('#AcompaSocio').on('click','.antecedentes', function() {
-
-                            //     loadeventAcompasocio($(this));
-                            // });
-
                         }else{
                           swal({title: "ÁREA RESTRINGIDA", html:true, type: "warning",  text: "No tienes permisos para ver la información de este estudiante.<br> Dirigete a la oficina de Sistemas del plan talentos pilos para gestionar tu situación", confirmButtonColor: "#d51b23"}, function(isConfirm){   if (isConfirm) { 
                             //window.history.back();
