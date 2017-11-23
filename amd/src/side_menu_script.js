@@ -1,5 +1,5 @@
  /**
-  * @module block_ases/periods_management_main
+  * @module block_ases/side_menu_script
   */
 
 define(['jquery', 'block_ases/bootstrap'], function($, bootstrap) {  
