@@ -40,7 +40,7 @@ include ("../classes/output/renderer.php");
 
 // Variables for setup the page.
 
-$title = "Gestionar roles";
+$title = "Gestionar Roles";
 $pagetitle = $title;
 $courseid = required_param('courseid', PARAM_INT);
 $blockid = required_param('instanceid', PARAM_INT);
