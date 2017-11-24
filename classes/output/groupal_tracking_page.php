@@ -14,21 +14,30 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
- 
+
+/**
+ * Talentos Pilos
+ *
+ * @author     Iader E. García Gómez
+ * @package    block_ases
+ * @copyright  2016 iaderegg <iadergg@gmail.com>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
 // Standard GPL and phpdocs
 namespace block_ases\output;                                                                                                       
-
+ 
 use renderable;                                                                                                                
 use renderer_base;                                                                                                                  
 use templatable;                                                                                                                    
 use stdClass;                                                                                                                       
  
-class seguimiento_pilos_page implements renderable, templatable {                                                                               
-    /** @var string $data Some text to show how to pass data to a template. */                                                  
-    var $data = null;                                                                                                           
+class groupal_tracking_page implements renderable, templatable {                                                                               
+    /** @var string $sometext Some text to show how to pass data to a template. */                                                  
+    var $sometext = null;                                                                                                           
  
-    public function __construct($data) {                                                                                        
-        $this->data = $data;                                                                                                
+    public function __construct($sometext) {                                                                                        
+        $this->sometext = $sometext;                                                                                                
     }
     /**                                                                                                                             
      * Export this data so it can be used as the context for a mustache template.                                                   
@@ -37,7 +46,7 @@ class seguimiento_pilos_page implements renderable, templatable {
      */                                                                                                                             
     public function export_for_template(renderer_base $output) {                                                                    
         $data = new stdClass();                                                                                                     
-        $data->data = $this->data;                                                                                          
+        $data->sometext = $this->sometext;                                                                                          
         return $data;                                                                                                               
     }
 }

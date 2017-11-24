@@ -105,7 +105,7 @@ function make_select_ficha($id){
   
     $rol = get_role_ases($id);
 
-    $asign = "<select name = 'asignados' id = 'asignados'>";
+    $asign = "<select name = 'asignados' id = 'asignados'><option>Seleccione un estudiante</option>";
 
     if($rol == 'profesional_ps'){
         $asign .= get_asigned_by_profesional($id);
