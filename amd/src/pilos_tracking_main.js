@@ -5,7 +5,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 /**
- * @module block_ases/pilos_tracing
+ * @module block_ases/pilos_tracking
  */
 define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_ases/datatables.net-buttons', 'block_ases/buttons.flash', 'block_ases/jszip', 'block_ases/pdfmake', 'block_ases/buttons.html5', 'block_ases/buttons.print', 'block_ases/sweetalert', 'block_ases/select2'], function($, bootstrap, datatables, sweetalert, select2) {
 
@@ -51,7 +51,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_as
                         type: "getInfo",
                         instance: instance
                     },
-                    url: "../../../blocks/ases/managers/pilos_tracing/pilos_tracing_report.php",
+                    url: "../../../blocks/ases/managers/pilos_tracking/pilos_tracking_report.php",
                     async: false,
                     success: function(msg) {
                         $data = $.parseJSON(msg);
@@ -177,7 +177,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_as
                                 otro: true,
                                 type: "consulta_sistemas"
                             },
-                            url: "../../../blocks/ases/managers/pilos_tracing/pilos_tracing_report.php",
+                            url: "../../../blocks/ases/managers/pilos_tracking/pilos_tracking_report.php",
                             async: false,
 
 
@@ -274,7 +274,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_as
                                 instance: instance,
                                 type: "consulta_sistemas"
                             },
-                            url: "../../../blocks/ases/managers/pilos_tracing/pilos_tracing_report.php",
+                            url: "../../../blocks/ases/managers/pilos_tracking/pilos_tracking_report.php",
                             async: false,
 
 
@@ -503,7 +503,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_as
                                 nombre: nombre,
                                 message: mensaje_enviar
                             },
-                            url: "../../../blocks/ases/managers/pilos_tracing/pilos_tracing_report.php",
+                            url: "../../../blocks/ases/managers/pilos_tracking/pilos_tracking_report.php",
                             async: false,
                             success: function(msg) {
                                 //si el envio del mensaje fue exitoso
@@ -653,7 +653,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_as
                                         seguimiento: seguimiento,
                                         type: "actualizar_registro",
                                     },
-                                    url: "../../../blocks/ases/managers/pilos_tracing/pilos_tracing_report.php",
+                                    url: "../../../blocks/ases/managers/pilos_tracking/pilos_tracking_report.php",
                                     async: false,
                                     success: function(msg) {
                                         if (msg == "0") {
@@ -785,7 +785,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_as
                                         id: id_registro,
                                         type: "eliminar_registro",
                                     },
-                                    url: "../../../blocks/ases/managers/pilos_tracing/pilos_tracing_report.php",
+                                    url: "../../../blocks/ases/managers/pilos_tracking/pilos_tracking_report.php",
                                     async: false,
                                     success: function(msg) {
                                         swal({
@@ -979,7 +979,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_as
                             instance: instance,
                             type: "actualizar_personas"
                         },
-                        url: "../../../blocks/ases/managers/pilos_tracing/pilos_tracing_report.php",
+                        url: "../../../blocks/ases/managers/pilos_tracking/pilos_tracking_report.php",
                         async: false,
                         success: function(msg) {
 

@@ -28,37 +28,50 @@ function authenticate_user_view($userid, $blockid)
     $function = get_functions_by_name($function_name);
     $data = 'data';
     $data = new stdClass;
-    if ($function) {
-        $role = get_id_rol($userid, $blockid);
-        $validation = get_actions_by_role($function->id, $role);
-        $credentials = empty($validation);
-        $message = "";
-        $table_courseuseres = "";
-        $view_users = "";
-        $search_users = "";
+    try {
+        if ($function) {
+            $role = get_id_rol($userid, $blockid);
+            if ($role) {
+                $validation = get_actions_by_role($function->id, $role);
+                $credentials = empty($validation);
+                $message = "";
+                $table_courseuseres = "";
+                $view_users = "";
+                $search_users = "";
+                if ($credentials) {
+                    $message = '<h3><strong><p class="text-danger">El usuario conectado no puede realizar dicha acción</p></strong></h3>';
+                    $data->message = $message;
+                    return $data;
+                }
+                else {
+                    foreach($validation as $key => $value) {
+                        $ {
+                            $value->nombre_accion
+                        } = true;
+                        $name = $value->nombre_accion;
+                        $data->$name = $name;
+                    }
 
-
-        if ($credentials) {
-            $message = '<h3><strong><p class="text-danger">El usuario conectado no puede realizar dicha acción</p></strong></h3>';
-            $data->message = $message;
-            return $data;
+                    return $data;
+                }
+            }
+            else {
+                $message = '<h3><strong><p class="text-danger">El usuario conectado no se encuentra registrado en la instancia actual</p></strong></h3>';
+                $data->message = $message;
+                return $data;
+            }
         }
         else {
-            foreach($validation as $key => $value) {
-                $ {
-                    $value->nombre_accion
-                } = true;
-                $name = $value->nombre_accion;
-                $data->$name = $name;
-            }
-
+            $message = '<h3><strong><p class="text-danger">La funcionalidad : ' . $function_name . ' no se encuentra registrada</p></strong></h3>';
+            $data->message = $message;
             return $data;
         }
     }
-    else {
-        $message = '<h3><strong><p class="text-danger">La funcionalidad : '.$function_name.' no se encuentra registrada</p></strong></h3>';
-            $data->message = $message;
-            return $data;
+
+    catch(Exception $ex) {
+        $message = '<h3><strong><p class="text-danger">Se presentó un inconveniente : ' . $ex . '</p></strong></h3>';
+        $data->message = $message;
+        return $data;
     }
 }
 
