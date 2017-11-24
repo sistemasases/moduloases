@@ -4,13 +4,13 @@ body {
 
 .sidenav {
     height: 100%;
-    width: 0;
-    position: fixed;
+    width: 30%;
+    position: relative;
     z-index: 1;
     top: 0;
     left: 0;
     background-color: #111;
-    overflow-x: hidden;
+    overflow-x: visible;
     transition: 0.5s;
     padding-top: 60px;
 }

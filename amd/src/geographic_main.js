@@ -47,9 +47,8 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
 
             });
 
-            }
         }
-
+    };
 
     function load_geographic_info(id_ases){
         $.ajax({
