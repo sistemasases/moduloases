@@ -1,19 +1,20 @@
 <div class="container">
 <div class="row">
-   <h2>GESTIÓN DE PERÍODOS</h2>
-   <hr/>
-   {{#data}}
+   <h2>GESTIÓN DE PERÍODOS</h2>   
+  <hr/>
+   {{#data}}   
    {{{message}}}
+   {{> block_ases/side_menu}}
    <div class="panel-group">
-      {{#search_periods}}
+      {{#search_periods_pm}}
       {{> block_ases/search_periods}}
-      {{/search_periods}}
-      {{#create_periods}}
+      {{/search_periods_pm}}
+      {{#create_periods_pm}}
       {{> block_ases/create_periods}}
-      {{/create_periods}}
-      {{#view_periods}}
+      {{/create_periods_pm}}
+      {{#view_periods_pm}}
       {{> block_ases/view_periods}}
-      {{/view_periods}}
+      {{/view_periods_pm}}
    </div>
    {{/data}}
    <!--end panel-group-->

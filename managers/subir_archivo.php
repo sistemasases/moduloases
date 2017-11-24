@@ -535,6 +535,8 @@ if (isset($_FILES['csv_file'])){
             $record->id_accion = $result->id;
 
             $DB->insert_record('talentospilos_permisos_rol', $record, false);
+
+	    $count += 1;
          }
 
          $respuesta = 1;

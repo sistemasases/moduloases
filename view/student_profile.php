@@ -708,6 +708,8 @@ $PAGE->requires->css('/blocks/ases/style/sugerenciaspilos.css', true);
 $PAGE->requires->css('/blocks/ases/style/forms_pilos.css', true);
 $PAGE->requires->css('/blocks/ases/style/c3.css', true);
 $PAGE->requires->css('/blocks/ases/style/student_profile_risk_graph.css', true);
+$PAGE->requires->css('/blocks/ases/js/select2/css/select2.css', true);
+
 
 $PAGE->requires->js_call_amd('block_ases/student_profile_main','init');
 $PAGE->requires->js_call_amd('block_ases/geographic_main','init');

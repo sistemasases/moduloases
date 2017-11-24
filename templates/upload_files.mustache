@@ -3,10 +3,11 @@
         <h2>Carga de datos</h2>
         <hr />
         {{#data}}
-            {{{message}}}
+            {{{message}}}            
         {{/data}}
         <!-- {{#data}} -->
         {{#upload_files_uf}}
+        {{> block_ases/side_menu}}
         <div class="row">
             <form class="form-horizontal" id="upload_data_form">
                 <div class="form-group">
