@@ -484,6 +484,29 @@ if (isset($_FILES['csv_file'])){
          $respuesta = 1;
          echo $respuesta;
       }
+      else if($varSelector == "Accion"){
+            global $DB;
+            $record = new stdClass();
+
+            while($data = fgetcsv($handle, 100, ","))
+            {
+                  $record->nombre_accion = $data[0];
+                  $record->descripcion = $data[1];
+                  $record->estado = $data[2];
+
+                  $query = "SELECT id FROM {talentospilos_funcionalidad} WHERE nombre_func = '".$data[3]."';";
+
+                  
+                  $result = $DB->get_record_sql($query);
+
+                  $record->id_funcionalidad = $result->id;
+                  
+                  $DB->insert_record('talentospilos_accion', $record, false);
+            }
+            $respuesta = 1;
+            echo $respuesta;
+            
+      }      
       else if($varSelector == "Permisos"){
          global $DB;
          $record = new stdClass();
@@ -508,11 +531,8 @@ if (isset($_FILES['csv_file'])){
             $result = $DB->get_record_sql("SELECT id FROM {talentospilos_rol} WHERE  nombre_rol = '".$data[0]."'");
             $record->id_rol = $result->id;
 
-            $result = $DB->get_record_sql("SELECT id FROM {talentospilos_permisos} WHERE permiso = '".$data[1]."'");
-            $record->id_permiso = $result->id;
-
-            $result = $DB->get_record_sql("SELECT id FROM {talentospilos_funcionalidad} WHERE nombre_func = '".$data[2]."'");
-            $record->id_funcionalidad = $result->id;
+            $result = $DB->get_record_sql("SELECT id FROM {talentospilos_accion} WHERE nombre_accion = '".$data[1]."'");
+            $record->id_accion = $result->id;
 
             $DB->insert_record('talentospilos_permisos_rol', $record, false);
          }

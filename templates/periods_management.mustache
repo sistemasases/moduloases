@@ -1,108 +1,21 @@
 <div class="container">
-    <div class="row">
-        <h2>GESTIÓN DE PERÍODOS</h2>
-        <hr/>
-        <div class="panel-group">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                  <h4 class="panel-title">
-                    <a data-toggle="collapse" href="#collapse1">Actualización de períodos</a>
-                  </h4>
-                </div><!--end panel-heading-->
-                <div id="collapse1" class="panel-collapse collapse">
-                  <div class="panel-body">
-                    
-                        <form class="form-pilos" id="role_man_form">
-                            <div class="col-md-6">
-                            <ul>
-                                <li>
-                                    <label for="periods_input">Períodos: </label> 
-                                    <select name="periods" id="periods">
-                                    {{#data}}
-                                    {{{table}}}
-                                    {{/data}} 
-                                    </select>
-                                    <button class="submit" type="button" id="search_button">Buscar</button> 
-
-                                </li>
-                                <li class="assignment_li"> 
-                                    <label for="semester_name">Semestre: </label>
-                                    <input type="text" id="semester_name" name="semester_name"/>
-                                </li> 
-                                <li class="assignment_li">
-                                    <label for="beginning_date">Fecha de Inicio (yyyy-mm-dd): </label>
-                                    <input class="period_date" type="text" maxlength="10" id="beginning_date" name="beginning_date"/>
-                                </li>
-                                <li class="assignment_li">
-                                    <label for="ending_date">Fecha de Finalización (yyyy-mm-dd): </label>
-                                    <input class="period_date" type="text" maxlength="10" id="ending_date" name="ending_date"/>
-                                </li>
-                            </ul>
-                        
-                    </div><!--end col-md-6-->                   
-                    <div class="col-md-3 col-md-offset-5 assignment_li">
-                        <button class="submit btn-form" type="button" id="ok-button">Guardar</button>
-                        <button class="submit btn-form" type="button" id="cancel-button">Cancelar</button>
-                    </div><!--end div buttons -->
-                </div><!--end panel-body-->
-                </form>
-            </div><!--end panel-collapse1-->
-
-
-        <div class="panel panel-default"> <!-- begin new panel -->
-                <div class="panel-heading">
-                  <h4 class="panel-title">
-                    <a data-toggle="collapse" href="#collapse3">Creación de períodos</a>
-                  </h4>
-                </div><!--end panel-heading-->
-                <div id="collapse3" class="panel-collapse collapse">
-                  <div class="panel-body">
-                    
-                        <form class="form-pilos" id="role_man_form">
-                            <div class="col-md-6">
-                            <ul>                                
-                                <li class="new_assignment_li"> 
-                                    <label for="new_semester_name">Nombre del semestre: </label>
-                                    <input type="text" id="new_semester_name" name="new_semester_name"/>
-                                </li> 
-                                <li class="new_assignment_li">
-                                    <label for="new_beginning_date">Fecha de Inicio (yyyy-mm-dd): </label>
-                                    <input class="period_date" type="text" maxlength="10" id="new_beginning_date" name="new_beginning_date"/>
-                                </li>
-                                <li class="new_assignment_li">
-                                    <label for="new_ending_date">Fecha de Finalización (yyyy-mm-dd): </label>
-                                    <input class="period_date" type="text" maxlength="10" id="new_ending_date" name="new_ending_date"/>
-                                </li>
-                            </ul>
-                        
-                    </div><!--end col-md-6-->                   
-                    <div class="col-md-3 col-md-offset-5 new_assignment_li">
-                        <button class="submit btn-form" type="button" id="save-button">Guardar</button>
-                        <button class="submit btn-form" type="button" id="cancel-save-button">Cancelar</button>
-                    </div><!--end div buttons -->
-                </div><!--end panel-body-->
-                </form>
-            </div><!--end panel-collapse3 -->        
-              
-
-        <div class="panel panel-default">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                  <h4 class="panel-title" id="list-periods-panel">
-                    <a data-toggle="collapse" href="#collapse2">Lista de períodos</a>
-                  </h4>
-                </div><!--end panel-heading-->
-                <div id="collapse2" class="panel-collapse collapse">
-                    <div class="panel-body">
-                        <h2>Lista de períodos</h2>
-                    </div>
-                <div class="col-md-8 col-md-offset-2" id="div_periods">
-                </div>
-                </div>
-            </div>
-        </div><!--end panel-default-->
-        
-    </div><!--end panel-group-->
+<div class="row">
+   <h2>GESTIÓN DE PERÍODOS</h2>
+   <hr/>
+   {{#data}}
+   {{{message}}}
+   <div class="panel-group">
+      {{#search_periods_pm}}
+      {{> block_ases/search_periods}}
+      {{/search_periods_pm}}
+      {{#create_periods_pm}}
+      {{> block_ases/create_periods}}
+      {{/create_periods_pm}}
+      {{#view_periods_pm}}
+      {{> block_ases/view_periods}}
+      {{/view_periods_pm}}
+   </div>
+   {{/data}}
+   <!--end panel-group-->
 </div>
-
-
+</div>

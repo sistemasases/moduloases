@@ -38,3 +38,19 @@ function get_students_select($students,$name){
     $table.='</select></div>';
     return $table;
 }
+
+
+/**
+ * Función que obtiene las opciones del  select organizado de los estudiantes matriculados al 
+ * curso
+ * @see get_students_option($students)
+ * @param $students ---> array de estudiantes
+ * @return string
+ **/
+function get_students_option($students){
+    $table="";
+    foreach($students as $student){
+        $table.='<option value="'.$student->username.'">'.$student->firstname.' -'.''.$student->lastname.'</option>';
+     }
+    return $table;
+}

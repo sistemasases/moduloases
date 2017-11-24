@@ -1,5 +1,5 @@
 <?php
-require_once('pilos_tracing_lib.php');
+require_once('pilos_tracking_lib.php');
 
 /*
  * Funciones del módulo seguimientos pilos que se utilizarán en la view. 
@@ -19,6 +19,7 @@ require_once('pilos_tracing_lib.php');
  * @return string
  **/
 function has_tracking($seguimientos){
+    $table="";
     if($seguimientos==""){
      $table.="<p class='text-center'><strong>No existen seguimientos en el periodo seleccionado</strong></p>";
     }else{
@@ -34,6 +35,7 @@ function has_tracking($seguimientos){
  * @return Array
  **/
 function get_period_select($periods){
+    $table ="";
     $table.='<div class="container"><form class="form-inline">';
     $table.='<div class="form-group"><label for="persona">Periodo</label><select class="form-control" id="periodos">';
     foreach($periods as $period){
@@ -50,6 +52,7 @@ function get_period_select($periods){
  * @return Array
  **/
 function get_people_select($people){
+ $table="";
  $table.='<div class="form-group"><label for="persona">Persona</label><select class="form-control" id="personas">';
     foreach($people as $person){
             $table.='<option value="'.$person->id_usuario.'">'.$person->username." - ".$person->firstname." ".$person->lastname.'</option>';

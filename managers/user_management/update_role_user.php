@@ -5,7 +5,12 @@ require_once(dirname(__FILE__).'/user_lib.php');
 
 if(isset($_POST['role']) && isset($_POST['username'])){
 
-  if($_POST['role'] == 'profesional_ps' && isset($_POST['professional']) && isset($_POST['idinstancia'])){
+  if($_POST['function']== 'verify_assign'){
+    echo verify_user_assign($_POST['username'],$_POST['idinstancia']);
+
+  }
+
+  else if($_POST['role'] == 'profesional_ps' && isset($_POST['professional']) && isset($_POST['idinstancia'])){
     $success =  manage_role_profesional_ps($_POST['username'], $_POST['role'], $_POST['professional'], $_POST['idinstancia']);
     switch($success){
       case 1:
