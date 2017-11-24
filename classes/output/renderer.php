@@ -57,12 +57,12 @@ class renderer extends plugin_renderer_base {
         $data = $page->export_for_template($this);
         return parent::render_from_template('block_ases/attendance', $data);
     }
-    
-    public function render_seguimiento_grupal($page){
+
+    public function render_groupal_tracking_page($page){
         $data = $page->export_for_template($this);
-        return parent::render_from_template('block_ases/seguimiento_grupal', $data);
+        return parent::render_from_template('block_ases/groupal_tracking', $data);
     }
-    
+       
     public function render_psicosocial_users_page($page){
         $data = $page->export_for_template($this);
         return parent::render_from_template('block_ases/psicosocial_users', $data);
@@ -83,9 +83,9 @@ class renderer extends plugin_renderer_base {
         return parent::render_from_template('block_ases/general_reports', $data);
     }
     
-    public function render_seguimiento_pilos_page($page){
+    public function render_report_trackings_page($page){
     $data = $page->export_for_template($this);
-     return parent::render_from_template('block_ases/seguimiento_pilos', $data);
+     return parent::render_from_template('block_ases/report_trackings', $data);
     }
     
     public function render_mass_role_management($page){
