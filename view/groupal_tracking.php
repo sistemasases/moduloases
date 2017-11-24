@@ -30,7 +30,7 @@ require_once($CFG->libdir.'/adminlib.php');
 
 global $PAGE;
 
-include("../classes/output/seguimiento_grupal.php");
+include("../classes/output/groupal_tracking_page.php");
 include("../classes/output/renderer.php");
 require_once('../managers/query.php');
 require_once('../managers/instance_management/instance_lib.php');
@@ -50,7 +50,7 @@ if(!consult_instance($blockid)){
 
 $contextcourse = context_course::instance($courseid);
 $contextblock =  context_block::instance($blockid);
-$url = new moodle_url("/blocks/ases/view/seguimiento_grupal.php", array('courseid' => $courseid, 'instanceid' => $blockid));
+$url = new moodle_url("/blocks/ases/view/groupal_tracking.php", array('courseid' => $courseid, 'instanceid' => $blockid));
 
 
 //se configura la navegacion
@@ -72,10 +72,12 @@ $PAGE->requires->css('/blocks/ases/style/sweetalert.css', true);
 $PAGE->requires->css('/blocks/ases/style/round-about_pilos.css', true);
 $PAGE->requires->css('/blocks/ases/style/sugerenciaspilos.css', true);
 $PAGE->requires->css('/blocks/ases/style/forms_pilos.css', true);
+$PAGE->requires->js_call_amd('block_ases/groupal_tracking','init');
+
 $output = $PAGE->get_renderer('block_ases');
 
 echo $output->header();
 //echo $output->standard_head_html(); 
-$seguimiento_grupal_page = new \block_ases\output\seguimiento_grupal('Some text');
-echo $output->render($seguimiento_grupal_page);
+$groupal_tracking_page = new \block_ases\output\groupal_tracking_page('Some text');
+echo $output->render($groupal_tracking_page);
 echo $output->footer();
