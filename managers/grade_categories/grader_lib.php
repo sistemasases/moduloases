@@ -517,12 +517,9 @@ function print_table_categories($report){
                      summary='" . s($report->get_lang_string('tablesummary', 'gradereport_user')) . "'
                      class='boxaligncenter generaltable user-grade'>
               <thead>
-                  <tr>
-                      <th id='".$report->tablecolumns[0]."' class=\"header column-{$report->tablecolumns[0]}\" colspan='$maxspan'>".$report->tableheaders[0]."</th>\n";
+                  <tr>";
 
-          for ($i = 1; $i < count($report->tableheaders); $i++) {
-              $html .= "<th id='".$report->tablecolumns[$i]."' class=\"header column-{$report->tablecolumns[$i]}\">".$report->tableheaders[$i]."</th>\n";
-          }
+
   
           $html .= "
                   </tr>
@@ -550,7 +547,7 @@ function print_table_categories($report){
                               $weight = '('. floatval($weight).' %)';
                         }  
                         $aggregation = getAggregationofCategory($categoryid);
-                      $maxweight = getMaxWeight($categoryid);
+                        $maxweight = getMaxWeight($categoryid);
                         $html .= "<$celltype $id $headers class='$class' $colspan><div id = '$aggregation' class = 'agg'> $content <p style = 'display: inline' class = 'maxweight' id = '$maxweight'>$weight</p> <button title = \" Crear nuevo item o categoria\" class = \" btn new\" style = \"float: right !important\">+</button> </div></$celltype>\n";
                       }else{
                         $id_item = explode("_",$id)[1];  
