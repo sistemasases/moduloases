@@ -1,122 +1,14 @@
-{{!--<link href="../style/styles_pilos.css" rel="stylesheet" >--}}
-{{!--<link href="../style/bootstrap_pilos.css" rel="stylesheet">--}}
-{{!--<link href="../style/sweetalert.css" rel="stylesheet">--}}
-
-{{!--<meta http-equiv="Expires" content="0" />--}}
-{{!--<meta http-equiv="Pragma" content="no-cache" />--}}
-
 <body name="prueba">
-  
-    {{#data}}
-    <div class="container">
-        <div class="row">
-            <h2>REPORTE GENERAL DE ESTUDIANTES</h2>
-            <h3>Por favor seleccione los campos deseados para el reporte</h3>
-        </div>
-        <div class="row">
-            <div class="col-lg-12 col-md-12">
-                <form role="form" id="formulario">
-                    <div class="row">
-                        <div class="col-lg-2 col-md-2">
-                          <fieldset id="poblacion">
-                            <legend>Especifique la población:</legend>
-                            <label class="label_pilos" for="cohorte">Cohorte:</label>
-                            {{{cohorts_checks}}}
-                            <br>
-                            <label class="label_pilos" for="estado">Estado Ases:</label>
-                            <select name="estado" id="estado">
-                              {{{status_ases}}}
-                              </select><br>
-                          </fieldset>
-                        </div>
 
-                        <div class="col-lg-2 col-md-2">
-                          <fieldset id="camposBase">
-                            <legend>Datos Base</legend>
-                              <input type="checkbox" name="chk[]" value="Código" onchange="check(this)" onclick="check(this)" checked="checked">Código<br>
-                              <input type="checkbox" name="chk[]" value="Nombre" onchange="check(this)" onclick="check(this)" checked="checked">Nombres<br>
-                              <input type="checkbox" name="chk[]" value="Apellidos" onchange="check(this)" onclick="check(this)" checked="checked">Apellidos<br>
-                              <input type="checkbox" name="chk[]" value="Documento" onchange="check(this)" onclick="check(this)" checked="checked">Documento<br>
-                              <input type="checkbox" name="chk[]" value="Grupo" disabled>Grupo<br>
-                              <input type="checkbox" name="chk[]" value="Estado">Estado<br>
-                          </fieldset>
-                        </div>
+  {{#data}}
+  <div class="container">
 
-                        <div class="col-lg-3 col-md-3">
-                          <fieldset id="camposContacto">
-                            <legend><input type="checkbox">Datos de Contacto</legend>
-                              <input type="checkbox" name="chk[]" value="Email">Correo Electrónico<br>
-                              <input type="checkbox" name="chk[]" value="Celular">Celular<br>
-                              <input type="checkbox" name="chk[]" value="Dirección">Dirección<br>
-                          </fieldset>
-                        </div>
+    {{#search_all_students_ar}}
+      {{> block_ases/ar_search_students}}
+    {{/search_all_students_ar}}
 
-                        <div class="col-lg-3 col-md-3">
-                          <fieldset id="camposAcudiente">
-                            <legend><input type="checkbox">Datos de Acudiente</legend>
-                              <input type="checkbox" name="chk[]" value="Nombre acudiente">Nombre<br>
-                              <input type="checkbox" name="chk[]" value="Celular acudiente">Celular<br>
-                          </fieldset>
-                        </div>
-                        <div class="col-lg-2 col-md-2" id="div_riesgo">
-                        <fieldset id="riesgo">
-                          <legend>Riesgo</legend>
-                            {{{risks_checks}}}
-                        </fieldset>
-                        </div>
-                    </div>
-                    <div class="row">                
-                      <div class="col-md-4 col-lg-4 col-md-offset-4 col-lg-offset-4">
-                        <center>
-                          <input type="button" value = "Generar Reporte" id="btn-send-indexform" formmethod="post" >
-                        </center>
-                      </div>
-                    </div>
-                </form>
-            </div>
-
-          <div class="row" id="div_table">
-          </div>
-          <div>
-            <legend>GRÁFICAS GENERALES:</legend>
-            <input type="button" value = "Edad" class = "edad" formmethod="post" data-toggle="modal" data-target="#myModalGraf"/>
-            <input type="button" value = "Sexo"  class = "sexo" formmethod="post" data-toggle="modal" data-target="#myModalGraf" />
-            <input type="button" value = "Carrera"  class = "carrera" formmethod="post" data-toggle="modal" data-target="#myModalGraf" /> 
-            <input type="button" value = "Facultad"  class = "facultad" formmethod="post" data-toggle="modal" data-target="#myModalGraf" />
-            <input type="button" value = "Estado"  class = "estado" formmethod="post" data-toggle="modal" data-target="#myModalGraf" /><br>
-            <legend>GRÁFICAS RIESGOS:</legend>
-            <input type="button" value = "TODOS"  id="exam" class = "todos" formmethod="post" data-toggle="modal" data-target="#myModalGraf" /><br>
-            <input type="button" value = "Individual"  class = "individual" formmethod="post" data-toggle="modal" data-target="#myModalGraf" />
-            <input type="button" value = "Familiar"  class = "familiar" formmethod="post" data-toggle="modal" data-target="#myModalGraf" /> 
-            <input type="button" value = "Académico" class = "academico" formmethod="post" data-toggle="modal" data-target="#myModalGraf"/>
-            <input type="button" value = "Económico"  class = "economico" formmethod="post" data-toggle="modal" data-target="#myModalGraf" />
-            <input type="button" value = "Vida Universitaria"  class = "vuni" formmethod="post" data-toggle="modal" data-target="#myModalGraf" />
-            <input type="button" value = "Geográfico"  class = "geog" formmethod="post" data-toggle="modal" data-target="#myModalGraf" />
-          </div>
-        </div>
-        
-        <!-- Modal Grafica-->
-        <div class="modal modal_pilos" id="myModalGraf" name="seguimiento" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-        <h4 class="modal-title" id="myModalLabel"><b>GRÁFICA POR:</b></h4>
-      </div>
-      <div  id = "myModalBody">
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="button btn btn-secondary" data-dismiss="modal">Cerrar</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-     <script type="text/javascript" src="../amd/require-setup.js"></script> 
-     <script data-main="../amd/src/ases_report/main" src="../amd/scripts/require.js"></script>
-     {{/data}}
+    {{#search_all_students_ar}}
+      {{> block_ases/ar_view_graphics}}
+    {{/search_all_students_ar}}
+  {{/data}}
 </body>
-
-
