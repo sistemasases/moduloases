@@ -238,11 +238,12 @@ function getGraficEstado($cohorte){
  * @param $column       --> Campos a seleccionar
  * @param $population   --> Estado y cohorte
  * @param $risk         --> Nivel de riesgo a mostrar
+ * @param $academic_fields --> Campos relacionados con el programa académico y facultad
  * @param $idinstancia  --> Instancia del módulo
  * @return Array 
  */
 
-function getUsersByPopulation($column, $population, $risk, $academic_program=null, $idinstancia){
+function getUsersByPopulation($column, $population, $risk, $academic_fields=null, $idinstancia){
     global $DB;
     global $USER;
     //consulta
@@ -408,7 +409,7 @@ function getUsersByPopulation($column, $population, $risk, $academic_program=nul
                                 SELECT userid, CAST(d.data as int) as data 
                                 FROM {user_info_data} d 
                                 WHERE d.data <> '' 
-                                AND fieldid = (SELECT id FROM  {user_info_field} as f WHERE f.shortname ='idtalentos')
+                                AND fieldid = (SELECT id FROM {user_info_field} as f WHERE f.shortname ='idtalentos') 
                             ) AS field 
                             ON userm. id_user = field.userid ) AS usermoodle 
                         INNER JOIN {talentospilos_usuario} as usuario 
@@ -457,23 +458,6 @@ function getUsersByPopulation($column, $population, $risk, $academic_program=nul
     
     $result_query = $DB->get_records_sql($sql_query,null);
 
-    /**** Consulta relacionada con el programa académico *****/
-
-    // Se desenmascaran los campos asociados a la consulta académica ("Código programa", "Programa académico", "Facultad")
-    $academic_fields = [
-        "Código programa" => "cod_univalle",
-        "Programa académico" => "nombre",
-        "Facultad" => "nombre"
-    ];
-
-    if($academic_program){
-        $academic_query = "";
-    }
-
-
-
-    $sql_qery = "SELECT ";
-
     if($result_query){
       
       $result  = array();
@@ -519,7 +503,67 @@ function getUsersByPopulation($column, $population, $risk, $academic_program=nul
           }
           array_push($result, $temp);    
       }
+
+    /*********************************************************/
+    /**** Consulta relacionada con el programa académico *****/
+    /*********************************************************/
+
+    // Se desenmascaran los campos asociados a la consulta académica ("Código programa", "Programa académico", "Facultad")
+    $academic_fields_array = [
+        "Código programa" => "cod_univalle",
+        "Programa académico" => "nombre",
+        "Facultad" => "nombre"
+    ];
+    
+    $academic_fields_string = "";
+
+    $count = 0;
+
+    if($academic_fields){
+        foreach ($academic_fields as $field){
+            switch($field){
+                case "Código programa":
+                    $academic_fields_string .= "programa.".$academic_fields_array[$field]." AS \"Código programa\", ";
+                    break;
+                case "Programa académico":
+                    $academic_fields_string .= "programa.".$academic_fields_array[$field]." AS \"Programa académico\", ";
+                    break;
+                case "Facultad":
+                    $academic_fields_string .= "facultad.".$academic_fields_array[$field]." AS \"Facultad\", ";
+                    break;
+            }
+
+            $count++;
+
+            if($count == count($academic_fields)){
+                $academic_fields_string = substr($academic_fields_string, 0, -2);
+            }
+        }
+
+        $academic_query = "SELECT programa.id, ".$academic_fields_string." FROM {talentospilos_programa} AS programa 
+                                                                  INNER JOIN {talentospilos_facultad} AS facultad 
+                                                                  ON programa.id_facultad = facultad.id";
+
+        $result_academic_query = $DB->get_records_sql($academic_query);
+
+        foreach($result as &$student){
+
+            $sql_query = "SELECT id FROM {user} WHERE username LIKE '$student[Código]%'";
+            $id_student = $DB->get_record_sql($sql_query)->id;
+
+            $added_fields = get_adds_fields_mi($id_student);
+
+            $academic_program = $result_academic_query[$added_fields->idprograma];
+
+            foreach($academic_fields_array as $field){
+
+                $student = array_merge((array) $student, (array) $academic_program);
+
+            }
+        }
+    }
       
+      //print_r($result);
       
       $prueba =  new stdClass;
       $prueba->data= $result;
