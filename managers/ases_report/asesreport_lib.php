@@ -3,7 +3,6 @@
 require_once(dirname(__FILE__).'/../../../../config.php');
 require_once(dirname(__FILE__).'/../instance_management/instance_lib.php');
 require_once(dirname(__FILE__).'/../lib/lib.php');
-require_once(dirname(__FILE__).'/../lib/student_lib.php');
 
 /**
  * Función que recupera riesgos 
@@ -264,7 +263,7 @@ function getUsersByPopulation($column, $population, $risk, $academic_fields=null
     //se formatean las columnas
     $chk = array("Código","Nombre","Apellidos", "Documento", "Dirección", "Nombre acudiente", "Celular acudiente", "Grupo", "Estado", "Email","Celular");
     $name_chk_db = array("username", "firstname", "lastname", "num_doc","direccion_res","acudiente", "tel_acudiente","grupo","estado","email","celular");
-
+    
     //se eliminan las columnas con valores nulos: en caso de que el checkbox de grupo esté deshabilitado
     $column = array_filter($column, function($var){return !is_null($var);} );
     
@@ -388,13 +387,13 @@ function getUsersByPopulation($column, $population, $risk, $academic_fields=null
                         FROM {user} umood INNER JOIN {user_info_data} udata ON umood.id = udata.userid 
                         INNER JOIN {talentospilos_est_estadoases} estado_ases ON udata.data = CAST(estado_ases.id_estudiante as TEXT)
                         WHERE id_estado_ases = $state AND udata.fieldid = (SELECT id FROM  {user_info_field} as f WHERE f.shortname ='idtalentos') 
-                                AND estado_ases.fecha = (SELECT MAX(fecha) FROM {talentospilos_est_estadoases} WHERE id_estudiante = estado_ases.id_estudiante)";
+                              AND estado_ases.fecha = (SELECT MAX(fecha) FROM {talentospilos_est_estadoases} WHERE id_estudiante = estado_ases.id_estudiante)";
         }else{
             $query_status = "SELECT umood.id
                         FROM {user} umood INNER JOIN {user_info_data} udata ON umood.id = udata.userid 
                         INNER JOIN {talentospilos_est_estadoases} estado_ases ON udata.data = CAST(estado_ases.id_estudiante as TEXT)
                         WHERE udata.fieldid = (SELECT id FROM  {user_info_field} as f WHERE f.shortname ='idtalentos')
-                            AND estado_ases.fecha = (SELECT MAX(fecha) FROM {talentospilos_est_estadoases} WHERE id_estudiante = estado_ases.id_estudiante)";
+                         AND estado_ases.fecha = (SELECT MAX(fecha) FROM {talentospilos_est_estadoases} WHERE id_estudiante = estado_ases.id_estudiante)";
         }
         
         
@@ -454,9 +453,16 @@ function getUsersByPopulation($column, $population, $risk, $academic_fields=null
             $sql_query.=  $whereclause;
             
         }
+
+
+
     }
+    // print_r($sql_query);
+    // die();
     
     $result_query = $DB->get_records_sql($sql_query,null);
+    // print_r($result_query);
+    // die();
 
     if($result_query){
       
