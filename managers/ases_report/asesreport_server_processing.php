@@ -5,6 +5,7 @@ $columns = array();
 $poblacion = array();
 $campos_consulta = array();
 $riesgos_consulta = array();
+$academic_query = array();
 $name_columns = new stdClass();
 
 if(isset($_POST['cohorte'])){
@@ -39,7 +40,16 @@ if(isset($_POST['chk']) && isset($_POST['idinstancia'])){
         }
     }
 
-    $result = getUsersByPopulation($campos_consulta, $poblacion, $riesgos_consulta, $_POST['idinstancia']);
+    if(isset($_POST['chk_academic'])){
+
+        foreach($_POST['chk_academic'] as $chk_academic){
+
+            array_push($columns, array("title"=>$chk_academic, "name"=>$chk_academic, "data"=>$chk_academic));
+            array_push($academic_query, $chk_academic);
+        }
+    }
+
+    $result = getUsersByPopulation($campos_consulta, $poblacion, $riesgos_consulta, $academic_query, $_POST['idinstancia']);
     
     $data = array(
                 "bsort" => false,
