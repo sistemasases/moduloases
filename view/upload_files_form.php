@@ -58,7 +58,7 @@ if (!consult_instance($blockid)) {
 }
 
 //se crean los elementos del menu
-$menu_option = create_menu_options($USER->id, $blockid);
+$menu_option = create_menu_options($USER->id, $blockid, $courseid);
 
 // Crea una clase con la información que se llevará al template.
 $data = 'data';
