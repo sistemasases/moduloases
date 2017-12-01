@@ -53,7 +53,7 @@ if(isset($_POST['type'])&&$_POST['type']=="consulta_sistemas"&&isset($_POST['id_
        $html=profesionalUser($globalArregloPares,$globalArregloGrupal,$_POST['id_persona'],$_POST['instance'],$retorno->id_rol,$fechas,true);
 
     }
-    $actions = authenticate_user_view($USER->id,$_POST['instance']);
+    $actions = authenticate_user_view($USER->id,$_POST['instance'],'report_trackings');
 
     $html=show_according_permissions($html,$actions);
 
