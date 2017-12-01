@@ -589,7 +589,14 @@ function crearTablaYToggle($arregloImprimirPares, $monitorNo, $arregloImprimirGr
         // se crea un toogle para cada seguimiento que presente dicho estudiante
 
         for ($tupla = 0; $tupla < count($arregloImprimirPares[$student]); $tupla++) {
-            $stringRetornar.= '<div class="panel-group"><div class="panel panel-default"><div class="panel-heading"><h4 class="panel-title"><a data-toggle="collapse" href="#collapse_' . $monitorNo . $arregloImprimirPares[$student][0][20] . $tupla . '"> <label  for="fechatext_' . $arregloImprimirPares[$student][$tupla][23] . '"/ id="fecha_texto_' . $arregloImprimirPares[$student][$tupla][23] . '"> Registro : ' . $arregloImprimirPares[$student][$tupla][1] . '</label></a></h4></div>';
+            
+            if($arregloImprimirPares[$student][$tupla][27]==0){
+                 $stringRetornar.= '<div class="panel-group"><div class="panel panel-default"><div class="panel-heading" style="background-color: #a39999"><h4 class="panel-title"><a data-toggle="collapse" href="#collapse_' . $monitorNo . $arregloImprimirPares[$student][0][20] . $tupla . '"> <label  for="fechatext_' . $arregloImprimirPares[$student][$tupla][23] . '"/ id="fecha_texto_' . $arregloImprimirPares[$student][$tupla][23] . '"> Registro : ' . $arregloImprimirPares[$student][$tupla][1] . '</label></a></h4></div>';
+            }else{
+                $stringRetornar.= '<div class="panel-group"><div class="panel panel-default"><div class="panel-heading"><h4 class="panel-title"><a data-toggle="collapse" href="#collapse_' . $monitorNo . $arregloImprimirPares[$student][0][20] . $tupla . '"> <label  for="fechatext_' . $arregloImprimirPares[$student][$tupla][23] . '"/ id="fecha_texto_' . $arregloImprimirPares[$student][$tupla][23] . '"> Registro : ' . $arregloImprimirPares[$student][$tupla][1] . '</label></a></h4></div>'; 
+            }
+            
+
             $stringRetornar.= '<div id="collapse_' . $monitorNo . $arregloImprimirPares[$student][0][20] . $tupla . '" class="panel-collapse collapse"><div class="panel-body hacer-scroll" style="overflow-y"><table class="table table-hover $students_table" id="$students_table' . $arregloImprimirPares[$student][0][20] . $arregloImprimirPares[$student][0][19] . '">';
             $stringRetornar.= '<thead><tr><th></th><th></th><th></th></tr></thead>';
             $stringRetornar.= '<tbody id=' . $tupla . '_' . $arregloImprimirPares[$student][$tupla][23] . '>';

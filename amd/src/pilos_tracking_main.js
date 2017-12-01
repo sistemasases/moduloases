@@ -25,7 +25,6 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_as
             var htmltexto = "";
             var instance = "";
             var email = "";
-            var namerol = "";
 
             //coment
 
