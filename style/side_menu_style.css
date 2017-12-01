@@ -8,10 +8,10 @@ body {
     padding: 0;
     overflow: hidden;
     background-color: #333;
-    position: absolute;
+    /*position: absolute;*/
     top: -47px;
     left: -115px;
-    width: 1500px;     
+    /*width: 1500px;*/     
 }
 
 #menu_div li {

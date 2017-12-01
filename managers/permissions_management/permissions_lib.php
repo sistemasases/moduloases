@@ -242,7 +242,7 @@ function get_functions_by_role_id($id_role){
 
 }
 
-get_functions_by_role_id(6);
+//get_functions_by_role_id(6);
 
 /**
  * Función que retorna los roles con el campo eliminar existentes en el sistema 

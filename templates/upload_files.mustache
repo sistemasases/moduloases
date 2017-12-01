@@ -1,14 +1,13 @@
+{{#data}}
+    {{{message}}}
+    {{> block_ases/side_menu}}            
+{{/data}}
 <div class="container">
     <div class="col-sm-6">
         <h2>Carga de datos</h2>
-        <hr />
-        {{#data}}
-            {{{message}}}
-            {{> block_ases/side_menu}}            
-        {{/data}}
+        <hr />        
         <!-- {{#data}} -->
-        {{#upload_files_uf}}
-        
+        {{#upload_files_uf}}        
         <div class="row">
             <form class="form-horizontal" id="upload_data_form">
                 <div class="form-group">
