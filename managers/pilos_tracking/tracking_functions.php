@@ -30,7 +30,7 @@ function show_according_permissions(&$table, $actions)
     }
 
     if (isset($actions->send_observations_rt) == 0) {
-        $start = '<div class="col-sm-12" id="enviar_correo">';
+        $start = '<div class="col-sm-4" id="enviar_correo">';
         $table = replace_content_inside_delimiters($start, $end, $replace_with, $table);
     }
 
@@ -749,7 +749,7 @@ function crearTablaYToggle($arregloImprimirPares, $monitorNo, $arregloImprimirGr
             }
 
             if ($riesgo != "no") {
-                $stringRetornar.= '<div class="table-info-pilos col-sm-12 riesgo_' . $riesgo . '"id="riesgo_academico_' . $arregloImprimirPares[$student][$tupla][23] . '"><b>ACADEMICO:</b><br /><textarea id="obacademico_' . $arregloImprimirPares[$student][$tupla][23] . '" class ="no-borde-fondo editable" readonly>' . $arregloImprimirPares[$student][$tupla][11] . '</textarea><br />RIESGO: ' . $riesgo;
+                $stringRetornar.= '<div class="table-info-pilos col-sm-12 riesgo_' . $riesgo . '" id="riesgo_academico_' . $arregloImprimirPares[$student][$tupla][23] . '"><b>ACADEMICO:</b><br /><textarea id="obacademico_' . $arregloImprimirPares[$student][$tupla][23] . '" class ="no-borde-fondo editable" readonly>' . $arregloImprimirPares[$student][$tupla][11] . '</textarea><br />RIESGO: ' . $riesgo;
                 $stringRetornar.= '<div class="col-md-12 radio-ocultar ocultar" id="radio_academico_div' . $arregloImprimirPares[$student][$tupla][23] . '">';
                 $stringRetornar.= '<label class="radio-inline" >';
                 $stringRetornar.= '<input type="radio" name="riesgo_academico_' . $arregloImprimirPares[$student][$tupla][23] . '" value="1">Bajo';
@@ -761,13 +761,15 @@ function crearTablaYToggle($arregloImprimirPares, $monitorNo, $arregloImprimirGr
                 $stringRetornar.= '<input type="radio" name="riesgo_academico_' . $arregloImprimirPares[$student][$tupla][23] . '" value="3">Alto';
                 $stringRetornar.= '</label>';
                 $stringRetornar.= '<label class="radio-inline" ><span style="color:gray;" class="glyphicon glyphicon-erase limpiar" id="clean_individual_risk"></span></label>';
+ 
                 $stringRetornar.= '</div></div>';
                 $stringRetornar.= '</td></tr>';
                 $stringRetornar.= '<div class="col-md-12 top-buffer"></div>';
             }
             else
             if ($riesgo == "no") {
-                $stringRetornar.= '<div class="table-info-pilos col-sm-12 riesgo_' . $riesgo . ' quitar-ocultar ocultar"><b>ACADEMICO:</b><br /><textarea id="obacademico_' . $arregloImprimirPares[$student][$tupla][23] . '" class ="no-borde-fondo editable" readonly></textarea><br />RIESGO:No registra</div>';
+
+                 $stringRetornar.= '<div class="table-info-pilos col-sm-12 riesgo_' . $riesgo . ' quitar-ocultar ocultar"><b>ACADEMICO:</b><br /><textarea id="obacademico_' . $arregloImprimirPares[$student][$tupla][23] . '" class ="no-borde-fondo editable" readonly></textarea><br />RIESGO:No registra';
                 $stringRetornar.= '<div class="col-md-12 radio-ocultar ocultar" id="radio_academico_div' . $arregloImprimirPares[$student][$tupla][23] . '">';
                 $stringRetornar.= '<label class="radio-inline hidden" >';
                 $stringRetornar.= '<input type="radio" name="riesgo_academico_' . $arregloImprimirPares[$student][$tupla][23] . '"  value="0">No registra';
@@ -784,7 +786,10 @@ function crearTablaYToggle($arregloImprimirPares, $monitorNo, $arregloImprimirGr
                 $stringRetornar.= '<label class="radio-inline" ><span style="color:gray;" class="glyphicon glyphicon-erase limpiar" id="clean_individual_risk"></span></label>';
                 $stringRetornar.= '</div>';
                 $stringRetornar.= '</td></tr>';
-                $stringRetornar.= '<div class=" col-md-12 top-buffer"></div>';
+                $stringRetornar.= '<div class=" col-md-12 top-buffer"></div></div>';
+
+
+
             }
 
             // se verifica el tipo de riesgo y asi mismo se añadira
@@ -934,10 +939,10 @@ function crearTablaYToggle($arregloImprimirPares, $monitorNo, $arregloImprimirGr
 
             if ($arregloImprimirPares[$student][$tupla][27] != 1 or $sistemas == 1) {
                 $stringRetornar.= '
-                        <div class="col-sm-12" id="enviar_correo"><div class="col-sm-4 col" id="enviar_' . $arregloImprimirPares[$student][$tupla][23] . '" style="display: "><span class="btn btn-info btn-lg  botonCorreo" value="' . $arregloImprimirPares[$student][$tupla][23] . '" id="correo_' . $arregloImprimirPares[$student][$tupla][23] . '" type="button">Enviar observaciones</span></div>
+                        <div class="col-sm-4" id="enviar_correo"><div class="col-sm-4 col" id="enviar_' . $arregloImprimirPares[$student][$tupla][23] . '" style="display: "><span class="btn btn-info btn-lg  botonCorreo" value="' . $arregloImprimirPares[$student][$tupla][23] . '" id="correo_' . $arregloImprimirPares[$student][$tupla][23] . '" type="button">Enviar observaciones</span></div></div>
 
                         <div class="col-sm-4" id="editar_registro">
-                        <div class="col-sm-4" id="editar_' . $arregloImprimirPares[$student][$tupla][23] . '" style="display:"><span class="btn btn-info btn-lg botonesSeguimiento botonEditarSeguimiento" value="' . $arregloImprimirPares[$student][$tupla][23] . '" type="button">Editar</span></div>
+                        <div class="col-sm-4" id="editar_' . $arregloImprimirPares[$student][$tupla][23] . '" style="display:"><span class="btn btn-info btn-lg botonesSeguimiento botonEditarSeguimiento" value="' . $arregloImprimirPares[$student][$tupla][23] . '" type="button">Editar</span></div></div>
 
                         <div class="col-sm-4" id="borrar_registro">
                         <div class="col-sm-4" id="borrar_' . $arregloImprimirPares[$student][$tupla][23] . '" style="display:"><span class="btn btn-info btn-lg botonBorrar"  value="' . $arregloImprimirPares[$student][$tupla][23] . '" type="button">Borrar</span></div></div>';
