@@ -852,27 +852,27 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_as
                     switch (elemento[1]) {
                         case 'individual':
                             $("#obindividual_" + id).val("");
-                            auxiliar_limpiar("#riesgo_individual_", id);
+                            auxiliar_limpiar("riesgo_individual_", id);
                             break;
 
                         case 'familiar':
                             $("#obfamiliar_" + id).val("");
-                            auxiliar_limpiar("#riesgo_familiar_", id);
+                            auxiliar_limpiar("riesgo_familiar_", id);
                             break;
 
                         case 'academico':
                             $("#obacademico_" + id).val("");
-                            auxiliar_limpiar("#riesgo_academico_", id);
+                            auxiliar_limpiar("riesgo_academico_", id);
                             break;
 
                         case 'economico':
                             $("#obeconomico_" + id).val("");
-                            auxiliar_limpiar("#riesgo_economico_", id);
+                            auxiliar_limpiar("riesgo_economico_", id);
                             break;
 
                         case 'universitario':
                             $("#obuniversitario_" + id).val("");
-                            auxiliar_limpiar("#riesgo_universitario_", id);
+                            auxiliar_limpiar("riesgo_universitario_", id);
                             break;
 
                         default:
@@ -1169,9 +1169,11 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_as
 
             //Limpia los campos de riesgos y deschequea su prioridad.
             function auxiliar_limpiar(texto, id) {
-                $(texto + id).removeClass("riesgo_bajo");
-                $(texto + id).removeClass("riesgo_medio");
-                $(texto + id).removeClass("riesgo_alto");
+                $('input:radio[name=' + texto+id + ']').parent().parent().parent().removeClass("riesgo_bajo");
+                $('input:radio[name=' + texto+id + ']').parent().parent().parent().removeClass("riesgo_medio");
+                $('input:radio[name=' + texto+id + ']').parent().parent().parent().removeClass("riesgo_alto");
+
+
                 var text = '"' + texto.replace("#", "") + id + '"';
                 $('input:radio[name=' + text + ']').each(function(i) {
                     this.checked = false;

@@ -1,22 +1,28 @@
+{{#data}}
+<div class="container">
+   <h2>SEGUIMIENTO PILOS</h2>
+   <hr/>
+   {{{message}}}
+</div>
 <form>
-  {{#data}}
-  <div class="row">
-    <label class="col-md-offset-3" id="titulo"></label>
-  </div>
-  <div class="row">
-
-    <div id="anadir" class="selectSistemas"></div>
+   {{#data}}
+   <div class="row">
+      <label class="col-md-offset-3" id="titulo"></label>
+   </div>
+   <div class="row">
+      {{#view_trackings_rt}}
       <div data-spy="scroll" data-target=".navbar" data-offset="50" class="well col-md-10 col-md-offset-1 reporte-seguimiento">
-        {{{table_periods}}}
+         {{{table_periods}}}
       </div>
       <div id='loadingmessage'>
       </div>
       <div data-spy="scroll" data-target=".navbar" data-offset="50" class="well col-md-10 col-md-offset-1" id="conteo_principal" name="conteo_principal">
-
       </div>
       <div data-spy="scroll" data-target=".navbar" data-offset="50" class="well col-md-10 col-md-offset-1 reporte-seguimiento oculto" id="reemplazarToogle" name="reemplazarToogle">
-      {{{table}}}
+         {{{table}}}
       </div>
-  </div>
-{{/data}}
+      {{/view_trackings_rt}}
+   </div>
+   {{/data}}
 </form>
+{{/data}}
