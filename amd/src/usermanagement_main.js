@@ -361,7 +361,8 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_as
                 var dataUsername = $('#users').val();
                 var dataStudents = new Array();
 
-                 var permissions = evaluate_permission("update_role");
+                 var permissions = evaluate_permission("update_role_um");
+                 console.log(permissions);
                     if (permissions == 'true') {
 
 

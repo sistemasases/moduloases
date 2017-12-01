@@ -287,7 +287,7 @@ function updateRisks($segObject, $idStudent){
  */
 
 
-function get_id_rol($userid,$instanceid)
+function get_id_rol_($userid,$instanceid)
 {
     global $DB;
     $sql_query = "SELECT id_rol FROM {talentospilos_user_rol} WHERE id_usuario='$userid' AND id_instancia='$instanceid'";

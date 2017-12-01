@@ -3,7 +3,7 @@ require_once (dirname(__FILE__) . '/../../../config.php');
 
 require_once ('permissions_management/permissions_lib.php');
 
-require_once ('../managers/user_management/user_functions.php');
+//require_once ('../managers/user_management/user_functions.php');
 
 global $USER;
 /*
@@ -129,3 +129,9 @@ function get_actions_by_role($id_functionality, $id_role)
     $consulta = $DB->get_records_sql($sql_query);
     return $consulta;
 }
+
+
+
+
+
+
