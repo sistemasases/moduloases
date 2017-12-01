@@ -361,11 +361,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_as
                 var dataUsername = $('#users').val();
                 var dataStudents = new Array();
 
-                 var permissions = evaluate_permission("update_role");
-                    if (permissions == 'true') {
-
-
-                    $('input[name="array_students[]"]').each(function() {
+                        $('input[name="array_students[]"]').each(function() {
                         dataStudents.push($(this).val().split(" - ")[0]);
 
                     });
@@ -491,9 +487,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_as
                         });
                     }
                 
-                }else{
-                    swal("Error", "el usuario conectado no puede realizar dicha acción", "error")
-                }
+               
             }
 
 
