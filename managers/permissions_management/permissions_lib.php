@@ -218,8 +218,8 @@ function get_functions_by_role($id_role)
 }
 
 /**
- * Función que retorna el id de las acciones asociadas a un rol
- * @see get_actions_by_role($id_role)
+ * Función que retorna el nombre de las funcionalidades asociadas a un rol
+ * @see get_actions_by_role_id($id_role)
  * @param $id_role
  * @return Array
  **/

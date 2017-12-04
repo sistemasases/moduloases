@@ -2,9 +2,14 @@
 require_once (dirname(__FILE__) . '/../../../config.php');
 
 require_once ('permissions_management/permissions_lib.php');
+require_once ('validate_profile_action.php');
 /**
  * Función que crea las opciones del menú dinámico
- * 
+ * @see create_menu_options($userid, $blockid, $courseid)
+ * @param $userid
+ * @param $blockid
+ * @param $courseid
+ * @return String
  */
 
 function create_menu_options($userid, $blockid, $courseid){
