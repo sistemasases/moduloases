@@ -9,10 +9,12 @@
   * @module block_ases/student_profile_main
   */
 
-define(['jquery', 'block_ases/bootstrap', 'block_ases/d3', 'block_ases/sweetalert', 'block_ases/jqueryui','block_ases/select2'], function($, bootstrap, d3, sweetalert, jqueryui, select2) {
+define(['jquery', 'block_ases/bootstrap', 'block_ases/d3', 'block_ases/sweetalert', 'block_ases/jqueryui','block_ases/select2', 'block_ases/Chart'], function($, bootstrap, d3, sweetalert, jqueryui, select2) {
     
     return {
         init: function() {
+
+            
             // Carga una determinada pestaña
 
             var parameters = get_url_parameters(document.location.search);
@@ -445,10 +447,12 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/d3', 'block_ases/sweetaler
                         });
             $('#view_graphic_risk_button').click(function(){
                 $('#modal_riesgos').fadeIn(200);
+                graficar();
             });
             $('#mymodal-riesgo-close').click(function(){
                 $('#modal_riesgos').fadeOut(200);
             });
+
         }
     };
 
@@ -1556,4 +1560,82 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/d3', 'block_ases/sweetaler
     }
 
 
+    function procesarJSON(){
+        // Asignación de gráficas y manejo del JSON para graficar
+        
+      
+        
+      
+        for(var i = 0; i <  Object.keys(datos['informacion']).length; i++){
+          var arregloDimensionTmp = [];
+          var nombreDimensionTmp;
+          var fechasTmp = [];
+          var colorTmp = [];
+          var riesgoTmp = [];
+      
+          nombreDimensionTmp = datos['informacion'][i]['dimension'];
+          var contador = 0;
+          while(datos['informacion'][i]['datos'][contador]['end'] == 'false'){
+            fechasTmp.push(datos['informacion'][i]['datos'][contador]['fecha']);
+            colorTmp.push(datos['informacion'][i]['datos'][contador]['color']);
+            riesgoTmp.push(datos['informacion'][i]['datos'][contador]['riesgo']);
+            contador = contador + 1;
+          }
+          arregloDimensionTmp.push(nombreDimensionTmp);
+          arregloDimensionTmp.push(fechasTmp);
+          arregloDimensionTmp.push(colorTmp);
+          arregloDimensionTmp.push(riesgoTmp);
+          datosGraficables.push(arregloDimensionTmp);
+        }
+        // Fin de asignación de gráficas
+    }
+    
+  
+    function graficar(){
+        procesarJSON();
+      var myChart_individual = generar(datosGraficables[0],ctx_individual);
+      var myChart_familiar = generar(datosGraficables[1],ctx_familiar);
+      var myChart_academico = generar(datosGraficables[2],ctx_academico);
+      var myChart_economico = generar(datosGraficables[3],ctx_economico);
+      var myChart_vida_universitaria = generar(datosGraficables[4],ctx_vida_universitaria);
+    }
+      
+  
+      /*Generador de gráficas*/
+      function generar(datos, destino, canvas){
+        return new Chart(destino, {
+            type: 'line',
+            data: {
+              
+                labels: datos[1],
+                datasets: [{
+                    label: 'Nivel de riesgo',
+                    fill: false,
+                    lineTension: 0,
+                    pointBackgroundColor: datos[2],
+                    data: datos[3],
+                    backgroundColor: 'black',
+                    borderColor: 'black',
+                    borderWidth: 3,
+                    pointRadius: 5,
+                    pointHoverRadius: 7
+                }]
+            },
+            options: {
+                legend: {
+                    display: false
+                },
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero:true,
+                            stepSize: 1,
+                            max : 3,    
+                            min : 0
+                        }
+                    }]
+                }
+            }
+        });
+      };
 })
