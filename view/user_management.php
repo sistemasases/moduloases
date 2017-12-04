@@ -33,6 +33,7 @@ require_once ('../managers/user_management/user_lib.php');
 require_once ('../managers/user_management/user_functions.php');
 require_once ('../managers/permissions_management/permissions_lib.php');
 require_once ('../managers/validate_profile_action.php');
+require_once ('../managers/menu_options.php');
 
 global $PAGE;
 include ("../classes/output/user_management_page.php");
@@ -58,6 +59,9 @@ if (!consult_instance($blockid)) {
 	header("Location: instance_configuration.php?courseid=$courseid&instanceid=$blockid");
 }
 
+//se crean los elementos del menu
+$menu_option = create_menu_options($USER->id, $blockid, $courseid);
+
 // Obtiene las personas asociadas al curso y los estudiantes.
 
 $courseusers = get_course_usersby_id($courseid);
@@ -72,6 +76,7 @@ $actions = authenticate_user_view($USER->id, $blockid);
 $data = $actions;
 
 $data->table = $table_courseuseres;
+$data->menu = $menu_option;
 $PAGE->requires->js_call_amd('block_ases/usermanagement_main', 'init');
 
 // Configuracion de la navegación
@@ -102,6 +107,7 @@ $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/jquery.dataTables.c
 $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/jquery.dataTables.min.css', true);
 $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/jquery.dataTables_themeroller.css', true);
 $PAGE->requires->css('/blocks/ases/js/select2/css/select2.css', true);
+$PAGE->requires->css('/blocks/ases/style/side_menu_style.css', true);
 $output = $PAGE->get_renderer('block_ases');
 $output = $PAGE->get_renderer('block_ases');
 $index_page = new \block_ases\output\user_management_page($data);
