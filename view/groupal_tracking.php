@@ -32,8 +32,9 @@ global $PAGE;
 
 include("../classes/output/groupal_tracking_page.php");
 include("../classes/output/renderer.php");
-require_once('../managers/query.php');
 require_once('../managers/instance_management/instance_lib.php');
+require_once ('../managers/permissions_management/permissions_lib.php');
+require_once ('../managers/validate_profile_action.php');
 
 // Set up the page.
 $title = "Seguimiento Grupal";
@@ -43,7 +44,7 @@ $blockid = required_param('instanceid', PARAM_INT);
 
 require_login($courseid, false);
 
-//se culta si la instancia ya está registrada
+//se oculta si la instancia ya está registrada
 if(!consult_instance($blockid)){
     header("Location: instance_configuration.php?courseid=$courseid&instanceid=$blockid");
 }
@@ -51,6 +52,14 @@ if(!consult_instance($blockid)){
 $contextcourse = context_course::instance($courseid);
 $contextblock =  context_block::instance($blockid);
 $url = new moodle_url("/blocks/ases/view/groupal_tracking.php", array('courseid' => $courseid, 'instanceid' => $blockid));
+
+// Crea una clase con la información que se llevará al template.
+$data = 'data';
+$data = new stdClass;
+
+// Evalua si el rol del usuario tiene permisos en esta view.
+$actions = authenticate_user_view($USER->id, $blockid);
+$data = $actions;
 
 
 //se configura la navegacion
@@ -78,6 +87,6 @@ $output = $PAGE->get_renderer('block_ases');
 
 echo $output->header();
 //echo $output->standard_head_html(); 
-$groupal_tracking_page = new \block_ases\output\groupal_tracking_page('Some text');
+$groupal_tracking_page = new \block_ases\output\groupal_tracking_page($data);
 echo $output->render($groupal_tracking_page);
 echo $output->footer();
