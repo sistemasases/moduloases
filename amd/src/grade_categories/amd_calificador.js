@@ -35,7 +35,7 @@ requirejs(['jquery', 'bootstrap', 'sweetalert'], function($) {
             $.ajax({
             type: "POST",
             data: data,
-            url: "../managers/grade_categories/grade_categories_processing.php",
+            url: "../managers/grade_categories/grader_processing.php",
             async: false,
             success: function(msg)
             {
@@ -235,7 +235,7 @@ requirejs(['jquery', 'bootstrap', 'sweetalert'], function($) {
         var newDiv = $("<div class = 'divForm'>");
         newDiv.load("../templates/categories_form.html");
 
-        var parent = $(this).parent();
+        var parent = $(this).parent().parent();
         parent.append('<hr style = "border-top: 1px solid #ddd">');
         parent.append(newDiv);
 
@@ -319,7 +319,7 @@ requirejs(['jquery', 'bootstrap', 'sweetalert'], function($) {
                 course: id,
                 type: "loadCat"
             },
-            url: "../managers/grade_categories/grade_categories_processing.php",
+            url: "../managers/grade_categories/grader_processing.php",
             success: function(msg) {
                 $("#mymodalbody").html(msg);
             },
@@ -350,7 +350,7 @@ requirejs(['jquery', 'bootstrap', 'sweetalert'], function($) {
                         tipo: tipoItem,
                         peso: weigth
                     },
-                    url: "../managers/grade_categories/grade_categories_processing.php",
+                    url: "../managers/grade_categories/grader_processing.php",
                     success: function(msg) {
                         //se recibe el mensaje, si el ingreso fue exitoso entonces se recarga el combo de categorias padre
                         if (msg == 1) {
@@ -399,7 +399,7 @@ requirejs(['jquery', 'bootstrap', 'sweetalert'], function($) {
                         tipo: tipoItem,
                         peso: weigth
                     },
-                    url: "../managers/grade_categories/grade_categories_processing.php",
+                    url: "../managers/grade_categories/grader_processing.php",
                     success: function(msg) {
                         //se recibe el mensaje, si el ingreso fue exitoso entonces se recarga el combo de categorias padre
                         if (msg == 1) {
@@ -447,7 +447,7 @@ requirejs(['jquery', 'bootstrap', 'sweetalert'], function($) {
                         tipo: tipoItem,
                         peso: weigth
                     },
-                    url: "../managers/grade_categories/grade_categories_processing.php",
+                    url: "../managers/grade_categories/grader_processing.php",
                     success: function(msg) {
                         //se recibe el mensaje, si el ingreso fue exitoso entonces se recarga el combo de categorias padre
                         if (msg == 1) {

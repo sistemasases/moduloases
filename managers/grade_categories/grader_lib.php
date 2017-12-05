@@ -454,11 +454,14 @@ function insertItem($course,$father,$name,$valsend,$item){
 //DELETING
 
 function delete_element($id, $courseid,$type){
+    global $DB;
     $gpr = new grade_plugin_return(array('type'=>'edit', 'plugin'=>'tree', 'courseid'=>$courseid));
     $gtree = new grade_tree($courseid, false, false);
     
     if($type === 'cat'){
         $eid = "cg$id";
+        // $query = "SELECT id FROM {grade_items} WHERE categoryid = $id";
+        // $result = $DB->get_records_sql($query);
     }elseif ($type === 'it') {
         $eid = "ig$id";
     }
@@ -468,10 +471,17 @@ function delete_element($id, $courseid,$type){
     }
     $object = $element['object'];
     $object->delete('grade/report/grader/category');
+    //PENDIENTE HACER ALGO CON LOS ITEMS
+    // if($result){
+    //     foreach($result as $itemid){
+    //         $grade_item = grade_item::fetch(array('id' => $itemid->id, 'courseid' => $courseid));
+    //         $grade_item->update();            
+    //     }
+    // }
     return true;
 }
 
-
+//delete_element(73,14,'cat');
 //AUXILIARY METHODS OF WIZARD
 /**
  *Make a query to find the last index of the sort element corresponding to the category that is being entered
@@ -562,7 +572,7 @@ function print_table_categories($report){
                         }  
                         $aggregation = getAggregationofCategory($categoryid);
                         $maxweight = getMaxWeight($categoryid);
-                        $html .= "<$celltype $id $headers class='$class' $colspan><div id = '$aggregation' class = 'agg'> $content <p style = 'display: inline' class = 'maxweight' id = '$maxweight'>$weight</p> <button title = \" Crear nuevo item o categoria\" class = \" btn new\" style = \"float: right !important\">+</button> </div></$celltype>\n";
+                        $html .= "<$celltype $id $headers class='$class' $colspan><div id = '$aggregation' class = 'agg'> $content <p style = 'display: inline' class = 'maxweight' id = '$maxweight'>$weight</p> <div id = 'buttons' style = 'float: right !important'><button title = 'Crear nuevo item o categoria' class = 'glyphicon glyphicon-plus-sign new'/ ><button title = 'Eliminar Categoria' class = 'glyphicon glyphicon-remove-sign delete'/><button title = 'Editar Categoria' class = 'glyphicon glyphicon-pencil edit'/></div></div></$celltype>\n";
                       }else{
                         $id_item = explode("_",$id)[1];  
                         $weight = getweightofItem($id_item);
