@@ -453,8 +453,22 @@ function insertItem($course,$father,$name,$valsend,$item){
 
 //DELETING
 
-function deleteItem($itemid, $courseid){
+function delete_element($id, $courseid,$type){
+    $gpr = new grade_plugin_return(array('type'=>'edit', 'plugin'=>'tree', 'courseid'=>$courseid));
+    $gtree = new grade_tree($courseid, false, false);
     
+    if($type === 'cat'){
+        $eid = "cg$id";
+    }elseif ($type === 'it') {
+        $eid = "ig$id";
+    }
+
+    if (!$element = $gtree->locate_element($eid)){
+        return false;
+    }
+    $object = $element['object'];
+    $object->delete('grade/report/grader/category');
+    return true;
 }
 
 
