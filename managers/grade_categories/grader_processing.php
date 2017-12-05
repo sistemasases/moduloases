@@ -1,5 +1,4 @@
 <?php
-require_once('grade_categories_lib.php');
 require_once('grader_lib.php');
 
  if(isset($_POST['course'])&&isset($_POST['parent'])&&isset($_POST['fullname'])&&isset($_POST['agregation'])&&($_POST['tipo']=="CATEGORÍA")&&isset($_POST['peso'])){

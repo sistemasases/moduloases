@@ -453,7 +453,7 @@ function insertItem($course,$father,$name,$valsend,$item){
 
 //DELETING
 
-function deleteItem($item){
+function deleteItem($itemid, $courseid){
     
 }
 
