@@ -15,9 +15,8 @@ require_once $CFG->dirroot.'/blocks/ases/managers/lib/student_lib.php';
 ///*** Get info calificador methods ***///
 ///*********************************///
 
-/*
+/**
  * Función que retorna un arreglo de todos los cursos donde hay matriculados estudiantes de una instancia determinada organizados segun su profesor.
- * @param $instanceid
  * @return Array 
  */
 
