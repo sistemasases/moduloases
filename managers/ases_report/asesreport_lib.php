@@ -1,9 +1,8 @@
 <?php
-
 require_once(dirname(__FILE__).'/../../../../config.php');
 require_once(dirname(__FILE__).'/../instance_management/instance_lib.php');
 require_once(dirname(__FILE__).'/../lib/lib.php');
-
+require_once(dirname(__FILE__).'/../lib/student_lib.php');
 /**
  * Función que recupera riesgos 
  *
@@ -11,14 +10,11 @@ require_once(dirname(__FILE__).'/../lib/lib.php');
  * @return Array Riesgos
  */
 function get_riesgos(){
-
     global $DB;
-
     $sql_query = "SELECT * FROM {talentospilos_riesgos_ases}";
     $result = $DB->get_records_sql($sql_query);
     return $result;
 }
-
 /**
  * Función que recupera cohortes
  *
@@ -26,15 +22,11 @@ function get_riesgos(){
  * @return Array Cohortes
  */
 function get_cohortes(){
-
     global $DB;
-
     $sql_query = "SELECT * FROM {cohort}";
     $result = $DB->get_records_sql($sql_query);
     return $result;
 }
-
-
 /**
  * Funcion recupera la informacion necesaria para la grafica de sexo de acuerdo al cohorte seleccionado
  * 
@@ -64,8 +56,6 @@ function getGraficSex($cohorte){
     }
     return $result;
 }
-
-
 /**
  * Funcion recupera la informacion necesaria para la grafica de edad de acuerdo al cohorte seleccionado
  * 
@@ -107,9 +97,7 @@ function getGraficAge($cohorte){
     
     return array_count_values($arrayRetornar);
     
-
 }
-
 /**
  * Funcion recupera la informacion necesaria para la grafica de programas de acuerdo al cohorte seleccionado
  * 
@@ -133,7 +121,6 @@ function getGraficPrograma($cohorte){
                   (data.userid=miembros.userid) INNER JOIN {cohort} AS cohort ON (cohort.id=miembros.cohortid) WHERE data.fieldid = 3 AND cohort.name='$cohorte')
                   AS sub INNER JOIN {talentospilos_programa} AS programa ON (cast(programa.id as text) = sub.codcarrera) 
                   GROUP BY programa.nombre;";
-
     //se verifica el cohorte ingresado, de acuerdo al caso se invoca el metodo de moodle con una de las dos
     //consultar armadas anteriormente
     if($cohorte == "TODOS"){
@@ -144,8 +131,6 @@ function getGraficPrograma($cohorte){
      //print_r($result);
     return $result;
 }
-
-
 /**
  * Funcion recupera la informacion necesaria para la grafica de facultad de acuerdo al cohorte seleccionado
  * 
@@ -162,8 +147,6 @@ function getGraficFacultad($cohorte){
                      AS sub INNER JOIN {talentospilos_programa} AS programa ON (CAST(programa.id AS text) = sub.codcarrera)) 
                   AS subconsulta INNER JOIN {talentospilos_facultad} AS facultad ON (subconsulta.id_facultad=facultad.id) 
                   GROUP BY facultad.nombre";  
-
-
     // consulta con la parte de los cohortes
     $query = "SELECT facultad.nombre,COUNT(facultad.nombre) FROM 
                     (SELECT nombre,programa.id_facultad FROM 
@@ -173,7 +156,6 @@ function getGraficFacultad($cohorte){
                      AS sub INNER JOIN {talentospilos_programa} AS programa ON (CAST(programa.id AS text) = sub.codcarrera)) 
                   AS subconsulta INNER JOIN {talentospilos_facultad} AS facultad ON (subconsulta.id_facultad=facultad.id) 
                   GROUP BY facultad.nombre";
-
     //se verifica el cohorte ingresado, de acuerdo al caso se invoca el metodo de moodle con una de las dos
     //consultar armadas anteriormente
     if($cohorte == "TODOS"){
@@ -185,8 +167,6 @@ function getGraficFacultad($cohorte){
     return $result;
     
 }
-
-
 /**
  * Funcion recupera la informacion necesaria para la grafica de estado de acuerdo al cohorte seleccionado
  * 
@@ -229,7 +209,6 @@ function getGraficEstado($cohorte){
     return $result;
     
 }
-
 /**
  * Función que recupera datos para la tabla de ases_report, dado el estado, la cohorte y un conjunto de campos a extraer.
  *
@@ -237,11 +216,11 @@ function getGraficEstado($cohorte){
  * @param $column       --> Campos a seleccionar
  * @param $population   --> Estado y cohorte
  * @param $risk         --> Nivel de riesgo a mostrar
+ * @param $academic_fields --> Campos relacionados con el programa académico y facultad
  * @param $idinstancia  --> Instancia del módulo
  * @return Array 
  */
-
-function getUsersByPopulation($column, $population, $risk, $idinstancia){
+function getUsersByPopulation($column, $population, $risk, $academic_fields=null, $idinstancia){
     global $DB;
     global $USER;
     //consulta
@@ -258,11 +237,9 @@ function getUsersByPopulation($column, $population, $risk, $idinstancia){
     if($infoinstancia->cod_univalle == 1008){
         $asescohorts = "OR pc.idnumber LIKE 'SP%'";
     }
-
     //se formatean las columnas
     $chk = array("Código","Nombre","Apellidos", "Documento", "Dirección", "Nombre acudiente", "Celular acudiente", "Grupo", "Estado", "Email","Celular");
     $name_chk_db = array("username", "firstname", "lastname", "num_doc","direccion_res","acudiente", "tel_acudiente","grupo","estado","email","celular");
-    
     //se eliminan las columnas con valores nulos: en caso de que el checkbox de grupo esté deshabilitado
     $column = array_filter($column, function($var){return !is_null($var);} );
     
@@ -299,11 +276,8 @@ function getUsersByPopulation($column, $population, $risk, $idinstancia){
         $column_risk_str = $column_risk_str."id_usuario = pcmuser.data AND id_riesgo = ".$id_riesgo.") AS ".$nombre_riesgo;
     }
     $columns_str = $columns_str.$column_risk_str;
-
     
     if(!isMonOrPract($USER)){
-
-
         if($state != "TODOS"){
             $query_status = "SELECT umood.id
                         FROM {user} umood INNER JOIN {user_info_data} udata ON umood.id = udata.userid 
@@ -371,28 +345,24 @@ function getUsersByPopulation($column, $population, $risk, $idinstancia){
                     ON usertm.id_user = pcm.userid) as pcmuser on pc.id = pcmuser.cohortid ";
                     
         	$whereclause = "WHERE pc.idnumber ='".$ch."';";
-
             $sql_query.=  $whereclause;
             
         }
     }else{
-
         //SE EVALUAN LOS ESTUDIANTES ASIGNADOS AL USUARIO
-
         $query_user = getQueryUser($USER);
-
         if($state != "TODOS"){
             $query_status = "SELECT umood.id
                         FROM {user} umood INNER JOIN {user_info_data} udata ON umood.id = udata.userid 
                         INNER JOIN {talentospilos_est_estadoases} estado_ases ON udata.data = CAST(estado_ases.id_estudiante as TEXT)
                         WHERE id_estado_ases = $state AND udata.fieldid = (SELECT id FROM  {user_info_field} as f WHERE f.shortname ='idtalentos') 
-                              AND estado_ases.fecha = (SELECT MAX(fecha) FROM {talentospilos_est_estadoases} WHERE id_estudiante = estado_ases.id_estudiante)";
+                                AND estado_ases.fecha = (SELECT MAX(fecha) FROM {talentospilos_est_estadoases} WHERE id_estudiante = estado_ases.id_estudiante)";
         }else{
             $query_status = "SELECT umood.id
                         FROM {user} umood INNER JOIN {user_info_data} udata ON umood.id = udata.userid 
                         INNER JOIN {talentospilos_est_estadoases} estado_ases ON udata.data = CAST(estado_ases.id_estudiante as TEXT)
                         WHERE udata.fieldid = (SELECT id FROM  {user_info_field} as f WHERE f.shortname ='idtalentos')
-                         AND estado_ases.fecha = (SELECT MAX(fecha) FROM {talentospilos_est_estadoases} WHERE id_estudiante = estado_ases.id_estudiante)";
+                            AND estado_ases.fecha = (SELECT MAX(fecha) FROM {talentospilos_est_estadoases} WHERE id_estudiante = estado_ases.id_estudiante)";
         }
         
         
@@ -407,7 +377,7 @@ function getUsersByPopulation($column, $population, $risk, $idinstancia){
                                 SELECT userid, CAST(d.data as int) as data 
                                 FROM {user_info_data} d 
                                 WHERE d.data <> '' 
-                                AND fieldid = (SELECT id FROM  {user_info_field} as f WHERE f.shortname ='idtalentos')
+                                AND fieldid = (SELECT id FROM {user_info_field} as f WHERE f.shortname ='idtalentos') 
                             ) AS field 
                             ON userm. id_user = field.userid ) AS usermoodle 
                         INNER JOIN {talentospilos_usuario} as usuario 
@@ -448,21 +418,12 @@ function getUsersByPopulation($column, $population, $risk, $idinstancia){
                     ON usertm.id_user = pcm.userid) as pcmuser on pc.id = pcmuser.cohortid ";
                     
             $whereclause = "WHERE pc.idnumber ='".$ch."';";
-
             $sql_query.=  $whereclause;
             
         }
-
-
-
     }
-    // print_r($sql_query);
-    // die();
     
     $result_query = $DB->get_records_sql($sql_query,null);
-    // print_r($result_query);
-    // die();
-
     if($result_query){
       
       $result  = array();
@@ -508,7 +469,52 @@ function getUsersByPopulation($column, $population, $risk, $idinstancia){
           }
           array_push($result, $temp);    
       }
+    /*********************************************************/
+    /**** Consulta relacionada con el programa académico *****/
+    /*********************************************************/
+    // Se desenmascaran los campos asociados a la consulta académica ("Código programa", "Programa académico", "Facultad")
+    $academic_fields_array = [
+        "Código programa" => "cod_univalle",
+        "Programa académico" => "nombre",
+        "Facultad" => "nombre"
+    ];
+    
+    $academic_fields_string = "";
+    $count = 0;
+    if($academic_fields){
+        foreach ($academic_fields as $field){
+            switch($field){
+                case "Código programa":
+                    $academic_fields_string .= "programa.".$academic_fields_array[$field]." AS \"Código programa\", ";
+                    break;
+                case "Programa académico":
+                    $academic_fields_string .= "programa.".$academic_fields_array[$field]." AS \"Programa académico\", ";
+                    break;
+                case "Facultad":
+                    $academic_fields_string .= "facultad.".$academic_fields_array[$field]." AS \"Facultad\", ";
+                    break;
+            }
+            $count++;
+            if($count == count($academic_fields)){
+                $academic_fields_string = substr($academic_fields_string, 0, -2);
+            }
+        }
+        $academic_query = "SELECT programa.id, ".$academic_fields_string." FROM {talentospilos_programa} AS programa 
+                                                                  INNER JOIN {talentospilos_facultad} AS facultad 
+                                                                  ON programa.id_facultad = facultad.id";
+        $result_academic_query = $DB->get_records_sql($academic_query);
+        foreach($result as &$student){
+            $sql_query = "SELECT id FROM {user} WHERE username LIKE '$student[Código]%'";
+            $id_student = $DB->get_record_sql($sql_query)->id;
+            $added_fields = get_adds_fields_mi($id_student);
+            $academic_program = $result_academic_query[$added_fields->idprograma];
+            foreach($academic_fields_array as $field){
+                $student = array_merge((array) $student, (array) $academic_program);
+            }
+        }
+    }
       
+      //print_r($result);
       
       $prueba =  new stdClass;
       $prueba->data= $result;
@@ -517,25 +523,20 @@ function getUsersByPopulation($column, $population, $risk, $idinstancia){
       $prueba =  new stdClass;
       $prueba->error = "No hay resultados en la consulta";
     }     
-
   return $prueba;
 }
-
 /**
  * Funcion que retorna un query especifico segun si el rol del usuario es monitor o practicante, para obtener sus estudiantes asignados
  * 
  * @param $USER
  * @return query String 
  */
-
 function getQueryUser($USER){
     global $DB;
     $id = $USER->id;
     $query_role = "SELECT rol.nombre_rol  FROM {talentospilos_rol} rol INNER JOIN {talentospilos_user_rol} uRol ON rol.id = uRol.id_rol WHERE uRol.id_usuario = $id AND uRol.id_semestre = (SELECT max(id_semestre) FROM {talentospilos_user_rol})";
     $rol = $DB->get_record_sql($query_role)->nombre_rol;
-
     $query = "";
-
     if($rol == 'monitor_ps'){
         $query = "SELECT muser.id 
                   FROM {user} muser INNER JOIN {user_info_data} data ON muser.id = data.userid 
@@ -559,7 +560,5 @@ function getQueryUser($USER){
                                            WHERE shortname ='idtalentos')";
     }
     return $query;
-
 }
-
 ?>
