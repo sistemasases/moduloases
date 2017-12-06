@@ -1,4 +1,5 @@
 <?php
+require_once ('../validate_profile_action.php');
 require_once('tracking_functions.php');
 require_once('../student_profile/studentprofile_lib.php');
 require_once('../periods_management/periods_lib.php');
@@ -11,7 +12,7 @@ if(isset($_POST['type'])&&$_POST['type']=="getInfo"&&isset($_POST['instance']))
     $datos["id"]=$USER->id;
     $datos["username"]=$USER->username;
     $datos["email"]=$USER->email;
-    $datos["rol"]=get_id_rol($USER->id,$_POST['instance']);
+    $datos["rol"]=get_id_rol_($USER->id,$_POST['instance']);
     $datos["name_rol"]=get_name_rol($datos["rol"]);
 
     echo json_encode($datos);
@@ -52,6 +53,9 @@ if(isset($_POST['type'])&&$_POST['type']=="consulta_sistemas"&&isset($_POST['id_
        $html=profesionalUser($globalArregloPares,$globalArregloGrupal,$_POST['id_persona'],$_POST['instance'],$retorno->id_rol,$fechas,true);
 
     }
+    $actions = authenticate_user_view($USER->id,$_POST['instance'],'report_trackings');
+
+    $html=show_according_permissions($html,$actions);
 
     echo $html;
 }}

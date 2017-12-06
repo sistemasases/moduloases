@@ -18,7 +18,7 @@ if(isset($_POST['id'])&&isset($_POST['source'])) {
 
 }else if( $_POST['data']=='get_info_permission'){
 	$user=$USER->id;
-    $user_role=get_id_rol($user,$_POST['instance']);
+    $user_role=get_id_rol_($user,$_POST['instance']);
     $accion = get_action_by_name($_POST['name_permission']);
     echo json_encode($is_permit=get_action_by_role($accion->id,$user_role));
 
