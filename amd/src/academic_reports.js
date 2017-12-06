@@ -2,7 +2,7 @@
   * @module block_ases/academic_reports
   */
 
-  define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_ases/datatables.net-buttons', 'block_ases/buttons.flash', 'block_ases/jszip', 'block_ases/pdfmake', 'block_ases/buttons.html5', 'block_ases/buttons.print', 'block_ases/sweetalert','block_ases/select2', 'block_ases/jqueryui'], function($, bootstrap, datatablesnet, datatablesnetbuttons, buttonsflash, jszip, pdfmake, buttonshtml5, buttonsprint, sweetalert, select2, jqueryui) {
+  define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_ases/datatables.net-buttons', 'block_ases/buttons.flash', 'block_ases/jszip', 'block_ases/pdfmake', 'block_ases/buttons.html5', 'block_ases/buttons.print', 'block_ases/sweetalert2','block_ases/select2', 'block_ases/jqueryui'], function($, bootstrap, datatablesnet, datatablesnetbuttons, buttonsflash, jszip, pdfmake, buttonshtml5, buttonsprint, sweetalert2, select2, jqueryui) {
     
         return {
     
@@ -35,9 +35,9 @@
                             success: function(msg) {
                                 //alert(msg);
                                 swal({ 
-                                    title: "Notas Perdidas", 
-                                    text: msg, 
+                                    title: "Notas Perdidas",
                                     type: "info", 
+                                    html: msg,
                                     showCancelButton: false,
                                     confirmButtonColor: "#DD6B55", 
                                     confirmButtonText: "Cerrar", 

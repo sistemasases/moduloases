@@ -139,7 +139,7 @@ function get_loses_by_student($username){
  * @return Array 
  */
 
-function get_courses_reports(){
+function get_courses_for_report(){
     global $DB;
     
     $query_semestre = "SELECT nombre FROM {talentospilos_semestre} WHERE id = (SELECT MAX(id) FROM {talentospilos_semestre})";
@@ -170,4 +170,19 @@ function get_courses_reports(){
     $result = $DB->get_records_sql($query_courses);
         
     return $result;
+}
+
+
+function get_courses_report(){
+	$courses = get_courses_for_report();
+
+	$string_html = "<table id = 'courses'>
+						<thead>
+							<tr>
+								<th> Código</th>
+								<th> Nombre Completo</th>
+								<th> Nombre </th>
+							</tr>
+						</thead>"; 
+
 }
