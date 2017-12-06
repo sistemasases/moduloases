@@ -453,6 +453,15 @@ function insertItem($course,$father,$name,$valsend,$item){
 
 //DELETING
 
+
+/**
+ *Delete an element of grading. (item or category)
+ *
+ * @param int $id id of element to delete
+ * @param int $courseid id of course
+ * @param string $type type of element. "cat" if category, "row" if item
+ * @return bool 
+**/
 function delete_element($id, $courseid,$type){
     global $DB;
     $gpr = new grade_plugin_return(array('type'=>'edit', 'plugin'=>'tree', 'courseid'=>$courseid));
@@ -460,9 +469,7 @@ function delete_element($id, $courseid,$type){
     
     if($type === 'cat'){
         $eid = "cg$id";
-        // $query = "SELECT id FROM {grade_items} WHERE categoryid = $id";
-        // $result = $DB->get_records_sql($query);
-    }elseif ($type === 'it') {
+    }elseif ($type === 'row') {
         $eid = "ig$id";
     }
 
@@ -470,18 +477,24 @@ function delete_element($id, $courseid,$type){
         return false;
     }
     $object = $element['object'];
-    $object->delete('grade/report/grader/category');
-    //PENDIENTE HACER ALGO CON LOS ITEMS
-    // if($result){
-    //     foreach($result as $itemid){
-    //         $grade_item = grade_item::fetch(array('id' => $itemid->id, 'courseid' => $courseid));
-    //         $grade_item->update();            
-    //     }
-    // }
+    $object->delete();
+    //sleep(5);
+    $query = "SELECT id FROM {grade_items} WHERE needsupdate = 1 AND courseid = $courseid";
+    $result = $DB->get_records_sql($query);
+
+    foreach($result as $itemid){
+        $grade_item = grade_item::fetch(array('id' => $itemid->id, 'courseid' => $courseid));
+        if(!$grade_item->is_course_item()){
+            $grade_item->aggregationcoef = 1;
+            $grade_item->update();
+        }
+        $grade_item->regrading_finished();
+    }
+    
     return true;
 }
 
-//delete_element(73,14,'cat');
+//delete_element(179,14,'it');
 //AUXILIARY METHODS OF WIZARD
 /**
  *Make a query to find the last index of the sort element corresponding to the category that is being entered
@@ -510,7 +523,8 @@ function getCategoriesandItems($courseid){
    
     $sql_query="SELECT {user_enrolments}.userid AS id
                 FROM {enrol} INNER JOIN {user_enrolments} ON ({user_enrolments}.enrolid ={enrol}.id) 
-                WHERE courseid=".$courseid.";";
+                WHERE courseid=".$courseid."
+                LIMIT 1;";
                 
     $userid = $DB->get_record_sql($sql_query)->id;
     $context = context_course::instance($courseid);
@@ -572,7 +586,7 @@ function print_table_categories($report){
                         }  
                         $aggregation = getAggregationofCategory($categoryid);
                         $maxweight = getMaxWeight($categoryid);
-                        $html .= "<$celltype $id $headers class='$class' $colspan><div id = '$aggregation' class = 'agg'> $content <p style = 'display: inline' class = 'maxweight' id = '$maxweight'>$weight</p> <div id = 'buttons' style = 'float: right !important'><button title = 'Crear nuevo item o categoria' class = 'glyphicon glyphicon-plus-sign new'/ ><button title = 'Eliminar Categoria' class = 'glyphicon glyphicon-remove-sign delete'/><button title = 'Editar Categoria' class = 'glyphicon glyphicon-pencil edit'/></div></div></$celltype>\n";
+                        $html .= "<$celltype $id $headers class='$class' $colspan><div id = '$aggregation' class = 'agg'> $content <p style = 'display: inline' class = 'maxweight' id = '$maxweight'>$weight</p> <div id = 'buttons' style = 'float: right !important'><button title = 'Crear nuevo item o categoria' class = 'glyphicon glyphicon-plus new'/ ><button title = 'Editar Categoria' class = 'glyphicon glyphicon-pencil edit'/><button title = 'Eliminar Categoria' class = 'glyphicon glyphicon-trash delete'/></div></div></$celltype>\n";
                       }else{
                         $id_item = explode("_",$id)[1];  
                         $weight = getweightofItem($id_item);
@@ -581,7 +595,7 @@ function print_table_categories($report){
                         }else{
                             $weight = '('. floatval($weight).' %)';
                         }  
-                        $html .= "<$celltype $id $headers class='$class' $colspan>$content <p style = 'display: inline'>$weight</p> </$celltype>\n";
+                        $html .= "<$celltype $id $headers class='$class' $colspan>$content <p style = 'display: inline'>$weight</p><div id = 'buttons' style = 'float: right !important'><div><button title = 'Editar Item' class = 'glyphicon glyphicon-pencil edit'/><button title = 'Eliminar Item' class = 'glyphicon glyphicon-trash delete'/></div></div> </$celltype>\n";
                       }
                   }
               }

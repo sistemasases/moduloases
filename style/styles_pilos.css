@@ -1477,3 +1477,12 @@ input.no-borde-fondo.tema
 .glyphicon-pencil:before {
   content: "\270f";
 }
+
+.glyphicon-trash:before {
+  content: "\e020";
+}
+
+.glyphicon-plus:before {
+  content: "\002b";
+}
+
