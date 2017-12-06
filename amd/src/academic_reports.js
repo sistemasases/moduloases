@@ -1,5 +1,5 @@
  /**
-  * @module block_ases/periods_management_main
+  * @module block_ases/academic_reports
   */
 
   define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_ases/datatables.net-buttons', 'block_ases/buttons.flash', 'block_ases/jszip', 'block_ases/pdfmake', 'block_ases/buttons.html5', 'block_ases/buttons.print', 'block_ases/sweetalert','block_ases/select2', 'block_ases/jqueryui'], function($, bootstrap, datatablesnet, datatablesnetbuttons, buttonsflash, jszip, pdfmake, buttonshtml5, buttonsprint, sweetalert, select2, jqueryui) {
@@ -14,7 +14,7 @@
                     var table = $("#students").DataTable();
                     var colIndex = table.cell(this).index().column;
                     var student_code = table.cell(table.row(this).index(), 0).data();
-                    var username = $(this).attr('id');
+                    var username = $(this).attr('id');                           
                     // if (colIndex <= 2) {
                     //     $("#formulario").each(function() {
                     //         this.reset;

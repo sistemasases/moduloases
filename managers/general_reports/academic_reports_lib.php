@@ -91,7 +91,7 @@ function getReportStudents($instance){
 							<td>$student->codigo</td>
 							<td>$student->firstname</td>
 							<td>$student->lastname</td>
-							<td id = '$student->username' >$student->cantidad</td>
+							<td class='lastC' id = '$student->username' >$student->cantidad</td>
 						</tr>";
 	}
 
@@ -128,7 +128,7 @@ function get_loses_by_student($username){
 			$nota->itemname = $DB->get_record_sql($query_name)->name;
 		}
 		$note = round($nota->finalgrade,2);
-		$text.="Curso: $nota->fullname. Item: $nota->itemname. Nota: $note\n";
+		$text.="$nota->fullname $nota->itemname: $note\n";
 	}
 	return $text;
 }
