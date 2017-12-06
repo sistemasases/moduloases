@@ -89,7 +89,6 @@ $PAGE->requires->css('/blocks/ases/style/sweetalert.css', true);
 $PAGE->requires->css('/blocks/ases/style/side_menu_style.css', true);
 $PAGE->requires->js_call_amd('block_ases/uploaddata_main', 'init');
 
-
 $output = $PAGE->get_renderer('block_ases');
 
 echo $output->header();
