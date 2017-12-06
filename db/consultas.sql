@@ -442,3 +442,133 @@ FROM (SELECT user_m.id,SUBSTRING(user_m.username FROM 1 FOR 7) as codigo, user_m
 WHERE SUBSTRING(curso.shortname FROM 15 FOR 6) = '201708' AND
       grades.finalgrade < 3 
 GROUP BY estudiantes.id, estudiantes.codigo, estudiantes.firstname, estudiantes.lastname
+
+
+--------- CONSULTA POR DOCENTES DE ITEMS CALIFICADOS
+SELECT DISTINCT
+  (SELECT concat_ws(' ',firstname,lastname) AS fullname
+   FROM
+     (SELECT usuario.firstname,
+             usuario.lastname,
+             userenrol.timecreated
+      FROM {course} cursoP
+      INNER JOIN {context} cont ON cont.instanceid = cursoP.id
+      INNER JOIN {role_assignments} rol ON cont.id = rol.contextid
+      INNER JOIN {user} usuario ON rol.userid = usuario.id
+      INNER JOIN {enrol} enrole ON cursoP.id = enrole.courseid
+      INNER JOIN {user_enrolments} userenrol ON (enrole.id = userenrol.enrolid
+                                                 AND usuario.id = userenrol.userid)
+      WHERE cont.contextlevel = 50
+        AND rol.roleid = 3
+        AND cursoP.id = curso.id
+      ORDER BY userenrol.timecreated ASC
+      LIMIT 1) AS subc) AS "DOCENTE",
+                curso.fullname AS "CURSO",
+                curso.shortname AS "CÓDIGO",
+
+  (SELECT COUNT(id) AS cant
+   FROM {grade_items}
+   WHERE courseid = curso.id) AS "ITEMS CREADOS",
+
+   (SELECT COUNT(notas.id)
+   FROM {grade_items} items INNER JOIN {grade_grades} notas ON items.id = notas.itemid
+   WHERE items.courseid = curso.id
+    AND notas.finalgrade IS NOT NULL) AS "N° NOTAS CALIFICADAS",
+
+    (SELECT COUNT(notas.id)
+   FROM {grade_items} items INNER JOIN {grade_grades} notas ON items.id = notas.itemid
+   WHERE items.courseid = curso.id
+    AND notas.finalgrade < 3 
+    AND notas.userid IN
+    (SELECT user_m.id
+     FROM {user} user_m
+     INNER JOIN {user_info_data} DATA ON data.userid = user_m.id
+     INNER JOIN {user_info_field} field ON data.fieldid = field.id
+     INNER JOIN {talentospilos_usuario} user_t ON data.data = CAST(user_t.id AS VARCHAR)
+     INNER JOIN {talentospilos_est_estadoases} estado_u ON user_t.id = estado_u.id_estudiante
+     INNER JOIN {talentospilos_estados_ases} estados ON estados.id = estado_u.id_estado_ases
+     WHERE estados.nombre = 'ACTIVO/SEGUIMIENTO'
+       AND field.shortname = 'idtalentos')) AS "N° NOTAS PERDIDAS"
+
+FROM {course} curso
+INNER JOIN {enrol} ROLE ON curso.id = role.courseid
+INNER JOIN {user_enrolments} enrols ON enrols.enrolid = role.id
+WHERE SUBSTRING(curso.shortname
+                FROM 15
+                FOR 6) = '201708'
+  AND enrols.userid IN
+    (SELECT user_m.id
+     FROM {user} user_m
+     INNER JOIN {user_info_data} DATA ON data.userid = user_m.id
+     INNER JOIN {user_info_field} field ON data.fieldid = field.id
+     INNER JOIN {talentospilos_usuario} user_t ON data.data = CAST(user_t.id AS VARCHAR)
+     INNER JOIN {talentospilos_est_estadoases} estado_u ON user_t.id = estado_u.id_estudiante
+     INNER JOIN {talentospilos_estados_ases} estados ON estados.id = estado_u.id_estado_ases
+     WHERE estados.nombre = 'ACTIVO/SEGUIMIENTO'
+       AND field.shortname = 'idtalentos')
+---------------
+SELECT DISTINCT         
+          (SELECT concat_ws(' ',firstname,lastname) AS fullname
+           FROM
+             (SELECT usuario.firstname,
+                     usuario.lastname,
+                     userenrol.timecreated
+              FROM mdl_course cursoP
+              INNER JOIN mdl_context cont ON cont.instanceid = cursoP.id
+              INNER JOIN mdl_role_assignments rol ON cont.id = rol.contextid
+              INNER JOIN mdl_user usuario ON rol.userid = usuario.id
+              INNER JOIN mdl_enrol enrole ON cursoP.id = enrole.courseid
+              INNER JOIN mdl_user_enrolments userenrol ON (enrole.id = userenrol.enrolid
+                                                           AND usuario.id = userenrol.userid)
+              WHERE cont.contextlevel = 50
+                AND rol.roleid = 3
+                AND cursoP.id = curso.id
+              ORDER BY userenrol.timecreated ASC
+              LIMIT 1) AS subc) AS DOCENTE,
+			  curso.fullname AS CURSO,
+			  curso.shortname AS CODIGO,
+              (SELECT COUNT(id) as cant
+                    FROM mdl_grade_items
+                    WHERE courseid = curso.id)  AS "ITEMS CREADOS",
+
+   (SELECT COUNT(notas.id)
+   FROM mdl_grade_items items INNER JOIN mdl_grade_grades notas ON items.id = notas.itemid
+   WHERE items.courseid = curso.id
+    AND notas.finalgrade IS NOT NULL 
+    AND notas.userid IN
+            (SELECT user_m.id
+     FROM  mdl_user user_m
+     INNER JOIN mdl_user_info_data data ON data.userid = user_m.id
+     INNER JOIN mdl_user_info_field field ON data.fieldid = field.id
+     INNER JOIN mdl_talentospilos_usuario user_t ON data.data = CAST(user_t.id AS VARCHAR)
+     INNER JOIN mdl_talentospilos_est_estadoases estado_u ON user_t.id = estado_u.id_estudiante
+     INNER JOIN mdl_talentospilos_estados_ases estados ON estados.id = estado_u.id_estado_ases
+     WHERE estados.nombre = 'ACTIVO/SEGUIMIENTO' AND field.shortname = 'idtalentos')) AS "N° NOTAS CALIFICADAS",
+
+    (SELECT COUNT(notas.id)
+   FROM mdl_grade_items items INNER JOIN mdl_grade_grades notas ON items.id = notas.itemid
+   WHERE items.courseid = curso.id
+    AND notas.finalgrade < 3
+    AND notas.userid IN
+            (SELECT user_m.id
+     FROM  mdl_user user_m
+     INNER JOIN mdl_user_info_data data ON data.userid = user_m.id
+     INNER JOIN mdl_user_info_field field ON data.fieldid = field.id
+     INNER JOIN mdl_talentospilos_usuario user_t ON data.data = CAST(user_t.id AS VARCHAR)
+     INNER JOIN mdl_talentospilos_est_estadoases estado_u ON user_t.id = estado_u.id_estudiante
+     INNER JOIN mdl_talentospilos_estados_ases estados ON estados.id = estado_u.id_estado_ases
+     WHERE estados.nombre = 'ACTIVO/SEGUIMIENTO' AND field.shortname = 'idtalentos')) AS "N° NOTAS PERDIDAS"
+
+        FROM mdl_course curso
+        INNER JOIN mdl_enrol ROLE ON curso.id = role.courseid
+        INNER JOIN mdl_user_enrolments enrols ON enrols.enrolid = role.id
+        WHERE SUBSTRING(curso.shortname FROM 15 FOR 6) = '201708' AND enrols.userid IN
+            (SELECT user_m.id
+     FROM  mdl_user user_m
+     INNER JOIN mdl_user_info_data data ON data.userid = user_m.id
+     INNER JOIN mdl_user_info_field field ON data.fieldid = field.id
+     INNER JOIN mdl_talentospilos_usuario user_t ON data.data = CAST(user_t.id AS VARCHAR)
+     INNER JOIN mdl_talentospilos_est_estadoases estado_u ON user_t.id = estado_u.id_estudiante
+     INNER JOIN mdl_talentospilos_estados_ases estados ON estados.id = estado_u.id_estado_ases
+     WHERE estados.nombre = 'ACTIVO/SEGUIMIENTO' AND field.shortname = 'idtalentos')
+     

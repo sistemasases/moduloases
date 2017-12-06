@@ -1,12 +1,12 @@
-requirejs(['jquery', 'bootstrap', 'sweetalert'], function($) {
+requirejs(['jquery', 'bootstrap', 'sweetalert'], function ($) {
     var grade;
 
-    $(document).ready(function() {
+    $(document).ready(function () {
         var pilos = getIDs();
         deleteNoPilos(pilos);
         bloquearTotales();
-        if($('.gradingerror').length != 0){
-            new_page = location.origin + "/moodle/grade/report/grader/index.php?id="+getCourseid();
+        if ($('.gradingerror').length != 0) {
+            new_page = location.origin + "/moodle/grade/report/grader/index.php?id=" + getCourseid();
             swal({
                 title: "Redireccionando página.",
                 text: "Debido al proceso de actualización del campus virtual se debe realizar este paso.\nSOLO EL DOCENTE ENCARGADO DEL CURSO PUEDE \n Una vez realizado por favor cerrar la ventana y volver a seleccionar su curso en el listado",
@@ -15,89 +15,88 @@ requirejs(['jquery', 'bootstrap', 'sweetalert'], function($) {
                 confirmButtonClass: "btn-danger",
                 confirmButtonText: "Continuar",
                 closeOnConfirm: false
-              },
-              function(){
-                location.href = new_page;
-              });
+            },
+                function () {
+                    location.href = new_page;
+                });
         }
     });
 
 
 
-    $(document).on('blur','.text',function(){
-        if(validateNota($(this))){
+    $(document).on('blur', '.text', function () {
+        if (validateNota($(this))) {
             var id = $(this).attr('id').split("_");
             var userid = id[1];
             var itemid = id[2];
             var nota = $(this).val();
             var curso = getCourseid();
-            var data ={user: userid,item: itemid, finalgrade: nota,course: curso};
+            var data = { user: userid, item: itemid, finalgrade: nota, course: curso };
             $.ajax({
-            type: "POST",
-            data: data,
-            url: "../managers/grade_categories/grade_categories_processing.php",
-            async: false,
-            success: function(msg)
-            {
-                
-                var updGrade = msg.nota;
+                type: "POST",
+                data: data,
+                url: "../managers/grade_categories/grader_processing.php",
+                async: false,
+                success: function (msg) {
 
-                if(updGrade == true){
-                    console.log("Nota actualizada");
+                    var updGrade = msg.nota;
 
-                    if(nota<3){
-                        var menMonitor = msg.monitor;
-                        var menPracticante = msg.practicante;
-                        var menProfesional = msg.profesional;
+                    if (updGrade == true) {
+                        console.log("Nota actualizada");
 
-                        if(menMonitor == true){
-                            console.log("mensaje al monitor enviado correctamente");
-                        }else{
-                            console.log("error monitor");
-                            swal('Error',
-                         'Error al enviar correo al monitor',
-                         'error');
+                        if (nota < 3) {
+                            var menMonitor = msg.monitor;
+                            var menPracticante = msg.practicante;
+                            var menProfesional = msg.profesional;
+
+                            if (menMonitor == true) {
+                                console.log("mensaje al monitor enviado correctamente");
+                            } else {
+                                console.log("error monitor");
+                                swal('Error',
+                                    'Error al enviar correo al monitor',
+                                    'error');
+                            }
+
+                            if (menPracticante == true) {
+                                console.log("mensaje al practicante enviado correctamente");
+                            } else {
+                                console.log("error practicante");
+                                swal('Error',
+                                    'Error al enviar correo al practicante',
+                                    'error');
+                            }
+
+                            if (menProfesional == true) {
+                                console.log("mensaje al profesional enviado correctamente");
+                            } else {
+                                console.log("error profesional");
+                                swal('Error',
+                                    'Error al enviar correo al profesional',
+                                    'error');
+                            }
                         }
-
-                        if(menPracticante == true){
-                            console.log("mensaje al practicante enviado correctamente");
-                        }else{
-                            console.log("error practicante");
-                            swal('Error',
-                         'Error al enviar correo al practicante',
-                         'error');
-                        }
-
-                        if(menProfesional == true){
-                            console.log("mensaje al profesional enviado correctamente");
-                        }else{
-                            console.log("error profesional");
-                            swal('Error',
-                         'Error al enviar correo al profesional',
-                         'error');
-                        }
+                    } else {
+                        swal('Error',
+                            'Error al actualizar la nota',
+                            'error');
                     }
-                }else{
-                    swal('Error',
-                         'Error al actualizar la nota',
-                         'error');
-                }
 
-            },
-            dataType: "json",
-            cache: "false",
-            error: function(msg){console.log(msg)},
+                },
+                dataType: "json",
+                cache: "false",
+                error: function (msg) { console.log(msg) },
             });
         };
     })
 
-    $(document).on('focus','.text',function(){
+    $(document).on('focus', '.text', function () {
         grade = $(this).val();
         //console.log(grade);
     })
 
-    $(document).on('keypress','.text', function(e){
-        
+    $(document).on('keypress', '.text', function (e) {
+
         tecla = (document.all) ? e.keyCode : e.which;
 
         //Tecla de retroceso para borrar y el punto(.) siempre la permite
@@ -111,17 +110,17 @@ requirejs(['jquery', 'bootstrap', 'sweetalert'], function($) {
     });
 
 
-    $(document).on('click','.reload', function(){
-        
+    $(document).on('click', '.reload', function () {
+
         location.reload();
     });
 
 
-    function validateNota(selector){
+    function validateNota(selector) {
         var bool = false;
         var nota = selector.val();
 
-        if(nota>5 || nota <0){
+        if (nota > 5 || nota < 0) {
             swal({
                 title: "Ingrese un valor valido, entre 0 y 5. \n\rUsted ingresó: " + nota,
                 html: true,
@@ -130,81 +129,81 @@ requirejs(['jquery', 'bootstrap', 'sweetalert'], function($) {
             });
             selector.val(grade);
             bool = false;
-        }else if(nota == '' && grade != ''){
+        } else if (nota == '' && grade != '') {
             selector.val('0');
             bool = true;
-        }else if(nota == '' && grade == '' || nota == grade){
+        } else if (nota == '' && grade == '' || nota == grade) {
             bool = false;
-        }else{
+        } else {
             bool = true;
         }
 
-        
+
 
         return bool;
     }
 
-    function bloquearTotales(){
-        $('.cat').each(function(){
-            var input = $(this).children().next('.text'); 
-            input.attr('disabled',true);
-            input.css('font-weight','bold')
-        })
-
-        $('.course').each(function(){
+    function bloquearTotales() {
+        $('.cat').each(function () {
             var input = $(this).children().next('.text');
-            input.attr('disabled',true);
-            input.css('font-weight','bold');
-            input.css('font-size',16)
+            input.attr('disabled', true);
+            input.css('font-weight', 'bold')
         })
 
-        $('.header').children().each(function(){
+        $('.course').each(function () {
+            var input = $(this).children().next('.text');
+            input.attr('disabled', true);
+            input.css('font-weight', 'bold');
+            input.css('font-size', 16)
+        })
+
+        $('.header').children().each(function () {
             $(this).removeAttr('href');
         })
     }
 
-    function deleteNoPilos(pilos){
-        $("#user-grades").children().children().each(function(){
-            if($(this).attr('data-uid') != undefined){
-                if(!isPilo($(this).attr('data-uid'), pilos)){
+    function deleteNoPilos(pilos) {
+        $("#user-grades").children().children().each(function () {
+            if ($(this).attr('data-uid') != undefined) {
+                if (!isPilo($(this).attr('data-uid'), pilos)) {
                     $(this).remove();
-                }else{
-                    $(this).children('th').children().each(function(){
+                } else {
+                    $(this).children('th').children().each(function () {
                         $(this).removeAttr('href');
-                        $(this).click(function(){
+                        $(this).click(function () {
                             var id = $(this).parent().parent().attr('data-uid');
-                            var code = $('#idmoodle_'+id).attr('data-code');
+                            var code = $('#idmoodle_' + id).attr('data-code');
                             var pagina = "student_profile.php";
                             var url = pagina + location.search + "&student_code=" + code;
                             //window.open(url, '_blank');
                         })
-                });
+                    });
                 }
             };
         })
     }
 
-    function isPilo(id,pilos){
+    function isPilo(id, pilos) {
         for (var i = 0; i < pilos.length; i++) {
-            if(pilos[i].split("_")[1] === id){
+            if (pilos[i].split("_")[1] === id) {
                 return true;
             }
         }
         return false;
     }
 
-    function getIDs(){
+    function getIDs() {
         var pilos = new Array;
-        $("#students-pilos").children().each(function(){
+        $("#students-pilos").children().each(function () {
             pilos.push($(this).attr("id"));
         })
         return pilos;
     }
 
-    
 
-//Metodos de Wizard de crear categorias e items
-    $(document).on('click', '#wizard_button', function() {
+
+    //Metodos de Wizard de crear categorias e items
+    $(document).on('click', '#wizard_button', function () {
         $("#modalCategories").modal({
             backdrop: false
         });
@@ -213,14 +212,52 @@ requirejs(['jquery', 'bootstrap', 'sweetalert'], function($) {
         loadCategories(id);
     });
 
-    $(document).on('click', '.mymodal-close', function() {
+    $(document).on('click', '.mymodal-close', function () {
         location.reload();
         $('.fondo').hide();
     });
 
-    $(document).on("click", ".new", function() {
+    $(document).on('click', '.delete', function () {
+        var element = $(this).parent().parent().parent().attr('id').split('_');
+        var courseid = getCourseid();
+        var id = element[1];
+        var type = element[0];
+        if (type === 'cat') {
+            var tipo = "esta categoría"
+        } else {
+            var tipo = "este item"
+        }
+        var titulo = "Esta seguro que desea eliminar " + tipo + "?";
+        swal({
+            title: titulo,
+            text: "No se podran recuperar la notas del elemento una vez borrado!",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonClass: "btn-danger",
+            confirmButtonText: "Aceptar, Borrar " + tipo,
+            cancelButtonText: "Cancelar",
+            closeOnConfirm: false,
+            closeOnCancel: false
+        },
+            function (isConfirm) {
+                if (isConfirm) {
+                    deleteElement(id, courseid, type);
+                } else {
+                    swal({
+                        title: "Cancelado",
+                        type: "error",
+                        showCancelButton: false,
+                        showConfirmButton: false,
+                        timer: 1200,
+                    });
+                }
+            });
+
+    });
+
+    $(document).on("click", ".new", function () {
         var maxweight = $(this).prev().attr('id');
-        if(maxweight <= 0){
+        if (maxweight <= 0) {
             swal({
                 title: "No se pueden crear mas categorías o ítems en la categoria seleccionada.",
                 text: "\n\r El peso de los elementos dentro de ésta suma 100%.\n\r Para crear un nuevo elemento primero configure los pesos de los demas.",
@@ -231,28 +268,30 @@ requirejs(['jquery', 'bootstrap', 'sweetalert'], function($) {
             return;
         }
         $('.new').prop('disabled', true);
+        $('.delete').prop('disabled', true);
+        $('.edit').prop('disabled', true);
 
         var newDiv = $("<div class = 'divForm'>");
         newDiv.load("../templates/categories_form.html");
 
-        var parent = $(this).parent();
+        var parent = $(this).parent().parent();
         parent.append('<hr style = "border-top: 1px solid #ddd">');
         parent.append(newDiv);
 
-        window.setTimeout(function() {
+        window.setTimeout(function () {
 
             var agg = parent.attr("id");
 
             if (agg == 10) { //if is ponderated
                 $("#divPeso").show();
-                $("#inputValor").on('blur', function() {
+                $("#inputValor").on('blur', function () {
                     //se revisa que el elemento digitado cumpla con las restricciones
                     var numero = $(this).val();
-                    var maxPeso= parseInt($(this).parent().parent().parent().parent().children().next('.maxweight').attr('id'));
+                    var maxPeso = parseInt($(this).parent().parent().parent().parent().children().next('.maxweight').attr('id'));
                     //si no cumple con la restriccion de estar entre 0 y 100 entonces se realiza el aviso y se pone el valor en 0
                     if (numero < 0 || numero > maxPeso) {
                         swal({
-                            title: "El valor debe estar entre 0 y el peso máximo: "+maxPeso,
+                            title: "El valor debe estar entre 0 y el peso máximo: " + maxPeso,
                             text: "\n\rUsted ingresó: " + numero,
                             html: true,
                             type: "warning",
@@ -261,7 +300,7 @@ requirejs(['jquery', 'bootstrap', 'sweetalert'], function($) {
                         $(this).val('');
                     }
                 });
-                $('#inputValor').on('keypress', function(e) {
+                $('#inputValor').on('keypress', function (e) {
                     tecla = (document.all) ? e.keyCode : e.which;
 
                     //Tecla de retroceso para borrar y el punto(.) siempre la permite
@@ -276,7 +315,7 @@ requirejs(['jquery', 'bootstrap', 'sweetalert'], function($) {
                 });
             }
 
-            $("#tipoItem").on('change', function() {
+            $("#tipoItem").on('change', function () {
                 var index = $(this).prop('selectedIndex');
                 if (index == 1) {
                     $('#divTipeC').show();
@@ -286,21 +325,54 @@ requirejs(['jquery', 'bootstrap', 'sweetalert'], function($) {
                 }
             });
 
-            $('#save').on('click', function() {
+            $('#save').on('click', function () {
                 var agg = $(this).parent().parent().parent().parent().attr("id");
                 var parent = $(this).parent().parent().parent().parent().parent().attr("id");
                 parent = parent.split('_')[1];
                 createElement(agg, parent);
             });
 
-            $('#cancel').on('click', function() {
+            $('#cancel').on('click', function () {
                 var id = getCourseid();
                 loadCategories(id);
             });
         }, 400);
     });
 
-
+    function deleteElement(id_e, course_id, type_e) {
+        $.ajax({
+            type: "POST",
+            data: {
+                type_ajax: "deleteElement",
+                id: id_e,
+                courseid: course_id,
+                type: type_e
+            },
+            url: "../managers/grade_categories/grader_processing.php",
+            success: function (msg) {
+                if (msg.error) {
+                    swal('Error',
+                        msg.error,
+                        'error');
+                } else {
+                    swal({
+                        title: "Listo",
+                        text: msg.msg,
+                        type: "success",
+                        showCancelButton: false,
+                        showConfirmButton: false,
+                        timer: 1200,
+                    });
+                    loadCategories(course_id);
+                }
+            },
+            dataType: "json",
+            cache: "false",
+            error: function (msg) {
+                console.log(msg);
+            },
+        });
+    }
     function getCourseid() {
         var informacionUrl = window.location.search.split("&");
         for (var i = 0; i < informacionUrl.length; i++) {
@@ -319,13 +391,13 @@ requirejs(['jquery', 'bootstrap', 'sweetalert'], function($) {
                 course: id,
                 type: "loadCat"
             },
-            url: "../managers/grade_categories/grade_categories_processing.php",
-            success: function(msg) {
+            url: "../managers/grade_categories/grader_processing.php",
+            success: function (msg) {
                 $("#mymodalbody").html(msg);
             },
             dataType: "text",
             cache: "false",
-            error: function(msg) {
+            error: function (msg) {
                 console.log(msg);
             },
         });
@@ -350,8 +422,8 @@ requirejs(['jquery', 'bootstrap', 'sweetalert'], function($) {
                         tipo: tipoItem,
                         peso: weigth
                     },
-                    url: "../managers/grade_categories/grade_categories_processing.php",
-                    success: function(msg) {
+                    url: "../managers/grade_categories/grader_processing.php",
+                    success: function (msg) {
                         //se recibe el mensaje, si el ingreso fue exitoso entonces se recarga el combo de categorias padre
                         if (msg == 1) {
 
@@ -375,7 +447,7 @@ requirejs(['jquery', 'bootstrap', 'sweetalert'], function($) {
 
                     },
                     cache: "false",
-                    error: function(msg) {
+                    error: function (msg) {
                         swal({
                             title: "Error al intentar añadir la categoria",
                             html: true,
@@ -399,8 +471,8 @@ requirejs(['jquery', 'bootstrap', 'sweetalert'], function($) {
                         tipo: tipoItem,
                         peso: weigth
                     },
-                    url: "../managers/grade_categories/grade_categories_processing.php",
-                    success: function(msg) {
+                    url: "../managers/grade_categories/grader_processing.php",
+                    success: function (msg) {
                         //se recibe el mensaje, si el ingreso fue exitoso entonces se recarga el combo de categorias padre
                         if (msg == 1) {
                             swal({
@@ -422,7 +494,7 @@ requirejs(['jquery', 'bootstrap', 'sweetalert'], function($) {
 
                     },
                     cache: "false",
-                    error: function(msg) {
+                    error: function (msg) {
                         swal({
                             title: "Error al intentar añadir el item",
                             html: true,
@@ -447,8 +519,8 @@ requirejs(['jquery', 'bootstrap', 'sweetalert'], function($) {
                         tipo: tipoItem,
                         peso: weigth
                     },
-                    url: "../managers/grade_categories/grade_categories_processing.php",
-                    success: function(msg) {
+                    url: "../managers/grade_categories/grader_processing.php",
+                    success: function (msg) {
                         //se recibe el mensaje, si el ingreso fue exitoso entonces se recarga el combo de categorias padre
                         if (msg == 1) {
 
@@ -472,7 +544,7 @@ requirejs(['jquery', 'bootstrap', 'sweetalert'], function($) {
 
                     },
                     cache: "false",
-                    error: function(msg) {
+                    error: function (msg) {
                         swal({
                             title: "Error al intentar añadir la categoria",
                             html: true,
@@ -597,5 +669,5 @@ requirejs(['jquery', 'bootstrap', 'sweetalert'], function($) {
         return true;
     }
 
-  
+
 });
