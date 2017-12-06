@@ -7,7 +7,7 @@ body {
     margin: 0;
     padding: 0;
     overflow: hidden;
-    background-color: #333;
+    background-color: #d51b23;
     /*position: absolute;*/
     /*top: -60px;*/
     left: -115px;
@@ -29,5 +29,5 @@ body {
 }
 
 #menu_div li a:hover {
-    background-color: #111;
+    background-color: #b6161e;
 }
