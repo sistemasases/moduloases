@@ -1,5 +1,6 @@
 <?php
-require_once('grade_categories_lib.php');
+require_once('grader_lib.php');
+
 
  if(isset($_POST['course'])&&isset($_POST['parent'])&&isset($_POST['fullname'])&&isset($_POST['agregation'])&&($_POST['tipo']=="CATEGORÍA")&&isset($_POST['peso'])){
         
@@ -37,5 +38,24 @@ if(isset($_POST['course'])&&isset($_POST['parent'])&&isset($_POST['fullname'])&&
     echo json_encode($resp);
 
  }
+
+ if(isset($_POST['type_ajax'])&&isset($_POST['id'])&&isset($_POST['type'])&&isset($_POST['courseid'])&&$_POST['type_ajax']==="deleteElement"){
+    $id = $_POST['id'];
+    $courseid = $_POST['courseid'];
+    $type = $_POST['type'];
+
+    $response = delete_element($id, $courseid, $type);
+
+
+    $resp = new stdClass;
+    if($response === true){
+        $resp->msg = "Elemento Borrado Correctamente";
+    }else{
+        $resp->error = "Error al borrar elemento";
+    }
+
+    echo json_encode($resp);
+
+}
 
 ?>
