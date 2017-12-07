@@ -179,10 +179,19 @@ function get_courses_report(){
 	$string_html = "<table id = 'courses'>
 						<thead>
 							<tr>
-								<th> Código</th>
-								<th> Nombre Completo</th>
 								<th> Nombre </th>
+								<th> Nombre Completo</th>
 							</tr>
 						</thead>"; 
+
+	foreach ($courses as $course) {
+		$string_html.= "<tr id='$course->id'>
+						<td>$course->fullname</td>
+						<td>$course->shortname</td>
+		        		</tr>";
+	}
+
+    $string_html.= "</table>";
+	return $string_html;
 
 }

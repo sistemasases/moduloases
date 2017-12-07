@@ -85,6 +85,7 @@ $PAGE->requires->js_call_amd('block_ases/academic_reports', 'init');
 $data = new stdClass;
 
 $data->tableStudents = getReportStudents($blockid);
+$data->tableCourses = get_courses_report();
 
 $output = $PAGE->get_renderer('block_ases');
 

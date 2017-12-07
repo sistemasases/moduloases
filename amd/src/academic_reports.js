@@ -7,7 +7,14 @@
         return {
     
             init: function() {
-                $("#students").DataTable();
+
+                $(document).ready(function(){
+                    
+                    $("#students").DataTable();
+                    $("#courses").DataTable();
+
+                });
+                
 
                 $(document).on('click', '#students tbody tr td', function() {
                     var pagina = "student_profile.php";
@@ -37,7 +44,7 @@
                                 swal({ 
                                     title: "Notas Perdidas",
                                     type: "info", 
-                                    html: msg,
+                                    text: msg,
                                     showCancelButton: false,
                                     confirmButtonColor: "#DD6B55", 
                                     confirmButtonText: "Cerrar", 
