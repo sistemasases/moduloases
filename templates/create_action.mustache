@@ -1,12 +1,11 @@
 {{#data}}
-    {{{message}}}
     {{> block_ases/side_menu}}            
-{{/data}}
 <div class="container">
 <div class="row">
    <h2>GESTIÓN DE PERMISOS</h2>
    <hr/>
-
+   {{{message}}}
+   {{#manage_action_ca}}
    <div class="panel-group">
       <div class="panel panel-default">
          <div class="panel panel-default">
@@ -168,6 +167,8 @@
 
    </div>
    {{!--end panel-group--}}
+   {{/manage_action_ca}}
+
 
 
 </div>
@@ -198,9 +199,7 @@
             <div class="form-pilos func hide" >
             <label class="col-sm-2 control-label">Funcionalidad</label>
             <div class="col-sm-10">
-            {{#data}}
             {{{functions}}}
-            {{/data}}
             </div>
             </div>
          </div>
@@ -215,3 +214,4 @@
   </div>
 </div>
 {{!-- End Modal --}}
+{{/data}}
