@@ -268,7 +268,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_as
             });
 
             $(document).on("click", ".new", function () {
-                var maxweight = $(this).prev().attr('id');
+                var maxweight = $(this).parent().parent().children().next('.maxweight').attr('id');
                 if (maxweight <= 0) {
                     swal({
                         title: "No se pueden crear mas categorías o ítems en la categoria seleccionada.",
