@@ -11,9 +11,11 @@
     <div class="container">
         <div class="row">
             <h2>REPORTE GENERAL DE ESTUDIANTES</h2>
-            <h3>Por favor seleccione los campos deseados para el reporte</h3>
+            {{{message}}}
         </div>
+        {{#search_assigned_students_ar}}
         <div class="row">
+            <h3>Por favor seleccione los campos deseados para el reporte</h3>
             <div class="col-lg-12 col-md-12">
                 <form role="form" id="formulario">
                     <div class="row">
@@ -74,9 +76,10 @@
                     </div>
                 </form>
             </div>
-
+          {{/search_assigned_students_ar}}
           <div class="row" id="div_table">
           </div>
+          {{#view_graphics_ar}}
           <div>
             <legend>GRÁFICAS GENERALES:</legend>
             <input type="button" value = "Edad" class = "edad" formmethod="post" data-toggle="modal" data-target="#myModalGraf"/>
@@ -94,6 +97,8 @@
             <input type="button" value = "Geográfico"  class = "geog" formmethod="post" data-toggle="modal" data-target="#myModalGraf" />
           </div>
         </div>
+        {{/view_graphics_ar}}
+
         
         <!-- Modal Grafica-->
         <div class="modal modal_pilos" id="myModalGraf" name="seguimiento" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">

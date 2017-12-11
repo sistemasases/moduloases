@@ -31,6 +31,8 @@ require_once('../managers/query.php');
 require_once('../managers/ases_report/asesreport_lib.php');
 require_once('../managers/instance_management/instance_lib.php');
 require_once('../managers/student_profile/studentprofile_lib.php');
+require_once ('../managers/permissions_management/permissions_lib.php');
+require_once ('../managers/validate_profile_action.php');
 include('../lib.php');
 global $PAGE;
 
@@ -68,6 +70,9 @@ foreach($ases_status_array as $ases_status){
 
 $data = 'data';    
 $data = new stdClass;
+// Evalua si el rol del usuario tiene permisos en esta view.
+$actions = authenticate_user_view($USER->id, $blockid);
+$data = $actions;
 $data->risks_checks = $tabla_riesgos;
 $data->cohorts_checks = $tabla_cohortes;
 $data->status_ases = $estados_ases;
