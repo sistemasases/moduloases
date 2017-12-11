@@ -7,17 +7,16 @@ $msg = new stdClass();
 global $USER;
 
 
-if(isset($_POST['id'])&&isset($_POST['type'])&&isset($_POST['source'])&&$_POST['source']=='delete_record') {
- 	echo json_encode(delete_record($_POST['id'],$_POST['type']));
+if(isset($_POST['id'])&&isset($_POST['source'])) {
+ 	echo json_encode(delete_record($_POST['id'],$_POST['source']));
+
+}else if(isset($_POST['name'])){
+    json_encode( get_action_profile());
 
 }else if(isset($_POST['user'])&&isset($_POST['source'])&&$_POST['source']=='permissions_management'){
 	echo json_encode(get_functions_by_role($_POST['user']));
 
-}else if(isset($_POST['id'])&&isset($_POST['table'])&&$_POST['source']=='modify_register'&&isset($_POST['nombre'])&&isset($_POST['descripcion'])&&isset($_POST['funcionalidad'])){
-
-	echo json_encode(modify_record($_POST['id'],$_POST['table'],$_POST['nombre'],$_POST['descripcion'],$_POST['funcionalidad']));
-
-}else if(isset($_POST['user'])&&isset($_POST['source'])&&$_POST['source']=='get_info_permission'){
+}else if( $_POST['data']=='get_info_permission'){
 	$user=$USER->id;
     $user_role=get_id_rol_($user,$_POST['instance']);
     $accion = get_action_by_name($_POST['name_permission']);

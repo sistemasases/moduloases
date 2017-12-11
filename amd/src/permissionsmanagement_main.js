@@ -7,13 +7,11 @@
 /**
  * @module block_ases/permissionsmanagement_main
  */
-define(['jquery', 'core/modal_factory', 'core/templates', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_ases/datatables.net-buttons', 'block_ases/buttons.flash', 'block_ases/jszip', 'block_ases/pdfmake', 'block_ases/buttons.html5', 'block_ases/buttons.print', 'block_ases/sweetalert', 'block_ases/select2', 'block_ases/modal_login'], function($, ModalFactory, Templates, bootstrap, datatablesnet, datatablesnetbuttons, buttonsflash, jszip, pdfmake, buttonshtml5, buttonsprint, sweetalert, select2, ModalLogin) {
+define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_ases/datatables.net-buttons', 'block_ases/buttons.flash', 'block_ases/jszip', 'block_ases/pdfmake', 'block_ases/buttons.html5', 'block_ases/buttons.print', 'block_ases/sweetalert', 'block_ases/select2'], function($, bootstrap, datatablesnet, datatablesnetbuttons, buttonsflash, jszip, pdfmake, buttonshtml5, buttonsprint, sweetalert, select2) {
 
 
     return {
         init: function() {
-
-
 
             $("#profiles_user").select2({
 
@@ -77,25 +75,23 @@ define(['jquery', 'core/modal_factory', 'core/templates', 'block_ases/bootstrap'
                         var instance = elemento[1];
                     }
                 }
-                load_actions();
-                load_functions();
-                load_roles();
+
 
                 $("#add_accion").on('click', function() {
                     crearAccion();
-                    load_actions();
                 });
 
                 $("#add_function").on('click', function() {
                     crearFuncion();
-                    load_functions();
                 });
 
                 $("#add_profile").on('click', function() {
                     crearPerfil();
-                    load_roles();
                 });
 
+                $("#assign_action_profile").on('click', function() {
+                    //  asignarAccionPerfil();
+                });
 
                 $("#assign_user_profile").on('click', function() {
                     asignarUsuarioPerfil(instance);
@@ -270,166 +266,53 @@ define(['jquery', 'core/modal_factory', 'core/templates', 'block_ases/bootstrap'
                     actions.push($(this).val());
                 });
                 var actions_array = JSON.stringify(actions);
-                if (id_profile == "") {
-                    swal({
-                        title: "Error",
-                        text: "Seleccione el rol del usuario",
-                        type: "error",
-                        confirmButtonColor: "#d51b23"
-                    });
-                } else {
-                    $.ajax({
-                        type: "POST",
-                        data: {
-                            profile: id_profile,
-                            actions: actions_array,
-                            function: "assign_role"
-                        },
-                        url: "../managers/ActionCreateAction.php",
-                        async: false,
-                        success: function(msg) {
-                            alert(msg);
-                        }
-                    });
-                }
-            }
-
-
-            $("input[name='actions[]']").change(function() {
-                $(this).attr('checked', true);
-
-            });
-
-
-            $("#profiles_user").change(function() {
-
-                var user = $("#profiles_user").val();
-                var source = "permissions_management";
-
-                $.ajax({
-                    type: "POST",
-                    data: {
-                        user: user,
-                        source: source
-                    },
-                    url: "../managers/permissions_management/permissions_report.php",
-                    success: function(msg) {
-                        $("input[name='actions[]'").prop('checked', false);
-
-                        $.each(msg, function(index, value) {
-                            $("input[value='" + value + "']").prop('checked', true);
-                        });
-                    },
-                    dataType: "json",
-                    cache: "false",
-                    error: function(msg) {
-                        alert("Error al cargar gestion de permisos y roles")
-                    },
-                });
-
-            });
-
-
-
-            //editar
-            $('body').on('click', 'tbody tr td .red.glyphicon.glyphicon-pencil', function() {
-                var nombre_table = $(this).parents().eq(3).attr('id');
-                var table = $("#" + nombre_table).DataTable();
-                var nombre = table.cell(table.row($(this).parent()).index(), 0).data();
-                var descripcion = table.cell(table.row($(this).parent()).index(), 1).data();
-                var funcionalidad = table.cell(table.row($(this).parent()).index(), 2).data();
-
-                $('#nombre_editar').val(nombre);
-                $('#descripcion_editar').val(descripcion);
-
-
-                if (nombre_table == 'tableActions') {
-                    $(".form-pilos.func").removeClass('hide');
-                    $("#save_seg").attr("name", this.id + "_accion");
-                    console.log(funcionalidad);
-                    //  $("#functions_table").val(funcionalidad).change();
-                    $("#functions_table option").filter(function() {
-                        //may want to use $.trim in here
-                        return $(this).text() == funcionalidad;
-                    }).prop('selected', true);
-
-
-                } else if (nombre_table == 'tableFunctions') {
-                    $("#save_seg").attr("name", this.id + "_funcionalidad");
-                    $(".form-pilos.func").addClass('hide');
-
-                } else {
-                    $("#save_seg").attr("name", this.id + "_rol");
-                    $(".form-pilos.func").addClass('hide');
-
-                }
-            });
-
-            //modificar
-            $(document).on('click', '#save_seg', function() {
-                var texto = this.name.split("_");
-                var id = texto[0];
-                var table = texto[1];
-                var nombre = $("#nombre_editar").val();
-                var descripcion = $("#descripcion_editar").val();
-                var funcionalidad = "";
-                if (table == 'accion') {
-                    funcionalidad = $("#functions_table").val();
-                }
-
-                $.ajax({
-                    type: "POST",
-                    data: {
-                        id: id,
-                        table: table,
-                        source: "modify_register",
-                        nombre: nombre,
-                        descripcion: descripcion,
-                        funcionalidad: funcionalidad
-                    },
-                    url: "../managers/permissions_management/permissions_report.php",
-                    success: function(msg) {
-                        swal({
-                            title: msg.title,
-                            html: true,
-                            text: msg.text,
-                            type: msg.type,
-                            confirmButtonColor: "#d51b23"
-                        });
-
-                        load_actions();
-                        load_functions();
-                        load_roles();
-
-
-                    },
-                    dataType: "json",
-                    cache: "false",
-                    error: function(msg) {
-                        swal({
+                if(id_profile ==""){
+                     swal({
                             title: "Error",
-                            html: true,
-                            text: "Se presento un inconveniente al modificar registro",
+                            text: "Seleccione el rol del usuario",
                             type: "error",
                             confirmButtonColor: "#d51b23"
                         });
+                }else{
+                $.ajax({
+                    type: "POST",
+                    data: {
+                        profile: id_profile,
+                        actions: actions_array,
+                        function: "assign_role"
                     },
+                    url: "../managers/ActionCreateAction.php",
+                    async: false,
+                    success: function(msg) {
+                        alert(msg);
+                    }
                 });
+              }
+            }
 
 
 
-            });
+
+
+    $(document).on('click', '#div_functions tbody tr td', function() {
+        var table = $("#tableFunctions").DataTable();
+        var colIndex = table.cell(this).index();
+        // table.row($(this).parent()).edit();
+
+
+    });
 
 
 
 
-            //eliminar
+
+
+
             $('#div_actions').on('click', '#delete_action', function() {
 
                 var table = $("#div_actions #tableActions").DataTable();
                 var td = $(this).parent();
                 var childrenid = $(this).children('span').attr('id');
-                console.log(this);
                 var colIndex = table.cell(td).index().column;
 
                 var nombre = table.cell(table.row(td).index(), 0).data();
@@ -449,23 +332,84 @@ define(['jquery', 'core/modal_factory', 'core/templates', 'block_ases/bootstrap'
                         if (isConfirm) {
 
                             delete_record(childrenid, "accion");
-                            load_actions();
-
-
                         }
                     }
                 );
+
+
+            });
+
+            $("#profiles_user").change(function() {
+                var user = $("#profiles_user").val();
+                var source = "permissions_management";
+
+                $.ajax({
+                    type: "POST",
+                    data: {
+                        user: user,
+                        source: source
+                    },
+                    url: "../managers/permissions_management/permissions_report.php",
+                    success: function(msg) {
+
+                        $("input[name='actions[]']").removeAttr('checked');
+                        $.each(msg, function(index, value) {
+                            $("input[value='" + value + "']").attr('checked', true);
+                        });
+
+
+
+                    },
+                    dataType: "json",
+                    cache: "false",
+                    error: function(msg) {
+                        alert("Error al cargar gestion de permisos y roles")
+                    },
+                });
+
+            });
+
+
+
+            $('#div_actions').on('click', '#delete_action', function() {
+
+                var table = $("#div_actions #tableActions").DataTable();
+                var td = $(this).parent();
+                var childrenid = $(this).children('span').attr('id');
+                var colIndex = table.cell(td).index().column;
+
+                var nombre = table.cell(table.row(td).index(), 0).data();
+                var descripcion = table.cell(table.row(td).index(), 1).data();
+                swal({
+                        title: "Estas seguro/a?",
+                        text: "La acción <strong>" + nombre + "</strong> se eliminará",
+                        type: "warning",
+                        html: true,
+                        showCancelButton: true,
+                        confirmButtonColor: "#d51b23",
+                        confirmButtonText: "Si!",
+                        cancelButtonText: "No",
+                        closeOnConfirm: true,
+                    },
+                    function(isConfirm) {
+                        if (isConfirm) {
+
+                            delete_record(childrenid, "accion");
+                        }
+                    }
+                );
+
 
             });
 
 
             function delete_record(id, source) {
+
                 $.ajax({
                     type: "POST",
                     data: {
                         id: id,
-                        source: "delete_record",
-                        type: source,
+                        source: source
                     },
                     url: "../managers/permissions_management/permissions_report.php",
                     success: function(msg) {
@@ -481,74 +425,68 @@ define(['jquery', 'core/modal_factory', 'core/templates', 'block_ases/bootstrap'
                     dataType: "json",
                     cache: "false",
                     error: function(msg) {
-                        alert("Error al eliminar registro")
+                        alert("Error al cargar acciones")
                     },
                 });
 
 
             }
 
+            $.ajax({
+                type: "POST",
+                url: "../managers/permissions_management/load_function.php",
+                success: function(msg) {
+                    $("#div_functions").empty();
+                    $("#div_functions").append('<table id="tableFunctions"  class="display" cellspacing="0" width="100%" ><thead><thead></table>');
+                    var table = $("#tableFunctions").DataTable(msg);
+                    $('#div_functions #modify_function').css('cursor', 'pointer');
 
 
-            function load_functions() {
-                $.ajax({
-                    type: "POST",
-                    url: "../managers/permissions_management/load_function.php",
-                    success: function(msg) {
-                        $("#div_functions").empty();
-                        $("#div_functions").append('<table id="tableFunctions"  class="display" cellspacing="0" width="100%" ><thead><thead></table>');
-                        var table = $("#tableFunctions").DataTable(msg);
-                        $('#div_functions #modify_function').css('cursor', 'pointer');
-
-
-                    },
-                    dataType: "json",
-                    cache: "false",
-                    error: function(msg) {
-                        alert("Error al cargar funcionalidades")
-                    },
-                })
-            }
-
-
-            function load_actions() {
-                $.ajax({
-                    type: "POST",
-                    url: "../managers/permissions_management/load_actions.php",
-                    success: function(msg) {
-                        $("#div_actions").empty();
-                        $("#div_actions").append('<table id="tableActions"  class="display" cellspacing="0" width="100%" ><thead><thead></table>');
-                        var table = $("#tableActions").DataTable(msg);
-                        $('#div_actions #delete_action').css('cursor', 'pointer');
-                    },
-                    dataType: "json",
-                    cache: "false",
-                    error: function(msg) {
-                        alert("Error al cargar acciones")
-                    },
-                })
-            }
-
-            function load_roles() {
-                $.ajax({
-                    type: "POST",
-                    url: "../managers/permissions_management/load_profiles.php",
-                    success: function(msg) {
-                        $("#div_profiles").empty();
-                        $("#div_profiles").append('<table id="tableProfiles"  class="display" cellspacing="0" width="100%" ><thead><thead></table>');
-                        var table = $("#tableProfiles").DataTable(msg);
-                        $('#div_profiles #delete_profiles').css('cursor', 'pointer');
-                    },
-                    dataType: "json",
-                    cache: "false",
-                    error: function(msg) {
-                        alert("Error al cargar roles")
-                    },
-                })
-            }
+                },
+                dataType: "json",
+                cache: "false",
+                error: function(msg) {
+                    alert("Error al cargar funcionalidades")
+                },
+            })
 
 
 
+            $.ajax({
+                type: "POST",
+                url: "../managers/permissions_management/load_actions.php",
+                success: function(msg) {
+                    $("#div_actions").empty();
+                    $("#div_actions").append('<table id="tableActions"  class="display" cellspacing="0" width="100%" ><thead><thead></table>');
+                    var table = $("#tableActions").DataTable(msg);
+                    $('#div_actions #delete_action').css('cursor', 'pointer');
+                },
+                dataType: "json",
+                cache: "false",
+                error: function(msg) {
+                    alert("Error al cargar acciones")
+                },
+            })
+
+
+            $.ajax({
+                type: "POST",
+                url: "../managers/permissions_management/load_profiles.php",
+                success: function(msg) {
+                    $("#div_profiles").empty();
+                    $("#div_profiles").append('<table id="tableProfiles"  class="display" cellspacing="0" width="100%" ><thead><thead></table>');
+                    var table = $("#tableProfiles").DataTable(msg);
+                    $('#div_profiles #delete_profiles').css('cursor', 'pointer');
+                },
+                dataType: "json",
+                cache: "false",
+                error: function(msg) {
+                    alert("Error al cargar acciones")
+                },
+            })
+
+
+          
 
         }
     };

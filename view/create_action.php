@@ -53,8 +53,6 @@ $roles_table_user= get_roles_select($roles,"profiles_user");
 //obtiene funcionalidades
 $function = get_functions();
 $functions_table = get_functions_select($function,"functions");
-$functions = get_functions_select($function,"functions_table");
-
 $general_table  = get_functions_actions();
 
 //Crea una clase con la información que se llevará al template.   
@@ -66,7 +64,6 @@ $data = $actions;
 $data->roles_table_user=$roles_table_user;
 $data->functions_table =$functions_table;
 $data->general_table=$general_table;
-$data->functions =$functions;
 
 
 $contextcourse = context_course::instance($courseid);
@@ -83,10 +80,10 @@ $blocknode->make_active();
 $PAGE->requires->css('/blocks/ases/style/styles_pilos.css', true);
 $PAGE->requires->css('/blocks/ases/style/bootstrap_pilos.css', true);
 $PAGE->requires->css('/blocks/ases/style/bootstrap_pilos.min.css', true);
-$PAGE->requires->css('/blocks/ases/style/sweetalert.css', true);
 $PAGE->requires->css('/blocks/ases/style/round-about_pilos.css', true);
-$PAGE->requires->css('/blocks/ases/style/sugerenciaspilos.css', true);
+$PAGE->requires->css('/blocks/ases/style/sweetalert.css', true);
 $PAGE->requires->css('/blocks/ases/style/forms_pilos.css', true);
+$PAGE->requires->css('/blocks/ases/style/add_fields.css', true);
 $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/dataTables.foundation.css', true);
 $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/dataTables.foundation.min.css', true);
 $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/dataTables.jqueryui.css', true);
@@ -99,6 +96,7 @@ $PAGE->requires->css('/blocks/ases/js/select2/css/select2.css', true);
 
 
 $PAGE->requires->js('/blocks/ases/js/npm.js', true);
+$PAGE->requires->js('/blocks/ases/js/checkrole.js', true);
 $PAGE->requires->js_call_amd('block_ases/permissionsmanagement_main','init');
 
 //$PAGE->requires->js('/blocks/ases/js/create_action.js', true);

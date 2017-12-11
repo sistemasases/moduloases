@@ -31,8 +31,6 @@ require_once($CFG->libdir.'/adminlib.php');
 require_once('../managers/instance_management/instance_lib.php');
 require_once('../managers/grade_categories/grade_categories_lib.php');
 require_once('../managers/lib/lib.php');
-require_once ('../managers/permissions_management/permissions_lib.php');
-require_once ('../managers/validate_profile_action.php');
 include('../lib.php');
 include("../classes/output/renderer.php");
 
@@ -153,9 +151,6 @@ if($rol == 'sistemas' || $rol == 'academico'){
 
 
 $record = new stdClass;
-// Evalua si el rol del usuario tiene permisos en esta view.
-$actions = authenticate_user_view($USER->id, $blockid);
-$record = $actions;
 $record->teachersTable = $htmlTable;
 $record->courses_info = $courses_info;
 
