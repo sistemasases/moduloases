@@ -3,8 +3,7 @@ require_once('permissions_lib.php');
     $columns = array();
     array_push($columns, array("title"=>"Nombre", "name"=>"nombre_func", "data"=>"nombre_func"));
     array_push($columns, array("title"=>"Descripción", "name"=>"descripcion", "data"=>"descripcion"));
-    array_push($columns, array("title"=>"", "name"=>"button", "data"=>"edit"));
-   // array_push($columns, array("title"=>"", "name"=>"button", "data"=>"delete"));
+    //array_push($columns, array("title"=>"Modificar", "name"=>"button", "data"=>"button"));
 
         $data = array(
                 "bsort" => false,
