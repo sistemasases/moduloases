@@ -32,7 +32,11 @@ function get_functions_table()
     $functions_array = get_functions();
     
     foreach ($functions_array as $function) {
-        $function->button = "<a id = \"modify_function\"  ><span  id=\"" . $function->id . "\" class=\"red glyphicon glyphicon-pencil\"></span></a>";
+
+        $function->edit= '   <button type="button" class="red glyphicon glyphicon-pencil"  id="'.  $function->id .'" data-toggle="modal" data-target="#edit"></button>';
+
+        $function->delete= '   <button type="button" class="red glyphicon glyphicon-remove"  id="'.  $function->id .'"></button>';
+  
         array_push($array, $function);
     }
     return $array;
@@ -87,11 +91,51 @@ function get_action_by_role($id_action,$id_role){
         return true;
     }else{
 
+
         return false;
     }
 }
 
+/**
+ * Función que modifica un registro dependiendo si es (accion,funcionalidad,rol)
+ * @see modify_record($data)
+ * @param data 
+ * @return Object
+ **/
 
+function modify_record($id,$table,$nombre,$descripcion,$funcionalidad)
+{
+    global $DB;
+    $record = new stdClass();
+    $record->id = $id;
+    $record->descripcion =$descripcion;
+
+    if($table=='accion'){
+     $record->nombre_accion =$nombre;  
+     $record->id_funcionalidad=$funcionalidad;
+    }else if($table =="funcionalidad"){
+     $record->nombre_func =$nombre;
+    }else{
+      $record->nombre_rol =$nombre;
+    }
+
+    $tabla = "talentospilos_".$table;
+    $modify = $DB->update_record($tabla, $record);
+
+    if($modify){
+         $msg        = new stdClass();
+            $msg->title = "Éxito";
+            $msg->text  = "Se modificó satisfactoriamente el registro";
+            $msg->type  = "success";
+        }else{
+             $msg        = new stdClass();
+            $msg->title = "Error";
+            $msg->text  = "Se presento un problema";
+            $msg->type  = "error";
+        }
+
+    return $msg;
+}
 
 
 /**
@@ -119,13 +163,15 @@ function get_actions()
 {
     global $DB;
     
-    $sql_query = "SELECT * FROM {talentospilos_accion} WHERE estado=1 order by nombre_accion asc";
+    $sql_query = "SELECT DISTINCT(accion.nombre_accion),accion.id,accion.descripcion,funcionalidad.nombre_func FROM {talentospilos_accion} accion
+    INNER JOIN {talentospilos_funcionalidad} funcionalidad ON accion.id_funcionalidad = funcionalidad.id where estado=1";
     return $DB->get_records_sql($sql_query);
+
 }
 
 /**
  * Función que obtiene las acciones relacionadas a una funcionalidad de la tabla {talentospilos_accion}
- * @see get_actions()
+ * @see  get_actions_function($funcionalidad)
  * @return Array
  **/
 
@@ -159,13 +205,6 @@ function is_action_in_functionality($id_action,$id_functionality)
 }
 
 
-
-/**
- * Función que retorna las acciones con el campo eliminar en el sistema 
- * @see get_actions_table()
- * @return Array
- **/
-
 function get_actions_table()
 {
     global $DB;
@@ -173,11 +212,14 @@ function get_actions_table()
     $actions_array = get_actions();
     
     foreach ($actions_array as $action) {
-        $action->button = "<a id = \"delete_action\"  ><span  id=\"" . $action->id . "\" class=\"red glyphicon glyphicon-remove\"></span></a>";
+        $action->edit= '   <button type="button" class="red glyphicon glyphicon-pencil"  id="'. $action->id .'" data-toggle="modal" data-target="#edit"></button>';
+
+        $action->delete= "<a id = \"delete_action\"  ><span  id=\"" . $action->id . "\" class=\"red glyphicon glyphicon-remove\"></span></a>";
         array_push($array, $action);
     }
     return $array;
 }
+
 
 
 //Rol.
@@ -257,7 +299,7 @@ function get_roles_table()
     $roles_array = get_roles();
     
     foreach ($roles_array as $role) {
-        $role->button = "<a id = \"delete_profiles\"  ><span  id=\"" . $role->id . "\" class=\"red glyphicon glyphicon-pencil\"></span></a>";
+        $role->edit= '   <button type="button" class="red glyphicon glyphicon-pencil"  id="'.$role->id .'" data-toggle="modal" data-target="#edit"></button>';
         array_push($array, $role);
     }
     return $array;
@@ -281,11 +323,11 @@ function delete_record($id, $source)
     $paso       = 1;
     try {
         if ($source == 'accion' or $source == 'usuario_perfil') {
-            $record->estado = false;
+            $record->estado = 0;
             $paso           = $DB->update_record('talentospilos_' . $source, $record);
             
         } else if ($source == 'perfil_accion') {
-            $record->habilitado = false;
+            $record->habilitado = 0;
             $paso               = $DB->update_record('talentospilos_' . $source, $record);
         }
         
