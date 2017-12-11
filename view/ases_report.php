@@ -91,8 +91,7 @@ $url = new moodle_url("/blocks/ases/view/ases_report.php",array('courseid' => $c
 $coursenode = $PAGE->navigation->find($courseid, navigation_node::TYPE_COURSE);
 $blocknode = navigation_node::create('Reporte general',$url, null, 'block', $blockid);
 $coursenode->add_node($blocknode);
-//ELIMINAR $node
-// $node = $blocknode->add('Calificador',new moodle_url("/blocks/ases/view/grade_categories.php",array('courseid' => $courseid, 'instanceid' => $blockid)));
+
 // $blocknode->make_active();
 // $node->make_active();
 

@@ -12,7 +12,7 @@ require_once $CFG->dirroot.'/blocks/ases/managers/lib/student_lib.php';
 // require_once $CFG->dirroot.'/grade/lib.php';
 
 ///*********************************///
-///*** Get info calificador methods ***///
+///*** Get info global_grade_book methods ***///
 ///*********************************///
 
 /*

@@ -33,7 +33,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_as
 
             $(document).on('click', '.ir_curso', function () {
                 var id_curso = $(this).attr('id');
-                var url = 'calificador.php' + location.search + '&id_course=' + id_curso;
+                var url = 'global_grade_book.php' + location.search + '&id_course=' + id_curso;
                 window.open(url, '_blank');
             });
 
