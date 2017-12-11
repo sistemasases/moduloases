@@ -28,8 +28,8 @@
 require_once(__DIR__ . '/../../../config.php');
 require_once($CFG->libdir . '/adminlib.php');
 require_once('../managers/instance_management/instance_lib.php');
-require_once ('../managers/permissions_management/permissions_lib.php');
 require_once ('../managers/validate_profile_action.php');
+require_once ('../managers/menu_options.php');
 
 global $PAGE;
 
@@ -57,6 +57,9 @@ if (!consult_instance($blockid)) {
     header("Location: instance_configuration.php?courseid=$courseid&instanceid=$blockid");
 }
 
+//se crean los elementos del menu
+$menu_option = create_menu_options($USER->id, $blockid, $courseid);
+
 // Crea una clase con la información que se llevará al template.
 $data = 'data';
 $data = new stdClass;
@@ -64,6 +67,7 @@ $data = new stdClass;
 // Evalua si el rol del usuario tiene permisos en esta view.
 $actions = authenticate_user_view($USER->id, $blockid);
 $data = $actions;
+$data->menu = $menu_option;
 
 
 
@@ -82,8 +86,8 @@ $PAGE->set_heading($title);
 $PAGE->requires->css('/blocks/ases/style/styles_pilos.css', true);
 $PAGE->requires->css('/blocks/ases/style/bootstrap_pilos.css', true);
 $PAGE->requires->css('/blocks/ases/style/sweetalert.css', true);
+$PAGE->requires->css('/blocks/ases/style/side_menu_style.css', true);
 $PAGE->requires->js_call_amd('block_ases/uploaddata_main', 'init');
-
 
 $output = $PAGE->get_renderer('block_ases');
 

@@ -260,6 +260,33 @@ function get_functions_by_role($id_role)
 }
 
 /**
+ * Función que retorna el nombre de las funcionalidades asociadas a un rol
+ * @see get_actions_by_role_id($id_role)
+ * @param $id_role
+ * @return Array
+ **/
+
+function get_functions_by_role_id($id_role){
+
+    global $DB;
+
+    $sql_query = "SELECT DISTINCT funcionalidad.nombre_func FROM mdl_talentospilos_permisos_rol AS permisos_rol 
+                    INNER JOIN mdl_talentospilos_accion AS accion ON  permisos_rol.id_accion = accion.id 
+                    INNER JOIN mdl_talentospilos_funcionalidad AS funcionalidad ON accion.id_funcionalidad = funcionalidad.id  
+                    WHERE id_rol =" . $id_role;
+    $results = $DB->get_records_sql($sql_query);
+    $array_functions = array();
+    foreach ($results as $record){
+        array_push($array_functions, $record->nombre_func);
+    }
+    
+    return $array_functions;
+
+}
+
+//get_functions_by_role_id(6);
+
+/**
  * Función que retorna los roles con el campo eliminar existentes en el sistema 
  * @see get_roles_table()
  * @return Array

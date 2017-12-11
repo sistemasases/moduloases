@@ -1,5 +1,5 @@
 <?php
-	require_once(dirname(_FILE_).'/../../../../config.php');
+	require_once(dirname(__FILE__).'/../../../../config.php');
 	require_once('periods_lib.php');
 
 	if(isset($_POST['dat'])){

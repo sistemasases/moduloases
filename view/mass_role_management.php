@@ -30,6 +30,7 @@ require_once($CFG->libdir.'/adminlib.php');
 require_once('../managers/query.php');
 require_once ('../managers/permissions_management/permissions_lib.php');
 require_once ('../managers/validate_profile_action.php');include('../lib.php');
+require_once ('../managers/menu_options.php');
 global $PAGE;
 
 require_once('../managers/instance_management/instance_lib.php');
@@ -55,6 +56,9 @@ if(!consult_instance($blockid)){
     header("Location: instance_configuration.php?courseid=$courseid&instanceid=$blockid");
 }
 
+//se crean los elementos del menu
+$menu_option = create_menu_options($USER->id, $blockid, $courseid);
+
 // Crea una clase con la información que se llevará al template.
 $data = 'data';
 $data = new stdClass;
@@ -62,7 +66,7 @@ $data = new stdClass;
 // Evalua si el rol del usuario tiene permisos en esta view.
 $actions = authenticate_user_view($USER->id, $blockid);
 $data = $actions;
-
+$data->menu = $menu_option;
 
 
 //Configuracion de la navegacion
@@ -88,6 +92,7 @@ $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/dataTables.jqueryui
 $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/jquery.dataTables.css', true);
 $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/jquery.dataTables.min.css', true);
 $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/jquery.dataTables_themeroller.css', true);
+$PAGE->requires->css('/blocks/ases/style/side_menu_style.css', true);
 
 $PAGE->requires->js('/blocks/ases/js/jquery-2.0.2.min.js', true);
 $PAGE->requires->js('/blocks/ases/js/checkrole.js', true);
