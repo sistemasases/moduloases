@@ -30,6 +30,7 @@ require_once($CFG->libdir.'/adminlib.php');
 require_once('../managers/lib/lib.php');
 require_once ('../managers/permissions_management/permissions_lib.php');
 require_once ('../managers/validate_profile_action.php');
+require_once ('../managers/menu_options.php');
 global $PAGE;
 
 include("../classes/output/instance_configuration_page.php");
@@ -55,6 +56,9 @@ $blocknode = navigation_node::create($title,$url, null, 'block', $blockid);
 $coursenode->add_node($blocknode);
 $blocknode->make_active();
 
+//se crean los elementos del menu
+$menu_option = create_menu_options($USER->id, $blockid, $courseid);
+
 // Crea una clase con la información que se llevará al template.
 $object_to_render = new stdClass();
 
@@ -62,6 +66,7 @@ $object_to_render = new stdClass();
 // Evalua si el rol del usuario tiene permisos en esta view.
 $actions = authenticate_user_view($USER->id, $blockid);
 $object_to_render = $actions;
+$object_to_render->menu = $menu_option;
 
 // Carga programas académicos
 $array_programs = load_programs_cali();
@@ -94,6 +99,7 @@ $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/dataTables.jqueryui
 $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/jquery.dataTables.css', true);
 $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/jquery.dataTables.min.css', true);
 $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/jquery.dataTables_themeroller.css', true);
+$PAGE->requires->css('/blocks/ases/style/side_menu_style.css', true);
 $PAGE->requires->js_call_amd('block_ases/instanceconfiguration_main','init');
 
 

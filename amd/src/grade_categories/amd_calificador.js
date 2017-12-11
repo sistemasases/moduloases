@@ -217,6 +217,10 @@ requirejs(['jquery', 'bootstrap', 'sweetalert'], function ($) {
         $('.fondo').hide();
     });
 
+    $(document).on('click', '.edit', function () {
+        swal("EDICIÓN EN PROCESO DE DESARROLLO", "Disculpe las molestias","warning");
+    });
+
     $(document).on('click', '.delete', function () {
         var element = $(this).parent().parent().parent().attr('id').split('_');
         var courseid = getCourseid();
@@ -230,7 +234,7 @@ requirejs(['jquery', 'bootstrap', 'sweetalert'], function ($) {
         var titulo = "Esta seguro que desea eliminar " + tipo + "?";
         swal({
             title: titulo,
-            text: "No se podran recuperar la notas del elemento una vez borrado!",
+            text: "Tenga en cuenta que NO SE PODRAN RECUPERAR ninguna de la notas que haya registrado en este elemento una vez borrado!",
             type: "warning",
             showCancelButton: true,
             confirmButtonClass: "btn-danger",

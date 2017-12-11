@@ -1,23 +1,18 @@
 <?php
 require_once('asesreport_lib.php');
-
 $columns = array();
 $poblacion = array();
 $campos_consulta = array();
 $riesgos_consulta = array();
 $academic_query = array();
 $name_columns = new stdClass();
-
 if(isset($_POST['cohorte'])){
     array_push($poblacion, $_POST['cohorte']);
 }
-
 if(isset($_POST['estado'])){
     array_push($poblacion, $_POST['estado']);
 }
-
 if(isset($_POST['chk']) && isset($_POST['idinstancia'])){
-
     $counter = 0;
     
     foreach($_POST['chk'] as $chk)
@@ -30,25 +25,19 @@ if(isset($_POST['chk']) && isset($_POST['idinstancia'])){
     if(isset($_POST['chk_risk'])){
         
         foreach($_POST['chk_risk'] as $chk_risk){
-
             $query_nombre = "SELECT * FROM {talentospilos_riesgos_ases} WHERE id =".$chk_risk;
-
             $nombre_riesgo = $DB->get_record_sql($query_nombre)->nombre;
             array_push($columns, array("title"=>'R.'.strtoupper(substr($nombre_riesgo, 0, 1)).substr($nombre_riesgo, 1, 2), "name"=>$nombre_riesgo, "data"=>$nombre_riesgo));
             array_push($riesgos_consulta, $chk_risk);
             $counter = $counter + 1;            
         }
     }
-
     if(isset($_POST['chk_academic'])){
-
         foreach($_POST['chk_academic'] as $chk_academic){
-
             array_push($columns, array("title"=>$chk_academic, "name"=>$chk_academic, "data"=>$chk_academic));
             array_push($academic_query, $chk_academic);
         }
     }
-
     $result = getUsersByPopulation($campos_consulta, $poblacion, $riesgos_consulta, $academic_query, $_POST['idinstancia']);
     
     $data = array(
@@ -90,10 +79,8 @@ if(isset($_POST['chk']) && isset($_POST['idinstancia'])){
                                 "excel"
                             )
         );
-
     header('Content-Type: application/json');
     $prueba = new stdClass;
-
     if(isset($result->error)){
         $prueba->error = $result->error;
         echo json_encode($prueba);

@@ -31,6 +31,7 @@ require_once('../managers/instance_management/instance_lib.php');
 require_once('../managers/periods_management/periods_lib.php');
 require_once ('../managers/permissions_management/permissions_lib.php');
 require_once ('../managers/validate_profile_action.php'); 
+require_once ('../managers/menu_options.php');
 
 global $PAGE;
 
@@ -51,6 +52,9 @@ if(!consult_instance($blockid)){
     header("Location: instanceconfiguration.php?courseid=$courseid&instanceid=$blockid");
 }
 
+//se crean los elementos del menu
+$menu_option = create_menu_options($USER->id, $blockid, $courseid);
+
 //Se obtienen todos los períodos (semestres)
 $semesters = get_all_semesters(); 
 
@@ -68,6 +72,7 @@ $data = new stdClass;
 $actions = authenticate_user_view($USER->id, $blockid);
 $data = $actions;
 $data->table = $table_semesters;
+$data->menu = $menu_option;
 
 //configuracion de la navegación
 $coursenode = $PAGE->navigation->find($courseid, navigation_node::TYPE_COURSE);
@@ -97,6 +102,8 @@ $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/jquery.dataTables.c
 $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/jquery.dataTables.min.css', true);
 $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/jquery.dataTables_themeroller.css', true);
 $PAGE->requires->css('/blocks/ases/js/select2/css/select2.css', true);
+$PAGE->requires->css('/blocks/ases/style/side_menu_style.css', true);
+
 $PAGE->requires->js_call_amd('block_ases/periods_management_main', 'init');
 
 $output = $PAGE->get_renderer('block_ases');

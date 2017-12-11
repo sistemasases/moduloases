@@ -534,11 +534,11 @@ function getCategoriesandItems($courseid){
     $report = new grade_report_user($courseid, $gpr, $context, $userid);
     reduce_table_categories($report);
     if ($report->fill_table()) {
-        //print_r($report->tabledata);
+        //print_r($report->courseid);
         return print_table_categories($report);
     }
 }
-//getCategoriesandItems(3);
+//getCategoriesandItems(14);
 
 /**
  * Returns the HTML from the flexitable.
@@ -586,7 +586,11 @@ function print_table_categories($report){
                         }  
                         $aggregation = getAggregationofCategory($categoryid);
                         $maxweight = getMaxWeight($categoryid);
-                        $html .= "<$celltype $id $headers class='$class' $colspan><div id = '$aggregation' class = 'agg'> $content <p style = 'display: inline' class = 'maxweight' id = '$maxweight'>$weight</p> <div id = 'buttons' style = 'float: right !important'><button title = 'Crear nuevo item o categoria' class = 'glyphicon glyphicon-plus new'/ ><button title = 'Editar Categoria' class = 'glyphicon glyphicon-pencil edit'/><button title = 'Eliminar Categoria' class = 'glyphicon glyphicon-trash delete'/></div></div></$celltype>\n";
+                        if(!isCourseCategorie($categoryid,$report->courseid)){
+                            $html .= "<$celltype $id $headers class='$class' $colspan><div id = '$aggregation' class = 'agg'> $content <p style = 'display: inline' class = 'maxweight' id = '$maxweight'>$weight</p> <div id = 'buttons' style = 'float: right !important'><button title = 'Crear nuevo item o categoria' class = 'glyphicon glyphicon-plus new'/ ><button title = 'Editar Categoria' class = 'glyphicon glyphicon-pencil edit'/><button title = 'Eliminar Categoria' class = 'glyphicon glyphicon-trash delete'/></div></div></$celltype>\n";
+                        }else{
+                            $html .= "<$celltype $id $headers class='$class' $colspan><div id = '$aggregation' class = 'agg'> $content <p style = 'display: inline' class = 'maxweight' id = '$maxweight'>$weight</p> <div id = 'buttons' style = 'float: right !important'><button title = 'Crear nuevo item o categoria' class = 'glyphicon glyphicon-plus new'/ ></div></div></$celltype>\n";                        
+                        }
                       }else{
                         $id_item = explode("_",$id)[1];  
                         $weight = getweightofItem($id_item);
@@ -594,8 +598,12 @@ function print_table_categories($report){
                             $weight = '-';
                         }else{
                             $weight = '('. floatval($weight).' %)';
-                        }  
-                        $html .= "<$celltype $id $headers class='$class' $colspan>$content <p style = 'display: inline'>$weight</p><div id = 'buttons' style = 'float: right !important'><div><button title = 'Editar Item' class = 'glyphicon glyphicon-pencil edit'/><button title = 'Eliminar Item' class = 'glyphicon glyphicon-trash delete'/></div></div> </$celltype>\n";
+                        }
+                        if(isItemMod($id_item,$report->courseid)){
+                            $html .= "<$celltype $id $headers class='$class' $colspan>$content <p style = 'display: inline'>$weight</p><div id = 'buttons' style = 'float: right !important'><div><button title = 'Editar Item' class = 'glyphicon glyphicon-pencil edit'/></div></div> </$celltype>\n";                        
+                        }else{
+                            $html .= "<$celltype $id $headers class='$class' $colspan>$content <p style = 'display: inline'>$weight</p><div id = 'buttons' style = 'float: right !important'><div><button title = 'Editar Item' class = 'glyphicon glyphicon-pencil edit'/><button title = 'Eliminar Item' class = 'glyphicon glyphicon-trash delete'/></div></div> </$celltype>\n";                        
+                        }
                       }
                   }
               }
@@ -605,6 +613,32 @@ function print_table_categories($report){
           $html .= "</tbody></table>";
           return $html;
 }
+
+
+/**
+ * Say if an item is Mod type
+ *
+ * @param int $id id of item
+ * @return boolean
+**/
+function isItemMod($id, $courseid){
+    $grade_item = grade_item::fetch(array('id' => $id, 'courseid' => $courseid));
+    return($grade_item->is_external_item());
+}
+
+
+/**
+ * Say if an categorie is course type
+ *
+ * @param int $id id of category
+ * @return boolean
+**/
+function isCourseCategorie($id, $courseid){
+    $grade_categorie = grade_category::fetch(array('id'=>$id, 'courseid'=>$courseid));
+    return($grade_categorie->is_course_category());
+}
+
+
 
 
 /**
@@ -661,6 +695,8 @@ function reduce_table_categories(&$report){
     $report->setup_table();
 }
 
+
+//PENDIENTE MODIFICAR CON LOS METODOS DE MOODLE
 /**
  * Say if find the string "gradeitemdescriptionfiller" in a parameter $string to determinate if is a total item
  *
