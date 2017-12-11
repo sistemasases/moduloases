@@ -1,8 +1,8 @@
+<script src="../js/checkrole.js"></script>
 <div class="container">
 <div class="row">
    <h2>GESTIÓN DE PERMISOS</h2>
    <hr/>
-
    <div class="panel-group">
       <div class="panel panel-default">
          <div class="panel panel-default">
@@ -161,53 +161,6 @@
             {{!--end panel-body--}}
          </div>
       </div>
-
    </div>
    {{!--end panel-group--}}
-
-
 </div>
-
-{{!-- Modal --}}
-<div id="edit" class="modal modal_pilos" role="dialog">
-  <div class="modal-dialog">
-
-    <!-- Modal content-->
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title">Permisos</h4>
-      </div>
-      <div class="modal-body">
-        <form id="form_editar">
-            <div class="form-pilos">
-            <label class="col-sm-2 control-label">Nombre :</label>
-            <div class="col-sm-10">
-              <input type="text" class="form-pilos" id="nombre_editar" name="nombre_editar">
-            </div>
-            <div class="form-pilos">
-            <label class="col-sm-2 control-label">Descripción :</label>
-            <div class="col-sm-10">
-              <input type="text" class="form-pilos" id="descripcion_editar" name="descripcion_editar">
-            </div>
-         </div>
-            <div class="form-pilos func hide" >
-            <label class="col-sm-2 control-label">Funcionalidad</label>
-            <div class="col-sm-10">
-            {{#data}}
-            {{{functions}}}
-            {{/data}}
-            </div>
-            </div>
-         </div>
-      </form>
-      </div>
-      <div class="modal-footer">
-      <button type="button" class="button btn btn-secondary" data-dismiss="modal" id="close_seg">Cerrar</button>
-      <button type="button" class="button btn btn-primary" id="save_seg">Guardar</button>
-
-    </div>
-
-  </div>
-</div>
-{{!-- End Modal --}}
