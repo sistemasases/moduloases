@@ -27,7 +27,8 @@ require_once(__DIR__ . '/../../../config.php');
 require_once($CFG->libdir.'/adminlib.php');
 require_once('../managers/permissions_management/permissions_functions.php');
 require_once ('../managers/permissions_management/permissions_lib.php');
-require_once ('../managers/validate_profile_action.php'); 
+require_once ('../managers/validate_profile_action.php');
+require_once ('../managers/menu_options.php'); 
 include('../lib.php');
 global $PAGE;
 
@@ -57,12 +58,16 @@ $functions = get_functions_select($function,"functions_table");
 
 $general_table  = get_functions_actions();
 
+//se crean los elementos del menu
+$menu_option = create_menu_options($USER->id, $blockid, $courseid);
+
 //Crea una clase con la información que se llevará al template.   
 $data = new stdClass;
 
 // Evalua si el rol del usuario tiene permisos en esta view.
 $actions = authenticate_user_view($USER->id, $blockid);
 $data = $actions;
+$data->menu = $menu_option;
 $data->roles_table_user=$roles_table_user;
 $data->functions_table =$functions_table;
 $data->general_table=$general_table;
@@ -95,6 +100,7 @@ $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/jquery.dataTables.c
 $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/jquery.dataTables.min.css', true);
 $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/jquery.dataTables_themeroller.css', true);
 $PAGE->requires->css('/blocks/ases/js/select2/css/select2.css', true);
+$PAGE->requires->css('/blocks/ases/style/side_menu_style.css', true);
 
 
 
