@@ -185,7 +185,7 @@ function get_courses_report(){
 						</thead>"; 
 
 	foreach ($courses as $course) {
-		$string_html.= "<tr id='$course->id'>
+		$string_html.= "<tr class='curso_reporte' id='$course->id'>
 						<td>$course->fullname</td>
 						<td>$course->shortname</td>
 		        		</tr>";
