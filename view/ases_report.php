@@ -31,9 +31,8 @@ require_once('../managers/query.php');
 require_once('../managers/ases_report/asesreport_lib.php');
 require_once('../managers/instance_management/instance_lib.php');
 require_once('../managers/student_profile/studentprofile_lib.php');
-
-require_once('../managers/permissions_management/permissions_lib.php');
-require_once('../managers/validate_profile_action.php');
+require_once ('../managers/permissions_management/permissions_lib.php');
+require_once ('../managers/validate_profile_action.php');
 
 include('../lib.php');
 global $PAGE;
