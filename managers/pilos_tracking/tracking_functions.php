@@ -20,27 +20,27 @@ function show_according_permissions(&$table, $actions)
     $replace_with = "";
     $tabla_format = "";
     if (isset($actions->update_assigned_tracking_rt) == 0) {
-        $start = '<div class="col-sm-4" id="editar_registro">';
+        $start = '<div class="col-sm-8" id="editar_registro">';
         $table = replace_content_inside_delimiters($start, $end, $replace_with, $table);
     }
 
     if (isset($actions->delete_assigned_tracking_rt) == 0) {
-        $start = '<div class="col-sm-4" id="borrar_registro">';
+        $start = '<div class="col-sm-2" id="borrar_registro">';
         $table = replace_content_inside_delimiters($start, $end, $replace_with, $table);
     }
 
     if (isset($actions->send_observations_rt) == 0) {
-        $start = '<div class="col-sm-4" id="enviar_correo">';
+        $start = '<div class="col-sm-12" id="enviar_correo">';
         $table = replace_content_inside_delimiters($start, $end, $replace_with, $table);
     }
 
     if (isset($actions->check_tracking_professional_rt) == 0) {
-        $start = '<div class="col-sm-4" id="check_profesional">';
+        $start = '<div class="col-sm-6" id="check_profesional">';
         $table = replace_content_inside_delimiters($start, $end, $replace_with, $table);
     }
 
     if (isset($actions->check_tracking_intern_rt) == 0) {
-        $start = '<div class="col-sm-4" id="check_practicante">';
+        $start = '<div class="col-sm-6" id="check_practicante">';
         $table = replace_content_inside_delimiters($start, $end, $replace_with, $table);
     }
 
@@ -917,34 +917,34 @@ function crearTablaYToggle($arregloImprimirPares, $monitorNo, $arregloImprimirGr
             $stringRetornar.= '<div class="col-sm-12" id="enviar_correo"><div class="table-info-pilos col-sm-12"><b>REPORTAR OBSERVACIÓN</b><br /><textarea  id="textarea_' . $arregloImprimirPares[$student][$tupla][23] . '" class="textarea-seguimiento-pilos" name="individual_' . $codigoEnviarN1 . '_' . $codigoEnviarN2 . '_' . $arregloImprimirPares[$student][$tupla][1] . '_' . $arregloImprimirPares[$student][$tupla][0] . '" rows="4" cols="150"></textarea><br /></div>';
             if ($arregloImprimirPares[$student][$tupla][27] == 1) {
                 $stringRetornar.= '
-                <div class="col-sm-12" id="profesional">
-                <div class="col-sm-12"><label class="checkbox-inline"><input type="checkbox" name="profesional"  id="profesional_' . $arregloImprimirPares[$student][$tupla][23] . '" value="1" checked>R. profesional</label><label class="checkbox-inline"></div>';
+                <div class="col-sm-6" id="profesional">
+                <div class="col-sm-12"><label class="checkbox-inline"><input type="checkbox" name="profesional"  id="profesional_' . $arregloImprimirPares[$student][$tupla][23] . '" value="1" checked disabled>R. profesional</label><label class="checkbox-inline"></div></div>';
             }
             else {
                 $stringRetornar.= '
-                <div class="col-sm-4" id="check_profesional">
-                <div class="col-sm-12"><label class="checkbox-inline"><input type="checkbox" name="profesional" id="profesional_' . $arregloImprimirPares[$student][$tupla][23] . '" value="1">R. profesional</label><label class="checkbox-inline"></div>';
+                <div class="col-sm-6" id="check_profesional">
+                <div class="col-sm-12"><label class="checkbox-inline"><input type="checkbox" name="profesional" id="profesional_' . $arregloImprimirPares[$student][$tupla][23] . '" value="1" disabled>R. profesional</label><label class="checkbox-inline"></div></div>';
             }
 
             if ($arregloImprimirPares[$student][$tupla][28] == 1) {
                 $stringRetornar.= '
-                <div class="col-sm-12" id="check_practicante">
-                <input type="checkbox" name="practicante" id="practicante_' . $arregloImprimirPares[$student][$tupla][23] . '" value="1" checked>R. practicante</label></div></div>';
+                <div class="col-sm-6" id="check_practicante">
+                <input type="checkbox" name="practicante" id="practicante_' . $arregloImprimirPares[$student][$tupla][23] . '" value="1" checked disabled>R. practicante</label></div></div>';
             }
             else {
                 $stringRetornar.= '
-                <div class="col-sm-4" id="check_practicante">
-                <input type="checkbox" name="practicante" id="practicante_' . $arregloImprimirPares[$student][$tupla][23] . '" value="1">R. practicante</label></div></div>';
+                <div class="col-sm-6" id="check_practicante">
+                <input type="checkbox" name="practicante" id="practicante_' . $arregloImprimirPares[$student][$tupla][23] . '" value="1" disabled>R. practicante</label></div></div>';
             }
 
             if ($arregloImprimirPares[$student][$tupla][27] != 1 or $sistemas == 1) {
                 $stringRetornar.= '
-                        <div class="col-sm-4" id="enviar_correo"><div class="col-sm-4 col" id="enviar_' . $arregloImprimirPares[$student][$tupla][23] . '" style="display: "><span class="btn btn-info btn-lg  botonCorreo" value="' . $arregloImprimirPares[$student][$tupla][23] . '" id="correo_' . $arregloImprimirPares[$student][$tupla][23] . '" type="button">Enviar observaciones</span></div></div>
+                        <div class="col-sm-12" id="enviar_correo"><div class="col-sm-4 col" id="enviar_' . $arregloImprimirPares[$student][$tupla][23] . '" style="display: "><span class="btn btn-info btn-lg  botonCorreo" value="' . $arregloImprimirPares[$student][$tupla][23] . '" id="correo_' . $arregloImprimirPares[$student][$tupla][23] . '" type="button">Enviar observaciones</span></div></div>
 
-                        <div class="col-sm-4" id="editar_registro">
+                        <div class="col-sm-8" id="editar_registro">
                         <div class="col-sm-4" id="editar_' . $arregloImprimirPares[$student][$tupla][23] . '" style="display:"><span class="btn btn-info btn-lg botonesSeguimiento botonEditarSeguimiento" value="' . $arregloImprimirPares[$student][$tupla][23] . '" type="button">Editar</span></div></div>
 
-                        <div class="col-sm-4" id="borrar_registro">
+                        <div class="col-sm-2" id="borrar_registro">
                         <div class="col-sm-4" id="borrar_' . $arregloImprimirPares[$student][$tupla][23] . '" style="display:"><span class="btn btn-info btn-lg botonBorrar"  value="' . $arregloImprimirPares[$student][$tupla][23] . '" type="button">Borrar</span></div></div>';
                 $stringRetornar.= '<div class="col-sm-12"><div class="col-sm-5"><span class="btn btn-info btn-lg botonesSeguimiento botonModificarSeguimiento ocultar" value="' . $arregloImprimirPares[$student][$tupla][23] . '" type="button">Guardar</span></div><div class="col-sm-5"><span class="btn btn-info btn-lg botonesSeguimiento botonCancelarSeguimiento ocultar" value="' . $arregloImprimirPares[$student][$tupla][23] . '" type="button">Cancelar</span></div></div><td></tr>';
             }

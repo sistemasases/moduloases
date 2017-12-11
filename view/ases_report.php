@@ -33,6 +33,7 @@ require_once('../managers/instance_management/instance_lib.php');
 require_once('../managers/student_profile/studentprofile_lib.php');
 require_once ('../managers/permissions_management/permissions_lib.php');
 require_once ('../managers/validate_profile_action.php');
+
 include('../lib.php');
 global $PAGE;
 
@@ -51,9 +52,9 @@ $cohortes = get_cohortes();
 $tabla_riesgos='';
 $tabla_cohortes='';
 foreach($riesgos as $riesgo){
-    $tabla_riesgos.='<input type="checkbox" name="chk_risk[]" id="'.$riesgo->id.'" value="'.$riesgo->id.'" />'.$riesgo->descripcion.'<br>';}
+    $tabla_riesgos.='<input type="checkbox" name="chk_risk[]" id="'.$riesgo->id.'" value="'.$riesgo->id.'" /> '.$riesgo->descripcion.'<br>';}
     
-$tabla_cohortes.='<select name="cohorte" id="cohorte" class="select_index"><option value="TODOS">TODOS</option>';
+$tabla_cohortes.='<select name="cohorte" id="cohorte" class="form-control"><option value="TODOS">TODOS</option>';
 foreach ($cohortes as $cohorte) {
     $tabla_cohortes.='<option value="'.$cohorte->idnumber.'">'.$cohorte->name.'</option>';
 }
@@ -68,11 +69,14 @@ foreach($ases_status_array as $ases_status){
 	$estados_ases .= "<option value='".$ases_status->id."'>".$ases_status->nombre."</option>";
 }
 
+// Crea una clase con la información que se llevará al template.
 $data = 'data';    
 $data = new stdClass;
+
 // Evalua si el rol del usuario tiene permisos en esta view.
 $actions = authenticate_user_view($USER->id, $blockid);
 $data = $actions;
+
 $data->risks_checks = $tabla_riesgos;
 $data->cohorts_checks = $tabla_cohortes;
 $data->status_ases = $estados_ases;
@@ -108,6 +112,10 @@ $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/jquery.dataTables.m
 $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/jquery.dataTables_themeroller.css', true);
 $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/dataTables.tableTools.css', true);
 $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/NewCSSExport/buttons.dataTables.min.css', true);
+
+$PAGE->requires->js_call_amd('block_ases/ases_report_main','init');
+//$PAGE->requires->js_call_amd('block_ases/ases_report_graphics','init');
+
 $PAGE->set_url($url);
 $PAGE->set_title($pagetitle);
 $PAGE->set_heading($pagetitle);

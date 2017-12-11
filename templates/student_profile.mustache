@@ -753,7 +753,7 @@
     <div class="mymodal-content">
       <div class="mymodal-header col-sm-12">
         <div class="col-sm-11">
-          <h4 class="" id="myModalLabel">Hitórico de riesgo para el periodo: {{{nombrePeriodoSeguimiento}}}</h4>  
+          <h4 class="" id="myModalLabel">Histórico de riesgo para el periodo: {{{nombrePeriodoSeguimiento}}}</h4>  
         </div>
         <div class="col-sm-1">
           <span id="mymodal-riesgo-close" class="mymodal-close" aria-hidden="true">&times;</span>
@@ -786,249 +786,62 @@
     </div>
   </div>
   <!-- End modal retiro-->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.0/Chart.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.0/Chart.bundle.min.js"></script>
+<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.0/Chart.min.js"></script>-->
+<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.0/Chart.bundle.min.js"></script>-->
+  <span style="display:none;" id="datos">{ "informacion":[
+    {"dimension":"individual", "datos":[
+    {{#datosSeguimientoEstudianteIndividual}}
+      {{#datos}}
+        {"fecha":"{{fecha}}","color":"{{color}}","riesgo":"{{riesgo}}", "end":"false"},
+      {{/datos}}
+    {{/datosSeguimientoEstudianteIndividual}}
+    {"end":"true"}
+      ]},
+    {"dimension":"familiar", "datos":[
+    {{#datosSeguimientoEstudianteFamiliar}}
+      {{#datos}}
+        {"fecha":"{{fecha}}","color":"{{color}}","riesgo":"{{riesgo}}", "end":"false"},
+      {{/datos}}
+    {{/datosSeguimientoEstudianteFamiliar}}
+    {"end":"true"}
+      ]},
+    {"dimension":"academico", "datos":[
+    {{#datosSeguimientoEstudianteAcademico}}
+      {{#datos}}
+        {"fecha":"{{fecha}}","color":"{{color}}","riesgo":"{{riesgo}}", "end":"false"},
+      {{/datos}}
+    {{/datosSeguimientoEstudianteAcademico}}
+    {"end":"true"}
+      ]},
+    {"dimension":"economico", "datos":[
+    {{#datosSeguimientoEstudianteEconomico}}
+      {{#datos}}
+        {"fecha":"{{fecha}}","color":"{{color}}","riesgo":"{{riesgo}}", "end":"false"},
+      {{/datos}}
+    {{/datosSeguimientoEstudianteEconomico}}
+    {"end":"true"}
+      ]},
+    {"dimension":"vidaUniversitaria", "datos":[
+    {{#datosSeguimientoEstudianteVidaUniversitaria}}
+      {{#datos}}
+        {"fecha":"{{fecha}}","color":"{{color}}","riesgo":"{{riesgo}}", "end":"false"},
+      {{/datos}}
+    {{/datosSeguimientoEstudianteVidaUniversitaria}}
+    {"end":"true"}
+      ]}
+    ]
+    }
+  </span>
 <script>
-  var ctx_individual = document.getElementById("myChart_individual").getContext('2d');
-    var ctx_familiar = document.getElementById("myChart_familiar").getContext('2d');
-    var ctx_academico = document.getElementById("myChart_academico").getContext('2d');
-    var ctx_economico = document.getElementById("myChart_economico").getContext('2d');
-    var ctx_vida_universitaria = document.getElementById("myChart_vida_universitaria").getContext('2d');
-    var myChart_individual = new Chart(ctx_individual, {
-        type: 'line',
-        data: {
-          
-            labels: [
-              {{#datosSeguimientoEstudianteIndividual}}
-                "{{fecha}}",
-              {{/datosSeguimientoEstudianteIndividual}}
-              ],
-            datasets: [{
-                label: 'Nivel de riesgo',
-                fill: false,
-                lineTension: 0,
-                pointBackgroundColor: [
-                    {{#datosSeguimientoEstudianteIndividual}}
-                        {{#datos}}
-                            "{{color}}",
-                        {{/datos}}
-                    {{/datosSeguimientoEstudianteIndividual}}
-                    ],
-                data: [
-                  {{#datosSeguimientoEstudianteIndividual}}
-                    {{#datos}}
-                        "{{riesgo}}",
-                    {{/datos}}
-                  {{/datosSeguimientoEstudianteIndividual}}
-                  ],
-                backgroundColor: 'black',
-                borderColor: 'black',
-                borderWidth: 3,
-                pointRadius: 5,
-                pointHoverRadius: 7
-            }]
-        },
-        options: {
-            legend: {
-                display: false
-            },
-            scales: {
-                yAxes: [{
-                    ticks: {
-                        beginAtZero:true
-                    }
-                }]
-            }
-        }
-    });
-    var myChart_familiar = new Chart(ctx_familiar, {
-        type: 'line',
-        data: {
-          
-            labels: [
-              {{#datosSeguimientoEstudianteFamiliar}}
-                "{{fecha}}",
-              {{/datosSeguimientoEstudianteFamiliar}}
-              ],
-            datasets: [{
-                label: 'Nivel de riesgo',
-                fill: false,
-                lineTension: 0,
-                pointBackgroundColor: [
-                    {{#datosSeguimientoEstudianteFamiliar}}
-                        {{#datos}}
-                            "{{color}}",
-                        {{/datos}}
-                    {{/datosSeguimientoEstudianteFamiliar}}
-                    ],
-                data: [
-                  {{#datosSeguimientoEstudianteFamiliar}}
-                    {{#datos}}
-                        "{{riesgo}}",
-                    {{/datos}}
-                  {{/datosSeguimientoEstudianteFamiliar}}
-                  ],
-                backgroundColor: 'black',
-                borderColor: 'black',
-                borderWidth: 3,
-                pointRadius: 5,
-                pointHoverRadius: 7
-            }]
-        },
-        options: {
-            legend: {
-                display: false
-            },
-            scales: {
-                yAxes: [{
-                    ticks: {
-                        beginAtZero:true
-                    }
-                }]
-            }
-        }
-    });
-    var myChart_academico = new Chart(ctx_academico, {
-        type: 'line',
-        data: {
-          
-            labels: [
-              {{#datosSeguimientoEstudianteAcademico}}
-                "{{fecha}}",
-              {{/datosSeguimientoEstudianteAcademico}}
-              ],
-            datasets: [{
-                label: 'Nivel de riesgo',
-                fill: false,
-                lineTension: 0,
-                pointBackgroundColor: [
-                    {{#datosSeguimientoEstudianteAcademico}}
-                        {{#datos}}
-                            "{{color}}",
-                        {{/datos}}
-                    {{/datosSeguimientoEstudianteAcademico}}
-                    ],
-                data: [
-                  {{#datosSeguimientoEstudianteAcademico}}
-                    {{#datos}}
-                        "{{riesgo}}",
-                    {{/datos}}
-                  {{/datosSeguimientoEstudianteAcademico}}
-                  ],
-                backgroundColor: 'black',
-                borderColor: 'black',
-                borderWidth: 3,
-                pointRadius: 5,
-                pointHoverRadius: 7
-            }]
-        },
-        options: {
-            legend: {
-                display: false
-            },
-            scales: {
-                yAxes: [{
-                    ticks: {
-                        beginAtZero:true
-                    }
-                }]
-            }
-        }
-    });
-    var myChart_economico = new Chart(ctx_economico, {
-        type: 'line',
-        data: {
-          
-            labels: [
-              {{#datosSeguimientoEstudianteEconomico}}
-                "{{fecha}}",
-              {{/datosSeguimientoEstudianteEconomico}}
-              ],
-            datasets: [{
-                label: 'Nivel de riesgo',
-                fill: false,
-                lineTension: 0,
-                pointBackgroundColor: [
-                    {{#datosSeguimientoEstudianteEconomico}}
-                        {{#datos}}
-                            "{{color}}",
-                        {{/datos}}
-                    {{/datosSeguimientoEstudianteEconomico}}
-                    ],
-                data: [
-                  {{#datosSeguimientoEstudianteEconomico}}
-                    {{#datos}}
-                        "{{riesgo}}",
-                    {{/datos}}
-                  {{/datosSeguimientoEstudianteEconomico}}
-                  ],
-                backgroundColor: 'black',
-                borderColor: 'black',
-                borderWidth: 3,
-                pointRadius: 5,
-                pointHoverRadius: 7
-            }]
-        },
-        options: {
-            legend: {
-                display: false
-            },
-            scales: {
-                yAxes: [{
-                    ticks: {
-                        beginAtZero:true
-                    }
-                }]
-            }
-        }
-    });
-    var myChart_vida_universitaria = new Chart(ctx_vida_universitaria, {
-        type: 'line',
-        data: {
-          
-            labels: [
-              {{#datosSeguimientoEstudianteVidaUniversitaria}}
-                "{{fecha}}",
-              {{/datosSeguimientoEstudianteVidaUniversitaria}}
-              ],
-            datasets: [{
-                label: 'Nivel de riesgo',
-                fill: false,
-                lineTension: 0,
-                pointBackgroundColor: [
-                    {{#datosSeguimientoEstudianteVidaUniversitaria}}
-                        {{#datos}}
-                            "{{color}}",
-                        {{/datos}}
-                    {{/datosSeguimientoEstudianteVidaUniversitaria}}
-                    ],
-                data: [
-                  {{#datosSeguimientoEstudianteVidaUniversitaria}}
-                    {{#datos}}
-                        "{{riesgo}}",
-                    {{/datos}}
-                  {{/datosSeguimientoEstudianteVidaUniversitaria}}
-                  ],
-                backgroundColor: 'black',
-                borderColor: 'black',
-                borderWidth: 3,
-                pointRadius: 5,
-                pointHoverRadius: 7
-            }]
-        },
-        options: {
-            legend: {
-                display: false
-            },
-            scales: {
-                yAxes: [{
-                    ticks: {
-                        beginAtZero:true
-                    }
-                }]
-            }
-        }
-    });
+
+        var ctx_individual = document.getElementById("myChart_individual").getContext('2d');
+        var ctx_familiar = document.getElementById("myChart_familiar").getContext('2d');
+        var ctx_academico = document.getElementById("myChart_academico").getContext('2d');
+        var ctx_economico = document.getElementById("myChart_economico").getContext('2d');
+        var ctx_vida_universitaria = document.getElementById("myChart_vida_universitaria").getContext('2d');
+        var datos = JSON.parse(document.getElementById("datos").innerText);
+        var datosGraficables = [];
+ 
 </script>
 {{/data}}
 </body>  
