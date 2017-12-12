@@ -33,6 +33,8 @@ require_once('../managers/instance_management/instance_lib.php');
 require_once('../managers/student_profile/studentprofile_lib.php');
 require_once ('../managers/permissions_management/permissions_lib.php');
 require_once ('../managers/validate_profile_action.php');
+require_once ('../managers/menu_options.php');
+
 
 include('../lib.php');
 global $PAGE;
@@ -48,6 +50,9 @@ $blockid = required_param('instanceid', PARAM_INT);
 require_login($courseid, false);
 $riesgos = get_riesgos();
 $cohortes = get_cohortes();
+
+//se crean los elementos del menu
+$menu_option = create_menu_options($USER->id, $blockid, $courseid);
 
 $tabla_riesgos='';
 $tabla_cohortes='';
@@ -73,10 +78,11 @@ foreach($ases_status_array as $ases_status){
 $data = 'data';    
 $data = new stdClass;
 
+
 // Evalua si el rol del usuario tiene permisos en esta view.
 $actions = authenticate_user_view($USER->id, $blockid);
 $data = $actions;
-
+$data->menu = $menu_option;
 $data->risks_checks = $tabla_riesgos;
 $data->cohorts_checks = $tabla_cohortes;
 $data->status_ases = $estados_ases;
@@ -112,6 +118,8 @@ $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/jquery.dataTables.m
 $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/jquery.dataTables_themeroller.css', true);
 $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/dataTables.tableTools.css', true);
 $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/NewCSSExport/buttons.dataTables.min.css', true);
+$PAGE->requires->css('/blocks/ases/style/side_menu_style.css', true);
+
 
 $PAGE->requires->js_call_amd('block_ases/ases_report_main','init');
 //$PAGE->requires->js_call_amd('block_ases/ases_report_graphics','init');

@@ -35,6 +35,7 @@ include("../classes/output/renderer.php");
 require_once('../managers/instance_management/instance_lib.php');
 require_once ('../managers/permissions_management/permissions_lib.php');
 require_once ('../managers/validate_profile_action.php');
+require_once ('../managers/menu_options.php');
 
 // Set up the page.
 $title = "Seguimiento Grupal";
@@ -53,6 +54,10 @@ $contextcourse = context_course::instance($courseid);
 $contextblock =  context_block::instance($blockid);
 $url = new moodle_url("/blocks/ases/view/groupal_tracking.php", array('courseid' => $courseid, 'instanceid' => $blockid));
 
+
+//se crean los elementos del menu
+$menu_option = create_menu_options($USER->id, $blockid, $courseid);
+
 // Crea una clase con la información que se llevará al template.
 $data = 'data';
 $data = new stdClass;
@@ -60,6 +65,8 @@ $data = new stdClass;
 // Evalua si el rol del usuario tiene permisos en esta view.
 $actions = authenticate_user_view($USER->id, $blockid);
 $data = $actions;
+$data->menu = $menu_option;
+
 
 
 //se configura la navegacion
@@ -81,6 +88,7 @@ $PAGE->requires->css('/blocks/ases/style/sweetalert.css', true);
 $PAGE->requires->css('/blocks/ases/style/round-about_pilos.css', true);
 $PAGE->requires->css('/blocks/ases/style/sugerenciaspilos.css', true);
 $PAGE->requires->css('/blocks/ases/style/forms_pilos.css', true);
+$PAGE->requires->css('/blocks/ases/style/side_menu_style.css', true);
 $PAGE->requires->js_call_amd('block_ases/groupal_tracking','init');
 
 $output = $PAGE->get_renderer('block_ases');

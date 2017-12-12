@@ -1,21 +1,15 @@
 {{#data}}
-{{{message}}}
 {{> block_ases/side_menu}}
-{{/data}}
 <div class="container">
 <div class="row">
 <h2>GESTIÓN DE USUARIOS</h2>
 <hr/>
-{{#data}}
 {{{message}}}
-{{/data}}
-<div id="collapse_div" class="panel-group hidden">
-   {{#data}}
    {{#search_user_um}}
    {{> block_ases/search_users}}
    {{/search_user_um}}
    {{#view_users_um}}
    {{> block_ases/view_users}}
    {{/view_users_um}}
-   {{/data}}
 </div>
+{{/data}}
