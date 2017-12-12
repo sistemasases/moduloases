@@ -109,7 +109,6 @@ $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/jquery.dataTables_t
 $PAGE->requires->css('/blocks/ases/js/select2/css/select2.css', true);
 $PAGE->requires->css('/blocks/ases/style/side_menu_style.css', true);
 $output = $PAGE->get_renderer('block_ases');
-$output = $PAGE->get_renderer('block_ases');
 $index_page = new \block_ases\output\user_management_page($data);
 
 

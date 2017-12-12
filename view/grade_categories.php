@@ -33,6 +33,8 @@ require_once('../managers/grade_categories/grade_categories_lib.php');
 require_once('../managers/lib/lib.php');
 include('../lib.php');
 include("../classes/output/renderer.php");
+require_once ('../managers/menu_options.php');
+
 
 global $PAGE;
 global $USER;
@@ -60,6 +62,10 @@ $blocknode = navigation_node::create($title,$url, null, 'block', $blockid);
 $coursenode->add_node($blocknode);
 $blocknode->make_active();
 
+
+//se crean los elementos del menu
+$menu_option = create_menu_options($USER->id, $blockid, $courseid);
+
 $PAGE->set_url($url);
 $PAGE->set_title($title);
 
@@ -80,6 +86,8 @@ $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/dataTables.tableToo
 $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/NewCSSExport/buttons.dataTables.min.css', true);
 $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/dataTables.tableTools.css', true);
 $PAGE->requires->css('/blocks/ases/style/sweetalert.css', true);
+$PAGE->requires->css('/blocks/ases/style/side_menu_style.css', true);
+
 
 $PAGE->requires->js_call_amd('block_ases/grade_categories', 'init');
 
@@ -155,6 +163,8 @@ if($rol == 'sistemas' || $rol == 'academico'){
 $record = new stdClass;
 $record->teachersTable = $htmlTable;
 $record->courses_info = $courses_info;
+$record->menu = $menu_option;
+
 
 echo $output->header();
 //echo $output->standard_head_html();

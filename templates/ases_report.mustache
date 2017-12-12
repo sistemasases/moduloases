@@ -1,15 +1,15 @@
 <body name="prueba">
   <!-- Testing -->
   {{#data}}
+  {{> block_ases/side_menu}}
   <div class="container">
-
+  {{{message}}}
     {{#search_all_students_ar}}
       {{> block_ases/ar_search_students}}
     {{/search_all_students_ar}}
 
-    {{#search_all_students_ar}}
+    {{#view_graphics_ar}}
       {{> block_ases/ar_view_graphics}}
-    {{/search_all_students_ar}}
+    {{/view_graphics_ar}}
   {{/data}}
-  
 </body>

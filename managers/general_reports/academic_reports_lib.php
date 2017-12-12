@@ -91,7 +91,7 @@ function getReportStudents($instance){
 							<td>$student->codigo</td>
 							<td>$student->firstname</td>
 							<td>$student->lastname</td>
-							<td id = '$student->username' >$student->cantidad</td>
+							<td class='lastC' id = '$student->username' >$student->cantidad</td>
 						</tr>";
 	}
 
@@ -128,8 +128,70 @@ function get_loses_by_student($username){
 			$nota->itemname = $DB->get_record_sql($query_name)->name;
 		}
 		$note = round($nota->finalgrade,2);
-		$text.="Curso: $nota->fullname. Item: $nota->itemname. Nota: $note\n";
+		$text.="$nota->fullname $nota->itemname: $note\n";
 	}
 	return $text;
-}	
-?>
+}
+
+/**
+ * Función que retorna un arreglo de todos los cursos donde hay matriculados estudiantes de una instancia determinada
+ * @see get_courses_reports()
+ * @return Array 
+ */
+
+function get_courses_for_report(){
+    global $DB;
+    
+    $query_semestre = "SELECT nombre FROM {talentospilos_semestre} WHERE id = (SELECT MAX(id) FROM {talentospilos_semestre})";
+    $sem = $DB->get_record_sql($query_semestre)->nombre;
+
+    $año = substr($sem,0,4);
+
+    if(substr($sem,4,1) == 'A'){
+        $semestre = $año.'02';
+    }else if(substr($sem,4,1) == 'B'){
+        $semestre = $año.'08';
+    }
+    //print_r($semestre);
+    $query_courses = "
+	SELECT DISTINCT curso.id, curso.fullname, curso.shortname          
+		FROM {course} curso
+		INNER JOIN {enrol} ROLE ON curso.id = role.courseid
+		INNER JOIN {user_enrolments} enrols ON enrols.enrolid = role.id
+		WHERE SUBSTRING(curso.shortname FROM 15 FOR 6) = '$semestre' AND enrols.userid IN
+			(SELECT user_m.id
+				FROM  {user} user_m
+				INNER JOIN {user_info_data} data ON data.userid = user_m.id
+				INNER JOIN {user_info_field} field ON data.fieldid = field.id
+				INNER JOIN {talentospilos_usuario} user_t ON data.data = CAST(user_t.id AS VARCHAR)
+				INNER JOIN {talentospilos_est_estadoases} estado_u ON user_t.id = estado_u.id_estudiante
+				INNER JOIN {talentospilos_estados_ases} estados ON estados.id = estado_u.id_estado_ases
+				WHERE estados.nombre = 'ACTIVO/SEGUIMIENTO' AND field.shortname = 'idtalentos')";
+    $result = $DB->get_records_sql($query_courses);
+        
+    return $result;
+}
+
+
+function get_courses_report(){
+	$courses = get_courses_for_report();
+
+	$string_html = "<table id = 'courses'>
+						<thead>
+							<tr>
+								<th> Nombre </th>
+								<th> Nombre Completo</th>
+							</tr>
+						</thead>"; 
+
+	foreach ($courses as $course) {
+		$string_html.= "<tr class='curso_reporte' id='$course->id'>
+						<td>$course->fullname</td>
+						<td>$course->shortname</td>
+		        		</tr>";
+	}
+
+    $string_html.= "</table>";
+	return $string_html;
+
+}

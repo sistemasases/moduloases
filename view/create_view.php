@@ -34,6 +34,8 @@ global $PAGE;
 include("../classes/output/create_view_page.php");
 include("../classes/output/renderer.php");
 require_once('../managers/query.php');
+require_once ('../managers/menu_options.php');
+
 
 // Set up the page.
 $title = "Crear vista";
@@ -51,9 +53,14 @@ $url = new moodle_url("/blocks/ases/view/create_view.php",array('courseid' => $c
 //Crea una clase con la información que se llevará al template.   
 $data = new stdClass;
 
+//se crean los elementos del menu
+$menu_option = create_menu_options($USER->id, $blockid, $courseid);
+
 // Evalua si el rol del usuario tiene permisos en esta view.
 $actions = authenticate_user_view($USER->id, $blockid);
 $data = $actions;
+$data->menu = $menu_option;
+
 
 //Configuracion de la navegacion
 $coursenode = $PAGE->navigation->find($courseid, navigation_node::TYPE_COURSE);
@@ -76,6 +83,7 @@ $PAGE->requires->js('/blocks/ases/js/bootstrap.js', true);
 $PAGE->requires->js('/blocks/ases/js/sweetalert-dev.js', true);
 $PAGE->requires->js('/blocks/ases/js/npm.js', true);
 $PAGE->requires->js('/blocks/ases/js/create_view.js', true);
+$PAGE->requires->css('/blocks/ases/style/side_menu_style.css', true);
 $PAGE->set_url($url);
 $PAGE->set_title($title);
 

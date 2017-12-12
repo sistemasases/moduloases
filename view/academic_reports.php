@@ -31,6 +31,8 @@ require_once('../managers/general_reports/academic_reports_lib.php');
 include('../lib.php');
 include("../classes/output/academic_reports_page.php");
 include("../classes/output/renderer.php");
+require_once ('../managers/permissions_management/permissions_lib.php');
+require_once ('../managers/validate_profile_action.php');
 
 global $PAGE;
 
@@ -76,13 +78,20 @@ $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/NewCSSExport/button
 $PAGE->requires->css('/blocks/ases/style/bootstrap_pilos.css', true);
 $PAGE->requires->css('/blocks/ases/style/bootstrap_pilos.min.css', true);
 $PAGE->requires->css('/blocks/ases/style/sweetalert.css', true);
+$PAGE->requires->css('/blocks/ases/style/sweetalert2.css', true);
 $PAGE->requires->css('/blocks/ases/style/round-about_pilos.css', true);
+$PAGE->requires->css('/blocks/ases/style/academic_reports_style.css', true);
 $PAGE->requires->js_call_amd('block_ases/academic_reports', 'init');
 
 //Se extrae la informacion a mostrar
 $data = new stdClass;
 
+// Evalua si el rol del usuario tiene permisos en esta view.
+$actions = authenticate_user_view($USER->id, $blockid);
+$data = $actions;
+
 $data->tableStudents = getReportStudents($blockid);
+$data->tableCourses = get_courses_report();
 
 $output = $PAGE->get_renderer('block_ases');
 
