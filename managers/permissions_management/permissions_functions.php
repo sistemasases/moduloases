@@ -63,8 +63,8 @@ function get_functions_actions(){
  * @return String
  **/
 function get_roles_select($roles,$nombre_rol){
-	$table = "";
- 	$table.='<select class="form-pilos" id="'.$nombre_rol.'">';
+    $table = "";
+    $table.='<select class="form-pilos" id="'.$nombre_rol.'">';
     $table.='<option></option>';
     foreach($roles as $role){
             $table.='<option value="'.$role->id.'">'.$role->nombre_rol.'</option>';
@@ -100,8 +100,8 @@ function get_functions_select($functions,$nombre_function){
  * @return String
  **/
 function get_actions_select($actions){
-	$table = "";
- 	$table.='<select class="form-pilos" id="actions">';
+    $table = "";
+    $table.='<select class="form-pilos" id="actions">';
     foreach($actions as $action){
             $table.='<option value="'.$action->id.'">'.$action->nombre_accion.'</option>';
      }
