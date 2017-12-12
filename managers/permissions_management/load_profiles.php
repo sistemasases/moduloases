@@ -3,7 +3,7 @@ require_once('permissions_lib.php');
     $columns = array();
     array_push($columns, array("title"=>"Nombre", "name"=>"nombre_rol", "data"=>"nombre_rol"));
     array_push($columns, array("title"=>"Descripción", "name"=>"descripcion", "data"=>"descripcion"));
-    //array_push($columns, array("title"=>"Modificar", "name"=>"button", "data"=>"button"));
+    array_push($columns, array("title"=>"", "name"=>"button", "data"=>"edit"));
 
 
         $data = array(
@@ -36,6 +36,5 @@ require_once('permissions_lib.php');
         );
     header('Content-Type: application/json');
 echo json_encode($data); 
-
 
 
