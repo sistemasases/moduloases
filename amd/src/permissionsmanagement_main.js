@@ -11,8 +11,9 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_as
 
 
     return {
-        init: function() {
 
+        init: function() {
+            console.log("a");
 
 
             $("#profiles_user").select2({
