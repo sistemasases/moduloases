@@ -27,12 +27,9 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
             var email = "";
 
             $(document).ready(function() {
-        // Animate loader off screen
-        $(".se-pre-con").fadeOut();
-        $("#reemplazarToogle").fadeIn("slow");
-    });
 
-            $(document).ready(function() {
+                $(".se-pre-con").fadeOut('slow');
+                $("#reemplazarToogle").fadeIn("slow");
 
                 var usuario = "";
                 //Obtenemos el ID de la instancia actual.
@@ -259,7 +256,6 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                     var fechas_epoch = [];
 
 
-
                     if (id_persona == undefined) {
                         swal({
                             title: "Debe escoger una persona para realizar la consulta",
@@ -269,6 +265,9 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                         });
                     } else {
                         $(".well.col-md-10.col-md-offset-1.reporte-seguimiento.oculto").show();
+
+                        $(".se-pre-con").show();
+                        $("#reemplazarToogle").hide();
 
                         $.ajax({
                             type: "POST",
@@ -283,6 +282,8 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
 
 
                             success: function(msg) {
+
+
 
                                 if (msg == "") {
                                     $('#reemplazarToogle').html('<label> No se encontraron registros </label>');
@@ -300,6 +301,10 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                             error: function(msg) {
                                 alert("error al consultar seguimientos de personas");
                             },
+                            complete: function(){
+                               $(".se-pre-con").hide();
+                               $("#reemplazarToogle").fadeIn();
+                            }
                         });
 
                     }
