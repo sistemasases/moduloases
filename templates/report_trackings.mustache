@@ -1,4 +1,5 @@
 {{#data}}
+{{> block_ases/side_menu}}            
 <div class="container">
    <h2>SEGUIMIENTO PILOS</h2>
    <hr/>
@@ -15,12 +16,17 @@
          {{{table_periods}}}
       </div>
       <div id='loadingmessage'>
-      </div>
+
       <div data-spy="scroll" data-target=".navbar" data-offset="50" class="well col-md-10 col-md-offset-1" id="conteo_principal" name="conteo_principal">
       </div>
-      <div data-spy="scroll" data-target=".navbar" data-offset="50" class="well col-md-10 col-md-offset-1 reporte-seguimiento oculto" id="reemplazarToogle" name="reemplazarToogle">
+
+               <img src="../icon/load.gif" class="se-pre-con">
+
+          <div data-spy="scroll" data-target=".navbar" data-offset="50" class="well col-md-10 col-md-offset-1 reporte-seguimiento " style="display:none" id="reemplazarToogle" name="reemplazarToogle">
          {{{table}}}
-      </div>
+
+
+
       {{/view_trackings_rt}}
    </div>
    {{/data}}

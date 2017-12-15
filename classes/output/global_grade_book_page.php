@@ -23,7 +23,7 @@ use renderer_base;
 use templatable;                                                                                                                    
 use stdClass;                                                                                                                       
  
-class calificador_page implements renderable, templatable {                                                                               
+class global_grade_book_page implements renderable, templatable {                                                                               
     /** @var string $sometext Some text to show how to pass data to a template. */                                                  
     var $data = null;                                                                                                           
  

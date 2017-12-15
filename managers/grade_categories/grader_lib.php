@@ -12,7 +12,7 @@ require_once $CFG->dirroot.'/blocks/ases/managers/lib/student_lib.php';
 // require_once $CFG->dirroot.'/grade/lib.php';
 
 ///*********************************///
-///*** Get info calificador methods ***///
+///*** Get info global_grade_book methods ***///
 ///*********************************///
 
 /*
@@ -66,7 +66,7 @@ function get_info_course($id_curso){
 
     $estudiantes = $DB->get_records_sql($query_students);
 
-    $header_categories = get_categorias_calificador($id_curso);
+    $header_categories = get_categories_global_grade_book($id_curso);
 
 
     $curso = new stdClass;
@@ -85,7 +85,7 @@ function get_info_course($id_curso){
  * @param $id_curso
  * @return string HTML
 **/
-function get_categorias_calificador($id_curso){
+function get_categories_global_grade_book($id_curso){
     global $USER;
     $USER->gradeediting[$id_curso] = 1;
 

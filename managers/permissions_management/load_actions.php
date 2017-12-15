@@ -41,4 +41,3 @@ require_once('permissions_lib.php');
 echo json_encode($data); 
 
 
-
