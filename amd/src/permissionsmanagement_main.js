@@ -13,9 +13,10 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_as
     return {
 
         init: function() {
-            console.log("a");
 
+            select_user();
 
+            function select_user(){
             $("#profiles_user").select2({
 
                 language: {
@@ -32,7 +33,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_as
                 width: '36%',
                 dropdownAutoWidth: true,
                 placeholder: "Seleccionar perfil"
-            });
+            });}
             $("#profiles_prof").select2({
 
                 language: {
@@ -85,11 +86,14 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_as
                 $("#add_accion").on('click', function() {
                     crearAccion();
                     load_actions();
+                    update_general_tab();
                 });
 
                 $("#add_function").on('click', function() {
                     crearFuncion();
                     load_functions();
+                    update_general_tab();
+                    update_functionality_select();
                 });
 
                 $("#add_profile").on('click', function() {
@@ -401,6 +405,9 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_as
                         load_actions();
                         load_functions();
                         load_roles();
+                        update_functionality_select();
+                        update_general_tab();
+                        
 
 
                     },
@@ -477,6 +484,8 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_as
                             type: msg.type,
                             confirmButtonColor: "#d51b23"
                         });
+                        update_functionality_select();
+                        update_general_tab();
 
                     },
                     dataType: "json",
@@ -548,9 +557,61 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_as
                 })
             }
 
+            function update_functionality_select(){
+              $.ajax({
+                        type: "POST",
+                        data: {
+                            source: "update_functionality_select",
+                        },
+                        url: "../managers/permissions_management/permissions_report.php",
+                        dataType: "json",
+                        cache: "false",
+                        success: function(msg) {
+                            console.log(msg);
+                        $("#funct1").html(msg[0]);
+                        $("#funct2").html(msg[1]);
+                                               },
+                        error: function(msg) {
+                        alert("Error actualizar las funcionalidades")
+                    },
+                    });  
+            }
 
+            function update_general_tab(){
+            $.ajax({
+                        type: "POST",
+                        data: {
+                            source: "update_general_table",
+                        },
+                        url: "../managers/permissions_management/permissions_report.php",
+                        dataType: "json",
+                        cache: "false",
+                        success: function(msg) {
+                        $("#lista_funcionalidades").html(msg);
+                                               },
+                        error: function(msg) {
+                        alert("Error actualizar tabla de asignación de permisos y roles")
+                    },
+                    });
+         }
 
-
+         function update_role_select(){
+            $.ajax({
+                        type: "POST",
+                        data: {
+                            source: "update_role_select",
+                        },
+                        url: "../managers/permissions_management/permissions_report.php",
+                        dataType: "json",
+                        cache: "false",
+                        success: function(msg) {
+                        $("#userol").html(msg);
+                                               },
+                        error: function(msg) {
+                        alert("Error actualizar roles")
+                    },
+                    });
+         }
         }
     };
 });

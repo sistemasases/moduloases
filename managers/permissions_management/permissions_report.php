@@ -1,5 +1,6 @@
 <?php
 require_once('permissions_lib.php');
+require_once('permissions_functions.php');
 require_once('../pilos_tracking/pilos_tracking_lib.php');
 
 $msg = new stdClass();
@@ -22,7 +23,21 @@ if(isset($_POST['id'])&&isset($_POST['type'])&&isset($_POST['source'])&&$_POST['
     $user_role=get_id_rol_($user,$_POST['instance']);
     $accion = get_action_by_name($_POST['name_permission']);
     echo json_encode($is_permit=get_action_by_role($accion->id,$user_role));
+}elseif($_POST['source']=='update_general_table'){
+	echo json_encode(get_functions_actions());
 
+}elseif($_POST['source']=='update_functionality_select'){
+	$array = [];
+	$function = get_functions();
+	$functions_table = get_functions_select($function,"functions");
+	$functions = get_functions_select($function,"functions_table");
+	array_push($array, $functions_table);
+	array_push($array, $functions);
+	echo json_encode($array);
 
+}elseif($_POST['source']=='update_role_select'){
+	$roles = get_roles();
+	$roles_table_user= get_roles_select($roles,"profiles_user");
+	echo json_encode($roles_table_user);
 
 }
