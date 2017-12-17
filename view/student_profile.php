@@ -37,6 +37,8 @@ require_once('../managers/academic_profile/academic_lib.php');
 require_once('../managers/student_profile/student_graphic_dimension_risk.php');
 require_once('../managers/instance_management/instance_lib.php');
 require_once('../managers/dateValidator.php');
+require_once ('../managers/permissions_management/permissions_lib.php');
+require_once ('../managers/validate_profile_action.php');
 include('../lib.php');
 
 global $PAGE;
@@ -133,6 +135,9 @@ if ($student_code != 0){
     $academic_program = get_program((int)$array_aditional_fields->idprograma);
 
     $faculty = get_faculty($academic_program->id_facultad);
+    // Evalua si el rol del usuario tiene permisos en esta view.
+    $actions = authenticate_user_view($USER->id, $blockid);
+    $record = $actions;
     
     $record->id_moodle = $id_user_moodle;
     $record->id_ases = $student_id;
