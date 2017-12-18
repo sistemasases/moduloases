@@ -7,7 +7,7 @@
 /**
  * @module block_ases/pilos_tracking
  */
-define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_ases/datatables.net-buttons', 'block_ases/buttons.flash', 'block_ases/jszip', 'block_ases/pdfmake', 'block_ases/buttons.html5', 'block_ases/buttons.print', 'block_ases/sweetalert', 'block_ases/select2'], function($, bootstrap, datatables, sweetalert, select2) {
+define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ases/datatables.net', 'block_ases/datatables.net-buttons', 'block_ases/buttons.flash', 'block_ases/jszip', 'block_ases/pdfmake', 'block_ases/buttons.html5', 'block_ases/buttons.print', 'block_ases/sweetalert', 'block_ases/select2'], function($,Modernizr,bootstrap, datatables, sweetalert, select2) {
 
 
     return {
@@ -26,9 +26,10 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_as
             var instance = "";
             var email = "";
 
-            //coment
-
             $(document).ready(function() {
+
+                $(".se-pre-con").fadeOut('slow');
+                $("#reemplazarToogle").fadeIn("slow");
 
                 var usuario = "";
                 //Obtenemos el ID de la instancia actual.
@@ -255,7 +256,6 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_as
                     var fechas_epoch = [];
 
 
-
                     if (id_persona == undefined) {
                         swal({
                             title: "Debe escoger una persona para realizar la consulta",
@@ -265,6 +265,9 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_as
                         });
                     } else {
                         $(".well.col-md-10.col-md-offset-1.reporte-seguimiento.oculto").show();
+
+                        $(".se-pre-con").show();
+                        $("#reemplazarToogle").hide();
 
                         $.ajax({
                             type: "POST",
@@ -279,6 +282,8 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_as
 
 
                             success: function(msg) {
+
+
 
                                 if (msg == "") {
                                     $('#reemplazarToogle').html('<label> No se encontraron registros </label>');
@@ -296,6 +301,10 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_as
                             error: function(msg) {
                                 alert("error al consultar seguimientos de personas");
                             },
+                            complete: function(){
+                               $(".se-pre-con").hide();
+                               $("#reemplazarToogle").fadeIn();
+                            }
                         });
 
                     }

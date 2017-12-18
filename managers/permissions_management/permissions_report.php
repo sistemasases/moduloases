@@ -1,5 +1,6 @@
 <?php
 require_once('permissions_lib.php');
+require_once('permissions_functions.php');
 require_once('../pilos_tracking/pilos_tracking_lib.php');
 
 $msg = new stdClass();
@@ -7,21 +8,40 @@ $msg = new stdClass();
 global $USER;
 
 
-if(isset($_POST['id'])&&isset($_POST['source'])) {
- 	echo json_encode(delete_record($_POST['id'],$_POST['source']));
-
-}else if(isset($_POST['name'])){
-    json_encode( get_action_profile());
+if(isset($_POST['id'])&&isset($_POST['type'])&&isset($_POST['source'])&&$_POST['source']=='delete_record') {
+ 	echo json_encode(delete_record($_POST['id'],$_POST['type']));
 
 }else if(isset($_POST['user'])&&isset($_POST['source'])&&$_POST['source']=='permissions_management'){
 	echo json_encode(get_functions_by_role($_POST['user']));
 
-}else if( $_POST['data']=='get_info_permission'){
+}else if(isset($_POST['id'])&&isset($_POST['table'])&&$_POST['source']=='modify_register'&&isset($_POST['nombre'])&&isset($_POST['descripcion'])&&isset($_POST['funcionalidad'])){
+
+	echo json_encode(modify_record($_POST['id'],$_POST['table'],$_POST['nombre'],$_POST['descripcion'],$_POST['funcionalidad']));
+
+}else if(isset($_POST['user'])&&isset($_POST['source'])&&$_POST['source']=='get_info_permission'){
 	$user=$USER->id;
     $user_role=get_id_rol_($user,$_POST['instance']);
     $accion = get_action_by_name($_POST['name_permission']);
     echo json_encode($is_permit=get_action_by_role($accion->id,$user_role));
+}elseif($_POST['source']=='update_general_table'){
+	//Obtiene rol del usuario conectado
+	$userrole = get_id_rol($USER->id,$_POST['instance']);
+	$usernamerole= get_name_rol($userrole);
 
+	echo json_encode(get_functions_actions($usernamerole));
 
+}elseif($_POST['source']=='update_functionality_select'){
+	$array = [];
+	$function = get_functions();
+	$functions_table = get_functions_select($function,"functions");
+	$functions = get_functions_select($function,"functions_table");
+	array_push($array, $functions_table);
+	array_push($array, $functions);
+	echo json_encode($array);
+
+}elseif($_POST['source']=='update_role_select'){
+	$roles = get_roles();
+	$roles_table_user= get_roles_select($roles,"profiles_user");
+	echo json_encode($roles_table_user);
 
 }
