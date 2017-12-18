@@ -1486,3 +1486,8 @@ input.no-borde-fondo.tema
   content: "\002b";
 }
 
+#academic:hover {
+  background-color: red;
+  color: white;
+}
+

@@ -49,7 +49,7 @@ function make_html_courses($courses)
     foreach ($courses as $course) {
 
         $html .= "<div class='panel panel-default'>
-                    <div class='panel-heading'>
+                    <div class='panel-heading' id = 'academic'>
                         <h4 class='panel-title'>
                         <a data-toggle='collapse' data-parent='#accordion_academic' href='#course_$course->id_course' aria-expanded='false' aria-controls='$course->id_course'>
                             $course->fullname 
