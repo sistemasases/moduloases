@@ -32,7 +32,7 @@ require_once('../managers/query.php');
 require_once('../managers/instance_management/instance_lib.php');
 require_once('../managers/grade_categories/grader_lib.php');
 include('../lib.php');
-include("../classes/output/calificador_page.php");
+include("../classes/output/global_grade_book_page.php");
 include("../classes/output/renderer.php");
 
 global $PAGE;
@@ -53,7 +53,7 @@ if(!consult_instance($blockid)){
 $contextcourse = context_course::instance($courseid);
 $contextblock =  context_block::instance($blockid);
 
-$url = new moodle_url("/blocks/ases/view/calificador.php",array('courseid' => $courseid, 'instanceid' => $blockid,'id_course' => $id_course));
+$url = new moodle_url("/blocks/ases/view/global_grade_book.php",array('courseid' => $courseid, 'instanceid' => $blockid,'id_course' => $id_course));
 
 //Navigation setup
 $coursenode = $PAGE->navigation->find($courseid, navigation_node::TYPE_COURSE);
@@ -69,6 +69,7 @@ $PAGE->set_title($title);
 $PAGE->requires->css('/blocks/ases/style/styles_pilos.css', true);
 $PAGE->requires->css('/blocks/ases/style/sweetalert.css', true);
 $PAGE->requires->css('/blocks/ases/style/sweetalert2.css', true);
+$PAGE->requires->js_call_amd('block_ases/global_grade_book', 'init');
 
 
 $output = $PAGE->get_renderer('block_ases');
@@ -96,6 +97,6 @@ $record->table = $htmlTable;
 $record->students = $students;
 echo $output->header();
 //echo $output->standard_head_html(); 
-$calificador_page = new \block_ases\output\calificador_page($record);
-echo $output->render($calificador_page);
+$global_grade_book_page = new \block_ases\output\global_grade_book_page($record);
+echo $output->render($global_grade_book_page);
 echo $output->footer();

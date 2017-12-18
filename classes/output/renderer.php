@@ -113,9 +113,9 @@ class renderer extends plugin_renderer_base {
         return parent::render_from_template('block_ases/no_tiene_permisos', $data);
     }
     
-    public function render_calificador_page($page){
+    public function render_global_grade_book_page($page){
         $data = $page->export_for_template($this);
-        return parent::render_from_template('block_ases/calificador', $data);
+        return parent::render_from_template('block_ases/global_grade_book', $data);
     }
 
     public function render_academic_reports_page($page){

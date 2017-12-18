@@ -32,6 +32,7 @@ require_once('../managers/pilos_tracking/tracking_functions.php');
 require_once('../managers/instance_management/instance_lib.php');
 require_once ('../managers/permissions_management/permissions_lib.php');
 require_once ('../managers/validate_profile_action.php');
+require_once ('../managers/menu_options.php');
 
 
 include('../lib.php');
@@ -68,6 +69,9 @@ $blocknode = navigation_node::create($title,$url, null, 'block', $blockid);
 $coursenode->add_node($blocknode);
 $blocknode->make_active();
 
+//se crean los elementos del menu
+$menu_option = create_menu_options($USER->id, $blockid, $courseid);
+
 // Crea una clase con la información que se llevará al template.
 $data = 'data';
 $data = new stdClass;
@@ -75,6 +79,8 @@ $data = new stdClass;
 // Evalua si el rol del usuario tiene permisos en esta view.
 $actions = authenticate_user_view($USER->id, $blockid);
 $data = $actions;
+$data->menu = $menu_option;
+
 
 
 //Se obtiene el rol del usuario que se encuentra conectado, username y su correo electronico respectivo.
@@ -142,13 +148,6 @@ $table_permissions=show_according_permissions($table,$actions);
 $data->table_periods =$table_periods;
 $data->table=$table_permissions;
 
-  
-
-
-
-
-
-//$PAGE->requires->css('/blocks/ases/style/grade_categories.css', true);
 $PAGE->requires->css('/blocks/ases/style/styles_pilos.css', true);
 $PAGE->requires->css('/blocks/ases/style/bootstrap_pilos.css', true);
 $PAGE->requires->css('/blocks/ases/style/datepicker.css', true);
@@ -167,6 +166,7 @@ $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/NewCSSExport/button
 $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/dataTables.tableTools.css', true);
 $PAGE->requires->css('/blocks/ases/style/sweetalert.css', true);
 $PAGE->requires->css('/blocks/ases/js/select2/css/select2.css', true);
+$PAGE->requires->css('/blocks/ases/style/side_menu_style.css', true);
 $PAGE->requires->js_call_amd('block_ases/pilos_tracking_main','init');
 $PAGE->set_url($url);
 $PAGE->set_title($title);
