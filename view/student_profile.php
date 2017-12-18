@@ -34,7 +34,7 @@ require_once('../managers/lib/lib.php');
 require_once('../managers/user_management/user_lib.php');
 require_once('../managers/student_profile/geographic_lib.php');
 require_once('../managers/student_profile/studentprofile_lib.php');
-require_once('../managers/academic_profile/academic_lib.php');
+require_once '../managers/student_profile/academic_lib.php';
 require_once('../managers/student_profile/student_graphic_dimension_risk.php');
 require_once('../managers/instance_management/instance_lib.php');
 require_once('../managers/dateValidator.php');
