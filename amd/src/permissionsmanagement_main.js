@@ -99,6 +99,8 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_as
                 $("#add_profile").on('click', function() {
                     crearPerfil();
                     load_roles();
+                    update_role_select();
+
                 });
 
 
@@ -351,7 +353,6 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_as
                 if (nombre_table == 'tableActions') {
                     $(".form-pilos.func").removeClass('hide');
                     $("#save_seg").attr("name", this.id + "_accion");
-                    console.log(funcionalidad);
                     //  $("#functions_table").val(funcionalidad).change();
                     $("#functions_table option").filter(function() {
                         //may want to use $.trim in here
@@ -407,7 +408,8 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_as
                         load_roles();
                         update_functionality_select();
                         update_general_tab();
-                        
+                        update_role_select();
+
 
 
                     },
@@ -437,7 +439,6 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_as
                 var table = $("#div_actions #tableActions").DataTable();
                 var td = $(this).parent();
                 var childrenid = $(this).children('span').attr('id');
-                console.log(this);
                 var colIndex = table.cell(td).index().column;
 
                 var nombre = table.cell(table.row(td).index(), 0).data();
@@ -567,7 +568,6 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_as
                         dataType: "json",
                         cache: "false",
                         success: function(msg) {
-                            console.log(msg);
                         $("#funct1").html(msg[0]);
                         $("#funct2").html(msg[1]);
                                                },
@@ -606,6 +606,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_as
                         cache: "false",
                         success: function(msg) {
                         $("#userol").html(msg);
+                        select_user();
                                                },
                         error: function(msg) {
                         alert("Error actualizar roles")
