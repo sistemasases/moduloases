@@ -1,0 +1,89 @@
+{{!-- Socioed tab --}}
+<div class="tab-pane" id="socioed_tab">
+   <div id="accordion" role="tablist" aria-multiselectable="true">
+      <div class="panel panel-default" id="panelPares">
+         <div class="panel-heading" role="tab" id="headingOne">
+            <h4 class="panel-title">
+               <a id="seg_pares_title" class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+               Seguimiento de Pares
+               </a>
+            </h4>
+         </div>
+         <div id="collapseOne" class="panel-collapse collapse in form-pilos" role="tabpanel" aria-labelledby="headingOne">
+            {{#add_peer_tracking_sp}}
+            <button type="button" id="button_add_track" class="btn-primary">
+            Nuevo seguimiento
+            </button>
+            {{/add_peer_tracking_sp}}
+            <hr>
+            <div class="well" id="peer_trackings" name="peer_trackings">
+               {{{peer_tracking}}}
+            </div>
+            <!-- Button trigger modal -->
+         </div>
+      </div>
+      <div class="panel panel-default" id="panelGrupal">
+         <div class="panel-heading" role="tab" id="headingTwo">
+            <h4 class="panel-title">
+               <a id="seg_grupal_title" class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+               Seguimiento Grupal
+               </a>
+            </h4>
+         </div>
+         <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+            <div class="ScrollStyle" id="list_grupal" name="list_grupal"></div>
+         </div>
+      </div>
+      <div class="panel panel-default" id="panelPrimerAcerca">
+         <div class="panel-heading" role="tab" id="headingThree">
+            <h4 class="panel-title">
+               <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+               Primer Acercamiento Profesional
+               </a>
+            </h4>
+         </div>
+         <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
+            <div class="ScrollStyle well" id="list_primerA" name="list_primerA"></div>
+            <!-- Button trigger modal -->
+            <button type="submit" id="socioedu_primerAcerca" class="submit" data-toggle="modal" data-target="#myModalPrimerAcerca">
+            Adicionar nuevo
+            </button>
+         </div>
+      </div>
+      <div class="panel panel-default" id="panelAcompSocio">
+         <div class="panel-heading" role="tab" id="headingFour">
+            <h4 class="panel-title">
+               <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+               Acompañamiento SocioEducativo
+               </a>
+            </h4>
+         </div>
+         <div id="collapseFour" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFour">
+            <div class="ScrollStyle well" id="list_AcompaSocio" name="list_AcompaSocio"></div>
+            <hr>
+            <!-- Button trigger modal -->
+            <button type="submit" id="socioedu_add_AcompaSocio" class="submit hide" data-toggle="modal" data-target="#myModalAcompaSocio">
+            Adicionar nuevo
+            </button>
+         </div>
+      </div>
+      <div class="panel panel-default" id="panelSegSocio">
+         <div class="panel-heading" role="tab" id="headingFive">
+            <h4 class="panel-title">
+               <a id="seg_socio_title" class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
+               Seguimiento SocioEducativo
+               </a>
+            </h4>
+         </div>
+         <div id="collapseFive" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFive">
+            <div class="ScrollStyle well" id="list_SegSocio" name="list_SegSocio"></div>
+            <hr>
+            <!-- Button trigger modal -->
+            <button type="submit" id="socioedu_add_segsocio" class="submit hide" data-toggle="modal" data-target="#myModalSegSocio">
+            Adicionar nuevo
+            </button> 
+         </div>
+      </div>
+   </div>
+</div>
+{{!-- End socied tab --}}

@@ -18,13 +18,15 @@
                       <div class="col-sm-4">
                         {{{code}}}
                       </div>
+                      {{#search_student_sp}}
                       <div class="col-sm-4">
                         <button type="button" class="btn-primary btn-sm" name="search" id="search">
                             <span class=" button glyphicon glyphicon-search"></span> Buscar
                         </button>
                       </div>
+                      {{/search_student_sp}}
                   </div>
-                  
+                  {{#update_icetex_status_sp}}
                   <div class="row">
                       <label for="estado"  class="col-sm-4 col-md-4 control-label">Estado Icetex</label>
                       <div class="col-sm-6">
@@ -33,7 +35,8 @@
                         </select>
                       </div>
                   </div>
-                  
+                  {{/update_icetex_status_sp}}
+                  {{#update_ases_status_sp}}
                   <div class="row">
                       <label for="estadoAses" class="col-md-4 control-label">Estado Ases</label>
                       <div class="col-sm-6">
@@ -42,7 +45,7 @@
                         </select>
                       </div>
                   </div>
-                  
+                  {{/update_ases_status_sp}}
                   <div class="row">
                       <label for="input_facultad" class="col-sm-4 control-label">Facultad</label>
                       <div class="col-sm-6">
@@ -115,247 +118,29 @@
             <!-- Pestañas ficha -->
             <div id="exTab1" class="col-sm-12">	
 
+
                 <ul class="nav nav-tabs">
+                    {{#view_general_tab_sp}}
               			<li id="general_li" class="active"><a href="#general_tab" data-toggle="tab">GENERAL</a></li>
-                		<li id="socioed_li"><a href="#socioed_tab" data-toggle="tab">SOCIOEDUCATIVO</a></li>
+                    {{/view_general_tab_sp}}
+
+                    {{#view_socioed_tab_sp}}
+                		<li id="socioed_li" ><a href="#socioed_tab" data-toggle="tab">SOCIOEDUCATIVO</a></li>
+                    {{/view_socioed_tab_sp}}
+
                     <li id="academic_li"><a href="#academic_tab" data-toggle="tab">ACADÉMICO</a></li>
-              			<li id="geographic_li"><a href="#geographic_tab" data-toggle="tab">GEOGRÁFICO</a></li>
+              			{{#view_geographic_tab_sp}}
+                    <li id="geographic_li"><a href="#geographic_tab" data-toggle="tab">GEOGRÁFICO</a></li>{{/view_geographic_tab_sp}}
+
             		</ul>
             		
           			<div class="tab-content clearfix ">
-                  <!-- General tab -->
-          			  <div class="tab-pane active p-t-100" id="general_tab" >
-            			    <div class="col-md-12">
-              			    <div class=" col-sm-4">
-              			      
-                            <div class="row">
-                              <label for="dir1" class="col-sm-4">Dirección</label>
-                              <div class="input-group col-sm-8"> 
-                                <input type="text" class="form-control" readonly name="direccion_res" id="dir1" value="{{res_address}}" maxlength="100">
-                              </div>
-                            </div>
-                            
-                            <div class="row">
-                              <label for="tel1" class="control-label col-sm-4">Teléfono 1</label>
-                              <div class = "input-group col-sm-8">
-                                <input type="tel" class="form-control" name="tel_ini" id="tel1" readonly value="{{init_tel}}"maxlength="15">
-                              </div>
-                            </div>
-                            
-                            <div class="row">
-                              <label for="tel2" class="control-label col-sm-4">Teléfono 2</label>
-                              <div class = "input-group col-sm-8">
-                                <input type="tel" class="form-control" name="tel_res" id="tel2" readonly value="{{res_tel}}"maxlength="15" >
-                              </div>
-                            </div>
-                            
-                            <div class="row">
-                              <label for="tel3" class="control-label col-sm-4">Teléfono 3</label>
-                              <div class = "input-group col-sm-8">
-                                <input type="tel" class="form-control" name="celular" id="tel3" readonly value="{{cell_phone}}" maxlength="15">
-                              </div>
-                            </div>
-                            
-                            <div class="row">
-                              <label for="email2" class="control-label col-sm-4">Email alternativo</label>
-                              <div class="input-group col-sm-8">
-                                <input type="email" class="form-control" name="emailpilos" id="email2" readonly value="{{emailpilos}}" maxlength="100" required />
-                              </div>
-                            </div>
-                            
-                            <hr class="col-md-12">
-                            
-                            <h3>INFORMACIÓN DEL ACUDIENTE</h3>
-
-                            <div class="row">
-                              <label for="nombre_acudiente" class="control-label col-sm-4">Nombre</label>
-                              <div class = "input-group col-md-8">
-                                <input type="text" class="form-control" readonly name="acudiente" id="nombre_acudiente" value="{{attendant}}" maxlength="100" />
-                              </div>
-                            </div>
-                            
-                            <div class="row">
-                              <label for="tel4" class="control-label col-sm-4">Teléfono Acudiente</label>
-                              <div class = "input-group col-md-8">
-                                <input type="tel" class="form-control" name="tel_acudiente" id="tel4" readonly value="{{attendant_tel}}" maxlength="15" />
-                              </div>
-                            </div>
-                            
-                            <hr class="col-md-12">
-                            
-                            <h3>INFORMACIÓN PROFESIONAL Y MONITOR</h3>
-
-                            <div class="row">
-                              <label for="profesional_ps" class="control-label col-sm-4">Profesional</label>
-                              <div class = "input-group col-md-7">
-                                <span>{{professional_fullname}}</span>
-                              </div>
-                            </div>
-                            <div class="row">
-                              <label for="practicante_ps" class="control-label col-sm-4">Practicante</label>
-                              <div class = "input-group col-md-7">
-                                <span>{{trainee_fullname}}</span>
-                              </div>
-                            </div>
-                            <div class="row">
-                              <label for="monitor_ps" class="control-label col-sm-4">Monitor</label>
-                              <div class = "input-group col-md-7">
-                                <span>{{monitor_fullname}}</span>
-                              </div>
-                            </div>
-                        </div>
-                        
-                        <div class="col-sm-6">
-                          <iframe class="col-sm-12" height="396" frameborder="0" style="border:0" src="https://www.google.com/maps/embed/v1/directions?key=AIzaSyAoE-aPVfruphY4V4BbE8Gdwi93x-5tBTM&origin={{latitude}},{{longitude}}&destination=3.3759493,-76.5355789&mode=transit" allowfullscreen> </iframe>
-                          <div class="row">
-                            <label for="observaciones" class="col-md-12">Observaciones</label>
-                            <textarea name="observacion" id="observations_profile" class="col-sm-12" readonly></textarea>
-                            <textarea name="" id="observaciones_anteriores" class="col-md-12" readonly>{{observations}}</textarea>
-                          </div>
-                          <br>
-                          <div class="row" id="div_ases_status">
-                            
-                          </div>
-                        </div>
-                        
-                        <!-- Gestión del riesgo -->
-                        <div id="div_risk" class="div_risk col-sm-2">
-                         
-                          <div class="row" align="center">
-                            <h5>GESTIÓN DEL RIESGO</h5>
-                          </div>
-
-                          <div class="row" align="center">
-                            <button type="button" id="view_graphic_button">Ver gráfico</button>
-                          </div>
-                          <div class="row" align="center">
-                            <button type="button" id="view_graphic_risk_button" class="btn-grafico-riesgo">Ver gráfico de riesgo</button>
-                          </div>
-                          
-                          <div class="{{individual_class}} col-sm-12" id="individual_risk">
-                            <span><b>INDIVIDUAL</b></span>
-                          </div>
-                          <div hidden>{{individual_risk}}</div>
-                          <div class="{{familiar_class}} col-sm-12" id="familiar_risk">
-                             <b> <span>FAMILIAR</span></b>
-                          </div>
-                          <div hidden>{{familiar_risk}}</div>
-                          <div class="{{academic_class}} col-sm-12" id="academic_risk">
-                            <b><span>ACADÉMICO</span></b>
-                          </div>
-                          <div hidden>{{academic_risk}}</div>
-                          <div class="{{economic_class}} col-sm-12" id="economic_risk">
-                            <b><span>ECONÓMICO</span></b>
-                          </div>
-                          <div hidden>{{economic_risk}}</div>
-                          <div class="{{life_class}} col-sm-12" id="life_risk">
-                            <b>VIDA UNIV.</b>
-                          </div>
-                          <div hidden>{{life_risk}}</div>
-                          <div class="{{geographic_class}} col-sm-12" id="geo_risk">
-                              <b><span>GEOGRÁFICO</span></b>
-                          </div>
-                          <div hidden>{{geographic_risk}}</div>
-            
-                        </div>   
-                        <!-- Fin gestión del riesgo -->
-                      </div>
-                      <div class="col-sm-offset-9 col-sm-3" id="buttons_edit_div">
-                        <button class="btn-primary col-sm-7" type="button" id="save" name="save">Actualizar Datos</button>
-                        <button class="btn-primary col-sm-4 col-sm-offset-1" type="button" id="cancel">Cancelar</button>
-                        <button class="btn-primary col-sm-6 col-sm-offset-3" type="button" id="editar_ficha">Editar Ficha</button>
-                      </div>
-          				</div>
-          				<!-- End general tab -->
-              		<!-- Socioed tab -->
-                  <div class="tab-pane" id="socioed_tab">
-                    <div id="accordion" role="tablist" aria-multiselectable="true">
-                      <div class="panel panel-default" id="panelPares">
-                        <div class="panel-heading" role="tab" id="headingOne">
-                          <h4 class="panel-title">
-                            <a id="seg_pares_title" class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
-                              Seguimiento de Pares
-                            </a>
-                          </h4>
-                        </div>
-                        <div id="collapseOne" class="panel-collapse collapse in form-pilos" role="tabpanel" aria-labelledby="headingOne">
-                          <button type="button" id="button_add_track" class="btn-primary">
-                            Nuevo seguimiento
-                          </button>
-                          <hr>
-                          <div class="well" id="peer_trackings" name="peer_trackings">
-                            {{{peer_tracking}}}
-                          </div>
-                          <!-- Button trigger modal -->
-                        </div>
-                        
-                      </div>
-                      <div class="panel panel-default" id="panelGrupal">
-                        <div class="panel-heading" role="tab" id="headingTwo">
-                          <h4 class="panel-title">
-                            <a id="seg_grupal_title" class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                              Seguimiento Grupal
-                            </a>
-                          </h4>
-                        </div>
-                        <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
-                          <div class="ScrollStyle" id="list_grupal" name="list_grupal"></div>
-                        </div>
-                      </div>
-                      <div class="panel panel-default" id="panelPrimerAcerca">
-                        <div class="panel-heading" role="tab" id="headingThree">
-                          <h4 class="panel-title">
-                            <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-                              Primer Acercamiento Profesional
-                            </a>
-                          </h4>
-                        </div>
-                        <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
-                          <div class="ScrollStyle well" id="list_primerA" name="list_primerA"></div>
-                          <!-- Button trigger modal -->
-                            <button type="submit" id="socioedu_primerAcerca" class="submit" data-toggle="modal" data-target="#myModalPrimerAcerca">
-                              Adicionar nuevo
-                            </button>
-                        </div>
-                      </div>
-                      <div class="panel panel-default" id="panelAcompSocio">
-                        <div class="panel-heading" role="tab" id="headingFour">
-                          <h4 class="panel-title">
-                            <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
-                              Acompañamiento SocioEducativo
-                            </a>
-                          </h4>
-                        </div>
-                        <div id="collapseFour" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFour">
-                          <div class="ScrollStyle well" id="list_AcompaSocio" name="list_AcompaSocio"></div>
-                              <hr>
-                          <!-- Button trigger modal -->
-                          <button type="submit" id="socioedu_add_AcompaSocio" class="submit hide" data-toggle="modal" data-target="#myModalAcompaSocio">
-                              Adicionar nuevo
-                            </button>
-                        </div>
-                      </div>
-                      <div class="panel panel-default" id="panelSegSocio">
-                        <div class="panel-heading" role="tab" id="headingFive">
-                          <h4 class="panel-title">
-                            <a id="seg_socio_title" class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
-                              Seguimiento SocioEducativo
-                            </a>
-                          </h4>
-                        </div>
-                        <div id="collapseFive" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFive">
-                          <div class="ScrollStyle well" id="list_SegSocio" name="list_SegSocio"></div>
-                              <hr>
-                          <!-- Button trigger modal -->
-                          <button type="submit" id="socioedu_add_segsocio" class="submit hide" data-toggle="modal" data-target="#myModalSegSocio">
-                                Adicionar nuevo
-                              </button> 
-                        </div>
-                        
-                      </div>
-                    </div>
-                  </div>
-                  <!-- End socied tab -->
+                  {{#view_general_tab_sp}}
+                  {{> block_ases/view_general_tab_sp}}
+          			  {{/view_general_tab_sp}}
+                  {{#view_socioed_tab_sp}}
+                  {{> block_ases/view_socioed_tab_sp}}
+                  {{/view_socioed_tab_sp}}
 
                   <!--academic tab-->
                   <div class="tab-pane" id="academic_tab">
@@ -365,59 +150,10 @@
                   </div>
                   <!-- End academic tab -->
 
-                  <!-- Geographic tab-->
-                  <div class="tab-pane" id="geographic_tab">
-                    <div class="row">
-                      <div class="col-sm-4">
-                        <div class="form-group">
-                          <label for="latitude" class="col-sm-3">Latitud</label>
-                          <div class="col-sm-9">
-                            <input type="number" class="form-control" id="latitude" name="latitude" value={{latitude}} placeholder="Digite latitud" disabled/>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="col-sm-5">
-                        <div class="form-group">
-                          <label for="select_neighborhood" class="col-sm-6">Barrio residencia</label>
-                          <div class="col-sm-6">
-                            <select class="form-control" name="select_neighborhood" id="select_neighborhood" disabled>
-                                {{{select_neighborhoods}}}
-                            </select>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="col-sm-3">
-                        <div class="form-group" id="div_edit_button">
-                          <button type="button" class="button btn-danger" id="button_edit_geographic">Editar</button>
-                        </div>
-                        <div class="form-group" id="div_save_buttons" hidden>
-                          <button type="button" class="button btn-success" id="button_save_geographic">Aceptar</button>
-                          <button type="button" class="button btn-danger" id="button_cancel_geographic">Cancelar</button>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div class="col-sm-4">
-                        <div class="form-group">
-                          <label for="longitude" class="col-sm-3">Longitud</label>
-                          <div class="col-sm-9">
-                            <input type="number" class="form-control" id="longitude" name="longitude" value={{longitude}} placeholder="Digite longitud" disabled/>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="col-sm-5">
-                        <div class="form-group">
-                          <label for="select_geographic_risk" class="col-sm-6">Riesgo geográfico</label>
-                          <div class="col-sm-6">
-                            <select class="form-control" name="geographic_risk" id="select_geographic_risk" disabled>
-                              {{{select_geographic_risk}}}
-                            </select>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                
-                  <!-- End geographic tab -->
+                  {{#view_geographic_tab_sp}}
+                  {{> block_ases/view_geographic_tab_sp}}
+                  {{/view_geographic_tab_sp}}
+
                 </div>
             </div>
             <!-- Fin Pestañas ficha -->
