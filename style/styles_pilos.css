@@ -1486,6 +1486,12 @@ input.no-borde-fondo.tema
   content: "\002b";
 }
 
+
+#academic:hover {
+  background-color: red;
+  color: white;
+}
+
 .no-js #loader { display: none;  }
 .js #loader { display: block; position: absolute; left: 100px; top: 0; }
 .se-pre-con {
@@ -1493,3 +1499,4 @@ input.no-borde-fondo.tema
   margin: auto;
 
 }
+
