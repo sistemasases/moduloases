@@ -24,7 +24,11 @@ if(isset($_POST['id'])&&isset($_POST['type'])&&isset($_POST['source'])&&$_POST['
     $accion = get_action_by_name($_POST['name_permission']);
     echo json_encode($is_permit=get_action_by_role($accion->id,$user_role));
 }elseif($_POST['source']=='update_general_table'){
-	echo json_encode(get_functions_actions());
+	//Obtiene rol del usuario conectado
+	$userrole = get_id_rol($USER->id,$_POST['instance']);
+	$usernamerole= get_name_rol($userrole);
+
+	echo json_encode(get_functions_actions($usernamerole));
 
 }elseif($_POST['source']=='update_functionality_select'){
 	$array = [];

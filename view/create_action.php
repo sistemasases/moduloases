@@ -29,6 +29,8 @@ require_once('../managers/permissions_management/permissions_functions.php');
 require_once ('../managers/permissions_management/permissions_lib.php');
 require_once ('../managers/validate_profile_action.php');
 require_once ('../managers/menu_options.php'); 
+require_once('../managers/pilos_tracking/pilos_tracking_lib.php');
+
 include('../lib.php');
 global $PAGE;
 
@@ -45,6 +47,9 @@ $blockid = required_param('instanceid', PARAM_INT);
 
 require_login($courseid, false);
 
+//Obtiene rol del usuario conectado
+$userrole = get_id_rol($USER->id,$blockid);
+$usernamerole= get_name_rol($userrole);
 
 //Obtiene los roles.
 $roles = get_roles();
@@ -56,7 +61,7 @@ $function = get_functions();
 $functions_table = get_functions_select($function,"functions");
 $functions = get_functions_select($function,"functions_table");
 
-$general_table  = get_functions_actions();
+$general_table  = get_functions_actions($usernamerole);
 
 //se crean los elementos del menu
 $menu_option = create_menu_options($USER->id, $blockid, $courseid);
@@ -67,6 +72,7 @@ $data = new stdClass;
 // Evalua si el rol del usuario tiene permisos en esta view.
 $actions = authenticate_user_view($USER->id, $blockid);
 $data = $actions;
+$data->rol = $usernamerole;
 $data->menu = $menu_option;
 $data->roles_table_user=$roles_table_user;
 $data->functions_table =$functions_table;

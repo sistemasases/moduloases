@@ -86,13 +86,13 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_as
                 $("#add_accion").on('click', function() {
                     crearAccion();
                     load_actions();
-                    update_general_tab();
+                    update_general_tab(instance);
                 });
 
                 $("#add_function").on('click', function() {
                     crearFuncion();
                     load_functions();
-                    update_general_tab();
+                    update_general_tab(instance);
                     update_functionality_select();
                 });
 
@@ -407,7 +407,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_as
                         load_functions();
                         load_roles();
                         update_functionality_select();
-                        update_general_tab();
+                        update_general_tab(instance);
                         update_role_select();
 
 
@@ -486,7 +486,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_as
                             confirmButtonColor: "#d51b23"
                         });
                         update_functionality_select();
-                        update_general_tab();
+                        update_general_tab(instance);
 
                     },
                     dataType: "json",
@@ -577,11 +577,12 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_as
                     });  
             }
 
-            function update_general_tab(){
+            function update_general_tab(instance){
             $.ajax({
                         type: "POST",
                         data: {
                             source: "update_general_table",
+                            instance:instance,
                         },
                         url: "../managers/permissions_management/permissions_report.php",
                         dataType: "json",
