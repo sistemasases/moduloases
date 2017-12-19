@@ -208,7 +208,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_as
                 return pilos;
             }
 
-
+ 
 
             //Metodos de Wizard de crear categorias e items
             $(document).on('click', '#wizard_button', function () {
@@ -226,7 +226,10 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_as
             });
 
             $(document).on('click', '.edit', function () {
-                swal("EDICIÓN EN PROCESO DE DESARROLLO", "Disculpe las molestias", "warning");
+                
+                $("#edit").modal({
+                    backdrop: false
+                });
             });
 
             $(document).on('click', '.delete', function () {

@@ -557,8 +557,6 @@ function print_table_categories($report){
               <thead>
                   <tr>";
 
-
-  
           $html .= "
                   </tr>
               </thead>
@@ -602,7 +600,7 @@ function print_table_categories($report){
                         if(isItemMod($id_item,$report->courseid)){
                             $html .= "<$celltype $id $headers class='$class' $colspan>$content <p style = 'display: inline'>$weight</p><div id = 'buttons' style = 'float: right !important'><div><button title = 'Editar Item' class = 'glyphicon glyphicon-pencil edit'/></div></div> </$celltype>\n";                        
                         }else{
-                            $html .= "<$celltype $id $headers class='$class' $colspan>$content <p style = 'display: inline'>$weight</p><div id = 'buttons' style = 'float: right !important'><div><button title = 'Editar Item' class = 'glyphicon glyphicon-pencil edit'/><button title = 'Eliminar Item' class = 'glyphicon glyphicon-trash delete'/></div></div> </$celltype>\n";                        
+                            $html .= "<$celltype $id $headers class='$class' $colspan>$content <p style = 'display: inline'>$weight</p><div id = 'buttons' style = 'float: right !important'><div><button title = 'Editar Item' class = 'glyphicon glyphicon-pencil edit'/ ' ><button title = 'Eliminar Item' class = 'glyphicon glyphicon-trash delete'/></div></div> </$celltype>\n";                        
                         }
                       }
                   }

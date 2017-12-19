@@ -1493,3 +1493,7 @@ input.no-borde-fondo.tema
   margin: auto;
 
 }
+
+#content-edit{
+  width: 400px;
+}
