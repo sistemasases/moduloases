@@ -70,6 +70,7 @@ $PAGE->requires->css('/blocks/ases/style/styles_pilos.css', true);
 $PAGE->requires->css('/blocks/ases/style/sweetalert.css', true);
 $PAGE->requires->css('/blocks/ases/style/sweetalert2.css', true);
 $PAGE->requires->js_call_amd('block_ases/global_grade_book', 'init');
+$PAGE->requires->js_call_amd('block_ases/wizard_categories', 'init');
 
 
 $output = $PAGE->get_renderer('block_ases');
