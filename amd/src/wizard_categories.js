@@ -7,7 +7,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_as
     return {
 
         init: function () {
-            
+
             //Metodos de Wizard de crear categorias e items
             $(document).on('click', '#wizard_button', function () {
                 $("#modalCategories").modal({
@@ -24,7 +24,62 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_as
             });
 
             $(document).on('click', '.edit', function () {
+                //se carga titulo (item o categoria)
+                var titulo = $(this).attr('title');
+                $("#titulo").text(titulo)
+
+                //se carga la informacion del elemento
+                var id_course = getCourseid();
+                var id_element = $(this).attr('id');
+                $('#save_edit').attr('name', id_element)
                 
+                //se evalua si el elemento es item o categoria
+                if (titulo === "Editar Categoría") {
+                    $('#type_cal').show();
+                    var tipo = $(this).parent().parent().attr('id')
+                    if(tipo != 10 && tipo != 11 && tipo != 6 ){ tipo = 0}
+                    $('#calific').prop('value', tipo)
+                    var type = 'cat';
+                    var nombre = $(this).parent().parent().text();
+                    if (nombre.search("-") == -1) {
+                        nom_text = nombre.split("(");
+                        nombre = nom_text[0];
+                        peso = nom_text[1];
+                        $('#peso').show();
+                        peso = peso.replace('(', '');
+                        peso = peso.replace(')', '');
+                        peso = peso.replace(' ', '');
+                        peso = peso.replace('%', ''); 
+                        $('#peso_editar').val(peso);
+                    } else {
+                        nombre = nombre.split("-")[0]
+                        $('#peso').hide()
+                    }
+                } else {
+                    //se oculta el tipo de calificacion
+                    $('#type_cal').hide()
+                    //se carga el peso de tenerlo
+                    var peso = $(this).parent().parent().prev().text();
+                    if(peso == '-'){
+                        $('#peso').hide()
+                    }else{
+                        $('#peso').show()
+                        peso = peso.replace('(', '');
+                        peso = peso.replace(')', '');
+                        peso = peso.replace(' ', '');
+                        peso = peso.replace('%', '');                        
+                        $('#peso_editar').val(peso)
+                    }
+                    var type = 'it';                    
+                    var nombre = $(this).parent().parent().prev().prev().attr('title')
+                }
+                //se carga el nombre
+                $("#nombre_editar").val(nombre)
+                
+                //se cargan las categorias seleccionando la categoria padre del elemento
+                load_parent_categorie(id_course, id_element, type)
+
+                //se abre el modal
                 $("#edit").modal({
                     backdrop: false
                 });
@@ -151,6 +206,29 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_as
                     });
                 }, 400);
             });
+
+            function load_parent_categorie(id_course, id_element, type_e) {
+                $.ajax({
+                    type: "POST",
+                    data: {
+                        course: id_course,
+                        element: id_element,
+                        type_e: type_e,
+                        type: "loadParentCat"
+                    },
+                    url: "../managers/grade_categories/grader_processing.php",
+                    success: function (msg) {
+                        $('#padre').html(msg.html);
+                    },
+                    dataType: "json",
+                    cache: "false",
+                    error: function (msg) {
+                        console.log(msg);
+                    },
+                });
+
+            }
+
 
             function deleteElement(id_e, course_id, type_e) {
                 $.ajax({
@@ -482,7 +560,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_as
                 return true;
             }
 
-            
+
         }
     }
 });

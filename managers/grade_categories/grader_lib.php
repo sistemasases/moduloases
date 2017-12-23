@@ -585,9 +585,9 @@ function print_table_categories($report){
                         $aggregation = getAggregationofCategory($categoryid);
                         $maxweight = getMaxWeight($categoryid);
                         if(!isCourseCategorie($categoryid,$report->courseid)){
-                            $html .= "<$celltype $id $headers class='$class' $colspan><div id = '$aggregation' class = 'agg'> $content <p style = 'display: inline' class = 'maxweight' id = '$maxweight'>$weight</p> <div id = 'buttons' style = 'float: right !important'><button title = 'Crear nuevo item o categoria' class = 'glyphicon glyphicon-plus new'/ ><button title = 'Editar Categoria' class = 'glyphicon glyphicon-pencil edit'/><button title = 'Eliminar Categoria' class = 'glyphicon glyphicon-trash delete'/></div></div></$celltype>\n";
+                            $html .= "<$celltype $id $headers class='$class' $colspan><div id = '$aggregation' class = 'agg'> $content <p style = 'display: inline' class = 'maxweight' id = '$maxweight'>$weight</p> <div id = 'buttons' style = 'float: right !important'><button title = 'Crear nuevo ítem o categoría' class = 'glyphicon glyphicon-plus new'/ ><button title = 'Editar Categoría' id = '$categoryid' class = 'glyphicon glyphicon-pencil edit'/><button title = 'Eliminar Categoría' class = 'glyphicon glyphicon-trash delete'/></div></div></$celltype>\n";
                         }else{
-                            $html .= "<$celltype $id $headers class='$class' $colspan><div id = '$aggregation' class = 'agg'> $content <p style = 'display: inline' class = 'maxweight' id = '$maxweight'>$weight</p> <div id = 'buttons' style = 'float: right !important'><button title = 'Crear nuevo item o categoria' class = 'glyphicon glyphicon-plus new'/ ></div></div></$celltype>\n";                        
+                            $html .= "<$celltype $id $headers class='$class' $colspan><div id = '$aggregation' class = 'agg'> $content <p style = 'display: inline' class = 'maxweight' id = '$maxweight'>$weight</p> <div id = 'buttons' style = 'float: right !important'><button title = 'Crear nuevo ítem o categoría' class = 'glyphicon glyphicon-plus new'/ ></div></div></$celltype>\n";                        
                         }
                       }else{
                         $id_item = explode("_",$id)[1];  
@@ -598,9 +598,9 @@ function print_table_categories($report){
                             $weight = '('. floatval($weight).' %)';
                         }
                         if(isItemMod($id_item,$report->courseid)){
-                            $html .= "<$celltype $id $headers class='$class' $colspan>$content <p style = 'display: inline'>$weight</p><div id = 'buttons' style = 'float: right !important'><div><button title = 'Editar Item' class = 'glyphicon glyphicon-pencil edit'/></div></div> </$celltype>\n";                        
+                            $html .= "<$celltype $id $headers class='$class' $colspan>$content <p style = 'display: inline'>$weight</p><div id = 'buttons' style = 'float: right !important'><div><button title = 'Editar Ítem' id = '$id_item' class = 'glyphicon glyphicon-pencil edit'/></div></div> </$celltype>\n";                        
                         }else{
-                            $html .= "<$celltype $id $headers class='$class' $colspan>$content <p style = 'display: inline'>$weight</p><div id = 'buttons' style = 'float: right !important'><div><button title = 'Editar Item' class = 'glyphicon glyphicon-pencil edit'/ ' ><button title = 'Eliminar Item' class = 'glyphicon glyphicon-trash delete'/></div></div> </$celltype>\n";                        
+                            $html .= "<$celltype $id $headers class='$class' $colspan>$content <p style = 'display: inline'>$weight</p><div id = 'buttons' style = 'float: right !important'><div><button title = 'Editar Ítem' id = '$id_item' class = 'glyphicon glyphicon-pencil edit'/ ' ><button title = 'Eliminar Ítem' class = 'glyphicon glyphicon-trash delete'/></div></div> </$celltype>\n";                        
                         }
                       }
                   }
@@ -790,4 +790,47 @@ function getAggregationofCategory($categoryid){
     return $aggregation;
 }
 
-?>
+
+/**
+ * Get the aggregation tipe of an category.
+ *
+ * @param $itemid
+ * @return int weight
+**/
+
+function getParentCategories($id_course,$id_element,$type){
+    global $DB;   
+    
+    if($type == "it"){
+        $query = "SELECT categoryid FROM {grade_items} WHERE id = $id_element";
+        $id_parent = $DB->get_record_sql($query)->categoryid;
+    }else{
+        $query = "SELECT parent FROM {grade_categories} WHERE id = $id_element";
+        $id_parent = $DB->get_record_sql($query)->parent;//ES NULL CUANDO ES LA CATEGORIA TOTAL DEL CURSO.
+    }
+    $record = new stdClass;
+    if(!$id_parent){
+        $record->total = true;
+        return $record;
+    }
+    $query_categories = "SELECT cat.id as id, cat.fullname as cat_name, cur.fullname as cur_name
+                         FROM {grade_categories} cat INNER JOIN {course} cur 
+                         ON cat.courseid = cur.id
+                         WHERE cat.courseid = $id_course";
+    $output = $DB->get_records_sql($query_categories);
+    $html_string = "";
+    foreach($output as $categorie){
+        if($categorie->cat_name == '?'){
+            $categorie->cat_name = $categorie->cur_name;
+        }
+        if($categorie->id == $id_parent){
+            $html_string .= "<option selected> $categorie->cat_name </option>";
+        }else{
+            $html_string .= "<option> $categorie->cat_name </option>";
+        }
+        
+    }
+    
+    $record->html= $html_string;
+    return $record;
+}

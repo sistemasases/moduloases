@@ -58,4 +58,7 @@ if(isset($_POST['course'])&&isset($_POST['parent'])&&isset($_POST['fullname'])&&
 
 }
 
-?>
+if(isset($_POST['course'])&&isset($_POST['type'])&&isset($_POST['type_e'])&&isset($_POST['element'])&&$_POST['type']=="loadParentCat"){
+    $categories = getParentCategories($_POST['course'],$_POST['element'],$_POST['type_e']);
+    echo json_encode($categories);
+}

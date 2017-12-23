@@ -37,7 +37,7 @@
       <div class="mymodal-content" id = "content-edit">
         <div class="mymodal-header">
           <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <h4>Editar Categoría o Ítem</h4>
+          <h4 id = "titulo">Editar Categoría o Ítem</h4>
         </div>
         <div class="mymodal-body">
           <form id="form_editar">
@@ -49,25 +49,25 @@
               <div class="form-pilos">
                 <label class="col-sm-2 control-label">Categoria Padre :</label>
                 <div class="col-sm-10">
-                  <select id = "cat_padre">
-                    <option>
-                      SELECCIONE CATEGORIA PADRE
-                    </option>
+                  <select id = "padre">
+                    
                   </select>
                 </div>
               </div>
-              <div class="form-pilos ">
+              <div class="form-pilos " id = 'peso'>
                   <label class="col-sm-2 control-label">Peso :</label>
                   <div class="col-sm-10">
                       <input type="text" class="form-pilos" id="peso_editar" name="peso_editar">
                   </div>
                 </div>
-              <div class="form-pilos ">
+              <div class="form-pilos hide" id = "type_cal">
                 <label class="col-sm-2 control-label">Tipo de Calificación</label>
                 <div class="col-sm-10" id="funct2">
-                  <select>
-                    <option>Promedio Simple</option>
-                    <option>Promedio Ponderado</option>
+                  <select id = "calific">
+                    <option value = '11'>Promedio Simple</option>
+                    <option value = '10'>Promedio Ponderado</option>
+                    <option value = '6'>Calificación mas alta</option>
+                    <option value=" 0">Otro tipo de calificación</option>
                   </select>
                 </div>
               </div>
@@ -77,7 +77,7 @@
         </div>
         <div class="mymodal-footer">
           <button type="button" class="button btn btn-secondary" data-dismiss="modal" id="close_seg">Cerrar</button>
-          <button type="button" class="button btn btn-primary" id="save_seg">Guardar</button>
+          <button type="button" class="button btn btn-primary" id="save_edit">Guardar</button>
 
         </div>
 
