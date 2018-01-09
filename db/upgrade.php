@@ -8,56 +8,31 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
 
     $result = true;
 
-    if ($oldversion < 2017111715539) {
+    if ($oldversion < 2018010911179) {
 
-    // Drop constraint
+    // Define table talentospilos_user_extended to be created.
+    $table = new xmldb_table('talentospilos_user_extended');
 
-        // Define table talentospilos_funcionalidad to be dropped.
-        $table = new xmldb_table('talentospilos_funcionalidad');
-        
-        // Conditionally launch drop table for talentospilos_funcionalidad.
-        if ($dbman->table_exists($table)) {
-            $dbman->drop_table($table);
-        }
-
-    // Define table talentospilos_funcionalidad to be created.
-    $table = new xmldb_table('talentospilos_funcionalidad');
-    
-    // Adding fields to table talentospilos_funcionalidad.
+    // Adding fields to table talentospilos_user_extended.
     $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
-    $table->add_field('nombre_func', XMLDB_TYPE_CHAR, '200', null, XMLDB_NOTNULL, null, null);
-    $table->add_field('descripcion', XMLDB_TYPE_CHAR, '150', null, null, null, null);
+    $table->add_field('id_moodle_user', XMLDB_TYPE_INTEGER, '20', null, XMLDB_NOTNULL, null, null);
+    $table->add_field('id_ases_user', XMLDB_TYPE_INTEGER, '20', null, XMLDB_NOTNULL, null, null);
+    $table->add_field('id_academic_program', XMLDB_TYPE_INTEGER, '20', null, XMLDB_NOTNULL, null, null);
+    $table->add_field('program_status', XMLDB_TYPE_BINARY, null, null, XMLDB_NOTNULL, null, null);
 
-    // Adding keys to table talentospilos_funcionalidad.
+    // Adding keys to table talentospilos_user_extended.
     $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
-    $table->add_key('unique', XMLDB_KEY_UNIQUE, array('nombre_func'));
+    $table->add_key('fk1_moodle_user', XMLDB_KEY_FOREIGN, array('id_moodle_user'), 'user', array('id'));
+    $table->add_key('fk2_ases_user', XMLDB_KEY_FOREIGN, array('id_ases_user'), 'talentospilos_usuario', array('id'));
+    $table->add_key('fk3_academic_program', XMLDB_KEY_FOREIGN, array('id_academic_program'), 'talentospilos_programa', array('id'));
 
-    // Conditionally launch create table for talentospilos_funcionalidad.
-    if (!$dbman->table_exists($table)) {
-        $dbman->create_table($table);
-    }
-
-
-    // Define table talentospilos_director_prog to be created.
-    $table = new xmldb_table('talentospilos_director_prog');
-    
-    // Adding fields to table talentospilos_director_prog.
-    $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
-    $table->add_field('id_director', XMLDB_TYPE_INTEGER, '20', null, XMLDB_NOTNULL, null, null);
-    $table->add_field('id_programa', XMLDB_TYPE_INTEGER, '20', null, XMLDB_NOTNULL, null, null);
-
-    // Adding keys to table talentospilos_director_prog.
-    $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
-    $table->add_key('id_director_fk', XMLDB_KEY_FOREIGN, array('id_director'), 'user', array('id'));
-    $table->add_key('id_programa_fk', XMLDB_KEY_FOREIGN, array('id_programa'), 'talentospilos_programa', array('id'));
-
-    // Conditionally launch create table for talentospilos_director_prog.
+    // Conditionally launch create table for talentospilos_user_extended.
     if (!$dbman->table_exists($table)) {
         $dbman->create_table($table);
     }
    
     // Ases savepoint reached.
-    upgrade_block_savepoint(true, 2017111715539, 'ases');
+    upgrade_block_savepoint(true, 2018010911179, 'ases');
    
     return $result;
     }
