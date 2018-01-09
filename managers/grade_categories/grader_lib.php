@@ -584,8 +584,16 @@ function print_table_categories($report){
                         }  
                         $aggregation = getAggregationofCategory($categoryid);
                         $maxweight = getMaxWeight($categoryid);
+                        
+                        $id_parent = get_category_parent($categoryid);
+                        if(!$id_parent){
+                            $maxweight_parent = $maxweight;
+                        }else{
+                            $maxweight_parent = getMaxWeight($id_parent);
+                        }
+                        
                         if(!isCourseCategorie($categoryid,$report->courseid)){
-                            $html .= "<$celltype $id $headers class='$class' $colspan><div id = '$aggregation' class = 'agg'> $content <p style = 'display: inline' class = 'maxweight' id = '$maxweight'>$weight</p> <div id = 'buttons' style = 'float: right !important'><button title = 'Crear nuevo ítem o categoría' class = 'glyphicon glyphicon-plus new'/ ><button title = 'Editar Categoría' id = '$categoryid' class = 'glyphicon glyphicon-pencil edit'/><button title = 'Eliminar Categoría' class = 'glyphicon glyphicon-trash delete'/></div></div></$celltype>\n";
+                            $html .= "<$celltype $id $headers class='$class' $colspan><div id = '$aggregation' class = 'agg'> $content <p style = 'display: inline' class = 'maxweight' id = '$maxweight'>$weight</p> <div id = 'buttons' style = 'float: right !important'><button title = 'Crear nuevo ítem o categoría' class = 'glyphicon glyphicon-plus new'/ ><button title = 'Editar Categoría' data-maxweight = '$maxweight_parent' id = '$categoryid' class = 'glyphicon glyphicon-pencil edit'/><button title = 'Eliminar Categoría' class = 'glyphicon glyphicon-trash delete'/></div></div></$celltype>\n";
                         }else{
                             $html .= "<$celltype $id $headers class='$class' $colspan><div id = '$aggregation' class = 'agg'> $content <p style = 'display: inline' class = 'maxweight' id = '$maxweight'>$weight</p> <div id = 'buttons' style = 'float: right !important'><button title = 'Crear nuevo ítem o categoría' class = 'glyphicon glyphicon-plus new'/ ></div></div></$celltype>\n";                        
                         }
@@ -597,10 +605,12 @@ function print_table_categories($report){
                         }else{
                             $weight = '('. floatval($weight).' %)';
                         }
+                        $categoryid = get_item_parent($id_item,$report->courseid);
+                        $maxweight = getMaxWeight($categoryid);
                         if(isItemMod($id_item,$report->courseid)){
-                            $html .= "<$celltype $id $headers class='$class' $colspan>$content <p style = 'display: inline'>$weight</p><div id = 'buttons' style = 'float: right !important'><div><button title = 'Editar Ítem' id = '$id_item' class = 'glyphicon glyphicon-pencil edit'/></div></div> </$celltype>\n";                        
+                            $html .= "<$celltype $id $headers class='$class' $colspan>$content <p style = 'display: inline'>$weight</p><div id = 'buttons' style = 'float: right !important'><div id = '$maxweight'><button title = 'Editar Ítem' id = '$id_item' class = 'glyphicon glyphicon-pencil edit'/></div></div> </$celltype>\n";                        
                         }else{
-                            $html .= "<$celltype $id $headers class='$class' $colspan>$content <p style = 'display: inline'>$weight</p><div id = 'buttons' style = 'float: right !important'><div><button title = 'Editar Ítem' id = '$id_item' class = 'glyphicon glyphicon-pencil edit'/ ' ><button title = 'Eliminar Ítem' class = 'glyphicon glyphicon-trash delete'/></div></div> </$celltype>\n";                        
+                            $html .= "<$celltype $id $headers class='$class' $colspan>$content <p style = 'display: inline'>$weight</p><div id = 'buttons' style = 'float: right !important'><div id = '$maxweight'><button title = 'Editar Ítem' id = '$id_item' class = 'glyphicon glyphicon-pencil edit'/ ' ><button title = 'Eliminar Ítem' class = 'glyphicon glyphicon-trash delete'/></div></div> </$celltype>\n";                        
                         }
                       }
                   }
@@ -613,10 +623,39 @@ function print_table_categories($report){
 }
 
 
+
+/**
+ * Returns the id of the parent category of an item
+ *
+ * @param int $id id of item, $courseid
+ * @return boolean
+**/
+function get_item_parent($id, $courseid){
+    $grade_item = grade_item::fetch(array('id' => $id, 'courseid' => $courseid));
+    return($grade_item->get_parent_category()->id);
+}
+
+/**
+ * Returns the id of the parent category of a category
+ *
+ * @param int $id id of category
+ * @return boolean
+**/
+function get_category_parent($id){
+    if($grade_category = grade_category::fetch(array('id' => $id))){
+        if(!$grade_category->is_course_category()){
+            return($grade_category->get_parent_category()->id);
+        }
+    }else{
+        return false;
+    }   
+}
+
+print_r(get_category_parent(56));
 /**
  * Say if an item is Mod type
  *
- * @param int $id id of item
+ * @param int $id id of item, $courseid
  * @return boolean
 **/
 function isItemMod($id, $courseid){

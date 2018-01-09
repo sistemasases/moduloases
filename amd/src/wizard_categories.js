@@ -28,6 +28,9 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_as
                 var titulo = $(this).attr('title');
                 $("#titulo").text(titulo)
 
+                $("#nombre_editar").show();
+                $("#label_nombre").show(); 
+
                 //se carga la informacion del elemento
                 var id_course = getCourseid();
                 var id_element = $(this).attr('id');
@@ -51,6 +54,9 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_as
                         peso = peso.replace(' ', '');
                         peso = peso.replace('%', ''); 
                         $('#peso_editar').val(peso);
+
+                        var maxweight = $(this).attr('data-maxweight');
+                        $('.maxweight-edit').attr('id', maxweight);
                     } else {
                         nombre = nombre.split("-")[0]
                         $('#peso').hide()
@@ -69,9 +75,18 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_as
                         peso = peso.replace(' ', '');
                         peso = peso.replace('%', '');                        
                         $('#peso_editar').val(peso)
+
+                        var maxweight = $(this).parent().attr('id');
+                        $('.maxweight-edit').attr('id', maxweight);
                     }
                     var type = 'it';                    
-                    var nombre = $(this).parent().parent().prev().prev().attr('title')
+                    var nombre = $(this).parent().parent().prev().prev().attr('title');
+
+                    //Se evalua si es una asignacion para no dejar modificar el nombre
+                    if(nombre == 'Enlazar a la actividad Tarea'){
+                        $("#nombre_editar").hide();
+                        $("#label_nombre").hide();                        
+                    }
                 }
                 //se carga el nombre
                 $("#nombre_editar").val(nombre)
@@ -84,6 +99,17 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_as
                     backdrop: false
                 });
             });
+
+            $(document).on('click', '#save_edit', function(){
+                var nombre = $("#nombre_editar").val();
+                var peso = $('#peso_editar').val();
+                var maxweight = $('.maxweight-edit').attr('id');
+
+                console.log("nombre: "+nombre + "\n peso:" + peso + "\n MAXpeso:" + maxweight);
+
+
+                
+            })
 
             $(document).on('click', '.delete', function () {
                 var element = $(this).parent().parent().parent().attr('id').split('_');
