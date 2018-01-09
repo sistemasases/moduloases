@@ -64,7 +64,7 @@
 
                 $(document).on('click', '.curso_reporte', function() {
                     var course_id = $(this).attr('id');
-                    var url = 'calificador.php' + location.search + '&id_course=' + course_id;
+                    var url = 'global_grade_book.php' + location.search + '&id_course=' + course_id;
                     window.open(url, '_blank');  
                 });
                 

@@ -85,6 +85,8 @@ $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/dataTables.tableToo
 $PAGE->requires->css('/blocks/ases/style/sweetalert.css', true);
 $PAGE->requires->css('/blocks/ases/style/side_menu_style.css', true);
 
+$PAGE->requires->js_call_amd('block_ases/grade_categories','init');
+
 $output = $PAGE->get_renderer('block_ases');
 
 
