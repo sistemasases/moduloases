@@ -33,6 +33,7 @@ include("../classes/output/academic_reports_page.php");
 include("../classes/output/renderer.php");
 require_once ('../managers/permissions_management/permissions_lib.php');
 require_once ('../managers/validate_profile_action.php');
+require_once ('../managers/menu_options.php');
 
 global $PAGE;
 
@@ -81,10 +82,14 @@ $PAGE->requires->css('/blocks/ases/style/sweetalert.css', true);
 $PAGE->requires->css('/blocks/ases/style/sweetalert2.css', true);
 $PAGE->requires->css('/blocks/ases/style/round-about_pilos.css', true);
 $PAGE->requires->css('/blocks/ases/style/academic_reports_style.css', true);
+$PAGE->requires->css('/blocks/ases/style/side_menu_style.css', true);
 $PAGE->requires->js_call_amd('block_ases/academic_reports', 'init');
 
 //Se extrae la informacion a mostrar
 $data = new stdClass;
+
+//se crean los elementos del menu
+$menu_option = create_menu_options($USER->id, $blockid, $courseid);
 
 // Evalua si el rol del usuario tiene permisos en esta view.
 $actions = authenticate_user_view($USER->id, $blockid);
@@ -92,6 +97,7 @@ $data = $actions;
 
 $data->tableStudents = getReportStudents($blockid);
 $data->tableCourses = get_courses_report();
+$data->menu = $menu_option;
 
 $output = $PAGE->get_renderer('block_ases');
 
