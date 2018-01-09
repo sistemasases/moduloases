@@ -8,6 +8,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_as
 
         init: function () {
 
+            var old_weight;
             //Metodos de Wizard de crear categorias e items
             $(document).on('click', '#wizard_button', function () {
                 $("#modalCategories").modal({
@@ -40,7 +41,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_as
                 if (titulo === "Editar Categoría") {
                     $('#type_cal').show();
                     var tipo = $(this).parent().parent().attr('id')
-                    if(tipo != 10 && tipo != 11 && tipo != 6 ){ tipo = 0}
+                    if(tipo != 10 && tipo != 0 && tipo != 6 ){ tipo = 99}
                     $('#calific').prop('value', tipo)
                     var type = 'cat';
                     var nombre = $(this).parent().parent().text();
@@ -53,6 +54,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_as
                         peso = peso.replace(')', '');
                         peso = peso.replace(' ', '');
                         peso = peso.replace('%', ''); 
+                        old_weight = peso;
                         $('#peso_editar').val(peso);
 
                         var maxweight = $(this).attr('data-maxweight');
@@ -101,12 +103,61 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_as
             });
 
             $(document).on('click', '#save_edit', function(){
-                var nombre = $("#nombre_editar").val();
-                var peso = $('#peso_editar').val();
-                var maxweight = $('.maxweight-edit').attr('id');
+                var id_element = $(this).attr("id");
+                var new_nombre = $("#nombre_editar").val();
+                var new_peso = $('#peso_editar').val();
+                var maxweight = parseFloat($('.maxweight-edit').attr('id')) + parseFloat(old_weight);
+                var new_calif = $('#calific').val();
+                
+                if(new_calif == '99'){
+                    new_calif = false;
+                }
 
-                console.log("nombre: "+nombre + "\n peso:" + peso + "\n MAXpeso:" + maxweight);
+                console.log("nombre: "+new_nombre + "\n peso:" + new_peso + "\n MAXpeso:" + maxweight+ "\n new_calif: " + new_calif);
+                
+                if(new_peso > maxweight){
+                    swal({
+                        title: "Peso no valido.",
+                        text: "El peso ingresado supera el peso máximo posible de la categoria padre que es: "+maxweight+"% \n Para crear un nuevo elemento primero configure los pesos de los demas.",
+                        html: true,
+                        type: "warning",
+                        confirmButtonColor: "#d51b23"
+                    });
+                    return ;
+                }
 
+                if (new_nombre == '') {
+                    swal({
+                        title: "Ingrese el nuevo nombre del ítem",
+                        html: true,
+                        type: "warning",
+                        confirmButtonColor: "#d51b23"
+                    });
+                    return;
+                }
+
+                    
+                $.ajax({
+                    type: "POST",
+                    data: {
+                        course: getCourseid(),
+                        element: id_element,
+                        type_e: type_e,
+                        newNombre: new_nombre, 
+                        newPeso: new_peso, 
+                        newCalific: new_calif, 
+                        type: "editElement"
+                    },
+                    url: "../managers/grade_categories/grader_processing.php",
+                    success: function (msg) {
+                        $('#padre').html(msg.html);
+                    },
+                    dataType: "json",
+                    cache: "false",
+                    error: function (msg) {
+                        console.log(msg);
+                    },
+                });
 
                 
             })
