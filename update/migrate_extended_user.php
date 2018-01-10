@@ -10,7 +10,11 @@ $sql_query = "SELECT ROW_NUMBER() OVER (ORDER BY u.id, info_field.shortname), u.
 
 $result_query = $DB->get_records_sql($sql_query);
 
+$sql_query = "SELECT username, firstname, lastname FROM {user} WHERE id = 10801";
+$result = $DB->get_records_sql($sql_query);
+
 print_r($result_query);
+print_r($result);
 
 $record_to_save = new stdClass(); //stdclass que se utiliza para guardar cada registro a almacenar
 $errors = []; //Arreglo para guardar los registros en los cuales se presentaron errores de inserción
