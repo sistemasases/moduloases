@@ -1,4 +1,29 @@
 <?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
+
+/**
+ * Estrategia ASES
+ *
+ * @author     Isabella Serna Ramírez
+ * @package    block_ases
+ * @copyright  2017 Isabella Serna Ramírez <isabella.serna@correounivalle.edu.co>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
 require_once(dirname(__FILE__). '/../../../../config.php');
 require_once(dirname(__FILE__).'/../seguimiento_grupal/seguimientogrupal_lib.php');
 require_once(dirname(__FILE__).'/../student_profile/studentprofile_lib.php');
@@ -7,7 +32,7 @@ require_once('user_functions.php');
 
 require_once('user_lib.php');
 
-
+//Verifies which functions will be executed to call the respective method or returns a json wheter with an email or  array of students, .
 if(isset($_POST['function'])){
     switch($_POST['function']){
         case "delete":
@@ -64,6 +89,12 @@ if(isset($_POST['function'])){
         echo json_encode($msg);
 }
 
+/**
+ * Function that deletes a tracking
+ * 
+ * @see deleteSeg()
+ * @return JSON
+ */
 function deleteSeg(){
          if(isset($_POST['id'])){
             $result= delete_tracking_peer($_POST['id']);
@@ -77,7 +108,13 @@ function deleteSeg(){
 }
 
 
-
+/**
+ * Function that updates a new groupal tracking
+ * 
+ * @see upgradePares($fun)
+ * @param $fun ---> parameter that indicates wheter update or insertion
+ * @return JSON
+ */
 
 function upgradePares($fun){
     try{
@@ -106,7 +143,7 @@ function upgradePares($fun){
                     if($_POST['economico'] != "" && !isset($_POST['riesgo_econom']))   throw new Exception('No se reconocio las variblaes necesarias para actualizar un nuevo seguimiento economico'); 
                     if($_POST['vida_uni'] != "" && !isset($_POST['riesgo_uni']))   throw new Exception('No se reconocio las variblaes necesarias para actualizar un nuevo seguimiento vida_uni'); 
                     
-                    //se almacena el riesgo siempre y cuando haya una descripcion del campo asosiado
+                    //the risk is storaged wether there is a description of the specific field
                     
                     if($_POST['vida_uni'] == "" && isset($_POST['riesgo_uni'])){
                         $insert_object->vida_uni_riesgo = null;
@@ -150,8 +187,7 @@ function upgradePares($fun){
                 }
             }
             
-            //fin validaciones segun el tipo
-            //comentados por esteban para evitar la modificacion del moonitor que creo el documento y la fecha creada
+            //end on validations depending on type
             // $insert_object->id_monitor = $USER->id;
             // $insert_object->created = $today;
             $insert_object->fecha = strtotime($_POST['date']);
@@ -166,14 +202,14 @@ function upgradePares($fun){
             $id = explode(",", $_POST['idtalentos']);
 
             $result = false;
-            //si $fun es cero es insercion de lo contrario es actualización
+            //if $fun = 0 then is an insert otherwise and update
             if($fun == 0){
                 
                 if(!isset($_POST['idinstancia'])) throw new Exception('No se reconocio las variblaes necesarias: idinstancia.'); 
                 
-                //se almacena solo una vez la instancia de donde se generó el registro
+                //the instance is storaged just once 
                 $insert_object->id_instancia = $_POST['idinstancia'];
-                //se almacena solo una vez la fecha de creacion
+                //Creation date is storaged just once
                 $insert_object->created = $today;
                 
                
@@ -196,7 +232,7 @@ function upgradePares($fun){
                     $msg="grupales";
                     $idtalentos_now = $id;
                     
-                    //se define e incializa el arreglo $idtalentos_old que va contener los id de los talentos del segumiento obenidos de la base de datos
+                    //An array is defined and initialized that'll contain all the id's from 'talentos' on the database
                     $idtalentos_old =  array();
                     $result_get = getEstudiantesSegGrupal($insert_object->id);
                     
@@ -204,7 +240,7 @@ function upgradePares($fun){
                         array_push($idtalentos_old,$r->id_estudiante);
                     }
                     
-                     //se verifican los ids que ya no van ser parte del seguimiento- los que se borraran de la bd
+                     //All id's are verified of not beeing part of 'seguimiento'
                     foreach ($idtalentos_old as $id_old){
                         if (!in_array($id_old,$idtalentos_now)){
                             $msg="grupales-drop";
@@ -212,7 +248,7 @@ function upgradePares($fun){
                         }
                     }
                     
-                    //se adicionan los nuevos en la lista
+                    //The new nes will be added to the list
                     foreach ($idtalentos_now as $id_now){
                         if(!in_array($id_now, $idtalentos_old)){
                             $msg="grupales-add";
@@ -220,7 +256,7 @@ function upgradePares($fun){
                         }
                     }
                     
-                    //se actualiza el segumiento
+                    //Updates 'seguimiento'
                     $result = updateSeguimiento_pares($insert_object);
                 }
                 
@@ -252,6 +288,12 @@ function upgradePares($fun){
     }
 }
 
+/**
+ * Function that returns a record
+ * 
+ * @see load()
+ * @return JSON
+ */
 function load(){
     
     if((isset($_POST['idtalentos']) || isset($_POST['tipo'])) &&  isset($_POST['idinstancia'])){
@@ -267,6 +309,13 @@ function load(){
     
 }
 
+
+/**
+ * Function that returns a student's tracking 
+ * 
+ * @see getSeguimientos()
+ * @return JSON
+ */
 function getSeguimientos(){
       
         $result =  new stdClass();
@@ -287,7 +336,7 @@ function getSeguimientos(){
         $user = getUserMoodleByid($result->seguimiento->id_monitor);
         $r->infoMonitor = $user->firstname." ".$user->lastname;
         
-        //Validar si es editable
+        //Validate if it's editable
         
         $editable = true;
             
@@ -308,14 +357,21 @@ function getSeguimientos(){
             
         $r->editable = $editable;
         //se formatea la fecha de creacíón
+        //creation date is formatted
         $r->createdate = date('d/m/Y \a \l\a\s h:i a',$result->seguimiento->created);
-        $r->act_status = $result->seguimiento->status; //no es pendejada, la variable 'status'  hasta JQuery 3.1 es una variable reservada. Por esa razon  se renombra por 'act_status'
+        $r->act_status = $result->seguimiento->status; // variable 'status'  until JQuery 3.1 is a reserved variable. That's the reason of its rename to 'act_status'
         
         $result->hour=$r;
         echo json_encode($result);
     
 }
 
+/**
+ * Function that loads a simple tracking ('seguimiento')
+ * 
+ * @see loadJustOneSeg()
+ * @return JSON
+ */
 function loadJustOneSeg(){
     
     global $USER;
@@ -339,7 +395,7 @@ function loadJustOneSeg(){
             $user = getUserMoodleByid($r->id_monitor);
             $r->infoMonitor = $user->firstname." ".$user->lastname;
             
-            //Validar si es editable
+            //Validate if it's editable
             
             $editable = true;
             
@@ -368,9 +424,9 @@ function loadJustOneSeg(){
             }
             
             $r->editable = $editable;
-            //se formatea la fecha de creacíón
+            //creation date is formatted
             $r->createdate = date('d/m/Y \a \l\a\s h:i a',$r->created);
-            $r->act_status = $r->status; //no es pendejada, la variable 'status'  hasta JQuery 3.1 es una variable reservada. Por esa razon  se renombra por 'act_status'
+            $r->act_status = $r->status; // variable 'status'  until JQuery 3.1 is a reserved variable. That's the reason of its rename to 'act_status'
             
             if($_POST['tipo'] == 'GRUPAL') $r->attendande_listid = get_group_tracking($_POST['id']);
             
@@ -388,6 +444,12 @@ function loadJustOneSeg(){
     }
 }
 
+/**
+ * Function that load all students given the id of their monitor
+ * 
+ * @see load_students()
+ * @return JSON
+ */
 function load_students(){
     global $USER;
     $id_monitor;
@@ -407,6 +469,12 @@ function load_students(){
   echo json_encode($result);
 }
 
+/**
+ * Function that obtains a track given a monitor id (instance), date and count of tracks.
+ * 
+ * @see load_students()
+ * @return JSON
+ */
 function loadbyMonitor(){
     global $USER;
 
@@ -434,6 +502,9 @@ function loadbyMonitor(){
     }
 }
 
+/**
+ * PREGUNTAR SOBRE ESTA FUNCIÓN
+ */
 function send_email($risk_array, $observations_array, $id_receiving_user, $id_student_moodle, $id_student_pilos, $date, $subject="", $messageText="", $track_url){
 
     global $USER, $DB;
