@@ -1,5 +1,6 @@
 <?php
 require_once('grader_lib.php');
+require_once('wizard_lib.php');
 
 
  if(isset($_POST['course'])&&isset($_POST['parent'])&&isset($_POST['fullname'])&&isset($_POST['agregation'])&&($_POST['tipo']=="CATEGORÍA")&&isset($_POST['peso'])){
@@ -63,8 +64,16 @@ if(isset($_POST['course'])&&isset($_POST['type'])&&isset($_POST['type_e'])&&isse
     echo json_encode($categories);
 }
 
-if(isset($_POST['course'])&&isset($_POST['element'])&&$_POST['type']=="loadCat"){
+if(isset($_POST['course'])&&isset($_POST['element'])&&isset($_POST['type_e'])&&isset($_POST['newNombre'])&&isset($_POST['newPeso'])&&isset($_POST['newCalific'])&&isset($_POST['type'])&&$_POST['type']=="editElement"){
 
-    $cursos = getCategoriesandItems($_POST['course']);
-    echo $cursos;
+    $response = true;//editElement($_POST);
+    
+    $resp = new stdClass;
+    if($response === true){
+        $resp->msg = "Elemento Editado Correctamente";
+    }else{
+        $resp->error = "Error al editar elemento";
+    }
+
+    echo json_encode($resp);
 }

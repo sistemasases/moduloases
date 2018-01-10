@@ -1,24 +1,30 @@
 <?php
+/**
+ * Estrategia ASES
+ *
+ * @author     Camilo José Cruz Rivera
+ * @package    block_ases
+ * @copyright  2017 Camilo José Cruz Rivera <cruz.camilo@correounivalle.edu.co>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 /*
- * Consultas modulo registro de notas.
+ * Consultas modulo listado de docentes.
  */
 require_once(__DIR__ . '/../../../../config.php');
 require_once $CFG->libdir.'/gradelib.php';
-//require_once('../../../../querylib.php');
 require_once $CFG->dirroot.'/grade/lib.php';
 require_once $CFG->dirroot.'/grade/report/user/lib.php';
 require_once $CFG->dirroot.'/blocks/ases/managers/lib/student_lib.php'; 
-// require_once $CFG->dirroot.'/grade/report/grader/lib.php';
-// require_once $CFG->dirroot.'/grade/lib.php';
 
-///*********************************///
-///*** Get info global_grade_book methods ***///
-///*********************************///
+
+///******************************************///
+///*** Get info grade_categories methods ***///
+///******************************************///
 
 /**
- * Función que retorna un arreglo de todos los cursos donde hay matriculados estudiantes de una instancia determinada organizados segun su profesor.
+ * Función que retorna un arreglo de todos los cursos donde hay matriculados estudiantes de la estrategia ASES organizados segun su profesor.
  * @return Array 
- */
+ **/
 
 function get_courses_pilos(){
     global $DB;
@@ -73,7 +79,7 @@ function get_courses_pilos(){
     $result = processInfo($result);
     return $result;
 }
- //get_courses_pilos(19);
+
 
 /*
  * Función que retorna un arreglo de profesores, dado un objeto consulta

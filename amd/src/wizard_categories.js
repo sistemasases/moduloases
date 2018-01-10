@@ -30,18 +30,22 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_as
                 $("#titulo").text(titulo)
 
                 $("#nombre_editar").show();
-                $("#label_nombre").show(); 
+                $("#label_nombre").show();
 
                 //se carga la informacion del elemento
                 var id_course = getCourseid();
                 var id_element = $(this).attr('id');
                 $('#save_edit').attr('name', id_element)
-                
+
                 //se evalua si el elemento es item o categoria
                 if (titulo === "Editar Categoría") {
                     $('#type_cal').show();
-                    var tipo = $(this).parent().parent().attr('id')
-                    if(tipo != 10 && tipo != 0 && tipo != 6 ){ tipo = 99}
+                    var tipo = $(this).parent().parent().attr('id');
+                    $('#otro').hide();
+                    if (tipo != 10 && tipo != 0 && tipo != 6) {
+                        tipo = 99
+                        $('#otro').show();
+                    }
                     $('#calific').prop('value', tipo)
                     var type = 'cat';
                     var nombre = $(this).parent().parent().text();
@@ -53,7 +57,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_as
                         peso = peso.replace('(', '');
                         peso = peso.replace(')', '');
                         peso = peso.replace(' ', '');
-                        peso = peso.replace('%', ''); 
+                        peso = peso.replace('%', '');
                         old_weight = peso;
                         $('#peso_editar').val(peso);
 
@@ -68,31 +72,32 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_as
                     $('#type_cal').hide()
                     //se carga el peso de tenerlo
                     var peso = $(this).parent().parent().prev().text();
-                    if(peso == '-'){
+                    if (peso == '-') {
                         $('#peso').hide()
-                    }else{
+                        $('#peso_editar').val(peso)
+                    } else {
                         $('#peso').show()
                         peso = peso.replace('(', '');
                         peso = peso.replace(')', '');
                         peso = peso.replace(' ', '');
-                        peso = peso.replace('%', '');                        
+                        peso = peso.replace('%', '');
                         $('#peso_editar').val(peso)
 
                         var maxweight = $(this).parent().attr('id');
                         $('.maxweight-edit').attr('id', maxweight);
                     }
-                    var type = 'it';                    
+                    var type = 'it';
                     var nombre = $(this).parent().parent().prev().prev().attr('title');
 
                     //Se evalua si es una asignacion para no dejar modificar el nombre
-                    if(nombre == 'Enlazar a la actividad Tarea'){
+                    if (nombre == 'Enlazar a la actividad Tarea') {
                         $("#nombre_editar").hide();
-                        $("#label_nombre").hide();                        
+                        $("#label_nombre").hide();
                     }
                 }
                 //se carga el nombre
                 $("#nombre_editar").val(nombre)
-                
+
                 //se cargan las categorias seleccionando la categoria padre del elemento
                 load_parent_categorie(id_course, id_element, type)
 
@@ -102,33 +107,28 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_as
                 });
             });
 
-            $(document).on('click', '#save_edit', function(){
-                var id_element = $(this).attr("id");
+            $(document).on('click', '#save_edit', function () {
+                var id_element = $(this).attr("name");
                 var new_nombre = $("#nombre_editar").val();
                 var new_peso = $('#peso_editar').val();
                 var maxweight = parseFloat($('.maxweight-edit').attr('id')) + parseFloat(old_weight);
                 var new_calif = $('#calific').val();
+                var parent_id = $('#padre').val();
                 
-                if(new_calif == '99'){
+                if (new_peso == '-') {
+                    new_peso = 0;
+                }
+
+                if (new_calif == '99') {
                     new_calif = false;
                 }
 
-                console.log("nombre: "+new_nombre + "\n peso:" + new_peso + "\n MAXpeso:" + maxweight+ "\n new_calif: " + new_calif);
-                
-                if(new_peso > maxweight){
+                //console.log("nombre: "+new_nombre + "\n peso:" + new_peso + "\n MAXpeso:" + maxweight+ "\n new_calif: " + new_calif);
+
+                if (new_peso > maxweight) {
                     swal({
                         title: "Peso no valido.",
-                        text: "El peso ingresado supera el peso máximo posible de la categoria padre que es: "+maxweight+"% \n Para crear un nuevo elemento primero configure los pesos de los demas.",
-                        html: true,
-                        type: "warning",
-                        confirmButtonColor: "#d51b23"
-                    });
-                    return ;
-                }
-
-                if (new_nombre == '') {
-                    swal({
-                        title: "Ingrese el nuevo nombre del ítem",
+                        text: "El peso ingresado supera el peso máximo posible de la categoria padre que es: " + maxweight + "% \n Para crear un nuevo elemento primero configure los pesos de los demas.",
                         html: true,
                         type: "warning",
                         confirmButtonColor: "#d51b23"
@@ -136,21 +136,58 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_as
                     return;
                 }
 
-                    
+                if (new_nombre == '') {
+                    swal({
+                        title: "Ingrese el nuevo nombre del elemento",
+                        html: true,
+                        type: "warning",
+                        confirmButtonColor: "#d51b23"
+                    });
+                    return;
+                }
+
+                var titulo = $('#titulo').text();
+                if (titulo.split(' ')[1] == 'Ítem') {
+                    type_e = "it";
+                    new_calif = false;
+                    // alert(type_e)
+                } else {
+                    type_e = "cat";
+                    // alert(type_e)
+                }
+
+                var course_id = getCourseid();
                 $.ajax({
                     type: "POST",
                     data: {
-                        course: getCourseid(),
+                        course: course_id,
                         element: id_element,
                         type_e: type_e,
-                        newNombre: new_nombre, 
-                        newPeso: new_peso, 
-                        newCalific: new_calif, 
-                        type: "editElement"
+                        newNombre: new_nombre,
+                        newPeso: new_peso,
+                        newCalific: new_calif,
+                        type: "editElement",
+                        parent: parent_id
                     },
                     url: "../managers/grade_categories/grader_processing.php",
                     success: function (msg) {
-                        $('#padre').html(msg.html);
+                        if (msg.error) {
+                            swal('Error',
+                                msg.error,
+                                'error');
+                        } else {
+                            swal({
+                                title: "Listo",
+                                text: msg.msg,
+                                type: "success",
+                                showCancelButton: false,
+                                showConfirmButton: false,
+                                timer: 1300,
+                            });
+                            $("#edit").modal('hide');
+                            loadCategories(course_id);
+                            //console.log(msg);
+                        }
                     },
                     dataType: "json",
                     cache: "false",
@@ -159,7 +196,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_as
                     },
                 });
 
-                
+
             })
 
             $(document).on('click', '.delete', function () {
