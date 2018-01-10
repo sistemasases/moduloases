@@ -108,13 +108,13 @@ function make_select_ficha($id){
     $asign = "<select name = 'asignados' id = 'asignados'><option>Seleccione un estudiante</option>";
 
     if($rol == 'profesional_ps'){
-        $asign .= get_asigned_by_profesional($id);
+        $asign .= process_info_assigned_students(get_asigned_by_profesional($id));
 
     }elseif($rol == 'practicante_ps'){
-        $asign .= get_asigned_by_practicante($id);
+        $asign .= process_info_assigned_students(get_asigned_by_practicante($id));
 
     }elseif($rol == 'monitor_ps'){
-        $asign .= get_asigned_by_monitor($id);
+        $asign .= process_info_assigned_students(get_asigned_by_monitor($id));
     }else{
         $asign = "ROL NO PERMITIDO";
         return $asign;
@@ -139,14 +139,13 @@ function get_asigned_by_monitor($id){
               INNER JOIN {user_info_field} field ON data.fieldid = field.id
               INNER JOIN {talentospilos_monitor_estud} mon_es ON data.data = CAST(mon_es.id_estudiante AS VARCHAR)
               WHERE mon_es.id_monitor = $id AND field.shortname = 'idtalentos'";
-    $asign = "";
 
     $result = $DB->get_records_sql($query);
-    foreach($result as $student){
-        $asign .= "<option>$student->username $student->firstname $student->lastname </option>";
-    }
-    return $asign;
+    
+    return $result;
 }
+
+//print_r(get_asigned_by_monitor(76));
 
 /**
 * Funcion que retorna los estudiantes asignados a un usuario de rol practicante
@@ -160,15 +159,18 @@ function get_asigned_by_practicante($id){
     $query = "SELECT rol.id_usuario
               FROM {talentospilos_user_rol} rol
               WHERE rol.id_jefe = $id";
-    $asign = "";
+
+    $students = array();
 
     $result = $DB->get_records_sql($query);
 
     foreach($result as $id_mon){
-        $asign .= get_asigned_by_monitor($id_mon->id_usuario);
+        $students = array_merge($students, get_asigned_by_monitor($id_mon->id_usuario));
     }
-    return $asign;
+    return $students;
 }
+
+//print_r(get_asigned_by_practicante(121));
 
 /**
 * Funcion que retorna los estudiantes asignados a un usuario de rol profesional
@@ -182,14 +184,28 @@ function get_asigned_by_profesional($id){
     $query = "SELECT rol.id_usuario
               FROM {talentospilos_user_rol} rol
               WHERE rol.id_jefe = $id";
-    $asign = "";
+    
+    $students = array();
 
     $result = $DB->get_records_sql($query);
 
     foreach($result as $id_prac){
-        $asign .= get_asigned_by_practicante($id_prac->id_usuario);
+        $students = array_merge($students, get_asigned_by_practicante($id_prac->id_usuario));
     }
-    return $asign;
+    return $students;
+}
+
+//print_r(get_asigned_by_profesional(122));
+
+
+function process_info_assigned_students($array_students){
+    $assign = "";
+
+    foreach($array_students as $student){
+        $assign .= "<option>$student->username $student->firstname $student->lastname </option>";
+    }
+    return $assign;
+
 }
 
 
