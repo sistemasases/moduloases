@@ -28,7 +28,7 @@ function get_cohortes(){
     return $result;
 }
 /**
- * Funcion recupera la informacion necesaria para la grafica de sexo de acuerdo al cohorte seleccionado
+ * Funcion recupera la informacion necesaria para la grafica de sexo de acuerdo a la cohorte seleccionado
  * 
  * @param $cohorte
  * @return Array 
@@ -88,12 +88,11 @@ function getGraficAge($cohorte){
     
     //ya que el dato recibido es un dato calculado se sabe que la edad son los dos primeros digitos de dicho campo
     //razon por la cual se accede a cada valor, se extraen los primeros valores y se retorna el arreglo
-    foreach($result as $datoEdad)
-     {
+    foreach($result as $datoEdad){
          $años=substr($datoEdad->age,0,2);
          
          array_push($arrayRetornar,$años);
-     }
+    }
     
     return array_count_values($arrayRetornar);
     
@@ -212,7 +211,7 @@ function getGraficEstado($cohorte){
 /**
  * Función que recupera datos para la tabla de ases_report, dado el estado, la cohorte y un conjunto de campos a extraer.
  *
- * @see getUsersByPopulation()
+ * @see get_ases_report()
  * @param $column       --> Campos a seleccionar
  * @param $population   --> Estado y cohorte
  * @param $risk         --> Nivel de riesgo a mostrar
@@ -220,6 +219,16 @@ function getGraficEstado($cohorte){
  * @param $idinstancia  --> Instancia del módulo
  * @return Array 
  */
+function get_ases_report($general_fields, $conditions, $academic_fields=null, $risk_fields=null, $id_instancia){
+
+    global $DB, $USER;
+
+    $sql_query = "";
+
+    
+
+}
+
 function getUsersByPopulation($column, $population, $risk, $academic_fields=null, $idinstancia){
     global $DB;
     global $USER;

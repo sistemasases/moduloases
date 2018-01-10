@@ -13,7 +13,7 @@ define(['jquery', 'block_ases/datatables.net', 'block_ases/datatables.net-button
   return {
     init: function () {
       //Control para el botón 'Generar Reporte'
-      $("#btn-send-indexform").on('click', function () {
+      $("#send_form_btn").on('click', function () {
         createTable();
       });
 
@@ -34,11 +34,14 @@ define(['jquery', 'block_ases/datatables.net', 'block_ases/datatables.net-button
   }
 
   function createTable() {
-    var dataString = $('#formulario').serializeArray();
+
+    var dataString = $('#form_general_report').serializeArray();
+
     dataString.push({
-      name: 'idinstancia',
+      name: 'instance_id',
       value: getIdinstancia()
     });
+
     $("#div_table").html('<img class="icon-loading" src="../icon/loading.gif"/>');
     $.ajax({
       type: "POST",

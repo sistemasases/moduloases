@@ -1,26 +1,69 @@
 <?php
 require_once('asesreport_lib.php');
+
 $columns = array();
-$poblacion = array();
-$campos_consulta = array();
-$riesgos_consulta = array();
-$academic_query = array();
+$conditions = array(); // Condiciones para la consulta
+$query_fields = array();
+$risk_fields = array();
+$academic_fields = array();
+
 $name_columns = new stdClass();
-if(isset($_POST['cohorte'])){
-    array_push($poblacion, $_POST['cohorte']);
+
+$fields_format = array(
+    'student_code'=>'username',
+    'firstname'=>'firstname',
+    'lastname'=>'lastname',
+    'document_id'=>'num_doc',
+    'email'=>'email',
+    'cellphone'=>'celular',
+    'address'=>'direccion_res',
+    'program_code'=>'cod_univalle',
+    'name_program'=>'programa.nombre',
+    'faculty'=>'facultad.nombre'
+);
+
+$columns_format = array(
+    'student_code'=>'Código estudiante',
+    'firstname'=>'Nombre(s)',
+    'lastname'=>'Apellido(s)',
+    'document_id'=>'Número de documento',
+    'email'=>'Correo electrónico',
+    'cellphone'=>'Celular',
+    'address'=>'Dirección residencia',
+    'program_code'=>'Código programa',
+    'name_program'=>'Programa académico',
+    'faculty'=>'Facultad'
+);
+
+if(isset($_POST['conditions'])){
+    foreach($_POST['conditions'] as $condition){
+        array_push($conditions, $condition);
+    }
 }
-if(isset($_POST['estado'])){
-    array_push($poblacion, $_POST['estado']);
+
+if(isset($_POST['fields'])){
+    foreach($_POST['fields'] as $field){
+        array_push($query_fields, $fields_format[$field]);
+        array_push($columns,  array("title"=>$columns_format[$field], "name"=>$columns_format[$field], "data"=>$columns_format[$field]));
+    }
 }
-if(isset($_POST['chk']) && isset($_POST['idinstancia'])){
+
+if(isset($_POST['academic_fields'])){
+    foreach($_POST['academic_fields'] as $academic_field){
+        array_push($academic_fields, $fields_format[$academic_field]);
+        array_push($columns, array("title"=>$columns_format[$academic_field], "name"=>$columns_format[$academic_field], "data"=>$columns_format[$academic_field]));
+    }
+}
+
+print_r($conditions);
+print_r($query_fields);
+print_r($academic_fields);
+print_r($columns);
+
+if(isset($_POST['instance_id'])){
     $counter = 0;
     
-    foreach($_POST['chk'] as $chk)
-    {
-        array_push($columns, array("title"=>$chk, "name"=>$chk, "data"=>$chk));
-        array_push($campos_consulta, $chk);
-    }
-    
+  
     
     if(isset($_POST['chk_risk'])){
         
@@ -32,62 +75,57 @@ if(isset($_POST['chk']) && isset($_POST['idinstancia'])){
             $counter = $counter + 1;            
         }
     }
-    if(isset($_POST['chk_academic'])){
-        foreach($_POST['chk_academic'] as $chk_academic){
-            array_push($columns, array("title"=>$chk_academic, "name"=>$chk_academic, "data"=>$chk_academic));
-            array_push($academic_query, $chk_academic);
-        }
-    }
-    $result = getUsersByPopulation($campos_consulta, $poblacion, $riesgos_consulta, $academic_query, $_POST['idinstancia']);
+
+    $result = get_ases_report($query_fields, $conditions, $risk_fields, $academic_fields, $_POST['instance_id']);
     
-    $data = array(
-                "bsort" => false,
-                "data"=> $result->data,
-                "columns" => $columns,
-                "select" => "false",
-                "language" => 
-                 array(
-                    "search"=> "Buscar:",
-                    "oPaginate" => array (
-                        "sFirst"=>    "Primero",
-                        "sLast"=>     "Último",
-                        "sNext"=>     "Siguiente",
-                        "sPrevious"=> "Anterior"
-                    ),
-                    "sProcessing"=>     "Procesando...",
-                    "sLengthMenu"=>     "Mostrar _MENU_ registros",
-                    "sZeroRecords"=>    "No se encontraron resultados",
-                    "sEmptyTable"=>     "Ningún dato disponible en esta tabla",
-                    "sInfo"=>           "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
-                    "sInfoEmpty"=>      "Mostrando registros del 0 al 0 de un total de 0 registros",
-                    "sInfoFiltered"=>   "(filtrado de un total de _MAX_ registros)",
-                    "sInfoPostFix"=>    "",
-                    "sSearch"=>         "Buscar:",
-                    "sUrl"=>            "",
-                    "sInfoThousands"=>  ",",
-                    "sLoadingRecords"=> "Cargando...",
-                    "oAria"=> array(
-                        "sSortAscending"=>  ": Activar para ordenar la columna de manera ascendente",
-                        "sSortDescending"=> ": Activar para ordenar la columna de manera descendente"
-                    )
-                 ),
-                "autoFill"=>"true",
-                "dom"=> "lfrtBip",
-                "buttons"=>array(
-                                array("extend"=>"pdf", "message"=>"Generando PDF"),
-                                "csv",
-                                "excel"
-                            )
-        );
-    header('Content-Type: application/json');
-    $prueba = new stdClass;
-    if(isset($result->error)){
-        $prueba->error = $result->error;
-        echo json_encode($prueba);
-    }else{
-        $prueba->data = $data;
-        $prueba->columns = $result->columns;
-        echo json_encode($prueba);
-    }
+    // $data = array(
+    //             "bsort" => false,
+    //             "data"=> $result->data,
+    //             "columns" => $columns,
+    //             "select" => "false",
+    //             "language" => 
+    //              array(
+    //                 "search"=> "Buscar:",
+    //                 "oPaginate" => array (
+    //                     "sFirst"=>    "Primero",
+    //                     "sLast"=>     "Último",
+    //                     "sNext"=>     "Siguiente",
+    //                     "sPrevious"=> "Anterior"
+    //                 ),
+    //                 "sProcessing"=>     "Procesando...",
+    //                 "sLengthMenu"=>     "Mostrar _MENU_ registros",
+    //                 "sZeroRecords"=>    "No se encontraron resultados",
+    //                 "sEmptyTable"=>     "Ningún dato disponible en esta tabla",
+    //                 "sInfo"=>           "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+    //                 "sInfoEmpty"=>      "Mostrando registros del 0 al 0 de un total de 0 registros",
+    //                 "sInfoFiltered"=>   "(filtrado de un total de _MAX_ registros)",
+    //                 "sInfoPostFix"=>    "",
+    //                 "sSearch"=>         "Buscar:",
+    //                 "sUrl"=>            "",
+    //                 "sInfoThousands"=>  ",",
+    //                 "sLoadingRecords"=> "Cargando...",
+    //                 "oAria"=> array(
+    //                     "sSortAscending"=>  ": Activar para ordenar la columna de manera ascendente",
+    //                     "sSortDescending"=> ": Activar para ordenar la columna de manera descendente"
+    //                 )
+    //              ),
+    //             "autoFill"=>"true",
+    //             "dom"=> "lfrtBip",
+    //             "buttons"=>array(
+    //                             array("extend"=>"pdf", "message"=>"Generando PDF"),
+    //                             "csv",
+    //                             "excel"
+    //                         )
+    //     );
+    // header('Content-Type: application/json');
+    // $prueba = new stdClass;
+    // if(isset($result->error)){
+    //     $prueba->error = $result->error;
+    //     echo json_encode($prueba);
+    // }else{
+    //     $prueba->data = $data;
+    //     $prueba->columns = $result->columns;
+    //     echo json_encode($prueba);
+    // }
 }
 ?>

@@ -56,14 +56,12 @@ $menu_option = create_menu_options($USER->id, $blockid, $courseid);
 $tabla_riesgos='';
 $tabla_cohortes='';
 foreach($riesgos as $riesgo){
-    $tabla_riesgos.='<input type="checkbox" name="chk_risk[]" id="'.$riesgo->id.'" value="'.$riesgo->id.'" /> '.$riesgo->descripcion.'<br>';}
+    $tabla_riesgos.='<div class="checkbox"><input type="checkbox" name="chk_risk[]" id="'.$riesgo->id.'" value="'.$riesgo->id.'" /> '.$riesgo->descripcion.'</div>';}
     
-$tabla_cohortes.='<select name="cohorte" id="cohorte" class="form-control"><option value="TODOS">TODOS</option>';
+$tabla_cohortes.='<option value="TODOS">TODOS</option>';
 foreach ($cohortes as $cohorte) {
     $tabla_cohortes.='<option value="'.$cohorte->idnumber.'">'.$cohorte->name.'</option>';
 }
-$tabla_cohortes.='</select><br>';
-
 
 $estados_ases = "";
 $estados_ases = "<option value='TODOS'>TODOS</option>";
@@ -81,6 +79,7 @@ $data = new stdClass;
 // Evalua si el rol del usuario tiene permisos en esta view.
 $actions = authenticate_user_view($USER->id, $blockid);
 $data = $actions;
+$USER->actions = $data;
 $data->menu = $menu_option;
 $data->risks_checks = $tabla_riesgos;
 $data->cohorts_checks = $tabla_cohortes;
