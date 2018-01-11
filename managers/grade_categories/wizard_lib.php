@@ -235,16 +235,14 @@ function edit_category($courseid, $categoryid, $weight, $name, $parentid,$aggreg
         }else{
             $item_update =  false;
         }
-        //  print_r("<br>aqui antes<br>");
-        // print_r($grade_category->aggregation);
+        
         if($grade_category->aggregation != $aggregation and $aggregation != false){
-            $old_agg = $grade_category->aggregation;
             $grade_category->aggregation = $aggregation;
             $new_agg = true;
         }
         // print_r("<br>aqui despues<br>");
         // print_r($grade_category->aggregation);
-        if($new_agg and $aggregation == 10){
+        if($new_agg and $grade_category->aggregation == 10){
             //PONER PESO 1 A TODOS SUS HIJOS
             $children = $grade_category->get_children();
             
@@ -369,9 +367,9 @@ function editElement($info){
     }
 }
 
-// $info = array('type_e' => 'cat','course' => 14,'element' => 166,'newPeso' => 11,'newNombre' => 'ParcialNuevo5','newCalific' => 10,'parent' => 56);
-// editElement($info);
-
+// $info = array('type_e' => 'cat','course' => 14,'element' => 173,'newPeso' => 10,'newNombre' => 'Otro tipo de calif','newCalific' => false,'parent' => 56);
+// print_r(editElement($info));
+// 
 
 /** DELETING METHODS **/
 
