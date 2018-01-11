@@ -76,7 +76,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_as
                         $('#peso').hide()
                         $('#peso_editar').val(peso)
                     } else {
-                        $('#peso').show()
+                        $('#peso').show();
                         peso = peso.replace('(', '');
                         peso = peso.replace(')', '');
                         peso = peso.replace(' ', '');
@@ -98,6 +98,8 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_as
                 //se carga el nombre
                 $("#nombre_editar").val(nombre)
 
+                
+
                 //se cargan las categorias seleccionando la categoria padre del elemento
                 load_parent_categorie(id_course, id_element, type)
 
@@ -114,7 +116,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_as
                 var maxweight = parseFloat($('.maxweight-edit').attr('id')) + parseFloat(old_weight);
                 var new_calif = $('#calific').val();
                 var parent_id = $('#padre').val();
-                
+
                 if (new_peso == '-') {
                     new_peso = 0;
                 }

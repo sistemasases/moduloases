@@ -198,9 +198,110 @@ function insertItem($course,$father,$name,$valsend,$item){
  * @param int $courseid id of course
  * @return bool
 */
-function edit_category(){
-    if (!$grade_category = grade_category::fetch(array('id'=>$id, 'courseid'=>$course->id))) {
-        print_error('invalidcategory');
+function edit_category($courseid, $categoryid, $weight, $name, $parentid,$aggregation){
+    if ($grade_category = grade_category::fetch(array('id'=>$categoryid, 'courseid'=>$courseid))) {
+        
+        // print_r("Antes <br>");
+        // print_r($grade_category);
+
+        if($grade_category->fullname != $name){
+            $grade_category->fullname = $name;
+        }
+
+        if($grade_category->parent != $parentid){
+            $grade_category->set_parent($parentid);
+        }
+        // print_r("<br>aqui antes de definir padre<br>");
+
+        $parent_category = $grade_category->get_parent_category();
+        // print_r("<br>aqui antes de definir item <br>");
+        
+        $grade_item = $grade_category->get_grade_item();
+        
+        if ($parent_category->aggregation != 10) {
+            $grade_item->aggregationcoef = 0;
+        } else if($grade_item->aggregationcoef != $weight){
+            $grade_item->aggregationcoef = $weight;
+        }
+
+        if($grade_item->aggregationcoef == 0 and $parent_category->aggregation == 10){
+            $grade_item->aggregationcoef = 1;            
+        }
+        // print_r("<br>aqui antes de update_item <br>");
+
+        if($grade_item->update()){
+            $grade_item->regrading_finished();          
+            $item_update = true;
+        }else{
+            $item_update =  false;
+        }
+        //  print_r("<br>aqui antes<br>");
+        // print_r($grade_category->aggregation);
+        if($grade_category->aggregation != $aggregation and $aggregation != false){
+            $old_agg = $grade_category->aggregation;
+            $grade_category->aggregation = $aggregation;
+            $new_agg = true;
+        }
+        // print_r("<br>aqui despues<br>");
+        // print_r($grade_category->aggregation);
+        if($new_agg and $aggregation == 10){
+            //PONER PESO 1 A TODOS SUS HIJOS
+            $children = $grade_category->get_children();
+            
+            foreach ($children as $child) {
+                $item = $child['object'];
+                if ($child['type'] == 'category') {
+                    $item = $item->load_grade_item();
+                }
+
+                // Set the new aggregation fields.
+                $item->aggregationcoef = 1;
+                $item->update();
+                $item->regrading_finished();            
+                
+            }
+
+        }else if($new_agg and $grade_category->aggregation != 10){
+            //PONER PESO 0 A TODOS SUS HIJOS
+
+            $children = $grade_category->get_children();
+            
+            foreach ($children as $child) {
+                $item = $child['object'];
+                if ($child['type'] == 'category') {
+                    $item = $item->load_grade_item();
+                }
+
+                // Set the new aggregation fields.
+                $item->aggregationcoef = 0;
+                $item->update();
+                $item->regrading_finished();            
+                
+            }
+        }
+        
+        if($grade_category->update()){
+            //print_r("ACTUALIZO");
+            $grade_item->regrading_finished();                        
+            $category_update = true;
+            $course_item = grade_item::fetch_course_item($courseid);
+            $course_item->regrading_finished();
+        }else{
+            //print_r("NO ACTUALIZO");
+            
+            $category_update = false;            
+        }
+        
+        
+        
+        // print_r("<br>Despues <br>");
+        // print_r($grade_category);
+
+        if($category_update and $item_update){
+            return true;
+        }else{
+            return false;
+        }
     }
 }
 
@@ -214,7 +315,7 @@ function edit_category(){
 function edit_item($courseid, $itemid, $weight, $name, $parentid){
     if ($grade_item = grade_item::fetch(array('id'=>$itemid, 'courseid'=>$courseid))) {
         
-        if($grade_item->itemname != $name){
+        if($grade_item->itemname != $name and $name != "Enlazar a la actividad Tarea"){
             $grade_item->itemname = $name;
         }
 
@@ -268,8 +369,8 @@ function editElement($info){
     }
 }
 
-$info = array('type_e' => 'it','course' => 14,'element' => 141,'newPeso' => 0,'newNombre' => 'asignacion666','newCalific' => false,'parent' => 56);
-editElement($info);
+// $info = array('type_e' => 'cat','course' => 14,'element' => 166,'newPeso' => 11,'newNombre' => 'ParcialNuevo5','newCalific' => 10,'parent' => 56);
+// editElement($info);
 
 
 /** DELETING METHODS **/

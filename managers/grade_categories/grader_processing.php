@@ -66,7 +66,7 @@ if(isset($_POST['course'])&&isset($_POST['type'])&&isset($_POST['type_e'])&&isse
 
 if(isset($_POST['course'])&&isset($_POST['element'])&&isset($_POST['type_e'])&&isset($_POST['newNombre'])&&isset($_POST['newPeso'])&&isset($_POST['newCalific'])&&isset($_POST['type'])&&$_POST['type']=="editElement"){
 
-    $response = true;//editElement($_POST);
+    $response = editElement($_POST);
     
     $resp = new stdClass;
     if($response === true){
