@@ -81,6 +81,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_as
                         peso = peso.replace(')', '');
                         peso = peso.replace(' ', '');
                         peso = peso.replace('%', '');
+                        old_weight = peso;
                         $('#peso_editar').val(peso)
 
                         var maxweight = $(this).parent().attr('id');
@@ -98,7 +99,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_as
                 //se carga el nombre
                 $("#nombre_editar").val(nombre)
 
-                
+
 
                 //se cargan las categorias seleccionando la categoria padre del elemento
                 load_parent_categorie(id_course, id_element, type)
@@ -122,7 +123,14 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_as
                 }
 
                 if (new_calif == '99') {
-                    new_calif = false;
+                    swal({
+                        title: "Tipo de Calificacion no valida.",
+                        text: "No es posible editar una categoria con un tipo de calificacion diferente a Promedio Simple, Promedio Ponderado, o Calificacion mas alta.\n Por favor seleccione uno de estos tipos de calificacion",
+                        html: true,
+                        type: "warning",
+                        confirmButtonColor: "#d51b23"
+                    });
+                    return;
                 }
 
                 //console.log("nombre: "+new_nombre + "\n peso:" + new_peso + "\n MAXpeso:" + maxweight+ "\n new_calif: " + new_calif);
@@ -157,7 +165,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_as
                     type_e = "cat";
                     // alert(type_e)
                 }
-
+                
                 var course_id = getCourseid();
                 $.ajax({
                     type: "POST",
@@ -194,6 +202,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_as
                     dataType: "json",
                     cache: "false",
                     error: function (msg) {
+                        console.log("AJAXerror");
                         console.log(msg);
                     },
                 });
@@ -357,21 +366,15 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_as
                     },
                     url: "../managers/grade_categories/grader_processing.php",
                     success: function (msg) {
-                        if (msg.error) {
-                            swal('Error',
-                                msg.error,
-                                'error');
-                        } else {
-                            swal({
-                                title: "Listo",
-                                text: msg.msg,
-                                type: "success",
-                                showCancelButton: false,
-                                showConfirmButton: false,
-                                timer: 1200,
-                            });
-                            loadCategories(course_id);
-                        }
+                        swal({
+                            title: "Listo",
+                            text: msg.msg,
+                            type: "success",
+                            showCancelButton: false,
+                            showConfirmButton: false,
+                            timer: 1200,
+                        });
+                        loadCategories(course_id);
                     },
                     dataType: "json",
                     cache: "false",
