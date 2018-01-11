@@ -4,6 +4,7 @@
  */
 require_once(__DIR__ . '/../../../../config.php');
 require_once $CFG->dirroot.'/blocks/ases/managers/lib/student_lib.php'; 
+require_once $CFG->dirroot.'/blocks/ases/managers/lib/lib.php';
 
 /**
  * Función que consulta todos los estudiantes ASES que tienen itemas de calificacion perdidos 
@@ -139,20 +140,62 @@ function get_loses_by_student($username){
  * @return Array 
  */
 
-function get_courses_for_report(){
+function get_courses_for_report($user_id){
     global $DB;
     
-    $query_semestre = "SELECT nombre FROM {talentospilos_semestre} WHERE id = (SELECT MAX(id) FROM {talentospilos_semestre})";
-    $sem = $DB->get_record_sql($query_semestre)->nombre;
+    $query_semestre = "SELECT id, nombre FROM {talentospilos_semestre} WHERE id = (SELECT MAX(id) FROM {talentospilos_semestre})";
+    $sem = $DB->get_record_sql($query_semestre);
+    $id_semestre = $sem->id;
+    $año = substr($sem->nombre,0,4);
 
-    $año = substr($sem,0,4);
-
-    if(substr($sem,4,1) == 'A'){
+    if(substr($sem->nombre,4,1) == 'A'){
         $semestre = $año.'02';
-    }else if(substr($sem,4,1) == 'B'){
+    }else if(substr($sem->nombre,4,1) == 'B'){
         $semestre = $año.'08';
     }
-    //print_r($semestre);
+	//print_r($semestre);
+
+	$intersect = "";
+	
+	$user_role = get_role_ases($user_id);
+
+	if($user_role == "monitor_ps"){
+
+		$intersect = " INTERSECT 
+		                SELECT user_m.id
+		                FROM {user} user_m
+                        INNER JOIN {user_info_data} data ON data.userid = user_m.id
+                        INNER JOIN {user_info_field} field ON data.fieldid = field.id
+                        INNER JOIN {talentospilos_monitor_estud} mon_es ON data.data = CAST(mon_es.id_estudiante AS VARCHAR)
+                        WHERE mon_es.id_semestre = $id_semestre AND mon_es.id_monitor = $user_id AND field.shortname = 'idtalentos'
+                        ";
+    }
+    elseif($user_role == "practicante_ps"){
+        
+        $intersect = " INTERSECT 
+                        SELECT DISTINCT user_m.id
+                        FROM {user} user_m
+                        INNER JOIN {user_info_data} data ON data.userid = user_m.id
+                        INNER JOIN {user_info_field} field ON data.fieldid = field.id
+                        INNER JOIN {talentospilos_monitor_estud} mon_es ON data.data = CAST(mon_es.id_estudiante AS VARCHAR)
+                        INNER JOIN {talentospilos_user_rol} us_rol ON mon_es.id_monitor = us_rol.id_usuario 
+                        WHERE mon_es.id_semestre = $id_semestre AND us_rol.id_semestre = $id_semestre AND us_rol.id_jefe = $user_id AND field.shortname = 'idtalentos'
+                        ";
+    }
+    elseif($user_role == "profesional_ps"){
+        
+        $intersect = " INTERSECT 
+                        SELECT DISTINCT user_m.id
+                        FROM {user} user_m
+                        INNER JOIN {user_info_data} data ON data.userid = user_m.id
+                        INNER JOIN {user_info_field} field ON data.fieldid = field.id
+                        INNER JOIN {talentospilos_monitor_estud} mon_es ON data.data = CAST(mon_es.id_estudiante AS VARCHAR)
+                        INNER JOIN {talentospilos_user_rol} us_rol ON mon_es.id_monitor = us_rol.id_usuario
+                        INNER JOIN {talentospilos_user_rol} us_rol_prof ON us_rol.id_jefe = us_rol_prof.id_usuario
+                        WHERE mon_es.id_semestre = $id_semestre AND us_rol.id_semestre = $id_semestre AND us_rol_prof.id_semestre = $id_semestre AND us_rol_prof.id_jefe = $user_id AND field.shortname = 'idtalentos'
+                        ";
+    }	
+
     $query_courses = "
 	SELECT DISTINCT curso.id, curso.fullname, curso.shortname          
 		FROM {course} curso
@@ -166,15 +209,17 @@ function get_courses_for_report(){
 				INNER JOIN {talentospilos_usuario} user_t ON data.data = CAST(user_t.id AS VARCHAR)
 				INNER JOIN {talentospilos_est_estadoases} estado_u ON user_t.id = estado_u.id_estudiante
 				INNER JOIN {talentospilos_estados_ases} estados ON estados.id = estado_u.id_estado_ases
-				WHERE estados.nombre = 'ACTIVO/SEGUIMIENTO' AND field.shortname = 'idtalentos')";
+				WHERE estados.nombre = 'ACTIVO/SEGUIMIENTO' AND field.shortname = 'idtalentos'
+				$intersect			
+				)";
     $result = $DB->get_records_sql($query_courses);
         
     return $result;
 }
 
 
-function get_courses_report(){
-	$courses = get_courses_for_report();
+function get_courses_report($user_id){
+	$courses = get_courses_for_report($user_id);
 
 	$string_html = "<table id = 'courses'>
 						<thead>
