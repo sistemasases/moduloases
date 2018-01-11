@@ -28,7 +28,6 @@
 // Standard GPL and phpdocs
 require_once(__DIR__ . '/../../../config.php');
 require_once($CFG->libdir.'/adminlib.php');
-require_once('../managers/query.php');
 require_once('../managers/instance_management/instance_lib.php');
 require_once('../managers/grade_categories/grader_lib.php');
 include('../lib.php');
@@ -70,6 +69,7 @@ $PAGE->requires->css('/blocks/ases/style/styles_pilos.css', true);
 $PAGE->requires->css('/blocks/ases/style/sweetalert.css', true);
 $PAGE->requires->css('/blocks/ases/style/sweetalert2.css', true);
 $PAGE->requires->js_call_amd('block_ases/global_grade_book', 'init');
+$PAGE->requires->js_call_amd('block_ases/wizard_categories', 'init');
 
 
 $output = $PAGE->get_renderer('block_ases');
