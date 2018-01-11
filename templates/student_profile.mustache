@@ -1,7 +1,7 @@
 <body>
 
   {{#data}}
-
+  {{> block_ases/side_menu}}
   <div class="container">
       <form  id="ficha_estudiante" onsubmit="myFunction(); return false;">
         
@@ -144,10 +144,40 @@
 
                   <!--academic tab-->
                   <div class="tab-pane" id="academic_tab">
-                    <div class="col-sm-10 col-sm-offset-1" id="academic_report">
-                      {{{academic_semestres_table}}}
+
+              <div class="accordion" role="tablist" aria-multiselectable="true">
+                <div class="panel panel-default" id="panelActual">
+                  <div class="panel-heading" role="tab" id="headingOne">
+                    <h4 class="panel-title">
+                      <a id="sem_act_title" class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseAct" aria-expanded="false"
+                        aria-controls="collapseAct">
+                        Semestre Actual
+                      </a>
+                    </h4>
+                  </div>
+                  <div id="collapseAct" class="panel-collapse form-pilos collapse" role="tabpanel" aria-labelledby="headingOne">
+                    <div class="panel-group" id="accordion_academic">
+                      {{{academic_semester_act}}}
                     </div>
                   </div>
+                </div>
+                <div class="panel panel-default" id="panelActual">
+                  <div class="panel-heading" role="tab" id="headingTwo">
+                    <h4 class="panel-title">
+                      <a id="hist_title" class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseHis" aria-expanded="false"
+                        aria-controls="collapseHis">
+                        Historico de Semestres
+                      </a>
+                    </h4>
+                  </div>
+                  <div id="collapseHis" class="panel-collapse form-pilos collapse" role="tabpanel" aria-labelledby="headingTwo">
+                    Reporte Historico en proceso de desarrollo
+                  </div>
+                </div>
+              </div>
+
+
+            </div>
                   <!-- End academic tab -->
 
                   {{#view_geographic_tab_sp}}

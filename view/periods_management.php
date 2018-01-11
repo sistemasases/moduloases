@@ -30,7 +30,7 @@ require_once($CFG->libdir.'/adminlib.php');
 require_once('../managers/instance_management/instance_lib.php');
 require_once('../managers/periods_management/periods_lib.php');
 require_once ('../managers/permissions_management/permissions_lib.php');
-require_once ('../managers/validate_profile_action.php'); 
+require_once ('../managers/validate_profile_action.php');
 require_once ('../managers/menu_options.php');
 
 global $PAGE;
