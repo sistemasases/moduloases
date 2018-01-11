@@ -186,7 +186,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_as
                             });
                             $("#edit").modal('hide');
                             loadCategories(course_id);
-                            //console.log(msg);
+                            console.log(msg);
                         }
                     },
                     dataType: "json",
