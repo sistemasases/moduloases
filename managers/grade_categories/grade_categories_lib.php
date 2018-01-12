@@ -15,6 +15,7 @@ require_once $CFG->libdir.'/gradelib.php';
 require_once $CFG->dirroot.'/grade/lib.php';
 require_once $CFG->dirroot.'/grade/report/user/lib.php';
 require_once $CFG->dirroot.'/blocks/ases/managers/lib/student_lib.php'; 
+require_once $CFG->dirroot.'/blocks/ases/managers/periods_management/periods_lib.php'; 
 
 
 ///******************************************///
@@ -29,8 +30,8 @@ require_once $CFG->dirroot.'/blocks/ases/managers/lib/student_lib.php';
 function get_courses_pilos(){
     global $DB;
     
-    $query_semestre = "SELECT nombre FROM {talentospilos_semestre} WHERE id = (SELECT MAX(id) FROM {talentospilos_semestre})";
-    $sem = $DB->get_record_sql($query_semestre)->nombre;
+    $semestre = get_current_semester();
+    $sem = $semestre->nombre;
 
     $año = substr($sem,0,4);
 

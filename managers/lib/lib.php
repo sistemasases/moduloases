@@ -1,6 +1,8 @@
 <?php
 
 require_once(dirname(__FILE__). '/../../../../config.php');
+require_once $CFG->dirroot.'/blocks/ases/managers/periods_management/periods_lib.php'; 
+
 
 /**
  * Función que recupera los programas académicos almacenados en la tabla talentospilos_programa
@@ -85,8 +87,11 @@ function isMonOrPract($USER){
 */
 function get_role_ases($id){
     global $DB;
+
+    $semestre = get_current_semester();
+    $id_semestre = $semestre->max;
   
-    $query_role = "SELECT rol.nombre_rol  FROM {talentospilos_rol} rol INNER JOIN {talentospilos_user_rol} uRol ON rol.id = uRol.id_rol WHERE uRol.id_usuario = $id AND uRol.id_semestre = (SELECT max(id_semestre) FROM {talentospilos_user_rol})";
+    $query_role = "SELECT rol.nombre_rol  FROM {talentospilos_rol} rol INNER JOIN {talentospilos_user_rol} uRol ON rol.id = uRol.id_rol WHERE uRol.id_usuario = $id AND uRol.id_semestre = $id_semestre";
     $rol = $DB->get_record_sql($query_role)->nombre_rol;
   
     return $rol;
@@ -133,12 +138,16 @@ function make_select_ficha($id){
 function get_asigned_by_monitor($id){
     global $DB;
 
+    $semestre = get_current_semester();
+    $id_semestre = $semestre->max;
+
+
     $query = "SELECT user_m.username, user_m.firstname, user_m.lastname
               FROM {user} user_m
               INNER JOIN {user_info_data} data ON data.userid = user_m.id
               INNER JOIN {user_info_field} field ON data.fieldid = field.id
               INNER JOIN {talentospilos_monitor_estud} mon_es ON data.data = CAST(mon_es.id_estudiante AS VARCHAR)
-              WHERE mon_es.id_monitor = $id AND field.shortname = 'idtalentos'";
+              WHERE mon_es.id_monitor = $id AND field.shortname = 'idtalentos' AND mon_es.id_semestre = $id_semestre";
 
     $result = $DB->get_records_sql($query);
     
@@ -156,9 +165,13 @@ function get_asigned_by_monitor($id){
 
 function get_asigned_by_practicante($id){
     global $DB;
+
+    $semestre = get_current_semester();
+    $id_semestre = $semestre->max;
+
     $query = "SELECT rol.id_usuario
               FROM {talentospilos_user_rol} rol
-              WHERE rol.id_jefe = $id";
+              WHERE rol.id_jefe = $id AND rol.id_semestre = $id_semestre";
 
     $students = array();
 
@@ -181,9 +194,13 @@ function get_asigned_by_practicante($id){
 
 function get_asigned_by_profesional($id){
     global $DB;
+
+    $semestre = get_current_semester();
+    $id_semestre = $semestre->max;
+
     $query = "SELECT rol.id_usuario
               FROM {talentospilos_user_rol} rol
-              WHERE rol.id_jefe = $id";
+              WHERE rol.id_jefe = $id AND rol.id_semestre = $id_semestre";
     
     $students = array();
 
