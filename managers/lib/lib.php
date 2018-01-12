@@ -197,6 +197,12 @@ function get_asigned_by_profesional($id){
 
 //print_r(get_asigned_by_profesional(122));
 
+/**
+ * Function that process the information contained in an array of students and returns a string with option html elements
+ * @see process_info_assigne_students($array_students)
+ * @param $array_students -> array which contains several student objects 
+ * @return String 
+ */
 
 function process_info_assigned_students($array_students){
     $assign = "";
@@ -207,7 +213,6 @@ function process_info_assigned_students($array_students){
     return $assign;
 
 }
-
 
 
 /**
