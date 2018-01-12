@@ -136,8 +136,9 @@ function get_loses_by_student($username){
 }
 
 /**
- * Función que retorna un arreglo de todos los cursos donde hay matriculados estudiantes de una instancia determinada
- * @see get_courses_reports()
+ * Function that given a logged user id, returns an array of the courses with enrolled users in an instance.
+ * @see get_courses_for_report($user_id)
+ * @param $user_id -> ID of the logged user
  * @return Array 
  */
 
@@ -218,7 +219,12 @@ function get_courses_for_report($user_id){
     return $result;
 }
 
-
+/**
+ * Function that given a logged user id, returns an array of the courses with enrolled users in an instance.
+ * @see get_courses_for_report($user_id)
+ * @param $user_id -> ID of the logged user
+ * @return Array 
+ */
 function get_courses_report($user_id){
 	$courses = get_courses_for_report($user_id);
 

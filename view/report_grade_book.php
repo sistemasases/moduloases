@@ -56,7 +56,7 @@ $url = new moodle_url("/blocks/ases/view/report_grade_book.php",array('courseid'
 
 //Navigation setup
 $coursenode = $PAGE->navigation->find($courseid, navigation_node::TYPE_COURSE);
-$blocknode = navigation_node::create(new moodle_url("/blocks/ases/view/academic_reports.php",array('courseid' => $courseid, 'instanceid' => $blockid)), null, 'block', $blockid);
+$blocknode = navigation_node::create("Reportes Académicos", new moodle_url("/blocks/ases/view/academic_reports.php",array('courseid' => $courseid, 'instanceid' => $blockid)), null, 'block', $blockid);
 $coursenode->add_node($blocknode);
 $node = $blocknode->add($title,$url);
 $blocknode->make_active();
