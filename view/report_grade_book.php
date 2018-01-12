@@ -56,7 +56,7 @@ $url = new moodle_url("/blocks/ases/view/report_grade_book.php",array('courseid'
 
 //Navigation setup
 $coursenode = $PAGE->navigation->find($courseid, navigation_node::TYPE_COURSE);
-$blocknode = navigation_node::create('Listado de Docentes',new moodle_url("/blocks/ases/view/grade_categories.php",array('courseid' => $courseid, 'instanceid' => $blockid)), null, 'block', $blockid);
+$blocknode = navigation_node::create(new moodle_url("/blocks/ases/view/academic_reports.php",array('courseid' => $courseid, 'instanceid' => $blockid)), null, 'block', $blockid);
 $coursenode->add_node($blocknode);
 $node = $blocknode->add($title,$url);
 $blocknode->make_active();
@@ -68,15 +68,14 @@ $PAGE->set_title($title);
 $PAGE->requires->css('/blocks/ases/style/styles_pilos.css', true);
 $PAGE->requires->css('/blocks/ases/style/sweetalert.css', true);
 $PAGE->requires->css('/blocks/ases/style/sweetalert2.css', true);
-$PAGE->requires->js_call_amd('block_ases/global_grade_book', 'init');
-$PAGE->requires->js_call_amd('block_ases/wizard_categories', 'init');
+$PAGE->requires->js_call_amd('block_ases/report_grade_book_main', 'init');
 
 
 $output = $PAGE->get_renderer('block_ases');
 
 
 //Carga de informacion a mostrar
-$curso = get_info_course($id_course);
+$curso = get_info_course_for_reports($id_course, $USER->id);
 $htmlTable = $curso->header_categories;
 $students = "<div id = 'students-pilos' hidden> ";
 foreach($curso->estudiantes as $student){
@@ -90,13 +89,13 @@ $students .= "</div>";
 // $htmlTable =  iconv_substr($header,$number);
 // $htmlTable.=$students;
 $record = new stdClass;
-//
+
 $record->nombre_curso = $curso->nombre_curso;
 $record->profesor = $curso->profesor;
 $record->table = $htmlTable;
 $record->students = $students;
 echo $output->header();
 //echo $output->standard_head_html(); 
-$global_grade_book_page = new \block_ases\output\global_grade_book_page($record);
-echo $output->render($global_grade_book_page);
+$report_grade_book_page = new \block_ases\output\report_grade_book_page($record);
+echo $output->render($report_grade_book_page);
 echo $output->footer();

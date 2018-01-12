@@ -347,4 +347,4 @@ function get_info_course_for_reports($course_id, $user_id){
     return $curso;
 }
 
-print_r(get_info_course_for_reports(10, 324)->estudiantes);
+//print_r(get_info_course_for_reports(10, 324)->estudiantes);
