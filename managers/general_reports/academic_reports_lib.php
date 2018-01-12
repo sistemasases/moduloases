@@ -6,6 +6,8 @@ require_once(__DIR__ . '/../../../../config.php');
 require_once $CFG->dirroot.'/blocks/ases/managers/lib/student_lib.php';
 require_once $CFG->dirroot.'/blocks/ases/managers/lib/lib.php';
 require_once $CFG->dirroot.'/blocks/ases/managers/grade_categories/grader_lib.php';
+require_once $CFG->dirroot.'/blocks/ases/managers/periods_management/periods_lib.php'; 
+
 
 /**
  * Función que consulta todos los estudiantes ASES que tienen itemas de calificacion perdidos 
@@ -17,8 +19,8 @@ require_once $CFG->dirroot.'/blocks/ases/managers/grade_categories/grader_lib.ph
 function studentsWithLoses($instance){
 	global $DB;
 
-	$query_semestre = "SELECT nombre FROM {talentospilos_semestre} WHERE id = (SELECT MAX(id) FROM {talentospilos_semestre})";
-    $sem = $DB->get_record_sql($query_semestre)->nombre;
+	$semestre = get_current_semester();
+    $sem = $semestre->nombre;
 
     $año = substr($sem,0,4);
 
@@ -145,14 +147,14 @@ function get_loses_by_student($username){
 function get_courses_for_report($user_id){
     global $DB;
     
-    $query_semestre = "SELECT id, nombre FROM {talentospilos_semestre} WHERE id = (SELECT MAX(id) FROM {talentospilos_semestre})";
-    $sem = $DB->get_record_sql($query_semestre);
-    $id_semestre = $sem->id;
-    $año = substr($sem->nombre,0,4);
+    $semestre_object = get_current_semester();
+    $sem = $semestre_object->nombre;
+    $id_semestre = $semestre_object->max;
+    $año = substr($sem,0,4);
 
-    if(substr($sem->nombre,4,1) == 'A'){
+    if(substr($sem,4,1) == 'A'){
         $semestre = $año.'02';
-    }else if(substr($sem->nombre,4,1) == 'B'){
+    }else if(substr($sem,4,1) == 'B'){
         $semestre = $año.'08';
     }
 	//print_r($semestre);
@@ -258,8 +260,8 @@ function get_courses_report($user_id){
 function get_info_course_for_reports($course_id, $user_id){
     global $DB;
 
-	$query_semester = "SELECT MAX(id) FROM {talentospilos_semestre}";
-	$id_semestre = $DB->get_record_sql($query_semester)->max;
+	$semestre_object = get_current_semester();
+	$id_semestre = $semestre_object->max;
 
 
     $intersect = "";
