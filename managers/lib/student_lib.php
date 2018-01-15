@@ -3,7 +3,7 @@
 require_once(dirname(__FILE__). '/../../../../config.php');
 
 /**
- * Función que el usuario del estudiante dado el id moodle
+ * Función que retorna el objeto usuario del estudiante dado el id de la tabla {talentospilos_usuario}
  *
  * @see get_user_moodle($id)
  * @param id --> id moodle 
@@ -13,9 +13,9 @@ function get_user_moodle($id){
     
     global $DB;
 
-    $sql_query = "SELECT * from {user} where id=(SELECT userid
-    FROM {user_info_data} info_data INNER JOIN {user_info_field} info_field ON info_data.fieldid = info_field.id
-    where info_data.fieldid=(select id from  {user_info_field} where shortname='idtalentos') and info_data.data='$id')";
+    $sql_query = "SELECT * from {user} where id= (SELECT id_moodle_user 
+                                                  FROM {talentospilos_user_extended} extended
+                                                  WHERE id_ases_user = $id)";
     $user = $DB->get_record_sql($sql_query);
     
     return $user;
