@@ -10,6 +10,8 @@ $sql_query = "SELECT ROW_NUMBER() OVER (ORDER BY u.id, info_field.shortname), u.
 
 $result_query = $DB->get_records_sql($sql_query);
 
+print_r($result_query);
+
 $record_to_save = new stdClass(); //stdclass que se utiliza para guardar cada registro a almacenar
 $errors = []; //Arreglo para guardar los registros en los cuales se presentaron errores de inserción
 
@@ -21,8 +23,8 @@ while($i < count($result_query)+1){
     if($id_moodle == $result_query[$i+1]->id){
         if($id_moodle == $result_query[$i+2]->id){
             $record_to_save->id_moodle_user = $id_moodle;
-            $record_to_save->id_ases_user = $result_query[$i+2]->data;
-            $record_to_save->id_academic_program = $result_query[$i+1]->data;
+            $record_to_save->id_ases_user = (int)$result_query[$i+2]->data;
+            $record_to_save->id_academic_program = (int)$result_query[$i+1]->data;
             $record_to_save->program_status = $result_query[$i]->data;
 
             $result_insertion = $DB->insert_record('talentospilos_user_extended', $record_to_save, true);

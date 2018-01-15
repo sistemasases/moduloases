@@ -1,4 +1,27 @@
 <?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
+/**
+ * Ases block
+ *
+ * @author     John Lourido
+ * @package    block_ases
+ * @copyright  2017 John Lourido <jhonkrave@gmail.com>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 require_once(dirname(__FILE__). '/../../../../config.php');
 require_once('../MyException.php');
 require_once('massmanagement_lib.php');
@@ -18,7 +41,7 @@ if( isset($_FILES['file']) || isset($_POST['idinstancia'])){
         $rootFolder    = "../../view/archivos_subidos/mrm/monitor_estud/files/";
         $zipFolfer = "../view/archivos_subidos/mrm/monitor_estud/comprimidos/";
         
-        //se limpian las carpetas
+        //deletes everything from folders
         deleteFilesFromFolder($rootFolder);
         deleteFilesFromFolder($zipFolfer);
 
@@ -55,9 +78,9 @@ if( isset($_FILES['file']) || isset($_POST['idinstancia'])){
         while($data = fgetcsv($handle, 0, ",")){
             $isValidRow = true;
             
-            //*** Incio validaciones campos requeridos
+            //*** begin validations on required fields
             
-            //validación id
+            //validation id
             $id_estudiante = 0;
             if($associativeTitles['username_estudiante'] !== null){
                 if($data[$associativeTitles['username_estudiante']] == "" || $data[$associativeTitles['username_estudiante']] == "undefined"){
@@ -82,7 +105,7 @@ if( isset($_FILES['file']) || isset($_POST['idinstancia'])){
             }
             
             $id_monitor=0;
-            //validacion existencia del usuario
+            //validating user exists
             if($associativeTitles['username_monitor'] !== null){
                 $sql_query = "SELECT id from {user} where username like '".$data[$associativeTitles['username_monitor']]."%';";
                 $result = $DB->get_record_sql($sql_query);
@@ -110,7 +133,7 @@ if( isset($_FILES['file']) || isset($_POST['idinstancia'])){
             }
             $last_semester = get_current_semester();
 
-            //validacion de duplicidad en la una intancia
+            //validating duplicity on instance
             $sql_query = "SELECT *  FROM {talentospilos_monitor_estud} where id_semestre='".$last_semester->max."' AND id_estudiante='".$id_estudiante."' AND id_instancia='".$_POST['idinstancia']."'";
             $exists = $DB->get_record_sql($sql_query);
 
@@ -119,7 +142,7 @@ if( isset($_FILES['file']) || isset($_POST['idinstancia'])){
                 array_push($detail_erros,[$line_count,$lc_wrongFile,($associativeTitles['username_estudiante'] + 1),'username_estudiante','El usuario asociado al username '.$data[ $associativeTitles['username_monitor'] ].' Ya tiene asignado un monitor' ]);
             }
             
-            //** Fin validaciones Campos requeridos
+            //** End validations on required fields
 
             
             if(!$isValidRow){
@@ -146,7 +169,7 @@ if( isset($_FILES['file']) || isset($_POST['idinstancia'])){
             $filewrongname = $rootFolder.'RegistrosErroneos_'.$nombre;
 
             $wrongfile = fopen($filewrongname, 'w');                              
-            fprintf($wrongfile, chr(0xEF).chr(0xBB).chr(0xBF)); // darle formato unicode utf-8
+            fprintf($wrongfile, chr(0xEF).chr(0xBB).chr(0xBF)); // feed utf-8 unicode format on
             foreach ($wrong_rows as $row) {
                 fputcsv($wrongfile,$row);              
             }
@@ -156,7 +179,7 @@ if( isset($_FILES['file']) || isset($_POST['idinstancia'])){
             $detailsFilename =  $rootFolder.'DetallesErrores_'.$nombre;
             
             $detailsFileHandler = fopen($detailsFilename, 'w');
-            fprintf($detailsFileHandler, chr(0xEF).chr(0xBB).chr(0xBF)); // darle formato unicode utf-8
+            fprintf($detailsFileHandler, chr(0xEF).chr(0xBB).chr(0xBF)); // feed utf-8 unicode format on
             foreach ($detail_erros as $row) {
                 fputcsv($detailsFileHandler, $row);    
             }
@@ -165,11 +188,11 @@ if( isset($_FILES['file']) || isset($_POST['idinstancia'])){
 
         }
         
-        if(count($success_rows) > 1){ //porque la primera fila es corresponde a los titulos no datos
+        if(count($success_rows) > 1){ //First row are titles
             $arrayIdsFilename =  $rootFolder.'IdentificadoresSeguimientos_'.$nombre;
             
             $arrayIdsFileHandler = fopen($arrayIdsFilename, 'w');
-            fprintf($arrayIdsFileHandler, chr(0xEF).chr(0xBB).chr(0xBF)); // darle formato unicode utf-8
+            fprintf($arrayIdsFileHandler, chr(0xEF).chr(0xBB).chr(0xBF)); // feed utf-8 unicode format on
             foreach ($success_rows as $row) {
                 fputcsv($arrayIdsFileHandler, $row);              
             }
@@ -218,6 +241,14 @@ if( isset($_FILES['file']) || isset($_POST['idinstancia'])){
 }else{
     echo json_encode('no entro');
 }
+
+/**
+ * Creates an associative array given a header from a CSV file
+ * 
+ * @see getAssociativeTitles ($titlesPos)
+ * @param $titlesPos --> header from CSV
+ * @return array 
+ */
 
 function getAssociativeTitles ($titlesPos){
     
