@@ -24,6 +24,7 @@
  */
 
 
+
 // Queries from module grades record (registro de notas)
 
 require_once(__DIR__ . '/../../../../config.php');
@@ -32,6 +33,7 @@ require_once $CFG->dirroot.'/grade/lib.php';
 require_once $CFG->dirroot.'/grade/report/user/lib.php';
 require_once $CFG->dirroot.'/blocks/ases/managers/lib/student_lib.php'; 
 require_once $CFG->dirroot.'/grade/report/grader/lib.php'; 
+
 
 
 ///******************************************///
@@ -45,11 +47,12 @@ require_once $CFG->dirroot.'/grade/report/grader/lib.php';
  * @param $id_curso --> course id
  * @return Object Containing all relevant course information
  */
-function get_info_course($id_curso){
+function get_info_course($id_curso)
+{
     global $DB;
     $course = $DB->get_record_sql("SELECT fullname FROM {course} WHERE id = $id_curso");
-    
-    $query_teacher="SELECT concat_ws(' ',firstname,lastname) AS fullname
+
+    $query_teacher = "SELECT concat_ws(' ',firstname,lastname) AS fullname
            FROM
              (SELECT usuario.firstname,
                      usuario.lastname,
@@ -67,49 +70,48 @@ function get_info_course($id_curso){
               ORDER BY userenrol.timecreated ASC
               LIMIT 1) AS subc";
     $profesor = $DB->get_record_sql($query_teacher);
-    
+
     $query_students = "SELECT usuario.id, usuario.firstname, usuario.lastname, usuario.username
-                    FROM {user} usuario INNER JOIN {user_enrolments} enrols ON usuario.id = enrols.userid 
-                    INNER JOIN {enrol} enr ON enr.id = enrols.enrolid 
-                    INNER JOIN {course} curso ON enr.courseid = curso.id  
+                    FROM {user} usuario INNER JOIN {user_enrolments} enrols ON usuario.id = enrols.userid
+                    INNER JOIN {enrol} enr ON enr.id = enrols.enrolid
+                    INNER JOIN {course} curso ON enr.courseid = curso.id
                     WHERE curso.id= $id_curso AND usuario.id IN (SELECT user_m.id
-                                                                 FROM  {user} user_m
-                                                                 INNER JOIN {user_info_data} data ON data.userid = user_m.id
-                                                                 INNER JOIN {user_info_field} field ON data.fieldid = field.id
-                                                                 INNER JOIN {talentospilos_usuario} user_t ON data.data = CAST(user_t.id AS VARCHAR)
-                                                                 INNER JOIN {talentospilos_est_estadoases} estado_u ON user_t.id = estado_u.id_estudiante 
-                                                                 INNER JOIN {talentospilos_estados_ases} estados ON estados.id = estado_u.id_estado_ases
-                                                                 WHERE estados.nombre = 'ACTIVO/SEGUIMIENTO' AND field.shortname = 'idtalentos')";
+                                                                FROM {user} user_m
+                                                                INNER JOIN {talentospilos_user_extended} extended ON user_m.id = extended.id_moodle_user
+                                                                INNER JOIN {talentospilos_usuario} user_t ON extended.id_ases_user = user_t.id
+                                                                INNER JOIN {talentospilos_est_estadoases} estado_u ON user_t.id = estado_u.id_estudiante
+                                                                INNER JOIN {talentospilos_estados_ases} estados ON estados.id = estado_u.id_estado_ases
+                                                                WHERE estados.nombre = 'ACTIVO/SEGUIMIENTO')";
 
     $estudiantes = $DB->get_records_sql($query_students);
 
     $header_categories = get_categories_global_grade_book($id_curso);
-
 
     $curso = new stdClass;
     $curso->nombre_curso = $course->fullname;
     $curso->profesor = $profesor->fullname;
     $curso->estudiantes = $estudiantes;
     $curso->header_categories = $header_categories;
-    
+
     return $curso;
 }
-
 
 /**
  * Returns a string html table with the students, categories and their notes.
  *
+
  * @see get_categories_global_grade_book($id_curso)
  * @param $id_curso --> course id
  * @return string HTML table
 **/
 function get_categories_global_grade_book($id_curso){
+
     global $USER;
     $USER->gradeediting[$id_curso] = 1;
 
     $context = context_course::instance($id_curso);
-    
-    $gpr = new grade_plugin_return(array('type'=>'report', 'plugin'=>'user', 'courseid'=>$id_curso));
+
+    $gpr = new grade_plugin_return(array('type' => 'report', 'plugin' => 'user', 'courseid' => $id_curso));
     $report = new grade_report_grader($id_curso, $gpr, $context);
     // $tabla = $report->get_grade_table();
     // echo htmlspecialchars($tabla);
@@ -126,6 +128,7 @@ function get_categories_global_grade_book($id_curso){
 /**
  * Updates grades from a student
  *
+
  * @see update_grades_moodle($userid, $itemid, $finalgrade,$courseid)
  * @param $userid --> user id
  * @param $item --> item id
@@ -133,30 +136,33 @@ function get_categories_global_grade_book($id_curso){
  * @param $courseid --> course id
  *       
  * @return boolean --> true if there's a successful update, false otherwise.
+
  */
 
-function update_grades_moodle($userid, $itemid, $finalgrade,$courseid){
-  if (!$grade_item = grade_item::fetch(array('id'=>$itemid, 'courseid'=>$courseid))) { // we must verify course id here!
-      return false;
-  }
-  
-  if ($grade_item->update_final_grade($userid, $finalgrade, 'gradebook', false, FORMAT_MOODLE)) {
-    if($finalgrade < 3){
-      return send_email_alert($userid, $itemid,$finalgrade,$courseid);
-    }else{
-      $resp = new stdClass;
-      $resp->nota = true;
-      return $resp;
+function update_grades_moodle($userid, $itemid, $finalgrade, $courseid)
+{
+    if (!$grade_item = grade_item::fetch(array('id' => $itemid, 'courseid' => $courseid))) { // we must verify course id here!
+        return false;
     }
-  } else {
 
-    $resp = new stdClass;
-    $resp->nota = false;
+    if ($grade_item->update_final_grade($userid, $finalgrade, 'gradebook', false, FORMAT_MOODLE)) {
+        if ($finalgrade < 3) {
+            return send_email_alert($userid, $itemid, $finalgrade, $courseid);
+        } else {
+            $resp = new stdClass;
+            $resp->nota = true;
+            return $resp;
+        }
+    } else {
 
-    return $resp;
-  }
+        $resp = new stdClass;
+        $resp->nota = false;
+
+        return $resp;
+    }
 
 }
+
 
 /**
  * Sends an email alert in case a student final grade is less than 3.0
@@ -216,50 +222,50 @@ function send_email_alert($userid, $itemid,$grade,$courseid){
                 AND cursoP.id = $courseid
               ORDER BY userenrol.timecreated ASC
               LIMIT 1) AS subc";
-      $profesor = $DB->get_record_sql($query_teacher)->fullname;
-      $item = $DB->get_record_sql("SELECT itemname FROM {grade_items} WHERE id = $itemid");
-      $itemname = $item->itemname;
-      $nota = number_format($grade,2);
-      $nom_may = strtoupper($nombre_curso);
-      $titulo = "<b>ALERTA ACADÉMICA CURSO $nom_may <br> PROFESOR: $profesor</b><br> ";
-      $mensaje = "Se le informa que se ha presentado una alerta académica del estudiante $nombre_estudiante en el curso $nombre_curso<br> 
-        El estudiante ha obtenido la siguiente calificación:<br> <br> <b>$itemname: <b> $nota <br><br> 
+    $profesor = $DB->get_record_sql($query_teacher)->fullname;
+    $item = $DB->get_record_sql("SELECT itemname FROM {grade_items} WHERE id = $itemid");
+    $itemname = $item->itemname;
+    $nota = number_format($grade, 2);
+    $nom_may = strtoupper($nombre_curso);
+    $titulo = "<b>ALERTA ACADÉMICA CURSO $nom_may <br> PROFESOR: $profesor</b><br> ";
+    $mensaje = "Se le informa que se ha presentado una alerta académica del estudiante $nombre_estudiante en el curso $nombre_curso<br>
+        El estudiante ha obtenido la siguiente calificación:<br> <br> <b>$itemname: <b> $nota <br><br>
         Cordialmente<br>
         <b>Oficina TIC<br>
         Estrategia ASES<br>
         Universidad del Valle</b>";
 
-      $user_ases = get_adds_fields_mi($userid);
-      $id_tal = $user_ases->idtalentos;
+    $user_ases = get_adds_fields_mi($userid);
+    $id_tal = $user_ases->idtalentos;
 
-      $monitor = get_assigned_monitor($id_tal);
-      $nombre_monitor = $monitor->firstname." ".$monitor->lastname;
-      $saludo_mon = "Estimado monitor $nombre_monitor<br><br>";
+    $monitor = get_assigned_monitor($id_tal);
+    $nombre_monitor = $monitor->firstname . " " . $monitor->lastname;
+    $saludo_mon = "Estimado monitor $nombre_monitor<br><br>";
 
-      $monitorToEmail = new stdClass;
-      $monitorToEmail->email = $monitor->email;
-      $monitorToEmail->firstname = $monitor->firstname;
-      $monitorToEmail->lastname = $monitor->lastname;
-      $monitorToEmail->maildisplay = true;
-      $monitorToEmail->mailformat = 1;
-      $monitorToEmail->id = $monitor->id; 
-      $monitorToEmail->alternatename = '';
-      $monitorToEmail->middlename = '';
-      $monitorToEmail->firstnamephonetic = '';
-      $monitorToEmail->lastnamephonetic = '';
+    $monitorToEmail = new stdClass;
+    $monitorToEmail->email = $monitor->email;
+    $monitorToEmail->firstname = $monitor->firstname;
+    $monitorToEmail->lastname = $monitor->lastname;
+    $monitorToEmail->maildisplay = true;
+    $monitorToEmail->mailformat = 1;
+    $monitorToEmail->id = $monitor->id;
+    $monitorToEmail->alternatename = '';
+    $monitorToEmail->middlename = '';
+    $monitorToEmail->firstnamephonetic = '';
+    $monitorToEmail->lastnamephonetic = '';
 
-      $messageHtml_mon = $titulo.$saludo_mon.$mensaje ;   
-      $messageText_mon = html_to_text($messageHtml_mon);
+    $messageHtml_mon = $titulo . $saludo_mon . $mensaje;
+    $messageText_mon = html_to_text($messageHtml_mon);
 
-      $email_result = email_to_user($monitorToEmail, $userFromEmail, $subject, $messageText_mon, $messageHtml_mon, ", ", true);
+    $email_result = email_to_user($monitorToEmail, $userFromEmail, $subject, $messageText_mon, $messageHtml_mon, ", ", true);
 
-      if($email_result!=1){ 
+    if ($email_result != 1) {
         $resp->monitor = false;
-      }else{
+    } else {
         $resp->monitor = true;
 
         $practicante = get_assigned_pract($id_tal);
-        $nombre_practicante = $practicante->firstname." ".$practicante->lastname;
+        $nombre_practicante = $practicante->firstname . " " . $practicante->lastname;
         $saludo_prac = "Estimado practicante $nombre_practicante<br><br>";
 
         $practicanteToEmail = new stdClass;
@@ -268,54 +274,52 @@ function send_email_alert($userid, $itemid,$grade,$courseid){
         $practicanteToEmail->lastname = $practicante->lastname;
         $practicanteToEmail->maildisplay = true;
         $practicanteToEmail->mailformat = 1;
-        $practicanteToEmail->id = $practicante->id; 
+        $practicanteToEmail->id = $practicante->id;
         $practicanteToEmail->alternatename = '';
         $practicanteToEmail->middlename = '';
         $practicanteToEmail->firstnamephonetic = '';
         $practicanteToEmail->lastnamephonetic = '';
 
-        $messageHtml_prac = $titulo.$saludo_prac.$mensaje ;   
+        $messageHtml_prac = $titulo . $saludo_prac . $mensaje;
         $messageText_prac = html_to_text($messageHtml_prac);
 
         $email_result_prac = email_to_user($practicanteToEmail, $userFromEmail, $subject, $messageText_prac, $messageHtml_prac, ", ", true);
 
-        if($email_result_prac!=1){
-          $resp->practicante = false;
-        }else{
-          $resp->practicante = true;
+        if ($email_result_prac != 1) {
+            $resp->practicante = false;
+        } else {
+            $resp->practicante = true;
 
-          $profesional = get_assigned_professional($id_tal);
-          $nombre_profesional = $profesional->firstname." ".$profesional->lastname;
-          $saludo_prof = "Estimado profesional $nombre_profesional<br><br>";
+            $profesional = get_assigned_professional($id_tal);
+            $nombre_profesional = $profesional->firstname . " " . $profesional->lastname;
+            $saludo_prof = "Estimado profesional $nombre_profesional<br><br>";
 
-          $profesionalToEmail = new stdClass;
-          $profesionalToEmail->email = $profesional->email;
-          $profesionalToEmail->firstname = $profesional->firstname;
-          $profesionalToEmail->lastname = $profesional->lastname;
-          $profesionalToEmail->maildisplay = true;
-          $profesionalToEmail->mailformat = 1;
-          $profesionalToEmail->id = $profesional->id; 
-          $profesionalToEmail->alternatename = '';
-          $profesionalToEmail->middlename = '';
-          $profesionalToEmail->firstnamephonetic = '';
-          $profesionalToEmail->lastnamephonetic = '';
+            $profesionalToEmail = new stdClass;
+            $profesionalToEmail->email = $profesional->email;
+            $profesionalToEmail->firstname = $profesional->firstname;
+            $profesionalToEmail->lastname = $profesional->lastname;
+            $profesionalToEmail->maildisplay = true;
+            $profesionalToEmail->mailformat = 1;
+            $profesionalToEmail->id = $profesional->id;
+            $profesionalToEmail->alternatename = '';
+            $profesionalToEmail->middlename = '';
+            $profesionalToEmail->firstnamephonetic = '';
+            $profesionalToEmail->lastnamephonetic = '';
 
-          $messageHtml_prof = $titulo.$saludo_prof.$mensaje ;   
-          $messageText_prof = html_to_text($messageHtml_prof);
+            $messageHtml_prof = $titulo . $saludo_prof . $mensaje;
+            $messageText_prof = html_to_text($messageHtml_prof);
 
-          $email_result_prof = email_to_user($profesionalToEmail, $userFromEmail, $subject, $messageText_prof, $messageHtml_prof, ", ", true);
+            $email_result_prof = email_to_user($profesionalToEmail, $userFromEmail, $subject, $messageText_prof, $messageHtml_prof, ", ", true);
 
-          if($email_result_prof!=1){
-            $resp->profesional = false;
-          }else{
-            $resp->profesional = true;
-          }
+            if ($email_result_prof != 1) {
+                $resp->profesional = false;
+            } else {
+                $resp->profesional = true;
+            }
 
         }
-      }
-      
-      return $resp;
-  
+    }
+
+    return $resp;
+
 }
-
-

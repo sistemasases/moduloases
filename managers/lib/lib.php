@@ -144,9 +144,8 @@ function get_asigned_by_monitor($id){
 
     $query = "SELECT user_m.username, user_m.firstname, user_m.lastname
               FROM {user} user_m
-              INNER JOIN {user_info_data} data ON data.userid = user_m.id
-              INNER JOIN {user_info_field} field ON data.fieldid = field.id
-              INNER JOIN {talentospilos_monitor_estud} mon_es ON data.data = CAST(mon_es.id_estudiante AS VARCHAR)
+              INNER JOIN {talentospilos_user_extended} extended ON user_m.id = extended.id_moodle_user
+              INNER JOIN {talentospilos_monitor_estud} mon_es ON extended.id_ases_user = mon_es.id_estudiante
               WHERE mon_es.id_monitor = $id AND field.shortname = 'idtalentos' AND mon_es.id_semestre = $id_semestre";
 
     $result = $DB->get_records_sql($query);
