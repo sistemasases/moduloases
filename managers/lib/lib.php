@@ -1,6 +1,8 @@
 <?php
 
 require_once(dirname(__FILE__). '/../../../../config.php');
+require_once $CFG->dirroot.'/blocks/ases/managers/periods_management/periods_lib.php'; 
+
 
 /**
  * Función que recupera los programas académicos almacenados en la tabla talentospilos_programa
@@ -85,8 +87,11 @@ function isMonOrPract($USER){
 */
 function get_role_ases($id){
     global $DB;
+
+    $semestre = get_current_semester();
+    $id_semestre = $semestre->max;
   
-    $query_role = "SELECT rol.nombre_rol  FROM {talentospilos_rol} rol INNER JOIN {talentospilos_user_rol} uRol ON rol.id = uRol.id_rol WHERE uRol.id_usuario = $id AND uRol.id_semestre = (SELECT max(id_semestre) FROM {talentospilos_user_rol})";
+    $query_role = "SELECT rol.nombre_rol  FROM {talentospilos_rol} rol INNER JOIN {talentospilos_user_rol} uRol ON rol.id = uRol.id_rol WHERE uRol.id_usuario = $id AND uRol.id_semestre = $id_semestre";
     $rol = $DB->get_record_sql($query_role)->nombre_rol;
   
     return $rol;
@@ -108,13 +113,13 @@ function make_select_ficha($id){
     $asign = "<select name = 'asignados' id = 'asignados'><option>Seleccione un estudiante</option>";
 
     if($rol == 'profesional_ps'){
-        $asign .= get_asigned_by_profesional($id);
+        $asign .= process_info_assigned_students(get_asigned_by_profesional($id));
 
     }elseif($rol == 'practicante_ps'){
-        $asign .= get_asigned_by_practicante($id);
+        $asign .= process_info_assigned_students(get_asigned_by_practicante($id));
 
     }elseif($rol == 'monitor_ps'){
-        $asign .= get_asigned_by_monitor($id);
+        $asign .= process_info_assigned_students(get_asigned_by_monitor($id));
     }else{
         $asign = "ROL NO PERMITIDO";
         return $asign;
@@ -133,20 +138,22 @@ function make_select_ficha($id){
 function get_asigned_by_monitor($id){
     global $DB;
 
+    $semestre = get_current_semester();
+    $id_semestre = $semestre->max;
+
+
     $query = "SELECT user_m.username, user_m.firstname, user_m.lastname
               FROM {user} user_m
-              INNER JOIN {user_info_data} data ON data.userid = user_m.id
-              INNER JOIN {user_info_field} field ON data.fieldid = field.id
-              INNER JOIN {talentospilos_monitor_estud} mon_es ON data.data = CAST(mon_es.id_estudiante AS VARCHAR)
-              WHERE mon_es.id_monitor = $id AND field.shortname = 'idtalentos'";
-    $asign = "";
+              INNER JOIN {talentospilos_user_extended} extended ON user_m.id = extended.id_moodle_user
+              INNER JOIN {talentospilos_monitor_estud} mon_es ON extended.id_ases_user = mon_es.id_estudiante
+              WHERE mon_es.id_monitor = $id AND field.shortname = 'idtalentos' AND mon_es.id_semestre = $id_semestre";
 
     $result = $DB->get_records_sql($query);
-    foreach($result as $student){
-        $asign .= "<option>$student->username $student->firstname $student->lastname </option>";
-    }
-    return $asign;
+    
+    return $result;
 }
+
+//print_r(get_asigned_by_monitor(76));
 
 /**
 * Funcion que retorna los estudiantes asignados a un usuario de rol practicante
@@ -157,18 +164,25 @@ function get_asigned_by_monitor($id){
 
 function get_asigned_by_practicante($id){
     global $DB;
+
+    $semestre = get_current_semester();
+    $id_semestre = $semestre->max;
+
     $query = "SELECT rol.id_usuario
               FROM {talentospilos_user_rol} rol
-              WHERE rol.id_jefe = $id";
-    $asign = "";
+              WHERE rol.id_jefe = $id AND rol.id_semestre = $id_semestre";
+
+    $students = array();
 
     $result = $DB->get_records_sql($query);
 
     foreach($result as $id_mon){
-        $asign .= get_asigned_by_monitor($id_mon->id_usuario);
+        $students = array_merge($students, get_asigned_by_monitor($id_mon->id_usuario));
     }
-    return $asign;
+    return $students;
 }
+
+//print_r(get_asigned_by_practicante(121));
 
 /**
 * Funcion que retorna los estudiantes asignados a un usuario de rol profesional
@@ -179,19 +193,42 @@ function get_asigned_by_practicante($id){
 
 function get_asigned_by_profesional($id){
     global $DB;
+
+    $semestre = get_current_semester();
+    $id_semestre = $semestre->max;
+
     $query = "SELECT rol.id_usuario
               FROM {talentospilos_user_rol} rol
-              WHERE rol.id_jefe = $id";
-    $asign = "";
+              WHERE rol.id_jefe = $id AND rol.id_semestre = $id_semestre";
+    
+    $students = array();
 
     $result = $DB->get_records_sql($query);
 
     foreach($result as $id_prac){
-        $asign .= get_asigned_by_practicante($id_prac->id_usuario);
+        $students = array_merge($students, get_asigned_by_practicante($id_prac->id_usuario));
     }
-    return $asign;
+    return $students;
 }
 
+//print_r(get_asigned_by_profesional(122));
+
+/**
+ * Function that process the information contained in an array of students and returns a string with option html elements
+ * @see process_info_assigne_students($array_students)
+ * @param $array_students -> array which contains several student objects 
+ * @return String 
+ */
+
+function process_info_assigned_students($array_students){
+    $assign = "";
+
+    foreach($array_students as $student){
+        $assign .= "<option>$student->username $student->firstname $student->lastname </option>";
+    }
+    return $assign;
+
+}
 
 
 /**

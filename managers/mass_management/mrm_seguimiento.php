@@ -1,4 +1,27 @@
 <?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
+/**
+ * Ases block
+ *
+ * @author     John Lourido
+ * @package    block_ases
+ * @copyright  2017 John Lourido <jhonkrave@gmail.com>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 require_once(dirname(__FILE__). '/../../../../config.php');
 require_once('../MyException.php');
 require_once('massmanagement_lib.php');
@@ -17,7 +40,7 @@ if( isset($_FILES['file']) || isset($_POST['idinstancia'])){
         $zipFolfer = "../view/archivos_subidos/mrm/seguimientos/comprimidos/";
 
 
-        //se limpian las carpetas
+        //deletes everything from folders
         deleteFilesFromFolder($rootFolder);
         deleteFilesFromFolder($zipFolfer);
         
@@ -53,9 +76,9 @@ if( isset($_FILES['file']) || isset($_POST['idinstancia'])){
             $exists = false;
             $seguimientoid = 0;
             
-            //*** Incio validaciones campos requeridos
+            //*** begin validations on required fields
             
-            //validación id
+            //validation id
             if($associativeTitles['registroid'] !== null){
                 if($data[$associativeTitles['registroid']] == "" || $data[$associativeTitles['registroid']] == "undefined"){
                     $isValidRow = false;
@@ -76,7 +99,7 @@ if( isset($_FILES['file']) || isset($_POST['idinstancia'])){
             }
             
             $id_monitor=0;
-            //validacion existencia del usuario
+            //validating user exists
             if($associativeTitles['email_monitor'] !== null){
                 $sql_query = "SELECT id from {user} where email='".$data[$associativeTitles['email_monitor']]."';";
                 $result = $DB->get_record_sql($sql_query);
@@ -107,7 +130,7 @@ if( isset($_FILES['file']) || isset($_POST['idinstancia'])){
             
             
             
-            //validacion campo created
+            // 'created' field validation
             
             if($associativeTitles['created']!== null ){
                 if (!is_numeric($data[$associativeTitles['created']]) || $data[$associativeTitles['created']] == "" ||  $data[$associativeTitles['created']] == "undefined"){
@@ -120,7 +143,7 @@ if( isset($_FILES['file']) || isset($_POST['idinstancia'])){
             
             
             
-            //validación campo hora ini
+            //'hora ini' field validation
             if($associativeTitles['hora_ini']!== null){
                 if(!preg_match("/(2[0-4]|[01][1-9]|10):([0-5][0-9])/", $data[$associativeTitles['hora_ini']])){
                     $isValidRow = false;
@@ -132,7 +155,7 @@ if( isset($_FILES['file']) || isset($_POST['idinstancia'])){
              
             
             
-            //validación campo hora_fin
+            //'hora_fin'  field validation
             if($associativeTitles['hora_fin']!== null){
                 if(!preg_match("/(2[0-4]|[01][1-9]|10):([0-5][0-9])/", $data[$associativeTitles['hora_fin']])){
                     $isValidRow = false;
@@ -230,7 +253,7 @@ if( isset($_FILES['file']) || isset($_POST['idinstancia'])){
             
             
             
-            //** Fin validaciones Campos requeridos
+            //** End validations on required fields
             
             
             if(!$isValidRow){
@@ -287,7 +310,7 @@ if( isset($_FILES['file']) || isset($_POST['idinstancia'])){
             $filewrongname = $rootFolder.'RegistrosErroneos_'.$nombre;
             
             $wrongfile = fopen($filewrongname, 'w');                              
-            fprintf($wrongfile, chr(0xEF).chr(0xBB).chr(0xBF)); // darle formato unicode utf-8
+            fprintf($wrongfile, chr(0xEF).chr(0xBB).chr(0xBF)); // feed utf-8 unicode format on
             foreach ($wrong_rows as $row) {
                 fputcsv($wrongfile, $row);              
             }
@@ -297,7 +320,7 @@ if( isset($_FILES['file']) || isset($_POST['idinstancia'])){
             $detailsFilename =  $rootFolder.'DetallesErrores_'.$nombre;
             
             $detailsFileHandler = fopen($detailsFilename, 'w');
-            fprintf($detailsFileHandler, chr(0xEF).chr(0xBB).chr(0xBF)); // darle formato unicode utf-8
+            fprintf($detailsFileHandler, chr(0xEF).chr(0xBB).chr(0xBF)); // feed utf-8 unicode format on
             foreach ($detail_erros as $row) {
                 fputcsv($detailsFileHandler, $row);              
             }
@@ -305,11 +328,11 @@ if( isset($_FILES['file']) || isset($_POST['idinstancia'])){
             
         }
         
-        if(count($arrayids) > 1){ //porque la primera fila es corresponde a los titulos no datos
+        if(count($arrayids) > 1){ //First row are titles
             $arrayIdsFilename =  $rootFolder.'IdentificadoresSeguimientos_'.$nombre;
             
             $arrayIdsFileHandler = fopen($arrayIdsFilename, 'w');
-            fprintf($arrayIdsFileHandler, chr(0xEF).chr(0xBB).chr(0xBF)); // darle formato unicode utf-8
+            fprintf($arrayIdsFileHandler, chr(0xEF).chr(0xBB).chr(0xBF)); // feed utf-8 unicode format on
             foreach ($arrayids as $row) {
                 fputcsv($arrayIdsFileHandler, $row);              
             }
@@ -359,6 +382,13 @@ if( isset($_FILES['file']) || isset($_POST['idinstancia'])){
     echo json_encode('no entro');
 }
 
+/**
+ * Creates an associative array given a header from a CSV file
+ * 
+ * @see getAssociativeTitles ($titlesPos)
+ * @param $titlesPos --> header from CSV
+ * @return array 
+ */
 function getAssociativeTitles ($titlesPos){
     
     $associativeTitles = array();

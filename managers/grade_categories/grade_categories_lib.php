@@ -1,30 +1,37 @@
 <?php
+/**
+ * Estrategia ASES
+ *
+ * @author     Camilo José Cruz Rivera
+ * @package    block_ases
+ * @copyright  2017 Camilo José Cruz Rivera <cruz.camilo@correounivalle.edu.co>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 /*
- * Consultas modulo registro de notas.
+ * Consultas modulo listado de docentes.
  */
 require_once(__DIR__ . '/../../../../config.php');
 require_once $CFG->libdir.'/gradelib.php';
-//require_once('../../../../querylib.php');
 require_once $CFG->dirroot.'/grade/lib.php';
 require_once $CFG->dirroot.'/grade/report/user/lib.php';
 require_once $CFG->dirroot.'/blocks/ases/managers/lib/student_lib.php'; 
-// require_once $CFG->dirroot.'/grade/report/grader/lib.php';
-// require_once $CFG->dirroot.'/grade/lib.php';
+require_once $CFG->dirroot.'/blocks/ases/managers/periods_management/periods_lib.php'; 
 
-///*********************************///
-///*** Get info global_grade_book methods ***///
-///*********************************///
+
+///******************************************///
+///*** Get info grade_categories methods ***///
+///******************************************///
 
 /**
- * Función que retorna un arreglo de todos los cursos donde hay matriculados estudiantes de una instancia determinada organizados segun su profesor.
+ * Función que retorna un arreglo de todos los cursos donde hay matriculados estudiantes de la estrategia ASES organizados segun su profesor.
  * @return Array 
- */
+ **/
 
 function get_courses_pilos(){
     global $DB;
     
-    $query_semestre = "SELECT nombre FROM {talentospilos_semestre} WHERE id = (SELECT MAX(id) FROM {talentospilos_semestre})";
-    $sem = $DB->get_record_sql($query_semestre)->nombre;
+    $semestre = get_current_semester();
+    $sem = $semestre->nombre;
 
     $año = substr($sem,0,4);
 
@@ -61,19 +68,18 @@ function get_courses_pilos(){
         INNER JOIN {user_enrolments} enrols ON enrols.enrolid = role.id
         WHERE SUBSTRING(curso.shortname FROM 15 FOR 6) = '$semestre' AND enrols.userid IN
             (SELECT user_m.id
-     FROM  {user} user_m
-     INNER JOIN {user_info_data} data ON data.userid = user_m.id
-     INNER JOIN {user_info_field} field ON data.fieldid = field.id
-     INNER JOIN {talentospilos_usuario} user_t ON data.data = CAST(user_t.id AS VARCHAR)
-     INNER JOIN {talentospilos_est_estadoases} estado_u ON user_t.id = estado_u.id_estudiante
-     INNER JOIN {talentospilos_estados_ases} estados ON estados.id = estado_u.id_estado_ases
-     WHERE estados.nombre = 'ACTIVO/SEGUIMIENTO' AND field.shortname = 'idtalentos')";
+            FROM {user} user_m
+            INNER JOIN {talentospilos_user_extended} extended ON user_m.id = extended.id_moodle_user
+            INNER JOIN {talentospilos_usuario} user_t ON extended.id_ases_user = user_t.id
+            INNER JOIN {talentospilos_est_estadoases} estado_u ON user_t.id = estado_u.id_estudiante
+            INNER JOIN {talentospilos_estados_ases} estados ON estados.id = estado_u.id_estado_ases
+            WHERE estados.nombre = 'ACTIVO/SEGUIMIENTO')";
     $result = $DB->get_records_sql($query_courses);
     
     $result = processInfo($result);
     return $result;
 }
- //get_courses_pilos(19);
+
 
 /*
  * Función que retorna un arreglo de profesores, dado un objeto consulta
