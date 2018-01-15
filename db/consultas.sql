@@ -572,3 +572,18 @@ SELECT DISTINCT
      INNER JOIN mdl_talentospilos_estados_ases estados ON estados.id = estado_u.id_estado_ases
      WHERE estados.nombre = 'ACTIVO/SEGUIMIENTO' AND field.shortname = 'idtalentos')
      
+
+     --------------------------------------------------------------------------------------------
+
+     SELECT user_m.id
+     FROM {user} user_m
+     INNER JOIN {talentospilos_user_extended} extended ON user_m.id = extended.id_moodle_user
+     INNER JOIN {talentospilos_usuario} user_t ON extended.id_ases_user = user_t.id
+     INNER JOIN {talentospilos_est_estadoases} estado_u ON user_t.id = estado_u.id_estudiante
+     INNER JOIN {talentospilos_estados_ases} estados ON estados.id = estado_u.id_estado_ases
+     WHERE estados.nombre = 'ACTIVO/SEGUIMIENTO'
+
+
+     SELECT id_moodle_user 
+     FROM {talentospilos_user_extended} extended
+     WHERE id_ases_user = $id

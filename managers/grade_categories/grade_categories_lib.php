@@ -68,13 +68,12 @@ function get_courses_pilos(){
         INNER JOIN {user_enrolments} enrols ON enrols.enrolid = role.id
         WHERE SUBSTRING(curso.shortname FROM 15 FOR 6) = '$semestre' AND enrols.userid IN
             (SELECT user_m.id
-     FROM  {user} user_m
-     INNER JOIN {user_info_data} data ON data.userid = user_m.id
-     INNER JOIN {user_info_field} field ON data.fieldid = field.id
-     INNER JOIN {talentospilos_usuario} user_t ON data.data = CAST(user_t.id AS VARCHAR)
-     INNER JOIN {talentospilos_est_estadoases} estado_u ON user_t.id = estado_u.id_estudiante
-     INNER JOIN {talentospilos_estados_ases} estados ON estados.id = estado_u.id_estado_ases
-     WHERE estados.nombre = 'ACTIVO/SEGUIMIENTO' AND field.shortname = 'idtalentos')";
+            FROM {user} user_m
+            INNER JOIN {talentospilos_user_extended} extended ON user_m.id = extended.id_moodle_user
+            INNER JOIN {talentospilos_usuario} user_t ON extended.id_ases_user = user_t.id
+            INNER JOIN {talentospilos_est_estadoases} estado_u ON user_t.id = estado_u.id_estudiante
+            INNER JOIN {talentospilos_estados_ases} estados ON estados.id = estado_u.id_estado_ases
+            WHERE estados.nombre = 'ACTIVO/SEGUIMIENTO')";
     $result = $DB->get_records_sql($query_courses);
     
     $result = processInfo($result);
