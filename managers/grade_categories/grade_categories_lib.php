@@ -1,6 +1,4 @@
 <?php
-<<<<<<< Updated upstream
-=======
 
 // This file is part of Moodle - http://moodle.org/
 //
@@ -18,7 +16,6 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 
->>>>>>> Stashed changes
 /**
  * Estrategia ASES
  *
@@ -26,12 +23,9 @@
  * @package    block_ases
  * @copyright  2017 Camilo José Cruz Rivera <cruz.camilo@correounivalle.edu.co>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
-<<<<<<< Updated upstream
  */
 /*
  * Consultas modulo listado de docentes.
-=======
->>>>>>> Stashed changes
  */
 
 
@@ -50,17 +44,11 @@ require_once $CFG->dirroot.'/blocks/ases/managers/periods_management/periods_lib
 ///******************************************///
 
 /**
-<<<<<<< Updated upstream
- * Función que retorna un arreglo de todos los cursos donde hay matriculados estudiantes de la estrategia ASES organizados segun su profesor.
- * @return Array 
- **/
-=======
  * Obtains all courses organized by their teacher where there are students from an instance
  * 
  * @see get_courses_pilos()
  * @return Array filled with courses
  */
->>>>>>> Stashed changes
 
 function get_courses_pilos(){
     global $DB;
@@ -119,6 +107,7 @@ function get_courses_pilos(){
 
 /**
  * Obtains all teacher given a certain information
+ * @see processInfo($info)
  * @param $info --> Object containing a teacher name, shortname, fullname, id 
  * @return Array with syntaxis: array("$nomProfesor" => array(array("id" => $id_curso, "nombre"=>$nom_curso,"shortname"=>$shortname_curso), array(...)))
  */
