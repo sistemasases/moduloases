@@ -47,7 +47,7 @@ $blockid = required_param('instanceid', PARAM_INT);
 
 require_login($courseid, false);
 
-//se consulta si la instancia ya está registrada
+//Instance is consulted for its registration
 if(!consult_instance($blockid)){
     header("Location: /blocks/ases/view/instanceconfiguration.php?courseid=$courseid&instanceid=$blockid");
 }
@@ -90,7 +90,7 @@ $PAGE->requires->js_call_amd('block_ases/grade_categories','init');
 $output = $PAGE->get_renderer('block_ases');
 
 
-//Carga de informacion a mostrar
+// Loading information to show
 $rol = get_role_ases($USER->id);
 $courses = get_courses_pilos();
 
@@ -158,10 +158,10 @@ if($rol == 'sistemas' || $rol == 'academico'){
 
 $record = new stdClass;
 
-// Evalua si el rol del usuario tiene permisos en esta view.
+// Evaluates if user role has permissions assigned on this view
 $actions = authenticate_user_view($USER->id, $blockid);
 
-//se crean los elementos del menu
+//Menu items are created
 $menu_option = create_menu_options($USER->id, $blockid, $courseid);
 $record = $actions;
 $record->teachersTable = $htmlTable;
