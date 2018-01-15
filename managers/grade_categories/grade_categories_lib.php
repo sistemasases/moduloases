@@ -1,30 +1,72 @@
 <?php
-/*
- * Consultas modulo registro de notas.
+<<<<<<< Updated upstream
+=======
+
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
+
+>>>>>>> Stashed changes
+/**
+ * Estrategia ASES
+ *
+ * @author     Camilo José Cruz Rivera
+ * @package    block_ases
+ * @copyright  2017 Camilo José Cruz Rivera <cruz.camilo@correounivalle.edu.co>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+<<<<<<< Updated upstream
  */
+/*
+ * Consultas modulo listado de docentes.
+=======
+>>>>>>> Stashed changes
+ */
+
+
+// Queries from module grades record (registro de notas)
+
 require_once(__DIR__ . '/../../../../config.php');
 require_once $CFG->libdir.'/gradelib.php';
-//require_once('../../../../querylib.php');
 require_once $CFG->dirroot.'/grade/lib.php';
 require_once $CFG->dirroot.'/grade/report/user/lib.php';
 require_once $CFG->dirroot.'/blocks/ases/managers/lib/student_lib.php'; 
-// require_once $CFG->dirroot.'/grade/report/grader/lib.php';
-// require_once $CFG->dirroot.'/grade/lib.php';
+require_once $CFG->dirroot.'/blocks/ases/managers/periods_management/periods_lib.php'; 
 
-///*********************************///
-///*** Get info global_grade_book methods ***///
-///*********************************///
+
+///******************************************///
+///*** Get info grade_categories methods ***///
+///******************************************///
 
 /**
- * Función que retorna un arreglo de todos los cursos donde hay matriculados estudiantes de una instancia determinada organizados segun su profesor.
+<<<<<<< Updated upstream
+ * Función que retorna un arreglo de todos los cursos donde hay matriculados estudiantes de la estrategia ASES organizados segun su profesor.
  * @return Array 
+ **/
+=======
+ * Obtains all courses organized by their teacher where there are students from an instance
+ * 
+ * @see get_courses_pilos()
+ * @return Array filled with courses
  */
+>>>>>>> Stashed changes
 
 function get_courses_pilos(){
     global $DB;
     
-    $query_semestre = "SELECT nombre FROM {talentospilos_semestre} WHERE id = (SELECT MAX(id) FROM {talentospilos_semestre})";
-    $sem = $DB->get_record_sql($query_semestre)->nombre;
+    $semestre = get_current_semester();
+    $sem = $semestre->nombre;
 
     $año = substr($sem,0,4);
 
@@ -73,12 +115,12 @@ function get_courses_pilos(){
     $result = processInfo($result);
     return $result;
 }
- //get_courses_pilos(19);
 
-/*
- * Función que retorna un arreglo de profesores, dado un objeto consulta
- * @param $info
- * @return Array con el siguiente formato: array("$nomProfesor" => array(array("id" => $id_curso, "nombre"=>$nom_curso,"shortname"=>$shortname_curso), array(...)))
+
+/**
+ * Obtains all teacher given a certain information
+ * @param $info --> Object containing a teacher name, shortname, fullname, id 
+ * @return Array with syntaxis: array("$nomProfesor" => array(array("id" => $id_curso, "nombre"=>$nom_curso,"shortname"=>$shortname_curso), array(...)))
  */
 function processInfo($info){
     $profesores = [];

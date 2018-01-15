@@ -96,7 +96,7 @@ $actions = authenticate_user_view($USER->id, $blockid);
 $data = $actions;
 
 $data->tableStudents = getReportStudents($blockid);
-$data->tableCourses = get_courses_report();
+$data->tableCourses = get_courses_report($USER->id);
 $data->menu = $menu_option;
 
 $output = $PAGE->get_renderer('block_ases');

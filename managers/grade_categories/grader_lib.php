@@ -1,13 +1,54 @@
 <?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
+/**
+ * Estrategia ASES
+ *
+ * @author     Camilo José Cruz Rivera
+ * @package    block_ases
+ * @copyright  2017 Camilo José Cruz Rivera <cruz.camilo@correounivalle.edu.co>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+<<<<<<< Updated upstream
+ */
 /*
  * Consultas modulo registro de notas.
+=======
+>>>>>>> Stashed changes
  */
+
+// Queries from module grades record (registro de notas)
+
 require_once(__DIR__ . '/../../../../config.php');
 require_once $CFG->libdir.'/gradelib.php';
-//require_once('../../../../querylib.php');
 require_once $CFG->dirroot.'/grade/lib.php';
 require_once $CFG->dirroot.'/grade/report/user/lib.php';
 require_once $CFG->dirroot.'/blocks/ases/managers/lib/student_lib.php'; 
+<<<<<<< Updated upstream
+require_once $CFG->dirroot.'/grade/report/grader/lib.php'; 
+require_once $CFG->dirroot.'/grade/lib.php'; 
+
+
+///******************************************///
+///*** Get info global_grade_book methods ***///
+///******************************************///
+=======
 // require_once $CFG->dirroot.'/grade/report/grader/lib.php';
 // require_once $CFG->dirroot.'/grade/lib.php';
 
@@ -15,18 +56,13 @@ require_once $CFG->dirroot.'/blocks/ases/managers/lib/student_lib.php';
 ///*** Get info global_grade_book methods ***///
 ///*********************************///
 
-/*
- * Función que retorna un arreglo de todos los cursos donde hay matriculados estudiantes de una instancia determinada organizados segun su profesor.
- * @param $instanceid
- * @return Array 
- */
+>>>>>>> Stashed changes
 
-
-
-/*
- * Función que retorna informacion de un curso por su id
- * @param $id_curso
- * @return Object $curso
+/**
+ * Gets course information given its id
+ * @see get_info_course($id_curso)
+ * @param $id_curso --> course id
+ * @return Object Containing all relevant course information
  */
 function get_info_course($id_curso){
     global $DB;
@@ -80,10 +116,11 @@ function get_info_course($id_curso){
 
 
 /**
- * Returns de string html table with the students, categories and his notes.
+ * Returns a string html table with the students, categories and their notes.
  *
- * @param $id_curso
- * @return string HTML
+ * @see get_categories_global_grade_book($id_curso)
+ * @param $id_curso --> course id
+ * @return string HTML table
 **/
 function get_categories_global_grade_book($id_curso){
     global $USER;
@@ -106,14 +143,15 @@ function get_categories_global_grade_book($id_curso){
 ///*********************************///
 
 /**
- * Update grades from a student
+ * Updates grades from a student
  *
- * @param   $userid
- *          $item
- *          $finalgrade: value of grade
- *          $courseid
+ * @see update_grades_moodle($userid, $itemid, $finalgrade,$courseid)
+ * @param $userid --> user id
+ * @param $item --> item id
+ * @param $finalgrade --> grade value
+ * @param $courseid --> course id
  *       
- * @return true if update and false if not.
+ * @return boolean --> true if there's a successful update, false otherwise.
  */
 
 function update_grades_moodle($userid, $itemid, $finalgrade,$courseid){
@@ -138,6 +176,18 @@ function update_grades_moodle($userid, $itemid, $finalgrade,$courseid){
   }
 
 }
+
+/**
+ * Sends an email alert in case a student final grade is less than 3.0
+ *
+ * @see send_email_alert($userid, $itemid,$grade,$courseid)
+ * @param $userid --> user id
+ * @param $itemid --> item id
+ * @param $grade --> grade value
+ * @param $courseid --> course id
+ *       
+ * @return boolean --> true if there's a successful update, false otherwise.
+ */
 
 function send_email_alert($userid, $itemid,$grade,$courseid){
       global $USER;
@@ -288,18 +338,21 @@ function send_email_alert($userid, $itemid,$grade,$courseid){
 }
 
 
+<<<<<<< Updated upstream
+=======
 
 //update_grades_moodle(92,49,5,3);
 ///*********************************///
 ///*** Wizard categories methods ***///
 ///*********************************///
 /**
- * It performs the insertion of a category considering whether it is of weighted type or not,
- * after which it inserts the item that represents the category. The latter is necessary for the category to have a weight.
+ * Performs the insertion of a category considering whether it is a weighted type or not,
+ * then it inserts the item that represents the category. The last one is necessary for the category to have a weight.
  *
- * @param $course
- * @param $father
- * @param $name
+ * @see insertCategory($course,$father,$name,$weighted,$weight)
+ * @param $course --> course id
+ * @param $father --> category parent
+ * @param $name --> category name
  * @param $weighted (aggregation)
  * @param $weight
  * @return Int --- ok->1 || error->0
@@ -793,3 +846,4 @@ function getAggregationofCategory($categoryid){
 }
 
 ?>
+>>>>>>> Stashed changes
