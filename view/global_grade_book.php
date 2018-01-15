@@ -45,7 +45,7 @@ $id_course = optional_param('id_course',0,PARAM_INT);
 
 require_login($courseid, false);
 
-//se consulta si la instancia ya está registrada
+//Instance is consulted for its registration
 if(!consult_instance($blockid)){
     header("Location: /blocks/ases/view/instance_configuration.php?courseid=$courseid&instanceid=$blockid");
 }
@@ -75,7 +75,7 @@ $PAGE->requires->js_call_amd('block_ases/global_grade_book', 'init');
 $output = $PAGE->get_renderer('block_ases');
 
 
-//Carga de informacion a mostrar
+//loading information to show
 $curso = get_info_course($id_course);
 $htmlTable = $curso->header_categories;
 $students = "<div id = 'students-pilos' hidden> ";
