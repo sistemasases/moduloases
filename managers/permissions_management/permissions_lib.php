@@ -329,7 +329,12 @@ function get_roles_table()
     $roles_array = get_roles();
     
     foreach ($roles_array as $role) {
+        if($role->nombre_rol=='sistemas'){
+         $role->edit= '   <span class="red glyphicon glyphicon-ban-circle"></span>';
+        
+        }else{
         $role->edit= '   <button type="button" class="red glyphicon glyphicon-pencil"  id="'.$role->id .'" data-toggle="modal" data-target="#edit"></button>';
+    }
         array_push($array, $role);
     }
     return $array;

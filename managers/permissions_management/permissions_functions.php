@@ -66,18 +66,23 @@ function get_functions_actions($rol){
 
 
     foreach($functions as $function){
+
         $table .=' <div class="col-lg-3 col-md-3"><fieldset id="'.$function->id.'"><legend>'.$function->nombre_func.'</legend>';
         $actions = get_actions_function($function->id);
         foreach($actions as $action){
 
-           $table.='<input type="checkbox" name="actions[]" "="" value="'.$action->id.'">'.$action->nombre_accion.'</br>';
-            
-        }
+
+            $table.='<input type="checkbox" name="actions[]" "="" value="'.$action->id.'">'.$action->nombre_accion.'</br>';
+        
+        }  
+         
+    
         $table.='</div>';
 
     }
     return $table;
 }
+
 
 
 
