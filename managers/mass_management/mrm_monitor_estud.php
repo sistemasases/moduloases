@@ -39,7 +39,7 @@ if( isset($_FILES['file']) || isset($_POST['idinstancia'])){
         $nombre = $archivo['name'];
         
         $rootFolder    = "../../view/archivos_subidos/mrm/monitor_estud/files/";
-        $zipFolfer = "../view/archivos_subidos/mrm/monitor_estud/comprimidos/";
+        $zipFolfer = "../../view/archivos_subidos/mrm/monitor_estud/comprimidos/";
         
         //deletes everything from folders
         deleteFilesFromFolder($rootFolder);
@@ -139,7 +139,7 @@ if( isset($_FILES['file']) || isset($_POST['idinstancia'])){
 
             if($exists){
                 $isValidRow = false;
-                array_push($detail_erros,[$line_count,$lc_wrongFile,($associativeTitles['username_estudiante'] + 1),'username_estudiante','El usuario asociado al username '.$data[ $associativeTitles['username_monitor'] ].' Ya tiene asignado un monitor' ]);
+                array_push($detail_erros,[$line_count,$lc_wrongFile,($associativeTitles['username_estudiante'] + 1),'username_estudiante','El usuario asociado al username '.$data[ $associativeTitles['username_estudiante'] ].' Ya tiene asignado un monitor' ]);
             }
             
             //** End validations on required fields
@@ -189,7 +189,7 @@ if( isset($_FILES['file']) || isset($_POST['idinstancia'])){
         }
         
         if(count($success_rows) > 1){ //First row are titles
-            $arrayIdsFilename =  $rootFolder.'IdentificadoresSeguimientos_'.$nombre;
+            $arrayIdsFilename =  $rootFolder.'RegistrosExitosos_'.$nombre;
             
             $arrayIdsFileHandler = fopen($arrayIdsFilename, 'w');
             fprintf($arrayIdsFileHandler, chr(0xEF).chr(0xBB).chr(0xBF)); // feed utf-8 unicode format on
@@ -200,7 +200,7 @@ if( isset($_FILES['file']) || isset($_POST['idinstancia'])){
             
             $response = new stdClass();
             
-            if(count($wrong_rows) > 0){
+            if(count($wrong_rows) > 1){
                 $response->warning = 'Archivo cargado con inconsistencias<br> Para mayor informacion descargar la carpeta con los detalles de inconsitencias.'; 
             }else{
                 $response->success = 'Archivo cargado satisfactoriamente';
@@ -208,8 +208,10 @@ if( isset($_FILES['file']) || isset($_POST['idinstancia'])){
             
             $zipname = $zipFolfer."detalle.zip";
             createZip($rootFolder, $zipname);
+
+            $zipname = explode("..", $zipname)[2];            
             
-            $response->urlzip = "<a href='$zipname'>Descargar detalles</a>";
+            $response->urlzip = "<a href='..$zipname'>Descargar detalles</a>";
             
             echo json_encode($response);
             
@@ -219,8 +221,10 @@ if( isset($_FILES['file']) || isset($_POST['idinstancia'])){
             
             $zipname = $zipFolfer."detalle.zip";
             createZip($rootFolder, $zipname);
+
+            $zipname = explode("..", $zipname)[2];            
             
-            $response->urlzip = "<a href='$zipname'>Descargar detalles</a>";
+            $response->urlzip = "<a href='..$zipname'>Descargar detalles</a>";
             
             echo json_encode($response);
         }
