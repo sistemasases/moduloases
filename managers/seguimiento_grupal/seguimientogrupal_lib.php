@@ -33,7 +33,6 @@ require_once('../pilos_tracking/pilos_tracking_lib.php');
 
 
 /**
- * Función que los estudiantes que están relacionados con un monitor especifico en una instancia.
  * Obtains all students related with a given monitor monitor 
  *
  * @see get_grupal_students($id_monitor, $idinstancia)
