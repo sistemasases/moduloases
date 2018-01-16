@@ -37,7 +37,7 @@ if( isset($_FILES['file']) || isset($_POST['idinstancia'])){
         $nombre = $archivo['name'];
   
         $rootFolder    = "../../view/archivos_subidos/mrm/roles/files/";
-        $zipFolfer = "../view/archivos_subidos/mrm/roles/comprimidos/";
+        $zipFolfer = "../../view/archivos_subidos/mrm/roles/comprimidos/";
 
         
         //deletes everything from folders
@@ -63,7 +63,7 @@ if( isset($_FILES['file']) || isset($_POST['idinstancia'])){
         $lc_wrongFile =2;
         
         $titlesPos = fgetcsv($handle, 0, ",");
-        array_push($detail_erros,$titlesPos);
+        array_push($wrong_rows,$titlesPos);
         array_push($success_rows,$titlesPos);
         
         $associativeTitles = getAssociativeTitles($titlesPos);
@@ -82,7 +82,7 @@ if( isset($_FILES['file']) || isset($_POST['idinstancia'])){
             if($associativeTitles['username'] !== null){
                 $sql_query = "SELECT username from {user} where username like '".$data[$associativeTitles['username']]."%';";
                 $result = $DB->get_record_sql($sql_query);
-                
+                 
                 
                 if(!$result){
                     $isValidRow = false;
@@ -231,7 +231,7 @@ if( isset($_FILES['file']) || isset($_POST['idinstancia'])){
             
             $response = new stdClass();
             
-            if(count($wrong_rows) > 0){
+            if(count($wrong_rows) > 1){
                 $response->warning = 'Archivo cargado con inconsistencias<br> Para mayor informacion descargar la carpeta con los detalles de inconsitencias.'; 
             }else{
                 $response->success = 'Archivo cargado satisfactoriamente';
@@ -239,8 +239,10 @@ if( isset($_FILES['file']) || isset($_POST['idinstancia'])){
             
             $zipname = $zipFolfer."detalle.zip";
             createZip($rootFolder, $zipname);
+
+            $zipname = explode("..", $zipname)[2];            
             
-            $response->urlzip = "<a href='$zipname'>Descargar detalles</a>";
+            $response->urlzip = "<a target='_blank' href='..$zipname'>Descargar detalles</a>";
             
             echo json_encode($response);
             
@@ -251,7 +253,9 @@ if( isset($_FILES['file']) || isset($_POST['idinstancia'])){
             $zipname = $zipFolfer."detalle.zip";
             createZip($rootFolder, $zipname);
             
-            $response->urlzip = "<a href='$zipname'>Descargar detalles</a>";
+            $zipname = explode("..", $zipname)[2];
+
+            $response->urlzip = "<a target='_blank': href='..$zipname'>Descargar detalles</a>";
             
             echo json_encode($response);
         }

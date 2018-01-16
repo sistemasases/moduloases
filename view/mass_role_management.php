@@ -27,7 +27,6 @@
 // Standard GPL and phpdocs
 require_once(__DIR__ . '/../../../config.php');
 require_once($CFG->libdir.'/adminlib.php');
-require_once('../managers/query.php');
 require_once ('../managers/permissions_management/permissions_lib.php');
 require_once ('../managers/validate_profile_action.php');include('../lib.php');
 require_once ('../managers/menu_options.php');
@@ -94,8 +93,6 @@ $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/jquery.dataTables.m
 $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/jquery.dataTables_themeroller.css', true);
 $PAGE->requires->css('/blocks/ases/style/side_menu_style.css', true);
 
-$PAGE->requires->js('/blocks/ases/js/jquery-2.0.2.min.js', true);
-$PAGE->requires->js('/blocks/ases/js/checkrole.js', true);
 $PAGE->requires->js_call_amd('block_ases/massmanagement_main','init');
 
 
