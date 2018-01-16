@@ -1,12 +1,37 @@
 <?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
+/**
+ * Talentos Pilos
+ *
+ * @author     Iader E. García Gómez
+ * @author     Camilo José Cruz Rivera
+ * @package    block_ases
+ * @copyright  2017 Iader E. García <iadergg@gmail.com>
+ * @copyright  2017 Camilo José Cruz Rivera <cruz.camilo@correounivalle.edu.co>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 
 require_once dirname(__FILE__) . '/../../../../config.php';
 
 /**
- * Función que retorna el objeto usuario del estudiante dado el id de la tabla {talentospilos_usuario}
+ * Obtains an user object given user id from {talentospilos_usuario} table 
  *
  * @see get_user_moodle($id)
- * @param id --> id moodle
+ * @param $id --> moodle user id
  * @return object
  */
 function get_user_moodle($id)
@@ -24,10 +49,11 @@ function get_user_moodle($id)
 
 /**
  * Función que recupera los campos de usuario de la tabla {talentospilos_usuario}
+ * Gets all fields from user on {talentospilos_usuario} table
  *
  * @see get_ases_user($id)
- * @param id_student --> id correspondiente a la tabla {talentospilos_usuario}
- * @return Array campos
+ * @param $id_student --> student id on {talentospilos_usuario} table
+ * @return array --> with every field
  */
 function get_ases_user($id)
 {
@@ -40,13 +66,13 @@ function get_ases_user($id)
     return $user;
 }
 /**
- * //PENDIENTE CAMBIAR AL NUEVO MODELO
-
- * Función que recupera el ID de la tabla usuario de Moodle dado el ID de la tabla {talentospilos_usuario}
+ * //THIS GOTTA CHANGE TO THE NEW MODEL
+ 
+ * Gets moodle user id (moodle table) given user id from {talentospilos_usuario}
  *
  * @see get_id_user_moodle($id_student)
- * @param id_student --> id correspondiente a la tabla {talentospilos_usuario}
- * @return id moodle
+ * @param $id_student --> user id from {talentospilos_usuario}
+ * @return string
  */
 function get_id_user_moodle($id_student)
 {
@@ -64,12 +90,11 @@ function get_id_user_moodle($id_student)
 }
 
 /**
+ * Gets ASES user given student id associated to moodle user name
  * 
- * Función que recupera el usuario ASES dado el código de estudiante asociado al nombre de usuario de Moodle
- *
  * @see get_ases_user_by_code($code)
- * @param $username --> Código asociado al nombre de usuario de Moodle
- * @return Array --> Campos de la tabla talentos usuario asociados al nombre de usuario de Moodle ingresado
+ * @param $username --> student id associated to moodle user
+ * @return array 
  */
 function get_ases_user_by_code($code)
 {
@@ -90,11 +115,11 @@ function get_ases_user_by_code($code)
 }
 
 /**
- * Función que recupera el estado ASES de un estudiante
+ * Gets ASES student status
  *
  * @see get_student_ases_status($id)
- * @param $id --> Código asociado al estudiante en la tabla talentospilos_usuario
- * @return Array --> Información del estado Ases del estudiante
+ * @param $id --> user id on talentospilos_usuario table
+ * @return array --> with ASES student information
  */
 
 function get_student_ases_status($id_student)
@@ -118,11 +143,11 @@ function get_student_ases_status($id_student)
 }
 
 /**
- * Función que recupera el estado ICETEX de un estudiante
+ * Gets student ICETEX status 
  *
  * @see get_student_icetex_status($id_student)
- * @param $id_student --> Código asociado al estudiante en la tabla talentospilos_usuario
- * @return Array --> Información del estado Ases del estudiante
+ * @param $id_student --> student id on talentospilos_usuario table 
+ * @return array --> with ICETEX student information
  */
 
 function get_student_icetex_status($id_student)
@@ -146,11 +171,11 @@ function get_student_icetex_status($id_student)
 }
 
 /**
- * Función que recupera los datos adicionales de un estudiante dado el ID de la tabla {user}
+ * Gets student information from {talentospilos_user_extended} table given his id
  *
  * @see get_adds_fields_mi($id_student)
- * @param id_student --> id correspondiente a la tabla {user}
- * @return stdClass --> campos adicionales del usuario moodle
+ * @param $id_student --> student id
+ * @return object --> object representing moodle user
  */
 
 function get_adds_fields_mi($id_student)
@@ -173,11 +198,11 @@ function get_adds_fields_mi($id_student)
 }
 
 /**
- * Función que recupera los datos de un programa académico dado su ID
+ * Obtains academic program data given the program id
  *
  * @see get_program($id_program)
- * @param id --> id del programa
- * @return Array program
+ * @param $id --> program id
+ * @return array 
  */
 function get_program($id)
 {
@@ -190,11 +215,11 @@ function get_program($id)
 }
 
 /**
- * Función que recupera la facultad dado un id de facultad
+ * Obtains faculty information given its id
  *
  * @see get_faculty($id)
- * @param id --> id correspondiente a la facultad
- * @return Array faculty
+ * @param $$id --> faculty id
+ * @return array
  */
 function get_faculty($id)
 {
@@ -208,11 +233,11 @@ function get_faculty($id)
 }
 
 /**
- * Función que recupera la cohorte de un estudiante
+ * Gets student cohort
  *
  * @see get_cohort_by_student($id_student)
- * @param $id_student --> id correspondiente a la facultad
- * @return Cohort Array
+ * @param $id_student --> student id
+ * @return object Representing the cohort
  */
 function get_cohort_student($id_student)
 {
@@ -232,11 +257,11 @@ function get_cohort_student($id_student)
 }
 
 /**
- * Función que retorna los nombres, apellidos y correo electrónico del monitor asignado a un estudiante, dado el ID del estudiante.
+ * Obtains name, lastname and email from a monitor assigned to a student, given the student id
  *
  * @see get_assigned_monitor($id_student)
- * @parameters $id_student int ID relacionado en la tabla {talentospilos_usuario}
- * @return Array --> Contiene los nombres, apellidos y el email del monitor asignado a un estudiante.
+ * @param $id_student --> student id on {talentospilos_usuario} table 
+ * @return array Containing the information
  */
 function get_assigned_monitor($id_student)
 {
@@ -259,11 +284,11 @@ function get_assigned_monitor($id_student)
 }
 
 /**
- * Función que retorna los nombres, apellidos y correo electrónico del practicante asignado a un estudiante, dado el ID del estudiante.
+ * Obtains name, lastname and email from a practicant (practicante) assigned to a student, given the student id
  *
  * @see get_assigned_pract($id_student)
- * @parameters $id_student int Id relacionado en la tabla {talentospilos_usuario}
- * @return Array --> Contiene los nombres, apellidos y el email del practicante asignado a un estudiante.
+ * @param $id_student --> student id on {talentospilos_usuario} table 
+ * @return array Containing the information
  */
 function get_assigned_pract($id_student)
 {
@@ -293,11 +318,11 @@ function get_assigned_pract($id_student)
 }
 
 /**
- * Función que retorna los nombres, apellidos y correo electrónico del profesional asignado a un estudiante, dado el ID del estudiante.
+ * Obtains name, lastname and email from a professional (profesional) assigned to a student, given the student id
  *
  * @see get_assigned_professional($id_student)
- * @param$id_student int Id relacionado en la tabla {talentospilos_usuario}
- * @return Array --> Contiene los nombres, apellidos y el email del profesional asignado a un estudiante
+ * @param $id_student --> student id on {talentospilos_usuario} table 
+ * @return array Containing the information
  */
 function get_assigned_professional($id_student)
 {
@@ -335,11 +360,11 @@ function get_assigned_professional($id_student)
 }
 
 /**
- * Función que retorna un arreglo de los riesgos asociados a un estudiante dado el ID del usuario de la tabla {talentospilos_usuario}
+ * Gets an array with all students risks given user id on {talentospilos_usuario} table 
  *
  * @see get_risk_by_student($id_student)
- * @param $id_student int Id relacionado en la tabla {talentospilos_usuario}
- * @return Array --> Contiene los nombres, apellidos y el email del profesional asignado a un estudiante
+ * @param $id_student --> student id on {talentospilos_usuario} table 
+ * @return array Containing the information
  */
 
 function get_risk_by_student($id_student)
@@ -357,11 +382,11 @@ function get_risk_by_student($id_student)
 }
 
 /**
- * Función que un objeto USER de moodle dado un id
+ * Gets a moodle user object given his id
  *
  * @see get_full_user($id)
- * @parameters $id int Id relacionado en la tabla {user}
- * @return Object --> Contiene toda la informacion de un usuario en la tabla {user}
+ * @param $id --> student id on {user} table
+ * @return object representing the user
  */
 
 function get_full_user($id)
