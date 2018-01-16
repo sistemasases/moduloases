@@ -1,15 +1,42 @@
 <?php
 
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
+/**
+ * Talentos Pilos
+ *
+ * @author     Iader E. García Gómez
+ * @author     Juan Pablo Moreno Muñoz
+ * @author     Camilo José Cruz Rivera
+ * @package    block_ases
+ * @copyright  2017 Iader E. García <iadergg@gmail.com>
+ * @copyright  2017 Juan Pablo Moreno Muñoz <moreno.juan@correounivalle.edu.co>
+ * @copyright  2017 Camilo José Cruz Rivera <cruz.camilo@correounivalle.edu.co>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
 require_once(dirname(__FILE__). '/../../../../config.php');
 require_once $CFG->dirroot.'/blocks/ases/managers/periods_management/periods_lib.php'; 
 
 
 /**
- * Función que recupera los programas académicos almacenados en la tabla talentospilos_programa
+ * Gets all academic programs that are stored on talentospilos_programa table
  *
  * @see load_programs()
- * @param void
- * @return Array --> Arreglo con los programas académicos (id, codigo_snies, codigo_univalle, nombre, id_sede, jornada, id_facultad)
+ * @return array -->Array with every academic program (id, codigo_snies, codigo_univalle, nombre, id_sede, jornada, id_facultad)
  */
 function load_programs(){
     
@@ -22,12 +49,10 @@ function load_programs(){
 }
 
 /**
- * Función que recupera los programas académicos almacenados en la tabla talentospilos_programa que 
- * corresponden a la sede CALI
+ * Gets all academic programs that are stored on talentospilos_programa table corresponding to CALI city
  *
  * @see load_programs_cali()
- * @param void
- * @return Array --> Arreglo con los programas académicos (id, codigo_snies, codigo_univalle, nombre, id_sede, jornada, id_facultad)
+ * @return array --> Array with every academic program  (id, codigo_snies, codigo_univalle, nombre, id_sede, jornada, id_facultad)
  */
 function load_programs_cali(){
     
@@ -43,11 +68,11 @@ function load_programs_cali(){
 }
 
 /**
- * Función que busca un usuario Moodle dado el username
+ * Returns an user given his moodle username
  *
- * @see search_user()
- * @param void
- * @return Array --> Arreglo con los datos del usuario Moodle consultado
+ * @see search_user($username)
+ * @param $username
+ * @return object --> Object representing the user
  */
  function search_user($username){
      
@@ -60,10 +85,11 @@ function load_programs_cali(){
  }
 
  /**
- * Funcion que evalua si un usuario es monitor o practicante y de ser asi retorna true.
+ * Evaluates wheter a user is a practicant or monitor
  * 
- * @param $USER
- * @return bool  
+ * @see isMonOrPract($USER)
+ * @param $USER --> Object user
+ * @return bool --> True if it's a practicant or monitor, false otherwise 
  */
 function isMonOrPract($USER){
     global $DB;
@@ -80,10 +106,11 @@ function isMonOrPract($USER){
 }
 
 /**
-* Funcion que retorna el rol en ases de un usuario dado el id de moodle.
-*
-* @param $id
-* @return String-> $rol
+* Gets an ASES user role given his moodle id
+* 
+* @see get_role_ases($id)
+* @param $id --> user moodle id
+* @return string --> containing user role
 */
 function get_role_ases($id){
     global $DB;
@@ -97,14 +124,14 @@ function get_role_ases($id){
     return $rol;
   }
 
-  
 
-/**
-* Funcion que retorna un select con los estudiantes asignados a un usuario de rol profesional, practicante, o monitor y "ROL NO PERMITIDO" si es otro rol.
-*
-* @param $id
-* @return String-> $select
-*/
+/** 
+ * Returns a select with every student that's been assigned to a 'profesional', 'practicante' or monitor and "ROL NO PERMITIDO" in case of different role
+ *
+ * @see make_select_ficha($id)
+ * @param $id --> student id
+ * @return string --> Containing the previous select
+ */
 function make_select_ficha($id){
     global $DB;
   
@@ -129,11 +156,12 @@ function make_select_ficha($id){
   }
 
 /**
-* Funcion que retorna los estudiantes asignados a un usuario de rol monitor
-*
-* @param $id
-* @return String-> $asign
-*/
+  * Gets all students assigned to a monitor 
+  *
+  * @see get_asigned_by_monitor($id)
+  * @param $id --> monitor id
+  * @return string --> with every student
+  */
 
 function get_asigned_by_monitor($id){
     global $DB;
@@ -156,10 +184,11 @@ function get_asigned_by_monitor($id){
 //print_r(get_asigned_by_monitor(76));
 
 /**
-* Funcion que retorna los estudiantes asignados a un usuario de rol practicante
+* Gets all students assigned to a 'practicante' 
 *
-* @param $id
-* @return String-> $asign
+* @see get_asigned_by_practicante($id)
+* @param $id --> practicant id
+* @return string --> with every student
 */
 
 function get_asigned_by_practicante($id){
@@ -185,10 +214,11 @@ function get_asigned_by_practicante($id){
 //print_r(get_asigned_by_practicante(121));
 
 /**
-* Funcion que retorna los estudiantes asignados a un usuario de rol profesional
-*
-* @param $id
-* @return String-> $asign
+ * Gets all students assigned to a 'profesional'  
+ *
+ * @see get_asigned_by_profesional($id)
+ * @param $id --> professional id
+ * @return string --> with every student
 */
 
 function get_asigned_by_profesional($id){
@@ -217,7 +247,7 @@ function get_asigned_by_profesional($id){
  * Function that process the information contained in an array of students and returns a string with option html elements
  * @see process_info_assigne_students($array_students)
  * @param $array_students -> array which contains several student objects 
- * @return String 
+ * @return string 
  */
 
 function process_info_assigned_students($array_students){
@@ -232,10 +262,11 @@ function process_info_assigned_students($array_students){
 
 
 /**
-* Función que retorna el semestre actual considerando la fecha actual
-*
-* @param void
-* @return semester array object or zero if error
+ *
+ * Returns current semester considering current date
+ * 
+ * @see get_current_semester_today()
+ * @return array -->  array object or zero if error
 */
 
 function get_current_semester_today(){
