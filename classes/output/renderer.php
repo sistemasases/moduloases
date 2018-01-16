@@ -137,4 +137,9 @@ class renderer extends plugin_renderer_base {
         $data = $page->export_for_template($this);
         return parent::render_from_template('block_ases/periods_management', $data);
     }
+
+    public function render_upload_historical_files_page($page){
+        $data = $page->export_for_template($this);
+        return parent::render_from_template('block_ases/upload_historical_files', $data);
+    }
 }

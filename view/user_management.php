@@ -53,25 +53,25 @@ $url = new moodle_url("/blocks/ases/view/user_management.php", array(
 	'instanceid' => $blockid
 ));
 
-// Se oculta si la instancia ya está registrada
+// Instance is consulted for its registration
 
 if (!consult_instance($blockid)) {
 	header("Location: instance_configuration.php?courseid=$courseid&instanceid=$blockid");
 }
 
-//se crean los elementos del menu
+// Menu items are created
 $menu_option = create_menu_options($USER->id, $blockid, $courseid);
 
-// Obtiene las personas asociadas al curso y los estudiantes.
+// Obatins the people associated to the course and the students
 
 $courseusers = get_course_usersby_id($courseid);
 $table_courseuseres = get_course_users_select($courseusers);
 
-// Crea una clase con la información que se llevará al template.
+// Creates a class with information that'll be send to template
 $data = 'data';
 $data = new stdClass;
 
-// Evalua si el rol del usuario tiene permisos en esta view.
+// Evaluates if user role has permissions assigned on this view
 $actions = authenticate_user_view($USER->id, $blockid);
 $data = $actions;
 
@@ -79,7 +79,7 @@ $data->table = $table_courseuseres;
 $data->menu = $menu_option;
 $PAGE->requires->js_call_amd('block_ases/usermanagement_main', 'init');
 
-// Configuracion de la navegación
+// Nav configuration
 
 $coursenode = $PAGE->navigation->find($courseid, navigation_node::TYPE_COURSE);
 $node = $coursenode->add('Gestion de roles del bloque', $url);

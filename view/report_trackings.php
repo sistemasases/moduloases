@@ -49,7 +49,7 @@ $blockid = required_param('instanceid', PARAM_INT);
 require_login($courseid, false);
 
 
-//se oculta si la instancia ya está registrada
+// Instance is consulted for its registration
 if(!consult_instance($blockid)){
     header("Location: instance_configuration.php?courseid=$courseid&instanceid=$blockid");
 }
@@ -69,21 +69,21 @@ $blocknode = navigation_node::create($title,$url, null, 'block', $blockid);
 $coursenode->add_node($blocknode);
 $blocknode->make_active();
 
-//se crean los elementos del menu
+//Menu items are created
 $menu_option = create_menu_options($USER->id, $blockid, $courseid);
 
-// Crea una clase con la información que se llevará al template.
+// Creates a class with information that'll be send to template
 $data = 'data';
 $data = new stdClass;
 
-// Evalua si el rol del usuario tiene permisos en esta view.
+// Evaluates if user role has permissions assigned on this view
 $actions = authenticate_user_view($USER->id, $blockid);
 $data = $actions;
 $data->menu = $menu_option;
 
 
 
-//Se obtiene el rol del usuario que se encuentra conectado, username y su correo electronico respectivo.
+//Getting role, username and email from current connected user
 
 $userrole = get_id_rol($USER->id,$blockid);
 $usernamerole= get_name_rol($userrole);
@@ -98,19 +98,20 @@ $table_periods="";
 
 $periods = get_semesters();
 
-//obtiene el intervalo de fechas del ultimo semestre
+// Getting last semester date range 
 $intervalo_fechas[0] = reset($periods)->fecha_inicio;
 $intervalo_fechas[1] =reset($periods)->fecha_fin;
 $intervalo_fechas[2] =reset($periods)->id;
 
 
 //organiza el select de periodos.
+// Sort periods Select
 $table_periods.=get_period_select($periods);
 
 if($usernamerole=='monitor_ps'){
 
 
-    //Se recupera los estudiantes de un monitor en la instancia y se organiza el array que será transformado en el toogle.
+    // All students from a monitor are retrieved in the instance and the array that will be transformed in toogle is sorted.
     $seguimientos = monitorUser($globalArregloPares,$globalArregloGrupal,$USER->id,0,$blockid,$userrole,$intervalo_fechas);
     $table.=has_tracking($seguimientos);
 
@@ -118,7 +119,7 @@ if($usernamerole=='monitor_ps'){
 
 
     
-    //Se recupera los estudiantes de un practicante en la instancia y se organiza el array que será transformado en el toogle.
+    // All students from a practicant (practicante) are retrieved in the instance and the array that will be transformed in toogle is sorted.
     $seguimientos =practicanteUser($globalArregloPares,$globalArregloGrupal,$USER->id,$blockid,$userrole,$intervalo_fechas);
     $table.=has_tracking($seguimientos);
 
@@ -126,20 +127,20 @@ if($usernamerole=='monitor_ps'){
 
 
     
-    //Se recupera los estudiantes de un profesional en la instancia y se organiza el array que será transformado en el toogle.
+    // All students from a professional (profesional) are retrieved in the instance and the array that will be transformed in toogle is sorted.
     $seguimientos = profesionalUser($globalArregloPares,$globalArregloGrupal,$USER->id,$blockid,$userrole,$intervalo_fechas);
     $table.=has_tracking($seguimientos);
 
 }elseif($usernamerole=='sistemas' or $username == "administrador" or $username == "sistemas1008" or $username == "Administrador"){
 
-    //Obtiene los periodos existentes y los roles que contengan "_ps".
+    //Gets all existent periods and roles containing "_ps"
     $roles = get_rol_ps();
 
-    //Obtiene las personas que se encuentran en el último semestre añadido y cuyos roles terminen en "_ps.
+    //Obtains the people who are in the last added semester in which their roles ended up with "_ps"
     $people = get_people_onsemester(reset($periods)->id,$roles,$blockid);
 
 
-    //organiza el select de personas.
+    //Sorts People 'select'
     $table_periods.=get_people_select($people);
 
 }

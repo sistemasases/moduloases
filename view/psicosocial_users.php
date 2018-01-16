@@ -17,7 +17,7 @@ $blockid = required_param('instanceid', PARAM_INT);
 
 require_login($courseid, false);
 
-//se culta si la instancia ya está registrada
+// Instance is consulted for its registration
 if(!consultInstance($blockid)){
     header("Location: /blocks/ases/view/instanceconfiguration.php?courseid=$courseid&instanceid=$blockid");
 }
