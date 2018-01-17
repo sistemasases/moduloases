@@ -108,6 +108,8 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_as
                     error: function (msj) {
                         alert("error ajax");
                         $('#response').html("");
+                        var val = $('#selector').val();
+                        addHelpMessage(val);
                     }
                     // ... Other options like success and etc
                 });
