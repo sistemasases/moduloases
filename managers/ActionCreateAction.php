@@ -152,7 +152,7 @@ if (isset($_POST['profile']) && isset($_POST['actions'])&&isset($_POST['instance
   $record = new stdClass;
 
 
-
+  try{
   if($usernamerole=='sistemas'){
     $record->id_rol=$_POST['profile'];
     $idaction = get_action_by_name('manage_action_ca');
@@ -160,6 +160,12 @@ if (isset($_POST['profile']) && isset($_POST['actions'])&&isset($_POST['instance
     $DB->insert_record('talentospilos_permisos_rol', $record, true);
 
   }
+}catch(Exception $ex){
+  $msg->title = "";
+    $msg->text = $ex;
+    $msg->type = "success";
+    echo $msg->text;
+}
 
   foreach($actions as $action)
     {
