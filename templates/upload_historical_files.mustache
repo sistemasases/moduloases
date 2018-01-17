@@ -17,16 +17,14 @@
             <div id="respuesta" class="col-lg-6 col-md-6 col-lg-offset-3">
                 <form id='form' class="form-inline" role="form" >
                   <div class="form-group">
-                     {{!--<label> Nombre el archivo: </label> --}}
-                     {{!--<input type="text" name="nombre_archivo" id="nombre_archivo" />--}}
                      <input type="file" name="archivo" id="archivo" required/>
                   </div>
                   <hr />
                   <div class="form-group">
                       <label>Selecione la operacion</label>
                       <select class="selectpicker" name="selector" id="selector" required >
-                          <option value="seguimiento">Histórico académico</option>
-                          <option value="monitor_estud">Histórico ICETEX</option>
+                          <option value="academic">Histórico académico</option>
+                          <option value="icetex">Histórico ICETEX</option>
                        </select>
                    </div>
                   <hr />
