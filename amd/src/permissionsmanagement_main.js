@@ -271,7 +271,6 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_as
              * @param array acciones
              */
             function asignarUsuarioPerfil(instance) {
-                console.log("instancia : "+instance);
                 var id_profile = $("#profiles_user").val();
                 var actions = [];
                 var acciones = $("input[name='actions[]']:checked").each(function() {
