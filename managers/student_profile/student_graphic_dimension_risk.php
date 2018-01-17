@@ -26,6 +26,12 @@ require_once(dirname(__FILE__). '/../../../../config.php');
 
  global $DB;
 
+ /**
+  * Gets current period (semester)
+  *
+  * @see getPeriodoActual()
+  * @return array containing the period name, starting and ending date
+  */
  function getPeriodoActual(){
      global $DB;
      $sql_query = 
@@ -44,16 +50,15 @@ require_once(dirname(__FILE__). '/../../../../config.php');
  }
 
 /**
- * getSeguimientosEstudiante($idEstudiante): Función que obtiene los seguimientos realizados a determinado
- * estudiante.
+ * Gets all tracks given the student id and semester
+ * 
+ * Important Aspects: familiar_desc is renamed to familiar, vida_uni is renamed to vida_universitaria yand vida_uni_riesgo
+ * is renamed to vida_universitaria_riesgo to preserve the nomination pattern.
  *
- * Aspectos importantes: se renombra familiar_desc a familiar, vida_uni a vida_universitaria y vida_uni_riesgo
- * a vida_universitaria_riesgo para conservar el patrón de nombramiento.
- *
- * @param int $idEstudiante Identificación del estudiante al interior
- *        del sistema ASES, no es el id que asigna moodle, ni el 
- *        código institucional.
- * @return array Seguimientos.
+ * @see getSeguimientosEstudiante($idEstudiante, $periodo)
+ * @param $idEstudiante --> ASES student id
+ * @param $periodo --> semester array 
+ * @return array with every track (seguimiento).
  */
  function getSeguimientosEstudiante($idEstudiante, $periodo){
     global $DB;
@@ -84,7 +89,7 @@ require_once(dirname(__FILE__). '/../../../../config.php');
         ORDER BY TPS.fecha ASC
         ";
     
-    // Esto es un arreglo de objetos del tipo stdClass
+    // stdClass objects array
     $seguimientos = $DB->get_records_sql($sql_query);
 
     $arraySeguimientos = array();
@@ -95,8 +100,7 @@ require_once(dirname(__FILE__). '/../../../../config.php');
  }
 
 /**
- * obtenerDatosDimensionesSeguimiento($seguimiento): Función que permite obtener la información
- * del riesgo presente en cada seguimiento, respecto a las dimensiones:
+ * Gets risk information on each track (seguimiento) on every next dimensions:
  *
  *  - Familiar
  *  - Academico
@@ -104,8 +108,8 @@ require_once(dirname(__FILE__). '/../../../../config.php');
  *  - Vida Universitaria
  *  - Individual
  *
- * @param array $seguimiento Registro de seguimiento.
- * @return array Arreglo de la forma 
+ * @param $seguimiento --> tracks array (seguimientos)
+ * @return array with syntaxis: 
  *              ( 
  *                  'id_seguimiento' => '$id_seguimiento'
  *                   'datos' =>  
@@ -132,6 +136,15 @@ require_once(dirname(__FILE__). '/../../../../config.php');
  *                     'fecha' => '$fecha'
  *              )
  */
+
+ /**
+  * Gets full data information of each dimension and push it into a track array (seguimiento)
+  *
+  * @see obtenerDatosDimensionSeguimiento($seguimiento, $dimension = 'todas')
+  * @param $seguimiento --> array of tracks (seguimientos)
+  * @param $dimension = 'todas' --> Needs information of all dimensions
+  * @return array with date, dimension and track information
+  */
  function obtenerDatosDimensionSeguimiento($seguimiento, $dimension = 'todas'){
 
     $fechaFormateada = new DateTime();
@@ -199,15 +212,13 @@ require_once(dirname(__FILE__). '/../../../../config.php');
  }
 
  /**
- * obtenerDatosSeguimientoFormateados($idEstudiante): Función que me procesa todos los registros de
- * seguimiento de un estudiante, respecto a una dimensión específica. 
+ * Gets all track records of a student on every dimension
  *
- * @param int $idEstudiante Identificación del estudiante.
- * @param string $dimension Filtra la dimensión a consultarse, el valor de 'todas', trae el conjunto de seguimiento 
- *               de todas las dimensiones.
- * @param array $periodo Arreglo con el intervalo de tiempo a consultar, array(fecha_nicio=>'yyyy-mm-dd hh:mm:ss',fecha_fin=>'yyyy-mm-dd hh:mm:ss')
- * @return array Datos formateados listos para graficarse 
- *
+ * @see obtenerDatosSeguimientoFormateados($idEstudiante, $dimension = 'todas', $periodo)
+ * @param $idEstudiante --> student id
+ * @param $dimension = 'todas' --> Gets a set of tracks on each dimension
+ * @param $periodo --> array containing date range to get the information array(fecha_nicio=>'yyyy-mm-dd hh:mm:ss',fecha_fin=>'yyyy-mm-dd hh:mm:ss')
+ * @return array --> Data processed to graph 
  */
  function obtenerDatosSeguimientoFormateados($idEstudiante, $dimension = 'todas', $periodo){
     $seguimientos = getSeguimientosEstudiante($idEstudiante, $periodo);
