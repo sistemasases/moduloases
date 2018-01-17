@@ -15,11 +15,10 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert'], function ($,
     return {
         init: function () {
 
-            var val = $('#selector').val();
-            addHelpMessage(val);
+
+            addHelpMessage();
             $('#selector').on('change', function () {
-                var val = $('#selector').val();
-                addHelpMessage(val);
+                addHelpMessage();
             });
 
             $('#boton_subir').on('click', function () {
@@ -57,53 +56,54 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert'], function ($,
                         type: "error",
                         confirmButtonColor: "#d51b23"
                     });
-                    var val = $('#selector').val();
-                    addHelpMessage(val);
+                    addHelpMessage();
                     return;
                 }
 
                 formData.append('file', $('#archivo')[0].files[0]);
 
-                var controler = $('#selector').val()+'_processing.php';
+                var controler = $('#selector').val() + '_processing.php';
                 alert(controler);
 
-                // $.ajax({
-                    // url: '../managers/historic_management/' + controler,
-                    // data: formData,
-                    // type: 'POST',
-                    // dataType: 'json',
-                    // cache: false,
-                    // //parametros necesarios para la carga de archivos
-                    // contentType: false,
-                    // processData: false,
-                    // beforeSend: function () {
-                        // $('#response').html("<img src='../icon/facebook.gif' />");
-                    // },
-                    // success: function (msj) {
-// 
-                        // $('#response').empty();
-// 
-                        // $('#informacion').empty();
-// 
-                        // if (msj.success) {
-                            // $('#informacion').append('<div class="alert alert-success"><h4 align="center">Información</h4><strong>Exito!</strong> <br><p>' + msj.success + '</p></div>');
-                        // } else if (msj.warning) {
-                            // $('#informacion').append('<div class="alert alert-warning"><h4 align="center">Información</h4><strong>Cargado con inconsitencias!</strong> <br>' + msj.warning + '</div>');
-                        // } else if (msj.error) {
-                            // $('#informacion').append('<div class="alert alert-danger"><h4 align="center">Información</h4><strong>Error!</strong> <br>' + msj.error + '</div>');
-                        // }
-// 
-                        // $('#informacion').append(msj.urlzip);
-                    // },
-                    // error: function (msj) {
-                        // alert("error en el servidor");
-                        // $('#response').html("");
-                    // }
-                    // //... Other options like success and etc
-                // });
+                $.ajax({
+                    url: '../managers/historic_management/' + controler,
+                    data: formData,
+                    type: 'POST',
+                    dataType: 'json',
+                    cache: false,
+                    //parametros necesarios para la carga de archivos
+                    contentType: false,
+                    processData: false,
+                    beforeSend: function () {
+                        $('#response').html("<img src='../icon/facebook.gif' />");
+                    },
+                    success: function (msj) {
+
+                        $('#response').empty();
+
+                        $('#informacion').empty();
+
+                        if (msj.success) {
+                            $('#informacion').append('<div class="alert alert-success"><h4 align="center">Información</h4><strong>Exito!</strong> <br><p>' + msj.success + '</p></div>');
+                        } else if (msj.warning) {
+                            $('#informacion').append('<div class="alert alert-warning"><h4 align="center">Información</h4><strong>Cargado con inconsitencias!</strong> <br>' + msj.warning + '</div>');
+                        } else if (msj.error) {
+                            $('#informacion').append('<div class="alert alert-danger"><h4 align="center">Información</h4><strong>Error!</strong> <br>' + msj.error + '</div>');
+                        }
+
+                        $('#informacion').append(msj.urlzip);
+                    },
+                    error: function (msj) {
+                        alert("error en el servidor");
+                        $('#response').html("");
+                        addHelpMessage();
+                    }
+                    //... Other options like success and etc
+                });
 
             }
-            function addHelpMessage(selector) {
+            function addHelpMessage() {
+                var selector = $('#selector').val();
                 $('#informacion').empty();
                 switch (selector) {
                     case 'academic':
