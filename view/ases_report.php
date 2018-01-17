@@ -31,9 +31,9 @@ require_once('../managers/query.php');
 require_once('../managers/ases_report/asesreport_lib.php');
 require_once('../managers/instance_management/instance_lib.php');
 require_once('../managers/student_profile/studentprofile_lib.php');
-require_once ('../managers/permissions_management/permissions_lib.php');
-require_once ('../managers/validate_profile_action.php');
-require_once ('../managers/menu_options.php');
+require_once('../managers/permissions_management/permissions_lib.php');
+require_once('../managers/validate_profile_action.php');
+require_once('../managers/menu_options.php');
 
 include('../lib.php');
 global $PAGE;
@@ -45,13 +45,15 @@ include("../classes/output/renderer.php");
 $pagetitle = 'Reporte general';
 $courseid = required_param('courseid', PARAM_INT);
 $blockid = required_param('instanceid', PARAM_INT);
+$id_current_user = $USER->id;
+
 
 require_login($courseid, false);
 $riesgos = get_riesgos();
 $cohortes = get_cohortes();
 
 //se crean los elementos del menu
-$menu_option = create_menu_options($USER->id, $blockid, $courseid);
+$menu_option = create_menu_options($id_current_user, $blockid, $courseid);
 
 $tabla_riesgos='';
 $tabla_cohortes='';
@@ -72,14 +74,17 @@ foreach($ases_status_array as $ases_status){
 }
 
 // Crea una clase con la información que se llevará al template.
-$data = 'data';    
-$data = new stdClass;
-
+$data = new stdClass();
 
 // Evalua si el rol del usuario tiene permisos en esta view.
-$actions = authenticate_user_view($USER->id, $blockid);
-$data = $actions;
-$USER->actions = $data;
+$actions = authenticate_user_view($id_current_user, $blockid);
+
+$USER->actions = $actions;
+
+foreach($actions as $act){
+    $data->$act = $act;
+}
+
 $data->menu = $menu_option;
 $data->risks_checks = $tabla_riesgos;
 $data->cohorts_checks = $tabla_cohortes;

@@ -208,6 +208,7 @@ function getGraficEstado($cohorte){
     return $result;
     
 }
+
 /**
  * Función que recupera datos para la tabla de ases_report, dado el estado, la cohorte y un conjunto de campos a extraer.
  *
@@ -219,14 +220,73 @@ function getGraficEstado($cohorte){
  * @param $idinstancia  --> Instancia del módulo
  * @return Array 
  */
-function get_ases_report($general_fields, $conditions, $academic_fields=null, $risk_fields=null, $id_instancia){
+function get_ases_report($general_fields=null, $conditions, $academic_fields=null, $risk_fields=null, $instance_id){
 
     global $DB, $USER;
 
-    $sql_query = "";
+    $actions = $USER->actions;
 
+    // ********* Se arman las clausulas de la consulta sql ***********
+
+    // ***** Select clause *****
+    $select_clause = "SELECT ";
+    $from_clause = "";
+    $where_clause = " WHERE ";
+    $sub_query_cohort = "";
+    $sub_query_status = "";
+
+    if($general_fields){
+        foreach($general_fields as $field){
+            $select_clause .= $field.', ';
+        }
+    }
+
+    $select_clause = substr($select_clause, 0, -2);
+
+    // **** From clause ****
+    $from_clause = " FROM {user} as user_moodle INNER JOIN {talentospilos_user_extended} AS user_extended ON user_moodle.id = user_extended.id_moodle_user
+                                                INNER JOIN {talentospilos_usuario} AS tp_user ON user_extended.id_ases_user = tp_user.id
+                                                INNER JOIN {talentospilos_est_estadoases} AS tp_ases_status ON tp_ases_status.id_estudiante = tp_user.id ";
+
+    // **** Where clause ****
+    $where_clause .= " tp_ases_status.id_instancia = $instance_id";
+
+    // Condición cohorte
+    if($conditions[0] != 'TODOS'){
+
+        $sub_query_cohort .= "INNER JOIN (SELECT user_moodle.username
+                                         FROM {cohort_members} AS members_cohort INNER JOIN {user} AS user_moodle ON user_moodle.id = members_cohort.userid
+                                                                                 INNER JOIN {cohort} AS cohorts ON cohorts.id = members_cohort.cohortid
+                                         WHERE cohorts.idnumber = '$conditions[0]') AS cohort_query ON cohort_query.username = user_moodle.username ";
+    }
+    // Condición estado ASES
+    if($conditions[1] != 'TODOS'){
+
+        $sub_query_status .= " INNER JOIN (SELECT 
+                                           FROM {talentospilos_usuario} AS tp_user INNER JOIN {talentospilos_est_estadoases} AS ases_status ON tp_user.)";
+
+    }
     
+    if(property_exists($actions, 'search_all_students_ar')){
+        
+        $sql_query = $select_clause.$from_clause.$sub_query_cohort;
+        //print_r($sql_query);
+        $result_query = $DB->get_records_sql($sql_query);
+        //print_r($result);        
 
+    }else if(property_exists($actions, 'search_assigned_students_ar')){
+
+    }else{
+        return 'El usuario no tiene permisos para listar estudiantes en el reporte ASES';
+    }
+
+    $result_to_return = array();
+
+    foreach($result_query as $result){
+        array_push($result_to_return, $result);
+    }
+
+    return $result_to_return;
 }
 
 function getUsersByPopulation($column, $population, $risk, $academic_fields=null, $idinstancia){

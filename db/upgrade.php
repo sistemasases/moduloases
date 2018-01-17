@@ -8,7 +8,12 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
 
     $result = true;
 
-    if ($oldversion < 2018010911179) {
+    if ($oldversion < 2018011716029) {
+
+    // ************************************************************************************************************
+    // Actualización que crea la tabla para los campos extendidos de usuario (Tabla: {talentospilos_user_extended})
+    // Versión: 2018010911179
+    // ************************************************************************************************************
 
     // Define table talentospilos_user_extended to be created.
     $table = new xmldb_table('talentospilos_user_extended');
@@ -30,9 +35,52 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     if (!$dbman->table_exists($table)) {
         $dbman->create_table($table);
     }
-   
+    // ************************************************************************************************************
+
+    // ************************************************************************************************************
+    // Actualización:
+    // Añade el campo id_funcionalidad en la tabla {talentospilos_est_estadoases}
+    // Versión en la que se incluye: 2018011716029
+    // ************************************************************************************************************
+
+    // Define field id_instancia to be added to talentospilos_est_estadoases.
+    $table = new xmldb_table('talentospilos_est_estadoases');
+    $field = new xmldb_field('id_instancia', XMLDB_TYPE_INTEGER, '20', null, XMLDB_NOTNULL, null, '0', 'fecha');
+
+    // Conditionally launch add field id_instancia.
+    if (!$dbman->field_exists($table, $field)) {
+        $dbman->add_field($table, $field);
+
+        // Define key id_instancia_fk (foreign) to be added to talentospilos_est_estadoases.
+        $table = new xmldb_table('talentospilos_est_estadoases');
+        $key = new xmldb_key('id_instancia_fk', XMLDB_KEY_FOREIGN, array('id_instancia'), 'talentospilos_instancia', array('id'));
+
+        // Launch add key id_instancia_fk.
+        $dbman->add_key($table, $key);
+    }
+
+    // ************************************************************************************************************
+    // Actualización:
+    // Añade el campo estado_seguimiento en la tabla {talentospilos_user_extended}
+    // Versión en la que se incluye: 2018011716029
+    // ************************************************************************************************************
+    // Define field id_instancia to be added to talentospilos_est_estadoases.
+    $table = new xmldb_table('talentospilos_user_extended');
+    $field = new xmldb_field('estado_seguimiento', XMLDB_TYPE_INTEGER, '1', null, null, null, null, 'program_status');
+
+    // Conditionally launch add field id_instancia.
+    if (!$dbman->field_exists($table, $field)) {
+        $dbman->add_field($table, $field);
+    }
+
+    // ************************************************************************************************************
+    // Actualización:
+    // Añade el campo estado_seguimiento en la tabla {talentospilos_user_extended}
+    // Versión en la que se incluye: 2018011716029
+    // ************************************************************************************************************
+
     // Ases savepoint reached.
-    upgrade_block_savepoint(true, 2018010911179, 'ases');
+    upgrade_block_savepoint(true, 2018011716029, 'ases');
    
     return $result;
     }

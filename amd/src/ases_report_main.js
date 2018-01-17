@@ -48,14 +48,11 @@ define(['jquery', 'block_ases/datatables.net', 'block_ases/datatables.net-button
       data: dataString,
       url: "../managers/ases_report/asesreport_server_processing.php",
       success: function (msg) {
-        if (msg.error) {
-          alert(msg.error);
-        } else {
           //alert(msg.data);
           //console.log(msg.columns);
           $("#div_table").html('');
           $("#div_table").fadeIn(1000).append('<table id="tableResult" class="display" cellspacing="0" width="100%"><thead> </thead></table>');
-          $("#tableResult").DataTable(msg.data);
+          $("#tableResult").DataTable(msg);
 
           $('#tableResult tr').each(function () {
             $.each(this.cells, function () {
@@ -86,10 +83,7 @@ define(['jquery', 'block_ases/datatables.net', 'block_ases/datatables.net-button
               });
             });
           });
-
-        }
-
-      },
+        },
       dataType: "json",
       cache: "false",
       error: function (msg) {

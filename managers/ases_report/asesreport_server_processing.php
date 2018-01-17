@@ -10,16 +10,16 @@ $academic_fields = array();
 $name_columns = new stdClass();
 
 $fields_format = array(
-    'student_code'=>'username',
-    'firstname'=>'firstname',
-    'lastname'=>'lastname',
-    'document_id'=>'num_doc',
-    'email'=>'email',
-    'cellphone'=>'celular',
-    'address'=>'direccion_res',
-    'program_code'=>'cod_univalle',
-    'name_program'=>'programa.nombre',
-    'faculty'=>'facultad.nombre'
+    'student_code'=>'user_moodle.username',
+    'firstname'=>'user_moodle.firstname',
+    'lastname'=>'user_moodle.lastname',
+    'document_id'=>'tp_user.num_doc',
+    'email'=>'tp_user.emailpilos',
+    'cellphone'=>'tp_user.celular',
+    'address'=>'tp_user.direccion_res',
+    'program_code'=>'acad_program.cod_univalle',
+    'name_program'=>'acad_program.nombre',
+    'faculty'=>'faculty.nombre'
 );
 
 $columns_format = array(
@@ -44,7 +44,7 @@ if(isset($_POST['conditions'])){
 if(isset($_POST['fields'])){
     foreach($_POST['fields'] as $field){
         array_push($query_fields, $fields_format[$field]);
-        array_push($columns,  array("title"=>$columns_format[$field], "name"=>$columns_format[$field], "data"=>$columns_format[$field]));
+        array_push($columns,  array("title"=>$columns_format[$field], "name"=>explode('.', $fields_format[$field])[1], "data"=>explode('.', $fields_format[$field])[1]));
     }
 }
 
@@ -55,15 +55,13 @@ if(isset($_POST['academic_fields'])){
     }
 }
 
-print_r($conditions);
-print_r($query_fields);
-print_r($academic_fields);
-print_r($columns);
+// print_r($conditions);
+// print_r($query_fields);
+// print_r($academic_fields);
+// print_r($columns);
 
 if(isset($_POST['instance_id'])){
     $counter = 0;
-    
-  
     
     if(isset($_POST['chk_risk'])){
         
@@ -78,54 +76,48 @@ if(isset($_POST['instance_id'])){
 
     $result = get_ases_report($query_fields, $conditions, $risk_fields, $academic_fields, $_POST['instance_id']);
     
-    // $data = array(
-    //             "bsort" => false,
-    //             "data"=> $result->data,
-    //             "columns" => $columns,
-    //             "select" => "false",
-    //             "language" => 
-    //              array(
-    //                 "search"=> "Buscar:",
-    //                 "oPaginate" => array (
-    //                     "sFirst"=>    "Primero",
-    //                     "sLast"=>     "Último",
-    //                     "sNext"=>     "Siguiente",
-    //                     "sPrevious"=> "Anterior"
-    //                 ),
-    //                 "sProcessing"=>     "Procesando...",
-    //                 "sLengthMenu"=>     "Mostrar _MENU_ registros",
-    //                 "sZeroRecords"=>    "No se encontraron resultados",
-    //                 "sEmptyTable"=>     "Ningún dato disponible en esta tabla",
-    //                 "sInfo"=>           "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
-    //                 "sInfoEmpty"=>      "Mostrando registros del 0 al 0 de un total de 0 registros",
-    //                 "sInfoFiltered"=>   "(filtrado de un total de _MAX_ registros)",
-    //                 "sInfoPostFix"=>    "",
-    //                 "sSearch"=>         "Buscar:",
-    //                 "sUrl"=>            "",
-    //                 "sInfoThousands"=>  ",",
-    //                 "sLoadingRecords"=> "Cargando...",
-    //                 "oAria"=> array(
-    //                     "sSortAscending"=>  ": Activar para ordenar la columna de manera ascendente",
-    //                     "sSortDescending"=> ": Activar para ordenar la columna de manera descendente"
-    //                 )
-    //              ),
-    //             "autoFill"=>"true",
-    //             "dom"=> "lfrtBip",
-    //             "buttons"=>array(
-    //                             array("extend"=>"pdf", "message"=>"Generando PDF"),
-    //                             "csv",
-    //                             "excel"
-    //                         )
-    //     );
-    // header('Content-Type: application/json');
-    // $prueba = new stdClass;
-    // if(isset($result->error)){
-    //     $prueba->error = $result->error;
-    //     echo json_encode($prueba);
-    // }else{
-    //     $prueba->data = $data;
-    //     $prueba->columns = $result->columns;
-    //     echo json_encode($prueba);
-    // }
+    $data = array(
+                "bsort" => false,
+                "data"=> $result,
+                "columns" => $columns,
+                "select" => "false",
+                "language" => 
+                 array(
+                    "search"=> "Buscar:",
+                    "oPaginate" => array (
+                        "sFirst"=>    "Primero",
+                        "sLast"=>     "Último",
+                        "sNext"=>     "Siguiente",
+                        "sPrevious"=> "Anterior"
+                    ),
+                    "sProcessing"=>     "Procesando...",
+                    "sLengthMenu"=>     "Mostrar _MENU_ registros",
+                    "sZeroRecords"=>    "No se encontraron resultados",
+                    "sEmptyTable"=>     "Ningún dato disponible en esta tabla",
+                    "sInfo"=>           "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+                    "sInfoEmpty"=>      "Mostrando registros del 0 al 0 de un total de 0 registros",
+                    "sInfoFiltered"=>   "(filtrado de un total de _MAX_ registros)",
+                    "sInfoPostFix"=>    "",
+                    "sSearch"=>         "Buscar:",
+                    "sUrl"=>            "",
+                    "sInfoThousands"=>  ",",
+                    "sLoadingRecords"=> "Cargando...",
+                    "oAria"=> array(
+                        "sSortAscending"=>  ": Activar para ordenar la columna de manera ascendente",
+                        "sSortDescending"=> ": Activar para ordenar la columna de manera descendente"
+                    )
+                 ),
+                "autoFill"=>"true",
+                "dom"=> "lfrtBip",
+                "buttons"=>array(
+                                array("extend"=>"pdf", "message"=>"Generando PDF"),
+                                "csv",
+                                "excel"
+                            )
+        );
+
+    header('Content-Type: application/json');
+
+    echo json_encode($data);
 }
 ?>
