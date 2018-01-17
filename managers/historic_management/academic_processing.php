@@ -57,6 +57,8 @@ if (isset($_FILES['file'])) {
             throw new MyException("Error al cargar el archivo " . $archivo['name'] . ". Es posible que el archivo se encuentre dañado");
         }
 
+        
+
         $msj = new stdClass();
         $msj->msj = "VAS BIEN";
         echo json_encode($msj);

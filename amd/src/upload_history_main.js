@@ -26,27 +26,10 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert'], function ($,
                 uploadFile();
             });
 
-            function getUrlParams(page) {
-                // This function is anonymous, is executed immediately and 
-                // the return value is assigned to QueryString!
-                var query_string = [];
-                var query = document.location.search.substring(1);
-                var vars = query.split("&");
-                for (var i = 0; i < vars.length; i++) {
-                    var pair = vars[i].split("=");
-                    query_string[pair[0]] = pair[1];
-                }
-
-                return query_string;
-            }
 
             function uploadFile() {
 
-                var urlParameters = getUrlParams(document.location.search); //metodo definido en checrole
-
                 var formData = new FormData();
-
-                formData.append('idinstancia', urlParameters.instanceid);
 
                 if ($('#archivo')[0].files[0] == undefined) {
                     swal({
