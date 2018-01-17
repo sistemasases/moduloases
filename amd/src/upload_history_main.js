@@ -98,12 +98,14 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert'], function ($,
                 $('#informacion').empty();
                 switch (selector) {
                     case 'academic':
-                        $('#informacion').append('<div class="alert alert-info"><h4 align="center">Información de carga Historico Academico</h4><br><strong>Para tener en cuenta...</strong> <br><p>Columnas obligatorias:<ul> <li>username_estudiante</li> </ul> </p><p>Columnas extras aceptadas: <ul> <li>nota</li>  </ul> </p></div>');
+                        $('#informacion').append('<div class="alert alert-info"><h4 align="center">Información de carga Historico Academico</h4><br><strong>Para tener en cuenta...</strong> <br><p>Columnas obligatorias:<ul> <li>codigo_estudiante</li> <li>semestre</li> <li>programa</li> <li>promedio_semestre</li> <li>promedio_acumulado</li> </ul> </p><p>Columnas extras aceptadas: <ul> <li>numero_bajo</li> <li>puesto_estimulo</li> <li>fecha_cancelacion</li> </ul> </p></div>');
                         break;
                     case 'icetex':
                         $('#informacion').append('<div class="alert alert-info"><h4 align="center">Información de carga Historico ICETEX</h4><br> <strong>Para tener en cuenta...</strong> <br><p>Columnas obligatorias:<ul><li>username_estudiante</li></ul> </p><p>Columnas extras aceptadas: <ul> <li>otro</li>  </ul> </p></div>');
                         break;
-
+                    case 'resolucion':
+                        $('#informacion').append('<div class="alert alert-info"><h4 align="center">Información de carga resolución ICETEX</h4><br> <strong>Para tener en cuenta...</strong> <br><p>Columnas obligatorias:<ul><li>numero_resolucion</li></ul> </p><p>Columnas extras aceptadas: <ul> <li>otro</li>  </ul> </p></div>');
+                        break;
                     default:
                     // code
                 }

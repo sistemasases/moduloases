@@ -57,11 +57,24 @@ if (isset($_FILES['file'])) {
             throw new MyException("Error al cargar el archivo " . $archivo['name'] . ". Es posible que el archivo se encuentre dañado");
         }
 
+        $wrong_rows = array();
+        $success_rows =  array();
+        $detail_erros = array();
+
+        array_push($detail_erros,['No. linea - archivo original','No. linea - archivo registros erroneos','No. columna','Nombre Columna' ,'detalle error']);
+
+        $line_count =2;
+        $lc_wrongFile =2;
         
+        $titlesPos = fgetcsv($handle, 0, ",");
+        array_push($wrong_rows,$titlesPos);
+        array_push($success_rows,$titlesPos);
+        
+
 
         $msj = new stdClass();
         $msj->msj = "VAS BIEN";
-        echo json_encode($msj);
+        echo json_encode($titlesPos);
 
     } catch (MyException $e) {
         $msj = new stdClass();
