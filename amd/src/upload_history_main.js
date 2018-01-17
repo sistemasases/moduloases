@@ -63,7 +63,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert'], function ($,
                 formData.append('file', $('#archivo')[0].files[0]);
 
                 var controler = $('#selector').val() + '_processing.php';
-                alert(controler);
+                //alert(controler);
 
                 $.ajax({
                     url: '../managers/historic_management/' + controler,
@@ -78,7 +78,8 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert'], function ($,
                         $('#response').html("<img src='../icon/facebook.gif' />");
                     },
                     success: function (msj) {
-
+                        alert("ENTRO")
+                        console.log(msj);
                         $('#response').empty();
 
                         $('#informacion').empty();
@@ -94,7 +95,14 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert'], function ($,
                         $('#informacion').append(msj.urlzip);
                     },
                     error: function (msj) {
-                        alert("error en el servidor");
+                        console.log(msj);
+                        swal({
+                            title: "Error en conexion al servidor.",
+                            text: "No se ha podido establecer conexion al servidor",
+                            html: true,
+                            type: "error",
+                            confirmButtonColor: "#d51b23"
+                        });
                         $('#response').html("");
                         addHelpMessage();
                     }
