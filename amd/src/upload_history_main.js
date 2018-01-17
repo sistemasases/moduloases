@@ -1,25 +1,24 @@
 // Standard license block omitted.
-/*
+/* @autor      Camilo José Cruz Rivera
  * @package    block_ases
  * @copyright  ASES
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 /**
- * @module block_ases/massmanagement_main
+ * @module block_ases/upload_history_main
  */
 
-define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_ases/datatables.net-buttons', 'block_ases/buttons.flash', 'block_ases/jszip', 'block_ases/pdfmake', 'block_ases/buttons.html5', 'block_ases/buttons.print', 'block_ases/sweetalert', 'block_ases/select2'], function ($, bootstrap, datatables, sweetalert, select2) {
+define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert'], function ($, bootstrap, sweetalert) {
 
 
     return {
         init: function () {
 
-            var val = $('#selector').val();
-            addHelpMessage(val);
+
+            addHelpMessage();
             $('#selector').on('change', function () {
-                var val = $('#selector').val();
-                addHelpMessage(val);
+                addHelpMessage();
             });
 
             $('#boton_subir').on('click', function () {
@@ -57,33 +56,22 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_as
                         type: "error",
                         confirmButtonColor: "#d51b23"
                     });
-                    var val = $('#selector').val();
-                    addHelpMessage(val);
+                    addHelpMessage();
                     return;
                 }
 
                 formData.append('file', $('#archivo')[0].files[0]);
 
-                var controler = '';
-
-                switch ($('#selector').val()) {
-                    case 'monitor_estud':
-                        controler = 'mrm_monitor_estud.php'; //
-                        break;
-                    case 'roles_usuario':
-                        controler = 'mrm_roles.php'; //
-                        break;
-                    default:
-                        return 0;
-                }
+                var controler = $('#selector').val() + '_processing.php';
+                alert(controler);
 
                 $.ajax({
-                    url: '../managers/mass_management/' + controler,
+                    url: '../managers/historic_management/' + controler,
                     data: formData,
                     type: 'POST',
                     dataType: 'json',
                     cache: false,
-                    // parametros necesarios para la carga de archivos
+                    //parametros necesarios para la carga de archivos
                     contentType: false,
                     processData: false,
                     beforeSend: function () {
@@ -106,23 +94,23 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_as
                         $('#informacion').append(msj.urlzip);
                     },
                     error: function (msj) {
-                        alert("error ajax");
+                        alert("error en el servidor");
                         $('#response').html("");
-                        var val = $('#selector').val();
-                        addHelpMessage(val);
+                        addHelpMessage();
                     }
-                    // ... Other options like success and etc
+                    //... Other options like success and etc
                 });
 
             }
-            function addHelpMessage(selector) {
+            function addHelpMessage() {
+                var selector = $('#selector').val();
                 $('#informacion').empty();
                 switch (selector) {
-                    case 'monitor_estud':
-                        $('#informacion').append('<div class="alert alert-info"><h4 align="center">Información</h4><strong>Para tener en cuenta...</strong> <br><p>Columnas obligatorias:<ul> <li>username_monitor</li><li>username_estudiante</li> </ul> </p></div>');
+                    case 'academic':
+                        $('#informacion').append('<div class="alert alert-info"><h4 align="center">Información de carga Historico Academico</h4><br><strong>Para tener en cuenta...</strong> <br><p>Columnas obligatorias:<ul> <li>username_estudiante</li> </ul> </p><p>Columnas extras aceptadas: <ul> <li>nota</li>  </ul> </p></div>');
                         break;
-                    case 'roles_usuario':
-                        $('#informacion').append('<div class="alert alert-info"><h4 align="center">Información</h4><strong>Para tener en cuenta...</strong> <br><p>Columnas obligatorias:<ul> <li>username</li><li>rol(administrativo, reportes,profesional_ps, monitor_ps,  estudiante_t ó practicante_psp)</li> </ul> </p><p>Columnas extras aceptadas: <ul> <li>jefe</li>  </ul> </p></div>');
+                    case 'icetex':
+                        $('#informacion').append('<div class="alert alert-info"><h4 align="center">Información de carga Historico ICETEX</h4><br> <strong>Para tener en cuenta...</strong> <br><p>Columnas obligatorias:<ul><li>username_estudiante</li></ul> </p><p>Columnas extras aceptadas: <ul> <li>otro</li>  </ul> </p></div>');
                         break;
 
                     default:

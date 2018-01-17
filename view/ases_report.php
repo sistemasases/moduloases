@@ -49,7 +49,7 @@ require_login($courseid, false);
 $riesgos = get_riesgos();
 $cohortes = get_cohortes();
 
-//se crean los elementos del menu
+//Menu items are created
 $menu_option = create_menu_options($USER->id, $blockid, $courseid);
 
 $tabla_riesgos='';
@@ -72,12 +72,12 @@ foreach($ases_status_array as $ases_status){
 	$estados_ases .= "<option value='".$ases_status->id."'>".$ases_status->nombre."</option>";
 }
 
-// Crea una clase con la información que se llevará al template.
+// Creates a class with information that'll be send to template
 $data = 'data';    
 $data = new stdClass;
 
 
-// Evalua si el rol del usuario tiene permisos en esta view.
+//Evaluates if user role has permissions assigned on this view
 $actions = authenticate_user_view($USER->id, $blockid);
 $data = $actions;
 $data->menu = $menu_option;
@@ -90,7 +90,7 @@ $contextblock =  context_block::instance($blockid);
 $url = new moodle_url("/blocks/ases/view/ases_report.php",array('courseid' => $courseid, 'instanceid' => $blockid));
 //$url =  $CFG->wwwroot."/blocks/ases/view/index.php?courseid=".$courseid."&instanceid=".$blockid;
 
-//Configuracion de la navegacion
+// Navigation setup
 $coursenode = $PAGE->navigation->find($courseid, navigation_node::TYPE_COURSE);
 $blocknode = navigation_node::create('Reporte general',$url, null, 'block', $blockid);
 $coursenode->add_node($blocknode);
@@ -98,7 +98,7 @@ $coursenode->add_node($blocknode);
 // $blocknode->make_active();
 // $node->make_active();
 
-// se valida si la instancia ya está registrada
+//Instance is consulted for its registration
 if(!consult_instance($blockid)){
     header("Location: instance_configuration.php?courseid=$courseid&instanceid=$blockid");
 }

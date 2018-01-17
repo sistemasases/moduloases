@@ -84,6 +84,21 @@ function get_actions_view($function_name,$userid,$blockid,$vista=null){
 }
 
 
+/**
+ * Función que retorna el nombre del rol de un usuario con el fin de mostrar al correspondiente interfaz en seguimiento_pilos
+ * Returns an user role to show the appropiate interface in 'seguimiento_pilos'
+ *
+ * @param $userid --> user id
+ * @param $instanceid --> instance id
+ * @return Array containing role name for the given user 
+ */
+function get_name_role($idrol)
+{
+    global $DB;
+    $sql_query = "SELECT nombre_rol FROM {talentospilos_rol} WHERE id='$idrol'";
+    $consulta=$DB->get_record_sql($sql_query);
+    return $consulta->nombre_rol;
+}
 
 
 /*

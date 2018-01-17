@@ -415,9 +415,6 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_as
                             url: "../managers/user_management/update_role_user.php",
                             success: function(msg) {
 
-                                alert(msg);
-
-
                                 swal({
                                     title: "Información!",
                                     text: msg,
@@ -495,7 +492,9 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_as
 
             function create_select2(name) {
 
+
                 $("#" + name).select2({
+
                     language: {
 
                         noResults: function() {
@@ -523,7 +522,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_as
                 if (count <= MaxInputs) //max input box allowed
                 {
                     FieldCount++;
-                    var text = "";
+                    var text = '<option value="-1">-----------------------</option>';
 
                     for (var student in students) {
                         text += '<option value="' + students[student].username + '">' + students[student].username + ' - ' + students[student].firstname + ' ' + '' + students[student].lastname + '</option>';

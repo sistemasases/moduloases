@@ -17,72 +17,65 @@
 
 /**
  * Ases block
- * @author     Edgar Mauricio Ceron Florez
+ *
+ * @author     Juan Pablo Moreno Muñoz
  * @package    block_ases
+ * @copyright  2017 Juan Pablo Moreno Muñoz <moreno.juan@correounivalle.edu.co>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 // Standard GPL and phpdocs
 require_once(__DIR__ . '/../../../config.php');
 require_once($CFG->libdir.'/adminlib.php');
-require_once('../managers/permissions_management/permissions_functions.php');
 require_once ('../managers/permissions_management/permissions_lib.php');
 require_once ('../managers/validate_profile_action.php');
-require_once ('../managers/menu_options.php'); 
 include('../lib.php');
+require_once ('../managers/menu_options.php');
 global $PAGE;
 
-include("../classes/output/create_action_page.php");
-require_once('../managers/user_management/user_lib.php');
+require_once('../managers/instance_management/instance_lib.php');
 include("../classes/output/renderer.php");
+include("../classes/output/upload_historical_files_page.php");
 
 
 // Set up the page.
-$title = "Crear accion";
+$title = "Carga Histórico";
 $pagetitle = $title;
 $courseid = required_param('courseid', PARAM_INT);
 $blockid = required_param('instanceid', PARAM_INT);
 
 require_login($courseid, false);
 
+$contextcourse = context_course::instance($courseid);
+$contextblock =  context_block::instance($blockid);
 
-//Gets all roles
-$roles = get_roles();
-$roles_table_user= get_roles_select($roles,"profiles_user");
+$url = new moodle_url("/blocks/ases/view/upload_historical_files.php",array('courseid' => $courseid, 'instanceid' => $blockid));
 
+//se oculta si la instancia ya está registrada
+if(!consult_instance($blockid)){
+    header("Location: instance_configuration.php?courseid=$courseid&instanceid=$blockid");
+}
 
-//Gets all functionalities
-$function = get_functions();
-$functions_table = get_functions_select($function,"functions");
-$functions = get_functions_select($function,"functions_table");
-
-$general_table  = get_functions_actions();
-
-//Menu items are created
+//se crean los elementos del menu
 $menu_option = create_menu_options($USER->id, $blockid, $courseid);
 
-//Crea una clase con la información que se llevará al template.   
+// Crea una clase con la información que se llevará al template.
+$data = 'data';
 $data = new stdClass;
 
-//Evaluates if user role has permissions assigned on this view
+// Evalua si el rol del usuario tiene permisos en esta view.
 $actions = authenticate_user_view($USER->id, $blockid);
 $data = $actions;
 $data->menu = $menu_option;
-$data->roles_table_user=$roles_table_user;
-$data->functions_table =$functions_table;
-$data->general_table=$general_table;
-$data->functions =$functions;
 
 
-$contextcourse = context_course::instance($courseid);
-$contextblock =  context_block::instance($blockid);
-$url = new moodle_url("/blocks/ases/view/create_action.php",array('courseid' => $courseid, 'instanceid' => $blockid));
-
-// Navegation set up
+//Configuracion de la navegacion
 $coursenode = $PAGE->navigation->find($courseid, navigation_node::TYPE_COURSE);
-$blocknode = navigation_node::create('Crear accion',$url, null, 'block', $blockid);
+$blocknode = navigation_node::create('Carga de archivos históricos',$url, null, 'block', $blockid);
 $coursenode->add_node($blocknode);
 $blocknode->make_active();
+
+
 
 
 $PAGE->requires->css('/blocks/ases/style/styles_pilos.css', true);
@@ -90,8 +83,8 @@ $PAGE->requires->css('/blocks/ases/style/bootstrap_pilos.css', true);
 $PAGE->requires->css('/blocks/ases/style/bootstrap_pilos.min.css', true);
 $PAGE->requires->css('/blocks/ases/style/sweetalert.css', true);
 $PAGE->requires->css('/blocks/ases/style/round-about_pilos.css', true);
-$PAGE->requires->css('/blocks/ases/style/sugerenciaspilos.css', true);
 $PAGE->requires->css('/blocks/ases/style/forms_pilos.css', true);
+$PAGE->requires->css('/blocks/ases/style/add_fields.css', true);
 $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/dataTables.foundation.css', true);
 $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/dataTables.foundation.min.css', true);
 $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/dataTables.jqueryui.css', true);
@@ -99,15 +92,11 @@ $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/dataTables.jqueryui
 $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/jquery.dataTables.css', true);
 $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/jquery.dataTables.min.css', true);
 $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/jquery.dataTables_themeroller.css', true);
-$PAGE->requires->css('/blocks/ases/js/select2/css/select2.css', true);
 $PAGE->requires->css('/blocks/ases/style/side_menu_style.css', true);
 
+$PAGE->requires->js_call_amd('block_ases/upload_history_main','init');
 
 
-$PAGE->requires->js('/blocks/ases/js/npm.js', true);
-$PAGE->requires->js_call_amd('block_ases/permissionsmanagement_main','init');
-
-//$PAGE->requires->js('/blocks/ases/js/create_action.js', true);
 
 $PAGE->set_url($url);
 $PAGE->set_title($title);
@@ -115,9 +104,7 @@ $PAGE->set_title($title);
 $PAGE->set_heading($title);
 
 $output = $PAGE->get_renderer('block_ases');
-
+$index_page = new \block_ases\output\upload_historical_files_page($data);
 echo $output->header();
-
-$permisos_rol_page = new \block_ases\output\create_action_page($data);
-echo $output->render($permisos_rol_page);
+echo $output->render($index_page);
 echo $output->footer();

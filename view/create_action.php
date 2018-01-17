@@ -47,29 +47,29 @@ $blockid = required_param('instanceid', PARAM_INT);
 
 require_login($courseid, false);
 
-//Obtiene rol del usuario conectado
+//Gets current user role
 $userrole = get_id_rol($USER->id,$blockid);
 $usernamerole= get_name_rol($userrole);
 
-//Obtiene los roles.
+//Gets all roles
 $roles = get_roles();
 $roles_table_user= get_roles_select($roles,"profiles_user");
 
 
-//obtiene funcionalidades
+//Gets all functionalities
 $function = get_functions();
 $functions_table = get_functions_select($function,"functions");
 $functions = get_functions_select($function,"functions_table");
 
 $general_table  = get_functions_actions($usernamerole);
 
-//se crean los elementos del menu
+//Menu items are created
 $menu_option = create_menu_options($USER->id, $blockid, $courseid);
 
-//Crea una clase con la información que se llevará al template.   
+// Creates a class with information that'll be send to template
 $data = new stdClass;
 
-// Evalua si el rol del usuario tiene permisos en esta view.
+//Evaluates if user role has permissions assigned on this view
 $actions = authenticate_user_view($USER->id, $blockid);
 $data = $actions;
 $data->rol = $usernamerole;
@@ -84,7 +84,7 @@ $contextcourse = context_course::instance($courseid);
 $contextblock =  context_block::instance($blockid);
 $url = new moodle_url("/blocks/ases/view/create_action.php",array('courseid' => $courseid, 'instanceid' => $blockid));
 
-//Configuracion de la navegacion
+//Navegation set up
 $coursenode = $PAGE->navigation->find($courseid, navigation_node::TYPE_COURSE);
 $blocknode = navigation_node::create('Crear accion',$url, null, 'block', $blockid);
 $coursenode->add_node($blocknode);
