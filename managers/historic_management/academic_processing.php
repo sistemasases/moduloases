@@ -69,7 +69,7 @@ if (isset($_FILES['file'])) {
         $titlesPos = fgetcsv($handle, 0, ",");
         array_push($wrong_rows,$titlesPos);
         array_push($success_rows,$titlesPos);
-        
+         
 
 
         $msj = new stdClass();
