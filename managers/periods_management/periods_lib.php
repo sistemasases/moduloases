@@ -227,11 +227,14 @@ require_once(dirname(__FILE__). '/../../../../config.php');
     global $DB;
 
     $sql_query = "SELECT id FROM {talentospilos_semestre} WHERE nombre = '$semester_name'";
-    $semester_id = $DB->get_record_sql($sql_query);
+    $semester_id = $DB->get_record_sql($sql_query)->id;
 
     return $semester_id;   
 
  }
+
+
+
 
 
 
