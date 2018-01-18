@@ -62,3 +62,21 @@ function get_student_by_identification($identification){
 }
 
 //print_r(get_student_by_identification('97040114746'));
+
+
+function create_resolution($num_resolution, $date, $total_amount){
+
+    global $DB;
+
+    $newResolution = new stdClass();
+    $newResolution->codigo_resolucion = $num_resolution;
+    $newResolution->fecha_resolucion = $date;
+    $newResolution->monto_total = $total_amount;
+
+    $insert = $DB->insert_record('talentospilos_res_icetex', $newResolution, true);
+
+    return $insert;
+
+}
+
+//print_r(create_resolution("0000000000", strtotime("2018-01-01"), 1000000));
