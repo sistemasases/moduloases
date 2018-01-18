@@ -65,7 +65,7 @@ if( isset($_FILES['file']) || isset($_POST['idinstancia'])){
         $titlesPos = fgetcsv($handle, 0, ",");
         array_push($wrong_rows,$titlesPos);
         array_push($success_rows,$titlesPos);
-        
+         
         $associativeTitles = getAssociativeTitles($titlesPos);
         
         

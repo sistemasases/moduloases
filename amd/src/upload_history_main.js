@@ -26,27 +26,10 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert'], function ($,
                 uploadFile();
             });
 
-            function getUrlParams(page) {
-                // This function is anonymous, is executed immediately and 
-                // the return value is assigned to QueryString!
-                var query_string = [];
-                var query = document.location.search.substring(1);
-                var vars = query.split("&");
-                for (var i = 0; i < vars.length; i++) {
-                    var pair = vars[i].split("=");
-                    query_string[pair[0]] = pair[1];
-                }
-
-                return query_string;
-            }
 
             function uploadFile() {
 
-                var urlParameters = getUrlParams(document.location.search); //metodo definido en checrole
-
                 var formData = new FormData();
-
-                formData.append('idinstancia', urlParameters.instanceid);
 
                 if ($('#archivo')[0].files[0] == undefined) {
                     swal({
@@ -63,7 +46,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert'], function ($,
                 formData.append('file', $('#archivo')[0].files[0]);
 
                 var controler = $('#selector').val() + '_processing.php';
-                alert(controler);
+                //alert(controler);
 
                 $.ajax({
                     url: '../managers/historic_management/' + controler,
@@ -78,7 +61,8 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert'], function ($,
                         $('#response').html("<img src='../icon/facebook.gif' />");
                     },
                     success: function (msj) {
-
+                        alert("ENTRO")
+                        console.log(msj);
                         $('#response').empty();
 
                         $('#informacion').empty();
@@ -94,7 +78,14 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert'], function ($,
                         $('#informacion').append(msj.urlzip);
                     },
                     error: function (msj) {
-                        alert("error en el servidor");
+                        console.log(msj);
+                        swal({
+                            title: "Error en conexion al servidor.",
+                            text: "No se ha podido establecer conexion al servidor",
+                            html: true,
+                            type: "error",
+                            confirmButtonColor: "#d51b23"
+                        });
                         $('#response').html("");
                         addHelpMessage();
                     }
@@ -107,12 +98,17 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert'], function ($,
                 $('#informacion').empty();
                 switch (selector) {
                     case 'academic':
-                        $('#informacion').append('<div class="alert alert-info"><h4 align="center">Información de carga Historico Academico</h4><br><strong>Para tener en cuenta...</strong> <br><p>Columnas obligatorias:<ul> <li>username_estudiante</li> </ul> </p><p>Columnas extras aceptadas: <ul> <li>nota</li>  </ul> </p></div>');
+                        $('#informacion').append('<div class="alert alert-info"><h4 align="center">Información de carga Historico Academico</h4><br><strong>Para tener en cuenta...</strong> <br><p>Columnas obligatorias:<ul> <li>codigo_estudiante</li> <li>semestre</li> <li>programa</li> <li>promedio_semestre</li> <li>promedio_acumulado</li> </ul> </p><p>Columnas extras aceptadas: <ul> <li>numero_bajo</li> <li>puesto_estimulo</li> <li>fecha_cancelacion</li> </ul> </p></div>');
+                        break;
+                    case 'materias':
+                        $('#informacion').append('<div class="alert alert-info"><h4 align="center">Información de carga materias</h4><br><strong>Para tener en cuenta...</strong> <br><p>Columnas obligatorias:<ul> <li>codigo_estudiante</li> <li>semestre</li> <li>programa</li> <li>nombre_materia</li> <li>codigo_materia</li> <li>creditos</li> <li>nota</li> </ul> </p></div>');
                         break;
                     case 'icetex':
-                        $('#informacion').append('<div class="alert alert-info"><h4 align="center">Información de carga Historico ICETEX</h4><br> <strong>Para tener en cuenta...</strong> <br><p>Columnas obligatorias:<ul><li>username_estudiante</li></ul> </p><p>Columnas extras aceptadas: <ul> <li>otro</li>  </ul> </p></div>');
+                        $('#informacion').append('<div class="alert alert-info"><h4 align="center">Información de carga Historico ICETEX</h4><br> <strong>Para tener en cuenta...</strong> <br><p>Columnas obligatorias:<ul><li>cedula_estudiante</li><li>semestre</li><li>num_resolucion</li> <li>monto_estudiante</li></ul> </p></div>');
                         break;
-
+                    case 'resolucion':
+                        $('#informacion').append('<div class="alert alert-info"><h4 align="center">Información de carga resolución ICETEX</h4><br> <strong>Para tener en cuenta...</strong> <br><p>Columnas obligatorias:<ul><li>numero_resolucion</li><li>fecha</li><li>total_girado</li></ul></p></div>');
+                        break;
                     default:
                     // code
                 }
