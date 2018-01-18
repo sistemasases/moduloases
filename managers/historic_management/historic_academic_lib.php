@@ -52,4 +52,22 @@ function get_ases_id_by_code($code)
     }
 }
 
+/**
+ * Creates an associative array given a header from a CSV file
+ * 
+ * @see getAssociativeTitles ($titlesPos)
+ * @param $titlesPos --> header from CSV
+ * @return array 
+ */
+function getAssociativeArray($array){
+    
+    $associativeArray = array();
+
+    foreach ($array as $key => $value) {
+        $associativeArray[$value] = $key; 
+    }
+
+    return $associativeArray;
+}
+
 
