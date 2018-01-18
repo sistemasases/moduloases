@@ -175,7 +175,7 @@ if (isset($_POST['profile']) && isset($_POST['actions'])&&isset($_POST['instance
     $msg->text = $ex;
     $msg->type = "success";
     echo $msg->text;
-    $continuar=false:
+    $continuar=false;
 }
 
   if ($continuar)
