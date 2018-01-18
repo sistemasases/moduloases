@@ -154,6 +154,13 @@ if (isset($_POST['profile']) && isset($_POST['actions'])&&isset($_POST['instance
   $record = new stdClass;
 
 
+  foreach($actions as $action)
+    {
+    $record->id_rol = $_POST['profile'];
+    $record->id_accion = $action;
+    $DB->insert_record('talentospilos_permisos_rol', $record, true);
+    }
+
 
   if($usernamerole=='sistemas'){
     $record->id_rol=$_POST['profile'];
@@ -163,19 +170,12 @@ if (isset($_POST['profile']) && isset($_POST['actions'])&&isset($_POST['instance
 
   }
 
-
-  foreach($actions as $action)
-    {
-    $record->id_rol = $_POST['profile'];
-    $record->id_accion = $action;
-    $DB->insert_record('talentospilos_permisos_rol', $record, true);
-    }
-
     }catch(Exception $ex){
-  $msg->title = "";
+    $msg->title = "";
     $msg->text = $ex;
     $msg->type = "success";
     echo $msg->text;
+    $continuar=false:
 }
 
   if ($continuar)
