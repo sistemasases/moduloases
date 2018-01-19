@@ -45,7 +45,7 @@ require_once $CFG->dirroot.'/grade/report/grader/lib.php';
  * Gets course information given its id
  * @see get_info_course($id_curso)
  * @param $id_curso --> course id
- * @return Object Containing all relevant course information
+ * @return object Containing all relevant course information
  */
 function get_info_course($id_curso)
 {

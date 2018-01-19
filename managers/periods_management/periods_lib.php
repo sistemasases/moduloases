@@ -32,7 +32,7 @@ require_once(dirname(__FILE__). '/../../../../config.php');
  * @see get_current_semester_byinterval($fecha_inicio,$fecha_fin)
  * @param $fecha_inicio ---> starting date
  * @param $fecha_fin ---> ending date
- * @return Object that represents the semester within the given interval
+ * @return object that represents the semester within the given interval
  */
 
  function get_current_semester_byinterval($fecha_inicio,$fecha_fin){
@@ -48,7 +48,7 @@ require_once(dirname(__FILE__). '/../../../../config.php');
  * Function that returns the current semester
  * 
  * @see get_current_semester()
- * @return  Object that represents the current semester
+ * @return  object that represents the current semester
  */
  
  function get_current_semester(){
@@ -65,7 +65,7 @@ require_once(dirname(__FILE__). '/../../../../config.php');
  * 
  * @see get_semester_interval($id)
  * @param $id ---> semester's id
- * @return Object that represents the semester 
+ * @return object that represents the semester 
  */
  
  function get_semester_interval($id){
@@ -82,7 +82,7 @@ require_once(dirname(__FILE__). '/../../../../config.php');
  * Function that returns all registered semesters
  * 
  * @see get_all_semesters()
- * @return Array that contains every semester registered on the DataBase
+ * @return array that contains every semester registered on the DataBase
  */
 
  function get_all_semesters(){
@@ -103,7 +103,7 @@ require_once(dirname(__FILE__). '/../../../../config.php');
  * 
  * @see get_semester_by_id($idSemester)
  * @param $idSemester -> semester's id
- * @return Object that represents certain information about the specific semester
+ * @return object that represents certain information about the specific semester
  */
 
 
@@ -161,7 +161,7 @@ require_once(dirname(__FILE__). '/../../../../config.php');
  * Function that returns every semester, change its language and date-format to spanish 
  * 
  * @see get_all_semesters_table()
- * @return Array
+ * @return array
  */
  
  function get_all_semesters_table(){
@@ -196,7 +196,7 @@ require_once(dirname(__FILE__). '/../../../../config.php');
  * @param $name -> name of the semester
  * @param $beginning_date -> semester's starting date
  * @param $ending_date -> semester's ending date
- * @return String
+ * @return string
  */
 
  function create_semester($name, $beginning_date, $ending_date){

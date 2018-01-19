@@ -49,7 +49,7 @@ function get_course_users_select($courseusers){
  * Function that obtains the select organized from the users registered to the course 
  * @see get_period_select($periods)
  * @param $periods ---> existent periods
- * @return Array
+ * @return array
  **/
 function get_students_select($students,$name){
 	$table="";
