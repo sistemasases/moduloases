@@ -54,7 +54,7 @@ function get_resolution_id_by_number($num_resolution){
 }
 
 /**
- * Function that returns the id of an student given its identification
+ * Function that returns the ases id of an student given its identification
  * 
  * @see get_student_id_by_identification($identification)
  * @param $identification -> student's identification
@@ -89,7 +89,7 @@ function get_student_id_by_identification($identification){
  * @param $num_resolution -> number of the new resolution
  * @param $date -> date of the new resolution
  * @param $total_amount -> total amount of money transfered
- * @return Integer
+ * @return integer
  */
 function create_resolution($num_resolution, $date, $total_amount){
 
@@ -116,9 +116,9 @@ function create_resolution($num_resolution, $date, $total_amount){
  * @param $num_resolution -> number of the resolution 
  * @param $name_semester -> name of the semester 
  * @param $amount -> amount of money per student
- * @return Integer
+ * @return integer
  */
-function create_historic_icetex($student_identification, $num_resolution, $name_semester, $amount){
+function create_historic_icetex($student_id, $resolution_id, $semester_id, $amount){
 
     global $DB;
 

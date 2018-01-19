@@ -25,4 +25,193 @@
  */
 
 require_once(dirname(__FILE__). '/../../../../config.php');
+require_once '../MyException.php';
+require_once '../mass_management/massmanagement_lib.php';
+require_once '../historic_management/historic_icetex_lib.php';
 
+if (isset($_FILES['file'])) {
+
+   try {
+       global $DB;
+       $record = new stdClass();
+
+       $archivo = $_FILES['file'];
+       $extension = pathinfo($archivo['name'], PATHINFO_EXTENSION);
+       date_default_timezone_set("America/Bogota");
+       $nombre = $archivo['name'];
+
+       $rootFolder = "../../view/archivos_subidos/historic/icetex/files/";
+       $zipFolfer = "../../view/archivos_subidos/historic/icetex/comprimidos/";
+
+       //deletes everything from folders
+       deleteFilesFromFolder($rootFolder);
+       deleteFilesFromFolder($zipFolfer);
+
+       //validate extension
+       if ($extension !== 'csv') {
+           throw new MyException("El archivo " . $archivo['name'] . " no corresponde al un archivo de tipo CSV. Por favor verifícalo");
+       }
+
+       //validate and move file
+       if (!move_uploaded_file($archivo['tmp_name'], $rootFolder . 'Original_' . $nombre)) {
+           throw new MyException("Error al cargar el archivo.");
+       }
+
+       //validate and open file
+       ini_set('auto_detect_line_endings', true);
+       if (!($handle = fopen($rootFolder . 'Original_' . $nombre, 'r'))) {
+           throw new MyException("Error al cargar el archivo " . $archivo['name'] . ". Es posible que el archivo se encuentre dañado");
+       }
+
+       //Control variables
+       $wrong_rows = array();
+       $success_rows = array();
+       $detail_errors = array();
+
+       //headers of error file
+       array_push($detail_errors, ['No. linea - archivo original', 'No. linea - archivo registros erroneos', 'No. columna', 'Nombre Columna', 'detalle error']);
+
+       $line_count = 2;
+       $lc_wrongFile = 2;
+
+       //headers of succes files
+       $titlesPos = fgetcsv($handle, 0, ",");
+       array_push($wrong_rows, $titlesPos);
+       array_push($success_rows, $titlesPos);
+
+       $associativeTitles = getAssociativeArray($titlesPos);
+
+       while ($data = fgetcsv($handle, 0, ",")) {
+           $isValidRow = true;
+           /* VALIDATIONS OF FIELDS */
+
+           //validate cedula_estudiante
+           if (!is_null($associativeTitles['cedula_estudiante'])) {
+
+               $cedula_estudiante = $data[$associativeTitles['cedula_estudiante']];
+
+               if ($cedula_estudiante != '') {
+
+                   $id_estudiante = get_student_id_by_identification($cedula_estudiante);
+                   if (!$id_estudiante) {
+                       $isValidRow = false;
+                       array_push($detail_errors, [$line_count, $lc_wrongFile, ($associativeTitles['cedula_estudiante'] + 1), 'cedula_estudiante', 'No existe un estudiante ases asociado a la cédula' . $data[$associativeTitles['cedula_estudiante']]]);
+                   }
+
+               } else {
+                   $isValidRow = false;
+                   array_push($detail_erros, [$line_count, $lc_wrongFile, ($associativeTitles['cedula_estudiante'] + 1), 'cedula_estudiante', 'El campo cedula_estudiante es obligatorio y se encuentra vacio']);
+               }
+
+           } else {
+               throw new MyException('La columna con el campo cedula_estudiante es obligatoria');
+           }
+           
+           //validate nombre_semestre
+           if ($associativeTitles['nombre_semestre'] != null) {
+               $nombre_semestre = $data[$associativeTitles['nombre_semestre']];
+               if ($nombre_semestre != '') {
+
+                   $id_semestre = get_semester_id_by_name($nombre_semestre);
+                   if (!$id_semestre) {
+                       $isValidRow = false;
+                       array_push($detail_erros, [$line_count, $lc_wrongFile, ($associativeTitles['nombre_semestre'] + 1), 'nombre_semestre', 'No existe ningun semestre registrado con el nombre' . $nombre_semestre]);
+                   }
+
+               } else {
+                   $isValidRow = false;
+                   array_push($detail_erros, [$line_count, $lc_wrongFile, ($associativeTitles['nombre_semestre'] + 1), 'nombre_semestre', 'El campo nombre_semestre es obligatorio y se encuentra vacio']);
+               }
+
+           } else {
+               throw new MyException('La columna con el campo nombre_semestre es obligatoria');
+           }
+
+           //validate codigo_resolucion
+           if ($associativeTitles['codigo_resolucion'] != null) {
+
+               $codigo_resolucion = $data[$associativeTitles['codigo_resolucion']];
+               if ($codigo_resolucion != '') {
+
+                    $id_resolucion = get_resolution_id_by_number($codigo_resolucion);
+
+                   if (!$id_resolucion) {
+                       $isValidRow = false;
+                       array_push($detail_erros, [$line_count, $lc_wrongFile, ($associativeTitles['codigo_resolucion'] + 1), 'codigo_resolucion', 'No existe ninguna resolución asociada al código' . $codigo_resolucion]);
+                   }
+
+               } else {
+                   $isValidRow = false;
+                   array_push($detail_erros, [$line_count, $lc_wrongFile, ($associativeTitles['codigo_resolucion'] + 1), 'codigo_resolucion', 'El campo codigo_resolucion es obligatorio y se encuentra vacio']);
+               }
+
+           } else {
+               throw new MyException('La columna con el campo codigo_resolucion es obligatoria');
+           }
+
+           //validate monto_estudiante
+           if ($associativeTitles['monto_estudiante'] != null) {
+
+               $monto_estudiante = $data[$associativeTitles['monto_estudiante']];
+               if ($monto_estudiante != '') {
+
+                   if (!is_numeric($monto_estudiante)) {
+                       $isValidRow = false;
+                       array_push($detail_erros, [$line_count, $lc_wrongFile, ($associativeTitles['monto_estudiante'] + 1), 'monto_estudiante', 'El campo monto_estudiante debe ser de tipo numerico']);
+                   }
+
+               } else {
+                   $isValidRow = false;
+                   array_push($detail_erros, [$line_count, $lc_wrongFile, ($associativeTitles['monto_estudiante'] + 1), 'monto_estudiante', 'El campo monto_estudiante es obligatorio y se encuentra vacio']);
+               }
+
+           } else {
+               throw new MyException('La columna con el campo monto_estudiante es obligatoria');
+           }           
+
+           //FINALIZACION DE VALIDACIONES. CARGA O ACTUALIZACIÓN
+           if (!$isValidRow) {
+               $lc_wrongFile++;
+               array_push($wrong_rows, $data);
+               continue;
+           } else {
+
+               //Actualizar o crear un registro
+               $result = create_historic_icetex($id_estudiante, $id_resolucion, $id_semestre, $monto_estudiante);
+
+               if (!$result) {
+                   array_push($detail_erros, [$line_count, $lc_wrongFile, 'Error al registrar historico', 'Error Servidor', 'Error del server registrando el historico']);
+                   array_push($wrong_rows, $data);
+                   $lc_wrongFile++;
+               } else {
+
+                   
+               }
+           }
+
+           $line_count++;
+       }
+
+       //RECORRER LOS REGISTROS ERRONEOS Y CREAR ARCHIVO DE registros_erroneos
+
+       //RECORRER LOS REGISTROS EXITOSOS Y CREAR ARCHIVO DE registros_exitosos
+
+       //CREAR ZIP
+
+       echo json_encode($cedula_estudiante);
+
+   } catch (MyException $e) {
+       $msj = new stdClass();
+       $msj->error = $e->getMessage() . pg_last_error();
+       echo json_encode($msj);
+   } catch (Exception $e) {
+       $msj = new stdClass();
+       $msj->error = $e->getMessage() . pg_last_error();
+       echo json_encode($msj);
+   }
+
+} else {
+   $msj = new stdClass();
+   $msj->error = "No se recibio ningun archivo";
+   echo json_encode($msj);
+}
