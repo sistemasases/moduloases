@@ -139,7 +139,7 @@ function update_historic_academic($id_student, $id_program, $id_semester, $avera
         $object_historic->id_estudiante = $id_student;
         $object_historic->id_programa = $id_program;
         $object_historic->id_semestre = $id_semester;
-        $object_historic->promedio = $average;
+        $object_historic->promedio_semestre = $average;
         $object_historic->promedio_acumulado = $overall_average;
 
         $insert = $DB->insert_record('talentospilos_history_academ', $object_historic, true);
@@ -158,7 +158,7 @@ function update_historic_academic($id_student, $id_program, $id_semester, $avera
         $object_historic->id_estudiante = $id_student;
         $object_historic->id_programa = $id_program;
         $object_historic->id_semestre = $id_semester;
-        $object_historic->promedio = $average;
+        $object_historic->promedio_semestre = $average;
         $object_historic->promedio_acumulado = $overall_average;
 
         $update = $DB->update_record('talentospilos_history_academ', $object_historic);

@@ -61,8 +61,16 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert'], function ($,
                         $('#response').html("<img src='../icon/facebook.gif' />");
                     },
                     success: function (msj) {
-                        alert("ENTRO")
-                        console.log(msj);
+                        swal({
+                            title: "Exito",
+                            text: "Archivo Cargado. Por favor consulte los detalles",
+                            html: true,
+                            type: "warning",
+                            showCancelButton: false,
+                            showConfirmButton: false,
+                            timer: 1300
+                        });
+                        
                         $('#response').empty();
 
                         $('#informacion').empty();
@@ -74,8 +82,9 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert'], function ($,
                         } else if (msj.error) {
                             $('#informacion').append('<div class="alert alert-danger"><h4 align="center">Información</h4><strong>Error!</strong> <br>' + msj.error + '</div>');
                         }
-
+                        
                         $('#informacion').append(msj.urlzip);
+                        
                     },
                     error: function (msj) {
                         console.log(msj);
