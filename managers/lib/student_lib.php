@@ -191,7 +191,7 @@ function get_adds_fields_mi($id_student)
 
     $array_result = new stdClass();
     $array_result->idtalentos = $result->id_ases_user;
-    $array_result->idprograma = $result->id_programa;
+    $array_result->idprograma = $result->id_academic_program;
     $array_result->estado = $result->program_status;
 
     return $array_result;
