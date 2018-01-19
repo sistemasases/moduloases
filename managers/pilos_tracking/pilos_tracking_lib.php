@@ -190,7 +190,7 @@ function insert_record_student($id_seg, $id_est){
  * @param $id_seg      ---> tracking id
  * @param $tipo        ---> type of tracking
  * @param $idinstancia ---> current instance id
- * @return Array ---> monitor tracks
+ * @return array ---> monitor tracks
  */
 
 function get_record_by_monitor($id_monitor, $id_seg= null, $tipo, $idinstancia){
@@ -209,7 +209,7 @@ function get_record_by_monitor($id_monitor, $id_seg= null, $tipo, $idinstancia){
  * Updates 'seguimientos pares'
  * @see updateSeguimiento_pares($object)
  * @param $object --> Object containing track information
- * @return number (1 for success, 0 otherwise)
+ * @return integer (1 for success, 0 otherwise)
  */
 
 function updateSeguimiento_pares($object){
@@ -339,7 +339,7 @@ function get_id_rol_($userid,$instanceid)
  *
  * @param $userid --> user id
  * @param $instanceid --> instance id
- * @return Array containing role name for the given user 
+ * @return array containing role name for the given user 
  */
 
 
@@ -391,7 +391,7 @@ function get_name_rol($idrol)
  * @param $id_instance --> instance id
  * @param $fechas_epoch --> range date (starting and ending current semester)
  * @param $period 
- * @return Array filled with track information
+ * @return array filled with track information
  */
 
 function get_seguimientos_monitor($id_monitor,$id_instance,$fechas_epoch,$periodo){
@@ -459,7 +459,7 @@ function get_seguimientos_monitor($id_monitor,$id_instance,$fechas_epoch,$period
  * @see get_cantidad_seguimientos_monitor($id_monitor,$id_instance)
  * @param $id_monitor --> monitor id
  * @param $id_instance --> instance id
- * @return Array 
+ * @return array 
  */
 
 function get_cantidad_seguimientos_monitor($id_monitor,$id_instance){
@@ -528,7 +528,7 @@ function get_monitores_practicante($id_practicante,$id_instancia,$semester)
  * @param $id_profesional --> profesional id
  * @param $id_instancia --> instance id
  * @param $semester --> semester id
- * @return Array 
+ * @return array 
  */
 function get_practicantes_profesional($id_profesional,$id_instancia,$semester)
 {
@@ -600,7 +600,7 @@ function get_practicantes_profesional($id_profesional,$id_instancia,$semester)
  * @see get_profesional_practicante($id,$instanceid)
  * @param $id --> user id
  * @param $instanceid --> instance id
- * @return Array 
+ * @return array 
  */
  
 function get_profesional_practicante($id,$instanceid)

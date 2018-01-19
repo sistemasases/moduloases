@@ -47,7 +47,7 @@ require_once $CFG->dirroot.'/blocks/ases/managers/periods_management/periods_lib
  * Obtains all courses organized by their teacher where there are students from an instance
  * 
  * @see get_courses_pilos()
- * @return Array filled with courses
+ * @return array filled with courses
  */
 
 function get_courses_pilos(){
@@ -108,7 +108,7 @@ function get_courses_pilos(){
  * Obtains all teacher given a certain information
  * @see processInfo($info)
  * @param $info --> Object containing a teacher name, shortname, fullname, id 
- * @return Array with syntaxis: array("$nomProfesor" => array(array("id" => $id_curso, "nombre"=>$nom_curso,"shortname"=>$shortname_curso), array(...)))
+ * @return array with syntaxis: array("$nomProfesor" => array(array("id" => $id_curso, "nombre"=>$nom_curso,"shortname"=>$shortname_curso), array(...)))
  */
 function processInfo($info){
     $profesores = [];

@@ -93,7 +93,7 @@ if(isset($_POST['function'])){
  * Function that deletes a tracking
  * 
  * @see deleteSeg()
- * @return JSON
+ * @return object in a json format
  */
 function deleteSeg(){
          if(isset($_POST['id'])){
@@ -292,7 +292,7 @@ function upgradePares($fun){
  * Function that returns a record
  * 
  * @see load()
- * @return JSON
+ * @return object in a json format
  */
 function load(){
     
@@ -314,7 +314,7 @@ function load(){
  * Function that returns a student's tracking 
  * 
  * @see getSeguimientos()
- * @return JSON
+ * @return object --> echo a json format (object)
  */
 function getSeguimientos(){
       
@@ -370,7 +370,7 @@ function getSeguimientos(){
  * Function that loads a simple tracking ('seguimiento')
  * 
  * @see loadJustOneSeg()
- * @return JSON
+ * @return object --> echo a json format (object)
  */
 function loadJustOneSeg(){
     
@@ -448,7 +448,7 @@ function loadJustOneSeg(){
  * Function that load all students given the id of their monitor
  * 
  * @see load_students()
- * @return JSON
+ * @return object --> echo a json format (object)
  */
 function load_students(){
     global $USER;
@@ -473,7 +473,7 @@ function load_students(){
  * Function that obtains a track given a monitor id (instance), date and count of tracks.
  * 
  * @see load_students()
- * @return JSON
+ * @return object --> echo a json format (object)
  */
 function loadbyMonitor(){
     global $USER;
