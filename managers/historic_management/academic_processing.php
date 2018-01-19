@@ -81,7 +81,7 @@ if (isset($_FILES['file'])) {
 
         while ($data = fgetcsv($handle, 0, ",")) {
             $isValidRow = true;
-            //VALIDATIONS OF FIELDS
+            /* VALIDATIONS OF FIELDS */
 
             //validate codigo_estudiante
             if (!is_null($associativeTitles['codigo_estudiante'])) {
@@ -185,18 +185,28 @@ if (isset($_FILES['file'])) {
                 throw new MyException('La columna con el campo promedio_acumulado es obligatoria');
             }
             //validate fecha_cancelacion
-            if($associativeTitles['fecha_cancelacion'] != null){
-
+            if ($associativeTitles['fecha_cancelacion'] != null) {
+                $fecha_cancelacion = $data[$associativeTitles['fecha_cancelacion']];
+                if ($fecha_cancelacion != "" and $fecha_cancelacion != 'undefined') {
+                    $hasCancel = true;
+                }
             }
             //validate estimulo
-            if($associativeTitles['puesto_estimulo'] != null){
-                
+            if ($associativeTitles['puesto_estimulo'] != null) {
+                $puesto_estimulo = $data[$associativeTitles['puesto_estimulo']];
+                if ($puesto_estimulo != "" and $puesto_estimulo != 'undefined') {
+                    $hasEstimulo = true;
+                }
+
             }
             //validate bajo
-            if($associativeTitles['numero_bajo'] != null){
-                
-            }
+            if ($associativeTitles['numero_bajo'] != null) {
+                $numero_bajo = $data[$associativeTitles['numero_bajo']];
+                if ($numero_bajo != "" and $numero_bajo != 'undefined') {
+                    $hasBajo = true;
+                }
 
+            }
 
             //FINALIZACION DE VALIDACIONES. CARGA O ACTUALIZACIÓN
             if (!$isValidRow) {
@@ -204,7 +214,39 @@ if (isset($_FILES['file'])) {
                 array_push($wrong_rows, $data);
                 continue;
             } else {
+
                 //Actualizar o crear un registro
+                $result = update_historic_academic($id_estudiante, $id_programa, $id_semestre, $promedio, $promedio_acumulado);
+
+                if (!$result) {
+                    array_push($detail_erros, [$line_count, $lc_wrongFile, 'Error al registrar historico', 'Error Servidor', 'Error del server registrando el historico']);
+                    array_push($wrong_rows, $data);
+                    $lc_wrongFile++;
+                } else {
+
+                    $id_historic = $result;
+                    
+                    if ($hasCancel) {
+                        if (!update_historic_cancel($id_historic, $fecha_cancelacion)) {
+                            array_push($detail_erros, [$line_count, $lc_wrongFile, 'Error al registrar cancelacion', 'Error Servidor', 'Error del server registrando la cancelacion']);
+                            array_push($wrong_rows, $data);
+                        }
+                    }
+
+                    if ($hasEstimulo) {
+                        if(!update_historic_estimulo($id_historic, $puesto_estimulo)){
+                            array_push($detail_erros, [$line_count, $lc_wrongFile, 'Error al registrar estimulo', 'Error Servidor', 'Error del server registrando el estimulo']);
+                            array_push($wrong_rows, $data);
+                        }
+                    }
+
+                    if ($hasBajo) {
+                        if(!update_historic_bajo($id_historic, $numero_bajo)){
+                            array_push($detail_erros, [$line_count, $lc_wrongFile, 'Error al registrar bajo rendimiento', 'Error Servidor', 'Error del server registrando el bajo rendimiento']);
+                            array_push($wrong_rows, $data);
+                        }
+                    }
+                }
             }
 
             $line_count++;
