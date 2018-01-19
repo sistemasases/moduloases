@@ -64,13 +64,22 @@ function get_student_by_identification($identification){
 //print_r(get_student_by_identification('97040114746'));
 
 
+/**
+ * Function that registers a new resolution given the number of the resolution, the date and the total amount
+ * 
+ * @see create_resolution($num_resolution, $date, $total_amount)
+ * @param $num_resolution -> number of the new resolution
+ * @param $date -> date of the new resolution
+ * @param $total_amount -> total amount of money transfered
+ * @return Integer
+ */
 function create_resolution($num_resolution, $date, $total_amount){
 
     global $DB;
 
     $newResolution = new stdClass();
     $newResolution->codigo_resolucion = $num_resolution;
-    $newResolution->fecha_resolucion = $date;
+    $newResolution->fecha_resolucion = strtotime($date);
     $newResolution->monto_total = $total_amount;
 
     $insert = $DB->insert_record('talentospilos_res_icetex', $newResolution, true);
@@ -80,3 +89,12 @@ function create_resolution($num_resolution, $date, $total_amount){
 }
 
 //print_r(create_resolution("0000000000", strtotime("2018-01-01"), 1000000));
+
+
+function create_historic_icetex(){
+
+    global $DB;
+
+    $newHistoric = new stdClass();
+
+}
