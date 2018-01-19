@@ -33,7 +33,7 @@ require_once $CFG->dirroot . '/grade/lib.php';
  *
  * @see get_grades_courses_student_last_semester($id_student)
  * @param $id_student --> id from {user}
- * @return string
+ * @return string html courses
  */
 
 function get_grades_courses_student_last_semester($id_student)

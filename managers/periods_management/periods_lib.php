@@ -128,7 +128,7 @@ require_once(dirname(__FILE__). '/../../../../config.php');
  * @see update_semester($semesterInfo, $idSemester)
  * @param $semesterInfo -> array with the new information of a semester
  * @param $idSemester -> semester's id
- * @return boolean
+ * @return boolean true if it was updated, false it wasn't
  */
 
  function update_semester($semesterInfo, $idSemester){

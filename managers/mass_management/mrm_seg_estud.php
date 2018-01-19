@@ -221,7 +221,7 @@ if( isset($_FILES['file']) || isset($_POST['idinstancia'])){
  * 
  * @see getAssociativeTitles ($titlesPos)
  * @param $titlesPos --> header from CSV
- * @return array 
+ * @return array --> Associative array with 'seguimientoid' and 'username' fields on it
  */
 function getAssociativeTitles ($titlesPos){
     

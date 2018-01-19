@@ -30,7 +30,7 @@
  * 
  * @see get_ases_id_by_code($code)
  * @param $username --> student id associated to moodle user
- * @return array 
+ * @return array of students ids
  */
 
 function get_ases_id_by_code($code)

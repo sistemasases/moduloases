@@ -251,7 +251,7 @@ if( isset($_FILES['file']) || isset($_POST['idinstancia'])){
  * 
  * @see getAssociativeTitles ($titlesPos)
  * @param $titlesPos --> header from CSV
- * @return array 
+ * @return array --> associative array with 'username_monitor' and 'username_estudiante' fields on it
  */
 
 function getAssociativeTitles ($titlesPos){

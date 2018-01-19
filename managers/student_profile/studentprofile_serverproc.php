@@ -133,7 +133,7 @@ if(isset($_POST["func"])){
  * 
  * @see save_profile($form)
  * @param $form --> Array containing the fields to update
- * @return object
+ * @return object in a json format
  */
 function save_profile($form){
     
