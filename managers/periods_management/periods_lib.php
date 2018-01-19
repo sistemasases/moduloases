@@ -215,15 +215,28 @@ require_once(dirname(__FILE__). '/../../../../config.php');
 
  }
 
+ /**
+  * Function that returns the semester id given its name
+  * 
+  * @see get_semester_id_by_name($semester_name)
+  * @param $semester_name -> name of the semester to be found
+  * @return Integer 
+  */
+ function get_semester_id_by_name($semester_name){
 
+    global $DB;
 
+    $sql_query = "SELECT id FROM {talentospilos_semestre} WHERE nombre = '$semester_name'";
+    $result = $DB->get_record_sql($sql_query);
 
+    if($result){
 
+        $semester_id = $result->id;
+        return $semester_id;
 
+    }else{
 
+        return false;
 
-
-
-
-
-
+    }
+}

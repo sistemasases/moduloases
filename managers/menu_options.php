@@ -14,7 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-
 /**
  * Estrategia ASES
  *
@@ -23,10 +22,10 @@
  * @copyright  2017 Juan Pablo Moreno Muñoz <moreno.juan@correounivalle.edu.co>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-require_once (dirname(__FILE__) . '/../../../config.php');
+require_once dirname(__FILE__) . '/../../../config.php';
 
-require_once ('permissions_management/permissions_lib.php');
-require_once ('validate_profile_action.php');
+require_once 'permissions_management/permissions_lib.php';
+require_once 'validate_profile_action.php';
 
 /**
  * Creates each menu options
@@ -37,147 +36,167 @@ require_once ('validate_profile_action.php');
  * @return string
  */
 
-function create_menu_options($userid, $blockid, $courseid){
+function create_menu_options($userid, $blockid, $courseid)
+{
 
     $id_role = get_id_rol($userid, $blockid);
     $functions = get_functions_by_role_id($id_role);
     $menu_options = '';
+    $menu_return = "";
+    $indexed = array();
 
-    foreach($functions as $function){
+    foreach ($functions as $function) {
 
-        if($function == 'academic_reports'){
+        if ($function == 'academic_reports') {
             $url = new moodle_url("/blocks/ases/view/academic_reports.php", array(
                 'courseid' => $courseid,
-                'instanceid' => $blockid
+                'instanceid' => $blockid,
             ));
 
-            $menu_options .= '<li><a href= "'. $url .'"> Reportes académicos </a><li>';
-             
+            $menu_options = '<li><a href= "'. $url .'"> Reportes académicos </a><li>';
+            $indexed['Reportes académicos'] = $menu_options;
         }
-        
-        if($function == 'ases_report') {
+
+        if ($function == 'ases_report') {
             $url = new moodle_url("/blocks/ases/view/ases_report.php", array(
                 'courseid' => $courseid,
-                'instanceid' => $blockid
+                'instanceid' => $blockid,
             ));
 
-            $menu_options .= '<li><a href= "'. $url .'"> Reporte general </a><li>';
+            $menu_options = '<li><a href= "' . $url . '"> Reporte general </a><li>';
+            $indexed['Reporte general'] = $menu_options;
         }
 
-        if($function == 'create_action'){
+        if ($function == 'create_action') {
             $url = new moodle_url("/blocks/ases/view/create_action.php", array(
                 'courseid' => $courseid,
-                'instanceid' => $blockid
+                'instanceid' => $blockid,
             ));
 
-            $menu_options .= '<li><a href= "'. $url .'"> Gestión de permisos </a><li>';
+            $menu_options = '<li><a href= "' . $url . '"> Gestión de permisos </a><li>';
+            $indexed['Gestión de permisos'] = $menu_options;
 
         }
 
-        if($function == 'grade_categories'){
+        if ($function == 'grade_categories') {
             $url = new moodle_url("/blocks/ases/view/grade_categories.php", array(
                 'courseid' => $courseid,
-                'instanceid' => $blockid
+                'instanceid' => $blockid,
             ));
 
-            $menu_options .= '<li><a href= "'. $url .'"> Registro de notas </a><li>';
+            $menu_options = '<li><a href= "' . $url . '"> Registro de notas </a><li>';
+            $indexed['Registro de notas'] = $menu_options;
 
         }
 
-        if($function == 'global_grade_book'){
-            $url = new moodle_url("/blocks/ases/view/global_grade_book.php", array(
+        if ($function == 'upload_historical_files') {
+            $url = new moodle_url("/blocks/ases/view/upload_historical_files.php", array(
                 'courseid' => $courseid,
-                'instanceid' => $blockid
+                'instanceid' => $blockid,
             ));
 
-            $menu_options .= '<li><a href= "'. $url .'"> Calificador </a><li>';
+            $menu_options = '<li><a href= "' . $url . '"> Carga de históricos </a><li>';
+            $indexed['Carga de históricos'] = $menu_options;
 
         }
 
-        if($function == 'instance_configuration'){
+        if ($function == 'instance_configuration') {
             $url = new moodle_url("/blocks/ases/view/instance_configuration.php", array(
                 'courseid' => $courseid,
-                'instanceid' => $blockid
+                'instanceid' => $blockid,
             ));
 
-            $menu_options .= '<li><a href= "'. $url .'"> Gestión de instancia </a><li>';
+            $menu_options = '<li><a href= "' . $url . '"> Gestión de instancia </a><li>';
+            $indexed['Gestión de instancia'] = $menu_options;
 
         }
 
-        if($function == 'mass_role_management'){
+        if ($function == 'mass_role_management') {
             $url = new moodle_url("/blocks/ases/view/mass_role_management.php", array(
                 'courseid' => $courseid,
-                'instanceid' => $blockid
+                'instanceid' => $blockid,
             ));
 
-            $menu_options .= '<li><a href= "'. $url .'"> Carga masiva </a><li>';
+            $menu_options = '<li><a href= "' . $url . '"> Carga masiva </a><li>';
+            $indexed['Carga masiva'] = $menu_options;
 
         }
 
-        if($function == 'periods_management'){
+        if ($function == 'periods_management') {
             $url = new moodle_url("/blocks/ases/view/periods_management.php", array(
                 'courseid' => $courseid,
-                'instanceid' => $blockid
+                'instanceid' => $blockid,
             ));
 
-            $menu_options .= '<li><a href= "'. $url .'"> Gestión de períodos </a><li>';
+            $menu_options = '<li><a href= "' . $url . '"> Gestión de períodos </a><li>';
+            $indexed["Gestión de períodos"] = $menu_options;
 
         }
 
-        if($function == 'groupal_tracking'){
+        if ($function == 'groupal_tracking') {
             $url = new moodle_url("/blocks/ases/view/groupal_tracking.php", array(
                 'courseid' => $courseid,
-                'instanceid' => $blockid
+                'instanceid' => $blockid,
             ));
 
-            $menu_options .= '<li><a href= "'. $url .'"> Seguimiento grupal </a><li>';
+            $menu_options = '<li><a href= "' . $url . '"> Seguimiento grupal </a><li>';
+            $indexed["Seguimiento grupal"] = $menu_options;
 
         }
 
-        if($function == 'report_trackings'){
+        if ($function == 'report_trackings') {
             $url = new moodle_url("/blocks/ases/view/report_trackings.php", array(
                 'courseid' => $courseid,
-                'instanceid' => $blockid
+                'instanceid' => $blockid,
             ));
 
-            $menu_options .= '<li><a href= "'. $url .'"> Reportes de seguimientos </a><li>';
+            $menu_options = '<li><a href= "' . $url . '"> Reportes de seguimientos </a><li>';
+            $indexed["Reportes de seguimientos"] = $menu_options;
 
         }
 
-        if($function == 'user_management'){
+        if ($function == 'user_management') {
             $url = new moodle_url("/blocks/ases/view/user_management.php", array(
                 'courseid' => $courseid,
-                'instanceid' => $blockid
+                'instanceid' => $blockid,
             ));
 
-            $menu_options .= '<li><a href= "'. $url .'"> Gestión de usuarios </a><li>';
+            $menu_options = '<li><a href= "' . $url . '"> Gestión de usuarios </a><li>';
+            $indexed['Gestión de usuarios'] = $menu_options;
 
         }
 
-        if($function == 'student_profile'){
+        if ($function == 'student_profile') {
             $url = new moodle_url("/blocks/ases/view/student_profile.php", array(
                 'courseid' => $courseid,
-                'instanceid' => $blockid
+                'instanceid' => $blockid,
             ));
 
-            $menu_options .= '<li><a href= "'. $url .'"> Ficha de estudiantes </a><li>';
+            $menu_options = '<li><a href= "' . $url . '"> Ficha de estudiantes </a><li>';
+            $indexed['Ficha de estudiantes'] = $menu_options;
 
         }
 
-        if($function == 'upload_files_form'){
+        if ($function == 'upload_files_form') {
             $url = new moodle_url("/blocks/ases/view/upload_files_form.php", array(
                 'courseid' => $courseid,
-                'instanceid' => $blockid
+                'instanceid' => $blockid,
             ));
 
-            $menu_options .= '<li><a href= "'. $url .'"> Carga de archivos </a><li>';
+            $menu_options = '<li><a href= "' . $url . '"> Carga de archivos </a><li>';
+            $indexed['Carga de archivos'] = $menu_options;
 
         }
-    
+
     }
 
-    return $menu_options;
+    //ORDENA
+    ksort($indexed);
 
-    
+    foreach ($indexed as $value) {
+        $menu_return .= $value;
+    }
+
+    return $menu_return;
 
 }
