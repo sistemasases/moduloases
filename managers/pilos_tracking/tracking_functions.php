@@ -382,8 +382,18 @@ function transformarConsultaPracticanteArray($pares, $grupal, $arregloMonitores,
 function crearTablaYTogglePracticante($arregloMonitorYEstudiantes)
 {
     $stringRetornar = "";
+    $actual_link =$_SERVER['REQUEST_URI'];
+
+    $nuevo_link=str_replace("report_trackings", "tracking_time_control", $actual_link);
+
     for ($monitor = 0; $monitor < count($arregloMonitorYEstudiantes); $monitor++) {
-        $stringRetornar.= '<div class="panel-group"><div class="panel panel-default" ><div class="panel-heading practicante" style="background-color: #AEA3A3;"><h4 class="panel-title"><a data-toggle="collapse"  href="#collapse' . $arregloMonitorYEstudiantes[$monitor][0] . '">' . $arregloMonitorYEstudiantes[$monitor][1] . '</a><span> R.P  : <b><label for="revisado_monitor_' . $arregloMonitorYEstudiantes[$monitor][0] . '">0</label></b> - NO R.P : <b><label for="norevisado_monitor_' . $arregloMonitorYEstudiantes[$monitor][0] . '">0</label></b> - Total  : <b><label for="total_monitor_' . $arregloMonitorYEstudiantes[$monitor][0] . '">0</label></b> </span></h4></div>';
+        $stringRetornar.= '<div class="panel-group"><div class="panel panel-default" ><div class="panel-heading practicante" style="background-color: #AEA3A3;"><h4 class="panel-title"><a data-toggle="collapse"  href="#collapse' . $arregloMonitorYEstudiantes[$monitor][0] . '">' . $arregloMonitorYEstudiantes[$monitor][1] . '</a><span> R.P  : <b><label for="revisado_monitor_' . $arregloMonitorYEstudiantes[$monitor][0] . '">0</label></b> - NO R.P : <b><label for="norevisado_monitor_' . $arregloMonitorYEstudiantes[$monitor][0] . '">0</label></b> - Total  : <b><label for="total_monitor_' . $arregloMonitorYEstudiantes[$monitor][0] . '">0</label></b>
+
+
+            <a href="http://localhost'.$nuevo_link.'&monitorid='.$arregloMonitorYEstudiantes[$monitor][0].'"
+        target="_blank"><span class="btn btn-primary btn-xs glyphicon glyphicon-time"></span></a>
+
+             </span></h4></div>';
         $stringRetornar.= '<div id="collapse' . $arregloMonitorYEstudiantes[$monitor][0] . '" class="panel-collapse collapse"><div class="panel-body">';
 
         // On third position there's a specific HTML format

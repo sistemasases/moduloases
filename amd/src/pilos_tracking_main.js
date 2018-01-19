@@ -1111,6 +1111,9 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
             }
 
 
+
+
+
             /*
              * Función usada para cambiar color cuando se cambie el radiobutton de riesgo.
              */
@@ -1135,6 +1138,10 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                     });
                 });
             }
+
+            $( "#tiempo_monitor" ).on( "click", function() {
+                console.log( this );
+            });
 
 
             //Oculta y muestra botones al presionar cancelar.

@@ -20,7 +20,11 @@ define(['jquery', 'block_ases/datatables.net', 'block_ases/datatables.net-button
       //Controles para la tabla generada
       $(document).on('click', '#tableResult tbody tr td', function () {
         var pagina = "student_profile.php";
-        var table = $("#tableResult").DataTable();
+        var table = $("#tableResult").DataTable({
+        fixedHeader: {
+            header: true,
+            footer: true
+        }});
         var colIndex = table.cell(this).index().column;
 
         if (colIndex <= 2) {
@@ -30,6 +34,22 @@ define(['jquery', 'block_ases/datatables.net', 'block_ases/datatables.net-button
           location.href = pagina + location.search + "&student_code=" + table.cell(table.row(this).index(), 0).data();
         }
       });
+
+
+      //Controles para la tabla generada
+      $(document).on('change', '#tableResult thead tr th select', function () {
+        var table = $("#tableResult").DataTable();
+
+        console.log($(this).parent().index()+1);
+        var colIndex = $(this).parent().index()+1;
+        var selectedText=$(this).parent().find(":selected").text();
+        table.columns( colIndex-1 ).search( this.value ).draw();
+
+     });
+
+
+
+
     }
   }
 
@@ -39,6 +59,7 @@ define(['jquery', 'block_ases/datatables.net', 'block_ases/datatables.net-button
       name: 'idinstancia',
       value: getIdinstancia()
     });
+
     $("#div_table").html('<img class="icon-loading" src="../icon/loading.gif"/>');
     $.ajax({
       type: "POST",
@@ -52,8 +73,9 @@ define(['jquery', 'block_ases/datatables.net', 'block_ases/datatables.net-button
           //console.log(msg.columns);
           $("#div_table").html('');
           $("#div_table").fadeIn(1000).append('<table id="tableResult" class="display" cellspacing="0" width="100%"><thead> </thead></table>');
-          $("#tableResult").DataTable(msg.data);
 
+        $("#tableResult").DataTable(msg.data);
+        
           $('#tableResult tr').each(function () {
             $.each(this.cells, function () {
               if ($(this).html() == 'bajo') {

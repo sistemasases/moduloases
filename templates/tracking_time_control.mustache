@@ -1,0 +1,74 @@
+{{#data}} {{> block_ases/side_menu}}
+<div class="container">
+<div class="row">
+<h2>REPORTE DE HORAS EN SEGUIMIENTOS</h2>
+<hr/>
+{{{message}}} {{#view_invested_hours}}
+<div class="panel-group">
+   <div class="panel panel-default">
+      <div class="panel panel-default">
+         <div class="panel-heading">
+            <h4 class="panel-title" id="list-users-panel">
+               <a data-toggle="collapse" href="#collapse1">Ver reporte por fechas</a>
+            </h4>
+         </div>
+         {{!--end panel-heading--}}
+         <div id="collapse1" class="panel-collapse collapse">
+            <div class="container">
+               <div class="row">
+                  <div class="col-md-2 col-md-offset-5">
+                     <h2><strong><span id="monitor_name">{{monitor}}</span></strong></h2>
+                  </div>
+               </div>
+               <div class="row">
+                  <div class="form-pilos">
+                     <div class="col-lg-6">
+                        <div class="input-group">
+                           <label for="beginning_date">Fecha inicio: </label>
+                           <input class="period_date" type="text" maxlength="10" id="beginning_date" name="beginning_date"/>
+                        </div>
+                     </div>
+                     <div class="col-lg-6">
+                        <div class="input-group">
+                           <label for="ending_date">Fecha final: </label>
+                           <input class="period_date" type="text" maxlength="10" id="ending_date" name="ending_date"/>  
+                        </div>
+                        <span class="btn btn-danger" type="button">Consultar</span> 
+                     </div>
+                  </div>
+               </div>
+               <div class="row">
+                  <br/>
+                  <div class="container">
+                     <table id="table_hours" class="display" cellspacing="0" width="100%">
+                        <thead>
+                           <tr>
+                              <th>Fecha</th>
+                              <th>Hora</th>
+                              <th>Opciones</th>
+                           </tr>
+                        </thead>
+                        <tfoot>
+                           <tr>
+                              <th>Name</th>
+                              <th>Position</th>
+                           </tr>
+                        </tfoot>
+                        <tbody>
+                           <tr>
+                              <td>19/01/2018</td>
+                              <td>8</td>
+                              <td><span class="btn btn-danger">Ver</span></td>
+                           </tr>
+                        </tbody>
+                     </table>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+      {{!--end panel-group--}} 
+   </div>
+   {{!--end panel-group--}} {{/view_invested_hours}}
+</div>
+{{/data}}
