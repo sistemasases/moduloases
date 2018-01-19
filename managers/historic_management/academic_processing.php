@@ -84,7 +84,7 @@ if (isset($_FILES['file'])) {
             //VALIDATIONS OF FIELDS
 
             //validate codigo_estudiante
-            if ($associativeTitles['codigo_estudiante'] != null) {
+            if (!is_null($associativeTitles['codigo_estudiante'])) {
 
                 $codigo_estudiante = $data[$associativeTitles['codigo_estudiante']];
 
@@ -94,13 +94,11 @@ if (isset($_FILES['file'])) {
                     if (!$id_estudiante) {
                         $isValidRow = false;
                         array_push($detail_errors, [$line_count, $lc_wrongFile, ($associativeTitles['codigo_estudiante'] + 1), 'codigo_estudiante', 'No existe un estudiante ases asociado al codigo' . $data[$associativeTitles['codigo_estudiante']]]);
-                    } else {
-
                     }
 
                 } else {
                     $isValidRow = false;
-                    array_push($detail_erros, [$line_count, $lc_wrongFile, ($associativeTitles['username'] + 1), 'username', 'No existe un usuario asociado al username' . $data[$associativeTitles['username']]]);
+                    array_push($detail_erros, [$line_count, $lc_wrongFile, ($associativeTitles['codigo_estudiante'] + 1), 'codigo_estudiante', 'El campo codigo_estudiante es obligatorio y se encuentra vacio']);
                 }
 
             } else {
@@ -108,12 +106,19 @@ if (isset($_FILES['file'])) {
             }
 
             //validate programa
-            if ($index_array['programa'] != null) {
+            if ($associativeTitles['programa'] != null) {
+                $codigo_programa = $data[$associativeTitles['programa']];
+                if ($codigo_programa != '') {
 
-                if ($data[$index_array['programa']] != '') {
+                    $id_programa = get_id_program($codigo_programa);
+                    if (!$id_programa) {
+                        $isValidRow = false;
+                        array_push($detail_erros, [$line_count, $lc_wrongFile, ($associativeTitles['programa'] + 1), 'programa', 'No existe un programa asociado al codigo ' . $codigo_programa]);
+                    }
 
                 } else {
-                    throw new MyException('El campo programa es obligatorio');
+                    $isValidRow = false;
+                    array_push($detail_erros, [$line_count, $lc_wrongFile, ($associativeTitles['programa'] + 1), 'programa', 'El campo programa es obligatorio y se encuentra vacio']);
                 }
 
             } else {
@@ -121,12 +126,19 @@ if (isset($_FILES['file'])) {
             }
 
             //validate semestre
-            if ($index_array['semestre'] != null) {
+            if ($associativeTitles['semestre'] != null) {
+                $semestre = $data[$associativeTitles['semestre']];
+                if ($semestre != '') {
 
-                if ($data[$index_array['semestre']] != '') {
+                    $id_semestre = get_id_semestre($semestre);
+                    if (!$id_semestre) {
+                        $isValidRow = false;
+                        array_push($detail_erros, [$line_count, $lc_wrongFile, ($associativeTitles['semestre'] + 1), 'semestre', 'No existe ningun semestre registrado el nombre' . $semestre]);
+                    }
 
                 } else {
-                    throw new MyException('El campo semestre es obligatorio');
+                    $isValidRow = false;
+                    array_push($detail_erros, [$line_count, $lc_wrongFile, ($associativeTitles['semestre'] + 1), 'semestre', 'El campo semestre es obligatorio y se encuentra vacio']);
                 }
 
             } else {
@@ -134,26 +146,77 @@ if (isset($_FILES['file'])) {
             }
 
             //validate promedio
-            if ($index_array['promedio'] != null) {
+            if ($associativeTitles['promedio'] != null) {
+
+                $promedio = $data[$associativeTitles['promedio']];
+                if ($promedio != '') {
+
+                    if (!is_numeric($promedio)) {
+                        $isValidRow = false;
+                        array_push($detail_erros, [$line_count, $lc_wrongFile, ($associativeTitles['promedio'] + 1), 'promedio', 'El campo promedio debe ser de tipo numerico']);
+                    }
+
+                } else {
+                    $isValidRow = false;
+                    array_push($detail_erros, [$line_count, $lc_wrongFile, ($associativeTitles['promedio'] + 1), 'promedio', 'El campo promedio es obligatorio y se encuentra vacio']);
+                }
 
             } else {
                 throw new MyException('La columna con el campo promedio es obligatoria');
             }
 
             //validate promedio_acumulado
-            if ($index_array['promedio_acumulado'] != null) {
+            if ($associativeTitles['promedio_acumulado'] != null) {
+
+                $promedio_acumulado = $data[$associativeTitles['promedio_acumulado']];
+                if ($promedio_acumulado != '') {
+
+                    if (!is_numeric($promedio_acumulado)) {
+                        $isValidRow = false;
+                        array_push($detail_erros, [$line_count, $lc_wrongFile, ($associativeTitles['promedio_acumulado'] + 1), 'promedio_acumulado', 'El campo promedio_acumulado debe ser de tipo numerico']);
+                    }
+
+                } else {
+                    $isValidRow = false;
+                    array_push($detail_erros, [$line_count, $lc_wrongFile, ($associativeTitles['promedio_acumulado'] + 1), 'promedio_acumulado', 'El campo promedio_acumulado es obligatorio y se encuentra vacio']);
+                }
 
             } else {
                 throw new MyException('La columna con el campo promedio_acumulado es obligatoria');
             }
             //validate fecha_cancelacion
+            if($associativeTitles['fecha_cancelacion'] != null){
+
+            }
             //validate estimulo
+            if($associativeTitles['puesto_estimulo'] != null){
+                
+            }
             //validate bajo
+            if($associativeTitles['numero_bajo'] != null){
+                
+            }
+
+
+            //FINALIZACION DE VALIDACIONES. CARGA O ACTUALIZACIÓN
+            if (!$isValidRow) {
+                $lc_wrongFile++;
+                array_push($wrong_rows, $data);
+                continue;
+            } else {
+                //Actualizar o crear un registro
+            }
 
             $line_count++;
         }
 
-        echo json_encode($index_array);
+        //RECORRER LOS REGISTROS ERRONEOS Y CREAR ARCHIVO DE registros_erroneos
+
+        //RECORRER LOS REGISTROS EXITOSOS Y CREAR ARCHIVO DE registros_exitosos
+
+        //CREAR ZIP
+
+        echo json_encode($codigo_estudiante);
 
     } catch (MyException $e) {
         $msj = new stdClass();

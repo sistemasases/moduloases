@@ -13,7 +13,6 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
-
 /**
  * Ases block
  *
@@ -29,8 +28,8 @@
  * Gets ASES id_user given student code associated to moodle username
  * 
  * @see get_ases_id_by_code($code)
- * @param $username --> student id associated to moodle user
- * @return array 
+ * @param $code --> code that represent username of moodle user
+ * @return $id or false 
  */
 
 function get_ases_id_by_code($code)
@@ -41,14 +40,60 @@ function get_ases_id_by_code($code)
 
     $id_moodle = $DB->get_record_sql($sql_query)->id_moodle;
 
-    $sql_query = "SELECT id_ases_user as id FROM {talentospilos_user_extended} WHERE id_moodle_user =" . $id_ases;
+    $sql_query = "SELECT id_ases_user as id FROM {talentospilos_user_extended} WHERE id_moodle_user =" . $id_moodle;
     
-    $ases_id = $DB->get_record_sql($sql_query);
+    $ases_user = $DB->get_record_sql($sql_query);
     
-    if(!$ases_id){
+    if(!$ases_user){
         return false;
     }else{
-        return $ases_id->id;
+        return $ases_user->id;
+    }
+}
+
+ /**
+ * Gets id of program given program code 
+ * 
+ * @see get_id_program($code)
+ * @param $username --> student id associated to moodle user
+ * @return $id or false 
+ */
+
+function get_id_program($code)
+{
+    global $DB;
+
+    $sql_query = "SELECT id FROM {talentospilos_programa} WHERE cod_univalle = " . $code . " LIMIT 1;";
+
+    $program = $DB->get_record_sql($sql_query);
+    
+    if(!$program){
+        return false;
+    }else{
+        return $program->id;
+    }
+}
+
+ /**
+ * Gets id of semestre given semestre name 
+ * 
+ * @see get_id_semestre($name)
+ * @param $name --> name of semestre
+ * @return $id or false 
+ */
+
+function get_id_semestre($name)
+{
+    global $DB;
+
+    $sql_query = "SELECT id FROM {talentospilos_semestre} WHERE nombre = '" . $name . "';";
+
+    $semestre = $DB->get_record_sql($sql_query);
+    
+    if(!$semestre){
+        return false;
+    }else{
+        return $semestre->id;
     }
 }
 
