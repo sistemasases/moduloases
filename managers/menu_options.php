@@ -84,13 +84,13 @@ function create_menu_options($userid, $blockid, $courseid){
 
         }
 
-        if($function == 'global_grade_book'){
-            $url = new moodle_url("/blocks/ases/view/global_grade_book.php", array(
+        if($function == 'upload_historical_files'){
+            $url = new moodle_url("/blocks/ases/view/upload_historical_files.php", array(
                 'courseid' => $courseid,
                 'instanceid' => $blockid
             ));
 
-            $menu_options .= '<li><a href= "'. $url .'"> Calificador </a><li>';
+            $menu_options .= '<li><a href= "'. $url .'"> Carga de históricos </a><li>';
 
         }
 
