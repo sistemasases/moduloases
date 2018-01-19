@@ -25,40 +25,58 @@
  */
 
 require_once(dirname(__FILE__). '/../../../../config.php');
+require_once $CFG->dirroot.'/blocks/ases/managers/periods_management/periods_lib.php'; 
 
 /**
  * Function that returns the resolution id given the number of the resolution
  * 
- * @see get_resolution_by_number($num_resolution)
+ * @see get_resolution_id_by_number($num_resolution)
  * @param $num_resolution -> number of the resolution to be found
- * @return Integer
+ * @return integer|boolean
  */
-function get_resolution_by_number($num_resolution){
+function get_resolution_id_by_number($num_resolution){
 
     global $DB;
 
     $sql_query = "SELECT id FROM {talentospilos_res_icetex} WHERE codigo_resolucion = '$num_resolution'";
-    $resolution_id = $DB->get_record_sql($sql_query)->id;
+    $result = $DB->get_record_sql($sql_query);
 
-    return $resolution_id;
+    if($result){
+
+        $resolution_id = $result->id;
+
+        return $resolution_id;
+
+    }else{
+
+        return false;
+    }
 }
 
 /**
  * Function that returns the id of an student given its identification
  * 
- * @see get_student_by_identification($identification)
+ * @see get_student_id_by_identification($identification)
  * @param $identification -> student's identification
- * @return Integer
+ * @return integer|boolean 
  */
-function get_student_by_identification($identification){
+function get_student_id_by_identification($identification){
 
     global $DB;
 
-
     $sql_query = "SELECT id FROM {talentospilos_usuario} WHERE num_doc_ini = '$identification' OR num_doc = '$identification'";
-    $student_id = $DB->get_record_sql($sql_query)->id;
+    $result = $DB->get_record_sql($sql_query);
 
-    return $student_id;
+    if($result){
+
+        $student_id = $result->id;
+
+        return $student_id;
+
+    }else{
+
+        return false;
+    }    
 }
 
 //print_r(get_student_by_identification('97040114746'));
@@ -90,11 +108,31 @@ function create_resolution($num_resolution, $date, $total_amount){
 
 //print_r(create_resolution("0000000000", strtotime("2018-01-01"), 1000000));
 
-
-function create_historic_icetex(){
+/**
+ * Function that creates a historic register given the student identification, the number of the resolution, the name of the semester and the amount of money per student
+ * 
+ * @see create_historic_icetex($student_identification, $num_resolution, $name_semester, $amount)
+ * @param $student_identification -> the student's identification number (not academic id)
+ * @param $num_resolution -> number of the resolution 
+ * @param $name_semester -> name of the semester 
+ * @param $amount -> amount of money per student
+ * @return Integer
+ */
+function create_historic_icetex($student_identification, $num_resolution, $name_semester, $amount){
 
     global $DB;
 
-    $newHistoric = new stdClass();
+    $student_id = get_student_id_by_identification($student_identification);
+    $resolution_id = get_resolution_id_by_number($num_resolution);
+    $semester_id = get_semester_id_by_name($name_semester);
 
+    $newHistoric = new stdClass();
+    $newHistoric->id_estudiante = $student_id;
+    $newHistoric->id_resolucion = $resolution_id;
+    $newHistoric->id_semestre = $semester_id;
+    $newHistoric->monto_estudiante = $amount;
+
+    $insert = $DB->insert_record('talentospilos_res_estudiante', $newHistoric, true);
+
+    return $insert;
 }
