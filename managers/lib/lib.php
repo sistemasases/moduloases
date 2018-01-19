@@ -247,7 +247,7 @@ function get_asigned_by_profesional($id){
  * Function that process the information contained in an array of students and returns a string with option html elements
  * @see process_info_assigne_students($array_students)
  * @param $array_students -> array which contains several student objects 
- * @return string 
+ * @return string containing the students information
  */
 
 function process_info_assigned_students($array_students){

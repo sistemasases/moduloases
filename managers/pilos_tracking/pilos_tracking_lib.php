@@ -138,7 +138,7 @@ function get_people_onsemester($period,$rols,$id_instancia){
  * @see insert_record($object, $id_est)
  * @param $object  ---> tracking object
  * @param $id_est  ---> student's id
- * @return boolean
+ * @return true
  */
 function insert_record($object, $id_est){
     global $DB;
@@ -167,7 +167,7 @@ function insert_record($object, $id_est){
  * @see insert_record_student($id_seg, $id_est)
  * @param $id_seg ---> track id
  * @param $id_est  ---> student's id
- * @return boolean
+ * @return boolean true if it was successful, false otherwise
  */
 function insert_record_student($id_seg, $id_est){
     global $DB;
@@ -268,7 +268,7 @@ function update_array_risk(&$array_student_risks, $name_risk, $calificacion, $id
  * 
  * @param $segObject --> Track object with appropiate information
  * @param $idStudent --> student's id
- * @return boolean 
+ * @return true 
  */
 function updateRisks($segObject, $idStudent){
     global $DB;
@@ -316,7 +316,7 @@ function updateRisks($segObject, $idStudent){
  * @see get_id_rol_($userid,$instanceid)
  * @param $userid --> user id
  * @param $instanceid instance id
- * @return Array with an object representing user
+ * @return array with an object representing user
  */
 
 
@@ -359,7 +359,7 @@ function get_name_rol($idrol)
  * @param $tipo     ---> type of track (PARES or GRUPAL) 
  * @param $instancia --> instance id
  * @param $fechas_epoch --> starting and ending date of current semester
- * @return string 
+ * @return string with the count track information
  */
  
  function consult_counting_tracking($revisado,$tipo,$instancia,$fechas_epoch,$persona){
@@ -459,7 +459,7 @@ function get_seguimientos_monitor($id_monitor,$id_instance,$fechas_epoch,$period
  * @see get_cantidad_seguimientos_monitor($id_monitor,$id_instance)
  * @param $id_monitor --> monitor id
  * @param $id_instance --> instance id
- * @return array 
+ * @return array with the count of tracks a monitor has done
  */
 
 function get_cantidad_seguimientos_monitor($id_monitor,$id_instance){
@@ -485,7 +485,7 @@ function get_cantidad_seguimientos_monitor($id_monitor,$id_instance){
  * @param $id_practicante --> 'practicante' id
  * @param $id_instancia --> instance id
  * @param $semester --> semester id
- * @return Array of arrays with information of each monitor
+ * @return array of arrays with information of each monitor
  */
 function get_monitores_practicante($id_practicante,$id_instancia,$semester)
 {
@@ -600,7 +600,7 @@ function get_practicantes_profesional($id_profesional,$id_instancia,$semester)
  * @see get_profesional_practicante($id,$instanceid)
  * @param $id --> user id
  * @param $instanceid --> instance id
- * @return array 
+ * @return object  with the bosses id
  */
  
 function get_profesional_practicante($id,$instanceid)

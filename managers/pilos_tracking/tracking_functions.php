@@ -36,7 +36,7 @@ function replace_content_inside_delimiters($start, $end, $new, $source)
 * @see show_according_permissions(&$table,$actions)
 * @param $table --> Toogle
 * @param $actions --> user permission (licence)
-* @return Array --> toogle
+* @return array --> toogle
 */
 
 function show_according_permissions(&$table, $actions)
@@ -90,7 +90,7 @@ function show_according_permissions(&$table, $actions)
  * Evaluates tracking existence
  * @see has_tracking($seguimientos)
  * @param $seguimientos ---> html string
- * @return string
+ * @return string html table
  *
  */
 
@@ -111,7 +111,7 @@ function has_tracking($seguimientos)
  * Gets a select organized by existent periods
  * @see get_period_select($periods)
  * @param $periods ---> existent periods
- * @return Array
+ * @return string html table
  *
  */
 
@@ -132,7 +132,7 @@ function get_period_select($periods)
  * Gets a select organized by users role '_ps'
  * @see get_people_select($people)
  * @param $people ---> existent users
- * @return Array
+ * @return string html table
  *
  */
 
@@ -159,7 +159,7 @@ function get_people_select($people)
  * @param $arregloSemestres --> Array containing information of current semester
  * @param $instanceid --> instance id
  * @param $role --> profesional role
- * @return Array of arrays which every array contains information of every 'practicante' and current semester
+ * @return array of arrays which every array contains information of every 'practicante' and current semester
  *
  */
 
@@ -195,7 +195,7 @@ function transformarConsultaSemestreArray($pares, $grupal, $arregloSemestres, $i
  * Counts how many tracks a practincant has cheked
  * @see get_conteo_profesional($professionalpracticants)
  * @param $professionalpracticants --> Array information of each practicant for each profesioal 
- * @return Array
+ * @return string with the count of tracks checked
  *
  */
 function get_conteo_profesional($professionalpracticants)
@@ -224,7 +224,7 @@ function get_conteo_profesional($professionalpracticants)
  * @param $rol --> profesional role
  * @param $semester --> semester id
  * @param $sistemas = false --> role is not a 'sistemas' one
- * @return Array
+ * @return array with the information to create a Toogle and table for a profesional
  *
  */
 function profesionalUser(&$pares, &$grupal, $id_prof, $instanceid, $rol, $semester, $sistemas = false)
@@ -250,7 +250,7 @@ function profesionalUser(&$pares, &$grupal, $id_prof, $instanceid, $rol, $semest
  * @param $role --> practicant role
  * @param $fechas_epoch --> date intervals
  * @param $sistemas --> boolean of 'sistemas' role
- * @return Array
+ * @return array with the information to create a Toogle
  *
  */
 
@@ -279,7 +279,7 @@ function transformarConsultaProfesionalArray($pares, $grupal, $arregloPracticant
  * @see crearTablaYToggleProfesional($arregloPracticanteYMonitor, $conteo_profesional)
  * @param $arregloPracticanteYMonitor --> Array containing information about each practicant for each profesional
  * @param $conteo_profesional --> amount of checked tracks (seguimientos)
- * @return Array
+ * @return array with all practicants assgined. Requeired to create a Toogle
  *
  */
 
@@ -318,7 +318,7 @@ function crearTablaYToggleProfesional($arregloPracticanteYMonitor, $conteo_profe
  * @param $rol --> practicant role
  * @param $semester --> semester id
  * @param $sistemas = false --> role is not a 'sistemas' one
- * @return Array
+ * @return array  with the information to create a Toogle and table for a practicant
  *
  */
 function practicanteUser(&$pares, &$grupal, $id_pract, $instanceid, $rol, $semester, $sistemas = false)
@@ -345,7 +345,7 @@ function practicanteUser(&$pares, &$grupal, $id_pract, $instanceid, $rol, $semes
  * @param $id_pract --> practicant id
  * @param $fechas_epoch --> date intervals
  * @param $sistemas --> boolean of 'sistemas' role
- * @return Array
+ * @return array with the information to create a Toogle
  *
  */
 function transformarConsultaPracticanteArray($pares, $grupal, $arregloMonitores, $instanceid, $role, $id_pract, $fechas_epoch, $sistemas = false)
@@ -376,7 +376,7 @@ function transformarConsultaPracticanteArray($pares, $grupal, $arregloMonitores,
  * Creates a 'practicante' toogle which contains each assigned monitor
  * @see crearTablaYTogglePracticante($arregloMonitorYEstudiantes)
  * @param $arregloMonitorYEstudiantes --> Array containing information about each monitor  for each practicant
- * @return Array
+ * @return array with all monitors assgined. Requeired to create a Toogle
  *
  */
 function crearTablaYTogglePracticante($arregloMonitorYEstudiantes)
@@ -416,7 +416,7 @@ function crearTablaYTogglePracticante($arregloMonitorYEstudiantes)
  * @param $fechas --> dates interval
  * @param $sistemas = false --> role is not a 'sistemas' one
  * @param $codigoPracticante = null --> practicant id is null
- * @return Array
+ * @return array with students grouped by monitor
  *
  */
 function monitorUser($pares, $grupal, $codigoMonitor, $noMonitor, $instanceid, $role, $fechas, $sistemas = false, $codigoPracticante = null)
@@ -462,7 +462,7 @@ function monitorUser($pares, $grupal, $codigoMonitor, $noMonitor, $instanceid, $
  * @param $instanceid --> instance id
  * @param $role --> monitor role
  * @param $codigoPracticante = null --> boolean of 'sistemas' role
- * @return Array
+ * @return array with the information to create a Toogle
  *
  */
 function transformarConsultaMonitorArray($array, &$pares, &$grupal, $codigoMonitor, $noMonitor, $instanceid, $role, $codigoPracticante = null)
@@ -579,7 +579,7 @@ function transformarConsultaMonitorArray($array, &$pares, &$grupal, $codigoMonit
  * @see ordenaPorColumna(&$arreglo, $col)
  * @param &$arreglo ---> array to sort
  * @param $col --> column number
- * @return Array
+ * @return array sorted
  *
  */
 function ordenaPorColumna(&$arreglo, $col)
@@ -616,7 +616,7 @@ function ordenaPorColumna(&$arreglo, $col)
  * Groups'seguimientos grupales' (groupal tracks) by id
  * @see agrupar_Seguimientos_grupales($arreglo)
  * @param $arreglo ---> array containing all tracks
- * @return Array
+ * @return array with grouped information by id
  *
  */
 function agrupar_Seguimientos_grupales($arreglo)
@@ -662,7 +662,7 @@ function agrupar_Seguimientos_grupales($arreglo)
  * @see agrupar_informacion($infoMonitor, $campoComparar)
  * @param $infoMonitor ---> monitor information
  * @param $campoComparar --> field to compare
- * @return Array
+ * @return array with grouped information by $campoComparar
  *
  */
 function agrupar_informacion($infoMonitor, $campoComparar)
@@ -731,7 +731,7 @@ function agrupar_informacion($infoMonitor, $campoComparar)
  * @param $codigoEnviarN2 --> 
  * @param $rol --> student role
  * @param $sistemas = false --> role is not a 'sistemas' one
- * @return Array
+ * @return string HTML tablaytoogle information
  *
  */
 function crearTablaYToggle($arregloImprimirPares, $monitorNo, $arregloImprimirGrupos, $codigoEnviarN1, $codigoEnviarN2, $rol, $sistemas = false)
