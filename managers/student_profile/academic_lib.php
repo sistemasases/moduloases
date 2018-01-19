@@ -1,4 +1,27 @@
 <?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
+/**
+ * Ases block
+ *
+ * @author     Iader E. García Gómez
+ * @package    block_ases
+ * @copyright  2018 Iader E. García <iadergg@gmail.com>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 
 require_once dirname(__FILE__) . '/../../../../config.php';
 require_once $CFG->dirroot . '/grade/querylib.php';
@@ -6,9 +29,10 @@ require_once $CFG->dirroot . '/grade/report/user/lib.php';
 require_once $CFG->dirroot . '/grade/lib.php';
 
 /**
- * Return an html wiht courses and grades for a student in the last semester
+ * Returns an html wiht courses and grades for a student in the last semester
  *
- * @param string $id_student  id from {user}
+ * @see get_grades_courses_student_last_semester($id_student)
+ * @param $id_student --> id from {user}
  * @return string
  */
 
@@ -38,8 +62,9 @@ function get_grades_courses_student_last_semester($id_student)
 /**
  * Process info of a courses array and make an html collapsable
  *
- * @param $courses  array() of stdClass object representing courses and grades for single student
- * @return string hmtl text with the info
+ * @see make_html_courses($courses)
+ * @param $courses --> array() of stdClass object representing courses and grades for single student
+ * @return string --> hmtl text with the info
  */
 
 function make_html_courses($courses)
@@ -71,8 +96,10 @@ function make_html_courses($courses)
 /**
  * Return courses and grades for a student in the last semester
  *
- * @param string $username_student Is te username of moodlesite
- * @return array() of stdClass object representing courses and grades for single student
+ * @see get_courses_by_student($id_student, $last_semester)
+ * @param $id_student --> student id
+ * @param $last_semester --> last semester string identifier
+ * @return array --> filled with stdClass objects representing courses and grades for single student
  */
 
 function get_courses_by_student($id_student, $last_semester)
@@ -119,9 +146,9 @@ function getCoursegradelib($courseid, $userid)
 }
 
 /**
- * Reduce course information to display
+ * Reduces course information to display
  *
- * @param &$report
+ * @param &$report --> report object containing information to reduce, such as percentage, range, feedback and contributiontocoursetotal.
  * @return null
  */
 function reduce_table(&$report)

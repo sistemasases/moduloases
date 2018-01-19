@@ -27,7 +27,6 @@
 // Standard GPL and phpdocs
 require_once(__DIR__ . '/../../../config.php');
 require_once($CFG->libdir.'/adminlib.php');
-require_once('../managers/query.php');
 require_once ('../managers/permissions_management/permissions_lib.php');
 require_once ('../managers/validate_profile_action.php');include('../lib.php');
 require_once ('../managers/menu_options.php');
@@ -51,25 +50,25 @@ $contextblock =  context_block::instance($blockid);
 
 $url = new moodle_url("/blocks/ases/view/mass_role_management.php",array('courseid' => $courseid, 'instanceid' => $blockid));
 
-//se oculta si la instancia ya está registrada
+//Instance is consulted for its registration
 if(!consult_instance($blockid)){
     header("Location: instance_configuration.php?courseid=$courseid&instanceid=$blockid");
 }
 
-//se crean los elementos del menu
+//Menu items are created
 $menu_option = create_menu_options($USER->id, $blockid, $courseid);
 
-// Crea una clase con la información que se llevará al template.
+// Creates a class with information that'll be send to template
 $data = 'data';
 $data = new stdClass;
 
-// Evalua si el rol del usuario tiene permisos en esta view.
+// Evaluates if user role has permissions assigned on this view
 $actions = authenticate_user_view($USER->id, $blockid);
 $data = $actions;
 $data->menu = $menu_option;
 
 
-//Configuracion de la navegacion
+//Navegation set up
 $coursenode = $PAGE->navigation->find($courseid, navigation_node::TYPE_COURSE);
 $blocknode = navigation_node::create('Roles y Seguimientos',$url, null, 'block', $blockid);
 $coursenode->add_node($blocknode);
@@ -94,8 +93,6 @@ $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/jquery.dataTables.m
 $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/jquery.dataTables_themeroller.css', true);
 $PAGE->requires->css('/blocks/ases/style/side_menu_style.css', true);
 
-$PAGE->requires->js('/blocks/ases/js/jquery-2.0.2.min.js', true);
-$PAGE->requires->js('/blocks/ases/js/checkrole.js', true);
 $PAGE->requires->js_call_amd('block_ases/massmanagement_main','init');
 
 

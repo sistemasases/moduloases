@@ -1,22 +1,51 @@
 <?php
-/*
- * Consultas modulo reportes academicos.
- */
-require_once(__DIR__ . '/../../../../config.php');
-require_once $CFG->dirroot.'/blocks/ases/managers/lib/student_lib.php'; 
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
 
 /**
- * Función que consulta todos los estudiantes ASES que tienen itemas de calificacion perdidos 
+ * Estrategia ASES
+ *
+ * @author     Juan Pablo Moreno Muñoz
+ * @package    block_ases
+ * @copyright  2017 Juan Pablo Moreno Muñoz <moreno.juan@correounivalle.edu.co>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
+/*
+ * Academic reports module queries (módulo académico)
+ */
+require_once(__DIR__ . '/../../../../config.php');
+require_once $CFG->dirroot.'/blocks/ases/managers/lib/student_lib.php';
+require_once $CFG->dirroot.'/blocks/ases/managers/lib/lib.php';
+require_once $CFG->dirroot.'/blocks/ases/managers/grade_categories/grader_lib.php';
+require_once $CFG->dirroot.'/blocks/ases/managers/periods_management/periods_lib.php'; 
+
+
+/**
+ * Gets all ASES students with items qualifications 'perdidos' 
  * 
  * @see studentsWithLoses($instance)
- * @param $instance id instancia
- * @return Array --> Array con la informacion de los estudiantes. 
+ * @param $instance --> id instancia
+ * @return array --> Array filled with students information
  */
 function studentsWithLoses($instance){
 	global $DB;
 
-	$query_semestre = "SELECT nombre FROM {talentospilos_semestre} WHERE id = (SELECT MAX(id) FROM {talentospilos_semestre})";
-    $sem = $DB->get_record_sql($query_semestre)->nombre;
+	$semestre = get_current_semester();
+    $sem = $semestre->nombre;
 
     $año = substr($sem,0,4);
 
@@ -34,7 +63,7 @@ function studentsWithLoses($instance){
 
 	$prog = $DB->get_record_sql($query_prog)->cod;    
 
-	//Si el código del programa es 1008 la cohorte comenzará por SP y si no, empezará por el código del programa
+    //If program code begins with 1008 then cohort will begin with SP, otherwise with the program code
 	if($prog === '1008'){
 		$cohort = 'SP';
 	}else{
@@ -67,11 +96,11 @@ function studentsWithLoses($instance){
 }	
 
 /**
- * Función que procesa la consulta de estudiantes ASES con el numero de itemas de calificacion perdidos y retorna una tabla html
+ * Returns an HTML table containing all ASES students with items qualifications 'perdidos' 
  * 
  * @see getReportStudents($instance)
- * @param $instance id instancia
- * @return String --> String Html con la tabla de estudiantes 
+ * @param $instance --> id instancia
+ * @return string -->  Html string with students information table 
  */
 function getReportStudents($instance){
 
@@ -102,11 +131,11 @@ function getReportStudents($instance){
 
 
 /**
- * Función que retornta un string con una lista de las notas que tiene perdidas un estudiante.
+ * Returns a String containing all lost students grades
  * 
  * @see get_loses_by_student($instance)
- * @param $username username instancia
- * @return String --> String Html con la tabla de estudiantes 
+ * @param $username --> username instancia
+ * @return string --> HTML students information table 
  */
 function get_loses_by_student($username){
 	global $DB;
@@ -134,17 +163,18 @@ function get_loses_by_student($username){
 }
 
 /**
- * Función que retorna un arreglo de todos los cursos donde hay matriculados estudiantes de una instancia determinada
- * @see get_courses_reports()
- * @return Array 
+ * Function that given a logged user id, returns an array of the courses with enrolled users in an instance.
+ * @see get_courses_for_report($user_id)
+ * @param $user_id -> ID of the logged user
+ * @return array 
  */
 
-function get_courses_for_report(){
+function get_courses_for_report($user_id){
     global $DB;
     
-    $query_semestre = "SELECT nombre FROM {talentospilos_semestre} WHERE id = (SELECT MAX(id) FROM {talentospilos_semestre})";
-    $sem = $DB->get_record_sql($query_semestre)->nombre;
-
+    $semestre_object = get_current_semester();
+    $sem = $semestre_object->nombre;
+    $id_semestre = $semestre_object->max;
     $año = substr($sem,0,4);
 
     if(substr($sem,4,1) == 'A'){
@@ -152,7 +182,49 @@ function get_courses_for_report(){
     }else if(substr($sem,4,1) == 'B'){
         $semestre = $año.'08';
     }
-    //print_r($semestre);
+	//print_r($semestre);
+
+	$intersect = "";
+	
+	$user_role = get_role_ases($user_id);
+
+	if($user_role == "monitor_ps"){
+
+		$intersect = " INTERSECT 
+		                SELECT user_m.id
+		                FROM {user} user_m
+                        INNER JOIN {user_info_data} data ON data.userid = user_m.id
+                        INNER JOIN {user_info_field} field ON data.fieldid = field.id
+                        INNER JOIN {talentospilos_monitor_estud} mon_es ON data.data = CAST(mon_es.id_estudiante AS VARCHAR)
+                        WHERE mon_es.id_semestre = $id_semestre AND mon_es.id_monitor = $user_id AND field.shortname = 'idtalentos'
+                        ";
+    }
+    elseif($user_role == "practicante_ps"){
+        
+        $intersect = " INTERSECT 
+                        SELECT DISTINCT user_m.id
+                        FROM {user} user_m
+                        INNER JOIN {user_info_data} data ON data.userid = user_m.id
+                        INNER JOIN {user_info_field} field ON data.fieldid = field.id
+                        INNER JOIN {talentospilos_monitor_estud} mon_es ON data.data = CAST(mon_es.id_estudiante AS VARCHAR)
+                        INNER JOIN {talentospilos_user_rol} us_rol ON mon_es.id_monitor = us_rol.id_usuario 
+                        WHERE mon_es.id_semestre = $id_semestre AND us_rol.id_semestre = $id_semestre AND us_rol.id_jefe = $user_id AND field.shortname = 'idtalentos'
+                        ";
+    }
+    elseif($user_role == "profesional_ps"){
+        
+        $intersect = " INTERSECT 
+                        SELECT DISTINCT user_m.id
+                        FROM {user} user_m
+                        INNER JOIN {user_info_data} data ON data.userid = user_m.id
+                        INNER JOIN {user_info_field} field ON data.fieldid = field.id
+                        INNER JOIN {talentospilos_monitor_estud} mon_es ON data.data = CAST(mon_es.id_estudiante AS VARCHAR)
+                        INNER JOIN {talentospilos_user_rol} us_rol ON mon_es.id_monitor = us_rol.id_usuario
+                        INNER JOIN {talentospilos_user_rol} us_rol_prof ON us_rol.id_jefe = us_rol_prof.id_usuario
+                        WHERE mon_es.id_semestre = $id_semestre AND us_rol.id_semestre = $id_semestre AND us_rol_prof.id_semestre = $id_semestre AND us_rol_prof.id_jefe = $user_id AND field.shortname = 'idtalentos'
+                        ";
+    }	
+
     $query_courses = "
 	SELECT DISTINCT curso.id, curso.fullname, curso.shortname          
 		FROM {course} curso
@@ -166,15 +238,22 @@ function get_courses_for_report(){
 				INNER JOIN {talentospilos_usuario} user_t ON data.data = CAST(user_t.id AS VARCHAR)
 				INNER JOIN {talentospilos_est_estadoases} estado_u ON user_t.id = estado_u.id_estudiante
 				INNER JOIN {talentospilos_estados_ases} estados ON estados.id = estado_u.id_estado_ases
-				WHERE estados.nombre = 'ACTIVO/SEGUIMIENTO' AND field.shortname = 'idtalentos')";
+				WHERE estados.nombre = 'ACTIVO/SEGUIMIENTO' AND field.shortname = 'idtalentos'
+				$intersect			
+				)";
     $result = $DB->get_records_sql($query_courses);
         
     return $result;
 }
 
-
-function get_courses_report(){
-	$courses = get_courses_for_report();
+/**
+ * Function that given a logged user id, returns an array of the courses with enrolled users in an instance.
+ * @see get_courses_for_report($user_id)
+ * @param $user_id -> ID of the logged user
+ * @return array 
+ */
+function get_courses_report($user_id){
+	$courses = get_courses_for_report($user_id);
 
 	$string_html = "<table id = 'courses'>
 						<thead>
@@ -195,3 +274,110 @@ function get_courses_report(){
 	return $string_html;
 
 }
+
+/** 
+ * Function that returns a course with all its information given the course id and the id of the logged user
+ * @param $course_id
+ * @param $user_id
+ * @return object $curso
+ */
+
+function get_info_course_for_reports($course_id, $user_id){
+    global $DB;
+
+	$semestre_object = get_current_semester();
+	$id_semestre = $semestre_object->max;
+
+
+    $intersect = "";
+
+    $user_role = get_role_ases($user_id);
+
+    if($user_role == "monitor_ps"){
+
+		$intersect = " INTERSECT 
+		                SELECT user_m.id
+		                FROM {user} user_m
+                        INNER JOIN {user_info_data} data ON data.userid = user_m.id
+                        INNER JOIN {user_info_field} field ON data.fieldid = field.id
+                        INNER JOIN {talentospilos_monitor_estud} mon_es ON data.data = CAST(mon_es.id_estudiante AS VARCHAR)
+                        WHERE mon_es.id_semestre = $id_semestre AND mon_es.id_monitor = $user_id AND field.shortname = 'idtalentos'
+                        ";
+    }
+    elseif($user_role == "practicante_ps"){
+        
+        $intersect = " INTERSECT 
+                        SELECT DISTINCT user_m.id
+                        FROM {user} user_m
+                        INNER JOIN {user_info_data} data ON data.userid = user_m.id
+                        INNER JOIN {user_info_field} field ON data.fieldid = field.id
+                        INNER JOIN {talentospilos_monitor_estud} mon_es ON data.data = CAST(mon_es.id_estudiante AS VARCHAR)
+                        INNER JOIN {talentospilos_user_rol} us_rol ON mon_es.id_monitor = us_rol.id_usuario 
+                        WHERE mon_es.id_semestre = $id_semestre AND us_rol.id_semestre = $id_semestre AND us_rol.id_jefe = $user_id AND field.shortname = 'idtalentos'
+                        ";
+    }
+    elseif($user_role == "profesional_ps"){
+        
+        $intersect = " INTERSECT 
+                        SELECT DISTINCT user_m.id
+                        FROM {user} user_m
+                        INNER JOIN {user_info_data} data ON data.userid = user_m.id
+                        INNER JOIN {user_info_field} field ON data.fieldid = field.id
+                        INNER JOIN {talentospilos_monitor_estud} mon_es ON data.data = CAST(mon_es.id_estudiante AS VARCHAR)
+                        INNER JOIN {talentospilos_user_rol} us_rol ON mon_es.id_monitor = us_rol.id_usuario
+                        INNER JOIN {talentospilos_user_rol} us_rol_prof ON us_rol.id_jefe = us_rol_prof.id_usuario
+                        WHERE mon_es.id_semestre = $id_semestre AND us_rol.id_semestre = $id_semestre AND us_rol_prof.id_semestre = $id_semestre AND us_rol_prof.id_jefe = $user_id AND field.shortname = 'idtalentos'
+                        ";
+    }
+
+    $course = $DB->get_record_sql("SELECT fullname FROM {course} WHERE id = $course_id");
+    
+    $query_teacher="SELECT concat_ws(' ',firstname,lastname) AS fullname
+           FROM
+             (SELECT usuario.firstname,
+                     usuario.lastname,
+                     userenrol.timecreated
+              FROM {course} cursoP
+              INNER JOIN {context} cont ON cont.instanceid = cursoP.id
+              INNER JOIN {role_assignments} rol ON cont.id = rol.contextid
+              INNER JOIN {user} usuario ON rol.userid = usuario.id
+              INNER JOIN {enrol} enrole ON cursoP.id = enrole.courseid
+              INNER JOIN {user_enrolments} userenrol ON (enrole.id = userenrol.enrolid
+                                                           AND usuario.id = userenrol.userid)
+              WHERE cont.contextlevel = 50
+                AND rol.roleid = 3
+                AND cursoP.id = $course_id
+              ORDER BY userenrol.timecreated ASC
+              LIMIT 1) AS subc";
+    $professor = $DB->get_record_sql($query_teacher);
+    
+    $query_students = "SELECT usuario.id, usuario.firstname, usuario.lastname, usuario.username
+                    FROM {user} usuario INNER JOIN {user_enrolments} enrols ON usuario.id = enrols.userid 
+                    INNER JOIN {enrol} enr ON enr.id = enrols.enrolid 
+                    INNER JOIN {course} curso ON enr.courseid = curso.id  
+                    WHERE curso.id= $course_id AND usuario.id IN (SELECT user_m.id
+                                                                 FROM  {user} user_m
+                                                                 INNER JOIN {user_info_data} data ON data.userid = user_m.id
+                                                                 INNER JOIN {user_info_field} field ON data.fieldid = field.id
+                                                                 INNER JOIN {talentospilos_usuario} user_t ON data.data = CAST(user_t.id AS VARCHAR)
+                                                                 INNER JOIN {talentospilos_est_estadoases} estado_u ON user_t.id = estado_u.id_estudiante 
+                                                                 INNER JOIN {talentospilos_estados_ases} estados ON estados.id = estado_u.id_estado_ases
+                                                                 WHERE estados.nombre = 'ACTIVO/SEGUIMIENTO' AND field.shortname = 'idtalentos'
+                                                                 $intersect
+                                                                 )";
+
+    $students = $DB->get_records_sql($query_students);
+
+    $header_categories = get_categories_global_grade_book($course_id);
+
+
+    $curso = new stdClass;
+    $curso->nombre_curso = $course->fullname;
+    $curso->profesor = $professor->fullname;
+    $curso->estudiantes = $students;
+    $curso->header_categories = $header_categories;
+    
+    return $curso;
+}
+
+//print_r(get_info_course_for_reports(10, 324)->estudiantes);

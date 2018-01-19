@@ -603,6 +603,10 @@ function getUsersByPopulation($column, $population, $risk, $academic_fields=null
 function getQueryUser($USER){
     global $DB;
     $id = $USER->id;
+    
+    $semestre = get_current_semester();
+    $id_semestre = $semestre->max;
+
     $query_role = "SELECT rol.nombre_rol  FROM {talentospilos_rol} rol INNER JOIN {talentospilos_user_rol} uRol ON rol.id = uRol.id_rol WHERE uRol.id_usuario = $id AND uRol.id_semestre = (SELECT max(id_semestre) FROM {talentospilos_user_rol})";
     $rol = $DB->get_record_sql($query_role)->nombre_rol;
     $query = "";
@@ -611,7 +615,7 @@ function getQueryUser($USER){
                   FROM {user} muser INNER JOIN {user_info_data} data ON muser.id = data.userid 
                   WHERE data.data IN (SELECT CAST(mon_estud.id_estudiante as text) 
                                       FROM {talentospilos_monitor_estud} mon_estud 
-                                      WHERE id_monitor = $id AND id_semestre = (SELECT id FROM {talentospilos_semestre} WHERE fecha_inicio = (SELECT max(fecha_inicio) from {talentospilos_semestre}))) 
+                                      WHERE id_monitor = $id AND id_semestre = $id_semestre) 
                       AND data.fieldid = (SELECT id 
                                           FROM  {user_info_field} 
                                           WHERE shortname ='idtalentos')";
@@ -623,7 +627,7 @@ function getQueryUser($USER){
                                       WHERE id_monitor IN (SELECT urol.id_usuario
                                                           FROM {talentospilos_user_rol} urol 
                                                           WHERE id_jefe = $id)
-                                      AND id_semestre = (SELECT id FROM {talentospilos_semestre} WHERE fecha_inicio = (SELECT max(fecha_inicio) from {talentospilos_semestre})))
+                                      AND id_semestre = $id_semestre)
                       AND data.fieldid = (SELECT id 
                                            FROM  mdl_user_info_field 
                                            WHERE shortname ='idtalentos')";

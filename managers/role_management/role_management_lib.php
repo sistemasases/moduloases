@@ -132,7 +132,12 @@ function monitor_student_assignment($username_monitor, $array_students, $idinsta
                     }
                 }else{
                     $hadErrors = true; 
+                    if($student=='-1'){
+                        array_push($array_errors,"Es necesario seleccionar el estudiante para asignarlo al monitor.");
+
+                    }else{
                     array_push($array_errors,"El estudiante con codigo '".$student."' no se encontro en la base de datos. Operaciòn de asignaciòn del estudiante anulada.");
+                    }
                 } 
         }
         if(!$hadErrors){

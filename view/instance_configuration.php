@@ -50,25 +50,25 @@ $contextblock =  context_block::instance($blockid);
 
 $url = new moodle_url("/blocks/ases/view/instance_configuration.php",array('courseid' => $courseid, 'instanceid' => $blockid));
 
-//Configuracion de la navegacion
+//Navegation set up
 $coursenode = $PAGE->navigation->find($courseid, navigation_node::TYPE_COURSE);
 $blocknode = navigation_node::create($title,$url, null, 'block', $blockid);
 $coursenode->add_node($blocknode);
 $blocknode->make_active();
 
-//se crean los elementos del menu
+//Menu items are created
 $menu_option = create_menu_options($USER->id, $blockid, $courseid);
 
-// Crea una clase con la información que se llevará al template.
+// Creates a class with information that'll be send to template
 $object_to_render = new stdClass();
 
 
-// Evalua si el rol del usuario tiene permisos en esta view.
+// Evaluates if user role has permissions assigned on this view
 $actions = authenticate_user_view($USER->id, $blockid);
 $object_to_render = $actions;
 $object_to_render->menu = $menu_option;
 
-// Carga programas académicos
+// Loading academic programs
 $array_programs = load_programs_cali();
 
 $html_programs = ""; 
