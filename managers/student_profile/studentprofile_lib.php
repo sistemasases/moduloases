@@ -1,13 +1,34 @@
 <?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+/**
+ * Ases block
+ *
+ * @author     Iader E. García Gómez
+ * @package    block_ases
+ * @copyright  2018 Iader E. García <iadergg@gmail.com>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 require_once(dirname(__FILE__). '/../../../../config.php');
 
 /**
- * Función que recupera los mótivos por los cuales un estudiante abandona o aplaza sus estudios en la universidad.
+ * Gets all reasons a student quit or delay studies
  *
  * @see  get_reasons_dropout()
- * @param void
- * @return Array --> Motivos por los cuales un estudiante puede abandonar o aplazar sus estudios.
+ * @return array 
  */
  
  function get_reasons_dropout(){
@@ -21,11 +42,10 @@ require_once(dirname(__FILE__). '/../../../../config.php');
  }
  
  /**
- * Función que extrae el conjunto de estados Ases
+ * Gets a set of ASES status
  *
  * @see get_status_ases()
- * @param void
- * @return Array --> Conjunto de estados Ases
+ * @return array
  */
  
  function get_status_ases(){
@@ -39,12 +59,11 @@ require_once(dirname(__FILE__). '/../../../../config.php');
  }
  
 /**
- * Función que extrae el conjunto de estados Icetex
+ * Gets a set of ICETEX status
  *
  * @see get_status_icetex()
- * @param void
- * @return Array --> Conjunto de estados Icetex
- */
+ * @return array 
+ */ 
  function get_status_icetex(){
      
      global $DB;
@@ -69,14 +88,13 @@ function load_tracking($id_tracking, $type_tracking, $id_instance) {
  }
  
 /**
- * Función que extrae los seguimientos de un estudiante dado el id ASES del estudiante
- * el tipo del seguimiento y la instancia asociada al seguimiento y al estudiante ASES
+ * Gets every track of a student given his id, track type and instance associated to the track and the student
  *
- * @see get_trackings_student()
- * @param id_ases --> id relacionado en la tabla talentospilos_profile
- * @param tracking_type [PARES, GRUPAL]
- * @param id_instance --> Id asociado a la instancia del módulo
- * @return Trackings array
+ * @see get_trackings_student($id_ases, $tracking_type, $id_instance)
+ * @param $id_ases --> {talentospilos_profile} table id
+ * @param $tracking_type --> [PARES, GRUPAL]
+ * @param $id_instance --> module associated instance
+ * @return array of trackings
  */
  
 function get_trackings_student($id_ases, $tracking_type, $id_instance){
@@ -106,13 +124,13 @@ function get_trackings_student($id_ases, $tracking_type, $id_instance){
  }
  
 /**
- * Función que retorna los seguimientos de un estudiante agrupados por semestre
+ * Gets all of a student grouped by semester
  * 
- * @see get_tracking_group_by_semester()
- * @param id_ases --> id relacionado en la tabla talentospilos_profile
- * @param tracking_type [PARES, GRUPAL]
- * @param id_instance --> Id asociado a la instancia del módulo
- * @return Trackings array group by semester
+ * @see get_tracking_group_by_semester($id_ases = null, $tracking_type, $id_semester = null, $id_instance = null)
+ * @param $id_ases --> ASES id on talentospilos_profile table
+ * @param $tracking_type --> [PARES, GRUPAL]
+ * @param $id_instance --> module instance id
+ * @return array --> trackings grouped by semester
  */
  
 function get_tracking_group_by_semester($id_ases = null, $tracking_type, $id_semester = null, $id_instance = null){
@@ -159,7 +177,7 @@ function get_tracking_group_by_semester($id_ases = null, $tracking_type, $id_sem
             
             foreach ($semesters as $semester){
                 
-                if($lastsemestreinfo && (strtotime($semester->fecha_inicio) <= strtotime($lastsemestreinfo->fecha_inicio))){ //se valida que solo se obtenga la info de los semestres en que se encutra matriculado el estudiante
+                if($lastsemestreinfo && (strtotime($semester->fecha_inicio) <= strtotime($lastsemestreinfo->fecha_inicio))){ //Gets info from semesters the student is registered
                 
                     $semester_object = new stdClass;
                     
@@ -202,10 +220,11 @@ function get_tracking_group_by_semester($id_ases = null, $tracking_type, $id_sem
 }
 
 /**
- * Función que retorna el id del primer semestre cursado por el estudiante
- *
- * @param int --- id student 
- * @return int --- id first semester
+ * Gets the student first semester
+ * 
+ * @see get_id_first_semester($id)
+ * @param $id --> student id
+ * @return string --> first semester id
  */
 function get_id_first_semester($id){
     try {
@@ -256,10 +275,10 @@ function get_id_first_semester($id){
 }
 
 /**
- * Return array of semesters of a student
+ * Returns an array of semesters of a student
  *
- * @param string $username_student Is te username of moodlesite 
- * @return array() of stdClass object representing semesters of a student
+ * @param $username_student --> moodle student username
+ * @return array --> stdClass object representing semesters of a student
  */
 function get_semesters_stud($id_first_semester){
      
@@ -289,6 +308,14 @@ function compare_date($fecha_inicio, $fecha_fin, $fecha_comparar){
     return (((int)$fecha_comparar >= strtotime($fecha_inicio->format('Y-m-d'))) && ((int)$fecha_comparar <= (int)$fecha_fin));
  }
 
+ /**
+  * Gets last semester id given a moodle id
+  * 
+  * @see get_id_last_semester($idmoodle)
+  * @param $idmoodle --> moodle student id
+  * @return string|boolean --> string containing the last semster id or false in case there weren't semesters related with the student
+  */
+
  function get_id_last_semester($idmoodle){
 
      $id_first_semester = get_id_first_semester($idmoodle);
@@ -301,12 +328,11 @@ function compare_date($fecha_inicio, $fecha_fin, $fecha_comparar){
  }
 
 /**
- * Función que guarda un seguimiento realizado a un estudiante
- * Guarda información en la tabla tp_seguimientos y la relación de estudiante y sus
- * seguimientos (tp_seguimiento_estud)
+ * Saves a track realized by a student on {tabla tp_seguimientos} and {tp_seguimiento_estud} tables 
  *
- * @param $object_tracking --> Objeto con toda la información correspondiente al seguimiento de pares a almacenar
- * @return $object_result --> Objeto que almacena el resultado de operación en la base de datos
+ * @see save_tracking_peer($object_tracking)
+ * @param $object_tracking --> Object containing the information that'll be stored
+ * @return object --> Object containing the query result
  */
 function save_tracking_peer($object_tracking){
 
@@ -315,19 +341,19 @@ function save_tracking_peer($object_tracking){
     pg_query("BEGIN") or die("Falló la conexión con la base de datos\n");
     $result_saving = new stdClass();
 
-    // Inserción o actualización del seguimiento, en caso se registre un ID de seguimiento
+    // track Insertion or update  in case there's an id track
     if($object_tracking->id != ""){
 
         unset($object_tracking->id_monitor);
         $result = $DB->update_record('talentospilos_seguimiento', $object_tracking);
-        $result_insertion_tracking = -1;  // Este valor para esta variable indica que no se realizó inserción si no actualización del seguimientos
+        $result_insertion_tracking = -1;  // This variable value indicates it wasn't an insertion but an update
     }else{
-        // Inserta el seguimiento
+        // Inserts track
         unset($object_tracking->id);
         $result_insertion_tracking = $DB->insert_record('talentospilos_seguimiento', $object_tracking, true);
     }    
 
-    // Inserta la relación de seguimiento_estudiante
+    // Inserts ins student-track (seguimiento-estudiante) relation 
     if($result_insertion_tracking != -1){
         $object_tracking_student = new stdClass();
         $object_tracking_student->id_estudiante = $object_tracking->id_estudiante_ases;
@@ -339,7 +365,7 @@ function save_tracking_peer($object_tracking){
     }
     
 
-    // Se consultan ID riesgos
+    // Risks are consulted
 
     $sql_query = "SELECT id FROM {talentospilos_riesgos_ases} WHERE nombre = 'individual'";
     $id_individual_risk = $DB->get_record_sql($sql_query)->id;
@@ -356,7 +382,7 @@ function save_tracking_peer($object_tracking){
     $sql_query = "SELECT id FROM {talentospilos_riesgos_ases} WHERE nombre = 'vida_universitaria'";
     $id_life_u_risk = $DB->get_record_sql($sql_query)->id;
 
-    // ID relación estudiante_riesgo individual
+    // {estudiante_riesgo - individual} relation id
     $sql_query = "SELECT id 
                   FROM {talentospilos_riesg_usuario} AS riesgo_usuario
                   WHERE riesgo_usuario.id_usuario = $object_tracking->id_estudiante_ases
@@ -381,7 +407,7 @@ function save_tracking_peer($object_tracking){
     }
         
 
-    // ID relación estudiante_riesgo familiar
+    // {estudiante_riesgo - familiar} relation id
     $sql_query = "SELECT id 
                   FROM {talentospilos_riesg_usuario} AS riesgo_usuario
                   WHERE riesgo_usuario.id_usuario = $object_tracking->id_estudiante_ases
@@ -405,7 +431,7 @@ function save_tracking_peer($object_tracking){
         $DB->insert_record('talentospilos_riesg_usuario', $object_risk_familiar);
     }
 
-    // ID relación estudiante_riesgo académico
+    // {estudiante_riesgo - académico} relation id
     $sql_query = "SELECT id 
                   FROM {talentospilos_riesg_usuario} AS riesgo_usuario
                   WHERE riesgo_usuario.id_usuario = $object_tracking->id_estudiante_ases
@@ -430,7 +456,7 @@ function save_tracking_peer($object_tracking){
         $DB->insert_record('talentospilos_riesg_usuario', $object_risk_academic);
     }
 
-    // ID relación estudiante_riesgo económico
+    // {estudiante_riesgo - económico} relation id
     $sql_query = "SELECT id 
                   FROM {talentospilos_riesg_usuario} AS riesgo_usuario
                   WHERE riesgo_usuario.id_usuario = $object_tracking->id_estudiante_ases
@@ -455,7 +481,7 @@ function save_tracking_peer($object_tracking){
         $DB->insert_record('talentospilos_riesg_usuario', $object_risk_economic);
     }
 
-    // ID relación estudiante_riesgo vida universitaria
+    // {estudiante_riesgo vida universitaria} relation id
     $sql_query = "SELECT id 
                   FROM {talentospilos_riesg_usuario} AS riesgo_usuario
                   WHERE riesgo_usuario.id_usuario = $object_tracking->id_estudiante_ases
@@ -498,12 +524,12 @@ function save_tracking_peer($object_tracking){
     return $result_saving;
 }
 
-/**
- * Función que realiza un borrado lógico para un seguimiento cambiando su estado en la base de datos
- * en la tabla de seguimientos (talentospilos_seguimiento)
+/** 
+ * Executes a logical delete changing a track status on {talentospilos_seguimiento} table
  *
- * @param $id_tracking --> Objeto con toda la información correspondiente al seguimiento de pares a almacenar
- * @return $object_result --> Objeto que almacena el resultado de operación en la base de datos
+ * @see delete_tracking_peer($id_tracking)
+ * @param $id_tracking --> object containing track information
+ * @return object --> object representing the database operation result
  */
 
 function delete_tracking_peer($id_tracking){
@@ -533,13 +559,14 @@ function delete_tracking_peer($id_tracking){
 }
 
 /**
- * Función que guarda el cambio de estado Icetex de un estudiante
- * 
+ * Saves the Icetex change of status of a student
  *
- * @param $id_student --> ID correspondiente al estudiante Ases
- * @param $id_status --> ID correspondiente al estado Ases a almacenar
- * @param $id_reason --> ID correspondiente al motivo en caso de que el nuevo estado sea RETIRADO. Por defecto null.
- * @return $object_result --> Objeto que almacena el resultado de operación en la base de datos
+ * @see save_status_icetex($id_status, $id_student, $id_reason=null, $observations=null)
+ * @param $id_student --> ASES student id
+ * @param $id_status --> status id that'll be saved
+ * @param $id_reason --> In case the status is retired, this is de id reason. null by default
+ * @param $observations --> Observaton of change
+ * @return object --> object representing the database operation result
  */
 
 function save_status_icetex($id_status, $id_student, $id_reason=null, $observations=null){
@@ -593,13 +620,13 @@ function save_status_icetex($id_status, $id_student, $id_reason=null, $observati
 }
 
 /**
- * Función que guarda el cambio de estado ASES de un estudiante
+ * Saves the ASES change of status of a student
  * 
- *
- * @param $id_student --> ID correspondiente al estudiante Ases
- * @param $id_status --> ID correspondiente al estado Ases a almacenar
- * @param $id_reason --> ID correspondiente al motivo en caso de que el nuevo estado sea RETIRADO. Por defecto null.
- * @return $object_result --> Objeto que almacena el resultado de operación en la base de datos
+ * @see save_status_ases($id_status, $id_student, $id_reason=null, $observations=null)
+ * @param $id_student --> ASES student id
+ * @param $id_status --> status id that'll be saved
+ * @param $id_reason --> In case the status is retired, this is de id reason. null by default
+ * @return object --> object representing the database operation result
  */
 
 function save_status_ases($id_status, $id_student, $id_reason=null, $observations=null){
@@ -653,10 +680,11 @@ function save_status_ases($id_status, $id_student, $id_reason=null, $observation
 }
 
 /**
- * Función que busca un estudiante a partir del código de estudiante Ases.
+ * Gets an student given his ASES id
  *
- * @param $id_student --> ID correspondiente al estudiante Ases
- * @return $object_result --> Objeto que almacena el resultado de operación en la base de datos
+ * @see validate_student($code_student)
+ * @param $code_student --> ASES student id
+ * @return integer --> 1 if it's successful, 0 otherwise
  */
 
 function validate_student($code_student){

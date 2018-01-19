@@ -47,7 +47,7 @@ $contextblock =  context_block::instance($blockid);
 
 $url = new moodle_url("/blocks/ases/view/permisos_rol.php",array('courseid' => $courseid, 'instanceid' => $blockid));
 
-//Configuracion de la navegacion
+// Navegation set up
 $coursenode = $PAGE->navigation->find($courseid, navigation_node::TYPE_COURSE);
 $blocknode = navigation_node::create('Permisos Rol',$url, null, 'block', $blockid);
 $coursenode->add_node($blocknode);
