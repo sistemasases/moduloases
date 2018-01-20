@@ -49,6 +49,7 @@
                                             ]
                                         }
                                     ];
+
                 $("#JSON-condiciones").text(JSON.stringify(JSONCondiciones, undefined, 2)) ;
                 
             });
@@ -327,7 +328,7 @@
                     disparadores = $('#disparadores').val();
                     for(var x in identificadores) {
                         disparadores = disparadores.replaceAll(identificadores[x].id_temporal, identificadores[x].id_nuevo);
-                        alert(identificadores[x].id_temporal + "   " + identificadores[x].id_nuevo);
+                        
                     };
                     
                     disparadores = JSON.parse(disparadores);
@@ -349,7 +350,7 @@
                 
                 $.ajax({
                     method: "POST",
-                    url: "dphpforms_forms_processor.php",
+                    url: "../managers/dphpforms/dphpforms_forms_processor.php",
                     data: { data: formulario }
                     }).done(function( msg ) {
                         alert( "Data Saved: " + msg );
