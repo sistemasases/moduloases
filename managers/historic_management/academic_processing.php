@@ -39,19 +39,19 @@ if (isset($_FILES['file'])) {
         $nombre = $archivo['name'];
 
         $rootFolder = "../../view/archivos_subidos/historic/academic/files/";
-        $zipFolfer = "../../view/archivos_subidos/historic/academic/comprimidos/";
+        $zipFolder = "../../view/archivos_subidos/historic/academic/comprimidos/";
 
         //validate and create folders
         if (!file_exists($rootFolder)) {
             mkdir($rootFolder, 0777, true);
         }
-        if (!file_exists($zipFolfer)) {
-            mkdir($zipFolfer, 0777, true);
+        if (!file_exists($zipFolder)) {
+            mkdir($zipFolder, 0777, true);
         }
 
         //deletes everything from folders
         deleteFilesFromFolder($rootFolder);
-        deleteFilesFromFolder($zipFolfer);
+        deleteFilesFromFolder($zipFolder);
 
         //validate extension
         if ($extension !== 'csv') {
@@ -307,10 +307,10 @@ if (isset($_FILES['file'])) {
                 $response->success = 'Archivo cargado satisfactoriamente';
             }
 
-            $zipname = $zipFolfer . "detalle.zip";
+            $zipname = $zipFolder . "detalle.zip";
             createZip($rootFolder, $zipname);
 
-            $response->urlzip = "<a href='$zipname'>Descargar detalles</a>";
+            $response->urlzip = "<a href='ases/$zipname'>Descargar detalles</a>";
 
             echo json_encode($response);
 
@@ -318,10 +318,10 @@ if (isset($_FILES['file'])) {
             $response = new stdClass();
             $response->error = "No se cargo el archivo. Para mayor informacion descargar la carpeta con los detalles de inconsitencias.";
 
-            $zipname = $zipFolfer . "detalle.zip";
+            $zipname = $zipFolder . "detalle.zip";
             createZip($rootFolder, $zipname);
 
-            $response->urlzip = "<a href='$zipname'>Descargar detalles</a>";
+            $response->urlzip = "<a href='ases/$zipname'>Descargar detalles</a>";
 
             echo json_encode($response);
         }

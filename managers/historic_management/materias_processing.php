@@ -39,19 +39,19 @@ if (isset($_FILES['file'])) {
         $nombre = $archivo['name'];
 
         $rootFolder = "../../view/archivos_subidos/historic/academic/files/";
-        $zipFolfer = "../../view/archivos_subidos/historic/academic/comprimidos/";
+        $zipFolder = "../../view/archivos_subidos/historic/academic/comprimidos/";
 
         //validate and create folders
         if (!file_exists($rootFolder)) {
             mkdir($rootFolder, 0777, true);
         }
-        if (!file_exists($zipFolfer)) {
-            mkdir($zipFolfer, 0777, true);
+        if (!file_exists($zipFolder)) {
+            mkdir($zipFolder, 0777, true);
         }
 
         //deletes everything from folders
         deleteFilesFromFolder($rootFolder);
-        deleteFilesFromFolder($zipFolfer);
+        deleteFilesFromFolder($zipFolder);
 
         //validate extension
         if ($extension !== 'csv') {
@@ -73,6 +73,7 @@ if (isset($_FILES['file'])) {
         $wrong_rows = array();
         $success_rows = array();
         $detail_errors = array();
+        $registros = array();
 
         //headers of error file
         array_push($detail_errors, ['No. linea - archivo original', 'No. linea - archivo registros erroneos', 'No. columna', 'Nombre Columna', 'detalle error']);
@@ -218,53 +219,56 @@ if (isset($_FILES['file'])) {
                 throw new MyException('La columna con el campo nota es obligatoria');
             }
 
-            //FINALIZACION DE VALIDACIONES. CARGA O ACTUALIZACIÓN
+            //FINALIZACION DE VALIDACIONES. 
             if (!$isValidRow) {
                 $lc_wrongFile++;
                 array_push($wrong_rows, $data);
                 continue;
             } else {
-
-                //Actualizar o crear un registro
-                $result = update_historic_academic($id_estudiante, $id_programa, $id_semestre, $nota, $nota_acumulado);
-
-                if (!$result) {
-                    array_push($detail_erros, [$line_count, $lc_wrongFile, 'Error al registrar historico', 'Error Servidor', 'Error del server registrando el historico']);
-                    array_push($wrong_rows, $data);
-                    $lc_wrongFile++;
-                } else {
-
-                    $id_historic = $result;
-                    array_push($success_rows, $data);
-                    if ($hasCancel) {
-                        if (!update_historic_cancel($id_historic, $fecha_cancelacion)) {
-                            array_push($detail_erros, [$line_count, $lc_wrongFile, 'Error al registrar cancelacion', 'Error Servidor', 'Error del server registrando la cancelacion']);
-                            array_push($wrong_rows, $data);
-                            $lc_wrongFile++;
-                        }
-                    }
-
-                    if ($hasEstimulo) {
-                        if (!update_historic_estimulo($id_historic, $puesto_estimulo)) {
-                            array_push($detail_erros, [$line_count, $lc_wrongFile, 'Error al registrar estimulo', 'Error Servidor', 'Error del server registrando el estimulo']);
-                            array_push($wrong_rows, $data);
-                            $lc_wrongFile++;
-                        }
-                    }
-
-                    if ($hasBajo) {
-                        if (!update_historic_bajo($id_historic, $numero_bajo)) {
-                            array_push($detail_erros, [$line_count, $lc_wrongFile, 'Error al registrar bajo rendimiento', 'Error Servidor', 'Error del server registrando el bajo rendimiento']);
-                            array_push($wrong_rows, $data);
-                            $lc_wrongFile++;
-                        }
-                    }
+                $key = "$id_estudiante-$id_semestre-$id_programa";
+                
+                //validate register
+                if(!array_key_exists($key, $registros)){
+                    $registros[$key] = array();
                 }
+
+                $materia = new stdClass;
+                $materia->nombre_materia = $nombre_materia;
+                $materia->codigo_materia = $codigo_materia;
+                $materia->creditos = $creditos;
+                $materia->nota = $nota;
+
+                array_push($registros[$key],$materia);
+                array_push($success_rows,$data);
             }
 
             $line_count++;
         }
 
+        //RECORRER ARREGLO DE REGISTRO PARA GENERAR JSON DE MATERIAS
+
+        foreach ($registros as $key => $array_materias) {
+
+            $data = explode("-", $key);
+            
+            $id_estudiante = $data[0];
+            $id_semestre = $data[1];
+            $id_programa = $data[2];
+            
+            $json_materias = json_encode($array_materias);
+
+            //Actualizar o crear un registro
+            $result = update_historic_materias($id_estudiante, $id_programa, $id_semestre, $json_materias);
+
+            if (!$result) {
+                array_push($detail_erros, [$line_count, $lc_wrongFile, 'Error al registrar historico', 'Error Servidor', 'Error del server registrando el historico']);
+                array_push($wrong_rows, $data);
+                $lc_wrongFile++;
+            }else{
+
+            }
+
+        }
         //RECORRER LOS REGISTROS ERRONEOS Y CREAR ARCHIVO DE registros_erroneos
 
         if (count($wrong_rows) > 1) {
@@ -308,10 +312,10 @@ if (isset($_FILES['file'])) {
                 $response->success = 'Archivo cargado satisfactoriamente';
             }
 
-            $zipname = $zipFolfer . "detalle.zip";
+            $zipname = $zipFolder . "detalle.zip";
             createZip($rootFolder, $zipname);
 
-            $response->urlzip = "<a href='$zipname'>Descargar detalles</a>";
+            $response->urlzip = "<a href='ases/$zipname'>Descargar detalles</a>";
 
             echo json_encode($response);
 
@@ -319,10 +323,10 @@ if (isset($_FILES['file'])) {
             $response = new stdClass();
             $response->error = "No se cargo el archivo. Para mayor informacion descargar la carpeta con los detalles de inconsitencias.";
 
-            $zipname = $zipFolfer . "detalle.zip";
+            $zipname = $zipFolder . "detalle.zip";
             createZip($rootFolder, $zipname);
 
-            $response->urlzip = "<a href='$zipname'>Descargar detalles</a>";
+            $response->urlzip = "<a href='ases/$zipname'>Descargar detalles</a>";
 
             echo json_encode($response);
         }
