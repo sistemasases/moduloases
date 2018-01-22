@@ -245,8 +245,7 @@ function get_ases_report($general_fields=null, $conditions, $academic_fields=nul
 
     // **** From clause ****
     $from_clause = " FROM {user} as user_moodle INNER JOIN {talentospilos_user_extended} AS user_extended ON user_moodle.id = user_extended.id_moodle_user
-                                                INNER JOIN {talentospilos_usuario} AS tp_user ON user_extended.id_ases_user = tp_user.id
-                                                INNER JOIN {talentospilos_est_estadoases} AS tp_ases_status ON tp_ases_status.id_estudiante = tp_user.id ";
+                                                INNER JOIN {talentospilos_usuario} AS tp_user ON user_extended.id_ases_user = tp_user.id ";
 
     // **** Where clause ****
     $where_clause .= " tp_ases_status.id_instancia = $instance_id";
@@ -258,18 +257,28 @@ function get_ases_report($general_fields=null, $conditions, $academic_fields=nul
                                          FROM {cohort_members} AS members_cohort INNER JOIN {user} AS user_moodle ON user_moodle.id = members_cohort.userid
                                                                                  INNER JOIN {cohort} AS cohorts ON cohorts.id = members_cohort.cohortid
                                          WHERE cohorts.idnumber = '$conditions[0]') AS cohort_query ON cohort_query.username = user_moodle.username ";
+    }else if($conditions[0] == 'TODOS'){
+        $sub_query_cohort .= " INNER JOIN (SELECT cohort.id, moodle_user.username 
+                                            FROM {cohort} AS cohort INNER JOIN {talentospilos_inst_cohorte} AS instance_cohort ON cohort.id = instance_cohort.id_cohorte
+                                                                    INNER JOIN {cohort_members} AS cohort_member ON cohort_member.cohortid = cohort.id
+                                                                    INNER JOIN {user} AS moodle_user ON moodle_user.id = cohort_member.userid
+                                            WHERE id_instancia = $instance_id) AS all_students_cht ON all_students_cht.username = user_moodle.username";
     }
     // Condición estado ASES
     if($conditions[1] != 'TODOS'){
 
-        $sub_query_status .= " INNER JOIN (SELECT 
-                                           FROM {talentospilos_usuario} AS tp_user INNER JOIN {talentospilos_est_estadoases} AS ases_status ON tp_user.)";
+        $sub_query_status .= " INNER JOIN (SELECT MAX(status_ases.id), moodle_user.username, status_ases.id_estado_ases
+                                            FROM {talentospilos_est_estadoases} AS status_ases LEFT JOIN {talentospilos_user_extended} AS user_extended ON status_ases.id_estudiante = user_extended.id_ases_user
+                                                                            LEFT JOIN {user} AS moodle_user ON moodle_user.id = user_extended.id_moodle_user
+                                            GROUP BY moodle_user.username, status_ases.id_estado_ases
+                                            HAVING status_ases.id_estado_ases = $conditions[1]
+                                            ) AS query_status_ases ON query_status_ases.username = user_moodle.username";
 
     }
     
     if(property_exists($actions, 'search_all_students_ar')){
         
-        $sql_query = $select_clause.$from_clause.$sub_query_cohort;
+        $sql_query = $select_clause.$from_clause.$sub_query_cohort.$sub_query_status;
         //print_r($sql_query);
         $result_query = $DB->get_records_sql($sql_query);
         //print_r($result);        
