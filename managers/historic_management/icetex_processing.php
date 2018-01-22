@@ -193,9 +193,7 @@ if (isset($_FILES['file'])) {
                    array_push($wrong_rows, $data);
                    $lc_wrongFile++;
                } else {
-                $msj = new stdClass();
-                $msj->success = "El registro se ha realizado con éxito";
-                echo json_encode($msj);                
+                               
                }
            }
 
@@ -239,14 +237,14 @@ if (isset($_FILES['file'])) {
             }
             $zipname = $zipFolfer . "detalle.zip";
             createZip($rootFolder, $zipname);
-            $response->urlzip = "<a href='$zipname'>Descargar detalles</a>";
+            $response->urlzip = "<a href='ases/$zipname'>Descargar detalles</a>";
             echo json_encode($response);
     } else {
         $response = new stdClass();
         $response->error = "No se cargó el archivo. Para mayor informacion descargar la carpeta con los detalles de inconsitencias.";
         $zipname = $zipFolfer . "detalle.zip";
         createZip($rootFolder, $zipname);
-        $response->urlzip = "<a href='$zipname'>Descargar detalles</a>";
+        $response->urlzip = "<a href='ases/$zipname'>Descargar detalles</a>";
         echo json_encode($response);
     }
 

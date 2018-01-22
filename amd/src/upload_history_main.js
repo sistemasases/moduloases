@@ -103,8 +103,8 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert'], function ($,
                     case 'icetex':
                         $('#informacion').append('<div class="alert alert-info"><h4 align="center">Información de carga Historico ICETEX</h4><br> <strong>Para tener en cuenta...</strong> <br><p>Columnas obligatorias:<ul><li>cedula_estudiante</li><li>nombre_semestre</li><li>codigo_resolucion</li> <li>monto_estudiante</li></ul> </p></div>');
                         break;
-                    case 'resolucion':
-                        $('#informacion').append('<div class="alert alert-info"><h4 align="center">Información de carga resolución ICETEX</h4><br> <strong>Para tener en cuenta...</strong> <br><p>Columnas obligatorias:<ul><li>numero_resolucion</li><li>fecha</li><li>total_girado</li></ul></p></div>');
+                    case 'resolution':
+                        $('#informacion').append('<div class="alert alert-info"><h4 align="center">Información de carga resolución ICETEX</h4><br> <strong>Para tener en cuenta...</strong> <br><p>Columnas obligatorias:<ul><li>codigo_resolucion</li><li>fecha</li><li>total_girado</li></ul></p></div>');
                         break;
                     default:
                     // code
