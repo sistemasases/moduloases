@@ -122,10 +122,6 @@ function create_historic_icetex($student_id, $resolution_id, $semester_id, $amou
 
     global $DB;
 
-    $student_id = get_student_id_by_identification($student_identification);
-    $resolution_id = get_resolution_id_by_number($num_resolution);
-    $semester_id = get_semester_id_by_name($name_semester);
-
     $newHistoric = new stdClass();
     $newHistoric->id_estudiante = $student_id;
     $newHistoric->id_resolucion = $resolution_id;

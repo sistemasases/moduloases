@@ -27,6 +27,7 @@
 require_once(dirname(__FILE__). '/../../../../config.php');
 require_once '../MyException.php';
 require_once '../mass_management/massmanagement_lib.php';
+require_once '../historic_management/historic_academic_lib.php';
 require_once '../historic_management/historic_icetex_lib.php';
 
 if (isset($_FILES['file'])) {
@@ -184,8 +185,9 @@ if (isset($_FILES['file'])) {
                    array_push($wrong_rows, $data);
                    $lc_wrongFile++;
                } else {
-
-                   
+                $msj = new stdClass();
+                $msj->success = "El registro se ha realizado con éxito";
+                echo json_encode($msj);                
                }
            }
 
@@ -197,9 +199,7 @@ if (isset($_FILES['file'])) {
        //RECORRER LOS REGISTROS EXITOSOS Y CREAR ARCHIVO DE registros_exitosos
 
        //CREAR ZIP
-
-       echo json_encode($cedula_estudiante);
-
+              
    } catch (MyException $e) {
        $msj = new stdClass();
        $msj->error = $e->getMessage() . pg_last_error();

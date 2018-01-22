@@ -1,5 +1,5 @@
 // Standard license block omitted.
-/* @autor      Camilo José Cruz Rivera
+/** @autor      Camilo José Cruz Rivera
  * @package    block_ases
  * @copyright  ASES
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -46,7 +46,6 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert'], function ($,
                 formData.append('file', $('#archivo')[0].files[0]);
 
                 var controler = $('#selector').val() + '_processing.php';
-                //alert(controler);
 
                 $.ajax({
                     url: '../managers/historic_management/' + controler,
@@ -60,9 +59,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert'], function ($,
                     beforeSend: function () {
                         $('#response').html("<img src='../icon/facebook.gif' />");
                     },
-                    success: function (msj) {
-                        alert("ENTRO")
-                        console.log(msj);
+                    success: function (msj) {+
                         $('#response').empty();
 
                         $('#informacion').empty();
@@ -104,7 +101,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert'], function ($,
                         $('#informacion').append('<div class="alert alert-info"><h4 align="center">Información de carga materias</h4><br><strong>Para tener en cuenta...</strong> <br><p>Columnas obligatorias:<ul> <li>codigo_estudiante</li> <li>semestre</li> <li>programa</li> <li>nombre_materia</li> <li>codigo_materia</li> <li>creditos</li> <li>nota</li> </ul> </p></div>');
                         break;
                     case 'icetex':
-                        $('#informacion').append('<div class="alert alert-info"><h4 align="center">Información de carga Historico ICETEX</h4><br> <strong>Para tener en cuenta...</strong> <br><p>Columnas obligatorias:<ul><li>cedula_estudiante</li><li>semestre</li><li>num_resolucion</li> <li>monto_estudiante</li></ul> </p></div>');
+                        $('#informacion').append('<div class="alert alert-info"><h4 align="center">Información de carga Historico ICETEX</h4><br> <strong>Para tener en cuenta...</strong> <br><p>Columnas obligatorias:<ul><li>cedula_estudiante</li><li>nombre_semestre</li><li>codigo_resolucion</li> <li>monto_estudiante</li></ul> </p></div>');
                         break;
                     case 'resolucion':
                         $('#informacion').append('<div class="alert alert-info"><h4 align="center">Información de carga resolución ICETEX</h4><br> <strong>Para tener en cuenta...</strong> <br><p>Columnas obligatorias:<ul><li>numero_resolucion</li><li>fecha</li><li>total_girado</li></ul></p></div>');
