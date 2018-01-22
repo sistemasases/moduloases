@@ -44,6 +44,14 @@ if (isset($_FILES['file'])) {
        $rootFolder = "../../view/archivos_subidos/historic/icetex/files/";
        $zipFolfer = "../../view/archivos_subidos/historic/icetex/comprimidos/";
 
+        //validate and create folders
+        if (!file_exists($rootFolder)) {
+            mkdir($rootFolder, 0777, true);
+        }
+        if (!file_exists($zipFolfer)) {
+            mkdir($zipFolfer, 0777, true);
+        }
+
        //deletes everything from folders
        deleteFilesFromFolder($rootFolder);
        deleteFilesFromFolder($zipFolfer);
@@ -96,12 +104,12 @@ if (isset($_FILES['file'])) {
                    $id_estudiante = get_student_id_by_identification($cedula_estudiante);
                    if (!$id_estudiante) {
                        $isValidRow = false;
-                       array_push($detail_errors, [$line_count, $lc_wrongFile, ($associativeTitles['cedula_estudiante'] + 1), 'cedula_estudiante', 'No existe un estudiante ases asociado a la cédula' . $data[$associativeTitles['cedula_estudiante']]]);
+                       array_push($detail_errors, [$line_count, $lc_wrongFile, ($associativeTitles['cedula_estudiante'] + 1), 'cedula_estudiante', 'No existe un estudiante ASES asociado a la cédula: ' . $cedula_estudiante]);
                    }
 
                } else {
                    $isValidRow = false;
-                   array_push($detail_erros, [$line_count, $lc_wrongFile, ($associativeTitles['cedula_estudiante'] + 1), 'cedula_estudiante', 'El campo cedula_estudiante es obligatorio y se encuentra vacio']);
+                   array_push($detail_errors, [$line_count, $lc_wrongFile, ($associativeTitles['cedula_estudiante'] + 1), 'cedula_estudiante', 'El campo cedula_estudiante es obligatorio y se encuentra vacio']);
                }
 
            } else {
@@ -116,12 +124,12 @@ if (isset($_FILES['file'])) {
                    $id_semestre = get_semester_id_by_name($nombre_semestre);
                    if (!$id_semestre) {
                        $isValidRow = false;
-                       array_push($detail_erros, [$line_count, $lc_wrongFile, ($associativeTitles['nombre_semestre'] + 1), 'nombre_semestre', 'No existe ningun semestre registrado con el nombre' . $nombre_semestre]);
+                       array_push($detail_errors, [$line_count, $lc_wrongFile, ($associativeTitles['nombre_semestre'] + 1), 'nombre_semestre', 'No existe ningun semestre registrado con el nombre: ' . $nombre_semestre]);
                    }
 
                } else {
                    $isValidRow = false;
-                   array_push($detail_erros, [$line_count, $lc_wrongFile, ($associativeTitles['nombre_semestre'] + 1), 'nombre_semestre', 'El campo nombre_semestre es obligatorio y se encuentra vacio']);
+                   array_push($detail_errors, [$line_count, $lc_wrongFile, ($associativeTitles['nombre_semestre'] + 1), 'nombre_semestre', 'El campo nombre_semestre es obligatorio y se encuentra vacio']);
                }
 
            } else {
@@ -138,12 +146,12 @@ if (isset($_FILES['file'])) {
 
                    if (!$id_resolucion) {
                        $isValidRow = false;
-                       array_push($detail_erros, [$line_count, $lc_wrongFile, ($associativeTitles['codigo_resolucion'] + 1), 'codigo_resolucion', 'No existe ninguna resolución asociada al código' . $codigo_resolucion]);
+                       array_push($detail_errors, [$line_count, $lc_wrongFile, ($associativeTitles['codigo_resolucion'] + 1), 'codigo_resolucion', 'No existe ninguna resolución asociada al código: ' . $codigo_resolucion]);
                    }
 
                } else {
                    $isValidRow = false;
-                   array_push($detail_erros, [$line_count, $lc_wrongFile, ($associativeTitles['codigo_resolucion'] + 1), 'codigo_resolucion', 'El campo codigo_resolucion es obligatorio y se encuentra vacio']);
+                   array_push($detail_errors, [$line_count, $lc_wrongFile, ($associativeTitles['codigo_resolucion'] + 1), 'codigo_resolucion', 'El campo codigo_resolucion es obligatorio y se encuentra vacio']);
                }
 
            } else {
@@ -158,12 +166,12 @@ if (isset($_FILES['file'])) {
 
                    if (!is_numeric($monto_estudiante)) {
                        $isValidRow = false;
-                       array_push($detail_erros, [$line_count, $lc_wrongFile, ($associativeTitles['monto_estudiante'] + 1), 'monto_estudiante', 'El campo monto_estudiante debe ser de tipo numerico']);
+                       array_push($detail_errors, [$line_count, $lc_wrongFile, ($associativeTitles['monto_estudiante'] + 1), 'monto_estudiante', 'El campo monto_estudiante debe ser de tipo numerico']);
                    }
 
                } else {
                    $isValidRow = false;
-                   array_push($detail_erros, [$line_count, $lc_wrongFile, ($associativeTitles['monto_estudiante'] + 1), 'monto_estudiante', 'El campo monto_estudiante es obligatorio y se encuentra vacio']);
+                   array_push($detail_errors, [$line_count, $lc_wrongFile, ($associativeTitles['monto_estudiante'] + 1), 'monto_estudiante', 'El campo monto_estudiante es obligatorio y se encuentra vacio']);
                }
 
            } else {
@@ -181,7 +189,7 @@ if (isset($_FILES['file'])) {
                $result = create_historic_icetex($id_estudiante, $id_resolucion, $id_semestre, $monto_estudiante);
 
                if (!$result) {
-                   array_push($detail_erros, [$line_count, $lc_wrongFile, 'Error al registrar historico', 'Error Servidor', 'Error del server registrando el historico']);
+                   array_push($detail_errors, [$line_count, $lc_wrongFile, 'Error al registrar historico', 'Error Servidor', 'Error del server registrando el historico']);
                    array_push($wrong_rows, $data);
                    $lc_wrongFile++;
                } else {
@@ -195,8 +203,52 @@ if (isset($_FILES['file'])) {
        }
 
        //RECORRER LOS REGISTROS ERRONEOS Y CREAR ARCHIVO DE registros_erroneos
+       if (count($wrong_rows) > 1) {
+            $filewrongname = $rootFolder . 'RegistrosErroneos_' . $nombre;
+            $wrongfile = fopen($filewrongname, 'w');
+            fprintf($wrongfile, chr(0xEF) . chr(0xBB) . chr(0xBF)); // darle formato unicode utf-8
+            foreach ($wrong_rows as $row) {
+                fputcsv($wrongfile, $row);
+            }
+            fclose($wrongfile);
+            //----
+            $detailsFilename = $rootFolder . 'DetallesErrores_' . $nombre;
+            $detailsFileHandler = fopen($detailsFilename, 'w');
+            fprintf($detailsFileHandler, chr(0xEF) . chr(0xBB) . chr(0xBF)); // darle formato unicode utf-8
+            foreach ($detail_errors as $row) {
+                fputcsv($detailsFileHandler, $row);
+        }
+            fclose($detailsFileHandler);
+        }
 
        //RECORRER LOS REGISTROS EXITOSOS Y CREAR ARCHIVO DE registros_exitosos
+
+       if (count($success_rows) > 1) { //porque la primera fila corresponde a los titulos no datos
+            $arrayIdsFilename = $rootFolder . 'RegistrosExitosos_' . $nombre;
+            $arrayIdsFileHandler = fopen($arrayIdsFilename, 'w');
+            fprintf($arrayIdsFileHandler, chr(0xEF) . chr(0xBB) . chr(0xBF)); // darle formato unicode utf-8
+            foreach ($success_rows as $row) {
+                fputcsv($arrayIdsFileHandler, $row);
+            }
+            fclose($arrayIdsFileHandler);
+            $response = new stdClass();
+            if (count($wrong_rows) > 1) {
+                $response->warning = 'Archivo cargado con inconsistencias<br> Para mayor informacion descargar la carpeta con los detalles de inconsitencias.';
+            } else {
+                $response->success = 'Archivo cargado satisfactoriamente';
+            }
+            $zipname = $zipFolfer . "detalle.zip";
+            createZip($rootFolder, $zipname);
+            $response->urlzip = "<a href='$zipname'>Descargar detalles</a>";
+            echo json_encode($response);
+    } else {
+        $response = new stdClass();
+        $response->error = "No se cargó el archivo. Para mayor informacion descargar la carpeta con los detalles de inconsitencias.";
+        $zipname = $zipFolfer . "detalle.zip";
+        createZip($rootFolder, $zipname);
+        $response->urlzip = "<a href='$zipname'>Descargar detalles</a>";
+        echo json_encode($response);
+    }
 
        //CREAR ZIP
               
