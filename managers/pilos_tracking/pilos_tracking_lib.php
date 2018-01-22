@@ -1,12 +1,36 @@
 <?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
+
+/**
+ * Estrategia ASES
+ *
+ * @author     Isabella Serna Ramírez
+ * @package    block_ases
+ * @copyright  2017 Isabella Serna Ramírez <isabella.serna@correounivalle.edu.co>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 require_once(dirname(__FILE__). '/../../../../config.php');
 require_once(dirname(__FILE__).'/../periods_management/periods_lib.php');
 require_once(dirname(__FILE__).'/../lib/student_lib.php');
 
-/*
- * Función que obtiene los semestres almacenados
- *
- * @return array
+/**
+ * Function that gets all semesters
+ * @see get_semesters()
+ * @return array with every semester on database
  */
 function get_semesters(){
   
@@ -17,10 +41,14 @@ function get_semesters(){
     return $semesters;
 }
 
-/*
- * Función que obtiene el rol dado id_usuario, instancia y id_semestre 
- *
- * @return object
+/**
+ * Function that gets an user's rol given his id, instance and id_semester
+ * 
+ * @see get_users_rols($user,$semester,$id_instancia)
+ * @param $user --> user's id 
+ * @param $semester --> semester's id
+ * @param $id_instancia --> instance id
+ * @return object which contains role
  */
 
 
@@ -31,10 +59,10 @@ function get_users_rols($user,$semester,$id_instancia){
     $rol = $DB->get_record_sql($sql_query);
     return $rol;
 }
-/*
- * Función que obtiene los roles almacenados que contengan el substring _ps
- *
- * @return array
+/**
+ * Gets all roles which contain substring '_ps'
+ * @see get_rol_ps()
+ * @return array with all roles
  */
 function get_rol_ps(){
   
@@ -54,12 +82,11 @@ function get_rol_ps(){
 }
 
 
-/*
- * funcion que obtiene el ID dado el shortname de la tabla
- * user_info_field
- *
- * @param $shortname
- * @return number
+/**
+ * Function that gets user's id given his shortname in user_info_field table
+ * @see get_id_info_field($shortname)
+ * @param $shortname --> user's shortname in database
+ * @return object representing the id
  */
 
 
@@ -74,10 +101,14 @@ function get_id_info_field($shortname){
 
 
 
-/*
- * Función que obtiene las personas dado un semestre y el rol a que tienen cargo.
- *
- * @return array
+/** 
+ * Function that returns all users given a semester and role
+ * 
+ * @see get_people_onsemester($period,$rols,$id_instancia)
+ * @param $period --> current semester
+ * @param $rols --> user's role
+ * @param $id_instancia --> instance id
+ * @return array with every user with those specifications
  */
 function get_people_onsemester($period,$rols,$id_instancia){
   
@@ -102,21 +133,21 @@ function get_people_onsemester($period,$rols,$id_instancia){
 }
 
 /**
- * Función para insertar un seguimiento.
+ * Function that inserts a track
  *
- * @see get_record($object, $id_est)
- * @param $object  ---> objeto seguimiento
- * @param $id_est  ---> id del estudiante
+ * @see insert_record($object, $id_est)
+ * @param $object  ---> tracking object
+ * @param $id_est  ---> student's id
  * @return boolean
  */
 function insert_record($object, $id_est){
     global $DB;
     $id_seg = $DB->insert_record('talentospilos_seguimiento', $object,true);
     
-    //se relaciona el seguimiento con el estudiante
+    //the student is beeing related with the track
     insert_record_student($id_seg, $id_est);
     
-    //se actualiza el riesgo
+    //risk updated
     if($object->tipo == 'PARES'){
         foreach ($id_est as $idStudent) {
             updateRisks($object, $idStudent);
@@ -131,12 +162,11 @@ function insert_record($object, $id_est){
 
 
 /**
- * Función para insertar un registro de seguimiento en {talentospilos_seg_estudiante}
- * dado el id del seguimiento insertado y el estudiante.
- *
+ * Inserts a tracking record in {talentospilos_seg_estudiante} given the track id and student's id
+ * 
  * @see insert_record_student($id_seg, $id_est)
- * @param $id_seg ---> id del seguimiento
- * @param $id_est  ---> id del estudiante
+ * @param $id_seg ---> track id
+ * @param $id_est  ---> student's id
  * @return boolean
  */
 function insert_record_student($id_seg, $id_est){
@@ -153,14 +183,14 @@ function insert_record_student($id_seg, $id_est){
 }
 
 /**
- * Función para obtener el seguimiento dado un monitor especifico.
+ * Gets a track given an specific monitor
  *
  * @see get_record_by_monitor($id_monitor, $id_seg= null, $tipo, $idinstancia)
- * @param $id_monitor  ---> id del monitor
- * @param $id_seg      ---> id del seguimiento
- * @param $tipo        ---> tipo del seguimiento
- * @param $idinstancia ---> id de instancia actual 
- * @return Array ---> obtiene array con los seguimientos del monitor
+ * @param $id_monitor  ---> monitor  id
+ * @param $id_seg      ---> tracking id
+ * @param $tipo        ---> type of tracking
+ * @param $idinstancia ---> current instance id
+ * @return array ---> monitor tracks
  */
 
 function get_record_by_monitor($id_monitor, $id_seg= null, $tipo, $idinstancia){
@@ -175,11 +205,11 @@ function get_record_by_monitor($id_monitor, $id_seg= null, $tipo, $idinstancia){
    return $DB->get_records_sql($sql_query);
 }
 
-/*
- * Función que actualiza los seguimientos pares.
- *
- * @param $object
- * @return 0 or 1 
+/**
+ * Updates 'seguimientos pares'
+ * @see updateSeguimiento_pares($object)
+ * @param $object --> Object containing track information
+ * @return integer (1 for success, 0 otherwise)
  */
 
 function updateSeguimiento_pares($object){
@@ -187,11 +217,11 @@ function updateSeguimiento_pares($object){
     $fecha_formato =str_replace( '/' , '-' , $object->fecha);
     date_default_timezone_set('America/Los_Angeles'); 
     $object->fecha=strtotime($fecha_formato);
-    //se obtiene el id del estudiante al que pertene el seguimiento
+    //student id is obtained
     $sql_query = "select id_estudiante from {talentospilos_seg_estudiante}  where id_seguimiento=".$object->id;
     $seg_estud = $DB->get_record_sql($sql_query);
     
-    //se obtiene el ultimo seguimeinto perteneciente al estudiante
+    //Last student track is obtained
     $lastSeg = $DB->get_record_sql('SELECT id_seguimiento,MAX(id) FROM {talentospilos_seg_estudiante} seg_est WHERE seg_est.id_estudiante='.$seg_estud->id_estudiante.'GROUP BY id_seguimiento ORDER BY id_seguimiento DESC limit 1');
    
       if($lastSeg->id_seguimiento == $object->id) updateRisks($object, $seg_estud->id_estudiante );
@@ -205,18 +235,19 @@ function updateSeguimiento_pares($object){
 
 }
 
-/*
- * Función que da una calificaciones a los riesgos dados.
+/**
+ * Function that qualifies given risks
  *
- * @param $array_student_risk
- * @param $name_risk
- * @param $calificacion
- * @param $idstudent
- * @return agrega datos a array 
+ * @see update_array_risk(&$array_student_risks, $name_risk, $calificacion, $idstudent)
+ * @param $array_student_risk --> Array containing student risk
+ * @param $name_risk --> risk name
+ * @param $calificacion --> risk qualification
+ * @param $idstudent --> student id
+ * @return void inserts data into array_student
  */
 function update_array_risk(&$array_student_risks, $name_risk, $calificacion, $idstudent){
     global $DB;
-    //Se obtienen los riegos disponible
+    //obatining availables risks
     $sql_query = "SELECT * FROM {talentospilos_riesgos_ases}";
     $array_risks = $DB->get_records_sql($sql_query);
     
@@ -232,16 +263,17 @@ function update_array_risk(&$array_student_risks, $name_risk, $calificacion, $id
 }
 
 
-/*
- * Función que crea arreglo con la información a actualizar de los riesgos de un seguimiento
- * @param $segObject
- * @param $idStudent
- * @return true 
+/**
+ * Function which creates an array with information to update a track risk
+ * 
+ * @param $segObject --> Track object with appropiate information
+ * @param $idStudent --> student's id
+ * @return boolean 
  */
 function updateRisks($segObject, $idStudent){
     global $DB;
     
-    //se crea un arraglo que contien la informacion a actualizar
+    //An array is created to storage information to update
     $array_student_risks = array();
     
     if($segObject->vida_uni_riesgo){
@@ -278,12 +310,13 @@ function updateRisks($segObject, $idStudent){
     return true;
 }
 
-/*
- * Función que retorna el rol de un usuario con el fin de mostrar al correspondiente interfaz en seguimiento_pilos
- *
- * @param $userid
- * @param $instanceid
- * @return Array 
+/**
+ * Returns user role  to show the correct interface in 'seguimiento_pilos'
+ * 
+ * @see get_id_rol_($userid,$instanceid)
+ * @param $userid --> user id
+ * @param $instanceid instance id
+ * @return Array with an object representing user
  */
 
 
@@ -300,12 +333,13 @@ function get_id_rol_($userid,$instanceid)
     return $idretornar;
 }
 
-/*
+/**
  * Función que retorna el nombre del rol de un usuario con el fin de mostrar al correspondiente interfaz en seguimiento_pilos
+ * Returns an user role to show the appropiate interface in 'seguimiento_pilos'
  *
- * @param $userid
- * @param $instanceid
- * @return Array 
+ * @param $userid --> user id
+ * @param $instanceid --> instance id
+ * @return array containing role name for the given user 
  */
 
 
@@ -318,12 +352,13 @@ function get_name_rol($idrol)
 }
 
 /**
- * Función que obtiene la información de los conteos por monitor de los seguimientos PARES y GRUPALES
+ * Function that gets information of counting 'seguimientos PARES y GRUPALES'
+ * 
  * @see consult_counting_tracking($revisado,$tipo,$instancia,$fechas_epoch,$persona)
- * @param $revisado ---> revisado por profesional (1 ó 0)
- * @param $tipo     ---> tipo de seguimiento (PARES ó GRUPAL) 
- * @param $instancia
- * @param $fechas_epoch --> Intervalo de fechas en la que empieza y termina el semestre actual
+ * @param $revisado ---> checked by professional (1 or 0)
+ * @param $tipo     ---> type of track (PARES or GRUPAL) 
+ * @param $instancia --> instance id
+ * @param $fechas_epoch --> starting and ending date of current semester
  * @return string 
  */
  
@@ -348,13 +383,15 @@ function get_name_rol($idrol)
 
 
 
-/*
- * Función que trae la información necesaria para los seguimientos considerando el monitor actual, la instancia actual asi como
- * que el monitor este asignado como tal a esta instancia
- *
- * @param $id_monitor
- * @param $id_instance 
- * @return Array 
+/**
+ * Function that returns tracks information given a monitor id, instance, range date and period
+ * 
+ * @see get_seguimientos_monitor($id_monitor,$id_instance,$fechas_epoch,$periodo)
+ * @param $id_monitor --> monitor id
+ * @param $id_instance --> instance id
+ * @param $fechas_epoch --> range date (starting and ending current semester)
+ * @param $period 
+ * @return array filled with track information
  */
 
 function get_seguimientos_monitor($id_monitor,$id_instance,$fechas_epoch,$periodo){
@@ -390,7 +427,7 @@ function get_seguimientos_monitor($id_monitor,$id_instance,$fechas_epoch,$period
 
     foreach($consulta as $estudiante)
     {
-      //Número de registros del estudiante revisados por el profesional,no revisados por el mismo,Número total de registros del estudiante.
+      //amount of student records checked by his professional, not checked by himself and total of student records (PARES).
       $sql = consult_counting_tracking(1,"PARES",$id_instance,$fechas_epoch,$estudiante);
       $estudiante->registros_estudiantes_revisados=$DB->get_record_sql($sql)->count;
 
@@ -401,7 +438,7 @@ function get_seguimientos_monitor($id_monitor,$id_instance,$fechas_epoch,$period
 
 
       
-      //Número de registros del estudiante revisados por el profesional, no revisados por el mismo,Número total de registros del monitor cuando son GRUPALES. 
+      //amount of student records checked by his professional, not checked by himself and total of student records (GRUPAL).
        $sql = consult_counting_tracking(1,"GRUPAL",$id_instance,$fechas_epoch,$id_monitor);
        $estudiante->registros_estudiantes_revisados_grupal=0;
 
@@ -416,12 +453,13 @@ function get_seguimientos_monitor($id_monitor,$id_instance,$fechas_epoch,$period
 }
 
 
-/*
- * Función que trae la información de cantidad de seguimientos que posee un monitor
- *
- * @param $id_monitor
- * @param $id_instance 
- * @return Array 
+/**
+ * Returns information about all monitor tracks given his id 
+ * 
+ * @see get_cantidad_seguimientos_monitor($id_monitor,$id_instance)
+ * @param $id_monitor --> monitor id
+ * @param $id_instance --> instance id
+ * @return array 
  */
 
 function get_cantidad_seguimientos_monitor($id_monitor,$id_instance){
@@ -441,11 +479,13 @@ function get_cantidad_seguimientos_monitor($id_monitor,$id_instance){
 }
 
 
-/*
- * Función que consulta información de los monitores asignados a un practicante
- * 
- * @param $id_practicante
- * @return Array 
+/**
+ * Returns information of every monitor assigned to a 'practicante'
+ * @see get_monitores_practicante($id_practicante,$id_instancia,$semester)
+ * @param $id_practicante --> 'practicante' id
+ * @param $id_instancia --> instance id
+ * @param $semester --> semester id
+ * @return Array of arrays with information of each monitor
  */
 function get_monitores_practicante($id_practicante,$id_instancia,$semester)
 {
@@ -460,33 +500,35 @@ function get_monitores_practicante($id_practicante,$id_instancia,$semester)
     
     $arreglo_retornar= array();
     
-    //por cada registro retornado se toma la información necesaria, se añade a un arreglo auxiliar y este se agrega 
-    //al areglo que sera retornado
+    //por cada registro retornado se toma la información necesaria, se añade a un arreglo auxiliar y este se agrega al areglo que sera retornado
+    //for each returned record, the valuable information is added into other array and this last one is added into the main array
     foreach($consulta as $monitores)
     {
         $array_auxiliar=array();
-        //posicion 0
+        //position 0
         array_push($array_auxiliar,$monitores->id_usuario);
         $nombre = $monitores->firstname ;
         $apellido = $monitores->lastname; 
         $unir = $nombre." ".$apellido;
-        //posicion 1
+        //position 1
         array_push($array_auxiliar,$unir);
-        // array_push($array_auxiliar,get_estudiantes_monitor($id_practicante));
-        //posicion n del arreglo que se retorna
+        //n position
         array_push($arreglo_retornar,$array_auxiliar);
     }
 
     
-//  print_r($arreglo_retornar);
+    //Return the main array
     return $arreglo_retornar;
 }
 
-/*
- * Función que consulta información de los practicantes asignados a un profesional
+/**
+ * Search information of each 'practicante' that has been assigned to a 'profesional'
  * 
- * @param $id_profesional
- * @return Array 
+ * @see get_practicantes_profesional($id_profesional,$id_instancia,$semester)
+ * @param $id_profesional --> profesional id
+ * @param $id_instancia --> instance id
+ * @param $semester --> semester id
+ * @return array 
  */
 function get_practicantes_profesional($id_profesional,$id_instancia,$semester)
 {
@@ -506,8 +548,7 @@ function get_practicantes_profesional($id_profesional,$id_instancia,$semester)
 
 
 
-    //por cada registro retornado se toma la informacion necesaria, se añade a un arreglo auxiliar y este se agrega 
-    //al areglo que sera retornado
+    //The value information is taken for every returned record, added to an auxiliar array and this last added to the return array
     foreach($consulta as $practicantes)
     {
         
@@ -532,13 +573,13 @@ function get_practicantes_profesional($id_profesional,$id_instancia,$semester)
     }
     
         $array_auxiliar=array();
-        //posicion 0
+        //position 0
         array_push($array_auxiliar,$practicantes->id_usuario);
 
         $nombre = $practicantes->nombre ;
         $apellido = $practicantes->apellido; 
         $unir = $nombre." ".$apellido;
-        //posicion 1
+        //position 1
         array_push($array_auxiliar,$unir);
         //array_push($array_auxiliar,$practicantes->semestre);
         array_push($array_auxiliar,$total_registros[0]);
@@ -554,12 +595,12 @@ function get_practicantes_profesional($id_profesional,$id_instancia,$semester)
 }
 
 
-/*
- * Función que consulta información de los jefes
- * 
- * @param $id
- * @param $instanceid
- * @return Array 
+/**
+ * Search bosses information
+ * @see get_profesional_practicante($id,$instanceid)
+ * @param $id --> user id
+ * @param $instanceid --> instance id
+ * @return array 
  */
  
 function get_profesional_practicante($id,$instanceid)
@@ -579,16 +620,17 @@ function get_profesional_practicante($id,$instanceid)
 }
 
 
-/*
- * Función para enviar mensaje al monitor que desea hacer la observación
+/** 
+ * Function to send a message to a monitor who wants to make an observation
  * 
- * @param $tipoSeg
- * @param $codigoEnviarN1
- * @param $codigoEnviarN2
- * @param $fecha
- * @param $nombre
- * @param $messageText
- * @return Array 
+ * @see send_email_to_user($tipoSeg,$codigoEnviarN1,$codigoEnviarN2,$fecha,$nombre,$messageText)
+ * @param $tipoSeg --> type of track ('seguimiento')
+ * @param $codigoEnviarN1 --> first user id to send an email
+ * @param $codigoEnviarN2 --> second user id to send an email
+ * @param $fecha --> track date 
+ * @param $nombre --> student name
+ * @param $messageText --> message content
+ * @return Array message information
  */
 function send_email_to_user($tipoSeg,$codigoEnviarN1,$codigoEnviarN2,$fecha,$nombre,$messageText){
 
@@ -671,7 +713,7 @@ function send_email_to_user($tipoSeg,$codigoEnviarN1,$codigoEnviarN2,$fecha,$nom
       $email_result=0;
       //************************************************************************************************************
       //************************************************************************************************************
-      //AHORA SE REENVIA EL CORREO AL PROFESIONAL
+      //message resent to a 'profesional'
       //************************************************************************************************************
       //************************************************************************************************************
     
@@ -696,7 +738,7 @@ function send_email_to_user($tipoSeg,$codigoEnviarN1,$codigoEnviarN2,$fecha,$nom
        $email_result=0;
       //************************************************************************************************************
       //************************************************************************************************************
-      //SE ENVIA EL CORREO AL SEGUNDO USUARIO CORRESPONDIENTE
+      //email will be sent to second user
       //************************************************************************************************************
       //************************************************************************************************************
     

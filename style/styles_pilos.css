@@ -1208,6 +1208,8 @@ input.no-borde-fondo.tema
 .mymodal-header {
     padding-top: 10px;
     padding-bottom: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
     margin-top: 0px;
     margin-right: 10px;
     background-color: #D8D8D8;
@@ -1500,3 +1502,11 @@ input.no-borde-fondo.tema
 
 }
 
+
+#content-edit{
+  width: 400px;
+}
+
+#informacion{
+  height: auto !important;
+}

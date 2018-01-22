@@ -43,7 +43,7 @@ $blockid = required_param('instanceid', PARAM_INT);
 
 require_login($courseid, false);
 
-//se oculta si la instancia ya está registrada
+//Instance is consulted for its registration
 if(!consult_instance($blockid)){
     header("Location: /blocks/ases/view/instanceconfiguration.php?courseid=$courseid&instanceid=$blockid");
 }
@@ -52,11 +52,11 @@ $contextcourse = context_course::instance($courseid);
 $contextblock =  context_block::instance($blockid);
 $url = new moodle_url("/blocks/ases/view/index_sistemas.php", array('courseid' => $courseid, 'instanceid' => $blockid));
 
-// Crea una clase con la información que se llevará al template.
+// Creates a class with information that'll be send to template
 $data = 'data';
 $data = new stdClass;
 
-// Evalua si el rol del usuario tiene permisos en esta view.
+// Evaluates if user role has permissions assigned on this view
 $actions = authenticate_user_view($USER->id, $blockid);
 $data = $actions;
 

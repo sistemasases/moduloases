@@ -1,4 +1,27 @@
 <?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
+/**
+ * Ases block
+ *
+ * @author     Iader E. García Gómez
+ * @package    block_ases
+ * @copyright  2018 Iader E. García <iadergg@gmail.com>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 require_once(dirname(__FILE__). '/../../../../config.php');
 require_once('../lib/student_lib.php');
 require_once('../student_profile/studentprofile_lib.php');
@@ -105,11 +128,12 @@ if(isset($_POST["func"])){
 }
 
  /**
- * Función que actualiza los campos de la tabla {talentospilos_usuario} 
+ * Updates every field on {talentospilos_usuario} table
  *
+ * 
  * @see save_profile($form)
- * @parameters $form Array que contiene los campos a actualizar
- * @return sdtClass
+ * @param $form --> Array containing the fields to update
+ * @return object
  */
 function save_profile($form){
     
@@ -119,15 +143,15 @@ function save_profile($form){
         $id_ases = $form[0]['value'];
         $msg = new stdClass();
 
-        //Se define un arreglo que va a contener la info a actualizar
+        //Info to update will be added here
         $obj_updatable = array();
         
-        // Se inserta los campos necesarios
+        // Required fields are inserted
         for($i = 0; $i < count($form); $i++){
             $obj_updatable[$form[$i]['name']] = $form[$i]['value'];
         }
         $obj_updatable = (object) $obj_updatable;
-        //se le asigna el id del usario a actualizar
+        //an id is assigned to update
         $obj_updatable->id = $id_ases;
 
         $sql_query = "SELECT observacion FROM {talentospilos_usuario} WHERE id = $id_ases";
@@ -165,13 +189,14 @@ function save_profile($form){
 }
 
  /**
- * Función que actualiza el campo 'estado Icetex' de la tabla {talentospilos_usuario} 
+ * Updates 'estado Icetex' field on {talentospilos_usuario} table
  *
- * @see save_status_icetex($new_status, $id_ases)
- * @parameters $new_status --> Nuevo estado a almacenar en el campo estado Icetex
- *             $id_ases --> ID asociado a un estudiante en la tabla {talentospilos_usuario}
- *             $id_reason -> ID de la razón del mótivo de retiro
- * @return stdClass 
+ * @see save_status_icetex_proc($new_status, $id_ases, $id_reason = null,  $observations=null)
+ * @param $new_status --> new status to save on 'estado Icetex' field
+ * @param $id_ases --> ASES student id
+ * @param $id_reason = null --> Retirement reason id
+ * @param $observations = null --> observations to save
+ * @return object in a json format 
  */
  
 function save_status_icetex_proc($new_status, $id_ases, $id_reason = null,  $observations=null){
@@ -183,12 +208,14 @@ function save_status_icetex_proc($new_status, $id_ases, $id_reason = null,  $obs
 }
 
  /**
- * Función que actualiza el campo 'estado Ases' de la tabla {talentospilos_usuario} 
+ * Updates 'estado Ases' field on {talentospilos_usuario} table
  *
- * @see save_status_ases($new_status, $id_ases)
- * @parameters $new_status --> Nuevo estado a almacenar en el campo estado Icetex
- *             $id_ses --> ID asociado a un estudiante en la tabla {talentospilos_usuario}
- * @return stdClass 
+ * @see save_status_ases_proc($new_status, $id_ases, $id_reason = null, $observations=null)
+ * @param $new_status --> New status to save on 'estado Ases' field
+ * @param $id_ses --> ASES student id
+ * @param $id_reason = null --> Retirement reason id
+ * @param $observations = null --> observations to save
+ * @return object in a json format 
  */
  
 function save_status_ases_proc($new_status, $id_ases, $id_reason = null, $observations=null){
@@ -198,6 +225,12 @@ function save_status_ases_proc($new_status, $id_ases, $id_reason = null, $observ
     echo json_encode($result);
 }
 
+/**
+ * Returns the saveMotivoRetiro(PARAMETERS) function output or an error message in case it fails
+ * 
+ * @see save_reason_dropout_student()
+ * @return integer in a json format
+ */
 function save_reason_dropout_student(){
     
     if(isset($_POST['talentosid']) && isset($_POST['motivoid']) && isset($_POST['detalle']))
@@ -234,12 +267,10 @@ function loadMotivoRetiroStudent(){
 }
 
 /**
- * Función que valida si el formulario que llega al servidor está completo
+ * Validates if a form is totally complete
  *
- * Por hacer: Validar la correctitud del formulario
- *
- * @param void
- * @return String --> Resultado de la validación
+ * @see validate_form_tracking_peer()
+ * @return string --> validation result
  */
 function validate_form_tracking_peer(){
     if(!isset($_POST['date'])){
@@ -292,13 +323,10 @@ function validate_form_tracking_peer(){
 }
 
 /**
- * Función que guarda valida y envía el formulario de seguimiento de pares a la libreria 
- * que almacena el formulario en la base de datos
+ * Saves and validated the form on database
  *
- * Por hacer: 
- *
- * @param void
- * @return String --> Resultado de la validación
+ * @see save_tracking_peer_proc()
+ * @return string --> validation result
  */
 function save_tracking_peer_proc(){
 
@@ -354,11 +382,10 @@ function save_tracking_peer_proc(){
 }
 
 /**
- * Función que realiza un borrado lógico de un seguimiento
- * cambiando su estado en la base de datos
+ * Executes a track (seguimiento) logical delete, changing its status on database
  *
- * @param Integer $id_tracking_peer --> ID del seguimiento a borrar
- * @return String --> Resultado de la acción
+ * @param $id_tracking_peer --> track id to delete
+ * @return string --> Operation result
  */
 function delete_tracking_peer_proc($id_tracking_peer){
 
@@ -368,10 +395,11 @@ function delete_tracking_peer_proc($id_tracking_peer){
 }
 
 /**
- * Función que valida si un estudiante existe en la base de datos
+ * Validates if a student is on the database
  *
- * @param $code_student --> código del estudiante
- * @return Array --> Resultado de la acción
+ * @see validate_student_proc($code_student)
+ * @param $code_student --> student id
+ * @return integer --> 1 if exists, 0 if not
  */
 
 function validate_student_proc($code_student){

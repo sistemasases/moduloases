@@ -1,30 +1,60 @@
 <?php
-/*
- * Consultas modulo registro de notas.
+
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
+
+/**
+ * Estrategia ASES
+ *
+ * @author     Camilo José Cruz Rivera
+ * @package    block_ases
+ * @copyright  2017 Camilo José Cruz Rivera <cruz.camilo@correounivalle.edu.co>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+/*
+ * Consultas modulo listado de docentes.
+ */
+
+
+// Queries from module grades record (registro de notas)
+
 require_once(__DIR__ . '/../../../../config.php');
 require_once $CFG->libdir.'/gradelib.php';
-//require_once('../../../../querylib.php');
 require_once $CFG->dirroot.'/grade/lib.php';
 require_once $CFG->dirroot.'/grade/report/user/lib.php';
 require_once $CFG->dirroot.'/blocks/ases/managers/lib/student_lib.php'; 
-// require_once $CFG->dirroot.'/grade/report/grader/lib.php';
-// require_once $CFG->dirroot.'/grade/lib.php';
+require_once $CFG->dirroot.'/blocks/ases/managers/periods_management/periods_lib.php'; 
 
-///*********************************///
-///*** Get info global_grade_book methods ***///
-///*********************************///
+
+///******************************************///
+///*** Get info grade_categories methods ***///
+///******************************************///
 
 /**
- * Función que retorna un arreglo de todos los cursos donde hay matriculados estudiantes de una instancia determinada organizados segun su profesor.
- * @return Array 
+ * Obtains all courses organized by their teacher where there are students from an instance
+ * 
+ * @see get_courses_pilos()
+ * @return array filled with courses
  */
 
 function get_courses_pilos(){
     global $DB;
     
-    $query_semestre = "SELECT nombre FROM {talentospilos_semestre} WHERE id = (SELECT MAX(id) FROM {talentospilos_semestre})";
-    $sem = $DB->get_record_sql($query_semestre)->nombre;
+    $semestre = get_current_semester();
+    $sem = $semestre->nombre;
 
     $año = substr($sem,0,4);
 
@@ -61,24 +91,24 @@ function get_courses_pilos(){
         INNER JOIN {user_enrolments} enrols ON enrols.enrolid = role.id
         WHERE SUBSTRING(curso.shortname FROM 15 FOR 6) = '$semestre' AND enrols.userid IN
             (SELECT user_m.id
-     FROM  {user} user_m
-     INNER JOIN {user_info_data} data ON data.userid = user_m.id
-     INNER JOIN {user_info_field} field ON data.fieldid = field.id
-     INNER JOIN {talentospilos_usuario} user_t ON data.data = CAST(user_t.id AS VARCHAR)
-     INNER JOIN {talentospilos_est_estadoases} estado_u ON user_t.id = estado_u.id_estudiante
-     INNER JOIN {talentospilos_estados_ases} estados ON estados.id = estado_u.id_estado_ases
-     WHERE estados.nombre = 'ACTIVO/SEGUIMIENTO' AND field.shortname = 'idtalentos')";
+            FROM {user} user_m
+            INNER JOIN {talentospilos_user_extended} extended ON user_m.id = extended.id_moodle_user
+            INNER JOIN {talentospilos_usuario} user_t ON extended.id_ases_user = user_t.id
+            INNER JOIN {talentospilos_est_estadoases} estado_u ON user_t.id = estado_u.id_estudiante
+            INNER JOIN {talentospilos_estados_ases} estados ON estados.id = estado_u.id_estado_ases
+            WHERE estados.nombre = 'ACTIVO/SEGUIMIENTO')";
     $result = $DB->get_records_sql($query_courses);
     
     $result = processInfo($result);
     return $result;
 }
- //get_courses_pilos(19);
 
-/*
- * Función que retorna un arreglo de profesores, dado un objeto consulta
- * @param $info
- * @return Array con el siguiente formato: array("$nomProfesor" => array(array("id" => $id_curso, "nombre"=>$nom_curso,"shortname"=>$shortname_curso), array(...)))
+
+/**
+ * Obtains all teacher given a certain information
+ * @see processInfo($info)
+ * @param $info --> Object containing a teacher name, shortname, fullname, id 
+ * @return array with syntaxis: array("$nomProfesor" => array(array("id" => $id_curso, "nombre"=>$nom_curso,"shortname"=>$shortname_curso), array(...)))
  */
 function processInfo($info){
     $profesores = [];
