@@ -185,7 +185,7 @@ function insertSeguimiento($object, $id_est){
  * @param $tipo --> track type
  * @param $idsemester = null --> semester id
  * @param $idinstancia = null --> instance id
- * @return array
+ * @return object with average grades and tracks 
  */
  
 function getSeguimientoOrderBySemester($id_est = null, $tipo,$idsemester = null, $idinstancia = null){
