@@ -188,7 +188,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
 
             /**
              * @method deleteNoPilos
-             * @desc Remove every student in the course who is not 'pilo'
+             * @desc Removes every student who's not 'pilo'. IF the student is 'pilo' remove href attribute (link to other page)
              * @param {array} pilos 'pilos' students to filtrate with the entry from DOM
              * @return {void}
              */
@@ -245,7 +245,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
 
             /**
              * @method getCourseid
-             * @description Obtains the course id displayed on window
+             * @description Obtains the course id present on the url
              * @return {integer} course id
              */
             function getCourseid() {
@@ -254,9 +254,10 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
                     var elemento = informacionUrl[i].split("=");
                     if (elemento[0] == "?id_course" || elemento[0] == "id_course") {
                         var curso = elemento[1];
+                        return curso;
                     }
                 }
-                return curso;
+                
             }
  
 
