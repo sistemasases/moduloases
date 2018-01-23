@@ -1,5 +1,5 @@
 <?php
-
+require_once(dirname(__FILE__). '/../../../../config.php');
 /*$formulario = '{
     "datos_formulario":{
         "nombre":"Formulario JSON",
@@ -235,18 +235,17 @@ function dphpforms_store_form($form_JSON){
 }
 
 function dphpforms_store_form_details($form_details){
-    $db_connection = pg_connect("host=localhost dbname=formularios user=administrator password=administrator");
-    $sql = "
-    
-        INSERT INTO formularios(nombre, descripcion, method, action, enctype)
-        VALUES('".$form_details['nombre']."', '".$form_details['descripcion']."', '".$form_details['method']."', '".$form_details['action']."', '".$form_details['enctype']."')
-        RETURNING id
-    
-    ";
 
-    $result = pg_query($db_connection, $sql);
-    $row = pg_fetch_row($result);
-    $form_id = $row[0];
+    global $DB;
+     
+    $obj_form_details = new stdClass();
+    $obj_form_details->nombre = $form_details['nombre'];
+    $obj_form_details->descripcion = $form_details['descripcion'];
+    $obj_form_details->method = $form_details['method'];
+    $obj_form_details->action = $form_details['action'];
+    $obj_form_details->enctype = $form_details['enctype'];
+
+    $form_id = $DB->insert_record('talentospilos_df_formularios', $obj_form_details, $returnid=true, $bulk=false) ;
     return $form_id;
 }
 
