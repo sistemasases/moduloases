@@ -234,11 +234,20 @@ function get_ases_report($general_fields=null, $conditions, $academic_fields=nul
     $where_clause = " WHERE ";
     $sub_query_cohort = "";
     $sub_query_status = "";
+    $sub_query_academic = "";
 
     if($general_fields){
         foreach($general_fields as $field){
             $select_clause .= $field.', ';
         }
+    }
+
+    if($academic_fields){
+        foreach($academic_fields as $field){
+            $select_clause .= $field.', ';
+        }
+
+        $sub_query_academic .= "INNER JOIN {talentospilos_programa}";
     }
 
     $select_clause = substr($select_clause, 0, -2);
@@ -267,11 +276,14 @@ function get_ases_report($general_fields=null, $conditions, $academic_fields=nul
     // Condición estado ASES
     if($conditions[1] != 'TODOS'){
 
-        $sub_query_status .= " INNER JOIN (SELECT MAX(status_ases.id), moodle_user.username, status_ases.id_estado_ases
-                                            FROM {talentospilos_est_estadoases} AS status_ases LEFT JOIN {talentospilos_user_extended} AS user_extended ON status_ases.id_estudiante = user_extended.id_ases_user
-                                                                            LEFT JOIN {user} AS moodle_user ON moodle_user.id = user_extended.id_moodle_user
-                                            GROUP BY moodle_user.username, status_ases.id_estado_ases
-                                            HAVING status_ases.id_estado_ases = $conditions[1]
+        $sub_query_status .= " INNER JOIN (SELECT current_status.username, status_ases.id_estado_ases 
+                                            FROM (SELECT MAX(status_ases.id) AS id, moodle_user.username
+                                                FROM mdl_talentospilos_est_estadoases AS status_ases 
+                                                    INNER JOIN mdl_talentospilos_user_extended AS user_extended ON status_ases.id_estudiante = user_extended.id_ases_user
+                                                INNER JOIN mdl_user AS moodle_user ON moodle_user.id = user_extended.id_moodle_user
+                                                GROUP BY moodle_user.username) AS current_status
+                                            INNER JOIN mdl_talentospilos_est_estadoases AS status_ases ON status_ases.id = current_status.id
+                                            WHERE id_estado_ases = $conditions[1]
                                             ) AS query_status_ases ON query_status_ases.username = user_moodle.username";
 
     }

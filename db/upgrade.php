@@ -467,7 +467,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     // ************************************************************************************************************
     // Actualización:
     // Se añade la tabla talentospilos_df_formularios
-    // Versión en la que se incluye: Pendiente
+    // Versión en la que se incluye: 2018012217129
     // ************************************************************************************************************
     
     // Define table talentospilos_df_formularios to be created.
@@ -494,7 +494,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     // ************************************************************************************************************
     // Actualización:
     // Se añade la tabla talentospilos_tipo_campo
-    // Versión en la que se incluye: Pendiente
+    // Versión en la que se incluye: 2018012217129
     // ************************************************************************************************************
 
     // Define table talentospilos_df_tipo_campo to be created.
@@ -517,7 +517,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     // ************************************************************************************************************
     // Actualización:
     // Se añade la tabla talentospilos_preguntas
-    // Versión en la que se incluye: Pendiente
+    // Versión en la que se incluye: 2018012217129
     // ************************************************************************************************************
     
     // Define table talentospilos_df_preguntas to be created.
@@ -544,7 +544,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     // ************************************************************************************************************
     // Actualización:
     // Se añade la tabla talentospilos_df_form_preg
-    // Versión en la que se incluye: Pendiente
+    // Versión en la que se incluye: 2018012217129
     // ************************************************************************************************************
 
     // Define table talentospilos_df_form_preg to be created.
@@ -569,7 +569,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     // ************************************************************************************************************
     // Actualización:
     // Se añade la tabla talentospilos_df_reglas
-    // Versión en la que se incluye: Pendiente
+    // Versión en la que se incluye: 2018012217129
     // ************************************************************************************************************
     
     // Define table talentospilos_df_reglas to be created.
@@ -591,7 +591,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     // ************************************************************************************************************
     // Actualización:
     // Se añade la tabla talentospilos_df_respuestas
-    // Versión en la que se incluye: Pendiente
+    // Versión en la que se incluye: 2018012217129
     // ************************************************************************************************************
 
     // Define table talentospilos_df_respuestas to be created.
@@ -617,7 +617,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     // ************************************************************************************************************
     // Actualización:
     // Se añade la tabla talentospilos_df_form_resp
-    // Versión en la que se incluye: Pendiente
+    // Versión en la que se incluye: 2018012217129
     // ************************************************************************************************************
     
     // Define table talentospilos_df_form_resp to be created.
@@ -644,7 +644,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     // ************************************************************************************************************
     // Actualización:
     // Se añade la tabla talentospilos_df_form_solu
-    // Versión en la que se incluye: Pendiente
+    // Versión en la que se incluye: 2018012217129
     // ************************************************************************************************************
  
     // Define table talentospilos_df_form_solu to be created.
