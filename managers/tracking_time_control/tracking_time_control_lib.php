@@ -27,6 +27,8 @@ require_once dirname(__FILE__) . '/../../../../config.php';
 require_once $CFG->dirroot . '/grade/querylib.php';
 require_once $CFG->dirroot . '/grade/report/user/lib.php';
 require_once $CFG->dirroot . '/grade/lib.php';
+require_once dirname(__FILE__) .'/../periods_management/periods_lib.php';
+
 require_once('tracking_time_control_functions.php');
 
 
@@ -45,6 +47,28 @@ function get_info_monitor($id_moodle){
 }
 
 /**
+ * Check trackings of a monitor that are not reviewed, belonging to an instance, in the *current period
+ * @see get_unreviewed_trackings($monitorid,$instanceid)
+ * @return object 
+ */
+
+function get_unreviewed_trackings($monitorid,$instanceid){
+    global $DB;
+
+    $current_semester =get_current_semester();
+    $semester_interval=get_semester_interval($current_semester->max);
+    $semester_interval->fecha_inicio=strtotime($semester_interval->fecha_inicio);
+    $semester_interval->fecha_fin=strtotime($semester_interval->fecha_fin);
+
+    $sql_query = "SELECT * FROM {talentospilos_seguimiento} seguimiento
+        INNER JOIN {talentospilos_seg_estudiante} seg ON seguimiento.id = seg.id_seguimiento
+        where id_instancia=$instanceid and id_monitor=$monitorid and revisado_profesional=0 and (fecha between '$semester_interval->fecha_inicio' and '$semester_interval->fecha_fin');";
+    $trackings = $DB->get_records_sql($sql_query);
+    return $trackings;
+}
+
+
+/**
  * Function that obtains the initial and final hours in which a monitor was monitored in a * time interval
  * @see get_report_by_date()
  * @return array 
@@ -54,7 +78,7 @@ function get_report_by_date($initial_date, $final_date){
     global $DB;
 
         $sql_query = "SELECT seg.id,id_monitor,fecha,hora_ini,hora_fin
-    FROM {user}  usuario INNER JOIN {talentospilos_seguimiento}  seg ON usuario.id = seg.id_monitor where fecha<=$final_date and fecha>=$initial_date order by fecha asc";
+    FROM {user}  usuario INNER JOIN {talentospilos_seguimiento}  seg ON usuario.id = seg.id_monitor where fecha<=$final_date and fecha>=$initial_date and status<>0 order by fecha asc";
     return $DB->get_records_sql($sql_query);
 }
 

@@ -25,6 +25,28 @@
  */
 
 
+
+/**
+ *Function that organizes in a toggle the trackings that are not reviewed of a selected *monitor
+ * 
+ * @see get_toggle_trackings()
+ * @param $dates
+ * @return void
+ */
+function get_toggle_trackings($trackings){
+
+    $msg="";
+
+    foreach ($trackings as $tracking) {
+        $msg.='<div class="panel-group"><div class="panel panel-default">
+        <div class="panel-heading" style="background-color: #D0C4C4;"><h4 class="panel-title"><a data-toggle="collapse" data-target="#demo"' . $tracking->id_seguimiento . '>';
+    }
+
+
+}
+
+
+
 /**
  * Calculates the number of dedicated hours of a monitor on a given date.
  * 
