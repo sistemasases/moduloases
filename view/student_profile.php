@@ -354,7 +354,7 @@ if ($student_code != 0) {
     $html_academic_table = get_grades_courses_student_last_semester($id_user_moodle);
     $record->academic_semester_act = $html_academic_table;
 
-    $html_historic_academic = "HISTORICO ACADEMICO EN PROCESO DE DESARROLLO";//get_historic_academic_by_student($student_id);
+    $html_historic_academic = get_historic_academic_by_student($student_id);
     $record->historic_academic = $html_historic_academic;
 
     // Student trackings (Seguimientos)

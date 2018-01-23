@@ -178,7 +178,7 @@ function reduce_table(&$report)
 function get_historic_academic_by_student($id_student)
 {
     $semesters = get_historical_semesters_by_student($id_student);
-
+    // print_r($semesters);
     if (!$semesters) {
         $html_courses = "<b>EL ESTUDIANTE NO REGISTRA HISTÓRICO ACADÉMICO</b>";
     } else {
@@ -188,6 +188,8 @@ function get_historic_academic_by_student($id_student)
     return $html_courses;
 
 }
+
+// get_historic_academic_by_student(320);
 
 /**
  * Return an array of academic semesters
@@ -223,11 +225,11 @@ function get_historical_semesters_by_student($id_student)
 
         //search semester name
         $query_semestre = "SELECT nombre FROM {talentospilos_semestre} WHERE id = $id_semester";
-        $semester_name = $DB->get_records_sql($query_semestre)->nombre;
+        $semester_name = $DB->get_record_sql($query_semestre)->nombre;
 
         //search program name
         $query_program = "SELECT nombre FROM {talentospilos_programa} WHERE id = $id_programa";
-        $program_name = $DB->get_records_sql($query_program)->nombre;
+        $program_name = $DB->get_record_sql($query_program)->nombre;
         $semester->program_name = $program_name;
 
         $semester->promedio_semestre = $register->promedio_semestre;
@@ -254,13 +256,13 @@ function get_historical_semesters_by_student($id_student)
         }
 
         //validate cancelacion
-        $query_cancelacion = "SELECT puesto FROM {talentospilos_history_cancel} WHERE id_history = $id";
+        $query_cancelacion = "SELECT fecha_cancelacion FROM {talentospilos_history_cancel} WHERE id_history = $id";
         $cancelacion = $DB->get_record_sql($query_cancelacion);
 
         if (!$cancelacion) {
             $semester->cancelacion = false;
         } else {
-            $semester->cancelacion = $cancelacion->puesto;
+            $semester->cancelacion = date("d.m.y",$cancelacion->fecha_cancelacion);
         }
 
         //validate register
@@ -289,11 +291,42 @@ function make_html_semesters($semesters)
     $html = "";
 
     foreach ($semesters as $semester_name => $semester) {
-        $descriptions = "";
+        foreach ($semester as $registro) {
+            $descriptions = "";
+            $descriptions .= "<div class = 'row'>
+                                <div class = 'col-md-4'>Programa: <b>$registro->program_name</b></div>
+                                <div class = 'col-md-4'>Promedio Semestre: $registro->promedio_semestre</div>
+                                <div class = 'col-md-4'>Promedio Acumulado: $registro->promedio_acumulado</div>
+                             </div>";
+            $div_bajo = "";
+            $div_estimulo = "";
+            $div_cancelacion = "";
 
-        $materias = json_decode($semester->json_materias);
+            if($registro->bajo != false){
+                $div_bajo .= "<div class = 'col-md-4'>Cae en bajo rendimiento número $registro->bajo.</div>";
+            }
 
-        $html .= "  <div class='panel panel-default'>
+            if($registro->estimulo != false){
+                $div_bajo .= "<div class = 'col-md-4'>Gana estimulo en puesto $registro->estimulo.</div>";            
+            }                 
+
+            if($registro->cancelacion != false){
+                $div_bajo .= "<div class = 'col-md-4'>Cancela semestre en fecha $registro->cancelacion.</div>";            
+            }
+
+            $descriptions .= "<div class = 'row'> 
+                                $div_bajo
+                                $div_cancelacion
+                                $div_estimulo
+                              </div>";
+
+            // $materias = json_decode($semester->json_materias);
+
+            // foreach ($materias as $materia) {
+            //     //AÑADIR MATERIAS
+            // }
+
+            $html .= "  <div class='panel panel-default'>
                       <div class='panel-heading' id = 'academic_historic'>
                           <h4 class='panel-title'>
                           <a data-toggle='collapse' data-parent='#accordion_academic_historic' href='#register_$semester_name' aria-expanded='false' aria-controls='$semester_name'>
@@ -307,6 +340,7 @@ function make_html_semesters($semesters)
                           </div>
                       </div>
                     </div>  ";
+        }
     }
 
     return $html;
