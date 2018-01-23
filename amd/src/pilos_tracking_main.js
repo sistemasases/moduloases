@@ -1,12 +1,10 @@
-// Standard license block omitted.
-/*
- * @package    block_ases
- * @copyright  ASES
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ /**
+ * Management - Tracks (seguimiento de pilos)
+ * @module amd/src/pilos_tracking_main 
+ * @author Isabella Serna Ramírez <isabella.serna@correounivalle.edu.co>
+ * @license  http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-/**
- * @module block_ases/pilos_tracking
- */
+
 define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ases/datatables.net', 'block_ases/datatables.net-buttons', 'block_ases/buttons.flash', 'block_ases/jszip', 'block_ases/pdfmake', 'block_ases/buttons.html5', 'block_ases/buttons.print', 'block_ases/sweetalert', 'block_ases/select2'], function($,Modernizr,bootstrap, datatables, sweetalert, select2) {
 
 
@@ -32,7 +30,7 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                 $("#reemplazarToogle").fadeIn("slow");
 
                 var usuario = "";
-                //Obtenemos el ID de la instancia actual.
+                //We get the current instance id
 
                 var informacionUrl = window.location.search.split("&");
                 for (var i = 0; i < informacionUrl.length; i++) {
@@ -42,10 +40,10 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                     }
                 }
 
-                //Oculta el div de la parte de sistemas.
+                //Disable div from sistemas
                 //$(".well.col-md-10.col-md-offset-1.reporte-seguimiento.oculto").hide();
 
-                //Se obtiene la información correspondiente al nombre,id,email y rol de la persona conectada.
+                //Getting information of the logged user such as name, id, email and role
                 $.ajax({
                     type: "POST",
                     data: {
@@ -76,7 +74,7 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
 
 
                 name = "";
-                //Se muestra la interfaz correspondiente al usuario.
+                //Shows the interface acording to the logged user
                 if (namerol == "monitor_ps") {
                     usuario = "monitor";
 
@@ -98,7 +96,7 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                 crear_conteo(usuario);
 
 
-                /*Cuando el usuario sea practicante = le es permitido */
+                // when user is 'practicante' then has permissions
                 if (namerol == "practicante_ps") {
 
                     $("input[name=profesional]").prop('disabled', true);
@@ -115,9 +113,9 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
 
 
 
-                    /*Cuando el usuario sea profesional = le es permitido */
+                   // when user is 'profesional' then has permissions
                 } else if (namerol == "profesional_ps") {
-                    //se inicia la adicion del evento
+                    //Starts adding event
                     $("input[name=practicante]").prop('disabled', true);
                     $("input[name=profesional]").prop('disabled', true);
                     limpiar_riesgos();
@@ -130,7 +128,7 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                     consultar_seguimientos_persona(instance, usuario);
 
 
-                    /*Cuando el usuario sea monitor = Le es permitido : */
+                    // when user is 'monitor' then has permissions
                 } else if (namerol == "monitor_ps") {
                     limpiar_riesgos();
                     editar_seguimiento(namerol);
@@ -142,7 +140,7 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
 
 
 
-                    /*Cuando el usuario sea sistemas = Le es permitido : */
+                    // when user is 'sistemas' then has permissions
                 } else if (namerol == "sistemas") {
                     limpiar_riesgos();
                     editar_seguimiento(namerol);
@@ -163,7 +161,15 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
 
 
 
-            //--------LISTENERS DE LOS ELEMENTOS DE LA PÁGINA.
+            //-------- Page elements --> Listener
+
+            /**
+             * @method consultar_seguimientos_persona
+             * @desc Obtain track information of a certain user
+             * @param {instance} instance current instance
+             * @param {object} usuario current user to obtain information
+             * @return {void}
+             */
             function consultar_seguimientos_persona(instance, usuario) {
                 $("#periodos").change(function() {
                     if (namerol != 'sistemas') {
@@ -214,15 +220,16 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
             }
 
 
-            /*
-             * Funcion para el rol sistemas
-             *
+            /**
+             * @method anadirEvento
+             * @desc Function for 'sistemas' role. Adding an event
+             * @param {instance} instance current instance
+             * @return {return}
              */
-
             function anadirEvento(instance) {
                 $("#personas").val('').change();
 
-                //Se activa el select2 cuando el usuario es de sistemas.
+                //Select2 is able when user role is 'sistemas'
                 $("#personas").select2({
                     placeholder: "Seleccionar persona",
 
@@ -269,6 +276,7 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                         $(".se-pre-con").show();
                         $("#reemplazarToogle").hide();
 
+                        //Processing in pilos_tracking_report.php
                         $.ajax({
                             type: "POST",
                             data: {
@@ -285,6 +293,7 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
 
 
 
+                                //In case there are not records
                                 if (msg == "") {
                                     $('#reemplazarToogle').html('<label> No se encontraron registros </label>');
 
@@ -312,8 +321,12 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                 });
             }
 
-
-
+            /**
+             * @method crear_conteo
+             * @desc On a container shows an HTML information about the amount of checked tracks by monitor, 'practicante' or 'profesional'
+             * @param {object} usuario
+             * @return {void} 
+             */
             function crear_conteo(usuario) {
                 var periodo = $("#periodos option:selected").text();
                 var conteo = 0;
@@ -344,6 +357,12 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                 }
             }
 
+            /**
+             * @method realizar_conteo
+             * @desc Does the counting of tracks
+             * @param {object} usuario current user to get the total tracks
+             * @param {string} dependiente 
+             */
             function realizar_conteo(usuario, dependiente = "ninguno") {
                 var conteos = [];
 
