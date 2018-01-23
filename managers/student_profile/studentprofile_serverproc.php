@@ -133,7 +133,7 @@ if(isset($_POST["func"])){
  * 
  * @see save_profile($form)
  * @param $form --> Array containing the fields to update
- * @return object
+ * @return object in a json format
  */
 function save_profile($form){
     
@@ -196,7 +196,7 @@ function save_profile($form){
  * @param $id_ases --> ASES student id
  * @param $id_reason = null --> Retirement reason id
  * @param $observations = null --> observations to save
- * @return JSON 
+ * @return object in a json format 
  */
  
 function save_status_icetex_proc($new_status, $id_ases, $id_reason = null,  $observations=null){
@@ -215,7 +215,7 @@ function save_status_icetex_proc($new_status, $id_ases, $id_reason = null,  $obs
  * @param $id_ses --> ASES student id
  * @param $id_reason = null --> Retirement reason id
  * @param $observations = null --> observations to save
- * @return JSON 
+ * @return object in a json format 
  */
  
 function save_status_ases_proc($new_status, $id_ases, $id_reason = null, $observations=null){
@@ -229,7 +229,7 @@ function save_status_ases_proc($new_status, $id_ases, $id_reason = null, $observ
  * Returns the saveMotivoRetiro(PARAMETERS) function output or an error message in case it fails
  * 
  * @see save_reason_dropout_student()
- * @return JSON
+ * @return integer in a json format
  */
 function save_reason_dropout_student(){
     

@@ -138,7 +138,7 @@ function get_people_onsemester($period,$rols,$id_instancia){
  * @see insert_record($object, $id_est)
  * @param $object  ---> tracking object
  * @param $id_est  ---> student's id
- * @return boolean
+ * @return true
  */
 function insert_record($object, $id_est){
     global $DB;
@@ -167,7 +167,7 @@ function insert_record($object, $id_est){
  * @see insert_record_student($id_seg, $id_est)
  * @param $id_seg ---> track id
  * @param $id_est  ---> student's id
- * @return boolean
+ * @return boolean true if it was successful, false otherwise
  */
 function insert_record_student($id_seg, $id_est){
     global $DB;
@@ -190,7 +190,7 @@ function insert_record_student($id_seg, $id_est){
  * @param $id_seg      ---> tracking id
  * @param $tipo        ---> type of tracking
  * @param $idinstancia ---> current instance id
- * @return Array ---> monitor tracks
+ * @return array ---> monitor tracks
  */
 
 function get_record_by_monitor($id_monitor, $id_seg= null, $tipo, $idinstancia){
@@ -209,7 +209,7 @@ function get_record_by_monitor($id_monitor, $id_seg= null, $tipo, $idinstancia){
  * Updates 'seguimientos pares'
  * @see updateSeguimiento_pares($object)
  * @param $object --> Object containing track information
- * @return number (1 for success, 0 otherwise)
+ * @return integer (1 for success, 0 otherwise)
  */
 
 function updateSeguimiento_pares($object){
@@ -268,7 +268,7 @@ function update_array_risk(&$array_student_risks, $name_risk, $calificacion, $id
  * 
  * @param $segObject --> Track object with appropiate information
  * @param $idStudent --> student's id
- * @return boolean 
+ * @return true 
  */
 function updateRisks($segObject, $idStudent){
     global $DB;
@@ -316,7 +316,7 @@ function updateRisks($segObject, $idStudent){
  * @see get_id_rol_($userid,$instanceid)
  * @param $userid --> user id
  * @param $instanceid instance id
- * @return Array with an object representing user
+ * @return array with an object representing user
  */
 
 
@@ -339,7 +339,7 @@ function get_id_rol_($userid,$instanceid)
  *
  * @param $userid --> user id
  * @param $instanceid --> instance id
- * @return Array containing role name for the given user 
+ * @return array containing role name for the given user 
  */
 
 
@@ -359,7 +359,7 @@ function get_name_rol($idrol)
  * @param $tipo     ---> type of track (PARES or GRUPAL) 
  * @param $instancia --> instance id
  * @param $fechas_epoch --> starting and ending date of current semester
- * @return string 
+ * @return string with the count track information
  */
  
  function consult_counting_tracking($revisado,$tipo,$instancia,$fechas_epoch,$persona){
@@ -391,7 +391,7 @@ function get_name_rol($idrol)
  * @param $id_instance --> instance id
  * @param $fechas_epoch --> range date (starting and ending current semester)
  * @param $period 
- * @return Array filled with track information
+ * @return array filled with track information
  */
 
 function get_seguimientos_monitor($id_monitor,$id_instance,$fechas_epoch,$periodo){
@@ -459,7 +459,7 @@ function get_seguimientos_monitor($id_monitor,$id_instance,$fechas_epoch,$period
  * @see get_cantidad_seguimientos_monitor($id_monitor,$id_instance)
  * @param $id_monitor --> monitor id
  * @param $id_instance --> instance id
- * @return Array 
+ * @return array with the count of tracks a monitor has done
  */
 
 function get_cantidad_seguimientos_monitor($id_monitor,$id_instance){
@@ -485,7 +485,7 @@ function get_cantidad_seguimientos_monitor($id_monitor,$id_instance){
  * @param $id_practicante --> 'practicante' id
  * @param $id_instancia --> instance id
  * @param $semester --> semester id
- * @return Array of arrays with information of each monitor
+ * @return array of arrays with information of each monitor
  */
 function get_monitores_practicante($id_practicante,$id_instancia,$semester)
 {
@@ -528,7 +528,7 @@ function get_monitores_practicante($id_practicante,$id_instancia,$semester)
  * @param $id_profesional --> profesional id
  * @param $id_instancia --> instance id
  * @param $semester --> semester id
- * @return Array 
+ * @return array 
  */
 function get_practicantes_profesional($id_profesional,$id_instancia,$semester)
 {
@@ -600,7 +600,7 @@ function get_practicantes_profesional($id_profesional,$id_instancia,$semester)
  * @see get_profesional_practicante($id,$instanceid)
  * @param $id --> user id
  * @param $instanceid --> instance id
- * @return Array 
+ * @return object  with the bosses id
  */
  
 function get_profesional_practicante($id,$instanceid)

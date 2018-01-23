@@ -1,12 +1,11 @@
-// Standard license block omitted.
-/*
- * @package    block_ases
- * @copyright  ASES
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
-/**
- * @module block_ases/massmanagement_main
+ /**
+ * mass management LOAD
+ * @module amd/src/massmanagement_main
+ * @author Jhon Lourido 
+ * @author Isabella Serna Ramírez
+ * @author Camilo José Cruz rivera
+ * @copyright 2018 - Jhon Lourido <jhonkrave@gmail.com>, Isabella Serna Ramírez <isabella.serna@correounivalle.edu.co>, Camilo José Cruz Rivera <cruz.camilo@correounivalle.edu.co> 
+ * @license  http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_ases/datatables.net-buttons', 'block_ases/buttons.flash', 'block_ases/jszip', 'block_ases/pdfmake', 'block_ases/buttons.html5', 'block_ases/buttons.print', 'block_ases/sweetalert', 'block_ases/select2'], function ($, bootstrap, datatables, sweetalert, select2) {
@@ -27,9 +26,14 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_as
                 uploadFile();
             });
 
+            /**
+             * @method getUrlParams
+             * @desc This function is anonymous, is executed immediately and  the return value is assigned to QueryString!
+             * @param {DOM element} page 
+             * @return {query string}
+             */
             function getUrlParams(page) {
-                // This function is anonymous, is executed immediately and 
-                // the return value is assigned to QueryString!
+                //
                 var query_string = [];
                 var query = document.location.search.substring(1);
                 var vars = query.split("&");
@@ -41,14 +45,20 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_as
                 return query_string;
             }
 
+            /**
+             * @method uploadFile
+             * @desc uploads a specific file depending on a choose on a selector. Change information deployed on a div
+             * @return {void}
+             */
             function uploadFile() {
 
-                var urlParameters = getUrlParams(document.location.search); //metodo definido en checrole
+                var urlParameters = getUrlParams(document.location.search); //method defined on checkrole
 
                 var formData = new FormData();
 
                 formData.append('idinstancia', urlParameters.instanceid);
 
+                //In case any file were uploaded
                 if ($('#archivo')[0].files[0] == undefined) {
                     swal({
                         title: "Archivo no registrado.",
@@ -66,6 +76,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_as
 
                 var controler = '';
 
+                //The selector has two options, monitor_estud or roles_usuario, depending on selection is redirected to a php file. 
                 switch ($('#selector').val()) {
                     case 'monitor_estud':
                         controler = 'mrm_monitor_estud.php'; //
@@ -83,7 +94,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_as
                     type: 'POST',
                     dataType: 'json',
                     cache: false,
-                    // parametros necesarios para la carga de archivos
+                    // required parameters to upload files
                     contentType: false,
                     processData: false,
                     beforeSend: function () {
@@ -115,6 +126,12 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_as
                 });
 
             }
+
+            /**
+             * @method addHelpMessage
+             * @desc Changes the information deployed on a div depending on the choose on the previous selector
+             * @param {DOM element} selector 
+             */
             function addHelpMessage(selector) {
                 $('#informacion').empty();
                 switch (selector) {

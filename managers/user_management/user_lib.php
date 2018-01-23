@@ -132,7 +132,7 @@ function get_students($instanceid)
  * @see get_boss_users($rol, $idinstancia)
  * @param $id_rol ---> user's role
  * @param $idinstancia ---> current instance id
- * @return Array
+ * @return array
  **/
 
 function get_boss_users($id_rol, $idinstancia)
@@ -150,7 +150,7 @@ function get_boss_users($id_rol, $idinstancia)
  * Function that gets the user's id given his username
  * @see get_userid_by_username($username)
  * @param $username --> username
- * @return Array
+ * @return array
  **/
 
 function get_userid_by_username($username)
@@ -168,7 +168,7 @@ function get_userid_by_username($username)
  * @see get_professionals($id, $idinstancia)
  * @param $id ---> id de usuario
  * @param $idinstancia ---> current instance id
- * @return Array
+ * @return array
  **/
 
 function get_professionals($id = null, $idinstancia)
@@ -186,7 +186,7 @@ function get_professionals($id = null, $idinstancia)
  * Function that returns every user's role given an instance
  * @see get_users_role($idinstancia)
  * @param $idinstancia ---> current instance id
- * @return Array
+ * @return array
  **/
 
 function get_users_role($idinstancia)
@@ -302,7 +302,7 @@ function changeMonitor($oldMonitor, $newMonitor)
  * @see  actualiza_rol_practicante($id_moodle_user, $id_role, $state, $id_semester, $username_boss)
  * @param $username ---> monitor's username in moodle 
  * @param $role     --->[string] student's username in moodle
- * @return Integer
+ * @return integer
  **/
 
 function actualiza_rol_practicante($username, $role, $idinstancia, $state = 1, $semester = null, $id_boss = null)
@@ -382,7 +382,7 @@ function actualiza_rol_practicante($username, $role, $idinstancia, $state = 1, $
  * @param $boss           ---> boss user
  * @param $idinstancia    ---> current instance id
  * @param $state          ---> user's state
- * @return Integer
+ * @return integer
  **/
 function update_role_monitor_ps($username, $role, $array_students, $boss, $idinstancia, $state = 1)
 {
@@ -459,7 +459,7 @@ function update_role_monitor_ps($username, $role, $array_students, $boss, $idins
  * @param $professional   ---> user's id
  * @param $idinstancia    ---> current instance id
  * @param $state          ---> user's state
- * @return Integer
+ * @return integer
  **/
 function manage_role_profesional_ps($username, $role, $professional, $idinstancia, $state = 1)
 {
@@ -573,7 +573,7 @@ function get_userById($column, $id)
  * Function used to recover associatd users to ASES course given the course name
  * @see  get_course_user($namecourse)
  * @param $namecourse --> course name        
- * @return Array with associated users to the course
+ * @return array with associated users to the course
  **/
 function get_course_user($namecourse)
 {
@@ -592,7 +592,7 @@ function get_course_user($namecourse)
  * Function used to recover associatd users to ASES course given the course id
  * @see  get_course_usersby_id($id)
  * @param $id        
- * @return Array with associated users to the course
+ * @return array with associated users to the course
  **/
 function get_course_usersby_id($id)
 {
@@ -612,8 +612,8 @@ function get_course_usersby_id($id)
 /**
  * Function used to recover fields from user table
  * @see get_moodle_user($id)
- * @param id --> user table id
- * @return Array filled with fields recoverd from {user}
+ * @param $id --> user table id
+ * @return array filled with fields recoverd from {user}
  */
 function get_moodle_user($id)
 {
@@ -632,7 +632,7 @@ function get_moodle_user($id)
  * @see checking_role($username, $idinstancia)
  * @param $username    ---> username in moodle (user)
  * @param $idinstancia ---> current instance id
- * @return Array (id_rol, nombre_rol, id, estado, id_usuario)
+ * @return array (id_rol, nombre_rol, id, estado, id_usuario)
  */
 
 function checking_role($username, $idinstancia)
@@ -689,7 +689,7 @@ function update_professional_user($id_user, $professional)
  * @see assign_professional_user($id_user, $professional)
  * @param $id_user    ---> user's id
  * @param $professional --> 'profesional's name
- * @return Integer
+ * @return integer
  */
 
 function assign_professional_user($id_user, $professional)

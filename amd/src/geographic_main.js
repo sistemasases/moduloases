@@ -1,13 +1,10 @@
-// Standard license block omitted.
-/*
- * @package    block_ases
- * @copyright  ASES
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
- 
  /**
-  * @module block_ases/geographic_main
-  */
+ * Load and save geographic information
+ * @module amd/src/geographic_main
+ * @author Iader E. García Gómez
+ * @copyright  2016 Iader E. García <iadergg@gmail.com>
+ * @license  http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */ 
 
 define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/jqueryui'], function($, bootstrap, sweetalert, jqueryui) {
 
@@ -51,6 +48,12 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
         }
 
 
+    /**
+     * @method load_geographic_info
+     * @desc Loads all geographic info of a student given his id. Current processing on geographic_serverproc.php
+     * @param {id} id_ases ASES student id
+     * @return {void}
+     */
     function load_geographic_info(id_ases){
         $.ajax({
             type: "POST",
@@ -63,7 +66,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
 
                 console.log(msg);
             },
-            dataType: "json",
+            dataType: "json", //Json format
             cache: "false",
             error: function(msg) {
                 console.log(msg);
@@ -71,6 +74,15 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
         });
     }
 
+    /**
+     * @method save_geographic_info
+     * @desc Saves a student geographic information. Current processing on geographic_serverproc.php
+     * @param {integer} id_ases ASES student id
+     * @param {float} latitude latitude coordenate
+     * @param {float} longitude longitude coordenate
+     * @param {id} neighborhood neighborhood name
+     * @param {id} geographic_risk geographic risk according to the neighborhood
+     */
     function save_geographic_info(id_ases, latitude, longitude, neighborhood, geographic_risk){
 
         $.ajax({

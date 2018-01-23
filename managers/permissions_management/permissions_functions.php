@@ -57,7 +57,7 @@ require_once('permissions_lib.php');
  * Function that gets all functionalities and their actions
  * @see get_functions_actions($rol)
  * @param $rol 
- * @return String
+ * @return string html with all functionalities obtained
  **/
 
 function get_functions_actions($rol){
@@ -87,11 +87,11 @@ function get_functions_actions($rol){
 
 
 /**
- * Función que obtiene un select con un array dado.
+ * Obtains a select given an array
  * @see get_roles_select($roles,$nombre_rol)
  * @param $roles --> array 
- * @param $nombre_rol --> nombre que se designara al select
- * @return String
+ * @param $nombre_rol --> name that will be assigned to the select
+ * @return string html with the select obtained
  **/
 function get_roles_select($roles,$nombre_rol){
     $table = "";
@@ -111,7 +111,7 @@ function get_roles_select($roles,$nombre_rol){
  * @see get_functions_select($functions,$nombre_function)
  * @param $functions --> array containing function information
  * @param $nombre_function --> function name
- * @return String
+ * @return string html with the select obtained
  **/
 function get_functions_select($functions,$nombre_function){
     $table = "";
@@ -129,7 +129,7 @@ function get_functions_select($functions,$nombre_function){
  * Gets a select given an array
  * @see get_actions_select($actions)
  * @param $actions --> array containing actions information
- * @return String
+ * @return string html with the select obtained
  **/
 function get_actions_select($actions){
     $table = "";

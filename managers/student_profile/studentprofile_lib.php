@@ -28,7 +28,7 @@ require_once(dirname(__FILE__). '/../../../../config.php');
  * Gets all reasons a student quit or delay studies
  *
  * @see  get_reasons_dropout()
- * @return array 
+ * @return array with all existent reasons a student quit or delays his studies
  */
  
  function get_reasons_dropout(){
@@ -45,7 +45,7 @@ require_once(dirname(__FILE__). '/../../../../config.php');
  * Gets a set of ASES status
  *
  * @see get_status_ases()
- * @return array
+ * @return array with the ASUS status grouped
  */
  
  function get_status_ases(){
@@ -62,7 +62,7 @@ require_once(dirname(__FILE__). '/../../../../config.php');
  * Gets a set of ICETEX status
  *
  * @see get_status_icetex()
- * @return array 
+ * @return array with the ICETEX status grouped
  */ 
  function get_status_icetex(){
      
@@ -75,12 +75,12 @@ require_once(dirname(__FILE__). '/../../../../config.php');
  }
  
  /**
- * Función que retorna un único seguimiento a partir de su id y el tipo de seguimiento
+ * Get an unique track given its id and track type
  *
  * @see load_tracking()
  * @param $id_tracking
  * @param $type_tracking
- * @return Array --> Datos del seguimiento
+ * @return array --> Datos del seguimiento
  */
 function load_tracking($id_tracking, $type_tracking, $id_instance) {
  
@@ -88,14 +88,13 @@ function load_tracking($id_tracking, $type_tracking, $id_instance) {
  }
  
 /**
- * Función que extrae los seguimientos de un estudiante dado el id ASES del estudiante
- * el tipo del seguimiento y la instancia asociada al seguimiento y al estudiante ASES
+ * Gets every track of a student given his id, track type and instance associated to the track and the student
  *
- * @see get_trackings_student()
- * @param id_ases --> id relacionado en la tabla talentospilos_profile
- * @param tracking_type [PARES, GRUPAL]
- * @param id_instance --> Id asociado a la instancia del módulo
- * @return Trackings array
+ * @see get_trackings_student($id_ases, $tracking_type, $id_instance)
+ * @param $id_ases --> {talentospilos_profile} table id
+ * @param $tracking_type --> [PARES, GRUPAL]
+ * @param $id_instance --> module associated instance
+ * @return array of trackings
  */
  
 function get_trackings_student($id_ases, $tracking_type, $id_instance){
@@ -309,6 +308,14 @@ function compare_date($fecha_inicio, $fecha_fin, $fecha_comparar){
     return (((int)$fecha_comparar >= strtotime($fecha_inicio->format('Y-m-d'))) && ((int)$fecha_comparar <= (int)$fecha_fin));
  }
 
+ /**
+  * Gets last semester id given a moodle id
+  * 
+  * @see get_id_last_semester($idmoodle)
+  * @param $idmoodle --> moodle student id
+  * @return string|boolean --> string containing the last semster id or false in case there weren't semesters related with the student
+  */
+
  function get_id_last_semester($idmoodle){
 
      $id_first_semester = get_id_first_semester($idmoodle);
@@ -325,7 +332,7 @@ function compare_date($fecha_inicio, $fecha_fin, $fecha_comparar){
  *
  * @see save_tracking_peer($object_tracking)
  * @param $object_tracking --> Object containing the information that'll be stored
- * @return $object_result --> Object containing the query result
+ * @return object --> Object containing the query result
  */
 function save_tracking_peer($object_tracking){
 
@@ -358,7 +365,7 @@ function save_tracking_peer($object_tracking){
     }
     
 
-    // Se consultan ID riesgos
+    // Risks are consulted
 
     $sql_query = "SELECT id FROM {talentospilos_riesgos_ases} WHERE nombre = 'individual'";
     $id_individual_risk = $DB->get_record_sql($sql_query)->id;
@@ -673,7 +680,7 @@ function save_status_ases($id_status, $id_student, $id_reason=null, $observation
 }
 
 /**
- * Función que busca un estudiante a partir del código de estudiante Ases.
+ * Gets an student given his ASES id
  *
  * @see validate_student($code_student)
  * @param $code_student --> ASES student id

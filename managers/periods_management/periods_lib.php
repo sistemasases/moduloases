@@ -32,7 +32,7 @@ require_once(dirname(__FILE__). '/../../../../config.php');
  * @see get_current_semester_byinterval($fecha_inicio,$fecha_fin)
  * @param $fecha_inicio ---> starting date
  * @param $fecha_fin ---> ending date
- * @return Object that represents the semester within the given interval
+ * @return object that represents the semester within the given interval
  */
 
  function get_current_semester_byinterval($fecha_inicio,$fecha_fin){
@@ -48,7 +48,7 @@ require_once(dirname(__FILE__). '/../../../../config.php');
  * Function that returns the current semester
  * 
  * @see get_current_semester()
- * @return  Object that represents the current semester
+ * @return  object that represents the current semester
  */
  
  function get_current_semester(){
@@ -65,7 +65,7 @@ require_once(dirname(__FILE__). '/../../../../config.php');
  * 
  * @see get_semester_interval($id)
  * @param $id ---> semester's id
- * @return Object that represents the semester 
+ * @return object that represents the semester 
  */
  
  function get_semester_interval($id){
@@ -82,7 +82,7 @@ require_once(dirname(__FILE__). '/../../../../config.php');
  * Function that returns all registered semesters
  * 
  * @see get_all_semesters()
- * @return Array that contains every semester registered on the DataBase
+ * @return array that contains every semester registered on the DataBase
  */
 
  function get_all_semesters(){
@@ -103,7 +103,7 @@ require_once(dirname(__FILE__). '/../../../../config.php');
  * 
  * @see get_semester_by_id($idSemester)
  * @param $idSemester -> semester's id
- * @return Object that represents certain information about the specific semester
+ * @return object that represents certain information about the specific semester
  */
 
 
@@ -128,7 +128,7 @@ require_once(dirname(__FILE__). '/../../../../config.php');
  * @see update_semester($semesterInfo, $idSemester)
  * @param $semesterInfo -> array with the new information of a semester
  * @param $idSemester -> semester's id
- * @return boolean
+ * @return boolean true if it was updated, false it wasn't
  */
 
  function update_semester($semesterInfo, $idSemester){
@@ -161,7 +161,7 @@ require_once(dirname(__FILE__). '/../../../../config.php');
  * Function that returns every semester, change its language and date-format to spanish 
  * 
  * @see get_all_semesters_table()
- * @return Array
+ * @return array
  */
  
  function get_all_semesters_table(){
@@ -196,7 +196,7 @@ require_once(dirname(__FILE__). '/../../../../config.php');
  * @param $name -> name of the semester
  * @param $beginning_date -> semester's starting date
  * @param $ending_date -> semester's ending date
- * @return String
+ * @return string
  */
 
  function create_semester($name, $beginning_date, $ending_date){
@@ -215,15 +215,28 @@ require_once(dirname(__FILE__). '/../../../../config.php');
 
  }
 
+ /**
+  * Function that returns the semester id given its name
+  * 
+  * @see get_semester_id_by_name($semester_name)
+  * @param $semester_name -> name of the semester to be found
+  * @return Integer 
+  */
+ function get_semester_id_by_name($semester_name){
 
+    global $DB;
 
+    $sql_query = "SELECT id FROM {talentospilos_semestre} WHERE nombre = '$semester_name'";
+    $result = $DB->get_record_sql($sql_query);
 
+    if($result){
 
+        $semester_id = $result->id;
+        return $semester_id;
 
+    }else{
 
+        return false;
 
-
-
-
-
-
+    }
+}

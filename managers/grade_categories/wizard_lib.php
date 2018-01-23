@@ -201,7 +201,7 @@ function insertItem($course,$father,$name,$valsend,$item){
  * @param $name --> category name
  * @param $parentid --> parent id
  * @param $aggregation --> qualification type id
- * @return boolean
+ * @return boolean true if category and item were both updated, false otherwise
 */
 function edit_category($courseid, $categoryid, $weight, $name, $parentid,$aggregation){
     if ($grade_category = grade_category::fetch(array('id'=>$categoryid, 'courseid'=>$courseid))) {
@@ -317,7 +317,7 @@ function edit_category($courseid, $categoryid, $weight, $name, $parentid,$aggreg
  * @param $weight --> weighted value
  * @param $name --> item name
  * @param $parentid --> parent id
- * @return boolean
+ * @return boolean true if grade item was updated, false otherwise
 */
 function edit_item($courseid, $itemid, $weight, $name, $parentid){
     if ($grade_item = grade_item::fetch(array('id'=>$itemid, 'courseid'=>$courseid))) {
@@ -358,7 +358,7 @@ function edit_item($courseid, $itemid, $weight, $name, $parentid){
  * 
  * @see editElement($info)
  * @param $info --> indexed-array with the new element information
- * @return boolean
+ * @return boolean true if the update operation was succesful, false otherwise
 */
 function editElement($info){
 
@@ -389,7 +389,7 @@ function editElement($info){
  * @param $id --> element id to delete
  * @param $courseid --> course id
  * @param $type --> element type. "cat" if it's category, "row" if it's item
- * @return boolean 
+ * @return boolean true if it was deleted, false otherwise
  */
 function delete_element($id, $courseid,$type){
     global $DB;
@@ -447,7 +447,7 @@ function getNextIndex($course){
  * 
  * @see getCategoriesandItems($courseid)
  * @param $courseid --> course id
- * @return String hmtl
+ * @return string html
 **/
 function getCategoriesandItems($courseid){
 
@@ -495,7 +495,7 @@ function reduce_table_categories(&$report){
  * 
  * @see print_table_categories($report)
  * @param $report --> info which will be shown
- * @return string
+ * @return string html
 **/ 
 function print_table_categories($report){
     $maxspan = $report->maxdepth;
@@ -582,7 +582,7 @@ function print_table_categories($report){
  * @see get_id_parent_item($id, $courseid)
  * @param $id --> item id
  * @param $courseid --> course id
- * @return boolean
+ * @return boolean 
 **/
 function get_id_parent_item($id, $courseid){
     $grade_item = grade_item::fetch(array('id' => $id, 'courseid' => $courseid));
@@ -594,7 +594,7 @@ function get_id_parent_item($id, $courseid){
  *
  * @see get_id_parent_category($id)
  * @param $id --> category id
- * @return boolean
+ * @return boolean|string --> false if there's no id, string with the id otherwise
 */
 function get_id_parent_category($id){
     if($grade_category = grade_category::fetch(array('id' => $id))){
@@ -681,7 +681,7 @@ function isCourseCategorie($id, $courseid){
  * 
  * @see isCategoryTotal($string)
  * @param $string --> Describes an item
- * @return boolean
+ * @return boolean false if it's not a total item, true otherwise
 */
 function isCategoryTotal($string){
     if(stripos($string, "gradeitemdescriptionfiller") === false && stripos($string, "Total") == false){

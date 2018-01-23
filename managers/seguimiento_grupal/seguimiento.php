@@ -409,7 +409,7 @@ function loadJustOneSeg(){
 /**
  * Returns a JSON containing all grupal students and the amount of them
  * @see load_students()
- * @return JSON 
+ * @return object in a json format 
  */
 
 function load_students(){
@@ -436,7 +436,7 @@ function load_students(){
  * Gets all monitor tracks and return a JSON containing them and the total amount
  * 
  * @see loadbyMonitor()
- * @return JSON 
+ * @return object in a json format
  */
 
 function loadbyMonitor(){
