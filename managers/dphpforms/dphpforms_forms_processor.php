@@ -204,7 +204,7 @@ function dphpforms_store_form($form_JSON){
             )
         );
     }
-//Migrado hasta aquí
+
     $identifiers_reglas = array();
     foreach ($json_obj_form->{'reglas'} as &$regla) {
         $identifier_pregunta_A = null;
@@ -324,8 +324,6 @@ function dphpforms_store_form_regla($form_id, $text_rule, $identifier_pregunta_A
     $result = $DB->get_records_sql($sql);
     $result = (array) $result;
 
-    print_r($result);
-
     if(count($result) > 0){
         for($i = 1; $i < count($result); $i++){
             $row = $result[$i];
@@ -336,37 +334,6 @@ function dphpforms_store_form_regla($form_id, $text_rule, $identifier_pregunta_A
         }
     }
 
-    
-
-    
-    
-    /*$db_connection = pg_connect("host=localhost dbname=formularios user=administrator password=administrator");
-    
-    $identifier_regla = null;
-
-    $sql = "SELECT * FROM reglas";
-    $result = pg_query($db_connection, $sql);
-    $row = pg_fetch_row($result);
-    while($row){
-        if($row[1] == $text_rule){
-            $identifier_regla = $row[0];
-            break;
-        }
-        $row = pg_fetch_row($result);
-    }
-
-    $sql = "
-    
-        INSERT INTO reglas_formulario_preguntas(id_formulario, id_regla, id_form_pregunta_a, id_form_pregunta_b)
-        VALUES('".$form_id."', '".$identifier_regla."', '".$identifier_pregunta_A."', '".$identifier_pregunta_B."')
-        RETURNING id
-    
-    ";
-
-    $result = pg_query($db_connection, $sql);
-    $row = pg_fetch_row($result);
-    $identifier_regla = $row[0];
-    return $identifier_regla;*/
 }
 
 function dphpforms_store_form_pregunta_permits($form_idPregunta, $permits){
@@ -380,42 +347,24 @@ function dphpforms_store_form_pregunta_permits($form_idPregunta, $permits){
    
     $identifier_permission = $DB->insert_record('talentospilos_df_per_form_pr', $obj_permisos_formulario_pregunta, $returnid=true, $bulk=false);
     return $identifier_permission;
-
-    /*$db_connection = pg_connect("host=localhost dbname=formularios user=administrator password=administrator");
-    $sql = "
-    
-        INSERT INTO permisos_formulario_pregunta(id_formulario_pregunta, permisos)
-        VALUES('".$form_idPregunta."', '".$permits."')
-        RETURNING id
-    
-    ";
-
-    $result = pg_query($db_connection, $sql);
-    $row = pg_fetch_row($result);
-    $identifier_permission = $row[0];
-    return $identifier_permission;*/
 }
 
 function dphpforms_store_form_disparadores($form_id, $disparadores, $identifiers_form_preguntas){
 
+    global $DB;
     $disparadores_string = json_encode($disparadores);
     foreach ($identifiers_form_preguntas as $key => $value) {
         $disparadores_string = str_replace($value['idPreguntaTemporal'], $value['idRelacionFormPreg'], $disparadores_string);
     }
 
-    $db_connection = pg_connect("host=localhost dbname=formularios user=administrator password=administrator");
-    $sql = "
-    
-        INSERT INTO disparadores_permisos_formulario_diligenciado(id_formulario, disparadores)
-        VALUES('".$form_id."', '".$disparadores_string."')
-        RETURNING id
-    
-    ";
 
-    $result = pg_query($db_connection, $sql);
-    $row = pg_fetch_row($result);
-    $identifier_disparador = $row[0];
+    $obj_disparadores_permisos_formulario_diligenciado = new stdClass();
+    $obj_disparadores_permisos_formulario_diligenciado->id_formulario = $form_id;
+    $obj_disparadores_permisos_formulario_diligenciado->disparadores = $disparadores_string;
+
+    $identifier_disparador = $DB->insert_record('talentospilos_df_disp_fordil', $obj_disparadores_permisos_formulario_diligenciado, $returnid=true, $bulk=false);
     return $identifier_disparador;
+    
 }
 
 ?>
