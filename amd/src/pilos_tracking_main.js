@@ -1184,7 +1184,6 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                 $('#seguimiento #m_fin').append(min);
             }
 
-
              /**
               * @method actualizar_riesgo
               * @desc Function used to change colour when risk radio buttons is modified
@@ -1217,6 +1216,7 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
              * @param {id} id  track id 
              * @return {void}
              */
+
             function auxiliar_cancelar(id) {
                 $("#titulo_fecha_" + id).hide();
                 $("#borrar_" + id).show();
