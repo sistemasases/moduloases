@@ -47,15 +47,15 @@ $contextcourse = context_course::instance($courseid);
 $contextblock =  context_block::instance($blockid);
 $url = new moodle_url("/blocks/ases/view/periods_management.php", array('courseid' => $courseid, 'instanceid' => $blockid));
 
-//se culta si la instancia ya está registrada
+//Instance is consulted for its registration
 if(!consult_instance($blockid)){
     header("Location: instanceconfiguration.php?courseid=$courseid&instanceid=$blockid");
 }
 
-//se crean los elementos del menu
+// Menu items are created
 $menu_option = create_menu_options($USER->id, $blockid, $courseid);
 
-//Se obtienen todos los períodos (semestres)
+//Getting all semesters
 $semesters = get_all_semesters(); 
 
 $table_semesters = '';
@@ -65,16 +65,16 @@ foreach ($semesters as $semester) {
 	$table_semesters.= '<option value="' .$semester->id .'">'.$semester->nombre .'</option>'; 	
 }
 
-//Crea una clase con la información que se llevará al template.   
+//Creates a class with information that'll be send to template
 $data = new stdClass;
 
-// Evalua si el rol del usuario tiene permisos en esta view.
+// Evaluates if user role has permissions assigned on this view
 $actions = authenticate_user_view($USER->id, $blockid);
 $data = $actions;
 $data->table = $table_semesters;
 $data->menu = $menu_option;
 
-//configuracion de la navegación
+//Navegation set up
 $coursenode = $PAGE->navigation->find($courseid, navigation_node::TYPE_COURSE);
 $node = $coursenode->add('Gestion de períodos del bloque',$url);
 $node->make_active();

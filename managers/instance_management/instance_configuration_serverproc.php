@@ -1,4 +1,28 @@
 <?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
+/**
+ * Talentos Pilos
+ *
+ * @author     John Lourido 
+ * @package    block_ases
+ * @copyright  2017 JOhn Lourido <jhonkrave@gmail.com>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
 require_once(dirname(__FILE__). '/../../../../config.php');
 require_once('instance_lib.php');
 require_once("../user_management/user_lib.php");
@@ -24,6 +48,12 @@ if(isset($_POST['function'])){
     }
 }
 
+/**
+ * Returns a JSON with information returned in getInfoSystemDirector(PARAMETER) in casi it's successful, otherwise returns an error message
+ * 
+ * @see searchUser()
+ * @return JSON
+ */
 function searchUser(){
     
     if(isset($_POST['username'])){
@@ -37,10 +67,24 @@ function searchUser(){
     }
 }
 
+/**
+ * Returns a json with the loadProgramsForSystemsAdmins() function output
+ * 
+ * @see loadPrograms()
+ * @return JSON
+ */
+
 function loadPrograms(){
     echo json_encode(loadProgramsForSystemsAdmins());
 }
 
+
+/**
+ * Returns a json with the updateSystemDirector(PARAMETERS) function output in case it's successful, otherwise returns an error message
+ * 
+ * @see updateUser()
+ * @return JSON
+ */
 function updateUser(){
     if(isset($_POST['username_input']) && isset($_POST['lista_programas']) && isset($_POST['idinstancia']) && isset($_POST['segAca']) &&  isset($_POST['segAsis']) &&  isset($_POST['segSoc'])){
         echo json_encode(updateSystemDirector($_POST['username_input'], $_POST['lista_programas'], $_POST['idinstancia'], $_POST['segAca'], $_POST['segAsis'], $_POST['segSoc']));
@@ -48,6 +92,7 @@ function updateUser(){
         echo json_encode("Error al obtener variables para la actualización del perfil administrador");
     }
 }
+
 
 function loadSystemAdminstrators(){
     $columns = array();
@@ -90,6 +135,12 @@ function loadSystemAdminstrators(){
     echo json_encode($data);
 }
 
+/**
+ * Returns a json with the deleteSystemAdministrator(PARAMETER) function output
+ * 
+ * @see deleteAdministrator()
+ * @return JSON
+ */
 function deleteAdministrator(){
     if(isset($_POST['username'])){
         echo json_encode(deleteSystemAdministrator($_POST['username']));

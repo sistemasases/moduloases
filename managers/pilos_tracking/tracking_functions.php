@@ -1,4 +1,29 @@
 <?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
+
+/**
+ * Estrategia ASES
+ *
+ * @author     Isabella Serna Ramírez
+ * @package    block_ases
+ * @copyright  2017 Isabella Serna Ramírez <isabella.serna@correounivalle.edu.co>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
 require_once ('pilos_tracking_lib.php');
 
 function replace_content_inside_delimiters($start, $end, $new, $source)
@@ -6,12 +31,12 @@ function replace_content_inside_delimiters($start, $end, $new, $source)
     return preg_replace('#(' . preg_quote($start) . ')(.*?)(' . preg_quote($end) . ')#si', '$1' . $new . '$3', $source);
 }
 
-/* Función que recorta el Toogle a mostrar deacuerdo a los permisos
-del usuario
-* @see show_according_permissions($table,$actions)
+/** Función que recorta el Toogle a mostrar deacuerdo a los permisos del usuario
+* Cuts the shown toogle according to an user licence
+* @see show_according_permissions(&$table,$actions)
 * @param $table --> Toogle
-* @param $actions --> acciones que el usuario puede acceder
-* @return Array
+* @param $actions --> user permission (licence)
+* @return array --> toogle
 */
 
 function show_according_permissions(&$table, $actions)
@@ -50,22 +75,22 @@ function show_according_permissions(&$table, $actions)
 }
 
 /*
-* Funciones del módulo seguimientos pilos que se utilizarán en la view.
+* 'Seguimiento pilos' functions which update on view
 */
 
 // ******************************************************************************************************
 // ******************************************************************************************************
 // ******************************************************************************************************
-// MÉTODOS PARA EL SEPARACIÓN POR SEMESTRES
+// SEPARATE BY SEMESTERS METHODS
 // ******************************************************************************************************
 // ******************************************************************************************************
 // ******************************************************************************************************
 
 /**
- * Función que evalua si existen seguimientos
+ * Evaluates tracking existence
  * @see has_tracking($seguimientos)
- * @param $seguimientos ---> string del html
- * @return string
+ * @param $seguimientos ---> html string
+ * @return string html table
  *
  */
 
@@ -83,10 +108,10 @@ function has_tracking($seguimientos)
 }
 
 /**
- * Función que obtiene el select organizado de los periodos existentes
+ * Gets a select organized by existent periods
  * @see get_period_select($periods)
- * @param $periods ---> periodos existentes
- * @return Array
+ * @param $periods ---> existent periods
+ * @return string html table
  *
  */
 
@@ -104,10 +129,10 @@ function get_period_select($periods)
 }
 
 /**
- * Función que obtiene el select organizado de las personas con rol _ps
- * @see get_people_select($periods)
- * @param $periods ---> periodos existentes
- * @return Array
+ * Gets a select organized by users role '_ps'
+ * @see get_people_select($people)
+ * @param $people ---> existent users
+ * @return string html table
  *
  */
 
@@ -124,8 +149,19 @@ function get_people_select($people)
     return $table;
 }
 
-// funcion que transforma el arreglo retornado por la peticion en un arreglo que posteriormente
-// se usara para la creacion del toogle
+
+/**
+ * Transforms the returned array into a new one who will be used to create a Toogle
+ * 
+ * @see transformarConsultaSemestreArray($pares, $grupal, $arregloSemestres, $instanceid, $role)
+ * @param $pares --> 'Seguimientos de pares'
+ * @param $grupal --> Groupal tracks ('seguimiento grupales')
+ * @param $arregloSemestres --> Array containing information of current semester
+ * @param $instanceid --> instance id
+ * @param $role --> profesional role
+ * @return array of arrays which every array contains information of every 'practicante' and current semester
+ *
+ */
 
 function transformarConsultaSemestreArray($pares, $grupal, $arregloSemestres, $instanceid, $role)
 {
@@ -137,7 +173,7 @@ function transformarConsultaSemestreArray($pares, $grupal, $arregloSemestres, $i
         array_push($arregloAuxiliar, $semestre->fecha_inicio);
         array_push($arregloAuxiliar, $semestre->fecha_fin);
 
-        // se asigna a esta posicion un texto html correspondiente a la informacion del profesional
+        // An HTML text containing information of the 'profesional' user is added on this position
 
         array_push($arregloAuxiliar, profesionalUser($pares, $grupal, $arregloPracticantes[$practicante][0], $instanceid, $role));
         array_push($arregloSemestreYPersonas, $arregloAuxiliar);
@@ -149,11 +185,19 @@ function transformarConsultaSemestreArray($pares, $grupal, $arregloSemestres, $i
 // ******************************************************************************************************
 // ******************************************************************************************************
 // ******************************************************************************************************
-// MÉTODOS PARA EL PROFESIONAL
+// 'PROFESIONAL' METHODS
 // ******************************************************************************************************
 // ******************************************************************************************************
 // ******************************************************************************************************
 
+
+/**
+ * Counts how many tracks a practincant has cheked
+ * @see get_conteo_profesional($professionalpracticants)
+ * @param $professionalpracticants --> Array information of each practicant for each profesioal 
+ * @return string with the count of tracks checked
+ *
+ */
 function get_conteo_profesional($professionalpracticants)
 {
     $revisado_profesional = 0;
@@ -170,6 +214,19 @@ function get_conteo_profesional($professionalpracticants)
     return $enunciado;
 }
 
+/**
+ * Auxiliar function to create a Toogle and table for a profesional
+ * @see profesionalUser(&$pares, &$grupal, $id_prof, $instanceid, $rol, $semester, $sistemas = false)
+ * @param &$pares --> 'seguimiento de pares' information
+ * @param &$grupal --> 'seguimiento grupal' (groupal tracks) information
+ * @param $id_prof --> profesional id
+ * @param $instanceid --> instance id
+ * @param $rol --> profesional role
+ * @param $semester --> semester id
+ * @param $sistemas = false --> role is not a 'sistemas' one
+ * @return array with the information to create a Toogle and table for a profesional
+ *
+ */
 function profesionalUser(&$pares, &$grupal, $id_prof, $instanceid, $rol, $semester, $sistemas = false)
 {
     $arregloPracticanteYMonitor = [];
@@ -183,8 +240,19 @@ function profesionalUser(&$pares, &$grupal, $id_prof, $instanceid, $rol, $semest
     return crearTablaYToggleProfesional($arregloPracticanteYMonitor, $conteo_profesional);
 }
 
-// funcion que transforma el arreglo retornado por la peticion en un arreglo que posteriormente
-// se usara para la creacion del toogle
+/**
+ * Transforms the returned array into a new one who will be used to create a Toogle
+ * @see transformarConsultaProfesionalArray($pares, $grupal, $arregloPracticantes, $instanceid, $role, $fechas_epoch, $sistemas)
+ * @param $pares --> 'Seguimiento pares' information
+ * @param $grupal --> 'seguimiento grupal' (groupal tracks) information
+ * @param $arregloPracticantes --> Array containing every practicant information
+ * @param $instanceid --> instance id
+ * @param $role --> practicant role
+ * @param $fechas_epoch --> date intervals
+ * @param $sistemas --> boolean of 'sistemas' role
+ * @return array with the information to create a Toogle
+ *
+ */
 
 function transformarConsultaProfesionalArray($pares, $grupal, $arregloPracticantes, $instanceid, $role, $fechas_epoch, $sistemas)
 {
@@ -206,7 +274,14 @@ function transformarConsultaProfesionalArray($pares, $grupal, $arregloPracticant
     return $arregloPracticanteYMonitor;
 }
 
-// se crea el toogle del profesional el cual tiene cada uno de los practicantesr asignados al profesional
+/**
+ * Creates a 'profesional' toogle which contains each assigned practicant
+ * @see crearTablaYToggleProfesional($arregloPracticanteYMonitor, $conteo_profesional)
+ * @param $arregloPracticanteYMonitor --> Array containing information about each practicant for each profesional
+ * @param $conteo_profesional --> amount of checked tracks (seguimientos)
+ * @return array with all practicants assgined. Requeired to create a Toogle
+ *
+ */
 
 function crearTablaYToggleProfesional($arregloPracticanteYMonitor, $conteo_profesional)
 {
@@ -228,11 +303,24 @@ function crearTablaYToggleProfesional($arregloPracticanteYMonitor, $conteo_profe
 // ******************************************************************************************************
 // ******************************************************************************************************
 // ******************************************************************************************************
-// MÉTODOS PARA EL PRACTICANTE
+// PRACTICANT METHODS
 // ******************************************************************************************************
 // ******************************************************************************************************
 // ******************************************************************************************************
 
+/**
+ * Auxiliar function to create a Toogle and table for a practicant
+ * @see practicanteUser(&$pares, &$grupal, $id_pract, $instanceid, $rol, $semester, $sistemas = false)
+ * @param &$pares --> 'seguimiento de pares' information
+ * @param &$grupal --> 'seguimiento grupal' (groupal tracks) information
+ * @param $id_pract --> practicant id
+ * @param $instanceid --> instance id
+ * @param $rol --> practicant role
+ * @param $semester --> semester id
+ * @param $sistemas = false --> role is not a 'sistemas' one
+ * @return array  with the information to create a Toogle and table for a practicant
+ *
+ */
 function practicanteUser(&$pares, &$grupal, $id_pract, $instanceid, $rol, $semester, $sistemas = false)
 {
     $arregloMonitorYEstudiantes = [];
@@ -245,9 +333,21 @@ function practicanteUser(&$pares, &$grupal, $id_pract, $instanceid, $rol, $semes
     return crearTablaYTogglePracticante($arregloMonitorYEstudiantes);
 }
 
-/*Función que transforma el arreglo retornado por la peticion en un arreglo que posteriormente
-se usara para la creacion del toogle.*/
 
+/**
+ * Transforms the returned array into a new one who will be used to create a Toogle
+ * @see transformarConsultaPracticanteArray($pares, $grupal, $arregloMonitores, $instanceid, $role, $id_pract, $fechas_epoch, $sistemas = false)
+ * @param $pares --> 'Seguimiento pares' information
+ * @param $grupal --> 'seguimiento grupal' (groupal tracks) information
+ * @param $arregloMonitores --> Array containing every monitor information
+ * @param $instanceid --> instance id
+ * @param $role --> practicant role
+ * @param $id_pract --> practicant id
+ * @param $fechas_epoch --> date intervals
+ * @param $sistemas --> boolean of 'sistemas' role
+ * @return array with the information to create a Toogle
+ *
+ */
 function transformarConsultaPracticanteArray($pares, $grupal, $arregloMonitores, $instanceid, $role, $id_pract, $fechas_epoch, $sistemas = false)
 {
     $arregloMonitorYEstudiantes = [];
@@ -271,8 +371,14 @@ function transformarConsultaPracticanteArray($pares, $grupal, $arregloMonitores,
     return $arregloMonitorYEstudiantes;
 }
 
-/*Se crea el toogle del practicante el cual tiene cada uno de los monitores asignados al practicante*/
 
+/**
+ * Creates a 'practicante' toogle which contains each assigned monitor
+ * @see crearTablaYTogglePracticante($arregloMonitorYEstudiantes)
+ * @param $arregloMonitorYEstudiantes --> Array containing information about each monitor  for each practicant
+ * @return array with all monitors assgined. Requeired to create a Toogle
+ *
+ */
 function crearTablaYTogglePracticante($arregloMonitorYEstudiantes)
 {
     $stringRetornar = "";
@@ -280,7 +386,7 @@ function crearTablaYTogglePracticante($arregloMonitorYEstudiantes)
         $stringRetornar.= '<div class="panel-group"><div class="panel panel-default" ><div class="panel-heading practicante" style="background-color: #AEA3A3;"><h4 class="panel-title"><a data-toggle="collapse"  href="#collapse' . $arregloMonitorYEstudiantes[$monitor][0] . '">' . $arregloMonitorYEstudiantes[$monitor][1] . '</a><span> R.P  : <b><label for="revisado_monitor_' . $arregloMonitorYEstudiantes[$monitor][0] . '">0</label></b> - NO R.P : <b><label for="norevisado_monitor_' . $arregloMonitorYEstudiantes[$monitor][0] . '">0</label></b> - Total  : <b><label for="total_monitor_' . $arregloMonitorYEstudiantes[$monitor][0] . '">0</label></b> </span></h4></div>';
         $stringRetornar.= '<div id="collapse' . $arregloMonitorYEstudiantes[$monitor][0] . '" class="panel-collapse collapse"><div class="panel-body">';
 
-        // en la tercer posicion del arreglo se encuentra un texto html con un formato especifico
+        // On third position there's a specific HTML format
 
         $stringRetornar.= $arregloMonitorYEstudiantes[$monitor][2];
         $stringRetornar.= '</div></div></div></div>';
@@ -292,13 +398,27 @@ function crearTablaYTogglePracticante($arregloMonitorYEstudiantes)
 // ******************************************************************************************************
 // ******************************************************************************************************
 // ******************************************************************************************************
-// MÉTODOS PARA EL MONITOR
+// MONITOR METHODS
 // ******************************************************************************************************
 // ******************************************************************************************************
 // ******************************************************************************************************
 
-/*Realiza toda la gestión para tener un arreglo final ordenado deacuerdo a los estudiantes de un monitor*/
-
+/**
+ * Does all management to get a final organized by monitor students array
+ * 
+ * @see monitorUser($pares, $grupal, $codigoMonitor, $noMonitor, $instanceid, $role, $fechas, $sistemas = false, $codigoPracticante = null)
+ * @param &$pares --> 'seguimiento de pares' information
+ * @param &$grupal --> 'seguimiento grupal' (groupal tracks) information
+ * @param $codigoMonitor --> monitor id
+ * @param $noMonitor --> monitor number
+ * @param $instanceid --> instance id
+ * @param $role --> monitor role
+ * @param $fechas --> dates interval
+ * @param $sistemas = false --> role is not a 'sistemas' one
+ * @param $codigoPracticante = null --> practicant id is null
+ * @return array with students grouped by monitor
+ *
+ */
 function monitorUser($pares, $grupal, $codigoMonitor, $noMonitor, $instanceid, $role, $fechas, $sistemas = false, $codigoPracticante = null)
 {
     $fecha_epoch = [];
@@ -308,31 +428,43 @@ function monitorUser($pares, $grupal, $codigoMonitor, $noMonitor, $instanceid, $
     $monitorstudents = get_seguimientos_monitor($codigoMonitor, $instanceid, $fecha_epoch, $semestre_periodo);
     transformarConsultaMonitorArray($monitorstudents, $pares, $grupal, $codigoMonitor, $noMonitor, $instanceid, $role);
 
-    // metodo que agrupa informacion de los seguimientos de pares por el codigo
+    // Group 'seguimiento de pares' information by id 
 
     $arregloImprimirPares = agrupar_informacion($pares, 20);
 
-    // metodo que agrupa informacion de los seguimientos grupales por los codigos
+    // Group 'seguimientos grupales' information by id 
 
     $arregloImprimirGrupos = agrupar_informacion($grupal, 12);
 
-    // metodo que deja un solo registro grupal con el mismo codigo y concatena nombres y codigos de los estudiantes
+    // transforms all 'seguimientos grupales' into just one with same id and link together students names and ids
 
     $arregloImprimirGrupos = agrupar_Seguimientos_grupales($arregloImprimirGrupos);
 
-    // se ordena los seguimientos de cada estudiante segun la fecha
+    // sort each student track by id
 
     for ($grupo = 0; $grupo < count($arregloImprimirPares); $grupo++) {
         ordenaPorColumna($arregloImprimirPares[$grupo], 19);
     }
 
-    // se retorna la informacion del toogle creado desde el punto del monitor
+    // Returns toogle information given a monitor 
 
     return crearTablaYToggle($arregloImprimirPares, $noMonitor, $arregloImprimirGrupos, $codigoMonitor, $codigoPracticante, $role, $sistemas);
 }
 
-/*Transforma la consulta realizada en un array que será utilizado para construir el Toogle.*/
-
+/**
+ * Transforms the returned array into a new one who will be used to create a Toogle
+ * @see transformarConsultaMonitorArray($array, &$pares, &$grupal, $codigoMonitor, $noMonitor, $instanceid, $role, $codigoPracticante = null)
+ * @param $array --> all tracks a monitor has done
+ * @param $pares --> 'Seguimiento pares' information
+ * @param $grupal --> 'seguimiento grupal' (groupal tracks) information
+ * @param $codigoMonitor --> monitor id
+ * @param $noMonitor --> monitor number
+ * @param $instanceid --> instance id
+ * @param $role --> monitor role
+ * @param $codigoPracticante = null --> boolean of 'sistemas' role
+ * @return array with the information to create a Toogle
+ *
+ */
 function transformarConsultaMonitorArray($array, &$pares, &$grupal, $codigoMonitor, $noMonitor, $instanceid, $role, $codigoPracticante = null)
 {
     foreach($array as $seguimiento) {
@@ -391,8 +523,8 @@ function transformarConsultaMonitorArray($array, &$pares, &$grupal, $codigoMonit
             array_push($array_auxiliar, $seguimiento->registros_estudiantes_total); // 26
             array_push($array_auxiliar, $seguimiento->profesional); // 27
             array_push($array_auxiliar, $seguimiento->practicante); // 28
-            array_push($array_auxiliar, $fecha_calendario->format('Y-m-d')); //29 formato fecha para el calendario
-            array_push($array_auxiliar, $seguimiento->individual_riesgo); //30 riesgo individual
+            array_push($array_auxiliar, $fecha_calendario->format('Y-m-d')); //29 calendar date format
+            array_push($array_auxiliar, $seguimiento->individual_riesgo); //30 individual risk (Riesgo individual)
             array_push($pares, $array_auxiliar);
         }
         elseif ($seguimiento->tipo == "GRUPAL") {
@@ -429,7 +561,7 @@ function transformarConsultaMonitorArray($array, &$pares, &$grupal, $codigoMonit
             array_push($array_auxiliar, $seguimiento->actividades);
             array_push($array_auxiliar, $seguimiento->objetivos);
             array_push($array_auxiliar, $seguimiento->observaciones);
-            array_push($array_auxiliar, "saltar"); //9 borrar
+            array_push($array_auxiliar, "saltar"); //9 delete
             array_push($array_auxiliar, $seguimiento->fecha); // 10
             array_push($array_auxiliar, $seguimiento->id_estudiante); // 11
             array_push($array_auxiliar, $seguimiento->id_seguimiento); // 12
@@ -442,27 +574,33 @@ function transformarConsultaMonitorArray($array, &$pares, &$grupal, $codigoMonit
     }
 }
 
-// Función que ordena un arreglo segun la columna definida de menos valor a mayor
-
+/**
+ * Sorts an array given a column from lower to higher value
+ * @see ordenaPorColumna(&$arreglo, $col)
+ * @param &$arreglo ---> array to sort
+ * @param $col --> column number
+ * @return array sorted
+ *
+ */
 function ordenaPorColumna(&$arreglo, $col)
 {
     $aux;
 
-    // Recorro la columna selecciona
+    // search through the column
 
     for ($i = 0; $i < count($arreglo); $i++) {
         for ($j = ($i + 1); $j < count($arreglo); $j++) {
 
-            // Verifico si el elemento en la posición [i][col] es mayor que el de la posición [j][col]
+            // Verify if the [i][col] element is greater than [j][col]
 
             if (intval($arreglo[$i][$col]) < intval($arreglo[$j][$col])) {
 
-                // Recorro las filas seleccionadas (i, j) e intercambio los elementos
-                // Declaro la variable k para controlar la posición (columnas) en la fila
+                // search through (i, j) selected rows and exchange elements 
+                // variable k to control column position through each row
 
                 for ($k = 0; $k < count($arreglo[$i]); $k++) {
 
-                    // Intercambio los elementos de las filas seleccionadas columna por columna
+                    // exchange rows elements selected column by column
 
                     $aux = $arreglo[$i][$k];
                     $arreglo[$i][$k] = $arreglo[$j][$k];
@@ -473,9 +611,14 @@ function ordenaPorColumna(&$arreglo, $col)
     }
 }
 
-/*Función para agrupar los seguimientos grupales segun el ID
-*/
 
+/**
+ * Groups'seguimientos grupales' (groupal tracks) by id
+ * @see agrupar_Seguimientos_grupales($arreglo)
+ * @param $arreglo ---> array containing all tracks
+ * @return array with grouped information by id
+ *
+ */
 function agrupar_Seguimientos_grupales($arreglo)
 {
     $NuevoArregloGrupal = [];
@@ -486,8 +629,7 @@ function agrupar_Seguimientos_grupales($arreglo)
         $codigos = "";
         $contador = 1;
 
-        // Función que captura tanto los nombres como los codigos y crea un texto
-        // para cada uno los cuales seran usado para ponerse en la tabla
+        // Grabs names and is to create a text to display on table
 
         for ($tuplaGrupo = 0; $tuplaGrupo < count($arreglo[$elementoRevisar]); $tuplaGrupo++) {
             $cuenta = count($arreglo[$elementoRevisar]) - 1;
@@ -503,7 +645,7 @@ function agrupar_Seguimientos_grupales($arreglo)
             }
         }
 
-        // se al arreglo los nombres y los codigos concatenados al final del arreglo
+        // Names and ids are added into the array to return
 
         $arregloAuxiliar[0] = $nombres;
         $arregloAuxiliar[11] = $codigos;
@@ -514,33 +656,38 @@ function agrupar_Seguimientos_grupales($arreglo)
     return $NuevoArregloGrupal;
 }
 
-/*Función utilizada para agrupar la información del array deacuerdo a parametros especificos de la variable
-$campoComparar.
-*/
 
+/**
+ * Groups all array information given specific parameters in $campoComparar
+ * @see agrupar_informacion($infoMonitor, $campoComparar)
+ * @param $infoMonitor ---> monitor information
+ * @param $campoComparar --> field to compare
+ * @return array with grouped information by $campoComparar
+ *
+ */
 function agrupar_informacion($infoMonitor, $campoComparar)
 {
     $nuevoArreglo = [];
     for ($i = 0; $i < count($infoMonitor); $i++) {
 
-        // se inician variables
+        // initialize variables
 
         $confirmarAnanir = "si";
         $posicion = 0;
 
-        // si es el primer elemento del arreglo siempre se añadira
+        // First array element will be added
 
         if (count($nuevoArreglo) != 0) {
 
-            // si ya hay elementos en el arreglo
+            // Array containing elements
 
             for ($j = 0; $j < count($nuevoArreglo); $j++) {
 
-                // se verifica que no exista otra persona con el mismo nombre
+                // Verifies other user to has a different name
 
                 if ($infoMonitor[$i][$campoComparar] == $nuevoArreglo[$j][0][$campoComparar]) {
 
-                    // si existe entonces no se añadira un nuevo al arreglo sino uno nuevo a la posicion
+                    // If there has users with same name, it'll be added into a new position
 
                     $confirmarAnanir = "no";
                     $posicion = $j;
@@ -548,12 +695,12 @@ function agrupar_informacion($infoMonitor, $campoComparar)
             }
         }
 
-        // si se retorna si es decir que no existen registros del estudiante
+        //Return "si" if there's no student records
 
         if ($confirmarAnanir == "si") {
             $arregloEstudiante = array();
 
-            // se agrega al arreglo
+            // Added to array
 
             $tamano = count($nuevoArreglo);
             array_push($arregloEstudiante, $infoMonitor[$i]);
@@ -564,7 +711,7 @@ function agrupar_informacion($infoMonitor, $campoComparar)
             $arregloEstudiante = $nuevoArreglo[$posicion];
             array_push($arregloEstudiante, $infoMonitor[$i]);
 
-            // si no es prque ya tiene registro asi que se agrega registro al estudiante
+            // Otherwise the record is added into the student
 
             $nuevoArreglo[$posicion] = [];
             $nuevoArreglo[$posicion] = $arregloEstudiante;
@@ -574,19 +721,30 @@ function agrupar_informacion($infoMonitor, $campoComparar)
     return $nuevoArreglo;
 }
 
-/*Función que crea la tabla de los estudiantes que pertenecen a un monitor determinado */
-
+/**
+ * Creates a students table who belong to a specified monitor
+ * @see crearTablaYToggle($arregloImprimirPares, $monitorNo, $arregloImprimirGrupos, $codigoEnviarN1, $codigoEnviarN2, $rol, $sistemas = false)
+ * @param $arregloImprimirPares ---> 'seguimiento de pares' information
+ * @param $monitorNo --> monitor number
+ * @param $arregloImprimirGrupos --> 'seguimientos grupales' (groupal tracks) information
+ * @param $codigoEnviarN1 -->
+ * @param $codigoEnviarN2 --> 
+ * @param $rol --> student role
+ * @param $sistemas = false --> role is not a 'sistemas' one
+ * @return string HTML tablaytoogle information
+ *
+ */
 function crearTablaYToggle($arregloImprimirPares, $monitorNo, $arregloImprimirGrupos, $codigoEnviarN1, $codigoEnviarN2, $rol, $sistemas = false)
 {
     $stringRetornar = "";
 
-    // se recorre cada estudiante
+    // search through each student
 
     for ($student = 0; $student < count($arregloImprimirPares); $student++) {
         $stringRetornar.= '<div class="panel-group"><div class="panel panel-default"><div class="panel-heading pares" style="background-color: #D0C4C4;"><h4 class="panel-title"><a data-toggle="collapse" href="#collapse' . $monitorNo . $arregloImprimirPares[$student][0][20] . '">' . $arregloImprimirPares[$student][0][0] . '<span> R.P  : <b><label for="revisado_pares_' . $codigoEnviarN1 . '_' . $student . '">' . $arregloImprimirPares[$student][0][24] . '</label></b> - NO R.P : <b><label for="norevisado_pares_' . $codigoEnviarN1 . '_' . $student . '">' . $arregloImprimirPares[$student][0][25] . '</label></b> - Total  : <b>' . $arregloImprimirPares[$student][0][26] . '</b> </span></a></h4></div>';
         $stringRetornar.= '<div id="collapse' . $monitorNo . $arregloImprimirPares[$student][0][20] . '" class="panel-collapse collapse"><div class="panel-body">';
 
-        // se crea un toogle para cada seguimiento que presente dicho estudiante
+        // Creates a Toogle for each track 
 
         for ($tupla = 0; $tupla < count($arregloImprimirPares[$student]); $tupla++) {
             
@@ -607,8 +765,7 @@ function crearTablaYToggle($arregloImprimirPares, $monitorNo, $arregloImprimirGr
             $riesgo = "";
             $valor = - 1;
 
-            // se verifica el tipo de riesgo y asi mismo se añadira
-            // la clase para la identificacion
+            // Depending on risk it will be added to class to identify
 
             if ($arregloImprimirPares[$student][$tupla][8] == 1) {
                 $riesgo = "bajo";
@@ -667,8 +824,7 @@ function crearTablaYToggle($arregloImprimirPares, $monitorNo, $arregloImprimirGr
                 $stringRetornar.= '<div class="col-md-12 top-buffer"></div>';
             }
 
-            // se verifica el tipo de riesgo y asi mismo se añadira
-            // la clase para la identificacion
+            // Depending on risk it will be added to class to identify
 
             if ($arregloImprimirPares[$student][$tupla][10] == 1) {
                 $riesgo = "bajo";
@@ -727,8 +883,7 @@ function crearTablaYToggle($arregloImprimirPares, $monitorNo, $arregloImprimirGr
                 $stringRetornar.= '<div class="col-md-12 top-buffer"></div>';
             }
 
-            // se verifica el tipo de riesgo y asi mismo se añadira
-            // la clase para la identificacion
+            // Depending on risk it will be added to class to identify
 
             if ($arregloImprimirPares[$student][$tupla][12] == 1) {
                 $riesgo = "bajo";
@@ -792,8 +947,7 @@ function crearTablaYToggle($arregloImprimirPares, $monitorNo, $arregloImprimirGr
 
             }
 
-            // se verifica el tipo de riesgo y asi mismo se añadira
-            // la clase para la identificacion
+            // Depending on risk it will be added to class to identify
 
             if ($arregloImprimirPares[$student][$tupla][14] == 1) {
                 $riesgo = "bajo";
@@ -852,8 +1006,7 @@ function crearTablaYToggle($arregloImprimirPares, $monitorNo, $arregloImprimirGr
                 $stringRetornar.= '<div class="col-md-12 top-buffer"></div>';
             }
 
-            // se verifica el tipo de riesgo y asi mismo se añadira
-            // la clase para la identificacion
+            // Depending on risk it will be added to class to identify
 
             if ($arregloImprimirPares[$student][$tupla][16] == 1) {
                 $riesgo = "bajo";
@@ -949,7 +1102,7 @@ function crearTablaYToggle($arregloImprimirPares, $monitorNo, $arregloImprimirGr
                 $stringRetornar.= '<div class="col-sm-12"><div class="col-sm-5"><span class="btn btn-info btn-lg botonesSeguimiento botonModificarSeguimiento ocultar" value="' . $arregloImprimirPares[$student][$tupla][23] . '" type="button">Guardar</span></div><div class="col-sm-5"><span class="btn btn-info btn-lg botonesSeguimiento botonCancelarSeguimiento ocultar" value="' . $arregloImprimirPares[$student][$tupla][23] . '" type="button">Cancelar</span></div></div><td></tr>';
             }
 
-            // cerre el colapsable correspondientes
+            // close all collapsables
 
             $stringRetornar.= '</tbody></table></div></div></div></div>';
         }
@@ -957,7 +1110,7 @@ function crearTablaYToggle($arregloImprimirPares, $monitorNo, $arregloImprimirGr
         $stringRetornar.= '</div></div></div></div>';
     }
 
-    // si existen seguimiento grupales
+    // In case of groupal tracks 'Seguimientos grupales'
 
     if (count($arregloImprimirGrupos) != 0) {
         $stringRetornar.= '<div class="panel-group"><div class="panel panel-default"><div class="panel-heading grupal" style="background-color: #D0C4C4;"><h4 class="panel-title"><a data-toggle="collapse" href="#collapsegroup' . $monitorNo . $arregloImprimirGrupos[0][11] . '">SEGUIMIENTOS GRUPALES <span> R.P  : <b><label for="revisado_grupal_' . $codigoEnviarN1 . '">' . $arregloImprimirGrupos[0][14] . '</label></b> - NO R.P : <b><label for="norevisado_grupal_' . $codigoEnviarN1 . '">' . $arregloImprimirGrupos[0][15] . '</label></b> - Total  : <b><label for="total_grupal_' . $codigoEnviarN1 . '">' . $arregloImprimirGrupos[0][16] . '</b> </span></a></h4></div>';
@@ -980,8 +1133,8 @@ function crearTablaYToggle($arregloImprimirPares, $monitorNo, $arregloImprimirGr
                     <tr>
                     <td colspan="3"><b>REPORTAR OBSERVACIÓN</b><br /><textarea id="grupal_' . $codigoEnviarN1 . '_' . $codigoEnviarN2 . '_' . $arregloImprimirGrupos[$grupo][1] . '_' . $arregloImprimirGrupos[$grupo][14] . '" rows="4" cols="150"></textarea><br /><br /><span class="btn btn-info btn-lg botonCorreo" value="' . $arregloImprimirPares[$student][$tupla][23] . '" type="button">Enviar observaciones</span><td></tr></div>';
 
-            // en caso que tenga el rol correspondiente se añade un campo y un boton para
-            // enviar un mensaje con observaciones tanto al monitor que hizo el seguimiento como al profesional que lo envia
+
+            // If role is OK a field and a button will be added to send messages to both monitor and profesional
 
             $stringRetornar.= '</tbody></table></div></div></div></div>';
         }

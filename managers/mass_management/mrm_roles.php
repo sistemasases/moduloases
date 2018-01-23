@@ -1,4 +1,27 @@
 <?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
+/**
+ * Ases block
+ *
+ * @author     John Lourido
+ * @package    block_ases
+ * @copyright  2017 John Lourido <jhonkrave@gmail.com>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 require_once(dirname(__FILE__). '/../../../../config.php');
 require_once('../MyException.php');
 require_once('massmanagement_lib.php');
@@ -14,10 +37,10 @@ if( isset($_FILES['file']) || isset($_POST['idinstancia'])){
         $nombre = $archivo['name'];
   
         $rootFolder    = "../../view/archivos_subidos/mrm/roles/files/";
-        $zipFolfer = "../view/archivos_subidos/mrm/roles/comprimidos/";
+        $zipFolfer = "../../view/archivos_subidos/mrm/roles/comprimidos/";
 
         
-        //se limpian las carpetas
+        //deletes everything from folders
         deleteFilesFromFolder($rootFolder);
         deleteFilesFromFolder($zipFolfer);
 
@@ -40,9 +63,9 @@ if( isset($_FILES['file']) || isset($_POST['idinstancia'])){
         $lc_wrongFile =2;
         
         $titlesPos = fgetcsv($handle, 0, ",");
-        array_push($detail_erros,$titlesPos);
+        array_push($wrong_rows,$titlesPos);
         array_push($success_rows,$titlesPos);
-        
+         
         $associativeTitles = getAssociativeTitles($titlesPos);
         
         
@@ -52,14 +75,14 @@ if( isset($_FILES['file']) || isset($_POST['idinstancia'])){
             $isValidRow = true;
             $seguimientoid = 0;
             
-            //*** Incio validaciones campos requeridos
+            //*** begin validations on required fields
             
             $username=0;
-            //validacion existencia del usuario
+            //validation id
             if($associativeTitles['username'] !== null){
                 $sql_query = "SELECT username from {user} where username like '".$data[$associativeTitles['username']]."%';";
                 $result = $DB->get_record_sql($sql_query);
-                
+                 
                 
                 if(!$result){
                     $isValidRow = false;
@@ -72,10 +95,10 @@ if( isset($_FILES['file']) || isset($_POST['idinstancia'])){
             }
             
             
-            //validacion existencia del usuario
+            //validating user exists
             if($associativeTitles['rol'] !== null){
                 
-                //valida si el rol es permitido
+                //validating rol permissions
                 
                 if(validateRole($data[$associativeTitles['rol']])){
                     
@@ -101,7 +124,7 @@ if( isset($_FILES['file']) || isset($_POST['idinstancia'])){
             $nombre_rol = null;
             if($associativeTitles['rol'] !== null){
                 
-                //valida si el rol es permitido
+                //validating rol permissions
                 
                 if(validateRole($data[$associativeTitles['rol']])){
                     
@@ -128,7 +151,7 @@ if( isset($_FILES['file']) || isset($_POST['idinstancia'])){
             
             
             $username_jefe=null;
-            //validacion existencia del usuario
+            //validating user exists
             if($associativeTitles['jefe'] !== null){
                 $sql_query = "SELECT username from {user} where username like '".$data[$associativeTitles['jefe']]."%';";
                 $result = $DB->get_record_sql($sql_query);
@@ -144,7 +167,7 @@ if( isset($_FILES['file']) || isset($_POST['idinstancia'])){
 
 
             
-            //** Fin validaciones Campos requeridos
+            //** End validations on required fields
             
             if(!$isValidRow){
                 $lc_wrongFile++;
@@ -178,7 +201,7 @@ if( isset($_FILES['file']) || isset($_POST['idinstancia'])){
             $filewrongname = $rootFolder.'RegistrosErroneos_'.$nombre;
             
             $wrongfile = fopen($filewrongname, 'w');                              
-            fprintf($wrongfile, chr(0xEF).chr(0xBB).chr(0xBF)); // darle formato unicode utf-8
+            fprintf($wrongfile, chr(0xEF).chr(0xBB).chr(0xBF)); // feed utf-8 unicode format on
             foreach ($wrong_rows as $row) {
                 fputcsv($wrongfile, $row);              
             }
@@ -188,7 +211,7 @@ if( isset($_FILES['file']) || isset($_POST['idinstancia'])){
             $detailsFilename =  $rootFolder.'DetallesErrores_'.$nombre;
             
             $detailsFileHandler = fopen($detailsFilename, 'w');
-            fprintf($detailsFileHandler, chr(0xEF).chr(0xBB).chr(0xBF)); // darle formato unicode utf-8
+            fprintf($detailsFileHandler, chr(0xEF).chr(0xBB).chr(0xBF)); // feed utf-8 unicode format on
             foreach ($detail_erros as $row) {
                 fputcsv($detailsFileHandler, $row);              
             }
@@ -196,11 +219,11 @@ if( isset($_FILES['file']) || isset($_POST['idinstancia'])){
             
         }
         
-        if(count($success_rows) > 1){ //porque la primera fila corresponde a los titulos no datos
+        if(count($success_rows) > 1){ //First row are titles
             $arrayIdsFilename =  $rootFolder.'RegistrosExitosos_'.$nombre;
             
             $arrayIdsFileHandler = fopen($arrayIdsFilename, 'w');
-            fprintf($arrayIdsFileHandler, chr(0xEF).chr(0xBB).chr(0xBF)); // darle formato unicode utf-8
+            fprintf($arrayIdsFileHandler, chr(0xEF).chr(0xBB).chr(0xBF)); // feed utf-8 unicode format on
             foreach ($success_rows as $row) {
                 fputcsv($arrayIdsFileHandler, $row);              
             }
@@ -208,7 +231,7 @@ if( isset($_FILES['file']) || isset($_POST['idinstancia'])){
             
             $response = new stdClass();
             
-            if(count($wrong_rows) > 0){
+            if(count($wrong_rows) > 1){
                 $response->warning = 'Archivo cargado con inconsistencias<br> Para mayor informacion descargar la carpeta con los detalles de inconsitencias.'; 
             }else{
                 $response->success = 'Archivo cargado satisfactoriamente';
@@ -216,8 +239,10 @@ if( isset($_FILES['file']) || isset($_POST['idinstancia'])){
             
             $zipname = $zipFolfer."detalle.zip";
             createZip($rootFolder, $zipname);
+
+            $zipname = explode("..", $zipname)[2];            
             
-            $response->urlzip = "<a href='$zipname'>Descargar detalles</a>";
+            $response->urlzip = "<a target='_blank' href='..$zipname'>Descargar detalles</a>";
             
             echo json_encode($response);
             
@@ -228,7 +253,9 @@ if( isset($_FILES['file']) || isset($_POST['idinstancia'])){
             $zipname = $zipFolfer."detalle.zip";
             createZip($rootFolder, $zipname);
             
-            $response->urlzip = "<a href='$zipname'>Descargar detalles</a>";
+            $zipname = explode("..", $zipname)[2];
+
+            $response->urlzip = "<a target='_blank': href='..$zipname'>Descargar detalles</a>";
             
             echo json_encode($response);
         }
@@ -250,6 +277,13 @@ if( isset($_FILES['file']) || isset($_POST['idinstancia'])){
     echo json_encode('no entro');
 }
 
+/**
+ * Creates an associative array given a header from a CSV file
+ * 
+ * @see getAssociativeTitles ($titlesPos)
+ * @param $titlesPos --> header from CSV
+ * @return array --> Associative array with 'username', 'rol' and 'jefe' fields on it
+ */
 function getAssociativeTitles ($titlesPos){
     
     $associativeTitles = array();
@@ -276,6 +310,14 @@ function getAssociativeTitles ($titlesPos){
     
     return $associativeTitles;
 }
+
+/**
+ * Validates if a given rol is a 'sistemas' one
+ * 
+ * @see validateRole($role)
+ * @param $role --> role to validate
+ * @return boolean false if it's sistemas role, true otherwise
+ */
 
 function validateRole($role){
     if($role != 'sistemas'){

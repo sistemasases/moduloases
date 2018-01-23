@@ -1,7 +1,39 @@
 <?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
+
+/**
+ * Estrategia ASES
+ *
+ * @author     Juan Pablo Moreno Muñoz
+ * @package    block_ases
+ * @copyright  2017 Juan Pablo Moreno Muñoz <moreno.juan@correounivalle.edu.co>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 
 require_once(dirname(__FILE__). '/../../../../config.php');
 
+ /**
+ * Functions that returns the current semester in a given interval
+ * 
+ * @see get_current_semester_byinterval($fecha_inicio,$fecha_fin)
+ * @param $fecha_inicio ---> starting date
+ * @param $fecha_fin ---> ending date
+ * @return object that represents the semester within the given interval
+ */
 
  function get_current_semester_byinterval($fecha_inicio,$fecha_fin){
      
@@ -13,10 +45,10 @@ require_once(dirname(__FILE__). '/../../../../config.php');
  }
 
 /**
- * Función que retorna el semestre actual 
+ * Function that returns the current semester
  * 
  * @see get_current_semester()
- * @return cadena de texto que representa el semestre actual
+ * @return  object that represents the current semester
  */
  
  function get_current_semester(){
@@ -29,11 +61,11 @@ require_once(dirname(__FILE__). '/../../../../config.php');
  }
 
  /**
- * Función que retorna el intervalo que define un semestre dado su ID 
+ * Function that returns the interval that represents a semester by its ID
  * 
  * @see get_semester_interval($id)
- * @param $id ---> id del semestre
- * @return cadena de texto que representa el semestre actual
+ * @param $id ---> semester's id
+ * @return object that represents the semester 
  */
  
  function get_semester_interval($id){
@@ -47,10 +79,10 @@ require_once(dirname(__FILE__). '/../../../../config.php');
 
 
  /**
- * Función que retorna todos los semestres que se encuentran registrados en la base de datos
+ * Function that returns all registered semesters
  * 
  * @see get_all_semesters()
- * @return arreglo que contiene todos los semestres que se han traído de la base de datos * 
+ * @return array that contains every semester registered on the DataBase
  */
 
  function get_all_semesters(){
@@ -67,10 +99,11 @@ require_once(dirname(__FILE__). '/../../../../config.php');
 
 
  /**
- * Función que retorna un semestre dado un identificador
+ * Function that returns a semester given its id
+ * 
  * @see get_semester_by_id($idSemester)
- * @param $idSemester -> identificador del semestre
- * @return objeto que representa el semestre	 
+ * @param $idSemester -> semester's id
+ * @return object that represents certain information about the specific semester
  */
 
 
@@ -90,11 +123,12 @@ require_once(dirname(__FILE__). '/../../../../config.php');
  }
 
  /**
- * Función que actualiza la información de un semestre
+ * Function which updates the information of a semester
+ * 
  * @see update_semester($semesterInfo, $idSemester)
- * @param $semesterInfo -> arreglo con la nueva información del semestre
- * @param $idSemester -> identificador del semestre
- * @return boolean
+ * @param $semesterInfo -> array with the new information of a semester
+ * @param $idSemester -> semester's id
+ * @return boolean true if it was updated, false it wasn't
  */
 
  function update_semester($semesterInfo, $idSemester){
@@ -123,6 +157,12 @@ require_once(dirname(__FILE__). '/../../../../config.php');
 
  }
 
+ /**
+ * Function that returns every semester, change its language and date-format to spanish 
+ * 
+ * @see get_all_semesters_table()
+ * @return array
+ */
  
  function get_all_semesters_table(){
      global $DB;
@@ -149,6 +189,15 @@ require_once(dirname(__FILE__). '/../../../../config.php');
 
  }
 
+/**
+ * Function which creates a new semester
+ * 
+ * @see create_semester($name, $beginning_date, $ending_date)
+ * @param $name -> name of the semester
+ * @param $beginning_date -> semester's starting date
+ * @param $ending_date -> semester's ending date
+ * @return string
+ */
 
  function create_semester($name, $beginning_date, $ending_date){
 
@@ -166,15 +215,28 @@ require_once(dirname(__FILE__). '/../../../../config.php');
 
  }
 
+ /**
+  * Function that returns the semester id given its name
+  * 
+  * @see get_semester_id_by_name($semester_name)
+  * @param $semester_name -> name of the semester to be found
+  * @return Integer 
+  */
+ function get_semester_id_by_name($semester_name){
 
+    global $DB;
 
+    $sql_query = "SELECT id FROM {talentospilos_semestre} WHERE nombre = '$semester_name'";
+    $result = $DB->get_record_sql($sql_query);
 
+    if($result){
 
+        $semester_id = $result->id;
+        return $semester_id;
 
+    }else{
 
+        return false;
 
-
-
-
-
-
+    }
+}

@@ -1,4 +1,29 @@
 <?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
+
+/**
+ * Estrategia ASES
+ *
+ * @author     Isabella Serna Ramírez
+ * @package    block_ases
+ * @copyright  2017 Isabella Serna Ramírez <isabella.serna@correounivalle.edu.co>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
 require_once(dirname(__FILE__).'/../../../../config.php');
 require_once('../MyException.php');
 require_once ('../lib/student_lib.php');
@@ -8,12 +33,12 @@ require_once('../pilos_tracking/pilos_tracking_lib.php');
 
 
 /**
- * Función que los estudiantes que están relacionados con un monitor especifico en una instancia.
+ * Obtains all students related with a given monitor monitor 
  *
  * @see get_grupal_students($id_monitor, $idinstancia)
- * @param  $id_monitor --> id del monitor
- * @param  $id_monitor --> id de la instancia
- * @return Array 
+ * @param  $id_monitor --> monitor id
+ * @param  $idinstancia --> instance id
+ * @return array with students 
  */
 
 function get_grupal_students($id_monitor, $idinstancia){
@@ -35,12 +60,13 @@ function get_grupal_students($id_monitor, $idinstancia){
 
 
 /**
- * Función que obtiene un seguimiento dado un id del monitor {talentospilos_seguimiento}, el tipo de seguimiento y la instancia
+ * Obtains a track given the monitor id, track type (seguimiento) and instance
+ * 
  * @see get_tracking_by_monitor($id_monitor, $id_seg= null, $tipo, $idinstancia)
- * @param $id_monitor = id de monitor
- * @param $id_seg = id del seguimiento
- * @param $tipo  = tipo del seguimiento
- * @param $idinstancia  = id de la instancia
+ * @param $id_monitor --> monitor id
+ * @param $id_seg --> track id
+ * @param $tipo --> track type
+ * @param $idinstancia --> instance type
  * @return array
  */
  
@@ -62,10 +88,10 @@ function get_tracking_by_monitor($id_monitor, $id_seg= null, $tipo, $idinstancia
 }
 
 /**
- * Función que elimina un registro grupal tanto en las tablas {talentospilos_seg_estudiante} {talentospilos_seguimientos} dado un id de seguimiento.
+ * Deletes a groupal tracking on {talentospilos_seg_estudiante} {talentospilos_seguimientos} tables given a track id
  * @see delete_seguimiento_grupal($id)
- * @param $id = id del seguimiento
- * @return boolean
+ * @param $id = track id
+ * @return boolean --> True if it's successul, false otherwise
  */
 
 function delete_seguimiento_grupal($id){
@@ -80,10 +106,10 @@ function delete_seguimiento_grupal($id){
 }
 
 /**
- * Función que consulta el seguimiento de tipo GRUPAL dado un id {talentospilos_seg_estudiante}
+ * Gets a groupal track given its id
  * @see getEstudiantesSegGrupal($id_seg)
- * @param $id_seg = id del seguimiento
- * @return Array
+ * @param $id_seg --> track id
+ * @return array
  */
 
 function getEstudiantesSegGrupal($id_seg){
@@ -93,11 +119,12 @@ function getEstudiantesSegGrupal($id_seg){
 }
 
 /**
- * Función que elimina un seguimiento 
- * dado su id_seguimiento e id_estudiante
- * {talentospilos_seg_estudiante}
+ * Deletes a track given its id and student id
+ * 
  * @see dropTalentosFromSeg($idSeg,$id_est)
- * @return 0 o 1
+ * @param $idSeg --> track id
+ * @param $id_est --> Student id
+ * @return integer --> 1 if it's successful, 0 otherwise
  */
 function dropTalentosFromSeg($idSeg,$id_est){
     global $DB;
@@ -106,11 +133,11 @@ function dropTalentosFromSeg($idSeg,$id_est){
 }
 
 /**
- * Función que inserta un seguimiento 
- * dado su id_seguimiento e id_estudiante
- * {talentospilos_seg_estudiante}
+ * Inserts a track given its id and student id
  * @see insertSegEst($id_seg,$id_est)
- * @return 0 o 1
+ * @param $id_seg --> track id
+ * @param $id_est --> student id
+ * @return integer --> 1 if it's successful, 0 otherwise
  */
 function insertSegEst($id_seg, $id_est){
     global $DB;
@@ -127,9 +154,10 @@ function insertSegEst($id_seg, $id_est){
 
 
 /**
- * Función que inserta un seguimiento 
- * {talentospilos_seguimiento}
- * @see insertSeguimiento($object)
+ * Inserts a track given the track object and student id
+ * @see insertSeguimiento($object, $id_est)
+ * @param $object --> Track object
+ * @param $id_est --> student id
  * @return true
  */
 
@@ -137,10 +165,10 @@ function insertSeguimiento($object, $id_est){
     global $DB;
     $id_seg = $DB->insert_record('talentospilos_seguimiento', $object,true);
     
-    //se relaciona el seguimiento con el estudiant
+    // Track is related with the student 
     insertSegEst($id_seg, $id_est);
     
-    //se actualiza el riesgo
+    //Risk is updated
     if($object->tipo == 'PARES'){
         foreach ($id_est as $idStudent) {
             updateRisks($object, $idStudent);
@@ -151,11 +179,13 @@ function insertSeguimiento($object, $id_est){
 }
 
 /**
- * Función que obtiene un seguimiento
- * ordenado por semestre {talentospilos_semestre}
- * {user_info_field} {user_info_data}
+ * Gets a track sorted by semester
  * @see getSeguimientoOrderBySemester($id_est = null, $tipo,$idsemester = null, $idinstancia = null)
- * @return array
+ * @param $id_est = null --> student id
+ * @param $tipo --> track type
+ * @param $idsemester = null --> semester id
+ * @param $idinstancia = null --> instance id
+ * @return object with average grades and tracks 
  */
  
 function getSeguimientoOrderBySemester($id_est = null, $tipo,$idsemester = null, $idinstancia = null){
@@ -243,10 +273,11 @@ function getSeguimientoOrderBySemester($id_est = null, $tipo,$idsemester = null,
 
 
 /**
- * Función que obtiene el rol de un usuario
- * dado un id moodle y id instancia {talentospilos_user_rol} {talentospilos_rol}
+ * Gets an user role given a moodle id and instance id
  * @see get_role_user($id_moodle, $idinstancia)
- * @return object
+ * @param $id_moodle --> moodle user id
+ * @param $idinstancia --> instance id
+ * @return object representing the user role
  */
 function get_role_user($id_moodle, $idinstancia)
 {
@@ -257,9 +288,10 @@ function get_role_user($id_moodle, $idinstancia)
 }
 
 /**
- * Función que obtiene permisos del rol
- * {talentospilos_permisos_rol} {talentospilos_funcionalidad}
+ * Gets role permissions given a role id and page
  * @see get_permisos_role($idrol,$page)
+ * @param $idrol --> role id
+ * @param $page
  * @return array
  */
 function get_permisos_role($idrol,$page){
@@ -300,10 +332,12 @@ function get_permisos_role($idrol,$page){
 }
 
 /**
- * Función que obtiene seguimientos dado
- * el id_estudiante, id_seguimiento, tipo_seguimiento y id_instancia
- * {talentospilos_seguimiento}{talentospilos_seg_estudiante} 
+ * Gets a track given its id, type, student id and instance id
  * @see getSeguimiento($id_est, $id_seg, $tipo, $idinstancia)
+ * @param $id_est --> student id
+ * @param $id_seg --> track id
+ * @param $tipo --> track type
+ * @param $idinstancia --> instance id
  * @return array
  */
 function getSeguimiento($id_est, $id_seg, $tipo, $idinstancia){
@@ -345,11 +379,10 @@ function getSeguimiento($id_est, $id_seg, $tipo, $idinstancia){
 }
 
 /**
- * Función que obtiene el usuario de Moodle
- * deacuerdo al ID
- * {user}
+ * Gets a moodle user given his id
  * @see getUserMoodleByid($id)
- * @return object
+ * @param $id --> user id
+ * @return object representing the user
  */
 function getUserMoodleByid($id){
     global $DB;
@@ -359,14 +392,13 @@ function getUserMoodleByid($id){
 
 
 /**
- * Función que recupera la información de la tabla de seguimientos grupales (estudiantes
- * respectivos que asistieron a ella -firstname-lastname-username y id ).
+ * Recovers information from groupal trackings table ({talentospilos_seguimiento})
  *
  * @see get_students_assistance($id,$tipo,$instancia)
- * @param id --> id correspondiente a la id del estudiante.
- * @param type--> tipo correspondiente a "GRUPAL".
- * @param instance --> instancia 
- * @return array con información de los nombres de los estudiantes que tuvieron un seguimiento grupal dado un idseguimiento.
+ * @param $id --> student id
+ * @param $type --> Type representing "GRUPAL"
+ * @param $instance --> instance id
+ * @return array with student information that were part of a groupal tracking (seguimiento grupal)
  */
 
 function get_students_assistance($id,$type,$instance){
@@ -378,8 +410,8 @@ function get_students_assistance($id,$type,$instance){
     
     foreach($registros as $registro){
         
-        $estudiante->id = get_id_user_moodle($registro->id_estudiante); //obtiene el id del estudiante.
-        $nombres_estudiantes = " SELECT id, username,firstname,lastname FROM {user} where id='$estudiante->id'"; //obtiene el nombre y el apellido dado el código del estudiante.
+        $estudiante->id = get_id_user_moodle($registro->id_estudiante); //Gets student id.
+        $nombres_estudiantes = " SELECT id, username,firstname,lastname FROM {user} where id='$estudiante->id'"; //Gets name and lastname given the user id
         $registros_nombres=$DB->get_records_sql($nombres_estudiantes);
 
         foreach($registros_nombres as $registro_nombre){
@@ -395,13 +427,13 @@ function get_students_assistance($id,$type,$instance){
 }
 
 /**
- * Función que recupera la información de la tabla de seguimientos grupales dado un id.
+ * Recovers information from groupal trackings table given an id
  *
  * @see get_seguimientos($id,$tipo,$instancia)
- * @param id --> id correspondiente a la id del estudiante.
- * @param tipo--> tipo correspondiente a "GRUPAL".
- * @param instancia --> instancia 
- * @return array con información de seguimiento grupal dado un idseguimiento.
+ * @param $id --> student id
+ * @param $tipo --> Type representing "GRUPAL"
+ * @param $instancia --> instance id
+ * @return array with groupal tracking information given an id
  */
 
 function get_seguimientos($id,$tipo,$instancia){
@@ -419,11 +451,11 @@ function get_seguimientos($id,$tipo,$instancia){
 
 
 /**
- * Función que retorna el id del profesional asignado a un estudiante
- *
+ * Gets the profesional id assigned to a student
+ * 
  * @see get_id_assigned_professional($id_student)
- * @parameters $id_student int Id relacionado en la tabla {talentospilos_usuario}
- * @return int Returns professional id or 0 if the student does not have a professional assigned
+ * @param $id_student --> student id
+ * @return integer Returns professional id or 0 if the student does not have a professional assigned
  */
  
  function get_id_assigned_professional($id_student){
@@ -454,11 +486,11 @@ function get_seguimientos($id,$tipo,$instancia){
  }
  
  /**
- * Función que retorna el id de practicante asignado a un estudiante
+ * Gets the practicant id assigned to a student
  *
  * @see get_id_assigned_pract($id_student)
- * @parameters $id_student int Id relacionado en la tabla {talentospilos_usuario}
- * @return String Nombre completo del practicante asignado
+ * @param $id_student --> student id
+ * @return string practicant fullname
  */
 
  function get_id_assigned_pract($id_student){
@@ -483,10 +515,11 @@ function get_seguimientos($id,$tipo,$instancia){
  }
 
 /**
- * get_user_by_username()
- *
- * @param  $username Moodle username 
- * @return Array user
+ * Gets an user given his username
+ * 
+ * @see get_user_by_username($username)
+ * @param  $username --> Moodle username 
+ * @return array with an object representing the user
  */
 function get_user_by_username($username){
     global $DB;

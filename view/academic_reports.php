@@ -45,7 +45,7 @@ $blockid = required_param('instanceid', PARAM_INT);
 
 require_login($courseid, false);
 
-//se culta si la instancia ya está registrada
+//Instance is consulted for its registration
 if(!consult_instance($blockid)){
     header("Location: /blocks/ases/view/instanceconfiguration.php?courseid=$courseid&instanceid=$blockid");
 }
@@ -85,18 +85,18 @@ $PAGE->requires->css('/blocks/ases/style/academic_reports_style.css', true);
 $PAGE->requires->css('/blocks/ases/style/side_menu_style.css', true);
 $PAGE->requires->js_call_amd('block_ases/academic_reports', 'init');
 
-//Se extrae la informacion a mostrar
+//Information to show
 $data = new stdClass;
 
-//se crean los elementos del menu
+//Menu items are created
 $menu_option = create_menu_options($USER->id, $blockid, $courseid);
 
-// Evalua si el rol del usuario tiene permisos en esta view.
+//Evaluates if user role has permissions assigned on this view
 $actions = authenticate_user_view($USER->id, $blockid);
 $data = $actions;
 
 $data->tableStudents = getReportStudents($blockid);
-$data->tableCourses = get_courses_report();
+$data->tableCourses = get_courses_report($USER->id);
 $data->menu = $menu_option;
 
 $output = $PAGE->get_renderer('block_ases');

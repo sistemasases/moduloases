@@ -1,13 +1,42 @@
 <?php
 
-require_once(dirname(__FILE__). '/../../../../config.php');
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Función que recupera los programas académicos almacenados en la tabla talentospilos_programa
+ * Talentos Pilos
+ *
+ * @author     Iader E. García Gómez
+ * @author     Juan Pablo Moreno Muñoz
+ * @author     Camilo José Cruz Rivera
+ * @package    block_ases
+ * @copyright  2017 Iader E. García <iadergg@gmail.com>
+ * @copyright  2017 Juan Pablo Moreno Muñoz <moreno.juan@correounivalle.edu.co>
+ * @copyright  2017 Camilo José Cruz Rivera <cruz.camilo@correounivalle.edu.co>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
+require_once(dirname(__FILE__). '/../../../../config.php');
+require_once $CFG->dirroot.'/blocks/ases/managers/periods_management/periods_lib.php'; 
+
+
+/**
+ * Gets all academic programs that are stored on talentospilos_programa table
  *
  * @see load_programs()
- * @param void
- * @return Array --> Arreglo con los programas académicos (id, codigo_snies, codigo_univalle, nombre, id_sede, jornada, id_facultad)
+ * @return array -->Array with every academic program (id, codigo_snies, codigo_univalle, nombre, id_sede, jornada, id_facultad)
  */
 function load_programs(){
     
@@ -20,12 +49,10 @@ function load_programs(){
 }
 
 /**
- * Función que recupera los programas académicos almacenados en la tabla talentospilos_programa que 
- * corresponden a la sede CALI
+ * Gets all academic programs that are stored on talentospilos_programa table corresponding to CALI city
  *
  * @see load_programs_cali()
- * @param void
- * @return Array --> Arreglo con los programas académicos (id, codigo_snies, codigo_univalle, nombre, id_sede, jornada, id_facultad)
+ * @return array --> Array with every academic program  (id, codigo_snies, codigo_univalle, nombre, id_sede, jornada, id_facultad)
  */
 function load_programs_cali(){
     
@@ -41,11 +68,11 @@ function load_programs_cali(){
 }
 
 /**
- * Función que busca un usuario Moodle dado el username
+ * Returns an user given his moodle username
  *
- * @see search_user()
- * @param void
- * @return Array --> Arreglo con los datos del usuario Moodle consultado
+ * @see search_user($username)
+ * @param $username
+ * @return object --> Object representing the user
  */
  function search_user($username){
      
@@ -58,10 +85,11 @@ function load_programs_cali(){
  }
 
  /**
- * Funcion que evalua si un usuario es monitor o practicante y de ser asi retorna true.
+ * Evaluates wheter a user is a practicant or monitor
  * 
- * @param $USER
- * @return bool  
+ * @see isMonOrPract($USER)
+ * @param $USER --> Object user
+ * @return bool --> True if it's a practicant or monitor, false otherwise 
  */
 function isMonOrPract($USER){
     global $DB;
@@ -78,28 +106,32 @@ function isMonOrPract($USER){
 }
 
 /**
-* Funcion que retorna el rol en ases de un usuario dado el id de moodle.
-*
-* @param $id
-* @return String-> $rol
+* Gets an ASES user role given his moodle id
+* 
+* @see get_role_ases($id)
+* @param $id --> user moodle id
+* @return string --> containing user role
 */
 function get_role_ases($id){
     global $DB;
+
+    $semestre = get_current_semester();
+    $id_semestre = $semestre->max;
   
-    $query_role = "SELECT rol.nombre_rol  FROM {talentospilos_rol} rol INNER JOIN {talentospilos_user_rol} uRol ON rol.id = uRol.id_rol WHERE uRol.id_usuario = $id AND uRol.id_semestre = (SELECT max(id_semestre) FROM {talentospilos_user_rol})";
+    $query_role = "SELECT rol.nombre_rol  FROM {talentospilos_rol} rol INNER JOIN {talentospilos_user_rol} uRol ON rol.id = uRol.id_rol WHERE uRol.id_usuario = $id AND uRol.id_semestre = $id_semestre";
     $rol = $DB->get_record_sql($query_role)->nombre_rol;
   
     return $rol;
   }
 
-  
 
-/**
-* Funcion que retorna un select con los estudiantes asignados a un usuario de rol profesional, practicante, o monitor y "ROL NO PERMITIDO" si es otro rol.
-*
-* @param $id
-* @return String-> $select
-*/
+/** 
+ * Returns a select with every student that's been assigned to a 'profesional', 'practicante' or monitor and "ROL NO PERMITIDO" in case of different role
+ *
+ * @see make_select_ficha($id)
+ * @param $id --> student id
+ * @return string --> Containing the previous select
+ */
 function make_select_ficha($id){
     global $DB;
   
@@ -108,13 +140,13 @@ function make_select_ficha($id){
     $asign = "<select name = 'asignados' id = 'asignados'><option>Seleccione un estudiante</option>";
 
     if($rol == 'profesional_ps'){
-        $asign .= get_asigned_by_profesional($id);
+        $asign .= process_info_assigned_students(get_asigned_by_profesional($id));
 
     }elseif($rol == 'practicante_ps'){
-        $asign .= get_asigned_by_practicante($id);
+        $asign .= process_info_assigned_students(get_asigned_by_practicante($id));
 
     }elseif($rol == 'monitor_ps'){
-        $asign .= get_asigned_by_monitor($id);
+        $asign .= process_info_assigned_students(get_asigned_by_monitor($id));
     }else{
         $asign = "ROL NO PERMITIDO";
         return $asign;
@@ -124,81 +156,117 @@ function make_select_ficha($id){
   }
 
 /**
-* Funcion que retorna los estudiantes asignados a un usuario de rol monitor
-*
-* @param $id
-* @return String-> $asign
-*/
+  * Gets all students assigned to a monitor 
+  *
+  * @see get_asigned_by_monitor($id)
+  * @param $id --> monitor id
+  * @return string --> with every student
+  */
 
 function get_asigned_by_monitor($id){
     global $DB;
 
+    $semestre = get_current_semester();
+    $id_semestre = $semestre->max;
+
+
     $query = "SELECT user_m.username, user_m.firstname, user_m.lastname
               FROM {user} user_m
-              INNER JOIN {user_info_data} data ON data.userid = user_m.id
-              INNER JOIN {user_info_field} field ON data.fieldid = field.id
-              INNER JOIN {talentospilos_monitor_estud} mon_es ON data.data = CAST(mon_es.id_estudiante AS VARCHAR)
-              WHERE mon_es.id_monitor = $id AND field.shortname = 'idtalentos'";
-    $asign = "";
+              INNER JOIN {talentospilos_user_extended} extended ON user_m.id = extended.id_moodle_user
+              INNER JOIN {talentospilos_monitor_estud} mon_es ON extended.id_ases_user = mon_es.id_estudiante
+              WHERE mon_es.id_monitor = $id AND field.shortname = 'idtalentos' AND mon_es.id_semestre = $id_semestre";
 
     $result = $DB->get_records_sql($query);
-    foreach($result as $student){
-        $asign .= "<option>$student->username $student->firstname $student->lastname </option>";
-    }
-    return $asign;
+    
+    return $result;
 }
 
+//print_r(get_asigned_by_monitor(76));
+
 /**
-* Funcion que retorna los estudiantes asignados a un usuario de rol practicante
+* Gets all students assigned to a 'practicante' 
 *
-* @param $id
-* @return String-> $asign
+* @see get_asigned_by_practicante($id)
+* @param $id --> practicant id
+* @return string --> with every student
 */
 
 function get_asigned_by_practicante($id){
     global $DB;
+
+    $semestre = get_current_semester();
+    $id_semestre = $semestre->max;
+
     $query = "SELECT rol.id_usuario
               FROM {talentospilos_user_rol} rol
-              WHERE rol.id_jefe = $id";
-    $asign = "";
+              WHERE rol.id_jefe = $id AND rol.id_semestre = $id_semestre";
+
+    $students = array();
 
     $result = $DB->get_records_sql($query);
 
     foreach($result as $id_mon){
-        $asign .= get_asigned_by_monitor($id_mon->id_usuario);
+        $students = array_merge($students, get_asigned_by_monitor($id_mon->id_usuario));
     }
-    return $asign;
+    return $students;
 }
 
+//print_r(get_asigned_by_practicante(121));
+
 /**
-* Funcion que retorna los estudiantes asignados a un usuario de rol profesional
-*
-* @param $id
-* @return String-> $asign
+ * Gets all students assigned to a 'profesional'  
+ *
+ * @see get_asigned_by_profesional($id)
+ * @param $id --> professional id
+ * @return string --> with every student
 */
 
 function get_asigned_by_profesional($id){
     global $DB;
+
+    $semestre = get_current_semester();
+    $id_semestre = $semestre->max;
+
     $query = "SELECT rol.id_usuario
               FROM {talentospilos_user_rol} rol
-              WHERE rol.id_jefe = $id";
-    $asign = "";
+              WHERE rol.id_jefe = $id AND rol.id_semestre = $id_semestre";
+    
+    $students = array();
 
     $result = $DB->get_records_sql($query);
 
     foreach($result as $id_prac){
-        $asign .= get_asigned_by_practicante($id_prac->id_usuario);
+        $students = array_merge($students, get_asigned_by_practicante($id_prac->id_usuario));
     }
-    return $asign;
+    return $students;
+}
+
+//print_r(get_asigned_by_profesional(122));
+
+/**
+ * Function that process the information contained in an array of students and returns a string with option html elements
+ * @see process_info_assigne_students($array_students)
+ * @param $array_students -> array which contains several student objects 
+ * @return string containing the students information
+ */
+
+function process_info_assigned_students($array_students){
+    $assign = "";
+
+    foreach($array_students as $student){
+        $assign .= "<option>$student->username $student->firstname $student->lastname </option>";
+    }
+    return $assign;
+
 }
 
 
-
 /**
-* Función que retorna el semestre actual considerando la fecha actual
-*
-* @param void
-* @return semester array object or zero if error
+ *
+ * Returns current semester considering current date
+ * 
+ * @see get_current_semester_today()
+ * @return array -->  array object or zero if error
 */
 
 function get_current_semester_today(){

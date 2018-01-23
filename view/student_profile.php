@@ -86,7 +86,7 @@ $rol = get_role_ases($USER->id);
 
 if ($student_code != 0) {
 
-    // Inicializa la variable a pasar por contexto
+    // Initialize context variable
     $record = new stdClass;
 
     $ases_student = get_ases_user_by_code($student_code);
@@ -96,7 +96,7 @@ if ($student_code != 0) {
     $student_status_ases = get_student_ases_status($student_id);
     $student_status_icetex = get_student_icetex_status($student_id);
 
-    // Carga de estados disponibles
+    // Loading available states
 
     $ases_status_array = get_status_ases();
     $icetex_status_array = get_status_icetex();
@@ -125,7 +125,7 @@ if ($student_code != 0) {
     $record->status_ases = $html_status_ases;
     $record->status_icetex = $html_status_icetex;
 
-    // Información del estudiante para la cabecera de la ficha
+    // Student information to display on file header (ficha)
 
     $id_user_moodle = get_id_user_moodle($ases_student->id);
 
@@ -139,7 +139,7 @@ if ($student_code != 0) {
 
     $faculty = get_faculty($academic_program->id_facultad);
 
-    // Evalua si el rol del usuario tiene permisos en esta view.
+    // Evaluates if user role has permissions assigned on this view
     $actions = authenticate_user_view($USER->id, $blockid);
     $record = $actions;
     
@@ -169,9 +169,9 @@ if ($student_code != 0) {
             break;
     }
 
-    /**
-     * Información para la ficha general
-     */
+    
+    // General file (ficha general) information
+     
 
     $record->res_address = $ases_student->direccion_res;
     $record->init_tel = $ases_student->tel_ini;
@@ -205,9 +205,9 @@ if ($student_code != 0) {
         $record->professional_fullname = "NO REGISTRA";
     }
 
-    /**
-     * Información geográfica
-     */
+    
+    // Geographic information
+     
 
     $geographic_tab_html = file_get_contents('../templates/geographic_tab.html');
     $record->geographic_tab = $geographic_tab_html;
@@ -262,9 +262,9 @@ if ($student_code != 0) {
             break;
     }
 
-    /**
-     * Riesgos asociados al estudiante
-     */
+    
+     // Students risks
+     
 
     $risk_object = get_risk_by_student($student_id);
 
@@ -356,9 +356,7 @@ if ($student_code != 0) {
         $record->code = $select;
     }
 
-    /**
-     * Carga de información academica
-     **/
+    // Loading academic information
 
     $html_academic_table = get_grades_courses_student_last_semester($id_user_moodle);
 
@@ -374,9 +372,7 @@ if ($student_code != 0) {
     }
 }
 
-/**
- * Seguimientos asociados al estudiante
- */
+// Student trackings (Seguimientos)
 
 $html_tracking_peer = "";
 $array_peer_trackings = get_tracking_group_by_semester($student_id, 'PARES', null, $blockid);
@@ -416,7 +412,7 @@ if ($array_peer_trackings != null) {
 
             $monitor_object = get_moodle_user($tracking->id_monitor);
 
-            // Formato de la fecha
+            // Date format (Formato de fecha)
             $date = date_parse_from_format('d-m-Y', $tracking->fecha);
             $months = array("Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre");
 
@@ -433,7 +429,7 @@ if ($array_peer_trackings != null) {
             $panel .= "<div id='$tracking->id_seg' class='panel-collapse collapse'>";
             $panel .= "<div class='panel-body'>";
 
-            // Fecha, lugar, hora
+            // Date, Place, time  (Fecha, lugar, hora)
             $panel .= "<div class='panel panel-default'>";
             $panel .= "<div class='panel-body'>";
 
@@ -460,7 +456,7 @@ if ($array_peer_trackings != null) {
             $panel .= "</div>"; // End panel-body
             $panel .= "</div>"; // End div panel panel-default
 
-            // Creado por
+            // Created by (Creado por)
 
             $panel .= "<div class='panel panel-default'>";
             $panel .= "<div class='panel-body'>";
@@ -473,7 +469,7 @@ if ($array_peer_trackings != null) {
             $panel .= "</div>"; // End panel-body
             $panel .= "</div>"; // End div panel panel-default
 
-            // Tema
+            // Subject (Tema)
             $panel .= "<div class='panel panel-default'>";
             $panel .= "<div class='panel-body'>";
 
@@ -488,7 +484,7 @@ if ($array_peer_trackings != null) {
             $panel .= "</div>"; // End panel-body
             $panel .= "</div>"; // End div panel panel-default
 
-            // Objetivos
+            // Objectives (Objetivos)
             $panel .= "<div class='panel panel-default'>";
             $panel .= "<div class='panel-body'>";
 
@@ -618,7 +614,7 @@ if ($array_peer_trackings != null) {
                 $panel .= "</div>"; // End div panel panel-default
             }
 
-            // Observaciones
+            // Observations (observaciones)
             $panel .= "<div class='panel panel-default'>";
             $panel .= "<div class='panel-body'>";
 
@@ -633,7 +629,7 @@ if ($array_peer_trackings != null) {
             $panel .= "</div>"; // End panel-body
             $panel .= "</div>"; // End div panel panel-default
 
-            // Botones de edición y borrado
+            // Edit and delete buttons
             $panel .= "<div class='row'>";
             $panel .= "<div class='col-sm-4 row-buttons-tracking'>";
             $panel .= "<button type='button' class='btn-primary edit_peer_tracking' id='edit_tracking_" . $tracking->id_seg . "'>Editar seguimiento</button>";
@@ -668,9 +664,9 @@ if ($array_peer_trackings != null) {
 
 $record->peer_tracking = $html_tracking_peer;
 
-/**
- * Se cargan los motivos de abandono o aplazamiento de los estudios
- */
+
+// Loading desertion reasons or studies postponement
+ 
 
 $reasons_dropout = get_reasons_dropout();
 
@@ -684,17 +680,17 @@ foreach ($reasons_dropout as $reason) {
 
 $record->reasons_options = $html_select_reasons;
 
-//se crean los elementos del menu
+//Menu items are created
 $menu_option = create_menu_options($USER->id, $blockid, $courseid);
 
 
 $record->menu = $menu_option;
 
-// Obtención de datos para las gráficas de riesgos
+// Getting data for risks graphs
 
 $periodoactual = getPeriodoActual();
 $idEstudiante = $student_id;
-/*La separación de la información se hace aquí, ya que mustache no permite el control avanzado de condicionales*/
+// Mustache doesn't allow advanced conditional control, information detachment occurs here
 $seguimientosEstudianteIndividual = obtenerDatosSeguimientoFormateados($idEstudiante, 'individual', $periodoactual);
 $seguimientosEstudianteFamiliar = obtenerDatosSeguimientoFormateados($idEstudiante, 'familiar', $periodoactual);
 $seguimientosEstudianteAcademico = obtenerDatosSeguimientoFormateados($idEstudiante, 'academico', $periodoactual);
@@ -708,7 +704,7 @@ $record->datosSeguimientoEstudianteAcademico = $seguimientosEstudianteAcademico;
 $record->datosSeguimientoEstudianteEconomico = $seguimientosEstudianteEconomicor;
 $record->datosSeguimientoEstudianteVidaUniversitaria = $seguimientosVidaUniversitaria;
 
-// Fin de obtención de datos para las gráficas de riesgos
+// End of data obtaining for risks graphs 
 
 $PAGE->set_context($contextcourse);
 $PAGE->set_context($contextblock);

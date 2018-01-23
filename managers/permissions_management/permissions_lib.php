@@ -1,14 +1,37 @@
 <?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+
+/**
+ * Estrategia ASES
+ *
+ * @author     Isabella Serna Ramírez
+ * @package    block_ases
+ * @copyright  2017 Isabella Serna Ramírez <isabella.serna@correounivalle.edu.co>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 require_once(dirname(__FILE__) . '/../../../../config.php');
 
 
-//Funcionalidades.
+//Functionalities   
 
 /**
- * Función que obtiene las funcionalidades de la tabla {talentospilos_funcionalidades}
+ * Gets all functionalities from {talentospilos_funcionalidades} table
  * @see get_functions()
- * @return Array
+ * @return array containing the information obtained from db
  **/
 
 function get_functions()
@@ -20,9 +43,9 @@ function get_functions()
 }
 
 /**
- * Función que retorna las funcionalidades con el campo eliminar en el sistema 
+ * Returns all functionalities along the 'eliminar' field on system
  * @see get_functions_table()
- * @return Array
+ * @return array with strings HTML containing every functionality
  **/
 
 function get_functions_table()
@@ -43,10 +66,10 @@ function get_functions_table()
 }
 
 /**
- * Función que obtiene las funcionalidades de la tabla {talentospilos_funcionalidades} por nombre
+ * Gets all functionalities from {talentospilos_funcionalidades} table by name
  * @see get_functions_by_name($name)
- * @param name --> nombre de la funcionalidad
- * @return Object
+ * @param $name --> Functionalityname
+ * @return object With all functionalities
  **/
 
 function get_functions_by_name($name)
@@ -60,13 +83,13 @@ function get_functions_by_name($name)
 
 
 
-//Acciones.
+//Actions.
 
 /**
- * Función que obtiene las accion de la tabla {talentospilos_accion} por nombre
+ * Gets all actions from  {talentospilos_accion} table by name
  * @see  get_action_by_name($name)
- * @param id ---> nombre de la acción
- * @return Object
+ * @param $name ---> action name
+ * @return object representing all actions obtained
  **/
 
 function get_action_by_name($name)
@@ -77,12 +100,13 @@ function get_action_by_name($name)
     return $DB->get_record_sql($sql_query);
 }
 
-/* Función que retorna si deacuerdo al rol el usuario puede hacer una acción especifica
-* @see get_action_by_role($id_action,$id_role)
-* @param $id_action --> id de la accion
-* @param $id_role --> id del rol
-* @return Object
-*/
+/**
+ * Returns true if an user can execute an specific action, false otherwise.
+ * @see get_action_by_role($id_action,$id_role)
+ * @param $id_action --> action id
+ * @param $id_role --> role id
+ * @return boolean
+ */
 function get_action_by_role($id_action,$id_role){
     global $DB;
     $sql_query = "SELECT id_accion,nombre_accion  FROM {talentospilos_permisos_rol}  permisos INNER JOIN {talentospilos_accion}   accion ON permisos.id_accion = accion.id where accion.id='$id_action' and id_rol='$id_role' and estado=1";
@@ -97,10 +121,14 @@ function get_action_by_role($id_action,$id_role){
 }
 
 /**
- * Función que modifica un registro dependiendo si es (accion,funcionalidad,rol)
- * @see modify_record($data)
- * @param data 
- * @return Object
+ * Modifies a record if it's an action, functionalitiy or role.
+ * @see modify_record($id,$table,$nombre,$descripcion,$funcionalidad)
+ * @param $id --> record id
+ * @param $table --> current record
+ * @param $nombre --> name to update
+ * @param $descripcion --> description
+ * @param $funcionalidad --> functionality id
+ * @return object With success or error information
  **/
 
 function modify_record($id,$table,$nombre,$descripcion,$funcionalidad)
@@ -139,10 +167,11 @@ function modify_record($id,$table,$nombre,$descripcion,$funcionalidad)
 
 
 /**
- * Función que obtiene las accion de la tabla {talentospilos_accion} por id
+ * Gets all actions from  {talentospilos_accion} table by id
+ * 
  * @see get_action_by_id($id)
- * @param id ---> id de acción
- * @return Object
+ * @param $id ---> action id
+ * @return object Representing the action
  **/
 
 function get_action_by_id($id)
@@ -154,9 +183,9 @@ function get_action_by_id($id)
 }
 
 /**
- * Función que obtiene las acciones de la tabla {talentospilos_accion}
+ * Gets all actions from  {talentospilos_accion} table
  * @see get_actions()
- * @return Array
+ * @return array of actions
  **/
 
 function get_actions()
@@ -170,9 +199,10 @@ function get_actions()
 }
 
 /**
- * Función que obtiene las acciones relacionadas a una funcionalidad de la tabla {talentospilos_accion}
+ * Gets all actions related to a functionality from  {talentospilos_accion} table 
  * @see  get_actions_function($funcionalidad)
- * @return Array
+ * @param $funcionalidad --> functionality id 
+ * @return array filled of actions
  **/
 
 function get_actions_function($funcionalidad)
@@ -184,10 +214,10 @@ function get_actions_function($funcionalidad)
 }
 
 /**
- * Función que retorna si el id de la acción pertenece a una determinada funcionalidad {talentospilos_accion} y {talentospilos_funcionalidad}
+ * Returns true if a given action belongs to a given functionality, false otherwise.
  * @see is_action_in_functionality($id_action,$id_functionality)
- * @param $id_action --> id de la acción
- * @param $id_functionality --> id de la funcionalidad
+ * @param $id_action --> action id
+ * @param $id_functionality --> functionality id
  * @return boolean
  **/
 
@@ -222,12 +252,12 @@ function get_actions_table()
 
 
 
-//Rol.
+//Role.
 
 /**
- * Función que obtiene los roles de la tabla {talentospilos_rol}
+ * Gets all roles from {talentospilos_rol} table 
  * @see get_roles()
- * @return Array
+ * @return array filled with roles
  **/
 
 function get_roles()
@@ -239,10 +269,10 @@ function get_roles()
 }
 
 /**
- * Función que obtiene los registros de la tabla {talentospilos_permisos_rol} dado un rol 
+ * Gets all records from {talentospilos_permisos_rol} table given a role 
  * @see  get_functions_by_role($id_role)
- * @param $id_role
- * @return Array
+ * @param $id_role --> role id
+ * @return array of records
  **/
 
 function get_functions_by_role($id_role)
@@ -260,10 +290,10 @@ function get_functions_by_role($id_role)
 }
 
 /**
- * Función que retorna el nombre de las funcionalidades asociadas a un rol
+ * Returns all functionalities names given a role
  * @see get_actions_by_role_id($id_role)
- * @param $id_role
- * @return Array
+ * @param $id_role --> role id
+ * @return array with the name of every functionality
  **/
 
 function get_functions_by_role_id($id_role){
@@ -287,9 +317,10 @@ function get_functions_by_role_id($id_role){
 //get_functions_by_role_id(6);
 
 /**
- * Función que retorna los roles con el campo eliminar existentes en el sistema 
+ * Gets all roles with their delete field on system
+ * 
  * @see get_roles_table()
- * @return Array
+ * @return array
  **/
 
 function get_roles_table()
@@ -299,7 +330,12 @@ function get_roles_table()
     $roles_array = get_roles();
     
     foreach ($roles_array as $role) {
+        if($role->nombre_rol=='sistemas'){
+         $role->edit= '   <span class="red glyphicon glyphicon-ban-circle"></span>';
+        
+        }else{
         $role->edit= '   <button type="button" class="red glyphicon glyphicon-pencil"  id="'.$role->id .'" data-toggle="modal" data-target="#edit"></button>';
+    }
         array_push($array, $role);
     }
     return $array;
@@ -308,11 +344,11 @@ function get_roles_table()
 
 
 /**
- * Función cambia de estado a un registro de acciones, perfil 
+ * Changes state of an action record depending of a source
  * @see delete_record($id,$source)
- * @param $id ---> id del registro a eliminar
- * @param $source --> string para identificar en que tabla se elimina el registro
- * @return Array
+ * @param $id ---> record id
+ * @param $source --> record table to delete
+ * @return object with information of the executed change
  **/
 
 function delete_record($id, $source)

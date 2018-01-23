@@ -1,15 +1,23 @@
  /**
-  * @module block_ases/academic_reports
-  */
+ * Academic report management
+ * @module amd/src/academic_reports
+ * @author Camilo José Cruz rivera
+ * @copyright 2017 Camilo José Cruz Rivera <cruz.camilo@correounivalle.edu.co> 
+ * @license  http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 
   define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_ases/datatables.net-buttons', 'block_ases/buttons.flash', 'block_ases/jszip', 'block_ases/pdfmake', 'block_ases/buttons.html5', 'block_ases/buttons.print', 'block_ases/sweetalert2','block_ases/select2', 'block_ases/jqueryui'], function($, bootstrap, datatablesnet, datatablesnetbuttons, buttonsflash, jszip, pdfmake, buttonshtml5, buttonsprint, sweetalert2, select2, jqueryui) {
     
         return {
     
+            /**
+             * 
+             */
             init: function() {
 
                 $(document).ready(function(){
                     
+                    //Gets students and courses data tables
                     $("#students").DataTable();
                     $("#courses").DataTable();
 
@@ -17,6 +25,7 @@
                 
 
                 $(document).on('click', '#students tbody tr td', function() {
+                    //Assign to variables a web page, table (students), column index selected, student code (obtained by table), username (student id)
                     var pagina = "student_profile.php";
                     var table = $("#students").DataTable();
                     var colIndex = table.cell(this).index().column;
@@ -38,9 +47,11 @@
                                 student: username,
                                 type: "load_loses"
                             },
+                            //Calls processing academic_reports_processing to execute ajax
                             url: "../managers/general_reports/academic_reports_processing.php",
                             success: function(msg) {
                                 //alert(msg);
+                                //Display all lose subjects
                                 swal({ 
                                     title: "Notas Perdidas",
                                     type: "info", 
@@ -62,9 +73,10 @@
 
                 });
 
+                //Opens a new tab to display a course report, given the course id and the location
                 $(document).on('click', '.curso_reporte', function() {
                     var course_id = $(this).attr('id');
-                    var url = 'global_grade_book.php' + location.search + '&id_course=' + course_id;
+                    var url = 'report_grade_book.php' + location.search + '&id_course=' + course_id;
                     window.open(url, '_blank');  
                 });
                 

@@ -2,7 +2,8 @@ requirejs(['jquery', 'datatables.net', 'datatables.net-buttons', 'buttons.flash'
 , 'pdfmake', 'vfs_fonts', 'buttons.html5', 'buttons.print'], function($) {
 
     $(document).ready(function() {
-        $("#btn-send-indexform").on('click', function() {
+        $("#send_form_btn").on('click', function() {
+            alert("Testing");
             createTable();
         });
     });
@@ -22,7 +23,8 @@ requirejs(['jquery', 'datatables.net', 'datatables.net-buttons', 'buttons.flash'
     });
 
     function createTable() {
-        var dataString = $('#formulario').serializeArray();
+        var dataString = $('#form_general_report').serializeArray();
+        console.log(dataString);
         dataString.push({
             name: 'idinstancia',
             value: getIdinstancia()
