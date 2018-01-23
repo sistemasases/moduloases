@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<XMLDB PATH="blocks/ases/db" VERSION="20171120" COMMENT="XMLDB file for Moodle blocks/configurable_reports"
+<XMLDB PATH="blocks/ases/db" VERSION="20180119" COMMENT="XMLDB file for Moodle blocks/configurable_reports"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
 >
@@ -693,12 +693,14 @@
         <FIELD NAME="id_estado_ases" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="false" COMMENT="Llave foranea que apunta a la tabla talentospilos_estados_ases"/>
         <FIELD NAME="id_motivo_retiro" TYPE="int" LENGTH="20" NOTNULL="false" SEQUENCE="false" COMMENT="Llave foranea que apunta a la tabla talentospilos_motivos"/>
         <FIELD NAME="fecha" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="false" COMMENT="Fecha en la que se realizó el registro de cambio de estado"/>
+        <FIELD NAME="id_instancia" TYPE="int" LENGTH="20" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Campo que referencia al ID de la tabla {talentospilos_instancia} y tiene la finalidad de referenciar el"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
         <KEY NAME="id_estudiante_fk" TYPE="foreign" FIELDS="id_estudiante" REFTABLE="talentospilos_usuario" REFFIELDS="id" COMMENT="Llave foranea que apunta al campo id de la tabla talentospilos_usuario."/>
         <KEY NAME="id_estado_ases" TYPE="foreign" FIELDS="id_estado_ases" REFTABLE="talentospilos_estados_ases" REFFIELDS="id" COMMENT="Id que apunta a la tabla talentospilos_estados_ases"/>
         <KEY NAME="id_motivo_fk" TYPE="foreign" FIELDS="id_motivo_retiro" REFTABLE="talentospilos_motivos" REFFIELDS="id" COMMENT="Llave foránea que apunta a la tabla talentospilos_motivos_retiro"/>
+        <KEY NAME="id_instancia_fk" TYPE="foreign" FIELDS="id_instancia" REFTABLE="talentospilos_instancia" REFFIELDS="id" COMMENT="Llave foránea que apunta al identificador de la tabla {talentospilos_instancia}"/>
       </KEYS>
     </TABLE>
     <TABLE NAME="talentospilos_est_est_icetex" COMMENT="Tabla que almacena el histórico de estados Icetex de un estudiante">
@@ -716,11 +718,11 @@
         <KEY NAME="motivos_retiros_fk" TYPE="foreign" FIELDS="id_motivo_retiro" REFTABLE="talentospilos_motivos" REFFIELDS="id" COMMENT="Clave foránea a la tabla talentospilos_motivos"/>
       </KEYS>
     </TABLE>
-    <TABLE NAME="changeme" COMMENT="Default comment for the table, please edit me">
+    <TABLE NAME="talentospilos_inst_cohorte" COMMENT="Tabla que relaciona las cohortes con sus respectivas instancias del bloque.">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
-        <FIELD NAME="id_director" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="false" COMMENT="Identificador del director. Se relacina con la tabla user de Moodle."/>
-        <FIELD NAME="id_programa" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="false" COMMENT="Identificador del programa académico. Se relaciona con la tabla talentospilos_programa"/>
+        <FIELD NAME="id_cohorte" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="false" COMMENT="Identificador de la cohorte. Se relaciona con la tabla {cohort}"/>
+        <FIELD NAME="id_instancia" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="false" COMMENT="Identificador de la instancia, se relaciona con la tabla {block_instances}"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>

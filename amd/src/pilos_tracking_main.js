@@ -7,7 +7,6 @@
 
 define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ases/datatables.net', 'block_ases/datatables.net-buttons', 'block_ases/buttons.flash', 'block_ases/jszip', 'block_ases/pdfmake', 'block_ases/buttons.html5', 'block_ases/buttons.print', 'block_ases/sweetalert', 'block_ases/select2'], function($,Modernizr,bootstrap, datatables, sweetalert, select2) {
 
-
     return {
         init: function() {
 
@@ -224,7 +223,7 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
              * @method anadirEvento
              * @desc Function for 'sistemas' role. Adding an event
              * @param {instance} instance current instance
-             * @return {return}
+             * @return {string} message according if there's a period or person to look for
              */
             function anadirEvento(instance) {
                 $("#personas").val('').change();
@@ -359,9 +358,10 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
 
             /**
              * @method realizar_conteo
-             * @desc Does the counting of tracks
+             * @desc Does the counting of tracks, even when there are dependents ('practicantes' or 'profesionales are dependents')
              * @param {object} usuario current user to get the total tracks
              * @param {string} dependiente 
+             * @return {integer} amount of tracks (checked and not checked)
              */
             function realizar_conteo(usuario, dependiente = "ninguno") {
                 var conteos = [];
@@ -371,10 +371,12 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                 var total_monitor_revisado = 0;
                 var total_monitor_norevisado = 0;
 
+                //If the user role is monitor
                 if (usuario["namerol"] == 'monitor_ps') {
                     var numero_pares = 0;
                     var numero_grupales = 0;
 
+                    //In case it has no dependents to counting tracks
                     if (dependiente == "ninguno") {
                         numero_pares = $('.panel-heading.pares').children().length;
                         numero_grupales = $('.panel-heading.grupal').children().length;
@@ -401,6 +403,7 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                     total = (total_monitor_revisado + total_grupal_revisado) + (total_monitor_norevisado + total_grupal_norevisado);
                     return new Array((total_monitor_revisado + total_grupal_revisado), (total_monitor_norevisado + total_grupal_norevisado), total);
 
+                    //In case the user role is 'practicante'
                 } else if (usuario["namerol"] == 'practicante_ps') {
                     var numero_monitores = 0;
                     conteos = [0, 0, 0];
@@ -431,6 +434,7 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                         }
 
 
+                        
                     } else {
 
                         numero_monitores = $("#collapse" + usuario["id"] + " .panel-heading.practicante").children().length;
@@ -456,10 +460,10 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                         }
                     }
 
-
-
+                    //Total trackings
                     return conteos;
 
+                    //Otherwise, it is a 'profesional' role
                 } else if (usuario["namerol"] == 'profesional_ps') {
                     conteos = [0, 0, 0];
                     var numero_practicantes = $('.panel-heading.profesional').children().length;
@@ -479,6 +483,7 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                         conteos[1] += conteos_practicantes[1];
                         conteos[2] += conteos_practicantes[2];
                     }
+                    //Total trackings
                     return conteos;
 
                 }
@@ -488,11 +493,12 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
 
             }
 
-            /*
-             * Funcion para enviar correos.
-             *
+            /**
+             * @method enviar_correo
+             * @desc Sends an email to a monitor, given his id, text message, date, name.
+             * @param {instance} instance current instance 
+             * @return {void}
              */
-
             function enviar_correo(instance) {
 
                 $('body').on('click', '.btn.btn-info.btn-lg.botonCorreo', function() {
@@ -507,7 +513,7 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                             confirmButtonColor: "#d51b23"
                         });
                     } else {
-                        //se recupera el mensaje y el id del monitor al que se va a enviar el mensaje
+                        // Gets text message and monitor id to send the email
                         var particionar_informacion = texto.attr('name').split("_");
                         var tipo = particionar_informacion[0];
                         var codigoN1 = particionar_informacion[1];
@@ -516,10 +522,10 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                         var nombre = particionar_informacion[4];
                         var mensaje_enviar = texto.val();
 
-                        //se limpia el textarea
+                        //Text area is clear again
                         var respuesta = "";
 
-                        //se llama el ajax para enviar el mensaje
+                        //Ajax function to send message
                         $.ajax({
                             type: "POST",
                             data: {
@@ -534,7 +540,8 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                             url: "../../../blocks/ases/managers/pilos_tracking/pilos_tracking_report.php",
                             async: false,
                             success: function(msg) {
-                                //si el envio del mensaje fue exitoso
+                                //If it was successful...
+
                                 if (msg != "Error") {
                                     swal({
                                         title: "Correo enviado",
@@ -569,15 +576,17 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
             }
 
 
-
-            /*
-             * Función para modificar un seguimiento determinado.
-             *
+            /**
+             * @method modificar_seguimiento
+             * @desc Function that modifies a specific track, then every field is filled with old information able to modify
+             * @param {id} id_usuario 
+             * @return {void}
              */
             function modificar_seguimiento(id_usuario) {
 
 
                 $('body').on('click', 'span.btn.btn-info.btn-lg.botonModificarSeguimiento', function() {
+                    //Gets all fields/values to modify
                     var id = $(this).attr("value");
                     var profesional = "",
                         practicante = "";
@@ -675,6 +684,7 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                                 seguimiento.fecha = fecha;
                                 seguimiento.hora_ini = h_inicial;
                                 seguimiento.hora_fin = h_final;
+                                //Ajax function calls processing at pilos_tracking_report.php
                                 $.ajax({
                                     type: "POST",
                                     data: {
@@ -684,6 +694,7 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                                     url: "../../../blocks/ases/managers/pilos_tracking/pilos_tracking_report.php",
                                     async: false,
                                     success: function(msg) {
+                                        //Something happened
                                         if (msg == "0") {
                                             swal({
                                                 title: "error al actualizar registro",
@@ -691,10 +702,12 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                                                 type: "error",
                                                 confirmButtonColor: "#d51b23"
                                             });
+                                            //In case it was successful
                                         } else if (msg == "1") {
                                             swal("¡Hecho!", "El registro ha sido actualizado",
                                                 "success");
                                         } else {
+                                            //Risks errors
                                             swal({
                                                 title: "Debe ingresar correctamente los riesgos",
                                                 html: true,
@@ -728,10 +741,11 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
             }
 
 
-
-            /*
-             * Función para editar un seguimiento determinado dado los roles existentes.
-             *
+            /**
+             * @method editar_seguimiento
+             * @desc Edit a specific track given existents roles
+             * @param {role} namerol user role. It could be whether 'profesional', 'practicante', 'profesional' or 'sistemas'
+             * @return {void}
              */
             function editar_seguimiento(namerol) {
 
@@ -741,6 +755,7 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
 
                     var visto_profesional = false;
 
+                    //Ables fields to edit, acording to the logged user role
                     if (namerol == 'monitor_ps') {
                         visto_profesional = $("#profesional_" + id).is(':checked');
 
@@ -766,6 +781,7 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                         auxiliar_editar(id);
                         seleccionarButtons(id);
 
+                        //In case the track had been checked already
                     } else {
                         swal("¡Advertencia!",
                             "No es posible editar el seguimiento, debido a que ya ha sido revisado por un profesional",
@@ -776,9 +792,11 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
             }
 
 
-            /*
-             * Función para borrar un seguimiento determinado dado los roles existentes.
-             *
+            /**
+             * @method borrar_seguimiento
+             * @desc Function that deletes a specific track determining the existing roles
+             * @param {role} namerol user role who is deleting a track
+             * @return {void}
              */
             function borrar_seguimiento(namerol) {
 
@@ -786,6 +804,7 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                     var id_registro = $(this).attr('value');
                     var visto_profesional = false;
 
+                    //If it's a monitor, visto_profesional value is consulted
                     if (namerol == 'monitor_ps') {
                         visto_profesional = $("#profesional_" + id).is(':checked');
 
@@ -795,6 +814,7 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                     } else if (namerol == 'profesional_ps') {
 
                     }
+                    //If the track hasn't been checked by a 'profesional', track could be deleted
                     if (visto_profesional == false) {
                         swal({
                                 title: "¿Seguro que desea eliminar el registro?",
@@ -806,6 +826,7 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                                 confirmButtonText: "Si",
                                 closeOnConfirm: false
                             },
+                            //Ajax function, processing at pilos_tracking_report.php
                             function() {
                                 $.ajax({
                                     type: "POST",
@@ -835,10 +856,11 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                 });
             }
 
-
-            /*
-             * Función para cancelar la edición de un seguimiento determinado dado cualquiera de los roles existentes.
-             *
+            /**
+             * @method cancelar_edicion
+             * @desc Cancel an edition of a specific track, no matter the user role
+             * @param {role} namerol user role who is canceling edition
+             * @return {void}
              */
             function cancelar_edicion(namerol) {
 
@@ -859,6 +881,7 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
 
                     }
 
+                    //read only track
                     var $tbody = $(this).parent().parent().parent();
                     $tbody.find('.editable').attr('readonly', true);
                     $tbody.find('.botonesSeguimiento').toggleClass('ocultar');
@@ -868,9 +891,10 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                 });
             }
 
-            /*
-             * Función para limpiar la descripción de los riesgos y los radiobuttons seleccionados.
-             *
+            /**
+             * @method limpiar_riesgos
+             * @desc clears risks radio buttons and descriptions
+             * @return {void}
              */
             function limpiar_riesgos() {
 
@@ -911,21 +935,30 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
             }
 
 
-            //--------FUNCIONES AUXILIARES.
+            //--------Auxiliary functions
 
 
+            /**
+             * @method send_email
+             * @desc 
+             * @param {id} id_seguimiento track id
+             * @param {id} id_usuario user id
+             * @return {void}
+             */
             function send_email(id_seguimiento, id_usuario) {
 
 
                 var high_risk_array = new Array();
                 var observations_array = new Array();
 
+                //Obtains every risk
                 var high_individual_risk = $('input:radio[name=riesgo_individual_' + id_seguimiento + ']:checked').val();
                 var high_familiar_risk = $('input:radio[name=riesgo_familiar_' + id_seguimiento + ']:checked').val();
                 var high_academic_risk = $('input:radio[name=riesgo_academico_' + id_seguimiento + ']:checked').val();
                 var high_economic_risk = $('input:radio[name=riesgo_economico_' + id_seguimiento + ']:checked').val();
                 var high_life_risk = $('input:radio[name=riesgo_universitario_' + id_seguimiento + ']:checked').val();
 
+                //In case there is any risk = 3 then it's added to a high risk array
                 if (high_individual_risk == '3') {
                     high_risk_array.push('Individual');
                     observations_array.push($('#obindividual_' + id_seguimiento).val());
@@ -960,10 +993,12 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                     name: "id_student_pilos",
                     value: id_seguimiento
                 });
+                //High risks are sent via email
                 data_email.push({
                     name: "risk_array",
                     value: high_risk_array
                 });
+                // Observation of every high risk
                 data_email.push({
                     name: "observations_array",
                     value: observations_array
@@ -979,6 +1014,7 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
 
 
 
+                //In case there's any high risk, call ajax function to send the email. Processing function at seguimiento.php
                 if (high_risk_array.length != 0) {
                     $.ajax({
                         type: "POST",
@@ -997,6 +1033,13 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
             }
 
 
+            /**
+             * @method consultar_periodos
+             * @desc 
+             * @param {*} instance 
+             * @param {*} namerol 
+             * @return {void}
+             */
             function consultar_periodos(instance, namerol) {
                 $("#periodos").change(function() {
                     var periodo_escogido = $("#periodos").val();
@@ -1043,9 +1086,11 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
 
             }
 
-
-            //Verifica si el profesional desea marcar como revisado el seguimiento.
-
+            /**
+             * @method verificar_profesional
+             * @desc Verifies if a 'profesional' wants to marks as checked a track
+             * @return {void}
+             */
             function verificar_profesional() {
                 $('input[name="profesional"]').click(function() {
                     if ($(this).is(':checked')) {
@@ -1059,6 +1104,7 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                                 confirmButtonText: "Si",
                                 closeOnConfirm: true
                             },
+                            //Confirms to check the track
                             function(isConfirm) {
                                 if (isConfirm == false) {
                                     $('input[name="profesional"]').prop('checked', false);
@@ -1068,10 +1114,15 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                 });
             }
 
-
-
-            /*
-             *  Función que obtiene los mensajes de validación de la hora.
+            
+            /**
+             * @method validarHoras
+             * @desc Validates the input hours for a track are correct
+             * @param {integer} h_ini initial hour
+             * @param {integer} h_fin final hour
+             * @param {integer} m_ini initial minute
+             * @param {integer} m_fin final minute
+             * @return {string} In case the hours are correct it shows nothing, otherwise deploys a message error (same hour or initial hour is later than final hour)
              */
             function validarHoras(h_ini, h_fin, m_ini, m_fin) {
                 var detalle = "";
@@ -1087,18 +1138,21 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                         }
                     }
                 }
+                //Returns nothinf if ok, message error if not
                 return detalle;
             }
 
-
-            /*
-             * Función usada para inicializar los selects de las horas/minutos finales e iniciales de cada seguimiento.
+            /**
+             * @method initFormSeg
+             * @desc Function used to initialize selects of hour/min of each track
+             * @param {id} id track id
+             * @return {void}
              */
             function initFormSeg(id) {
                 var date = new Date();
                 var minutes = date.getMinutes();
                 var hour = date.getHours();
-                //incializar hora
+                //initialize hour
                 var hora = "";
                 for (var i = 0; i < 24; i++) {
                     if (i == hour) {
@@ -1122,6 +1176,7 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                         min += "<option value=\"" + i + "\">" + i + "</option>";
                     }
                 }
+                //fill every selector with posible hours and minutes to choose (hour: 0-23, min: 0-59)
                 $('#h_ini_' + id).append(hora);
                 $('#m_ini_' + id).append(min);
                 $('#h_fin_' + id).append(hora);
@@ -1129,11 +1184,11 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                 $('#seguimiento #m_fin').append(min);
             }
 
-
-            /*
-             * Función usada para cambiar color cuando se cambie el radiobutton de riesgo.
-             */
-
+             /**
+              * @method actualizar_riesgo
+              * @desc Function used to change colour when risk radio buttons is modified
+              * @return {void}
+              */
             function actualizar_riesgo() {
                 $(document).ready(function() {
 
@@ -1155,8 +1210,13 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                 });
             }
 
+            /**
+             * @method auxiliar_cancelar
+             * @desc hide and show buttons when 'cancelar' button is clicked
+             * @param {id} id  track id 
+             * @return {void}
+             */
 
-            //Oculta y muestra botones al presionar cancelar.
             function auxiliar_cancelar(id) {
                 $("#titulo_fecha_" + id).hide();
                 $("#borrar_" + id).show();
@@ -1168,7 +1228,12 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                 $("#mod_hora_ini_" + id).hide();
             }
 
-            //Oculta y muestra botones al presionar editar, organiza fecha y horas.
+            /**
+             * @method auxiliar_editar
+             * @desc hide and show buttons, line date and hours up when 'editar' button is clicked
+             * @param {id} id track id
+             * @return {void}
+             */
             function auxiliar_editar(id) {
                 $("#borrar_" + id).hide();
                 $("#editar_" + id).hide();
@@ -1185,7 +1250,7 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                 var array_f2 = f2.split(":");
 
                 initFormSeg(id);
-                //Seleccionamos la hora deacuerdo al sistema
+                //Get hour from system
 
                 $("#h_ini_" + id + " option[value=" + array_f1[0] + "]").prop("selected", true);
                 $("#m_ini_" + id + " option[value=" + array_f1[1] + "]").prop("selected", true);
@@ -1195,7 +1260,13 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
             }
 
 
-            //Limpia los campos de riesgos y deschequea su prioridad.
+            /**
+             * @method auxiliar_limpiar
+             * @desc clears risk fields and unmark their priority
+             * @param {string} texto text to remove
+             * @param {id} id track id
+             * @return {void}
+             */
             function auxiliar_limpiar(texto, id) {
                 $('input:radio[name=' + texto+id + ']').parent().parent().parent().removeClass("riesgo_bajo");
                 $('input:radio[name=' + texto+id + ']').parent().parent().parent().removeClass("riesgo_medio");
@@ -1210,8 +1281,12 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
             }
 
 
-            //En el caso de que el check esté revisado por un profesional 
-            //quita los botones de editar,borrar y observaciones.
+            /**
+             * @method revisado_profesional
+             * @desc In case a track is checked by a 'profesional', edit, delete and observations buttons will be hidden
+             * @param {id} id track id
+             * @return {void}
+             */
             function revisado_profesional(id) {
                 if ($("#profesional_" + id).is(':checked')) {
                     $("#borrar_" + id).hide();
@@ -1220,11 +1295,16 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                 }
             }
 
-            //Selecciona los radiobuttons correspondientes con la prioridad del riesgo.
+            /**
+             * @method seleccionarButtons
+             * @desc Select all radiobuttons according to risk priority
+             * @param {id} id_seguimiento track id
+             * @return {void}
+             */
             function seleccionarButtons(id_seguimiento) {
 
 
-                //Riesgo individual
+                //individual risk (Riesgo individual)
                 if ($("#riesgo_individual_" + id_seguimiento).is('.riesgo_bajo')) {
                     $("input[name=riesgo_individual_" + id_seguimiento + "][value=1]").prop('checked', 'checked');
 
@@ -1238,7 +1318,7 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
 
                 }
 
-                //Riesgo familiar
+                //familiar risk (Riesgo familiar)
                 if ($("#riesgo_familiar_" + id_seguimiento).is('.riesgo_bajo')) {
                     $("input[name=riesgo_familiar_" + id_seguimiento + "][value=1]").prop('checked', 'checked');
                 } else if ($("#riesgo_familiar_" + id_seguimiento).is('.riesgo_medio')) {
@@ -1250,7 +1330,7 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
 
                 }
 
-                //Riesgo academico
+                //Academic risk(Riesgo academico)
                 if ($("#riesgo_academico_" + id_seguimiento).is('.riesgo_bajo')) {
                     $("input[name=riesgo_academico_" + id_seguimiento + "][value=1]").prop('checked', 'checked');
                 } else if ($("#riesgo_academico_" + id_seguimiento).is('.riesgo_medio')) {
@@ -1262,7 +1342,7 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
 
                 }
 
-                //Riesgo economico
+                //Economic risk(Riesgo economico)
                 if ($("#riesgo_economico_" + id_seguimiento).is('.riesgo_bajo')) {
                     $("input[name=riesgo_economico_" + id_seguimiento + "][value=1]").prop('checked', 'checked');
                 } else if ($("#riesgo_economico_" + id_seguimiento).is('.riesgo_medio')) {
@@ -1274,7 +1354,7 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
 
                 }
 
-                //Riesgo universitario
+                //Universitary risk(Riesgo universitario)
                 if ($("#riesgo_universitario_" + id_seguimiento).is('.riesgo_bajo')) {
                     $("input[name=riesgo_universitario_" + id_seguimiento + "][value=1]").prop('checked', 'checked');
                 } else if ($("#riesgo_universitario_" + id_seguimiento).is('.riesgo_medio')) {

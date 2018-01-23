@@ -193,7 +193,7 @@ if (isset($_FILES['file'])) {
                    array_push($wrong_rows, $data);
                    $lc_wrongFile++;
                } else {
-                               
+                   array_push($success_rows, $data);                               
                }
            }
 
