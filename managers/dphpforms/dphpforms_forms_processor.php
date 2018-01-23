@@ -181,7 +181,8 @@ function dphpforms_store_form($form_JSON){
             'tipo_campo' => $pregunta->{'tipo_campo'},
             'opciones_campo' => $pregunta->{'opciones_campo'},
             'atributos_campo' => $pregunta->{'atributos_campo'},
-            'enunciado' => $pregunta->{'enunciado'}
+            'enunciado' => $pregunta->{'enunciado'},
+            'permisos_campo' => $pregunta->{'permisos_campo'} 
         );
         array_push(
             $identifiers_preguntas, 
@@ -250,15 +251,19 @@ function dphpforms_store_form_details($form_details){
 }
 
 function dphpforms_store_pregunta($pregunta_details){
-    $db_connection = pg_connect("host=localhost dbname=formularios user=administrator password=administrator");
 
-    $sql = "SELECT * FROM tipo_campo;";
-    $result = pg_query($db_connection, $sql);
-    $row = pg_fetch_row($result);
+    global $DB;
+    $result = null;
+    $sql = "SELECT * FROM {talentospilos_df_tipo_campo}";
+    $result = $DB->get_records_sql($sql);
+    $result = (array) $result;
+    
     $fields = array();
-    while($row){
-        array_push($fields, array('id' => $row[0], 'campo' => $row[1]));
-        $row = pg_fetch_row($result);
+    if(count($result) > 0){
+        for($i = 1; $i < count($result); $i++){
+            $row = $result[$i];
+            array_push($fields, array('id' => $row->id, 'campo' => $row->campo));
+        }
     }
 
     foreach($fields as &$field){
@@ -267,35 +272,27 @@ function dphpforms_store_pregunta($pregunta_details){
         };
     };    
 
-    $sql = "
-    
-        INSERT INTO preguntas(tipo_campo, opciones_campo, atributos_campo, enunciado)
-        VALUES('".$pregunta_details['tipo_campo']."', '".json_encode($pregunta_details['opciones_campo'])."', '".json_encode($pregunta_details['atributos_campo'])."', '".$pregunta_details['enunciado']."')
-        RETURNING id
-    
-    ";
+    $obj_pregunta = new stdClass();
+    $obj_pregunta->tipo_campo = $pregunta_details['tipo_campo'];
+    $obj_pregunta->opciones_campo = json_encode($pregunta_details['opciones_campo']);
+    $obj_pregunta->atributos_campo = json_encode($pregunta_details['atributos_campo']);
+    $obj_pregunta->enunciado = $pregunta_details['enunciado'];
 
-    $result = pg_query($db_connection, $sql);
-    $row = pg_fetch_row($result);
-    $identifier_pregunta = $row[0];
+    $pregunta_identifier = $DB->insert_record('talentospilos_df_preguntas', $obj_pregunta, $returnid=true, $bulk=false);
 
-    $sql = "
-    
-        INSERT INTO permisos_formulario_pregunta(id_formulario_pregunta, permisos)
-        VALUES('".$identifier_pregunta."', '".json_encode($pregunta_details['permisos_campo'])."')
-        RETURNING id
-    
-    ";
+    $obj_permisos_formulario_pregunta = new stdClass();
+    $obj_permisos_formulario_pregunta->id_formulario_pregunta = $pregunta_identifier;
+    $obj_permisos_formulario_pregunta->permisos = json_encode($pregunta_details['permisos_campo']);
 
-    $result = pg_query($db_connection, $sql);
-    $row = pg_fetch_row($result);
-    $identifier_permission = $row[0];
+    print_r($pregunta_details);
 
-    if($identifier_permission){
+    $permission_identifier = $DB->insert_record('talentospilos_df_per_form_pr', $obj_permisos_formulario_pregunta, $returnid=true, $bulk=false);
+
+    if($permission_identifier){
         echo " PERMISO REGISTRADO. ";
     }
-
-    return $identifier_pregunta;
+    
+    return $pregunta_identifier;
 }
 
 function dphpforms_store_form_pregunta($form_id, $identifier_pregunta, $position, $permits){
