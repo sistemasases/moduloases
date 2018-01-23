@@ -220,7 +220,7 @@ function getGraficEstado($cohorte){
  * @param $idinstancia  --> Instancia del módulo
  * @return Array 
  */
-function get_ases_report($general_fields=null, $conditions, $academic_fields=null, $risk_fields=null, $instance_id){
+function get_ases_report($general_fields=null, $conditions, $risk_fields=null, $academic_fields=null, $instance_id){
 
     global $DB, $USER;
 
@@ -242,12 +242,15 @@ function get_ases_report($general_fields=null, $conditions, $academic_fields=nul
         }
     }
 
+    //print_r($academic_fields);
+
     if($academic_fields){
         foreach($academic_fields as $field){
             $select_clause .= $field.', ';
         }
 
-        $sub_query_academic .= "INNER JOIN {talentospilos_programa}";
+        $sub_query_academic .= " INNER JOIN {talentospilos_programa} AS acad_program ON user_extended.id_academic_program = acad_program.id
+                                INNER JOIN {talentospilos_facultad} AS faculty ON faculty.id = acad_program.id_facultad";
     }
 
     $select_clause = substr($select_clause, 0, -2);
@@ -285,15 +288,14 @@ function get_ases_report($general_fields=null, $conditions, $academic_fields=nul
                                             INNER JOIN mdl_talentospilos_est_estadoases AS status_ases ON status_ases.id = current_status.id
                                             WHERE id_estado_ases = $conditions[1]
                                             ) AS query_status_ases ON query_status_ases.username = user_moodle.username";
-
     }
     
     if(property_exists($actions, 'search_all_students_ar')){
         
-        $sql_query = $select_clause.$from_clause.$sub_query_cohort.$sub_query_status;
+        $sql_query = $select_clause.$from_clause.$sub_query_cohort.$sub_query_status.$sub_query_academic;
         //print_r($sql_query);
         $result_query = $DB->get_records_sql($sql_query);
-        //print_r($result);        
+        //print_r($result_query);        
 
     }else if(property_exists($actions, 'search_assigned_students_ar')){
 
