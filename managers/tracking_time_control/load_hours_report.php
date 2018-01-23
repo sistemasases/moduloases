@@ -23,20 +23,29 @@
  * @copyright  2017 Isabella Serna Ramírez <isabella.serna@correounivalle.edu.co>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-require_once('permissions_lib.php');
-    $columns = array();
-    array_push($columns, array("title"=>"Nombre", "name"=>"nombre_accion", "data"=>"nombre_accion"));
-    array_push($columns, array("title"=>"Descripción", "name"=>"descripcion", "data"=>"descripcion"));
-    array_push($columns, array("title"=>"Funcionalidad", "name"=>"funcionalidad", "data"=>"nombre_func"));
+require_once('tracking_time_control_lib.php');
 
-    array_push($columns, array("title"=>"", "name"=>"button", "data"=>"edit"));
-    array_push($columns, array("title"=>"", "name"=>"button", "data"=>"delete"));
+
+    if (isset($_POST['initial_hour'])&&isset($_POST['final_hour'])){
+        $initial_hour=strtotime($_POST['initial_hour']);
+        $final_hour=strtotime($_POST['final_hour']);
+    }else{
+        $initial_hour =strtotime(date("Y/m/d"));
+        $final_hour=date_create(date("Y/m/d"));
+        $final_hour=strtotime(  date_time_set($final_hour, 23, 59,59)->format('Y-m-d H:i:s'));
+    }
+
+
+
+    $columns = array();
+    array_push($columns, array("title"=>"Fecha", "name"=>"fecha", "data"=>"fecha"));
+    array_push($columns, array("title"=>"Número horas", "name"=>"descripcion", "data"=>"total"));
 
 
         $data = array(
                 "bsort" => false,
                 "columns" => $columns,
-                "data"=> get_actions_table(),
+                "data"=> get_hours_per_days($initial_hour,$final_hour),
                 "language" => 
                  array(
                     "search"=> "Buscar:",

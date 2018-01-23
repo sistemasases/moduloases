@@ -23,7 +23,6 @@
  * @copyright  2017 Isabella Serna Ramírez <isabella.serna@correounivalle.edu.co>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-require_once('tracking_time_control_lib.php');
 
 
 /**
@@ -34,51 +33,36 @@ require_once('tracking_time_control_lib.php');
  * @return void
  */
 
- function calculate_hours($dates){
+ function calculate_hours($date){
 
-    foreach ($dates as $date) {
+    $register= new stdClass();
 
-        $first_date =$date->fecha;
-        $initial_time=$date->hora_fin;
-        $final_time=$date->hora_ini;
+    $first_date =$date->fecha;
+    $register->date=$first_date;
 
-        $separar[1]=explode(':',$initial_time); 
-        $separar[2]=explode(':',$final_time); 
+    $initial_time=$date->hora_fin;
+    $final_time=$date->hora_ini;
 
-        $total_minutos_trasncurridos[1] = ($separar[1][0]*60)+$separar[1][1]; 
-        $total_minutos_trasncurridos[2] = ($separar[2][0]*60)+$separar[2][1]; 
-        $total_minutos_trasncurridos = $total_minutos_trasncurridos[1]-$total_minutos_trasncurridos[2]; 
+    $separar[1]=explode(':',$initial_time); 
+    $separar[2]=explode(':',$final_time); 
+
+    $total_minutos_trasncurridos[1] = ($separar[1][0]*60)+$separar[1][1]; 
+    $total_minutos_trasncurridos[2] = ($separar[2][0]*60)+$separar[2][1]; 
+    $total_minutos_trasncurridos = $total_minutos_trasncurridos[1]-$total_minutos_trasncurridos[2]; 
         
-        if($total_minutos_trasncurridos<=59) {
-            if($total_minutos_trasncurridos<=0){
-             return('0 Minutos');
-            }else{
-                return($total_minutos_trasncurridos.' Minutos'); 
-            }
+    if($total_minutos_trasncurridos<=59) {
+        if($total_minutos_trasncurridos<=0){
+            $register->total_minutes=0;
+        }else{
+            $register->total_minutes=$total_minutos_trasncurridos; 
+        }
         }elseif($total_minutos_trasncurridos>59){ 
             $HORA_TRANSCURRIDA = round($total_minutos_trasncurridos/60); 
             if($HORA_TRANSCURRIDA<=9) $HORA_TRANSCURRIDA='0'.$HORA_TRANSCURRIDA; 
                 $MINUITOS_TRANSCURRIDOS = $total_minutos_trasncurridos%60; 
             if($MINUITOS_TRANSCURRIDOS<=9) $MINUITOS_TRANSCURRIDOS='0'.$MINUITOS_TRANSCURRIDOS; 
-            return ($HORA_TRANSCURRIDA.':'.$MINUITOS_TRANSCURRIDOS.' Horas'); 
-
-
-
-    }
-
-    return $array_variable;
-
- }}
-
-
-
-
-
-
-
-
-
-
-
-
-?>
+            $register->hours=$HORA_TRANSCURRIDA;
+            $register->minutes=$MINUITOS_TRANSCURRIDOS;
+ }
+    return $register;
+}

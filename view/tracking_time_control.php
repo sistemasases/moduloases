@@ -26,7 +26,7 @@
 require_once(__DIR__ . '/../../../config.php');
 require_once($CFG->libdir.'/adminlib.php');
 require_once('../managers/permissions_management/permissions_functions.php');
-require_once ('../managers/tracking_time_control/tracking_time_control_functions.php');
+require_once ('../managers/tracking_time_control/tracking_time_control_lib.php');
 require_once ('../managers/permissions_management/permissions_lib.php');
 require_once ('../managers/validate_profile_action.php');
 require_once ('../managers/menu_options.php'); 
@@ -62,14 +62,8 @@ $data = $actions;
 $monitor_name = $monitor->firstname." ".$monitor->lastname;
 
 //
-$current_date=time();
-$report_by_date=get_report_by_date(1016338000,1811416400);
-//var_dump($report_by_date);
+//var_dump(get_hours_per_days(1504882193,1516406399));
 //exit();
-$horas=calculate_hours($report_by_date);
-//var_dump($horas);
-//exit();
-
 
 $data->monitor=$monitor_name;
 $data->menu = $menu_option;
