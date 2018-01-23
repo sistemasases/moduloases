@@ -204,7 +204,7 @@ function dphpforms_store_form($form_JSON){
             )
         );
     }
-
+//Migrado hasta aquí
     $identifiers_reglas = array();
     foreach ($json_obj_form->{'reglas'} as &$regla) {
         $identifier_pregunta_A = null;
@@ -253,6 +253,7 @@ function dphpforms_store_form_details($form_details){
 function dphpforms_store_pregunta($pregunta_details){
 
     global $DB;
+
     $result = null;
     $sql = "SELECT * FROM {talentospilos_df_tipo_campo}";
     $result = $DB->get_records_sql($sql);
@@ -296,7 +297,25 @@ function dphpforms_store_pregunta($pregunta_details){
 }
 
 function dphpforms_store_form_pregunta($form_id, $identifier_pregunta, $position, $permits){
-    $db_connection = pg_connect("host=localhost dbname=formularios user=administrator password=administrator");
+    
+    global $DB;
+
+    $obj_form_preguntas = new stdClass();
+    $obj_form_preguntas->id_formulario = $form_id;
+    $obj_form_preguntas->id_pregunta = $identifier_pregunta;
+    $obj_form_preguntas->posicion = $position;
+
+    $idRelacion = $DB->insert_record('talentospilos_df_form_preg', $obj_form_preguntas, $returnid=true, $bulk=false);
+
+    $identifier_permission = dphpforms_store_form_pregunta_permits($idRelacion, $permits);
+    if(!$identifier_permission){
+        echo ' ERROR REGISTRANDO PERMISOS ';
+    }
+
+    return $idRelacion;
+
+
+    /*$db_connection = pg_connect("host=localhost dbname=formularios user=administrator password=administrator");
  
     $sql = "
     
@@ -315,7 +334,7 @@ function dphpforms_store_form_pregunta($form_id, $identifier_pregunta, $position
         echo ' ERROR REGISTRANDO PERMISOS ';
     }
 
-    return $idRelacion;
+    return $idRelacion;*/
 }
 
 function dphpforms_store_form_regla($form_id, $text_rule, $identifier_pregunta_A, $identifier_pregunta_B){
@@ -349,7 +368,18 @@ function dphpforms_store_form_regla($form_id, $text_rule, $identifier_pregunta_A
 }
 
 function dphpforms_store_form_pregunta_permits($form_idPregunta, $permits){
-    $db_connection = pg_connect("host=localhost dbname=formularios user=administrator password=administrator");
+    
+    global $DB;
+
+    $obj_permisos_formulario_pregunta = new stdClass();
+    $obj_permisos_formulario_pregunta->id_formulario_pregunta = $form_idPregunta;
+    $obj_permisos_formulario_pregunta->permisos = $permits;
+
+   
+    $identifier_permission = $DB->insert_record('talentospilos_df_per_form_pr', $obj_permisos_formulario_pregunta, $returnid=true, $bulk=false);
+    return $identifier_permission;
+
+    /*$db_connection = pg_connect("host=localhost dbname=formularios user=administrator password=administrator");
     $sql = "
     
         INSERT INTO permisos_formulario_pregunta(id_formulario_pregunta, permisos)
@@ -361,7 +391,7 @@ function dphpforms_store_form_pregunta_permits($form_idPregunta, $permits){
     $result = pg_query($db_connection, $sql);
     $row = pg_fetch_row($result);
     $identifier_permission = $row[0];
-    return $identifier_permission;
+    return $identifier_permission;*/
 }
 
 function dphpforms_store_form_disparadores($form_id, $disparadores, $identifiers_form_preguntas){
