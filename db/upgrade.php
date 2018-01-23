@@ -746,7 +746,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
 
     // ************************************************************************************************************
     // Actualización:
-    // Se inserta campo id_programa en la tabla talentospilos_res_estudiante 
+    // Se inserta campo id_programa en la tabla talentospilos_res_estudiante
     // Versión en la que se incluye: Pendiente
     // ************************************************************************************************************
 
@@ -758,6 +758,21 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     if (!$dbman->field_exists($table, $field)) {
         $dbman->add_field($table, $field);
     }
+
+    // ************************************************************************************************************
+    // Actualización:
+    // Se crea la llave foránea desde campo id_programa en la tabla talentospilos_res_estudiante hacia
+    // la tabla talentospilos_programa
+    // Versión en la que se incluye: Pendiente
+    // ************************************************************************************************************
+
+    // Define key fk_programa (foreign) to be added to talentospilos_res_estudiante.
+    $table = new xmldb_table('talentospilos_res_estudiante');
+    $key = new xmldb_key('fk_programa', XMLDB_KEY_FOREIGN, array('id_programa'), 'talentospilos_programa', array('id'));
+
+    // Launch add key fk_programa.
+    $dbman->add_key($table, $key);
+
 
     // ************************************************************************************************************
     // Actualización:
