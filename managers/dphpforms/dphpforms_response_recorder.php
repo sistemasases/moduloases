@@ -1,20 +1,29 @@
 <?php 
-    $db_connection = pg_connect("host=localhost dbname=formularios user=administrator password=administrator");
+    require_once(dirname(__FILE__). '/../../../../config.php');
+
+    global $DB;
 
     $FORM_ID = $_GET['id'];
     $ROL = $_GET['rol'];
     
     $sql = '
     
-        SELECT * FROM tipo_campo AS TC INNER JOIN (SELECT * FROM preguntas AS P INNER JOIN (SELECT * FROM formularios AS F
-        INNER JOIN formulario_preguntas AS FP
-        ON F.id = FP.id_formulario WHERE F.id = '.$FORM_ID.') AS AA ON P.id = AA.id_pregunta) AS AAA
+        SELECT * FROM {talentospilos_df_tipo_campo} AS TC 
+        INNER JOIN (
+            SELECT * FROM {talentospilos_df_preguntas} AS P 
+            INNER JOIN (
+                SELECT *, F.id AS mod_id_formulario, FP.id AS mod_id_formulario_pregunta FROM {talentospilos_df_formularios} AS F
+                INNER JOIN {talentospilos_df_form_preg} AS FP
+                ON F.id = FP.id_formulario WHERE F.id = '.$FORM_ID.'
+                ) AS AA ON P.id = AA.id_pregunta
+            ) AS AAA
         ON TC.id = AAA.tipo_campo
         ORDER BY posicion
     
     ';
 
-    $result = pg_query($db_connection, $sql);
+    $result = $DB->get_records_sql($sql);
+    $result = (array) $result;
 
     echo '
     
@@ -42,9 +51,13 @@
             <div class="row">
     ';
 
-    $row = pg_fetch_row($result);
-    $form_name = $row[10];
-    $form_name_formatted = strtolower($row[10]);
+    
+
+    $result = array_values($result);
+    print_r($result);
+    $row = $result[0];
+    $form_name = $row->{'nombre'};
+    $form_name_formatted = strtolower($form_name);
     $form_name_formatted = str_replace(" ", "_", $form_name_formatted);
     $form_name_formatted = str_replace("   ", "_", $form_name_formatted);
     $form_name_formatted = str_replace(' ', "_", $form_name_formatted);
@@ -56,24 +69,26 @@
     $form_name_formatted = str_replace("ü", "u", $form_name_formatted);
     $form_name_formatted = str_replace("ñ", "n", $form_name_formatted);
     $form_name_formatted = utf8_encode($form_name_formatted);
-    $form_name_formatted = $form_name_formatted . "_" . $row[9];
+    $form_name_formatted = $form_name_formatted . "_" . $row->{'mod_id_formulario'};
 
 
-    echo '<form id="'. $form_name_formatted .'" method="'. $row[12] .'" action="'. $row[13] .'" class="col-xs-12 col-sm-8 col-md-8 col-lg-6 col-sm col-sm-offset-2 col-md-offset-2 col-lg-offset-3" style="margin-bottom:0.7em">' ;
+    echo '<form id="'. $form_name_formatted .'" method="'. $row->{'method'} .'" action="'. $row->{'action'} .'" class="col-xs-12 col-sm-8 col-md-8 col-lg-6 col-sm col-sm-offset-2 col-md-offset-2 col-lg-offset-3" style="margin-bottom:0.7em">' ;
     echo '<h1>'.$form_name.'</h1><hr style="border-color:red;">';
-    echo '<input name="id" value="'.$row[9].'" style="display:none;">';
+    echo '<input name="id" value="'.$row->{'mod_id_formulario'}.'" style="display:none;">';
     echo '<input name="id_monitor" value="5245" style="display:none;">';
     echo '<input name="id_estudiante" value="6548" style="display:none;">';
     while($row){
-        $campo = $row[1] ;
-        $enunciado = $row[7];
-        $atributos = json_decode($row[6]);
+        $campo = $row->{'campo'} ;
+        $enunciado = $row->{'enunciado'};
+        $atributos = json_decode($row->{'atributos_campo'});
 
         //Consulta de permisos
         $sql_permisos = '
-            SELECT * FROM permisos_formulario_pregunta WHERE id_formulario_pregunta = '.$row[16].'
+            SELECT * FROM {talentospilos_df_per_form_pr} WHERE id_formulario_pregunta = '.$row->{'mod_id_formulario_pregunta'}.'
         ';
-        $result_permisos = pg_query($db_connection, $sql_permisos);
+
+        $result_permisos = $DB->get_record_sql($sql);
+        print_r($result_permisos);
         $permisos = pg_fetch_row($result_permisos);
         $permisos_JSON = json_decode($permisos[2]);
 
@@ -101,42 +116,42 @@
 
                     if($campo == 'TEXTFIELD'){
                         echo $enunciado . ':<br>';
-                        echo ' <input id="'.$row[16].'" class="form-control" type="'.$atributos->{'type'}.'" placeholder="'.$atributos->{'placeholder'}.'" name="'.$row[16].'" '.$enabled.'><br>' . "\n";
+                        echo ' <input id="'.$row->{'mod_id_formulario_pregunta'}.'" class="form-control" type="'.$atributos->{'type'}.'" placeholder="'.$atributos->{'placeholder'}.'" name="'.$row->{'mod_id_formulario_pregunta'}.'" '.$enabled.'><br>' . "\n";
                     }
 
                     if($campo == 'TEXTAREA'){
                         echo $enunciado . ':<br>';
-                        echo ' <textarea id="'.$row[16].'" class="form-control" name="'. $row[16] .'" '.$enabled.'></textarea><br>' . "\n";
+                        echo ' <textarea id="'.$row->{'mod_id_formulario_pregunta'}.'" class="form-control" name="'. $row->{'mod_id_formulario_pregunta'} .'" '.$enabled.'></textarea><br>' . "\n";
                     }
 
                     if($campo == 'DATE'){
                         echo $enunciado . ':<br>';
-                        echo ' <input id="'.$row[16].'" class="form-control" type="date" name="'.$row[16].'" '.$enabled.'><br>' . "\n";
+                        echo ' <input id="'.$row->{'mod_id_formulario_pregunta'}.'" class="form-control" type="date" name="'.$row->{'mod_id_formulario_pregunta'}.'" '.$enabled.'><br>' . "\n";
                     }
                     
                     if($campo == 'DATETIME'){
                         echo $enunciado . ':<br>';
-                        echo ' <input id="'.$row[16].'" class="form-control" type="datetime-local" name="'.$row[16].'" '.$enabled.'><br>' . "\n";
+                        echo ' <input id="'.$row->{'mod_id_formulario_pregunta'}.'" class="form-control" type="datetime-local" name="'.$row->{'mod_id_formulario_pregunta'}.'" '.$enabled.'><br>' . "\n";
                     }
 
                     if($campo == 'TIME'){
                         echo $enunciado . ':<br>';
-                        echo ' <input id="'.$row[16].'" class="form-control" type="time" name="'.$row[16].'" '.$enabled.'><br>' . "\n";
+                        echo ' <input id="'.$row->{'mod_id_formulario_pregunta'}.'" class="form-control" type="time" name="'.$row->{'mod_id_formulario_pregunta'}.'" '.$enabled.'><br>' . "\n";
                     }
 
                     if($campo == 'RADIOBUTTON'){
-                        $opciones = json_decode($row[5]);
+                        $opciones = json_decode($row->{'opciones_campo'});
                         $array_opciones = (array)$opciones;
                         $number_opciones = count($array_opciones);
                         echo '
-                        <input type="hidden" name="'.$row[16].'" value="-#$%-">
-                        <label id="'.$row[16].'">'.$enunciado.'</label>';
+                        <input type="hidden" name="'.$row->{'mod_id_formulario_pregunta'}.'" value="-#$%-">
+                        <label id="'.$row->{'mod_id_formulario_pregunta'}.'">'.$enunciado.'</label>';
                         echo '<div class="opcionesRadio" style="margin-bottom:0.4em">';
                         for($i = 0; $i < $number_opciones; $i++){
                             $opcion = (array) $array_opciones[$i];
                             echo '
-                                <div id="'.$row[16].'" name="'.$row[16].'" class="radio">
-                                    <label><input type="radio" name="'.$row[16].'" value="'.$opcion['valor'].'" name="optradio" '.$enabled.'>'.$opcion['enunciado'].'</label>
+                                <div id="'.$row->{'mod_id_formulario_pregunta'}.'" name="'.$row->{'mod_id_formulario_pregunta'}.'" class="radio">
+                                    <label><input type="radio" name="'.$row->{'mod_id_formulario_pregunta'}.'" value="'.$opcion['valor'].'" name="optradio" '.$enabled.'>'.$opcion['enunciado'].'</label>
                                 </div>
                             
                             ' . "\n";
@@ -147,17 +162,17 @@
                     }
 
                     if($campo == 'CHECKBOX'){
-                        $opciones = json_decode($row[5]);
+                        $opciones = json_decode($row->{'opciones_campo'});
                         $array_opciones = (array)$opciones;
                         $number_opciones = count($array_opciones);
                         echo '
-                        <label id="'.$row[16].'">'.$enunciado.'</label>';
+                        <label id="'.$row->{'mod_id_formulario_pregunta'}.'">'.$enunciado.'</label>';
                         for($i = 0; $i < $number_opciones; $i++){
                             $opcion = (array) $array_opciones[$i];
                             echo '
                             <div class="checkbox">
-                                <input type="hidden" name="'.$row[16].'" value="-1">
-                                <label><input type="checkbox" name="'.$row[16].'" value="'.$opcion['valor'].'" '.$enabled.'>'.$opcion['enunciado'].'</label>
+                                <input type="hidden" name="'.$row->{'mod_id_formulario_pregunta'}.'" value="-1">
+                                <label><input type="checkbox" name="'.$row->{'mod_id_formulario_pregunta'}.'" value="'.$opcion['valor'].'" '.$enabled.'>'.$opcion['enunciado'].'</label>
                             </div>
                             ' . "\n";
                         }
