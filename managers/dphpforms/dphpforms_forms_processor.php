@@ -206,32 +206,47 @@ function dphpforms_store_form($form_JSON){
     }
 
     $identifiers_reglas = array();
-    foreach ($json_obj_form->{'reglas'} as &$regla) {
-        $identifier_pregunta_A = null;
-        $identifier_pregunta_B = null;
-       
-        for($i = 0; $i < count($identifiers_form_preguntas); $i++){
+    if(property_exists($json_obj_form, 'reglas')){
+        foreach ($json_obj_form->{'reglas'} as &$regla) {
+            $identifier_pregunta_A = null;
+            $identifier_pregunta_B = null;
+           
+            for($i = 0; $i < count($identifiers_form_preguntas); $i++){
+                
+                if($identifiers_form_preguntas[$i]['idPreguntaTemporal'] == $regla->{'id_temporal_campo_a'}){
+                    $identifier_pregunta_A = $identifiers_form_preguntas[$i]['idRelacionFormPreg'];
+                }
+    
+                if($identifiers_form_preguntas[$i]['idPreguntaTemporal'] == $regla->{'id_temporal_campo_b'} ){
+                    $identifier_pregunta_B = $identifiers_form_preguntas[$i]['idRelacionFormPreg'];
+                }
+    
+                if(($identifier_pregunta_A != null)&&($identifier_pregunta_B != null)){
+                    break;
+                }
+            }
             
-            if($identifiers_form_preguntas[$i]['idPreguntaTemporal'] == $regla->{'id_temporal_campo_a'}){
-                $identifier_pregunta_A = $identifiers_form_preguntas[$i]['idRelacionFormPreg'];
-            }
-
-            if($identifiers_form_preguntas[$i]['idPreguntaTemporal'] == $regla->{'id_temporal_campo_b'} ){
-                $identifier_pregunta_B = $identifiers_form_preguntas[$i]['idRelacionFormPreg'];
-            }
-
-            if(($identifier_pregunta_A != null)&&($identifier_pregunta_B != null)){
-                break;
-            }
+            array_push($identifiers_reglas, dphpforms_store_form_regla($form_db_id, $regla->{'regla'}, $identifier_pregunta_A, $identifier_pregunta_B));
         }
-        
-        array_push($identifiers_reglas, dphpforms_store_form_regla($form_db_id, $regla->{'regla'}, $identifier_pregunta_A, $identifier_pregunta_B));
     }
 
     $identifiers_disparadores = dphpforms_store_form_disparadores($form_db_id, $form_details['disparadores'], $identifiers_form_preguntas);
     if(!$identifiers_disparadores){
-        echo " ERROR REGISTRANDO DISPARADORES ";
+        echo json_encode(
+            array(
+                'id_formulario' => '-1',
+                'mensaje_error' => 'ERROR REGISTRANDO DISPARADORES'
+            )
+        );
+        die();
     }
+
+    echo json_encode(
+        array(
+            'id_formulario' => $form_db_id,
+            'mensaje_error' => ''
+        )
+    );
     
 }
 
@@ -287,9 +302,9 @@ function dphpforms_store_pregunta($pregunta_details){
 
     $permission_identifier = $DB->insert_record('talentospilos_df_per_form_pr', $obj_permisos_formulario_pregunta, $returnid=true, $bulk=false);
 
-    if($permission_identifier){
+    /*if($permission_identifier){
         echo " PERMISO REGISTRADO. ";
-    }
+    }*/
     
     return $pregunta_identifier;
 }
@@ -307,7 +322,13 @@ function dphpforms_store_form_pregunta($form_id, $identifier_pregunta, $position
 
     $identifier_permission = dphpforms_store_form_pregunta_permits($idRelacion, $permits);
     if(!$identifier_permission){
-        echo ' ERROR REGISTRANDO PERMISOS ';
+        echo json_encode(
+            array(
+                'id_formulario' => '-1',
+                'mensaje_error' => 'ERROR REGISTRANDO PERMISOS'
+            )
+        );
+        die();
     }
 
     return $idRelacion;
