@@ -285,8 +285,6 @@ function dphpforms_store_pregunta($pregunta_details){
     $obj_permisos_formulario_pregunta->id_formulario_pregunta = $pregunta_identifier;
     $obj_permisos_formulario_pregunta->permisos = json_encode($pregunta_details['permisos_campo']);
 
-    print_r($pregunta_details);
-
     $permission_identifier = $DB->insert_record('talentospilos_df_per_form_pr', $obj_permisos_formulario_pregunta, $returnid=true, $bulk=false);
 
     if($permission_identifier){
@@ -314,31 +312,35 @@ function dphpforms_store_form_pregunta($form_id, $identifier_pregunta, $position
 
     return $idRelacion;
 
-
-    /*$db_connection = pg_connect("host=localhost dbname=formularios user=administrator password=administrator");
- 
-    $sql = "
-    
-        INSERT INTO formulario_preguntas(id_formulario, id_pregunta, posicion)
-        VALUES('".$form_id."', '".$identifier_pregunta."', '".$position."')
-        RETURNING id
-    
-    ";
-
-    $result = pg_query($db_connection, $sql);
-    $row = pg_fetch_row($result);
-    $idRelacion = $row[0];
-
-    $identifier_permission = dphpforms_store_form_pregunta_permits($idRelacion, $permits);
-    if(!$identifier_permission){
-        echo ' ERROR REGISTRANDO PERMISOS ';
-    }
-
-    return $idRelacion;*/
 }
 
 function dphpforms_store_form_regla($form_id, $text_rule, $identifier_pregunta_A, $identifier_pregunta_B){
-    $db_connection = pg_connect("host=localhost dbname=formularios user=administrator password=administrator");
+    
+    global $DB;
+
+    $identifier_regla = null;
+
+    $sql = "SELECT * from {talentospilos_df_reglas}";
+    $result = $DB->get_records_sql($sql);
+    $result = (array) $result;
+
+    print_r($result);
+
+    if(count($result) > 0){
+        for($i = 1; $i < count($result); $i++){
+            $row = $result[$i];
+            if($row->regla == $text_rule){
+                $identifier_regla = $row->id;
+                break;
+            }
+        }
+    }
+
+    
+
+    
+    
+    /*$db_connection = pg_connect("host=localhost dbname=formularios user=administrator password=administrator");
     
     $identifier_regla = null;
 
@@ -364,7 +366,7 @@ function dphpforms_store_form_regla($form_id, $text_rule, $identifier_pregunta_A
     $result = pg_query($db_connection, $sql);
     $row = pg_fetch_row($result);
     $identifier_regla = $row[0];
-    return $identifier_regla;
+    return $identifier_regla;*/
 }
 
 function dphpforms_store_form_pregunta_permits($form_idPregunta, $permits){
