@@ -48,7 +48,7 @@ function consult_instance($instanceid){
  * 
  * @see consult_program($codPrograma)
  * @param $codPrograma --> program id
- * @return object of the instance
+ * @return object representing the instance
  */
 
 function consult_program($codPrograma){
@@ -159,8 +159,7 @@ function updateSystemDirector($username, $codPrograma, $idinstancia, $segAca, $s
             $DB->update_record('talentospilos_instancia', $updateObject);
             update_role_user($directorinfo->username, "sistemas", $idinstancia); // se actualiza al rol sistemas
             
-        }else{//insert
-            // se opbtiene el id del programa
+        }else{//Gets program id
             $sql_query = "SELECT id FROM {talentospilos_programa} WHERE cod_univalle=".$codPrograma.";";
             $programa = $DB->get_record_sql($sql_query);
             if(!$programa) throw new Exception("NO se encontró el programa");

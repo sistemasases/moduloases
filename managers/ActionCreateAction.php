@@ -171,8 +171,8 @@ if (isset($_POST['profile']) && isset($_POST['actions'])&&isset($_POST['instance
   }
 
     }catch(Exception $ex){
-    $msg->title = "";
-    $msg->text = $ex;
+    $msg->title = "Éxito";
+    $msg->text = "Permisos asignados exitosamente";
     $msg->type = "success";
     echo $msg->text;
     $continuar=false;

@@ -1,6 +1,11 @@
-/**
- * @module block_ases/global_grade_book
+ /**
+ * Management - grade book, disabling fields (not editing).
+ * @module amd/src/report_grade_book_main
+ * @author Juan Pablo Moreno Muñoz
+ * @copyright 2018 Juan Pablo Moreno Muñoz <moreno.juan@correounivalle.edu.co>
+ * @license  http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
 
 define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/jqueryui'], function ($, bootstrap, sweetalert, jqueryui) {
 
@@ -15,6 +20,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
                 deleteNoPilos(pilos);
                 bloquearTotales();
                 if ($('.gradingerror').length != 0) {
+                    //Redirect to a new page given the course id 
                     new_page = location.origin + "/moodle/grade/report/grader/index.php?id=" + getCourseid();
                     swal({
                         title: "Redireccionando página.",
@@ -41,6 +47,11 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
                 location.reload();
             });
             
+            /**
+             * @method bloquearTotales
+             * @desc Changes css style, font size and remove the href attribute (link)
+             * @return {void}
+             */
             function bloquearTotales() {
                 $('.cat').each(function () {
                     var input = $(this).children().next('.text');
@@ -61,6 +72,12 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
             }
 
 
+            /**
+             * @method deleteNoPilos
+             * @desc Removes every student who's not 'pilo'. IF the student is 'pilo' remove href attribute (link to other page)
+             * @param {array} pilos students with cohort 'pilo'
+             * @return {void}
+             */
             function deleteNoPilos(pilos) {
                 $("#user-grades").children().children().each(function () {
                     if ($(this).attr('data-uid') != undefined) {
@@ -82,6 +99,13 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
                 })
             }
 
+            /**
+             * @method isPilo
+             * @desc Verifies if an id is in a given array
+             * @param {id} id id to verify in an array
+             * @param {array} pilos students with category 'pilo'
+             * @return {boolean} true if the given id is in the array, false otherwise
+             */
             function isPilo(id, pilos) {
                 for (var i = 0; i < pilos.length; i++) {
                     if (pilos[i].split("_")[1] === id) {
@@ -91,6 +115,11 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
                 return false;
             }
 
+            /**
+             * @method getIDs
+             * @desc gets all students id of element with attribute students-pilos from DOM
+             * @return {array} students 'pilos' ids
+             */
             function getIDs() {
                 var pilos = new Array;
                 $("#students-pilos").children().each(function () {
@@ -99,15 +128,21 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
                 return pilos;
             }
 
+            /**
+             * @method getCourseid
+             * @desc Obtains the course id present on the url
+             * @return {}
+             */
             function getCourseid() {
                 var informacionUrl = window.location.search.split("&");
                 for (var i = 0; i < informacionUrl.length; i++) {
                     var elemento = informacionUrl[i].split("=");
                     if (elemento[0] == "?id_course" || elemento[0] == "id_course") {
                         var curso = elemento[1];
+                        return curso;
                     }
                 }
-                return curso;
+                
             }
  
 

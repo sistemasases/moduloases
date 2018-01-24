@@ -1,7 +1,10 @@
-/**
- * @module block_ases/global_grade_book
+ /**
+ * Grade book management
+ * @module amd/src/global_grade_book
+ * @author Camilo José Cruz rivera
+ * @copyright 2018 Camilo José Cruz Rivera <cruz.camilo@correounivalle.edu.co> 
+ * @license  http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
 define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/jqueryui'], function ($, bootstrap, sweetalert, jqueryui) {
 
     return {
@@ -14,6 +17,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
                 deleteNoPilos(pilos);
                 bloquearTotales();
                 if ($('.gradingerror').length != 0) {
+                    //Redirect to a new page given the course id 
                     new_page = location.origin + "/moodle/grade/report/grader/index.php?id=" + getCourseid();
                     swal({
                         title: "Redireccionando página.",
@@ -107,11 +111,11 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
 
                 tecla = (document.all) ? e.keyCode : e.which;
 
-                //Tecla de retroceso para borrar y el punto(.) siempre la permite
+                //backspace to delete and (.)  always allows it
                 if (tecla == 8 || tecla == 46) {
                     return true;
                 }
-                // Patron de entrada, en este caso solo acepta numeros
+                // entry pattern, just accept numbers
                 patron = /[0-9]/;
                 tecla_final = String.fromCharCode(tecla);
                 return patron.test(tecla_final);
@@ -124,6 +128,12 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
             });
 
 
+            /**
+             * @method validateNota
+             * @desc Verifies if a grade is correct value (not empty or within a range)
+             * @param {DOM element} selector 
+             * @return {boolean} Return false in case there was any mistake or error, true if the grade is correct or there isn't a selected grade
+             */
             function validateNota(selector) {
                 var bool = false;
                 var nota = selector.val();
@@ -151,6 +161,11 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
                 return bool;
             }
 
+            /**
+             * @method bloquearTotales
+             * @desc disable some fields on front page and changes CSS (font weight and size)
+             * @return {void}
+             */
             function bloquearTotales() {
                 $('.cat').each(function () {
                     var input = $(this).children().next('.text');
@@ -171,6 +186,12 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
             }
 
 
+            /**
+             * @method deleteNoPilos
+             * @desc Removes every student who's not 'pilo'. IF the student is 'pilo' remove href attribute (link to other page)
+             * @param {array} pilos 'pilos' students to filtrate with the entry from DOM
+             * @return {void}
+             */
             function deleteNoPilos(pilos) {
                 $("#user-grades").children().children().each(function () {
                     if ($(this).attr('data-uid') != undefined) {
@@ -192,6 +213,13 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
                 })
             }
 
+            /**
+             * @method isPilo
+             * @desc verifies if a student id is in an array of 'pilos'
+             * @param {integer} id 
+             * @param {array} pilos 
+             * @return {boolean} True if the student is 'pilo', false otherwise
+             */
             function isPilo(id, pilos) {
                 for (var i = 0; i < pilos.length; i++) {
                     if (pilos[i].split("_")[1] === id) {
@@ -201,6 +229,12 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
                 return false;
             }
 
+
+            /**
+             * @method getIDs
+             * @desc Returns an array of ids, belonging to students 'pilos'
+             * @return {array} array of students id
+             */
             function getIDs() {
                 var pilos = new Array;
                 $("#students-pilos").children().each(function () {
@@ -209,15 +243,21 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
                 return pilos;
             }
 
+            /**
+             * @method getCourseid
+             * @description Obtains the course id present on the url
+             * @return {integer} course id
+             */
             function getCourseid() {
                 var informacionUrl = window.location.search.split("&");
                 for (var i = 0; i < informacionUrl.length; i++) {
                     var elemento = informacionUrl[i].split("=");
                     if (elemento[0] == "?id_course" || elemento[0] == "id_course") {
                         var curso = elemento[1];
+                        return curso;
                     }
                 }
-                return curso;
+                
             }
  
 

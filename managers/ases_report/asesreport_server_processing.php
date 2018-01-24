@@ -17,9 +17,9 @@ $fields_format = array(
     'email'=>'tp_user.emailpilos',
     'cellphone'=>'tp_user.celular',
     'address'=>'tp_user.direccion_res',
-    'program_code'=>'acad_program.cod_univalle',
-    'name_program'=>'acad_program.nombre',
-    'faculty'=>'faculty.nombre'
+    'program_code'=>'acad_program.cod_univalle AS cod_univalle',
+    'name_program'=>'acad_program.nombre AS nombre_programa',
+    'faculty'=>'faculty.nombre AS nombre_facultad'
 );
 
 $columns_format = array(
@@ -41,6 +41,7 @@ if(isset($_POST['conditions'])){
     }
 }
 
+
 if(isset($_POST['fields'])){
     foreach($_POST['fields'] as $field){
         array_push($query_fields, $fields_format[$field]);
@@ -50,30 +51,30 @@ if(isset($_POST['fields'])){
 
 if(isset($_POST['academic_fields'])){
     foreach($_POST['academic_fields'] as $academic_field){
+        //print_r(explode(' ', $fields_format[$academic_field])[2]);
         array_push($academic_fields, $fields_format[$academic_field]);
-        array_push($columns, array("title"=>$columns_format[$academic_field], "name"=>$columns_format[$academic_field], "data"=>$columns_format[$academic_field]));
+        array_push($columns, array("title"=>$columns_format[$academic_field], "name"=>explode(' ', $fields_format[$academic_field])[2], "data"=>explode(' ', $fields_format[$academic_field])[2]));
     }
 }
 
-// print_r($conditions);
+if(isset($_POST['risk_fields'])){
+    foreach($_POST['risk_fields'] as $risk_field){
+    
+        $query_name = "SELECT * FROM {talentospilos_riesgos_ases} WHERE id =".$risk_field;
+        $risk_name = $DB->get_record_sql($query_name)->nombre;
+        array_push($columns, array("title"=>'R.'.strtoupper(substr($risk_name, 0, 1)).substr($risk_name, 1, 2), "name"=>$risk_name, "data"=>$risk_name));
+        array_push($risk_fields, $risk_field);
+    }
+}
+
+// print_r($columns);
 // print_r($query_fields);
-// print_r($academic_fields);
+//print_r($academic_fields);
 // print_r($columns);
 
 if(isset($_POST['instance_id'])){
     $counter = 0;
     
-    if(isset($_POST['chk_risk'])){
-        
-        foreach($_POST['chk_risk'] as $chk_risk){
-            $query_nombre = "SELECT * FROM {talentospilos_riesgos_ases} WHERE id =".$chk_risk;
-            $nombre_riesgo = $DB->get_record_sql($query_nombre)->nombre;
-            array_push($columns, array("title"=>'R.'.strtoupper(substr($nombre_riesgo, 0, 1)).substr($nombre_riesgo, 1, 2), "name"=>$nombre_riesgo, "data"=>$nombre_riesgo));
-            array_push($riesgos_consulta, $chk_risk);
-            $counter = $counter + 1;            
-        }
-    }
-
     $result = get_ases_report($query_fields, $conditions, $risk_fields, $academic_fields, $_POST['instance_id']);
     
     $data = array(

@@ -386,8 +386,9 @@ if( isset($_FILES['file']) || isset($_POST['idinstancia'])){
  * Creates an associative array given a header from a CSV file
  * 
  * @see getAssociativeTitles ($titlesPos)
- * @param $titlesPos --> header from CSV
- * @return array 
+ * @param $titlesPos --> header from CSV 
+ * @return array with 'email_monitor', 'created', 'fecha', 'hora_ini', 'hora_fin', 'lugar', 'tema', 'objetivos', 'actividades', 'familiar_desc', 'familiar_riesgo', 'academico', 'academico_riesgo', 'economico', 'economico_riesgo', 'vida_uni', 'vida_uni_riesgo', 'individual', 'individual_riesgo', 'registroid' and 'username' fields on it
+ * 
  */
 function getAssociativeTitles ($titlesPos){
     

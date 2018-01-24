@@ -31,7 +31,7 @@ require_once(dirname(__FILE__) . '/../../../../config.php');
 /**
  * Gets all functionalities from {talentospilos_funcionalidades} table
  * @see get_functions()
- * @return Array
+ * @return array containing the information obtained from db
  **/
 
 function get_functions()
@@ -45,7 +45,7 @@ function get_functions()
 /**
  * Returns all functionalities along the 'eliminar' field on system
  * @see get_functions_table()
- * @return Array
+ * @return array with strings HTML containing every functionality
  **/
 
 function get_functions_table()
@@ -69,7 +69,7 @@ function get_functions_table()
  * Gets all functionalities from {talentospilos_funcionalidades} table by name
  * @see get_functions_by_name($name)
  * @param $name --> Functionalityname
- * @return Object With all functionalities
+ * @return object With all functionalities
  **/
 
 function get_functions_by_name($name)
@@ -89,7 +89,7 @@ function get_functions_by_name($name)
  * Gets all actions from  {talentospilos_accion} table by name
  * @see  get_action_by_name($name)
  * @param $name ---> action name
- * @return Object
+ * @return object representing all actions obtained
  **/
 
 function get_action_by_name($name)
@@ -293,7 +293,7 @@ function get_functions_by_role($id_role)
  * Returns all functionalities names given a role
  * @see get_actions_by_role_id($id_role)
  * @param $id_role --> role id
- * @return array
+ * @return array with the name of every functionality
  **/
 
 function get_functions_by_role_id($id_role){
@@ -317,7 +317,8 @@ function get_functions_by_role_id($id_role){
 //get_functions_by_role_id(6);
 
 /**
- * Función que retorna los roles con el campo eliminar existentes en el sistema 
+ * Gets all roles with their delete field on system
+ * 
  * @see get_roles_table()
  * @return array
  **/
@@ -347,7 +348,7 @@ function get_roles_table()
  * @see delete_record($id,$source)
  * @param $id ---> record id
  * @param $source --> record table to delete
- * @return array
+ * @return object with information of the executed change
  **/
 
 function delete_record($id, $source)
