@@ -25,7 +25,6 @@
 require_once(dirname(__FILE__).'/../../../../config.php');
 require_once(dirname(__FILE__).'/../instance_management/instance_lib.php');
 
- //metodo apra borrar archivos de un folder
 /**
  * Deletes files from a folder given its path
  * 
