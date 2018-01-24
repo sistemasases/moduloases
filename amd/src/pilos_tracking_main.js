@@ -7,7 +7,6 @@
 
 define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ases/datatables.net', 'block_ases/datatables.net-buttons', 'block_ases/buttons.flash', 'block_ases/jszip', 'block_ases/pdfmake', 'block_ases/buttons.html5', 'block_ases/buttons.print', 'block_ases/sweetalert', 'block_ases/select2'], function($,Modernizr,bootstrap, datatables, sweetalert, select2) {
 
-
     return {
         init: function() {
 
@@ -1185,7 +1184,6 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                 $('#seguimiento #m_fin').append(min);
             }
 
-
              /**
               * @method actualizar_riesgo
               * @desc Function used to change colour when risk radio buttons is modified
@@ -1218,6 +1216,7 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
              * @param {id} id  track id 
              * @return {void}
              */
+
             function auxiliar_cancelar(id) {
                 $("#titulo_fecha_" + id).hide();
                 $("#borrar_" + id).show();

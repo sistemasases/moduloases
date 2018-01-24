@@ -102,6 +102,11 @@ class renderer extends plugin_renderer_base {
      $data = $page->export_for_template($this);
      return parent::render_from_template('block_ases/create_action', $data);
     }
+
+    public function render_tracking_time_control_page($page){
+     $data = $page->export_for_template($this);
+     return parent::render_from_template('block_ases/tracking_time_control', $data);
+    }
     
     public function render_create_view_page($page){
      $data = $page->export_for_template($this);

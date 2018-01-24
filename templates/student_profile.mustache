@@ -2,6 +2,7 @@
 
   {{#data}}
   {{> block_ases/side_menu}}
+  {{{message}}}
   <div class="container">
       <form  id="ficha_estudiante" onsubmit="myFunction(); return false;">
         
@@ -128,7 +129,10 @@
                 		<li id="socioed_li" ><a href="#socioed_tab" data-toggle="tab">SOCIOEDUCATIVO</a></li>
                     {{/view_socioed_tab_sp}}
 
+                    {{#view_academic_tab_sp}}                                    
                     <li id="academic_li"><a href="#academic_tab" data-toggle="tab">ACADÉMICO</a></li>
+                    {{/view_academic_tab_sp}}
+
               			{{#view_geographic_tab_sp}}
                     <li id="geographic_li"><a href="#geographic_tab" data-toggle="tab">GEOGRÁFICO</a></li>{{/view_geographic_tab_sp}}
 
@@ -141,6 +145,7 @@
                   {{#view_socioed_tab_sp}}
                   {{> block_ases/view_socioed_tab_sp}}
                   {{/view_socioed_tab_sp}}
+                  {{#view_academic_tab_sp}}
 
                   <!--academic tab-->
                   <div class="tab-pane" id="academic_tab">
@@ -166,18 +171,20 @@
                     <h4 class="panel-title">
                       <a id="hist_title" class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseHis" aria-expanded="false"
                         aria-controls="collapseHis">
-                        Historico de Semestres
+                        Semestres Anteriores
                       </a>
                     </h4>
                   </div>
                   <div id="collapseHis" class="panel-collapse form-pilos collapse" role="tabpanel" aria-labelledby="headingTwo">
-                    Reporte Historico en proceso de desarrollo
+                    {{{historic_academic}}}
                   </div>
                 </div>
               </div>
 
 
             </div>
+            {{/view_academic_tab_sp}}
+            
                   <!-- End academic tab -->
 
                   {{#view_geographic_tab_sp}}
@@ -535,11 +542,11 @@
                     <canvas id="myChart_familiar" width="900" height="110"></canvas>
                 </div><br>
                 <div class="graficaHistoricoDimensional" width="900" height="110">
-                    <span>Dimensión: Academico</span>
+                    <span>Dimensión: Academica</span>
                     <canvas id="myChart_academico" width="900" height="110"></canvas>
                 </div><br>
                 <div class="graficaHistoricoDimensional" width="900" height="110">
-                    <span>Dimensión: Económico</span>
+                    <span>Dimensión: Económica</span>
                     <canvas id="myChart_economico" width="900" height="110"></canvas>
                 </div><br>
                 <div class="graficaHistoricoDimensional" width="900" height="110">

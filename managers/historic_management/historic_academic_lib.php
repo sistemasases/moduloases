@@ -119,13 +119,13 @@ function getAssociativeArray($array)
 /**
  * validate a register in table talentospilos_historic_academ
  *
- * @see validate_register($id_student, $id_program, $id_semester)
+ * @see validate_historic_register($id_student, $id_program, $id_semester)
  * @param $id_student --> id from table talentospilos_usuario
  * @param $id_program --> id from table talentospilos_semestre
  * @param $id_semester --> id from
  * @return Object|boolean
  */
-function validate_register($id_student, $id_program, $id_semester)
+function validate_historic_register($id_student, $id_program, $id_semester)
 {
 
     global $DB;
@@ -153,7 +153,7 @@ function update_historic_academic($id_student, $id_program, $id_semester, $avera
     global $DB;
 
     //validate existence
-    $result = validate_register($id_student, $id_program, $id_semester);
+    $result = validate_historic_register($id_student, $id_program, $id_semester);
     $object_historic = new StdClass;
 
     if (!$result) {
@@ -210,10 +210,10 @@ function update_historic_academic($id_student, $id_program, $id_semester, $avera
 function update_historic_materias($id_student, $id_program, $id_semester, $json_materias)
 {
     global $DB;
+    $object_historic = new StdClass;
 
     //validate existence
-    $result = validate_register($id_student, $id_program, $id_semester);
-    $object_historic = new StdClass;
+    $result = validate_historic_register($id_student, $id_program, $id_semester);
     
     if (!$result) {
         //INSERTION
@@ -264,11 +264,11 @@ function update_historic_materias($id_student, $id_program, $id_semester, $json_
 function update_historic_cancel($id_historic, $cancel_date)
 {
     global $DB;
+    $object_cancel = new StdClass;
 
     //validate exitence
     $sql_query = "SELECT id FROM {talentospilos_history_cancel} WHERE id_history = $id_historic";
     $result = $DB->get_record_sql($sql_query);
-    $object_cancel = new StdClass;
 
     if (!$result) {
         //INSERTION
@@ -313,16 +313,16 @@ function update_historic_cancel($id_historic, $cancel_date)
 function update_historic_bajo($id_historic, $num_bajo)
 {
     global $DB;
+    $object_bajo = new StdClass;
     
     //validate exitence
     $sql_query = "SELECT id FROM {talentospilos_history_bajos} WHERE id_history = $id_historic";
     $result = $DB->get_record_sql($sql_query);
-    $object_bajo = new StdClass;
 
     if (!$result) {
         //INSERTION
         $object_bajo->id_history = $id_historic;
-        $object_bajo->numero = $num_bajo;
+        $object_bajo->numero_bajo = $num_bajo;
 
         $insert = $DB->insert_record('talentospilos_history_bajos', $object_bajo, false);
 
@@ -337,7 +337,7 @@ function update_historic_bajo($id_historic, $num_bajo)
         $id_register = $result->id;
         $object_bajo->id = $id_register;
         $object_bajo->id_history = $id_historic;
-        $object_bajo->numero = $num_bajo;
+        $object_bajo->numero_bajo = $num_bajo;
 
         $update = $DB->update_record('talentospilos_history_bajos', $object_bajo);
 
@@ -362,15 +362,16 @@ function update_historic_bajo($id_historic, $num_bajo)
 function update_historic_estimulo($id_historic, $puesto)
 {
     global $DB;
+    $object_estimulo = new StdClass;
+    
     //validate exitence
     $sql_query = "SELECT id FROM {talentospilos_history_estim} WHERE id_history = $id_historic";
     $result = $DB->get_record_sql($sql_query);
-    $object_estimulo = new StdClass;
 
     if (!$result) {
         //INSERTION
         $object_estimulo->id_history = $id_historic;
-        $object_estimulo->puesto = $puesto;
+        $object_estimulo->puesto_ocupado = $puesto;
 
         $insert = $DB->insert_record('talentospilos_history_estim', $object_estimulo, false);
 
@@ -385,7 +386,7 @@ function update_historic_estimulo($id_historic, $puesto)
         $id_register = $result->id;
         $object_estimulo->id = $id_register;
         $object_estimulo->id_history = $id_historic;
-        $object_estimulo->puesto = $puesto;
+        $object_estimulo->puesto_ocupado = $puesto;
 
         $update = $DB->update_record('talentospilos_history_estim', $object_estimulo);
 

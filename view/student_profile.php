@@ -29,20 +29,19 @@ require_once __DIR__ . '/../../../config.php';
 require_once $CFG->libdir . '/adminlib.php';
 //require_once('../managers/query.php');
 
-require_once('../managers/lib/student_lib.php');
-require_once('../managers/lib/lib.php');
-require_once('../managers/user_management/user_lib.php');
-require_once('../managers/student_profile/geographic_lib.php');
-require_once('../managers/student_profile/studentprofile_lib.php');
+require_once '../managers/lib/student_lib.php';
+require_once '../managers/lib/lib.php';
+require_once '../managers/user_management/user_lib.php';
+require_once '../managers/student_profile/geographic_lib.php';
+require_once '../managers/student_profile/studentprofile_lib.php';
 require_once '../managers/student_profile/academic_lib.php';
-require_once('../managers/student_profile/student_graphic_dimension_risk.php');
-require_once('../managers/instance_management/instance_lib.php');
-require_once('../managers/dateValidator.php');
-require_once ('../managers/permissions_management/permissions_lib.php');
-require_once ('../managers/validate_profile_action.php');
-require_once ('../managers/menu_options.php');
-include('../lib.php');
-
+require_once '../managers/student_profile/student_graphic_dimension_risk.php';
+require_once '../managers/instance_management/instance_lib.php';
+require_once '../managers/dateValidator.php';
+require_once '../managers/permissions_management/permissions_lib.php';
+require_once '../managers/validate_profile_action.php';
+require_once '../managers/menu_options.php';
+include '../lib.php';
 
 global $PAGE;
 global $USER;
@@ -142,7 +141,6 @@ if ($student_code != 0) {
     // Evaluates if user role has permissions assigned on this view
     $actions = authenticate_user_view($USER->id, $blockid);
     $record = $actions;
-    
 
     $record->id_moodle = $id_user_moodle;
     $record->id_ases = $student_id;
@@ -169,9 +167,7 @@ if ($student_code != 0) {
             break;
     }
 
-    
     // General file (ficha general) information
-     
 
     $record->res_address = $ases_student->direccion_res;
     $record->init_tel = $ases_student->tel_ini;
@@ -205,9 +201,7 @@ if ($student_code != 0) {
         $record->professional_fullname = "NO REGISTRA";
     }
 
-    
     // Geographic information
-     
 
     $geographic_tab_html = file_get_contents('../templates/geographic_tab.html');
     $record->geographic_tab = $geographic_tab_html;
@@ -262,9 +256,7 @@ if ($student_code != 0) {
             break;
     }
 
-    
-     // Students risks
-     
+    // Students risks
 
     $risk_object = get_risk_by_student($student_id);
 
@@ -358,9 +350,339 @@ if ($student_code != 0) {
 
     // Loading academic information
 
+    //Current semester
     $html_academic_table = get_grades_courses_student_last_semester($id_user_moodle);
-
     $record->academic_semester_act = $html_academic_table;
+
+    $html_historic_academic = get_historic_academic_by_student($student_id);
+    $record->historic_academic = $html_historic_academic;
+
+    // Student trackings (Seguimientos)
+
+    $html_tracking_peer = "";
+    $array_peer_trackings = get_tracking_group_by_semester($student_id, 'PARES', null, $blockid);
+
+    $enum_risk = array();
+    array_push($enum_risk, "");
+    array_push($enum_risk, "Bajo");
+    array_push($enum_risk, "Medio");
+    array_push($enum_risk, "Alto");
+
+    if ($array_peer_trackings != null) {
+
+        $panel = "<div class='panel-group' id='accordion_semesters'>";
+
+        foreach ($array_peer_trackings->semesters_segumientos as $array_semester) {
+
+            $panel .= "<div class='panel panel-default'>";
+            $panel .= "<a data-toggle='collapse' class='collapsed' data-parent='#accordion_semesters' style='text-decoration:none' href='#semester" . $array_semester->id_semester . "'>";
+            $panel .= "<div class='panel-heading heading_semester_tracking'>";
+            $panel .= "<h4 class='panel-title'>";
+            $panel .= "$array_semester->name_semester";
+            $panel .= "<span class='glyphicon glyphicon-chevron-left'></span>";
+            $panel .= "</h4>"; //End panel-title
+            $panel .= "</div>"; //End panel-heading
+            $panel .= "</a>";
+
+            $panel .= "<div id='semester$array_semester->id_semester' class='panel-collapse collapse in'>";
+            $panel .= "<div class='panel-body'>";
+
+            // $panel .= "<div class=\"container well col-md-12\">";
+            // $panel .= "<div class=\"container-fluid col-md-10\" name=\"info\">";
+            // $panel .= "<div class=\"row\">";
+
+            $panel .= "<div class='panel-group' id='accordion_trackings_semester'>";
+
+            foreach ($array_semester->result as $tracking) {
+
+                $monitor_object = get_moodle_user($tracking->id_monitor);
+
+                // Date format (Formato de fecha)
+                $date = date_parse_from_format('d-m-Y', $tracking->fecha);
+                $months = array("Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre");
+
+                $panel .= "<div class='panel panel-default'>";
+                $panel .= "<div class='panel-heading'>";
+                $panel .= "<h4 class='panel-title'>";
+
+                $panel .= "<a data-toggle='collapse' data-parent='#accordion_trackings_semester' href='#" . $tracking->id_seg . "'>";
+                $panel .= " Registro " . $months[(int) $date["month"] - 1] . "-" . $date["day"] . "-" . $date["year"] . "</a>";
+
+                $panel .= "</h4>"; // h4 div panel-title
+                $panel .= "</div>"; // End div panel-heading
+
+                $panel .= "<div id='$tracking->id_seg' class='panel-collapse collapse'>";
+                $panel .= "<div class='panel-body'>";
+
+                // Date, Place, time  (Fecha, lugar, hora)
+                $panel .= "<div class='panel panel-default'>";
+                $panel .= "<div class='panel-body'>";
+
+                $panel .= "<div class='col-sm-3'>";
+                $panel .= "<b>Fecha:</b>";
+                $panel .= "</div>";
+                $panel .= "<div class='col-sm-6'>";
+                $panel .= "<b>Lugar:</b>";
+                $panel .= "</div>";
+                $panel .= "<div class='col-sm-3'>";
+                $panel .= "<b>Hora:</b>";
+                $panel .= "</div>";
+
+                $panel .= "<div class='col-sm-3'>";
+                $panel .= "<span class='date_tracking_peer'>" . $date["month"] . "-" . $date["day"] . "-" . $date["year"] . "</span>";
+                $panel .= "</div>";
+                $panel .= "<div class='col-sm-6'>";
+                $panel .= "<span class='place_tracking_peer'>" . $tracking->lugar . "</span>";
+                $panel .= "</div>";
+                $panel .= "<div class='col-sm-3'>";
+                $panel .= "<span class='init_time_tracking_peer'>" . $tracking->hora_ini . "</span> - <span class='ending_time_tracking_peer'>" . $tracking->hora_fin . "</span>";
+                $panel .= "</div>";
+
+                $panel .= "</div>"; // End panel-body
+                $panel .= "</div>"; // End div panel panel-default
+
+                // Created by (Creado por)
+
+                $panel .= "<div class='panel panel-default'>";
+                $panel .= "<div class='panel-body'>";
+
+                $panel .= "<div class='col-sm-12'>";
+                $panel .= "<b>Creado por: </b>";
+                $panel .= $monitor_object->firstname . " " . $monitor_object->lastname;
+                $panel .= "</div>";
+
+                $panel .= "</div>"; // End panel-body
+                $panel .= "</div>"; // End div panel panel-default
+
+                // Subject (Tema)
+                $panel .= "<div class='panel panel-default'>";
+                $panel .= "<div class='panel-body'>";
+
+                $panel .= "<div class='col-sm-12'>";
+                $panel .= "<b>Tema:</b>";
+                $panel .= "</div>";
+
+                $panel .= "<div class='col-sm-12'>";
+                $panel .= "<span class='topic_tracking_peer'>" . $tracking->tema . "</span>";
+                $panel .= "</div>";
+
+                $panel .= "</div>"; // End panel-body
+                $panel .= "</div>"; // End div panel panel-default
+
+                // Objectives (Objetivos)
+                $panel .= "<div class='panel panel-default'>";
+                $panel .= "<div class='panel-body'>";
+
+                $panel .= "<div class='col-sm-12'>";
+                $panel .= "<b>Objetivos:</b>";
+                $panel .= "</div>";
+
+                $panel .= "<div class='col-sm-12'>";
+                $panel .= "<span class='objectives_tracking_peer'>" . $tracking->objetivos . "</span>";
+                $panel .= "</div>";
+
+                $panel .= "</div>"; // End panel-body
+                $panel .= "</div>"; // End div panel panel-default
+
+                if ($tracking->individual != "") {
+
+                    if ($tracking->individual_riesgo == '1') {
+                        $panel .= "<div class='panel panel-default riesgo_bajo'>";
+                    } else if ($tracking->individual_riesgo == '2') {
+                        $panel .= "<div class='panel panel-default riesgo_medio'>";
+                    } else if ($tracking->individual_riesgo == '3') {
+                        $panel .= "<div class='panel panel-default riesgo_alto'>";
+                    } else {
+                        $panel .= "<div class='panel panel-default'>";
+                    }
+
+                    $panel .= "<div class='panel-body'>";
+                    $panel .= "<div class='col-sm-12'>";
+                    $panel .= "<b>Individual:</b><br>";
+                    $panel .= "<span class='individual_tracking_peer'>$tracking->individual</span><br><br>";
+                    $panel .= "<b>Riesgo individual: </b>";
+                    $panel .= "<span class='ind_risk_tracking_peer'>" . $enum_risk[(int) $tracking->individual_riesgo] . "</span><br><br>";
+                    $panel .= "</div>"; // End div col-sm-12
+                    $panel .= "</div>"; // End panel-body
+                    $panel .= "</div>"; // End div panel panel-default
+                }
+
+                if ($tracking->familiar_desc != "") {
+
+                    if ($tracking->familiar_riesgo == '1') {
+                        $panel .= "<div class='panel panel-default riesgo_bajo'>";
+                    } else if ($tracking->familiar_riesgo == '2') {
+                        $panel .= "<div class='panel panel-default riesgo_medio'>";
+                    } else if ($tracking->familiar_riesgo == '3') {
+                        $panel .= "<div class='panel panel-default riesgo_alto'>";
+                    } else {
+                        $panel .= "<div class='panel panel-default'>";
+                    }
+
+                    $panel .= "<div class='panel-body'>";
+                    $panel .= "<div class='col-sm-12'>";
+                    $panel .= "<b>Familiar:</b><br>";
+                    $panel .= "<span class='familiar_tracking_peer'>$tracking->familiar_desc</span><br><br>";
+                    $panel .= "<b>Riesgo familiar: </b>";
+                    $panel .= "<span class='fam_risk_tracking_peer'>" . $enum_risk[(int) $tracking->familiar_riesgo] . "</span><br><br>";
+                    $panel .= "</div>"; // End div col-sm-12
+                    $panel .= "</div>"; // End panel-body
+                    $panel .= "</div>"; // End div panel panel-default
+                }
+
+                if ($tracking->academico != "") {
+
+                    if ($tracking->academico_riesgo == '1') {
+                        $panel .= "<div class='panel panel-default riesgo_bajo'>";
+                    } else if ($tracking->academico_riesgo == '2') {
+                        $panel .= "<div class='panel panel-default riesgo_medio'>";
+                    } else if ($tracking->academico_riesgo == '3') {
+                        $panel .= "<div class='panel panel-default riesgo_alto'>";
+                    } else {
+                        $panel .= "<div class='panel panel-default'>";
+                    }
+
+                    $panel .= "<div class='panel-body'>";
+                    $panel .= "<div class='col-sm-12'>";
+                    $panel .= "<b>Académico:</b><br>";
+                    $panel .= "<span class='academico_tracking_peer'>$tracking->academico</span><br><br>";
+                    $panel .= "<b>Riesgo académico: </b>";
+                    $panel .= "<span class='aca_risk_tracking_peer'>" . $enum_risk[(int) $tracking->academico_riesgo] . "</span><br><br>";
+                    $panel .= "</div>"; // End div col-sm-12
+                    $panel .= "</div>"; // End panel-body
+                    $panel .= "</div>"; // End div panel panel-default
+                }
+
+                if ($tracking->economico != "") {
+
+                    if ($tracking->economico_riesgo == '1') {
+                        $panel .= "<div class='panel panel-default riesgo_bajo'>";
+                    } else if ($tracking->economico_riesgo == '2') {
+                        $panel .= "<div class='panel panel-default riesgo_medio'>";
+                    } else if ($tracking->economico_riesgo == '3') {
+                        $panel .= "<div class='panel panel-default riesgo_alto'>";
+                    } else {
+                        $panel .= "<div class='panel panel-default'>";
+                    }
+
+                    $panel .= "<div class='panel-body'>";
+                    $panel .= "<div class='col-sm-12'>";
+                    $panel .= "<b>Económico:</b><br>";
+                    $panel .= "<span class='economico_tracking_peer'>$tracking->economico</span><br><br>";
+                    $panel .= "<b>Riesgo económico: </b>";
+                    $panel .= "<span class='econ_risk_tracking_peer'>" . $enum_risk[(int) $tracking->economico_riesgo] . "</span><br><br>";
+                    $panel .= "</div>"; // End div col-sm-12
+                    $panel .= "</div>"; // End panel-body
+                    $panel .= "</div>"; // End div panel panel-default
+                }
+
+                if ($tracking->vida_uni != "") {
+
+                    if ($tracking->vida_uni_riesgo == '1') {
+                        $panel .= "<div class='panel panel-default riesgo_bajo'>";
+                    } else if ($tracking->vida_uni_riesgo == '2') {
+                        $panel .= "<div class='panel panel-default riesgo_medio'>";
+                    } else if ($tracking->vida_uni_riesgo == '3') {
+                        $panel .= "<div class='panel panel-default riesgo_alto'>";
+                    } else {
+                        $panel .= "<div class='panel panel-default'>";
+                    }
+
+                    $panel .= "<div class='panel-body'>";
+                    $panel .= "<div class='col-sm-12'>";
+                    $panel .= "<b>Vida universitaria:</b><br>";
+                    $panel .= "<span class='lifeu_tracking_peer'>$tracking->vida_uni</span><br><br>";
+                    $panel .= "<b>Riesgo vida universitaria: </b>";
+                    $panel .= "<span class='lifeu_risk_tracking_peer'>" . $enum_risk[(int) $tracking->vida_uni_riesgo] . "</span><br><br>";
+                    $panel .= "</div>"; // End div col-sm-12
+                    $panel .= "</div>"; // End panel-body
+                    $panel .= "</div>"; // End div panel panel-default
+                }
+
+                // Observations (observaciones)
+                $panel .= "<div class='panel panel-default'>";
+                $panel .= "<div class='panel-body'>";
+
+                $panel .= "<div class='col-sm-12'>";
+                $panel .= "<b>Observaciones:</b>";
+                $panel .= "</div>";
+
+                $panel .= "<div class='col-sm-12'>";
+                $panel .= "<span class='observations_tracking_peer'>" . $tracking->observaciones . "</span>";
+                $panel .= "</div>";
+
+                $panel .= "</div>"; // End panel-body
+                $panel .= "</div>"; // End div panel panel-default
+
+                // Edit and delete buttons
+                $panel .= "<div class='row'>";
+                $panel .= "<div class='col-sm-4 row-buttons-tracking'>";
+                $panel .= "<button type='button' class='btn-primary edit_peer_tracking' id='edit_tracking_" . $tracking->id_seg . "'>Editar seguimiento</button>";
+                $panel .= "</div>";
+                $panel .= "<div class='col-sm-3 col-sm-offset-5 row-buttons-tracking'>";
+                $panel .= "<button type='button' class='btn-danger delete_peer_tracking col-sm-10' id='delete_tracking_peer_" . $tracking->id_seg . "'>";
+                $panel .= "Borrar <span class='glyphicon glyphicon-trash'></span>";
+                $panel .= "</button>";
+                $panel .= "</div>";
+                $panel .= "</div>";
+
+                $panel .= "</div>"; // End panel-body tracking
+                $panel .= "</div>"; // End div panel-collapse tracking
+                $panel .= "</div>"; // End div panel-default
+            }
+
+            $panel .= "</div>"; // End panel accordion_trackings_semester
+
+            $panel .= "</div>"; // End panel-body
+            $panel .= "</div>"; // End panel-collapse
+
+            $panel .= "</div>"; //End panel panel-default
+        }
+
+        $panel .= "</div>"; //End panel group accordion_semesters
+
+        $html_tracking_peer .= $panel;
+
+    } else {
+        $html_tracking_peer .= "<div class='col-sm-12'><center><h4>No registra seguimientos</h4></center></div>";
+    }
+
+    $record->peer_tracking = $html_tracking_peer;
+
+    // Loading desertion reasons or studies postponement
+
+    $reasons_dropout = get_reasons_dropout();
+
+    $html_select_reasons = "<option value='' id='no_reason_option'>Seleccione el motivo</option>";
+
+    foreach ($reasons_dropout as $reason) {
+        $html_select_reasons .= "<option value=" . $reason->id . ">";
+        $html_select_reasons .= $reason->descripcion;
+        $html_select_reasons .= "</option>";
+    }
+
+    $record->reasons_options = $html_select_reasons;
+
+    // Getting data for risks graphs
+
+    $periodoactual = getPeriodoActual();
+    $idEstudiante = $student_id;
+    // Mustache doesn't allow advanced conditional control, information detachment occurs here
+    $seguimientosEstudianteIndividual = obtenerDatosSeguimientoFormateados($idEstudiante, 'individual', $periodoactual);
+    $seguimientosEstudianteFamiliar = obtenerDatosSeguimientoFormateados($idEstudiante, 'familiar', $periodoactual);
+    $seguimientosEstudianteAcademico = obtenerDatosSeguimientoFormateados($idEstudiante, 'academico', $periodoactual);
+    $seguimientosEstudianteEconomicor = obtenerDatosSeguimientoFormateados($idEstudiante, 'economico', $periodoactual);
+    $seguimientosVidaUniversitaria = obtenerDatosSeguimientoFormateados($idEstudiante, 'vida_universitaria', $periodoactual);
+
+    $record->nombrePeriodoSeguimiento = $periodoactual['nombre_periodo'];
+    $record->datosSeguimientoEstudianteIndividual = $seguimientosEstudianteIndividual;
+    $record->datosSeguimientoEstudianteFamiliar = $seguimientosEstudianteFamiliar;
+    $record->datosSeguimientoEstudianteAcademico = $seguimientosEstudianteAcademico;
+    $record->datosSeguimientoEstudianteEconomico = $seguimientosEstudianteEconomicor;
+    $record->datosSeguimientoEstudianteVidaUniversitaria = $seguimientosVidaUniversitaria;
+
+// End of data obtaining for risks graphs
+
 } else {
     $record = new stdClass;
     $student_id = -1;
@@ -372,339 +694,11 @@ if ($student_code != 0) {
     }
 }
 
-// Student trackings (Seguimientos)
-
-$html_tracking_peer = "";
-$array_peer_trackings = get_tracking_group_by_semester($student_id, 'PARES', null, $blockid);
-
-$enum_risk = array();
-array_push($enum_risk, "");
-array_push($enum_risk, "Bajo");
-array_push($enum_risk, "Medio");
-array_push($enum_risk, "Alto");
-
-if ($array_peer_trackings != null) {
-
-    $panel = "<div class='panel-group' id='accordion_semesters'>";
-
-    foreach ($array_peer_trackings->semesters_segumientos as $array_semester) {
-
-        $panel .= "<div class='panel panel-default'>";
-        $panel .= "<a data-toggle='collapse' class='collapsed' data-parent='#accordion_semesters' style='text-decoration:none' href='#semester" . $array_semester->id_semester . "'>";
-        $panel .= "<div class='panel-heading heading_semester_tracking'>";
-        $panel .= "<h4 class='panel-title'>";
-        $panel .= "$array_semester->name_semester";
-        $panel .= "<span class='glyphicon glyphicon-chevron-left'></span>";
-        $panel .= "</h4>"; //End panel-title
-        $panel .= "</div>"; //End panel-heading
-        $panel .= "</a>";
-
-        $panel .= "<div id='semester$array_semester->id_semester' class='panel-collapse collapse in'>";
-        $panel .= "<div class='panel-body'>";
-
-        // $panel .= "<div class=\"container well col-md-12\">";
-        // $panel .= "<div class=\"container-fluid col-md-10\" name=\"info\">";
-        // $panel .= "<div class=\"row\">";
-
-        $panel .= "<div class='panel-group' id='accordion_trackings_semester'>";
-
-        foreach ($array_semester->result as $tracking) {
-
-            $monitor_object = get_moodle_user($tracking->id_monitor);
-
-            // Date format (Formato de fecha)
-            $date = date_parse_from_format('d-m-Y', $tracking->fecha);
-            $months = array("Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre");
-
-            $panel .= "<div class='panel panel-default'>";
-            $panel .= "<div class='panel-heading'>";
-            $panel .= "<h4 class='panel-title'>";
-
-            $panel .= "<a data-toggle='collapse' data-parent='#accordion_trackings_semester' href='#" . $tracking->id_seg . "'>";
-            $panel .= " Registro " . $months[(int) $date["month"] - 1] . "-" . $date["day"] . "-" . $date["year"] . "</a>";
-
-            $panel .= "</h4>"; // h4 div panel-title
-            $panel .= "</div>"; // End div panel-heading
-
-            $panel .= "<div id='$tracking->id_seg' class='panel-collapse collapse'>";
-            $panel .= "<div class='panel-body'>";
-
-            // Date, Place, time  (Fecha, lugar, hora)
-            $panel .= "<div class='panel panel-default'>";
-            $panel .= "<div class='panel-body'>";
-
-            $panel .= "<div class='col-sm-3'>";
-            $panel .= "<b>Fecha:</b>";
-            $panel .= "</div>";
-            $panel .= "<div class='col-sm-6'>";
-            $panel .= "<b>Lugar:</b>";
-            $panel .= "</div>";
-            $panel .= "<div class='col-sm-3'>";
-            $panel .= "<b>Hora:</b>";
-            $panel .= "</div>";
-
-            $panel .= "<div class='col-sm-3'>";
-            $panel .= "<span class='date_tracking_peer'>" . $date["month"] . "-" . $date["day"] . "-" . $date["year"] . "</span>";
-            $panel .= "</div>";
-            $panel .= "<div class='col-sm-6'>";
-            $panel .= "<span class='place_tracking_peer'>" . $tracking->lugar . "</span>";
-            $panel .= "</div>";
-            $panel .= "<div class='col-sm-3'>";
-            $panel .= "<span class='init_time_tracking_peer'>" . $tracking->hora_ini . "</span> - <span class='ending_time_tracking_peer'>" . $tracking->hora_fin . "</span>";
-            $panel .= "</div>";
-
-            $panel .= "</div>"; // End panel-body
-            $panel .= "</div>"; // End div panel panel-default
-
-            // Created by (Creado por)
-
-            $panel .= "<div class='panel panel-default'>";
-            $panel .= "<div class='panel-body'>";
-
-            $panel .= "<div class='col-sm-12'>";
-            $panel .= "<b>Creado por: </b>";
-            $panel .= $monitor_object->firstname . " " . $monitor_object->lastname;
-            $panel .= "</div>";
-
-            $panel .= "</div>"; // End panel-body
-            $panel .= "</div>"; // End div panel panel-default
-
-            // Subject (Tema)
-            $panel .= "<div class='panel panel-default'>";
-            $panel .= "<div class='panel-body'>";
-
-            $panel .= "<div class='col-sm-12'>";
-            $panel .= "<b>Tema:</b>";
-            $panel .= "</div>";
-
-            $panel .= "<div class='col-sm-12'>";
-            $panel .= "<span class='topic_tracking_peer'>" . $tracking->tema . "</span>";
-            $panel .= "</div>";
-
-            $panel .= "</div>"; // End panel-body
-            $panel .= "</div>"; // End div panel panel-default
-
-            // Objectives (Objetivos)
-            $panel .= "<div class='panel panel-default'>";
-            $panel .= "<div class='panel-body'>";
-
-            $panel .= "<div class='col-sm-12'>";
-            $panel .= "<b>Objetivos:</b>";
-            $panel .= "</div>";
-
-            $panel .= "<div class='col-sm-12'>";
-            $panel .= "<span class='objectives_tracking_peer'>" . $tracking->objetivos . "</span>";
-            $panel .= "</div>";
-
-            $panel .= "</div>"; // End panel-body
-            $panel .= "</div>"; // End div panel panel-default
-
-            if ($tracking->individual != "") {
-
-                if ($tracking->individual_riesgo == '1') {
-                    $panel .= "<div class='panel panel-default riesgo_bajo'>";
-                } else if ($tracking->individual_riesgo == '2') {
-                    $panel .= "<div class='panel panel-default riesgo_medio'>";
-                } else if ($tracking->individual_riesgo == '3') {
-                    $panel .= "<div class='panel panel-default riesgo_alto'>";
-                } else {
-                    $panel .= "<div class='panel panel-default'>";
-                }
-
-                $panel .= "<div class='panel-body'>";
-                $panel .= "<div class='col-sm-12'>";
-                $panel .= "<b>Individual:</b><br>";
-                $panel .= "<span class='individual_tracking_peer'>$tracking->individual</span><br><br>";
-                $panel .= "<b>Riesgo individual: </b>";
-                $panel .= "<span class='ind_risk_tracking_peer'>" . $enum_risk[(int) $tracking->individual_riesgo] . "</span><br><br>";
-                $panel .= "</div>"; // End div col-sm-12
-                $panel .= "</div>"; // End panel-body
-                $panel .= "</div>"; // End div panel panel-default
-            }
-
-            if ($tracking->familiar_desc != "") {
-
-                if ($tracking->familiar_riesgo == '1') {
-                    $panel .= "<div class='panel panel-default riesgo_bajo'>";
-                } else if ($tracking->familiar_riesgo == '2') {
-                    $panel .= "<div class='panel panel-default riesgo_medio'>";
-                } else if ($tracking->familiar_riesgo == '3') {
-                    $panel .= "<div class='panel panel-default riesgo_alto'>";
-                } else {
-                    $panel .= "<div class='panel panel-default'>";
-                }
-
-                $panel .= "<div class='panel-body'>";
-                $panel .= "<div class='col-sm-12'>";
-                $panel .= "<b>Familiar:</b><br>";
-                $panel .= "<span class='familiar_tracking_peer'>$tracking->familiar_desc</span><br><br>";
-                $panel .= "<b>Riesgo familiar: </b>";
-                $panel .= "<span class='fam_risk_tracking_peer'>" . $enum_risk[(int) $tracking->familiar_riesgo] . "</span><br><br>";
-                $panel .= "</div>"; // End div col-sm-12
-                $panel .= "</div>"; // End panel-body
-                $panel .= "</div>"; // End div panel panel-default
-            }
-
-            if ($tracking->academico != "") {
-
-                if ($tracking->academico_riesgo == '1') {
-                    $panel .= "<div class='panel panel-default riesgo_bajo'>";
-                } else if ($tracking->academico_riesgo == '2') {
-                    $panel .= "<div class='panel panel-default riesgo_medio'>";
-                } else if ($tracking->academico_riesgo == '3') {
-                    $panel .= "<div class='panel panel-default riesgo_alto'>";
-                } else {
-                    $panel .= "<div class='panel panel-default'>";
-                }
-
-                $panel .= "<div class='panel-body'>";
-                $panel .= "<div class='col-sm-12'>";
-                $panel .= "<b>Académico:</b><br>";
-                $panel .= "<span class='academico_tracking_peer'>$tracking->academico</span><br><br>";
-                $panel .= "<b>Riesgo académico: </b>";
-                $panel .= "<span class='aca_risk_tracking_peer'>" . $enum_risk[(int) $tracking->academico_riesgo] . "</span><br><br>";
-                $panel .= "</div>"; // End div col-sm-12
-                $panel .= "</div>"; // End panel-body
-                $panel .= "</div>"; // End div panel panel-default
-            }
-
-            if ($tracking->economico != "") {
-
-                if ($tracking->economico_riesgo == '1') {
-                    $panel .= "<div class='panel panel-default riesgo_bajo'>";
-                } else if ($tracking->economico_riesgo == '2') {
-                    $panel .= "<div class='panel panel-default riesgo_medio'>";
-                } else if ($tracking->economico_riesgo == '3') {
-                    $panel .= "<div class='panel panel-default riesgo_alto'>";
-                } else {
-                    $panel .= "<div class='panel panel-default'>";
-                }
-
-                $panel .= "<div class='panel-body'>";
-                $panel .= "<div class='col-sm-12'>";
-                $panel .= "<b>Económico:</b><br>";
-                $panel .= "<span class='economico_tracking_peer'>$tracking->economico</span><br><br>";
-                $panel .= "<b>Riesgo económico: </b>";
-                $panel .= "<span class='econ_risk_tracking_peer'>" . $enum_risk[(int) $tracking->economico_riesgo] . "</span><br><br>";
-                $panel .= "</div>"; // End div col-sm-12
-                $panel .= "</div>"; // End panel-body
-                $panel .= "</div>"; // End div panel panel-default
-            }
-
-            if ($tracking->vida_uni != "") {
-
-                if ($tracking->vida_uni_riesgo == '1') {
-                    $panel .= "<div class='panel panel-default riesgo_bajo'>";
-                } else if ($tracking->vida_uni_riesgo == '2') {
-                    $panel .= "<div class='panel panel-default riesgo_medio'>";
-                } else if ($tracking->vida_uni_riesgo == '3') {
-                    $panel .= "<div class='panel panel-default riesgo_alto'>";
-                } else {
-                    $panel .= "<div class='panel panel-default'>";
-                }
-
-                $panel .= "<div class='panel-body'>";
-                $panel .= "<div class='col-sm-12'>";
-                $panel .= "<b>Vida universitaria:</b><br>";
-                $panel .= "<span class='lifeu_tracking_peer'>$tracking->vida_uni</span><br><br>";
-                $panel .= "<b>Riesgo vida universitaria: </b>";
-                $panel .= "<span class='lifeu_risk_tracking_peer'>" . $enum_risk[(int) $tracking->vida_uni_riesgo] . "</span><br><br>";
-                $panel .= "</div>"; // End div col-sm-12
-                $panel .= "</div>"; // End panel-body
-                $panel .= "</div>"; // End div panel panel-default
-            }
-
-            // Observations (observaciones)
-            $panel .= "<div class='panel panel-default'>";
-            $panel .= "<div class='panel-body'>";
-
-            $panel .= "<div class='col-sm-12'>";
-            $panel .= "<b>Observaciones:</b>";
-            $panel .= "</div>";
-
-            $panel .= "<div class='col-sm-12'>";
-            $panel .= "<span class='observations_tracking_peer'>" . $tracking->observaciones . "</span>";
-            $panel .= "</div>";
-
-            $panel .= "</div>"; // End panel-body
-            $panel .= "</div>"; // End div panel panel-default
-
-            // Edit and delete buttons
-            $panel .= "<div class='row'>";
-            $panel .= "<div class='col-sm-4 row-buttons-tracking'>";
-            $panel .= "<button type='button' class='btn-primary edit_peer_tracking' id='edit_tracking_" . $tracking->id_seg . "'>Editar seguimiento</button>";
-            $panel .= "</div>";
-            $panel .= "<div class='col-sm-3 col-sm-offset-5 row-buttons-tracking'>";
-            $panel .= "<button type='button' class='btn-danger delete_peer_tracking col-sm-10' id='delete_tracking_peer_" . $tracking->id_seg . "'>";
-            $panel .= "Borrar <span class='glyphicon glyphicon-trash'></span>";
-            $panel .= "</button>";
-            $panel .= "</div>";
-            $panel .= "</div>";
-
-            $panel .= "</div>"; // End panel-body tracking
-            $panel .= "</div>"; // End div panel-collapse tracking
-            $panel .= "</div>"; // End div panel-default
-        }
-
-        $panel .= "</div>"; // End panel accordion_trackings_semester
-
-        $panel .= "</div>"; // End panel-body
-        $panel .= "</div>"; // End panel-collapse
-
-        $panel .= "</div>"; //End panel panel-default
-    }
-
-    $panel .= "</div>"; //End panel group accordion_semesters
-
-    $html_tracking_peer .= $panel;
-
-} else {
-    $html_tracking_peer .= "<div class='col-sm-12'><center><h4>No registra seguimientos</h4></center></div>";
-}
-
-$record->peer_tracking = $html_tracking_peer;
-
-
-// Loading desertion reasons or studies postponement
- 
-
-$reasons_dropout = get_reasons_dropout();
-
-$html_select_reasons = "<option value='' id='no_reason_option'>Seleccione el motivo</option>";
-
-foreach ($reasons_dropout as $reason) {
-    $html_select_reasons .= "<option value=" . $reason->id . ">";
-    $html_select_reasons .= $reason->descripcion;
-    $html_select_reasons .= "</option>";
-}
-
-$record->reasons_options = $html_select_reasons;
-
 //Menu items are created
 $menu_option = create_menu_options($USER->id, $blockid, $courseid);
 
-
 $record->menu = $menu_option;
 
-// Getting data for risks graphs
-
-$periodoactual = getPeriodoActual();
-$idEstudiante = $student_id;
-// Mustache doesn't allow advanced conditional control, information detachment occurs here
-$seguimientosEstudianteIndividual = obtenerDatosSeguimientoFormateados($idEstudiante, 'individual', $periodoactual);
-$seguimientosEstudianteFamiliar = obtenerDatosSeguimientoFormateados($idEstudiante, 'familiar', $periodoactual);
-$seguimientosEstudianteAcademico = obtenerDatosSeguimientoFormateados($idEstudiante, 'academico', $periodoactual);
-$seguimientosEstudianteEconomicor = obtenerDatosSeguimientoFormateados($idEstudiante, 'economico', $periodoactual);
-$seguimientosVidaUniversitaria = obtenerDatosSeguimientoFormateados($idEstudiante, 'vida_universitaria', $periodoactual);
-
-$record->nombrePeriodoSeguimiento = $periodoactual['nombre_periodo'];
-$record->datosSeguimientoEstudianteIndividual = $seguimientosEstudianteIndividual;
-$record->datosSeguimientoEstudianteFamiliar = $seguimientosEstudianteFamiliar;
-$record->datosSeguimientoEstudianteAcademico = $seguimientosEstudianteAcademico;
-$record->datosSeguimientoEstudianteEconomico = $seguimientosEstudianteEconomicor;
-$record->datosSeguimientoEstudianteVidaUniversitaria = $seguimientosVidaUniversitaria;
-
-// End of data obtaining for risks graphs 
 
 $PAGE->set_context($contextcourse);
 $PAGE->set_context($contextblock);
