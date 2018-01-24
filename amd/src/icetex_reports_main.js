@@ -15,7 +15,9 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_as
 			
 			$(document).ready(function() {
                     $("#list-resolution-students-panel").on('click', function(){
-                    loadReportResolution();
+					loadReportResolution();
+					
+
                 });
 
 			});	
@@ -32,19 +34,23 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_as
 			url: "../managers/historic_icetex_reports/icetex_reports_processing.php",
 			success: function(msg){
 				$("#div_res_students").empty();
-				$("#div_res_students").append('<table id="tableResStudents" class="display" cellspacing="0" width="100%"><thead><thead></table>');
+				$("#div_res_students").append('<table id="tableResStudents" class="display" cellspacing="0" width="100%"><thead><thead><tfoot><tr><th colspan="4" style="text-align:right">Total: </th></tr></tfoot></table>');
 				var table = $("#tableResStudents").DataTable(msg);
-				$('#div_res_students').css('cursor', 'pointer');
+				$('#div_res_students').css('cursor', 'pointer');				
 			},
 			dataType: "json",
 			cache: false,
 			error: function(msg){
-				alert("Error al cargar períodos")
+				swal("Error", "Error al cargar el reporte", "error");
 			}
 		});
 
-	}	
-
+	}
+	
+	function calculate_total_amount(){
+		var table = $("#tableResStudents").DataTable();
+	}
+	
 }
 
 };
