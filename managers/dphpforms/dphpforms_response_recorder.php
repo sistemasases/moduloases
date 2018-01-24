@@ -86,9 +86,10 @@
         $sql_permisos = '
             SELECT * FROM {talentospilos_df_per_form_pr} WHERE id_formulario_pregunta = '.$row->{'mod_id_formulario_pregunta'}.'
         ';
-
-        $result_permisos = $DB->get_record_sql($sql);
+        echo '--> Identificador ' . $row->{'mod_id_formulario_pregunta'} . ' <--' ;
+        $result_permisos = $DB->get_records_sql($sql);//1record
         print_r($result_permisos);
+        die();
         $permisos = pg_fetch_row($result_permisos);
         $permisos_JSON = json_decode($permisos[2]);
 

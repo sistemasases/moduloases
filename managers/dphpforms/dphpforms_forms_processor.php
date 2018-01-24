@@ -356,14 +356,24 @@ function dphpforms_store_form_regla($form_id, $text_rule, $identifier_pregunta_A
         }
     }
 
+    $obj_regla_form_pregunta = new stdClass();
+    $obj_regla_form_pregunta->id_formulario         = $form_id;
+    $obj_regla_form_pregunta->id_regla              = $identifier_regla;
+    $obj_regla_form_pregunta->id_form_pregunta_a    = $identifier_pregunta_A;
+    $obj_regla_form_pregunta->id_form_pregunta_b    = $identifier_pregunta_B;
+
+    $regla_identifier = $DB->insert_record('talentospilos_df_reg_form_pr', $obj_regla_form_pregunta, $returnid=true, $bulk=false);
+
+    return $regla_identifier;
+
 }
 
-function dphpforms_store_form_pregunta_permits($form_idPregunta, $permits){
+function dphpforms_store_form_pregunta_permits($form_id_pregunta, $permits){
     
     global $DB;
 
     $obj_permisos_formulario_pregunta = new stdClass();
-    $obj_permisos_formulario_pregunta->id_formulario_pregunta = $form_idPregunta;
+    $obj_permisos_formulario_pregunta->id_formulario_pregunta = $form_id_pregunta;
     $obj_permisos_formulario_pregunta->permisos = $permits;
 
    
