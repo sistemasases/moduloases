@@ -560,16 +560,6 @@ function dphpforms_get_respuestas_form_completed($idFormularioDiligenciado){
         array_push($respuestas, $tmp);
     }
 
-    /*$row = pg_fetch_row($result);
-    while($row){
-        $tmp = array(
-            'id' => $row[1],
-            'valor' => $row[2]
-        );
-        array_push($respuestas, $tmp);
-        $row = pg_fetch_row($result);
-    }*/
-
     return $respuestas;
 
 }
