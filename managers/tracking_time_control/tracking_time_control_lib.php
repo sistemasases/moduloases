@@ -27,7 +27,6 @@ require_once dirname(__FILE__) . '/../../../../config.php';
 require_once $CFG->dirroot . '/grade/querylib.php';
 require_once $CFG->dirroot . '/grade/report/user/lib.php';
 require_once $CFG->dirroot . '/grade/lib.php';
-require_once dirname(__FILE__) .'/../periods_management/periods_lib.php';
 
 require_once('tracking_time_control_functions.php');
 
@@ -73,12 +72,20 @@ function get_unreviewed_trackings($monitorid,$instanceid){
  * @see get_report_by_date()
  * @return array 
  */
-function get_report_by_date($initial_date, $final_date){
+function get_report_by_date($initial_date, $final_date,$default){
 
     global $DB;
+    $sql_query = "SELECT seg.id,id_monitor,fecha,hora_ini,hora_fin
+    FROM {user}  usuario INNER JOIN {talentospilos_seguimiento}  seg ON usuario.id = seg.id_monitor where fecha<=$final_date and fecha>=$initial_date ";
 
-        $sql_query = "SELECT seg.id,id_monitor,fecha,hora_ini,hora_fin
-    FROM {user}  usuario INNER JOIN {talentospilos_seguimiento}  seg ON usuario.id = seg.id_monitor where fecha<=$final_date and fecha>=$initial_date and status<>0 order by fecha asc";
+    if($default){
+     $sql_query.=" and revisado_profesional=0";  
+
+    }
+    
+    $sql_query.="and status<>0 order by fecha asc";  
+    
+
     return $DB->get_records_sql($sql_query);
 }
 
@@ -88,7 +95,7 @@ function get_report_by_date($initial_date, $final_date){
  * @see get_hours_per_days($init,$final)
  * @return array 
  */
-function get_hours_per_days($init,$final)
+function get_hours_per_days($init,$final,$default)
 {
     global $DB;
     //
@@ -98,7 +105,8 @@ function get_hours_per_days($init,$final)
 	$register->total_minutes=0;
 
 	$final_array=[];
-    $initial_hours_array = get_report_by_date($init,$final);
+    $initial_hours_array = get_report_by_date($init,$final,$default);
+
     $first_date;
     date_default_timezone_set("America/Bogota");
 

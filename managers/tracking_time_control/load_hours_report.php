@@ -24,15 +24,24 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 require_once('tracking_time_control_lib.php');
+require_once dirname(__FILE__) .'/../periods_management/periods_lib.php';
 
 
     if (isset($_POST['initial_hour'])&&isset($_POST['final_hour'])){
-        $initial_hour=strtotime($_POST['initial_hour']);
-        $final_hour=strtotime($_POST['final_hour']);
-    }else{
-        $initial_hour =strtotime(date("Y/m/d"));
-        $final_hour=date_create(date("Y/m/d"));
-        $final_hour=strtotime(  date_time_set($final_hour, 23, 59,59)->format('Y-m-d H:i:s'));
+        if($_POST['initial_hour']==0 && $_POST['final_hour']==0){
+            $current_semester =get_current_semester();
+            $semester_interval=get_semester_interval($current_semester->max);
+            $initial_hour=strtotime($semester_interval->fecha_inicio);
+            $final_hour=strtotime($semester_interval->fecha_fin);
+            $default=true;
+
+
+        }else{
+            $initial_hour=strtotime($_POST['initial_hour']);
+            $final_hour=strtotime($_POST['final_hour']);
+            $default=false;
+        }
+
     }
 
 
@@ -45,7 +54,7 @@ require_once('tracking_time_control_lib.php');
         $data = array(
                 "bsort" => false,
                 "columns" => $columns,
-                "data"=> get_hours_per_days($initial_hour,$final_hour),
+                "data"=> get_hours_per_days($initial_hour,$final_hour,$default),
                 "language" => 
                  array(
                     "search"=> "Buscar:",
