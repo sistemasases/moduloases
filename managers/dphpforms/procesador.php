@@ -1,10 +1,14 @@
 <?php 
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
 
-    $RECORD_ID = $_POST['id_registro'];
-   
+    require_once(dirname(__FILE__). '/../../../../config.php');
+    global $DB;
+
+    $RECORD_ID = null;
+
+    if(isset($_POST['id_registro'])){
+        $RECORD_ID = $_POST['id_registro'];
+    }
+    
     $form = array(
         'id' => $_POST['id'],
         'id_monitor' => $_POST['id_monitor'],
@@ -305,69 +309,61 @@ function dphpforms_update_completed_form($form_identifier_respuesta, $pregunta_i
 }
 
 function dphpforms_store_form_soluciones($form_id, $respuesta_identifier){
-    $db_connection = pg_connect("host=localhost dbname=formularios user=administrator password=administrator");
-    
-       $sql = "
-       
-           INSERT INTO formulario_soluciones(id_formulario_respuestas, id_respuesta)
-           VALUES('".$form_id."', '".$respuesta_identifier."')
-           RETURNING id
-       
-       ";
+
+    global $DB;
+
+       $obj_form_soluciones = new stdClass();
+       $obj_form_soluciones->id_formulario_respuestas = $form_id;
+       $obj_form_soluciones->id_respuesta = $respuesta_identifier;
    
-       $result = pg_query($db_connection, $sql);
-       $row = pg_fetch_row($result);
-       $form_identifier_soluciones = $row[0];
-       return $form_identifier_soluciones;
+       $form_solucines_identifier = $DB->insert_record('talentospilos_df_form_solu', $obj_form_soluciones, $returnid=false, $bulk=false);
+
+       return $form_solucines_identifier;
 }
 
 function dphpforms_store_form_respuesta($form_detail){
-    $db_connection = pg_connect("host=localhost dbname=formularios user=administrator password=administrator");
-    $sql = "
     
-        INSERT INTO formulario_respuestas(id_formulario, id_monitor, id_estudiante)
-        VALUES('".$form_detail->{'id'}."', '".$form_detail->{'id_monitor'}."', '".$form_detail->{'id_estudiante'}."')
-        RETURNING id
-    
-    ";
+    global $DB;
 
-    $result = pg_query($db_connection, $sql);
-    $row = pg_fetch_row($result);
-    $form_identifier_respuesta = $row[0];
-    return $form_identifier_respuesta;
+    $obj_form_respuesta = new stdClass();
+    $obj_form_respuesta->id_formulario = $form_detail->{'id'};
+    $obj_form_respuesta->id_monitor = $form_detail->{'id_monitor'};
+    $obj_form_respuesta->id_estudiante = $form_detail->{'id_estudiante'};
+
+    $form_respuesta_identifier = $DB->insert_record('talentospilos_df_form_resp', $obj_form_respuesta, $returnid=true, $bulk=false);
+
+    return $form_respuesta_identifier;
 }
 
 function dphpforms_store_respuesta($respuesta){
-    $db_connection = pg_connect("host=localhost dbname=formularios user=administrator password=administrator");
+    
+    global $DB;
 
     if(is_array($respuesta->{'valor'})){
         $respuesta->{'valor'} = json_encode($respuesta->{'valor'});
     }
 
-    $sql = "
-    
-        INSERT INTO respuestas(id_pregunta, respuesta)
-        VALUES('".$respuesta->{'id'}."', '".$respuesta->{'valor'}."')
-        RETURNING id
-    
-    ";
+    $obj_respuesta = new stdClass();
+    $obj_respuesta->id_pregunta = $respuesta->{'id'};
+    $obj_respuesta->respuesta = $respuesta->{'valor'};
 
-    $result = pg_query($db_connection, $sql);
-    $row = pg_fetch_row($result);
-    $respuesta_identifier = $row[0];
+    $respuesta_identifier = $DB->insert_record('talentospilos_df_respuestas', $obj_respuesta, $returnid=true, $bulk=false);
     return $respuesta_identifier;
 }
 
 function dphpforms_form_exist($id){
-    $db_connection = pg_connect("host=localhost dbname=formularios user=administrator password=administrator");
+
+    global $DB;
+
     $sql = "
     
-        SELECT * FROM formularios WHERE id = '" . $id . "'
+        SELECT * FROM {talentospilos_df_formularios} WHERE id = '" . $id . "'
     
     ";
-    $result = pg_query($db_connection, $sql);
-    $row = pg_fetch_row($result);
-    $form_id = $row[0];
+
+    $result = $DB->get_record_sql($sql);
+
+    $form_id = $result->id;
     if($form_id != null){
         return true;
     }else{
@@ -376,15 +372,16 @@ function dphpforms_form_exist($id){
 }
 
 function dphpforms_pregunta_exist_into_form($pregunta_identifier){
-    $db_connection = pg_connect("host=localhost dbname=formularios user=administrator password=administrator");
+
+    global $DB;
+    
     $sql = "
     
-        SELECT * FROM formulario_preguntas WHERE id = '" . $pregunta_identifier . "'
+        SELECT * FROM {talentospilos_df_form_preg} WHERE id = '" . $pregunta_identifier . "'
     
     ";
-    $result = pg_query($db_connection, $sql);
-    $row = pg_fetch_row($result);
-    $pregunta_identifier = $row[0];
+    $result = $DB->get_record_sql($sql);
+    $pregunta_identifier = $result->id;
     if($pregunta_identifier != null){
         return true;
         
@@ -395,25 +392,29 @@ function dphpforms_pregunta_exist_into_form($pregunta_identifier){
 }
 
 function dphpforms_get_form_reglas($form_id){
-    $db_connection = pg_connect("host=localhost dbname=formularios user=administrator password=administrator");
+
+    global $DB;
+
     $sql = "
     
-        SELECT * FROM reglas_formulario_preguntas RFP INNER JOIN reglas R ON RFP.id_regla = R.id WHERE RFP.id_formulario = '" . $form_id . "'
+        SELECT * FROM {talentospilos_df_reg_form_pr} RFP INNER JOIN {talentospilos_df_reglas} R ON RFP.id_regla = R.id WHERE RFP.id_formulario = '" . $form_id . "'
     
     ";
-    $result = pg_query($db_connection, $sql);
+    $result = $DB->get_records_sql($sql);
+    $result = array_values($result);
     
     $reglas = array();
-    while($row = pg_fetch_row($result)){
-
+    for($i = 0; $i < count($result); $i++){
+        $row = $result[$i];
         $regla = array(
-            'respuesta_a' => $row[3],
-            'regla' => $row[6],
-            'respuesta_b' => $row[4]
+            'respuesta_a' => $row->id_form_pregunta_a,
+            'regla' => $row->regla,
+            'respuesta_b' => $row->id_form_pregunta_b
         );
         
         array_push($reglas, $regla);
     }
+
     return $reglas;
 }
 
@@ -526,16 +527,18 @@ function dphpforms_reglas_validator($respuestas, $reglas){
 }
 
 function dphpforms_get_respuestas_form_completed($idFormularioDiligenciado){
-    $db_connection = pg_connect("host=localhost dbname=formularios user=administrator password=administrator");
+    
+    global $DB;
+
     $sql_respuestas = '
     
         SELECT * 
-        FROM respuestas AS R 
+        FROM {talentospilos_df_respuestas} AS R 
         INNER JOIN 
             (
                 SELECT * 
-                FROM formulario_respuestas AS FR 
-                INNER JOIN formulario_soluciones AS FS 
+                FROM {talentospilos_df_form_resp} AS FR 
+                INNER JOIN {talentospilos_df_form_solu} AS FS 
                 ON FR.id = FS.id_formulario_respuestas 
                 WHERE FR.id = '.$idFormularioDiligenciado.'
             ) AS FRS 
@@ -543,10 +546,21 @@ function dphpforms_get_respuestas_form_completed($idFormularioDiligenciado){
     
     ';
 
-    $result = pg_query($db_connection, $sql_respuestas);
+    $result = $DB->get_records_sql($sql_respuestas);
+    $result = array_values($result);
     
     $respuestas = array();
-    $row = pg_fetch_row($result);
+
+    for($i = 0; $i < count($result); $i++){
+        $row = $result[$i];
+        $tmp = array(
+            'id' => $row->id_pregunta,
+            'valor' => $row->respuesta
+        );
+        array_push($respuestas, $tmp);
+    }
+
+    /*$row = pg_fetch_row($result);
     while($row){
         $tmp = array(
             'id' => $row[1],
@@ -554,7 +568,7 @@ function dphpforms_get_respuestas_form_completed($idFormularioDiligenciado){
         );
         array_push($respuestas, $tmp);
         $row = pg_fetch_row($result);
-    }
+    }*/
 
     return $respuestas;
 
