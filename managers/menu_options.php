@@ -188,6 +188,17 @@ function create_menu_options($userid, $blockid, $courseid)
 
         }
 
+        if ($function == 'historical_icetex_reports') {
+            $url = new moodle_url("/blocks/ases/view/historical_icetex_reports.php", array(
+                'courseid' => $courseid,
+                'instanceid' => $blockid,
+            ));
+
+            $menu_options = '<li><a href= "' . $url . '"> Reportes ICETEX </a><li>';
+            $indexed['Reportes ICETEX'] = $menu_options;
+
+        }
+
     }
 
     //ORDENA
