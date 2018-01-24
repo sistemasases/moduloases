@@ -5,6 +5,8 @@
 
     $FORM_ID = $_GET['id'];
     $ROL = $_GET['rol'];
+
+    $html = null;
     
     $sql = '
     
@@ -25,7 +27,7 @@
     $result = $DB->get_records_sql($sql);
     $result = (array) $result;
 
-    echo '
+    /*$html = $html .  '
     
     <!DOCTYPE html>
     <html lang="en">
@@ -49,7 +51,9 @@
     <body>
         <div class="container">
             <div class="row">
-    ';
+    ';*/
+
+
 
     
 
@@ -71,11 +75,11 @@
     $form_name_formatted = $form_name_formatted . "_" . $row->{'mod_id_formulario'};
 
 
-    echo '<form id="'. $form_name_formatted .'" method="'. $row->{'method'} .'" action="'. $row->{'action'} .'" class="col-xs-12 col-sm-8 col-md-8 col-lg-6 col-sm col-sm-offset-2 col-md-offset-2 col-lg-offset-3" style="margin-bottom:0.7em">' ;
-    echo '<h1>'.$form_name.'</h1><hr style="border-color:red;">';
-    echo '<input name="id" value="'.$row->{'mod_id_formulario'}.'" style="display:none;">';
-    echo '<input name="id_monitor" value="5245" style="display:none;">';
-    echo '<input name="id_estudiante" value="6548" style="display:none;">';
+    $html = $html .  '<form id="'. $form_name_formatted .'" method="'. $row->{'method'} .'" action="'. $row->{'action'} .'" class="col-xs-12 col-sm-8 col-md-8 col-lg-6 col-sm col-sm-offset-2 col-md-offset-2 col-lg-offset-3" style="margin-bottom:0.7em">' ;
+    $html = $html .  '<h1>'.$form_name.'</h1><hr style="border-color:red;">';
+    $html = $html .  '<input name="id" value="'.$row->{'mod_id_formulario'}.'" style="display:none;">';
+    $html = $html .  '<input name="id_monitor" value="5245" style="display:none;">';
+    $html = $html .  '<input name="id_estudiante" value="6548" style="display:none;">';
     
     for($i = 0; $i < count($result); $i++){
         $row = null;
@@ -118,48 +122,48 @@
                     }
 
                     if($campo == 'TEXTFIELD'){
-                        echo $enunciado . ':<br>';
-                        echo ' <input id="'.$row->{'mod_id_formulario_pregunta'}.'" class="form-control" type="'.$atributos->{'type'}.'" placeholder="'.$atributos->{'placeholder'}.'" name="'.$row->{'mod_id_formulario_pregunta'}.'" '.$enabled.'><br>' . "\n";
+                        $html = $html .  $enunciado . ':<br>';
+                        $html = $html .  ' <input id="'.$row->{'mod_id_formulario_pregunta'}.'" class="form-control" type="'.$atributos->{'type'}.'" placeholder="'.$atributos->{'placeholder'}.'" name="'.$row->{'mod_id_formulario_pregunta'}.'" '.$enabled.'><br>' . "\n";
                     }
 
                     if($campo == 'TEXTAREA'){
-                        echo $enunciado . ':<br>';
-                        echo ' <textarea id="'.$row->{'mod_id_formulario_pregunta'}.'" class="form-control" name="'. $row->{'mod_id_formulario_pregunta'} .'" '.$enabled.'></textarea><br>' . "\n";
+                        $html = $html .  $enunciado . ':<br>';
+                        $html = $html .  ' <textarea id="'.$row->{'mod_id_formulario_pregunta'}.'" class="form-control" name="'. $row->{'mod_id_formulario_pregunta'} .'" '.$enabled.'></textarea><br>' . "\n";
                     }
 
                     if($campo == 'DATE'){
-                        echo $enunciado . ':<br>';
-                        echo ' <input id="'.$row->{'mod_id_formulario_pregunta'}.'" class="form-control" type="date" name="'.$row->{'mod_id_formulario_pregunta'}.'" '.$enabled.'><br>' . "\n";
+                        $html = $html .  $enunciado . ':<br>';
+                        $html = $html .  ' <input id="'.$row->{'mod_id_formulario_pregunta'}.'" class="form-control" type="date" name="'.$row->{'mod_id_formulario_pregunta'}.'" '.$enabled.'><br>' . "\n";
                     }
                     
                     if($campo == 'DATETIME'){
-                        echo $enunciado . ':<br>';
-                        echo ' <input id="'.$row->{'mod_id_formulario_pregunta'}.'" class="form-control" type="datetime-local" name="'.$row->{'mod_id_formulario_pregunta'}.'" '.$enabled.'><br>' . "\n";
+                        $html = $html .  $enunciado . ':<br>';
+                        $html = $html .  ' <input id="'.$row->{'mod_id_formulario_pregunta'}.'" class="form-control" type="datetime-local" name="'.$row->{'mod_id_formulario_pregunta'}.'" '.$enabled.'><br>' . "\n";
                     }
 
                     if($campo == 'TIME'){
-                        echo $enunciado . ':<br>';
-                        echo ' <input id="'.$row->{'mod_id_formulario_pregunta'}.'" class="form-control" type="time" name="'.$row->{'mod_id_formulario_pregunta'}.'" '.$enabled.'><br>' . "\n";
+                        $html = $html .  $enunciado . ':<br>';
+                        $html = $html .  ' <input id="'.$row->{'mod_id_formulario_pregunta'}.'" class="form-control" type="time" name="'.$row->{'mod_id_formulario_pregunta'}.'" '.$enabled.'><br>' . "\n";
                     }
 
                     if($campo == 'RADIOBUTTON'){
                         $opciones = json_decode($row->{'opciones_campo'});
                         $array_opciones = (array)$opciones;
                         $number_opciones = count($array_opciones);
-                        echo '
+                        $html = $html .  '
                         <input type="hidden" name="'.$row->{'mod_id_formulario_pregunta'}.'" value="-#$%-">
                         <label id="'.$row->{'mod_id_formulario_pregunta'}.'">'.$enunciado.'</label>';
-                        echo '<div class="opcionesRadio" style="margin-bottom:0.4em">';
+                        $html = $html .  '<div class="opcionesRadio" style="margin-bottom:0.4em">';
                         for($i = 0; $i < $number_opciones; $i++){
                             $opcion = (array) $array_opciones[$i];
-                            echo '
+                            $html = $html .  '
                                 <div id="'.$row->{'mod_id_formulario_pregunta'}.'" name="'.$row->{'mod_id_formulario_pregunta'}.'" class="radio">
                                     <label><input type="radio" name="'.$row->{'mod_id_formulario_pregunta'}.'" value="'.$opcion['valor'].'" name="optradio" '.$enabled.'>'.$opcion['enunciado'].'</label>
                                 </div>
                             
                             ' . "\n";
                         }
-                        echo '<a href="javascript:void(0);" class="limpiar btn btn-xs btn-default" >Limpiar</a>
+                        $html = $html .  '<a href="javascript:void(0);" class="limpiar btn btn-xs btn-default" >Limpiar</a>
                             </div>
                         ' . "\n";
                     }
@@ -168,11 +172,11 @@
                         $opciones = json_decode($row->{'opciones_campo'});
                         $array_opciones = (array)$opciones;
                         $number_opciones = count($array_opciones);
-                        echo '
+                        $html = $html .  '
                         <label id="'.$row->{'mod_id_formulario_pregunta'}.'">'.$enunciado.'</label>';
                         for($i = 0; $i < $number_opciones; $i++){
                             $opcion = (array) $array_opciones[$i];
-                            echo '
+                            $html = $html .  '
                             <div class="checkbox">
                                 <input type="hidden" name="'.$row->{'mod_id_formulario_pregunta'}.'" value="-1">
                                 <label><input type="checkbox" name="'.$row->{'mod_id_formulario_pregunta'}.'" value="'.$opcion['valor'].'" '.$enabled.'>'.$opcion['enunciado'].'</label>
@@ -191,8 +195,8 @@
         }
 
     }
-    echo ' <hr style="border-color:red"><button type="submit" class="btn btn-sm btn-default">Registrar</button>' . "\n";
-    echo ' </form>' . "\n";
+    $html = $html .  ' <hr style="border-color:red"><button type="submit" class="btn btn-sm btn-default">Registrar</button>' . "\n";
+    $html = $html .  ' </form>' . "\n";
 
 
     //Escritura de reglas en JAVASCRIPT (ALPHA)
@@ -246,7 +250,7 @@
         $row_reglas = pg_fetch_row($reglas);
     };*/
 
-    echo '
+    /*$html = $html .  '
     
         </div>
     </div>
@@ -262,8 +266,10 @@
     </body>
 </html>
     
-    ';
+    ';*/
 
     // Fin de construcción
+
+    echo $html;
    
 ?>

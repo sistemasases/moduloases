@@ -260,6 +260,7 @@
                }
             });
             
+            
             function generadorFormJSON(){
                 
                 var contador = 0;
@@ -357,6 +358,12 @@
                         console.log(msg)
                     });
             };
+
+            $(".limpiar").click(function(){
+                $(this).parent().find("div").each(function(){
+                    $(this).find("label").find("input").prop("checked", false);
+                });
+            });
             
             String.prototype.replaceAll = function(search, replace) {
                 if (replace === undefined) {
