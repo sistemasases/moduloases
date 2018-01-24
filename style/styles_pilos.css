@@ -1489,9 +1489,13 @@ input.no-borde-fondo.tema
 }
 
 
-#academic:hover {
-  background-color: red;
-  color: white;
+#academic:hover,.academic:hover {
+  background-color: red !important;
+  color: white !important;
+}
+.selected {
+  background-color: red !important;
+  color: white !important;
 }
 
 .no-js #loader { display: none;  }
