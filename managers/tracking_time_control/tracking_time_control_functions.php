@@ -27,27 +27,6 @@
 
 
 /**
- *Function that organizes in a toggle the trackings that are not reviewed of a selected *monitor
- * 
- * @see get_toggle_trackings()
- * @param $dates
- * @return void
- */
-function get_toggle_trackings($trackings){
-
-    $msg="";
-
-    foreach ($trackings as $tracking) {
-        $msg.='<div class="panel-group"><div class="panel panel-default">
-        <div class="panel-heading" style="background-color: #D0C4C4;"><h4 class="panel-title"><a data-toggle="collapse" data-target="#demo"' . $tracking->id_seguimiento . '>';
-    }
-
-
-}
-
-
-
-/**
  * Calculates the number of dedicated hours of a monitor on a given date.
  * 
  * @see calculate_hours($dates)
@@ -65,8 +44,23 @@ function get_toggle_trackings($trackings){
     $initial_time=$date->hora_fin;
     $final_time=$date->hora_ini;
 
+    $init_t = strpos($initial_time, ":");
+    $fin_t=strpos($final_time, ":");
+
+
+    if($init_t===false){
+     $separar[1][0]='0';
+     $separar[1][1]='0';
+    }else{
     $separar[1]=explode(':',$initial_time); 
-    $separar[2]=explode(':',$final_time); 
+    }
+
+    if($fin_t===false){
+     $separar[2][0]='0';
+     $separar[2][1]='0';
+    }else{
+     $separar[2]=explode(':',$final_time); 
+    }
 
     $total_minutos_trasncurridos[1] = ($separar[1][0]*60)+$separar[1][1]; 
     $total_minutos_trasncurridos[2] = ($separar[2][0]*60)+$separar[2][1]; 
