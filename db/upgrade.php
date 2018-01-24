@@ -8,7 +8,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
 
     $result = true;
 
-    if ($oldversion < 2018012217129) {
+    if ($oldversion < 2018012413229) {
 
     // ************************************************************************************************************
     // Actualización que crea la tabla para los campos extendidos de usuario (Tabla: {talentospilos_user_extended})
@@ -125,8 +125,13 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     // Versión en la que se incluye: 2018011911069
     // ************************************************************************************************************
 
+    
     // Define table talentospilos_history_academ to be created.
     $table = new xmldb_table('talentospilos_history_academ');
+    // Conditionally launch drop table for talentospilos_history_academ.
+    if ($dbman->table_exists($table)) {
+        $dbman->drop_table($table);
+    }
     // Adding fields to table talentospilos_history_academ.
     $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
     // Adding keys to table talentospilos_history_academ.
@@ -158,14 +163,14 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     }
     // Define field promedio_semestre to be added to talentospilos_history_academ.
     $table = new xmldb_table('talentospilos_history_academ');
-    $field = new xmldb_field('promedio_semestre', XMLDB_TYPE_INTEGER, '20', null, null, null, null, 'id_programa');
+    $field = new xmldb_field('promedio_semestre', XMLDB_TYPE_NUMBER, '20', null, null, null, null, 'id_programa');
     // Conditionally launch add field promedio_semestre.
     if (!$dbman->field_exists($table, $field)) {
         $dbman->add_field($table, $field);
     }
     // Define field promedio_acumulado to be added to talentospilos_history_academ.
     $table = new xmldb_table('talentospilos_history_academ');
-    $field = new xmldb_field('promedio_acumulado', XMLDB_TYPE_INTEGER, '20', null, null, null, null, 'promedio_semestre');
+    $field = new xmldb_field('promedio_acumulado', XMLDB_TYPE_NUMBER, '20', null, null, null, null, 'promedio_semestre');
     // Conditionally launch add field promedio_acumulado.
     if (!$dbman->field_exists($table, $field)) {
         $dbman->add_field($table, $field);
@@ -821,8 +826,34 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
 
     $DB->insert_records('talentospilos_df_reglas', $records);
 
+    // ************************************************************************************************************
+    // Actualización:
+    // Se inserta campo id_programa en la tabla talentospilos_res_estudiante
+    // Versión en la que se incluye: 2018012413229
+    // ************************************************************************************************************
+
+    // Define field id_programa to be added to talentospilos_res_estudiante.
+    $table = new xmldb_table('talentospilos_res_estudiante');
+    $field = new xmldb_field('id_programa', XMLDB_TYPE_TEXT, null, null, XMLDB_NOTNULL, null, null, 'id_resolucion');
+    // Conditionally launch add field id_programa.
+    if (!$dbman->field_exists($table, $field)) {
+        $dbman->add_field($table, $field);
+    }
+
+    // ************************************************************************************************************
+    // Actualización:
+    // Se crea la llave foránea desde campo id_programa en la tabla talentospilos_res_estudiante hacia
+    // la tabla talentospilos_programa
+    // Versión en la que se incluye: 2018012413229
+    // ************************************************************************************************************
+    // Define key fk_programa (foreign) to be added to talentospilos_res_estudiante.
+    $table = new xmldb_table('talentospilos_res_estudiante');
+    $key = new xmldb_key('fk_programa', XMLDB_KEY_FOREIGN, array('id_programa'), 'talentospilos_programa', array('id'));
+    // Launch add key fk_programa.
+    $dbman->add_key($table, $key);
+
     // Ases savepoint reached.
-    upgrade_block_savepoint(true, 2018012217129, 'ases');
+    upgrade_block_savepoint(true, 2018012413229, 'ases');
    
     return $result;
     }
