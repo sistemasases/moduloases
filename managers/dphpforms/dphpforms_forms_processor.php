@@ -198,7 +198,7 @@ function dphpforms_store_form($form_JSON){
     foreach ($identifiers_preguntas as $key => $identifiers_pregunta) {
         array_push($identifiers_form_preguntas,
             array(
-                'idRelacionFormPreg' => dphpforms_store_form_pregunta($form_db_id, $identifiers_pregunta['idPreguntaDB'], $key, $identifiers_pregunta['permisosCampo']),
+                'idRelacionFormPreg' => dphpforms_store_form_pregunta($form_db_id, $identifiers_pregunta['idPreguntaDB'], $key),
                 'idPreguntaDB' => $identifiers_pregunta['idPreguntaDB'],
                 'idPreguntaTemporal' => $identifiers_pregunta['idPreguntaTemporal']
             )
@@ -321,12 +321,12 @@ function dphpforms_store_form_pregunta($form_id, $identifier_pregunta, $position
 
     $idRelacion = $DB->insert_record('talentospilos_df_form_preg', $obj_form_preguntas, $returnid=true, $bulk=false);
 
-    $identifier_permission = dphpforms_store_form_pregunta_permits($idRelacion, $permits);
+    //$identifier_permission = dphpforms_store_form_pregunta_permits($idRelacion, $permits);
     if(!$identifier_permission){
         echo json_encode(
             array(
                 'id_formulario' => '-1',
-                'mensaje_error' => 'ERROR REGISTRANDO PERMISOS'
+                'mensaje_error' => 'ERROR REGISTRANDO PREGUNTA'
             )
         );
         die();
@@ -376,8 +376,10 @@ function dphpforms_store_form_pregunta_permits($form_id_pregunta, $permits){
     $obj_permisos_formulario_pregunta->id_formulario_pregunta = $form_id_pregunta;
     $obj_permisos_formulario_pregunta->permisos = $permits;
 
-   
+    echo ' INFO: FORM ID PREGUNTA ' . $form_id_pregunta . ' PERMISOS ' . $permits;
+    print_r($obj_permisos_formulario_pregunta);
     $identifier_permission = $DB->insert_record('talentospilos_df_per_form_pr', $obj_permisos_formulario_pregunta, $returnid=true, $bulk=false);
+    echo ' ID_PERMISO:::::: ' . $identifier_permission . ' :::::::';
     return $identifier_permission;
 }
 
