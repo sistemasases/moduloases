@@ -1510,3 +1510,7 @@ input.no-borde-fondo.tema
 #informacion{
   height: auto !important;
 }
+
+#panel_academic{
+  padding: 10px;
+}

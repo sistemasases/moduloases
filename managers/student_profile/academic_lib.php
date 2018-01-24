@@ -236,7 +236,7 @@ function get_historical_semesters_by_student($id_student)
         $semester->promedio_acumulado = $register->promedio_acumulado;
 
         //validate bajo rendimiento
-        $query_bajo = "SELECT numero FROM {talentospilos_history_bajos} WHERE id_history = $id";
+        $query_bajo = "SELECT numero_bajo as numero FROM {talentospilos_history_bajos} WHERE id_history = $id";
         $bajo = $DB->get_record_sql($query_bajo);
 
         if (!$bajo) {
@@ -246,7 +246,7 @@ function get_historical_semesters_by_student($id_student)
         }
 
         //validate estimulo
-        $query_estimulo = "SELECT puesto FROM {talentospilos_history_estim} WHERE id_history = $id";
+        $query_estimulo = "SELECT puesto_ocupado as puesto FROM {talentospilos_history_estim} WHERE id_history = $id";
         $estimulo = $DB->get_record_sql($query_estimulo);
 
         if (!$estimulo) {
@@ -262,7 +262,7 @@ function get_historical_semesters_by_student($id_student)
         if (!$cancelacion) {
             $semester->cancelacion = false;
         } else {
-            $semester->cancelacion = date("d.m.y",$cancelacion->fecha_cancelacion);
+            $semester->cancelacion = date("d / M / Y",$cancelacion->fecha_cancelacion);
         }
 
         //validate register
@@ -293,7 +293,7 @@ function make_html_semesters($semesters)
     foreach ($semesters as $semester_name => $semester) {
         foreach ($semester as $registro) {
             $descriptions = "";
-            $descriptions .= "<div class = 'row'>
+            $descriptions .= "<div id = 'panel_academic' class = 'panel panel-default'><div class = 'row'>
                                 <div class = 'col-md-4'>Programa: <b>$registro->program_name</b></div>
                                 <div class = 'col-md-4'>Promedio Semestre: $registro->promedio_semestre</div>
                                 <div class = 'col-md-4'>Promedio Acumulado: $registro->promedio_acumulado</div>
@@ -303,28 +303,57 @@ function make_html_semesters($semesters)
             $div_cancelacion = "";
 
             if($registro->bajo != false){
-                $div_bajo .= "<div class = 'col-md-4'>Cae en bajo rendimiento número $registro->bajo.</div>";
+                $div_bajo .= "<div class = 'col-md-8'>Cae en bajo rendimiento número $registro->bajo.</div>";
             }
 
             if($registro->estimulo != false){
-                $div_bajo .= "<div class = 'col-md-4'>Gana estimulo en puesto $registro->estimulo.</div>";            
+                $div_bajo .= "<div class = 'col-md-8'>Gana estimulo ocupando el puesto $registro->estimulo.</div>";            
             }                 
 
             if($registro->cancelacion != false){
-                $div_bajo .= "<div class = 'col-md-4'>Cancela semestre en fecha $registro->cancelacion.</div>";            
+                $div_bajo .= "<div class = 'col-md-8'>Cancela semestre. Fecha de cancelación: $registro->cancelacion.</div>";            
             }
 
             $descriptions .= "<div class = 'row'> 
                                 $div_bajo
                                 $div_cancelacion
                                 $div_estimulo
-                              </div>";
+                              </div> <hr>";
 
-            // $materias = json_decode($semester->json_materias);
+            $materias = json_decode($registro->json_materias);
 
-            // foreach ($materias as $materia) {
-            //     //AÑADIR MATERIAS
-            // }
+            $descriptions .= "<div class = 'row'> <b>
+                                <div class = 'col-md-3'>
+                                   MATERIA
+                                </div>
+                             <div class = 'col-md-2'>
+                                    CÓDIGO
+                             </div>
+                               <div class = 'col-md-2'>
+                                    NOTA
+                               </div>
+                               <div class = 'col-md-2'>
+                                    CREDITOS
+                               </div>  </b>  
+                            </div>";
+
+            foreach ($materias as $materia) {
+                $descriptions .= "<div class = 'row'> 
+                                    <div class = 'col-md-3'>
+                                        $materia->nombre_materia
+                                    </div>
+                                    <div class = 'col-md-2'>
+                                         $materia->codigo_materia
+                                    </div>
+                                    <div class = 'col-md-2'>
+                                         $materia->nota
+                                    </div>
+                                    <div class = 'col-md-2'>
+                                         $materia->creditos
+                                    </div>    
+                                 </div>";
+            }
+            $descriptions .= "</div>";
 
             $html .= "  <div class='panel panel-default'>
                       <div class='panel-heading' id = 'academic_historic'>
