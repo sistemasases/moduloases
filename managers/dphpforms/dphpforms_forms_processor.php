@@ -310,7 +310,7 @@ function dphpforms_store_pregunta($pregunta_details){
     return $pregunta_identifier;
 }
 
-function dphpforms_store_form_pregunta($form_id, $identifier_pregunta, $position, $permits){
+function dphpforms_store_form_pregunta($form_id, $identifier_pregunta, $position){
     
     global $DB;
 
