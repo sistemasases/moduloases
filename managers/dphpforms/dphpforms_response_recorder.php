@@ -54,7 +54,6 @@
     
 
     $result = array_values($result);
-    print_r($result);
     $row = $result[0];
     $form_name = $row->{'nombre'};
     $form_name_formatted = strtolower($form_name);
@@ -77,21 +76,24 @@
     echo '<input name="id" value="'.$row->{'mod_id_formulario'}.'" style="display:none;">';
     echo '<input name="id_monitor" value="5245" style="display:none;">';
     echo '<input name="id_estudiante" value="6548" style="display:none;">';
-    while($row){
+    
+    for($i = 0; $i < count($result); $i++){
+        $row = null;
+        $row = $result[$i];
+
         $campo = $row->{'campo'} ;
         $enunciado = $row->{'enunciado'};
         $atributos = json_decode($row->{'atributos_campo'});
 
         //Consulta de permisos
         $sql_permisos = '
-            SELECT * FROM {talentospilos_df_per_form_pr} WHERE id_formulario_pregunta = '.$row->{'mod_id_formulario_pregunta'}.'
+            SELECT * FROM {talentospilos_df_per_form_pr} WHERE id_formulario_pregunta = '.$row->{'id_pregunta'}.'
         ';
-        echo '--> Identificador ' . $row->{'mod_id_formulario_pregunta'} . ' <--' ;
-        $result_permisos = $DB->get_records_sql($sql);//1record
-        print_r($result_permisos);
-        die();
-        $permisos = pg_fetch_row($result_permisos);
-        $permisos_JSON = json_decode($permisos[2]);
+        
+        $result_permisos = $DB->get_record_sql($sql_permisos);
+
+        $permisos = $result_permisos;
+        $permisos_JSON = json_decode($permisos->permisos);
 
         foreach ($permisos_JSON as $key => $rol) {
             if($rol->{'rol'} == $ROL){
@@ -188,8 +190,6 @@
             }
         }
 
-
-        $row = pg_fetch_row($result);
     }
     echo ' <hr style="border-color:red"><button type="submit" class="btn btn-sm btn-default">Registrar</button>' . "\n";
     echo ' </form>' . "\n";
@@ -258,9 +258,6 @@
                 $(this).find("label").find("input").prop("checked", false);
             });
         });
-    </script>
-    <script>
-        '.$scriptReglas.'
     </script>
     </body>
 </html>
