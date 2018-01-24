@@ -322,7 +322,7 @@ function dphpforms_store_form_pregunta($form_id, $identifier_pregunta, $position
     $idRelacion = $DB->insert_record('talentospilos_df_form_preg', $obj_form_preguntas, $returnid=true, $bulk=false);
 
     //$identifier_permission = dphpforms_store_form_pregunta_permits($idRelacion, $permits);
-    if(!$identifier_permission){
+    if(!$idRelacion){
         echo json_encode(
             array(
                 'id_formulario' => '-1',
