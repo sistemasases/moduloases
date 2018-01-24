@@ -275,8 +275,9 @@ function dphpforms_store_pregunta($pregunta_details){
     $result = (array) $result;
     
     $fields = array();
+    $result = array_values($result);
     if(count($result) > 0){
-        for($i = 1; $i < count($result); $i++){
+        for($i = 0; $i < count($result); $i++){
             $row = $result[$i];
             array_push($fields, array('id' => $row->id, 'campo' => $row->campo));
         }
