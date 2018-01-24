@@ -322,7 +322,7 @@ function update_historic_bajo($id_historic, $num_bajo)
     if (!$result) {
         //INSERTION
         $object_bajo->id_history = $id_historic;
-        $object_bajo->numero = $num_bajo;
+        $object_bajo->numero_bajo = $num_bajo;
 
         $insert = $DB->insert_record('talentospilos_history_bajos', $object_bajo, false);
 
@@ -337,7 +337,7 @@ function update_historic_bajo($id_historic, $num_bajo)
         $id_register = $result->id;
         $object_bajo->id = $id_register;
         $object_bajo->id_history = $id_historic;
-        $object_bajo->numero = $num_bajo;
+        $object_bajo->numero_bajo = $num_bajo;
 
         $update = $DB->update_record('talentospilos_history_bajos', $object_bajo);
 
@@ -371,7 +371,7 @@ function update_historic_estimulo($id_historic, $puesto)
     if (!$result) {
         //INSERTION
         $object_estimulo->id_history = $id_historic;
-        $object_estimulo->puesto = $puesto;
+        $object_estimulo->puesto_ocupado = $puesto;
 
         $insert = $DB->insert_record('talentospilos_history_estim', $object_estimulo, false);
 
@@ -386,7 +386,7 @@ function update_historic_estimulo($id_historic, $puesto)
         $id_register = $result->id;
         $object_estimulo->id = $id_register;
         $object_estimulo->id_history = $id_historic;
-        $object_estimulo->puesto = $puesto;
+        $object_estimulo->puesto_ocupado = $puesto;
 
         $update = $DB->update_record('talentospilos_history_estim', $object_estimulo);
 
