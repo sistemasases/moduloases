@@ -26,6 +26,7 @@
 
     $result = $DB->get_records_sql($sql);
     $result = (array) $result;
+    $result = array_values($result);
 
     /*$html = $html .  '
     
@@ -53,11 +54,6 @@
             <div class="row">
     ';*/
 
-
-
-    
-
-    $result = array_values($result);
     $row = $result[0];
     $form_name = $row->{'nombre'};
     $form_name_formatted = strtolower($form_name);
@@ -85,7 +81,7 @@
         $row = null;
         $row = $result[$i];
 
-        $campo = $row->{'campo'} ;
+        $campo = $row->{'campo'};
         $enunciado = $row->{'enunciado'};
         $atributos = json_decode($row->{'atributos_campo'});
 

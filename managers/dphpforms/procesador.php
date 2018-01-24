@@ -3,6 +3,8 @@
     require_once(dirname(__FILE__). '/../../../../config.php');
     global $DB;
 
+    print_r($_POST);
+
     $RECORD_ID = null;
 
     if(isset($_POST['id_registro'])){
@@ -18,19 +20,18 @@
     $respuestas = array();
 
     foreach ($_POST as $key => $value) {
-        $elemento = $value;
-        if(is_numeric(key($_POST))){
-
+        if(is_numeric($key)){
+            $elemento = $value;
             $respuesta = array(
-                'id' => key($_POST),
+                'id' => (string) $key,
                 'valor' => (string) $elemento
             );
-
             array_push($respuestas, $respuesta);
         }
         next($_POST);
     }
 
+    echo 'RESPUESTAS-->';
     print_r($respuestas);
     
 
@@ -270,40 +271,37 @@ function dphpforms_new_store_respuesta($completed_form){
 
 
 function dphpforms_update_completed_form($form_identifier_respuesta, $pregunta_identifier, $new_value){
-    $db_connection = pg_connect("host=localhost dbname=formularios user=administrator password=administrator");
+    
+    global $DB;
     
        $sql = "
        
        SELECT * 
-       FROM respuestas AS R 
+       FROM {talentospilos_df_respuestas} AS R 
        INNER JOIN 
            (
                SELECT * 
-               FROM formulario_respuestas AS FR 
-               INNER JOIN formulario_soluciones AS FS 
+               FROM {talentospilos_df_form_resp} AS FR 
+               INNER JOIN {talentospilos_df_form_solu} AS FS 
                ON FR.id = FS.id_formulario_respuestas 
                WHERE FR.id = '".$form_identifier_respuesta."'
            ) AS FRS 
        ON FRS.id_respuesta = R.id WHERE R.id_pregunta = '".$pregunta_identifier."';
        
        ";
-       
-   
-       $result = pg_query($db_connection, $sql);
-       $row = pg_fetch_row($result);
-       $respuesta_identifier = $row[0];
 
-       $sql = "
+       $result = $DB->get_record_sql($sql);
+       $respuesta_identifier = $result->id_respuesta;
+
+       $obj_updated_respuesta = new stdClass();
+       $obj_updated_respuesta->id = $respuesta_identifier;
+       $obj_updated_respuesta->respuesta = $new_value;
        
-        UPDATE respuestas 
-        SET respuesta = '" . $new_value . "' 
-        WHERE id = '".$respuesta_identifier."'
-       
-       ";
+       $obj_updated_respuesta->fecha_hora_registro = "now()";
+
+       $DB->update_record('talentospilos_df_respuestas', $obj_updated_respuesta, $bulk=false);
 
        echo 'IDPREGUNTA' .$pregunta_identifier;
-
-       $result = pg_query($db_connection, $sql);
 
        return true;
 }
