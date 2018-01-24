@@ -32,6 +32,8 @@ require_once('../managers/periods_management/periods_lib.php');
 require_once ('../managers/permissions_management/permissions_lib.php');
 require_once ('../managers/validate_profile_action.php');
 require_once ('../managers/menu_options.php');
+include("../classes/output/renderer.php");
+include("../classes/output/historical_icetex_reports_page.php");
 
 global $PAGE;
 
@@ -104,7 +106,7 @@ $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/jquery.dataTables_t
 $PAGE->requires->css('/blocks/ases/js/select2/css/select2.css', true);
 $PAGE->requires->css('/blocks/ases/style/side_menu_style.css', true);
 
-//$PAGE->requires->js_call_amd('block_ases/periods_management_main', 'init');
+$PAGE->requires->js_call_amd('block_ases/icetex_reports_main', 'init');
 
 $output = $PAGE->get_renderer('block_ases');
 $index_page = new \block_ases\output\historical_icetex_reports_page($data);
