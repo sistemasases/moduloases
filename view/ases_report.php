@@ -58,7 +58,7 @@ $menu_option = create_menu_options($id_current_user, $blockid, $courseid);
 $tabla_riesgos='';
 $tabla_cohortes='';
 foreach($riesgos as $riesgo){
-    $tabla_riesgos.='<div class="checkbox"><input type="checkbox" name="chk_risk[]" id="'.$riesgo->id.'" value="'.$riesgo->id.'" /> '.$riesgo->descripcion.'</div>';}
+    $tabla_riesgos.='<div class="checkbox"><input type="checkbox" name="risk_fields[]" id="'.$riesgo->id.'" value="'.$riesgo->id.'" /> '.$riesgo->descripcion.'</div>';}
     
 $tabla_cohortes.='<option value="TODOS">TODOS</option>';
 foreach ($cohortes as $cohorte) {

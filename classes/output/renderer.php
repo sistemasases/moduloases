@@ -147,4 +147,9 @@ class renderer extends plugin_renderer_base {
         $data = $page->export_for_template($this);
         return parent::render_from_template('block_ases/upload_historical_files', $data);
     }
+
+    public function render_historical_icetex_reports_page($page){
+        $data = $page->export_for_template($this);
+        return parent::render_from_template('block_ases/historical_icetex_reports', $data);
+    }
 }

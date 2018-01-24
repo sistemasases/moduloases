@@ -21,7 +21,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_as
                     dateFormat: "yy-mm-dd"
                 });
 
-               // get_unreviewed_trackings();
+                load_hours_report();
 
                 $("#consult").click(function() {
 
@@ -42,56 +42,6 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_as
                 });
             });
 
-
-            //*Obtain trackings not reviewed by the professional of a chosen monitor.
-            function get_unreviewed_trackings() {
-                instanceid = get_parameter_url("instanceid");
-                monitorid = get_parameter_url("monitorid");
-
-                $.ajax({
-                    type: "POST",
-                    url: "../managers/tracking_time_control/load_unreviewed_tracking.php",
-                    data: {
-                        instanceid: instanceid,
-                        monitorid: monitorid
-                    },
-
-                    success: function(msg) {
-                        console.log(msg);
-                        if (msg == '') {
-                            $("#div_hours").empty();
-                            $("#div_hours").append('<h2>Todos los seguimientos del periodo se encuentran revisados.</h2>');
-                        } else {
-                            $("#div_hours").empty();
-                            $("#div_hours").append(msg);
-                        }
-                    },
-                    dataType: "text",
-                    cache: "false",
-                    error: function(msg) {
-                        alert("Error al cargar los seguimientos no revisados.");
-                    },
-                })
-
-
-
-
-            }
-
-
-            //*Get the value of a given parameter of the url.
-            function get_parameter_url(parameter) {
-                var res_parameter;
-                var informacionUrl = window.location.search.split("&");
-                for (var i = 0; i < informacionUrl.length; i++) {
-                    var elemento = informacionUrl[i].split("=");
-                    if (elemento[0] == "?" + parameter || elemento[0] == parameter) {
-                        res_parameter = elemento[1];
-                    }
-                }
-
-                return res_parameter;
-            }
             //*Perform date format validation.
             function validateFields(beginningDate, endingDate) {
 
@@ -119,7 +69,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_as
 
 
             //*Create the hour report table
-            function load_hours_report(init, fin) {
+            function load_hours_report(init=0, fin=0) {
                 $.ajax({
                     type: "POST",
                     url: "../managers/tracking_time_control/load_hours_report.php",

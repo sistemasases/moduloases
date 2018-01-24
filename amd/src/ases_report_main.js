@@ -78,13 +78,13 @@ define(['jquery', 'block_ases/datatables.net', 'block_ases/datatables.net-button
         
           $('#tableResult tr').each(function () {
             $.each(this.cells, function () {
-              if ($(this).html() == 'bajo') {
+              if ($(this).html() == 'Bajo') {
                 $(this).addClass('bajo');
               }
-              else if ($(this).html() == 'medio') {
+              else if ($(this).html() == 'Medio') {
                 $(this).addClass('medio');
               }
-              else if ($(this).html() == 'alto') {
+              else if ($(this).html() == 'Alto') {
                 $(this).addClass('alto');
               }
             });
