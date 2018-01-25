@@ -5,9 +5,6 @@
 
         global $DB;
 
-        //$FORM_ID = $_GET['id'];
-        //$ROL = $_GET['rol'];
-
         $FORM_ID = $id_form;
         $ROL = $rol;
 
@@ -33,32 +30,6 @@
         $result = (array) $result;
         $result = array_values($result);
 
-        /*$html = $html .  '
-        
-        <!DOCTYPE html>
-        <html lang="en">
-        <head>
-            <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <meta http-equiv="X-UA-Compatible" content="ie=edge">
-            <title>Renderizador de formularios</title>
-            <link rel="stylesheet" href="css/bootstrap.min.css">
-            <style>
-            
-                .danger{
-                    border: 1px solid red;
-                }
-                .ok{
-                    border: 1px solid green;
-                }
-            
-            </style>
-        </head>
-        <body>
-            <div class="container">
-                <div class="row">
-        ';*/
-
         $row = $result[0];
         $form_name = $row->{'nombre'};
         $form_name_formatted = strtolower($form_name);
@@ -79,8 +50,8 @@
         $html = $html .  '<form id="'. $form_name_formatted .'" method="'. $row->{'method'} .'" action="'. $row->{'action'} .'" class="col-xs-12 col-sm-12 col-md-12 col-lg-12" style="margin-bottom:0.7em">' ;
         $html = $html .  '<h1>'.$form_name.'</h1><hr style="border-color:red;">';
         $html = $html .  '<input name="id" value="'.$row->{'mod_id_formulario'}.'" style="display:none;">';
-        $html = $html .  '<input name="id_monitor" value="'.$id_monitor.'" style="display:none;">';
-        $html = $html .  '<input name="id_estudiante" value="'.$student_id.'" style="display:none;">';
+        $html = $html .  '<input name="id_monitor" value="'.$id_monitor.'" style="display:none;">';//Pendiente para eliminación
+        $html = $html .  '<input name="id_estudiante" value="'.$student_id.'" style="display:none;">';//Pendiente para eliminación
         
         for($i = 0; $i < count($result); $i++){
             $row = null;
@@ -255,24 +226,6 @@
             }
             $row_reglas = pg_fetch_row($reglas);
         };*/
-
-        /*$html = $html .  '
-        
-            </div>
-        </div>
-        <script src="js/jquery.min.js"></script>
-        <script src="js/bootstrap.min.js"></script>
-        <script>
-            $(".limpiar").click(function(){
-                $(this).parent().find("div").each(function(){
-                    $(this).find("label").find("input").prop("checked", false);
-                });
-            });
-        </script>
-        </body>
-    </html>
-        
-        ';*/
 
         // Fin de construcción
 

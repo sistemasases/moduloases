@@ -8,17 +8,13 @@
 
         $html = null;
 
-        /*$FORM_ID = $_GET['id']; 
-        $ROL = $_GET['rol'];
-        $RECORD_ID = $_GET['reg']; // Identificador del registro del formulario diligenciado*/
-
         $FORM_ID = $id_completed_form; 
         $ROL = $rol_;
         $RECORD_ID = $record_id_;
 
         if(!$RECORD_ID){
             $html = $html .  "Error: variable reg ausente.";
-            die();
+            return $html;
         }
         
         $sql = '
@@ -58,36 +54,6 @@
             $triggers_permissions = null;
         }
 
-        // Construcción de todo el sitio en HTML para pruebas de bootstrap
-
-        /*$html = $html .  '
-        
-        <!DOCTYPE html>
-        <html lang="en">
-        <head>
-            <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <meta http-equiv="X-UA-Compatible" content="ie=edge">
-            <title>Renderizador de formularios</title>
-            <link rel="stylesheet" href="css/bootstrap.min.css">
-            <style>
-            
-                .danger{
-                    border: 1px solid red;
-                }
-                .ok{
-                    border: 1px solid green;
-                }
-            
-            </style>
-        </head>
-        <body>
-            <div class="container">
-                <div class="row">
-        ';*/
-
-        // Fin de construcción
-
         $row = $result[0];
         $form_name = $row->{'nombre'};
         $form_name_formatted = strtolower($row->{'nombre'});
@@ -108,8 +74,8 @@
         $html = $html .  '<form id="'. $form_name_formatted .'" method="'. $row->{'method'} .'" action="'. $row->{'action'} .'" class="col-xs-12 col-sm-12 col-md-12 col-lg-12" style="margin-bottom:0.7em">' ;
         $html = $html .  '<h1>'.$form_name.'</h1><hr style="border-color:red;">';
         $html = $html .  '<input name="id" value="'.$row->{'mod_id_formulario'}.'" style="display:none;">';
-        $html = $html .  '<input name="id_monitor" value="" style="display:none;">';
-        $html = $html .  '<input name="id_estudiante" value="" style="display:none;">';
+        $html = $html .  '<input name="id_monitor" value="" style="display:none;">';//Pendientes para eliminación
+        $html = $html .  '<input name="id_estudiante" value="" style="display:none;">';//Pendientes para eliminación
 
         $html = $html .  '<input name="id_registro" value="'.$RECORD_ID.'" style="display:none;">';
 
@@ -147,7 +113,7 @@
         $checkboxes_scripts = null;
 
         for($i = 0; $i < count($result); $i++){
-            //while($row){
+           
             $row = null;
             $row = $result[$i];
         
@@ -306,14 +272,12 @@
                 }
             }
 
-
-            //$row = pg_fetch_row($result);
         }
         $html = $html .  ' <hr style="border-color:red"><button type="submit" class="btn btn-sm btn-default">Registrar</button>' . "\n";
         $html = $html .  ' </form>' . "\n";
 
 
-        // Construcción de todo el sitio en HTML para pruebas de bootstrap
+        
 
         //Escritura de reglas en JAVASCRIPT
         //Reglas
@@ -425,7 +389,6 @@
             foreach($conditionns as $keyCondicion => $condition){
                 $respuesta_trigger = null;
 
-                //$html = $html .  'Disparador: ' . $trigger . ' Condición: ' . $condition->{'condicion'};
                 foreach ($global_respuestas as $key => $g_respuesta) {
                     if($g_respuesta['idP'] == $trigger ){
                         $respuesta_trigger = $g_respuesta;
@@ -433,7 +396,6 @@
                     }
                 }
 
-                //print_r($respuesta_trigger);
                 $flag_satisfy = false;
 
                 if(
@@ -484,8 +446,8 @@
                             //$html = $html .  "Se cumple marcado y con resultado";
                             $flag_satisfy = true;
                             $html = $html .  $respuesta_trigger['valor'];
-                            $html = $html .  "CUMPLIÓ";
-                            print_r($respuesta_trigger);
+                            //$html = $html .  "CUMPLIÓ";
+                            //print_r($respuesta_trigger);
                         }else{
                             //$html = $html .  "No se cumple marcado y con resultado";
                         }
@@ -494,8 +456,8 @@
                             //$html = $html .  "Se cumple no_marcado y sin resultado";
                             $flag_satisfy = true;
                             $html = $html .  $respuesta_trigger['valor'];
-                            $html = $html .  "NO CUMPLIO";
-                            print_r($respuesta_trigger);
+                            //$html = $html .  "NO CUMPLIO";
+                            //print_r($respuesta_trigger);
                         }else{
                             //$html = $html .  "No se cumple no_marcado y sin resultado";
                         }
@@ -514,36 +476,6 @@
                 }
             }
         }
-
-        /*$html = $html .  '
-        
-            </div>
-        </div>
-        <script src="js/jquery.min.js"></script>
-        <script src="js/bootstrap.min.js"></script>
-        <script>
-            $(document).ready(function(){
-                '
-                .$permissions_script.
-                '
-            });
-            $(".limpiar").click(function(){
-                $(this).parent().find("div").each(function(){
-                    $(this).find("label").find("input").prop("checked", false);
-                });
-            });
-
-
-        </script>
-        <script>
-            '.$script_reglas.'
-        </script>
-        </body>
-    </html>
-        
-        ';*/
-
-        // Fin de construcción
 
         return $html;
 
