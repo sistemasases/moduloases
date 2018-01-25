@@ -304,15 +304,15 @@ function make_html_semesters($semesters)
             $div_cancelacion = "";
 
             if ($registro->bajo != false) {
-                $div_bajo .= "<div id = 'bajo' class = 'col-md-8'>Cae en bajo rendimiento número $registro->bajo.</div>";
+                $div_bajo .= "<div id = 'bajo' class = 'col-md-8 bajo'>Cae en bajo rendimiento número $registro->bajo.</div>";
             }
 
             if ($registro->estimulo != false) {
-                $div_bajo .= "<div id = 'estimulo' class = 'col-md-8'>Gana estimulo ocupando el puesto $registro->estimulo.</div>";
+                $div_bajo .= "<div id = 'estimulo' class = 'col-md-8 estimulo'>Gana estimulo ocupando el puesto $registro->estimulo.</div>";
             }
 
             if ($registro->cancelacion != false) {
-                $div_bajo .= "<div id = 'cancelacion' class = 'col-md-8'>Cancela semestre. Fecha de cancelación: $registro->cancelacion.</div>";
+                $div_bajo .= "<div id = 'cancelacion' class = 'col-md-8 cancelacion'>Cancela semestre. Fecha de cancelación: $registro->cancelacion.</div>";
             }
 
             $descriptions .= "<div class = 'row'>

@@ -719,6 +719,7 @@ $PAGE->requires->css('/blocks/ases/style/side_menu_style.css', true);
 
 $PAGE->requires->js_call_amd('block_ases/student_profile_main', 'init');
 $PAGE->requires->js_call_amd('block_ases/geographic_main', 'init');
+$PAGE->requires->js_call_amd('block_ases/academic_profile_main', 'init');
 
 $output = $PAGE->get_renderer('block_ases');
 

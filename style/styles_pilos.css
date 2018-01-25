@@ -1493,10 +1493,7 @@ input.no-borde-fondo.tema
   background-color: red !important;
   color: white !important;
 }
-.selected {
-  background-color: red !important;
-  color: white !important;
-}
+
 
 .no-js #loader { display: none;  }
 .js #loader { display: block; position: absolute; left: 100px; top: 0; }
@@ -1517,4 +1514,16 @@ input.no-borde-fondo.tema
 
 #panel_academic{
   padding: 10px;
+}
+
+.bajo{
+  background-color: #F78181 !important;
+}
+
+.estimulo{
+  background-color: #BEF781 !important;
+}
+
+.cancelacion{
+  background-color: #F3E2A9 !important;
 }
