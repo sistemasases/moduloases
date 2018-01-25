@@ -30,9 +30,9 @@ foreach ($result as $register) {
     $record->id = $register->id;
 
     if($has_tracking){
-        $record->tracking_status = 1;
-    }else{
         $record->tracking_status = 0;
+    }else{
+        $record->tracking_status = 1;
     }
 
     echo $DB->update_record('talentospilos_user_extended', $record);
