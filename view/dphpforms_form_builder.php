@@ -60,7 +60,6 @@ $url = new moodle_url("/blocks/ases/view/dphpforms_form_builder.php", array('cou
 $coursenode = $PAGE->navigation->find($courseid, navigation_node::TYPE_COURSE);
 
 $rol = get_role_ases($USER->id);
-$record->menu = $menu_option;
 
 $PAGE->set_context($contextcourse);
 $PAGE->set_context($contextblock);

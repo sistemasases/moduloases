@@ -1,7 +1,7 @@
 <?php 
     require_once(dirname(__FILE__). '/../../../../config.php');
 
-    function dphpforms_generate_html_recorder($id_form, $rol, $id_estudiante, $id_monitor){
+    function dphpforms_generate_html_recorder($id_form, $rol, $student_id, $id_monitor){
 
         global $DB;
 
@@ -80,7 +80,7 @@
         $html = $html .  '<h1>'.$form_name.'</h1><hr style="border-color:red;">';
         $html = $html .  '<input name="id" value="'.$row->{'mod_id_formulario'}.'" style="display:none;">';
         $html = $html .  '<input name="id_monitor" value="'.$id_monitor.'" style="display:none;">';
-        $html = $html .  '<input name="id_estudiante" value="'$id_estudiante'" style="display:none;">';
+        $html = $html .  '<input name="id_estudiante" value="'.$student_id.'" style="display:none;">';
         
         for($i = 0; $i < count($result); $i++){
             $row = null;
