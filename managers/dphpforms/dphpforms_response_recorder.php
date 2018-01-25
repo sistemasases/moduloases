@@ -76,7 +76,7 @@
         $form_name_formatted = $form_name_formatted . "_" . $row->{'mod_id_formulario'};
 
 
-        $html = $html .  '<form id="'. $form_name_formatted .'" method="'. $row->{'method'} .'" action="'. $row->{'action'} .'" class="col-xs-12 col-sm-8 col-md-8 col-lg-6 col-sm col-sm-offset-2 col-md-offset-2 col-lg-offset-3" style="margin-bottom:0.7em">' ;
+        $html = $html .  '<form id="'. $form_name_formatted .'" method="'. $row->{'method'} .'" action="'. $row->{'action'} .'" class="col-xs-12 col-sm-12 col-md-12 col-lg-12" style="margin-bottom:0.7em">' ;
         $html = $html .  '<h1>'.$form_name.'</h1><hr style="border-color:red;">';
         $html = $html .  '<input name="id" value="'.$row->{'mod_id_formulario'}.'" style="display:none;">';
         $html = $html .  '<input name="id_monitor" value="'.$id_monitor.'" style="display:none;">';

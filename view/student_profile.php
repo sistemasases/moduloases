@@ -41,6 +41,7 @@ require_once '../managers/dateValidator.php';
 require_once '../managers/permissions_management/permissions_lib.php';
 require_once '../managers/validate_profile_action.php';
 require_once '../managers/menu_options.php';
+require_once '../managers/dphpforms/dphpforms_forms_core.php';
 include '../lib.php';
 
 global $PAGE;
@@ -683,6 +684,10 @@ if ($student_code != 0) {
 
 // End of data obtaining for risks graphs
 
+    $record->form_seguimientos = null;
+    //Pruebas
+    $record->form_seguimientos = dphpforms_render_recorder('62', '6', '-1', '-1');
+
 } else {
     $record = new stdClass;
     $student_id = -1;
@@ -719,6 +724,7 @@ $PAGE->requires->css('/blocks/ases/style/side_menu_style.css', true);
 
 $PAGE->requires->js_call_amd('block_ases/student_profile_main', 'init');
 $PAGE->requires->js_call_amd('block_ases/geographic_main', 'init');
+$PAGE->requires->js_call_amd('block_ases/dphpforms_form_renderer', 'init');
 
 $output = $PAGE->get_renderer('block_ases');
 
