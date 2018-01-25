@@ -1,11 +1,8 @@
 <?php 
-
 require_once(dirname(__FILE__).'/../../../config.php');
-
 function xmldb_block_ases_upgrade($oldversion = 0) {
     global $DB;
     $dbman = $DB->get_manager();
-
     $result = true;
 
     if ($oldversion < 2018012413229) {
@@ -14,29 +11,24 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     // Actualización que crea la tabla para los campos extendidos de usuario (Tabla: {talentospilos_user_extended})
     // Versión: 2018010911179
     // ************************************************************************************************************
-
     // Define table talentospilos_user_extended to be created.
     $table = new xmldb_table('talentospilos_user_extended');
-
     // Adding fields to table talentospilos_user_extended.
     $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
     $table->add_field('id_moodle_user', XMLDB_TYPE_INTEGER, '20', null, XMLDB_NOTNULL, null, null);
     $table->add_field('id_ases_user', XMLDB_TYPE_INTEGER, '20', null, XMLDB_NOTNULL, null, null);
     $table->add_field('id_academic_program', XMLDB_TYPE_INTEGER, '20', null, XMLDB_NOTNULL, null, null);
     $table->add_field('program_status', XMLDB_TYPE_BINARY, null, null, XMLDB_NOTNULL, null, null);
-
     // Adding keys to table talentospilos_user_extended.
     $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
     $table->add_key('fk1_moodle_user', XMLDB_KEY_FOREIGN, array('id_moodle_user'), 'user', array('id'));
     $table->add_key('fk2_ases_user', XMLDB_KEY_FOREIGN, array('id_ases_user'), 'talentospilos_usuario', array('id'));
     $table->add_key('fk3_academic_program', XMLDB_KEY_FOREIGN, array('id_academic_program'), 'talentospilos_programa', array('id'));
-
     // Conditionally launch create table for talentospilos_user_extended.
     if (!$dbman->table_exists($table)) {
         $dbman->create_table($table);
     }
     // ************************************************************************************************************
-
     // ************************************************************************************************************
     // Actualización:
     // Añade el campo id_funcionalidad en la tabla {talentospilos_est_estadoases}
@@ -67,12 +59,10 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     // Define field id_instancia to be added to talentospilos_est_estadoases.
     $table = new xmldb_table('talentospilos_user_extended');
     $field = new xmldb_field('tracking_status', XMLDB_TYPE_INTEGER, '1', null, null, null, null, 'program_status');
-
     // Conditionally launch add field id_instancia.
     if (!$dbman->field_exists($table, $field)) {
         $dbman->add_field($table, $field);
     }
-
     // ************************************************************************************************************
     // Actualización:
     // Se modifica el nombre del campo estado_seguimiento en la tabla {talentospilos_user_extended}. Se pasa de estado_seguimiento a tracking_status
@@ -97,7 +87,6 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     
     // Define table talentospilos_inst_cohorte to be created.
     $table = new xmldb_table('talentospilos_inst_cohorte');
-
     // Adding fields to table talentospilos_inst_cohorte.
     $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
     $table->add_field('id_cohorte', XMLDB_TYPE_INTEGER, '20', null, XMLDB_NOTNULL, null, null);
@@ -202,7 +191,6 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     $key = new xmldb_key('unique_key', XMLDB_KEY_UNIQUE, array('id_estudiante', 'id_semestre', 'id_programa'));
     // Launch add key unique_key.
     $dbman->add_key($table, $key);
-
     // ************************************************************************************************************
     // Actualización:
     // Se crea la tabla {talentospilos_history_cancel}. Con los campos
@@ -211,7 +199,6 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     //          fecha_cancelacion --> Fecha en la que se realiza la cancelación del semestre
     // Versión en la que se incluye: 2018011911069
     // ************************************************************************************************************
-
     // Define table talentospilos_history_cancel to be created.
     $table = new xmldb_table('talentospilos_history_cancel');
     // Adding fields to table talentospilos_history_cancel.
@@ -254,7 +241,6 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     //          numero_bajo --> Cantidad de bajos registrados
     // Versión en la que se incluye: 2018011911069
     // ************************************************************************************************************
-
     // Define table talentospilos_history_bajos to be created.
     $table = new xmldb_table('talentospilos_history_bajos');
     // Adding fields to table talentospilos_history_bajos.
@@ -294,7 +280,6 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     //          puesto_ocupado --> Puesto ocupado por el estudiante en el semestre  
     // Versión en la que se incluye: 2018011911069
     // ************************************************************************************************************
-
     // Define table talentospilos_history_estim to be created.
     $table = new xmldb_table('talentospilos_history_estim');
     // Adding fields to table talentospilos_history_estim.
@@ -336,7 +321,6 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     //          id_resolucion --> Identificador de la resolución asociada al estudiante
     // Versión en la que se incluye: 2018011911069
     // ************************************************************************************************************
-
     // Define table talentospilos_res_estudiante to be dropped.
     $table = new xmldb_table('talentospilos_res_estudiante');
     // Conditionally launch drop table for talentospilos_res_estudiante.
@@ -407,7 +391,6 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     //          fecha_resolucion --> Identificador asociado al estudiante ASES
     // Versión en la que se incluye: 2018011911069
     // ************************************************************************************************************
-
     // Define table talentospilos_res_icetex to be dropped.
     $table = new xmldb_table('talentospilos_res_icetex');
     // Conditionally launch drop table for talentospilos_res_icetex.
@@ -450,7 +433,6 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     $key = new xmldb_key('unique_cod_res', XMLDB_KEY_UNIQUE, array('codigo_resolucion'));
     // Launch add key unique_cod_res.
     $dbman->add_key($table, $key);
-
     // ************************************************************************************************************
     // Actualización:
     // Se añade el campo cod_instancia a la tabla {talentospilos_instancia}
@@ -477,7 +459,6 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     
     // Define table talentospilos_df_formularios to be created.
     $table = new xmldb_table('talentospilos_df_formularios');
-
     // Adding fields to table talentospilos_df_formularios.
     $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
     $table->add_field('nombre', XMLDB_TYPE_CHAR, '140', null, XMLDB_NOTNULL, null, null);
@@ -527,7 +508,6 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     
     // Define table talentospilos_df_preguntas to be created.
     $table = new xmldb_table('talentospilos_df_preguntas');
-
     // Adding fields to table talentospilos_df_preguntas.
     $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
     $table->add_field('tipo_campo', XMLDB_TYPE_INTEGER, '20', null, XMLDB_NOTNULL, null, null);
@@ -617,7 +597,6 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
         $dbman->create_table($table);
     }
     //end tp_respuestas
-
     
     // ************************************************************************************************************
     // Actualización:
@@ -627,7 +606,6 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     
     // Define table talentospilos_df_form_resp to be created.
     $table = new xmldb_table('talentospilos_df_form_resp');
-
     // Adding fields to table talentospilos_df_form_resp.
     $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
     $table->add_field('id_formulario', XMLDB_TYPE_INTEGER, '20', null, XMLDB_NOTNULL, null, null);
@@ -644,7 +622,6 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
         $dbman->create_table($table);
     }
     //end tp_formulario_respuestas
-
     
     // ************************************************************************************************************
     // Actualización:
@@ -654,24 +631,20 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
  
     // Define table talentospilos_df_form_solu to be created.
     $table = new xmldb_table('talentospilos_df_form_solu');
-
     // Adding fields to table talentospilos_df_form_solu.
     $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
     $table->add_field('id_formulario_respuestas', XMLDB_TYPE_INTEGER, '20', null, XMLDB_NOTNULL, null, null);
     $table->add_field('id_respuesta', XMLDB_TYPE_INTEGER, '20', null, XMLDB_NOTNULL, null, null);
     $table->add_field('fecha_hora_registro', XMLDB_TYPE_DATETIME, null, null, XMLDB_NOTNULL, null, "now()");
-
     // Adding keys to table talentospilos_df_form_solu.
     $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
     $table->add_key('fk_form_solu_id_form_resp', XMLDB_KEY_FOREIGN, array('id_formulario_respuestas'), 'talentospilos_df_form_resp', array('id'));
     $table->add_key('fk_form_solu_id_resp', XMLDB_KEY_FOREIGN, array('id_respuesta'), 'talentospilos_df_respuestas', array('id'));
-
     // Conditionally launch create table for talentospilos_df_form_solu.
     if (!$dbman->table_exists($table)) {
         $dbman->create_table($table);
     }
     //end tp_soluciones
-
     // ************************************************************************************************************
     // Actualización:
     // Se añade la tabla talentospilos_df_reg_form_pr
@@ -687,20 +660,17 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     $table->add_field('id_regla', XMLDB_TYPE_INTEGER, '20', null, XMLDB_NOTNULL, null, null);
     $table->add_field('id_form_pregunta_a', XMLDB_TYPE_INTEGER, '20', null, XMLDB_NOTNULL, null, null);
     $table->add_field('id_form_pregunta_b', XMLDB_TYPE_INTEGER, '20', null, XMLDB_NOTNULL, null, null);
-
     // Adding keys to table talentospilos_df_reg_form_pr.
     $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
     $table->add_key('fk_reg_form_pr_formularios', XMLDB_KEY_FOREIGN, array('id_formulario'), 'talentospilos_df_formularios', array('id'));
     $table->add_key('fk_reg_form_pr_id_reglas', XMLDB_KEY_FOREIGN, array('id_regla'), 'talentospilos_df_reglas', array('id'));
     $table->add_key('fk_reg_form_pr_id_form_pregunta_a', XMLDB_KEY_FOREIGN, array('id_form_pregunta_a'), 'talentospilos_df_form_preg', array('id'));
     $table->add_key('fk_reg_form_pr_id_form_pregunta_b', XMLDB_KEY_FOREIGN, array('id_form_pregunta_b'), 'talentospilos_df_form_preg', array('id'));
-
     // Conditionally launch create table for talentospilos_df_reg_form_pr.
     if (!$dbman->table_exists($table)) {
         $dbman->create_table($table);
     }
     //end tp_reglas_form_preguntas
-
     // ************************************************************************************************************
     // Actualización:
     // Se añade la tabla talentospilos_df_per_form_pr
@@ -724,7 +694,6 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
         $dbman->create_table($table);
     }
     //end tp_permisos_formulario_preguntas
-
     // ************************************************************************************************************
     // Actualización:
     // Se añade la tabla talentospilos_df_disp_fordil

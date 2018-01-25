@@ -1,0 +1,48 @@
+.container{
+    margin-top: 3em;
+}
+li{
+    cursor:pointer;
+}
+li:hover{
+    color:gray;
+}
+.div-box-preview{
+    background-color:#fff9db;
+    padding: 1.5rem;
+    border-radius:5px;
+    border: 2px dotted #000;
+}
+.div-box-preview hr{
+    border-color:#8888;
+}
+.btn-eliminar-campo{
+    margin-top: 0.5rem;
+}
+.enunciado{
+    margin-bottom:0.5rem;
+}
+.identificador-temporal{
+    width: 100%;
+    margin-bottom: 0.5em;
+    border-top: 1px solid #444;
+    border-bottom: 1px solid #444;
+    background-color: rgba(16, 204, 6, 0.5);
+}
+.regla{
+    padding: 0.7em;
+    font-weight: bold;
+    text-align: center;
+    background-color: #fff9db;
+    border: 1px solid #444;
+    border-radius: 3px;
+    margin-bottom: 0.5em;
+}
+
+.eliminar-regla{
+    float: right;
+}
+
+pre, code {
+    white-space: pre-line;
+}
