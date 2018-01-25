@@ -256,7 +256,7 @@ function get_ases_report($general_fields=null, $conditions, $risk_fields=null, $
                                                          WHEN calificacion_riesgo = 2 THEN 'Medio'
                                                          WHEN calificacion_riesgo = 3 THEN 'Alto'
                                                          WHEN calificacion_riesgo = 0 THEN 'N.R.'
-                                                         Else 'N.R.' 
+                                                         ELSE 'N.R.' 
                                                     END
                                                 FROM {talentospilos_riesg_usuario} WHERE ";
             $select_clause = $select_clause."id_usuario = user_extended.id_ases_user AND id_riesgo = ".$risk_field.") AS ".$risk_name.", ";
