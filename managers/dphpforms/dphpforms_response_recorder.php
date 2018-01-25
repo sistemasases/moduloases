@@ -118,28 +118,33 @@
                     }
 
                     if($campo == 'TEXTFIELD'){
-                        $html = $html .  $enunciado . ':<br>';
+                        $html = $html .  '<div class="div-'.$row->{'mod_id_formulario_pregunta'}.' '.$atributos->{'class'}.'" >' . $enunciado . ':<br>';
                         $html = $html .  ' <input id="'.$row->{'mod_id_formulario_pregunta'}.'" class="form-control" type="'.$atributos->{'type'}.'" placeholder="'.$atributos->{'placeholder'}.'" name="'.$row->{'mod_id_formulario_pregunta'}.'" '.$enabled.'><br>' . "\n";
+                        $html = $html .  '</div>';
                     }
 
                     if($campo == 'TEXTAREA'){
-                        $html = $html .  $enunciado . ':<br>';
+                        $html = $html .  '<div class="div-'.$row->{'mod_id_formulario_pregunta'}.' '.$atributos->{'class'}.'" >' . $enunciado . ':<br>';
                         $html = $html .  ' <textarea id="'.$row->{'mod_id_formulario_pregunta'}.'" class="form-control" name="'. $row->{'mod_id_formulario_pregunta'} .'" '.$enabled.'></textarea><br>' . "\n";
+                        $html = $html .  '</div>';
                     }
 
                     if($campo == 'DATE'){
-                        $html = $html .  $enunciado . ':<br>';
+                        $html = $html .  '<div class="div-'.$row->{'mod_id_formulario_pregunta'}.' '.$atributos->{'class'}.'" >' . $enunciado . ':<br>';
                         $html = $html .  ' <input id="'.$row->{'mod_id_formulario_pregunta'}.'" class="form-control" type="date" name="'.$row->{'mod_id_formulario_pregunta'}.'" '.$enabled.'><br>' . "\n";
+                        $html = $html .  '</div>';
                     }
                     
                     if($campo == 'DATETIME'){
-                        $html = $html .  $enunciado . ':<br>';
+                        $html = $html .  '<div class="div-'.$row->{'mod_id_formulario_pregunta'}.' '.$atributos->{'class'}.'" >' . $enunciado . ':<br>';
                         $html = $html .  ' <input id="'.$row->{'mod_id_formulario_pregunta'}.'" class="form-control" type="datetime-local" name="'.$row->{'mod_id_formulario_pregunta'}.'" '.$enabled.'><br>' . "\n";
+                        $html = $html .  '</div>';
                     }
 
                     if($campo == 'TIME'){
-                        $html = $html .  $enunciado . ':<br>';
+                        $html = $html .  '<div class="div-'.$row->{'mod_id_formulario_pregunta'}.' '.$atributos->{'class'}.'" >' . $enunciado . ':<br>';
                         $html = $html .  ' <input id="'.$row->{'mod_id_formulario_pregunta'}.'" class="form-control" type="time" name="'.$row->{'mod_id_formulario_pregunta'}.'" '.$enabled.'><br>' . "\n";
+                        $html = $html .  '</div>';
                     }
 
                     if($campo == 'RADIOBUTTON'){

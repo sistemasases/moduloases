@@ -4,12 +4,14 @@
 
     global $DB;
 
+    $html = null;
+
     $FORM_ID = $_GET['id']; 
     $ROL = $_GET['rol'];
     $RECORD_ID = $_GET['reg']; // Identificador del registro del formulario diligenciado
 
     if(!$RECORD_ID){
-        echo "Error: variable reg ausente.";
+        $html = $html .  "Error: variable reg ausente.";
         die();
     }
     
@@ -52,7 +54,7 @@
 
     // Construcción de todo el sitio en HTML para pruebas de bootstrap
 
-    /*echo '
+    /*$html = $html .  '
     
     <!DOCTYPE html>
     <html lang="en">
@@ -97,13 +99,13 @@
     $form_name_formatted = $form_name_formatted . "_" . $row->{'mod_id_formulario'};
 
 
-    echo '<form id="'. $form_name_formatted .'" method="'. $row->{'method'} .'" action="'. $row->{'action'} .'" class="col-xs-12 col-sm-8 col-md-8 col-lg-6 col-sm col-sm-offset-2 col-md-offset-2 col-lg-offset-3" style="margin-bottom:0.7em">' ;
-    echo '<h1>'.$form_name.'</h1><hr style="border-color:red;">';
-    echo '<input name="id" value="'.$row->{'mod_id_formulario'}.'" style="display:none;">';
-    echo '<input name="id_monitor" value="5245" style="display:none;">';
-    echo '<input name="id_estudiante" value="6548" style="display:none;">';
+    $html = $html .  '<form id="'. $form_name_formatted .'" method="'. $row->{'method'} .'" action="'. $row->{'action'} .'" class="col-xs-12 col-sm-8 col-md-8 col-lg-6 col-sm col-sm-offset-2 col-md-offset-2 col-lg-offset-3" style="margin-bottom:0.7em">' ;
+    $html = $html .  '<h1>'.$form_name.'</h1><hr style="border-color:red;">';
+    $html = $html .  '<input name="id" value="'.$row->{'mod_id_formulario'}.'" style="display:none;">';
+    $html = $html .  '<input name="id_monitor" value="5245" style="display:none;">';
+    $html = $html .  '<input name="id_estudiante" value="6548" style="display:none;">';
 
-    echo '<input name="id_registro" value="'.$RECORD_ID.'" style="display:none;">';
+    $html = $html .  '<input name="id_registro" value="'.$RECORD_ID.'" style="display:none;">';
 
 
     $sql_respuestas = '
@@ -165,7 +167,7 @@
             
             if($id_campo_DB == $id_campo_DB_form){
                 $valor = $value['respuesta'];
-                echo 'VALOOOOOOOOOOOR:['.$id_campo_DB.']['.$id_campo_DB_form.']' . $valor;
+                
                 $tmpPregunta = array(
                     'idP' => $id_campo_DB,
                     'valor' => $value['respuesta'],
@@ -199,28 +201,33 @@
                     }
 
                     if($campo == 'TEXTFIELD'){
-                        echo $enunciado . ':<br>';
-                        echo ' <input id="'.$row->{'mod_id_formulario_pregunta'}.'" class="form-control" type="'.$atributos->{'type'}.'" placeholder="'.$atributos->{'placeholder'}.'" name="'.$row->{'mod_id_formulario_pregunta'}.'" value="'.$valor.'" '.$enabled.'><br>' . "\n";
+                        $html = $html .  '<div class="div-'.$row->{'mod_id_formulario_pregunta'}.' '.$atributos->{'class'}.'" >' . $enunciado . ':<br>';
+                        $html = $html .  ' <input id="'.$row->{'mod_id_formulario_pregunta'}.'" class="form-control" type="'.$atributos->{'type'}.'" placeholder="'.$atributos->{'placeholder'}.'" name="'.$row->{'mod_id_formulario_pregunta'}.'" value="'.$valor.'" '.$enabled.'><br>' . "\n";
+                        $html = $html .  '</div>';
                     }
 
                     if($campo == 'TEXTAREA'){
-                        echo $enunciado . ':<br>';
-                        echo ' <textarea id="'.$row->{'mod_id_formulario_pregunta'}.'" class="form-control" name="'. $row->{'mod_id_formulario_pregunta'} .'" '.$enabled.'>'.$valor.'</textarea><br>' . "\n";
+                        $html = $html .  '<div class="div-'.$row->{'mod_id_formulario_pregunta'}.' '.$atributos->{'class'}.'" >' . $enunciado . ':<br>';
+                        $html = $html .  ' <textarea id="'.$row->{'mod_id_formulario_pregunta'}.'" class="form-control" name="'. $row->{'mod_id_formulario_pregunta'} .'" '.$enabled.'>'.$valor.'</textarea><br>' . "\n";
+                        $html = $html .  '</div>';
                     }
 
                     if($campo == 'DATE'){
-                        echo $enunciado . ':<br>';
-                        echo ' <input id="'.$row->{'mod_id_formulario_pregunta'}.'" class="form-control" type="date" name="'.$row->{'mod_id_formulario_pregunta'}.'" value="'.$valor.'" '.$enabled.'><br>' . "\n";
+                        $html = $html .  '<div class="div-'.$row->{'mod_id_formulario_pregunta'}.' '.$atributos->{'class'}.'" >' . $enunciado . ':<br>';
+                        $html = $html .  ' <input id="'.$row->{'mod_id_formulario_pregunta'}.'" class="form-control" type="date" name="'.$row->{'mod_id_formulario_pregunta'}.'" value="'.$valor.'" '.$enabled.'><br>' . "\n";
+                        $html = $html .  '</div>';
                     }
                     
                     if($campo == 'DATETIME'){
-                        echo $enunciado . ':<br>';
-                        echo ' <input id="'.$row->{'mod_id_formulario_pregunta'}.'" class="form-control" type="datetime-local" name="'.$row->{'mod_id_formulario_pregunta'}.'" value="'.$valor.'" '.$enabled.'><br>' . "\n";
+                        $html = $html .  '<div class="div-'.$row->{'mod_id_formulario_pregunta'}.' '.$atributos->{'class'}.'" >' . $enunciado . ':<br>';
+                        $html = $html .  ' <input id="'.$row->{'mod_id_formulario_pregunta'}.'" class="form-control" type="datetime-local" name="'.$row->{'mod_id_formulario_pregunta'}.'" value="'.$valor.'" '.$enabled.'><br>' . "\n";
+                        $html = $html .  '</div>';
                     }
 
                     if($campo == 'TIME'){
-                        echo $enunciado . ':<br>';
-                        echo ' <input id="'.$row->{'mod_id_formulario_pregunta'}.'" class="form-control" type="time" name="'.$row->{'mod_id_formulario_pregunta'}.'" value="'.$valor.'" '.$enabled.'><br>' . "\n";
+                        $html = $html .  '<div class="div-'.$row->{'mod_id_formulario_pregunta'}.' '.$atributos->{'class'}.'" >' . $enunciado . ':<br>';
+                        $html = $html .  ' <input id="'.$row->{'mod_id_formulario_pregunta'}.'" class="form-control" type="time" name="'.$row->{'mod_id_formulario_pregunta'}.'" value="'.$valor.'" '.$enabled.'><br>' . "\n";
+                        $html = $html .  '</div>';
                     }
 
                     if($campo == 'RADIOBUTTON'){
@@ -228,9 +235,9 @@
                         $array_opciones = (array)$opciones;
                         $number_opciones = count($array_opciones);
 
-                        echo '
+                        $html = $html .  '
                         <label id="'.$row->{'mod_id_formulario_pregunta'}.'">'.$enunciado.'</label>';
-                        echo '<div class="opcionesRadio" style="margin-bottom:0.4em">
+                        $html = $html .  '<div class="opcionesRadio" style="margin-bottom:0.4em">
                         <input type="hidden" name="'.$row->{'mod_id_formulario_pregunta'}.'"  class="'.$row->{'mod_id_formulario_pregunta'}.'" value="-#$%-" '.$enabled.'>';
                         
                         
@@ -240,7 +247,7 @@
                             if($valor === $opcion['valor']){
                                 $checked = 'checked';
                             }
-                            echo '
+                            $html = $html .  '
                                 <div class="radio">
                                     <label><input type="radio" class="'.$row->{'mod_id_formulario_pregunta'}.'" name="'.$row->{'mod_id_formulario_pregunta'}.'" value="'.$opcion['valor'].'" name="optradio" '.$enabled.'  '.$checked.'>'.$opcion['enunciado'].'</label>
                                 </div>
@@ -248,7 +255,7 @@
                             ' . "\n";
                         }
                         
-                        echo '<a href="javascript:void(0);" class="'.$row->{'mod_id_formulario_pregunta'}.' limpiar btn btn-xs btn-default" >Limpiar</a>
+                        $html = $html .  '<a href="javascript:void(0);" class="'.$row->{'mod_id_formulario_pregunta'}.' limpiar btn btn-xs btn-default" >Limpiar</a>
                             </div>
                         ' . "\n";
                     }
@@ -267,12 +274,12 @@
                             $checked = '';
                             $valor_marcado = "-1";
                         }
-                        echo '
+                        $html = $html .  '
                         <label id="'.$row->{'mod_id_formulario_pregunta'}.'">'.$enunciado.'</label>';
                         
                         for($i = 0; $i < $number_opciones; $i++){
                             $opcion = (array) $array_opciones[$i];
-                            echo '
+                            $html = $html .  '
                             <div id="'.$row->{'mod_id_formulario_pregunta'}.'" name="'.$row->{'mod_id_formulario_pregunta'}.'" class="checkbox">
                                 <input type="hidden" name="'.$row->{'mod_id_formulario_pregunta'}.'" value="'.$valor_marcado.'" '.$enabled.'>
                                 <label><input id="'.$row->{'mod_id_formulario_pregunta'}.'" type="checkbox" name="'.$row->{'mod_id_formulario_pregunta'}.'" value="'.$opcion['valor'].'" '.$enabled.' '.$checked.'>'.$opcion['enunciado'].'</label>
@@ -296,8 +303,8 @@
 
         //$row = pg_fetch_row($result);
     }
-    echo ' <hr style="border-color:red"><button type="submit" class="btn btn-sm btn-default">Registrar</button>' . "\n";
-    echo ' </form>' . "\n";
+    $html = $html .  ' <hr style="border-color:red"><button type="submit" class="btn btn-sm btn-default">Registrar</button>' . "\n";
+    $html = $html .  ' </form>' . "\n";
 
 
     // Construcción de todo el sitio en HTML para pruebas de bootstrap
@@ -412,7 +419,7 @@
         foreach($conditionns as $keyCondicion => $condition){
             $respuesta_trigger = null;
 
-            //echo 'Disparador: ' . $trigger . ' Condición: ' . $condition->{'condicion'};
+            //$html = $html .  'Disparador: ' . $trigger . ' Condición: ' . $condition->{'condicion'};
             foreach ($global_respuestas as $key => $g_respuesta) {
                 if($g_respuesta['idP'] == $trigger ){
                     $respuesta_trigger = $g_respuesta;
@@ -439,19 +446,19 @@
                     )
                 ){
 
-                    //echo 'CONDICION PARA TEXTO';
+                    //$html = $html .  'CONDICION PARA TEXTO';
                     if(($condition->{'condicion'} == 'no_vacio') && ($respuesta_trigger['valor'] !== null )){
-                        //echo "Se cumple no_vacio y con resultado";
+                        //$html = $html .  "Se cumple no_vacio y con resultado";
                         $flag_satisfy = true;
                     }else{
-                        //echo "No se cumple no_vacio y con resultado";
+                        //$html = $html .  "No se cumple no_vacio y con resultado";
                     }
 
                     if(($condition->{'condicion'} == 'vacio') && ($respuesta_trigger['valor'] === null )){
-                        //echo "Se cumple vacio y sin resultado";
+                        //$html = $html .  "Se cumple vacio y sin resultado";
                         $flag_satisfy = true;
                     }else{
-                        //echo "No se cumple vacio y sin resultado";
+                        //$html = $html .  "No se cumple vacio y sin resultado";
                     }
             }
 
@@ -466,25 +473,25 @@
                 )
             ){
 
-                    //echo ' CONDICION PARA RADIO/CHECK ';
+                    //$html = $html .  ' CONDICION PARA RADIO/CHECK ';
                     if(($condition->{'condicion'} == 'marcado') && (($respuesta_trigger['valor'] !== "-1" )&&($respuesta_trigger['valor'] !== "-#$%-" ))){
-                        //echo "Se cumple marcado y con resultado";
+                        //$html = $html .  "Se cumple marcado y con resultado";
                         $flag_satisfy = true;
-                        echo $respuesta_trigger['valor'];
-                        echo "CUMPLIÓ";
+                        $html = $html .  $respuesta_trigger['valor'];
+                        $html = $html .  "CUMPLIÓ";
                         print_r($respuesta_trigger);
                     }else{
-                        //echo "No se cumple marcado y con resultado";
+                        //$html = $html .  "No se cumple marcado y con resultado";
                     }
 
                     if(($condition->{'condicion'} == 'no_marcado') && (($respuesta_trigger['valor'] === "-1" )||($respuesta_trigger['valor'] == "-#$%-" ))){
-                        //echo "Se cumple no_marcado y sin resultado";
+                        //$html = $html .  "Se cumple no_marcado y sin resultado";
                         $flag_satisfy = true;
-                        echo $respuesta_trigger['valor'];
-                        echo "NO CUMPLIO";
+                        $html = $html .  $respuesta_trigger['valor'];
+                        $html = $html .  "NO CUMPLIO";
                         print_r($respuesta_trigger);
                     }else{
-                        //echo "No se cumple no_marcado y sin resultado";
+                        //$html = $html .  "No se cumple no_marcado y sin resultado";
                     }
             }
 
@@ -502,7 +509,7 @@
         }
     }
 
-    /*echo '
+    /*$html = $html .  '
     
         </div>
     </div>
@@ -531,5 +538,7 @@
     ';*/
 
     // Fin de construcción
+
+    echo $html;
    
 ?>
