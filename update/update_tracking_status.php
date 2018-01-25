@@ -9,14 +9,18 @@ $query_nulls = "SELECT *
 
 $result = $DB->get_records_sql($query_nulls);
 
+print_r($result);
+
 foreach ($result as $register) {
     
     //validate if have more users with tracking_status = 1
     $query = "SELECT *
-             FROM {talentospilos_user_extended};
+             FROM {talentospilos_user_extended}
              WHERE id_ases_user = $register->id_ases_user";
 
     $result_query = $DB->get_records_sql($query);
+
+    print_r($result_query);
 
     $has_tracking = false;
 
