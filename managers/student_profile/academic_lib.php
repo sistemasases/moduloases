@@ -54,7 +54,11 @@ function get_grades_courses_student_last_semester($id_student)
 
     $courses = get_courses_by_student($id_student, $last_semester);
 
-    $html_courses = make_html_courses($courses);
+    if (!$courses) {
+        $html_courses = "<b>EL ESTUDIANTE NO REGISTRA CURSOS EN EL SEMESTRE ACTUAL</b>";
+    } else {
+        $html_courses = make_html_courses($courses);
+    }
     return $html_courses;
 }
 //print_r(get_grades_courses_student_last_semester(144));
@@ -77,7 +81,7 @@ function make_html_courses($courses)
                     <div class='panel-heading' id = 'academic'>
                         <h4 class='panel-title'>
                         <a data-toggle='collapse' data-parent='#accordion_academic' href='#course_$course->id_course' aria-expanded='false' aria-controls='$course->id_course'>
-                            $course->fullname 
+                            $course->fullname
                         </a>
                         </h4>
                     </div>
@@ -118,6 +122,9 @@ function get_courses_by_student($id_student, $last_semester)
             ORDER BY time_created DESC";
 
     $result_query = $DB->get_records_sql($query);
+    if (!$result_query) {
+        return false;
+    }
     $courses_array = array();
     foreach ($result_query as $result) {
         $result->grade = number_format(grade_get_course_grade($id_student, $result->id_course)->grade, 2);
@@ -158,4 +165,212 @@ function reduce_table(&$report)
     $report->showfeedback = false;
     $report->showcontributiontocoursetotal = false;
     $report->setup_table();
+}
+
+/**
+ * Return historical academic for a student
+ *
+ * @see get_historic_academic_by_student($id_student)
+ * @param $id_student --> student id from {talentospilos_usuario}
+ * @return string --> html
+ */
+
+function get_historic_academic_by_student($id_student)
+{
+    $semesters = get_historical_semesters_by_student($id_student);
+    // print_r($semesters);
+    if (!$semesters) {
+        $html_courses = "<b>EL ESTUDIANTE NO REGISTRA HISTÓRICO ACADÉMICO</b>";
+    } else {
+        $html_courses = make_html_semesters($semesters);
+    }
+
+    return $html_courses;
+
+}
+
+// get_historic_academic_by_student(320);
+
+/**
+ * Return an array of academic semesters
+ *
+ * @see get_historical_semesters_by_student($id_student)
+ * @param $id_student --> student id from {talentospilos_usuario}
+ * @return array --> array with the semesters info
+ */
+
+function get_historical_semesters_by_student($id_student)
+{
+    global $DB;
+
+    $sql_query = "SELECT *
+                  FROM {talentospilos_history_academ}
+                  WHERE id_estudiante = $id_student";
+
+    $result = $DB->get_records_sql($sql_query);
+
+    if (!$result) {
+        return false;
+    }
+
+    $semester_info = array();
+
+    foreach ($result as $register) {
+
+        $semester = new stdClass;
+        $id = $register->id;
+        $id_semester = $register->id_semestre;
+        $id_programa = $register->id_programa;
+        $semester->json_materias = $register->json_materias;
+
+        //search semester name
+        $query_semestre = "SELECT nombre FROM {talentospilos_semestre} WHERE id = $id_semester";
+        $semester_name = $DB->get_record_sql($query_semestre)->nombre;
+
+        //search program name
+        $query_program = "SELECT nombre FROM {talentospilos_programa} WHERE id = $id_programa";
+        $program_name = $DB->get_record_sql($query_program)->nombre;
+        $semester->program_name = $program_name;
+
+        $semester->promedio_semestre = $register->promedio_semestre;
+        $semester->promedio_acumulado = $register->promedio_acumulado;
+
+        //validate bajo rendimiento
+        $query_bajo = "SELECT numero_bajo as numero FROM {talentospilos_history_bajos} WHERE id_history = $id";
+        $bajo = $DB->get_record_sql($query_bajo);
+
+        if (!$bajo) {
+            $semester->bajo = false;
+        } else {
+            $semester->bajo = $bajo->numero;
+        }
+
+        //validate estimulo
+        $query_estimulo = "SELECT puesto_ocupado as puesto FROM {talentospilos_history_estim} WHERE id_history = $id";
+        $estimulo = $DB->get_record_sql($query_estimulo);
+
+        if (!$estimulo) {
+            $semester->estimulo = false;
+        } else {
+            $semester->estimulo = $estimulo->puesto;
+        }
+
+        //validate cancelacion
+        $query_cancelacion = "SELECT fecha_cancelacion FROM {talentospilos_history_cancel} WHERE id_history = $id";
+        $cancelacion = $DB->get_record_sql($query_cancelacion);
+
+        if (!$cancelacion) {
+            $semester->cancelacion = false;
+        } else {
+            $semester->cancelacion = date("d / M / Y",$cancelacion->fecha_cancelacion);
+        }
+
+        //validate register
+        if (!array_key_exists($semester_name, $semester_info)) {
+            $semester_info[$semester_name] = array();
+        }
+
+        array_push($semester_info[$semester_name], $semester);
+
+    }
+
+    return $semester_info;
+
+}
+
+/**
+ * Return an array of academic semesters
+ *
+ * @see make_html_semesters($semesters)
+ * @param $semesters --> array of Objects semester
+ * @return String --> html
+ */
+
+function make_html_semesters($semesters)
+{
+    $html = "";
+
+    foreach ($semesters as $semester_name => $semester) {
+        foreach ($semester as $registro) {
+            $descriptions = "";
+            $descriptions .= "<div id = 'panel_academic' class = 'panel panel-default'><div class = 'row'>
+                                <div class = 'col-md-4'>Programa: <b>$registro->program_name</b></div>
+                                <div class = 'col-md-4'>Promedio Semestre: $registro->promedio_semestre</div>
+                                <div class = 'col-md-4'>Promedio Acumulado: $registro->promedio_acumulado</div>
+                             </div>";
+            $div_bajo = "";
+            $div_estimulo = "";
+            $div_cancelacion = "";
+
+            if($registro->bajo != false){
+                $div_bajo .= "<div class = 'col-md-8'>Cae en bajo rendimiento número $registro->bajo.</div>";
+            }
+
+            if($registro->estimulo != false){
+                $div_bajo .= "<div class = 'col-md-8'>Gana estimulo ocupando el puesto $registro->estimulo.</div>";            
+            }                 
+
+            if($registro->cancelacion != false){
+                $div_bajo .= "<div class = 'col-md-8'>Cancela semestre. Fecha de cancelación: $registro->cancelacion.</div>";            
+            }
+
+            $descriptions .= "<div class = 'row'> 
+                                $div_bajo
+                                $div_cancelacion
+                                $div_estimulo
+                              </div> <hr>";
+
+            $materias = json_decode($registro->json_materias);
+
+            $descriptions .= "<div class = 'row'> <b>
+                                <div class = 'col-md-3'>
+                                   MATERIA
+                                </div>
+                             <div class = 'col-md-2'>
+                                    CÓDIGO
+                             </div>
+                               <div class = 'col-md-2'>
+                                    NOTA
+                               </div>
+                               <div class = 'col-md-2'>
+                                    CREDITOS
+                               </div>  </b>  
+                            </div>";
+
+            foreach ($materias as $materia) {
+                $descriptions .= "<div class = 'row'> 
+                                    <div class = 'col-md-3'>
+                                        $materia->nombre_materia
+                                    </div>
+                                    <div class = 'col-md-2'>
+                                         $materia->codigo_materia
+                                    </div>
+                                    <div class = 'col-md-2'>
+                                         $materia->nota
+                                    </div>
+                                    <div class = 'col-md-2'>
+                                         $materia->creditos
+                                    </div>    
+                                 </div>";
+            }
+            $descriptions .= "</div>";
+
+            $html .= "  <div class='panel panel-default'>
+                      <div class='panel-heading' id = 'academic_historic'>
+                          <h4 class='panel-title'>
+                          <a data-toggle='collapse' data-parent='#accordion_academic_historic' href='#register_$semester_name' aria-expanded='false' aria-controls='$semester_name'>
+                              Semestre $semester_name
+                          </a>
+                          </h4>
+                      </div>
+                      <div id = 'register_$semester_name' class='panel-collapse collapse'>
+                          <div class = 'panel-body'>
+                              $descriptions
+                          </div>
+                      </div>
+                    </div>  ";
+        }
+    }
+
+    return $html;
 }

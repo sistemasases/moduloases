@@ -1,12 +1,9 @@
-// Standard license block omitted.
-/*
- * @package    block_ases/uploaddata_main
- * @copyright  ASES
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
-/**
- * @module block_ases/uploaddata_main
+ /**
+ * Management - Upload, delete and display files
+ * @module amd/src/uploaddata_main
+ * @author Iader E. García Gómez
+ * @copyright 2018 Iader E. García <iadergg@gmail.com>
+ * @license  http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/validator'], function ($, bootstrap, sweetalert, validator) {
@@ -31,9 +28,13 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/v
                 });
             });
 
-            /*
-                Carga de archivos
-            */
+           
+            /**
+             * @method subir_archivos
+             * @desc Upload files given a form to obtain the data
+             * @param {DOM element} form 
+             * @return {void}
+             */
             function subir_archivos(form) {
 
                 let status_bar = form.children[2].children[0].children[0],
@@ -79,6 +80,8 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/v
 
                 });
 
+                //Upload files processing file at subir_archivo.php
+
                 request.open('post', '../managers/upload_files_form/subir_archivo.php');
 
                 request.send(new FormData(form));
@@ -91,10 +94,13 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/v
                 });
             }
 
-            /*
-             Eliminar archivos
-            */
+            /**
+             * @method eliminarArchivos
+             * @desc Deletes a specific file through an ajax call
+             * @param {file} archivo file to delete
+             */
             function eliminarArchivos(archivo) {
+                //Ajax call using processing at eliminar_archivo.php
                 $.ajax({
                     url: '../managers/upload_files_form/eliminar_archivo.php',
                     type: 'POST',
@@ -103,13 +109,16 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/v
                         archivo: archivo
                     },
                     error: function () {
+                        //In case something were missing
                         mostrarRespuesta('Error al intentar eliminar el archivo.', false);
                     },
                     success: function (respuesta) {
                         if (respuesta == 1) {
+                            //File deleted
                             mostrarRespuesta('El archivo ha sido eliminado.', true);
                         }
                         else {
+                            //Error during deleting
                             mostrarRespuesta('Error al intentar eliminar el archivo.', false);
                         }
                         mostrarArchivos();
@@ -117,10 +126,13 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/v
                 });
             }
 
-            /*
-            Mostrar archivos
-            */
+            /**
+             * @method mostrar_archivos
+             * @desc Displays all files through an ajax call
+             * @return {void}
+             */
             function mostrarArchivos() {
+                //Ajax call using processing at mostrar_archivos.php
                 $.ajax({
                     url: '../managers/upload_files_form/mostrar_archivos.php',
                     dataType: 'JSON',
@@ -138,6 +150,12 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/v
                 });
             }
 
+            /**
+             * @method mostrarRespuesta
+             * @desc Displays a given message according an 'ok' flag
+             * @param {string} mensaje message to show
+             * @param {boolean} ok boolean flasg that indicates if it's  a success or danger alert (message) 
+             */
             function mostrarRespuesta(mensaje, ok) {
                 $("#respuesta").removeClass('alert-success').removeClass('alert-danger').html(mensaje);
                 if (ok) {

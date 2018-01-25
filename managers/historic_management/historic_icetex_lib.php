@@ -118,7 +118,7 @@ function create_resolution($num_resolution, $date, $total_amount){
  * @param $amount -> amount of money per student
  * @return integer
  */
-function create_historic_icetex($student_id, $resolution_id, $semester_id, $amount){
+function create_historic_icetex($student_id, $program_id, $resolution_id, $semester_id, $amount){
 
     global $DB;
 
@@ -126,6 +126,7 @@ function create_historic_icetex($student_id, $resolution_id, $semester_id, $amou
     $newHistoric->id_estudiante = $student_id;
     $newHistoric->id_resolucion = $resolution_id;
     $newHistoric->id_semestre = $semester_id;
+    $newHistoric->id_programa = $program_id;
     $newHistoric->monto_estudiante = $amount;
 
     $insert = $DB->insert_record('talentospilos_res_estudiante', $newHistoric, true);

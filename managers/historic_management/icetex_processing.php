@@ -115,6 +115,26 @@ if (isset($_FILES['file'])) {
            } else {
                throw new MyException('La columna con el campo cedula_estudiante es obligatoria');
            }
+
+           //validate programa
+           if ($associativeTitles['programa'] != null) {
+            $codigo_programa = $data[$associativeTitles['programa']];
+            if ($codigo_programa != '') {
+
+                $id_programa = get_id_program($codigo_programa);
+                if (!$id_programa) {
+                    $isValidRow = false;
+                    array_push($detail_erros, [$line_count, $lc_wrongFile, ($associativeTitles['programa'] + 1), 'programa', 'No existe un programa asociado al codigo ' . $codigo_programa]);
+                }
+
+            } else {
+                $isValidRow = false;
+                array_push($detail_erros, [$line_count, $lc_wrongFile, ($associativeTitles['programa'] + 1), 'programa', 'El campo programa es obligatorio y se encuentra vacio']);
+            }
+
+           } else {
+               throw new MyException('La columna con el campo programa es obligatoria');
+           }
            
            //validate nombre_semestre
            if ($associativeTitles['nombre_semestre'] != null) {
@@ -186,7 +206,7 @@ if (isset($_FILES['file'])) {
            } else {
 
                //Actualizar o crear un registro
-               $result = create_historic_icetex($id_estudiante, $id_resolucion, $id_semestre, $monto_estudiante);
+               $result = create_historic_icetex($id_estudiante, $id_programa, $id_resolucion, $id_semestre, $monto_estudiante);
 
                if (!$result) {
                    array_push($detail_errors, [$line_count, $lc_wrongFile, 'Error al registrar historico', 'Error Servidor', 'Error del server registrando el historico']);
