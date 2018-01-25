@@ -1507,3 +1507,10 @@ input.no-borde-fondo.tema
   width: 400px;
 }
 
+#informacion{
+  height: auto !important;
+}
+
+#panel_academic{
+  padding: 10px;
+}

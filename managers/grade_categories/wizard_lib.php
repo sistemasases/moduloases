@@ -34,21 +34,21 @@ require_once $CFG->dirroot.'/blocks/ases/managers/lib/student_lib.php';
 
 /**
  * It performs the insertion of a category considering whether it is of weighted type or not,
- * after which it inserts the item that represents the category. The latter is necessary for the category to have a weight.
+ * then it inserts the item that represents the category. The last one is needed for the category to have a weight.
  *
- * @param $course
- * @param $father
- * @param $name
- * @param $weighted (aggregation)
- * @param $weight
- * @return Int --- ok->1 || error->0
+ * @param $course --> course id
+ * @param $father --> category parent
+ * @param $name --> category name
+ * @param $weighted --> type of qualification(aggregation)
+ * @param $weight --> weighetd value
+ * @return integer --- ok->1 || error->0
 **/
 
 /** INSERTION METHODS **/
 function insertCategory($course,$father,$name,$weighted,$weight){
     global $DB;
     
-    //Instance an object category to use insert_record
+    //Instance a category object to use insert_record
     $object = new stdClass;
     $object ->courseid=$course;
     $object ->fullname=$name;
@@ -74,16 +74,17 @@ function insertCategory($course,$father,$name,$weighted,$weight){
 }
 
 /**
- * It performs the insertion of a category parcial and if it works, it returns the id  the created category
+ * Performs the insertion of a category 'parcial'. Returns the id  the created category if it's successful, 0 otherwise
  *
- * @param $course
- * @param $father
- * @param $name
- * @param $weighted (aggregation)
- * @param $weight
- * @return int --- ok->id_cat || error->0
+ * @see insertCategoryParcial($course,$father,$name,$weighted,$weight)
+ * @param $course --> course id
+ * @param $father --> category parent
+ * @param $name --> category name
+ * @param $weighted --> type of qualification(aggregation)
+ * @param $weight --> weighted value
+ * @return integer --- ok->id_cat || error->0
 **/
-function insertCategoryParcial($course,$father,$name,$weighted,$weight){
+function E($course,$father,$name,$weighted,$weight){
     global $DB;
       
     //Instance an object category to use insert_record
@@ -112,14 +113,14 @@ function insertCategoryParcial($course,$father,$name,$weighted,$weight){
 }
 
 /**
- * It performs the insertion of parcial
+ * It performs the insertion of 'parcial'
  *
- * @param $course
- * @param $father
- * @param $name
- * @param $weighted (aggregation)
- * @param $weight
- * @return Int --- ok-> 1 || error-> 0
+ * @param $course --> course id
+ * @param $father --> category parent
+ * @param $name --> category name
+ * @param $weighted --> type of qualification(aggregation)
+ * @param $weight --> weighted value
+ * @return integer --- ok-> 1 || error-> 0
 **/
 function insertParcial($course,$father,$name,$weighted,$weight){
     $succes = insertCategoryParcial($course,$father,$name,$weighted,$weight);
@@ -140,17 +141,17 @@ function insertParcial($course,$father,$name,$weighted,$weight){
 
 
 /**
- *Performs the insertion of item, either flat item or an item related to a category,
- *the latter is necessary to be able to assign a weight in case the category is a 
+ * Inserts an item, either flat item or an item related to a category, the last one is needed to assign a weight in case the category were a 
  * daughter of another category with weighted rating
  *
- * @param $course
- * @param $father
- * @param $name
- * @param $valsend
- * @param $item
- * @return Int --- ok-> 1 || error-> 0
-**/
+ * @see insertItem($course,$father,$name,$valsend,$item)
+ * @param $course --> course id
+ * @param $father --> category parent
+ * @param $name --> category name
+ * @param $valsend --> category value
+ * @param $item --> Item that'll be added
+ * @return integer --- ok-> 1 || error-> 0
+*/
 function insertItem($course,$father,$name,$valsend,$item){
     global $DB;
     
@@ -193,10 +194,14 @@ function insertItem($course,$father,$name,$valsend,$item){
 
 /** 
  * Edit a category
- * 
- * @param int $id id of category
- * @param int $courseid id of course
- * @return bool
+ * @see edit_category($courseid, $categoryid, $weight, $name, $parentid,$aggregation)
+ * @param $courseid --> course id
+ * @param $categoryid --> category id
+ * @param $weight --> weighted value
+ * @param $name --> category name
+ * @param $parentid --> parent id
+ * @param $aggregation --> qualification type id
+ * @return boolean true if category and item were both updated, false otherwise
 */
 function edit_category($courseid, $categoryid, $weight, $name, $parentid,$aggregation){
     if ($grade_category = grade_category::fetch(array('id'=>$categoryid, 'courseid'=>$courseid))) {
@@ -243,7 +248,7 @@ function edit_category($courseid, $categoryid, $weight, $name, $parentid,$aggreg
         // print_r("<br>aqui despues<br>");
         // print_r($grade_category->aggregation);
         if($new_agg and $grade_category->aggregation == 10){
-            //PONER PESO 1 A TODOS SUS HIJOS
+            // weight value = 1 to children
             $children = $grade_category->get_children();
             
             foreach ($children as $child) {
@@ -260,7 +265,7 @@ function edit_category($courseid, $categoryid, $weight, $name, $parentid,$aggreg
             }
 
         }else if($new_agg and $grade_category->aggregation != 10){
-            //PONER PESO 0 A TODOS SUS HIJOS
+            //weight value = 0 to children
 
             $children = $grade_category->get_children();
             
@@ -304,11 +309,15 @@ function edit_category($courseid, $categoryid, $weight, $name, $parentid,$aggreg
 }
 
 /** 
- * Edit an item
+ * Edits an item given some specifications, including course id and weight value
  * 
- * @param int $id id of item
- * @param int $courseid id of course
- * @return bool
+ * @see edit_item($courseid, $itemid, $weight, $name, $parentid)
+ * @param $courseid --> course id
+ * @param $itemid --> item id
+ * @param $weight --> weighted value
+ * @param $name --> item name
+ * @param $parentid --> parent id
+ * @return boolean true if grade item was updated, false otherwise
 */
 function edit_item($courseid, $itemid, $weight, $name, $parentid){
     if ($grade_item = grade_item::fetch(array('id'=>$itemid, 'courseid'=>$courseid))) {
@@ -345,10 +354,11 @@ function edit_item($courseid, $itemid, $weight, $name, $parentid){
 }
 
 /** 
- * Edit a grade element 
+ * Edits an element given an array with some specifications, including course id, element id and element aggregation.
  * 
- * @param indexed-array $info 
- * @return bool
+ * @see editElement($info)
+ * @param $info --> indexed-array with the new element information
+ * @return boolean true if the update operation was succesful, false otherwise
 */
 function editElement($info){
 
@@ -374,13 +384,13 @@ function editElement($info){
 /** DELETING METHODS **/
 
 /**
- *Delete an element of grading. (item or category)
- *
- * @param int $id id of element to delete
- * @param int $courseid id of course
- * @param string $type type of element. "cat" if category, "row" if item
- * @return bool 
-**/
+ * Deletes an element of grading. (item or category)
+ * @see delete_element($id, $courseid,$type)
+ * @param $id --> element id to delete
+ * @param $courseid --> course id
+ * @param $type --> element type. "cat" if it's category, "row" if it's item
+ * @return boolean true if it was deleted, false otherwise
+ */
 function delete_element($id, $courseid,$type){
     global $DB;
     $gpr = new grade_plugin_return(array('type'=>'edit', 'plugin'=>'tree', 'courseid'=>$courseid));
@@ -417,10 +427,11 @@ function delete_element($id, $courseid,$type){
 
 //
 /**
- *Make a query to find the last index of the sort element corresponding to the category that is being entered
+ * Makes a query to find the last index of the sorted element corresponding to the category that is being inserted
  *
- * @param $course
- * @return int --- nextindex
+ * @see getNextIndex($course)
+ * @param $course --> course id
+ * @return integer 
 **/
 function getNextIndex($course){
     global $DB;
@@ -432,10 +443,11 @@ function getNextIndex($course){
 
 
 /**
- * Make a html_string with the categories tree of a course identified by $courseid
- *
- * @param $idCourse
- * @return String hmtl
+ * Makes an html_string with the categories tree of a course identified by $courseid
+ * 
+ * @see getCategoriesandItems($courseid)
+ * @param $courseid --> course id
+ * @return string html
 **/
 function getCategoriesandItems($courseid){
 
@@ -461,11 +473,12 @@ function getCategoriesandItems($courseid){
 //getCategoriesandItems(14);
 
 /**
- * Reduce grade information to display in categories tree
+ * Function that reduces grade information to display in categories tree
  *
- * @param &$report
+ * @see reduce_table_categories(&$report)
+ * @param &$report --> object containing grade information
  * @return null
-**/
+*/
 function reduce_table_categories(&$report){
     $report->showpercentage = false;
     $report->showrange = false; 
@@ -479,8 +492,10 @@ function reduce_table_categories(&$report){
 
 /**
  * Returns the HTML from the flexitable.
- * @param grade_report_user $report info of which will be shown
- * @return string
+ * 
+ * @see print_table_categories($report)
+ * @param $report --> info which will be shown
+ * @return string html
 **/ 
 function print_table_categories($report){
     $maxspan = $report->maxdepth;
@@ -564,8 +579,10 @@ function print_table_categories($report){
 /**
  * Returns the id of the parent category of an item
  *
- * @param int $id id of item, $courseid
- * @return boolean
+ * @see get_id_parent_item($id, $courseid)
+ * @param $id --> item id
+ * @param $courseid --> course id
+ * @return boolean 
 **/
 function get_id_parent_item($id, $courseid){
     $grade_item = grade_item::fetch(array('id' => $id, 'courseid' => $courseid));
@@ -573,11 +590,12 @@ function get_id_parent_item($id, $courseid){
 }
 
 /**
- * Returns the id of the parent category of a category
+ * Returns the category parent id
  *
- * @param int $id id of category
- * @return boolean
-**/
+ * @see get_id_parent_category($id)
+ * @param $id --> category id
+ * @return boolean|string --> false if there's no id, string with the id otherwise
+*/
 function get_id_parent_category($id){
     if($grade_category = grade_category::fetch(array('id' => $id))){
         if(!$grade_category->is_course_category()){
@@ -589,9 +607,11 @@ function get_id_parent_category($id){
 }
 
 /**
- * Say if an item is Mod type
+ * Returns true if an item is a Mod type, false otherwise
  *
- * @param int $id id of item, $courseid
+ * @see isItemMod($id, $courseid)
+ * @param $id --> item id
+ * @param $courseid --> course id
  * @return boolean
 **/
 function isItemMod($id, $courseid){
@@ -601,9 +621,11 @@ function isItemMod($id, $courseid){
 
 
 /**
- * Say if an categorie is course type
+ * Returns true if a category is a course type
  *
- * @param int $id id of category
+ * @see isCourseCategorie($id, $courseid)
+ * @param $id --> category id
+ * @param $courseid --> course id
  * @return boolean
 **/
 function isCourseCategorie($id, $courseid){
@@ -615,11 +637,12 @@ function isCourseCategorie($id, $courseid){
 
 
 /**
- * Get the max weight that a new item can have in a category.
+ * Gets the max weight that a new item can have in a category.
  *
- * @param $categoryid
- * @return int
-**/
+ * @see getMaxWeight($categoryid)
+ * @param $categoryid --> category id
+ * @return integer
+*/
  function getMaxWeight($categoryid) {
   global $DB;
   $maxweight = 100;
@@ -653,13 +676,13 @@ function isCourseCategorie($id, $courseid){
 
 
 
-//PENDIENTE MODIFICAR CON LOS METODOS DE MOODLE
 /**
- * Say if find the string "gradeitemdescriptionfiller" in a parameter $string to determinate if is a total item
- *
- * @param $string
- * @return boolean
-**/
+ * Function that searches into $string "gradeitemdescriptionfiller" to determine if it's a total item
+ * 
+ * @see isCategoryTotal($string)
+ * @param $string --> Describes an item
+ * @return boolean false if it's not a total item, true otherwise
+*/
 function isCategoryTotal($string){
     if(stripos($string, "gradeitemdescriptionfiller") === false && stripos($string, "Total") == false){
         return false;
@@ -670,9 +693,10 @@ function isCategoryTotal($string){
 }
 
 /**
- * Say if find the string "Categoria" or "Category" in a parameter $string
+ * Function that searches into $string "Categoria" or "Category"
  *
- * @param $string
+ * @see isCategory($string)
+ * @param $string --> Describes a potential category
  * @return boolean
 **/
 
@@ -687,10 +711,11 @@ function isCategory($string){
 
 
 /**
- * Get the weight of an item.
- *
- * @param $itemid
- * @return int weight
+ * Gets an item weight.
+ * 
+ * @see getweightofItem($itemid)
+ * @param $itemid --> item id
+ * @return integer
 **/
 function getweightofItem($itemid){
     global $DB;
@@ -708,7 +733,7 @@ function getweightofItem($itemid){
 }
 
 /**
- * Get the weight of an category.
+ * Gets a category weight.
  *
  * @param $itemid
  * @return int weight
@@ -729,11 +754,12 @@ function getweightofCategory($id){
 }
 
 /**
- * Get the aggregation tipe of an category.
+ * Gets a category aggregation value
  *
- * @param $itemid
- * @return int weight
-**/
+ * @see getAggregationofCategory($categoryid)
+ * @param $categoryid --> category id
+ * @return integer
+*/
 
 function getAggregationofCategory($categoryid){
     global $DB;
@@ -751,11 +777,14 @@ function getAggregationofCategory($categoryid){
 
 
 /**
- * Get the aggregation tipe of an category.
+ * Gets a category aggregation type.
  *
- * @param $itemid
- * @return int weight
-**/
+ * @see getParentCategories($id_course,$id_element,$type)
+ * @param $id_course --> course id
+ * @param $id_element --> element id
+ * @param $type --> Category type
+ * @return integer
+*/
 
 function getParentCategories($id_course,$id_element,$type){
     global $DB;   
@@ -765,7 +794,7 @@ function getParentCategories($id_course,$id_element,$type){
         $id_parent = $DB->get_record_sql($query)->categoryid;
     }else{
         $query = "SELECT parent FROM {grade_categories} WHERE id = $id_element";
-        $id_parent = $DB->get_record_sql($query)->parent;//ES NULL CUANDO ES LA CATEGORIA TOTAL DEL CURSO.
+        $id_parent = $DB->get_record_sql($query)->parent;// NULL WHEN TOTAL COURSE CATEGORY
     }
     $record = new stdClass;
     if(!$id_parent){

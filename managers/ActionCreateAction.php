@@ -4,7 +4,9 @@ require_once (dirname(__FILE__) . '/../../../config.php');
 require_once ('periods_management/periods_lib.php');
 
 require_once ('user_management/user_lib.php');
-
+require_once('pilos_tracking/pilos_tracking_lib.php');
+require_once('permissions_management/permissions_lib.php');
+require_once('validate_profile_action.php');
 global $DB, $PAGE;
 require_once ($CFG->libdir . '/adminlib.php');
 
@@ -60,29 +62,6 @@ if (isset($_POST['nombre_perfil']) && isset($_POST['descripcion_perfil']))
     }
   }
   else
-if (isset($_POST['profile']) && isset($_POST['actions']))
-  {
-  $actions = json_decode(stripslashes($_POST['actions']));
-  $continuar = true;
-  $whereclause = "id_rol = " . $_POST['profile'];
-  $DB->delete_records_select('talentospilos_permisos_rol', $whereclause);
-  foreach($actions as $action)
-    {
-    $record = new stdClass;
-    $record->id_rol = $_POST['profile'];
-    $record->id_accion = $action;
-    $DB->insert_record('talentospilos_permisos_rol', $record, true);
-    }
-
-  if ($continuar)
-    {
-    $msg->title = "Éxito";
-    $msg->text = "Permisos asignados exitosamente";
-    $msg->type = "success";
-    echo $msg->text;
-    }
-  }
-  else
 if (isset($_POST['profiles_user']) && isset($_POST['users']) && isset($_POST['instance']))
   {
   $profile = $_POST['profiles_user'];
@@ -118,42 +97,86 @@ if (isset($_POST['nombre_funcionalidad']) && isset($_POST['descripcion_funcional
   $function_name = $_POST['nombre_funcionalidad'];
   $function_description = $_POST['descripcion_funcionalidad'];
   $continuar = true;
-  try
+   
+  $sql_query = "SELECT * FROM {talentospilos_funcionalidad} WHERE nombre_func = '" . $function_name . "'";
+  $function = $DB->get_record_sql($sql_query);
+  $repetido = false;
+  if ($function->nombre_func)
     {
-    $record = new stdClass;
-    $record->nombre_func = $function_name;
-    $record->descripcion = $function_description;
-    $DB->insert_record('talentospilos_funcionalidad', $record, true);
+    $repetido = true;
     }
 
-  catch(Exception $ex)
+  if (!$repetido)
     {
-    echo "Se presentó un inconveniente : " . $ex;
-    $continuar = false;
+
+      $continuar=true;
+      try{
+      $record = new stdClass;
+      $record->nombre_func = $function_name;
+      $record->descripcion = $function_description;
+      $DB->insert_record('talentospilos_funcionalidad', $record, true);
+
+      }catch(Exception $ex){
+        echo "Se ha presentado un inconveniente : "+$ex;
+        $continuar=false;
+      }
+
+      if($continuar){
+        $msg->title = "Éxito";
+        $msg->text = "Funcionalidad creada exitosamente";
+        $msg->type = "success";
+        echo $msg->text;
+      }
+      
+    }
+    else
+    {
+    echo "El nombre de la funcionalidad ya se encuentra registrada.";
     }
 
-  if ($continuar)
-    {
-    $msg->title = "Éxito";
-    $msg->text = "Funcionalidad creada exitosamente";
-    $msg->type = "success";
-    echo $msg->text;
-    }
+
+
   }
   else
-if (isset($_POST['id_profile']) && isset($_POST['actions']) && isset($_POST['function']))
+if (isset($_POST['profile']) && isset($_POST['actions'])&&isset($_POST['instance'])&&isset($_POST['function'])&&$_POST['function']=='assign_role')
   {
+
+  try{
   $actions = json_decode(stripslashes($_POST['actions']));
   $continuar = true;
-  $whereclause = "id_rol = " . $_POST['id_profile'];
+  $whereclause = "id_rol = " . $_POST['profile'];
   $DB->delete_records_select('talentospilos_permisos_rol', $whereclause);
+
+
+  //Si el rol es de sistemas se agrega la acción  : manage_action_ca
+
+  $usernamerole= get_name_rol($_POST['profile']);
+  $record = new stdClass;
+
+
   foreach($actions as $action)
     {
-    $record = new stdClass;
-    $record->id_rol = $_POST['id_profile'];
+    $record->id_rol = $_POST['profile'];
     $record->id_accion = $action;
     $DB->insert_record('talentospilos_permisos_rol', $record, true);
     }
+
+
+  if($usernamerole=='sistemas'){
+    $record->id_rol=$_POST['profile'];
+    $idaction = get_action_by_name('manage_action_ca');
+    $record->id_accion = $idaction->id;
+    $DB->insert_record('talentospilos_permisos_rol', $record, true);
+
+  }
+
+    }catch(Exception $ex){
+    $msg->title = "Éxito";
+    $msg->text = "Permisos asignados exitosamente";
+    $msg->type = "success";
+    echo $msg->text;
+    $continuar=false;
+}
 
   if ($continuar)
     {

@@ -31,7 +31,7 @@ require_once(dirname(__FILE__) . '/../../../../config.php');
 /**
  * Gets all functionalities from {talentospilos_funcionalidades} table
  * @see get_functions()
- * @return Array
+ * @return array containing the information obtained from db
  **/
 
 function get_functions()
@@ -45,7 +45,7 @@ function get_functions()
 /**
  * Returns all functionalities along the 'eliminar' field on system
  * @see get_functions_table()
- * @return Array
+ * @return array with strings HTML containing every functionality
  **/
 
 function get_functions_table()
@@ -69,7 +69,7 @@ function get_functions_table()
  * Gets all functionalities from {talentospilos_funcionalidades} table by name
  * @see get_functions_by_name($name)
  * @param $name --> Functionalityname
- * @return Object With all functionalities
+ * @return object With all functionalities
  **/
 
 function get_functions_by_name($name)
@@ -89,7 +89,7 @@ function get_functions_by_name($name)
  * Gets all actions from  {talentospilos_accion} table by name
  * @see  get_action_by_name($name)
  * @param $name ---> action name
- * @return Object
+ * @return object representing all actions obtained
  **/
 
 function get_action_by_name($name)
@@ -128,7 +128,7 @@ function get_action_by_role($id_action,$id_role){
  * @param $nombre --> name to update
  * @param $descripcion --> description
  * @param $funcionalidad --> functionality id
- * @return Object With success or error information
+ * @return object With success or error information
  **/
 
 function modify_record($id,$table,$nombre,$descripcion,$funcionalidad)
@@ -171,7 +171,7 @@ function modify_record($id,$table,$nombre,$descripcion,$funcionalidad)
  * 
  * @see get_action_by_id($id)
  * @param $id ---> action id
- * @return Object Representing the action
+ * @return object Representing the action
  **/
 
 function get_action_by_id($id)
@@ -185,7 +185,7 @@ function get_action_by_id($id)
 /**
  * Gets all actions from  {talentospilos_accion} table
  * @see get_actions()
- * @return Array of actions
+ * @return array of actions
  **/
 
 function get_actions()
@@ -202,7 +202,7 @@ function get_actions()
  * Gets all actions related to a functionality from  {talentospilos_accion} table 
  * @see  get_actions_function($funcionalidad)
  * @param $funcionalidad --> functionality id 
- * @return Array filled of actions
+ * @return array filled of actions
  **/
 
 function get_actions_function($funcionalidad)
@@ -257,7 +257,7 @@ function get_actions_table()
 /**
  * Gets all roles from {talentospilos_rol} table 
  * @see get_roles()
- * @return Array filled with roles
+ * @return array filled with roles
  **/
 
 function get_roles()
@@ -272,7 +272,7 @@ function get_roles()
  * Gets all records from {talentospilos_permisos_rol} table given a role 
  * @see  get_functions_by_role($id_role)
  * @param $id_role --> role id
- * @return Array of records
+ * @return array of records
  **/
 
 function get_functions_by_role($id_role)
@@ -293,7 +293,7 @@ function get_functions_by_role($id_role)
  * Returns all functionalities names given a role
  * @see get_actions_by_role_id($id_role)
  * @param $id_role --> role id
- * @return Array
+ * @return array with the name of every functionality
  **/
 
 function get_functions_by_role_id($id_role){
@@ -317,9 +317,10 @@ function get_functions_by_role_id($id_role){
 //get_functions_by_role_id(6);
 
 /**
- * Función que retorna los roles con el campo eliminar existentes en el sistema 
+ * Gets all roles with their delete field on system
+ * 
  * @see get_roles_table()
- * @return Array
+ * @return array
  **/
 
 function get_roles_table()
@@ -329,7 +330,12 @@ function get_roles_table()
     $roles_array = get_roles();
     
     foreach ($roles_array as $role) {
+        if($role->nombre_rol=='sistemas'){
+         $role->edit= '   <span class="red glyphicon glyphicon-ban-circle"></span>';
+        
+        }else{
         $role->edit= '   <button type="button" class="red glyphicon glyphicon-pencil"  id="'.$role->id .'" data-toggle="modal" data-target="#edit"></button>';
+    }
         array_push($array, $role);
     }
     return $array;
@@ -342,7 +348,7 @@ function get_roles_table()
  * @see delete_record($id,$source)
  * @param $id ---> record id
  * @param $source --> record table to delete
- * @return Array
+ * @return object with information of the executed change
  **/
 
 function delete_record($id, $source)

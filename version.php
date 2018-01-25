@@ -6,5 +6,8 @@
     //$plugin->version = 2017011301;  // YYYYMMDDHH (year, month, day, 24-hr time)
     //$plugin->version = 201709211100;
     //    $plugin->version=201710131234;
-    $plugin->version= 2018012217129;
+
+
+    $plugin->version= 2018012413229;
+
     $plugin->requires = 2010112400;

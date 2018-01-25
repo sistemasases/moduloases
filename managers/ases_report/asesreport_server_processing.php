@@ -1,48 +1,91 @@
 <?php
 require_once('asesreport_lib.php');
+
 $columns = array();
-$poblacion = array();
-$campos_consulta = array();
-$riesgos_consulta = array();
-$academic_query = array();
+$conditions = array(); // Condiciones para la consulta
+$query_fields = array();
+$risk_fields = array();
+$academic_fields = array();
+
 $name_columns = new stdClass();
-if(isset($_POST['cohorte'])){
-    array_push($poblacion, $_POST['cohorte']);
+
+$fields_format = array(
+    'student_code'=>'user_moodle.username',
+    'firstname'=>'user_moodle.firstname',
+    'lastname'=>'user_moodle.lastname',
+    'document_id'=>'tp_user.num_doc',
+    'email'=>'tp_user.emailpilos',
+    'cellphone'=>'tp_user.celular',
+    'address'=>'tp_user.direccion_res',
+    'program_code'=>'acad_program.cod_univalle AS cod_univalle',
+    'name_program'=>'acad_program.nombre AS nombre_programa',
+    'faculty'=>'faculty.nombre AS nombre_facultad'
+);
+
+$columns_format = array(
+    'student_code'=>'Código estudiante',
+    'firstname'=>'Nombre(s)',
+    'lastname'=>'Apellido(s)',
+    'document_id'=>'Número de documento',
+    'email'=>'Correo electrónico',
+    'cellphone'=>'Celular',
+    'address'=>'Dirección residencia',
+    'program_code'=>'Código programa',
+    'name_program'=>'Programa académico',
+    'faculty'=>'Facultad'
+);
+
+if(isset($_POST['conditions'])){
+    foreach($_POST['conditions'] as $condition){
+        array_push($conditions, $condition);
+    }
 }
-if(isset($_POST['estado'])){
-    array_push($poblacion, $_POST['estado']);
+
+
+if(isset($_POST['fields'])){
+    foreach($_POST['fields'] as $field){
+        array_push($query_fields, $fields_format[$field]);
+        array_push($columns,  array("title"=>$columns_format[$field], "name"=>explode('.', $fields_format[$field])[1], "data"=>explode('.', $fields_format[$field])[1]));
+    }
 }
-if(isset($_POST['chk']) && isset($_POST['idinstancia'])){
+
+if(isset($_POST['academic_fields'])){
+    foreach($_POST['academic_fields'] as $academic_field){
+        //print_r(explode(' ', $fields_format[$academic_field])[2]);
+        array_push($academic_fields, $fields_format[$academic_field]);
+        array_push($columns, array("title"=>$columns_format[$academic_field], "name"=>explode(' ', $fields_format[$academic_field])[2], "data"=>explode(' ', $fields_format[$academic_field])[2]));
+    }
+}
+
+if(isset($_POST['risk_fields'])){
+    $select='<br/><select><option value=""></option><option value="N.R.">N.R.</option><option value="Bajo">Bajo</option><option value="Medio">Medio</option>
+          <option value="alto">Alto</option></select>';
+
+
+    foreach($_POST['risk_fields'] as $risk_field){
+    
+        $query_name = "SELECT * FROM {talentospilos_riesgos_ases} WHERE id =".$risk_field;
+        $risk_name = $DB->get_record_sql($query_name)->nombre;
+        array_push($columns, array("title"=>'R.'.strtoupper(substr($risk_name, 0, 1)).substr($risk_name, 1, 2).$select, "name"=>$risk_name, "data"=>$risk_name));
+        array_push($risk_fields, $risk_field);
+    }
+}
+
+// print_r($columns);
+// print_r($query_fields);
+//print_r($academic_fields);
+// print_r($columns);
+
+
+if(isset($_POST['instance_id'])){
     $counter = 0;
     
-    foreach($_POST['chk'] as $chk)
-    {
-        array_push($columns, array("title"=>$chk, "name"=>$chk, "data"=>$chk));
-        array_push($campos_consulta, $chk);
-    }
-    
-    
-    if(isset($_POST['chk_risk'])){
-        
-        foreach($_POST['chk_risk'] as $chk_risk){
-            $query_nombre = "SELECT * FROM {talentospilos_riesgos_ases} WHERE id =".$chk_risk;
-            $nombre_riesgo = $DB->get_record_sql($query_nombre)->nombre;
-            array_push($columns, array("title"=>'R.'.strtoupper(substr($nombre_riesgo, 0, 1)).substr($nombre_riesgo, 1, 2), "name"=>$nombre_riesgo, "data"=>$nombre_riesgo));
-            array_push($riesgos_consulta, $chk_risk);
-            $counter = $counter + 1;            
-        }
-    }
-    if(isset($_POST['chk_academic'])){
-        foreach($_POST['chk_academic'] as $chk_academic){
-            array_push($columns, array("title"=>$chk_academic, "name"=>$chk_academic, "data"=>$chk_academic));
-            array_push($academic_query, $chk_academic);
-        }
-    }
-    $result = getUsersByPopulation($campos_consulta, $poblacion, $riesgos_consulta, $academic_query, $_POST['idinstancia']);
+    $result = get_ases_report($query_fields, $conditions, $risk_fields, $academic_fields, $_POST['instance_id']);
+
     
     $data = array(
                 "bsort" => false,
-                "data"=> $result->data,
+                "data"=> $result,
                 "columns" => $columns,
                 "select" => "false",
                 "language" => 
@@ -79,15 +122,9 @@ if(isset($_POST['chk']) && isset($_POST['idinstancia'])){
                                 "excel"
                             )
         );
+
     header('Content-Type: application/json');
-    $prueba = new stdClass;
-    if(isset($result->error)){
-        $prueba->error = $result->error;
-        echo json_encode($prueba);
-    }else{
-        $prueba->data = $data;
-        $prueba->columns = $result->columns;
-        echo json_encode($prueba);
-    }
+
+    echo json_encode($data);
 }
 ?>

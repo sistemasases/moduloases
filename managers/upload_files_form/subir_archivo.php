@@ -1,4 +1,32 @@
 <?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
+/**
+ * Talentos Pilos
+ *
+ * @author     John Lourido
+ * @author     Juan Pablo Moreno Muñoz
+ * @author     Camilo José Cruz Rivera
+ * @package    block_ases
+ * @copyright  2017 John Lourido <jhonkrave@gmail.com>
+ * @copyright  2017 Juan Pablo Moreno Muñoz <moreno.juan@correounivalle.edu.co>
+ * @copyright  2017 Camilo José Cruz Rivera <cruz.camilo@correounivalle.edu.co>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
 require_once dirname(__FILE__) . '/../../../../config.php';
 
 require_once $CFG->dirroot . '/blocks/ases/managers/MyException.php';
@@ -24,7 +52,7 @@ if (isset($_FILES['csv_file'])) {
             throw new MyException("Error al cargar el archivo " . $archivo['name'] . ". Es posible que el archivo se encuentre dañado");
         }
 
-        //se incia la transaccion en bd
+        //DB transaction begins
         pg_query("BEGIN") or die("Could not start transaction\n");
         //$transaction = $DB->start_delegated_transaction();
 
@@ -63,7 +91,7 @@ if (isset($_FILES['csv_file'])) {
             echo $respuesta;
         } else if ($varSelector == "Facultad") {
             global $DB;
-            //esta tabla no depende de otra
+            //This table does not depend on another
             $record = new stdClass();
             $count = 0;
 
@@ -79,7 +107,7 @@ if (isset($_FILES['csv_file'])) {
 
         } else if ($varSelector == "Departamento") {
             global $DB;
-            // esta tabla no depende de otra
+            // This table does not depend on another
             $record = new stdClass();
             $count = 0;
 
@@ -142,7 +170,7 @@ if (isset($_FILES['csv_file'])) {
                 }
                 array_push($array_id_sede, $result->id);
 
-                //se verifica el codigo de l facultad
+                //faculty code is verified
                 $query = "SELECT id FROM {talentospilos_facultad} WHERE cod_univalle ='" . $data[4] . "';";
                 $result = $DB->get_record_sql($query);
                 if (!$result) {
@@ -167,7 +195,7 @@ if (isset($_FILES['csv_file'])) {
             echo $respuesta;
         } else if ($varSelector == "Discapacidad") {
             global $DB;
-            //no depende de ninguna tabla
+            // Does not depend on any table
             $record = new stdClass();
             $count = 0;
 
@@ -185,17 +213,17 @@ if (isset($_FILES['csv_file'])) {
             $record = new stdClass();
             $dateValidator = new dateValidator();
             $count = 0;
-            $array_id_ciudadini = array(); //ciudad incial
-            $array_id_ciudadres = array(); //ciudad recidencia
-            $array_id_ciudadnac = array(); //ciudad nacimiento
-            $array_id_discap = array(); //discapacidad
+            $array_id_ciudadini = array(); // initial city
+            $array_id_ciudadres = array(); // City of residence
+            $array_id_ciudadnac = array(); // Birthplace
+            $array_id_discap = array(); //disability
             $array_id_talentos = array();
             $array_data = array();
             $line_count = 0;
-            $exists = true; //variable que verifica la existencia de un registro
+            $exists = true; // Verifies any record existence
 
             while ($data = fgetcsv($handle, 10000, ",")) {
-                //se verifica la existencia del registro en la base de datos para determinar si es un actualización o un nuevo registro
+                // Verifies record existence to confirm wheter it's an insertion or an update
                 $query = "SELECT id FROM {talentospilos_usuario} WHERE num_doc_ini ='" . intval($data[1]) . "';";
                 $result = $DB->get_record_sql($query);
 
@@ -205,15 +233,15 @@ if (isset($_FILES['csv_file'])) {
                     $array_id_talentos[$line_count] = $result->id;
                 }
 
-                //se verifica el formato de la fecha de nacimiento
+                // Birthdate format is verified
                 $dateValidator->validateDateStyle($data[16]);
 
-                //se almacena la informacion de toda linea leida
+                //line information is stored
                 array_push($array_data, $data);
 
-                //en caso de que no exista se obtiene la información requerida para la nueva insercción
+                // In case it doesn't exist, the requeried information is obtained to insert
                 if (!$exists) {
-                    //se verifica la existencia de la ciudad incial
+                    // initial city information is verified
                     $query = "SELECT id FROM {talentospilos_municipio} WHERE codigodivipola ='" . intval($data[6]) . "';";
                     $result = $DB->get_record_sql($query);
                     if (!$result) {
@@ -221,7 +249,7 @@ if (isset($_FILES['csv_file'])) {
                     }
                     $array_id_ciudadini[$line_count] = $result->id;
 
-                    //se verifica la ciudad de recidencia
+                    //City of residence is verified
                     $query = "SELECT id FROM {talentospilos_municipio} WHERE codigodivipola ='" . intval($data[10]) . "';";
                     $result = $DB->get_record_sql($query);
                     if (!$result) {
@@ -229,7 +257,7 @@ if (isset($_FILES['csv_file'])) {
                     }
                     $array_id_ciudadres[$line_count] = $result->id;
 
-                    //se verifica la ciudad de nacimiento
+                    //Birthplace is verified
                     $query = "SELECT id FROM {talentospilos_municipio} WHERE codigodivipola ='" . intval($data[17]) . "';";
                     $result = $DB->get_record_sql($query);
                     if (!$result) {
@@ -237,7 +265,7 @@ if (isset($_FILES['csv_file'])) {
                     }
                     $array_id_ciudadnac[$line_count] = $result->id;
 
-                    //se verifica el codigo de discapacidad
+                    //disability code is verified
                     $query = "SELECT id FROM {talentospilos_discap_men} WHERE codigo_men ='" . intval($data[24]) . "';";
                     $result = $DB->get_record_sql($query);
                     if (!$result) {
@@ -277,7 +305,7 @@ if (isset($_FILES['csv_file'])) {
 
                 $record->ayuda_discap = $data[25];
 
-                //se realiza la inserccion o actualizacion pertinente
+                //Inserts or update
 
                 if ($exists) {
                     $record->id_ciudad_ini = $data[6];
@@ -328,17 +356,20 @@ if (isset($_FILES['csv_file'])) {
 
             while ($data = fgetcsv($handle, 500, ",")) {
                 $temp_array = array();
-                //se verifica el número de documento
+                //document number is verified
                 $query = "SELECT id FROM {talentospilos_usuario} WHERE num_doc = '" . intval($data[0]) . "';";
                 $result = $DB->get_record_sql($query);
 
                 if (!$result) {
                     throw new MyException("Por favor revisa la línea " . $line_count . ".<br>El número de documento " . $data[0] . " no corresponde a un estudiante de pilos");
                 }
-                //se adiciona el id  de la tabla talentospilos_usuario correspondiente al nuero de documento
-                array_push($temp_array, $result->id);
 
-                // se verifica el programa
+                $id_talentos = $result->id;
+
+                // talentospilos_usuario table id is added according to the document number
+                array_push($temp_array, $id_talentos);
+
+                // program is verified
                 $query = "SELECT id FROM {talentospilos_programa} WHERE cod_univalle = " . intval($data[2]) . " AND  jornada='" . $data[3] . "' AND id_sede = (SELECT id from {talentospilos_sede} WHERE cod_univalle =" . intval($data[4]) . ");";
                 $result = $DB->get_record_sql($query);
 
@@ -347,7 +378,7 @@ if (isset($_FILES['csv_file'])) {
                 }
                 array_push($temp_array, $result->id);
 
-                //se verifica el username
+                //username is verified
                 $username = substr($data[1], -7) . "-" . $data[2];
                 $query = "SELECT id FROM {user} WHERE username = '" . $username . "' ;";
                 $result = $DB->get_record_sql($query);
@@ -357,10 +388,23 @@ if (isset($_FILES['csv_file'])) {
                 }
                 array_push($temp_array, $result->id);
 
-                // SE ADICIONA el restode informacion al arreglo temporal el cual tendria (id_talentos,id_programa,id_user, ACTIVO)
+                // remainder information is added to a temporary array that contains (id_talentos,id_programa,id_user, ACTIVO)
                 array_push($temp_array, 'ACTIVO');
 
-                //SE ADICIONA EL ARRAY TEMPORAL AL arreglo que contiene la informarion general
+                //validate tracking_status
+
+                $query = "SELECT * FROM {talentospilos_user_extended} WHERE id_ases_user = $id_talentos";
+                $result = $DB->get_records_sql($query);
+
+                if (!$result) {
+                    $tracking_status = 1;
+                } else {
+                    $tracking_status = 0;
+                }
+
+                array_push($temp_array, $tracking_status);
+
+                //Previous temporary array is added to the array that contains the general information
                 array_push($array_data, $temp_array);
 
                 $line_count += 1;
@@ -368,19 +412,21 @@ if (isset($_FILES['csv_file'])) {
 
             foreach ($array_data as $dat) {
                 $record = new stdClass();
-                //se verifica si ya el campo está creado asi saber si insertar o actualizar
+                // If the field is created it'd be an insert, update otherwise
                 $query = "SELECT id FROM {talentospilos_user_extended} WHERE id_moodle_user = " . $dat[2];
                 //$query="select  d.id, f.shortname  from {user_info_data} d inner join {user_info_field} f on d.fieldid= f.id  where (f.shortname='idtalentos' OR f.shortname='idprograma' OR f.shortname='estado') AND userid =".$dat[2]." order by shortname;";
                 $result = $DB->get_records_sql($query);
                 if (!$result) {
-                    //dat[2] es el id del usario de tabla user de moodle
+                    //dat[2] --> user id on moodle user table
                     $record->id_moodle_user = $dat[2];
-                    //dat[0] es el id del usario de tabla usuario talentos
+                    //dat[0] --> user id on moodle talentos table
                     $record->id_ases_user = $dat[0];
-                    //dat[1] es el id del programa
+                    //dat[1] --> program id
                     $record->id_academic_program = $dat[1];
-                    //dat[3] es el estado
+                    //dat[3] --> status
                     $record->program_status = $dat[3];
+                    //dat[4] --> tracking_status
+                    $record->tracking_status = $dat[4];
 
                     $DB->insert_record('talentospilos_user_extended', $record);
 
@@ -411,41 +457,41 @@ if (isset($_FILES['csv_file'])) {
                     //   $DB->insert_record('user_info_data', $record);
 
                 } else {
+                    $record->id = $value->id;
+                    //dat[2] user id on moodle user table
+                    $record->id_moodle_user = $dat[2];
+                    //dat[0] user id on moodle talentos table
+                    $record->id_ases_user = $dat[0];
+                    //dat[1] program id
+                    $record->id_academic_program = dat[1];
+                    //dat[3] status
+                    $record->id_academic_program = dat[3];
+                    //dat[4] --> tracking_status
+                    $record->tracking_status = $dat[4];
 
-                    foreach ($result as $value) {
+                    $DB->update_record('talentospilos_user_extended', $record);
+                    // foreach ($result as $value) {
 
-                        $record->id = $value->id;
-                        //dat[2] es el id del usario de tabla user de moodle
-                        $record->id_moodle_user = $dat[2];
-                        //dat[0] es el id del usario de tabla usuario talentos
-                        $record->id_ases_user = $dat[0];
-                        //dat[1] es el id del programa
-                        $record->id_academic_program = dat[1];
-                        //dat[3] es el estado
-                        $record->id_academic_program = dat[3];
+                    //     //METODO USANDO MODELO ANTIGUO.(usando user_info_data)
 
-                        $DB->update_record('talentospilos_user_extended', $record);
+                    //     // $shortname = $value->shortname;
 
-                        //METODO USANDO MODELO ANTIGUO.(usando user_info_data)
+                    //     // if ($shortname == 'idtalentos') {
 
-                        // $shortname = $value->shortname;
+                    //     //     $record->id = $value->id; //se asigna el id que correponde a la informacion del campo a actualizar
+                    //     //     $record->data = $dat[0]; //se actualiza la informacion con la info de la tabla
 
-                        // if ($shortname == 'idtalentos') {
+                    //     // } else if ($shortname == 'idprograma') {
 
-                        //     $record->id = $value->id; //se asigna el id que correponde a la informacion del campo a actualizar
-                        //     $record->data = $dat[0]; //se actualiza la informacion con la info de la tabla
+                    //     //     $record->id = $value->id; //
+                    //     //     $record->data = $dat[1];
+                    //     // } else if ($shortname == 'estado') {
 
-                        // } else if ($shortname == 'idprograma') {
-
-                        //     $record->id = $value->id; //
-                        //     $record->data = $dat[1];
-                        // } else if ($shortname == 'estado') {
-
-                        //     $record->id = $value->id;
-                        //     $record->data = $dat[3];
-                        // }
-                        // $DB->update_record('user_info_data', $record);
-                    }
+                    //     //     $record->id = $value->id;
+                    //     //     $record->data = $dat[3];
+                    //     // }
+                    //     // $DB->update_record('user_info_data', $record);
+                    // }
                     $count += 1;
                 }
             }
@@ -453,7 +499,7 @@ if (isset($_FILES['csv_file'])) {
             $respuesta = 1;
             echo $respuesta;
         }
-        // Carga roles
+        // loading roles
         else if ($varSelector == "Roles") {
             global $DB;
             $record = new stdClass();
@@ -515,7 +561,7 @@ if (isset($_FILES['csv_file'])) {
             $record = new stdClass();
 
             while ($data = fgetcsv($handle, 100, ",")) {
-                //se obtine los id de los campos permiso, rol, funcionalidad
+                // Getting id from field: campos, permiso, rol, funcionalidad.
                 $result = $DB->get_record_sql("SELECT id FROM {talentospilos_rol} WHERE  nombre_rol = '" . $data[0] . "'");
                 $record->id_rol = $result->id;
 
@@ -599,7 +645,7 @@ if (isset($_FILES['csv_file'])) {
             echo $respuesta;
         } else if ($varSelector == "Geolocalizacion") {
 
-            // Campos csv: código barrio, código estudiante, latitud, longitud
+            // CSV field: neighborhood id, student id, latitude, longitude
 
             global $DB;
             $record = new stdClass();
@@ -656,7 +702,7 @@ if (isset($_FILES['csv_file'])) {
         } else {
             throw new MyException("Lo sentimos la carga de archivos para la tabla " . $varSelector . " esta en desarrollo.");
         }
-        //se termina la transaccion
+        //End of db transaction
         pg_query("COMMIT") or die("Transaction commit failed\n");
         //$transaction->allow_commit();
         fclose($handle);
@@ -674,7 +720,7 @@ if (isset($_FILES['csv_file'])) {
             unlink("../../view/archivos_subidos/$nombre");
         }
         pg_query("ROLLBACK");
-        //se captura el error sql generado por el serversql en alguna insersion cuando está en medio de una transaccion no lo hace. averiguar porque? y como hacerlo siempre
+        // SQL error generated by serversql is captured. Why is not being captured during a transaction? Find how to do it always
 
         echo $e->getMessage() . "<br>" . $errorSqlServer . "<br>" . $query . "<b>Consejos:</b><br><b>*</b> Por favor verifica la linea: " . intval($count + 1) . " en el archivo: " . $archivo['name'] . ". Asegurate de que no haya duplicidad en la información<br><b>*</b>Asegurate de que el archivo cargado contenga a la información necesaria en el formato determinado para cargar la tabla " . $varSelector . ".";
 

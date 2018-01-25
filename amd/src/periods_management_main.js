@@ -1,6 +1,10 @@
  /**
-  * @module block_ases/periods_management_main
-  */
+ * Management - Create, update and load periods
+ * @module amd/src/periods_management_main
+ * @author Juan Pablo Moreno Muñoz
+ * @copyright 2018 Juan Pablo Moreno Muñoz <moreno.juan@correounivalle.edu.co>
+ * @license  http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 
 define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_ases/datatables.net-buttons', 'block_ases/buttons.flash', 'block_ases/jszip', 'block_ases/pdfmake', 'block_ases/buttons.html5', 'block_ases/buttons.print', 'block_ases/sweetalert','block_ases/select2', 'block_ases/jqueryui'], function($, bootstrap, datatablesnet, datatablesnetbuttons, buttonsflash, jszip, pdfmake, buttonshtml5, buttonsprint, sweetalert, select2, jqueryui) {
 
@@ -78,6 +82,13 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_as
 			});
 
 
+	/**
+	 * @method searchPeriod
+	 * @desc Search a period information given a semester. Current processing on search_period_processing.php
+	 * @param {object} semester We'd like to get certain information
+	 * @param {function} callback 
+	 * @return {void}
+	 */
 	function searchPeriod(semester, callback){
 		var dataString = semester;
 		if(!dataString){
@@ -128,6 +139,11 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_as
 
 	}
 
+	/**
+	 * @method updatePeriod
+	 * @desc Updates a period values (id, name, beginning date and ending date). Current processing on update_period_processing.php
+	 * @return {void}
+	 */
 	function updatePeriod(){
 
 		var semesterId = $("#periods").val();
@@ -173,6 +189,11 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_as
 
 	}
 
+	/**
+	 * @method loadPeriods
+	 * @desc Loads a period values on a table. Current processing on load_periods_processing.php
+	 * @return {void}
+	 */
 	function loadPeriods(){
 		$.ajax({
 			type: "POST",
@@ -194,13 +215,20 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_as
 	}
 
 
+	/**
+	 * @method createPeriod
+	 * @desc Creates a period obtaining values from html. Current processing on load_periods_processing.php
+	 * @return {void}
+	 */
 	function createPeriod(){
 		var newSemesterName = $("#new_semester_name").val();
 		var newBeginningDate = $("#new_beginning_date").val();
 		var newEndingDate = $("#new_ending_date").val();
 
+		//Validates if every field is correct
 		var result_validation = validateFieldsCreate(newSemesterName, newBeginningDate, newEndingDate);
 
+		//If error
 		if(result_validation != "success"){
 			swal({
 				title: "Advertencia",
@@ -209,6 +237,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_as
 				html: true
 			});
 
+		//Refresh with ajax 
 		}else{
 			$.ajax({
 				type: "POST",
@@ -237,6 +266,14 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_as
 	}
 
 
+	/**
+	 * @method validateFieldsUpdate
+	 * @desc Validates if each field to update is correct (not empty field, date format correct)
+	 * @param {id} semesterId semester id
+	 * @param {string} semesterName semester name
+	 * @param {date} beginningDate Beginning period date
+	 * @param {date} endingDate Ending period date
+	 */
 	function validateFieldsUpdate(semesterId, semesterName, beginningDate, endingDate){
 
 		var regexp = /^\d{4}\-(0?[1-9]|1[012])\-(0?[1-9]|[12][0-9]|3[01])$/;
@@ -270,7 +307,14 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_as
 		}
 
 	}
-
+	
+	/**
+	 * @method validateFieldsCreate
+	 * @desc Validates if each field to create is correct (not empty field, date format correct)
+	 * @param {string} semesterName Semester name
+	 * @param {date} beginningDate Beginning period date
+	 * @param {date} endingDate Ending period date
+	 */
 	function validateFieldsCreate(semesterName, beginningDate, endingDate){
 
 		var regexp = /^\d{4}\-(0?[1-9]|1[012])\-(0?[1-9]|[12][0-9]|3[01])$/;

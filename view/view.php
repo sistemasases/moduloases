@@ -53,7 +53,7 @@ $page_url->params(array(
 'id' => $id,
 ));
 
-// Formato de página
+// Page format
 $PAGE->set_context($context);
 $PAGE->set_pagelayout('report');
 $PAGE->set_pagetype('course-view-' . $course->format);
@@ -62,7 +62,7 @@ $PAGE->set_url($page_url);
 $PAGE->set_title(get_string('pagetitle', 'block_generalreports', $course->shortname));
 $PAGE->set_heading($course->fullname);
 
-// Dibujando la página
+// Displaying the page
 
 $index = new code_index_reports();
 

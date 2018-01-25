@@ -1,11 +1,34 @@
 <?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Función que extrae la información geográfica asociada a un estudiante
+ * Ases block
+ *
+ * @author     Iader E. García Gómez
+ * @package    block_ases
+ * @copyright  2018 Iader E. García <iadergg@gmail.com>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
+/**
+ * Gets geographic information of a student, given his ID
  *
  * @see get_geographic_info($id_ases)
- * @param $id_ases --> ID correspondiente a la tabla {talentospilos_ases}
- * @return Array con las coordenadas de la residencia y la calificación del riesgo geográfico
+ * @param $id_ases --> user id from {talentospilos_ases} table
+ * @return array containing residence coordinates and geographic risk qualification
  */
  
 function get_geographic_info($id_ases){
@@ -34,11 +57,10 @@ function get_geographic_info($id_ases){
 }
 
 /**
- * Función 
+ * Obtains all neighborhoods from {talentospilos_barrios} table
  *
- * @see 
- * @param 
- * @return
+ * @see get_neighborhoods()
+ * @return array
  */
 
 function get_neighborhoods(){
@@ -55,10 +77,11 @@ function get_neighborhoods(){
 
 /**
  * Función que carga la información geográfica de un estudiante ASES 
+ * Load geographic information of an ASES student 
  *
- * @see 
- * @param 
- * @return
+ * @see load_geographic_info($id_ases)
+ * @param $id_ases --> ASES student id
+ * @return object representing the user
  */
 
 function load_geographic_info($id_ases){
@@ -81,11 +104,15 @@ function load_geographic_info($id_ases){
 }
 
 /**
- * Función que guarda la información geográfica de un estudiante ASES
+ * Saves grographic information of an ASES student 
  *
- * @see 
- * @param 
- * @return
+ * @see save_geographic_info($id_ases, $latitude, $longitude, $neighborhood, $geographic_risk)
+ * @param $id_ases --> ASES student id
+ * @param $latitude --> Latitude
+ * @param $longitude --> longitude
+ * @param $neighborhood --> neighborhood id
+ * @param $geographic_risk --> geographic risk qualification
+ * @return integer --> 1 if everything were saved, 0 otherwise
  */
 
 function save_geographic_info($id_ases, $latitude, $longitude, $neighborhood, $geographic_risk){
