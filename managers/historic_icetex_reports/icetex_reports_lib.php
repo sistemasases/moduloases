@@ -37,12 +37,10 @@ function get_array_students_with_resolution(){
 
     $array_historics = array();
 
-    $sql_query = "SELECT substring(cohortm.idnumber from 0 for 5) AS cohorte, substring(userm.username from 0 for 8) AS codigo, usuario.num_doc, userm.firstname, 
-                userm.lastname, semestre.nombre, res.codigo_resolucion, monto_estudiante, uextended.program_status, TO_CHAR(TO_TIMESTAMP(cancel.fecha_cancelacion), 'DD/MM/YYYY') as fecha_cancel 
-                FROM mdl_talentospilos_res_estudiante AS res_est
+    $sql_query = "SELECT res_est.id, substring(cohortm.idnumber from 0 for 5) AS cohorte, substring(userm.username from 0 for 8) AS codigo, usuario.num_doc, userm.firstname, userm.lastname, 
+                    semestre.nombre, res.codigo_resolucion, monto_estudiante, uextended.program_status
+                    FROM mdl_talentospilos_res_estudiante AS res_est
                     INNER JOIN mdl_talentospilos_res_icetex res ON res.id = res_est.id_resolucion
-                    INNER JOIN mdl_talentospilos_history_academ academ ON academ.id_estudiante = res_est.id_estudiante
-                    INNER JOIN mdl_talentospilos_history_cancel cancel ON cancel.id_history = academ.id
                     INNER JOIN mdl_talentospilos_semestre semestre ON semestre.id = res_est.id_semestre 
                     INNER JOIN mdl_talentospilos_usuario usuario ON usuario.id = res_est.id_estudiante 
                     INNER JOIN mdl_talentospilos_user_extended uextended ON usuario.id = uextended.id_ases_user 
@@ -54,10 +52,28 @@ function get_array_students_with_resolution(){
     $historics = $DB->get_records_sql($sql_query);
 
     foreach ($historics as $historic) {
+        $id_es
+        $id_pr
+        $id_se
+
         array_push($array_historics, $historic);
     }
 
     return $array_historics;
+}
 
+function get_array_students_with_cancel($id_student, $id_program, $id_semester){    
+    global $DB;
 
+    $sql_query = "SELECT cancel.fecha_cancelacion FROM mdl_talentospilos_history_academ AS academ
+    INNER JOIN mdl_talentospilos_history_cancel cancel ON academ.id = cancel.id_history 
+    WHERE academ.id_estudiante = $id_student AND academ.id_semestre = $id_semester AND academ.id_programa = $id_program";
+
+    $cancel_date = $DB->get_record_sql($sql_query)->fecha_cancelacion;
+
+    foreach($students as $student){
+        array_push($cancel_students, $student);
+    }
+
+    return $cancel_students;
 }

@@ -11,30 +11,32 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_as
 	return {
 
 		init: function() {
-
 			
-			$(document).ready(function() {
-                    $("#list-resolution-students-panel").on('click', function(){
-					loadReportResolution();
-					
-
-                });
-
-			});	
+			
+			$("#list-resolution-students-panel").on('click', function(){
+				load_report_resolution();				
+				setTimeout(function(){
+					var table = $("#tableResStudents").DataTable();
+					var col_array = table.columns(7).data().eq(0);;
+					string_to_integer(col_array);
+					var total = col_array.reduce(numSum);
+					$("#table_foot").append(total);				
+				}, 500);
+			});
 
 	/**
 	 * @method loadReportResolution
 	 * @desc Loads the report of a student with resolution on a table. Current processing on icetex_reports_processing.php
 	 * @return {void}
 	 */
-	function loadReportResolution(){
+	function load_report_resolution(){
 		$.ajax({
 			type: "POST",
 			data: {loadR: 'loadReport'},
 			url: "../managers/historic_icetex_reports/icetex_reports_processing.php",
 			success: function(msg){
 				$("#div_res_students").empty();
-				$("#div_res_students").append('<table id="tableResStudents" class="display" cellspacing="0" width="100%"><thead><thead><tfoot><tr><th colspan="4" style="text-align:right">Total: </th></tr></tfoot></table>');
+				$("#div_res_students").append('<table id="tableResStudents" class="display" cellspacing="0" width="100%"><thead><thead><tfoot><tr><th id="table_foot" colspan="8" style="text-align:right">Total: </th> <th></th></tr></tfoot></table>');
 				var table = $("#tableResStudents").DataTable(msg);
 				$('#div_res_students').css('cursor', 'pointer');				
 			},
@@ -44,11 +46,17 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_as
 				swal("Error", "Error al cargar el reporte", "error");
 			}
 		});
-
 	}
-	
-	function calculate_total_amount(){
-		var table = $("#tableResStudents").DataTable();
+
+	function numSum(numa, numb) {
+		return numa + numb;		
+	}
+
+	function string_to_integer(amount_array){
+		for(i = 0; i < amount_array.length; i++){
+			amount_array[i] = parseInt(amount_array[i]);
+		}
+
 	}
 	
 }
