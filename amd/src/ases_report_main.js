@@ -40,7 +40,6 @@ define(['jquery', 'block_ases/datatables.net', 'block_ases/datatables.net-button
       $(document).on('change', '#tableResult thead tr th select', function () {
         var table = $("#tableResult").DataTable();
 
-        console.log($(this).parent().index()+1);
         var colIndex = $(this).parent().index()+1;
         var selectedText=$(this).parent().find(":selected").text();
         table.columns( colIndex-1 ).search( this.value ).draw();
@@ -74,7 +73,7 @@ define(['jquery', 'block_ases/datatables.net', 'block_ases/datatables.net-button
           $("#div_table").fadeIn(1000).append('<table id="tableResult" class="display" cellspacing="0" width="100%"><thead> </thead></table>');
 
 
-        $("#tableResult").DataTable(msg.data);
+        $("#tableResult").DataTable(msg);
         
           $('#tableResult tr').each(function () {
             $.each(this.cells, function () {
