@@ -38,7 +38,7 @@ function get_array_students_with_resolution(){
     $array_historics = array();
 
     $sql_query = "SELECT res_est.id, substring(cohortm.idnumber from 0 for 5) AS cohorte, substring(userm.username from 0 for 8) AS codigo, usuario.num_doc, userm.firstname, userm.lastname, 
-                    semestre.nombre, res.codigo_resolucion, monto_estudiante, uextended.program_status
+                    semestre.nombre, res.codigo_resolucion, monto_estudiante, uextended.program_status, res_est.id_estudiante, res_est.id_semestre, res_est.id_programa
                     FROM mdl_talentospilos_res_estudiante AS res_est
                     INNER JOIN mdl_talentospilos_res_icetex res ON res.id = res_est.id_resolucion
                     INNER JOIN mdl_talentospilos_semestre semestre ON semestre.id = res_est.id_semestre 
@@ -52,9 +52,17 @@ function get_array_students_with_resolution(){
     $historics = $DB->get_records_sql($sql_query);
 
     foreach ($historics as $historic) {
-        $id_es
-        $id_pr
-        $id_se
+        $student_id = $historic->id_estudiante;
+        $program_id = $historic->id_programa;
+        $semester_id = $historic->id_semestre;
+
+        $cancel_date = get_array_students_with_cancel($student_id, $program_id, $semester_id);
+
+        if($cancel_date == false){
+            $historic->fecha_cancelacion = "---";
+        }else{
+            $historic->fecha_cancelacion = date("Y-m-d", $cancel_date);
+        }
 
         array_push($array_historics, $historic);
     }
@@ -71,9 +79,9 @@ function get_array_students_with_cancel($id_student, $id_program, $id_semester){
 
     $cancel_date = $DB->get_record_sql($sql_query)->fecha_cancelacion;
 
-    foreach($students as $student){
-        array_push($cancel_students, $student);
-    }
-
-    return $cancel_students;
+    if($cancel_date){
+        return $cancel_date;
+    }else{
+        return false;
+    }    
 }
