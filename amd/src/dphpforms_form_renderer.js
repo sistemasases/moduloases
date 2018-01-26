@@ -19,6 +19,12 @@
                         $(this).find("label").find("input").prop("checked", false);
                     });
                 });
+
+                $(document).on('click', '.limpiar' , function() {
+                    $(this).parent().find("div").each(function(){
+                        $(this).find("label").find("input").prop("checked", false);
+                    });
+                 });
                 
             }
 
