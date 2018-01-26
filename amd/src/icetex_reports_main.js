@@ -26,6 +26,16 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_as
 				*/
 			});
 
+			//Controles para la tabla generada
+			$(document).on('change', '#tableResStudents thead tr th select', function () {
+				var table = $("#tableResStudents").DataTable();
+		
+				var colIndex = $(this).parent().index()+1;
+				var selectedText=$(this).parent().find(":selected").text();
+				table.columns( colIndex-1 ).search( this.value ).draw();
+		
+		});
+
 	/**
 	 * @method loadReportResolution
 	 * @desc Loads the report of a student with resolution on a table. Current processing on icetex_reports_processing.php
