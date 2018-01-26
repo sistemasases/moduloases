@@ -194,25 +194,25 @@
                         }
 
                         if($campo == 'TEXTAREA'){
-                            $html = $html .  '<div class="div-'.$row->{'mod_id_formulario_pregunta'}.' '.$atributos->{'class'}.'" >' . $enunciado . ':<br>';
+                            $html = $html .  '<div class="div-'.$row->{'mod_id_formulario_pregunta'}.' '.$field_attr_class.'" >' . $enunciado . ':<br>';
                             $html = $html .  ' <textarea id="'.$row->{'mod_id_formulario_pregunta'}.'" class="form-control" name="'. $row->{'mod_id_formulario_pregunta'} .'" '.$enabled.'>'.$valor.'</textarea><br>' . "\n";
                             $html = $html .  '</div>';
                         }
 
                         if($campo == 'DATE'){
-                            $html = $html .  '<div class="div-'.$row->{'mod_id_formulario_pregunta'}.' '.$atributos->{'class'}.'" >' . $enunciado . ':<br>';
+                            $html = $html .  '<div class="div-'.$row->{'mod_id_formulario_pregunta'}.' '.$field_attr_class.'" >' . $enunciado . ':<br>';
                             $html = $html .  ' <input id="'.$row->{'mod_id_formulario_pregunta'}.'" class="form-control" type="date" name="'.$row->{'mod_id_formulario_pregunta'}.'" value="'.$valor.'" '.$enabled.'><br>' . "\n";
                             $html = $html .  '</div>';
                         }
                         
                         if($campo == 'DATETIME'){
-                            $html = $html .  '<div class="div-'.$row->{'mod_id_formulario_pregunta'}.' '.$atributos->{'class'}.'" >' . $enunciado . ':<br>';
+                            $html = $html .  '<div class="div-'.$row->{'mod_id_formulario_pregunta'}.' '.$field_attr_class.'" >' . $enunciado . ':<br>';
                             $html = $html .  ' <input id="'.$row->{'mod_id_formulario_pregunta'}.'" class="form-control" type="datetime-local" name="'.$row->{'mod_id_formulario_pregunta'}.'" value="'.$valor.'" '.$enabled.'><br>' . "\n";
                             $html = $html .  '</div>';
                         }
 
                         if($campo == 'TIME'){
-                            $html = $html .  '<div class="div-'.$row->{'mod_id_formulario_pregunta'}.' '.$atributos->{'class'}.'" >' . $enunciado . ':<br>';
+                            $html = $html .  '<div class="div-'.$row->{'mod_id_formulario_pregunta'}.' '.$field_attr_class.'" >' . $enunciado . ':<br>';
                             $html = $html .  ' <input id="'.$row->{'mod_id_formulario_pregunta'}.'" class="form-control" type="time" name="'.$row->{'mod_id_formulario_pregunta'}.'" value="'.$valor.'" '.$enabled.'><br>' . "\n";
                             $html = $html .  '</div>';
                         }
@@ -396,101 +396,106 @@
         }
 
         $permissions_script = null;
-        
-        foreach ($triggers_permissions as $keyPermiso => $permission_trigger) {
 
-            $trigger = $permission_trigger->{'disparador'};
-            $conditionns = $permission_trigger->{'condiciones'};
-            foreach($conditionns as $keyCondicion => $condition){
-                $respuesta_trigger = null;
+        if($triggers_permissions != 'null'){
 
-                foreach ($global_respuestas as $key => $g_respuesta) {
-                    if($g_respuesta['idP'] == $trigger ){
-                        $respuesta_trigger = $g_respuesta;
-                        break;
+            foreach ($triggers_permissions as $keyPermiso => $permission_trigger) {
+
+                $trigger = $permission_trigger->{'disparador'};
+                $conditionns = $permission_trigger->{'condiciones'};
+                foreach($conditionns as $keyCondicion => $condition){
+                    $respuesta_trigger = null;
+    
+                    foreach ($global_respuestas as $key => $g_respuesta) {
+                        if($g_respuesta['idP'] == $trigger ){
+                            $respuesta_trigger = $g_respuesta;
+                            break;
+                        }
                     }
-                }
-
-                $flag_satisfy = false;
-
-                if(
+    
+                    $flag_satisfy = false;
+    
+                    if(
+                            (
+                                ($respuesta_trigger['tipoCampo'] == 'TEXTFIELD') ||
+                                ($respuesta_trigger['tipoCampo'] == 'TEXTAREA') ||
+                                ($respuesta_trigger['tipoCampo'] == 'DATE') ||
+                                ($respuesta_trigger['tipoCampo'] == 'TIME') ||
+                                ($respuesta_trigger['tipoCampo'] == 'DATETIME')
+    
+                            ) 
+                                && 
+                            (
+                                ($condition->{'condicion'} == 'vacio')||
+                                ( $condition->{'condicion'} == 'no_vacio')
+                            )
+                        ){
+    
+                            //$html = $html .  'CONDICION PARA TEXTO';
+                            if(($condition->{'condicion'} == 'no_vacio') && ($respuesta_trigger['valor'] !== null )){
+                                //$html = $html .  "Se cumple no_vacio y con resultado";
+                                $flag_satisfy = true;
+                            }else{
+                                //$html = $html .  "No se cumple no_vacio y con resultado";
+                            }
+    
+                            if(($condition->{'condicion'} == 'vacio') && ($respuesta_trigger['valor'] === null )){
+                                //$html = $html .  "Se cumple vacio y sin resultado";
+                                $flag_satisfy = true;
+                            }else{
+                                //$html = $html .  "No se cumple vacio y sin resultado";
+                            }
+                    }
+    
+                    if(
                         (
-                            ($respuesta_trigger['tipoCampo'] == 'TEXTFIELD') ||
-                            ($respuesta_trigger['tipoCampo'] == 'TEXTAREA') ||
-                            ($respuesta_trigger['tipoCampo'] == 'DATE') ||
-                            ($respuesta_trigger['tipoCampo'] == 'TIME') ||
-                            ($respuesta_trigger['tipoCampo'] == 'DATETIME')
-
+                            ($respuesta_trigger['tipoCampo'] == 'RADIOBUTTON') || 
+                            ($respuesta_trigger['tipoCampo'] == 'CHECKBOX')
                         ) 
                             && 
                         (
-                            ($condition->{'condicion'} == 'vacio')||
-                            ( $condition->{'condicion'} == 'no_vacio')
+                            ($condition->{'condicion'} == 'marcado') || ($condition->{'condicion'} == 'no_marcado')
                         )
                     ){
-
-                        //$html = $html .  'CONDICION PARA TEXTO';
-                        if(($condition->{'condicion'} == 'no_vacio') && ($respuesta_trigger['valor'] !== null )){
-                            //$html = $html .  "Se cumple no_vacio y con resultado";
-                            $flag_satisfy = true;
-                        }else{
-                            //$html = $html .  "No se cumple no_vacio y con resultado";
-                        }
-
-                        if(($condition->{'condicion'} == 'vacio') && ($respuesta_trigger['valor'] === null )){
-                            //$html = $html .  "Se cumple vacio y sin resultado";
-                            $flag_satisfy = true;
-                        }else{
-                            //$html = $html .  "No se cumple vacio y sin resultado";
-                        }
-                }
-
-                if(
-                    (
-                        ($respuesta_trigger['tipoCampo'] == 'RADIOBUTTON') || 
-                        ($respuesta_trigger['tipoCampo'] == 'CHECKBOX')
-                    ) 
-                        && 
-                    (
-                        ($condition->{'condicion'} == 'marcado') || ($condition->{'condicion'} == 'no_marcado')
-                    )
-                ){
-
-                        //$html = $html .  ' CONDICION PARA RADIO/CHECK ';
-                        if(($condition->{'condicion'} == 'marcado') && (($respuesta_trigger['valor'] !== "-1" )&&($respuesta_trigger['valor'] !== "-#$%-" ))){
-                            //$html = $html .  "Se cumple marcado y con resultado";
-                            $flag_satisfy = true;
-                            $html = $html .  $respuesta_trigger['valor'];
-                            //$html = $html .  "CUMPLIÓ";
-                            //print_r($respuesta_trigger);
-                        }else{
-                            //$html = $html .  "No se cumple marcado y con resultado";
-                        }
-
-                        if(($condition->{'condicion'} == 'no_marcado') && (($respuesta_trigger['valor'] === "-1" )||($respuesta_trigger['valor'] == "-#$%-" ))){
-                            //$html = $html .  "Se cumple no_marcado y sin resultado";
-                            $flag_satisfy = true;
-                            $html = $html .  $respuesta_trigger['valor'];
-                            //$html = $html .  "NO CUMPLIO";
-                            //print_r($respuesta_trigger);
-                        }else{
-                            //$html = $html .  "No se cumple no_marcado y sin resultado";
-                        }
-                }
-
-                $behavioral_condition_satisfied  = $condition->{'comportamiento_condicion_cumplida'};
-                $behavioral_condition_not_satisfied  = $condition->{'comportamiento_condicion_no_cumplida'};
-                if($flag_satisfy){
-                    foreach ($behavioral_condition_satisfied  as $keyCCC => $behaviors) {
-                        $permissions_script = $permissions_script . dphpforms_generate_permits_scripts($behaviors, $ROL);
+    
+                            //$html = $html .  ' CONDICION PARA RADIO/CHECK ';
+                            if(($condition->{'condicion'} == 'marcado') && (($respuesta_trigger['valor'] !== "-1" )&&($respuesta_trigger['valor'] !== "-#$%-" ))){
+                                //$html = $html .  "Se cumple marcado y con resultado";
+                                $flag_satisfy = true;
+                                $html = $html .  $respuesta_trigger['valor'];
+                                //$html = $html .  "CUMPLIÓ";
+                                //print_r($respuesta_trigger);
+                            }else{
+                                //$html = $html .  "No se cumple marcado y con resultado";
+                            }
+    
+                            if(($condition->{'condicion'} == 'no_marcado') && (($respuesta_trigger['valor'] === "-1" )||($respuesta_trigger['valor'] == "-#$%-" ))){
+                                //$html = $html .  "Se cumple no_marcado y sin resultado";
+                                $flag_satisfy = true;
+                                $html = $html .  $respuesta_trigger['valor'];
+                                //$html = $html .  "NO CUMPLIO";
+                                //print_r($respuesta_trigger);
+                            }else{
+                                //$html = $html .  "No se cumple no_marcado y sin resultado";
+                            }
                     }
-                }else{
-                    foreach ($behavioral_condition_not_satisfied  as $keyCCNC => $comportamiento) {
-                        $permissions_script = $permissions_script . dphpforms_generate_permits_scripts($behaviors, $ROL);
+    
+                    $behavioral_condition_satisfied  = $condition->{'comportamiento_condicion_cumplida'};
+                    $behavioral_condition_not_satisfied  = $condition->{'comportamiento_condicion_no_cumplida'};
+                    if($flag_satisfy){
+                        foreach ($behavioral_condition_satisfied  as $keyCCC => $behaviors) {
+                            $permissions_script = $permissions_script . dphpforms_generate_permits_scripts($behaviors, $ROL);
+                        }
+                    }else{
+                        foreach ($behavioral_condition_not_satisfied  as $keyCCNC => $comportamiento) {
+                            $permissions_script = $permissions_script . dphpforms_generate_permits_scripts($behaviors, $ROL);
+                        }
                     }
                 }
             }
-        }
+        };
+        
+        
 
         return $html;
 
