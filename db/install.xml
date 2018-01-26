@@ -728,5 +728,19 @@
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
       </KEYS>
     </TABLE>
+    <TABLE NAME="talentospilos_user_extended" COMMENT="Tabla que relaciona un estudiante ASES con sus usuarios en Moodle">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="id_moodle_user" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="false" COMMENT="Identificador del usuario Moodle, se relaciona con la tabla {user}"/>
+        <FIELD NAME="id_ases_user" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="false" COMMENT="Identificador del usuario ASES, se relaciona con la tabla {talentospilos_usuario}"/>
+        <FIELD NAME="id_academic_program" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="false" COMMENT="Identificador del programa acadpemico, se relaciona con la tabla {talentospilos_programa}"/>
+        <FIELD NAME="program_status" TYPE="binary" LENGTH="20" NOTNULL="true" SEQUENCE="false" COMMENT="Identificador de la cohorte. Se relaciona con la tabla {cohort}"/>
+        <FIELD NAME="tracking_status" TYPE="int" LENGTH="1" NOTNULL="true" SEQUENCE="false" COMMENT="Identificador de la cohorte. Se relaciona con la tabla {cohort}"/>
+        <FIELD NAME="estado_seguimiento" TYPE="int" LENGTH="1" NOTNULL="true" SEQUENCE="false" COMMENT="Identificador de la cohorte. Se relaciona con la tabla {cohort}"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+    </TABLE>
   </TABLES>
 </XMLDB>

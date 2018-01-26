@@ -150,20 +150,20 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     if (!$dbman->field_exists($table, $field)) {
         $dbman->add_field($table, $field);
     }
-    // Define field promedio_semestre to be added to talentospilos_history_academ.
-    $table = new xmldb_table('talentospilos_history_academ');
-    $field = new xmldb_field('promedio_semestre', XMLDB_TYPE_NUMBER, '20', null, null, null, null, 'id_programa');
-    // Conditionally launch add field promedio_semestre.
-    if (!$dbman->field_exists($table, $field)) {
-        $dbman->add_field($table, $field);
-    }
-    // Define field promedio_acumulado to be added to talentospilos_history_academ.
-    $table = new xmldb_table('talentospilos_history_academ');
-    $field = new xmldb_field('promedio_acumulado', XMLDB_TYPE_NUMBER, '20', null, null, null, null, 'promedio_semestre');
-    // Conditionally launch add field promedio_acumulado.
-    if (!$dbman->field_exists($table, $field)) {
-        $dbman->add_field($table, $field);
-    }
+   // Define field promedio_semestre to be added to talentospilos_history_academ.
+   $table = new xmldb_table('talentospilos_history_academ');
+   $field = new xmldb_field('promedio_semestre', XMLDB_TYPE_FLOAT, '20', null, null, null, null, 'id_programa');
+   // Conditionally launch add field promedio_semestre.
+   if (!$dbman->field_exists($table, $field)) {
+       $dbman->add_field($table, $field);
+   }
+   // Define field promedio_acumulado to be added to talentospilos_history_academ.
+   $table = new xmldb_table('talentospilos_history_academ');
+   $field = new xmldb_field('promedio_acumulado', XMLDB_TYPE_FLOAT, '20', null, null, null, null, 'promedio_semestre');
+   // Conditionally launch add field promedio_acumulado.
+   if (!$dbman->field_exists($table, $field)) {
+       $dbman->add_field($table, $field);
+   }
     // Define field json_materias to be added to talentospilos_history_academ.
     $table = new xmldb_table('talentospilos_history_academ');
     $field = new xmldb_field('json_materias', XMLDB_TYPE_TEXT, null, null, null, null, null, 'promedio_acumulado');
@@ -838,6 +838,18 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     if (!$dbman->field_exists($table, $field)) {
         $dbman->add_field($table, $field);
     }
+
+    // ************************************************************************************************************
+    // Actualización:
+    // Se crea la llave foránea desde campo id_programa en la tabla talentospilos_res_estudiante hacia
+    // la tabla talentospilos_programa
+    // Versión en la que se incluye: 2018012413229
+    // ************************************************************************************************************
+    // Define key fk_programa (foreign) to be added to talentospilos_res_estudiante.
+    $table = new xmldb_table('talentospilos_res_estudiante');
+    $key = new xmldb_key('fk_programa', XMLDB_KEY_FOREIGN, array('id_programa'), 'talentospilos_programa', array('id'));
+    // Launch add key fk_programa.
+    $dbman->add_key($table, $key);
 
     // ************************************************************************************************************
     // Actualización:
