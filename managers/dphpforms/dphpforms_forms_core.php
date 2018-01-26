@@ -11,5 +11,9 @@
         return dphpforms_generate_html_updater($id_completed_form, $rol, $record_id);
     };
 
+    if( isset($_GET['form_id']) && isset($_GET['rol']) && isset($_GET['record_id']) ){
+        echo dphpforms_render_updater($_GET['form_id'], $_GET['rol'], $_GET['record_id']);
+    }
+
 
 ?>

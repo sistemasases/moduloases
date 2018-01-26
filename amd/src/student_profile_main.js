@@ -156,6 +156,35 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/d3', 'block_ases/sweetaler
                 });
             });
 
+            // Despliega el modal de seguimiento v2
+            $('#button_add_test_track').on('click', function() {
+                
+                $('#myModalLabel').attr('name', 'PARES');
+                $('#modal_test_peer_tracking').show();
+
+                init_form_tracking();
+            });
+            $('.mymodal-close').click(function(){
+                $(this).parent().parent().parent().parent().fadeOut(300);
+            });
+
+            // Controles para editar formulario de pares
+            $('.btn-primary.edit_peer_test_tracking').on('click', function(){
+                var id_tracking = $(this).attr('data-record-id');
+                load_record_updater('62', '6', '5');
+                $('#modal_test_edit_peer_tracking').fadeIn(300);
+            });
+            /*$('.mymodal-close').click(function(){
+                $('#modal_test_peer_tracking').fadeOut(300);
+            });*/
+
+            function load_record_updater(form_id, record_id, rol){
+                $.get( "../managers/dphpforms/dphpforms_forms_core.php?form_id=62&rol=6&record_id=6", function( data ) {
+                        $("#body_editor").html("");
+                        $('#body_editor').append( data );
+                  });
+            }
+
             var RadarChart = {
                 draw: function(id, d, options){
                 var cfg = {
