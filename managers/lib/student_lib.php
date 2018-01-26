@@ -79,12 +79,15 @@ function get_id_user_moodle($id_student)
 
     global $DB;
 
-    $sql_query = "SELECT id FROM {user_info_field} WHERE shortname = 'idtalentos'";
-    $id_field = $DB->get_record_sql($sql_query)->id;
+    $sql_query = "SELECT id_moodle_user FROM {talentospilos_user_extended} WHERE id_ases_user = $id_student AND tracking_status = 1";
+    $id_user_moodle = $DB->get_record_sql($sql_query)->id_moodle_user;
+    //USANDO MODELO ANTIGUO
+    // $sql_query = "SELECT id FROM {user_info_field} WHERE shortname = 'idtalentos'";
+    // $id_field = $DB->get_record_sql($sql_query)->id;
 
-    $sql_query = "SELECT MAX(userid) AS userid FROM {user_info_data} WHERE fieldid = $id_field AND data = '$id_student'";
+    // $sql_query = "SELECT MAX(userid) AS userid FROM {user_info_data} WHERE fieldid = $id_field AND data = '$id_student'";
 
-    $id_user_moodle = $DB->get_record_sql($sql_query)->userid;
+    // $id_user_moodle = $DB->get_record_sql($sql_query)->userid;
 
     return $id_user_moodle;
 }

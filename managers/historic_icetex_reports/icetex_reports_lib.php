@@ -37,27 +37,115 @@ function get_array_students_with_resolution(){
 
     $array_historics = array();
 
-    $sql_query = "SELECT substring(cohortm.idnumber from 0 for 5) AS cohorte, substring(userm.username from 0 for 8) AS codigo, usuario.num_doc, userm.firstname, 
-                userm.lastname, semestre.nombre, res.codigo_resolucion, monto_estudiante, uextended.program_status, TO_CHAR(TO_TIMESTAMP(cancel.fecha_cancelacion), 'DD/MM/YYYY') as fecha_cancel 
-                FROM mdl_talentospilos_res_estudiante AS res_est
-                    INNER JOIN mdl_talentospilos_res_icetex res ON res.id = res_est.id_resolucion
-                    INNER JOIN mdl_talentospilos_history_academ academ ON academ.id_estudiante = res_est.id_estudiante
-                    INNER JOIN mdl_talentospilos_history_cancel cancel ON cancel.id_history = academ.id
-                    INNER JOIN mdl_talentospilos_semestre semestre ON semestre.id = res_est.id_semestre 
-                    INNER JOIN mdl_talentospilos_usuario usuario ON usuario.id = res_est.id_estudiante 
-                    INNER JOIN mdl_talentospilos_user_extended uextended ON usuario.id = uextended.id_ases_user 
-                    INNER JOIN mdl_user userm ON uextended.id_moodle_user = userm.id
-                    INNER JOIN mdl_cohort_members co_mem ON userm.id = co_mem.userid
-                    INNER JOIN mdl_cohort cohortm ON co_mem.cohortid = cohortm.id
-                    WHERE uextended.id_academic_program = res_est.id_programa";
+    $sql_query = "SELECT res_est.id, substring(cohortm.idnumber from 0 for 5) AS cohorte, substring(userm.username from 0 for 8) AS codigo, usuario.num_doc, userm.firstname, userm.lastname, 
+                    semestre.nombre, res.codigo_resolucion, monto_estudiante, uextended.program_status, res_est.id_estudiante, res_est.id_semestre, res_est.id_programa
+                    FROM {talentospilos_res_estudiante} AS res_est
+                    INNER JOIN {talentospilos_res_icetex} res ON res.id = res_est.id_resolucion
+                    INNER JOIN {talentospilos_semestre} semestre ON semestre.id = res_est.id_semestre 
+                    INNER JOIN {talentospilos_usuario} usuario ON usuario.id = res_est.id_estudiante 
+                    INNER JOIN {talentospilos_user_extended} uextended ON usuario.id = uextended.id_ases_user 
+                    INNER JOIN {user} userm ON uextended.id_moodle_user = userm.id
+                    INNER JOIN {cohort_members} co_mem ON userm.id = co_mem.userid
+                    INNER JOIN {cohort} cohortm ON co_mem.cohortid = cohortm.id
+                    WHERE uextended.id_academic_program = res_est.id_programa AND substring(cohortm.idnumber from 0 for 4) = 'SPP'";
 
     $historics = $DB->get_records_sql($sql_query);
 
     foreach ($historics as $historic) {
+        $student_id = $historic->id_estudiante;
+        $program_id = $historic->id_programa;
+        $semester_id = $historic->id_semestre;
+
+        $cancel_date = get_array_students_with_cancel($student_id, $program_id, $semester_id);
+
+        if($cancel_date == false){
+            $historic->fecha_cancel = "---";
+        }else{
+            $historic->fecha_cancel = date("Y-m-d", $cancel_date);
+        }
+
         array_push($array_historics, $historic);
     }
 
     return $array_historics;
+}
 
+function get_array_students_with_cancel($id_student, $id_program, $id_semester){    
+    global $DB;
+
+    $sql_query = "SELECT cancel.fecha_cancelacion FROM {talentospilos_history_academ} AS academ
+    INNER JOIN {talentospilos_history_cancel} cancel ON academ.id = cancel.id_history 
+    WHERE academ.id_estudiante = $id_student AND academ.id_semestre = $id_semester AND academ.id_programa = $id_program";
+
+    $result = $DB->get_record_sql($sql_query);
+
+    if($result == false){
+        return false;
+    }else{
+        $fecha_cancel = $result->fecha_cancelacion;
+        return $fecha_cancel;
+    }    
+}
+
+
+function get_all_cohort_names(){
+    global $DB;
+
+    $cohorts_options = "<select>";
+
+    $sql_query = "SELECT substring(idnumber from 0 for 5) AS cohort_name FROM {cohort} 
+                    WHERE substring(idnumber from 0 for 4) = 'SPP'";
+
+    $cohorts = $DB->get_records_sql($sql_query);
+
+    foreach($cohorts as $cohort){
+        $cohorts_options.= "<option value='$cohort->cohort_name'>$cohort->cohort_name</option>";
+    }
+
+    $cohorts_options .= "</select>";
+
+    return $cohorts_options;
+}
+
+
+function get_all_semesters_names(){
+    global $DB;
+
+    $semesters_options = "<select>";
+
+    $sql_query = "SELECT nombre FROM {talentospilos_semestre}";
+
+    $semesters = $DB->get_records_sql($sql_query);
+
+    foreach($semesters as $semester){
+
+        $semesters_options .= "<option value='$semester->nombre'>$semester->nombre</option>";
+    }
+
+    $semesters_options .= "</option>";
+
+    return $semesters_options;
+}
+
+
+function get_all_resolutions_codes(){
+    global $DB;
+
+    $resolutions_options = "<select>";
+
+    $sql_query = "SELECT codigo_resolucion FROM {talentospilos_res_icetex}";
+
+    $resolutions = $DB->get_records_sql($sql_query);
+
+    foreach($resolutions as $resolution){
+
+        $resolutions_options .= "<option value='$resolution->codigo_resolucion'> $resolution->codigo_resolucion</option>";
+    }
+
+    $resolutions_options .= "</select>";
+
+    return $resolutions_options;
 
 }
+
+//print_r(get_all_resolutions_codes());

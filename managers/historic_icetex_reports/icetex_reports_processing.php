@@ -27,15 +27,18 @@
 	require_once(dirname(__FILE__). '/../../../../config.php');
 	require_once('icetex_reports_lib.php');
 
-	if(isset($_POST['loadR']) && $_POST['loadR'] == 'loadReport'){
+	if(isset($_POST['loadR']) && $_POST['loadR'] == 'loadReport'){		
 		$columns = array();
-		array_push($columns, array("title"=>"Cohorte", "name"=>"cohorte", "data"=>"cohorte"));
+		$cohort_options = get_all_cohort_names();
+		$semester_options = get_all_semesters_names();
+		$resolution_options = get_all_resolutions_codes();
+		array_push($columns, array("title"=>"Cohorte".$cohort_options, "name"=>"cohorte", "data"=>"cohorte"));
 		array_push($columns, array("title"=>"Código estudiante", "name"=>"codigo", "data"=>"codigo"));
 		array_push($columns, array("title"=>"Cédula", "name"=>"num_doc", "data"=>"num_doc"));
         array_push($columns, array("title"=>"Nombre", "name"=>"firstname", "data"=>"firstname"));
         array_push($columns, array("title"=>"Apellido", "name"=>"lastname", "data"=>"lastname"));
-		array_push($columns, array("title"=>"Semestre", "name"=>"nombre", "data"=>"nombre"));
-		array_push($columns, array("title"=>"Código resolución", "name"=>"codigo_resolucion", "data"=>"codigo_resolucion"));
+		array_push($columns, array("title"=>"Semestre".$semester_options, "name"=>"nombre", "data"=>"nombre"));
+		array_push($columns, array("title"=>"Código resolución".$resolution_options, "name"=>"codigo_resolucion", "data"=>"codigo_resolucion"));
         array_push($columns, array("title"=>"Monto", "name"=>"monto_estudiante", "data"=>"monto_estudiante"));
         array_push($columns, array("title"=>"Estado en el programa", "name"=>"program_status", "data"=>"program_status"));
         array_push($columns, array("title"=>"Fecha de cancelación de semestre", "name"=>"fecha_cancel", "data"=>"fecha_cancel"));

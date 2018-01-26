@@ -18,12 +18,11 @@
 /**
  * Talentos Pilos
  *
- * @author     Juan Pablo Moreno Muñoz
+ * @author     Samuel Ramirez
  * @package    block_ases
- * @copyright  2016 Juan Pablo Moreno Muñoz <moreno.juan@correounivalle.edu.co>
+ * @copyright  2016 Samuel Ramirez <samuel.ramirez.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
 
 // Standard GPL and phpdocs
 namespace block_ases\output;                                                                                                       
@@ -33,14 +32,13 @@ use renderer_base;
 use templatable;                                                                                                                    
 use stdClass;                                                                                                                       
  
-class historical_icetex_reports_page implements renderable, templatable {                                                                               
+class dphpforms_form_builder_page implements renderable, templatable {                                                                               
     /** @var string $sometext Some text to show how to pass data to a template. */                                                  
     var $data = null;                                                                                                           
  
     public function __construct($data) {                                                                                        
         $this->data = $data;                                                                                                
     }
- 
     /**                                                                                                                             
      * Export this data so it can be used as the context for a mustache template.                                                   
      *                                                                                                                              
