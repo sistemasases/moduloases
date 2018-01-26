@@ -20,11 +20,7 @@ define(['jquery', 'block_ases/datatables.net', 'block_ases/datatables.net-button
       //Controles para la tabla generada
       $(document).on('click', '#tableResult tbody tr td', function () {
         var pagina = "student_profile.php";
-        var table = $("#tableResult").DataTable({
-        fixedHeader: {
-            header: true,
-            footer: true
-        }});
+        var table = $("#tableResult").DataTable();
         var colIndex = table.cell(this).index().column;
 
         if (colIndex <= 2) {
@@ -35,7 +31,6 @@ define(['jquery', 'block_ases/datatables.net', 'block_ases/datatables.net-button
         }
       });
 
-
       //Controles para la tabla generada
       $(document).on('change', '#tableResult thead tr th select', function () {
         var table = $("#tableResult").DataTable();
@@ -43,12 +38,7 @@ define(['jquery', 'block_ases/datatables.net', 'block_ases/datatables.net-button
         var colIndex = $(this).parent().index()+1;
         var selectedText=$(this).parent().find(":selected").text();
         table.columns( colIndex-1 ).search( this.value ).draw();
-
-     });
-
-
-
-
+      });
     }
   }
 
@@ -67,44 +57,42 @@ define(['jquery', 'block_ases/datatables.net', 'block_ases/datatables.net-button
       data: dataString,
       url: "../managers/ases_report/asesreport_server_processing.php",
       success: function (msg) {
-          //alert(msg.data);
-          //console.log(msg.columns);
-          $("#div_table").html('');
-          $("#div_table").fadeIn(1000).append('<table id="tableResult" class="display" cellspacing="0" width="100%"><thead> </thead></table>');
 
+        $("#div_table").html('');
+        $("#div_table").fadeIn(1000).append('<table id="tableResult" class="display" cellspacing="0" width="100%"><thead> </thead></table>');
 
         $("#tableResult").DataTable(msg);
         
+        $('#tableResult tr').each(function () {
+          $.each(this.cells, function () {
+            if ($(this).html() == 'Bajo') {
+              $(this).addClass('bajo');
+            }
+            else if ($(this).html() == 'Medio') {
+              $(this).addClass('medio');
+            }
+            else if ($(this).html() == 'Alto') {
+              $(this).addClass('alto');
+            }
+          });
+        });
+
+        $('#tableResult').bind("DOMSubtreeModified", function () {
           $('#tableResult tr').each(function () {
             $.each(this.cells, function () {
-              if ($(this).html() == 'Bajo') {
+              if ($(this).html() == 'bajo') {
                 $(this).addClass('bajo');
               }
-              else if ($(this).html() == 'Medio') {
+              else if ($(this).html() == 'medio') {
                 $(this).addClass('medio');
               }
-              else if ($(this).html() == 'Alto') {
+              else if ($(this).html() == 'alto') {
                 $(this).addClass('alto');
               }
             });
           });
-
-          $('#tableResult').bind("DOMSubtreeModified", function () {
-            $('#tableResult tr').each(function () {
-              $.each(this.cells, function () {
-                if ($(this).html() == 'bajo') {
-                  $(this).addClass('bajo');
-                }
-                else if ($(this).html() == 'medio') {
-                  $(this).addClass('medio');
-                }
-                else if ($(this).html() == 'alto') {
-                  $(this).addClass('alto');
-                }
-              });
-            });
-          });
-        },
+        });
+      },
       dataType: "json",
       cache: "false",
       error: function (msg) {

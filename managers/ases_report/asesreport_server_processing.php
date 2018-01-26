@@ -88,6 +88,10 @@ if(isset($_POST['instance_id'])){
                 "data"=> $result,
                 "columns" => $columns,
                 "select" => "false",
+                "fixedHeader"=> array(
+                    "header"=> true,
+                    "footer"=> true
+                ),
                 "language" => 
                  array(
                     "search"=> "Buscar:",
