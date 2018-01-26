@@ -91,7 +91,7 @@ function get_array_students_with_cancel($id_student, $id_program, $id_semester){
 function get_all_cohort_names(){
     global $DB;
 
-    $cohorts_options = "<select>";
+    $cohorts_options = "<select><option value=''></option>";
 
     $sql_query = "SELECT substring(idnumber from 0 for 5) AS cohort_name FROM {cohort} 
                     WHERE substring(idnumber from 0 for 4) = 'SPP'";
@@ -111,7 +111,7 @@ function get_all_cohort_names(){
 function get_all_semesters_names(){
     global $DB;
 
-    $semesters_options = "<select>";
+    $semesters_options = "<select><option value=''></option>";
 
     $sql_query = "SELECT nombre FROM {talentospilos_semestre}";
 
@@ -131,7 +131,7 @@ function get_all_semesters_names(){
 function get_all_resolutions_codes(){
     global $DB;
 
-    $resolutions_options = "<select>";
+    $resolutions_options = "<select><option value=''></option>";
 
     $sql_query = "SELECT codigo_resolucion FROM {talentospilos_res_icetex}";
 
@@ -148,4 +148,22 @@ function get_all_resolutions_codes(){
 
 }
 
-//print_r(get_all_resolutions_codes());
+
+function get_resolutions_for_report(){
+    global $DB;
+
+    $resolutions_array = array();
+
+    $sql_query = "SELECT DISTINCT res_ice.id, res_ice.codigo_resolucion, semestre.nombre, res_ice.monto_total 
+                    FROM mdl_talentospilos_res_icetex AS res_ice
+                        INNER JOIN mdl_talentospilos_res_estudiante res_est ON res_est.id_resolucion = res_ice.id
+                        INNER JOIN mdl_talentospilos_semestre semestre ON semestre.id = res_est.id_semestre";
+
+    $resolutions = $DB->get_records_sql($sql_query);
+
+    foreach ($resolutions as $resolution) {
+        array_push($resolutions_array, $resolution);
+    }
+
+    return $resolutions_array;
+}

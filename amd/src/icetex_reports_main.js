@@ -26,6 +26,10 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_as
 				*/
 			});
 
+			$("#list-resolutions-panel").on('click', function(){
+				load_resolution_report();				
+			});
+
 			//Controles para la tabla generada
 			$(document).on('change', '#tableResStudents thead tr th select', function () {
 				var table = $("#tableResStudents").DataTable();
@@ -60,6 +64,27 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_as
 		});
 	}
 
+	function load_resolution_report(){
+		$.ajax({
+			type: "POST",
+			data: {resR: 'resReport'},
+			url: "../managers/historic_icetex_reports/resolution_reports_processing.php",
+			success: function(msg){
+				$("#div_resolutions").empty();
+				$("#div_resolutions").append('<table id="tableResolutions" class="display" cellspacing="0" width="100%"><thead><thead></table>');
+				var table = $("#tableResolutions").DataTable(msg);
+				$('#div_resolutions').css('cursor', 'pointer');				
+			},
+			dataType: "json",
+			cache: false,
+			error: function(msg){
+				swal("Error", "Error al cargar el reporte", "error");
+			}
+		});
+
+	}
+
+	/*
 	function numSum(numa, numb) {
 		return numa + numb;		
 	}
@@ -70,6 +95,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_as
 		}
 
 	}
+	*/
 	
 }
 
