@@ -25,6 +25,39 @@
                         $(this).find("label").find("input").prop("checked", false);
                     });
                  });
+
+                 //formulario_prueba_d3_62s
+                 $(document).on('submit', '.dphpforms' , function(evt) {
+                    evt.preventDefault();
+                    var formData = new FormData(this);
+                    var formulario = $(this);
+                    var url_processor = formulario.attr('action');
+                    if(formulario.attr('action') == 'procesador.php'){
+                        url_processor = '../managers/dphpforms/procesador.php';
+                    }
+                    $.ajax({
+                        type: 'POST',
+                        url: url_processor,
+                        data: formData,
+                        cache: false,
+                        contentType: false,
+                        processData: false,
+                        success: function(data) {
+                                swal(
+                                    'Información',
+                                    data,
+                                    'success'
+                                );
+                            },
+                            error: function(data) {
+                                swal(
+                                    'Error!',
+                                    data,
+                                    'error'
+                                );
+                            }
+                     });
+                });
                 
             }
 

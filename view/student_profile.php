@@ -685,8 +685,8 @@ if ($student_code != 0) {
 
 // End of data obtaining for risks graphs
 
-    $record->form_seguimientos = null;
     //Pruebas
+    $record->form_seguimientos = null;
     $record->form_seguimientos = dphpforms_render_recorder('62', '6', '-1', '-1');
 
 } else {
