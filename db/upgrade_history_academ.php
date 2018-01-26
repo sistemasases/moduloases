@@ -53,7 +53,7 @@ if ($oldversion < XXXXXXXXXX) {
 
     // Define field promedio_semestre to be added to talentospilos_history_academ.
     $table = new xmldb_table('talentospilos_history_academ');
-    $field = new xmldb_field('promedio_semestre', XMLDB_TYPE_NUMBER, '20', null, null, null, null, 'id_programa');
+    $field = new xmldb_field('promedio_semestre', XMLDB_TYPE_FLOAT, '20', null, null, null, null, 'id_programa');
 
     // Conditionally launch add field promedio_semestre.
     if (!$dbman->field_exists($table, $field)) {
@@ -62,7 +62,7 @@ if ($oldversion < XXXXXXXXXX) {
 
     // Define field promedio_acumulado to be added to talentospilos_history_academ.
     $table = new xmldb_table('talentospilos_history_academ');
-    $field = new xmldb_field('promedio_acumulado', XMLDB_TYPE_NUMBER, '20', null, null, null, null, 'promedio_semestre');
+    $field = new xmldb_field('promedio_acumulado', XMLDB_TYPE_FLOAT, '20', null, null, null, null, 'promedio_semestre');
 
     // Conditionally launch add field promedio_acumulado.
     if (!$dbman->field_exists($table, $field)) {

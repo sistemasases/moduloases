@@ -134,9 +134,9 @@ if ($student_code != 0) {
 
     $array_aditional_fields = get_adds_fields_mi($id_user_moodle);
 
-    //$academic_program = get_program((int) $array_aditional_fields->idprograma);
+    $academic_program = get_program((int) $array_aditional_fields->idprograma);
 
-    //$faculty = get_faculty($academic_program->id_facultad);
+    $faculty = get_faculty($academic_program->id_facultad);
 
     // Evaluates if user role has permissions assigned on this view
     $actions = authenticate_user_view($USER->id, $blockid);
@@ -148,8 +148,8 @@ if ($student_code != 0) {
     $record->lastname = $user_moodle->lastname;
     $record->email_moodle = $user_moodle->email_moodle;
     $record->age = substr($ases_student->age, 0, 2);
-    //$record->program = $academic_program->nombre;
-    //$record->faculty = $faculty->nombre;
+    $record->program = $academic_program->nombre;
+    $record->faculty = $faculty->nombre;
     $record->cohort = $cohort->name;
 
     switch ($ases_student->tipo_doc) {
@@ -350,10 +350,24 @@ if ($student_code != 0) {
 
     // Loading academic information
 
+    //Current data
+    //weighted average
+    $promedio = get_promedio_ponderado($student_id, $academic_program->id);
+    $record->promedio = $promedio;
+    
+    //num bajos
+    // $bajos = get_bajos_rendimientos($student_id, $academic_program->id);
+    // $record->bajos = $bajos;
+
+    // //num estimulos
+    // $estimulos = get_estimulos($student_id, $academic_program->id);
+    // $record->estimulos = $estimulos;
+
     //Current semester
     $html_academic_table = get_grades_courses_student_last_semester($id_user_moodle);
     $record->academic_semester_act = $html_academic_table;
 
+    //historic academic
     $html_historic_academic = get_historic_academic_by_student($student_id);
     $record->historic_academic = $html_historic_academic;
 

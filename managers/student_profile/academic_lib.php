@@ -394,3 +394,25 @@ function make_html_semesters($semesters)
 
     return $html;
 }
+
+
+
+function get_promedio_ponderado($id_estudiante, $id_programa){
+    
+    global $DB;
+
+    $query = "SELECT MAX(id_semestre), promedio_acumulado as prom
+              FROM {talentospilos_history_academ}
+              WHERE id_estudiante = $id_estudiante AND id_programa = $id_programa
+              GROUP BY prom";        
+    $result = $DB->get_record_sql($query);
+
+    if(!$result){
+        $promedio = "NO REGISTRA";    
+    }else{
+        $promedio = $result->prom;
+    }
+
+    return $promedio;
+
+}
