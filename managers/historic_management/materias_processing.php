@@ -198,26 +198,49 @@ if (isset($_FILES['file'])) {
                 throw new MyException('La columna con el campo creditos es obligatoria');
             }
             
-            // validate nota
+            $hasCancel = false;
+            
+            //validate fecha_cancelacion_materia
+            if ($associativeTitles['fecha_cancelacion_materia'] != null) {
 
+                $fecha_cancelacion_materia = $data[$associativeTitles['fecha_cancelacion_materia']];
+                if ($fecha_cancelacion_materia != '') {
+                    $hasCancel = true;
+                    $fecha_cancelacion_materia = strtotime($fecha_cancelacion_materia);
+
+                    if($fecha_cancelacion_materia == null){
+                        $isValidRow = false;
+                        array_push($detail_erros, [$line_count, $lc_wrongFile, ($associativeTitles['fecha_cancelacion_materia'] + 1), 'fecha_cancelacion_materia', 'El formato de fecha_cancelacion_materia es incorrecto. Recuerde que el formato debe ser dd-mm-yyyy']);    
+                    }        
+                }
+
+            } else {
+                throw new MyException('La columna con el campo fecha_cancelacion_materia es obligatoria');
+            }
+
+            // validate nota
+            
             if ($associativeTitles['nota'] != null) {
 
                 $nota = $data[$associativeTitles['nota']];
-                if ($nota != '') {
+                if(!$hasCancel){
+                    if ($nota != '') {
 
-                    if (!is_numeric($nota)) {
+                        if (!is_numeric($nota)) {
+                            $isValidRow = false;
+                            array_push($detail_erros, [$line_count, $lc_wrongFile, ($associativeTitles['nota'] + 1), 'nota', 'El campo nota debe ser de tipo numerico']);
+                        }
+    
+                    } else {
                         $isValidRow = false;
-                        array_push($detail_erros, [$line_count, $lc_wrongFile, ($associativeTitles['nota'] + 1), 'nota', 'El campo nota debe ser de tipo numerico']);
+                        array_push($detail_erros, [$line_count, $lc_wrongFile, ($associativeTitles['nota'] + 1), 'nota', 'El campo nota es obligatorio y se encuentra vacio']);
                     }
-
-                } else {
-                    $isValidRow = false;
-                    array_push($detail_erros, [$line_count, $lc_wrongFile, ($associativeTitles['nota'] + 1), 'nota', 'El campo nota es obligatorio y se encuentra vacio']);
                 }
 
             } else {
                 throw new MyException('La columna con el campo nota es obligatoria');
             }
+
 
             //FINALIZACION DE VALIDACIONES. 
             if (!$isValidRow) {
@@ -237,6 +260,7 @@ if (isset($_FILES['file'])) {
                 $materia->codigo_materia = $codigo_materia;
                 $materia->creditos = $creditos;
                 $materia->nota = $nota;
+                $materia->fecha_cancelacion_materia = $fecha_cancelacion_materia;
 
                 array_push($registros[$key],$materia);
                 array_push($success_rows,$data);
