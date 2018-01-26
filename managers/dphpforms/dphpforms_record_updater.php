@@ -172,9 +172,24 @@
                             $enabled = "disabled";
                         }
 
+                        $field_attr_class = '';
+                        $field_attr_type = '';
+                        $field_attr_placeholder = '';
+
+                        if(property_exists($atributos, 'class')){
+                            $field_attr_class = $atributos->{'class'};
+                        }
+
+                        if(property_exists($atributos, 'type')){
+                            $field_attr_type = $atributos->{'type'};
+                        }
+                        if(property_exists($atributos, 'placeholder')){
+                            $field_attr_placeholder = $atributos->{'placeholder'};
+                        }
+
                         if($campo == 'TEXTFIELD'){
-                            $html = $html .  '<div class="div-'.$row->{'mod_id_formulario_pregunta'}.' '.$atributos->{'class'}.'" >' . $enunciado . ':<br>';
-                            $html = $html .  ' <input id="'.$row->{'mod_id_formulario_pregunta'}.'" class="form-control" type="'.$atributos->{'type'}.'" placeholder="'.$atributos->{'placeholder'}.'" name="'.$row->{'mod_id_formulario_pregunta'}.'" value="'.$valor.'" '.$enabled.'><br>' . "\n";
+                            $html = $html .  '<div class="div-'.$row->{'mod_id_formulario_pregunta'}.' '.$field_attr_class.'" >' . $enunciado . ':<br>';
+                            $html = $html .  ' <input id="'.$row->{'mod_id_formulario_pregunta'}.'" class="form-control" type="'.$field_attr_type.'" placeholder="'.$field_attr_placeholder.'" name="'.$row->{'mod_id_formulario_pregunta'}.'" value="'.$valor.'" '.$enabled.'><br>' . "\n";
                             $html = $html .  '</div>';
                         }
 
