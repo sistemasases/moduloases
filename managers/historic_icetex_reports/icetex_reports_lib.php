@@ -47,7 +47,7 @@ function get_array_students_with_resolution(){
                     INNER JOIN mdl_user userm ON uextended.id_moodle_user = userm.id
                     INNER JOIN mdl_cohort_members co_mem ON userm.id = co_mem.userid
                     INNER JOIN mdl_cohort cohortm ON co_mem.cohortid = cohortm.id
-                    WHERE uextended.id_academic_program = res_est.id_programa";
+                    WHERE uextended.id_academic_program = res_est.id_programa AND substring(cohortm.idnumber from 0 for 4) = 'SPP'";
 
     $historics = $DB->get_records_sql($sql_query);
 
@@ -59,9 +59,9 @@ function get_array_students_with_resolution(){
         $cancel_date = get_array_students_with_cancel($student_id, $program_id, $semester_id);
 
         if($cancel_date == false){
-            $historic->fecha_cancelacion = "---";
+            $historic->fecha_cancel = "---";
         }else{
-            $historic->fecha_cancelacion = date("Y-m-d", $cancel_date);
+            $historic->fecha_cancel = date("Y-m-d", $cancel_date);
         }
 
         array_push($array_historics, $historic);
@@ -77,11 +77,12 @@ function get_array_students_with_cancel($id_student, $id_program, $id_semester){
     INNER JOIN mdl_talentospilos_history_cancel cancel ON academ.id = cancel.id_history 
     WHERE academ.id_estudiante = $id_student AND academ.id_semestre = $id_semester AND academ.id_programa = $id_program";
 
-    $cancel_date = $DB->get_record_sql($sql_query)->fecha_cancelacion;
+    $result = $DB->get_record_sql($sql_query);
 
-    if($cancel_date){
-        return $cancel_date;
-    }else{
+    if($result == false){
         return false;
+    }else{
+        $fecha_cancel = $result->fecha_cancelacion;
+        return $fecha_cancel;
     }    
 }

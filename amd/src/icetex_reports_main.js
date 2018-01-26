@@ -14,7 +14,8 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_as
 			
 			
 			$("#list-resolution-students-panel").on('click', function(){
-				load_report_resolution();				
+				load_report_resolution();
+				/*				
 				setTimeout(function(){
 					var table = $("#tableResStudents").DataTable();
 					var col_array = table.columns(7).data().eq(0);;
@@ -22,6 +23,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_as
 					var total = col_array.reduce(numSum);
 					$("#table_foot").append(total);				
 				}, 500);
+				*/
 			});
 
 	/**
@@ -36,7 +38,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_as
 			url: "../managers/historic_icetex_reports/icetex_reports_processing.php",
 			success: function(msg){
 				$("#div_res_students").empty();
-				$("#div_res_students").append('<table id="tableResStudents" class="display" cellspacing="0" width="100%"><thead><thead><tfoot><tr><th id="table_foot" colspan="8" style="text-align:right">Total: </th> <th></th></tr></tfoot></table>');
+				$("#div_res_students").append('<table id="tableResStudents" class="display" cellspacing="0" width="100%"><thead><thead></table>');
 				var table = $("#tableResStudents").DataTable(msg);
 				$('#div_res_students').css('cursor', 'pointer');				
 			},
