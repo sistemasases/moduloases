@@ -4,7 +4,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     global $DB;
     $dbman = $DB->get_manager();
     $result = true;
-    if ($oldversion < 2018012413229) {
+    if ($oldversion < 2018012911099) {
     // ************************************************************************************************************
     // Actualización que crea la tabla para los campos extendidos de usuario (Tabla: {talentospilos_user_extended})
     // Versión: 2018010911179
@@ -761,10 +761,38 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     // Launch add key fk_programa.
     $dbman->add_key($table, $key);
 
+        // ************************************************************************************************************
+    // Actualización:
+    // Se añade el campo id_programa a la tabla {talentospilos_user_rol}
+    // Versión en la que se incluye: 2018012911099
+    // ************************************************************************************************************
+
+    // Define field id_programa to be added to talentospilos_user_rol.
+    $table = new xmldb_table('talentospilos_user_rol');
+    $field = new xmldb_field('id_programa', XMLDB_TYPE_INTEGER, '20', null, null, null, null, 'id_instancia');
+
+    // Conditionally launch add field id_programa.
+    if (!$dbman->field_exists($table, $field)) {
+        $dbman->add_field($table, $field);
+    }
+
+    // ************************************************************************************************************
+    // Actualización:
+    // Se añade la llave foránea fk_program a la tabla {talentospilos_user_rol}
+    // Versión en la que se incluye: 2018012911099
+    // ************************************************************************************************************
+
+    // Define key fk_program (foreign) to be added to talentospilos_user_rol.
+    $table = new xmldb_table('talentospilos_user_rol');
+    $key = new xmldb_key('fk_program', XMLDB_KEY_FOREIGN, array('id_programa'), 'talentospilos_programa', array('id'));
+
+    // Launch add key fk_program.
+    $dbman->add_key($table, $key);
+
     // Ases savepoint reached.
-    upgrade_block_savepoint(true, 2018012413229, 'ases');
+    upgrade_block_savepoint(true, 2018012911099, 'ases');
    
     return $result;
-    }
+
 }
 ?>
