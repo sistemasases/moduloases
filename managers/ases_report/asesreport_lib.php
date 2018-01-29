@@ -3,7 +3,7 @@ require_once(dirname(__FILE__).'/../../../../config.php');
 require_once(dirname(__FILE__).'/../instance_management/instance_lib.php');
 require_once(dirname(__FILE__).'/../lib/lib.php');
 require_once(dirname(__FILE__).'/../lib/student_lib.php');
-require_once(dirname(__FILE__).'/../lib/user_lib.php');
+require_once(dirname(__FILE__).'/../user_management/user_lib.php');
 /**
  * Función que recupera riesgos 
  *
@@ -324,12 +324,12 @@ function get_ases_report($general_fields=null, $conditions, $risk_fields=null, $
 
         $user_role = $DB->get_record_sql($sql_query);
 
-        print_r($user_role);
+        //print_r($user_role);
 
         switch($user_role){
             case 'director_prog':
 
-                $
+                
                 
                 break;
             case 'profesional_ps':
