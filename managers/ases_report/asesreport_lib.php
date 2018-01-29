@@ -220,6 +220,118 @@ function getGraficEstado($cohorte){
  * @param $idinstancia  --> Instancia del módulo
  * @return Array 
  */
+function get_not_assign_students($general_fields=null, $conditions, $academic_fields=null, $instance_id){
+
+    global $DB, $USER;
+
+    $actions = $USER->actions;
+
+    // ********* Se arman las clausulas de la consulta sql ***********
+
+    // ***** Select clause *****
+    $select_clause = "SELECT ";
+    $from_clause = "";
+    $where_clause = " WHERE ";
+    $sub_query_cohort = "";
+    $sub_query_status = "";
+    $sub_query_academic = "";
+    $sub_query_risks = "";
+
+    if($general_fields){
+        foreach($general_fields as $field){
+            $select_clause .= $field.', ';
+        }
+    }
+
+
+
+    //print_r($academic_fields);
+
+    if($academic_fields){
+        foreach($academic_fields as $field){
+            $select_clause .= $field.', ';
+        }
+
+        $sub_query_academic .= " INNER JOIN {talentospilos_programa} AS acad_program ON user_extended.id_academic_program = acad_program.id
+                                INNER JOIN {talentospilos_facultad} AS faculty ON faculty.id = acad_program.id_facultad";
+    }
+
+    $select_clause = substr($select_clause, 0, -2);
+
+
+    // **** From clause ****
+    $from_clause = " FROM {user} as user_moodle INNER JOIN {talentospilos_user_extended} AS user_extended ON user_moodle.id = user_extended.id_moodle_user
+                                                INNER JOIN {talentospilos_usuario} AS tp_user ON user_extended.id_ases_user = tp_user.id ";
+
+    // **** Where clause ****
+    $where_clause .= " tp_ases_status.id_instancia = $instance_id";
+
+    // Condición cohorte
+    if($conditions[0] != 'TODOS'){
+
+        $sub_query_cohort .= "INNER JOIN (SELECT user_moodle.username
+                                         FROM {cohort_members} AS members_cohort INNER JOIN {user} AS user_moodle ON user_moodle.id = members_cohort.userid
+                                                                                 INNER JOIN {cohort} AS cohorts ON cohorts.id = members_cohort.cohortid
+                                         WHERE cohorts.idnumber = '$conditions[0]') AS cohort_query ON cohort_query.username = user_moodle.username ";
+    }else if($conditions[0] == 'TODOS'){
+        $sub_query_cohort .= " INNER JOIN (SELECT cohort.id, moodle_user.username 
+                                            FROM {cohort} AS cohort INNER JOIN {talentospilos_inst_cohorte} AS instance_cohort ON cohort.id = instance_cohort.id_cohorte
+                                                                    INNER JOIN {cohort_members} AS cohort_member ON cohort_member.cohortid = cohort.id
+                                                                    INNER JOIN {user} AS moodle_user ON moodle_user.id = cohort_member.userid
+                                            WHERE id_instancia = $instance_id) AS all_students_cht ON all_students_cht.username = user_moodle.username";
+    }
+    // Condición estado ASES
+    if($conditions[1] != 'TODOS'){
+
+        $sub_query_status .= " INNER JOIN (SELECT current_status.username, status_ases.id_estado_ases 
+                                            FROM (SELECT MAX(status_ases.id) AS id, moodle_user.username
+                                                FROM mdl_talentospilos_est_estadoases AS status_ases 
+                                                    INNER JOIN mdl_talentospilos_user_extended AS user_extended ON status_ases.id_estudiante = user_extended.id_ases_user
+                                                INNER JOIN mdl_user AS moodle_user ON moodle_user.id = user_extended.id_moodle_user
+                                                GROUP BY moodle_user.username) AS current_status
+                                            INNER JOIN mdl_talentospilos_est_estadoases AS status_ases ON status_ases.id = current_status.id
+                                            WHERE id_estado_ases = $conditions[1]
+                                            ) AS query_status_ases ON query_status_ases.username = user_moodle.username";
+    }
+
+    if(property_exists($actions, 'search_all_students_ar')){
+        
+        $sql_query = $select_clause.$from_clause.$sub_query_cohort.$sub_query_status.$sub_query_academic;
+        //print_r($sql_query);
+        $result_query = $DB->get_records_sql($sql_query);
+
+        //print_r($result_query);        
+
+    }else if(property_exists($actions, 'search_assigned_students_ar')){
+
+    }else{
+        return 'El usuario no tiene permisos para listar estudiantes en el reporte ASES';
+    }
+
+    $result_to_return = array();
+
+    foreach($result_query as $result){
+
+        array_push($result_to_return, $result);
+    }
+
+    return $result_to_return;
+
+}
+
+
+
+/**
+ * Función que recupera datos para la tabla de ases_report, dado el estado, la cohorte y un conjunto de campos a extraer.
+ *
+ * @see get_ases_report()
+ * @param $column       --> Campos a seleccionar
+ * @param $population   --> Estado y cohorte
+ * @param $risk         --> Nivel de riesgo a mostrar
+ * @param $academic_fields --> Campos relacionados con el programa académico y facultad
+ * @param $idinstancia  --> Instancia del módulo
+ * @return Array 
+ */
 function get_ases_report($general_fields=null, $conditions, $risk_fields=null, $academic_fields=null, $instance_id){
 
     global $DB, $USER;

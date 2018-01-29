@@ -1,13 +1,21 @@
+
 <?php
 require_once('asesreport_lib.php');
+require_once('asesreport_functions.php');
+require_once (dirname(__FILE__) . '/../validate_profile_action.php');
+require_once (dirname(__FILE__) . '/../role_management/role_management_lib.php');
+
 
 $columns = array();
 $conditions = array(); // Condiciones para la consulta
 $query_fields = array();
 $risk_fields = array();
 $academic_fields = array();
-
 $name_columns = new stdClass();
+$practicants_col = array();
+$monitors_col = array();
+
+global $USER;
 
 $fields_format = array(
     'student_code'=>'user_moodle.username',
@@ -42,6 +50,22 @@ if(isset($_POST['conditions'])){
 }
 
 
+$current_role = get_id_rol($USER->id,$_POST['instance_id']);
+$role_name = get_name_role($current_role);
+
+
+if($role_name=='profesional_ps'){
+   $practicants = get_pract_of_prof($USER->id,$_POST['instance_id']);
+   $name_practicants=get_roles_select($practicants,"practicants");
+
+
+   $monitors = get_monitors_of_pract(array_values($practicants)[0]->id_usuario,$_POST['instance_id']);
+   $name_monitors=get_roles_select($monitors,"monitors");
+
+}
+
+
+
 if(isset($_POST['fields'])){
     foreach($_POST['fields'] as $field){
         array_push($query_fields, $fields_format[$field]);
@@ -57,30 +81,13 @@ if(isset($_POST['academic_fields'])){
     }
 }
 
-if(isset($_POST['risk_fields'])){
-    $select='<br/><select><option value=""></option><option value="N.R.">N.R.</option><option value="Bajo">Bajo</option><option value="Medio">Medio</option>
-          <option value="alto">Alto</option></select>';
 
-
-    foreach($_POST['risk_fields'] as $risk_field){
-    
-        $query_name = "SELECT * FROM {talentospilos_riesgos_ases} WHERE id =".$risk_field;
-        $risk_name = $DB->get_record_sql($query_name)->nombre;
-        array_push($columns, array("title"=>'R.'.strtoupper(substr($risk_name, 0, 1)).substr($risk_name, 1, 2).$select, "name"=>$risk_name, "data"=>$risk_name));
-        array_push($risk_fields, $risk_field);
-    }
-}
-
-// print_r($columns);
-// print_r($query_fields);
-//print_r($academic_fields);
-// print_r($columns);
 
 
 if(isset($_POST['instance_id'])){
     $counter = 0;
     
-    $result = get_ases_report($query_fields, $conditions, $risk_fields, $academic_fields, $_POST['instance_id']);
+    $result = get_not_assign_students($query_fields, $conditions, $academic_fields, $_POST['instance_id']);
 
     
     $data = array(

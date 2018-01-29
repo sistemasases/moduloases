@@ -15,6 +15,7 @@ define(['jquery', 'block_ases/datatables.net', 'block_ases/datatables.net-button
       //Control para el botón 'Generar Reporte'
       $("#send_form_btn").on('click', function () {
         createTable();
+        createTableAssign();
       });
 
       //Controles para la tabla generada
@@ -51,6 +52,39 @@ define(['jquery', 'block_ases/datatables.net', 'block_ases/datatables.net-button
 
     }
   }
+
+  function createTableAssign() {
+
+    var dataString = $('#form_general_report').serializeArray();
+
+    dataString.push({
+      name: 'instance_id',
+      value: getIdinstancia()
+    });
+
+    $("#not_assigned_students").html('<img class="icon-loading" src="../icon/loading.gif"/>');
+    $.ajax({
+      type: "POST",
+      data: dataString,
+      url: "../managers/ases_report/load_not assigned_students.php",
+      success: function (msg) {
+          //alert(msg.data);
+          //console.log(msg.columns);
+          $("#not_assigned_students").html('');
+          $("#not_assigned_students").fadeIn(1000).append('<table id="tableAssign" class="display" cellspacing="0" width="100%"><thead> </thead></table>');
+
+
+        $("#tableAssign").DataTable(msg);
+
+        },
+
+      dataType: "json",
+      cache: "false",
+      error: function (msg) {
+        alert("Error al cargar estudiantes no asignados")
+      },
+    });
+  }  
 
   function createTable() {
 
