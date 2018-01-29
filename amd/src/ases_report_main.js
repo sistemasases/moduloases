@@ -34,7 +34,6 @@ define(['jquery', 'block_ases/datatables.net', 'block_ases/datatables.net-button
       //Controles para la tabla generada
       $(document).on('change', '#tableResult thead tr th select', function () {
         var table = $("#tableResult").DataTable();
-
         var colIndex = $(this).parent().index()+1;
         var selectedText=$(this).parent().find(":selected").text();
         table.columns( colIndex-1 ).search( this.value ).draw();
