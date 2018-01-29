@@ -1,12 +1,12 @@
 <?php 
     require_once(dirname(__FILE__). '/../../../../config.php');
 
-    function dphpforms_generate_html_recorder($id_form, $rol, $student_id, $id_monitor){
+    function dphpforms_generate_html_recorder($id_form, $rol_, $student_id, $id_monitor){
 
         global $DB;
 
         $FORM_ID = $id_form;
-        $ROL = $rol;
+        $ROL = $rol_;
 
         $html = null;
         
@@ -59,6 +59,7 @@
 
             $campo = $row->{'campo'};
             $enunciado = $row->{'enunciado'};
+            
             $atributos = json_decode($row->{'atributos_campo'});
 
             //Consulta de permisos
@@ -70,20 +71,24 @@
 
             $permisos = $result_permisos;
             $permisos_JSON = json_decode($permisos->permisos);
+            
+            foreach ($permisos_JSON as $key => $v_rol) {
 
-            foreach ($permisos_JSON as $key => $rol) {
-                if($rol->{'rol'} == $ROL){
+                
+                //$permisos_JSON = null;
+                if($v_rol->{'rol'} == $ROL){
 
                     $lectura = false;
                     $escritura = false;
 
-                    foreach ($rol->{'permisos'} as $key2 => $value) {
+                    foreach ($v_rol->{'permisos'} as $key2 => $value) {
                         if($value == "lectura"){
                             $lectura = true;
                         }
                         if($value == "escritura"){
                             $escritura = true;
                         }
+
                     }
 
                     if($lectura){
@@ -128,8 +133,8 @@
 
                         if($campo == 'DATE'){
                             $html = $html .  '<div class="div-'.$row->{'mod_id_formulario_pregunta'}.' '.$field_attr_class.'" >' . $enunciado . ':<br>';
-                            $html = $html .  ' <input id="'.$row->{'mod_id_formulario_pregunta'}.'" class="form-control" type="date" name="'.$row->{'mod_id_formulario_pregunta'}.'" '.$enabled.'><br>' . "\n";
-                            $html = $html .  '</div>';
+                            ' <input id="'.$row->{'mod_id_formulario_pregunta'}.'" class="form-control" type="date" name="'.$row->{'mod_id_formulario_pregunta'}.'" '.$enabled.'><br>' . "\n";
+                            '</div>';
                         }
                         
                         if($campo == 'DATETIME'){
@@ -150,21 +155,20 @@
                             $number_opciones = count($array_opciones);
 
                             $html = $html .  '<div class="div-'.$row->{'mod_id_formulario_pregunta'}.' '.$field_attr_class.'" >';
-                            $html = $html .  '
-                            <input type="hidden" name="'.$row->{'mod_id_formulario_pregunta'}.'" value="-#$%-">
-                            <label id="'.$row->{'mod_id_formulario_pregunta'}.'">'.$enunciado.'</label>';
+                            $html = $html .  '<input type="hidden" name="'.$row->{'mod_id_formulario_pregunta'}.'" value="-#$%-">
+                                              <label id="'.$row->{'mod_id_formulario_pregunta'}.'">'.$enunciado.'</label>';
                             $html = $html .  '<div class="opcionesRadio" style="margin-bottom:0.4em">';
-                            for($i = 0; $i < $number_opciones; $i++){
-                                $opcion = (array) $array_opciones[$i];
+                            for($x = 0; $x < $number_opciones; $x++){
+                                $opcion = (array) $array_opciones[$x];
                                 $html = $html .  '
                                     <div id="'.$row->{'mod_id_formulario_pregunta'}.'" name="'.$row->{'mod_id_formulario_pregunta'}.'" class="radio">
                                         <label><input type="radio" name="'.$row->{'mod_id_formulario_pregunta'}.'" value="'.$opcion['valor'].'" name="optradio" '.$enabled.'>'.$opcion['enunciado'].'</label>
                                     </div>
-                                </div>
                                 ' . "\n";
                             }
                             $html = $html .  '<a href="javascript:void(0);" class="limpiar btn btn-xs btn-default" >Limpiar</a>
                                 </div>
+                             </div>
                             ' . "\n";
                         }
 
@@ -176,8 +180,8 @@
                             $html = $html .  '<div class="div-'.$row->{'mod_id_formulario_pregunta'}.' '.$field_attr_class.'" >';
                             $html = $html .  '
                             <label>'.$enunciado.'</label>';
-                            for($i = 0; $i < $number_opciones; $i++){
-                                $opcion = (array) $array_opciones[$i];
+                            for($x = 0; $x < $number_opciones; $x++){
+                                $opcion = (array) $array_opciones[$x];
                                 $html = $html .  '
                                     <div class="checkbox">
                                         <input type="hidden" name="'.$row->{'mod_id_formulario_pregunta'}.'" value="-1">
@@ -199,60 +203,6 @@
         }
         $html = $html .  ' <hr style="border-color:red"><button type="submit" class="btn btn-sm btn-default">Registrar</button>' . "\n";
         $html = $html .  ' </form>' . "\n";
-
-
-        //Escritura de reglas en JAVASCRIPT (ALPHA)
-        //Reglas
-        /*
-        $scriptReglas = null;
-        $sql = '
-            SELECT 
-                * 
-            FROM 
-                reglas, 
-                reglas_formulario_preguntas
-            WHERE 
-                reglas_formulario_preguntas.id_regla = reglas.id
-            AND
-                reglas_formulario_preguntas.id_formulario = '.$FORM_ID.'
-
-        ';
-
-        $reglas = pg_query($db_connection, $sql);
-        $row_reglas = pg_fetch_row($reglas);
-        while($row_reglas){
-            $regla = $row_reglas[1];
-            $campoA = $row_reglas[5];
-            $campoB = $row_reglas[6];
-            if($regla == 'DIFFERENT'){
-                $scriptReglas = $scriptReglas . '
-                
-                    $(document).on("keyup", "#'.$campoA.'" , function() {
-                        if(($("#'.$campoA.'").val() == $("#'.$campoB.'").val())&&($("'.$campoA.'").val() != "")){
-                            $("#'.$campoA.'").addClass("danger");
-                            $("#'.$campoB.'").addClass("danger");
-                        }else{
-                            $("#'.$campoA.'").removeClass("danger");
-                            $("#'.$campoB.'").removeClass("danger");
-                        }
-                    });
-
-                    $(document).on("keyup", "#'.$campoB.'" , function() {
-                        if(($("#'.$campoB.'").val() == $("#'.$campoA.'").val())&&($("#'.$campoB.'").val() != "")){
-                            $("#'.$campoB.'").addClass("danger");
-                            $("#'.$campoA.'").addClass("danger");
-                        }else{
-                            $("#'.$campoB.'").removeClass("danger");
-                            $("#'.$campoA.'").removeClass("danger");
-                        }
-                    });
-                
-                ';
-            }
-            $row_reglas = pg_fetch_row($reglas);
-        };*/
-
-        // Fin de construcción
 
         return $html;
 

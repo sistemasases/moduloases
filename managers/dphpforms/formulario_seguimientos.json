@@ -15,7 +15,7 @@
             "atributos_campo": {
                 "type": "text",
                 "maxlength": "10",
-                "class": "form-control hasDatepicker",
+                "class": " hasDatepicker",
                 "name": "date"
             },
             "permisos_campo": [
@@ -84,7 +84,7 @@
             "opciones_campo": "",
             "atributos_campo": {
                 "type": "text",
-                "class": "form-control",
+                "class": "",
                 "name": "place"
             },
             "permisos_campo": [
@@ -152,7 +152,7 @@
             "tipo_campo": "TIME",
             "opciones_campo": "",
             "atributos_campo": {
-                "class": "form-control",
+                "class": "",
                 "name": "h_ini"
             },
             "permisos_campo": [
@@ -220,7 +220,7 @@
             "tipo_campo": "TIME",
             "opciones_campo": "",
             "atributos_campo": {
-                "class": "form-control",
+                "class": "",
                 "name": "h_fin"
             },
             "permisos_campo": [
@@ -288,7 +288,7 @@
             "tipo_campo": "TEXTAREA",
             "opciones_campo": "",
             "atributos_campo": {
-                "class": "form-control",
+                "class": "",
                 "name": "tema",
                 "maxlength": "1000"
             },
@@ -357,7 +357,7 @@
             "tipo_campo": "TEXTAREA",
             "opciones_campo": "",
             "atributos_campo": {
-                "class": "form-control",
+                "class": "",
                 "name": "objetivos",
                 "maxlength": "1000"
             },
@@ -426,7 +426,7 @@
             "tipo_campo": "TEXTAREA",
             "opciones_campo": "",
             "atributos_campo": {
-                "class": "form-control",
+                "class": "",
                 "name": "individual",
                 "maxlength": "5000"
             },
@@ -579,7 +579,7 @@
             "tipo_campo": "TEXTAREA",
             "opciones_campo": "",
             "atributos_campo": {
-                "class": "form-control",
+                "class": "",
                 "name": "familiar",
                 "maxlength": "5000"
             },
@@ -732,7 +732,7 @@
             "tipo_campo": "TEXTAREA",
             "opciones_campo": "",
             "atributos_campo": {
-                "class": "form-control small",
+                "class": " small",
                 "name": "academico",
                 "maxlength": "5000"
             },
@@ -885,7 +885,7 @@
             "tipo_campo": "TEXTAREA",
             "opciones_campo": "",
             "atributos_campo": {
-                "class": "form-control small",
+                "class": " small",
                 "name": "economico",
                 "maxlength": "5000"
             },
@@ -1038,7 +1038,7 @@
             "tipo_campo": "TEXTAREA",
             "opciones_campo": "",
             "atributos_campo": {
-                "class": "form-control small",
+                "class": " small",
                 "name": "vida_uni",
                 "maxlength": "5000"
             },
@@ -1123,7 +1123,7 @@
                 }
             ],
             "atributos_campo": {
-                "class": "form-control small",
+                "class": " small",
                 "name": "vida_uni",
                 "maxlength": "5000"
             },
@@ -1192,7 +1192,7 @@
             "tipo_campo": "TEXTAREA",
             "opciones_campo": "",
             "atributos_campo": {
-                "class": "form-control",
+                "class": "",
                 "name": "observaciones",
                 "maxlength": "5000"
             },

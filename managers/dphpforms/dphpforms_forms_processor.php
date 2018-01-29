@@ -155,16 +155,27 @@ $formulario = '{
             "id_temporal_campo_b":"cmp_12",
             "regla":"<"
         }
-    ]
-}';*/
+    ]}';*/
 
-$form = json_encode($_POST['data']);
+$form = json_decode(file_get_contents("php://input"));
+
+/*
+if(!$form){
+    echo json_encode(
+        array(
+            'id_formulario' => '-1',
+            'mensaje_error' => 'NULL'
+        )
+    );
+    die();
+}*/
 
 dphpforms_store_form($form);
 
 function dphpforms_store_form($form_JSON){
 
-    $json_obj_form = json_decode($form_JSON);
+    $json_obj_form = $form_JSON;
+    
     $form_db_id = null; 
     $form_details = array(
         'nombre' => $json_obj_form->{'datos_formulario'}->{'nombre'},
@@ -173,8 +184,10 @@ function dphpforms_store_form($form_JSON){
         'action' => $json_obj_form->{'datos_formulario'}->{'action'},
         'enctype' => $json_obj_form->{'datos_formulario'}->{'enctype'}
     );
+
     $form_db_id = dphpforms_store_form_details($form_details);
 
+    
 
     $identifiers_preguntas = array();
     foreach ($json_obj_form->{'preguntas'} as &$pregunta) {
@@ -205,6 +218,7 @@ function dphpforms_store_form($form_JSON){
             )
         );
     }
+
 
     $identifiers_reglas = array();
     if(property_exists($json_obj_form, 'reglas')){
@@ -377,10 +391,10 @@ function dphpforms_store_form_pregunta_permits($form_id_pregunta, $permits){
     $obj_permisos_formulario_pregunta->id_formulario_pregunta = $form_id_pregunta;
     $obj_permisos_formulario_pregunta->permisos = $permits;
 
-    echo ' INFO: FORM ID PREGUNTA ' . $form_id_pregunta . ' PERMISOS ' . $permits;
-    print_r($obj_permisos_formulario_pregunta);
+    //echo ' INFO: FORM ID PREGUNTA ' . $form_id_pregunta . ' PERMISOS ' . $permits;
+    //print_r($obj_permisos_formulario_pregunta);
     $identifier_permission = $DB->insert_record('talentospilos_df_per_form_pr', $obj_permisos_formulario_pregunta, $returnid=true, $bulk=false);
-    echo ' ID_PERMISO:::::: ' . $identifier_permission . ' :::::::';
+    //echo ' ID_PERMISO:::::: ' . $identifier_permission . ' :::::::';
     return $identifier_permission;
 }
 

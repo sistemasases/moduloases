@@ -234,8 +234,8 @@
                             <input type="hidden" name="'.$row->{'mod_id_formulario_pregunta'}.'"  class="'.$row->{'mod_id_formulario_pregunta'}.'" value="-#$%-" '.$enabled.'>';
                             
                             
-                            for($i = 0; $i < $number_opciones; $i++){
-                                $opcion = (array) $array_opciones[$i];
+                            for($x = 0; $x < $number_opciones; $x++){
+                                $opcion = (array) $array_opciones[$x];
                                 $checked = null;
                                 if($valor === $opcion['valor']){
                                     $checked = 'checked';
@@ -271,8 +271,8 @@
                             $html = $html .  '<div class="div-'.$row->{'mod_id_formulario_pregunta'}.' '.$field_attr_class.'" >';
                             $html = $html .  '<label>'.$enunciado.'</label>';
                             
-                            for($i = 0; $i < $number_opciones; $i++){
-                                $opcion = (array) $array_opciones[$i];
+                            for($x = 0; $x < $number_opciones; $x++){
+                                $opcion = (array) $array_opciones[$x];
                                 $html = $html .  '
                                     <div id="'.$row->{'mod_id_formulario_pregunta'}.'" name="'.$row->{'mod_id_formulario_pregunta'}.'" class="checkbox">
                                         <input type="hidden" name="'.$row->{'mod_id_formulario_pregunta'}.'" value="'.$valor_marcado.'" '.$enabled.'>

@@ -352,7 +352,6 @@
                     "disparadores": disparadores,
                     "reglas":reglas
                 };
-                console.log(formulario);
                 store_form(formulario);
                 /*$.ajax({
                     method: "POST",
@@ -369,11 +368,17 @@
                 $.ajax({
                     method: "POST",
                     url: "../managers/dphpforms/dphpforms_forms_processor.php",
-                    data: { data: form }
-                    }).done(function( msg ) {
-                        alert( "Data Saved: " + msg );
-                        console.log(msg)
-                    });
+                    contentType: "application/json",
+                    dataType: "text",
+                    data: JSON.stringify(form) ,
+                    success: function( msg ){
+                            alert( "Data Saved: " + msg );
+                            console.log(msg);
+                    },
+                    error: function( XMLHttpRequest, textStatus, errorThrown ) {
+                        alert( "some error " + textStatus + " " + errorThrown );
+                    }
+                });
             }
 
             $(".limpiar").click(function(){
