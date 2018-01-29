@@ -132,9 +132,9 @@
                         }
 
                         if($campo == 'DATE'){
-                            $html = $html .  '<div class="div-'.$row->{'mod_id_formulario_pregunta'}.' '.$field_attr_class.'" >' . $enunciado . ':<br>';
-                            ' <input id="'.$row->{'mod_id_formulario_pregunta'}.'" class="form-control" type="date" name="'.$row->{'mod_id_formulario_pregunta'}.'" '.$enabled.'><br>' . "\n";
-                            '</div>';
+                            $html = $html . '<div class="div-'.$row->{'mod_id_formulario_pregunta'}.' '.$field_attr_class.'" >' . $enunciado . ':<br>';
+                            $html = $html . ' <input id="'.$row->{'mod_id_formulario_pregunta'}.'" class="form-control" type="date" name="'.$row->{'mod_id_formulario_pregunta'}.'" '.$enabled.'><br>' . "\n";
+                            $html = $html . '</div>';
                         }
                         
                         if($campo == 'DATETIME'){
@@ -155,8 +155,11 @@
                             $number_opciones = count($array_opciones);
 
                             $html = $html .  '<div class="div-'.$row->{'mod_id_formulario_pregunta'}.' '.$field_attr_class.'" >';
-                            $html = $html .  '<input type="hidden" name="'.$row->{'mod_id_formulario_pregunta'}.'" value="-#$%-">
-                                              <label id="'.$row->{'mod_id_formulario_pregunta'}.'">'.$enunciado.'</label>';
+                            $html = $html .  '<input type="hidden" name="'.$row->{'mod_id_formulario_pregunta'}.'" value="-#$%-">';
+                            if($enunciado){
+                                $html = $html . '<label>'.$enunciado.'</label>';
+                            }
+                                              
                             $html = $html .  '<div class="opcionesRadio" style="margin-bottom:0.4em">';
                             for($x = 0; $x < $number_opciones; $x++){
                                 $opcion = (array) $array_opciones[$x];
@@ -178,8 +181,9 @@
                             $number_opciones = count($array_opciones);
 
                             $html = $html .  '<div class="div-'.$row->{'mod_id_formulario_pregunta'}.' '.$field_attr_class.'" >';
-                            $html = $html .  '
-                            <label>'.$enunciado.'</label>';
+                            if($enunciado){
+                                $html = $html . '<label>'.$enunciado.'</label>';
+                            }
                             for($x = 0; $x < $number_opciones; $x++){
                                 $opcion = (array) $array_opciones[$x];
                                 $html = $html .  '

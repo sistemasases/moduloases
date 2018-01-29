@@ -11,11 +11,10 @@
             "id_temporal": "cmp_0",
             "enunciado": "Fecha (aaaa-mm-dd)*",
             "tipo_campo": "DATE",
-            "opciones_campo": "",
+            "opciones_campo": null,
             "atributos_campo": {
-                "type": "text",
                 "maxlength": "10",
-                "class": " hasDatepicker",
+                "class": "hasDatepicker",
                 "name": "date"
             },
             "permisos_campo": [
@@ -81,9 +80,8 @@
             "id_temporal": "cmp_1",
             "enunciado": "Lugar *",
             "tipo_campo": "TEXTFIELD",
-            "opciones_campo": "",
+            "opciones_campo": null,
             "atributos_campo": {
-                "type": "text",
                 "class": "",
                 "name": "place"
             },
@@ -150,7 +148,7 @@
             "id_temporal": "cmp_2",
             "enunciado": "Hora de inicio*",
             "tipo_campo": "TIME",
-            "opciones_campo": "",
+            "opciones_campo": null,
             "atributos_campo": {
                 "class": "",
                 "name": "h_ini"
@@ -218,7 +216,7 @@
             "id_temporal": "cmp_3",
             "enunciado": "Hora de finalización*",
             "tipo_campo": "TIME",
-            "opciones_campo": "",
+            "opciones_campo": null,
             "atributos_campo": {
                 "class": "",
                 "name": "h_fin"
@@ -286,7 +284,7 @@
             "id_temporal": "cmp_4",
             "enunciado": "Tema *",
             "tipo_campo": "TEXTAREA",
-            "opciones_campo": "",
+            "opciones_campo": null,
             "atributos_campo": {
                 "class": "",
                 "name": "tema",
@@ -355,7 +353,7 @@
             "id_temporal": "cmp_5",
             "enunciado": "Objetivos *",
             "tipo_campo": "TEXTAREA",
-            "opciones_campo": "",
+            "opciones_campo": null,
             "atributos_campo": {
                 "class": "",
                 "name": "objetivos",
@@ -424,7 +422,7 @@
             "id_temporal": "cmp_6",
             "enunciado": "Individual",
             "tipo_campo": "TEXTAREA",
-            "opciones_campo": "",
+            "opciones_campo": null,
             "atributos_campo": {
                 "class": "",
                 "name": "individual",
@@ -511,7 +509,6 @@
                 }
             ],
             "atributos_campo": {
-                "type": "radio",
                 "name": "riesgo_ind"
             },
             "permisos_campo": [
@@ -577,7 +574,7 @@
             "id_temporal": "cmp_8",
             "enunciado": "Familiar",
             "tipo_campo": "TEXTAREA",
-            "opciones_campo": "",
+            "opciones_campo": null,
             "atributos_campo": {
                 "class": "",
                 "name": "familiar",
@@ -664,7 +661,6 @@
                 }
             ],
             "atributos_campo": {
-                "type": "radio",
                 "name": "riesgo_familiar"
             },
             "permisos_campo": [
@@ -730,9 +726,9 @@
             "id_temporal": "cmp_10",
             "enunciado": "Académico",
             "tipo_campo": "TEXTAREA",
-            "opciones_campo": "",
+            "opciones_campo": null,
             "atributos_campo": {
-                "class": " small",
+                "class": "small",
                 "name": "academico",
                 "maxlength": "5000"
             },
@@ -817,7 +813,6 @@
                 }
             ],
             "atributos_campo": {
-                "type": "radio",
                 "name": "riesgo_aca"
             },
             "permisos_campo": [
@@ -883,9 +878,9 @@
             "id_temporal": "cmp_12",
             "enunciado": "Económico",
             "tipo_campo": "TEXTAREA",
-            "opciones_campo": "",
+            "opciones_campo": null,
             "atributos_campo": {
-                "class": " small",
+                "class": "small",
                 "name": "economico",
                 "maxlength": "5000"
             },
@@ -970,7 +965,6 @@
                 }
             ],
             "atributos_campo": {
-                "type": "radio",
                 "name": "riesgo_econom"
             },
             "permisos_campo": [
@@ -1036,7 +1030,7 @@
             "id_temporal": "cmp_14",
             "enunciado": "Vida universitaria y ciudad",
             "tipo_campo": "TEXTAREA",
-            "opciones_campo": "",
+            "opciones_campo": null,
             "atributos_campo": {
                 "class": " small",
                 "name": "vida_uni",
@@ -1190,7 +1184,7 @@
             "id_temporal": "cmp_16",
             "enunciado": "Observaciones",
             "tipo_campo": "TEXTAREA",
-            "opciones_campo": "",
+            "opciones_campo": null,
             "atributos_campo": {
                 "class": "",
                 "name": "observaciones",
@@ -1393,9 +1387,8 @@
             "id_temporal": "cmp_19",
             "enunciado": "id_monitor",
             "tipo_campo": "TEXTFIELD",
-            "opciones_campo": "",
+            "opciones_campo": null,
             "atributos_campo": {
-                "type": "text",
                 "style": "display:none",
                 "name": "place"
             },
@@ -1458,9 +1451,8 @@
             "id_temporal": "cmp_20",
             "enunciado": "id_estudiante",
             "tipo_campo": "TEXTFIELD",
-            "opciones_campo": "",
+            "opciones_campo": null,
             "atributos_campo": {
-                "type": "text",
                 "style": "display:none",
                 "name": "place"
             },

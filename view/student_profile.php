@@ -688,7 +688,7 @@ if ($student_code != 0) {
     //Pruebas
     
     $record->form_seguimientos = null;
-    $record->form_seguimientos = dphpforms_render_recorder('104', '6', '-1', '-1');
+    $record->form_seguimientos = dphpforms_render_recorder('106', '6', '-1', '-1');
 
 } else {
     $record = new stdClass;
