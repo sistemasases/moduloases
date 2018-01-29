@@ -3,7 +3,7 @@
         "nombre": "Seguimiento de pares",
         "descripcion": "Formulario para registro y modificación de los seguimientos individuales",
         "method": "POST",
-        "action": "",
+        "action": "procesador.php",
         "enctype": null,
         "disparadores": [
             {
@@ -2720,9 +2720,21 @@
             "enunciado": "",
             "tipo_campo": "RADIOBUTTON",
             "opciones_campo": [
-                "Bajo",
-                "Medio",
-                "Alto"
+                {
+                    "enunciado": "Bajo",
+                    "valor":"1",
+                    "posicion":"1"
+                },
+                {
+                    "enunciado": "Medio",
+                    "valor":"2",
+                    "posicion":"2"
+                },
+                {
+                    "enunciado": "Alto",
+                    "valor":"3",
+                    "posicion":"3"
+                }
             ],
             "atributos_campo": {
                 "type": "radio",
@@ -2861,9 +2873,21 @@
             "enunciado": "",
             "tipo_campo": "RADIOBUTTON",
             "opciones_campo": [
-                "Bajo",
-                "Medio",
-                "Alto"
+                {
+                    "enunciado": "Bajo",
+                    "valor":"1",
+                    "posicion":"1"
+                },
+                {
+                    "enunciado": "Medio",
+                    "valor":"2",
+                    "posicion":"2"
+                },
+                {
+                    "enunciado": "Alto",
+                    "valor":"3",
+                    "posicion":"3"
+                }
             ],
             "atributos_campo": {
                 "type": "radio",
@@ -3002,9 +3026,21 @@
             "enunciado": "",
             "tipo_campo": "RADIOBUTTON",
             "opciones_campo": [
-                "Bajo",
-                "Medio",
-                "Alto"
+                {
+                    "enunciado": "Bajo",
+                    "valor":"1",
+                    "posicion":"1"
+                },
+                {
+                    "enunciado": "Medio",
+                    "valor":"2",
+                    "posicion":"2"
+                },
+                {
+                    "enunciado": "Alto",
+                    "valor":"3",
+                    "posicion":"3"
+                }
             ],
             "atributos_campo": {
                 "type": "radio",
@@ -3143,9 +3179,21 @@
             "enunciado": "",
             "tipo_campo": "RADIOBUTTON",
             "opciones_campo": [
-                "Bajo",
-                "Medio",
-                "Alto"
+                {
+                    "enunciado": "Bajo",
+                    "valor":"1",
+                    "posicion":"1"
+                },
+                {
+                    "enunciado": "Medio",
+                    "valor":"2",
+                    "posicion":"2"
+                },
+                {
+                    "enunciado": "Alto",
+                    "valor":"3",
+                    "posicion":"3"
+                }
             ],
             "atributos_campo": {
                 "type": "radio",
@@ -3284,9 +3332,21 @@
             "enunciado": "",
             "tipo_campo": "RADIOBUTTON",
             "opciones_campo": [
-                "Bajo",
-                "Medio",
-                "Alto"
+                {
+                    "enunciado": "Bajo",
+                    "valor":"1",
+                    "posicion":"1"
+                },
+                {
+                    "enunciado": "Medio",
+                    "valor":"2",
+                    "posicion":"2"
+                },
+                {
+                    "enunciado": "Alto",
+                    "valor":"3",
+                    "posicion":"3"
+                }
             ],
             "atributos_campo": {
                 "class": "form-control small",
@@ -3425,7 +3485,13 @@
             "id_temporal": "cmp_17",
             "enunciado": "R. profesional",
             "tipo_campo": "CHECKBOX",
-            "opciones_campo": "",
+            "opciones_campo": [
+                {
+                    "enunciado": "Revisado",
+                    "valor":"1",
+                    "posicion":"1"
+                }
+            ],
             "atributos_campo": {
                 "name":"profesional"
             },
@@ -3486,7 +3552,13 @@
             "id_temporal": "cmp_18",
             "enunciado": "R. practicante",
             "tipo_campo": "CHECKBOX",
-            "opciones_campo": "",
+            "opciones_campo": [
+                {
+                    "enunciado": "Revisado",
+                    "valor":"1",
+                    "posicion":"1"
+                }
+            ],
             "atributos_campo": {
                 "name":"practicante"
             },
