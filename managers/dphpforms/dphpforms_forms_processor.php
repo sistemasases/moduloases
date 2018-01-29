@@ -1,6 +1,8 @@
 <?php
 require_once(dirname(__FILE__). '/../../../../config.php');
-/*$formulario = '{
+/*
+PENDIENTE PARA MOVERSE A LA DOCUMENTACIÓN
+$formulario = '{
     "datos_formulario":{
         "nombre":"Formulario JSON",
         "descripcion":"Primer formulario escrito en JSON para pruebas de registro",

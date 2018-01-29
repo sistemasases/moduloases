@@ -324,7 +324,7 @@
                         }'));
                 });
             
-                var disparadores = "null";
+                var disparadores = JSON.parse('[]');;
                 if($('#disparadores').val()){
                     disparadores = $('#disparadores').val();
                     for(var x in identificadores) {
@@ -341,10 +341,10 @@
                         "descripcion": $('#desc-formulario').val(),
                         "method": $('#metodo-formulario').val(),
                         "action": $('#procesador-formulario').val(),
-                        "enctype": $('#enctype-formulario').val(),
-                        "disparadores": disparadores
+                        "enctype": $('#enctype-formulario').val()
                     },
                     "preguntas":preguntas,
+                    "disparadores": disparadores,
                     "reglas":reglas
                 };
                 console.log(formulario);
