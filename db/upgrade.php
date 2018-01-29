@@ -4,7 +4,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     global $DB;
     $dbman = $DB->get_manager();
     $result = true;
-    if ($oldversion < 2018012911099) {
+    if ($oldversion < 2018012918099) {
     // ************************************************************************************************************
     // Actualización que crea la tabla para los campos extendidos de usuario (Tabla: {talentospilos_user_extended})
     // Versión: 2018010911179
@@ -789,8 +789,36 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     // Launch add key fk_program.
     $dbman->add_key($table, $key);
 
+
+    // ************************************************************************************************************
+    // Actualización:
+    // Se crea la tabla {talentospilos_materias_criti}
+    // Versión en la que se incluye: 2018012917589
+    // ************************************************************************************************************
+
+      // Define table talentospilos_materias_criti to be created.
+    	$table = new xmldb_table('talentospilos_materias_criti');
+
+    	// Adding fields to table talentospilos_materias_criti.
+    	$table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+    	$table->add_field('codigo_materia', XMLDB_TYPE_CHAR, '10', null, XMLDB_NOTNULL, null, null);
+
+    	// Adding keys to table talentospilos_materias_criti.
+    	$table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+    	$table->add_key('unique_key', XMLDB_KEY_UNIQUE, array('codigo_materia'));
+
+    	// Conditionally launch create table for talentospilos_materias_criti.
+    	if (!$dbman->table_exists($table)) {
+        	$dbman->create_table($table);
+    	}
+
+
+
+
+
+
     // Ases savepoint reached.
-    upgrade_block_savepoint(true, 2018012911099, 'ases');
+    upgrade_block_savepoint(true, 2018012918099, 'ases');
    
     return $result;
 
