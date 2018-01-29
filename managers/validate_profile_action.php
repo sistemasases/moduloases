@@ -3,7 +3,7 @@ require_once (dirname(__FILE__) . '/../../../config.php');
 
 require_once ('permissions_management/permissions_lib.php');
 
-//require_once ('../managers/user_management/user_functions.php');
+require_once ('../managers/periods_management/periods_lib.php');
 
 global $USER;
 /*
@@ -112,7 +112,9 @@ function get_name_role($idrol)
 function get_id_rol($userid, $blockid)
 {
     global $DB;
-    $sql_query = "SELECT id_rol FROM {talentospilos_user_rol} WHERE id_usuario='$userid' AND id_instancia='$blockid'";
+
+    $current_semester = get_current_semester();
+    $sql_query = "SELECT id_rol FROM {talentospilos_user_rol} WHERE id_usuario='$userid' AND id_instancia='$blockid' AND id_semestre='$current_semester->max'";
     $consulta = $DB->get_records_sql($sql_query);
     foreach($consulta as $tomarId) {
         $idretornar = $tomarId->id_rol;
