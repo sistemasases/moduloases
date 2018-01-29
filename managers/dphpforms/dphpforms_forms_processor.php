@@ -171,8 +171,7 @@ function dphpforms_store_form($form_JSON){
         'descripcion' => $json_obj_form->{'datos_formulario'}->{'descripcion'},
         'method' => $json_obj_form->{'datos_formulario'}->{'method'},
         'action' => $json_obj_form->{'datos_formulario'}->{'action'},
-        'enctype' => $json_obj_form->{'datos_formulario'}->{'enctype'},
-        'disparadores' => $json_obj_form->{'datos_formulario'}->{'disparadores'}
+        'enctype' => $json_obj_form->{'datos_formulario'}->{'enctype'}
     );
     $form_db_id = dphpforms_store_form_details($form_details);
 
@@ -232,7 +231,7 @@ function dphpforms_store_form($form_JSON){
         }
     }
 
-    $identifiers_disparadores = dphpforms_store_form_disparadores($form_db_id, $form_details['disparadores'], $identifiers_form_preguntas);
+    $identifiers_disparadores = dphpforms_store_form_disparadores($form_db_id, $json_obj_form->{'disparadores'}, $identifiers_form_preguntas);
     if(!$identifiers_disparadores){
         echo json_encode(
             array(
