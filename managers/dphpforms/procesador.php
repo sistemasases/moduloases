@@ -116,11 +116,11 @@
 
 ';*/
 if($RECORD_ID){
-    //echo 'SE VA A ACTUALIZAR';
+    echo 'SE VA A ACTUALIZAR';
     //echo json_encode($form_JSON);
     dphpforms_update_respuesta($form_JSON, $RECORD_ID);
 }else{
-    //echo 'REGISTRO NUEVO';
+    echo 'REGISTRO NUEVO';
     dphpforms_new_store_respuesta($form_JSON);
 }
 
@@ -432,7 +432,7 @@ function dphpforms_get_form_reglas($form_id){
 
     $sql = "
     
-        SELECT * FROM {talentospilos_df_reg_form_pr} RFP INNER JOIN {talentospilos_df_reglas} R ON RFP.id_regla = R.id WHERE RFP.id_formulario = '" . $form_id . "'
+        SELECT RFP.id, RFP.id_form_pregunta_a, RFP.id_form_pregunta_b, R.regla FROM {talentospilos_df_reg_form_pr} RFP INNER JOIN {talentospilos_df_reglas} R ON RFP.id_regla = R.id WHERE RFP.id_formulario = '" . $form_id . "'
     
     ";
     $result = $DB->get_records_sql($sql);
@@ -483,9 +483,9 @@ function dphpforms_reglas_validator($respuestas, $reglas){
 
             if($respuesta_a->{'valor'} == $respuesta_b->{'valor'}){
                 $satisfied_reglas = false;
-                //echo "REGLA " . $regla . " NO CUMPLIDA\n";
-                //print_r($respuesta_a);
-                //print_r($respuesta_b);
+                /*echo "REGLA " . $regla . " NO CUMPLIDA\n";
+                print_r($respuesta_a);
+                print_r($respuesta_b);*/
                 break;
             }else{
                 $satisfied_reglas = true;
@@ -495,9 +495,9 @@ function dphpforms_reglas_validator($respuestas, $reglas){
 
             if($respuesta_a->{'valor'} != $respuesta_b->{'valor'}){
                 $satisfied_reglas = false;
-                //echo "REGLA " . $regla . " NO CUMPLIDA\n";
-                //print_r($respuesta_a);
-                //print_r($respuesta_b);
+                /*echo "REGLA " . $regla . " NO CUMPLIDA\n";
+                print_r($respuesta_a);
+                print_r($respuesta_b);*/
                 break;
             }else{
                 $satisfied_reglas = true;
@@ -507,9 +507,9 @@ function dphpforms_reglas_validator($respuestas, $reglas){
             
             if($respuesta_a->{'valor'} < $respuesta_b->{'valor'}){
                 $satisfied_reglas = false;
-                //echo "REGLA " . $regla . " NO CUMPLIDA\n";
-                //print_r($respuesta_a);
-                //print_r($respuesta_b);
+                /*echo "REGLA " . $regla . " NO CUMPLIDA\n";
+                print_r($respuesta_a);
+                print_r($respuesta_b);*/
                 break;
             }else{
                 $satisfied_reglas = true;
@@ -519,9 +519,9 @@ function dphpforms_reglas_validator($respuestas, $reglas){
             
             if($respuesta_a->{'valor'} > $respuesta_b->{'valor'}){
                 $satisfied_reglas = false;
-                //echo "REGLA " . $regla . " NO CUMPLIDA\n";
-                //print_r($respuesta_a);
-                //print_r($respuesta_b);
+                /*echo "REGLA " . $regla . " NO CUMPLIDA\n";
+                print_r($respuesta_a);
+                print_r($respuesta_b);*/
                 break;
             }else{
                 $satisfied_reglas = true;

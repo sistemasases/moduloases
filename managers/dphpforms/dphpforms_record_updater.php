@@ -76,9 +76,9 @@
         $html = $html .  '<input name="id" value="'.$row->{'mod_id_formulario'}.'" style="display:none;">';
         $html = $html .  '<input name="id_monitor" value="" style="display:none;">';//Pendientes para eliminación
         $html = $html .  '<input name="id_estudiante" value="" style="display:none;">';//Pendientes para eliminación
-
+        //Dispara la actualización
         $html = $html .  '<input name="id_registro" value="'.$RECORD_ID.'" style="display:none;">';
-
+        //Fin del disparador de actualización
 
         $sql_respuestas = '
         
@@ -139,7 +139,6 @@
                 
                 if($id_campo_DB == $id_campo_DB_form){
                     $valor = $value['respuesta'];
-                    
                     $tmpPregunta = array(
                         'idP' => $id_campo_DB,
                         'valor' => $value['respuesta'],
@@ -434,8 +433,8 @@
                     }
     
                     $behavioral_condition_satisfied  = $condition->{'comportamiento_condicion_cumplida'};
-                    $behavioral_condition_not_satisfied  = $condition->{'comportamiento_condicion_no_cumplida'};
-                    if($flag_satisfy){
+                    //$behavioral_condition_not_satisfied  = $condition->{'comportamiento_condicion_no_cumplida'};
+                    /*if($flag_satisfy){
                         foreach ($behavioral_condition_satisfied  as $keyCCC => $behaviors) {
                             $permissions_script = $permissions_script . dphpforms_generate_permits_scripts($behaviors, $ROL);
                         }
@@ -443,7 +442,7 @@
                         foreach ($behavioral_condition_not_satisfied  as $keyCCNC => $comportamiento) {
                             $permissions_script = $permissions_script . dphpforms_generate_permits_scripts($behaviors, $ROL);
                         }
-                    }
+                    }*/
                 }
             }
         };

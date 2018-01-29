@@ -74,8 +74,7 @@
             
             foreach ($permisos_JSON as $key => $v_rol) {
 
-                
-                //$permisos_JSON = null;
+            
                 if($v_rol->{'rol'} == $ROL){
 
                     $lectura = false;
