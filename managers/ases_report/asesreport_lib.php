@@ -3,6 +3,7 @@ require_once(dirname(__FILE__).'/../../../../config.php');
 require_once(dirname(__FILE__).'/../instance_management/instance_lib.php');
 require_once(dirname(__FILE__).'/../lib/lib.php');
 require_once(dirname(__FILE__).'/../lib/student_lib.php');
+require_once(dirname(__FILE__).'/../lib/user_lib.php');
 /**
  * Función que recupera riesgos 
  *
@@ -263,8 +264,6 @@ function get_ases_report($general_fields=null, $conditions, $risk_fields=null, $
         }
     }
 
-    //print_r($academic_fields);
-
     if($academic_fields){
         foreach($academic_fields as $field){
             $select_clause .= $field.', ';
@@ -314,13 +313,34 @@ function get_ases_report($general_fields=null, $conditions, $risk_fields=null, $
     if(property_exists($actions, 'search_all_students_ar')){
         
         $sql_query = $select_clause.$from_clause.$sub_query_cohort.$sub_query_status.$sub_query_academic;
-        //print_r($sql_query);
         $result_query = $DB->get_records_sql($sql_query);
-
-        //print_r($result_query);        
 
     }else if(property_exists($actions, 'search_assigned_students_ar')){
 
+        $user_id = $USER->id;
+
+        $sql_query = "SELECT role.nombre_rol FROM {talentospilos_user_rol} AS user_role 
+                                                INNER JOIN {talentospilos_rol} AS roles ON user_role.id_rol = roles.id";
+
+        $user_role = $DB->get_record_sql($sql_query);
+
+        print_r($user_role);
+
+        switch($user_role){
+            case 'director_prog':
+
+                $
+                
+                break;
+            case 'profesional_ps':
+
+                break;
+            case 'practicante_ps':
+                break;
+            case 'monitor_ps':
+                break;
+        }
+            
     }else{
         return 'El usuario no tiene permisos para listar estudiantes en el reporte ASES';
     }

@@ -708,3 +708,24 @@ function assign_professional_user($id_user, $professional)
     
     return $insert_record;
 }
+
+/**
+ * Función que retorna los estudiantes relacionados a un programa académico
+ * @see get_students_by_program($id_academic_program)
+ * @param $id_academic_program    ---> Identificador del programa académico
+ * @return stdClass
+ */
+
+function get_students_by_program($id_academic_program){
+
+    global $DB;
+
+    $sql_query = 'SELECT * FROM {talentospilos_user_extended} AS extended_user
+                            INNER JOIN {talentospilos_usuario} AS ases_user ON ases_user.id = extended_user.id_ases_user
+                  WHERE extended_user.id_academic_program = $id_academic_program';
+
+    $result_query = $DB->get_records_sql($sql_query);
+
+    return $result_query;
+
+}
