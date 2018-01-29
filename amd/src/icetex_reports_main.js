@@ -14,7 +14,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_as
 			
 			
 			$("#list-resolution-students-panel").on('click', function(){
-				load_report_resolution();
+				load_report_students_resolution();
 				/*				
 				setTimeout(function(){
 					var table = $("#tableResStudents").DataTable();
@@ -27,25 +27,33 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_as
 			});
 
 			$("#list-resolutions-panel").on('click', function(){
-				load_resolution_report();				
+				load_resolutions();				
 			});
 
-			//Controles para la tabla generada
+			//Controles para la tabla de los estudianes con resolución
 			$(document).on('change', '#tableResStudents thead tr th select', function () {
 				var table = $("#tableResStudents").DataTable();
 		
 				var colIndex = $(this).parent().index()+1;
 				var selectedText=$(this).parent().find(":selected").text();
-				table.columns( colIndex-1 ).search( this.value ).draw();
+				table.columns( colIndex-1 ).search( this.value ).draw();		
+			});
+
+			//Controles para la tabla de resoluciones
+			$(document).on('change', '#tableResolutions thead tr th select', function () {
+				var table = $("#tableResolutions").DataTable();
 		
-		});
+				var colIndex = $(this).parent().index()+1;
+				var selectedText=$(this).parent().find(":selected").text();
+				table.columns( colIndex-1 ).search( this.value ).draw();		
+			});
 
 	/**
-	 * @method loadReportResolution
+	 * @method load_report_students_resolution
 	 * @desc Loads the report of a student with resolution on a table. Current processing on icetex_reports_processing.php
 	 * @return {void}
 	 */
-	function load_report_resolution(){
+	function load_report_students_resolution(){
 		$.ajax({
 			type: "POST",
 			data: {loadR: 'loadReport'},
@@ -64,7 +72,12 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_as
 		});
 	}
 
-	function load_resolution_report(){
+	/**
+	 * @method load_resolutions
+	 * @desc Loads the report of all resolutions on a table. Current processing on resolution_reports_processing.php
+	 * @return {void}
+	 */
+	function load_resolutions(){
 		$.ajax({
 			type: "POST",
 			data: {resR: 'resReport'},

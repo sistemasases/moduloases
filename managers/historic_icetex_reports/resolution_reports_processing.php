@@ -29,14 +29,15 @@
 
 	if(isset($_POST['resR']) && $_POST['resR'] == 'resReport'){		
 		$columns = array();
-		array_push($columns, array("title"=>"Código resolución", "name"=>"codigo_resolucion", "data"=>"codigo_resolucion"));
+		$resolution_options = get_all_resolutions_codes();
+		array_push($columns, array("title"=>"Código resolución".$resolution_options, "name"=>"codigo_resolucion", "data"=>"codigo_resolucion"));
 		array_push($columns, array("title"=>"Semestre", "name"=>"nombre", "data"=>"nombre"));
 		array_push($columns, array("title"=>"Total", "name"=>"monto_total", "data"=>"monto_total"));
 
 		$data = array(
 					"bsort" => false,
 					"columns" => $columns,
-					"data" => get_array_students_with_resolution(),
+					"data" => get_resolutions_for_report(),
 					"language" => 
                 	 array(
                     	"search"=> "Buscar:",
