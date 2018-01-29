@@ -48,8 +48,8 @@ require_once dirname(__FILE__) .'/../periods_management/periods_lib.php';
 
     $columns = array();
     array_push($columns, array("title"=>"Fecha", "name"=>"fecha", "data"=>"fecha"));
-    array_push($columns, array("title"=>"Número horas", "name"=>"descripcion", "data"=>"total"));
-
+    array_push($columns, array("title"=>"Número horas", "name"=>"hours", "data"=>"hours"));
+    array_push($columns, array("title"=>"Número minutos", "name"=>"minutes", "data"=>"total_minutes"));
 
         $data = array(
                 "bsort" => false,

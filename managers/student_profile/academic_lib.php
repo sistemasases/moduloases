@@ -80,7 +80,7 @@ function make_html_courses($courses)
         $html .= "<div class='panel panel-default'>
                     <div class='panel-heading' id = 'academic'>
                         <h4 class='panel-title'>
-                        <a data-toggle='collapse' data-parent='#accordion_academic' href='#course_$course->id_course' aria-expanded='false' aria-controls='$course->id_course'>
+                        <a id = 'academic_link' data-toggle='collapse' data-parent='#accordion_academic' href='#course_$course->id_course' aria-expanded='false' aria-controls='$course->id_course'>
                             $course->fullname
                         </a>
                         </h4>
@@ -262,7 +262,7 @@ function get_historical_semesters_by_student($id_student)
         if (!$cancelacion) {
             $semester->cancelacion = false;
         } else {
-            $semester->cancelacion = date("d / M / Y",$cancelacion->fecha_cancelacion);
+            $semester->cancelacion = date("d / M / Y", $cancelacion->fecha_cancelacion);
         }
 
         //validate register
@@ -274,6 +274,7 @@ function get_historical_semesters_by_student($id_student)
 
     }
 
+    krsort($semester_info);
     return $semester_info;
 
 }
@@ -293,7 +294,7 @@ function make_html_semesters($semesters)
     foreach ($semesters as $semester_name => $semester) {
         foreach ($semester as $registro) {
             $descriptions = "";
-            $descriptions .= "<div id = 'panel_academic' class = 'panel panel-default'><div class = 'row'>
+            $descriptions .= "<div id = 'panel_academic' class = 'panel panel-default'><div id = 'info_course' class = 'row'>
                                 <div class = 'col-md-4'>Programa: <b>$registro->program_name</b></div>
                                 <div class = 'col-md-4'>Promedio Semestre: $registro->promedio_semestre</div>
                                 <div class = 'col-md-4'>Promedio Acumulado: $registro->promedio_acumulado</div>
@@ -302,19 +303,19 @@ function make_html_semesters($semesters)
             $div_estimulo = "";
             $div_cancelacion = "";
 
-            if($registro->bajo != false){
-                $div_bajo .= "<div class = 'col-md-8'>Cae en bajo rendimiento número $registro->bajo.</div>";
+            if ($registro->bajo != false) {
+                $div_bajo .= "<div id = 'bajo' class = 'col-md-8 bajo'>Cae en bajo rendimiento número $registro->bajo.</div>";
             }
 
-            if($registro->estimulo != false){
-                $div_bajo .= "<div class = 'col-md-8'>Gana estimulo ocupando el puesto $registro->estimulo.</div>";            
-            }                 
-
-            if($registro->cancelacion != false){
-                $div_bajo .= "<div class = 'col-md-8'>Cancela semestre. Fecha de cancelación: $registro->cancelacion.</div>";            
+            if ($registro->estimulo != false) {
+                $div_bajo .= "<div id = 'estimulo' class = 'col-md-8 estimulo'>Gana estimulo ocupando el puesto $registro->estimulo.</div>";
             }
 
-            $descriptions .= "<div class = 'row'> 
+            if ($registro->cancelacion != false) {
+                $div_bajo .= "<div id = 'cancelacion' class = 'col-md-8 cancelacion'>Cancela semestre. Fecha de cancelación: $registro->cancelacion.</div>";
+            }
+
+            $descriptions .= "<div class = 'row'>
                                 $div_bajo
                                 $div_cancelacion
                                 $div_estimulo
@@ -322,43 +323,62 @@ function make_html_semesters($semesters)
 
             $materias = json_decode($registro->json_materias);
 
-            $descriptions .= "<div class = 'row'> <b>
-                                <div class = 'col-md-3'>
-                                   MATERIA
-                                </div>
-                             <div class = 'col-md-2'>
-                                    CÓDIGO
-                             </div>
-                               <div class = 'col-md-2'>
-                                    NOTA
-                               </div>
-                               <div class = 'col-md-2'>
-                                    CREDITOS
-                               </div>  </b>  
-                            </div>";
+            if ($materias === null) {
+                $descriptions .= "NO REGISTRA MATERIAS EN ESTE SEMESTRE";
+            } else {
+                $descriptions .= "<div class = 'row'> <b>
+                <div class = 'col-md-3'>
+                   MATERIA
+                </div>
+             <div class = 'col-md-2'>
+                    CÓDIGO
+             </div>
+               <div class = 'col-md-2'>
+                    NOTA
+               </div>
+               <div class = 'col-md-2'>
+                    CREDITOS
+               </div>
+               <div class = 'col-md-2'>
+                    CANCELA
+               </div>  </b>
+            </div>";
 
-            foreach ($materias as $materia) {
-                $descriptions .= "<div class = 'row'> 
-                                    <div class = 'col-md-3'>
-                                        $materia->nombre_materia
-                                    </div>
-                                    <div class = 'col-md-2'>
-                                         $materia->codigo_materia
-                                    </div>
-                                    <div class = 'col-md-2'>
-                                         $materia->nota
-                                    </div>
-                                    <div class = 'col-md-2'>
-                                         $materia->creditos
-                                    </div>    
-                                 </div>";
+                foreach ($materias as $materia) {
+
+                    $cancelacion = '';
+
+                    if ($materia->fecha_cancelacion_materia != '') {
+                        $cancelacion = date('d / M / Y', $materia->fecha_cancelacion_materia);
+                    }
+
+                    $descriptions .= "<div class = 'row'>
+                    <div class = 'col-md-3'>
+                        $materia->nombre_materia
+                    </div>
+                    <div class = 'col-md-2'>
+                         $materia->codigo_materia
+                    </div>
+                    <div class = 'col-md-2'>
+                         $materia->nota
+                    </div>
+                    <div class = 'col-md-2'>
+                         $materia->creditos
+                    </div>
+                    <div class = 'col-md-2'>
+                         $cancelacion
+                    </div>
+                 </div>";
+                }
+
             }
+
             $descriptions .= "</div>";
 
             $html .= "  <div class='panel panel-default'>
-                      <div class='panel-heading' id = 'academic_historic'>
+                      <div class='panel-heading' id = 'academic'>
                           <h4 class='panel-title'>
-                          <a data-toggle='collapse' data-parent='#accordion_academic_historic' href='#register_$semester_name' aria-expanded='false' aria-controls='$semester_name'>
+                          <a id = 'academic_link' data-toggle='collapse' data-parent='#accordion_academic_historic' href='#register_$semester_name' aria-expanded='false' aria-controls='$semester_name'>
                               Semestre $semester_name
                           </a>
                           </h4>
@@ -373,4 +393,88 @@ function make_html_semesters($semesters)
     }
 
     return $html;
+}
+
+/**
+ * Get the weigthed average from one student
+ * @see get_promedio_ponderado($id_estudiante, $id_programa)
+ * @param $id_estudiante --> id from {talentospilos_usuario}
+ * @param $id_programa --> id from {talentospilos_programa}
+ * @return float --> weigthed average
+ */
+
+function get_promedio_ponderado($id_estudiante, $id_programa)
+{
+
+    global $DB;
+
+    $query = "SELECT MAX(id_semestre), promedio_acumulado as prom
+              FROM {talentospilos_history_academ}
+              WHERE id_estudiante = $id_estudiante AND id_programa = $id_programa
+              GROUP BY prom";
+    $result = $DB->get_record_sql($query);
+
+    if (!$result) {
+        $promedio = "NO REGISTRA";
+    } else {
+        $promedio = $result->prom;
+    }
+
+    return $promedio;
+
+}
+
+/**
+ * Get the number of academic incentives that one student win in a program
+ * @see get_estimulos($id_estudiante, $id_programa)
+ * @param $id_estudiante, $id_programa --> id from {talentospilos_usuario}
+ * @param $id_programa --> id from {talentospilos_programa}
+ * @return int --> number of academic incentives
+ */
+
+function get_estimulos($id_estudiante, $id_programa)
+{
+    global $DB;
+
+    $query = "SELECT COUNT(estim.id) as estimulos
+              FROM {talentospilos_history_academ} academ INNER JOIN {talentospilos_history_estim} estim ON academ.id = estim.id_history
+              WHERE academ.id_estudiante = $id_estudiante AND academ.id_programa = $id_programa";
+
+    $result = $DB->get_record_sql($query);
+
+    if (!$result) {
+        $estimulos = 0;
+    } else {
+        $estimulos = $result->estimulos;
+    }
+
+    return $estimulos;
+}
+
+/**
+ * Get the number of poor academic performance from a student in a program
+ * @see get_bajos_rendimientos($id_estudiante, $id_programa)
+ * @param $id_estudiante --> id from {talentospilos_usuario}
+ * @param $id_programa --> id from {talentospilos_programa}
+ * @return int --> number
+ */
+
+function get_bajos_rendimientos($id_estudiante, $id_programa)
+{
+
+    global $DB;
+
+    $query = "SELECT COUNT(bajo.id) as bajos
+    FROM {talentospilos_history_academ} academ INNER JOIN {talentospilos_history_bajos} bajo ON academ.id = bajo.id_history
+    WHERE academ.id_estudiante = $id_estudiante AND academ.id_programa = $id_programa";
+
+    $result = $DB->get_record_sql($query);
+
+    if (!$result) {
+        $bajos = 0;
+    } else {
+        $bajos = $result->bajos;
+    }
+
+    return $bajos;
 }

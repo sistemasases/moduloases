@@ -42,6 +42,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_as
                 });
             });
 
+
             //*Perform date format validation.
             function validateFields(beginningDate, endingDate) {
 
@@ -67,9 +68,29 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_as
             }
 
 
+            function SumarColumna(grilla, columna) {
+
+                var resultVal = 0.0;
+                $("#" + grilla + " tbody tr").not(':first').each(
+                    function() {
+
+                        var celdaValor = $(this).find('td:eq(' + columna + ')');
+
+                        if (celdaValor.val() != null)
+                            resultVal += parseFloat(celdaValor.html().replace(',', '.'));
+
+                    } //function
+
+                ) //each
+                $("#" + grilla + " tfoot tr").find('td:eq(' + columna + ')').html(resultVal.toFixed(2).toString().replace('.', ','));
+
+            }
+
+
+
 
             //*Create the hour report table
-            function load_hours_report(init=0, fin=0) {
+            function load_hours_report(init = 0, fin = 0) {
                 $.ajax({
                     type: "POST",
                     url: "../managers/tracking_time_control/load_hours_report.php",
@@ -85,8 +106,11 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_as
                             $("#div_hours").append('<h2>No existen registros de seguimientos en el dia de hoy</h2>');
                         } else {
                             $("#div_hours").empty();
-                            $("#div_hours").append('<table id="tableHours"  class="display" cellspacing="0" width="100%" ><thead><thead></table>');
+                            $("#div_hours").append('<table id="tableHours"  class="display" cellspacing="0" width="100%" ><thead><thead><tfoot id="hours_foot"></tfoot></table>');
                             var table = $("#tableHours").DataTable(msg);
+                            $("#hours_foot").append(' <tr><td><strong>Total : </strong></td><td id="total_hour"></td><td></td></tr>');
+                            SumarColumna('tableHours', 1);
+                            SumarColumna('tableHours', 2);
                             $('#div_hours #show_details').css('cursor', 'pointer');
                         }
                     },
