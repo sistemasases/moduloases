@@ -69,6 +69,11 @@
             $('#generarFormulario').click(function(){
                 generadorFormJSON();
             });
+
+            $('#json-store-form').click(function(){
+                var json = JSON.parse($('#opt1-textarea-json').val());
+                store_form(json);
+            });
             
             $('#titulo-formulario').on('keyup',function(){
                 $('#form-preview > h2').text($('#titulo-formulario').val());
@@ -348,16 +353,28 @@
                     "reglas":reglas
                 };
                 console.log(formulario);
-                
-                $.ajax({
+                store_form(formulario);
+                /*$.ajax({
                     method: "POST",
                     url: "../managers/dphpforms/dphpforms_forms_processor.php",
                     data: { data: formulario }
                     }).done(function( msg ) {
                         alert( "Data Saved: " + msg );
                         console.log(msg)
-                    });
+                    });*/
             };
+
+            function store_form(form){
+                console.log(form);
+                $.ajax({
+                    method: "POST",
+                    url: "../managers/dphpforms/dphpforms_forms_processor.php",
+                    data: { data: form }
+                    }).done(function( msg ) {
+                        alert( "Data Saved: " + msg );
+                        console.log(msg)
+                    });
+            }
 
             $(".limpiar").click(function(){
                 $(this).parent().find("div").each(function(){

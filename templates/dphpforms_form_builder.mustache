@@ -1,8 +1,28 @@
 <body>
 
     <div class="container">
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 form-group">
+                <h2>Diseñador de formularios</h2>
+                <hr>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 form-group">
+                <span>Opción #1: </span>
+                <label>Crear formulario desde un JSON</label>
+                <textarea id="opt1-textarea-json" class="form-control"></textarea>
+                <hr>
+                <div class="form-group">
+                    <button id="json-store-form" class="btn btn-sm btn-danger btn-dphpforms-builder">Registrar formulario desde JSON</button>
+                </div>
+            </div>
+        </div>
+        <hr>
         <div class ="row">
             <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                <span>Opción #2: </span>
+                <label>Construir</label>
                 <div class="form-group">
                     <div class="form-group">
                         <label for="titulo-formulario">Título del formulario: </label>
@@ -81,14 +101,14 @@
                             <pre id="JSON-condiciones">
                                 
                             </pre>
-                            <textarea id="disparadores" name="" id="" cols="" rows="10" class="form-control"></textarea>
+                            <textarea id="disparadores" name="" id="" rows="10" class="form-control"></textarea>
                             <hr>
                         </div>
                     </div>
                 </div><br>
                 <hr>
                 <div class="form-group">
-                    <button id="generarFormulario" class="btn btn-sm btn-default">Generar formulario en JSON</button>
+                    <button id="generarFormulario" class="btn btn-sm btn-danger btn-dphpforms-builder">Registrar formulario</button>
                 </div>
                 
             </div>

@@ -46,3 +46,6 @@ li:hover{
 pre, code {
     white-space: pre-line;
 }
+.btn-dphpforms-builder{
+    font-weight: bold;
+}
