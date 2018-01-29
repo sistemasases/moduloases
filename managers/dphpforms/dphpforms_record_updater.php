@@ -293,65 +293,9 @@
             }
 
         }
-        $html = $html .  ' <hr style="border-color:red"><button type="submit" class="btn btn-sm btn-default">Registrar</button>' . "\n";
+        $html = $html .  ' <hr style="border-color:red"><button type="submit" class="btn btn-sm btn-danger btn-dphpforms-univalle">Registrar</button>' . "\n";
         $html = $html .  ' </form>' . "\n";
 
-
-        
-
-        //Escritura de reglas en JAVASCRIPT
-        //Reglas
-
-        /*
-        $script_reglas = null;
-        $sql = '
-            SELECT 
-                * 
-            FROM 
-                reglas, 
-                reglas_formulario_preguntas
-            WHERE 
-                reglas_formulario_preguntas.id_regla = reglas.id
-            AND
-                reglas_formulario_preguntas.id_formulario = '.$FORM_ID.'
-
-        ';
-
-        $reglas = pg_query($db_connection, $sql);
-        $row_reglas = pg_fetch_row($reglas);
-        while($row_reglas){
-            $regla = $row_reglas[1];
-            $campoA = $row_reglas[5];
-            $campoB = $row_reglas[6];
-            if($regla == 'DIFFERENT'){
-                $script_reglas = $script_reglas . '
-                
-                    $(document).on("keyup", "#'.$campoA.'" , function() {
-                        if(($("#'.$campoA.'").val() == $("#'.$campoB.'").val())&&($("'.$campoA.'").val() != "")){
-                            $("#'.$campoA.'").addClass("danger");
-                            $("#'.$campoB.'").addClass("danger");
-                        }else{
-                            $("#'.$campoA.'").removeClass("danger");
-                            $("#'.$campoB.'").removeClass("danger");
-                        }
-                    });
-
-                    $(document).on("keyup", "#'.$campoB.'" , function() {
-                        if(($("#'.$campoB.'").val() == $("#'.$campoA.'").val())&&($("#'.$campoB.'").val() != "")){
-                            $("#'.$campoB.'").addClass("danger");
-                            $("#'.$campoA.'").addClass("danger");
-                        }else{
-                            $("#'.$campoB.'").removeClass("danger");
-                            $("#'.$campoA.'").removeClass("danger");
-                        }
-                    });
-                
-                ';
-            }
-            $row_reglas = pg_fetch_row($reglas);
-        };*/
-
-    
         function dphpforms_generate_permits_scripts($behaviors, $ROL){
             
             $script = null;
