@@ -1,153 +1,170 @@
 <body>
 
-  {{#data}}
-  {{> block_ases/side_menu}}
+  {{#data}} {{> block_ases/side_menu}} {{{message}}}
   <div class="container">
-      <form  id="ficha_estudiante" onsubmit="myFunction(); return false;">
-        
-        <input type= "text" class="hide" id="id_ases" name="id_ases" value="{{id_ases}}" />
-        <input type= "text" class="hide" id="id_moodle" name="id_moodle" value="{{id_moodle}}" />
-        
-          <div class="row m-bottom-20 cabecera">
-              <div class="col-md-4">
-                
-                  <h2>FICHA GENERAL DEL ESTUDIANTE</h2>
-                  
-                  <div class="row">
-                      <label class="col-sm-4 col-md-4 control-label">Código</label>
-                      <div class="col-sm-4">
-                        {{{code}}}
-                      </div>
-                      {{#search_student_sp}}
-                      <div class="col-sm-4">
-                        <button type="button" class="btn-primary btn-sm" name="search" id="search">
-                            <span class=" button glyphicon glyphicon-search"></span> Buscar
-                        </button>
-                      </div>
-                      {{/search_student_sp}}
-                  </div>
-                  {{#update_icetex_status_sp}}
-                  <div class="row">
-                      <label for="estado"  class="col-sm-4 col-md-4 control-label">Estado Icetex</label>
-                      <div class="col-sm-6">
-                        <select name="estado" id="estado" class="col-md-5 form-control" disabled>
-                          {{{status_icetex}}}
-                        </select>
-                      </div>
-                  </div>
-                  {{/update_icetex_status_sp}}
-                  {{#update_ases_status_sp}}
-                  <div class="row">
-                      <label for="estadoAses" class="col-md-4 control-label">Estado Ases</label>
-                      <div class="col-sm-6">
-                        <select name="estado_ases" id="estadoAses" class="col-md-5 form-control" disabled>
-                            {{{status_ases}}}
-                        </select>
-                      </div>
-                  </div>
-                  {{/update_ases_status_sp}}
-                  <div class="row">
-                      <label for="input_facultad" class="col-sm-4 control-label">Facultad</label>
-                      <div class="col-sm-6">
-                        <span id="input_facultad">{{faculty}}</span>
-                      </div>
-                  </div>
-                  
-                  <div class="row">
-                      <label for="input_programa" class="col-sm-4 control-label">Programa</label>
-                      <div class="col-sm-6">
-                        <span id="input_programa">{{program}}</span>
-                      </div>
-                  </div>
-              </div><!-- End col-md-4 -->
-  
-              <div class="col-md-6">
-                
-                  <div class="row m-bottom-20">
-                      <label class="col-md-12 nombre-ficha" id = "nombreficha">{{firstname}} {{lastname}}</label>
-                  </div>
-                  
-                  <div class="row">
-                      <label for="cedula" class="col-sm-2 control-label">Documento</label>
-                      <div class="col-sm-6">
-                        <input type="text" class="form-control" name="num_doc" id="cedula" value="{{num_doc}}" size="12" maxlength = "11" readonly>
-                      </div>
-                  </div>
-                  
-                  <div class="row">
-                      <label for="tipo_doc" class="col-sm-2 control-label">Tipo</label>
-                      <div class="col-sm-6">
-                        <select name="tipo_doc" id="tipo_doc" name="tipo_doc" disabled>
-                           <option value="T.I" {{doc_type_ti}}>T.I.</option>
-                           <option value="C.C" {{doc_type_cc}}>C.C.</option>
-                           <option value="C.R" {{doc_type_cr}}>C.R.</option>
-                           <option id="EMPTY" {{doc_type_empty}}></option>
-                        </select>
-                      </div>
-                  </div>
-                  
-                  <div class="row">
-                      <label for="age" class="col-sm-2" >Edad:</label> 
-                      <div class="col-sm-6">
-                        <span id="age">{{age}}</span>
-                      </div>
-                  </div>
-                  
-                  <div class="row">
-                      <label for="email1" class="col-sm-2 control-label" >Correo</label> 
-                      <div class="col-sm-6">
-                        <span id="email">{{email_moodle}}</span>
-                      </div>
-                  </div>
+    <form id="ficha_estudiante" onsubmit="myFunction(); return false;">
 
-                  <div class="row">
-                      <label class="col-sm-2" >Cohorte</label>
-                      <div class="col-sm-6">
-                        <span type="text" id ="fcohorte" name= "fcohorte" >{{cohort}}</span>
-                      </div>
-                  </div>
-              </div>
-              
-              <div class="col-md-2 col-sm-2 talentos_ficha">
-                      <img id="photo" class="img-rounded" src="../../../user/pix.php/{{id_user}}/f1.jpg" style="width:150px; height:180px">
-              </div>
+      <input type="text" class="hide" id="id_ases" name="id_ases" value="{{id_ases}}" />
+      <input type="text" class="hide" id="id_moodle" name="id_moodle" value="{{id_moodle}}" />
+
+      <div class="row m-bottom-20 cabecera">
+        <div class="col-md-4">
+
+          <h2>FICHA GENERAL DEL ESTUDIANTE</h2>
+
+          <div class="row">
+            <label class="col-sm-4 col-md-4 control-label">Código</label>
+            <div class="col-sm-4">
+              {{{code}}}
+            </div>
+            {{#search_student_sp}}
+            <div class="col-sm-4">
+              <button type="button" class="btn-primary btn-sm" name="search" id="search">
+                <span class=" button glyphicon glyphicon-search"></span> Buscar
+              </button>
+            </div>
+            {{/search_student_sp}}
           </div>
-  
-          <div class="row cabecera" id="container_profile">
-            
-            <!-- Pestañas ficha -->
-            <div id="exTab1" class="col-sm-12">	
+          {{#update_icetex_status_sp}}
+          <div class="row">
+            <label for="estado" class="col-sm-4 col-md-4 control-label">Estado Icetex</label>
+            <div class="col-sm-6">
+              <select name="estado" id="estado" class="col-md-5 form-control" disabled>
+                {{{status_icetex}}}
+              </select>
+            </div>
+          </div>
+          {{/update_icetex_status_sp}} {{#update_ases_status_sp}}
+          <div class="row">
+            <label for="estadoAses" class="col-md-4 control-label">Estado Ases</label>
+            <div class="col-sm-6">
+              <select name="estado_ases" id="estadoAses" class="col-md-5 form-control" disabled>
+                {{{status_ases}}}
+              </select>
+            </div>
+          </div>
+          {{/update_ases_status_sp}}
+          <div class="row">
+            <label for="input_facultad" class="col-sm-4 control-label">Facultad</label>
+            <div class="col-sm-6">
+              <span id="input_facultad">{{faculty}}</span>
+            </div>
+          </div>
+
+          <div class="row">
+            <label for="input_programa" class="col-sm-4 control-label">Programa</label>
+            <div class="col-sm-6">
+              <span id="input_programa">{{program}}</span>
+            </div>
+          </div>
+        </div>
+        <!-- End col-md-4 -->
+
+        <div class="col-md-6">
+
+          <div class="row m-bottom-20">
+            <label class="col-md-12 nombre-ficha" id="nombreficha">{{firstname}} {{lastname}}</label>
+          </div>
+
+          <div class="row">
+            <label for="cedula" class="col-sm-2 control-label">Documento</label>
+            <div class="col-sm-6">
+              <input type="text" class="form-control" name="num_doc" id="cedula" value="{{num_doc}}" size="12" maxlength="11" readonly>
+            </div>
+          </div>
+
+          <div class="row">
+            <label for="tipo_doc" class="col-sm-2 control-label">Tipo</label>
+            <div class="col-sm-6">
+              <select name="tipo_doc" id="tipo_doc" name="tipo_doc" disabled>
+                <option value="T.I" {{doc_type_ti}}>T.I.</option>
+                <option value="C.C" {{doc_type_cc}}>C.C.</option>
+                <option value="C.R" {{doc_type_cr}}>C.R.</option>
+                <option id="EMPTY" {{doc_type_empty}}></option>
+              </select>
+            </div>
+          </div>
+
+          <div class="row">
+            <label for="age" class="col-sm-2">Edad:</label>
+            <div class="col-sm-6">
+              <span id="age">{{age}}</span>
+            </div>
+          </div>
+
+          <div class="row">
+            <label for="email1" class="col-sm-2 control-label">Correo</label>
+            <div class="col-sm-6">
+              <span id="email">{{email_moodle}}</span>
+            </div>
+          </div>
+
+          <div class="row">
+            <label class="col-sm-2">Cohorte</label>
+            <div class="col-sm-6">
+              <span type="text" id="fcohorte" name="fcohorte">{{cohort}}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-2 col-sm-2 talentos_ficha">
+          <img id="photo" class="img-rounded" src="../../../user/pix.php/{{id_user}}/f1.jpg" style="width:150px; height:180px">
+        </div>
+      </div>
+
+      <div class="row cabecera" id="container_profile">
+
+        <!-- Pestañas ficha -->
+        <div id="exTab1" class="col-sm-12">
 
 
-                <ul class="nav nav-tabs">
-                    {{#view_general_tab_sp}}
-              			<li id="general_li" class="active"><a href="#general_tab" data-toggle="tab">GENERAL</a></li>
-                    {{/view_general_tab_sp}}
+          <ul class="nav nav-tabs">
+            {{#view_general_tab_sp}}
+            <li id="general_li" class="active">
+              <a href="#general_tab" data-toggle="tab">GENERAL</a>
+            </li>
+            {{/view_general_tab_sp}} {{#view_socioed_tab_sp}}
+            <li id="socioed_li">
+              <a href="#socioed_tab" data-toggle="tab">SOCIOEDUCATIVO</a>
+            </li>
+            {{/view_socioed_tab_sp}} {{#view_academic_tab_sp}}
+            <li id="academic_li">
+              <a href="#academic_tab" data-toggle="tab">ACADÉMICO</a>
+            </li>
+            {{/view_academic_tab_sp}} {{#view_geographic_tab_sp}}
+            <li id="geographic_li">
+              <a href="#geographic_tab" data-toggle="tab">GEOGRÁFICO</a>
+            </li>{{/view_geographic_tab_sp}}
 
-                    {{#view_socioed_tab_sp}}
-                		<li id="socioed_li" ><a href="#socioed_tab" data-toggle="tab">SOCIOEDUCATIVO</a></li>
-                    {{/view_socioed_tab_sp}}
+          </ul>
 
-                    <li id="academic_li"><a href="#academic_tab" data-toggle="tab">ACADÉMICO</a></li>
-              			{{#view_geographic_tab_sp}}
-                    <li id="geographic_li"><a href="#geographic_tab" data-toggle="tab">GEOGRÁFICO</a></li>{{/view_geographic_tab_sp}}
+          <div class="tab-content clearfix ">
+            {{#view_general_tab_sp}} {{> block_ases/view_general_tab_sp}} {{/view_general_tab_sp}} {{#view_socioed_tab_sp}} {{> block_ases/view_socioed_tab_sp}}
+            {{/view_socioed_tab_sp}} {{#view_academic_tab_sp}}
 
-            		</ul>
-            		
-          			<div class="tab-content clearfix ">
-                  {{#view_general_tab_sp}}
-                  {{> block_ases/view_general_tab_sp}}
-          			  {{/view_general_tab_sp}}
-                  {{#view_socioed_tab_sp}}
-                  {{> block_ases/view_socioed_tab_sp}}
-                  {{/view_socioed_tab_sp}}
-
-                  <!--academic tab-->
-                  <div class="tab-pane" id="academic_tab">
+            <!--academic tab-->
+            <div class="tab-pane" id="academic_tab">
 
               <div class="accordion" role="tablist" aria-multiselectable="true">
+                <div class="row" style="padding: 0px 10px 15px ">
+                  <div class="col-md-3">Promedio Ponderado:
+                    <p class="prom" style="display: inline">
+                      <b>{{promedio}}</b>
+                    </p>
+                  </div>
+                  <div class="col-md-3">Estimulos academicos:
+                    <p class="est" style="display: inline">
+                      <b>{{estimulos}}</b>
+                    </p>
+                  </div>
+                  <div class="col-md-3">Bajos rendimientos:
+                    <p class="baj" style="display: inline">
+                      <b>{{bajos}}</b>
+                    </p>
+                  </div>
+                </div>
                 <div class="panel panel-default" id="panelActual">
-                  <div class="panel-heading" role="tab" id="headingOne">
+                  <div class="academic panel-heading" role="tab" id="headingOne">
                     <h4 class="panel-title">
                       <a id="sem_act_title" class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseAct" aria-expanded="false"
                         aria-controls="collapseAct">
@@ -162,35 +179,35 @@
                   </div>
                 </div>
                 <div class="panel panel-default" id="panelActual">
-                  <div class="panel-heading" role="tab" id="headingTwo">
+                  <div class="academic panel-heading" role="tab" id="headingTwo">
                     <h4 class="panel-title">
                       <a id="hist_title" class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseHis" aria-expanded="false"
                         aria-controls="collapseHis">
-                        Historico de Semestres
+                        Semestres Anteriores
                       </a>
                     </h4>
                   </div>
                   <div id="collapseHis" class="panel-collapse form-pilos collapse" role="tabpanel" aria-labelledby="headingTwo">
-                    Reporte Historico en proceso de desarrollo
+                    {{{historic_academic}}}
                   </div>
                 </div>
               </div>
 
 
             </div>
-                  <!-- End academic tab -->
+            {{/view_academic_tab_sp}}
 
-                  {{#view_geographic_tab_sp}}
-                  {{> block_ases/view_geographic_tab_sp}}
-                  {{/view_geographic_tab_sp}}
+            <!-- End academic tab -->
 
-                </div>
-            </div>
-            <!-- Fin Pestañas ficha -->
-            </div>
+            {{#view_geographic_tab_sp}} {{> block_ases/view_geographic_tab_sp}} {{/view_geographic_tab_sp}}
 
-          <span class="btn btn-info" id="go_back">REGRESAR</span>
-        </form>  
+          </div>
+        </div>
+        <!-- Fin Pestañas ficha -->
+      </div>
+
+      <span class="btn btn-info" id="go_back">REGRESAR</span>
+    </form>
   </div>
 
   <!-- Modal Seguimiento pares-->
@@ -206,8 +223,8 @@
       </div>
       <div class="mymodal-body col-sm-12">
         <form class="form-horizontal" id="tracking_peer_form" role="form">
-          
-          <input type="text" id="id_tracking_peer" name="id_tracking_peer" class="hide"/>
+
+          <input type="text" id="id_tracking_peer" name="id_tracking_peer" class="hide" />
 
           <div class="row form-legend">
             <h4>Datos generales</h4>
@@ -216,7 +233,9 @@
           <div class="row">
             <div class="col-sm-6">
               <div class="form-group">
-                <label for="date" class="col-sm-3">Fecha (aaaa-mm-dd)<b style="color:red;">*</b></label>
+                <label for="date" class="col-sm-3">Fecha (aaaa-mm-dd)
+                  <b style="color:red;">*</b>
+                </label>
                 <div class="col-sm-9">
                   <input type="text" maxlength="10" class="form-control" id="date" name="date" />
                 </div>
@@ -224,34 +243,40 @@
             </div>
             <div class="col-sm-6">
               <div class="form-group">
-                <label for="place" class="col-sm-3">Lugar <b style="color:red;">*</b></label>
+                <label for="place" class="col-sm-3">Lugar
+                  <b style="color:red;">*</b>
+                </label>
                 <div class="col-sm-9">
-                  <input type="text" class="form-control" id="place" name="place" >
+                  <input type="text" class="form-control" id="place" name="place">
                 </div>
               </div>
             </div>
           </div>
-          
+
           <!-- Hora inicio - Hora finalización-->
           <div class="row">
             <div class="col-sm-6">
               <div class="form-group">
-                <label for="h_ini" class="col-sm-3">Hora de inicio<b style="color:red;">*</b></label>
+                <label for="h_ini" class="col-sm-3">Hora de inicio
+                  <b style="color:red;">*</b>
+                </label>
                 <div class="col-sm-3">
-                  <select class="form-control" id="h_ini" name="h_ini" ></select>
+                  <select class="form-control" id="h_ini" name="h_ini"></select>
                 </div>
                 <label class="col-sm-1" for="m_ini">:</label>
                 <div class="col-sm-3">
-                  <select class="form-control" id="m_ini"  name="m_ini"></select>
+                  <select class="form-control" id="m_ini" name="m_ini"></select>
                 </div>
               </div>
             </div>
 
             <div class="col-sm-6">
               <div class="form-group">
-                <label for="h_fin" class="col-sm-3">Hora de finalización<b style="color:red;">*</b></label>
+                <label for="h_fin" class="col-sm-3">Hora de finalización
+                  <b style="color:red;">*</b>
+                </label>
                 <div class="col-sm-3">
-                  <select class="form-control" id="h_fin" name="h_fin" ></select>
+                  <select class="form-control" id="h_fin" name="h_fin"></select>
                 </div>
                 <span class="col-sm-1">:</span>
                 <div class="col-sm-3">
@@ -260,25 +285,29 @@
               </div>
             </div>
           </div>
-          
+
           <!-- Tema - Objetivos-->
-          <div class= "row">
+          <div class="row">
             <div class="col-sm-6">
               <div class="form-group">
-                <label for="tema" class="col-sm-12">Tema <b style="color:red;">*</b></label>
+                <label for="tema" class="col-sm-12">Tema
+                  <b style="color:red;">*</b>
+                </label>
                 <div class="col-sm-12">
-                  <textarea  class="form-control" id="topic_textarea" name="tema" maxlength="1000"></textarea>
+                  <textarea class="form-control" id="topic_textarea" name="tema" maxlength="1000"></textarea>
                 </div>
               </div>
-             </div>
-             <div class="col-sm-6">
-                <div class="form-group">
-                  <label for="objetivos" class="col-sm-12">Objetivos <b style="color:red;">*</b></label>
-                  <div class="col-md-12">
-                    <textarea class="form-control" id="objetivos" name="objetivos" maxlength="1000"></textarea>
-                  </div>
+            </div>
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label for="objetivos" class="col-sm-12">Objetivos
+                  <b style="color:red;">*</b>
+                </label>
+                <div class="col-md-12">
+                  <textarea class="form-control" id="objetivos" name="objetivos" maxlength="1000"></textarea>
                 </div>
-             </div>
+              </div>
+            </div>
           </div>
 
           <!--<div class="row hide" id="infomonitor">-->
@@ -289,26 +318,26 @@
           <div class="row form-legend">
             <h4>Actividades</h4>
           </div>
-          
+
           <!-- Individual - Familiar -->
-          <div class= "row">
+          <div class="row">
             <div class="col-sm-6">
               <div class="form-group">
                 <label for="individual" class="col-sm-12">Individual</label>
                 <div class="col-sm-12">
-                  <textarea  class="form-control" id="individual" name="individual" maxlength="5000"></textarea>
+                  <textarea class="form-control" id="individual" name="individual" maxlength="5000"></textarea>
                 </div>
               </div>
               <div class="form-group" id="riesgo_ind_div">
                 <div class="col-sm-10" id="radio_div">
-                  <label class="radio-inline" >
-                    <input type="radio" name="riesgo_ind"  value="1">Bajo
+                  <label class="radio-inline">
+                    <input type="radio" name="riesgo_ind" value="1">Bajo
                   </label>
-                  <label class="radio-inline" >
+                  <label class="radio-inline">
                     <input type="radio" name="riesgo_ind" value="2">Medio
                   </label>
-                  <label class="radio-inline" >
-                    <input type="radio" id = "high_individual_risk" name="riesgo_ind" value="3" />Alto
+                  <label class="radio-inline">
+                    <input type="radio" id="high_individual_risk" name="riesgo_ind" value="3" />Alto
                   </label>
                   <label class="radio-inline">
                     <span style="color:gray;" class="glyphicon glyphicon-erase" id="clean_individual_risk"></span>
@@ -319,7 +348,7 @@
                 </div>
               </div>
             </div>
-            
+
             <div class="col-sm-6">
               <div class="form-group">
                 <label for="familiar" class="col-sm-12">Familiar</label>
@@ -330,7 +359,7 @@
               <div class="form-group" id="riesgo_familia_div">
                 <div class="col-sm-10" id="radio_div">
                   <label class="radio-inline" id="1">
-                    <input type="radio" name="riesgo_familiar"  value="1">Bajo
+                    <input type="radio" name="riesgo_familiar" value="1">Bajo
                   </label>
                   <label class="radio-inline" id="3">
                     <input type="radio" name="riesgo_familiar" value="2">Medio
@@ -348,20 +377,20 @@
               </div>
             </div>
           </div>
-          
+
           <!-- Académico - Económico -->
-          <div class= "row">
+          <div class="row">
             <div class="col-sm-6">
               <div class="form-group">
                 <label for="academico" class="col-sm-12">Académico</label>
                 <div class="col-sm-12">
-                  <textarea  class="form-control small" id="academico" name="academico" maxlength="5000"></textarea>
+                  <textarea class="form-control small" id="academico" name="academico" maxlength="5000"></textarea>
                 </div>
               </div>
               <div class="form-group" id="riesgo_aca_div">
                 <div class="col-sm-10" id="radio_div">
                   <label class="radio-inline" id="1">
-                    <input type="radio" name="riesgo_aca"  value="1">Bajo
+                    <input type="radio" name="riesgo_aca" value="1">Bajo
                   </label>
                   <label class="radio-inline" id="2">
                     <input type="radio" name="riesgo_aca" value="2">Medio
@@ -378,7 +407,7 @@
                 </div>
               </div>
             </div>
-            
+
             <div class="col-sm-6">
               <div class="form-group">
                 <label for="economico" class="col-sm-12">Económico</label>
@@ -389,7 +418,7 @@
               <div class="form-group" id="riesgo_econom_div">
                 <div class="col-sm-10" id="radio_div">
                   <label class="radio-inline" id="1">
-                    <input type="radio" name="riesgo_econom"  value="1">Bajo
+                    <input type="radio" name="riesgo_econom" value="1">Bajo
                   </label>
                   <label class="radio-inline" id="2">
                     <input type="radio" name="riesgo_econom" value="2">Medio
@@ -409,18 +438,18 @@
           </div>
 
           <!-- Vida universitaria -->
-          <div class= "row">
+          <div class="row">
             <div class="col-sm-6">
               <div class="form-group">
                 <label for="vida_uni" class="col-sm-12">Vida universitaria y ciudad</label>
                 <div class="col-sm-12">
-                  <textarea  class="form-control small" id="vida_uni" name="vida_uni" maxlength="5000"></textarea>
+                  <textarea class="form-control small" id="vida_uni" name="vida_uni" maxlength="5000"></textarea>
                 </div>
               </div>
               <div class="form-group" id="riesgo_uni_div">
                 <div class="col-sm-10" id="radio_div">
                   <label class="radio-inline" id="1">
-                    <input type="radio" name="riesgo_uni"  value="1">Bajo
+                    <input type="radio" name="riesgo_uni" value="1">Bajo
                   </label>
                   <label class="radio-inline" id="2">
                     <input type="radio" name="riesgo_uni" value="2">Medio
@@ -437,22 +466,23 @@
                 </div>
               </div>
             </div>
-          </div><!-- End row -->
+          </div>
+          <!-- End row -->
           <hr />
 
-          <div class= "row">
-            <div class="col-sm-12 form-group" >
+          <div class="row">
+            <div class="col-sm-12 form-group">
               <label for="vida_uni" class="col-sm-12">Observaciones</label>
               <div class="col-sm-12" align="center">
-                <textarea  class="form-control" id="observaciones" name="observaciones" maxlength="5000"></textarea>
+                <textarea class="form-control" id="observaciones" name="observaciones" maxlength="5000"></textarea>
               </div>
             </div>
           </div>
         </form>
       </div>
       <div class="mymodal-footer">
-          <button type="button" class="btn-primary" id="save_tracking_btn">Guardar cambios</button>
-          <button type="button" class="btn-primary" id="cancel_peer_tracking">Cancelar</button>
+        <button type="button" class="btn-primary" id="save_tracking_btn">Guardar cambios</button>
+        <button type="button" class="btn-primary" id="cancel_peer_tracking">Cancelar</button>
       </div>
     </div>
   </div>
@@ -465,10 +495,12 @@
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span id="modal_risk_span" aria-hidden="true">&times;</span>
         </button>
-        <h4 class="mymodal-title" id="myModalLabel"><b>GRÁFICA POR:</b></h4>
+        <h4 class="mymodal-title" id="myModalLabel">
+          <b>GRÁFICA POR:</b>
+        </h4>
       </div>
       <div class="mymodal-body" id="modal_risk_body">
-         
+
       </div>
       <div class="mymodal-footer">
         <button id="modal_risk_close" type="button" class="button btn btn-secondary">Cerrar</button>
@@ -482,29 +514,29 @@
     <div class="mymodal-content">
       <div class="mymodal-header col-sm-12">
         <div class="col-sm-11">
-          <h4 class="" id="myModalLabel">Motivo del retiro</h4>  
+          <h4 class="" id="myModalLabel">Motivo del retiro</h4>
         </div>
         <div class="col-sm-1">
           <span class="mymodal-close" aria-hidden="true">&times;</span>
-        </div>        
+        </div>
       </div>
       <div class="mymodal-body col-sm-12">
-            <form class="form-horizontal" id = "retiroForm" role="form">
-              <div class="form-group">
-                <label for="motivo" class="col-sm-2">Motivo</label>
-                <div class="col-sm-10">
-                  <select name="reasons_select" id="reasons_select">
-                    {{{reasons_options}}}
-                  </select>
-                </div>
-              </div>
-              <div class = "form-group">
-                <label for="detalle" class="col-sm-2">Descripción</label>
-                <div class="col-sm-10">
-                  <textarea  class="form-control medium-inline" id="description_dropout" name="detalle" maxlength="1000"></textarea>
-                </div>
-              </div>
-            </form>
+        <form class="form-horizontal" id="retiroForm" role="form">
+          <div class="form-group">
+            <label for="motivo" class="col-sm-2">Motivo</label>
+            <div class="col-sm-10">
+              <select name="reasons_select" id="reasons_select">
+                {{{reasons_options}}}
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="detalle" class="col-sm-2">Descripción</label>
+            <div class="col-sm-10">
+              <textarea class="form-control medium-inline" id="description_dropout" name="detalle" maxlength="1000"></textarea>
+            </div>
+          </div>
+        </form>
       </div>
       <div class="mymodal-footer">
         <button type="button" class="btn-primary" id="save_changes_dropout">Guardar</button>
@@ -514,100 +546,69 @@
   </div>
   <!-- End modal retiro-->
 
-    <!-- Modal gráfica de riesgos-->
+  <!-- Modal gráfica de riesgos-->
   <div class="mymodal" id="modal_riesgos" name="modal_dropout">
     <div class="mymodal-content">
       <div class="mymodal-header col-sm-12">
         <div class="col-sm-11">
-          <h4 class="" id="myModalLabel">Histórico de riesgo para el periodo: {{{nombrePeriodoSeguimiento}}}</h4>  
+          <h4 class="" id="myModalLabel">Histórico de riesgo para el periodo: {{{nombrePeriodoSeguimiento}}}</h4>
         </div>
         <div class="col-sm-1">
           <span id="mymodal-riesgo-close" class="mymodal-close" aria-hidden="true">&times;</span>
-        </div>        
+        </div>
       </div>
       <div class="mymodal-body col-sm-12">
-                <div class="graficaHistoricoDimensional" width="900" height="110">
-                    <span>Dimensión: Individual</span>
-                    <canvas id="myChart_individual" width="900" height="110"></canvas>
-                </div><br>
-                <div class="graficaHistoricoDimensional" width="900" height="110">
-                    <span>Dimensión: Familiar</span>
-                    <canvas id="myChart_familiar" width="900" height="110"></canvas>
-                </div><br>
-                <div class="graficaHistoricoDimensional" width="900" height="110">
-                    <span>Dimensión: Academica</span>
-                    <canvas id="myChart_academico" width="900" height="110"></canvas>
-                </div><br>
-                <div class="graficaHistoricoDimensional" width="900" height="110">
-                    <span>Dimensión: Económica</span>
-                    <canvas id="myChart_economico" width="900" height="110"></canvas>
-                </div><br>
-                <div class="graficaHistoricoDimensional" width="900" height="110">
-                    <span>Dimensión: Vida universitaria</span>
-                    <canvas id="myChart_vida_universitaria" width="900" height="110"></canvas>
-                </div>
-            <!--</div> -->
+        <div class="graficaHistoricoDimensional" width="900" height="110">
+          <span>Dimensión: Individual</span>
+          <canvas id="myChart_individual" width="900" height="110"></canvas>
+        </div>
+        <br>
+        <div class="graficaHistoricoDimensional" width="900" height="110">
+          <span>Dimensión: Familiar</span>
+          <canvas id="myChart_familiar" width="900" height="110"></canvas>
+        </div>
+        <br>
+        <div class="graficaHistoricoDimensional" width="900" height="110">
+          <span>Dimensión: Academica</span>
+          <canvas id="myChart_academico" width="900" height="110"></canvas>
+        </div>
+        <br>
+        <div class="graficaHistoricoDimensional" width="900" height="110">
+          <span>Dimensión: Económica</span>
+          <canvas id="myChart_economico" width="900" height="110"></canvas>
+        </div>
+        <br>
+        <div class="graficaHistoricoDimensional" width="900" height="110">
+          <span>Dimensión: Vida universitaria</span>
+          <canvas id="myChart_vida_universitaria" width="900" height="110"></canvas>
+        </div>
+        <!--</div> -->
       </div>
       <div class="mymodal-footer">.</div>
     </div>
   </div>
   <!-- End modal retiro-->
-<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.0/Chart.min.js"></script>-->
-<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.0/Chart.bundle.min.js"></script>-->
-  <span style="display:none;" id="datos">{ "informacion":[
-    {"dimension":"individual", "datos":[
-    {{#datosSeguimientoEstudianteIndividual}}
-      {{#datos}}
-        {"fecha":"{{fecha}}","color":"{{color}}","riesgo":"{{riesgo}}", "end":"false"},
-      {{/datos}}
-    {{/datosSeguimientoEstudianteIndividual}}
-    {"end":"true"}
-      ]},
-    {"dimension":"familiar", "datos":[
-    {{#datosSeguimientoEstudianteFamiliar}}
-      {{#datos}}
-        {"fecha":"{{fecha}}","color":"{{color}}","riesgo":"{{riesgo}}", "end":"false"},
-      {{/datos}}
-    {{/datosSeguimientoEstudianteFamiliar}}
-    {"end":"true"}
-      ]},
-    {"dimension":"academico", "datos":[
-    {{#datosSeguimientoEstudianteAcademico}}
-      {{#datos}}
-        {"fecha":"{{fecha}}","color":"{{color}}","riesgo":"{{riesgo}}", "end":"false"},
-      {{/datos}}
-    {{/datosSeguimientoEstudianteAcademico}}
-    {"end":"true"}
-      ]},
-    {"dimension":"economico", "datos":[
-    {{#datosSeguimientoEstudianteEconomico}}
-      {{#datos}}
-        {"fecha":"{{fecha}}","color":"{{color}}","riesgo":"{{riesgo}}", "end":"false"},
-      {{/datos}}
-    {{/datosSeguimientoEstudianteEconomico}}
-    {"end":"true"}
-      ]},
-    {"dimension":"vidaUniversitaria", "datos":[
-    {{#datosSeguimientoEstudianteVidaUniversitaria}}
-      {{#datos}}
-        {"fecha":"{{fecha}}","color":"{{color}}","riesgo":"{{riesgo}}", "end":"false"},
-      {{/datos}}
-    {{/datosSeguimientoEstudianteVidaUniversitaria}}
-    {"end":"true"}
-      ]}
-    ]
-    }
+  <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.0/Chart.min.js"></script>-->
+  <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.0/Chart.bundle.min.js"></script>-->
+  <span style="display:none;" id="datos">{ "informacion":[ {"dimension":"individual", "datos":[ {{#datosSeguimientoEstudianteIndividual}} {{#datos}} {"fecha":"{{fecha}}","color":"{{color}}","riesgo":"{{riesgo}}",
+    "end":"false"}, {{/datos}} {{/datosSeguimientoEstudianteIndividual}} {"end":"true"} ]}, {"dimension":"familiar", "datos":[
+    {{#datosSeguimientoEstudianteFamiliar}} {{#datos}} {"fecha":"{{fecha}}","color":"{{color}}","riesgo":"{{riesgo}}", "end":"false"},
+    {{/datos}} {{/datosSeguimientoEstudianteFamiliar}} {"end":"true"} ]}, {"dimension":"academico", "datos":[ {{#datosSeguimientoEstudianteAcademico}}
+    {{#datos}} {"fecha":"{{fecha}}","color":"{{color}}","riesgo":"{{riesgo}}", "end":"false"}, {{/datos}} {{/datosSeguimientoEstudianteAcademico}}
+    {"end":"true"} ]}, {"dimension":"economico", "datos":[ {{#datosSeguimientoEstudianteEconomico}} {{#datos}} {"fecha":"{{fecha}}","color":"{{color}}","riesgo":"{{riesgo}}",
+    "end":"false"}, {{/datos}} {{/datosSeguimientoEstudianteEconomico}} {"end":"true"} ]}, {"dimension":"vidaUniversitaria",
+    "datos":[ {{#datosSeguimientoEstudianteVidaUniversitaria}} {{#datos}} {"fecha":"{{fecha}}","color":"{{color}}","riesgo":"{{riesgo}}",
+    "end":"false"}, {{/datos}} {{/datosSeguimientoEstudianteVidaUniversitaria}} {"end":"true"} ]} ] }
   </span>
-<script>
+  <script>
 
-        var ctx_individual = document.getElementById("myChart_individual").getContext('2d');
-        var ctx_familiar = document.getElementById("myChart_familiar").getContext('2d');
-        var ctx_academico = document.getElementById("myChart_academico").getContext('2d');
-        var ctx_economico = document.getElementById("myChart_economico").getContext('2d');
-        var ctx_vida_universitaria = document.getElementById("myChart_vida_universitaria").getContext('2d');
-        var datos = JSON.parse(document.getElementById("datos").innerText);
-        var datosGraficables = [];
- 
-</script>
-{{/data}}
-</body>  
+    var ctx_individual = document.getElementById("myChart_individual").getContext('2d');
+    var ctx_familiar = document.getElementById("myChart_familiar").getContext('2d');
+    var ctx_academico = document.getElementById("myChart_academico").getContext('2d');
+    var ctx_economico = document.getElementById("myChart_economico").getContext('2d');
+    var ctx_vida_universitaria = document.getElementById("myChart_vida_universitaria").getContext('2d');
+    var datos = JSON.parse(document.getElementById("datos").innerText);
+    var datosGraficables = [];
+
+  </script> {{/data}}
+</body>

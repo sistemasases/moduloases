@@ -28,7 +28,7 @@ require_once(dirname(__FILE__). '/../../../../config.php');
  * Gets all reasons a student quit or delay studies
  *
  * @see  get_reasons_dropout()
- * @return array 
+ * @return array with all existent reasons a student quit or delays his studies
  */
  
  function get_reasons_dropout(){
@@ -45,7 +45,7 @@ require_once(dirname(__FILE__). '/../../../../config.php');
  * Gets a set of ASES status
  *
  * @see get_status_ases()
- * @return array
+ * @return array with the ASUS status grouped
  */
  
  function get_status_ases(){
@@ -62,7 +62,7 @@ require_once(dirname(__FILE__). '/../../../../config.php');
  * Gets a set of ICETEX status
  *
  * @see get_status_icetex()
- * @return array 
+ * @return array with the ICETEX status grouped
  */ 
  function get_status_icetex(){
      
@@ -75,12 +75,12 @@ require_once(dirname(__FILE__). '/../../../../config.php');
  }
  
  /**
- * Función que retorna un único seguimiento a partir de su id y el tipo de seguimiento
+ * Get an unique track given its id and track type
  *
  * @see load_tracking()
  * @param $id_tracking
  * @param $type_tracking
- * @return Array --> Datos del seguimiento
+ * @return array --> Datos del seguimiento
  */
 function load_tracking($id_tracking, $type_tracking, $id_instance) {
  

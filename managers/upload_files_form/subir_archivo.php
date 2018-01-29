@@ -363,8 +363,11 @@ if (isset($_FILES['csv_file'])) {
                 if (!$result) {
                     throw new MyException("Por favor revisa la línea " . $line_count . ".<br>El número de documento " . $data[0] . " no corresponde a un estudiante de pilos");
                 }
+
+                $id_talentos = $result->id;
+
                 // talentospilos_usuario table id is added according to the document number
-                array_push($temp_array, $result->id);
+                array_push($temp_array, $id_talentos);
 
                 // program is verified
                 $query = "SELECT id FROM {talentospilos_programa} WHERE cod_univalle = " . intval($data[2]) . " AND  jornada='" . $data[3] . "' AND id_sede = (SELECT id from {talentospilos_sede} WHERE cod_univalle =" . intval($data[4]) . ");";
@@ -388,6 +391,19 @@ if (isset($_FILES['csv_file'])) {
                 // remainder information is added to a temporary array that contains (id_talentos,id_programa,id_user, ACTIVO)
                 array_push($temp_array, 'ACTIVO');
 
+                //validate tracking_status
+
+                $query = "SELECT * FROM {talentospilos_user_extended} WHERE id_ases_user = $id_talentos";
+                $result = $DB->get_records_sql($query);
+
+                if (!$result) {
+                    $tracking_status = 1;
+                } else {
+                    $tracking_status = 0;
+                }
+
+                array_push($temp_array, $tracking_status);
+
                 //Previous temporary array is added to the array that contains the general information
                 array_push($array_data, $temp_array);
 
@@ -396,19 +412,21 @@ if (isset($_FILES['csv_file'])) {
 
             foreach ($array_data as $dat) {
                 $record = new stdClass();
-                // If the field is created it'd be an insert, update otherwise 
+                // If the field is created it'd be an insert, update otherwise
                 $query = "SELECT id FROM {talentospilos_user_extended} WHERE id_moodle_user = " . $dat[2];
                 //$query="select  d.id, f.shortname  from {user_info_data} d inner join {user_info_field} f on d.fieldid= f.id  where (f.shortname='idtalentos' OR f.shortname='idprograma' OR f.shortname='estado') AND userid =".$dat[2]." order by shortname;";
                 $result = $DB->get_records_sql($query);
                 if (!$result) {
                     //dat[2] --> user id on moodle user table
                     $record->id_moodle_user = $dat[2];
-                    //dat[0] --> user id on moodle talentos table 
+                    //dat[0] --> user id on moodle talentos table
                     $record->id_ases_user = $dat[0];
                     //dat[1] --> program id
                     $record->id_academic_program = $dat[1];
                     //dat[3] --> status
                     $record->program_status = $dat[3];
+                    //dat[4] --> tracking_status
+                    $record->tracking_status = $dat[4];
 
                     $DB->insert_record('talentospilos_user_extended', $record);
 
@@ -439,41 +457,41 @@ if (isset($_FILES['csv_file'])) {
                     //   $DB->insert_record('user_info_data', $record);
 
                 } else {
+                    $record->id = $value->id;
+                    //dat[2] user id on moodle user table
+                    $record->id_moodle_user = $dat[2];
+                    //dat[0] user id on moodle talentos table
+                    $record->id_ases_user = $dat[0];
+                    //dat[1] program id
+                    $record->id_academic_program = dat[1];
+                    //dat[3] status
+                    $record->id_academic_program = dat[3];
+                    //dat[4] --> tracking_status
+                    $record->tracking_status = $dat[4];
 
-                    foreach ($result as $value) {
+                    $DB->update_record('talentospilos_user_extended', $record);
+                    // foreach ($result as $value) {
 
-                        $record->id = $value->id;
-                        //dat[2] user id on moodle user table
-                        $record->id_moodle_user = $dat[2];
-                        //dat[0] user id on moodle talentos table 
-                        $record->id_ases_user = $dat[0];
-                        //dat[1] program id
-                        $record->id_academic_program = dat[1];
-                        //dat[3] status
-                        $record->id_academic_program = dat[3];
+                    //     //METODO USANDO MODELO ANTIGUO.(usando user_info_data)
 
-                        $DB->update_record('talentospilos_user_extended', $record);
+                    //     // $shortname = $value->shortname;
 
-                        //METODO USANDO MODELO ANTIGUO.(usando user_info_data)
+                    //     // if ($shortname == 'idtalentos') {
 
-                        // $shortname = $value->shortname;
+                    //     //     $record->id = $value->id; //se asigna el id que correponde a la informacion del campo a actualizar
+                    //     //     $record->data = $dat[0]; //se actualiza la informacion con la info de la tabla
 
-                        // if ($shortname == 'idtalentos') {
+                    //     // } else if ($shortname == 'idprograma') {
 
-                        //     $record->id = $value->id; //se asigna el id que correponde a la informacion del campo a actualizar
-                        //     $record->data = $dat[0]; //se actualiza la informacion con la info de la tabla
+                    //     //     $record->id = $value->id; //
+                    //     //     $record->data = $dat[1];
+                    //     // } else if ($shortname == 'estado') {
 
-                        // } else if ($shortname == 'idprograma') {
-
-                        //     $record->id = $value->id; //
-                        //     $record->data = $dat[1];
-                        // } else if ($shortname == 'estado') {
-
-                        //     $record->id = $value->id;
-                        //     $record->data = $dat[3];
-                        // }
-                        // $DB->update_record('user_info_data', $record);
-                    }
+                    //     //     $record->id = $value->id;
+                    //     //     $record->data = $dat[3];
+                    //     // }
+                    //     // $DB->update_record('user_info_data', $record);
+                    // }
                     $count += 1;
                 }
             }

@@ -8,6 +8,11 @@ if ($oldversion < XXXXXXXXXX) {
     // Define table talentospilos_history_academ to be created.
     $table = new xmldb_table('talentospilos_history_academ');
 
+    // Conditionally launch drop table for talentospilos_history_academ.
+    if ($dbman->table_exists($table)) {
+        $dbman->drop_table($table);
+    }
+
     // Adding fields to table talentospilos_history_academ.
     $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
 
@@ -48,7 +53,7 @@ if ($oldversion < XXXXXXXXXX) {
 
     // Define field promedio_semestre to be added to talentospilos_history_academ.
     $table = new xmldb_table('talentospilos_history_academ');
-    $field = new xmldb_field('promedio_semestre', XMLDB_TYPE_INTEGER, '20', null, null, null, null, 'id_programa');
+    $field = new xmldb_field('promedio_semestre', XMLDB_TYPE_FLOAT, '20', null, null, null, null, 'id_programa');
 
     // Conditionally launch add field promedio_semestre.
     if (!$dbman->field_exists($table, $field)) {
@@ -57,7 +62,7 @@ if ($oldversion < XXXXXXXXXX) {
 
     // Define field promedio_acumulado to be added to talentospilos_history_academ.
     $table = new xmldb_table('talentospilos_history_academ');
-    $field = new xmldb_field('promedio_acumulado', XMLDB_TYPE_INTEGER, '20', null, null, null, null, 'promedio_semestre');
+    $field = new xmldb_field('promedio_acumulado', XMLDB_TYPE_FLOAT, '20', null, null, null, null, 'promedio_semestre');
 
     // Conditionally launch add field promedio_acumulado.
     if (!$dbman->field_exists($table, $field)) {
@@ -107,6 +112,11 @@ if ($oldversion < XXXXXXXXXX) {
     // Define table talentospilos_history_cancel to be created.
     $table = new xmldb_table('talentospilos_history_cancel');
 
+    // Conditionally launch drop table for talentospilos_history_cancel.
+    if ($dbman->table_exists($table)) {
+        $dbman->drop_table($table);
+    }
+
     // Adding fields to table talentospilos_history_cancel.
     $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
     $table->add_field('id_history', XMLDB_TYPE_INTEGER, '20', null, XMLDB_NOTNULL, null, null);
@@ -153,6 +163,11 @@ if ($oldversion < XXXXXXXXXX) {
     // Define table talentospilos_history_bajos to be created.
     $table = new xmldb_table('talentospilos_history_bajos');
 
+    // Conditionally launch drop table for talentospilos_history_cancel.
+    if ($dbman->table_exists($table)) {
+        $dbman->drop_table($table);
+    }
+
     // Adding fields to table talentospilos_history_bajos.
     $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
 
@@ -195,6 +210,11 @@ if ($oldversion < XXXXXXXXXX) {
 
     // Define table talentospilos_history_estim to be created.
     $table = new xmldb_table('talentospilos_history_estim');
+
+    // Conditionally launch drop table for talentospilos_history_cancel.
+    if ($dbman->table_exists($table)) {
+        $dbman->drop_table($table);
+    }
 
     // Adding fields to table talentospilos_history_estim.
     $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);

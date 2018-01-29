@@ -282,7 +282,7 @@ if( isset($_FILES['file']) || isset($_POST['idinstancia'])){
  * 
  * @see getAssociativeTitles ($titlesPos)
  * @param $titlesPos --> header from CSV
- * @return array 
+ * @return array --> Associative array with 'username', 'rol' and 'jefe' fields on it
  */
 function getAssociativeTitles ($titlesPos){
     
@@ -310,6 +310,14 @@ function getAssociativeTitles ($titlesPos){
     
     return $associativeTitles;
 }
+
+/**
+ * Validates if a given rol is a 'sistemas' one
+ * 
+ * @see validateRole($role)
+ * @param $role --> role to validate
+ * @return boolean false if it's sistemas role, true otherwise
+ */
 
 function validateRole($role){
     if($role != 'sistemas'){

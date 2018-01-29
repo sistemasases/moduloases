@@ -32,7 +32,8 @@ require_once dirname(__FILE__) . '/../../../../config.php';
  * @return $id or false
  */
 
-function get_ases_id_by_code($code){
+function get_ases_id_by_code($code)
+{
     global $DB;
 
     $sql_query = "SELECT MAX(id) as id_moodle FROM {user} WHERE username LIKE '" . $code . "%';";
@@ -58,7 +59,8 @@ function get_ases_id_by_code($code){
  * @return int|boolean
  */
 
-function get_id_program($code){
+function get_id_program($code)
+{
     global $DB;
 
     $sql_query = "SELECT id FROM {talentospilos_programa} WHERE cod_univalle = " . $code . " LIMIT 1;";
@@ -80,7 +82,8 @@ function get_id_program($code){
  * @return int|boolean
  */
 
-function get_id_semester($name){
+function get_id_semester($name)
+{
     global $DB;
 
     $sql_query = "SELECT id FROM {talentospilos_semestre} WHERE nombre = '" . $name . "';";
@@ -101,7 +104,8 @@ function get_id_semester($name){
  * @param $titlesPos --> header from CSV
  * @return array
  */
-function getAssociativeArray($array){
+function getAssociativeArray($array)
+{
 
     $associativeArray = array();
 
@@ -110,6 +114,25 @@ function getAssociativeArray($array){
     }
 
     return $associativeArray;
+}
+
+/**
+ * validate a register in table talentospilos_historic_academ
+ *
+ * @see validate_historic_register($id_student, $id_program, $id_semester)
+ * @param $id_student --> id from table talentospilos_usuario
+ * @param $id_program --> id from table talentospilos_semestre
+ * @param $id_semester --> id from
+ * @return Object|boolean
+ */
+function validate_historic_register($id_student, $id_program, $id_semester)
+{
+
+    global $DB;
+
+    $sql_query = "SELECT id FROM {talentospilos_history_academ} WHERE id_estudiante = $id_student AND id_programa = $id_program AND id_semestre = $id_semester";
+    return $DB->get_record_sql($sql_query);
+
 }
 
 /**
@@ -124,13 +147,13 @@ function getAssociativeArray($array){
  * @return array
  */
 
-function update_historic_academic($id_student, $id_program, $id_semester, $average, $overall_average){
+function update_historic_academic($id_student, $id_program, $id_semester, $average, $overall_average)
+{
 
     global $DB;
 
     //validate existence
-    $sql_query = "SELECT id FROM {talentospilos_history_academ} WHERE id_estudiante = $id_student AND id_programa = $id_program AND id_semestre = $id_semester";
-    $result = $DB->get_record_sql($sql_query);
+    $result = validate_historic_register($id_student, $id_program, $id_semester);
     $object_historic = new StdClass;
 
     if (!$result) {
@@ -139,7 +162,7 @@ function update_historic_academic($id_student, $id_program, $id_semester, $avera
         $object_historic->id_estudiante = $id_student;
         $object_historic->id_programa = $id_program;
         $object_historic->id_semestre = $id_semester;
-        $object_historic->promedio = $average;
+        $object_historic->promedio_semestre = $average;
         $object_historic->promedio_acumulado = $overall_average;
 
         $insert = $DB->insert_record('talentospilos_history_academ', $object_historic, true);
@@ -158,13 +181,70 @@ function update_historic_academic($id_student, $id_program, $id_semester, $avera
         $object_historic->id_estudiante = $id_student;
         $object_historic->id_programa = $id_program;
         $object_historic->id_semestre = $id_semester;
-        $object_historic->promedio = $average;
+        $object_historic->promedio_semestre = $average;
         $object_historic->promedio_acumulado = $overall_average;
 
         $update = $DB->update_record('talentospilos_history_academ', $object_historic);
 
         if ($update) {
             return $id_historic;
+        } else {
+            return false;
+        }
+
+    }
+
+}
+
+/**
+ * Update or insert a register in table talentospilos_historic_academ with this JSON_materias
+ *
+ * @see update_historic_materias($id_student, $id_program, $id_semester, $json_materias)
+ * @param $id_student --> id from table talentospilos_usuario
+ * @param $id_program --> id from table talentospilos_semestre
+ * @param $id_semester --> id from
+ * @param $json_materias --> JSON string
+ * @return boolean
+ */
+
+function update_historic_materias($id_student, $id_program, $id_semester, $json_materias)
+{
+    global $DB;
+    $object_historic = new StdClass;
+
+    //validate existence
+    $result = validate_historic_register($id_student, $id_program, $id_semester);
+    
+    if (!$result) {
+        //INSERTION
+
+        $object_historic->id_estudiante = $id_student;
+        $object_historic->id_programa = $id_program;
+        $object_historic->id_semestre = $id_semester;
+        $object_historic->json_materias = $json_materias;
+
+        $insert = $DB->insert_record('talentospilos_history_academ', $object_historic, true);
+
+        if ($insert) {
+            return true;
+        } else {
+            return false;
+        }
+
+    } else {
+        //UPDATE
+        $id_historic = $result->id;
+
+        $object_historic->id = $id_historic;
+        $object_historic->id_estudiante = $id_student;
+        $object_historic->id_programa = $id_program;
+        $object_historic->id_semestre = $id_semester;
+        $object_historic->json_materias = $json_materias;
+
+        $update = $DB->update_record('talentospilos_history_academ', $object_historic);
+
+        if ($update) {
+            return true;
         } else {
             return false;
         }
@@ -181,18 +261,20 @@ function update_historic_academic($id_student, $id_program, $id_semester, $avera
  * @param $cancel_date --> date of cancelation
  * @return boolean
  */
-function update_historic_cancel($id_historic, $cancel_date){
+function update_historic_cancel($id_historic, $cancel_date)
+{
+    global $DB;
+    $object_cancel = new StdClass;
 
     //validate exitence
     $sql_query = "SELECT id FROM {talentospilos_history_cancel} WHERE id_history = $id_historic";
     $result = $DB->get_record_sql($sql_query);
-    $object_cancel = new StdClass;
-    
-    if(!$result){
+
+    if (!$result) {
         //INSERTION
         $object_cancel->id_history = $id_historic;
-        $object_cancel->fecha_cancelacion = $cancel_date;
-    
+        $object_cancel->fecha_cancelacion = strtotime($cancel_date);
+
         $insert = $DB->insert_record('talentospilos_history_cancel', $object_cancel, false);
 
         if ($insert) {
@@ -201,12 +283,12 @@ function update_historic_cancel($id_historic, $cancel_date){
             return false;
         }
 
-    }else{
+    } else {
         //UPDATE
         $id_register = $result->id;
         $object_cancel->id = $id_register;
         $object_cancel->id_history = $id_historic;
-        $object_cancel->fecha_cancelacion = $cancel_date;
+        $object_cancel->fecha_cancelacion = strtotime($cancel_date);
 
         $update = $DB->update_record('talentospilos_history_cancel', $object_cancel);
 
@@ -215,7 +297,7 @@ function update_historic_cancel($id_historic, $cancel_date){
         } else {
             return false;
         }
-        
+
     }
 
 }
@@ -228,19 +310,21 @@ function update_historic_cancel($id_historic, $cancel_date){
  * @param $num_bajo --> number of bajo rendimiento
  * @return boolean
  */
-function update_historic_bajo($id_historic, $num_bajo){
-
-    //validate exitence
-    $sql_query = "SELECT id FROM {talentospilos_history_bajo} WHERE id_history = $id_historic";
-    $result = $DB->get_record_sql($sql_query);
+function update_historic_bajo($id_historic, $num_bajo)
+{
+    global $DB;
     $object_bajo = new StdClass;
     
-    if(!$result){
+    //validate exitence
+    $sql_query = "SELECT id FROM {talentospilos_history_bajos} WHERE id_history = $id_historic";
+    $result = $DB->get_record_sql($sql_query);
+
+    if (!$result) {
         //INSERTION
         $object_bajo->id_history = $id_historic;
-        $object_bajo->numero = $num_bajo;
-    
-        $insert = $DB->insert_record('talentospilos_history_bajo', $object_bajo, false);
+        $object_bajo->numero_bajo = $num_bajo;
+
+        $insert = $DB->insert_record('talentospilos_history_bajos', $object_bajo, false);
 
         if ($insert) {
             return true;
@@ -248,21 +332,21 @@ function update_historic_bajo($id_historic, $num_bajo){
             return false;
         }
 
-    }else{
+    } else {
         //UPDATE
         $id_register = $result->id;
         $object_bajo->id = $id_register;
         $object_bajo->id_history = $id_historic;
-        $object_bajo->numero = $num_bajo;
+        $object_bajo->numero_bajo = $num_bajo;
 
-        $update = $DB->update_record('talentospilos_history_bajo', $object_bajo);
+        $update = $DB->update_record('talentospilos_history_bajos', $object_bajo);
 
         if ($update) {
             return true;
         } else {
             return false;
         }
-        
+
     }
 
 }
@@ -275,18 +359,20 @@ function update_historic_bajo($id_historic, $num_bajo){
  * @param $puesto --> number of bajo rendimiento
  * @return boolean
  */
-function update_historic_estimulo($id_historic, $puesto){
-
+function update_historic_estimulo($id_historic, $puesto)
+{
+    global $DB;
+    $object_estimulo = new StdClass;
+    
     //validate exitence
     $sql_query = "SELECT id FROM {talentospilos_history_estim} WHERE id_history = $id_historic";
     $result = $DB->get_record_sql($sql_query);
-    $object_estimulo = new StdClass;
-    
-    if(!$result){
+
+    if (!$result) {
         //INSERTION
         $object_estimulo->id_history = $id_historic;
-        $object_estimulo->puesto = $puesto;
-    
+        $object_estimulo->puesto_ocupado = $puesto;
+
         $insert = $DB->insert_record('talentospilos_history_estim', $object_estimulo, false);
 
         if ($insert) {
@@ -295,12 +381,12 @@ function update_historic_estimulo($id_historic, $puesto){
             return false;
         }
 
-    }else{
+    } else {
         //UPDATE
         $id_register = $result->id;
         $object_estimulo->id = $id_register;
         $object_estimulo->id_history = $id_historic;
-        $object_estimulo->puesto = $puesto;
+        $object_estimulo->puesto_ocupado = $puesto;
 
         $update = $DB->update_record('talentospilos_history_estim', $object_estimulo);
 
@@ -309,8 +395,7 @@ function update_historic_estimulo($id_historic, $puesto){
         } else {
             return false;
         }
-        
+
     }
 
 }
-

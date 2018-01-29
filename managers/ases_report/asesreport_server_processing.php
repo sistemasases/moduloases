@@ -58,11 +58,15 @@ if(isset($_POST['academic_fields'])){
 }
 
 if(isset($_POST['risk_fields'])){
+    $select='<br/><select><option value=""></option><option value="N.R.">N.R.</option><option value="Bajo">Bajo</option><option value="Medio">Medio</option>
+          <option value="alto">Alto</option></select>';
+
+
     foreach($_POST['risk_fields'] as $risk_field){
     
         $query_name = "SELECT * FROM {talentospilos_riesgos_ases} WHERE id =".$risk_field;
         $risk_name = $DB->get_record_sql($query_name)->nombre;
-        array_push($columns, array("title"=>'R.'.strtoupper(substr($risk_name, 0, 1)).substr($risk_name, 1, 2), "name"=>$risk_name, "data"=>$risk_name));
+        array_push($columns, array("title"=>'R.'.strtoupper(substr($risk_name, 0, 1)).substr($risk_name, 1, 2).$select, "name"=>$risk_name, "data"=>$risk_name));
         array_push($risk_fields, $risk_field);
     }
 }
@@ -72,16 +76,22 @@ if(isset($_POST['risk_fields'])){
 //print_r($academic_fields);
 // print_r($columns);
 
+
 if(isset($_POST['instance_id'])){
     $counter = 0;
     
     $result = get_ases_report($query_fields, $conditions, $risk_fields, $academic_fields, $_POST['instance_id']);
+
     
     $data = array(
                 "bsort" => false,
                 "data"=> $result,
                 "columns" => $columns,
                 "select" => "false",
+                "fixedHeader"=> array(
+                    "header"=> true,
+                    "footer"=> true
+                ),
                 "language" => 
                  array(
                     "search"=> "Buscar:",

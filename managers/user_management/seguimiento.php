@@ -113,7 +113,7 @@ function deleteSeg(){
  * 
  * @see upgradePares($fun)
  * @param $fun ---> parameter that indicates wheter update or insertion
- * @return JSON
+ * @return object in a json format
  */
 
 function upgradePares($fun){

@@ -72,19 +72,22 @@ function get_ases_user($id)
  *
  * @see get_id_user_moodle($id_student)
  * @param $id_student --> user id from {talentospilos_usuario}
- * @return string
+ * @return string with the moodle id
  */
 function get_id_user_moodle($id_student)
 {
 
     global $DB;
 
-    $sql_query = "SELECT id FROM {user_info_field} WHERE shortname = 'idtalentos'";
-    $id_field = $DB->get_record_sql($sql_query)->id;
+    $sql_query = "SELECT id_moodle_user FROM {talentospilos_user_extended} WHERE id_ases_user = $id_student AND tracking_status = 1";
+    $id_user_moodle = $DB->get_record_sql($sql_query)->id_moodle_user;
+    //USANDO MODELO ANTIGUO
+    // $sql_query = "SELECT id FROM {user_info_field} WHERE shortname = 'idtalentos'";
+    // $id_field = $DB->get_record_sql($sql_query)->id;
 
-    $sql_query = "SELECT MAX(userid) AS userid FROM {user_info_data} WHERE fieldid = $id_field AND data = '$id_student'";
+    // $sql_query = "SELECT MAX(userid) AS userid FROM {user_info_data} WHERE fieldid = $id_field AND data = '$id_student'";
 
-    $id_user_moodle = $DB->get_record_sql($sql_query)->userid;
+    // $id_user_moodle = $DB->get_record_sql($sql_query)->userid;
 
     return $id_user_moodle;
 }
@@ -94,7 +97,7 @@ function get_id_user_moodle($id_student)
  * 
  * @see get_ases_user_by_code($code)
  * @param $username --> student id associated to moodle user
- * @return array 
+ * @return object containing the ASES student information
  */
 function get_ases_user_by_code($code)
 {
@@ -119,7 +122,7 @@ function get_ases_user_by_code($code)
  *
  * @see get_student_ases_status($id)
  * @param $id --> user id on talentospilos_usuario table
- * @return array --> with ASES student information
+ * @return object --> with ASES student information
  */
 
 function get_student_ases_status($id_student)
@@ -191,7 +194,7 @@ function get_adds_fields_mi($id_student)
 
     $array_result = new stdClass();
     $array_result->idtalentos = $result->id_ases_user;
-    $array_result->idprograma = $result->id_programa;
+    $array_result->idprograma = $result->id_academic_program;
     $array_result->estado = $result->program_status;
 
     return $array_result;
@@ -202,7 +205,7 @@ function get_adds_fields_mi($id_student)
  *
  * @see get_program($id_program)
  * @param $id --> program id
- * @return array 
+ * @return object representing all the academic program information 
  */
 function get_program($id)
 {
@@ -219,7 +222,7 @@ function get_program($id)
  *
  * @see get_faculty($id)
  * @param $$id --> faculty id
- * @return array
+ * @return object representing all faculty information
  */
 function get_faculty($id)
 {

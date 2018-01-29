@@ -44,15 +44,11 @@ require_once('../pilos_tracking/pilos_tracking_lib.php');
 function get_grupal_students($id_monitor, $idinstancia){
     global $DB;
     $semestre_act = get_current_semester();
-    $sql_query = "SELECT * FROM (SELECT * FROM 
-                    (SELECT *, id AS id_user FROM {user}) AS userm 
-                            INNER JOIN 
-                            (SELECT * FROM {user_info_data} as d INNER JOIN {user_info_field} as f ON d.fieldid = f.id WHERE f.shortname ='idtalentos' AND data <> '') AS field 
-                            ON userm. id_user = field.userid ) AS usermoodle 
-                        INNER JOIN 
-                        (SELECT *,id AS idtalentos FROM {talentospilos_usuario}) AS usuario 
-                        ON usermoodle.data = CAST(usuario.id AS TEXT)
-                    where  idtalentos in (select id_estudiante from {talentospilos_monitor_estud} where id_monitor =".$id_monitor." AND id_instancia=".$idinstancia." and id_semestre=".$semestre_act->max.")  ;";
+
+    $sql_query="SELECT *  FROM mdl_user AS userm 
+    INNER JOIN {talentospilos_user_extended} as user_ext  ON user_ext.id_moodle_user= userm.id
+    INNER JOIN (SELECT *,id AS idtalentos FROM {talentospilos_usuario}) AS usuario ON id_ases_user = usuario.id 
+    where  idtalentos in (select id_estudiante from {talentospilos_monitor_estud} where id_monitor =".$id_monitor." AND id_instancia=".$idinstancia." and id_semestre=".$semestre_act->max.")";
     
    $result = $DB->get_records_sql($sql_query);
    return $result;
@@ -185,7 +181,7 @@ function insertSeguimiento($object, $id_est){
  * @param $tipo --> track type
  * @param $idsemester = null --> semester id
  * @param $idinstancia = null --> instance id
- * @return array
+ * @return object with average grades and tracks 
  */
  
 function getSeguimientoOrderBySemester($id_est = null, $tipo,$idsemester = null, $idinstancia = null){
@@ -204,7 +200,7 @@ function getSeguimientoOrderBySemester($id_est = null, $tipo,$idsemester = null,
     if($idsemester != null){
         $sql_query .= " WHERE id = ".$idsemester;
     }else{
-        $userid = $DB->get_record_sql("select userid from {user_info_data} d inner join {user_info_field} f on d.fieldid = f.id where f.shortname='idtalentos' and d.data='$id_est';");
+        $userid = $DB->get_record_sql("select id_moodle_user from {talentospilos_user_extended} user_ext inner join {user} userm on user_ext.id_moodle_user =userm.id where user_ext.id_ases_user='$id_est';");
         $firstsemester = getIdFirstSemester($userid->userid);
         $lastsemestre = getIdLastSemester($userid->userid);
         //print_r($firstsemester."-last:".$lastsemestre);

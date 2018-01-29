@@ -31,7 +31,7 @@ if (isset($_FILES['file'])) {
 
     try {
         global $DB;
-        $record = new stdClass();
+        $response = new stdClass();
 
         $archivo = $_FILES['file'];
         $extension = pathinfo($archivo['name'], PATHINFO_EXTENSION);
@@ -39,11 +39,19 @@ if (isset($_FILES['file'])) {
         $nombre = $archivo['name'];
 
         $rootFolder = "../../view/archivos_subidos/historic/academic/files/";
-        $zipFolfer = "../../view/archivos_subidos/historic/academic/comprimidos/";
+        $zipFolder = "../../view/archivos_subidos/historic/academic/comprimidos/";
+
+        //validate and create folders
+        if (!file_exists($rootFolder)) {
+            mkdir($rootFolder, 0777, true);
+        }
+        if (!file_exists($zipFolder)) {
+            mkdir($zipFolder, 0777, true);
+        }
 
         //deletes everything from folders
         deleteFilesFromFolder($rootFolder);
-        deleteFilesFromFolder($zipFolfer);
+        deleteFilesFromFolder($zipFolder);
 
         //validate extension
         if ($extension !== 'csv') {
@@ -130,7 +138,7 @@ if (isset($_FILES['file'])) {
                 $semestre = $data[$associativeTitles['semestre']];
                 if ($semestre != '') {
 
-                    $id_semestre = get_id_semestre($semestre);
+                    $id_semestre = get_id_semester($semestre);
                     if (!$id_semestre) {
                         $isValidRow = false;
                         array_push($detail_erros, [$line_count, $lc_wrongFile, ($associativeTitles['semestre'] + 1), 'semestre', 'No existe ningun semestre registrado el nombre' . $semestre]);
@@ -184,6 +192,7 @@ if (isset($_FILES['file'])) {
             } else {
                 throw new MyException('La columna con el campo promedio_acumulado es obligatoria');
             }
+            $hasCancel = $hasBajo = $hasEstimulo = false;
             //validate fecha_cancelacion
             if ($associativeTitles['fecha_cancelacion'] != null) {
                 $fecha_cancelacion = $data[$associativeTitles['fecha_cancelacion']];
@@ -225,25 +234,28 @@ if (isset($_FILES['file'])) {
                 } else {
 
                     $id_historic = $result;
-                    
+                    array_push($success_rows, $data);
                     if ($hasCancel) {
                         if (!update_historic_cancel($id_historic, $fecha_cancelacion)) {
                             array_push($detail_erros, [$line_count, $lc_wrongFile, 'Error al registrar cancelacion', 'Error Servidor', 'Error del server registrando la cancelacion']);
                             array_push($wrong_rows, $data);
+                            $lc_wrongFile++;
                         }
                     }
 
                     if ($hasEstimulo) {
-                        if(!update_historic_estimulo($id_historic, $puesto_estimulo)){
+                        if (!update_historic_estimulo($id_historic, $puesto_estimulo)) {
                             array_push($detail_erros, [$line_count, $lc_wrongFile, 'Error al registrar estimulo', 'Error Servidor', 'Error del server registrando el estimulo']);
                             array_push($wrong_rows, $data);
+                            $lc_wrongFile++;
                         }
                     }
 
                     if ($hasBajo) {
-                        if(!update_historic_bajo($id_historic, $numero_bajo)){
+                        if (!update_historic_bajo($id_historic, $numero_bajo)) {
                             array_push($detail_erros, [$line_count, $lc_wrongFile, 'Error al registrar bajo rendimiento', 'Error Servidor', 'Error del server registrando el bajo rendimiento']);
                             array_push($wrong_rows, $data);
+                            $lc_wrongFile++;
                         }
                     }
                 }
@@ -254,11 +266,65 @@ if (isset($_FILES['file'])) {
 
         //RECORRER LOS REGISTROS ERRONEOS Y CREAR ARCHIVO DE registros_erroneos
 
+        if (count($wrong_rows) > 1) {
+
+            $filewrongname = $rootFolder . 'RegistrosErroneos_' . $nombre;
+
+            $wrongfile = fopen($filewrongname, 'w');
+            fprintf($wrongfile, chr(0xEF) . chr(0xBB) . chr(0xBF)); // darle formato unicode utf-8
+            foreach ($wrong_rows as $row) {
+                fputcsv($wrongfile, $row);
+            }
+            fclose($wrongfile);
+
+            //----
+            $detailsFilename = $rootFolder . 'DetallesErrores_' . $nombre;
+
+            $detailsFileHandler = fopen($detailsFilename, 'w');
+            fprintf($detailsFileHandler, chr(0xEF) . chr(0xBB) . chr(0xBF)); // darle formato unicode utf-8
+            foreach ($detail_erros as $row) {
+                fputcsv($detailsFileHandler, $row);
+            }
+            fclose($detailsFileHandler);
+
+        }
         //RECORRER LOS REGISTROS EXITOSOS Y CREAR ARCHIVO DE registros_exitosos
+        if (count($success_rows) > 1) { //porque la primera fila corresponde a los titulos no datos
+            $arrayIdsFilename = $rootFolder . 'RegistrosExitosos_' . $nombre;
 
-        //CREAR ZIP
+            $arrayIdsFileHandler = fopen($arrayIdsFilename, 'w');
+            fprintf($arrayIdsFileHandler, chr(0xEF) . chr(0xBB) . chr(0xBF)); // darle formato unicode utf-8
+            foreach ($success_rows as $row) {
+                fputcsv($arrayIdsFileHandler, $row);
+            }
+            fclose($arrayIdsFileHandler);
 
-        echo json_encode($codigo_estudiante);
+            $response = new stdClass();
+
+            if (count($wrong_rows) > 1) {
+                $response->warning = 'Archivo cargado con inconsistencias<br> Para mayor informacion descargar la carpeta con los detalles de inconsitencias.';
+            } else {
+                $response->success = 'Archivo cargado satisfactoriamente';
+            }
+
+            $zipname = $zipFolder . "detalle.zip";
+            createZip($rootFolder, $zipname);
+
+            $response->urlzip = "<a href='ases/$zipname'>Descargar detalles</a>";
+
+            echo json_encode($response);
+
+        } else {
+            $response = new stdClass();
+            $response->error = "No se cargo el archivo. Para mayor informacion descargar la carpeta con los detalles de inconsitencias.";
+
+            $zipname = $zipFolder . "detalle.zip";
+            createZip($rootFolder, $zipname);
+
+            $response->urlzip = "<a href='ases/$zipname'>Descargar detalles</a>";
+
+            echo json_encode($response);
+        }
 
     } catch (MyException $e) {
         $msj = new stdClass();

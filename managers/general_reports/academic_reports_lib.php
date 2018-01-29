@@ -279,7 +279,7 @@ function get_courses_report($user_id){
  * Function that returns a course with all its information given the course id and the id of the logged user
  * @param $course_id
  * @param $user_id
- * @return object $curso
+ * @return object --> Representing the course
  */
 
 function get_info_course_for_reports($course_id, $user_id){
