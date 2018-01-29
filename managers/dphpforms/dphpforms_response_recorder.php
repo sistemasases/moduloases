@@ -142,6 +142,8 @@
                             $opciones = json_decode($row->{'opciones_campo'});
                             $array_opciones = (array)$opciones;
                             $number_opciones = count($array_opciones);
+
+                            $html = $html .  '<div class="div-'.$row->{'mod_id_formulario_pregunta'}.' '.$field_attr_class.'" >';
                             $html = $html .  '
                             <input type="hidden" name="'.$row->{'mod_id_formulario_pregunta'}.'" value="-#$%-">
                             <label id="'.$row->{'mod_id_formulario_pregunta'}.'">'.$enunciado.'</label>';
@@ -152,7 +154,7 @@
                                     <div id="'.$row->{'mod_id_formulario_pregunta'}.'" name="'.$row->{'mod_id_formulario_pregunta'}.'" class="radio">
                                         <label><input type="radio" name="'.$row->{'mod_id_formulario_pregunta'}.'" value="'.$opcion['valor'].'" name="optradio" '.$enabled.'>'.$opcion['enunciado'].'</label>
                                     </div>
-                                
+                                </div>
                                 ' . "\n";
                             }
                             $html = $html .  '<a href="javascript:void(0);" class="limpiar btn btn-xs btn-default" >Limpiar</a>
@@ -164,19 +166,21 @@
                             $opciones = json_decode($row->{'opciones_campo'});
                             $array_opciones = (array)$opciones;
                             $number_opciones = count($array_opciones);
+
+                            $html = $html .  '<div class="div-'.$row->{'mod_id_formulario_pregunta'}.' '.$field_attr_class.'" >';
                             $html = $html .  '
-                            <label id="'.$row->{'mod_id_formulario_pregunta'}.'">'.$enunciado.'</label>';
+                            <label>'.$enunciado.'</label>';
                             for($i = 0; $i < $number_opciones; $i++){
                                 $opcion = (array) $array_opciones[$i];
                                 $html = $html .  '
-                                <div class="checkbox">
-                                    <input type="hidden" name="'.$row->{'mod_id_formulario_pregunta'}.'" value="-1">
-                                    <label><input type="checkbox" name="'.$row->{'mod_id_formulario_pregunta'}.'" value="'.$opcion['valor'].'" '.$enabled.'>'.$opcion['enunciado'].'</label>
+                                    <div class="checkbox">
+                                        <input type="hidden" name="'.$row->{'mod_id_formulario_pregunta'}.'" value="-1">
+                                        <label><input type="checkbox" name="'.$row->{'mod_id_formulario_pregunta'}.'" value="'.$opcion['valor'].'" '.$enabled.'>'.$opcion['enunciado'].'</label>
+                                    </div>
                                 </div>
                                 ' . "\n";
                             }
 
-                            
                         }
 
                     }
