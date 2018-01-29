@@ -96,6 +96,7 @@
                         $field_attr_class = '';
                         $field_attr_type = '';
                         $field_attr_placeholder = '';
+                        $field_attr_maxlength = '';
 
                         if(property_exists($atributos, 'class')){
                             $field_attr_class = $atributos->{'class'};
@@ -104,19 +105,24 @@
                         if(property_exists($atributos, 'type')){
                             $field_attr_type = $atributos->{'type'};
                         }
+
                         if(property_exists($atributos, 'placeholder')){
                             $field_attr_placeholder = $atributos->{'placeholder'};
                         }
 
+                        if(property_exists($atributos, 'maxlength')){
+                            $field_attr_maxlength = $atributos->{'maxlength'};
+                        }
+
                         if($campo == 'TEXTFIELD'){
                             $html = $html .  '<div class="div-'.$row->{'mod_id_formulario_pregunta'}.' '.$field_attr_class.'" >' . $enunciado . ':<br>';
-                            $html = $html .  ' <input id="'.$row->{'mod_id_formulario_pregunta'}.'" class="form-control" type="'.$field_attr_type.'" placeholder="'.$field_attr_placeholder.'" name="'.$row->{'mod_id_formulario_pregunta'}.'" '.$enabled.'><br>' . "\n";
+                            $html = $html .  ' <input id="'.$row->{'mod_id_formulario_pregunta'}.'" class="form-control" type="'.$field_attr_type.'" placeholder="'.$field_attr_placeholder.'" name="'.$row->{'mod_id_formulario_pregunta'}.'" maxlength="'.$field_attr_maxlength.'" '.$enabled.'><br>' . "\n";
                             $html = $html .  '</div>';
                         }
 
                         if($campo == 'TEXTAREA'){
                             $html = $html .  '<div class="div-'.$row->{'mod_id_formulario_pregunta'}.' '.$field_attr_class.'" >' . $enunciado . ':<br>';
-                            $html = $html .  ' <textarea id="'.$row->{'mod_id_formulario_pregunta'}.'" class="form-control" name="'. $row->{'mod_id_formulario_pregunta'} .'" '.$enabled.'></textarea><br>' . "\n";
+                            $html = $html .  ' <textarea id="'.$row->{'mod_id_formulario_pregunta'}.'" class="form-control" name="'. $row->{'mod_id_formulario_pregunta'} .'" maxlength="'.$field_attr_maxlength.'" '.$enabled.'></textarea><br>' . "\n";
                             $html = $html .  '</div>';
                         }
 
