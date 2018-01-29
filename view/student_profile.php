@@ -356,12 +356,12 @@ if ($student_code != 0) {
     $record->promedio = $promedio;
     
     //num bajos
-    // $bajos = get_bajos_rendimientos($student_id, $academic_program->id);
-    // $record->bajos = $bajos;
+    $bajos = get_bajos_rendimientos($student_id, $academic_program->id);
+    $record->bajos = $bajos;
 
     // //num estimulos
-    // $estimulos = get_estimulos($student_id, $academic_program->id);
-    // $record->estimulos = $estimulos;
+    $estimulos = get_estimulos($student_id, $academic_program->id);
+    $record->estimulos = $estimulos;
 
     //Current semester
     $html_academic_table = get_grades_courses_student_last_semester($id_user_moodle);

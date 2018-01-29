@@ -345,13 +345,13 @@ function make_html_semesters($semesters)
             </div>";
 
                 foreach ($materias as $materia) {
-                    
+
                     $cancelacion = '';
 
-                    if($materia->fecha_cancelacion_materia != ''){
+                    if ($materia->fecha_cancelacion_materia != '') {
                         $cancelacion = date('d / M / Y', $materia->fecha_cancelacion_materia);
                     }
-                    
+
                     $descriptions .= "<div class = 'row'>
                     <div class = 'col-md-3'>
                         $materia->nombre_materia
@@ -395,24 +395,86 @@ function make_html_semesters($semesters)
     return $html;
 }
 
+/**
+ * Get the weigthed average from one student
+ * @see get_promedio_ponderado($id_estudiante, $id_programa)
+ * @param $id_estudiante --> id from {talentospilos_usuario}
+ * @param $id_programa --> id from {talentospilos_programa}
+ * @return float --> weigthed average
+ */
 
+function get_promedio_ponderado($id_estudiante, $id_programa)
+{
 
-function get_promedio_ponderado($id_estudiante, $id_programa){
-    
     global $DB;
 
     $query = "SELECT MAX(id_semestre), promedio_acumulado as prom
               FROM {talentospilos_history_academ}
               WHERE id_estudiante = $id_estudiante AND id_programa = $id_programa
-              GROUP BY prom";        
+              GROUP BY prom";
     $result = $DB->get_record_sql($query);
 
-    if(!$result){
-        $promedio = "NO REGISTRA";    
-    }else{
+    if (!$result) {
+        $promedio = "NO REGISTRA";
+    } else {
         $promedio = $result->prom;
     }
 
     return $promedio;
 
+}
+
+/**
+ * Get the number of academic incentives that one student win in a program
+ * @see get_estimulos($id_estudiante, $id_programa)
+ * @param $id_estudiante, $id_programa --> id from {talentospilos_usuario}
+ * @param $id_programa --> id from {talentospilos_programa}
+ * @return int --> number of academic incentives
+ */
+
+function get_estimulos($id_estudiante, $id_programa)
+{
+    global $DB;
+
+    $query = "SELECT COUNT(estim.id) as estimulos
+              FROM {talentospilos_history_academ} academ INNER JOIN {talentospilos_history_estim} estim ON academ.id = estim.id_history
+              WHERE academ.id_estudiante = $id_estudiante AND academ.id_programa = $id_programa";
+
+    $result = $DB->get_record_sql($query);
+
+    if (!$result) {
+        $estimulos = 0;
+    } else {
+        $estimulos = $result->estimulos;
+    }
+
+    return $estimulos;
+}
+
+/**
+ * Get the number of poor academic performance from a student in a program
+ * @see get_bajos_rendimientos($id_estudiante, $id_programa)
+ * @param $id_estudiante --> id from {talentospilos_usuario}
+ * @param $id_programa --> id from {talentospilos_programa}
+ * @return int --> number
+ */
+
+function get_bajos_rendimientos($id_estudiante, $id_programa)
+{
+
+    global $DB;
+
+    $query = "SELECT COUNT(bajo.id) as bajos
+    FROM {talentospilos_history_academ} academ INNER JOIN {talentospilos_history_bajos} bajo ON academ.id = bajo.id_history
+    WHERE academ.id_estudiante = $id_estudiante AND academ.id_programa = $id_programa";
+
+    $result = $DB->get_record_sql($query);
+
+    if (!$result) {
+        $bajos = 0;
+    } else {
+        $bajos = $result->bajos;
+    }
+
+    return $bajos;
 }
