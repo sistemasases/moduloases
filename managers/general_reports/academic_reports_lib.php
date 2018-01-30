@@ -74,7 +74,7 @@ function studentsWithLoses($instance){
 	FROM (SELECT user_m.id,SUBSTRING(user_m.username FROM 1 FOR 7) as codigo, user_m.firstname, user_m.lastname,user_m.username
 		 FROM  {user} user_m
          INNER JOIN {talentospilos_user_extended} extended ON user_m.id = extended.id_moodle_user 
-		 INNER JOIN {talentospilos_usuario} user_t ON data.data = CAST(user_t.id AS VARCHAR)
+		 INNER JOIN {talentospilos_usuario} user_t ON extended.id_ases_user = user_t.id
 		 INNER JOIN {talentospilos_est_estadoases} estado_u ON user_t.id = estado_u.id_estudiante
 		 INNER JOIN {talentospilos_estados_ases} estados ON estados.id = estado_u.id_estado_ases
 		 WHERE estados.nombre = 'ACTIVO/SEGUIMIENTO' AND field.shortname = 'idtalentos'
@@ -193,7 +193,7 @@ function get_courses_for_report($user_id){
 		                SELECT user_m.id
 		                FROM {user} user_m
                         INNER JOIN {talentospilos_user_extended} extended ON user_m.id = extended.id_moodle_user
-                        INNER JOIN {talentospilos_monitor_estud} mon_es ON data.data = CAST(mon_es.id_estudiante AS VARCHAR)
+                        INNER JOIN {talentospilos_monitor_estud} mon_es ON extended.id_ases_user = mon_es.id_estudiante
                         WHERE mon_es.id_semestre = $id_semestre AND mon_es.id_monitor = $user_id AND field.shortname = 'idtalentos'
                         ";
     }
@@ -203,7 +203,7 @@ function get_courses_for_report($user_id){
                         SELECT DISTINCT user_m.id
                         FROM {user} user_m
                         INNER JOIN {talentospilos_user_extended} extended ON user_m.id = extended.id_moodle_user
-                        INNER JOIN {talentospilos_monitor_estud} mon_es ON data.data = CAST(mon_es.id_estudiante AS VARCHAR)
+                        INNER JOIN {talentospilos_monitor_estud} mon_es ON extended.id_ases_user = mon_es.id_estudiante
                         INNER JOIN {talentospilos_user_rol} us_rol ON mon_es.id_monitor = us_rol.id_usuario 
                         WHERE mon_es.id_semestre = $id_semestre AND us_rol.id_semestre = $id_semestre AND us_rol.id_jefe = $user_id AND field.shortname = 'idtalentos'
                         ";
@@ -214,7 +214,7 @@ function get_courses_for_report($user_id){
                         SELECT DISTINCT user_m.id
                         FROM {user} user_m
                         INNER JOIN {talentospilos_user_extended} extended ON user_m.id = extended.id_moodle_user
-                        INNER JOIN {talentospilos_monitor_estud} mon_es ON data.data = CAST(mon_es.id_estudiante AS VARCHAR)
+                        INNER JOIN {talentospilos_monitor_estud} mon_es ON extended.id_ases_user = mon_es.id_estudiante
                         INNER JOIN {talentospilos_user_rol} us_rol ON mon_es.id_monitor = us_rol.id_usuario
                         INNER JOIN {talentospilos_user_rol} us_rol_prof ON us_rol.id_jefe = us_rol_prof.id_usuario
                         WHERE mon_es.id_semestre = $id_semestre AND us_rol.id_semestre = $id_semestre AND us_rol_prof.id_semestre = $id_semestre AND us_rol_prof.id_jefe = $user_id AND field.shortname = 'idtalentos'
@@ -230,7 +230,7 @@ function get_courses_for_report($user_id){
 			(SELECT user_m.id
 				FROM  {user} user_m
                 INNER JOIN {talentospilos_user_extended} extended ON user_m.id = extended.id_moodle_user
-				INNER JOIN {talentospilos_usuario} user_t ON data.data = CAST(user_t.id AS VARCHAR)
+				INNER JOIN {talentospilos_usuario} user_t ON extended.id_ases_user = user_t.id
 				INNER JOIN {talentospilos_est_estadoases} estado_u ON user_t.id = estado_u.id_estudiante
 				INNER JOIN {talentospilos_estados_ases} estados ON estados.id = estado_u.id_estado_ases
 				WHERE estados.nombre = 'ACTIVO/SEGUIMIENTO' AND field.shortname = 'idtalentos'
@@ -294,7 +294,7 @@ function get_info_course_for_reports($course_id, $user_id){
 		                SELECT user_m.id
 		                FROM {user} user_m
                         INNER JOIN {talentospilos_user_extended} extended ON user_m.id = extended.id_moodle_user
-                        INNER JOIN {talentospilos_monitor_estud} mon_es ON data.data = CAST(mon_es.id_estudiante AS VARCHAR)
+                        INNER JOIN {talentospilos_monitor_estud} mon_es ON extended.id_ases_user = mon_es.id_estudiante
                         WHERE mon_es.id_semestre = $id_semestre AND mon_es.id_monitor = $user_id AND field.shortname = 'idtalentos'
                         ";
     }
@@ -304,7 +304,7 @@ function get_info_course_for_reports($course_id, $user_id){
                         SELECT DISTINCT user_m.id
                         FROM {user} user_m
                         INNER JOIN {talentospilos_user_extended} extended ON user_m.id = extended.id_moodle_user
-                        INNER JOIN {talentospilos_monitor_estud} mon_es ON data.data = CAST(mon_es.id_estudiante AS VARCHAR)
+                        INNER JOIN {talentospilos_monitor_estud} mon_es ON extended.id_ases_user = mon_es.id_estudiante
                         INNER JOIN {talentospilos_user_rol} us_rol ON mon_es.id_monitor = us_rol.id_usuario 
                         WHERE mon_es.id_semestre = $id_semestre AND us_rol.id_semestre = $id_semestre AND us_rol.id_jefe = $user_id AND field.shortname = 'idtalentos'
                         ";
@@ -315,7 +315,7 @@ function get_info_course_for_reports($course_id, $user_id){
                         SELECT DISTINCT user_m.id
                         FROM {user} user_m
                         INNER JOIN {talentospilos_user_extended} extended ON user_m.id = extended.id_moodle_user
-                        INNER JOIN {talentospilos_monitor_estud} mon_es ON data.data = CAST(mon_es.id_estudiante AS VARCHAR)
+                        INNER JOIN {talentospilos_monitor_estud} mon_es ON extended.id_ases_user = mon_es.id_estudiante
                         INNER JOIN {talentospilos_user_rol} us_rol ON mon_es.id_monitor = us_rol.id_usuario
                         INNER JOIN {talentospilos_user_rol} us_rol_prof ON us_rol.id_jefe = us_rol_prof.id_usuario
                         WHERE mon_es.id_semestre = $id_semestre AND us_rol.id_semestre = $id_semestre AND us_rol_prof.id_semestre = $id_semestre AND us_rol_prof.id_jefe = $user_id AND field.shortname = 'idtalentos'
@@ -350,7 +350,7 @@ function get_info_course_for_reports($course_id, $user_id){
                     WHERE curso.id= $course_id AND usuario.id IN (SELECT user_m.id
                                                                  FROM  {user} user_m
                                                                  INNER JOIN {talentospilos_user_extended} extended ON user_m.id = extended.id_moodle_user
-                                                                 INNER JOIN {talentospilos_usuario} user_t ON data.data = CAST(user_t.id AS VARCHAR)
+                                                                 INNER JOIN {talentospilos_usuario} user_t ON extended.id_ases_user = user_t.id
                                                                  INNER JOIN {talentospilos_est_estadoases} estado_u ON user_t.id = estado_u.id_estudiante 
                                                                  INNER JOIN {talentospilos_estados_ases} estados ON estados.id = estado_u.id_estado_ases
                                                                  WHERE estados.nombre = 'ACTIVO/SEGUIMIENTO' AND field.shortname = 'idtalentos'
