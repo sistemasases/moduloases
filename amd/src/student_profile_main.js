@@ -167,7 +167,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/d3', 'block_ases/sweetaler
             // Controles para editar formulario de pares
             $('.edit_peer_test_tracking').on('click', function(){
                 var id_tracking = $(this).attr('data-record-id');
-                load_record_updater('67', '24', '6');
+                load_record_updater('69', '25', '3');
                 $('#modal_test_edit_peer_tracking').fadeIn(300);
             });
 

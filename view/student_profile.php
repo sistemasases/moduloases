@@ -702,7 +702,7 @@ if ($student_code != 0) {
     //Pruebas
     
     $record->form_seguimientos = null;
-    $record->form_seguimientos = dphpforms_render_recorder('67', '6', '-1', '-1');
+    $record->form_seguimientos = dphpforms_render_recorder('69', '6', '-1', '-1');
 
 } else {
     $record = new stdClass;
