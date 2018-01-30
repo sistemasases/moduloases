@@ -15,13 +15,13 @@
         init: function() {
 
                 $(".limpiar").click(function(){
-                    $(this).parent().find("div").each(function(){
+                    $(this).parent().find(".opcionesRadio").find('div').each(function(){
                         $(this).find("label").find("input").prop("checked", false);
                     });
                 });
 
                 $(document).on('click', '.limpiar' , function() {
-                    $(this).parent().find("div").each(function(){
+                    $(this).parent().find(".opcionesRadio").find('div').each(function(){
                         $(this).find("label").find("input").prop("checked", false);
                     });
                  });
@@ -43,11 +43,26 @@
                         contentType: false,
                         processData: false,
                         success: function(data) {
-                                swal(
-                                    'Información',
-                                    data,
-                                    'success'
-                                );
+                                var response = JSON.parse(data);
+                                if(response['status'] == 0){
+                                    swal(
+                                        'Información',
+                                        response['message'],
+                                        'success'
+                                    );
+                                }else if(response['status'] == -2){
+                                    swal(
+                                        'Alerta',
+                                        response['message'],
+                                        'warning'
+                                    );
+                                }else if(response['status'] == -1){
+                                    swal(
+                                        'ERROR!',
+                                        response['message'],
+                                        'error'
+                                    );
+                                };
                             },
                             error: function(data) {
                                 swal(

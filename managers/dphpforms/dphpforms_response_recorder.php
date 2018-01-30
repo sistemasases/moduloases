@@ -168,8 +168,7 @@
                                     </div>
                                 ' . "\n";
                             }
-                            $html = $html .  '<a href="javascript:void(0);" class="limpiar btn btn-xs btn-default" >Limpiar</a>
-                                </div>
+                            $html = $html .  '</div><a href="javascript:void(0);" class="limpiar btn btn-xs btn-default" >Limpiar</a>
                              </div>
                             ' . "\n";
                         }
@@ -190,9 +189,9 @@
                                         <input type="hidden" name="'.$row->{'mod_id_formulario_pregunta'}.'" value="-1">
                                         <label><input type="checkbox" name="'.$row->{'mod_id_formulario_pregunta'}.'" value="'.$opcion['valor'].'" '.$enabled.'>'.$opcion['enunciado'].'</label>
                                     </div>
-                                </div>
                                 ' . "\n";
                             }
+                            $html = $html . '</div>';
 
                         }
 

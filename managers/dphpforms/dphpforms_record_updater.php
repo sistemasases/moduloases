@@ -244,12 +244,11 @@
                                 $html = $html .  '
                                     <div class="radio">
                                         <label><input type="radio" class="'.$row->{'mod_id_formulario_pregunta'}.'" name="'.$row->{'mod_id_formulario_pregunta'}.'" value="'.$opcion['valor'].'" name="optradio" '.$enabled.'  '.$checked.'>'.$opcion['enunciado'].'</label>
-                                    </div>
-                                </div>
-                                ' . "\n";
+                                    </div>' . "\n";
                             }
                             
-                            $html = $html .  '<a href="javascript:void(0);" class="'.$row->{'mod_id_formulario_pregunta'}.' limpiar btn btn-xs btn-default" >Limpiar</a>
+                            $html = $html .  '</div>
+                                        <a href="javascript:void(0);" class="'.$row->{'mod_id_formulario_pregunta'}.' limpiar btn btn-xs btn-default" >Limpiar</a>
                                 </div>
                             ' . "\n";
                         }
@@ -282,9 +281,9 @@
                                         <label><input id="'.$row->{'mod_id_formulario_pregunta'}.'" type="checkbox" name="'.$row->{'mod_id_formulario_pregunta'}.'" value="'.$opcion['valor'].'" '.$enabled.' '.$checked.'>'.$opcion['enunciado'].'</label>
                                         
                                     </div>
-                                </div>
                                 ' . "\n";
                             }
+                            $html = $html . '</div>';
 
                         }
 
