@@ -105,7 +105,7 @@ define(['jquery', 'block_ases/datatables.net', 'block_ases/datatables.net-button
         $.ajax({
             type: "POST",
             data: dataString,
-            url: "../managers/ases_report/load_not assigned_students.php",
+            url: "../managers/ases_report/load_not_assigned_students.php",
             success: function(msg) {
                 //alert(msg.data);
                 //console.log(msg.columns);
