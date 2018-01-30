@@ -27,7 +27,7 @@
 
 /**
  * Obtains a select given an array
- * @see get_select($role,$nombre_rol)
+ * @see get_roles_select($roles,$nombre_rol)
  * @param $roles --> array 
  * @param $nombre_rol --> name that will be assigned to the select
  * @return string html with the select obtained
@@ -35,59 +35,42 @@
 function get_roles_select($roles,$nombre_rol){
     $table = "";
     $table.='<select class="form-pilos" id="'.$nombre_rol.'">';
-    $table.='<option></option>';
+    $table.='<option value="--" > ------------------------------------- </option>';
     foreach($roles as $role){
-            $table.='<option value="'.$role->username.'">'.$role->username." - ".$role->firstname." ".$role->lastname.'</option>';
+            $table.='<option value="'.$role->id_usuario.'">'.$role->username." - ".$role->firstname." ".$role->lastname.'</option>';
      }
     $table.='</select>';
     return $table;
 
 }
-
 
 /**
- * Gets a select given an array
- * @see get_functions_select($functions,$nombre_function)
- * @param $functions --> array containing function information
- * @param $nombre_function --> function name
- * @return string html with the select obtained
+ * Function that adds two select and one button to an array result.
+ * @see get_assign($result,$practicants,$monitors)
+ * @param $result --> array
+ * @param $practicants --> array of practicants
+ * @param $monitors --> array of monitors
+ * @return array
  **/
-function get_functions_select($functions,$nombre_function){
-    $table = "";
-    $table.='<select class="form-pilos" id="'.$nombre_function.'">';
-    foreach($functions as $function){
-            $table.='<option value="'.$function->id.'">'.$function->nombre_func.'</option>';
-     }
-    $table.='</select>';
-    return $table;
+function get_assign($result,$practicants,$monitors)
+{
+    global $DB;
+    $array           = Array();
 
+    $name_practicants=get_roles_select($practicants,"practicants");
+    $name_monitors=get_roles_select($monitors,"monitors");
+
+    
+    foreach ($result as $r) {
+
+        $r->monitor= $name_monitors;
+
+        $r->practicante= $name_practicants;
+
+        $r->assign= '<button type="button" id="student_assign"  class="red glyphicon glyphicon-ok"  id="'.  $r->id .'"></button>';
+  
+        array_push($array, $r);
+    }
+    return $array;
 }
-
-
-/**
- * Gets a select given an array
- * @see get_actions_select($actions)
- * @param $actions --> array containing actions information
- * @return string html with the select obtained
- **/
-function get_actions_select($actions){
-    $table = "";
-    $table.='<select class="form-pilos" id="actions">';
-    foreach($actions as $action){
-            $table.='<option value="'.$action->id.'">'.$action->nombre_accion.'</option>';
-     }
-    $table.='</select>';
-    return $table;
-
-}
-
-
-
-
-
-
-
-
-
-
 ?>

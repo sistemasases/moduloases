@@ -18,6 +18,57 @@ define(['jquery', 'block_ases/datatables.net', 'block_ases/datatables.net-button
         createTableAssign();
       });
 
+
+      //Asignación de estudiantes a monitores/practicantes por parte de profesional. 
+      $(document).on('click', '#tableAssign tbody tr td #student_assign', function () {
+        var table = $("#tableAssign").DataTable();
+        var current_row= table.row( $(this).parents('tr') ).data();
+        var instance = getIdinstancia();
+        var student = current_row.username;
+        var monitores =  $(this).closest('tr').find('#monitors').val();
+        var practicantes = $(this).closest('tr').find('#practicants').val();
+
+        var next=true;
+        var msg="";
+        if(monitores =='--'){
+          next=false;
+          msg+="* Debe elegir monitor a asignar \n";
+        }
+        if(practicantes =='--'){
+          next=false;
+          msg+="*Debe elegir practicantes a asignar";
+        }
+
+        if(next){
+          $.ajax({
+          type: "POST",
+          data: {
+                  type: "assign_student",
+                  monitor: monitores,
+                  practicant: practicantes,
+                  instance:instance,
+                  student:student
+
+          },
+          url: "../managers/ases_report/asesreport.php",
+          success: function (msg) {
+            alert(msg);
+
+
+        },
+
+        dataType: "text",
+        cache: "false",
+        error: function (msg) {
+          console.log("Error al asignar estudiantes"+ msg);
+          },
+         });
+        }else{
+          alert(msg);
+        }
+      });
+
+
       //Controles para la tabla generada
       $(document).on('click', '#tableResult tbody tr td', function () {
         var pagina = "student_profile.php";
@@ -37,7 +88,7 @@ define(['jquery', 'block_ases/datatables.net', 'block_ases/datatables.net-button
       });
 
 
-      //Controles para la tabla generada
+      //Función para busqueda de los filtros de riesgos.
       $(document).on('change', '#tableResult thead tr th select', function () {
         var table = $("#tableResult").DataTable();
 
@@ -46,13 +97,10 @@ define(['jquery', 'block_ases/datatables.net', 'block_ases/datatables.net-button
         table.columns( colIndex-1 ).search( this.value ).draw();
 
      });
-
-
-
-
     }
   }
 
+  //Creación de tabla de asignaciones
   function createTableAssign() {
 
     var dataString = $('#form_general_report').serializeArray();
@@ -86,6 +134,7 @@ define(['jquery', 'block_ases/datatables.net', 'block_ases/datatables.net-button
     });
   }  
 
+  // Creación de tabla general
   function createTable() {
 
     var dataString = $('#form_general_report').serializeArray();
