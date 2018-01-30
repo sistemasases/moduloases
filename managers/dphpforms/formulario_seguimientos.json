@@ -1390,7 +1390,7 @@
             "opciones_campo": null,
             "atributos_campo": {
                 "style": "display:none",
-                "name": "place"
+                "name": "id_monitor"
             },
             "permisos_campo": [
                 {
@@ -1454,7 +1454,7 @@
             "opciones_campo": null,
             "atributos_campo": {
                 "style": "display:none",
-                "name": "place"
+                "name": "id_estudiante"
             },
             "permisos_campo": [
                 {
@@ -3736,7 +3736,1168 @@
                             ]
                         }
                     ],
-                    "comportamiento_condicion_no_cumplida": []
+                    "comportamiento_condicion_no_cumplida": [
+	{
+                            "campo": "cmp_0",
+                            "permisos": [
+                                {
+                                    "rol": 1,
+                                    "permisos": []
+                                },
+                                {
+                                    "rol": 2,
+                                    "permisos": []
+                                },
+                                {
+                                    "rol": 3,
+                                    "permisos": [
+                                        "lectura",
+                                        "escritura"
+                                    ]
+                                },
+                                {
+                                    "rol": 4,
+                                    "permisos": [
+                                        "lectura",
+                                        "escritura"
+                                    ]
+                                },
+                                {
+                                    "rol": 5,
+                                    "permisos": []
+                                },
+                                {
+                                    "rol": 6,
+                                    "permisos": [
+                                        "lectura",
+                                        "escritura"
+                                    ]
+                                },
+                                {
+                                    "rol": 7,
+                                    "permisos": [
+                                        "lectura",
+                                        "escritura"
+                                    ]
+                                },
+                                {
+                                    "rol": 8,
+                                    "permisos": []
+                                },
+                                {
+                                    "rol": 9,
+                                    "permisos": []
+                                },
+                                {
+                                    "rol": 10,
+                                    "permisos": []
+                                },
+                                {
+                                    "rol": 11,
+                                    "permisos": []
+                                }
+                            ]
+                        },
+                        {
+                            "campo": "cmp_1",
+                            "permisos": [
+                                {
+                                    "rol": 1,
+                                    "permisos": []
+                                },
+                                {
+                                    "rol": 2,
+                                    "permisos": []
+                                },
+                                {
+                                    "rol": 3,
+                                    "permisos": [
+                                        "lectura",
+                                        "escritura"
+                                    ]
+                                },
+                                {
+                                    "rol": 4,
+                                    "permisos": [
+                                        "lectura",
+                                        "escritura"
+                                    ]
+                                },
+                                {
+                                    "rol": 5,
+                                    "permisos": []
+                                },
+                                {
+                                    "rol": 6,
+                                    "permisos": [
+                                        "lectura",
+                                        "escritura"
+                                    ]
+                                },
+                                {
+                                    "rol": 7,
+                                    "permisos": [
+                                        "lectura",
+                                        "escritura"
+                                    ]
+                                },
+                                {
+                                    "rol": 8,
+                                    "permisos": []
+                                },
+                                {
+                                    "rol": 9,
+                                    "permisos": []
+                                },
+                                {
+                                    "rol": 10,
+                                    "permisos": []
+                                },
+                                {
+                                    "rol": 11,
+                                    "permisos": []
+                                }
+                            ]
+                        },
+                        {
+                            "campo": "cmp_2",
+                            "permisos": [
+                                {
+                                    "rol": 1,
+                                    "permisos": []
+                                },
+                                {
+                                    "rol": 2,
+                                    "permisos": []
+                                },
+                                {
+                                    "rol": 3,
+                                    "permisos": [
+                                        "lectura",
+                                        "escritura"
+                                    ]
+                                },
+                                {
+                                    "rol": 4,
+                                    "permisos": [
+                                        "lectura",
+                                        "escritura"
+                                    ]
+                                },
+                                {
+                                    "rol": 5,
+                                    "permisos": []
+                                },
+                                {
+                                    "rol": 6,
+                                    "permisos": [
+                                        "lectura",
+                                        "escritura"
+                                    ]
+                                },
+                                {
+                                    "rol": 7,
+                                    "permisos": [
+                                        "lectura",
+                                        "escritura"
+                                    ]
+                                },
+                                {
+                                    "rol": 8,
+                                    "permisos": []
+                                },
+                                {
+                                    "rol": 9,
+                                    "permisos": []
+                                },
+                                {
+                                    "rol": 10,
+                                    "permisos": []
+                                },
+                                {
+                                    "rol": 11,
+                                    "permisos": []
+                                }
+                            ]
+                        },
+                        {
+                            "campo": "cmp_3",
+                            "permisos": [
+                                {
+                                    "rol": 1,
+                                    "permisos": []
+                                },
+                                {
+                                    "rol": 2,
+                                    "permisos": []
+                                },
+                                {
+                                    "rol": 3,
+                                    "permisos": [
+                                        "lectura",
+                                        "escritura"
+                                    ]
+                                },
+                                {
+                                    "rol": 4,
+                                    "permisos": [
+                                        "lectura",
+                                        "escritura"
+                                    ]
+                                },
+                                {
+                                    "rol": 5,
+                                    "permisos": []
+                                },
+                                {
+                                    "rol": 6,
+                                    "permisos": [
+                                        "lectura",
+                                        "escritura"
+                                    ]
+                                },
+                                {
+                                    "rol": 7,
+                                    "permisos": [
+                                        "lectura",
+                                        "escritura"
+                                    ]
+                                },
+                                {
+                                    "rol": 8,
+                                    "permisos": []
+                                },
+                                {
+                                    "rol": 9,
+                                    "permisos": []
+                                },
+                                {
+                                    "rol": 10,
+                                    "permisos": []
+                                },
+                                {
+                                    "rol": 11,
+                                    "permisos": []
+                                }
+                            ]
+                        },
+                        {
+                            "campo": "cmp_4",
+                            "permisos": [
+                                {
+                                    "rol": 1,
+                                    "permisos": []
+                                },
+                                {
+                                    "rol": 2,
+                                    "permisos": []
+                                },
+                                {
+                                    "rol": 3,
+                                    "permisos": [
+                                        "lectura",
+                                        "escritura"
+                                    ]
+                                },
+                                {
+                                    "rol": 4,
+                                    "permisos": [
+                                        "lectura",
+                                        "escritura"
+                                    ]
+                                },
+                                {
+                                    "rol": 5,
+                                    "permisos": []
+                                },
+                                {
+                                    "rol": 6,
+                                    "permisos": [
+                                        "lectura",
+                                        "escritura"
+                                    ]
+                                },
+                                {
+                                    "rol": 7,
+                                    "permisos": [
+                                        "lectura",
+                                        "escritura"
+                                    ]
+                                },
+                                {
+                                    "rol": 8,
+                                    "permisos": []
+                                },
+                                {
+                                    "rol": 9,
+                                    "permisos": []
+                                },
+                                {
+                                    "rol": 10,
+                                    "permisos": []
+                                },
+                                {
+                                    "rol": 11,
+                                    "permisos": []
+                                }
+                            ]
+                        },
+                        {
+                            "campo": "cmp_5",
+                            "permisos": [
+                                {
+                                    "rol": 1,
+                                    "permisos": []
+                                },
+                                {
+                                    "rol": 2,
+                                    "permisos": []
+                                },
+                                {
+                                    "rol": 3,
+                                    "permisos": [
+                                        "lectura",
+                                        "escritura"
+                                    ]
+                                },
+                                {
+                                    "rol": 4,
+                                    "permisos": [
+                                        "lectura",
+                                        "escritura"
+                                    ]
+                                },
+                                {
+                                    "rol": 5,
+                                    "permisos": []
+                                },
+                                {
+                                    "rol": 6,
+                                    "permisos": [
+                                        "lectura",
+                                        "escritura"
+                                    ]
+                                },
+                                {
+                                    "rol": 7,
+                                    "permisos": [
+                                        "lectura",
+                                        "escritura"
+                                    ]
+                                },
+                                {
+                                    "rol": 8,
+                                    "permisos": []
+                                },
+                                {
+                                    "rol": 9,
+                                    "permisos": []
+                                },
+                                {
+                                    "rol": 10,
+                                    "permisos": []
+                                },
+                                {
+                                    "rol": 11,
+                                    "permisos": []
+                                }
+                            ]
+                        },
+                        {
+                            "campo": "cmp_6",
+                            "permisos": [
+                                {
+                                    "rol": 1,
+                                    "permisos": []
+                                },
+                                {
+                                    "rol": 2,
+                                    "permisos": []
+                                },
+                                {
+                                    "rol": 3,
+                                    "permisos": [
+                                        "lectura",
+                                        "escritura"
+                                    ]
+                                },
+                                {
+                                    "rol": 4,
+                                    "permisos": [
+                                        "lectura",
+                                        "escritura"
+                                    ]
+                                },
+                                {
+                                    "rol": 5,
+                                    "permisos": []
+                                },
+                                {
+                                    "rol": 6,
+                                    "permisos": [
+                                        "lectura",
+                                        "escritura"
+                                    ]
+                                },
+                                {
+                                    "rol": 7,
+                                    "permisos": [
+                                        "lectura",
+                                        "escritura"
+                                    ]
+                                },
+                                {
+                                    "rol": 8,
+                                    "permisos": []
+                                },
+                                {
+                                    "rol": 9,
+                                    "permisos": []
+                                },
+                                {
+                                    "rol": 10,
+                                    "permisos": []
+                                },
+                                {
+                                    "rol": 11,
+                                    "permisos": []
+                                }
+                            ]
+                        },
+                        {
+                            "campo": "cmp_7",
+                            "permisos": [
+                                {
+                                    "rol": 1,
+                                    "permisos": []
+                                },
+                                {
+                                    "rol": 2,
+                                    "permisos": []
+                                },
+                                {
+                                    "rol": 3,
+                                    "permisos": [
+                                        "lectura",
+                                        "escritura"
+                                    ]
+                                },
+                                {
+                                    "rol": 4,
+                                    "permisos": [
+                                        "lectura",
+                                        "escritura"
+                                    ]
+                                },
+                                {
+                                    "rol": 5,
+                                    "permisos": []
+                                },
+                                {
+                                    "rol": 6,
+                                    "permisos": [
+                                        "lectura",
+                                        "escritura"
+                                    ]
+                                },
+                                {
+                                    "rol": 7,
+                                    "permisos": [
+                                        "lectura",
+                                        "escritura"
+                                    ]
+                                },
+                                {
+                                    "rol": 8,
+                                    "permisos": []
+                                },
+                                {
+                                    "rol": 9,
+                                    "permisos": []
+                                },
+                                {
+                                    "rol": 10,
+                                    "permisos": []
+                                },
+                                {
+                                    "rol": 11,
+                                    "permisos": []
+                                }
+                            ]
+                        },
+                        {
+                            "campo": "cmp_8",
+                            "permisos": [
+                                {
+                                    "rol": 1,
+                                    "permisos": []
+                                },
+                                {
+                                    "rol": 2,
+                                    "permisos": []
+                                },
+                                {
+                                    "rol": 3,
+                                    "permisos": [
+                                        "lectura",
+                                        "escritura"
+                                    ]
+                                },
+                                {
+                                    "rol": 4,
+                                    "permisos": [
+                                        "lectura",
+                                        "escritura"
+                                    ]
+                                },
+                                {
+                                    "rol": 5,
+                                    "permisos": []
+                                },
+                                {
+                                    "rol": 6,
+                                    "permisos": [
+                                        "lectura",
+                                        "escritura"
+                                    ]
+                                },
+                                {
+                                    "rol": 7,
+                                    "permisos": [
+                                        "lectura",
+                                        "escritura"
+                                    ]
+                                },
+                                {
+                                    "rol": 8,
+                                    "permisos": []
+                                },
+                                {
+                                    "rol": 9,
+                                    "permisos": []
+                                },
+                                {
+                                    "rol": 10,
+                                    "permisos": []
+                                },
+                                {
+                                    "rol": 11,
+                                    "permisos": []
+                                }
+                            ]
+                        },
+                        {
+                            "campo": "cmp_9",
+                            "permisos": [
+                                {
+                                    "rol": 1,
+                                    "permisos": []
+                                },
+                                {
+                                    "rol": 2,
+                                    "permisos": []
+                                },
+                                {
+                                    "rol": 3,
+                                    "permisos": [
+                                        "lectura",
+                                        "escritura"
+                                    ]
+                                },
+                                {
+                                    "rol": 4,
+                                    "permisos": [
+                                        "lectura",
+                                        "escritura"
+                                    ]
+                                },
+                                {
+                                    "rol": 5,
+                                    "permisos": []
+                                },
+                                {
+                                    "rol": 6,
+                                    "permisos": [
+                                        "lectura",
+                                        "escritura"
+                                    ]
+                                },
+                                {
+                                    "rol": 7,
+                                    "permisos": [
+                                        "lectura",
+                                        "escritura"
+                                    ]
+                                },
+                                {
+                                    "rol": 8,
+                                    "permisos": []
+                                },
+                                {
+                                    "rol": 9,
+                                    "permisos": []
+                                },
+                                {
+                                    "rol": 10,
+                                    "permisos": []
+                                },
+                                {
+                                    "rol": 11,
+                                    "permisos": []
+                                }
+                            ]
+                        },
+                        {
+                            "campo": "cmp_10",
+                            "permisos": [
+                                {
+                                    "rol": 1,
+                                    "permisos": []
+                                },
+                                {
+                                    "rol": 2,
+                                    "permisos": []
+                                },
+                                {
+                                    "rol": 3,
+                                    "permisos": [
+                                        "lectura",
+                                        "escritura"
+                                    ]
+                                },
+                                {
+                                    "rol": 4,
+                                    "permisos": [
+                                        "lectura",
+                                        "escritura"
+                                    ]
+                                },
+                                {
+                                    "rol": 5,
+                                    "permisos": []
+                                },
+                                {
+                                    "rol": 6,
+                                    "permisos": [
+                                        "lectura",
+                                        "escritura"
+                                    ]
+                                },
+                                {
+                                    "rol": 7,
+                                    "permisos": [
+                                        "lectura",
+                                        "escritura"
+                                    ]
+                                },
+                                {
+                                    "rol": 8,
+                                    "permisos": []
+                                },
+                                {
+                                    "rol": 9,
+                                    "permisos": []
+                                },
+                                {
+                                    "rol": 10,
+                                    "permisos": []
+                                },
+                                {
+                                    "rol": 11,
+                                    "permisos": []
+                                }
+                            ]
+                        },
+                        {
+                            "campo": "cmp_11",
+                            "permisos": [
+                                {
+                                    "rol": 1,
+                                    "permisos": []
+                                },
+                                {
+                                    "rol": 2,
+                                    "permisos": []
+                                },
+                                {
+                                    "rol": 3,
+                                    "permisos": [
+                                        "lectura",
+                                        "escritura"
+                                    ]
+                                },
+                                {
+                                    "rol": 4,
+                                    "permisos": [
+                                        "lectura",
+                                        "escritura"
+                                    ]
+                                },
+                                {
+                                    "rol": 5,
+                                    "permisos": []
+                                },
+                                {
+                                    "rol": 6,
+                                    "permisos": [
+                                        "lectura",
+                                        "escritura"
+                                    ]
+                                },
+                                {
+                                    "rol": 7,
+                                    "permisos": [
+                                        "lectura",
+                                        "escritura"
+                                    ]
+                                },
+                                {
+                                    "rol": 8,
+                                    "permisos": []
+                                },
+                                {
+                                    "rol": 9,
+                                    "permisos": []
+                                },
+                                {
+                                    "rol": 10,
+                                    "permisos": []
+                                },
+                                {
+                                    "rol": 11,
+                                    "permisos": []
+                                }
+                            ]
+                        },
+                        {
+                            "campo": "cmp_12",
+                            "permisos": [
+                                {
+                                    "rol": 1,
+                                    "permisos": []
+                                },
+                                {
+                                    "rol": 2,
+                                    "permisos": []
+                                },
+                                {
+                                    "rol": 3,
+                                    "permisos": [
+                                        "lectura",
+                                        "escritura"
+                                    ]
+                                },
+                                {
+                                    "rol": 4,
+                                    "permisos": [
+                                        "lectura",
+                                        "escritura"
+                                    ]
+                                },
+                                {
+                                    "rol": 5,
+                                    "permisos": []
+                                },
+                                {
+                                    "rol": 6,
+                                    "permisos": [
+                                        "lectura",
+                                        "escritura"
+                                    ]
+                                },
+                                {
+                                    "rol": 7,
+                                    "permisos": [
+                                        "lectura",
+                                        "escritura"
+                                    ]
+                                },
+                                {
+                                    "rol": 8,
+                                    "permisos": []
+                                },
+                                {
+                                    "rol": 9,
+                                    "permisos": []
+                                },
+                                {
+                                    "rol": 10,
+                                    "permisos": []
+                                },
+                                {
+                                    "rol": 11,
+                                    "permisos": []
+                                }
+                            ]
+                        },
+                        {
+                            "campo": "cmp_13",
+                            "permisos": [
+                                {
+                                    "rol": 1,
+                                    "permisos": []
+                                },
+                                {
+                                    "rol": 2,
+                                    "permisos": []
+                                },
+                                {
+                                    "rol": 3,
+                                    "permisos": [
+                                        "lectura",
+                                        "escritura"
+                                    ]
+                                },
+                                {
+                                    "rol": 4,
+                                    "permisos": [
+                                        "lectura",
+                                        "escritura"
+                                    ]
+                                },
+                                {
+                                    "rol": 5,
+                                    "permisos": []
+                                },
+                                {
+                                    "rol": 6,
+                                    "permisos": [
+                                        "lectura",
+                                        "escritura"
+                                    ]
+                                },
+                                {
+                                    "rol": 7,
+                                    "permisos": [
+                                        "lectura",
+                                        "escritura"
+                                    ]
+                                },
+                                {
+                                    "rol": 8,
+                                    "permisos": []
+                                },
+                                {
+                                    "rol": 9,
+                                    "permisos": []
+                                },
+                                {
+                                    "rol": 10,
+                                    "permisos": []
+                                },
+                                {
+                                    "rol": 11,
+                                    "permisos": []
+                                }
+                            ]
+                        },
+                        {
+                            "campo": "cmp_14",
+                            "permisos": [
+                                {
+                                    "rol": 1,
+                                    "permisos": []
+                                },
+                                {
+                                    "rol": 2,
+                                    "permisos": []
+                                },
+                                {
+                                    "rol": 3,
+                                    "permisos": [
+                                        "lectura",
+                                        "escritura"
+                                    ]
+                                },
+                                {
+                                    "rol": 4,
+                                    "permisos": [
+                                        "lectura",
+                                        "escritura"
+                                    ]
+                                },
+                                {
+                                    "rol": 5,
+                                    "permisos": []
+                                },
+                                {
+                                    "rol": 6,
+                                    "permisos": [
+                                        "lectura",
+                                        "escritura"
+                                    ]
+                                },
+                                {
+                                    "rol": 7,
+                                    "permisos": [
+                                        "lectura",
+                                        "escritura"
+                                    ]
+                                },
+                                {
+                                    "rol": 8,
+                                    "permisos": []
+                                },
+                                {
+                                    "rol": 9,
+                                    "permisos": []
+                                },
+                                {
+                                    "rol": 10,
+                                    "permisos": []
+                                },
+                                {
+                                    "rol": 11,
+                                    "permisos": []
+                                }
+                            ]
+                        },
+                        {
+                            "campo": "cmp_15",
+                            "permisos": [
+                                {
+                                    "rol": 1,
+                                    "permisos": []
+                                },
+                                {
+                                    "rol": 2,
+                                    "permisos": []
+                                },
+                                {
+                                    "rol": 3,
+                                    "permisos": [
+                                        "lectura",
+                                        "escritura"
+                                    ]
+                                },
+                                {
+                                    "rol": 4,
+                                    "permisos": [
+                                        "lectura",
+                                        "escritura"
+                                    ]
+                                },
+                                {
+                                    "rol": 5,
+                                    "permisos": []
+                                },
+                                {
+                                    "rol": 6,
+                                    "permisos": [
+                                        "lectura",
+                                        "escritura"
+                                    ]
+                                },
+                                {
+                                    "rol": 7,
+                                    "permisos": [
+                                        "lectura",
+                                        "escritura"
+                                    ]
+                                },
+                                {
+                                    "rol": 8,
+                                    "permisos": []
+                                },
+                                {
+                                    "rol": 9,
+                                    "permisos": []
+                                },
+                                {
+                                    "rol": 10,
+                                    "permisos": []
+                                },
+                                {
+                                    "rol": 11,
+                                    "permisos": []
+                                }
+                            ]
+                        },
+                        {
+                            "campo": "cmp_16",
+                            "permisos": [
+                                {
+                                    "rol": 1,
+                                    "permisos": []
+                                },
+                                {
+                                    "rol": 2,
+                                    "permisos": []
+                                },
+                                {
+                                    "rol": 3,
+                                    "permisos": [
+                                        "lectura",
+                                        "escritura"
+                                    ]
+                                },
+                                {
+                                    "rol": 4,
+                                    "permisos": [
+                                        "lectura",
+                                        "escritura"
+                                    ]
+                                },
+                                {
+                                    "rol": 5,
+                                    "permisos": []
+                                },
+                                {
+                                    "rol": 6,
+                                    "permisos": [
+                                        "lectura",
+                                        "escritura"
+                                    ]
+                                },
+                                {
+                                    "rol": 7,
+                                    "permisos": [
+                                        "lectura",
+                                        "escritura"
+                                    ]
+                                },
+                                {
+                                    "rol": 8,
+                                    "permisos": []
+                                },
+                                {
+                                    "rol": 9,
+                                    "permisos": []
+                                },
+                                {
+                                    "rol": 10,
+                                    "permisos": []
+                                },
+                                {
+                                    "rol": 11,
+                                    "permisos": []
+                                }
+                            ]
+                        },
+                        {
+                            "campo": "cmp_17",
+                            "permisos": [
+                                {
+                                    "rol": 1,
+                                    "permisos": []
+                                },
+                                {
+                                    "rol": 2,
+                                    "permisos": []
+                                },
+                                {
+                                    "rol": 3,
+                                    "permisos": [
+                                        "lectura",
+                                        "escritura"
+                                    ]
+                                },
+                                {
+                                    "rol": 4,
+                                    "permisos": [
+                                        "lectura",
+                                        "escritura"
+                                    ]
+                                },
+                                {
+                                    "rol": 5,
+                                    "permisos": []
+                                },
+                                {
+                                    "rol": 6,
+                                    "permisos": [
+                                        "lectura",
+                                        "escritura"
+                                    ]
+                                },
+                                {
+                                    "rol": 7,
+                                    "permisos": [
+                                        "lectura",
+                                        "escritura"
+                                    ]
+                                },
+                                {
+                                    "rol": 8,
+                                    "permisos": []
+                                },
+                                {
+                                    "rol": 9,
+                                    "permisos": []
+                                },
+                                {
+                                    "rol": 10,
+                                    "permisos": []
+                                },
+                                {
+                                    "rol": 11,
+                                    "permisos": []
+                                }
+                            ]
+                        },
+                        {
+                            "campo": "cmp_18",
+                            "permisos": [
+                                {
+                                    "rol": 1,
+                                    "permisos": []
+                                },
+                                {
+                                    "rol": 2,
+                                    "permisos": []
+                                },
+                                {
+                                    "rol": 3,
+                                    "permisos": [
+                                        "lectura",
+                                        "escritura"
+                                    ]
+                                },
+                                {
+                                    "rol": 4,
+                                    "permisos": [
+                                        "lectura",
+                                        "escritura"
+                                    ]
+                                },
+                                {
+                                    "rol": 5,
+                                    "permisos": []
+                                },
+                                {
+                                    "rol": 6,
+                                    "permisos": [
+                                        "lectura",
+                                        "escritura"
+                                    ]
+                                },
+                                {
+                                    "rol": 7,
+                                    "permisos": [
+                                        "lectura",
+                                        "escritura"
+                                    ]
+                                },
+                                {
+                                    "rol": 8,
+                                    "permisos": []
+                                },
+                                {
+                                    "rol": 9,
+                                    "permisos": []
+                                },
+                                {
+                                    "rol": 10,
+                                    "permisos": []
+                                },
+                                {
+                                    "rol": 11,
+                                    "permisos": []
+                                }
+                            ]
+                        }
+
+		]
                 }
             ]
         }

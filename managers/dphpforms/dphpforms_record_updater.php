@@ -298,55 +298,9 @@
         $html = $html .  ' <hr style="border-color:red"><button type="submit" class="btn btn-sm btn-danger btn-dphpforms-univalle">Registrar</button>' . "\n";
         $html = $html .  ' </form>' . "\n";
 
-        function dphpforms_generate_permits_scripts($behaviors, $ROL){
-            
-            $script = null;
-                
-            $behavior_field = $behaviors->{'campo'};
-            $behavioral_permissions = $behaviors->{'permisos'};
+        //Manejo de disparadores
 
-            foreach ($behavioral_permissions as $keyPC => $PC) {
-                
-                if($PC->{'rol'} == $ROL){
-
-                    $flagLectura = false;
-                    $flagEscritura = false;
-
-                    foreach ($PC->{'permisos'} as $keyPC => $permissions_field) {
-                        if($permissions_field == "lectura"){
-                            $flagLectura = true;
-                        }
-                        if($permissions_field == "escritura"){
-                            $flagEscritura = true;
-                        }
-                    }
-
-                    if($flagEscritura){
-
-                        $disabled = "false";
-                        $script = $script.   '  $("#'.$behavior_field.'").prop( "disabled", '.$disabled.' );  ' . "\n";
-                        $script = $script.   '  $(".'.$behavior_field.'").prop( "disabled", '.$disabled.' );  ' . "\n";
-
-                    }else{
-                        $disabled = "true";
-                        $script = $script.   '  $("#'.$behavior_field.'").prop( "disabled", '.$disabled.' );  ' . "\n";
-                        $script = $script.   '  $(".'.$behavior_field.'").prop( "disabled", '.$disabled.' );  ' . "\n";
-                        $script = $script.   '  $(".'.$behavior_field.'.limpiar ").remove();  ' . "\n";  
-                    }
-
-                        
-                
-                    if(!$flagLectura){
-                        $script = $script.   '  $("#'.$behavior_field.'").remove();  ' . "\n";
-                        $script = $script.   '  $(".'.$behavior_field.'").remove();  ' . "\n";
-                    }
-                    break;
-                }
-            }
-            return $script;
-        }
-
-        $permissions_script = null;
+        $permissions_to_script = array();
 
         if($triggers_permissions != 'null'){
 
@@ -432,21 +386,111 @@
                     }
     
                     $behavioral_condition_satisfied  = $condition->{'comportamiento_condicion_cumplida'};
-                    //$behavioral_condition_not_satisfied  = $condition->{'comportamiento_condicion_no_cumplida'};
-                    /*if($flag_satisfy){
+                    $behavioral_condition_not_satisfied  = $condition->{'comportamiento_condicion_no_cumplida'};
+                    if($flag_satisfy){
                         foreach ($behavioral_condition_satisfied  as $keyCCC => $behaviors) {
-                            $permissions_script = $permissions_script . dphpforms_generate_permits_scripts($behaviors, $ROL);
+                            //$permissions_to_script = $permissions_to_script . dphpforms_generate_permits_information($behaviors, $ROL);
+                            array_push( $permissions_to_script, dphpforms_generate_permits_information($behaviors, $ROL) );
                         }
                     }else{
-                        foreach ($behavioral_condition_not_satisfied  as $keyCCNC => $comportamiento) {
-                            $permissions_script = $permissions_script . dphpforms_generate_permits_scripts($behaviors, $ROL);
+                        foreach ($behavioral_condition_not_satisfied  as $keyCCNC => $behaviors) {
+                            //$permissions_to_script = $permissions_to_script . dphpforms_generate_permits_information($behaviors, $ROL);
+                            array_push( $permissions_to_script, dphpforms_generate_permits_information($behaviors, $ROL) );
                         }
-                    }*/
+                    }
                 }
             }
         };
-        
-        
+
+        $html = $html . '<div id="permissions_information">' . json_encode($permissions_to_script) . '</div>';
+
+        function dphpforms_generate_permits_information($behaviors, $ROL){
+            
+            $json_behaviors = null;
+
+            $json_behaviors_accessibility = array();
+            $json_behaviors_fields_to_remove = array();
+            $json_limpiar_to_eliminate = array();
+                
+            $behavior_field = $behaviors->{'campo'};
+            $behavioral_permissions = $behaviors->{'permisos'};
+
+            foreach ($behavioral_permissions as $keyPC => $PC) {
+                
+                if($PC->{'rol'} == $ROL){
+
+                    $flagLectura = false;
+                    $flagEscritura = false;
+
+                    foreach ($PC->{'permisos'} as $keyPC => $permissions_field) {
+                        if($permissions_field == "lectura"){
+                            $flagLectura = true;
+                        }
+                        if($permissions_field == "escritura"){
+                            $flagEscritura = true;
+                        }
+                    }
+
+
+                    if($flagEscritura){
+
+                        $disabled = "false";
+                        //$json_behaviors = $json_behaviors.   '  $("#'.$behavior_field.'").prop( "disabled", '.$disabled.' );  ' . "\n";
+                        //$json_behaviors = $json_behaviors.   '  $(".'.$behavior_field.'").prop( "disabled", '.$disabled.' );  ' . "\n";
+
+                        $tmp_accessibility = array(
+                            'class' => $behavior_field,
+                            'id' => $behavior_field,
+                            'disabled' => $disabled
+                        );
+
+                        array_push($json_behaviors_accessibility, $tmp_accessibility);
+
+                    }else{
+                        $disabled = "true";
+                        //$json_behaviors = $json_behaviors.   '  $("#'.$behavior_field.'").prop( "disabled", '.$disabled.' );  ' . "\n";
+                        //$json_behaviors = $json_behaviors.   '  $(".'.$behavior_field.'").prop( "disabled", '.$disabled.' );  ' . "\n";
+                        //$json_behaviors = $json_behaviors.   '  $(".'.$behavior_field.'.limpiar ").remove();  ' . "\n";  
+
+                        $tmp_accessibility = array(
+                            'class' => $behavior_field,
+                            'id' => $behavior_field,
+                            'disabled' => $disabled
+                        );
+
+                        $tmp_limpiar_to_eliminate = array(
+                            'id' => $behavior_field
+                        );
+
+                        array_push($json_behaviors_accessibility, $tmp_accessibility);
+                        array_push($json_limpiar_to_eliminate, $tmp_limpiar_to_eliminate);
+                    }
+
+                    if(!$flagLectura){
+                        //$json_behaviors = $json_behaviors.   '  $("#'.$behavior_field.'").remove();  ' . "\n";
+                        //$json_behaviors = $json_behaviors.   '  $(".'.$behavior_field.'").remove();  ' . "\n";
+
+                        $tmp_field_to_remove = array(
+                            'class' => $behavior_field,
+                            'id' => $behavior_field
+                        );
+
+                        array_push($json_behaviors_fields_to_remove, $tmp_field_to_remove);
+                    }
+                    break;
+                }
+            }
+            $html = $html . 'GENERANDO PERMISOS';
+            print_r($json_behaviors);
+
+            $json_behaviors = array(
+                'behaviors_accessibility' => $json_behaviors_accessibility,
+                'behaviors_fields_to_remove' => $json_behaviors_fields_to_remove,
+                'limpiar_to_eliminate' => $json_limpiar_to_eliminate
+            );
+
+            return $json_behaviors;
+        }
 
         return $html;
 
