@@ -38,7 +38,7 @@ function get_array_students_with_resolution(){
     $array_historics = array();
 
     $sql_query = "SELECT res_est.id, substring(cohortm.idnumber from 0 for 5) AS cohorte, substring(userm.username from 0 for 8) AS codigo, usuario.num_doc, userm.firstname, userm.lastname, 
-                    semestre.nombre, res.codigo_resolucion, monto_estudiante, uextended.program_status, res_est.id_estudiante, res.id_semestre, res_est.id_programa
+                    semestre.nombre, res.codigo_resolucion, monto_estudiante, res_est.id_estudiante, res.id_semestre, res_est.id_programa
                     FROM {talentospilos_res_estudiante} AS res_est
                     INNER JOIN {talentospilos_res_icetex} res ON res.id = res_est.id_resolucion
                     INNER JOIN {talentospilos_semestre} semestre ON semestre.id = res.id_semestre 
@@ -60,8 +60,10 @@ function get_array_students_with_resolution(){
 
         if($cancel_date == false){
             $historic->fecha_cancel = "---";
+            $historic->program_status = "ACTIVO";
         }else{
             $historic->fecha_cancel = date("Y-m-d", $cancel_date);
+            $historic->program_status = "INACTIVO";
         }
 
         array_push($array_historics, $historic);
@@ -86,19 +88,6 @@ function get_array_students_with_cancel($id_student, $id_program, $id_semester){
         return $fecha_cancel;
     }    
 }
-
-function get_active_res_students($cohort){
-    global $DB;
-
-$sql_query = "SELECT Count(res_est.id) FROM {talentospilos_res_estudiante} AS res_est
-                INNER JOIN {talentospilos_user_extended} uext ON uext.id_ases_user = res_est.id_estudiante
-                INNER JOIN {cohort_members} co_mem ON uext.id_moodle_user = cohortm.userid
-                INNER JOIN {cohort} cohortm ON cohortm.id = co_mem.cohortid
-                WHERE substring(cohortm.idnumber from 0 for 5) = $cohort OR substring(cohortm.idnumber from 0 for 6) = $cohort";
-
-
-}
-
 
 function get_all_cohort_names(){
     global $DB;
@@ -177,4 +166,26 @@ function get_resolutions_for_report(){
     }
 
     return $resolutions_array;
+}
+
+
+function get_active_res_students($cohort){
+    global $DB;
+
+$sql_query = "SELECT Count(res_est.id) AS numero FROM {talentospilos_res_estudiante} AS res_est
+                INNER JOIN {talentospilos_user_extended} uext ON uext.id_ases_user = res_est.id_estudiante
+                INNER JOIN {cohort_members} co_mem ON uext.id_moodle_user = co_mem.userid
+                INNER JOIN {cohort} cohortm ON cohortm.id = co_mem.cohortid
+                WHERE substring(cohortm.idnumber from 0 for 5) = '$cohort' OR substring(cohortm.idnumber from 0 for 6) = '$cohort'";
+
+$count = $DB->get_record_sql($sql_query)->numero;
+
+return $count;
+
+}
+
+//print_r(get_active_res_students("SPP1"));
+
+function get_active_no_res_students(){
+
 }
