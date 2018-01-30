@@ -402,7 +402,8 @@ function dphpforms_store_form_disparadores($form_id, $disparadores, $identifiers
 
     global $DB;
     $disparadores_string = json_encode($disparadores);
-    foreach ($identifiers_form_preguntas as $key => $value) {
+    foreach ($identifiers_form_preguntas as &$value) {
+        echo 'REEMPLAZO DE'  . $value['idPreguntaTemporal'] . ' CON ' . $value['idRelacionFormPreg'] . ' <::::';
         $disparadores_string = str_replace($value['idPreguntaTemporal'], $value['idRelacionFormPreg'], $disparadores_string);
     }
 

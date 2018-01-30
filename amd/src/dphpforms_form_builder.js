@@ -334,7 +334,6 @@
                     disparadores = $('#disparadores').val();
                     for(var x in identificadores) {
                         disparadores = disparadores.replaceAll(identificadores[x].id_temporal, identificadores[x].id_nuevo);
-                        
                     };
                     
                     disparadores = JSON.parse(disparadores);

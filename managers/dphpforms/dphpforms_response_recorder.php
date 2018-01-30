@@ -101,6 +101,7 @@
                         $field_attr_type = '';
                         $field_attr_placeholder = '';
                         $field_attr_maxlength = '';
+                        $field_attr_inputclass = '';
 
                         if(property_exists($atributos, 'class')){
                             $field_attr_class = $atributos->{'class'};
@@ -118,33 +119,37 @@
                             $field_attr_maxlength = $atributos->{'maxlength'};
                         }
 
+                        if(property_exists($atributos, 'inputclass')){
+                            $field_attr_inputclass = $atributos->{'inputclass'};
+                        }
+
                         if($campo == 'TEXTFIELD'){
                             $html = $html .  '<div class="div-'.$row->{'mod_id_formulario_pregunta'}.' '.$field_attr_class.'" >' . $enunciado . ':<br>';
-                            $html = $html .  ' <input id="'.$row->{'mod_id_formulario_pregunta'}.'" class="form-control" type="'.$field_attr_type.'" placeholder="'.$field_attr_placeholder.'" name="'.$row->{'mod_id_formulario_pregunta'}.'" maxlength="'.$field_attr_maxlength.'" '.$enabled.'><br>' . "\n";
+                            $html = $html .  ' <input id="'.$row->{'mod_id_formulario_pregunta'}.'" class="form-control ' . $field_attr_inputclass . '" type="'.$field_attr_type.'" placeholder="'.$field_attr_placeholder.'" name="'.$row->{'mod_id_formulario_pregunta'}.'" maxlength="'.$field_attr_maxlength.'" '.$enabled.'><br>' . "\n";
                             $html = $html .  '</div>';
                         }
 
                         if($campo == 'TEXTAREA'){
                             $html = $html .  '<div class="div-'.$row->{'mod_id_formulario_pregunta'}.' '.$field_attr_class.'" >' . $enunciado . ':<br>';
-                            $html = $html .  ' <textarea id="'.$row->{'mod_id_formulario_pregunta'}.'" class="form-control" name="'. $row->{'mod_id_formulario_pregunta'} .'" maxlength="'.$field_attr_maxlength.'" '.$enabled.'></textarea><br>' . "\n";
+                            $html = $html .  ' <textarea id="'.$row->{'mod_id_formulario_pregunta'}.'" class="form-control ' . $field_attr_inputclass . '" name="'. $row->{'mod_id_formulario_pregunta'} .'" maxlength="'.$field_attr_maxlength.'" '.$enabled.'></textarea><br>' . "\n";
                             $html = $html .  '</div>';
                         }
 
                         if($campo == 'DATE'){
                             $html = $html . '<div class="div-'.$row->{'mod_id_formulario_pregunta'}.' '.$field_attr_class.'" >' . $enunciado . ':<br>';
-                            $html = $html . ' <input id="'.$row->{'mod_id_formulario_pregunta'}.'" class="form-control" type="date" name="'.$row->{'mod_id_formulario_pregunta'}.'" '.$enabled.'><br>' . "\n";
+                            $html = $html . ' <input id="'.$row->{'mod_id_formulario_pregunta'}.'" class="form-control ' . $field_attr_inputclass . '" type="date" name="'.$row->{'mod_id_formulario_pregunta'}.'" '.$enabled.'><br>' . "\n";
                             $html = $html . '</div>';
                         }
                         
                         if($campo == 'DATETIME'){
                             $html = $html .  '<div class="div-'.$row->{'mod_id_formulario_pregunta'}.' '.$field_attr_class.'" >' . $enunciado . ':<br>';
-                            $html = $html .  ' <input id="'.$row->{'mod_id_formulario_pregunta'}.'" class="form-control" type="datetime-local" name="'.$row->{'mod_id_formulario_pregunta'}.'" '.$enabled.'><br>' . "\n";
+                            $html = $html .  ' <input id="'.$row->{'mod_id_formulario_pregunta'}.'" class="form-control ' . $field_attr_inputclass . '" type="datetime-local" name="'.$row->{'mod_id_formulario_pregunta'}.'" '.$enabled.'><br>' . "\n";
                             $html = $html .  '</div>';
                         }
 
                         if($campo == 'TIME'){
                             $html = $html .  '<div class="div-'.$row->{'mod_id_formulario_pregunta'}.' '.$field_attr_class.'" >' . $enunciado . ':<br>';
-                            $html = $html .  ' <input id="'.$row->{'mod_id_formulario_pregunta'}.'" class="form-control" type="time" name="'.$row->{'mod_id_formulario_pregunta'}.'" '.$enabled.'><br>' . "\n";
+                            $html = $html .  ' <input id="'.$row->{'mod_id_formulario_pregunta'}.'" class="form-control ' . $field_attr_inputclass . '" type="time" name="'.$row->{'mod_id_formulario_pregunta'}.'" '.$enabled.'><br>' . "\n";
                             $html = $html .  '</div>';
                         }
 
@@ -158,13 +163,18 @@
                             if($enunciado){
                                 $html = $html . '<label>'.$enunciado.'</label>';
                             }
+
+                            $field_attr_radioclass = '';
+                            if(property_exists($atributos, 'radioclass')){
+                                $field_attr_radioclass = $atributos->{'radioclass'};
+                            }
                                               
                             $html = $html .  '<div class="opcionesRadio" style="margin-bottom:0.4em">';
                             for($x = 0; $x < $number_opciones; $x++){
                                 $opcion = (array) $array_opciones[$x];
                                 $html = $html .  '
-                                    <div id="'.$row->{'mod_id_formulario_pregunta'}.'" name="'.$row->{'mod_id_formulario_pregunta'}.'" class="radio">
-                                        <label><input type="radio" name="'.$row->{'mod_id_formulario_pregunta'}.'" value="'.$opcion['valor'].'" name="optradio" '.$enabled.'>'.$opcion['enunciado'].'</label>
+                                    <div id="'.$row->{'mod_id_formulario_pregunta'}.'" name="'.$row->{'mod_id_formulario_pregunta'}.'" class="radio ' . $field_attr_radioclass . '">
+                                        <label><input type="radio" class=" ' . $field_attr_inputclass . '" name="'.$row->{'mod_id_formulario_pregunta'}.'" value="'.$opcion['valor'].'" name="optradio" '.$enabled.'>'.$opcion['enunciado'].'</label>
                                     </div>
                                 ' . "\n";
                             }
@@ -182,12 +192,18 @@
                             if($enunciado){
                                 $html = $html . '<label>'.$enunciado.'</label>';
                             }
+
+                            $field_attr_checkclass = '';
+                            if(property_exists($atributos, 'checkclass')){
+                                $field_attr_checkclass = $atributos->{'checkclass'};
+                            }
+
                             for($x = 0; $x < $number_opciones; $x++){
                                 $opcion = (array) $array_opciones[$x];
                                 $html = $html .  '
-                                    <div class="checkbox">
+                                    <div class="checkbox ' . $field_attr_checkclass . '">
                                         <input type="hidden" name="'.$row->{'mod_id_formulario_pregunta'}.'" value="-1">
-                                        <label><input type="checkbox" name="'.$row->{'mod_id_formulario_pregunta'}.'" value="'.$opcion['valor'].'" '.$enabled.'>'.$opcion['enunciado'].'</label>
+                                        <label><input type="checkbox  ' . $field_attr_inputclass . '" name="'.$row->{'mod_id_formulario_pregunta'}.'" value="'.$opcion['valor'].'" '.$enabled.'>'.$opcion['enunciado'].'</label>
                                     </div>
                                 ' . "\n";
                             }
