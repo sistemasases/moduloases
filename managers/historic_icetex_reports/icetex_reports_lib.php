@@ -87,6 +87,18 @@ function get_array_students_with_cancel($id_student, $id_program, $id_semester){
     }    
 }
 
+function get_active_res_students($cohort){
+    global $DB;
+
+$sql_query = "SELECT Count(res_est.id) FROM {talentospilos_res_estudiante} AS res_est
+                INNER JOIN {talentospilos_user_extended} uext ON uext.id_ases_user = res_est.id_estudiante
+                INNER JOIN {cohort_members} co_mem ON uext.id_moodle_user = cohortm.userid
+                INNER JOIN {cohort} cohortm ON cohortm.id = co_mem.cohortid
+                WHERE substring(cohortm.idnumber from 0 for 5) = $cohort OR substring(cohortm.idnumber from 0 for 6) = $cohort";
+
+
+}
+
 
 function get_all_cohort_names(){
     global $DB;
