@@ -84,13 +84,18 @@ if(isset($_POST['type'])&&$_POST['type']=="assign_student")
     $student = $DB->get_record_sql($sql_query);
     if($student){
 
-      $sql_query = "SELECT * FROM {talentospilos_monitor_estud} WHERE id_monitor='$monitor' and id_estudiante='$student->id' and id_semestre='$semester' and id_instancia='$instance'";
+    $sql_query = "SELECT * FROM  mdl_talentospilos_user_extended ext INNER JOIN mdl_user users ON ext.id_moodle_user = users.id where id_moodle_user='$student->id'";
+
+      $id_ases_user  = $DB->get_record_sql($sql_query)->id_ases_user; 
+
+      $sql_query = "SELECT * FROM {talentospilos_monitor_estud} WHERE id_monitor='$monitor' and id_estudiante='$id_ases_user' and id_semestre='$semester' and id_instancia='$instance'";
       $assign  = $DB->get_record_sql($sql_query);  
 
       if (! $assign){
+ 
       $record= new stdClass;
       $record->id_monitor = $monitor;
-      $record->id_estudiante = $student->id;
+      $record->id_estudiante = $id_ases_user;
       $record->id_semestre =$semester;
       $record->id_instancia= $instance;
       $insert_record = $DB->insert_record('talentospilos_monitor_estud', $record, false);
