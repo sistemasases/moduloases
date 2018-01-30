@@ -203,7 +203,7 @@
                                 $html = $html .  '
                                     <div class="checkbox ' . $field_attr_checkclass . '">
                                         <input type="hidden" name="'.$row->{'mod_id_formulario_pregunta'}.'" value="-1">
-                                        <label><input type="checkbox  ' . $field_attr_inputclass . '" name="'.$row->{'mod_id_formulario_pregunta'}.'" value="'.$opcion['valor'].'" '.$enabled.'>'.$opcion['enunciado'].'</label>
+                                        <label><input type="checkbox" class="' . $field_attr_inputclass . '" name="'.$row->{'mod_id_formulario_pregunta'}.'" value="'.$opcion['valor'].'" '.$enabled.'>'.$opcion['enunciado'].'</label>
                                     </div>
                                 ' . "\n";
                             }

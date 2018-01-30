@@ -403,9 +403,14 @@ function dphpforms_store_form_disparadores($form_id, $disparadores, $identifiers
     global $DB;
     $disparadores_string = json_encode($disparadores);
     foreach ($identifiers_form_preguntas as &$value) {
-        echo 'REEMPLAZO DE'  . $value['idPreguntaTemporal'] . ' CON ' . $value['idRelacionFormPreg'] . ' <::::';
+        //echo 'REEMPLAZO DE'  . $value['idPreguntaTemporal'] . ' CON ' . $value['idRelacionFormPreg'] . ' <::::';
         $disparadores_string = str_replace($value['idPreguntaTemporal'], $value['idRelacionFormPreg'], $disparadores_string);
+        if($value['idPreguntaTemporal'] == 'cmp_17'){
+            echo 'NUEVO CAMPO ::::::::' . $value['idRelacionFormPreg'];
+            echo $disparadores_string;
+        }
     }
+    //echo $disparadores_string;
 
 
     $obj_disparadores_permisos_formulario_diligenciado = new stdClass();

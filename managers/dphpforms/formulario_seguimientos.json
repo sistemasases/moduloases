@@ -509,7 +509,8 @@
                 }
             ],
             "atributos_campo": {
-                "name": "riesgo_ind"
+                "name": "riesgo_ind",
+                "radioclass":"radio-inline"
             },
             "permisos_campo": [
                 {
