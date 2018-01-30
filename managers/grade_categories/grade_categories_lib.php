@@ -89,7 +89,7 @@ function get_courses_pilos(){
         FROM {course} curso
         INNER JOIN {enrol} ROLE ON curso.id = role.courseid
         INNER JOIN {user_enrolments} enrols ON enrols.enrolid = role.id
-        WHERE SUBSTRING(curso.shortname FROM 15 FOR 6) = '$semestre' AND enrols.userid IN
+        WHERE SUBSTRING(curso.shortname FROM 4 FOR 7) IN (SELECT codigo_materia FROM {talentospilos_materias_criti}) AND SUBSTRING(curso.shortname FROM 15 FOR 6) = '$semestre' AND enrols.userid IN
             (SELECT user_m.id
             FROM {user} user_m
             INNER JOIN {talentospilos_user_extended} extended ON user_m.id = extended.id_moodle_user
