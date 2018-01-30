@@ -38,10 +38,10 @@ function get_array_students_with_resolution(){
     $array_historics = array();
 
     $sql_query = "SELECT res_est.id, substring(cohortm.idnumber from 0 for 5) AS cohorte, substring(userm.username from 0 for 8) AS codigo, usuario.num_doc, userm.firstname, userm.lastname, 
-                    semestre.nombre, res.codigo_resolucion, monto_estudiante, uextended.program_status, res_est.id_estudiante, res_est.id_semestre, res_est.id_programa
+                    semestre.nombre, res.codigo_resolucion, monto_estudiante, uextended.program_status, res_est.id_estudiante, res.id_semestre, res_est.id_programa
                     FROM {talentospilos_res_estudiante} AS res_est
                     INNER JOIN {talentospilos_res_icetex} res ON res.id = res_est.id_resolucion
-                    INNER JOIN {talentospilos_semestre} semestre ON semestre.id = res_est.id_semestre 
+                    INNER JOIN {talentospilos_semestre} semestre ON semestre.id = res.id_semestre 
                     INNER JOIN {talentospilos_usuario} usuario ON usuario.id = res_est.id_estudiante 
                     INNER JOIN {talentospilos_user_extended} uextended ON usuario.id = uextended.id_ases_user 
                     INNER JOIN {user} userm ON uextended.id_moodle_user = userm.id
@@ -168,8 +168,7 @@ function get_resolutions_for_report(){
 
     $sql_query = "SELECT DISTINCT res_ice.id, res_ice.codigo_resolucion, semestre.nombre, res_ice.monto_total 
                     FROM mdl_talentospilos_res_icetex AS res_ice
-                        INNER JOIN mdl_talentospilos_res_estudiante res_est ON res_est.id_resolucion = res_ice.id
-                        INNER JOIN mdl_talentospilos_semestre semestre ON semestre.id = res_est.id_semestre";
+                        INNER JOIN mdl_talentospilos_semestre semestre ON semestre.id = res_ice.id_semestre";
 
     $resolutions = $DB->get_records_sql($sql_query);
 

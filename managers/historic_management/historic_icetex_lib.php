@@ -91,12 +91,13 @@ function get_student_id_by_identification($identification){
  * @param $total_amount -> total amount of money transfered
  * @return integer
  */
-function create_resolution($num_resolution, $date, $total_amount){
+function create_resolution($num_resolution, $semester_id, $date, $total_amount){
 
     global $DB;
 
     $newResolution = new stdClass();
     $newResolution->codigo_resolucion = $num_resolution;
+    $newResolution->id_semestre = $semester_id;
     $newResolution->fecha_resolucion = strtotime($date);
     $newResolution->monto_total = $total_amount;
 
@@ -118,14 +119,13 @@ function create_resolution($num_resolution, $date, $total_amount){
  * @param $amount -> amount of money per student
  * @return integer
  */
-function create_historic_icetex($student_id, $program_id, $resolution_id, $semester_id, $amount){
+function create_historic_icetex($student_id, $program_id, $resolution_id, $amount){
 
     global $DB;
 
     $newHistoric = new stdClass();
     $newHistoric->id_estudiante = $student_id;
     $newHistoric->id_resolucion = $resolution_id;
-    $newHistoric->id_semestre = $semester_id;
     $newHistoric->id_programa = $program_id;
     $newHistoric->monto_estudiante = $amount;
 

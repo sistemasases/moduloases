@@ -1,5 +1,5 @@
  /**
- * Management - Create, update and load periods
+ * Management - View reports
  * @module amd/src/icetex_reports_main
  * @author Juan Pablo Moreno Muñoz
  * @copyright 2018 Juan Pablo Moreno Muñoz <moreno.juan@correounivalle.edu.co>
