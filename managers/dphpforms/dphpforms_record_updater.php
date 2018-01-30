@@ -327,8 +327,6 @@
             $behavioral_permissions = $behaviors->{'permisos'};
 
             foreach ($behavioral_permissions as &$PC) {
-                echo ' CAMPO!: ' . $behavior_field;
-                print_r($PC);
                 if($PC->{'rol'} == $ROL){
 
                     $flagLectura = false;
@@ -468,23 +466,23 @@
     
                             //$html = $html .  ' CONDICION PARA RADIO/CHECK ';
                             if(($condition->{'condicion'} == 'marcado') && (($respuesta_trigger['valor'] !== "-1" )&&($respuesta_trigger['valor'] !== "-#$%-" ))){
-                                $html = $html .  "Se cumple marcado y con resultado";
+                                //$html = $html .  "Se cumple marcado y con resultado";
                                 $flag_satisfy = true;
-                                $html = $html .  $respuesta_trigger['valor'];
-                                $html = $html .  "CUMPLIÓ";
-                                print_r($respuesta_trigger);
+                                //$html = $html .  $respuesta_trigger['valor'];
+                                //$html = $html .  "CUMPLIÓ";
+                                //print_r($respuesta_trigger);
                             }else{
-                                $html = $html .  "No se cumple marcado y con resultado";
+                                //$html = $html .  "No se cumple marcado y con resultado";
                             }
     
                             if(($condition->{'condicion'} == 'no_marcado') && (($respuesta_trigger['valor'] === "-1" )||($respuesta_trigger['valor'] == "-#$%-" ))){
-                                $html = $html .  "Se cumple no_marcado y sin resultado";
+                                //$html = $html .  "Se cumple no_marcado y sin resultado";
                                 $flag_satisfy = true;
-                                $html = $html .  $respuesta_trigger['valor'];
-                                $html = $html .  "NO CUMPLIO";
-                                print_r($respuesta_trigger);
+                                //$html = $html .  $respuesta_trigger['valor'];
+                                //$html = $html .  "NO CUMPLIO";
+                                //print_r($respuesta_trigger);
                             }else{
-                                $html = $html .  "No se cumple no_marcado y sin resultado";
+                                //$html = $html .  "No se cumple no_marcado y sin resultado";
                             }
                     }
     
@@ -507,7 +505,7 @@
             }
         };
 
-        $html = $html . '<div id="permissions_information">' . json_encode($permissions_to_script) . '</div>';
+        $html = $html . '<div id="permissions_information" style="display:none;">' . json_encode($permissions_to_script) . '</div>';
 
         
 
