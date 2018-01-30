@@ -1256,7 +1256,7 @@
             "opciones_campo": [
                 {
                     "enunciado": "Revisado",
-                    "valor":"1",
+                    "valor":"0",
                     "posicion":"1"
                 }
             ],
@@ -1323,7 +1323,7 @@
             "opciones_campo": [
                 {
                     "enunciado": "Revisado",
-                    "valor":"1",
+                    "valor":"0",
                     "posicion":"1"
                 }
             ],
