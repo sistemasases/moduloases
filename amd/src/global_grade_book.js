@@ -20,8 +20,8 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
                     //Redirect to a new page given the course id 
                     new_page = location.origin + "/moodle/grade/report/grader/index.php?id=" + getCourseid();
                     swal({
-                        title: "Redireccionando página.",
-                        text: "Debido al proceso de actualización del campus virtual se debe realizar este paso.\nSOLO EL DOCENTE ENCARGADO DEL CURSO PUEDE \n Una vez realizado por favor cerrar la ventana y volver a seleccionar su curso en el listado",
+                        title: "Recalculando ítems.",
+                        text: "Debido al proceso de actualización del campus virtual se debe realizar este paso.\nGracias por su paciencia \nDe seguir presentando este problema, por favor dirigirse al area de sistemas Ases",
                         type: "warning",
                         showCancelButton: false,
                         confirmButtonClass: "btn-danger",
@@ -29,7 +29,8 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
                         closeOnConfirm: false
                     },
                         function () {
-                            location.href = new_page;
+                            update_grade_items(getCourseid());
+                            location.reload();
                         });
                 }
             });
@@ -127,11 +128,38 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
                 location.reload();
             });
 
+            /**
+             * @method update_grade_items 
+             * @desc uptade the items which needsupdate from a course
+             * @param {integer} course_id
+             * @return {boolean} 
+             */
+            function update_grade_items(course_id){
 
+                var curso = course_id;
+                var data = { type: 'update_grade_items', course: curso };
+
+                $.ajax({
+                    type: "POST",
+                    data: data,
+                    url: "../managers/grade_categories/grader_processing.php",
+                    async: false,
+                    success: function (msg) {
+                        if(msg == '1'){
+                            console.log('update ok');
+                        }else{
+                            console.log('update fail');
+                        }
+                    },
+                    dataType: "text",
+                    cache: "false",
+                    error: function (msg) { console.log(msg) },
+                });
+            };
             /**
              * @method validateNota
              * @desc Verifies if a grade is correct value (not empty or within a range)
-             * @param {DOM element} selector 
+             * @param {DOM element} selector represents all inputs where every grade is registered
              * @return {boolean} Return false in case there was any mistake or error, true if the grade is correct or there isn't a selected grade
              */
             function validateNota(selector) {
