@@ -25,6 +25,18 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/jqueryui'], function($, bo
                 if($(".cancelacion").length != 0){
                     $(".cancelacion").parent().parent().parent().parent().prev().toggleClass('cancelacion');
                 }
+
+                if(parseInt($('.est').text()) > 0){
+                    $('.est').parent().toggleClass('estimulo');
+                }
+
+                if(parseInt($('.baj').text()) > 0){
+                    $('.baj').parent().toggleClass('bajo');
+                }
+                
+                if(parseFloat($('.prom').text()) < 3){
+                    $('.prom').parent().toggleClass('bajo');
+                }
             });           
         }
         

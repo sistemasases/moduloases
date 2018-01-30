@@ -23,23 +23,18 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-
-
 // Queries from module grades record (registro de notas)
 
-require_once(__DIR__ . '/../../../../config.php');
-require_once $CFG->libdir.'/gradelib.php';
-require_once $CFG->dirroot.'/grade/lib.php';
-require_once $CFG->dirroot.'/grade/report/user/lib.php';
-require_once $CFG->dirroot.'/blocks/ases/managers/lib/student_lib.php'; 
-require_once $CFG->dirroot.'/grade/report/grader/lib.php'; 
-
-
+require_once __DIR__ . '/../../../../config.php';
+require_once $CFG->libdir . '/gradelib.php';
+require_once $CFG->dirroot . '/grade/lib.php';
+require_once $CFG->dirroot . '/grade/report/user/lib.php';
+require_once $CFG->dirroot . '/blocks/ases/managers/lib/student_lib.php';
+require_once $CFG->dirroot . '/grade/report/grader/lib.php';
 
 ///******************************************///
 ///*** Get info global_grade_book methods ***///
 ///******************************************///
-
 
 /**
  * Gets course information given its id
@@ -103,8 +98,9 @@ function get_info_course($id_curso)
  * @see get_categories_global_grade_book($id_curso)
  * @param $id_curso --> course id
  * @return string HTML table
-**/
-function get_categories_global_grade_book($id_curso){
+ **/
+function get_categories_global_grade_book($id_curso)
+{
 
     global $USER;
     $USER->gradeediting[$id_curso] = 1;
@@ -121,9 +117,33 @@ function get_categories_global_grade_book($id_curso){
 }
 // print_r(get_categorias_curso(3));
 
-///*********************************///
-///***    Update grades method   ***///
-///*********************************///
+///**********************************///
+///***    Update grades methods   ***///
+///**********************************///
+
+/**
+ * update all grades from a course which needsupdate
+ * @see update_grade_items_by_course($course_id)
+ * @param $course_id --> id from course to update grade_items
+ * @return integer --> 1 if Ok 0 if not
+ */
+
+function update_grade_items_by_course($course_id)
+{
+
+    // $course_item = grade_item::fetch_course_item($courseid);
+    // $course_item->regrading_finished();
+    $grade_items = grade_item::fetch_all(array('courseid'=>$course_id, 'needsupdate'=>1));
+    foreach ($grade_items as $item) {
+        if($item->needsupdate = 1){
+            $item->regrading_finished();
+        }
+    }
+
+    return '1';
+}
+
+//update_grade_items_by_course(9);
 
 /**
  * Updates grades from a student
@@ -134,7 +154,7 @@ function get_categories_global_grade_book($id_curso){
  * @param $item --> item id
  * @param $finalgrade --> grade value
  * @param $courseid --> course id
- *       
+ *
  * @return boolean --> true if there's a successful update, false otherwise.
 
  */
@@ -163,7 +183,6 @@ function update_grades_moodle($userid, $itemid, $finalgrade, $courseid)
 
 }
 
-
 /**
  * Sends an email alert in case a student final grade is less than 3.0
  *
@@ -172,40 +191,41 @@ function update_grades_moodle($userid, $itemid, $finalgrade, $courseid)
  * @param $itemid --> item id
  * @param $grade --> grade value
  * @param $courseid --> course id
- *       
+ *
  * @return boolean --> true if there's a successful update, false otherwise.
  */
 
-function send_email_alert($userid, $itemid,$grade,$courseid){
-      global $USER;
-      global $DB;
+function send_email_alert($userid, $itemid, $grade, $courseid)
+{
+    global $USER;
+    global $DB;
 
-      $resp = new stdClass;
-      $resp->nota = true;
-      
-      $sending_user = $DB->get_record_sql("SELECT * FROM {user} WHERE username = 'sistemas1008'");
-      
-      $userFromEmail = new stdClass;
+    $resp = new stdClass;
+    $resp->nota = true;
 
-      $userFromEmail->email = $sending_user->email;
-      $userFromEmail->firstname = $sending_user->firstname;
-      $userFromEmail->lastname = $sending_user->lastname;
-      $userFromEmail->maildisplay = true;
-      $userFromEmail->mailformat = 1;
-      $userFromEmail->id = $sending_user->id; 
-      $userFromEmail->alternatename = '';
-      $userFromEmail->middlename = '';
-      $userFromEmail->firstnamephonetic = '';
-      $userFromEmail->lastnamephonetic = '';
+    $sending_user = $DB->get_record_sql("SELECT * FROM {user} WHERE username = 'sistemas1008'");
 
-      $user_moodle = get_full_user($userid);
-      $nombre_estudiante = $user_moodle->firstname." ".$user_moodle->lastname;
+    $userFromEmail = new stdClass;
 
-      $subject = "ALERTA ACADÉMICA $nombre_estudiante";
+    $userFromEmail->email = $sending_user->email;
+    $userFromEmail->firstname = $sending_user->firstname;
+    $userFromEmail->lastname = $sending_user->lastname;
+    $userFromEmail->maildisplay = true;
+    $userFromEmail->mailformat = 1;
+    $userFromEmail->id = $sending_user->id;
+    $userFromEmail->alternatename = '';
+    $userFromEmail->middlename = '';
+    $userFromEmail->firstnamephonetic = '';
+    $userFromEmail->lastnamephonetic = '';
 
-      $curso = $DB->get_record_sql("SELECT fullname, shortname FROM {course} WHERE id = $courseid");
-      $nombre_curso= $curso->fullname." ".$curso->shortname;
-      $query_teacher="SELECT concat_ws(' ',firstname,lastname) AS fullname
+    $user_moodle = get_full_user($userid);
+    $nombre_estudiante = $user_moodle->firstname . " " . $user_moodle->lastname;
+
+    $subject = "ALERTA ACADÉMICA $nombre_estudiante";
+
+    $curso = $DB->get_record_sql("SELECT fullname, shortname FROM {course} WHERE id = $courseid");
+    $nombre_curso = $curso->fullname . " " . $curso->shortname;
+    $query_teacher = "SELECT concat_ws(' ',firstname,lastname) AS fullname
            FROM
              (SELECT usuario.firstname,
                      usuario.lastname,
