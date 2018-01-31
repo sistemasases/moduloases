@@ -304,9 +304,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     // Define table talentospilos_res_estudiante to be dropped.
     $table = new xmldb_table('talentospilos_res_estudiante');
     // Conditionally launch drop table for talentospilos_res_estudiante.
-    if ($dbman->table_exists($table)) {
-        $dbman->drop_table($table);
-    }
+    
     // Define table talentospilos_res_estudiante to be created.
     $table = new xmldb_table('talentospilos_res_estudiante');
     // Adding fields to table talentospilos_res_estudiante.
@@ -361,9 +359,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     // Define table talentospilos_res_icetex to be dropped.
     $table = new xmldb_table('talentospilos_res_icetex');
     // Conditionally launch drop table for talentospilos_res_icetex.
-    if ($dbman->table_exists($table)) {
-        $dbman->drop_table($table);
-    }
+    
     // Define table talentospilos_res_icetex to be created.
     $table = new xmldb_table('talentospilos_res_icetex');
     // Adding fields to table talentospilos_res_icetex.
