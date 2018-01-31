@@ -104,6 +104,9 @@
                                         response['message'],
                                         'success'
                                     );
+                                    $('.dphpforms-response').trigger("reset");
+                                    $('#modal_test_edit_peer_tracking').fadeOut(300);
+                                    $('#modal_test_peer_tracking').fadeOut(300);
                                 }else if(response['status'] == -2){
                                     swal(
                                         'Alerta',
@@ -117,7 +120,7 @@
                                         'error'
                                     );
                                 };
-                                $('#modal_test_edit_peer_tracking').fadeOut(300);
+                                
                             },
                             error: function(data) {
                                 swal(
@@ -125,7 +128,6 @@
                                     data,
                                     'error'
                                 );
-                                $('#modal_test_edit_peer_tracking').fadeOut(300);
                             }
                      });
                 });
