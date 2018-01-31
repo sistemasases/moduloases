@@ -117,6 +117,7 @@
                                         'error'
                                     );
                                 };
+                                $('#modal_test_edit_peer_tracking').fadeOut(300);
                             },
                             error: function(data) {
                                 swal(
@@ -124,6 +125,7 @@
                                     data,
                                     'error'
                                 );
+                                $('#modal_test_edit_peer_tracking').fadeOut(300);
                             }
                      });
                 });
