@@ -4,7 +4,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     global $DB;
     $dbman = $DB->get_manager();
     $result = true;
-    if ($oldversion < 2018012918099) {
+    if ($oldversion < 2018013114389) {
     // ************************************************************************************************************
     // Actualización que crea la tabla para los campos extendidos de usuario (Tabla: {talentospilos_user_extended})
     // Versión: 2018010911179
@@ -812,13 +812,37 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
         	$dbman->create_table($table);
     	}
 
+    // ************************************************************************************************************
+    // Actualización:
+    // Se crea la tabla {talentospilos_df_alias}
+    // Versión en la que se incluye: 2018013114389
+    // ************************************************************************************************************
 
+        // Define table talentospilos_df_alias to be created.
+        $table = new xmldb_table('talentospilos_df_alias');
+
+        // Adding fields to table talentospilos_df_alias.
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        $table->add_field('id_pregunta', XMLDB_TYPE_INTEGER, '20', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('alias', XMLDB_TYPE_CHAR, '100', null, XMLDB_NOTNULL, null, null);
+
+        // Adding keys to table talentospilos_df_alias.
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+
+        // Adding indexes to table talentospilos_df_alias.
+        $table->add_index('unique_id_pregunta', XMLDB_INDEX_UNIQUE, array('id_pregunta'));
+        $table->add_index('unique_alias', XMLDB_INDEX_UNIQUE, array('alias'));
+
+        // Conditionally launch create table for talentospilos_df_alias.
+        if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
+        }
 
 
 
 
     // Ases savepoint reached.
-    upgrade_block_savepoint(true, 2018012918099, 'ases');
+    upgrade_block_savepoint(true, 2018013114389, 'ases');
    
     return $result;
 
