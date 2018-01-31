@@ -3,11 +3,11 @@
     require_once(dirname(__FILE__). '/../../../../config.php');
     require_once('dphpforms_record_updater.php');
     require_once('dphpforms_response_recorder.php');
-    /*include '../lib.php';
+    include '../lib/lib.php';
 
     global $USER;
     $rol = get_role_ases($USER->id);
-    echo $rol;*/
+    //echo $rol;
 
     function dphpforms_render_recorder($id_form, $rol, $id_estudiante, $id_monitor){
         return dphpforms_generate_html_recorder($id_form, $rol, $id_estudiante, $id_monitor);
