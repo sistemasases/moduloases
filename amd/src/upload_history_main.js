@@ -112,10 +112,10 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert'], function ($,
                         $('#informacion').append('<div class="alert alert-info"><h4 align="center">Información de carga materias</h4><br><strong>Para tener en cuenta...</strong> <br><p>Columnas obligatorias:<ul> <li>codigo_estudiante</li> <li>semestre</li> <li>programa</li> <li>nombre_materia</li> <li>codigo_materia</li> <li>creditos</li> <li>nota</li> <li>fecha_cancelacion_materia</li> </ul> </p></div>');
                         break;
                     case 'icetex':
-                        $('#informacion').append('<div class="alert alert-info"><h4 align="center">Información de carga histórico ICETEX</h4><br> <strong>Para tener en cuenta...</strong> <br><p>Columnas obligatorias:<ul><li>cedula_estudiante</li><li>nombre_semestre</li><li>codigo_resolucion</li> <li>monto_estudiante</li></ul> </p></div>');
+                        $('#informacion').append('<div class="alert alert-info"><h4 align="center">Información de carga histórico ICETEX</h4><br> <strong>Para tener en cuenta...</strong> <br><p>Columnas obligatorias:<ul><li>cedula_estudiante</li><li>programa</li><li>codigo_resolucion</li> <li>monto_estudiante</li></ul> </p></div>');
                         break;
                     case 'resolution':
-                        $('#informacion').append('<div class="alert alert-info"><h4 align="center">Información de carga resolución ICETEX</h4><br> <strong>Para tener en cuenta...</strong> <br><p>Columnas obligatorias:<ul><li>codigo_resolucion</li><li>fecha</li><li>total_girado</li></ul></p></div>');
+                        $('#informacion').append('<div class="alert alert-info"><h4 align="center">Información de carga resolución ICETEX</h4><br> <strong>Para tener en cuenta...</strong> <br><p>Columnas obligatorias:<ul><li>codigo_resolucion</li><li>nombre_semestre</li><li>fecha</li><li>total_girado</li></ul></p></div>');
                         break;
                     default:
                     // code

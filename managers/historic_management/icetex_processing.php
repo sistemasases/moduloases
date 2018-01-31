@@ -134,27 +134,7 @@ if (isset($_FILES['file'])) {
 
            } else {
                throw new MyException('La columna con el campo programa es obligatoria');
-           }
-           
-           //validate nombre_semestre
-           if ($associativeTitles['nombre_semestre'] != null) {
-               $nombre_semestre = $data[$associativeTitles['nombre_semestre']];
-               if ($nombre_semestre != '') {
-
-                   $id_semestre = get_semester_id_by_name($nombre_semestre);
-                   if (!$id_semestre) {
-                       $isValidRow = false;
-                       array_push($detail_errors, [$line_count, $lc_wrongFile, ($associativeTitles['nombre_semestre'] + 1), 'nombre_semestre', 'No existe ningun semestre registrado con el nombre: ' . $nombre_semestre]);
-                   }
-
-               } else {
-                   $isValidRow = false;
-                   array_push($detail_errors, [$line_count, $lc_wrongFile, ($associativeTitles['nombre_semestre'] + 1), 'nombre_semestre', 'El campo nombre_semestre es obligatorio y se encuentra vacio']);
-               }
-
-           } else {
-               throw new MyException('La columna con el campo nombre_semestre es obligatoria');
-           }
+           }          
 
            //validate codigo_resolucion
            if ($associativeTitles['codigo_resolucion'] != null) {
@@ -206,7 +186,7 @@ if (isset($_FILES['file'])) {
            } else {
 
                //Actualizar o crear un registro
-               $result = create_historic_icetex($id_estudiante, $id_programa, $id_resolucion, $id_semestre, $monto_estudiante);
+               $result = create_historic_icetex($id_estudiante, $id_programa, $id_resolucion, $monto_estudiante);
 
                if (!$result) {
                    array_push($detail_errors, [$line_count, $lc_wrongFile, 'Error al registrar historico', 'Error Servidor', 'Error del server registrando el historico']);

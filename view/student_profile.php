@@ -179,10 +179,20 @@ if ($student_code != 0) {
     $record->num_doc = $ases_student->num_doc;
     $record->observations = $ases_student->observacion;
 
-    $monitor_object = get_assigned_monitor($student_id);
-    $trainee_object = get_assigned_pract($student_id);
-    $professional_object = get_assigned_professional($student_id);
+    $monitor_object = new stdClass();
+    $trainee_object = new stdClass();
+    $professional_object = new stdClass();
 
+    if(get_assigned_monitor($student_id)){
+        $monitor_object = get_assigned_monitor($student_id);
+    }
+    if(get_assigned_pract($student_id)){
+        $trainee_object = get_assigned_pract($student_id);
+    }
+    if(get_assigned_professional($student_id)){
+        $professional_object = get_assigned_professional($student_id);
+    }
+    
     if ($monitor_object) {
         $record->monitor_fullname = "$monitor_object->firstname $monitor_object->lastname";
     } else {

@@ -1602,23 +1602,23 @@ function get_current_semester_by_date()
   return $current_semester;
 }
 
- /**
- * Función que retorna el semestre actual 
- *
- * @see get_current_semester()
- * @return cadena de texto que representa el semestre actual
- */
+//  /**
+//  * Función que retorna el semestre actual 
+//  *
+//  * @see get_current_semester()
+//  * @return cadena de texto que representa el semestre actual
+//  */
  
- function get_current_semester(){
+//  function get_current_semester(){
      
-     global $DB;
+//      global $DB;
      
-     $sql_query = "SELECT id AS max, nombre FROM {talentospilos_semestre} WHERE id = (SELECT MAX(id) FROM {talentospilos_semestre})";
+//      $sql_query = "SELECT id AS max, nombre FROM {talentospilos_semestre} WHERE id = (SELECT MAX(id) FROM {talentospilos_semestre})";
      
-     $current_semester = $DB->get_record_sql($sql_query);
+//      $current_semester = $DB->get_record_sql($sql_query);
      
-     return $current_semester;
- }
+//      return $current_semester;
+//  }
 /** 
  **********************
  Fin consultas asistencias 
