@@ -36,6 +36,7 @@ function get_array_students_with_resolution(){
     global $DB;
 
     $array_historics = array();
+    $final_array = array();
 
     $sql_query = "SELECT res_est.id, substring(cohortm.idnumber from 0 for 5) AS cohorte, substring(userm.username from 0 for 8) AS codigo, usuario.num_doc, userm.firstname, userm.lastname, 
                     semestre.nombre, res.codigo_resolucion, monto_estudiante, res_est.id_estudiante, res.id_semestre, res_est.id_programa
@@ -178,17 +179,28 @@ function get_resolutions_for_report(){
 function get_count_active_res_students($cohort){
     global $DB;
 
-    $sql_query = "SELECT Count(res_est.id) AS numero FROM {talentospilos_res_estudiante} AS res_est
-                    INNER JOIN {talentospilos_user_extended} uext ON uext.id_ases_user = res_est.id_estudiante
-                    INNER JOIN {cohort_members} co_mem ON uext.id_moodle_user = co_mem.userid
-                    INNER JOIN {cohort} cohortm ON cohortm.id = co_mem.cohortid
-                    WHERE substring(cohortm.idnumber from 0 for 5) = '$cohort' OR substring(cohortm.idnumber from 0 for 6) = '$cohort'";
+    $array_count = array();
 
-    $count = $DB->get_record_sql($sql_query)->numero;
+    $sql_query = "SELECT res_est.id, Count(res_est.id) AS numero, semestre.nombre, sum(res_est.monto_estudiante) 
+                    FROM {talentospilos_res_estudiante} AS res_est
+                        INNER JOIN {talentospilos_res_icetex} res_ice ON res_ice.id = res_est.id_resolucion
+                        INNER JOIN {talentospilos_semestre} semestre ON semestre.id = res_ice.id_semestre
+                        INNER JOIN {talentospilos_user_extended} uext ON uext.id_ases_user = res_est.id_estudiante
+                        INNER JOIN {cohort_members} co_mem ON uext.id_moodle_user = co_mem.userid
+                        INNER JOIN {cohort} cohortm ON cohortm.id = co_mem.cohortid
+                        WHERE substring(cohortm.idnumber from 0 for 5) = '$cohort' OR substring(cohortm.idnumber from 0 for 6) = '$cohort'
+                        GROUP BY semestre.nombre";
 
-    return $count;
+    $counts = $DB->get_record_sql($sql_query);
 
+    foreach($counts as $count){
+        array_push($array_count, $count);
+    }
+
+    return $array_count;
 }
+
+print_r(get_count_active_res_students('SPP1'));
 
 function get_count_inactive_res_students($cohort){
     global $DB;
@@ -213,6 +225,7 @@ function get_active_no_res_students(){
     global $DB;
     
     $students = array();
+    $final_students = array();
 
     $sql_query = "SELECT id_estudiante
                     FROM {talentospilos_history_academ} AS academ
