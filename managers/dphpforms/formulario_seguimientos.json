@@ -14,7 +14,7 @@
             "opciones_campo": null,
             "atributos_campo": {
                 "maxlength": "10",
-                "class": "hasDatepicker",
+                "class": "col-xs-6 date_field",
                 "name": "date"
             },
             "permisos_campo": [
@@ -82,7 +82,7 @@
             "tipo_campo": "TEXTFIELD",
             "opciones_campo": null,
             "atributos_campo": {
-                "class": "",
+                "class": "col-xs-6",
                 "name": "place"
             },
             "permisos_campo": [
@@ -150,7 +150,7 @@
             "tipo_campo": "TIME",
             "opciones_campo": null,
             "atributos_campo": {
-                "class": "",
+                "class": "time_field",
                 "name": "h_ini"
             },
             "permisos_campo": [
@@ -218,7 +218,7 @@
             "tipo_campo": "TIME",
             "opciones_campo": null,
             "atributos_campo": {
-                "class": "",
+                "class": "time_field",
                 "name": "h_fin"
             },
             "permisos_campo": [
@@ -286,7 +286,7 @@
             "tipo_campo": "TEXTAREA",
             "opciones_campo": null,
             "atributos_campo": {
-                "class": "",
+                "class": "col-sm-6 content_field",
                 "name": "tema",
                 "maxlength": "1000"
             },
@@ -355,7 +355,7 @@
             "tipo_campo": "TEXTAREA",
             "opciones_campo": null,
             "atributos_campo": {
-                "class": "",
+                "class": "col-sm-6 content_field",
                 "name": "objetivos",
                 "maxlength": "1000"
             },
@@ -424,8 +424,77 @@
             "tipo_campo": "TEXTAREA",
             "opciones_campo": null,
             "atributos_campo": {
-                "class": "",
+                "class": "col-sm-6 content_field",
                 "name": "individual",
+                "maxlength": "5000"
+            },
+            "permisos_campo": [
+                {
+                    "rol": 1,
+                    "permisos": []
+                },
+                {
+                    "rol": 2,
+                    "permisos": []
+                },
+                {
+                    "rol": 3,
+                    "permisos": [
+                        "lectura",
+                        "escritura"
+                    ]
+                },
+                {
+                    "rol": 4,
+                    "permisos": [
+                        "lectura",
+                        "escritura"
+                    ]
+                },
+                {
+                    "rol": 5,
+                    "permisos": []
+                },
+                {
+                    "rol": 6,
+                    "permisos": [
+                        "lectura",
+                        "escritura"
+                    ]
+                },
+                {
+                    "rol": 7,
+                    "permisos": [
+                        "lectura",
+                        "escritura"
+                    ]
+                },
+                {
+                    "rol": 8,
+                    "permisos": []
+                },
+                {
+                    "rol": 9,
+                    "permisos": []
+                },
+                {
+                    "rol": 10,
+                    "permisos": []
+                },
+                {
+                    "rol": 11,
+                    "permisos": []
+                }
+            ]
+        },
+        {
+            "id_temporal": "cmp_8",
+            "enunciado": "Familiar",
+            "tipo_campo": "TEXTAREA",
+            "opciones_campo": null,
+            "atributos_campo": {
+                "class": "col-sm-6 content_field",
+                "name": "familiar",
                 "maxlength": "5000"
             },
             "permisos_campo": [
@@ -510,76 +579,8 @@
             ],
             "atributos_campo": {
                 "name": "riesgo_ind",
-                "radioclass":"radio-inline"
-            },
-            "permisos_campo": [
-                {
-                    "rol": 1,
-                    "permisos": []
-                },
-                {
-                    "rol": 2,
-                    "permisos": []
-                },
-                {
-                    "rol": 3,
-                    "permisos": [
-                        "lectura",
-                        "escritura"
-                    ]
-                },
-                {
-                    "rol": 4,
-                    "permisos": [
-                        "lectura",
-                        "escritura"
-                    ]
-                },
-                {
-                    "rol": 5,
-                    "permisos": []
-                },
-                {
-                    "rol": 6,
-                    "permisos": [
-                        "lectura",
-                        "escritura"
-                    ]
-                },
-                {
-                    "rol": 7,
-                    "permisos": [
-                        "lectura",
-                        "escritura"
-                    ]
-                },
-                {
-                    "rol": 8,
-                    "permisos": []
-                },
-                {
-                    "rol": 9,
-                    "permisos": []
-                },
-                {
-                    "rol": 10,
-                    "permisos": []
-                },
-                {
-                    "rol": 11,
-                    "permisos": []
-                }
-            ]
-        },
-        {
-            "id_temporal": "cmp_8",
-            "enunciado": "Familiar",
-            "tipo_campo": "TEXTAREA",
-            "opciones_campo": null,
-            "atributos_campo": {
-                "class": "",
-                "name": "familiar",
-                "maxlength": "5000"
+                "class": "col-sm-6",
+                "radioclass": "radio-inline"
             },
             "permisos_campo": [
                 {
@@ -662,7 +663,9 @@
                 }
             ],
             "atributos_campo": {
-                "name": "riesgo_familiar"
+                "name": "riesgo_familiar",
+                "class": "col-sm-6",
+                "radioclass": "radio-inline"
             },
             "permisos_campo": [
                 {
@@ -729,8 +732,77 @@
             "tipo_campo": "TEXTAREA",
             "opciones_campo": null,
             "atributos_campo": {
-                "class": "small",
+                "class": "col-sm-6 content_field",
                 "name": "academico",
+                "maxlength": "5000"
+            },
+            "permisos_campo": [
+                {
+                    "rol": 1,
+                    "permisos": []
+                },
+                {
+                    "rol": 2,
+                    "permisos": []
+                },
+                {
+                    "rol": 3,
+                    "permisos": [
+                        "lectura",
+                        "escritura"
+                    ]
+                },
+                {
+                    "rol": 4,
+                    "permisos": [
+                        "lectura",
+                        "escritura"
+                    ]
+                },
+                {
+                    "rol": 5,
+                    "permisos": []
+                },
+                {
+                    "rol": 6,
+                    "permisos": [
+                        "lectura",
+                        "escritura"
+                    ]
+                },
+                {
+                    "rol": 7,
+                    "permisos": [
+                        "lectura",
+                        "escritura"
+                    ]
+                },
+                {
+                    "rol": 8,
+                    "permisos": []
+                },
+                {
+                    "rol": 9,
+                    "permisos": []
+                },
+                {
+                    "rol": 10,
+                    "permisos": []
+                },
+                {
+                    "rol": 11,
+                    "permisos": []
+                }
+            ]
+        },
+        {
+            "id_temporal": "cmp_12",
+            "enunciado": "Económico",
+            "tipo_campo": "TEXTAREA",
+            "opciones_campo": null,
+            "atributos_campo": {
+                "class": "col-sm-6 content_field",
+                "name": "economico",
                 "maxlength": "5000"
             },
             "permisos_campo": [
@@ -814,76 +886,9 @@
                 }
             ],
             "atributos_campo": {
-                "name": "riesgo_aca"
-            },
-            "permisos_campo": [
-                {
-                    "rol": 1,
-                    "permisos": []
-                },
-                {
-                    "rol": 2,
-                    "permisos": []
-                },
-                {
-                    "rol": 3,
-                    "permisos": [
-                        "lectura",
-                        "escritura"
-                    ]
-                },
-                {
-                    "rol": 4,
-                    "permisos": [
-                        "lectura",
-                        "escritura"
-                    ]
-                },
-                {
-                    "rol": 5,
-                    "permisos": []
-                },
-                {
-                    "rol": 6,
-                    "permisos": [
-                        "lectura",
-                        "escritura"
-                    ]
-                },
-                {
-                    "rol": 7,
-                    "permisos": [
-                        "lectura",
-                        "escritura"
-                    ]
-                },
-                {
-                    "rol": 8,
-                    "permisos": []
-                },
-                {
-                    "rol": 9,
-                    "permisos": []
-                },
-                {
-                    "rol": 10,
-                    "permisos": []
-                },
-                {
-                    "rol": 11,
-                    "permisos": []
-                }
-            ]
-        },
-        {
-            "id_temporal": "cmp_12",
-            "enunciado": "Económico",
-            "tipo_campo": "TEXTAREA",
-            "opciones_campo": null,
-            "atributos_campo": {
-                "class": "small",
-                "name": "economico",
-                "maxlength": "5000"
+                "name": "riesgo_aca",
+                "class": "col-sm-6",
+                "radioclass": "radio-inline"
             },
             "permisos_campo": [
                 {
@@ -966,7 +971,9 @@
                 }
             ],
             "atributos_campo": {
-                "name": "riesgo_econom"
+                "name": "riesgo_econom",
+                "class": "col-sm-6",
+                "radioclass": "radio-inline"
             },
             "permisos_campo": [
                 {
@@ -1033,8 +1040,77 @@
             "tipo_campo": "TEXTAREA",
             "opciones_campo": null,
             "atributos_campo": {
-                "class": " small",
+                "class": "col-sm-6 content_field",
                 "name": "vida_uni",
+                "maxlength": "5000"
+            },
+            "permisos_campo": [
+                {
+                    "rol": 1,
+                    "permisos": []
+                },
+                {
+                    "rol": 2,
+                    "permisos": []
+                },
+                {
+                    "rol": 3,
+                    "permisos": [
+                        "lectura",
+                        "escritura"
+                    ]
+                },
+                {
+                    "rol": 4,
+                    "permisos": [
+                        "lectura",
+                        "escritura"
+                    ]
+                },
+                {
+                    "rol": 5,
+                    "permisos": []
+                },
+                {
+                    "rol": 6,
+                    "permisos": [
+                        "lectura",
+                        "escritura"
+                    ]
+                },
+                {
+                    "rol": 7,
+                    "permisos": [
+                        "lectura",
+                        "escritura"
+                    ]
+                },
+                {
+                    "rol": 8,
+                    "permisos": []
+                },
+                {
+                    "rol": 9,
+                    "permisos": []
+                },
+                {
+                    "rol": 10,
+                    "permisos": []
+                },
+                {
+                    "rol": 11,
+                    "permisos": []
+                }
+            ]
+        },
+        {
+            "id_temporal": "cmp_16",
+            "enunciado": "Observaciones",
+            "tipo_campo": "TEXTAREA",
+            "opciones_campo": null,
+            "atributos_campo": {
+                "class": "col-sm-6 content_field",
+                "name": "observaciones",
                 "maxlength": "5000"
             },
             "permisos_campo": [
@@ -1118,77 +1194,9 @@
                 }
             ],
             "atributos_campo": {
-                "class": " small",
+                "radioclass": "radio-inline",
+                "class": "col-sm-12",
                 "name": "vida_uni",
-                "maxlength": "5000"
-            },
-            "permisos_campo": [
-                {
-                    "rol": 1,
-                    "permisos": []
-                },
-                {
-                    "rol": 2,
-                    "permisos": []
-                },
-                {
-                    "rol": 3,
-                    "permisos": [
-                        "lectura",
-                        "escritura"
-                    ]
-                },
-                {
-                    "rol": 4,
-                    "permisos": [
-                        "lectura",
-                        "escritura"
-                    ]
-                },
-                {
-                    "rol": 5,
-                    "permisos": []
-                },
-                {
-                    "rol": 6,
-                    "permisos": [
-                        "lectura",
-                        "escritura"
-                    ]
-                },
-                {
-                    "rol": 7,
-                    "permisos": [
-                        "lectura",
-                        "escritura"
-                    ]
-                },
-                {
-                    "rol": 8,
-                    "permisos": []
-                },
-                {
-                    "rol": 9,
-                    "permisos": []
-                },
-                {
-                    "rol": 10,
-                    "permisos": []
-                },
-                {
-                    "rol": 11,
-                    "permisos": []
-                }
-            ]
-        },
-        {
-            "id_temporal": "cmp_16",
-            "enunciado": "Observaciones",
-            "tipo_campo": "TEXTAREA",
-            "opciones_campo": null,
-            "atributos_campo": {
-                "class": "",
-                "name": "observaciones",
                 "maxlength": "5000"
             },
             "permisos_campo": [
@@ -1262,7 +1270,9 @@
                 }
             ],
             "atributos_campo": {
-                "name": "profesional"
+                "name": "profesional",
+                "class": "col-sm-6",
+                "checkclass": "checkbox-inline"
             },
             "permisos_campo": [
                 {
@@ -1329,7 +1339,8 @@
                 }
             ],
             "atributos_campo": {
-                "name": "practicante"
+                "name": "practicante",
+                "checkclass": "checkbox-inline"
             },
             "permisos_campo": [
                 {
@@ -1386,12 +1397,13 @@
         },
         {
             "id_temporal": "cmp_19",
-            "enunciado": "id_monitor",
-            "tipo_campo": "TEXTFIELD",
+            "enunciado": "Creado por ",
+            "tipo_campo": "TEXTAREA",
             "opciones_campo": null,
             "atributos_campo": {
-                "style": "display:none",
-                "name": "id_monitor"
+                "class": "content_field",
+                "name": "creado",
+                "maxlength": "1000"
             },
             "permisos_campo": [
                 {
@@ -1450,11 +1462,141 @@
         },
         {
             "id_temporal": "cmp_20",
+            "enunciado": "Reportar observacion *",
+            "tipo_campo": "TEXTAREA",
+            "opciones_campo": null,
+            "atributos_campo": {
+                "class": "content_field",
+                "name": "observacion_reportar",
+                "maxlength": "1000"
+            },
+            "permisos_campo": [
+                {
+                    "rol": 1,
+                    "permisos": []
+                },
+                {
+                    "rol": 2,
+                    "permisos": []
+                },
+                {
+                    "rol": 3,
+                    "permisos": [
+                        "lectura",
+                        "escritura"
+                    ]
+                },
+                {
+                    "rol": 4,
+                    "permisos": []
+                },
+                {
+                    "rol": 5,
+                    "permisos": []
+                },
+                {
+                    "rol": 6,
+                    "permisos": [
+                        "lectura",
+                        "escritura"
+                    ]
+                },
+                {
+                    "rol": 7,
+                    "permisos": [
+                        "lectura",
+                        "escritura"
+                    ]
+                },
+                {
+                    "rol": 8,
+                    "permisos": []
+                },
+                {
+                    "rol": 9,
+                    "permisos": []
+                },
+                {
+                    "rol": 10,
+                    "permisos": []
+                },
+                {
+                    "rol": 11,
+                    "permisos": []
+                }
+            ]
+        },
+        {
+            "id_temporal": "cmp_21",
+            "enunciado": "id_monitor",
+            "tipo_campo": "TEXTFIELD",
+            "opciones_campo": null,
+            "atributos_campo": {
+                "class": "oculto",
+                "name": "id_monitor"
+            },
+            "permisos_campo": [
+                {
+                    "rol": 1,
+                    "permisos": []
+                },
+                {
+                    "rol": 2,
+                    "permisos": []
+                },
+                {
+                    "rol": 3,
+                    "permisos": [
+                        "lectura"
+                    ]
+                },
+                {
+                    "rol": 4,
+                    "permisos": [
+                        "lectura"
+                    ]
+                },
+                {
+                    "rol": 5,
+                    "permisos": []
+                },
+                {
+                    "rol": 6,
+                    "permisos": [
+                        "lectura"
+                    ]
+                },
+                {
+                    "rol": 7,
+                    "permisos": [
+                        "lectura"
+                    ]
+                },
+                {
+                    "rol": 8,
+                    "permisos": []
+                },
+                {
+                    "rol": 9,
+                    "permisos": []
+                },
+                {
+                    "rol": 10,
+                    "permisos": []
+                },
+                {
+                    "rol": 11,
+                    "permisos": []
+                }
+            ]
+        },
+        {
+            "id_temporal": "cmp_22",
             "enunciado": "id_estudiante",
             "tipo_campo": "TEXTFIELD",
             "opciones_campo": null,
             "atributos_campo": {
-                "style": "display:none",
+                "class": "oculto",
                 "name": "id_estudiante"
             },
             "permisos_campo": [

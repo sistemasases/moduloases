@@ -316,17 +316,20 @@
         //Manejo de disparadores
         function dphpforms_generate_permits_information($behaviors, $ROL){
             
-            $json_behaviors = null;
-
-            $json_behaviors_accessibility = array();
-            $json_behaviors_fields_to_remove = array();
-            $json_limpiar_to_eliminate = array();
-            
             //Este campo hace referencia a el identificador de la pregunta.
             $behavior_field = $behaviors->{'campo'};
             $behavioral_permissions = $behaviors->{'permisos'};
 
+            $all_behaviors_rol = array();
+
             foreach ($behavioral_permissions as &$PC) {
+
+                $behaviors_rol = array();
+
+                $json_behaviors_accessibility = array();
+                $json_behaviors_fields_to_remove = array();
+                $json_limpiar_to_eliminate = array();
+
                 if($PC->{'rol'} == $ROL){
 
                     $flagLectura = false;
@@ -369,7 +372,7 @@
                         );
 
                         $tmp_limpiar_to_eliminate = array(
-                            'id' => $behavior_field
+                            'class' => $behavior_field
                         );
 
                         array_push($json_behaviors_accessibility, $tmp_accessibility);
@@ -387,18 +390,24 @@
 
                         array_push($json_behaviors_fields_to_remove, $tmp_field_to_remove);
                     }
+
+                    $behaviors_rol = array(
+                        'behaviors_accessibility' => $json_behaviors_accessibility,
+                        'behaviors_fields_to_remove' => $json_behaviors_fields_to_remove,
+                        'limpiar_to_eliminate' => $json_limpiar_to_eliminate
+                    );
+
+                    array_push($all_behaviors_rol, $behaviors_rol);
                     break;
                 }
             }
             
 
-            $json_behaviors = array(
-                'behaviors_accessibility' => $json_behaviors_accessibility,
-                'behaviors_fields_to_remove' => $json_behaviors_fields_to_remove,
-                'limpiar_to_eliminate' => $json_limpiar_to_eliminate
+            $_behaviors = array(
+                    'behaviors' => $all_behaviors_rol
             );
 
-            return $json_behaviors;
+            return $_behaviors;
         }
 
         $permissions_to_script = array();
@@ -505,7 +514,11 @@
             }
         };
 
-        $html = $html . '<div id="permissions_information" style="display:none;">' . json_encode($permissions_to_script) . '</div>';
+        $permissions_behaviors_to_script = array(
+            'behaviors_permissions' => $permissions_to_script
+        );
+
+        $html = $html . '<div id="permissions_information" style="display:none;">' . json_encode($permissions_behaviors_to_script) . '</div>';
 
         
 
