@@ -17,6 +17,7 @@ $name_columns = new stdClass();
 $practicants = array();
 $monitors = array();
 global $USER;
+
 $fields_format = array(
     'student_code' => 'user_moodle.username',
     'firstname' => 'user_moodle.firstname',
@@ -44,23 +45,13 @@ $columns_format = array(
 
 if (isset($_POST['conditions']))
     {
+
     foreach($_POST['conditions'] as $condition)
         {
         array_push($conditions, $condition);
         }
     }
 
-
-$instancia =$_POST['instance_id'];
-$current_role = get_id_rol($USER->id,$instancia);
-
-$role_name = get_name_role($current_role);
-
-if ($role_name == 'profesional_ps')
-    {
-    $practicants = get_pract_of_prof($USER->id, $_POST['instance_id']);
-    $monitors = get_monitors_of_pract(array_values($practicants) [0]->id_usuario, $_POST['instance_id']);
-    }
 
 if (isset($_POST['fields']))
     {
@@ -74,6 +65,8 @@ if (isset($_POST['fields']))
         ));
         }
     }
+
+
 
 if (isset($_POST['academic_fields']))
     {
@@ -90,6 +83,22 @@ if (isset($_POST['academic_fields']))
         ));
         }
     }
+
+
+
+
+if(isset($_POST['instance_id'])){
+
+$instancia =$_POST['instance_id'];
+$current_role = get_id_rol($USER->id,$instancia);
+$role_name = get_name_role($current_role);
+
+if ($role_name == 'profesional_ps')
+    {
+    $practicants = get_pract_of_prof($USER->id, $_POST['instance_id']);
+    $monitors = get_monitors_of_pract(array_values($practicants) [0]->id_usuario, $_POST['instance_id']);
+    }
+}
 
 array_push($columns, array(
     "title" => "Escoger monitor",

@@ -67,7 +67,7 @@ function get_assign($result,$practicants,$monitors)
 
         $r->practicante= $name_practicants;
 
-        $r->assign= '<button type="button" id="student_assign"  class="red glyphicon glyphicon-ok"  id="'.  $r->id .'"></button>';
+        $r->assign= '<button type="button" id="student_assign"  class="red glyphicon glyphicon-ok"></button>';
   
         array_push($array, $r);
     }

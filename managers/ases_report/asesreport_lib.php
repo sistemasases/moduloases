@@ -324,7 +324,7 @@ function get_not_assign_students($general_fields=null, $conditions, $academic_fi
                 $where_clause .= " user_moodle.username NOT IN (SELECT user_moodle.username
                                                                 FROM {talentospilos_usuario}  AS ases_user
                                                                 INNER JOIN {talentospilos_user_extended} AS user_extended ON user_extended.id_ases_user = ases_user.id
-                                                                INNER JOIN {user AS user_moodle} ON user_moodle.id = user_extended.id_moodle_user
+                                                                INNER JOIN {user} AS user_moodle ON user_moodle.id = user_extended.id_moodle_user
                                                                 INNER JOIN {cohort_members}  AS cohorts_students ON cohorts_students.userid = user_extended.id_moodle_user
                                                                 INNER JOIN {talentospilos_monitor_estud} AS students_monitor ON students_monitor.id_estudiante = ases_user.id
                                                                 INNER JOIN {talentospilos_inst_cohorte}  AS cohorts_instance ON cohorts_instance.id_cohorte = cohorts_students.cohortid
