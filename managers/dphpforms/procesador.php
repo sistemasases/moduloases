@@ -1,9 +1,10 @@
 <?php 
 
     require_once(dirname(__FILE__). '/../../../../config.php');
+    
     global $DB;
 
-    print_r($_POST);
+    //print_r($_POST);
 
     $RECORD_ID = null;
 
@@ -31,8 +32,8 @@
         next($_POST);
     }
 
-    echo 'RESPUESTAS-->';
-    print_r($respuestas);
+    //echo 'RESPUESTAS-->';
+    //print_r($respuestas);
     
 
     $full_form = array(
@@ -115,23 +116,23 @@
 
 ';*/
 if($RECORD_ID){
-    echo 'SE VA A ACTUALIZAR';
-    echo json_encode($form_JSON);
+    //echo 'SE VA A ACTUALIZAR';
+    //echo json_encode($form_JSON);
     dphpforms_update_respuesta($form_JSON, $RECORD_ID);
 }else{
-    echo 'REGISTRO NUEVO';
+    //echo 'REGISTRO NUEVO';
     dphpforms_new_store_respuesta($form_JSON);
 }
 
 function dphpforms_update_respuesta($completed_form, $RECORD_ID){
-    echo 'ID REGISTRO: ' . $RECORD_ID;
+    //echo 'ID REGISTRO: ' . $RECORD_ID;
 
     $processable = true;
 
     $obj_form_completed = json_decode($completed_form);
     $processable = dphpforms_form_exist($obj_form_completed->{'formulario'}->{'id'});
    
-    print_r($obj_form_completed->{'respuestas'});
+    //print_r($obj_form_completed->{'respuestas'});
 
     foreach($obj_form_completed->{'respuestas'} as &$respuesta){
         if(dphpforms_pregunta_exist_into_form($respuesta->{'id'})){
@@ -148,7 +149,7 @@ function dphpforms_update_respuesta($completed_form, $RECORD_ID){
 
     $updated_respuestas = array();
     if($processable){
-        echo "\n¿Procesable?: Sí.\n";
+        //echo "\n¿Procesable?: Sí.\n";
         $different_flag = false;
         
         foreach ($registered_respuestas as &$respuesta) {
@@ -157,7 +158,7 @@ function dphpforms_update_respuesta($completed_form, $RECORD_ID){
                 if( $respuesta['id'] == $respuestaActualizada->id ){
 
                     if( $respuesta['valor'] != $respuestaActualizada->valor ){
-                        echo ' SE VA A ACTUALIZAR: ' . $respuesta['id'] ;
+                        //echo ' SE VA A ACTUALIZAR: ' . $respuesta['id'] ;
                         array_push($updated_respuestas, array('id' => $respuesta['id'], 'valor' => $respuestaActualizada->valor) );
                         $different_flag = true;
                     }
@@ -177,28 +178,57 @@ function dphpforms_update_respuesta($completed_form, $RECORD_ID){
         }
         if($different_flag){
             
+            //La última afectación es si las reglas son válidas
             $processable = dphpforms_reglas_validator(json_decode(json_encode($updated_respuestas)), $reglas);
            
             if($processable){
 
-                echo 'REGLAS OK, PENDIENTE';
+                //echo 'REGLAS OK, PENDIENTE';
 
                 foreach($updated_respuestas as &$r){
                     
-                    echo "RESPUESTAS ACTUALIZADAS ==>" . count($updated_respuestas);
+                    //echo "RESPUESTAS ACTUALIZADAS ==>" . count($updated_respuestas);
 
                     $updated = dphpforms_update_completed_form($RECORD_ID, $r['id'], $r['valor']);
-                    echo "REGISTRO: " . $RECORD_ID . " ID " . $r['id'] . " VALOR " . $r['valor'];
-                    if($updated){
-                        echo 'ACTUALIZADO';
-                    }else{
-                        echo 'ERROR ACTUALIZANDO';
+                    //echo "REGISTRO: " . $RECORD_ID . " ID " . $r['id'] . " VALOR " . $r['valor'];
+                    if(!$updated){
+                        //echo 'ERROR ACTUALIZANDO';
+                        echo json_encode(
+                            array(
+                                'status' => '-1',
+                                'message' => 'Error updating',
+                                'data' => ''
+                            )
+                        );
+                        die();
                     }
                 }
+                echo json_encode(
+                    array(
+                        'status' => '0',
+                        'message' => 'Updated',
+                        'data' => ''
+                    )
+                );
+            }else{
+                echo json_encode(
+                    array(
+                        'status' => '-2',
+                        'message' => 'Unfulfilled rules',
+                        'data' => ''
+                    )
+                );
             }
 
         }else{
-            echo ' NO HAY NADA QUE ACTUALIZAR ';
+            //echo ' NO HAY NADA QUE ACTUALIZAR ';
+            echo json_encode(
+                array(
+                    'status' => '-2',
+                    'message' => 'Without changes',
+                    'data' => ''
+                )
+            );
         }
     }
     
@@ -225,8 +255,8 @@ function dphpforms_new_store_respuesta($completed_form){
     $processable = dphpforms_reglas_validator($obj_form_completed->{'respuestas'}, $reglas);
 
     if($processable){
-        echo "\n¿Procesable?: Sí.\n";
-        echo "Inicio de registro en la base de datos\n";
+        //echo "\n¿Procesable?: Sí.\n";
+        //echo "Inicio de registro en la base de datos\n";
         
         $resultadoRegistro = array();
 
@@ -258,12 +288,26 @@ function dphpforms_new_store_respuesta($completed_form){
         }
 
         array_push($resultadoRegistro, array('ids_respuestas' => $form_soluciones_identifiers));
-        echo "\nResultado del registro:\n";
-        print_r($resultadoRegistro);
+        //echo "\nResultado del registro:\n";
+        //print_r($resultadoRegistro);
+        echo json_encode(
+            array(
+                'status' => '0',
+                'message' => 'Stored',
+                'data' => $ID_FORMULARIO_RESPUESTA
+            )
+        );
         
 
     }else{
-        echo "¿Procesable?: No.\n";
+        //echo "¿Procesable?: No.\n";
+        echo json_encode(
+            array(
+                'status' => '-1',
+                'message' => 'It is not processable',
+                'data' => ''
+            )
+        );
     }
     
 
@@ -301,7 +345,7 @@ function dphpforms_update_completed_form($form_identifier_respuesta, $pregunta_i
 
        $DB->update_record('talentospilos_df_respuestas', $obj_updated_respuesta, $bulk=false);
 
-       echo 'IDPREGUNTA' .$pregunta_identifier;
+       //echo 'IDPREGUNTA' .$pregunta_identifier;
 
        return true;
 }
@@ -395,7 +439,7 @@ function dphpforms_get_form_reglas($form_id){
 
     $sql = "
     
-        SELECT * FROM {talentospilos_df_reg_form_pr} RFP INNER JOIN {talentospilos_df_reglas} R ON RFP.id_regla = R.id WHERE RFP.id_formulario = '" . $form_id . "'
+        SELECT RFP.id, RFP.id_form_pregunta_a, RFP.id_form_pregunta_b, R.regla FROM {talentospilos_df_reg_form_pr} RFP INNER JOIN {talentospilos_df_reglas} R ON RFP.id_regla = R.id WHERE RFP.id_formulario = '" . $form_id . "'
     
     ";
     $result = $DB->get_records_sql($sql);
@@ -438,7 +482,7 @@ function dphpforms_reglas_validator($respuestas, $reglas){
         }
 
         if(($respuesta_a == null)&&($respuesta_b == null)){
-            echo "Oops, algo pasa con las respuestas ingresadas\n";
+            //echo "Oops, algo pasa con las respuestas ingresadas\n";
             break;
         }
 
@@ -446,49 +490,53 @@ function dphpforms_reglas_validator($respuestas, $reglas){
 
             if($respuesta_a->{'valor'} == $respuesta_b->{'valor'}){
                 $satisfied_reglas = false;
-                echo "REGLA " . $regla . " NO CUMPLIDA\n";
+                /*echo "REGLA " . $regla . " NO CUMPLIDA\n";
                 print_r($respuesta_a);
-                print_r($respuesta_b);
+                print_r($respuesta_b);*/
+                return false;
                 break;
             }else{
                 $satisfied_reglas = true;
-                echo "REGLA " . $regla . " CUMPLIDA\n";
+                //echo "REGLA " . $regla . " CUMPLIDA\n";
             }
         }elseif($regla == 'EQUAL'){
 
             if($respuesta_a->{'valor'} != $respuesta_b->{'valor'}){
                 $satisfied_reglas = false;
-                echo "REGLA " . $regla . " NO CUMPLIDA\n";
+                /*echo "REGLA " . $regla . " NO CUMPLIDA\n";
                 print_r($respuesta_a);
-                print_r($respuesta_b);
+                print_r($respuesta_b);*/
+                return false;
                 break;
             }else{
                 $satisfied_reglas = true;
-                echo "REGLA " . $regla . " CUMPLIDA\n";
+                //echo "REGLA " . $regla . " CUMPLIDA\n";
             }
         }elseif($regla == '>'){
             
             if($respuesta_a->{'valor'} < $respuesta_b->{'valor'}){
                 $satisfied_reglas = false;
-                echo "REGLA " . $regla . " NO CUMPLIDA\n";
+                /*echo "REGLA " . $regla . " NO CUMPLIDA\n";
                 print_r($respuesta_a);
-                print_r($respuesta_b);
+                print_r($respuesta_b);*/
+                return false;
                 break;
             }else{
                 $satisfied_reglas = true;
-                echo "REGLA " . $regla . " CUMPLIDA\n";
+                //echo "REGLA " . $regla . " CUMPLIDA\n";
             }
         }elseif($regla == '<'){
             
             if($respuesta_a->{'valor'} > $respuesta_b->{'valor'}){
                 $satisfied_reglas = false;
-                echo "REGLA " . $regla . " NO CUMPLIDA\n";
+                /*echo "REGLA " . $regla . " NO CUMPLIDA\n";
                 print_r($respuesta_a);
-                print_r($respuesta_b);
+                print_r($respuesta_b);*/
+                return false;
                 break;
             }else{
                 $satisfied_reglas = true;
-                echo "REGLA " . $regla . " CUMPLIDA\n";
+                //echo "REGLA " . $regla . " CUMPLIDA\n";
             }
         }elseif($regla == 'DEPENDS'){
             /*
@@ -502,21 +550,23 @@ function dphpforms_reglas_validator($respuestas, $reglas){
                 */
             if((($respuesta_a->{'valor'} != null) && ($respuesta_a->{'valor'} != "-#$%-") ) && (($respuesta_b->{'valor'} == null)||($respuesta_b->{'valor'} == "-#$%-"))){
                 $satisfied_reglas = false;
-                echo "REGLA " . $regla . " NO CUMPLIDA\n";
+                /*echo "REGLA " . $regla . " NO CUMPLIDA\n";
                 print_r($respuesta_a);
                 print_r($respuesta_b);
-                echo 'VALOR A' . $respuesta_a->{'valor'} . ' VALOR B' . $respuesta_a->{'valor'};
+                echo 'VALOR A' . $respuesta_a->{'valor'} . ' VALOR B' . $respuesta_a->{'valor'};*/
+                return false;
                 break;
             }elseif((($respuesta_a->{'valor'} == null)||($respuesta_a->{'valor'} == "-#$%-")) && (($respuesta_b->{'valor'} != null) && ($respuesta_b->{'valor'} != "-#$%-") )){
                 $satisfied_reglas = false;
-                echo "REGLA " . $regla . " NO CUMPLIDA\n";
+                /*echo "REGLA " . $regla . " NO CUMPLIDA\n";
                 print_r($respuesta_a);
                 print_r($respuesta_b);
-                echo 'VALOR A' . $respuesta_a->{'valor'} . ' VALOR B' . $respuesta_a->{'valor'};
+                echo 'VALOR A' . $respuesta_a->{'valor'} . ' VALOR B' . $respuesta_a->{'valor'};*/
+                return false;
                 break;
             }else{
                 $satisfied_reglas = true;
-                echo "REGLA " . $regla . " CUMPLIDA\n";
+                //echo "REGLA " . $regla . " CUMPLIDA\n";
             }
         }
     }
