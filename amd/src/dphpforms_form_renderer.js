@@ -24,7 +24,7 @@
                 // Controles para editar formulario de pares
                 $('.edit_peer_test_tracking').on('click', function(){
                     var id_tracking = $(this).attr('data-record-id');
-                    load_record_updater('89', '28', '3');
+                    load_record_updater('2', '1', '7');
                     $('#modal_test_edit_peer_tracking').fadeIn(300);
                 });
 
