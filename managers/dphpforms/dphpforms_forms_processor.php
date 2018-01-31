@@ -1,6 +1,8 @@
 <?php
 require_once(dirname(__FILE__). '/../../../../config.php');
-/*$formulario = '{
+/*
+PENDIENTE PARA MOVERSE A LA DOCUMENTACIÓN
+$formulario = '{
     "datos_formulario":{
         "nombre":"Formulario JSON",
         "descripcion":"Primer formulario escrito en JSON para pruebas de registro",
@@ -153,27 +155,39 @@ require_once(dirname(__FILE__). '/../../../../config.php');
             "id_temporal_campo_b":"cmp_12",
             "regla":"<"
         }
-    ]
-}';*/
+    ]}';*/
 
-$form = json_encode($_POST['data']);
+$form = json_decode(file_get_contents("php://input"));
+
+/*
+if(!$form){
+    echo json_encode(
+        array(
+            'id_formulario' => '-1',
+            'mensaje_error' => 'NULL'
+        )
+    );
+    die();
+}*/
 
 dphpforms_store_form($form);
 
 function dphpforms_store_form($form_JSON){
 
-    $json_obj_form = json_decode($form_JSON);
+    $json_obj_form = $form_JSON;
+    
     $form_db_id = null; 
     $form_details = array(
         'nombre' => $json_obj_form->{'datos_formulario'}->{'nombre'},
         'descripcion' => $json_obj_form->{'datos_formulario'}->{'descripcion'},
         'method' => $json_obj_form->{'datos_formulario'}->{'method'},
         'action' => $json_obj_form->{'datos_formulario'}->{'action'},
-        'enctype' => $json_obj_form->{'datos_formulario'}->{'enctype'},
-        'disparadores' => $json_obj_form->{'datos_formulario'}->{'disparadores'}
+        'enctype' => $json_obj_form->{'datos_formulario'}->{'enctype'}
     );
+
     $form_db_id = dphpforms_store_form_details($form_details);
 
+    
 
     $identifiers_preguntas = array();
     foreach ($json_obj_form->{'preguntas'} as &$pregunta) {
@@ -205,6 +219,7 @@ function dphpforms_store_form($form_JSON){
         );
     }
 
+
     $identifiers_reglas = array();
     if(property_exists($json_obj_form, 'reglas')){
         foreach ($json_obj_form->{'reglas'} as &$regla) {
@@ -230,7 +245,7 @@ function dphpforms_store_form($form_JSON){
         }
     }
 
-    $identifiers_disparadores = dphpforms_store_form_disparadores($form_db_id, $form_details['disparadores'], $identifiers_form_preguntas);
+    $identifiers_disparadores = dphpforms_store_form_disparadores($form_db_id, $json_obj_form->{'disparadores'}, $identifiers_form_preguntas);
     if(!$identifiers_disparadores){
         echo json_encode(
             array(
@@ -376,10 +391,10 @@ function dphpforms_store_form_pregunta_permits($form_id_pregunta, $permits){
     $obj_permisos_formulario_pregunta->id_formulario_pregunta = $form_id_pregunta;
     $obj_permisos_formulario_pregunta->permisos = $permits;
 
-    echo ' INFO: FORM ID PREGUNTA ' . $form_id_pregunta . ' PERMISOS ' . $permits;
-    print_r($obj_permisos_formulario_pregunta);
+    //echo ' INFO: FORM ID PREGUNTA ' . $form_id_pregunta . ' PERMISOS ' . $permits;
+    //print_r($obj_permisos_formulario_pregunta);
     $identifier_permission = $DB->insert_record('talentospilos_df_per_form_pr', $obj_permisos_formulario_pregunta, $returnid=true, $bulk=false);
-    echo ' ID_PERMISO:::::: ' . $identifier_permission . ' :::::::';
+    //echo ' ID_PERMISO:::::: ' . $identifier_permission . ' :::::::';
     return $identifier_permission;
 }
 
@@ -387,9 +402,15 @@ function dphpforms_store_form_disparadores($form_id, $disparadores, $identifiers
 
     global $DB;
     $disparadores_string = json_encode($disparadores);
-    foreach ($identifiers_form_preguntas as $key => $value) {
-        $disparadores_string = str_replace($value['idPreguntaTemporal'], $value['idRelacionFormPreg'], $disparadores_string);
+    foreach ($identifiers_form_preguntas as &$value) {
+        //echo 'REEMPLAZO DE'  . $value['idPreguntaTemporal'] . ' CON ' . $value['idRelacionFormPreg'] . ' <::::';
+        $disparadores_string = str_replace('"'.$value['idPreguntaTemporal'].'"', '"'.$value['idRelacionFormPreg'].'"', $disparadores_string);
+        if($value['idPreguntaTemporal'] == 'cmp_17'){
+            //echo '>' . $value['idPreguntaTemporal'] . 'NUEVO CAMPO ::::::::' . $value['idRelacionFormPreg'];
+            //echo $disparadores_string;
+        }
     }
+    //echo $disparadores_string;
 
 
     $obj_disparadores_permisos_formulario_diligenciado = new stdClass();

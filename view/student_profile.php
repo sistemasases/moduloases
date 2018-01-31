@@ -41,6 +41,7 @@ require_once '../managers/dateValidator.php';
 require_once '../managers/permissions_management/permissions_lib.php';
 require_once '../managers/validate_profile_action.php';
 require_once '../managers/menu_options.php';
+require_once '../managers/dphpforms/dphpforms_forms_core.php';
 include '../lib.php';
 
 global $PAGE;
@@ -179,10 +180,20 @@ if ($student_code != 0) {
     $record->num_doc = $ases_student->num_doc;
     $record->observations = $ases_student->observacion;
 
-    $monitor_object = get_assigned_monitor($student_id);
-    $trainee_object = get_assigned_pract($student_id);
-    $professional_object = get_assigned_professional($student_id);
+    $monitor_object = new stdClass();
+    $trainee_object = new stdClass();
+    $professional_object = new stdClass();
 
+    if(get_assigned_monitor($student_id)){
+        $monitor_object = get_assigned_monitor($student_id);
+    }
+    if(get_assigned_pract($student_id)){
+        $trainee_object = get_assigned_pract($student_id);
+    }
+    if(get_assigned_professional($student_id)){
+        $professional_object = get_assigned_professional($student_id);
+    }
+    
     if ($monitor_object) {
         $record->monitor_fullname = "$monitor_object->firstname $monitor_object->lastname";
     } else {
@@ -632,6 +643,7 @@ if ($student_code != 0) {
                 $panel .= "<div class='row'>";
                 $panel .= "<div class='col-sm-4 row-buttons-tracking'>";
                 $panel .= "<button type='button' class='btn-primary edit_peer_tracking' id='edit_tracking_" . $tracking->id_seg . "'>Editar seguimiento</button>";
+                $panel .= "<button type='button' class='btn-primary edit_peer_test_tracking' data-record-id='" . $tracking->id_seg . "' id='edit_tracking_test_" . $tracking->id_seg . "'>Editar seguimiento v2</button>";
                 $panel .= "</div>";
                 $panel .= "<div class='col-sm-3 col-sm-offset-5 row-buttons-tracking'>";
                 $panel .= "<button type='button' class='btn-danger delete_peer_tracking col-sm-10' id='delete_tracking_peer_" . $tracking->id_seg . "'>";
@@ -697,6 +709,12 @@ if ($student_code != 0) {
 
 // End of data obtaining for risks graphs
 
+    //Pruebas
+    
+    $record->form_seguimientos = null;
+    $record->form_seguimientos = dphpforms_render_recorder('2', '7', '-1', '-1');
+    //$record->form_seguimientos = '';
+
 } else {
     $record = new stdClass;
     $student_id = -1;
@@ -733,6 +751,7 @@ $PAGE->requires->css('/blocks/ases/style/side_menu_style.css', true);
 
 $PAGE->requires->js_call_amd('block_ases/student_profile_main', 'init');
 $PAGE->requires->js_call_amd('block_ases/geographic_main', 'init');
+$PAGE->requires->js_call_amd('block_ases/dphpforms_form_renderer', 'init');
 $PAGE->requires->js_call_amd('block_ases/academic_profile_main', 'init');
 
 $output = $PAGE->get_renderer('block_ases');

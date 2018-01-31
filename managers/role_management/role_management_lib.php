@@ -7,6 +7,49 @@ require_once(dirname(__FILE__).'/../MyException.php');
 
 
 /**
+ * Función que obtiene los practicantes de un profesional en el semestre actual.
+ *
+ * @see get_pract_of_prof()
+ * @return object rol
+ */
+function get_pract_of_prof($id_prof,$id_instance){
+   global $DB;
+
+    $current_semester = get_current_semester();
+    $id_practicant = get_role_id('practicante_ps');
+    $sql_query="SELECT users.firstname,users.lastname,id_usuario,id_semestre,users.username
+    FROM {talentospilos_user_rol} user_rol
+    INNER JOIN {user} users ON user_rol.id_usuario = users.id where user_rol.id_jefe=$id_prof and user_rol.id_rol=$id_practicant->id and user_rol.estado=1 and user_rol.id_semestre=$current_semester->max and user_rol.id_instancia=$id_instance";
+
+    $practicants = $DB->get_records_sql($sql_query);
+    return $practicants;
+}
+
+/**
+ * Función que obtiene los monitores de un practicante en el semestre actual.
+ *
+ * @see get_monitors_of_pract($id_pract,$id_instance)
+ * @return Array
+ */
+function get_monitors_of_pract($id_pract,$id_instance){
+   global $DB;
+
+    $current_semester = get_current_semester();
+    $id_monitor = get_role_id('monitor_ps');
+    $sql_query = "SELECT users.firstname,users.lastname,id_usuario,id_semestre,users.username
+    FROM {talentospilos_user_rol} user_rol
+    INNER JOIN {user} users ON user_rol.id_usuario = users.id where user_rol.id_jefe='$id_pract' and user_rol.id_rol='$id_monitor->id' and user_rol.estado=1 and user_rol.id_semestre='$current_semester->max' and user_rol.id_instancia='$id_instance'";
+
+    $monitors = $DB->get_records_sql($sql_query);
+    return $monitors;
+}
+
+
+
+
+
+
+/**
  * Función que obtiene el nombre del rol de un usuario dado su username completo
  *
  * @see get_user_rol()
