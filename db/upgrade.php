@@ -299,7 +299,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     //          id_semestre --> Identificador del semestre académico
     //          id_estudiante --> Identificador asociado al estudiante ASES
     //          id_resolucion --> Identificador de la resolución asociada al estudiante
-    // Versión en la que se incluye: 2018011911069
+    // Versión en la que se incluye: 2018013010459
     // ************************************************************************************************************
     // Define table talentospilos_res_estudiante to be dropped.
     $table = new xmldb_table('talentospilos_res_estudiante');
@@ -324,13 +324,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     if (!$dbman->field_exists($table, $field)) {
         $dbman->add_field($table, $field);
     }
-    // Define field id_semestre to be added to talentospilos_res_estudiante.
-    $table = new xmldb_table('talentospilos_res_estudiante');
-    $field = new xmldb_field('id_semestre', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null, 'monto_estudiante');
-    // Conditionally launch add field id_semestre.
-    if (!$dbman->field_exists($table, $field)) {
-        $dbman->add_field($table, $field);
-    }
+    
     // Define field id_estudiante to be added to talentospilos_res_estudiante.
     $table = new xmldb_table('talentospilos_res_estudiante');
     $field = new xmldb_field('id_estudiante', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null, 'id_semestre');
@@ -344,12 +338,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     // Conditionally launch add field id_resolucion.
     if (!$dbman->field_exists($table, $field)) {
         $dbman->add_field($table, $field);
-    }
-    // Define key foreign_key_semestre (foreign) to be added to talentospilos_res_estudiante.
-    $table = new xmldb_table('talentospilos_res_estudiante');
-    $key = new xmldb_key('foreign_key_semestre', XMLDB_KEY_FOREIGN, array('id_semestre'), 'talentospilos_semestre', array('id'));
-    // Launch add key foreign_key_semestre.
-    $dbman->add_key($table, $key);
+    }    
     // Define key foreign_key_estudiante (foreign) to be added to talentospilos_res_estudiante.
     $table = new xmldb_table('talentospilos_res_estudiante');
     $key = new xmldb_key('foreign_key_estudiante', XMLDB_KEY_FOREIGN, array('id_estudiante'), 'talentospilos_usuario', array('id'));
@@ -367,7 +356,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     //          codigo_resolucion --> Identificador del histórico académico
     //          monto_total --> Identificador del semestre académico
     //          fecha_resolucion --> Identificador asociado al estudiante ASES
-    // Versión en la que se incluye: 2018011911069
+    // Versión en la que se incluye: 2018013010459
     // ************************************************************************************************************
     // Define table talentospilos_res_icetex to be dropped.
     $table = new xmldb_table('talentospilos_res_icetex');
@@ -392,6 +381,15 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     if (!$dbman->field_exists($table, $field)) {
         $dbman->add_field($table, $field);
     }
+
+    // Define field id_semestre to be added to talentospilos_res_icetex.
+    $table = new xmldb_table('talentospilos_res_icetex');
+    $field = new xmldb_field('id_semestre', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null, 'codigo_resolucion');
+    // Conditionally launch add field id_semestre.
+    if (!$dbman->field_exists($table, $field)) {
+        $dbman->add_field($table, $field);
+    }
+
     // Define field monto_total to be added to talentospilos_res_icetex.
     $table = new xmldb_table('talentospilos_res_icetex');
     $field = new xmldb_field('monto_total', XMLDB_TYPE_INTEGER, '20', null, XMLDB_NOTNULL, null, null, 'codigo_resolucion');
@@ -410,6 +408,11 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     $table = new xmldb_table('talentospilos_res_icetex');
     $key = new xmldb_key('unique_cod_res', XMLDB_KEY_UNIQUE, array('codigo_resolucion'));
     // Launch add key unique_cod_res.
+    $dbman->add_key($table, $key);
+    // Define key foreign_key_semestre (foreign) to be added to talentospilos_res_icetex.
+    $table = new xmldb_table('talentospilos_res_icetex');
+    $key = new xmldb_key('foreign_key_semestre', XMLDB_KEY_FOREIGN, array('id_semestre'), 'talentospilos_semestre', array('id'));
+    // Launch add key foreign_key_semestre.
     $dbman->add_key($table, $key);
     // ************************************************************************************************************
     // Actualización:
@@ -793,7 +796,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     // ************************************************************************************************************
     // Actualización:
     // Se crea la tabla {talentospilos_materias_criti}
-    // Versión en la que se incluye: 2018012917589
+    // Versión en la que se incluye: 2018012918099
     // ************************************************************************************************************
 
       // Define table talentospilos_materias_criti to be created.
