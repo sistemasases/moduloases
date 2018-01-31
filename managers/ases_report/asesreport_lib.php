@@ -280,11 +280,11 @@ function get_not_assign_students($general_fields=null, $conditions, $academic_fi
 
         $sub_query_status .= " INNER JOIN (SELECT current_status.username, status_ases.id_estado_ases 
                                             FROM (SELECT MAX(status_ases.id) AS id, moodle_user.username
-                                                FROM mdl_talentospilos_est_estadoases AS status_ases 
-                                                    INNER JOIN mdl_talentospilos_user_extended AS user_extended ON status_ases.id_estudiante = user_extended.id_ases_user
-                                                INNER JOIN mdl_user AS moodle_user ON moodle_user.id = user_extended.id_moodle_user
+                                                FROM {talentospilos_est_estadoases} AS status_ases 
+                                                    INNER JOIN {talentospilos_user_extended} AS user_extended ON status_ases.id_estudiante = user_extended.id_ases_user
+                                                INNER JOIN {user AS moodle_user} ON moodle_user.id = user_extended.id_moodle_user
                                                 GROUP BY moodle_user.username) AS current_status
-                                            INNER JOIN mdl_talentospilos_est_estadoases AS status_ases ON status_ases.id = current_status.id
+                                            INNER JOIN {talentospilos_est_estadoases} AS status_ases ON status_ases.id = current_status.id
                                             WHERE id_estado_ases = $conditions[1]
                                             ) AS query_status_ases ON query_status_ases.username = user_moodle.username";
     }
@@ -320,6 +320,19 @@ function get_not_assign_students($general_fields=null, $conditions, $academic_fi
                 break;
 
             case 'profesional_ps':
+
+                $where_clause .= " user_moodle.username NOT IN (SELECT user_moodle.username
+                                                                FROM {talentospilos_usuario}  AS ases_user
+                                                                INNER JOIN {talentospilos_user_extended} AS user_extended ON user_extended.id_ases_user = ases_user.id
+                                                                INNER JOIN {user AS user_moodle} ON user_moodle.id = user_extended.id_moodle_user
+                                                                INNER JOIN {cohort_members}  AS cohorts_students ON cohorts_students.userid = user_extended.id_moodle_user
+                                                                INNER JOIN {talentospilos_monitor_estud} AS students_monitor ON students_monitor.id_estudiante = ases_user.id
+                                                                INNER JOIN {talentospilos_inst_cohorte}  AS cohorts_instance ON cohorts_instance.id_cohorte = cohorts_students.cohortid
+                                                                WHERE cohorts_instance.id_instancia = $instance)";
+                $sql_query = $select_clause.$from_clause.$sub_query_cohort.$sub_query_status.$sub_query_academic.$where_clause;
+                $result_query = $DB->get_records_sql($sql_query);
+                //print_r($sql_query);
+                //die();
 
                 break;
 

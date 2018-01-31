@@ -19,7 +19,7 @@ function get_pract_of_prof($id_prof,$id_instance){
     $id_practicant = get_role_id('practicante_ps');
     $sql_query="SELECT users.firstname,users.lastname,id_usuario,id_semestre,users.username
     FROM {talentospilos_user_rol} user_rol
-    INNER JOIN {user} users ON user_rol.id_usuario = users.id where user_rol.id_jefe='$id_prof' and user_rol.id_rol='$id_practicant->id' and user_rol.estado=1 and user_rol.id_semestre='$current_semester->max' and user_rol.id_instancia='$id_instance'";
+    INNER JOIN {user} users ON user_rol.id_usuario = users.id where user_rol.id_jefe=$id_prof and user_rol.id_rol=$id_practicant->id and user_rol.estado=1 and user_rol.id_semestre=$current_semester->max and user_rol.id_instancia=$id_instance";
 
     $practicants = $DB->get_records_sql($sql_query);
     return $practicants;

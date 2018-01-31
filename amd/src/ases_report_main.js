@@ -93,7 +93,7 @@ define(['jquery', 'block_ases/datatables.net', 'block_ases/datatables.net-button
 
     //Creación de tabla de asignaciones
     function createTableAssign() {
-
+        
         var dataString = $('#form_general_report').serializeArray();
 
         dataString.push({
