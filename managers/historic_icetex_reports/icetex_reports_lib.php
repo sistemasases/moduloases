@@ -76,6 +76,8 @@ function get_array_students_with_resolution(){
     return $final_array;
 }
 
+//print_r(get_array_students_with_resolution());
+
 function get_array_students_with_cancel($id_student, $id_program, $id_semester){    
     global $DB;
 
@@ -195,30 +197,34 @@ function get_active_no_res_students(){
     $students = array();
 
     $sql_query = "SELECT id_estudiante
-                    FROM mdl_talentospilos_history_academ AS academ
+                    FROM {talentospilos_history_academ} AS academ
                     WHERE academ.id 
                     NOT IN 
-                    (SELECT id_history FROM mdl_talentospilos_history_cancel);                    
+                    (SELECT id_history FROM {talentospilos_history_cancel})                    
                     EXCEPT                     
                     SELECT id_estudiante
-                    FROM mdl_talentospilos_res_icetex;";
+                    FROM {talentospilos_res_estudiante}";
 
     $results = $DB->get_records_sql($sql_query);
 
     foreach($results as $result){
         $student = get_info_student($result->id_estudiante);
-        array_push($students, $student);
+        $final_students = array_merge($students, $student);
     }
 
-    return $students;
+    return $final_students;
 }
+
+//print_r(get_active_no_res_students());
 
 
 //Brings the info of a student given its id
 function get_info_student($student_id){
     global $DB;
 
-    $sql_query = "SELECT substring(cohortm.idnumber from 0 for 5) AS cohorte, 
+    $info_students = array();
+
+    $sql_query = "SELECT academ.id, substring(cohortm.idnumber from 0 for 5) AS cohorte, 
                         substring(userm.username from 0 for 8) AS codigo, 
                         usuario.num_doc, userm.firstname, userm.lastname, semestre.nombre, 
                         academ.id_estudiante, academ.id_semestre, academ.id_programa
@@ -233,12 +239,16 @@ function get_info_student($student_id){
                                 AND substring(cohortm.idnumber from 0 for 4) = 'SPP'
                                 AND academ.id_estudiante = '$student_id'";
 
-    $student = $DB->get_record_sql($sql_query);
+    $students = $DB->get_records_sql($sql_query);
+    
+    foreach($students as $student){
+        $student->codigo_resolucion = "---";
+        $student->monto_estudiante = 0;
+        $student->fecha_cancel = "---";
+        $student->program_status = "ACTIVO";
 
-    $student->codigo_resolucion = "---";
-    $student->monto_estudiante = 0;
-    $student->fecha_cancel = "---";
-    $student->program_status = "ACTIVO";
+        array_push($info_students, $student);
+    }
 
-    return $student;
+    return $info_students;
 } 

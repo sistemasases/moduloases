@@ -30,6 +30,13 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_as
 				load_resolutions();				
 			});
 
+			$("#report_button").on('click', function() {
+				var cohort = $("#cohort_select select").val();
+				load_summary_report(cohort);
+
+				
+			});
+
 			//Controles para la tabla de los estudianes con resolución
 			$(document).on('change', '#tableResStudents thead tr th select', function () {
 				var table = $("#tableResStudents").DataTable();
@@ -95,6 +102,26 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_as
 			}
 		});
 
+	}
+
+	function load_summary_report(cohort_name){
+		$.ajax({
+			type: "POST",
+			data: {summ: 'summaryR', cohor: cohort_name},
+			url: "../managers/historic_icetex_reports/summary_report_processing.php",
+			success: function(msg){
+				$("#div_icetex_sumary").empty();
+				$("#div_icetex_sumary").append('<table id="tableSummary" class="display" cellspacing="0" width="100%"><thead><thead></table>');
+				var table = $("#tableSummary").DataTable(msg);
+				$('#div_icetex_sumary').css('cursor', 'pointer');				
+			},
+			dataType: "json",
+			cache: false,
+			error: function(msg){
+				swal("Error", "Error al cargar el reporte", "error");
+			}
+		});
+		
 	}
 
 	/*
