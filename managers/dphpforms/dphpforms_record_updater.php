@@ -8,17 +8,13 @@
 
         $html = null;
 
-        /*$FORM_ID = $_GET['id']; 
-        $ROL = $_GET['rol'];
-        $RECORD_ID = $_GET['reg']; // Identificador del registro del formulario diligenciado*/
-
         $FORM_ID = $id_completed_form; 
         $ROL = $rol_;
         $RECORD_ID = $record_id_;
 
         if(!$RECORD_ID){
             $html = $html .  "Error: variable reg ausente.";
-            die();
+            return $html;
         }
         
         $sql = '
@@ -58,36 +54,6 @@
             $triggers_permissions = null;
         }
 
-        // Construcción de todo el sitio en HTML para pruebas de bootstrap
-
-        /*$html = $html .  '
-        
-        <!DOCTYPE html>
-        <html lang="en">
-        <head>
-            <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <meta http-equiv="X-UA-Compatible" content="ie=edge">
-            <title>Renderizador de formularios</title>
-            <link rel="stylesheet" href="css/bootstrap.min.css">
-            <style>
-            
-                .danger{
-                    border: 1px solid red;
-                }
-                .ok{
-                    border: 1px solid green;
-                }
-            
-            </style>
-        </head>
-        <body>
-            <div class="container">
-                <div class="row">
-        ';*/
-
-        // Fin de construcción
-
         $row = $result[0];
         $form_name = $row->{'nombre'};
         $form_name_formatted = strtolower($row->{'nombre'});
@@ -105,14 +71,14 @@
         $form_name_formatted = $form_name_formatted . "_" . $row->{'mod_id_formulario'};
 
 
-        $html = $html .  '<form id="'. $form_name_formatted .'" method="'. $row->{'method'} .'" action="'. $row->{'action'} .'" class="col-xs-12 col-sm-8 col-md-8 col-lg-6 col-sm col-sm-offset-2 col-md-offset-2 col-lg-offset-3" style="margin-bottom:0.7em">' ;
+        $html = $html .  '<form id="'. $form_name_formatted .'" method="'. $row->{'method'} .'" action="'. $row->{'action'} .'" class="dphpforms dphpforms-record col-xs-12 col-sm-12 col-md-12 col-lg-12" style="margin-bottom:0.7em">' ;
         $html = $html .  '<h1>'.$form_name.'</h1><hr style="border-color:red;">';
         $html = $html .  '<input name="id" value="'.$row->{'mod_id_formulario'}.'" style="display:none;">';
-        $html = $html .  '<input name="id_monitor" value="" style="display:none;">';
-        $html = $html .  '<input name="id_estudiante" value="" style="display:none;">';
-
+        $html = $html .  '<input name="id_monitor" value="" style="display:none;">';//Pendientes para eliminación
+        $html = $html .  '<input name="id_estudiante" value="" style="display:none;">';//Pendientes para eliminación
+        //Dispara la actualización
         $html = $html .  '<input name="id_registro" value="'.$RECORD_ID.'" style="display:none;">';
-
+        //Fin del disparador de actualización
 
         $sql_respuestas = '
         
@@ -147,7 +113,7 @@
         $checkboxes_scripts = null;
 
         for($i = 0; $i < count($result); $i++){
-            //while($row){
+           
             $row = null;
             $row = $result[$i];
         
@@ -173,7 +139,6 @@
                 
                 if($id_campo_DB == $id_campo_DB_form){
                     $valor = $value['respuesta'];
-                    
                     $tmpPregunta = array(
                         'idP' => $id_campo_DB,
                         'valor' => $value['respuesta'],
@@ -206,33 +171,59 @@
                             $enabled = "disabled";
                         }
 
+                        $field_attr_class = '';
+                        $field_attr_type = '';
+                        $field_attr_placeholder = '';
+                        $field_attr_maxlength = '';
+                        $field_attr_inputclass = '';
+
+                        if(property_exists($atributos, 'class')){
+                            $field_attr_class = $atributos->{'class'};
+                        }
+
+                        if(property_exists($atributos, 'type')){
+                            $field_attr_type = $atributos->{'type'};
+                        }
+
+                        if(property_exists($atributos, 'placeholder')){
+                            $field_attr_placeholder = $atributos->{'placeholder'};
+                        }
+
+                        if(property_exists($atributos, 'maxlength')){
+                            $field_attr_maxlength = $atributos->{'maxlength'};
+                        }
+
+                        if(property_exists($atributos, 'inputclass')){
+                            $field_attr_inputclass = $atributos->{'inputclass'};
+                        }
+
                         if($campo == 'TEXTFIELD'){
-                            $html = $html .  '<div class="div-'.$row->{'mod_id_formulario_pregunta'}.' '.$atributos->{'class'}.'" >' . $enunciado . ':<br>';
-                            $html = $html .  ' <input id="'.$row->{'mod_id_formulario_pregunta'}.'" class="form-control" type="'.$atributos->{'type'}.'" placeholder="'.$atributos->{'placeholder'}.'" name="'.$row->{'mod_id_formulario_pregunta'}.'" value="'.$valor.'" '.$enabled.'><br>' . "\n";
+                            $html = $html .  '<div class="div-'.$row->{'mod_id_formulario_pregunta'}.' '.$field_attr_class.'" >' . $enunciado . ':<br>';
+                            $html = $html .  ' <input id="'.$row->{'mod_id_formulario_pregunta'}.'" class="form-control ' . $field_attr_inputclass . '" type="'.$field_attr_type.'" placeholder="'.$field_attr_placeholder.'" name="'.$row->{'mod_id_formulario_pregunta'}.'" value="'.$valor.'" maxlength="'.$field_attr_maxlength.'" '.$enabled.'><br>' . "\n";
                             $html = $html .  '</div>';
                         }
 
                         if($campo == 'TEXTAREA'){
-                            $html = $html .  '<div class="div-'.$row->{'mod_id_formulario_pregunta'}.' '.$atributos->{'class'}.'" >' . $enunciado . ':<br>';
-                            $html = $html .  ' <textarea id="'.$row->{'mod_id_formulario_pregunta'}.'" class="form-control" name="'. $row->{'mod_id_formulario_pregunta'} .'" '.$enabled.'>'.$valor.'</textarea><br>' . "\n";
+                            $html = $html .  '<div class="div-'.$row->{'mod_id_formulario_pregunta'}.' '.$field_attr_class.'" >' . $enunciado . ':<br>';
+                            $html = $html .  ' <textarea id="'.$row->{'mod_id_formulario_pregunta'}.'" class="form-control ' . $field_attr_inputclass . '" name="'. $row->{'mod_id_formulario_pregunta'} .'" '.$enabled.' maxlength="'.$field_attr_maxlength.'">'.$valor.'</textarea><br>' . "\n";
                             $html = $html .  '</div>';
                         }
 
                         if($campo == 'DATE'){
-                            $html = $html .  '<div class="div-'.$row->{'mod_id_formulario_pregunta'}.' '.$atributos->{'class'}.'" >' . $enunciado . ':<br>';
-                            $html = $html .  ' <input id="'.$row->{'mod_id_formulario_pregunta'}.'" class="form-control" type="date" name="'.$row->{'mod_id_formulario_pregunta'}.'" value="'.$valor.'" '.$enabled.'><br>' . "\n";
+                            $html = $html .  '<div class="div-'.$row->{'mod_id_formulario_pregunta'}.' '.$field_attr_class.'" >' . $enunciado . ':<br>';
+                            $html = $html .  ' <input id="'.$row->{'mod_id_formulario_pregunta'}.'" class="form-control ' . $field_attr_inputclass . '" type="date" name="'.$row->{'mod_id_formulario_pregunta'}.'" value="'.$valor.'" '.$enabled.'><br>' . "\n";
                             $html = $html .  '</div>';
                         }
                         
                         if($campo == 'DATETIME'){
-                            $html = $html .  '<div class="div-'.$row->{'mod_id_formulario_pregunta'}.' '.$atributos->{'class'}.'" >' . $enunciado . ':<br>';
-                            $html = $html .  ' <input id="'.$row->{'mod_id_formulario_pregunta'}.'" class="form-control" type="datetime-local" name="'.$row->{'mod_id_formulario_pregunta'}.'" value="'.$valor.'" '.$enabled.'><br>' . "\n";
+                            $html = $html .  '<div class="div-'.$row->{'mod_id_formulario_pregunta'}.' '.$field_attr_class.'" >' . $enunciado . ':<br>';
+                            $html = $html .  ' <input id="'.$row->{'mod_id_formulario_pregunta'}.'" class="form-control ' . $field_attr_inputclass . '" type="datetime-local" name="'.$row->{'mod_id_formulario_pregunta'}.'" value="'.$valor.'" '.$enabled.'><br>' . "\n";
                             $html = $html .  '</div>';
                         }
 
                         if($campo == 'TIME'){
-                            $html = $html .  '<div class="div-'.$row->{'mod_id_formulario_pregunta'}.' '.$atributos->{'class'}.'" >' . $enunciado . ':<br>';
-                            $html = $html .  ' <input id="'.$row->{'mod_id_formulario_pregunta'}.'" class="form-control" type="time" name="'.$row->{'mod_id_formulario_pregunta'}.'" value="'.$valor.'" '.$enabled.'><br>' . "\n";
+                            $html = $html .  '<div class="div-'.$row->{'mod_id_formulario_pregunta'}.' '.$field_attr_class.'" >' . $enunciado . ':<br>';
+                            $html = $html .  ' <input id="'.$row->{'mod_id_formulario_pregunta'}.'" class="form-control ' . $field_attr_inputclass . '" type="time" name="'.$row->{'mod_id_formulario_pregunta'}.'" value="'.$valor.'" '.$enabled.'><br>' . "\n";
                             $html = $html .  '</div>';
                         }
 
@@ -240,28 +231,34 @@
                             $opciones = json_decode($row->{'opciones_campo'});
                             $array_opciones = (array)$opciones;
                             $number_opciones = count($array_opciones);
+                            
+                            $html = $html .  '<div class="div-'.$row->{'mod_id_formulario_pregunta'}.' '.$field_attr_class.'" >';
+                            if($enunciado){
+                                $html = $html . '<label>'.$enunciado.'</label>';
+                            }
 
-                            $html = $html .  '
-                            <label id="'.$row->{'mod_id_formulario_pregunta'}.'">'.$enunciado.'</label>';
+                            $field_attr_radioclass = '';
+                            if(property_exists($atributos, 'radioclass')){
+                                $field_attr_radioclass = $atributos->{'radioclass'};
+                            }
+
                             $html = $html .  '<div class="opcionesRadio" style="margin-bottom:0.4em">
                             <input type="hidden" name="'.$row->{'mod_id_formulario_pregunta'}.'"  class="'.$row->{'mod_id_formulario_pregunta'}.'" value="-#$%-" '.$enabled.'>';
                             
-                            
-                            for($i = 0; $i < $number_opciones; $i++){
-                                $opcion = (array) $array_opciones[$i];
+                            for($x = 0; $x < $number_opciones; $x++){
+                                $opcion = (array) $array_opciones[$x];
                                 $checked = null;
                                 if($valor === $opcion['valor']){
                                     $checked = 'checked';
                                 }
                                 $html = $html .  '
-                                    <div class="radio">
-                                        <label><input type="radio" class="'.$row->{'mod_id_formulario_pregunta'}.'" name="'.$row->{'mod_id_formulario_pregunta'}.'" value="'.$opcion['valor'].'" name="optradio" '.$enabled.'  '.$checked.'>'.$opcion['enunciado'].'</label>
-                                    </div>
-                                
-                                ' . "\n";
+                                    <div class="radio ' . $field_attr_radioclass . '">
+                                        <label><input type="radio" class="'.$row->{'mod_id_formulario_pregunta'}.' ' . $field_attr_inputclass . '" name="'.$row->{'mod_id_formulario_pregunta'}.'" value="'.$opcion['valor'].'" name="optradio" '.$enabled.'  '.$checked.'>'.$opcion['enunciado'].'</label>
+                                    </div>' . "\n";
                             }
                             
-                            $html = $html .  '<a href="javascript:void(0);" class="'.$row->{'mod_id_formulario_pregunta'}.' limpiar btn btn-xs btn-default" >Limpiar</a>
+                            $html = $html .  '</div>
+                                        <a href="javascript:void(0);" class="'.$row->{'mod_id_formulario_pregunta'}.' limpiar btn btn-xs btn-default" >Limpiar</a>
                                 </div>
                             ' . "\n";
                         }
@@ -280,23 +277,29 @@
                                 $checked = '';
                                 $valor_marcado = "-1";
                             }
-                            $html = $html .  '
-                            <label id="'.$row->{'mod_id_formulario_pregunta'}.'">'.$enunciado.'</label>';
-                            
-                            for($i = 0; $i < $number_opciones; $i++){
-                                $opcion = (array) $array_opciones[$i];
-                                $html = $html .  '
-                                <div id="'.$row->{'mod_id_formulario_pregunta'}.'" name="'.$row->{'mod_id_formulario_pregunta'}.'" class="checkbox">
-                                    <input type="hidden" name="'.$row->{'mod_id_formulario_pregunta'}.'" value="'.$valor_marcado.'" '.$enabled.'>
-                                    <label><input id="'.$row->{'mod_id_formulario_pregunta'}.'" type="checkbox" name="'.$row->{'mod_id_formulario_pregunta'}.'" value="'.$opcion['valor'].'" '.$enabled.' '.$checked.'>'.$opcion['enunciado'].'</label>
-                                    
-                                </div>
-                                ' . "\n";
 
-                            
+                            $html = $html .  '<div class="div-'.$row->{'mod_id_formulario_pregunta'}.' '.$field_attr_class.'" >';
+                            if($enunciado){
+                                $html = $html . '<label>'.$enunciado.'</label>';
                             }
 
+                            $field_attr_checkclass = '';
+                            if(property_exists($atributos, 'checkclass')){
+                                $field_attr_checkclass = $atributos->{'checkclass'};
+                            }
                             
+                            for($x = 0; $x < $number_opciones; $x++){
+                                $opcion = (array) $array_opciones[$x];
+                                $html = $html .  '
+                                    <div id="'.$row->{'mod_id_formulario_pregunta'}.'" name="'.$row->{'mod_id_formulario_pregunta'}.'" class="checkbox ' . $field_attr_checkclass . '">
+                                        <input type="hidden" name="'.$row->{'mod_id_formulario_pregunta'}.'" value="'.$valor_marcado.'" '.$enabled.'>
+                                        <label><input id="'.$row->{'mod_id_formulario_pregunta'}.'" class="' . $field_attr_inputclass . '" type="checkbox" name="'.$row->{'mod_id_formulario_pregunta'}.'" value="'.$opcion['valor'].'" '.$enabled.' '.$checked.'>'.$opcion['enunciado'].'</label>
+                                        
+                                    </div>
+                                ' . "\n";
+                            }
+                            $html = $html . '</div>';
+
                         }
 
                     }
@@ -306,83 +309,33 @@
                 }
             }
 
-
-            //$row = pg_fetch_row($result);
         }
-        $html = $html .  ' <hr style="border-color:red"><button type="submit" class="btn btn-sm btn-default">Registrar</button>' . "\n";
+        $html = $html .  ' <hr style="border-color:red"><button type="submit" class="btn btn-sm btn-danger btn-dphpforms-univalle">Registrar</button>' . "\n";
         $html = $html .  ' </form>' . "\n";
 
-
-        // Construcción de todo el sitio en HTML para pruebas de bootstrap
-
-        //Escritura de reglas en JAVASCRIPT
-        //Reglas
-
-        /*
-        $script_reglas = null;
-        $sql = '
-            SELECT 
-                * 
-            FROM 
-                reglas, 
-                reglas_formulario_preguntas
-            WHERE 
-                reglas_formulario_preguntas.id_regla = reglas.id
-            AND
-                reglas_formulario_preguntas.id_formulario = '.$FORM_ID.'
-
-        ';
-
-        $reglas = pg_query($db_connection, $sql);
-        $row_reglas = pg_fetch_row($reglas);
-        while($row_reglas){
-            $regla = $row_reglas[1];
-            $campoA = $row_reglas[5];
-            $campoB = $row_reglas[6];
-            if($regla == 'DIFFERENT'){
-                $script_reglas = $script_reglas . '
-                
-                    $(document).on("keyup", "#'.$campoA.'" , function() {
-                        if(($("#'.$campoA.'").val() == $("#'.$campoB.'").val())&&($("'.$campoA.'").val() != "")){
-                            $("#'.$campoA.'").addClass("danger");
-                            $("#'.$campoB.'").addClass("danger");
-                        }else{
-                            $("#'.$campoA.'").removeClass("danger");
-                            $("#'.$campoB.'").removeClass("danger");
-                        }
-                    });
-
-                    $(document).on("keyup", "#'.$campoB.'" , function() {
-                        if(($("#'.$campoB.'").val() == $("#'.$campoA.'").val())&&($("#'.$campoB.'").val() != "")){
-                            $("#'.$campoB.'").addClass("danger");
-                            $("#'.$campoA.'").addClass("danger");
-                        }else{
-                            $("#'.$campoB.'").removeClass("danger");
-                            $("#'.$campoA.'").removeClass("danger");
-                        }
-                    });
-                
-                ';
-            }
-            $row_reglas = pg_fetch_row($reglas);
-        };*/
-
-    
-        function dphpforms_generate_permits_scripts($behaviors, $ROL){
+        //Manejo de disparadores
+        function dphpforms_generate_permits_information($behaviors, $ROL){
             
-            $script = null;
-                
+            //Este campo hace referencia a el identificador de la pregunta.
             $behavior_field = $behaviors->{'campo'};
             $behavioral_permissions = $behaviors->{'permisos'};
 
-            foreach ($behavioral_permissions as $keyPC => $PC) {
-                
+            $all_behaviors_rol = array();
+
+            foreach ($behavioral_permissions as &$PC) {
+
+                $behaviors_rol = array();
+
+                $json_behaviors_accessibility = array();
+                $json_behaviors_fields_to_remove = array();
+                $json_limpiar_to_eliminate = array();
+
                 if($PC->{'rol'} == $ROL){
 
                     $flagLectura = false;
                     $flagEscritura = false;
 
-                    foreach ($PC->{'permisos'} as $keyPC => $permissions_field) {
+                    foreach ($PC->{'permisos'} as &$permissions_field) {
                         if($permissions_field == "lectura"){
                             $flagLectura = true;
                         }
@@ -391,159 +344,183 @@
                         }
                     }
 
+
                     if($flagEscritura){
 
                         $disabled = "false";
-                        $script = $script.   '  $("#'.$behavior_field.'").prop( "disabled", '.$disabled.' );  ' . "\n";
-                        $script = $script.   '  $(".'.$behavior_field.'").prop( "disabled", '.$disabled.' );  ' . "\n";
+                        //$json_behaviors = $json_behaviors.   '  $("#'.$behavior_field.'").prop( "disabled", '.$disabled.' );  ' . "\n";
+                        //$json_behaviors = $json_behaviors.   '  $(".'.$behavior_field.'").prop( "disabled", '.$disabled.' );  ' . "\n";
+
+                        $tmp_accessibility = array(
+                            'class' => $behavior_field,
+                            'id' => $behavior_field,
+                            'disabled' => $disabled
+                        );
+
+                        array_push($json_behaviors_accessibility, $tmp_accessibility);
 
                     }else{
                         $disabled = "true";
-                        $script = $script.   '  $("#'.$behavior_field.'").prop( "disabled", '.$disabled.' );  ' . "\n";
-                        $script = $script.   '  $(".'.$behavior_field.'").prop( "disabled", '.$disabled.' );  ' . "\n";
-                        $script = $script.   '  $(".'.$behavior_field.'.limpiar ").remove();  ' . "\n";  
+                        //$json_behaviors = $json_behaviors.   '  $("#'.$behavior_field.'").prop( "disabled", '.$disabled.' );  ' . "\n";
+                        //$json_behaviors = $json_behaviors.   '  $(".'.$behavior_field.'").prop( "disabled", '.$disabled.' );  ' . "\n";
+                        //$json_behaviors = $json_behaviors.   '  $(".'.$behavior_field.'.limpiar ").remove();  ' . "\n";  
+
+                        $tmp_accessibility = array(
+                            'class' => $behavior_field,
+                            'id' => $behavior_field,
+                            'disabled' => $disabled
+                        );
+
+                        $tmp_limpiar_to_eliminate = array(
+                            'class' => $behavior_field
+                        );
+
+                        array_push($json_behaviors_accessibility, $tmp_accessibility);
+                        array_push($json_limpiar_to_eliminate, $tmp_limpiar_to_eliminate);
                     }
 
-                        
-                
                     if(!$flagLectura){
-                        $script = $script.   '  $("#'.$behavior_field.'").remove();  ' . "\n";
-                        $script = $script.   '  $(".'.$behavior_field.'").remove();  ' . "\n";
+                        //$json_behaviors = $json_behaviors.   '  $("#'.$behavior_field.'").remove();  ' . "\n";
+                        //$json_behaviors = $json_behaviors.   '  $(".'.$behavior_field.'").remove();  ' . "\n";
+
+                        $tmp_field_to_remove = array(
+                            'class' => $behavior_field,
+                            'id' => $behavior_field
+                        );
+
+                        array_push($json_behaviors_fields_to_remove, $tmp_field_to_remove);
                     }
+
+                    $behaviors_rol = array(
+                        'behaviors_accessibility' => $json_behaviors_accessibility,
+                        'behaviors_fields_to_remove' => $json_behaviors_fields_to_remove,
+                        'limpiar_to_eliminate' => $json_limpiar_to_eliminate
+                    );
+
+                    array_push($all_behaviors_rol, $behaviors_rol);
                     break;
                 }
             }
-            return $script;
+            
+
+            $_behaviors = array(
+                    'behaviors' => $all_behaviors_rol
+            );
+
+            return $_behaviors;
         }
 
-        $permissions_script = null;
-        
-        foreach ($triggers_permissions as $keyPermiso => $permission_trigger) {
+        $permissions_to_script = array();
 
-            $trigger = $permission_trigger->{'disparador'};
-            $conditionns = $permission_trigger->{'condiciones'};
-            foreach($conditionns as $keyCondicion => $condition){
-                $respuesta_trigger = null;
+        if($triggers_permissions != 'null'){
 
-                //$html = $html .  'Disparador: ' . $trigger . ' Condición: ' . $condition->{'condicion'};
-                foreach ($global_respuestas as $key => $g_respuesta) {
-                    if($g_respuesta['idP'] == $trigger ){
-                        $respuesta_trigger = $g_respuesta;
-                        break;
+            foreach ($triggers_permissions as $keyPermiso => $permission_trigger) {
+
+                $trigger = $permission_trigger->{'disparador'};
+                $conditionns = $permission_trigger->{'condiciones'};
+                foreach($conditionns as &$condition){
+                    $respuesta_trigger = null;
+    
+                    foreach ($global_respuestas as $key => $g_respuesta) {
+                        if($g_respuesta['idP'] == $trigger ){
+                            $respuesta_trigger = $g_respuesta;
+                            break;
+                        }
                     }
-                }
-
-                //print_r($respuesta_trigger);
-                $flag_satisfy = false;
-
-                if(
+    
+                    $flag_satisfy = false;
+    
+                    if(
+                            (
+                                ($respuesta_trigger['tipoCampo'] == 'TEXTFIELD') ||
+                                ($respuesta_trigger['tipoCampo'] == 'TEXTAREA') ||
+                                ($respuesta_trigger['tipoCampo'] == 'DATE') ||
+                                ($respuesta_trigger['tipoCampo'] == 'TIME') ||
+                                ($respuesta_trigger['tipoCampo'] == 'DATETIME')
+    
+                            ) 
+                                && 
+                            (
+                                ($condition->{'condicion'} == 'vacio')||
+                                ( $condition->{'condicion'} == 'no_vacio')
+                            )
+                        ){
+    
+                            //$html = $html .  'CONDICION PARA TEXTO';
+                            if(($condition->{'condicion'} == 'no_vacio') && ($respuesta_trigger['valor'] !== null )){
+                                //$html = $html .  "Se cumple no_vacio y con resultado";
+                                $flag_satisfy = true;
+                            }else{
+                                //$html = $html .  "No se cumple no_vacio y con resultado";
+                            }
+    
+                            if(($condition->{'condicion'} == 'vacio') && ($respuesta_trigger['valor'] === null )){
+                                //$html = $html .  "Se cumple vacio y sin resultado";
+                                $flag_satisfy = true;
+                            }else{
+                                //$html = $html .  "No se cumple vacio y sin resultado";
+                            }
+                    }
+    
+                    if(
                         (
-                            ($respuesta_trigger['tipoCampo'] == 'TEXTFIELD') ||
-                            ($respuesta_trigger['tipoCampo'] == 'TEXTAREA') ||
-                            ($respuesta_trigger['tipoCampo'] == 'DATE') ||
-                            ($respuesta_trigger['tipoCampo'] == 'TIME') ||
-                            ($respuesta_trigger['tipoCampo'] == 'DATETIME')
-
+                            ($respuesta_trigger['tipoCampo'] == 'RADIOBUTTON') || 
+                            ($respuesta_trigger['tipoCampo'] == 'CHECKBOX')
                         ) 
                             && 
                         (
-                            ($condition->{'condicion'} == 'vacio')||
-                            ( $condition->{'condicion'} == 'no_vacio')
+                            ($condition->{'condicion'} == 'marcado') || ($condition->{'condicion'} == 'no_marcado')
                         )
                     ){
-
-                        //$html = $html .  'CONDICION PARA TEXTO';
-                        if(($condition->{'condicion'} == 'no_vacio') && ($respuesta_trigger['valor'] !== null )){
-                            //$html = $html .  "Se cumple no_vacio y con resultado";
-                            $flag_satisfy = true;
-                        }else{
-                            //$html = $html .  "No se cumple no_vacio y con resultado";
-                        }
-
-                        if(($condition->{'condicion'} == 'vacio') && ($respuesta_trigger['valor'] === null )){
-                            //$html = $html .  "Se cumple vacio y sin resultado";
-                            $flag_satisfy = true;
-                        }else{
-                            //$html = $html .  "No se cumple vacio y sin resultado";
-                        }
-                }
-
-                if(
-                    (
-                        ($respuesta_trigger['tipoCampo'] == 'RADIOBUTTON') || 
-                        ($respuesta_trigger['tipoCampo'] == 'CHECKBOX')
-                    ) 
-                        && 
-                    (
-                        ($condition->{'condicion'} == 'marcado') || ($condition->{'condicion'} == 'no_marcado')
-                    )
-                ){
-
-                        //$html = $html .  ' CONDICION PARA RADIO/CHECK ';
-                        if(($condition->{'condicion'} == 'marcado') && (($respuesta_trigger['valor'] !== "-1" )&&($respuesta_trigger['valor'] !== "-#$%-" ))){
-                            //$html = $html .  "Se cumple marcado y con resultado";
-                            $flag_satisfy = true;
-                            $html = $html .  $respuesta_trigger['valor'];
-                            $html = $html .  "CUMPLIÓ";
-                            print_r($respuesta_trigger);
-                        }else{
-                            //$html = $html .  "No se cumple marcado y con resultado";
-                        }
-
-                        if(($condition->{'condicion'} == 'no_marcado') && (($respuesta_trigger['valor'] === "-1" )||($respuesta_trigger['valor'] == "-#$%-" ))){
-                            //$html = $html .  "Se cumple no_marcado y sin resultado";
-                            $flag_satisfy = true;
-                            $html = $html .  $respuesta_trigger['valor'];
-                            $html = $html .  "NO CUMPLIO";
-                            print_r($respuesta_trigger);
-                        }else{
-                            //$html = $html .  "No se cumple no_marcado y sin resultado";
-                        }
-                }
-
-                $behavioral_condition_satisfied  = $condition->{'comportamiento_condicion_cumplida'};
-                $behavioral_condition_not_satisfied  = $condition->{'comportamiento_condicion_no_cumplida'};
-                if($flag_satisfy){
-                    foreach ($behavioral_condition_satisfied  as $keyCCC => $behaviors) {
-                        $permissions_script = $permissions_script . dphpforms_generate_permits_scripts($behaviors, $ROL);
+    
+                            //$html = $html .  ' CONDICION PARA RADIO/CHECK ';
+                            if(($condition->{'condicion'} == 'marcado') && (($respuesta_trigger['valor'] !== "-1" )&&($respuesta_trigger['valor'] !== "-#$%-" ))){
+                                //$html = $html .  "Se cumple marcado y con resultado";
+                                $flag_satisfy = true;
+                                //$html = $html .  $respuesta_trigger['valor'];
+                                //$html = $html .  "CUMPLIÓ";
+                                //print_r($respuesta_trigger);
+                            }else{
+                                //$html = $html .  "No se cumple marcado y con resultado";
+                            }
+    
+                            if(($condition->{'condicion'} == 'no_marcado') && (($respuesta_trigger['valor'] === "-1" )||($respuesta_trigger['valor'] == "-#$%-" ))){
+                                //$html = $html .  "Se cumple no_marcado y sin resultado";
+                                $flag_satisfy = true;
+                                //$html = $html .  $respuesta_trigger['valor'];
+                                //$html = $html .  "NO CUMPLIO";
+                                //print_r($respuesta_trigger);
+                            }else{
+                                //$html = $html .  "No se cumple no_marcado y sin resultado";
+                            }
                     }
-                }else{
-                    foreach ($behavioral_condition_not_satisfied  as $keyCCNC => $comportamiento) {
-                        $permissions_script = $permissions_script . dphpforms_generate_permits_scripts($behaviors, $ROL);
+    
+                    $behavioral_condition_satisfied  = $condition->{'comportamiento_condicion_cumplida'};
+                    $behavioral_condition_not_satisfied  = $condition->{'comportamiento_condicion_no_cumplida'};
+
+                    
+                    if($flag_satisfy){
+                        foreach ($behavioral_condition_satisfied  as $keyCCC => $behaviors) {
+                            //$permissions_to_script = $permissions_to_script . dphpforms_generate_permits_information($behaviors, $ROL);
+                            array_push( $permissions_to_script, dphpforms_generate_permits_information($behaviors, $ROL) );
+                        }
+                    }else{
+                        foreach ($behavioral_condition_not_satisfied  as $keyCCNC => $behaviors) {
+                            //$permissions_to_script = $permissions_to_script . dphpforms_generate_permits_information($behaviors, $ROL);
+                            array_push( $permissions_to_script, dphpforms_generate_permits_information($behaviors, $ROL) );
+                        }
                     }
                 }
             }
-        }
+        };
 
-        /*$html = $html .  '
+        $permissions_behaviors_to_script = array(
+            'behaviors_permissions' => $permissions_to_script
+        );
+
+        $html = $html . '<div id="permissions_information" style="display:none;">' . json_encode($permissions_behaviors_to_script) . '</div>';
+
         
-            </div>
-        </div>
-        <script src="js/jquery.min.js"></script>
-        <script src="js/bootstrap.min.js"></script>
-        <script>
-            $(document).ready(function(){
-                '
-                .$permissions_script.
-                '
-            });
-            $(".limpiar").click(function(){
-                $(this).parent().find("div").each(function(){
-                    $(this).find("label").find("input").prop("checked", false);
-                });
-            });
-
-
-        </script>
-        <script>
-            '.$script_reglas.'
-        </script>
-        </body>
-    </html>
-        
-        ';*/
-
-        // Fin de construcción
 
         return $html;
 

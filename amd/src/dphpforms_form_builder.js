@@ -69,6 +69,11 @@
             $('#generarFormulario').click(function(){
                 generadorFormJSON();
             });
+
+            $('#json-store-form').click(function(){
+                var json = JSON.parse($('#opt1-textarea-json').val());
+                store_form(json);
+            });
             
             $('#titulo-formulario').on('keyup',function(){
                 $('#form-preview > h2').text($('#titulo-formulario').val());
@@ -324,12 +329,11 @@
                         }'));
                 });
             
-                var disparadores = "null";
+                var disparadores = JSON.parse('[]');;
                 if($('#disparadores').val()){
                     disparadores = $('#disparadores').val();
                     for(var x in identificadores) {
                         disparadores = disparadores.replaceAll(identificadores[x].id_temporal, identificadores[x].id_nuevo);
-                        
                     };
                     
                     disparadores = JSON.parse(disparadores);
@@ -341,23 +345,32 @@
                         "descripcion": $('#desc-formulario').val(),
                         "method": $('#metodo-formulario').val(),
                         "action": $('#procesador-formulario').val(),
-                        "enctype": $('#enctype-formulario').val(),
-                        "disparadores": disparadores
+                        "enctype": $('#enctype-formulario').val()
                     },
                     "preguntas":preguntas,
+                    "disparadores": disparadores,
                     "reglas":reglas
                 };
-                console.log(formulario);
-                
+                store_form(formulario);
+            };
+
+            function store_form(form){
+                console.log(form);
                 $.ajax({
                     method: "POST",
                     url: "../managers/dphpforms/dphpforms_forms_processor.php",
-                    data: { data: formulario }
-                    }).done(function( msg ) {
-                        alert( "Data Saved: " + msg );
-                        console.log(msg)
-                    });
-            };
+                    contentType: "application/json",
+                    dataType: "text",
+                    data: JSON.stringify(form) ,
+                    success: function( msg ){
+                            alert( "Data Saved: " + msg );
+                            console.log(msg);
+                    },
+                    error: function( XMLHttpRequest, textStatus, errorThrown ) {
+                        alert( "some error " + textStatus + " " + errorThrown );
+                    }
+                });
+            }
 
             $(".limpiar").click(function(){
                 $(this).parent().find("div").each(function(){
