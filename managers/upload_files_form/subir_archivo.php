@@ -699,6 +699,32 @@ if (isset($_FILES['csv_file'])) {
             $respuesta = 1;
             echo $respuesta;
 
+        } else if ($varSelector == "materias") {
+
+            global $DB;
+            $count = 0;
+            while ($data = fgetcsv($handle, 100, ",")) {
+                $record = new stdClass();
+                $count++;
+                $codigo_materia = $data[0];
+
+                $query = "SELECT *
+                FROM {talentospilos_materias_criti}
+                WHERE codigo_materia = '$codigo_materia'";
+
+                $result = $DB->get_record_sql($query);
+
+                if ($result) {
+                    throw new MyException("La materia con codigo $codigo_materia ya se encuentra registrada");
+                }
+
+                $record->codigo_materia = $codigo_materia;
+                $DB->insert_record('talentospilos_materias_criti', $record);
+
+            }
+
+            $respuesta = 1;
+            echo $respuesta;
         } else {
             throw new MyException("Lo sentimos la carga de archivos para la tabla " . $varSelector . " esta en desarrollo.");
         }

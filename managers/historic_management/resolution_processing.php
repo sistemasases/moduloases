@@ -115,6 +115,26 @@ if (isset($_FILES['file'])) {
                 throw new MyException('La columna con el campo codigo_resolucion es obligatoria');
             }
 
+            //validate nombre_semestre
+           if ($associativeTitles['nombre_semestre'] != null) {
+            $nombre_semestre = $data[$associativeTitles['nombre_semestre']];
+            if ($nombre_semestre != '') {
+
+                $id_semestre = get_semester_id_by_name($nombre_semestre);
+                if (!$id_semestre) {
+                    $isValidRow = false;
+                    array_push($detail_errors, [$line_count, $lc_wrongFile, ($associativeTitles['nombre_semestre'] + 1), 'nombre_semestre', 'No existe ningun semestre registrado con el nombre: ' . $nombre_semestre]);
+                }
+
+                } else {
+                    $isValidRow = false;
+                    array_push($detail_errors, [$line_count, $lc_wrongFile, ($associativeTitles['nombre_semestre'] + 1), 'nombre_semestre', 'El campo nombre_semestre es obligatorio y se encuentra vacio']);
+                }
+
+            } else {
+                throw new MyException('La columna con el campo nombre_semestre es obligatoria');
+            }
+
             //validate fecha
             if ($associativeTitles['fecha'] != null) {
                 $fecha = $data[$associativeTitles['fecha']];
@@ -156,7 +176,7 @@ if (isset($_FILES['file'])) {
             } else {
 
                 //Actualizar o crear un registro
-                $result = create_resolution($codigo_resolucion, $fecha, $total_girado);
+                $result = create_resolution($codigo_resolucion, $id_semestre, $fecha, $total_girado);
 
                 if (!$result) {
                     array_push($detail_errors, [$line_count, $lc_wrongFile, 'Error al registrar resolución', 'Error Servidor', 'Error del server registrando el historico']);

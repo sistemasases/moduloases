@@ -181,14 +181,11 @@ function get_student_icetex_status($id_student)
  * @return object --> object representing moodle user
  */
 
-function get_adds_fields_mi($id_student)
-{
+function get_adds_fields_mi($id_student){
 
     global $DB;
+
     $sql_query = "SELECT * FROM {talentospilos_user_extended} WHERE id_moodle_user = $id_student";
-    // $sql_query = "SELECT field.shortname, data.data
-    //               FROM {user_info_data} AS data INNER JOIN {user_info_field} AS field ON data.fieldid = field.id
-    //               WHERE data.userid = $id_student";
 
     $result = $DB->get_record_sql($sql_query);
 
@@ -339,15 +336,23 @@ function get_assigned_professional($id_student)
 
     if ($id_monitor) {
 
-        $sql_query = "SELECT id_jefe FROM {talentospilos_user_rol} WHERE id_usuario = " . $id_monitor . ";";
+        $sql_query = "SELECT id_jefe 
+                      FROM {talentospilos_user_rol} 
+                      WHERE id_usuario = $id_monitor AND id_semestre = $object_current_semester->id";
+
         $id_trainee = $DB->get_record_sql($sql_query)->id_jefe;
 
         if ($id_trainee) {
-            $sql_query = "SELECT id_jefe FROM {talentospilos_user_rol} WHERE id_usuario = " . $id_trainee . ";";
+
+            $sql_query = "SELECT id_jefe 
+                          FROM {talentospilos_user_rol} 
+                          WHERE id_usuario = $id_trainee AND id_semestre = $object_current_semester->id;";
+
             $id_professional = $DB->get_record_sql($sql_query)->id_jefe;
 
             if ($id_professional) {
-                $sql_query = "SELECT id, firstname, lastname, email FROM {user} WHERE id = " . $id_professional . ";";
+                $sql_query = "SELECT id, firstname, lastname, email 
+                              FROM {user} WHERE id = $id_professional ;";
                 $professional_object = $DB->get_record_sql($sql_query);
             } else {
                 $professional_object = array();
