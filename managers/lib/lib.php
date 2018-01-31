@@ -160,7 +160,7 @@ function make_select_ficha($id){
   *
   * @see get_asigned_by_monitor($id)
   * @param $id --> monitor id
-  * @return string --> with every student
+  * @return stdClass Array --> with every student
   */
 
 function get_asigned_by_monitor($id){
@@ -169,19 +169,16 @@ function get_asigned_by_monitor($id){
     $semestre = get_current_semester();
     $id_semestre = $semestre->max;
 
-
-    $query = "SELECT user_m.username, user_m.firstname, user_m.lastname
-              FROM {user} user_m
-              INNER JOIN {talentospilos_user_extended} extended ON user_m.id = extended.id_moodle_user
-              INNER JOIN {talentospilos_monitor_estud} mon_es ON extended.id_ases_user = mon_es.id_estudiante
-              WHERE mon_es.id_monitor = $id AND field.shortname = 'idtalentos' AND mon_es.id_semestre = $id_semestre";
+    $query = "SELECT user_moodle.username, user_moodle.firstname, user_moodle.lastname
+              FROM {user} AS user_moodle
+              INNER JOIN {talentospilos_user_extended} AS user_extended ON user_moodle.id = user_extended.id_moodle_user
+              INNER JOIN {talentospilos_monitor_estud} AS monitor_student ON user_extended.id_ases_user = monitor_student.id_estudiante
+              WHERE monitor_student.id_monitor = $id AND monitor_student.id_semestre = $id_semestre";
 
     $result = $DB->get_records_sql($query);
     
     return $result;
 }
-
-//print_r(get_asigned_by_monitor(76));
 
 /**
 * Gets all students assigned to a 'practicante' 
@@ -198,7 +195,7 @@ function get_asigned_by_practicante($id){
     $id_semestre = $semestre->max;
 
     $query = "SELECT rol.id_usuario
-              FROM {talentospilos_user_rol} rol
+              FROM {talentospilos_user_rol} AS rol
               WHERE rol.id_jefe = $id AND rol.id_semestre = $id_semestre";
 
     $students = array();
