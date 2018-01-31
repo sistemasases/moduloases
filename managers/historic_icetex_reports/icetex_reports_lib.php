@@ -178,17 +178,35 @@ function get_resolutions_for_report(){
 function get_count_active_res_students($cohort){
     global $DB;
 
-$sql_query = "SELECT Count(res_est.id) AS numero FROM {talentospilos_res_estudiante} AS res_est
-                INNER JOIN {talentospilos_user_extended} uext ON uext.id_ases_user = res_est.id_estudiante
-                INNER JOIN {cohort_members} co_mem ON uext.id_moodle_user = co_mem.userid
-                INNER JOIN {cohort} cohortm ON cohortm.id = co_mem.cohortid
-                WHERE substring(cohortm.idnumber from 0 for 5) = '$cohort' OR substring(cohortm.idnumber from 0 for 6) = '$cohort'";
+    $sql_query = "SELECT Count(res_est.id) AS numero FROM {talentospilos_res_estudiante} AS res_est
+                    INNER JOIN {talentospilos_user_extended} uext ON uext.id_ases_user = res_est.id_estudiante
+                    INNER JOIN {cohort_members} co_mem ON uext.id_moodle_user = co_mem.userid
+                    INNER JOIN {cohort} cohortm ON cohortm.id = co_mem.cohortid
+                    WHERE substring(cohortm.idnumber from 0 for 5) = '$cohort' OR substring(cohortm.idnumber from 0 for 6) = '$cohort'";
 
-$count = $DB->get_record_sql($sql_query)->numero;
+    $count = $DB->get_record_sql($sql_query)->numero;
 
-return $count;
+    return $count;
 
 }
+
+function get_count_inactive_res_students($cohort){
+    global $DB;
+
+    $sql_query = "SELECT Count(res_est.id) AS numero FROM {talentospilos_res_estudiante} AS res_est
+                    INNER JOIN {talentospilos_user_extended} uext ON uext.id_ases_user = res_est.id_estudiante
+                    INNER JOIN {talentospilos_history_academ} academ ON academ.id_estudiante = res_est.id_estudiante
+                    INNER JOIN {talentospilos_history_cancel} cancel ON cancel.id_history = academ.id
+                    INNER JOIN {cohort_members} co_mem ON uext.id_moodle_user = co_mem.userid
+                    INNER JOIN {cohort} cohortm ON cohortm.id = co_mem.cohortid
+                    WHERE substring(cohortm.idnumber from 0 for 5) = '$cohort' OR substring(cohortm.idnumber from 0 for 6) = '$cohort'";
+
+    $count = $DB->get_record_sql($sql_query)->numero;
+
+    return $count;
+}
+
+//print_r(get_count_inactive_res_students('SPP1'));
 
 //Returns the student that does not have resolution
 function get_active_no_res_students(){
