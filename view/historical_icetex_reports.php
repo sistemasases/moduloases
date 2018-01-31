@@ -30,6 +30,7 @@ require_once($CFG->libdir.'/adminlib.php');
 require_once('../managers/instance_management/instance_lib.php');
 require_once('../managers/periods_management/periods_lib.php');
 require_once ('../managers/permissions_management/permissions_lib.php');
+require_once ('../managers/historic_icetex_reports/icetex_reports_lib.php');
 require_once ('../managers/validate_profile_action.php');
 require_once ('../managers/menu_options.php');
 include("../classes/output/renderer.php");
@@ -57,15 +58,8 @@ if(!consult_instance($blockid)){
 // Menu items are created
 $menu_option = create_menu_options($USER->id, $blockid, $courseid);
 
-//Getting all semesters
-$semesters = get_all_semesters(); 
-
-$table_semesters = '';
-$table_semesters .= '<option value=""> --------------------------------- </option>';
-
-foreach ($semesters as $semester) {
-	$table_semesters.= '<option value="' .$semester->id .'">'.$semester->nombre .'</option>'; 	
-}
+//Getting all cohorts
+$cohorts = get_all_cohort_names(); 
 
 //Creates a class with information that'll be send to template
 $data = new stdClass;
@@ -73,7 +67,7 @@ $data = new stdClass;
 // Evaluates if user role has permissions assigned on this view
 $actions = authenticate_user_view($USER->id, $blockid);
 $data = $actions;
-$data->table = $table_semesters;
+$data->table = $cohorts;
 $data->menu = $menu_option;
 
 //Navegation set up
