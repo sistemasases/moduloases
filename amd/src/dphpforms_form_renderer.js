@@ -24,7 +24,7 @@
                 // Controles para editar formulario de pares
                 $('.edit_peer_test_tracking').on('click', function(){
                     var id_tracking = $(this).attr('data-record-id');
-                    load_record_updater('88', '27', '7');
+                    load_record_updater('89', '28', '3');
                     $('#modal_test_edit_peer_tracking').fadeIn(300);
                 });
 
@@ -32,51 +32,39 @@
                     $.get( "../managers/dphpforms/dphpforms_forms_core.php?form_id="+form_id+"&rol="+rol+"&record_id="+record_id, function( data ) {
                             $("#body_editor").html("");
                             $('#body_editor').append( data );
+                            $("#permissions_informationr").html("");
                             var behaviors = JSON.parse($('#permissions_information').text());
-                            console.log(behaviors);
-
+                            
                             for(var x = 0; x < behaviors['behaviors_permissions'].length; x++){
+                             
+                                var current_behaviors =  behaviors['behaviors_permissions'][x]['behaviors'][0];
                                 
-                                for(var y = 0; y < behaviors['behaviors_permissions'][x]['behaviors'].length; y++ ){
-
-                                    var current_behaviors = behaviors['behaviors_permissions'][x]['behaviors'][y];
-                                    console.log(current_behaviors);
-                                    var behaviors_accessibility = current_behaviors['behaviors_accessibility'];
-                                    for( var z = 0; z <  behaviors_accessibility.length; z++){
-                                        $('#' + behaviors_accessibility[z]['id']).prop( 'disabled', z['disabled'] );
-                                        $('.' + behaviors_accessibility[z]['class']).prop( 'disabled', z['disabled'] );
+                                //
+                                var behaviors_accessibility = current_behaviors.behaviors_accessibility;
+                                
+                                for( var z = 0; z <  behaviors_accessibility.length; z++){
+                                    var disabled = behaviors_accessibility[z]['disabled'];
+                                    if(disabled == 'true'){
+                                        disabled = true;
+                                    }else if(disabled == 'false'){
+                                        disabled = false;
                                     }
-                                    var behaviors_fields_to_remove = current_behaviors['behaviors_fields_to_remove'];
-                                    for( var z = 0; z < behaviors_fields_to_remove.length; z++){
-                                        $('#' + behaviors_fields_to_remove[z]['id']).remove();
-                                        $('.' + behaviors_fields_to_remove[z]['class']).remove();
-                                    }
-                                    var limpiar_to_eliminate = current_behaviors['limpiar_to_eliminate'];
-                                    for( var z = 0; z <  limpiar_to_eliminate.length; z++){
-                                        $('.' + limpiar_to_eliminate[z]['class'] + '.limpiar ').remove();
-                                    }
+                                    $('.dphpforms-record').find('#' + behaviors_accessibility[z]['id']).prop( 'disabled', disabled );
+                                    $('.dphpforms-record').find('.' + behaviors_accessibility[z]['class']).prop( 'disabled', disabled );
 
                                 }
+                                var behaviors_fields_to_remove = current_behaviors['behaviors_fields_to_remove'];
+                                for( var z = 0; z < behaviors_fields_to_remove.length; z++){
+                                    $('.dphpforms-record').find('#' + behaviors_fields_to_remove[z]['id']).remove();
+                                    $('.dphpforms-record').find('.' + behaviors_fields_to_remove[z]['class']).remove();
+                                }
+                                var limpiar_to_eliminate = current_behaviors['limpiar_to_eliminate'];
+                                for( var z = 0; z <  limpiar_to_eliminate.length; z++){
+                                    $('.dphpforms-record').find('.' + limpiar_to_eliminate[z]['class'] + '.limpiar ').remove();
+                                }
+                                
                             }
 
-                            /*for( var behavior in behaviors['behaviors_permissions']){
-                                
-                                var behaviors_accessibility = behavior['behaviors_accessibility'];
-                                for( var x in  behaviors_accessibility){
-                                    $('#' + x['id']).prop( 'disabled', x['disabled'] );
-                                    $('.' + x['class']).prop( 'disabled', x['disabled'] );
-                                }
-                                var behaviors_fields_to_remove = behavior['behaviors_fields_to_remove'];
-                                for( var x in  behaviors_fields_to_remove){
-                                    $('#' + x['id']).remove();
-                                    $('.' + x['class']).remove();
-                                }
-                                var limpiar_to_eliminate = behavior['limpiar_to_eliminate'];
-                                for( var x in  limpiar_to_eliminate){
-                                    $('.' + x['class'] + '.limpiar ').remove();
-                                }
-                                
-                            }*/
                     });
                 }
 
