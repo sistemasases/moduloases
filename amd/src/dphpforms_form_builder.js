@@ -352,14 +352,6 @@
                     "reglas":reglas
                 };
                 store_form(formulario);
-                /*$.ajax({
-                    method: "POST",
-                    url: "../managers/dphpforms/dphpforms_forms_processor.php",
-                    data: { data: formulario }
-                    }).done(function( msg ) {
-                        alert( "Data Saved: " + msg );
-                        console.log(msg)
-                    });*/
             };
 
             function store_form(form){
