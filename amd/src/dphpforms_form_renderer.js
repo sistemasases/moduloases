@@ -24,12 +24,12 @@
                 // Controles para editar formulario de pares
                 $('.edit_peer_test_tracking').on('click', function(){
                     var id_tracking = $(this).attr('data-record-id');
-                    load_record_updater('89', '28', '6');
+                    load_record_updater('89', '28');
                     $('#modal_test_edit_peer_tracking').fadeIn(300);
                 });
 
-                function load_record_updater(form_id, record_id, rol){
-                    $.get( "../managers/dphpforms/dphpforms_forms_core.php?form_id="+form_id+"&rol="+rol+"&record_id="+record_id, function( data ) {
+                function load_record_updater(form_id, record_id){
+                    $.get( "../managers/dphpforms/dphpforms_forms_core.php?form_id="+form_id+"&record_id="+record_id, function( data ) {
                             $("#body_editor").html("");
                             $('#body_editor').append( data );
                             $("#permissions_informationr").html("");
