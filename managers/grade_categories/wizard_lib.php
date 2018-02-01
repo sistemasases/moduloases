@@ -84,7 +84,7 @@ function insertCategory($course,$father,$name,$weighted,$weight){
  * @param $weight --> weighted value
  * @return integer --- ok->id_cat || error->0
 **/
-function E($course,$father,$name,$weighted,$weight){
+function insertCategoryParcial($course,$father,$name,$weighted,$weight){
     global $DB;
       
     //Instance an object category to use insert_record
@@ -125,8 +125,8 @@ function E($course,$father,$name,$weighted,$weight){
 function insertParcial($course,$father,$name,$weighted,$weight){
     $succes = insertCategoryParcial($course,$father,$name,$weighted,$weight);
     if($succes != 0){
-        if(insertItem($course,$succes,$name,0,true) === 1){
-            if(insertItem($course,$succes,"Opcional de ".$name,0,true)===1){
+        if(insertItem($course,$succes,$name,0,true) == 1){
+            if(insertItem($course,$succes,"Opcional de ".$name,0,true)==1){
                 return 1;
             }else{
                 return 0;
