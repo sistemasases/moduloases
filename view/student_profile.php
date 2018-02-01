@@ -710,10 +710,8 @@ if ($student_code != 0) {
 // End of data obtaining for risks graphs
 
     //Pruebas
-    
     $record->form_seguimientos = null;
-    $record->form_seguimientos = dphpforms_render_recorder('65', $rol);
-    //$record->form_seguimientos = '';
+    $record->form_seguimientos = dphpforms_render_recorder('93', $rol);
 
 } else {
     $record = new stdClass;

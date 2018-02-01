@@ -6,7 +6,7 @@
     if( isset($_GET['form_id']) && isset($_GET['pregunta_id']) && isset($_GET['criterio']) && isset($_GET['order'])){
         echo dphpforms_find_records($_GET['form_id'], $_GET['pregunta_id'], $_GET['criterio'], $_GET['order']);
     }
-    
+    //Se busca por if_from_preg (info en dphpforms_get_record)
     function dphpforms_find_records($form_id, $pregunta_id, $criterio, $order = 'DESC'){
 
         global $DB;
