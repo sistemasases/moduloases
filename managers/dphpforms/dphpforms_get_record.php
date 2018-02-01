@@ -31,6 +31,10 @@
 
         $list_respuestas = $DB->get_records_sql($sql);
         $list_respuestas = array_values($list_respuestas);
+
+        $sql_record = "SELECT * FROM {talentospilos_df_form_resp} WHERE id = '"  . $record_id . "'";
+        $record_info = $DB->get_record_sql($sql_record);
+
         $respuestas = array();
         if(count($list_respuestas) > 0){
             foreach($list_respuestas as &$respuesta){
@@ -48,7 +52,9 @@
         return json_encode(
             array(
                 'record' => array(
-                    'id_solucion' => $list_respuestas[0]->id_formulario_respuestas,
+                    'id_formulario' => $list_respuestas[0]->id_formulario,
+                    'id_registro' => $list_respuestas[0]->id_formulario_respuestas,
+                    'fecha_hora_registro' => $record_info->fecha_hora_registro,
                     'campos' => $respuestas
                 )
             )
