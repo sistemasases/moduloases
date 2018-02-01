@@ -2,7 +2,11 @@
     
     require_once(dirname(__FILE__). '/../../../../config.php');
     header('Content-Type: application/json');
-    dphpforms_find_records('64', '102', 'UNIVALLE', 'ASC');
+
+    if( isset($_GET['form_id']) && isset($_GET['pregunta_id']) && isset($_GET['criterio']) && isset($_GET['order'])){
+        echo dphpforms_find_records($_GET['form_id'], $_GET['pregunta_id'], $_GET['criterio'], $_GET['order']);
+    }
+    
     function dphpforms_find_records($form_id, $pregunta_id, $criterio, $order = 'DESC'){
 
         global $DB;
@@ -23,7 +27,7 @@
         ORDER BY FRS.fecha_hora_registro_respuesta " . $order;
 
         $resultados = $DB->get_records_sql($sql);
-        echo json_encode(
+        return json_encode(
             array(
                 'results' => array_values($resultados)
             )
