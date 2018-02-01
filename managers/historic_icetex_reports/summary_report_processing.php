@@ -29,14 +29,19 @@
 
 	if(isset($_POST['summ']) && $_POST['summ'] == 'summaryR' && isset($_POST['cohor'])){		
 		$columns = array();
-		array_push($columns, array("title"=>"", "name"=>"", "data"=>""));
-		array_push($columns, array("title"=>"", "name"=>"", "data"=>""));
-		array_push($columns, array("title"=>"", "name"=>"", "data"=>""));
+		array_push($columns, array("title"=>"Cohorte", "name"=>"cohort", "data"=>"cohort"));
+		array_push($columns, array("title"=>"Semestre", "name"=>"semestre", "data"=>"semestre"));
+		array_push($columns, array("title"=>"Estudiantes activos con res.", "name"=>"num_act_res", "data"=>"num_act_res"));
+		array_push($columns, array("title"=>"Monto", "name"=>"monto_act_res", "data"=>"monto_act_res"));
+		array_push($columns, array("title"=>"Estudiantes inactivos con res.", "name"=>"num_inact_res", "data"=>"num_inact_res"));
+		array_push($columns, array("title"=>"Monto", "name"=>"monto_inact_res", "data"=>"monto_inact_res"));
+		array_push($columns, array("title"=>"Estudiantes activos sin res.", "name"=>"num_act_no_res", "data"=>"num_act_no_res"));
+		array_push($columns, array("title"=>"Monto", "name"=>"monto_act_no_res", "data"=>"monto_act_no_res"));
 
 		$data = array(
 					"bsort" => false,
 					"columns" => $columns,
-					"data" => get_summary(),
+					"data" => get_info_summary_report($_POST['cohor']),
 					"language" => 
                 	 array(
                     	"search"=> "Buscar:",
