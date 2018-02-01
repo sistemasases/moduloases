@@ -712,7 +712,7 @@ if ($student_code != 0) {
     //Pruebas
     
     $record->form_seguimientos = null;
-    $record->form_seguimientos = dphpforms_render_recorder('89', $rol, '-1', '-1');
+    $record->form_seguimientos = dphpforms_render_recorder('65', $rol);
     //$record->form_seguimientos = '';
 
 } else {
