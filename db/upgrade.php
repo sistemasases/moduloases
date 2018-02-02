@@ -4,7 +4,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     global $DB;
     $dbman = $DB->get_manager();
     $result = true;
-    if ($oldversion < 2018020209479 ) {
+    if ($oldversion < 2018020214529 ) {
     // ************************************************************************************************************
     // Actualización que crea la tabla para los campos extendidos de usuario (Tabla: {talentospilos_user_extended})
     // Versión: 2018010911179
@@ -852,8 +852,51 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
 
 
 
+    // ************************************************************************************************************
+    // Actualización:
+    // Se añade el campo nota_credito en la tabla {talentospilos_res_icetex}
+    // Versión en la que se incluye: 2018020214529
+    // ************************************************************************************************************
+
+     // Define field alias to be added to talentospilos_df_formularios.
+     $table = new xmldb_table('talentospilos_df_formularios');
+     $field = new xmldb_field('alias', XMLDB_TYPE_CHAR, '100', null, null, null, null, 'fecha_hora_registro');
+
+     // Conditionally launch add field alias.
+     if (!$dbman->field_exists($table, $field)) {
+          $dbman->add_field($table, $field);
+     }
+
+     // Define field estado to be added to talentospilos_df_formularios.
+     $table = new xmldb_table('talentospilos_df_formularios');
+     $field = new xmldb_field('estado', XMLDB_TYPE_INTEGER, '5', null, XMLDB_NOTNULL, null, '1', 'alias');
+
+     // Conditionally launch add field estado.
+     if (!$dbman->field_exists($table, $field)) {
+         $dbman->add_field($table, $field);
+     }
+
+     // Define field estado to be added to talentospilos_df_form_resp.
+     $table = new xmldb_table('talentospilos_df_form_resp');
+     $field = new xmldb_field('estado', XMLDB_TYPE_INTEGER, '5', null, XMLDB_NOTNULL, null, '1', 'fecha_hora_registro');
+
+     // Conditionally launch add field estado.
+     if (!$dbman->field_exists($table, $field)) {
+         $dbman->add_field($table, $field);
+     }
+
+     // Define field estado to be added to talentospilos_df_form_preg.
+     $table = new xmldb_table('talentospilos_df_form_preg');
+     $field = new xmldb_field('estado', XMLDB_TYPE_INTEGER, '5', null, XMLDB_NOTNULL, null, '1', 'fecha_hora_registro');
+
+     // Conditionally launch add field talentospilos_df_form_resp.
+     if (!$dbman->field_exists($table, $field)) {
+         $dbman->add_field($table, $field);
+     }
+
+
     // Ases savepoint reached.
-    upgrade_block_savepoint(true, 2018020209479 , 'ases');
+    upgrade_block_savepoint(true, 2018020214529 , 'ases');
    
     return $result;
 
