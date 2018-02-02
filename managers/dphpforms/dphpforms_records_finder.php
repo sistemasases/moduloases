@@ -1,9 +1,9 @@
 <?php 
     
     require_once(dirname(__FILE__). '/../../../../config.php');
-    header('Content-Type: application/json');
-
+    
     if( isset($_GET['form_id']) && isset($_GET['pregunta_id']) && isset($_GET['criterio']) && isset($_GET['order'])){
+        header('Content-Type: application/json');
         echo dphpforms_find_records($_GET['form_id'], $_GET['pregunta_id'], $_GET['criterio'], $_GET['order']);
     }
     //Se busca por if_from_preg (info en dphpforms_get_record)
@@ -12,7 +12,7 @@
         global $DB;
 
         //"SELECT R.id, R.id_pregunta, R.respuesta, FRS.id_formulario, FRS.id_formulario_respuestas, FRS.fecha_hora_registro_respuesta
-        $sql = "SELECT FRS.id_formulario_respuestas AS id_solucion, FRS.fecha_hora_registro_respuesta AS fecha_hora_registro
+        $sql = "SELECT FRS.id_formulario_respuestas AS id_registro, FRS.fecha_hora_registro_respuesta AS fecha_hora_registro
         FROM {talentospilos_df_respuestas} AS R 
         INNER JOIN 
             (

@@ -2,7 +2,8 @@
 
   {{#data}} {{> block_ases/side_menu}} {{{message}}}
   <div class="container">
-    <input type="text" class="hide" id="id_dphpforms_monitor" value="{{id_dphpforms_monitor}}" />
+    <input type="text" class="hide" id="current_user_id" value="{{id_dphpforms_creado_por}}" />
+    <div id="json_seguimientos" style="display:none;">peer_tracking_v2</div>
     <form id="ficha_estudiante" onsubmit="myFunction(); return false;">
 
       <input type="text" class="hide" id="id_ases" name="id_ases" value="{{id_ases}}" />

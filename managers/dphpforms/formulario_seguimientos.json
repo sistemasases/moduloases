@@ -4,7 +4,8 @@
        "descripcion":"Formulario para registro y modificación de los seguimientos individuales",
        "method":"POST",
        "action":"procesador.php",
-       "enctype":null
+       "enctype":null,
+       "alias":"seguimiento_pares"
     },
     "preguntas":[  
        {  
@@ -398,7 +399,7 @@
           "tipo_campo":"TEXTAREA",
           "opciones_campo":null,
           "atributos_campo":{  
-             "class":"col-xs-6 col-sm-6 col-md-6 col-lg-6 content_field",
+             "class":"col-xs-6 col-sm-6 col-md-6 col-lg-6",
              "name":"tema",
              "required":"true",
              "maxlength":"1000",
@@ -495,7 +496,7 @@
           "tipo_campo":"TEXTAREA",
           "opciones_campo":null,
           "atributos_campo":{  
-             "class":"col-xs-6 col-sm-6 col-md-6 col-lg-6 content_field",
+             "class":"col-xs-6 col-sm-6 col-md-6 col-lg-6",
              "name":"objetivos",
              "required":"true",
              "maxlength":"1000",
@@ -592,7 +593,7 @@
           "tipo_campo":"TEXTAREA",
           "opciones_campo":null,
           "atributos_campo":{  
-             "class":"col-xs-6 col-sm-6 col-md-6 col-lg-6 content_field",
+             "class":"col-xs-6 col-sm-6 col-md-6 col-lg-6",
              "name":"individual",
              "required":"false",
              "maxlength":"5000",
@@ -689,7 +690,7 @@
           "tipo_campo":"TEXTAREA",
           "opciones_campo":null,
           "atributos_campo":{  
-             "class":"col-xs-6 col-sm-6 col-md-6 col-lg-6 content_field",
+             "class":"col-xs-6 col-sm-6 col-md-6 col-lg-6",
              "name":"familiar",
              "required":"false",
              "maxlength":"5000",
@@ -1012,7 +1013,7 @@
           "tipo_campo":"TEXTAREA",
           "opciones_campo":null,
           "atributos_campo":{  
-             "class":"col-xs-6 col-sm-6 col-md-6 col-lg-6 content_field",
+             "class":"col-xs-6 col-sm-6 col-md-6 col-lg-6",
              "name":"academico",
              "required":"false",
              "maxlength":"5000",
@@ -1109,7 +1110,7 @@
           "tipo_campo":"TEXTAREA",
           "opciones_campo":null,
           "atributos_campo":{  
-             "class":"col-xs-6 col-sm-6 col-md-6 col-lg-6 content_field",
+             "class":"col-xs-6 col-sm-6 col-md-6 col-lg-6",
              "required":"false",
              "name":"economico",
              "maxlength":"5000",
@@ -1432,7 +1433,7 @@
           "tipo_campo":"TEXTAREA",
           "opciones_campo":null,
           "atributos_campo":{  
-             "class":"col-xs-6 col-sm-6 col-md-6 col-lg-6 content_field",
+             "class":"col-xs-6 col-sm-6 col-md-6 col-lg-6",
              "name":"vida_uni",
              "required":"false",
              "maxlength":"5000",
@@ -1529,7 +1530,7 @@
           "tipo_campo":"TEXTAREA",
           "opciones_campo":null,
           "atributos_campo":{  
-             "class":"col-xs-6 col-sm-6 col-md-6 col-lg-6 content_field",
+             "class":"col-xs-6 col-sm-6 col-md-6 col-lg-6",
              "required":"false",
              "name":"observaciones",
              "maxlength":"5000",
@@ -2030,14 +2031,14 @@
        },
        {  
           "id_temporal":"cmp_21",
-          "enunciado":"id_monitor",
+          "enunciado":"id_creado_por",
           "tipo_campo":"TEXTFIELD",
           "opciones_campo":null,
           "atributos_campo":{  
              "class":"oculto",
              "required":"true",
-             "name":"id_monitor",
-             "local_alias":"id_monitor"
+             "name":"id_creado_por",
+             "local_alias":"id_creado_por"
           },
           "permisos_campo":[  
              {  
@@ -5515,6 +5516,20 @@
           "id_temporal_campo_b":"cmp_15",
           "regla":"BOUND"
        }
+    ],
+    "campos_busqueda":[
+        {
+            "alias":"seguimiento_pares_id_estudiante",
+            "id_campo":"cmp_22"
+        },
+        {
+            "alias":"seguimiento_pares_id_creado_por",
+            "id_campo":"cmp_21"
+        },
+        {
+            "alias":"seguimiento_pares_fecha",
+            "id_campo":"cmp_0"
+        }
     ]
  }
  

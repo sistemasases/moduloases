@@ -1,9 +1,10 @@
 <?php 
     
     require_once(dirname(__FILE__). '/../../../../config.php');
-    header('Content-Type: application/json');
+    
 
     if( isset( $_GET['record_id'] ) ){
+        header('Content-Type: application/json');
         echo dphpforms_get_record( $_GET['record_id'] );
     }
     

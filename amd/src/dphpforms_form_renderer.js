@@ -14,12 +14,41 @@
     return {
         init: function() {
 
+                $('#socioed_li').click(function(){
+                    var codigo_estudiante = $('#codigo').val();
+                    var periodo_A = [1, 2, 3, 4, ,5 ,6 ,7];
+                    var periodo_B = [8, 9, 10, 11, ,12];
+                    $.get( "../managers/dphpforms/dphpforms_records_finder.php?form_id=96&pregunta_id=802&criterio="+codigo_estudiante+"&order=ASC", function( data ) {
+                            /*$("#body_editor").html("");
+                            $('#body_editor').append( data );*/
+                            var seguimientos = data;
+                            var detalles_seguimientos = [];
+                            var registros_ordenados = [];
+                            for( var i = 0 ; i < seguimientos['results'].length; i++ ){
+                                $.get( "../managers/dphpforms/dphpforms_get_record.php?record_id=" + seguimientos['results'][i]['id_registro'], function( data_detalle ) {
+                                    var fecha_registro = null;
+                                    for(var x = 0; x < data_detalle['record']['campos'].length; x++ ){
+                                        if(data_detalle['record']['campos'][x]['local_alias'] == 'fecha'){
+                                            fecha_registro = data_detalle['record']['campos'][x]['respuesta'];
+                                            break;
+                                        }
+                                    }
+                                    var fecha_registro = new Date(fecha_registro);
+                                    
+                                    
+                                });
+                            }
+                            console.log(detalles_seguimientos);
+                    });
+                    
+                });
+
                 $('#button_add_v2_track').on('click', function() {
                     $('#modal_v2_peer_tracking').fadeIn(300);
                     var codigo_estudiante = $('#codigo').val();
                     $('.id_estudiante').find('input').val(codigo_estudiante);
-                    var codigo_monitor = $('#id_dphpforms_monitor').val();
-                    $('.id_monitor').find('input').val(codigo_monitor);
+                    var codigo_monitor = $('#current_user_id').val();
+                    $('.id_creado_por').find('input').val(codigo_monitor);
                 });
                 $('.mymodal-close').click(function(){
                     $(this).parent().parent().parent().parent().fadeOut(300);
@@ -28,7 +57,7 @@
                 // Controles para editar formulario de pares
                 $('.edit_peer_v2_tracking').on('click', function(){
                     var id_tracking = $(this).attr('data-record-id');
-                    load_record_updater('67', '23');
+                    load_record_updater('96', '23');
                     $('#modal_v2_edit_peer_tracking').fadeIn(300);
                 });
 

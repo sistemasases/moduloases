@@ -43,6 +43,7 @@ require_once '../managers/validate_profile_action.php';
 require_once '../managers/menu_options.php';
 require_once '../managers/dphpforms/dphpforms_forms_core.php';
 require_once '../managers/dphpforms/dphpforms_records_finder.php';
+require_once '../managers/dphpforms/dphpforms_get_record.php';
 include '../lib.php';
 
 global $PAGE;
@@ -185,7 +186,7 @@ if ($student_code != 0) {
     $trainee_object = new stdClass();
     $professional_object = new stdClass();
 
-    $record->id_dphpforms_monitor = '';
+    $record->id_dphpforms_creado_por = $USER->id;
 
     if(get_assigned_monitor($student_id)){
         $monitor_object = get_assigned_monitor($student_id);
@@ -199,7 +200,7 @@ if ($student_code != 0) {
     
     if ($monitor_object) {
         $record->monitor_fullname = "$monitor_object->firstname $monitor_object->lastname";
-        //$record->id_dphpforms_monitor = $monitor_object->id;
+        $record->id_dphpforms_monitor = '-1';
     } else {
         $record->monitor_fullname = "NO REGISTRA";
     }
@@ -391,14 +392,21 @@ if ($student_code != 0) {
     $html_tracking_peer = "";
     $array_peer_trackings = get_tracking_group_by_semester($student_id, 'PARES', null, $blockid);
 
-    $array_peer_trackings_dphpforms = dphpforms_find_records('67', '190', $student_code, 'DESC');
-    print_r($array_peer_trackings_dphpforms);
+    /*$array_peer_trackings_dphpforms = dphpforms_find_records('96', '802', $student_code, 'DESC');
+    $array_peer_trackings_dphpforms = json_decode($array_peer_trackings_dphpforms);
+    $array_detail_peer_trackings_dphpforms = array();
+    foreach($array_peer_trackings_dphpforms->results as &$peer_trackings_dphpforms){
+        array_push($array_detail_peer_trackings_dphpforms, json_decode(dphpforms_get_record($peer_trackings_dphpforms->id_registro)));
+    }
+    $record->peer_tracking_v2 = json_encode($array_detail_peer_trackings_dphpforms);*/
 
     $enum_risk = array();
     array_push($enum_risk, "");
     array_push($enum_risk, "Bajo");
     array_push($enum_risk, "Medio");
     array_push($enum_risk, "Alto");
+
+    //END V2
 
     if ($array_peer_trackings != null) {
 
@@ -718,7 +726,7 @@ if ($student_code != 0) {
 
     //Pruebas
     $record->form_seguimientos = null;
-    $record->form_seguimientos = dphpforms_render_recorder('67', $rol);
+    $record->form_seguimientos = dphpforms_render_recorder('96', $rol);
 
 } else {
     $record = new stdClass;
