@@ -2055,13 +2055,15 @@
              {  
                 "rol":"profesional_ps",
                 "permisos":[  
-                   "lectura"
+                   "lectura",
+                   "escritura"
                 ]
              },
              {  
                 "rol":"monitor_ps",
                 "permisos":[  
-                   "lectura"
+                   "lectura",
+                   "escritura"
                 ]
              },
              {  
@@ -2073,13 +2075,15 @@
              {  
                 "rol":"sistemas",
                 "permisos":[  
-                   "lectura"
+                   "lectura",
+                   "escritura"
                 ]
              },
              {  
                 "rol":"practicante_ps",
                 "permisos":[  
-                   "lectura"
+                   "lectura",
+                   "escritura"
                 ]
              },
              {  
@@ -2154,7 +2158,8 @@
              {  
                 "rol":"monitor_ps",
                 "permisos":[  
-                   "lectura"
+                   "lectura",
+                   "escritura"
                 ]
              },
              {  
@@ -2166,13 +2171,15 @@
              {  
                 "rol":"sistemas",
                 "permisos":[  
-                   "lectura"
+                   "lectura",
+                   "escritura"
                 ]
              },
              {  
                 "rol":"practicante_ps",
                 "permisos":[  
-                   "lectura"
+                   "lectura",
+                   "escritura"
                 ]
              },
              {  

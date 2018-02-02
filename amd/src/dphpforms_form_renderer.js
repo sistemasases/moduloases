@@ -16,6 +16,10 @@
 
                 $('#button_add_v2_track').on('click', function() {
                     $('#modal_v2_peer_tracking').fadeIn(300);
+                    var codigo_estudiante = $('#codigo').val();
+                    $('.id_estudiante').find('input').val(codigo_estudiante);
+                    var codigo_monitor = $('#id_dphpforms_monitor').val();
+                    $('.id_monitor').find('input').val(codigo_monitor);
                 });
                 $('.mymodal-close').click(function(){
                     $(this).parent().parent().parent().parent().fadeOut(300);
@@ -24,7 +28,7 @@
                 // Controles para editar formulario de pares
                 $('.edit_peer_v2_tracking').on('click', function(){
                     var id_tracking = $(this).attr('data-record-id');
-                    load_record_updater('93', '36');
+                    load_record_updater('67', '23');
                     $('#modal_v2_edit_peer_tracking').fadeIn(300);
                 });
 
