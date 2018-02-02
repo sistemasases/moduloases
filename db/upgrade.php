@@ -4,7 +4,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     global $DB;
     $dbman = $DB->get_manager();
     $result = true;
-    if ($oldversion < 2018013114389) {
+    if ($oldversion < 2018020209479 ) {
     // ************************************************************************************************************
     // Actualización que crea la tabla para los campos extendidos de usuario (Tabla: {talentospilos_user_extended})
     // Versión: 2018010911179
@@ -102,10 +102,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     
     // Define table talentospilos_history_academ to be created.
     $table = new xmldb_table('talentospilos_history_academ');
-    // Conditionally launch drop table for talentospilos_history_academ.
-    if ($dbman->table_exists($table)) {
-        $dbman->drop_table($table);
-    }
+    
     // Adding fields to table talentospilos_history_academ.
     $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
     // Adding keys to table talentospilos_history_academ.
@@ -838,10 +835,25 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
         }
 
 
+    // ************************************************************************************************************
+    // Actualización:
+    // Se añade el campo nota_credito en la tabla {talentospilos_res_icetex}
+    // Versión en la que se incluye: 2018020209479 
+    // ************************************************************************************************************
+
+     // Define field nota_credito to be added to talentospilos_res_icetex.
+     $table = new xmldb_table('talentospilos_res_icetex');
+     $field = new xmldb_field('nota_credito', XMLDB_TYPE_TEXT, null, null, null, null, null, 'fecha_resolucion');
+
+     // Conditionally launch add field nota_credito.
+     if (!$dbman->field_exists($table, $field)) {
+         $dbman->add_field($table, $field);
+     }
+
 
 
     // Ases savepoint reached.
-    upgrade_block_savepoint(true, 2018013114389, 'ases');
+    upgrade_block_savepoint(true, 2018020209479 , 'ases');
    
     return $result;
 

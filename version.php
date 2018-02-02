@@ -8,6 +8,6 @@
     //    $plugin->version=201710131234;
 
 
-    $plugin->version= 2018013114389;
+    $plugin->version= 2018020209479 ;
 
     $plugin->requires = 2010112400;
