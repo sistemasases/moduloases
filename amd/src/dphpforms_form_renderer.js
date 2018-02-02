@@ -14,18 +14,18 @@
     return {
         init: function() {
 
-                $('#button_add_test_track').on('click', function() {
-                    $('#modal_test_peer_tracking').fadeIn(300);
+                $('#button_add_v2_track').on('click', function() {
+                    $('#modal_v2_peer_tracking').fadeIn(300);
                 });
                 $('.mymodal-close').click(function(){
                     $(this).parent().parent().parent().parent().fadeOut(300);
                 });
 
                 // Controles para editar formulario de pares
-                $('.edit_peer_test_tracking').on('click', function(){
+                $('.edit_peer_v2_tracking').on('click', function(){
                     var id_tracking = $(this).attr('data-record-id');
                     load_record_updater('93', '36');
-                    $('#modal_test_edit_peer_tracking').fadeIn(300);
+                    $('#modal_v2_edit_peer_tracking').fadeIn(300);
                 });
 
                 function load_record_updater(form_id, record_id){
@@ -105,8 +105,8 @@
                                         'success'
                                     );
                                     $('.dphpforms-response').trigger("reset");
-                                    $('#modal_test_edit_peer_tracking').fadeOut(300);
-                                    $('#modal_test_peer_tracking').fadeOut(300);
+                                    $('#modal_v2_edit_peer_tracking').fadeOut(300);
+                                    $('#modal_v2_peer_tracking').fadeOut(300);
                                 }else if(response['status'] == -2){
                                     swal(
                                         'Alerta',
