@@ -710,10 +710,8 @@ if ($student_code != 0) {
 // End of data obtaining for risks graphs
 
     //Pruebas
-    
     $record->form_seguimientos = null;
-    $record->form_seguimientos = dphpforms_render_recorder('2', '7', '-1', '-1');
-    //$record->form_seguimientos = '';
+    $record->form_seguimientos = dphpforms_render_recorder('93', $rol);
 
 } else {
     $record = new stdClass;
@@ -748,6 +746,9 @@ $PAGE->requires->css('/blocks/ases/style/c3.css', true);
 $PAGE->requires->css('/blocks/ases/style/student_profile_risk_graph.css', true);
 $PAGE->requires->css('/blocks/ases/js/select2/css/select2.css', true);
 $PAGE->requires->css('/blocks/ases/style/side_menu_style.css', true);
+//Pendiente para cambiar el idioma del nombre del archivo junto con la estructura de
+//su nombramiento.
+$PAGE->requires->css('/blocks/ases/style/creadorFormulario.css', true);
 
 $PAGE->requires->js_call_amd('block_ases/student_profile_main', 'init');
 $PAGE->requires->js_call_amd('block_ases/geographic_main', 'init');

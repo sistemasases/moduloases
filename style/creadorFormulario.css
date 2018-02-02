@@ -50,6 +50,9 @@ pre, code {
     font-weight: bold;
 }
 
+/*Definición de los estilos para los formularios que dependen de dphpforms*/
+
+/*Inicio de definición de estilos para el formulario de seguimientos*/
 .date_field input{
     display: block;
     width: 100%;
@@ -62,6 +65,7 @@ pre, code {
     background-image: none;
     border: 1px solid #ccc;
     border-radius: 4px;
+    margin-bottom: 0px;
  
 }
 
@@ -90,5 +94,8 @@ pre, code {
     display: none;
 }
 
+.ajuste_radio_seguimientos{
+    margin-top: 0px;
+}
 
-
+/*Finalización de definición de estilos para el formulario de seguimientos*/
