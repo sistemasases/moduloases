@@ -8,9 +8,27 @@
     }
     
     //Se busca por if_from_preg (info en dphpforms_get_record)
-    function dphpforms_find_records($form_id, $pregunta_id, $criterio, $order = 'DESC'){
+    function dphpforms_find_records($id_form, $pregunta_id, $criterio, $order = 'DESC'){
 
         global $DB;
+
+        $FORM_ID = $id_form;
+
+        if(!is_numeric($id_form)){
+            $sql_alias = "SELECT id FROM {talentospilos_df_formularios} WHERE alias = '$id_form' AND estado = 1";
+            $form_record = $DB->get_record_sql($sql_alias);
+            if($form_record != null){
+                $FORM_ID = $form_record->id;
+            }
+        }
+
+        if(is_string($FORM_ID)){
+            return json_encode(
+                array(
+                    'results' => array()
+                )
+            );
+        };
 
         $sql = "SELECT FRS.id_formulario_respuestas AS id_registro, FRS.fecha_hora_registro_respuesta AS fecha_hora_registro
         FROM {talentospilos_df_respuestas} AS R 
@@ -20,7 +38,7 @@
                 FROM {talentospilos_df_form_resp} AS FR 
                 INNER JOIN {talentospilos_df_form_solu} AS FS 
                 ON FR.id = FS.id_formulario_respuestas 
-        WHERE FR.id_formulario = '" . $form_id . "'
+        WHERE FR.id_formulario = '" . $FORM_ID . "'
             ) AS FRS 
         ON FRS.id_respuesta = R.id
         WHERE R.respuesta = '" . $criterio . "' AND R.id_pregunta = '" . $pregunta_id . "'
