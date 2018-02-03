@@ -5489,7 +5489,7 @@
        {  
           "id_temporal_campo_a":"cmp_2",
           "id_temporal_campo_b":"cmp_3",
-          "regla":"DIFFERENT"
+          "regla":"<"
        },
        {  
           "id_temporal_campo_a":"cmp_6",

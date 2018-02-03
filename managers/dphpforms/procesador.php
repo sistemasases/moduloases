@@ -513,6 +513,27 @@ function dphpforms_reglas_validator($respuestas, $reglas){
                 //echo "REGLA " . $regla . " CUMPLIDA\n";
             }
         }elseif($regla == '>'){
+
+            /* Validation for times XX:XX */
+            
+            if((count($respuesta_a->{'valor'}) == 5)&&(count($respuesta_b->{'valor'}) == 5)){
+                    if(($respuesta_a->{'valor'}[2] == ':')&&($respuesta_b->{'valor'}[2] == ':')){
+                        if(
+                            (is_numeric(substr($respuesta_a->{'valor'}, 0, 1)))&&(is_numeric(substr($respuesta_a->{'valor'}, 3, 4)))&&
+                            (is_numeric(substr($respuesta_b->{'valor'}, 0, 1)))&&(is_numeric(substr($respuesta_b->{'valor'}, 3, 4)))
+                            ){
+                                $time_a = strtotime($respuesta_a->{'valor'});
+                                $time_b = strtotime($respuesta_b->{'valor'});
+                                if($time_a < $time_b){
+                                    $satisfied_reglas = false;
+                                    return false;
+                                    break;
+                                }else{
+                                    $satisfied_reglas = true;
+                                }
+                        }
+                    }
+            }
             
             if($respuesta_a->{'valor'} < $respuesta_b->{'valor'}){
                 $satisfied_reglas = false;
@@ -525,7 +546,29 @@ function dphpforms_reglas_validator($respuestas, $reglas){
                 $satisfied_reglas = true;
                 //echo "REGLA " . $regla . " CUMPLIDA\n";
             }
+
         }elseif($regla == '<'){
+
+            /* Validation for times XX:XX */
+            
+            if((count($respuesta_a->{'valor'}) == 5)&&(count($respuesta_b->{'valor'}) == 5)){
+                    if(($respuesta_a->{'valor'}[2] == ':')&&($respuesta_b->{'valor'}[2] == ':')){
+                        if(
+                            (is_numeric(substr($respuesta_a->{'valor'}, 0, 1)))&&(is_numeric(substr($respuesta_a->{'valor'}, 3, 4)))&&
+                            (is_numeric(substr($respuesta_b->{'valor'}, 0, 1)))&&(is_numeric(substr($respuesta_b->{'valor'}, 3, 4)))
+                            ){
+                                $time_a = strtotime($respuesta_a->{'valor'});
+                                $time_b = strtotime($respuesta_b->{'valor'});
+                                if($time_a > $time_b){
+                                    $satisfied_reglas = false;
+                                    return false;
+                                    break;
+                                }else{
+                                    $satisfied_reglas = true;
+                                }
+                        }
+                    }
+            }
             
             if($respuesta_a->{'valor'} > $respuesta_b->{'valor'}){
                 $satisfied_reglas = false;
