@@ -9,6 +9,14 @@
         $ROL = $rol_;
 
         $html = null;
+
+        if(!is_numeric($id_form)){
+            $sql_alias = "SELECT * FROM {talentospilos_df_formularios} WHERE alias = '$id_form' AND estado = 1";
+            $form_record = $DB->get_record_sql($sql_alias);
+            if($form_record){
+                $FORM_ID = $form_record->id;
+            }
+        }
         
         $sql = '
         

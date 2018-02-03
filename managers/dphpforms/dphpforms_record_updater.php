@@ -2,6 +2,7 @@
  
     require_once(dirname(__FILE__). '/../../../../config.php');
 
+    //$id_completed_form -> form_id
     function dphpforms_generate_html_updater($id_completed_form, $rol_, $record_id_){
 
         global $DB;
@@ -16,6 +17,16 @@
             $html = $html .  "Error: variable reg ausente.";
             return $html;
         }
+
+        if(!is_numeric($id_completed_form)){
+            $sql_alias = "SELECT * FROM {talentospilos_df_formularios} WHERE alias = '$id_completed_form' AND estado = 1";
+            $form_record = $DB->get_record_sql($sql_alias);
+            if($form_record){
+                $FORM_ID = $form_record->id;
+            }
+        }
+
+        
         
         $sql = '
         
