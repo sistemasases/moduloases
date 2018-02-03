@@ -24,6 +24,8 @@
                             var seguimientos = data;
                             var detalles_seguimientos = [];
                             var registros_ordenados = [];
+                            var fechas_seguimiento = [];
+                            var fechas_seguimiento_date = [];
                             for( var i = 0 ; i < seguimientos['results'].length; i++ ){
                                 $.get( "../managers/dphpforms/dphpforms_get_record.php?record_id=" + seguimientos['results'][i]['id_registro'], function( data_detalle ) {
                                     var fecha_registro = null;
@@ -34,11 +36,17 @@
                                         }
                                     }
                                     var fecha_registro = new Date(fecha_registro);
-                                    
-                                    
+                                    fechas_seguimiento_date.push(fecha_registro);
+                                    fechas_seguimiento.push( parseInt( Date.parse(fecha_registro)));
+
                                 });
                             }
-                            console.log(detalles_seguimientos);
+
+                            var m = fechas_seguimiento_date.sort(function(a, b){return new Date(a) - new Date(b)});
+                            //var m = m.sort(function(a, b){return b-a});
+                            console.log(m);
+                            console.log(fechas_seguimiento_date);
+                            
                     });
                     
                 });

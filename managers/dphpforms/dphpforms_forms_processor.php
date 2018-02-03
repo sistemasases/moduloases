@@ -1,7 +1,7 @@
 <?php
 require_once(dirname(__FILE__). '/../../../../config.php');
 /*
-PENDIENTE PARA MOVERSE A LA DOCUMENTACIÓN
+PENDIENTE PARA MOVERSE A LA DOCUMENTACIÓN -- OBSOLETO
 $formulario = '{
     "datos_formulario":{
         "nombre":"Formulario JSON",
@@ -182,12 +182,11 @@ function dphpforms_store_form($form_JSON){
         'descripcion' => $json_obj_form->{'datos_formulario'}->{'descripcion'},
         'method' => $json_obj_form->{'datos_formulario'}->{'method'},
         'action' => $json_obj_form->{'datos_formulario'}->{'action'},
-        'enctype' => $json_obj_form->{'datos_formulario'}->{'enctype'}
+        'enctype' => $json_obj_form->{'datos_formulario'}->{'enctype'},
+        'alias' => $json_obj_form->{'datos_formulario'}->{'alias'}
     );
 
     $form_db_id = dphpforms_store_form_details($form_details);
-
-    
 
     $identifiers_preguntas = array();
     foreach ($json_obj_form->{'preguntas'} as &$pregunta) {
@@ -218,6 +217,8 @@ function dphpforms_store_form($form_JSON){
             )
         );
     }
+
+    dphpforms_store_preg_alias($identifiers_form_preguntas, $json_obj_form->{'campos_busqueda'});
 
 
     $identifiers_reglas = array();
@@ -275,6 +276,7 @@ function dphpforms_store_form_details($form_details){
     $obj_form_details->method = $form_details['method'];
     $obj_form_details->action = $form_details['action'];
     $obj_form_details->enctype = $form_details['enctype'];
+    $obj_form_details->alias = $form_details['alias'];
 
     $form_id = $DB->insert_record('talentospilos_df_formularios', $obj_form_details, $returnid=true, $bulk=false) ;
     return $form_id;
@@ -391,10 +393,8 @@ function dphpforms_store_form_pregunta_permits($form_id_pregunta, $permits){
     $obj_permisos_formulario_pregunta->id_formulario_pregunta = $form_id_pregunta;
     $obj_permisos_formulario_pregunta->permisos = $permits;
 
-    //echo ' INFO: FORM ID PREGUNTA ' . $form_id_pregunta . ' PERMISOS ' . $permits;
-    //print_r($obj_permisos_formulario_pregunta);
     $identifier_permission = $DB->insert_record('talentospilos_df_per_form_pr', $obj_permisos_formulario_pregunta, $returnid=true, $bulk=false);
-    //echo ' ID_PERMISO:::::: ' . $identifier_permission . ' :::::::';
+ 
     return $identifier_permission;
 }
 
@@ -403,14 +403,8 @@ function dphpforms_store_form_disparadores($form_id, $disparadores, $identifiers
     global $DB;
     $disparadores_string = json_encode($disparadores);
     foreach ($identifiers_form_preguntas as &$value) {
-        //echo 'REEMPLAZO DE'  . $value['idPreguntaTemporal'] . ' CON ' . $value['idRelacionFormPreg'] . ' <::::';
         $disparadores_string = str_replace('"'.$value['idPreguntaTemporal'].'"', '"'.$value['idRelacionFormPreg'].'"', $disparadores_string);
-        if($value['idPreguntaTemporal'] == 'cmp_17'){
-            //echo '>' . $value['idPreguntaTemporal'] . 'NUEVO CAMPO ::::::::' . $value['idRelacionFormPreg'];
-            //echo $disparadores_string;
-        }
     }
-    //echo $disparadores_string;
 
 
     $obj_disparadores_permisos_formulario_diligenciado = new stdClass();
@@ -419,7 +413,29 @@ function dphpforms_store_form_disparadores($form_id, $disparadores, $identifiers
 
     $identifier_disparador = $DB->insert_record('talentospilos_df_disp_fordil', $obj_disparadores_permisos_formulario_diligenciado, $returnid=true, $bulk=false);
     return $identifier_disparador;
-    
+}
+
+function dphpforms_store_preg_alias($identifiers_form_preguntas, $alias){
+
+    global $DB;
+
+    $alias_string = json_encode($alias);
+
+    foreach ($identifiers_form_preguntas as &$value) {
+        $alias_string = str_replace('"'.$value['idPreguntaTemporal'].'"', '"'.$value['idRelacionFormPreg'].'"', $alias_string);
+    }
+
+    $json_alias = json_decode($alias_string);
+
+    foreach ($json_alias as &$value) {
+        
+        $obj_alias = new stdClass();
+        $obj_alias->id_pregunta = $value->{'id_campo'};
+        $obj_alias->alias = $value->{'alias'};
+
+        $DB->insert_record('talentospilos_df_alias', $obj_alias, $returnid=true, $bulk=false);
+    }
+
 }
 
 ?>
