@@ -392,14 +392,106 @@ if ($student_code != 0) {
     $html_tracking_peer = "";
     $array_peer_trackings = get_tracking_group_by_semester($student_id, 'PARES', null, $blockid);
 
-    /*$array_peer_trackings_dphpforms = dphpforms_find_records('96', '802', $student_code, 'DESC');
+    $array_peer_trackings_dphpforms = dphpforms_find_records('seguimiento_pares', 'seguimiento_pares_id_estudiante', $student_code, 'DESC');
     $array_peer_trackings_dphpforms = json_decode($array_peer_trackings_dphpforms);
     $array_detail_peer_trackings_dphpforms = array();
     foreach($array_peer_trackings_dphpforms->results as &$peer_trackings_dphpforms){
         array_push($array_detail_peer_trackings_dphpforms, json_decode(dphpforms_get_record($peer_trackings_dphpforms->id_registro)));
     }
-    $record->peer_tracking_v2 = json_encode($array_detail_peer_trackings_dphpforms);*/
 
+    $array_tracking_date = array();
+    foreach($array_detail_peer_trackings_dphpforms as &$peer_tracking){
+        foreach ($peer_tracking->record->campos as &$tracking) {
+            if($tracking->local_alias == 'fecha'){
+                array_push($array_tracking_date, strtotime($tracking->respuesta));
+            }
+        }
+    }
+
+    rsort($array_tracking_date);
+
+    $seguimientos_ordenados = new stdClass();
+    //Inicio de ordenamiento
+    $periodo_a = [1, 2, 3, 4, 5, 6, 7];
+    //periodo_b es el resto de meses;
+    for($x = 0; $x < count($array_tracking_date); $x++){
+        $string_date = $array_tracking_date[$x];
+        $array_tracking_date[$x] = getdate($array_tracking_date[$x]);
+        if(property_exists($seguimientos_ordenados, $array_tracking_date[$x]['year'])){
+            if(in_array($array_tracking_date[$x]['mon'], $periodo_a)){
+                for($y = 0; $y < count($array_detail_peer_trackings_dphpforms); $y++){
+                    if($array_detail_peer_trackings_dphpforms[$y]){
+                        foreach ($array_detail_peer_trackings_dphpforms[$y]->record->campos as &$tracking) {
+                            if($tracking->local_alias == 'fecha'){
+                                if(strtotime($tracking->respuesta) == $string_date ){
+                                    array_push($seguimientos_ordenados->$array_tracking_date[$x]['year']->per_a, $array_detail_peer_trackings_dphpforms[$y]);
+                                    $array_detail_peer_trackings_dphpforms[$y] = null;
+                                    break;
+                                }
+                                
+                            }
+                        }
+                    }
+                }
+                //array_push($seguimientos_ordenados->$array_tracking_date[$x]['year']->per_a, $array_tracking_date[$x]);
+            }else{
+                for($y = 0; $y < count($array_detail_peer_trackings_dphpforms); $y++){
+                    if($array_detail_peer_trackings_dphpforms[$y]){
+                        foreach ($array_detail_peer_trackings_dphpforms[$y]->record->campos as &$tracking) {
+                            if($tracking->local_alias == 'fecha'){
+                                if(strtotime($tracking->respuesta) == $string_date ){
+                                    array_push($seguimientos_ordenados->$array_tracking_date[$x]['year']->per_b, $array_detail_peer_trackings_dphpforms[$y]);
+                                    $array_detail_peer_trackings_dphpforms[$y] = null;
+                                    break;
+                                }
+                                
+                            }
+                        }
+                    }
+                }
+                //array_push($seguimientos_ordenados->$array_tracking_date[$x]['year']->per_b, $array_tracking_date[$x]);
+            }
+        }else{
+            $seguimientos_ordenados->$array_tracking_date[$x]['year']->per_a = array();
+            $seguimientos_ordenados->$array_tracking_date[$x]['year']->per_b = array();
+            if(in_array($array_tracking_date[$x]['mon'], $periodo_a)){
+                for($y = 0; $y < count($array_detail_peer_trackings_dphpforms); $y++){
+                    if($array_detail_peer_trackings_dphpforms[$y]){
+                        foreach ($array_detail_peer_trackings_dphpforms[$y]->record->campos as &$tracking) {
+                            if($tracking->local_alias == 'fecha'){
+                                if(strtotime($tracking->respuesta) == $string_date ){
+                                    array_push($seguimientos_ordenados->$array_tracking_date[$x]['year']->per_a, $array_detail_peer_trackings_dphpforms[$y]);
+                                    $array_detail_peer_trackings_dphpforms[$y] = null;
+                                    break;
+                                }
+                                
+                            }
+                        }
+                    }
+                }
+                //array_push($seguimientos_ordenados->$array_tracking_date[$x]['year']->per_a, $array_tracking_date[$x]);
+            }else{
+                for($y = 0; $y < count($array_detail_peer_trackings_dphpforms); $y++){
+                    if($array_detail_peer_trackings_dphpforms[$y]){
+                        foreach ($array_detail_peer_trackings_dphpforms[$y]->record->campos as &$tracking) {
+                            if($tracking->local_alias == 'fecha'){
+                                if(strtotime($tracking->respuesta) == $string_date ){
+                                    array_push($seguimientos_ordenados->$array_tracking_date[$x]['year']->per_b, $array_detail_peer_trackings_dphpforms[$y]);
+                                    $array_detail_peer_trackings_dphpforms[$y] = null;
+                                    break;
+                                }
+                                
+                            }
+                        }
+                    }
+                }
+                //array_push($seguimientos_ordenados->$array_tracking_date[$x]['year']->per_b, $array_tracking_date[$x]);
+            }
+        }
+    }
+    //Fin de ordenamiento
+    $record->peer_tracking_v2 = $seguimientos_ordenados;
+    
     $enum_risk = array();
     array_push($enum_risk, "");
     array_push($enum_risk, "Bajo");

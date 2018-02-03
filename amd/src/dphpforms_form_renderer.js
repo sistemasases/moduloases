@@ -14,18 +14,31 @@
     return {
         init: function() {
 
-                $('#socioed_li').click(function(){
+                function order_max_min(array, start_pos){
+                    if(array.length == start_pos){
+                        return array;
+                    }else{
+                        for(var x = start_pos; x < array.length; x++){
+                            if(array[x] > array[start_pos]){
+                                var dynamic_pos = array[x];
+                                array[x] =  array[start_pos];
+                                array[start_pos] = dynamic_pos;
+                            }
+                        }
+                        order_max_min(array, (start_pos + 1));
+                    }
+                }
+
+                /*$('#socioed_li').click(function(){
                     var codigo_estudiante = $('#codigo').val();
                     var periodo_A = [1, 2, 3, 4, ,5 ,6 ,7];
                     var periodo_B = [8, 9, 10, 11, ,12];
                     $.get( "../managers/dphpforms/dphpforms_records_finder.php?form_id=seguimiento_pares&pregunta_id=seguimiento_pares_id_estudiante&criterio="+codigo_estudiante+"&order=ASC", function( data ) {
-                            /*$("#body_editor").html("");
-                            $('#body_editor').append( data );*/
+                            
                             var seguimientos = data;
                             var detalles_seguimientos = [];
                             var registros_ordenados = [];
                             var fechas_seguimiento = [];
-                            var fechas_seguimiento_date = [];
                             for( var i = 0 ; i < seguimientos['results'].length; i++ ){
                                 $.get( "../managers/dphpforms/dphpforms_get_record.php?record_id=" + seguimientos['results'][i]['id_registro'], function( data_detalle ) {
                                     var fecha_registro = null;
@@ -36,20 +49,17 @@
                                         }
                                     }
                                     var fecha_registro = new Date(fecha_registro);
-                                    fechas_seguimiento_date.push(fecha_registro);
                                     fechas_seguimiento.push( parseInt( Date.parse(fecha_registro)));
+                                    fechas_seguimiento = order_max_min(fechas_seguimiento, 0);
 
                                 });
                             }
-
-                            var m = fechas_seguimiento_date.sort(function(a, b){return new Date(a) - new Date(b)});
-                            //var m = m.sort(function(a, b){return b-a});
-                            console.log(m);
-                            console.log(fechas_seguimiento_date);
+                            
+                            console.log(fechas_seguimiento);
                             
                     });
                     
-                });
+                });*/
 
                 $('#button_add_v2_track').on('click', function() {
                     $('#modal_v2_peer_tracking').fadeIn(300);
