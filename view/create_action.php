@@ -110,7 +110,7 @@ $PAGE->requires->css('/blocks/ases/style/side_menu_style.css', true);
 
 
 
-$PAGE->requires->js('/blocks/ases/js/npm.js', true);
+// $PAGE->requires->js('/blocks/ases/js/npm.js', true);
 $PAGE->requires->js_call_amd('block_ases/permissionsmanagement_main','init');
 
 //$PAGE->requires->js('/blocks/ases/js/create_action.js', true);
