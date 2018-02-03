@@ -31,6 +31,22 @@
             );
         };
 
+        if(!is_numeric($id_pregunta)){
+            $sql_alias = "SELECT id_pregunta FROM {talentospilos_df_alias} WHERE alias = '$id_pregunta'";
+            $preg_record = $DB->get_record_sql($sql_alias);
+            if($preg_record != null){
+                $PREGUNTA_ID = (int) $preg_record->id_pregunta;
+            }
+        }
+
+        if(!is_numeric($id_pregunta)){
+            return json_encode(
+                array(
+                    'results' => array()
+                )
+            );
+        };
+
         $sql = "SELECT FRS.id_formulario_respuestas AS id_registro, FRS.fecha_hora_registro_respuesta AS fecha_hora_registro
         FROM {talentospilos_df_respuestas} AS R 
         INNER JOIN 

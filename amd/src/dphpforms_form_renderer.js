@@ -18,7 +18,7 @@
                     var codigo_estudiante = $('#codigo').val();
                     var periodo_A = [1, 2, 3, 4, ,5 ,6 ,7];
                     var periodo_B = [8, 9, 10, 11, ,12];
-                    $.get( "../managers/dphpforms/dphpforms_records_finder.php?form_id=96&pregunta_id=802&criterio="+codigo_estudiante+"&order=ASC", function( data ) {
+                    $.get( "../managers/dphpforms/dphpforms_records_finder.php?form_id=seguimiento_pares&pregunta_id=seguimiento_pares_id_estudiante&criterio="+codigo_estudiante+"&order=ASC", function( data ) {
                             /*$("#body_editor").html("");
                             $('#body_editor').append( data );*/
                             var seguimientos = data;
