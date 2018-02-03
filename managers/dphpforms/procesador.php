@@ -13,9 +13,9 @@
     }
     
     $form = array(
-        'id' => $_POST['id'],
-        'id_monitor' => $_POST['id_monitor'],
-        'id_estudiante' => $_POST['id_estudiante']
+        'id' => $_POST['id']
+        //'id_monitor' => $_POST['id_monitor'],
+        //'id_estudiante' => $_POST['id_estudiante']
     );
 
     $respuestas = array();
@@ -369,8 +369,8 @@ function dphpforms_store_form_respuesta($form_detail){
 
     $obj_form_respuesta = new stdClass();
     $obj_form_respuesta->id_formulario = $form_detail->{'id'};
-    $obj_form_respuesta->id_monitor = $form_detail->{'id_monitor'};
-    $obj_form_respuesta->id_estudiante = $form_detail->{'id_estudiante'};
+    $obj_form_respuesta->id_monitor = '-1';
+    $obj_form_respuesta->id_estudiante = '-1';
 
     $form_respuesta_identifier = $DB->insert_record('talentospilos_df_form_resp', $obj_form_respuesta, $returnid=true, $bulk=false);
 

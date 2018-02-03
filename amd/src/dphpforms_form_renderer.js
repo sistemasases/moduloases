@@ -29,38 +29,6 @@
                     }
                 }
 
-                /*$('#socioed_li').click(function(){
-                    var codigo_estudiante = $('#codigo').val();
-                    var periodo_A = [1, 2, 3, 4, ,5 ,6 ,7];
-                    var periodo_B = [8, 9, 10, 11, ,12];
-                    $.get( "../managers/dphpforms/dphpforms_records_finder.php?form_id=seguimiento_pares&pregunta_id=seguimiento_pares_id_estudiante&criterio="+codigo_estudiante+"&order=ASC", function( data ) {
-                            
-                            var seguimientos = data;
-                            var detalles_seguimientos = [];
-                            var registros_ordenados = [];
-                            var fechas_seguimiento = [];
-                            for( var i = 0 ; i < seguimientos['results'].length; i++ ){
-                                $.get( "../managers/dphpforms/dphpforms_get_record.php?record_id=" + seguimientos['results'][i]['id_registro'], function( data_detalle ) {
-                                    var fecha_registro = null;
-                                    for(var x = 0; x < data_detalle['record']['campos'].length; x++ ){
-                                        if(data_detalle['record']['campos'][x]['local_alias'] == 'fecha'){
-                                            fecha_registro = data_detalle['record']['campos'][x]['respuesta'];
-                                            break;
-                                        }
-                                    }
-                                    var fecha_registro = new Date(fecha_registro);
-                                    fechas_seguimiento.push( parseInt( Date.parse(fecha_registro)));
-                                    fechas_seguimiento = order_max_min(fechas_seguimiento, 0);
-
-                                });
-                            }
-                            
-                            console.log(fechas_seguimiento);
-                            
-                    });
-                    
-                });*/
-
                 $('#button_add_v2_track').on('click', function() {
                     $('#modal_v2_peer_tracking').fadeIn(300);
                     var codigo_estudiante = $('#codigo').val();
@@ -73,9 +41,9 @@
                 });
 
                 // Controles para editar formulario de pares
-                $('.edit_peer_v2_tracking').on('click', function(){
+                $('.dphpforms-peer-record').on('click', function(){
                     var id_tracking = $(this).attr('data-record-id');
-                    load_record_updater('seguimiento_pares', '22');
+                    load_record_updater('seguimiento_pares', id_tracking);
                     $('#modal_v2_edit_peer_tracking').fadeIn(300);
                 });
 
@@ -131,7 +99,6 @@
                     });
                  });
 
-                 //formulario_prueba_d3_62s
                  $(document).on('submit', '.dphpforms' , function(evt) {
                     evt.preventDefault();
                     var formData = new FormData(this);
@@ -151,13 +118,18 @@
                                 var response = JSON.parse(data);
                                 if(response['status'] == 0){
                                     swal(
-                                        'Información',
-                                        response['message'],
-                                        'success'
+                                        {title:'Información',
+                                        text: response['message'],
+                                        type: 'success'},
+                                        function(){
+                                            $('#dphpforms-peer-record-' + $('#dphpforms_record_id').val()).stop().animate({backgroundColor:'rgb(175, 255, 173)'}, 900).animate({backgroundColor:'#f5f5f5'}, 4000);
+                                        }
                                     );
                                     $('.dphpforms-response').trigger("reset");
                                     $('#modal_v2_edit_peer_tracking').fadeOut(300);
                                     $('#modal_v2_peer_tracking').fadeOut(300);
+                                    
+                                    //$('#dphpforms-peer-record-' + $('#dphpforms_record_id').val()).stop().animate({backgroundColor:'#f5f5f5'}, 900);
                                 }else if(response['status'] == -2){
                                     swal(
                                         'Alerta',
@@ -180,7 +152,11 @@
                                     'error'
                                 );
                             }
+                            
                      });
+
+                     //$('#dphpforms-peer-record-' + $('#dphpforms_record_id').val() ).css('background-color', 'green');
+                     
                 });
                 
             }

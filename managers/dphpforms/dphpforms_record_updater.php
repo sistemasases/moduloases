@@ -88,7 +88,7 @@
         $html = $html .  '<input name="id_monitor_x_obsolete" value="" style="display:none;">';//Pendientes para eliminación
         $html = $html .  '<input name="id_estudiante_x_obsolete" value="" style="display:none;">';//Pendientes para eliminación
         //Dispara la actualización
-        $html = $html .  '<input name="id_registro" value="'.$RECORD_ID.'" style="display:none;">';
+        $html = $html .  '<input id="dphpforms_record_id" name="id_registro" value="'.$RECORD_ID.'" style="display:none;">';
         //Fin del disparador de actualización
 
         $sql_respuestas = '
@@ -336,7 +336,7 @@
             }
 
         }
-        $html = $html .  ' <hr style="border-color:red"><button type="submit" class="btn btn-sm btn-danger btn-dphpforms-univalle">Registrar</button>' . "\n";
+        $html = $html .  ' <hr style="border-color:red"><button type="submit" class="btn btn-sm btn-danger btn-dphpforms-univalle">Actualizar</button>' . "\n";
         $html = $html .  ' </form>' . "\n";
 
         //Manejo de disparadores
