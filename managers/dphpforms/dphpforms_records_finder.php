@@ -39,7 +39,7 @@
             }
         }
 
-        if(!is_numeric($id_pregunta)){
+        if(!is_numeric($PREGUNTA_ID)){
             return json_encode(
                 array(
                     'results' => array()
