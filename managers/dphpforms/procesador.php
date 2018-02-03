@@ -514,7 +514,7 @@ function dphpforms_reglas_validator($respuestas, $reglas){
             }
         }elseif($regla == '>'){
 
-            /* Validation for times XX:XX */
+            /* Validation for time XX:XX */
             
             if((count($respuesta_a->{'valor'}) == 5)&&(count($respuesta_b->{'valor'}) == 5)){
                     if(($respuesta_a->{'valor'}[2] == ':')&&($respuesta_b->{'valor'}[2] == ':')){
@@ -524,12 +524,12 @@ function dphpforms_reglas_validator($respuestas, $reglas){
                             ){
                                 $time_a = strtotime($respuesta_a->{'valor'});
                                 $time_b = strtotime($respuesta_b->{'valor'});
-                                if($time_a < $time_b){
+                                if($time_a > $time_b){
+                                    $satisfied_reglas = true;
+                                }else{
                                     $satisfied_reglas = false;
                                     return false;
                                     break;
-                                }else{
-                                    $satisfied_reglas = true;
                                 }
                         }
                     }
@@ -549,7 +549,7 @@ function dphpforms_reglas_validator($respuestas, $reglas){
 
         }elseif($regla == '<'){
 
-            /* Validation for times XX:XX */
+            /* Validation for time XX:XX */
             
             if((count($respuesta_a->{'valor'}) == 5)&&(count($respuesta_b->{'valor'}) == 5)){
                     if(($respuesta_a->{'valor'}[2] == ':')&&($respuesta_b->{'valor'}[2] == ':')){
@@ -559,12 +559,12 @@ function dphpforms_reglas_validator($respuestas, $reglas){
                             ){
                                 $time_a = strtotime($respuesta_a->{'valor'});
                                 $time_b = strtotime($respuesta_b->{'valor'});
-                                if($time_a > $time_b){
+                                if($time_a < $time_b){
+                                    $satisfied_reglas = true;
+                                }else{
                                     $satisfied_reglas = false;
                                     return false;
                                     break;
-                                }else{
-                                    $satisfied_reglas = true;
                                 }
                         }
                     }

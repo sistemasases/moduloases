@@ -10,7 +10,7 @@
     "preguntas":[  
        {  
           "id_temporal":"cmp_0",
-          "enunciado":"Fecha (aaaa-mm-dd)*",
+          "enunciado":"Fecha (mm/dd/aaaa)*",
           "tipo_campo":"DATE",
           "opciones_campo":null,
           "atributos_campo":{  
