@@ -2,6 +2,7 @@
 
   {{#data}} {{> block_ases/side_menu}} {{{message}}}
   <div class="container">
+    <input type="text" class="hide" id="current_user_id" value="{{id_dphpforms_creado_por}}" />
     <form id="ficha_estudiante" onsubmit="myFunction(); return false;">
 
       <input type="text" class="hide" id="id_ases" name="id_ases" value="{{id_ases}}" />
@@ -210,18 +211,18 @@
     </form>
   </div>
 
-  <!-- MODALES DE PRUEBAS-->
-  <div class="mymodal" id="modal_test_peer_tracking" name="modal_test_pares">
+  <!-- MODALES DE SEGUIMIENTO -->
+  <div class="mymodal" id="modal_v2_peer_tracking" name="modal_v2_pares">
     <div class="mymodal-content">
       <div class="mymodal-header col-sm-12">
         <div class="col-sm-11">
-          <h4 class="" id="myModalLabel">Prueba registro de seguimiento de pares</h4>
+          <h4 class="" id="myModalLabel">Nuevo registro</h4>
         </div>
         <div class="col-sm-1">
-          <span id="mymodal-test-close" class="mymodal-close" aria-hidden="true">&times;</span>
+          <span id="mymodal-v2-close" class="mymodal-close" aria-hidden="true">&times;</span>
         </div>
       </div>
-      <div class="mymodal-body col-sm-12">
+      <div class="mymodal-body mymodal-body_v2 col-sm-12">
         <div class="row">
           <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             {{{form_seguimientos}}}
@@ -234,17 +235,17 @@
     </div>
   </div>
 
-  <div class="mymodal" id="modal_test_edit_peer_tracking" name="modal_edit_test_pares">
+  <div class="mymodal" id="modal_v2_edit_peer_tracking" name="modal_edit_v2_pares">
     <div class="mymodal-content">
       <div class="mymodal-header col-sm-12">
         <div class="col-sm-11">
-          <h4 class="" id="myModalLabel">Prueba edición del registro de seguimiento de pares</h4>
+          <h4 class="" id="myModalLabel">Visualización/Edición</h4>
         </div>
         <div class="col-sm-1">
-          <span id="mymodal-test-close" class="mymodal-close" aria-hidden="true">&times;</span>
+          <span id="mymodal-v2-close" class="mymodal-close" aria-hidden="true">&times;</span>
         </div>
       </div>
-      <div class="mymodal-body col-sm-12">
+      <div class="mymodal-body mymodal-body_v2 col-sm-12">
         <div class="row">
           <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <div id="body_editor"></div>
@@ -256,7 +257,7 @@
       </div>
     </div>
   </div>
-  <!-- FIN MODALES DE PRUEBAS -->
+  <!-- FIN MODALES SEGUIMIENTO V2 -->
 
   <!-- Modal Seguimiento pares-->
   <div class="mymodal" id="modal_peer_tracking" name="modal_pares">

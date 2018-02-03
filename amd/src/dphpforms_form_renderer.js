@@ -14,18 +14,37 @@
     return {
         init: function() {
 
-                $('#button_add_test_track').on('click', function() {
-                    $('#modal_test_peer_tracking').fadeIn(300);
+                function order_max_min(array, start_pos){
+                    if(array.length == start_pos){
+                        return array;
+                    }else{
+                        for(var x = start_pos; x < array.length; x++){
+                            if(array[x] > array[start_pos]){
+                                var dynamic_pos = array[x];
+                                array[x] =  array[start_pos];
+                                array[start_pos] = dynamic_pos;
+                            }
+                        }
+                        order_max_min(array, (start_pos + 1));
+                    }
+                }
+
+                $('#button_add_v2_track').on('click', function() {
+                    $('#modal_v2_peer_tracking').fadeIn(300);
+                    var codigo_estudiante = $('#codigo').val();
+                    $('.id_estudiante').find('input').val(codigo_estudiante);
+                    var codigo_monitor = $('#current_user_id').val();
+                    $('.id_creado_por').find('input').val(codigo_monitor);
                 });
                 $('.mymodal-close').click(function(){
                     $(this).parent().parent().parent().parent().fadeOut(300);
                 });
 
                 // Controles para editar formulario de pares
-                $('.edit_peer_test_tracking').on('click', function(){
+                $('.dphpforms-peer-record').on('click', function(){
                     var id_tracking = $(this).attr('data-record-id');
-                    load_record_updater('93', '36');
-                    $('#modal_test_edit_peer_tracking').fadeIn(300);
+                    load_record_updater('seguimiento_pares', id_tracking);
+                    $('#modal_v2_edit_peer_tracking').fadeIn(300);
                 });
 
                 function load_record_updater(form_id, record_id){
@@ -80,7 +99,6 @@
                     });
                  });
 
-                 //formulario_prueba_d3_62s
                  $(document).on('submit', '.dphpforms' , function(evt) {
                     evt.preventDefault();
                     var formData = new FormData(this);
@@ -100,13 +118,18 @@
                                 var response = JSON.parse(data);
                                 if(response['status'] == 0){
                                     swal(
-                                        'Información',
-                                        response['message'],
-                                        'success'
+                                        {title:'Información',
+                                        text: response['message'],
+                                        type: 'success'},
+                                        function(){
+                                            $('#dphpforms-peer-record-' + $('#dphpforms_record_id').val()).stop().animate({backgroundColor:'rgb(175, 255, 173)'}, 900).animate({backgroundColor:'#f5f5f5'}, 4000);
+                                        }
                                     );
                                     $('.dphpforms-response').trigger("reset");
-                                    $('#modal_test_edit_peer_tracking').fadeOut(300);
-                                    $('#modal_test_peer_tracking').fadeOut(300);
+                                    $('#modal_v2_edit_peer_tracking').fadeOut(300);
+                                    $('#modal_v2_peer_tracking').fadeOut(300);
+                                    
+                                    //$('#dphpforms-peer-record-' + $('#dphpforms_record_id').val()).stop().animate({backgroundColor:'#f5f5f5'}, 900);
                                 }else if(response['status'] == -2){
                                     swal(
                                         'Alerta',
@@ -129,7 +152,11 @@
                                     'error'
                                 );
                             }
+                            
                      });
+
+                     //$('#dphpforms-peer-record-' + $('#dphpforms_record_id').val() ).css('background-color', 'green');
+                     
                 });
                 
             }
