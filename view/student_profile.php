@@ -760,7 +760,6 @@ if ($student_code != 0) {
                 $panel .= "<div class='row'>";
                 $panel .= "<div class='col-sm-4 row-buttons-tracking'>";
                 $panel .= "<button type='button' class='btn-primary edit_peer_tracking' id='edit_tracking_" . $tracking->id_seg . "'>Editar seguimiento</button>";
-                $panel .= "<button type='button' class='btn-primary edit_peer_v2_tracking' data-record-id='" . $tracking->id_seg . "' id='edit_tracking_test_" . $tracking->id_seg . "'>Editar seguimiento v2</button>";
                 $panel .= "</div>";
                 $panel .= "<div class='col-sm-3 col-sm-offset-5 row-buttons-tracking'>";
                 $panel .= "<button type='button' class='btn-danger delete_peer_tracking col-sm-10' id='delete_tracking_peer_" . $tracking->id_seg . "'>";

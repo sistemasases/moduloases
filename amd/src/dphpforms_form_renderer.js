@@ -52,13 +52,19 @@
                             $("#body_editor").html("");
                             $('#body_editor').append( data );
                             $("#permissions_informationr").html("");
+
+                            var rev_prof = $('.dphpforms-record').find('.revisado_profesional').find('.checkbox').find('input[type=checkbox]').prop('checked');
+                            var rev_prac = $('.dphpforms-record').find('.revisado_practicante').find('.checkbox').find('input[type=checkbox]').prop('checked');
+                            
+                            if(rev_prof || rev_prac){
+                                $('.dphpforms-record').find('.btn-dphpforms-delete-record').remove();
+                            }
+
                             var behaviors = JSON.parse($('#permissions_information').text());
                             
                             for(var x = 0; x < behaviors['behaviors_permissions'].length; x++){
                              
                                 var current_behaviors =  behaviors['behaviors_permissions'][x]['behaviors'][0];
-                                
-                                //
                                 var behaviors_accessibility = current_behaviors.behaviors_accessibility;
                                 
                                 for( var z = 0; z <  behaviors_accessibility.length; z++){
@@ -84,6 +90,8 @@
                                 
                             }
 
+                            $("#permissions_informationr").html("");
+
                     });
                 }
 
@@ -99,7 +107,7 @@
                     });
                  });
 
-                 $(document).on('submit', '.dphpforms' , function(evt) {
+                $(document).on('submit', '.dphpforms' , function(evt) {
                     evt.preventDefault();
                     var formData = new FormData(this);
                     var formulario = $(this);
@@ -122,14 +130,13 @@
                                         text: response['message'],
                                         type: 'success'},
                                         function(){
-                                            $('#dphpforms-peer-record-' + $('#dphpforms_record_id').val()).stop().animate({backgroundColor:'rgb(175, 255, 173)'}, 900).animate({backgroundColor:'#f5f5f5'}, 4000);
+                                            $('#dphpforms-peer-record-' + $('#dphpforms_record_id').val()).stop().animate({backgroundColor:'rgb(175, 255, 173)'}, 400).animate({backgroundColor:'#f5f5f5'}, 4000);
                                         }
                                     );
                                     $('.dphpforms-response').trigger("reset");
                                     $('#modal_v2_edit_peer_tracking').fadeOut(300);
                                     $('#modal_v2_peer_tracking').fadeOut(300);
                                     
-                                    //$('#dphpforms-peer-record-' + $('#dphpforms_record_id').val()).stop().animate({backgroundColor:'#f5f5f5'}, 900);
                                 }else if(response['status'] == -2){
                                     swal(
                                         'Alerta',
@@ -154,10 +161,35 @@
                             }
                             
                      });
-
-                     //$('#dphpforms-peer-record-' + $('#dphpforms_record_id').val() ).css('background-color', 'green');
                      
                 });
+
+                $(document).on('click', '.btn-dphpforms-delete-record' , function() {
+                    var record_id = $('.btn-dphpforms-delete-record').attr('data-record-id');
+                    $.get( "../managers/dphpforms/dphpforms_delete_record.php?record_id="+record_id, function( data ) {
+                        var response = data;
+                        if(response['status'] == 0){
+                            swal(
+                                {title:'Información',
+                                text: response['message'],
+                                type: 'success'},
+                                function(){
+                                    $('#modal_v2_edit_peer_tracking').fadeOut(300);
+                                    $('#dphpforms-peer-record-' + record_id).remove();
+                                }
+                            );
+                        }else if(response['status'] == -1){
+                            swal(
+                                'Error!',
+                                response['message'],
+                                'error'
+                            );
+                        }
+                    });
+                     
+                });
+
+                
                 
             }
 
