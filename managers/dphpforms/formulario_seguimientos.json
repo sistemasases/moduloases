@@ -901,55 +901,65 @@
           "opciones_campo":[  
              {  
                 "enunciado":"Salud",
-                "valor":"0",
+                "identificador":"salud",
+                "valor":"salud",
                 "posicion":"1"
              },
              {  
                 "enunciado":"Relación de pareja",
-                "valor":"0",
+                "identificador":"relacion_pareja",
+                "valor":"relacion_pareja",
                 "posicion":"2"
              },
              {  
                 "enunciado":"Red de apoyo",
-                "valor":"0",
+                "identificador":"red_apoyo",
+                "valor":"red_apoyo",
                 "posicion":"3"
              },
              {  
                 "enunciado":"Autoconocimiento",
-                "valor":"0",
+                "identificador":"autoconocimiento",
+                "valor":"autoconocimiento",
                 "posicion":"4"
              },
              {  
                 "enunciado":"Rasgos de personalidad",
-                "valor":"0",
+                "identificador":"rasgos_personalidad",
+                "valor":"rasgos_personalidad",
                 "posicion":"5"
              },
              {  
                 "enunciado":"Proyecto de vida",
-                "valor":"0",
+                "identificador":"proyecto_vida",
+                "valor":"proyecto_vida",
                 "posicion":"6"
              },
              {  
                 "enunciado":"Historia de vida",
-                "valor":"0",
+                "identificador":"historia_vida",
+                "valor":"historia_vida",
                 "posicion":"7"
              },
              {  
                 "enunciado":"Identificación",
-                "valor":"0",
+                "identificador":"identificacion",
+                "valor":"identificacion",
                 "posicion":"8"
              },
              {  
                 "enunciado":"Aspectos motivacionales",
-                "valor":"0",
+                "identificador":"aspectos_motivacionales",
+                "valor":"aspectos_motivacionales",
                 "posicion":"9"
              }
           ],
           "atributos_campo":{  
              "name":"tematicas_individual",
              "required":"false",
-             "checkclass":"checkbox-tematicas",
-             "local_alias":"tematicas_individual"
+             "checkclass":"checkbox-tematicas col-xs-6 col-sm-6 col-md-6 col-lg-6",
+             "local_alias":"tematicas_individual",
+             "class":"ajuste_tematicas col-xs-12 col-sm-12 col-md-12 col-lg-12"
           },
           "permisos_campo":[  
              {  
@@ -2455,6 +2465,90 @@
                       ]
                    },
                    {  
+                    "campo":"cmp_23",
+                    "permisos":[  
+                       {  
+                          "rol":"administrativo",
+                          "permisos":[  
+
+                          ]
+                       },
+                       {  
+                          "rol":"reportes",
+                          "permisos":[  
+
+                          ]
+                       },
+                       {  
+                          "rol":"profesional_ps",
+                          "permisos":[  
+                             "lectura"
+                          ]
+                       },
+                       {  
+                          "rol":"monitor_ps",
+                          "permisos":[  
+                             "lectura"
+                          ]
+                       },
+                       {  
+                          "rol":"estudiante_t",
+                          "permisos":[  
+
+                          ]
+                       },
+                       {  
+                          "rol":"sistemas",
+                          "permisos":[  
+                             "lectura",
+                             "escritura"
+                          ]
+                       },
+                       {  
+                          "rol":"practicante_ps",
+                          "permisos":[  
+                             "lectura"
+                          ]
+                       },
+                       {  
+                          "rol":"geografo",
+                          "permisos":[  
+
+                          ]
+                       },
+                       {  
+                          "rol":"academico",
+                          "permisos":[  
+
+                          ]
+                       },
+                       {  
+                          "rol":"director_prog",
+                          "permisos":[  
+
+                          ]
+                       },
+                       {  
+                          "rol":"geografico",
+                          "permisos":[  
+
+                          ]
+                       },
+                       {  
+                          "rol":"dir_socioeducativo",
+                          "permisos":[  
+
+                          ]
+                       },
+                       {  
+                          "rol":"financiero",
+                          "permisos":[  
+
+                          ]
+                       }
+                    ]
+                 },
+                 {  
                       "campo":"cmp_1",
                       "permisos":[  
                          {  
@@ -4055,6 +4149,93 @@
                          }
                       ]
                    },
+                   {  
+                    "campo":"cmp_23",
+                    "permisos":[  
+                       {  
+                          "rol":"administrativo",
+                          "permisos":[  
+
+                          ]
+                       },
+                       {  
+                          "rol":"reportes",
+                          "permisos":[  
+
+                          ]
+                       },
+                       {  
+                          "rol":"profesional_ps",
+                          "permisos":[  
+                             "lectura",
+                             "escritura"
+                          ]
+                       },
+                       {  
+                          "rol":"monitor_ps",
+                          "permisos":[  
+                             "lectura",
+                             "escritura"
+                          ]
+                       },
+                       {  
+                          "rol":"estudiante_t",
+                          "permisos":[  
+
+                          ]
+                       },
+                       {  
+                          "rol":"sistemas",
+                          "permisos":[  
+                             "lectura",
+                             "escritura"
+                          ]
+                       },
+                       {  
+                          "rol":"practicante_ps",
+                          "permisos":[  
+                             "lectura",
+                             "escritura"
+                          ]
+                       },
+                       {  
+                          "rol":"geografo",
+                          "permisos":[  
+
+                          ]
+                       },
+                       {  
+                          "rol":"academico",
+                          "permisos":[  
+
+                          ]
+                       },
+                       {  
+                          "rol":"director_prog",
+                          "permisos":[  
+
+                          ]
+                       },
+                       {  
+                          "rol":"geografico",
+                          "permisos":[  
+
+                          ]
+                       },
+                       {  
+                          "rol":"dir_socioeducativo",
+                          "permisos":[  
+
+                          ]
+                       },
+                       {  
+                          "rol":"financiero",
+                          "permisos":[  
+
+                          ]
+                       }
+                    ]
+                 },
                    {  
                       "campo":"cmp_1",
                       "permisos":[  
@@ -5706,60 +5887,64 @@
             "nueva_posicion":"7"
         },
         {
-            "id_temporal":"cmp_8",
+            "id_temporal":"cmp_23",
             "nueva_posicion":"8"
         },
         {
-            "id_temporal":"cmp_9",
+            "id_temporal":"cmp_8",
             "nueva_posicion":"9"
         },
         {
-            "id_temporal":"cmp_10",
+            "id_temporal":"cmp_9",
             "nueva_posicion":"10"
         },
         {
-            "id_temporal":"cmp_11",
+            "id_temporal":"cmp_10",
             "nueva_posicion":"11"
         },
         {
-            "id_temporal":"cmp_12",
+            "id_temporal":"cmp_11",
             "nueva_posicion":"12"
         },
         {
-            "id_temporal":"cmp_13",
+            "id_temporal":"cmp_12",
             "nueva_posicion":"13"
         },
         {
-            "id_temporal":"cmp_14",
+            "id_temporal":"cmp_13",
             "nueva_posicion":"14"
         },
         {
-            "id_temporal":"cmp_15",
+            "id_temporal":"cmp_14",
             "nueva_posicion":"15"
         },
         {
-            "id_temporal":"cmp_16",
+            "id_temporal":"cmp_15",
             "nueva_posicion":"16"
         },
         {
-            "id_temporal":"cmp_17",
+            "id_temporal":"cmp_16",
             "nueva_posicion":"17"
         },
         {
-            "id_temporal":"cmp_18",
+            "id_temporal":"cmp_17",
             "nueva_posicion":"18"
         },
         {
-            "id_temporal":"cmp_19",
+            "id_temporal":"cmp_18",
             "nueva_posicion":"19"
         },
         {
-            "id_temporal":"cmp_21",
+            "id_temporal":"cmp_19",
             "nueva_posicion":"20"
         },
         {
-            "id_temporal":"cmp_22",
+            "id_temporal":"cmp_21",
             "nueva_posicion":"21"
+        },
+        {
+            "id_temporal":"cmp_22",
+            "nueva_posicion":"22"
         }
     ]
  }

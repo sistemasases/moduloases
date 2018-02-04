@@ -125,6 +125,14 @@ pre, code {
     float: right;
 }
 
+.ajuste_tematicas > .checkbox:nth-child(3){
+    margin-top: 10px;
+}
+
+.ajuste_tematicas > label{
+    width: 100%;
+}
+
 .date_field input{
     display: block;
     width: 100%;
