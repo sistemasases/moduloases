@@ -363,11 +363,11 @@
                     dataType: "text",
                     data: JSON.stringify(form) ,
                     success: function( msg ){
-                            alert( "Data Saved: " + msg );
+                            alert( msg );
                             console.log(msg);
                     },
                     error: function( XMLHttpRequest, textStatus, errorThrown ) {
-                        alert( "some error " + textStatus + " " + errorThrown );
+                        console.log( "some error " + textStatus + " " + errorThrown );
                     }
                 });
             }

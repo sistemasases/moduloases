@@ -1,166 +1,11 @@
 <?php
 require_once(dirname(__FILE__). '/../../../../config.php');
-/*
-PENDIENTE PARA MOVERSE A LA DOCUMENTACIÓN -- OBSOLETO
-$formulario = '{
-    "datos_formulario":{
-        "nombre":"Formulario JSON",
-        "descripcion":"Primer formulario escrito en JSON para pruebas de registro",
-        "method":"POST",
-        "action":"procesador_formularios.php",
-        "enctype":null
-    },
-    "preguntas":[
-        {
-            "id_temporal":"cmp_0",
-            "enunciado":"Nombre(s)",
-            "tipo_campo":"TEXTFIELD",
-            "opciones_campo":"",
-            "atributos_campo":{"placeholder":"Nombre", "type":"text"},
-            "permisos_campo":[{ "rol":0, "permisos":["lectura", "escritura"] }]
-        },
-        {
-            "id_temporal":"cmp_1",
-            "enunciado":"Apellidos",
-            "tipo_campo":"TEXTFIELD",
-            "opciones_campo":"",
-            "atributos_campo":{"placeholder":"Apellido"},
-            "permisos_campo":[{ "rol":0, "permisos":["lectura", "escritura"] }]
-        },
-        {
-            "id_temporal":"cmp_2",
-            "enunciado":"Contraseña",
-            "tipo_campo":"TEXTFIELD",
-            "opciones_campo":"",
-            "atributos_campo":{"type":"password", "placeholder":"*****"},
-            "permisos_campo":[{ "rol":0, "permisos":["lectura", "escritura"] }]
-        },
-        {
-            "id_temporal":"cmp_3",
-            "enunciado":"Género",
-            "tipo_campo":"RADIOBUTTON",
-            "opciones_campo":[
-                "Masculino",
-                "Femenino"
-            ],
-            "atributos_campo":"",
-            "permisos_campo":[{ "rol":0, "permisos":["lectura", "escritura"] }]
-        },
-        {
-            "id_temporal":"cmp_4",
-            "enunciado":"Permisos",
-            "tipo_campo":"CHECKBOX",
-            "opciones_campo":[
-                "Lectura",
-                "Escritura"
-            ],
-            "atributos_campo":"",
-            "permisos_campo":[{ "rol":0, "permisos":["lectura", "escritura"] }]
-        },
-        {
-            "id_temporal":"cmp_5",
-            "enunciado":"¿Registra BIO?",
-            "tipo_campo":"CHECKBOX",
-            "opciones_campo":[
-                "Sí"
-            ],
-            "atributos_campo":"",
-            "permisos_campo":[{ "rol":0, "permisos":["lectura", "escritura"] }]
-        },
-        {
-            "id_temporal":"cmp_6",
-            "enunciado":"BIO",
-            "tipo_campo":"TEXTAREA",
-            "opciones_campo":"",
-            "atributos_campo":{"placeholder":"Biografía"},
-            "permisos_campo":[{ "rol":0, "permisos":["lectura", "escritura"] }]
-        },
-        {
-            "id_temporal":"cmp_7",
-            "enunciado":"Edad",
-            "tipo_campo":"TEXTFIELD",
-            "opciones_campo":"",
-            "atributos_campo":{"placeholder":"Edad", "type":"number"},
-            "permisos_campo":[{ "rol":0, "permisos":["lectura", "escritura"] }]
-        },
-        {
-            "id_temporal":"cmp_8",
-            "enunciado":"Email",
-            "tipo_campo":"TEXTFIELD",
-            "opciones_campo":"",
-            "atributos_campo":{"placeholder":"Correo electrónico", "type":"email"},
-            "permisos_campo":[{ "rol":0, "permisos":["lectura", "escritura"] }]
-        },
-        {
-            "id_temporal":"cmp_9",
-            "enunciado":"Correo de recuperación",
-            "tipo_campo":"TEXTFIELD",
-            "opciones_campo":"",
-            "atributos_campo":{"placeholder":"example@domain.com", "type":"email"},
-            "permisos_campo":[{ "rol":0, "permisos":["lectura", "escritura"] }]
-        },
-        {
-            "id_temporal":"cmp_10",
-            "enunciado":"Escriba OSO",
-            "tipo_campo":"TEXTFIELD",
-            "opciones_campo":"",
-            "atributos_campo":{"placeholder":"Verificación", "type":"text"},
-            "permisos_campo":[{ "rol":0, "permisos":["lectura", "escritura"] }]
-        },
-        {
-            "id_temporal":"cmp_11",
-            "enunciado":"Repita la contraseña",
-            "tipo_campo":"TEXTFIELD",
-            "opciones_campo":"",
-            "atributos_campo":{"type":"password", "placeholder":"*****"},
-            "permisos_campo":[{ "rol":0, "permisos":["lectura", "escritura"] }]
-        },
-        {
-            "id_temporal":"cmp_12",
-            "enunciado":"Escriba un número mayor a su edad",
-            "tipo_campo":"TEXTFIELD",
-            "opciones_campo":"",
-            "atributos_campo":{"placeholder":"Verificación", "type":"number"},
-            "permisos_campo":[{ "rol":0, "permisos":["lectura", "escritura"] }]
-        }
-    ],
-    "reglas":[
-        {
-            "id_temporal_campo_a":"cmp_0",
-            "id_temporal_campo_b":"cmp_2",
-            "regla":"DIFFERENT"
-        },
-        {
-            "id_temporal_campo_a":"cmp_6",
-            "id_temporal_campo_b":"cmp_5",
-            "regla":"BOUND"
-        },
-        {
-            "id_temporal_campo_a":"cmp_8",
-            "id_temporal_campo_b":"cmp_9",
-            "regla":"EQUAL"
-        },
-        {
-            "id_temporal_campo_a":"cmp_11",
-            "id_temporal_campo_b":"cmp_2",
-            "regla":"EQUAL"
-        },
-        {
-            "id_temporal_campo_a":"cmp_12",
-            "id_temporal_campo_b":"cmp_7",
-            "regla":">"
-        },
-        {
-            "id_temporal_campo_a":"cmp_7",
-            "id_temporal_campo_b":"cmp_12",
-            "regla":"<"
-        }
-    ]}';*/
+
 
 $form = json_decode(file_get_contents("php://input"));
 
-/*
-if(!$form){
+
+/*if(!$form){
     echo json_encode(
         array(
             'id_formulario' => '-1',
@@ -218,8 +63,10 @@ function dphpforms_store_form($form_JSON){
         );
     }
 
-    dphpforms_store_preg_alias($identifiers_form_preguntas, $json_obj_form->{'campos_busqueda'});
-
+    if(property_exists($json_obj_form, 'campos_busqueda')){
+        dphpforms_store_preg_alias($identifiers_form_preguntas, $json_obj_form->{'campos_busqueda'});
+    }
+    
 
     $identifiers_reglas = array();
     if(property_exists($json_obj_form, 'reglas')){
@@ -359,11 +206,19 @@ function dphpforms_store_form_regla($form_id, $text_rule, $identifier_pregunta_A
 
     $identifier_regla = null;
 
-    $sql = "SELECT * from {talentospilos_df_reglas}";
-    $result = $DB->get_records_sql($sql);
-    $result = (array) $result;
+    if($text_rule == 'LESS_THAN'){
+        $text_rule = "<";
+    }
 
-    if(count($result) > 0){
+    if($text_rule == 'LESS_THAN'){
+        $text_rule = ">";
+    }
+
+    $sql = "SELECT * from {talentospilos_df_reglas} WHERE regla = '$text_rule'";
+    $result = $DB->get_record_sql($sql);
+    $identifier_regla = $result->id;
+
+    /*if(count($result) > 0){
         for($i = 1; $i < count($result); $i++){
             $row = $result[$i];
             if($row->regla == $text_rule){
@@ -371,7 +226,7 @@ function dphpforms_store_form_regla($form_id, $text_rule, $identifier_pregunta_A
                 break;
             }
         }
-    }
+    }*/
 
     $obj_regla_form_pregunta = new stdClass();
     $obj_regla_form_pregunta->id_formulario         = $form_id;
