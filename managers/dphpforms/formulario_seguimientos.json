@@ -895,6 +895,147 @@
           ]
        },
        {  
+          "id_temporal":"cmp_23",
+          "enunciado":"Temáticas (Individual)",
+          "tipo_campo":"CHECKBOX",
+          "opciones_campo":[  
+             {  
+                "enunciado":"Salud",
+                "valor":"0",
+                "posicion":"1"
+             },
+             {  
+                "enunciado":"Relación de pareja",
+                "valor":"0",
+                "posicion":"2"
+             },
+             {  
+                "enunciado":"Red de apoyo",
+                "valor":"0",
+                "posicion":"3"
+             },
+             {  
+                "enunciado":"Autoconocimiento",
+                "valor":"0",
+                "posicion":"4"
+             },
+             {  
+                "enunciado":"Rasgos de personalidad",
+                "valor":"0",
+                "posicion":"5"
+             },
+             {  
+                "enunciado":"Proyecto de vida",
+                "valor":"0",
+                "posicion":"6"
+             },
+             {  
+                "enunciado":"Historia de vida",
+                "valor":"0",
+                "posicion":"7"
+             },
+             {  
+                "enunciado":"Identificación",
+                "valor":"0",
+                "posicion":"8"
+             },
+             {  
+                "enunciado":"Aspectos motivacionales",
+                "valor":"0",
+                "posicion":"9"
+             }
+          ],
+          "atributos_campo":{  
+             "name":"tematicas_individual",
+             "required":"false",
+             "checkclass":"checkbox-tematicas",
+             "local_alias":"tematicas_individual"
+          },
+          "permisos_campo":[  
+             {  
+                "rol":"administrativo",
+                "permisos":[  
+ 
+                ]
+             },
+             {  
+                "rol":"reportes",
+                "permisos":[  
+ 
+                ]
+             },
+             {  
+                "rol":"profesional_ps",
+                "permisos":[  
+                   "lectura",
+                   "escritura"
+                ]
+             },
+             {  
+                "rol":"monitor_ps",
+                "permisos":[  
+ 
+                ]
+             },
+             {  
+                "rol":"estudiante_t",
+                "permisos":[  
+ 
+                ]
+             },
+             {  
+                "rol":"sistemas",
+                "permisos":[  
+                   "lectura",
+                   "escritura"
+                ]
+             },
+             {  
+                "rol":"practicante_ps",
+                "permisos":[  
+                   "lectura",
+                   "escritura"
+                ]
+             },
+             {  
+                "rol":"geografo",
+                "permisos":[  
+ 
+                ]
+             },
+             {  
+                "rol":"academico",
+                "permisos":[  
+ 
+                ]
+             },
+             {  
+                "rol":"director_prog",
+                "permisos":[  
+ 
+                ]
+             },
+             {  
+                "rol":"geografico",
+                "permisos":[  
+ 
+                ]
+             },
+             {  
+                "rol":"dir_socioeducativo",
+                "permisos":[  
+ 
+                ]
+             },
+             {  
+                "rol":"financiero",
+                "permisos":[  
+ 
+                ]
+             }
+          ]
+       },
+       {  
           "id_temporal":"cmp_9",
           "enunciado":"",
           "tipo_campo":"RADIOBUTTON",
