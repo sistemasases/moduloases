@@ -259,7 +259,7 @@ function dphpforms_new_store_respuesta($completed_form){
 
     $reglas = dphpforms_get_form_reglas($obj_form_completed->{'formulario'}->{'id'});
 
-    $processable = dphpforms_reglas_validator($obj_form_completed->{'respuestas'}, $reglas);
+    $processable = dphpforms_reglas_validator(json_decode(json_encode($obj_form_completed->{'respuestas'})), $reglas);
 
     if($processable){
         //echo "\n¿Procesable?: Sí.\n";
@@ -468,7 +468,7 @@ function dphpforms_get_form_reglas($form_id){
 }
 
 function dphpforms_reglas_validator($respuestas, $reglas){
-    
+
     $satisfied_reglas = false;
     if(count($reglas) == 0){
         return true;
@@ -488,9 +488,12 @@ function dphpforms_reglas_validator($respuestas, $reglas){
             }
         }
 
-        if(($respuesta_a == null)&&($respuesta_b == null)){
+        print_r( $respuesta_a );
+        print_r( $respuesta_b );
+        
+        if((  is_null($respuesta_a)  ) && (  is_null($respuesta_b)   )){
             //echo "Oops, algo pasa con las respuestas ingresadas\n";
-            break;
+            return false;
         }
 
         if($regla == 'DIFFERENT'){
@@ -598,7 +601,7 @@ function dphpforms_reglas_validator($respuestas, $reglas){
                     de asignarle un valor nulo diferente a 0, con el fin de no entrar en conflicto
                     con lo enviado por un CheckBox
                 */
-            if((($respuesta_a->{'valor'} != null) && ($respuesta_a->{'valor'} != "-#$%-") ) && (($respuesta_b->{'valor'} == null)||($respuesta_b->{'valor'} == "-#$%-"))){
+            if((( !is_null($respuesta_a->{'valor'}) ) && ($respuesta_a->{'valor'} != "-#$%-") ) && (( is_null($respuesta_b->{'valor'}) )||($respuesta_b->{'valor'} == "-#$%-"))){
                 $satisfied_reglas = false;
                 /*echo "REGLA " . $regla . " NO CUMPLIDA\n";
                 print_r($respuesta_a);
@@ -606,7 +609,7 @@ function dphpforms_reglas_validator($respuestas, $reglas){
                 echo 'VALOR A' . $respuesta_a->{'valor'} . ' VALOR B' . $respuesta_a->{'valor'};*/
                 return false;
                 break;
-            }elseif((($respuesta_a->{'valor'} == null)||($respuesta_a->{'valor'} == "-#$%-")) && (($respuesta_b->{'valor'} != null) && ($respuesta_b->{'valor'} != "-#$%-") )){
+            }elseif(((  is_null($respuesta_a->{'valor'})  )||($respuesta_a->{'valor'} == "-#$%-")) && (( !is_null($respuesta_a->{'valor'}) ) && ($respuesta_b->{'valor'} != "-#$%-") )){
                 $satisfied_reglas = false;
                 /*echo "REGLA " . $regla . " NO CUMPLIDA\n";
                 print_r($respuesta_a);

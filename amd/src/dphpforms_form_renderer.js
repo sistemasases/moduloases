@@ -123,9 +123,9 @@
                         contentType: false,
                         processData: false,
                         success: function(data) {
-                                var response = JSON.parse(data);
-                                console.log(response);
-                                if(response['status'] == 0){
+                                //var response = JSON.parse(data);
+                                console.log(data);
+                                /*if(response['status'] == 0){
                                     swal(
                                         {title:'Información',
                                         text: response['message'],
@@ -150,10 +150,11 @@
                                         response['message'],
                                         'error'
                                     );
-                                };
+                                };*/
                                 
                             },
                             error: function(data) {
+                                console.log(data);
                                 swal(
                                     'Error!',
                                     data,
