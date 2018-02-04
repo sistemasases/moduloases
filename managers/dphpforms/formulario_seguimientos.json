@@ -593,7 +593,7 @@
           "tipo_campo":"TEXTAREA",
           "opciones_campo":null,
           "atributos_campo":{  
-             "class":"col-xs-6 col-sm-6 col-md-6 col-lg-6",
+             "class":"col-xs-12 col-sm-12 col-md-12 col-lg-12",
              "name":"individual",
              "required":"false",
              "maxlength":"5000",
@@ -690,7 +690,7 @@
           "tipo_campo":"TEXTAREA",
           "opciones_campo":null,
           "atributos_campo":{  
-             "class":"col-xs-6 col-sm-6 col-md-6 col-lg-6",
+             "class":"col-xs-12 col-sm-12 col-md-12 col-lg-12",
              "name":"familiar",
              "required":"false",
              "maxlength":"5000",
@@ -804,7 +804,7 @@
           ],
           "atributos_campo":{  
              "name":"riesgo_ind",
-             "class":"col-xs-6 col-sm-6 col-md-6 col-lg-6",
+             "class":"col-xs-12 col-sm-12 col-md-12 col-lg-12",
              "required":"false",
              "radioclass":"ajuste_radio_seguimientos radio-inline",
              "local_alias":"puntuacion_riesgo_individual"
@@ -917,7 +917,7 @@
           ],
           "atributos_campo":{  
              "name":"riesgo_familiar",
-             "class":"col-xs-6 col-sm-6 col-md-6 col-lg-6",
+             "class":"col-xs-12 col-sm-12 col-md-12 col-lg-12",
              "required":"false",
              "radioclass":"ajuste_radio_seguimientos radio-inline",
              "local_alias":"puntuacion_riesgo_familiar"
@@ -1013,7 +1013,7 @@
           "tipo_campo":"TEXTAREA",
           "opciones_campo":null,
           "atributos_campo":{  
-             "class":"col-xs-6 col-sm-6 col-md-6 col-lg-6",
+             "class":"col-xs-12 col-sm-12 col-md-12 col-lg-12",
              "name":"academico",
              "required":"false",
              "maxlength":"5000",
@@ -1110,7 +1110,7 @@
           "tipo_campo":"TEXTAREA",
           "opciones_campo":null,
           "atributos_campo":{  
-             "class":"col-xs-6 col-sm-6 col-md-6 col-lg-6",
+             "class":"col-xs-12 col-sm-12 col-md-12 col-lg-12",
              "required":"false",
              "name":"economico",
              "maxlength":"5000",
@@ -1224,7 +1224,7 @@
           ],
           "atributos_campo":{  
              "name":"riesgo_aca",
-             "class":"col-xs-6 col-sm-6 col-md-6 col-lg-6",
+             "class":"col-xs-12 col-sm-12 col-md-12 col-lg-12",
              "required":"false",
              "radioclass":"ajuste_radio_seguimientos radio-inline",
              "local_alias":"puntuacion_riesgo_academico"
@@ -1337,7 +1337,7 @@
           ],
           "atributos_campo":{  
              "name":"riesgo_econom",
-             "class":"col-xs-6 col-sm-6 col-md-6 col-lg-6",
+             "class":"col-xs-12 col-sm-12 col-md-12 col-lg-12",
              "required":"false",
              "radioclass":"ajuste_radio_seguimientos radio-inline",
              "local_alias":"puntuacion_riesgo_economico"
@@ -1433,7 +1433,7 @@
           "tipo_campo":"TEXTAREA",
           "opciones_campo":null,
           "atributos_campo":{  
-             "class":"col-xs-6 col-sm-6 col-md-6 col-lg-6",
+             "class":"col-xs-12 col-sm-12 col-md-12 col-lg-12",
              "name":"vida_uni",
              "required":"false",
              "maxlength":"5000",
@@ -1530,7 +1530,7 @@
           "tipo_campo":"TEXTAREA",
           "opciones_campo":null,
           "atributos_campo":{  
-             "class":"col-xs-6 col-sm-6 col-md-6 col-lg-6",
+             "class":"col-xs-12 col-sm-12 col-md-12 col-lg-12",
              "required":"false",
              "name":"observaciones",
              "maxlength":"5000",
@@ -1644,7 +1644,7 @@
           ],
           "atributos_campo":{  
              "radioclass":"ajuste_radio_seguimientos radio-inline",
-             "class":"col-sm-12",
+             "class":"col-xs-12 col-sm-12 col-md-12 col-lg-12",
              "required":"false",
              "name":"vida_uni",
              "maxlength":"5000",
@@ -5489,7 +5489,7 @@
        {  
           "id_temporal_campo_a":"cmp_2",
           "id_temporal_campo_b":"cmp_3",
-          "regla":"<"
+          "regla":"SMALLER_THAT"
        },
        {  
           "id_temporal_campo_a":"cmp_6",
