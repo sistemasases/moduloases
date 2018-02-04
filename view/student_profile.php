@@ -828,6 +828,9 @@ if ($student_code != 0) {
     //Pruebas
     $record->form_seguimientos = null;
     $record->form_seguimientos = dphpforms_render_recorder('seguimiento_pares', $rol);
+    if($record->form_seguimientos == ''){
+        $record->form_seguimientos = "<strong><h3>Oops!: No se ha encontrado un formulario con el alias <code>seguimiento_pares</code></h3></strong>";
+    }
 
 } else {
     $record = new stdClass;

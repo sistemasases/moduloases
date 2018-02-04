@@ -17,6 +17,11 @@
                 $FORM_ID = $form_record->id;
             }
         }
+
+        if(!is_numeric($FORM_ID)){
+            return '';
+        }
+
         
         $sql = '
         
