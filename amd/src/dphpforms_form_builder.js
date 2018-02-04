@@ -367,7 +367,9 @@
                             console.log(msg);
                     },
                     error: function( XMLHttpRequest, textStatus, errorThrown ) {
+                        alert( "some error " + textStatus + " " + errorThrown );
                         console.log( "some error " + textStatus + " " + errorThrown );
+                        console.log( XMLHttpRequest );
                     }
                 });
             }

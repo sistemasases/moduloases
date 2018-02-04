@@ -1646,7 +1646,7 @@
              "radioclass":"ajuste_radio_seguimientos radio-inline",
              "class":"col-xs-12 col-sm-12 col-md-12 col-lg-12",
              "required":"false",
-             "name":"vida_uni",
+             "name":"riesgo_vida_uni",
              "maxlength":"5000",
              "local_alias":"puntuacion_vida_uni"
           },
@@ -5489,7 +5489,7 @@
        {  
           "id_temporal_campo_a":"cmp_2",
           "id_temporal_campo_b":"cmp_3",
-          "regla":"SMALLER_THAT"
+          "regla":"LESS_THAN"
        },
        {  
           "id_temporal_campo_a":"cmp_6",
@@ -5529,6 +5529,96 @@
         {
             "alias":"seguimiento_pares_fecha",
             "id_campo":"cmp_0"
+        }
+    ],
+    "actualizador_orden":[
+        {
+            "id_temporal":"cmp_0",
+            "nueva_posicion":"0"
+        },
+        {
+            "id_temporal":"cmp_1",
+            "nueva_posicion":"1"
+        },
+        {
+            "id_temporal":"cmp_2",
+            "nueva_posicion":"2"
+        },
+        {
+            "id_temporal":"cmp_3",
+            "nueva_posicion":"3"
+        },
+        {
+            "id_temporal":"cmp_4",
+            "nueva_posicion":"4"
+        },
+        {
+            "id_temporal":"cmp_5",
+            "nueva_posicion":"5"
+        },
+        {
+            "id_temporal":"cmp_6",
+            "nueva_posicion":"6"
+        },
+        {
+            "id_temporal":"cmp_7",
+            "nueva_posicion":"7"
+        },
+        {
+            "id_temporal":"cmp_8",
+            "nueva_posicion":"8"
+        },
+        {
+            "id_temporal":"cmp_9",
+            "nueva_posicion":"9"
+        },
+        {
+            "id_temporal":"cmp_10",
+            "nueva_posicion":"10"
+        },
+        {
+            "id_temporal":"cmp_11",
+            "nueva_posicion":"11"
+        },
+        {
+            "id_temporal":"cmp_12",
+            "nueva_posicion":"12"
+        },
+        {
+            "id_temporal":"cmp_13",
+            "nueva_posicion":"13"
+        },
+        {
+            "id_temporal":"cmp_14",
+            "nueva_posicion":"14"
+        },
+        {
+            "id_temporal":"cmp_15",
+            "nueva_posicion":"15"
+        },
+        {
+            "id_temporal":"cmp_16",
+            "nueva_posicion":"16"
+        },
+        {
+            "id_temporal":"cmp_17",
+            "nueva_posicion":"17"
+        },
+        {
+            "id_temporal":"cmp_18",
+            "nueva_posicion":"18"
+        },
+        {
+            "id_temporal":"cmp_19",
+            "nueva_posicion":"19"
+        },
+        {
+            "id_temporal":"cmp_21",
+            "nueva_posicion":"20"
+        },
+        {
+            "id_temporal":"cmp_22",
+            "nueva_posicion":"21"
         }
     ]
  }

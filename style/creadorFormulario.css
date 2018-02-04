@@ -117,9 +117,14 @@ pre, code {
     margin-top: 0px;
 }
 
+
 /*Definición de los estilos para los formularios que dependen de dphpforms*/
 
 /*Inicio de definición de estilos para el formulario de seguimientos*/
+.limpiar{
+    float: right;
+}
+
 .date_field input{
     display: block;
     width: 100%;
