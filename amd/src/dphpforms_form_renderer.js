@@ -52,13 +52,19 @@
                             $("#body_editor").html("");
                             $('#body_editor').append( data );
                             $("#permissions_informationr").html("");
+
+                            var rev_prof = $('.dphpforms-record').find('.revisado_profesional').find('.checkbox').find('input[type=checkbox]').prop('checked');
+                            var rev_prac = $('.dphpforms-record').find('.revisado_practicante').find('.checkbox').find('input[type=checkbox]').prop('checked');
+                            
+                            if(rev_prof || rev_prac){
+                                $('.dphpforms-record').find('.btn-dphpforms-delete-record').remove();
+                            }
+
                             var behaviors = JSON.parse($('#permissions_information').text());
                             
                             for(var x = 0; x < behaviors['behaviors_permissions'].length; x++){
                              
                                 var current_behaviors =  behaviors['behaviors_permissions'][x]['behaviors'][0];
-                                
-                                //
                                 var behaviors_accessibility = current_behaviors.behaviors_accessibility;
                                 
                                 for( var z = 0; z <  behaviors_accessibility.length; z++){
@@ -83,6 +89,8 @@
                                 }
                                 
                             }
+
+                            $("#permissions_informationr").html("");
 
                     });
                 }
