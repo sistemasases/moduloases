@@ -18,11 +18,18 @@
         //'id_estudiante' => $_POST['id_estudiante']
     );
 
+    //echo json_encode($_POST);
+    //die();
+
     $respuestas = array();
 
     foreach ($_POST as $key => $value) {
         if(is_numeric($key)){
             $elemento = $value;
+            if(is_array($value)){
+                $elemento = json_encode($elemento);
+            }
+
             $respuesta = array(
                 'id' => (string) $key,
                 'valor' => (string) $elemento

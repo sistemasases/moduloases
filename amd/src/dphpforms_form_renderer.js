@@ -124,6 +124,7 @@
                         processData: false,
                         success: function(data) {
                                 var response = JSON.parse(data);
+                                console.log(response);
                                 if(response['status'] == 0){
                                     swal(
                                         {title:'Información',

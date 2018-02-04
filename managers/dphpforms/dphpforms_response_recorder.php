@@ -226,14 +226,20 @@
                                 $field_attr_checkclass = $atributos->{'checkclass'};
                             }
 
+                            $name_checkbox = $row->{'mod_id_formulario_pregunta'};
+                            if($number_opciones > 1){
+                                $name_checkbox = $row->{'mod_id_formulario_pregunta'} . '[]';
+                            }
+
                             for($x = 0; $x < $number_opciones; $x++){
                                 $opcion = (array) $array_opciones[$x];
-                                $html = $html .  '
-                                    <div class="checkbox ' . $field_attr_checkclass . '">
-                                        <input type="hidden" name="'.$row->{'mod_id_formulario_pregunta'}.'" value="-1">
-                                        <label><input type="checkbox" class="' . $field_attr_inputclass . '" name="'.$row->{'mod_id_formulario_pregunta'}.'" value="'.$opcion['valor'].'" '.$enabled.'>'.$opcion['enunciado'].'</label>
-                                    </div>
-                                ' . "\n";
+                                $html = $html . '<div class="checkbox ' . $field_attr_checkclass . '">' . "\n";
+                                if($number_opciones == 1){
+                                    $html = $html . '   <input type="hidden" name="'. $name_checkbox .'" value="-1">' . "\n";
+                                }
+                                $html = $html . '   <label><input type="checkbox" class="' . $field_attr_inputclass . '" name="'. $name_checkbox .'" value="'.$opcion['valor'].'" '.$enabled.'>'.$opcion['enunciado'].'</label>' . "\n";
+                                $html = $html . '</div>';
+                                $html = $html . '' . "\n";
                             }
                             $html = $html . '</div>';
 
