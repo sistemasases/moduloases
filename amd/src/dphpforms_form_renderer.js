@@ -99,7 +99,7 @@
                     });
                  });
 
-                 $(document).on('submit', '.dphpforms' , function(evt) {
+                $(document).on('submit', '.dphpforms' , function(evt) {
                     evt.preventDefault();
                     var formData = new FormData(this);
                     var formulario = $(this);
@@ -122,14 +122,13 @@
                                         text: response['message'],
                                         type: 'success'},
                                         function(){
-                                            $('#dphpforms-peer-record-' + $('#dphpforms_record_id').val()).stop().animate({backgroundColor:'rgb(175, 255, 173)'}, 900).animate({backgroundColor:'#f5f5f5'}, 4000);
+                                            $('#dphpforms-peer-record-' + $('#dphpforms_record_id').val()).stop().animate({backgroundColor:'rgb(175, 255, 173)'}, 400).animate({backgroundColor:'#f5f5f5'}, 4000);
                                         }
                                     );
                                     $('.dphpforms-response').trigger("reset");
                                     $('#modal_v2_edit_peer_tracking').fadeOut(300);
                                     $('#modal_v2_peer_tracking').fadeOut(300);
                                     
-                                    //$('#dphpforms-peer-record-' + $('#dphpforms_record_id').val()).stop().animate({backgroundColor:'#f5f5f5'}, 900);
                                 }else if(response['status'] == -2){
                                     swal(
                                         'Alerta',
@@ -154,10 +153,35 @@
                             }
                             
                      });
-
-                     //$('#dphpforms-peer-record-' + $('#dphpforms_record_id').val() ).css('background-color', 'green');
                      
                 });
+
+                $(document).on('click', '.btn-dphpforms-delete-record' , function() {
+                    var record_id = $('.btn-dphpforms-delete-record').attr('data-record-id');
+                    $.get( "../managers/dphpforms/dphpforms_delete_record.php?record_id="+record_id, function( data ) {
+                        var response = data;
+                        if(response['status'] == 0){
+                            swal(
+                                {title:'Información',
+                                text: response['message'],
+                                type: 'success'},
+                                function(){
+                                    $('#modal_v2_edit_peer_tracking').fadeOut(300);
+                                    $('#dphpforms-peer-record-' + record_id).remove();
+                                }
+                            );
+                        }else if(response['status'] == -1){
+                            swal(
+                                'Error!',
+                                response['message'],
+                                'error'
+                            );
+                        }
+                    });
+                     
+                });
+
+                
                 
             }
 

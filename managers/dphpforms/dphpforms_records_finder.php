@@ -55,7 +55,7 @@
                 FROM {talentospilos_df_form_resp} AS FR 
                 INNER JOIN {talentospilos_df_form_solu} AS FS 
                 ON FR.id = FS.id_formulario_respuestas 
-        WHERE FR.id_formulario = '" . $FORM_ID . "'
+        WHERE FR.id_formulario = '" . $FORM_ID . "' AND FR.estado = 1
             ) AS FRS 
         ON FRS.id_respuesta = R.id
         WHERE R.respuesta = '" . $criterio . "' AND R.id_pregunta = '" . $PREGUNTA_ID . "'

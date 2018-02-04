@@ -48,6 +48,8 @@ pre, code {
 }
 .btn-dphpforms-builder, .btn-dphpforms-univalle{
     font-weight: bold;
+    background-color: #d51b23;
+    border-radius: 0px;
 }
 
 .btn-card{
