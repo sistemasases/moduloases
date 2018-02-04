@@ -1,5 +1,6 @@
 <?php
 require_once(dirname(__FILE__). '/../../../../config.php');
+require_once('dphpforms_form_updater.php');
 
 
 $form = json_decode(file_get_contents("php://input"));
@@ -65,6 +66,10 @@ function dphpforms_store_form($form_JSON){
 
     if(property_exists($json_obj_form, 'campos_busqueda')){
         dphpforms_store_preg_alias($identifiers_form_preguntas, $json_obj_form->{'campos_busqueda'});
+    }
+
+    if(property_exists($json_obj_form, 'actualizador_orden')){
+        dphpforms_update_pregunta_position_new_form($identifiers_form_preguntas, $json_obj_form->{'actualizador_orden'});
     }
     
 
@@ -206,27 +211,19 @@ function dphpforms_store_form_regla($form_id, $text_rule, $identifier_pregunta_A
 
     $identifier_regla = null;
 
-    if($text_rule == 'LESS_THAN'){
-        $text_rule = "<";
+    $text_rule_ = $text_rule;
+
+    if($text_rule_ == 'LESS_THAN'){
+        $text_rule_ = "<";
     }
 
-    if($text_rule == 'LESS_THAN'){
-        $text_rule = ">";
+    if($text_rule_ == 'GREATER_THAN'){
+        $text_rule_ = ">";
     }
 
-    $sql = "SELECT * from {talentospilos_df_reglas} WHERE regla = '$text_rule'";
+    $sql = "SELECT * from {talentospilos_df_reglas} WHERE regla = '".$text_rule_."'";
     $result = $DB->get_record_sql($sql);
     $identifier_regla = $result->id;
-
-    /*if(count($result) > 0){
-        for($i = 1; $i < count($result); $i++){
-            $row = $result[$i];
-            if($row->regla == $text_rule){
-                $identifier_regla = $row->id;
-                break;
-            }
-        }
-    }*/
 
     $obj_regla_form_pregunta = new stdClass();
     $obj_regla_form_pregunta->id_formulario         = $form_id;
@@ -291,6 +288,21 @@ function dphpforms_store_preg_alias($identifiers_form_preguntas, $alias){
         $DB->insert_record('talentospilos_df_alias', $obj_alias, $returnid=true, $bulk=false);
     }
 
+}
+
+function dphpforms_update_pregunta_position_new_form($identifiers_form_preguntas, $update_json){
+
+    $updated_info = json_encode($update_json);
+
+    foreach ($identifiers_form_preguntas as &$value) {
+        $updated_info = str_replace('"'.$value['idPreguntaTemporal'].'"', '"'.$value['idRelacionFormPreg'].'"', $updated_info);
+    }
+
+    $updated_info = json_decode($updated_info);
+
+    foreach ($updated_info as &$value) {
+        update_pregunta_position($value->{'id_temporal'}, (int) $value->{'nueva_posicion'});
+    }
 }
 
 ?>
