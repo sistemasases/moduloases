@@ -162,13 +162,17 @@ function get_resolutions_for_report(){
 
     $resolutions_array = array();
 
-    $sql_query = "SELECT DISTINCT res_ice.id, res_ice.codigo_resolucion, semestre.nombre, res_ice.monto_total 
+    $sql_query = "SELECT DISTINCT res_ice.id, res_ice.codigo_resolucion, semestre.nombre, res_ice.nota_credito, res_ice.monto_total 
                     FROM mdl_talentospilos_res_icetex AS res_ice
                         INNER JOIN mdl_talentospilos_semestre semestre ON semestre.id = res_ice.id_semestre";
 
     $resolutions = $DB->get_records_sql($sql_query);
     
     foreach ($resolutions as $resolution) {
+        if(is_null($resolution->nota_credito)){
+            $resolution->nota_credito = "---";
+        }
+
         array_push($resolutions_array, $resolution);
     }
 
