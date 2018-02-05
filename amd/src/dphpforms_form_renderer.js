@@ -123,15 +123,26 @@
                         contentType: false,
                         processData: false,
                         success: function(data) {
-                                //var response = JSON.parse(data);
+                                var response = JSON.parse(data);
                                 console.log(data);
-                                /*if(response['status'] == 0){
+                                //errorCode = -1 InternalError
+                                //            -2 UnfulfilledRules
+                                //             0 AllOkay
+                                if(response['status'] == 0){
+                                    var mensaje = '';
+                                    if(response['mensaje'] == 'Stored'){
+                                        mensaje = 'Almacenado';
+                                    }else if(response['mensaje'] == 'Updated'){
+                                        mensaje = 'Actualizado';
+                                    }
                                     swal(
                                         {title:'Información',
                                         text: response['message'],
                                         type: 'success'},
                                         function(){
-                                            $('#dphpforms-peer-record-' + $('#dphpforms_record_id').val()).stop().animate({backgroundColor:'rgb(175, 255, 173)'}, 400).animate({backgroundColor:'#f5f5f5'}, 4000);
+                                            if(response['mensaje'] == 'Updated'){
+                                                $('#dphpforms-peer-record-' + $('#dphpforms_record_id').val()).stop().animate({backgroundColor:'rgb(175, 255, 173)'}, 400).animate({backgroundColor:'#f5f5f5'}, 4000);
+                                            }
                                         }
                                     );
                                     $('.dphpforms-response').trigger("reset");
@@ -139,26 +150,31 @@
                                     $('#modal_v2_peer_tracking').fadeOut(300);
                                     
                                 }else if(response['status'] == -2){
+                                    var mensaje = '';
+                                    if(response['mensaje'] == 'Without changes'){
+                                        mensaje = 'No hay cambios que registrar';
+                                    }else if(response['mensaje'] == 'Unfulfilled rules'){
+                                        mensaje = 'Revise los valores ingresados';
+                                    }
                                     swal(
                                         'Alerta',
                                         response['message'],
-                                        'warning'
+                                        mensaje
                                     );
                                 }else if(response['status'] == -1){
                                     swal(
                                         'ERROR!',
                                         response['message'],
-                                        'error'
+                                        'Oops!, informe de este error'
                                     );
-                                };*/
-                                
+                                };
                             },
                             error: function(data) {
                                 console.log(data);
                                 swal(
                                     'Error!',
                                     data,
-                                    'error'
+                                    'Oops!, informe de este error'
                                 );
                             }
                             

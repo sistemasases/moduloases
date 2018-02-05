@@ -310,8 +310,8 @@ function dphpforms_new_store_respuesta($completed_form){
         //echo "¿Procesable?: No.\n";
         echo json_encode(
             array(
-                'status' => '-1',
-                'message' => 'It is not processable',
+                'status' => '-2',
+                'message' => 'Unfulfilled rules',
                 'data' => ''
             )
         );
