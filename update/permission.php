@@ -32,7 +32,7 @@ foreach ($instances as $instance) {
     $record->id_usuario = $user->id;
     $record->estado = 1;
     $record->id_semestre= $current_semester->id;
-    $record->id_instancia = $instance->id;
+    $record->id_instancia = $instance->id_instancia;
     $DB->insert_record('talentospilos_user_rol', $record, false);
     }
 }
