@@ -122,7 +122,22 @@ pre, code {
 
 /*Inicio de definición de estilos para el formulario de seguimientos*/
 .limpiar{
-    float: right;
+    /*float: right;
+    margin-right: 50%;*/
+    margin-bottom: 0.9em;
+    margin-top: 0.5em;
+}
+
+.comentarios_individual{
+    border-top: 1px rgb(116, 116, 116) solid;
+    margin-top: 2em;
+    padding-top: 2em;
+}
+
+.ajuste_tematicas{
+    border-bottom: 1px rgb(116, 116, 116) solid;
+    margin-bottom: 2em;
+    padding-bottom: 2em;
 }
 
 .ajuste_tematicas > .checkbox:nth-child(3){
