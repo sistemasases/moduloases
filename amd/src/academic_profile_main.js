@@ -2,16 +2,16 @@
  * Academic report management
  * @module amd/src/academic_reports
  * @author Camilo José Cruz rivera
- * @copyright 2018 Camilo José Cruz Rivera <cruz.camilo@correounivalle.edu.co> 
+ * @copyright 2018 Camilo José Cruz Rivera <cruz.camilo@correounivalle.edu.co>
  * @license  http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-define(['jquery', 'block_ases/bootstrap', 'block_ases/jqueryui'], function($, bootstrap, jqueryui) {
-    
+define(['jquery'], function($) {
+
     return {
 
         /**
-         * 
+         *
          */
         init: function() {
 
@@ -33,12 +33,12 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/jqueryui'], function($, bo
                 if(parseInt($('.baj').text()) > 0){
                     $('.baj').parent().toggleClass('bajo');
                 }
-                
+
                 if(parseFloat($('.prom').text()) < 3){
                     $('.prom').parent().toggleClass('bajo');
                 }
-            });           
+            });
         }
-        
-    }
+
+    };
 });

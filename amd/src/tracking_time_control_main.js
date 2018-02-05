@@ -7,7 +7,7 @@
 /**
  * @module block_ases/tracking_time_control_main
  */
-define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_ases/sweetalert', 'block_ases/select2', 'block_ases/jqueryui', 'block_ases/moment'], function($, bootstrap, datatablesnet, sweetalert, select2, jqueryui, moment) {
+define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables', 'block_ases/sweetalert', 'block_ases/select2', 'block_ases/jqueryui', 'block_ases/moment'], function($, bootstrap, datatablesnet, sweetalert, select2, jqueryui, moment) {
 
 
     return {
@@ -86,11 +86,17 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_as
 
             }
 
-
-
-
             //*Create the hour report table
-            function load_hours_report(init = 0, fin = 0) {
+            function load_hours_report(init, fin){
+
+                if(init === undefined){
+                    init = 0;
+                }
+
+                if(fin === undefined){
+                    fin = 0;
+                }
+
                 $.ajax({
                     type: "POST",
                     url: "../managers/tracking_time_control/load_hours_report.php",

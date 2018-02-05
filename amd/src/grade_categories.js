@@ -7,7 +7,7 @@
  */
 
 
-define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_ases/sweetalert', 'block_ases/jqueryui'], function ($, bootstrap, datatablesnet) {
+define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables', 'block_ases/sweetalert', 'block_ases/jqueryui'], function ($, bootstrap, datatablesnet) {
 
     return {
 

@@ -2,7 +2,7 @@
  * @module block_ases/global_grade_book
  */
 
-define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/jqueryui'], function ($, bootstrap, datatablesnet, sweetalert, jqueryui) {
+define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/jqueryui'], function ($, bootstrap, sweetalert, jqueryui) {
 
     return {
 

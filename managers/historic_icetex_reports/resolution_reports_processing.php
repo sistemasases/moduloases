@@ -32,6 +32,7 @@
 		$resolution_options = get_all_resolutions_codes();
 		array_push($columns, array("title"=>"Código resolución".$resolution_options, "name"=>"codigo_resolucion", "data"=>"codigo_resolucion"));
 		array_push($columns, array("title"=>"Semestre", "name"=>"nombre", "data"=>"nombre"));
+		array_push($columns, array("title"=>"Nota crédito", "name"=>"nota_credito", "data"=>"nota_credito"));
 		array_push($columns, array("title"=>"Total", "name"=>"monto_total", "data"=>"monto_total"));
 
 		$data = array(

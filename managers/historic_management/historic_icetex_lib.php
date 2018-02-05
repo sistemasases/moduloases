@@ -135,25 +135,27 @@ function create_historic_icetex($student_id, $program_id, $resolution_id, $amoun
 }
 
 
-function update_resolution_credit_note($res_code, $credit_note){
+function update_resolution_credit_note($id_resolution, $credit_note){
     global $DB;
 
-    $id_resolution = get_resolution_id_by_number($res_code);
+    $upd_cred_note = false;
 
-    if($id_resolution){
-        $object_resolution = new stdClass();
-        $object_resolution->id = $id_resolution;
-        $object_resolution->nota_credito = $credit_note;
 
-        $update = $DB->update_record('talentospilos_res_icetex', $object_resolution);
+    //$id_resolution = get_resolution_id_by_number($res_code);
+    
+    $object_resolution = new stdClass();
+    $object_resolution->id = $id_resolution;
+    $object_resolution->nota_credito = $credit_note;
 
-        if($update){
-            return true;
-        }else{
-            return false;
-        }
+    $update = $DB->update_record('talentospilos_res_icetex', $object_resolution);
 
+    if($update){
+        $upd_cred_note = true;
     }else{
-        return false;
+        $upd_cred_note = false;
     }
+
+    return $upd_cred_note;
 }
+
+//print_r(update_resolution_credit_note(10, 'Hey'));
