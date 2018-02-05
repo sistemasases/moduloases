@@ -473,28 +473,39 @@ function dphpforms_reglas_validator($respuestas, $reglas){
     if(count($reglas) == 0){
         return true;
     }
+
     for($i = 0; $i < count($reglas); $i++){
         $regla = $reglas[$i]['regla'];
-        $respuesta_a = null;
-        $respuesta_b = null;
+        $respuesta_a = new stdClass();
+        $respuesta_b = new stdClass();
         foreach ($respuestas as &$respuesta) {
             if($reglas[$i]['respuesta_a'] == $respuesta->{'id'}){
-                $respuesta_a = $respuesta;
+                $respuesta_a = clone $respuesta;
+                break;
             }
         }
         foreach ($respuestas as &$respuesta) {
             if($reglas[$i]['respuesta_b'] == $respuesta->{'id'}){
-                $respuesta_b = $respuesta;
+                $respuesta_b = clone $respuesta;
+                break;
             }
         }
 
-        print_r( $respuesta_a );
-        print_r( $respuesta_b );
-        
-        if((  is_null($respuesta_a)  ) && (  is_null($respuesta_b)   )){
+        if(!property_exists($respuesta_a, 'id')){
+            $respuesta_a->id = $reglas[$i]['respuesta_a'];
+            $respuesta_a->valor =  null;
+        }
+
+        if(!property_exists($respuesta_b, 'id')){
+            $respuesta_b->id = $reglas[$i]['respuesta_a'];
+            $respuesta_b->valor =  null;
+        }
+
+        //Es remplazado porque se usa el new stdClass
+        /**if((  is_null($respuesta_a)  ) || (  is_null($respuesta_b)   )){
             //echo "Oops, algo pasa con las respuestas ingresadas\n";
             return false;
-        }
+        }**/
 
         if($regla == 'DIFFERENT'){
 
@@ -595,27 +606,44 @@ function dphpforms_reglas_validator($respuestas, $reglas){
             /*
                 BOUND replaces DEPENDS
             */
-        }elseif($regla == 'BOUND'){
+        }elseif(($regla == 'BOUND')||($regla == 'DEPENDS')){
             /*
                     Se usa -#$%- para enviar cuando el RadioButton está vacío, esto con el fin
                     de asignarle un valor nulo diferente a 0, con el fin de no entrar en conflicto
                     con lo enviado por un CheckBox
                 */
-            if((( !is_null($respuesta_a->{'valor'}) ) && ($respuesta_a->{'valor'} != "-#$%-") ) && (( is_null($respuesta_b->{'valor'}) )||($respuesta_b->{'valor'} == "-#$%-"))){
+
+            if(!is_null($respuesta_a->{'valor'})){
+                if(trim($respuesta_a->{'valor'}) == ''){
+                    $respuesta_tmp = clone $respuesta_a;
+                    $respuesta_a = new stdClass();
+                    $respuesta_a->id = $respuesta_tmp->{'id'};
+                    $respuesta_a->valor = null;
+                }
+            }
+
+            if(!is_null($respuesta_b->{'valor'})){
+                if(trim($respuesta_b->{'valor'}) == ''){
+                    $respuesta_tmp = clone $respuesta_b;
+                    $respuesta_b = new stdClass();
+                    $respuesta_b->id = $respuesta_tmp->{'id'};
+                    $respuesta_b->valor = null;
+                }
+            }
+            
+            if((( !is_null($respuesta_a->{'valor'}) ) && ($respuesta_a->{'valor'} !== "-#$%-") ) && (( is_null($respuesta_b->{'valor'}) )||($respuesta_b->{'valor'} === "-#$%-"))){
                 $satisfied_reglas = false;
                 /*echo "REGLA " . $regla . " NO CUMPLIDA\n";
                 print_r($respuesta_a);
                 print_r($respuesta_b);
                 echo 'VALOR A' . $respuesta_a->{'valor'} . ' VALOR B' . $respuesta_a->{'valor'};*/
-                return false;
                 break;
-            }elseif(((  is_null($respuesta_a->{'valor'})  )||($respuesta_a->{'valor'} == "-#$%-")) && (( !is_null($respuesta_a->{'valor'}) ) && ($respuesta_b->{'valor'} != "-#$%-") )){
+            }elseif(((  is_null($respuesta_a->{'valor'})  )||($respuesta_a->{'valor'} === "-#$%-")) && (( !is_null($respuesta_b->{'valor'}) ) && ($respuesta_b->{'valor'} !== "-#$%-") )){
                 $satisfied_reglas = false;
                 /*echo "REGLA " . $regla . " NO CUMPLIDA\n";
                 print_r($respuesta_a);
                 print_r($respuesta_b);
                 echo 'VALOR A' . $respuesta_a->{'valor'} . ' VALOR B' . $respuesta_a->{'valor'};*/
-                return false;
                 break;
             }else{
                 $satisfied_reglas = true;
