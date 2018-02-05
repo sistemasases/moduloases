@@ -63,8 +63,6 @@
         $html = $html .  '<form id="'. $form_name_formatted .'" method="'. $row->{'method'} .'" action="'. $row->{'action'} .'" class="dphpforms dphpforms-response col-xs-12 col-sm-12 col-md-12 col-lg-12" style="margin-bottom:0.7em">' ;
         $html = $html .  '<h1>'.$form_name.'</h1><hr style="border-color:red;">';
         $html = $html .  '<input name="id" value="'.$row->{'mod_id_formulario'}.'" style="display:none;">';
-        $html = $html .  '<input name="id_monitor" value="'.$id_monitor.'" style="display:none;">';//Pendiente para eliminación
-        $html = $html .  '<input name="id_estudiante" value="'.$student_id.'" style="display:none;">';//Pendiente para eliminación
         
         for($i = 0; $i < count($result); $i++){
             $row = null;
@@ -153,7 +151,7 @@
 
                         if($campo == 'TEXTFIELD'){
                             $html = $html .  '<div class="div-'.$row->{'mod_id_formulario_pregunta'}.' '.$field_attr_class.' '.$field_attr_local_alias.'" >' . $enunciado . ':<br>';
-                            $html = $html .  ' <input id="'.$row->{'mod_id_formulario_pregunta'}.'" class="form-control ' . $field_attr_inputclass . '" type="'.$field_attr_type.'" placeholder="'.$field_attr_placeholder.'" name="'.$row->{'mod_id_formulario_pregunta'}.'" maxlength="'.$field_attr_maxlength.'" '.$enabled.' '.$field_attr_required.'><br>' . "\n";
+                            $html = $html .  ' <input id="'.$row->{'mod_id_formulario_pregunta'}.'" class="form-control ' . $field_attr_inputclass . '" type="'.$field_attr_type.'" placeholder="'.$field_attr_placeholder.'" name="'.$row->{'mod_id_formulario_pregunta'}.'" value="" maxlength="'.$field_attr_maxlength.'" '.$enabled.' '.$field_attr_required.'><br>' . "\n";
                             $html = $html .  '</div>';
                         }
 

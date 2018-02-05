@@ -51,7 +51,6 @@
     $form_JSON = json_encode($full_form);
     
 
-
 /*$formularioDiligenciado = '
 
 {
@@ -63,60 +62,7 @@
     "respuestas":[
         {
             "id":139,
-            "valor":"Jeison"
-        },
-        {
-            "id":140,
-            "valor":"Cardona"
-        },
-        {
-            "id":141,
-            "valor":"123456789"
-        },
-        {
-            "id":142,
-            "valor":"Masculino"
-        },
-        {
-            "id":143,
-            "valor":[
-                "Lectura",
-                "Escritura"
-            ]
-        },
-        {
-            "id":144,
-            "valor":[
-                "Si"
-            ]
-        },
-        {
-            "id":145,
-            "valor":"Amet nisi proident enim occaecat Lorem consequat Lorem labore ut anim adipisicing culpa. Ipsum occaecat ea sint dolor minim ad et est dolore culpa mollit irure. Sint ut nulla reprehenderit deserunt magna eu nisi culpa dolore cupidatat."
-        },
-        {
-            "id":146,
-            "valor":17
-        },
-        {
-            "id":147,
-            "valor":"jcardona@keepler.com"
-        },
-        {
-            "id":148,
-            "valor":"jcardona@keepler.com"
-        },
-        {
-            "id":149,
-            "valor":"OSO"
-        },
-        {
-            "id":150,
-            "valor":"123456789"
-        },
-        {
-            "id":151,
-            "valor":17
+            "valor":"xyz"
         }
     ]
 }
@@ -151,10 +97,13 @@ function dphpforms_update_respuesta($completed_form, $RECORD_ID){
         };
     }
 
+    $reglas = null;
     $reglas = dphpforms_get_form_reglas($obj_form_completed->{'formulario'}->{'id'});
+    $registered_respuestas = null;
     $registered_respuestas = dphpforms_get_respuestas_form_completed($RECORD_ID);
 
     $updated_respuestas = array();
+    //print_r($registered_respuestas);
     if($processable){
         //echo "\n¿Procesable?: Sí.\n";
         $different_flag = false;
@@ -164,42 +113,107 @@ function dphpforms_update_respuesta($completed_form, $RECORD_ID){
                 
                 if( $respuesta['id'] == $respuestaActualizada->id ){
 
-                    if( $respuesta['valor'] != $respuestaActualizada->valor ){
+                    if( $respuesta['valor'] !== $respuestaActualizada->valor ){
                         //echo ' SE VA A ACTUALIZAR: ' . $respuesta['id'] ;
-                        array_push($updated_respuestas, array('id' => $respuesta['id'], 'valor' => $respuestaActualizada->valor) );
+                        array_push( $updated_respuestas, array( 'id' => $respuesta['id'], 'valor' => $respuestaActualizada->valor ) );
                         $different_flag = true;
+                        
+                    }else{
+                        array_push( $updated_respuestas, array('id' => $respuesta['id'], 'valor' => $respuesta['valor']) );
                     }
-                }else{
+
+                    break;
+
+                }/*else{
+
                     $exist_flag = false;
-                    foreach ($updated_respuestas as $ra) {
+                    foreach ($updated_respuestas as &$ra) {
                         if($ra['id'] == $respuesta['id']){
                             $exist_flag = true;
+                            break;
                         }
                     }
+
                     if(!$exist_flag){
                         array_push($updated_respuestas, array('id' => $respuesta['id'], 'valor' => $respuesta['valor']) );
                     }
                     
-                }
+                }*/
             }
         }
+
+        $form_expected_respuestas =  dphpforms_get_expected_respuestas($obj_form_completed->{'formulario'}->{'id'});
+    
+        $all_respuestas_updated = array();
+        for($z = 0; $z < count($form_expected_respuestas); $z++){
+            //print_r( (array) $obj_form_completed->{'respuestas'} ) ;
+            $flag = true;
+            $array_form_respuestas = $updated_respuestas;
+            
+            for($m = 0; $m < count($array_form_respuestas); $m++ ){
+                if(!is_null($form_expected_respuestas[$z]) && !is_null($array_form_respuestas[$m])){
+                    
+                    if((int) $array_form_respuestas[$m]['id'] === (int) $form_expected_respuestas[$z]->mod_id_formulario_pregunta){
+                        $flag = false;
+                        array_push(
+                            $all_respuestas_updated, 
+                            $array_form_respuestas[$m]
+                        );
+                        $form_expected_respuestas[$z] = null;
+                        break;
+                    }
+                }
+            }
+            if($flag){
+                $new_respuesta = new stdClass();
+                $new_respuesta->id = $form_expected_respuestas[$z]->mod_id_formulario_pregunta;
+                if($form_expected_respuestas[$z]->campo == 'CHECKBOX'){
+                    //Pendiente de comentar el por qué de estos valores.
+                    if(count(json_decode($form_expected_respuestas[$z]->opciones_campo)) > 1){
+                        $new_respuesta->valor = '';
+                    }else{
+                        $new_respuesta->valor = '-1';
+                    }
+                }elseif($form_expected_respuestas[$z]->campo == 'RADIOBUTTON'){
+                    $new_respuesta->valor = '-#$%-';
+                }else{
+                    $new_respuesta->valor = '';
+                }
+                array_push(
+                    $all_respuestas_updated, 
+                    $new_respuesta
+                );
+            }
+        }
+
+        $updated_respuestas =  $all_respuestas_updated;
+
+        
         if($different_flag){
             
             //La última afectación es si las reglas son válidas
             $processable = dphpforms_reglas_validator(json_decode(json_encode($updated_respuestas)), $reglas);
+
+            /*print_r($updated_respuestas);
+
+            if($processable){
+                echo 'PROCESABLE';
+            }else{
+                echo 'NO PROCESABLE';
+            }
+
+            die();*/
            
             if($processable){
 
                 //echo 'REGLAS OK, PENDIENTE';
-
+                $updated_respuestas = json_decode(json_encode($updated_respuestas));
+                //print_r($updated_respuestas);
+                //die();
                 foreach($updated_respuestas as &$r){
-                    
-                    //echo "RESPUESTAS ACTUALIZADAS ==>" . count($updated_respuestas);
 
-                    $updated = dphpforms_update_completed_form($RECORD_ID, $r['id'], $r['valor']);
-                    //echo "REGISTRO: " . $RECORD_ID . " ID " . $r['id'] . " VALOR " . $r['valor'];
+                    $updated = dphpforms_update_completed_form($RECORD_ID, $r->id, $r->valor);
                     if(!$updated){
-                        //echo 'ERROR ACTUALIZANDO';
                         echo json_encode(
                             array(
                                 'status' => '-1',
@@ -228,7 +242,6 @@ function dphpforms_update_respuesta($completed_form, $RECORD_ID){
             }
 
         }else{
-            //echo ' NO HAY NADA QUE ACTUALIZAR ';
             echo json_encode(
                 array(
                     'status' => '-2',
@@ -257,9 +270,63 @@ function dphpforms_new_store_respuesta($completed_form){
         };
     }
 
+    
+
     $reglas = dphpforms_get_form_reglas($obj_form_completed->{'formulario'}->{'id'});
 
-    $processable = dphpforms_reglas_validator($obj_form_completed->{'respuestas'}, $reglas);
+    $form_expected_respuestas =  dphpforms_get_expected_respuestas($obj_form_completed->{'formulario'}->{'id'});
+    
+    $all_respuestas = array();
+    for($z = 0; $z < count($form_expected_respuestas); $z++){
+        //print_r( (array) $obj_form_completed->{'respuestas'} ) ;
+        $flag = true;
+        $array_form_respuestas = (array) $obj_form_completed->{'respuestas'};
+        $array_form_respuestas = array_values($array_form_respuestas);
+        
+        for($m = 0; $m < count($array_form_respuestas); $m++ ){
+
+            if(!is_null($form_expected_respuestas[$z]) && !is_null($array_form_respuestas[$m])){
+                
+                if((int) $array_form_respuestas[$m]->id === (int) $form_expected_respuestas[$z]->mod_id_formulario_pregunta){
+                    //echo '==>'. $array_form_respuestas[$m]->id . ' ::: '.$form_expected_respuestas[$z]->mod_id_formulario_pregunta . "\n";
+                    $flag = false;
+                    array_push(
+                        $all_respuestas, 
+                        $array_form_respuestas[$m]
+                    );
+                    $form_expected_respuestas[$z] = null;
+                    break;
+                }
+            }
+        }
+        if($flag){
+            //echo $form_expected_respuestas[$z]->mod_id_formulario_pregunta . "<==\n";
+            $new_respuesta = new stdClass();
+            $new_respuesta->id = $form_expected_respuestas[$z]->mod_id_formulario_pregunta;
+            if($form_expected_respuestas[$z]->campo == 'CHECKBOX'){
+                //Pendiente de comentar el por qué de estos valores.
+                if(count(json_decode($form_expected_respuestas[$z]->opciones_campo)) > 1){
+                    $new_respuesta->valor = '';
+                }else{
+                    $new_respuesta->valor = '-1';
+                }
+            }elseif($form_expected_respuestas[$z]->campo == 'RADIOBUTTON'){
+                $new_respuesta->valor = '-#$%-';
+            }else{
+                $new_respuesta->valor = '';
+            }
+
+            array_push(
+                $all_respuestas, 
+                $new_respuesta
+            );
+        }
+    }
+
+    //print_r($all_respuestas);
+    //die();
+
+    $processable = dphpforms_reglas_validator(json_decode(json_encode($all_respuestas)), $reglas);
 
     if($processable){
         //echo "\n¿Procesable?: Sí.\n";
@@ -274,6 +341,43 @@ function dphpforms_new_store_respuesta($completed_form){
 
         // Registro de respuestas
         $respuestas_identifiers = array();
+        $form_expected_respuestas =  dphpforms_get_expected_respuestas($obj_form_completed->{'formulario'}->{'id'});
+        for($z = 0; $z < count($form_expected_respuestas); $z++){
+            $flag = true;
+            foreach ($obj_form_completed->{'respuestas'} as &$respuesta){
+                if($respuesta->id == $form_expected_respuestas[$z]->mod_id_formulario_pregunta){
+                    $flag = false;
+                    break;
+                }
+            }
+            if($flag){
+
+                $new_respuesta = new stdClass();
+                $new_respuesta->id = $form_expected_respuestas[$z]->mod_id_formulario_pregunta;
+                if($form_expected_respuestas[$z]->campo == 'CHECKBOX'){
+                    //Pendiente de comentar el por qué de estos valores.
+                    if(count(json_decode($form_expected_respuestas[$z]->opciones_campo)) > 1){
+                        $new_respuesta->valor = '';
+                    }else{
+                        $new_respuesta->valor = '-1';
+                    }
+                }elseif($form_expected_respuestas[$z]->campo == 'RADIOBUTTON'){
+                    $new_respuesta->valor = '-#$%-';
+                }else{
+                    $new_respuesta->valor = "";
+                }
+
+                array_push(
+                    $respuestas_identifiers, 
+                    array( 
+                        'idRespuestaDB' => dphpforms_store_respuesta($new_respuesta)
+                    )
+                );
+
+            }
+
+        }
+
         foreach ($obj_form_completed->{'respuestas'} as &$respuesta) {
             array_push(
                 $respuestas_identifiers, 
@@ -307,11 +411,10 @@ function dphpforms_new_store_respuesta($completed_form){
         
 
     }else{
-        //echo "¿Procesable?: No.\n";
         echo json_encode(
             array(
-                'status' => '-1',
-                'message' => 'It is not processable',
+                'status' => '-2',
+                'message' => 'Unfulfilled rules',
                 'data' => ''
             )
         );
@@ -473,24 +576,42 @@ function dphpforms_reglas_validator($respuestas, $reglas){
     if(count($reglas) == 0){
         return true;
     }
+
     for($i = 0; $i < count($reglas); $i++){
         $regla = $reglas[$i]['regla'];
         $respuesta_a = null;
         $respuesta_b = null;
         foreach ($respuestas as &$respuesta) {
             if($reglas[$i]['respuesta_a'] == $respuesta->{'id'}){
-                $respuesta_a = $respuesta;
+                $respuesta_a = clone $respuesta;
+                break;
             }
         }
         foreach ($respuestas as &$respuesta) {
             if($reglas[$i]['respuesta_b'] == $respuesta->{'id'}){
-                $respuesta_b = $respuesta;
+                $respuesta_b = clone $respuesta;
+                break;
             }
         }
+        
+        /*if((  is_null($respuesta_a)  ) && (  is_null($respuesta_b)   )){
+            return false;
+        }*/
 
-        if(($respuesta_a == null)&&($respuesta_b == null)){
-            //echo "Oops, algo pasa con las respuestas ingresadas\n";
-            break;
+        if(is_null($respuesta_a) && $respuesta_b){
+            if(!property_exists($respuesta_b, 'id')){
+                $respuesta_b = new stdClass();
+                $respuesta_a->id = $reglas[$i]['respuesta_a'];
+                $respuesta_a->valor =  null;
+            }
+        }
+        
+        if(is_null($respuesta_b) && $respuesta_a){
+            if(!property_exists($respuesta_a, 'id')){
+                $respuesta_b = new stdClass();
+                $respuesta_b->id = $reglas[$i]['respuesta_b'];
+                $respuesta_b->valor =  null;
+            }
         }
 
         if($regla == 'DIFFERENT'){
@@ -592,32 +713,60 @@ function dphpforms_reglas_validator($respuestas, $reglas){
             /*
                 BOUND replaces DEPENDS
             */
-        }elseif($regla == 'BOUND'){
+        }elseif(($regla == 'BOUND')||($regla == 'DEPENDS')){
             /*
                     Se usa -#$%- para enviar cuando el RadioButton está vacío, esto con el fin
                     de asignarle un valor nulo diferente a 0, con el fin de no entrar en conflicto
                     con lo enviado por un CheckBox
                 */
-            if((($respuesta_a->{'valor'} != null) && ($respuesta_a->{'valor'} != "-#$%-") ) && (($respuesta_b->{'valor'} == null)||($respuesta_b->{'valor'} == "-#$%-"))){
+
+            
+
+            /*if(!is_null($respuesta_a->{'valor'})){
+                if(trim($respuesta_a->{'valor'}) == ''){
+                    $respuesta_tmp = clone $respuesta_a;
+                    $respuesta_a = new stdClass();
+                    $respuesta_a->id = $respuesta_tmp->{'id'};
+                    $respuesta_a->valor = null;
+                }
+            }
+
+            if(!is_null($respuesta_b->{'valor'})){
+                if(trim($respuesta_b->{'valor'}) == ''){
+                    $respuesta_tmp = clone $respuesta_b;
+                    $respuesta_b = new stdClass();
+                    $respuesta_b->id = $respuesta_tmp->{'id'};
+                    $respuesta_b->valor = null;
+                }
+            }*/
+            
+            if((( !is_null($respuesta_a->{'valor'}) ) && ($respuesta_a->{'valor'} !== "-#$%-") && ($respuesta_a->{'valor'} !== "") ) && (( is_null($respuesta_b->{'valor'}) )||($respuesta_b->{'valor'} === "-#$%-")||($respuesta_b->{'valor'} === "") )){
                 $satisfied_reglas = false;
                 /*echo "REGLA " . $regla . " NO CUMPLIDA\n";
                 print_r($respuesta_a);
                 print_r($respuesta_b);
                 echo 'VALOR A' . $respuesta_a->{'valor'} . ' VALOR B' . $respuesta_a->{'valor'};*/
-                return false;
                 break;
-            }elseif((($respuesta_a->{'valor'} == null)||($respuesta_a->{'valor'} == "-#$%-")) && (($respuesta_b->{'valor'} != null) && ($respuesta_b->{'valor'} != "-#$%-") )){
+            }elseif(((  is_null($respuesta_a->{'valor'})  ) || ($respuesta_a->{'valor'} === "-#$%-" ) || ($respuesta_a->{'valor'} === "" )) && (( !is_null($respuesta_b->{'valor'}) ) && ($respuesta_b->{'valor'} !== "-#$%-") && ($respuesta_b->{'valor'} !== "") )){
                 $satisfied_reglas = false;
                 /*echo "REGLA " . $regla . " NO CUMPLIDA\n";
                 print_r($respuesta_a);
                 print_r($respuesta_b);
                 echo 'VALOR A' . $respuesta_a->{'valor'} . ' VALOR B' . $respuesta_a->{'valor'};*/
-                return false;
                 break;
             }else{
                 $satisfied_reglas = true;
                 //echo "REGLA " . $regla . " CUMPLIDA\n";
             }
+
+            /*print_r($respuesta_a);
+            if($satisfied_reglas){
+                echo 'SATISFECHA';
+            }else{
+                echo 'NO SATISFECHA';
+            }
+            print_r($respuesta_b);
+            echo '=====================' . "\n";*/
         }
     }
 
@@ -659,6 +808,26 @@ function dphpforms_get_respuestas_form_completed($idFormularioDiligenciado){
     }
 
     return $respuestas;
+
+}
+
+function dphpforms_get_expected_respuestas($form_id){
+
+    global $DB;
+
+    $sql = "SELECT * FROM {talentospilos_df_tipo_campo} AS TC 
+    INNER JOIN (
+        SELECT * FROM {talentospilos_df_preguntas} AS P 
+        INNER JOIN (
+            SELECT *, F.id AS mod_id_formulario, FP.id AS mod_id_formulario_pregunta FROM {talentospilos_df_formularios} AS F
+            INNER JOIN {talentospilos_df_form_preg} AS FP
+            ON F.id = FP.id_formulario WHERE F.id = '$form_id' AND F.estado = '1'
+            ) AS AA ON P.id = AA.id_pregunta
+        ) AS AAA
+    ON TC.id = AAA.tipo_campo
+    ORDER BY posicion";
+
+    return array_values($DB->get_records_sql($sql));
 
 }
 

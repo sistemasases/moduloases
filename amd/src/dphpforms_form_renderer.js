@@ -124,14 +124,26 @@
                         processData: false,
                         success: function(data) {
                                 var response = JSON.parse(data);
-                                console.log(response);
+                                console.log(data);
+                                //return;
+                                //errorCode = -1 InternalError
+                                //            -2 UnfulfilledRules
+                                //             0 AllOkay
                                 if(response['status'] == 0){
+                                    var mensaje = '';
+                                    if(response['message'] == 'Stored'){
+                                        mensaje = 'Almacenado';
+                                    }else if(response['message'] == 'Updated'){
+                                        mensaje = 'Actualizado';
+                                    }
                                     swal(
                                         {title:'Información',
-                                        text: response['message'],
+                                        text: mensaje,
                                         type: 'success'},
                                         function(){
-                                            $('#dphpforms-peer-record-' + $('#dphpforms_record_id').val()).stop().animate({backgroundColor:'rgb(175, 255, 173)'}, 400).animate({backgroundColor:'#f5f5f5'}, 4000);
+                                            if(response['message'] == 'Updated'){
+                                                $('#dphpforms-peer-record-' + $('#dphpforms_record_id').val()).stop().animate({backgroundColor:'rgb(175, 255, 173)'}, 400).animate({backgroundColor:'#f5f5f5'}, 4000);
+                                            }
                                         }
                                     );
                                     $('.dphpforms-response').trigger("reset");
@@ -139,24 +151,31 @@
                                     $('#modal_v2_peer_tracking').fadeOut(300);
                                     
                                 }else if(response['status'] == -2){
+                                    var mensaje = '';
+                                    if(response['message'] == 'Without changes'){
+                                        mensaje = 'No hay cambios que registrar';
+                                    }else if(response['message'] == 'Unfulfilled rules'){
+                                        mensaje = 'Revise los valores ingresados';
+                                    }
                                     swal(
                                         'Alerta',
-                                        response['message'],
+                                        mensaje,
                                         'warning'
                                     );
                                 }else if(response['status'] == -1){
+                                    console.log(data);
                                     swal(
                                         'ERROR!',
-                                        response['message'],
+                                        'Oops!, informe de este error',
                                         'error'
                                     );
                                 };
-                                
                             },
                             error: function(data) {
+                                console.log(data);
                                 swal(
                                     'Error!',
-                                    data,
+                                    'Oops!, informe de este error',
                                     'error'
                                 );
                             }
@@ -166,28 +185,39 @@
                 });
 
                 $(document).on('click', '.btn-dphpforms-delete-record' , function() {
-                    var record_id = $('.btn-dphpforms-delete-record').attr('data-record-id');
-                    $.get( "../managers/dphpforms/dphpforms_delete_record.php?record_id="+record_id, function( data ) {
-                        var response = data;
-                        if(response['status'] == 0){
-                            swal(
-                                {title:'Información',
-                                text: response['message'],
-                                type: 'success'},
-                                function(){
-                                    $('#modal_v2_edit_peer_tracking').fadeOut(300);
-                                    $('#dphpforms-peer-record-' + record_id).remove();
+
+                    swal({
+                        title: 'Confirmación',
+                        text: "Está eliminando este registro, ¿desea continuar?",
+                        type: 'warning',
+                        showCancelButton: true,
+                        confirmButtonText: 'Sí, Eliminar!'
+                      }, function(isConfirm) {
+                        if (isConfirm) {
+                            var record_id = $('.btn-dphpforms-delete-record').attr('data-record-id');
+                            $.get( "../managers/dphpforms/dphpforms_delete_record.php?record_id="+record_id, function( data ) {
+                                var response = data;
+                                if(response['status'] == 0){
+                                    swal(
+                                        {title:'Información',
+                                        text: 'Eliminado',
+                                        type: 'success'},
+                                        function(){
+                                            $('#modal_v2_edit_peer_tracking').fadeOut(300);
+                                            $('#dphpforms-peer-record-' + record_id).remove();
+                                        }
+                                    );
+                                }else if(response['status'] == -1){
+                                    swal(
+                                        'Error!',
+                                        response['message'],
+                                        'error'
+                                    );
                                 }
-                            );
-                        }else if(response['status'] == -1){
-                            swal(
-                                'Error!',
-                                response['message'],
-                                'error'
-                            );
+                            });
                         }
-                    });
-                     
+                      });
+                    
                 });
 
                 
