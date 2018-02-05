@@ -7,7 +7,7 @@
 /**
  * @module block_ases/usermanagement_main
  */
-define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables', 'block_ases/sweetalert', 'block_ases/select2'], function($, bootstrap, datatablesnet, sweetalert, select2) {
+define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables', 'block_ases/sweetalert', 'block_ases/select2'], function($, bootstrap, datatables, sweetalert, select2) {
 
     var students;
 
