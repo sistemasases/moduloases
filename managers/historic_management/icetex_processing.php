@@ -176,7 +176,16 @@ if (isset($_FILES['file'])) {
 
            } else {
                throw new MyException('La columna con el campo monto_estudiante es obligatoria');
-           }           
+           }
+           
+           $has_credit_note = false;
+            //validate nota_credito
+            if ($associativeTitles['nota_credito'] != null) {
+                $credit_note = $data[$associativeTitles['nota_credito']];
+                if ($credit_note != "" and $credit_note != 'undefined') {
+                    $has_credit_note = true;
+                }
+            }
 
            //FINALIZACION DE VALIDACIONES. CARGA O ACTUALIZACIÓN
            if (!$isValidRow) {
@@ -193,7 +202,16 @@ if (isset($_FILES['file'])) {
                    array_push($wrong_rows, $data);
                    $lc_wrongFile++;
                } else {
-                   array_push($success_rows, $data);                               
+                   $id_resolution = $result;
+                   array_push($success_rows, $data);
+
+                   if ($has_credit_note) {
+                    if (!update_resolution_credit_note($id_resolution, $credit_note)) {
+                        array_push($detail_erros, [$line_count, $lc_wrongFile, 'Error al nota crédito', 'Error Servidor', 'Error del server registrando la nota crédito']);
+                        array_push($wrong_rows, $data);
+                        $lc_wrongFile++;
+                    }
+                }
                }
            }
 
