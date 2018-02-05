@@ -1,166 +1,12 @@
 <?php
 require_once(dirname(__FILE__). '/../../../../config.php');
-/*
-PENDIENTE PARA MOVERSE A LA DOCUMENTACIÓN
-$formulario = '{
-    "datos_formulario":{
-        "nombre":"Formulario JSON",
-        "descripcion":"Primer formulario escrito en JSON para pruebas de registro",
-        "method":"POST",
-        "action":"procesador_formularios.php",
-        "enctype":null
-    },
-    "preguntas":[
-        {
-            "id_temporal":"cmp_0",
-            "enunciado":"Nombre(s)",
-            "tipo_campo":"TEXTFIELD",
-            "opciones_campo":"",
-            "atributos_campo":{"placeholder":"Nombre", "type":"text"},
-            "permisos_campo":[{ "rol":0, "permisos":["lectura", "escritura"] }]
-        },
-        {
-            "id_temporal":"cmp_1",
-            "enunciado":"Apellidos",
-            "tipo_campo":"TEXTFIELD",
-            "opciones_campo":"",
-            "atributos_campo":{"placeholder":"Apellido"},
-            "permisos_campo":[{ "rol":0, "permisos":["lectura", "escritura"] }]
-        },
-        {
-            "id_temporal":"cmp_2",
-            "enunciado":"Contraseña",
-            "tipo_campo":"TEXTFIELD",
-            "opciones_campo":"",
-            "atributos_campo":{"type":"password", "placeholder":"*****"},
-            "permisos_campo":[{ "rol":0, "permisos":["lectura", "escritura"] }]
-        },
-        {
-            "id_temporal":"cmp_3",
-            "enunciado":"Género",
-            "tipo_campo":"RADIOBUTTON",
-            "opciones_campo":[
-                "Masculino",
-                "Femenino"
-            ],
-            "atributos_campo":"",
-            "permisos_campo":[{ "rol":0, "permisos":["lectura", "escritura"] }]
-        },
-        {
-            "id_temporal":"cmp_4",
-            "enunciado":"Permisos",
-            "tipo_campo":"CHECKBOX",
-            "opciones_campo":[
-                "Lectura",
-                "Escritura"
-            ],
-            "atributos_campo":"",
-            "permisos_campo":[{ "rol":0, "permisos":["lectura", "escritura"] }]
-        },
-        {
-            "id_temporal":"cmp_5",
-            "enunciado":"¿Registra BIO?",
-            "tipo_campo":"CHECKBOX",
-            "opciones_campo":[
-                "Sí"
-            ],
-            "atributos_campo":"",
-            "permisos_campo":[{ "rol":0, "permisos":["lectura", "escritura"] }]
-        },
-        {
-            "id_temporal":"cmp_6",
-            "enunciado":"BIO",
-            "tipo_campo":"TEXTAREA",
-            "opciones_campo":"",
-            "atributos_campo":{"placeholder":"Biografía"},
-            "permisos_campo":[{ "rol":0, "permisos":["lectura", "escritura"] }]
-        },
-        {
-            "id_temporal":"cmp_7",
-            "enunciado":"Edad",
-            "tipo_campo":"TEXTFIELD",
-            "opciones_campo":"",
-            "atributos_campo":{"placeholder":"Edad", "type":"number"},
-            "permisos_campo":[{ "rol":0, "permisos":["lectura", "escritura"] }]
-        },
-        {
-            "id_temporal":"cmp_8",
-            "enunciado":"Email",
-            "tipo_campo":"TEXTFIELD",
-            "opciones_campo":"",
-            "atributos_campo":{"placeholder":"Correo electrónico", "type":"email"},
-            "permisos_campo":[{ "rol":0, "permisos":["lectura", "escritura"] }]
-        },
-        {
-            "id_temporal":"cmp_9",
-            "enunciado":"Correo de recuperación",
-            "tipo_campo":"TEXTFIELD",
-            "opciones_campo":"",
-            "atributos_campo":{"placeholder":"example@domain.com", "type":"email"},
-            "permisos_campo":[{ "rol":0, "permisos":["lectura", "escritura"] }]
-        },
-        {
-            "id_temporal":"cmp_10",
-            "enunciado":"Escriba OSO",
-            "tipo_campo":"TEXTFIELD",
-            "opciones_campo":"",
-            "atributos_campo":{"placeholder":"Verificación", "type":"text"},
-            "permisos_campo":[{ "rol":0, "permisos":["lectura", "escritura"] }]
-        },
-        {
-            "id_temporal":"cmp_11",
-            "enunciado":"Repita la contraseña",
-            "tipo_campo":"TEXTFIELD",
-            "opciones_campo":"",
-            "atributos_campo":{"type":"password", "placeholder":"*****"},
-            "permisos_campo":[{ "rol":0, "permisos":["lectura", "escritura"] }]
-        },
-        {
-            "id_temporal":"cmp_12",
-            "enunciado":"Escriba un número mayor a su edad",
-            "tipo_campo":"TEXTFIELD",
-            "opciones_campo":"",
-            "atributos_campo":{"placeholder":"Verificación", "type":"number"},
-            "permisos_campo":[{ "rol":0, "permisos":["lectura", "escritura"] }]
-        }
-    ],
-    "reglas":[
-        {
-            "id_temporal_campo_a":"cmp_0",
-            "id_temporal_campo_b":"cmp_2",
-            "regla":"DIFFERENT"
-        },
-        {
-            "id_temporal_campo_a":"cmp_6",
-            "id_temporal_campo_b":"cmp_5",
-            "regla":"BOUND"
-        },
-        {
-            "id_temporal_campo_a":"cmp_8",
-            "id_temporal_campo_b":"cmp_9",
-            "regla":"EQUAL"
-        },
-        {
-            "id_temporal_campo_a":"cmp_11",
-            "id_temporal_campo_b":"cmp_2",
-            "regla":"EQUAL"
-        },
-        {
-            "id_temporal_campo_a":"cmp_12",
-            "id_temporal_campo_b":"cmp_7",
-            "regla":">"
-        },
-        {
-            "id_temporal_campo_a":"cmp_7",
-            "id_temporal_campo_b":"cmp_12",
-            "regla":"<"
-        }
-    ]}';*/
+require_once('dphpforms_form_updater.php');
+
 
 $form = json_decode(file_get_contents("php://input"));
 
-/*
-if(!$form){
+
+/*if(!$form){
     echo json_encode(
         array(
             'id_formulario' => '-1',
@@ -182,12 +28,11 @@ function dphpforms_store_form($form_JSON){
         'descripcion' => $json_obj_form->{'datos_formulario'}->{'descripcion'},
         'method' => $json_obj_form->{'datos_formulario'}->{'method'},
         'action' => $json_obj_form->{'datos_formulario'}->{'action'},
-        'enctype' => $json_obj_form->{'datos_formulario'}->{'enctype'}
+        'enctype' => $json_obj_form->{'datos_formulario'}->{'enctype'},
+        'alias' => $json_obj_form->{'datos_formulario'}->{'alias'}
     );
 
     $form_db_id = dphpforms_store_form_details($form_details);
-
-    
 
     $identifiers_preguntas = array();
     foreach ($json_obj_form->{'preguntas'} as &$pregunta) {
@@ -219,6 +64,14 @@ function dphpforms_store_form($form_JSON){
         );
     }
 
+    if(property_exists($json_obj_form, 'campos_busqueda')){
+        dphpforms_store_preg_alias($identifiers_form_preguntas, $json_obj_form->{'campos_busqueda'});
+    }
+
+    if(property_exists($json_obj_form, 'actualizador_orden')){
+        dphpforms_update_pregunta_position_new_form($identifiers_form_preguntas, $json_obj_form->{'actualizador_orden'});
+    }
+    
 
     $identifiers_reglas = array();
     if(property_exists($json_obj_form, 'reglas')){
@@ -275,6 +128,7 @@ function dphpforms_store_form_details($form_details){
     $obj_form_details->method = $form_details['method'];
     $obj_form_details->action = $form_details['action'];
     $obj_form_details->enctype = $form_details['enctype'];
+    $obj_form_details->alias = $form_details['alias'];
 
     $form_id = $DB->insert_record('talentospilos_df_formularios', $obj_form_details, $returnid=true, $bulk=false) ;
     return $form_id;
@@ -357,19 +211,19 @@ function dphpforms_store_form_regla($form_id, $text_rule, $identifier_pregunta_A
 
     $identifier_regla = null;
 
-    $sql = "SELECT * from {talentospilos_df_reglas}";
-    $result = $DB->get_records_sql($sql);
-    $result = (array) $result;
+    $text_rule_ = $text_rule;
 
-    if(count($result) > 0){
-        for($i = 1; $i < count($result); $i++){
-            $row = $result[$i];
-            if($row->regla == $text_rule){
-                $identifier_regla = $row->id;
-                break;
-            }
-        }
+    if($text_rule_ == 'LESS_THAN'){
+        $text_rule_ = "<";
     }
+
+    if($text_rule_ == 'GREATER_THAN'){
+        $text_rule_ = ">";
+    }
+
+    $sql = "SELECT * from {talentospilos_df_reglas} WHERE regla = '".$text_rule_."'";
+    $result = $DB->get_record_sql($sql);
+    $identifier_regla = $result->id;
 
     $obj_regla_form_pregunta = new stdClass();
     $obj_regla_form_pregunta->id_formulario         = $form_id;
@@ -391,10 +245,8 @@ function dphpforms_store_form_pregunta_permits($form_id_pregunta, $permits){
     $obj_permisos_formulario_pregunta->id_formulario_pregunta = $form_id_pregunta;
     $obj_permisos_formulario_pregunta->permisos = $permits;
 
-    //echo ' INFO: FORM ID PREGUNTA ' . $form_id_pregunta . ' PERMISOS ' . $permits;
-    //print_r($obj_permisos_formulario_pregunta);
     $identifier_permission = $DB->insert_record('talentospilos_df_per_form_pr', $obj_permisos_formulario_pregunta, $returnid=true, $bulk=false);
-    //echo ' ID_PERMISO:::::: ' . $identifier_permission . ' :::::::';
+ 
     return $identifier_permission;
 }
 
@@ -403,14 +255,8 @@ function dphpforms_store_form_disparadores($form_id, $disparadores, $identifiers
     global $DB;
     $disparadores_string = json_encode($disparadores);
     foreach ($identifiers_form_preguntas as &$value) {
-        //echo 'REEMPLAZO DE'  . $value['idPreguntaTemporal'] . ' CON ' . $value['idRelacionFormPreg'] . ' <::::';
         $disparadores_string = str_replace('"'.$value['idPreguntaTemporal'].'"', '"'.$value['idRelacionFormPreg'].'"', $disparadores_string);
-        if($value['idPreguntaTemporal'] == 'cmp_17'){
-            //echo '>' . $value['idPreguntaTemporal'] . 'NUEVO CAMPO ::::::::' . $value['idRelacionFormPreg'];
-            //echo $disparadores_string;
-        }
     }
-    //echo $disparadores_string;
 
 
     $obj_disparadores_permisos_formulario_diligenciado = new stdClass();
@@ -419,7 +265,44 @@ function dphpforms_store_form_disparadores($form_id, $disparadores, $identifiers
 
     $identifier_disparador = $DB->insert_record('talentospilos_df_disp_fordil', $obj_disparadores_permisos_formulario_diligenciado, $returnid=true, $bulk=false);
     return $identifier_disparador;
-    
+}
+
+function dphpforms_store_preg_alias($identifiers_form_preguntas, $alias){
+
+    global $DB;
+
+    $alias_string = json_encode($alias);
+
+    foreach ($identifiers_form_preguntas as &$value) {
+        $alias_string = str_replace('"'.$value['idPreguntaTemporal'].'"', '"'.$value['idRelacionFormPreg'].'"', $alias_string);
+    }
+
+    $json_alias = json_decode($alias_string);
+
+    foreach ($json_alias as &$value) {
+        
+        $obj_alias = new stdClass();
+        $obj_alias->id_pregunta = $value->{'id_campo'};
+        $obj_alias->alias = $value->{'alias'};
+
+        $DB->insert_record('talentospilos_df_alias', $obj_alias, $returnid=true, $bulk=false);
+    }
+
+}
+
+function dphpforms_update_pregunta_position_new_form($identifiers_form_preguntas, $update_json){
+
+    $updated_info = json_encode($update_json);
+
+    foreach ($identifiers_form_preguntas as &$value) {
+        $updated_info = str_replace('"'.$value['idPreguntaTemporal'].'"', '"'.$value['idRelacionFormPreg'].'"', $updated_info);
+    }
+
+    $updated_info = json_decode($updated_info);
+
+    foreach ($updated_info as &$value) {
+        update_pregunta_position($value->{'id_temporal'}, (int) $value->{'nueva_posicion'});
+    }
 }
 
 ?>

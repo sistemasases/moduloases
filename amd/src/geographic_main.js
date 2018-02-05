@@ -44,11 +44,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
 
             });
 
-            }
-        }
-
-
-    /**
+            /**
      * @method load_geographic_info
      * @desc Loads all geographic info of a student given his id. Current processing on geographic_serverproc.php
      * @param {id} id_ases ASES student id
@@ -122,5 +118,11 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
         });
 
     }
+
+            }
+        }
+
+
+    
 
 })

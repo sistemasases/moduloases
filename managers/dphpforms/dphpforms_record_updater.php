@@ -2,6 +2,7 @@
  
     require_once(dirname(__FILE__). '/../../../../config.php');
 
+    //$id_completed_form -> form_id
     function dphpforms_generate_html_updater($id_completed_form, $rol_, $record_id_){
 
         global $DB;
@@ -16,6 +17,16 @@
             $html = $html .  "Error: variable reg ausente.";
             return $html;
         }
+
+        if(!is_numeric($id_completed_form)){
+            $sql_alias = "SELECT id FROM {talentospilos_df_formularios} WHERE alias = '$id_completed_form' AND estado = 1";
+            $form_record = $DB->get_record_sql($sql_alias);
+            if($form_record){
+                $FORM_ID = $form_record->id;
+            }
+        }
+
+        
         
         $sql = '
         
@@ -74,10 +85,10 @@
         $html = $html .  '<form id="'. $form_name_formatted .'" method="'. $row->{'method'} .'" action="'. $row->{'action'} .'" class="dphpforms dphpforms-record col-xs-12 col-sm-12 col-md-12 col-lg-12" style="margin-bottom:0.7em">' ;
         $html = $html .  '<h1>'.$form_name.'</h1><hr style="border-color:red;">';
         $html = $html .  '<input name="id" value="'.$row->{'mod_id_formulario'}.'" style="display:none;">';
-        $html = $html .  '<input name="id_monitor" value="" style="display:none;">';//Pendientes para eliminación
-        $html = $html .  '<input name="id_estudiante" value="" style="display:none;">';//Pendientes para eliminación
+        $html = $html .  '<input name="id_monitor_x_obsolete" value="" style="display:none;">';//Pendientes para eliminación
+        $html = $html .  '<input name="id_estudiante_x_obsolete" value="" style="display:none;">';//Pendientes para eliminación
         //Dispara la actualización
-        $html = $html .  '<input name="id_registro" value="'.$RECORD_ID.'" style="display:none;">';
+        $html = $html .  '<input id="dphpforms_record_id" name="id_registro" value="'.$RECORD_ID.'" style="display:none;">';
         //Fin del disparador de actualización
 
         $sql_respuestas = '
@@ -177,6 +188,7 @@
                         $field_attr_maxlength = '';
                         $field_attr_inputclass = '';
                         $field_attr_required = '';
+                        $field_attr_local_alias = '';
 
                         if(property_exists($atributos, 'class')){
                             $field_attr_class = $atributos->{'class'};
@@ -207,32 +219,36 @@
                             }
                         }
 
+                        if(property_exists($atributos, 'local_alias')){
+                            $field_attr_local_alias = $atributos->{'local_alias'};
+                        }
+
                         if($campo == 'TEXTFIELD'){
-                            $html = $html .  '<div class="div-'.$row->{'mod_id_formulario_pregunta'}.' '.$field_attr_class.'" >' . $enunciado . ':<br>';
+                            $html = $html .  '<div class="div-'.$row->{'mod_id_formulario_pregunta'}.' '.$field_attr_class.' '.$field_attr_local_alias.'" >' . $enunciado . ':<br>';
                             $html = $html .  ' <input id="'.$row->{'mod_id_formulario_pregunta'}.'" class="form-control ' . $field_attr_inputclass . '" type="'.$field_attr_type.'" placeholder="'.$field_attr_placeholder.'" name="'.$row->{'mod_id_formulario_pregunta'}.'" value="'.$valor.'" maxlength="'.$field_attr_maxlength.'" '.$enabled.' '.$field_attr_required.'><br>' . "\n";
                             $html = $html .  '</div>';
                         }
 
                         if($campo == 'TEXTAREA'){
-                            $html = $html .  '<div class="div-'.$row->{'mod_id_formulario_pregunta'}.' '.$field_attr_class.'" >' . $enunciado . ':<br>';
+                            $html = $html .  '<div class="div-'.$row->{'mod_id_formulario_pregunta'}.' '.$field_attr_class.' '.$field_attr_local_alias.'" >' . $enunciado . ':<br>';
                             $html = $html .  ' <textarea id="'.$row->{'mod_id_formulario_pregunta'}.'" class="form-control ' . $field_attr_inputclass . '" name="'. $row->{'mod_id_formulario_pregunta'} .'" '.$enabled.' maxlength="'.$field_attr_maxlength.'" '.$field_attr_required.'>'.$valor.'</textarea><br>' . "\n";
                             $html = $html .  '</div>';
                         }
 
                         if($campo == 'DATE'){
-                            $html = $html .  '<div class="div-'.$row->{'mod_id_formulario_pregunta'}.' '.$field_attr_class.'" >' . $enunciado . ':<br>';
+                            $html = $html .  '<div class="div-'.$row->{'mod_id_formulario_pregunta'}.' '.$field_attr_class.' '.$field_attr_local_alias.'" >' . $enunciado . ':<br>';
                             $html = $html .  ' <input id="'.$row->{'mod_id_formulario_pregunta'}.'" class="form-control ' . $field_attr_inputclass . '" type="date" name="'.$row->{'mod_id_formulario_pregunta'}.'" value="'.$valor.'" '.$enabled.' '.$field_attr_required.'><br>' . "\n";
                             $html = $html .  '</div>';
                         }
                         
                         if($campo == 'DATETIME'){
-                            $html = $html .  '<div class="div-'.$row->{'mod_id_formulario_pregunta'}.' '.$field_attr_class.'" >' . $enunciado . ':<br>';
+                            $html = $html .  '<div class="div-'.$row->{'mod_id_formulario_pregunta'}.' '.$field_attr_class.' '.$field_attr_local_alias.'" >' . $enunciado . ':<br>';
                             $html = $html .  ' <input id="'.$row->{'mod_id_formulario_pregunta'}.'" class="form-control ' . $field_attr_inputclass . '" type="datetime-local" name="'.$row->{'mod_id_formulario_pregunta'}.'" value="'.$valor.'" '.$enabled.' '.$field_attr_required.'><br>' . "\n";
                             $html = $html .  '</div>';
                         }
 
                         if($campo == 'TIME'){
-                            $html = $html .  '<div class="div-'.$row->{'mod_id_formulario_pregunta'}.' '.$field_attr_class.'" >' . $enunciado . ':<br>';
+                            $html = $html .  '<div class="div-'.$row->{'mod_id_formulario_pregunta'}.' '.$field_attr_class.' '.$field_attr_local_alias.'" >' . $enunciado . ':<br>';
                             $html = $html .  ' <input id="'.$row->{'mod_id_formulario_pregunta'}.'" class="form-control ' . $field_attr_inputclass . '" type="time" name="'.$row->{'mod_id_formulario_pregunta'}.'" value="'.$valor.'" '.$enabled.' '.$field_attr_required.'><br>' . "\n";
                             $html = $html .  '</div>';
                         }
@@ -242,7 +258,7 @@
                             $array_opciones = (array)$opciones;
                             $number_opciones = count($array_opciones);
                             
-                            $html = $html .  '<div class="div-'.$row->{'mod_id_formulario_pregunta'}.' '.$field_attr_class.'" >';
+                            $html = $html .  '<div class="div-'.$row->{'mod_id_formulario_pregunta'}.' '.$field_attr_class.' '.$field_attr_local_alias.'" >';
                             if($enunciado){
                                 $html = $html . '<label>'.$enunciado.'</label>';
                             }
@@ -279,16 +295,20 @@
                             $number_opciones = count($array_opciones);
                             $checked = null;
                             $valor_marcado = null;
-                            if($valor === "0"){
-                                $checked = 'checked';
-                                $valor_marcado = "-1";
-                            }
-                            if($valor === "-1"){
-                                $checked = '';
-                                $valor_marcado = "-1";
-                            }
 
-                            $html = $html .  '<div class="div-'.$row->{'mod_id_formulario_pregunta'}.' '.$field_attr_class.'" >';
+                            if(count($opciones) == 1){
+                                if($valor === "0"){
+                                    $checked = 'checked';
+                                    $valor_marcado = "-1";
+                                }
+                                if($valor === "-1"){
+                                    $checked = '';
+                                    $valor_marcado = "-1";
+                                }
+                            }
+                            
+
+                            $html = $html .  '<div class="div-'.$row->{'mod_id_formulario_pregunta'}.' '.$field_attr_class.' '.$field_attr_local_alias.'" >';
                             if($enunciado){
                                 $html = $html . '<label>'.$enunciado.'</label>';
                             }
@@ -297,16 +317,40 @@
                             if(property_exists($atributos, 'checkclass')){
                                 $field_attr_checkclass = $atributos->{'checkclass'};
                             }
+
+                            $name_checkbox = $row->{'mod_id_formulario_pregunta'};
+                            if($number_opciones > 1){
+                                $name_checkbox = $row->{'mod_id_formulario_pregunta'} . '[]';
+                            }
                             
                             for($x = 0; $x < $number_opciones; $x++){
+
                                 $opcion = (array) $array_opciones[$x];
-                                $html = $html .  '
-                                    <div id="'.$row->{'mod_id_formulario_pregunta'}.'" name="'.$row->{'mod_id_formulario_pregunta'}.'" class="checkbox ' . $field_attr_checkclass . '">
-                                        <input type="hidden" name="'.$row->{'mod_id_formulario_pregunta'}.'" value="'.$valor_marcado.'" '.$enabled.'>
-                                        <label><input id="'.$row->{'mod_id_formulario_pregunta'}.'" class="' . $field_attr_inputclass . '" type="checkbox" name="'.$row->{'mod_id_formulario_pregunta'}.'" value="'.$opcion['valor'].'" '.$enabled.' '.$checked.'>'.$opcion['enunciado'].'</label>
-                                        
-                                    </div>
-                                ' . "\n";
+                                if($number_opciones > 1){
+                                    $valores_marcados = json_decode($valor);
+                                    $checked = '';
+                                    $valor_checked = $opcion['identificador'];
+                                    for($y = 0; $y < count($valores_marcados); $y++ ){
+                                        if($valores_marcados[$y] == $opcion['identificador'] ){
+                                            $checked = 'checked';
+                                            $valor_marcado = $opcion['identificador'];
+                                            break;
+                                        }
+                                    }
+                                }
+                                
+                                $html = $html . '<div id="'.$row->{'mod_id_formulario_pregunta'}.'"  class="checkbox ' . $field_attr_checkclass . '">';
+                                if($number_opciones == 1){
+                                    $html = $html . '   <input type="hidden" name="'.$name_checkbox.'" value="'.$valor_marcado.'" '.$enabled.'>';
+                                }
+                                if($number_opciones == 1){
+                                    $html = $html . '   <label><input id="'.$row->{'mod_id_formulario_pregunta'}.'" class="' . $field_attr_inputclass . '" type="checkbox" name="'.$name_checkbox.'" value="'.$opcion['valor'].'" '.$enabled.' '.$checked.'>'.$opcion['enunciado'].'</label>';
+                                }else{
+                                    $html = $html . '   <label><input class="' . $row->{'mod_id_formulario_pregunta'} . ' ' . $field_attr_inputclass . '" type="checkbox" name="'.$name_checkbox.'" value="'.$valor_checked.'" '.$enabled.' '.$checked.'>'.$opcion['enunciado'].'</label>';
+                                }
+                               
+                                $html = $html . '</div>';
+                                $html = $html . '' . "\n";
                             }
                             $html = $html . '</div>';
 
@@ -320,7 +364,7 @@
             }
 
         }
-        $html = $html .  ' <hr style="border-color:red"><button type="submit" class="btn btn-sm btn-danger btn-dphpforms-univalle">Registrar</button>' . "\n";
+        $html = $html .  ' <hr style="border-color:red"><button type="submit" class="btn btn-sm btn-danger btn-dphpforms-univalle">Actualizar</button> <a href="javascript:void(0);" data-record-id="'.$RECORD_ID.'" class="btn btn-sm btn-danger btn-dphpforms-univalle btn-dphpforms-delete-record">Eliminar</a>' . "\n";
         $html = $html .  ' </form>' . "\n";
 
         //Manejo de disparadores
