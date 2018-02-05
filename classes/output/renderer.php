@@ -157,4 +157,9 @@ class renderer extends plugin_renderer_base {
         $data = $page->export_for_template($this);
         return parent::render_from_template('block_ases/historical_icetex_reports', $data);
     }
+
+    public function render_dphpforms_form_editor_page($page){
+        $data = $page->export_for_template($this);
+        return parent::render_from_template('block_ases/dphpforms_form_editor', $data);
+    }
 }
