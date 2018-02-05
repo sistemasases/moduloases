@@ -2,11 +2,12 @@
  * sweetalert2 v6.6.0
  * Released under the MIT License.
  */
-(function (global, factory) {
-	typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
-	typeof define === 'function' && define.amd ? define(factory) :
-	(global.Sweetalert2 = factory());
-}(this, (function () { 'use strict';
+'use strict';
+define( ['jquery'], function ( $ ) {
+  return factory( $, window, document );
+} );
+
+function factory( $, window, document, undefined ){
 
 var defaultParams = {
   title: '',
@@ -1589,5 +1590,5 @@ sweetAlert.default = sweetAlert;
 
 return sweetAlert;
 
-})));
+};
 if (window.Sweetalert2)  window.swal2 = window.Sweetalert2;

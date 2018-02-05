@@ -13,16 +13,23 @@
     }
     
     $form = array(
-        'id' => $_POST['id'],
-        'id_monitor' => $_POST['id_monitor'],
-        'id_estudiante' => $_POST['id_estudiante']
+        'id' => $_POST['id']
+        //'id_monitor' => $_POST['id_monitor'],
+        //'id_estudiante' => $_POST['id_estudiante']
     );
+
+    //echo json_encode($_POST);
+    //die();
 
     $respuestas = array();
 
     foreach ($_POST as $key => $value) {
         if(is_numeric($key)){
             $elemento = $value;
+            if(is_array($value)){
+                $elemento = json_encode($elemento);
+            }
+
             $respuesta = array(
                 'id' => (string) $key,
                 'valor' => (string) $elemento
@@ -369,8 +376,8 @@ function dphpforms_store_form_respuesta($form_detail){
 
     $obj_form_respuesta = new stdClass();
     $obj_form_respuesta->id_formulario = $form_detail->{'id'};
-    $obj_form_respuesta->id_monitor = $form_detail->{'id_monitor'};
-    $obj_form_respuesta->id_estudiante = $form_detail->{'id_estudiante'};
+    $obj_form_respuesta->id_monitor = '-1';
+    $obj_form_respuesta->id_estudiante = '-1';
 
     $form_respuesta_identifier = $DB->insert_record('talentospilos_df_form_resp', $obj_form_respuesta, $returnid=true, $bulk=false);
 
@@ -513,6 +520,27 @@ function dphpforms_reglas_validator($respuestas, $reglas){
                 //echo "REGLA " . $regla . " CUMPLIDA\n";
             }
         }elseif($regla == '>'){
+
+            /* Validation for time XX:XX */
+            
+            if((count($respuesta_a->{'valor'}) == 5)&&(count($respuesta_b->{'valor'}) == 5)){
+                    if(($respuesta_a->{'valor'}[2] == ':')&&($respuesta_b->{'valor'}[2] == ':')){
+                        if(
+                            (is_numeric(substr($respuesta_a->{'valor'}, 0, 1)))&&(is_numeric(substr($respuesta_a->{'valor'}, 3, 4)))&&
+                            (is_numeric(substr($respuesta_b->{'valor'}, 0, 1)))&&(is_numeric(substr($respuesta_b->{'valor'}, 3, 4)))
+                            ){
+                                $time_a = strtotime($respuesta_a->{'valor'});
+                                $time_b = strtotime($respuesta_b->{'valor'});
+                                if($time_a > $time_b){
+                                    $satisfied_reglas = true;
+                                }else{
+                                    $satisfied_reglas = false;
+                                    return false;
+                                    break;
+                                }
+                        }
+                    }
+            }
             
             if($respuesta_a->{'valor'} < $respuesta_b->{'valor'}){
                 $satisfied_reglas = false;
@@ -525,7 +553,29 @@ function dphpforms_reglas_validator($respuestas, $reglas){
                 $satisfied_reglas = true;
                 //echo "REGLA " . $regla . " CUMPLIDA\n";
             }
+
         }elseif($regla == '<'){
+
+            /* Validation for time XX:XX */
+            
+            if((count($respuesta_a->{'valor'}) == 5)&&(count($respuesta_b->{'valor'}) == 5)){
+                    if(($respuesta_a->{'valor'}[2] == ':')&&($respuesta_b->{'valor'}[2] == ':')){
+                        if(
+                            (is_numeric(substr($respuesta_a->{'valor'}, 0, 1)))&&(is_numeric(substr($respuesta_a->{'valor'}, 3, 4)))&&
+                            (is_numeric(substr($respuesta_b->{'valor'}, 0, 1)))&&(is_numeric(substr($respuesta_b->{'valor'}, 3, 4)))
+                            ){
+                                $time_a = strtotime($respuesta_a->{'valor'});
+                                $time_b = strtotime($respuesta_b->{'valor'});
+                                if($time_a < $time_b){
+                                    $satisfied_reglas = true;
+                                }else{
+                                    $satisfied_reglas = false;
+                                    return false;
+                                    break;
+                                }
+                        }
+                    }
+            }
             
             if($respuesta_a->{'valor'} > $respuesta_b->{'valor'}){
                 $satisfied_reglas = false;

@@ -48,11 +48,91 @@ pre, code {
 }
 .btn-dphpforms-builder, .btn-dphpforms-univalle{
     font-weight: bold;
+    background-color: #d51b23;
+    border-radius: 0px;
 }
+
+.btn-card{
+    border-radius: 0px;
+    width: 100%;
+    background-color: #E5E5E5;
+    color: #333;
+    text-align: left;
+    border-color: #ddd !important;
+}
+
+.btn-card:hover{
+    color: white;
+    font-weight: bold;
+    background-color: #D51B23;
+}
+
+.peer-tracking-record{
+    color: #333;
+    border: 1px solid #ddd;
+    padding: 0.4em;
+    font-size: 1.1em;
+    margin-bottom: 0.4em;
+    background-color: #f5f5f5;
+    border-radius: 3px;
+}
+
+
+.peer-tracking-record:first-child{
+    margin-top: 20px;
+}
+
+.peer-tracking-record:last-child{
+    margin-bottom: 20px;
+}
+
+.peer-tracking-record:hover{
+    cursor: pointer;
+    color: #000;
+    border-color: #333;
+    box-shadow: 0px 0px 15px -3px #888888;
+}
+
+.card_v2{
+    padding: 0px !important;
+    border-width: 0px;
+    margin: -15px 0px 0px 0;
+}
+
+.card-header_v2{
+    padding: 0px;
+}
+
+.collapse_v2{
+    padding: 0px 20px 0px 20px;
+    background-color: white;
+}
+
+.well_v2{
+    padding-left: 0px;
+    padding-right: 0px;
+}
+
+.mymodal-body_v2{
+    margin-top: 0px;
+}
+
 
 /*Definición de los estilos para los formularios que dependen de dphpforms*/
 
 /*Inicio de definición de estilos para el formulario de seguimientos*/
+.limpiar{
+    float: right;
+}
+
+.ajuste_tematicas > .checkbox:nth-child(3){
+    margin-top: 10px;
+}
+
+.ajuste_tematicas > label{
+    width: 100%;
+}
+
 .date_field input{
     display: block;
     width: 100%;
