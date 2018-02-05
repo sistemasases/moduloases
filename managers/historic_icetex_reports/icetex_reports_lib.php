@@ -67,6 +67,7 @@ function get_array_students_with_resolution(){
             $historic->program_status = "INACTIVO";
         }
 
+        $historic->monto_estudiante = "$".$historic->monto_estudiante;
         array_push($array_historics, $historic);
     }
 
@@ -173,6 +174,8 @@ function get_resolutions_for_report(){
             $resolution->nota_credito = "---";
         }
 
+        $resolution->monto_total = "$".$resolution->monto_total;
+
         array_push($resolutions_array, $resolution);
     }
 
@@ -201,6 +204,7 @@ function get_count_active_res_students($cohort){
 
     foreach($counts as $count){
         $count->cohort = $cohort;
+        $count->monto_act_res = "$".$count->monto_act_res;
         array_push($array_count, $count);
     }
 
@@ -228,6 +232,7 @@ function get_count_inactive_res_students($cohort){
 
     foreach($counts as $count){
         $count->cohort = $cohort;
+        $count->monto_inact_res = "$".$count->monto_act_res;
         array_push($array_count, $count);
     }
 
@@ -266,7 +271,7 @@ function get_count_active_no_res_students($cohort){
 
     foreach($counts as $count){
         $count->cohort = $cohort;
-        $count->monto_act_no_res = 0;
+        $count->monto_act_no_res = "$0";
         array_push($array_count, $count);
     }
 
@@ -431,7 +436,7 @@ function get_info_student($student_id){
     
     foreach($students as $student){
         $student->codigo_resolucion = "---";
-        $student->monto_estudiante = 0;
+        $student->monto_estudiante = "$0";
         $student->fecha_cancel = "---";
         $student->program_status = "ACTIVO";
 
