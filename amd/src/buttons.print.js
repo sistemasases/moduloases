@@ -1,4 +1,167 @@
-(function(d){"function"===typeof define&&define.amd?define(["jquery","block_ases/datatables.net","block_ases/datatables.net-buttons"],function(f){return d(f,window,document)}):"object"===typeof exports?module.exports=function(f,b){f||(f=window);if(!b||!b.fn.dataTable)b=require("datatables.net")(f,b).$;b.fn.dataTable.Buttons||require("datatables.net-buttons")(f,b);return d(b,f,f.document)}:d(jQuery,window,document)})(function(d,f,b){var i=d.fn.dataTable,h=b.createElement("a"),m=function(a){h.href=a;a=h.host;-1===a.indexOf("/")&&
-0!==h.pathname.indexOf("/")&&(a+="/");return h.protocol+"//"+a+h.pathname+h.search};i.ext.buttons.print={className:"buttons-print",text:function(a){return a.i18n("buttons.print","Print")},action:function(a,b,h,e){var c=b.buttons.exportData(e.exportOptions),k=function(a,c){for(var b="<tr>",d=0,e=a.length;d<e;d++)b+="<"+c+">"+a[d]+"</"+c+">";return b+"</tr>"},a='<table class="'+b.table().node().className+'">';e.header&&(a+="<thead>"+k(c.header,"th")+"</thead>");for(var a=a+"<tbody>",l=0,i=c.body.length;l<
-i;l++)a+=k(c.body[l],"td");a+="</tbody>";e.footer&&c.footer&&(a+="<tfoot>"+k(c.footer,"th")+"</tfoot>");var g=f.open("",""),c=e.title;"function"===typeof c&&(c=c());-1!==c.indexOf("*")&&(c=c.replace("*",d("title").text()));g.document.close();var j="<title>"+c+"</title>";d("style, link").each(function(){var a=j,b=d(this).clone()[0];"link"===b.nodeName.toLowerCase()&&(b.href=m(b.href));j=a+b.outerHTML});try{g.document.head.innerHTML=j}catch(n){d(g.document.head).html(j)}g.document.body.innerHTML="<h1>"+
-c+"</h1><div>"+("function"===typeof e.message?e.message(b,h,e):e.message)+"</div>"+a;d(g.document.body).addClass("dt-print-view");d("img",g.document.body).each(function(a,b){b.setAttribute("src",m(b.getAttribute("src")))});e.customize&&e.customize(g);setTimeout(function(){e.autoPrint&&(g.print(),g.close())},250)},title:"*",message:"",exportOptions:{},header:!0,footer:!1,autoPrint:!0,customize:null};return i.Buttons});
+/*!
+ * Print button for Buttons and DataTables.
+ * 2016 SpryMedia Ltd - datatables.net/license
+ */
+define( ['jquery', 'block_ases/datatables', 'block_ases/datatables.net-buttons'], function ( $, datatable, datatablebuttons) {
+	return factory( $, window, document );
+});
+
+function factory ( $, window, document, undefined ) {
+    
+    var DataTable = $.fn.dataTable;
+
+
+    var _link = document.createElement( 'a' );
+
+    /**
+     * Clone link and style tags, taking into account the need to change the source
+     * path.
+     *
+     * @param  {node}     el Element to convert
+     */
+    var _styleToAbs = function( el ) {
+        var url;
+        var clone = $(el).clone()[0];
+        var linkHost;
+
+        if ( clone.nodeName.toLowerCase() === 'link' ) {
+            clone.href = _relToAbs( clone.href );
+        }
+
+        return clone.outerHTML;
+    };
+
+    /**
+     * Convert a URL from a relative to an absolute address so it will work
+     * correctly in the popup window which has no base URL.
+     *
+     * @param  {string} href URL
+     */
+    var _relToAbs = function( href ) {
+        // Assign to a link on the original page so the browser will do all the
+        // hard work of figuring out where the file actually is
+        _link.href = href;
+        var linkHost = _link.host;
+
+        // IE doesn't have a trailing slash on the host
+        // Chrome has it on the pathname
+        if ( linkHost.indexOf('/') === -1 && _link.pathname.indexOf('/') !== 0) {
+            linkHost += '/';
+        }
+
+        return _link.protocol+"//"+linkHost+_link.pathname+_link.search;
+    };
+
+
+    DataTable.ext.buttons.print = {
+        className: 'buttons-print',
+
+        text: function ( dt ) {
+            return dt.i18n( 'buttons.print', 'Print' );
+        },
+
+        action: function ( e, dt, button, config ) {
+            var data = dt.buttons.exportData( config.exportOptions );
+            var addRow = function ( d, tag ) {
+                var str = '<tr>';
+
+                for ( var i=0, ien=d.length ; i<ien ; i++ ) {
+                    str += '<'+tag+'>'+d[i]+'</'+tag+'>';
+                }
+
+                return str + '</tr>';
+            };
+
+            // Construct a table for printing
+            var html = '<table class="'+dt.table().node().className+'">';
+
+            if ( config.header ) {
+                html += '<thead>'+ addRow( data.header, 'th' ) +'</thead>';
+            }
+
+            html += '<tbody>';
+            for ( var i=0, ien=data.body.length ; i<ien ; i++ ) {
+                html += addRow( data.body[i], 'td' );
+            }
+            html += '</tbody>';
+
+            if ( config.footer && data.footer ) {
+                html += '<tfoot>'+ addRow( data.footer, 'th' ) +'</tfoot>';
+            }
+
+            // Open a new window for the printable table
+            var win = window.open( '', '' );
+            var title = config.title;
+
+            if ( typeof title === 'function' ) {
+                title = title();
+            }
+
+            if ( title.indexOf( '*' ) !== -1 ) {
+                title= title.replace( '*', $('title').text() );
+            }
+
+            win.document.close();
+
+            // Inject the title and also a copy of the style and link tags from this
+            // document so the table can retain its base styling. Note that we have
+            // to use string manipulation as IE won't allow elements to be created
+            // in the host document and then appended to the new window.
+            var head = '<title>'+title+'</title>';
+            $('style, link').each( function () {
+                head += _styleToAbs( this );
+            } );
+
+            try {
+                win.document.head.innerHTML = head; // Work around for Edge
+            }
+            catch (e) {
+                $(win.document.head).html( head ); // Old IE
+            }
+
+            // Inject the table and other surrounding information
+            win.document.body.innerHTML =
+                '<h1>'+title+'</h1>'+
+                '<div>'+
+                    (typeof config.message === 'function' ?
+                        config.message( dt, button, config ) :
+                        config.message
+                    )+
+                '</div>'+
+                html;
+
+            $(win.document.body).addClass('dt-print-view');
+
+            $('img', win.document.body).each( function ( i, img ) {
+                img.setAttribute( 'src', _relToAbs( img.getAttribute('src') ) );
+            } );
+
+            if ( config.customize ) {
+                config.customize( win );
+            }
+
+            setTimeout( function () {
+                if ( config.autoPrint ) {
+                    win.print(); // blocking - so close will not
+                    win.close(); // execute until this is done
+                }
+            }, 250 );
+        },
+
+        title: '*',
+
+        message: '',
+
+        exportOptions: {},
+
+        header: true,
+
+        footer: false,
+
+        autoPrint: true,
+
+        customize: null
+    };
+
+    return DataTable.Buttons;
+}

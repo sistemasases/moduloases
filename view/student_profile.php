@@ -42,6 +42,8 @@ require_once '../managers/permissions_management/permissions_lib.php';
 require_once '../managers/validate_profile_action.php';
 require_once '../managers/menu_options.php';
 require_once '../managers/dphpforms/dphpforms_forms_core.php';
+require_once '../managers/dphpforms/dphpforms_records_finder.php';
+require_once '../managers/dphpforms/dphpforms_get_record.php';
 include '../lib.php';
 
 global $PAGE;
@@ -184,6 +186,8 @@ if ($student_code != 0) {
     $trainee_object = new stdClass();
     $professional_object = new stdClass();
 
+    $record->id_dphpforms_creado_por = $USER->id;
+
     if(get_assigned_monitor($student_id)){
         $monitor_object = get_assigned_monitor($student_id);
     }
@@ -196,6 +200,7 @@ if ($student_code != 0) {
     
     if ($monitor_object) {
         $record->monitor_fullname = "$monitor_object->firstname $monitor_object->lastname";
+        $record->id_dphpforms_monitor = '-1';
     } else {
         $record->monitor_fullname = "NO REGISTRA";
     }
@@ -387,11 +392,123 @@ if ($student_code != 0) {
     $html_tracking_peer = "";
     $array_peer_trackings = get_tracking_group_by_semester($student_id, 'PARES', null, $blockid);
 
+    $array_peer_trackings_dphpforms = dphpforms_find_records('seguimiento_pares', 'seguimiento_pares_id_estudiante', $student_code, 'DESC');
+    $array_peer_trackings_dphpforms = json_decode($array_peer_trackings_dphpforms);
+    $array_detail_peer_trackings_dphpforms = array();
+    foreach($array_peer_trackings_dphpforms->results as &$peer_trackings_dphpforms){
+        array_push($array_detail_peer_trackings_dphpforms, json_decode(dphpforms_get_record($peer_trackings_dphpforms->id_registro, 'fecha')));
+    }
+
+    $array_tracking_date = array();
+    foreach($array_detail_peer_trackings_dphpforms as &$peer_tracking){
+        foreach ($peer_tracking->record->campos as &$tracking) {
+            if($tracking->local_alias == 'fecha'){
+                array_push($array_tracking_date, strtotime($tracking->respuesta));
+            }
+        }
+    }
+
+    rsort($array_tracking_date);
+
+    $seguimientos_ordenados = new stdClass();
+    $seguimientos_ordenados->index = array();
+    //Inicio de ordenamiento
+    $periodo_a = [1, 2, 3, 4, 5, 6, 7];
+    //periodo_b es el resto de meses;
+    for($x = 0; $x < count($array_tracking_date); $x++){
+        $string_date = $array_tracking_date[$x];
+        $array_tracking_date[$x] = getdate($array_tracking_date[$x]);
+        if(property_exists($seguimientos_ordenados, $array_tracking_date[$x]['year'])){
+            if(in_array($array_tracking_date[$x]['mon'], $periodo_a)){
+                for($y = 0; $y < count($array_detail_peer_trackings_dphpforms); $y++){
+                    if($array_detail_peer_trackings_dphpforms[$y]){
+                        foreach ($array_detail_peer_trackings_dphpforms[$y]->record->campos as &$tracking) {
+                            if($tracking->local_alias == 'fecha'){
+                                if(strtotime($tracking->respuesta) == $string_date ){
+                                    array_push($seguimientos_ordenados->$array_tracking_date[$x]['year']->per_a, $array_detail_peer_trackings_dphpforms[$y]);
+                                    $array_detail_peer_trackings_dphpforms[$y] = null;
+                                    break;
+                                }
+                                
+                            }
+                        }
+                    }
+                }
+            }else{
+                for($y = 0; $y < count($array_detail_peer_trackings_dphpforms); $y++){
+                    if($array_detail_peer_trackings_dphpforms[$y]){
+                        foreach ($array_detail_peer_trackings_dphpforms[$y]->record->campos as &$tracking) {
+                            if($tracking->local_alias == 'fecha'){
+                                if(strtotime($tracking->respuesta) == $string_date ){
+                                    array_push($seguimientos_ordenados->$array_tracking_date[$x]['year']->per_b, $array_detail_peer_trackings_dphpforms[$y]);
+                                    $array_detail_peer_trackings_dphpforms[$y] = null;
+                                    break;
+                                }
+                                
+                            }
+                        }
+                    }
+                }
+            }
+        }else{
+            array_push($seguimientos_ordenados->index ,$array_tracking_date[$x]['year']);
+            $seguimientos_ordenados->$array_tracking_date[$x]['year']->year = $array_tracking_date[$x]['year'];
+            $seguimientos_ordenados->$array_tracking_date[$x]['year']->per_a = array();
+            $seguimientos_ordenados->$array_tracking_date[$x]['year']->per_b = array();
+            if(in_array($array_tracking_date[$x]['mon'], $periodo_a)){
+                for($y = 0; $y < count($array_detail_peer_trackings_dphpforms); $y++){
+                    if($array_detail_peer_trackings_dphpforms[$y]){
+                        foreach ($array_detail_peer_trackings_dphpforms[$y]->record->campos as &$tracking) {
+                            if($tracking->local_alias == 'fecha'){
+                                if(strtotime($tracking->respuesta) == $string_date ){
+                                    array_push($seguimientos_ordenados->$array_tracking_date[$x]['year']->per_a, $array_detail_peer_trackings_dphpforms[$y]);
+                                    $array_detail_peer_trackings_dphpforms[$y] = null;
+                                    break;
+                                }
+                                
+                            }
+                        }
+                    }
+                }
+            }else{
+                for($y = 0; $y < count($array_detail_peer_trackings_dphpforms); $y++){
+                    if($array_detail_peer_trackings_dphpforms[$y]){
+                        foreach ($array_detail_peer_trackings_dphpforms[$y]->record->campos as &$tracking) {
+                            if($tracking->local_alias == 'fecha'){
+                                if(strtotime($tracking->respuesta) == $string_date ){
+                                    array_push($seguimientos_ordenados->$array_tracking_date[$x]['year']->per_b, $array_detail_peer_trackings_dphpforms[$y]);
+                                    $array_detail_peer_trackings_dphpforms[$y] = null;
+                                    break;
+                                }
+                                
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    //Fin de ordenamiento
+    
+    //echo json_encode($seguimientos_ordenados);
+    $seguimientos_array = json_decode(json_encode($seguimientos_ordenados), true);
+    $array_periodos = array();
+    for($x = 0; $x < count($seguimientos_array['index']); $x++){
+        array_push($array_periodos, $seguimientos_array[$seguimientos_array['index'][$x]] );
+    }
+    $record->peer_tracking_v2 = array(
+        'index' => $seguimientos_array['index'],
+        'periodos' => $array_periodos
+    );
+    //print_r(json_encode($record->peer_tracking_v2));
+    
     $enum_risk = array();
     array_push($enum_risk, "");
     array_push($enum_risk, "Bajo");
     array_push($enum_risk, "Medio");
     array_push($enum_risk, "Alto");
+
+    //END V2
 
     if ($array_peer_trackings != null) {
 
@@ -643,7 +760,6 @@ if ($student_code != 0) {
                 $panel .= "<div class='row'>";
                 $panel .= "<div class='col-sm-4 row-buttons-tracking'>";
                 $panel .= "<button type='button' class='btn-primary edit_peer_tracking' id='edit_tracking_" . $tracking->id_seg . "'>Editar seguimiento</button>";
-                $panel .= "<button type='button' class='btn-primary edit_peer_test_tracking' data-record-id='" . $tracking->id_seg . "' id='edit_tracking_test_" . $tracking->id_seg . "'>Editar seguimiento v2</button>";
                 $panel .= "</div>";
                 $panel .= "<div class='col-sm-3 col-sm-offset-5 row-buttons-tracking'>";
                 $panel .= "<button type='button' class='btn-danger delete_peer_tracking col-sm-10' id='delete_tracking_peer_" . $tracking->id_seg . "'>";
@@ -711,7 +827,10 @@ if ($student_code != 0) {
 
     //Pruebas
     $record->form_seguimientos = null;
-    $record->form_seguimientos = dphpforms_render_recorder('93', $rol);
+    $record->form_seguimientos = dphpforms_render_recorder('seguimiento_pares', $rol);
+    if($record->form_seguimientos == ''){
+        $record->form_seguimientos = "<strong><h3>Oops!: No se ha encontrado un formulario con el alias <code>seguimiento_pares</code></h3></strong>";
+    }
 
 } else {
     $record = new stdClass;

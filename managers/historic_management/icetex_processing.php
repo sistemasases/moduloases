@@ -177,24 +177,27 @@ if (isset($_FILES['file'])) {
            } else {
                throw new MyException('La columna con el campo monto_estudiante es obligatoria');
            }           
+           
 
            //FINALIZACION DE VALIDACIONES. CARGA O ACTUALIZACIÓN
            if (!$isValidRow) {
                $lc_wrongFile++;
                array_push($wrong_rows, $data);
                continue;
+
            } else {
 
-               //Actualizar o crear un registro
+               //Crear un registro
                $result = create_historic_icetex($id_estudiante, $id_programa, $id_resolucion, $monto_estudiante);
 
                if (!$result) {
                    array_push($detail_errors, [$line_count, $lc_wrongFile, 'Error al registrar historico', 'Error Servidor', 'Error del server registrando el historico']);
                    array_push($wrong_rows, $data);
                    $lc_wrongFile++;
+
                } else {
-                   array_push($success_rows, $data);                               
-               }
+                   array_push($success_rows, $data);
+                }
            }
 
            $line_count++;
