@@ -7,7 +7,7 @@
 /**
  * @module block_ases/ases_report_main
  */
-define(['jquery', 'block_ases/datatables.net', 'block_ases/buttons.flash', 'block_ases/jszip', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/buttons.html5', 'block_ases/buttons.print', 'block_ases/jqueryui'], function($) {
+define(['jquery', 'block_ases/datatables', 'block_ases/buttons.flash', 'block_ases/jszip', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/buttons.html5', 'block_ases/buttons.print', 'block_ases/jqueryui'], function($, DataTable, flash, jszip, bootstrap, sweetalert, html, print, jqueryui) {
     return {
         init: function() {
             //Control para el botón 'Generar Reporte'
