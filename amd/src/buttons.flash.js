@@ -6,7 +6,7 @@
  * Copyright (c) 2012 Joseph Huckaby
  */
 
-define( ['block_ases/jquery.datatables', 'block_ases/datatables', 'block_ases/datatables.net-buttons'], function ( $ ) {
+define( ['jquery', 'block_ases/datatables', 'block_ases/datatables.net-buttons'], function ($, datatable, datatablebuttons) {
     return factory( $, window, document );
 });
 

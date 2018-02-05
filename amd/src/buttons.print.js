@@ -2,13 +2,12 @@
  * Print button for Buttons and DataTables.
  * 2016 SpryMedia Ltd - datatables.net/license
  */
-
-define( ['block_ases/jquery.datatables', 'block_ases/datatables', 'block_ases/datatables.net-buttons'], function ( $, datatables) {
+define( ['jquery', 'block_ases/datatables', 'block_ases/datatables.net-buttons'], function ( $, datatable, datatablebuttons) {
 	return factory( $, window, document );
 });
 
 function factory ( $, window, document, undefined ) {
-    'use strict';
+    
     var DataTable = $.fn.dataTable;
 
 

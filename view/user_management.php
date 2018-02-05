@@ -49,8 +49,8 @@ require_login($courseid, false);
 $contextcourse = context_course::instance($courseid);
 $contextblock = context_block::instance($blockid);
 $url = new moodle_url("/blocks/ases/view/user_management.php", array(
-	'courseid' => $courseid,
-	'instanceid' => $blockid
+    'courseid' => $courseid,
+    'instanceid' => $blockid
 ));
 
 // Instance is consulted for its registration

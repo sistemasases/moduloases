@@ -279,7 +279,16 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/validator', 'block_ases/sw
             }
 
 
-            function load_attendance_list(list = null, editable = null) {
+            function load_attendance_list(list, editable) {
+
+                if(list === undefined){
+                    list = null;
+                }
+
+                if(editable === undefined){
+                    editable = null;
+                }
+
                 var data = new Array();
                 var parameters = getUrlParams(document.location.search); //metodo definido en chekrole.js
 
