@@ -125,6 +125,7 @@
                         success: function(data) {
                                 var response = JSON.parse(data);
                                 console.log(data);
+                                //return;
                                 //errorCode = -1 InternalError
                                 //            -2 UnfulfilledRules
                                 //             0 AllOkay

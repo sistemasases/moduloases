@@ -140,7 +140,11 @@ pre, code {
     padding-bottom: 2em;
 }
 
-.ajuste_tematicas > .checkbox:nth-child(3){
+.dphpforms-updater > .ajuste_tematicas > .checkbox:nth-child(4){
+    margin-top: 10px;
+}
+
+.dphpforms-response > .ajuste_tematicas > .checkbox:nth-child(3){
     margin-top: 10px;
 }
 

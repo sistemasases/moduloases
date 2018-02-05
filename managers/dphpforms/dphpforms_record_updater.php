@@ -82,7 +82,7 @@
         $form_name_formatted = $form_name_formatted . "_" . $row->{'mod_id_formulario'};
 
 
-        $html = $html .  '<form id="'. $form_name_formatted .'" method="'. $row->{'method'} .'" action="'. $row->{'action'} .'" class="dphpforms dphpforms-record col-xs-12 col-sm-12 col-md-12 col-lg-12" style="margin-bottom:0.7em">' ;
+        $html = $html .  '<form id="'. $form_name_formatted .'" method="'. $row->{'method'} .'" action="'. $row->{'action'} .'" class="dphpforms dphpforms-record dphpforms-updater col-xs-12 col-sm-12 col-md-12 col-lg-12" style="margin-bottom:0.7em">' ;
         $html = $html .  '<h1>'.$form_name.'</h1><hr style="border-color:red;">';
         $html = $html .  '<input name="id" value="'.$row->{'mod_id_formulario'}.'" style="display:none;">';
         $html = $html .  '<input name="id_monitor_x_obsolete" value="" style="display:none;">';//Pendientes para eliminación
@@ -309,6 +309,13 @@
                             
 
                             $html = $html .  '<div class="div-'.$row->{'mod_id_formulario_pregunta'}.' '.$field_attr_class.' '.$field_attr_local_alias.'" >';
+                            
+                            $name_checkbox = $row->{'mod_id_formulario_pregunta'};
+                            if($number_opciones > 1){
+                                $name_checkbox = $row->{'mod_id_formulario_pregunta'} . '[]';
+                                $html = $html . '   <input style="height:0px; display:none" name="'.$row->{'mod_id_formulario_pregunta'}.'" value="-#$%-" '.$enabled.'>';
+                            }
+                            
                             if($enunciado){
                                 $html = $html . '<label>'.$enunciado.'</label>';
                             }
@@ -316,11 +323,6 @@
                             $field_attr_checkclass = '';
                             if(property_exists($atributos, 'checkclass')){
                                 $field_attr_checkclass = $atributos->{'checkclass'};
-                            }
-
-                            $name_checkbox = $row->{'mod_id_formulario_pregunta'};
-                            if($number_opciones > 1){
-                                $name_checkbox = $row->{'mod_id_formulario_pregunta'} . '[]';
                             }
                             
                             for($x = 0; $x < $number_opciones; $x++){
@@ -339,7 +341,7 @@
                                     }
                                 }
                                 
-                                $html = $html . '<div id="'.$row->{'mod_id_formulario_pregunta'}.'"  class="checkbox ' . $field_attr_checkclass . '">';
+                                $html = $html . '<div class="checkbox ' . $field_attr_checkclass . '">';
                                 if($number_opciones == 1){
                                     $html = $html . '   <input type="hidden" name="'.$name_checkbox.'" value="'.$valor_marcado.'" '.$enabled.'>';
                                 }
