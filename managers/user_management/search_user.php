@@ -38,16 +38,17 @@
         if($info_user){
             $sql_query = "SELECT nombre_rol,id_jefe FROM {talentospilos_user_rol} INNER JOIN {talentospilos_rol} ON {talentospilos_user_rol}.id_rol = {talentospilos_rol}.id   WHERE {talentospilos_user_rol}.id_usuario = '".$info_user->id."' AND  {talentospilos_user_rol}.id_instancia=".$_POST['idinstancia']." AND {talentospilos_user_rol}.estado = 1 AND {talentospilos_user_rol}.id_semestre = (SELECT MAX(id)  FROM {talentospilos_semestre});";
             $rol_user = $DB->get_record_sql($sql_query);
-            
-            if($rol_user->id_jefe != ""){
-                $sql_query = "SELECT firstname, lastname FROM {user} WHERE id =$rol_user->id_jefe";
-                $info_boss = $DB->get_record_sql($sql_query);    
-            }
+
+            if(isset($rol_user->id_jefe)){
+                if($rol_user->id_jefe != ""){
+                    $sql_query = "SELECT firstname, lastname FROM {user} WHERE id =$rol_user->id_jefe";
+                    $info_boss = $DB->get_record_sql($sql_query);    
+                }
+            }           
 
             if(!$rol_user){
                 $info_user->rol = "ninguno";
-            }
-            else {
+            }else {
                 $info_user->rol = $rol_user->nombre_rol;
 
                 if($info_user->rol == 'practicante_ps' || $info_user->rol == 'monitor_ps'){
