@@ -14,7 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-
 /**
  * Estrategia ASES
  *
@@ -27,8 +26,6 @@
 require_once(dirname(__FILE__) . '/../../../../config.php');
 require_once(dirname(__FILE__) . '/../periods_management/periods_lib.php');
 require_once(dirname(__FILE__) . '/../role_management/role_management_lib.php');
-
-
 
 /**
  * Function that verifies if an user has a role assigned
@@ -728,4 +725,23 @@ function get_students_by_program($id_academic_program){
 
     return $result_query;
 
+}
+
+/**
+ * Función que retorna los programas académicos 
+ * @see get_academic_programs()
+ * @return array of stdclass
+ **/
+
+function get_academic_programs(){
+    
+    global $DB;
+
+    $sql_query = "SELECT academic_program.id, academic_program.nombre AS academic_program_name, academic_program.cod_univalle, location_university.nombre AS location_name,
+                         academic_program.jornada 
+                  FROM {talentospilos_programa} AS academic_program
+                           INNER JOIN {talentospilos_sede} AS location_university ON location_university.id = academic_program.id_sede";
+    $result_query = $DB->get_records_sql($sql_query);
+
+    return $result_query;
 }
