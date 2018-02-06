@@ -310,15 +310,23 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables', 'block_ases/s
                                             $("#form_prof_type").fadeIn();
                                             $('#boss_li').fadeOut();
                                             $("#form_mon_student").fadeOut();
+                                            $('#academic_program_li').fadeOut();
                                         } else if (msg.rol == "monitor_ps") {
                                             loadStudents();
                                             get_boss(4, msg.boss);
                                             $("#form_mon_student").fadeIn();
                                             $("#form_prof_type").fadeOut();
+                                            $('#academic_program_li').fadeOut();
                                         } else if (msg.rol == "practicante_ps") {
                                             get_boss(7, msg.boss);
                                             $("#form_mon_student").fadeOut();
                                             $("#form_prof_type").fadeOut();
+                                            $('#academic_program_li').fadeOut();
+                                        } else if(msg.rol == "director_prog"){
+                                            $("#form_mon_student").fadeOut();
+                                            $("#form_prof_type").fadeOut();
+                                            $('#boss_li').fadeOut();
+                                            $('#academic_program_li').fadeIn();
                                         } else {
                                             $('#boss_li').fadeOut();
                                             $("#form_mon_student").fadeOut();
@@ -522,11 +530,8 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables', 'block_ases/s
                     create_select2('campo_' + FieldCount);
                     count++;
                 }
-
-
-
-
             }
+
             function loadStudents() {
                 var data = new Array();
                 var user_id = $('#user_id').val();
