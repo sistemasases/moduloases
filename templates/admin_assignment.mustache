@@ -10,7 +10,7 @@
       <form class="form-pilos" id="role_man_form">
          <div >
             <ul>
-               <li>
+               <!--<li>
                   <label for="username_input">Nombre de usuario:</label> 
                   <input type="text" name="username_input" id="username_input"/>
                   <button class="submit" type="button" id="search_button" >Buscar</button> 
@@ -20,54 +20,17 @@
                   <input type="text" id="name_lastname" name="name_lastname" disabled />
                   <input type="text" class="hide" id="user_id" name="user_id"/>
                </li>
-               <li class="assignment_li">
-                  <label for="lista_programas">Programa</label>
-                  <select name="lista_programas" id="lista_programas" disabled>
-                  {{{programs}}}
-                  </select>
-               </li>
-               {{!--
-               <li class="assignment_li" style="display:none;" id="boss_li" >--}} 
-                  {{!--    <label for="boss_select">Jefe</label>--}}
-                  {{!--    <select name="boss_select" id="boss_select">--}}
-                  {{!--    </select>--}}
-                  {{!--
-               </li>
-               --}}
             </ul>
-         </div>
-         {{!--end col-md-6--}}
+         </div> -->
+         <!--end col-md-6-->
+         <li>
+            <label>Cohorte: </label>
+            <select id="select_cohorts">
+                {{{select_cohorts}}}
+            </select>
+         </li>
       </form>
-      <div id="segumientos_div" class="assignment_li">
-         <h4>Seguimientos:</h4>
-         <div class="row col-md-offset-1">
-            <label class="col-md-2">Academico:</label>
-            <label class="radio-inline" id="1">
-            <input type="radio" name="segAca"  value="1">Si
-            </label>
-            <label class="radio-inline" id="1">
-            <input type="radio" name="segAca"  value="0">No
-            </label>
-         </div>
-         <div class="row col-md-offset-1">
-            <label class="col-md-2" >Asistencias:</label>
-            <label class="radio-inline" id="1">
-            <input type="radio" name="segAsis"  value="1">Si
-            </label>
-            <label class="radio-inline" id="1">
-            <input type="radio" name="segAsis"  value="0">No
-            </label>
-         </div>
-         <div class="row col-md-offset-1">
-            <label class="col-md-2">Socioeducativo:</label>
-            <label class="radio-inline" id="1">
-            <input type="radio" name="segSoc"  value="1">Si
-            </label>
-            <label class="radio-inline" id="1">
-            <input type="radio" name="segSoc"  value="0">No
-            </label>
-         </div>
-      </div>
+
       <div class="col-md-3 col-md-offset-5 assignment_li">
          <button class="submit btn-form" type="button" id="ok_button">Aceptar</button>
          <button class="submit btn-form" type="button" id="cancel_button">Cancelar</button>

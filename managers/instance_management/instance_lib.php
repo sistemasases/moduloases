@@ -31,16 +31,17 @@ require_once(dirname(__FILE__). '/../../../../config.php');
 /**
  * Returns an instance given its id
  * 
- * @see consult_instance($instanceid)
- * @param $instanceid --> instance id
+ * @see consult_instance($id_instance)
+ * @param $id_instance --> instance id
  * @return object representing the instance from {talentospilos_instancia} and {talentospilos_programa} tables (JOIN)
  */
-function consult_instance($instanceid){
+function consult_instance($id_instance){
     global $DB;
-    $sql_query = "SELECT instancia.id as id_talentosinstancia ,id_instancia id_director, id_programa, prog.nombre, prog.cod_univalle FROM {talentospilos_instancia} instancia INNER JOIN  {talentospilos_programa} prog ON prog.id = instancia.id_programa   WHERE id_instancia = ".$instanceid.";";
-    $consult = $DB->get_record_sql($sql_query);
-    // print_r($consult);
-    return $consult;
+    $sql_query = "SELECT *
+                  FROM {talentospilos_instancia} 
+                  WHERE id_instancia = ".$id_instance.";";
+    $result_query = $DB->get_record_sql($sql_query);
+    return $result_query;
 }
 
 /**
@@ -218,9 +219,25 @@ function getSystemAdministrators(){
 function deleteSystemAdministrator($username){
     global $DB;
     $directorinfo = getInfoSystemDirector($username);
-    //print_r($directorinfo);
     update_role_user($directorinfo->username, "sistemas",$directorinfo->id_instancia,0);
     $DB->delete_records_select('talentospilos_instancia', 'id= '.$directorinfo->id_talentosinstancia);
     
     return true;
 }
+
+/**
+ * Función que
+ * 
+ * @see get_cohorts_without_assignment()
+ * @return 
+ */
+
+function get_cohorts_without_assignment(){
+    global $DB;
+    $sql_query = "SELECT id, idnumber, name 
+                  FROM {cohort} 
+                  WHERE id NOT IN (SELECT id_cohorte FROM {talentospilos_inst_cohorte})";
+    $result = $DB->get_records_sql($sql_query);
+    return $result;
+}
+
