@@ -566,12 +566,22 @@ function update_program_director($username, $role, $id_instance, $status = 1, $i
             // Start db transaction
             pg_query("BEGIN") or die("Could not start transaction\n");
             
-            assign_role_user($username, $role, 1, $id_current_semester->max, $id_instance, null);
+            $result = assign_role_user($username, $role, 1, $id_current_semester->max, $id_instance, null, $id_academic_program);
+
+            // End db transaction
+            pg_query("COMMIT") or die("Transaction commit failed\n");
+        }else{
+
+            // Start db transaction
+            pg_query("BEGIN") or die("Could not start transaction\n");
+
+            $result = update_role_user($username, $role, $id_instance, 1, $id_current_semester, null, $id_academic_program);
             
             // End db transaction
             pg_query("COMMIT") or die("Transaction commit failed\n");
-            
         }
+
+        return $result;       
 
     }catch (Exception $e) {
         return "Error al gestionar el rol del usuario director de programa " . $e->getMessage();

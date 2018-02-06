@@ -108,15 +108,10 @@ function get_user_boss($rol){
 
     }else if (get_role_name($rol)->nombre_rol == 'practicante_ps'){
       $boss = get_role_id('profesional_ps')->id;
-
     }
 
     return $boss;
 }
-
-
-
-
 
 /**
  * Función que relaciona a un conjunto de estudiantes con un monitor
@@ -128,7 +123,6 @@ function monitor_student_assignment($username_monitor, $array_students, $idinsta
 {
     global $DB;
 
-
     try{
         $sql_query = "SELECT id FROM {user} WHERE username = '$username_monitor'";
         $idmonitor = $DB->get_record_sql($sql_query);
@@ -139,9 +133,7 @@ function monitor_student_assignment($username_monitor, $array_students, $idinsta
         $insert_record = "";
         $array_errors = array();
         $hadErrors = false; 
-
-
-        
+       
         foreach($array_students as $student)
         {
                 $studentid = get_userById(array('*'),$student);
@@ -213,10 +205,10 @@ function monitor_student_assignment($username_monitor, $array_students, $idinsta
  * @return Integer
  */
  
- function assign_role_user($username, $role, $state, $semester,$idinstancia, $username_boss = null, $id_academic_program = null){
+ function assign_role_user($username, $role, $state, $semester, $idinstancia, $username_boss = null, $id_academic_program = null){
      
     global $DB;
-    
+
     $array_record = new stdClass;
 
     $sql_query = "SELECT id FROM {user} WHERE username='$username'";
@@ -230,15 +222,13 @@ function monitor_student_assignment($username_monitor, $array_students, $idinsta
     if($role == "monitor_ps"){
         $sql_query = "SELECT * FROM {user} WHERE username='$username_boss'";
         $id_boss = $DB->get_record_sql($sql_query);    
-    }else if($role == 'director_prog'){
+    }else if($role == "director_prog"){
         $array_record->id_programa = $id_academic_program;
         $id_boss = null;
-    }
-    else{
+    }else{
         $id_boss = null;
     }
         
-    $array_record = new stdClass;
     $array_record->id_rol = $id_role->id;
     $array_record->id_usuario = $id_user_moodle->id;
     $array_record->estado = $state;
@@ -246,8 +236,8 @@ function monitor_student_assignment($username_monitor, $array_students, $idinsta
     $array_record->id_jefe = $id_boss;
     $array_record->id_instancia= $idinstancia;
 
-    $insert_user_rol = $DB->insert_record('talentospilos_user_rol', $array, false);
-        
+    $insert_user_rol = $DB->insert_record('talentospilos_user_rol', $array_record, false);
+
     if($insert_user_rol){
         return 1;
     }
@@ -262,7 +252,7 @@ function monitor_student_assignment($username_monitor, $array_students, $idinsta
  * @see update_role_user($id_moodle_user, $id_role, $state, $id_semester, $username_boss){
  * @return Entero
  */
- function update_role_user($username, $role, $idinstancia, $state = 1, $semester = null, $username_boss = null){
+ function update_role_user($username, $role, $idinstancia, $state = 1, $semester = null, $username_boss = null, $id_academic_program = null){
     
     global $DB;
     
@@ -289,9 +279,9 @@ function monitor_student_assignment($username_monitor, $array_students, $idinsta
     $array->id_semestre = $id_semester->id;
     $array->id_jefe = $id_boss;
     $array->id_instancia = $idinstancia;
+    $array->id_programa = $id_academic_program;
     
     $result = 0;
-    
     
     if ($checkrole = checking_role($username, $idinstancia)){
         

@@ -499,7 +499,6 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables', 'block_ases/s
                                     closeOnConfirm: true
                                 });
                                 userLoad(dataUsername);
-
                             },
                             dataType: "text",
                             cache: "false",
@@ -507,7 +506,6 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables', 'block_ases/s
                                 swal("Error", "Ha ocurrido un error", "error")
                             },
                         });
-
                     } else {
                         $.ajax({
                             type: "POST",
