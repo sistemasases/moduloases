@@ -229,7 +229,6 @@ function drop_student_of_monitor($monitor, $student)
     
 }
 
-
 /**
  * Deletes relation monitor-estudiante from database
  * @see dropStudentofMonitor($monitor, $student)
@@ -458,8 +457,7 @@ function update_role_monitor_ps($username, $role, $array_students, $boss, $idins
  * @param $state          ---> user's state
  * @return integer
  **/
-function manage_role_profesional_ps($username, $role, $professional, $idinstancia, $state = 1)
-{
+function manage_role_profesional_ps($username, $role, $professional, $idinstancia, $state = 1){
     global $DB;
     
     try {
@@ -526,11 +524,58 @@ function manage_role_profesional_ps($username, $role, $professional, $idinstanci
         }
         return 1;
         
-    }
-    catch (Exception $e) {
+    }catch (Exception $e) {
         return "Error al gestionar los permisos profesional " . $e->getMessage();
     }
     
+}
+
+/**
+ * update_program_director
+ * @see  update_program_director($username, $role, $id_instance, $status = 1, $id_academic_program)
+ * @param $username             ---> 'profesional' username in moodle 
+ * @param $role                 ---> user's role
+ * @param $id_instance          ---> current instance id
+ * @param $status               ---> user status
+ * @param $id_academic_program  ---> user's state
+ * @return integer
+ **/
+
+function update_program_director($username, $role, $id_instance, $status = 1, $id_academic_program){
+
+    global $DB;
+    
+    try{
+
+        // Select object user
+        $sql_query   = "SELECT * FROM {user} WHERE username ='$username';";
+        $object_user = $DB->get_record_sql($sql_query);
+
+        $sql_query = "SELECT id_rol, nombre_rol 
+                      FROM {talentospilos_user_rol} AS user_role 
+                      INNER JOIN {talentospilos_rol} AS t_role ON t_role.id = user_role.id_rol 
+                      WHERE id_usuario = $object_user->id AND user_role.id_instancia= $id_instance 
+                                                          AND id_semestre = (SELECT max(id) FROM {talentospilos_semestre})";
+
+        $current_role = $DB->get_record_sql($sql_query);
+
+        $id_current_semester = get_current_semester();
+
+        if (empty($current_role)) {
+            
+            // Start db transaction
+            pg_query("BEGIN") or die("Could not start transaction\n");
+            
+            assign_role_user($username, $role, 1, $id_current_semester->max, $id_instance, null);
+            
+            // End db transaction
+            pg_query("COMMIT") or die("Transaction commit failed\n");
+            
+        }
+
+    }catch (Exception $e) {
+        return "Error al gestionar el rol del usuario director de programa " . $e->getMessage();
+    }
 }
 
 /**

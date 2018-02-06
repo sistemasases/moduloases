@@ -475,6 +475,39 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables', 'block_ases/s
                                 swal("Error", "Ha ocurrido un error", "error")
                             },
                         });
+                    } else if(dataRole == "director_prog"){
+                        
+                        var academic_program_id = $('#academic_program_select').val();
+
+                        $.ajax({
+                            type: "POST",
+                            data: {
+                                role: dataRole,
+                                username: dataUsername,
+                                academic_program: academic_program_id,
+                                idinstancia: getIdinstancia()
+                            },
+                            url: "../managers/user_management/update_role_user.php",
+                            success: function(msg) {
+                                swal({
+                                    title: "Información!",
+                                    text: msg,
+                                    type: "info",
+                                    html: true,
+                                    confirmButtonColor: "#d51b23",
+                                    confirmButtonText: "Ok!",
+                                    closeOnConfirm: true
+                                });
+                                userLoad(dataUsername);
+
+                            },
+                            dataType: "text",
+                            cache: "false",
+                            error: function(msg) {
+                                swal("Error", "Ha ocurrido un error", "error")
+                            },
+                        });
+
                     } else {
                         $.ajax({
                             type: "POST",

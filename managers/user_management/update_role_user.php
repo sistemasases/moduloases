@@ -107,6 +107,29 @@ if(isset($_POST['role']) && isset($_POST['username'])){
                 break;
             }
     //Assign or update the given role, echoing success or fail
+    }else if($_POST['role'] == 'director_prog' && isset($_POST['idinstancia'])){
+
+        $success =  update_program_director($_POST['username'], $_POST['role'],$_POST['idinstancia'], 1, $_POST['academic_program']);
+        switch($success){
+            case 1:
+                echo "Rol asignado con éxito";
+                break;
+            case 2:
+                echo "No se ha podido asignar el rol";
+                break;
+            case 3:
+                echo "Rol actualizado con éxito.";
+                break;
+            case 4:
+                echo "Actualización de rol fallida.ultimo";
+                break;
+            case 5:
+                echo "El usuario no puede ser su mismo jefe";
+                break;
+            default:
+                echo $success;
+                break;
+            }
     }else{
         $success =  update_role_user($_POST['username'], $_POST['role'],$_POST['idinstancia']);
         switch($success){
