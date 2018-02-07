@@ -46,11 +46,12 @@ require_once $CFG->dirroot.'/blocks/ases/managers/periods_management/periods_lib
 /**
  * Obtains all courses organized by their teacher where there are students from an instance
  * 
- * @see get_courses_pilos()
+ * @see get_courses_pilos($instanceid)
+ * @param $instanceid
  * @return array filled with courses
  */
 
-function get_courses_pilos(){
+function get_courses_pilos($instanceid){
     global $DB;
     
     $semestre = get_current_semester();
@@ -93,10 +94,18 @@ function get_courses_pilos(){
             (SELECT user_m.id
             FROM {user} user_m
             INNER JOIN {talentospilos_user_extended} extended ON user_m.id = extended.id_moodle_user
-            INNER JOIN {talentospilos_usuario} user_t ON extended.id_ases_user = user_t.id
-            INNER JOIN {talentospilos_est_estadoases} estado_u ON user_t.id = estado_u.id_estudiante
+            INNER JOIN {talentospilos_est_estadoases} estado_u ON extended.id_ases_user = estado_u.id_estudiante
             INNER JOIN {talentospilos_estados_ases} estados ON estados.id = estado_u.id_estado_ases
-            WHERE estados.nombre = 'ACTIVO/SEGUIMIENTO')";
+            WHERE estados.nombre = 'ACTIVO/SEGUIMIENTO'
+            
+            INTERSECT
+
+            SELECT user_m.id
+            FROM {user} user_m 
+            INNER JOIN {cohort_members} memb ON user_m.id = memb.userid 
+            INNER JOIN {cohort} cohorte ON memb.cohortid = cohorte.id 
+            INNER JOIN {talentospilos_inst_cohorte} as inst_coh ON cohorte.id = inst_coh.id_cohorte
+            WHERE inst_coh.id_instancia = $instanceid)";
     $result = $DB->get_records_sql($query_courses);
     
     $result = processInfo($result);
