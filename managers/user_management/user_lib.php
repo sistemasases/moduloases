@@ -14,7 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-
 /**
  * Estrategia ASES
  *
@@ -27,8 +26,6 @@
 require_once(dirname(__FILE__) . '/../../../../config.php');
 require_once(dirname(__FILE__) . '/../periods_management/periods_lib.php');
 require_once(dirname(__FILE__) . '/../role_management/role_management_lib.php');
-
-
 
 /**
  * Function that verifies if an user has a role assigned
@@ -231,7 +228,6 @@ function drop_student_of_monitor($monitor, $student)
     return $DB->delete_records_select('talentospilos_monitor_estud', $whereclause);
     
 }
-
 
 /**
  * Deletes relation monitor-estudiante from database
@@ -461,8 +457,7 @@ function update_role_monitor_ps($username, $role, $array_students, $boss, $idins
  * @param $state          ---> user's state
  * @return integer
  **/
-function manage_role_profesional_ps($username, $role, $professional, $idinstancia, $state = 1)
-{
+function manage_role_profesional_ps($username, $role, $professional, $idinstancia, $state = 1){
     global $DB;
     
     try {
@@ -529,11 +524,68 @@ function manage_role_profesional_ps($username, $role, $professional, $idinstanci
         }
         return 1;
         
-    }
-    catch (Exception $e) {
+    }catch (Exception $e) {
         return "Error al gestionar los permisos profesional " . $e->getMessage();
     }
     
+}
+
+/**
+ * update_program_director
+ * @see  update_program_director($username, $role, $id_instance, $status = 1, $id_academic_program)
+ * @param $username             ---> 'profesional' username in moodle 
+ * @param $role                 ---> user's role
+ * @param $id_instance          ---> current instance id
+ * @param $status               ---> user status
+ * @param $id_academic_program  ---> user's state
+ * @return integer
+ **/
+
+function update_program_director($username, $role, $id_instance, $status = 1, $id_academic_program){
+
+    global $DB;
+    
+    try{
+
+        // Select object user
+        $sql_query   = "SELECT * FROM {user} WHERE username ='$username';";
+        $object_user = $DB->get_record_sql($sql_query);
+
+        $sql_query = "SELECT id_rol, nombre_rol 
+                      FROM {talentospilos_user_rol} AS user_role 
+                      INNER JOIN {talentospilos_rol} AS t_role ON t_role.id = user_role.id_rol 
+                      WHERE id_usuario = $object_user->id AND user_role.id_instancia= $id_instance 
+                                                          AND id_semestre = (SELECT max(id) FROM {talentospilos_semestre})";
+
+        $current_role = $DB->get_record_sql($sql_query);
+
+        $id_current_semester = get_current_semester();
+
+        if (empty($current_role)) {
+            
+            // Start db transaction
+            pg_query("BEGIN") or die("Could not start transaction\n");
+            
+            $result = assign_role_user($username, $role, 1, $id_current_semester->max, $id_instance, null, $id_academic_program);
+
+            // End db transaction
+            pg_query("COMMIT") or die("Transaction commit failed\n");
+        }else{
+
+            // Start db transaction
+            pg_query("BEGIN") or die("Could not start transaction\n");
+
+            $result = update_role_user($username, $role, $id_instance, 1, $id_current_semester, null, $id_academic_program);
+            
+            // End db transaction
+            pg_query("COMMIT") or die("Transaction commit failed\n");
+        }
+
+        return $result;       
+
+    }catch (Exception $e) {
+        return "Error al gestionar el rol del usuario director de programa " . $e->getMessage();
+    }
 }
 
 /**
@@ -728,4 +780,23 @@ function get_students_by_program($id_academic_program){
 
     return $result_query;
 
+}
+
+/**
+ * Función que retorna los programas académicos 
+ * @see get_academic_programs()
+ * @return array of stdclass
+ **/
+
+function get_academic_programs(){
+    
+    global $DB;
+
+    $sql_query = "SELECT academic_program.id, academic_program.nombre AS academic_program_name, academic_program.cod_univalle, location_university.nombre AS location_name,
+                         academic_program.jornada 
+                  FROM {talentospilos_programa} AS academic_program
+                           INNER JOIN {talentospilos_sede} AS location_university ON location_university.id = academic_program.id_sede";
+    $result_query = $DB->get_records_sql($sql_query);
+
+    return $result_query;
 }

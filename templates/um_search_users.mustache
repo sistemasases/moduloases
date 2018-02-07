@@ -8,12 +8,12 @@
    <div id="collapse1" class="panel-collapse collapse">
       <div class="panel-body">
          <form class="form-pilos" id="role_man_form">
-            <div class="col-md-6">
+            <div class="col-md-6 col-sm-6">
                <ul>
                   <li>
                      <label for="username_input">Nombre de usuario:</label> 
                      <select name="users" id="users">
-                     {{{table}}}
+                        {{{table}}}
                      </select>
                      <button class="submit" type="button" id="search_button">Buscar</button> 
                   </li>
@@ -33,11 +33,11 @@
                      <select name="boss_select" id="boss_select">
                      </select>
                   </li>
-                  <li class="assignment_li" style="display:none;" id="academic_program_li">
-                        <label for=""></label>
-                        <select name="academic_program_select" id="academic_program_select">
-                              {{{academic_program_select}}}
-                        </select>
+                  <li class="" style="display:none;" id="academic_program_li">
+                    <label for="academic_program_select">Programa académico</label>
+                    <select class="form-control" name="academic_program_select" id="academic_program_select">
+                        {{{academic_program_select}}}
+                    </select>
                   </li>
                </ul>
             </div>

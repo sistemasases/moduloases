@@ -81,15 +81,14 @@ $blocknode->make_active();
 $node->make_active();
 
 // Load information of student's file
-
-$record = 'data';
+// Initialize context variable
+$record = new stdClass;
+$actions = authenticate_user_view($USER->id, $blockid);
+$record = $actions;
 
 $rol = get_role_ases($USER->id);
 
 if ($student_code != 0) {
-
-    // Initialize context variable
-    $record = new stdClass;
 
     $ases_student = get_ases_user_by_code($student_code);
 
@@ -142,8 +141,6 @@ if ($student_code != 0) {
     $faculty = get_faculty($academic_program->id_facultad);
 
     // Evaluates if user role has permissions assigned on this view
-    $actions = authenticate_user_view($USER->id, $blockid);
-    $record = $actions;
 
     $record->id_moodle = $id_user_moodle;
     $record->id_ases = $student_id;
@@ -188,16 +185,16 @@ if ($student_code != 0) {
 
     $record->id_dphpforms_creado_por = $USER->id;
 
-    if(get_assigned_monitor($student_id)){
+    if (get_assigned_monitor($student_id)) {
         $monitor_object = get_assigned_monitor($student_id);
     }
-    if(get_assigned_pract($student_id)){
+    if (get_assigned_pract($student_id)) {
         $trainee_object = get_assigned_pract($student_id);
     }
-    if(get_assigned_professional($student_id)){
+    if (get_assigned_professional($student_id)) {
         $professional_object = get_assigned_professional($student_id);
     }
-    
+
     if ($monitor_object) {
         $record->monitor_fullname = "$monitor_object->firstname $monitor_object->lastname";
         $record->id_dphpforms_monitor = '-1';
@@ -370,7 +367,7 @@ if ($student_code != 0) {
     //weighted average
     $promedio = get_promedio_ponderado($student_id, $academic_program->id);
     $record->promedio = $promedio;
-    
+
     //num bajos
     $bajos = get_bajos_rendimientos($student_id, $academic_program->id);
     $record->bajos = $bajos;
@@ -392,14 +389,14 @@ if ($student_code != 0) {
     $array_peer_trackings_dphpforms = dphpforms_find_records('seguimiento_pares', 'seguimiento_pares_id_estudiante', $student_code, 'DESC');
     $array_peer_trackings_dphpforms = json_decode($array_peer_trackings_dphpforms);
     $array_detail_peer_trackings_dphpforms = array();
-    foreach($array_peer_trackings_dphpforms->results as &$peer_trackings_dphpforms){
+    foreach ($array_peer_trackings_dphpforms->results as &$peer_trackings_dphpforms) {
         array_push($array_detail_peer_trackings_dphpforms, json_decode(dphpforms_get_record($peer_trackings_dphpforms->id_registro, 'fecha')));
     }
 
     $array_tracking_date = array();
-    foreach($array_detail_peer_trackings_dphpforms as &$peer_tracking){
+    foreach ($array_detail_peer_trackings_dphpforms as &$peer_tracking) {
         foreach ($peer_tracking->record->campos as &$tracking) {
-            if($tracking->local_alias == 'fecha'){
+            if ($tracking->local_alias == 'fecha') {
                 array_push($array_tracking_date, strtotime($tracking->respuesta));
             }
         }
@@ -412,43 +409,43 @@ if ($student_code != 0) {
     //Inicio de ordenamiento
     $periodo_a = [1, 2, 3, 4, 5, 6, 7];
     //periodo_b es el resto de meses;
-    for($x = 0; $x < count($array_tracking_date); $x++){
+    for ($x = 0; $x < count($array_tracking_date); $x++) {
         $string_date = $array_tracking_date[$x];
         $array_tracking_date[$x] = getdate($array_tracking_date[$x]);
-        if(property_exists($seguimientos_ordenados, $array_tracking_date[$x]['year'])){
-            if(in_array($array_tracking_date[$x]['mon'], $periodo_a)){
-                for($y = 0; $y < count($array_detail_peer_trackings_dphpforms); $y++){
-                    if($array_detail_peer_trackings_dphpforms[$y]){
+        if (property_exists($seguimientos_ordenados, $array_tracking_date[$x]['year'])) {
+            if (in_array($array_tracking_date[$x]['mon'], $periodo_a)) {
+                for ($y = 0; $y < count($array_detail_peer_trackings_dphpforms); $y++) {
+                    if ($array_detail_peer_trackings_dphpforms[$y]) {
                         foreach ($array_detail_peer_trackings_dphpforms[$y]->record->campos as &$tracking) {
-                            if($tracking->local_alias == 'fecha'){
-                                if(strtotime($tracking->respuesta) == $string_date ){
+                            if ($tracking->local_alias == 'fecha') {
+                                if (strtotime($tracking->respuesta) == $string_date) {
                                     array_push($seguimientos_ordenados->$array_tracking_date[$x]['year']->per_a, $array_detail_peer_trackings_dphpforms[$y]);
                                     $array_detail_peer_trackings_dphpforms[$y] = null;
                                     break;
                                 }
-                                
+
                             }
                         }
                     }
                 }
-            }else{
-                for($y = 0; $y < count($array_detail_peer_trackings_dphpforms); $y++){
-                    if($array_detail_peer_trackings_dphpforms[$y]){
+            } else {
+                for ($y = 0; $y < count($array_detail_peer_trackings_dphpforms); $y++) {
+                    if ($array_detail_peer_trackings_dphpforms[$y]) {
                         foreach ($array_detail_peer_trackings_dphpforms[$y]->record->campos as &$tracking) {
-                            if($tracking->local_alias == 'fecha'){
-                                if(strtotime($tracking->respuesta) == $string_date ){
+                            if ($tracking->local_alias == 'fecha') {
+                                if (strtotime($tracking->respuesta) == $string_date) {
                                     array_push($seguimientos_ordenados->$array_tracking_date[$x]['year']->per_b, $array_detail_peer_trackings_dphpforms[$y]);
                                     $array_detail_peer_trackings_dphpforms[$y] = null;
                                     break;
                                 }
-                                
+
                             }
                         }
                     }
                 }
             }
-        }else{
-            array_push($seguimientos_ordenados->index ,$array_tracking_date[$x]['year']);
+        } else {
+            array_push($seguimientos_ordenados->index, $array_tracking_date[$x]['year']);
             $seguimientos_ordenados->$array_tracking_date[$x]['year']->year = $array_tracking_date[$x]['year'];
             $seguimientos_ordenados->$array_tracking_date[$x]['year']->per_a = array();
             $seguimientos_ordenados->$array_tracking_date[$x]['year']->per_b = array();
@@ -459,8 +456,8 @@ if ($student_code != 0) {
                 for($y = 0; $y < count($array_detail_peer_trackings_dphpforms); $y++){
                     if($array_detail_peer_trackings_dphpforms[$y]){
                         foreach ($array_detail_peer_trackings_dphpforms[$y]->record->campos as &$tracking) {
-                            if($tracking->local_alias == 'fecha'){
-                                if(strtotime($tracking->respuesta) == $string_date ){
+                            if ($tracking->local_alias == 'fecha') {
+                                if (strtotime($tracking->respuesta) == $string_date) {
                                     array_push($seguimientos_ordenados->$array_tracking_date[$x]['year']->per_a, $array_detail_peer_trackings_dphpforms[$y]);
                                     $array_detail_peer_trackings_dphpforms[$y] = null;
                                     break;
@@ -474,8 +471,8 @@ if ($student_code != 0) {
                 for($y = 0; $y < count($array_detail_peer_trackings_dphpforms); $y++){
                     if($array_detail_peer_trackings_dphpforms[$y]){
                         foreach ($array_detail_peer_trackings_dphpforms[$y]->record->campos as &$tracking) {
-                            if($tracking->local_alias == 'fecha'){
-                                if(strtotime($tracking->respuesta) == $string_date ){
+                            if ($tracking->local_alias == 'fecha') {
+                                if (strtotime($tracking->respuesta) == $string_date) {
                                     array_push($seguimientos_ordenados->$array_tracking_date[$x]['year']->per_b, $array_detail_peer_trackings_dphpforms[$y]);
                                     $array_detail_peer_trackings_dphpforms[$y] = null;
                                     break;
@@ -488,19 +485,19 @@ if ($student_code != 0) {
         }
     }
     //Fin de ordenamiento
-    
+
     //echo json_encode($seguimientos_ordenados);
     $seguimientos_array = json_decode(json_encode($seguimientos_ordenados), true);
     $array_periodos = array();
-    for($x = 0; $x < count($seguimientos_array['index']); $x++){
-        array_push($array_periodos, $seguimientos_array[$seguimientos_array['index'][$x]] );
+    for ($x = 0; $x < count($seguimientos_array['index']); $x++) {
+        array_push($array_periodos, $seguimientos_array[$seguimientos_array['index'][$x]]);
     }
     $record->peer_tracking_v2 = array(
         'index' => $seguimientos_array['index'],
-        'periodos' => $array_periodos
+        'periodos' => $array_periodos,
     );
     //print_r(json_encode($record->peer_tracking_v2));
-    
+
     $enum_risk = array();
     array_push($enum_risk, "");
     array_push($enum_risk, "Bajo");
@@ -834,12 +831,12 @@ if ($student_code != 0) {
     //Pruebas
     $record->form_seguimientos = null;
     $record->form_seguimientos = dphpforms_render_recorder('seguimiento_pares', $rol);
-    if($record->form_seguimientos == ''){
+    if ($record->form_seguimientos == '') {
         $record->form_seguimientos = "<strong><h3>Oops!: No se ha encontrado un formulario con el alias <code>seguimiento_pares</code></h3></strong>";
     }
 
 } else {
-    $record = new stdClass;
+
     $student_id = -1;
     if ($rol == 'sistemas') {
         $record->code = "<input type='text' class='tip' id='codigo' value=' ' size='12' maxlength='12' required>";
@@ -857,7 +854,6 @@ if($rol == 'sistemas'){
 $menu_option = create_menu_options($USER->id, $blockid, $courseid);
 
 $record->menu = $menu_option;
-
 
 $PAGE->set_context($contextcourse);
 $PAGE->set_context($contextblock);

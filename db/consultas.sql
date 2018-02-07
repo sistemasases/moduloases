@@ -81,9 +81,11 @@ WHERE enrols.userid IN
     INTERSECT
 
     SELECT user_m.id
-    FROM mdl_user user_m INNER JOIN mdl_cohort_members memb ON user_m.id = memb.userid INNER JOIN mdl_cohort cohorte ON memb.cohortid = cohorte.id 
-    WHERE SUBSTRING(cohorte.idnumber FROM 1 FOR 2) = 'SP'
-
+    FROM mdl_user user_m 
+    INNER JOIN mdl_cohort_members memb ON user_m.id = memb.userid 
+    INNER JOIN mdl_cohort cohorte ON memb.cohortid = cohorte.id 
+    INNER JOIN mdl_inst_cohorte as inst_coh ON cohorte.id = inst_coh.id_cohorte
+    WHERE inst_coh.id_instancia = $instanceid
       )
 ;
 
