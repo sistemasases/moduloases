@@ -119,9 +119,16 @@
     }
 
     function delete_alias($id_alias){
+
+        if(!$id_alias){
+            return -1;
+        }
+
         global $DB;
         $sql = "DELETE FROM {talentospilos_df_alias} WHERE id = '$id_alias'";
         $DB->execute($sql);
+
+        return 0;
     }
     
 ?>
