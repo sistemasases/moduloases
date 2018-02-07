@@ -26,15 +26,16 @@
 
 // Standard GPL and phpdocs
 require_once(__DIR__ . '/../../../config.php');
-require_once($CFG->libdir.'/adminlib.php');
-require_once('../managers/lib/lib.php');
-require_once ('../managers/permissions_management/permissions_lib.php');
-require_once ('../managers/validate_profile_action.php');
-require_once ('../managers/menu_options.php');
+require_once $CFG->libdir.'/adminlib.php';
+require_once $CFG->dirroot.'/blocks/ases/managers/lib/lib.php';
+require_once $CFG->dirroot.'/blocks/ases/managers/permissions_management/permissions_lib.php';
+require_once $CFG->dirroot.'/blocks/ases/managers/validate_profile_action.php';
+require_once $CFG->dirroot.'/blocks/ases/managers/menu_options.php';
 require_once $CFG->dirroot.'/blocks/ases/managers/periods_management/periods_lib.php'; 
-require_once('../managers/instance_management/instance_lib.php');
-require_once('../managers/role_management/role_management_lib.php');
+require_once $CFG->dirroot.'/blocks/ases/managers/instance_management/instance_lib.php';
+require_once $CFG->dirroot.'/blocks/ases/managers/role_management/role_management_lib.php';
 global $PAGE;
+global $COURSE;
 
 include("../classes/output/instance_configuration_page.php");
 include("../classes/output/renderer.php");
@@ -59,8 +60,21 @@ $coursenode->add_node($blocknode);
 $blocknode->make_active();
 
 if(!consult_instance($blockid)){
-    if($USER->username == 'sistemas1008' || $USER->username == 'administrador'){
-        assign_role_user($USER->username, 'sistemas', 1, get_current_semester(), $blockid, null, null);
+    $category_context = context_coursecat::instance($COURSE->category);
+    if(has_capability('moodle/category:manage', $category_context)) {
+        
+        // Systems role assignment for the current instance
+        update_role_user($USER->username, 'sistemas', $blockid, 1, get_current_semester(), null, null);
+
+        // Add permission in instance_management
+        $result_assign_permissions = assign_permissions('sistemas', 'instance_configuration');
+        
+        if(!$result_assign_permissions){
+
+        }
+
+    } else {
+        print_r("Is not admin");
     }
 }
 
