@@ -28,11 +28,11 @@ define(['jquery', 'block_ases/datatables.net', 'block_ases/datatables.net-button
 
                 var next = true;
                 var msg = "";
-                if (monitores == '--') {
+                if (monitores == '-1') {
                     next = false;
                     msg += "* Debe elegir monitor a asignar \n";
                 }
-                if (practicantes == '--') {
+                if (practicantes == '-1') {
                     next = false;
                     msg += "*Debe elegir practicantes a asignar";
                 }
@@ -91,22 +91,23 @@ define(['jquery', 'block_ases/datatables.net', 'block_ases/datatables.net-button
 
             //Despliega monitores deacuerdo al practicante seleccionado
 
-            $(document).on('change', '#tableAssign tbody tr td select', function() {
+            $(document).on('change', '#tableAssign tbody tr td select#practicants', function() {
 
                 var user = $(this).val();
                 var source = "list_monitors";
-                console.log(user);
+                var instancia =getIdinstancia();
 
                 $.ajax({
                     type: "POST",
                     data: {
                         user: user,
-                        instance:getIdinstancia(),
+                        instance:instancia,
                         source: source
                     },
                     url: "../managers/ases_report/asesreport.php",
                     success: function(msg) {
-                       console.log(msg);
+                       $("select#monitors").find('option').remove().end();
+                       $("select#monitors").append(msg);
                     },
                     dataType: "json",
                     cache: "false",
