@@ -88,8 +88,41 @@ define(['jquery', 'block_ases/datatables.net', 'block_ases/datatables.net-button
                 var selectedText = $(this).parent().find(":selected").text();
                 table.columns(colIndex - 1).search(this.value).draw();
             });
+
+            //Despliega monitores deacuerdo al practicante seleccionado
+
+            $(document).on('change', '#tableAssign tbody tr td select', function() {
+
+                var user = $(this).val();
+                var source = "list_monitors";
+                console.log(user);
+
+                $.ajax({
+                    type: "POST",
+                    data: {
+                        user: user,
+                        instance:getIdinstancia(),
+                        source: source
+                    },
+                    url: "../managers/ases_report/asesreport.php",
+                    success: function(msg) {
+                       console.log(msg);
+                    },
+                    dataType: "json",
+                    cache: "false",
+                    error: function(msg) {
+                        alert("Error al cargar monitores con practicante seleccionado")
+                    },
+                });
+
+            });
         }
     }
+
+
+
+
+
 
     //Creación de tabla de asignaciones
     function createTableAssign() {
