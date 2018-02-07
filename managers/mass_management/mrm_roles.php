@@ -39,6 +39,12 @@ if( isset($_FILES['file']) || isset($_POST['idinstancia'])){
         $rootFolder    = "../../view/archivos_subidos/mrm/roles/files/";
         $zipFolfer = "../../view/archivos_subidos/mrm/roles/comprimidos/";
 
+        if (!file_exists($rootFolder)) {
+            mkdir($rootFolder, 0777, true);
+        }
+        if (!file_exists($zipFolder)) {
+            mkdir($zipFolder, 0777, true);
+        }
         
         //deletes everything from folders
         deleteFilesFromFolder($rootFolder);
