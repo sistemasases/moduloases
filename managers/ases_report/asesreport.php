@@ -27,7 +27,7 @@
 require_once(dirname(__FILE__).'/../../../../config.php');
 require_once(dirname(__FILE__).'/../periods_management/periods_lib.php');
 require_once(dirname(__FILE__).'/../role_management/role_management_lib.php');
-
+require_once ('asesreport_functions.php');
 global $USER;
 
 if(isset($_POST['type'])&&$_POST['type']=="assign_student") 
@@ -106,5 +106,9 @@ if(isset($_POST['type'])&&$_POST['type']=="assign_student")
     }
 
 
+}else if(isset($_POST['user'])&&isset($_POST['source'])&&$_POST['source']=="list_monitors"&&isset($_POST['instance'])){
+ $monitors = get_monitors_of_pract($_POST['user'],$_POST['instance']);
+ $select_options =create_option_of_select($monitors);
+  echo json_encode($select_options);
 }
 ?>

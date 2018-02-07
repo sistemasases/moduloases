@@ -92,24 +92,26 @@ if(isset($_POST['instance_id'])){
 $instancia =$_POST['instance_id'];
 $current_role = get_id_rol($USER->id,$instancia);
 $role_name = get_name_role($current_role);
+$monitors=[];
 
 if ($role_name == 'profesional_ps')
     {
     $practicants = get_pract_of_prof($USER->id, $_POST['instance_id']);
-    $monitors = get_monitors_of_pract(array_values($practicants) [0]->id_usuario, $_POST['instance_id']);
+   // $monitors = get_monitors_of_pract(array_values($practicants) [0]->id_usuario, $_POST['instance_id']);
     }
 }
 
-array_push($columns, array(
-    "title" => "Escoger monitor",
-    "name" => "monitores",
-    "data" => "monitor"
-));
 array_push($columns, array(
     "title" => "Escoger practicante",
     "name" => "practicantes",
     "data" => "practicante"
 ));
+array_push($columns, array(
+    "title" => "Escoger monitor",
+    "name" => "monitores",
+    "data" => "monitor"
+));
+
 array_push($columns, array(
     "title" => "Asignar",
     "name" => "student_assign",
