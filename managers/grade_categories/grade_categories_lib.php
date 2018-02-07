@@ -47,7 +47,7 @@ require_once $CFG->dirroot.'/blocks/ases/managers/periods_management/periods_lib
  * Obtains all courses organized by their teacher where there are students from an instance
  * 
  * @see get_courses_pilos($instanceid)
- * @param $instanceid
+ * @param $instanceid id of an instance
  * @return array filled with courses
  */
 
