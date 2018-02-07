@@ -59,6 +59,8 @@ pre, code {
     color: #333;
     text-align: left;
     border-color: #ddd !important;
+    padding: 10px 15px 10px 15px;
+    font-size: 16px;
 }
 
 .btn-card:hover{
