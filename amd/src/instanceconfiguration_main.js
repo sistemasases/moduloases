@@ -9,7 +9,7 @@
   * @module block_ases/instanceconfiguration_main
   */
 
-define(['jquery','block_ases/sweetalert','block_ases/datatables.net','block_ases/datatables.net-buttons','block_ases/buttons.flash','block_ases/jszip','block_ases/pdfmake','block_ases/buttons.html5','block_ases/buttons.print'], function($,sweetalert,datatables) {
+define(['jquery','block_ases/sweetalert','block_ases/datatables'], function($,sweetalert,datatables) {
 
 
   return {

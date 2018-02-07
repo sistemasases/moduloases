@@ -1,17 +1,27 @@
 <?php 
     require_once(dirname(__FILE__). '/../../../../config.php');
 
-    function dphpforms_generate_html_recorder($id_form, $rol, $student_id, $id_monitor){
+    function dphpforms_generate_html_recorder($id_form, $rol_, $student_id, $id_monitor){
 
         global $DB;
 
-        //$FORM_ID = $_GET['id'];
-        //$ROL = $_GET['rol'];
-
         $FORM_ID = $id_form;
-        $ROL = $rol;
+        $ROL = $rol_;
 
         $html = null;
+
+        if(!is_numeric($id_form)){
+            $sql_alias = "SELECT id FROM {talentospilos_df_formularios} WHERE alias = '$id_form' AND estado = 1";
+            $form_record = $DB->get_record_sql($sql_alias);
+            if($form_record){
+                $FORM_ID = $form_record->id;
+            }
+        }
+
+        if(!is_numeric($FORM_ID)){
+            return '';
+        }
+
         
         $sql = '
         
@@ -33,32 +43,6 @@
         $result = (array) $result;
         $result = array_values($result);
 
-        /*$html = $html .  '
-        
-        <!DOCTYPE html>
-        <html lang="en">
-        <head>
-            <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <meta http-equiv="X-UA-Compatible" content="ie=edge">
-            <title>Renderizador de formularios</title>
-            <link rel="stylesheet" href="css/bootstrap.min.css">
-            <style>
-            
-                .danger{
-                    border: 1px solid red;
-                }
-                .ok{
-                    border: 1px solid green;
-                }
-            
-            </style>
-        </head>
-        <body>
-            <div class="container">
-                <div class="row">
-        ';*/
-
         $row = $result[0];
         $form_name = $row->{'nombre'};
         $form_name_formatted = strtolower($form_name);
@@ -76,11 +60,9 @@
         $form_name_formatted = $form_name_formatted . "_" . $row->{'mod_id_formulario'};
 
 
-        $html = $html .  '<form id="'. $form_name_formatted .'" method="'. $row->{'method'} .'" action="'. $row->{'action'} .'" class="col-xs-12 col-sm-8 col-md-8 col-lg-6 col-sm col-sm-offset-2 col-md-offset-2 col-lg-offset-3" style="margin-bottom:0.7em">' ;
+        $html = $html .  '<form id="'. $form_name_formatted .'" method="'. $row->{'method'} .'" action="'. $row->{'action'} .'" class="dphpforms dphpforms-response col-xs-12 col-sm-12 col-md-12 col-lg-12" style="margin-bottom:0.7em">' ;
         $html = $html .  '<h1>'.$form_name.'</h1><hr style="border-color:red;">';
         $html = $html .  '<input name="id" value="'.$row->{'mod_id_formulario'}.'" style="display:none;">';
-        $html = $html .  '<input name="id_monitor" value="'.$id_monitor.'" style="display:none;">';
-        $html = $html .  '<input name="id_estudiante" value="'.$student_id.'" style="display:none;">';
         
         for($i = 0; $i < count($result); $i++){
             $row = null;
@@ -88,6 +70,7 @@
 
             $campo = $row->{'campo'};
             $enunciado = $row->{'enunciado'};
+            
             $atributos = json_decode($row->{'atributos_campo'});
 
             //Consulta de permisos
@@ -99,20 +82,23 @@
 
             $permisos = $result_permisos;
             $permisos_JSON = json_decode($permisos->permisos);
+            
+            foreach ($permisos_JSON as $key => $v_rol) {
 
-            foreach ($permisos_JSON as $key => $rol) {
-                if($rol->{'rol'} == $ROL){
+            
+                if($v_rol->{'rol'} == $ROL){
 
                     $lectura = false;
                     $escritura = false;
 
-                    foreach ($rol->{'permisos'} as $key2 => $value) {
+                    foreach ($v_rol->{'permisos'} as $key2 => $value) {
                         if($value == "lectura"){
                             $lectura = true;
                         }
                         if($value == "escritura"){
                             $escritura = true;
                         }
+
                     }
 
                     if($lectura){
@@ -122,33 +108,74 @@
                             $enabled = "disabled";
                         }
 
+                        $field_attr_class = '';
+                        $field_attr_type = '';
+                        $field_attr_placeholder = '';
+                        $field_attr_maxlength = '';
+                        $field_attr_inputclass = '';
+                        $field_attr_required = '';
+                        $field_attr_local_alias = '';
+
+                        if(property_exists($atributos, 'class')){
+                            $field_attr_class = $atributos->{'class'};
+                        }
+
+                        if(property_exists($atributos, 'type')){
+                            $field_attr_type = $atributos->{'type'};
+                        }
+
+                        if(property_exists($atributos, 'placeholder')){
+                            $field_attr_placeholder = $atributos->{'placeholder'};
+                        }
+
+                        if(property_exists($atributos, 'maxlength')){
+                            $field_attr_maxlength = $atributos->{'maxlength'};
+                        }
+
+                        if(property_exists($atributos, 'inputclass')){
+                            $field_attr_inputclass = $atributos->{'inputclass'};
+                        }
+
+                        if(property_exists($atributos, 'required')){
+                            $field_attr_required = $atributos->{'required'};
+                            if($field_attr_required == 'true'){
+                                $field_attr_required = 'required';
+                            }elseif($field_attr_required == 'false'){
+                                $field_attr_required = '';
+                            }
+                        }
+
+                        if(property_exists($atributos, 'local_alias')){
+                            $field_attr_local_alias = $atributos->{'local_alias'};
+                        }
+
                         if($campo == 'TEXTFIELD'){
-                            $html = $html .  '<div class="div-'.$row->{'mod_id_formulario_pregunta'}.' '.$atributos->{'class'}.'" >' . $enunciado . ':<br>';
-                            $html = $html .  ' <input id="'.$row->{'mod_id_formulario_pregunta'}.'" class="form-control" type="'.$atributos->{'type'}.'" placeholder="'.$atributos->{'placeholder'}.'" name="'.$row->{'mod_id_formulario_pregunta'}.'" '.$enabled.'><br>' . "\n";
+                            $html = $html .  '<div class="div-'.$row->{'mod_id_formulario_pregunta'}.' '.$field_attr_class.' '.$field_attr_local_alias.'" >' . $enunciado . ':<br>';
+                            $html = $html .  ' <input id="'.$row->{'mod_id_formulario_pregunta'}.'" class="form-control ' . $field_attr_inputclass . '" type="'.$field_attr_type.'" placeholder="'.$field_attr_placeholder.'" name="'.$row->{'mod_id_formulario_pregunta'}.'" value="" maxlength="'.$field_attr_maxlength.'" '.$enabled.' '.$field_attr_required.'><br>' . "\n";
                             $html = $html .  '</div>';
                         }
 
                         if($campo == 'TEXTAREA'){
-                            $html = $html .  '<div class="div-'.$row->{'mod_id_formulario_pregunta'}.' '.$atributos->{'class'}.'" >' . $enunciado . ':<br>';
-                            $html = $html .  ' <textarea id="'.$row->{'mod_id_formulario_pregunta'}.'" class="form-control" name="'. $row->{'mod_id_formulario_pregunta'} .'" '.$enabled.'></textarea><br>' . "\n";
+                            $html = $html .  '<div class="div-'.$row->{'mod_id_formulario_pregunta'}.' '.$field_attr_class.' '.$field_attr_local_alias.'" >' . $enunciado . ':<br>';
+                            $html = $html .  ' <textarea id="'.$row->{'mod_id_formulario_pregunta'}.'" class="form-control ' . $field_attr_inputclass . '" name="'. $row->{'mod_id_formulario_pregunta'} .'" maxlength="'.$field_attr_maxlength.'" '.$enabled.' '.$field_attr_required.'></textarea><br>' . "\n";
                             $html = $html .  '</div>';
                         }
 
                         if($campo == 'DATE'){
-                            $html = $html .  '<div class="div-'.$row->{'mod_id_formulario_pregunta'}.' '.$atributos->{'class'}.'" >' . $enunciado . ':<br>';
-                            $html = $html .  ' <input id="'.$row->{'mod_id_formulario_pregunta'}.'" class="form-control" type="date" name="'.$row->{'mod_id_formulario_pregunta'}.'" '.$enabled.'><br>' . "\n";
-                            $html = $html .  '</div>';
+                            $html = $html . '<div class="div-'.$row->{'mod_id_formulario_pregunta'}.' '.$field_attr_class.' '.$field_attr_local_alias.'" >' . $enunciado . ':<br>';
+                            $html = $html . ' <input id="'.$row->{'mod_id_formulario_pregunta'}.'" class="form-control ' . $field_attr_inputclass . '" type="date" name="'.$row->{'mod_id_formulario_pregunta'}.'" '.$enabled.' '.$field_attr_required.'><br>' . "\n";
+                            $html = $html . '</div>';
                         }
                         
                         if($campo == 'DATETIME'){
-                            $html = $html .  '<div class="div-'.$row->{'mod_id_formulario_pregunta'}.' '.$atributos->{'class'}.'" >' . $enunciado . ':<br>';
-                            $html = $html .  ' <input id="'.$row->{'mod_id_formulario_pregunta'}.'" class="form-control" type="datetime-local" name="'.$row->{'mod_id_formulario_pregunta'}.'" '.$enabled.'><br>' . "\n";
+                            $html = $html .  '<div class="div-'.$row->{'mod_id_formulario_pregunta'}.' '.$field_attr_class.' '.$field_attr_local_alias.'" >' . $enunciado . ':<br>';
+                            $html = $html .  ' <input id="'.$row->{'mod_id_formulario_pregunta'}.'" class="form-control ' . $field_attr_inputclass . '" type="datetime-local" name="'.$row->{'mod_id_formulario_pregunta'}.'" '.$enabled.' '.$field_attr_required.'><br>' . "\n";
                             $html = $html .  '</div>';
                         }
 
                         if($campo == 'TIME'){
-                            $html = $html .  '<div class="div-'.$row->{'mod_id_formulario_pregunta'}.' '.$atributos->{'class'}.'" >' . $enunciado . ':<br>';
-                            $html = $html .  ' <input id="'.$row->{'mod_id_formulario_pregunta'}.'" class="form-control" type="time" name="'.$row->{'mod_id_formulario_pregunta'}.'" '.$enabled.'><br>' . "\n";
+                            $html = $html .  '<div class="div-'.$row->{'mod_id_formulario_pregunta'}.' '.$field_attr_class.' '.$field_attr_local_alias.'" >' . $enunciado . ':<br>';
+                            $html = $html .  ' <input id="'.$row->{'mod_id_formulario_pregunta'}.'" class="form-control ' . $field_attr_inputclass . '" type="time" name="'.$row->{'mod_id_formulario_pregunta'}.'" '.$enabled.' '.$field_attr_required.'><br>' . "\n";
                             $html = $html .  '</div>';
                         }
 
@@ -156,21 +183,29 @@
                             $opciones = json_decode($row->{'opciones_campo'});
                             $array_opciones = (array)$opciones;
                             $number_opciones = count($array_opciones);
-                            $html = $html .  '
-                            <input type="hidden" name="'.$row->{'mod_id_formulario_pregunta'}.'" value="-#$%-">
-                            <label id="'.$row->{'mod_id_formulario_pregunta'}.'">'.$enunciado.'</label>';
+
+                            $html = $html .  '<div class="div-'.$row->{'mod_id_formulario_pregunta'}.' '.$field_attr_class.' '.$field_attr_local_alias.'" >';
+                            $html = $html .  '<input type="hidden" name="'.$row->{'mod_id_formulario_pregunta'}.'" value="-#$%-">';
+                            if($enunciado){
+                                $html = $html . '<label>'.$enunciado.'</label>';
+                            }
+
+                            $field_attr_radioclass = '';
+                            if(property_exists($atributos, 'radioclass')){
+                                $field_attr_radioclass = $atributos->{'radioclass'};
+                            }
+                                              
                             $html = $html .  '<div class="opcionesRadio" style="margin-bottom:0.4em">';
-                            for($i = 0; $i < $number_opciones; $i++){
-                                $opcion = (array) $array_opciones[$i];
+                            for($x = 0; $x < $number_opciones; $x++){
+                                $opcion = (array) $array_opciones[$x];
                                 $html = $html .  '
-                                    <div id="'.$row->{'mod_id_formulario_pregunta'}.'" name="'.$row->{'mod_id_formulario_pregunta'}.'" class="radio">
-                                        <label><input type="radio" name="'.$row->{'mod_id_formulario_pregunta'}.'" value="'.$opcion['valor'].'" name="optradio" '.$enabled.'>'.$opcion['enunciado'].'</label>
+                                    <div id="'.$row->{'mod_id_formulario_pregunta'}.'" name="'.$row->{'mod_id_formulario_pregunta'}.'" class="radio ' . $field_attr_radioclass . '">
+                                        <label><input type="radio" class=" ' . $field_attr_inputclass . '" name="'.$row->{'mod_id_formulario_pregunta'}.'" value="'.$opcion['valor'].'" name="optradio" '.$enabled.'>'.$opcion['enunciado'].'</label>
                                     </div>
-                                
                                 ' . "\n";
                             }
-                            $html = $html .  '<a href="javascript:void(0);" class="limpiar btn btn-xs btn-default" >Limpiar</a>
-                                </div>
+                            $html = $html .  '</div><a href="javascript:void(0);" class="limpiar btn btn-xs btn-default" >Limpiar</a>
+                             </div>
                             ' . "\n";
                         }
 
@@ -178,19 +213,34 @@
                             $opciones = json_decode($row->{'opciones_campo'});
                             $array_opciones = (array)$opciones;
                             $number_opciones = count($array_opciones);
-                            $html = $html .  '
-                            <label id="'.$row->{'mod_id_formulario_pregunta'}.'">'.$enunciado.'</label>';
-                            for($i = 0; $i < $number_opciones; $i++){
-                                $opcion = (array) $array_opciones[$i];
-                                $html = $html .  '
-                                <div class="checkbox">
-                                    <input type="hidden" name="'.$row->{'mod_id_formulario_pregunta'}.'" value="-1">
-                                    <label><input type="checkbox" name="'.$row->{'mod_id_formulario_pregunta'}.'" value="'.$opcion['valor'].'" '.$enabled.'>'.$opcion['enunciado'].'</label>
-                                </div>
-                                ' . "\n";
+
+                            $html = $html .  '<div class="div-'.$row->{'mod_id_formulario_pregunta'}.' '.$field_attr_class.' '.$field_attr_local_alias.'" >';
+                            if($enunciado){
+                                $html = $html . '<label>'.$enunciado.'</label>';
                             }
 
-                            
+                            $field_attr_checkclass = '';
+                            if(property_exists($atributos, 'checkclass')){
+                                $field_attr_checkclass = $atributos->{'checkclass'};
+                            }
+
+                            $name_checkbox = $row->{'mod_id_formulario_pregunta'};
+                            if($number_opciones > 1){
+                                $name_checkbox = $row->{'mod_id_formulario_pregunta'} . '[]';
+                            }
+
+                            for($x = 0; $x < $number_opciones; $x++){
+                                $opcion = (array) $array_opciones[$x];
+                                $html = $html . '<div class="checkbox ' . $field_attr_checkclass . '">' . "\n";
+                                if($number_opciones == 1){
+                                    $html = $html . '   <input type="hidden" name="'. $name_checkbox .'" value="-1">' . "\n";
+                                }
+                                $html = $html . '   <label><input type="checkbox" class="' . $field_attr_inputclass . '" name="'. $name_checkbox .'" value="'.$opcion['valor'].'" '.$enabled.'>'.$opcion['enunciado'].'</label>' . "\n";
+                                $html = $html . '</div>';
+                                $html = $html . '' . "\n";
+                            }
+                            $html = $html . '</div>';
+
                         }
 
                     }
@@ -201,80 +251,8 @@
             }
 
         }
-        $html = $html .  ' <hr style="border-color:red"><button type="submit" class="btn btn-sm btn-default">Registrar</button>' . "\n";
+        $html = $html .  ' <hr style="border-color:red"><button type="submit" class="btn btn-sm btn-danger btn-dphpforms-univalle">Registrar</button>' . "\n";
         $html = $html .  ' </form>' . "\n";
-
-
-        //Escritura de reglas en JAVASCRIPT (ALPHA)
-        //Reglas
-        /*
-        $scriptReglas = null;
-        $sql = '
-            SELECT 
-                * 
-            FROM 
-                reglas, 
-                reglas_formulario_preguntas
-            WHERE 
-                reglas_formulario_preguntas.id_regla = reglas.id
-            AND
-                reglas_formulario_preguntas.id_formulario = '.$FORM_ID.'
-
-        ';
-
-        $reglas = pg_query($db_connection, $sql);
-        $row_reglas = pg_fetch_row($reglas);
-        while($row_reglas){
-            $regla = $row_reglas[1];
-            $campoA = $row_reglas[5];
-            $campoB = $row_reglas[6];
-            if($regla == 'DIFFERENT'){
-                $scriptReglas = $scriptReglas . '
-                
-                    $(document).on("keyup", "#'.$campoA.'" , function() {
-                        if(($("#'.$campoA.'").val() == $("#'.$campoB.'").val())&&($("'.$campoA.'").val() != "")){
-                            $("#'.$campoA.'").addClass("danger");
-                            $("#'.$campoB.'").addClass("danger");
-                        }else{
-                            $("#'.$campoA.'").removeClass("danger");
-                            $("#'.$campoB.'").removeClass("danger");
-                        }
-                    });
-
-                    $(document).on("keyup", "#'.$campoB.'" , function() {
-                        if(($("#'.$campoB.'").val() == $("#'.$campoA.'").val())&&($("#'.$campoB.'").val() != "")){
-                            $("#'.$campoB.'").addClass("danger");
-                            $("#'.$campoA.'").addClass("danger");
-                        }else{
-                            $("#'.$campoB.'").removeClass("danger");
-                            $("#'.$campoA.'").removeClass("danger");
-                        }
-                    });
-                
-                ';
-            }
-            $row_reglas = pg_fetch_row($reglas);
-        };*/
-
-        /*$html = $html .  '
-        
-            </div>
-        </div>
-        <script src="js/jquery.min.js"></script>
-        <script src="js/bootstrap.min.js"></script>
-        <script>
-            $(".limpiar").click(function(){
-                $(this).parent().find("div").each(function(){
-                    $(this).find("label").find("input").prop("checked", false);
-                });
-            });
-        </script>
-        </body>
-    </html>
-        
-        ';*/
-
-        // Fin de construcción
 
         return $html;
 

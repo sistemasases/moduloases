@@ -8,7 +8,6 @@
 
 define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/validator'], function ($, bootstrap, sweetalert, validator) {
 
-
     return {
         init: function () {
 
@@ -37,9 +36,9 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/v
              */
             function subir_archivos(form) {
 
-                let status_bar = form.children[2].children[0].children[0],
-                    span = status_bar.children[0],
-                    goback_button = form.children[4].children[1];
+                var status_bar = form.children[2].children[0].children[0];
+                var span = status_bar.children[0];
+                var goback_button = form.children[4].children[1];
 
                 response_div = document.getElementById('response_div');
                 response_span = document.getElementById('response_span');
@@ -50,7 +49,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/v
                 status_bar.classList.remove('green_bar', 'red_bar');
 
                 //Ajax request
-                let request = new XMLHttpRequest();
+                var request = new XMLHttpRequest();
 
                 // Progress bar
 

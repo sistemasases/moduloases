@@ -100,7 +100,7 @@ $PAGE->requires->css('/blocks/ases/style/side_menu_style.css', true);
 
 
 
-$PAGE->requires->js('/blocks/ases/js/npm.js', true);
+// $PAGE->requires->js('/blocks/ases/js/npm.js', true);
 $PAGE->requires->js_call_amd('block_ases/tracking_time_control_main','init');
 
 $PAGE->set_url($url);

@@ -7,7 +7,7 @@
 /**
  * @module block_ases/usermanagement_main
  */
-define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_ases/datatables.net-buttons', 'block_ases/buttons.flash', 'block_ases/jszip', 'block_ases/pdfmake', 'block_ases/buttons.html5', 'block_ases/buttons.print', 'block_ases/sweetalert', 'block_ases/select2'], function($, bootstrap, datatablesnet, datatablesnetbuttons, buttonsflash, jszip, pdfmake, buttonshtml5, buttonsprint, sweetalert, select2) {
+define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables', 'block_ases/sweetalert', 'block_ases/select2'], function($, bootstrap, datatables, sweetalert, select2) {
 
     var students;
 
@@ -30,7 +30,6 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_as
                 },
                 dropdownAutoWidth: true,
             });
-
 
             function evaluate_permission(name_permission) {
                 var result;
@@ -57,12 +56,16 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_as
                         });
                     },
                 });
-
                 return result;
             }
 
             $(document).ready(function() {
+                
                 var roleLoaded = false;
+
+                $('#academic_program_li').css({
+                    display: 'none'
+                });
                 $(".assignment_li").css({
                     display: 'none'
                 });
@@ -92,12 +95,8 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_as
                             currentUser.username = $("#users").val();
                             valdateStudentMonitor(currentUser, false);
                         } else {
-
-
                                 updateRolUser();
                                 load_users();
-                            
-
                         }
                     });
 
@@ -128,23 +127,28 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_as
                         $("#form_mon_student").fadeIn();
                         get_boss(4);
                         $('#boss_li').fadeIn();
-
+                        $('#academic_program_li').fadeOut();
                     } else if ($("#role_select").val() == "profesional_ps") {
                         $("#form_prof_type").fadeIn();
                         $('#boss_li').fadeOut();
                         $("#form_mon_student").fadeOut();
-
+                        $('#academic_program_li').fadeOut();
                     } else if ($("#role_select").val() == "practicante_ps") {
-
                         $("#form_prof_type").fadeOut();
                         $("#form_mon_student").fadeOut();
                         get_boss(7);
                         $('#boss_li').fadeIn();
-
-                    } else {
+                        $('#academic_program_li').fadeOut();
+                    } else if($('#role_select').val() == "director_prog"){
+                        $('#form_prof_type').fadeOut();
+                        $('#form_mon_student').fadeOut();
+                        $('#boss_li').fadeOut();
+                        $('#academic_program_li').fadeIn();
+                    }else {
                         $('#boss_li').fadeOut();
                         $("#form_mon_student").fadeOut();
                         $("#form_prof_type").fadeOut();
+                        $('#academic_program_li').fadeOut();
                     }
                 });
                 $("#list-users-panel").on('click', function() {
@@ -306,15 +310,23 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_as
                                             $("#form_prof_type").fadeIn();
                                             $('#boss_li').fadeOut();
                                             $("#form_mon_student").fadeOut();
+                                            $('#academic_program_li').fadeOut();
                                         } else if (msg.rol == "monitor_ps") {
                                             loadStudents();
                                             get_boss(4, msg.boss);
                                             $("#form_mon_student").fadeIn();
                                             $("#form_prof_type").fadeOut();
+                                            $('#academic_program_li').fadeOut();
                                         } else if (msg.rol == "practicante_ps") {
                                             get_boss(7, msg.boss);
                                             $("#form_mon_student").fadeOut();
                                             $("#form_prof_type").fadeOut();
+                                            $('#academic_program_li').fadeOut();
+                                        } else if(msg.rol == "director_prog"){
+                                            $("#form_mon_student").fadeOut();
+                                            $("#form_prof_type").fadeOut();
+                                            $('#boss_li').fadeOut();
+                                            $('#academic_program_li').fadeIn();
                                         } else {
                                             $('#boss_li').fadeOut();
                                             $("#form_mon_student").fadeOut();
@@ -360,7 +372,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_as
                 var dataRole = $('#role_select').val();
                 var dataUsername = $('#users').val();
                 var dataStudents = new Array();
-
+                
                         $('input[name="array_students[]"]').each(function() {
                         dataStudents.push($(this).val().split(" - ")[0]);
 
@@ -368,7 +380,6 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_as
 
                     $('select[name="array_students[]"]').each(function() {
                         dataStudents.push($(this).val().split(" - ")[0]);
-
                     });
 
                     if (dataRole == "profesional_ps") {
@@ -464,6 +475,37 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_as
                                 swal("Error", "Ha ocurrido un error", "error")
                             },
                         });
+                    } else if(dataRole == "director_prog"){
+                        
+                        var academic_program_id = $('#academic_program_select').val();
+
+                        $.ajax({
+                            type: "POST",
+                            data: {
+                                role: dataRole,
+                                username: dataUsername,
+                                academic_program: academic_program_id,
+                                idinstancia: getIdinstancia()
+                            },
+                            url: "../managers/user_management/update_role_user.php",
+                            success: function(msg) {
+                                swal({
+                                    title: "Información!",
+                                    text: msg,
+                                    type: "info",
+                                    html: true,
+                                    confirmButtonColor: "#d51b23",
+                                    confirmButtonText: "Ok!",
+                                    closeOnConfirm: true
+                                });
+                                userLoad(dataUsername);
+                            },
+                            dataType: "text",
+                            cache: "false",
+                            error: function(msg) {
+                                swal("Error", "Ha ocurrido un error", "error")
+                            },
+                        });
                     } else {
                         $.ajax({
                             type: "POST",
@@ -483,33 +525,21 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_as
                             },
                         });
                     }
-                
-               
             }
-
-
-
 
             function create_select2(name) {
 
-
                 $("#" + name).select2({
-
                     language: {
-
                         noResults: function() {
-
                             return "No hay resultado";
                         },
                         searching: function() {
-
                             return "Buscando..";
                         }
                     },
                     dropdownAutoWidth: true,
                 });
-
-
             }
 
             function student_asignment(students) {
@@ -519,23 +549,20 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables.net', 'block_as
                 var count = $(".inputs_students").length + 1;
                 var FieldCount = count; //para el seguimiento de los campos
 
-                if (count <= MaxInputs) //max input box allowed
-                {
+                if (count <= MaxInputs){ // Max input allowed
                     FieldCount++;
                     var text = '<option value="-1">-----------------------</option>';
 
                     for (var student in students) {
                         text += '<option value="' + students[student].username + '">' + students[student].username + ' - ' + students[student].firstname + ' ' + '' + students[student].lastname + '</option>';
                     }
+                    
                     $("#contenedor_add_fields").append('<div class="select-pilos"><select class="inputs_students" name="array_students[]" id="campo_' + FieldCount + '"">' + text + '</select></div>');
                     create_select2('campo_' + FieldCount);
                     count++;
                 }
-
-
-
-
             }
+
             function loadStudents() {
                 var data = new Array();
                 var user_id = $('#user_id').val();

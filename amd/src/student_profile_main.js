@@ -156,6 +156,9 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/d3', 'block_ases/sweetaler
                 });
             });
 
+            // Despliega el modal de seguimiento v2
+            //Se mueve a dphpforms_form_renderer.js
+
             var RadarChart = {
                 draw: function(id, d, options){
                 var cfg = {

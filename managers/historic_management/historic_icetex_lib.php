@@ -133,3 +133,29 @@ function create_historic_icetex($student_id, $program_id, $resolution_id, $amoun
 
     return $insert;
 }
+
+
+function update_resolution_credit_note($id_resolution, $credit_note){
+    global $DB;
+
+    $upd_cred_note = false;
+
+
+    //$id_resolution = get_resolution_id_by_number($res_code);
+    
+    $object_resolution = new stdClass();
+    $object_resolution->id = $id_resolution;
+    $object_resolution->nota_credito = $credit_note;
+
+    $update = $DB->update_record('talentospilos_res_icetex', $object_resolution);
+
+    if($update){
+        $upd_cred_note = true;
+    }else{
+        $upd_cred_note = false;
+    }
+
+    return $upd_cred_note;
+}
+
+//print_r(update_resolution_credit_note(10, 'Hey'));

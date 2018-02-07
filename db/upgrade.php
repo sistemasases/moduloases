@@ -4,7 +4,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     global $DB;
     $dbman = $DB->get_manager();
     $result = true;
-    if ($oldversion < 2018013010459) {
+    if ($oldversion < 2018020214529 ) {
     // ************************************************************************************************************
     // Actualización que crea la tabla para los campos extendidos de usuario (Tabla: {talentospilos_user_extended})
     // Versión: 2018010911179
@@ -102,10 +102,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     
     // Define table talentospilos_history_academ to be created.
     $table = new xmldb_table('talentospilos_history_academ');
-    // Conditionally launch drop table for talentospilos_history_academ.
-    if ($dbman->table_exists($table)) {
-        $dbman->drop_table($table);
-    }
+    
     // Adding fields to table talentospilos_history_academ.
     $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
     // Adding keys to table talentospilos_history_academ.
@@ -304,9 +301,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     // Define table talentospilos_res_estudiante to be dropped.
     $table = new xmldb_table('talentospilos_res_estudiante');
     // Conditionally launch drop table for talentospilos_res_estudiante.
-    if ($dbman->table_exists($table)) {
-        $dbman->drop_table($table);
-    }
+    
     // Define table talentospilos_res_estudiante to be created.
     $table = new xmldb_table('talentospilos_res_estudiante');
     // Adding fields to table talentospilos_res_estudiante.
@@ -361,9 +356,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     // Define table talentospilos_res_icetex to be dropped.
     $table = new xmldb_table('talentospilos_res_icetex');
     // Conditionally launch drop table for talentospilos_res_icetex.
-    if ($dbman->table_exists($table)) {
-        $dbman->drop_table($table);
-    }
+    
     // Define table talentospilos_res_icetex to be created.
     $table = new xmldb_table('talentospilos_res_icetex');
     // Adding fields to table talentospilos_res_icetex.
@@ -815,13 +808,95 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
         	$dbman->create_table($table);
     	}
 
+    // ************************************************************************************************************
+    // Actualización:
+    // Se crea la tabla {talentospilos_df_alias}
+    // Versión en la que se incluye: 2018013114389
+    // ************************************************************************************************************
+
+        // Define table talentospilos_df_alias to be created.
+        $table = new xmldb_table('talentospilos_df_alias');
+
+        // Adding fields to table talentospilos_df_alias.
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        $table->add_field('id_pregunta', XMLDB_TYPE_INTEGER, '20', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('alias', XMLDB_TYPE_CHAR, '100', null, XMLDB_NOTNULL, null, null);
+
+        // Adding keys to table talentospilos_df_alias.
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+
+        // Adding indexes to table talentospilos_df_alias.
+        $table->add_index('unique_id_pregunta', XMLDB_INDEX_UNIQUE, array('id_pregunta'));
+        $table->add_index('unique_alias', XMLDB_INDEX_UNIQUE, array('alias'));
+
+        // Conditionally launch create table for talentospilos_df_alias.
+        if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
+        }
+
+
+    // ************************************************************************************************************
+    // Actualización:
+    // Se añade el campo nota_credito en la tabla {talentospilos_res_icetex}
+    // Versión en la que se incluye: 2018020209479 
+    // ************************************************************************************************************
+
+     // Define field nota_credito to be added to talentospilos_res_icetex.
+     $table = new xmldb_table('talentospilos_res_icetex');
+     $field = new xmldb_field('nota_credito', XMLDB_TYPE_TEXT, null, null, null, null, null, 'fecha_resolucion');
+
+     // Conditionally launch add field nota_credito.
+     if (!$dbman->field_exists($table, $field)) {
+         $dbman->add_field($table, $field);
+     }
 
 
 
+    // ************************************************************************************************************
+    // Actualización:
+    // Se añade el campo nota_credito en la tabla {talentospilos_res_icetex}
+    // Versión en la que se incluye: 2018020214529
+    // ************************************************************************************************************
+
+     // Define field alias to be added to talentospilos_df_formularios.
+     $table = new xmldb_table('talentospilos_df_formularios');
+     $field = new xmldb_field('alias', XMLDB_TYPE_CHAR, '100', null, null, null, null, 'fecha_hora_registro');
+
+     // Conditionally launch add field alias.
+     if (!$dbman->field_exists($table, $field)) {
+          $dbman->add_field($table, $field);
+     }
+
+     // Define field estado to be added to talentospilos_df_formularios.
+     $table = new xmldb_table('talentospilos_df_formularios');
+     $field = new xmldb_field('estado', XMLDB_TYPE_INTEGER, '5', null, XMLDB_NOTNULL, null, '1', 'alias');
+
+     // Conditionally launch add field estado.
+     if (!$dbman->field_exists($table, $field)) {
+         $dbman->add_field($table, $field);
+     }
+
+     // Define field estado to be added to talentospilos_df_form_resp.
+     $table = new xmldb_table('talentospilos_df_form_resp');
+     $field = new xmldb_field('estado', XMLDB_TYPE_INTEGER, '5', null, XMLDB_NOTNULL, null, '1', 'fecha_hora_registro');
+
+     // Conditionally launch add field estado.
+     if (!$dbman->field_exists($table, $field)) {
+         $dbman->add_field($table, $field);
+     }
+
+     // Define field estado to be added to talentospilos_df_form_preg.
+     $table = new xmldb_table('talentospilos_df_form_preg');
+     $field = new xmldb_field('estado', XMLDB_TYPE_INTEGER, '5', null, XMLDB_NOTNULL, null, '1', 'fecha_hora_registro');
+
+     // Conditionally launch add field talentospilos_df_form_resp.
+     if (!$dbman->field_exists($table, $field)) {
+         $dbman->add_field($table, $field);
+     }
 
 
     // Ases savepoint reached.
-    upgrade_block_savepoint(true, 2018013010459, 'ases');
+    upgrade_block_savepoint(true, 2018020214529 , 'ases');
    
     return $result;
 

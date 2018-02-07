@@ -168,6 +168,15 @@ if (isset($_FILES['file'])) {
                 throw new MyException('La columna con el campo total_girado es obligatoria');
             }
 
+            $has_credit_note = false;
+            //validate nota_credito
+            if (!is_null($associativeTitles['nota_credito'])) {
+                $credit_note = $data[$associativeTitles['nota_credito']];
+                if ($credit_note != "" and $credit_note != 'undefined') {
+                    $has_credit_note = true;                    
+                }
+            }
+
             //FINALIZACION DE VALIDACIONES. CARGA O ACTUALIZACIÓN
             if (!$isValidRow) {
                 $lc_wrongFile++;
@@ -183,7 +192,18 @@ if (isset($_FILES['file'])) {
                     array_push($wrong_rows, $data);
                     $lc_wrongFile++;
                 } else {
+                    $id_resolution = $result;
                     array_push($success_rows, $data);
+ 
+                    if ($has_credit_note) {
+                     $insert_credit_note = update_resolution_credit_note($id_resolution, $credit_note);
+                     
+                         if (!$insert_credit_note) {
+                             array_push($detail_erros, [$line_count, $lc_wrongFile, 'Error al nota crédito', 'Error Servidor', 'Error del server registrando la nota crédito']);
+                             array_push($wrong_rows, $data);
+                             $lc_wrongFile++;
+                         }
+                     }
                 }
             }
 

@@ -49,8 +49,8 @@ require_login($courseid, false);
 $contextcourse = context_course::instance($courseid);
 $contextblock = context_block::instance($blockid);
 $url = new moodle_url("/blocks/ases/view/user_management.php", array(
-	'courseid' => $courseid,
-	'instanceid' => $blockid
+    'courseid' => $courseid,
+    'instanceid' => $blockid
 ));
 
 // Instance is consulted for its registration
@@ -63,7 +63,6 @@ if (!consult_instance($blockid)) {
 $menu_option = create_menu_options($USER->id, $blockid, $courseid);
 
 // Obatins the people associated to the course and the students
-
 $courseusers = get_course_usersby_id($courseid);
 $table_courseuseres = get_course_users_select($courseusers);
 
@@ -75,12 +74,22 @@ $data = new stdClass;
 $actions = authenticate_user_view($USER->id, $blockid);
 $data = $actions;
 
+// Load academic programs for program director role
+$academic_programs = get_academic_programs();
+$academic_programs_options = "";
+
+foreach($academic_programs as $academic_program){
+    $academic_programs_options .= "<option value='$academic_program->id'>$academic_program->cod_univalle - 
+                                   $academic_program->academic_program_name - $academic_program->location_name - $academic_program->jornada</option>";
+}
+
+$data->academic_program_select = $academic_programs_options;
+
 $data->table = $table_courseuseres;
 $data->menu = $menu_option;
 $PAGE->requires->js_call_amd('block_ases/usermanagement_main', 'init');
 
 // Nav configuration
-
 $coursenode = $PAGE->navigation->find($courseid, navigation_node::TYPE_COURSE);
 $node = $coursenode->add('Gestion de roles del bloque', $url);
 $node->make_active();

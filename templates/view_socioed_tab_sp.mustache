@@ -11,10 +11,62 @@
          </div>
          <div id="collapseOne" class="panel-collapse collapse in form-pilos" role="tabpanel" aria-labelledby="headingOne">
             {{#add_peer_tracking_sp}}
-            <button type="button" id="button_add_track" class="btn-primary">
+            <!--<button type="button" id="button_add_track" class="btn-primary">
+            Nuevo seguimiento
+            </button>-->
+            <button type="button" id="button_add_v2_track" class="btn-primary">
             Nuevo seguimiento
             </button>
             {{/add_peer_tracking_sp}}
+            <hr>
+            <div class="peer_trackings_v2 well well_v2" id="peer_trackings_v2" name="peer_trackings_v2">
+               
+               {{#peer_tracking_v2}}
+               <div id="accordion_v2">
+                    {{#periodos}}
+                            <div class="card card_v2">
+                                <div class="card-header card-header_v2" role="tab" id="headingOne{{year}}A">
+                                    <h5 class="mb-0">
+                                        <a data-toggle="collapse" class="btn btn-danger btn-univalle btn-card" data-parent="#accordion_v2" href="#collapseOne{{year}}A" aria-expanded="true" aria-controls="collapseOne">
+                                            {{year}} A
+                                        </a>
+                                    </h5>
+                                </div>
+
+                                <div id="collapseOne{{year}}A" class="collapse show collapse_v2" role="tabpanel" aria-labelledby="headingOne{{year}}A">
+                                    {{#per_a}}
+                                    <div id="dphpforms-peer-record-{{#record}}{{id_registro}}{{/record}}" class="card-block dphpforms-peer-record peer-tracking-record" data-record-id="{{#record}}{{id_registro}}{{/record}}">
+                                        Registro: {{#record}} {{#alias_key}} {{respuesta}} {{/alias_key}} {{/record}}
+                                    </div>
+                                    {{/per_a}}
+                                </div>
+                            </div>
+
+                            <div class="card card_v2">
+                                <div class="card-header card-header_v2" role="tab" id="headingOne{{year}}B">
+                                    <h5 class="mb-0">
+                                        <a data-toggle="collapse" class="btn btn-danger btn-univalle btn-card" data-parent="#accordion_v2" href="#collapseOne{{year}}B" aria-expanded="true" aria-controls="collapseOne">
+                                            {{year}} B
+                                        </a>
+                                    </h5>
+                                </div>
+
+                                <div id="collapseOne{{year}}B" class="collapse show collapse_v2" role="tabpanel" aria-labelledby="headingOne{{year}}B">
+                                    {{#per_b}}
+                                    <div id="dphpforms-peer-record-{{#record}}{{id_registro}}{{/record}}" class="card-block dphpforms-peer-record peer-tracking-record" data-record-id="{{#record}}{{id_registro}}{{/record}}">
+                                        Registro: {{#record}} {{#alias_key}} {{respuesta}} {{/alias_key}} {{/record}}
+                                    </div>
+                                    {{/per_b}}
+                                </div>
+                            
+
+                        </div>
+                    {{/periodos}}
+
+                </div>
+                {{/peer_tracking_v2}}
+                
+            </div>
             <hr>
             <div class="well" id="peer_trackings" name="peer_trackings">
                {{{peer_tracking}}}
