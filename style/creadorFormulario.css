@@ -56,9 +56,11 @@ pre, code {
     border-radius: 0px;
     width: 100%;
     background-color: #E5E5E5;
-    color: #333;
+    color: black;
     text-align: left;
     border-color: #ddd !important;
+    padding: 10px 15px 10px 15px;
+    font-size: 16px;
 }
 
 .btn-card:hover{
@@ -117,6 +119,10 @@ pre, code {
     margin-top: 0px;
 }
 
+
+.peer_trackings_v2{
+    margin-bottom: 10px;
+}
 
 /*Definición de los estilos para los formularios que dependen de dphpforms*/
 
