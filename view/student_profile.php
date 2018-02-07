@@ -389,9 +389,6 @@ if ($student_code != 0) {
 
     // Student trackings (Seguimientos)
 
-    $html_tracking_peer = "";
-    $array_peer_trackings = get_tracking_group_by_semester($student_id, 'PARES', null, $blockid);
-
     $array_peer_trackings_dphpforms = dphpforms_find_records('seguimiento_pares', 'seguimiento_pares_id_estudiante', $student_code, 'DESC');
     $array_peer_trackings_dphpforms = json_decode($array_peer_trackings_dphpforms);
     $array_detail_peer_trackings_dphpforms = array();
@@ -512,11 +509,18 @@ if ($student_code != 0) {
 
     //END V2
 
+    $html_tracking_peer = "";
+    $array_peer_trackings = get_tracking_group_by_semester($student_id, 'PARES', null, $blockid);
+
     if ($array_peer_trackings != null) {
 
         $panel = "<div class='panel-group' id='accordion_semesters'>";
+        $number_semesters = count($array_semester);
+        foreach ($array_peer_trackings->semesters_segumientos as $key_semester => $array_semester) {
 
-        foreach ($array_peer_trackings->semesters_segumientos as $array_semester) {
+            if(strpos($array_semester->name_semester, '2018') !== false){
+                continue;
+            };
 
             $panel .= "<div class='panel panel-default'>";
             $panel .= "<a data-toggle='collapse' class='collapsed' data-parent='#accordion_semesters' style='text-decoration:none' href='#semester" . $array_semester->id_semester . "'>";
