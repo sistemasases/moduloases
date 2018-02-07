@@ -455,7 +455,10 @@ if ($student_code != 0) {
             $seguimientos_ordenados->$array_tracking_date[$x]['year']->year = $array_tracking_date[$x]['year'];
             $seguimientos_ordenados->$array_tracking_date[$x]['year']->per_a = array();
             $seguimientos_ordenados->$array_tracking_date[$x]['year']->per_b = array();
+
+            $seguimientos_ordenados->$array_tracking_date[$x]['year']->year = $array_tracking_date[$x]['year'];
             if(in_array($array_tracking_date[$x]['mon'], $periodo_a)){
+                
                 for($y = 0; $y < count($array_detail_peer_trackings_dphpforms); $y++){
                     if($array_detail_peer_trackings_dphpforms[$y]){
                         foreach ($array_detail_peer_trackings_dphpforms[$y]->record->campos as &$tracking) {
@@ -465,12 +468,12 @@ if ($student_code != 0) {
                                     $array_detail_peer_trackings_dphpforms[$y] = null;
                                     break;
                                 }
-                                
                             }
                         }
                     }
                 }
             }else{
+                
                 for($y = 0; $y < count($array_detail_peer_trackings_dphpforms); $y++){
                     if($array_detail_peer_trackings_dphpforms[$y]){
                         foreach ($array_detail_peer_trackings_dphpforms[$y]->record->campos as &$tracking) {
@@ -480,7 +483,6 @@ if ($student_code != 0) {
                                     $array_detail_peer_trackings_dphpforms[$y] = null;
                                     break;
                                 }
-                                
                             }
                         }
                     }
