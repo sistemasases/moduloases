@@ -4,6 +4,7 @@
 
     if(isset($_GET['function'])){
         if($_GET['function'] == 'get_forms'){
+            header('Content-Type: application/json');
             echo json_encode(get_forms());
             die();
         }
@@ -11,13 +12,30 @@
 
     if(isset($_GET['function'])){
         if($_GET['function'] == 'delete_form'){
-            delete_form( $_GET['id_form'] );
+            header('Content-Type: application/json');
+            $response = delete_form( $_GET['id_form'] );
+            if($response == 0){
+                echo json_encode(
+                    array(
+                        'status' => '0',
+                        'message' => 'Deleted'
+                    )
+                );
+            }else{
+                echo json_encode(
+                    array(
+                        'status' => '-1',
+                        'message' => "Does not exist"
+                    )
+                );
+            }
             die();
         }
     }
 
     if(isset($_GET['function'])){
         if($_GET['function'] == 'get_alias'){
+            header('Content-Type: application/json');
             echo json_encode(get_alias());
             die();
         }
@@ -25,7 +43,23 @@
 
     if(isset($_GET['function'])){
         if($_GET['function'] == 'delete_alias'){
-            delete_alias( $_GET['id_alias'] );
+            header('Content-Type: application/json');
+            $response = delete_alias( $_GET['id_alias'] );
+            if($response == 0){
+                echo json_encode(
+                    array(
+                        'status' => '0',
+                        'message' => 'Deleted'
+                    )
+                );
+            }else{
+                echo json_encode(
+                    array(
+                        'status' => '-1',
+                        'message' => "Does not exist"
+                    )
+                );
+            }
             die();
         }
     }
@@ -58,15 +92,23 @@
 
     function delete_form($form_id){
 
+        if(!$form_id){
+            return -1;
+        }
+
         global $DB;
 
         $sql = "SELECT * FROM {talentospilos_df_formularios} WHERE id = '$form_id' AND estado = '1'";
         $formulario = $DB->get_record_sql($sql);
-        $formulario->estado = '0';
-        $formulario->alias = null;
-
-        $DB->update_record('talentospilos_df_formularios', $formulario, $bulk = false);
-
+        if($formulario){
+            $formulario->estado = '0';
+            $formulario->alias = null;
+            $DB->update_record('talentospilos_df_formularios', $formulario, $bulk = false);
+            return 0;
+        }else{
+            return -1;
+        }
+        
     }
 
     function get_alias(){
