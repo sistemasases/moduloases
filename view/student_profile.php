@@ -849,6 +849,10 @@ if ($student_code != 0) {
     }
 }
 
+if($rol == 'sistemas'){
+    $record->add_peer_tracking_lts = true;
+}
+
 //Menu items are created
 $menu_option = create_menu_options($USER->id, $blockid, $courseid);
 

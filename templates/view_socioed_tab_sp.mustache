@@ -10,14 +10,20 @@
             </h4>
          </div>
          <div id="collapseOne" class="panel-collapse collapse in form-pilos" role="tabpanel" aria-labelledby="headingOne">
+            
             {{#add_peer_tracking_sp}}
-            <!--<button type="button" id="button_add_track" class="btn-primary">
-            Nuevo seguimiento
-            </button>-->
+
+            {{#add_peer_tracking_lts}}
+            <button type="button" id="button_add_track" class="btn-primary">
+            Nuevo seguimiento (2017)
+            </button>
+            {{/add_peer_tracking_lts}}
             <button type="button" id="button_add_v2_track" class="btn-primary">
             Nuevo seguimiento
             </button>
             {{/add_peer_tracking_sp}}
+            
+
             <hr>
             <div class="peer_trackings_v2 well well_v2" id="peer_trackings_v2" name="peer_trackings_v2">
                
