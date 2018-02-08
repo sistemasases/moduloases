@@ -354,12 +354,8 @@ if ($student_code != 0) {
             break;
     }
 
-    if ($rol == 'sistemas') {
-        $record->code = "<input type='text' class='tip' id='codigo' value='$student_code' size='12' maxlength='12' required>";
-    } else {
-        $select = make_select_ficha($USER->id);
-        $record->code = $select;
-    }
+    $select = make_select_ficha($USER->id, $rol, $student_code);
+    $record->code = $select;
 
     // Loading academic information
 
@@ -451,10 +447,10 @@ if ($student_code != 0) {
             $seguimientos_ordenados->$array_tracking_date[$x]['year']->per_b = array();
 
             $seguimientos_ordenados->$array_tracking_date[$x]['year']->year = $array_tracking_date[$x]['year'];
-            if(in_array($array_tracking_date[$x]['mon'], $periodo_a)){
-                
-                for($y = 0; $y < count($array_detail_peer_trackings_dphpforms); $y++){
-                    if($array_detail_peer_trackings_dphpforms[$y]){
+            if (in_array($array_tracking_date[$x]['mon'], $periodo_a)) {
+
+                for ($y = 0; $y < count($array_detail_peer_trackings_dphpforms); $y++) {
+                    if ($array_detail_peer_trackings_dphpforms[$y]) {
                         foreach ($array_detail_peer_trackings_dphpforms[$y]->record->campos as &$tracking) {
                             if ($tracking->local_alias == 'fecha') {
                                 if (strtotime($tracking->respuesta) == $string_date) {
@@ -466,10 +462,10 @@ if ($student_code != 0) {
                         }
                     }
                 }
-            }else{
-                
-                for($y = 0; $y < count($array_detail_peer_trackings_dphpforms); $y++){
-                    if($array_detail_peer_trackings_dphpforms[$y]){
+            } else {
+
+                for ($y = 0; $y < count($array_detail_peer_trackings_dphpforms); $y++) {
+                    if ($array_detail_peer_trackings_dphpforms[$y]) {
                         foreach ($array_detail_peer_trackings_dphpforms[$y]->record->campos as &$tracking) {
                             if ($tracking->local_alias == 'fecha') {
                                 if (strtotime($tracking->respuesta) == $string_date) {
@@ -515,9 +511,10 @@ if ($student_code != 0) {
         $number_semesters = count($array_semester);
         foreach ($array_peer_trackings->semesters_segumientos as $key_semester => $array_semester) {
 
-            if(strpos($array_semester->name_semester, '2018') !== false){
+            if (strpos($array_semester->name_semester, '2018') !== false) {
                 continue;
-            };
+            }
+            ;
 
             $panel .= "<div class='panel panel-default'>";
             $panel .= "<a data-toggle='collapse' class='collapsed' data-parent='#accordion_semesters' style='text-decoration:none' href='#semester" . $array_semester->id_semester . "'>";
@@ -838,15 +835,12 @@ if ($student_code != 0) {
 } else {
 
     $student_id = -1;
-    if ($rol == 'sistemas') {
-        $record->code = "<input type='text' class='tip' id='codigo' value=' ' size='12' maxlength='12' required>";
-    } else {
-        $select = make_select_ficha($USER->id);
-        $record->code = $select;
-    }
+    $select = make_select_ficha($USER->id, $rol, null);
+    $record->code = $select;
+
 }
 
-if($rol == 'sistemas'){
+if ($rol == 'sistemas') {
     $record->add_peer_tracking_lts = true;
 }
 
