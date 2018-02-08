@@ -59,54 +59,46 @@ $blocknode = navigation_node::create($title,$url, null, 'block', $blockid);
 $coursenode->add_node($blocknode);
 $blocknode->make_active();
 
+// Creates a class with information that'll be send to template
+$object_to_render = new stdClass();
+
 if(!consult_instance($blockid)){
     $category_context = context_coursecat::instance($COURSE->category);
     if(has_capability('moodle/category:manage', $category_context)) {
         
         // Systems role assignment for the current instance
-        update_role_user($USER->username, 'sistemas', $blockid, 1, get_current_semester(), null, null);
-
-        // Add permission in instance_management
-        $result_assign_permissions = assign_permissions('sistemas', 'instance_configuration');
+        $result_assign_role = update_role_user($USER->username, 'sistemas', $blockid, 1, get_current_semester(), null, null);
         
-        if(!$result_assign_permissions){
-
+        if($result_assign_role == 4 || $result_assign_role == 2){
+            $object_to_render->status = 0;
+            $object_to_render->status_message .= ' Error al asignar el rol sistemas al administrador.';
         }
 
     } else {
-        print_r("Is not admin");
+        $object_to_render->status = 0;
+        $object_to_render->status_message = 'El usuario actual no tiene permisos para configurar nuevas instancias.';
     }
 }
 
-//Menu items are created
-$menu_option = create_menu_options($USER->id, $blockid, $courseid);
+if(!isset($object_to_render->status)){
+    //Menu items are created
+    $menu_option = create_menu_options($USER->id, $blockid, $courseid);
 
-// Creates a class with information that'll be send to template
-$object_to_render = new stdClass();
-$actions = authenticate_user_view($USER->id, $blockid);
+    $actions = authenticate_user_view($USER->id, $blockid);
 
-$object_to_render = $actions;
-$object_to_render->menu = $menu_option;
+    $object_to_render = $actions;
+    $object_to_render->menu = $menu_option;
 
-$cohorts = get_cohorts_without_assignment();
-$cohorts_options = "";
+    $cohorts = get_cohorts_without_assignment();
+    $cohorts_options = "";
 
-foreach($cohorts as $cohort){
-    $cohorts_options .= "<option value='$cohort->id'>$cohort->idnumber - $cohort->name</option>";
+    foreach($cohorts as $cohort){
+        $cohorts_options .= "<option value='$cohort->id'>$cohort->idnumber - $cohort->name</option>";
+    }
+
+    $object_to_render->select_cohorts = $cohorts_options;
+
 }
-
-$object_to_render->select_cohorts = $cohorts_options;
-
-// Loading academic programs
-$array_programs = load_programs_cali();
-
-$html_programs = ""; 
-
-foreach($array_programs as $program){
-    $html_programs .= "<option value = '$program->cod_univalle'>$program->cod_univalle - $program->nombre </option>";
-}
-
-$object_to_render->programs = $html_programs;
 
 $PAGE->set_url($url);
 $PAGE->set_title($title);

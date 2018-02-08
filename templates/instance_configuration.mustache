@@ -4,7 +4,7 @@
 <div class="row">
    <h2>GESTIÓN DE ADMINISTRADORES DEL SISTEMA</h2>
    <hr/>
-   {{{message}}}   
+   {{{message}}}
    <div class="panel-group">
       {{#admin_assignment_ic}}
       {{> block_ases/admin_assignment}}
@@ -13,8 +13,10 @@
       {{#view_admins_ic}}
       {{> block_ases/view_admins}}
       {{/view_admins_ic}}
-
    </div>
+    {{#status}}
+        {{> block_ases/restricted_access}}
+    {{/status}}
    {{!--end panel-group--}}
 </div>
 {{/data}}

@@ -20,6 +20,7 @@
  * @author     John Lourido 
  * @package    block_ases
  * @copyright  2017 JOhn Lourido <jhonkrave@gmail.com>
+ * @copyright  2018 Iader E. García Gómez <iader.garcia@correounivalle.edu.co>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -72,13 +73,15 @@ function get_cohorts_without_assignment(){
 function assign_permissions($role_name, $fun_name){
     global $DB;
 
-    $slq_query = "SELECT accion.id FROM {talentospilos_funcionalidad} AS funcionalidad
+    $result = true;
+
+    $sql_query = "SELECT accion.id FROM {talentospilos_funcionalidad} AS funcionalidad
                                 INNER JOIN {talentospilos_accion} AS accion 
                                 ON funcionalidad.id = accion.id_funcionalidad";
 
-    $actions = $DB->get_records_sql();
+    $actions = $DB->get_records_sql($sql_query);
 
-    $sql_query = "SELECT id FROM {talentospilos_rol} AS role WHERE nombre_rol = $role_name";
+    $sql_query = "SELECT id FROM {talentospilos_rol} AS role WHERE nombre_rol = '$role_name'";
 
     $id_role = $DB->get_record_sql($sql_query)->id;
 
@@ -95,8 +98,6 @@ function assign_permissions($role_name, $fun_name){
             break;
         }
     }
-
-    $result = true;
 
     return $result;
 }
