@@ -90,14 +90,18 @@ if(!isset($object_to_render->status)){
     $object_to_render->menu = $menu_option;
 
     $cohorts = get_cohorts_without_assignment();
+    print_r($cohorts);
     $cohorts_options = "";
 
-    foreach($cohorts as $cohort){
-        $cohorts_options .= "<option value='$cohort->id'>$cohort->idnumber - $cohort->name</option>";
+    if($cohorts){
+        foreach($cohorts as $cohort){
+            $cohorts_options .= "<option value='$cohort->id'>$cohort->idnumber - $cohort->name</option>";
+        }
+    }else{
+        $cohorts_options .= "<option value=''>No hay cohortes disponibles para asignar</option>";
     }
 
     $object_to_render->select_cohorts = $cohorts_options;
-
 }
 
 $PAGE->set_url($url);
