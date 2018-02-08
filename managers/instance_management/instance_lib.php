@@ -52,11 +52,14 @@ function consult_instance($id_instance){
  * @return stdClass Array
  */
 
-function get_cohorts_without_assignment(){
+function get_cohorts_without_assignment($id_instance){
     global $DB;
     $sql_query = "SELECT id, idnumber, name 
                   FROM {cohort} 
-                  WHERE id NOT IN (SELECT id_cohorte FROM {talentospilos_inst_cohorte})";
+                  WHERE id NOT IN 
+                  (SELECT id_cohorte 
+                   FROM {talentospilos_inst_cohorte} 
+                   WHERE id_instancia = $id_instance)";
     $result = $DB->get_records_sql($sql_query);
     return $result;
 }

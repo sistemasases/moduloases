@@ -89,8 +89,7 @@ if(!isset($object_to_render->status)){
     $object_to_render = $actions;
     $object_to_render->menu = $menu_option;
 
-    $cohorts = get_cohorts_without_assignment();
-    print_r($cohorts);
+    $cohorts = get_cohorts_without_assignment($blockid);
     $cohorts_options = "";
 
     if($cohorts){
