@@ -201,7 +201,7 @@ function monitor_student_assignment($username_monitor, $array_students, $idinsta
 /**
  * Función que asigna un rol a un usuario
  *
- * @see assign_role_user($username, $id_role, $state, $semester, $username_boss, $id_academic_program){
+ * @see assign_role_user($username, $role, $status, $semester, $idinstancia, $username_boss, $id_academic_program){
  * @return Integer
  */
  

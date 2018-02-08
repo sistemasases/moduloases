@@ -45,7 +45,38 @@ if(isset($_POST['function'])){
             break;
         case 'deleteUser':
             deleteAdministrator();
+        case 'insert_instance':
+            insert_instance();
     }
+}
+
+function insert_instance(){
+    
+    global $DB;
+    global $USER;
+
+    $record_to_inst_cohort = new stdClass();
+    $record_to_inst_cohort->id_cohorte = $_POST['id_cohort'];
+    $record_to_inst_cohort->id_instancia = $_POST['id_instance'];
+
+    $result_inst_cohort = $DB->insert_record('talentospilos_inst_cohorte', $record_to_inst_cohort);
+
+    $record_to_instance = new stdClass();
+    $record_to_instance->id_instancia = $_POST['id_instance'];;
+    $record_to_instance->id_director = $USER->id;
+    $record_to_instance->id_programa = 1;
+    $record_to_instance->cod_instancia = 'changeme';
+
+    print_r($record_to_instance);
+
+    $result_instance = $DB->insert_record('talentospilos_instancia', $record_to_instance);
+
+    if($result_inst_cohort && $result_instance){
+        echo "1";
+    }else{
+        echo "0";
+    }
+    
 }
 
 /**

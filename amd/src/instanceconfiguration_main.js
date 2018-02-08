@@ -26,7 +26,7 @@ define(['jquery','block_ases/sweetalert','block_ases/datatables'], function($,sw
         });
 
         $('#ok_button').on('click', function() {
-            updateSystemUser();
+            update_instance();
         });
 
         $("#cancel_button").on('click', function() {
@@ -80,6 +80,43 @@ define(['jquery','block_ases/sweetalert','block_ases/datatables'], function($,sw
             );
         });
     });
+
+    function update_instance(){
+
+        
+        var id_instance = get_id_instance();
+        var id_cohort = $('#select_cohorts').val()
+
+        $.ajax({
+            type: "POST",
+            data: {
+                id_instance: id_instance,
+                id_cohort: id_cohort,
+                function: 'insert_instance'
+            },
+            url: "../managers/instance_management/instance_configuration_serverproc.php",
+            success: function(msg){
+                if(msg == "1"){
+                    swal(
+                        "Éxito",
+                        "La instancia ha sido registrada",
+                        "success"
+                    )
+                }else{
+                    swal(
+                        "Error",
+                        "Ha ocurrido un error al registrar la instancia",
+                        "error"
+                    )
+                }
+            },
+            dataType: "text",
+            cache: "false",
+            error: function(msg) {
+                console.log(msg)
+            },
+        });
+    }
 
     function searchUser() {
         var username = $('#username_input').val();
@@ -330,6 +367,18 @@ define(['jquery','block_ases/sweetalert','block_ases/datatables'], function($,sw
                 console.log(msg);
             }
         });
+    }
+
+    function get_id_instance() {
+        var urlParameters = location.search.split('&');
+
+        for (x in urlParameters) {
+            if (urlParameters[x].indexOf('instanceid') >= 0) {
+                var intanceparameter = urlParameters[x].split('=');
+                return intanceparameter[1];
+            }
+        }
+        return 0;
     }
 
 
