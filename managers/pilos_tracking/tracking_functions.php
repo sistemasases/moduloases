@@ -26,6 +26,50 @@
 
 require_once ('pilos_tracking_lib.php');
 
+
+
+/**
+ * Does all management to get a final organized by monitor students array
+ * 
+ * @see monitorUser($pares, $grupal, $codigoMonitor, $noMonitor, $instanceid, $role, $fechas, $sistemas = false, $codigoPracticante = null)
+ * @param &$pares --> 'seguimiento de pares' information
+ * @param &$grupal --> 'seguimiento grupal' (groupal tracks) information
+ * @param $codigoMonitor --> monitor id
+ * @param $noMonitor --> monitor number
+ * @param $instanceid --> instance id
+ * @param $role --> monitor role
+ * @param $fechas --> dates interval
+ * @param $sistemas = false --> role is not a 'sistemas' one
+ * @param $codigoPracticante = null --> practicant id is null
+ * @return array with students grouped by monitor
+ *
+ */
+function get_peer_trackings_by_monitor($pares, $grupal, $codigoMonitor, $noMonitor, $instanceid, $role, $fechas, $sistemas = false, $codigoPracticante = null)
+{
+    $fecha_epoch = [];
+    $fecha_epoch[0] = strtotime($fechas[0]);
+    $fecha_epoch[1] = strtotime($fechas[1]);
+    $semestre_periodo = get_current_semester_byinterval($fechas[0], $fechas[1]);
+    $monitorstudents = get_seguimientos_monitor($codigoMonitor, $instanceid, $fecha_epoch, $semestre_periodo);
+
+
+    return $monitorstudents;
+
+}
+
+
+
+
+
+
+
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////
+
 function replace_content_inside_delimiters($start, $end, $new, $source)
 {
     return preg_replace('#(' . preg_quote($start) . ')(.*?)(' . preg_quote($end) . ')#si', '$1' . $new . '$3', $source);

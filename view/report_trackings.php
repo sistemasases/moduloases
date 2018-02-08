@@ -31,9 +31,13 @@ require_once($CFG->libdir.'/adminlib.php');
 require_once('../managers/pilos_tracking/tracking_functions.php');
 require_once('../managers/instance_management/instance_lib.php');
 require_once ('../managers/permissions_management/permissions_lib.php');
+require_once ('../managers/role_management/role_management_lib.php');
+
 require_once ('../managers/validate_profile_action.php');
 require_once ('../managers/menu_options.php');
-
+require_once '../managers/dphpforms/dphpforms_forms_core.php';
+require_once '../managers/dphpforms/dphpforms_records_finder.php';
+require_once '../managers/dphpforms/dphpforms_get_record.php';
 
 include('../lib.php');
 include("../classes/output/renderer.php");
@@ -109,6 +113,23 @@ $intervalo_fechas[2] =reset($periods)->id;
 $table_periods.=get_period_select($periods);
 
 if($usernamerole=='monitor_ps'){
+
+    //Obtener los estudiantes que tienen seguimiento en ese intervalo de fecha dado el monitor
+
+    $monitor_id =$USER->id;
+    $students_by_monitor=get_students_of_monitor($monitor_id,$blockid);
+
+
+
+    var_dump($students_by_monitor);   
+        die();
+ 
+
+    $array_peer_trackings_dphpforms = dphpforms_find_records('seguimiento_pares', 'seguimiento_pares_id_estudiante', array_shift($students_by_monitor)[0], 'DESC');
+    
+    // $array_peer_trackings_dphpforms = json_decode($array_peer_trackings_dphpforms);
+
+
 
 
     // All students from a monitor are retrieved in the instance and the array that will be transformed in toogle is sorted.
