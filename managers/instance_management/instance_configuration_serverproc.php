@@ -41,17 +41,11 @@ if(isset($_POST['function'])){
 
 function insert_cohort($id_cohort, $id_instance){
 
-    global $DB;
-
     $msg_to_return = new stdClass();
 
-    $sql_query = "SELECT count(*) AS count
-                  FROM {talentospilos_inst_cohorte}
-                  WHERE id_cohorte = $id_cohort AND id_instancia = $id_instance";
-    
-    $result_query = $DB->get_record_sql($sql_query);
+    $validate_cohort = validate_cohort($id_cohort, $id_instance);
 
-    if($result_query->count >= 1){
+    if($validate_cohort->count >= 1){
         $msg_to_return->msg = 'Error. La cohorte ya está asignada a la instancia.';
         $msg_to_return->status = 0;
     }else{
@@ -71,6 +65,11 @@ function load_cohorts_assigned($id_instance){
     global $DB;
 
     $msg_to_return = new stdClass();
+
+    $sql_query = "SELECT * 
+                  FROM {talentospilos_inst_cohorte} AS instance_cohort
+                  INNER JOIN {cohort} AS t_cohort ON t_cohort.id = instance_cohort.id_cohorte
+                  WHERE id_instancia = $id_instancia";
 
 }
 ?>

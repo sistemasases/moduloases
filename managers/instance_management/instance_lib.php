@@ -114,11 +114,17 @@ function assign_permissions($role_name, $fun_name){
  * @return boolean
  */
 
- function validate_cohort_insatnce($id_cohort, $id_instance){
+ function validate_cohort($id_cohort, $id_instance){
 
     global $DB;
 
+    $sql_query = "SELECT count(*) AS count
+                  FROM {talentospilos_inst_cohorte}
+                  WHERE id_cohorte = $id_cohort AND id_instancia = $id_instance";
     
+    $result_query = $DB->get_record_sql($sql_query);
+
+    return $result_query;
 
  }
 
