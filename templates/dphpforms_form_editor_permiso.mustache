@@ -1,0 +1,38 @@
+{{#data}}
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 form-group">
+                <h2>Editor de preguntas</h2>
+                <hr>   
+                    <a id="dphpforms-redirect-new-form" href="javascript:void(0)" class="btn btn-sm btn-default">Crear/registrar nuevo formulario</a>
+                    <a id="dphpforms-redirect-adm-alias" href="javascript:void(0)" class="btn btn-sm btn-default">Administrar alias de preguntas</a>
+                <hr>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <h4>Permiso</h4>
+                <hr>
+                {{#permiso}}
+                <div class="form-group">
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                        ID del permiso: <strong>{{id}}</strong> - ID relación formulario-pregunta: <strong>{{id_formulario_pregunta}}</strong>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                        <textarea rows="5" class="form-control">{{permisos}}</textarea>
+                    </div>
+                </div>
+                <br>
+                <div class="form-group">
+                    <a href="javascript:void(0)" class="btn btn-danger btn-dphpforms btn-dphpforms-univalle" data-permiso-id="{{id}}">Actualizar permiso</a>
+                </div>
+                {{/permiso}}
+            </div>
+        </div>
+    </div>
+</body>
+{{/data}}

@@ -167,4 +167,14 @@ class renderer extends plugin_renderer_base {
         $data = $page->export_for_template($this);
         return parent::render_from_template('block_ases/dphpforms_alias_editor', $data);
     }
+
+    public function render_dphpforms_form_editor_preguntas_page($page){
+        $data = $page->export_for_template($this);
+        return parent::render_from_template('block_ases/dphpforms_form_editor_preguntas', $data);
+    }
+
+    public function render_dphpforms_form_editor_permiso_page($page){
+        $data = $page->export_for_template($this);
+        return parent::render_from_template('block_ases/dphpforms_form_editor_permiso', $data);
+    }
 }

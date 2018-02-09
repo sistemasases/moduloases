@@ -35,6 +35,14 @@
                     window.location.href = "dphpforms_form_editor.php" + get_url_parameters(window.location.href);
                 });
 
+                $('.btn-editor-form').click(function(){
+                    window.location.href = "dphpforms_form_editor_preguntas.php" + get_url_parameters(window.location.href) + '&form_id=' + $(this).attr('data-form-id');
+                });
+
+                $('.btn-editor-permiso').click(function(){
+                    window.location.href = "dphpforms_form_editor_permiso.php" + get_url_parameters(window.location.href) + '&permiso_id=' + $(this).attr('data-permiso-id');
+                });
+
                 $('.btn-remove-form').click(function(){
                     var form_name = $(this).attr('data-form-name');
                     var form_id = $(this).attr('data-form-id');

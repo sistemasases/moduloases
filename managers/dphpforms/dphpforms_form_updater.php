@@ -130,5 +130,81 @@
 
         return 0;
     }
+
+    function get_preguntas_form($form_id){
+
+        if(!$form_id){
+            return null;
+        }
+
+        global $DB;
+
+        $sql = "SELECT * FROM {talentospilos_df_tipo_campo} AS TC 
+        INNER JOIN (
+            SELECT * FROM {talentospilos_df_preguntas} AS P 
+            INNER JOIN (
+                SELECT *, F.id AS mod_id_formulario, FP.id AS mod_id_formulario_pregunta FROM {talentospilos_df_formularios} AS F
+                INNER JOIN {talentospilos_df_form_preg} AS FP
+                ON F.id = FP.id_formulario WHERE F.id = '$form_id' AND F.estado = '1'
+                ) AS AA ON P.id = AA.id_pregunta
+            ) AS AAA
+        ON TC.id = AAA.tipo_campo
+        ORDER BY posicion";
+
+        $preguntas_form = $DB->get_records_sql($sql);
+        return $preguntas_form;
+    }
+
+    function get_permisos_form($form_id){
+
+        if(!$form_id){
+            return null;
+        }
+
+        global $DB;
+
+        $sql = "SELECT * FROM {talentospilos_df_tipo_campo} AS TC 
+        INNER JOIN (
+            SELECT * FROM {talentospilos_df_preguntas} AS P 
+            INNER JOIN (
+                SELECT *, F.id AS mod_id_formulario, FP.id AS mod_id_formulario_pregunta FROM {talentospilos_df_formularios} AS F
+                INNER JOIN {talentospilos_df_form_preg} AS FP
+                ON F.id = FP.id_formulario WHERE F.id = '$form_id' AND F.estado = '1'
+                ) AS AA ON P.id = AA.id_pregunta
+            ) AS AAA
+        ON TC.id = AAA.tipo_campo
+        ORDER BY posicion";
+
+        $preguntas_form = $DB->get_records_sql($sql);
+
+        $preguntas_with_permissions = array();
+
+        foreach ($preguntas_form as $key => $pregunta) {
+            $sql_permiso = "SELECT * FROM {talentospilos_df_per_form_pr} WHERE id_formulario_pregunta = '$pregunta->mod_id_formulario_pregunta'";
+            $permiso = $DB->get_record_sql($sql_permiso);
+
+            $permiso_pregunta = new stdClass();
+            $permiso_pregunta->id_pregunta = $pregunta->id_pregunta;
+            $permiso_pregunta->id_formulario_pregunta = $pregunta->mod_id_formulario_pregunta;
+            $permiso_pregunta->campo = $pregunta->campo;
+            $permiso_pregunta->enunciado = $pregunta->enunciado;
+            $permiso_pregunta->permisos = $permiso->permisos;
+            $permiso_pregunta->id_permiso = $permiso->id;
+
+            array_push($preguntas_with_permissions, $permiso_pregunta);
+
+        }
+
+        return $preguntas_with_permissions;
+    }
+
+    function get_permiso($id){
+        
+        global $DB;
+
+        $sql_permiso = "SELECT * FROM {talentospilos_df_per_form_pr} WHERE id = '$id'";
+        return $DB->get_record_sql($sql_permiso);
+
+    }
     
 ?>
