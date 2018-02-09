@@ -4,7 +4,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     global $DB;
     $dbman = $DB->get_manager();
     $result = true;
-    if ($oldversion < 2018020214529 ) {
+    if ($oldversion < 2018020917109 ) {
     // ************************************************************************************************************
     // Actualización que crea la tabla para los campos extendidos de usuario (Tabla: {talentospilos_user_extended})
     // Versión: 2018010911179
@@ -682,57 +682,64 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     // ************************************************************************************************************
     
     //Registro de los tipos de campos  
-    $campo_textfield = new stdClass();
-    $campo_textfield->campo                = 'TEXTFIELD';
-    $campo_textfield->fecha_hora_registro  = 'now()';
-    $campo_textarea = new stdClass();
-    $campo_textarea->campo                 = 'TEXTAREA';
-    $campo_textarea->fecha_hora_registro   = 'now()';
-    $campo_date = new stdClass();
-    $campo_date->campo                     = 'DATE';
-    $campo_date->fecha_hora_registro       = 'now()';
-    $campo_time = new stdClass();
-    $campo_time->campo                     = 'TIME';
-    $campo_time->fecha_hora_registro       = 'now()';
-    $campo_radio = new stdClass();
-    $campo_radio->campo                    = 'RADIOBUTTON';
-    $campo_radio->fecha_hora_registro      = 'now()';
-    $campo_check = new stdClass();
-    $campo_check->campo                    = 'CHECKBOX';
-    $campo_check->fecha_hora_registro      = 'now()';
-    $records = array();
-    array_push($records, $campo_textfield);
-    array_push($records, $campo_textarea);
-    array_push($records, $campo_date);
-    array_push($records, $campo_time);
-    array_push($records, $campo_radio);
-    array_push($records, $campo_check);
-    $DB->insert_records('talentospilos_df_tipo_campo', $records);
+    $verificador = $DB->get_record_sql("SELECT * FROM {talentospilos_df_tipo_campo} WHERE campo = 'TEXTFIELD'");
+    if(!$verificador){
+        $campo_textfield = new stdClass();
+        $campo_textfield->campo                = 'TEXTFIELD';
+        $campo_textfield->fecha_hora_registro  = 'now()';
+        $campo_textarea = new stdClass();
+        $campo_textarea->campo                 = 'TEXTAREA';
+        $campo_textarea->fecha_hora_registro   = 'now()';
+        $campo_date = new stdClass();
+        $campo_date->campo                     = 'DATE';
+        $campo_date->fecha_hora_registro       = 'now()';
+        $campo_time = new stdClass();
+        $campo_time->campo                     = 'TIME';
+        $campo_time->fecha_hora_registro       = 'now()';
+        $campo_radio = new stdClass();
+        $campo_radio->campo                    = 'RADIOBUTTON';
+        $campo_radio->fecha_hora_registro      = 'now()';
+        $campo_check = new stdClass();
+        $campo_check->campo                    = 'CHECKBOX';
+        $campo_check->fecha_hora_registro      = 'now()';
+        $records = array();
+        array_push($records, $campo_textfield);
+        array_push($records, $campo_textarea);
+        array_push($records, $campo_date);
+        array_push($records, $campo_time);
+        array_push($records, $campo_radio);
+        array_push($records, $campo_check);
+        $DB->insert_records('talentospilos_df_tipo_campo', $records);
+    }
+    
     // ************************************************************************************************************
     // Actualización:
     // Se insertan registros para las reglas de los formularios
     // Versión en la que se incluye: 2018012217129
     // ************************************************************************************************************
-    $regla_mayor_que = new stdClass();
-    $regla_mayor_que->regla    = '>';
-    $regla_menor_que = new stdClass();
-    $regla_menor_que->regla    = '<';
-    $regla_igual = new stdClass();
-    $regla_igual->regla        = 'EQUAL';
-    $regla_diferente = new stdClass();
-    $regla_diferente->regla    = 'DIFFERENT';
-    $regla_depende = new stdClass();
-    $regla_depende->regla      = 'DEPENDS';
-    $regla_enlazado = new stdClass();
-    $regla_enlazado->regla     = 'BOUND';
-    $records = array();
-    array_push($records, $regla_mayor_que);
-    array_push($records, $regla_menor_que);
-    array_push($records, $regla_igual);
-    array_push($records, $regla_diferente);
-    array_push($records, $regla_depende);
-    array_push($records, $regla_enlazado);
-    $DB->insert_records('talentospilos_df_reglas', $records);
+    $verificador_reglas = $DB->get_record_sql("SELECT * FROM {talentospilos_df_reglas} WHERE regla = 'EQUAL'");
+    if(!$verificador_reglas){
+        $regla_mayor_que = new stdClass();
+        $regla_mayor_que->regla    = '>';
+        $regla_menor_que = new stdClass();
+        $regla_menor_que->regla    = '<';
+        $regla_igual = new stdClass();
+        $regla_igual->regla        = 'EQUAL';
+        $regla_diferente = new stdClass();
+        $regla_diferente->regla    = 'DIFFERENT';
+        $regla_depende = new stdClass();
+        $regla_depende->regla      = 'DEPENDS';
+        $regla_enlazado = new stdClass();
+        $regla_enlazado->regla     = 'BOUND';
+        $records = array();
+        array_push($records, $regla_mayor_que);
+        array_push($records, $regla_menor_que);
+        array_push($records, $regla_igual);
+        array_push($records, $regla_diferente);
+        array_push($records, $regla_depende);
+        array_push($records, $regla_enlazado);
+        $DB->insert_records('talentospilos_df_reglas', $records);
+    }
     // ************************************************************************************************************
     // Actualización:
     // Se inserta campo id_programa en la tabla talentospilos_res_estudiante
@@ -896,7 +903,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
 
 
     // Ases savepoint reached.
-    upgrade_block_savepoint(true, 2018020214529 , 'ases');
+    upgrade_block_savepoint(true, 2018020917109 , 'ases');
    
     return $result;
 
