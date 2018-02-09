@@ -64,6 +64,34 @@
         }
     }
 
+    $post = json_decode(file_get_contents('php://input'));
+    if($post){
+        $json_post = $post;
+        if(property_exists($json_post, 'function')){
+            if($json_post->function == 'update_permiso'){
+                header('Content-Type: application/json');
+                
+                if(update_permiso($post->permiso_id, $post->permisos) == 0){
+                    echo json_encode(
+                        array(
+                            'status' => '0',
+                            'message' => 'Updated'
+                        )
+                    );
+                }else{
+                    echo json_encode(
+                        array(
+                            'status' => '-1',
+                            'message' => 'Error'
+                        )
+                    );
+                }
+                die();
+            }
+        }
+    };
+    
+
     function update_pregunta_position($id_form_pregunta, $new_position){
         global $DB;
         $sql = "SELECT * FROM {talentospilos_df_form_preg} WHERE id = '$id_form_pregunta' AND estado = 1";
@@ -204,6 +232,27 @@
 
         $sql_permiso = "SELECT * FROM {talentospilos_df_per_form_pr} WHERE id = '$id'";
         return $DB->get_record_sql($sql_permiso);
+
+    }
+
+    function update_permiso($id, $permisos){
+
+        if( ($id) && ($permisos) ){
+        
+            global $DB;
+
+            $sql_permiso = "SELECT * FROM {talentospilos_df_per_form_pr} WHERE id = '$id'";
+            $db_permiso = $DB->get_record_sql($sql_permiso);
+            $db_permiso->id = $db_permiso->id;
+            $db_permiso->permisos = $permisos;
+
+            $DB->update_record('talentospilos_df_per_form_pr', $db_permiso, $bulk=false);
+
+            return 0;
+
+        }else{
+            return -1;
+        }
 
     }
     
