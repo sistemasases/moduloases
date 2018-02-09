@@ -105,4 +105,21 @@ function assign_permissions($role_name, $fun_name){
     return $result;
 }
 
+/**
+ * Función que valida si una cohorte ya fue asignada a una instancia
+ * 
+ * @see validate_cohort_instance()
+ * @param id_cohort   ---> ID cohorte
+ * @param id_instance  ---> ID instancia
+ * @return boolean
+ */
+
+ function validate_cohort_insatnce($id_cohort, $id_instance){
+
+    global $DB;
+
+    
+
+ }
+
 

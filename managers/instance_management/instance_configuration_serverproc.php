@@ -17,9 +17,9 @@
 /**
  * Talentos Pilos
  *
- * @author     John Lourido 
+ * @author     Iader E. García 
  * @package    block_ases
- * @copyright  2017 JOhn Lourido <jhonkrave@gmail.com>
+ * @copyright  2018 Iader E. García <iadergg@gmail.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -31,153 +31,46 @@ require_once("../periods_management/periods_lib.php");
 if(isset($_POST['function'])){
     
     switch($_POST['function']){
-        case 'search': 
-            searchUser();
+        case 'insert_cohort':
+            if(isset($_POST['cohort']) && isset($_POST['instance'])){
+                insert_cohort($_POST['cohort'], $_POST['instance']);
+            }             
             break;
-        case 'load_programs':
-            loadPrograms();
-            break;
-        case 'updateUser':
-            updateUser();
-            break;
-        case 'loadSystemAdministrators':
-            loadSystemAdminstrators();
-            break;
-        case 'deleteUser':
-            deleteAdministrator();
-        case 'insert_instance':
-            insert_instance();
     }
 }
 
-function insert_instance(){
-    
+function insert_cohort($id_cohort, $id_instance){
+
     global $DB;
-    global $USER;
 
-    $record_to_inst_cohort = new stdClass();
-    $record_to_inst_cohort->id_cohorte = $_POST['id_cohort'];
-    $record_to_inst_cohort->id_instancia = $_POST['id_instance'];
+    $msg_to_return = new stdClass();
 
-    $result_inst_cohort = $DB->insert_record('talentospilos_inst_cohorte', $record_to_inst_cohort);
+    $sql_query = "SELECT count(*) AS count
+                  FROM {talentospilos_inst_cohorte}
+                  WHERE id_cohorte = $id_cohort AND id_instancia = $id_instance";
+    
+    $result_query = $DB->get_record_sql($sql_query);
 
-    $record_to_instance = new stdClass();
-    $record_to_instance->id_instancia = $_POST['id_instance'];;
-    $record_to_instance->id_director = $USER->id;
-    $record_to_instance->id_programa = 1;
-    $record_to_instance->cod_instancia = 'changeme';
-
-    print_r($record_to_instance);
-
-    $result_instance = $DB->insert_record('talentospilos_instancia', $record_to_instance);
-
-    if($result_inst_cohort && $result_instance){
-        echo "1";
+    if($result_query->count >= 1){
+        $msg_to_return->msg = 'Error. La cohorte ya está asignada a la instancia.';
+        $msg_to_return->status = 0;
     }else{
-        echo "0";
+        $object_to_record = new stdClass();
+        $object_to_record->id_cohorte = $id_cohort;
+        $object_to_record->id_instancia = $id_instance;
+        $result_insertion = $DB->insert_record('talentospilos_inst_cohorte', $object_to_record);
+        $msg_to_return->msg = 'La cohorte ha sido correctamente asignada.';
+        $msg_to_return->status = 1;
     }
     
+    echo json_encode($msg_to_return);
 }
 
-/**
- * Returns a JSON with information returned in getInfoSystemDirector(PARAMETER) in casi it's successful, otherwise returns an error message
- * 
- * @see searchUser()
- * @return JSON
- */
-function searchUser(){
-    
-    if(isset($_POST['username'])){
-        
-        echo json_encode(getInfoSystemDirector($_POST['username']));
-        
-    }else{
-        $msg =  new stdClass();
-        $msg->Error = "Error al obtener variable de consulta de usuario";
-        echo json_encode($msg);
-    }
+function load_cohorts_assigned($id_instance){
+
+    global $DB;
+
+    $msg_to_return = new stdClass();
+
 }
-
-/**
- * Returns a json with the loadProgramsForSystemsAdmins() function output
- * 
- * @see loadPrograms()
- * @return JSON
- */
-
-function loadPrograms(){
-    echo json_encode(loadProgramsForSystemsAdmins());
-}
-
-
-/**
- * Returns a json with the updateSystemDirector(PARAMETERS) function output in case it's successful, otherwise returns an error message
- * 
- * @see updateUser()
- * @return JSON
- */
-function updateUser(){
-    if(isset($_POST['username_input']) && isset($_POST['lista_programas']) && isset($_POST['idinstancia']) && isset($_POST['segAca']) &&  isset($_POST['segAsis']) &&  isset($_POST['segSoc'])){
-        echo json_encode(updateSystemDirector($_POST['username_input'], $_POST['lista_programas'], $_POST['idinstancia'], $_POST['segAca'], $_POST['segAsis'], $_POST['segSoc']));
-    }else{
-        echo json_encode("Error al obtener variables para la actualización del perfil administrador");
-    }
-}
-
-
-function loadSystemAdminstrators(){
-    $columns = array();
-    array_push($columns, array("title"=>"Código", "name"=>"username", "data"=>"username"));
-    array_push($columns, array("title"=>"Nombres", "name"=>"firstname", "data"=>"firstname"));
-    array_push($columns, array("title"=>"Apellidos", "name"=>"lastname", "data"=>"lastname"));
-    array_push($columns, array("title"=>"Programa", "name"=>"nombre_rol", "data"=>"programa"));
-    array_push($columns, array("title"=>"Instancia", "name"=>"nombre_rol", "data"=>"id_instancia"));
-    array_push($columns, array("title"=>"Eliminar", "name"=>"button", "data"=>"button"));
-    
-    $data = array(
-                "bsort" => false,
-                "columns" => $columns,
-                "data"=> getSystemAdministrators(),
-                "language" => 
-                 array(
-                    "search"=> "Buscar:",
-                    "oPaginate" => array (
-                        "sFirst"=>    "Primero",
-                        "sLast"=>     "Último",
-                        "sNext"=>     "Siguiente",
-                        "sPrevious"=> "Anterior"
-                    ),
-                    "sProcessing"=>     "Procesando...",
-                    "sLengthMenu"=>     "Mostrar _MENU_ registros",
-                    "sZeroRecords"=>    "No se encontraron resultados",
-                    "sEmptyTable"=>     "Ningún dato disponible en esta tabla",
-                    "sInfo"=>           "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
-                    "sInfoEmpty"=>      "Mostrando registros del 0 al 0 de un total de 0 registros",
-                    "sInfoFiltered"=>   "(filtrado de un total de _MAX_ registros)",
-                    "sInfoPostFix"=>    "",
-                    "sSearch"=>         "Buscar:",
-                    "sUrl"=>            "",
-                    "sInfoThousands"=>  ",",
-                    "sLoadingRecords"=> "Cargando...",
-                 ),
-                 "order"=> array(0, "desc" )
-        );
-    header('Content-Type: application/json');
-    echo json_encode($data);
-}
-
-/**
- * Returns a json with the deleteSystemAdministrator(PARAMETER) function output
- * 
- * @see deleteAdministrator()
- * @return JSON
- */
-function deleteAdministrator(){
-    if(isset($_POST['username'])){
-        echo json_encode(deleteSystemAdministrator($_POST['username']));
-    }else{
-        echo "no entro";
-    }
-}
-
 ?>
