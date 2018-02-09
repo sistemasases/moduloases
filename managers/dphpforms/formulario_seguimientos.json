@@ -817,7 +817,10 @@
                 },
                 {
                     "rol": "monitor_ps",
-                    "permisos": []
+                    "permisos": [
+                        "lectura",
+                        "escritura"
+                    ]
                 },
                 {
                     "rol": "estudiante_t",
@@ -912,7 +915,10 @@
                 },
                 {
                     "rol": "monitor_ps",
-                    "permisos": []
+                    "permisos": [
+                        "lectura",
+                        "escritura"
+                    ]
                 },
                 {
                     "rol": "estudiante_t",
@@ -1013,7 +1019,10 @@
                 },
                 {
                     "rol": "monitor_ps",
-                    "permisos": []
+                    "permisos": [
+                        "lectura",
+                        "escritura"
+                    ]
                 },
                 {
                     "rol": "estudiante_t",
@@ -1120,7 +1129,10 @@
                 },
                 {
                     "rol": "monitor_ps",
-                    "permisos": []
+                    "permisos": [
+                        "lectura",
+                        "escritura"
+                    ]
                 },
                 {
                     "rol": "estudiante_t",
@@ -1245,7 +1257,10 @@
                 },
                 {
                     "rol": "monitor_ps",
-                    "permisos": []
+                    "permisos": [
+                        "lectura",
+                        "escritura"
+                    ]
                 },
                 {
                     "rol": "estudiante_t",
