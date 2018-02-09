@@ -125,7 +125,32 @@ function assign_permissions($role_name, $fun_name){
     $result_query = $DB->get_record_sql($sql_query);
 
     return $result_query;
-
  }
 
+ /**
+ * Función retorna las cohortes asignadas a una instancia
+ * 
+ * @see load_cohorts_by_instance()
+ * @param id_instance  ---> ID instancia
+ * @return stdClass Array
+ */
 
+ function load_cohorts_by_instance($id_instance){
+
+    global $DB;
+
+    $result_to_return = array();
+
+    $sql_query = "SELECT t_cohort.name, t_cohort.idnumber, t_cohort.description
+                  FROM {talentospilos_inst_cohorte} AS instance_cohort
+                  INNER JOIN {cohort} AS t_cohort ON t_cohort.id = instance_cohort.id_cohorte
+                  WHERE id_instancia = $id_instance";
+    
+    $result_query = $DB->get_records_sql($sql_query);
+
+    foreach($result_query as $cohort){
+        array_push($result_to_return, $cohort);
+    }
+
+    return $result_to_return;
+ }

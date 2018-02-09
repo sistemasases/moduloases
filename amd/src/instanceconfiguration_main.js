@@ -17,6 +17,11 @@ define(['jquery','block_ases/sweetalert','block_ases/datatables'], function($,sw
 
             var cohort_to_assign = $('#select_cohorts').val();
             var instance_id = get_id_instance();
+            
+            $(document).ready(function(){
+                load_cohorts_assigned(instance_id);
+            });
+
             $('#button_assign_cohort').on('click', function(){
                 assign_cohort_instance(cohort_to_assign, instance_id);
             });
@@ -58,11 +63,17 @@ define(['jquery','block_ases/sweetalert','block_ases/datatables'], function($,sw
 
         $.ajax({
             type: "POST",
-            data: {cohort: cohort_id,
+            data: {
+                   function: 'load_cohorts',
                    instance: instance_id},
             url: "../managers/instance_management/instance_configuration_serverproc.php",
             success: function(msg) {
                 console.log(msg);
+                if(msg.status == 0){
+                    $('#div_cohorts_table').html('<center><span>La instancia no tiene cohortes asignadas</span></center>');
+                }else{
+                    $('#cohorts_table').DataTable(msg.msg);
+                }
             },
             dataType: "json",
             cache: "false",
