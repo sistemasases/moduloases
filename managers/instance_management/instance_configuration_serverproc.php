@@ -36,11 +36,15 @@ if(isset($_POST['function'])){
                 insert_cohort($_POST['cohort'], $_POST['instance']);
             }             
             break;
-        case 'load_cohorts_assigned':
+        case 'load_cohorts':
             if(isset($_POST['instance'])){
                 load_cohorts_assigned($_POST['instance']);
             }
             break;
+        case 'load_cohorts_without_assignment':
+            if(isset($_POST['instance'])){
+
+            }
     }
 }
 
@@ -55,6 +59,8 @@ if(isset($_POST['function'])){
  */
 function insert_cohort($id_cohort, $id_instance){
 
+    global $DB;
+
     $msg_to_return = new stdClass();
 
     $validate_cohort = validate_cohort($id_cohort, $id_instance);
@@ -63,6 +69,7 @@ function insert_cohort($id_cohort, $id_instance){
         $msg_to_return->msg = 'Error. La cohorte ya está asignada a la instancia.';
         $msg_to_return->status = 0;
     }else{
+        $object_to_record = new stdClass();
         $object_to_record->id_cohorte = $id_cohort;
         $object_to_record->id_instancia = $id_instance;
         $result_insertion = $DB->insert_record('talentospilos_inst_cohorte', $object_to_record);
@@ -97,16 +104,11 @@ function load_cohorts_assigned($id_instance){
         array_push($columns, array("title"=>'Identificador', "name"=>'idnumber', "data"=>'idnumber'));
         array_push($columns, array("title"=>'Nombre cohorte', "name"=>'name', "data"=>'name'));
         array_push($columns, array("title"=>'Descripción', "name"=>'description', "data"=>'description'));
-        
+
         $data = array(
             "bsort" => false,
             "data"=> $array_cohorts,
             "columns" => $columns,
-            "select" => "false",
-            "fixedHeader"=> array(
-                "header"=> true,
-                "footer"=> true
-            ),
             "language" => 
              array(
                 "search"=> "Buscar:",
@@ -133,19 +135,17 @@ function load_cohorts_assigned($id_instance){
                     "sSortDescending"=> ": Activar para ordenar la columna de manera descendente"
                 )
              ),
-            "autoFill"=>"true",
-            "dom"=> "lfrtBip",
-            "buttons"=>array(
-                            array("extend"=>"pdf", "message"=>"Generando PDF"),
-                            "csv",
-                            "excel"
-                        )
-                );
+        );
+        $msg_to_return->msg = $data;
     };
 
-    $msg_to_return->msg = json_encode($data);
-
     echo json_encode($msg_to_return);
+}
+
+function load_cohorts_without_assignment($id_instance){
+
+    $msg_to_return = new stdClass();
+
 }
 
 ?>

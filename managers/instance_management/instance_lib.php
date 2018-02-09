@@ -154,3 +154,30 @@ function assign_permissions($role_name, $fun_name){
 
     return $result_to_return;
  }
+
+/**
+ * Función que deshace la asignación de una cohorte sobre una instancia
+ * 
+ * @see unassign_cohort()
+ * @param id_cohort   ---> ID cohorte
+ * @param id_instance  ---> ID instancia
+ * @return stdClass Array
+ */
+
+function unassign_cohort($id_cohort, $id_instance){
+
+    global $DB;
+
+    $sql_query = "SELECT id 
+                  FROM {talentospilos_inst_cohorte}
+                  WHERE id_cohorte = $id_cohort AND id_instancia = $id_instance";
+
+    $id_register = $DB->get_record_sql($sql_query);
+
+    $object_to_delete = array();
+    $object_to_delete['id'] = $id_register->id;
+
+    $result = $DB->delete_records('talentospilos_inst_cohorte', $object_to_delete);
+
+    return $result;
+}
