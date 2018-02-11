@@ -3,9 +3,9 @@
     <div class="container">
         <div class="row">
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 form-group">
-                <h2>Editor de preguntas</h2>
+                <h2>Editor de preguntas y permisos</h2>
                 <hr>   
-                    <a id="dphpforms-redirect-adm-form" href="javascript:void(0)" class="btn btn-sm btn-default">Administrar formularios</a>
+                    <a id="dphpforms-redirect-adm-forms" href="javascript:void(0)" class="btn btn-sm btn-default">Administrar formularios</a>
                     <a id="dphpforms-redirect-adm-alias" href="javascript:void(0)" class="btn btn-sm btn-default">Administrar alias de preguntas</a>
                 <hr>
             </div>
@@ -26,7 +26,7 @@
                 <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5">{{enunciado}}</div>
                 <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">{{campo}}</div>
                 <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1">{{posicion}}</div>
-                <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1"><span data-pregunta-id="{{id_pregunta}}" class="btn-editor btn btn-default btn-xs glyphicon glyphicon-pencil"></span> <span data-pregunta-id="{{id}}" class="btn-remove-pregunta btn btn-danger btn-xs glyphicon glyphicon-remove"></span></div>
+                <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1">.<!--<span data-pregunta-id="{{id_pregunta}}" class="btn-editor btn btn-default btn-xs glyphicon glyphicon-pencil"></span> <span data-pregunta-id="{{id}}" class="btn-remove-pregunta btn btn-danger btn-xs glyphicon glyphicon-remove"></span>--></div>
                 {{^last}}
                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12"><hr></div>
                 {{/last}}
@@ -36,15 +36,17 @@
                 <h4>Permisos del formulario</h4>
                 <hr>
                 <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1"><strong>#ID</strong></div>
-                <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5 col-lg-offset-4 col-md-offset-4 col-sm-offset-4 col-xs-offset-4"><strong>Enunciado</strong></div>
+                <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5"><strong>Enunciado</strong></div>
+                <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5"><strong>Campo</strong></div>
                 <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1"><strong>Opciones</strong></div>
                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12"><hr></div>
 
                 {{#preguntas_permissions}}
 
                 <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1">{{id_permiso}}</div>
-                <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5 col-lg-offset-4 col-md-offset-4 col-sm-offset-4 col-xs-offset-4">{{enunciado}}</div>
-                <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1"><span data-permiso-id="{{id_permiso}}" class="btn-editor-permiso btn btn-default btn-xs glyphicon glyphicon-pencil"></span> <span data-permiso-id="{{id_permiso}}" class="btn-remove-permiso btn btn-danger btn-xs glyphicon glyphicon-remove"></span></div>
+                <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5">{{enunciado}}</div>
+                <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5">{{campo}}</div>
+                <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1"><span data-permiso-id="{{id_permiso}}" class="btn-editor-permiso btn btn-default btn-xs glyphicon glyphicon-pencil"></span> <!--<span data-permiso-id="{{id_permiso}}" class="btn-remove-permiso btn btn-danger btn-xs glyphicon glyphicon-remove"></span>--></div>
                 {{^last}}
                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12"><hr></div>
                 {{/last}}

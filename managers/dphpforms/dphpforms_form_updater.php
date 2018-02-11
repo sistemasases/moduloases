@@ -208,7 +208,7 @@
         $preguntas_with_permissions = array();
 
         foreach ($preguntas_form as $key => $pregunta) {
-            $sql_permiso = "SELECT * FROM {talentospilos_df_per_form_pr} WHERE id_formulario_pregunta = '$pregunta->mod_id_formulario_pregunta'";
+            $sql_permiso = "SELECT * FROM {talentospilos_df_per_form_pr} WHERE id_formulario_pregunta = '$pregunta->id_pregunta'";
             $permiso = $DB->get_record_sql($sql_permiso);
 
             $permiso_pregunta = new stdClass();

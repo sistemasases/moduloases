@@ -3,10 +3,9 @@
     <div class="container">
         <div class="row">
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 form-group">
-                <h2>Editor de preguntas</h2>
+                <h2>Editor de permisos</h2>
                 <hr>   
-                    <a id="dphpforms-redirect-new-form" href="javascript:void(0)" class="btn btn-sm btn-default">Crear/registrar nuevo formulario</a>
-                    <a id="dphpforms-redirect-adm-alias" href="javascript:void(0)" class="btn btn-sm btn-default">Administrar alias de preguntas</a>
+                    <a id="dphpforms-redirect-adm-forms" href="javascript:void(0)" class="btn btn-sm btn-default">Administrar formularios</a>
                 <hr>
             </div>
         </div>
@@ -16,7 +15,7 @@
                 <hr>
                 {{#permiso}}
                 <div class="form-group">
-                    #ID del permiso: <strong>{{id}}</strong> - ID relación formulario-pregunta: <strong>{{id_formulario_pregunta}}</strong>
+                    #ID del permiso: <strong>{{id}}</strong>
                 </div>
 
                 <div class="form-group">
