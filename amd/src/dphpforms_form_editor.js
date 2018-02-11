@@ -20,7 +20,7 @@
                     for(var i = start_param_position; i < url.length; i++){
                         params += url[i];
                     }
-                    return params;
+                    return params.replace(/#[a-zA-z]+_[a-zA-z]+/i, '');
                 }
 
                 $('#dphpforms-redirect-new-form').click(function(){
