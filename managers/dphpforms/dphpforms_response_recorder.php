@@ -3,12 +3,15 @@
 
     function dphpforms_generate_html_recorder($id_form, $rol_, $student_id, $id_monitor){
 
+
+
         global $DB;
 
         $FORM_ID = $id_form;
         $ROL = $rol_;
 
         $html = null;
+        $html = $rol_;
 
         if(!is_numeric($id_form)){
             $sql_alias = "SELECT id FROM {talentospilos_df_formularios} WHERE alias = '$id_form' AND estado = 1";

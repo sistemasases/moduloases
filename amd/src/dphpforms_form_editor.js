@@ -20,7 +20,7 @@
                     for(var i = start_param_position; i < url.length; i++){
                         params += url[i];
                     }
-                    return params;
+                    return params.replace(/#[a-zA-z]+_[a-zA-z]+/i, '');
                 }
 
                 $('#dphpforms-redirect-new-form').click(function(){
@@ -34,6 +34,79 @@
                 $('#dphpforms-redirect-adm-forms').click(function(){
                     window.location.href = "dphpforms_form_editor.php" + get_url_parameters(window.location.href);
                 });
+
+                $('.btn-editor-form').click(function(){
+                    window.location.href = "dphpforms_form_editor_preguntas.php" + get_url_parameters(window.location.href) + '&form_id=' + $(this).attr('data-form-id');
+                });
+
+                $('.btn-editor-permiso').click(function(){
+                    window.location.href = "dphpforms_form_editor_permiso.php" + get_url_parameters(window.location.href) + '&permiso_id=' + $(this).attr('data-permiso-id');
+                });
+
+                $('#actualizar-permiso').click(function(){
+                    
+                    var permiso_id = $(this).attr('data-permiso-id');
+                    swal({
+                        html:true,
+                        title: 'Confirmación',
+                        text: "<strong>Nota importante!</strong>: Está actualizando este permiso, ¿desea continuar?",
+                        type: 'warning',
+                        showCancelButton: true,
+                        confirmButtonText: 'Sí, Actualizar!'
+                      }, function(isConfirm) {
+                        if (isConfirm) {
+                            
+
+                            $.ajax({
+                                method: "POST",
+                                url: "../managers/dphpforms/dphpforms_form_updater.php",
+                                contentType: "application/json",
+                                dataType: "text",
+                                data: JSON.stringify({"function":"update_permiso", "permiso_id":permiso_id, "permisos":$('#permisos').val()}) ,
+                                success: function( msg ){
+                                    msg = JSON.parse( msg );
+                                    
+                                    if( msg['status'] == 0 ){
+                                        alert('Actualizado');
+
+                                        
+                                    }else if( msg['status'] == -1 ){
+                                        /*swal(
+                                            'Error',
+                                            'Permiso vacio o inexistente',
+                                            'error'
+                                          );*/
+                                          alert('Permiso vacio o inexistente');
+                                    }
+                                    
+                                },
+                                error: function( XMLHttpRequest, textStatus, errorThrown ) {
+                                    /*swal(
+                                        'Error',
+                                        'Informe de este error.',
+                                        'error'
+                                      );*/
+
+                                      alert('Informe de este error');
+                                    console.log( "some error " + textStatus + " " + errorThrown );
+                                    console.log( XMLHttpRequest );
+                                }
+                            });
+
+                        }
+                    });
+                    
+                    
+                    //window.location.href = "dphpforms_form_editor_permiso.php" + get_url_parameters(window.location.href) + '&permiso_id=' + $(this).attr('data-permiso-id');
+                });
+
+                function test(){
+                    swal(
+                        'Good job!',
+                        'You clicked the button!',
+                        'success'
+                      )
+                }
 
                 $('.btn-remove-form').click(function(){
                     var form_name = $(this).attr('data-form-name');
