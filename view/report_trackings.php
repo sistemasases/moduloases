@@ -38,6 +38,8 @@ require_once ('../managers/menu_options.php');
 require_once '../managers/dphpforms/dphpforms_forms_core.php';
 require_once '../managers/dphpforms/dphpforms_records_finder.php';
 require_once '../managers/dphpforms/dphpforms_get_record.php';
+require_once '../managers/lib/student_lib.php';
+
 
 include('../lib.php');
 include("../classes/output/renderer.php");
@@ -118,14 +120,36 @@ if($usernamerole=='monitor_ps'){
 
     $monitor_id =$USER->id;
     $students_by_monitor=get_students_of_monitor($monitor_id,$blockid);
+    $table_monitor="";
 
 
 
-    var_dump($students_by_monitor);   
-        die();
- 
+    foreach ($students_by_monitor as $student) {
+        $student_code= get_user_moodle($student->id_estudiante);
+        $panel .= "<div class='panel panel-default'>";
+            $panel .= "<a data-toggle='collapse' class='collapsed btn btn-danger btn-univalle btn-card collapsed' data-parent='#accordion_students' style='text-decoration:none' href='#student" .$student_code->username."'>";
+            $panel .= "<div class='panel-heading heading_students_tracking'>";
+            $panel .= "<h4 class='panel-title'>";
+            $panel .= "$student_code->firstname $student_code->lastname";
+            $panel .= "<span class='glyphicon glyphicon-chevron-left'></span>";
+            $panel .= "</h4>"; //End panel-title
+            $panel .= "</div>"; //End panel-heading
+            $panel .= "</a>";
 
-    $array_peer_trackings_dphpforms = dphpforms_find_records('seguimiento_pares', 'seguimiento_pares_id_estudiante', array_shift($students_by_monitor)[0], 'DESC');
+            $panel .= "<div id='student$student_code->username'  class='show collapse_v2 in collapse' role='tabpanel' aria-labelledby='headingstudent$student_code->username' aria-expanded='true'>";
+            $panel .= "<div class='panel-body'>";
+
+            $panel .= "</div>"; // End panel-body
+            $panel .= "</div>"; // End collapse
+            $panel .= "</div>"; // End panel-collapse
+
+
+       
+    }
+
+    $table.=$panel;
+
+
     
     // $array_peer_trackings_dphpforms = json_decode($array_peer_trackings_dphpforms);
 
@@ -134,7 +158,7 @@ if($usernamerole=='monitor_ps'){
 
     // All students from a monitor are retrieved in the instance and the array that will be transformed in toogle is sorted.
     $seguimientos = monitorUser($globalArregloPares,$globalArregloGrupal,$USER->id,0,$blockid,$userrole,$intervalo_fechas);
-    $table.=has_tracking($seguimientos);
+    //$table.=has_tracking($seguimientos);
 
 }elseif($usernamerole=='practicante_ps'){
 
@@ -170,25 +194,21 @@ $table_permissions=show_according_permissions($table,$actions);
 $data->table_periods =$table_periods;
 $data->table=$table_permissions;
 
+$PAGE->requires->css('/blocks/ases/style/jqueryui.css', true);
 $PAGE->requires->css('/blocks/ases/style/styles_pilos.css', true);
-$PAGE->requires->css('/blocks/ases/style/bootstrap_pilos.css', true);
-$PAGE->requires->css('/blocks/ases/style/datepicker.css', true);
-$PAGE->requires->css('/blocks/ases/style/bootstrap_pilos.min.css', true);
+$PAGE->requires->css('/blocks/ases/style/bootstrap.min.css', true);
 $PAGE->requires->css('/blocks/ases/style/sweetalert.css', true);
-$PAGE->requires->css('/blocks/ases/style/round-about_pilos.css', true);
-$PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/dataTables.foundation.css', true);
-$PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/dataTables.foundation.min.css', true);
-$PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/dataTables.jqueryui.css', true);
-$PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/dataTables.jqueryui.min.css', true);
-$PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/jquery.dataTables.css', true);
-$PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/jquery.dataTables.min.css', true);
-$PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/jquery.dataTables_themeroller.css', true);
-$PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/dataTables.tableTools.css', true);
-$PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/NewCSSExport/buttons.dataTables.min.css', true);
-$PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/dataTables.tableTools.css', true);
-$PAGE->requires->css('/blocks/ases/style/sweetalert.css', true);
+$PAGE->requires->css('/blocks/ases/style/sweetalert2.css', true);
+$PAGE->requires->css('/blocks/ases/style/sugerenciaspilos.css', true);
+$PAGE->requires->css('/blocks/ases/style/forms_pilos.css', true);
+$PAGE->requires->css('/blocks/ases/style/c3.css', true);
+$PAGE->requires->css('/blocks/ases/style/student_profile_risk_graph.css', true);
 $PAGE->requires->css('/blocks/ases/js/select2/css/select2.css', true);
 $PAGE->requires->css('/blocks/ases/style/side_menu_style.css', true);
+//Pendiente para cambiar el idioma del nombre del archivo junto con la estructura de
+//su nombramiento.
+$PAGE->requires->css('/blocks/ases/style/creadorFormulario.css', true);
+
 $PAGE->requires->js_call_amd('block_ases/pilos_tracking_main','init');
 $PAGE->set_url($url);
 $PAGE->set_title($title);
