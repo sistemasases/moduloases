@@ -48,18 +48,15 @@
             }           
 
             if(!$rol_user){
-                $info_user->rol = "ninguno";
+                $info_user->rol = "";
             }else {
                 $info_user->rol = $rol_user->nombre_rol;
 
                 if($info_user->rol == 'practicante_ps' || $info_user->rol == 'monitor_ps'){
 
                     $info_user->boss = $rol_user->id_jefe;
-                    if($info_boss){
                     $info_user->boss_name = $info_boss->firstname." ".$info_boss->lastname;
-                    }else{
-                    $info_user->boss_name="ninguno";
-                    }
+                    
                 }               
 
                 if($info_user->rol == 'profesional_ps'){
