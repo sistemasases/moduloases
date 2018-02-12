@@ -11,7 +11,6 @@
         $ROL = $rol_;
 
         $html = null;
-        $html = $rol_;
 
         if(!is_numeric($id_form)){
             $sql_alias = "SELECT id FROM {talentospilos_df_formularios} WHERE alias = '$id_form' AND estado = 1";
