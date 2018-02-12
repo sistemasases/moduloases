@@ -43,7 +43,7 @@ if(isset($_POST['function'])){
             break;
         case 'load_cohorts_without_assignment':
             if(isset($_POST['instance'])){
-
+                load_cohorts_without_assignment($_POST['instance']);
             }
     }
 }
@@ -103,7 +103,7 @@ function load_cohorts_assigned($id_instance){
         $columns = array();
         array_push($columns, array("title"=>'Identificador', "name"=>'idnumber', "data"=>'idnumber'));
         array_push($columns, array("title"=>'Nombre cohorte', "name"=>'name', "data"=>'name'));
-        array_push($columns, array("title"=>'Descripción', "name"=>'description', "data"=>'description'));
+        array_push($columns, array("title"=>'', "name"=>'controls_column', "data"=>'controls_column'));
 
         $data = array(
             "bsort" => false,
@@ -142,10 +142,48 @@ function load_cohorts_assigned($id_instance){
     echo json_encode($msg_to_return);
 }
 
+/**
+ * Función que organiza los datos a retornar a la interfaz gráfica 
+ * al solicitar extraer las cohortes sin asignación a una instancia
+ * 
+ * @see load_cohorts_without_assignment
+ * @param id_instance  ---> ID instancia
+ * @return JSON
+ */
+
 function load_cohorts_without_assignment($id_instance){
 
     $msg_to_return = new stdClass();
 
+    $array_cohorts_without_assignment = get_cohorts_without_assignment($id_instance);
+    if(count($array_cohorts_without_assignment) >= 0){
+        $msg_to_return->msg = $array_cohorts_without_assignment;
+        $msg_to_return->status = 1;
+    }else{
+        $msg_to_return->status = 0;
+        $msg_to_return->msg= "Error al cargar las cohortes sin asignación. Por favor recargue la página.";
+    }
+
+    echo json_encode($msg_to_return);
+}
+
+/**
+ * Función que organiza los datos a retornar a la interfaz gráfica 
+ * al solicitar desasignar una cohorte a una instancia
+ * 
+ * @see unassign_cohort
+ * @param id_number_cohort   ---> ID cohorte
+ * @param id_instance  ---> ID instancia
+ * @return JSON
+ */
+
+function unassign_cohort_server_proc($id_number_cohort, $id_instance){
+
+    $msg_to_return = new stdClass();
+
+
+
+    echo json_encode($msg_to_return);
 }
 
 ?>

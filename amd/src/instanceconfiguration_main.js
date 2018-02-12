@@ -14,16 +14,17 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables','block_ases/sw
   return {
         init: function() {
 
-            var cohort_to_assign = $('#select_cohorts').val();
             var instance_id = get_id_instance();
-            
+
             $(document).ready(function(){
                 load_cohorts_assigned(instance_id);
             });
 
             $('#button_assign_cohort').on('click', function(){
+                var cohort_to_assign = $('#select_cohorts').val();
                 assign_cohort_instance(cohort_to_assign, instance_id);
                 load_cohorts_assigned(instance_id);
+                get_cohorts_without_assignment(instance_id);
             });
 
 
@@ -36,7 +37,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables','block_ases/sw
                             instance: instance_id},
                     url: "../managers/instance_management/instance_configuration_serverproc.php",
                     success: function(msg) {
-                        if(msg.status = 0){
+                        if(msg.status == 0){
                             var title = 'Error';
                             var type = 'error';
                         }else{
@@ -49,9 +50,9 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables','block_ases/sw
                             type
                         );
                     },
-        
                     dataType: "json",
-                    cache: "false",
+                    cache: false,
+                    async: false,
                     error: function(msg){
                         console.log(msg);
                     },
@@ -75,15 +76,66 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables','block_ases/sw
                         }
                     },
                     dataType: "json",
-                    cache: "false",
+                    cache: false,
+                    async: false,
                     error: function(msg) {
                         console.log(msg);
                     },
                 });
             }
         
-            function unassign_cohort(){
+            function unassign_cohort(id_cohort){
 
+                console.log('Unassigned');
+
+            }
+
+            function get_cohorts_without_assignment(instance_id){
+
+                $.ajax({
+                    type: "POST",
+                    data: {
+                           function: 'load_cohorts_without_assignment',
+                           instance: instance_id},
+                    url: "../managers/instance_management/instance_configuration_serverproc.php",
+                    success: function(msg) {
+                        if(msg.status == 0){
+                            swal(
+                                'Error',
+                                msg.msg,
+                                'error'
+                            );
+                        }else if(msg.status == 1){
+
+                            var options = "";
+                            var cohorts_array = msg.msg;
+
+                            if(cohorts_array.length == 0){
+                                options += "<option>No hay cohortes disponibles para asignar</option>";
+                            }else{
+                                $.each(cohorts_array, function(key){
+                                    options += "<option value='"+cohorts_array[key].id+"'>";
+                                    options += cohorts_array[key].idnumber+" "+cohorts_array[key].name+"</option>";
+                                });
+                            }
+                            
+                            $('#select_cohorts').html(options);
+
+                        }else{
+                            swal(
+                                'Error',
+                                'Error al cargar las cohortes no asignadas. Por favor recargue la página. Si el problema persiste contacte al área de sistemas.',
+                                'error'
+                            );
+                        }
+                    },
+                    dataType: "json",
+                    cache: false,
+                    async: false,
+                    error: function(msg) {
+                        console.log(msg);
+                    },
+                });
             }
         
             function get_id_instance() {

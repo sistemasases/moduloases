@@ -141,7 +141,7 @@ function assign_permissions($role_name, $fun_name){
 
     $result_to_return = array();
 
-    $sql_query = "SELECT t_cohort.name, t_cohort.idnumber, t_cohort.description
+    $sql_query = "SELECT t_cohort.name, t_cohort.idnumber
                   FROM {talentospilos_inst_cohorte} AS instance_cohort
                   INNER JOIN {cohort} AS t_cohort ON t_cohort.id = instance_cohort.id_cohorte
                   WHERE id_instancia = $id_instance";
@@ -149,6 +149,11 @@ function assign_permissions($role_name, $fun_name){
     $result_query = $DB->get_records_sql($sql_query);
 
     foreach($result_query as $cohort){
+        $controls_html = "";
+        $controls_html .= "<span class='glyphicon glyphicon-remove' id='$cohort->idnumber'"; 
+        $controls_html .= "onclick='unassign_cohort(this.id)' style='color:red'>";
+        $controls_html .= "</span>";
+        $cohort->controls_column = $controls_html;
         array_push($result_to_return, $cohort);
     }
 
