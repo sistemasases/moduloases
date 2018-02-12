@@ -35,10 +35,8 @@ require_once ('../managers/role_management/role_management_lib.php');
 
 require_once ('../managers/validate_profile_action.php');
 require_once ('../managers/menu_options.php');
-require_once '../managers/dphpforms/dphpforms_forms_core.php';
-require_once '../managers/dphpforms/dphpforms_records_finder.php';
-require_once '../managers/dphpforms/dphpforms_get_record.php';
-require_once '../managers/lib/student_lib.php';
+
+require_once ('../managers/lib/student_lib.php');
 
 
 include('../lib.php');
@@ -127,7 +125,7 @@ if($usernamerole=='monitor_ps'){
     foreach ($students_by_monitor as $student) {
         $student_code= get_user_moodle($student->id_estudiante);
         $panel .= "<div class='panel panel-default'>";
-            $panel .= "<a data-toggle='collapse' class='collapsed btn btn-danger btn-univalle btn-card collapsed' data-parent='#accordion_students' style='text-decoration:none' href='#student" .$student_code->username."'>";
+            $panel .= "<a data-toggle='collapse' class='student collapsed btn btn-danger btn-univalle btn-card collapsed' data-parent='#accordion_students' style='text-decoration:none' href='#student" .$student_code->username."'>";
             $panel .= "<div class='panel-heading heading_students_tracking'>";
             $panel .= "<h4 class='panel-title'>";
             $panel .= "$student_code->firstname $student_code->lastname";
@@ -136,15 +134,12 @@ if($usernamerole=='monitor_ps'){
             $panel .= "</div>"; //End panel-heading
             $panel .= "</a>";
 
-            $panel .= "<div id='student$student_code->username'  class='show collapse_v2 in collapse' role='tabpanel' aria-labelledby='headingstudent$student_code->username' aria-expanded='true'>";
+            $panel .= "<div id='student$student_code->username'  class='show collapse_v2 collapse' role='tabpanel' aria-labelledby='headingstudent$student_code->username' aria-expanded='true'>";
             $panel .= "<div class='panel-body'>";
 
             $panel .= "</div>"; // End panel-body
             $panel .= "</div>"; // End collapse
             $panel .= "</div>"; // End panel-collapse
-
-
-       
     }
 
     $table.=$panel;
