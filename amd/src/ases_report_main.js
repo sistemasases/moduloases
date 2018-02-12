@@ -28,11 +28,11 @@ define(['jquery', 'block_ases/datatables', 'block_ases/buttons.flash', 'block_as
 
                 var next = true;
                 var msg = "";
-                if (monitores == '--') {
+                if (monitores == '-1') {
                     next = false;
                     msg += "* Debe elegir monitor a asignar \n";
                 }
-                if (practicantes == '--') {
+                if (practicantes == '-1') {
                     next = false;
                     msg += "*Debe elegir practicantes a asignar";
                 }
@@ -88,8 +88,42 @@ define(['jquery', 'block_ases/datatables', 'block_ases/buttons.flash', 'block_as
                 var selectedText = $(this).parent().find(":selected").text();
                 table.columns(colIndex - 1).search(this.value).draw();
             });
+
+            //Despliega monitores deacuerdo al practicante seleccionado
+
+            $(document).on('change', '#tableAssign tbody tr td select#practicants', function() {
+
+                var user = $(this).val();
+                var source = "list_monitors";
+                var instancia =getIdinstancia();
+
+                $.ajax({
+                    type: "POST",
+                    data: {
+                        user: user,
+                        instance:instancia,
+                        source: source
+                    },
+                    url: "../managers/ases_report/asesreport.php",
+                    success: function(msg) {
+                       $("select#monitors").find('option').remove().end();
+                       $("select#monitors").append(msg);
+                    },
+                    dataType: "json",
+                    cache: "false",
+                    error: function(msg) {
+                        alert("Error al cargar monitores con practicante seleccionado")
+                    },
+                });
+
+            });
         }
     }
+
+
+
+
+
 
     //Creación de tabla de asignaciones
     function createTableAssign() {

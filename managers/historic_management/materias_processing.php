@@ -226,10 +226,10 @@ if (isset($_FILES['file'])) {
                 if(!$hasCancel){
                     if ($nota != '') {
 
-                        if (!is_numeric($nota)) {
-                            $isValidRow = false;
-                            array_push($detail_erros, [$line_count, $lc_wrongFile, ($associativeTitles['nota'] + 1), 'nota', 'El campo nota debe ser de tipo numerico']);
-                        }
+                        // if (!is_numeric($nota)) {
+                        //     $isValidRow = false;
+                        //     array_push($detail_erros, [$line_count, $lc_wrongFile, ($associativeTitles['nota'] + 1), 'nota', 'El campo nota debe ser de tipo numerico']);
+                        // }
     
                     } else {
                         $isValidRow = false;

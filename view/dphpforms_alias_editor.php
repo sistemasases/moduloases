@@ -38,7 +38,7 @@ include('../lib.php');
 global $PAGE;
 global $USER;
 
-include "../classes/output/dphpforms_form_editor_page.php";
+include "../classes/output/dphpforms_alias_editor_page.php";
 include "../classes/output/renderer.php";
 
 $title = "Editor de formularios";
@@ -64,7 +64,7 @@ $coursenode = $PAGE->navigation->find($courseid, navigation_node::TYPE_COURSE);
 
 $rol = get_role_ases($USER->id);
 
-$record->forms = array_values(get_forms());
+$record->alias = array_values(get_alias());
 
 $PAGE->set_context($contextcourse);
 $PAGE->set_context($contextblock);
@@ -88,6 +88,6 @@ $PAGE->requires->js_call_amd('block_ases/dphpforms_form_editor', 'init');
 $output = $PAGE->get_renderer('block_ases');
 
 echo $output->header();
-$dphpforms_form_editor_page = new \block_ases\output\dphpforms_form_editor_page($record);
+$dphpforms_form_editor_page = new \block_ases\output\dphpforms_alias_editor_page($record);
 echo $output->render($dphpforms_form_editor_page);
 echo $output->footer();

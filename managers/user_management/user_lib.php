@@ -83,7 +83,7 @@ function get_students($instanceid)
         $cohort = $prog;
     }
     $query_semestre = "SELECT nombre FROM {talentospilos_semestre} WHERE id = (SELECT MAX(id) FROM {talentospilos_semestre})";
-    $sem            = $DB->get_record_sql($query_semestre)->nombre;
+    $sem = $DB->get_record_sql($query_semestre)->nombre;
     
     $año = substr($sem, 0, 4);
     
@@ -92,30 +92,27 @@ function get_students($instanceid)
     } else if (substr($sem, 4, 1) == 'B') {
         $semestre = $año . '08';
     }
-   
-    
+
     $query_courses = "SELECT *
     FROM (SELECT *
-    FROM {talentospilos_monitor_estud} as monitor_estud
-    INNER JOIN (select * from {user_info_data} where fieldid=(select id from {user_info_field} where shortname='idtalentos')) as info_data ON CAST(monitor_estud.id_estudiante as TEXT) = info_data.data
+    FROM {talentospilos_monitor_estud}  as monitor_estud
+     INNER JOIN {talentospilos_user_extended}  extended ON monitor_estud.id_estudiante = extended.id_ases_user
     ) as monitor_estud
     RIGHT JOIN (SELECT user_m.id, user_m.username,user_m.firstname,user_m.lastname
-     FROM  {user} user_m
-     INNER JOIN {user_info_data} data ON data.userid = user_m.id
-     INNER JOIN {user_info_field} field ON data.fieldid = field.id
-     INNER JOIN {talentospilos_usuario} user_t ON data.data = CAST(user_t.id AS VARCHAR)
-     INNER JOIN {talentospilos_est_estadoases} estado_u ON user_t.id = estado_u.id_estudiante
-     INNER JOIN {talentospilos_estados_ases} estados ON estados.id = estado_u.id_estado_ases
-     WHERE estados.nombre = 'ACTIVO/SEGUIMIENTO' AND field.shortname = 'idtalentos'
-
+     FROM  {user}  user_m
+         INNER JOIN {talentospilos_user_extended}  extended ON user_m.id = extended.id_moodle_user 
+         INNER JOIN {talentospilos_usuario}  user_t ON extended.id_ases_user = user_t.id
+         INNER JOIN {talentospilos_est_estadoases}  estado_u ON user_t.id = estado_u.id_estudiante
+         INNER JOIN {talentospilos_estados_ases}  estados ON estados.id = estado_u.id_estado_ases
+         WHERE estados.nombre = 'ACTIVO/SEGUIMIENTO' 
     INTERSECT
 
     SELECT user_m.id, user_m.username,user_m.firstname,user_m.lastname
-    FROM {user} user_m INNER JOIN {cohort_members} memb ON user_m.id = memb.userid INNER JOIN {cohort} cohorte ON memb.cohortid = cohorte.id
+    FROM {user}  user_m INNER JOIN {cohort_members}  memb ON user_m.id = memb.userid INNER JOIN {cohort}  cohorte ON memb.cohortid = cohorte.id
         WHERE cohorte.idnumber LIKE '$cohort%') as estudiantes
 
-    ON monitor_estud.userid = estudiantes.id
-    WHERE monitor_estud.userid IS NULL order by firstname";
+    ON monitor_estud.id_moodle_user = estudiantes.id
+    WHERE monitor_estud.id_moodle_user IS NULL  order by firstname";
     
     
     $result = $DB->get_records_sql($query_courses);

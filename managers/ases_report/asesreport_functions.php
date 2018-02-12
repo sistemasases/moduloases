@@ -35,7 +35,7 @@
 function get_roles_select($roles,$nombre_rol){
     $table = "";
     $table.='<select class="form-pilos" id="'.$nombre_rol.'">';
-    $table.='<option value="--" > ------------------------------------- </option>';
+    $table.='<option value="-1" > ------------------------------------- </option>';
     foreach($roles as $role){
             $table.='<option value="'.$role->id_usuario.'">'.$role->username." - ".$role->firstname." ".$role->lastname.'</option>';
      }
@@ -73,4 +73,25 @@ function get_assign($result,$practicants,$monitors)
     }
     return $array;
 }
+
+/**
+ * Function that creates options of a select of monitors by an array given
+ * @see create_option_of_select($monitors)
+ * @param $monitors --> array
+ * @return String
+ **/
+function create_option_of_select($monitors)
+{
+
+    $table = "";
+    $table.='<option value="-1" > ------------------------------------- </option>';
+    foreach($monitors as $monitor){
+            $table.='<option value="'.$monitor->id_usuario.'">'.$monitor->username." - ".$monitor->firstname." ".$monitor->lastname.'</option>';
+     }
+    return $table;
+}
+
+
+
+
 ?>

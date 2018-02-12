@@ -29,6 +29,24 @@
                     }
                 }
 
+                $('.btn.btn-danger.btn-univalle.btn-card').click(function(){
+                    var container = $(this).attr('data-container');
+                    var height = $('#' + container).height();
+
+                    
+
+                    if(height == 0){
+                        $(this).find('span').removeClass('glyphicon-chevron-left');
+                        $(this).find('span').addClass('glyphicon-chevron-down');
+                    }else{
+                        while(height < 0){
+                            height = $('#' + container).height();
+                        }
+                        $(this).find('span').removeClass('glyphicon-chevron-down');
+                        $(this).find('span').addClass('glyphicon-chevron-left');
+                    }
+                })
+
                 $('#button_add_v2_track').on('click', function() {
                     $('#modal_v2_peer_tracking').fadeIn(300);
                     var codigo_estudiante = $('#codigo').val();
