@@ -26,6 +26,7 @@
 require_once(dirname(__FILE__).'/../role_management/role_management_lib.php');
 require_once(dirname(__FILE__).'/user_lib.php');
 
+
 if(isset($_POST['role']) && isset($_POST['username'])){
 
     if(!isset($_POST['function'])){
@@ -55,7 +56,7 @@ if(isset($_POST['role']) && isset($_POST['username'])){
             break;
         }
     //Assign or update the monitor role, echoing success or fail
-    }else if($_POST['role'] == 'monitor_ps' && isset($_POST['students']) && isset($_POST['idinstancia'])){
+    }else if($_POST['role'] == 'monitor_ps'  && isset($_POST['idinstancia'])){
         $success =  update_role_monitor_ps($_POST['username'], $_POST['role'], $_POST['students'], $_POST['boss'], $_POST['idinstancia']);
 
         switch($success){
@@ -132,6 +133,7 @@ if(isset($_POST['role']) && isset($_POST['username'])){
             }
     }else{
         $success =  update_role_user($_POST['username'], $_POST['role'],$_POST['idinstancia']);
+
         switch($success){
             case 1:
                 echo "Rol asignado con éxito";
