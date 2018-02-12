@@ -506,6 +506,10 @@ if ($student_code != 0) {
 
     //END V2
 
+    //*************************************/
+    // fx get_tracking_peer_student_current_semester('1522006', '23');
+    //*************************************/
+
     $html_tracking_peer = "";
     $array_peer_trackings = get_tracking_group_by_semester($student_id, 'PARES', null, $blockid);
 
