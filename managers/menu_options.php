@@ -43,7 +43,7 @@ function create_menu_options($userid, $blockid, $courseid)
     $menu_return = "";
     $id_role = get_id_rol($userid, $blockid);
     
-    if($id_role == ""){
+    if($id_role != ""){
         $functions = get_functions_by_role_id($id_role);
         
         $indexed = array();
@@ -210,8 +210,8 @@ function create_menu_options($userid, $blockid, $courseid)
         foreach ($indexed as $value) {
             $menu_return .= $value;
         }
+
         
-    }else{
     }
 
     return $menu_return;
