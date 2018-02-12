@@ -4,7 +4,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     global $DB;
     $dbman = $DB->get_manager();
     $result = true;
-    if ($oldversion < 2018021215469 ) {
+    if ($oldversion < 2018021216159 ) {
     // ************************************************************************************************************
     // Actualización que crea la tabla para los campos extendidos de usuario (Tabla: {talentospilos_user_extended})
     // Versión: 2018010911179
@@ -739,10 +739,9 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
         array_push($records, $regla_depende);
         array_push($records, $regla_enlazado);
         $DB->insert_records('talentospilos_df_reglas', $records);
-
-        $sql_intel = "DELETE FROM {talentospilos_df_reglas} WHERE id <> 1 and id <> 2 and id <> 3 and id <> 4 and id <> 5 and id <> 6";
-        $DB->execute($sql_intel);
     }
+    $sql_intel = "DELETE FROM {talentospilos_df_reglas} WHERE id <> 1 and id <> 2 and id <> 3 and id <> 4 and id <> 5 and id <> 6";
+    $DB->execute($sql_intel);
     // ************************************************************************************************************
     // Actualización:
     // Se inserta campo id_programa en la tabla talentospilos_res_estudiante
@@ -906,7 +905,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
 
 
     // Ases savepoint reached.
-    upgrade_block_savepoint(true, 2018021215469 , 'ases');
+    upgrade_block_savepoint(true, 2018021216159 , 'ases');
    
     return $result;
 

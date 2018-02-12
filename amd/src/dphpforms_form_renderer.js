@@ -167,6 +167,8 @@
                                     $('.dphpforms-response').trigger("reset");
                                     $('#modal_v2_edit_peer_tracking').fadeOut(300);
                                     $('#modal_v2_peer_tracking').fadeOut(300);
+
+                                    
                                     
                                 }else if(response['status'] == -2){
                                     var mensaje = '';
