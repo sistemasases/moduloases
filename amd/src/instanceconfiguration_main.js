@@ -9,332 +9,151 @@
   * @module block_ases/instanceconfiguration_main
   */
 
-define(['jquery','block_ases/sweetalert','block_ases/datatables'], function($,sweetalert,datatables) {
-
+define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables','block_ases/sweetalert'], function($, bootstrap, datatables, sweetalert) {
 
   return {
-      init: function() {
-        $(document).ready(function() {
-        // loadPrograms();
-        $('#search_button').on('click', function() {
-            $(".assignment_li").removeClass('hidden');
-            var usr = $('#username_input').val();
-            if (usr === null || usr == "") {
+        init: function() {
+
+            var instance_id = get_id_instance();
+
+            $(document).ready(function(){
+                load_cohorts_assigned(instance_id);
+            });
+
+            $('#button_assign_cohort').on('click', function(){
+                var cohort_to_assign = $('#select_cohorts').val();
+                assign_cohort_instance(cohort_to_assign, instance_id);
+                load_cohorts_assigned(instance_id);
+                get_cohorts_without_assignment(instance_id);
+            });
+
+
+            function assign_cohort_instance(cohort_id, instance_id){
+
+                $.ajax({
+                    type: "POST",
+                    data: { function: 'insert_cohort',
+                            cohort: cohort_id,
+                            instance: instance_id},
+                    url: "../managers/instance_management/instance_configuration_serverproc.php",
+                    success: function(msg) {
+                        if(msg.status == 0){
+                            var title = 'Error';
+                            var type = 'error';
+                        }else{
+                            var title = 'Éxito';
+                            var type = 'success'
+                        }
+                        swal(
+                            title,
+                            msg.msg,
+                            type
+                        );
+                    },
+                    dataType: "json",
+                    cache: false,
+                    async: false,
+                    error: function(msg){
+                        console.log(msg);
+                    },
+                });
+            }
+        
+            function load_cohorts_assigned(instance_id){
+        
+                $.ajax({
+                    type: "POST",
+                    data: {
+                           function: 'load_cohorts',
+                           instance: instance_id},
+                    url: "../managers/instance_management/instance_configuration_serverproc.php",
+                    success: function(msg) {
+                        if(msg.status == 0){
+                            $('#div_cohorts_table').html("<center><span>La instancia no tiene cohortes asignadas</span></center>");
+                        }else{
+                            $('#div_cohorts_table').html("<table id='cohorts_table' class='col-sm-12' style='width:100%'></table>");
+                            $('#cohorts_table').DataTable(msg.msg);
+                        }
+                    },
+                    dataType: "json",
+                    cache: false,
+                    async: false,
+                    error: function(msg) {
+                        console.log(msg);
+                    },
+                });
+            }
+        
+            function unassign_cohort(id_cohort){
+
+                console.log('Unassigned');
+
+            }
+
+            function get_cohorts_without_assignment(instance_id){
+
+                $.ajax({
+                    type: "POST",
+                    data: {
+                           function: 'load_cohorts_without_assignment',
+                           instance: instance_id},
+                    url: "../managers/instance_management/instance_configuration_serverproc.php",
+                    success: function(msg) {
+                        if(msg.status == 0){
+                            swal(
+                                'Error',
+                                msg.msg,
+                                'error'
+                            );
+                        }else if(msg.status == 1){
+
+                            var options = "";
+                            var cohorts_array = msg.msg;
+
+                            if(cohorts_array.length == 0){
+                                options += "<option>No hay cohortes disponibles para asignar</option>";
+                            }else{
+                                $.each(cohorts_array, function(key){
+                                    options += "<option value='"+cohorts_array[key].id+"'>";
+                                    options += cohorts_array[key].idnumber+" "+cohorts_array[key].name+"</option>";
+                                });
+                            }
+                            
+                            $('#select_cohorts').html(options);
+
+                        }else{
+                            swal(
+                                'Error',
+                                'Error al cargar las cohortes no asignadas. Por favor recargue la página. Si el problema persiste contacte al área de sistemas.',
+                                'error'
+                            );
+                        }
+                    },
+                    dataType: "json",
+                    cache: false,
+                    async: false,
+                    error: function(msg) {
+                        console.log(msg);
+                    },
+                });
+            }
+        
+            function get_id_instance() {
+                var urlParameters = location.search.split('&');
+        
+                for (x in urlParameters) {
+                    if (urlParameters[x].indexOf('instanceid') >= 0) {
+                        var intanceparameter = urlParameters[x].split('=');
+                        return intanceparameter[1];
+                    }
+                }
                 return 0;
             }
-            searchUser();
-        });
-
-        $('#ok_button').on('click', function() {
-            updateSystemUser();
-        });
-
-        $("#cancel_button").on('click', function() {
-            $(".assignment_li").addClass('hidden');
-            $("#form_mon_student").fadeOut();
-            $("#username_input").val("");
-            $('#username_input').prop('disabled', false);
-            $('#name_lastname').val(" ");
-            $("#form_prof_type").fadeOut();
-        });
-
-        $('#next').on('click', function() {
-            var pagina = "upload_files_form.php";
-            location.href = pagina + location.search;
-        });
-
-
-        $('#listadministradores').on('click', function() {
-            loadSystemAdministrators();
-        });
-
-        loadSystemAdministrators();
-
-        $('#div_users').on('click', '#delete_user', function() {
-
-            var table = $("#div_users #tableUsers").DataTable();
-            var td = $(this).parent();
-            var childrenid = $(this).children('span').attr('id');
-            var colIndex = table.cell(td).index().column;
-
-            var username = table.cell(table.row(td).index(), 0).data();
-            var firstname = table.cell(table.row(td).index(), 1).data();
-            var lastname = table.cell(table.row(td).index(), 2).data();
-
-            swal({
-                    title: "¿Estas seguro/a?",
-                    text: "Al usuario <strong>" + firstname + " " + lastname + "</strong> con código <strong>" + username + "</strong> se le inhabilitará los permisos de administrador del sistema</strong>.<br><strong>¿Estás de acuerdo con los cambios que se efectuarán?</strong>",
-                    type: "warning",
-                    html: true,
-                    showCancelButton: true,
-                    confirmButtonColor: "#d51b23",
-                    confirmButtonText: "Si!",
-                    cancelButtonText: "No",
-                    closeOnConfirm: true,
-                },
-                function(isConfirm) {
-                    if (isConfirm) {
-                        deleteUser(username);
-                    }
-                }
-            );
-        });
-    });
-
-    function searchUser() {
-        var username = $('#username_input').val();
-        var data = new Array();
-
-        data.push({
-            name: 'function',
-            value: 'search'
-        });
-        data.push({
-            name: 'username',
-            value: username
-        });
-
-        $.ajax({
-            type: "POST",
-            data: data,
-            url: "../managers/instance_management/instance_configuration_serverproc.php",
-            success: function(msg) {
-                var error = msg.error;
-                if (!error) {
-                    $('#username_input').prop('disabled', true);
-                    $('#lista_programas').prop('disabled', false);
-                    $('#name_lastname').val(msg.firstname + " " + msg.lastname);
-                    $('#lista_programas').append('<option value="' + msg.cod_programa + '" selected> ' + msg.cod_programa + ' - ' + msg.nombre_programa + '</option>');
-
-                    if (msg.seg_academico == 1) {
-                        $('label input[name="segAca"][ value="1"]').prop('checked', true);
-                    }
-                    else {
-                        $('label input[name="segAca" ][ value="0"]').prop('checked', true);
-                    }
-
-                    if (msg.seg_asistencias == 1) {
-                        $('label input[name="segAsis" ][ value="1"]').prop('checked', true);
-                    }
-                    else {
-                        $('label input[name="segAsis"][ value="0"]').prop('checked', true);
-                    }
-
-                    if (msg.seg_socioeducativo == 1) {
-                        $('label input[name="segSoc" ][ value="1"]').prop('checked', true);
-                    }
-                    else {
-                        $('label input[name="segSoc"][ value="0"]').prop('checked', true);
-                    }
-
-                }
-                else {
-                    swal({
-                        title: 'Error',
-                        html: true,
-                        type: "error",
-                        text: msg.error,
-                        confirmButtonColor: "#D3D3D3"
-                    });
-                }
-
-
-            },
-            dataType: "json",
-            cache: "false",
-            error: function(msg) {
-                console.log(msg)
-            },
-        });
-
-    }
-
-    function loadPrograms() {
-        $('#lista_programas').html('');
-
-        $.ajax({
-            type: "POST",
-            data: [{
-                name: 'function',
-                value: 'load_programs'
-            }],
-            url: "../managers/instance_management/instance_configuration_serverproc.php",
-            success: function(msg) {
-                $('#lista_programas').append('<option value="0" selected> 0000 - Ninguno</option>');
-                if (msg) {
-                    for (x in msg) {
-                        $('#lista_programas').append('<option value="' + msg[x].cod_univalle + '">' + msg[x].cod_univalle + ' - ' + msg[x].nombre + '</option>'); //cod_univalle
-                    }
-                }
-
-
-            },
-            dataType: "json",
-            cache: "false",
-            error: function(msg) {
-                console.log(msg)
-            }
-        });
-    }
-
-    function updateSystemUser() {
-        $('#username_input').prop('disabled', false);
-        $('#name_lastname').prop('disabled', false);
-        var username = $('#username_input').val();
-        var programa = $("#lista_programas option[value='" + $('#lista_programas').val() + "']").text();
-        var id_program = $("#lista_programas").val();
-        var data = $('input, select').serializeArray();
-        $('#username_input').prop('disabled', true);
-        $('#name_lastname').prop('disabled', true);
-        var blockid = "<?php echo $blockid; ?>";
-
-        //se obtiene el id de la instancia por la url
-        var instanceid = 0;
-        var urlParameters = location.search.split('&');
-
-        for (x in urlParameters) {
-            if (urlParameters[x].indexOf('instanceid') >= 0) {
-                var intanceparameter = urlParameters[x].split('=');
-                instanceid = intanceparameter[1];
-            }
         }
-
-        data.push({
-            name: "idinstancia",
-            value: instanceid
-        });
-        data.push({
-            name: "function",
-            value: "updateUser"
-        });
-
-        $.ajax({
-            type: "POST",
-            data: data,
-            url: "../managers/instance_management/instance_configuration_serverproc.php",
-            success: function(msg) {
-                if (msg === true) {
-                    swal({
-                            title: "Actualizado con exito!!",
-                            html: true,
-                            type: "success",
-                            text: "El usuario con código " + username + " es ahora administrador del sistema de " + programa,
-                            confirmButtonColor: "#d51b23"
-                        },
-                        function(isConfirm) {
-                            if (isConfirm) {
-
-                            }
-                        });
-                    $('#next_div').fadeIn();
-                    loadSystemAdministrators();
-                    loadPrograms();
-                }
-                else {
-                    swal({
-                            title: "Error :(",
-                            html: true,
-                            type: "error",
-                            text: msg,
-                            confirmButtonColor: "#d51b23"
-                        },
-                        function(isConfirm) {
-                            if (isConfirm) {
-
-                            }
-                        });
-                }
-            },
-            dataType: "json",
-            cache: "false",
-            error: function(msg) {
-                console.log(msg);
-            }
-        });
-    }
-
-    function loadSystemAdministrators() {
-        var data = new Array();
-        data.push({
-            name: "function",
-            value: "loadSystemAdministrators"
-        });
-        $.ajax({
-            type: "POST",
-            data: data,
-            url: "../managers/instance_management/instance_configuration_serverproc.php",
-            success: function(msg) {
-                $("#div_users").empty();
-                $("#div_users").append('<table id="tableUsers" class="display" cellspacing="0" width="100%"><thead><thead></table>');
-                var table = $("#tableUsers").DataTable(msg);
-                $('#div_users #delete_user').css('cursor', 'pointer');
-            },
-            dataType: "json",
-            cache: "false",
-            error: function(msg) {
-                console.log(msg);
-            }
-        });
-    }
-
-    function deleteUser(username) {
-        var data = new Array();
-        data.push({
-            name: "function",
-            value: "deleteUser"
-        });
-        data.push({
-            name: "username",
-            value: username
-        });
-        //console.log(data);
-        $.ajax({
-            type: "POST",
-            data: data,
-            url: "../managers/instance_management/instance_configuration_serverproc.php",
-            success: function(msg) {
-                if (msg === true) {
-                    swal({
-                            title: "Actualizado con exito!!",
-                            html: true,
-                            type: "success",
-                            text: "El usuario con código " + username + " se ha eliminado satisfactoriamente",
-                            confirmButtonColor: "#d51b23"
-                        },
-                        function(isConfirm) {
-                            if (isConfirm) {
-
-                            }
-                        });
-                    loadSystemAdministrators();
-                    loadPrograms();
-                }
-                else {
-                    swal({
-                            title: "Error :(",
-                            html: true,
-                            type: "error",
-                            text: msg,
-                            confirmButtonColor: "#d51b23"
-                        },
-                        function(isConfirm) {
-                            if (isConfirm) {
-
-                            }
-                        });
-                }
-            },
-            dataType: "json",
-            cache: "false",
-            error: function(msg) {
-                console.log(msg);
-            }
-        });
-    }
-
-
-
-
-       }
     };
+
+ 
+
+    
+
 });
