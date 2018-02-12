@@ -68,6 +68,7 @@ if(!consult_instance($blockid)){
         
         // Systems role assignment for the current instance
         $result_assign_role = update_role_user($USER->username, 'sistemas', $blockid, 1, get_current_semester(), null, null);
+        insert_instance($blockid, $USER->id);
         
         if($result_assign_role == 4 || $result_assign_role == 2){
             $object_to_render->status = 0;

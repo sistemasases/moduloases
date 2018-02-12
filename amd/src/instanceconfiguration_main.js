@@ -71,7 +71,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables','block_ases/sw
                         if(msg.status == 0){
                             $('#div_cohorts_table').html("<center><span>La instancia no tiene cohortes asignadas</span></center>");
                         }else{
-                            $('#div_cohorts_table').html("<table id='cohorts_table' class='col-sm-12' style='width:100%'></table>");
+                            $('#div_cohorts_table').html("<h4>Cohortes asignadas a la instancia</h4><hr/><table id='cohorts_table' class='col-sm-12' style='width:100%'></table>");
                             $('#cohorts_table').DataTable(msg.msg);
                         }
                     },

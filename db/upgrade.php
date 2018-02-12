@@ -4,7 +4,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     global $DB;
     $dbman = $DB->get_manager();
     $result = true;
-    if ($oldversion < 2018021216159 ) {
+    if ($oldversion < 2018021217339 ) {
     // ************************************************************************************************************
     // Actualización que crea la tabla para los campos extendidos de usuario (Tabla: {talentospilos_user_extended})
     // Versión: 2018010911179
@@ -407,18 +407,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     $key = new xmldb_key('foreign_key_semestre', XMLDB_KEY_FOREIGN, array('id_semestre'), 'talentospilos_semestre', array('id'));
     // Launch add key foreign_key_semestre.
     $dbman->add_key($table, $key);
-    // ************************************************************************************************************
-    // Actualización:
-    // Se añade el campo cod_instancia a la tabla {talentospilos_instancia}
-    // Versión en la que se incluye: 2018011914179
-    // ************************************************************************************************************
-    // Define field cod_instancia to be added to talentospilos_instancia.
-    $table = new xmldb_table('talentospilos_instancia');
-    $field = new xmldb_field('cod_instancia', XMLDB_TYPE_CHAR, '20', null, XMLDB_NOTNULL, null, 'change', 'seg_socioeducativo');
-    // Conditionally launch add field cod_instancia.
-    if (!$dbman->field_exists($table, $field)) {
-        $dbman->add_field($table, $field);
-    }
+
     //*************************************************************************************************************
     // ************************************************************************************************************
     // ************************************************************************************************************
@@ -904,8 +893,43 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
      }
 
 
+    // ************************************************************************************************************
+    // Actualización:
+    // Se elimina la tabla talentospilos_instancia
+    // Versión en la que se incluye: Pendiente
+    // ************************************************************************************************************
+    // Define table talentospilos_instancia to be dropped.
+    //$table = new xmldb_table('talentospilos_instancia');
+
+    // Conditionally launch drop table for talentospilos_instancia.
+    if ($dbman->table_exists($table)) {
+        $dbman->drop_table($table);
+    }
+
+    // ************************************************************************************************************
+    // Actualización:
+    // Se añade la nueva tabla para la configuración de la instancia
+    // Versión en la que se incluye: Pendiente
+    // ************************************************************************************************************
+    // Define table talentospilos_instancia to be created.
+    $table = new xmldb_table('talentospilos_instancia');
+
+    // Adding fields to table talentospilos_instancia.
+    $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+    $table->add_field('id_instancia', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+    $table->add_field('descripcion', XMLDB_TYPE_CHAR, '200', null, null, null, null);
+
+    // Adding keys to table talentospilos_instancia.
+    $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+
+    // Conditionally launch create table for talentospilos_instancia.
+    if (!$dbman->table_exists($table)) {
+        $dbman->create_table($table);
+    }
+
+
     // Ases savepoint reached.
-    upgrade_block_savepoint(true, 2018021216159 , 'ases');
+    upgrade_block_savepoint(true, 2018021217339 , 'ases');
    
     return $result;
 
