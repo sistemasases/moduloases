@@ -302,6 +302,8 @@ function actualiza_rol_practicante($username, $role, $idinstancia, $state = 1, $
 {
     
     global $DB;
+
+
     
     $sql_query      = "SELECT id FROM {user} WHERE username='$username'";
     $id_user_moodle = $DB->get_record_sql($sql_query);
@@ -311,6 +313,9 @@ function actualiza_rol_practicante($username, $role, $idinstancia, $state = 1, $
     
     $sql_query   = "select max(id) as id from {talentospilos_semestre};";
     $id_semester = $DB->get_record_sql($sql_query);
+
+
+
     
     $array = new stdClass;
     
@@ -318,7 +323,11 @@ function actualiza_rol_practicante($username, $role, $idinstancia, $state = 1, $
     $array->id_usuario   = $id_user_moodle->id;
     $array->estado       = $state;
     $array->id_semestre  = $id_semester->id;
-    $array->id_jefe      = (int) $id_boss;
+    if($id_boss =='ninguno'){
+     $id_boss=null;
+     $array->id_jefe = null;
+    }else{
+    $array->id_jefe      = (int) $id_boss;}
     $array->id_instancia = $idinstancia;
     
     $result = 0;
