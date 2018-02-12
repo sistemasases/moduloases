@@ -405,19 +405,16 @@ function update_role_monitor_ps($username, $role, $array_students, $boss, $idins
     $sql_query = "SELECT id FROM {talentospilos_rol} WHERE nombre_rol='monitor_ps';";
     $id_role   = $DB->get_record_sql($sql_query);
     
-    //boss is consulted
-    $bossid = null;
-    if (intval($boss)) {
-        if (get_professionals($boss, $idinstancia))
-            $bossid = $boss;
-    }
-    
     $object_role               = new stdClass;
     $object_role->id_rol       = $id_role->id;
     $object_role->id_usuario   = $id_moodle->id;
     $object_role->estado       = $state;
     $object_role->id_semestre  = $semestre->id_semestre;
-    $object_role->id_jefe      = $bossid;
+    if($boss =='ninguno'){
+     $id_boss=null;
+     $object_role->id_jefe = null;
+    }else{
+    $object_role->id_jefe      =$boss;}
     $object_role->id_instancia = $idinstancia;
     
     if (empty($id_rol_actual)) {
