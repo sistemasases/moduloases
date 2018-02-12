@@ -177,17 +177,6 @@ if (isset($_FILES['file'])) {
             if ($associativeTitles['promedio_acumulado'] != null) {
 
                 $promedio_acumulado = $data[$associativeTitles['promedio_acumulado']];
-                if ($promedio_acumulado != '') {
-
-                    if (!is_numeric($promedio_acumulado)) {
-                        $isValidRow = false;
-                        array_push($detail_erros, [$line_count, $lc_wrongFile, ($associativeTitles['promedio_acumulado'] + 1), 'promedio_acumulado', 'El campo promedio_acumulado debe ser de tipo numerico']);
-                    }
-
-                } else {
-                    $isValidRow = false;
-                    array_push($detail_erros, [$line_count, $lc_wrongFile, ($associativeTitles['promedio_acumulado'] + 1), 'promedio_acumulado', 'El campo promedio_acumulado es obligatorio y se encuentra vacio']);
-                }
 
             } else {
                 throw new MyException('La columna con el campo promedio_acumulado es obligatoria');
@@ -198,6 +187,18 @@ if (isset($_FILES['file'])) {
                 $fecha_cancelacion = $data[$associativeTitles['fecha_cancelacion']];
                 if ($fecha_cancelacion != "" and $fecha_cancelacion != 'undefined') {
                     $hasCancel = true;
+                }else{
+                    if ($promedio_acumulado != '') {
+
+                        if (!is_numeric($promedio_acumulado)) {
+                            $isValidRow = false;
+                            array_push($detail_erros, [$line_count, $lc_wrongFile, ($associativeTitles['promedio_acumulado'] + 1), 'promedio_acumulado', 'El campo promedio_acumulado debe ser de tipo numerico']);
+                        }
+    
+                    } else {
+                        $isValidRow = false;
+                        array_push($detail_erros, [$line_count, $lc_wrongFile, ($associativeTitles['promedio_acumulado'] + 1), 'promedio_acumulado', 'El campo promedio_acumulado es obligatorio y se encuentra vacio']);
+                    }
                 }
             }
             //validate estimulo
