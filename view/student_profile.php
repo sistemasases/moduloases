@@ -506,6 +506,10 @@ if ($student_code != 0) {
 
     //END V2
 
+    //*************************************/
+    // fx get_tracking_peer_student_current_semester('1522006', '23');
+    //*************************************/
+
     $html_tracking_peer = "";
     $array_peer_trackings = get_tracking_group_by_semester($student_id, 'PARES', null, $blockid);
 
@@ -849,6 +853,7 @@ if ($student_code != 0) {
 if($rol == 'sistemas'){
     $record->add_peer_tracking_lts = true;
 }
+
 
 //Menu items are created
 $menu_option = create_menu_options($USER->id, $blockid, $courseid);

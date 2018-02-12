@@ -23,6 +23,10 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 require_once(dirname(__FILE__). '/../../../../config.php');
+require_once '../managers/dphpforms/dphpforms_forms_core.php';
+require_once '../managers/dphpforms/dphpforms_records_finder.php';
+require_once '../managers/dphpforms/dphpforms_get_record.php';
+require_once '../managers/periods_management/periods_lib.php';
 
 /**
  * Gets all reasons a student quit or delay studies
@@ -123,6 +127,98 @@ function get_trackings_student($id_ases, $tracking_type, $id_instance){
     return $tracking_array;
  }
  
+function get_tracking_peer_student_current_semester($student_id, $semester_id){
+
+    $interval = get_semester_interval($semester_id);
+    $fecha_inicio = getdate(strtotime($interval->fecha_inicio));
+    $fecha_fin = getdate(strtotime($interval->fecha_fin));
+    $ano_semester  = $fecha_inicio['year'];
+   
+    $array_peer_trackings_dphpforms = dphpforms_find_records('seguimiento_pares', 'seguimiento_pares_id_estudiante', $student_id, 'DESC');
+    $array_peer_trackings_dphpforms = json_decode($array_peer_trackings_dphpforms);
+    $array_detail_peer_trackings_dphpforms = array();
+    foreach ($array_peer_trackings_dphpforms->results as &$peer_trackings_dphpforms) {
+        array_push($array_detail_peer_trackings_dphpforms, json_decode(dphpforms_get_record($peer_trackings_dphpforms->id_registro, 'fecha')));
+    }
+
+    $array_tracking_date = array();
+    foreach ($array_detail_peer_trackings_dphpforms as &$peer_tracking) {
+        foreach ($peer_tracking->record->campos as &$tracking) {
+            if ($tracking->local_alias == 'fecha') {
+                array_push($array_tracking_date, strtotime($tracking->respuesta));
+            }
+        }
+    }
+
+    rsort($array_tracking_date);
+
+    $seguimientos_ordenados = new stdClass();
+    $seguimientos_ordenados->index = array();
+    //Inicio de ordenamiento
+    $periodo_actual = [];
+    for($l = $fecha_inicio['mon']; $l <= $fecha_fin['mon']; $l++ ){
+        array_push($periodo_actual, $l);
+    }
+    for ($x = 0; $x < count($array_tracking_date); $x++) {
+        $string_date = $array_tracking_date[$x];
+        $array_tracking_date[$x] = getdate($array_tracking_date[$x]);
+        if (property_exists($seguimientos_ordenados, $array_tracking_date[$x]['year'])) {
+            if (in_array($array_tracking_date[$x]['mon'], $periodo_actual)) {
+                for ($y = 0; $y < count($array_detail_peer_trackings_dphpforms); $y++) {
+                    if ($array_detail_peer_trackings_dphpforms[$y]) {
+                        foreach ($array_detail_peer_trackings_dphpforms[$y]->record->campos as &$tracking) {
+                            if ($tracking->local_alias == 'fecha') {
+                                if (strtotime($tracking->respuesta) == $string_date) {
+                                    array_push($seguimientos_ordenados->$array_tracking_date[$x]['year']->periodo, $array_detail_peer_trackings_dphpforms[$y]);
+                                    $array_detail_peer_trackings_dphpforms[$y] = null;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+            } 
+
+        } else {
+            array_push($seguimientos_ordenados->index, $array_tracking_date[$x]['year']);
+            $seguimientos_ordenados->$array_tracking_date[$x]['year']->year = $array_tracking_date[$x]['year'];
+            $seguimientos_ordenados->$array_tracking_date[$x]['year']->periodo = array();
+
+            $seguimientos_ordenados->$array_tracking_date[$x]['year']->year = $array_tracking_date[$x]['year'];
+            if(in_array($array_tracking_date[$x]['mon'], $periodo_actual)){
+                
+                for($y = 0; $y < count($array_detail_peer_trackings_dphpforms); $y++){
+                    if($array_detail_peer_trackings_dphpforms[$y]){
+                        foreach ($array_detail_peer_trackings_dphpforms[$y]->record->campos as &$tracking) {
+                            if ($tracking->local_alias == 'fecha') {
+                                if (strtotime($tracking->respuesta) == $string_date) {
+                                    array_push($seguimientos_ordenados->$array_tracking_date[$x]['year']->periodo, $array_detail_peer_trackings_dphpforms[$y]);
+                                    $array_detail_peer_trackings_dphpforms[$y] = null;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    $seguimientos_array = json_decode(json_encode($seguimientos_ordenados), true);
+    $array_periodos = array();
+    for ($x = 0; $x < count($seguimientos_array['index']); $x++) {
+        array_push($array_periodos, $seguimientos_array[$seguimientos_array['index'][$x]]);
+    }
+    /*$peer_tracking_v2 = array(
+        'index' => $seguimientos_array['index'],
+        'periodos' => $array_periodos,
+    );*/
+
+    //return;
+    return $array_periodos;
+
+}
+
 /**
  * Gets all of a student grouped by semester
  * 
