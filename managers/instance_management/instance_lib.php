@@ -46,6 +46,27 @@ function consult_instance($id_instance){
 }
 
 /**
+ * Insert a new instance
+ * 
+ * @see insert_instance($id_instance)
+ * @param $id_instance --> instance id
+ * @return boolean 
+ */
+function insert_instance($id_instance, $id_user){
+
+    global $DB;
+
+    $object_to_record = new stdClass();
+    $object_to_record->id_instancia = $id_instance;
+    $object_to_record->id_administrador = $id_user;
+    $object_to_record->descripcion = "";
+
+    $result_insertion = $DB->insert_record('talentospilos_instancia', $object_to_record, true);
+    
+    return $result_insertion;
+}
+
+/**
  * Función que retorna las cohortes del sistema que no han sido asignadas a alguna instancia
  * 
  * @see get_cohorts_without_assignment()
@@ -150,9 +171,8 @@ function assign_permissions($role_name, $fun_name){
 
     foreach($result_query as $cohort){
         $controls_html = "";
-        $controls_html .= "<span class='glyphicon glyphicon-remove' id='$cohort->idnumber'"; 
-        $controls_html .= "onclick='unassign_cohort(this.id)' style='color:red'>";
-        $controls_html .= "</span>";
+        $controls_html .= "<span class='unassigned_cohort glyphicon glyphicon-remove' id='$cohort->idnumber'"; 
+        $controls_html .= "style='color:red'></span>";
         $cohort->controls_column = $controls_html;
         array_push($result_to_return, $cohort);
     }
