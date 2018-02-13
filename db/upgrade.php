@@ -4,7 +4,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     global $DB;
     $dbman = $DB->get_manager();
     $result = true;
-    if ($oldversion < 2018021217339 ) {
+    if ($oldversion < 2018021311149 ) {
     // ************************************************************************************************************
     // Actualización que crea la tabla para los campos extendidos de usuario (Tabla: {talentospilos_user_extended})
     // Versión: 2018010911179
@@ -899,7 +899,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     // Versión en la que se incluye: Pendiente
     // ************************************************************************************************************
     // Define table talentospilos_instancia to be dropped.
-    //$table = new xmldb_table('talentospilos_instancia');
+    $table = new xmldb_table('talentospilos_instancia');
 
     // Conditionally launch drop table for talentospilos_instancia.
     if ($dbman->table_exists($table)) {
@@ -927,9 +927,47 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
         $dbman->create_table($table);
     }
 
+    // ************************************************************************************************************
+    // Actualización:
+    // Se elimina la tabla talentospilos_monitor_estud
+    // Versión en la que se incluye: Pendiente
+    // ************************************************************************************************************
+    // Define table talentospilos_monitor_estud to be dropped.
+    $table = new xmldb_table('talentospilos_monitor_estud');
+
+    // Conditionally launch drop table for talentospilos_monitor_estud.
+    if ($dbman->table_exists($table)) {
+        $dbman->drop_table($table);
+    }
+
+    // ************************************************************************************************************
+    // Actualización:
+    // Se crea la tabla talentospilos_monitor_estud con llave única que incluye id_monitor, id_estudiante, id_instancia, id_semestre
+    // Versión en la que se incluye: Pendiente
+    // ************************************************************************************************************
+    // Define table talentospilos_monitor_estud to be created.
+    $table = new xmldb_table('talentospilos_monitor_estud');
+
+    // Adding fields to table talentospilos_monitor_estud.
+    $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+    $table->add_field('id_monitor', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+    $table->add_field('id_estudiante', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+    $table->add_field('id_instancia', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+    $table->add_field('id_semestre', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+
+    // Adding keys to table talentospilos_monitor_estud.
+    $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+    $table->add_key('mon_est_pk1', XMLDB_KEY_FOREIGN, array('id_monitor'), 'user', array('id'));
+    $table->add_key('mon_est_pk2', XMLDB_KEY_FOREIGN, array('id_estudiante'), 'talentospilos_usuario', array('id'));
+    $table->add_key('mon_est_un', XMLDB_KEY_UNIQUE, array('id_monitor', 'id_estudiante', 'id_instancia', 'id_semestre'));
+
+    // Conditionally launch create table for talentospilos_monitor_estud.
+    if (!$dbman->table_exists($table)) {
+        $dbman->create_table($table);
+    }
 
     // Ases savepoint reached.
-    upgrade_block_savepoint(true, 2018021217339 , 'ases');
+    upgrade_block_savepoint(true, 2018021311149 , 'ases');
    
     return $result;
 

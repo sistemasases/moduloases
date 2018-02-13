@@ -171,9 +171,8 @@ function assign_permissions($role_name, $fun_name){
 
     foreach($result_query as $cohort){
         $controls_html = "";
-        $controls_html .= "<span class='glyphicon glyphicon-remove' id='$cohort->idnumber'"; 
-        $controls_html .= "onclick='unassign_cohort(this.id)' style='color:red'>";
-        $controls_html .= "</span>";
+        $controls_html .= "<span class='unassigned_cohort glyphicon glyphicon-remove' id='$cohort->idnumber'"; 
+        $controls_html .= "style='color:red'></span>";
         $cohort->controls_column = $controls_html;
         array_push($result_to_return, $cohort);
     }

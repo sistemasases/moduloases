@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<XMLDB PATH="blocks/ases/db" VERSION="20180212" COMMENT="XMLDB file for Moodle blocks/configurable_reports"
+<XMLDB PATH="blocks/ases/db" VERSION="20180213" COMMENT="XMLDB file for Moodle blocks/configurable_reports"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
 >
@@ -307,12 +307,13 @@
         <FIELD NAME="id_monitor" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="id_estudiante" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="id_instancia" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="id_semestre" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Identificador del semestre en el cual se realiza la asignación"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
         <KEY NAME="mon_est_pk1" TYPE="foreign" FIELDS="id_monitor" REFTABLE="user" REFFIELDS="id" COMMENT="XMLDB foreign key 'mon_est_fk1'"/>
         <KEY NAME="mon_est_pk2" TYPE="foreign" FIELDS="id_estudiante" REFTABLE="talentospilos_usuario" REFFIELDS="id" COMMENT="XMLDB foreign key 'mon_est_fk2'"/>
-        <KEY NAME="mon_est_un" TYPE="unique" FIELDS="id_monitor, id_estudiante, id_instancia" COMMENT="XMLDB unique key 'mon_est_un'"/>
+        <KEY NAME="mon_est_un" TYPE="unique" FIELDS="id_monitor, id_estudiante, id_instancia, id_semestre" COMMENT="XMLDB unique key 'mon_est_un'"/>
       </KEYS>
     </TABLE>
     <TABLE NAME="talentospilos_seguimiento" COMMENT="describe un seguimiento hecho por un monitor">
