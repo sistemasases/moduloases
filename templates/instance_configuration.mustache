@@ -1,20 +1,22 @@
 {{#data}}
 {{> block_ases/side_menu}}
 <div class="container">
-<div class="row">
-   <h2>GESTIÓN DE ADMINISTRADORES DEL SISTEMA</h2>
-   <hr/>
-   {{{message}}}   
-   <div class="panel-group">
-      {{#admin_assignment_ic}}
-      {{> block_ases/admin_assignment}}
-      {{/admin_assignment_ic}}
+    <div class="row">
+    <h2>CONFIGURACIÓN DE LA INSTANCIA</h2>
+    <hr/>
+    {{{message}}}
+    <div class="panel-group">
+        {{#cohort_assignment_ic}}
+        {{> block_ases/cohort_assignment_ic}}
+        {{/cohort_assignment_ic}}
 
-      {{#view_admins_ic}}
-      {{> block_ases/view_admins}}
-      {{/view_admins_ic}}
-
-   </div>
-   {{!--end panel-group--}}
+        {{#admin_assignment_ic}}
+        {{> block_ases/admin_assignment_ic}}
+        {{/admin_assignment_ic}}
+    </div>
+    {{#status}}
+        {{> block_ases/restricted_access}}
+    {{/status}}
+    {{!--end panel-group--}}
 </div>
 {{/data}}

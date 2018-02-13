@@ -4,7 +4,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     global $DB;
     $dbman = $DB->get_manager();
     $result = true;
-    if ($oldversion < 2018020214529 ) {
+    if ($oldversion < 2018021311149 ) {
     // ************************************************************************************************************
     // Actualización que crea la tabla para los campos extendidos de usuario (Tabla: {talentospilos_user_extended})
     // Versión: 2018010911179
@@ -407,18 +407,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     $key = new xmldb_key('foreign_key_semestre', XMLDB_KEY_FOREIGN, array('id_semestre'), 'talentospilos_semestre', array('id'));
     // Launch add key foreign_key_semestre.
     $dbman->add_key($table, $key);
-    // ************************************************************************************************************
-    // Actualización:
-    // Se añade el campo cod_instancia a la tabla {talentospilos_instancia}
-    // Versión en la que se incluye: 2018011914179
-    // ************************************************************************************************************
-    // Define field cod_instancia to be added to talentospilos_instancia.
-    $table = new xmldb_table('talentospilos_instancia');
-    $field = new xmldb_field('cod_instancia', XMLDB_TYPE_CHAR, '20', null, XMLDB_NOTNULL, null, 'change', 'seg_socioeducativo');
-    // Conditionally launch add field cod_instancia.
-    if (!$dbman->field_exists($table, $field)) {
-        $dbman->add_field($table, $field);
-    }
+
     //*************************************************************************************************************
     // ************************************************************************************************************
     // ************************************************************************************************************
@@ -682,57 +671,66 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     // ************************************************************************************************************
     
     //Registro de los tipos de campos  
-    $campo_textfield = new stdClass();
-    $campo_textfield->campo                = 'TEXTFIELD';
-    $campo_textfield->fecha_hora_registro  = 'now()';
-    $campo_textarea = new stdClass();
-    $campo_textarea->campo                 = 'TEXTAREA';
-    $campo_textarea->fecha_hora_registro   = 'now()';
-    $campo_date = new stdClass();
-    $campo_date->campo                     = 'DATE';
-    $campo_date->fecha_hora_registro       = 'now()';
-    $campo_time = new stdClass();
-    $campo_time->campo                     = 'TIME';
-    $campo_time->fecha_hora_registro       = 'now()';
-    $campo_radio = new stdClass();
-    $campo_radio->campo                    = 'RADIOBUTTON';
-    $campo_radio->fecha_hora_registro      = 'now()';
-    $campo_check = new stdClass();
-    $campo_check->campo                    = 'CHECKBOX';
-    $campo_check->fecha_hora_registro      = 'now()';
-    $records = array();
-    array_push($records, $campo_textfield);
-    array_push($records, $campo_textarea);
-    array_push($records, $campo_date);
-    array_push($records, $campo_time);
-    array_push($records, $campo_radio);
-    array_push($records, $campo_check);
-    $DB->insert_records('talentospilos_df_tipo_campo', $records);
+    $verificador = $DB->get_record_sql("SELECT * FROM {talentospilos_df_tipo_campo} WHERE campo = 'TEXTFIELD'");
+    if(!$verificador){
+        $campo_textfield = new stdClass();
+        $campo_textfield->campo                = 'TEXTFIELD';
+        $campo_textfield->fecha_hora_registro  = 'now()';
+        $campo_textarea = new stdClass();
+        $campo_textarea->campo                 = 'TEXTAREA';
+        $campo_textarea->fecha_hora_registro   = 'now()';
+        $campo_date = new stdClass();
+        $campo_date->campo                     = 'DATE';
+        $campo_date->fecha_hora_registro       = 'now()';
+        $campo_time = new stdClass();
+        $campo_time->campo                     = 'TIME';
+        $campo_time->fecha_hora_registro       = 'now()';
+        $campo_radio = new stdClass();
+        $campo_radio->campo                    = 'RADIOBUTTON';
+        $campo_radio->fecha_hora_registro      = 'now()';
+        $campo_check = new stdClass();
+        $campo_check->campo                    = 'CHECKBOX';
+        $campo_check->fecha_hora_registro      = 'now()';
+        $records = array();
+        array_push($records, $campo_textfield);
+        array_push($records, $campo_textarea);
+        array_push($records, $campo_date);
+        array_push($records, $campo_time);
+        array_push($records, $campo_radio);
+        array_push($records, $campo_check);
+        $DB->insert_records('talentospilos_df_tipo_campo', $records);
+    }
+    
     // ************************************************************************************************************
     // Actualización:
     // Se insertan registros para las reglas de los formularios
     // Versión en la que se incluye: 2018012217129
     // ************************************************************************************************************
-    $regla_mayor_que = new stdClass();
-    $regla_mayor_que->regla    = '>';
-    $regla_menor_que = new stdClass();
-    $regla_menor_que->regla    = '<';
-    $regla_igual = new stdClass();
-    $regla_igual->regla        = 'EQUAL';
-    $regla_diferente = new stdClass();
-    $regla_diferente->regla    = 'DIFFERENT';
-    $regla_depende = new stdClass();
-    $regla_depende->regla      = 'DEPENDS';
-    $regla_enlazado = new stdClass();
-    $regla_enlazado->regla     = 'BOUND';
-    $records = array();
-    array_push($records, $regla_mayor_que);
-    array_push($records, $regla_menor_que);
-    array_push($records, $regla_igual);
-    array_push($records, $regla_diferente);
-    array_push($records, $regla_depende);
-    array_push($records, $regla_enlazado);
-    $DB->insert_records('talentospilos_df_reglas', $records);
+    $verificador_reglas = $DB->get_record_sql("SELECT * FROM {talentospilos_df_reglas} WHERE regla = 'EQUAL'");
+    if(!$verificador_reglas){
+        $regla_mayor_que = new stdClass();
+        $regla_mayor_que->regla    = '>';
+        $regla_menor_que = new stdClass();
+        $regla_menor_que->regla    = '<';
+        $regla_igual = new stdClass();
+        $regla_igual->regla        = 'EQUAL';
+        $regla_diferente = new stdClass();
+        $regla_diferente->regla    = 'DIFFERENT';
+        $regla_depende = new stdClass();
+        $regla_depende->regla      = 'DEPENDS';
+        $regla_enlazado = new stdClass();
+        $regla_enlazado->regla     = 'BOUND';
+        $records = array();
+        array_push($records, $regla_mayor_que);
+        array_push($records, $regla_menor_que);
+        array_push($records, $regla_igual);
+        array_push($records, $regla_diferente);
+        array_push($records, $regla_depende);
+        array_push($records, $regla_enlazado);
+        $DB->insert_records('talentospilos_df_reglas', $records);
+    }
+    $sql_intel = "DELETE FROM {talentospilos_df_reglas} WHERE id <> 1 and id <> 2 and id <> 3 and id <> 4 and id <> 5 and id <> 6";
+    $DB->execute($sql_intel);
     // ************************************************************************************************************
     // Actualización:
     // Se inserta campo id_programa en la tabla talentospilos_res_estudiante
@@ -895,8 +893,81 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
      }
 
 
+    // ************************************************************************************************************
+    // Actualización:
+    // Se elimina la tabla talentospilos_instancia
+    // Versión en la que se incluye: Pendiente
+    // ************************************************************************************************************
+    // Define table talentospilos_instancia to be dropped.
+    $table = new xmldb_table('talentospilos_instancia');
+
+    // Conditionally launch drop table for talentospilos_instancia.
+    if ($dbman->table_exists($table)) {
+        $dbman->drop_table($table);
+    }
+
+    // ************************************************************************************************************
+    // Actualización:
+    // Se añade la nueva tabla para la configuración de la instancia
+    // Versión en la que se incluye: Pendiente
+    // ************************************************************************************************************
+    // Define table talentospilos_instancia to be created.
+    $table = new xmldb_table('talentospilos_instancia');
+
+    // Adding fields to table talentospilos_instancia.
+    $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+    $table->add_field('id_instancia', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+    $table->add_field('descripcion', XMLDB_TYPE_CHAR, '200', null, null, null, null);
+
+    // Adding keys to table talentospilos_instancia.
+    $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+
+    // Conditionally launch create table for talentospilos_instancia.
+    if (!$dbman->table_exists($table)) {
+        $dbman->create_table($table);
+    }
+
+    // ************************************************************************************************************
+    // Actualización:
+    // Se elimina la tabla talentospilos_monitor_estud
+    // Versión en la que se incluye: Pendiente
+    // ************************************************************************************************************
+    // Define table talentospilos_monitor_estud to be dropped.
+    $table = new xmldb_table('talentospilos_monitor_estud');
+
+    // Conditionally launch drop table for talentospilos_monitor_estud.
+    if ($dbman->table_exists($table)) {
+        $dbman->drop_table($table);
+    }
+
+    // ************************************************************************************************************
+    // Actualización:
+    // Se crea la tabla talentospilos_monitor_estud con llave única que incluye id_monitor, id_estudiante, id_instancia, id_semestre
+    // Versión en la que se incluye: Pendiente
+    // ************************************************************************************************************
+    // Define table talentospilos_monitor_estud to be created.
+    $table = new xmldb_table('talentospilos_monitor_estud');
+
+    // Adding fields to table talentospilos_monitor_estud.
+    $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+    $table->add_field('id_monitor', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+    $table->add_field('id_estudiante', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+    $table->add_field('id_instancia', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+    $table->add_field('id_semestre', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+
+    // Adding keys to table talentospilos_monitor_estud.
+    $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+    $table->add_key('mon_est_pk1', XMLDB_KEY_FOREIGN, array('id_monitor'), 'user', array('id'));
+    $table->add_key('mon_est_pk2', XMLDB_KEY_FOREIGN, array('id_estudiante'), 'talentospilos_usuario', array('id'));
+    $table->add_key('mon_est_un', XMLDB_KEY_UNIQUE, array('id_monitor', 'id_estudiante', 'id_instancia', 'id_semestre'));
+
+    // Conditionally launch create table for talentospilos_monitor_estud.
+    if (!$dbman->table_exists($table)) {
+        $dbman->create_table($table);
+    }
+
     // Ases savepoint reached.
-    upgrade_block_savepoint(true, 2018020214529 , 'ases');
+    upgrade_block_savepoint(true, 2018021311149 , 'ases');
    
     return $result;
 

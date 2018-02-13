@@ -607,7 +607,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables', 'block_ases/s
                         dataType: "json",
                         cache: "false",
                         success: function(msg) {
-                        $("#userol").html(msg);
+                        $("#profiles_user").html(msg);
                         select_user();
                                                },
                         error: function(msg) {

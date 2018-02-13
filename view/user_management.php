@@ -53,12 +53,6 @@ $url = new moodle_url("/blocks/ases/view/user_management.php", array(
     'instanceid' => $blockid
 ));
 
-// Instance is consulted for its registration
-
-if (!consult_instance($blockid)) {
-	header("Location: instance_configuration.php?courseid=$courseid&instanceid=$blockid");
-}
-
 // Menu items are created
 $menu_option = create_menu_options($USER->id, $blockid, $courseid);
 
