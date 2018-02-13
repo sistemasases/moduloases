@@ -68,6 +68,7 @@ if(!consult_instance($blockid)){
         
         // Systems role assignment for the current instance
         $result_assign_role = update_role_user($USER->username, 'sistemas', $blockid, 1, get_current_semester(), null, null);
+        insert_instance($blockid, $USER->id);
         
         if($result_assign_role == 4 || $result_assign_role == 2){
             $object_to_render->status = 0;
@@ -123,6 +124,7 @@ $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/jquery.dataTables.c
 $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/jquery.dataTables.min.css', true);
 $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/jquery.dataTables_themeroller.css', true);
 $PAGE->requires->css('/blocks/ases/style/side_menu_style.css', true);
+
 $PAGE->requires->js_call_amd('block_ases/instanceconfiguration_main','init');
 
 $output = $PAGE->get_renderer('block_ases');

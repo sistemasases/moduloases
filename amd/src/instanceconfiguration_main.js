@@ -4,20 +4,24 @@
  * @copyright  ASES
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
- 
+
  /**
   * @module block_ases/instanceconfiguration_main
   */
 
-define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables','block_ases/sweetalert'], function($, bootstrap, datatables, sweetalert) {
+define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables','block_ases/sweetalert'],
+        function($, bootstrap, datatables, swal) {
 
-  return {
+    return {
         init: function() {
 
             var instance_id = get_id_instance();
 
             $(document).ready(function(){
                 load_cohorts_assigned(instance_id);
+                $('span.unassigned_cohort').on('click', function(){
+                    this.unassign_cohort();
+                });
             });
 
             $('#button_assign_cohort').on('click', function(){
@@ -26,7 +30,6 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables','block_ases/sw
                 load_cohorts_assigned(instance_id);
                 get_cohorts_without_assignment(instance_id);
             });
-
 
             function assign_cohort_instance(cohort_id, instance_id){
 
@@ -42,7 +45,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables','block_ases/sw
                             var type = 'error';
                         }else{
                             var title = 'Éxito';
-                            var type = 'success'
+                            var type = 'success';
                         }
                         swal(
                             title,
@@ -53,14 +56,18 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables','block_ases/sw
                     dataType: "json",
                     cache: false,
                     async: false,
-                    error: function(msg){
-                        console.log(msg);
+                    error: function(){
+                        swal(
+                            'Error',
+                            'Error al comunicarse con el servidor.',
+                            'error'
+                        );
                     },
                 });
             }
-        
+
             function load_cohorts_assigned(instance_id){
-        
+
                 $.ajax({
                     type: "POST",
                     data: {
@@ -71,23 +78,24 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables','block_ases/sw
                         if(msg.status == 0){
                             $('#div_cohorts_table').html("<center><span>La instancia no tiene cohortes asignadas</span></center>");
                         }else{
-                            $('#div_cohorts_table').html("<table id='cohorts_table' class='col-sm-12' style='width:100%'></table>");
+                            var html = "";
+                            html += "<h4>Cohortes asignadas a la instancia</h4><hr/>";
+                            html += "<table id='cohorts_table' class='col-sm-12' style='width:100%'></table>";
+                            $('#div_cohorts_table').html(html);
                             $('#cohorts_table').DataTable(msg.msg);
                         }
                     },
                     dataType: "json",
                     cache: false,
                     async: false,
-                    error: function(msg) {
-                        console.log(msg);
+                    error: function() {
+                        swal(
+                            'Error',
+                            'Error al cargar las cohortes asignadas',
+                            'error'
+                        );
                     },
                 });
-            }
-        
-            function unassign_cohort(id_cohort){
-
-                console.log('Unassigned');
-
             }
 
             function get_cohorts_without_assignment(instance_id){
@@ -118,13 +126,15 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables','block_ases/sw
                                     options += cohorts_array[key].idnumber+" "+cohorts_array[key].name+"</option>";
                                 });
                             }
-                            
+
                             $('#select_cohorts').html(options);
 
                         }else{
+                            var error_msg = "Error al cargar las cohortes no asignadas. Por favor recargue la página.";
+                            error_msg += "Si el problema persiste contacte al área de sistemas.";
                             swal(
                                 'Error',
-                                'Error al cargar las cohortes no asignadas. Por favor recargue la página. Si el problema persiste contacte al área de sistemas.',
+                                error_msg,
                                 'error'
                             );
                         }
@@ -132,16 +142,19 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables','block_ases/sw
                     dataType: "json",
                     cache: false,
                     async: false,
-                    error: function(msg) {
-                        console.log(msg);
+                    error: function() {
+                        swal(
+                            'Error',
+                            'Error al cargar las cohortes sin asignación',
+                            'error'
+                        );
                     },
                 });
             }
-        
+
             function get_id_instance() {
                 var urlParameters = location.search.split('&');
-        
-                for (x in urlParameters) {
+                for (var x in urlParameters) {
                     if (urlParameters[x].indexOf('instanceid') >= 0) {
                         var intanceparameter = urlParameters[x].split('=');
                         return intanceparameter[1];
@@ -149,11 +162,9 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables','block_ases/sw
                 }
                 return 0;
             }
+        },
+        unassign_cohort: function(){
+            alert('success!!');
         }
     };
-
- 
-
-    
-
 });
