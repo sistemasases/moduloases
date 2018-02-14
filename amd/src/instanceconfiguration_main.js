@@ -13,58 +13,65 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables','block_ases/sw
         function($, bootstrap, datatables, swal) {
 
     return {
+
         init: function() {
 
-            var instance_id = get_id_instance();
+            console.log(this);
 
-            $(document).ready(function(){
-                load_cohorts_assigned(instance_id);
-                $('span.unassigned_cohort').on('click', function(){
-                    this.unassign_cohort();
-                });
+            var func_assign = this.assign_cohort_instance;
+            console.log(func_assign);
+
+            var instance_id = this.get_id_instance();
+            
+            load_cohorts_assigned(instance_id);
+
+            $('span.unassigned_cohort').on('click', function(){
+                alert(this.unassign_cohort());
             });
 
-            $('#button_assign_cohort').on('click', function(){
-                var cohort_to_assign = $('#select_cohorts').val();
-                assign_cohort_instance(cohort_to_assign, instance_id);
-                load_cohorts_assigned(instance_id);
-                get_cohorts_without_assignment(instance_id);
-            });
+            // $('#button_assign_cohort').on('click', function(func_assign){
+            //     console.log(typeof(func_assign));
+            //     console.log(func_assign);
+            //     load_cohorts_assigned(instance_id);
+            //     get_cohorts_without_assignment(instance_id);
+            // });
 
-            function assign_cohort_instance(cohort_id, instance_id){
+            $('#button_assign_cohort').on('click', func_assign);
 
-                $.ajax({
-                    type: "POST",
-                    data: { function: 'insert_cohort',
-                            cohort: cohort_id,
-                            instance: instance_id},
-                    url: "../managers/instance_management/instance_configuration_serverproc.php",
-                    success: function(msg) {
-                        if(msg.status == 0){
-                            var title = 'Error';
-                            var type = 'error';
-                        }else{
-                            var title = 'Éxito';
-                            var type = 'success';
-                        }
-                        swal(
-                            title,
-                            msg.msg,
-                            type
-                        );
-                    },
-                    dataType: "json",
-                    cache: false,
-                    async: false,
-                    error: function(){
-                        swal(
-                            'Error',
-                            'Error al comunicarse con el servidor.',
-                            'error'
-                        );
-                    },
-                });
-            }
+            // function assign_cohort_instance(cohort_id, instance_id){
+
+            //     $.ajax({
+            //         type: "POST",
+            //         data: { function: 'insert_cohort',
+            //                 cohort: cohort_id,
+            //                 instance: instance_id},
+            //         url: "../managers/instance_management/instance_configuration_serverproc.php",
+            //         success: function(msg) {
+            //             if(msg.status == 0){
+            //                 var title = 'Error';
+            //                 var type = 'error';
+            //             }else{
+            //                 var title = 'Éxito';
+            //                 var type = 'success';
+            //             }
+            //             swal(
+            //                 title,
+            //                 msg.msg,
+            //                 type
+            //             );
+            //         },
+            //         dataType: "json",
+            //         cache: false,
+            //         async: false,
+            //         error: function(){
+            //             swal(
+            //                 'Error',
+            //                 'Error al comunicarse con el servidor.',
+            //                 'error'
+            //             );
+            //         },
+            //     });
+            // }
 
             function load_cohorts_assigned(instance_id){
 
@@ -152,19 +159,57 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables','block_ases/sw
                 });
             }
 
-            function get_id_instance() {
-                var urlParameters = location.search.split('&');
-                for (var x in urlParameters) {
-                    if (urlParameters[x].indexOf('instanceid') >= 0) {
-                        var intanceparameter = urlParameters[x].split('=');
-                        return intanceparameter[1];
-                    }
-                }
-                return 0;
-            }
         },
         unassign_cohort: function(){
-            alert('success!!');
+            var suc = "success";
+            return suc;
+        },
+        get_id_instance: function(){
+            var urlParameters = location.search.split('&');
+            for (var x in urlParameters) {
+                if (urlParameters[x].indexOf('instanceid') >= 0) {
+                    var intanceparameter = urlParameters[x].split('=');
+                    return intanceparameter[1];
+                }
+            }
+            return 0;
+        },
+        assign_cohort_instance: function(get_id_instance){
+
+            var cohort_id = $('#select_cohorts').val();
+            var instance_id = get_id_instance();
+
+            $.ajax({
+                type: "POST",
+                data: { function: 'insert_cohort',
+                        cohort: cohort_id,
+                        instance: instance_id},
+                url: "../managers/instance_management/instance_configuration_serverproc.php",
+                success: function(msg) {
+                    if(msg.status == 0){
+                        var title = 'Error';
+                        var type = 'error';
+                    }else{
+                        var title = 'Éxito';
+                        var type = 'success';
+                    }
+                    swal(
+                        title,
+                        msg.msg,
+                        type
+                    );
+                },
+                dataType: "json",
+                cache: false,
+                async: false,
+                error: function(){
+                    swal(
+                        'Error',
+                        'Error al comunicarse con el servidor.',
+                        'error'
+                    );
+                },
+            });
         }
     };
 });
