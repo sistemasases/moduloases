@@ -26,12 +26,16 @@
 
 // Standard GPL and phpdocs
 require_once(__DIR__ . '/../../../config.php');
-require_once($CFG->libdir.'/adminlib.php');
-require_once('../managers/lib/lib.php');
-require_once ('../managers/permissions_management/permissions_lib.php');
-require_once ('../managers/validate_profile_action.php');
-require_once ('../managers/menu_options.php');
+require_once $CFG->libdir.'/adminlib.php';
+require_once $CFG->dirroot.'/blocks/ases/managers/lib/lib.php';
+require_once $CFG->dirroot.'/blocks/ases/managers/permissions_management/permissions_lib.php';
+require_once $CFG->dirroot.'/blocks/ases/managers/validate_profile_action.php';
+require_once $CFG->dirroot.'/blocks/ases/managers/menu_options.php';
+require_once $CFG->dirroot.'/blocks/ases/managers/periods_management/periods_lib.php'; 
+require_once $CFG->dirroot.'/blocks/ases/managers/instance_management/instance_lib.php';
+require_once $CFG->dirroot.'/blocks/ases/managers/role_management/role_management_lib.php';
 global $PAGE;
+global $COURSE;
 
 include("../classes/output/instance_configuration_page.php");
 include("../classes/output/renderer.php");
@@ -47,7 +51,6 @@ require_login($courseid, false);
 $contextcourse = context_course::instance($courseid);
 $contextblock =  context_block::instance($blockid);
 
-
 $url = new moodle_url("/blocks/ases/view/instance_configuration.php",array('courseid' => $courseid, 'instanceid' => $blockid));
 
 //Navegation set up
@@ -56,29 +59,50 @@ $blocknode = navigation_node::create($title,$url, null, 'block', $blockid);
 $coursenode->add_node($blocknode);
 $blocknode->make_active();
 
-//Menu items are created
-$menu_option = create_menu_options($USER->id, $blockid, $courseid);
-
 // Creates a class with information that'll be send to template
 $object_to_render = new stdClass();
 
+if(!consult_instance($blockid)){
+    $category_context = context_coursecat::instance($COURSE->category);
+    if(has_capability('moodle/category:manage', $category_context)) {
+        
+        // Systems role assignment for the current instance
+        $result_assign_role = update_role_user($USER->username, 'sistemas', $blockid, 1, get_current_semester(), null, null);
+        insert_instance($blockid, $USER->id);
+        
+        if($result_assign_role == 4 || $result_assign_role == 2){
+            $object_to_render->status = 0;
+            $object_to_render->status_message .= ' Error al asignar el rol sistemas al administrador.';
+        }
 
-// Evaluates if user role has permissions assigned on this view
-$actions = authenticate_user_view($USER->id, $blockid);
-$object_to_render = $actions;
-$object_to_render->menu = $menu_option;
-
-// Loading academic programs
-$array_programs = load_programs_cali();
-
-$html_programs = ""; 
-
-foreach($array_programs as $program){
-    $html_programs .= "<option value = '$program->cod_univalle'>$program->cod_univalle - $program->nombre </option>";
+    } else {
+        $object_to_render->status = 0;
+        $object_to_render->status_message = 'El usuario actual no tiene permisos para configurar nuevas instancias.';
+    }
 }
 
-$object_to_render->programs = $html_programs;
+if(!isset($object_to_render->status)){
+    //Menu items are created
+    $menu_option = create_menu_options($USER->id, $blockid, $courseid);
 
+    $actions = authenticate_user_view($USER->id, $blockid);
+
+    $object_to_render = $actions;
+    $object_to_render->menu = $menu_option;
+
+    $cohorts = get_cohorts_without_assignment($blockid);
+    $cohorts_options = "";
+
+    if($cohorts){
+        foreach($cohorts as $cohort){
+            $cohorts_options .= "<option value='$cohort->id'>$cohort->idnumber - $cohort->name</option>";
+        }
+    }else{
+        $cohorts_options .= "<option value=''>No hay cohortes disponibles para asignar</option>";
+    }
+
+    $object_to_render->select_cohorts = $cohorts_options;
+}
 
 $PAGE->set_url($url);
 $PAGE->set_title($title);
@@ -100,8 +124,8 @@ $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/jquery.dataTables.c
 $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/jquery.dataTables.min.css', true);
 $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/jquery.dataTables_themeroller.css', true);
 $PAGE->requires->css('/blocks/ases/style/side_menu_style.css', true);
-$PAGE->requires->js_call_amd('block_ases/instanceconfiguration_main','init');
 
+$PAGE->requires->js_call_amd('block_ases/instanceconfiguration_main','init');
 
 $output = $PAGE->get_renderer('block_ases');
 
