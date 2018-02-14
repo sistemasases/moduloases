@@ -31,6 +31,7 @@
     if(isset($_POST['dat']) && isset($_POST['idinstancia']))
     {
         global $DB;
+        $info_boss;
 
         $sql_query = "SELECT id, firstname, lastname, username, email FROM {user} WHERE username = '".$_POST['dat']."';";
         $info_user = $DB->get_record_sql($sql_query);
@@ -47,13 +48,15 @@
             }           
 
             if(!$rol_user){
-                $info_user->rol = "ninguno";
+                $info_user->rol = "";
             }else {
                 $info_user->rol = $rol_user->nombre_rol;
 
                 if($info_user->rol == 'practicante_ps' || $info_user->rol == 'monitor_ps'){
+
                     $info_user->boss = $rol_user->id_jefe;
                     $info_user->boss_name = $info_boss->firstname." ".$info_boss->lastname;
+                    
                 }               
 
                 if($info_user->rol == 'profesional_ps'){

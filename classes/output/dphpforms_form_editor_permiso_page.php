@@ -32,7 +32,7 @@ use renderer_base;
 use templatable;                                                                                                                    
 use stdClass;                                                                                                                       
  
-class dphpforms_alias_editor_page implements renderable, templatable {                                                                               
+class dphpforms_form_editor_permiso_page implements renderable, templatable {                                                                               
     /** @var string $sometext Some text to show how to pass data to a template. */                                                  
     var $data = null;                                                                                                           
  
