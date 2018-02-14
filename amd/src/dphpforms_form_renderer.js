@@ -143,16 +143,15 @@
                         success: function(data) {
                                 var response = JSON.parse(data);
                                 console.log(data);
-                                //return;
-                                //errorCode = -1 InternalError
-                                //            -2 UnfulfilledRules
-                                //             0 AllOkay
+                                
                                 if(response['status'] == 0){
                                     var mensaje = '';
                                     if(response['message'] == 'Stored'){
                                         mensaje = 'Almacenado';
+                                        check_risks_tracking('stored');
                                     }else if(response['message'] == 'Updated'){
                                         mensaje = 'Actualizado';
+                                        check_risks_tracking('updated');
                                     }
                                     swal(
                                         {title:'Información',
@@ -240,10 +239,55 @@
                     
                 });
 
-                
+                function check_risks_tracking(flag){
+                    if(!flag){
+                        return;
+                    }
+
+                    if(flag == 'stored'){
+
+                        var id_individual_risk = get_checked_risk_value_tracking('.puntuacion_riesgo_individual');
+                        var idv_observation = null;
+                        var id_familiar_risk = get_checked_risk_value_tracking('.puntuacion_riesgo_familiar');
+                        var fam_observation = null;
+                        var id_academico_risk = get_checked_risk_value_tracking('.puntuacion_riesgo_academico');
+                        var aca_observation = null;
+                        var id_economico_risk = get_checked_risk_value_tracking('.puntuacion_riesgo_economico');
+                        var eco_observation = null;
+                        var id_vida_univer_risk = get_checked_risk_value_tracking('.puntuacion_vida_uni');
+                        var vid_observation = null;
+
+                        if(id_academico_risk){
+                            idv_observation = $('.comentarios_individual').find('textarea').val();
+                        }
+                        if(id_familiar_risk){
+                            fam_observation = $('.comentarios_familiar').find('textarea').val();
+                        }
+                        if(id_academico_risk){
+                            aca_observation = $('.comentarios_academico').find('textarea').val();
+                        }
+                        if(id_economico_risk){
+                            eco_observation = $('.comentarios_economico').find('textarea').val();
+                        }
+                        if(id_vida_univer_risk){
+                            vid_observation = $('.comentarios_vida_uni').find('textarea').val();
+                        }
+
+                    }else if(flag == 'updated'){
+
+                    }
+                };
+
+                function get_checked_risk_value_tracking( class_id ){
+                    $('.' + class_id ).find('.opcionesRadio').find('div').each(function(){
+                        if($(this).find('label').find('input').is(':checked')){
+                            return (this).find('label').find('input').val();
+                        }
+                    });
+                    return null;
+                };
                 
             }
-
     };
       
 })
