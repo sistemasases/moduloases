@@ -68,6 +68,8 @@
     if($post){
         $json_post = $post;
         if(property_exists($json_post, 'function')){
+
+            //Actualizador de permisos
             if($json_post->function == 'update_permiso'){
                 header('Content-Type: application/json');
                 
@@ -88,9 +90,112 @@
                 }
                 die();
             }
+
+            //Actualizador de enunciados de preguntas
+            if($json_post->function == 'update_pregunta_enunciado'){
+                header('Content-Type: application/json');
+                
+                if(update_pregunta_enunciado($post->pregunta_id, $post->enunciado) == 0){
+                    echo json_encode(
+                        array(
+                            'status' => '0',
+                            'message' => 'Updated'
+                        )
+                    );
+                }else{
+                    echo json_encode(
+                        array(
+                            'status' => '-1',
+                            'message' => 'Error'
+                        )
+                    );
+                }
+                die();
+            }
+            //Actualizador de atributos de preguntas
+            if($json_post->function == 'update_pregunta_atributos'){
+                header('Content-Type: application/json');
+                
+                if(update_pregunta_atributos($post->pregunta_id, $post->atributos) == 0){
+                    echo json_encode(
+                        array(
+                            'status' => '0',
+                            'message' => 'Updated'
+                        )
+                    );
+                }else{
+                    echo json_encode(
+                        array(
+                            'status' => '-1',
+                            'message' => 'Error'
+                        )
+                    );
+                }
+                die();
+            }
+            //Actualizador de opciones de preguntas
+            if($json_post->function == 'update_pregunta_opciones'){
+                header('Content-Type: application/json');
+                
+                if(update_pregunta_opciones($post->pregunta_id, $post->opciones) == 0){
+                    echo json_encode(
+                        array(
+                            'status' => '0',
+                            'message' => 'Updated'
+                        )
+                    );
+                }else{
+                    echo json_encode(
+                        array(
+                            'status' => '-1',
+                            'message' => 'Error'
+                        )
+                    );
+                }
+                die();
+            }
+
         }
     };
-    
+
+    function update_pregunta_enunciado($pregunta_id, $new_enunciado){
+        global $DB;
+        $sql = "SELECT * FROM {talentospilos_df_preguntas} WHERE id = '$pregunta_id'";
+        $pregunta = $DB->get_record_sql($sql);
+        if($pregunta){
+            $pregunta->enunciado = $new_enunciado;
+            $DB->update_record('talentospilos_df_preguntas', $pregunta, $bulk=false);
+            return 0;
+        }else{
+            return -1;
+        }
+    }
+
+    function update_pregunta_atributos($pregunta_id, $new_atributos){
+        global $DB;
+        $sql = "SELECT * FROM {talentospilos_df_preguntas} WHERE id = '$pregunta_id'";
+        $pregunta = $DB->get_record_sql($sql);
+        if($pregunta){
+            $pregunta->atributos_campo = $new_atributos;
+            $DB->update_record('talentospilos_df_preguntas', $pregunta, $bulk=false);
+            return 0;
+        }else{
+            return -1;
+        }
+    }
+
+    function update_pregunta_opciones($pregunta_id, $new_opciones){
+        global $DB;
+        $sql = "SELECT * FROM {talentospilos_df_preguntas} WHERE id = '$pregunta_id'";
+        $pregunta = $DB->get_record_sql($sql);
+        if($pregunta){
+            $pregunta->opciones_campo = $new_opciones;
+            $DB->update_record('talentospilos_df_preguntas', $pregunta, $bulk=false);
+            return 0;
+        }else{
+            return -1;
+        }
+    }
 
     function update_pregunta_position($id_form_pregunta, $new_position){
         global $DB;
@@ -253,6 +358,24 @@
         }else{
             return -1;
         }
+
+    }
+
+    function get_pregunta($id){
+        
+        global $DB;
+
+        $sql_pregunta = "SELECT * FROM {talentospilos_df_preguntas} WHERE id = '$id'";
+        return $DB->get_record_sql($sql_pregunta);
+
+    }
+
+    function get_tipo_campo($id){
+        
+        global $DB;
+
+        $sql = "SELECT * FROM {talentospilos_df_tipo_campo} WHERE id = '$id'";
+        return $DB->get_record_sql($sql);
 
     }
     
