@@ -80,7 +80,7 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
 
                 $('a[class*="student"]').click(function() {
                 var student_code = $(this).attr('href').split("#student")[1];
-                console.log(instance);
+                var student_id = $(this).attr('href');
 
                 /*Fill container with the information corresponding to the trackings of 
                 the selected student*/
@@ -95,10 +95,9 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                     async: false,
                     success: function(msg
                         ) {
-                      console.log(msg);
-                      $(this).append(msg);
+                    $(student_id + " > div").append(msg);
                     },
-                    dataType: "text",
+                    dataType: "json",
                     cache: "false",
                     error: function(msg) {
                         swal({
