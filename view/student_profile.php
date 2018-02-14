@@ -185,15 +185,10 @@ if ($student_code != 0) {
 
     $record->id_dphpforms_creado_por = $USER->id;
 
-    if (get_assigned_monitor($student_id)) {
-        $monitor_object = get_assigned_monitor($student_id);
-    }
-    if (get_assigned_pract($student_id)) {
-        $trainee_object = get_assigned_pract($student_id);
-    }
-    if (get_assigned_professional($student_id)) {
-        $professional_object = get_assigned_professional($student_id);
-    }
+    $monitor_object = get_assigned_monitor($student_id);
+    $trainee_object = get_assigned_pract($student_id);
+    $professional_object = get_assigned_professional($student_id);
+
 
     if ($monitor_object) {
         $record->monitor_fullname = "$monitor_object->firstname $monitor_object->lastname";
@@ -207,7 +202,7 @@ if ($student_code != 0) {
     } else {
         $record->trainee_fullname = "NO REGISTRA";
     }
-
+    //print_r($professional_object);
     if ($professional_object) {
         $record->professional_fullname = "$professional_object->firstname $professional_object->lastname";
     } else {

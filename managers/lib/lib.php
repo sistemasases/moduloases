@@ -301,9 +301,6 @@ function get_all_student()
     $semestre = get_current_semester();
     $id_semestre = $semestre->max;
 
-    $query_program = "SELECT id_programa FROM {talentospilos_user_rol} WHERE id_usuario = $id AND id_semestre = $id_semestre";
-    $id_programa = $DB->get_record_sql($query_program)->id_programa;
-
     $query = "SELECT user_moodle.username, user_moodle.firstname, user_moodle.lastname
               FROM {user} AS user_moodle
               INNER JOIN {talentospilos_user_extended} AS user_extended ON user_moodle.id = user_extended.id_moodle_user";
