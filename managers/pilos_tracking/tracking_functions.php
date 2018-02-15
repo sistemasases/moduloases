@@ -38,69 +38,34 @@ require_once (dirname(__FILE__) . '/../dphpforms/dphpforms_get_record.php');
 
 function render_student_trackings($peer_tracking_v2)
     {
-    $form_rendered = '<div class="peer_trackings_v2 well well_v2" id="peer_trackings_v2" name="peer_trackings_v2">';
+    $form_rendered="";
+    $form_rendered.= '<div class="peer_trackings_v2 well well_v2" id="peer_trackings_v2" name="peer_trackings_v2">';
+
+            echo json_encode($form_rendered);
+            die();
+
     if ($peer_tracking_v2)
         {
-        $form_rendered = ' <div id="accordion_v2">';
-
-    
-        foreach($peer_tracking_v2[periodos] as $key_1 => $periodos)
+        foreach($peer_tracking_v2 as $key_1 => $year)
             {
-            if ($periodos[per_b])
-                {
-                $form_rendered.= '<div class="card card_v2">';
-                $form_rendered.= '<div class="card-header card-header_v2" role="tab" id="headingOne' . $periodos[year] . 'B">';
-                $form_rendered.= '<h5 class="mb-0">';
-                $form_rendered.= '<a data-toggle="collapse" class="btn btn-danger btn-univalle btn-card" data-container="collapseOne' . $periodos[year] . 'B" data-parent="#accordion_v2" href="#collapseOne' . $periodos[year] . 'B" aria-expanded="true" aria-controls="collapseOne">' . $periodos[year] . 'B';
-                $form_rendered.= '<span class="glyphicon glyphicon-chevron-left">';
-                $form_rendered.= '</span>';
-                $form_rendered.= '</a>';
-                $form_rendered.= '</h5>';
-                $form_rendered.= '</div>';
+            foreach ($year as $key => $period) {
+                $year_number= $period;
+                foreach ($period as $key => $tracking) {
+                    $form_rendered.= '<div id="collapseOne' . $year_number . '" class="collapse show collapse_v2" role="tabpanel" aria-labelledby="headingOne' . $year_number . '">';
+                    $form_rendered.= '<div id="dphpforms-peer-record-' . $tracking[record][id_registro] . '" class="card-block dphpforms-peer-record peer-tracking-record" data-record-id="' . $tracking[record][id_registro] . '">Registro: '.$tracking[record][alias_key][respuesta].'';
+                        $form_rendered.='<\/div>';
+        $form_rendered.='<\/div>';
+              }
 
+            }    
 
-                foreach($periodos[per_b] as $key_2 => $periodo_b)
-                    {
+            }
 
-                    $form_rendered.= '<div id="collapseOne' . $periodos[year] . 'B" class="collapse show collapse_v2" role="tabpanel" aria-labelledby="headingOne' . $periodos[year] . 'B">';
-                    $form_rendered.= '<div id="dphpforms-peer-record-' . $periodo_b[record][id_registro] . '" class="card-block dphpforms-peer-record peer-tracking-record" data-record-id="' . $periodo_b[record][id_registro] . '">Registro: '.$periodo_b[record][alias_key][respuesta].'';
-                    }
-                }
-
-            if ($periodos[per_a])
-                {
-                $form_rendered.= '<div class="card card_v2">';
-                $form_rendered.= '<div class="card-header card-header_v2" role="tab" id="headingOne' . $periodos[year] . 'A">';
-                $form_rendered.= '<h5 class="mb-0">';
-                $form_rendered.= '<a data-toggle="collapse" class="btn btn-danger btn-univalle btn-card" data-container="collapseOne' . $periodos[year] . 'A" data-parent="#accordion_v2" href="#collapseOne' . $periodos[year] . 'A" aria-expanded="true" aria-controls="collapseOne">' . $periodos[year] . 'A';
-                $form_rendered.= '<span class="glyphicon glyphicon-chevron-left">';
-                $form_rendered.= '</span>';
-                $form_rendered.= '</a>';
-                $form_rendered.= '</h5>';
-                $form_rendered.= '</div>';
-
-                foreach($periodos[per_a] as $key_2 => $periodo_a)
-                    {
-
-
-                        return $periodos[per_a];
-                        die();
-                    $form_rendered.= '<div id="collapseOne' . $periodos[year] . 'A" class="collapse show collapse_v2" role="tabpanel" aria-labelledby="headingOne' . $periodos[year] . 'A">';
-                    $form_rendered.= '<div id="dphpforms-peer-record-' . $periodo_a[record][id_registro] . '" class="card-block dphpforms-peer-record peer-tracking-record" data-record-id="' . $periodo_a[record][id_registro] . '">Registro: '.$periodo_a[record][alias_key][respuesta].'';
-                    }
-                } // End of if -- period_a
-            }// End of periods
-
-        $form_rendered.='</div>';
         }
-        $form_rendered.='</div>';
-        $form_rendered.='<div class="well" id="peer_trackings" name="peer_trackings">';
-        $form_rendered.='{{{peer_tracking}}}';
-        $form_rendered.='</div>';
-        $form_rendered.='</div>';
+
         $form_rendered.='</div>';
 
-                return $form_rendered;
+        echo json_encode($form_rendered);
 
     }
 

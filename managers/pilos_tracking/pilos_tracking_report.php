@@ -59,30 +59,36 @@ if(isset($_POST['type'])&&isset($_POST['instance'])&&$_POST['type']=="get_studen
 
     $ases_student = get_ases_user_by_code($student_code[0]);
     $student_id = $ases_student->id;
-    $array_peer_trackings_dphpforms = dphpforms_find_records('seguimiento_pares', 'seguimiento_pares_id_estudiante', $student_code[0], 'DESC');
-    $array_peer_trackings_dphpforms = json_decode($array_peer_trackings_dphpforms);
+    //$array_peer_trackings_dphpforms = dphpforms_find_records('seguimiento_pares', 'seguimiento_pares_id_estudiante', $student_code[0], 'DESC');
 
-    $array_detail_peer_trackings_dphpforms = array();
-    $array_tracking_date = array();
+    $array_peer_trackings_dphpforms=get_tracking_peer_student_current_semester($student_code[0], '21');
 
-    format_dates_trackings($array_detail_peer_trackings_dphpforms,$array_tracking_date,$array_peer_trackings_dphpforms);
-
-    rsort($array_tracking_date);
-    $seguimientos_ordenados=trackings_sorting($array_detail_peer_trackings_dphpforms,$array_tracking_date,$array_peer_trackings_dphpforms);
-
-    $seguimientos_array = json_decode(json_encode($seguimientos_ordenados), true);
-    $array_periodos = array();
-    for ($x = 0; $x < count($seguimientos_array['index']); $x++) {
-        array_push($array_periodos, $seguimientos_array[$seguimientos_array['index'][$x]]);
-    }
-    $peer_tracking_v2 = array(
-        'index' => $seguimientos_array['index'],
-        'periodos' => $array_periodos,
-    );
+    print_r(render_student_trackings($array_peer_trackings_dphpforms));
 
 
-    $html_tracking_peer = "";
-    print_r(render_student_trackings($peer_tracking_v2));
+    // $array_peer_trackings_dphpforms = json_decode($array_peer_trackings_dphpforms);
+
+    // $array_detail_peer_trackings_dphpforms = array();
+    // $array_tracking_date = array();
+
+    // format_dates_trackings($array_detail_peer_trackings_dphpforms,$array_tracking_date,$array_peer_trackings_dphpforms);
+
+    // rsort($array_tracking_date);
+    // $seguimientos_ordenados=trackings_sorting($array_detail_peer_trackings_dphpforms,$array_tracking_date,$array_peer_trackings_dphpforms);
+
+    // $seguimientos_array = json_decode(json_encode($seguimientos_ordenados), true);
+    // $array_periodos = array();
+    // for ($x = 0; $x < count($seguimientos_array['index']); $x++) {
+    //     array_push($array_periodos, $seguimientos_array[$seguimientos_array['index'][$x]]);
+    // }
+    // $peer_tracking_v2 = array(
+    //     'index' => $seguimientos_array['index'],
+    //     'periodos' => $array_periodos,
+    // );
+
+
+    // $html_tracking_peer = "";
+    // print_r(render_student_trackings($peer_tracking_v2));
  
     
 
