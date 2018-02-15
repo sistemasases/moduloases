@@ -79,7 +79,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/validator', 'block_ases/sw
                         $.ajax({
                             type: "POST",
                             data: data,
-                            url: "../managers/user_management/seguimiento.php",
+                            url: "../managers/seguimiento_grupal/groupal_trackings_report.php",
                             success: function(msg) {
                                 var error = msg.error;
                                 if (!error) {
@@ -162,7 +162,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/validator', 'block_ases/sw
                         $.ajax({
                             type: "POST",
                             data: data,
-                            url: "../managers/user_management/seguimiento.php",
+                            url: "../managers/seguimiento_grupal/groupal_trackings_report.php",
                             success: function(msg) {
                                 var error = msg.error;
                                 if (!error) {
@@ -255,7 +255,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/validator', 'block_ases/sw
                 $.ajax({
                     type: "POST",
                     data: data,
-                    url: "../managers/user_management/seguimiento.php",
+                    url: "../managers/user_management/usermanagement_report.php",
                     success: function(msg) {
                         $('#mytable tbody').html('');
                         if (msg.rows != 0) {
@@ -304,7 +304,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/validator', 'block_ases/sw
                 $.ajax({
                     type: "POST",
                     data: data,
-                    url: "../managers/user_management/seguimiento.php",
+                    url: "../managers/user_management/usermanagement_report.php",
                     success: function(msg) {
                         $('#seguimiento #mytable_consult tbody').html('');
 
@@ -387,7 +387,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/validator', 'block_ases/sw
                 $.ajax({
                     type: "POST",
                     data: data,
-                    url: "../managers/user_management/seguimiento.php",
+                    url: "../managers/seguimiento_grupal/groupal_trackings_report.php",
                     success: function(msg) {
                         var error = msg.error;
                         if (!error) {
@@ -495,7 +495,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/validator', 'block_ases/sw
                 $.ajax({
                     type: "POST",
                     data: data,
-                    url: "../managers/user_management/seguimiento.php",
+                    url: "../managers/seguimiento_grupal/groupal_trackings_report.php",
                     success: function(msg) {
                         var error = msg.error;
                         if (!error) {
@@ -567,7 +567,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/validator', 'block_ases/sw
                                 id: id,
                                 "function": "delete",
                             },
-                            url: "../../../blocks/ases/managers/user_management/seguimiento.php",
+                            url: "../../../blocks/ases/managers/seguimiento_grupal/groupal_trackings_report.php",
                             async: false,
                             success: function(msg) {
                                 if (msg == 0) {
@@ -624,7 +624,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/validator', 'block_ases/sw
                 $.ajax({
                     type: "POST",
                     data: data,
-                    url: "../managers/user_management/seguimiento.php",
+                    url: "../managers/seguimiento_grupal/groupal_trackings_report.php",
                     success: function(msg) {
                         var error = msg.error;
                         if (!error) {
