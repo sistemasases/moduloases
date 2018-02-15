@@ -100,7 +100,7 @@
                             $.ajax({
                                 type: "POST",
                                 data: JSON.stringify(json_risks),
-                                url: "../managers/pilos_tracking/send_risk.php",
+                                url: "../managers/pilos_tracking/send_risk_email.php",
                                 success: function(msg) {
                                     console.log(msg);
                                 },

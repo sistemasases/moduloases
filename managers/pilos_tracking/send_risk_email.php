@@ -177,16 +177,16 @@ function send_email_dphpforms($json_risk_observation_, $student_code, $date, $su
     $emailToUser = new stdClass;
     $emailFromUser = new stdClass;
 
-    $id_moodle = get_id_user_moodle( get_ases_user_by_code($student_code)->id );
+    $id_estudiante = get_ases_user_by_code($student_code)->id;
 
-    $id_professional = get_id_assigned_professional($id_moodle);
-    $id_practicante = get_id_assigned_pract($id_moodle);
+    $id_professional = get_id_assigned_professional($id_estudiante);
+    $id_practicante = get_id_assigned_pract($id_estudiante);
     
     $sending_user = get_user_by_username('sistemas1008');
     $receiving_user = get_full_user($id_professional);
     
     $receiving_user_pract = get_full_user($id_practicante);
-    $student_info = get_user_moodle($id_moodle);
+    $student_info = get_user_moodle($id_estudiante);
     
     $emailToUser->email = $receiving_user->email;
     $emailToUser->firstname = $receiving_user->firstname;
