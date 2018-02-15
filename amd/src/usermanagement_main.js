@@ -239,7 +239,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables', 'block_ases/s
                             function: "students_consult",
                             instancia: getIdinstancia()
                         },
-                        url: "../managers/user_management/seguimiento.php",
+                        url: "../managers/user_management/usermanagement_report.php",
                         success: function(msg) {
                             students = msg;
                             student_asignment(students);
@@ -583,7 +583,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables', 'block_ases/s
                 $.ajax({
                     type: "POST",
                     data: data,
-                    url: "../managers/user_management/seguimiento.php",
+                    url: "../managers/user_management/usermanagement_report.php",
                     success: function(msg) {
 
                         $('#contenedor_add_fields').html('');
@@ -733,7 +733,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables', 'block_ases/s
                 $.ajax({
                     type: "POST",
                     data: data,
-                    url: "../managers/user_management/seguimiento.php",
+                    url: "../managers/user_management/usermanagement_report.php",
                     success: function(msg) {
                         //console.log(msg);
                         //deleteMonitor(username,msg);
