@@ -14,20 +14,117 @@
     return {
         init: function() {
 
-                function order_max_min(array, start_pos){
-                    if(array.length == start_pos){
-                        return array;
-                    }else{
-                        for(var x = start_pos; x < array.length; x++){
-                            if(array[x] > array[start_pos]){
-                                var dynamic_pos = array[x];
-                                array[x] =  array[start_pos];
-                                array[start_pos] = dynamic_pos;
-                            }
-                        }
-                        order_max_min(array, (start_pos + 1));
+
+                function get_url_parameters(url){
+                    var start_param_position = url.indexOf("?");
+                    var params = "";
+                    for(var i = start_param_position; i < url.length; i++){
+                        params += url[i];
                     }
+                    return params.replace(/#[a-zA-z]+_[a-zA-z]+/i, '');
                 }
+
+                function get_student_code(){
+                    var url = window.location.href;
+                    var params = get_url_parameters( url );
+
+                    var student_position = params.indexOf('student_code=') + 13;
+                    var codigo_estudiante = '';
+                    for(var x = student_position; x < params.length; x++ ){
+                        if(student_position[x] == '-'){
+                            break;
+                        }else{
+                            codigo_estudiante += params[x];
+                        }
+                    }
+                    return codigo_estudiante;
+                }
+
+                function check_risks_tracking( flag ){
+                   
+
+                        var individual_risk = get_checked_risk_value_tracking('.puntuacion_riesgo_individual');
+                        var idv_observation = $('.comentarios_individual').find('textarea').val();;
+                        var familiar_risk = get_checked_risk_value_tracking('.puntuacion_riesgo_familiar');
+                        var fam_observation = $('.comentarios_familiar').find('textarea').val();
+                        var academico_risk = get_checked_risk_value_tracking('.puntuacion_riesgo_academico');
+                        var aca_observation = $('.comentarios_academico').find('textarea').val();
+                        var economico_risk = get_checked_risk_value_tracking('.puntuacion_riesgo_economico');
+                        var eco_observation = $('.comentarios_economico').find('textarea').val();
+                        var vida_univer_risk = get_checked_risk_value_tracking('.puntuacion_vida_uni');
+                        var vid_observation = $('.comentarios_vida_uni').find('textarea').val();
+
+                        if( 
+                            ( individual_risk == '3' ) || ( familiar_risk == '3' ) || 
+                            ( academico_risk == '3' ) || ( economico_risk == '3' ) || 
+                            ( vida_univer_risk == '3' ) 
+                        ){
+
+                            console.log("flag");
+
+                            var json_risks = {
+                                "function": "send_email_dphpforms",
+                                "student_code": get_student_code(),
+                                "risks": [
+                                    {
+                                        "name":"Individual",
+                                        "risk_lvl": individual_risk,
+                                        "observation":idv_observation
+                                    },
+                                    {
+                                        "name":"Familiar",
+                                        "risk_lvl": familiar_risk,
+                                        "observation":fam_observation
+                                    },
+                                    {
+                                        "name":"Académico",
+                                        "risk_lvl": academico_risk,
+                                        "observation":aca_observation
+                                    },
+                                    {
+                                        "name":"Económico",
+                                        "risk_lvl": economico_risk,
+                                        "observation":eco_observation
+                                    },
+                                    {
+                                        "name":"Vida Universitaria",
+                                        "risk_lvl": vida_univer_risk,
+                                        "observation":vid_observation
+                                    }
+                                ],
+                                "date": $('.fecha').find('input').val(),
+                                "url": window.location.href
+                            };
+
+
+                            $.ajax({
+                                type: "POST",
+                                data: JSON.stringify(json_risks),
+                                url: "../managers/pilos_tracking/send_risk.php",
+                                success: function(msg) {
+                                    console.log(msg);
+                                },
+                                dataType: "text",
+                                cache: "false",
+                                error: function(msg) {
+                                    console.log(msg)
+                                }
+                            });
+
+                        }
+
+                    
+                };
+
+                function get_checked_risk_value_tracking( class_id ){
+                    var value = 0;
+                    $( class_id ).find('.opcionesRadio').find('div').each(function(){
+                        if($(this).find('label').find('input').is(':checked')){
+                            value = $(this).find('label').find('input').val();
+                        }
+                    });
+                    return value;
+                };
 
                 $('.btn.btn-danger.btn-univalle.btn-card').click(function(){
                     var container = $(this).attr('data-container');
@@ -48,12 +145,16 @@
                 })
 
                 $('#button_add_v2_track').on('click', function() {
+
                     $('#modal_v2_peer_tracking').fadeIn(300);
-                    var codigo_estudiante = $('#codigo').val();
-                    $('.id_estudiante').find('input').val(codigo_estudiante);
+
+                    $('.id_estudiante').find('input').val(get_student_code());
+
                     var codigo_monitor = $('#current_user_id').val();
                     $('.id_creado_por').find('input').val(codigo_monitor);
+
                 });
+
                 $('.mymodal-close').click(function(){
                     $(this).parent().parent().parent().parent().fadeOut(300);
                 });
@@ -143,10 +244,7 @@
                         success: function(data) {
                                 var response = JSON.parse(data);
                                 console.log(data);
-                                //return;
-                                //errorCode = -1 InternalError
-                                //            -2 UnfulfilledRules
-                                //             0 AllOkay
+                                
                                 if(response['status'] == 0){
                                     var mensaje = '';
                                     if(response['message'] == 'Stored'){
@@ -154,6 +252,7 @@
                                     }else if(response['message'] == 'Updated'){
                                         mensaje = 'Actualizado';
                                     }
+                                    check_risks_tracking();
                                     swal(
                                         {title:'Información',
                                         text: mensaje,
@@ -223,7 +322,7 @@
                                         text: 'Eliminado',
                                         type: 'success'},
                                         function(){
-                                            $('#modal_v2_edit_peer_tracking').fadeOut(300);
+                                            $('#modal_v2_edit_peer_tracking').fadeOut( 300 );
                                             $('#dphpforms-peer-record-' + record_id).remove();
                                         }
                                     );
@@ -243,7 +342,6 @@
                 
                 
             }
-
     };
       
 })

@@ -23,10 +23,10 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 require_once(dirname(__FILE__). '/../../../../config.php');
-require_once (dirname(__FILE__). '/../dphpforms/dphpforms_forms_core.php');
-require_once (dirname(__FILE__). '/../dphpforms/dphpforms_records_finder.php');
-require_once (dirname(__FILE__). '/../dphpforms/dphpforms_get_record.php');
-require_once (dirname(__FILE__).'/../periods_management/periods_lib.php');
+require_once $CFG->dirroot.'/blocks/ases/managers/dphpforms/dphpforms_forms_core.php';
+require_once $CFG->dirroot.'/blocks/ases/managers/dphpforms/dphpforms_records_finder.php';
+require_once $CFG->dirroot.'/blocks/ases/managers/dphpforms/dphpforms_get_record.php';
+require_once $CFG->dirroot.'/blocks/ases/managers/periods_management/periods_lib.php';
 
 /**
  * Gets all reasons a student quit or delay studies
@@ -151,7 +151,6 @@ function get_tracking_peer_student_current_semester($student_id, $semester_id){
     }
 
     rsort($array_tracking_date);
-    return $array_peer_trackings_dphpforms;
 
     $seguimientos_ordenados = new stdClass();
     $seguimientos_ordenados->index = array();
@@ -798,5 +797,4 @@ function validate_student($code_student){
     }
 
 }
-
 

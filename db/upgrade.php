@@ -4,7 +4,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     global $DB;
     $dbman = $DB->get_manager();
     $result = true;
-    if ($oldversion < 2018021311149 ) {
+    if ($oldversion < 2018021417179 ) {
     // ************************************************************************************************************
     // Actualización que crea la tabla para los campos extendidos de usuario (Tabla: {talentospilos_user_extended})
     // Versión: 2018010911179
@@ -700,6 +700,9 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
         array_push($records, $campo_check);
         $DB->insert_records('talentospilos_df_tipo_campo', $records);
     }
+
+    $sql_intel = "DELETE FROM {talentospilos_df_tipo_campo} WHERE id <> 1 and id <> 2 and id <> 3 and id <> 4 and id <> 5 and id <> 6";
+    $DB->execute($sql_intel);
     
     // ************************************************************************************************************
     // Actualización:
@@ -967,7 +970,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     }
 
     // Ases savepoint reached.
-    upgrade_block_savepoint(true, 2018021311149 , 'ases');
+    upgrade_block_savepoint(true, 2018021417179 , 'ases');
    
     return $result;
 

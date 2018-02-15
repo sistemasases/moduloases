@@ -1059,12 +1059,12 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
 
 
 
-                //In case there's any high risk, call ajax function to send the email. Processing function at seguimiento.php
+                //In case there's any high risk, call ajax function to send the email. Processing function at send_risk_email.php"
                 if (high_risk_array.length != 0) {
                     $.ajax({
                         type: "POST",
                         data: data_email,
-                        url: "../managers/user_management/seguimiento.php",
+                        url: "../managers/pilos_tracking/send_risk_email.php",
                         success: function(msg) {
                             console.log(msg);
                         },

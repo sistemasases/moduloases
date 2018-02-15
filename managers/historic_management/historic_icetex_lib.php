@@ -134,7 +134,14 @@ function create_historic_icetex($student_id, $program_id, $resolution_id, $amoun
     return $insert;
 }
 
-
+/**
+ * Function that updates the field 'nota_credito' of a resolution register in the database
+ * 
+ * @see update_resolution_credit_note($id_resolution, $credit_note)
+ * @param $id_resolution -> id of a resolution
+ * @param $credit_note -> value that represents the credi note of a resolution
+ * @return boolean
+ */
 function update_resolution_credit_note($id_resolution, $credit_note){
     global $DB;
 
