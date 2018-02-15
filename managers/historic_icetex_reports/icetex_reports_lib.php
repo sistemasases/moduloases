@@ -57,7 +57,7 @@ function get_array_students_with_resolution(){
         $program_id = $historic->id_programa;
         $semester_id = $historic->id_semestre;
 
-        $cancel_date = get_array_students_with_cancel($student_id, $program_id, $semester_id);
+        $cancel_date = get_student_cancel_date($student_id, $program_id, $semester_id);
 
         if($cancel_date == false){
             $historic->fecha_cancel = "---";
@@ -80,7 +80,16 @@ function get_array_students_with_resolution(){
 
 //print_r(get_array_students_with_resolution());
 
-function get_array_students_with_cancel($id_student, $id_program, $id_semester){    
+/**
+ * Function that returns the date when an student quitted a program in the semester 
+ * 
+ * @see get_student_cancel_date($id_student, $id_program, $id_semester)
+ * @param $id_student -> id of a student
+ * @param $id_program -> id of a program
+ * @param $id_semester -> id of the semester
+ * @return array
+ */
+function get_student_cancel_date($id_student, $id_program, $id_semester){    
     global $DB;
 
     $sql_query = "SELECT cancel.fecha_cancelacion FROM {talentospilos_history_academ} AS academ
@@ -97,6 +106,12 @@ function get_array_students_with_cancel($id_student, $id_program, $id_semester){
     }    
 }
 
+/**
+ * Function that returns a string with the names of all cohorts
+ * 
+ * @see get_all_cohort_names()
+ * @return string
+ */
 function get_all_cohort_names(){
     global $DB;
 
@@ -116,7 +131,12 @@ function get_all_cohort_names(){
     return $cohorts_options;
 }
 
-
+/**
+ * Function that returns a string with the names of all semesters
+ * 
+ * @see get_all_semesters_names()
+ * @return string
+ */
 function get_all_semesters_names(){
     global $DB;
 
@@ -136,7 +156,12 @@ function get_all_semesters_names(){
     return $semesters_options;
 }
 
-
+/**
+ * Function that returns a string with the codes of all resolutions
+ * 
+ * @see get_all_resolutions_codes()
+ * @return string
+ */
 function get_all_resolutions_codes(){
     global $DB;
 
@@ -157,7 +182,12 @@ function get_all_resolutions_codes(){
 
 }
 
-//Returns all resolutions
+/**
+ * Functions that returns an array containing the resolutions for the report
+ * 
+ * @see get_resolutions_for_report
+ * @return array
+ */
 function get_resolutions_for_report(){
     global $DB;
 
@@ -184,7 +214,13 @@ function get_resolutions_for_report(){
 
 //print_r(get_resolutions_for_report());
 
-//Return the number of active students with resolution given a cohort
+/**
+ * Function that returns an array with the number of active students
+ * 
+ * @see get_count_active_res_students($cohort)
+ * @param $cohort -> name of the cohort
+ * @return array
+ */
 function get_count_active_res_students($cohort){
     global $DB;
 
@@ -213,6 +249,13 @@ function get_count_active_res_students($cohort){
 
 //print_r(get_count_active_res_students('SPP1'));
 
+/**
+ * Function that returns an array with all the inactive students that belong to a resolution
+ * 
+ * @see get_count_inactive_res_students($cohort)
+ * @param $cohort -> name of the cohort
+ * @return array
+ */
 function get_count_inactive_res_students($cohort){
     global $DB;
 
@@ -241,7 +284,13 @@ function get_count_inactive_res_students($cohort){
 
 //print_r(get_count_inactive_res_students('SPP1'));
 
-
+/**
+ * Function that returns an array with the number of students that are active and don't belong to a resolution
+ * 
+ * @see get_count_active_no_res_students($cohort)
+ * @param $cohort -> name of the cohort
+ * @return array
+ */
 function get_count_active_no_res_students($cohort){
     global $DB;
 
@@ -280,6 +329,13 @@ function get_count_active_no_res_students($cohort){
 
 //print_r(get_count_active_no_res_students('SPP1'));
 
+/**
+ * Function that returns an array with all the necessary information for the summary report
+ * 
+ * @see get_info_summary_report($cohort)
+ * @param $cohort -> name of the cohort
+ * @return array
+ */
 function get_info_summary_report($cohort){
 
     $array_act_res = array();
@@ -411,7 +467,13 @@ function get_active_no_res_students(){
 //print_r(get_active_no_res_students());
 
 
-//Brings the info of a student given its id
+/**
+ * Function that returns an array containing the information of an student
+ * 
+ * @see get_info_student($student_id)
+ * @param $student_id -> id of an student
+ * @return array
+ */
 function get_info_student($student_id){
     global $DB;
 
