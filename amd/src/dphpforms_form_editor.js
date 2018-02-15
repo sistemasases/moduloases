@@ -43,6 +43,11 @@
                     window.location.href = "dphpforms_form_editor_permiso.php" + get_url_parameters(window.location.href) + '&permiso_id=' + $(this).attr('data-permiso-id');
                 });
 
+                $('.btn-editor-pregunta').click(function(){
+                    window.location.href = "dphpforms_form_editor_pregunta.php" + get_url_parameters(window.location.href) + '&pregunta_id=' + $(this).attr('data-pregunta-id');
+                });
+                
+
                 $('#actualizar-permiso').click(function(){
                     
                     var permiso_id = $(this).attr('data-permiso-id');
@@ -99,6 +104,136 @@
                     
                     //window.location.href = "dphpforms_form_editor_permiso.php" + get_url_parameters(window.location.href) + '&permiso_id=' + $(this).attr('data-permiso-id');
                 });
+
+                $('#actualizar-enunciado').click(function(){
+                    
+                    var pregunta_id = $(this).attr('data-pregunta-id');
+                    swal({
+                        html:true,
+                        title: 'Confirmación',
+                        text: "<strong>Nota importante!</strong>: Está actualizando el enunciado, ¿desea continuar?",
+                        type: 'warning',
+                        showCancelButton: true,
+                        confirmButtonText: 'Sí, Actualizar!'
+                      }, function(isConfirm) {
+                        if (isConfirm) {
+                            
+
+                            $.ajax({
+                                method: "POST",
+                                url: "../managers/dphpforms/dphpforms_form_updater.php",
+                                contentType: "application/json",
+                                dataType: "text",
+                                data: JSON.stringify({"function":"update_pregunta_enunciado", "pregunta_id":pregunta_id, "enunciado":$('#enunciado').val()}) ,
+                                success: function( msg ){
+                                    msg = JSON.parse( msg );
+                                    
+                                    if( msg['status'] == 0 ){
+                                        alert('Actualizado');
+                                        
+                                    }else if( msg['status'] == -1 ){
+                                          alert('Pregunta inexistente');
+                                    }
+                                    
+                                },
+                                error: function( XMLHttpRequest, textStatus, errorThrown ) {
+                                    alert('Informe de este error');
+                                    console.log( "some error " + textStatus + " " + errorThrown );
+                                    console.log( XMLHttpRequest );
+                                }
+                            });
+
+                        }
+                    });
+                    
+                });
+
+                $('#actualizar-atributos').click(function(){
+                    
+                    var pregunta_id = $(this).attr('data-pregunta-id');
+                    swal({
+                        html:true,
+                        title: 'Confirmación',
+                        text: "<strong>Nota importante!</strong>: Está actualizando los atributos, ¿desea continuar?",
+                        type: 'warning',
+                        showCancelButton: true,
+                        confirmButtonText: 'Sí, Actualizar!'
+                      }, function(isConfirm) {
+                        if (isConfirm) {
+                            
+
+                            $.ajax({
+                                method: "POST",
+                                url: "../managers/dphpforms/dphpforms_form_updater.php",
+                                contentType: "application/json",
+                                dataType: "text",
+                                data: JSON.stringify({"function":"update_pregunta_atributos", "pregunta_id":pregunta_id, "atributos":$('#atributos').val()}) ,
+                                success: function( msg ){
+                                    msg = JSON.parse( msg );
+                                    
+                                    if( msg['status'] == 0 ){
+                                        alert('Actualizado');
+                                        
+                                    }else if( msg['status'] == -1 ){
+                                          alert('Pregunta inexistente');
+                                    }
+                                    
+                                },
+                                error: function( XMLHttpRequest, textStatus, errorThrown ) {
+                                    alert('Informe de este error');
+                                    console.log( "some error " + textStatus + " " + errorThrown );
+                                    console.log( XMLHttpRequest );
+                                }
+                            });
+
+                        }
+                    });
+                    
+                });
+
+                $('#actualizar-opciones').click(function(){
+                    
+                    var pregunta_id = $(this).attr('data-pregunta-id');
+                    swal({
+                        html:true,
+                        title: 'Confirmación',
+                        text: "<strong>Nota importante!</strong>: Está las opciones de esta pregunta, ¿desea continuar?",
+                        type: 'warning',
+                        showCancelButton: true,
+                        confirmButtonText: 'Sí, Actualizar!'
+                      }, function(isConfirm) {
+                        if (isConfirm) {
+                            
+
+                            $.ajax({
+                                method: "POST",
+                                url: "../managers/dphpforms/dphpforms_form_updater.php",
+                                contentType: "application/json",
+                                dataType: "text",
+                                data: JSON.stringify({"function":"update_pregunta_opciones", "pregunta_id":pregunta_id, "opciones":$('#opciones').val()}) ,
+                                success: function( msg ){
+                                    msg = JSON.parse( msg );
+                                    console.log(msg);
+                                    if( msg['status'] == 0 ){
+                                        alert('Actualizado');
+                                        
+                                    }else if( msg['status'] == -1 ){
+                                          alert('Pregunta inexistente');
+                                    }
+                                    
+                                },
+                                error: function( XMLHttpRequest, textStatus, errorThrown ) {
+                                    alert('Informe de este error');
+                                    console.log( "some error " + textStatus + " " + errorThrown );
+                                    console.log( XMLHttpRequest );
+                                }
+                            });
+
+                        }
+                    });
+                    
+                });
+
 
                 function test(){
                     swal(
