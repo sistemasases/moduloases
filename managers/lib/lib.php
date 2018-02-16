@@ -28,9 +28,8 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-require_once(dirname(__FILE__). '/../../../../config.php');
-require_once $CFG->dirroot.'/blocks/ases/managers/periods_management/periods_lib.php'; 
-
+require_once dirname(__FILE__) . '/../../../../config.php';
+require_once $CFG->dirroot . '/blocks/ases/managers/periods_management/periods_lib.php';
 
 /**
  * Gets all academic programs that are stored on talentospilos_programa table
@@ -38,13 +37,14 @@ require_once $CFG->dirroot.'/blocks/ases/managers/periods_management/periods_lib
  * @see load_programs()
  * @return array -->Array with every academic program (id, codigo_snies, codigo_univalle, nombre, id_sede, jornada, id_facultad)
  */
-function load_programs(){
-    
+function load_programs()
+{
+
     global $DB;
-    
+
     $sql_query = "SELECT * FROM {talentospilos_programa}";
     $array_programs = $DB->get_records_sql($sql_query);
-    
+
     return $array_programs;
 }
 
@@ -54,16 +54,17 @@ function load_programs(){
  * @see load_programs_cali()
  * @return array --> Array with every academic program  (id, codigo_snies, codigo_univalle, nombre, id_sede, jornada, id_facultad)
  */
-function load_programs_cali(){
-    
+function load_programs_cali()
+{
+
     global $DB;
-    
+
     $sql_query = "SELECT id FROM {talentospilos_sede} WHERE nombre = 'CALI'";
     $id_cali = $DB->get_record_sql($sql_query)->id;
-    
+
     $sql_query = "SELECT * FROM {talentospilos_programa} WHERE id_sede = $id_cali ORDER BY nombre";
     $array_programs = $DB->get_records_sql($sql_query);
-    
+
     return $array_programs;
 }
 
@@ -74,96 +75,113 @@ function load_programs_cali(){
  * @param $username
  * @return object --> Object representing the user
  */
- function search_user($username){
-     
+function search_user($username)
+{
+
     global $DB;
-    
+
     $sql_query = "SELECT * FROM {user} WHERE username = $username";
     $array_user = $DB->get_record_sql($sql_query);
-    
-    return $array_user;
- }
 
- /**
+    return $array_user;
+}
+
+/**
  * Evaluates wheter a user is a practicant or monitor
- * 
+ *
  * @see isMonOrPract($USER)
  * @param $USER --> Object user
- * @return bool --> True if it's a practicant or monitor, false otherwise 
+ * @return bool --> True if it's a practicant or monitor, false otherwise
  */
-function isMonOrPract($USER){
+function isMonOrPract($USER)
+{
     global $DB;
-    
+
     $id = $USER->id;
     $query_role = "SELECT rol.nombre_rol  FROM {talentospilos_rol} rol INNER JOIN {talentospilos_user_rol} uRol ON rol.id = uRol.id_rol WHERE uRol.id_usuario = $id AND uRol.id_semestre = (SELECT max(id_semestre) FROM {talentospilos_user_rol})";
     $rol = $DB->get_record_sql($query_role)->nombre_rol;
 
-    if($rol != "monitor_ps" && $rol != "practicante_ps"){
+    if ($rol != "monitor_ps" && $rol != "practicante_ps") {
         return false;
-    }else{
+    } else {
         return true;
     }
 }
 
 /**
-* Gets an ASES user role given his moodle id
-* 
-* @see get_role_ases($id)
-* @param $id --> user moodle id
-* @return string --> containing user role
-*/
-function get_role_ases($id){
+ * Gets an ASES user role given his moodle id
+ *
+ * @see get_role_ases($id)
+ * @param $id --> user moodle id
+ * @return string --> containing user role
+ */
+function get_role_ases($id)
+{
     global $DB;
 
     $semestre = get_current_semester();
     $id_semestre = $semestre->max;
-  
+
     $query_role = "SELECT rol.nombre_rol  FROM {talentospilos_rol} rol INNER JOIN {talentospilos_user_rol} uRol ON rol.id = uRol.id_rol WHERE uRol.id_usuario = $id AND uRol.id_semestre = $id_semestre";
     $rol = $DB->get_record_sql($query_role)->nombre_rol;
-  
+
     return $rol;
-  }
+}
 
-
-/** 
+/**
  * Returns a select with every student that's been assigned to a 'profesional', 'practicante' or monitor and "ROL NO PERMITIDO" in case of different role
  *
- * @see make_select_ficha($id)
+ * @see make_select_ficha($id, $student_code)
  * @param $id --> student id
  * @return string --> Containing the previous select
  */
-function make_select_ficha($id){
-    global $DB;
-  
-    $rol = get_role_ases($id);
+function make_select_ficha($id, $rol, $student_code)
+{
+    global $DB;  
 
-    $asign = "<select name = 'asignados' id = 'asignados'><option>Seleccione un estudiante</option>";
+    $sel = "";
 
-    if($rol == 'profesional_ps'){
-        $asign .= process_info_assigned_students(get_asigned_by_profesional($id));
+    if (is_null($student_code)) {
+        $sel = "selected";
+    }
 
-    }elseif($rol == 'practicante_ps'){
-        $asign .= process_info_assigned_students(get_asigned_by_practicante($id));
+    $asign = "<select name = 'asignados' id = 'asignados'><option $sel>Seleccione un estudiante</option>";
 
-    }elseif($rol == 'monitor_ps'){
-        $asign .= process_info_assigned_students(get_asigned_by_monitor($id));
-    }else{
-        $asign = "ROL NO PERMITIDO";
-        return $asign;
+    if ($rol == 'profesional_ps') {
+
+        $asign .= process_info_assigned_students(get_asigned_by_profesional($id), $student_code);
+
+    } elseif ($rol == 'practicante_ps') {
+
+        $asign .= process_info_assigned_students(get_asigned_by_practicante($id), $student_code);
+
+    } elseif ($rol == 'monitor_ps') {
+
+        $asign .= process_info_assigned_students(get_asigned_by_monitor($id), $student_code);
+
+    }elseif ($rol == 'director_prog') {
+
+        $asign .= process_info_assigned_students(get_asigned_by_dir_prog($id), $student_code);   
+        
+    } else {
+
+        $asign .= process_info_assigned_students(get_all_student(), $student_code);   
+
     }
     $asign .= "</select>";
     return $asign;
-  }
+}
 
 /**
-  * Gets all students assigned to a monitor 
-  *
-  * @see get_asigned_by_monitor($id)
-  * @param $id --> monitor id
-  * @return stdClass Array --> with every student
-  */
+ * Gets all students assigned to a monitor
+ *
+ * @see get_asigned_by_monitor($id)
+ * @param $id --> monitor id
+ * @return  Array --> with every stdClass student
+ */
 
-function get_asigned_by_monitor($id){
+function get_asigned_by_monitor($id)
+{
     global $DB;
 
     $semestre = get_current_semester();
@@ -176,19 +194,20 @@ function get_asigned_by_monitor($id){
               WHERE monitor_student.id_monitor = $id AND monitor_student.id_semestre = $id_semestre";
 
     $result = $DB->get_records_sql($query);
-    
+
     return $result;
 }
 
 /**
-* Gets all students assigned to a 'practicante' 
-*
-* @see get_asigned_by_practicante($id)
-* @param $id --> practicant id
-* @return string --> with every student
-*/
+ * Gets all students assigned to a 'practicante'
+ *
+ * @see get_asigned_by_practicante($id)
+ * @param $id --> practicant id
+ * @return array --> with every student
+ */
 
-function get_asigned_by_practicante($id){
+function get_asigned_by_practicante($id)
+{
     global $DB;
 
     $semestre = get_current_semester();
@@ -202,7 +221,7 @@ function get_asigned_by_practicante($id){
 
     $result = $DB->get_records_sql($query);
 
-    foreach($result as $id_mon){
+    foreach ($result as $id_mon) {
         $students = array_merge($students, get_asigned_by_monitor($id_mon->id_usuario));
     }
     return $students;
@@ -211,14 +230,15 @@ function get_asigned_by_practicante($id){
 //print_r(get_asigned_by_practicante(121));
 
 /**
- * Gets all students assigned to a 'profesional'  
+ * Gets all students assigned to a 'profesional'
  *
  * @see get_asigned_by_profesional($id)
  * @param $id --> professional id
- * @return string --> with every student
-*/
+ * @return array --> with every student
+ */
 
-function get_asigned_by_profesional($id){
+function get_asigned_by_profesional($id)
+{
     global $DB;
 
     $semestre = get_current_semester();
@@ -227,61 +247,124 @@ function get_asigned_by_profesional($id){
     $query = "SELECT rol.id_usuario
               FROM {talentospilos_user_rol} rol
               WHERE rol.id_jefe = $id AND rol.id_semestre = $id_semestre";
-    
+
     $students = array();
 
     $result = $DB->get_records_sql($query);
 
-    foreach($result as $id_prac){
+    foreach ($result as $id_prac) {
         $students = array_merge($students, get_asigned_by_practicante($id_prac->id_usuario));
     }
     return $students;
 }
 
 //print_r(get_asigned_by_profesional(122));
+/**
+ * Gets all students assigned to a 'director_prog'
+ *
+ * @see get_asigned_by_dir_prog($id)
+ * @param $id --> dirrector id
+ * @return array --> with every student
+ */
+function get_asigned_by_dir_prog($id)       
+{
+    global $DB;
+
+    $semestre = get_current_semester();
+    $id_semestre = $semestre->max;
+
+    $query_program = "SELECT id_programa FROM {talentospilos_user_rol} WHERE id_usuario = $id AND id_semestre = $id_semestre";
+    $id_programa = $DB->get_record_sql($query_program)->id_programa;
+
+    $query = "SELECT user_moodle.username, user_moodle.firstname, user_moodle.lastname
+              FROM {user} AS user_moodle
+              INNER JOIN {talentospilos_user_extended} AS user_extended ON user_moodle.id = user_extended.id_moodle_user
+              WHERE user_extended.id_academic_program = $id_programa";
+
+    $result = $DB->get_records_sql($query);
+
+    return $result;
+
+}
+
+/**
+ * Gets all students from ASES
+ *
+ * @see get_asigned_by_dir_prog($id)
+ * @param $id --> dirrector id
+ * @return array --> with every student
+ */
+function get_all_student()      
+{
+    global $DB;
+
+    $semestre = get_current_semester();
+    $id_semestre = $semestre->max;
+
+    $query = "SELECT user_moodle.username, user_moodle.firstname, user_moodle.lastname
+              FROM {user} AS user_moodle
+              INNER JOIN {talentospilos_user_extended} AS user_extended ON user_moodle.id = user_extended.id_moodle_user";
+
+    $result = $DB->get_records_sql($query);
+
+    return $result;
+
+}
 
 /**
  * Function that process the information contained in an array of students and returns a string with option html elements
  * @see process_info_assigne_students($array_students)
- * @param $array_students -> array which contains several student objects 
+ * @param $array_students -> array which contains several student objects
  * @return string containing the students information
  */
 
-function process_info_assigned_students($array_students){
+function process_info_assigned_students($array_students, $student_code)
+{
+
     $assign = "";
 
-    foreach($array_students as $student){
-        $assign .= "<option>$student->username $student->firstname $student->lastname </option>";
+    if (is_null($student_code)) {
+        foreach ($array_students as $student) {
+            $assign .= "<option>$student->username $student->firstname $student->lastname </option>";
+        }
+    } else {
+        foreach ($array_students as $student) {
+            if ($student_code == substr($student->username, 0, 7)) {
+                $assign .= "<option selected>$student->username $student->firstname $student->lastname </option>";
+            } else {
+                $assign .= "<option>$student->username $student->firstname $student->lastname </option>";
+            }
+        }
     }
+
     return $assign;
 
 }
 
-
 /**
  *
  * Returns current semester considering current date
- * 
+ *
  * @see get_current_semester_today()
  * @return array -->  array object or zero if error
-*/
+ */
 
-function get_current_semester_today(){
+function get_current_semester_today()
+{
 
     global $DB;
-    
+
     date_default_timezone_set('America/Bogota');
     $today = time();
 
     $sql_query = "SELECT * FROM {talentospilos_semestre}";
     $array_periods = $DB->get_records_sql($sql_query);
-    
-    foreach($array_periods as $period){
-        if(strtotime($period->fecha_inicio) < $today && strtotime($period->fecha_fin) > $today){
+
+    foreach ($array_periods as $period) {
+        if (strtotime($period->fecha_inicio) < $today && strtotime($period->fecha_fin) > $today) {
             return $period;
         }
     }
 
     return 0;
-}  
-
+}

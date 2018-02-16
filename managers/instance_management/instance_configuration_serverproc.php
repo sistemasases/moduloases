@@ -45,6 +45,12 @@ if(isset($_POST['function'])){
             if(isset($_POST['instance'])){
                 load_cohorts_without_assignment($_POST['instance']);
             }
+            break;
+        case 'unassign_cohort':
+            if(isset($_POST['instance_id']) && isset($_POST['idnumber_cohort'])){
+                unassign_cohort_server_proc($_POST['idnumber_cohort'], $_POST['instance_id']);
+            }
+            break;
     }
 }
 
@@ -176,12 +182,18 @@ function load_cohorts_without_assignment($id_instance){
  * @param id_instance  ---> ID instancia
  * @return JSON
  */
-
 function unassign_cohort_server_proc($id_number_cohort, $id_instance){
 
     $msg_to_return = new stdClass();
+    $result_unassignment = unassign_cohort($id_number_cohort, $id_instance);
 
-
+    if($result_unassignment){
+        $msg_to_return->status = 1;
+        $msg_to_return->msg = "Cohorte desasignada con éxito.";
+    }else{
+        $msg_to_return->status = 0;
+        $msg_to_return->msg = "Error al desasignar la cohorte.";
+    }
 
     echo json_encode($msg_to_return);
 }
