@@ -176,7 +176,8 @@ function send_email_dphpforms($json_risk_observation_, $student_code, $date, $su
 
     $emailToUser = new stdClass;
     $emailFromUser = new stdClass;
-
+    
+    //print_r(get_ases_user_by_code($student_code));
     $id_estudiante = get_ases_user_by_code($student_code)->id;
 
     $id_professional = get_id_assigned_professional($id_estudiante);

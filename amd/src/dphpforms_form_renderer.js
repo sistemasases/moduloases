@@ -24,8 +24,8 @@
                     return params.replace(/#[a-zA-z]+_[a-zA-z]+/i, '');
                 }
 
-                function get_student_code(){
-                    var url = window.location.href;
+                /*function get_student_code(){
+                    var url = location.search;
                     var params = get_url_parameters( url );
 
                     var student_position = params.indexOf('student_code=') + 13;
@@ -37,7 +37,18 @@
                             codigo_estudiante += params[x];
                         }
                     }
-                    return codigo_estudiante;
+                    return get_id_instance();
+                }*/
+
+                function get_student_code() {
+                    var urlParameters = location.search.split('&');
+                    for (var x in urlParameters) {
+                        if (urlParameters[x].indexOf('student_code') >= 0) {
+                            var intanceparameter = urlParameters[x].split('=');
+                            return intanceparameter[1];
+                        }
+                    }
+                    return 0;
                 }
 
                 function check_risks_tracking( flag ){
