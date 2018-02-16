@@ -16,9 +16,11 @@ function get_riesgos(){
     $result = $DB->get_records_sql($sql_query);
     return $result;
 }
+
 /**
+ * @deprecated
+ * @deprecated No utilizado
  * Función que recupera cohortes
- *
  * @see getCohorte()
  * @return Array Cohortes
  */
@@ -28,6 +30,7 @@ function get_cohortes(){
     $result = $DB->get_records_sql($sql_query);
     return $result;
 }
+
 /**
  * Funcion recupera la informacion necesaria para la grafica de sexo de acuerdo a la cohorte seleccionado
  * 

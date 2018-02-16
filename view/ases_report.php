@@ -53,21 +53,22 @@ if(!consult_instance($blockid)){
 }
 
 require_login($courseid, false);
-$riesgos = get_riesgos();
-$cohortes = get_cohortes();
+$risks = get_riesgos();
+$cohorts = load_cohorts_by_instance($blockid);
 
 //se crean los elementos del menu
 $menu_option = create_menu_options($id_current_user, $blockid, $courseid);
 
 
-$tabla_riesgos='';
-$tabla_cohortes='';
-foreach($riesgos as $riesgo){
-    $tabla_riesgos.='<div class="checkbox"><input type="checkbox" name="risk_fields[]" id="'.$riesgo->id.'" value="'.$riesgo->id.'" /> '.$riesgo->descripcion.'</div>';}
+$risks_table='';
+$cohorts_table='';
+foreach($risks as $risk){
+    $risks_table.='<div class="checkbox"><input type="checkbox" name="risk_fields[]" id="'.$risk->id.'" value="'.$risk->id.'" /> '.$risk->descripcion.'</div>';}
     
-$tabla_cohortes.='<option value="TODOS">TODOS</option>';
-foreach ($cohortes as $cohorte) {
-    $tabla_cohortes.='<option value="'.$cohorte->idnumber.'">'.$cohorte->name.'</option>';
+$cohorts_table.='<option value="TODOS">TODOS</option>';
+
+foreach ($cohorts as $cohort) {
+    $cohorts_table.='<option value="'.$cohort->idnumber.'">'.$cohort->name.'</option>';
 }
 
 $estados_ases = "";
@@ -91,8 +92,8 @@ foreach($actions as $act){
 }
 
 $data->menu = $menu_option;
-$data->risks_checks = $tabla_riesgos;
-$data->cohorts_checks = $tabla_cohortes;
+$data->risks_checks = $risks_table;
+$data->cohorts_checks = $cohorts_table;
 $data->status_ases = $estados_ases;
 $contextcourse = context_course::instance($courseid);
 $contextblock =  context_block::instance($blockid);
