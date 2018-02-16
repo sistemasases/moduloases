@@ -46,7 +46,7 @@ $courseid = required_param('courseid', PARAM_INT);
 $blockid = required_param('instanceid', PARAM_INT);
 $id_current_user = $USER->id;
 
-//Instance is consulted for its registration
+// Instance is consulted for its registration
 if(!consult_instance($blockid)){
     header("Location: instance_configuration.php?courseid=$courseid&instanceid=$blockid");
     die();

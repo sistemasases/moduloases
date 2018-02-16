@@ -4,6 +4,7 @@ require_once(dirname(__FILE__).'/../instance_management/instance_lib.php');
 require_once(dirname(__FILE__).'/../lib/lib.php');
 require_once(dirname(__FILE__).'/../lib/student_lib.php');
 require_once(dirname(__FILE__).'/../user_management/user_lib.php');
+
 /**
  * Función que recupera riesgos 
  *
@@ -60,6 +61,7 @@ function getGraficSex($cohorte){
     }
     return $result;
 }
+
 /**
  * Funcion recupera la informacion necesaria para la grafica de edad de acuerdo al cohorte seleccionado
  * 
@@ -101,6 +103,7 @@ function getGraficAge($cohorte){
     return array_count_values($arrayRetornar);
     
 }
+
 /**
  * Funcion recupera la informacion necesaria para la grafica de programas de acuerdo al cohorte seleccionado
  * 
@@ -134,6 +137,7 @@ function getGraficPrograma($cohorte){
      //print_r($result);
     return $result;
 }
+
 /**
  * Funcion recupera la informacion necesaria para la grafica de facultad de acuerdo al cohorte seleccionado
  * 
@@ -170,6 +174,7 @@ function getGraficFacultad($cohorte){
     return $result;
     
 }
+
 /**
  * Funcion recupera la informacion necesaria para la grafica de estado de acuerdo al cohorte seleccionado
  * 
@@ -378,7 +383,6 @@ function get_not_assign_students($general_fields=null, $conditions, $academic_fi
     return $result_to_return;
 }
 
-
 /**
  * Función que recupera datos para la tabla de ases_report, dado el estado, la cohorte y un conjunto de campos a extraer.
  *
@@ -577,5 +581,4 @@ function get_ases_report($general_fields=null, $conditions, $risk_fields=null, $
 
     return $result_to_return;
 }
-
 ?>
