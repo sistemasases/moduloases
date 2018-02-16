@@ -90,7 +90,6 @@
                 }
                 die();
             }
-
             //Actualizador de enunciados de preguntas
             if($json_post->function == 'update_pregunta_enunciado'){
                 header('Content-Type: application/json');
@@ -142,6 +141,27 @@
                         array(
                             'status' => '0',
                             'message' => 'Updated'
+                        )
+                    );
+                }else{
+                    echo json_encode(
+                        array(
+                            'status' => '-1',
+                            'message' => 'Error'
+                        )
+                    );
+                }
+                die();
+            }
+            //Crear pregunta
+            if($json_post->function == 'create_pregunta'){
+                header('Content-Type: application/json');
+                
+                if(create_pregunta($post->form_id, $post->json_pregunta) == 0){
+                    echo json_encode(
+                        array(
+                            'status' => '0',
+                            'message' => 'Created'
                         )
                     );
                 }else{
@@ -377,6 +397,10 @@
         $sql = "SELECT * FROM {talentospilos_df_tipo_campo} WHERE id = '$id'";
         return $DB->get_record_sql($sql);
 
+    }
+
+    function create_pregunta($form_id, $pregunta){
+        return -1;
     }
     
 ?>
