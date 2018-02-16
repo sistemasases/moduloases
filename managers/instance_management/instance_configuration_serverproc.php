@@ -182,7 +182,6 @@ function load_cohorts_without_assignment($id_instance){
  * @param id_instance  ---> ID instancia
  * @return JSON
  */
-
 function unassign_cohort_server_proc($id_number_cohort, $id_instance){
 
     $msg_to_return = new stdClass();
