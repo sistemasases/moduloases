@@ -406,8 +406,8 @@
         /*
             {
                 "id_temporal": "cmp_XX",
-                "enunciado": "Campo ABC,
-                "tipo_campo": "CHECKBOX|TEXAREA|ETC",
+                "enunciado": "Campo ABC",
+                "tipo_campo": "CHECKBOX|TEXTAREA|ETC",
                 "opciones_campo": [
                     { "enunciado": "Opc_1", "valor": "0", "posicion": "1" }
                 ],
@@ -424,9 +424,16 @@
                 ]
             }
         */
-        $obj_pregunta = json_decode($pregunta);
-
-        return json_encode(  );
+        $obj_pregunta = json_decode( $pregunta );
+        $pregunta_details = array(
+            'tipo_campo' => $obj_pregunta->tipo_campo,
+            'opciones_campo' => $obj_pregunta->opciones_campo,
+            'atributos_campo' => $obj_pregunta->atributos_campo,
+            'enunciado' => $obj_pregunta->enunciado,
+            'permisos_campo' => $obj_pregunta->permisos_campo 
+        );
+        $pregunta_id = dphpforms_store_pregunta( $pregunta_details );
+        return json_encode( $pregunta_id );
 
         //return -1;
     }
