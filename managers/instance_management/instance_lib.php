@@ -195,7 +195,7 @@ function unassign_cohort($idnumber_cohort, $id_instance){
 
     $sql_query = "SELECT id
                   FROM {cohort}
-                  WHERE idnumber = $idnumber_cohort";
+                  WHERE idnumber = '$idnumber_cohort'";
 
     $id_cohort = $DB->get_record_sql($sql_query)->id;
 

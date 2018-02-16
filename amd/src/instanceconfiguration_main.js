@@ -25,7 +25,12 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables','block_ases/sw
             $('#button_assign_cohort').on('click', {object_function: self}, self.assign_cohort_instance);
 
         },
-        get_cohorts_without_assignment: function(){
+        get_cohorts_without_assignment: function(instance_id){
+
+            if(instance_id == undefined){
+                var instance_id = this.get_id_instance();
+            }
+
             $.ajax({
                 type: "POST",
                 data: {
@@ -77,9 +82,11 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables','block_ases/sw
                 },
             });
         },
-        load_cohorts_assigned: function(){
+        load_cohorts_assigned: function(instance_id){
 
-            var instance_id = this.get_id_instance();
+            if(instance_id == undefined){
+                var instance_id = this.get_id_instance();
+            }
 
             $.ajax({
                 type: "POST",
@@ -123,12 +130,24 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables','block_ases/sw
                     idnumber_cohort: idnumber_cohort},
                 url: "../managers/instance_management/instance_configuration_serverproc.php",
                 success: function(msg){
-                    console.log(msg);
+                    if(msg.status == 1){
+                        swal(
+                            'Éxito',
+                            msg.msg,
+                            'success'
+                        );
+                    }else{
+                        swal(
+                            'Error',
+                            msg.msg,
+                            'error'
+                        );
+                    }
                 },
-                error: function(){
+                error: function(msg){
                     swal(
                         'Error',
-                        'Error al desasignar la cohorte a la instancia actual',
+                        'Error al conctarse con el servidor.',
                         'error'
                     );
                 },
@@ -136,8 +155,9 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables','block_ases/sw
                 cache: false,
                 async: false
             });
-
-            
+            obj.data.object_function.get_cohorts_without_assignment();
+            obj.data.object_function.load_cohorts_assigned();
+            $('span.unassigned_cohort').on('click', {object_function: obj.data.object_function}, obj.data.object_function.unassign_cohort);
         },
         get_id_instance: function(){
             var urlParameters = location.search.split('&');
@@ -175,6 +195,8 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables','block_ases/sw
                     );
 
                     obj.data.object_function.get_cohorts_without_assignment();
+                    obj.data.object_function.load_cohorts_assigned();
+                    $('span.unassigned_cohort').on('click', {object_function: obj.data.object_function}, obj.data.object_function.unassign_cohort);
                 },
                 dataType: "json",
                 cache: false,
