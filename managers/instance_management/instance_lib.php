@@ -184,14 +184,20 @@ function assign_permissions($role_name, $fun_name){
  * Función que deshace la asignación de una cohorte sobre una instancia
  * 
  * @see unassign_cohort()
- * @param id_cohort   ---> ID cohorte
+ * @param id_cohort   ---> idnumber cohorte
  * @param id_instance  ---> ID instancia
  * @return stdClass Array
  */
 
-function unassign_cohort($id_cohort, $id_instance){
+function unassign_cohort($idnumber_cohort, $id_instance){
 
     global $DB;
+
+    $sql_query = "SELECT id
+                  FROM {cohort}
+                  WHERE idnumber = $idnumber_cohort";
+
+    $id_cohort = $DB->get_record_sql($sql_query)->id;
 
     $sql_query = "SELECT id 
                   FROM {talentospilos_inst_cohorte}

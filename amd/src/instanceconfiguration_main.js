@@ -21,7 +21,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables','block_ases/sw
 
             self.load_cohorts_assigned();
 
-            $('span.unassigned_cohort').on('click', self.unassign_cohort);
+            $('span.unassigned_cohort').on('click', {object_function: self}, self.unassign_cohort);
             $('#button_assign_cohort').on('click', {object_function: self}, self.assign_cohort_instance);
 
         },
@@ -110,8 +110,32 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables','block_ases/sw
                 },
             });
         },
-        unassign_cohort: function(){
+        unassign_cohort: function(obj){
+
             var idnumber_cohort = $(this).parent().siblings()[0].innerHTML;
+            var instance_id = obj.data.object_function.get_id_instance();
+
+            $.ajax({
+                type: "POST",
+                data: {
+                    function: 'unassign_cohort',
+                    instance_id: instance_id,
+                    idnumber_cohort: idnumber_cohort},
+                url: "../managers/instance_management/instance_configuration_serverproc.php",
+                success: function(msg){
+                    console.log(msg);
+                },
+                error: function(){
+                    swal(
+                        'Error',
+                        'Error al desasignar la cohorte a la instancia actual',
+                        'error'
+                    );
+                },
+                dataType: "json",
+                cache: false,
+                async: false
+            });
 
             
         },

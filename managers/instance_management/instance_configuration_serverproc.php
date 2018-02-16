@@ -45,6 +45,11 @@ if(isset($_POST['function'])){
             if(isset($_POST['instance'])){
                 load_cohorts_without_assignment($_POST['instance']);
             }
+        case 'unassign_cohort':
+            if(isset($_POST['instance']) && isset($_POST['idnumber_cohort'])){
+                unassign_cohort_server_proc($_POST['idnumber_cohort'], $_POST['instance']);
+            }
+            break;
     }
 }
 
@@ -180,8 +185,9 @@ function load_cohorts_without_assignment($id_instance){
 function unassign_cohort_server_proc($id_number_cohort, $id_instance){
 
     $msg_to_return = new stdClass();
+    $result_Unassignment = unassign_cohort($id_number_cohort, $id_instance);
 
-
+    
 
     echo json_encode($msg_to_return);
 }
