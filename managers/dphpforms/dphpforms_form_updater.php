@@ -1,6 +1,7 @@
 <?php 
     
     require_once(dirname(__FILE__). '/../../../../config.php');
+    require_once('dphpforms_functions.php');
 
     if(isset($_GET['function'])){
         if($_GET['function'] == 'get_forms'){
@@ -156,8 +157,9 @@
             //Crear pregunta
             if($json_post->function == 'create_pregunta'){
                 header('Content-Type: application/json');
-                
-                if(create_pregunta($post->form_id, $post->json_pregunta) == 0){
+
+                echo create_pregunta($post->form_id, $post->json_pregunta) ;
+                /*if(create_pregunta($post->form_id, $post->json_pregunta) == 0){
                     echo json_encode(
                         array(
                             'status' => '0',
@@ -171,7 +173,7 @@
                             'message' => 'Error'
                         )
                     );
-                }
+                }*/
                 die();
             }
 
@@ -400,7 +402,33 @@
     }
 
     function create_pregunta($form_id, $pregunta){
-        return -1;
+
+        /*
+            {
+                "id_temporal": "cmp_XX",
+                "enunciado": "Campo ABC,
+                "tipo_campo": "CHECKBOX|TEXAREA|ETC",
+                "opciones_campo": [
+                    { "enunciado": "Opc_1", "valor": "0", "posicion": "1" }
+                ],
+                "atributos_campo": {
+                    "class": "css_selector_campo_abc col-xs-## col-sm-## col-md-## col-lg-##",
+                    "name": "campo_abc",
+                    "required": "false",
+                    "maxlength": "####",
+                    "local_alias": "local_alias_campo_abc"
+                },
+                "permisos_campo": [
+                    { "rol": "rol_1", "permisos": ["lectura"] },
+                    { "rol": "rol_2", "permisos": ["lectura", "escritura"] }
+                ]
+            }
+        */
+        $obj_pregunta = json_decode($pregunta);
+
+        return json_encode(  );
+
+        //return -1;
     }
     
 ?>

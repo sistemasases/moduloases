@@ -260,7 +260,7 @@
                                 data: JSON.stringify({"function":"create_pregunta", "form_id":form_id, "json_pregunta":$('#json_pregunta').val()}) ,
                                 success: function( msg ){
                                     msg = JSON.parse( msg );
-                                    
+                                    console.log( msg );
                                     if( msg['status'] == 0 ){
                                         alert('Creada');
 
