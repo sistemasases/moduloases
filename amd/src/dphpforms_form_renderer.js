@@ -45,7 +45,7 @@
                     for (var x in urlParameters) {
                         if (urlParameters[x].indexOf('student_code') >= 0) {
                             var intanceparameter = urlParameters[x].split('=');
-                            return intanceparameter[1];
+                            return intanceparameter[1].split('-')[0];
                         }
                     }
                     return 0;
