@@ -1505,7 +1505,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/d3', 'block_ases/sweetaler
             $.ajax({
                 type: "POST",
                 data: data_email,
-                url: "../managers/pilos_tracking/send_risk_email.php",
+                url: "../managers/seguimientos.php",
                 success: function(msg) {
                     console.log(msg);
                 },
