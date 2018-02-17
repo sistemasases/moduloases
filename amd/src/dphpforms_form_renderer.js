@@ -71,8 +71,6 @@
                             ( vida_univer_risk == '3' ) 
                         ){
 
-                            console.log("flag");
-
                             var json_risks = {
                                 "function": "send_email_dphpforms",
                                 "student_code": get_student_code(),
