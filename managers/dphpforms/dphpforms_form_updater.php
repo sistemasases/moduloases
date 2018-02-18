@@ -156,10 +156,8 @@
             }
             //Crear pregunta
             if($json_post->function == 'create_pregunta'){
-                header('Content-Type: application/json');
-
-                echo create_pregunta($post->form_id, $post->json_pregunta) ;
-                /*if(create_pregunta($post->form_id, $post->json_pregunta) == 0){
+                //header('Content-Type: application/json');
+                if(!(create_pregunta($post->form_id, $post->json_pregunta) == -1)){
                     echo json_encode(
                         array(
                             'status' => '0',
@@ -173,7 +171,7 @@
                             'message' => 'Error'
                         )
                     );
-                }*/
+                }
                 die();
             }
 
@@ -403,6 +401,8 @@
 
     function create_pregunta($form_id, $pregunta){
 
+        global $DB;
+
         /*
             {
                 "id_temporal": "cmp_XX",
@@ -433,7 +433,27 @@
             'permisos_campo' => $obj_pregunta->permisos_campo 
         );
         $pregunta_id = dphpforms_store_pregunta( $pregunta_details );
-        return json_encode( $pregunta_id );
+        $form_preg_id = -1;
+
+        if($pregunta_id){
+
+            $sql_last_pregunta = "SELECT * FROM {talentospilos_df_form_preg}  WHERE id_formulario = '$form_id' ORDER BY posicion DESC LIMIT 1";
+            $last_pregunta = $DB->get_record_sql($sql_last_pregunta);
+
+            $form_preg = new stdClass();
+            $form_preg->id_formulario = $form_id;
+            $form_preg->id_pregunta = $pregunta_id;
+            if($last_pregunta){
+                $form_preg->posicion = $last_pregunta->posicion + 1;
+            }else{
+                $form_preg->posicion = 0;
+            }
+            $form_preg->estado = 1;
+            $form_preg_id = $DB->insert_record('talentospilos_df_form_preg', $form_preg, $returnid=true, $bulk=false);
+            
+        }
+
+        return $form_preg_id;
 
         //return -1;
     }

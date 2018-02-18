@@ -263,7 +263,7 @@
                                     console.log( msg );
                                     if( msg['status'] == 0 ){
                                         alert('Creada');
-
+                                        $('#json_pregunta').val('');
                                         
                                     }else if( msg['status'] == -1 ){
                                           alert('Formulario inexistente o JSON-pregunta vacio');
