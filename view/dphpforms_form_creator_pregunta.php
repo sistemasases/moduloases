@@ -38,10 +38,10 @@ include('../lib.php');
 global $PAGE;
 global $USER;
 
-include "../classes/output/dphpforms_form_editor_preguntas_page.php";
+include "../classes/output/dphpforms_form_creator_pregunta_page.php";
 include "../classes/output/renderer.php";
 
-$title = "Editor de formularios";
+$title = "Creador de preguntas";
 $pagetitle = $title;
 $courseid = required_param('courseid', PARAM_INT);
 $form_id = required_param('form_id', PARAM_INT);
@@ -59,16 +59,13 @@ if (!consult_instance($blockid)) {
 $contextcourse = context_course::instance($courseid);
 $contextblock = context_block::instance($blockid);
 
-$url = new moodle_url("/blocks/ases/view/dphpforms_form_builder.php", array('courseid' => $courseid, 'instanceid' => $blockid));
+$url = new moodle_url("/blocks/ases/view/dphpforms_form_creator_pregunta.php", array('courseid' => $courseid, 'instanceid' => $blockid));
 
 $coursenode = $PAGE->navigation->find($courseid, navigation_node::TYPE_COURSE);
 
 $rol = get_role_ases($USER->id);
 
-$record->preguntas_form = array_values(get_preguntas_form($form_id));
-$record->preguntas_permissions = array_values(get_permisos_form($form_id));
 $record->form_id = $form_id;
-$record->json_ordenamiento = get_json_ordenamiento($form_id);
 
 $PAGE->set_context($contextcourse);
 $PAGE->set_context($contextblock);
@@ -92,6 +89,6 @@ $PAGE->requires->js_call_amd('block_ases/dphpforms_form_editor', 'init');
 $output = $PAGE->get_renderer('block_ases');
 
 echo $output->header();
-$dphpforms_form_editor_preguntas_page = new \block_ases\output\dphpforms_form_editor_preguntas_page($record);
-echo $output->render($dphpforms_form_editor_preguntas_page);
+$dphpforms_form_creator_pregunta_page = new \block_ases\output\dphpforms_form_creator_pregunta_page($record);
+echo $output->render($dphpforms_form_creator_pregunta_page);
 echo $output->footer();

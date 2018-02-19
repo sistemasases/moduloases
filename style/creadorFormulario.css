@@ -140,6 +140,17 @@ pre, code {
     padding-top: 2em;
 }
 
+.separador_superior{
+    border-top: 1px rgb(116, 116, 116) solid;
+    margin-top: 2em;
+    padding-top: 2em;
+}
+.separador_inferior{
+    border-bottom: 1px rgb(116, 116, 116) solid;
+    margin-top: 2em;
+    padding-top: 2em;
+}
+
 .ajuste_tematicas{
     border-bottom: 1px rgb(116, 116, 116) solid;
     margin-bottom: 2em;

@@ -327,9 +327,9 @@
             "tipo_campo": "TEXTAREA",
             "opciones_campo": null,
             "atributos_campo": {
-                "class": "col-xs-6 col-sm-6 col-md-6 col-lg-6",
+                "class": "col-xs-6 col-sm-6 col-md-6 col-lg-6 oculto",
                 "name": "tema",
-                "required": "true",
+                "required": "false",
                 "maxlength": "1000",
                 "local_alias": "tema"
             },
@@ -406,7 +406,7 @@
             "tipo_campo": "TEXTAREA",
             "opciones_campo": null,
             "atributos_campo": {
-                "class": "col-xs-6 col-sm-6 col-md-6 col-lg-6",
+                "class": "col-xs-12 col-sm-12 col-md-12 col-lg-12",
                 "name": "objetivos",
                 "required": "true",
                 "maxlength": "1000",

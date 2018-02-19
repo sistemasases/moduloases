@@ -46,7 +46,7 @@ $courseid = required_param('courseid', PARAM_INT);
 $blockid = required_param('instanceid', PARAM_INT);
 $id_current_user = $USER->id;
 
-//Instance is consulted for its registration
+// Instance is consulted for its registration
 if(!consult_instance($blockid)){
     header("Location: instance_configuration.php?courseid=$courseid&instanceid=$blockid");
     die();
@@ -76,7 +76,7 @@ $estados_ases = "<option value='TODOS'>TODOS</option>";
 $ases_status_array = get_status_ases();
 
 foreach($ases_status_array as $ases_status){
-	$estados_ases .= "<option value='".$ases_status->id."'>".$ases_status->nombre."</option>";
+	$estados_ases .= "<option value='".$ases_status->id."'>".$ases_status->descripcion."</option>";
 }
 
 

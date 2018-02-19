@@ -24,8 +24,8 @@
                     return params.replace(/#[a-zA-z]+_[a-zA-z]+/i, '');
                 }
 
-                function get_student_code(){
-                    var url = window.location.href;
+                /*function get_student_code(){
+                    var url = location.search;
                     var params = get_url_parameters( url );
 
                     var student_position = params.indexOf('student_code=') + 13;
@@ -37,7 +37,18 @@
                             codigo_estudiante += params[x];
                         }
                     }
-                    return codigo_estudiante;
+                    return get_id_instance();
+                }*/
+
+                function get_student_code() {
+                    var urlParameters = location.search.split('&');
+                    for (var x in urlParameters) {
+                        if (urlParameters[x].indexOf('student_code') >= 0) {
+                            var intanceparameter = urlParameters[x].split('=');
+                            return intanceparameter[1].split('-')[0];
+                        }
+                    }
+                    return 0;
                 }
 
                 function check_risks_tracking( flag ){
@@ -59,8 +70,6 @@
                             ( academico_risk == '3' ) || ( economico_risk == '3' ) || 
                             ( vida_univer_risk == '3' ) 
                         ){
-
-                            console.log("flag");
 
                             var json_risks = {
                                 "function": "send_email_dphpforms",
@@ -100,7 +109,7 @@
                             $.ajax({
                                 type: "POST",
                                 data: JSON.stringify(json_risks),
-                                url: "../managers/pilos_tracking/send_risk.php",
+                                url: "../managers/pilos_tracking/send_risk_email.php",
                                 success: function(msg) {
                                     console.log(msg);
                                 },
@@ -148,7 +157,7 @@
 
                     $('#modal_v2_peer_tracking').fadeIn(300);
 
-                    $('.id_estudiante').find('input').val(get_student_code());
+                    $('.id_estudiante').find('input').val( get_student_code() );
 
                     var codigo_monitor = $('#current_user_id').val();
                     $('.id_creado_por').find('input').val(codigo_monitor);

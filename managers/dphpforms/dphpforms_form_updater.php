@@ -1,6 +1,7 @@
 <?php 
     
     require_once(dirname(__FILE__). '/../../../../config.php');
+    require_once('dphpforms_functions.php');
 
     if(isset($_GET['function'])){
         if($_GET['function'] == 'get_forms'){
@@ -90,7 +91,6 @@
                 }
                 die();
             }
-
             //Actualizador de enunciados de preguntas
             if($json_post->function == 'update_pregunta_enunciado'){
                 header('Content-Type: application/json');
@@ -138,6 +138,47 @@
                 header('Content-Type: application/json');
                 
                 if(update_pregunta_opciones($post->pregunta_id, $post->opciones) == 0){
+                    echo json_encode(
+                        array(
+                            'status' => '0',
+                            'message' => 'Updated'
+                        )
+                    );
+                }else{
+                    echo json_encode(
+                        array(
+                            'status' => '-1',
+                            'message' => 'Error'
+                        )
+                    );
+                }
+                die();
+            }
+            //Crear pregunta
+            if($json_post->function == 'create_pregunta'){
+                //header('Content-Type: application/json');
+                if(!(create_pregunta($post->form_id, $post->json_pregunta) == -1)){
+                    echo json_encode(
+                        array(
+                            'status' => '0',
+                            'message' => 'Created'
+                        )
+                    );
+                }else{
+                    echo json_encode(
+                        array(
+                            'status' => '-1',
+                            'message' => 'Error'
+                        )
+                    );
+                }
+                die();
+            }
+
+            //Actualizar posiciones
+            if($json_post->function == 'update_positions'){
+                //header('Content-Type: application/json');
+                if(!(update_positions($post->form_id, $post->ordenamiento) == -1)){
                     echo json_encode(
                         array(
                             'status' => '0',
@@ -377,6 +418,92 @@
         $sql = "SELECT * FROM {talentospilos_df_tipo_campo} WHERE id = '$id'";
         return $DB->get_record_sql($sql);
 
+    }
+
+    function create_pregunta($form_id, $pregunta){
+
+        global $DB;
+
+        /*
+            {
+                "id_temporal": "cmp_XX",
+                "enunciado": "Campo ABC",
+                "tipo_campo": "CHECKBOX|TEXTAREA|ETC",
+                "opciones_campo": [
+                    { "enunciado": "Opc_1", "valor": "0", "posicion": "1" }
+                ],
+                "atributos_campo": {
+                    "class": "css_selector_campo_abc col-xs-## col-sm-## col-md-## col-lg-##",
+                    "name": "campo_abc",
+                    "required": "false",
+                    "maxlength": "####",
+                    "local_alias": "local_alias_campo_abc"
+                },
+                "permisos_campo": [
+                    { "rol": "rol_1", "permisos": ["lectura"] },
+                    { "rol": "rol_2", "permisos": ["lectura", "escritura"] }
+                ]
+            }
+        */
+        $obj_pregunta = json_decode( $pregunta );
+        $pregunta_details = array(
+            'tipo_campo' => $obj_pregunta->tipo_campo,
+            'opciones_campo' => $obj_pregunta->opciones_campo,
+            'atributos_campo' => $obj_pregunta->atributos_campo,
+            'enunciado' => $obj_pregunta->enunciado,
+            'permisos_campo' => $obj_pregunta->permisos_campo 
+        );
+        $pregunta_id = dphpforms_store_pregunta( $pregunta_details );
+        $form_preg_id = -1;
+
+        if($pregunta_id){
+
+            $sql_last_pregunta = "SELECT * FROM {talentospilos_df_form_preg}  WHERE id_formulario = '$form_id' ORDER BY posicion DESC LIMIT 1";
+            $last_pregunta = $DB->get_record_sql($sql_last_pregunta);
+
+            $form_preg = new stdClass();
+            $form_preg->id_formulario = $form_id;
+            $form_preg->id_pregunta = $pregunta_id;
+            if($last_pregunta){
+                $form_preg->posicion = $last_pregunta->posicion + 1;
+            }else{
+                $form_preg->posicion = 0;
+            }
+            $form_preg->estado = 1;
+            $form_preg_id = $DB->insert_record('talentospilos_df_form_preg', $form_preg, $returnid=true, $bulk=false);
+            
+        }
+
+        return $form_preg_id;
+
+        //return -1;
+    }
+
+    function get_json_ordenamiento($form_id){
+        $preguntas = array_values( get_preguntas_form($form_id) );
+        $obj_preguntas_orden = array();
+        foreach( $preguntas as $key => $pregunta ){
+            array_push( 
+                $obj_preguntas_orden, 
+                array(
+                    'id_temporal' => $pregunta->id,
+                    'nueva_posicion' => $pregunta->posicion
+                ) 
+            );
+        }
+        return json_encode( $obj_preguntas_orden );
+    }
+
+    function update_positions($form_id, $preguntas){
+
+        global $DB;
+        $obj_preguntas = json_decode( $preguntas );
+        foreach($obj_preguntas as $key => $pregunta){
+            update_pregunta_position($pregunta->id_temporal, $pregunta->nueva_posicion);
+        }
+
+        return 0;
+        
     }
     
 ?>

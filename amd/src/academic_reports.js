@@ -45,7 +45,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables', 'block_ases/s
               type: "load_loses"
             },
             //Calls processing academic_reports_processing to execute ajax
-            url: "../managers/general_reports/academic_reports_processing.php",
+            url: "../managers/academic_reports/academic_reports_processing.php",
             success: function(msg){
               //Display all lose subjects
               swal({ 

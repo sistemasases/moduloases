@@ -25,6 +25,9 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
 
             $(document).ready(function() {
 
+
+                ///////////////////////////////////////////////////////////7
+
                 $(".se-pre-con").fadeOut('slow');
                 $("#reemplazarToogle").fadeIn("slow");
 
@@ -70,6 +73,43 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                         });
                     },
                 });
+
+
+            /*When click on the student's name, open the container with the information of 
+            the follow-ups of that date*/
+
+                /*$('a[class*="student"]').click(function() {
+                var student_code = $(this).attr('href').split("#student")[1];
+                var student_id = $(this).attr('href');
+
+                //Fill container with the information corresponding to the trackings of 
+                the selected student
+                $.ajax({
+                    type: "POST",
+                    data: {
+                        type: "get_student_trackings",
+                        student_code: student_code,
+                        instance:instance
+                    },
+                    url: "../managers/pilos_tracking/pilos_tracking_report.php",
+                    async: false,
+                    success: function(msg
+                        ) {
+                    $(student_id + " > div").append(msg);
+                    },
+                    dataType: "json",
+                    cache: "false",
+                    error: function(msg) {
+                        swal({
+                            title: "Error al cargar seguimientos del estudiantes",
+                            html: true,
+                            type: "error",
+                            confirmButtonColor: "#d51b23"
+                        });
+                    },
+                });
+                
+            });*/
 
 
                 name = "";
