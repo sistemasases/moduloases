@@ -55,40 +55,52 @@ function studentsWithLoses($instance){
         $semestre = $año.'08';
 	}
 	
-	$query_prog = "
-		SELECT pgr.cod_univalle as cod
-		FROM {talentospilos_instancia} inst
-		INNER JOIN {talentospilos_programa} pgr ON inst.id_programa = pgr.id
-		WHERE inst.id_instancia= $instance";
 
-	$prog = $DB->get_record_sql($query_prog)->cod;    
-
-    //If program code begins with 1008 then cohort will begin with SP, otherwise with the program code
-	if($prog === '1008'){
-		$cohort = 'SP';
-	}else{
-		$cohort = $prog;
-	}
-
-	$query = "SELECT estudiantes.*, COUNT(grades.id) as cantidad
-	FROM (SELECT user_m.id,SUBSTRING(user_m.username FROM 1 FOR 7) as codigo, user_m.firstname, user_m.lastname,user_m.username
-		 FROM  {user} user_m
-         INNER JOIN {talentospilos_user_extended} extended ON user_m.id = extended.id_moodle_user 
-		 INNER JOIN {talentospilos_usuario} user_t ON extended.id_ases_user = user_t.id
-		 INNER JOIN {talentospilos_est_estadoases} estado_u ON user_t.id = estado_u.id_estudiante
-		 INNER JOIN {talentospilos_estados_ases} estados ON estados.id = estado_u.id_estado_ases
-		 WHERE estados.nombre = 'ACTIVO/SEGUIMIENTO'
-	
-		INTERSECT
-	
-		SELECT user_m.id, SUBSTRING(user_m.username FROM 1 FOR 7) as codigo, user_m.firstname, user_m.lastname,user_m.username
-		FROM {user} user_m INNER JOIN {cohort_members} memb ON user_m.id = memb.userid INNER JOIN {cohort} cohorte ON memb.cohortid = cohorte.id
-		WHERE cohorte.idnumber LIKE '$cohort%') estudiantes INNER JOIN {grade_grades} grades ON estudiantes.id = grades.userid
-		INNER JOIN {grade_items} items ON grades.itemid = items.id 
-		INNER JOIN {course} curso ON curso.id = items.courseid
-	WHERE SUBSTRING(curso.shortname FROM 15 FOR 6) = '$semestre' AND
-		  grades.finalgrade < 3 
-	GROUP BY estudiantes.id, estudiantes.codigo, estudiantes.firstname, estudiantes.lastname, estudiantes.username";
+	$query = "  SELECT     estudiantes.*,
+                Count(grades.id) AS cantidad
+            FROM       (
+                        SELECT     user_m.id,
+                                    substring(user_m.username from 1 FOR 7) AS codigo,
+                                    user_m.firstname,
+                                    user_m.lastname,
+                                    user_m.username
+                        FROM       {user} user_m
+                        INNER JOIN {talentospilos_user_extended} extended
+                        ON         user_m.id = extended.id_moodle_user
+                        INNER JOIN {talentospilos_usuario} user_t
+                        ON         extended.id_ases_user = user_t.id
+                        INNER JOIN {talentospilos_est_estadoases} estado_u
+                        ON         user_t.id = estado_u.id_estudiante
+                        INNER JOIN {talentospilos_estados_ases} estados
+                        ON         estados.id = estado_u.id_estado_ases
+                        WHERE      estados.nombre = 'ACTIVO/SEGUIMIENTO'
+                        INTERSECT
+                        SELECT     user_m.id,
+                                    substring(user_m.username FROM 1 FOR 7) AS codigo,
+                                    user_m.firstname,
+                                    user_m.lastname,
+                                    user_m.username
+                        FROM       {user} user_m
+                        INNER JOIN {cohort_members} memb
+                        ON         user_m.id = memb.userid
+                        WHERE      memb.cohortid IN
+                                    (
+                                            SELECT id_cohorte
+                                            FROM   {talentospilos_inst_cohorte}
+                                            WHERE  id_instancia = $instance) ) estudiantes
+            INNER JOIN {grade_grades} grades
+            ON         estudiantes.id = grades.userid
+            INNER JOIN {grade_items} items
+            ON         grades.itemid = items.id
+            INNER JOIN {course} curso
+            ON         curso.id = items.courseid
+            WHERE      substring(curso.shortname FROM 15 FOR 6) = '$semestre'
+            AND        grades.finalgrade < 3
+            GROUP BY   estudiantes.id,
+                estudiantes.codigo,
+                estudiantes.firstname,
+                estudiantes.lastname,
+                estudiantes.username ";
 
 	$result = $DB->get_records_sql($query);
 	return $result;
