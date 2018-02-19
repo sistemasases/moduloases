@@ -487,6 +487,7 @@ if ($student_code != 0) {
         'index' => $seguimientos_array['index'],
         'periodos' => $array_periodos,
     );
+    //print_r($record->peer_tracking_v2);
     //print_r(json_encode($record->peer_tracking_v2));
 
     $enum_risk = array();

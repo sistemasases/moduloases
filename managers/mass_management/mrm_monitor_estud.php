@@ -42,8 +42,8 @@ if (isset($_FILES['file']) || isset($_POST['idinstancia'])) {
         if (!file_exists($rootFolder)) {
             mkdir($rootFolder, 0777, true);
         }
-        if (!file_exists($zipFolder)) {
-            mkdir($zipFolder, 0777, true);
+        if (!file_exists($zipFolfer)) {
+            mkdir($zipFolfer, 0777, true);
         }
 
         //deletes everything from folders

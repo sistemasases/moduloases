@@ -75,6 +75,8 @@ function send_email($risk_array, $observations_array, $id_receiving_user, $id_st
 
     $emailToUser = new stdClass;
     $emailFromUser = new stdClass;
+    $emailToUserPract = new stdClass();
+
     $sql_query = "select id_estudiante from {talentospilos_seg_estudiante}  where id_seguimiento=".$id_student_pilos;
     $id_student = $DB->get_record_sql($sql_query);
 
@@ -176,21 +178,24 @@ function send_email_dphpforms($json_risk_observation_, $student_code, $date, $su
 
     $emailToUser = new stdClass;
     $emailFromUser = new stdClass;
+    $emailToUserPract = new stdClass();
+    
+    //print_r(get_ases_user_by_code($student_code));
+    $id_estudiante = get_ases_user_by_code($student_code)->id;
 
-    $id_moodle = get_id_user_moodle( get_ases_user_by_code($student_code)->id );
-
-    $id_professional = get_id_assigned_professional($id_moodle);
-    $id_practicante = get_id_assigned_pract($id_moodle);
+    $id_professional = get_id_assigned_professional($id_estudiante);
+    $id_practicante = get_id_assigned_pract($id_estudiante);
     
     $sending_user = get_user_by_username('sistemas1008');
     $receiving_user = get_full_user($id_professional);
     
     $receiving_user_pract = get_full_user($id_practicante);
-    $student_info = get_user_moodle($id_moodle);
-    
+    $student_info = get_user_moodle($id_estudiante);
+
     $emailToUser->email = $receiving_user->email;
     $emailToUser->firstname = $receiving_user->firstname;
     $emailToUser->lastname = $receiving_user->lastname;
+    $emailToUser->username = $receiving_user->username;
     $emailToUser->maildisplay = true;
     $emailToUser->mailformat = 1;
     $emailToUser->id = $receiving_user->id; 
@@ -203,6 +208,7 @@ function send_email_dphpforms($json_risk_observation_, $student_code, $date, $su
     $emailToUserPract->email = $receiving_user_pract->email;
     $emailToUserPract->firstname = $receiving_user_pract->firstname;
     $emailToUserPract->lastname = $receiving_user_pract->lastname;
+    $emailToUserPract->username = $receiving_user_pract->username;
     $emailToUserPract->maildisplay = true;
     $emailToUserPract->mailformat = 1;
     $emailToUserPract->id = $receiving_user_pract->id; 
@@ -214,6 +220,7 @@ function send_email_dphpforms($json_risk_observation_, $student_code, $date, $su
     $emailFromUser->email = $sending_user->email;
     $emailFromUser->firstname = 'Seguimiento';
     $emailFromUser->lastname = 'Sistema de';
+    $emailFromUser->username = $sending_user->username;
     $emailFromUser->maildisplay = false;
     $emailFromUser->mailformat = 1;
     $emailFromUser->id = $sending_user->id; 
@@ -265,9 +272,13 @@ function send_email_dphpforms($json_risk_observation_, $student_code, $date, $su
     $messageHtml .= "El registro fue realizado por: <b>$USER->firstname $USER->lastname</b><br><br>";
     $messageHtml .= "Puede revisar el registro de seguimiento haciendo clic <a href='$track_url'>aquí</a>.";
     
-    $email_result = email_to_user($emailToUser, $emailFromUser, $subject, $messageText, $messageHtml, ", ", true);
-    $email_result = email_to_user($emailToUserPract, $emailFromUser, $subject, $messageText, $messageHtml, ", ", true);
+
+    //return json_encode($emailToUser) ."  ". json_encode($emailFromUser) ."  ". json_encode($subject) ."  ". json_encode($messageText) ."  ". json_encode($messageHtml);
+
+    $email_result = email_to_user($emailToUser, $emailFromUser, "", "", $messageHtml, ", ", true);
+    $email_result = email_to_user($emailToUserPract, $emailFromUser, "", "", $messageHtml, ", ", true);
     
+    //return 'Resultado: ' . $email_result . ' Usuarios: ' .  json_encode($emailToUser) ." |||| ". json_encode($emailFromUser);
     return $email_result;
 }
 ?>
