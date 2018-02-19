@@ -94,7 +94,8 @@ if (isset($_FILES['file']) || isset($_POST['idinstancia'])) {
                     array_push($detail_erros, [$line_count, $lc_wrongFile, ($associativeTitles['username_estudiante'] + 1), 'username_estudiante', 'El campo No puede ser vacio']);
                 } else {
 
-                    $result = get_userById(array('idtalentos'), $data[$associativeTitles['username_estudiante']]);
+                    // $result = get_userById(array('idtalentos'), $data[$associativeTitles['username_estudiante']]);
+                    $result = get_ases_user_by_code($data[$associativeTitles['username_estudiante']]);                    
 
                     if (!$result) {
                         $isValidRow = false;

@@ -4,9 +4,9 @@ require "dateValidator.php";
 
 $id = $_POST['codigo'];
 if(isset($_POST['codigo'])){
-    if($result = get_userById('*',$id)){
+    if($result = get_ases_user_by_code($id)){
         //se consulta enfasis en caso de qeu exista
-        $enfasis = getEnfasisFinal($result->idtalentos);
+        $enfasis = getEnfasisFinal($result->id);
         if($enfasis) {
             $result->nom_enfasis = $enfasis->nom_enfasis;
             

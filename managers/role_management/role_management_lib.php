@@ -136,14 +136,15 @@ function monitor_student_assignment($username_monitor, $array_students, $idinsta
        
         foreach($array_students as $student)
         {
-                $studentid = get_userById(array('*'),$student);
+                // $studentid = get_userById(array('*'),$student);
+                $studentid =get_ases_user_by_code($student);
                 $semestre_act = get_current_semester();
 
 
 
                 if($studentid){
                     //se valida si el estudiante ya tiene asignado un monitor
-                    $sql_query = "SELECT u.id as id, username,firstname, lastname FROM {talentospilos_monitor_estud} me INNER JOIN {user} u  ON  u.id = me.id_monitor WHERE me.id_semestre =".$semestre_act->max."  AND me.id_estudiante =".$studentid->idtalentos."";
+                    $sql_query = "SELECT u.id as id, username,firstname, lastname FROM {talentospilos_monitor_estud} me INNER JOIN {user} u  ON  u.id = me.id_monitor WHERE me.id_semestre =".$semestre_act->max."  AND me.id_estudiante =".$studentid->id."";
                     $hasmonitor = $DB->get_record_sql($sql_query);
                 
                     if(!$hasmonitor){
