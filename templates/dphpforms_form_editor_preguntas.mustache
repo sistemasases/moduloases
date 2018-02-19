@@ -14,9 +14,6 @@
         </div>
         <div class="row">
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                <textarea id="ordenamiento" class="form-control"></textarea>
-            </div>
-            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                 <hr>
                 <div class="peer_trackings_v2" id="peer_trackings_v2" name="peer_trackings_v2">
                     <div id="accordion_v2">
@@ -73,11 +70,6 @@
                     </div>
                 </div>
 
-
-
-
-
-                
                 <hr>
 
                 <div class="peer_trackings_v2" id="peer_trackings_v2" name="peer_trackings_v2">
@@ -130,8 +122,17 @@
                         </div>
                     </div>
                 </div>
-
-
+                <hr>
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <h3>Actualizador de posiciones</h3>
+                    <hr>
+                    <div class="form-group">
+                        <textarea id="ordenamiento" class="form-control" rows="9">{{{json_ordenamiento}}}</textarea>
+                    </div>
+                    <div class="form-group">
+                        <a id="actualizar-orden" href="javascript:void(0)" class="btn btn-danger btn-sm btn-dphpforms btn-dphpforms-univalle" data-form-id="{{form_id}}">Actualizar orden</a>
+                    </div>
+                </div>
                 
 
             </div>

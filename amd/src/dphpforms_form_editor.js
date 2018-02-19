@@ -283,6 +283,50 @@
                     
                 });
 
+                $('#actualizar-orden').click(function(){
+                    
+                    var form_id = $(this).attr('data-form-id');
+                    console.log( 'FormID: ' + form_id );
+                    swal({
+                        html:true,
+                        title: 'Confirmación',
+                        text: "<strong>Nota importante!</strong>: Está actualizando el orden de las pregunta, ¿desea continuar?",
+                        type: 'warning',
+                        showCancelButton: true,
+                        confirmButtonText: 'Sí, Actualizar!'
+                      }, function(isConfirm) {
+                        if (isConfirm) {
+                            
+
+                            $.ajax({
+                                method: "POST",
+                                url: "../managers/dphpforms/dphpforms_form_updater.php",
+                                contentType: "application/json",
+                                dataType: "text",
+                                data: JSON.stringify({"function":"update_positions", "form_id":form_id, "ordenamiento":$('#ordenamiento').val()}) ,
+                                success: function( msg ){
+                                    //msg = JSON.parse( msg );
+                                    console.log(msg);
+                                    /*if( msg['status'] == 0 ){
+                                        alert('Actualizado');
+                                        
+                                    }else if( msg['status'] == -1 ){
+                                          alert('Error');
+                                    }*/
+                                    
+                                },
+                                error: function( XMLHttpRequest, textStatus, errorThrown ) {
+                                    alert('Informe de este error');
+                                    console.log( "some error " + textStatus + " " + errorThrown );
+                                    console.log( XMLHttpRequest );
+                                }
+                            });
+
+                        }
+                    });
+                    
+                });
+
                 $('.btn-remove-form').click(function(){
                     var form_name = $(this).attr('data-form-name');
                     var form_id = $(this).attr('data-form-id');

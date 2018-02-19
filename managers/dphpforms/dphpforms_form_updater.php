@@ -175,6 +175,27 @@
                 die();
             }
 
+            //Actualizar posiciones
+            if($json_post->function == 'update_positions'){
+                //header('Content-Type: application/json');
+                if(!(update_positions($post->form_id, $post->ordenamiento) == -1)){
+                    echo json_encode(
+                        array(
+                            'status' => '0',
+                            'message' => 'Updated'
+                        )
+                    );
+                }else{
+                    echo json_encode(
+                        array(
+                            'status' => '-1',
+                            'message' => 'Error'
+                        )
+                    );
+                }
+                die();
+            }
+
         }
     };
 
@@ -459,7 +480,30 @@
     }
 
     function get_json_ordenamiento($form_id){
-        $preguntas = get_preguntas_form($form_id);
+        $preguntas = array_values( get_preguntas_form($form_id) );
+        $obj_preguntas_orden = array();
+        foreach( $preguntas as $key => $pregunta ){
+            array_push( 
+                $obj_preguntas_orden, 
+                array(
+                    'id_temporal' => $pregunta->id,
+                    'nueva_posicion' => $pregunta->posicion
+                ) 
+            );
+        }
+        return json_encode( $obj_preguntas_orden );
+    }
+
+    function update_positions($form_id, $preguntas){
+
+        global $DB;
+        $obj_preguntas = json_decode( $preguntas );
+        foreach($obj_preguntas as $key => $pregunta){
+            update_pregunta_position($pregunta->id_temporal, $pregunta->nueva_posicion);
+        }
+
+        return 0;
+        
     }
     
 ?>
