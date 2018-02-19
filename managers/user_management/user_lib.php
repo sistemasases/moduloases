@@ -91,7 +91,7 @@ function get_students($instanceid)
          INNER JOIN {talentospilos_usuario}  user_t ON extended.id_ases_user = user_t.id
          INNER JOIN {talentospilos_est_estadoases}  estado_u ON user_t.id = estado_u.id_estudiante
          INNER JOIN {talentospilos_estados_ases}  estados ON estados.id = estado_u.id_estado_ases
-         WHERE estados.nombre = 'ACTIVO/SEGUIMIENTO' 
+         WHERE estados.nombre = 'seguimiento' 
     INTERSECT
 
     SELECT user_m.id, user_m.username,user_m.firstname,user_m.lastname

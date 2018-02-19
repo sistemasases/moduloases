@@ -3,7 +3,7 @@
     
   global $DB;
   $students = $DB->get_records_sql("SELECT id FROM {talentospilos_usuario} WHERE id NOT IN (SELECT id_estudiante FROM {talentospilos_est_estadoases})");
-  $state = $DB->get_record_sql("SELECT id FROM {talentospilos_estados_ases} WHERE nombre = 'ACTIVO/SEGUIMIENTO'")->id;
+  $state = $DB->get_record_sql("SELECT id FROM {talentospilos_estados_ases} WHERE nombre = 'seguimiento'")->id;
   foreach($students as $id){
       $record = new stdClass;
       $record->id_estudiante = $id->id;
