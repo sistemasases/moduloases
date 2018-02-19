@@ -35,6 +35,10 @@
                     window.location.href = "dphpforms_form_editor.php" + get_url_parameters(window.location.href);
                 });
 
+                $('#dphpforms-redirect-new-pregu').click(function(){
+                    window.location.href = "dphpforms_form_creator_pregunta.php" + get_url_parameters(window.location.href) + '&form_id=' + $(this).attr('data-form-id');
+                });
+
                 $('.btn-editor-form').click(function(){
                     window.location.href = "dphpforms_form_editor_preguntas.php" + get_url_parameters(window.location.href) + '&form_id=' + $(this).attr('data-form-id');
                 });
@@ -234,14 +238,50 @@
                     
                 });
 
+                $('#registrar-pregunta').click(function(){
+                    
+                    var form_id = $(this).attr('data-form-id');
+                    swal({
+                        html:true,
+                        title: 'Confirmación',
+                        text: "<strong>Nota importante!</strong>: Está registrando una nueva pregunta en el formulario, ¿desea continuar?",
+                        type: 'warning',
+                        showCancelButton: true,
+                        confirmButtonText: 'Sí, Crear!'
+                      }, function(isConfirm) {
+                        if (isConfirm) {
+                            
 
-                function test(){
-                    swal(
-                        'Good job!',
-                        'You clicked the button!',
-                        'success'
-                      )
-                }
+                            $.ajax({
+                                method: "POST",
+                                url: "../managers/dphpforms/dphpforms_form_updater.php",
+                                contentType: "application/json",
+                                dataType: "text",
+                                data: JSON.stringify({"function":"create_pregunta", "form_id":form_id, "json_pregunta":$('#json_pregunta').val()}) ,
+                                success: function( msg ){
+                                    msg = JSON.parse( msg );
+                                    console.log( msg );
+                                    if( msg['status'] == 0 ){
+                                        alert('Creada');
+                                        $('#json_pregunta').val('');
+                                        
+                                    }else if( msg['status'] == -1 ){
+                                          alert('Formulario inexistente o JSON-pregunta vacio');
+                                    }
+                                    
+                                },
+                                error: function( XMLHttpRequest, textStatus, errorThrown ) {
+
+                                    alert('Informe de este error');
+                                    console.log( "some error " + textStatus + " " + errorThrown );
+                                    console.log( XMLHttpRequest );
+                                }
+                            });
+
+                        }
+                    });
+                    
+                });
 
                 $('.btn-remove-form').click(function(){
                     var form_name = $(this).attr('data-form-name');

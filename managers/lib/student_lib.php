@@ -355,7 +355,7 @@ function get_assigned_professional($id_student)
                               FROM {user} WHERE id = $id_professional ;";
                 $professional_object = $DB->get_record_sql($sql_query);
                 //$tmp = (array) $professional_object;
-                print_r($professional_object);
+                //print_r($professional_object);
                 if(!isset($professional_object->firstname)){
                     $professional_object = array();
                 }
