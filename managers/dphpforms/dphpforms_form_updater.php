@@ -457,5 +457,9 @@
 
         //return -1;
     }
+
+    function get_json_ordenamiento($form_id){
+        $preguntas = get_preguntas_form($form_id);
+    }
     
 ?>
