@@ -108,7 +108,6 @@ $intervalo_fechas[1] =reset($periods)->fecha_fin;
 $intervalo_fechas[2] =reset($periods)->id;
 
 
-//organiza el select de periodos.
 // Sort periods Select
 $table_periods.=get_period_select($periods);
 
