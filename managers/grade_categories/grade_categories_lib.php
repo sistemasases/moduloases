@@ -96,7 +96,7 @@ function get_courses_pilos($instanceid){
             INNER JOIN {talentospilos_user_extended} extended ON user_m.id = extended.id_moodle_user
             INNER JOIN {talentospilos_est_estadoases} estado_u ON extended.id_ases_user = estado_u.id_estudiante
             INNER JOIN {talentospilos_estados_ases} estados ON estados.id = estado_u.id_estado_ases
-            WHERE estados.nombre = 'ACTIVO/SEGUIMIENTO'
+            WHERE estados.nombre = 'seguimiento'
             
             INTERSECT
 

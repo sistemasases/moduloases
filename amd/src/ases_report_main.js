@@ -16,7 +16,6 @@ define(['jquery', 'block_ases/datatables', 'block_ases/buttons.flash', 'block_as
                 createTableAssign();
             });
 
-
             //Asignación de estudiantes a monitores/practicantes por parte de profesional. 
             $(document).on('click', '#tableAssign tbody tr td #student_assign', function() {
                 var table = $("#tableAssign").DataTable();
@@ -51,8 +50,6 @@ define(['jquery', 'block_ases/datatables', 'block_ases/buttons.flash', 'block_as
                         url: "../managers/ases_report/asesreport.php",
                         success: function(msg) {
                             alert(msg);
-
-
                         },
 
                         dataType: "text",
