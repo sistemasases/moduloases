@@ -68,6 +68,7 @@ $rol = get_role_ases($USER->id);
 $record->preguntas_form = array_values(get_preguntas_form($form_id));
 $record->preguntas_permissions = array_values(get_permisos_form($form_id));
 $record->form_id = $form_id;
+$record->json_ordenamiento = get_json_ordenamiento($form_id);
 
 $PAGE->set_context($contextcourse);
 $PAGE->set_context($contextblock);
