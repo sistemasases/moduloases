@@ -157,7 +157,7 @@
 
                     $('#modal_v2_peer_tracking').fadeIn(300);
 
-                    $('.id_estudiante').find('input').val(get_student_code());
+                    $('.id_estudiante').find('input').val( get_student_code() );
 
                     var codigo_monitor = $('#current_user_id').val();
                     $('.id_creado_por').find('input').val(codigo_monitor);
