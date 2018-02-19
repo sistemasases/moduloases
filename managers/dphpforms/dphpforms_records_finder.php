@@ -47,6 +47,7 @@
             );
         };
 
+        /* !!!!!!!!!! Modificación temporal de la consulta del criterio en la respuesta con un LIKE */
         $sql = "SELECT FRS.id_formulario_respuestas AS id_registro, FRS.fecha_hora_registro_respuesta AS fecha_hora_registro
         FROM {talentospilos_df_respuestas} AS R 
         INNER JOIN 
@@ -58,7 +59,7 @@
         WHERE FR.id_formulario = '" . $FORM_ID . "' AND FR.estado = 1
             ) AS FRS 
         ON FRS.id_respuesta = R.id
-        WHERE R.respuesta = '" . $criterio . "' AND R.id_pregunta = '" . $PREGUNTA_ID . "'
+        WHERE R.respuesta LIKE '" . $criterio . "%' AND R.id_pregunta = '" . $PREGUNTA_ID . "'
         ORDER BY FRS.fecha_hora_registro_respuesta " . $order;
 
         $resultados = $DB->get_records_sql($sql);
