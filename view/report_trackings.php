@@ -31,8 +31,12 @@ require_once($CFG->libdir.'/adminlib.php');
 require_once('../managers/pilos_tracking/tracking_functions.php');
 require_once('../managers/instance_management/instance_lib.php');
 require_once ('../managers/permissions_management/permissions_lib.php');
+require_once ('../managers/role_management/role_management_lib.php');
+
 require_once ('../managers/validate_profile_action.php');
 require_once ('../managers/menu_options.php');
+
+require_once ('../managers/lib/student_lib.php');
 
 
 include('../lib.php');
@@ -104,34 +108,35 @@ $intervalo_fechas[1] =reset($periods)->fecha_fin;
 $intervalo_fechas[2] =reset($periods)->id;
 
 
-//organiza el select de periodos.
 // Sort periods Select
 $table_periods.=get_period_select($periods);
 
 if($usernamerole=='monitor_ps'){
 
+    //Get the trackings of the students related to the connected monitor.
 
-    // All students from a monitor are retrieved in the instance and the array that will be transformed in toogle is sorted.
-    $seguimientos = monitorUser($globalArregloPares,$globalArregloGrupal,$USER->id,0,$blockid,$userrole,$intervalo_fechas);
-    $table.=has_tracking($seguimientos);
+    $monitor_id =$USER->id;
+    $students_by_monitor=get_students_of_monitor($monitor_id,$blockid);
+    $table.=render_monitor_new_form($students_by_monitor);
+
 
 }elseif($usernamerole=='practicante_ps'){
+   
+    //Get trackings of students associated with a set of monitors assigned to a practicant.
+    $practicant_id =$USER->id;
+    $monitors_of_pract = get_monitors_of_pract($practicant_id,$blockid);
+    $table.=render_practicant_new_form($monitors_of_pract,$blockid);
 
-
-    
-    // All students from a practicant (practicante) are retrieved in the instance and the array that will be transformed in toogle is sorted.
-    $seguimientos =practicanteUser($globalArregloPares,$globalArregloGrupal,$USER->id,$blockid,$userrole,$intervalo_fechas);
-    $table.=has_tracking($seguimientos);
 
 }elseif($usernamerole=='profesional_ps'){
 
+    //Get trackings of students associated with a set of monitors in turn assigned to a practitioner of a professional.
+    $professional_id=$USER->id;
+    $practicant_of_prof=get_pract_of_prof($professional_id,$blockid);
+    $table.=render_professional_new_form($practicant_of_prof,$blockid);
 
-    
-    // All students from a professional (profesional) are retrieved in the instance and the array that will be transformed in toogle is sorted.
-    $seguimientos = profesionalUser($globalArregloPares,$globalArregloGrupal,$USER->id,$blockid,$userrole,$intervalo_fechas);
-    $table.=has_tracking($seguimientos);
 
-}elseif($usernamerole=='sistemas' or $username == "administrador" or $username == "sistemas1008" or $username == "Administrador"){
+}elseif($usernamerole=='sistemas'){
 
     //Gets all existent periods and roles containing "_ps"
     $roles = get_rol_ps();
@@ -149,26 +154,24 @@ $table_permissions=show_according_permissions($table,$actions);
 $data->table_periods =$table_periods;
 $data->table=$table_permissions;
 
+$PAGE->requires->css('/blocks/ases/style/jqueryui.css', true);
 $PAGE->requires->css('/blocks/ases/style/styles_pilos.css', true);
-$PAGE->requires->css('/blocks/ases/style/bootstrap_pilos.css', true);
-$PAGE->requires->css('/blocks/ases/style/datepicker.css', true);
-$PAGE->requires->css('/blocks/ases/style/bootstrap_pilos.min.css', true);
+$PAGE->requires->css('/blocks/ases/style/bootstrap.min.css', true);
 $PAGE->requires->css('/blocks/ases/style/sweetalert.css', true);
-$PAGE->requires->css('/blocks/ases/style/round-about_pilos.css', true);
-$PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/dataTables.foundation.css', true);
-$PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/dataTables.foundation.min.css', true);
-$PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/dataTables.jqueryui.css', true);
-$PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/dataTables.jqueryui.min.css', true);
-$PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/jquery.dataTables.css', true);
-$PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/jquery.dataTables.min.css', true);
-$PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/jquery.dataTables_themeroller.css', true);
-$PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/dataTables.tableTools.css', true);
-$PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/NewCSSExport/buttons.dataTables.min.css', true);
-$PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/dataTables.tableTools.css', true);
-$PAGE->requires->css('/blocks/ases/style/sweetalert.css', true);
+$PAGE->requires->css('/blocks/ases/style/sweetalert2.css', true);
+$PAGE->requires->css('/blocks/ases/style/sugerenciaspilos.css', true);
+$PAGE->requires->css('/blocks/ases/style/forms_pilos.css', true);
+$PAGE->requires->css('/blocks/ases/style/c3.css', true);
+$PAGE->requires->css('/blocks/ases/style/student_profile_risk_graph.css', true);
 $PAGE->requires->css('/blocks/ases/js/select2/css/select2.css', true);
 $PAGE->requires->css('/blocks/ases/style/side_menu_style.css', true);
+//Pendiente para cambiar el idioma del nombre del archivo junto con la estructura de
+//su nombramiento.
+$PAGE->requires->css('/blocks/ases/style/creadorFormulario.css', true);
+
 $PAGE->requires->js_call_amd('block_ases/pilos_tracking_main','init');
+$PAGE->requires->js_call_amd('block_ases/dphpforms_form_renderer', 'init');
+
 $PAGE->set_url($url);
 $PAGE->set_title($title);
 

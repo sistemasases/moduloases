@@ -44,6 +44,23 @@ function get_monitors_of_pract($id_pract,$id_instance){
     return $monitors;
 }
 
+/**
+ * Función que obtiene estudiantes de un monitor en el periodo actual
+ *
+ * @see get_monitors_of_pract($id_pract,$id_instance)
+ * @return Array
+ */
+function get_students_of_monitor($id_monitor,$id_instance){
+   global $DB;
+
+    $current_semester = get_current_semester();
+    $sql_query = "select * from {talentospilos_monitor_estud} where id_semestre=$current_semester->max and id_monitor=$id_monitor and id_instancia=$id_instance";
+
+    $students = $DB->get_records_sql($sql_query);
+    return $students;
+}
+
+
 
 
 
