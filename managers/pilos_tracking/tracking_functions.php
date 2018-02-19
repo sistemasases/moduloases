@@ -45,7 +45,6 @@ function render_monitor_new_form($students_by_monitor,$period=null){
 
     foreach ($students_by_monitor as $student) {
         $student_code= get_user_moodle($student->id_estudiante);
-        $panel .= "<div class='panel panel-default'>";
         $student= explode("-", $student_code->username);
         $current_semester =get_current_semester();
 
@@ -55,7 +54,6 @@ function render_monitor_new_form($students_by_monitor,$period=null){
             $monitor_trackings= get_tracking_peer_student_current_semester($student[0], $period);
 
         }
-        
         if($monitor_trackings){
              $panel .= "<a data-toggle='collapse' class='student collapsed btn btn-danger btn-univalle btn-card collapsed' data-parent='#accordion_students' style='text-decoration:none' href='#student" .$student_code->username."'>";
             $panel .= "<div class='panel-heading heading_students_tracking'>";
@@ -74,7 +72,6 @@ function render_monitor_new_form($students_by_monitor,$period=null){
 
             $panel .= "</div>"; // End panel-body
             $panel .= "</div>"; // End collapse
-            $panel .= "</div>"; // End panel-collapse
         }
            
     }
@@ -98,7 +95,6 @@ function render_practicant_new_form($monitors_of_pract,$instance,$period=null){
     $panel="";
 
     foreach ($monitors_of_pract as $monitor) {
-        $panel .= "<div class='panel panel-default'>";
 
         $monitor_id =$monitor->id_usuario;
         $students_by_monitor=get_students_of_monitor($monitor_id,$instance);
@@ -128,8 +124,8 @@ function render_practicant_new_form($monitors_of_pract,$instance,$period=null){
         
             $panel .= "</div>"; // End panel-body
             $panel .= "</div>"; // End collapse
-            $panel .= "</div>"; // End panel-collapse
         }
+
     }
 
     return $panel;
