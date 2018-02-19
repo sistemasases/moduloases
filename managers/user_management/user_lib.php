@@ -25,6 +25,7 @@
 
 require_once(dirname(__FILE__) . '/../../../../config.php');
 require_once(dirname(__FILE__) . '/../periods_management/periods_lib.php');
+require_once(dirname(__FILE__) . '/../lib/student_lib.php');
 require_once(dirname(__FILE__) . '/../role_management/role_management_lib.php');
 
 /**
@@ -204,13 +205,16 @@ function drop_student_of_monitor($monitor, $student)
     $sql_query = "SELECT id FROM {user} WHERE username = '$monitor'";
     $idmonitor = $DB->get_record_sql($sql_query);
     
-    //id is gotten from student's {talentospilos_usuario} table
-    $studentid = get_userById(array(
-        'idtalentos'
-    ), $student);
+    //OBSOLETE METHOD
+    // $studentid = get_userById(array(
+    //     'idtalentos'
+    // ), $student);
+
+    //id is gotten from student's {talentospilos_usuario} table    
+    $studentid = get_ases_user_by_code($student);
     
     //where clause
-    $whereclause = "id_monitor = " . $idmonitor->id . " AND id_estudiante =" . $studentid->idtalentos;
+    $whereclause = "id_monitor = " . $idmonitor->id . " AND id_estudiante =" . $studentid->id;
     return $DB->delete_records_select('talentospilos_monitor_estud', $whereclause);
     
 }
@@ -232,15 +236,17 @@ function dropStudentofMonitor($monitor, $student)
     $idmonitor = $DB->get_record_sql($sql_query);
     
     //id is gotten from student's {talentospilos_usuario} table
-    $studentid = get_userById(array(
-        'idtalentos'
-    ), $student);
+    // $studentid = get_userById(array(
+    //     'idtalentos'
+    // ), $student);
+    $studentid = get_ases_user_by_code($student);
+    
     
     $semestre_act = get_current_semester();
     
     if ($studentid) {
         //where clause
-        $whereclause = "id_monitor = " . $idmonitor->id . " AND id_estudiante =" . $studentid->idtalentos . " AND id_semestre=" . $semestre_act->max;
+        $whereclause = "id_monitor = " . $idmonitor->id . " AND id_estudiante =" . $studentid->id . " AND id_semestre=" . $semestre_act->max;
         return $DB->delete_records_select('talentospilos_monitor_estud', $whereclause);
     }
 }
@@ -581,6 +587,7 @@ function update_program_director($username, $role, $id_instance, $status = 1, $i
 }
 
 /**
+ * 
  * Gets an user given his id
  * @see  get_userById($column, $id)
  * @param $column --> column that contains user's information
