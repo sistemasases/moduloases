@@ -968,7 +968,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     // ************************************************************************************************************
     // Actualización:
     // Se configuran los estados de la tabla talentospilos_estado_ases
-    // Versión en la que se incluye: Pendiente
+    // Versión en la que se incluye: 2018021909439
     // ************************************************************************************************************
 
     $register = $DB->get_record('talentospilos_estados_ases', array('nombre'=>'ACTIVO/SEGUIMIENTO'));

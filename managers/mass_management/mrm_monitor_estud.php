@@ -101,7 +101,7 @@ if (isset($_FILES['file']) || isset($_POST['idinstancia'])) {
                         $isValidRow = false;
                         array_push($detail_erros, [$line_count, $lc_wrongFile, ($associativeTitles['username_estudiante'] + 1), 'username_estudiante', 'No existe un usuario Ases asociado al username ' . $data[$associativeTitles['username_estudiante']]]);
                     } else {
-                        $id_estudiante = $result->idtalentos;
+                        $id_estudiante = $result->id;
                     }
 
                 }
