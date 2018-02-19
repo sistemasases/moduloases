@@ -114,46 +114,12 @@ $table_periods.=get_period_select($periods);
 
 if($usernamerole=='monitor_ps'){
 
-    //Obtener los estudiantes que tienen seguimiento en ese intervalo de fecha dado el monitor
+    //Get the trackings of the students related to the connected monitor.
 
     $monitor_id =$USER->id;
     $students_by_monitor=get_students_of_monitor($monitor_id,$blockid);
-    $table_monitor="";
+    $table=render_monitor_new_form($students_by_monitor);
 
-
-
-    foreach ($students_by_monitor as $student) {
-        $student_code= get_user_moodle($student->id_estudiante);
-        $panel .= "<div class='panel panel-default'>";
-            $panel .= "<a data-toggle='collapse' class='student collapsed btn btn-danger btn-univalle btn-card collapsed' data-parent='#accordion_students' style='text-decoration:none' href='#student" .$student_code->username."'>";
-            $panel .= "<div class='panel-heading heading_students_tracking'>";
-            $panel .= "<h4 class='panel-title'>";
-            $panel .= "$student_code->firstname $student_code->lastname";
-            $panel .= "<span class='glyphicon glyphicon-chevron-left'></span>";
-            $panel .= "</h4>"; //End panel-title
-            $panel .= "</div>"; //End panel-heading
-            $panel .= "</a>";
-
-            $panel .= "<div id='student$student_code->username'  class='show collapse_v2 collapse' role='tabpanel' aria-labelledby='headingstudent$student_code->username' aria-expanded='true'>";
-            $panel .= "<div class='panel-body'>";
-
-            $panel .= "</div>"; // End panel-body
-            $panel .= "</div>"; // End collapse
-            $panel .= "</div>"; // End panel-collapse
-    }
-
-    $table.=$panel;
-
-
-    
-    // $array_peer_trackings_dphpforms = json_decode($array_peer_trackings_dphpforms);
-
-
-
-
-    // All students from a monitor are retrieved in the instance and the array that will be transformed in toogle is sorted.
-    $seguimientos = monitorUser($globalArregloPares,$globalArregloGrupal,$USER->id,0,$blockid,$userrole,$intervalo_fechas);
-    //$table.=has_tracking($seguimientos);
 
 }elseif($usernamerole=='practicante_ps'){
 
@@ -205,6 +171,8 @@ $PAGE->requires->css('/blocks/ases/style/side_menu_style.css', true);
 $PAGE->requires->css('/blocks/ases/style/creadorFormulario.css', true);
 
 $PAGE->requires->js_call_amd('block_ases/pilos_tracking_main','init');
+$PAGE->requires->js_call_amd('block_ases/dphpforms_form_renderer', 'init');
+
 $PAGE->set_url($url);
 $PAGE->set_title($title);
 

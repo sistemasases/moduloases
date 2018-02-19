@@ -24,8 +24,60 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 require_once ('pilos_tracking_lib.php');
-
+require_once (dirname(__FILE__) . '/../lib/student_lib.php');
 require_once (dirname(__FILE__) . '/../dphpforms/dphpforms_get_record.php');
+require_once (dirname(__FILE__) . '/../student_profile/studentprofile_lib.php');
+
+
+
+/**
+ * Get the toggle of the monitor with the follow-ups of each student with the implementation of the new form
+ *
+ * @see render_monitor_new_form($students_by_monitor)
+ * @param $student_by_monitor --> students assigned to a monitor
+ * @return String
+ *
+ */
+
+function render_monitor_new_form($students_by_monitor){
+
+    $panel="";
+
+    foreach ($students_by_monitor as $student) {
+        $student_code= get_user_moodle($student->id_estudiante);
+        $panel .= "<div class='panel panel-default'>";
+            $panel .= "<a data-toggle='collapse' class='student collapsed btn btn-danger btn-univalle btn-card collapsed' data-parent='#accordion_students' style='text-decoration:none' href='#student" .$student_code->username."'>";
+            $panel .= "<div class='panel-heading heading_students_tracking'>";
+            $panel .= "<h4 class='panel-title'>";
+            $panel .= "$student_code->firstname $student_code->lastname";
+            $panel .= "<span class='glyphicon glyphicon-chevron-left'></span>";
+            $panel .= "</h4>"; //End panel-title
+            $panel .= "</div>"; //End panel-heading
+            $panel .= "</a>";
+
+            $panel .= "<div id='student$student_code->username'  class='show collapse_v2 collapse' role='tabpanel' aria-labelledby='headingstudent$student_code->username' aria-expanded='true'>";
+            $panel .= "<div class='panel-body'>";
+            $student_code = explode("-", $student_code->username);
+            $current_semester =get_current_semester();
+            $monitor_trackings= get_tracking_peer_student_current_semester($student_code[0], $current_semester->max);
+
+            $panel.=render_student_trackings($monitor_trackings);
+
+            $panel .= "</div>"; // End panel-body
+            $panel .= "</div>"; // End collapse
+            $panel .= "</div>"; // End panel-collapse
+    }
+
+    return $panel;
+}
+
+
+
+
+
+
+
+
 
 /**
  * Formatting of array with dates of trackings
@@ -38,34 +90,25 @@ require_once (dirname(__FILE__) . '/../dphpforms/dphpforms_get_record.php');
 
 function render_student_trackings($peer_tracking_v2)
     {
-    $form_rendered="";
-    $form_rendered.= '<div class="peer_trackings_v2 well well_v2" id="peer_trackings_v2" name="peer_trackings_v2">';
-
-            echo json_encode($form_rendered);
-            die();
-
+    $form_rendered='';
     if ($peer_tracking_v2)
         {
-        foreach($peer_tracking_v2 as $key_1 => $year)
-            {
-            foreach ($year as $key => $period) {
+
+            foreach ($peer_tracking_v2[0] as $key => $period) {
+
                 $year_number= $period;
                 foreach ($period as $key => $tracking) {
-                    $form_rendered.= '<div id="collapseOne' . $year_number . '" class="collapse show collapse_v2" role="tabpanel" aria-labelledby="headingOne' . $year_number . '">';
-                    $form_rendered.= '<div id="dphpforms-peer-record-' . $tracking[record][id_registro] . '" class="card-block dphpforms-peer-record peer-tracking-record" data-record-id="' . $tracking[record][id_registro] . '">Registro: '.$tracking[record][alias_key][respuesta].'';
-                        $form_rendered.='<\/div>';
-        $form_rendered.='<\/div>';
+
+                    $form_rendered.='<div id="dphpforms-peer-record-'.$tracking[record][id_registro].'" class="card-block dphpforms-peer-record peer-tracking-record" data-record-id="'.$tracking[record][id_registro].'">Registro:   '.$tracking[record][alias_key][respuesta].'</div>';
               }
 
-            }    
+            }   
 
-            }
+            
 
         }
 
-        $form_rendered.='</div>';
-
-        echo json_encode($form_rendered);
+        return $form_rendered;
 
     }
 

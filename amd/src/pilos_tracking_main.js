@@ -78,12 +78,12 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
             /*When click on the student's name, open the container with the information of 
             the follow-ups of that date*/
 
-                $('a[class*="student"]').click(function() {
+                /*$('a[class*="student"]').click(function() {
                 var student_code = $(this).attr('href').split("#student")[1];
                 var student_id = $(this).attr('href');
 
-                /*Fill container with the information corresponding to the trackings of 
-                the selected student*/
+                //Fill container with the information corresponding to the trackings of 
+                the selected student
                 $.ajax({
                     type: "POST",
                     data: {
