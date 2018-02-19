@@ -28,6 +28,10 @@ require_once ('../validate_profile_action.php');
 require_once('tracking_functions.php');
 require_once('../student_profile/studentprofile_lib.php');
 require_once('../periods_management/periods_lib.php');
+require_once ('../dphpforms/dphpforms_forms_core.php');
+require_once ('../dphpforms/dphpforms_records_finder.php');
+require_once ('../dphpforms/dphpforms_get_record.php');
+require_once '../user_management/user_lib.php';
 
 global $USER;
 
@@ -42,6 +46,23 @@ if(isset($_POST['type'])&&$_POST['type']=="getInfo"&&isset($_POST['instance']))
 
     echo json_encode($datos);
 }
+
+if(isset($_POST['type'])&&isset($_POST['instance'])&&$_POST['type']=="get_student_trackings"&&isset($_POST['student_code'])) 
+ {
+    // Student trackings (Seguimientos)
+
+      $html_tracking_peer = "";
+    $student_code = explode("-", $_POST['student_code']);
+
+    $ases_student = get_ases_user_by_code($student_code[0]);
+    $student_id = $ases_student->id;
+    $array_peer_trackings_dphpforms=get_tracking_peer_student_current_semester($student_code[0], '21');
+
+    $array =render_student_trackings($array_peer_trackings_dphpforms);
+    echo json_encode($array);
+ 
+}
+
 if(isset($_POST['type'])&&$_POST['type']=="actualizar_personas"&&isset($_POST['id'])&&isset($_POST['instance'])) 
  {
     $roles = get_rol_ps();
@@ -63,27 +84,62 @@ if(isset($_POST['type'])&&$_POST['type']=="consulta_sistemas"&&isset($_POST['id_
     $fechas[1] = $intervalos->fecha_fin;
     $fechas[2] = $intervalos->id;
 
+    /*Compara con fecha desde que se utilizan los nuevos formularios*/
+
+
+    $choosen_date =strtotime($fechas[0]);
+    $new_forms_date =strtotime('2018-01-01 00:00:00');
     $retorno = get_users_rols($_POST['id_persona'],$_POST['id_semestre'],$_POST['instance']);
-    if(empty($retorno)){
-      $html="No tiene registros en ese periodo";
+
+
+    if($choosen_date>=$new_forms_date){
+        if(empty($retorno)){
+            $html="No tiene registros en ese periodo";
+        }else{
+            $usernamerole= get_name_rol($retorno->id_rol);
+            $id_person =$_POST['id_persona'];
+            $id_instance = $_POST['instance'];
+
+        if($usernamerole == 'monitor_ps'){
+            $students_by_monitor=get_students_of_monitor($id_person,$id_instance);
+            $html=render_monitor_new_form($students_by_monitor,$intervalos->id);
+
+        }else if ($usernamerole == 'practicante_ps'){
+            $monitors_of_pract = get_monitors_of_pract($id_person,$id_instance);
+            $html=render_practicant_new_form($monitors_of_pract,$id_instance,$intervalos->id);
+
+        }else if ($usernamerole == 'profesional_ps'){
+            $practicant_of_prof=get_pract_of_prof($id_person,$id_instance);
+            $html=render_professional_new_form($practicant_of_prof,$id_instance,$intervalos->id);
+    }
+        $actions = authenticate_user_view($USER->id,$_POST['instance'],'report_trackings');
+        $html=show_according_permissions($html,$actions);
+        echo $html;
+    }
+
+
     }else{
-    $usernamerole= get_name_rol($retorno->id_rol);
-    if($usernamerole == 'monitor_ps'){
-       $html = monitorUser($globalArregloPares,$globalArregloGrupal,$_POST['id_persona'],0,$_POST['instance'],$retorno->id_rol,$fechas,true);
+        if(empty($retorno)){
+            $html="No tiene registros en ese periodo";
+        }else{
+            $usernamerole= get_name_rol($retorno->id_rol);
+        if($usernamerole == 'monitor_ps'){
+            $html = monitorUser($globalArregloPares,$globalArregloGrupal,$_POST['id_persona'],0,$_POST['instance'],$retorno->id_rol,$fechas,true);
 
-    }else if ($usernamerole == 'practicante_ps'){
-       $html=practicanteUser($globalArregloPares,$globalArregloGrupal,$_POST['id_persona'],$_POST['instance'],$retorno->id_rol,$fechas,true);
+        }else if ($usernamerole == 'practicante_ps'){
+            $html=practicanteUser($globalArregloPares,$globalArregloGrupal,$_POST['id_persona'],$_POST['instance'],$retorno->id_rol,$fechas,true);
 
-    }else if ($usernamerole == 'profesional_ps'){
-       $html=profesionalUser($globalArregloPares,$globalArregloGrupal,$_POST['id_persona'],$_POST['instance'],$retorno->id_rol,$fechas,true);
+        }else if ($usernamerole == 'profesional_ps'){
+            $html=profesionalUser($globalArregloPares,$globalArregloGrupal,$_POST['id_persona'],$_POST['instance'],$retorno->id_rol,$fechas,true);
+    }
+        $actions = authenticate_user_view($USER->id,$_POST['instance'],'report_trackings');
+        $html=show_according_permissions($html,$actions);
+        echo $html;
+    }
 
     }
-    $actions = authenticate_user_view($USER->id,$_POST['instance'],'report_trackings');
 
-    $html=show_according_permissions($html,$actions);
-
-    echo $html;
-}}
+}
 
 if(isset($_POST['type'])&&$_POST['type']=="info_monitor"&&isset($_POST['id'])&&isset($_POST['instance'])) 
  {
@@ -138,6 +194,7 @@ if(isset($_POST['type'])&&$_POST['type']=="send_email_to_user"&&isset($_POST['me
 {
  echo send_email_to_user($_POST['tipoSeg'],$_POST['codigoEnviarN1'],$_POST['codigoEnviarN2'],$_POST['fecha'],$_POST['nombre'],$_POST['message']);
 }
+
 
 
 ?>
