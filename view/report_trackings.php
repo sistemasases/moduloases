@@ -107,6 +107,9 @@ $intervalo_fechas[0] = reset($periods)->fecha_inicio;
 $intervalo_fechas[1] =reset($periods)->fecha_fin;
 $intervalo_fechas[2] =reset($periods)->id;
 
+$choosen_date =strtotime($intervalo_fechas[0]);
+$new_forms_date =strtotime('2018-01-01 00:00:00');
+
 
 // Sort periods Select
 $table_periods.=get_period_select($periods);
@@ -115,26 +118,53 @@ if($usernamerole=='monitor_ps'){
 
     //Get the trackings of the students related to the connected monitor.
 
+    if($choosen_date>=$new_forms_date){
+
+    //Render new form of the role monitor
     $monitor_id =$USER->id;
     $students_by_monitor=get_students_of_monitor($monitor_id,$blockid);
     $table.=render_monitor_new_form($students_by_monitor);
+
+    }else{
+
+    //Render old form of the role monitor
+    $seguimientos = monitorUser($globalArregloPares,$globalArregloGrupal,$USER->id,0,$blockid,$userrole,$intervalo_fechas);
+    $table.=has_tracking($seguimientos);
+    }
 
 
 }elseif($usernamerole=='practicante_ps'){
    
     //Get trackings of students associated with a set of monitors assigned to a practicant.
+
+    //Render new form of the role practicant
+    if($choosen_date>=$new_forms_date){
     $practicant_id =$USER->id;
     $monitors_of_pract = get_monitors_of_pract($practicant_id,$blockid);
     $table.=render_practicant_new_form($monitors_of_pract,$blockid);
+    }else{
+    
+    //Render old form of the role practicant
+    $seguimientos =practicanteUser($globalArregloPares,$globalArregloGrupal,$USER->id,$blockid,$userrole,$intervalo_fechas);
+    $table.=has_tracking($seguimientos);
+    }
 
 
 }elseif($usernamerole=='profesional_ps'){
 
     //Get trackings of students associated with a set of monitors in turn assigned to a practitioner of a professional.
+
+    //Render new form of the role professional
+    if($choosen_date>=$new_forms_date){
     $professional_id=$USER->id;
     $practicant_of_prof=get_pract_of_prof($professional_id,$blockid);
     $table.=render_professional_new_form($practicant_of_prof,$blockid);
-
+    }else{
+    
+    //Render old form of the role professional
+    $seguimientos = profesionalUser($globalArregloPares,$globalArregloGrupal,$USER->id,$blockid,$userrole,$intervalo_fechas);
+    $table.=has_tracking($seguimientos);
+    }
 
 }elseif($usernamerole=='sistemas'){
 
