@@ -167,7 +167,7 @@ function monitor_student_assignment($username_monitor, $array_students, $idinsta
                     if(!$hasmonitor){
                         $object = new stdClass();
                         $object->id_monitor = $idmonitor->id;
-                        $object->id_estudiante = $studentid->idtalentos;
+                        $object->id_estudiante = $studentid->id;
                         $object->id_instancia = $idinstancia;
                         $object->id_semestre = $semestre_act->max;
               
