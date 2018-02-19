@@ -73,7 +73,7 @@ function studentsWithLoses($instance){
                         ON         user_t.id = estado_u.id_estudiante
                         INNER JOIN {talentospilos_estados_ases} estados
                         ON         estados.id = estado_u.id_estado_ases
-                        WHERE      estados.nombre = 'ACTIVO/SEGUIMIENTO'
+                        WHERE      estados.nombre = 'seguimiento'
                         INTERSECT
                         SELECT     user_m.id,
                                     substring(user_m.username FROM 1 FOR 7) AS codigo,
@@ -245,7 +245,7 @@ function get_courses_for_report($user_id){
 				INNER JOIN {talentospilos_usuario} user_t ON extended.id_ases_user = user_t.id
 				INNER JOIN {talentospilos_est_estadoases} estado_u ON user_t.id = estado_u.id_estudiante
 				INNER JOIN {talentospilos_estados_ases} estados ON estados.id = estado_u.id_estado_ases
-				WHERE estados.nombre = 'ACTIVO/SEGUIMIENTO' 
+				WHERE estados.nombre = 'seguimiento' 
 				$intersect			
 				)";
     $result = $DB->get_records_sql($query_courses);
@@ -365,7 +365,7 @@ function get_info_course_for_reports($course_id, $user_id){
                                                                  INNER JOIN {talentospilos_usuario} user_t ON extended.id_ases_user = user_t.id
                                                                  INNER JOIN {talentospilos_est_estadoases} estado_u ON user_t.id = estado_u.id_estudiante 
                                                                  INNER JOIN {talentospilos_estados_ases} estados ON estados.id = estado_u.id_estado_ases
-                                                                 WHERE estados.nombre = 'ACTIVO/SEGUIMIENTO'
+                                                                 WHERE estados.nombre = 'seguimiento'
                                                                  $intersect
                                                                  )";
 

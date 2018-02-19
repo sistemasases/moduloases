@@ -321,7 +321,7 @@ if (isset($_FILES['csv_file'])) {
                     $record->id_discapacidad = $array_id_discap[$count];
                     $id_register = $DB->insert_record('talentospilos_usuario', $record, true);
 
-                    $state_ases = $DB->get_record_sql("SELECT id FROM {talentospilos_estados_ases} WHERE nombre = 'ACTIVO/SEGUIMIENTO'")->id;
+                    $state_ases = $DB->get_record_sql("SELECT id FROM {talentospilos_estados_ases} WHERE nombre = 'seguimiento'")->id;
 
                     $record = new stdClass;
                     $record->id_estudiante = $id_register;
