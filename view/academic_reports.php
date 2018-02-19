@@ -27,7 +27,7 @@
 require_once(__DIR__ . '/../../../config.php');
 require_once($CFG->libdir.'/adminlib.php');
 require_once('../managers/instance_management/instance_lib.php');
-require_once('../managers/general_reports/academic_reports_lib.php');
+require_once('../managers/academic_reports/academic_reports_lib.php');
 include('../lib.php');
 include("../classes/output/academic_reports_page.php");
 include("../classes/output/renderer.php");

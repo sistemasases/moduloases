@@ -102,10 +102,10 @@ function get_courses_pilos($instanceid){
 
             SELECT user_m.id
             FROM {user} user_m 
-            INNER JOIN {cohort_members} memb ON user_m.id = memb.userid 
-            INNER JOIN {cohort} cohorte ON memb.cohortid = cohorte.id 
-            INNER JOIN {talentospilos_inst_cohorte} as inst_coh ON cohorte.id = inst_coh.id_cohorte
-            WHERE inst_coh.id_instancia = $instanceid)";
+            INNER JOIN {cohort_members} memb ON user_m.id = memb.userid
+            WHERE memb.cohortid IN (SELECT id_cohorte
+                                    FROM   {talentospilos_inst_cohorte}
+                                    WHERE  id_instancia = $instanceid))";
     $result = $DB->get_records_sql($query_courses);
     
     $result = processInfo($result);
