@@ -59,7 +59,7 @@
         WHERE FR.id_formulario = '" . $FORM_ID . "' AND FR.estado = 1
             ) AS FRS 
         ON FRS.id_respuesta = R.id
-        WHERE R.respuesta LIKE '" . $criterio . "%' AND R.id_pregunta = '" . $PREGUNTA_ID . "'
+        WHERE R.respuesta = '" . $criterio . "' AND R.id_pregunta = '" . $PREGUNTA_ID . "'
         ORDER BY FRS.fecha_hora_registro_respuesta " . $order;
 
         $resultados = $DB->get_records_sql($sql);
