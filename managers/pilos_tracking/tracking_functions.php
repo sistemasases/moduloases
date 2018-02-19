@@ -46,7 +46,12 @@ function render_monitor_new_form($students_by_monitor){
     foreach ($students_by_monitor as $student) {
         $student_code= get_user_moodle($student->id_estudiante);
         $panel .= "<div class='panel panel-default'>";
-            $panel .= "<a data-toggle='collapse' class='student collapsed btn btn-danger btn-univalle btn-card collapsed' data-parent='#accordion_students' style='text-decoration:none' href='#student" .$student_code->username."'>";
+        $student= explode("-", $student_code->username);
+        $current_semester =get_current_semester();
+        $monitor_trackings= get_tracking_peer_student_current_semester($student[0], $current_semester->max);
+
+        if($monitor_trackings){
+             $panel .= "<a data-toggle='collapse' class='student collapsed btn btn-danger btn-univalle btn-card collapsed' data-parent='#accordion_students' style='text-decoration:none' href='#student" .$student_code->username."'>";
             $panel .= "<div class='panel-heading heading_students_tracking'>";
             $panel .= "<h4 class='panel-title'>";
             $panel .= "$student_code->firstname $student_code->lastname";
@@ -57,15 +62,117 @@ function render_monitor_new_form($students_by_monitor){
 
             $panel .= "<div id='student$student_code->username'  class='show collapse_v2 collapse' role='tabpanel' aria-labelledby='headingstudent$student_code->username' aria-expanded='true'>";
             $panel .= "<div class='panel-body'>";
-            $student_code = explode("-", $student_code->username);
-            $current_semester =get_current_semester();
-            $monitor_trackings= get_tracking_peer_student_current_semester($student_code[0], $current_semester->max);
+
 
             $panel.=render_student_trackings($monitor_trackings);
 
             $panel .= "</div>"; // End panel-body
             $panel .= "</div>"; // End collapse
             $panel .= "</div>"; // End panel-collapse
+        }
+           
+    }
+
+    return $panel;
+}
+
+
+
+/**
+ * Get the toggle of the practicant with the trackings of each student that belongs to a certain monitor with the implementation of the new form
+ *
+ * @see render_practicant_new_form($monitors_of_pract)
+ * @param $monitors_of_pract --> monitors of practicants
+ * @return String
+ *
+ */
+
+function render_practicant_new_form($monitors_of_pract,$instance){
+
+    $panel="";
+
+    foreach ($monitors_of_pract as $monitor) {
+        $panel .= "<div class='panel panel-default'>";
+
+        $monitor_id =$monitor->id_usuario;
+        $students_by_monitor=get_students_of_monitor($monitor_id,$instance);
+
+        //If the practicant has monitors with students that show
+
+        if($students_by_monitor){
+
+            $panel .= "<a data-toggle='collapse' class='student collapsed btn btn-danger btn-univalle btn-card collapsed' data-parent='#accordion_monitors' style='text-decoration:none' href='#monitor" .$monitor->username."'>";
+            $panel .= "<div class='panel-heading heading_monitors_tracking'>";
+            $panel .= "<h4 class='panel-title'>";
+            $panel .= "$monitor->firstname $monitor->lastname";
+            $panel .= "<span class='glyphicon glyphicon-chevron-left'></span>";
+            $panel .= "</h4>"; //End panel-title
+            $panel .= "</div>"; //End panel-heading
+            $panel .= "</a>";
+
+            $panel .= "<div id='monitor$monitor->username'  class='show collapse_v2 collapse' role='tabpanel' aria-labelledby='headingmonitor$monitor->username' aria-expanded='true'>";
+            $panel .= "<div class='panel-body'>";
+
+
+
+            $panel.=render_monitor_new_form($students_by_monitor);
+
+
+            $panel .= "</div>"; // End panel-body
+            $panel .= "</div>"; // End collapse
+            $panel .= "</div>"; // End panel-collapse
+        }
+
+    }
+
+    return $panel;
+}
+
+
+/**
+ * Get the toggle of the practicant with the trackings of each student that belongs to a certain monitor with the implementation of the new form
+ *
+ * @see render_practicant_new_form($monitors_of_pract)
+ * @param $monitors_of_pract --> monitors of practicants
+ * @return String
+ *
+ */
+
+function render_professional_new_form($practicant_of_prof,$instance){
+
+    $panel="";
+
+    foreach ($practicant_of_prof as $practicant) {
+        $panel .= "<div class='panel panel-default'>";
+
+        $practicant_id =$practicant->id_usuario;
+        $monitors_of_pract = get_monitors_of_pract($practicant_id,$instance);
+
+
+        // If the professional has associate practitioners with monitors that show
+        if($monitors_of_pract){
+
+            $panel .= "<a data-toggle='collapse' class='practicant collapsed btn btn-danger btn-univalle btn-card collapsed' data-parent='#accordion_practicant' style='text-decoration:none' href='#practicant" .$practicant->username."'>";
+            $panel .= "<div class='panel-heading heading_practicant_tracking'>";
+            $panel .= "<h4 class='panel-title'>";
+            $panel .= "$practicant->firstname $practicant->lastname";
+            $panel .= "<span class='glyphicon glyphicon-chevron-left'></span>";
+            $panel .= "</h4>"; //End panel-title
+            $panel .= "</div>"; //End panel-heading
+            $panel .= "</a>";
+
+            $panel .= "<div id='practicant$practicant->username'  class='show collapse_v2 collapse' role='tabpanel' aria-labelledby='heading_practicant_tracking$practicant->username' aria-expanded='true'>";
+            $panel .= "<div class='panel-body'>";
+
+            $practicant_id =$practicant->id_usuario;
+            $monitors_of_pract = get_monitors_of_pract($practicant_id,$instance);
+            $panel.=render_practicant_new_form($monitors_of_pract,$instance);
+
+            $panel .= "</div>"; // End panel-body
+            $panel .= "</div>"; // End collapse
+            $panel .= "</div>"; // End panel-collapse
+        }
+
     }
 
     return $panel;

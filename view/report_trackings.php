@@ -118,26 +118,26 @@ if($usernamerole=='monitor_ps'){
 
     $monitor_id =$USER->id;
     $students_by_monitor=get_students_of_monitor($monitor_id,$blockid);
-    $table=render_monitor_new_form($students_by_monitor);
+    $table.=render_monitor_new_form($students_by_monitor);
 
 
 }elseif($usernamerole=='practicante_ps'){
+   
+    //Get trackings of students associated with a set of monitors assigned to a practicant.
+    $practicant_id =$USER->id;
+    $monitors_of_pract = get_monitors_of_pract($practicant_id,$blockid);
+    $table.=render_practicant_new_form($monitors_of_pract,$blockid);
 
-
-    
-    // All students from a practicant (practicante) are retrieved in the instance and the array that will be transformed in toogle is sorted.
-    $seguimientos =practicanteUser($globalArregloPares,$globalArregloGrupal,$USER->id,$blockid,$userrole,$intervalo_fechas);
-    $table.=has_tracking($seguimientos);
 
 }elseif($usernamerole=='profesional_ps'){
 
+    //Get trackings of students associated with a set of monitors in turn assigned to a practitioner of a professional.
+    $professional_id=$USER->id;
+    $practicant_of_prof=get_pract_of_prof($professional_id,$blockid);
+    $table.=render_professional_new_form($practicant_of_prof,$blockid);
 
-    
-    // All students from a professional (profesional) are retrieved in the instance and the array that will be transformed in toogle is sorted.
-    $seguimientos = profesionalUser($globalArregloPares,$globalArregloGrupal,$USER->id,$blockid,$userrole,$intervalo_fechas);
-    $table.=has_tracking($seguimientos);
 
-}elseif($usernamerole=='sistemas' or $username == "administrador" or $username == "sistemas1008" or $username == "Administrador"){
+}elseif($usernamerole=='sistemas'){
 
     //Gets all existent periods and roles containing "_ps"
     $roles = get_rol_ps();
