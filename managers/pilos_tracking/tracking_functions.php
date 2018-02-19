@@ -39,7 +39,7 @@ require_once (dirname(__FILE__) . '/../student_profile/studentprofile_lib.php');
  *
  */
 
-function render_monitor_new_form($students_by_monitor){
+function render_monitor_new_form($students_by_monitor,$period=null){
 
     $panel="";
 
@@ -48,8 +48,14 @@ function render_monitor_new_form($students_by_monitor){
         $panel .= "<div class='panel panel-default'>";
         $student= explode("-", $student_code->username);
         $current_semester =get_current_semester();
-        $monitor_trackings= get_tracking_peer_student_current_semester($student[0], $current_semester->max);
 
+        if($period==null){
+            $monitor_trackings= get_tracking_peer_student_current_semester($student[0], $current_semester->max);
+         }else{
+            $monitor_trackings= get_tracking_peer_student_current_semester($student[0], $period);
+
+        }
+        
         if($monitor_trackings){
              $panel .= "<a data-toggle='collapse' class='student collapsed btn btn-danger btn-univalle btn-card collapsed' data-parent='#accordion_students' style='text-decoration:none' href='#student" .$student_code->username."'>";
             $panel .= "<div class='panel-heading heading_students_tracking'>";
@@ -87,7 +93,7 @@ function render_monitor_new_form($students_by_monitor){
  *
  */
 
-function render_practicant_new_form($monitors_of_pract,$instance){
+function render_practicant_new_form($monitors_of_pract,$instance,$period=null){
 
     $panel="";
 
@@ -114,15 +120,16 @@ function render_practicant_new_form($monitors_of_pract,$instance){
             $panel .= "<div class='panel-body'>";
 
 
-
-            $panel.=render_monitor_new_form($students_by_monitor);
-
-
+            if($period==null){
+                $panel.=render_monitor_new_form($students_by_monitor);
+            }else{
+                $panel.=render_monitor_new_form($students_by_monitor,$period);
+            }
+        
             $panel .= "</div>"; // End panel-body
             $panel .= "</div>"; // End collapse
             $panel .= "</div>"; // End panel-collapse
         }
-
     }
 
     return $panel;
@@ -138,7 +145,7 @@ function render_practicant_new_form($monitors_of_pract,$instance){
  *
  */
 
-function render_professional_new_form($practicant_of_prof,$instance){
+function render_professional_new_form($practicant_of_prof,$instance,$period=null){
 
     $panel="";
 
@@ -164,15 +171,18 @@ function render_professional_new_form($practicant_of_prof,$instance){
             $panel .= "<div id='practicant$practicant->username'  class='show collapse_v2 collapse' role='tabpanel' aria-labelledby='heading_practicant_tracking$practicant->username' aria-expanded='true'>";
             $panel .= "<div class='panel-body'>";
 
-            $practicant_id =$practicant->id_usuario;
-            $monitors_of_pract = get_monitors_of_pract($practicant_id,$instance);
-            $panel.=render_practicant_new_form($monitors_of_pract,$instance);
+
+            if($period==null){
+                $panel.=render_practicant_new_form($monitors_of_pract,$instance);
+            }else{
+                $panel.=render_practicant_new_form($monitors_of_pract,$instance,$period);
+            }
+            
 
             $panel .= "</div>"; // End panel-body
             $panel .= "</div>"; // End collapse
             $panel .= "</div>"; // End panel-collapse
         }
-
     }
 
     return $panel;
