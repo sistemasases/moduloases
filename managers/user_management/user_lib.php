@@ -68,20 +68,7 @@ function get_students($instanceid)
     global $DB;
     
     //the program which is associated with the instance is consulted
-    $query_prog = "
-        SELECT pgr.cod_univalle as cod
-        FROM {talentospilos_instancia} inst
-        INNER JOIN {talentospilos_programa} pgr ON inst.id_programa = pgr.id
-        WHERE inst.id_instancia= $instanceid";
-    
-    $prog = $DB->get_record_sql($query_prog)->cod;
-    
-    //if program code ($prog) = 1008 the cohort will begin by 'SP' otherwise by the program code
-    if ($prog === '1008') {
-        $cohort = 'SP';
-    } else {
-        $cohort = $prog;
-    }
+
     $query_semestre = "SELECT nombre FROM {talentospilos_semestre} WHERE id = (SELECT MAX(id) FROM {talentospilos_semestre})";
     $sem = $DB->get_record_sql($query_semestre)->nombre;
     
@@ -108,8 +95,10 @@ function get_students($instanceid)
     INTERSECT
 
     SELECT user_m.id, user_m.username,user_m.firstname,user_m.lastname
-    FROM {user}  user_m INNER JOIN {cohort_members}  memb ON user_m.id = memb.userid INNER JOIN {cohort}  cohorte ON memb.cohortid = cohorte.id
-        WHERE cohorte.idnumber LIKE '$cohort%') as estudiantes
+    FROM {user}  user_m INNER JOIN {cohort_members}  memb ON user_m.id = memb.userid 
+    WHERE memb.cohortid IN (SELECT id_cohorte
+                            FROM   {talentospilos_inst_cohorte}
+                            WHERE  id_instancia = $instance)) as estudiantes
 
     ON monitor_estud.id_moodle_user = estudiantes.id
     WHERE monitor_estud.id_moodle_user IS NULL  order by firstname";
