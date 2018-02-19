@@ -107,9 +107,9 @@ if ($student_code != 0) {
     foreach ($ases_status_array as $ases_status) {
 
         if ($ases_status->nombre == $student_status_ases->nombre) {
-            $html_status_ases .= "<option value='" . $ases_status->id . "' selected>" . $ases_status->nombre . "</option>";
+            $html_status_ases .= "<option value='" . $ases_status->id . "' selected>" . $ases_status->descripcion . "</option>";
         } else {
-            $html_status_ases .= "<option value='" . $ases_status->id . "'>" . $ases_status->nombre . "</option>";
+            $html_status_ases .= "<option value='" . $ases_status->id . "'>" . $ases_status->descripcion . "</option>";
         }
     }
 

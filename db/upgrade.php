@@ -4,7 +4,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     global $DB;
     $dbman = $DB->get_manager();
     $result = true;
-    if ($oldversion < 2018021417179 ) {
+    if ($oldversion < 2018021909439 ) {
     // ************************************************************************************************************
     // Actualización que crea la tabla para los campos extendidos de usuario (Tabla: {talentospilos_user_extended})
     // Versión: 2018010911179
@@ -835,7 +835,6 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
             $dbman->create_table($table);
         }
 
-
     // ************************************************************************************************************
     // Actualización:
     // Se añade el campo nota_credito en la tabla {talentospilos_res_icetex}
@@ -850,8 +849,6 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
      if (!$dbman->field_exists($table, $field)) {
          $dbman->add_field($table, $field);
      }
-
-
 
     // ************************************************************************************************************
     // Actualización:
@@ -895,24 +892,23 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
          $dbman->add_field($table, $field);
      }
 
-
     // ************************************************************************************************************
     // Actualización:
     // Se elimina la tabla talentospilos_instancia
-    // Versión en la que se incluye: Pendiente
+    // Versión en la que se incluye: 2018021417179
     // ************************************************************************************************************
     // Define table talentospilos_instancia to be dropped.
-    $table = new xmldb_table('talentospilos_instancia');
+    // $table = new xmldb_table('talentospilos_instancia');
 
-    // Conditionally launch drop table for talentospilos_instancia.
-    if ($dbman->table_exists($table)) {
-        $dbman->drop_table($table);
-    }
+    // // Conditionally launch drop table for talentospilos_instancia.
+    // if ($dbman->table_exists($table)) {
+    //     $dbman->drop_table($table);
+    // }
 
     // ************************************************************************************************************
     // Actualización:
     // Se añade la nueva tabla para la configuración de la instancia
-    // Versión en la que se incluye: Pendiente
+    // Versión en la que se incluye: 2018021417179
     // ************************************************************************************************************
     // Define table talentospilos_instancia to be created.
     $table = new xmldb_table('talentospilos_instancia');
@@ -933,20 +929,20 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     // ************************************************************************************************************
     // Actualización:
     // Se elimina la tabla talentospilos_monitor_estud
-    // Versión en la que se incluye: Pendiente
+    // Versión en la que se incluye: 2018021417179
     // ************************************************************************************************************
     // Define table talentospilos_monitor_estud to be dropped.
-    $table = new xmldb_table('talentospilos_monitor_estud');
+    // $table = new xmldb_table('talentospilos_monitor_estud');
 
-    // Conditionally launch drop table for talentospilos_monitor_estud.
-    if ($dbman->table_exists($table)) {
-        $dbman->drop_table($table);
-    }
+    // // Conditionally launch drop table for talentospilos_monitor_estud.
+    // if ($dbman->table_exists($table)) {
+    //     $dbman->drop_table($table);
+    // }
 
     // ************************************************************************************************************
     // Actualización:
     // Se crea la tabla talentospilos_monitor_estud con llave única que incluye id_monitor, id_estudiante, id_instancia, id_semestre
-    // Versión en la que se incluye: Pendiente
+    // Versión en la que se incluye: 2018021417179
     // ************************************************************************************************************
     // Define table talentospilos_monitor_estud to be created.
     $table = new xmldb_table('talentospilos_monitor_estud');
@@ -969,8 +965,60 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
         $dbman->create_table($table);
     }
 
+    // ************************************************************************************************************
+    // Actualización:
+    // Se configuran los estados de la tabla talentospilos_estado_ases
+    // Versión en la que se incluye: Pendiente
+    // ************************************************************************************************************
+
+    $register = $DB->get_record('talentospilos_estados_ases', array('nombre'=>'ACTIVO/SEGUIMIENTO'));
+    if($register){
+        $data_object = new stdClass();
+        $data_object->id = $register->id;
+        $data_object->nombre = 'seguimiento';
+        $data_object->descripcion = 'SEGUIMIENTO';
+
+        $DB->update_record('talentospilos_estados_ases', $data_object);
+    }
+
+    $register = $DB->get_record('talentospilos_estados_ases', array('nombre'=>'ACTIVO/SINSEGUIMIENTO'));
+    if($register){
+        $data_object = new stdClass();
+        $data_object = new stdClass();
+        $data_object->id = $register->id;
+        $data_object->nombre = 'sinseguimiento';
+        $data_object->descripcion = 'SIN SEGUIMIENTO';
+
+        $DB->update_record('talentospilos_estados_ases', $data_object);
+    }
+
+    $register = $DB->get_record('talentospilos_estados_ases', array('nombre'=>'RETIRADO'));
+
+    if($register){
+        $object_to_delete = array();
+        $object_to_delete['id'] = $register->id;
+        $DB->delete_records('talentospilos_estados_ases', $object_to_delete);
+    }
+
+    $register = $DB->get_record('talentospilos_estados_ases', array('nombre'=>'APLAZADO'));
+    
+    if($register){
+        $object_to_delete = array();
+        $object_to_delete['id'] = $register->id;
+        $DB->delete_records('talentospilos_estados_ases', $object_to_delete);
+    }
+
+    $register = $DB->get_record('talentospilos_estados_ases', array('nombre'=>'EGRESADO'));
+
+    if($register){
+        $object_to_delete = array();
+        $object_to_delete['id'] = $register->id;
+        $DB->delete_records('talentospilos_estados_ases', $object_to_delete);
+    }
+
+
     // Ases savepoint reached.
-    upgrade_block_savepoint(true, 2018021417179 , 'ases');
+    upgrade_block_savepoint(true, 2018021909439 , 'ases');
    
     return $result;
 

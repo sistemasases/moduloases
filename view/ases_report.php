@@ -76,7 +76,7 @@ $estados_ases = "<option value='TODOS'>TODOS</option>";
 $ases_status_array = get_status_ases();
 
 foreach($ases_status_array as $ases_status){
-	$estados_ases .= "<option value='".$ases_status->id."'>".$ases_status->nombre."</option>";
+	$estados_ases .= "<option value='".$ases_status->id."'>".$ases_status->descripcion."</option>";
 }
 
 
