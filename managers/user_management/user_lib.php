@@ -98,7 +98,7 @@ function get_students($instanceid)
     FROM {user}  user_m INNER JOIN {cohort_members}  memb ON user_m.id = memb.userid 
     WHERE memb.cohortid IN (SELECT id_cohorte
                             FROM   {talentospilos_inst_cohorte}
-                            WHERE  id_instancia = $instance)) as estudiantes
+                            WHERE  id_instancia = $instanceid)) as estudiantes
 
     ON monitor_estud.id_moodle_user = estudiantes.id
     WHERE monitor_estud.id_moodle_user IS NULL  order by firstname";
