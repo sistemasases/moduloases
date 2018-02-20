@@ -106,9 +106,6 @@ $coursenode = $PAGE->navigation->find($courseid, navigation_node::TYPE_COURSE);
 $blocknode = navigation_node::create('Reporte general',$url, null, 'block', $blockid);
 $coursenode->add_node($blocknode);
 
-// $blocknode->make_active();
-// $node->make_active();
-
 $PAGE->requires->css('/blocks/ases/style/styles_pilos.css', true);
 $PAGE->requires->css('/blocks/ases/style/bootstrap_pilos.min.css', true);
 $PAGE->requires->css('/blocks/ases/style/sweetalert.css', true);
@@ -120,9 +117,12 @@ $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/dataTables.tableToo
 $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/NewCSSExport/buttons.dataTables.min.css', true);
 $PAGE->requires->css('/blocks/ases/style/side_menu_style.css', true);
 
+$params = new stdClass();
+$params->testing_msg = "Testing msg";
+$params->testing_two = "Other testing";
 
 $PAGE->requires->js_call_amd('block_ases/ases_report_main','init');
-//$PAGE->requires->js_call_amd('block_ases/ases_report_graphics','init');
+$PAGE->requires->js_call_amd('block_ases/ases_report_main','load_defaults_students', $params);
 
 $PAGE->set_url($url);
 $PAGE->set_title($pagetitle);

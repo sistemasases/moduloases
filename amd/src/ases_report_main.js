@@ -9,7 +9,7 @@
  */
 define(['jquery', 'block_ases/datatables', 'block_ases/buttons.flash', 'block_ases/jszip', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/buttons.html5', 'block_ases/buttons.print', 'block_ases/jqueryui'], function($, DataTable, flash, jszip, bootstrap, sweetalert, html, print, jqueryui) {
     return {
-        init: function() {
+        init: function(){
             //Control para el botón 'Generar Reporte'
             $("#send_form_btn").on('click', function() {
                 createTable();
@@ -114,13 +114,37 @@ define(['jquery', 'block_ases/datatables', 'block_ases/buttons.flash', 'block_as
                 });
 
             });
+        },
+        load_defaults_students: function(initial, second){
+
+            var parameter = initial;
+
+            dataString = new Array();
+
+            dataString.push({
+                name: 'instance_id',
+                value: this.get_id_instance()
+            });
+
+            console.log("instance_id: " + this.get_id_instance());
+            console.log("msg_testing: " + initial);
+            console.log("msg_testing: " + second);
+        },
+        create_table: function(){
+
+        },
+        get_id_instance: function(){
+            var urlParameters = location.search.split('&');
+
+            for (x in urlParameters) {
+                if (urlParameters[x].indexOf('instanceid') >= 0) {
+                    var intanceparameter = urlParameters[x].split('=');
+                    return intanceparameter[1];
+                }
+            }
+            return 0;
         }
     }
-
-
-
-
-
 
     //Creación de tabla de asignaciones
     function createTableAssign() {

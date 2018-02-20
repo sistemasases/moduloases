@@ -41,7 +41,6 @@ if(isset($_POST['conditions'])){
     }
 }
 
-
 if(isset($_POST['fields'])){
     foreach($_POST['fields'] as $field){
         array_push($query_fields, $fields_format[$field]);
@@ -61,7 +60,6 @@ if(isset($_POST['risk_fields'])){
     $select='<br/><select><option value=""></option><option value="N.R.">N.R.</option><option value="Bajo">Bajo</option><option value="Medio">Medio</option>
           <option value="alto">Alto</option></select>';
 
-
     foreach($_POST['risk_fields'] as $risk_field){
     
         $query_name = "SELECT * FROM {talentospilos_riesgos_ases} WHERE id =".$risk_field;
@@ -71,18 +69,11 @@ if(isset($_POST['risk_fields'])){
     }
 }
 
-// print_r($columns);
-// print_r($query_fields);
-//print_r($academic_fields);
-// print_r($columns);
-
-
 if(isset($_POST['instance_id'])){
     $counter = 0;
     
     $result = get_ases_report($query_fields, $conditions, $risk_fields, $academic_fields, $_POST['instance_id']);
 
-    
     $data = array(
                 "bsort" => false,
                 "data"=> $result,
