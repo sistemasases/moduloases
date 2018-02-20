@@ -275,7 +275,7 @@ function get_count_inactive_res_students($cohort){
 
     foreach($counts as $count){
         $count->cohort = $cohort;
-        $count->monto_inact_res = "$".$count->monto_act_res;
+        $count->monto_inact_res = "$".$count->monto_inact_res;
         array_push($array_count, $count);
     }
 
