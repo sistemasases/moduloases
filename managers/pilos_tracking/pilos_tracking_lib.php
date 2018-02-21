@@ -26,6 +26,8 @@
 require_once(dirname(__FILE__). '/../../../../config.php');
 require_once(dirname(__FILE__).'/../periods_management/periods_lib.php');
 require_once(dirname(__FILE__).'/../lib/student_lib.php');
+require_once(dirname(__FILE__).'/../dphpforms/dphpforms_records_finder.php');
+require_once(dirname(__FILE__).'/../dphpforms/dphpforms_get_record.php');
 
 /**
  * Function that gets all semesters
@@ -765,6 +767,176 @@ function send_email_to_user($tipoSeg,$codigoEnviarN1,$codigoEnviarN2,$fecha,$nom
     }
   
 }
+
+function update_last_user_risk( $student_code ){
+
+    global $DB;
+
+    $trackings = dphpforms_find_records( 'seguimiento_pares', 'seguimiento_pares_id_estudiante', $student_code, 'DESC' );
+    $trackings = json_decode( $trackings )->results;
+
+    $last_tracking = null;
+
+    foreach ($trackings as $key => $tracking) {
+
+        $full_tracking = json_decode( dphpforms_get_record( $tracking->id_registro, 'fecha' ) )->record;
+
+        if( !$last_tracking ){    
+
+            $last_tracking = new stdClass();
+            $last_tracking->id = $full_tracking->id_registro;
+            $last_tracking->fecha = strtotime( $full_tracking->alias_key->respuesta );
+            $last_tracking->json_full_tracking = json_encode( $full_tracking );
+
+        }else{
+
+            if( $last_tracking->fecha < strtotime( $full_tracking->alias_key->respuesta ) ){
+
+                $last_tracking->id = $full_tracking->id_registro;
+                $last_tracking->fecha = strtotime( $full_tracking->alias_key->respuesta );
+                $last_tracking->json_full_tracking = json_encode( $full_tracking );
+
+            }
+
+        }
+
+    }
+
+    $fields_tracking = json_decode( $last_tracking->json_full_tracking )->campos;
+
+    $ases_user_id = get_ases_user_by_code($student_code)->id;;
+
+    $vida_universitaria_risk_lvl = '0';
+    $economico_risk_lvl = '0';
+    $academico_risk_lvl = '0';
+    $familiar_risk_lvl = '0';
+    $individual_risk_lvl = '0';
+
+    foreach ($fields_tracking as $key => $field) {
+        
+        if( $field->local_alias == 'puntuacion_vida_uni' ){
+            if( $field->respuesta == '-#$%-' ){
+                $vida_universitaria_risk_lvl = '0';
+            }else{
+                $vida_universitaria_risk_lvl = $field->respuesta;
+            }
+        }
+        if( $field->local_alias == 'puntuacion_riesgo_economico' ){
+            if( $field->respuesta == '-#$%-' ){
+                $economico_risk_lvl = '0';
+            }else{
+                $economico_risk_lvl = $field->respuesta;
+            }
+        }
+        if( $field->local_alias == 'puntuacion_riesgo_academico' ){
+            if( $field->respuesta == '-#$%-' ){
+                $academico_risk_lvl = '0';
+            }else{
+                $academico_risk_lvl = $field->respuesta;
+            }
+        }
+        if( $field->local_alias == 'puntuacion_riesgo_familiar' ){
+            if( $field->respuesta == '-#$%-' ){
+                $familiar_risk_lvl = '0';
+            }else{
+                $familiar_risk_lvl = $field->respuesta;
+            }
+        }
+        if( $field->local_alias == 'puntuacion_riesgo_individual' ){
+            if( $field->respuesta == '-#$%-' ){
+                $individual_risk_lvl = '0';
+            }else{
+                $individual_risk_lvl = $field->respuesta;
+            }
+        }
+
+    }
+
+    $risks = $DB->get_records_sql( "SELECT * FROM {talentospilos_riesgos_ases}" );
+    foreach( $risks as $key => $risk ){
+
+        if ( $risk->nombre == 'individual' ){
+            
+            $previous_record_risk = $DB->get_record_sql( "SELECT * FROM {talentospilos_riesg_usuario} WHERE id_usuario = '$ases_user_id' AND id_riesgo = '$risk->id'" );
+            if( $previous_record_risk ){
+                $previous_record_risk->calificacion_riesgo = $individual_risk_lvl;
+                $DB->update_record( 'talentospilos_riesg_usuario', $previous_record_risk, $bulk=false );
+            }else{
+                $new_user_risk = new stdClass();
+                $new_user_risk->id_usuario = $ases_user_id;
+                $new_user_risk->id_riesgo = $risk->id;
+                $new_user_risk->calificacion_riesgo = $individual_risk_lvl;
+                $DB->insert_record( 'talentospilos_riesg_usuario', $new_user_risk, $returnid=false, $bulk=false );
+            }
+
+        }elseif ( $risk->nombre == 'familiar' ){
+
+            $previous_record_risk = $DB->get_record_sql( "SELECT * FROM {talentospilos_riesg_usuario} WHERE id_usuario = '$ases_user_id' AND id_riesgo = '$risk->id'" );
+            if( $previous_record_risk ){
+                $previous_record_risk->calificacion_riesgo = $familiar_risk_lvl;
+                $DB->update_record( 'talentospilos_riesg_usuario', $previous_record_risk, $bulk=false );
+            }else{
+                $new_user_risk = new stdClass();
+                $new_user_risk->id_usuario = $ases_user_id;
+                $new_user_risk->id_riesgo = $risk->id;
+                $new_user_risk->calificacion_riesgo = $familiar_risk_lvl;
+                $DB->insert_record( 'talentospilos_riesg_usuario', $new_user_risk, $returnid=false, $bulk=false );
+            }
+
+        }elseif ( $risk->nombre == 'academico' ){
+
+            $previous_record_risk = $DB->get_record_sql( "SELECT * FROM {talentospilos_riesg_usuario} WHERE id_usuario = '$ases_user_id' AND id_riesgo = '$risk->id'" );
+            if( $previous_record_risk ){
+                $previous_record_risk->calificacion_riesgo = $academico_risk_lvl;
+                $DB->update_record( 'talentospilos_riesg_usuario', $previous_record_risk, $bulk=false );
+            }else{
+                $new_user_risk = new stdClass();
+                $new_user_risk->id_usuario = $ases_user_id;
+                $new_user_risk->id_riesgo = $risk->id;
+                $new_user_risk->calificacion_riesgo = $academico_risk_lvl;
+                $DB->insert_record( 'talentospilos_riesg_usuario', $new_user_risk, $returnid=false, $bulk=false );
+            }
+
+        }elseif ( $risk->nombre == 'economico' ) {
+            
+            $previous_record_risk = $DB->get_record_sql( "SELECT * FROM {talentospilos_riesg_usuario} WHERE id_usuario = '$ases_user_id' AND id_riesgo = '$risk->id'" );
+            if( $previous_record_risk ){
+                $previous_record_risk->calificacion_riesgo = $economico_risk_lvl;
+                $DB->update_record( 'talentospilos_riesg_usuario', $previous_record_risk, $bulk=false );
+            }else{
+                $new_user_risk = new stdClass();
+                $new_user_risk->id_usuario = $ases_user_id;
+                $new_user_risk->id_riesgo = $risk->id;
+                $new_user_risk->calificacion_riesgo = $economico_risk_lvl;
+                $DB->insert_record( 'talentospilos_riesg_usuario', $new_user_risk, $returnid=false, $bulk=false );
+            }
+
+        }elseif ( $risk->nombre == 'vida_universitaria' ) {
+            
+            $previous_record_risk = $DB->get_record_sql( "SELECT * FROM {talentospilos_riesg_usuario} WHERE id_usuario = '$ases_user_id' AND id_riesgo = '$risk->id'" );
+            if( $previous_record_risk ){
+                $previous_record_risk->calificacion_riesgo = $vida_universitaria_risk_lvl;
+                print_r($DB->update_record( 'talentospilos_riesg_usuario', $previous_record_risk, $bulk=false ));
+            }else{
+                
+                $new_user_risk = new stdClass();
+                $new_user_risk->id_usuario = $ases_user_id;
+                $new_user_risk->id_riesgo = $risk->id;
+                $new_user_risk->calificacion_riesgo = $vida_universitaria_risk_lvl;
+                $DB->insert_record( 'talentospilos_riesg_usuario', $new_user_risk, $returnid=false, $bulk=false );
+            }
+
+        }elseif ( $risk->nombre == 'geografico' ){
+            // 
+        }
+
+    }
+
+    return 0;
+
+}
+
+
 
 
 ?>
