@@ -29,9 +29,11 @@
     /*
         This module script is defined for external interactions to dphpforms tables.
     */
-    require_once(dirname(__FILE__). '/../../../../config.php');
+    require_once(dirname(__FILE__). '/../../../../../../config.php');
 
-    function record_last_risk(){
+    function record_last_risk( $student_id ){
+
+        $FORM_ALIAS = 'seguimientos_pares';
 
     }
 
