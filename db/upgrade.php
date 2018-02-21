@@ -888,7 +888,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
      $field = new xmldb_field('estado', XMLDB_TYPE_INTEGER, '5', null, XMLDB_NOTNULL, null, '1', 'fecha_hora_registro');
 
      // Conditionally launch add field talentospilos_df_form_resp.
-     if (!$dbman->field_exists($table, $field)) {
+     if (!$dbman->field_exists($table, $field)){
          $dbman->add_field($table, $field);
      }
 
