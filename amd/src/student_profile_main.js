@@ -1572,7 +1572,6 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/d3', 'block_ases/sweetaler
         });
     }
 
-
     function procesarJSON(){
         // Asignación de gráficas y manejo del JSON para graficar
         
@@ -1602,7 +1601,6 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/d3', 'block_ases/sweetaler
         }
         // Fin de asignación de gráficas
     }
-    
   
     function graficar(){
         procesarJSON();
@@ -1613,13 +1611,12 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/d3', 'block_ases/sweetaler
       var myChart_vida_universitaria = generar(datosGraficables[4],ctx_vida_universitaria);
     }
       
-  
-      /*Generador de gráficas*/
-      function generar(datos, destino, canvas){
+    /*Generador de gráficas*/
+    function generar(datos, destino, canvas){
         return new Chart(destino, {
             type: 'line',
             data: {
-              
+                
                 labels: datos[1],
                 datasets: [{
                     label: 'Nivel de riesgo',
@@ -1650,5 +1647,5 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/d3', 'block_ases/sweetaler
                 }
             }
         });
-      };
+    };
 })

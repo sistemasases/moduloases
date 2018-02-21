@@ -1,10 +1,10 @@
 <body>
-
   {{#data}} {{> block_ases/side_menu}} {{{message}}}
   <div class="container">
     <input type="text" class="hide" id="current_user_id" value="{{id_dphpforms_creado_por}}" />
-    <form id="ficha_estudiante" onsubmit="myFunction(); return false;">
 
+    <form id="ficha_estudiante" onsubmit="myFunction(); return false;">
+    
       <input type="text" class="hide" id="id_ases" name="id_ases" value="{{id_ases}}" />
       <input type="text" class="hide" id="id_moodle" name="id_moodle" value="{{id_moodle}}" />
 
@@ -26,6 +26,7 @@
             </div>
             {{/search_student_sp}}
           </div>
+
           {{#update_icetex_status_sp}}
           <div class="row">
             <label for="estado" class="col-sm-4 col-md-4 control-label">Estado Icetex</label>
@@ -35,7 +36,9 @@
               </select>
             </div>
           </div>
-          {{/update_icetex_status_sp}} {{#update_ases_status_sp}}
+          {{/update_icetex_status_sp}}
+
+          {{#update_ases_status_sp}}
           <div class="row">
             <label for="estadoAses" class="col-md-4 control-label">Estado Ases</label>
             <div class="col-sm-6">
@@ -117,8 +120,6 @@
 
         <!-- Pestañas ficha -->
         <div id="exTab1" class="col-sm-12">
-
-
           <ul class="nav nav-tabs">
             {{#view_general_tab_sp}}
             <li id="general_li" class="active">
@@ -136,13 +137,10 @@
             <li id="geographic_li">
               <a href="#geographic_tab" data-toggle="tab">GEOGRÁFICO</a>
             </li>{{/view_geographic_tab_sp}}
-
           </ul>
-
           <div class="tab-content clearfix ">
             {{#view_general_tab_sp}} {{> block_ases/view_general_tab_sp}} {{/view_general_tab_sp}} {{#view_socioed_tab_sp}} {{> block_ases/view_socioed_tab_sp}}
             {{/view_socioed_tab_sp}} {{#view_academic_tab_sp}}
-
             <!--academic tab-->
             <div class="tab-pane" id="academic_tab">
 
