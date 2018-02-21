@@ -44,6 +44,11 @@ require_once '../managers/menu_options.php';
 require_once '../managers/dphpforms/dphpforms_forms_core.php';
 require_once '../managers/dphpforms/dphpforms_records_finder.php';
 require_once '../managers/dphpforms/dphpforms_get_record.php';
+
+//Temporal
+require_once '../managers/pilos_tracking/pilos_tracking_lib.php';
+//End temporal
+
 include '../lib.php';
 
 global $PAGE;
@@ -376,6 +381,8 @@ if ($student_code != 0) {
     $record->historic_academic = $html_historic_academic;
 
     // Student trackings (Seguimientos)
+
+    //update_last_user_risk( $student_code );
 
     $array_peer_trackings_dphpforms = dphpforms_find_records('seguimiento_pares', 'seguimiento_pares_id_estudiante', $student_code, 'DESC');
     $array_peer_trackings_dphpforms = json_decode($array_peer_trackings_dphpforms);
