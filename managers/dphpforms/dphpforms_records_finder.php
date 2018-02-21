@@ -47,7 +47,6 @@
             );
         };
 
-        /* !!!!!!!!!! Modificación temporal de la consulta del criterio en la respuesta con un LIKE */
         $sql = "SELECT FRS.id_formulario_respuestas AS id_registro, FRS.fecha_hora_registro_respuesta AS fecha_hora_registro
         FROM {talentospilos_df_respuestas} AS R 
         INNER JOIN 
