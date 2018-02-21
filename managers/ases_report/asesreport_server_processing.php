@@ -50,7 +50,6 @@ if(isset($_POST['fields'])){
 
 if(isset($_POST['academic_fields'])){
     foreach($_POST['academic_fields'] as $academic_field){
-        //print_r(explode(' ', $fields_format[$academic_field])[2]);
         array_push($academic_fields, $fields_format[$academic_field]);
         array_push($columns, array("title"=>$columns_format[$academic_field], "name"=>explode(' ', $fields_format[$academic_field])[2], "data"=>explode(' ', $fields_format[$academic_field])[2]));
     }

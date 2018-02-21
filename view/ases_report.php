@@ -62,15 +62,19 @@ $menu_option = create_menu_options($id_current_user, $blockid, $courseid);
 
 $risks_table='';
 $cohorts_table='';
+
+// Carga de riesgos
 foreach($risks as $risk){
     $risks_table.='<div class="checkbox"><input type="checkbox" name="risk_fields[]" id="'.$risk->id.'" value="'.$risk->id.'" /> '.$risk->descripcion.'</div>';}
-    
+
+// Carga de cohortes
 $cohorts_table.='<option value="TODOS">TODOS</option>';
 
 foreach ($cohorts as $cohort) {
     $cohorts_table.='<option value="'.$cohort->idnumber.'">'.$cohort->name.'</option>';
 }
 
+// Carga de estado ASES
 $estados_ases = "";
 $estados_ases = "<option value='TODOS'>TODOS</option>";
 $ases_status_array = get_status_ases();
@@ -78,7 +82,6 @@ $ases_status_array = get_status_ases();
 foreach($ases_status_array as $ases_status){
 	$estados_ases .= "<option value='".$ases_status->id."'>".$ases_status->descripcion."</option>";
 }
-
 
 // Crea una clase con la información que se llevará al template.
 $data = new stdClass();
@@ -99,7 +102,13 @@ $contextcourse = context_course::instance($courseid);
 $contextblock =  context_block::instance($blockid);
 
 $url = new moodle_url("/blocks/ases/view/ases_report.php",array('courseid' => $courseid, 'instanceid' => $blockid));
-//$url =  $CFG->wwwroot."/blocks/ases/view/index.php?courseid=".$courseid."&instanceid=".$blockid;
+
+// ---------------------------------------------
+// Carga por defecto de estudiantes relacionados
+// ---------------------------------------------
+$data_to_table = get_default_ases_report($blockid);
+$params = new stdClass();
+$params->table = $data_to_table;
 
 // Navigation setup
 $coursenode = $PAGE->navigation->find($courseid, navigation_node::TYPE_COURSE);
@@ -116,10 +125,6 @@ $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/jquery.dataTables_t
 $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/dataTables.tableTools.css', true);
 $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/NewCSSExport/buttons.dataTables.min.css', true);
 $PAGE->requires->css('/blocks/ases/style/side_menu_style.css', true);
-
-$params = new stdClass();
-$params->testing_msg = "Testing msg";
-$params->testing_two = "Other testing";
 
 $PAGE->requires->js_call_amd('block_ases/ases_report_main','init');
 $PAGE->requires->js_call_amd('block_ases/ases_report_main','load_defaults_students', $params);

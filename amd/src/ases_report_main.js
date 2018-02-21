@@ -115,20 +115,13 @@ define(['jquery', 'block_ases/datatables', 'block_ases/buttons.flash', 'block_as
 
             });
         },
-        load_defaults_students: function(initial, second){
+        load_defaults_students: function(data){
 
-            var parameter = initial;
+            $("#div_table").html('');
+            $("#div_table").fadeIn(1000).append('<table id="tableResult" class="display" cellspacing="0" width="100%"><thead> </thead></table>');
 
-            dataString = new Array();
+            $("#tableResult").DataTable(data);
 
-            dataString.push({
-                name: 'instance_id',
-                value: this.get_id_instance()
-            });
-
-            console.log("instance_id: " + this.get_id_instance());
-            console.log("msg_testing: " + initial);
-            console.log("msg_testing: " + second);
         },
         create_table: function(){
 
