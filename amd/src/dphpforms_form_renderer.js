@@ -105,6 +105,7 @@
                                 "url": window.location.href
                             };
 
+                            console.log( JSON.stringify(json_risks) );
 
                             $.ajax({
                                 type: "POST",
