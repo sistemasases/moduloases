@@ -276,6 +276,10 @@
                                     $('#modal_v2_edit_peer_tracking').fadeOut(300);
                                     $('#modal_v2_peer_tracking').fadeOut(300);
 
+                                    $.get( "../managers/pilos_tracking/api_pilos_tracking.php?function=update_last_user_risk&arg=" + get_student_code(), function( data ) {
+                                        console.log( data );
+                                    });
+
                                     
                                     
                                 }else if(response['status'] == -2){
