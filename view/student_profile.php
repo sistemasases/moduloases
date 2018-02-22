@@ -45,10 +45,6 @@ require_once '../managers/dphpforms/dphpforms_forms_core.php';
 require_once '../managers/dphpforms/dphpforms_records_finder.php';
 require_once '../managers/dphpforms/dphpforms_get_record.php';
 
-//Temporal
-require_once '../managers/pilos_tracking/pilos_tracking_lib.php';
-//End temporal
-
 include '../lib.php';
 
 global $PAGE;
