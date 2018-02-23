@@ -27,7 +27,6 @@
 // Standard GPL and phpdocs
 require_once __DIR__ . '/../../../config.php';
 require_once $CFG->libdir . '/adminlib.php';
-//require_once('../managers/query.php');
 
 require_once '../managers/lib/student_lib.php';
 require_once '../managers/lib/lib.php';

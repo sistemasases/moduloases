@@ -3,7 +3,7 @@
   <div class="container">
     <input type="text" class="hide" id="current_user_id" value="{{id_dphpforms_creado_por}}" />
 
-    <form id="ficha_estudiante" onsubmit="myFunction(); return false;">
+    <form id="ficha_estudiante">
     
       <input type="text" class="hide" id="id_ases" name="id_ases" value="{{id_ases}}" />
       <input type="text" class="hide" id="id_moodle" name="id_moodle" value="{{id_moodle}}" />
@@ -14,10 +14,11 @@
           <h2>FICHA GENERAL DEL ESTUDIANTE</h2>
 
           <div class="row">
-            <label class="col-sm-4 col-md-4 control-label">Código</label>
+            <label class="col-sm-4">Código</label>
             <div class="col-sm-4">
               {{{code}}}
             </div>
+
             {{#search_student_sp}}
             <div class="col-sm-4">
               <button type="button" class="btn-primary btn-sm" name="search" id="search">

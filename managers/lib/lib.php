@@ -145,7 +145,7 @@ function make_select_ficha($id, $rol, $student_code)
         $sel = "selected";
     }
 
-    $asign = "<select name = 'asignados' id = 'asignados'><option $sel>Seleccione un estudiante</option>";
+    $asign = "<select name = 'asignados' id = 'asignados' class='form-control'><option $sel>Seleccione un estudiante</option>";
 
     if ($rol == 'profesional_ps') {
 
