@@ -215,3 +215,9 @@ pre, code {
 }
 
 /*Finalización de definición de estilos para el formulario de seguimientos*/
+
+/* Inicio definición de estilos para primer acercamiento */
+
+.primer_acerca_fecha_ajuste{
+    width: 50% !important;
+}

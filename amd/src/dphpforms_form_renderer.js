@@ -165,6 +165,17 @@
 
                 });
 
+                $('#button_primer_acercamiento').on('click', function() {
+
+                    $('#modal_primer_acercamiento').fadeIn(300);
+
+                    $('.primer_acerca_id_estudiante_field').find('input').val( get_student_code() );
+
+                    var creado_por = $('#current_user_id').val();
+                    $('.primer_acerca_id_creado_por_field').find('input').val(creado_por);
+
+                });
+
                 $('.mymodal-close').click(function(){
                     $(this).parent().parent().parent().parent().fadeOut(300);
                 });
