@@ -227,7 +227,7 @@ function get_resolutions_for_report(){
         
         $total_am_students = sum_amount_students_resolutions($resolution->id);
         $total_subtraction = $resolution->monto_total - $total_am_students;
-        $resolution->monto_total = "$".$resolution->monto_total;
+        $resolution->monto_total = "$".number_format($resolution->monto_total, 0, ',', '.');
         $resolution->monto_sum_estudiantes = "$".$total_am_students;
         $resolution->monto_diferencia = "$".$total_subtraction;
         array_push($resolutions_array, $resolution);
