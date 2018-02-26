@@ -387,8 +387,8 @@ function get_not_assign_students($general_fields=null, $conditions, $academic_fi
  * Función que recupera datos para la tabla de ases_report, dado el estado, la cohorte y un conjunto de campos a extraer.
  *
  * @see get_ases_report()
- * @param $column       --> Campos a seleccionar
- * @param $population   --> Estado y cohorte
+ * @param $general_fields       --> Campos a seleccionar
+ * @param $conditions   --> Estado y cohorte
  * @param $risk         --> Nivel de riesgo a mostrar
  * @param $academic_fields --> Campos relacionados con el programa académico y facultad
  * @param $idinstancia  --> Instancia del módulo
@@ -422,7 +422,6 @@ function get_ases_report($general_fields=null, $conditions, $risk_fields=null, $
         foreach($risk_fields as $risk_field){
             $name_query = "SELECT * FROM {talentospilos_riesgos_ases} WHERE id =".$risk_field;
             $risk_name = $DB->get_record_sql($name_query)->nombre;
-            //array_push($column_risk_nombres, $name_query);
             
             //calificacion_riesgo
             $select_clause = $select_clause." (SELECT 
@@ -580,5 +579,85 @@ function get_ases_report($general_fields=null, $conditions, $risk_fields=null, $
     }
 
     return $result_to_return;
+}
+
+/**
+ * Función que recupera datos para la tabla de ases_report, de los estudiantes asignados a una persona del rol socioeducativo o
+ * asociados a un director de programa académico
+ *
+ * @see get_default_ases_report()
+ * @param $column       --> Campos a seleccionar
+ * @param $population   --> Estado y cohorte
+ * @param $risk_fields         --> Nivel de riesgo a mostrar
+ * @param $academic_fields --> Campos relacionados con el programa académico y facultad
+ * @param $instance_id  --> Instancia del módulo
+ * @return Array 
+ */
+function get_default_ases_report($id_instance){
+
+    $query_fields = array();
+    array_push($query_fields, "user_moodle.username");
+    array_push($query_fields, "user_moodle.firstname");
+    array_push($query_fields, "user_moodle.lastname");
+    array_push($query_fields, "tp_user.num_doc");
+
+    $conditions = array();
+    array_push($conditions, "TODOS");
+    array_push($conditions, "TODOS");
+
+    $columns = array();
+    array_push($columns, array("title"=>"Código estudiante", "name"=>"username", "data"=>"username"));
+    array_push($columns, array("title"=>"Nombre(s)", "name"=>"firstname", "data"=>"firstname"));
+    array_push($columns, array("title"=>"Apellido(s)", "name"=>"lastname", "data"=>"lastname"));
+    array_push($columns, array("title"=>"Número de documento", "name"=>"num_doc", "data"=>"num_doc"));
+
+    $default_students = get_ases_report($query_fields, $conditions, null, null, $id_instance);
+
+    $data_to_table = array(
+        "bsort" => false,
+        "data"=> $default_students,
+        "columns" => $columns,
+        "select" => "false",
+        "fixedHeader"=> array(
+            "header"=> true,
+            "footer"=> true
+        ),
+        "language" => 
+        array(
+            "search"=> "Buscar:",
+            "oPaginate" => array (
+                "sFirst"=>    "Primero",
+                "sLast"=>     "Último",
+                "sNext"=>     "Siguiente",
+                "sPrevious"=> "Anterior"
+            ),
+            "sProcessing"=>     "Procesando...",
+            "sLengthMenu"=>     "Mostrar _MENU_ registros",
+            "sZeroRecords"=>    "No se encontraron resultados",
+            "sEmptyTable"=>     "Ningún dato disponible en esta tabla",
+            "sInfo"=>           "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+            "sInfoEmpty"=>      "Mostrando registros del 0 al 0 de un total de 0 registros",
+            "sInfoFiltered"=>   "(filtrado de un total de _MAX_ registros)",
+            "sInfoPostFix"=>    "",
+            "sSearch"=>         "Buscar:",
+            "sUrl"=>            "",
+            "sInfoThousands"=>  ",",
+            "sLoadingRecords"=> "Cargando...",
+            "oAria"=> array(
+                "sSortAscending"=>  ": Activar para ordenar la columna de manera ascendente",
+                "sSortDescending"=> ": Activar para ordenar la columna de manera descendente"
+            )
+        ),
+        "autoFill"=>"true",
+        "dom"=> "lfrtBip",
+        "buttons"=>array(
+                        array("extend"=>"pdf", "message"=>"Generando PDF"),
+                        "csv",
+                        "excel"
+                    )
+    );
+
+    return $data_to_table;
+
 }
 ?>

@@ -14,6 +14,14 @@
     return {
         init: function() {
 
+                $('#button_actualizar_primer_acercamiento').click(function(){
+                    $.get( "../managers/dphpforms/dphpforms_forms_core.php?form_id=primer_acercamiento&record_id=" + $(this).attr('data-record-id'), function( data ) {
+                        $("#primer_acercamiento_form").html("");
+                        $('#primer_acercamiento_form').append( data );
+                        $('#modal_primer_acercamiento').fadeIn(300);
+                    });
+                });
+                
 
                 function get_url_parameters(url){
                     var start_param_position = url.indexOf("?");
@@ -105,6 +113,7 @@
                                 "url": window.location.href
                             };
 
+                            console.log( JSON.stringify(json_risks) );
 
                             $.ajax({
                                 type: "POST",
@@ -161,6 +170,17 @@
 
                     var codigo_monitor = $('#current_user_id').val();
                     $('.id_creado_por').find('input').val(codigo_monitor);
+
+                });
+
+                $('#button_primer_acercamiento').on('click', function() {
+
+                    $('#modal_primer_acercamiento').fadeIn(300);
+
+                    $('.primer_acerca_id_estudiante_field').find('input').val( get_student_code() );
+
+                    var creado_por = $('#current_user_id').val();
+                    $('.primer_acerca_id_creado_por_field').find('input').val(creado_por);
 
                 });
 
@@ -269,12 +289,20 @@
                                         function(){
                                             if(response['message'] == 'Updated'){
                                                 $('#dphpforms-peer-record-' + $('#dphpforms_record_id').val()).stop().animate({backgroundColor:'rgb(175, 255, 173)'}, 400).animate({backgroundColor:'#f5f5f5'}, 4000);
+                                            }else{
+                                                $('.dphpforms-response').trigger("reset");
+                                                location.reload();
                                             }
                                         }
                                     );
-                                    $('.dphpforms-response').trigger("reset");
+                                    
                                     $('#modal_v2_edit_peer_tracking').fadeOut(300);
                                     $('#modal_v2_peer_tracking').fadeOut(300);
+                                    $('#modal_primer_acercamiento').fadeOut(300);
+
+                                    $.get( "../managers/pilos_tracking/api_pilos_tracking.php?function=update_last_user_risk&arg=" + get_student_code(), function( data ) {
+                                        console.log( data );
+                                    });
 
                                     
                                     
@@ -332,7 +360,9 @@
                                         type: 'success'},
                                         function(){
                                             $('#modal_v2_edit_peer_tracking').fadeOut( 300 );
-                                            $('#dphpforms-peer-record-' + record_id).remove();
+                                            //$('#dphpforms-peer-record-' + record_id).remove();
+                                            $('#modal_primer_acercamiento').fadeOut( 300 );
+                                            location.reload();
                                         }
                                     );
                                 }else if(response['status'] == -1){
