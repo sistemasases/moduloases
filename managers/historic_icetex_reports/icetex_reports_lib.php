@@ -182,6 +182,24 @@ function get_all_resolutions_codes(){
 
 }
 
+
+function sum_amount_students_resolutions($id_resolution){
+    global $DB;
+
+    $sql_query = "SELECT sum(monto_estudiante) AS sum_am_res FROM {talentospilos_res_estudiante} 
+                    WHERE id_resolucion = $id_resolution";
+
+    $sum_res = $DB->get_record_sql($sql_query);
+
+    if(!$sum_res->sum_am_res){
+        return 0;
+    }else{
+        return $sum_res->sum_am_res;
+    }
+}
+
+//print_r(sum_amount_students_resolutions(1));
+
 /**
  * Functions that returns an array containing the resolutions for the report
  * 
@@ -193,6 +211,9 @@ function get_resolutions_for_report(){
 
     $resolutions_array = array();
 
+    $total_am_students = 0;
+    $total_subtraction = 0;
+
     $sql_query = "SELECT DISTINCT res_ice.id, res_ice.codigo_resolucion, semestre.nombre, res_ice.nota_credito, res_ice.monto_total 
                     FROM mdl_talentospilos_res_icetex AS res_ice
                         INNER JOIN mdl_talentospilos_semestre semestre ON semestre.id = res_ice.id_semestre";
@@ -203,9 +224,12 @@ function get_resolutions_for_report(){
         if(is_null($resolution->nota_credito)){
             $resolution->nota_credito = "---";
         }
-
+        
+        $total_am_students = sum_amount_students_resolutions($resolution->id);
+        $total_subtraction = $resolution->monto_total - $total_am_students;
         $resolution->monto_total = "$".$resolution->monto_total;
-
+        $resolution->monto_sum_estudiantes = "$".$total_am_students;
+        $resolution->monto_diferencia = "$".$total_subtraction;
         array_push($resolutions_array, $resolution);
     }
 
