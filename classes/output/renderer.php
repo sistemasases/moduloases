@@ -133,6 +133,11 @@ class renderer extends plugin_renderer_base {
         return parent::render_from_template('block_ases/academic_reports', $data);
     }
 
+    public function render_historic_academic_reports_page($page){
+        $data = $page->export_for_template($this);
+        return parent::render_from_template('block_ases/historic_academic_reports', $data);
+    }
+
     public function render_index_sistemas_page($page){
         $data = $page->export_for_template($this);
         return parent::render_from_template('block_ases/index_sistemas', $data);

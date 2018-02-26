@@ -1,0 +1,56 @@
+<body name="historic_academic_reports">
+    {{#data}}
+    {{> block_ases/side_menu}}
+    {{{message}}}
+        <div>
+                {{#view_students_report_har}}
+            <div class = 'title'><b>REPORTES HISTORICOS ACADÉMICOS</b></div>
+    
+            <div data-spy="scroll" data-target=".navbar" data-offset="50" class="well col-md-10 col-md-offset-1 reporte-seguimiento" id="reemplazarToogle" name="reemplazarToogle">
+                
+                <div class="panel-group">
+                    <div class="panel panel-default">
+                        <div class="panel-heading" style="background-color: #D0C4C4;">
+                            <h4 class="panel-title">
+                                <a data-toggle="collapse" href="#collapse01">
+                                    Reporte por materias de estudiantes
+                                </a>
+                            </h4>
+                        </div>
+                        <div id = "collapse01" class="panel-collapse collapse">
+                            {{{tableStudents}}}
+                        </div>
+                    </div>
+    
+                </div>
+                {{/view_students_report_har}}
+
+                {{#view_totals_report_har}}
+                <div class="panel-group">
+                    <div class="panel panel-default">
+                        <div class="panel-heading" style="background-color: #D0C4C4;">
+                            <h4 class="panel-title">
+                                <a data-toggle="collapse" href="#collapse02">
+                                    Reportes totales
+                                </a>
+                            </h4>
+                        </div>
+                        <div id = "collapse02" class="panel-collapse collapse">
+                            holi
+                            {{{totalTable}}}
+                        </div>
+                    </div>
+    
+                </div>
+                {{/view_totals_report_har}}
+    
+    
+            </div>
+           
+    
+           
+        </div>
+        <!-- end wrapper -->
+        {{/data}}
+    </body>
+    
