@@ -40,7 +40,7 @@
         $RECORD_ID = $record_id_;
 
         if(!$RECORD_ID){
-            $html = $html .  "Error: variable reg ausente.";
+            $html = $html .  "Error: variable registro ausente.";
             return $html;
         }
 
@@ -392,7 +392,7 @@
             }
 
         }
-        $html = $html .  ' <hr style="border-color:red"><button type="submit" class="btn btn-sm btn-danger btn-dphpforms-univalle">Actualizar</button> <a href="javascript:void(0);" data-record-id="'.$RECORD_ID.'" class="btn btn-sm btn-danger btn-dphpforms-univalle btn-dphpforms-delete-record">Eliminar</a>' . "\n";
+        $html = $html .  '<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" style="padding:0px;"> <hr style="border-color:red"></div><button type="submit" class="btn btn-sm btn-danger btn-dphpforms-univalle">Actualizar</button> <a href="javascript:void(0);" data-record-id="'.$RECORD_ID.'" class="btn btn-sm btn-danger btn-dphpforms-univalle btn-dphpforms-delete-record">Eliminar</a>' . "\n";
         $html = $html .  ' </form>' . "\n";
 
         //Manejo de disparadores
