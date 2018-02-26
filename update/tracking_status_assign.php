@@ -8,100 +8,100 @@ global $DB;
 //Que se encuentran 3 veces con diferentes id_moodle_user mismo id_ases_user
 
 
-$sql_query = "UPDATE {talentospilos_user_extended} SET tracking_status = 0 WHERE id=129";
+$sql_query = "UPDATE {talentospilos_user_extended} SET tracking_status = 0 WHERE id_moodle_user=103151";
 $success = $DB->execute($sql_query);
 
-$sql_query = "UPDATE {talentospilos_user_extended} SET tracking_status = 1 WHERE id=439";
+$sql_query = "UPDATE {talentospilos_user_extended} SET tracking_status = 1 WHERE id_moodle_user=108600";
 $success = $DB->execute($sql_query);
 
-$sql_query = "DELETE FROM {talentospilos_user_extended} WHERE id=1048";
+$sql_query = "DELETE FROM {talentospilos_user_extended} WHERE id_moodle_user=115980";
 $success = $DB->execute($sql_query);
 
-$sql_query = "UPDATE {talentospilos_user_extended} SET tracking_status = 1 WHERE id=433";
+$sql_query = "UPDATE {talentospilos_user_extended} SET tracking_status = 1 WHERE id_moodle_user=107985";
 $success = $DB->execute($sql_query);
 
-$sql_query = "UPDATE {talentospilos_user_extended} SET tracking_status = 0 WHERE id=180";
+$sql_query = "UPDATE {talentospilos_user_extended} SET tracking_status = 0 WHERE id_moodle_user=103203";
 $success = $DB->execute($sql_query);
 
-$sql_query = "DELETE FROM {talentospilos_user_extended} WHERE id=1061";
+$sql_query = "DELETE FROM {talentospilos_user_extended} WHERE id_moodle_user=115994";
 $success = $DB->execute($sql_query);
 
-$sql_query = "UPDATE {talentospilos_user_extended} SET tracking_status = 0 WHERE id=171";
+$sql_query = "UPDATE {talentospilos_user_extended} SET tracking_status = 0 WHERE id_moodle_user=103193";
 $success = $DB->execute($sql_query);
 
-$sql_query = "UPDATE {talentospilos_user_extended} SET tracking_status = 1 WHERE id=1324";
+$sql_query = "UPDATE {talentospilos_user_extended} SET tracking_status = 1 WHERE id_moodle_user=121271";
 $success = $DB->execute($sql_query);
 
-$sql_query = "DELETE FROM {talentospilos_user_extended} WHERE id=1038";
+$sql_query = "DELETE FROM {talentospilos_user_extended} WHERE id_moodle_user=115969";
 $success = $DB->execute($sql_query);
 
-$sql_query = "DELETE FROM {talentospilos_user_extended} WHERE id=1045";
+$sql_query = "DELETE FROM {talentospilos_user_extended} WHERE id_moodle_user=115977";
 $success = $DB->execute($sql_query);
 
-$sql_query = "UPDATE {talentospilos_user_extended} SET tracking_status = 1 WHERE id=443";
+$sql_query = "UPDATE {talentospilos_user_extended} SET tracking_status = 1 WHERE id_moodle_user=109597";
 $success = $DB->execute($sql_query);
 
-$sql_query = "UPDATE {talentospilos_user_extended} SET tracking_status = 0 WHERE id=211";
+$sql_query = "UPDATE {talentospilos_user_extended} SET tracking_status = 0 WHERE id_moodle_user=103239";
 $success = $DB->execute($sql_query);
 
-$sql_query = "DELETE FROM {talentospilos_user_extended} WHERE id=1037";
+$sql_query = "DELETE FROM {talentospilos_user_extended} WHERE id_moodle_user=115968";
 $success = $DB->execute($sql_query);
 
-$sql_query = "UPDATE {talentospilos_user_extended} SET tracking_status = 1 WHERE id=820";
+$sql_query = "UPDATE {talentospilos_user_extended} SET tracking_status = 1 WHERE id_moodle_user=114305";
 $success = $DB->execute($sql_query);
 
-$sql_query = "UPDATE {talentospilos_user_extended} SET tracking_status = 0 WHERE id=213";
+$sql_query = "UPDATE {talentospilos_user_extended} SET tracking_status = 0 WHERE id_moodle_user=103241";
 $success = $DB->execute($sql_query);
 
-$sql_query = "DELETE FROM {talentospilos_user_extended} WHERE id=1047";
+$sql_query = "DELETE FROM {talentospilos_user_extended} WHERE id_moodle_user=115979";
 $success = $DB->execute($sql_query);
 
-$sql_query = "UPDATE {talentospilos_user_extended} SET tracking_status = 1 WHERE id=431";
+$sql_query = "UPDATE {talentospilos_user_extended} SET tracking_status = 1 WHERE id_moodle_user=107313";
 $success = $DB->execute($sql_query);
 
-$sql_query = "UPDATE {talentospilos_user_extended} SET tracking_status = 0 WHERE id=217";
+$sql_query = "UPDATE {talentospilos_user_extended} SET tracking_status = 0 WHERE id_moodle_user=103245";
 $success = $DB->execute($sql_query);
 
-$sql_query = "UPDATE {talentospilos_user_extended} SET tracking_status = 1 WHERE id=435";
+$sql_query = "UPDATE {talentospilos_user_extended} SET tracking_status = 1 WHERE id_moodle_user=108249";
 $success = $DB->execute($sql_query);
 
-$sql_query = "DELETE FROM {talentospilos_user_extended} WHERE id=1043";
+$sql_query = "DELETE FROM {talentospilos_user_extended} WHERE id_moodle_user=115975";
 $success = $DB->execute($sql_query);
 
-$sql_query = "UPDATE {talentospilos_user_extended} SET tracking_status = 0 WHERE id=200";
+$sql_query = "UPDATE {talentospilos_user_extended} SET tracking_status = 0 WHERE id_moodle_user=103226";
 $success = $DB->execute($sql_query);
 
-$sql_query = "UPDATE {talentospilos_user_extended} SET tracking_status = 1 WHERE id=437";
+$sql_query = "UPDATE {talentospilos_user_extended} SET tracking_status = 1 WHERE id_moodle_user=108300";
 $success = $DB->execute($sql_query);
 
-$sql_query = "UPDATE {talentospilos_user_extended} SET tracking_status = 0 WHERE id=222";
+$sql_query = "UPDATE {talentospilos_user_extended} SET tracking_status = 0 WHERE id_moodle_user=103250";
 $success = $DB->execute($sql_query);
 
-$sql_query = "DELETE FROM {talentospilos_user_extended} WHERE id=1058";
+$sql_query = "DELETE FROM {talentospilos_user_extended} WHERE id_moodle_user=115991";
 $success = $DB->execute($sql_query);
 
-$sql_query = "DELETE FROM {talentospilos_user_extended} WHERE id=1039";
+$sql_query = "DELETE FROM {talentospilos_user_extended} WHERE id_moodle_user=115970";
 $success = $DB->execute($sql_query);
 
-$sql_query = "UPDATE {talentospilos_user_extended} SET tracking_status = 1 WHERE id=446";
+$sql_query = "UPDATE {talentospilos_user_extended} SET tracking_status = 1 WHERE id_moodle_user=109704";
 $success = $DB->execute($sql_query);
 
-$sql_query = "UPDATE {talentospilos_user_extended} SET tracking_status = 0 WHERE id=262";
+$sql_query = "UPDATE {talentospilos_user_extended} SET tracking_status = 0 WHERE id_moodle_user=103293";
 $success = $DB->execute($sql_query);
 
-$sql_query = "DELETE FROM {talentospilos_user_extended} WHERE id=1051";
+$sql_query = "DELETE FROM {talentospilos_user_extended} WHERE id_moodle_user=115983";
 $success = $DB->execute($sql_query);
 
-$sql_query = "UPDATE {talentospilos_user_extended} SET tracking_status = 1 WHERE id=789";
+$sql_query = "UPDATE {talentospilos_user_extended} SET tracking_status = 1 WHERE id_moodle_user=113930";
 $success = $DB->execute($sql_query);
 
-$sql_query = "UPDATE {talentospilos_user_extended} SET tracking_status = 0 WHERE id=273";
+$sql_query = "UPDATE {talentospilos_user_extended} SET tracking_status = 0 WHERE id_moodle_user=103304";
 $success = $DB->execute($sql_query);
 
-$sql_query = "UPDATE {talentospilos_user_extended} SET tracking_status = 0 WHERE id=283";
+$sql_query = "UPDATE {talentospilos_user_extended} SET tracking_status = 0 WHERE id_moodle_user=103315";
 $success = $DB->execute($sql_query);
 
-$sql_query = "UPDATE {talentospilos_user_extended} SET tracking_status = 1 WHERE id=541";
+$sql_query = "UPDATE {talentospilos_user_extended} SET tracking_status = 1 WHERE id_moodle_user=111505";
 $success = $DB->execute($sql_query);
 
 
@@ -109,67 +109,67 @@ $success = $DB->execute($sql_query);
 //Que se encuentran 2 veces con diferentes id_moodle_user mismo id_ases_user
 
 
-$sql_query = "UPDATE {talentospilos_user_extended} SET tracking_status = 0 WHERE id=1007";
+$sql_query = "UPDATE {talentospilos_user_extended} SET tracking_status = 0 WHERE id_moodle_user=115923";
 $success = $DB->execute($sql_query);
 
-$sql_query = "UPDATE {talentospilos_user_extended} SET tracking_status = 1 WHERE id=434";
+$sql_query = "UPDATE {talentospilos_user_extended} SET tracking_status = 1 WHERE id_moodle_user=108003";
 $success = $DB->execute($sql_query);
 
-$sql_query = "UPDATE {talentospilos_user_extended} SET tracking_status = 0 WHERE id=13";
+$sql_query = "UPDATE {talentospilos_user_extended} SET tracking_status = 0 WHERE id_moodle_user=93524";
 $success = $DB->execute($sql_query);
 
-$sql_query = "UPDATE {talentospilos_user_extended} SET tracking_status = 1 WHERE id=605";
+$sql_query = "UPDATE {talentospilos_user_extended} SET tracking_status = 1 WHERE id_moodle_user=112119";
 $success = $DB->execute($sql_query);
 
-$sql_query = "UPDATE {talentospilos_user_extended} SET tracking_status = 0 WHERE id=1004";
+$sql_query = "UPDATE {talentospilos_user_extended} SET tracking_status = 0 WHERE id_moodle_user=115916";
 $success = $DB->execute($sql_query);
 
-$sql_query = "UPDATE {talentospilos_user_extended} SET tracking_status = 1 WHERE id=102";
+$sql_query = "UPDATE {talentospilos_user_extended} SET tracking_status = 1 WHERE id_moodle_user=99097";
 $success = $DB->execute($sql_query);
 
-$sql_query = "UPDATE {talentospilos_user_extended} SET tracking_status = 1 WHERE id=774";
+$sql_query = "UPDATE {talentospilos_user_extended} SET tracking_status = 1 WHERE id_moodle_user=113766";
 $success = $DB->execute($sql_query);
 
-$sql_query = "UPDATE {talentospilos_user_extended} SET tracking_status = 0 WHERE id=63";
+$sql_query = "UPDATE {talentospilos_user_extended} SET tracking_status = 0 WHERE id_moodle_user=95881";
 $success = $DB->execute($sql_query);
 
-$sql_query = "DELETE FROM {talentospilos_user_extended} WHERE id=1006";
+$sql_query = "DELETE FROM {talentospilos_user_extended} WHERE id_moodle_user=115918";
 $success = $DB->execute($sql_query);
 
-$sql_query = "UPDATE {talentospilos_user_extended} SET tracking_status = 1 WHERE id=108";
+$sql_query = "UPDATE {talentospilos_user_extended} SET tracking_status = 1 WHERE id_moodle_user=99750";
 $success = $DB->execute($sql_query);
 
-$sql_query = "UPDATE {talentospilos_user_extended} SET tracking_status = 0 WHERE id=407";
+$sql_query = "UPDATE {talentospilos_user_extended} SET tracking_status = 0 WHERE id_moodle_user=106092";
 $success = $DB->execute($sql_query);
 
-$sql_query = "UPDATE {talentospilos_user_extended} SET tracking_status = 1 WHERE id=1013";
+$sql_query = "UPDATE {talentospilos_user_extended} SET tracking_status = 1 WHERE id_moodle_user=115929";
 $success = $DB->execute($sql_query);
 
-$sql_query = "UPDATE {talentospilos_user_extended} SET tracking_status = 1 WHERE id=1065";
+$sql_query = "UPDATE {talentospilos_user_extended} SET tracking_status = 1 WHERE id_moodle_user=116519";
 $success = $DB->execute($sql_query);
 
-$sql_query = "UPDATE {talentospilos_user_extended} SET tracking_status = 0 WHERE id=388";
+$sql_query = "UPDATE {talentospilos_user_extended} SET tracking_status = 0 WHERE id_moodle_user=105594";
 $success = $DB->execute($sql_query);
 
-$sql_query = "UPDATE {talentospilos_user_extended} SET tracking_status = 1 WHERE id=946";
+$sql_query = "UPDATE {talentospilos_user_extended} SET tracking_status = 1 WHERE id_moodle_user=115523";
 $success = $DB->execute($sql_query);
 
-$sql_query = "UPDATE {talentospilos_user_extended} SET tracking_status = 0 WHERE id=363";
+$sql_query = "UPDATE {talentospilos_user_extended} SET tracking_status = 0 WHERE id_moodle_user=105057";
 $success = $DB->execute($sql_query);
 
-$sql_query = "UPDATE {talentospilos_user_extended} SET tracking_status = 1 WHERE id=1151";
+$sql_query = "UPDATE {talentospilos_user_extended} SET tracking_status = 1 WHERE id_moodle_user=118311";
 $success = $DB->execute($sql_query);
 
-$sql_query = "UPDATE {talentospilos_user_extended} SET tracking_status = 0 WHERE id=658";
+$sql_query = "UPDATE {talentospilos_user_extended} SET tracking_status = 0 WHERE id_moodle_user=112598";
 $success = $DB->execute($sql_query);
 
-$sql_query = "UPDATE {talentospilos_user_extended} SET tracking_status = 0 WHERE id=718";
+$sql_query = "UPDATE {talentospilos_user_extended} SET tracking_status = 0 WHERE id_moodle_user=112957";
 $success = $DB->execute($sql_query);
 
-$sql_query = "UPDATE {talentospilos_user_extended} SET tracking_status = 1 WHERE id=1302";
+$sql_query = "UPDATE {talentospilos_user_extended} SET tracking_status = 1 WHERE id_moodle_user=120575";
 $success = $DB->execute($sql_query);
 
-$sql_query = "UPDATE {talentospilos_user_extended} SET tracking_status = 1 WHERE id=423";
+$sql_query = "UPDATE {talentospilos_user_extended} SET tracking_status = 1 WHERE id_moodle_user=106622";
 $success = $DB->execute($sql_query);
 
 
