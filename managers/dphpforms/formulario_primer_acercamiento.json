@@ -89,7 +89,7 @@
             "opciones_campo": null,
             "atributos_campo": {
                 "maxlength": "5000",
-                "class": "col-xs-12 col-sm-12 col-md-12 col-lg-12 col-sm-offset-6 col-md-offset-6 col-lg-offset-6 primer_acerca_motivo_field",
+                "class": "col-xs-12 col-sm-12 col-md-12 col-lg-12 primer_acerca_motivo_field",
                 "name": "motivo",
                 "required": "true",
                 "local_alias": "pa_motivo"

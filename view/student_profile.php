@@ -840,6 +840,17 @@ if ($student_code != 0) {
         $record->primer_acercamiento = "<strong><h3>Oops!: No se ha encontrado un formulario con el alias <code>primer_acercamiento</code></h3></strong>";
     }
 
+    $record->registro_primer_acercamient = null;
+    $record->editor_registro_primer_acercamiento = null;
+    $primer_acercamiento = json_decode( dphpforms_find_records('primer_acercamiento', 'primer_acercamiento_id_estudiante', $student_code, 'DESC') )->results;
+    if($primer_acercamiento){
+        $record->actualizar_primer_acercamiento = true;
+        $record->id_primer_acercamiento = array_values( $primer_acercamiento )[0]->id_registro;
+        $record->editor_registro_primer_acercamiento = dphpforms_render_updater('primer_acercamiento', $rol, array_values( $primer_acercamiento )[0]->id_registro);
+    }else{
+        $record->registro_primer_acercamiento = true;
+    }
+
 } else {
 
     $student_id = -1;
