@@ -3,8 +3,7 @@
 require_once(dirname(__FILE__). '/../../../config.php');
 
 /* Modifica registros en la tabla {talentospilos_user_extended}
-   cuando :
-   El id_ases_user este repetido y en ambos tracking_status este en 1
+   cuando tracking status este en 0 lo modifica a 1
 */
 
 global $DB;
