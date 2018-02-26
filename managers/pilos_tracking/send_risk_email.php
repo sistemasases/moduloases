@@ -277,8 +277,8 @@ function send_email_dphpforms($json_risk_observation_, $student_code, $date, $su
 
     //return json_encode($emailToUser) ."  ". json_encode($emailFromUser) ."  ". json_encode($subject) ."  ". json_encode($messageText) ."  ". json_encode($messageHtml);
 
-    $email_result = email_to_user($emailToUser, $emailFromUser, "", "", $messageHtml, ", ", true);
-    $email_result = email_to_user($emailToUserPract, $emailFromUser, "", "", $messageHtml, ", ", true);
+    $email_result = email_to_user($emailToUser, $emailFromUser, "Riesgo de alto nivel: " . $student_info->firstname . $student_info->lastname, "", $messageHtml, ", ", true);
+    $email_result = email_to_user($emailToUserPract, $emailFromUser, "Riesgo de alto nivel: " . $student_info->firstname . $student_info->lastname, "", $messageHtml, ", ", true);
     
     //return 'Resultado: ' . $email_result . ' Usuarios: ' .  json_encode($emailToUser) ." |||| ". json_encode($emailFromUser);
     return $email_result;
