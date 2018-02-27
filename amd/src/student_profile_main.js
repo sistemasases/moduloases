@@ -14,7 +14,6 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/d3', 'block_ases/sweetaler
     return {
         init: function() {
 
-            
             // Carga una determinada pestaña
 
             var parameters = get_url_parameters(document.location.search);
@@ -35,8 +34,9 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/d3', 'block_ases/sweetaler
             }
 
             $("#asignados").select2({
+                width: 'resolve',
+                height: 'resolve',
                 language: {
-
                     noResults: function() {
 
                         return "No hay resultado";
@@ -46,7 +46,6 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/d3', 'block_ases/sweetaler
                         return "Buscando..";
                     }
                 },
-                dropdownAutoWidth: true,
             });
 
             $("#search").on('click', function(){

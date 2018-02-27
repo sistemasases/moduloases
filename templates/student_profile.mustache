@@ -8,117 +8,81 @@
       <input type="text" class="hide" id="id_ases" name="id_ases" value="{{id_ases}}" />
       <input type="text" class="hide" id="id_moodle" name="id_moodle" value="{{id_moodle}}" />
 
-      <div class="row m-bottom-20 cabecera">
-        <div class="col-md-4">
-
-          <h2>FICHA GENERAL DEL ESTUDIANTE</h2>
-
-          <div class="row">
-            <label class="col-sm-4">Código</label>
-            <div class="col-sm-4">
+      <div class="row" id="div-header-profile">
+        <div class="col-sm-10" id="div-header-info">
+          <div class="row" id="div-select-student">
+            <div class="col-sm-10">
               {{{code}}}
             </div>
-
             {{#search_student_sp}}
-            <div class="col-sm-4">
-              <button type="button" class="btn-primary btn-sm" name="search" id="search">
-                <span class=" button glyphicon glyphicon-search"></span> Buscar
-              </button>
-            </div>
+            <button type="button" id="search" class="btn-primary col-sm-1" name="search">
+              <span class="glyphicon glyphicon-search"></span> 
+            </button>
             {{/search_student_sp}}
-          </div>
-
-          {{#update_icetex_status_sp}}
-          <div class="row">
-            <label for="estado" class="col-sm-4 col-md-4 control-label">Estado Icetex</label>
-            <div class="col-sm-6">
-              <select name="estado" id="estado" class="col-md-5 form-control" disabled>
-                {{{status_icetex}}}
-              </select>
+            <div class="col-sm-1">
+              <span class="glyphicon glyphicon-ok" id="icon-tracking"></span>
             </div>
           </div>
-          {{/update_icetex_status_sp}}
-
-          {{#update_ases_status_sp}}
-          <div class="row">
-            <label for="estadoAses" class="col-md-4 control-label">Estado Ases</label>
-            <div class="col-sm-6">
-              <select name="estado_ases" id="estadoAses" class="col-md-5 form-control" disabled>
-                {{{status_ases}}}
-              </select>
-            </div>
-          </div>
-          {{/update_ases_status_sp}}
-          <div class="row">
-            <label for="input_facultad" class="col-sm-4 control-label">Facultad</label>
-            <div class="col-sm-6">
-              <span id="input_facultad">{{faculty}}</span>
-            </div>
-          </div>
-
-          <div class="row">
-            <label for="input_programa" class="col-sm-4 control-label">Programa</label>
-            <div class="col-sm-6">
-              <span id="input_programa">{{program}}</span>
-            </div>
-          </div>
-        </div>
-        <!-- End col-md-4 -->
-
-        <div class="col-md-6">
-
-          <div class="row m-bottom-20">
-            <label class="col-md-12 nombre-ficha" id="nombreficha">{{firstname}} {{lastname}}</label>
-          </div>
-
-          <div class="row">
-            <label for="cedula" class="col-sm-2 control-label">Documento</label>
-            <div class="col-sm-6">
-              <input type="text" class="form-control" name="num_doc" id="cedula" value="{{num_doc}}" size="12" maxlength="11" readonly>
-            </div>
-          </div>
-
-          <div class="row">
-            <label for="tipo_doc" class="col-sm-2 control-label">Tipo</label>
-            <div class="col-sm-6">
-              <select name="tipo_doc" id="tipo_doc" name="tipo_doc" disabled>
+          <div class="row" id="row-general-fields">
+            <div class="col-sm-1 div-general-fields" id="">
+              <select name="tipo_doc" class="" id="tipo_doc" name="tipo_doc" disabled>
                 <option value="T.I" {{doc_type_ti}}>T.I.</option>
                 <option value="C.C" {{doc_type_cc}}>C.C.</option>
                 <option value="C.R" {{doc_type_cr}}>C.R.</option>
                 <option id="EMPTY" {{doc_type_empty}}></option>
               </select>
             </div>
-          </div>
-
-          <div class="row">
-            <label for="age" class="col-sm-2">Edad:</label>
-            <div class="col-sm-6">
-              <span id="age">{{age}}</span>
+            <div class="col-sm-2 div-general-fields">
+              <input type="text" class="" name="num_doc" id="cedula" value="{{num_doc}}" size="12" maxlength="12" readonly>
             </div>
-          </div>
-
-          <div class="row">
-            <label for="email1" class="col-sm-2 control-label">Correo</label>
-            <div class="col-sm-6">
+            <div class="col-sm-2 div-general-fields">
+              <span id="age">{{age}} años</span>
+            </div>
+            <div class="col-sm-4 div-general-fields">
               <span id="email">{{email_moodle}}</span>
             </div>
           </div>
-
-          <div class="row">
-            <label class="col-sm-2">Cohorte</label>
-            <div class="col-sm-6">
-              <span type="text" id="fcohorte" name="fcohorte">{{cohort}}</span>
-            </div>
+          <hr>
+          <div class="col-sm-8" id="div_academic_programs">
+            {{#academic_programs}}
+              <h4>Programas académicos</h4>
+              <div class="col-sm-8">
+                  {{cod_univalle}} - {{nombre_programa}}    
+              </div>
+              <div class="col-sm-4">
+                  <select name="" id="">
+                      <option value="ACTIVO">ACTIVO</option>
+                      <option value="INACTIVO">INACTIVO</option>
+                      <option value="APLAZADO">APLAZADO</option>
+                      <option value="RETIRADO">RETIRADO</option>
+                      <option value="NR">NO REGISTRA</option>
+                  </select>
+              </div>  
+            {{/academic_programs}}
+            {{^academic_programs}}
+              <h4>Programa académico</h4>
+              No registra programas académicos.
+            {{/academic_programs}}
           </div>
-        </div>
+          <div class="col-sm-4" id="div_cohorts">
+            <h4>Cohortes</h4>
+            {{#student_cohorts}}
+              <div class="col-sm-12">
+                {{name}}
+              </div>
+            {{/student_cohorts}}
+            {{^student_cohorts}}
+              No registra cohortes asociadas.
+            {{/student_cohorts}}
+          </div>
 
-        <div class="col-md-2 col-sm-2 talentos_ficha">
-          <img id="photo" class="img-rounded" src="../../../user/pix.php/{{id_user}}/f1.jpg" style="width:150px; height:180px">
+        </div>
+        <div class="col-sm-2" id="photo_div">
+          <img id="photo" class="img-responsive" src="../../../user/pix.php/{{id_user}}/f1.jpg" alt="Foto de perfil" />
         </div>
       </div>
 
       <div class="row cabecera" id="container_profile">
-
         <!-- Pestañas ficha -->
         <div id="exTab1" class="col-sm-12">
           <ul class="nav nav-tabs">
@@ -192,8 +156,6 @@
                   </div>
                 </div>
               </div>
-
-
             </div>
             {{/view_academic_tab_sp}}
 

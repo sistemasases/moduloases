@@ -497,7 +497,7 @@ function get_ases_report($general_fields=null, $conditions, $risk_fields=null, $
                                                 INNER JOIN {talentospilos_rol} AS roles ON user_role.id_rol = roles.id
                       WHERE user_role.id_semestre = $id_current_semester AND user_role.estado = 1 AND user_role.id_usuario = $user_id";
 
-        $user_role = $DB->get_record_sql($sql_query);
+        $user_role = $DB->get_records_sql($sql_query);
 
         switch($user_role->nombre_rol){
             case 'director_prog':

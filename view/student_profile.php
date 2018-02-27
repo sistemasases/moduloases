@@ -93,63 +93,21 @@ if ($student_code != 0) {
 
     $student_id = $ases_student->id;
 
-    $student_status_ases = get_student_ases_status($student_id);
-    $student_status_icetex = get_student_icetex_status($student_id);
-
-    // Loading available states
-
-    $ases_status_array = get_status_ases();
-    $icetex_status_array = get_status_icetex();
-
-    $html_status_ases = "<option value=''>NO REGISTRA</option>";
-
-    foreach ($ases_status_array as $ases_status) {
-
-        if ($ases_status->nombre == $student_status_ases->nombre) {
-            $html_status_ases .= "<option value='" . $ases_status->id . "' selected>" . $ases_status->descripcion . "</option>";
-        } else {
-            $html_status_ases .= "<option value='" . $ases_status->id . "'>" . $ases_status->descripcion . "</option>";
-        }
-    }
-
-    $html_status_icetex = "<option value=''>NO REGISTRA</option>";
-
-    foreach ($icetex_status_array as $icetex_status) {
-        if ($icetex_status->nombre == $student_status_icetex->nombre) {
-            $html_status_icetex .= "<option value='" . $icetex_status->id . "' selected>" . $icetex_status->nombre . "</option>";
-        } else {
-            $html_status_icetex .= "<option value='" . $icetex_status->id . "'>" . $icetex_status->nombre . "</option>";
-        }
-    }
-
-    $record->status_ases = $html_status_ases;
-    $record->status_icetex = $html_status_icetex;
-
     // Student information to display on file header (ficha)
 
     $id_user_moodle = get_id_user_moodle($ases_student->id);
-
     $user_moodle = get_moodle_user($id_user_moodle);
-
-    $cohort = get_cohort_student($id_user_moodle);
-
-    $array_aditional_fields = get_adds_fields_mi($id_user_moodle);
-
-    $academic_program = get_program((int) $array_aditional_fields->idprograma);
-
-    $faculty = get_faculty($academic_program->id_facultad);
+    $academic_programs = get_academic_programs_by_student($student_id);
+    $student_cohorts = get_cohorts_by_student($id_user_moodle);
 
     // Evaluates if user role has permissions assigned on this view
 
     $record->id_moodle = $id_user_moodle;
     $record->id_ases = $student_id;
-    $record->firstname = $user_moodle->firstname;
-    $record->lastname = $user_moodle->lastname;
     $record->email_moodle = $user_moodle->email_moodle;
     $record->age = substr($ases_student->age, 0, 2);
-    $record->program = $academic_program->nombre;
-    $record->faculty = $faculty->nombre;
-    $record->cohort = $cohort->name;
+    $record->academic_programs = $academic_programs;
+    $record->student_cohorts = $student_cohorts;
 
     switch ($ases_student->tipo_doc) {
         case "T.I":
@@ -355,24 +313,24 @@ if ($student_code != 0) {
 
     //Current data
     //weighted average
-    $promedio = get_promedio_ponderado($student_id, $academic_program->id);
-    $record->promedio = $promedio;
+    // $promedio = get_promedio_ponderado($student_id, $academic_program->id);
+    // $record->promedio = $promedio;
 
-    //num bajos
-    $bajos = get_bajos_rendimientos($student_id, $academic_program->id);
-    $record->bajos = $bajos;
+    // //num bajos
+    // $bajos = get_bajos_rendimientos($student_id, $academic_program->id);
+    // $record->bajos = $bajos;
 
-    // //num estimulos
-    $estimulos = get_estimulos($student_id, $academic_program->id);
-    $record->estimulos = $estimulos;
+    // // //num estimulos
+    // $estimulos = get_estimulos($student_id, $academic_program->id);
+    // $record->estimulos = $estimulos;
 
-    //Current semester
-    $html_academic_table = get_grades_courses_student_last_semester($id_user_moodle);
-    $record->academic_semester_act = $html_academic_table;
+    // //Current semester
+    // $html_academic_table = get_grades_courses_student_last_semester($id_user_moodle);
+    // $record->academic_semester_act = $html_academic_table;
 
-    //historic academic
-    $html_historic_academic = get_historic_academic_by_student($student_id);
-    $record->historic_academic = $html_historic_academic;
+    // //historic academic
+    // $html_historic_academic = get_historic_academic_by_student($student_id);
+    // $record->historic_academic = $html_historic_academic;
 
     // Student trackings (Seguimientos)
 
@@ -865,6 +823,7 @@ $PAGE->requires->css('/blocks/ases/style/c3.css', true);
 $PAGE->requires->css('/blocks/ases/style/student_profile_risk_graph.css', true);
 $PAGE->requires->css('/blocks/ases/js/select2/css/select2.css', true);
 $PAGE->requires->css('/blocks/ases/style/side_menu_style.css', true);
+$PAGE->requires->css('/blocks/ases/style/student_profile.css', true);
 //Pendiente para cambiar el idioma del nombre del archivo junto con la estructura de
 //su nombramiento.
 $PAGE->requires->css('/blocks/ases/style/creadorFormulario.css', true);

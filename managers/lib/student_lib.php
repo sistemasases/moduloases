@@ -257,6 +257,33 @@ function get_cohort_student($id_student)
 }
 
 /**
+ * Gets student cohorts
+ *
+ * @see get_cohorts_by_student($id_student)
+ * @param $id_moodle_student --> ID moodle 
+ * @return Array
+ */
+function get_cohorts_by_student($id_moodle_student){
+
+    global $DB;
+
+    $result_to_return = array();
+
+    $sql_query = "SELECT cohorts.name
+                  FROM {cohort_members} AS members 
+                    INNER JOIN {cohort} AS cohorts ON members.cohortid = cohorts.id
+                  WHERE userid = $id_moodle_student";
+    
+    $result_query = $DB->get_records_sql($sql_query);
+
+    foreach($result_query as $result){
+        array_push($result_to_return, $result);
+    }
+
+    return $result_to_return;
+}
+
+/**
  * Obtains name, lastname and email from a monitor assigned to a student, given the student id
  *
  * @see get_assigned_monitor($id_student)
@@ -411,3 +438,38 @@ function get_full_user($id)
 
     return $user;
 }
+
+
+/**
+ * Returns the academic programs associated with a student
+ *
+ * @see get_academic_program($id_ases_user)
+ * @param $id_ases_user --> student id on {talentospilos_usuario} table 
+ * @return array 
+ */
+function get_academic_programs_by_student($id_ases_user){
+
+    global $DB;
+
+    $result_to_return = new stdClass();
+    $array_result = array();
+
+    $sql_query = "SELECT academic_program.id, academic_program.cod_univalle, 
+                         academic_program.nombre AS nombre_programa, academic_program.jornada, faculty.nombre AS nombre_facultad,
+                         user_extended.program_status, user_extended.tracking_status
+                  FROM {talentospilos_user_extended} AS user_extended
+                       INNER JOIN {talentospilos_programa} AS academic_program ON user_extended.id_academic_program = academic_program.id
+                       INNER JOIN {talentospilos_facultad} AS faculty ON academic_program.id_facultad = faculty.id
+                  WHERE id_ases_user = $id_ases_user";
+    
+    $array_result_query = $DB->get_records_sql($sql_query);
+
+    foreach($array_result_query as $result){
+        array_push($array_result, $result);
+        
+    }
+
+    return $array_result;
+}
+
+// get_academic_programs_by_student(108);
