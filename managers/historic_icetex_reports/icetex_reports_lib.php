@@ -67,7 +67,7 @@ function get_array_students_with_resolution(){
             $historic->program_status = "INACTIVO";
         }
 
-        $historic->monto_estudiante = "$".$historic->monto_estudiante;
+        $historic->monto_estudiante = "$".number_format($historic->monto_estudiante, 0, ',', '.');
         array_push($array_historics, $historic);
     }
 
@@ -227,9 +227,9 @@ function get_resolutions_for_report(){
         
         $total_am_students = sum_amount_students_resolutions($resolution->id);
         $total_subtraction = $resolution->monto_total - $total_am_students;
-        $resolution->monto_total = "$".$resolution->monto_total;
-        $resolution->monto_sum_estudiantes = "$".$total_am_students;
-        $resolution->monto_diferencia = "$".$total_subtraction;
+        $resolution->monto_total = "$".number_format($resolution->monto_total, 0, ',', '.');
+        $resolution->monto_sum_estudiantes = "$".number_format($total_am_students, 0, ',', '.');
+        $resolution->monto_diferencia = "$".number_format($total_subtraction, 0, ',', '.');
         array_push($resolutions_array, $resolution);
     }
 
@@ -264,7 +264,7 @@ function get_count_active_res_students($cohort){
 
     foreach($counts as $count){
         $count->cohort = $cohort;
-        $count->monto_act_res = "$".$count->monto_act_res;
+        $count->monto_act_res = "$".number_format($count->monto_act_res, 0, ',', '.');
         array_push($array_count, $count);
     }
 
@@ -299,7 +299,7 @@ function get_count_inactive_res_students($cohort){
 
     foreach($counts as $count){
         $count->cohort = $cohort;
-        $count->monto_inact_res = "$".$count->monto_inact_res;
+        $count->monto_inact_res = "$".number_format($count->monto_inact_res, 0, ',', '.');
         array_push($array_count, $count);
     }
 
