@@ -225,10 +225,7 @@ pre, code {
 /* Inicio de definición de estilos para seguimientos geográficos */
 
 .geographic_track_container{
-    border-radius: 5px;
-    background-color: white;
-    padding: 0.5em 1.5em 1.5em 1.5em;
-    margin: 1.5em;
+    padding: 20px;
 }
 
 /* Finalización de definición de estilos para seguimientos geográficos */

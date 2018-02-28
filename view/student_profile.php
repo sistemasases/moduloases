@@ -854,7 +854,7 @@ if ($student_code != 0) {
         $record->registro_primer_acercamiento = true;
     }
 
-    $record->form_seguimientos_geograficos = dphpforms_render_recorder('seguimientos_geograficos', $rol);
+    $record->form_seguimientos_geograficos = dphpforms_render_recorder('seguimiento_geografico', $rol);
     if ($record->form_seguimientos_geograficos == '') {
         $record->form_seguimientos_geograficos = "<strong><h3>Oops!: No se ha encontrado un formulario con el alias: <code>seguimientos_geograficos</code>.</h3></strong>";
     }

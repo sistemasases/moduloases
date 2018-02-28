@@ -53,11 +53,31 @@
     </div>
     <div class="row">
         <div class="col-xs-11 col-sm-11 col-md-11 col-lg-11 geographic_track_container">
-            <h3>Seguimientos geográficos</h3>
-            <hr>
-            <button type="button" id="button_add_geographic_track" class="btn-primary">
-                Nuevo seguimiento 
-            </button>
+
+                <!--
+                    Riesgo
+                    3 checks( vive lejos, vive en zona de riesgo( Regla a otro check Nativo, inmigrante ) ), Nativo inmigrante, quien registra, id_estudiante, único
+                    + Histórico de riesgo, Alerta si es alto
+                 -->
+
+                <div id="accordion_geo_tab" role="tablist" aria-multiselectable="true">
+                        <div class="panel panel-default" id="panelGeo">
+                           <div class="panel-heading" role="tab" id="headingGeo">
+                              <h4 class="panel-title">
+                                 <a class="collapsed" data-toggle="collapse" data-parent="#accordion_geo_tab" href="#collapseGeo" aria-expanded="false" aria-controls="collapseGeo">
+                                      Seguimiento geográfico
+                                 </a>
+                              </h4>
+                           </div>
+                           <div id="collapseGeo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingGeo" aria-expanded="false">
+                                <button type="button" id="button_add_geographic_track" class="btn-primary">
+                                    Nuevo seguimiento 
+                                </button>
+                                <hr>
+                           </div>
+                        </div>
+                   </div>
+            
         </div>
     </div>
 </div>
