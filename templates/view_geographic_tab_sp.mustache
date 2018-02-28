@@ -70,14 +70,19 @@
                               </h4>
                            </div>
                            <div id="collapseGeo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingGeo" aria-expanded="false">
+                                {{#registro_seguimiento_geografico}}
                                 <button type="button" id="button_add_geographic_track" class="btn-primary">
-                                    Nuevo seguimiento 
-                                </button>
-                                <hr>
-                           </div>
+                                    Registrar seguimiento
+                                </button> 
+                                {{/registro_seguimiento_geografico}}
+                                {{#actualizar_seguimiento_geografico}}
+                                <button type="button" id="button_update_geographic_track" data-record-id="{{id_seguimiento_geografico}}" class="btn-primary">
+                                    Ver/Actualizar seguimiento
+                                </button> 
+                                {{/actualizar_seguimiento_geografico}}
+                            </div>
                         </div>
-                   </div>
-            
+                </div>
         </div>
     </div>
 </div>
