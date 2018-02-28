@@ -19,6 +19,11 @@
                         $("#primer_acercamiento_form").html("");
                         $('#primer_acercamiento_form').append( data );
                         $('#modal_primer_acercamiento').fadeIn(300);
+                        var id_creado_por = $('#modal_primer_acercamiento').find('.pa_id_creado_por').find('input').val();
+                        $.get( "../managers/user_management/api_user.php?function=get_user_information&arg=" + id_creado_por, function( response ) {
+                            var registered_by = response.firstname + ' ' + response.lastname;
+                            $('#modal_primer_acercamiento').find('h1').after('<hr style="border-color:#444;"><h3>Registrado por: <strong>' + registered_by + '</strong></h3>');
+                        });
                     });
                 });
                 
@@ -165,9 +170,7 @@
                 $('#button_add_v2_track').on('click', function() {
 
                     $('#modal_v2_peer_tracking').fadeIn(300);
-
                     $('.id_estudiante').find('input').val( get_student_code() );
-
                     var codigo_monitor = $('#current_user_id').val();
                     $('.id_creado_por').find('input').val(codigo_monitor);
 
@@ -176,9 +179,7 @@
                 $('#button_primer_acercamiento').on('click', function() {
 
                     $('#modal_primer_acercamiento').fadeIn(300);
-
                     $('.primer_acerca_id_estudiante_field').find('input').val( get_student_code() );
-
                     var creado_por = $('#current_user_id').val();
                     $('.primer_acerca_id_creado_por_field').find('input').val(creado_por);
 
@@ -194,6 +195,16 @@
                     load_record_updater('seguimiento_pares', id_tracking);
                     $('#modal_v2_edit_peer_tracking').fadeIn(300);
                 });
+
+                function custom_actions( data ){
+
+                    if( data == 'primer_acercamiento' ){ 
+
+                    }else if( data == 'seguimiento_pares' ){
+
+                    }
+
+                }
 
                 function load_record_updater(form_id, record_id){
                     $.get( "../managers/dphpforms/dphpforms_forms_core.php?form_id="+form_id+"&record_id="+record_id, function( data ) {
@@ -239,7 +250,16 @@
                             }
 
                             $("#permissions_informationr").html("");
-
+                            
+                            var is_primer_acercamiento = data.indexOf('primer_acercamiento_');
+                            if( is_primer_acercamiento != -1 ){
+                                custom_actions( 'primer_acercamiento' );
+                            }
+                            var is_seguimiento_pares = data.indexOf('seguimiento_de_pares_');
+                            if( is_seguimiento_pares != -1 ){
+                                custom_actions( 'seguimiento_pares' );
+                            }
+                           
                     });
                 }
 
