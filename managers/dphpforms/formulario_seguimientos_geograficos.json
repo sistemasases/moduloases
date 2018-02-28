@@ -1,0 +1,15 @@
+{
+    "datos_formulario": {
+        "nombre": "Seguimiento geográfico",
+        "descripcion": "Formulario para el registro de seguimientos geográficos de un estudiante",
+        "method": "POST",
+        "action": "procesador.php",
+        "enctype": null,
+        "alias": "seguimiento_geografico"
+    },
+    "preguntas": [],
+    "disparadores": [],
+    "reglas": [],
+    "campos_busqueda": [],
+    "actualizador_orden": []
+}
