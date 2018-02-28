@@ -256,6 +256,7 @@
                  });
 
                 $(document).on('submit', '.dphpforms' , function(evt) {
+
                     evt.preventDefault();
                     var formData = new FormData(this);
                     var formulario = $(this);
@@ -263,6 +264,8 @@
                     if(formulario.attr('action') == 'procesador.php'){
                         url_processor = '../managers/dphpforms/procesador.php';
                     }
+                    $(formulario).find('button').prop( "disabled", true );
+                    $(formulario).find('a').attr("disabled", true);
                     $.ajax({
                         type: 'POST',
                         url: url_processor,
@@ -299,6 +302,8 @@
                                     $('#modal_v2_edit_peer_tracking').fadeOut(300);
                                     $('#modal_v2_peer_tracking').fadeOut(300);
                                     $('#modal_primer_acercamiento').fadeOut(300);
+                                    $(formulario).find('button').prop( "disabled", false);
+                                    $(formulario).find('a').attr( "disabled", false);
 
                                     $.get( "../managers/pilos_tracking/api_pilos_tracking.php?function=update_last_user_risk&arg=" + get_student_code(), function( data ) {
                                         console.log( data );
@@ -307,6 +312,8 @@
                                     
                                     
                                 }else if(response['status'] == -2){
+                                    $(formulario).find('button').prop( "disabled", false);
+                                    $(formulario).find('a').attr( "disabled", false);
                                     var mensaje = '';
                                     if(response['message'] == 'Without changes'){
                                         mensaje = 'No hay cambios que registrar';
@@ -334,6 +341,8 @@
                                     'Oops!, informe de este error',
                                     'error'
                                 );
+                                $(formulario).find('button').prop( "disabled", false);
+                                $(formulario).find('a').attr( "disabled", false);
                             }
                             
                      });
