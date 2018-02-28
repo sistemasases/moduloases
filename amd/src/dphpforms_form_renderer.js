@@ -185,6 +185,15 @@
 
                 });
 
+                $('#button_add_geographic_track').on('click', function() {
+
+                    $('#modal_seguimiento_geografico').fadeIn(300);
+                    /*$('.primer_acerca_id_estudiante_field').find('input').val( get_student_code() );
+                    var creado_por = $('#current_user_id').val();
+                    $('.primer_acerca_id_creado_por_field').find('input').val(creado_por);*/
+
+                });
+
                 $('.mymodal-close').click(function(){
                     $(this).parent().parent().parent().parent().fadeOut(300);
                 });
@@ -322,6 +331,8 @@
                                     $('#modal_v2_edit_peer_tracking').fadeOut(300);
                                     $('#modal_v2_peer_tracking').fadeOut(300);
                                     $('#modal_primer_acercamiento').fadeOut(300);
+                                    $('#modal_seguimiento_geografico').fadeOut(300);
+                                    
                                     $(formulario).find('button').prop( "disabled", false);
                                     $(formulario).find('a').attr( "disabled", false);
 

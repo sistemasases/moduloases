@@ -834,13 +834,13 @@ if ($student_code != 0) {
     $record->form_seguimientos = dphpforms_render_recorder('seguimiento_pares', $rol);
     
     if ($record->form_seguimientos == '') {
-        $record->form_seguimientos = "<strong><h3>Oops!: No se ha encontrado un formulario con el alias <code>seguimiento_pares</code></h3></strong>";
+        $record->form_seguimientos = "<strong><h3>Oops!: No se ha encontrado un formulario con el alias: <code>seguimiento_pares</code>.</h3></strong>";
     }
     $record->has_form =1;
     $record->primer_acercamiento = dphpforms_render_recorder('primer_acercamiento', $rol);
     
     if ($record->primer_acercamiento == '') {
-        $record->primer_acercamiento = "<strong><h3>Oops!: No se ha encontrado un formulario con el alias <code>primer_acercamiento</code></h3></strong>";
+        $record->primer_acercamiento = "<strong><h3>Oops!: No se ha encontrado un formulario con el alias: <code>primer_acercamiento</code>.</h3></strong>";
     }
 
     $record->registro_primer_acercamient = null;
@@ -852,6 +852,11 @@ if ($student_code != 0) {
         $record->editor_registro_primer_acercamiento = dphpforms_render_updater('primer_acercamiento', $rol, array_values( $primer_acercamiento )[0]->id_registro);
     }else{
         $record->registro_primer_acercamiento = true;
+    }
+
+    $record->form_seguimientos_geograficos = dphpforms_render_recorder('seguimientos_geograficos', $rol);
+    if ($record->form_seguimientos_geograficos == '') {
+        $record->form_seguimientos_geograficos = "<strong><h3>Oops!: No se ha encontrado un formulario con el alias: <code>seguimientos_geograficos</code>.</h3></strong>";
     }
 
 } else {
