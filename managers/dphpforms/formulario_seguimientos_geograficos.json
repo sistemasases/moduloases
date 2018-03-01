@@ -14,13 +14,78 @@
             "tipo_campo": "TEXTAREA",
             "opciones_campo": null,
             "atributos_campo": {
-                "class": "col-xs-12 col-sm-12 col-md-12 col-lg-12",
+                "class": "col-xs-12 col-sm-12 col-md-12 col-lg-12 separador_inferior",
                 "name": "seg_geo_observaciones",
                 "required": "false",
                 "maxlength": "1000",
                 "local_alias": "seg_geo_observaciones"
             },
-            "permisos_campo": []
+            "permisos_campo": [
+                {
+                    "rol": "administrativo",
+                    "permisos": []
+                },
+                {
+                    "rol": "reportes",
+                    "permisos": []
+                },
+                {
+                    "rol": "profesional_ps",
+                    "permisos": [
+                        "lectura"
+                    ]
+                },
+                {
+                    "rol": "monitor_ps",
+                    "permisos": [
+                        "lectura",
+                        "escritura"
+                    ]
+                },
+                {
+                    "rol": "estudiante_t",
+                    "permisos": []
+                },
+                {
+                    "rol": "sistemas",
+                    "permisos": [
+                        "lectura",
+                        "escritura"
+                    ]
+                },
+                {
+                    "rol": "practicante_ps",
+                    "permisos": [
+                        "lectura"
+                    ]
+                },
+                {
+                    "rol": "geografo",
+                    "permisos": [
+                        "lectura"
+                    ]
+                },
+                {
+                    "rol": "academico",
+                    "permisos": []
+                },
+                {
+                    "rol": "director_prog",
+                    "permisos": []
+                },
+                {
+                    "rol": "geografico",
+                    "permisos": []
+                },
+                {
+                    "rol": "dir_socioeducativo",
+                    "permisos": []
+                },
+                {
+                    "rol": "financiero",
+                    "permisos": []
+                }
+            ]
         },
         {
             "id_temporal": "cmp_2",
@@ -45,13 +110,78 @@
             ],
             "atributos_campo": {
                 "radioclass": "ajuste_radio_seguimientos radio-inline",
-                "class": "col-xs-12 col-sm-12 col-md-12 col-lg-12",
+                "class": "col-xs-12 col-sm-12 col-md-12 col-lg-12 ",
                 "required": "false",
                 "name": "seg_geo_nivel_riesgo",
                 "maxlength": "5000",
                 "local_alias": "seg_geo_nivel_riesgo"
             },
-            "permisos_campo": []
+            "permisos_campo": [
+                {
+                    "rol": "administrativo",
+                    "permisos": []
+                },
+                {
+                    "rol": "reportes",
+                    "permisos": []
+                },
+                {
+                    "rol": "profesional_ps",
+                    "permisos": [
+                        "lectura"
+                    ]
+                },
+                {
+                    "rol": "monitor_ps",
+                    "permisos": [
+                        "lectura",
+                        "escritura"
+                    ]
+                },
+                {
+                    "rol": "estudiante_t",
+                    "permisos": []
+                },
+                {
+                    "rol": "sistemas",
+                    "permisos": [
+                        "lectura",
+                        "escritura"
+                    ]
+                },
+                {
+                    "rol": "practicante_ps",
+                    "permisos": [
+                        "lectura"
+                    ]
+                },
+                {
+                    "rol": "geografo",
+                    "permisos": [
+                        "lectura"
+                    ]
+                },
+                {
+                    "rol": "academico",
+                    "permisos": []
+                },
+                {
+                    "rol": "director_prog",
+                    "permisos": []
+                },
+                {
+                    "rol": "geografico",
+                    "permisos": []
+                },
+                {
+                    "rol": "dir_socioeducativo",
+                    "permisos": []
+                },
+                {
+                    "rol": "financiero",
+                    "permisos": []
+                }
+            ]
         },
         {
             "id_temporal": "cmp_3",
@@ -71,7 +201,72 @@
                 "checkclass": "checkbox-inline",
                 "local_alias": "seg_geo_vive_zona_riesgo"
             },
-            "permisos_campo": []
+            "permisos_campo": [
+                {
+                    "rol": "administrativo",
+                    "permisos": []
+                },
+                {
+                    "rol": "reportes",
+                    "permisos": []
+                },
+                {
+                    "rol": "profesional_ps",
+                    "permisos": [
+                        "lectura"
+                    ]
+                },
+                {
+                    "rol": "monitor_ps",
+                    "permisos": [
+                        "lectura",
+                        "escritura"
+                    ]
+                },
+                {
+                    "rol": "estudiante_t",
+                    "permisos": []
+                },
+                {
+                    "rol": "sistemas",
+                    "permisos": [
+                        "lectura",
+                        "escritura"
+                    ]
+                },
+                {
+                    "rol": "practicante_ps",
+                    "permisos": [
+                        "lectura"
+                    ]
+                },
+                {
+                    "rol": "geografo",
+                    "permisos": [
+                        "lectura"
+                    ]
+                },
+                {
+                    "rol": "academico",
+                    "permisos": []
+                },
+                {
+                    "rol": "director_prog",
+                    "permisos": []
+                },
+                {
+                    "rol": "geografico",
+                    "permisos": []
+                },
+                {
+                    "rol": "dir_socioeducativo",
+                    "permisos": []
+                },
+                {
+                    "rol": "financiero",
+                    "permisos": []
+                }
+            ]
         },
 
         {
@@ -92,12 +287,77 @@
             ],
             "atributos_campo": {
                 "name": "seg_geo_origen",
-                "class": "col-xs-12 col-sm-12 col-md-12 col-lg-12",
+                "class": "col-xs-12 col-sm-12 col-md-12 col-lg-12 separador_inferior ajuste_origen",
                 "required": "false",
                 "radioclass": "ajuste_radio_seguimientos radio-inline",
                 "local_alias": "seg_geo_origen"
             },
-            "permisos_campo": []
+            "permisos_campo": [
+                {
+                    "rol": "administrativo",
+                    "permisos": []
+                },
+                {
+                    "rol": "reportes",
+                    "permisos": []
+                },
+                {
+                    "rol": "profesional_ps",
+                    "permisos": [
+                        "lectura"
+                    ]
+                },
+                {
+                    "rol": "monitor_ps",
+                    "permisos": [
+                        "lectura",
+                        "escritura"
+                    ]
+                },
+                {
+                    "rol": "estudiante_t",
+                    "permisos": []
+                },
+                {
+                    "rol": "sistemas",
+                    "permisos": [
+                        "lectura",
+                        "escritura"
+                    ]
+                },
+                {
+                    "rol": "practicante_ps",
+                    "permisos": [
+                        "lectura"
+                    ]
+                },
+                {
+                    "rol": "geografo",
+                    "permisos": [
+                        "lectura"
+                    ]
+                },
+                {
+                    "rol": "academico",
+                    "permisos": []
+                },
+                {
+                    "rol": "director_prog",
+                    "permisos": []
+                },
+                {
+                    "rol": "geografico",
+                    "permisos": []
+                },
+                {
+                    "rol": "dir_socioeducativo",
+                    "permisos": []
+                },
+                {
+                    "rol": "financiero",
+                    "permisos": []
+                }
+            ]
         },
         {
             "id_temporal": "cmp_5",
@@ -117,7 +377,72 @@
                 "checkclass": "checkbox-inline",
                 "local_alias": "seg_geo_vive_lejos"
             },
-            "permisos_campo": []
+            "permisos_campo": [
+                {
+                    "rol": "administrativo",
+                    "permisos": []
+                },
+                {
+                    "rol": "reportes",
+                    "permisos": []
+                },
+                {
+                    "rol": "profesional_ps",
+                    "permisos": [
+                        "lectura"
+                    ]
+                },
+                {
+                    "rol": "monitor_ps",
+                    "permisos": [
+                        "lectura",
+                        "escritura"
+                    ]
+                },
+                {
+                    "rol": "estudiante_t",
+                    "permisos": []
+                },
+                {
+                    "rol": "sistemas",
+                    "permisos": [
+                        "lectura",
+                        "escritura"
+                    ]
+                },
+                {
+                    "rol": "practicante_ps",
+                    "permisos": [
+                        "lectura"
+                    ]
+                },
+                {
+                    "rol": "geografo",
+                    "permisos": [
+                        "lectura"
+                    ]
+                },
+                {
+                    "rol": "academico",
+                    "permisos": []
+                },
+                {
+                    "rol": "director_prog",
+                    "permisos": []
+                },
+                {
+                    "rol": "geografico",
+                    "permisos": []
+                },
+                {
+                    "rol": "dir_socioeducativo",
+                    "permisos": []
+                },
+                {
+                    "rol": "financiero",
+                    "permisos": []
+                }
+            ]
         },
         {
             "id_temporal": "cmp_6",
@@ -130,7 +455,72 @@
                 "name": "seg_geo_id_creado_por",
                 "local_alias": "seg_geo_id_creado_por"
             },
-            "permisos_campo": []
+            "permisos_campo": [
+                {
+                    "rol": "administrativo",
+                    "permisos": []
+                },
+                {
+                    "rol": "reportes",
+                    "permisos": []
+                },
+                {
+                    "rol": "profesional_ps",
+                    "permisos": [
+                        "lectura"
+                    ]
+                },
+                {
+                    "rol": "monitor_ps",
+                    "permisos": [
+                        "lectura",
+                        "escritura"
+                    ]
+                },
+                {
+                    "rol": "estudiante_t",
+                    "permisos": []
+                },
+                {
+                    "rol": "sistemas",
+                    "permisos": [
+                        "lectura",
+                        "escritura"
+                    ]
+                },
+                {
+                    "rol": "practicante_ps",
+                    "permisos": [
+                        "lectura"
+                    ]
+                },
+                {
+                    "rol": "geografo",
+                    "permisos": [
+                        "lectura"
+                    ]
+                },
+                {
+                    "rol": "academico",
+                    "permisos": []
+                },
+                {
+                    "rol": "director_prog",
+                    "permisos": []
+                },
+                {
+                    "rol": "geografico",
+                    "permisos": []
+                },
+                {
+                    "rol": "dir_socioeducativo",
+                    "permisos": []
+                },
+                {
+                    "rol": "financiero",
+                    "permisos": []
+                }
+            ]
         },
         {
             "id_temporal": "cmp_7",
@@ -143,11 +533,82 @@
                 "required": "true",
                 "local_alias": "seg_geo_id_estudiante"
             },
-            "permisos_campo": []
+            "permisos_campo": [
+                {
+                    "rol": "administrativo",
+                    "permisos": []
+                },
+                {
+                    "rol": "reportes",
+                    "permisos": []
+                },
+                {
+                    "rol": "profesional_ps",
+                    "permisos": [
+                        "lectura"
+                    ]
+                },
+                {
+                    "rol": "monitor_ps",
+                    "permisos": [
+                        "lectura",
+                        "escritura"
+                    ]
+                },
+                {
+                    "rol": "estudiante_t",
+                    "permisos": []
+                },
+                {
+                    "rol": "sistemas",
+                    "permisos": [
+                        "lectura",
+                        "escritura"
+                    ]
+                },
+                {
+                    "rol": "practicante_ps",
+                    "permisos": [
+                        "lectura"
+                    ]
+                },
+                {
+                    "rol": "geografo",
+                    "permisos": [
+                        "lectura"
+                    ]
+                },
+                {
+                    "rol": "academico",
+                    "permisos": []
+                },
+                {
+                    "rol": "director_prog",
+                    "permisos": []
+                },
+                {
+                    "rol": "geografico",
+                    "permisos": []
+                },
+                {
+                    "rol": "dir_socioeducativo",
+                    "permisos": []
+                },
+                {
+                    "rol": "financiero",
+                    "permisos": []
+                }
+            ]
         }
     ],
     "disparadores": [],
-    "reglas": [],
+    "reglas": [
+        {
+            "id_temporal_campo_a": "cmp_3",
+            "id_temporal_campo_b": "cmp_4",
+            "regla": "BOUND"
+        }
+    ],
     "campos_busqueda": [
         {
             "alias": "seg_geo_nivel_riesgo",
@@ -162,5 +623,34 @@
             "id_campo": "cmp_3"
         }
     ],
-    "actualizador_orden": []
+    "actualizador_orden": [
+        {
+            "id_temporal": "cmp_1",
+            "nueva_posicion": "0"
+        },
+        {
+            "id_temporal": "cmp_5",
+            "nueva_posicion": "1"
+        },
+        {
+            "id_temporal": "cmp_3",
+            "nueva_posicion": "2"
+        },
+        {
+            "id_temporal": "cmp_4",
+            "nueva_posicion": "3"
+        },
+        {
+            "id_temporal": "cmp_2",
+            "nueva_posicion": "4"
+        },
+        {
+            "id_temporal": "cmp_6",
+            "nueva_posicion": "5"
+        },
+        {
+            "id_temporal": "cmp_7",
+            "nueva_posicion": "6"
+        }
+    ]
 }
