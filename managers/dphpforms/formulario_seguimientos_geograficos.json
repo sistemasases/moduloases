@@ -7,9 +7,160 @@
         "enctype": null,
         "alias": "seguimiento_geografico"
     },
-    "preguntas": [],
+    "preguntas": [
+        {
+            "id_temporal": "cmp_1",
+            "enunciado": "Observaciones",
+            "tipo_campo": "TEXTAREA",
+            "opciones_campo": null,
+            "atributos_campo": {
+                "class": "col-xs-12 col-sm-12 col-md-12 col-lg-12",
+                "name": "seg_geo_observaciones",
+                "required": "false",
+                "maxlength": "1000",
+                "local_alias": "seg_geo_observaciones"
+            },
+            "permisos_campo": []
+        },
+        {
+            "id_temporal": "cmp_2",
+            "enunciado": "Nivel de riesgo",
+            "tipo_campo": "RADIOBUTTON",
+            "opciones_campo": [
+                {
+                    "enunciado": "Bajo",
+                    "valor": "1",
+                    "posicion": "1"
+                },
+                {
+                    "enunciado": "Medio",
+                    "valor": "2",
+                    "posicion": "2"
+                },
+                {
+                    "enunciado": "Alto",
+                    "valor": "3",
+                    "posicion": "3"
+                }
+            ],
+            "atributos_campo": {
+                "radioclass": "ajuste_radio_seguimientos radio-inline",
+                "class": "col-xs-12 col-sm-12 col-md-12 col-lg-12",
+                "required": "false",
+                "name": "seg_geo_nivel_riesgo",
+                "maxlength": "5000",
+                "local_alias": "seg_geo_nivel_riesgo"
+            },
+            "permisos_campo": []
+        },
+        {
+            "id_temporal": "cmp_3",
+            "enunciado": "",
+            "tipo_campo": "CHECKBOX",
+            "opciones_campo": [
+                {
+                    "enunciado": "Vive en zona de riesgo",
+                    "valor": "0",
+                    "posicion": "1"
+                }
+            ],
+            "atributos_campo": {
+                "name": "seg_geo_vive_zona_riesgo",
+                "class": "col-xs-12 col-sm-12 col-md-12 col-lg-12",
+                "required": "false",
+                "checkclass": "checkbox-inline",
+                "local_alias": "seg_geo_vive_zona_riesgo"
+            },
+            "permisos_campo": []
+        },
+
+        {
+            "id_temporal": "cmp_4",
+            "enunciado": "Origen",
+            "tipo_campo": "RADIOBUTTON",
+            "opciones_campo": [
+                {
+                    "enunciado": "Nativo",
+                    "valor": "1",
+                    "posicion": "1"
+                },
+                {
+                    "enunciado": "Inmigrante",
+                    "valor": "2",
+                    "posicion": "2"
+                }
+            ],
+            "atributos_campo": {
+                "name": "seg_geo_origen",
+                "class": "col-xs-12 col-sm-12 col-md-12 col-lg-12",
+                "required": "false",
+                "radioclass": "ajuste_radio_seguimientos radio-inline",
+                "local_alias": "seg_geo_origen"
+            },
+            "permisos_campo": []
+        },
+        {
+            "id_temporal": "cmp_5",
+            "enunciado": "",
+            "tipo_campo": "CHECKBOX",
+            "opciones_campo": [
+                {
+                    "enunciado": "Vive lejos",
+                    "valor": "0",
+                    "posicion": "1"
+                }
+            ],
+            "atributos_campo": {
+                "name": "seg_geo_vive_lejos",
+                "class": "col-xs-12 col-sm-12 col-md-12 col-lg-12",
+                "required": "false",
+                "checkclass": "checkbox-inline",
+                "local_alias": "seg_geo_vive_lejos"
+            },
+            "permisos_campo": []
+        },
+        {
+            "id_temporal": "cmp_6",
+            "enunciado": "id_creado_por",
+            "tipo_campo": "TEXTFIELD",
+            "opciones_campo": null,
+            "atributos_campo": {
+                "class": "oculto",
+                "required": "true",
+                "name": "seg_geo_id_creado_por",
+                "local_alias": "seg_geo_id_creado_por"
+            },
+            "permisos_campo": []
+        },
+        {
+            "id_temporal": "cmp_7",
+            "enunciado": "id_estudiante",
+            "tipo_campo": "TEXTFIELD",
+            "opciones_campo": null,
+            "atributos_campo": {
+                "class": "oculto",
+                "name": "seg_geo_id_estudiante",
+                "required": "true",
+                "local_alias": "seg_geo_id_estudiante"
+            },
+            "permisos_campo": []
+        }
+    ],
     "disparadores": [],
     "reglas": [],
-    "campos_busqueda": [],
+    "campos_busqueda": [
+        {
+            "alias": "seg_geo_nivel_riesgo",
+            "id_campo": "cmp_2"
+        },
+        {
+            "alias": "seg_geo_id_estudiante",
+            "id_campo": "cmp_7"
+        },
+        {
+            "alias": "seg_geo_id_creado_por",
+            "id_campo": "cmp_3"
+        }
+    ],
     "actualizador_orden": []
 }
