@@ -14,13 +14,11 @@
     return {
         init: function() {
 
-                $(document).ready(function(){
+                /*$(document).ready(function(){
                     $('.seg_geo_origen').find('input').prop('disabled', true );
-                });
+                });*/
 
-                $('.seg_geo_vive_zona_riesgo').find('label').find('input').change(function() {
-
-                    console.log($('.seg_geo_vive_zona_riesgo').find('label').find('input').prop('checked'));
+                /*$(document).on('change', $('.seg_geo_vive_zona_riesgo').find('label').find('input') , function() {
 
                     if($('.seg_geo_vive_zona_riesgo').find('label').find('input').prop('checked')) {
                         $('.seg_geo_origen').find('input').prop('disabled', false );
@@ -29,6 +27,15 @@
                         $('.seg_geo_origen').find('input').prop('checked', false );
                     }
                 });
+
+                $('.seg_geo_vive_zona_riesgo').find('label').find('input').change(function() {
+                    if($('.seg_geo_vive_zona_riesgo').find('label').find('input').prop('checked')) {
+                        $('.seg_geo_origen').find('input').prop('disabled', false );
+                    }else{
+                        $('.seg_geo_origen').find('input').prop('disabled', true );
+                        $('.seg_geo_origen').find('input').prop('checked', false );
+                    }
+                });*/
 
                 $('#button_actualizar_primer_acercamiento').click(function(){
                     $.get( "../managers/dphpforms/dphpforms_forms_core.php?form_id=primer_acercamiento&record_id=" + $(this).attr('data-record-id'), function( data ) {
@@ -40,6 +47,14 @@
                             var registered_by = response.firstname + ' ' + response.lastname;
                             $('#modal_primer_acercamiento').find('h1').after('<hr style="border-color:#444;"><h3>Registrado por: <strong>' + registered_by + '</strong></h3>');
                         });
+                    });
+                });
+
+                $('#button_update_geographic_track').click(function(){
+                    $.get( "../managers/dphpforms/dphpforms_forms_core.php?form_id=seguimiento_geografico&record_id=" + $(this).attr('data-record-id'), function( data ) {
+                        $("#seguimiento_geografico_form").html("");
+                        $('#seguimiento_geografico_form').append( data );
+                        $('#modal_seguimiento_geografico').fadeIn(300);
                     });
                 });
                 
@@ -202,12 +217,11 @@
                 });
 
                 $('#button_add_geographic_track').on('click', function() {
-
                     $('#modal_seguimiento_geografico').fadeIn(300);
-                    /*$('.primer_acerca_id_estudiante_field').find('input').val( get_student_code() );
+                    $('.seg_geo_id_estudiante').find('input').val( get_student_code() );
                     var creado_por = $('#current_user_id').val();
-                    $('.primer_acerca_id_creado_por_field').find('input').val(creado_por);*/
-
+                    $('.seg_geo_id_creado_por').find('input').val(creado_por);
+                    
                 });
 
                 $('.mymodal-close').click(function(){
@@ -227,6 +241,8 @@
 
                     }else if( data == 'seguimiento_pares' ){
 
+                    }else if( data == 'seguimiento_geografico_' ){
+                        $('.seg_geo_origen').find('input').prop('disabled', false );
                     }
 
                 }
@@ -301,8 +317,14 @@
                  });
 
                 $(document).on('submit', '.dphpforms' , function(evt) {
-
                     evt.preventDefault();
+
+                    /*var is_seguimiento_geografico = data.indexOf($(this).attr('id'));
+                        if( is_seguimiento_geografico != -1 ){
+                            custom_actions( 'seguimiento_geografico_' );
+                    }*/
+                    //$('.seg_geo_origen').find('input').prop('disabled', false );
+
                     var formData = new FormData(this);
                     var formulario = $(this);
                     var url_processor = formulario.attr('action');

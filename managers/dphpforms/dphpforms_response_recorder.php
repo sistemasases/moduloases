@@ -259,10 +259,17 @@
                             for($x = 0; $x < $number_opciones; $x++){
                                 $opcion = (array) $array_opciones[$x];
                                 $html = $html . '<div class="checkbox ' . $field_attr_checkclass . '">' . "\n";
+
+                                $option_attr_checkclass = $opcion['class'];
+                                /*if(property_exists($opcion, 'class')){
+                                    $option_attr_checkclass = $opcion->{'class'};
+                                }*/
+
                                 if($number_opciones == 1){
                                     $html = $html . '   <input type="hidden" name="'. $name_checkbox .'" value="-1">' . "\n";
                                 }
-                                $html = $html . '   <label><input type="checkbox" class="' . $field_attr_inputclass . '" name="'. $name_checkbox .'" value="'.$opcion['valor'].'" '.$enabled.'>'.$opcion['enunciado'].'</label>' . "\n";
+
+                                $html = $html . '   <label class="' . $option_attr_checkclass . '" ><input type="checkbox" class="' . $field_attr_inputclass . '" name="'. $name_checkbox .'" value="'.$opcion['valor'].'" '.$enabled.'>'.$opcion['enunciado'].'</label>' . "\n";
                                 $html = $html . '</div>';
                                 $html = $html . '' . "\n";
                             }

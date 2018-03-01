@@ -366,15 +366,20 @@
                                         }
                                     }
                                 }
+
+                                $option_attr_checkclass = $opcion['class'];
+                                /*if(property_exists($opcion, 'class')){
+                                    $option_attr_checkclass = $opcion->{'class'};
+                                }*/
                                 
                                 $html = $html . '<div class="checkbox ' . $field_attr_checkclass . '">';
                                 if($number_opciones == 1){
                                     $html = $html . '   <input type="hidden" name="'.$name_checkbox.'" value="'.$valor_marcado.'" '.$enabled.'>';
                                 }
                                 if($number_opciones == 1){
-                                    $html = $html . '   <label><input id="'.$row->{'mod_id_formulario_pregunta'}.'" class="' . $field_attr_inputclass . '" type="checkbox" name="'.$name_checkbox.'" value="'.$opcion['valor'].'" '.$enabled.' '.$checked.'>'.$opcion['enunciado'].'</label>';
+                                    $html = $html . '   <label class="'.$option_attr_checkclass.'" ><input id="'.$row->{'mod_id_formulario_pregunta'}.'" class="' . $field_attr_inputclass . '" type="checkbox" name="'.$name_checkbox.'" value="'.$opcion['valor'].'" '.$enabled.' '.$checked.'>'.$opcion['enunciado'].'</label>';
                                 }else{
-                                    $html = $html . '   <label><input class="' . $row->{'mod_id_formulario_pregunta'} . ' ' . $field_attr_inputclass . '" type="checkbox" name="'.$name_checkbox.'" value="'.$valor_checked.'" '.$enabled.' '.$checked.'>'.$opcion['enunciado'].'</label>';
+                                    $html = $html . '   <label class="'.$option_attr_checkclass.'"><input class="' . $row->{'mod_id_formulario_pregunta'} . ' ' . $field_attr_inputclass . '" type="checkbox" name="'.$name_checkbox.'" value="'.$valor_checked.'" '.$enabled.' '.$checked.'>'.$opcion['enunciado'].'</label>';
                                 }
                                
                                 $html = $html . '</div>';

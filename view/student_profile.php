@@ -859,7 +859,7 @@ if ($student_code != 0) {
     if ($record->form_seguimientos_geograficos == '') {
         $record->form_seguimientos_geograficos = "<strong><h3>Oops!: No se ha encontrado un formulario con el alias: <code>seguimientos_geograficos</code>.</h3></strong>";
     }
-    $seguimiento_geografico = json_decode( dphpforms_find_records('seguimiento_geografico', 'seguimiento_geografico_id_estudiante', $student_code, 'DESC') )->results;
+    $seguimiento_geografico = json_decode( dphpforms_find_records('seguimiento_geografico', 'seg_geo_id_estudiante', $student_code, 'DESC') )->results;
     if($seguimiento_geografico){
         $record->actualizar_seguimiento_geografico = true;
         $record->id_seguimiento_geografico = array_values( $seguimiento_geografico )[0]->id_registro;
