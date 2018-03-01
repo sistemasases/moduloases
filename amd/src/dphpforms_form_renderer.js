@@ -14,6 +14,22 @@
     return {
         init: function() {
 
+                $(document).ready(function(){
+                    $('.seg_geo_origen').find('input').prop('disabled', true );
+                });
+
+                $('.seg_geo_vive_zona_riesgo').find('label').find('input').change(function() {
+
+                    console.log($('.seg_geo_vive_zona_riesgo').find('label').find('input').prop('checked'));
+
+                    if($('.seg_geo_vive_zona_riesgo').find('label').find('input').prop('checked')) {
+                        $('.seg_geo_origen').find('input').prop('disabled', false );
+                    }else{
+                        $('.seg_geo_origen').find('input').prop('disabled', true );
+                        $('.seg_geo_origen').find('input').prop('checked', false );
+                    }
+                });
+
                 $('#button_actualizar_primer_acercamiento').click(function(){
                     $.get( "../managers/dphpforms/dphpforms_forms_core.php?form_id=primer_acercamiento&record_id=" + $(this).attr('data-record-id'), function( data ) {
                         $("#primer_acercamiento_form").html("");
