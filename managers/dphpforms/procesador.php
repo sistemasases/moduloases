@@ -122,10 +122,20 @@ function dphpforms_update_respuesta($completed_form, $RECORD_ID){
         $different_flag = false;
         
         foreach ($registered_respuestas as &$respuesta) {
-            foreach ($obj_form_completed->{'respuestas'} as &$respuestaActualizada) {
-                
-                if( $respuesta['id'] == $respuestaActualizada->id ){
+            /* 
+                Asumimos que hay respuestas sin valores previos ni resgistros en 
+                la base de datos
+             */
+            //$form_structure_was_changed = true;
 
+            foreach ($obj_form_completed->{'respuestas'} as &$respuestaActualizada) {
+
+                if( $respuesta['id'] == $respuestaActualizada->id ){
+                    /* 
+                        Si encontramos el registro previo a la respuesta, asumimos que no
+                        existen cambios en la estructura del formulario.
+                    */
+                    //$form_structure_was_changed = false;
                     if( $respuesta['valor'] !== $respuestaActualizada->valor ){
                         //echo ' SE VA A ACTUALIZAR: ' . $respuesta['id'] ;
                         array_push( $updated_respuestas, array( 'id' => $respuesta['id'], 'valor' => $respuestaActualizada->valor ) );
@@ -153,6 +163,39 @@ function dphpforms_update_respuesta($completed_form, $RECORD_ID){
                     
                 }*/
             }
+
+            /* Si no se encuentra una respuesta previa en las respuestas registradas */
+            /*if( $form_structure_was_changed ){
+                array_push( $updated_respuestas, array('id' => $respuesta['id'], 'valor' => $respuesta['valor']) );
+                $different_flag = true;
+            }*/
+        }
+
+        // Inicia el proceso de trabajo sobre las respuestas no registradas
+        if( count( $registered_respuestas ) != count( $obj_form_completed->{'respuestas'} )  ){
+            /*$new_respuestas = array();
+            foreach ($obj_form_completed->{'respuestas'} as &$respuestaActualizada) {
+                $is_not_matched = true;
+                foreach ($registered_respuestas as &$respuesta) {
+                    if( $respuesta['id'] == $respuestaActualizada->id ){
+                        $is_not_matched = false;
+                        break;
+                    }
+                }
+                if( $is_not_matched ){
+
+                    
+
+                    $new_respuesta = new stdClass();
+                    $new_respuesta->id =  $respuestaActualizada->id_respuesta_db;
+                    $new_respuesta->valor = $respuestaActualizada->valor . '[SALT]';
+
+                    $id_respuesta_db = dphpforms_store_respuesta( $new_respuesta );
+
+                    dphpforms_store_form_soluciones($RECORD_ID , $id_respuesta_db );
+                }
+            }
+            $different_flag = true;*/
         }
 
         $form_expected_respuestas =  dphpforms_get_expected_respuestas($obj_form_completed->{'formulario'}->{'id'});
@@ -339,7 +382,7 @@ function dphpforms_new_store_respuesta($completed_form){
     //print_r($all_respuestas);
     //die();
 
-    $processable = dphpforms_reglas_validator(json_decode(json_encode($all_respuestas)), $reglas);
+    $processable = dphpforms_reglas_validator( json_decode( json_encode($all_respuestas) ), $reglas );
 
     if($processable){
         //echo "\n¿Procesable?: Sí.\n";
@@ -467,8 +510,6 @@ function dphpforms_update_completed_form($form_identifier_respuesta, $pregunta_i
        $obj_updated_respuesta->fecha_hora_registro = "now()";
 
        $DB->update_record('talentospilos_df_respuestas', $obj_updated_respuesta, $bulk=false);
-
-       //echo 'IDPREGUNTA' .$pregunta_identifier;
 
        return true;
 }
