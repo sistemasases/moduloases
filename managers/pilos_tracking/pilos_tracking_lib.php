@@ -775,6 +775,28 @@ function update_last_user_risk( $student_code ){
     $trackings = dphpforms_find_records( 'seguimiento_pares', 'seguimiento_pares_id_estudiante', $student_code, 'DESC' );
     $trackings = json_decode( $trackings )->results;
 
+    $geo_tracking = dphpforms_find_records( 'seguimiento_geografico', 'seg_geo_id_estudiante', $student_code, 'DESC' );
+    $geo_tracking = json_decode( $trackings )->results;
+
+    $full_geo_tracking = json_decode( dphpforms_get_record( $geo_tracking->id_registro, 'fecha' ) )->record;
+
+    $geo_risk_lvl = '0';
+
+    if( $full_geo_tracking ){
+
+        $fields = $full_geo_tracking->campos;
+        foreach ($fields as $key => $field) {
+        
+            if( $field->local_alias == 'seg_geo_nivel_riesgo' ){
+                if( $field->respuesta == '-#$%-' ){
+                    $geo_risk_lvl = '0';
+                }else{
+                    $geo_risk_lvl = $field->respuesta;
+                }
+            }
+        }
+    }
+
     $last_tracking = null;
 
     foreach ($trackings as $key => $tracking) {
@@ -804,7 +826,7 @@ function update_last_user_risk( $student_code ){
 
     $fields_tracking = json_decode( $last_tracking->json_full_tracking )->campos;
 
-    $ases_user_id = get_ases_user_by_code($student_code)->id;;
+    $ases_user_id = get_ases_user_by_code($student_code)->id;
 
     $vida_universitaria_risk_lvl = '0';
     $economico_risk_lvl = '0';
@@ -927,7 +949,19 @@ function update_last_user_risk( $student_code ){
             }
 
         }elseif ( $risk->nombre == 'geografico' ){
-            // 
+
+            $previous_record_risk = $DB->get_record_sql( "SELECT * FROM {talentospilos_riesg_usuario} WHERE id_usuario = '$ases_user_id' AND id_riesgo = '$risk->id'" );
+            if( $previous_record_risk ){
+                $previous_record_risk->calificacion_riesgo = $geo_risk_lvl;
+                print_r($DB->update_record( 'talentospilos_riesg_usuario', $previous_record_risk, $bulk=false ));
+            }else{
+                
+                $new_user_risk = new stdClass();
+                $new_user_risk->id_usuario = $ases_user_id;
+                $new_user_risk->id_riesgo = $risk->id;
+                $new_user_risk->calificacion_riesgo = $geo_risk_lvl;
+                $DB->insert_record( 'talentospilos_riesg_usuario', $new_user_risk, $returnid=false, $bulk=false );
+            } 
         }
 
     }
