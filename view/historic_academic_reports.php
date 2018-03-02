@@ -14,7 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-
 /**
  * Estrategia ASES
  *
@@ -24,15 +23,15 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
- 
-require_once(__DIR__ . '/../../../config.php');
-require_once($CFG->libdir.'/adminlib.php');
-require_once('../managers/instance_management/instance_lib.php');
-include("../classes/output/historic_academic_reports_page.php");
-include("../classes/output/renderer.php");
-require_once('../managers/permissions_management/permissions_lib.php');
-require_once('../managers/validate_profile_action.php');
-require_once('../managers/menu_options.php');
+require_once __DIR__ . '/../../../config.php';
+require_once $CFG->libdir . '/adminlib.php';
+require_once '../managers/instance_management/instance_lib.php';
+require_once '../managers/historic_academic_reports/historic_academic_reports_lib.php';
+include "../classes/output/historic_academic_reports_page.php";
+include "../classes/output/renderer.php";
+require_once '../managers/permissions_management/permissions_lib.php';
+require_once '../managers/validate_profile_action.php';
+require_once '../managers/menu_options.php';
 
 global $PAGE;
 
@@ -45,18 +44,18 @@ $blockid = required_param('instanceid', PARAM_INT);
 require_login($courseid, false);
 
 //Instance is consulted for its registration
-if(!consult_instance($blockid)){
+if (!consult_instance($blockid)) {
     header("Location: /blocks/ases/view/instanceconfiguration.php?courseid=$courseid&instanceid=$blockid");
 }
 
 $contextcourse = context_course::instance($courseid);
-$contextblock =  context_block::instance($blockid);
+$contextblock = context_block::instance($blockid);
 
-$url = new moodle_url("/blocks/ases/view/historic_academic_reports.php",array('courseid' => $courseid, 'instanceid' => $blockid));
+$url = new moodle_url("/blocks/ases/view/historic_academic_reports.php", array('courseid' => $courseid, 'instanceid' => $blockid));
 
 //Navigation setup
 $coursenode = $PAGE->navigation->find($courseid, navigation_node::TYPE_COURSE);
-$blocknode = navigation_node::create($title,$url, null, 'block', $blockid);
+$blocknode = navigation_node::create($title, $url, null, 'block', $blockid);
 $coursenode->add_node($blocknode);
 $blocknode->make_active();
 
@@ -71,19 +70,25 @@ $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/dataTables.jqueryui
 $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/jquery.dataTables.min.css', true);
 $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/jquery.dataTables_themeroller.css', true);
 $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/dataTables.tableTools.css', true);
-$PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/NewCSSExport/buttons.dataTables.min.css', true);
 $PAGE->requires->css('/blocks/ases/style/bootstrap_pilos.css', true);
-
-//$PAGE->requires->css('/blocks/ases/style/bootstrap_pilos.min.css', true);
 $PAGE->requires->css('/blocks/ases/style/sweetalert.css', true);
 $PAGE->requires->css('/blocks/ases/style/sweetalert2.css', true);
 $PAGE->requires->css('/blocks/ases/style/round-about_pilos.css', true);
 $PAGE->requires->css('/blocks/ases/style/side_menu_style.css', true);
 
+//Requires AMD modules
+$PAGE->requires->js_call_amd('block_ases/historic_academic_reports', 'init');
 
-//hacer js
-//$PAGE->requires->js_call_amd('block_ases/historic_academic_reports', 'init');
+$tableStudent = get_datatable_array_Students($blockid);
+$paramsStudents = new stdClass();
+$paramsStudents->table = $tableStudent;
 
+$tableTotals = get_datatable_array_totals($blockid);
+$paramsTotals = new stdClass();
+$paramsTotals->table = $tableTotals;
+
+$PAGE->requires->js_call_amd('block_ases/historic_academic_reports', 'load_table_students', $paramsStudents);
+$PAGE->requires->js_call_amd('block_ases/historic_academic_reports', 'load_total_table', $paramsTotals);
 
 //Menu items are created
 $menu_option = create_menu_options($USER->id, $blockid, $courseid);
@@ -98,4 +103,3 @@ echo $output->header();
 $historic_academic_reports_page = new \block_ases\output\historic_academic_reports_page($data);
 echo $output->render($historic_academic_reports_page);
 echo $output->footer();
-
