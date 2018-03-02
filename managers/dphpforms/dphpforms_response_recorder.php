@@ -221,15 +221,30 @@
                             if(property_exists($atributos, 'radioclass')){
                                 $field_attr_radioclass = $atributos->{'radioclass'};
                             }
+
+                            /*
+                                Se utiliza para controlar el registro de una sola
+                                condición de required para el primer radio.
+                            */
+                            $required_temporal = $field_attr_required;
                                               
                             $html = $html .  '<div class="opcionesRadio" style="margin-bottom:0.4em">';
                             for($x = 0; $x < $number_opciones; $x++){
                                 $opcion = (array) $array_opciones[$x];
+
                                 $html = $html .  '
                                     <div id="'.$row->{'mod_id_formulario_pregunta'}.'" name="'.$row->{'mod_id_formulario_pregunta'}.'" class="radio ' . $field_attr_radioclass . '">
-                                        <label><input type="radio" class=" ' . $field_attr_inputclass . '" name="'.$row->{'mod_id_formulario_pregunta'}.'" value="'.$opcion['valor'].'" name="optradio" '.$enabled.'>'.$opcion['enunciado'].'</label>
+                                        <label><input type="radio" class=" ' . $field_attr_inputclass . '" name="'.$row->{'mod_id_formulario_pregunta'}.'" value="'.$opcion['valor'].'" name="optradio" '.$enabled.'   ' . $required_temporal . '>'.$opcion['enunciado'].'</label>
                                     </div>
                                 ' . "\n";
+                                /*
+                                    Si el grupo de radios es requerido y ya se ha puesto esa condición en el 
+                                    primer radio, a pesar de que se concatene la variable al input, se limpia después
+                                    de pintar el primer radio.
+                                */
+                                if(  $required_temporal != ''  ){
+                                    $required_temporal = '';
+                                }
                             }
                             $html = $html .  '</div><a href="javascript:void(0);" class="limpiar btn btn-xs btn-default" >Limpiar</a>
                              </div>

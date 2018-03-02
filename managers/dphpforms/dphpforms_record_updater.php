@@ -297,16 +297,33 @@
                             $html = $html .  '<div class="opcionesRadio" style="margin-bottom:0.4em">
                             <input type="hidden" name="'.$row->{'mod_id_formulario_pregunta'}.'"  class="'.$row->{'mod_id_formulario_pregunta'}.'" value="-#$%-" '.$enabled.'>';
                             
+                            /*
+                                Se utiliza para controlar el registro de una sola
+                                condición de required para el primer radio.
+                            */
+                            $required_temporal = $field_attr_required;
                             for($x = 0; $x < $number_opciones; $x++){
                                 $opcion = (array) $array_opciones[$x];
+
+                                
+
                                 $checked = null;
                                 if($valor === $opcion['valor']){
                                     $checked = 'checked';
                                 }
                                 $html = $html .  '
                                     <div class="radio ' . $field_attr_radioclass . '">
-                                        <label><input type="radio" class="'.$row->{'mod_id_formulario_pregunta'}.' ' . $field_attr_inputclass . '" name="'.$row->{'mod_id_formulario_pregunta'}.'" value="'.$opcion['valor'].'" name="optradio" '.$enabled.'  '.$checked.'>'.$opcion['enunciado'].'</label>
+                                        <label><input type="radio" class="'.$row->{'mod_id_formulario_pregunta'}.' ' . $field_attr_inputclass . '" name="'.$row->{'mod_id_formulario_pregunta'}.'" value="'.$opcion['valor'].'" name="optradio" '.$enabled.'  '.$checked.' ' . $required_temporal . '>'.$opcion['enunciado'].'</label>
                                     </div>' . "\n";
+                                
+                                /*
+                                    Si el grupo de radios es requerido y ya se ha puesto esa condición en el 
+                                    primer radio, a pesar de que se concatene la variable al input, se limpia después
+                                    de pintar el primer radio.
+                                */
+                                if(  $required_temporal != ''  ){
+                                    $required_temporal = '';
+                                }
                             }
                             
                             $html = $html .  '</div>
