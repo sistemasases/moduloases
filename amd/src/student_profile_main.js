@@ -9,15 +9,22 @@
   * @module block_ases/student_profile_main
   */
 
-define(['jquery', 'block_ases/bootstrap', 'block_ases/d3', 'block_ases/sweetalert', 'block_ases/jqueryui','block_ases/select2', 'block_ases/Chart'], function($, bootstrap, d3, sweetalert, jqueryui, select2) {
+define(['jquery', 'block_ases/bootstrap', 'block_ases/d3', 'block_ases/sweetalert', 'block_ases/jqueryui','block_ases/select2', 'block_ases/Chart', 'block_ases/bootstrap-toogle'], function($, bootstrap, d3, sweetalert, jqueryui, select2, bootstrap_toogle) {
     
     return {
-        init: function() {
+        init: function(data_init) {
 
             // Carga una determinada pestaña
-
             var parameters = get_url_parameters(document.location.search);
             var panel_collapse = $('.panel-collapse.collapse.in');
+
+            // Load statuses
+            for (var i = 0, len = data_init.length; i < len; i++){
+                $('#'+data_init[i].id+' option[value='+data_init[i].program_status+']').attr('selected', true);
+                if(data_init[i].program_status == "ACTIVO"){
+                    $('#tr-'+data_init[i].id).addClass('success');
+                }
+            }
 
             switch(parameters.tab){
                 case "socioed_tab":
@@ -48,7 +55,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/d3', 'block_ases/sweetaler
                 },
             });
 
-            $("#search").on('click', function(){
+            $("#asignados").on('change', function(){
                 var code = $('#asignados').val();
                 var student_code = code.split('-')[0];
 
@@ -58,9 +65,6 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/d3', 'block_ases/sweetaler
             var modal_peer_tracking = $('#modal_peer_tracking');
 
             edit_profile_act();
-            go_back();
-            manage_icetex_status();
-            manage_ases_status();
             modal_manage();
             modal_peer_tracking_manage();
             modal_risk_graphic_manage();
@@ -125,7 +129,6 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/d3', 'block_ases/sweetaler
             });
 
             // Controles para editar formulario de pares
-
             $('.btn-primary.edit_peer_tracking').on('click', function(){
                 var id_button = $(this).attr('id');
                 var id_tracking = id_button.substring(14);
@@ -157,7 +160,6 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/d3', 'block_ases/sweetaler
 
             // Despliega el modal de seguimiento v2
             //Se mueve a dphpforms_form_renderer.js
-
             var RadarChart = {
                 draw: function(id, d, options){
                 var cfg = {
@@ -372,80 +374,79 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/d3', 'block_ases/sweetaler
 
             // Controles modal gráfico de riesgos
             $('#view_graphic_button').on('click', function(){
-                
-                            var array_level_risk = new Object();
-                            array_level_risk['div_no_risk'] = 0;
-                            array_level_risk['div_high_risk'] = 1;
-                            array_level_risk['div_medium_risk'] = 2;
-                            array_level_risk['div_low_risk'] = 3;
-                
-                            var class_list_individual = document.getElementById('individual_risk').className.split(/\s+/);
-                            var class_list_familiar = document.getElementById('familiar_risk').className.split(/\s+/);
-                            var class_list_academic = document.getElementById('academic_risk').className.split(/\s+/);
-                            var class_list_economic = document.getElementById('economic_risk').className.split(/\s+/);
-                            var class_list_life = document.getElementById('life_risk').className.split(/\s+/);
-                            var class_list_geographic = document.getElementById('geo_risk').className.split(/\s+/);
-                
-                            var individual_risk = array_level_risk[class_list_individual[0]];
-                            var familiar_risk = array_level_risk[class_list_familiar[0]];
-                            var economic_risk = array_level_risk[class_list_economic[0]];
-                            var academic_risk = array_level_risk[class_list_academic[0]];
-                            var life_risk = array_level_risk[class_list_life[0]];
-                            var geographic_risk = array_level_risk[class_list_geographic[0]];
-                
-                            var w = 500,
-                                h = 500;
-                
-                            var colorscale = d3.scale.category10();
-                
-                            //Data
-                            var d = [
-                                [{
-                                    axis: "Individual",
-                                    value: individual_risk
-                                }, {
-                                    axis: "Económico",
-                                    value: economic_risk
-                                }, {
-                                    axis: "Familiar",
-                                    value: familiar_risk
-                                }, {
-                                    axis: "Vida Universitaria",
-                                    value: 1
-                                }, {
-                                    axis: "Académico",
-                                    value: academic_risk
-                                }, {
-                                    axis: "Geográfico",
-                                    value: geographic_risk
-                                },
-                                ]
-                            ];
+                var array_level_risk = new Object();
+                array_level_risk['div_no_risk'] = 0;
+                array_level_risk['div_high_risk'] = 1;
+                array_level_risk['div_medium_risk'] = 2;
+                array_level_risk['div_low_risk'] = 3;
+    
+                var class_list_individual = document.getElementById('individual_risk').className.split(/\s+/);
+                var class_list_familiar = document.getElementById('familiar_risk').className.split(/\s+/);
+                var class_list_academic = document.getElementById('academic_risk').className.split(/\s+/);
+                var class_list_economic = document.getElementById('economic_risk').className.split(/\s+/);
+                var class_list_life = document.getElementById('life_risk').className.split(/\s+/);
+                var class_list_geographic = document.getElementById('geo_risk').className.split(/\s+/);
+    
+                var individual_risk = array_level_risk[class_list_individual[0]];
+                var familiar_risk = array_level_risk[class_list_familiar[0]];
+                var economic_risk = array_level_risk[class_list_economic[0]];
+                var academic_risk = array_level_risk[class_list_academic[0]];
+                var life_risk = array_level_risk[class_list_life[0]];
+                var geographic_risk = array_level_risk[class_list_geographic[0]];
+    
+                var w = 500,
+                    h = 500;
+    
+                var colorscale = d3.scale.category10();
+    
+                //Data
+                var d = [
+                    [{
+                        axis: "Individual",
+                        value: individual_risk
+                    }, {
+                        axis: "Económico",
+                        value: economic_risk
+                    }, {
+                        axis: "Familiar",
+                        value: familiar_risk
+                    }, {
+                        axis: "Vida Universitaria",
+                        value: 1
+                    }, {
+                        axis: "Académico",
+                        value: academic_risk
+                    }, {
+                        axis: "Geográfico",
+                        value: geographic_risk
+                    },
+                    ]
+                ];
 
-                            //Options for the Radar chart, other than default
-                            var mycfg = {
-                                w: w,
-                                h: h,
-                                maxValue: 3,
-                                levels: 3,
-                                ExtraWidthX: 300
-                            }
-                                            
-                            //Call function to draw the Radar chart
-                            //Will expect that data is in %'s
-                            RadarChart.draw("#modal_risk_body", d, mycfg);
-                
-                            ////////////////////////////////////////////
-                            /////////// Initiate legend ////////////////
-                            ////////////////////////////////////////////
+                //Options for the Radar chart, other than default
+                var mycfg = {
+                    w: w,
+                    h: h,
+                    maxValue: 3,
+                    levels: 3,
+                    ExtraWidthX: 300
+                }
+                                
+                //Call function to draw the Radar chart
+                //Will expect that data is in %'s
+                RadarChart.draw("#modal_risk_body", d, mycfg);
+    
+                ////////////////////////////////////////////
+                /////////// Initiate legend ////////////////
+                ////////////////////////////////////////////
 
-                            var svg = d3.select('#body')
-                            .selectAll('svg')
-                            .append('svg')
-                            .attr("width", w + 300)
-                            .attr("height", h)
-            
-                            $('#modal_risk_graph').show();
+                var svg = d3.select('#body')
+                .selectAll('svg')
+                .append('svg')
+                .attr("width", w + 300)
+                .attr("height", h)
+
+                $('#modal_risk_graph').show();
                         });
             $('#view_graphic_risk_button').click(function(){
                 $('#modal_riesgos').fadeIn(200);
@@ -455,6 +456,22 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/d3', 'block_ases/sweetaler
                 $('#modal_riesgos').fadeOut(200);
             });
 
+        },equalize: function(){
+            $( document ).ready(function() {
+                var heights = $(".equalize").map(function() {
+                    return $(this).height();
+                }).get(),
+            
+                maxHeight = Math.max.apply(null, heights);
+            
+                $(".equalize").height(maxHeight);
+            });
+        },update_status_program: function(){
+
+        },init_programs_status: function(academic_programs){
+            for (var i = 0, len = academic_programs.length; i < len; i++) {
+                someFn(arr[i]);
+            }
         }
     };
 

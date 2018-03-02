@@ -43,6 +43,7 @@ require_once '../managers/menu_options.php';
 require_once '../managers/dphpforms/dphpforms_forms_core.php';
 require_once '../managers/dphpforms/dphpforms_records_finder.php';
 require_once '../managers/dphpforms/dphpforms_get_record.php';
+
 include '../lib.php';
 
 global $PAGE;
@@ -71,7 +72,6 @@ $contextblock = context_block::instance($blockid);
 $url = new moodle_url("/blocks/ases/view/student_profile.php", array('courseid' => $courseid, 'instanceid' => $blockid, 'student_code' => $student_code));
 
 // Nav configuration
-
 $coursenode = $PAGE->navigation->find($courseid, navigation_node::TYPE_COURSE);
 $blocknode = navigation_node::create('Reporte general', new moodle_url("/blocks/ases/view/ases_report.php", array('courseid' => $courseid, 'instanceid' => $blockid)), null, 'block', $blockid);
 $coursenode->add_node($blocknode);
@@ -85,6 +85,8 @@ $record = new stdClass;
 $actions = authenticate_user_view($USER->id, $blockid);
 $record = $actions;
 
+$data_init = array();
+
 $rol = get_role_ases($USER->id);
 
 if ($student_code != 0) {
@@ -94,13 +96,10 @@ if ($student_code != 0) {
     $student_id = $ases_student->id;
 
     // Student information to display on file header (ficha)
-
     $id_user_moodle = get_id_user_moodle($ases_student->id);
     $user_moodle = get_moodle_user($id_user_moodle);
     $academic_programs = get_academic_programs_by_student($student_id);
     $student_cohorts = get_cohorts_by_student($id_user_moodle);
-
-    // Evaluates if user role has permissions assigned on this view
 
     $record->id_moodle = $id_user_moodle;
     $record->id_ases = $student_id;
@@ -109,7 +108,9 @@ if ($student_code != 0) {
     $record->academic_programs = $academic_programs;
     $record->student_cohorts = $student_cohorts;
 
-    switch ($ases_student->tipo_doc) {
+    array_push($data_init, $academic_programs);
+
+    switch ($ases_student->tipo_doc){
         case "T.I":
             $record->doc_type_ti = "selected";
             break;
@@ -135,6 +136,8 @@ if ($student_code != 0) {
     $record->attendant_tel = $ases_student->tel_acudiente;
     $record->num_doc = $ases_student->num_doc;
     $record->observations = $ases_student->observacion;
+
+    
 
     $monitor_object = new stdClass();
     $trainee_object = new stdClass();
@@ -333,6 +336,8 @@ if ($student_code != 0) {
     // $record->historic_academic = $html_historic_academic;
 
     // Student trackings (Seguimientos)
+
+    //update_last_user_risk( $student_code );
 
     $array_peer_trackings_dphpforms = dphpforms_find_records('seguimiento_pares', 'seguimiento_pares_id_estudiante', $student_code, 'DESC');
     $array_peer_trackings_dphpforms = json_decode($array_peer_trackings_dphpforms);
@@ -784,9 +789,25 @@ if ($student_code != 0) {
 
     //Pruebas
     $record->form_seguimientos = null;
+    $record->primer_acercamiento = null;
     $record->form_seguimientos = dphpforms_render_recorder('seguimiento_pares', $rol);
     if ($record->form_seguimientos == '') {
         $record->form_seguimientos = "<strong><h3>Oops!: No se ha encontrado un formulario con el alias <code>seguimiento_pares</code></h3></strong>";
+    }
+    $record->primer_acercamiento = dphpforms_render_recorder('primer_acercamiento', $rol);
+    if ($record->primer_acercamiento == '') {
+        $record->primer_acercamiento = "<strong><h3>Oops!: No se ha encontrado un formulario con el alias <code>primer_acercamiento</code></h3></strong>";
+    }
+
+    $record->registro_primer_acercamient = null;
+    $record->editor_registro_primer_acercamiento = null;
+    $primer_acercamiento = json_decode( dphpforms_find_records('primer_acercamiento', 'primer_acercamiento_id_estudiante', $student_code, 'DESC') )->results;
+    if($primer_acercamiento){
+        $record->actualizar_primer_acercamiento = true;
+        $record->id_primer_acercamiento = array_values( $primer_acercamiento )[0]->id_registro;
+        $record->editor_registro_primer_acercamiento = dphpforms_render_updater('primer_acercamiento', $rol, array_values( $primer_acercamiento )[0]->id_registro);
+    }else{
+        $record->registro_primer_acercamiento = true;
     }
 
 } else {
@@ -828,7 +849,9 @@ $PAGE->requires->css('/blocks/ases/style/student_profile.css', true);
 //su nombramiento.
 $PAGE->requires->css('/blocks/ases/style/creadorFormulario.css', true);
 
-$PAGE->requires->js_call_amd('block_ases/student_profile_main', 'init');
+$PAGE->requires->js_call_amd('block_ases/student_profile_main', 'init', $data_init);
+$PAGE->requires->js_call_amd('block_ases/student_profile_main', 'equalize');
+
 $PAGE->requires->js_call_amd('block_ases/geographic_main', 'init');
 $PAGE->requires->js_call_amd('block_ases/dphpforms_form_renderer', 'init');
 $PAGE->requires->js_call_amd('block_ases/academic_profile_main', 'init');

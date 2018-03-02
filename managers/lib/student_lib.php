@@ -41,7 +41,7 @@ function get_user_moodle($id)
 
     $sql_query = "SELECT * from {user} where id= (SELECT id_moodle_user
                                                   FROM {talentospilos_user_extended} extended
-                                                  WHERE id_ases_user = $id)";
+                                                  WHERE id_ases_user = $id and tracking_status=1)";
     $user = $DB->get_record_sql($sql_query);
 
     return $user;

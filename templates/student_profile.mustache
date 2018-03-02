@@ -9,16 +9,11 @@
       <input type="text" class="hide" id="id_moodle" name="id_moodle" value="{{id_moodle}}" />
 
       <div class="row" id="div-header-profile">
-        <div class="col-sm-10" id="div-header-info">
+        <div class="col-sm-10 equalize" id="div-header-info">
           <div class="row" id="div-select-student">
-            <div class="col-sm-10">
+            <div class="col-sm-11">
               {{{code}}}
             </div>
-            {{#search_student_sp}}
-            <button type="button" id="search" class="btn-primary col-sm-1" name="search">
-              <span class="glyphicon glyphicon-search"></span> 
-            </button>
-            {{/search_student_sp}}
             <div class="col-sm-1">
               <span class="glyphicon glyphicon-ok" id="icon-tracking"></span>
             </div>
@@ -44,41 +39,53 @@
           </div>
           <hr>
           <div class="col-sm-8" id="div_academic_programs">
-            {{#academic_programs}}
-              <h4>Programas académicos</h4>
-              <div class="col-sm-8">
-                  {{cod_univalle}} - {{nombre_programa}}    
-              </div>
-              <div class="col-sm-4">
-                  <select name="" id="">
-                      <option value="ACTIVO">ACTIVO</option>
-                      <option value="INACTIVO">INACTIVO</option>
-                      <option value="APLAZADO">APLAZADO</option>
-                      <option value="RETIRADO">RETIRADO</option>
-                      <option value="NR">NO REGISTRA</option>
-                  </select>
-              </div>  
-            {{/academic_programs}}
+            <h4>Programas académicos</h4>
+            <table class="table table-hover borderless">
+              <tbody>
+              {{#academic_programs}}
+                <tr id="tr-{{id}}">
+                  <td class="col-sm-8 td-middle">
+                    {{cod_univalle}} - {{nombre_programa}}    
+                  </td>
+                  <td class="col-sm-4">
+                    <select id="{{id}}">
+                        <option value="ACTIVO">ACTIVO</option>
+                        <option value="APLAZADO">APLAZADO</option>
+                        <option value="EGRESADO">EGRESADO</option>
+                        <option value="INACTIVO">INACTIVO</option>
+                        <option value="NOREGISTRA">NO REGISTRA</option>
+                        <option value="RETIRADO">RETIRADO</option>
+                    </select>
+                  </td>
+                </tr>
+              {{/academic_programs}}
+              </tbody>
+            </table>
             {{^academic_programs}}
-              <h4>Programa académico</h4>
               No registra programas académicos.
             {{/academic_programs}}
           </div>
           <div class="col-sm-4" id="div_cohorts">
             <h4>Cohortes</h4>
-            {{#student_cohorts}}
-              <div class="col-sm-12">
-                {{name}}
-              </div>
-            {{/student_cohorts}}
+            <table class="table table-sm table-hover borderless">
+              <tbody>
+                {{#student_cohorts}}
+                  <tr>
+                    <td class="td-middle">
+                      {{name}}
+                    </td>
+                  </tr>
+                {{/student_cohorts}}
+              </tbody>
+            </table>
             {{^student_cohorts}}
               No registra cohortes asociadas.
             {{/student_cohorts}}
           </div>
 
         </div>
-        <div class="col-sm-2" id="photo_div">
-          <img id="photo" class="img-responsive" src="../../../user/pix.php/{{id_user}}/f1.jpg" alt="Foto de perfil" />
+        <div class="col-sm-2 equalize" id="photo_div">
+          <img id="photo" class="" src="../../../user/pix.php/{{id_user}}/f1.jpg" alt="Foto de perfil" />
         </div>
       </div>
 
@@ -219,6 +226,31 @@
     </div>
   </div>
   <!-- FIN MODALES SEGUIMIENTO V2 -->
+
+  <!-- Modal primer acercamiento -->
+<div class="mymodal" id="modal_primer_acercamiento" name="modal_primer_acercamiento_name">
+    <div class="mymodal-content">
+      <div class="mymodal-header col-sm-12">
+        <div class="col-sm-11">
+          <h4 class="" id="myModalLabel">Visualización/Edición</h4>
+        </div>
+        <div class="col-sm-1">
+          <span id="mymodal-v2-close" class="mymodal-close" aria-hidden="true">&times;</span>
+        </div>
+      </div>
+      <div class="mymodal-body mymodal-body_v2 col-sm-12">
+        <div class="row">
+          <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            <div id="primer_acercamiento_form">{{{primer_acercamiento}}}</div>
+          </div>
+        </div>
+      </div>
+      <div class="mymodal-footer">
+          .
+      </div>
+    </div>
+  </div>
+  <!-- end primer acercamiento -->
 
   <!-- Modal Seguimiento pares-->
   <div class="mymodal" id="modal_peer_tracking" name="modal_pares">
