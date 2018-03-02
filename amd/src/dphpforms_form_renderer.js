@@ -424,9 +424,8 @@
                                     $('#modal_primer_acercamiento').fadeOut(300);
                                     $('#modal_seguimiento_geografico').fadeOut(300);
                                     
-                                    console.log(  "[INICIO DE ACTUALIZACIÓN]" );
                                     $.get( "../managers/pilos_tracking/api_pilos_tracking.php?function=update_last_user_risk&arg=" + get_student_code(), function( data ) {
-                                        console.log(  "[====>]" +  data );
+                                        console.log( data );
                                     });
 
                                     $(formulario).find('button').prop( "disabled", false);
