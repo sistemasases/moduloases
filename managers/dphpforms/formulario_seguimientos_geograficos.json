@@ -191,11 +191,13 @@
                 {
                     "enunciado": "Vive en zona de riesgo",
                     "valor": "vive_zona_riesgo",
+                    "identificador": "vive_zona_riesgo",
                     "posicion": "1"
                 },
                 {
                     "enunciado": "FIX_REGLA_CHECK_UNICO",
                     "valor": "fix_regla_check_unico",
+                    "identificador": "fix_regla_check_unico",
                     "posicion": "2",
                     "class":"oculto"
                 }

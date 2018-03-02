@@ -260,10 +260,10 @@
                                 $opcion = (array) $array_opciones[$x];
                                 $html = $html . '<div class="checkbox ' . $field_attr_checkclass . '">' . "\n";
 
-                                $option_attr_checkclass = $opcion['class'];
-                                /*if(property_exists($opcion, 'class')){
-                                    $option_attr_checkclass = $opcion->{'class'};
-                                }*/
+                                $option_attr_checkclass = '';
+                                if(array_key_exists('class', $opcion)){
+                                    $option_attr_checkclass = $opcion['class'];
+                                }
 
                                 if($number_opciones == 1){
                                     $html = $html . '   <input type="hidden" name="'. $name_checkbox .'" value="-1">' . "\n";
