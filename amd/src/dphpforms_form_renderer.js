@@ -101,8 +101,48 @@
                     return 0;
                 }
 
+                function check_risks_geo_tracking( flag ){
+                        var geo_risk = get_checked_risk_value_tracking('.seg_geo_nivel_riesgo');
+                        var geo_observation = $('.seg_geo_observaciones').find('textarea').val();;
+
+                        if( 
+                            ( geo_risk == '3' ) 
+                        ){
+
+                            var json_risks = {
+                                "function": "send_email_dphpforms",
+                                "student_code": get_student_code(),
+                                "risks": [
+                                    {
+                                        "name":"Geográfico",
+                                        "risk_lvl": geo_risk,
+                                        "observation":geo_observation
+                                    }
+                                ],
+                                "date": $('.fecha').find('input').val(),
+                                "url": window.location.href
+                            };
+
+                            console.log( JSON.stringify(json_risks) );
+
+                            $.ajax({
+                                type: "POST",
+                                data: JSON.stringify(json_risks),
+                                url: "../managers/pilos_tracking/send_risk_email.php",
+                                success: function(msg) {
+                                    console.log(msg);
+                                },
+                                dataType: "text",
+                                cache: "false",
+                                error: function(msg) {
+                                    console.log(msg)
+                                }
+                            });
+
+                        }
+                }
+
                 function check_risks_tracking( flag ){
-                   
 
                         var individual_risk = get_checked_risk_value_tracking('.puntuacion_riesgo_individual');
                         var idv_observation = $('.comentarios_individual').find('textarea').val();;
@@ -172,7 +212,6 @@
                             });
 
                         }
-
                     
                 };
 
@@ -365,6 +404,7 @@
                                         mensaje = 'Actualizado';
                                     }
                                     check_risks_tracking();
+                                    check_risks_geo_tracking();
                                     swal(
                                         {title:'Información',
                                         text: mensaje,
