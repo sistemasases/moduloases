@@ -16,7 +16,7 @@
             "atributos_campo": {
                 "class": "col-xs-12 col-sm-12 col-md-12 col-lg-12 separador_inferior",
                 "name": "seg_geo_observaciones",
-                "required": "false",
+                "required": "true",
                 "maxlength": "1000",
                 "local_alias": "seg_geo_observaciones"
             },
@@ -111,7 +111,7 @@
             "atributos_campo": {
                 "radioclass": "ajuste_radio_seguimientos radio-inline",
                 "class": "col-xs-12 col-sm-12 col-md-12 col-lg-12 ",
-                "required": "false",
+                "required": "true",
                 "name": "seg_geo_nivel_riesgo",
                 "maxlength": "5000",
                 "local_alias": "seg_geo_nivel_riesgo"
