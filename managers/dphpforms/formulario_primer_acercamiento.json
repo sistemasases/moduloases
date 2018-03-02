@@ -84,7 +84,7 @@
         },
         {
             "id_temporal": "cmp_1",
-            "enunciado": "Motivo *",
+            "enunciado": "Motivo de orientación *",
             "tipo_campo": "TEXTAREA",
             "opciones_campo": null,
             "atributos_campo": {

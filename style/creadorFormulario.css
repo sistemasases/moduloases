@@ -147,8 +147,8 @@ pre, code {
 }
 .separador_inferior{
     border-bottom: 1px rgb(116, 116, 116) solid;
-    margin-top: 2em;
-    padding-top: 2em;
+    margin-bottom: 2em;
+    padding-bottom: 2em;
 }
 
 .ajuste_tematicas{
@@ -220,3 +220,12 @@ pre, code {
 .primer_acerca_fecha_ajuste{
     width: 50% !important;
 }
+/* Finalización de definición de estilos para el formulario de perimer acercamient */
+
+/* Inicio de definición de estilos para seguimientos geográficos */
+
+.geographic_track_container{
+    padding: 20px;
+}
+
+/* Finalización de definición de estilos para seguimientos geográficos */
