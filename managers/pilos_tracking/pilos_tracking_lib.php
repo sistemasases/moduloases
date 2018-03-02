@@ -776,15 +776,17 @@ function update_last_user_risk( $student_code ){
     $trackings = json_decode( $trackings )->results;
 
     $geo_tracking = dphpforms_find_records( 'seguimiento_geografico', 'seg_geo_id_estudiante', $student_code, 'DESC' );
-    $geo_tracking = json_decode( $trackings )->results;
-
-    $full_geo_tracking = json_decode( dphpforms_get_record( $geo_tracking->id_registro, 'fecha' ) )->record;
+    $geo_tracking = json_decode( $geo_tracking )->results;
+    $full_geo_tracking = null;
+    if( count( $geo_tracking ) > 0 ){
+        $full_geo_tracking = json_decode( dphpforms_get_record( array_values( $geo_tracking )[0]->id_registro, 'fecha' ) )->record;
+    }  
 
     $geo_risk_lvl = '0';
 
     if( $full_geo_tracking ){
 
-        $fields = $full_geo_tracking->campos;
+        $fields =  $full_geo_tracking->campos;
         foreach ($fields as $key => $field) {
         
             if( $field->local_alias == 'seg_geo_nivel_riesgo' ){
