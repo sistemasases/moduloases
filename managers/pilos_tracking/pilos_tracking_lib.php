@@ -938,7 +938,7 @@ function update_last_user_risk( $student_code ){
             $previous_record_risk = $DB->get_record_sql( "SELECT * FROM {talentospilos_riesg_usuario} WHERE id_usuario = '$ases_user_id' AND id_riesgo = '$risk->id'" );
             if( $previous_record_risk ){
                 $previous_record_risk->calificacion_riesgo = $vida_universitaria_risk_lvl;
-                print_r($DB->update_record( 'talentospilos_riesg_usuario', $previous_record_risk, $bulk=false ));
+                $DB->update_record( 'talentospilos_riesg_usuario', $previous_record_risk, $bulk=false );
             }else{
                 
                 $new_user_risk = new stdClass();
@@ -953,7 +953,7 @@ function update_last_user_risk( $student_code ){
             $previous_record_risk = $DB->get_record_sql( "SELECT * FROM {talentospilos_riesg_usuario} WHERE id_usuario = '$ases_user_id' AND id_riesgo = '$risk->id'" );
             if( $previous_record_risk ){
                 $previous_record_risk->calificacion_riesgo = $geo_risk_lvl;
-                print_r($DB->update_record( 'talentospilos_riesg_usuario', $previous_record_risk, $bulk=false ));
+                $DB->update_record( 'talentospilos_riesg_usuario', $previous_record_risk, $bulk=false );
             }else{
                 
                 $new_user_risk = new stdClass();
