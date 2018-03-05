@@ -35,7 +35,7 @@
 		array_push($columns, array("title"=>"Nota crédito", "name"=>"nota_credito", "data"=>"nota_credito"));
 		array_push($columns, array("title"=>"Total", "name"=>"monto_total", "data"=>"monto_total"));
 		array_push($columns, array("title"=>"Total monto estudiantes", "name"=>"monto_sum_estudiantes", "data"=>"monto_sum_estudiantes"));
-		array_push($columns, array("title"=>"Diferencia", "name"=>"monto_diferencia", "data"=>"monto_diferencia"));
+		array_push($columns, array("title"=>"Diferencia", "className"=>"mon_dif", "name"=>"monto_diferencia", "data"=>"monto_diferencia"));
 
 		$data = array(
 					"bsort" => false,

@@ -14,11 +14,53 @@
     return {
         init: function() {
 
+                $(document).ready(function(){
+                    $('.seg_geo_origen').find('input').prop('disabled', true );
+                });
+
+                $(document).on('change', $('.seg_geo_vive_zona_riesgo').find('label').find('input') , function() {
+
+                    if($('.seg_geo_vive_zona_riesgo').find('label').find('input').prop('checked')) {
+                        $('.seg_geo_origen').find('input').prop('disabled', false );
+                    }else{
+                        $('.seg_geo_origen').find('input').prop('disabled', true );
+                        $('.seg_geo_origen').find('input').prop('checked', false );
+                    }
+                });
+
+                $('.seg_geo_vive_zona_riesgo').find('label').find('input').change(function() {
+                    if($('.seg_geo_vive_zona_riesgo').find('label').find('input').prop('checked')) {
+                        $('.seg_geo_origen').find('input').prop('disabled', false );
+                    }else{
+                        $('.seg_geo_origen').find('input').prop('disabled', true );
+                        $('.seg_geo_origen').find('input').prop('checked', false );
+                    }
+                });
+
                 $('#button_actualizar_primer_acercamiento').click(function(){
                     $.get( "../managers/dphpforms/dphpforms_forms_core.php?form_id=primer_acercamiento&record_id=" + $(this).attr('data-record-id'), function( data ) {
                         $("#primer_acercamiento_form").html("");
                         $('#primer_acercamiento_form').append( data );
                         $('#modal_primer_acercamiento').fadeIn(300);
+                        var id_creado_por = $('#modal_primer_acercamiento').find('.pa_id_creado_por').find('input').val();
+                        $.get( "../managers/user_management/api_user.php?function=get_user_information&arg=" + id_creado_por, function( response ) {
+                            var registered_by = response.firstname + ' ' + response.lastname;
+                            $('#modal_primer_acercamiento').find('h1').after('<hr style="border-color:#444;"><h3>Registrado por: <strong>' + registered_by + '</strong></h3>');
+                        });
+                    });
+                });
+
+                $('#button_update_geographic_track').click(function(){
+                    $.get( "../managers/dphpforms/dphpforms_forms_core.php?form_id=seguimiento_geografico&record_id=" + $(this).attr('data-record-id'), function( data ) {
+                        $("#seguimiento_geografico_form").html("");
+                        $('#seguimiento_geografico_form').append( data );
+                        $('#modal_seguimiento_geografico').fadeIn(300);
+                        if($('.seg_geo_vive_zona_riesgo').find('label').find('input').prop('checked')) {
+                            $('.seg_geo_origen').find('input').prop('disabled', false );
+                        }else{
+                            $('.seg_geo_origen').find('input').prop('disabled', true );
+                            $('.seg_geo_origen').find('input').prop('checked', false );
+                        }
                     });
                 });
                 
@@ -59,8 +101,48 @@
                     return 0;
                 }
 
+                function check_risks_geo_tracking( flag ){
+                        var geo_risk = get_checked_risk_value_tracking('.seg_geo_nivel_riesgo');
+                        var geo_observation = $('.seg_geo_observaciones').find('textarea').val();;
+
+                        if( 
+                            ( geo_risk == '3' ) 
+                        ){
+
+                            var json_risks = {
+                                "function": "send_email_dphpforms",
+                                "student_code": get_student_code(),
+                                "risks": [
+                                    {
+                                        "name":"Geográfico",
+                                        "risk_lvl": geo_risk,
+                                        "observation":geo_observation
+                                    }
+                                ],
+                                "date": $('.fecha').find('input').val(),
+                                "url": window.location.href
+                            };
+
+                            console.log( JSON.stringify(json_risks) );
+
+                            $.ajax({
+                                type: "POST",
+                                data: JSON.stringify(json_risks),
+                                url: "../managers/pilos_tracking/send_risk_email.php",
+                                success: function(msg) {
+                                    console.log(msg);
+                                },
+                                dataType: "text",
+                                cache: "false",
+                                error: function(msg) {
+                                    console.log(msg)
+                                }
+                            });
+
+                        }
+                }
+
                 function check_risks_tracking( flag ){
-                   
 
                         var individual_risk = get_checked_risk_value_tracking('.puntuacion_riesgo_individual');
                         var idv_observation = $('.comentarios_individual').find('textarea').val();;
@@ -130,7 +212,6 @@
                             });
 
                         }
-
                     
                 };
 
@@ -165,9 +246,7 @@
                 $('#button_add_v2_track').on('click', function() {
 
                     $('#modal_v2_peer_tracking').fadeIn(300);
-
                     $('.id_estudiante').find('input').val( get_student_code() );
-
                     var codigo_monitor = $('#current_user_id').val();
                     $('.id_creado_por').find('input').val(codigo_monitor);
 
@@ -176,12 +255,25 @@
                 $('#button_primer_acercamiento').on('click', function() {
 
                     $('#modal_primer_acercamiento').fadeIn(300);
-
                     $('.primer_acerca_id_estudiante_field').find('input').val( get_student_code() );
-
                     var creado_por = $('#current_user_id').val();
                     $('.primer_acerca_id_creado_por_field').find('input').val(creado_por);
 
+                });
+
+                $('#button_add_geographic_track').on('click', function() {
+                    $('#modal_seguimiento_geografico').fadeIn(300);
+                    $('.seg_geo_id_estudiante').find('input').val( get_student_code() );
+                    var creado_por = $('#current_user_id').val();
+                    $('.seg_geo_id_creado_por').find('input').val(creado_por);
+
+                    if($('.seg_geo_vive_zona_riesgo').find('label').find('input').prop('checked')) {
+                        $('.seg_geo_origen').find('input').prop('disabled', false );
+                    }else{
+                        $('.seg_geo_origen').find('input').prop('disabled', true );
+                        $('.seg_geo_origen').find('input').prop('checked', false );
+                    }
+                    
                 });
 
                 $('.mymodal-close').click(function(){
@@ -194,6 +286,18 @@
                     load_record_updater('seguimiento_pares', id_tracking);
                     $('#modal_v2_edit_peer_tracking').fadeIn(300);
                 });
+
+                function custom_actions( data ){
+
+                    if( data == 'primer_acercamiento' ){ 
+
+                    }else if( data == 'seguimiento_pares' ){
+
+                    }else if( data == 'seguimiento_geografico_' ){
+                        $('.seg_geo_origen').find('input').prop('disabled', false );
+                    }
+
+                }
 
                 function load_record_updater(form_id, record_id){
                     $.get( "../managers/dphpforms/dphpforms_forms_core.php?form_id="+form_id+"&record_id="+record_id, function( data ) {
@@ -239,7 +343,16 @@
                             }
 
                             $("#permissions_informationr").html("");
-
+                            
+                            var is_primer_acercamiento = data.indexOf('primer_acercamiento_');
+                            if( is_primer_acercamiento != -1 ){
+                                custom_actions( 'primer_acercamiento' );
+                            }
+                            var is_seguimiento_pares = data.indexOf('seguimiento_de_pares_');
+                            if( is_seguimiento_pares != -1 ){
+                                custom_actions( 'seguimiento_pares' );
+                            }
+                           
                     });
                 }
 
@@ -256,13 +369,22 @@
                  });
 
                 $(document).on('submit', '.dphpforms' , function(evt) {
+
                     evt.preventDefault();
+                    var is_seguimiento_geografico = $(this).attr('id').indexOf( 'seguimiento_geografico_' );
+                        if( is_seguimiento_geografico != -1 ){
+                            custom_actions( 'seguimiento_geografico_' );
+                    }
+                    $('.seg_geo_origen').find('input').prop('disabled', false );
+
                     var formData = new FormData(this);
                     var formulario = $(this);
                     var url_processor = formulario.attr('action');
                     if(formulario.attr('action') == 'procesador.php'){
                         url_processor = '../managers/dphpforms/procesador.php';
                     }
+                    $(formulario).find('button').prop( "disabled", true );
+                    $(formulario).find('a').attr("disabled", true);
                     $.ajax({
                         type: 'POST',
                         url: url_processor,
@@ -282,6 +404,7 @@
                                         mensaje = 'Actualizado';
                                     }
                                     check_risks_tracking();
+                                    check_risks_geo_tracking();
                                     swal(
                                         {title:'Información',
                                         text: mensaje,
@@ -299,14 +422,20 @@
                                     $('#modal_v2_edit_peer_tracking').fadeOut(300);
                                     $('#modal_v2_peer_tracking').fadeOut(300);
                                     $('#modal_primer_acercamiento').fadeOut(300);
-
+                                    $('#modal_seguimiento_geografico').fadeOut(300);
+                                    
                                     $.get( "../managers/pilos_tracking/api_pilos_tracking.php?function=update_last_user_risk&arg=" + get_student_code(), function( data ) {
                                         console.log( data );
                                     });
 
+                                    $(formulario).find('button').prop( "disabled", false);
+                                    $(formulario).find('a').attr( "disabled", false);
+
                                     
                                     
                                 }else if(response['status'] == -2){
+                                    $(formulario).find('button').prop( "disabled", false);
+                                    $(formulario).find('a').attr( "disabled", false);
                                     var mensaje = '';
                                     if(response['message'] == 'Without changes'){
                                         mensaje = 'No hay cambios que registrar';
@@ -334,6 +463,8 @@
                                     'Oops!, informe de este error',
                                     'error'
                                 );
+                                $(formulario).find('button').prop( "disabled", false);
+                                $(formulario).find('a').attr( "disabled", false);
                             }
                             
                      });
@@ -377,9 +508,6 @@
                       });
                     
                 });
-
-                
-                
             }
     };
       
