@@ -47,7 +47,7 @@
                   <td class="col-sm-8 td-middle">
                     {{cod_univalle}} - {{nombre_programa}}    
                   </td>
-                  <td class="col-sm-4">
+                  <td class="col-sm-3">
                     <select id="{{id}}">
                         <option value="ACTIVO">ACTIVO</option>
                         <option value="APLAZADO">APLAZADO</option>
@@ -56,6 +56,12 @@
                         <option value="NOREGISTRA">NO REGISTRA</option>
                         <option value="RETIRADO">RETIRADO</option>
                     </select>
+                  </td>
+                  <td class="col-sm-1 td-middle" id="div_flags">
+                    <label class="switch">
+                      <input type="checkbox">
+                      <div class="slider round"></div>
+                    </label>
                   </td>
                 </tr>
               {{/academic_programs}}

@@ -9,7 +9,7 @@
   * @module block_ases/student_profile_main
   */
 
-define(['jquery', 'block_ases/bootstrap', 'block_ases/d3', 'block_ases/sweetalert', 'block_ases/jqueryui','block_ases/select2', 'block_ases/Chart', 'block_ases/bootstrap-toogle'], function($, bootstrap, d3, sweetalert, jqueryui, select2, bootstrap_toogle) {
+define(['jquery', 'block_ases/bootstrap', 'block_ases/d3', 'block_ases/sweetalert', 'block_ases/jqueryui','block_ases/select2', 'block_ases/Chart'], function($, bootstrap, d3, sweetalert, jqueryui, select2) {
     
     return {
         init: function(data_init) {
@@ -25,6 +25,8 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/d3', 'block_ases/sweetaler
                     $('#tr-'+data_init[i].id).addClass('success');
                 }
             }
+
+            // Load flag-tracking
 
             switch(parameters.tab){
                 case "socioed_tab":
@@ -468,10 +470,6 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/d3', 'block_ases/sweetaler
             });
         },update_status_program: function(){
 
-        },init_programs_status: function(academic_programs){
-            for (var i = 0, len = academic_programs.length; i < len; i++) {
-                someFn(arr[i]);
-            }
         }
     };
 
