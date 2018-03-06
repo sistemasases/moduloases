@@ -544,7 +544,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables', 'block_ases/s
 
             function student_asignment(students) {
 
-                var MaxInputs = 10; //Número Maximo de Campos
+                var MaxInputs = 12; //Número Maximo de Campos
                 var contenedor = $("#contenedor_add_fields"); //ID del contenedor
                 var count = $(".inputs_students").length + 1;
                 var FieldCount = count; //para el seguimiento de los campos

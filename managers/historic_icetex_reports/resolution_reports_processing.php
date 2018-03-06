@@ -33,9 +33,9 @@
 		array_push($columns, array("title"=>"Código resolución".$resolution_options, "name"=>"codigo_resolucion", "data"=>"codigo_resolucion"));
 		array_push($columns, array("title"=>"Semestre", "name"=>"nombre", "data"=>"nombre"));
 		array_push($columns, array("title"=>"Nota crédito", "name"=>"nota_credito", "data"=>"nota_credito"));
-		array_push($columns, array("title"=>"Total", "name"=>"monto_total", "data"=>"monto_total"));
-		array_push($columns, array("title"=>"Total monto estudiantes", "name"=>"monto_sum_estudiantes", "data"=>"monto_sum_estudiantes"));
-		array_push($columns, array("title"=>"Diferencia", "className"=>"mon_dif", "name"=>"monto_diferencia", "data"=>"monto_diferencia"));
+		array_push($columns, array("title"=>"Total", "className"=>"amount", "name"=>"monto_total", "data"=>"monto_total"));
+		array_push($columns, array("title"=>"Total monto estudiantes", "className"=>"amount", "name"=>"monto_sum_estudiantes", "data"=>"monto_sum_estudiantes"));
+		array_push($columns, array("title"=>"Diferencia", "className"=>"amount", "name"=>"monto_diferencia", "data"=>"monto_diferencia"));
 
 		$data = array(
 					"bsort" => false,
