@@ -5,7 +5,7 @@
  * @license  http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ases/datatables',  'block_ases/sweetalert', 'block_ases/select2','block_ases/dphpforms_form_renderer'], function($,Modernizr,bootstrap, datatables, sweetalert, select2,$forms) {
+define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ases/datatables',  'block_ases/sweetalert', 'block_ases/select2'], function($,Modernizr,bootstrap, datatables, sweetalert, select2) {
 
     return {
         init: function() {
@@ -74,45 +74,7 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                     },
                 });
 
-
-            /*When click on the student's name, open the container with the information of 
-            the follow-ups of that date*/
-
-                /*$('a[class*="student"]').click(function() {
-                var student_code = $(this).attr('href').split("#student")[1];
-                var student_id = $(this).attr('href');
-
-                //Fill container with the information corresponding to the trackings of 
-                the selected student
-                $.ajax({
-                    type: "POST",
-                    data: {
-                        type: "get_student_trackings",
-                        student_code: student_code,
-                        instance:instance
-                    },
-                    url: "../managers/pilos_tracking/pilos_tracking_report.php",
-                    async: false,
-                    success: function(msg
-                        ) {
-                    $(student_id + " > div").append(msg);
-                    },
-                    dataType: "json",
-                    cache: "false",
-                    error: function(msg) {
-                        swal({
-                            title: "Error al cargar seguimientos del estudiantes",
-                            html: true,
-                            type: "error",
-                            confirmButtonColor: "#d51b23"
-                        });
-                    },
-                });
-                
-            });*/
-
-
-                name = "";
+               name = "";
                 //Shows the interface acording to the logged user
                 if (namerol == "monitor_ps") {
                     usuario = "monitor";
@@ -149,6 +111,7 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                     actualizar_riesgo();
                     enviar_correo(instance);
                     consultar_seguimientos_persona(instance, usuario);
+                    send_email_new_form(instance);
 
 
 
@@ -165,6 +128,7 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                     actualizar_riesgo();
                     enviar_correo(instance);
                     consultar_seguimientos_persona(instance, usuario);
+                    send_email_new_form(instance);
 
 
                     // when user is 'monitor' then has permissions
@@ -189,6 +153,7 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                     actualizar_riesgo();
                     enviar_correo(instance);
                     anadirEvento(instance);
+                    send_email_new_form(instance);
 
 
 
@@ -280,11 +245,9 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                     return value;
                 };
 
-        $(document).on('click', '.dphpforms' , function(evt) {
+        $(document).on('submit', '.dphpforms' , function(evt) {
             evt.preventDefault();
-            var event=$(evt.target).attr('class');
 
-            if(event=='btn btn-sm btn-danger btn-dphpforms-univalle'){
                     var formData = new FormData(this);
                     var formulario = $(this);
                     var url_processor = formulario.attr('action');
@@ -357,7 +320,7 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                             }
                             
                      });
-                }
+                
                      
                 });
 
@@ -368,10 +331,18 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                     $('#modal_v2_edit_peer_tracking').fadeIn(300);
                 });
 
+                $('.mymodal-close').click(function(){
+                    $(this).parent().parent().parent().parent().fadeOut(300);
+                });
+
                 function load_record_updater(form_id, record_id){
                     $.get( "../managers/dphpforms/dphpforms_forms_core.php?form_id="+form_id+"&record_id="+record_id, function( data ) {
                             $("#body_editor").html("");
                             $('#body_editor').append( data );
+
+                            
+                            $(".dphpforms.dphpforms-record.dphpforms-updater").append('<br><br><div class="div-observation col-xs-12 col-sm-12 col-md-12 col-lg-12 comentarios_vida_uni">Observaciones de Practicante/profesional:<br> <textarea id="observation_text" class="form-control " name="observation_text" maxlength="5000"></textarea><br><a id="send_observation" class="btn btn-sm btn-danger btn-dphpforms-univalle btn-dphpforms-send-observation">Enviar observación</a></div>');
+
                             $("#permissions_informationr").html("");
 
                             var rev_prof = $('.dphpforms-record').find('.revisado_profesional').find('.checkbox').find('input[type=checkbox]').prop('checked');
@@ -762,6 +733,101 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                 }
 
 
+
+
+            }
+
+            /**
+             * @method send_email_new_form
+             * @desc Sends an email to a monitor, given his id, text message, date, name.
+             * @param {instance} instance current instance 
+             * @return {void}
+             */
+            function send_email_new_form(instance){
+
+                $('body').on('click', '#send_observation', function() {
+                    var form = $("form").serializeArray(),dataObj = {};
+                    console.log(form);
+
+
+                    $(form).each(function(i, field){
+                        dataObj[field.name] = field.value;
+                    });
+
+
+                    var id_register = dataObj['id_registro'];
+                    var text = $("#observation_text");
+
+
+                    if (text.val() == "") {
+                        swal({
+                            title: "Para enviar una observación debe llenar el campo correspondiente",
+                            html: true,
+                            type: "error",
+                            confirmButtonColor: "#d51b23"
+                        });
+                    } else {
+                        // Gets text message and monitor id to send the email
+                        var tracking_type = 'individual';
+                        var monitor_code = form[28].value;
+                        var date = form[5].value;
+                        var message_to_send = text.val();
+                        var semester=$("#periodos").val();
+
+                        //Text area is clear again
+                        var answer = "";
+
+                        //Ajax function to send message
+                        $.ajax({
+                            type: "POST",
+                            data: {
+                                id_tracking: id_register,
+                                type: "send_email_to_user",
+                                form: "new_form",
+                                tracking_type: tracking_type,
+                                monitor_code: monitor_code,
+                                date: date,
+                                message_to_send: message_to_send,
+                                semester:semester,
+                                instance:instance
+                            },
+                            url: "../../../blocks/ases/managers/pilos_tracking/pilos_tracking_report.php",
+                            async: false,
+                            success: function(msg) {
+                                //If it was successful...
+                                console.log(msg);
+
+                                if (msg != "Error") {
+                                    swal({
+                                        title: "Correo enviado",
+                                        html: true,
+                                        type: "success",
+                                        confirmButtonColor: "#d51b23"
+                                    });
+                                    text.val("");
+
+                                } else {
+                                    swal({
+                                        title: "error al enviar el correo al monitor",
+                                        html: true,
+                                        type: "error",
+                                        confirmButtonColor: "#d51b23"
+                                    });
+                                }
+                            },
+                            dataType: "text",
+                            cache: "false",
+                            error: function(msg) {
+                                swal({
+                                    title: "error al enviar el correo",
+                                    html: true,
+                                    type: "error",
+                                    confirmButtonColor: "#d51b23"
+                                });
+                            },
+                        });
+                    }
+                });
 
 
             }
