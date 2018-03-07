@@ -796,3 +796,23 @@ function validate_student($code_student){
 
 }
 
+
+/**
+ * Gets name of student by username
+ *
+ * @see get_name_by_username($username)
+ * @param $username --> code of student without program
+ * @return object representing the user
+ */
+
+function get_name_by_username($username)
+{
+    global $DB;
+
+    $sql_query = "SELECT * FROM {user} WHERE username LIKE '$username%'";
+    $user = $DB->get_record_sql($sql_query);
+
+    return $user;
+}
+
+
