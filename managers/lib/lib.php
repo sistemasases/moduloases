@@ -368,3 +368,23 @@ function get_current_semester_today()
 
     return 0;
 }
+
+/**
+ *
+ * Returns current semester considering current date
+ *
+ * @see get_current_semester_today()
+ * @return array -->  array object or zero if error
+ */
+
+function get_id_ases_user($id_moodle_user)
+{
+
+    global $DB;
+
+    $sql_query = "SELECT * FROM {user} us
+    INNER JOIN {talentospilos_user_extended} extended ON us.id = extended.id_moodle_user where id_moodle_user=$id_moodle_user and extended.tracking_status=1;";
+    $id_ases = $DB->get_record_sql($sql_query);
+    return $id_ases;
+
+}

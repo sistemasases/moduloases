@@ -54,7 +54,6 @@ function render_monitor_new_form($students_by_monitor,$period=null){
             $monitor_trackings= get_tracking_peer_student_current_semester($student[0], $period);
 
         }
-        if($monitor_trackings){
              $panel .= "<a data-toggle='collapse' class='student collapsed btn btn-danger btn-univalle btn-card collapsed' data-parent='#accordion_students' style='text-decoration:none' href='#student" .$student_code->username."'>";
             $panel .= "<div class='panel-heading heading_students_tracking'>";
             $panel .= "<h4 class='panel-title'>";
@@ -72,7 +71,7 @@ function render_monitor_new_form($students_by_monitor,$period=null){
 
             $panel .= "</div>"; // End panel-body
             $panel .= "</div>"; // End collapse
-        }
+        
            
     }
 
@@ -101,7 +100,6 @@ function render_practicant_new_form($monitors_of_pract,$instance,$period=null){
 
         //If the practicant has monitors with students that show
 
-        if($students_by_monitor){
 
             $panel .= "<a data-toggle='collapse' class='student collapsed btn btn-danger btn-univalle btn-card collapsed' data-parent='#accordion_monitors' style='text-decoration:none' href='#monitor" .$monitor->username."'>";
             $panel .= "<div class='panel-heading heading_monitors_tracking'>";
@@ -124,7 +122,7 @@ function render_practicant_new_form($monitors_of_pract,$instance,$period=null){
         
             $panel .= "</div>"; // End panel-body
             $panel .= "</div>"; // End collapse
-        }
+        
 
     }
 
@@ -153,7 +151,6 @@ function render_professional_new_form($practicant_of_prof,$instance,$period=null
 
 
         // If the professional has associate practitioners with monitors that show
-        if($monitors_of_pract){
 
             $panel .= "<a data-toggle='collapse' class='practicant collapsed btn btn-danger btn-univalle btn-card collapsed' data-parent='#accordion_practicant' style='text-decoration:none' href='#practicant" .$practicant->username."'>";
             $panel .= "<div class='panel-heading heading_practicant_tracking'>";
@@ -178,7 +175,7 @@ function render_professional_new_form($practicant_of_prof,$instance,$period=null
             $panel .= "</div>"; // End panel-body
             $panel .= "</div>"; // End collapse
             $panel .= "</div>"; // End panel-collapse
-        }
+        
     }
 
     return $panel;
