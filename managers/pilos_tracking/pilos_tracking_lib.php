@@ -768,7 +768,7 @@ function send_email_to_user($tipoSeg,$codigoEnviarN1,$codigoEnviarN2,$fecha,$nom
       return $email_result;
       }}
     }catch(Exception $ex){
-      return "Error";
+      return "se presentó un error :".$ex;
     }
   
 }
