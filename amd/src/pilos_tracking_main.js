@@ -1267,7 +1267,10 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                             break;
 
                         default:
-                            alert("Dato invalido");
+                            //alert("Dato invalido");
+                            $(this).parent().find(".opcionesRadio").find('div').each(function(){
+                        $(this).find("label").find("input").prop("checked", false);
+                    });
                             break;
                     }
                 });
