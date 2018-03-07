@@ -27,7 +27,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables', 'block_ases/s
 			});
 
 			$("#list-resolutions-panel").on('click', function(){
-				load_resolutions();				
+				load_resolutions();								
 			});
 
 			$("#report_button").on('click', function() {
@@ -67,7 +67,8 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables', 'block_ases/s
 				$("#div_res_students").empty();
 				$("#div_res_students").append('<table id="tableResStudents" class="display" cellspacing="0" width="100%"><thead><thead></table>');
 				var table = $("#tableResStudents").DataTable(msg);
-				$('#div_res_students').css('cursor', 'pointer');				
+				$('#div_res_students').css('cursor', 'pointer');
+				$("tbody .amount_est").css("text-align", "right");
 			},
 			dataType: "json",
 			cache: false,
@@ -91,7 +92,8 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables', 'block_ases/s
 				$("#div_resolutions").empty();
 				$("#div_resolutions").append('<table id="tableResolutions" class="display" cellspacing="0" width="100%"><thead><thead></table>');
 				var table = $("#tableResolutions").DataTable(msg);
-				$('#div_resolutions').css('cursor', 'pointer');				
+				$('#div_resolutions').css('cursor', 'pointer');
+				$("tbody .amount").css("text-align", "right");				
 			},
 			dataType: "json",
 			cache: false,
@@ -111,7 +113,8 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables', 'block_ases/s
 				$("#div_report_summary").empty();
 				$("#div_report_summary").append('<table id="tableSummary" class="display" cellspacing="0" width="100%"><thead><thead></table>');
 				var table = $("#tableSummary").DataTable(msg);
-				$('#div_report_summary').css('cursor', 'pointer');				
+				$('#div_report_summary').css('cursor', 'pointer');
+				$("tbody .amount_summ").css("text-align", "right");				
 			},
 			dataType: "json",
 			cache: false,
