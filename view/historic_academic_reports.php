@@ -83,9 +83,14 @@ $tableStudent = get_datatable_array_Students($blockid);
 $paramsStudents = new stdClass();
 $paramsStudents->table = $tableStudent;
 
+// print_r($paramsStudents);
+
 $tableTotals = get_datatable_array_totals($blockid);
 $paramsTotals = new stdClass();
 $paramsTotals->table = $tableTotals;
+
+// print_r($paramsTotals);
+
 
 $PAGE->requires->js_call_amd('block_ases/historic_academic_reports', 'load_table_students', $paramsStudents);
 $PAGE->requires->js_call_amd('block_ases/historic_academic_reports', 'load_total_table', $paramsTotals);

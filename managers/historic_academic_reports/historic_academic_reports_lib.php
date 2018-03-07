@@ -24,6 +24,7 @@
  */
 
 require_once __DIR__ . '/../../../../config.php';
+require_once '../student_profile/academic_lib.php'; 
 
 /**
  * Función que recupera datos para la tabla de reporte historico academico por estudiantes,
@@ -52,7 +53,7 @@ function get_datatable_array_Students($instance_id)
     array_push($columns, array("title" => "Programa", "name" => "programa", "data" => "programa"));
     array_push($columns, array("title" => "Cohorte", "name" => "cohorte", "data" => "cohorte"));
 
-    $default_students = get_historic_report($instance_id);
+    //$default_students = get_historic_report($instance_id);
 
     $data_to_table = array(
         "bsort" => false,
@@ -110,6 +111,8 @@ function get_historic_report($id_instance)
     $array_historic = array();
 
     $query = "  SELECT     historic.id as id,
+                           programa.id as program_id,
+                           usuario.id as student_id,
                            num_doc,
                            substring(username from 1 FOR 7) AS username,
                            firstname,
@@ -118,7 +121,7 @@ function get_historic_report($id_instance)
                            promedio_semestre  AS promsem,
                            promedio_acumulado AS promacum,
                            programa.nombre    AS programa,
-                           'cohorte.NAME'       AS cohorte,
+                           cohorte.NAME       AS cohorte,
                            json_materias
                 FROM       {talentospilos_history_academ} historic
                 INNER JOIN {talentospilos_usuario} usuario
@@ -130,7 +133,11 @@ function get_historic_report($id_instance)
                 INNER JOIN {talentospilos_user_extended} user_ext
                 ON         historic.id_estudiante = user_ext.id_ases_user
                 INNER JOIN {user} user_moodle
-                ON         user_ext.id_moodle_user = user_moodle.id ";
+                ON         user_ext.id_moodle_user = user_moodle.id
+                INNER JOIN {cohort_members} memb 
+                ON         memb.userid = user_moodle.id 
+                INNER JOIN {cohort} cohorte
+                ON         memb.cohortid = cohorte.id";
                       
     $historics = $DB->get_records_sql($query);
 
@@ -170,13 +177,24 @@ function get_historic_report($id_instance)
         }
 
         //validate estimulos
-        $historic->Numestim = "NO";            
+        $estimulos = get_estimulos($historic->student_id, $historic->program_id);
+        $historic->Numestim = $estimulos;            
 
         //validate bajos
-        $historic->bajos = "NO";            
+        $bajos = get_bajos_rendimientos($student_id, $academic_program->id);        
+        $historic->bajos = $bajos;            
 
         //validate materias perdidas
-        $historic->perdidas = "NO";            
+        $materias = json_decode($historic->json_materias);
+        $perdidas = 0;
+
+        foreach($materias as $materia){
+            if($materia->nota < 3){
+                $perdidas++;
+            }
+        }
+        
+        $historic->perdidas = $perdidas;            
         array_push($array_historic, $historic);
     }
 
@@ -242,4 +260,38 @@ function get_datatable_array_totals($instance_id)
 
     return $data_to_table;
 
+}
+
+
+/**
+* Retorna un arreglo con la informacion de la tabla de historico academico
+* @see get_Totals_report($instance_id)
+* @param $id_instance --> id del modulo
+* @return Array --> info totals_historic_academic_report
+*/
+
+function get_Totals_report($instance_id)
+{
+
+    global $DB;
+    $array_historic = array();
+
+    $query = "SELECT semestre.nombre as semestre
+                     cohorte.name as cohorte
+                     COUNT(academ.id) as total
+              FROM {talentospilos_history_academ} academ 
+              INNER JOIN {talentospilos_semestre} semestre 
+              ON         academ.id_semestre = semestre.id
+              INNER JOIN {talentospilos_user_extended} extend
+              ON         academ.id_estudiante = extend.id_ases_user
+              INNER JOIN {cohort_members} memb 
+              ON         memb.userid = extend.id_moodle_user 
+              INNER JOIN {cohort} cohorte
+              ON         memb.cohortid = cohorte.id
+              WHERE tracking_status = 1";
+
+
+
+    return $array_historic;
+    
 }
