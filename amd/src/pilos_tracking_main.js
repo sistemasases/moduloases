@@ -245,25 +245,25 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                     return value;
                 };
 
-        $(document).on('submit', '.dphpforms' , function(evt) {
-            evt.preventDefault();
+           $(document).on('click', '.dphpforms > #button' , function(evt) {
+                     evt.preventDefault();
 
                     var formData = new FormData(this);
-                    var formulario = $(this);
+                    var formulario = $(this).parent();
                     var url_processor = formulario.attr('action');
                     if(formulario.attr('action') == 'procesador.php'){
                         url_processor = '../managers/dphpforms/procesador.php';
                     }
+
                     $.ajax({
                         type: 'POST',
                         url: url_processor,
-                        data: formData,
-                        cache: false,
-                        contentType: false,
-                        processData: false,
+                        data:  $('form.dphpforms').serialize(),
+                                dataType: 'json',
+
                         success: function(data) {
-                                var response = JSON.parse(data);
-                                console.log(data);
+                                //var response = JSON.parse(data);
+                                var response = data;
                                 
                                 if(response['status'] == 0){
                                     var mensaje = '';
@@ -302,7 +302,6 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                                         'warning'
                                     );
                                 }else if(response['status'] == -1){
-                                    console.log(data);
                                     swal(
                                         'ERROR!',
                                         'Oops!, informe de este error',
@@ -311,7 +310,6 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                                 };
                             },
                             error: function(data) {
-                                console.log(data);
                                 swal(
                                     'Error!',
                                     'Oops!, informe de este error',
@@ -324,11 +322,13 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                      
                 });
 
+
                  // Controles para editar formulario de pares
                 $('.dphpforms-peer-record').on('click', function(){
                     var id_tracking = $(this).attr('data-record-id');
                     load_record_updater('seguimiento_pares', id_tracking);
                     $('#modal_v2_edit_peer_tracking').fadeIn(300);
+                    
                 });
 
                 $('.mymodal-close').click(function(){
@@ -342,6 +342,7 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
 
                             
                             $(".dphpforms.dphpforms-record.dphpforms-updater").append('<br><br><div class="div-observation col-xs-12 col-sm-12 col-md-12 col-lg-12 comentarios_vida_uni">Observaciones de Practicante/profesional:<br> <textarea id="observation_text" class="form-control " name="observation_text" maxlength="5000"></textarea><br><a id="send_observation" class="btn btn-sm btn-danger btn-dphpforms-univalle btn-dphpforms-send-observation">Enviar observación</a></div>');
+                            $('button.btn.btn-sm.btn-danger.btn-dphpforms-univalle').attr('id', 'button');
 
                             $("#permissions_informationr").html("");
 
@@ -747,7 +748,6 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
 
                 $('body').on('click', '#send_observation', function() {
                     var form = $("form").serializeArray(),dataObj = {};
-                    console.log(form);
 
 
                     $(form).each(function(i, field){
@@ -795,7 +795,6 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                             async: false,
                             success: function(msg) {
                                 //If it was successful...
-                                console.log(msg);
 
                                 if (msg != "Error") {
                                     swal({
