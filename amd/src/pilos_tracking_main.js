@@ -795,6 +795,7 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                             async: false,
                             success: function(msg) {
                                 //If it was successful...
+                                console.log(msg);
 
                                 if (msg != "Error") {
                                     swal({
