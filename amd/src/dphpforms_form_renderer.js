@@ -393,8 +393,8 @@
                         contentType: false,
                         processData: false,
                         success: function(data) {
-                                var response = JSON.parse(data);
                                 console.log(data);
+                                var response = JSON.parse(data);
                                 
                                 if(response['status'] == 0){
                                     var mensaje = '';
