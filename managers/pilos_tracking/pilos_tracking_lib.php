@@ -705,7 +705,10 @@ function send_email_to_user($tipoSeg,$codigoEnviarN1,$codigoEnviarN2,$fecha,$nom
     $messageHtml.="Cordialmente<br>";
     $messageHtml.="$name_prof";
 
+
+
     $email_result = email_to_user($emailToUser, $emailFromUser->email, $subject, $messageText, $messageHtml, ", ", true);
+
 
     if($email_result!=1)
     {
@@ -745,7 +748,9 @@ function send_email_to_user($tipoSeg,$codigoEnviarN1,$codigoEnviarN2,$fecha,$nom
       //************************************************************************************************************
     
       $receiving_user = get_full_user($codigoEnviarN2);
-    
+
+      echo $receiving_user;
+
       $emailToUser->email = $receiving_user->email;
       $emailToUser->firstname = $receiving_user->firstname;
       $emailToUser->lastname = $receiving_user->lastname;
@@ -763,7 +768,7 @@ function send_email_to_user($tipoSeg,$codigoEnviarN1,$codigoEnviarN2,$fecha,$nom
       return $email_result;
       }}
     }catch(Exception $ex){
-      return "Error";
+      return "se presentó un error :".$ex;
     }
   
 }

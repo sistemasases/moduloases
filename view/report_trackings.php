@@ -61,7 +61,6 @@ if(!consult_instance($blockid)){
 
 $contextcourse = context_course::instance($courseid);
 $contextblock =  context_block::instance($blockid);
-$PAGE->set_context($contextcourse);
 
 
 $url = new moodle_url("/blocks/ases/view/report_tackings.php",array('courseid' => $courseid, 'instanceid' => $blockid));
@@ -200,7 +199,6 @@ $PAGE->requires->css('/blocks/ases/style/side_menu_style.css', true);
 $PAGE->requires->css('/blocks/ases/style/creadorFormulario.css', true);
 
 $PAGE->requires->js_call_amd('block_ases/pilos_tracking_main','init');
-$PAGE->requires->js_call_amd('block_ases/dphpforms_form_renderer', 'init');
 
 $PAGE->set_url($url);
 $PAGE->set_title($title);

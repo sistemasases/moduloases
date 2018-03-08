@@ -27,7 +27,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables', 'block_ases/s
 			});
 
 			$("#list-resolutions-panel").on('click', function(){
-				load_resolutions();				
+				load_resolutions();								
 			});
 
 			$("#report_button").on('click', function() {
@@ -67,7 +67,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables', 'block_ases/s
 				$("#div_res_students").empty();
 				$("#div_res_students").append('<table id="tableResStudents" class="display" cellspacing="0" width="100%"><thead><thead></table>');
 				var table = $("#tableResStudents").DataTable(msg);
-				$('#div_res_students').css('cursor', 'pointer');				
+				$('#div_res_students').css('cursor', 'pointer');
 			},
 			dataType: "json",
 			cache: false,
@@ -91,7 +91,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables', 'block_ases/s
 				$("#div_resolutions").empty();
 				$("#div_resolutions").append('<table id="tableResolutions" class="display" cellspacing="0" width="100%"><thead><thead></table>');
 				var table = $("#tableResolutions").DataTable(msg);
-				$('#div_resolutions').css('cursor', 'pointer');				
+				$('#div_resolutions').css('cursor', 'pointer');			
 			},
 			dataType: "json",
 			cache: false,
@@ -111,7 +111,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables', 'block_ases/s
 				$("#div_report_summary").empty();
 				$("#div_report_summary").append('<table id="tableSummary" class="display" cellspacing="0" width="100%"><thead><thead></table>');
 				var table = $("#tableSummary").DataTable(msg);
-				$('#div_report_summary').css('cursor', 'pointer');				
+				$('#div_report_summary').css('cursor', 'pointer');			
 			},
 			dataType: "json",
 			cache: false,
@@ -121,19 +121,6 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables', 'block_ases/s
 		});
 		
 	}
-
-	/*
-	function numSum(numa, numb) {
-		return numa + numb;		
-	}
-
-	function string_to_integer(amount_array){
-		for(i = 0; i < amount_array.length; i++){
-			amount_array[i] = parseInt(amount_array[i]);
-		}
-
-	}
-	*/
 	
 }
 

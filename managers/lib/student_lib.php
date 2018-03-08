@@ -411,3 +411,22 @@ function get_full_user($id)
 
     return $user;
 }
+
+
+/**
+ * Obtains name, lastname and email from a monitor assigned to a student, given the student id
+ *
+ * @see get_student_monitor($id_ases_user,$id_semester,$id_instance)
+ * @param $id_student --> student id on {talentospilos_usuario} table 
+ * @return array Containing the information
+ */
+function get_student_monitor($id_ases_user,$id_semester,$id_instance)
+{
+
+    global $DB;
+
+    $sql_query = "SELECT id_monitor FROM {talentospilos_monitor_estud} WHERE id_estudiante =$id_ases_user AND  id_instancia=$id_instance AND id_semestre =$id_semester";
+    $id_monitor = $DB->get_record_sql($sql_query)->id_monitor;
+
+    return $id_monitor;
+}

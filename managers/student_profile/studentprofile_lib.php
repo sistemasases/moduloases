@@ -250,9 +250,7 @@ function get_tracking_group_by_semester($id_ases = null, $tracking_type, $id_sem
         if($id_semester != null){
             $sql_query .= " WHERE id = ".$id_semester;
         }else{
-            $userid = $DB->get_record_sql("SELECT userid FROM {user_info_data} AS data 
-                                                         INNER JOIN {user_info_field} AS field on data.fieldid = field.id 
-                                                         WHERE field.shortname='idtalentos' AND data.data='$id_ases';");
+            $userid = $DB->get_record_sql("SELECT id_moodle_user AS userid FROM {talentospilos_user_extended} WHERE id_ases_user = $id_ases;");
             $firstsemester = get_id_first_semester($userid->userid);
             $lastsemestre = get_id_last_semester($userid->userid);
     
@@ -797,4 +795,24 @@ function validate_student($code_student){
     }
 
 }
+
+
+/**
+ * Gets name of student by username
+ *
+ * @see get_name_by_username($username)
+ * @param $username --> code of student without program
+ * @return object representing the user
+ */
+
+function get_name_by_username($username)
+{
+    global $DB;
+
+    $sql_query = "SELECT * FROM {user} WHERE username LIKE '$username%'";
+    $user = $DB->get_record_sql($sql_query);
+
+    return $user;
+}
+
 
