@@ -116,6 +116,13 @@ pre, code {
     margin-top: 0px;
 }
 
+#modal_v2_edit_peer_tracking > .mymodal-content, #modal_v2_peer_tracking > .mymodal-content{
+    width: 80%;
+}
+
+.big_textarea{
+    height: 7em !important;
+}
 
 .peer_trackings_v2{
     margin-bottom: 10px;
