@@ -32,11 +32,11 @@
 		array_push($columns, array("title"=>"Cohorte", "name"=>"cohort", "data"=>"cohort"));
 		array_push($columns, array("title"=>"Semestre", "name"=>"semestre", "data"=>"semestre"));
 		array_push($columns, array("title"=>"Estudiantes activos con res.", "name"=>"num_act_res", "data"=>"num_act_res"));
-		array_push($columns, array("title"=>"Monto", "className"=>"amount_summ", "name"=>"monto_act_res", "data"=>"monto_act_res"));
+		array_push($columns, array("title"=>"Monto", "className"=>"dt-body-right", "name"=>"monto_act_res", "data"=>"monto_act_res"));
 		array_push($columns, array("title"=>"Estudiantes inactivos con res.", "name"=>"num_inact_res", "data"=>"num_inact_res"));
-		array_push($columns, array("title"=>"Monto", "className"=>"amount_summ", "name"=>"monto_inact_res", "data"=>"monto_inact_res"));
+		array_push($columns, array("title"=>"Monto", "className"=>"dt-body-right", "name"=>"monto_inact_res", "data"=>"monto_inact_res"));
 		array_push($columns, array("title"=>"Estudiantes activos sin res.", "name"=>"num_act_no_res", "data"=>"num_act_no_res"));
-		array_push($columns, array("title"=>"Monto", "className"=>"amount_summ", "name"=>"monto_act_no_res", "data"=>"monto_act_no_res"));
+		array_push($columns, array("title"=>"Monto", "className"=>"dt-body-right", "name"=>"monto_act_no_res", "data"=>"monto_act_no_res"));
 
 		$data = array(
 					"bsort" => false,
