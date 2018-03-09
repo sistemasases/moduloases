@@ -331,6 +331,7 @@
                 "name": "tema",
                 "required": "false",
                 "maxlength": "1000",
+                "inputclass":"big_textarea",
                 "local_alias": "tema"
             },
             "permisos_campo": [
@@ -410,6 +411,7 @@
                 "name": "objetivos",
                 "required": "true",
                 "maxlength": "1000",
+                "inputclass":"big_textarea",
                 "local_alias": "objetivos"
             },
             "permisos_campo": [
@@ -489,6 +491,7 @@
                 "name": "individual",
                 "required": "false",
                 "maxlength": "5000",
+                "inputclass":"big_textarea",
                 "local_alias": "comentarios_individual"
             },
             "permisos_campo": [
@@ -568,6 +571,7 @@
                 "name": "familiar",
                 "required": "false",
                 "maxlength": "5000",
+                "inputclass":"big_textarea",
                 "local_alias": "comentarios_familiar"
             },
             "permisos_campo": [
@@ -1411,6 +1415,7 @@
                 "name": "academico",
                 "required": "false",
                 "maxlength": "5000",
+                "inputclass":"big_textarea",
                 "local_alias": "comentarios_academico"
             },
             "permisos_campo": [
@@ -1490,6 +1495,7 @@
                 "required": "false",
                 "name": "economico",
                 "maxlength": "5000",
+                "inputclass":"big_textarea",
                 "local_alias": "comentarios_economico"
             },
             "permisos_campo": [
@@ -1759,6 +1765,7 @@
                 "name": "vida_uni",
                 "required": "false",
                 "maxlength": "5000",
+                "inputclass":"big_textarea",
                 "local_alias": "comentarios_vida_uni"
             },
             "permisos_campo": [
