@@ -161,6 +161,10 @@ pre, code {
     padding-bottom: 2em;
 }
 
+.dphpforms-updater > .ajuste_tematicas > .checkbox:nth-child(5){
+    margin-top: 10px;
+}
+
 .dphpforms-updater > .ajuste_tematicas > .checkbox:nth-child(4){
     margin-top: 10px;
 }
