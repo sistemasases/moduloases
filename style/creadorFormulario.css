@@ -136,6 +136,11 @@ pre, code {
     margin-bottom: 10px;
 }
 
+.ajuste_limpiar{
+    display: inline;
+    margin-right: 3em;
+}
+
 /*Definición de los estilos para los formularios que dependen de dphpforms*/
 
 /*Inicio de definición de estilos para el formulario de seguimientos*/
