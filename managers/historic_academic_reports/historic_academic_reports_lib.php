@@ -24,7 +24,7 @@
  */
 
 require_once __DIR__ . '/../../../../config.php';
-require_once '../student_profile/academic_lib.php'; 
+require_once '../managers/student_profile/academic_lib.php';
 
 /**
  * Función que recupera datos para la tabla de reporte historico academico por estudiantes,
@@ -134,23 +134,23 @@ function get_historic_report($id_instance)
                 ON         historic.id_estudiante = user_ext.id_ases_user
                 INNER JOIN {user} user_moodle
                 ON         user_ext.id_moodle_user = user_moodle.id
-                INNER JOIN {cohort_members} memb 
-                ON         memb.userid = user_moodle.id 
+                INNER JOIN {cohort_members} memb
+                ON         memb.userid = user_moodle.id
                 INNER JOIN {cohort} cohorte
                 ON         memb.cohortid = cohorte.id";
-                      
+
     $historics = $DB->get_records_sql($query);
 
-    foreach($historics as $historic){
+    foreach ($historics as $historic) {
 
-        //validate cancel 
+        //validate cancel
         $query_cancel = "SELECT * FROM {talentospilos_history_cancel} WHERE id_history = $historic->id ";
 
         $cancel = $DB->get_record_sql($query_cancel);
 
-        if($cancel){
+        if ($cancel) {
             $historic->cancel = $cancel->fecha_cancelacion;
-        }else{
+        } else {
             $historic->cancel = "NO";
         }
 
@@ -159,10 +159,10 @@ function get_historic_report($id_instance)
 
         $estimulo = $DB->get_records_sql($query_estimulo);
 
-        if($estimulo){
+        if ($estimulo) {
             $historic->estim = $estimulo->puesto_ocupado;
-        }else{
-            $historic->estim = "NO";            
+        } else {
+            $historic->estim = "NO";
         }
 
         //validate bajo
@@ -170,31 +170,31 @@ function get_historic_report($id_instance)
 
         $bajo = $DB->get_records_sql($query_bajo);
 
-        if($bajo){
-            $historic->bajo = $bajo->numero_bajo;
-        }else{
-            $historic->bajo = "NO";            
+        if ($bajo) {
+            $historic->bajo = "Bajo num: $bajo->numero_bajo";
+        } else {
+            $historic->bajo = "NO";
         }
 
         //validate estimulos
         $estimulos = get_estimulos($historic->student_id, $historic->program_id);
-        $historic->Numestim = $estimulos;            
+        $historic->Numestim = $estimulos;
 
         //validate bajos
-        $bajos = get_bajos_rendimientos($student_id, $academic_program->id);        
-        $historic->bajos = $bajos;            
+        $bajos = get_bajos_rendimientos($student_id, $academic_program->id);
+        $historic->bajos = $bajos;
 
         //validate materias perdidas
         $materias = json_decode($historic->json_materias);
         $perdidas = 0;
 
-        foreach($materias as $materia){
-            if($materia->nota < 3){
+        foreach ($materias as $materia) {
+            if ($materia->nota < 3) {
                 $perdidas++;
             }
         }
-        
-        $historic->perdidas = $perdidas;            
+
+        $historic->perdidas = $perdidas;
         array_push($array_historic, $historic);
     }
 
@@ -262,13 +262,12 @@ function get_datatable_array_totals($instance_id)
 
 }
 
-
 /**
-* Retorna un arreglo con la informacion de la tabla de historico academico
-* @see get_Totals_report($instance_id)
-* @param $id_instance --> id del modulo
-* @return Array --> info totals_historic_academic_report
-*/
+ * Retorna un arreglo con la informacion de la tabla de historico academico
+ * @see get_Totals_report($instance_id)
+ * @param $id_instance --> id del modulo
+ * @return Array --> info totals_historic_academic_report
+ */
 
 function get_Totals_report($instance_id)
 {
@@ -279,19 +278,54 @@ function get_Totals_report($instance_id)
     $query = "SELECT semestre.nombre as semestre
                      cohorte.name as cohorte
                      COUNT(academ.id) as total
-              FROM {talentospilos_history_academ} academ 
-              INNER JOIN {talentospilos_semestre} semestre 
+              FROM {talentospilos_history_academ} academ
+              INNER JOIN {talentospilos_semestre} semestre
               ON         academ.id_semestre = semestre.id
               INNER JOIN {talentospilos_user_extended} extend
               ON         academ.id_estudiante = extend.id_ases_user
-              INNER JOIN {cohort_members} memb 
-              ON         memb.userid = extend.id_moodle_user 
+              INNER JOIN {cohort_members} memb
+              ON         memb.userid = extend.id_moodle_user
               INNER JOIN {cohort} cohorte
               ON         memb.cohortid = cohorte.id
-              WHERE tracking_status = 1";
+              GROUP BY semestre, cohorte";
 
+    $historics = $DB->get_records_sql($query);
 
+    foreach ($historics as $historic) {
+
+        $query_cancel = "SELECT COUNT(cancel.id) as inact
+                                semestre.nombre as semestre
+                                cohorte.name as cohorte
+                                FROM {talentospilos_history_academ} academ
+                        INNER JOIN {talentospilos_semestre} semestre
+                        ON         academ.id_semestre = semestre.id
+                        INNER JOIN {talentospilos_history_cancel} cancel
+                        ON         academ.id = cancel.history_id 
+                        INNER JOIN {talentospilos_user_extended} extend
+                        ON         academ.id_estudiante = extend.id_ases_user
+                        INNER JOIN {cohort_members} memb
+                        ON         memb.userid = extend.id_moodle_user
+                        INNER JOIN {cohort} cohorte
+                        ON         memb.cohortid = cohorte.id
+                        WHERE semestre.nombre = '$historic->semestre' AND cohorte.name = '$historic->cohorte'
+                        GROUP BY semestre, cohorte";
+
+        $inact = $DB->get_record_sql($query_cancel);
+
+        if(!$inact){
+            $historic->inact = 0;
+            $historic->act = $historic->total;
+        }else{
+            $historic->inact = $inact->inact;   
+            $historic->act = $historic->total - $inact->inact;
+        }
+
+        array_push($array_historic, $historic);
+
+        //
+
+    }
 
     return $array_historic;
-    
+
 }
