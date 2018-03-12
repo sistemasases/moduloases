@@ -118,7 +118,8 @@ pre, code {
 
 #modal_v2_edit_peer_tracking > .mymodal-content, 
 #modal_v2_peer_tracking > .mymodal-content, 
-#modal_seguimiento_geografico > .mymodal-content{
+#modal_seguimiento_geografico > .mymodal-content,
+#modal_primer_acercamiento > .mymodal-content{
     width: 80%;
     padding: 0px;
 }
