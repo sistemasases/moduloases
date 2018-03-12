@@ -22,11 +22,12 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/d3', 'block_ases/sweetaler
             for (var i = 0, len = data_init.length; i < len; i++){
                 $('#'+data_init[i].id+' option[value='+data_init[i].program_status+']').attr('selected', true);
                 if(data_init[i].program_status == "ACTIVO"){
-                    $('#tr-'+data_init[i].id).addClass('success');
+                    $('#tr-'+data_init[i].id).addClass('is-active');
+                }
+                if(data_init[i].tracking_status == "1"){
+                    $('#div_flags_'+data_init[i].id).prop('checked', true);
                 }
             }
-
-            // Load flag-tracking
 
             switch(parameters.tab){
                 case "socioed_tab":

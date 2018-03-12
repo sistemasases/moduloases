@@ -1,264 +1,265 @@
-<body>
-  {{#data}} {{> block_ases/side_menu}} {{{message}}}
-  <div class="container">
-    <input type="text" class="hide" id="current_user_id" value="{{id_dphpforms_creado_por}}" />
+{{#data}} 
+{{> block_ases/side_menu}} 
+{{{message}}}
 
-    <form id="ficha_estudiante">
-    
-      <input type="text" class="hide" id="id_ases" name="id_ases" value="{{id_ases}}" />
-      <input type="text" class="hide" id="id_moodle" name="id_moodle" value="{{id_moodle}}" />
+<div class="container">
 
-      <div class="row" id="div-header-profile">
-        <div class="col-sm-10 equalize" id="div-header-info">
-          <div class="row" id="div-select-student">
-            <div class="col-sm-11">
-              {{{code}}}
-            </div>
-            <div class="col-sm-1">
-              <span class="glyphicon glyphicon-ok" id="icon-tracking"></span>
-            </div>
+  <input type="text" class="hide" id="current_user_id" value="{{id_dphpforms_creado_por}}" />
+
+  <form id="ficha_estudiante">
+  
+    <input type="text" class="hide" id="id_ases" name="id_ases" value="{{id_ases}}" />
+    <input type="text" class="hide" id="id_moodle" name="id_moodle" value="{{id_moodle}}" />
+
+    <div class="row" id="div-header-profile">
+      <div class="col-xs-12 col-sm-10 col-md-10 col-lg-10 equalize" id="div-header-info">
+        <div class="row" id="div-select-student">
+          <div class="col-xs-11 col-sm-11">
+            {{{code}}}
           </div>
-          <div class="row" id="row-general-fields">
-            <div class="col-sm-1 div-general-fields" id="">
-              <select name="tipo_doc" class="" id="tipo_doc" name="tipo_doc" disabled>
-                <option value="T.I" {{doc_type_ti}}>T.I.</option>
-                <option value="C.C" {{doc_type_cc}}>C.C.</option>
-                <option value="C.R" {{doc_type_cr}}>C.R.</option>
-                <option id="EMPTY" {{doc_type_empty}}></option>
-              </select>
-            </div>
-            <div class="col-sm-2 div-general-fields">
-              <input type="text" class="" name="num_doc" id="cedula" value="{{num_doc}}" size="12" maxlength="12" readonly>
-            </div>
-            <div class="col-sm-2 div-general-fields">
-              <span id="age">{{age}} años</span>
-            </div>
-            <div class="col-sm-4 div-general-fields">
-              <span id="email">{{email_moodle}}</span>
-            </div>
+          <div class="col-xs-1 col-sm-1">
+            <span class="glyphicon glyphicon-ok" id="icon-tracking"></span>
           </div>
-          <hr>
-          <div class="col-sm-8" id="div_academic_programs">
-            <h4>Programas académicos</h4>
-            <table class="table table-hover borderless">
-              <tbody>
-              {{#academic_programs}}
-                <tr id="tr-{{id}}">
-                  <td class="col-sm-8 td-middle">
-                    {{cod_univalle}} - {{nombre_programa}}    
-                  </td>
-                  <td class="col-sm-3">
-                    <select id="{{id}}">
-                        <option value="ACTIVO">ACTIVO</option>
-                        <option value="APLAZADO">APLAZADO</option>
-                        <option value="EGRESADO">EGRESADO</option>
-                        <option value="INACTIVO">INACTIVO</option>
-                        <option value="NOREGISTRA">NO REGISTRA</option>
-                        <option value="RETIRADO">RETIRADO</option>
-                    </select>
-                  </td>
-                  <td class="col-sm-1 td-middle" id="div_flags">
-                    <label class="switch">
-                      <input type="checkbox">
-                      <div class="slider round"></div>
-                    </label>
+        </div>
+        <div class="row" id="row-general-fields">
+          <div class="col-xs-2 col-sm-1 div-general-fields" id="">
+            <select name="tipo_doc" class="" id="tipo_doc" name="tipo_doc" disabled>
+              <option value="T.I" {{doc_type_ti}}>T.I.</option>
+              <option value="C.C" {{doc_type_cc}}>C.C.</option>
+              <option value="C.R" {{doc_type_cr}}>C.R.</option>
+              <option id="EMPTY" {{doc_type_empty}}></option>
+            </select>
+          </div>
+          <div class="col-xs-3 col-sm-2 div-general-fields">
+            <input type="text" class="" name="num_doc" id="cedula" value="{{num_doc}}" size="12" maxlength="12" readonly>
+          </div>
+          <div class="col-xs-2 col-sm-2 div-general-fields">
+            <span id="age">{{age}} años</span>
+          </div>
+          <div class="col-xs-4 col-sm-4 div-general-fields">
+            <span id="email">{{email_moodle}}</span>
+          </div>
+        </div>
+        <hr>
+        <div class="col-xs-12 col-sm-8" id="div_academic_programs">
+          <h4>Programas académicos</h4>
+          <table class="table table-hover borderless">
+            <tbody>
+            {{#academic_programs}}
+              <tr id="tr-{{id}}">
+                <td class="col-sm-8 td-middle">
+                  {{cod_univalle}} - {{nombre_programa}}    
+                </td>
+                <td class="col-sm-3">
+                  <select id="{{id}}">
+                      <option value="ACTIVO">ACTIVO</option>
+                      <option value="APLAZADO">APLAZADO</option>
+                      <option value="EGRESADO">EGRESADO</option>
+                      <option value="INACTIVO">INACTIVO</option>
+                      <option value="NOREGISTRA">NO REGISTRA</option>
+                      <option value="RETIRADO">RETIRADO</option>
+                  </select>
+                </td>
+                <td class="col-sm-1 td-middle">
+                  <label class="switch">
+                    <input type="checkbox" id="div_flags_{{id}}">
+                    <div class="slider round"></div>
+                  </label>
+                </td>
+              </tr>
+            {{/academic_programs}}
+            </tbody>
+          </table>
+          {{^academic_programs}}
+            No registra programas académicos.
+          {{/academic_programs}}
+        </div>
+        <div class="col-xs-12 col-sm-4" id="div_cohorts">
+          <h4>Cohortes</h4>
+          <table class="table table-sm table-hover borderless">
+            <tbody>
+              {{#student_cohorts}}
+                <tr>
+                  <td class="col-xs-12 col-sm-12 td-middle">
+                    {{name}}
                   </td>
                 </tr>
-              {{/academic_programs}}
-              </tbody>
-            </table>
-            {{^academic_programs}}
-              No registra programas académicos.
-            {{/academic_programs}}
-          </div>
-          <div class="col-sm-4" id="div_cohorts">
-            <h4>Cohortes</h4>
-            <table class="table table-sm table-hover borderless">
-              <tbody>
-                {{#student_cohorts}}
-                  <tr>
-                    <td class="td-middle">
-                      {{name}}
-                    </td>
-                  </tr>
-                {{/student_cohorts}}
-              </tbody>
-            </table>
-            {{^student_cohorts}}
-              No registra cohortes asociadas.
-            {{/student_cohorts}}
-          </div>
-
-        </div>
-        <div class="col-sm-2 equalize" id="photo_div">
-          <img id="photo" class="" src="../../../user/pix.php/{{id_user}}/f1.jpg" alt="Foto de perfil" />
+              {{/student_cohorts}}
+            </tbody>
+          </table>
+          {{^student_cohorts}}
+            No registra cohortes asociadas.
+          {{/student_cohorts}}
         </div>
       </div>
+      <div class="col-xs-4 col-sm-2 col-md-2 col-lg-2 equalize" id="photo_div" style="background-image: url('../../../user/pix.php/{{id_user}}/f1.jpg'); background-repeat: no-repeat; background-size: 100% 100%;">
+      </div>
+    </div>
 
-      <div class="row cabecera" id="container_profile">
-        <!-- Pestañas ficha -->
-        <div id="exTab1" class="col-sm-12">
-          <ul class="nav nav-tabs">
-            {{#view_general_tab_sp}}
-            <li id="general_li" class="active">
-              <a href="#general_tab" data-toggle="tab">GENERAL</a>
-            </li>
-            {{/view_general_tab_sp}} {{#view_socioed_tab_sp}}
-            <li id="socioed_li">
-              <a href="#socioed_tab" data-toggle="tab">SOCIOEDUCATIVO</a>
-            </li>
-            {{/view_socioed_tab_sp}} {{#view_academic_tab_sp}}
-            <li id="academic_li">
-              <a href="#academic_tab" data-toggle="tab">ACADÉMICO</a>
-            </li>
-            {{/view_academic_tab_sp}} {{#view_geographic_tab_sp}}
-            <li id="geographic_li">
-              <a href="#geographic_tab" data-toggle="tab">GEOGRÁFICO</a>
-            </li>{{/view_geographic_tab_sp}}
-          </ul>
-          <div class="tab-content clearfix ">
-            {{#view_general_tab_sp}} {{> block_ases/view_general_tab_sp}} {{/view_general_tab_sp}} {{#view_socioed_tab_sp}} {{> block_ases/view_socioed_tab_sp}}
-            {{/view_socioed_tab_sp}} {{#view_academic_tab_sp}}
-            <!--academic tab-->
-            <div class="tab-pane" id="academic_tab">
+    <div class="row cabecera" id="container_profile">
+      <!-- Pestañas ficha -->
+      <div id="exTab1" class="col-sm-12">
+        <ul class="nav nav-tabs">
+          {{#view_general_tab_sp}}
+          <li id="general_li" class="active">
+            <a href="#general_tab" data-toggle="tab">GENERAL</a>
+          </li>
+          {{/view_general_tab_sp}} {{#view_socioed_tab_sp}}
+          <li id="socioed_li">
+            <a href="#socioed_tab" data-toggle="tab">SOCIOEDUCATIVO</a>
+          </li>
+          {{/view_socioed_tab_sp}} {{#view_academic_tab_sp}}
+          <li id="academic_li">
+            <a href="#academic_tab" data-toggle="tab">ACADÉMICO</a>
+          </li>
+          {{/view_academic_tab_sp}} {{#view_geographic_tab_sp}}
+          <li id="geographic_li">
+            <a href="#geographic_tab" data-toggle="tab">GEOGRÁFICO</a>
+          </li>{{/view_geographic_tab_sp}}
+        </ul>
+        <div class="tab-content clearfix ">
+          {{#view_general_tab_sp}} {{> block_ases/view_general_tab_sp}} {{/view_general_tab_sp}} {{#view_socioed_tab_sp}} {{> block_ases/view_socioed_tab_sp}}
+          {{/view_socioed_tab_sp}} {{#view_academic_tab_sp}}
+          <!--academic tab-->
+          <div class="tab-pane" id="academic_tab">
 
-              <div class="accordion" role="tablist" aria-multiselectable="true">
-                <div class="row" style="padding: 0px 10px 15px ">
-                  <div class="col-md-3">Promedio Ponderado:
-                    <p class="prom" style="display: inline">
-                      <b>{{promedio}}</b>
-                    </p>
-                  </div>
-                  <div class="col-md-3">Estimulos academicos:
-                    <p class="est" style="display: inline">
-                      <b>{{estimulos}}</b>
-                    </p>
-                  </div>
-                  <div class="col-md-3">Bajos rendimientos:
-                    <p class="baj" style="display: inline">
-                      <b>{{bajos}}</b>
-                    </p>
-                  </div>
+            <div class="accordion" role="tablist" aria-multiselectable="true">
+              <div class="row" style="padding: 0px 10px 15px ">
+                <div class="col-md-3">Promedio Ponderado:
+                  <p class="prom" style="display: inline">
+                    <b>{{promedio}}</b>
+                  </p>
                 </div>
-                <div class="panel panel-default" id="panelActual">
-                  <div class="academic panel-heading" role="tab" id="headingOne">
-                    <h4 class="panel-title">
-                      <a id="sem_act_title" class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseAct" aria-expanded="false"
-                        aria-controls="collapseAct">
-                        Semestre Actual
-                      </a>
-                    </h4>
-                  </div>
-                  <div id="collapseAct" class="panel-collapse form-pilos collapse" role="tabpanel" aria-labelledby="headingOne">
-                    <div class="panel-group" id="accordion_academic">
-                      {{{academic_semester_act}}}
-                    </div>
-                  </div>
+                <div class="col-md-3">Estimulos academicos:
+                  <p class="est" style="display: inline">
+                    <b>{{estimulos}}</b>
+                  </p>
                 </div>
-                <div class="panel panel-default" id="panelActual">
-                  <div class="academic panel-heading" role="tab" id="headingTwo">
-                    <h4 class="panel-title">
-                      <a id="hist_title" class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseHis" aria-expanded="false"
-                        aria-controls="collapseHis">
-                        Semestres Anteriores
-                      </a>
-                    </h4>
-                  </div>
-                  <div id="collapseHis" class="panel-collapse form-pilos collapse" role="tabpanel" aria-labelledby="headingTwo">
-                    {{{historic_academic}}}
+                <div class="col-md-3">Bajos rendimientos:
+                  <p class="baj" style="display: inline">
+                    <b>{{bajos}}</b>
+                  </p>
+                </div>
+              </div>
+              <div class="panel panel-default" id="panelActual">
+                <div class="academic panel-heading" role="tab" id="headingOne">
+                  <h4 class="panel-title">
+                    <a id="sem_act_title" class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseAct" aria-expanded="false"
+                      aria-controls="collapseAct">
+                      Semestre Actual
+                    </a>
+                  </h4>
+                </div>
+                <div id="collapseAct" class="panel-collapse form-pilos collapse" role="tabpanel" aria-labelledby="headingOne">
+                  <div class="panel-group" id="accordion_academic">
+                    {{{academic_semester_act}}}
                   </div>
                 </div>
               </div>
+              <div class="panel panel-default" id="panelActual">
+                <div class="academic panel-heading" role="tab" id="headingTwo">
+                  <h4 class="panel-title">
+                    <a id="hist_title" class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseHis" aria-expanded="false"
+                      aria-controls="collapseHis">
+                      Semestres Anteriores
+                    </a>
+                  </h4>
+                </div>
+                <div id="collapseHis" class="panel-collapse form-pilos collapse" role="tabpanel" aria-labelledby="headingTwo">
+                  {{{historic_academic}}}
+                </div>
+              </div>
             </div>
-            {{/view_academic_tab_sp}}
-
-            <!-- End academic tab -->
-
-            {{#view_geographic_tab_sp}} {{> block_ases/view_geographic_tab_sp}} {{/view_geographic_tab_sp}}
-
           </div>
-        </div>
-        <!-- Fin Pestañas ficha -->
-      </div>
+          {{/view_academic_tab_sp}}
 
-      <span class="btn btn-info" id="go_back">REGRESAR</span>
-    </form>
-  </div>
+          <!-- End academic tab -->
 
-  <!-- MODALES DE SEGUIMIENTO -->
-  <div class="mymodal" id="modal_v2_peer_tracking" name="modal_v2_pares">
-    <div class="mymodal-content">
-      <div class="mymodal-header col-sm-12">
-        <div class="col-sm-11">
-          <h4 class="" id="myModalLabel">Nuevo registro</h4>
-        </div>
-        <div class="col-sm-1">
-          <span id="mymodal-v2-close" class="mymodal-close" aria-hidden="true">&times;</span>
+          {{#view_geographic_tab_sp}} {{> block_ases/view_geographic_tab_sp}} {{/view_geographic_tab_sp}}
+
         </div>
       </div>
-      <div class="mymodal-body mymodal-body_v2 col-sm-12">
-        <div class="row">
-          <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-            {{{form_seguimientos}}}
-          </div>
-        </div>
+      <!-- Fin Pestañas ficha -->
+    </div>
+
+    <span class="btn btn-info" id="go_back">REGRESAR</span>
+  </form>
+</div>
+
+<!-- MODALES DE SEGUIMIENTO -->
+<div class="mymodal" id="modal_v2_peer_tracking" name="modal_v2_pares">
+  <div class="mymodal-content">
+    <div class="mymodal-header col-sm-12">
+      <div class="col-sm-11">
+        <h4 class="" id="myModalLabel">Nuevo registro</h4>
       </div>
-      <div class="mymodal-footer">
-          .
+      <div class="col-sm-1">
+        <span id="mymodal-v2-close" class="mymodal-close" aria-hidden="true">&times;</span>
       </div>
     </div>
-  </div>
-
-  <div class="mymodal" id="modal_v2_edit_peer_tracking" name="modal_edit_v2_pares">
-    <div class="mymodal-content">
-      <div class="mymodal-header col-sm-12">
-        <div class="col-sm-11">
-          <h4 class="" id="myModalLabel">Visualización/Edición</h4>
+    <div class="mymodal-body mymodal-body_v2 col-sm-12">
+      <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+          {{{form_seguimientos}}}
         </div>
-        <div class="col-sm-1">
-          <span id="mymodal-v2-close" class="mymodal-close" aria-hidden="true">&times;</span>
-        </div>
-      </div>
-      <div class="mymodal-body mymodal-body_v2 col-sm-12">
-        <div class="row">
-          <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-            <div id="body_editor"></div>
-          </div>
-        </div>
-      </div>
-      <div class="mymodal-footer">
-          .
       </div>
     </div>
+    <div class="mymodal-footer">
+        .
+    </div>
   </div>
-  <!-- FIN MODALES SEGUIMIENTO V2 -->
+</div>
 
-  <!-- Modal primer acercamiento -->
+<div class="mymodal" id="modal_v2_edit_peer_tracking" name="modal_edit_v2_pares">
+  <div class="mymodal-content">
+    <div class="mymodal-header col-sm-12">
+      <div class="col-sm-11">
+        <h4 class="" id="myModalLabel">Visualización/Edición</h4>
+      </div>
+      <div class="col-sm-1">
+        <span id="mymodal-v2-close" class="mymodal-close" aria-hidden="true">&times;</span>
+      </div>
+    </div>
+    <div class="mymodal-body mymodal-body_v2 col-sm-12">
+      <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+          <div id="body_editor"></div>
+        </div>
+      </div>
+    </div>
+    <div class="mymodal-footer">
+        .
+    </div>
+  </div>
+</div>
+<!-- FIN MODALES SEGUIMIENTO V2 -->
+
+<!-- Modal primer acercamiento -->
 <div class="mymodal" id="modal_primer_acercamiento" name="modal_primer_acercamiento_name">
-    <div class="mymodal-content">
-      <div class="mymodal-header col-sm-12">
-        <div class="col-sm-11">
-          <h4 class="" id="myModalLabel">Visualización/Edición</h4>
-        </div>
-        <div class="col-sm-1">
-          <span id="mymodal-v2-close" class="mymodal-close" aria-hidden="true">&times;</span>
-        </div>
+  <div class="mymodal-content">
+    <div class="mymodal-header col-sm-12">
+      <div class="col-sm-11">
+        <h4 class="" id="myModalLabel">Visualización/Edición</h4>
       </div>
-      <div class="mymodal-body mymodal-body_v2 col-sm-12">
-        <div class="row">
-          <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-            <div id="primer_acercamiento_form">{{{primer_acercamiento}}}</div>
-          </div>
-        </div>
-      </div>
-      <div class="mymodal-footer">
-          .
+      <div class="col-sm-1">
+        <span id="mymodal-v2-close" class="mymodal-close" aria-hidden="true">&times;</span>
       </div>
     </div>
+    <div class="mymodal-body mymodal-body_v2 col-sm-12">
+      <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+          <div id="primer_acercamiento_form">{{{primer_acercamiento}}}</div>
+        </div>
+      </div>
+    </div>
+    <div class="mymodal-footer">
+        .
+    </div>
   </div>
-  <!-- end primer acercamiento -->
+</div>
+<!-- end primer acercamiento -->
 
-    <!-- Modal seguimiento geográfico -->
+<!-- Modal seguimiento geográfico -->
 <div class="mymodal" id="modal_seguimiento_geografico" name="modal_seguimiento_geografico_name">
     <div class="mymodal-content">
       <div class="mymodal-header col-sm-12">
@@ -684,4 +685,3 @@
     var datosGraficables = [];
 
   </script> {{/data}}
-</body>

@@ -99,6 +99,7 @@ if ($student_code != 0) {
     $id_user_moodle = get_id_user_moodle($ases_student->id);
     $user_moodle = get_moodle_user($id_user_moodle);
     $academic_programs = get_academic_programs_by_student($student_id);
+    print_r($academic_programs);
     $student_cohorts = get_cohorts_by_student($id_user_moodle);
 
     $record->id_moodle = $id_user_moodle;
