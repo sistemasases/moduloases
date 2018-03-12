@@ -184,17 +184,14 @@ pre, code {
 
 .dphpforms-response > .ajuste_tematicas > .checkbox:nth-child(2){
     margin-top: 10px;
-    border: 1px solid red;
 }
 
 .dphpforms-response > .ajuste_tematicas > .checkbox:nth-child(3){
     margin-top: 10px;
-    border: 1px solid green;
 }
 
 .dphpforms-response > .ajuste_tematicas > .checkbox:nth-child(4){
     margin-top: 10px;
-    border: 1px solid blue;
 }
 
 .ajuste_tematicas > label{
