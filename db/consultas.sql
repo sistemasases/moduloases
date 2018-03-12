@@ -589,3 +589,14 @@ SELECT DISTINCT
      SELECT id_moodle_user 
      FROM {talentospilos_user_extended} extended
      WHERE id_ases_user = $id
+
+
+     -------------------------------------------------------------------------------------------------
+     --Consultas historic_academic_reports
+
+     SELECT num_doc, SUBSTRING(username FROM 1 FOR 7) as username, firstname, lastname, semestre.nombre as semestre, promedio_semestre as promSem, promedio_acumulado as promAcum, programa.nombre as programa, cohorte.name as cohorte, json_materias
+     FROM {talentospilos_history_academ} historic INNER JOIN {talentospilos_usuario} usuario ON historic.id_estudiante = usuario.id 
+     INNER JOIN {talentospilos_semestre} semestre ON historic.id_semestre = semestre.id
+     INNER JOIN {talentospilos_programa} programa ON historic.id_programa = programa.id
+     INNER JOIN {talentospilos_user_extended} user_ext ON historic.id_estudiante = user_ext.id_ases_user
+     INNER JOIN {user} user_moodle ON user_ext.id_moodle_user = user_moodle.id
