@@ -53,7 +53,7 @@ function get_datatable_array_Students($instance_id)
     array_push($columns, array("title" => "Programa", "name" => "programa", "data" => "programa"));
     array_push($columns, array("title" => "Cohorte", "name" => "cohorte", "data" => "cohorte"));
 
-    //$default_students = get_historic_report($instance_id);
+    $default_students = get_historic_report($instance_id);
 
     $data_to_table = array(
         "bsort" => false,
@@ -218,7 +218,7 @@ function get_datatable_array_totals($instance_id)
     array_push($columns, array("title" => "Total Inactivos", "name" => "inact", "data" => "inact"));
     array_push($columns, array("title" => "Total Cohorte", "n" => "total", "data" => "total"));
 
-    // $default_students = get_Totals_report($instance_id);
+    $default_students = get_Totals_report($instance_id);
 
     $data_to_table = array(
         "bsort" => false,
@@ -275,8 +275,8 @@ function get_Totals_report($instance_id)
     global $DB;
     $array_historic = array();
 
-    $query = "SELECT semestre.nombre as semestre
-                     cohorte.name as cohorte
+    $query = "SELECT semestre.nombre as semestre,
+                     cohorte.name as cohorte,
                      COUNT(academ.id) as total
               FROM {talentospilos_history_academ} academ
               INNER JOIN {talentospilos_semestre} semestre
