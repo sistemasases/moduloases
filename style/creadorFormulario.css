@@ -182,7 +182,15 @@ pre, code {
     margin-top: 10px;
 }
 
+.dphpforms-response > .ajuste_tematicas > .checkbox:nth-child(2){
+    margin-top: 10px;
+}
+
 .dphpforms-response > .ajuste_tematicas > .checkbox:nth-child(3){
+    margin-top: 10px;
+}
+
+.dphpforms-response > .ajuste_tematicas > .checkbox:nth-child(4){
     margin-top: 10px;
 }
 
