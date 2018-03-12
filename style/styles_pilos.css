@@ -1527,3 +1527,7 @@ input.no-borde-fondo.tema
 .cancelacion{
   background-color: #F3E2A9 !important;
 }
+
+.historic{
+  padding: 1%;
+}

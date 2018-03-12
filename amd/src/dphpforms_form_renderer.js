@@ -14,6 +14,25 @@
     return {
         init: function() {
 
+                
+
+                $('.outside').click(function(){
+                    var outside = $(this);
+                    swal({
+                        title: 'Confirmación de salida',
+                        text: "",
+                        type: 'warning',
+                        showCancelButton: true,
+                        confirmButtonText: 'Salir'
+                      }, function(isConfirm) {
+                        if (isConfirm) {
+                            $(outside).parent('.mymodal').fadeOut(300);
+                            console.log( $(this).parent('.mymodal') );
+                        }
+                      });
+                    
+                });
+
                 $(document).ready(function(){
                     $('.seg_geo_origen').find('input').prop('disabled', true );
                 });
@@ -249,6 +268,7 @@
                     $('.id_estudiante').find('input').val( get_student_code() );
                     var codigo_monitor = $('#current_user_id').val();
                     $('.id_creado_por').find('input').val(codigo_monitor);
+                    
 
                 });
 
@@ -393,8 +413,8 @@
                         contentType: false,
                         processData: false,
                         success: function(data) {
-                                var response = JSON.parse(data);
                                 console.log(data);
+                                var response = JSON.parse(data);
                                 
                                 if(response['status'] == 0){
                                     var mensaje = '';
