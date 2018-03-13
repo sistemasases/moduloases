@@ -46,12 +46,12 @@
           <table class="table table-hover borderless">
             <tbody>
             {{#academic_programs}}
-              <tr id="tr-{{id}}">
-                <td class="col-sm-8 td-middle">
+              <tr id="tr-{{id_moodle_user}}">
+                <td class="col-sm-8 td-middle" id="{{academic_program_id}}">
                   {{cod_univalle}} - {{nombre_programa}}    
                 </td>
                 <td class="col-sm-3">
-                  <select id="{{id}}">
+                  <select class="select_statuses_program" id="select-{{academic_program_id}}">
                       <option value="ACTIVO">ACTIVO</option>
                       <option value="APLAZADO">APLAZADO</option>
                       <option value="EGRESADO">EGRESADO</option>
@@ -62,7 +62,7 @@
                 </td>
                 <td class="col-sm-1 td-middle">
                   <label class="switch">
-                    <input type="checkbox" id="div_flags_{{id}}">
+                    <input type="checkbox" id="div_flags_{{academic_program_id}}">
                     <div class="slider round"></div>
                   </label>
                 </td>

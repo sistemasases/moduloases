@@ -4,30 +4,34 @@
  * @copyright  ASES
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
- 
+
  /**
   * @module block_ases/student_profile_main
   */
 
-define(['jquery', 'block_ases/bootstrap', 'block_ases/d3', 'block_ases/sweetalert', 'block_ases/jqueryui','block_ases/select2', 'block_ases/Chart'], function($, bootstrap, d3, sweetalert, jqueryui, select2) {
-    
+define(['jquery', 'block_ases/bootstrap', 'block_ases/d3', 'block_ases/sweetalert',
+        'block_ases/jqueryui','block_ases/select2', 'block_ases/Chart'], function($, bootstrap, d3) {
+
     return {
         init: function(data_init) {
-
             // Carga una determinada pestaña
             var parameters = get_url_parameters(document.location.search);
             var panel_collapse = $('.panel-collapse.collapse.in');
 
-            // Load statuses
+            var self = this;
+
+            // Manage statuses
             for (var i = 0, len = data_init.length; i < len; i++){
-                $('#'+data_init[i].id+' option[value='+data_init[i].program_status+']').attr('selected', true);
+                $('#select-'+data_init[i].academic_program_id+' option[value='+data_init[i].program_status+']').attr('selected', true);
                 if(data_init[i].program_status == "ACTIVO"){
-                    $('#tr-'+data_init[i].id).addClass('is-active');
+                    $('#tr-'+data_init[i].id_moodle_user).addClass('is-active');
                 }
                 if(data_init[i].tracking_status == "1"){
-                    $('#div_flags_'+data_init[i].id).prop('checked', true);
+                    $('#div_flags_'+data_init[i].academic_program_id).prop('checked', true);
                 }
             }
+
+            $('.select_statuses_program').on('change', {object_funcion: self}, self.update_status_program);
 
             switch(parameters.tab){
                 case "socioed_tab":
@@ -469,8 +473,58 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/d3', 'block_ases/sweetaler
             
                 $(".equalize").height(maxHeight);
             });
-        },update_status_program: function(){
+        },update_status_program: function(object_function){
 
+            var program_id = $(this).attr('id').split("-")[1];
+            var status = $(this).val();
+            var student_id = $(this).parent().parent().attr('id').split("-")[1];
+
+            var data = {
+                func: 'update_status_program',
+                program_id: program_id,
+                status: status,
+                student_id: student_id
+            };
+
+            swal({
+                title: "Are you sure?",
+                text: "Your will not be able to recover this imaginary file!",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonClass: "btn-danger",
+                confirmButtonText: "Yes, delete it!",
+                closeOnConfirm: false
+            },
+            function(){
+                $.ajax({
+                    type: "POST",
+                    data: data,
+                    url: "../managers/student_profile/studentprofile_serverproc.php",
+                    success: function(msg) {
+                        if($('#select-'+data.program_id).val() == "ACTIVO"){
+                            $('#tr-'+data.student_id).addClass('is-active');
+                        }else{
+                            $('#tr-'+data.student_id).removeClass('is-active');
+                        }
+                        swal(
+                            msg.title,
+                            msg.msg,
+                            msg.status
+                        );
+                    },
+                    dataType: "json",
+                    cache: "false",
+                    error: function(msg) {
+                        swal(
+                            msg.title,
+                            msg.msg,
+                            msg.status
+                        );
+                    },
+                });
+            });
+            
+            
         }
     };
 

@@ -439,7 +439,6 @@ function get_full_user($id)
     return $user;
 }
 
-
 /**
  * Returns the academic programs associated with a student
  *
@@ -454,7 +453,7 @@ function get_academic_programs_by_student($id_ases_user){
     $result_to_return = new stdClass();
     $array_result = array();
 
-    $sql_query = "SELECT academic_program.id, academic_program.cod_univalle, 
+    $sql_query = "SELECT user_extended.id_moodle_user, academic_program.id AS academic_program_id, academic_program.cod_univalle, 
                          academic_program.nombre AS nombre_programa, academic_program.jornada, faculty.nombre AS nombre_facultad,
                          user_extended.program_status, user_extended.tracking_status
                   FROM {talentospilos_user_extended} AS user_extended
@@ -472,4 +471,36 @@ function get_academic_programs_by_student($id_ases_user){
     return $array_result;
 }
 
-// get_academic_programs_by_student(108);
+/**
+ * Update the academic program status of a student
+ *
+ * @see update_status_program($program_id, $status, $student_id)
+ * @param $program_id --> Academic program id
+ * @param $status --> New status for an academic program
+ * @param $student_id --> Student id in Moodle table
+ * @return array 
+ */
+
+function update_status_program($program_id, $status, $student_id){
+
+    global $DB;
+
+    $sql_query = "SELECT id 
+                  FROM {talentospilos_user_extended} 
+                  WHERE id_academic_program = $program_id AND id_moodle_user = $student_id";
+
+    $id_register = $DB->get_record_sql($sql_query)->id;
+
+    $object_updatable = new stdClass();
+    $object_updatable->id = $id_register;
+    $object_updatable->program_status = $status;
+
+    $result = $DB->update_record('talentospilos_user_extended', $object_updatable);
+
+    if($result){
+        return 1;
+    }else{
+        return 0;
+    }
+
+}
