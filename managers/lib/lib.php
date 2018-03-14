@@ -80,7 +80,7 @@ function search_user($username)
 
     global $DB;
 
-    $sql_query = "SELECT * FROM {user} WHERE username = $username";
+    $sql_query = "SELECT * FROM {user} WHERE username ='$username'";
     $array_user = $DB->get_record_sql($sql_query);
 
     return $array_user;
