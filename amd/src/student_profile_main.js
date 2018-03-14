@@ -31,7 +31,17 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/d3', 'block_ases/sweetaler
                 }
             }
 
-            $('.select_statuses_program').on('change', {object_funcion: self}, self.update_status_program);
+            var status_prev = "Esta si la esta pasando";
+
+            $.when(function(e){$('.select_statuses_program').on('change', {status_prev: status_prev}, self.update_status_program)}).done($('.select_statuses_program').on('focus', function(e){status_prev = e.target.value; console.log("focus= " + status_prev);}));
+            
+            // $('.select_statuses_program').on('focus', function(e){
+            //     status_prev = e.target.value; 
+            //     console.log(e);
+            //     //$('.select_statuses_program').on('change', {status_prev: status_prev}, self.update_status_program);
+            // });
+            
+            
 
             switch(parameters.tab){
                 case "socioed_tab":
@@ -473,8 +483,9 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/d3', 'block_ases/sweetaler
             
                 $(".equalize").height(maxHeight);
             });
-        },update_status_program: function(object_function){
-
+        },update_status_program: function(e){
+            console.log("when = "+e.data.status_prev);
+            console.log("Cualquiercosa");
             var program_id = $(this).attr('id').split("-")[1];
             var status = $(this).val();
             var student_id = $(this).parent().parent().attr('id').split("-")[1];
@@ -487,41 +498,48 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/d3', 'block_ases/sweetaler
             };
 
             swal({
-                title: "Are you sure?",
-                text: "Your will not be able to recover this imaginary file!",
+                title: "Advertencia",
+                text: "¿Está seguro que desea cambiar el estado del programa?",
                 type: "warning",
                 showCancelButton: true,
                 confirmButtonClass: "btn-danger",
-                confirmButtonText: "Yes, delete it!",
-                closeOnConfirm: false
+                confirmButtonText: "Si",
+                cancelButtonText: "No",
+                closeOnConfirm: false,
+                closeOnCancel: false
             },
-            function(){
-                $.ajax({
-                    type: "POST",
-                    data: data,
-                    url: "../managers/student_profile/studentprofile_serverproc.php",
-                    success: function(msg) {
-                        if($('#select-'+data.program_id).val() == "ACTIVO"){
-                            $('#tr-'+data.student_id).addClass('is-active');
-                        }else{
-                            $('#tr-'+data.student_id).removeClass('is-active');
-                        }
-                        swal(
-                            msg.title,
-                            msg.msg,
-                            msg.status
-                        );
-                    },
-                    dataType: "json",
-                    cache: "false",
-                    error: function(msg) {
-                        swal(
-                            msg.title,
-                            msg.msg,
-                            msg.status
-                        );
-                    },
-                });
+            function(isConfirm){
+                if(isConfirm){
+                    $.ajax({
+                        type: "POST",
+                        data: data,
+                        url: "../managers/student_profile/studentprofile_serverproc.php",
+                        success: function(msg) {
+                            if($('#select-'+data.program_id).val() == "ACTIVO"){
+                                $('#tr-'+data.student_id).addClass('is-active');
+                            }else{
+                                $('#tr-'+data.student_id).removeClass('is-active');
+                            }
+                            swal(
+                                msg.title,
+                                msg.msg,
+                                msg.status
+                            );
+                        },
+                        dataType: "json",
+                        cache: "false",
+                        error: function(msg) {
+                            swal(
+                                msg.title,
+                                msg.msg,
+                                msg.status
+                            );
+                        },
+                    });
+                }else{
+
+                }
+                
             });
             
             
