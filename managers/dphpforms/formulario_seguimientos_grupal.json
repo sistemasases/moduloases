@@ -719,7 +719,7 @@
     ],
     "campos_busqueda": [
         {
-            "alias": "seguimiento_grupal_id_estudiante",
+            "alias": "seguimiento_grupal_id_monitor",
             "id_campo": "cmp_9"
         },
         {
