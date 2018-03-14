@@ -67,7 +67,7 @@ function render_monitor_new_form($students_by_monitor,$period=null){
             $panel .= "<div class='panel-body'>";
 
 
-            $panel.=render_student_trackings($monitor_trackings);
+            //$panel.=render_student_trackings($monitor_trackings);
 
             $panel .= "</div>"; // End panel-body
             $panel .= "</div>"; // End collapse
@@ -101,7 +101,7 @@ function render_practicant_new_form($monitors_of_pract,$instance,$period=null){
         //If the practicant has monitors with students that show
 
 
-            $panel .= "<a data-toggle='collapse' class='student collapsed btn btn-danger btn-univalle btn-card collapsed' data-parent='#accordion_monitors' style='text-decoration:none' href='#monitor" .$monitor->username."'>";
+            $panel .= "<a data-toggle='collapse' class='monitor collapsed btn btn-danger btn-univalle btn-card collapsed' data-parent='#accordion_monitors' style='text-decoration:none' href='#monitor" .$monitor->username."'>";
             $panel .= "<div class='panel-heading heading_monitors_tracking'>";
             $panel .= "<h4 class='panel-title'>";
             $panel .= "$monitor->firstname $monitor->lastname";
@@ -115,9 +115,9 @@ function render_practicant_new_form($monitors_of_pract,$instance,$period=null){
 
 
             if($period==null){
-                $panel.=render_monitor_new_form($students_by_monitor);
+              //  $panel.=render_monitor_new_form($students_by_monitor);
             }else{
-                $panel.=render_monitor_new_form($students_by_monitor,$period);
+                //$panel.=render_monitor_new_form($students_by_monitor,$period);
             }
         
             $panel .= "</div>"; // End panel-body
@@ -166,9 +166,9 @@ function render_professional_new_form($practicant_of_prof,$instance,$period=null
 
 
             if($period==null){
-                $panel.=render_practicant_new_form($monitors_of_pract,$instance);
+               // $panel.=render_practicant_new_form($monitors_of_pract,$instance);
             }else{
-                $panel.=render_practicant_new_form($monitors_of_pract,$instance,$period);
+               // $panel.=render_practicant_new_form($monitors_of_pract,$instance,$period);
             }
             
 
