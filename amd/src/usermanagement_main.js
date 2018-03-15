@@ -548,7 +548,6 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables', 'block_ases/s
                 var count = $(".inputs_students").length + 1;
                 var FieldCount = count; //para el seguimiento de los campos
 
-                if (count <= MaxInputs){ // Max input allowed
                     FieldCount++;
                     var text = '<option value="-1">-----------------------</option>';
 
@@ -559,7 +558,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables', 'block_ases/s
                     $("#contenedor_add_fields").append('<div class="select-pilos"><select class="inputs_students" name="array_students[]" id="campo_' + FieldCount + '"">' + text + '</select></div>');
                     create_select2('campo_' + FieldCount);
                     count++;
-                }
+                
             }
 
             function loadStudents() {
@@ -790,7 +789,8 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables', 'block_ases/s
                                     //swal("Nice!", "You wrote: " + inputValue, "success");
                                 });
                         } else {
-                            updateRolUser();
+                            deleteMonitorWithoutStudents(currentUser,getIdinstancia());
+                            //updateRolUser();
                             load_users();
                         }
 
@@ -836,6 +836,39 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables', 'block_ases/s
                             valdateStudentMonitor(currentUser, isdelete);
                         }
                     });
+            }
+
+            function deleteMonitorWithoutStudents(currentUser,isdelete){
+             var data = new Array();
+                data.push({
+                    name: 'deleteMonitorWithoutStudents',
+                    value: 'deleteMonitorWithoutStudents'
+                });
+                data.push({
+                    name: 'idinstancia',
+                    value: getIdinstancia()
+                });
+                $.ajax({
+                    type: "POST",
+                    data: data,
+                    url: "../managers/user_management/update_role_user.php",
+                    success: function(msg) {
+                        if (msg == 1) {
+                                swal("Hecho!", "El usuario ha sido eliminado satisfactoriamente.", "success");
+                                updateRolUser();
+                                load_users();
+                        } else {
+                            swal("Error!", msg, "error");
+                        }
+
+
+                    },
+                    dataType: "text",
+                    cache: "false",
+                    error: function(msg) {
+                        alert("Error al eliminar monitor sin estudiantes asignados")
+                    },
+                });
             }
 
             function changeMonitor(newUser, currentUser, isdelete) {

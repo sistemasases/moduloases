@@ -387,7 +387,7 @@ function update_role_monitor_ps($username, $role, $array_students, $boss, $idins
     
     $sql_query = "SELECT id FROM {user} WHERE username ='$username';";
     $id_moodle = $DB->get_record_sql($sql_query);
-    
+
     //current semester's id is consulted
     $sql_query = "select max(id) as id_semestre from {talentospilos_semestre};";
     $semestre  = $DB->get_record_sql($sql_query);

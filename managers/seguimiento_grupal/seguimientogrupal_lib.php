@@ -45,10 +45,10 @@ function get_grupal_students($id_monitor, $idinstancia){
     global $DB;
     $semestre_act = get_current_semester();
 
-    $sql_query="SELECT *  FROM mdl_user AS userm 
+    $sql_query="SELECT *  FROM {user} AS userm 
     INNER JOIN {talentospilos_user_extended} as user_ext  ON user_ext.id_moodle_user= userm.id
     INNER JOIN (SELECT *,id AS idtalentos FROM {talentospilos_usuario}) AS usuario ON id_ases_user = usuario.id 
-    where  idtalentos in (select id_estudiante from {talentospilos_monitor_estud} where id_monitor =".$id_monitor." AND id_instancia=".$idinstancia." and id_semestre=".$semestre_act->max.")";
+    where  idtalentos in (select id_estudiante from {talentospilos_monitor_estud} where id_monitor =".$id_monitor." AND id_instancia=".$idinstancia." and id_semestre=".$semestre_act->max." and tracking_status=1)";
     
    $result = $DB->get_records_sql($sql_query);
    return $result;

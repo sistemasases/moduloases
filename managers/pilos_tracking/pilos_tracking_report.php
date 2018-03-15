@@ -24,27 +24,16 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 require_once ('../validate_profile_action.php');
-
 require_once ('tracking_functions.php');
-
 require_once ('../lib/student_lib.php');
-
 require_once ('../lib/lib.php');
-
 require_once ('../student_profile/studentprofile_lib.php');
-
 require_once ('../periods_management/periods_lib.php');
-
 require_once ('../dphpforms/dphpforms_forms_core.php');
-
 require_once ('../dphpforms/dphpforms_records_finder.php');
-
 require_once ('../dphpforms/dphpforms_get_record.php');
-
 require_once '../user_management/user_lib.php';
-
 require_once '../role_management/role_management_lib.php';
-
 global $USER;
 
 if (isset($_POST['type']) && $_POST['type'] == "getInfo" && isset($_POST['instance']))
@@ -67,7 +56,8 @@ if (isset($_POST['type']) && isset($_POST['instance']) && $_POST['type'] == "get
     $student_code = explode("-", $_POST['student_code']);
     $ases_student = get_ases_user_by_code($student_code[0]);
     $student_id = $ases_student->id;
-    $array_peer_trackings_dphpforms = get_tracking_peer_student_current_semester($student_code[0], '21');
+    $current_semester = get_current_semester();
+    $array_peer_trackings_dphpforms = get_tracking_peer_student_current_semester($student_code[0], $current_semester->max);
     $array = render_student_trackings($array_peer_trackings_dphpforms);
     echo json_encode($array);
     }
@@ -76,8 +66,7 @@ if (isset($_POST['type']) && isset($_POST['instance']) && $_POST['type'] == "get
     {
 
     // Get Monitors of practicant
-    $monitor_code = explode("-", $_POST['monitor_code']);
-    $monitor_id =search_user($monitor_code[0]);
+    $monitor_id =search_user($_POST['monitor_code']);
     $students_by_monitor=get_students_of_monitor($monitor_id->id,$_POST['instance']);
     $array=render_monitor_new_form($students_by_monitor);
     echo json_encode($array);
@@ -87,8 +76,7 @@ if (isset($_POST['type']) && isset($_POST['instance']) && $_POST['type'] == "get
     {
 
     // Get practicant of professional
-    $practicant_code = explode("-", $_POST['practicant_code']);
-    $practicant_id =search_user($practicant_code[0]);
+    $practicant_id =search_user($_POST['practicant_code']);
     $monitors_of_pract = get_monitors_of_pract($practicant_id->id,$_POST['instance']);
     $array=render_practicant_new_form($monitors_of_pract,$_POST['instance']);
     echo json_encode($array);
