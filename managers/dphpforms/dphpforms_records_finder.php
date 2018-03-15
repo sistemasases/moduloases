@@ -37,7 +37,7 @@
     }
     
     //Se busca por if_from_preg (info en dphpforms_get_record)
-    function dphpforms_find_records($id_form, $id_pregunta, $criterio, $order = 'DESC', $using_like = false){
+    function dphpforms_find_records($id_form, $id_pregunta, $criterio, $order = 'DESC', $using_like = 'false'){
 
         global $DB;
 
