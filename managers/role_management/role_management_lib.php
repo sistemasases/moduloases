@@ -310,8 +310,9 @@ function monitor_student_assignment($username_monitor, $array_students, $idinsta
         $result = $DB->get_record_sql($sql_query);
         $id_boss =  $result->id;
     }
-    
+    if($id_role){
     $array->id_rol = $id_role->id;
+    }
     $array->id_usuario = $id_user_moodle->id;
     $array->estado = $state;
     $array->id_semestre = $id_semester->id;

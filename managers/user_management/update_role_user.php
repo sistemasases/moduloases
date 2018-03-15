@@ -214,7 +214,6 @@ if(isset($_POST['role']) && isset($_POST['username'])){
     $user->id = $newUserArray[0];
     $user->username = $newUserArray[1];
     $user->rol =  $newUserArray[2];
-    echo $idinstancia;
     update_role_user($user->username, $user->rol,$_POST['idinstancia'], 0);
     echo 1;
     
