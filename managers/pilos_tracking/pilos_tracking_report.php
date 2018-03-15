@@ -66,8 +66,7 @@ if (isset($_POST['type']) && isset($_POST['instance']) && $_POST['type'] == "get
     {
 
     // Get Monitors of practicant
-    $monitor_code = explode("-", $_POST['monitor_code']);
-    $monitor_id =search_user($monitor_code[0]);
+    $monitor_id =search_user($_POST['monitor_code']);
     $students_by_monitor=get_students_of_monitor($monitor_id->id,$_POST['instance']);
     $array=render_monitor_new_form($students_by_monitor);
     echo json_encode($array);
@@ -77,8 +76,7 @@ if (isset($_POST['type']) && isset($_POST['instance']) && $_POST['type'] == "get
     {
 
     // Get practicant of professional
-    $practicant_code = explode("-", $_POST['practicant_code']);
-    $practicant_id =search_user($practicant_code[0]);
+    $practicant_id =search_user($_POST['practicant_code']);
     $monitors_of_pract = get_monitors_of_pract($practicant_id->id,$_POST['instance']);
     $array=render_practicant_new_form($monitors_of_pract,$_POST['instance']);
     echo json_encode($array);
