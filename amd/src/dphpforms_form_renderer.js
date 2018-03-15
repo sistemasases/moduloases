@@ -268,6 +268,7 @@
                     $('.id_estudiante').find('input').val( get_student_code() );
                     var codigo_monitor = $('#current_user_id').val();
                     $('.id_creado_por').find('input').val(codigo_monitor);
+                    $('.dphpforms-response .btn-dphpforms-univalle').css( { 'margin-left' : ( ($('.dphpforms-response').width()/2) - ( $('.dphpforms-response .btn-dphpforms-univalle').outerWidth() /2) ) + 'px'  } );
                     
 
                 });
