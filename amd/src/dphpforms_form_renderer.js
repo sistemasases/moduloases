@@ -372,6 +372,13 @@
                             if( is_seguimiento_pares != -1 ){
                                 custom_actions( 'seguimiento_pares' );
                             }
+
+                            var count_buttons_dphpforms = $('.dphpforms-record .btn-dphpforms-univalle').length;
+                            if( count_buttons_dphpforms == 1 ){
+                                $('.dphpforms-record .btn-dphpforms-univalle').css( { 'margin-left' : ( ($('.dphpforms-updater').width()/2) - ( $('.dphpforms-record .btn-dphpforms-univalle').outerWidth() /2) ) + 'px'  } );
+                            }else if( count_buttons_dphpforms == 2 ){
+                                $('.dphpforms-record .btn-dphpforms-univalle:eq(0)').css( { 'margin-left' : ( ($('.dphpforms-updater').width()/2) - 72 ) + 'px'  } );
+                            }
                            
                     });
                 }
