@@ -184,7 +184,7 @@ function get_tracking_peer_student_current_semester($student_id, $semester_id){
             $seguimientos_ordenados->$array_tracking_date[$x]['year']->year = $array_tracking_date[$x]['year'];
             $seguimientos_ordenados->$array_tracking_date[$x]['year']->periodo = array();
 
-            $seguimientos_ordenados->$array_tracking_date[$x]['year']->year = $array_tracking_date[$x]['year'];
+            //$seguimientos_ordenados->$array_tracking_date[$x]['year']->year = $array_tracking_date[$x]['year'];
             if(in_array($array_tracking_date[$x]['mon'], $periodo_actual)){
                 
                 for($y = 0; $y < count($array_detail_peer_trackings_dphpforms); $y++){
