@@ -1933,11 +1933,11 @@
         },
         {
             "id_temporal": "cmp_17",
-            "enunciado": "R. profesional",
+            "enunciado": "",
             "tipo_campo": "CHECKBOX",
             "opciones_campo": [
                 {
-                    "enunciado": "Revisado",
+                    "enunciado": "Revisado profesional",
                     "valor": "0",
                     "posicion": "1"
                 }
@@ -2014,11 +2014,11 @@
         },
         {
             "id_temporal": "cmp_18",
-            "enunciado": "R. practicante",
+            "enunciado": "",
             "tipo_campo": "CHECKBOX",
             "opciones_campo": [
                 {
-                    "enunciado": "Revisado",
+                    "enunciado": "Revisado practicante",
                     "valor": "0",
                     "posicion": "1"
                 }

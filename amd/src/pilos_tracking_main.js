@@ -154,13 +154,151 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                     enviar_correo(instance);
                     anadirEvento(instance);
                     send_email_new_form(instance);
-
-
-
-
                 }
 
             });
+
+
+            function edit_tracking_new_form(){
+            // Controles para editar formulario de pares
+            $('.dphpforms-peer-record').on('click', function(){
+                var id_tracking = $(this).attr('data-record-id');
+                load_record_updater('seguimiento_pares', id_tracking);
+                $('#modal_v2_edit_peer_tracking').fadeIn(300);
+                  
+            });}
+
+            student_load();
+            monitor_load();
+            professional_load();
+
+            function professional_load(){
+
+            /*When click on the practicant's name, open the container with the information of 
+            the assigned monitors*/
+
+            $('a[class*="practicant"]').click(function() {
+                var practicant_code = $(this).attr('href').split("#practicant")[1];
+                var practicant_id = $(this).attr('href');
+                //Fill container with the information corresponding to the monitor 
+                $.ajax({
+                    type: "POST",
+                    data: {
+                        type: "get_practicants_of_professional",
+                        practicant_code: practicant_code,
+                        instance:get_instance(),
+                    },
+                    url: "../managers/pilos_tracking/pilos_tracking_report.php",
+                    async: false,
+                    success: function(msg
+                        ) {
+                    $(practicant_id + " > div").empty();
+                    $(practicant_id + " > div").append(msg);
+                    monitor_load();
+                    },
+                    dataType: "json",
+                    cache: "false",
+                    error: function(msg) {
+                       swal({
+                            title: "Oops !",
+                            text: "Se presentó un inconveniente con el practicante seleccionado.",
+                            html: true,
+                            type: 'warning',
+                            confirmButtonColor: "#d51b23"
+                        });
+                    },
+                });
+            
+            });
+            }
+
+
+
+
+
+
+            function monitor_load(){
+
+            /*When click on the student's name, open the container with the information of 
+            the follow-ups of that date*/
+
+            $('a[class*="monitor"]').click(function() {
+                var monitor_code = $(this).attr('href').split("#monitor")[1];
+                var monitor_id = $(this).attr('href');
+                //Fill container with the information corresponding to the monitor 
+                $.ajax({
+                    type: "POST",
+                    data: {
+                        type: "get_monitors_of_practicant",
+                        monitor_code: monitor_code,
+                        instance:get_instance(),
+                    },
+                    url: "../managers/pilos_tracking/pilos_tracking_report.php",
+                    async: false,
+                    success: function(msg
+                        ) {
+                    $(monitor_id + " > div").empty();
+                    $(monitor_id + " > div").append(msg);
+                    student_load();
+                    },
+                    dataType: "json",
+                    cache: "false",
+                    error: function(msg) {
+                       swal({
+                            title: "Oops !",
+                            text: "Se presentó un inconveniente con el monitor seleccionado.",
+                            html: true,
+                            type: 'warning',
+                            confirmButtonColor: "#d51b23"
+                        });
+                    },
+                });
+            
+            });
+            }
+
+
+            /*When click on the student's name, open the container with the information of 
+            the follow-ups of that date*/
+
+            function student_load(){
+
+            $('a[class*="student"]').click(function() {
+                console.log("student : "+$(this).attr('href').split("#student")[1]);
+                var student_code = $(this).attr('href').split("#student")[1];
+                var student_id = $(this).attr('href');
+                //Fill container with the information corresponding to the trackings of the selected student
+                $.ajax({
+                    type: "POST",
+                    data: {
+                        type: "get_student_trackings",
+                        student_code: student_code,
+                        instance:instance
+                    },
+                    url: "../managers/pilos_tracking/pilos_tracking_report.php",
+                    async: false,
+                    success: function(msg
+                        ) {
+                    $(student_id + " > div").empty();
+                    $(student_id + " > div").append(msg);
+                    edit_tracking_new_form();
+                    },
+                    dataType: "json",
+                    cache: "false",
+                    error: function(msg) {
+                        swal({
+                            title: "Oops !",
+                            text: "Se presentó un inconveniente con el estudiante seleccionado.",
+                            html: true,
+                            type: 'warning',
+                            confirmButtonColor: "#d51b23"
+                        });
+                    },
+                });
+            
+            });}
+
+
                  function check_risks_tracking( flag ){
                    
 
@@ -323,13 +461,7 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                 });
 
 
-                 // Controles para editar formulario de pares
-                $('.dphpforms-peer-record').on('click', function(){
-                    var id_tracking = $(this).attr('data-record-id');
-                    load_record_updater('seguimiento_pares', id_tracking);
-                    $('#modal_v2_edit_peer_tracking').fadeIn(300);
-                    
-                });
+
 
                 $('.mymodal-close').click(function(){
                     $(this).parent().parent().parent().parent().fadeOut(300);
@@ -427,6 +559,9 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
 
                                 } else {
                                     $('#reemplazarToogle').html(msg);
+                                    student_load();
+                                    monitor_load();
+                                    professional_load();
                                 }
                                 $(".well.col-md-10.col-md-offset-1.reporte-seguimiento.oculto").slideDown("slow");
                                 crear_conteo(usuario);
@@ -441,11 +576,7 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                                 alert("error al consultar seguimientos de personas");
                             },
                         });
-                    $('.dphpforms-peer-record').on('click', function(){
-                            var id_tracking = $(this).attr('data-record-id');
-                            load_record_updater('seguimiento_pares', id_tracking);
-                            $('#modal_v2_edit_peer_tracking').fadeIn(300);
-                        });
+                        edit_tracking_new_form();
 
                     }
 
@@ -536,6 +667,9 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                                     $("input[name=practicante]").prop('disabled', true);
                                     $("input[name=profesional]").prop('disabled', true);
                                 }
+                                student_load();
+                                monitor_load();
+                                professional_load();
                                 $(".well.col-md-10.col-md-offset-1.reporte-seguimiento.oculto").slideDown("slow");
 
                             },
@@ -549,11 +683,7 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                                $("#reemplazarToogle").fadeIn();
                             }
                         });
-                        $('.dphpforms-peer-record').on('click', function(){
-                            var id_tracking = $(this).attr('data-record-id');
-                            load_record_updater('seguimiento_pares', id_tracking);
-                            $('#modal_v2_edit_peer_tracking').fadeIn(300);
-                        });
+                        edit_tracking_new_form();
 
                     }
 
@@ -1635,6 +1765,20 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                     $("#editar_" + id).hide();
                     $("#enviar_" + id).hide();
                 }
+            }
+
+
+            function get_instance(){
+                //We get the current instance id
+
+                var informacionUrl = window.location.search.split("&");
+                for (var i = 0; i < informacionUrl.length; i++) {
+                    var elemento = informacionUrl[i].split("=");
+                    if (elemento[0] == "?instanceid" || elemento[0] == "instanceid") {
+                        var instance = elemento[1];
+                    }
+                }
+                return instance;
             }
 
             /**
