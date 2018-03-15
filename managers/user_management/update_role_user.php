@@ -159,7 +159,18 @@ if(isset($_POST['role']) && isset($_POST['username'])){
 }else if(isset($_POST['deleteStudent']) && isset($_POST['student']) && isset($_POST['username'])){
     echo dropStudentofMonitor($_POST['username'], $_POST['student']);
     
-}else if(isset($_POST['changeMonitor']) && isset($_POST['oldUser']) && isset($_POST['newUser']) && isset($_POST['idinstancia']) ){
+}else if(isset($_POST['deleteMonitorWithoutStudents'])&&isset($_POST['oldUser']) && isset($_POST['idinstancia'])){
+        //disable old user
+        // old user informations is storaged
+        $oldUserArray =  json_decode($_POST['oldUser']);
+        $oldUser = new stdClass();
+        $oldUser->id = $oldUserArray[0];
+        $oldUser->username = $oldUserArray[1];  
+        
+        update_role_monitor_ps($oldUser->username, 'monitor_ps', array(), null,$_POST['idinstancia'], 0);
+        echo 3;    
+}
+else if(isset($_POST['changeMonitor']) && isset($_POST['oldUser']) && isset($_POST['newUser']) && isset($_POST['idinstancia']) ){
     $user_rol = get_user_rol(json_decode($_POST['newUser'])[1]);
     $isdelete = $_POST['isdelete'];
 
