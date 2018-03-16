@@ -899,8 +899,8 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                     } else {
                         // Gets text message and monitor id to send the email
                         var tracking_type = 'individual';
-                        var monitor_code = form[28].value;
-                        var date = form[5].value;
+                        var monitor_code = $('.id_creado_por').find('input').val();
+                        var date = $('.fecha').find('input').val();
                         var message_to_send = text.val();
                         var semester=$("#periodos").val();
 
