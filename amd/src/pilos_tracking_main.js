@@ -903,6 +903,7 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                         var date = $('.fecha').find('input').val();
                         var message_to_send = text.val();
                         var semester=$("#periodos").val();
+                        var place = $('.lugar').find('input').val();
 
                         //Text area is clear again
                         var answer = "";
@@ -919,7 +920,8 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                                 date: date,
                                 message_to_send: message_to_send,
                                 semester:semester,
-                                instance:instance
+                                instance:instance,
+                                place:place
                             },
                             url: "../../../blocks/ases/managers/pilos_tracking/pilos_tracking_report.php",
                             async: false,

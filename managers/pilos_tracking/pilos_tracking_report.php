@@ -218,6 +218,13 @@ if (isset($_POST['type']) && $_POST['type'] == "getProfesional" && isset($_POST[
 
 if (isset($_POST['type']) && $_POST['type'] == "send_email_to_user" && isset($_POST['message_to_send']) && isset($_POST['tracking_type']) && isset($_POST['monitor_code']) && isset($_POST['date']))
     {
+ 
+        /*
+            La linea siguiente no se adiciona a el if previo, con el 
+            fin de evitar problemas con otros script que hagan uso del método.
+        */
+        $place = $_POST['lugar'];
+
     if ($_POST['form'] == 'new_form')
         {
         $register = dphpforms_get_record($_POST['id_tracking'], 'id_estudiante');
@@ -226,11 +233,12 @@ if (isset($_POST['type']) && $_POST['type'] == "send_email_to_user" && isset($_P
         $id_ases_student = get_id_ases_user($id_moodle_student->id);
         $monitor_code = get_student_monitor($id_ases_student->id_ases_user, $_POST['semester'], $_POST['instance']);
         $practicant_code = get_boss_of_monitor_by_semester($monitor_code, $_POST['semester'], $_POST['instance']);
-        echo send_email_to_user($_POST['tracking_type'], $monitor_code, $practicant_code->id_jefe, $_POST['date'], $id_moodle_student->firstname . " " . $id_moodle_student->lastname, $_POST['message_to_send']);
+        
+        echo send_email_to_user($_POST['tracking_type'], $monitor_code, $practicant_code->id_jefe, $practicant_code->id_usuario, $_POST['date'], $id_moodle_student->firstname . " " . $id_moodle_student->lastname, $_POST['message_to_send'], $place);
         }
       else
         {
-        echo send_email_to_user($_POST['tipoSeg'], $_POST['codigoEnviarN1'], $_POST['codigoEnviarN2'], $_POST['fecha'], $_POST['nombre'], $_POST['message']);
+        echo send_email_to_user($_POST['tipoSeg'], $_POST['codigoEnviarN1'], $_POST['codigoEnviarN2'], $practicant_code->id_usuario, $_POST['fecha'], $_POST['nombre'], $_POST['message'], $place);
         }
     }
 

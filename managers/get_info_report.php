@@ -74,7 +74,7 @@ if(isset($_POST['type'])&&$_POST['type']=="getProfesional"&&isset($_POST['instan
 
 if(isset($_POST['type'])&&$_POST['type']=="send_email_to_user"&&isset($_POST['message'])&&isset($_POST['tipoSeg'])&&isset($_POST['codigoEnviarN1'])&&isset($_POST['codigoEnviarN2'])&&isset($_POST['fecha'])&&isset($_POST['nombre'])) 
 {
- echo send_email_to_user($_POST['tipoSeg'],$_POST['codigoEnviarN1'],$_POST['codigoEnviarN2'],$_POST['fecha'],$_POST['nombre'],$_POST['message']);
+ echo send_email_to_user($_POST['tipoSeg'],$_POST['codigoEnviarN1'],$_POST['codigoEnviarN2'], 0,$_POST['fecha'],$_POST['nombre'],$_POST['message'], "");
 }
 
 
