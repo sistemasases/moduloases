@@ -89,7 +89,7 @@
         },
         {
             "id_temporal": "cmp_2",
-            "enunciado": "Nivel de riesgo",
+            "enunciado": "Nivel de riesgo:",
             "tipo_campo": "RADIOBUTTON",
             "opciones_campo": [
                 {
@@ -114,6 +114,7 @@
                 "required": "true",
                 "name": "seg_geo_nivel_riesgo",
                 "maxlength": "5000",
+                "groupradioclass":"ajuste_limpiar",
                 "local_alias": "seg_geo_nivel_riesgo"
             },
             "permisos_campo": [
@@ -279,7 +280,7 @@
 
         {
             "id_temporal": "cmp_4",
-            "enunciado": "Origen",
+            "enunciado": "Origen:",
             "tipo_campo": "RADIOBUTTON",
             "opciones_campo": [
                 {
@@ -298,6 +299,7 @@
                 "class": "col-xs-12 col-sm-12 col-md-12 col-lg-12 separador_inferior ajuste_origen",
                 "required": "false",
                 "radioclass": "ajuste_radio_seguimientos radio-inline",
+                "groupradioclass":"ajuste_limpiar",
                 "local_alias": "seg_geo_origen"
             },
             "permisos_campo": [

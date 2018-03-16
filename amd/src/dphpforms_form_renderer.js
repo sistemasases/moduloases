@@ -268,6 +268,7 @@
                     $('.id_estudiante').find('input').val( get_student_code() );
                     var codigo_monitor = $('#current_user_id').val();
                     $('.id_creado_por').find('input').val(codigo_monitor);
+                    $('.dphpforms-response .btn-dphpforms-univalle').css( { 'margin-left' : ( ($('.dphpforms-response').width()/2) - ( $('.dphpforms-response .btn-dphpforms-univalle').outerWidth() /2) ) + 'px'  } );
                     
 
                 });
@@ -371,6 +372,13 @@
                             var is_seguimiento_pares = data.indexOf('seguimiento_de_pares_');
                             if( is_seguimiento_pares != -1 ){
                                 custom_actions( 'seguimiento_pares' );
+                            }
+
+                            var count_buttons_dphpforms = $('.dphpforms-record .btn-dphpforms-univalle').length;
+                            if( count_buttons_dphpforms == 1 ){
+                                $('.dphpforms-record .btn-dphpforms-univalle').css( { 'margin-left' : ( ($('.dphpforms-updater').width()/2) - ( $('.dphpforms-record .btn-dphpforms-univalle').outerWidth() /2) ) + 'px'  } );
+                            }else if( count_buttons_dphpforms == 2 ){
+                                $('.dphpforms-record .btn-dphpforms-univalle:eq(0)').css( { 'margin-left' : ( ($('.dphpforms-updater').width()/2) - 72 ) + 'px'  } );
                             }
                            
                     });
