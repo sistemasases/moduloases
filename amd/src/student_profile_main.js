@@ -14,6 +14,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/d3', 'block_ases/sweetaler
 
     return {
         init: function(data_init) {
+            console.log(data_init);
             // Carga una determinada pestaña
             var parameters = get_url_parameters(document.location.search);
             var panel_collapse = $('.panel-collapse.collapse.in');
@@ -31,18 +32,9 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/d3', 'block_ases/sweetaler
                 }
             }
 
-            var status_prev = "Esta si la esta pasando";
+            $('.select_statuses_program').on('change', {id: data_init}, self.update_status_program)
 
-            $.when(function(e){$('.select_statuses_program').on('change', {status_prev: status_prev}, self.update_status_program)}).done($('.select_statuses_program').on('focus', function(e){status_prev = e.target.value; console.log("focus= " + status_prev);}));
-            
-            // $('.select_statuses_program').on('focus', function(e){
-            //     status_prev = e.target.value; 
-            //     console.log(e);
-            //     //$('.select_statuses_program').on('change', {status_prev: status_prev}, self.update_status_program);
-            // });
-            
-            
-
+            // 
             switch(parameters.tab){
                 case "socioed_tab":
                     $('#general_li').removeClass('active');
@@ -484,8 +476,6 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/d3', 'block_ases/sweetaler
                 $(".equalize").height(maxHeight);
             });
         },update_status_program: function(e){
-            console.log("when = "+e.data.status_prev);
-            console.log("Cualquiercosa");
             var program_id = $(this).attr('id').split("-")[1];
             var status = $(this).val();
             var student_id = $(this).parent().parent().attr('id').split("-")[1];
@@ -537,7 +527,9 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/d3', 'block_ases/sweetaler
                         },
                     });
                 }else{
-
+                    for(){
+                        
+                    }
                 }
                 
             });
