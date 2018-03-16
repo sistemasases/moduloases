@@ -629,12 +629,14 @@ function get_profesional_practicante($id,$instanceid)
  * @param $tipoSeg --> type of track ('seguimiento')
  * @param $codigoEnviarN1 --> first user id to send an email
  * @param $codigoEnviarN2 --> second user id to send an email
+ * @param $codigoEnviarN3 --> Thirt user is to send and email
  * @param $fecha --> track date 
  * @param $nombre --> student name
  * @param $messageText --> message content
+ * @param $place --> //
  * @return Array message information
  */
-function send_email_to_user($tipoSeg,$codigoEnviarN1,$codigoEnviarN2,$fecha,$nombre,$messageText){
+function send_email_to_user( $tipoSeg, $codigoEnviarN1, $codigoEnviarN2, $codigoEnviarN3, $fecha, $nombre, $messageText, $place ){
 
     global $USER;
 
@@ -682,10 +684,10 @@ function send_email_to_user($tipoSeg,$codigoEnviarN1,$codigoEnviarN2,$fecha,$nom
     
     if($tipoSeg=="individual")
     {
-      $subject = "Observaciones seguimiento del dia $fecha del estudiante $nombre"; 
+      $subject = "Observaciones seguimiento del dia $fecha del estudiante $nombre, Lugar: $place"; 
     }else
     {
-      $subject = "Observaciones seguimiento del dia $fecha de los estudiantes $nombre";
+      $subject = "Observaciones seguimiento del dia $fecha de los estudiantes $nombre, Lugar: $place";
     }
     
     
@@ -765,7 +767,38 @@ function send_email_to_user($tipoSeg,$codigoEnviarN1,$codigoEnviarN2,$fecha,$nom
 
       $email_result = email_to_user($emailToUser, $emailFromUser, $subject, $messageText, $messageHtml, ", ", true);
       
-      return $email_result;
+      if( $email_result != 1 ){
+        return $email_result;
+      }else{
+
+        $email_result=0;
+        //************************************************************************************************************
+        //************************************************************************************************************
+        //email will be sent to third user
+        //************************************************************************************************************
+        //************************************************************************************************************
+        
+        $receiving_user = get_full_user($codigoEnviarN3);
+
+        echo $receiving_user;
+
+        $emailToUser->email = $receiving_user->email;
+        $emailToUser->firstname = $receiving_user->firstname;
+        $emailToUser->lastname = $receiving_user->lastname;
+        $emailToUser->maildisplay = true;
+        $emailToUser->mailformat = 1;
+        $emailToUser->id = $receiving_user->id; 
+        $emailToUser->alternatename = '';
+        $emailToUser->middlename = '';
+        $emailToUser->firstnamephonetic = '';
+        $emailToUser->lastnamephonetic = '';
+
+
+        $email_result = email_to_user($emailToUser, $emailFromUser, $subject, $messageText, $messageHtml, ", ", true);
+        
+      }
+      
+
       }}
     }catch(Exception $ex){
       return "se presentó un error :".$ex;
