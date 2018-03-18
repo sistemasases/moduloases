@@ -14,6 +14,8 @@
     return {
         init: function() {
 
+
+
                 
 
                 $('.outside').click(function(){
@@ -273,6 +275,18 @@
 
                 });
 
+
+                $('#button_add_groupal_track').on('click', function() {
+                    $('#modal_v2_groupal_tracking').fadeIn(300);
+                    var codigo_monitor = $('#current_user_id').val();
+                    $('.id_creado_por').find('input').val(codigo_monitor);
+                    $('.id_estudiante').find('input').val("-");
+                    $('#list_grupal_seg_consult  input[type=checkbox]').prop('checked', false);
+
+                });
+
+
+
                 $('#button_primer_acercamiento').on('click', function() {
 
                     $('#modal_primer_acercamiento').fadeIn(300);
@@ -299,6 +313,7 @@
 
                 $('.mymodal-close').click(function(){
                     $(this).parent().parent().parent().parent().fadeOut(300);
+                    $("#list_grupal_seg_consult_1").remove();
                 });
 
                 // Controles para editar formulario de pares
@@ -308,6 +323,22 @@
                     $('#modal_v2_edit_peer_tracking').fadeIn(300);
                 });
 
+                // Controles para editar formulario grupal
+                $('.dphpforms-groupal-record').on('click', function(){
+                    var id_tracking = $(this).attr('data-record-id');
+                    load_record_updater('seguimiento_grupal', id_tracking);
+                    $('#modal_v2_edit_groupal_tracking').fadeIn(300);
+
+
+
+
+
+
+
+                });
+
+
+
                 function custom_actions( data ){
 
                     if( data == 'primer_acercamiento' ){ 
@@ -316,14 +347,80 @@
 
                     }else if( data == 'seguimiento_geografico_' ){
                         $('.seg_geo_origen').find('input').prop('disabled', false );
+                    
+                    }else if(data=='seguimiento_grupal_'){
+                       var total = $('input:checked').length;
+                       var array_students="";
+                       
+                       $("#modal_v2_groupal_tracking").find('form').find('.oculto.id_estudiante').find('input').val("");
+
+                       $("input:checked").each(function(index) {
+                            var complete_code = $(this).parent().parent().find(">:first-child").text();
+                            var code = complete_code.split("-");
+                            if (index === total - 1) {
+                                array_students+=code[0];
+                           }else{
+                                array_students+=code[0]+",";
+                          }
+                        });
+                       $("#modal_v2_edit_groupal_tracking").find('form').find('.oculto.id_estudiante').find('input').val(array_students);
+                       $("#modal_v2_groupal_tracking").find('form').find('.oculto.id_estudiante').find('input').val(array_students);
+
+
                     }
 
                 }
+
+                function check_students_groupal_tracks(students){
+                     
+                   students_code =students.split(','); 
+                   console.log(".id_estudiante :"+students_code);
+
+
+                   //Get student list of the monitor in an array.
+
+                   var student_list_of_monitor=[];
+
+                  $('#list_students_attendance_1 > tbody  > tr').each(function(index) {
+                   var code = $(this).children('td').first().html().split('-');
+                   student_list_of_monitor.push(code[0]);
+                   });
+
+                  console.log("lista total de id_estudiantes :"+student_list_of_monitor);
+                  console.log("lista de estudiantes seleccin : "+students_code);
+
+                  $.each(students_code , function(index, val) { 
+                    var index_selected = student_list_of_monitor.indexOf(val);
+                    if(index_selected!=-1){
+                        var row =$("#list_students_attendance_1 tbody>tr:eq('"+ index_selected + "')");
+                        var column = row.find('td').eq(3).children('input');
+
+                       $("input[type=checkbox][value='"+column.val()+"']").prop('checked',true);
+                     }
+                  });
+
+                }
+
 
                 function load_record_updater(form_id, record_id){
                     $.get( "../managers/dphpforms/dphpforms_forms_core.php?form_id="+form_id+"&record_id="+record_id, function( data ) {
                             $("#body_editor").html("");
                             $('#body_editor').append( data );
+
+
+                            var table = $("#list_grupal_seg_consult").clone().prop('id','list_grupal_seg_consult_1');
+                            $('#modal_v2_edit_groupal_tracking').find('form').find('h1').after(table);
+                            $("#list_grupal_seg_consult_1 > #list_students_attendance").prop('id','list_students_attendance_1');
+
+                            $('#list_grupal_seg_consult_1  input[type=checkbox]').prop('checked', false);
+
+                            var div_estudiante =$("#modal_v2_edit_groupal_tracking").find('form').find('.oculto.id_estudiante').find('input');
+                            if(div_estudiante.val() != undefined){
+                                 check_students_groupal_tracks(div_estudiante.val());  
+                            }
+
+
+                            
                             $("#permissions_informationr").html("");
 
                             var rev_prof = $('.dphpforms-record').find('.revisado_profesional').find('.checkbox').find('input[type=checkbox]').prop('checked');
@@ -400,9 +497,19 @@
 
                     evt.preventDefault();
                     var is_seguimiento_geografico = $(this).attr('id').indexOf( 'seguimiento_geografico_' );
+                    var is_seguimiento_grupal = $(this).attr('id').indexOf( 'seguimiento_grupal_' );
+
                         if( is_seguimiento_geografico != -1 ){
                             custom_actions( 'seguimiento_geografico_' );
                     }
+
+                    if (is_seguimiento_grupal!=-1){
+                        $("#modal_v2_edit_groupal_tracking").find('form').find('.oculto.id_estudiante').find('input').val("");
+
+
+                        custom_actions( 'seguimiento_grupal_' );
+                    }
+
                     $('.seg_geo_origen').find('input').prop('disabled', false );
 
                     var formData = new FormData(this);
@@ -446,7 +553,7 @@
                                             }
                                         }
                                     );
-                                    
+
                                     $('#modal_v2_edit_peer_tracking').fadeOut(300);
                                     $('#modal_v2_peer_tracking').fadeOut(300);
                                     $('#modal_primer_acercamiento').fadeOut(300);

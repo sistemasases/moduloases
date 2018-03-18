@@ -92,6 +92,34 @@ pre, code {
     box-shadow: 0px 0px 15px -3px #888888;
 }
 
+
+
+.groupal-tracking-record{
+    color: #333;
+    border: 1px solid #ddd;
+    padding: 0.4em;
+    font-size: 1.1em;
+    margin-bottom: 0.4em;
+    background-color: #f5f5f5;
+    border-radius: 3px;
+}
+
+
+.groupal-tracking-record:first-child{
+    margin-top: 20px;
+}
+
+.groupal-tracking-record:last-child{
+    margin-bottom: 20px;
+}
+
+.groupal-tracking-record:hover{
+    cursor: pointer;
+    color: #000;
+    border-color: #333;
+    box-shadow: 0px 0px 15px -3px #888888;
+}
+
 .card_v2{
     padding: 0px !important;
     border-width: 0px;
