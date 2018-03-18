@@ -4,219 +4,153 @@
  * @copyright  ASES
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+/**
+ * @module block_ases/instanceconfiguration_main
+ */
+define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables', 'block_ases/sweetalert','block_ases/dphpforms_form_renderer'],
+    function($, bootstrap, datatables, swal,renderer_forms) {
 
- /**
-  * @module block_ases/instanceconfiguration_main
-  */
+        return {
 
-define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables','block_ases/sweetalert'],
-        function($, bootstrap, datatables, swal) {
+            init: function() {
 
-    return {
+                var self = this;
+                var instance_id = self.get_id_instance();
+                var list_attendance = self.generate_attendance_table();
+                var form = $('#modal_v2_groupal_tracking').find('form').find('h1').after(list_attendance);
+                
 
-        init: function() {
+                self.load_attendance_list(undefined, undefined, instance_id);
+                self.load_students_of_monitor(instance_id);
 
-            var self = this;
-            var instance_id = self.get_id_instance();
+            },
+            //Load the list of students assigned to the current monitor.
+            load_students_of_monitor: function(instance) {
+                var data = new Array();
+                data.push({
+                    name: "function",
+                    value: "load_grupal"
+                });
+                data.push({
+                    name: "idinstancia",
+                    value: instance
+                });
 
-            $('#button_add_v2_track').on('click', {object_function: self}, self.add_new_groupal_tracking);
-           
-        },
-        add_new_groupal_tracking: function(instance_id){
-          if(instance_id == undefined){
-                var instance_id = this.get_id_instance();
-            }
-            $('#modal_v2_peer_tracking').fadeIn(300);
-            var codigo_monitor = $('#current_user_id').val();
-            $('.id_creado_por').find('input').val(codigo_monitor);
+                $.ajax({
+                    type: "POST",
+                    data: data,
+                    url: "../managers/user_management/usermanagement_report.php",
+                    success: function(msg) {
+                        $('#mytable tbody').html('');
+                        if (msg.rows != 0) {
 
+                            var content = msg.content;
+                            for (x in content) {
 
-        },
+                                $('#mytable tbody').append("<tr> <td>" + content[x].username + "</td> <td>" + content[x].firstname + "</td> <td>" + content[x].lastname + "</td>  <td class=\"hide\">" + content[x].idtalentos + "</td> </tr>");
+                            }
 
-        get_cohorts_without_assignment: function(instance_id){
+                        } else {
+                            $('#list_grupal_seg').append("<a>No registra ningún estudiante a su cargo.Por favor dirigete a la oficina de Sistemas de talentos pilos para gestionar su situación</a>");
+                        }
+                    },
+                    dataType: "json",
+                    cache: "false",
+                    error: function(msg) {
+                        alert("Error al cargar lista de estudiantes asignados del monitor");
+                    },
+                });
 
-            if(instance_id == undefined){
-                var instance_id = this.get_id_instance();
-            }
+            },
+            //Generates the student attendance table in the modal
+            generate_attendance_table: function() {
+                var list_attendance = '';
+                list_attendance += '<div class="mymodal-body mymodal-body_v2 col-sm-12">';
+                list_attendance += '<div class="row">';
+                list_attendance += '<div class= "form-group">';
+                list_attendance += '<div data-spy="scroll" data-target=".navbar" data-offset="50" class="well col-md-12" id="list_grupal_seg_consult" name="list_grupal_seg_consult">';
+                list_attendance += '<table id="list_students_attendance" class="table table-striped">';
+                list_attendance += '<thead>';
+                list_attendance += '<tr>';
+                list_attendance += '<th>Código</th><th>Nombre</th><th>Apellido</th><th>Presente</th>';
+                list_attendance += '</tr>';
+                list_attendance += '</thead>';
+                list_attendance += '<tbody id="mytbody"></tbody></table>';
+                list_attendance += '</div></div></div></div>';
 
-            $.ajax({
-                type: "POST",
-                data: {
-                       function: 'load_cohorts_without_assignment',
-                       instance: instance_id},
-                url: "../managers/instance_management/instance_configuration_serverproc.php",
-                success: function(msg) {
-                    if(msg.status == 0){
-                        swal(
-                            'Error',
-                            msg.msg,
-                            'error'
-                        );
-                    }else if(msg.status == 1){
+                return list_attendance;
 
-                        var options = "";
-                        var cohorts_array = msg.msg;
+            },
 
-                        if(cohorts_array.length == 0){
-                            options += "<option>No hay cohortes disponibles para asignar</option>";
-                        }else{
-                            $.each(cohorts_array, function(key){
-                                options += "<option value='"+cohorts_array[key].id+"'>";
-                                options += cohorts_array[key].idnumber+" "+cohorts_array[key].name+"</option>";
-                            });
+            //Check the current instance
+            get_id_instance: function() {
+                var urlParameters = location.search.split('&');
+                for (var x in urlParameters) {
+                    if (urlParameters[x].indexOf('instanceid') >= 0) {
+                        var intanceparameter = urlParameters[x].split('=');
+                        return intanceparameter[1];
+                    }
+                }
+                return 0;
+            },
+
+            //Load students to the student attendance chart in the modal
+            load_attendance_list: function(list, editable, instance) {
+
+                if (list === undefined) {
+                    list = null;
+                }
+
+                if (editable === undefined) {
+                    editable = null;
+                }
+
+                var data = new Array();
+
+                data.push({
+                    name: "function",
+                    value: "load_grupal"
+                });
+                data.push({
+                    name: "idinstancia",
+                    value: instance
+                });
+
+                $.ajax({
+                    type: "POST",
+                    data: data,
+                    url: "../managers/user_management/usermanagement_report.php",
+                    success: function(msg) {
+                        $('#list_students_attendance tbody').html('');
+
+                        if (msg.rows != 0) {
+
+                            var content = msg.content;
+                            if (!list) {
+                                for (x in content) {
+                                    $('#modal_v2_groupal_tracking #list_students_attendance tbody').append("<tr> <td>" + content[x].username + "</td> <td>" + content[x].firstname + "</td> <td>" + content[x].lastname + "</td>  <td><input type=\"checkbox\" id=\"asistencia\" name=\"asistencia\" value=\"" + content[x].idtalentos + "\"/></td>  </tr>");
+                                }
+                            } else {
+                                for (x in content) {
+
+                                    if (list.indexOf(x) != -1) {
+                                        $('#modal_v2_groupal_tracking #list_students_attendance tbody').append(" <tr> <td>" + content[x].username + "</td> <td>" + content[x].firstname + "</td> <td>" + content[x].lastname + "</td>  <td><input type=\"checkbox\" checked=\"checked\" id=\"asistencia\" name=\"asistencia\"  value=\"" + content[x].idtalentos + "\"/></td>  </tr>");
+                                    } else {
+                                        $('#modal_v2_groupal_tracking #list_students_attendance tbody').append("<tr> <td>" + content[x].username + "</td> <td>" + content[x].firstname + "</td> <td>" + content[x].lastname + "</td>  <td><input type=\"checkbox\" id=\"asistencia\" name=\"asistencia\" value=\"" + content[x].idtalentos + "\"/></td>  </tr>");
+                                    }
+                                }
+                            }
+                        } else {
+                            $('#modal_v2_groupal_tracking #list_students_attendance').append("<a>No registra ningun estudiante a su cargo.Por favor dirigete a la oficina de Sistemas de talentos pilos para gestionar tu situación</a>");
                         }
 
-                        $('#select_cohorts').html(options);
-
-                    }else{
-                        var error_msg = "Error al cargar las cohortes no asignadas. Por favor recargue la página.";
-                        error_msg += "Si el problema persiste contacte al área de sistemas.";
-                        swal(
-                            'Error',
-                            error_msg,
-                            'error'
-                        );
-                    }
-                },
-                dataType: "json",
-                cache: false,
-                async: false,
-                error: function() {
-                    swal(
-                        'Error',
-                        'Error al cargar las cohortes sin asignación',
-                        'error'
-                    );
-                },
-            });
-        },
-        load_cohorts_assigned: function(instance_id){
-
-            if(instance_id == undefined){
-                var instance_id = this.get_id_instance();
+                    },
+                    dataType: "json",
+                    cache: "false",
+                    error: function(msg) {
+                        alert("error al cargar listado de asistencia");
+                    },
+                });
             }
-
-            $.ajax({
-                type: "POST",
-                data: {
-                       function: 'load_cohorts',
-                       instance: instance_id},
-                url: "../managers/instance_management/instance_configuration_serverproc.php",
-                success: function(msg) {
-                    if(msg.status == 0){
-                        $('#div_cohorts_table').html("<center><span>La instancia no tiene cohortes asignadas</span></center>");
-                    }else{
-                        var html = "";
-                        html += "<h4>Cohortes asignadas a la instancia</h4><hr/>";
-                        html += "<table id='cohorts_table' class='col-sm-12' style='width:100%'></table>";
-                        $('#div_cohorts_table').html(html);
-                        $('#cohorts_table').DataTable(msg.msg);
-                    }
-                },
-                dataType: "json",
-                cache: false,
-                async: false,
-                error: function() {
-                    swal(
-                        'Error',
-                        'Error al cargar las cohortes asignadas',
-                        'error'
-                    );
-                },
-            });
-        },
-        unassign_cohort: function(obj){
-
-            var idnumber_cohort = $(this).parent().siblings()[0].innerHTML;
-            var instance_id = obj.data.object_function.get_id_instance();
-
-            $.ajax({
-                type: "POST",
-                data: {
-                    function: 'unassign_cohort',
-                    instance_id: instance_id,
-                    idnumber_cohort: idnumber_cohort},
-                url: "../managers/instance_management/instance_configuration_serverproc.php",
-                success: function(msg){
-                    if(msg.status == 1){
-                        swal(
-                            'Éxito',
-                            msg.msg,
-                            'success'
-                        );
-                    }else{
-                        swal(
-                            'Error',
-                            msg.msg,
-                            'error'
-                        );
-                    }
-                },
-                error: function(msg){
-                    swal(
-                        'Error',
-                        'Error al conctarse con el servidor.',
-                        'error'
-                    );
-                },
-                dataType: "json",
-                cache: false,
-                async: false
-            });
-            obj.data.object_function.get_cohorts_without_assignment();
-            obj.data.object_function.load_cohorts_assigned();
-            $('span.unassigned_cohort').on('click', {object_function: obj.data.object_function}, obj.data.object_function.unassign_cohort);
-        },
-        get_id_instance: function(){
-            var urlParameters = location.search.split('&');
-            for (var x in urlParameters) {
-                if (urlParameters[x].indexOf('instanceid') >= 0) {
-                    var intanceparameter = urlParameters[x].split('=');
-                    return intanceparameter[1];
-                }
-            }
-            return 0;
-        },
-        assign_cohort_instance: function(obj){
-
-            var cohort_id = $('#select_cohorts').val();
-            var instance_id = obj.data.object_function.get_id_instance();
-
-            $.ajax({
-                type: "POST",
-                data: { function: 'insert_cohort',
-                        cohort: cohort_id,
-                        instance: instance_id},
-                url: "../managers/instance_management/instance_configuration_serverproc.php",
-                success: function(msg) {
-                    if(msg.status == 0){
-                        var title = 'Error';
-                        var type = 'error';
-                    }else{
-                        var title = 'Éxito';
-                        var type = 'success';
-                    }
-                    swal(
-                        title,
-                        msg.msg,
-                        type
-                    );
-
-                    obj.data.object_function.get_cohorts_without_assignment();
-                    obj.data.object_function.load_cohorts_assigned();
-                    $('span.unassigned_cohort').on('click', {object_function: obj.data.object_function}, obj.data.object_function.unassign_cohort);
-                },
-                dataType: "json",
-                cache: false,
-                async: false,
-                error: function(){
-                    swal(
-                        'Error',
-                        'Error al comunicarse con el servidor.',
-                        'error'
-                    );
-                },
-            });
-        }
-    };
-});
+        };
+    });

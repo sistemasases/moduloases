@@ -36,9 +36,12 @@ require_once('../managers/instance_management/instance_lib.php');
 require_once ('../managers/permissions_management/permissions_lib.php');
 require_once ('../managers/validate_profile_action.php');
 require_once ('../managers/menu_options.php');
-require_once '../managers/dphpforms/dphpforms_forms_core.php';
-require_once '../managers/dphpforms/dphpforms_records_finder.php';
-require_once '../managers/dphpforms/dphpforms_get_record.php';
+require_once ('../managers/dphpforms/dphpforms_forms_core.php');
+require_once ('../managers/dphpforms/dphpforms_records_finder.php');
+require_once ('../managers/dphpforms/dphpforms_get_record.php');
+require_once ('../managers/seguimiento_grupal/seguimientogrupal_lib.php');
+
+
 
 // Set up the page.
 $title = "Seguimiento Grupal";
@@ -66,11 +69,18 @@ $menu_option = create_menu_options($USER->id, $blockid, $courseid);
 $data = 'data';
 $data = new stdClass;
 
+
+$current_semester = get_current_semester();
+$result = get_tracking_grupal_monitor_current_semester($USER->id,$current_semester->max);
+$render_trackings= render_monitor_groupal_trackings($result);
+
+
 // Evaluates if user role has permissions assigned on this view
 $actions = authenticate_user_view($USER->id, $blockid);
 
 $data = $actions;
 $data->menu = $menu_option;
+$data->seguimiento_grupal =$render_trackings;
 $data->form_seguimientos_grupales = dphpforms_render_recorder('seguimiento_grupal', $rol);
   if ($record->form_seguimientos_grupales == '') {
        $record->form_seguimientos_grupales = "<strong><h3>Oops!: No se ha encontrado un formulario con el alias: <code>seguimientos_grupales</code>.</h3></strong>";
@@ -83,6 +93,12 @@ $data->id_dphpforms_creado_por = $USER->id;
 $coursenode = $PAGE->navigation->find($courseid, navigation_node::TYPE_COURSE);
 $node = $coursenode->add('Seguimiento Grupal',$url);
 $node->make_active();
+
+
+//Falta añadir la validacion periodos antiguos.<--
+$choosen_date =strtotime('2018-01-01 00:00:00');
+$new_forms_date =strtotime('2018-01-01 00:00:00');
+
 
 //set up page
 
@@ -101,9 +117,12 @@ $PAGE->requires->css('/blocks/ases/style/forms_pilos.css', true);
 $PAGE->requires->css('/blocks/ases/style/side_menu_style.css', true);
 $PAGE->requires->css('/blocks/ases/style/creadorFormulario.css', true);
 
-//$PAGE->requires->js_call_amd('block_ases/dphpforms_form_renderer', 'init');
-$PAGE->requires->js_call_amd('block_ases/groupal_tracking','init');
+if($choosen_date>=$new_forms_date){
 $PAGE->requires->js_call_amd('block_ases/new_logic_form_gt', 'init');
+}else{
+$PAGE->requires->js_call_amd('block_ases/groupal_tracking','init');
+}
+$PAGE->requires->js_call_amd('block_ases/dphpforms_form_renderer', 'init');
 
 
 $output = $PAGE->get_renderer('block_ases');
