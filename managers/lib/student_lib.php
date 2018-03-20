@@ -28,7 +28,7 @@
 require_once dirname(__FILE__) . '/../../../../config.php';
 
 /**
- * Obtains an user object given user id from {talentospilos_usuario} table 
+ * Obtains an user object given user id from {talentospilos_usuario} table
  *
  * @see get_user_moodle($id)
  * @param $id --> moodle user id
@@ -67,7 +67,7 @@ function get_ases_user($id)
 }
 /**
  * //THIS GOTTA CHANGE TO THE NEW MODEL
- 
+
  * Gets moodle user id (moodle table) given user id from {talentospilos_usuario}
  *
  * @see get_id_user_moodle($id_student)
@@ -94,7 +94,7 @@ function get_id_user_moodle($id_student)
 
 /**
  * Gets ASES user given student id associated to moodle user name
- * 
+ *
  * @see get_ases_user_by_code($code)
  * @param $username --> student id associated to moodle user
  * @return object containing the ASES student information
@@ -106,9 +106,21 @@ function get_ases_user_by_code($code)
 
     $sql_query = "SELECT MAX(id) as id_moodle FROM {user} WHERE username LIKE '" . $code . "%';";
 
-    $id_moodle = $DB->get_record_sql($sql_query)->id_moodle;
+    $id_moodle_result = $DB->get_record_sql($sql_query);
 
-    $id_ases = get_adds_fields_mi($id_moodle)->idtalentos;
+    if ($id_moodle_result) {
+        $id_moodle = $id_moodle_result->id_moodle;
+    } else {
+        return false;
+    }
+
+    $add_fields = get_adds_fields_mi($id_moodle);
+
+    if($add_fields){
+        $id_ases = $add_fields->idtalentos;
+    }else{
+        return false;
+    }
 
     $sql_query = "SELECT *, (now() - fecha_nac)/365 AS age FROM {talentospilos_usuario} WHERE id =" . $id_ases;
 
@@ -146,10 +158,10 @@ function get_student_ases_status($id_student)
 }
 
 /**
- * Gets student ICETEX status 
+ * Gets student ICETEX status
  *
  * @see get_student_icetex_status($id_student)
- * @param $id_student --> student id on talentospilos_usuario table 
+ * @param $id_student --> student id on talentospilos_usuario table
  * @return array --> with ICETEX student information
  */
 
@@ -181,18 +193,22 @@ function get_student_icetex_status($id_student)
  * @return object --> object representing moodle user
  */
 
-function get_adds_fields_mi($id_student){
+function get_adds_fields_mi($id_student)
+{
 
     global $DB;
 
     $sql_query = "SELECT * FROM {talentospilos_user_extended} WHERE id_moodle_user = $id_student";
 
     $result = $DB->get_record_sql($sql_query);
-
-    $array_result = new stdClass();
-    $array_result->idtalentos = $result->id_ases_user;
-    $array_result->idprograma = $result->id_academic_program;
-    $array_result->estado = $result->program_status;
+    if ($result) {
+        $array_result = new stdClass();
+        $array_result->idtalentos = $result->id_ases_user;
+        $array_result->idprograma = $result->id_academic_program;
+        $array_result->estado = $result->program_status;
+    } else {
+        $array_result = false;
+    }
 
     return $array_result;
 }
@@ -202,7 +218,7 @@ function get_adds_fields_mi($id_student){
  *
  * @see get_program($id_program)
  * @param $id --> program id
- * @return object representing all the academic program information 
+ * @return object representing all the academic program information
  */
 function get_program($id)
 {
@@ -260,7 +276,7 @@ function get_cohort_student($id_student)
  * Obtains name, lastname and email from a monitor assigned to a student, given the student id
  *
  * @see get_assigned_monitor($id_student)
- * @param $id_student --> student id on {talentospilos_usuario} table 
+ * @param $id_student --> student id on {talentospilos_usuario} table
  * @return array Containing the information
  */
 function get_assigned_monitor($id_student)
@@ -287,7 +303,7 @@ function get_assigned_monitor($id_student)
  * Obtains name, lastname and email from a practicant (practicante) assigned to a student, given the student id
  *
  * @see get_assigned_pract($id_student)
- * @param $id_student --> student id on {talentospilos_usuario} table 
+ * @param $id_student --> student id on {talentospilos_usuario} table
  * @return array Containing the information
  */
 function get_assigned_pract($id_student)
@@ -321,7 +337,7 @@ function get_assigned_pract($id_student)
  * Obtains name, lastname and email from a professional (profesional) assigned to a student, given the student id
  *
  * @see get_assigned_professional($id_student)
- * @param $id_student --> student id on {talentospilos_usuario} table 
+ * @param $id_student --> student id on {talentospilos_usuario} table
  * @return array Containing the information
  */
 function get_assigned_professional($id_student)
@@ -336,27 +352,27 @@ function get_assigned_professional($id_student)
 
     if ($id_monitor) {
 
-        $sql_query = "SELECT id_jefe 
-                      FROM {talentospilos_user_rol} 
+        $sql_query = "SELECT id_jefe
+                      FROM {talentospilos_user_rol}
                       WHERE id_usuario = $id_monitor->id_monitor AND id_semestre = $object_current_semester->id";
 
         $id_trainee = $DB->get_record_sql($sql_query)->id_jefe;
 
         if ($id_trainee) {
 
-            $sql_query = "SELECT id_jefe 
-                          FROM {talentospilos_user_rol} 
+            $sql_query = "SELECT id_jefe
+                          FROM {talentospilos_user_rol}
                           WHERE id_usuario = $id_trainee AND id_semestre = $object_current_semester->id;";
 
             $id_professional = $DB->get_record_sql($sql_query)->id_jefe;
 
             if ($id_professional) {
-                $sql_query = "SELECT id, firstname, lastname, email 
+                $sql_query = "SELECT id, firstname, lastname, email
                               FROM {user} WHERE id = $id_professional ;";
                 $professional_object = $DB->get_record_sql($sql_query);
                 //$tmp = (array) $professional_object;
                 //print_r($professional_object);
-                if(!isset($professional_object->firstname)){
+                if (!isset($professional_object->firstname)) {
                     $professional_object = array();
                 }
             } else {
@@ -373,10 +389,10 @@ function get_assigned_professional($id_student)
 }
 
 /**
- * Gets an array with all students risks given user id on {talentospilos_usuario} table 
+ * Gets an array with all students risks given user id on {talentospilos_usuario} table
  *
  * @see get_risk_by_student($id_student)
- * @param $id_student --> student id on {talentospilos_usuario} table 
+ * @param $id_student --> student id on {talentospilos_usuario} table
  * @return array Containing the information
  */
 
@@ -412,15 +428,14 @@ function get_full_user($id)
     return $user;
 }
 
-
 /**
  * Obtains name, lastname and email from a monitor assigned to a student, given the student id
  *
  * @see get_student_monitor($id_ases_user,$id_semester,$id_instance)
- * @param $id_student --> student id on {talentospilos_usuario} table 
+ * @param $id_student --> student id on {talentospilos_usuario} table
  * @return array Containing the information
  */
-function get_student_monitor($id_ases_user,$id_semester,$id_instance)
+function get_student_monitor($id_ases_user, $id_semester, $id_instance)
 {
 
     global $DB;

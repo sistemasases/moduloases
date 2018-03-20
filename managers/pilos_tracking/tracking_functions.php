@@ -27,6 +27,7 @@ require_once ('pilos_tracking_lib.php');
 require_once (dirname(__FILE__) . '/../lib/student_lib.php');
 require_once (dirname(__FILE__) . '/../dphpforms/dphpforms_get_record.php');
 require_once (dirname(__FILE__) . '/../student_profile/studentprofile_lib.php');
+require_once (dirname(__FILE__) . '/../seguimiento_grupal/seguimientogrupal_lib.php');
 
 
 
@@ -77,6 +78,55 @@ function render_monitor_new_form($students_by_monitor,$period=null){
 
     return $panel;
 }
+
+/**
+ * Get the toggle of the monitor with the groupal follow-ups of each student with the implementation of the new form
+ *
+ * @see render_monitor_new_form($students_by_monitor)
+ * @param $student_by_monitor --> students assigned to a monitor
+ * @return String
+ *
+ */
+
+function render_groupal_tracks_monitor_new_form($groupal_tracks,$monitor_id,$period=null){
+
+    $panel="";
+
+
+    foreach ($groupal_tracks as $student) {
+
+        $current_semester =get_current_semester();
+
+        if($period==null){
+            $monitor_trackings= get_tracking_grupal_monitor_current_semester($monitor_id, $current_semester->max);
+         }else{
+            $monitor_trackings= get_tracking_grupal_monitor_current_semester($monitor_id, $period);
+
+        }
+             $panel .= "<a data-toggle='collapse' class='groupal collapsed btn btn-danger btn-univalle btn-card collapsed' data-parent='#accordion_students' style='text-decoration:none' href='#groupal" .$monitor_id."'>";
+            $panel .= "<div class='panel-heading heading_students_tracking'>";
+            $panel .= "<h4 class='panel-title'>";
+            $panel .= "SEGUIMIENTOS GRUPALES";
+            $panel .= "<span class='glyphicon glyphicon-chevron-left'></span>";
+            $panel .= "</h4>"; //End panel-title
+            $panel .= "</div>"; //End panel-heading
+            $panel .= "</a>";
+
+            $panel .= "<div id='groupal$monitor_id'  class='show collapse_v2 collapse' role='tabpanel' aria-labelledby='headinggroupal$monitor_id' aria-expanded='true'>";
+            $panel .= "<div class='panel-body'>";
+
+
+            //$panel.=render_student_trackings($monitor_trackings);
+
+            $panel .= "</div>"; // End panel-body
+            $panel .= "</div>"; // End collapse
+        
+           
+    }
+
+    return $panel;
+}
+
 
 
 
