@@ -526,15 +526,59 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                     $(this).parent().parent().parent().parent().fadeOut(300);
                 });
 
+                function generate_attendance_table(students){
+
+                     $.ajax({
+                            type: "POST",
+                            data: {
+                                students: students,
+                                type: "consult_students_name"
+                            },
+                            url: "../../../blocks/ases/managers/pilos_tracking/pilos_tracking_report.php",
+                            async: false,
+
+
+                            success: function(msg) {
+
+                                if (msg != "") {
+                                   var table ='<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 estudiantes" id="students">Estudiantes asistentes:<br> <textarea id="students_assistance" class="form-control " name="1518" maxlength="1000" required="">'+msg+'</textarea><br>';
+                                   $('#modal_v2_edit_groupal_tracking').find('form').find('h1').after(table);
+                                }
+                            },
+                            dataType: "text",
+                            cache: "false",
+                            error: function(msg) {
+                                alert("Error al consultar nombres de los estudiantes pertenecientes a un seguimiento grupal");
+                            },
+                        });
+
+                    
+
+
+                }
+
+
                 function load_record_updater(form_id, record_id){
                     $.get( "../managers/dphpforms/dphpforms_forms_core.php?form_id="+form_id+"&record_id="+record_id, function( data ) {
-                            $("#body_editor").html("");
-                            $('#body_editor').append( data );
+                         if(form_id =='seguimiento_grupal'){
 
                             
-                            $(".dphpforms.dphpforms-record.dphpforms-updater").append('<br><br><div class="div-observation col-xs-12 col-sm-12 col-md-12 col-lg-12 comentarios_vida_uni">Observaciones de Practicante/profesional:<br> <textarea id="observation_text" class="form-control " name="observation_text" maxlength="5000"></textarea><br><a id="send_observation" class="btn btn-sm btn-danger btn-dphpforms-univalle btn-dphpforms-send-observation">Enviar observación</a></div>');
+                            $("#modal_v2_edit_groupal_tracking").find("#body_editor").append(data);
+                            $("#modal_v2_edit_groupal_tracking").find(".btn-dphpforms-univalle").remove();
+                            var students = $("#modal_v2_edit_groupal_tracking").find('form').find('.oculto.id_estudiante').find('input').val();
+
+                            generate_attendance_table(students);
+
+
+                         }else{
+                            $("#body_editor").html("");
+                            $('#body_editor').append( data );
+                             $(".dphpforms.dphpforms-record.dphpforms-updater").append('<br><br><div class="div-observation col-xs-12 col-sm-12 col-md-12 col-lg-12 comentarios_vida_uni">Observaciones de Practicante/profesional:<br> <textarea id="observation_text" class="form-control " name="observation_text" maxlength="5000"></textarea><br><a id="send_observation" class="btn btn-sm btn-danger btn-dphpforms-univalle btn-dphpforms-send-observation">Enviar observación</a></div>');
                             $('button.btn.btn-sm.btn-danger.btn-dphpforms-univalle').attr('id', 'button');
 
+                         }
+                            
+                           
                             $("#permissions_informationr").html("");
 
                             var rev_prof = $('.dphpforms-record').find('.revisado_profesional').find('.checkbox').find('input[type=checkbox]').prop('checked');

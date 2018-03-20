@@ -63,6 +63,13 @@ if (isset($_POST['type']) && isset($_POST['instance']) && $_POST['type'] == "get
     echo json_encode($html_tracking_groupal);
     }
 
+if (isset($_POST['type']) && $_POST['type'] == "consult_students_name" && isset($_POST['students']))
+    {
+
+      echo (get_names_students($_POST['students']));
+
+    }
+
 if (isset($_POST['type']) && isset($_POST['instance']) && $_POST['type'] == "get_student_trackings" && isset($_POST['student_code']))
     {
 
