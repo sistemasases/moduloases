@@ -3,7 +3,7 @@
         "nombre": "Seguimiento grupal",
         "descripcion": "Formulario para registro y modificación de los seguimientos grupales",
         "method": "POST",
-        "action": "procesador_grupal.php",
+        "action": "procesador.php",
         "enctype": null,
         "alias": "seguimiento_grupal"
     },
@@ -31,7 +31,8 @@
                 },
                 {
                     "rol": "profesional_ps",
-                    "permisos": []
+                    "permisos": [
+                        "lectura"]
                 },
                 {
                     "rol": "monitor_ps",
@@ -46,11 +47,15 @@
                 },
                 {
                     "rol": "sistemas",
-                    "permisos": []
+                    "permisos": [
+                        "lectura",
+                        "escritura"
+                    ]
                 },
                 {
                     "rol": "practicante_ps",
-                    "permisos": []
+                    "permisos": [
+                        "lectura"]
                 },
                 {
                     "rol": "geografo",
@@ -100,7 +105,8 @@
                 },
                 {
                     "rol": "profesional_ps",
-                    "permisos": []
+                    "permisos": [
+                        "lectura"]
                 },
                 {
                     "rol": "monitor_ps",
@@ -115,11 +121,14 @@
                 },
                 {
                     "rol": "sistemas",
-                    "permisos": []
+                    "permisos": [
+                        "lectura",
+                        "escritura"]
                 },
                 {
                     "rol": "practicante_ps",
-                    "permisos": []
+                    "permisos": [
+                        "lectura"]
                 },
                 {
                     "rol": "geografo",
@@ -169,7 +178,8 @@
                 },
                 {
                     "rol": "profesional_ps",
-                    "permisos": []
+                    "permisos": [
+                        "lectura"]
                 },
                 {
                     "rol": "monitor_ps",
@@ -184,11 +194,14 @@
                 },
                 {
                     "rol": "sistemas",
-                    "permisos": []
+                    "permisos": [
+                        "lectura",
+                        "escritura"]
                 },
                 {
                     "rol": "practicante_ps",
-                    "permisos": []
+                    "permisos": [
+                        "lectura"]
                 },
                 {
                     "rol": "geografo",
@@ -238,7 +251,8 @@
                 },
                 {
                     "rol": "profesional_ps",
-                    "permisos": []
+                    "permisos": [
+                        "lectura"]
                 },
                 {
                     "rol": "monitor_ps",
@@ -253,11 +267,14 @@
                 },
                 {
                     "rol": "sistemas",
-                    "permisos": []
+                    "permisos": [
+                        "lectura",
+                        "escritura"]
                 },
                 {
                     "rol": "practicante_ps",
-                    "permisos": []
+                    "permisos": [
+                        "lectura"]
                 },
                 {
                     "rol": "geografo",
@@ -308,7 +325,8 @@
                 },
                 {
                     "rol": "profesional_ps",
-                    "permisos": []
+                    "permisos": [
+                        "lectura"]
                 },
                 {
                     "rol": "monitor_ps",
@@ -323,11 +341,14 @@
                 },
                 {
                     "rol": "sistemas",
-                    "permisos": []
+                    "permisos": [
+                        "lectura",
+                        "escritura"]
                 },
                 {
                     "rol": "practicante_ps",
-                    "permisos": []
+                    "permisos": [
+                        "lectura"]
                 },
                 {
                     "rol": "geografo",
@@ -378,7 +399,8 @@
                 },
                 {
                     "rol": "profesional_ps",
-                    "permisos": []
+                    "permisos": [
+                        "lectura"]
                 },
                 {
                     "rol": "monitor_ps",
@@ -393,11 +415,14 @@
                 },
                 {
                     "rol": "sistemas",
-                    "permisos": []
+                    "permisos": [
+                        "lectura",
+                        "escritura"]
                 },
                 {
                     "rol": "practicante_ps",
-                    "permisos": []
+                    "permisos": [
+                        "lectura"]
                 },
                 {
                     "rol": "geografo",
@@ -447,7 +472,8 @@
                 },
                 {
                     "rol": "profesional_ps",
-                    "permisos": []
+                    "permisos": [
+                        "lectura"]
                 },
                 {
                     "rol": "monitor_ps",
@@ -462,11 +488,14 @@
                 },
                 {
                     "rol": "sistemas",
-                    "permisos": []
+                    "permisos": [
+                        "lectura",
+                        "escritura"]
                 },
                 {
                     "rol": "practicante_ps",
-                    "permisos": []
+                    "permisos": [
+                        "lectura"]
                 },
                 {
                     "rol": "geografo",
@@ -517,7 +546,8 @@
                 },
                 {
                     "rol": "profesional_ps",
-                    "permisos": []
+                    "permisos": [
+                        "lectura"]
                 },
                 {
                     "rol": "monitor_ps",
@@ -532,11 +562,14 @@
                 },
                 {
                     "rol": "sistemas",
-                    "permisos": []
+                    "permisos": [
+                        "lectura",
+                        "escritura"]
                 },
                 {
                     "rol": "practicante_ps",
-                    "permisos": []
+                    "permisos": [
+                        "lectura"]
                 },
                 {
                     "rol": "geografo",
@@ -587,7 +620,8 @@
                 },
                 {
                     "rol": "profesional_ps",
-                    "permisos": []
+                    "permisos": [
+                        "lectura"]
                 },
                 {
                     "rol": "monitor_ps",
@@ -602,11 +636,14 @@
                 },
                 {
                     "rol": "sistemas",
-                    "permisos": []
+                    "permisos": [
+                        "lectura",
+                        "escritura"]
                 },
                 {
                     "rol": "practicante_ps",
-                    "permisos": []
+                    "permisos": [
+                        "lectura"]
                 },
                 {
                     "rol": "geografo",
@@ -656,7 +693,8 @@
                 },
                 {
                     "rol": "profesional_ps",
-                    "permisos": []
+                    "permisos": [
+                        "lectura"]
                 },
                 {
                     "rol": "monitor_ps",
@@ -671,11 +709,14 @@
                 },
                 {
                     "rol": "sistemas",
-                    "permisos": []
+                    "permisos": [
+                        "lectura",
+                        "escritura"]
                 },
                 {
                     "rol": "practicante_ps",
-                    "permisos": []
+                    "permisos": [
+                        "lectura"]
                 },
                 {
                     "rol": "geografo",

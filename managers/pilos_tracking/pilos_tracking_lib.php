@@ -44,6 +44,31 @@ function get_semesters(){
 }
 
 /**
+ * Function that gets string with names of certain students
+ * 
+ * @see get_names_students($array_usernames)
+ * @param $array_usernames --> string with username without program code separated with ","
+ * @return string with names of students and codes.
+ */
+function get_names_students($array_usernames){
+
+  $names ="";
+
+  $students_code = explode(",", $array_usernames);
+  global $DB;
+
+
+  foreach ($students_code as $key =>$student) {
+
+    $sql_query = "select * from {user} where username LIKE '$student%' ";
+    $user = $DB->get_record_sql($sql_query);
+    $names.=$user->username." - ".$user->firstname." ".$user->lastname."<br>";
+  }
+   return $names;
+
+}
+
+/**
  * Function that gets an user's rol given his id, instance and id_semester
  * 
  * @see get_users_rols($user,$semester,$id_instancia)

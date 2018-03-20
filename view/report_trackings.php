@@ -32,10 +32,9 @@ require_once('../managers/pilos_tracking/tracking_functions.php');
 require_once('../managers/instance_management/instance_lib.php');
 require_once ('../managers/permissions_management/permissions_lib.php');
 require_once ('../managers/role_management/role_management_lib.php');
-
+require_once ('../managers/seguimiento_grupal/seguimientogrupal_lib.php');
 require_once ('../managers/validate_profile_action.php');
 require_once ('../managers/menu_options.php');
-
 require_once ('../managers/lib/student_lib.php');
 
 
@@ -123,6 +122,8 @@ if($usernamerole=='monitor_ps'){
     $monitor_id =$USER->id;
     $students_by_monitor=get_students_of_monitor($monitor_id,$blockid);
     $table.=render_monitor_new_form($students_by_monitor);
+    $array_groupal_trackings_dphpforms =get_tracking_grupal_monitor_current_semester($monitor_id,$intervalo_fechas[2]);
+    $table.=render_groupal_tracks_monitor_new_form($array_groupal_trackings_dphpforms,$monitor_id);
 
     }else{
 
@@ -199,6 +200,9 @@ $PAGE->requires->css('/blocks/ases/style/side_menu_style.css', true);
 $PAGE->requires->css('/blocks/ases/style/creadorFormulario.css', true);
 
 $PAGE->requires->js_call_amd('block_ases/pilos_tracking_main','init');
+$PAGE->requires->js_call_amd('block_ases/groupal_tracking','init');
+//$PAGE->requires->js_call_amd('block_ases/dphpforms_form_renderer', 'init');
+
 
 $PAGE->set_url($url);
 $PAGE->set_title($title);

@@ -29,6 +29,7 @@ require_once ('../lib/student_lib.php');
 require_once ('../lib/lib.php');
 require_once ('../student_profile/studentprofile_lib.php');
 require_once ('../periods_management/periods_lib.php');
+require_once ('../seguimiento_grupal/seguimientogrupal_lib.php');
 require_once ('../dphpforms/dphpforms_forms_core.php');
 require_once ('../dphpforms/dphpforms_records_finder.php');
 require_once ('../dphpforms/dphpforms_get_record.php');
@@ -45,6 +46,28 @@ if (isset($_POST['type']) && $_POST['type'] == "getInfo" && isset($_POST['instan
     $datos["rol"] = get_id_rol_($USER->id, $_POST['instance']);
     $datos["name_rol"] = get_name_rol($datos["rol"]);
     echo json_encode($datos);
+    }
+if (isset($_POST['type']) && isset($_POST['instance']) && $_POST['type'] == "get_groupal_trackings" && isset($_POST['student_code']))
+    {
+
+    // Groupal trackings (Seguimientos)
+
+    $html_tracking_groupal = "";
+    $student_code = $_POST['student_code'];
+
+    $current_semester = get_current_semester();
+    $array_groupal_trackings_dphpforms =get_tracking_grupal_monitor_current_semester($student_code,$current_semester->max);
+
+    $html_tracking_groupal.=render_monitor_groupal_trackings($array_groupal_trackings_dphpforms);
+
+    echo json_encode($html_tracking_groupal);
+    }
+
+if (isset($_POST['type']) && $_POST['type'] == "consult_students_name" && isset($_POST['students']))
+    {
+
+      echo (get_names_students($_POST['students']));
+
     }
 
 if (isset($_POST['type']) && isset($_POST['instance']) && $_POST['type'] == "get_student_trackings" && isset($_POST['student_code']))
@@ -67,8 +90,14 @@ if (isset($_POST['type']) && isset($_POST['instance']) && $_POST['type'] == "get
 
     // Get Monitors of practicant
     $monitor_id =search_user($_POST['monitor_code']);
+    $current_semester = get_current_semester();
     $students_by_monitor=get_students_of_monitor($monitor_id->id,$_POST['instance']);
     $array=render_monitor_new_form($students_by_monitor);
+    $array_groupal_trackings_dphpforms =get_tracking_grupal_monitor_current_semester($monitor_id->id,$current_semester->max);
+    $array.=render_groupal_tracks_monitor_new_form($array_groupal_trackings_dphpforms,$monitor_id->id);
+
+
+
     echo json_encode($array);
     }
 
@@ -123,6 +152,8 @@ if (isset($_POST['type']) && $_POST['type'] == "consulta_sistemas" && isset($_PO
                 {
                 $students_by_monitor = get_students_of_monitor($id_person, $id_instance);
                 $html = render_monitor_new_form($students_by_monitor, $intervalos->id);
+                $array_groupal_trackings_dphpforms =get_tracking_grupal_monitor_current_semester($id_person,$intervalos->id);
+                $html.=render_groupal_tracks_monitor_new_form($array_groupal_trackings_dphpforms,$id_person);
                 }
               else
             if ($usernamerole == 'practicante_ps')

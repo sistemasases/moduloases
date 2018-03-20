@@ -349,22 +349,33 @@
                         $('.seg_geo_origen').find('input').prop('disabled', false );
                     
                     }else if(data=='seguimiento_grupal_'){
-                       var total = $('input:checked').length;
+
+                       var total = $('modal_v2_edit_groupal_tracking').find('input:checked').length;
                        var array_students="";
+                       var create ="";
                        
                        $("#modal_v2_groupal_tracking").find('form').find('.oculto.id_estudiante').find('input').val("");
+                       $("#modal_v2_edit_groupal_tracking").find('form').find('.oculto.id_estudiante').find('input').val("");
 
-                       $("input:checked").each(function(index) {
+                       $("#modal_v2_edit_groupal_tracking").find('input:checked').each(function(index) {
                             var complete_code = $(this).parent().parent().find(">:first-child").text();
                             var code = complete_code.split("-");
-                            if (index === total - 1) {
-                                array_students+=code[0];
-                           }else{
-                                array_students+=code[0]+",";
-                          }
+                            array_students+=code[0]+",";
+                          
                         });
-                       $("#modal_v2_edit_groupal_tracking").find('form').find('.oculto.id_estudiante').find('input').val(array_students);
-                       $("#modal_v2_groupal_tracking").find('form').find('.oculto.id_estudiante').find('input').val(array_students);
+
+
+                        $("#modal_v2_groupal_tracking").find('input:checked').each(function(index) {
+                            var complete_code = $(this).parent().parent().find(">:first-child").text();
+                            var code = complete_code.split("-");
+
+                            create+=code[0]+",";
+                          
+                        });
+
+
+                       $("#modal_v2_edit_groupal_tracking").find('form').find('.oculto.id_estudiante').find('input').val(array_students.slice(0,-1));
+                       $("#modal_v2_groupal_tracking").find('form').find('.oculto.id_estudiante').find('input').val(create.slice(0,-1));
 
 
                     }
