@@ -93,6 +93,10 @@ if (isset($_POST['type']) && isset($_POST['instance']) && $_POST['type'] == "get
     $current_semester = get_current_semester();
     $students_by_monitor=get_students_of_monitor($monitor_id->id,$_POST['instance']);
     $array=render_monitor_new_form($students_by_monitor);
+    $array_groupal_trackings_dphpforms =get_tracking_grupal_monitor_current_semester($monitor_id->id,$current_semester->max);
+    $array.=render_groupal_tracks_monitor_new_form($array_groupal_trackings_dphpforms,$monitor_id->id);
+
+
 
     echo json_encode($array);
     }
@@ -148,6 +152,8 @@ if (isset($_POST['type']) && $_POST['type'] == "consulta_sistemas" && isset($_PO
                 {
                 $students_by_monitor = get_students_of_monitor($id_person, $id_instance);
                 $html = render_monitor_new_form($students_by_monitor, $intervalos->id);
+                $array_groupal_trackings_dphpforms =get_tracking_grupal_monitor_current_semester($id_person,$intervalos->id);
+                $html.=render_groupal_tracks_monitor_new_form($array_groupal_trackings_dphpforms,$id_person);
                 }
               else
             if ($usernamerole == 'practicante_ps')

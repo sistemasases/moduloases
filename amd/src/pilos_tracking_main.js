@@ -283,7 +283,7 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
             $('a[class*="groupal"]').click(function() {
                 var student_code = $(this).attr('href').split("#groupal")[1];
                 var student_id = $(this).attr('href');
-                console.log(student_id);
+                //console.log(student_id);
                 //Fill container with the information corresponding to the trackings of the selected student
                 $.ajax({
                     type: "POST",
@@ -296,9 +296,10 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                     async: false,
                     success: function(msg
                         ) {
-                    console.log(msg);
+                    //console.log(msg);
                     $(student_id + " > div").empty();
                     $(student_id + " > div").append(msg);
+                    edit_groupal_tracking_new_form();
                     },
                     dataType: "json",
                     cache: "false",
@@ -322,7 +323,7 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
             function student_load(){
 
             $('a[class*="student"]').click(function() {
-                console.log("student : "+$(this).attr('href').split("#student")[1]);
+               // console.log("student : "+$(this).attr('href').split("#student")[1]);
                 var student_code = $(this).attr('href').split("#student")[1];
                 var student_id = $(this).attr('href');
                 //Fill container with the information corresponding to the trackings of the selected student
@@ -541,7 +542,8 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                             success: function(msg) {
 
                                 if (msg != "") {
-                                   var table ='<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 estudiantes" id="students">Estudiantes asistentes:<br> <textarea id="students_assistance" class="form-control " name="1518" maxlength="1000" required="">'+msg+'</textarea><br>';
+                                   var table ='<hr style="border-color:red"><div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 estudiantes" id="students"><h3>Estudiantes asistentes:</h3><br>'+msg+'<br>';
+                                   $('#modal_v2_edit_groupal_tracking').find('#students').remove(); 
                                    $('#modal_v2_edit_groupal_tracking').find('form').find('h1').after(table);
                                 }
                             },
@@ -562,7 +564,8 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                     $.get( "../managers/dphpforms/dphpforms_forms_core.php?form_id="+form_id+"&record_id="+record_id, function( data ) {
                          if(form_id =='seguimiento_grupal'){
 
-                            
+                            $("#body_editor").html("");
+                            $("#modal_v2_edit_groupal_tracking").find("#body_editor").html("");                            
                             $("#modal_v2_edit_groupal_tracking").find("#body_editor").append(data);
                             $("#modal_v2_edit_groupal_tracking").find(".btn-dphpforms-univalle").remove();
                             var students = $("#modal_v2_edit_groupal_tracking").find('form').find('.oculto.id_estudiante').find('input').val();
@@ -571,9 +574,10 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
 
 
                          }else{
+                            $("#modal_v2_edit_groupal_tracking").find("#body_editor").html("");                            
                             $("#body_editor").html("");
                             $('#body_editor').append( data );
-                             $(".dphpforms.dphpforms-record.dphpforms-updater").append('<br><br><div class="div-observation col-xs-12 col-sm-12 col-md-12 col-lg-12 comentarios_vida_uni">Observaciones de Practicante/profesional:<br> <textarea id="observation_text" class="form-control " name="observation_text" maxlength="5000"></textarea><br><a id="send_observation" class="btn btn-sm btn-danger btn-dphpforms-univalle btn-dphpforms-send-observation">Enviar observación</a></div>');
+                           //  $(".dphpforms.dphpforms-record.dphpforms-updater").append('<br><br><div class="div-observation col-xs-12 col-sm-12 col-md-12 col-lg-12 comentarios_vida_uni">Observaciones de Practicante/profesional:<br> <textarea id="observation_text" class="form-control " name="observation_text" maxlength="5000"></textarea><br><a id="send_observation" class="btn btn-sm btn-danger btn-dphpforms-univalle btn-dphpforms-send-observation">Enviar observación</a></div>');
                             $('button.btn.btn-sm.btn-danger.btn-dphpforms-univalle').attr('id', 'button');
 
                          }
