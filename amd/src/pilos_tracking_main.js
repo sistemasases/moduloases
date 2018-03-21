@@ -577,7 +577,7 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                             $("#modal_v2_edit_groupal_tracking").find("#body_editor").html("");                            
                             $("#body_editor").html("");
                             $('#body_editor').append( data );
-                           //  $(".dphpforms.dphpforms-record.dphpforms-updater").append('<br><br><div class="div-observation col-xs-12 col-sm-12 col-md-12 col-lg-12 comentarios_vida_uni">Observaciones de Practicante/profesional:<br> <textarea id="observation_text" class="form-control " name="observation_text" maxlength="5000"></textarea><br><a id="send_observation" class="btn btn-sm btn-danger btn-dphpforms-univalle btn-dphpforms-send-observation">Enviar observación</a></div>');
+                            $(".dphpforms.dphpforms-record.dphpforms-updater").append('<br><br><div class="div-observation col-xs-12 col-sm-12 col-md-12 col-lg-12 comentarios_vida_uni">Observaciones de Practicante/profesional:<br> <textarea id="observation_text" class="form-control " name="observation_text" maxlength="5000"></textarea><br><a id="send_observation" class="btn btn-sm btn-danger btn-dphpforms-univalle btn-dphpforms-send-observation">Enviar observación</a></div>');
                             $('button.btn.btn-sm.btn-danger.btn-dphpforms-univalle').attr('id', 'button');
 
                          }
@@ -998,6 +998,7 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
 
                     var id_register = dataObj['id_registro'];
                     var text = $("#observation_text");
+                    console.log()
 
 
                     if (text.val() == "") {
@@ -1050,6 +1051,7 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                                     text.val("");
 
                                 } else {
+                                    console.log("mensaje error : "+msg);
                                     swal({
                                         title: "error al enviar el correo al monitor",
                                         html: true,
@@ -1061,6 +1063,7 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                             dataType: "text",
                             cache: "false",
                             error: function(msg) {
+                                console.log("mensaje error : "+msg);
                                 swal({
                                     title: "error al enviar el correo",
                                     html: true,

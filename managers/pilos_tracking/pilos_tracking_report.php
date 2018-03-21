@@ -254,7 +254,7 @@ if (isset($_POST['type']) && $_POST['type'] == "send_email_to_user" && isset($_P
             La linea siguiente no se adiciona a el if previo, con el 
             fin de evitar problemas con otros script que hagan uso del método.
         */
-        $place = $_POST['lugar'];
+        $place = $_POST['place'];
 
     if ($_POST['form'] == 'new_form')
         {
