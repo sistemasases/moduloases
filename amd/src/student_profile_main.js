@@ -31,8 +31,17 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/d3', 'block_ases/sweetaler
                     $('#div_flags_'+data_init[i].academic_program_id).prop('checked', true);
                 }
             }
+            
+            var current_status = ""; 
 
-            $('.select_statuses_program').on('change', {id: data_init}, self.update_status_program)
+            $('.select_statuses_program').on('focus', function(event){current_status = event.target.value});
+            
+            $('.select_statuses_program').on('change', {current_status: current_status}, 
+                function(){
+                    self.update_status_program(current_status, $(this));
+                });
+
+            $('#icon-tracking').on('click', self.update_status_ases);
 
             // 
             switch(parameters.tab){
@@ -475,10 +484,11 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/d3', 'block_ases/sweetaler
             
                 $(".equalize").height(maxHeight);
             });
-        },update_status_program: function(e){
-            var program_id = $(this).attr('id').split("-")[1];
-            var status = $(this).val();
-            var student_id = $(this).parent().parent().attr('id').split("-")[1];
+        },update_status_program: function(current_status, element){
+
+            var program_id = element.attr('id').split("-")[1];
+            var status = element.val();
+            var student_id = element.parent().parent().attr('id').split("-")[1];
 
             var data = {
                 func: 'update_status_program',
@@ -495,8 +505,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/d3', 'block_ases/sweetaler
                 confirmButtonClass: "btn-danger",
                 confirmButtonText: "Si",
                 cancelButtonText: "No",
-                closeOnConfirm: false,
-                closeOnCancel: false
+                closeOnConfirm: false
             },
             function(isConfirm){
                 if(isConfirm){
@@ -527,14 +536,52 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/d3', 'block_ases/sweetaler
                         },
                     });
                 }else{
-                    for(){
-                        
-                    }
+                    $('#select-'+data.program_id).val(current_status);
                 }
                 
             });
             
             
+        },update_status_ases: function(){
+
+            var data = {
+                func: 'update_status_ases',
+            };
+
+            swal({
+                title: "Advertencia",
+                text: "¿Está seguro que desea cambiar el estado de seguimiento del estudiante en esta instancia?",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonClass: "btn-danger",
+                confirmButtonText: "Si",
+                cancelButtonText: "No",
+                closeOnConfirm: false
+            },
+            function(isConfirm){
+                if(isConfirm){
+                    $.ajax({
+                        type: "POST",
+                        data: data,
+                        url: "../managers/student_profile/studentprofile_serverproc.php",
+                        success: function(msg) {
+                            
+                        },
+                        dataType: "json",
+                        cache: "false",
+                        error: function(msg) {
+                            swal(
+                                msg.title,
+                                msg.msg,
+                                msg.status
+                            );
+                        },
+                    });
+                }else{
+                    alert("Cancelado por el usuario");
+                }
+                
+            });
         }
     };
 
