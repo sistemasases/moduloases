@@ -293,7 +293,9 @@
                     $('.primer_acerca_id_estudiante_field').find('input').val( get_student_code() );
                     var creado_por = $('#current_user_id').val();
                     $('.primer_acerca_id_creado_por_field').find('input').val(creado_por);
-
+                    $("#modal_primer_acercamiento").find('.dphpforms-response .btn-dphpforms-univalle').css( { 'margin-left' : ( ($('.dphpforms-response').width()/2) - ( $('.dphpforms-response .btn-dphpforms-univalle').outerWidth() /2) ) + 'px'  } );
+                    $("#modal_primer_acercamiento").find('.dphpforms-updater .btn-dphpforms-univalle').css( { 'margin-left' : ( ($('.dphpforms-updater').width()/2) - ( $('.dphpforms-updater .btn-dphpforms-univalle').outerWidth() /2) ) + 'px'  } );
+                    
                 });
 
                 $('#button_add_geographic_track').on('click', function() {
@@ -308,6 +310,8 @@
                         $('.seg_geo_origen').find('input').prop('disabled', true );
                         $('.seg_geo_origen').find('input').prop('checked', false );
                     }
+                    $('.dphpforms-response .btn-dphpforms-univalle').css( { 'margin-left' : ( ($('.dphpforms-response').width()/2) - ( $('.dphpforms-response .btn-dphpforms-univalle').outerWidth() /2) ) + 'px'  } );
+                    $('.dphpforms-updater .btn-dphpforms-univalle').css( { 'margin-left' : ( ($('.dphpforms-updater').width()/2) - ( $('.dphpforms-updater .btn-dphpforms-univalle').outerWidth() /2) ) + 'px'  } );
                     
                 });
 
@@ -328,12 +332,6 @@
                     var id_tracking = $(this).attr('data-record-id');
                     load_record_updater('seguimiento_grupal', id_tracking);
                     $('#modal_v2_edit_groupal_tracking').fadeIn(300);
-
-
-
-
-
-
 
                 });
 
