@@ -776,7 +776,6 @@ function send_email_to_user( $tipoSeg, $codigoEnviarN1, $codigoEnviarN2, $codigo
     
       $receiving_user = get_full_user($codigoEnviarN2);
 
-      echo $receiving_user;
 
       $emailToUser->email = $receiving_user->email;
       $emailToUser->firstname = $receiving_user->firstname;
@@ -805,7 +804,6 @@ function send_email_to_user( $tipoSeg, $codigoEnviarN1, $codigoEnviarN2, $codigo
         
         $receiving_user = get_full_user($codigoEnviarN3);
 
-        echo $receiving_user;
 
         $emailToUser->email = $receiving_user->email;
         $emailToUser->firstname = $receiving_user->firstname;
