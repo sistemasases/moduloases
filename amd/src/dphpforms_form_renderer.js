@@ -67,6 +67,12 @@
                         $.get( "../managers/user_management/api_user.php?function=get_user_information&arg=" + id_creado_por, function( response ) {
                             var registered_by = response.firstname + ' ' + response.lastname;
                             $('#modal_primer_acercamiento').find('h1').after('<hr style="border-color:#444;"><h3>Registrado por: <strong>' + registered_by + '</strong></h3>');
+                            var count_buttons_dphpforms = $('.dphpforms-record .btn-dphpforms-univalle').length;
+                            if( count_buttons_dphpforms == 1 ){
+                                $('.dphpforms-record .btn-dphpforms-univalle').css( { 'margin-left' : ( ($('.dphpforms-updater').width()/2) - ( $('.dphpforms-record .btn-dphpforms-univalle').outerWidth() /2) ) + 'px'  } );
+                            }else if( count_buttons_dphpforms == 2 ){
+                                $('.dphpforms-record .btn-dphpforms-univalle:eq(0)').css( { 'margin-left' : ( ($('.dphpforms-updater').width()/2) - 72 ) + 'px'  } );
+                            }
                         });
                     });
                 });
@@ -82,13 +88,14 @@
                             $('.seg_geo_origen').find('input').prop('disabled', true );
                             $('.seg_geo_origen').find('input').prop('checked', false );
                         }
+                        var count_buttons_dphpforms = $('.dphpforms-record .btn-dphpforms-univalle').length;
+                        if( count_buttons_dphpforms == 1 ){
+                            $('.dphpforms-record .btn-dphpforms-univalle').css( { 'margin-left' : ( ($('.dphpforms-updater').width()/2) - ( $('.dphpforms-record .btn-dphpforms-univalle').outerWidth() /2) ) + 'px'  } );
+                        }else if( count_buttons_dphpforms == 2 ){
+                            $('.dphpforms-record .btn-dphpforms-univalle:eq(0)').css( { 'margin-left' : ( ($('.dphpforms-updater').width()/2) - 72 ) + 'px'  } );
+                        }
                     });
-                    var count_buttons_dphpforms = $('.dphpforms-record .btn-dphpforms-univalle').length;
-                    if( count_buttons_dphpforms == 1 ){
-                        $('.dphpforms-record .btn-dphpforms-univalle').css( { 'margin-left' : ( ($('.dphpforms-updater').width()/2) - ( $('.dphpforms-record .btn-dphpforms-univalle').outerWidth() /2) ) + 'px'  } );
-                    }else if( count_buttons_dphpforms == 2 ){
-                        $('.dphpforms-record .btn-dphpforms-univalle:eq(0)').css( { 'margin-left' : ( ($('.dphpforms-updater').width()/2) - 72 ) + 'px'  } );
-                    }
+                    
                 });
                 
 
@@ -278,7 +285,6 @@
                     $('.id_creado_por').find('input').val(codigo_monitor);
                     $('.dphpforms-response .btn-dphpforms-univalle').css( { 'margin-left' : ( ($('.dphpforms-response').width()/2) - ( $('.dphpforms-response .btn-dphpforms-univalle').outerWidth() /2) ) + 'px'  } );
                     
-
                 });
 
 
@@ -291,22 +297,16 @@
 
                 });
 
-
-
                 $('#button_primer_acercamiento').on('click', function() {
 
                     $('#modal_primer_acercamiento').fadeIn(300);
+                    
                     $('.primer_acerca_id_estudiante_field').find('input').val( get_student_code() );
                     var creado_por = $('#current_user_id').val();
                     $('.primer_acerca_id_creado_por_field').find('input').val(creado_por);
-                    $('.dphpforms-response .btn-dphpforms-univalle').css( { 'margin-left' : ( ($('.dphpforms-response').width()/2) - ( $('.dphpforms-response .btn-dphpforms-univalle').outerWidth() /2) ) + 'px'  } );
-                    $('.dphpforms-updater .btn-dphpforms-univalle').css( { 'margin-left' : ( ($('.dphpforms-updater').width()/2) - ( $('.dphpforms-updater .btn-dphpforms-univalle').outerWidth() /2) ) + 'px'  } );
-                    var count_buttons_dphpforms = $('.dphpforms-record .btn-dphpforms-univalle').length;
-                    if( count_buttons_dphpforms == 1 ){
-                        $('.dphpforms-record .btn-dphpforms-univalle').css( { 'margin-left' : ( ($('.dphpforms-updater').width()/2) - ( $('.dphpforms-record .btn-dphpforms-univalle').outerWidth() /2) ) + 'px'  } );
-                    }else if( count_buttons_dphpforms == 2 ){
-                        $('.dphpforms-record .btn-dphpforms-univalle:eq(0)').css( { 'margin-left' : ( ($('.dphpforms-updater').width()/2) - 72 ) + 'px'  } );
-                    }
+                    
+                    $('#primer_acercamiento_form').find('.dphpforms-response .btn-dphpforms-univalle').css( { 'margin-left' : ( ($('#primer_acercamiento_form').find('.dphpforms-response').width()/2) - ( $('#primer_acercamiento_form').find('.dphpforms-response .btn-dphpforms-univalle').outerWidth() /2) ) + 'px'  } );
+                    
                 });
 
                 $('#button_add_geographic_track').on('click', function() {
@@ -321,12 +321,8 @@
                         $('.seg_geo_origen').find('input').prop('disabled', true );
                         $('.seg_geo_origen').find('input').prop('checked', false );
                     }
-                    var count_buttons_dphpforms = $('.dphpforms-record .btn-dphpforms-univalle').length;
-                    if( count_buttons_dphpforms == 1 ){
-                        $('.dphpforms-record .btn-dphpforms-univalle').css( { 'margin-left' : ( ($('.dphpforms-updater').width()/2) - ( $('.dphpforms-record .btn-dphpforms-univalle').outerWidth() /2) ) + 'px'  } );
-                    }else if( count_buttons_dphpforms == 2 ){
-                        $('.dphpforms-record .btn-dphpforms-univalle:eq(0)').css( { 'margin-left' : ( ($('.dphpforms-updater').width()/2) - 72 ) + 'px'  } );
-                    }
+                    $('#seguimiento_geografico_form').find('.dphpforms-response .btn-dphpforms-univalle').css( { 'margin-left' : ( ($('#seguimiento_geografico_form').find('.dphpforms-response').width()/2) - ( $('#seguimiento_geografico_form').find('.dphpforms-response .btn-dphpforms-univalle').outerWidth() /2) ) + 'px'  } );
+                    
                 });
 
                 $('.mymodal-close').click(function(){
@@ -598,7 +594,7 @@
                                     if(response['message'] == 'Without changes'){
                                         mensaje = 'No hay cambios que registrar';
                                     }else if(response['message'] == 'Unfulfilled rules'){
-                                        mensaje = 'Revise los valores ingresados';
+                                        mensaje = 'Revise Que los campos estén completos y correctamente diligenciados';
                                     }
                                     swal(
                                         'Alerta',
