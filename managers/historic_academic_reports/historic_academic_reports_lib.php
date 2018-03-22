@@ -166,7 +166,7 @@ function get_historic_report($id_instance)
         }
 
         //validate bajo
-        $query_bajo = "SELECT * FROM {talentospilos_history_bajo} WHERE id_history = $historic->id ";
+        $query_bajo = "SELECT * FROM {talentospilos_history_bajos} WHERE id_history = $historic->id ";
 
         $bajo = $DB->get_records_sql($query_bajo);
 
@@ -181,7 +181,7 @@ function get_historic_report($id_instance)
         $historic->Numestim = $estimulos;
 
         //validate bajos
-        $bajos = get_bajos_rendimientos($student_id, $academic_program->id);
+        $bajos = get_bajos_rendimientos($historic->student_id, $historic->program_id);
         $historic->bajos = $bajos;
 
         //validate materias perdidas
@@ -293,14 +293,14 @@ function get_Totals_report($instance_id)
 
     foreach ($historics as $historic) {
 
-        $query_cancel = "SELECT COUNT(cancel.id) as inact
-                                semestre.nombre as semestre
+        $query_cancel = "SELECT COUNT(cancel.id) as inact,
+                                semestre.nombre as semestre,
                                 cohorte.name as cohorte
                                 FROM {talentospilos_history_academ} academ
                         INNER JOIN {talentospilos_semestre} semestre
                         ON         academ.id_semestre = semestre.id
                         INNER JOIN {talentospilos_history_cancel} cancel
-                        ON         academ.id = cancel.history_id 
+                        ON         academ.id = cancel.id_history 
                         INNER JOIN {talentospilos_user_extended} extend
                         ON         academ.id_estudiante = extend.id_ases_user
                         INNER JOIN {cohort_members} memb

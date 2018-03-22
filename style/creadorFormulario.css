@@ -158,7 +158,7 @@ pre, code {
 
 
 .big_textarea{
-    height: 7em !important;
+    min-height: 7em !important;
 }
 
 .peer_trackings_v2{
