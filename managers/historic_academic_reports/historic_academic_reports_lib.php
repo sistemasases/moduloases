@@ -43,10 +43,10 @@ function get_datatable_array_Students($instance_id)
     array_push($columns, array("title" => "Apellido(s)", "name" => "lastname", "data" => "lastname"));
     array_push($columns, array("title" => "Semestre", "name" => "semestre", "data" => "semestre"));
     array_push($columns, array("title" => "Cancela", "name" => "cancel", "data" => "cancel"));
-    array_push($columns, array("title" => "Promedio Semestre", "name" => "promSem", "data" => "promSem"));
+    array_push($columns, array("title" => "Promedio Semestre", "name" => "promsem", "data" => "promsem"));
     array_push($columns, array("title" => "Gano Estimulo", "name" => "estim", "data" => "estim"));
     array_push($columns, array("title" => "Cae en Bajo", "name" => "bajo", "data" => "bajo"));
-    array_push($columns, array("title" => "Promedio Acumulado", "name" => "promAcum", "data" => "promAcum"));
+    array_push($columns, array("title" => "Promedio Acumulado", "name" => "promacum", "data" => "promacum"));
     array_push($columns, array("title" => "Estimulos", "name" => "Numestim", "data" => "estim"));
     array_push($columns, array("title" => "Bajos", "name" => "bajos", "data" => "bajos"));
     array_push($columns, array("title" => "Materias Perdidas", "name" => "perdidas", "data" => "perdidas"));
