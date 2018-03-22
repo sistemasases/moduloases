@@ -256,6 +256,7 @@ if (isset($_POST['type']) && $_POST['type'] == "send_email_to_user" && isset($_P
         */
         $place = $_POST['place'];
 
+
     if ($_POST['form'] == 'new_form')
         {
         $register = dphpforms_get_record($_POST['id_tracking'], 'id_estudiante');
@@ -263,9 +264,13 @@ if (isset($_POST['type']) && $_POST['type'] == "send_email_to_user" && isset($_P
         $id_moodle_student = get_name_by_username($json['record']['alias_key']['respuesta']);
         $id_ases_student = get_id_ases_user($id_moodle_student->id);
         $monitor_code = get_student_monitor($id_ases_student->id_ases_user, $_POST['semester'], $_POST['instance']);
+
         $practicant_code = get_boss_of_monitor_by_semester($monitor_code, $_POST['semester'], $_POST['instance']);
-        
-        echo send_email_to_user($_POST['tracking_type'], $monitor_code, $practicant_code->id_jefe, $practicant_code->id_usuario, $_POST['date'], $id_moodle_student->firstname . " " . $id_moodle_student->lastname, $_POST['message_to_send'], $place);
+
+        $profesional_code = get_boss_of_monitor_by_semester($practicant_code->id_jefe, $_POST['semester'], $_POST['instance']);  
+
+           
+        echo send_email_to_user($_POST['tracking_type'], $monitor_code, $practicant_code->id_jefe, $profesional_code->id_jefe, $_POST['date'], $id_moodle_student->firstname . " " . $id_moodle_student->lastname, $_POST['message_to_send'], $place);
         }
       else
         {
