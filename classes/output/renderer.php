@@ -192,5 +192,10 @@ class renderer extends plugin_renderer_base {
         $data = $page->export_for_template($this);
         return parent::render_from_template('block_ases/dphpforms_form_creator_pregunta', $data);
     }
+
+    public function render_teachers_reports_page($page){
+        $data = $page->export_for_template($this);
+        return parent::render_from_template('block_ases/historical_icetex_reports', $data);
+    }
     
 }
