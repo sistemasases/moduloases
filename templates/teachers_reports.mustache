@@ -1,0 +1,16 @@
+{{#data}}   
+{{> block_ases/side_menu}}
+<div class="container">
+<div class="row">
+   <h2>REPORTE DE DOCENTES</h2>   
+  <hr/>
+  {{{message}}}   
+   <div class="panel-group">
+      {{#view_teachers_reports_tr}}
+      {{> block_ases/view_teachers_reports}}
+      {{/view_teachers_reports_tr}}      
+   </div>
+   {{/data}}
+   <!--end panel-group-->
+</div>
+</div>
