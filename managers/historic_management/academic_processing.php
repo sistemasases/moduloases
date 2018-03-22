@@ -106,7 +106,7 @@ if (isset($_FILES['file'])) {
 
                 } else {
                     $isValidRow = false;
-                    array_push($detail_erros, [$line_count, $lc_wrongFile, ($associativeTitles['codigo_estudiante'] + 1), 'codigo_estudiante', 'El campo codigo_estudiante es obligatorio y se encuentra vacio']);
+                    array_push($detail_errors, [$line_count, $lc_wrongFile, ($associativeTitles['codigo_estudiante'] + 1), 'codigo_estudiante', 'El campo codigo_estudiante es obligatorio y se encuentra vacio']);
                 }
 
             } else {
@@ -121,12 +121,12 @@ if (isset($_FILES['file'])) {
                     $id_programa = get_id_program($codigo_programa);
                     if (!$id_programa) {
                         $isValidRow = false;
-                        array_push($detail_erros, [$line_count, $lc_wrongFile, ($associativeTitles['programa'] + 1), 'programa', 'No existe un programa asociado al codigo ' . $codigo_programa]);
+                        array_push($detail_errors, [$line_count, $lc_wrongFile, ($associativeTitles['programa'] + 1), 'programa', 'No existe un programa asociado al codigo ' . $codigo_programa]);
                     }
 
                 } else {
                     $isValidRow = false;
-                    array_push($detail_erros, [$line_count, $lc_wrongFile, ($associativeTitles['programa'] + 1), 'programa', 'El campo programa es obligatorio y se encuentra vacio']);
+                    array_push($detail_errors, [$line_count, $lc_wrongFile, ($associativeTitles['programa'] + 1), 'programa', 'El campo programa es obligatorio y se encuentra vacio']);
                 }
 
             } else {
@@ -141,12 +141,12 @@ if (isset($_FILES['file'])) {
                     $id_semestre = get_id_semester($semestre);
                     if (!$id_semestre) {
                         $isValidRow = false;
-                        array_push($detail_erros, [$line_count, $lc_wrongFile, ($associativeTitles['semestre'] + 1), 'semestre', 'No existe ningun semestre registrado el nombre' . $semestre]);
+                        array_push($detail_errors, [$line_count, $lc_wrongFile, ($associativeTitles['semestre'] + 1), 'semestre', 'No existe ningun semestre registrado el nombre' . $semestre]);
                     }
 
                 } else {
                     $isValidRow = false;
-                    array_push($detail_erros, [$line_count, $lc_wrongFile, ($associativeTitles['semestre'] + 1), 'semestre', 'El campo semestre es obligatorio y se encuentra vacio']);
+                    array_push($detail_errors, [$line_count, $lc_wrongFile, ($associativeTitles['semestre'] + 1), 'semestre', 'El campo semestre es obligatorio y se encuentra vacio']);
                 }
 
             } else {
@@ -161,12 +161,12 @@ if (isset($_FILES['file'])) {
 
                     if (!is_numeric($promedio)) {
                         $isValidRow = false;
-                        array_push($detail_erros, [$line_count, $lc_wrongFile, ($associativeTitles['promedio'] + 1), 'promedio', 'El campo promedio debe ser de tipo numerico']);
+                        array_push($detail_errors, [$line_count, $lc_wrongFile, ($associativeTitles['promedio'] + 1), 'promedio', 'El campo promedio debe ser de tipo numerico']);
                     }
 
                 } else {
                     $isValidRow = false;
-                    array_push($detail_erros, [$line_count, $lc_wrongFile, ($associativeTitles['promedio'] + 1), 'promedio', 'El campo promedio es obligatorio y se encuentra vacio']);
+                    array_push($detail_errors, [$line_count, $lc_wrongFile, ($associativeTitles['promedio'] + 1), 'promedio', 'El campo promedio es obligatorio y se encuentra vacio']);
                 }
 
             } else {
@@ -192,12 +192,12 @@ if (isset($_FILES['file'])) {
 
                         if (!is_numeric($promedio_acumulado)) {
                             $isValidRow = false;
-                            array_push($detail_erros, [$line_count, $lc_wrongFile, ($associativeTitles['promedio_acumulado'] + 1), 'promedio_acumulado', 'El campo promedio_acumulado debe ser de tipo numerico']);
+                            array_push($detail_errors, [$line_count, $lc_wrongFile, ($associativeTitles['promedio_acumulado'] + 1), 'promedio_acumulado', 'El campo promedio_acumulado debe ser de tipo numerico']);
                         }
     
                     } else {
                         $isValidRow = false;
-                        array_push($detail_erros, [$line_count, $lc_wrongFile, ($associativeTitles['promedio_acumulado'] + 1), 'promedio_acumulado', 'El campo promedio_acumulado es obligatorio y se encuentra vacio']);
+                        array_push($detail_errors, [$line_count, $lc_wrongFile, ($associativeTitles['promedio_acumulado'] + 1), 'promedio_acumulado', 'El campo promedio_acumulado es obligatorio y se encuentra vacio']);
                     }
                 }
             }
@@ -229,7 +229,7 @@ if (isset($_FILES['file'])) {
                 $result = update_historic_academic($id_estudiante, $id_programa, $id_semestre, $promedio, $promedio_acumulado);
 
                 if (!$result) {
-                    array_push($detail_erros, [$line_count, $lc_wrongFile, 'Error al registrar historico', 'Error Servidor', 'Error del server registrando el historico']);
+                    array_push($detail_errors, [$line_count, $lc_wrongFile, 'Error al registrar historico', 'Error Servidor', 'Error del server registrando el historico']);
                     array_push($wrong_rows, $data);
                     $lc_wrongFile++;
                 } else {
@@ -238,7 +238,7 @@ if (isset($_FILES['file'])) {
                     array_push($success_rows, $data);
                     if ($hasCancel) {
                         if (!update_historic_cancel($id_historic, $fecha_cancelacion)) {
-                            array_push($detail_erros, [$line_count, $lc_wrongFile, 'Error al registrar cancelacion', 'Error Servidor', 'Error del server registrando la cancelacion']);
+                            array_push($detail_errors, [$line_count, $lc_wrongFile, 'Error al registrar cancelacion', 'Error Servidor', 'Error del server registrando la cancelacion']);
                             array_push($wrong_rows, $data);
                             $lc_wrongFile++;
                         }
@@ -246,7 +246,7 @@ if (isset($_FILES['file'])) {
 
                     if ($hasEstimulo) {
                         if (!update_historic_estimulo($id_historic, $puesto_estimulo)) {
-                            array_push($detail_erros, [$line_count, $lc_wrongFile, 'Error al registrar estimulo', 'Error Servidor', 'Error del server registrando el estimulo']);
+                            array_push($detail_errors, [$line_count, $lc_wrongFile, 'Error al registrar estimulo', 'Error Servidor', 'Error del server registrando el estimulo']);
                             array_push($wrong_rows, $data);
                             $lc_wrongFile++;
                         }
@@ -254,7 +254,7 @@ if (isset($_FILES['file'])) {
 
                     if ($hasBajo) {
                         if (!update_historic_bajo($id_historic, $numero_bajo)) {
-                            array_push($detail_erros, [$line_count, $lc_wrongFile, 'Error al registrar bajo rendimiento', 'Error Servidor', 'Error del server registrando el bajo rendimiento']);
+                            array_push($detail_errors, [$line_count, $lc_wrongFile, 'Error al registrar bajo rendimiento', 'Error Servidor', 'Error del server registrando el bajo rendimiento']);
                             array_push($wrong_rows, $data);
                             $lc_wrongFile++;
                         }
@@ -266,7 +266,6 @@ if (isset($_FILES['file'])) {
         }
 
         //RECORRER LOS REGISTROS ERRONEOS Y CREAR ARCHIVO DE registros_erroneos
-
         if (count($wrong_rows) > 1) {
 
             $filewrongname = $rootFolder . 'RegistrosErroneos_' . $nombre;
@@ -283,7 +282,7 @@ if (isset($_FILES['file'])) {
 
             $detailsFileHandler = fopen($detailsFilename, 'w');
             fprintf($detailsFileHandler, chr(0xEF) . chr(0xBB) . chr(0xBF)); // darle formato unicode utf-8
-            foreach ($detail_erros as $row) {
+            foreach ($detail_errors as $row) {
                 fputcsv($detailsFileHandler, $row);
             }
             fclose($detailsFileHandler);

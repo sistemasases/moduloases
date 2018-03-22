@@ -38,7 +38,13 @@ function get_ases_id_by_code($code)
 
     $sql_query = "SELECT MAX(id) as id_moodle FROM {user} WHERE username LIKE '" . $code . "%';";
 
-    $id_moodle = $DB->get_record_sql($sql_query)->id_moodle;
+    $id_moodle = $DB->get_record_sql($sql_query);
+    //print_r($id_moodle);
+    if($id_moodle->id_moodle){
+        $id_moodle = $id_moodle->id_moodle;
+    }else{
+        return false;
+    }
 
     $sql_query = "SELECT id_ases_user as id FROM {talentospilos_user_extended} WHERE id_moodle_user =" . $id_moodle;
 
