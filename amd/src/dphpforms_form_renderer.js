@@ -595,11 +595,11 @@
                                         mensaje = 'No hay cambios que registrar';
                                     }else if(response['message'] == 'Unfulfilled rules'){
                                         mensaje = 'Revise que los campos estén completos y correctamente diligenciados';
-                                        var id_form_pregunta_a = response['data']['id_form_pregunta_a'];
-                                        var id_form_pregunta_b = response['data']['id_form_pregunta_b'];
-                                        var enunciado_preg_a = $('.div-' + id_form_pregunta_a).text();
-                                        var enunciado_preg_b = $('.div-' + id_form_pregunta_b).text();
-                                        mensaje = 'Revise que los campos ' + enunciado_preg_a + ' y ' + enunciado_preg_b;
+                                        //var id_form_pregunta_a = response['data']['id_form_pregunta_a'];
+                                        //var id_form_pregunta_b = response['data']['id_form_pregunta_b'];
+                                        //var enunciado_preg_a = $('.div-' + id_form_pregunta_a).text();
+                                        //var enunciado_preg_b = $('.div-' + id_form_pregunta_b).text();
+                                        //mensaje = 'Revise que los campos ' + enunciado_preg_a + ' y ' + enunciado_preg_b;
                                     }
                                     swal(
                                         'Alerta',

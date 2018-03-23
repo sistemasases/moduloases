@@ -300,7 +300,7 @@ function dphpforms_update_respuesta($completed_form, $RECORD_ID){
                 );
             }else{
 
-                $rule = dphpforms_get_regla( $Unfulfilled_rules );
+                //$rule = dphpforms_get_regla( $Unfulfilled_rules );
 
                 echo json_encode(
                     array(
@@ -484,7 +484,7 @@ function dphpforms_new_store_respuesta($completed_form){
 
     }else{
 
-        $rule = dphpforms_get_regla( $Unfulfilled_rules );
+        //$rule = dphpforms_get_regla( $Unfulfilled_rules );
 
         echo json_encode(
             array(
@@ -887,8 +887,11 @@ function dphpforms_reglas_validator($respuestas, $reglas){
             echo '=====================' . "\n";*/
         }
     }
-
-    return $satisfied_reglas;
+    return array(
+        'status' => $satisfied_reglas,
+        'unfulfilled_ruler' => $id_regla
+    );
+    //return $satisfied_reglas;
 }
 
 function dphpforms_get_respuestas_form_completed($idFormularioDiligenciado){
