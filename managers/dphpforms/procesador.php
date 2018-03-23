@@ -256,7 +256,10 @@ function dphpforms_update_respuesta($completed_form, $RECORD_ID){
         if($different_flag){
             
             //La última afectación es si las reglas son válidas
-            $processable = dphpforms_reglas_validator(json_decode(json_encode($updated_respuestas)), $reglas);
+            $validator_response = dphpforms_reglas_validator(json_decode(json_encode($updated_respuestas)), $reglas);
+
+            $processable = $validator_response['status'];
+            $Unfulfilled_rules = $validator_response['unfulfilled_ruler'];
 
             /*print_r($updated_respuestas);
 
@@ -296,11 +299,14 @@ function dphpforms_update_respuesta($completed_form, $RECORD_ID){
                     )
                 );
             }else{
+
+                $rule = dphpforms_get_regla( $Unfulfilled_rules );
+
                 echo json_encode(
                     array(
                         'status' => '-2',
                         'message' => 'Unfulfilled rules',
-                        'data' => ''
+                        'data' => $rule
                     )
                 );
             }
@@ -390,7 +396,9 @@ function dphpforms_new_store_respuesta($completed_form){
     //print_r($all_respuestas);
     //die();
 
-    $processable = dphpforms_reglas_validator( json_decode( json_encode($all_respuestas) ), $reglas );
+    $validator_response = dphpforms_reglas_validator( json_decode( json_encode($all_respuestas) ), $reglas );
+    $processable = $validator_response['status'];
+    $Unfulfilled_rules = $validator_response['unfulfilled_ruler'];
 
     if($processable){
         //echo "\n¿Procesable?: Sí.\n";
@@ -475,11 +483,14 @@ function dphpforms_new_store_respuesta($completed_form){
         
 
     }else{
+
+        $rule = dphpforms_get_regla( $Unfulfilled_rules );
+
         echo json_encode(
             array(
                 'status' => '-2',
                 'message' => 'Unfulfilled rules',
-                'data' => ''
+                'data' => $rule
             )
         );
     }
@@ -639,6 +650,7 @@ function dphpforms_get_form_reglas($form_id){
     for($i = 0; $i < count($result); $i++){
         $row = $result[$i];
         $regla = array(
+            'id_regla' => $row->id,
             'respuesta_a' => $row->id_form_pregunta_a,
             'regla' => $row->regla,
             'respuesta_b' => $row->id_form_pregunta_b
@@ -650,6 +662,19 @@ function dphpforms_get_form_reglas($form_id){
     return $reglas;
 }
 
+function dphpforms_get_regla( $id ){
+
+    global $DB;
+
+    $sql = "
+    
+        SELECT RFP.id, RFP.id_form_pregunta_a, RFP.id_form_pregunta_b, R.regla FROM {talentospilos_df_reg_form_pr} RFP INNER JOIN {talentospilos_df_reglas} R ON RFP.id_regla = R.id WHERE RFP.id = '" . $id . "'
+    
+    ";
+
+    return $DB->get_record_sql($sql);
+}
+
 function dphpforms_reglas_validator($respuestas, $reglas){
     
     $satisfied_reglas = false;
@@ -658,6 +683,7 @@ function dphpforms_reglas_validator($respuestas, $reglas){
     }
 
     for($i = 0; $i < count($reglas); $i++){
+        $id_regla = $reglas[$i]['id_regla'];
         $regla = $reglas[$i]['regla'];
         $respuesta_a = null;
         $respuesta_b = null;
@@ -701,8 +727,10 @@ function dphpforms_reglas_validator($respuestas, $reglas){
                 /*echo "REGLA " . $regla . " NO CUMPLIDA\n";
                 print_r($respuesta_a);
                 print_r($respuesta_b);*/
-                return false;
-                break;
+                return array(
+                    'status' => false,
+                    'unfulfilled_ruler' => $id_regla
+                );
             }else{
                 $satisfied_reglas = true;
                 //echo "REGLA " . $regla . " CUMPLIDA\n";
@@ -714,8 +742,10 @@ function dphpforms_reglas_validator($respuestas, $reglas){
                 /*echo "REGLA " . $regla . " NO CUMPLIDA\n";
                 print_r($respuesta_a);
                 print_r($respuesta_b);*/
-                return false;
-                break;
+                return array(
+                    'status' => false,
+                    'unfulfilled_ruler' => $id_regla
+                );
             }else{
                 $satisfied_reglas = true;
                 //echo "REGLA " . $regla . " CUMPLIDA\n";
@@ -736,8 +766,10 @@ function dphpforms_reglas_validator($respuestas, $reglas){
                                     $satisfied_reglas = true;
                                 }else{
                                     $satisfied_reglas = false;
-                                    return false;
-                                    break;
+                                    return array(
+                                        'status' => false,
+                                        'unfulfilled_ruler' => $id_regla
+                                    );
                                 }
                         }
                     }
@@ -748,8 +780,10 @@ function dphpforms_reglas_validator($respuestas, $reglas){
                 /*echo "REGLA " . $regla . " NO CUMPLIDA\n";
                 print_r($respuesta_a);
                 print_r($respuesta_b);*/
-                return false;
-                break;
+                return array(
+                    'status' => false,
+                    'unfulfilled_ruler' => $id_regla
+                );
             }else{
                 $satisfied_reglas = true;
                 //echo "REGLA " . $regla . " CUMPLIDA\n";
@@ -771,8 +805,10 @@ function dphpforms_reglas_validator($respuestas, $reglas){
                                     $satisfied_reglas = true;
                                 }else{
                                     $satisfied_reglas = false;
-                                    return false;
-                                    break;
+                                    return array(
+                                        'status' => false,
+                                        'unfulfilled_ruler' => $id_regla
+                                    );
                                 }
                         }
                     }
@@ -783,8 +819,10 @@ function dphpforms_reglas_validator($respuestas, $reglas){
                 /*echo "REGLA " . $regla . " NO CUMPLIDA\n";
                 print_r($respuesta_a);
                 print_r($respuesta_b);*/
-                return false;
-                break;
+                return array(
+                    'status' => false,
+                    'unfulfilled_ruler' => $id_regla
+                );
             }else{
                 $satisfied_reglas = true;
                 //echo "REGLA " . $regla . " CUMPLIDA\n";
