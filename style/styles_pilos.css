@@ -1118,6 +1118,7 @@ input.no-borde-fondo.tema
 
 .risk_graph_button,
 .risk_graph_button:active{
+  width: 45% !important;
   background-color: #337ab7; 
   border: 1px solid #2e6da4; 
   border-bottom: 1px solid #337ab7; 
@@ -1132,8 +1133,11 @@ input.no-borde-fondo.tema
   -ms-box-shadow: 0 1px 0 0 #337ab7 inset; 
   -o-box-shadow: 0 1px 0 0 #337ab7 inset; 
   color: white; font-weight: bold; 
-  /* padding: 6px 20px; */
   text-align: center; 
+  padding-left: 0px !important;
+  padding-right: 0px !important;
+  margin-left: 2.5%;
+  margin-right: 2.5%;
 }
 
 .risk_graph_button:hover{
@@ -1141,6 +1145,11 @@ input.no-borde-fondo.tema
   background-color: #286090;
   border-color: #204d74;
   cursor: pointer;
+}
+
+#div_buttons_risk{
+  padding-left: 0px !important;
+  padding-right: 0px !important;
 }
 
 #buttons_edit_div{
