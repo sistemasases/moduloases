@@ -716,21 +716,19 @@ function send_email_to_user( $tipoSeg, $codigoEnviarN1, $codigoEnviarN2, $codigo
       $subject = "Observaciones seguimiento del dia $fecha de los estudiantes $nombre, Lugar: $place";
     }
 
-
-    
-    $messageHtml.="<b>OBSERVACION:<b><br><br>";
+    $messageHtml.="<b>OBSERVACION:</b><br><br>";
     $messageHtml.="Estimado monitor $name_monitor<br><br>";
     
     
     if($tipoSeg=="individual")
     {
-      $messageHtml.="Revisando el seguimiento realizado al estudiante $nombre  el dia $fecha, mis comentarios son los siguientes:<br><br>";
+      $messageHtml.="Revisando el seguimiento realizado al estudiante <b> $nombre </b> el dia <b> $fecha </b>, mis comentarios son los siguientes:<br><br>";
     }else
     {
       $messageHtml.="Revisando el seguimiento realizado a los estudiantes $nombre  el dia $fecha, mis comentarios son los siguientes:<br><br>";
     }
     
-    $messageHtml.=$messageText."<br><br>";
+    $messageHtml.="<i>".$messageText."</i><br><br>";
     $messageHtml.="Cordialmente<br>";
     $messageHtml.="$name_prof";
 
