@@ -18,7 +18,7 @@
             {{{code}}}
           </div>
           <div class="col-xs-1 col-sm-1">
-            <span class="glyphicon glyphicon-ok" id="icon-tracking"></span>
+            <span class="glyphicon glyphicon-ok i-tracking" {{#update_ases_status_sp}} id="icon-tracking" {{/update_ases_status_sp}}></span>
             <input type="hidden" id="input_status_ases">
           </div>
         </div>
@@ -62,10 +62,12 @@
                   </select>
                 </td>
                 <td class="col-sm-1 td-middle">
+                {{#update_tracking_status_sp}}
                   <label class="switch">
-                    <input type="checkbox" id="div_flags_{{academic_program_id}}">
+                    <input class="input-tracking" type="checkbox" id="div_flags_{{academic_program_id}}">
                     <div class="slider round"></div>
                   </label>
+                {{/update_tracking_status_sp}}
                 </td>
               </tr>
             {{/academic_programs}}
@@ -97,13 +99,13 @@
       </div>
     </div>
 
-    <div class="row div_risk" id="">
-      <div class="col-sm-1">
+    <div class="row div_risk">
+      <div class="col-sm-1 no-padding-left">
         <div id="div_title_risk">
-          <b>RIESGOS: </b>
+          <b>RIESGOS:</b>
         </div>
       </div>
-      <div class="col-sm-9">
+      <div class="col-sm-9 no-padding-left" id="div_bar_risks">
          <div class="{{individual_class}} col-sm-2" id="individual_risk">
             <span><b>INDIVIDUAL</b></span>
          </div>
@@ -220,8 +222,6 @@
       </div>
       <!-- Fin Pestañas ficha -->
     </div>
-
-    <span class="btn btn-info" id="go_back">REGRESAR</span>
   </form>
 </div>
 

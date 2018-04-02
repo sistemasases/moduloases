@@ -31,6 +31,11 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/d3', 'block_ases/sweetaler
                     $('#div_flags_'+data_init[i].academic_program_id).prop('checked', true);
                 }
             }
+
+            var current_tracking_status = "";
+            $('.input-tracking').on('focus', function(event){current_tracking_status = event.target.value;});
+
+            $('.input-tracking').on('change', function(){alert(current_tracking_status);});
             
             var current_status = ""; 
 

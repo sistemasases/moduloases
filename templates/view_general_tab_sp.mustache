@@ -1,90 +1,90 @@
 {{!-- General tab --}}
-<div class="tab-pane active p-t-100" id="general_tab" >
-   <div class="col-md-12">
-      <div class=" col-sm-4">
-         <div class="row">
-            <label for="dir1" class="col-sm-4">Dirección</label>
-            <div class="input-group col-sm-8"> 
-               <input type="text" class="form-control" readonly name="direccion_res" id="dir1" value="{{res_address}}" maxlength="100">
+<div class="tab-pane active p-t-100" id="general_tab">
+    <div class="row">
+        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+            <h3>INFORMACIÓN DEL ESTUDIANTE</h3>
+            <div class="row">
+                <label for="dir1" class="col-sm-4">Dirección</label>
+                <div class="input-group col-sm-8">
+                    <input type="text" class="form-control" readonly name="direccion_res" id="dir1" value="{{res_address}}" maxlength="100">
+                </div>
             </div>
-         </div>
-         <div class="row">
-            <label for="tel1" class="control-label col-sm-4">Teléfono 1</label>
-            <div class = "input-group col-sm-8">
-               <input type="tel" class="form-control" name="tel_ini" id="tel1" readonly value="{{init_tel}}"maxlength="15">
+            <div class="row">
+                <label for="tel1" class="control-label col-sm-4">Teléfono 1</label>
+                <div class="input-group col-sm-8">
+                    <input type="tel" class="form-control" name="tel_ini" id="tel1" readonly value="{{init_tel}}" maxlength="15">
+                </div>
             </div>
-         </div>
-         <div class="row">
-            <label for="tel2" class="control-label col-sm-4">Teléfono 2</label>
-            <div class = "input-group col-sm-8">
-               <input type="tel" class="form-control" name="tel_res" id="tel2" readonly value="{{res_tel}}"maxlength="15" >
+            <div class="row">
+                <label for="tel2" class="control-label col-sm-4">Teléfono 2</label>
+                <div class="input-group col-sm-8">
+                    <input type="tel" class="form-control" name="tel_res" id="tel2" readonly value="{{res_tel}}" maxlength="15">
+                </div>
             </div>
-         </div>
-         <div class="row">
-            <label for="tel3" class="control-label col-sm-4">Teléfono 3</label>
-            <div class = "input-group col-sm-8">
-               <input type="tel" class="form-control" name="celular" id="tel3" readonly value="{{cell_phone}}" maxlength="15">
+            <div class="row">
+                <label for="tel3" class="control-label col-sm-4">Teléfono 3</label>
+                <div class="input-group col-sm-8">
+                    <input type="tel" class="form-control" name="celular" id="tel3" readonly value="{{cell_phone}}" maxlength="15">
+                </div>
             </div>
-         </div>
-         <div class="row">
-            <label for="email2" class="control-label col-sm-4">Email alternativo</label>
-            <div class="input-group col-sm-8">
-               <input type="email" class="form-control" name="emailpilos" id="email2" readonly value="{{emailpilos}}" maxlength="100" required />
+            <div class="row">
+                <label for="email2" class="control-label col-sm-4">Email alternativo</label>
+                <div class="input-group col-sm-8">
+                    <input type="email" class="form-control" name="emailpilos" id="email2" readonly value="{{emailpilos}}" maxlength="100" required />
+                </div>
             </div>
-         </div>
-         <hr class="col-md-12">
-         <h3>INFORMACIÓN DEL ACUDIENTE</h3>
-         <div class="row">
-            <label for="nombre_acudiente" class="control-label col-sm-4">Nombre</label>
-            <div class = "input-group col-md-8">
-               <input type="text" class="form-control" readonly name="acudiente" id="nombre_acudiente" value="{{attendant}}" maxlength="100" />
+            <hr>
+            <h3>INFORMACIÓN DEL ACUDIENTE</h3>
+            <div class="row">
+                <label for="nombre_acudiente" class="control-label col-sm-4">Nombre</label>
+                <div class="input-group col-md-8">
+                    <input type="text" class="form-control" readonly name="acudiente" id="nombre_acudiente" value="{{attendant}}" maxlength="100" />
+                </div>
             </div>
-         </div>
-         <div class="row">
-            <label for="tel4" class="control-label col-sm-4">Teléfono Acudiente</label>
-            <div class = "input-group col-md-8">
-               <input type="tel" class="form-control" name="tel_acudiente" id="tel4" readonly value="{{attendant_tel}}" maxlength="15" />
+            <div class="row">
+                <label for="tel4" class="control-label col-sm-4">Teléfono Acudiente</label>
+                <div class="input-group col-md-8">
+                    <input type="tel" class="form-control" name="tel_acudiente" id="tel4" readonly value="{{attendant_tel}}" maxlength="15" />
+                </div>
             </div>
-         </div>
-         <hr class="col-md-12">
-         <h3>INFORMACIÓN PROFESIONAL Y MONITOR</h3>
-         <div class="row">
-            <label for="profesional_ps" class="control-label col-sm-4">Profesional</label>
-            <div class = "input-group col-md-7">
-               <span>{{professional_fullname}}</span>
+            <hr>
+            <h3>INFORMACIÓN PROFESIONAL Y MONITOR</h3>
+            <div class="row">
+                <label for="profesional_ps" class="control-label col-sm-4">Profesional</label>
+                <div class="input-group col-md-7">
+                    <span>{{professional_fullname}}</span>
+                </div>
             </div>
-         </div>
-         <div class="row">
-            <label for="practicante_ps" class="control-label col-sm-4">Practicante</label>
-            <div class = "input-group col-md-7">
-               <span>{{trainee_fullname}}</span>
+            <div class="row">
+                <label for="practicante_ps" class="control-label col-sm-4">Practicante</label>
+                <div class="input-group col-md-7">
+                    <span>{{trainee_fullname}}</span>
+                </div>
             </div>
-         </div>
-         <div class="row">
-            <label for="monitor_ps" class="control-label col-sm-4">Monitor</label>
-            <div class = "input-group col-md-7">
-               <span>{{monitor_fullname}}</span>
+            <div class="row">
+                <label for="monitor_ps" class="control-label col-sm-4">Monitor</label>
+                <div class="input-group col-md-7">
+                    <span>{{monitor_fullname}}</span>
+                </div>
             </div>
-         </div>
-      </div>
-      <div class="col-sm-6">
-         <iframe class="col-sm-12" height="396" frameborder="0" style="border:0" src="https://www.google.com/maps/embed/v1/directions?key=AIzaSyAoE-aPVfruphY4V4BbE8Gdwi93x-5tBTM&origin={{latitude}},{{longitude}}&destination=3.3759493,-76.5355789&mode=transit" allowfullscreen> </iframe>
-         <div class="row">
-            <label for="observaciones" class="col-md-12">Observaciones</label>
-            <textarea name="observacion" id="observations_profile" class="col-sm-12" readonly></textarea>
-            <textarea name="" id="observaciones_anteriores" class="col-md-12" readonly>{{observations}}</textarea>
-         </div>
-         <br>
-         <div class="row" id="div_ases_status">
-         </div>
-      </div>
-   </div>
-   <div class="col-sm-offset-9 col-sm-3" id="buttons_edit_div">
-      <button class="btn-primary col-sm-7" type="button" id="save" name="save">Actualizar Datos</button>
-      <button class="btn-primary col-sm-4 col-sm-offset-1" type="button" id="cancel">Cancelar</button>
-      {{#update_general_tab_sp}}
-      <button class="btn-primary col-sm-6 col-sm-offset-3" type="button" id="editar_ficha">Editar Ficha</button>
-      {{/update_general_tab_sp}}
-   </div>
+        </div>
+        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+            <iframe class="col-xs-12 col-sm-12 col-md-12 col-lg-12" height="396" frameborder="0" style="border:0" src="https://www.google.com/maps/embed/v1/directions?key=AIzaSyAoE-aPVfruphY4V4BbE8Gdwi93x-5tBTM&origin={{latitude}},{{longitude}}&destination=3.3759493,-76.5355789&mode=transit"
+            allowfullscreen> </iframe>
+            <div class="col-sm-12">
+                <label for="observaciones" class="col-md-12">Observaciones</label>
+                <textarea name="observacion" id="observations_profile" class="col-sm-12" readonly></textarea>
+                <textarea name="" id="observaciones_anteriores" class="col-md-12" readonly>{{observations}}</textarea>
+            </div>
+        </div>
+            
+    </div>
+    <div class="col-sm-offset-9 col-sm-3" id="buttons_edit_div">
+        <button class="btn-primary col-sm-7" type="button" id="save" name="save">Actualizar Datos</button>
+        <button class="btn-primary col-sm-4 col-sm-offset-1" type="button" id="cancel">Cancelar</button>
+        {{#update_general_tab_sp}}
+        <button class="btn-primary col-sm-6 col-sm-offset-3" type="button" id="editar_ficha">Editar Ficha</button>
+        {{/update_general_tab_sp}}
+    </div>
 </div>
 {{!-- End general tab --}}

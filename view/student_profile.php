@@ -163,7 +163,7 @@ if ($student_code != 0) {
     } else {
         $record->trainee_fullname = "NO REGISTRA";
     }
-    //print_r($professional_object);
+    
     if ($professional_object) {
         $record->professional_fullname = "$professional_object->firstname $professional_object->lastname";
     } else {
@@ -172,9 +172,6 @@ if ($student_code != 0) {
 
     // Geographic information
 
-    $geographic_tab_html = file_get_contents('../templates/geographic_tab.html');
-    $record->geographic_tab = $geographic_tab_html;
-
     $geographic_object = load_geographic_info($student_id);
 
     $neighborhoods_array = get_neighborhoods();
@@ -182,11 +179,16 @@ if ($student_code != 0) {
     $neighborhoods = "<option>No registra</option>";
 
     for ($i = 1; $i <= count($neighborhoods_array); $i++) {
-        if ($neighborhoods_array[$i]->id == (int) $geographic_object->barrio) {
-            $neighborhoods .= "<option value='" . $neighborhoods_array[$i]->id . "' selected>" . $neighborhoods_array[$i]->nombre . "</option>";
-        } else {
+        if(isset($geographic_object->barrio)){
+            if ($neighborhoods_array[$i]->id == (int) $geographic_object->barrio) {
+                $neighborhoods .= "<option value='" . $neighborhoods_array[$i]->id . "' selected>" . $neighborhoods_array[$i]->nombre . "</option>";
+            } else {
+                $neighborhoods .= "<option value='" . $neighborhoods_array[$i]->id . "'>" . $neighborhoods_array[$i]->nombre . "</option>";
+            }
+        }else{
             $neighborhoods .= "<option value='" . $neighborhoods_array[$i]->id . "'>" . $neighborhoods_array[$i]->nombre . "</option>";
         }
+        
     }
 
     $level_risk_array = array('Bajo', 'Medio', 'Alto');
@@ -450,8 +452,6 @@ if ($student_code != 0) {
         'index' => $seguimientos_array['index'],
         'periodos' => $array_periodos,
     );
-    //print_r($record->peer_tracking_v2);
-    //print_r(json_encode($record->peer_tracking_v2));
 
     $enum_risk = array();
     array_push($enum_risk, "");

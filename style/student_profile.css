@@ -45,7 +45,11 @@ hr{
 }
 
 #icon-tracking{
-    color: green;
+    
+}
+
+.i-tracking{
+    color: green !important;
     font-size: 30px;
     position: absolute;
     transition:all .5s ease-in-out;

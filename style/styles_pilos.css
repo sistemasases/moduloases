@@ -44,6 +44,7 @@ header ul li{
   margin-top: 0px;
   margin-left: 0px;
   padding-left: 0px;
+  padding-right: 0px;
 }
 
 #photo_div{
@@ -112,7 +113,7 @@ header ul li{
 }
 #ficha_estudiante .cabecera > .col-md-4,
 #ficha_estudiante .cabecera > .col-md-6{
-    background: #c3c4c9;
+    background: #D4D4D4;
     min-height: 230px;
 }
 
@@ -133,17 +134,17 @@ header ul li{
     font-weight: bolder;
 }
 #ficha_estudiante .tab-content>.tab-pane{
-    padding: 20px 10px;
+    padding: 20px 20px;
 }
 #ficha_estudiante .tab-content{
-    background-color: #e5e5e5;
-    border: 1px solid #ddd;
+    background-color: rgb(233, 233, 233);
+    border: 1px solid rgb(233, 233, 233);;
     border-top-color: transparent;
-    box-shadow: 2px 2px 5px #999;
-    margin-bottom: 30px;
+    margin-bottom: 0px;
 }
 #ficha_estudiante .nav-tabs > li.active > a{
-    background-color: #e5e5e5;
+    background-color: #D4D4D4;
+    font-weight: bold;
 }
 
 #ficha_estudiante #cancel{ display: none; }
@@ -890,8 +891,13 @@ tr.shown td.details-control {
   margin-bottom: 5px;
   padding-top: 5px;
   padding-bottom: 5px;
+  padding-left: 5px;
   word-wrap: break-word;
   text-align: center;
+}
+
+.no-padding-left{
+  padding-left: 0px !important;
 }
 
 .div_risk{
@@ -1524,4 +1530,8 @@ input.no-borde-fondo.tema
 
 .cancelacion{
   background-color: #F3E2A9 !important;
+}
+
+footer#page-footer{
+  margin-top: 20px;
 }
