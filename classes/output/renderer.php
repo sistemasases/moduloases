@@ -195,7 +195,7 @@ class renderer extends plugin_renderer_base {
 
     public function render_teachers_reports_page($page){
         $data = $page->export_for_template($this);
-        return parent::render_from_template('block_ases/historical_icetex_reports', $data);
+        return parent::render_from_template('block_ases/teachers_reports', $data);
     }
     
 }

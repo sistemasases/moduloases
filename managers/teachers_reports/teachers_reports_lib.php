@@ -95,10 +95,12 @@ function get_graded_items_by_course_id($course_id){
 
 function get_datatable_array_for_report(){
     $columns = array();
-		array_push($columns, array("title"=>"Código", "name"=>"id", "data"=>"id"));
-		array_push($columns, array("title"=>"Nombre", "name"=>"nombre", "data"=>"nombre"));
-		array_push($columns, array("title"=>"Fecha de Inicio", "name"=>"fecha_inicio", "data"=>"fecha_inicio"));
-		array_push($columns, array("title"=>"Fecha de Finalización", "name"=>"fecha_fin", "data"=>"fecha_fin"));
+		array_push($columns, array("title"=>"Código del curso", "name"=>"cod_asignatura", "data"=>"cod_asignatura"));
+		array_push($columns, array("title"=>"Nombre del curso", "name"=>"fullname", "data"=>"fullname"));
+		array_push($columns, array("title"=>"Nombre del docente", "name"=>"firstname", "data"=>"firstname"));
+		array_push($columns, array("title"=>"Apellido del docente", "name"=>"lastname", "data"=>"lastname"));
+        array_push($columns, array("title"=>"Cantidad de ítems", "name"=>"count_items", "data"=>"count_items"));
+        array_push($columns, array("title"=>"Cantidad de notas registradas", "name"=>"count_grades", "data"=>"count_grades"));
 
 		$data = array(
 					"bsort" => false,
@@ -128,5 +130,6 @@ function get_datatable_array_for_report(){
                  	),
 					"order"=> array(0, "desc")
 
-				);
+                );
+    return $data;
 }
