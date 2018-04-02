@@ -294,10 +294,21 @@ function make_html_semesters($semesters)
     foreach ($semesters as $semester_name => $semester) {
         foreach ($semester as $registro) {
             $descriptions = "";
+            $promedio_semestre = $registro->promedio_semestre;
+            $promedio_acumulado = $registro->promedio_acumulado;
+
+            if($promedio_semestre == null){
+                $promedio_semestre = "NO REGISTRA";
+            }
+
+            if($promedio_acumulado == null){
+                $promedio_acumulado = "NO REGISTRA";
+            }
+            
             $descriptions .= "<div id = 'panel_academic' class = 'panel panel-default'><div id = 'info_course' class = 'row'>
                                 <div class = 'col-md-4'>Programa: <b>$registro->program_name</b></div>
-                                <div class = 'col-md-4'>Promedio Semestre: $registro->promedio_semestre</div>
-                                <div class = 'col-md-4'>Promedio Acumulado: $registro->promedio_acumulado</div>
+                                <div class = 'col-md-4'>Promedio Semestre: $promedio_semestre</div>
+                                <div class = 'col-md-4'>Promedio Acumulado: $promedio_acumulado</div>
                              </div>";
             $div_bajo = "";
             $div_estimulo = "";
