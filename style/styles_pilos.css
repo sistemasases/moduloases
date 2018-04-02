@@ -1113,7 +1113,10 @@ input.no-borde-fondo.tema
 #container_profile{
   padding-left: 0px;
   padding-right: 0px;
+}
 
+#hr_header{
+  margin-bottom: 0px;
 }
 
 .risk_graph_button,
