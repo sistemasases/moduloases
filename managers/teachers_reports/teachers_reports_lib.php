@@ -30,7 +30,9 @@ require_once(dirname(__FILE__). '/../../../../config.php');
 function get_created_items_per_course(){
     global $DB;
 
-    $query = "SELECT DISTINCT materias_criticas.id, courses.shortname, courses.fullname, 
+    $count_created_items = array();
+
+    $query = "SELECT DISTINCT materias_criticas.id, SUBSTR(courses.shortname, 0, 14) AS cod_asignatura, courses.fullname, 
                 users.firstname, users.lastname, COUNT(items.id) AS count_items
                 FROM
                     (SELECT id
@@ -62,7 +64,72 @@ function get_created_items_per_course(){
 
                             GROUP BY materias_criticas.id, courses.shortname, courses.fullname, users.firstname, users.lastname";
 
-    $result = $DB->get_records_sql($query);
+    $results = $DB->get_records_sql($query);
 
-    
+    foreach($results as $result){
+        $result->count_grades = get_graded_items_by_course_id($result->id);
+        array_push($count_created_items, $result);
+    }
+
+    return $count_created_items;    
+}
+
+//print_r(get_created_items_per_course());
+
+
+function get_graded_items_by_course_id($course_id){
+    global $DB;
+
+    $query = "SELECT count(grades.finalgrade) AS count_grades FROM 
+    {course} AS courses
+    INNER JOIN {grade_items} AS items ON items.courseid = courses.id
+    INNER JOIN {grade_grades} AS grades ON grades.itemid = items.id
+    WHERE courses.id = $course_id AND grades.finalgrade IS NOT NULL";
+
+    $result = $DB->get_record_sql($query);
+
+    $count_grades = $result->count_grades;
+
+    return $count_grades;
+}
+
+function get_datatable_array_for_report(){
+    $columns = array();
+		array_push($columns, array("title"=>"Código del curso", "name"=>"cod_asignatura", "data"=>"cod_asignatura"));
+		array_push($columns, array("title"=>"Nombre del curso", "name"=>"fullname", "data"=>"fullname"));
+		array_push($columns, array("title"=>"Nombre del docente", "name"=>"firstname", "data"=>"firstname"));
+		array_push($columns, array("title"=>"Apellido del docente", "name"=>"lastname", "data"=>"lastname"));
+        array_push($columns, array("title"=>"Cantidad de ítems", "name"=>"count_items", "data"=>"count_items"));
+        array_push($columns, array("title"=>"Cantidad de notas registradas", "name"=>"count_grades", "data"=>"count_grades"));
+
+		$data = array(
+					"bsort" => false,
+					"columns" => $columns,
+					"data" => get_created_items_per_course(),
+					"language" => 
+                	 array(
+                    	"search"=> "Buscar:",
+                    	"oPaginate" => array(
+                        	"sFirst"=>    "Primero",
+                        	"sLast"=>     "Último",
+                        	"sNext"=>     "Siguiente",
+                        	"sPrevious"=> "Anterior"
+                    		),
+                		"sProcessing"=>     "Procesando...",
+                		"sLengthMenu"=>     "Mostrar _MENU_ registros",
+                    	"sZeroRecords"=>    "No se encontraron resultados",
+                    	"sEmptyTable"=>     "Ningún dato disponible en esta tabla",
+                    	"sInfo"=>           "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+                    	"sInfoEmpty"=>      "Mostrando registros del 0 al 0 de un total de 0 registros",
+                    	"sInfoFiltered"=>   "(filtrado de un total de _MAX_ registros)",
+                    	"sInfoPostFix"=>    "",
+                    	"sSearch"=>         "Buscar:",
+                    	"sUrl"=>            "",
+                    	"sInfoThousands"=>  ",",
+                    	"sLoadingRecords"=> "Cargando...",
+                 	),
+					"order"=> array(0, "desc")
+
+                );
+    return $data;
 }
