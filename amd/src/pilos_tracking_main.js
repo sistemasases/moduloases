@@ -441,7 +441,7 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                         }
                     });
                     return value;
-                };
+                }; 
 
            $(document).on('click', '.dphpforms > #button' , function(evt) {
                      evt.preventDefault();
