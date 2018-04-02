@@ -446,7 +446,7 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
            $(document).on('click', '.dphpforms > #button' , function(evt) {
                      evt.preventDefault();
 
-                    var formData = new FormData(this);
+                    var formData = new FormData();
                     var formulario = $(this).parent();
                     var url_processor = formulario.attr('action');
                     if(formulario.attr('action') == 'procesador.php'){
