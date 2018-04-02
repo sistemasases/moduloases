@@ -679,6 +679,7 @@ function send_email_to_user( $tipoSeg, $codigoEnviarN1, $codigoEnviarN2, $codigo
 
     $monitor = get_full_user($codigoEnviarN1);
 
+
     $name_monitor=$monitor->firstname;
     $name_monitor.=" ";
     $name_monitor.=$monitor->lastname;
@@ -714,59 +715,27 @@ function send_email_to_user( $tipoSeg, $codigoEnviarN1, $codigoEnviarN2, $codigo
     {
       $subject = "Observaciones seguimiento del dia $fecha de los estudiantes $nombre, Lugar: $place";
     }
-    
-    
-    $messageHtml.="<b>OBSERVACION:<b><br><br>";
+
+    $messageHtml.="<b>OBSERVACION:</b><br><br>";
     $messageHtml.="Estimado monitor $name_monitor<br><br>";
     
     
     if($tipoSeg=="individual")
     {
-      $messageHtml.="Revisando el seguimiento realizado al estudiante $nombre  el dia $fecha, mis comentarios son los siguientes:<br><br>";
+      $messageHtml.="Revisando el seguimiento realizado al estudiante <b> $nombre </b> el dia <b> $fecha </b>, mis comentarios son los siguientes:<br><br>";
     }else
     {
       $messageHtml.="Revisando el seguimiento realizado a los estudiantes $nombre  el dia $fecha, mis comentarios son los siguientes:<br><br>";
     }
     
-    $messageHtml.=$messageText."<br><br>";
+    $messageHtml.="<i>".$messageText."</i><br><br>";
     $messageHtml.="Cordialmente<br>";
     $messageHtml.="$name_prof";
-
 
 
     $email_result = email_to_user($emailToUser, $emailFromUser->email, $subject, $messageText, $messageHtml, ", ", true);
 
 
-    if($email_result!=1)
-    {
-     return $email_result;
-    }else{
-     
-      $email_result=0;
-      //************************************************************************************************************
-      //************************************************************************************************************
-      //message resent to a 'profesional'
-      //************************************************************************************************************
-      //************************************************************************************************************
-    
-      $receiving_user = get_full_user($USER->id);
-      $emailToUser->email = $receiving_user->email;
-      $emailToUser->firstname = $receiving_user->firstname;
-      $emailToUser->lastname = $receiving_user->lastname;
-      $emailToUser->maildisplay = true;
-      $emailToUser->mailformat = 1;
-      $emailToUser->id = $receiving_user->id; 
-      $emailToUser->alternatename = '';
-      $emailToUser->middlename = '';
-      $emailToUser->firstnamephonetic = '';
-      $emailToUser->lastnamephonetic = '';
-      
-      $email_result = email_to_user($emailToUser, $emailFromUser, $subject, $messageText, $messageHtml, ", ", true);
-      if($email_result!=1)
-      {
-      return $email_result;
-      }else{
-       
        $email_result=0;
       //************************************************************************************************************
       //************************************************************************************************************
@@ -790,10 +759,6 @@ function send_email_to_user( $tipoSeg, $codigoEnviarN1, $codigoEnviarN2, $codigo
 
 
       $email_result = email_to_user($emailToUser, $emailFromUser, $subject, $messageText, $messageHtml, ", ", true);
-      
-      if( $email_result != 1 ){
-        return $email_result;
-      }else{
 
         $email_result=0;
         //************************************************************************************************************
@@ -819,12 +784,12 @@ function send_email_to_user( $tipoSeg, $codigoEnviarN1, $codigoEnviarN2, $codigo
 
         $email_result = email_to_user($emailToUser, $emailFromUser, $subject, $messageText, $messageHtml, ", ", true);
         
-      }
+      
       
 
-      }}
+      
     }catch(Exception $ex){
-      return "se presentó un error :".$ex;
+      return "Error";
     }
   
 }

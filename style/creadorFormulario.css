@@ -76,6 +76,17 @@ pre, code {
     border-radius: 3px;
 }
 
+.peer-tracking-record-review{
+    color: #333;
+    border: 1px solid #ddd;
+    padding: 0.4em;
+    font-size: 1.1em;
+    margin-bottom: 0.4em;
+    background-color: #999999;
+    border-radius: 3px;
+}
+
+
 
 .peer-tracking-record:first-child{
     margin-top: 20px;

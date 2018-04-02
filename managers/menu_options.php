@@ -202,6 +202,17 @@ function create_menu_options($userid, $blockid, $courseid)
 
             }
 
+            if ($function == 'teachers_reports') {
+                $url = new moodle_url("/blocks/ases/view/teachers_reports.php", array(
+                    'courseid' => $courseid,
+                    'instanceid' => $blockid,
+                ));
+
+                $menu_options = '<li><a href= "' . $url . '"> Reportes de Docentes </a><li>';
+                $indexed['Reportes ICETEX'] = $menu_options;
+
+            }
+
         }
 
         //ORDENA

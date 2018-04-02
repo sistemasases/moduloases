@@ -153,20 +153,31 @@ if (isset($_FILES['file'])) {
                 throw new MyException('La columna con el campo semestre es obligatoria');
             }
 
+            $hasCancel = $hasBajo = $hasEstimulo = false;
+            //validate fecha_cancelacion
+            if ($associativeTitles['fecha_cancelacion'] != null) {
+                $fecha_cancelacion = $data[$associativeTitles['fecha_cancelacion']];
+                if ($fecha_cancelacion != "" and $fecha_cancelacion != 'undefined') {
+                    $hasCancel = true;
+                }
+            }
+
             //validate promedio
             if ($associativeTitles['promedio'] != null) {
-
                 $promedio = $data[$associativeTitles['promedio']];
-                if ($promedio != '') {
+                if (!$hasCancel) {
 
-                    if (!is_numeric($promedio)) {
+                    if ($promedio != '') {
+
+                        if (!is_numeric($promedio)) {
+                            $isValidRow = false;
+                            array_push($detail_errors, [$line_count, $lc_wrongFile, ($associativeTitles['promedio'] + 1), 'promedio', 'El campo promedio debe ser de tipo numerico']);
+                        }
+
+                    } else {
                         $isValidRow = false;
-                        array_push($detail_errors, [$line_count, $lc_wrongFile, ($associativeTitles['promedio'] + 1), 'promedio', 'El campo promedio debe ser de tipo numerico']);
+                        array_push($detail_errors, [$line_count, $lc_wrongFile, ($associativeTitles['promedio'] + 1), 'promedio', 'El campo promedio es obligatorio y se encuentra vacio']);
                     }
-
-                } else {
-                    $isValidRow = false;
-                    array_push($detail_errors, [$line_count, $lc_wrongFile, ($associativeTitles['promedio'] + 1), 'promedio', 'El campo promedio es obligatorio y se encuentra vacio']);
                 }
 
             } else {
@@ -175,32 +186,26 @@ if (isset($_FILES['file'])) {
 
             //validate promedio_acumulado
             if ($associativeTitles['promedio_acumulado'] != null) {
-
                 $promedio_acumulado = $data[$associativeTitles['promedio_acumulado']];
 
-            } else {
-                throw new MyException('La columna con el campo promedio_acumulado es obligatoria');
-            }
-            $hasCancel = $hasBajo = $hasEstimulo = false;
-            //validate fecha_cancelacion
-            if ($associativeTitles['fecha_cancelacion'] != null) {
-                $fecha_cancelacion = $data[$associativeTitles['fecha_cancelacion']];
-                if ($fecha_cancelacion != "" and $fecha_cancelacion != 'undefined') {
-                    $hasCancel = true;
-                }else{
+                if (!$hasCancel) {
                     if ($promedio_acumulado != '') {
 
                         if (!is_numeric($promedio_acumulado)) {
                             $isValidRow = false;
                             array_push($detail_errors, [$line_count, $lc_wrongFile, ($associativeTitles['promedio_acumulado'] + 1), 'promedio_acumulado', 'El campo promedio_acumulado debe ser de tipo numerico']);
                         }
-    
+
                     } else {
                         $isValidRow = false;
                         array_push($detail_errors, [$line_count, $lc_wrongFile, ($associativeTitles['promedio_acumulado'] + 1), 'promedio_acumulado', 'El campo promedio_acumulado es obligatorio y se encuentra vacio']);
                     }
                 }
+
+            } else {
+                throw new MyException('La columna con el campo promedio_acumulado es obligatoria');
             }
+
             //validate estimulo
             if ($associativeTitles['puesto_estimulo'] != null) {
                 $puesto_estimulo = $data[$associativeTitles['puesto_estimulo']];
