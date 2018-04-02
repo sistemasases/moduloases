@@ -33,9 +33,12 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/d3', 'block_ases/sweetaler
             }
 
             var current_tracking_status = "";
-            $('.input-tracking').on('focus', function(event){current_tracking_status = event.target.value;});
+            $('div.slider.round').click(function(event){current_tracking_status = event.target.parentElement.children[0].checked;});
 
-            $('.input-tracking').on('change', function(){alert(current_tracking_status);});
+            $('.input-tracking').on('change', {current_tracking_status: current_tracking_status},
+                function(){
+                    self.update_tracking_status(current_tracking_status, $(this), data_init, self);
+                });
             
             var current_status = ""; 
 
@@ -587,6 +590,57 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/d3', 'block_ases/sweetaler
                 }
                 
             });
+        },update_tracking_status: function(current_status, element, data_init, object_function){
+
+            has_tracking_status = false;
+
+            if(current_status == false){
+
+                has_tracking_status = object_function.validate_tracking_statuses(data_init);
+
+                if(has_tracking_status.tracking_status){
+                    swal({
+                        title: "¿Está seguro/a de cambiar el estado?",
+                        text: "Texto a cambiar",
+                        type: "warning",
+                        showCancelButton: true,
+                        confirmButtonColor: "#d51b23",
+                        confirmButtonText: "Si",
+                        cancelButtonText: "No",
+                        closeOnConfirm: true,
+                        allowEscapeKey: false
+                    },
+                    function(isConfirm) {
+                        if (isConfirm) {
+                            element.prop('checked', true);
+                            $('#div_flags_'+has_tracking_status.academic_program_id).prop('checked', false);
+                        }
+                        else {
+                            if(current_status){
+                                element.prop('checked', true);
+                            }else{
+                                element.prop('checked', false);
+                            }
+                        }
+                });
+                }
+
+            }else{
+                element.prop('checked', true);
+            }
+
+        }, validate_tracking_statuses: function(data_init){
+
+            has_tracking_status = false;
+
+            for(i = 0; i < data_init.length; i++){
+                if(data_init[i].tracking_status == 1){
+                    has_tracking_status = true;
+                    break;
+                }
+            }
+
+            return data_init[i];
         }
     };
 
