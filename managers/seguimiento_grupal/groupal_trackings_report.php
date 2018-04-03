@@ -30,6 +30,11 @@ require_once(dirname(__FILE__).'/../student_profile/studentprofile_lib.php');
 require_once(dirname(__FILE__).'/../lib/student_lib.php');
 require_once(dirname(__FILE__).'/../user_management/user_functions.php');
 require_once(dirname(__FILE__).'/../user_management/user_lib.php');
+require_once(dirname(__FILE__).'/../dphpforms/dphpforms_forms_core.php');
+require_once(dirname(__FILE__).'/../dphpforms/dphpforms_records_finder.php');
+require_once(dirname(__FILE__).'/../dphpforms/dphpforms_get_record.php');
+require_once(dirname(__FILE__).'/../periods_management/periods_lib.php');
+
 
 $_JSON_POST_INPUT = json_decode(file_get_contents('php://input'));
 
@@ -55,7 +60,12 @@ if(isset($_POST['function']) || !(is_null($_JSON_POST_INPUT)) ){
             break;
 
         case "loadSegMonitor":
-            loadbyMonitor();
+           //Falta agregar si son periodos anteriores mostrar con antiguo formulario
+           loadbyMonitor();// --> antigua función para listar seguimientos grupales
+            break;
+
+        case "load_trackings_by_monitor";
+            load_trackings_by_monitor();
             break;
 
         case "delete":
@@ -163,8 +173,34 @@ function deleteSeg(){
          }
 }
 
+/** <new forms>
+ * Function that obtains trackings given to monitor id( (with logic of new forms)
+ * 
+ * @see load_trackings_by_monitor()
+ * @return object --> echo a json format (object)
+ */
+function load_trackings_by_monitor(){
+    global $USER;
 
-/**
+    if(isset($_POST['idinstancia']) ){
+
+        $current_semester = get_current_semester();
+        $result = get_tracking_grupal_monitor_current_semester($USER->id,$current_semester->max);
+        $render_trackings= render_monitor_groupal_trackings($result);
+  
+        echo json_encode($render_trackings);
+    }else{
+        $msg =  new stdClass();
+        $msg->error = "Error :(";
+        $msg->msg = "Error al cargar seguimientos del monitor. ";
+       echo json_encode($msg);
+    }
+}
+
+
+
+
+/**  <old forms>
  * Function that obtains a track given a monitor id (instance), date and count of tracks.
  * 
  * @see load_students()

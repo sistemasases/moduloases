@@ -29,11 +29,23 @@
     
     if( isset($_GET['form_id']) && isset($_GET['pregunta_id']) && isset($_GET['criterio']) && isset($_GET['order'])){
         header('Content-Type: application/json');
-        echo dphpforms_find_records($_GET['form_id'], $_GET['pregunta_id'], $_GET['criterio'], $_GET['order']);
+
+        if( !empty( $_GET[ 'super_su' ] ) ){
+            echo dphpforms_find_records($_GET['form_id'], $_GET['pregunta_id'], $_GET['criterio'], $_GET['order'], $_GET[ 'using_like' ], $_GET[ 'super_su' ] );
+            die();
+        }
+
+        if( (empty( $_GET[ 'using_like' ] ))&& ( empty( $_GET[ 'super_su' ] ) ) ){
+            echo dphpforms_find_records($_GET['form_id'], $_GET['pregunta_id'], $_GET['criterio'], $_GET['order']);
+        }else{
+            echo dphpforms_find_records($_GET['form_id'], $_GET['pregunta_id'], $_GET['criterio'], $_GET['order'], $_GET[ 'using_like' ] );
+        }  
+        
+        
     }
     
     //Se busca por if_from_preg (info en dphpforms_get_record)
-    function dphpforms_find_records($id_form, $id_pregunta, $criterio, $order = 'DESC'){
+    function dphpforms_find_records($id_form, $id_pregunta, $criterio, $order = 'DESC', $using_like = 'false', $super_su = 'false'){
 
         global $DB;
 
@@ -72,19 +84,53 @@
             );
         };
 
-        $sql = "SELECT FRS.id_formulario_respuestas AS id_registro, FRS.fecha_hora_registro_respuesta AS fecha_hora_registro
-        FROM {talentospilos_df_respuestas} AS R 
-        INNER JOIN 
-            (
-                SELECT FR.id_formulario, FR.fecha_hora_registro AS fecha_hora_registro_respuesta, FS.id_formulario_respuestas, FS.id_respuesta
-                FROM {talentospilos_df_form_resp} AS FR 
-                INNER JOIN {talentospilos_df_form_solu} AS FS 
-                ON FR.id = FS.id_formulario_respuestas 
-        WHERE FR.id_formulario = '" . $FORM_ID . "' AND FR.estado = 1
-            ) AS FRS 
-        ON FRS.id_respuesta = R.id
-        WHERE R.respuesta = '" . $criterio . "' AND R.id_pregunta = '" . $PREGUNTA_ID . "'
-        ORDER BY FRS.fecha_hora_registro_respuesta " . $order;
+        $sql = "";
+
+        $estado = "AND FR.estado = 1";
+
+        if( $super_su == 'true' ){
+            $estado = "";
+        }
+
+        if( $using_like == 'true' ){
+
+            $sql = "SELECT FRS.id_formulario_respuestas AS id_registro, FRS.fecha_hora_registro_respuesta AS fecha_hora_registro
+            FROM {talentospilos_df_respuestas} AS R 
+            INNER JOIN 
+                (
+                    SELECT FR.id_formulario, FR.fecha_hora_registro AS fecha_hora_registro_respuesta, FS.id_formulario_respuestas, FS.id_respuesta
+                    FROM {talentospilos_df_form_resp} AS FR 
+                    INNER JOIN {talentospilos_df_form_solu} AS FS 
+                    ON FR.id = FS.id_formulario_respuestas 
+            WHERE FR.id_formulario = '" . $FORM_ID . "' ".$estado."
+                ) AS FRS 
+            ON FRS.id_respuesta = R.id
+            WHERE R.respuesta LIKE '%" . $criterio . "%' AND R.id_pregunta = '" . $PREGUNTA_ID . "'
+            ORDER BY FRS.fecha_hora_registro_respuesta " . $order;
+
+        }else if( $using_like == 'false' ){
+
+            $sql = "SELECT FRS.id_formulario_respuestas AS id_registro, FRS.fecha_hora_registro_respuesta AS fecha_hora_registro
+            FROM {talentospilos_df_respuestas} AS R 
+            INNER JOIN 
+                (
+                    SELECT FR.id_formulario, FR.fecha_hora_registro AS fecha_hora_registro_respuesta, FS.id_formulario_respuestas, FS.id_respuesta
+                    FROM {talentospilos_df_form_resp} AS FR 
+                    INNER JOIN {talentospilos_df_form_solu} AS FS 
+                    ON FR.id = FS.id_formulario_respuestas 
+            WHERE FR.id_formulario = '" . $FORM_ID . "' ".$estado."
+                ) AS FRS 
+            ON FRS.id_respuesta = R.id
+            WHERE R.respuesta = '" . $criterio . "' AND R.id_pregunta = '" . $PREGUNTA_ID . "'
+            ORDER BY FRS.fecha_hora_registro_respuesta " . $order;
+
+        }else{
+            return json_encode(
+                array(
+                    'results' => array()
+                )
+            );
+        }
 
         $resultados = $DB->get_records_sql($sql);
         return json_encode(

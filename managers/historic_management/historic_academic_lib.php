@@ -38,7 +38,13 @@ function get_ases_id_by_code($code)
 
     $sql_query = "SELECT MAX(id) as id_moodle FROM {user} WHERE username LIKE '" . $code . "%';";
 
-    $id_moodle = $DB->get_record_sql($sql_query)->id_moodle;
+    $id_moodle = $DB->get_record_sql($sql_query);
+    //print_r($id_moodle);
+    if($id_moodle->id_moodle){
+        $id_moodle = $id_moodle->id_moodle;
+    }else{
+        return false;
+    }
 
     $sql_query = "SELECT id_ases_user as id FROM {talentospilos_user_extended} WHERE id_moodle_user =" . $id_moodle;
 
@@ -156,6 +162,12 @@ function update_historic_academic($id_student, $id_program, $id_semester, $avera
     $result = validate_historic_register($id_student, $id_program, $id_semester);
     $object_historic = new StdClass;
 
+    if($average == ''){
+        $average = null;
+    }
+    if($overall_average == ''){
+        $overall_average = null;
+    }
     if (!$result) {
         //INSERTION
 
@@ -289,6 +301,7 @@ function update_historic_cancel($id_historic, $cancel_date)
         $object_cancel->id = $id_register;
         $object_cancel->id_history = $id_historic;
         $object_cancel->fecha_cancelacion = strtotime($cancel_date);
+        //print_r($object_cancel);
 
         $update = $DB->update_record('talentospilos_history_cancel', $object_cancel);
 

@@ -25,12 +25,140 @@
  */
 
 require_once(dirname(__FILE__).'/../../../../config.php');
-require_once('../MyException.php');
-require_once ('../lib/student_lib.php');
-require_once('../periods_management/periods_lib.php');
-require_once('../pilos_tracking/pilos_tracking_lib.php');
+require_once(dirname(__FILE__).'/../MyException.php');
+require_once(dirname(__FILE__).'/../lib/student_lib.php');
+require_once(dirname(__FILE__).'/../periods_management/periods_lib.php');
+require_once(dirname(__FILE__).'/../pilos_tracking/pilos_tracking_lib.php');
+require_once(dirname(__FILE__).'/../dphpforms/dphpforms_forms_core.php');
+require_once(dirname(__FILE__).'/../dphpforms/dphpforms_records_finder.php');
+require_once(dirname(__FILE__).'/../dphpforms/dphpforms_get_record.php');
 
 
+/**
+ * Formatting of array with dates of trackings
+ *
+ * @see format_dates_trackings($array_peer_trackings_dphpforms)
+ * @param array_peer_trackings_dphpforms --> array with trackings of student
+ * @return array with formatted dates
+ *
+ */
+
+function render_monitor_groupal_trackings($groupal_tracking_v2)
+    {
+    $form_rendered='';
+    if ($groupal_tracking_v2)
+        {
+
+            foreach ($groupal_tracking_v2[0] as $key => $period) {
+
+                $year_number= $period;
+                foreach ($period as $key => $tracking) {
+
+                   $form_rendered.='<div id="dphpforms-groupal-record-'.$tracking[record][id_registro].'" class="card-block dphpforms-groupal-record groupal-tracking-record" data-record-id="'.$tracking[record][id_registro].'">Registro:   '.$tracking[record][alias_key][respuesta].'</div>';
+              }
+
+            }   
+
+            
+
+        }
+
+        return $form_rendered;
+
+    }
+
+
+function get_tracking_grupal_monitor_current_semester($monitor_id, $semester_id){
+
+    $interval = get_semester_interval($semester_id);
+    $fecha_inicio = getdate(strtotime($interval->fecha_inicio));
+    $fecha_fin = getdate(strtotime($interval->fecha_fin));
+    $ano_semester  = $fecha_inicio['year'];
+   
+    $array_peer_trackings_dphpforms = dphpforms_find_records('seguimiento_grupal', 'seguimiento_grupal_id_creado_por', $monitor_id, 'DESC');
+    $array_peer_trackings_dphpforms = json_decode($array_peer_trackings_dphpforms);
+    $array_detail_peer_trackings_dphpforms = array();
+    foreach ($array_peer_trackings_dphpforms->results as &$peer_trackings_dphpforms) {
+        array_push($array_detail_peer_trackings_dphpforms, json_decode(dphpforms_get_record($peer_trackings_dphpforms->id_registro, 'fecha')));
+    }
+
+    $array_tracking_date = array();
+    foreach ($array_detail_peer_trackings_dphpforms as &$peer_tracking) {
+        foreach ($peer_tracking->record->campos as &$tracking) {
+            if ($tracking->local_alias == 'fecha') {
+                array_push($array_tracking_date, strtotime($tracking->respuesta));
+            }
+        }
+    }
+
+    rsort($array_tracking_date);
+
+    $seguimientos_ordenados = new stdClass();
+    $seguimientos_ordenados->index = array();
+    //Inicio de ordenamiento
+    $periodo_actual = [];
+    for($l = $fecha_inicio['mon']; $l <= $fecha_fin['mon']; $l++ ){
+        array_push($periodo_actual, $l);
+    }
+    for ($x = 0; $x < count($array_tracking_date); $x++) {
+        $string_date = $array_tracking_date[$x];
+        $array_tracking_date[$x] = getdate($array_tracking_date[$x]);
+        if (property_exists($seguimientos_ordenados, $array_tracking_date[$x]['year'])) {
+            if (in_array($array_tracking_date[$x]['mon'], $periodo_actual)) {
+                for ($y = 0; $y < count($array_detail_peer_trackings_dphpforms); $y++) {
+                    if ($array_detail_peer_trackings_dphpforms[$y]) {
+                        foreach ($array_detail_peer_trackings_dphpforms[$y]->record->campos as &$tracking) {
+                            if ($tracking->local_alias == 'fecha') {
+                                if (strtotime($tracking->respuesta) == $string_date) {
+                                    array_push($seguimientos_ordenados->$array_tracking_date[$x]['year']->periodo, $array_detail_peer_trackings_dphpforms[$y]);
+                                    $array_detail_peer_trackings_dphpforms[$y] = null;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+            } 
+
+        } else {
+            array_push($seguimientos_ordenados->index, $array_tracking_date[$x]['year']);
+            $seguimientos_ordenados->$array_tracking_date[$x]['year']->year = $array_tracking_date[$x]['year'];
+            $seguimientos_ordenados->$array_tracking_date[$x]['year']->periodo = array();
+
+            //$seguimientos_ordenados->$array_tracking_date[$x]['year']->year = $array_tracking_date[$x]['year'];
+            if(in_array($array_tracking_date[$x]['mon'], $periodo_actual)){
+                
+                for($y = 0; $y < count($array_detail_peer_trackings_dphpforms); $y++){
+                    if($array_detail_peer_trackings_dphpforms[$y]){
+                        foreach ($array_detail_peer_trackings_dphpforms[$y]->record->campos as &$tracking) {
+                            if ($tracking->local_alias == 'fecha') {
+                                if (strtotime($tracking->respuesta) == $string_date) {
+                                    array_push($seguimientos_ordenados->$array_tracking_date[$x]['year']->periodo, $array_detail_peer_trackings_dphpforms[$y]);
+                                    $array_detail_peer_trackings_dphpforms[$y] = null;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    $seguimientos_array = json_decode(json_encode($seguimientos_ordenados), true);
+    $array_periodos = array();
+    for ($x = 0; $x < count($seguimientos_array['index']); $x++) {
+        array_push($array_periodos, $seguimientos_array[$seguimientos_array['index'][$x]]);
+    }
+    /*$peer_tracking_v2 = array(
+        'index' => $seguimientos_array['index'],
+        'periodos' => $array_periodos,
+    );*/
+
+    //return;
+    return $array_periodos;
+
+}
 
 /**
  * Obtains all students related with a given monitor monitor 
@@ -45,10 +173,10 @@ function get_grupal_students($id_monitor, $idinstancia){
     global $DB;
     $semestre_act = get_current_semester();
 
-    $sql_query="SELECT *  FROM mdl_user AS userm 
+    $sql_query="SELECT *  FROM {user} AS userm 
     INNER JOIN {talentospilos_user_extended} as user_ext  ON user_ext.id_moodle_user= userm.id
     INNER JOIN (SELECT *,id AS idtalentos FROM {talentospilos_usuario}) AS usuario ON id_ases_user = usuario.id 
-    where  idtalentos in (select id_estudiante from {talentospilos_monitor_estud} where id_monitor =".$id_monitor." AND id_instancia=".$idinstancia." and id_semestre=".$semestre_act->max.")";
+    where  idtalentos in (select id_estudiante from {talentospilos_monitor_estud} where id_monitor =".$id_monitor." AND id_instancia=".$idinstancia." and id_semestre=".$semestre_act->max." and tracking_status=1)";
     
    $result = $DB->get_records_sql($sql_query);
    return $result;

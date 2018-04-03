@@ -39,7 +39,7 @@
         array_push($columns, array("title"=>"Apellido", "name"=>"lastname", "data"=>"lastname"));
 		array_push($columns, array("title"=>"Semestre".$semester_options, "name"=>"nombre", "data"=>"nombre"));
 		array_push($columns, array("title"=>"Código resolución".$resolution_options, "name"=>"codigo_resolucion", "data"=>"codigo_resolucion"));
-        array_push($columns, array("title"=>"Monto", "name"=>"monto_estudiante", "data"=>"monto_estudiante"));
+        array_push($columns, array("title"=>"Monto", "className"=>"dt-body-right", "name"=>"monto_estudiante", "data"=>"monto_estudiante"));
         array_push($columns, array("title"=>"Estado en el programa", "name"=>"program_status", "data"=>"program_status"));
         array_push($columns, array("title"=>"Fecha de cancelación de semestre", "name"=>"fecha_cancel", "data"=>"fecha_cancel"));
 

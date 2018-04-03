@@ -1,6 +1,3 @@
-.container{
-    margin-top: 3em;
-}
 li{
     cursor:pointer;
 }
@@ -79,6 +76,17 @@ pre, code {
     border-radius: 3px;
 }
 
+.peer-tracking-record-review{
+    color: #333;
+    border: 1px solid #ddd;
+    padding: 0.4em;
+    font-size: 1.1em;
+    margin-bottom: 0.4em;
+    background-color: #999999;
+    border-radius: 3px;
+}
+
+
 
 .peer-tracking-record:first-child{
     margin-top: 20px;
@@ -89,6 +97,34 @@ pre, code {
 }
 
 .peer-tracking-record:hover{
+    cursor: pointer;
+    color: #000;
+    border-color: #333;
+    box-shadow: 0px 0px 15px -3px #888888;
+}
+
+
+
+.groupal-tracking-record{
+    color: #333;
+    border: 1px solid #ddd;
+    padding: 0.4em;
+    font-size: 1.1em;
+    margin-bottom: 0.4em;
+    background-color: #f5f5f5;
+    border-radius: 3px;
+}
+
+
+.groupal-tracking-record:first-child{
+    margin-top: 20px;
+}
+
+.groupal-tracking-record:last-child{
+    margin-bottom: 20px;
+}
+
+.groupal-tracking-record:hover{
     cursor: pointer;
     color: #000;
     border-color: #333;
@@ -119,9 +155,30 @@ pre, code {
     margin-top: 0px;
 }
 
+#modal_v2_edit_peer_tracking > .mymodal-content, 
+#modal_v2_peer_tracking > .mymodal-content, 
+#modal_seguimiento_geografico > .mymodal-content,
+#modal_primer_acercamiento > .mymodal-content{
+    width: 80%;
+    padding: 0px;
+}
+
+.mymodal-close{
+    margin-top: 10px;
+}
+
+
+.big_textarea{
+    min-height: 7em !important;
+}
 
 .peer_trackings_v2{
     margin-bottom: 10px;
+}
+
+.ajuste_limpiar{
+    display: inline;
+    margin-right: 3em;
 }
 
 /*Definición de los estilos para los formularios que dependen de dphpforms*/
@@ -157,11 +214,23 @@ pre, code {
     padding-bottom: 2em;
 }
 
+.dphpforms-updater > .ajuste_tematicas > .checkbox:nth-child(5){
+    margin-top: 10px;
+}
+
 .dphpforms-updater > .ajuste_tematicas > .checkbox:nth-child(4){
     margin-top: 10px;
 }
 
+.dphpforms-response > .ajuste_tematicas > .checkbox:nth-child(2){
+    margin-top: 10px;
+}
+
 .dphpforms-response > .ajuste_tematicas > .checkbox:nth-child(3){
+    margin-top: 10px;
+}
+
+.dphpforms-response > .ajuste_tematicas > .checkbox:nth-child(4){
     margin-top: 10px;
 }
 
@@ -212,6 +281,15 @@ pre, code {
 
 .ajuste_radio_seguimientos{
     margin-top: 0px;
+}
+
+.outside{
+    position: absolute;
+    width: calc( 100% - 20px );
+    height: 100%;
+    /*background-color: rgba(78, 12, 185, 0.3);*/
+    position: fixed;
+    margin-right: 20px;
 }
 
 /*Finalización de definición de estilos para el formulario de seguimientos*/

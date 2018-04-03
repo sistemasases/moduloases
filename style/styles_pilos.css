@@ -1535,3 +1535,7 @@ input.no-borde-fondo.tema
 footer#page-footer{
   margin-top: 20px;
 }
+
+.historic{
+  padding: 1%;
+}

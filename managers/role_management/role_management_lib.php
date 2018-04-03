@@ -6,6 +6,26 @@ require_once(dirname(__FILE__).'/../user_management/user_lib.php');
 require_once(dirname(__FILE__).'/../MyException.php');
 
 
+
+/**
+ * Función que obtiene el codigo del jefe de un monitor (practicante) en un periodo 
+ * dado
+ *
+ * @see get_boss_of_monitor_by_semester()
+ * @return object rol
+ */
+
+function get_boss_of_monitor_by_semester($id_monitor,$id_semester,$id_instance){
+  global $DB;
+
+    $sql_query="SELECT * FROM {talentospilos_user_rol} where id_usuario=$id_monitor and id_semestre=$id_semester and id_instancia=$id_instance";
+
+    $practicant = $DB->get_record_sql($sql_query);
+    return $practicant;
+}
+
+
+
 /**
  * Función que obtiene los practicantes de un profesional en el semestre actual.
  *
@@ -290,8 +310,9 @@ function monitor_student_assignment($username_monitor, $array_students, $idinsta
         $result = $DB->get_record_sql($sql_query);
         $id_boss =  $result->id;
     }
-    
+    if($id_role){
     $array->id_rol = $id_role->id;
+    }
     $array->id_usuario = $id_user_moodle->id;
     $array->estado = $state;
     $array->id_semestre = $id_semester->id;

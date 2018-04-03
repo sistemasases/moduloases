@@ -227,8 +227,13 @@
                                 condición de required para el primer radio.
                             */
                             $required_temporal = $field_attr_required;
+
+                            $field_attr_group_radio_class = '';
+                            if(property_exists($atributos, 'groupradioclass')){
+                                $field_attr_group_radio_class = $atributos->{'groupradioclass'};
+                            }
                                               
-                            $html = $html .  '<div class="opcionesRadio" style="margin-bottom:0.4em">';
+                            $html = $html .  '<div class="opcionesRadio ' .  $field_attr_group_radio_class . '" style="margin-bottom:0.4em">';
                             for($x = 0; $x < $number_opciones; $x++){
                                 $opcion = (array) $array_opciones[$x];
 

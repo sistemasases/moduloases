@@ -294,7 +294,12 @@
                                 $field_attr_radioclass = $atributos->{'radioclass'};
                             }
 
-                            $html = $html .  '<div class="opcionesRadio" style="margin-bottom:0.4em">
+                            $field_attr_group_radio_class = '';
+                            if(property_exists($atributos, 'groupradioclass')){
+                                $field_attr_group_radio_class = $atributos->{'groupradioclass'};
+                            }
+
+                            $html = $html .  '<div class="opcionesRadio ' .  $field_attr_group_radio_class . '" style="margin-bottom:0.4em">
                             <input type="hidden" name="'.$row->{'mod_id_formulario_pregunta'}.'"  class="'.$row->{'mod_id_formulario_pregunta'}.'" value="-#$%-" '.$enabled.'>';
                             
                             /*

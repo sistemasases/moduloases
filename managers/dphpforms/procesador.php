@@ -122,10 +122,20 @@ function dphpforms_update_respuesta($completed_form, $RECORD_ID){
         $different_flag = false;
         
         foreach ($registered_respuestas as &$respuesta) {
-            foreach ($obj_form_completed->{'respuestas'} as &$respuestaActualizada) {
-                
-                if( $respuesta['id'] == $respuestaActualizada->id ){
+            /* 
+                Asumimos que hay respuestas sin valores previos ni resgistros en 
+                la base de datos
+             */
+            //$form_structure_was_changed = true;
 
+            foreach ($obj_form_completed->{'respuestas'} as &$respuestaActualizada) {
+
+                if( $respuesta['id'] == $respuestaActualizada->id ){
+                    /* 
+                        Si encontramos el registro previo a la respuesta, asumimos que no
+                        existen cambios en la estructura del formulario.
+                    */
+                    //$form_structure_was_changed = false;
                     if( $respuesta['valor'] !== $respuestaActualizada->valor ){
                         //echo ' SE VA A ACTUALIZAR: ' . $respuesta['id'] ;
                         array_push( $updated_respuestas, array( 'id' => $respuesta['id'], 'valor' => $respuestaActualizada->valor ) );
@@ -153,7 +163,42 @@ function dphpforms_update_respuesta($completed_form, $RECORD_ID){
                     
                 }*/
             }
+
+            /* Si no se encuentra una respuesta previa en las respuestas registradas */
+            /*if( $form_structure_was_changed ){
+                array_push( $updated_respuestas, array('id' => $respuesta['id'], 'valor' => $respuesta['valor']) );
+                $different_flag = true;
+            }*/
         }
+
+        // Inicia el proceso de trabajo sobre las respuestas no registradas
+        if( count( $registered_respuestas ) != count( $obj_form_completed->{'respuestas'} )  ){
+            //$new_respuestas = array();
+            foreach ($obj_form_completed->{'respuestas'} as &$respuestaActualizada) {
+                $is_not_matched = true;
+                foreach ($registered_respuestas as &$respuesta) {
+                    if( $respuesta['id'] == $respuestaActualizada->id ){
+                        $is_not_matched = false;
+                        break;
+                    }
+                }
+                if( $is_not_matched ){
+                    
+                    $new_respuesta = new stdClass();
+                    $new_respuesta->id =  $respuestaActualizada->id;
+                    $new_respuesta->valor = $respuestaActualizada->valor;
+
+                    $id_respuesta_db = dphpforms_store_respuesta( $new_respuesta );
+                    dphpforms_store_form_soluciones($RECORD_ID, $id_respuesta_db);
+
+                    array_push( $updated_respuestas, array( 'id' => $respuestaActualizada->id, 'valor' => $new_respuesta->valor ) );
+                    
+                }
+            }
+            $different_flag = true;
+        }
+
+        //print_r( $updated_respuestas );
 
         $form_expected_respuestas =  dphpforms_get_expected_respuestas($obj_form_completed->{'formulario'}->{'id'});
     
@@ -162,6 +207,8 @@ function dphpforms_update_respuesta($completed_form, $RECORD_ID){
             //print_r( (array) $obj_form_completed->{'respuestas'} ) ;
             $flag = true;
             $array_form_respuestas = $updated_respuestas;
+
+            //print_r( $array_form_respuestas );
             
             for($m = 0; $m < count($array_form_respuestas); $m++ ){
                 if(!is_null($form_expected_respuestas[$z]) && !is_null($array_form_respuestas[$m])){
@@ -201,6 +248,10 @@ function dphpforms_update_respuesta($completed_form, $RECORD_ID){
 
         $updated_respuestas =  $all_respuestas_updated;
 
+
+        /*if( count( $registered_respuestas ) != count( $obj_form_completed->{'respuestas'} )  ){
+            $different_flag = true;
+        }*/
         
         if($different_flag){
             
@@ -339,7 +390,7 @@ function dphpforms_new_store_respuesta($completed_form){
     //print_r($all_respuestas);
     //die();
 
-    $processable = dphpforms_reglas_validator(json_decode(json_encode($all_respuestas)), $reglas);
+    $processable = dphpforms_reglas_validator( json_decode( json_encode($all_respuestas) ), $reglas );
 
     if($processable){
         //echo "\n¿Procesable?: Sí.\n";
@@ -436,8 +487,8 @@ function dphpforms_new_store_respuesta($completed_form){
 
 }
 
-
-function dphpforms_update_completed_form($form_identifier_respuesta, $pregunta_identifier, $new_value){
+// $pregunta_identifier Es el identificador que relaciona una pregunta con un formulario
+function dphpforms_update_completed_form( $form_identifier_respuesta, $pregunta_identifier, $new_value ){
     
     global $DB;
     
@@ -458,17 +509,33 @@ function dphpforms_update_completed_form($form_identifier_respuesta, $pregunta_i
        ";
 
        $result = $DB->get_record_sql($sql);
-       $respuesta_identifier = $result->id_respuesta;
 
-       $obj_updated_respuesta = new stdClass();
-       $obj_updated_respuesta->id = $respuesta_identifier;
-       $obj_updated_respuesta->respuesta = $new_value;
-       
-       $obj_updated_respuesta->fecha_hora_registro = "now()";
+       //Registrar aquí
 
-       $DB->update_record('talentospilos_df_respuestas', $obj_updated_respuesta, $bulk=false);
+       if( $result ){
+        $respuesta_identifier = $result->id_respuesta;
 
-       //echo 'IDPREGUNTA' .$pregunta_identifier;
+        $obj_updated_respuesta = new stdClass();
+        $obj_updated_respuesta->id = $respuesta_identifier;
+        $obj_updated_respuesta->respuesta = $new_value;
+        $obj_updated_respuesta->fecha_hora_registro = "now()";
+
+        //echo json_encode( $obj_updated_respuesta );
+
+        $DB->update_record('talentospilos_df_respuestas', $obj_updated_respuesta, $bulk=false);
+       };
+
+       /*}else{
+        $obj_updated_respuesta = new stdClass();
+        $obj_updated_respuesta->respuesta = $new_value;
+        $obj_updated_respuesta->id_pregunta = $pregunta_identifier;
+        $obj_updated_respuesta->fecha_hora_registro = "now()";
+
+        echo json_encode( $obj_updated_respuesta );*/
+
+        //$DB->insert_record('talentospilos_df_respuestas', $obj_updated_respuesta, $returnid=true, $bulk=false);
+
+       //}
 
        return true;
 }
