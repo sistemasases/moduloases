@@ -237,7 +237,7 @@ function get_not_assign_students($general_fields=null, $conditions, $academic_fi
     // ********* Se arman las clausulas de la consulta sql ***********
 
     // ***** Select clause *****
-    $select_clause = "SELECT ";
+    $select_clause = "SELECT DISTINCT ";
     $from_clause = "";
     $where_clause = " WHERE ";
     $sub_query_cohort = "";
@@ -403,7 +403,7 @@ function get_ases_report($general_fields=null, $conditions, $risk_fields=null, $
     // ********* Se arman las clausulas de la consulta sql ***********
 
     // ***** Select clause *****
-    $select_clause = "SELECT ";
+    $select_clause = "SELECT DISTINCT ";
     $from_clause = "";
     $where_clause = " WHERE ";
     $sub_query_cohort = "";
@@ -462,7 +462,7 @@ function get_ases_report($general_fields=null, $conditions, $risk_fields=null, $
                                                                                  INNER JOIN {cohort} AS cohorts ON cohorts.id = members_cohort.cohortid
                                          WHERE cohorts.idnumber = '$conditions[0]') AS cohort_query ON cohort_query.username = user_moodle.username ";
     }else if($conditions[0] == 'TODOS'){
-        $sub_query_cohort .= " INNER JOIN (SELECT cohort.id, moodle_user.username 
+        $sub_query_cohort .= " INNER JOIN (SELECT cohort.id, moodle_user.username
                                             FROM {cohort} AS cohort INNER JOIN {talentospilos_inst_cohorte} AS instance_cohort ON cohort.id = instance_cohort.id_cohorte
                                                                     INNER JOIN {cohort_members} AS cohort_member ON cohort_member.cohortid = cohort.id
                                                                     INNER JOIN {user} AS moodle_user ON moodle_user.id = cohort_member.userid
@@ -497,7 +497,7 @@ function get_ases_report($general_fields=null, $conditions, $risk_fields=null, $
                                                 INNER JOIN {talentospilos_rol} AS roles ON user_role.id_rol = roles.id
                       WHERE user_role.id_semestre = $id_current_semester AND user_role.estado = 1 AND user_role.id_usuario = $user_id";
 
-        $user_role = $DB->get_record_sql($sql_query);
+        $user_role = $DB->get_records_sql($sql_query);
 
         switch($user_role->nombre_rol){
             case 'director_prog':
