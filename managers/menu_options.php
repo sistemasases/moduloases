@@ -208,8 +208,8 @@ function create_menu_options($userid, $blockid, $courseid)
                     'instanceid' => $blockid,
                 ));
 
-                $menu_options = '<li><a href= "' . $url . '"> Reportes de Docentes </a><li>';
-                $indexed['Reportes ICETEX'] = $menu_options;
+                $menu_options = '<li><a href= "' . $url . '"> Reportes por docente </a><li>';
+                $indexed['Reportes por docente'] = $menu_options;
 
             }
 
