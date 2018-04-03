@@ -714,71 +714,73 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/d3', 'block_ases/sweetaler
     }
 
     function validateFormProfile(form) {
+
+        console.log(form);
         // Validación documento
-        if (has_letters(form[5].value)) {
+        if (has_letters(form[4].value)) {
             swal('Error',
                 'El campo "Documento" solo debe contener números',
                 'error');
             return 0;
         }
         // Validación documento vacio
-        else if (form[5].value == "") {
+        else if (form[4].value == "") {
             swal('Error',
                 'El campo "Documento" no puede estar vacio',
                 'error');
             return 0;
         }
         // Validación tipo de documento vacio
-        else if (form[6].value == "") {
+        else if (form[3].value == "") {
             swal('Error',
                 'El campo "Tipo de documento" no puede estar vacio',
                 'error');
             return 0;
         }
         // Validación campo teléfono 1
-        else if (has_letters(form[8].value)) {
+        else if (has_letters(form[6].value)) {
             swal('Error',
                 'El campo "Teléfono 1" solo debe contener números',
                 'error');
             return 0;
         }
         // Validación campo teléfono 2
-        else if (has_letters(form[9].value)) {
+        else if (has_letters(form[7].value)) {
             swal('Error',
                 'El campo "Teléfono 2" solo debe contener números',
                 'error');
             return 0;
         }
         // Validación campo teléfono 3
-        else if (has_letters(form[10].value)) {
+        else if (has_letters(form[8].value)) {
             swal('Error',
                 'El campo "Teléfono 3" solo debe contener números',
                 'error');
             return 0;
         }
         // Validación campo email alternativo (emailpilos) no vacio
-        else if (form[11].value == "") {
+        else if (form[9].value == "") {
             swal('Error',
                 'El campo "Email alternativo" no puede estar vacio',
                 'error');
             return 0;
         }
         // Validación formato email alternativo (emailpilos)
-        else if (is_email(form[11].value)) {
+        else if (is_email(form[9].value)) {
             swal('Error',
                 'El formato del correo alternativo es incorrecto. \n El formato correcto debería ser ejemplo@ejemplo.com',
                 'error');
             return 0;
         }
         // Validación nombre acudiente no vacio
-        else if (form[12].value == "") {
+        else if (form[10].value == "") {
             swal('Error',
                 'El campo "Nombre acudiente" no puede estar vacio',
                 'error');
             return 0;
         }
         // Validación teléfono acudiente solo números
-        else if (has_letters(form[13].value)) {
+        else if (has_letters(form[11].value)) {
             swal('Error',
                 'El campo "Teléfono acudiente" solo debe contener números',
                 'error');
