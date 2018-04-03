@@ -622,7 +622,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/d3', 'block_ases/sweetaler
                                 element.prop('checked', false);
                             }
                         }
-                });
+                    });
                 }
 
             }else{
