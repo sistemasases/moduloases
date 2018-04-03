@@ -52,7 +52,12 @@
                   {{cod_univalle}} - {{nombre_programa}}    
                 </td>
                 <td class="col-sm-3">
+                  {{#update_program_status_sp}}
                   <select class="select_statuses_program" id="select-{{academic_program_id}}">
+                  {{/update_program_status_sp}}
+                  {{^update_program_status_sp}}
+                  <select class="select_statuses_program" id="select-{{academic_program_id}}" disabled>
+                  {{/update_program_status_sp}}
                       <option value="ACTIVO">ACTIVO</option>
                       <option value="APLAZADO">APLAZADO</option>
                       <option value="EGRESADO">EGRESADO</option>
@@ -221,7 +226,6 @@
         </div>
       </div>
 
-      <span class="btn btn-info" id="go_back">REGRESAR</span>
     </form>
   </div>
 

@@ -77,13 +77,17 @@
                 <textarea name="" id="observaciones_anteriores" class="col-md-12" readonly>{{observations}}</textarea>
             </div>
         </div>
-            
     </div>
-    <div class="col-sm-offset-9 col-sm-3" id="buttons_edit_div">
-        <button class="btn-primary col-sm-7" type="button" id="save" name="save">Actualizar Datos</button>
-        <button class="btn-primary col-sm-4 col-sm-offset-1" type="button" id="cancel">Cancelar</button>
+    <br>
+    <div class="col-sm-12" id="buttons_edit_div">
+        <div class="col-sm-2 col-sm-offset-4">
+            <button class="btn-primary" type="button" id="save" name="save">Actualizar Datos</button>
+        </div>
+        <div class="col-sm-1-col-sm-offset-1">
+            <button class="btn-primary col-sm-1" type="button" id="cancel">Cancelar</button>
+        </div>        
         {{#update_general_tab_sp}}
-        <button class="btn-primary col-sm-6 col-sm-offset-3" type="button" id="editar_ficha">Editar Ficha</button>
+        <button class="btn-primary col-sm-2 col-sm-offset-5" type="button" id="editar_ficha">Editar Ficha</button>
         {{/update_general_tab_sp}}
     </div>
 </div>
