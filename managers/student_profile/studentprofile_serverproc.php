@@ -34,8 +34,7 @@ if(isset($_POST["func"])){
     if($_POST['func'] == 'save_profile'){
         $form = $_POST['form'];
         save_profile($form);
-
-    } elseif($_POST['func'] == 'save_icetex_status') {
+    }elseif($_POST['func'] == 'save_icetex_status') {
         
         if(isset($_POST['id_ases'])){
             $id_ases = $_POST['id_ases'];
@@ -71,7 +70,33 @@ if(isset($_POST["func"])){
 
         save_status_icetex_proc($new_status, $id_ases, $id_reason, $observations);
 
-    } elseif($_POST['func'] == 'save_ases_status'){
+    }elseif($_POST['func'] == 'update_status_program'){
+        if(isset($_POST['program_id']) && isset($_POST['status']) && isset($_POST['student_id'])){
+
+            $result = update_status_program($_POST['program_id'], $_POST['status'], $_POST['student_id']);
+            $msg = new stdClass();
+
+            if($result){                
+                $msg->title = 'Éxito';
+                $msg->msg = 'Estado del programa actualizado con éxito.';
+                $msg->status = 'success';
+            }else{
+                $msg->title = 'Error';
+                $msg->msg = 'Error al guardar estado en la base de datos.';
+                $msg->status = 'error';
+            }
+
+            echo json_encode($msg);
+        }else{
+            $msg_error = new stdClass();
+            $msg_error->title = 'Error';
+            $msg_error->msg = 'Error al conectarse con el servidor.';
+            $msg_error->status = 'error';
+
+            echo json_encode($msg_error);
+        }
+
+    }elseif($_POST['func'] == 'save_ases_status'){
 
         if(isset($_POST['id_ases'])){
             $id_ases = $_POST['id_ases'];
@@ -107,23 +132,22 @@ if(isset($_POST["func"])){
 
         save_status_ases_proc($new_status, $id_ases, $id_reason, $observations);
 
-    } elseif($_POST['func'] == 'save_tracking_peer'){
+    }elseif($_POST['func'] == 'save_tracking_peer'){
         save_tracking_peer_proc();
-    } elseif($_POST['func'] == 'delete_tracking_peer' && isset($_POST['id_tracking'])){
+    }elseif($_POST['func'] == 'delete_tracking_peer' && isset($_POST['id_tracking'])){
         $id_tracking_peer = $_POST['id_tracking'];
         delete_tracking_peer_proc($id_tracking_peer);
-    } elseif($_POST['func'] == 'is_student'){
+    }elseif($_POST['func'] == 'is_student'){
         $code_student = $_POST['code_student'];
         validate_student_proc($code_student);
-    } else if($_POST['func'] == 'send_email'){
+    }else if($_POST['func'] == 'send_email'){
         send_email($_POST["risk_array"], $_POST["observations_array"],'' ,$_POST["id_student_moodle"], $_POST["id_student_pilos"], $_POST["date"],'', '', $_POST["url"]);
-    }
-    else {
+    }else{
         $msg->msg = "No se reconoce la función a ejecutar. Contacte al área de sistemas.";
         echo json_encode($msg);
     }
 }else{
-    $msg->msg = "No se es posible contactar con el servidor. Revise su conexión a Internet.";
+    $msg->msg = "No es posible contactar con el servidor. Revise su conexión a Internet.";
     echo json_encode($msg);
 }
 

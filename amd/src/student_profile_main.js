@@ -4,22 +4,54 @@
  * @copyright  ASES
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
- 
+
  /**
   * @module block_ases/student_profile_main
   */
 
-define(['jquery', 'block_ases/bootstrap', 'block_ases/d3', 'block_ases/sweetalert', 'block_ases/jqueryui','block_ases/select2', 'block_ases/Chart'], function($, bootstrap, d3, sweetalert, jqueryui, select2) {
-    
+define(['jquery', 'block_ases/bootstrap', 'block_ases/d3', 'block_ases/sweetalert',
+        'block_ases/jqueryui','block_ases/select2', 'block_ases/Chart'], function($, bootstrap, d3) {
+
     return {
-        init: function() {
-
-            
+        init: function(data_init) {
+            console.log(data_init);
             // Carga una determinada pestaña
-
             var parameters = get_url_parameters(document.location.search);
             var panel_collapse = $('.panel-collapse.collapse.in');
 
+            var self = this;
+
+            // Manage statuses
+            for (var i = 0, len = data_init.length; i < len; i++){
+                $('#select-'+data_init[i].academic_program_id+' option[value='+data_init[i].program_status+']').attr('selected', true);
+                if(data_init[i].program_status == "ACTIVO"){
+                    $('#tr-'+data_init[i].id_moodle_user).addClass('is-active');
+                }
+                if(data_init[i].tracking_status == "1"){
+                    $('#div_flags_'+data_init[i].academic_program_id).prop('checked', true);
+                }
+            }
+
+            var current_tracking_status = "";
+            $('div.slider.round').click(function(event){current_tracking_status = event.target.parentElement.children[0].checked;});
+
+            $('.input-tracking').on('change', {current_tracking_status: current_tracking_status},
+                function(){
+                    self.update_tracking_status(current_tracking_status, $(this), data_init, self);
+                });
+            
+            var current_status = ""; 
+
+            $('.select_statuses_program').on('focus', function(event){current_status = event.target.value});
+            
+            $('.select_statuses_program').on('change', {current_status: current_status}, 
+                function(){
+                    self.update_status_program(current_status, $(this));
+                });
+
+            $('#icon-tracking').on('click', self.update_status_ases);
+
+            // 
             switch(parameters.tab){
                 case "socioed_tab":
                     $('#general_li').removeClass('active');
@@ -35,8 +67,9 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/d3', 'block_ases/sweetaler
             }
 
             $("#asignados").select2({
+                width: 'resolve',
+                height: 'resolve',
                 language: {
-
                     noResults: function() {
 
                         return "No hay resultado";
@@ -46,10 +79,9 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/d3', 'block_ases/sweetaler
                         return "Buscando..";
                     }
                 },
-                dropdownAutoWidth: true,
             });
 
-            $("#search").on('click', function(){
+            $("#asignados").on('change', function(){
                 var code = $('#asignados').val();
                 var student_code = code.split('-')[0];
 
@@ -59,9 +91,6 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/d3', 'block_ases/sweetaler
             var modal_peer_tracking = $('#modal_peer_tracking');
 
             edit_profile_act();
-            go_back();
-            manage_icetex_status();
-            manage_ases_status();
             modal_manage();
             modal_peer_tracking_manage();
             modal_risk_graphic_manage();
@@ -126,7 +155,6 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/d3', 'block_ases/sweetaler
             });
 
             // Controles para editar formulario de pares
-
             $('.btn-primary.edit_peer_tracking').on('click', function(){
                 var id_button = $(this).attr('id');
                 var id_tracking = id_button.substring(14);
@@ -158,7 +186,6 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/d3', 'block_ases/sweetaler
 
             // Despliega el modal de seguimiento v2
             //Se mueve a dphpforms_form_renderer.js
-
             var RadarChart = {
                 draw: function(id, d, options){
                 var cfg = {
@@ -373,80 +400,79 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/d3', 'block_ases/sweetaler
 
             // Controles modal gráfico de riesgos
             $('#view_graphic_button').on('click', function(){
-                
-                            var array_level_risk = new Object();
-                            array_level_risk['div_no_risk'] = 0;
-                            array_level_risk['div_high_risk'] = 1;
-                            array_level_risk['div_medium_risk'] = 2;
-                            array_level_risk['div_low_risk'] = 3;
-                
-                            var class_list_individual = document.getElementById('individual_risk').className.split(/\s+/);
-                            var class_list_familiar = document.getElementById('familiar_risk').className.split(/\s+/);
-                            var class_list_academic = document.getElementById('academic_risk').className.split(/\s+/);
-                            var class_list_economic = document.getElementById('economic_risk').className.split(/\s+/);
-                            var class_list_life = document.getElementById('life_risk').className.split(/\s+/);
-                            var class_list_geographic = document.getElementById('geo_risk').className.split(/\s+/);
-                
-                            var individual_risk = array_level_risk[class_list_individual[0]];
-                            var familiar_risk = array_level_risk[class_list_familiar[0]];
-                            var economic_risk = array_level_risk[class_list_economic[0]];
-                            var academic_risk = array_level_risk[class_list_academic[0]];
-                            var life_risk = array_level_risk[class_list_life[0]];
-                            var geographic_risk = array_level_risk[class_list_geographic[0]];
-                
-                            var w = 500,
-                                h = 500;
-                
-                            var colorscale = d3.scale.category10();
-                
-                            //Data
-                            var d = [
-                                [{
-                                    axis: "Individual",
-                                    value: individual_risk
-                                }, {
-                                    axis: "Económico",
-                                    value: economic_risk
-                                }, {
-                                    axis: "Familiar",
-                                    value: familiar_risk
-                                }, {
-                                    axis: "Vida Universitaria",
-                                    value: 1
-                                }, {
-                                    axis: "Académico",
-                                    value: academic_risk
-                                }, {
-                                    axis: "Geográfico",
-                                    value: geographic_risk
-                                },
-                                ]
-                            ];
+                var array_level_risk = new Object();
+                array_level_risk['div_no_risk'] = 0;
+                array_level_risk['div_high_risk'] = 1;
+                array_level_risk['div_medium_risk'] = 2;
+                array_level_risk['div_low_risk'] = 3;
+    
+                var class_list_individual = document.getElementById('individual_risk').className.split(/\s+/);
+                var class_list_familiar = document.getElementById('familiar_risk').className.split(/\s+/);
+                var class_list_academic = document.getElementById('academic_risk').className.split(/\s+/);
+                var class_list_economic = document.getElementById('economic_risk').className.split(/\s+/);
+                var class_list_life = document.getElementById('life_risk').className.split(/\s+/);
+                var class_list_geographic = document.getElementById('geo_risk').className.split(/\s+/);
+    
+                var individual_risk = array_level_risk[class_list_individual[0]];
+                var familiar_risk = array_level_risk[class_list_familiar[0]];
+                var economic_risk = array_level_risk[class_list_economic[0]];
+                var academic_risk = array_level_risk[class_list_academic[0]];
+                var life_risk = array_level_risk[class_list_life[0]];
+                var geographic_risk = array_level_risk[class_list_geographic[0]];
+    
+                var w = 500,
+                    h = 500;
+    
+                var colorscale = d3.scale.category10();
+    
+                //Data
+                var d = [
+                    [{
+                        axis: "Individual",
+                        value: individual_risk
+                    }, {
+                        axis: "Económico",
+                        value: economic_risk
+                    }, {
+                        axis: "Familiar",
+                        value: familiar_risk
+                    }, {
+                        axis: "Vida Universitaria",
+                        value: 1
+                    }, {
+                        axis: "Académico",
+                        value: academic_risk
+                    }, {
+                        axis: "Geográfico",
+                        value: geographic_risk
+                    },
+                    ]
+                ];
 
-                            //Options for the Radar chart, other than default
-                            var mycfg = {
-                                w: w,
-                                h: h,
-                                maxValue: 3,
-                                levels: 3,
-                                ExtraWidthX: 300
-                            }
-                                            
-                            //Call function to draw the Radar chart
-                            //Will expect that data is in %'s
-                            RadarChart.draw("#modal_risk_body", d, mycfg);
-                
-                            ////////////////////////////////////////////
-                            /////////// Initiate legend ////////////////
-                            ////////////////////////////////////////////
+                //Options for the Radar chart, other than default
+                var mycfg = {
+                    w: w,
+                    h: h,
+                    maxValue: 3,
+                    levels: 3,
+                    ExtraWidthX: 300
+                }
+                                
+                //Call function to draw the Radar chart
+                //Will expect that data is in %'s
+                RadarChart.draw("#modal_risk_body", d, mycfg);
+    
+                ////////////////////////////////////////////
+                /////////// Initiate legend ////////////////
+                ////////////////////////////////////////////
 
-                            var svg = d3.select('#body')
-                            .selectAll('svg')
-                            .append('svg')
-                            .attr("width", w + 300)
-                            .attr("height", h)
-            
-                            $('#modal_risk_graph').show();
+                var svg = d3.select('#body')
+                .selectAll('svg')
+                .append('svg')
+                .attr("width", w + 300)
+                .attr("height", h)
+
+                $('#modal_risk_graph').show();
                         });
             $('#view_graphic_risk_button').click(function(){
                 $('#modal_riesgos').fadeIn(200);
@@ -456,6 +482,165 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/d3', 'block_ases/sweetaler
                 $('#modal_riesgos').fadeOut(200);
             });
 
+        },equalize: function(){
+            $( document ).ready(function() {
+                var heights = $(".equalize").map(function() {
+                    return $(this).height();
+                }).get(),
+            
+                maxHeight = Math.max.apply(null, heights);
+            
+                $(".equalize").height(maxHeight);
+            });
+        },update_status_program: function(current_status, element){
+
+            var program_id = element.attr('id').split("-")[1];
+            var status = element.val();
+            var student_id = element.parent().parent().attr('id').split("-")[1];
+
+            var data = {
+                func: 'update_status_program',
+                program_id: program_id,
+                status: status,
+                student_id: student_id
+            };
+
+            swal({
+                title: "Advertencia",
+                text: "¿Está seguro que desea cambiar el estado del programa?",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonClass: "btn-danger",
+                confirmButtonText: "Si",
+                cancelButtonText: "No",
+                closeOnConfirm: false
+            },
+            function(isConfirm){
+                if(isConfirm){
+                    $.ajax({
+                        type: "POST",
+                        data: data,
+                        url: "../managers/student_profile/studentprofile_serverproc.php",
+                        success: function(msg) {
+                            if($('#select-'+data.program_id).val() == "ACTIVO"){
+                                $('#tr-'+data.student_id).addClass('is-active');
+                            }else{
+                                $('#tr-'+data.student_id).removeClass('is-active');
+                            }
+                            swal(
+                                msg.title,
+                                msg.msg,
+                                msg.status
+                            );
+                        },
+                        dataType: "json",
+                        cache: "false",
+                        error: function(msg) {
+                            swal(
+                                msg.title,
+                                msg.msg,
+                                msg.status
+                            );
+                        },
+                    });
+                }else{
+                    $('#select-'+data.program_id).val(current_status);
+                }
+                
+            });
+            
+            
+        },update_status_ases: function(){
+
+            var data = {
+                func: 'update_status_ases',
+            };
+
+            swal({
+                title: "Advertencia",
+                text: "¿Está seguro que desea cambiar el estado de seguimiento del estudiante en esta instancia?",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonClass: "btn-danger",
+                confirmButtonText: "Si",
+                cancelButtonText: "No",
+                closeOnConfirm: false
+            },
+            function(isConfirm){
+                if(isConfirm){
+                    $.ajax({
+                        type: "POST",
+                        data: data,
+                        url: "../managers/student_profile/studentprofile_serverproc.php",
+                        success: function(msg) {
+                            
+                        },
+                        dataType: "json",
+                        cache: "false",
+                        error: function(msg) {
+                            swal(
+                                msg.title,
+                                msg.msg,
+                                msg.status
+                            );
+                        },
+                    });
+                }else{
+                    alert("Cancelado por el usuario");
+                }
+                
+            });
+        },update_tracking_status: function(current_status, element, data_init, object_function){
+
+            has_tracking_status = false;
+
+            if(current_status == false){
+
+                has_tracking_status = object_function.validate_tracking_statuses(data_init);
+
+                if(has_tracking_status.tracking_status){
+                    swal({
+                        title: "¿Está seguro/a de cambiar el estado?",
+                        text: "Texto a cambiar",
+                        type: "warning",
+                        showCancelButton: true,
+                        confirmButtonColor: "#d51b23",
+                        confirmButtonText: "Si",
+                        cancelButtonText: "No",
+                        closeOnConfirm: true,
+                        allowEscapeKey: false
+                    },
+                    function(isConfirm) {
+                        if (isConfirm) {
+                            element.prop('checked', true);
+                            $('#div_flags_'+has_tracking_status.academic_program_id).prop('checked', false);
+                        }
+                        else {
+                            if(current_status){
+                                element.prop('checked', true);
+                            }else{
+                                element.prop('checked', false);
+                            }
+                        }
+                    });
+                }
+
+            }else{
+                element.prop('checked', true);
+            }
+
+        }, validate_tracking_statuses: function(data_init){
+
+            has_tracking_status = false;
+
+            for(i = 0; i < data_init.length; i++){
+                if(data_init[i].tracking_status == 1){
+                    has_tracking_status = true;
+                    break;
+                }
+            }
+
+            return data_init[i];
         }
     };
 

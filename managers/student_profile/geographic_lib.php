@@ -97,7 +97,9 @@ function load_geographic_info($id_ases){
     $sql_query = "SELECT * FROM {talentospilos_riesg_usuario} WHERE id_usuario = $id_ases AND id_riesgo = $id_risk";
     $register_risk = $DB->get_record_sql($sql_query);
 
-    $result->risk = $register_risk->calificacion_riesgo;
+    if($register_risk){
+        $result->risk = $register_risk->calificacion_riesgo;
+    }
 
     return $result;
 
