@@ -143,7 +143,7 @@ function get_teachers_last_name($instance_id){
     return $teachers_lastnames_options;
 }
 
-function get_datatable_array_for_report(){
+function get_datatable_array_for_report($instance_id){
     $columns = array();
     $teachers_lastnames = get_teachers_last_name($instance_id);
 		array_push($columns, array("title"=>"Código del curso", "name"=>"cod_asignatura", "data"=>"cod_asignatura"));
