@@ -29,13 +29,26 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
                 var titulo = $(this).attr('title');
                 $("#titulo").text(titulo)
 
+                var curso = false;
+
                 $("#nombre_editar").show();
                 $("#label_nombre").show();
+                $('#alta').show();
+                $('#div_padres').show();
+
+                if ($(this).hasClass('curso')) {
+                    curso = true;
+                    $('#alta').hide();
+                    console.log("CURSO");
+                    $("#nombre_editar").hide();
+                    $("#label_nombre").hide();
+                    $('#div_padres').hide();
+                }
 
                 //se carga la informacion del elemento
                 var id_course = getCourseid();
                 var id_element = $(this).attr('id');
-                $('#save_edit').attr('name', id_element)
+                $('#save_edit').attr('name', id_element);
 
                 //se evalua si el elemento es item o categoria
                 if (titulo === "Editar Categoría") {
@@ -53,7 +66,9 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
                         nom_text = nombre.split("(");
                         nombre = nom_text[0];
                         peso = nom_text[1];
-                        $('#peso').show();
+                        if (!curso) {
+                            $('#peso').show();
+                        }
                         peso = peso.replace('(', '');
                         peso = peso.replace(')', '');
                         peso = peso.replace(' ', '');
@@ -133,7 +148,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
                     return;
                 }
 
-                //console.log("nombre: "+new_nombre + "\n peso:" + new_peso + "\n MAXpeso:" + maxweight+ "\n new_calif: " + new_calif);
+                console.log("nombre: "+new_nombre + "\n peso:" + new_peso + "\n MAXpeso:" + maxweight+ "\n new_calif: " + new_calif);
 
                 if (new_peso > maxweight) {
                     swal({
@@ -165,7 +180,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
                     type_e = "cat";
                     // alert(type_e)
                 }
-                
+
                 var course_id = getCourseid();
                 $.ajax({
                     type: "POST",
