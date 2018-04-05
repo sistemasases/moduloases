@@ -27,7 +27,7 @@
 require_once(dirname(__FILE__). '/../../../../config.php');
 
 
-function get_created_items_per_course(){
+function get_created_items_per_course($instance_id){
     global $DB;
 
     $count_created_items = array();
@@ -49,7 +49,9 @@ function get_created_items_per_course(){
                             INNER JOIN {cohort} AS cohorts ON cohorts.id = members.cohortid
                             INNER JOIN {user_enrolments} AS enrolments ON  enrolments.userid = members.userid
                             INNER JOIN {enrol} AS enrols ON enrols.id = enrolments.enrolid
-                            WHERE (cohorts.idnumber LIKE 'SPP%') OR (cohorts.idnumber LIKE 'SPE%')) AS cursos_ases
+                            WHERE members.cohortid IN (SELECT id_cohorte
+                                    FROM   {talentospilos_inst_cohorte}
+                                    WHERE  id_instancia = $instance_id)) AS cursos_ases
 
                             ON cursos_ases.courseid = materias_criticas.id
 
@@ -93,19 +95,68 @@ function get_graded_items_by_course_id($course_id){
     return $count_grades;
 }
 
+function get_teachers_last_name($instance_id){
+    global $DB;
+
+    $teachers_lastnames_options = "<select><option value=''></option>";
+
+    $query = "SELECT DISTINCT users.lastname
+    FROM
+      (SELECT id
+      FROM {course} AS courses 
+      INNER JOIN (SELECT codigo_materia 
+            FROM {talentospilos_materias_criti}) AS materias_criticas
+      ON materias_criticas.codigo_materia = SUBSTR(courses.shortname, 4, 7)
+      WHERE SUBSTR(courses.shortname, 15, 4) = '2018') AS materias_criticas
+    
+      INNER JOIN
+    
+      (SELECT DISTINCT enrols.courseid
+      FROM {cohort_members} AS members 
+      INNER JOIN {cohort} AS cohorts ON cohorts.id = members.cohortid
+      INNER JOIN {user_enrolments} AS enrolments ON  enrolments.userid = members.userid
+      INNER JOIN {enrol} AS enrols ON enrols.id = enrolments.enrolid
+      WHERE members.cohortid IN (SELECT id_cohorte
+                                        FROM   {talentospilos_inst_cohorte}
+                                        WHERE  id_instancia = $instance_id)) AS cursos_ases
+    
+      ON cursos_ases.courseid = materias_criticas.id
+    
+    INNER JOIN {course} AS courses ON courses.id = materias_criticas.id
+    INNER JOIN {context} AS context ON courses.id = context.instanceid
+    INNER JOIN {role_assignments} AS role_assignments ON role_assignments.contextid = context.id
+    INNER JOIN {user} AS users ON users.id = role_assignments.userid
+    INNER JOIN {role} AS roles ON roles.id = role_assignments.roleid
+    
+    WHERE role_assignments.roleid = 3
+    
+    GROUP BY users.lastname";
+
+    $results = $DB->get_records_sql($query);
+
+    foreach($results as $result){
+        $teachers_lastnames_options.= "<option value='$result->lastname'>$result->lastname</option>";
+    }
+
+    $teachers_lastnames_options.= "</select>";
+
+    return $teachers_lastnames_options;
+}
+
 function get_datatable_array_for_report(){
     $columns = array();
+    $teachers_lastnames = get_teachers_last_name($instance_id);
 		array_push($columns, array("title"=>"Código del curso", "name"=>"cod_asignatura", "data"=>"cod_asignatura"));
 		array_push($columns, array("title"=>"Nombre del curso", "name"=>"fullname", "data"=>"fullname"));
 		array_push($columns, array("title"=>"Nombre del docente", "name"=>"firstname", "data"=>"firstname"));
-		array_push($columns, array("title"=>"Apellido del docente", "name"=>"lastname", "data"=>"lastname"));
+		array_push($columns, array("title"=>"Apellido del docente".$teachers_lastnames, "name"=>"lastname", "data"=>"lastname"));
         array_push($columns, array("title"=>"Cantidad de ítems", "name"=>"count_items", "data"=>"count_items"));
         array_push($columns, array("title"=>"Cantidad de notas registradas", "name"=>"count_grades", "data"=>"count_grades"));
 
 		$data = array(
 					"bsort" => false,
 					"columns" => $columns,
-					"data" => get_created_items_per_course(),
+					"data" => get_created_items_per_course($instance_id),
 					"language" => 
                 	 array(
                     	"search"=> "Buscar:",
