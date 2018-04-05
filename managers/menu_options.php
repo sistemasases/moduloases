@@ -213,6 +213,28 @@ function create_menu_options($userid, $blockid, $courseid)
 
             }
 
+            if ($function == 'historic_academic_reports') {
+                $url = new moodle_url("/blocks/ases/view/historic_academic_reports.php", array(
+                    'courseid' => $courseid,
+                    'instanceid' => $blockid,
+                ));
+
+                $menu_options = '<li><a href= "' . $url . '"> Reportes históricos académicos </a><li>';
+                $indexed['Reportes históricos académicos'] = $menu_options;
+
+            }
+
+            if ($function == 'dphpforms_form_editor') {
+                $url = new moodle_url("/blocks/ases/view/dphpforms_form_editor.php", array(
+                    'courseid' => $courseid,
+                    'instanceid' => $blockid,
+                ));
+
+                $menu_options = '<li><a href= "' . $url . '"> Administrador de formularios </a><li>';
+                $indexed['Administrador de formularios'] = $menu_options;
+
+            }
+
         }
 
         //ORDENA

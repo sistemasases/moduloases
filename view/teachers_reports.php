@@ -97,7 +97,7 @@ $PAGE->requires->css('/blocks/ases/style/side_menu_style.css', true);
 
 $PAGE->requires->js_call_amd('block_ases/teachers_reports_main', 'init');
 
-$tableReport = get_datatable_array_for_report();
+$tableReport = get_datatable_array_for_report($blockid);
 $paramReport = new stdClass();
 $paramReport->table = $tableReport;
 
