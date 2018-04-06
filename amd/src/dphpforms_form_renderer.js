@@ -530,8 +530,10 @@
                     }
 
                     $('.seg_geo_origen').find('input').prop('disabled', false );
-
+                    $( ':disabled' ).prop( 'disabled', false);
+                    
                     var formData = new FormData(this);
+                    
                     var formulario = $(this);
                     var url_processor = formulario.attr('action');
                     if(formulario.attr('action') == 'procesador.php'){
@@ -539,6 +541,7 @@
                     }
                     $(formulario).find('button').prop( "disabled", true );
                     $(formulario).find('a').attr("disabled", true);
+                    console.log(formulario);
                     $.ajax({
                         type: 'POST',
                         url: url_processor,
@@ -547,7 +550,8 @@
                         contentType: false,
                         processData: false,
                         success: function(data) {
-                                console.log(data);
+                                
+                                console.log( data );
                                 var response = JSON.parse(data);
                                 
                                 if(response['status'] == 0){
@@ -593,6 +597,10 @@
                                     var mensaje = '';
                                     if(response['message'] == 'Without changes'){
                                         mensaje = 'No hay cambios que registrar';
+                                        $('#modal_v2_edit_peer_tracking').fadeOut(300);
+                                        $('#modal_v2_peer_tracking').fadeOut(300);
+                                        $('#modal_primer_acercamiento').fadeOut(300);
+                                        $('#modal_seguimiento_geografico').fadeOut(300);
                                     }else if(response['message'] == 'Unfulfilled rules'){
                                         mensaje = 'Revise Que los campos estén completos y correctamente diligenciados';
                                     }
