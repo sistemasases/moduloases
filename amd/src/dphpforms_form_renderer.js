@@ -572,6 +572,7 @@
                                         function(){
                                             if(response['message'] == 'Updated'){
                                                 $('#dphpforms-peer-record-' + $('#dphpforms_record_id').val()).stop().animate({backgroundColor:'rgb(175, 255, 173)'}, 400).animate({backgroundColor:'#f5f5f5'}, 4000);
+                                                location.reload();
                                             }else{
                                                 $('.dphpforms-response').trigger("reset");
                                                 location.reload();
