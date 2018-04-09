@@ -343,8 +343,8 @@
                     }else if( (form == 'seguimiento_pares')&&( action == 'update' ) ){
 
                         var rev_prof = $('.dphpforms-record').find('.revisado_profesional').find('.checkbox').find('input[type=checkbox]').prop('checked');
-                        
-                        if( rev_prof ){
+                        var role_support = $('#dphpforms_role_support').attr('data-info');
+                        if( rev_prof && ( role_support != "sistemas" ) ){
                             $('.btn-dphpforms-update').remove();
                         }
 
