@@ -18,9 +18,9 @@
 /**
  * Estrategia ASES
  *
- * @author     Isabella Serna RamĆ­rez
+ * @author     Isabella Serna RamÄ†Ā­rez
  * @package    block_ases
- * @copyright  2017 Isabella Serna RamĆ­rez <isabella.serna@correounivalle.edu.co>
+ * @copyright  2017 Isabella Serna RamÄ†Ā­rez <isabella.serna@correounivalle.edu.co>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 require_once ('../validate_profile_action.php');
@@ -39,6 +39,9 @@ global $USER;
 
 if (isset($_POST['type']) && $_POST['type'] == "getInfo" && isset($_POST['instance']))
     {
+
+    //Function that organizes a user's information
+
     $datos = [];
     $datos["id"] = $USER->id;
     $datos["username"] = $USER->username;
@@ -47,33 +50,31 @@ if (isset($_POST['type']) && $_POST['type'] == "getInfo" && isset($_POST['instan
     $datos["name_rol"] = get_name_rol($datos["rol"]);
     echo json_encode($datos);
     }
+
 if (isset($_POST['type']) && isset($_POST['instance']) && $_POST['type'] == "get_groupal_trackings" && isset($_POST['student_code']))
     {
 
-    // Groupal trackings (Seguimientos)
+    //Function that obtains the groupal trackings of a monitor.
 
     $html_tracking_groupal = "";
     $student_code = $_POST['student_code'];
-
     $current_semester = get_current_semester();
-    $array_groupal_trackings_dphpforms =get_tracking_grupal_monitor_current_semester($student_code,$current_semester->max);
-
-    $html_tracking_groupal.=render_monitor_groupal_trackings($array_groupal_trackings_dphpforms);
-
+    $array_groupal_trackings_dphpforms = get_tracking_grupal_monitor_current_semester($student_code, $current_semester->max);
+    $html_tracking_groupal.= render_monitor_groupal_trackings($array_groupal_trackings_dphpforms);
     echo json_encode($html_tracking_groupal);
     }
 
 if (isset($_POST['type']) && $_POST['type'] == "consult_students_name" && isset($_POST['students']))
     {
-
-      echo (get_names_students($_POST['students']));
-
+    //Function that generates the list of students attending a group trackings
+    
+    echo (get_names_students($_POST['students']));
     }
 
 if (isset($_POST['type']) && isset($_POST['instance']) && $_POST['type'] == "get_student_trackings" && isset($_POST['student_code']))
     {
 
-    // Student trackings (Seguimientos)
+    // Function that obtains the peer trackings of a student.
 
     $html_tracking_peer = "";
     $student_code = explode("-", $_POST['student_code']);
@@ -89,15 +90,13 @@ if (isset($_POST['type']) && isset($_POST['instance']) && $_POST['type'] == "get
     {
 
     // Get Monitors of practicant
-    $monitor_id =search_user($_POST['monitor_code']);
+
+    $monitor_id = search_user($_POST['monitor_code']);
     $current_semester = get_current_semester();
-    $students_by_monitor=get_students_of_monitor($monitor_id->id,$_POST['instance']);
-    $array=render_monitor_new_form($students_by_monitor);
-    $array_groupal_trackings_dphpforms =get_tracking_grupal_monitor_current_semester($monitor_id->id,$current_semester->max);
-    $array.=render_groupal_tracks_monitor_new_form($array_groupal_trackings_dphpforms,$monitor_id->id);
-
-
-
+    $students_by_monitor = get_students_of_monitor($monitor_id->id, $_POST['instance']);
+    $array = render_monitor_new_form($students_by_monitor);
+    $array_groupal_trackings_dphpforms = get_tracking_grupal_monitor_current_semester($monitor_id->id, $current_semester->max);
+    $array.= render_groupal_tracks_monitor_new_form($array_groupal_trackings_dphpforms, $monitor_id->id);
     echo json_encode($array);
     }
 
@@ -105,14 +104,14 @@ if (isset($_POST['type']) && isset($_POST['instance']) && $_POST['type'] == "get
     {
 
     // Get practicant of professional
-    $practicant_id =search_user($_POST['practicant_code']);
-    $monitors_of_pract = get_monitors_of_pract($practicant_id->id,$_POST['instance']);
-    $array=render_practicant_new_form($monitors_of_pract,$_POST['instance']);
+
+    $practicant_id = search_user($_POST['practicant_code']);
+    $monitors_of_pract = get_monitors_of_pract($practicant_id->id, $_POST['instance']);
+    $array = render_practicant_new_form($monitors_of_pract, $_POST['instance']);
     echo json_encode($array);
     }
 
-
-if (isset($_POST['type']) && $_POST['type'] == "actualizar_personas" && isset($_POST['id']) && isset($_POST['instance']))
+if (isset($_POST['type']) && $_POST['type'] == "update_people" && isset($_POST['id']) && isset($_POST['instance']))
     {
     $roles = get_rol_ps();
     $retorno = get_people_onsemester($_POST['id'], $roles, $_POST['instance']);
@@ -152,8 +151,8 @@ if (isset($_POST['type']) && $_POST['type'] == "consulta_sistemas" && isset($_PO
                 {
                 $students_by_monitor = get_students_of_monitor($id_person, $id_instance);
                 $html = render_monitor_new_form($students_by_monitor, $intervalos->id);
-                $array_groupal_trackings_dphpforms =get_tracking_grupal_monitor_current_semester($id_person,$intervalos->id);
-                $html.=render_groupal_tracks_monitor_new_form($array_groupal_trackings_dphpforms,$id_person);
+                $array_groupal_trackings_dphpforms = get_tracking_grupal_monitor_current_semester($id_person, $intervalos->id);
+                $html.= render_groupal_tracks_monitor_new_form($array_groupal_trackings_dphpforms, $id_person);
                 }
               else
             if ($usernamerole == 'practicante_ps')
@@ -173,90 +172,15 @@ if (isset($_POST['type']) && $_POST['type'] == "consulta_sistemas" && isset($_PO
             echo $html;
             }
         }
-      else
-        {
-        if (empty($retorno))
-            {
-            $html = "No tiene registros en ese periodo";
-            }
-          else
-            {
-            $usernamerole = get_name_rol($retorno->id_rol);
-            if ($usernamerole == 'monitor_ps')
-                {
-                $html = monitorUser($globalArregloPares, $globalArregloGrupal, $_POST['id_persona'], 0, $_POST['instance'], $retorno->id_rol, $fechas, true);
-                }
-              else
-            if ($usernamerole == 'practicante_ps')
-                {
-                $html = practicanteUser($globalArregloPares, $globalArregloGrupal, $_POST['id_persona'], $_POST['instance'], $retorno->id_rol, $fechas, true);
-                }
-              else
-            if ($usernamerole == 'profesional_ps')
-                {
-                $html = profesionalUser($globalArregloPares, $globalArregloGrupal, $_POST['id_persona'], $_POST['instance'], $retorno->id_rol, $fechas, true);
-                }
-
-            $actions = authenticate_user_view($USER->id, $_POST['instance'], 'report_trackings');
-            $html = show_according_permissions($html, $actions);
-            echo $html;
-            }
-        }
-    }
-
-if (isset($_POST['type']) && $_POST['type'] == "info_monitor" && isset($_POST['id']) && isset($_POST['instance']))
-    {
-    $retorno = get_seguimientos_monitor($_POST['id'], $_POST['instance']);
-    echo (json_encode($retorno));
-    }
-
-if (isset($_POST['type']) && $_POST['type'] == "eliminar_registro" && isset($_POST['id']))
-    {
-    $retorno = delete_tracking_peer($_POST['id']);
-    echo (json_encode($retorno));
-    }
-
-if (isset($_POST['type']) && $_POST['type'] == "actualizar_registro")
-    {
-    $objeto = (object)$_POST['seguimiento'];
-    $retorno = updateSeguimiento_pares($objeto);
-    echo $retorno;
-    }
-
-if (isset($_POST['type']) && $_POST['type'] == "number_seg_monitor" && isset($_POST['id']) && isset($_POST['instance']))
-    {
-    $retorno = get_cantidad_seguimientos_monitor($_POST['id'], $_POST['instance']);
-    echo (json_encode($retorno));
-    }
-
-if (isset($_POST['type']) && $_POST['type'] == "info_practicante" && isset($_POST['id']))
-    {
-    $retorno = get_monitores_practicante($_POST['id']);
-    echo (json_encode($retorno));
-    }
-
-if (isset($_POST['type']) && $_POST['type'] == "info_profesional" && isset($_POST['id']) && isset($_POST['instance']))
-    {
-    $retorno = get_practicantes_profesional($_POST['id'], $_POST['instance']);
-    echo (json_encode($retorno));
-    }
-
-if (isset($_POST['type']) && $_POST['type'] == "getProfesional" && isset($_POST['instance']) && isset($_POST['id']))
-    {
-    $retorno = get_profesional_practicante($_POST['id'], $_POST['instance']);
-    echo ($retorno);
     }
 
 if (isset($_POST['type']) && $_POST['type'] == "send_email_to_user" && isset($_POST['message_to_send']) && isset($_POST['tracking_type']) && isset($_POST['monitor_code']) && isset($_POST['date']))
     {
- 
-        /*
-            La linea siguiente no se adiciona a el if previo, con el 
-            fin de evitar problemas con otros script que hagan uso del método.
-        */
-        $place = $_POST['place'];
-
-
+    /*
+    La linea siguiente no se adiciona a el if previo, con el
+    fin de evitar problemas con otros script que hagan uso del mĆ©todo.
+    */
+    $place = $_POST['place'];
     if ($_POST['form'] == 'new_form')
         {
         $register = dphpforms_get_record($_POST['id_tracking'], 'id_estudiante');
@@ -264,17 +188,9 @@ if (isset($_POST['type']) && $_POST['type'] == "send_email_to_user" && isset($_P
         $id_moodle_student = get_name_by_username($json['record']['alias_key']['respuesta']);
         $id_ases_student = get_id_ases_user($id_moodle_student->id);
         $monitor_code = get_student_monitor($id_ases_student->id_ases_user, $_POST['semester'], $_POST['instance']);
-
         $practicant_code = get_boss_of_monitor_by_semester($monitor_code, $_POST['semester'], $_POST['instance']);
-
-        $profesional_code = get_boss_of_monitor_by_semester($practicant_code->id_jefe, $_POST['semester'], $_POST['instance']);  
-
-           
+        $profesional_code = get_boss_of_monitor_by_semester($practicant_code->id_jefe, $_POST['semester'], $_POST['instance']);
         echo send_email_to_user($_POST['tracking_type'], $monitor_code, $practicant_code->id_jefe, $profesional_code->id_jefe, $_POST['date'], $id_moodle_student->firstname . " " . $id_moodle_student->lastname, $_POST['message_to_send'], $place);
-        }
-      else
-        {
-        echo send_email_to_user($_POST['tipoSeg'], $_POST['codigoEnviarN1'], $_POST['codigoEnviarN2'], $practicant_code->id_usuario, $_POST['fecha'], $_POST['nombre'], $_POST['message'], $place);
         }
     }
 

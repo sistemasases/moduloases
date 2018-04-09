@@ -209,7 +209,7 @@ $PAGE->requires->css('/blocks/ases/style/creadorFormulario.css', true);
 
 $PAGE->requires->js_call_amd('block_ases/pilos_tracking_main','init');
 $PAGE->requires->js_call_amd('block_ases/groupal_tracking','init');
-//$PAGE->requires->js_call_amd('block_ases/dphpforms_form_renderer', 'init');
+$PAGE->requires->js_call_amd('block_ases/dphpforms_form_renderer', 'init');
 
 
 $PAGE->set_url($url);

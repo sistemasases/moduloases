@@ -59,7 +59,7 @@
                 });
 
                 $('#button_actualizar_primer_acercamiento').click(function(){
-                    $('.div').removeClass('regla_incumplida');
+                    $('div').removeClass('regla_incumplida');
                     $.get( "../managers/dphpforms/dphpforms_forms_core.php?form_id=primer_acercamiento&record_id=" + $(this).attr('data-record-id'), function( data ) {
                         $("#primer_acercamiento_form").html("");
                         $('#primer_acercamiento_form').append( data );
@@ -79,7 +79,7 @@
                 });
 
                 $('#button_update_geographic_track').click(function(){
-                    $('.div').removeClass('regla_incumplida');
+                    $('div').removeClass('regla_incumplida');
                     $.get( "../managers/dphpforms/dphpforms_forms_core.php?form_id=seguimiento_geografico&record_id=" + $(this).attr('data-record-id'), function( data ) {
                         $("#seguimiento_geografico_form").html("");
                         $('#seguimiento_geografico_form').append( data );
@@ -264,7 +264,7 @@
                 })
 
                 $('#button_add_v2_track').on('click', function() {
-                    $('.div').removeClass('regla_incumplida');
+                    $('div').removeClass('regla_incumplida');
                     $('#modal_v2_peer_tracking').fadeIn(300);
                     $('.id_estudiante').find('input').val( get_student_code() );
                     var codigo_monitor = $('#current_user_id').val();
@@ -275,6 +275,7 @@
 
 
                 $('#button_add_groupal_track').on('click', function() {
+                    $('div').removeClass('regla_incumplida');
                     $('#modal_v2_groupal_tracking').fadeIn(300);
                     var codigo_monitor = $('#current_user_id').val();
                     $('.id_creado_por').find('input').val(codigo_monitor);
@@ -284,7 +285,7 @@
                 });
 
                 $('#button_primer_acercamiento').on('click', function() {
-                    $('.div').removeClass('regla_incumplida');
+                    $('div').removeClass('regla_incumplida');
                     $('#modal_primer_acercamiento').fadeIn(300);
                     
                     $('.primer_acerca_id_estudiante_field').find('input').val( get_student_code() );
@@ -296,7 +297,7 @@
                 });
 
                 $('#button_add_geographic_track').on('click', function() {
-                    $('.div').removeClass('regla_incumplida');
+                    $('div').removeClass('regla_incumplida');
                     $('#modal_seguimiento_geografico').fadeIn(300);
                     $('.seg_geo_id_estudiante').find('input').val( get_student_code() );
                     var creado_por = $('#current_user_id').val();
@@ -579,7 +580,7 @@
                                             }
                                         }
                                     );
-
+                                    
                                     $('#modal_v2_edit_peer_tracking').fadeOut(300);
                                     $('#modal_v2_peer_tracking').fadeOut(300);
                                     $('#modal_primer_acercamiento').fadeOut(300);

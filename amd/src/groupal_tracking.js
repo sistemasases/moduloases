@@ -13,6 +13,23 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/validator', 'block_ases/sw
     return {
         init: function() {
 
+            $('.outside').click(function(){
+                var outside = $(this);
+                swal({
+                    title: 'Confirmación de salida',
+                    text: "",
+                    type: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Salir'
+                  }, function(isConfirm) {
+                    if (isConfirm) {
+                        $(outside).parent('.mymodal').fadeOut(300);
+                        console.log( $(this).parent('.mymodal') );
+                    }
+                  });
+                
+            });
+
             $(document).ready(function() {
                 load_students();
                 loadAll_seg();
