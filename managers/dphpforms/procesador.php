@@ -300,7 +300,10 @@ function dphpforms_update_respuesta($completed_form, $RECORD_ID){
                 );
             }else{
 
-                $rule = dphpforms_get_regla( $Unfulfilled_rules );
+                $rule = '';
+                if( $Unfulfilled_rules != '' ){
+                    $rule = dphpforms_get_regla( $Unfulfilled_rules );
+                }
 
                 echo json_encode(
                     array(
@@ -484,7 +487,10 @@ function dphpforms_new_store_respuesta($completed_form){
 
     }else{
 
-        $rule = dphpforms_get_regla( $Unfulfilled_rules );
+        $rule = '';
+        if( $Unfulfilled_rules != '' ){
+            $rule = dphpforms_get_regla( $Unfulfilled_rules );
+        }
 
         echo json_encode(
             array(
@@ -679,7 +685,10 @@ function dphpforms_reglas_validator($respuestas, $reglas){
     
     $satisfied_reglas = false;
     if(count($reglas) == 0){
-        return true;
+        return array(
+            'status' => true,
+            'unfulfilled_ruler' => ''
+        );
     }
 
     for($i = 0; $i < count($reglas); $i++){

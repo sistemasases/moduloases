@@ -606,7 +606,7 @@
                                     }else if(response['message'] == 'Unfulfilled rules'){
                                         var id_form_pregunta_a = response['data']['id_form_pregunta_a'];
                                         var id_form_pregunta_b = response['data']['id_form_pregunta_b'];
-                                        $('.div').removeClass('regla_incumplida');
+                                        $('div').removeClass('regla_incumplida');
                                         $('.div-' + id_form_pregunta_a).addClass('regla_incumplida');
                                         $('.div-' + id_form_pregunta_b).addClass('regla_incumplida');
                                         
