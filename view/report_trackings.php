@@ -137,24 +137,18 @@ if($usernamerole=='monitor_ps'){
     $table.=render_groupal_tracks_monitor_new_form($array_groupal_trackings_dphpforms,$monitor_id);
 
 
-
-    
-
 }elseif($usernamerole=='practicante_ps'){
    
     //Get trackings of students associated with a set of monitors assigned to a practicant.
 
     //Render new form of the role practicant
-    if($choosen_date>=$new_forms_date){
     $practicant_id =$USER->id;
     $monitors_of_pract = get_monitors_of_pract($practicant_id,$blockid);
+    $calculate_counting=calculate_counting_by('PRACTICANTE',$monitors_of_pract,$intervalo_fechas[2],$blockid);
+
+    $counting=create_counting_advice('PRACTICANTE',$calculate_counting);
     $table.=render_practicant_new_form($monitors_of_pract,$blockid);
-    }else{
-    
-    //Render old form of the role practicant
-    $seguimientos =practicanteUser($globalArregloPares,$globalArregloGrupal,$USER->id,$blockid,$userrole,$intervalo_fechas);
-    $table.=has_tracking($seguimientos);
-    }
+  
 
 
 }elseif($usernamerole=='profesional_ps'){
@@ -162,16 +156,13 @@ if($usernamerole=='monitor_ps'){
     //Get trackings of students associated with a set of monitors in turn assigned to a practitioner of a professional.
 
     //Render new form of the role professional
-    if($choosen_date>=$new_forms_date){
     $professional_id=$USER->id;
     $practicant_of_prof=get_pract_of_prof($professional_id,$blockid);
+    $calculate_counting=calculate_counting_by('PROFESIONAL',$practicant_of_prof,$intervalo_fechas[2],$blockid);
+    $counting=create_counting_advice('PROFESIONAL',$calculate_counting);
     $table.=render_professional_new_form($practicant_of_prof,$blockid);
-    }else{
-    
-    //Render old form of the role professional
-    $seguimientos = profesionalUser($globalArregloPares,$globalArregloGrupal,$USER->id,$blockid,$userrole,$intervalo_fechas);
-    $table.=has_tracking($seguimientos);
-    }
+   
+
 
 }elseif($usernamerole=='sistemas'){
 
