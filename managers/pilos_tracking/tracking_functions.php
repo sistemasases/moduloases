@@ -64,7 +64,7 @@ function render_monitor_new_form($students_by_monitor, $period = null)
         $panel.= "</h4>"; //End panel-title
         $panel.= "</div>"; //End panel-heading
         $panel.= "</a>";
-        $panel.= "<div id='student$student_code->username'  class='show collapse_v2 collapse' role='tabpanel' aria-labelledby='headingstudent$student_code->username' aria-expanded='true'>";
+        $panel.= "<div id='student$student_code->username'  class='show collapse_v2 collapse border_rt' role='tabpanel' aria-labelledby='headingstudent$student_code->username' aria-expanded='true'>";
         $panel.= "<div class='panel-body'>";
 
         // $panel.=render_student_trackings($monitor_trackings);
@@ -105,7 +105,7 @@ function render_groupal_tracks_monitor_new_form($groupal_tracks, $monitor_id, $p
         $panel.= "</h4>"; //End panel-title
         $panel.= "</div>"; //End panel-heading
         $panel.= "</a>";
-        $panel.= "<div id='groupal$monitor_id'  class='show collapse_v2 collapse' role='tabpanel' aria-labelledby='headinggroupal$monitor_id' aria-expanded='true'>";
+        $panel.= "<div id='groupal$monitor_id'  class='show collapse_v2 collapse border_rt' role='tabpanel' aria-labelledby='headinggroupal$monitor_id' aria-expanded='true'>";
         $panel.= "<div class='panel-body'>";
 
         // $panel.=render_student_trackings($monitor_trackings);
@@ -143,7 +143,7 @@ function render_practicant_new_form($monitors_of_pract, $instance, $period = nul
         $panel.= "</h4>"; //End panel-title
         $panel.= "</div>"; //End panel-heading
         $panel.= "</a>";
-        $panel.= "<div id='monitor$monitor->username'  class='show collapse_v2 collapse' role='tabpanel' aria-labelledby='headingmonitor$monitor->username' aria-expanded='true'>";
+        $panel.= "<div id='monitor$monitor->username'  class='show collapse_v2 collapse border_rt' role='tabpanel' aria-labelledby='headingmonitor$monitor->username' aria-expanded='true'>";
         $panel.= "<div class='panel-body'>";
         if ($period == null) {
 
@@ -190,7 +190,7 @@ function render_professional_new_form($practicant_of_prof, $instance, $period = 
         $panel.= "</h4>"; //End panel-title
         $panel.= "</div>"; //End panel-heading
         $panel.= "</a>";
-        $panel.= "<div id='practicant$practicant->username'  class='show collapse_v2 collapse' role='tabpanel' aria-labelledby='heading_practicant_tracking$practicant->username' aria-expanded='true'>";
+        $panel.= "<div id='practicant$practicant->username'  class='show collapse_v2 collapse border_rt' role='tabpanel' aria-labelledby='heading_practicant_tracking$practicant->username' aria-expanded='true'>";
         $panel.= "<div class='panel-body'>";
         if ($period == null) {
 
