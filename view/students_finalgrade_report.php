@@ -101,7 +101,7 @@ $tableReport = get_datatable_array_for_finalgrade_report($blockid);
 $paramReport = new stdClass();
 $paramReport->table = $tableReport;
 
-$PAGE->requires->js_call_amd('block_ases/students_finalgrade_report_main', 'students_finalgrade_report', $paramReport);
+$PAGE->requires->js_call_amd('block_ases/students_finalgrade_report_main', 'load_table_finalgrades_report', $paramReport);
 
 $output = $PAGE->get_renderer('block_ases');
 $index_page = new \block_ases\output\students_finalgrade_report_page($data);
