@@ -21,7 +21,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables', 'block_ases/s
             $("#div_table_report").fadeIn(1000).append('<table id="tableFinalgradesReport" class="table"' +
                 ' cellspacing="0" width="100%"><thead> </thead></table>');
 
-            $("#tableItemsReport").DataTable(data);
+            $("#tableFinalgradesReport").DataTable(data);
         }
     };
 
