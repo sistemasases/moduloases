@@ -31,6 +31,9 @@ require_once('../managers/instance_management/instance_lib.php');
 require_once ('../managers/permissions_management/permissions_lib.php');
 require_once ('../managers/validate_profile_action.php');
 require_once ('../managers/menu_options.php');
+require_once ('../managers/teachers_reports/teachers_reports_lib.php');
+include "../classes/output/teachers_reports_page.php";
+include "../classes/output/renderer.php";
 
 global $PAGE;
 
@@ -92,7 +95,13 @@ $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/jquery.dataTables_t
 $PAGE->requires->css('/blocks/ases/js/select2/css/select2.css', true);
 $PAGE->requires->css('/blocks/ases/style/side_menu_style.css', true);
 
-//$PAGE->requires->js_call_amd('block_ases/periods_management_main', 'init');
+$PAGE->requires->js_call_amd('block_ases/teachers_reports_main', 'init');
+
+$tableReport = get_datatable_array_for_report($blockid);
+$paramReport = new stdClass();
+$paramReport->table = $tableReport;
+
+$PAGE->requires->js_call_amd('block_ases/teachers_reports_main', 'load_table_report', $paramReport);
 
 $output = $PAGE->get_renderer('block_ases');
 $index_page = new \block_ases\output\teachers_reports_page($data);

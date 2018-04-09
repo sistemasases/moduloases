@@ -27,7 +27,6 @@
 // Standard GPL and phpdocs
 require_once __DIR__ . '/../../../config.php';
 require_once $CFG->libdir . '/adminlib.php';
-//require_once('../managers/query.php');
 
 require_once '../managers/lib/student_lib.php';
 require_once '../managers/lib/lib.php';
@@ -73,7 +72,6 @@ $contextblock = context_block::instance($blockid);
 $url = new moodle_url("/blocks/ases/view/student_profile.php", array('courseid' => $courseid, 'instanceid' => $blockid, 'student_code' => $student_code));
 
 // Nav configuration
-
 $coursenode = $PAGE->navigation->find($courseid, navigation_node::TYPE_COURSE);
 $blocknode = navigation_node::create('Reporte general', new moodle_url("/blocks/ases/view/ases_report.php", array('courseid' => $courseid, 'instanceid' => $blockid)), null, 'block', $blockid);
 $coursenode->add_node($blocknode);
@@ -87,6 +85,8 @@ $record = new stdClass;
 $actions = authenticate_user_view($USER->id, $blockid);
 $record = $actions;
 
+$data_init = array();
+
 $rol = get_role_ases($USER->id);
 
 if ($student_code != 0) {
@@ -95,65 +95,23 @@ if ($student_code != 0) {
 
     $student_id = $ases_student->id;
 
-    $student_status_ases = get_student_ases_status($student_id);
-    $student_status_icetex = get_student_icetex_status($student_id);
-
-    // Loading available states
-
-    $ases_status_array = get_status_ases();
-    $icetex_status_array = get_status_icetex();
-
-    $html_status_ases = "<option value=''>NO REGISTRA</option>";
-
-    foreach ($ases_status_array as $ases_status) {
-
-        if ($ases_status->nombre == $student_status_ases->nombre) {
-            $html_status_ases .= "<option value='" . $ases_status->id . "' selected>" . $ases_status->descripcion . "</option>";
-        } else {
-            $html_status_ases .= "<option value='" . $ases_status->id . "'>" . $ases_status->descripcion . "</option>";
-        }
-    }
-
-    $html_status_icetex = "<option value=''>NO REGISTRA</option>";
-
-    foreach ($icetex_status_array as $icetex_status) {
-        if ($icetex_status->nombre == $student_status_icetex->nombre) {
-            $html_status_icetex .= "<option value='" . $icetex_status->id . "' selected>" . $icetex_status->nombre . "</option>";
-        } else {
-            $html_status_icetex .= "<option value='" . $icetex_status->id . "'>" . $icetex_status->nombre . "</option>";
-        }
-    }
-
-    $record->status_ases = $html_status_ases;
-    $record->status_icetex = $html_status_icetex;
-
     // Student information to display on file header (ficha)
-
     $id_user_moodle = get_id_user_moodle($ases_student->id);
-
     $user_moodle = get_moodle_user($id_user_moodle);
-
-    $cohort = get_cohort_student($id_user_moodle);
-
-    $array_aditional_fields = get_adds_fields_mi($id_user_moodle);
-
-    $academic_program = get_program((int) $array_aditional_fields->idprograma);
-
-    $faculty = get_faculty($academic_program->id_facultad);
-
-    // Evaluates if user role has permissions assigned on this view
+    $academic_programs = get_academic_programs_by_student($student_id);
+    $student_cohorts = get_cohorts_by_student($id_user_moodle);
+    
 
     $record->id_moodle = $id_user_moodle;
     $record->id_ases = $student_id;
-    $record->firstname = $user_moodle->firstname;
-    $record->lastname = $user_moodle->lastname;
     $record->email_moodle = $user_moodle->email_moodle;
     $record->age = substr($ases_student->age, 0, 2);
-    $record->program = $academic_program->nombre;
-    $record->faculty = $faculty->nombre;
-    $record->cohort = $cohort->name;
+    $record->academic_programs = $academic_programs;
+    $record->student_cohorts = $student_cohorts;
 
-    switch ($ases_student->tipo_doc) {
+    array_push($data_init, $academic_programs);
+
+    switch ($ases_student->tipo_doc){
         case "T.I":
             $record->doc_type_ti = "selected";
             break;
@@ -180,6 +138,8 @@ if ($student_code != 0) {
     $record->num_doc = $ases_student->num_doc;
     $record->observations = $ases_student->observacion;
 
+    
+
     $monitor_object = new stdClass();
     $trainee_object = new stdClass();
     $professional_object = new stdClass();
@@ -203,7 +163,7 @@ if ($student_code != 0) {
     } else {
         $record->trainee_fullname = "NO REGISTRA";
     }
-    //print_r($professional_object);
+    
     if ($professional_object) {
         $record->professional_fullname = "$professional_object->firstname $professional_object->lastname";
     } else {
@@ -212,9 +172,6 @@ if ($student_code != 0) {
 
     // Geographic information
 
-    $geographic_tab_html = file_get_contents('../templates/geographic_tab.html');
-    $record->geographic_tab = $geographic_tab_html;
-
     $geographic_object = load_geographic_info($student_id);
 
     $neighborhoods_array = get_neighborhoods();
@@ -222,11 +179,16 @@ if ($student_code != 0) {
     $neighborhoods = "<option>No registra</option>";
 
     for ($i = 1; $i <= count($neighborhoods_array); $i++) {
-        if ($neighborhoods_array[$i]->id == (int) $geographic_object->barrio) {
-            $neighborhoods .= "<option value='" . $neighborhoods_array[$i]->id . "' selected>" . $neighborhoods_array[$i]->nombre . "</option>";
-        } else {
+        if(isset($geographic_object->barrio)){
+            if ($neighborhoods_array[$i]->id == (int) $geographic_object->barrio) {
+                $neighborhoods .= "<option value='" . $neighborhoods_array[$i]->id . "' selected>" . $neighborhoods_array[$i]->nombre . "</option>";
+            } else {
+                $neighborhoods .= "<option value='" . $neighborhoods_array[$i]->id . "'>" . $neighborhoods_array[$i]->nombre . "</option>";
+            }
+        }else{
             $neighborhoods .= "<option value='" . $neighborhoods_array[$i]->id . "'>" . $neighborhoods_array[$i]->nombre . "</option>";
         }
+        
     }
 
     $level_risk_array = array('Bajo', 'Medio', 'Alto');
@@ -357,24 +319,24 @@ if ($student_code != 0) {
 
     //Current data
     //weighted average
-    $promedio = get_promedio_ponderado($student_id, $academic_program->id);
-    $record->promedio = $promedio;
+    // $promedio = get_promedio_ponderado($student_id, $academic_program->id);
+    // $record->promedio = $promedio;
 
-    //num bajos
-    $bajos = get_bajos_rendimientos($student_id, $academic_program->id);
-    $record->bajos = $bajos;
+    // //num bajos
+    // $bajos = get_bajos_rendimientos($student_id, $academic_program->id);
+    // $record->bajos = $bajos;
 
-    // //num estimulos
-    $estimulos = get_estimulos($student_id, $academic_program->id);
-    $record->estimulos = $estimulos;
+    // // //num estimulos
+    // $estimulos = get_estimulos($student_id, $academic_program->id);
+    // $record->estimulos = $estimulos;
 
-    //Current semester
-    $html_academic_table = get_grades_courses_student_last_semester($id_user_moodle);
-    $record->academic_semester_act = $html_academic_table;
+    // //Current semester
+    // $html_academic_table = get_grades_courses_student_last_semester($id_user_moodle);
+    // $record->academic_semester_act = $html_academic_table;
 
-    //historic academic
-    $html_historic_academic = get_historic_academic_by_student($student_id);
-    $record->historic_academic = $html_historic_academic;
+    // //historic academic
+    // $html_historic_academic = get_historic_academic_by_student($student_id);
+    // $record->historic_academic = $html_historic_academic;
 
     // Student trackings (Seguimientos)
 
@@ -490,8 +452,6 @@ if ($student_code != 0) {
         'index' => $seguimientos_array['index'],
         'periodos' => $array_periodos,
     );
-    //print_r($record->peer_tracking_v2);
-    //print_r(json_encode($record->peer_tracking_v2));
 
     $enum_risk = array();
     array_push($enum_risk, "");
@@ -875,6 +835,7 @@ if ($student_code != 0) {
 
 if ($rol == 'sistemas') {
     $record->add_peer_tracking_lts = true;
+    $record->sistemas = true;
 }
 
 
@@ -899,11 +860,15 @@ $PAGE->requires->css('/blocks/ases/style/c3.css', true);
 $PAGE->requires->css('/blocks/ases/style/student_profile_risk_graph.css', true);
 $PAGE->requires->css('/blocks/ases/js/select2/css/select2.css', true);
 $PAGE->requires->css('/blocks/ases/style/side_menu_style.css', true);
+$PAGE->requires->css('/blocks/ases/style/student_profile.css', true);
+$PAGE->requires->css('/blocks/ases/style/switch.css', true);
 //Pendiente para cambiar el idioma del nombre del archivo junto con la estructura de
 //su nombramiento.
 $PAGE->requires->css('/blocks/ases/style/creadorFormulario.css', true);
 
-$PAGE->requires->js_call_amd('block_ases/student_profile_main', 'init');
+$PAGE->requires->js_call_amd('block_ases/student_profile_main', 'init', $data_init);
+$PAGE->requires->js_call_amd('block_ases/student_profile_main', 'equalize');
+
 $PAGE->requires->js_call_amd('block_ases/geographic_main', 'init');
 $PAGE->requires->js_call_amd('block_ases/dphpforms_form_renderer', 'init');
 $PAGE->requires->js_call_amd('block_ases/academic_profile_main', 'init');

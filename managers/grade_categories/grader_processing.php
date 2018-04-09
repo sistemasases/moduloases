@@ -105,7 +105,7 @@ if (isset($_POST['course']) && isset($_POST['element']) && isset($_POST['type_e'
     $response = editElement($_POST);
 
     $resp = new stdClass;
-    if ($response === true) {
+    if ($response == true) {
         $resp->msg = "Elemento Editado Correctamente";
     } else {
         $resp->error = "Error al editar elemento";

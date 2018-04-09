@@ -10,7 +10,7 @@
     "preguntas": [
         {
             "id_temporal": "cmp_0",
-            "enunciado": "Fecha (mm/dd/aaaa)*",
+            "enunciado": "Fecha*",
             "tipo_campo": "DATE",
             "opciones_campo": null,
             "atributos_campo": {
@@ -18,7 +18,8 @@
                 "class": "col-xs-6 col-sm-6 col-md-6 col-lg-6 date_field",
                 "name": "date",
                 "required": "true",
-                "local_alias": "fecha"
+                "local_alias": "fecha",
+                "max": "today()"
             },
             "permisos_campo": [
                 {
