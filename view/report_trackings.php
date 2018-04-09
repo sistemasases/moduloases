@@ -36,6 +36,10 @@ require_once ('../managers/seguimiento_grupal/seguimientogrupal_lib.php');
 require_once ('../managers/validate_profile_action.php');
 require_once ('../managers/menu_options.php');
 require_once ('../managers/lib/student_lib.php');
+require_once '../managers/dphpforms/dphpforms_forms_core.php';
+require_once '../managers/dphpforms/dphpforms_records_finder.php';
+require_once '../managers/dphpforms/dphpforms_get_record.php';
+require_once ('../managers/student_profile/studentprofile_lib.php');
 
 
 include('../lib.php');
@@ -108,29 +112,29 @@ $intervalo_fechas[2] =reset($periods)->id;
 $choosen_date =strtotime($intervalo_fechas[0]);
 $new_forms_date =strtotime('2018-01-01 00:00:00');
 
-
 // Sort periods Select
 $table_periods.=get_period_select($periods);
 
 if($usernamerole=='monitor_ps'){
 
-    //Get the trackings of the students related to the connected monitor.
-
-    if($choosen_date>=$new_forms_date){
-
-    //Render new form of the role monitor
     $monitor_id =$USER->id;
+
+    //Performs the total count of trackings per monitor, filtering by professional and practicant 
+
+    $tracking_current_semestrer=get_tracking_current_semester('monitor',$monitor_id, $intervalo_fechas[2]);
+    $counting_trackings=filter_trackings_by_review($tracking_current_semestrer);
+    $counting=create_counting_advice('MONITOR',$counting_trackings);
+
+
+    // Get peer trackings that a monitor has done and show it in a toggle.
     $students_by_monitor=get_students_of_monitor($monitor_id,$blockid);
     $table.=render_monitor_new_form($students_by_monitor);
+
+    
+    // Get grupal trackings that a monitor has done and show it in a toggle.
     $array_groupal_trackings_dphpforms =get_tracking_grupal_monitor_current_semester($monitor_id,$intervalo_fechas[2]);
+
     $table.=render_groupal_tracks_monitor_new_form($array_groupal_trackings_dphpforms,$monitor_id);
-
-    }else{
-
-    //Render old form of the role monitor
-    $seguimientos = monitorUser($globalArregloPares,$globalArregloGrupal,$USER->id,0,$blockid,$userrole,$intervalo_fechas);
-    $table.=has_tracking($seguimientos);
-    }
 
 
 }elseif($usernamerole=='practicante_ps'){
@@ -138,16 +142,13 @@ if($usernamerole=='monitor_ps'){
     //Get trackings of students associated with a set of monitors assigned to a practicant.
 
     //Render new form of the role practicant
-    if($choosen_date>=$new_forms_date){
     $practicant_id =$USER->id;
     $monitors_of_pract = get_monitors_of_pract($practicant_id,$blockid);
+    $calculate_counting=calculate_counting_by('PRACTICANTE',$monitors_of_pract,$intervalo_fechas[2],$blockid);
+
+    $counting=create_counting_advice('PRACTICANTE',$calculate_counting);
     $table.=render_practicant_new_form($monitors_of_pract,$blockid);
-    }else{
-    
-    //Render old form of the role practicant
-    $seguimientos =practicanteUser($globalArregloPares,$globalArregloGrupal,$USER->id,$blockid,$userrole,$intervalo_fechas);
-    $table.=has_tracking($seguimientos);
-    }
+  
 
 
 }elseif($usernamerole=='profesional_ps'){
@@ -155,16 +156,13 @@ if($usernamerole=='monitor_ps'){
     //Get trackings of students associated with a set of monitors in turn assigned to a practitioner of a professional.
 
     //Render new form of the role professional
-    if($choosen_date>=$new_forms_date){
     $professional_id=$USER->id;
     $practicant_of_prof=get_pract_of_prof($professional_id,$blockid);
+    $calculate_counting=calculate_counting_by('PROFESIONAL',$practicant_of_prof,$intervalo_fechas[2],$blockid);
+    $counting=create_counting_advice('PROFESIONAL',$calculate_counting);
     $table.=render_professional_new_form($practicant_of_prof,$blockid);
-    }else{
-    
-    //Render old form of the role professional
-    $seguimientos = profesionalUser($globalArregloPares,$globalArregloGrupal,$USER->id,$blockid,$userrole,$intervalo_fechas);
-    $table.=has_tracking($seguimientos);
-    }
+   
+
 
 }elseif($usernamerole=='sistemas'){
 
@@ -183,6 +181,7 @@ $table_permissions=show_according_permissions($table,$actions);
 
 $data->table_periods =$table_periods;
 $data->table=$table_permissions;
+$data->counting=$counting;
 
 $PAGE->requires->css('/blocks/ases/style/jqueryui.css', true);
 $PAGE->requires->css('/blocks/ases/style/styles_pilos.css', true);

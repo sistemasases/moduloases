@@ -127,14 +127,20 @@ function get_trackings_student($id_ases, $tracking_type, $id_instance){
     return $tracking_array;
  }
  
-function get_tracking_peer_student_current_semester($student_id, $semester_id){
+function get_tracking_current_semester($criterio,$student_id, $semester_id){
 
     $interval = get_semester_interval($semester_id);
     $fecha_inicio = getdate(strtotime($interval->fecha_inicio));
     $fecha_fin = getdate(strtotime($interval->fecha_fin));
     $ano_semester  = $fecha_inicio['year'];
-   
-    $array_peer_trackings_dphpforms = dphpforms_find_records('seguimiento_pares', 'seguimiento_pares_id_estudiante', $student_id, 'DESC');
+
+   if($criterio=='student'){
+      $array_peer_trackings_dphpforms = dphpforms_find_records('seguimiento_pares', 'seguimiento_pares_id_estudiante', $student_id, 'DESC');
+
+   }else if($criterio=='monitor'){
+    $array_peer_trackings_dphpforms = dphpforms_find_records('seguimiento_pares', 'seguimiento_pares_id_creado_por', $student_id, 'DESC');
+   }
+
     $array_peer_trackings_dphpforms = json_decode($array_peer_trackings_dphpforms);
     $array_detail_peer_trackings_dphpforms = array();
     foreach ($array_peer_trackings_dphpforms->results as &$peer_trackings_dphpforms) {

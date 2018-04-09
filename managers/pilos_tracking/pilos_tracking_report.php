@@ -81,7 +81,7 @@ if (isset($_POST['type']) && isset($_POST['instance']) && $_POST['type'] == "get
     $ases_student = get_ases_user_by_code($student_code[0]);
     $student_id = $ases_student->id;
     $current_semester = get_current_semester();
-    $array_peer_trackings_dphpforms = get_tracking_peer_student_current_semester($student_code[0], $current_semester->max);
+    $array_peer_trackings_dphpforms = get_tracking_current_semester('student',$student_code[0], $current_semester->max);
     $array = render_student_trackings($array_peer_trackings_dphpforms);
     echo json_encode($array);
     }
