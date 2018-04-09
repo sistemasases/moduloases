@@ -50,10 +50,10 @@ function render_monitor_new_form($students_by_monitor, $period = null)
         $student = explode("-", $student_code->username);
         $current_semester = get_current_semester();
         if ($period == null) {
-            $monitor_trackings = get_tracking_peer_student_current_semester($student[0], $current_semester->max);
+            $monitor_trackings = get_tracking_current_semester('student',$criterio,$student[0], $current_semester->max);
         }
         else {
-            $monitor_trackings = get_tracking_peer_student_current_semester($student[0], $period);
+            $monitor_trackings = get_tracking_current_semester('student',$criterio,$student[0], $period);
         }
 
         $panel.= "<a data-toggle='collapse' class='student collapsed btn btn-danger btn-univalle btn-card collapsed' data-parent='#accordion_students' style='text-decoration:none' href='#student" . $student_code->username . "'>";
@@ -248,6 +248,81 @@ function render_student_trackings($peer_tracking_v2)
 }
 
 /**
+ * Filter the trackings of a monitor that are reviewed by the professional
+ *
+ * @see filter_trackings_by_review($peer_tracking_v2)
+ * @param peer_tracking_v2 --> Array of trackings
+ * @return 
+ *
+ */
+
+function filter_trackings_by_review($peer_tracking_v2)
+{
+    $array_review_trackings =[];
+    $array_not_review_trackings =[];
+
+
+    if ($peer_tracking_v2) {
+        foreach($peer_tracking_v2[0] as $key => $period) {
+            $year_number = $period;
+            foreach($period as $key => $tracking) {
+                $is_reviewed = false;
+                foreach($tracking[record][campos] as $key => $review) {
+                    if ($review[local_alias] == 'revisado_profesional') {
+                        if ($review[respuesta] == 0) {
+                            array_push($array_review_trackings, $tracking);
+                            $is_reviewed = true;
+                        }
+                    }
+                }
+
+                if (!$is_reviewed) {
+                     array_push($array_not_review_trackings, $tracking);
+                }
+            }
+        }
+    }
+
+    $counting=[];
+    $counting[0]=count($array_review_trackings);
+    $counting[1]=count($array_not_review_trackings);
+
+
+    return $counting;
+}
+
+
+/**
+ * Create the notice sign of the counts by professional and practicant
+ *
+ * @see create_counting_advice($user_kind,$result)
+ * @param $user_kind --> String with the role of user
+ * @param $result --> Array with number of reviewed trackings by profesional (0,1) and
+ * practicant (2,3).
+ * @return String
+ *
+ */
+
+function create_counting_advice($user_kind,$result){
+
+  $advice="";
+  $advice.='<h2> INFORMACIÓN DE  '.$user_kind.'</h2><hr>';
+  $advice.='<div class="row">';
+  $advice.='<div class="col-sm-6">';
+  $advice.='<strong>Profesional</strong><hr>';
+  $advice.='Revisado :'.$result[0].' - No revisado : '.$result[1].' -  Total :'.($result[1]+$result[0]).'</div>';
+  $advice.='<div class="col-sm-6">';
+  $advice.='<strong>Practicante</strong><hr>';
+  $advice.='Revisado :'.$result[0].' - No revisado : '.$result[1].' -  Total :'.($result[1]+$result[0]).'</div></div>';
+
+  return $advice;  
+}
+
+
+
+
+
+/**
  * Formatting of array with dates of trackings
  *
  * @see format_dates_trackings($array_peer_trackings_dphpforms)
@@ -268,6 +343,40 @@ function format_dates_trackings(&$array_detail_peer_trackings_dphpforms, &$array
                 array_push($array_tracking_date, strtotime($tracking->respuesta));
             }
         }
+    }
+}
+
+
+function quick_sort($array)
+{
+    // find array size
+    $length = count($array);
+    
+    // base case test, if array of length 0 then just return array to caller
+    if($length <= 1){
+        return $array;
+    }
+    else{
+    
+        // select an item to act as our pivot point, since list is unsorted first position is easiest
+        $pivot = $array[0];
+        
+        // declare our two arrays to act as partitions
+        $left = $right = array();
+        
+        // loop and compare each item in the array to the pivot value, place item in appropriate partition
+        for($i = 1; $i < count($array); $i++)
+        {
+            if($array[$i] < $pivot){
+                $left[] = $array[$i];
+            }
+            else{
+                $right[] = $array[$i];
+            }
+        }
+        
+        // use recursion to now sort the left and right lists
+        return array_merge(quick_sort($left), array($pivot), quick_sort($right));
     }
 }
 

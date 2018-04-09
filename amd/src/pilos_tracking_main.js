@@ -93,7 +93,7 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                 usuario["namerol"] = namerol;
 
 
-                crear_conteo(usuario);
+                //crear_conteo(usuario);
 
 
                 // when user is 'practicante' then has permissions
@@ -660,7 +660,7 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
 
                                 if (msg == "") {
                                     $('#reemplazarToogle').html('<label> No se encontraron registros </label>');
-                                    crear_conteo(usuario);
+                                   // crear_conteo(usuario);
 
 
 
@@ -672,7 +672,7 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                                     groupal_tracking_load();
                                 }
                                 $(".well.col-md-10.col-md-offset-1.reporte-seguimiento.oculto").slideDown("slow");
-                                crear_conteo(usuario);
+                               // crear_conteo(usuario);
 
 
 
