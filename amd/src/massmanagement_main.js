@@ -1,12 +1,12 @@
- /**
- * mass management LOAD
- * @module amd/src/massmanagement_main
- * @author Jhon Lourido 
- * @author Isabella Serna Ramírez
- * @author Camilo José Cruz rivera
- * @copyright 2018 - Jhon Lourido <jhonkrave@gmail.com>, Isabella Serna Ramírez <isabella.serna@correounivalle.edu.co>, Camilo José Cruz Rivera <cruz.camilo@correounivalle.edu.co> 
- * @license  http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
+/**
+* mass management LOAD
+* @module amd/src/massmanagement_main
+* @author Jhon Lourido 
+* @author Isabella Serna Ramírez
+* @author Camilo José Cruz rivera
+* @copyright 2018 - Jhon Lourido <jhonkrave@gmail.com>, Isabella Serna Ramírez <isabella.serna@correounivalle.edu.co>, Camilo José Cruz Rivera <cruz.camilo@correounivalle.edu.co> 
+* @license  http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+*/
 
 define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert'], function ($, bootstrap, sweetalert) {
 
@@ -84,6 +84,9 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert'], function ($,
                     case 'roles_usuario':
                         controler = 'mrm_roles.php'; //
                         break;
+                    case 'status':
+                        controler = 'mrm_status.php'; //
+                        break;
                     default:
                         return 0;
                 }
@@ -136,12 +139,14 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert'], function ($,
                 $('#informacion').empty();
                 switch (selector) {
                     case 'monitor_estud':
-                        $('#informacion').append('<div class="alert alert-info"><h4 align="center">Información</h4><strong>Para tener en cuenta...</strong> <br><p>Columnas obligatorias:<ul> <li>username_monitor</li><li>username_estudiante</li> </ul> </p></div>');
+                        $('#informacion').append('<div class="alert alert-info"><h4 align="center">Información Asignacion</h4><strong>Para tener en cuenta...</strong> <br><p>Columnas obligatorias:<ul> <li>username_monitor</li><li>username_estudiante</li> </ul> </p></div>');
                         break;
                     case 'roles_usuario':
-                        $('#informacion').append('<div class="alert alert-info"><h4 align="center">Información</h4><strong>Para tener en cuenta...</strong> <br><p>Columnas obligatorias:<ul> <li>username</li><li>rol(administrativo, reportes,profesional_ps, monitor_ps,  estudiante_t ó practicante_psp)</li> </ul> </p><p>Columnas extras aceptadas: <ul> <li>jefe</li>  </ul> </p></div>');
+                        $('#informacion').append('<div class="alert alert-info"><h4 align="center">Información Roles</h4><strong>Para tener en cuenta...</strong> <br><p>Columnas obligatorias:<ul> <li>username</li><li>rol(administrativo, reportes,profesional_ps, monitor_ps,  estudiante_t ó practicante_psp)</li> </ul> </p><p>Columnas extras aceptadas: <ul> <li>jefe</li>  </ul> </p></div>');
                         break;
-
+                    case 'status':
+                        $('#informacion').append('<div class="alert alert-info"><h4 align="center">Información estados</h4><strong>Para tener en cuenta...</strong> <br><p>Columnas obligatorias:<ul> <li>username</li> <li>estado_ases</li> <li>estado_icetex</li> <li>estado_programa</li><li>tracking_status</li> <li>motivo_ases</li> <li>motivo_icetex</li> </ul> </p></div>');
+                        break;
                     default:
                     // code
                 }
