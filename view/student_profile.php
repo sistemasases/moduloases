@@ -835,6 +835,7 @@ if ($student_code != 0) {
 
 if ($rol == 'sistemas') {
     $record->add_peer_tracking_lts = true;
+    $record->sistemas = true;
 }
 
 
