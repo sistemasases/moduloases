@@ -348,7 +348,6 @@
                             $('.btn-dphpforms-update').remove();
                         }
 
-                        var rev_prof = $('.dphpforms-record').find('.revisado_profesional').find('.checkbox').find('input[type=checkbox]').prop('checked');
                         var count_buttons_dphpforms = $('.dphpforms-record .btn-dphpforms-univalle').length;
                         if( count_buttons_dphpforms == 1 ){
                             $('.dphpforms-record .btn-dphpforms-univalle:eq(0)').css( { 'margin-left' : ( ($('.dphpforms-updater').width()/2) - ( $('.dphpforms-record .btn-dphpforms-close').outerWidth() /2) ) + 'px'  } );

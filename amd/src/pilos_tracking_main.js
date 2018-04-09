@@ -23,6 +23,45 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
             var instance = "";
             var email = "";
 
+            $(document).on( "click", ".btn-dphpforms-close", function() {
+                $(this).closest('div[class="mymodal"]').fadeOut(300);
+            });
+
+            function custom_actions( form, action ){
+
+                if( (form == 'primer_acercamiento' ) && ( action == 'insert' )){ 
+
+                }else if( (form == 'primer_acercamiento' ) && ( action == 'update' )){ 
+
+                }else if( (form == 'seguimiento_pares' )&&( action == 'insert' )){
+
+                }else if( (form == 'seguimiento_pares')&&( action == 'update' ) ){
+
+                    var rev_prof = $('.dphpforms-record').find('.revisado_profesional').find('.checkbox').find('input[type=checkbox]').prop('checked');
+                    
+                    if( rev_prof ){
+                        $('.btn-dphpforms-update').remove();
+                    }
+
+                    var count_buttons_dphpforms = $('.dphpforms-record .btn-dphpforms-univalle').length;
+                    if( count_buttons_dphpforms == 2 ){
+                        $('.dphpforms-record .btn-dphpforms-close').css( { 'margin-left' : ( ($('.dphpforms-updater').width()/2) - 30 ) + 'px'  } );
+                    }else if( count_buttons_dphpforms == 3 ){
+                        $('.dphpforms-record .btn-dphpforms-univalle:eq(0)').css( { 'margin-left' : ( ($('.dphpforms-updater').width()/2) - 72 - 30 ) + 'px'  } );
+                    }
+
+                }else if( (form == 'seguimiento_geografico_')&&( action == 'insert' ) ){
+                
+                }else if( (form == 'seguimiento_geografico_')&&( action == 'update' ) ){
+
+                }else if( (form=='seguimiento_grupal_')&&( action == 'insert' ) ){
+
+                }else if( (form=='seguimiento_grupal_')&&( action == 'update' ) ){
+
+                }
+
+            }
+
             $(document).ready(function() {
 
                 ///////////////////////////////////////////////////////////7
@@ -176,9 +215,6 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                $('#modal_v2_edit_groupal_tracking').fadeIn(300);
 
             });}
-
-
-
 
 
 
@@ -444,8 +480,8 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                 }; 
 
            $(document).on('click', '.dphpforms > #button' , function(evt) {
-                     evt.preventDefault();
-
+                    evt.preventDefault();
+                    $( ':disabled' ).prop( 'disabled', false);
                     var formData = new FormData();
                     var formulario = $(this).parent();
                     var url_processor = formulario.attr('action');
@@ -491,6 +527,10 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                                     var mensaje = '';
                                     if(response['message'] == 'Without changes'){
                                         mensaje = 'No hay cambios que registrar';
+                                        $('#modal_v2_edit_peer_tracking').fadeOut(300);
+                                        $('#modal_v2_peer_tracking').fadeOut(300);
+                                        $('#modal_primer_acercamiento').fadeOut(300);
+                                        $('#modal_seguimiento_geografico').fadeOut(300);
                                     }else if(response['message'] == 'Unfulfilled rules'){
                                         mensaje = 'Revise los valores ingresados';
                                     }
@@ -579,7 +619,10 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                             $('#body_editor').append( data );
                             $(".dphpforms.dphpforms-record.dphpforms-updater").append('<br><br><div class="div-observation col-xs-12 col-sm-12 col-md-12 col-lg-12 comentarios_vida_uni">Observaciones de Practicante/profesional:<br> <textarea id="observation_text" class="form-control " name="observation_text" maxlength="5000"></textarea><br><a id="send_observation" class="btn btn-sm btn-danger btn-dphpforms-univalle btn-dphpforms-send-observation">Enviar observación</a></div>');
                             $('button.btn.btn-sm.btn-danger.btn-dphpforms-univalle').attr('id', 'button');
-
+                            var is_seguimiento_pares = data.indexOf('seguimiento_de_pares_');
+                            if( is_seguimiento_pares != -1 ){
+                                custom_actions( 'seguimiento_pares', 'update' );
+                            }
                          }
                             
                            
