@@ -1,0 +1,94 @@
+#div-header-info{
+    background: #D4D4D4;
+}
+
+#div-header-profile{
+    margin-bottom: 10px;
+    margin-top: 20px;
+}
+
+#photo_div{
+    border-left: 5px solid white;
+}
+
+.select2.select2-container.select2-container--default{
+    width: 100% !important;
+    font-size: 200%;
+}
+
+.select2-container .select2-selection--single{
+    height: 40px;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__rendered{
+    line-height: 40px;
+    font-weight: bold;
+}
+
+#row-general-fields{
+    height: 30px;
+    margin-top: 5px;
+}
+
+#div-select-student{
+    padding-top: 20px;
+}
+
+hr{
+    background-color: gray;
+    height: 1px;
+    border: 0px;
+    margin-top: 5px;
+}
+
+.div-general-fields{
+    height:100%;
+}
+
+#icon-tracking{
+    
+}
+
+.i-tracking{
+    color: green !important;
+    font-size: 30px;
+    position: absolute;
+    transition:all .5s ease-in-out;
+}
+
+#icon-tracking:hover{
+    filter: opacity(.4);
+}
+
+.div-general-fields>input{
+    border: 1px;
+}
+
+.div-general-fields>input,
+.div-general-fields>select,
+.div-general-fields>span{
+    height:100%;
+    position: absolute;
+}
+
+#age,
+#email{
+    padding-top: 5px;
+}
+
+.borderless td, .borderless th {
+    border: none !important;
+}
+
+.td-middle{
+    vertical-align: middle !important;
+}
+
+.is-active{
+    background-color: #93B793;
+}
+
+
+
+
+

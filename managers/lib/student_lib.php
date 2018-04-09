@@ -273,6 +273,33 @@ function get_cohort_student($id_student)
 }
 
 /**
+ * Gets student cohorts
+ *
+ * @see get_cohorts_by_student($id_student)
+ * @param $id_moodle_student --> ID moodle 
+ * @return Array
+ */
+function get_cohorts_by_student($id_moodle_student){
+
+    global $DB;
+
+    $result_to_return = array();
+
+    $sql_query = "SELECT cohorts.name
+                  FROM {cohort_members} AS members 
+                    INNER JOIN {cohort} AS cohorts ON members.cohortid = cohorts.id
+                  WHERE userid = $id_moodle_student";
+    
+    $result_query = $DB->get_records_sql($sql_query);
+
+    foreach($result_query as $result){
+        array_push($result_to_return, $result);
+    }
+
+    return $result_to_return;
+}
+
+/**
  * Obtains name, lastname and email from a monitor assigned to a student, given the student id
  *
  * @see get_assigned_monitor($id_student)
@@ -429,7 +456,72 @@ function get_full_user($id)
 }
 
 /**
- * Obtains name, lastname and email from a monitor assigned to a student, given the student id
+ * Returns the academic programs associated with a student
+ *
+ * @see get_academic_program($id_ases_user)
+ * @param $id_ases_user --> student id on {talentospilos_usuario} table 
+ * @return array 
+ */
+function get_academic_programs_by_student($id_ases_user){
+
+    global $DB;
+
+    $result_to_return = new stdClass();
+    $array_result = array();
+
+    $sql_query = "SELECT user_extended.id_moodle_user, academic_program.id AS academic_program_id, academic_program.cod_univalle, 
+                         academic_program.nombre AS nombre_programa, academic_program.jornada, faculty.nombre AS nombre_facultad,
+                         user_extended.program_status, user_extended.tracking_status
+                  FROM {talentospilos_user_extended} AS user_extended
+                       INNER JOIN {talentospilos_programa} AS academic_program ON user_extended.id_academic_program = academic_program.id
+                       INNER JOIN {talentospilos_facultad} AS faculty ON academic_program.id_facultad = faculty.id
+                  WHERE id_ases_user = $id_ases_user";
+    
+    $array_result_query = $DB->get_records_sql($sql_query);
+
+    foreach($array_result_query as $result){
+        array_push($array_result, $result);
+        
+    }
+
+    return $array_result;
+}
+
+/**
+ * Update the academic program status of a student
+ *
+ * @see update_status_program($program_id, $status, $student_id)
+ * @param $program_id --> Academic program id
+ * @param $status --> New status for an academic program
+ * @param $student_id --> Student id in Moodle table
+ * @return array 
+ */
+
+function update_status_program($program_id, $status, $student_id){
+
+    global $DB;
+
+    $sql_query = "SELECT id 
+                  FROM {talentospilos_user_extended} 
+                  WHERE id_academic_program = $program_id AND id_moodle_user = $student_id";
+
+    $id_register = $DB->get_record_sql($sql_query)->id;
+
+    $object_updatable = new stdClass();
+    $object_updatable->id = $id_register;
+    $object_updatable->program_status = $status;
+
+    $result = $DB->update_record('talentospilos_user_extended', $object_updatable);
+
+    if($result){
+        return 1;
+    }else{
+        return 0;
+    }
+
+}
+
+/* Obtains name, lastname and email from a monitor assigned to a student, given the student id
  *
  * @see get_student_monitor($id_ases_user,$id_semester,$id_instance)
  * @param $id_student --> student id on {talentospilos_usuario} table

@@ -305,7 +305,7 @@
             }
 
         }
-        $html = $html .  ' <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" style="padding:0px;"> <hr style="border-color:red"></div><button type="submit" class="btn btn-sm btn-danger btn-dphpforms-univalle">Registrar</button>' . "\n";
+        $html = $html .  ' <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" style="padding:0px;"> <hr style="border-color:red"></div><button type="submit" class="btn btn-sm btn-danger btn-dphpforms-univalle btn-dphpforms-sendform">Registrar</button> <a href="javascript:void(0);" class="btn btn-sm btn-danger btn-dphpforms-univalle btn-dphpforms-close">Cerrar</a>' . "\n";
         $html = $html .  ' </form>' . "\n";
 
         return $html;
