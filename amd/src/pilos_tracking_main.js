@@ -27,6 +27,23 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                 $(this).closest('div[class="mymodal"]').fadeOut(300);
             });
 
+            $('.outside').click(function(){
+                var outside = $(this);
+                swal({
+                    title: 'Confirmación de salida',
+                    text: "",
+                    type: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Salir'
+                  }, function(isConfirm) {
+                    if (isConfirm) {
+                        $(outside).parent('.mymodal').fadeOut(300);
+                        console.log( $(this).parent('.mymodal') );
+                    }
+                  });
+                
+            });
+
             function custom_actions( form, action ){
 
                 if( (form == 'primer_acercamiento' ) && ( action == 'insert' )){ 
