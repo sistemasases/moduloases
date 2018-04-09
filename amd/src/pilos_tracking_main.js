@@ -44,6 +44,7 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                     }
 
                     var count_buttons_dphpforms = $('.dphpforms-record .btn-dphpforms-univalle').length;
+                    console.log( count_buttons_dphpforms )
                     if( count_buttons_dphpforms == 2 ){
                         $('.dphpforms-record .btn-dphpforms-close').css( { 'margin-left' : ( ($('.dphpforms-updater').width()/2) - 30 ) + 'px'  } );
                     }else if( count_buttons_dphpforms == 3 ){
@@ -506,7 +507,7 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                                     }else if(response['message'] == 'Updated'){
                                         mensaje = 'Actualizado';
                                     }
-                                    check_risks_tracking();
+                                    //check_risks_tracking();
                                     swal(
                                         {title:'Información',
                                         text: mensaje,
