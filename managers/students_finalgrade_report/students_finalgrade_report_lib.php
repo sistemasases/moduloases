@@ -78,7 +78,7 @@ function get_students_and_finalgrades($instance_id){
                 ON materias_criticas.codigo_materia = SUBSTR(courses.shortname, 4, 7)
                 WHERE SUBSTR(courses.shortname, 15, 4) = '2018') AS materias_criticas
 
-                ON cursos_ases.id_course = materias_criticas.id";
+                ON cursos_ases.id_course = materias_criticas.materiacr_id";
 
     $records = $DB->get_records_sql($query);
 
