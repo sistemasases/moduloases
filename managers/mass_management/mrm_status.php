@@ -87,6 +87,7 @@ if (isset($_FILES['file']) || isset($_POST['idinstancia'])) {
 
             $username = 0;
             $id_moodle = 0;
+            $id_user_extended = 0;
             //validation id
             if ($associativeTitles['username'] !== null) {
                 $sql_query = "SELECT id, username from {user} where username like '" . $data[$associativeTitles['username']] . "%';";
@@ -97,7 +98,6 @@ if (isset($_FILES['file']) || isset($_POST['idinstancia'])) {
                     array_push($detail_erros, [$line_count, $lc_wrongFile, ($associativeTitles['username'] + 1), 'username', 'No existe un usuario moodle asociado al username' . $data[$associativeTitles['username']]]);
                 } else {
                     $id_moodle = $result->id;
-                    $username = $result->username;
 
                     //validate user_extended
                     $sql_query = "SELECT * FROM {talentospilos_user_extended} WHERE id_moodle_user = $id_moodle";
@@ -109,6 +109,7 @@ if (isset($_FILES['file']) || isset($_POST['idinstancia'])) {
                         array_push($detail_erros, [$line_count, $lc_wrongFile, ($associativeTitles['username'] + 1), 'username', 'No existe un usuario talentos asociado al usuario moodle con username' . $data[$associativeTitles['username']]]);
                     } else {
                         $id_talentos = $result->id_ases_user;
+                        $id_user_extended = $result->id;
                     }
                 }
             } else {
@@ -189,7 +190,7 @@ if (isset($_FILES['file']) || isset($_POST['idinstancia'])) {
                         $id_motivo_ases = $result->id;
                     }
 
-                }else{
+                } else {
                     $id_motivo_ases = false;
                 }
 
@@ -210,7 +211,7 @@ if (isset($_FILES['file']) || isset($_POST['idinstancia'])) {
                     } else {
                         $id_motivo_icetex = $result->id;
                     }
-                }else{
+                } else {
                     $id_motivo_icetex = false;
                 }
 
@@ -227,7 +228,7 @@ if (isset($_FILES['file']) || isset($_POST['idinstancia'])) {
                 continue;
             } else {
 
-                $result = update_status_student($id_moodle, $id_talentos, $id_estado_ases, $id_estado_icetex, $estado_programa, $tracking_status, $id_motivo_ases, $id_motivo_icetex);
+                $result = update_status_student($id_user_extended, $id_talentos, $id_estado_ases, $id_estado_icetex, $estado_programa, $tracking_status, $id_motivo_ases, $id_motivo_icetex);
 
                 if ($result) {
                     array_push($success_rows, $data);
@@ -350,8 +351,53 @@ function getAssociativeTitles($array)
  * @param $tracking_status --> tracking_status of {talentospilos_user_extended}
  * @return boolean
  */
-function update_status_student($id_moodle, $id_talentos, $id_estado_ases, $id_estado_icetex, $estado_programa, $tracking_status)
+function update_status_student($id_user_extended, $id_talentos, $id_estado_ases, $id_estado_icetex, $estado_programa, $tracking_status, $id_motivo_ases, $id_motivo_icetex)
 {
     global $DB;
 
+    //update tp_user_extended
+    $object_user_extended_update = new stdClass;
+    $object_user_extended_update->id = $id_user_extended;
+    $object_user_extended_update->program_status = $estado_programa;
+    $object_user_extended_update->tracking_status = $tracking_status;
+
+    $update = $DB->update_record('talentospilos_user_extended', $object_user_extended_update);
+
+    if (!$update) {
+        return false;
+    }
+
+    //update estado ases
+
+    $object_est_estado_ases = new stdClass;
+    $object_est_estado_ases->id_estudiante = $id_talentos;
+    $object_est_estado_ases->id_estado_ases = $id_estado_ases;    
+    if ($motivo_ases != false) {
+        $object_est_estado_ases->id_motivo_ret = $id_motivo_ases;
+    }
+    $object_est_estado_ases->fecha = time();
+
+    $insert_ases = $DB->insert_record('talentospilos_est_estadoases', $record, false);
+    
+    if (!$insert_ases) {
+        return false;
+    }
+
+    //update estado_icetex
+
+    $object_est_estado_icetex = new stdClass;
+    $object_est_estado_icetex->id_estudiante = $id_talentos;
+    $object_est_estado_icetex->id_estado_icetex = $id_estado_icetex;    
+    if ($motivo_ases != false) {
+        $object_est_estado_icetex->id_motivo_ret = $id_motivo_ases;
+    }
+    $object_est_estado_icetex->fecha = time();
+
+    $insert_icetex = $DB->insert_record('talentospilos_est_est_icetex', $record, false);
+    
+    if (!$insert_icetex) {
+        return false;
+    }
+
+    return true;
 }
