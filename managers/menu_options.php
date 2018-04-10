@@ -235,6 +235,17 @@ function create_menu_options($userid, $blockid, $courseid)
 
             }
 
+            if ($function == 'students_finalgrade_report') {
+                $url = new moodle_url("/blocks/ases/view/students_finalgrade_report.php", array(
+                    'courseid' => $courseid,
+                    'instanceid' => $blockid,
+                ));
+
+                $menu_options = '<li><a href= "' . $url . '"> Reporte de notas finales </a><li>';
+                $indexed['Reporte de notas finales'] = $menu_options;
+
+            }
+
         }
 
         //ORDENA
