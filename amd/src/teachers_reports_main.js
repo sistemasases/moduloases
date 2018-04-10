@@ -13,6 +13,15 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables', 'block_ases/s
             $(document).ready(function(){
 
             });
+
+            //Controles para la tabla de los estudianes con resolución
+			$(document).on('change', '#tableItemsReport thead tr th select', function () {
+				var table = $("#tableItemsReport").DataTable();
+		
+				var colIndex = $(this).parent().index()+1;
+				var selectedText=$(this).parent().find(":selected").text();
+				table.columns( colIndex-1 ).search( this.value ).draw();		
+			});
         },
 
         load_table_report: function (data) {
