@@ -317,26 +317,32 @@ if ($student_code != 0) {
 
     // Loading academic information
 
+    foreach ($academic_programs as $program) {
+        if($program->tracking_status == 1){
+            $academic_program_id = $program->academic_program_id;
+            break;
+        }
+    }
     //Current data
     //weighted average
-    // $promedio = get_promedio_ponderado($student_id, $academic_program->id);
-    // $record->promedio = $promedio;
+    $promedio = get_promedio_ponderado($student_id, $academic_program_id);
+    $record->promedio = $promedio;
 
     // //num bajos
-    // $bajos = get_bajos_rendimientos($student_id, $academic_program->id);
-    // $record->bajos = $bajos;
+    $bajos = get_bajos_rendimientos($student_id, $academic_program_id);
+    $record->bajos = $bajos;
 
     // // //num estimulos
-    // $estimulos = get_estimulos($student_id, $academic_program->id);
-    // $record->estimulos = $estimulos;
+    $estimulos = get_estimulos($student_id, $academic_program_id);
+    $record->estimulos = $estimulos;
 
     // //Current semester
-    // $html_academic_table = get_grades_courses_student_last_semester($id_user_moodle);
-    // $record->academic_semester_act = $html_academic_table;
+    $html_academic_table = get_grades_courses_student_last_semester($id_user_moodle);
+    $record->academic_semester_act = $html_academic_table;
 
     // //historic academic
-    // $html_historic_academic = get_historic_academic_by_student($student_id);
-    // $record->historic_academic = $html_historic_academic;
+    $html_historic_academic = get_historic_academic_by_student($student_id);
+    $record->historic_academic = $html_historic_academic;
 
     // Student trackings (Seguimientos)
 
