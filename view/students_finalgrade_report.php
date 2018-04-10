@@ -31,14 +31,14 @@ require_once('../managers/instance_management/instance_lib.php');
 require_once ('../managers/permissions_management/permissions_lib.php');
 require_once ('../managers/validate_profile_action.php');
 require_once ('../managers/menu_options.php');
-require_once ('../managers/teachers_reports/teachers_reports_lib.php');
-include "../classes/output/teachers_reports_page.php";
+require_once ('../managers/students_finalgrade_report/students_finalgrade_report_lib.php');
 include "../classes/output/renderer.php";
+include "../classes/output/students_finalgrade_report_page.php";
 
 global $PAGE;
 
 // Variables for setup the page.
-$title = "Reporte de Docentes";
+$title = "Reporte de Notas Finales Parciales";
 $pagetitle = $title;
 $courseid = required_param('courseid', PARAM_INT);
 $blockid = required_param('instanceid', PARAM_INT);
@@ -47,7 +47,7 @@ require_login($courseid, false);
 
 $contextcourse = context_course::instance($courseid);
 $contextblock =  context_block::instance($blockid);
-$url = new moodle_url("/blocks/ases/view/teachers_reports.php", array('courseid' => $courseid, 'instanceid' => $blockid));
+$url = new moodle_url("/blocks/ases/view/students_finalgrade_report.php", array('courseid' => $courseid, 'instanceid' => $blockid));
 
 //Instance is consulted for its registration
 if(!consult_instance($blockid)){
@@ -67,7 +67,7 @@ $data->menu = $menu_option;
 
 //Navegation set up
 $coursenode = $PAGE->navigation->find($courseid, navigation_node::TYPE_COURSE);
-$node = $coursenode->add('Reporte de docentes',$url);
+$node = $coursenode->add('Reporte de notas finales parciales',$url);
 $node->make_active();
 
 // Setup page
@@ -95,16 +95,16 @@ $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/jquery.dataTables_t
 $PAGE->requires->css('/blocks/ases/js/select2/css/select2.css', true);
 $PAGE->requires->css('/blocks/ases/style/side_menu_style.css', true);
 
-$PAGE->requires->js_call_amd('block_ases/teachers_reports_main', 'init');
+$PAGE->requires->js_call_amd('block_ases/students_finalgrade_report_main', 'init');
 
-$tableReport = get_datatable_array_for_report($blockid);
+$tableReport = get_datatable_array_for_finalgrade_report($blockid);
 $paramReport = new stdClass();
 $paramReport->table = $tableReport;
 
-$PAGE->requires->js_call_amd('block_ases/teachers_reports_main', 'load_table_report', $paramReport);
+$PAGE->requires->js_call_amd('block_ases/students_finalgrade_report_main', 'load_table_finalgrades_report', $paramReport);
 
 $output = $PAGE->get_renderer('block_ases');
-$index_page = new \block_ases\output\teachers_reports_page($data);
+$index_page = new \block_ases\output\students_finalgrade_report_page($data);
 
 echo $output->header();
 

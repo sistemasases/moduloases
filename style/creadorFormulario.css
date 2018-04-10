@@ -76,6 +76,17 @@ pre, code {
     border-radius: 3px;
 }
 
+.peer-tracking-record-review{
+    color: #333;
+    border: 1px solid #ddd;
+    padding: 0.4em;
+    font-size: 1.1em;
+    margin-bottom: 0.4em;
+    background-color: #999999;
+    border-radius: 3px;
+}
+
+
 
 .peer-tracking-record:first-child{
     margin-top: 20px;
@@ -147,7 +158,9 @@ pre, code {
 #modal_v2_edit_peer_tracking > .mymodal-content, 
 #modal_v2_peer_tracking > .mymodal-content, 
 #modal_seguimiento_geografico > .mymodal-content,
-#modal_primer_acercamiento > .mymodal-content{
+#modal_primer_acercamiento > .mymodal-content,
+#modal_v2_groupal_tracking > .mymodal-content,
+#modal_v2_edit_groupal_tracking > .mymodal-content{
     width: 80%;
     padding: 0px;
 }
@@ -297,6 +310,12 @@ pre, code {
 
 .ajuste_origen{
     margin-top: 2em;
+}
+
+.regla_incumplida{
+    border: 1px solid #D51B23;
+    border-radius: 3px;
+    margin-top: 0.2em;
 }
 
 /* Finalización de definición de estilos para seguimientos geográficos */

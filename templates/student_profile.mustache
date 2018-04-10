@@ -1,211 +1,231 @@
-<body>
-  {{#data}} {{> block_ases/side_menu}} {{{message}}}
-  <div class="container">
-    <input type="text" class="hide" id="current_user_id" value="{{id_dphpforms_creado_por}}" />
+{{#data}} 
+{{> block_ases/side_menu}} 
+{{{message}}}
 
-    <form id="ficha_estudiante" onsubmit="myFunction(); return false;">
-    
-      <input type="text" class="hide" id="id_ases" name="id_ases" value="{{id_ases}}" />
-      <input type="text" class="hide" id="id_moodle" name="id_moodle" value="{{id_moodle}}" />
+<div class="container">
+  {{#sistemas}}<div id="dphpforms_role_support" data-info="sistemas" style="display:none;"></div>{{/sistemas}}
+  <input type="text" class="hide" id="current_user_id" value="{{id_dphpforms_creado_por}}" />
 
-      <div class="row m-bottom-20 cabecera">
-        <div class="col-md-4">
+  <form id="ficha_estudiante">
+  
+    <input type="text" class="hide" id="id_ases" name="id_ases" value="{{id_ases}}" />
+    <input type="text" class="hide" id="id_moodle" name="id_moodle" value="{{id_moodle}}" />
 
-          <h2>FICHA GENERAL DEL ESTUDIANTE</h2>
-
-          <div class="row">
-            <label class="col-sm-4 col-md-4 control-label">Código</label>
-            <div class="col-sm-4">
-              {{{code}}}
-            </div>
-            {{#search_student_sp}}
-            <div class="col-sm-4">
-              <button type="button" class="btn-primary btn-sm" name="search" id="search">
-                <span class=" button glyphicon glyphicon-search"></span> Buscar
-              </button>
-            </div>
-            {{/search_student_sp}}
+    <div class="row" id="div-header-profile">
+      <div class="col-xs-12 col-sm-10 col-md-10 col-lg-10 equalize" id="div-header-info">
+        <div class="row" id="div-select-student">
+          <div class="col-xs-11 col-sm-11">
+            {{{code}}}
           </div>
-
-          {{#update_icetex_status_sp}}
-          <div class="row">
-            <label for="estado" class="col-sm-4 col-md-4 control-label">Estado Icetex</label>
-            <div class="col-sm-6">
-              <select name="estado" id="estado" class="col-md-5 form-control" disabled>
-                {{{status_icetex}}}
-              </select>
-            </div>
-          </div>
-          {{/update_icetex_status_sp}}
-
-          {{#update_ases_status_sp}}
-          <div class="row">
-            <label for="estadoAses" class="col-md-4 control-label">Estado Ases</label>
-            <div class="col-sm-6">
-              <select name="estado_ases" id="estadoAses" class="col-md-5 form-control" disabled>
-                {{{status_ases}}}
-              </select>
-            </div>
-          </div>
-          {{/update_ases_status_sp}}
-          <div class="row">
-            <label for="input_facultad" class="col-sm-4 control-label">Facultad</label>
-            <div class="col-sm-6">
-              <span id="input_facultad">{{faculty}}</span>
-            </div>
-          </div>
-
-          <div class="row">
-            <label for="input_programa" class="col-sm-4 control-label">Programa</label>
-            <div class="col-sm-6">
-              <span id="input_programa">{{program}}</span>
-            </div>
+          <div class="col-xs-1 col-sm-1">
+            <span class="glyphicon glyphicon-ok i-tracking" {{#update_ases_status_sp}} id="icon-tracking" {{/update_ases_status_sp}}></span>
+            <input type="hidden" id="input_status_ases">
           </div>
         </div>
-        <!-- End col-md-4 -->
-
-        <div class="col-md-6">
-
-          <div class="row m-bottom-20">
-            <label class="col-md-12 nombre-ficha" id="nombreficha">{{firstname}} {{lastname}}</label>
+        <div class="row" id="row-general-fields">
+          <div class="col-xs-2 col-sm-1 div-general-fields" id="">
+            <select name="tipo_doc" class="" id="tipo_doc" name="tipo_doc" disabled>
+              <option value="T.I" {{doc_type_ti}}>T.I.</option>
+              <option value="C.C" {{doc_type_cc}}>C.C.</option>
+              <option value="C.R" {{doc_type_cr}}>C.R.</option>
+              <option id="EMPTY" {{doc_type_empty}}></option>
+            </select>
           </div>
-
-          <div class="row">
-            <label for="cedula" class="col-sm-2 control-label">Documento</label>
-            <div class="col-sm-6">
-              <input type="text" class="form-control" name="num_doc" id="cedula" value="{{num_doc}}" size="12" maxlength="11" readonly>
-            </div>
+          <div class="col-xs-3 col-sm-2 div-general-fields">
+            <input type="text" class="" name="num_doc" id="cedula" value="{{num_doc}}" size="12" maxlength="12" readonly>
           </div>
-
-          <div class="row">
-            <label for="tipo_doc" class="col-sm-2 control-label">Tipo</label>
-            <div class="col-sm-6">
-              <select name="tipo_doc" id="tipo_doc" name="tipo_doc" disabled>
-                <option value="T.I" {{doc_type_ti}}>T.I.</option>
-                <option value="C.C" {{doc_type_cc}}>C.C.</option>
-                <option value="C.R" {{doc_type_cr}}>C.R.</option>
-                <option id="EMPTY" {{doc_type_empty}}></option>
-              </select>
-            </div>
+          <div class="col-xs-2 col-sm-2 div-general-fields">
+            <span id="age">{{age}} años</span>
           </div>
-
-          <div class="row">
-            <label for="age" class="col-sm-2">Edad:</label>
-            <div class="col-sm-6">
-              <span id="age">{{age}}</span>
-            </div>
-          </div>
-
-          <div class="row">
-            <label for="email1" class="col-sm-2 control-label">Correo</label>
-            <div class="col-sm-6">
-              <span id="email">{{email_moodle}}</span>
-            </div>
-          </div>
-
-          <div class="row">
-            <label class="col-sm-2">Cohorte</label>
-            <div class="col-sm-6">
-              <span type="text" id="fcohorte" name="fcohorte">{{cohort}}</span>
-            </div>
+          <div class="col-xs-4 col-sm-4 div-general-fields">
+            <span id="email">{{email_moodle}}</span>
           </div>
         </div>
-
-        <div class="col-md-2 col-sm-2 talentos_ficha">
-          <img id="photo" class="img-rounded" src="../../../user/pix.php/{{id_user}}/f1.jpg" style="width:150px; height:180px">
+        <hr id="hr_header">
+        <div class="col-xs-12 col-sm-8" id="div_academic_programs">
+          <h4>Programas académicos</h4>
+          <table class="table table-hover borderless">
+            <tbody>
+            {{#academic_programs}}
+              <tr id="tr-{{id_moodle_user}}">
+                <td class="col-sm-8 td-middle" id="{{academic_program_id}}">
+                  {{cod_univalle}} - {{nombre_programa}}    
+                </td>
+                <td class="col-sm-3">
+                  {{#update_program_status_sp}}
+                  <select class="select_statuses_program" id="select-{{academic_program_id}}">
+                  {{/update_program_status_sp}}
+                  {{^update_program_status_sp}}
+                  <select class="select_statuses_program" id="select-{{academic_program_id}}" disabled>
+                  {{/update_program_status_sp}}
+                      <option value="ACTIVO">ACTIVO</option>
+                      <option value="APLAZADO">APLAZADO</option>
+                      <option value="EGRESADO">EGRESADO</option>
+                      <option value="INACTIVO">INACTIVO</option>
+                      <option value="NOREGISTRA">NO REGISTRA</option>
+                      <option value="RETIRADO">RETIRADO</option>
+                  </select>
+                </td>
+                <td class="col-sm-1 td-middle">
+                {{#update_tracking_status_sp}}
+                  <label class="switch">
+                    <input class="input-tracking" type="checkbox" id="div_flags_{{academic_program_id}}">
+                    <div class="slider round"></div>
+                  </label>
+                {{/update_tracking_status_sp}}
+                </td>
+              </tr>
+            {{/academic_programs}}
+            </tbody>
+          </table>
+          {{^academic_programs}}
+            No registra programas académicos.
+          {{/academic_programs}}
+        </div>
+        <div class="col-xs-12 col-sm-4" id="div_cohorts">
+          <h4>Cohortes</h4>
+          <table class="table table-sm table-hover borderless">
+            <tbody>
+              {{#student_cohorts}}
+                <tr>
+                  <td class="col-xs-12 col-sm-12 td-middle">
+                    {{name}}
+                  </td>
+                </tr>
+              {{/student_cohorts}}
+            </tbody>
+          </table>
+          {{^student_cohorts}}
+            No registra cohortes asociadas.
+          {{/student_cohorts}}
         </div>
       </div>
+      <div class="col-xs-4 col-sm-2 col-md-2 col-lg-2 equalize" id="photo_div" style="background-image: url('../../../user/pix.php/{{id_user}}/f1.jpg'); background-repeat: no-repeat; background-size: 100% 100%;">
+      </div>
+    </div>
 
-      <div class="row cabecera" id="container_profile">
+    <div class="row div_risk">
+      <div class="col-sm-1 no-padding-left">
+        <div id="div_title_risk">
+          <b>RIESGOS:</b>
+        </div>
+      </div>
+      <div class="col-sm-9 no-padding-left" id="div_bar_risks">
+         <div class="{{individual_class}} col-sm-2" id="individual_risk">
+            <span><b>INDIVIDUAL</b></span>
+         </div>
+         <div hidden>{{individual_risk}}</div>
+         <div class="{{familiar_class}} col-sm-2" id="familiar_risk">
+            <b> <span>FAMILIAR</span></b>
+         </div>
+         <div hidden>{{familiar_risk}}</div>
+         <div class="{{academic_class}} col-sm-2" id="academic_risk">
+            <b><span>ACADÉMICO</span></b>
+         </div>
+         <div hidden>{{academic_risk}}</div>
+         <div class="{{economic_class}} col-sm-2" id="economic_risk">
+            <b><span>ECONÓMICO</span></b>
+         </div>
+         <div hidden>{{economic_risk}}</div>
+         <div class="{{life_class}} col-sm-2" id="life_risk">
+            <b>VIDA UNIV.</b>
+         </div>
+         <div hidden>{{life_risk}}</div>
+         <div class="{{geographic_class}} col-sm-2" id="geo_risk">
+            <b><span>GEOGRÁFICO</span></b>
+         </div>
+         <div hidden>{{geographic_risk}}</div>
+      </div>
+      <div class="col-sm-2" id="div_buttons_risk">
+        <button class="risk_graph_button col-sm-6" type="button" id="view_graphic_button">Radial</button>
+        <button class="risk_graph_button col-sm-6" type="button" id="view_graphic_risk_button">Trayectoria</button>
+      </div>
+    </div>
 
-        <!-- Pestañas ficha -->
-        <div id="exTab1" class="col-sm-12">
-          <ul class="nav nav-tabs">
-            {{#view_general_tab_sp}}
-            <li id="general_li" class="active">
-              <a href="#general_tab" data-toggle="tab">GENERAL</a>
-            </li>
-            {{/view_general_tab_sp}} {{#view_socioed_tab_sp}}
-            <li id="socioed_li">
-              <a href="#socioed_tab" data-toggle="tab">SOCIOEDUCATIVO</a>
-            </li>
-            {{/view_socioed_tab_sp}} {{#view_academic_tab_sp}}
-            <li id="academic_li">
-              <a href="#academic_tab" data-toggle="tab">ACADÉMICO</a>
-            </li>
-            {{/view_academic_tab_sp}} {{#view_geographic_tab_sp}}
-            <li id="geographic_li">
-              <a href="#geographic_tab" data-toggle="tab">GEOGRÁFICO</a>
-            </li>{{/view_geographic_tab_sp}}
-          </ul>
-          <div class="tab-content clearfix ">
-            {{#view_general_tab_sp}} {{> block_ases/view_general_tab_sp}} {{/view_general_tab_sp}} {{#view_socioed_tab_sp}} {{> block_ases/view_socioed_tab_sp}}
-            {{/view_socioed_tab_sp}} {{#view_academic_tab_sp}}
-            <!--academic tab-->
-            <div class="tab-pane" id="academic_tab">
+    <div class="row cabecera" id="container_profile">
+      <!-- Pestañas ficha -->
+      <div id="exTab1" class="col-sm-12">
+        <ul class="nav nav-tabs">
+          {{#view_general_tab_sp}}
+          <li id="general_li" class="active">
+            <a href="#general_tab" data-toggle="tab">GENERAL</a>
+          </li>
+          {{/view_general_tab_sp}} {{#view_socioed_tab_sp}}
+          <li id="socioed_li">
+            <a href="#socioed_tab" data-toggle="tab">SOCIOEDUCATIVO</a>
+          </li>
+          {{/view_socioed_tab_sp}} {{#view_academic_tab_sp}}
+          <li id="academic_li">
+            <a href="#academic_tab" data-toggle="tab">ACADÉMICO</a>
+          </li>
+          {{/view_academic_tab_sp}} {{#view_geographic_tab_sp}}
+          <li id="geographic_li">
+            <a href="#geographic_tab" data-toggle="tab">GEOGRÁFICO</a>
+          </li>{{/view_geographic_tab_sp}}
+        </ul>
+        <div class="tab-content clearfix ">
+          {{#view_general_tab_sp}} {{> block_ases/view_general_tab_sp}} {{/view_general_tab_sp}} {{#view_socioed_tab_sp}} {{> block_ases/view_socioed_tab_sp}}
+          {{/view_socioed_tab_sp}} {{#view_academic_tab_sp}}
+          <!--academic tab-->
+          <div class="tab-pane" id="academic_tab">
 
-              <div class="accordion" role="tablist" aria-multiselectable="true">
-                <div class="row" style="padding: 0px 10px 15px ">
-                  <div class="col-md-3">Promedio Ponderado:
-                    <p class="prom" style="display: inline">
-                      <b>{{promedio}}</b>
-                    </p>
-                  </div>
-                  <div class="col-md-3">Estimulos academicos:
-                    <p class="est" style="display: inline">
-                      <b>{{estimulos}}</b>
-                    </p>
-                  </div>
-                  <div class="col-md-3">Bajos rendimientos:
-                    <p class="baj" style="display: inline">
-                      <b>{{bajos}}</b>
-                    </p>
-                  </div>
+            <div class="accordion" role="tablist" aria-multiselectable="true">
+              <div class="row" style="padding: 0px 10px 15px ">
+                <div class="col-md-3">Promedio Ponderado:
+                  <p class="prom" style="display: inline">
+                    <b>{{promedio}}</b>
+                  </p>
                 </div>
-                <div class="panel panel-default" id="panelActual">
-                  <div class="academic panel-heading" role="tab" id="headingOne">
-                    <h4 class="panel-title">
-                      <a id="sem_act_title" class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseAct" aria-expanded="false"
-                        aria-controls="collapseAct">
-                        Semestre Actual
-                      </a>
-                    </h4>
-                  </div>
-                  <div id="collapseAct" class="panel-collapse form-pilos collapse" role="tabpanel" aria-labelledby="headingOne">
-                    <div class="panel-group" id="accordion_academic">
-                      {{{academic_semester_act}}}
-                    </div>
-                  </div>
+                <div class="col-md-3">Estimulos academicos:
+                  <p class="est" style="display: inline">
+                    <b>{{estimulos}}</b>
+                  </p>
                 </div>
-                <div class="panel panel-default" id="panelActual">
-                  <div class="academic panel-heading" role="tab" id="headingTwo">
-                    <h4 class="panel-title">
-                      <a id="hist_title" class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseHis" aria-expanded="false"
-                        aria-controls="collapseHis">
-                        Semestres Anteriores
-                      </a>
-                    </h4>
-                  </div>
-                  <div id="collapseHis" class="panel-collapse form-pilos collapse" role="tabpanel" aria-labelledby="headingTwo">
-                    {{{historic_academic}}}
+                <div class="col-md-3">Bajos rendimientos:
+                  <p class="baj" style="display: inline">
+                    <b>{{bajos}}</b>
+                  </p>
+                </div>
+              </div>
+              <div class="panel panel-default" id="panelActual">
+                <div class="academic panel-heading" role="tab" id="headingOne">
+                  <h4 class="panel-title">
+                    <a id="sem_act_title" class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseAct" aria-expanded="false"
+                      aria-controls="collapseAct">
+                      Semestre Actual
+                    </a>
+                  </h4>
+                </div>
+                <div id="collapseAct" class="panel-collapse form-pilos collapse" role="tabpanel" aria-labelledby="headingOne">
+                  <div class="panel-group" id="accordion_academic">
+                    {{{academic_semester_act}}}
                   </div>
                 </div>
               </div>
-
-
+              <div class="panel panel-default" id="panelActual">
+                <div class="academic panel-heading" role="tab" id="headingTwo">
+                  <h4 class="panel-title">
+                    <a id="hist_title" class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseHis" aria-expanded="false"
+                      aria-controls="collapseHis">
+                      Semestres Anteriores
+                    </a>
+                  </h4>
+                </div>
+                <div id="collapseHis" class="panel-collapse form-pilos collapse" role="tabpanel" aria-labelledby="headingTwo">
+                  {{{historic_academic}}}
+                </div>
+              </div>
             </div>
-            {{/view_academic_tab_sp}}
-
-            <!-- End academic tab -->
-
-            {{#view_geographic_tab_sp}} {{> block_ases/view_geographic_tab_sp}} {{/view_geographic_tab_sp}}
-
           </div>
+          {{/view_academic_tab_sp}}
+
+          <!-- End academic tab -->
+
+          {{#view_geographic_tab_sp}} {{> block_ases/view_geographic_tab_sp}} {{/view_geographic_tab_sp}}
+
         </div>
-        <!-- Fin Pestañas ficha -->
       </div>
 
-      <span class="btn btn-info" id="go_back">REGRESAR</span>
     </form>
   </div>
 
@@ -233,7 +253,9 @@
           .
       </div>
     </div>
+    
   </div>
+</div>
 
   <div class="mymodal" id="modal_v2_edit_peer_tracking" name="modal_edit_v2_pares">
     <div class="outside" ></div>
@@ -258,10 +280,12 @@
           .
       </div>
     </div>
+    
   </div>
-  <!-- FIN MODALES SEGUIMIENTO V2 -->
+</div>
+<!-- FIN MODALES SEGUIMIENTO V2 -->
 
-  <!-- Modal primer acercamiento -->
+<!-- Modal primer acercamiento -->
 <div class="mymodal" id="modal_primer_acercamiento" name="modal_primer_acercamiento_name">
     <div class="outside" ></div>
     <div class="mymodal-content">
@@ -284,10 +308,12 @@
           .
       </div>
     </div>
+    
   </div>
-  <!-- end primer acercamiento -->
+</div>
+<!-- end primer acercamiento -->
 
-    <!-- Modal seguimiento geográfico -->
+<!-- Modal seguimiento geográfico -->
 <div class="mymodal" id="modal_seguimiento_geografico" name="modal_seguimiento_geografico_name">
     <div class="outside" ></div>
     <div class="mymodal-content">
@@ -714,4 +740,3 @@
     var datosGraficables = [];
 
   </script> {{/data}}
-</body>

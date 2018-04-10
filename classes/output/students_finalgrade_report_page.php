@@ -33,7 +33,7 @@ use renderer_base;
 use templatable;                                                                                                                    
 use stdClass;                                                                                                                       
  
-class teachers_reports_page implements renderable, templatable {                                                                               
+class students_finalgrade_report_page implements renderable, templatable {                                                                               
     /** @var string $sometext Some text to show how to pass data to a template. */                                                  
     var $data = null;                                                                                                           
  

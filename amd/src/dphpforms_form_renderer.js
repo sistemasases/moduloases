@@ -14,9 +14,9 @@
     return {
         init: function() {
 
-
-
-                
+                $(document).on( "click", ".btn-dphpforms-close", function() {
+                    $(this).closest('div[class="mymodal"]').fadeOut(300);
+                });
 
                 $('.outside').click(function(){
                     var outside = $(this);
@@ -59,6 +59,7 @@
                 });
 
                 $('#button_actualizar_primer_acercamiento').click(function(){
+                    $('div').removeClass('regla_incumplida');
                     $.get( "../managers/dphpforms/dphpforms_forms_core.php?form_id=primer_acercamiento&record_id=" + $(this).attr('data-record-id'), function( data ) {
                         $("#primer_acercamiento_form").html("");
                         $('#primer_acercamiento_form').append( data );
@@ -68,16 +69,17 @@
                             var registered_by = response.firstname + ' ' + response.lastname;
                             $('#modal_primer_acercamiento').find('h1').after('<hr style="border-color:#444;"><h3>Registrado por: <strong>' + registered_by + '</strong></h3>');
                             var count_buttons_dphpforms = $('.dphpforms-record .btn-dphpforms-univalle').length;
-                            if( count_buttons_dphpforms == 1 ){
-                                $('.dphpforms-record .btn-dphpforms-univalle').css( { 'margin-left' : ( ($('.dphpforms-updater').width()/2) - ( $('.dphpforms-record .btn-dphpforms-univalle').outerWidth() /2) ) + 'px'  } );
-                            }else if( count_buttons_dphpforms == 2 ){
+                            if( count_buttons_dphpforms == 2 ){
                                 $('.dphpforms-record .btn-dphpforms-univalle:eq(0)').css( { 'margin-left' : ( ($('.dphpforms-updater').width()/2) - 72 ) + 'px'  } );
+                            }else if( count_buttons_dphpforms == 3 ){
+                                $('.dphpforms-record .btn-dphpforms-univalle:eq(0)').css( { 'margin-left' : ( ($('.dphpforms-updater').width()/2) - 72 - 30 ) + 'px'  } );
                             }
                         });
                     });
                 });
 
                 $('#button_update_geographic_track').click(function(){
+                    $('div').removeClass('regla_incumplida');
                     $.get( "../managers/dphpforms/dphpforms_forms_core.php?form_id=seguimiento_geografico&record_id=" + $(this).attr('data-record-id'), function( data ) {
                         $("#seguimiento_geografico_form").html("");
                         $('#seguimiento_geografico_form').append( data );
@@ -89,10 +91,10 @@
                             $('.seg_geo_origen').find('input').prop('checked', false );
                         }
                         var count_buttons_dphpforms = $('.dphpforms-record .btn-dphpforms-univalle').length;
-                        if( count_buttons_dphpforms == 1 ){
-                            $('.dphpforms-record .btn-dphpforms-univalle').css( { 'margin-left' : ( ($('.dphpforms-updater').width()/2) - ( $('.dphpforms-record .btn-dphpforms-univalle').outerWidth() /2) ) + 'px'  } );
-                        }else if( count_buttons_dphpforms == 2 ){
+                        if( count_buttons_dphpforms == 2 ){
                             $('.dphpforms-record .btn-dphpforms-univalle:eq(0)').css( { 'margin-left' : ( ($('.dphpforms-updater').width()/2) - 72 ) + 'px'  } );
+                        }if( count_buttons_dphpforms == 3 ){
+                            $('.dphpforms-record .btn-dphpforms-univalle:eq(0)').css( { 'margin-left' : ( ($('.dphpforms-updater').width()/2) - 72 - 30 ) + 'px'  } );
                         }
                     });
                     
@@ -107,22 +109,6 @@
                     }
                     return params.replace(/#[a-zA-z]+_[a-zA-z]+/i, '');
                 }
-
-                /*function get_student_code(){
-                    var url = location.search;
-                    var params = get_url_parameters( url );
-
-                    var student_position = params.indexOf('student_code=') + 13;
-                    var codigo_estudiante = '';
-                    for(var x = student_position; x < params.length; x++ ){
-                        if(student_position[x] == '-'){
-                            break;
-                        }else{
-                            codigo_estudiante += params[x];
-                        }
-                    }
-                    return get_id_instance();
-                }*/
 
                 function get_student_code() {
                     var urlParameters = location.search.split('&');
@@ -278,17 +264,18 @@
                 })
 
                 $('#button_add_v2_track').on('click', function() {
-
+                    $('div').removeClass('regla_incumplida');
                     $('#modal_v2_peer_tracking').fadeIn(300);
                     $('.id_estudiante').find('input').val( get_student_code() );
                     var codigo_monitor = $('#current_user_id').val();
                     $('.id_creado_por').find('input').val(codigo_monitor);
-                    $('.dphpforms-response .btn-dphpforms-univalle').css( { 'margin-left' : ( ($('.dphpforms-response').width()/2) - ( $('.dphpforms-response .btn-dphpforms-univalle').outerWidth() /2) ) + 'px'  } );
+                    $('.dphpforms-response .btn-dphpforms-sendform').css( { 'margin-left' : ( ($('.dphpforms-response').width()/2) - ( $('.dphpforms-response .btn-dphpforms-univalle').outerWidth() /2) - ( $('.dphpforms-response .btn-dphpforms-close').outerWidth() /2) )  + 'px'  } );
                     
                 });
 
 
                 $('#button_add_groupal_track').on('click', function() {
+                    $('div').removeClass('regla_incumplida');
                     $('#modal_v2_groupal_tracking').fadeIn(300);
                     var codigo_monitor = $('#current_user_id').val();
                     $('.id_creado_por').find('input').val(codigo_monitor);
@@ -298,18 +285,19 @@
                 });
 
                 $('#button_primer_acercamiento').on('click', function() {
-
+                    $('div').removeClass('regla_incumplida');
                     $('#modal_primer_acercamiento').fadeIn(300);
                     
                     $('.primer_acerca_id_estudiante_field').find('input').val( get_student_code() );
                     var creado_por = $('#current_user_id').val();
                     $('.primer_acerca_id_creado_por_field').find('input').val(creado_por);
                     
-                    $('#primer_acercamiento_form').find('.dphpforms-response .btn-dphpforms-univalle').css( { 'margin-left' : ( ($('#primer_acercamiento_form').find('.dphpforms-response').width()/2) - ( $('#primer_acercamiento_form').find('.dphpforms-response .btn-dphpforms-univalle').outerWidth() /2) ) + 'px'  } );
+                    $('#primer_acercamiento_form').find('.dphpforms-response .btn-dphpforms-sendform').css( { 'margin-left' : ( ($('#primer_acercamiento_form').find('.dphpforms-response').width()/2) - ( $('#primer_acercamiento_form').find('.dphpforms-response .btn-dphpforms-univalle').outerWidth() /2) - ( $('#primer_acercamiento_form').find('.btn-dphpforms-close').outerWidth() /2) ) + 'px'  } );
                     
                 });
 
                 $('#button_add_geographic_track').on('click', function() {
+                    $('div').removeClass('regla_incumplida');
                     $('#modal_seguimiento_geografico').fadeIn(300);
                     $('.seg_geo_id_estudiante').find('input').val( get_student_code() );
                     var creado_por = $('#current_user_id').val();
@@ -321,7 +309,7 @@
                         $('.seg_geo_origen').find('input').prop('disabled', true );
                         $('.seg_geo_origen').find('input').prop('checked', false );
                     }
-                    $('#seguimiento_geografico_form').find('.dphpforms-response .btn-dphpforms-univalle').css( { 'margin-left' : ( ($('#seguimiento_geografico_form').find('.dphpforms-response').width()/2) - ( $('#seguimiento_geografico_form').find('.dphpforms-response .btn-dphpforms-univalle').outerWidth() /2) ) + 'px'  } );
+                    $('#seguimiento_geografico_form').find('.dphpforms-response .btn-dphpforms-sendform').css( { 'margin-left' : ( ($('#seguimiento_geografico_form').find('.dphpforms-response').width()/2) - ( $('#seguimiento_geografico_form').find('.dphpforms-response .btn-dphpforms-univalle').outerWidth() /2) - ( $('#seguimiento_geografico_form').find('.btn-dphpforms-close').outerWidth() /2) ) + 'px'  } );
                     
                 });
 
@@ -335,6 +323,8 @@
                     var id_tracking = $(this).attr('data-record-id');
                     load_record_updater('seguimiento_pares', id_tracking);
                     $('#modal_v2_edit_peer_tracking').fadeIn(300);
+                    
+                    
                 });
 
                 // Controles para editar formulario grupal
@@ -346,17 +336,37 @@
                 });
 
 
+                function custom_actions( form, action ){
 
-                function custom_actions( data ){
+                    if( (form == 'primer_acercamiento' ) && ( action == 'insert' )){ 
 
-                    if( data == 'primer_acercamiento' ){ 
+                    }else if( (form == 'primer_acercamiento' ) && ( action == 'update' )){ 
 
-                    }else if( data == 'seguimiento_pares' ){
+                    }else if( (form == 'seguimiento_pares' )&&( action == 'insert' )){
 
-                    }else if( data == 'seguimiento_geografico_' ){
+                    }else if( (form == 'seguimiento_pares')&&( action == 'update' ) ){
+
+                        var rev_prof = $('.dphpforms-record').find('.revisado_profesional').find('.checkbox').find('input[type=checkbox]').prop('checked');
+                        var role_support = $('#dphpforms_role_support').attr('data-info');
+                        if( rev_prof && ( role_support != "sistemas" ) ){
+                            $('.btn-dphpforms-update').remove();
+                        }
+
+                        var count_buttons_dphpforms = $('.dphpforms-record .btn-dphpforms-univalle').length;
+                        if( count_buttons_dphpforms == 1 ){
+                            $('.dphpforms-record .btn-dphpforms-univalle:eq(0)').css( { 'margin-left' : ( ($('.dphpforms-updater').width()/2) - ( $('.dphpforms-record .btn-dphpforms-close').outerWidth() /2) ) + 'px'  } );
+                        }else if( count_buttons_dphpforms == 2 ){
+                            $('.dphpforms-record .btn-dphpforms-univalle:eq(0)').css( { 'margin-left' : ( ($('.dphpforms-updater').width()/2) - 72 ) + 'px'  } );
+                        }else if( count_buttons_dphpforms == 3 ){
+                            $('.dphpforms-record .btn-dphpforms-univalle:eq(0)').css( { 'margin-left' : ( ($('.dphpforms-updater').width()/2) - 72 - 30) + 'px'  } );
+                        }
+
+                    }else if( (form == 'seguimiento_geografico_')&&( action == 'insert' ) ){
                         $('.seg_geo_origen').find('input').prop('disabled', false );
                     
-                    }else if(data=='seguimiento_grupal_'){
+                    }else if( (form == 'seguimiento_geografico_')&&( action == 'update' ) ){
+
+                    }else if( (form=='seguimiento_grupal_')&&( action == 'insert' ) ){
 
                        var total = $('modal_v2_edit_groupal_tracking').find('input:checked').length;
                        var array_students="";
@@ -385,6 +395,7 @@
                        $("#modal_v2_edit_groupal_tracking").find('form').find('.oculto.id_estudiante').find('input').val(array_students.slice(0,-1));
                        $("#modal_v2_groupal_tracking").find('form').find('.oculto.id_estudiante').find('input').val(create.slice(0,-1));
 
+                    }else if( (form=='seguimiento_grupal_')&&( action == 'update' ) ){
 
                     }
 
@@ -422,6 +433,7 @@
 
 
                 function load_record_updater(form_id, record_id){
+                    $('.div').removeClass('regla_incumplida');
                     $.get( "../managers/dphpforms/dphpforms_forms_core.php?form_id="+form_id+"&record_id="+record_id, function( data ) {
                             $("#body_editor").html("");
                             $('#body_editor').append( data );
@@ -480,21 +492,14 @@
                             }
 
                             $("#permissions_informationr").html("");
-                            
+
                             var is_primer_acercamiento = data.indexOf('primer_acercamiento_');
                             if( is_primer_acercamiento != -1 ){
-                                custom_actions( 'primer_acercamiento' );
+                                custom_actions( 'primer_acercamiento', 'update' );
                             }
                             var is_seguimiento_pares = data.indexOf('seguimiento_de_pares_');
                             if( is_seguimiento_pares != -1 ){
-                                custom_actions( 'seguimiento_pares' );
-                            }
-
-                            var count_buttons_dphpforms = $('.dphpforms-record .btn-dphpforms-univalle').length;
-                            if( count_buttons_dphpforms == 1 ){
-                                $('.dphpforms-record .btn-dphpforms-univalle').css( { 'margin-left' : ( ($('.dphpforms-updater').width()/2) - ( $('.dphpforms-record .btn-dphpforms-univalle').outerWidth() /2) ) + 'px'  } );
-                            }else if( count_buttons_dphpforms == 2 ){
-                                $('.dphpforms-record .btn-dphpforms-univalle:eq(0)').css( { 'margin-left' : ( ($('.dphpforms-updater').width()/2) - 72 ) + 'px'  } );
+                                custom_actions( 'seguimiento_pares', 'update' );
                             }
                            
                     });
@@ -519,19 +524,19 @@
                     var is_seguimiento_grupal = $(this).attr('id').indexOf( 'seguimiento_grupal_' );
 
                         if( is_seguimiento_geografico != -1 ){
-                            custom_actions( 'seguimiento_geografico_' );
+                            custom_actions( 'seguimiento_geografico_', 'insert' );
                     }
 
                     if (is_seguimiento_grupal!=-1){
                         $("#modal_v2_edit_groupal_tracking").find('form').find('.oculto.id_estudiante').find('input').val("");
-
-
-                        custom_actions( 'seguimiento_grupal_' );
+                        custom_actions( 'seguimiento_grupal_', 'insert' );
                     }
 
                     $('.seg_geo_origen').find('input').prop('disabled', false );
-
+                    $( ':disabled' ).prop( 'disabled', false);
+                    
                     var formData = new FormData(this);
+                    
                     var formulario = $(this);
                     var url_processor = formulario.attr('action');
                     if(formulario.attr('action') == 'procesador.php'){
@@ -539,6 +544,7 @@
                     }
                     $(formulario).find('button').prop( "disabled", true );
                     $(formulario).find('a').attr("disabled", true);
+                    console.log(formulario);
                     $.ajax({
                         type: 'POST',
                         url: url_processor,
@@ -547,7 +553,8 @@
                         contentType: false,
                         processData: false,
                         success: function(data) {
-                                console.log(data);
+                                
+                                console.log( data );
                                 var response = JSON.parse(data);
                                 
                                 if(response['status'] == 0){
@@ -566,13 +573,14 @@
                                         function(){
                                             if(response['message'] == 'Updated'){
                                                 $('#dphpforms-peer-record-' + $('#dphpforms_record_id').val()).stop().animate({backgroundColor:'rgb(175, 255, 173)'}, 400).animate({backgroundColor:'#f5f5f5'}, 4000);
+                                                location.reload();
                                             }else{
                                                 $('.dphpforms-response').trigger("reset");
                                                 location.reload();
                                             }
                                         }
                                     );
-
+                                    
                                     $('#modal_v2_edit_peer_tracking').fadeOut(300);
                                     $('#modal_v2_peer_tracking').fadeOut(300);
                                     $('#modal_primer_acercamiento').fadeOut(300);
@@ -593,8 +601,18 @@
                                     var mensaje = '';
                                     if(response['message'] == 'Without changes'){
                                         mensaje = 'No hay cambios que registrar';
+                                        $('#modal_v2_edit_peer_tracking').fadeOut(300);
+                                        $('#modal_v2_peer_tracking').fadeOut(300);
+                                        $('#modal_primer_acercamiento').fadeOut(300);
+                                        $('#modal_seguimiento_geografico').fadeOut(300);
                                     }else if(response['message'] == 'Unfulfilled rules'){
-                                        mensaje = 'Revise Que los campos estén completos y correctamente diligenciados';
+                                        var id_form_pregunta_a = response['data']['id_form_pregunta_a'];
+                                        var id_form_pregunta_b = response['data']['id_form_pregunta_b'];
+                                        $('div').removeClass('regla_incumplida');
+                                        $('.div-' + id_form_pregunta_a).addClass('regla_incumplida');
+                                        $('.div-' + id_form_pregunta_b).addClass('regla_incumplida');
+                                        
+                                        mensaje  = 'Ups, revise los campos que se acaban de colorear en rojo.';
                                     }
                                     swal(
                                         'Alerta',
