@@ -38,7 +38,7 @@ include("../classes/output/mass_role_management.php");
 include("../classes/output/renderer.php");
 
 // Set up the page.
-$title = get_string('pluginname', 'block_ases');
+$title = "Carga Masiva";
 $pagetitle = $title;
 $courseid = required_param('courseid', PARAM_INT);
 $blockid = required_param('instanceid', PARAM_INT);
