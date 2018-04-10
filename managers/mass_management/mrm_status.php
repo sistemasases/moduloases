@@ -36,8 +36,9 @@ if (isset($_FILES['file']) || isset($_POST['idinstancia'])) {
 
         $rootFolder = "../../view/archivos_subidos/mrm/status/files/";
         $zipFolder = "../../view/archivos_subidos/mrm/status/comprimidos/";
-
+        
         if (!file_exists($rootFolder)) {
+            //echo $rootFolder;
             mkdir($rootFolder, 0777, true);
         }
         if (!file_exists($zipFolder)) {
@@ -118,8 +119,7 @@ if (isset($_FILES['file']) || isset($_POST['idinstancia'])) {
 
             //validate Estado Ases
             if ($associativeTitles['estado_ases'] !== null) {
-                $estado_ases = $associativeTitles['estado_ases'];
-
+                $estado_ases = $data[$associativeTitles['estado_ases']];
                 $sql_query = "SELECT id FROM {talentospilos_estados_ases} WHERE descripcion = '$estado_ases' ";
                 $result = $DB->get_record_sql($sql_query);
                 if (!$result) {
@@ -135,7 +135,7 @@ if (isset($_FILES['file']) || isset($_POST['idinstancia'])) {
 
             //validate Estado Icetex
             if ($associativeTitles['estado_icetex'] !== null) {
-                $estado_icetex = $associativeTitles['estado_icetex'];
+                $estado_icetex = $data[$associativeTitles['estado_icetex']];
 
                 $sql_query = "SELECT id FROM {talentospilos_estados_icetex} WHERE nombre = '$estado_icetex' ";
                 $result = $DB->get_record_sql($sql_query);
@@ -152,7 +152,7 @@ if (isset($_FILES['file']) || isset($_POST['idinstancia'])) {
 
             //validate Estado Programa
             if ($associativeTitles['estado_programa'] !== null) {
-                $estado_programa = $associativeTitles['estado_programa'];
+                $estado_programa = $data[$associativeTitles['estado_programa']];
 
                 if ($estado_programa != "ACTIVO" && $estado_programa != "RETIRADO" && $estado_programa != "APLAZADO" && $estado_programa != "EGRESADO") {
                     $isValidRow = false;
@@ -165,7 +165,7 @@ if (isset($_FILES['file']) || isset($_POST['idinstancia'])) {
 
             //validate tracking_status
             if ($associativeTitles['tracking_status'] !== null) {
-                $tracking_status = $associativeTitles['tracking_status'];
+                $tracking_status = $data[$associativeTitles['tracking_status']];
 
                 if ($tracking_status != 1 && $tracking_status != 0) {
                     $isValidRow = false;
@@ -178,7 +178,7 @@ if (isset($_FILES['file']) || isset($_POST['idinstancia'])) {
 
             //validate motivo_ases
             if ($associativeTitles['motivo_ases'] !== null) {
-                $motivo_ases = $associativeTitles['motivo_ases'];
+                $motivo_ases = $data[$associativeTitles['motivo_ases']];
 
                 if ($motivo_ases != '') {
                     $sql_query = "SELECT id FROM {talentospilos_motivos} WHERE descripcion = '$motivo_ases' ";
@@ -200,7 +200,7 @@ if (isset($_FILES['file']) || isset($_POST['idinstancia'])) {
 
             //validate motivo_icetex
             if ($associativeTitles['motivo_icetex'] !== null) {
-                $motivo_icetex = $associativeTitles['motivo_icetex'];
+                $motivo_icetex = $data[$associativeTitles['motivo_icetex']];
 
                 if ($motivo_icetex != '') {
                     $sql_query = "SELECT id FROM {talentospilos_motivos} WHERE descripcion = '$motivo_icetex' ";
@@ -367,17 +367,43 @@ function update_status_student($id_user_extended, $id_talentos, $id_estado_ases,
         return false;
     }
 
+    $query_instance = "SELECT cohorte.id, inst_cohort.id_instancia, cohorte.idnumber
+                       FROM {talentospilos_user_extended}  ext
+                       INNER JOIN {cohort_members} memb ON ext.id_moodle_user = memb.userid
+                       INNER JOIN {talentospilos_inst_cohorte} inst_cohort ON memb.cohortid = inst_cohort.id_cohorte
+                       INNER JOIN {cohort} cohorte ON memb.cohortid = cohorte.id
+                       WHERE ext.id = $id_user_extended
+                       ORDER BY cohorte.id ASC
+                       ";
+    
+    $instances = $DB->get_records_sql($query_instance);
+
+    $id_instance = 0;
+
+    foreach ($instances as $instance) {
+        $instance_name = $instance->idnumber;
+        if(substr($instance_name,0,2) == 'SP'){
+            $id_instance = $instance->id_instancia;
+            break;
+        }else if(substr($instance_name,0,6) == 'PORRAS'){
+            $id_instance = $instance->id_instancia;
+            break;
+        }else{
+            $id_instance = $instance->id_instancia;
+        }
+    }
     //update estado ases
 
     $object_est_estado_ases = new stdClass;
     $object_est_estado_ases->id_estudiante = $id_talentos;
     $object_est_estado_ases->id_estado_ases = $id_estado_ases;    
-    if ($motivo_ases != false) {
-        $object_est_estado_ases->id_motivo_ret = $id_motivo_ases;
+    if ($id_motivo_ases != false) {
+        $object_est_estado_ases->id_motivo_retiro = $id_motivo_ases;
     }
     $object_est_estado_ases->fecha = time();
+    $object_est_estado_ases->id_instancia = $id_instance;
 
-    $insert_ases = $DB->insert_record('talentospilos_est_estadoases', $record, false);
+    $insert_ases = $DB->insert_record('talentospilos_est_estadoases', $object_est_estado_ases, false);
     
     if (!$insert_ases) {
         return false;
@@ -388,12 +414,12 @@ function update_status_student($id_user_extended, $id_talentos, $id_estado_ases,
     $object_est_estado_icetex = new stdClass;
     $object_est_estado_icetex->id_estudiante = $id_talentos;
     $object_est_estado_icetex->id_estado_icetex = $id_estado_icetex;    
-    if ($motivo_ases != false) {
-        $object_est_estado_icetex->id_motivo_ret = $id_motivo_ases;
+    if ($id_motivo_icetex != false) {
+        $object_est_estado_icetex->id_motivo_retiro = $id_motivo_icetex;
     }
     $object_est_estado_icetex->fecha = time();
 
-    $insert_icetex = $DB->insert_record('talentospilos_est_est_icetex', $record, false);
+    $insert_icetex = $DB->insert_record('talentospilos_est_est_icetex', $object_est_estado_icetex, false);
     
     if (!$insert_icetex) {
         return false;
