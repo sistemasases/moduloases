@@ -32,7 +32,7 @@ function get_students_and_finalgrades($instance_id){
 
     $students_finalgrades_array = array();
 
-    $query = "SELECT DISTINCT materias_criticas.id, substring(courses.shortname from 0 for 14) AS course_code, courses.fullname, 
+    $query = "SELECT DISTINCT row_number() over(), materias_criticas.materiacr_id, substring(courses.shortname from 0 for 14) AS course_code, courses.fullname, 
                     (SELECT concat_ws(' ',firstname,lastname) AS fullname
                         FROM
                         (SELECT usuario.firstname,
@@ -71,7 +71,7 @@ function get_students_and_finalgrades($instance_id){
 
                 INNER JOIN  
 
-                (SELECT id
+                (SELECT id AS materiacr_id
                 FROM {course} AS courses 
                 INNER JOIN (SELECT codigo_materia 
                     FROM {talentospilos_materias_criti}) AS materias_criticas
@@ -84,7 +84,7 @@ function get_students_and_finalgrades($instance_id){
 
     foreach ($records as $record) {
         $student_id = $record->student_id;
-        $course_id = $record->id;
+        $course_id = $record->materiacr_id;
         $record->finalgrade = get_finalgrade_by_student_and_course($student_id, $course_id);
 
         array_push($students_finalgrades_array, $record);
