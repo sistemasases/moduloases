@@ -40,6 +40,12 @@ header ul li{
 
 /****** PLUGIN ******/
 
+.border_rt{
+
+ border:1px ridge #E5E5E5;
+}
+
+
 #exTab1{
   margin-top: 0px;
   margin-left: 0px;
