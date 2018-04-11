@@ -90,7 +90,7 @@ $data_init = array();
 $rol = get_role_ases($USER->id);
 
 if ($student_code != 0) {
-    print_r($student_code);
+    echo $student_code;
 
     $ases_student = get_ases_user_by_code($student_code);
 
