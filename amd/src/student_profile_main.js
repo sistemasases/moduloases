@@ -21,6 +21,28 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/d3', 'block_ases/sweetaler
 
             var self = this;
 
+            $("#asignados").select2({
+                width: 'resolve',
+                height: 'resolve',
+                language: {
+                    noResults: function() {
+
+                        return "No hay resultado";
+                    },
+                    searching: function() {
+
+                        return "Buscando..";
+                    }
+                },
+            });
+
+            $("#asignados").on('change', function(){
+                var code = $('#asignados').val();
+                var student_code = code.split('-')[0];
+
+                load_student(student_code);
+            });
+
             // Manage statuses
             for (var i = 0, len = data_init.length; i < len; i++){
                 $('#select-'+data_init[i].academic_program_id+' option[value='+data_init[i].program_status+']').attr('selected', true);
@@ -66,27 +88,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/d3', 'block_ases/sweetaler
                     break;
             }
 
-            $("#asignados").select2({
-                width: 'resolve',
-                height: 'resolve',
-                language: {
-                    noResults: function() {
-
-                        return "No hay resultado";
-                    },
-                    searching: function() {
-
-                        return "Buscando..";
-                    }
-                },
-            });
-
-            $("#asignados").on('change', function(){
-                var code = $('#asignados').val();
-                var student_code = code.split('-')[0];
-
-                load_student(student_code);
-            });
+            
     
             var modal_peer_tracking = $('#modal_peer_tracking');
 
