@@ -96,41 +96,9 @@ if(isset($_POST["func"])){
             echo json_encode($msg_error);
         }
 
-    }elseif($_POST['func'] == 'save_ases_status'){
-
-        if(isset($_POST['id_ases'])){
-            $id_ases = $_POST['id_ases'];
-        }else{
-            $msg_error->title = "Error";
-            $msg_error->msg = "Problema en la conexión al servidor. El ID del estudiante no llegó al servidor.";
-            $msg_error->type = "error";
-
-            return $msg_error;
-        }
-
-        if(isset($_POST['new_status'])){
-            $new_status = $_POST['new_status'];
-        }else{
-            $msg_error->title = "Error";
-            $msg_error->msg = "Problema en la conexión al servidor. El Nuevo Estado del estudiante no llegó al servidor.";
-            $msg_error->type = "error";
-
-            return $msg_error;
-        }
-
-        if(isset($_POST['id_reason'])){
-            $id_reason = $_POST['id_reason'];
-        }else{
-           $id_reason = null;
-        }
-
-        if(isset($_POST['observations'])){
-            $observations = $_POST['observations'];
-        }else{
-            $observations = null;
-        }
-
-        save_status_ases_proc($new_status, $id_ases, $id_reason, $observations);
+    }elseif($_POST['func'] == 'update_ases_status'){
+        
+        
 
     }elseif($_POST['func'] == 'save_tracking_peer'){
         save_tracking_peer_proc();

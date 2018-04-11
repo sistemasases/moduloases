@@ -18,7 +18,7 @@
             {{{code}}}
           </div>
           <div class="col-xs-1 col-sm-1">
-            <span class="glyphicon glyphicon-ok i-tracking" {{#update_ases_status_sp}} id="icon-tracking" {{/update_ases_status_sp}}></span>
+            <span class="glyphicon glyphicon-ok {{#ases_status_t}}i-tracking-t{{/ases_status_t}}{{#ases_status_f}}i-tracking-f{{/ases_status_f}}{{#ases_status_n}}i-tracking-n{{/ases_status_n}}" {{#update_ases_status_sp}} id="icon-tracking" {{/update_ases_status_sp}}></span>
             <input type="hidden" id="input_status_ases">
           </div>
         </div>
@@ -190,31 +190,19 @@
               <div class="panel panel-default" id="panelActual">
                 <div class="academic panel-heading" role="tab" id="headingOne">
                   <h4 class="panel-title">
-                    <a id="sem_act_title" class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseAct" aria-expanded="false"
+                    <a id="sem_act_title" class="" data-toggle="collapse" data-parent="#accordion" href="#collapseAct" aria-expanded="true"
                       aria-controls="collapseAct">
                       Semestre Actual
                     </a>
                   </h4>
                 </div>
-                <div id="collapseAct" class="panel-collapse form-pilos collapse" role="tabpanel" aria-labelledby="headingOne">
+                <div id="collapseAct" class="panel-collapse form-pilos in" role="tabpanel" aria-labelledby="headingOne">
                   <div class="panel-group" id="accordion_academic">
                     {{{academic_semester_act}}}
                   </div>
                 </div>
               </div>
-              <div class="panel panel-default" id="panelActual">
-                <div class="academic panel-heading" role="tab" id="headingTwo">
-                  <h4 class="panel-title">
-                    <a id="hist_title" class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseHis" aria-expanded="false"
-                      aria-controls="collapseHis">
-                      Semestres Anteriores
-                    </a>
-                  </h4>
-                </div>
-                <div id="collapseHis" class="panel-collapse form-pilos collapse" role="tabpanel" aria-labelledby="headingTwo">
-                  {{{historic_academic}}}
-                </div>
-              </div>
+              {{{historic_academic}}}
             </div>
           </div>
           {{/view_academic_tab_sp}}
