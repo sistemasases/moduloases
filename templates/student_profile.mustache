@@ -18,8 +18,11 @@
             {{{code}}}
           </div>
           <div class="col-xs-1 col-sm-1">
-            <span class="glyphicon glyphicon-ok {{#ases_status_t}}i-tracking-t{{/ases_status_t}}{{#ases_status_f}}i-tracking-f{{/ases_status_f}}{{#ases_status_n}}i-tracking-n{{/ases_status_n}}" {{#update_ases_status_sp}} id="icon-tracking" {{/update_ases_status_sp}}></span>
-            <input type="hidden" id="input_status_ases">
+            <div class="icontip">
+              <span class="glyphicon glyphicon-ok {{#ases_status_t}}i-tracking-t{{/ases_status_t}}{{#ases_status_f}}i-tracking-f{{/ases_status_f}}{{#ases_status_n}}i-tracking-n{{/ases_status_n}}" {{#update_ases_status_sp}} id="icon-tracking" {{/update_ases_status_sp}}></span>
+              <span class="icontiptext">{{ases_status_description}}</span>
+              <input type="hidden" id="input_status_ases">
+            </div>
           </div>
         </div>
         <div class="row" id="row-general-fields">

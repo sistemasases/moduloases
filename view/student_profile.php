@@ -141,18 +141,19 @@ if ($student_code != 0) {
     $record->num_doc = $ases_student->num_doc;
     $record->observations = $ases_student->observacion;
 
-    print_r($status_ases_array);
-
     // Estado ASES
     if($status_ases_array){
         if($status_ases_array[$blockid]->nombre == "SEGUIMIENTO"){
             $record->ases_status_t = true;
-        }else if($status_ases_array[$block_id]->nombre == "SIN SEGUIMIENTO"){
+            $record->ases_status_description = "Se realiza seguimiento en esta instancia";
+        }else if($status_ases_array[$blockid]->nombre == "SIN SEGUIMIENTO"){
             $record->ases_status_f = true;
+            $record->ases_status_description = "Se realiza seguimiento en otra instancia";
         }
     }
     else{
         $record->ases_status_n = true;
+        $record->ases_status_description = "No se realiza seguimiento en ninguna instancia";
     }
 
     $monitor_object = new stdClass();
