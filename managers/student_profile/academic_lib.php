@@ -354,15 +354,18 @@ function make_html_semesters($semesters)
             </div>";
 
                 foreach ($materias as $materia) {
-
-                    $descriptions .= "<div class = 'row'>
+                    $perdida = "";
+                    if($materia->nota < 3){
+                        $perdida = "perdida";
+                    }
+                    $descriptions .= "<div class = 'row $perdida'>
                     <div class = 'col-md-4'>
                         $materia->nombre_materia
                     </div>
                     <div class = 'col-md-2'>
                          $materia->codigo_materia
                     </div>
-                    <div class = 'col-md-2'>
+                    <div class = 'col-md-2 '>
                          $materia->nota
                     </div>
                     <div class = 'col-md-2'>
