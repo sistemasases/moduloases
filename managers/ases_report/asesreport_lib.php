@@ -339,8 +339,6 @@ function get_not_assign_students($general_fields=null, $conditions, $academic_fi
                                                                 WHERE cohorts_instance.id_instancia = $instance)";
                 $sql_query = $select_clause.$from_clause.$sub_query_cohort.$sub_query_status.$sub_query_academic.$where_clause;
                 $result_query = $DB->get_records_sql($sql_query);
-                //print_r($sql_query);
-                //die();
 
                 break;
 
@@ -497,7 +495,7 @@ function get_ases_report($general_fields=null, $conditions, $risk_fields=null, $
                                                 INNER JOIN {talentospilos_rol} AS roles ON user_role.id_rol = roles.id
                       WHERE user_role.id_semestre = $id_current_semester AND user_role.estado = 1 AND user_role.id_usuario = $user_id";
 
-        $user_role = $DB->get_records_sql($sql_query);
+        $user_role = $DB->get_record_sql($sql_query);
 
         switch($user_role->nombre_rol){
             case 'director_prog':
