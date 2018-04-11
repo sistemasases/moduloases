@@ -59,8 +59,6 @@ $courseid = required_param('courseid', PARAM_INT);
 $blockid = required_param('instanceid', PARAM_INT);
 $student_code = (string)optional_param('student_code', 0, PARAM_INT);
 
-print_r($student_code);
-
 require_login($courseid, false);
 
 // Set up the page.
@@ -92,6 +90,7 @@ $data_init = array();
 $rol = get_role_ases($USER->id);
 
 if ($student_code != 0) {
+    print_r($student_code);
 
     $ases_student = get_ases_user_by_code($student_code);
 
