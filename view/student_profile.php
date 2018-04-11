@@ -102,6 +102,8 @@ if ($student_code != 0) {
     $user_moodle = get_moodle_user($id_user_moodle);
     $academic_programs = get_academic_programs_by_student($student_id);
     $student_cohorts = get_cohorts_by_student($id_user_moodle);
+    $status_ases_array = get_ases_status($ases_student->id, $blockid);
+
     
 
     $record->id_moodle = $id_user_moodle;
@@ -140,7 +142,19 @@ if ($student_code != 0) {
     $record->num_doc = $ases_student->num_doc;
     $record->observations = $ases_student->observacion;
 
-    
+    print_r($status_ases_array);
+
+    // Estado ASES
+    if($status_ases_array){
+        if($status_ases_array[$blockid]->nombre == "SEGUIMIENTO"){
+            $record->ases_status_t = true;
+        }else if($status_ases_array[$block_id]->nombre == "SIN SEGUIMIENTO"){
+            $record->ases_status_f = true;
+        }
+    }
+    else{
+        $record->ases_status_n = true;
+    }
 
     $monitor_object = new stdClass();
     $trainee_object = new stdClass();

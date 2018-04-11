@@ -49,8 +49,22 @@ hr{
     
 }
 
-.i-tracking{
+.i-tracking-t{
     color: green !important;
+    font-size: 30px;
+    position: absolute;
+    transition:all .5s ease-in-out;
+}
+
+.i-tracking-f{
+    color: rgb(128, 186, 128) !important;
+    font-size: 30px;
+    position: absolute;
+    transition:all .5s ease-in-out;
+}
+
+.i-tracking-n{
+    color: gray !important;
     font-size: 30px;
     position: absolute;
     transition:all .5s ease-in-out;
