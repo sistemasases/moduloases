@@ -190,31 +190,19 @@
               <div class="panel panel-default" id="panelActual">
                 <div class="academic panel-heading" role="tab" id="headingOne">
                   <h4 class="panel-title">
-                    <a id="sem_act_title" class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseAct" aria-expanded="false"
+                    <a id="sem_act_title" class="" data-toggle="collapse" data-parent="#accordion" href="#collapseAct" aria-expanded="true"
                       aria-controls="collapseAct">
                       Semestre Actual
                     </a>
                   </h4>
                 </div>
-                <div id="collapseAct" class="panel-collapse form-pilos collapse" role="tabpanel" aria-labelledby="headingOne">
+                <div id="collapseAct" class="panel-collapse form-pilos in" role="tabpanel" aria-labelledby="headingOne">
                   <div class="panel-group" id="accordion_academic">
                     {{{academic_semester_act}}}
                   </div>
                 </div>
               </div>
-              <div class="panel panel-default" id="panelActual">
-                <div class="academic panel-heading" role="tab" id="headingTwo">
-                  <h4 class="panel-title">
-                    <a id="hist_title" class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseHis" aria-expanded="false"
-                      aria-controls="collapseHis">
-                      Semestres Anteriores
-                    </a>
-                  </h4>
-                </div>
-                <div id="collapseHis" class="panel-collapse form-pilos collapse" role="tabpanel" aria-labelledby="headingTwo">
-                  {{{historic_academic}}}
-                </div>
-              </div>
+              {{{historic_academic}}}
             </div>
           </div>
           {{/view_academic_tab_sp}}
