@@ -90,7 +90,7 @@ require_once $CFG->dirroot.'/blocks/ases/managers/periods_management/periods_lib
 
     global $DB;
 
-    $sql_query = "SELECT ases_status.id_instancia, ases_statuses.nombre
+    $sql_query = "SELECT ases_status.id_instancia, ases_statuses.nombre, MAX(ases_status.fecha)
                   FROM
                    (SELECT DISTINCT inst_cohorts.id_instancia 
                     FROM {cohort_members} AS cohorts
@@ -98,7 +98,8 @@ require_once $CFG->dirroot.'/blocks/ases/managers/periods_management/periods_lib
                     WHERE userid = $ases_id) AS assigned_instances
                   INNER JOIN {talentospilos_est_estadoases} AS ases_status ON ases_status.id_instancia = assigned_instances.id_instancia
                   INNER JOIN {talentospilos_estados_ases} AS ases_statuses ON ases_statuses.id = ases_status.id_estado_ases
-                  WHERE ases_status.id_estudiante = $ases_id";
+                  WHERE ases_status.id_estudiante = $ases_id
+                  GROUP BY ases_status.id_instancia, ases_statuses.nombre";
     
     $instances_array = $DB->get_records_sql($sql_query);
 
