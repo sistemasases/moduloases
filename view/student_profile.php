@@ -57,7 +57,7 @@ $title = "Ficha estudiante";
 $pagetitle = $title;
 $courseid = required_param('courseid', PARAM_INT);
 $blockid = required_param('instanceid', PARAM_INT);
-$student_code = optional_param('student_code', 0, PARAM_INT);
+$student_code = (string)optional_param('student_code', 0, PARAM_INT);
 
 require_login($courseid, false);
 
