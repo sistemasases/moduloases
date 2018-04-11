@@ -338,7 +338,7 @@ function make_html_semesters($semesters)
                 $descriptions .= "NO REGISTRA MATERIAS EN ESTE SEMESTRE";
             } else {
                 $descriptions .= "<div class = 'row'> <b>
-                <div class = 'col-md-3'>
+                <div class = 'col-md-4'>
                    MATERIA
                 </div>
              <div class = 'col-md-2'>
@@ -350,21 +350,13 @@ function make_html_semesters($semesters)
                <div class = 'col-md-2'>
                     CREDITOS
                </div>
-               <div class = 'col-md-2'>
-                    CANCELA
-               </div>  </b>
+                </b>
             </div>";
 
                 foreach ($materias as $materia) {
 
-                    $cancelacion = '';
-
-                    if ($materia->fecha_cancelacion_materia != '') {
-                        $cancelacion = date('d / M / Y', $materia->fecha_cancelacion_materia);
-                    }
-
                     $descriptions .= "<div class = 'row'>
-                    <div class = 'col-md-3'>
+                    <div class = 'col-md-4'>
                         $materia->nombre_materia
                     </div>
                     <div class = 'col-md-2'>
@@ -376,9 +368,7 @@ function make_html_semesters($semesters)
                     <div class = 'col-md-2'>
                          $materia->creditos
                     </div>
-                    <div class = 'col-md-2'>
-                         $cancelacion
-                    </div>
+                    
                  </div>";
                 }
 
