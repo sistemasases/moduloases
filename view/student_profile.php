@@ -795,6 +795,84 @@ if ($student_code != 0) {
 
     $periodoactual = getPeriodoActual();
     $idEstudiante = $student_id;
+
+    //$seguimientos_array
+    //
+    echo '<br>';
+    print_r( $periodoactual) ;
+    echo '<br>';
+    $current_year = date('Y', strtotime($periodoactual['fecha_inicio']));
+    echo $current_year; 
+    echo '<br>';
+    $initial_month = date('m', strtotime($periodoactual['fecha_inicio']));
+    $final_month = date('m', strtotime($periodoactual['fecha_fin']));
+    
+    $isPeriodA = false;
+    if ( in_array( $initial_month, $periodo_a ) ){
+        $isPeriodA = true;
+    }
+
+    $datos_seguimientos_periodo_actual = array();
+
+    if( $isPeriodA ){
+        $datos_seguimientos_periodo_actual = $seguimientos_array[ $current_year ][ 'per_a' ];
+    }else{
+        $datos_seguimientos_periodo_actual = $seguimientos_array[ $current_year ][ 'per_b' ];
+    };
+
+    /*
+        In this block, we use the local_alias defined with the field in the dynamic form
+        to filter the fields
+    */
+    
+    for( $x = 0; $x < count( $datos_seguimientos_periodo_actual ); $x++){
+
+        $individual_dimension_risk_lvl = 0;
+        $academic_dimension_risk_lvl = 0;
+        $economic_dimension_risk_lvl = 0;
+        $familiar_dimension_risk_lvl = 0;
+        $universitary_life_risk_lvl = 0;
+
+        $tmp_track = $datos_seguimientos_periodo_actual[ $x ][ 'record' ][ 'campos' ];
+        
+        for( $y = 0; $y < count( $tmp_track ); $y++ ){
+            if( $tmp_track[ $y ]['local_alias'] == 'puntuacion_riesgo_individual' ){
+                if( $tmp_track['respuesta'] != '-#$%-' ){
+                    $individual_dimension_risk_lvl = $tmp_track[ $y ]['respuesta'] ;
+                }
+            }
+            if( $tmp_track[ $y ]['local_alias'] == 'puntuacion_riesgo_academico' ){
+                if( $tmp_track[ $y ]['respuesta'] != '-#$%-' ){
+                    $academic_dimension_risk_lvl = $tmp_track[ $y ]['respuesta'] ;
+                }
+            }
+            if( $tmp_track[ $y ]['local_alias'] == 'puntuacion_riesgo_economico' ){
+                if( $tmp_track[ $y ]['respuesta'] != '-#$%-' ){
+                    $economic_dimension_risk_lvl = $tmp_track[ $y ]['respuesta'] ;
+                }
+            }
+            if( $tmp_track[ $y ]['local_alias'] == 'puntuacion_riesgo_familiar' ){
+                if( $tmp_track[ $y ]['respuesta'] != '-#$%-' ){
+                    $familiar_dimension_risk_lvl = $tmp_track[ $y ]['respuesta'] ;
+                }
+            }
+            if( $tmp_track[ $y ]['local_alias'] == 'puntuacion_vida_uni' ){
+                if( $tmp_track[ $y ]['respuesta'] != '-#$%-' ){
+                    $universitary_life_risk_lvl = $tmp_track[ $y ]['respuesta'] ;
+                }
+            }
+        }
+
+        print_r( $individual_dimension_risk_lvl ); echo '<br>';
+        print_r( $academic_dimension_risk_lvl ); echo '<br>';
+        print_r( $economic_dimension_risk_lvl ); echo '<br>';
+        print_r( $familiar_dimension_risk_lvl ); echo '<br>';
+        print_r( $universitary_life_risk_lvl ); echo '<br>';
+
+    }
+
+    //die();
+
     // Mustache doesn't allow advanced conditional control, information detachment occurs here
     $seguimientosEstudianteIndividual = obtenerDatosSeguimientoFormateados($idEstudiante, 'individual', $periodoactual);
     $seguimientosEstudianteFamiliar = obtenerDatosSeguimientoFormateados($idEstudiante, 'familiar', $periodoactual);
@@ -809,7 +887,7 @@ if ($student_code != 0) {
     $record->datosSeguimientoEstudianteEconomico = $seguimientosEstudianteEconomicor;
     $record->datosSeguimientoEstudianteVidaUniversitaria = $seguimientosVidaUniversitaria;
 
-// End of data obtaining for risks graphs
+    // End of data obtaining for risks graphs
 
     $record->form_seguimientos = null;
     $record->primer_acercamiento = null;
