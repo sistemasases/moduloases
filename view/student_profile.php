@@ -148,7 +148,7 @@ if ($student_code != 0) {
             $record->ases_status_t = "SEGUIMIENTO";
             $record->ases_status_description = "Se realiza seguimiento en esta instancia";
         }else if($status_ases_array[$blockid]->nombre == "SIN SEGUIMIENTO"){
-            $record->ases_status_f = "NO SEGUIMIENTO";
+            $record->ases_status_f = "SIN SEGUIMIENTO";
             $record->ases_status_description = "Se realiza seguimiento en otra instancia";
         }
     }
