@@ -587,10 +587,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/d3', 'block_ases/sweetaler
                             );
                         },
                     });
-                }else{
-                    alert("Cancelado por el usuario");
                 }
-                
             });
         },update_tracking_status: function(current_status, element, data_init, object_function){
 
