@@ -104,8 +104,6 @@ if ($student_code != 0) {
     $student_cohorts = get_cohorts_by_student($id_user_moodle);
     $status_ases_array = get_ases_status($ases_student->id, $blockid);
 
-    
-
     $record->id_moodle = $id_user_moodle;
     $record->id_ases = $student_id;
     $record->email_moodle = $user_moodle->email_moodle;
@@ -150,11 +148,14 @@ if ($student_code != 0) {
         }else if($status_ases_array[$blockid]->nombre == "SIN SEGUIMIENTO"){
             $record->ases_status_f = "SIN SEGUIMIENTO";
             $record->ases_status_description = "Se realiza seguimiento en otra instancia";
+        }else{
+            $record->ases_status_n = true;
+            $record->ases_status_description = "No se realiza seguimiento";
         }
     }
     else{
         $record->ases_status_n = true;
-        $record->ases_status_description = "No se realiza seguimiento en ninguna instancia";
+        $record->ases_status_description = "No se realiza seguimiento";
     }
 
     $monitor_object = new stdClass();

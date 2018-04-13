@@ -90,20 +90,38 @@ require_once $CFG->dirroot.'/blocks/ases/managers/periods_management/periods_lib
 
     global $DB;
 
-    $sql_query = "SELECT ases_status.id_instancia, ases_statuses.nombre, MAX(ases_status.fecha)
-                  FROM
-                   (SELECT DISTINCT inst_cohorts.id_instancia 
-                    FROM {cohort_members} AS cohorts
-                    INNER JOIN {talentospilos_inst_cohorte} AS inst_cohorts ON inst_cohorts.id_cohorte = cohorts.cohortid
-                    WHERE userid = $ases_id) AS assigned_instances
-                  INNER JOIN {talentospilos_est_estadoases} AS ases_status ON ases_status.id_instancia = assigned_instances.id_instancia
-                  INNER JOIN {talentospilos_estados_ases} AS ases_statuses ON ases_statuses.id = ases_status.id_estado_ases
-                  WHERE ases_status.id_estudiante = $ases_id
-                  GROUP BY ases_status.id_instancia, ases_statuses.nombre";
+    $sql_query = "SELECT DISTINCT inst_cohorts.id_instancia
+                  FROM {cohort_members} AS cohorts
+                  INNER JOIN {talentospilos_inst_cohorte} AS inst_cohorts ON inst_cohorts.id_cohorte = cohorts.cohortid
+                  WHERE userid = $ases_id";
     
-    $instances_array = $DB->get_records_sql($sql_query);
+    $array_instances = $DB->get_records_sql($sql_query);
+    $array_instances_status = array();
 
-    return $instances_array;
+    $array_instances;    
+
+    foreach($array_instances as $instance){
+
+        $sql_query = "SELECT ases_statuses.id, st_status_ases.id_estado_ases, ases_statuses.nombre
+                      FROM {talentospilos_est_estadoases} AS st_status_ases
+                      INNER JOIN {talentospilos_estados_ases} AS ases_statuses ON st_status_ases.id_estado_ases = ases_statuses.id
+                      WHERE id_instancia = $instance->id_instancia AND st_status_ases.id_estudiante = $ases_id AND st_status_ases.fecha = (SELECT MAX(fecha) 
+                                                                                                                                           FROM {talentospilos_est_estadoases}
+                                                                                                                                           WHERE id_instancia = $instance->id_instancia AND id_estudiante = $ases_id)
+                      GROUP BY ases_statuses.id, st_status_ases.id_estado_ases, ases_statuses.nombre";
+
+        $ases_status_instance = $DB->get_record_sql($sql_query);
+
+        if($ases_status_instance){
+            $instance->nombre = $ases_status_instance->nombre;
+        }else{
+            $instance->nombre = 'NO REGISTRA';
+        }
+
+        $array_instances_status[$instance->id_instancia] = $instance;
+    }
+    
+    return $array_instances_status;
  }
 
 /**
@@ -139,48 +157,31 @@ function update_status_ases($current_status, $new_status, $instance_id, $code_st
     $sql_query = "SELECT id FROM {talentospilos_estados_ases} WHERE nombre = 'SIN SEGUIMIENTO'";
     $id_no_tracking_status = $DB->get_record_sql($sql_query)->id;
 
+    // **************************************
+    //Iniciar transacción en la base de datos
+    // **************************************
+
     foreach($array_instances as $instance){
+
         $record->id_estudiante = $id_ases_student;
-        $record->id_estado_ases = $id_no_tracking_status;
         $record->fecha = $today_timestamp;
         $record->id_instancia = $instance->id_instancia;
 
-        $result = $DB->insert_record('talentospilos_est_estadoases', $record);
+        if($instance->id_instancia == $instance_id){
+            $record->id_estado_ases = $id_new_status;
+            $result = $DB->insert_record('talentospilos_est_estadoases', $record);
+        }else{
+            if($new_status == 'SEGUIMIENTO' && ($instance->nombre == 'SEGUIMIENTO' || $instance->nombre == 'NO REGISTRA')){
+                $record->id_estado_ases = $id_no_tracking_status;
+                $result = $DB->insert_record('talentospilos_est_estadoases', $record);
+            }else if($new_status == 'SEGUIMIENTO' && ($instance->nombre == 'NO SEGUIMIENTO' || $instance->nombre == 'NO REGISTRA')){
+                $result = 1;
+            }
+        }
 
         if(!$result){
             return 0;
         }
-    }
-
-    if($current_status == '' && $new_status == 'SEGUIMIENTO'){
-
-        $record->id_estudiante = $id_ases_student;
-        $record->id_estado_ases = $id_new_status;
-        $record->fecha = $today_timestamp;
-        $record->id_instancia = $instance_id;
-
-        $result = $DB->insert_record('talentospilos_est_estadoases', $record);
-        
-    }else if($current_status == 'SEGUIMIENTO' && $new_status == 'SIN SEGUIMIENTO'){
-
-        $record->id_estudiante = $id_ases_student;
-        $record->id_estado_ases = $id_new_status;
-        $record->fecha = $today_timestamp;
-        $record->id_instancia = $instance_id;
-
-        $result = $DB->insert_record('talentospilos_est_estadoases', $record);
-
-    }else if($current_status == 'SIN SEGUIMIENTO' && $new_status == 'SEGUIMIENTO'){
-
-        $record->id_estudiante = $id_ases_student;
-        $record->id_estado_ases = $id_new_status;
-        $record->fecha = $today_timestamp;
-        $record->id_instancia = $instance_id;
-
-        $result = $DB->insert_record('talentospilos_est_estadoases', $record);
-
-    }else{
-        $result = 0;
     }
 
     return $result;
