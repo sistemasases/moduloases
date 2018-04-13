@@ -124,6 +124,27 @@ require_once $CFG->dirroot.'/blocks/ases/managers/periods_management/periods_lib
     return $array_instances_status;
  }
 
+ /**
+ * Verify ASES status
+ *
+ * @see verify_ases_status
+ * @param $id_ases_student
+ * @return int
+ */
+function verify_ases_status($id_ases_student){
+    
+    $array_status_instances = get_ases_status($id_ases_student);
+    $result = 0;
+
+    foreach($array_status_instances as $instance){
+        if($instance->nombre == 'SEGUIMIENTO'){
+            return 1;
+        }
+    }
+
+    return $result;
+}
+
 /**
  * Update the ASES status for a student
  *
@@ -174,8 +195,10 @@ function update_status_ases($current_status, $new_status, $instance_id, $code_st
             if($new_status == 'SEGUIMIENTO' && ($instance->nombre == 'SEGUIMIENTO' || $instance->nombre == 'NO REGISTRA')){
                 $record->id_estado_ases = $id_no_tracking_status;
                 $result = $DB->insert_record('talentospilos_est_estadoases', $record);
-            }else if($new_status == 'SEGUIMIENTO' && ($instance->nombre == 'NO SEGUIMIENTO' || $instance->nombre == 'NO REGISTRA')){
+            }else if($instance->nombre == 'SIN SEGUIMIENTO'){
                 $result = 1;
+            }else{
+                $result = 0;
             }
         }
 
