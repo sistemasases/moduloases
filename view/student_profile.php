@@ -931,17 +931,18 @@ if ($student_code != 0) {
     $risk_economic_dimension = array();
     $risk_familiar_dimension = array();
     $risk_uni_life_dimension = array();
-
+    
+    $risks = array_reverse( $risks );
+    
     for( $p = 0; $p < count( $risks ); $p++ ){
 
-        for( $q = 0; $q < count( $risks[ $p ][ 'information' ] ); $p++  ){
+        for( $q = 0; $q < count( $risks[ $p ][ 'information' ] ); $q++  ){
 
             $isIndividual = false;
             $isAcademic = false;
             $isEconomic = false;
             $isFamiliar = false;
             $isUniLife = false;
-
             
             if( $risks[ $p ][ 'information' ][ $q ][ 'dimension' ] == 'individual' ){
                 $isIndividual = true;
@@ -955,8 +956,8 @@ if ($student_code != 0) {
                 }
             }
 
-            if( $risks[ $p ][ 'information' ][ $q ][ 'dimension' ] == 'academico' ){
-                $isIndividual = true;
+            if( $risks[ $p ][ 'information' ][ $q ][ 'dimension' ] == 'academica' ){
+                $isAcademic = true;
                 $color = null;
                 if( $risks[ $p ][ 'information' ][ $q ][ 'risk_lvl' ] == '1'){
                     $color = 'green';
@@ -967,8 +968,8 @@ if ($student_code != 0) {
                 }
             }
 
-            if( $risks[ $p ][ 'information' ][ $q ][ 'dimension' ] == 'economico' ){
-                $isIndividual = true;
+            if( $risks[ $p ][ 'information' ][ $q ][ 'dimension' ] == 'economica' ){
+                $isEconomic = true;
                 $color = null;
                 if( $risks[ $p ][ 'information' ][ $q ][ 'risk_lvl' ] == '1'){
                     $color = 'green';
@@ -980,7 +981,7 @@ if ($student_code != 0) {
             }
 
             if( $risks[ $p ][ 'information' ][ $q ][ 'dimension' ] == 'familiar' ){
-                $isIndividual = true;
+                $isFamiliar = true;
                 $color = null;
                 if( $risks[ $p ][ 'information' ][ $q ][ 'risk_lvl' ] == '1'){
                     $color = 'green';
@@ -992,7 +993,7 @@ if ($student_code != 0) {
             }
 
             if( $risks[ $p ][ 'information' ][ $q ][ 'dimension' ] == 'vida_universitaria' ){
-                $isIndividual = true;
+                $isUniLife = true;
                 $color = null;
                 if( $risks[ $p ][ 'information' ][ $q ][ 'risk_lvl' ] == '1'){
                     $color = 'green';
@@ -1044,14 +1045,6 @@ if ($student_code != 0) {
     $seguimientosEstudianteAcademico = obtenerDatosSeguimientoFormateados($idEstudiante, 'academico', $periodoactual);
     $seguimientosEstudianteEconomicor = obtenerDatosSeguimientoFormateados($idEstudiante, 'economico', $periodoactual);
     $seguimientosVidaUniversitaria = obtenerDatosSeguimientoFormateados($idEstudiante, 'vida_universitaria', $periodoactual);*/
-
-    /*print_r(
-        json_encode($risk_individual_dimension)
-    );
-    echo "<br>-----------<br>";
-    print_r(
-        json_encode($seguimientosEstudianteIndividual)
-    );*/
 
     $seguimientosEstudianteIndividual = $risk_individual_dimension;
     $seguimientosEstudianteFamiliar = $risk_familiar_dimension;

@@ -132,7 +132,9 @@ hr{
     visibility: visible;
 }
 
-
+#modal_riesgos > .mymodal-content{
+    padding: 0px !important;
+}
 
 
 
