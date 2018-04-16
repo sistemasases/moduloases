@@ -70,6 +70,7 @@ if(isset($_POST["func"])){
 
         save_status_icetex_proc($new_status, $id_ases, $id_reason, $observations);
 
+
     }elseif($_POST['func'] == 'update_status_program'){
         if(isset($_POST['program_id']) && isset($_POST['status']) && isset($_POST['student_id'])){
 
@@ -95,10 +96,32 @@ if(isset($_POST["func"])){
 
             echo json_encode($msg_error);
         }
+    }elseif($_POST['func'] == 'update_status_ases'){
 
-    }elseif($_POST['func'] == 'update_ases_status'){
-        
-        
+        if(isset($_POST['current_status']) && isset($_POST['new_status']) && isset($_POST['instance_id']) && isset($_POST['code_student'])){
+            $result = update_status_ases($_POST['current_status'], $_POST['new_status'], $_POST['instance_id'], $_POST['code_student']);
+            $msg = new stdClass();
+
+            if($result){                
+                $msg->title = 'Éxito';
+                $msg->msg = 'Estado actualizado con éxito.';
+                $msg->status = 'success';
+                $msg->previous_status = $_POST['current_status'];
+            }else{
+                $msg->title = 'Error';
+                $msg->msg = 'Error al guardar estado en la base de datos.';
+                $msg->status = 'error';
+            }
+
+            echo json_encode($msg);
+        }else{
+            $msg_error = new stdClass();
+            $msg_error->title = 'Error';
+            $msg_error->msg = 'Error al conectarse con el servidor.';
+            $msg_error->status = 'error';
+
+            echo json_encode($msg_error);
+        }
 
     }elseif($_POST['func'] == 'save_tracking_peer'){
         save_tracking_peer_proc();

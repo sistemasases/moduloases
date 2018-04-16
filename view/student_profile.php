@@ -103,8 +103,6 @@ if ($student_code != 0) {
     $student_cohorts = get_cohorts_by_student($id_user_moodle);
     $status_ases_array = get_ases_status($ases_student->id, $blockid);
 
-    
-
     $record->id_moodle = $id_user_moodle;
     $record->id_ases = $student_id;
     $record->email_moodle = $user_moodle->email_moodle;
@@ -144,17 +142,43 @@ if ($student_code != 0) {
     // Estado ASES
     if($status_ases_array){
         if($status_ases_array[$blockid]->nombre == "SEGUIMIENTO"){
-            $record->ases_status_t = true;
+            $record->ases_status_t = "SEGUIMIENTO";
             $record->ases_status_description = "Se realiza seguimiento en esta instancia";
         }else if($status_ases_array[$blockid]->nombre == "SIN SEGUIMIENTO"){
-            $record->ases_status_f = true;
-            $record->ases_status_description = "Se realiza seguimiento en otra instancia";
+
+            $has_ases_status = verify_ases_status($ases_student->id);
+
+            if($has_ases_status){
+                $record->ases_status_f = "SIN SEGUIMIENTO";
+                $record->ases_status_description = "Se realiza seguimiento en otra instancia";
+            }else{
+                $record->ases_status_n = true;
+                $record->ases_status_description = "No se realiza seguimiento";
+            }
+        }else{
+            $record->ases_status_n = true;
+            $record->ases_status_description = "No se realiza seguimiento";
+        }
+    }else{
+        $record->ases_status_n = true;
+        $record->ases_status_description = "No se realiza seguimiento";
+    }
+
+    // Estado ICETEX
+    $icetex_statuses = get_icetex_statuses();
+    $options_status_icetex = '';
+
+    $status_icetex_student = get_icetex_status_student($student_id);
+
+    foreach($icetex_statuses as $status){
+        if($status_icetex_student->id_estado_icetex == $status->id){
+            $options_status_icetex .= "<option value='$status->id' selected='selected'>$status->nombre</option>";
+        }else{
+            $options_status_icetex .= "<option value='$status->id'>$status->nombre</option>";
         }
     }
-    else{
-        $record->ases_status_n = true;
-        $record->ases_status_description = "No se realiza seguimiento en ninguna instancia";
-    }
+
+    $record->options_status_icetex = $options_status_icetex;
 
     $monitor_object = new stdClass();
     $trainee_object = new stdClass();
@@ -794,12 +818,261 @@ if ($student_code != 0) {
 
     $periodoactual = getPeriodoActual();
     $idEstudiante = $student_id;
+
+    //$seguimientos_array
+    //
+    echo '<br>';
+    $current_year = date('Y', strtotime($periodoactual['fecha_inicio']));
+    $initial_month = date('m', strtotime($periodoactual['fecha_inicio']));
+    $final_month = date('m', strtotime($periodoactual['fecha_fin']));
+    
+    $isPeriodA = false;
+    if ( in_array( $initial_month, $periodo_a ) ){
+        $isPeriodA = true;
+    }
+
+    $datos_seguimientos_periodo_actual = array();
+
+    if( $isPeriodA ){
+        $datos_seguimientos_periodo_actual = $seguimientos_array[ $current_year ][ 'per_a' ];
+    }else{
+        $datos_seguimientos_periodo_actual = $seguimientos_array[ $current_year ][ 'per_b' ];
+    };
+
+    /*
+        In this block, we use the local_alias defined with the field in the dynamic form
+        to filter the fields
+    */
+    
+    $risks = array();
+
+    for( $x = 0; $x < count( $datos_seguimientos_periodo_actual ); $x++){
+
+        $risk_date = null;
+
+        $individual_dimension_risk_lvl = null;
+        $academic_dimension_risk_lvl = null;
+        $economic_dimension_risk_lvl = null;
+        $familiar_dimension_risk_lvl = null;
+        $universitary_life_risk_lvl = null;
+
+        $tmp_track = $datos_seguimientos_periodo_actual[ $x ][ 'record' ][ 'campos' ];
+        
+        for( $y = 0; $y < count( $tmp_track ); $y++ ){
+            
+            if( $tmp_track[ $y ]['local_alias'] == 'fecha' ){
+                $risk_date = date('Y-M-d', strtotime($tmp_track[ $y ]['respuesta'] ));
+            }
+            if( $tmp_track[ $y ]['local_alias'] == 'puntuacion_riesgo_individual' ){
+                if( ($tmp_track[ $y ]['respuesta'] != '-#$%-')&&($tmp_track[ $y ]['respuesta'] != '0') ){
+                    $individual_dimension_risk_lvl = $tmp_track[ $y ]['respuesta'] ;
+                }
+            }
+            if( $tmp_track[ $y ]['local_alias'] == 'puntuacion_riesgo_academico' ){
+                if( ($tmp_track[ $y ]['respuesta'] != '-#$%-')&&($tmp_track[ $y ]['respuesta'] != '0') ){
+                    $academic_dimension_risk_lvl = $tmp_track[ $y ]['respuesta'] ;
+                }
+            }
+            if( $tmp_track[ $y ]['local_alias'] == 'puntuacion_riesgo_economico' ){
+                if( ($tmp_track[ $y ]['respuesta'] != '-#$%-')&&($tmp_track[ $y ]['respuesta'] != '0') ){
+                    $economic_dimension_risk_lvl = $tmp_track[ $y ]['respuesta'] ;
+                }
+            }
+            if( $tmp_track[ $y ]['local_alias'] == 'puntuacion_riesgo_familiar' ){
+                if( ($tmp_track[ $y ]['respuesta'] != '-#$%-')&&($tmp_track[ $y ]['respuesta'] != '0') ){
+                    $familiar_dimension_risk_lvl = $tmp_track[ $y ]['respuesta'] ;
+                }
+            }
+            if( $tmp_track[ $y ]['local_alias'] == 'puntuacion_vida_uni' ){
+                if( ($tmp_track[ $y ]['respuesta'] != '-#$%-')&&($tmp_track[ $y ]['respuesta'] != '0') ){
+                    $universitary_life_risk_lvl = $tmp_track[ $y ]['respuesta'] ;
+                }
+            }
+        }
+
+        $risk_by_dimensions = array();
+
+        if( $individual_dimension_risk_lvl ){
+            array_push(
+                $risk_by_dimensions,
+                array(
+                    'dimension' => 'individual',
+                    'risk_lvl' => $individual_dimension_risk_lvl
+                )
+            );
+        }
+        if( $academic_dimension_risk_lvl ){
+            array_push(
+                $risk_by_dimensions,
+                array(
+                    'dimension' => 'academica',
+                    'risk_lvl' => $academic_dimension_risk_lvl
+                )
+            );
+        }
+        if( $economic_dimension_risk_lvl ){
+            array_push(
+                $risk_by_dimensions,
+                array(
+                    'dimension' => 'economica',
+                    'risk_lvl' => $economic_dimension_risk_lvl
+                )
+            );
+        }
+        if( $familiar_dimension_risk_lvl ){
+            array_push(
+                $risk_by_dimensions,
+                array(
+                    'dimension' => 'familiar',
+                    'risk_lvl' => $familiar_dimension_risk_lvl
+                )
+            );
+        }
+        if( $universitary_life_risk_lvl ){
+            array_push(
+                $risk_by_dimensions,
+                array(
+                    'dimension' => 'vida_universitaria',
+                    'risk_lvl' => $universitary_life_risk_lvl
+                )
+            );
+        }
+        
+
+        $risk_data = array(
+            'date' => $risk_date,
+            'information' => $risk_by_dimensions,
+            'record_id' => $datos_seguimientos_periodo_actual[ $x ]['record']['id_registro']
+        );
+
+        array_push( $risks, $risk_data );
+    }
+    
+    $risk_individual_dimension = array();
+    $risk_academic_dimension = array();
+    $risk_economic_dimension = array();
+    $risk_familiar_dimension = array();
+    $risk_uni_life_dimension = array();
+    
+    $risks = array_reverse( $risks );
+    
+    for( $p = 0; $p < count( $risks ); $p++ ){
+
+        for( $q = 0; $q < count( $risks[ $p ][ 'information' ] ); $q++  ){
+
+            $isIndividual = false;
+            $isAcademic = false;
+            $isEconomic = false;
+            $isFamiliar = false;
+            $isUniLife = false;
+            
+            if( $risks[ $p ][ 'information' ][ $q ][ 'dimension' ] == 'individual' ){
+                $isIndividual = true;
+                $color = null;
+                if( $risks[ $p ][ 'information' ][ $q ][ 'risk_lvl' ] == '1'){
+                    $color = 'green';
+                }elseif ( $risks[ $p ][ 'information' ][ $q ][ 'risk_lvl' ] == '2') {
+                    $color = 'orange';
+                }elseif ( $risks[ $p ][ 'information' ][ $q ][ 'risk_lvl' ] == '3') {
+                    $color = 'red';
+                }
+            }
+
+            if( $risks[ $p ][ 'information' ][ $q ][ 'dimension' ] == 'academica' ){
+                $isAcademic = true;
+                $color = null;
+                if( $risks[ $p ][ 'information' ][ $q ][ 'risk_lvl' ] == '1'){
+                    $color = 'green';
+                }elseif ( $risks[ $p ][ 'information' ][ $q ][ 'risk_lvl' ] == '2') {
+                    $color = 'orange';
+                }elseif ( $risks[ $p ][ 'information' ][ $q ][ 'risk_lvl' ] == '3') {
+                    $color = 'red';
+                }
+            }
+
+            if( $risks[ $p ][ 'information' ][ $q ][ 'dimension' ] == 'economica' ){
+                $isEconomic = true;
+                $color = null;
+                if( $risks[ $p ][ 'information' ][ $q ][ 'risk_lvl' ] == '1'){
+                    $color = 'green';
+                }elseif ( $risks[ $p ][ 'information' ][ $q ][ 'risk_lvl' ] == '2') {
+                    $color = 'orange';
+                }elseif ( $risks[ $p ][ 'information' ][ $q ][ 'risk_lvl' ] == '3') {
+                    $color = 'red';
+                }
+            }
+
+            if( $risks[ $p ][ 'information' ][ $q ][ 'dimension' ] == 'familiar' ){
+                $isFamiliar = true;
+                $color = null;
+                if( $risks[ $p ][ 'information' ][ $q ][ 'risk_lvl' ] == '1'){
+                    $color = 'green';
+                }elseif ( $risks[ $p ][ 'information' ][ $q ][ 'risk_lvl' ] == '2') {
+                    $color = 'orange';
+                }elseif ( $risks[ $p ][ 'information' ][ $q ][ 'risk_lvl' ] == '3') {
+                    $color = 'red';
+                }
+            }
+
+            if( $risks[ $p ][ 'information' ][ $q ][ 'dimension' ] == 'vida_universitaria' ){
+                $isUniLife = true;
+                $color = null;
+                if( $risks[ $p ][ 'information' ][ $q ][ 'risk_lvl' ] == '1'){
+                    $color = 'green';
+                }elseif ( $risks[ $p ][ 'information' ][ $q ][ 'risk_lvl' ] == '2') {
+                    $color = 'orange';
+                }elseif ( $risks[ $p ][ 'information' ][ $q ][ 'risk_lvl' ] == '3') {
+                    $color = 'red';
+                }
+            }
+            
+            $data = array(
+                'fecha' => $risks[ $p ][ 'date' ],
+                'color' => $color,
+                'riesgo' => $risks[ $p ][ 'information' ][ $q ][ 'risk_lvl' ],
+                'end' => 'false'
+            );
+
+            $tmp_risk = array(
+                'id_seguimiento' => $risks[ $p ][ 'record_id' ],
+                'datos' => $data
+            );
+
+            if( $isIndividual ){
+                array_push( $risk_individual_dimension, $tmp_risk );
+            }else if( $isAcademic ){
+                array_push( $risk_academic_dimension, $tmp_risk );
+            }else if( $isEconomic ){
+                array_push( $risk_economic_dimension, $tmp_risk );
+            }else if( $isFamiliar ){
+                array_push( $risk_familiar_dimension, $tmp_risk );
+            }else if( $isUniLife ){
+                array_push( $risk_uni_life_dimension, $tmp_risk );
+            }
+        };
+
+    }
+
+    array_push( $risk_individual_dimension, array( 'end' => 'true' ) );
+    array_push( $risk_academic_dimension, array( 'end' => 'true' ) );
+    array_push( $risk_economic_dimension, array( 'end' => 'true' ) );
+    array_push( $risk_familiar_dimension, array( 'end' => 'true' ) );
+    array_push( $risk_uni_life_dimension, array( 'end' => 'true' ) );
+
+    //die();
+
     // Mustache doesn't allow advanced conditional control, information detachment occurs here
-    $seguimientosEstudianteIndividual = obtenerDatosSeguimientoFormateados($idEstudiante, 'individual', $periodoactual);
+    /*$seguimientosEstudianteIndividual = obtenerDatosSeguimientoFormateados($idEstudiante, 'individual', $periodoactual);
     $seguimientosEstudianteFamiliar = obtenerDatosSeguimientoFormateados($idEstudiante, 'familiar', $periodoactual);
     $seguimientosEstudianteAcademico = obtenerDatosSeguimientoFormateados($idEstudiante, 'academico', $periodoactual);
     $seguimientosEstudianteEconomicor = obtenerDatosSeguimientoFormateados($idEstudiante, 'economico', $periodoactual);
-    $seguimientosVidaUniversitaria = obtenerDatosSeguimientoFormateados($idEstudiante, 'vida_universitaria', $periodoactual);
+    $seguimientosVidaUniversitaria = obtenerDatosSeguimientoFormateados($idEstudiante, 'vida_universitaria', $periodoactual);*/
+
+    $seguimientosEstudianteIndividual = $risk_individual_dimension;
+    $seguimientosEstudianteFamiliar = $risk_familiar_dimension;
+    $seguimientosEstudianteAcademico = $risk_academic_dimension;
+    $seguimientosEstudianteEconomicor = $risk_economic_dimension;
+    $seguimientosVidaUniversitaria = $risk_uni_life_dimension;
 
     $record->nombrePeriodoSeguimiento = $periodoactual['nombre_periodo'];
     $record->datosSeguimientoEstudianteIndividual = $seguimientosEstudianteIndividual;
@@ -808,7 +1081,7 @@ if ($student_code != 0) {
     $record->datosSeguimientoEstudianteEconomico = $seguimientosEstudianteEconomicor;
     $record->datosSeguimientoEstudianteVidaUniversitaria = $seguimientosVidaUniversitaria;
 
-// End of data obtaining for risks graphs
+    // End of data obtaining for risks graphs
 
     $record->form_seguimientos = null;
     $record->primer_acercamiento = null;

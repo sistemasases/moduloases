@@ -71,8 +71,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/d3', 'block_ases/sweetaler
                     self.update_status_program(current_status, $(this));
                 });
 
-            $('#icon-tracking').on('click', self.update_status_ases);
-
+            $('#icon-tracking').on('click', function(){self.update_status_ases(parameters);});
             // 
             switch(parameters.tab){
                 case "socioed_tab":
@@ -88,8 +87,6 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/d3', 'block_ases/sweetaler
                     break;
             }
 
-            
-    
             var modal_peer_tracking = $('#modal_peer_tracking');
 
             edit_profile_act();
@@ -552,15 +549,37 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/d3', 'block_ases/sweetaler
             });
             
             
-        },update_status_ases: function(){
+        },update_status_ases: function(parameters_url){
+
+            var current_status = $('#input_status_ases').val(); 
+            var new_status;
+
+            // Se configura el nuevo estado a partir del estado actual
+            switch(current_status){
+                case 'SEGUIMIENTO':
+                    new_status = 'SIN SEGUIMIENTO'
+                    break;
+                case 'SIN SEGUIMIENTO':
+                    new_status = 'SEGUIMIENTO';
+                    break;
+                case '':
+                    new_status = 'SEGUIMIENTO';
+                    break;
+                default:
+                    
+            }
 
             var data = {
                 func: 'update_status_ases',
+                current_status: current_status,
+                new_status: new_status,
+                instance_id: parameters_url.instanceid,
+                code_student: parameters_url.student_code
             };
 
             swal({
                 title: "Advertencia",
-                text: "¿Está seguro que desea cambiar el estado de seguimiento del estudiante en esta instancia?",
+                text: "¿Está seguro que desea cambiar el estado de seguimiento del estudiante en esta instancia? El estado pasará de '"+current_status+"' a '"+new_status+"'",
                 type: "warning",
                 showCancelButton: true,
                 confirmButtonClass: "btn-danger",
@@ -575,6 +594,26 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/d3', 'block_ases/sweetaler
                         data: data,
                         url: "../managers/student_profile/studentprofile_serverproc.php",
                         success: function(msg) {
+
+                            if(msg.previous_status == 'SEGUIMIENTO'){
+                                $('#icon-tracking').removeClass('i-tracking-t');
+                                $('#icon-tracking').addClass('i-tracking-n');
+                                $('#tip_ases_status').html('Se realiza seguimiento en otra instancia');
+                            }else if(msg.previous_status == 'SIN SEGUIMIENTO'){
+                                $('#icon-tracking').removeClass('i-tracking-f');
+                                $('#icon-tracking').addClass('i-tracking-t');
+                                $('#tip_ases_status').html('Se realiza seguimiento en esta instancia');
+                            }else if(msg.previous_status == ''){
+                                $('#icon-tracking').removeClass('i-tracking-n');
+                                $('#icon-tracking').addClass('i-tracking-t');
+                                $('#tip_ases_status').html('Se realiza seguimiento en esta instancia');
+                            }
+
+                            swal(
+                                msg.title,
+                                msg.msg,
+                                msg.status
+                            );
                             
                         },
                         dataType: "json",
@@ -587,10 +626,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/d3', 'block_ases/sweetaler
                             );
                         },
                     });
-                }else{
-                    alert("Cancelado por el usuario");
                 }
-                
             });
         },update_tracking_status: function(current_status, element, data_init, object_function){
 
@@ -631,7 +667,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/d3', 'block_ases/sweetaler
                 element.prop('checked', true);
             }
 
-        }, validate_tracking_statuses: function(data_init){
+        },validate_tracking_statuses: function(data_init){
 
             has_tracking_status = false;
 
@@ -643,6 +679,16 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/d3', 'block_ases/sweetaler
             }
 
             return data_init[i];
+        },get_url_parameters: function(page){
+            var query_string = [];
+            var query = document.location.search.substring(1);
+            var vars = query.split("&");
+            for (var i = 0; i < vars.length; i++) {
+                var pair = vars[i].split("=");
+                query_string[pair[0]] = pair[1];
+            }
+
+            return query_string;
         }
     };
 
@@ -1245,7 +1291,6 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/d3', 'block_ases/sweetaler
         $('#no_value_economic').prop('checked', true);
         $('#no_value_life').prop('checked', true); 
     }
-
 
     function save_tracking_peer() {
         var form = $('#tracking_peer_form');

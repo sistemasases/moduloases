@@ -86,8 +86,9 @@ hr{
 }
 
 #age,
-#email{
-    padding-top: 5px;
+#email,
+#span-icetex-status{
+    padding-top: 7px;
 }
 
 .borderless td, .borderless th {
@@ -132,7 +133,9 @@ hr{
     visibility: visible;
 }
 
-
+#modal_riesgos > .mymodal-content{
+    padding: 0px !important;
+}
 
 
 

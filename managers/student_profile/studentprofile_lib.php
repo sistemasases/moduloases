@@ -23,6 +23,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 require_once(dirname(__FILE__). '/../../../../config.php');
+require_once $CFG->dirroot.'/blocks/ases/managers/lib/student_lib.php';
 require_once $CFG->dirroot.'/blocks/ases/managers/dphpforms/dphpforms_forms_core.php';
 require_once $CFG->dirroot.'/blocks/ases/managers/dphpforms/dphpforms_records_finder.php';
 require_once $CFG->dirroot.'/blocks/ases/managers/dphpforms/dphpforms_get_record.php';
@@ -65,10 +66,10 @@ require_once $CFG->dirroot.'/blocks/ases/managers/periods_management/periods_lib
 /**
  * Gets a set of ICETEX status
  *
- * @see get_status_icetex()
+ * @see get_icetex_statuses()
  * @return array with the ICETEX status grouped
  */
- function get_status_icetex(){
+ function get_icetex_statuses(){
      
      global $DB;
      
@@ -77,34 +78,161 @@ require_once $CFG->dirroot.'/blocks/ases/managers/periods_management/periods_lib
      
      return $status_icetex_array;
  }
+
+ /**
+ * Gets a set of ICETEX status
+ *
+ * @see get_icetex_statuses()
+ * @return array with the ICETEX status grouped
+ */
+ function get_icetex_status_student($ases_student_id){
+
+    global $DB;
+
+    $sql_query = "SELECT MAX(fecha), id_estado_icetex 
+                  FROM {talentospilos_est_est_icetex} 
+                  WHERE id_estudiante = $ases_student_id
+                  GROUP BY id_estado_icetex";
+    
+    $icetex_status_student = $DB->get_record_sql($sql_query);
+
+    return $icetex_status_student;
+ }
  
  /**
  * Gets the ASES status for a student
  *
  * @see get_ases_status
  * @param $ases_id
- * @param $current_instance_id
- * @return array with the ICETEX status grouped
+ * @return array ASES status in instances
  */
- function get_ases_status($ases_id, $current_instance_id){
+ function get_ases_status($ases_id){
 
     global $DB;
 
-    $sql_query = "SELECT ases_status.id_instancia, ases_statuses.nombre, MAX(ases_status.fecha)
-                  FROM
-                   (SELECT DISTINCT inst_cohorts.id_instancia 
-                    FROM {cohort_members} AS cohorts
-                    INNER JOIN {talentospilos_inst_cohorte} AS inst_cohorts ON inst_cohorts.id_cohorte = cohorts.cohortid
-                    WHERE userid = $ases_id) AS assigned_instances
-                  INNER JOIN {talentospilos_est_estadoases} AS ases_status ON ases_status.id_instancia = assigned_instances.id_instancia
-                  INNER JOIN {talentospilos_estados_ases} AS ases_statuses ON ases_statuses.id = ases_status.id_estado_ases
-                  WHERE ases_status.id_estudiante = $ases_id
-                  GROUP BY ases_status.id_instancia, ases_statuses.nombre";
+    $sql_query = "SELECT DISTINCT inst_cohorts.id_instancia
+                  FROM {cohort_members} AS cohorts
+                  INNER JOIN {talentospilos_inst_cohorte} AS inst_cohorts ON inst_cohorts.id_cohorte = cohorts.cohortid
+                  WHERE userid = $ases_id";
     
-    $instances_array = $DB->get_records_sql($sql_query);
+    $array_instances = $DB->get_records_sql($sql_query);
+    $array_instances_status = array();
 
-    return $instances_array;
+    $array_instances;    
+
+    foreach($array_instances as $instance){
+
+        $sql_query = "SELECT ases_statuses.id, st_status_ases.id_estado_ases, ases_statuses.nombre
+                      FROM {talentospilos_est_estadoases} AS st_status_ases
+                      INNER JOIN {talentospilos_estados_ases} AS ases_statuses ON st_status_ases.id_estado_ases = ases_statuses.id
+                      WHERE id_instancia = $instance->id_instancia AND st_status_ases.id_estudiante = $ases_id AND st_status_ases.fecha = (SELECT MAX(fecha) 
+                                                                                                                                           FROM {talentospilos_est_estadoases}
+                                                                                                                                           WHERE id_instancia = $instance->id_instancia AND id_estudiante = $ases_id)
+                      GROUP BY ases_statuses.id, st_status_ases.id_estado_ases, ases_statuses.nombre";
+
+        $ases_status_instance = $DB->get_record_sql($sql_query);
+
+        if($ases_status_instance){
+            $instance->nombre = $ases_status_instance->nombre;
+        }else{
+            $instance->nombre = 'NO REGISTRA';
+        }
+
+        $array_instances_status[$instance->id_instancia] = $instance;
+    }
+    
+    return $array_instances_status;
  }
+
+ /**
+ * Verify ASES status
+ *
+ * @see verify_ases_status
+ * @param $id_ases_student
+ * @return int
+ */
+function verify_ases_status($id_ases_student){
+    
+    $array_status_instances = get_ases_status($id_ases_student);
+    $result = 0;
+
+    foreach($array_status_instances as $instance){
+        if($instance->nombre == 'SEGUIMIENTO'){
+            return 1;
+        }
+    }
+
+    return $result;
+}
+
+/**
+ * Update the ASES status for a student
+ *
+ * @see update_status_ases
+ * @param $current_status
+ * @param $new_status
+ * @param $instance_id
+ * @param $code_student
+ * @return int
+ */
+function update_status_ases($current_status, $new_status, $instance_id, $code_student){
+
+    global $DB;
+
+    date_default_timezone_set('America/Bogota');
+
+    if($current_status == ""){
+        $id_current_status = 0;
+    }else{
+        $sql_query = "SELECT id FROM {talentospilos_estados_ases} WHERE nombre = '$current_status'";
+        $id_current_status = $DB->get_record_sql($sql_query)->id;
+    }    
+
+    $sql_query = "SELECT id FROM {talentospilos_estados_ases} WHERE nombre = '$new_status'";
+    $id_new_status = $DB->get_record_sql($sql_query)->id;
+
+
+    $id_ases_student = get_ases_user_by_code($code_student)->id;
+
+    $array_instances = get_ases_status($id_ases_student);
+
+    $today_timestamp = time();
+    $record = new stdClass();
+
+    $sql_query = "SELECT id FROM {talentospilos_estados_ases} WHERE nombre = 'SIN SEGUIMIENTO'";
+    $id_no_tracking_status = $DB->get_record_sql($sql_query)->id;
+
+    // **************************************
+    //Iniciar transacción en la base de datos
+    // **************************************
+
+    foreach($array_instances as $instance){
+
+        $record->id_estudiante = $id_ases_student;
+        $record->fecha = $today_timestamp;
+        $record->id_instancia = $instance->id_instancia;
+
+        if($instance->id_instancia == $instance_id){
+            $record->id_estado_ases = $id_new_status;
+            $result = $DB->insert_record('talentospilos_est_estadoases', $record);
+        }else{
+            if($new_status == 'SEGUIMIENTO' && ($instance->nombre == 'SEGUIMIENTO' || $instance->nombre == 'NO REGISTRA')){
+                $record->id_estado_ases = $id_no_tracking_status;
+                $result = $DB->insert_record('talentospilos_est_estadoases', $record);
+            }else if($instance->nombre == 'SIN SEGUIMIENTO'){
+                $result = 1;
+            }else{
+                $result = 0;
+            }
+        }
+
+        if(!$result){
+            return 0;
+        }
+    }
+
+    return $result;
+}
  
 /**
  * Gets every track of a student given his id, track type and instance associated to the track and the student
@@ -140,7 +268,7 @@ function get_trackings_student($id_ases, $tracking_type, $id_instance){
     $tracking_array = $DB->get_records_sql($sql_query);
 
     return $tracking_array;
- }
+}
  
 function get_tracking_current_semester($criterio,$student_id, $semester_id){
 
@@ -409,7 +537,7 @@ function get_semesters_stud($id_first_semester){
       array_push($semesters_array, $result);
     }
     return $semesters_array;
- }
+}
 
 function compare_date($fecha_inicio, $fecha_fin, $fecha_comparar){
     
@@ -421,7 +549,7 @@ function compare_date($fecha_inicio, $fecha_fin, $fecha_comparar){
     // var_dump($fecha_comparar);
     //print_r(($fecha_comparar >= strtotime($fecha_inicio->format('Y-m-d'))) && ($fecha_comparar <= $fecha_fin));
     return (((int)$fecha_comparar >= strtotime($fecha_inicio->format('Y-m-d'))) && ((int)$fecha_comparar <= (int)$fecha_fin));
- }
+}
 
  /**
   * Gets last semester id given a moodle id
@@ -430,7 +558,6 @@ function compare_date($fecha_inicio, $fecha_fin, $fecha_comparar){
   * @param $idmoodle --> moodle student id
   * @return string|boolean --> string containing the last semster id or false in case there weren't semesters related with the student
   */
-
  function get_id_last_semester($idmoodle){
 
      $id_first_semester = get_id_first_semester($idmoodle);
@@ -735,66 +862,6 @@ function save_status_icetex($id_status, $id_student, $id_reason=null, $observati
 }
 
 /**
- * Saves the ASES change of status of a student
- * 
- * @see save_status_ases($id_status, $id_student, $id_reason=null, $observations=null)
- * @param $id_student --> ASES student id
- * @param $id_status --> status id that'll be saved
- * @param $id_reason --> In case the status is retired, this is de id reason. null by default
- * @return object --> object representing the database operation result
- */
-
-function save_status_ases($id_status, $id_student, $id_reason=null, $observations=null){
-
-    global $DB;
-    $msg_result = new stdClass();
-
-    date_default_timezone_set('America/Bogota');
-
-    $today_timestamp = time();
-
-    $object_status = new stdClass();
-
-    $object_status->fecha = $today_timestamp;
-    $object_status->id_estado_ases = $id_status;
-    $object_status->id_estudiante = $id_student;
-
-    if($id_reason){
-        $object_status->id_motivo_retiro = $id_reason;
-    }
-
-    if($observations){
-        $sql_query = "SELECT observacion FROM {talentospilos_usuario} WHERE id = $id_student";
-        $user_observations = $DB->get_record_sql($sql_query)->observacion;
-
-        $user_observations = date('d-m-y', $today_timestamp).": Mótivo de retiro ASES:  $observations"."\n".$user_observations;
-
-        $object_updatable = new stdClass();
-        $object_updatable->id = $id_student;
-        $object_updatable->observacion = $user_observations;
-
-        $DB->update_record('talentospilos_usuario', $object_updatable);
-    }
-
-    $result_insertion = $DB->insert_record('talentospilos_est_estadoases', $object_status);
-
-    if($result_insertion){
-
-        $msg_result->title = "Éxito";
-        $msg_result->msg = "El estado ha sido cambiado con éxito";
-        $msg_result->type = "success";
-
-    }else{
-
-        $msg_result->title = "Error";
-        $msg_result->msg = "Error al almacenar el seguimiento en la base de datos";
-        $msg_result->type = "error";
-    }
-
-    return $msg_result;
-}
-
-/**
  * Gets an student given his ASES id
  *
  * @see validate_student($code_student)
@@ -814,7 +881,6 @@ function validate_student($code_student){
     }else{
         return "0";
     }
-
 }
 
 

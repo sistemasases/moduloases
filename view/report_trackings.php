@@ -130,7 +130,6 @@ if($usernamerole=='monitor_ps'){
     $students_by_monitor=get_students_of_monitor($monitor_id,$blockid);
     $table.=render_monitor_new_form($students_by_monitor);
 
-    
     // Get grupal trackings that a monitor has done and show it in a toggle.
     $array_groupal_trackings_dphpforms =get_tracking_grupal_monitor_current_semester($monitor_id,$intervalo_fechas[2]);
 
@@ -144,7 +143,7 @@ if($usernamerole=='monitor_ps'){
     //Render new form of the role practicant
     $practicant_id =$USER->id;
     $monitors_of_pract = get_monitors_of_pract($practicant_id,$blockid);
-    $calculate_counting=calculate_counting_by('PRACTICANTE',$monitors_of_pract,$intervalo_fechas[2],$blockid);
+    $calculate_counting=calculate_general_counting('PRACTICANTE',$monitors_of_pract,$intervalo_fechas[2],$blockid);
 
     $counting=create_counting_advice('PRACTICANTE',$calculate_counting);
     $table.=render_practicant_new_form($monitors_of_pract,$blockid);
@@ -158,7 +157,7 @@ if($usernamerole=='monitor_ps'){
     //Render new form of the role professional
     $professional_id=$USER->id;
     $practicant_of_prof=get_pract_of_prof($professional_id,$blockid);
-    $calculate_counting=calculate_counting_by('PROFESIONAL',$practicant_of_prof,$intervalo_fechas[2],$blockid);
+    $calculate_counting=calculate_general_counting('PROFESIONAL',$practicant_of_prof,$intervalo_fechas[2],$blockid);
     $counting=create_counting_advice('PROFESIONAL',$calculate_counting);
     $table.=render_professional_new_form($practicant_of_prof,$blockid);
    
@@ -200,7 +199,7 @@ $PAGE->requires->css('/blocks/ases/style/creadorFormulario.css', true);
 
 $PAGE->requires->js_call_amd('block_ases/pilos_tracking_main','init');
 $PAGE->requires->js_call_amd('block_ases/groupal_tracking','init');
-$PAGE->requires->js_call_amd('block_ases/dphpforms_form_renderer', 'init');
+//$PAGE->requires->js_call_amd('block_ases/dphpforms_form_renderer', 'init');
 
 
 $PAGE->set_url($url);
