@@ -61,13 +61,18 @@ $data = $actions;
 //Set name of a monitor selected.
 $monitor_name = $monitor->firstname." ".$monitor->lastname;
 
-//
-//var_dump(get_hours_per_days(1504882193,1516406399));
-//exit();
 
 $data->monitor=$monitor_name;
 $data->menu = $menu_option;
 
+
+            $current_semester =get_current_semester();
+            $semester_interval=get_semester_interval($current_semester->max);
+            $initial_hour=strtotime($semester_interval->fecha_inicio);
+            $final_hour=strtotime($semester_interval->fecha_fin);
+            $default=true;
+print_r(get_hours_per_days($initial_hour,$final_hour,$default));
+die();
 
 $contextcourse = context_course::instance($courseid);
 $contextblock =  context_block::instance($blockid);

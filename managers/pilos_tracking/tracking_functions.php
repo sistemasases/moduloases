@@ -55,6 +55,7 @@ function render_monitor_new_form($students_by_monitor, $period = null)
         $monitor_counting=filter_trackings_by_review($monitor_trackings);
         $A=0;
 
+
         $panel.= "<a data-toggle='collapse' class='student collapsed btn btn-danger btn-univalle btn-card collapsed' data-parent='#accordion_students' style='text-decoration:none' href='#student" . $student_code->username . "'>";
         $panel.= "<div class='panel-heading heading_students_tracking'>";
         $panel.= "<h4 class='panel-title'>";
@@ -167,11 +168,15 @@ function render_practicant_new_form($monitors_of_pract, $instance, $period = nul
         }
 
         $panel.="<div class='col-sm-1'>";
-        $panel.="<span class='glyphicon glyphicon-user' style='font-size: 20px; color:gray'></span> : ".count(get_students_of_monitor($monitor_id,$instance));
+        $panel.="<span class='glyphicon glyphicon-user subpanel' style='font-size: 20px;'></span> : ".count(get_students_of_monitor($monitor_id,$instance));
         $panel.="</div>";
-        $panel.="<div class='col-sm-5'>";
+        $panel.="<div class='col-sm-1'>";
+        $panel.="<button type='button' id='see_history' class='btn red_button'>
+                <span class='glyphicon glyphicon-time'></span> Ver horas</button>";
+        $panel.="</div>";
+        $panel.="<div class='col-sm-4'>";
 
-        $panel.="<h6><p class='text-right'><strong style='color :gray'>RP :</strong>".$practicant_counting[0]." - <strong style='color :gray'> N RP: </strong>".$practicant_counting[1]." - <strong style='color :gray'>TOTAL:</strong>".($practicant_counting[0]+$practicant_counting[1])."</p><p class='text-right'><strong style='color :gray'>Rp :</strong>".$practicant_counting[2]." - <strong style='color :gray'> N Rp: </strong>".$practicant_counting[3]." - <strong style='color :gray'>TOTAL:</strong>".($practicant_counting[2]+$practicant_counting[3])."</p></h6>";
+        $panel.="<h6><p class='text-right'><strong class='subpanel'>RP :</strong>".$practicant_counting[0]." - <strong class='subpanel'> N RP: </strong>".$practicant_counting[1]." - <strong class='subpanel'>TOTAL:</strong>".($practicant_counting[0]+$practicant_counting[1])."</p><p class='text-right'><strong class='subpanel'>Rp :</strong>".$practicant_counting[2]." - <strong class='subpanel'> N Rp: </strong>".$practicant_counting[3]." - <strong class='subpanel'>TOTAL:</strong>".($practicant_counting[2]+$practicant_counting[3])."</p></h6>";
         $panel.="</div>";
         $panel.="<div class='col-sm-1'><span class='glyphicon glyphicon-chevron-left'></span></div>";
         $panel.= "</div>";
@@ -237,11 +242,11 @@ function render_professional_new_form($practicant_of_prof, $instance, $period = 
 
 
         $panel.="<div class='col-sm-1'>";
-        $panel.="<span class='glyphicon glyphicon-user' style='font-size: 20px; color:gray'></span> : ".count(get_monitors_of_pract($practicant_id,$instance));
+        $panel.="<span class='glyphicon glyphicon-user subpanel' style='font-size: 20px;'></span> : ".count(get_monitors_of_pract($practicant_id,$instance));
         $panel.="</div>";
         $panel.="<div class='col-sm-5'>";
 
-        $panel.="<h6><p class='text-right'><strong style='color :gray'>RP :</strong>".$profesional_counting[0]." - <strong style='color :gray'> N RP: </strong>".$profesional_counting[1]." - <strong style='color :gray'>TOTAL:</strong>".($profesional_counting[0]+$profesional_counting[1])."</p><p class='text-right'><strong style='color :gray'>Rp :</strong>".$profesional_counting[2]." - <strong style='color :gray'> N Rp: </strong>".$profesional_counting[3]." - <strong style='color :gray'>TOTAL:</strong>".($profesional_counting[2]+$profesional_counting[3])."</p></h6>";
+        $panel.="<h6><p class='text-right'><strong class='subpanel'>RP :</strong>".$profesional_counting[0]." - <strong class='subpanel'> N RP: </strong>".$profesional_counting[1]." - <strong class='subpanel'>TOTAL:</strong>".($profesional_counting[0]+$profesional_counting[1])."</p><p class='text-right'><strong class='subpanel'>Rp :</strong>".$profesional_counting[2]." - <strong class='subpanel'> N Rp: </strong>".$profesional_counting[3]." - <strong class='subpanel'>TOTAL:</strong>".($profesional_counting[2]+$profesional_counting[3])."</p></h6>";
         $panel.="</div>";
         $panel.="<div class='col-sm-1'><span class='glyphicon glyphicon-chevron-left'></span></div>";
         $panel.= "</div>";
