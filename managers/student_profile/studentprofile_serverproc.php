@@ -106,6 +106,7 @@ if(isset($_POST["func"])){
                 $msg->title = 'Éxito';
                 $msg->msg = 'Estado actualizado con éxito.';
                 $msg->status = 'success';
+                $msg->previous_status = $_POST['current_status'];
             }else{
                 $msg->title = 'Error';
                 $msg->msg = 'Error al guardar estado en la base de datos.';

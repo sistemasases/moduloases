@@ -59,8 +59,6 @@ $courseid = required_param('courseid', PARAM_INT);
 $blockid = required_param('instanceid', PARAM_INT);
 $student_code = (string)optional_param('student_code', 0, PARAM_INT);
 
-print_r($student_code);
-
 require_login($courseid, false);
 
 // Set up the page.
@@ -146,17 +144,40 @@ if ($student_code != 0) {
             $record->ases_status_t = "SEGUIMIENTO";
             $record->ases_status_description = "Se realiza seguimiento en esta instancia";
         }else if($status_ases_array[$blockid]->nombre == "SIN SEGUIMIENTO"){
-            $record->ases_status_f = "SIN SEGUIMIENTO";
-            $record->ases_status_description = "Se realiza seguimiento en otra instancia";
+
+            $has_ases_status = verify_ases_status($ases_student->id);
+
+            if($has_ases_status){
+                $record->ases_status_f = "SIN SEGUIMIENTO";
+                $record->ases_status_description = "Se realiza seguimiento en otra instancia";
+            }else{
+                $record->ases_status_n = true;
+                $record->ases_status_description = "No se realiza seguimiento";
+            }
         }else{
             $record->ases_status_n = true;
             $record->ases_status_description = "No se realiza seguimiento";
         }
-    }
-    else{
+    }else{
         $record->ases_status_n = true;
         $record->ases_status_description = "No se realiza seguimiento";
     }
+
+    // Estado ICETEX
+    $icetex_statuses = get_icetex_statuses();
+    $options_status_icetex = '';
+
+    $status_icetex_student = get_icetex_status_student($student_id);
+
+    foreach($icetex_statuses as $status){
+        if($status_icetex_student->id_estado_icetex == $status->id){
+            $options_status_icetex .= "<option value='$status->id' selected='selected'>$status->nombre</option>";
+        }else{
+            $options_status_icetex .= "<option value='$status->id'>$status->nombre</option>";
+        }
+    }
+
+    $record->options_status_icetex = $options_status_icetex;
 
     $monitor_object = new stdClass();
     $trainee_object = new stdClass();
