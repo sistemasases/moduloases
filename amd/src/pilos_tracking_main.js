@@ -600,10 +600,12 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
             });}
 
 
-            /*When click on the student's name, open the container with the information of 
-            the follow-ups of that date*/
+
 
             function student_load(){
+
+            /*When click on the student's name, open the container with the information of 
+            the follow-ups of that date*/
 
             $('a[class*="student"]').click(function() {
                // console.log("student : "+$(this).attr('href').split("#student")[1]);
@@ -639,7 +641,56 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                     },
                 });
             
-            });}
+            });
+
+            /*When click on the button "Ver horas", open a new tab with information of report time control about a
+            determinated monitor*/
+
+            $('#see_history').click(function() {
+
+             var element =  $(this).parents().eq(3).attr('href').split("#monitor")[1];
+             console.log(element);
+
+            $.ajax({
+                    type: "POST",
+                    data: {
+                        type: "redirect_tracking_time_control",
+                        monitor: element,
+                    },
+                    url: "../managers/pilos_tracking/pilos_tracking_report.php",
+                    async: false,
+                    success: function(msg) {
+                        console.log(msg);
+                        var current_url = window.location.href;
+                        var next_url = current_url.replace("report_trackings", "tracking_time_control");
+
+                        try{
+                        var win = window.open(next_url+"&&monitorid="+msg, '_blank');
+                        if (win) {
+                            //Browser has allowed it to be opened
+                            win.focus();
+                        }
+                        }catch(ex){
+                            alert("Se ha producido un error al abrir la ventana : "+ex);
+                        } 
+                    },
+                    dataType: "json",
+                    cache: "false",
+                    error: function(msg) {
+                        swal({
+                            title: "Oops !",
+                            text: "Se presentó un inconveniente al reedirecionar al reporte de horas.",
+                            html: true,
+                            type: 'warning',
+                            confirmButtonColor: "#d51b23"
+                        });
+                    },
+                });
+
+            });
+
+        }
+
 
 
 
@@ -922,6 +973,9 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
 
 
             }
+
+
+
 
  
 

@@ -92,6 +92,9 @@ function get_id_user_moodle($id_student)
     return $id_user_moodle;
 }
 
+
+
+
 /**
  * Gets ASES user given student id associated to moodle user name
  *

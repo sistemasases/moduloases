@@ -1551,7 +1551,11 @@ footer#page-footer{
 }
 
 
+.red_button{
+   color: #fff;
+   border-radius: 12px !important;
+}
 
-.gray{
-   color:gray;
+.subpanel{
+  color: gray !important;
 }
