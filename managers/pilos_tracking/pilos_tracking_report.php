@@ -174,6 +174,11 @@ if (isset($_POST['type']) && $_POST['type'] == "consulta_sistemas" && isset($_PO
         }
     }
 
+if(isset($_POST['monitor'])&&isset($_POST['type'])&&$_POST['type']=='redirect_tracking_time_control'){
+    $username_monitor = $_POST['monitor'];
+   echo  get_user_by_username($username_monitor)->id;
+}    
+
 if (isset($_POST['type']) && $_POST['type'] == "send_email_to_user" && isset($_POST['message_to_send']) && isset($_POST['tracking_type']) && isset($_POST['monitor_code']) && isset($_POST['date']))
     {
     /*
