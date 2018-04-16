@@ -14,7 +14,6 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/d3', 'block_ases/sweetaler
 
     return {
         init: function(data_init) {
-            console.log(data_init);
             // Carga una determinada pestaña
             var parameters = get_url_parameters(document.location.search);
             var panel_collapse = $('.panel-collapse.collapse.in');
@@ -763,7 +762,6 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/d3', 'block_ases/sweetaler
 
     function validateFormProfile(form) {
 
-        console.log(form);
         // Validación documento
         if (has_letters(form[4].value)) {
             swal('Error',
@@ -1360,8 +1358,6 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/d3', 'block_ases/sweetaler
         
         var validate_date = regexp.exec(form[1].value);       
         
-        console.log(regexp.exec(form[1].value));
-
         // Validación de los datos generales
         if (form[1].value == "") {
             return "Debe introducir la fecha en la cual se realizó el seguimiento";
@@ -1617,7 +1613,6 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/d3', 'block_ases/sweetaler
                 }
                 else {
                     var individual_r = 0;
-                    // console.log(individual_r);
                 }
 
                 if (msg.familiar) {
@@ -1743,8 +1738,6 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/d3', 'block_ases/sweetaler
             value: window.location
         });
     
-        console.log(observations_array);
-    
         if (high_risk_array.length != 0) {
             $.ajax({
                 type: "POST",
@@ -1773,8 +1766,6 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/d3', 'block_ases/sweetaler
             url: "../managers/student_profile/studentprofile_serverproc.php",
             success: function(msg) {
     
-                console.log(msg);
-    
                 if(msg == "1"){
                     var parameters = get_url_parameters(document.location.search);
                     var full_url = String(document.location);
@@ -1795,7 +1786,6 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/d3', 'block_ases/sweetaler
             dataType: "text",
             cache: "false",
             error: function(msg) {
-                console.log(msg);
                 swal(
                     "Error",
                     "Error al comunicarse con el servidor, por favor intentelo nuevamente.",
