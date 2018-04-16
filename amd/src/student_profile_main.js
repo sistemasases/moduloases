@@ -594,11 +594,24 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/d3', 'block_ases/sweetaler
                         data: data,
                         url: "../managers/student_profile/studentprofile_serverproc.php",
                         success: function(msg) {
+
+                            if(msg.previous_status == 'SEGUIMIENTO'){
+                                $('#icon-tracking').removeClass('i-tracking-t');
+                                $('#icon-tracking').addClass('i-tracking-n');
+                            }else if(msg.previous_status == 'SIN SEGUIMIENTO'){
+                                $('#icon-tracking').removeClass('i-tracking-f');
+                                $('#icon-tracking').addClass('i-tracking-t');
+                            }else if(msg.previous_status == ''){
+                                $('#icon-tracking').removeClass('i-tracking-n');
+                                $('#icon-tracking').addClass('i-tracking-t');
+                            }
+
                             swal(
                                 msg.title,
                                 msg.msg,
                                 msg.status
                             );
+                            
                         },
                         dataType: "json",
                         cache: "false",

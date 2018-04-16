@@ -82,7 +82,6 @@ function get_actions_view($function_name,$userid,$blockid,$vista=null){
     }
 }
 
-
 /**
  * Función que retorna el nombre del rol de un usuario con el fin de mostrar al correspondiente interfaz en seguimiento_pilos
  * Returns an user role to show the appropiate interface in 'seguimiento_pilos'

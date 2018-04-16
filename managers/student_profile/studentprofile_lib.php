@@ -66,10 +66,10 @@ require_once $CFG->dirroot.'/blocks/ases/managers/periods_management/periods_lib
 /**
  * Gets a set of ICETEX status
  *
- * @see get_status_icetex()
+ * @see get_icetex_statuses()
  * @return array with the ICETEX status grouped
  */
- function get_status_icetex(){
+ function get_icetex_statuses(){
      
      global $DB;
      
@@ -77,6 +77,26 @@ require_once $CFG->dirroot.'/blocks/ases/managers/periods_management/periods_lib
      $status_icetex_array = $DB->get_records_sql($sql_query);
      
      return $status_icetex_array;
+ }
+
+ /**
+ * Gets a set of ICETEX status
+ *
+ * @see get_icetex_statuses()
+ * @return array with the ICETEX status grouped
+ */
+ function get_icetex_status_student($ases_student_id){
+
+    global $DB;
+
+    $sql_query = "SELECT MAX(fecha), id_estado_icetex 
+                  FROM {talentospilos_est_est_icetex} 
+                  WHERE id_estudiante = $ases_student_id
+                  GROUP BY id_estado_icetex";
+    
+    $icetex_status_student = $DB->get_record_sql($sql_query);
+
+    return $icetex_status_student;
  }
  
  /**
@@ -161,8 +181,12 @@ function update_status_ases($current_status, $new_status, $instance_id, $code_st
 
     date_default_timezone_set('America/Bogota');
 
-    $sql_query = "SELECT id FROM {talentospilos_estados_ases} WHERE nombre = '$current_status'";
-    $id_current_status = $DB->get_record_sql($sql_query)->id;
+    if($current_status == ""){
+        $id_current_status = 0;
+    }else{
+        $sql_query = "SELECT id FROM {talentospilos_estados_ases} WHERE nombre = '$current_status'";
+        $id_current_status = $DB->get_record_sql($sql_query)->id;
+    }    
 
     $sql_query = "SELECT id FROM {talentospilos_estados_ases} WHERE nombre = '$new_status'";
     $id_new_status = $DB->get_record_sql($sql_query)->id;
