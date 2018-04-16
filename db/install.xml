@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<XMLDB PATH="blocks/ases/db" VERSION="20180213" COMMENT="XMLDB file for Moodle blocks/configurable_reports"
+<XMLDB PATH="blocks/ases/db" VERSION="20180416" COMMENT="XMLDB file for Moodle blocks/configurable_reports"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
 >
@@ -732,6 +732,16 @@
         <FIELD NAME="id_instancia" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Identificador de la instancia creada"/>
         <FIELD NAME="id_administrador" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="Identificador del administrador de la instancia"/>
         <FIELD NAME="descripcion" TYPE="char" LENGTH="200" NOTNULL="false" SEQUENCE="false" COMMENT="Descripción de la instancia"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="talentospilos_estad_programa" COMMENT="Tabla que almacena los posibles estados de un estudiante en un programa académico">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="nombre" TYPE="char" LENGTH="100" NOTNULL="true" SEQUENCE="false" COMMENT="Nombre asociado al estado ASES"/>
+        <FIELD NAME="descripcion" TYPE="char" LENGTH="500" NOTNULL="false" SEQUENCE="false" COMMENT="Descripción asociada al estado"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
