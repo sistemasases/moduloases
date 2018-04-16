@@ -598,12 +598,15 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/d3', 'block_ases/sweetaler
                             if(msg.previous_status == 'SEGUIMIENTO'){
                                 $('#icon-tracking').removeClass('i-tracking-t');
                                 $('#icon-tracking').addClass('i-tracking-n');
+                                $('#tip_ases_status').html('Se realiza seguimiento en otra instancia');
                             }else if(msg.previous_status == 'SIN SEGUIMIENTO'){
                                 $('#icon-tracking').removeClass('i-tracking-f');
                                 $('#icon-tracking').addClass('i-tracking-t');
+                                $('#tip_ases_status').html('Se realiza seguimiento en esta instancia');
                             }else if(msg.previous_status == ''){
                                 $('#icon-tracking').removeClass('i-tracking-n');
                                 $('#icon-tracking').addClass('i-tracking-t');
+                                $('#tip_ases_status').html('Se realiza seguimiento en esta instancia');
                             }
 
                             swal(
