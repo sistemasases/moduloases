@@ -120,7 +120,7 @@ require_once $CFG->dirroot.'/blocks/ases/managers/periods_management/periods_lib
     
     $array_instances = $DB->get_records_sql($sql_query);
     $array_instances_status = array();
-   
+
     foreach($array_instances as $instance){
 
         $sql_query = "SELECT ases_statuses.id, st_status_ases.id_estado_ases, ases_statuses.nombre
