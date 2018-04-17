@@ -119,7 +119,7 @@ require_once $CFG->dirroot.'/blocks/ases/managers/periods_management/periods_lib
     $array_instances_status = array();
 
     print_r("Instancias: ");
-    print_r($array_instances);
+    print_r($sql_query);
 
     foreach($array_instances as $instance){
 
