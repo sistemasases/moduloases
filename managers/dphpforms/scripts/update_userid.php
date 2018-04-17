@@ -55,7 +55,7 @@
                 'record_id' => $record->id
             );
             array_push( $cambios, $tmp );
-            echo 'Cambio: ' . $record->respuesta . ' → ' . $ases_user->id . ' RID: ' . $record->id . '<br>';
+            echo 'VALIDO: ' . $record->respuesta . ' → ' . $ases_user->id . ' DOC: ' . $ases_user->num_doc . ' RID: ' . $record->id . '<br>';
         }else{
             echo 'NO VALIDO!: ' . $record->respuesta . '<br>';
         }
