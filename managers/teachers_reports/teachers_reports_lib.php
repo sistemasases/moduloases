@@ -32,39 +32,68 @@ function get_created_items_per_course($instance_id){
 
     $count_created_items = array();
 
-    $query = "SELECT DISTINCT row_number() over(), materias_criticas.id, SUBSTR(courses.shortname, 0, 14) AS cod_asignatura, courses.fullname, 
-                users.firstname, users.lastname, COUNT(items.id) AS count_items
-                FROM
-                    (SELECT id
-                    FROM {course} AS courses 
-                        INNER JOIN (SELECT codigo_materia 
-                                    FROM {talentospilos_materias_criti}) AS materias_criticas
-                                    ON materias_criticas.codigo_materia = SUBSTR(courses.shortname, 4, 7)
-                        WHERE SUBSTR(courses.shortname, 15, 4) = '2018') AS materias_criticas
-
-                        INNER JOIN
-
-                            (SELECT DISTINCT enrols.courseid
-                            FROM {cohort_members} AS members 
-                            INNER JOIN {cohort} AS cohorts ON cohorts.id = members.cohortid
-                            INNER JOIN {user_enrolments} AS enrolments ON  enrolments.userid = members.userid
-                            INNER JOIN {enrol} AS enrols ON enrols.id = enrolments.enrolid
-                            WHERE members.cohortid IN (SELECT id_cohorte
-                                    FROM   {talentospilos_inst_cohorte}
-                                    WHERE  id_instancia = $instance_id)) AS cursos_ases
-
-                            ON cursos_ases.courseid = materias_criticas.id
-
-                            INNER JOIN {course} AS courses ON courses.id = materias_criticas.id
-                            INNER JOIN {grade_items} AS items ON items.courseid = courses.id
-                            INNER JOIN {context} AS context ON courses.id = context.instanceid
-                            INNER JOIN {role_assignments} AS role_assignments ON role_assignments.contextid = context.id
-                            INNER JOIN {user} AS users ON users.id = role_assignments.userid
-                            INNER JOIN {role} AS roles ON roles.id = role_assignments.roleid
-
-                            WHERE role_assignments.roleid = 3
-
-                            GROUP BY materias_criticas.id, courses.shortname, courses.fullname, users.firstname, users.lastname";
+    $query = "SELECT DISTINCT Row_number() OVER(), 
+                materias_criticas.id, 
+                Substr(courses.shortname, 0, 14) AS cod_asignatura, 
+                courses.fullname, 
+                Count(items.id) AS count_items, 
+                ( 
+                    SELECT Concat_ws(' ', firstname, lastname) AS fullname 
+                    FROM   ( 
+                                        SELECT     usuario.firstname, 
+                                                    usuario.lastname, 
+                                                    userenrol.timecreated 
+                                        FROM       {course} cursoP 
+                                        INNER JOIN {context} cont 
+                                        ON         cont.instanceid = cursop.id 
+                                        INNER JOIN {role_assignments} rol 
+                                        ON         cont.id = rol.contextid 
+                                        INNER JOIN {user} usuario 
+                                        ON         rol.userid = usuario.id 
+                                        INNER JOIN {enrol} enrole 
+                                        ON         cursop.id = enrole.courseid 
+                                        INNER JOIN {user_enrolments} userenrol 
+                                        ON         ( 
+                                                            enrole.id = userenrol.enrolid 
+                                                    AND        usuario.id = userenrol.userid ) 
+                                        WHERE      cont.contextlevel = 50 
+                                        AND        rol.roleid = 3 
+                                        AND        cursop.id = courses.id 
+                                        ORDER BY   userenrol.timecreated ASC limit 1 ) AS subc ) AS nombre_profe
+            FROM            {course} AS courses 
+            INNER JOIN 
+                ( 
+                        SELECT     id 
+                        FROM       {course} AS courses 
+                        INNER JOIN 
+                                    ( 
+                                            SELECT codigo_materia 
+                                            FROM   {talentospilos_materias_criti} ) AS materias_criticas
+                        ON         materias_criticas.codigo_materia = Substr(courses.shortname, 4, 7)
+                        WHERE      Substr(courses.shortname, 15, 4) = '2018' ) AS materias_criticas
+            ON              courses.id = materias_criticas.id 
+            INNER JOIN 
+                ( 
+                                SELECT DISTINCT enrols.courseid 
+                                FROM            {cohort_members} AS members 
+                                INNER JOIN      {cohort}         AS cohorts 
+                                ON              cohorts.id = members.cohortid 
+                                INNER JOIN      {user_enrolments} AS enrolments 
+                                ON              enrolments.userid = members.userid 
+                                INNER JOIN      {enrol} AS enrols 
+                                ON              enrols.id = enrolments.enrolid 
+                                WHERE           members.cohortid IN 
+                                                ( 
+                                                    SELECT id_cohorte 
+                                                    FROM   {talentospilos_inst_cohorte} 
+                                                    WHERE  id_instancia = 450299 ) ) AS cursos_ases
+            ON              cursos_ases.courseid = materias_criticas.id 
+            INNER JOIN      {grade_items} AS items 
+            ON              items.courseid = courses.id 
+            GROUP BY        materias_criticas.id, 
+                courses.shortname, 
+                courses.fullname, 
+                nombre_profe";
 
     $results = $DB->get_records_sql($query);
 
