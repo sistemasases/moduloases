@@ -568,65 +568,76 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/d3', 'block_ases/sweetaler
                     
             }
 
-            var data = {
-                func: 'update_status_ases',
-                current_status: current_status,
-                new_status: new_status,
-                instance_id: parameters_url.instanceid,
-                code_student: parameters_url.student_code
-            };
+            if(current_status == 'SIN SEGUIMIENTO'){
+                swal(
+                    'Advertencia',
+                    'No es posible realizar esta acción. Al estudiante se le realiza seguimiento desde otra instancia.',
+                    'warning'
+                );
 
-            swal({
-                title: "Advertencia",
-                text: "¿Está seguro que desea cambiar el estado de seguimiento del estudiante en esta instancia? El estado pasará de '"+current_status+"' a '"+new_status+"'",
-                type: "warning",
-                showCancelButton: true,
-                confirmButtonClass: "btn-danger",
-                confirmButtonText: "Si",
-                cancelButtonText: "No",
-                closeOnConfirm: false
-            },
-            function(isConfirm){
-                if(isConfirm){
-                    $.ajax({
-                        type: "POST",
-                        data: data,
-                        url: "../managers/student_profile/studentprofile_serverproc.php",
-                        success: function(msg) {
+            }else{
+                var data = {
+                    func: 'update_status_ases',
+                    current_status: current_status,
+                    new_status: new_status,
+                    instance_id: parameters_url.instanceid,
+                    code_student: parameters_url.student_code
+                };
+    
+                swal({
+                    title: "Advertencia",
+                    text: "¿Está seguro que desea cambiar el estado de seguimiento del estudiante en esta instancia? El estado pasará de '"+current_status+"' a '"+new_status+"'",
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonClass: "btn-danger",
+                    confirmButtonText: "Si",
+                    cancelButtonText: "No",
+                    closeOnConfirm: false
+                },
+                function(isConfirm){
+                    if(isConfirm){
+                        $.ajax({
+                            type: "POST",
+                            data: data,
+                            url: "../managers/student_profile/studentprofile_serverproc.php",
+                            success: function(msg) {
+    
+                                if(msg.previous_status == 'SEGUIMIENTO'){
+                                    $('#icon-tracking').removeClass('i-tracking-t');
+                                    $('#icon-tracking').addClass('i-tracking-n');
+                                    $('#tip_ases_status').html('Se realiza seguimiento en otra instancia');
+                                }else if(msg.previous_status == 'SIN SEGUIMIENTO'){
+                                    $('#icon-tracking').removeClass('i-tracking-f');
+                                    $('#icon-tracking').addClass('i-tracking-t');
+                                    $('#tip_ases_status').html('Se realiza seguimiento en esta instancia');
+                                }else if(msg.previous_status == ''){
+                                    $('#icon-tracking').removeClass('i-tracking-n');
+                                    $('#icon-tracking').addClass('i-tracking-t');
+                                    $('#tip_ases_status').html('Se realiza seguimiento en esta instancia');
+                                }
+    
+                                swal(
+                                    msg.title,
+                                    msg.msg,
+                                    msg.status
+                                );
+                                
+                            },
+                            dataType: "json",
+                            cache: "false",
+                            error: function(msg) {
+                                swal(
+                                    msg.title,
+                                    msg.msg,
+                                    msg.status
+                                );
+                            },
+                        });
+                    }
+                });
+            }
 
-                            if(msg.previous_status == 'SEGUIMIENTO'){
-                                $('#icon-tracking').removeClass('i-tracking-t');
-                                $('#icon-tracking').addClass('i-tracking-n');
-                                $('#tip_ases_status').html('Se realiza seguimiento en otra instancia');
-                            }else if(msg.previous_status == 'SIN SEGUIMIENTO'){
-                                $('#icon-tracking').removeClass('i-tracking-f');
-                                $('#icon-tracking').addClass('i-tracking-t');
-                                $('#tip_ases_status').html('Se realiza seguimiento en esta instancia');
-                            }else if(msg.previous_status == ''){
-                                $('#icon-tracking').removeClass('i-tracking-n');
-                                $('#icon-tracking').addClass('i-tracking-t');
-                                $('#tip_ases_status').html('Se realiza seguimiento en esta instancia');
-                            }
-
-                            swal(
-                                msg.title,
-                                msg.msg,
-                                msg.status
-                            );
-                            
-                        },
-                        dataType: "json",
-                        cache: "false",
-                        error: function(msg) {
-                            swal(
-                                msg.title,
-                                msg.msg,
-                                msg.status
-                            );
-                        },
-                    });
-                }
-            });
+            
         },update_tracking_status: function(current_status, element, data_init, object_function){
 
             has_tracking_status = false;
