@@ -202,6 +202,8 @@ function update_status_ases($current_status, $new_status, $instance_id, $code_st
     $sql_query = "SELECT id FROM {talentospilos_estados_ases} WHERE nombre = 'SIN SEGUIMIENTO'";
     $id_no_tracking_status = $DB->get_record_sql($sql_query)->id;
 
+    print_r($array_instances);
+
     // **************************************
     //Iniciar transacción en la base de datos
     // **************************************
