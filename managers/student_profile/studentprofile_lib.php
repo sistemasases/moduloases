@@ -118,7 +118,7 @@ require_once $CFG->dirroot.'/blocks/ases/managers/periods_management/periods_lib
     $array_instances = $DB->get_records_sql($sql_query);
     $array_instances_status = array();
 
-    $array_instances;    
+    print_r($array_instances_status);
 
     foreach($array_instances as $instance){
 
@@ -201,8 +201,6 @@ function update_status_ases($current_status, $new_status, $instance_id, $code_st
 
     $sql_query = "SELECT id FROM {talentospilos_estados_ases} WHERE nombre = 'SIN SEGUIMIENTO'";
     $id_no_tracking_status = $DB->get_record_sql($sql_query)->id;
-
-    print_r($array_instances);
 
     // **************************************
     //Iniciar transacción en la base de datos
