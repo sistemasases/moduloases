@@ -158,6 +158,8 @@ if (isset($_FILES['file']) || isset($_POST['idinstancia'])) {
                 if (!$result) {
                     $isValidRow = false;
                     array_push($detail_erros, [$line_count, $lc_wrongFile, ($associativeTitles['estado_programa'] + 1), 'estado_programa', 'No existe un estado de programa con nombre ' . $data[$associativeTitles['estado_programa']]]);
+                }else{
+                    $id_estado_programa = $result->id;
                 }
 
             } else {
@@ -229,7 +231,7 @@ if (isset($_FILES['file']) || isset($_POST['idinstancia'])) {
                 continue;
             } else {
 
-                $result = update_status_student($id_user_extended, $id_talentos, $id_estado_ases, $id_estado_icetex, $estado_programa, $tracking_status, $id_motivo_ases, $id_motivo_icetex);
+                $result = update_status_student($id_user_extended, $id_talentos, $id_estado_ases, $id_estado_icetex, $id_estado_programa, $tracking_status, $id_motivo_ases, $id_motivo_icetex);
 
                 if ($result) {
                     array_push($success_rows, $data);
@@ -343,23 +345,23 @@ function getAssociativeTitles($array)
 /**
  * Update all student's status
  *
- * @see update_status_student($id_moodle, $id_talentos, $id_estado_ases, $id_estado_icetex, $estado_programa, $tracking_status)
+ * @see update_status_student($id_moodle, $id_talentos, $id_estado_ases, $id_estado_icetex, $id_estado_programa, $tracking_status)
  * @param $id_moodle --> id of {user} table
  * @param $id_talentos --> id of {talentospilos_usuario} table
  * @param $id_estado_ases --> id of {talentospilos_estados_ases} table
  * @param $id_estado_icetex --> id of {talentospilos_estados_icetex} table
- * @param $estado_programa --> program_status of {talentospilos_user_extended}
+ * @param $id_estado_programa --> program_status of {talentospilos_user_extended}
  * @param $tracking_status --> tracking_status of {talentospilos_user_extended}
  * @return boolean
  */
-function update_status_student($id_user_extended, $id_talentos, $id_estado_ases, $id_estado_icetex, $estado_programa, $tracking_status, $id_motivo_ases, $id_motivo_icetex)
+function update_status_student($id_user_extended, $id_talentos, $id_estado_ases, $id_estado_icetex, $id_estado_programa, $tracking_status, $id_motivo_ases, $id_motivo_icetex)
 {
     global $DB;
 
     //update tp_user_extended
     $object_user_extended_update = new stdClass;
     $object_user_extended_update->id = $id_user_extended;
-    $object_user_extended_update->program_status = $estado_programa;
+    $object_user_extended_update->program_status = $id_estado_programa;
     $object_user_extended_update->tracking_status = $tracking_status;
 
     $update = $DB->update_record('talentospilos_user_extended', $object_user_extended_update);
