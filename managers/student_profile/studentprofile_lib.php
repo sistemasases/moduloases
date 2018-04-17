@@ -118,7 +118,8 @@ require_once $CFG->dirroot.'/blocks/ases/managers/periods_management/periods_lib
     $array_instances = $DB->get_records_sql($sql_query);
     $array_instances_status = array();
 
-    print_r("Instancias: ".$array_instances);
+    print_r("Instancias: ");
+    print_r($array_instances);
 
     foreach($array_instances as $instance){
 
