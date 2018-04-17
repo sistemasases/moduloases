@@ -86,6 +86,7 @@ function get_students_and_finalgrades($instance_id){
         $student_id = $record->student_id;
         $course_id = $record->materiacr_id;
         $record->finalgrade = get_finalgrade_by_student_and_course($student_id, $course_id);
+        $record->grades = get_students_grades($student_id, $course_id);
 
         array_push($students_finalgrades_array, $record);
     }
@@ -96,7 +97,6 @@ function get_students_and_finalgrades($instance_id){
 
 function get_finalgrade_by_student_and_course($student_id, $course_id){
     global $DB;
-
     
     $query = "SELECT finalgrade 
                 FROM {grade_grades} AS grades
@@ -106,7 +106,26 @@ function get_finalgrade_by_student_and_course($student_id, $course_id){
 
     $finalgrade = $DB->get_record_sql($query)->finalgrade;
 
-    return $finalgrade;
+    return number_format($finalgrade, 1);
+}
+
+function get_students_grades($student_id, $course_id){
+    global $DB;
+
+    $query = "SELECT substring(itemname from 0 for 5) AS it_name, finalgrade 
+                FROM {grade_grades} AS grades
+                INNER JOIN {grade_items} items ON items.id = grades.itemid
+                WHERE items.itemtype = 'mod' AND grades.userid = $student_id 
+                        AND items.courseid = $course_id AND grades.finalgrade IS NOT NULL";
+
+    $records = $DB->get_records_sql($query);
+
+    foreach ($records as $record){
+        $formatted_grade = number_format($record->finalgrade, 1);
+        $grades.= "$record->it_name : $formatted_grade ";
+    }
+
+    return $grades;    
 }
 
 function get_datatable_array_for_finalgrade_report($instance_id){
@@ -116,6 +135,7 @@ function get_datatable_array_for_finalgrade_report($instance_id){
 		array_push($columns, array("title"=>"Docente", "name"=>"nombre_profe", "data"=>"nombre_profe"));
 		array_push($columns, array("title"=>"Nombre del estudiante", "name"=>"student_name", "data"=>"student_name"));
         array_push($columns, array("title"=>"Apellido del estudiante", "name"=>"student_lastname", "data"=>"student_lastname"));
+        array_push($columns, array("title"=>"Notas", "name"=>"grades", "data"=>"grades"));
         array_push($columns, array("title"=>"Nota final parcial", "name"=>"finalgrade", "data"=>"finalgrade"));
 
 		$data = array(
