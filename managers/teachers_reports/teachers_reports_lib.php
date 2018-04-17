@@ -32,7 +32,7 @@ function get_created_items_per_course($instance_id){
 
     $count_created_items = array();
 
-    $query = "SELECT DISTINCT materias_criticas.id, SUBSTR(courses.shortname, 0, 14) AS cod_asignatura, courses.fullname, 
+    $query = "SELECT DISTINCT row_number() over(), materias_criticas.id, SUBSTR(courses.shortname, 0, 14) AS cod_asignatura, courses.fullname, 
                 users.firstname, users.lastname, COUNT(items.id) AS count_items
                 FROM
                     (SELECT id
