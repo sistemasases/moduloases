@@ -110,10 +110,13 @@ require_once $CFG->dirroot.'/blocks/ases/managers/periods_management/periods_lib
 
     global $DB;
 
+    $sql_query = "SELECT id_moodle_user FROM {talentospilos_user_extended} WHERE id_ases_user = $ases_id AND tracking_status = 1";
+    $id_moodle_user = $DB->get_record_sql($sql_query)->id_moodle_user;
+
     $sql_query = "SELECT DISTINCT inst_cohorts.id_instancia
                   FROM {cohort_members} AS cohorts
                   INNER JOIN {talentospilos_inst_cohorte} AS inst_cohorts ON inst_cohorts.id_cohorte = cohorts.cohortid
-                  WHERE userid = $ases_id";
+                  WHERE userid = $id_moodle_user";
     
     $array_instances = $DB->get_records_sql($sql_query);
     $array_instances_status = array();
