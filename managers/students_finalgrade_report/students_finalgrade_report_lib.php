@@ -112,9 +112,9 @@ function get_finalgrade_by_student_and_course($student_id, $course_id){
 function get_students_grades($student_id, $course_id){
     global $DB;
 
-    $grades;
+    $grades = "";
 
-    $query = "SELECT substring(itemname from 0 for 5) AS it_name, finalgrade 
+    $query = "SELECT row_number() over(), substring(itemname from 0 for 5) AS it_name, finalgrade 
                 FROM {grade_grades} AS grades
                 INNER JOIN {grade_items} items ON items.id = grades.itemid
                 WHERE items.itemtype = 'mod' AND grades.userid = $student_id 
