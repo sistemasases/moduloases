@@ -544,10 +544,6 @@ function compare_date($fecha_inicio, $fecha_fin, $fecha_comparar){
     $fecha_inicio = new DateTime(date('Y-m-d',$fecha_inicio));
     date_add($fecha_inicio, date_interval_create_from_date_string('-30 days'));
     
-    // var_dump(strtotime($fecha_inicio->format('Y-m-d')));
-    // var_dump($fecha_fin);
-    // var_dump($fecha_comparar);
-    //print_r(($fecha_comparar >= strtotime($fecha_inicio->format('Y-m-d'))) && ($fecha_comparar <= $fecha_fin));
     return (((int)$fecha_comparar >= strtotime($fecha_inicio->format('Y-m-d'))) && ((int)$fecha_comparar <= (int)$fecha_fin));
 }
 

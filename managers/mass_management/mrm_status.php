@@ -153,8 +153,9 @@ if (isset($_FILES['file']) || isset($_POST['idinstancia'])) {
             //validate Estado Programa
             if ($associativeTitles['estado_programa'] !== null) {
                 $estado_programa = $data[$associativeTitles['estado_programa']];
-
-                if ($estado_programa != "ACTIVO" && $estado_programa != "RETIRADO" && $estado_programa != "APLAZADO" && $estado_programa != "EGRESADO") {
+                $sql_query = "SELECT id FROM {talentospilos_estad_programa} WHERE nombre = '$estado_programa' ";
+                $result = $DB->get_record_sql($sql_query);
+                if (!$result) {
                     $isValidRow = false;
                     array_push($detail_erros, [$line_count, $lc_wrongFile, ($associativeTitles['estado_programa'] + 1), 'estado_programa', 'No existe un estado de programa con nombre ' . $data[$associativeTitles['estado_programa']]]);
                 }
