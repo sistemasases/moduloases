@@ -140,15 +140,15 @@ if ($student_code != 0) {
 
     // Estado ASES
     if($status_ases_array){
-        if($status_ases_array[$blockid]->nombre == "SEGUIMIENTO"){
-            $record->ases_status_t = "SEGUIMIENTO";
+        if($status_ases_array[$blockid]->nombre == "seguimiento"){
+            $record->ases_status_t = "seguimiento";
             $record->ases_status_description = "Se realiza seguimiento en esta instancia";
-        }else if($status_ases_array[$blockid]->nombre == "SIN SEGUIMIENTO"){
+        }else if($status_ases_array[$blockid]->nombre == "sinseguimiento"){
 
             $has_ases_status = verify_ases_status($ases_student->id);
 
             if($has_ases_status){
-                $record->ases_status_f = "SIN SEGUIMIENTO";
+                $record->ases_status_f = "sinseguimiento";
                 $record->ases_status_description = "Se realiza seguimiento en otra instancia";
             }else{
                 $record->ases_status_n = true;
