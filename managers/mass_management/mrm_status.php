@@ -120,7 +120,7 @@ if (isset($_FILES['file']) || isset($_POST['idinstancia'])) {
             //validate Estado Ases
             if ($associativeTitles['estado_ases'] !== null) {
                 $estado_ases = $data[$associativeTitles['estado_ases']];
-                $sql_query = "SELECT id FROM {talentospilos_estados_ases} WHERE descripcion = '$estado_ases' ";
+                $sql_query = "SELECT id FROM {talentospilos_estados_ases} WHERE nombre = '$estado_ases' ";
                 $result = $DB->get_record_sql($sql_query);
                 if (!$result) {
                     $isValidRow = false;
