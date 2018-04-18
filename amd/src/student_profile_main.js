@@ -555,20 +555,20 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/d3', 'block_ases/sweetaler
 
             // Se configura el nuevo estado a partir del estado actual
             switch(current_status){
-                case 'SEGUIMIENTO':
-                    new_status = 'SIN SEGUIMIENTO'
+                case 'seguimiento':
+                    new_status = 'sinseguimiento'
                     break;
-                case 'SIN SEGUIMIENTO':
-                    new_status = 'SEGUIMIENTO';
+                case 'sinseguimiento':
+                    new_status = 'seguimiento';
                     break;
                 case '':
-                    new_status = 'SEGUIMIENTO';
+                    new_status = 'seguimiento';
                     break;
                 default:
                     
             }
 
-            if(current_status == 'SIN SEGUIMIENTO'){
+            if(current_status == 'sinseguimiento'){
                 swal(
                     'Advertencia',
                     'No es posible realizar esta acción. Al estudiante se le realiza seguimiento desde otra instancia.',
@@ -602,11 +602,11 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/d3', 'block_ases/sweetaler
                             url: "../managers/student_profile/studentprofile_serverproc.php",
                             success: function(msg) {
     
-                                if(msg.previous_status == 'SEGUIMIENTO'){
+                                if(msg.previous_status == 'seguimiento'){
                                     $('#icon-tracking').removeClass('i-tracking-t');
                                     $('#icon-tracking').addClass('i-tracking-n');
                                     $('#tip_ases_status').html('Se realiza seguimiento en otra instancia');
-                                }else if(msg.previous_status == 'SIN SEGUIMIENTO'){
+                                }else if(msg.previous_status == 'sinseguimiento'){
                                     $('#icon-tracking').removeClass('i-tracking-f');
                                     $('#icon-tracking').addClass('i-tracking-t');
                                     $('#tip_ases_status').html('Se realiza seguimiento en esta instancia');

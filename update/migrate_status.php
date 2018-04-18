@@ -15,7 +15,7 @@ if($result_truncate_est_estado){
 }
 
 // Carga de tabla de estados ASES
-$status_array = ["SEGUIMIENTO", "SIN SEGUIMIENTO"];
+$status_array = ["seguimiento", "sinseguimiento"];
 $description_status_array = ["Se le realiza seguimiento en la estrategia ASES", "No se le realiza seguimiento en la estrategia ASES"];
 
 $object_record = new stdClass();

@@ -158,7 +158,7 @@ function verify_ases_status($id_ases_student){
     $result = 0;
 
     foreach($array_status_instances as $instance){
-        if($instance->nombre == 'SEGUIMIENTO'){
+        if($instance->nombre == 'seguimiento'){
             return 1;
         }
     }
@@ -200,7 +200,7 @@ function update_status_ases($current_status, $new_status, $instance_id, $code_st
     $today_timestamp = time();
     $record = new stdClass();
 
-    $sql_query = "SELECT id FROM {talentospilos_estados_ases} WHERE nombre = 'SIN SEGUIMIENTO'";
+    $sql_query = "SELECT id FROM {talentospilos_estados_ases} WHERE nombre = 'sinsegumiento'";
     $id_no_tracking_status = $DB->get_record_sql($sql_query)->id;
 
     // **************************************
@@ -217,10 +217,10 @@ function update_status_ases($current_status, $new_status, $instance_id, $code_st
             $record->id_estado_ases = $id_new_status;
             $result = $DB->insert_record('talentospilos_est_estadoases', $record);
         }else{
-            if($new_status == 'SEGUIMIENTO' && ($instance->nombre == 'SEGUIMIENTO' || $instance->nombre == 'NO REGISTRA')){
+            if($new_status == 'seguimiento' && ($instance->nombre == 'seguimiento' || $instance->nombre == 'NO REGISTRA')){
                 $record->id_estado_ases = $id_no_tracking_status;
                 $result = $DB->insert_record('talentospilos_est_estadoases', $record);
-            }else if($instance->nombre == 'SIN SEGUIMIENTO'){
+            }else if($instance->nombre == 'sinseguimiento'){
                 $result = 1;
             }else{
                 $result = 0;
