@@ -332,6 +332,8 @@ function filter_trackings_by_review($peer_tracking_v2)
     if ($peer_tracking_v2) {
         foreach($peer_tracking_v2[0] as $key => $period) {
             $year_number = $period;
+            print_r( $period );
+            break;
             foreach($period as $key => $tracking) {
                 $is_reviewed_prof = false;
                 $is_reviewed_pract=false;
