@@ -646,22 +646,8 @@ function get_default_ases_report($id_instance){
                 "sSortDescending"=> ": Activar para ordenar la columna de manera descendente"
             )
         ),
-        "autoFill"=>"true",
         "dom"=>'Bfrtip',
-        "tableTools"=>array(
-            "sSwfPath"=>"../../style/swf/flashExport.swf"
-        ),
         "buttons"=>array(
-            array(
-                "extend"=>'excelHtml5',
-                "text"=>'Excel'
-            ),
-            array(
-                "extend"=>'csvHtml5',
-                "text"=>'Excel',
-                "filename"=>'Reporte general',
-                "extension"=>'.xls'
-            ),
             array(
                 "extend"=>'print',
                 "text"=>'Imprimir'
@@ -669,6 +655,10 @@ function get_default_ases_report($id_instance){
             array(
                 "extend"=>'csvHtml5',
                 "text"=>'CSV'
+            ),
+            array(
+                "extend"=>'excel',
+                "text"=>'Excel'
             )
         )
     );

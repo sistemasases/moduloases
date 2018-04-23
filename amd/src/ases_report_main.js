@@ -8,17 +8,13 @@
  * @module block_ases/ases_report_main
  */
 define(['jquery', 
-'block_ases/pdfmake',
-'block_ases/jszip',
-'block_ases/buttons.html5',
-
+        'block_ases/pdfmake',
         'block_ases/jquery.dataTables',
         'block_ases/dataTables.autoFill',
         'block_ases/dataTables.buttons',
-        'block_ases/buttons.colVis',        
-        
+        'block_ases/jszip',
+        'block_ases/buttons.html5',
         'block_ases/buttons.flash',
-        
         'block_ases/buttons.print',
         'block_ases/bootstrap',
         'block_ases/sweetalert'
@@ -205,12 +201,14 @@ define(['jquery',
             data: dataString,
             url: "../managers/ases_report/asesreport_server_processing.php",
             success: function(msg) {
+                console.log(msg);
 
                 $("#div_table").html('');
                 $("#div_table").fadeIn(1000).append('<table id="tableResult" class="display" cellspacing="0" width="100%"><thead> </thead></table>');
 
                 $("#tableResult").DataTable(msg);
 
+              
                 $('#tableResult tr').each(function() {
                     $.each(this.cells, function() {
                         if ($(this).html() == 'Bajo') {
