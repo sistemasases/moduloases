@@ -351,10 +351,10 @@
                         if( rev_prof && ( role_support != "sistemas" ) ){
                             $('.btn-dphpforms-update').remove();
                         }
-                        if( rev_prof && ( role_support == "dir_socioeducativo" ) ){
+                        if( role_support == "dir_socioeducativo" ){
                             $('.btn-dphpforms-delete-record').remove();
                         }
-                        if( rev_prof && ( role_support == "dir_socioeducativo" ) ){
+                        if( role_support == "dir_socioeducativo" ){
                             $('.btn-dphpforms-delete-record').remove();
                         }
 
