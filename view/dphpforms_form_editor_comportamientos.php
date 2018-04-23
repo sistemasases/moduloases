@@ -65,6 +65,7 @@ $coursenode = $PAGE->navigation->find($courseid, navigation_node::TYPE_COURSE);
 $rol = get_role_ases($USER->id);
 
 $record->form_id = $form_id;
+$record->comportamientos_disparadores = dphpforms_form_updater_get_disparadores( $form_id );
 
 $PAGE->set_context($contextcourse);
 $PAGE->set_context($contextblock);

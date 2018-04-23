@@ -1,8 +1,31 @@
 {{#data}}
 <body>
     <div class="container">
-      
-        
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 form-group">
+                <h2>Editor de disparadores/comportamientos</h2>
+                <hr>   
+                <a id="dphpforms-redirect-adm-forms" href="javascript:void(0)" class="btn btn-sm btn-default">Administrar formularios</a>
+                <hr>
+            </div>
+        </div>
+      {{#comportamientos_disparadores}}
+        <div ckass="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <div class="form-group">
+                    #ID: <strong>{{id}}</strong> - #ID Formulario: <strong> {{id_formulario}} </strong>
+                </div>
+                <div class="form-group">
+                    <textarea id="permisos" rows="15" class="form-control">
+                        {{disparadores}}
+                    </textarea>
+                </div>
+                <div class="form-group">
+                    <a id="actualizar-disparador" href="javascript:void(0)" class="btn btn-danger btn-dphpforms btn-dphpforms-univalle" data-disparador-id="{{id}}">Actualizar disparador</a>
+                </div>
+            </div>
+        </div>
+      {{/comportamientos_disparadores}}
     </div>
 </body>
 {{/data}}

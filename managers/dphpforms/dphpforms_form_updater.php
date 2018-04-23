@@ -531,5 +531,14 @@
         return 0;
         
     }
+
+    function dphpforms_form_updater_get_disparadores( $form_id ){
+
+        global $DB;
+        $sql = "SELECT * FROM {talentospilos_df_disp_fordil} WHERE id_formulario = '" . $form_id . "'";
+        $records = $DB->get_records_sql( $sql );
+        return array_values( $records );
+
+    }
     
 ?>
