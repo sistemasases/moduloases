@@ -222,6 +222,28 @@
                 die();
             }
 
+            //Actualizador de disparador
+            if($json_post->function == 'update_disparadores'){
+                header('Content-Type: application/json');
+                
+                if(update_disparadores($post->disparadores_id, $post->disparadores) == 0){
+                    echo json_encode(
+                        array(
+                            'status' => '0',
+                            'message' => 'Updated'
+                        )
+                    );
+                }else{
+                    echo json_encode(
+                        array(
+                            'status' => '-1',
+                            'message' => 'Error'
+                        )
+                    );
+                }
+                die();
+            }
+
         }
     };
 
@@ -527,7 +549,6 @@
         foreach($obj_preguntas as $key => $pregunta){
             update_pregunta_position($pregunta->id_temporal, $pregunta->nueva_posicion);
         }
-
         return 0;
         
     }
@@ -538,6 +559,21 @@
         $sql = "SELECT * FROM {talentospilos_df_disp_fordil} WHERE id_formulario = '" . $form_id . "'";
         $records = $DB->get_records_sql( $sql );
         return array_values( $records );
+
+    }
+
+    function update_disparadores( $id, $disparadores ){
+
+        global $DB;
+        $sql = "SELECT * FROM {talentospilos_df_disp_fordil} WHERE id = '" . (int) $id . "'";
+        $disparador = $DB->get_record_sql( $sql );
+        if( $disparador ){
+            $disparador->disparadores = trim( $disparadores );
+            if ( $DB->update_record('talentospilos_df_disp_fordil', $disparador, $bulk=false) == 1 ){
+                return 0;
+            };
+        }
+        return -1;
 
     }
     

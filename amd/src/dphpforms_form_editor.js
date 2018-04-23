@@ -39,6 +39,10 @@
                     window.location.href = "dphpforms_form_creator_pregunta.php" + get_url_parameters(window.location.href) + '&form_id=' + $(this).attr('data-form-id');
                 });
 
+                $('#dphpforms-redirect-adm-disparadores').click(function(){
+                    window.location.href = "dphpforms_form_editor_comportamientos.php" + get_url_parameters(window.location.href) + '&form_id=' + $(this).attr('data-form-id');
+                });
+
                 $('.btn-editor-form').click(function(){
                     window.location.href = "dphpforms_form_editor_preguntas.php" + get_url_parameters(window.location.href) + '&form_id=' + $(this).attr('data-form-id');
                 });
@@ -399,6 +403,49 @@
 
                         }
                     });
+                });
+
+                $('#actualizar-disparadores').click(function(){
+                    
+                    var disparadores_id = $(this).attr('data-disparadores-id');
+                    swal({
+                        html:true,
+                        title: 'Confirmación',
+                        text: "<strong>Nota importante!</strong>: Está actualizando este disparador de comportamientos, ¿desea continuar?",
+                        type: 'warning',
+                        showCancelButton: true,
+                        confirmButtonText: 'Sí, Actualizar!'
+                      }, function(isConfirm) {
+                        if (isConfirm) {
+                            
+
+                            $.ajax({
+                                method: "POST",
+                                url: "../managers/dphpforms/dphpforms_form_updater.php",
+                                contentType: "application/json",
+                                dataType: "text",
+                                data: JSON.stringify({"function":"update_disparadores", "disparadores_id":disparadores_id, "disparadores":$( '#disparadores-' + disparadores_id ).val()}) ,
+                                success: function( msg ){
+                                    msg = JSON.parse( msg );
+                                    
+                                    if( msg['status'] == 0 ){
+                                        alert('Actualizado');
+                                        
+                                    }else if( msg['status'] == -1 ){
+                                          alert('Bloque de disparadores inexistente');
+                                    }
+                                    
+                                },
+                                error: function( XMLHttpRequest, textStatus, errorThrown ) {
+                                    alert('Informe de este error');
+                                    console.log( "some error " + textStatus + " " + errorThrown );
+                                    console.log( XMLHttpRequest );
+                                }
+                            });
+
+                        }
+                    });
+                    
                 });
             }
     };
