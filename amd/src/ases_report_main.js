@@ -8,14 +8,17 @@
  * @module block_ases/ases_report_main
  */
 define(['jquery', 
-        'block_ases/jszip',
-        'block_ases/pdfmake',
+'block_ases/pdfmake',
+'block_ases/jszip',
+'block_ases/buttons.html5',
+
         'block_ases/jquery.dataTables',
         'block_ases/dataTables.autoFill',
         'block_ases/dataTables.buttons',
-        'block_ases/buttons.colVis',
+        'block_ases/buttons.colVis',        
+        
         'block_ases/buttons.flash',
-        'block_ases/buttons.html5',
+        
         'block_ases/buttons.print',
         'block_ases/bootstrap',
         'block_ases/sweetalert'
