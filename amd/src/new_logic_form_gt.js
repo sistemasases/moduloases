@@ -7,7 +7,7 @@
 /**
  * @module block_ases/instanceconfiguration_main
  */
-define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables', 'block_ases/sweetalert','block_ases/dphpforms_form_renderer'],
+define(['jquery', 'block_ases/bootstrap', 'block_ases/jquery.dataTables', 'block_ases/sweetalert','block_ases/dphpforms_form_renderer'],
     function($, bootstrap, datatables, swal,renderer_forms) {
 
         return {

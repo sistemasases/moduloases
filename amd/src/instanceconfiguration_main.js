@@ -9,7 +9,7 @@
   * @module block_ases/instanceconfiguration_main
   */
 
-define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables','block_ases/sweetalert'],
+define(['jquery', 'block_ases/bootstrap', 'block_ases/jquery.dataTables','block_ases/sweetalert'],
         function($, bootstrap, datatables, swal) {
 
     return {

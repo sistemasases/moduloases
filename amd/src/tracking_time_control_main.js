@@ -7,7 +7,7 @@
 /**
  * @module block_ases/tracking_time_control_main
  */
-define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables', 'block_ases/sweetalert', 'block_ases/select2', 'block_ases/jqueryui', 'block_ases/moment'], function($, bootstrap, datatablesnet, sweetalert, select2, jqueryui, moment) {
+define(['jquery', 'block_ases/bootstrap', 'block_ases/jquery.dataTables', 'block_ases/sweetalert', 'block_ases/select2', 'block_ases/jqueryui', 'block_ases/moment'], function($, bootstrap, datatablesnet, sweetalert, select2, jqueryui, moment) {
 
 
     return {

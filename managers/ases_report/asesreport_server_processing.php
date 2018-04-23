@@ -109,12 +109,24 @@ if(isset($_POST['instance_id'])){
                     )
                  ),
                 "autoFill"=>"true",
-                "dom"=> "lfrtBip",
+                "dom"=> "Bfrtip",
                 "buttons"=>array(
-                                array("extend"=>"pdf", "message"=>"Generando PDF"),
-                                "csv",
-                                "excel"
-                            )
+                            array(
+                                "extend" => "excelHtml5",
+                                "text" => 'Export excel',
+                                "className" => 'exportExcel',
+                                "filename" => 'Export excel'
+                            ),
+                            array(
+                                "extend" => "print",
+                                "text" => 'print',
+
+                            ), 
+                            array(
+                                "extend" => "csv",
+                                "text" => 'CSV',
+                            ) 
+                        )
         );
 
     header('Content-Type: application/json');

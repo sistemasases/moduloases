@@ -5,7 +5,7 @@
  * @license  http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ases/datatables',  'block_ases/sweetalert', 'block_ases/select2'], function($,Modernizr,bootstrap, datatables, sweetalert, select2) {
+define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ases/jquery.dataTables',  'block_ases/sweetalert', 'block_ases/select2'], function($,Modernizr,bootstrap, datatables, sweetalert, select2) {
 
     return {
         init: function() {
