@@ -353,9 +353,11 @@
                         }
                         if( role_support == "dir_socioeducativo" ){
                             $('.btn-dphpforms-delete-record').remove();
+                            $('.btn-dphpforms-update').remove();
                         }
                         if( role_support == "dir_socioeducativo" ){
                             $('.btn-dphpforms-delete-record').remove();
+                            $('.btn-dphpforms-update').remove();
                         }
 
                         var count_buttons_dphpforms = $('.dphpforms-record .btn-dphpforms-univalle').length;
