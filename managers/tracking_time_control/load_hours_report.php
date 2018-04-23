@@ -33,12 +33,10 @@ require_once dirname(__FILE__) .'/../periods_management/periods_lib.php';
             $semester_interval=get_semester_interval($current_semester->max);
             $initial_hour=strtotime($semester_interval->fecha_inicio);
             $final_hour=strtotime($semester_interval->fecha_fin);
-            $default=true;
 
         }else{
-            $initial_hour=strtotime($_POST['initial_hour']);
-            $final_hour=strtotime($_POST['final_hour']);
-            $default=false;
+            $initial_hour=$_POST['initial_hour'];
+            $final_hour=$_POST['final_hour'];
 
         }
 

@@ -276,10 +276,9 @@ function get_tracking_current_semester($criterio,$student_id, $semester_id,$inte
 
     if($intervals!=null){
 
-        $interval = get_semester_interval($semester_id);
 
-        $fecha_inicio = getdate(strtotime($interval[0]));
-        $fecha_fin = getdate(strtotime($interval[1]));
+        $fecha_inicio = getdate(strtotime($intervals[0]));
+        $fecha_fin = getdate(strtotime($intervals[1]));
         $ano_semester  = $fecha_inicio['year'];
 
     }else{

@@ -14,7 +14,6 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables', 'block_ases/s
 
         init: function() {
 
-
             $(document).ready(function() {
                 $('#table_hours').DataTable();
                 $(".period_date").datepicker({
@@ -101,6 +100,8 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables', 'block_ases/s
                     fin = 0;
                 }
 
+                console.log(monitorid);
+
                 $.ajax({
                     type: "POST",
                     url: "../managers/tracking_time_control/load_hours_report.php",
@@ -111,7 +112,6 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables', 'block_ases/s
                     },
 
                     success: function(msg) {
-                        console.log(msg);
                         if (msg == '') {
                             $("#div_hours").empty();
                             $("#div_hours").append('<h2>No existen registros de seguimientos en el dia de hoy</h2>');
