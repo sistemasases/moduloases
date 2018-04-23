@@ -358,10 +358,41 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
 
 
                 function create_specific_counting(user){
-                    if(user->namerol !='sistemas'){
-                         console.log(user);
+                
+                $.ajax({
+                    type: "POST",
+                    data: {
+                        type: "user_specific_counting",
+                        user: user,
+                        instance:get_instance(),
+                    },
+                    url: "../managers/pilos_tracking/pilos_tracking_report.php",
+                    async: false,
+                    success: function(msg
+                        ) {
+                    console.log(msg);
 
-                    }
+                    var obj = msg;
+                    $.each( obj, function( index, value ){
+
+                        $("#counting_"+value.code).html(value.html);
+                    });
+
+
+
+                    },
+                    dataType: "json",
+                    cache: "false",
+                    error: function(msg) {
+                       swal({
+                            title: "Oops !",
+                            text: "Se presentó un inconveniente al cargar conteo de usuarios",
+                            html: true,
+                            type: 'warning',
+                            confirmButtonColor: "#d51b23"
+                        });
+                    },
+                });
 
                 }
 

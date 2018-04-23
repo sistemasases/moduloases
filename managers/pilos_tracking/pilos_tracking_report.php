@@ -35,6 +35,7 @@ require_once ('../dphpforms/dphpforms_records_finder.php');
 require_once ('../dphpforms/dphpforms_get_record.php');
 require_once '../user_management/user_lib.php';
 require_once '../role_management/role_management_lib.php';
+
 global $USER;
 
 
@@ -55,17 +56,26 @@ if (isset($_POST['type']) && $_POST['type'] == "getInfo" && isset($_POST['instan
     }
 
 
-if (isset($_POST['type']) && $_POST['type'] == "user_specific_counting")
+if (isset($_POST['type']) && $_POST['type'] == "user_specific_counting" && isset($_POST['instance']))
     {
 
     //Function that obtains the count of the subordinates given the authenticated user number
 
 
     $user = $USER->id;
-        
+    $role = get_id_rol_($USER->id, $_POST['instance']);
+    $role_name = get_name_rol($role);
+    $current_semester = get_current_semester();
+    $array_final=[];
 
 
-    print_r($_POST);
+    if($role_name == 'profesional_ps'){
+       $array_final =auxiliary_specific_counting("profesional_ps",$user,$current_semester, $_POST['instance']);
+    }
+
+
+      echo json_encode($array_final);  
+
     }
 
 
