@@ -89,38 +89,54 @@
  function calculate_hours_2($date){
 
     $register= new stdClass();
-
-    return $date;
-
-    $first_date =$date->fecha;
-    $register->date=$first_date;
-
-    $initial_time=$date->hora_fin;
-    $final_time=$date->hora_ini;
-
-    $init_t = strpos($initial_time, ":");
-    $fin_t=strpos($final_time, ":");
+    $initial_time="";
+    $final_time="";
 
 
-    if($init_t===false){
-     $separar[1][0]='0';
-     $separar[1][1]='0';
-    }else{
-    $separar[1]=explode(':',$initial_time); 
-    }
+    foreach($date[campos] as  $review) {
 
-    if($fin_t===false){
-     $separar[2][0]='0';
-     $separar[2][1]='0';
-    }else{
-     $separar[2]=explode(':',$final_time); 
-    }
 
-    $total_minutos_trasncurridos[1] = ($separar[1][0]*60)+$separar[1][1]; 
-    $total_minutos_trasncurridos[2] = ($separar[2][0]*60)+$separar[2][1]; 
-    $total_minutos_trasncurridos = $total_minutos_trasncurridos[1]-$total_minutos_trasncurridos[2]; 
-        
-    if($total_minutos_trasncurridos<=59) {
+        if ($review[local_alias] == 'fecha') {
+            $first_date =$review[respuesta];
+            $register->date=$first_date;                    
+        }
+
+        if($review[local_alias]=='hora_inicio'){
+            $initial_time.=$review[respuesta];
+        }
+
+        if($review[local_alias]=='hora_finalizacion'){
+            $final_time.=$review[respuesta];
+        }
+
+    if($initial_time && $final_time){
+
+        $init_t = strpos($initial_time, ":");
+        $fin_t=strpos($final_time, ":");
+
+        if($init_t===false){
+            $separar[1][0]='0';
+            $separar[1][1]='0';
+        }else{
+            $separar[1]=explode(':',$initial_time); 
+        }
+
+        if($fin_t===false){
+            $separar[2][0]='0';
+            $separar[2][1]='0';
+        }else{
+            $separar[2]=explode(':',$final_time); 
+        }
+
+
+        $total_minutos_trasncurridos[1] = ($separar[1][0]*60)+$separar[1][1]; 
+        $total_minutos_trasncurridos[2] = ($separar[2][0]*60)+$separar[2][1]; 
+        $total_minutos_trasncurridos =  $total_minutos_trasncurridos[2]-$total_minutos_trasncurridos[1]; 
+
+
+
+       
+        if($total_minutos_trasncurridos<=59) {
         if($total_minutos_trasncurridos<=0){
             $register->total_minutes=0;
         }else{
@@ -133,6 +149,16 @@
             if($MINUITOS_TRANSCURRIDOS<=9) $MINUITOS_TRANSCURRIDOS='0'.$MINUITOS_TRANSCURRIDOS; 
             $register->hours=$HORA_TRANSCURRIDA;
             $register->minutes=$MINUITOS_TRANSCURRIDOS;
- }
-    return $register;
+        }
+         return $register;
+
+      }
+
+
+    }
+
+            
+    
+
+  
 }

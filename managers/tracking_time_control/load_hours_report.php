@@ -31,19 +31,19 @@ require_once dirname(__FILE__) .'/../periods_management/periods_lib.php';
         if($_POST['initial_hour']==0 && $_POST['final_hour']==0){
             $current_semester =get_current_semester();
             $semester_interval=get_semester_interval($current_semester->max);
-            $initial_hour=strtotime($semester_interval->fecha_inicio);
-            $final_hour=strtotime($semester_interval->fecha_fin);
-            $default=true;
-
+            $initial_hour=$semester_interval->fecha_inicio;
+            $final_hour=$semester_interval->fecha_fin;
 
         }else{
-            $initial_hour=strtotime($_POST['initial_hour']);
-            $final_hour=strtotime($_POST['final_hour']);
-            $default=false;
+            $initial_hour=$_POST['initial_hour'];
+            $final_hour=$_POST['final_hour'];
+
         }
 
-    }
 
+
+
+    }
 
 
     $columns = array();
@@ -54,7 +54,7 @@ require_once dirname(__FILE__) .'/../periods_management/periods_lib.php';
         $data = array(
                 "bsort" => false,
                 "columns" => $columns,
-                "data"=> get_hours_per_days($initial_hour,$final_hour,$default),
+                "data"=> get_hours_per_days($initial_hour,$final_hour,$_POST['monitorid']),
                 "language" => 
                  array(
                     "search"=> "Buscar:",
