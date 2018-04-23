@@ -7,7 +7,23 @@
 /**
  * @module block_ases/ases_report_main
  */
-define(['jquery', 'block_ases/datatables', 'block_ases/buttons.flash', 'block_ases/jszip', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/buttons.html5', 'block_ases/buttons.print', 'block_ases/jqueryui'], function($, DataTable, flash, jszip, bootstrap, sweetalert, html, print, jqueryui) {
+define(['jquery', 
+'block_ases/pdfmake',
+'block_ases/jszip',
+'block_ases/buttons.html5',
+
+        'block_ases/jquery.dataTables',
+        'block_ases/dataTables.autoFill',
+        'block_ases/dataTables.buttons',
+        'block_ases/buttons.colVis',        
+        
+        'block_ases/buttons.flash',
+        
+        'block_ases/buttons.print',
+        'block_ases/bootstrap',
+        'block_ases/sweetalert'
+        ],
+        function($, jszip, pdfmake, dataTables, buttons, colVis, flash, html5, print, bootstrap, sweetalert, jqueryui) {
     return {
         init: function(){
             //Control para el botón 'Generar Reporte'
@@ -161,7 +177,7 @@ define(['jquery', 'block_ases/datatables', 'block_ases/buttons.flash', 'block_as
                 $("#not_assigned_students").fadeIn(1000).append('<table id="tableAssign" class="display" cellspacing="0" width="100%"><thead> </thead></table>');
 
 
-                $("#tableAssign").DataTable(msg);
+                var table = $("#tableAssign").DataTable(msg);
 
             },
 

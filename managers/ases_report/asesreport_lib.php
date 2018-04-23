@@ -647,12 +647,30 @@ function get_default_ases_report($id_instance){
             )
         ),
         "autoFill"=>"true",
-        "dom"=> "lfrtBip",
+        "dom"=>'Bfrtip',
+        "tableTools"=>array(
+            "sSwfPath"=>"../../style/swf/flashExport.swf"
+        ),
         "buttons"=>array(
-                        array("extend"=>"pdf", "message"=>"Generando PDF"),
-                        "csv",
-                        "excel"
-                    )
+            array(
+                "extend"=>'excelHtml5',
+                "text"=>'Excel'
+            ),
+            array(
+                "extend"=>'csvHtml5',
+                "text"=>'Excel',
+                "filename"=>'Reporte general',
+                "extension"=>'.xls'
+            ),
+            array(
+                "extend"=>'print',
+                "text"=>'Imprimir'
+            ),
+            array(
+                "extend"=>'csvHtml5',
+                "text"=>'CSV'
+            )
+        )
     );
 
     return $data_to_table;

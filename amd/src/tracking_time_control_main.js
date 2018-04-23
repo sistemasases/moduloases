@@ -100,7 +100,6 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables', 'block_ases/s
                     fin = 0;
                 }
 
-                console.log(monitorid);
 
                 $.ajax({
                     type: "POST",
@@ -108,7 +107,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables', 'block_ases/s
                     data: {
                         initial_hour: init,
                         final_hour: fin,
-                        monitorid: monitorid
+                        monitorid: monitorid[1] 
                     },
 
                     success: function(msg) {

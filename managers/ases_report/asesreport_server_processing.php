@@ -73,6 +73,7 @@ if(isset($_POST['instance_id'])){
     
     $result = get_ases_report($query_fields, $conditions, $risk_fields, $academic_fields, $_POST['instance_id']);
 
+
     $data = array(
                 "bsort" => false,
                 "data"=> $result,
@@ -109,12 +110,27 @@ if(isset($_POST['instance_id'])){
                     )
                  ),
                 "autoFill"=>"true",
-                "dom"=> "lfrtBip",
+                "dom"=> "Bfrtip",
+                "tableTools"=>array(
+                    "sSwfPath"=>"../../style/swf/flashExport.swf"
+                ),
                 "buttons"=>array(
-                                array("extend"=>"pdf", "message"=>"Generando PDF"),
-                                "csv",
-                                "excel"
-                            )
+                            array(
+                                "extend" => "excelHtml5",
+                                "text" => 'Export excel',
+                                "className" => 'exportExcel',
+                                "filename" => 'Export excel'
+                            ),
+                            array(
+                                "extend" => "print",
+                                "text" => 'print',
+
+                            ), 
+                            array(
+                                "extend" => "csv",
+                                "text" => 'CSV',
+                            ) 
+                        )
         );
 
     header('Content-Type: application/json');
