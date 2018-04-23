@@ -241,15 +241,17 @@ function render_professional_new_form($practicant_of_prof, $instance, $period = 
         }
 
 
-        // $panel.="<div class='col-sm-1'>";
-        // $panel.="<span class='glyphicon glyphicon-user subpanel' style='font-size: 20px;'></span> : ".count(get_monitors_of_pract($practicant_id,$instance));
-        // $panel.="</div>";
-        // $panel.="<div class='col-sm-5'>";
+         $panel.="<div class='col-sm-1'>";
+         $panel.="<span class='glyphicon glyphicon-user subpanel' style='font-size: 20px;'></span> : ".count(get_monitors_of_pract($practicant_id,$instance));
+         $panel.="</div>";
+         $panel.="<div class='col-sm-5' id=counting_" . $practicant->username .">";
+
+         $panel.='<div class="loader"></div>';
 
         // $panel.="<h6><p class='text-right'><strong class='subpanel'>RP :</strong>".$profesional_counting[0]." - <strong class='subpanel'> N RP: </strong>".$profesional_counting[1]." - <strong class='subpanel'>TOTAL:</strong>".($profesional_counting[0]+$profesional_counting[1])."</p><p class='text-right'><strong class='subpanel'>Rp :</strong>".$profesional_counting[2]." - <strong class='subpanel'> N Rp: </strong>".$profesional_counting[3]." - <strong class='subpanel'>TOTAL:</strong>".($profesional_counting[2]+$profesional_counting[3])."</p></h6>";
-        // $panel.="</div>";
-        // $panel.="<div class='col-sm-1'><span class='glyphicon glyphicon-chevron-left'></span></div>";
-        // $panel.= "</div>";
+         $panel.="</div>";
+         $panel.="<div class='col-sm-1'><span class='glyphicon glyphicon-chevron-left'></span></div>";
+         $panel.= "</div>";
 
 
         $panel.= "</div>"; //End panel-heading
@@ -369,6 +371,45 @@ function filter_trackings_by_review($peer_tracking_v2)
 
     return $counting;
 }
+
+/**
+ * Calculate the  tracking count of the practitioner and professional roles
+ *
+ * @see auxiliary_specific_counting($user_kind,$user_id,$semester,$instance)
+ * @param $user_kind --> Name of role
+ * @param $user_id --> id of user
+ * @param $semester
+ * @param $instance --> id of instance
+ * @return Array 
+ *
+ */
+
+function auxiliary_specific_counting($user_kind,$user_id,$semester,$instance){
+
+$array_final = array();
+
+if($user_kind=='profesional_ps'){
+    $practicant_of_prof=get_pract_of_prof($user_id,$instance);
+
+
+    foreach($practicant_of_prof as $practicant) {
+        $practicant_id = $practicant->id_usuario;
+        $monitors_of_pract = get_monitors_of_pract($practicant_id,$instance);
+        $profesional_counting = calculate_specific_counting('PROFESIONAL',$monitors_of_pract,$semester->max,$instance);
+
+         $counting_advice=new stdClass();
+
+         $counting_advice->code =$practicant->username;
+         $counting_advice->html="<h6><p class='text-right'><strong class='subpanel'>RP :</strong>".$profesional_counting[0]." - <strong class='subpanel'> N RP: </strong>".$profesional_counting[1]." - <strong class='subpanel'>TOTAL:</strong>".($profesional_counting[0]+$profesional_counting[1])."</p><p class='text-right'><strong class='subpanel'>Rp :</strong>".$profesional_counting[2]." - <strong class='subpanel'> N Rp: </strong>".$profesional_counting[3]." - <strong class='subpanel'>TOTAL:</strong>".($profesional_counting[2]+$profesional_counting[3])."</p></h6>";
+         array_push($array_final, $counting_advice);
+
+        }
+
+       return $array_final; 
+    }
+
+}
+
 
 
 
