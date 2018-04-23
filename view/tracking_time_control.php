@@ -71,8 +71,7 @@ $data->menu = $menu_option;
             $initial_hour=strtotime($semester_interval->fecha_inicio);
             $final_hour=strtotime($semester_interval->fecha_fin);
             $default=true;
-//print_r(get_hours_per_days($initial_hour,$final_hour,$default));
-//die();
+
 
 $contextcourse = context_course::instance($courseid);
 $contextblock =  context_block::instance($blockid);

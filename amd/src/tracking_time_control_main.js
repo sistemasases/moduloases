@@ -89,6 +89,10 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables', 'block_ases/s
             //*Create the hour report table
             function load_hours_report(init, fin){
 
+                var url      = window.location.href;     // Returns full URL
+                var monitorid = url.split('monitorid=');
+
+
                 if(init === undefined){
                     init = 0;
                 }
@@ -102,7 +106,8 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables', 'block_ases/s
                     url: "../managers/tracking_time_control/load_hours_report.php",
                     data: {
                         initial_hour: init,
-                        final_hour: fin
+                        final_hour: fin,
+                        monitorid: monitorid
                     },
 
                     success: function(msg) {

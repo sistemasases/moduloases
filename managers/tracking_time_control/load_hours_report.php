@@ -35,15 +35,17 @@ require_once dirname(__FILE__) .'/../periods_management/periods_lib.php';
             $final_hour=strtotime($semester_interval->fecha_fin);
             $default=true;
 
-
         }else{
             $initial_hour=strtotime($_POST['initial_hour']);
             $final_hour=strtotime($_POST['final_hour']);
             $default=false;
+
         }
 
-    }
 
+
+
+    }
 
 
     $columns = array();
@@ -54,7 +56,7 @@ require_once dirname(__FILE__) .'/../periods_management/periods_lib.php';
         $data = array(
                 "bsort" => false,
                 "columns" => $columns,
-                "data"=> get_hours_per_days($initial_hour,$final_hour,$default),
+                "data"=> get_hours_per_days($initial_hour,$final_hour,$_POST['monitorid']),
                 "language" => 
                  array(
                     "search"=> "Buscar:",
