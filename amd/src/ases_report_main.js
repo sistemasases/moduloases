@@ -8,11 +8,11 @@
  * @module block_ases/ases_report_main
  */
 define(['jquery', 
+        'block_ases/jszip',
         'block_ases/pdfmake',
         'block_ases/jquery.dataTables',
         'block_ases/dataTables.autoFill',
         'block_ases/dataTables.buttons',
-        'block_ases/jszip',
         'block_ases/buttons.html5',
         'block_ases/buttons.flash',
         'block_ases/buttons.print',
@@ -22,6 +22,8 @@ define(['jquery',
         function($, jszip, pdfmake, dataTables, buttons, colVis, flash, html5, print, bootstrap, sweetalert, jqueryui) {
     return {
         init: function(){
+
+            window.JSZip = jszip;
             //Control para el botón 'Generar Reporte'
             $("#send_form_btn").on('click', function() {
                 createTable();
@@ -167,8 +169,6 @@ define(['jquery',
             data: dataString,
             url: "../managers/ases_report/load_not_assigned_students.php",
             success: function(msg) {
-                //alert(msg.data);
-                //console.log(msg.columns);
                 $("#not_assigned_students").html('');
                 $("#not_assigned_students").fadeIn(1000).append('<table id="tableAssign" class="display" cellspacing="0" width="100%"><thead> </thead></table>');
 
@@ -201,8 +201,6 @@ define(['jquery',
             data: dataString,
             url: "../managers/ases_report/asesreport_server_processing.php",
             success: function(msg) {
-                console.log(msg);
-
                 $("#div_table").html('');
                 $("#div_table").fadeIn(1000).append('<table id="tableResult" class="display" cellspacing="0" width="100%"><thead> </thead></table>');
 
