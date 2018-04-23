@@ -115,21 +115,22 @@ if(isset($_POST['instance_id'])){
                     "sSwfPath"=>"../../style/swf/flashExport.swf"
                 ),
                 "buttons"=>array(
-                            array(
-                                "extend" => "excelHtml5",
-                                "text" => 'Export excel',
-                                "className" => 'exportExcel',
-                                "filename" => 'Export excel'
-                            ),
+                            
                             array(
                                 "extend" => "print",
-                                "text" => 'print',
+                                "text" => 'Imprimir',
 
                             ), 
                             array(
                                 "extend" => "csv",
                                 "text" => 'CSV',
-                            ) 
+                            ),
+                            array(
+                                "extend" => "excel",
+                                "text" => 'Export excel',
+                                "className" => 'buttons-excel',
+                                "filename" => 'Export excel'
+                            ),
                         )
         );
 
