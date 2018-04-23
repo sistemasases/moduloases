@@ -37,6 +37,9 @@ require_once '../user_management/user_lib.php';
 require_once '../role_management/role_management_lib.php';
 global $USER;
 
+
+
+
 if (isset($_POST['type']) && $_POST['type'] == "getInfo" && isset($_POST['instance']))
     {
 
@@ -50,6 +53,21 @@ if (isset($_POST['type']) && $_POST['type'] == "getInfo" && isset($_POST['instan
     $datos["name_rol"] = get_name_rol($datos["rol"]);
     echo json_encode($datos);
     }
+
+
+if (isset($_POST['type']) && $_POST['type'] == "user_specific_counting")
+    {
+
+    //Function that obtains the count of the subordinates given the authenticated user number
+
+
+    $user = $USER->id;
+        
+
+
+    print_r($_POST);
+    }
+
 
 if (isset($_POST['type']) && isset($_POST['instance']) && $_POST['type'] == "get_groupal_trackings" && isset($_POST['student_code']))
     {

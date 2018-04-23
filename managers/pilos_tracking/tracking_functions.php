@@ -241,15 +241,17 @@ function render_professional_new_form($practicant_of_prof, $instance, $period = 
         }
 
 
-        // $panel.="<div class='col-sm-1'>";
-        // $panel.="<span class='glyphicon glyphicon-user subpanel' style='font-size: 20px;'></span> : ".count(get_monitors_of_pract($practicant_id,$instance));
-        // $panel.="</div>";
-        // $panel.="<div class='col-sm-5'>";
+         $panel.="<div class='col-sm-1'>";
+         $panel.="<span class='glyphicon glyphicon-user subpanel' style='font-size: 20px;'></span> : ".count(get_monitors_of_pract($practicant_id,$instance));
+         $panel.="</div>";
+         $panel.="<div class='col-sm-5'>";
+
+         $panel.='<div class="loader"></div>';
 
         // $panel.="<h6><p class='text-right'><strong class='subpanel'>RP :</strong>".$profesional_counting[0]." - <strong class='subpanel'> N RP: </strong>".$profesional_counting[1]." - <strong class='subpanel'>TOTAL:</strong>".($profesional_counting[0]+$profesional_counting[1])."</p><p class='text-right'><strong class='subpanel'>Rp :</strong>".$profesional_counting[2]." - <strong class='subpanel'> N Rp: </strong>".$profesional_counting[3]." - <strong class='subpanel'>TOTAL:</strong>".($profesional_counting[2]+$profesional_counting[3])."</p></h6>";
-        // $panel.="</div>";
-        // $panel.="<div class='col-sm-1'><span class='glyphicon glyphicon-chevron-left'></span></div>";
-        // $panel.= "</div>";
+         $panel.="</div>";
+         $panel.="<div class='col-sm-1'><span class='glyphicon glyphicon-chevron-left'></span></div>";
+         $panel.= "</div>";
 
 
         $panel.= "</div>"; //End panel-heading

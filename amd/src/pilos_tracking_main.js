@@ -25,6 +25,8 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
 
             $(document).on( "click", ".btn-dphpforms-close", function() {
                 $(this).closest('div[class="mymodal"]').fadeOut(300);
+
+
             });
 
             $('.outside').click(function(){
@@ -125,6 +127,8 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                 usuario["name"] = name;
                 usuario["namerol"] = namerol;
 
+
+                create_specific_counting(usuario);
 
 
 
@@ -351,6 +355,15 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                 $('.mymodal-close').click(function(){
                     $(this).parent().parent().parent().parent().fadeOut(300);
                 });
+
+
+                function create_specific_counting(user){
+                    if(user->namerol !='sistemas'){
+                         console.log(user);
+
+                    }
+
+                }
 
                 function generate_attendance_table(students){
 
@@ -723,7 +736,6 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
 
                                 if (msg == "") {
                                     $('#reemplazarToogle').html('<label> No se encontraron registros </label>');
-                                    crear_conteo(usuario);
 
 
 
@@ -735,7 +747,6 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                                     groupal_tracking_load();
                                 }
                                 $(".well.col-md-10.col-md-offset-1.reporte-seguimiento.oculto").slideDown("slow");
-                                crear_conteo(usuario);
 
 
 
