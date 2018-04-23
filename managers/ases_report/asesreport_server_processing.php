@@ -73,7 +73,6 @@ if(isset($_POST['instance_id'])){
     
     $result = get_ases_report($query_fields, $conditions, $risk_fields, $academic_fields, $_POST['instance_id']);
 
-
     $data = array(
                 "bsort" => false,
                 "data"=> $result,
@@ -127,9 +126,10 @@ if(isset($_POST['instance_id'])){
                             ),
                             array(
                                 "extend" => "excel",
-                                "text" => 'Export excel',
+                                "text" => 'Excel',
                                 "className" => 'buttons-excel',
-                                "filename" => 'Export excel'
+                                "filename" => 'Export excel',
+                                "extension" => '.xls'
                             ),
                         )
         );
