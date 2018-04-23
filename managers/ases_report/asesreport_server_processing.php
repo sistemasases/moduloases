@@ -73,6 +73,7 @@ if(isset($_POST['instance_id'])){
     
     $result = get_ases_report($query_fields, $conditions, $risk_fields, $academic_fields, $_POST['instance_id']);
 
+
     $data = array(
                 "bsort" => false,
                 "data"=> $result,
@@ -110,6 +111,9 @@ if(isset($_POST['instance_id'])){
                  ),
                 "autoFill"=>"true",
                 "dom"=> "Bfrtip",
+                "tableTools"=>array(
+                    "sSwfPath"=>"../../style/swf/flashExport.swf"
+                ),
                 "buttons"=>array(
                             array(
                                 "extend" => "excelHtml5",
