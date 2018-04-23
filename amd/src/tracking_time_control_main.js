@@ -7,13 +7,12 @@
 /**
  * @module block_ases/tracking_time_control_main
  */
-define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables', 'block_ases/sweetalert', 'block_ases/select2', 'block_ases/jqueryui', 'block_ases/moment'], function($, bootstrap, datatablesnet, sweetalert, select2, jqueryui, moment) {
+define(['jquery', 'block_ases/bootstrap', 'block_ases/jquery.dataTables', 'block_ases/sweetalert', 'block_ases/select2', 'block_ases/jqueryui', 'block_ases/moment'], function($, bootstrap, datatablesnet, sweetalert, select2, jqueryui, moment) {
 
 
     return {
 
         init: function() {
-
 
             $(document).ready(function() {
                 $('#table_hours').DataTable();
@@ -89,6 +88,10 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables', 'block_ases/s
             //*Create the hour report table
             function load_hours_report(init, fin){
 
+                var url      = window.location.href;     // Returns full URL
+                var monitorid = url.split('monitorid=');
+
+
                 if(init === undefined){
                     init = 0;
                 }
@@ -97,16 +100,18 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables', 'block_ases/s
                     fin = 0;
                 }
 
+                console.log(monitorid);
+
                 $.ajax({
                     type: "POST",
                     url: "../managers/tracking_time_control/load_hours_report.php",
                     data: {
                         initial_hour: init,
-                        final_hour: fin
+                        final_hour: fin,
+                        monitorid: monitorid
                     },
 
                     success: function(msg) {
-                        console.log(msg);
                         if (msg == '') {
                             $("#div_hours").empty();
                             $("#div_hours").append('<h2>No existen registros de seguimientos en el dia de hoy</h2>');
