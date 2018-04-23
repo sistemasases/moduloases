@@ -657,8 +657,11 @@ function get_default_ases_report($id_instance){
                 "text"=>'CSV'
             ),
             array(
-                "extend"=>'excel',
-                "text"=>'Excel'
+                "extend" => "excel",
+                                "text" => 'Excel',
+                                "className" => 'buttons-excel',
+                                "filename" => 'Export excel',
+                                "extension" => '.xls'
             )
         )
     );
