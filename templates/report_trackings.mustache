@@ -11,6 +11,7 @@
       <label class="col-md-offset-12" id="titulo"></label>
    </div>
    <div class="row">
+
       {{#view_trackings_rt}}
       <div data-spy="scroll" data-target=".navbar" data-offset="50" class="well col-md-12  reporte-seguimiento">
          {{{table_periods}}}
@@ -20,10 +21,10 @@
 
      {{{counting}}}
     </div>
-     <img src="../icon/load.gif" class="se-pre-con" height="112" width="162">
-         
-    <div data-spy="scroll" data-target=".navbar" data-offset="50" class="well col-md-10 col-md-offset-1 reporte-seguimiento " style="display:none" id="reemplazarToogle" name="reemplazarToogle">
+
+    <div data-spy="scroll" data-target=".navbar" data-offset="50" class="well col-md-10 col-md-offset-1 reporte-seguimiento " id="reemplazarToogle" name="reemplazarToogle">
          {{{table}}}
+
       {{/view_trackings_rt}}
    </div>
    {{/data}}

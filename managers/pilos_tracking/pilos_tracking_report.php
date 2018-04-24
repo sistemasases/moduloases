@@ -71,6 +71,13 @@ if (isset($_POST['type']) && $_POST['type'] == "user_specific_counting" && isset
 
     if($role_name == 'profesional_ps'){
        $array_final =auxiliary_specific_counting("profesional_ps",$user,$current_semester, $_POST['instance']);
+    
+    }else if($role_name =='practicante_ps'){
+       $array_final =auxiliary_specific_counting("practicante_ps",$user,$current_semester, $_POST['instance']);
+
+    }else if($role_name =='monitor_ps'){
+       $array_final =auxiliary_specific_counting("monitor_ps",$user,$current_semester, $_POST['instance']);
+
     }
 
 
