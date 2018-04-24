@@ -161,9 +161,9 @@ function render_practicant_new_form($monitors_of_pract, $instance, $period = nul
         $panel.= "</h4></div>"; //End panel-title
 
         if($period==null){
-            $practicant_counting=calculate_specific_counting("PRACTICANTE",$monitor,$current_semester->max,$instance);
+           // $practicant_counting=calculate_specific_counting("PRACTICANTE",$monitor,$current_semester->max,$instance);
         }else{
-            $practicant_counting=calculate_specific_counting("PRACTICANTE",$monitor,$period,$instance);
+           // $practicant_counting=calculate_specific_counting("PRACTICANTE",$monitor,$period,$instance);
 
         }
 
@@ -174,9 +174,12 @@ function render_practicant_new_form($monitors_of_pract, $instance, $period = nul
         $panel.="<button type='button' id='see_history' class='btn red_button'>
                 <span class='glyphicon glyphicon-time'></span> Ver horas</button>";
         $panel.="</div>";
-        $panel.="<div class='col-sm-4'>";
+        $panel.="<div class='col-sm-4' id=counting_" . $monitor->username .">";
+        $panel.='<div class="loader"></div>';
 
-        $panel.="<h6><p class='text-right'><strong class='subpanel'>RP :</strong>".$practicant_counting[0]." - <strong class='subpanel'> N RP: </strong>".$practicant_counting[1]." - <strong class='subpanel'>TOTAL:</strong>".($practicant_counting[0]+$practicant_counting[1])."</p><p class='text-right'><strong class='subpanel'>Rp :</strong>".$practicant_counting[2]." - <strong class='subpanel'> N Rp: </strong>".$practicant_counting[3]." - <strong class='subpanel'>TOTAL:</strong>".($practicant_counting[2]+$practicant_counting[3])."</p></h6>";
+
+        //$panel.="<h6><p class='text-right'><strong class='subpanel'>RP :</strong>".$practicant_counting[0]." - <strong class='subpanel'> N RP: </strong>".$practicant_counting[1]." - <strong class='subpanel'>TOTAL:</strong>".($practicant_counting[0]+$practicant_counting[1])."</p><p class='text-right'><strong class='subpanel'>Rp :</strong>".$practicant_counting[2]." - <strong class='subpanel'> N Rp: </strong>".$practicant_counting[3]." - <strong class='subpanel'>TOTAL:</strong>".($practicant_counting[2]+$practicant_counting[3])."</p></h6>";
+
         $panel.="</div>";
         $panel.="<div class='col-sm-1'><span class='glyphicon glyphicon-chevron-left'></span></div>";
         $panel.= "</div>";
@@ -388,6 +391,7 @@ function auxiliary_specific_counting($user_kind,$user_id,$semester,$instance){
 
 $array_final = array();
 
+
 if($user_kind=='profesional_ps'){
     $practicant_of_prof=get_pract_of_prof($user_id,$instance);
 
@@ -398,15 +402,38 @@ if($user_kind=='profesional_ps'){
         $profesional_counting = calculate_specific_counting('PROFESIONAL',$monitors_of_pract,$semester->max,$instance);
 
          $counting_advice=new stdClass();
-
          $counting_advice->code =$practicant->username;
          $counting_advice->html="<h6><p class='text-right'><strong class='subpanel'>RP :</strong>".$profesional_counting[0]." - <strong class='subpanel'> N RP: </strong>".$profesional_counting[1]." - <strong class='subpanel'>TOTAL:</strong>".($profesional_counting[0]+$profesional_counting[1])."</p><p class='text-right'><strong class='subpanel'>Rp :</strong>".$profesional_counting[2]." - <strong class='subpanel'> N Rp: </strong>".$profesional_counting[3]." - <strong class='subpanel'>TOTAL:</strong>".($profesional_counting[2]+$profesional_counting[3])."</p></h6>";
          array_push($array_final, $counting_advice);
 
         }
 
-       return $array_final; 
+    }else if($user_kind=='practicante_ps'){
+
+
+        $monitors_of_pract =get_monitors_of_pract($user_id,$instance);
+
+
+        foreach($monitors_of_pract as $monitor) {
+        $monitor_id = $monitor->id_usuario;
+        $practicant_counting=calculate_specific_counting("PRACTICANTE",$monitor,$semester->max,$instance);
+
+        $counting_advice=new stdClass();
+
+        $counting_advice->code =$monitor->username;
+
+
+        $counting_advice->html="<h6><p class='text-right'><strong class='subpanel'>RP :</strong>".$practicant_counting[0]." - <strong class='subpanel'> N RP: </strong>".$practicant_counting[1]." - <strong class='subpanel'>TOTAL:</strong>".($practicant_counting[0]+$practicant_counting[1])."</p><p class='text-right'><strong class='subpanel'>Rp :</strong>".$practicant_counting[2]." - <strong class='subpanel'> N Rp: </strong>".$practicant_counting[3]." - <strong class='subpanel'>TOTAL:</strong>".($practicant_counting[2]+$practicant_counting[3])."</p></h6>";
+         array_push($array_final, $counting_advice);
+        }
+
+
     }
+
+
+
+    return $array_final; 
+
 
 }
 
