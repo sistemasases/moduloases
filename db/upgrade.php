@@ -4,7 +4,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     global $DB;
     $dbman = $DB->get_manager();
     $result = true;
-    if ($oldversion < 2018052409479 ) {
+    if ($oldversion < 2018052409579 ) {
     //     // ************************************************************************************************************
     //     // Actualización que crea la tabla para los campos extendidos de usuario (Tabla: {talentospilos_user_extended})
     //     // Versión: 2018010911179
@@ -1061,7 +1061,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
 
         // Define field cantidad_estudiantes to be added to talentospilos_res_icetex.
         $table = new xmldb_table('talentospilos_res_icetex');
-        $field = new xmldb_field('cantidad_estudiantes', XMLDB_TYPE_INTEGER, '20', null, XMLDB_NOTNULL, null, null, 'fecha_resolucion');
+        $field = new xmldb_field('cantidad_estudiantes', XMLDB_TYPE_INTEGER, '20', null, null, null, null, 'fecha_resolucion');
 
         // Conditionally launch add field cantidad_estudiantes.
         if (!$dbman->field_exists($table, $field)) {
@@ -1097,7 +1097,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
         }
 
         // Ases savepoint reached.
-        upgrade_block_savepoint(true, 2018052409479 , 'ases');
+        upgrade_block_savepoint(true, 2018052409579 , 'ases');
     
         return $result;
 
