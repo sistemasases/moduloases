@@ -4,7 +4,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     global $DB;
     $dbman = $DB->get_manager();
     $result = true;
-    if ($oldversion < 2018041616209 ) {
+    if ($oldversion < 2018052409479 ) {
     //     // ************************************************************************************************************
     //     // Actualización que crea la tabla para los campos extendidos de usuario (Tabla: {talentospilos_user_extended})
     //     // Versión: 2018010911179
@@ -1026,42 +1026,78 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
         // Versión en la que se incluye: PENDIENTE
         // ************************************************************************************************************
         
-        // Define table talentospilos_estad_programa to be created.
-        $table = new xmldb_table('talentospilos_estad_programa');
+        // // Define table talentospilos_estad_programa to be created.
+        // $table = new xmldb_table('talentospilos_estad_programa');
 
-        // Adding fields to table talentospilos_estad_programa.
+        // // Adding fields to table talentospilos_estad_programa.
+        // $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        // $table->add_field('nombre', XMLDB_TYPE_CHAR, '100', null, XMLDB_NOTNULL, null, null);
+        // $table->add_field('descripcion', XMLDB_TYPE_CHAR, '500', null, null, null, null);
+
+        // // Adding keys to table talentospilos_estad_programa.
+        // $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+
+        // // Conditionally launch create table for talentospilos_estad_programa.
+        // if (!$dbman->table_exists($table)) {
+        //     $dbman->create_table($table);
+        // }
+
+        // $array_status_program = array('ACTIVO', 'APLAZADO', 'EGRESADO', 'INACTIVO', 'NO REGISTRA', 'RETIRADO');
+        // $array_description_status_program = array('El estudiante está activo en el programa académico',
+        //                                     'El estudiante es egresado del programa académico',
+        //                                     'El estudiante se encuentra aplazado en el programa académico',
+        //                                     'El estudiante se encuentra inactivo en el programa académico',
+        //                                     'No registra estado en el programa académico',
+        //                                     'El estudiante se encuentra retirado del programa académico'
+        //                                     );
+        
+        // $record = new stdClass();
+
+        // for($i = 0; $i < count($array_status_program); $i++){
+        //     $record->nombre = $array_status_program[$i];
+        //     $record->descripcion = $array_description_status_program[$i];
+        //     $result = $DB->insert_record('talentospilos_estad_programa', $record, true);
+        // }
+
+        // Define field cantidad_estudiantes to be added to talentospilos_res_icetex.
+        $table = new xmldb_table('talentospilos_res_icetex');
+        $field = new xmldb_field('cantidad_estudiantes', XMLDB_TYPE_INTEGER, '20', null, XMLDB_NOTNULL, null, null, 'fecha_resolucion');
+
+        // Conditionally launch add field cantidad_estudiantes.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Define table talentospilos_res_estudiante to be dropped.
+        $table = new xmldb_table('talentospilos_res_estudiante');
+
+        // Conditionally launch drop table for talentospilos_res_estudiante.
+        if ($dbman->table_exists($table)) {
+            $dbman->drop_table($table);
+        }
+
+        // Define table talentospilos_res_estudiante to be created.
+        $table = new xmldb_table('talentospilos_res_estudiante');
+
+        // Adding fields to table talentospilos_res_estudiante.
         $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
-        $table->add_field('nombre', XMLDB_TYPE_CHAR, '100', null, XMLDB_NOTNULL, null, null);
-        $table->add_field('descripcion', XMLDB_TYPE_CHAR, '500', null, null, null, null);
+        $table->add_field('id_estudiante', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('id_resolucion', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('id_semestre', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('monto_estudiante', XMLDB_TYPE_NUMBER, '20, 2', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('id_estado_icetex', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
 
-        // Adding keys to table talentospilos_estad_programa.
+        // Adding keys to table talentospilos_res_estudiante.
         $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+        $table->add_key('uk_res_est', XMLDB_KEY_UNIQUE, array('id_estudiante', 'id_resolucion'));
 
-        // Conditionally launch create table for talentospilos_estad_programa.
+        // Conditionally launch create table for talentospilos_res_estudiante.
         if (!$dbman->table_exists($table)) {
             $dbman->create_table($table);
         }
 
-        $array_status_program = array('ACTIVO', 'APLAZADO', 'EGRESADO', 'INACTIVO', 'NO REGISTRA', 'RETIRADO');
-        $array_description_status_program = array('El estudiante está activo en el programa académico',
-                                            'El estudiante es egresado del programa académico',
-                                            'El estudiante se encuentra aplazado en el programa académico',
-                                            'El estudiante se encuentra inactivo en el programa académico',
-                                            'No registra estado en el programa académico',
-                                            'El estudiante se encuentra retirado del programa académico'
-                                            );
-        
-        $record = new stdClass();
-
-        for($i = 0; $i < count($array_status_program); $i++){
-            $record->nombre = $array_status_program[$i];
-            $record->descripcion = $array_description_status_program[$i];
-            $result = $DB->insert_record('talentospilos_estad_programa', $record, true);
-        }
-        
-
         // Ases savepoint reached.
-        upgrade_block_savepoint(true, 2018041616209 , 'ases');
+        upgrade_block_savepoint(true, 2018052409479 , 'ases');
     
         return $result;
 
