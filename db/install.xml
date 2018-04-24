@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<XMLDB PATH="blocks/ases/db" VERSION="20180416" COMMENT="XMLDB file for Moodle blocks/configurable_reports"
+<XMLDB PATH="blocks/ases/db" VERSION="20180424" COMMENT="XMLDB file for Moodle blocks/configurable_reports"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
 >
@@ -588,24 +588,10 @@
         <FIELD NAME="codigo_resolucion" TYPE="char" LENGTH="50" NOTNULL="true" SEQUENCE="false" COMMENT="Código de la resolución emitida por el Icetex."/>
         <FIELD NAME="monto_total" TYPE="number" LENGTH="20" NOTNULL="true" SEQUENCE="false" DECIMALS="2" COMMENT="Monto total de la resolución"/>
         <FIELD NAME="fecha_resolucion" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="false" COMMENT="Fecha de emisión de la resolución."/>
+        <FIELD NAME="cantidad_estudiantes" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="false" COMMENT="Cantidad de estudiantes en la resolución"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
-      </KEYS>
-    </TABLE>
-    <TABLE NAME="talentospilos_res_estudiante" COMMENT="Tabla que relaciona estudiantes con la resolución correspondiente por periodo académico">
-      <FIELDS>
-        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
-        <FIELD NAME="id_estudiante" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Llave foránea a la tabla talentospilos_usuario."/>
-        <FIELD NAME="id_resolucion" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Llave foránea a la tabla talentospilos_res_icetex."/>
-        <FIELD NAME="id_semestre" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Llave foránea a la tabla talentospilos_semestre."/>
-        <FIELD NAME="monto_estudiante" TYPE="number" LENGTH="20" NOTNULL="true" SEQUENCE="false" DECIMALS="2" COMMENT="Almacena el monto correspondiente al estudiante en la resolución."/>
-        <FIELD NAME="id_estado_icetex" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Llave foránea al estado Icetex"/>
-      </FIELDS>
-      <KEYS>
-        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
-        <KEY NAME="fk_semestre" TYPE="foreign" FIELDS="id_semestre" REFTABLE="talentospilos_semestre" REFFIELDS="id" COMMENT="Llave foránea a la tabla talentospilos_semestre"/>
-        <KEY NAME="fk_estado_icetex" TYPE="foreign" FIELDS="id_estado_icetex" REFTABLE="talentospilos_estado_icetex" REFFIELDS="id" COMMENT="Llave foránea al estado Icetex"/>
       </KEYS>
     </TABLE>
     <TABLE NAME="talentospilos_estados_icetex" COMMENT="Tabla que almacena los estados del Icetex de un estudiante">
@@ -742,6 +728,19 @@
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="nombre" TYPE="char" LENGTH="100" NOTNULL="true" SEQUENCE="false" COMMENT="Nombre asociado al estado ASES"/>
         <FIELD NAME="descripcion" TYPE="char" LENGTH="500" NOTNULL="false" SEQUENCE="false" COMMENT="Descripción asociada al estado"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="talentospilos_res_estudiante" COMMENT="Default comment for the table, please edit me">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="id_estudiante" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="id_resolucion" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="id_semestre" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="monto_estudiante" TYPE="number" LENGTH="20" NOTNULL="true" SEQUENCE="false" DECIMALS="2"/>
+        <FIELD NAME="id_estado_icetex" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
