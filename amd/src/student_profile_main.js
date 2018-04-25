@@ -601,8 +601,8 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/d3', 'block_ases/sweetaler
                             modal_dropout.show();
 
                             $('#save_changes_dropout').on('click', function(){
-                                data.id_motivo_retiro = $('#reasons_select').val();
-                                data.observacion = $('#description_dropout').val();
+                                data.id_reason_dropout = $('#reasons_select').val();
+                                data.observation = $('#description_dropout').val();
 
                                 $.ajax({
                                     type: "POST",
