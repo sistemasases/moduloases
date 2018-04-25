@@ -40,7 +40,6 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                   }, function(isConfirm) {
                     if (isConfirm) {
                         $(outside).parent('.mymodal').fadeOut(300);
-                        console.log( $(this).parent('.mymodal') );
                     }
                   });
                 
@@ -63,7 +62,6 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                     }
 
                     var count_buttons_dphpforms = $('.dphpforms-record .btn-dphpforms-univalle').length;
-                    console.log( count_buttons_dphpforms )
                     if( count_buttons_dphpforms == 2 ){
                         $('.dphpforms-record .btn-dphpforms-close').css( { 'margin-left' : ( ($('.dphpforms-updater').width()/2) - 30 ) + 'px'  } );
                     }else if( count_buttons_dphpforms == 3 ){
@@ -371,15 +369,15 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                     async: false,
                     success: function(msg
                         ) {
-                    console.log(msg);
 
                     var obj = msg;
                     $.each( obj, function( index, value ){
 
                         $("#counting_"+value.code).html(value.html);
                     });
-                    generate_general_counting();
+                    generate_general_counting(user);
                     $("#loading").fadeOut('slow');
+
 
 
 
@@ -400,11 +398,55 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                 }
 
 
-                function generate_general_counting(){
+                function generate_general_counting(user){
+
+                    var review_prof=0;
+                    var not_review_prof=0;
+                    var review_pract=0;
+                    var not_review_pract=0;
+                    var role;
 
                     $(".review_prof").each(function( index,value ) {
-                        console.log(value.text());
+                        review_prof+=parseInt($(this).text(),10);
                   });
+
+                    $(".not_review_prof").each(function( index,value ) {
+                        not_review_prof+=parseInt($(this).text(),10);
+                  });
+                    $(".review_pract").each(function( index,value ) {
+                        review_pract+=parseInt($(this).text(),10);
+                  });
+
+                    $(".not_review_pract").each(function( index,value ) {
+                        not_review_pract+=parseInt($(this).text(),10);
+                  });
+
+                if(user["namerol"]=='profesional_ps'){
+
+                  role="PROFESIONAL";  
+                }else if(user["namerol"]=='practicante_ps'){
+
+                role="PRACTICANTE";
+
+                }else if(user["namerol"]=='monitor_ps'){
+                role="MONITOR";
+
+                }else if(user["namerol"]=='sistemas'){
+                role="SISTEMAS";
+                }
+
+                advice="";
+                advice+='<h2> INFORMACIÓN DE  '+role+'</h2><hr>';
+                advice+='<div class="row">';
+                advice+='<div class="col-sm-6">';
+                advice+='<strong>Profesional</strong><br>';
+                advice+='Revisado :'+review_prof+' - No revisado : '+not_review_prof+' -  Total :'+(review_prof+not_review_prof)+'</div>';
+                advice+='<div class="col-sm-6">';
+                advice+='<strong>Practicante</strong><br>';
+                advice+='Revisado :'+review_pract+' - No revisado : '+not_review_pract+' -  Total :'+(review_pract+not_review_pract)+'</div></div>';
+
+                $("#div-header-info").html(advice);
+
 
                 }
 
@@ -547,7 +589,14 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                     success: function(msg
                         ) {
                     $(practicant_id + " > div").empty();
-                    $(practicant_id + " > div").append(msg);
+                    $(practicant_id + " > div").append(msg.render);
+                    var html = msg.counting;
+
+                    $.each(html,function( index,value ) {
+                        $("#counting_"+value.code).html(value.html);
+                    });
+
+
                     monitor_load();
                     groupal_tracking_load();
                     },
@@ -622,7 +671,6 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
             $('a[class*="groupal"]').click(function() {
                 var student_code = $(this).attr('href').split("#groupal")[1];
                 var student_id = $(this).attr('href');
-                //console.log(student_id);
                 //Fill container with the information corresponding to the trackings of the selected student
                 $.ajax({
                     type: "POST",
@@ -635,7 +683,6 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                     async: false,
                     success: function(msg
                         ) {
-                    //console.log(msg);
                     $(student_id + " > div").empty();
                     $(student_id + " > div").append(msg);
                     edit_groupal_tracking_new_form();
@@ -664,7 +711,6 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
             the follow-ups of that date*/
 
             $('a[class*="student"]').click(function() {
-               // console.log("student : "+$(this).attr('href').split("#student")[1]);
                 var student_code = $(this).attr('href').split("#student")[1];
                 var student_id = $(this).attr('href');
                 //Fill container with the information corresponding to the trackings of the selected student
@@ -702,10 +748,10 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
             /*When click on the button "Ver horas", open a new tab with information of report time control about a
             determinated monitor*/
 
-            $('#see_history').click(function() {
+            $('.see_history').unbind().click(function(e) {
+
 
              var element =  $(this).parents().eq(3).attr('href').split("#monitor")[1];
-             console.log(element);
 
             $.ajax({
                     type: "POST",
@@ -716,7 +762,6 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                     url: "../managers/pilos_tracking/pilos_tracking_report.php",
                     async: false,
                     success: function(msg) {
-                        console.log(msg);
                         var current_url = window.location.href;
                         var next_url = current_url.replace("report_trackings", "tracking_time_control");
 
@@ -949,7 +994,6 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
 
                     var id_register = dataObj['id_registro'];
                     var text = $("#observation_text");
-                    console.log()
 
 
                     if (text.val() == "") {
@@ -990,7 +1034,6 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                             async: false,
                             success: function(msg) {
                                 //If it was successful...
-                                console.log(msg);
 
                                 if (msg != "Error") {
                                     swal({
