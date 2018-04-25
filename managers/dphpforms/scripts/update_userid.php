@@ -32,12 +32,10 @@
     global $DB;
 
     $super_su = false;
-    if( $_GET['password'] != 'actualizacion_seguimientos' ){
-        echo "La contraseña no corresponde";
+    $password = "2de2c2dd474bdc6cceeb24417d993a8d53d6f8d68681ea382ef82de49cd52d794043703777916081aad481508cbaa1dfdd7f50882fc101a27847efb5484f2c52";
+    if( hash('sha512', $_GET['password']) == $password  ){
         $super_su = true;
-    }
-
-    if( !$super_su ){
+    }else{
         echo "<strong> MODO SOLO LECTURA </strong><br>";
     }
 
