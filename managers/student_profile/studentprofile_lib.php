@@ -158,7 +158,7 @@ function verify_ases_status($id_ases_student){
     $result = 0;
 
     foreach($array_status_instances as $instance){
-        if($instance->nombre == 'SEGUIMIENTO'){
+        if($instance->nombre == 'seguimiento'){
             return 1;
         }
     }
