@@ -31,9 +31,14 @@
 
     global $DB;
 
+    $super_su = false;
     if( $_GET['password'] != 'actualizacion_seguimientos' ){
         echo "La contraseña no corresponde";
-        die();
+        $super_su = true;
+    }
+
+    if( !$super_su ){
+        echo "<strong> MODO SOLO LECTURA </strong><br>";
     }
 
     $alias = 'seguimiento_pares_id_estudiante';
@@ -52,8 +57,8 @@
     $flag_error = false;
 
     foreach( $records as $record ){
-
-        if( is_numeric( $record->respuesta ) ){
+        print_r( $record );
+        if( is_numeric( $record->respuesta ) && !empty( $record->respuesta ) ){
             $registros_validos++;
             $ases_user = get_ases_user_by_code( $record->respuesta );
             $tmp = array(
@@ -63,13 +68,16 @@
             );
             array_push( $cambios, $tmp );
             echo 'VALIDO: ' . $record->respuesta . ' → ' . $ases_user->id . ' DOC: ' . $ases_user->num_doc . ' RID: ' . $record->id . '<br>';
-            $record->respuesta = $ases_user->id;
-            $status = $DB->update_record('talentospilos_df_respuestas', $record, $bulk=false);
-            echo "Estado de la actualizacion: " . $status . "<br>";
-            if( $status != 1 ){
-                $flag_error = true;
-            };
-            break;
+            
+            if( $super_su ){
+                $record->respuesta = $ases_user->id;
+                $status = $DB->update_record('talentospilos_df_respuestas', $record, $bulk=false);
+                echo "Estado de la actualizacion: " . $status . "<br>";
+                if( $status != 1 ){
+                    $flag_error = true;
+                    break;
+                };
+            }
 
         }else{
             echo 'NO VALIDO!: ' . $record->respuesta . '<br>';
@@ -79,19 +87,21 @@
 
     echo  '<br>Registros totales:' . count( $records ) . ' Registros válidos:' . $registros_validos . ' Registros actualizables: ' . count( $cambios ) . '<br><br>';
 
-    if( $flag_error ){
-        echo "========> ERROR DETECTADO, REGRESANDO A ESTADO PREVIO<br>";
-        $flag_error_restaurando = false;
-        foreach( $cambios as $cambio ){
-            $registro = $DB->get_record_sql( "SELECT * FROM {talentospilos_df_respuestas} WHERE id = '" . $cambio['record_id'] . "'" );
-            $registro->respuesta = $cambio['old_value'];
-            if( $DB->update_record('talentospilos_df_respuestas', $registro, $bulk=false) != 1 ){
-                $flag_error_restaurando = true;
-                echo 'ERROR CRÍTICO: ' . $registro->respuesta . ' → ' . $cambio['old_value'] . ' RID: ' . $registro->id . '<br>';
+    if( $super_su ){
+        if( $flag_error ){
+            echo "<strong>========> ERROR DETECTADO, REGRESANDO A ESTADO PREVIO</strong><br>";
+            $flag_error_restaurando = false;
+            foreach( $cambios as $cambio ){
+                $registro = $DB->get_record_sql( "SELECT * FROM {talentospilos_df_respuestas} WHERE id = '" . $cambio['record_id'] . "'" );
+                $registro->respuesta = $cambio['old_value'];
+                if( $DB->update_record('talentospilos_df_respuestas', $registro, $bulk=false) != 1 ){
+                    $flag_error_restaurando = true;
+                    echo 'ERROR CRÍTICO: ' . $registro->respuesta . ' → ' . $cambio['old_value'] . ' RID: ' . $registro->id . '<br>';
+                };
             };
-        };
-        if( $flag_error_restaurando ){
-            echo "ERROR CRÍTICO DURANTE EL REGRESO AL ESTADO PREVIO<br>";
+            if( $flag_error_restaurando ){
+                echo "ERROR CRÍTICO DURANTE EL REGRESO AL ESTADO PREVIO<br>";
+            }
         }
     }
 
