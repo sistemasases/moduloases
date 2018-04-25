@@ -132,6 +132,8 @@ if (isset($_POST['type']) && isset($_POST['instance']) && $_POST['type'] == "get
     $array = render_monitor_new_form($students_by_monitor);
     $array_groupal_trackings_dphpforms = get_tracking_grupal_monitor_current_semester($monitor_id->id, $current_semester->max);
     $array.= render_groupal_tracks_monitor_new_form($array_groupal_trackings_dphpforms, $monitor_id->id);
+
+
     echo json_encode($array);
     }
 
@@ -140,10 +142,16 @@ if (isset($_POST['type']) && isset($_POST['instance']) && $_POST['type'] == "get
 
     // Get practicant of professional
 
+    $current_semester= get_current_semester();
+
     $practicant_id = search_user($_POST['practicant_code']);
     $monitors_of_pract = get_monitors_of_pract($practicant_id->id, $_POST['instance']);
     $array = render_practicant_new_form($monitors_of_pract, $_POST['instance']);
-    echo json_encode($array);
+    $msg = new stdClass();
+    $msg->render =$array;
+    $msg->counting= auxiliary_specific_counting("practicante_ps",$practicant_id->id,$current_semester, $_POST['instance']);
+
+    echo json_encode($msg);
     }
 
 if (isset($_POST['type']) && $_POST['type'] == "update_people" && isset($_POST['id']) && isset($_POST['instance']))
