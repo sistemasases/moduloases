@@ -31,6 +31,11 @@
 
     global $DB;
 
+    if( $_GET['password'] != 'actualizacion_seguimientos' ){
+        echo "La contraseña no corresponde";
+        die();
+    }
+
     $alias = 'seguimiento_pares_id_estudiante';
     $sql_find_preg = "SELECT id_pregunta FROM {talentospilos_df_alias} WHERE alias = '$alias'";
     $preg_record = $DB->get_record_sql( $sql_find_preg );
@@ -56,6 +61,10 @@
             );
             array_push( $cambios, $tmp );
             echo 'VALIDO: ' . $record->respuesta . ' → ' . $ases_user->id . ' DOC: ' . $ases_user->num_doc . ' RID: ' . $record->id . '<br>';
+            $record->respuesta = $ases_user->id;
+            $status = $DB->update_record('talentospilos_df_respuestas', $record, $bulk=false);
+            echo "Estado de la actualizacion: " . $status . "<br>";
+
         }else{
             echo 'NO VALIDO!: ' . $record->respuesta . '<br>';
         }

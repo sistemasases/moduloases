@@ -387,7 +387,8 @@ if ($student_code != 0) {
 
     //update_last_user_risk( $student_code );
 
-    $array_peer_trackings_dphpforms = dphpforms_find_records('seguimiento_pares', 'seguimiento_pares_id_estudiante', $student_code, 'DESC');
+    $dphpforms_ases_user = get_ases_user_by_code( $student_code )->id;
+    $array_peer_trackings_dphpforms = dphpforms_find_records('seguimiento_pares', 'seguimiento_pares_id_estudiante', $dphpforms_ases_user, 'DESC');
     $array_peer_trackings_dphpforms = json_decode($array_peer_trackings_dphpforms);
     $array_detail_peer_trackings_dphpforms = array();
     foreach ($array_peer_trackings_dphpforms->results as &$peer_trackings_dphpforms) {
