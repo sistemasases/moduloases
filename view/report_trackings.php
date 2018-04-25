@@ -143,9 +143,9 @@ if($usernamerole=='monitor_ps'){
     //Render new form of the role practicant
     $practicant_id =$USER->id;
     $monitors_of_pract = get_monitors_of_pract($practicant_id,$blockid);
-    $calculate_counting=calculate_general_counting('PRACTICANTE',$monitors_of_pract,$intervalo_fechas[2],$blockid);
+    //$calculate_counting=calculate_general_counting('PRACTICANTE',$monitors_of_pract,$intervalo_fechas[2],$blockid);
 
-    $counting=create_counting_advice('PRACTICANTE',$calculate_counting);
+    //$counting=create_counting_advice('PRACTICANTE',$calculate_counting);
     $table.=render_practicant_new_form($monitors_of_pract,$blockid);
   
 

@@ -1,6 +1,8 @@
 {{#data}}
-{{> block_ases/side_menu}}            
-<div class="container">
+{{> block_ases/side_menu}} 
+<div id="loading">
+<img id="loading-image" src="../icon/load.gif" height="162" width="162"><div class="container">
+</div>
    <h2>SEGUIMIENTO PILOS</h2>
    <hr/>
    {{{message}}}
@@ -17,7 +19,7 @@
          {{{table_periods}}}
       </div>
       <div id='loadingmessage'>
-      <div class="well col-xs-12 col-sm-12 col-md-10 col-lg-10 col-md-offset-1 equalize text-center" id="div-header-info" style="height: 204.746px;"  id="conteo_principal" name="conteo_principal">
+      <div class="well col-xs-12 col-sm-12 col-md-10 col-lg-10 col-md-offset-1 equalize text-center" id="div-header-info" style="height: 204.746px;" name="main_counting">
 
      {{{counting}}}
     </div>
@@ -29,6 +31,7 @@
    </div>
    {{/data}}
 </form>
+
   <!-- MODALES DE SEGUIMIENTO -->
   <div class="mymodal" id="modal_v2_peer_tracking" name="modal_v2_pares">
     <div class="outside" ></div>

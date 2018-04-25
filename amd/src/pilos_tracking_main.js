@@ -132,6 +132,7 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
 
 
 
+
                 // when user is 'practicante' then has permissions
                 if (namerol == "practicante_ps") {
 
@@ -377,6 +378,8 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
 
                         $("#counting_"+value.code).html(value.html);
                     });
+                    generate_general_counting();
+                    $("#loading").fadeOut('slow');
 
 
 
@@ -393,6 +396,15 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                         });
                     },
                 });
+
+                }
+
+
+                function generate_general_counting(){
+
+                    $(".review_prof").each(function( index,value ) {
+                        console.log(value.text());
+                  });
 
                 }
 
