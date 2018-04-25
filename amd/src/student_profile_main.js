@@ -561,7 +561,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/d3', 'block_ases/sweetaler
                 case 'sinseguimiento':
                     new_status = 'seguimiento';
                     break;
-                case '':
+                case 'noasignado':
                     new_status = 'seguimiento';
                     break;
                 default:

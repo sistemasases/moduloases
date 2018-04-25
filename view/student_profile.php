@@ -151,15 +151,15 @@ if ($student_code != 0) {
                 $record->ases_status_f = "sinseguimiento";
                 $record->ases_status_description = "Se realiza seguimiento en otra instancia";
             }else{
-                $record->ases_status_n = true;
+                $record->ases_status_n = "noasignado";
                 $record->ases_status_description = "No se realiza seguimiento";
             }
         }else{
-            $record->ases_status_n = true;
+            $record->ases_status_n = "noasignado";
             $record->ases_status_description = "No se realiza seguimiento";
         }
     }else{
-        $record->ases_status_n = true;
+        $record->ases_status_n = "noasignado";
         $record->ases_status_description = "No se realiza seguimiento";
     }
 
