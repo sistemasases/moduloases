@@ -29,8 +29,9 @@ require_once('../student_profile/studentprofile_lib.php');
 date_default_timezone_set('America/Bogota');
 
 $msg_error = new stdClass();
+$msg = new stdClass();
 
-if(isset($_POST["func"])){
+if(isset($_POST['func'])){
     if($_POST['func'] == 'save_profile'){
         $form = $_POST['form'];
         save_profile($form);
@@ -138,7 +139,7 @@ if(isset($_POST["func"])){
         echo json_encode($msg);
     }
 }else{
-    $msg->msg = "No es posible contactar con el servidor. Revise su conexión a Internet.";
+    $msg->msg = "Error en el servidor.";
     echo json_encode($msg);
 }
 
