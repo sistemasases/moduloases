@@ -24,7 +24,7 @@ define(['jquery',
         init: function(){
 
             window.JSZip = jszip;
-            //Control para el botón 'Generar Reporte'
+            //Control para el botón 'Generar Reporte
             $("#send_form_btn").on('click', function() {
                 createTable();
                 createTableAssign();
