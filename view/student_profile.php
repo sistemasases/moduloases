@@ -1132,10 +1132,10 @@ if ($rol == 'sistemas') {
     $record->add_peer_tracking_lts = true;
     $record->sistemas = true;
 }
-
+/*
 if ($rol == 'dir_socioeducativo') {
     $record->dir_socioeducativo = true;
-}
+}*/
 
 
 //Menu items are created
