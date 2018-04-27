@@ -600,3 +600,53 @@ SELECT DISTINCT
      INNER JOIN {talentospilos_programa} programa ON historic.id_programa = programa.id
      INNER JOIN {talentospilos_user_extended} user_ext ON historic.id_estudiante = user_ext.id_ases_user
      INNER JOIN {user} user_moodle ON user_ext.id_moodle_user = user_moodle.id
+
+
+
+------------------------------------------------------------
+
+--Consulta para saber por cohortes
+SELECT cohorte.name AS nombre_cohorte,
+        cohorte.id,
+         COUNT(usuario.id) AS "TOTAL",
+
+FROM {cohort} cohorte
+INNER JOIN {cohort_members} memb
+    ON cohorte.id = memb.cohortid
+INNER JOIN {user} usuario
+    ON usuario.id = memb.userid
+WHERE cohorte.idnumber = 'SPT12016A'
+        OR cohorte.idnumber = 'SPP42018A'
+        OR cohorte.idnumber = 'SPP32017A'
+        OR cohorte.idnumber = 'SPP22016A'
+        OR cohorte.idnumber = 'SPP12015A'
+GROUP BY  nombre_cohorte, cohorte.id 
+
+
+
+
+
+
+
+
+
+
+
+
+
+SELECT DISTINCT id_moodle_user
+FROM {cohort_members} membic
+INNER JOIN {talentospilos_user_extended} extic
+    ON membic.userid = extic.id_moodle_user
+INNER JOIN {talentospilos_est_est_icetex} est_icetex
+    ON est_icetex.id_estudiante = extic.id_ases_user
+INNER JOIN {talentospilos_estados_icetex} estados_icetex
+    ON est_icetex.id_estado_icetex = estados_icetex.id
+WHERE membic.cohortid=11
+        AND estados_icetex.nombre = 'ACTIVO'
+        AND est_icetex.fecha = 
+    (SELECT MAX(fecha)
+    FROM {talentospilos_est_est_icetex}
+    WHERE id_estudiante = extic.id_ases_user)
+
+
