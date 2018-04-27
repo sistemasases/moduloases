@@ -4,7 +4,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     global $DB;
     $dbman = $DB->get_manager();
     $result = true;
-    if ($oldversion < 2018052409579 ) {
+    if ($oldversion < 2018052715189 ) {
     //     // ************************************************************************************************************
     //     // Actualización que crea la tabla para los campos extendidos de usuario (Tabla: {talentospilos_user_extended})
     //     // Versión: 2018010911179
@@ -1095,9 +1095,39 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
         if (!$dbman->table_exists($table)) {
             $dbman->create_table($table);
         }
+        
+        /*Eliminación de los campos id_semestre y id_estado_icetex en la tabla
+        talentospilos_res_estudiante */
+
+        // Define field id_semestre to be dropped from talentospilos_res_estudiante.
+        $table = new xmldb_table('talentospilos_res_estudiante');
+        $field = new xmldb_field('id_semestre');
+ 
+         // Conditionally launch drop field id_semestre.
+         if ($dbman->field_exists($table, $field)) {
+             $dbman->drop_field($table, $field);
+         }
+
+         // Define field id_estado_icetex to be dropped from talentospilos_res_estudiante.
+        $table = new xmldb_table('talentospilos_res_estudiante');
+        $field = new xmldb_field('id_estado_icetex');
+
+        // Conditionally launch drop field id_estado_icetex.
+        if ($dbman->field_exists($table, $field)) {
+            $dbman->drop_field($table, $field);
+        }
+
+        // Define field id_programa to be added to talentospilos_res_estudiante.
+        $table = new xmldb_table('talentospilos_res_estudiante');
+        $field = new xmldb_field('id_programa', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null, null);
+
+        // Conditionally launch add field id_programa.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
 
         // Ases savepoint reached.
-        upgrade_block_savepoint(true, 2018052409579 , 'ases');
+        upgrade_block_savepoint(true, 2018052715189 , 'ases');
     
         return $result;
 
