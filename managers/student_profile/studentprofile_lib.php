@@ -158,7 +158,7 @@ function verify_ases_status($id_ases_student){
     $result = 0;
 
     foreach($array_status_instances as $instance){
-        if($instance->nombre == 'SEGUIMIENTO'){
+        if($instance->nombre == 'seguimiento'){
             return 1;
         }
     }
@@ -176,7 +176,7 @@ function verify_ases_status($id_ases_student){
  * @param $code_student
  * @return int
  */
-function update_status_ases($current_status, $new_status, $instance_id, $code_student){
+function update_status_ases($current_status, $new_status, $instance_id, $code_student, $reason=null, $observation=null){
 
     global $DB;
 
@@ -212,6 +212,7 @@ function update_status_ases($current_status, $new_status, $instance_id, $code_st
         $record->id_estudiante = $id_ases_student;
         $record->fecha = $today_timestamp;
         $record->id_instancia = $instance->id_instancia;
+        $record->id_motivo_retiro = $reason;
 
         if($instance->id_instancia == $instance_id){
             $record->id_estado_ases = $id_new_status;

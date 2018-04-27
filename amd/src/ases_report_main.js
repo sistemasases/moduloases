@@ -19,12 +19,12 @@ define(['jquery',
         'block_ases/bootstrap',
         'block_ases/sweetalert'
         ],
-        function($, jszip, pdfmake, dataTables, buttons, colVis, flash, html5, print, bootstrap, sweetalert, jqueryui) {
+        function($, jszip, pdfmake, dataTables, autoFill, buttons, flash, html5, print, bootstrap, sweetalert) {
     return {
         init: function(){
 
             window.JSZip = jszip;
-            //Control para el botón 'Generar Reporte'
+            //Control para el botón 'Generar Reporte
             $("#send_form_btn").on('click', function() {
                 createTable();
                 createTableAssign();
