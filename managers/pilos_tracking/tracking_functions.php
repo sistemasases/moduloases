@@ -162,6 +162,7 @@ function render_practicant_new_form($monitors_of_pract, $instance, $period = nul
 
         $panel.="<div class='col-sm-1'>";
         $panel.="<span class='glyphicon glyphicon-user subpanel' style='font-size: 20px;'></span> : ".count(get_students_of_monitor($monitor_id,$instance));
+
         $panel.="</div>";
         $panel.="<div class='col-sm-1'>";
         $panel.="<button type='button' class='see_history btn red_button'>
@@ -217,6 +218,7 @@ function render_professional_new_form($practicant_of_prof, $instance, $period = 
 
          $panel.="<div class='col-sm-1'>";
          $panel.="<span class='glyphicon glyphicon-user subpanel' style='font-size: 20px;'></span> : ".count(get_monitors_of_pract($practicant_id,$instance));
+         $panel.="<br><span class='glyphicon glyphicon-education subpanel' style='font-size: 20px;'></span> : ".get_quantity_students_by_pract($practicant_id,$instance);
          $panel.="</div>";
          $panel.="<div class='col-sm-5' id=counting_" . $practicant->username .">";
 
