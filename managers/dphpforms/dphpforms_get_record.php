@@ -28,8 +28,9 @@
 
     require_once(dirname(__FILE__). '/../../../../config.php');
     
+    //$_GET['source'] prevents collisions with other API calls.
 
-    if( isset( $_GET['record_id'] ) ){
+    if( isset( $_GET['record_id'] ) && ( !isset( $_GET['source'] ) ) ){
         header('Content-Type: application/json');
         $a_key = null;
         if(isset($_GET['alias_key'])){
