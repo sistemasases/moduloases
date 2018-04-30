@@ -98,8 +98,12 @@ function get_report_by_date_2($initial_date, $final_date,$monitorid)
     $interval[0] = $initial_date;
     $interval[1] = $final_date;
     $monitor_code = $monitorid;
-    $monitor_trackings = get_tracking_current_semester('monitor', "$monitor_code", 0, $interval);
-    return $monitor_trackings;
+
+    $seguimiento_monitor =   dphpforms_find_records( 'seguimiento_pares', 'seguimiento_pares_id_creado_por', $monitor_code, 'DESC' );
+
+    $trackings = json_decode( $seguimiento_monitor )->results;
+
+     return get_trackings_in_interval($trackings,$initial_date,$final_date);
 }
 
 /**
@@ -124,17 +128,13 @@ function get_hours_per_days($init, $final,$monitorid)
     if ($peer_tracking_v2)
     {
 
-        foreach($peer_tracking_v2[0] as $key => $period)
-        {
-            $year_number = $period;
-            foreach($period as $key => $tracking)
-            {
-
-                foreach($tracking[record][campos] as $key => $review)
-                {
-                    if ($review[local_alias] == 'fecha')
+        foreach ($peer_tracking_v2 as $key => $tracking) {
+            foreach ($tracking->campos as $key => $review) {
+                if ($review->local_alias == 'fecha')
                     {
-                        $first = $tracking[record][alias_key][respuesta];
+
+
+                        $first = $review->respuesta;
 
                         // Get the start and end of the day in unix format
 
@@ -142,12 +142,13 @@ function get_hours_per_days($init, $final,$monitorid)
                         $final_day = date_create($first);
 
 
+
                         $final_day = strtotime(date_time_set($final_day, 23, 59, 59)->format('Y-m-d H:i:s'));
 
-                        if ($tracking === reset($period))
+                        if ($tracking === reset($peer_tracking_v2))
 
                         {
-                            $first_date = strtotime($tracking[record][alias_key][respuesta]);
+                            $first_date = strtotime($review->respuesta);
                         }
                         // if $first_date is different than $first, all the time calculation variables are reset.
 
@@ -176,7 +177,7 @@ function get_hours_per_days($init, $final,$monitorid)
                             $first_date = strtotime($first);
                         }
 
-                        $calculated_time = calculate_hours_2($tracking[record]);
+                        $calculated_time = calculate_hours_2($tracking);
                         if (isset($calculated_time->hours))
                         {
                             $register->hours+= $calculated_time->hours;
@@ -194,7 +195,7 @@ function get_hours_per_days($init, $final,$monitorid)
 
 
 
-                        if ($tracking === end($period))
+                        if ($tracking === end($peer_tracking_v2))
                         {
                             $register->fecha=date('d-m-Y', $first_date);
                             $register->total_minutes+= $register->minutes;
@@ -210,10 +211,11 @@ function get_hours_per_days($init, $final,$monitorid)
                             array_push($final_array, $register);
                         }
                     }
-                }
+
             }
         }
-    }
+
+            }
 
     return $final_array;
 

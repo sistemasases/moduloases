@@ -607,14 +607,55 @@ SELECT DISTINCT
 
 --Consulta para saber por cohortes
 SELECT cohorte.name AS nombre_cohorte,
-        cohorte.id,
+         cohorte.id,
          COUNT(usuario.id) AS "TOTAL",
-
-FROM {cohort} cohorte
-INNER JOIN {cohort_members} memb
-    ON cohorte.id = memb.cohortid
-INNER JOIN {user} usuario
-    ON usuario.id = memb.userid
+         
+    (SELECT COUNT(*)
+    FROM 
+        (SELECT DISTINCT id_moodle_user
+        FROM {cohort_members} membic
+        INNER JOIN {talentospilos_user_extended} extic
+            ON membic.userid = extic.id_moodle_user
+        INNER JOIN {talentospilos_est_est_icetex} est_icetex
+            ON est_icetex.id_estudiante = extic.id_ases_user
+        INNER JOIN {talentospilos_estados_icetex} estados_icetex
+            ON est_icetex.id_estado_icetex = estados_icetex.id
+        WHERE membic.cohortid=cohorte.id
+                AND estados_icetex.nombre = 'ACTIVO'
+                AND est_icetex.fecha = 
+            (SELECT MAX(fecha)
+            FROM {talentospilos_est_est_icetex}
+            WHERE id_estudiante = extic.id_ases_user)) activos_icetex ) AS activos_icetex, 
+            (SELECT COUNT(*)
+            FROM 
+                (SELECT DISTINCT id_moodle_user
+                FROM {cohort_members} membases
+                INNER JOIN {talentospilos_user_extended} extases
+                    ON membases.userid = extases.id_moodle_user
+                INNER JOIN {talentospilos_est_estadoases} est_ases
+                    ON est_ases.id_estudiante = extases.id_ases_user
+                INNER JOIN {talentospilos_estados_ases} estados_ases
+                    ON est_ases.id_estado_ases = estados_ases.id
+                WHERE membases.cohortid = cohorte.id
+                        AND estados_ases.nombre = 'seguimiento'
+                        AND est_ases.fecha = 
+                    (SELECT max(fecha)
+                    FROM {talentospilos_est_estadoases}
+                    WHERE id_estudiante = extases.id_ases_user)) activos_ases ) AS activos_ases, 
+                    (SELECT COUNT(*)
+                    FROM 
+                        (SELECT DISTINCT id_moodle_user
+                        FROM {cohort_members} membprog
+                        INNER JOIN {talentospilos_user_extended} extprog
+                            ON membprog.userid = extprog.id_moodle_user
+                        WHERE membprog.cohortid = cohorte.id
+                                AND (extprog.program_status = 'ACTIVO'
+                                OR extprog.program_status = '1')) activos_sra) AS activos_sra
+                    FROM {cohort} cohorte
+                INNER JOIN {cohort_members} memb
+                ON cohorte.id = memb.cohortid
+        INNER JOIN {user} usuario
+        ON usuario.id = memb.userid
 WHERE cohorte.idnumber = 'SPT12016A'
         OR cohorte.idnumber = 'SPP42018A'
         OR cohorte.idnumber = 'SPP32017A'
@@ -629,24 +670,54 @@ GROUP BY  nombre_cohorte, cohorte.id
 
 
 
+--activos en icetex en una cohorte determinada (11 = SPP3)
+
+SELECT COUNT(*) AS activos_icetex
+FROM 
+    (SELECT DISTINCT id_moodle_user
+    FROM {cohort_members} membic
+    INNER JOIN {talentospilos_user_extended} extic
+        ON membic.userid = extic.id_moodle_user
+    INNER JOIN {talentospilos_est_est_icetex} est_icetex
+        ON est_icetex.id_estudiante = extic.id_ases_user
+    INNER JOIN {talentospilos_estados_icetex} estados_icetex
+        ON est_icetex.id_estado_icetex = estados_icetex.id
+    WHERE membic.cohortid=11
+            AND estados_icetex.nombre = 'ACTIVO'
+            AND est_icetex.fecha = 
+        (SELECT MAX(fecha)
+        FROM {talentospilos_est_est_icetex}
+        WHERE id_estudiante = extic.id_ases_user)) activos_icetex 
 
 
+--activos en ases en una cohorte determinada (11 = SPP3)
 
 
+SELECT COUNT(*)
+FROM 
+    (SELECT DISTINCT id_moodle_user
+    FROM {cohort_members} membases
+    INNER JOIN {talentospilos_user_extended} extases
+        ON membases.userid = extases.id_moodle_user
+    INNER JOIN {talentospilos_est_estadoases} est_ases
+        ON est_ases.id_estudiante = extases.id_ases_user
+    INNER JOIN {talentospilos_estados_ases} estados_ases
+        ON est_ases.id_estado_ases = estados_ases.id
+    WHERE membases.cohortid = 11
+            AND estados_ases.nombre = 'seguimiento'
+            AND est_ases.fecha = 
+        (SELECT max(fecha)
+        FROM {talentospilos_est_estadoases}
+        WHERE id_estudiante = extases.id_ases_user)) activos_ases
 
-SELECT DISTINCT id_moodle_user
-FROM {cohort_members} membic
-INNER JOIN {talentospilos_user_extended} extic
-    ON membic.userid = extic.id_moodle_user
-INNER JOIN {talentospilos_est_est_icetex} est_icetex
-    ON est_icetex.id_estudiante = extic.id_ases_user
-INNER JOIN {talentospilos_estados_icetex} estados_icetex
-    ON est_icetex.id_estado_icetex = estados_icetex.id
-WHERE membic.cohortid=11
-        AND estados_icetex.nombre = 'ACTIVO'
-        AND est_icetex.fecha = 
-    (SELECT MAX(fecha)
-    FROM {talentospilos_est_est_icetex}
-    WHERE id_estudiante = extic.id_ases_user)
 
-
+--activos en programa
+SELECT COUNT(*)
+FROM 
+    (SELECT DISTINCT id_moodle_user
+    FROM {cohort_members} membprog
+    INNER JOIN {talentospilos_user_extended} extprog
+        ON membprog.userid = extprog.id_moodle_user
+    WHERE membprog.cohortid = 11
+            AND (extprog.program_status = 'ACTIVO'
+            OR extprog.program_status = '1')) activos_sra
