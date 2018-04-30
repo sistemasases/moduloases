@@ -752,8 +752,13 @@
         <FIELD NAME="id_usuario_moodle" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="accion" TYPE="text" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="id_registro_respuesta_form" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="false"/>
-        <FIELD NAME="datos" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="datos_previos" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="datos_enviados" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="datos_almacenados" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="observaciones" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="cod_retorno" TYPE="int" LENGTH="5" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="msg_retorno" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="dts_retorno" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>

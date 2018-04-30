@@ -4,7 +4,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     global $DB;
     $dbman = $DB->get_manager();
     $result = true;
-    if ($oldversion < 2018052715189 ) {
+    if ($oldversion < 2018053015359 ) {
     //     // ************************************************************************************************************
     //     // Actualización que crea la tabla para los campos extendidos de usuario (Tabla: {talentospilos_user_extended})
     //     // Versión: 2018010911179
@@ -1126,8 +1126,41 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
             $dbman->add_field($table, $field);
         }
 
+        // ************************************************************************************************************
+        // Actualización:
+        // Se crea tabla para almacenar temporalmente los cambios de un formulario diligenciado en el tiempo
+        // Versión en la que se incluye: GIT 4.2, Moodle: 2018053015359
+        // ************************************************************************************************************
+        // Define table talentospilos_df_dwarehouse to be created.
+        $table = new xmldb_table('talentospilos_df_dwarehouse');
+
+        // Adding fields to table talentospilos_df_dwarehouse.
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        $table->add_field('id_usuario_moodle', XMLDB_TYPE_INTEGER, '20', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('accion', XMLDB_TYPE_TEXT, null, null, XMLDB_NOTNULL, null, null);
+        $table->add_field('id_registro_respuesta_form', XMLDB_TYPE_INTEGER, '20', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('datos_previos', XMLDB_TYPE_TEXT, null, null, null, null, null);
+        $table->add_field('datos_enviados', XMLDB_TYPE_TEXT, null, null, null, null, null);
+        $table->add_field('datos_almacenados', XMLDB_TYPE_TEXT, null, null, null, null, null);
+        $table->add_field('observaciones', XMLDB_TYPE_TEXT, null, null, null, null, null);
+        $table->add_field('cod_retorno', XMLDB_TYPE_INTEGER, '5', null, null, null, null);
+        $table->add_field('msg_retorno', XMLDB_TYPE_TEXT, null, null, null, null, null);
+        $table->add_field('dts_retorno', XMLDB_TYPE_TEXT, null, null, null, null, null);
+
+        // Adding keys to table talentospilos_df_dwarehouse.
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+
+        // Adding indexes to table talentospilos_df_dwarehouse.
+        $table->add_index('indice_df_dw_id_usuario_moodle', XMLDB_INDEX_NOTUNIQUE, array('id_usuario_moodle'));
+        $table->add_index('df_dw_id_registro_respuesta_form', XMLDB_INDEX_NOTUNIQUE, array('id_registro_respuesta_form'));
+
+        // Conditionally launch create table for talentospilos_df_dwarehouse.
+        if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
+        }
+
         // Ases savepoint reached.
-        upgrade_block_savepoint(true, 2018052715189 , 'ases');
+        upgrade_block_savepoint(true, 2018053015359 , 'ases');
     
         return $result;
 
