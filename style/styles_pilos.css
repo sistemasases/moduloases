@@ -1139,6 +1139,16 @@ input.no-borde-fondo.tema
     cursor: pointer;
 }
 
+/*Asignaciones */
+#tableAssign td:nth-child(1), 
+#tableAssign td:nth-child(2), 
+#tableAssign td:nth-child(3) {
+    text-decoration: underline;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+
 /*Talentos profile*/
 #container_profile{
   padding-left: 0px;
@@ -1577,5 +1587,3 @@ footer#page-footer{
 .subpanel{
   color: gray !important;
 }
-
-s

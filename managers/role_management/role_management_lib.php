@@ -64,6 +64,34 @@ function get_monitors_of_pract($id_pract,$id_instance){
     return $monitors;
 }
 
+
+function get_quantity_students_by_pract($id_practicant,$instance,$semester=null){
+
+   global $DB;
+
+
+    $total_quantity=0;
+
+    $monitors = get_monitors_of_pract($id_practicant,$instance);
+
+
+    if($semester == null){
+       $semester = get_current_semester()->max;
+    }
+
+
+    foreach ($monitors as $key => $monitor) {
+
+        
+        $sql_query = "SELECT COUNT(*) FROM {talentospilos_monitor_estud} WHERE id_monitor=$monitor->id_usuario and id_instancia=$instance and id_semestre=$semester"; 
+        $quantity = $DB->get_record_sql($sql_query);
+        $total_quantity+= $quantity->count;
+
+    }
+
+    return $total_quantity; 
+}
+
 /**
  * Función que obtiene estudiantes de un monitor en el periodo actual
  *
