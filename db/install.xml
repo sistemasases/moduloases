@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<XMLDB PATH="blocks/ases/db" VERSION="20180424" COMMENT="XMLDB file for Moodle blocks/configurable_reports"
+<XMLDB PATH="blocks/ases/db" VERSION="20180430" COMMENT="XMLDB file for Moodle blocks/configurable_reports"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
 >
@@ -745,6 +745,28 @@
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
       </KEYS>
+    </TABLE>
+    <TABLE NAME="talentospilos_df_dwarehouse" COMMENT="Default comment for the table, please edit me">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="id_usuario_moodle" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="accion" TYPE="text" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="id_registro_respuesta_form" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="datos_previos" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="datos_enviados" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="datos_almacenados" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="observaciones" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="cod_retorno" TYPE="int" LENGTH="5" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="msg_retorno" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="dts_retorno" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="indice_df_dw_id_usuario_moodle" UNIQUE="false" FIELDS="id_usuario_moodle"/>
+        <INDEX NAME="df_dw_id_registro_respuesta_form" UNIQUE="false" FIELDS="id_registro_respuesta_form"/>
+      </INDEXES>
     </TABLE>
   </TABLES>
 </XMLDB>

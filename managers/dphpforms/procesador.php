@@ -27,8 +27,11 @@
 // Standard GPL and phpdocs
 
     require_once(dirname(__FILE__). '/../../../../config.php');
-    
+    require_once(dirname(__FILE__). '/dphpforms_get_record.php');
+    require_once( $CFG->libdir . '/adminlib.php');
+
     global $DB;
+    global $USER;
 
     $RECORD_ID = null;
 
@@ -86,14 +89,55 @@
 }
 
 ';*/
+
+
 if($RECORD_ID){
-    dphpforms_update_respuesta($form_JSON, $RECORD_ID);
+
+    $previous_data = dphpforms_get_record($RECORD_ID, null);
+    $current_data = $form_JSON;
+    $retorno = dphpforms_update_respuesta($form_JSON, $RECORD_ID);
+    $stored_data = dphpforms_get_record($RECORD_ID, null);
+
+    $to_warehouse = new stdClass();
+    $to_warehouse->id_usuario_moodle = $USER->id;
+    $to_warehouse->accion = "UPDATE";
+    $to_warehouse->id_registro_respuesta_form = $RECORD_ID;
+    $to_warehouse->datos_previos = $previous_data;
+    $to_warehouse->datos_enviados = $current_data;
+    $to_warehouse->datos_almacenados = $stored_data;
+    $to_warehouse->observaciones = "";
+    $to_warehouse->cod_retorno = json_decode($retorno)->status;
+    $to_warehouse->msg_retorno = json_decode($retorno)->message;
+    $to_warehouse->dts_retorno = json_encode(json_decode($retorno)->data);
+
+    $DB->insert_record('talentospilos_df_dwarehouse', $to_warehouse, $returnid=false, $bulk=false);
+
 }else{
-    dphpforms_new_store_respuesta($form_JSON);
-}
+
+    $current_data = $form_JSON;
+    $retorno = dphpforms_new_store_respuesta($form_JSON);
+    if( json_decode($retorno)->status == '0' ){
+
+        $stored_data = dphpforms_get_record(json_decode($retorno)->data, null);
+        $to_warehouse = new stdClass();
+        $to_warehouse->id_usuario_moodle = $USER->id;
+        $to_warehouse->accion = "INSERT";
+        $to_warehouse->id_registro_respuesta_form = json_decode($retorno)->data;
+        $to_warehouse->datos_previos = $previous_data;
+        $to_warehouse->datos_enviados = $current_data;
+        $to_warehouse->datos_almacenados = $stored_data;
+        $to_warehouse->observaciones = "";
+        $to_warehouse->cod_retorno = json_decode($retorno)->status;
+        $to_warehouse->msg_retorno = json_decode($retorno)->message;
+        $to_warehouse->dts_retorno = json_encode(json_decode($retorno)->data);
+
+        $DB->insert_record('talentospilos_df_dwarehouse', $to_warehouse, $returnid=false, $bulk=false);
+
+    };
+   
+};
 
 function dphpforms_update_respuesta($completed_form, $RECORD_ID){
-
 
     $processable = true;
 
@@ -281,23 +325,26 @@ function dphpforms_update_respuesta($completed_form, $RECORD_ID){
 
                     $updated = dphpforms_update_completed_form($RECORD_ID, $r->id, $r->valor);
                     if(!$updated){
-                        echo json_encode(
+                        $retorno = json_encode(
                             array(
                                 'status' => '-1',
                                 'message' => 'Error updating',
                                 'data' => ''
                             )
                         );
-                        die();
+                        echo $retorno;
+                        return $retorno;
                     }
                 }
-                echo json_encode(
+                $retorno = json_encode(
                     array(
                         'status' => '0',
                         'message' => 'Updated',
                         'data' => ''
                     )
                 );
+                echo $retorno;
+                return $retorno;
             }else{
 
                 $rule = '';
@@ -305,23 +352,27 @@ function dphpforms_update_respuesta($completed_form, $RECORD_ID){
                     $rule = dphpforms_get_regla( $Unfulfilled_rules );
                 }
 
-                echo json_encode(
+                $retorno = json_encode(
                     array(
                         'status' => '-2',
                         'message' => 'Unfulfilled rules',
                         'data' => $rule
                     )
                 );
+                echo $retorno;
+                return $retorno;
             }
 
         }else{
-            echo json_encode(
+            $retorno = json_encode(
                 array(
                     'status' => '-2',
                     'message' => 'Without changes',
                     'data' => ''
                 )
             );
+            echo $retorno;
+            return $retorno;
         }
     }
     
@@ -476,13 +527,15 @@ function dphpforms_new_store_respuesta($completed_form){
         array_push($resultadoRegistro, array('ids_respuestas' => $form_soluciones_identifiers));
         //echo "\nResultado del registro:\n";
         //print_r($resultadoRegistro);
-        echo json_encode(
+        $retorno = json_encode(
             array(
                 'status' => '0',
                 'message' => 'Stored',
                 'data' => $ID_FORMULARIO_RESPUESTA
             )
         );
+        echo $retorno;
+        return $retorno;
         
 
     }else{
@@ -492,16 +545,17 @@ function dphpforms_new_store_respuesta($completed_form){
             $rule = dphpforms_get_regla( $Unfulfilled_rules );
         }
 
-        echo json_encode(
+        $retorno = json_encode(
             array(
                 'status' => '-2',
                 'message' => 'Unfulfilled rules',
                 'data' => $rule
             )
         );
+        echo $retorno;
+        return $retorno;
     }
     
-
 }
 
 // $pregunta_identifier Es el identificador que relaciona una pregunta con un formulario
