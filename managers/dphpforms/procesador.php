@@ -100,7 +100,7 @@ if($RECORD_ID){
 
     $to_warehouse = new stdClass();
     $to_warehouse->id_usuario_moodle = $USER->id;
-    $to_warehouse->accion = "actualization";
+    $to_warehouse->accion = "UPDATE";
     $to_warehouse->id_registro_respuesta_form = $RECORD_ID;
     $to_warehouse->datos_previos = $previous_data;
     $to_warehouse->datos_enviados = $current_data;
@@ -108,7 +108,9 @@ if($RECORD_ID){
     $to_warehouse->observaciones = "";
     $to_warehouse->cod_retorno = json_decode($retorno)->status;
     $to_warehouse->msg_retorno = json_decode($retorno)->message;
-    $to_warehouse->dts_retorno = json_decode($retorno)->data;
+    $to_warehouse->dts_retorno = json_encode(json_decode($retorno)->data);
+
+    $DB->insert_record('talentospilos_df_dwarehouse', $to_warehouse, $returnid=false, $bulk=false);
 
 }else{
 
@@ -116,19 +118,21 @@ if($RECORD_ID){
     $retorno = dphpforms_new_store_respuesta($form_JSON);
     if( json_decode($retorno)->status == '0' ){
 
-        $stored_data = dphpforms_get_record($RECORD_ID, null);
+        $stored_data = dphpforms_get_record(json_decode($retorno)->data, null);
         $to_warehouse = new stdClass();
         $to_warehouse->id_usuario_moodle = $USER->id;
-        $to_warehouse->accion = "insercion";
-        $to_warehouse->id_registro_respuesta_form = $RECORD_ID;
+        $to_warehouse->accion = "INSERT";
+        $to_warehouse->id_registro_respuesta_form = json_decode($retorno)->data;
         $to_warehouse->datos_previos = $previous_data;
         $to_warehouse->datos_enviados = $current_data;
         $to_warehouse->datos_almacenados = $stored_data;
         $to_warehouse->observaciones = "";
         $to_warehouse->cod_retorno = json_decode($retorno)->status;
         $to_warehouse->msg_retorno = json_decode($retorno)->message;
-        $to_warehouse->dts_retorno = json_decode($retorno)->data;
-        
+        $to_warehouse->dts_retorno = json_encode(json_decode($retorno)->data);
+
+        $DB->insert_record('talentospilos_df_dwarehouse', $to_warehouse, $returnid=false, $bulk=false);
+
     };
    
 };
