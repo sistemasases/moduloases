@@ -1,116 +1,115 @@
-<div class="row">
-    <h2>REPORTE GENERAL DE ESTUDIANTES</h2>
-    <h5>Por favor seleccione los campos a incluir en el reporte</h5>
-    <hr/>
-    <br>
-</div>
-<div class="row">
-    <form role="form" id="form_general_report">
-        <div class="col-sm-12">
-            <!-- Columna de población -->
-            <div class="col-sm-2">
-                <fieldset id="population">
-                    <legend>Población</legend>
-                    
-                    <div class="form-group">
-                        <label class="col-sm-12" for="conditions">Cohorte:</label>
-                        <div class="col-sm-12">
-                            <select name="conditions[]" id="conditions" class="form-control">
-                                {{{cohorts_checks}}}
-                            </select><br>
-                        </div>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label class="col-sm-12" for="conditions">Estado Ases:</label>
-                        <div class="col-sm-12">
-                            <select class="form-control" name="conditions[]" id="conditions">
-                                {{{status_ases}}}
-                            </select>
-                        </div>
-                    </div>
-                </fieldset>
-            </div>
-
-            <!-- Columna de campos base -->
-            <div class="col-sm-2 col-md-2">
-                <fieldset id="base_fields">
-                    <legend>Campos base</legend>
-                    <div class="checkbox">
-                        <input type="checkbox" name="fields[]" value="student_code" onchange="check(this)" onclick="check(this)" checked="checked"> Código
-                    </div>
-                    <div class="checkbox">
-                        <input type="checkbox" name="fields[]" value="firstname" onchange="check(this)" onclick="check(this)" checked="checked">Nombres
-                    </div>
-                    <div class="checkbox">
-                        <input type="checkbox" name="fields[]" value="lastname" onchange="check(this)" onclick="check(this)" checked="checked">Apellidos
-                    </div>
-                    <div class="checkbox">
-                        <input type="checkbox" name="fields[]" value="document_id" onchange="check(this)" onclick="check(this)" checked="checked">Documento
-                    </div>
-                </fieldset>
-            </div>
-
-            <!-- Columna de contacto -->
-            <div class="col-sm-2 col-md-2">
-                <fieldset id="contact_fields">
-                    <legend><input type="checkbox"> Contacto</legend>
-                    <div class="checkbox">
-                        <input type="checkbox" name="fields[]" value="email"> Correo electrónico
-                    </div>
-                    <div class="checkbox">
-                        <input type="checkbox" name="fields[]" value="cellphone"> Celular
-                    </div>
-                    <div class="checkbox">
-                        <input type="checkbox" name="fields[]" value="address"> Dirección
-                    </div>
-                </fieldset>
-            </div>
-
-            <!-- Columna de programa académico -->
-            <div class="col-sm-3 col-md-3">
-                <fieldset id="academic_fields">
-                    <legend><input type="checkbox"> Académico</legend>
-                    <div class="checkbox">
-                            <input type="checkbox" name="academic_fields[]" value="program_code"> Código programa académico
-                        </div>
-                    <div class="checkbox">
-                        <input type="checkbox" name="academic_fields[]" value="name_program"> Programa académico
-                    </div>
-                    <div class="checkbox">
-                        <input type="checkbox" name="academic_fields[]" value="faculty"> Facultad
-                    </div>
-                </fieldset>
-            </div>
-
-            <!-- Columna de riesgos -->
-            <div class="col-sm-3 col-md-3" id="risk_fields">
-                <fieldset id="riesgo">
-                    <legend>Riesgos</legend>
-                    {{{risks_checks}}}
-                </fieldset>
-            </div>
+<form role="form" id="form_general_report">
+    <div class="row">
+        <div class="col-sm-8">
+            <h2>REPORTE GENERAL DE ESTUDIANTES</h2>
+            <h5>Por favor seleccione los campos a incluir en el reporte</h5>
         </div>
-        <hr />
-
-        <!--Botones del formulario-->
-        <div class="col-sm-12">
-            <div class="col-sm-2 col-sm-offset-5">
-                <button type="button" class="btn btn-danger col-sm-12" id="send_form_btn"><b>Generar reporte</b></button>
-            </div>
+        <div class="col-sm-4" id="div_cohorts">
+            <label for="">Cohorte:  </label>
+            <select name="conditions[]" id="conditions" class="form-control">
+                {{{cohorts_checks}}}
+            </select>
         </div>
-        <hr>
-    </form>
-    
+        <hr class="col-sm-12" />
+    </div>
 
-    <div class="row" id="div_table">
+    <div class="col-sm-12">
+
+        <!-- Columna de campos base -->
+        <div class="col-sm-12" hidden>
+            <fieldset id="base_fields">
+                <legend>Campos base</legend>
+                <div class="checkbox">
+                    <input type="checkbox" name="fields[]" value="student_code" onchange="check(this)" onclick="check(this)" checked="checked"> Código
+                </div>
+                <div class="checkbox">
+                    <input type="checkbox" name="fields[]" value="firstname" onchange="check(this)" onclick="check(this)" checked="checked">Nombres
+                </div>
+                <div class="checkbox">
+                    <input type="checkbox" name="fields[]" value="lastname" onchange="check(this)" onclick="check(this)" checked="checked">Apellidos
+                </div>
+                <div class="checkbox">
+                    <input type="checkbox" name="fields[]" value="document_id" onchange="check(this)" onclick="check(this)" checked="checked">Documento
+                </div>
+            </fieldset>
+        </div>
+
+        <!-- Columna de contacto -->
+        <div class="col-sm-2 col-md-2">
+            <fieldset id="contact_fields">
+                <legend><input type="checkbox"> Contacto</legend>
+                <div class="checkbox">
+                    <input type="checkbox" name="fields[]" value="email"> Correo electrónico
+                </div>
+                <div class="checkbox">
+                    <input type="checkbox" name="fields[]" value="cellphone"> Celular
+                </div>
+                <div class="checkbox">
+                    <input type="checkbox" name="fields[]" value="address"> Dirección
+                </div>
+            </fieldset>
+        </div>
+
+        <!-- Columna de estados -->
+        <div class="col-sm-2">
+            <fieldset id="status_fields">
+                <legend><input type="checkbox"> Estados</legend>
+                <div class="checkbox">
+                    <input type="checkbox" name="status_fields[]" value="ases_status"> ASES
+                </div>
+                <div class="checkbox">
+                    <input type="checkbox" name="status_fields[]" value="icetex_status"> ICETEX
+                </div>
+                <div class="checkbox">
+                    <input type="checkbox" name="status_fields[]" value="academic_program_status"> Programa académico
+                </div>
+            </fieldset>
+        </div>
+
+        <!-- Columna de programa académico -->
+        <div class="col-sm-3 col-md-3">
+            <fieldset id="academic_fields">
+                <legend><input type="checkbox"> Académico</legend>
+                <div class="checkbox">
+                        <input type="checkbox" name="academic_fields[]" value="program_code"> Código programa académico
+                    </div>
+                <div class="checkbox">
+                    <input type="checkbox" name="academic_fields[]" value="name_program"> Programa académico
+                </div>
+                <div class="checkbox">
+                    <input type="checkbox" name="academic_fields[]" value="faculty"> Facultad
+                </div>
+            </fieldset>
+        </div>
+
+        <!-- Columna de riesgos -->
+        <div class="col-sm-3 col-md-3" id="risk_fields">
+            <fieldset id="riesgo">
+                <legend>Riesgos</legend>
+                {{{risks_checks}}}
+            </fieldset>
+        </div>
     </div>
-    {{#search_not_assigned_students_ar}}
-    <div class="container">
-    <p class="text-center"><h1>Estudiantes no asignados</h1></p>
-    <div class="row"  id="not_assigned_students">
+    <hr />
+
+    <!--Botones del formulario-->
+    <div class="col-sm-12">
+        <div class="col-sm-2 col-sm-offset-5">
+            <button type="button" class="btn btn-danger col-sm-12" id="send_form_btn"><b>Generar reporte</b></button>
+        </div>
     </div>
-    </div>
-    {{/search_not_assigned_students_ar}}
+    <hr>
+</form>
+
+
+<div class="row" id="div_table">
 </div>
+{{#search_not_assigned_students_ar}}
+<div class="container">
+<p class="text-center"><h1>Estudiantes no asignados</h1></p>
+<div class="row"  id="not_assigned_students">
+</div>
+</div>
+{{/search_not_assigned_students_ar}}
+
 

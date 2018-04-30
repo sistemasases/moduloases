@@ -6,6 +6,7 @@ $conditions = array(); // Condiciones para la consulta
 $query_fields = array();
 $risk_fields = array();
 $academic_fields = array();
+$statuses_array = array();
 
 $name_columns = new stdClass();
 
@@ -19,7 +20,10 @@ $fields_format = array(
     'address'=>'tp_user.direccion_res',
     'program_code'=>'acad_program.cod_univalle AS cod_univalle',
     'name_program'=>'acad_program.nombre AS nombre_programa',
-    'faculty'=>'faculty.nombre AS nombre_facultad'
+    'faculty'=>'faculty.nombre AS nombre_facultad',
+    'ases_status'=>'',
+    'icetex_status'=>'',
+    'academic_program_status'=>''
 );
 
 $columns_format = array(
@@ -32,7 +36,10 @@ $columns_format = array(
     'address'=>'Dirección residencia',
     'program_code'=>'Código programa',
     'name_program'=>'Programa académico',
-    'faculty'=>'Facultad'
+    'faculty'=>'Facultad',
+    'ases_status'=>'Estado ASES',
+    'icetex_status'=>'Estado ICETEX',
+    'academic_program_status'=>'Estado prorama'
 );
 
 if(isset($_POST['conditions'])){
@@ -65,6 +72,13 @@ if(isset($_POST['risk_fields'])){
         $risk_name = $DB->get_record_sql($query_name)->nombre;
         array_push($columns, array("title"=>'R.'.strtoupper(substr($risk_name, 0, 1)).substr($risk_name, 1, 2).$select, "name"=>$risk_name, "data"=>$risk_name));
         array_push($risk_fields, $risk_field);
+    }
+}
+
+if(isset($_POST['status_fields'])){
+    foreach($_POST['status_fields'] as $status_field){
+        array_push($statuses_array, $fields_format[$status_field]);
+        array_push($columns, array("title"=>$columns_format[$status_field], "name"=>$fields_format[$status_field], "data"=>$fields_format[$status_field]));
     }
 }
 
@@ -109,7 +123,7 @@ if(isset($_POST['instance_id'])){
                     )
                  ),
                 "autoFill"=>"true",
-                "dom"=> "Bfrtip",
+                "dom"=> "frtiplB",
                 "tableTools"=>array(
                     "sSwfPath"=>"../../style/swf/flashExport.swf"
                 ),

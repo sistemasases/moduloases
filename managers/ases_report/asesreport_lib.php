@@ -234,6 +234,8 @@ function get_not_assign_students($general_fields=null, $conditions, $academic_fi
 
     $actions = $USER->actions;
 
+    $conditions[1] = 'TODOS';
+
     // ********* Se arman las clausulas de la consulta sql ***********
 
     // ***** Select clause *****
@@ -293,7 +295,6 @@ function get_not_assign_students($general_fields=null, $conditions, $academic_fi
                                                 INNER JOIN {user AS moodle_user} ON moodle_user.id = user_extended.id_moodle_user
                                                 GROUP BY moodle_user.username) AS current_status
                                             INNER JOIN {talentospilos_est_estadoases} AS status_ases ON status_ases.id = current_status.id
-                                            WHERE id_estado_ases = $conditions[1]
                                             ) AS query_status_ases ON query_status_ases.username = user_moodle.username";
     }
 
@@ -398,6 +399,8 @@ function get_ases_report($general_fields=null, $conditions, $risk_fields=null, $
 
     $actions = $USER->actions;
 
+    $conditions[1] = 'TODOS';
+
     // ********* Se arman las clausulas de la consulta sql ***********
 
     // ***** Select clause *****
@@ -476,7 +479,6 @@ function get_ases_report($general_fields=null, $conditions, $risk_fields=null, $
                                                 INNER JOIN {user} AS moodle_user ON moodle_user.id = user_extended.id_moodle_user
                                                 GROUP BY moodle_user.username) AS current_status
                                             INNER JOIN {talentospilos_est_estadoases} AS status_ases ON status_ases.id = current_status.id
-                                            WHERE id_estado_ases = $conditions[1]
                                             ) AS query_status_ases ON query_status_ases.username = user_moodle.username";
     }
 
@@ -646,7 +648,7 @@ function get_default_ases_report($id_instance){
                 "sSortDescending"=> ": Activar para ordenar la columna de manera descendente"
             )
         ),
-        "dom"=>'Bfrtip',
+        "dom"=>'frtiplB',
         "buttons"=>array(
             array(
                 "extend"=>'print',
