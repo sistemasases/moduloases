@@ -234,6 +234,8 @@ function get_not_assign_students($general_fields=null, $conditions, $academic_fi
 
     $actions = $USER->actions;
 
+    $conditions[1] = 'TODOS';
+
     // ********* Se arman las clausulas de la consulta sql ***********
 
     // ***** Select clause *****
@@ -293,7 +295,6 @@ function get_not_assign_students($general_fields=null, $conditions, $academic_fi
                                                 INNER JOIN {user AS moodle_user} ON moodle_user.id = user_extended.id_moodle_user
                                                 GROUP BY moodle_user.username) AS current_status
                                             INNER JOIN {talentospilos_est_estadoases} AS status_ases ON status_ases.id = current_status.id
-                                            WHERE id_estado_ases = $conditions[1]
                                             ) AS query_status_ases ON query_status_ases.username = user_moodle.username";
     }
 
@@ -392,11 +393,13 @@ function get_not_assign_students($general_fields=null, $conditions, $academic_fi
  * @param $idinstancia  --> Instancia del módulo
  * @return Array 
  */
-function get_ases_report($general_fields=null, $conditions, $risk_fields=null, $academic_fields=null, $instance_id){
+function get_ases_report($general_fields=null, $conditions, $risk_fields=null, $academic_fields=null, $statuses_fields=null, $instance_id){
 
     global $DB, $USER;
 
     $actions = $USER->actions;
+
+    $conditions[1] = 'TODOS';
 
     // ********* Se arman las clausulas de la consulta sql ***********
 
@@ -466,18 +469,33 @@ function get_ases_report($general_fields=null, $conditions, $risk_fields=null, $
                                                                     INNER JOIN {user} AS moodle_user ON moodle_user.id = cohort_member.userid
                                             WHERE id_instancia = $instance_id) AS all_students_cht ON all_students_cht.username = user_moodle.username";
     }
-    // Condición estado ASES
-    if($conditions[1] != 'TODOS'){
 
-        $sub_query_status .= " INNER JOIN (SELECT current_status.username, status_ases.id_estado_ases 
-                                            FROM (SELECT MAX(status_ases.id) AS id, moodle_user.username
-                                                FROM {talentospilos_est_estadoases} AS status_ases 
-                                                    INNER JOIN {talentospilos_user_extended} AS user_extended ON status_ases.id_estudiante = user_extended.id_ases_user
-                                                INNER JOIN {user} AS moodle_user ON moodle_user.id = user_extended.id_moodle_user
+    // Campos Estados del estudiante
+
+    if($statuses_fields){
+
+        foreach($statuses_fields as $status_field){
+
+            switch(explode(".", $status_field)[1]){
+                case 'estado_ases':
+                $select_clause = $select_clause.", (CASE WHEN $statuses_fields[0] = 'seguimiento' THEN 'SEGUIMIENTO'
+                                                    WHEN $statuses_fields[0] = 'noseguimiento' THEN 'NO SEGUIMIENTO'
+                                                    ELSE 'N.R.' 
+                                                    END) AS estado_ases";
+
+                $sub_query_status .= " LEFT JOIN (SELECT current_status.username, statuses_ases.nombre AS estado_ases
+                                        FROM (SELECT MAX(status_ases.id) AS id, moodle_user.username
+                                            FROM mdl_talentospilos_est_estadoases AS status_ases 
+                                                INNER JOIN mdl_talentospilos_user_extended AS user_extended ON status_ases.id_estudiante = user_extended.id_ases_user
+                                                INNER JOIN mdl_user AS moodle_user ON moodle_user.id = user_extended.id_moodle_user
                                                 GROUP BY moodle_user.username) AS current_status
-                                            INNER JOIN {talentospilos_est_estadoases} AS status_ases ON status_ases.id = current_status.id
-                                            WHERE id_estado_ases = $conditions[1]
-                                            ) AS query_status_ases ON query_status_ases.username = user_moodle.username";
+                                        INNER JOIN mdl_talentospilos_est_estadoases AS status_ases ON status_ases.id = current_status.id
+                                        INNER JOIN mdl_talentospilos_estados_ases AS statuses_ases ON statuses_ases.id = status_ases.id_estado_ases
+                                        ) AS query_status_ases ON query_status_ases.username = user_moodle.username";
+                    break;
+            }
+
+        }
     }
 
     if(property_exists($actions, 'search_all_students_ar')){
@@ -609,7 +627,7 @@ function get_default_ases_report($id_instance){
     array_push($columns, array("title"=>"Apellido(s)", "name"=>"lastname", "data"=>"lastname"));
     array_push($columns, array("title"=>"Número de documento", "name"=>"num_doc", "data"=>"num_doc"));
 
-    $default_students = get_ases_report($query_fields, $conditions, null, null, $id_instance);
+    $default_students = get_ases_report($query_fields, $conditions, null, null, null, $id_instance);
 
     $data_to_table = array(
         "bsort" => false,
@@ -646,7 +664,7 @@ function get_default_ases_report($id_instance){
                 "sSortDescending"=> ": Activar para ordenar la columna de manera descendente"
             )
         ),
-        "dom"=>'Bfrtip',
+        "dom"=>'lfrtiplB',
         "buttons"=>array(
             array(
                 "extend"=>'print',
