@@ -21,7 +21,7 @@ $fields_format = array(
     'program_code'=>'acad_program.cod_univalle AS cod_univalle',
     'name_program'=>'acad_program.nombre AS nombre_programa',
     'faculty'=>'faculty.nombre AS nombre_facultad',
-    'ases_status'=>'',
+    'ases_status'=>'query_status_ases.estado_ases',
     'icetex_status'=>'',
     'academic_program_status'=>''
 );
@@ -78,14 +78,14 @@ if(isset($_POST['risk_fields'])){
 if(isset($_POST['status_fields'])){
     foreach($_POST['status_fields'] as $status_field){
         array_push($statuses_array, $fields_format[$status_field]);
-        array_push($columns, array("title"=>$columns_format[$status_field], "name"=>$fields_format[$status_field], "data"=>$fields_format[$status_field]));
+        array_push($columns, array("title"=>$columns_format[$status_field], "name"=>explode('.', $fields_format[$status_field])[1], "data"=>explode('.', $fields_format[$status_field])[1]));
     }
 }
 
 if(isset($_POST['instance_id'])){
     $counter = 0;
     
-    $result = get_ases_report($query_fields, $conditions, $risk_fields, $academic_fields, $_POST['instance_id']);
+    $result = get_ases_report($query_fields, $conditions, $risk_fields, $academic_fields, $statuses_array, $_POST['instance_id']);
 
     $data = array(
                 "bsort" => false,
@@ -123,7 +123,7 @@ if(isset($_POST['instance_id'])){
                     )
                  ),
                 "autoFill"=>"true",
-                "dom"=> "frtiplB",
+                "dom"=> "lfrtiplB",
                 "tableTools"=>array(
                     "sSwfPath"=>"../../style/swf/flashExport.swf"
                 ),
