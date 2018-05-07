@@ -607,7 +607,6 @@ SELECT DISTINCT
 
 --Consulta para saber por cohortes
 SELECT cohorte.name AS nombre_cohorte,
-         cohorte.id,
          COUNT(usuario.id) AS "TOTAL",
          
     (SELECT COUNT(*)
