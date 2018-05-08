@@ -23,6 +23,7 @@ $fields_format = array(
     'firstname' => 'user_moodle.firstname',
     'lastname' => 'user_moodle.lastname',
     'document_id' => 'tp_user.num_doc',
+    'cohort'=>'all_students_cht.cohorts_student',
     'email' => 'tp_user.emailpilos',
     'cellphone' => 'tp_user.celular',
     'address' => 'tp_user.direccion_res',
@@ -35,6 +36,7 @@ $columns_format = array(
     'firstname' => 'Nombre(s)',
     'lastname' => 'Apellido(s)',
     'document_id' => 'Número de documento',
+    'cohort'=>'Cohorte',
     'email' => 'Correo electrónico',
     'cellphone' => 'Celular',
     'address' => 'Dirección residencia',
@@ -72,8 +74,6 @@ if (isset($_POST['academic_fields']))
     {
     foreach($_POST['academic_fields'] as $academic_field)
         {
-
-        // print_r(explode(' ', $fields_format[$academic_field])[2]);
 
         array_push($academic_fields, $fields_format[$academic_field]);
         array_push($columns, array(

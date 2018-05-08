@@ -91,8 +91,49 @@ define(['jquery',
                 }
             });
 
-            //Función para busqueda de los filtros de riesgos.
+            //Controles para el filtro de cohortes
+            $('#conditions').on('change', function(){
+                if(('#conditions').val() != 'TODOS'){
+                    $('#cohort_check').prop('checked', false);
+                }else{
+                    $('#cohort_check').prop('checked', true);
+                }
+            });
 
+            //Controles check all
+            $('#contact_fields_check').on('change', function(){
+                if( $('#contact_fields_check').prop('checked') ) {
+                    $("input[name='fields[]']").prop('checked', true);
+                }else{
+                    $("input[name='fields[]']").prop('checked', false);
+                }
+            });
+
+            $('#status_fields_check').on('change', function(){
+                if( $('#status_fields_check').prop('checked') ) {
+                    $("input[name='status_fields[]']").prop('checked', true);
+                }else{
+                    $("input[name='status_fields[]']").prop('checked', false);
+                }
+            });
+
+            $('#academic_fields_check').on('change', function(){
+                if( $('#academic_fields_check').prop('checked') ) {
+                    $("input[name='academic_fields[]']").prop('checked', true);
+                }else{
+                    $("input[name='academic_fields[]']").prop('checked', false);
+                }
+            });
+
+            $('#risk_fields_check').on('change', function(){
+                if( $('#risk_fields_check').prop('checked') ) {
+                    $("input[name='risk_fields[]']").prop('checked', true);
+                }else{
+                    $("input[name='risk_fields[]']").prop('checked', false);
+                }
+            });
+
+            //Función para busqueda de los filtros de riesgos.
             $(document).on('change', '#tableResult thead tr th select', function() {
                 var table = $("#tableResult").DataTable();
                 var colIndex = $(this).parent().index() + 1;
