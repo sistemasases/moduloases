@@ -31,6 +31,7 @@ require_once dirname(__FILE__) . '/../../../../config.php';
 
 require_once $CFG->dirroot . '/blocks/ases/managers/lib/student_lib.php';
 require_once $CFG->dirroot . '/blocks/ases/managers/MyException.php';
+require_once $CFG->dirroot . '/blocks/ases/managers/lib/student_lib.php';
 require_once $CFG->dirroot . '/blocks/ases/managers/dateValidator.php';
 
 if (isset($_FILES['csv_file'])) {
@@ -646,11 +647,11 @@ if (isset($_FILES['csv_file'])) {
             echo $respuesta;
         } else if ($varSelector == "Geolocalizacion") {
 
-            // CSV field: neighborhood id, student id, latitude, longitude
+            // CSV field: neighborhood id, student id, latitude, longitude, risk
 
             global $DB;
             $record = new stdClass();
-            $count = 0;
+            $count = 1;
 
             while ($data = fgetcsv($handle, 100, ",")) {
                 $count++;
@@ -680,8 +681,10 @@ if (isset($_FILES['csv_file'])) {
 
                     $record->id = $id_register->id;
                     $record->id_usuario = $id_user_talentos;
-                    $record->longitud = (float) $data[2];
-                    $record->latitud = (float) $data[3];
+                    // print_r($data[2]);
+                    $record->longitud = floatval($data[2]);
+                    // print_r($record->longitud);
+                    $record->latitud = (double) $data[3];
                     $record->barrio = (int) $id_barrio->id;
 
                     $DB->update_record('talentospilos_demografia', $record);
@@ -695,6 +698,23 @@ if (isset($_FILES['csv_file'])) {
                     $DB->insert_record('talentospilos_demografia', $record);
                 }
 
+                //consultar id riesgo geografico
+                $id_geografic_risk = $DB->get_record_sql("SELECT id FROM {talentospilos_riesgos_ases} WHERE nombre = 'geografico' ")->id;
+                $new_risk = new stdClass;
+                $new_risk->id_usuario = (int) $id_user_talentos;
+                $new_risk->id_riesgo = (int) $id_geografic_risk;
+                $new_risk->calificacion_riesgo = (int) $data[4];
+                //actualizar riesgo geografico o insertar nuevo registro
+                
+                $registro = $DB->get_record_sql("SELECT id FROM {talentospilos_riesg_usuario} WHERE id_usuario = $id_user_talentos AND id_riesgo = $id_geografic_risk");
+                if( $registro ){
+                    $new_risk->id = $registro->id;
+                    $DB->update_record('talentospilos_riesg_usuario', $new_risk);                    
+                }else{
+                    $DB->insert_record('talentospilos_riesg_usuario', $new_risk);
+                }
+                
+                $count++;
             }
 
             $respuesta = 1;
