@@ -680,9 +680,9 @@ if (isset($_FILES['csv_file'])) {
 
                     $record->id = $id_register->id;
                     $record->id_usuario = $id_user_talentos;
-                    print_r($data[2]);
+                    // print_r($data[2]);
                     $record->longitud = floatval($data[2]);
-                    print_r($record->longitud);
+                    // print_r($record->longitud);
                     $record->latitud = (double) $data[3];
                     $record->barrio = (int) $id_barrio->id;
 
