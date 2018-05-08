@@ -470,20 +470,24 @@ function get_ases_report($general_fields=null, $conditions, $risk_fields=null, $
 
             switch(explode(".", $status_field)[1]){
                 case 'estado_ases':
-                $select_clause = $select_clause.", (CASE WHEN $statuses_fields[0] = 'seguimiento' THEN 'SEGUIMIENTO'
-                                                    WHEN $statuses_fields[0] = 'noseguimiento' THEN 'NO SEGUIMIENTO'
-                                                    ELSE 'N.R.' 
-                                                    END) AS estado_ases";
+                    $select_clause = $select_clause.", (CASE WHEN $statuses_fields[0] = 'seguimiento' THEN 'SEGUIMIENTO'
+                                                        WHEN $statuses_fields[0] = 'noseguimiento' THEN 'NO SEGUIMIENTO'
+                                                        ELSE 'N.R.' 
+                                                        END) AS estado_ases";
 
-                $sub_query_status .= " LEFT JOIN (SELECT current_status.username, statuses_ases.nombre AS estado_ases
-                                        FROM (SELECT MAX(status_ases.id) AS id, moodle_user.username
-                                            FROM mdl_talentospilos_est_estadoases AS status_ases 
-                                                INNER JOIN mdl_talentospilos_user_extended AS user_extended ON status_ases.id_estudiante = user_extended.id_ases_user
-                                                INNER JOIN mdl_user AS moodle_user ON moodle_user.id = user_extended.id_moodle_user
-                                                GROUP BY moodle_user.username) AS current_status
-                                        INNER JOIN mdl_talentospilos_est_estadoases AS status_ases ON status_ases.id = current_status.id
-                                        INNER JOIN mdl_talentospilos_estados_ases AS statuses_ases ON statuses_ases.id = status_ases.id_estado_ases
-                                        ) AS query_status_ases ON query_status_ases.username = user_moodle.username";
+                    $sub_query_status .= " LEFT JOIN (SELECT current_status.username, statuses_ases.nombre AS estado_ases
+                                            FROM (SELECT MAX(status_ases.id) AS id, moodle_user.username
+                                                FROM mdl_talentospilos_est_estadoases AS status_ases 
+                                                    INNER JOIN mdl_talentospilos_user_extended AS user_extended ON status_ases.id_estudiante = user_extended.id_ases_user
+                                                    INNER JOIN mdl_user AS moodle_user ON moodle_user.id = user_extended.id_moodle_user
+                                                    GROUP BY moodle_user.username) AS current_status
+                                            INNER JOIN mdl_talentospilos_est_estadoases AS status_ases ON status_ases.id = current_status.id
+                                            INNER JOIN mdl_talentospilos_estados_ases AS statuses_ases ON statuses_ases.id = status_ases.id_estado_ases
+                                            ) AS query_status_ases ON query_status_ases.username = user_moodle.username";
+                    break;
+                
+                case 'program_status':
+                    $select_clause = $select_clause.", $status_field";
                     break;
             }
 
