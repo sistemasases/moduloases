@@ -127,6 +127,7 @@ if (isset($_POST['instance_id']))
         "data" => get_assign($result, $practicants, $monitors) ,
         "columns" => $columns,
         "select" => "false",
+        "scrollX" => true,
         "language" => array(
             "search" => "Buscar:",
             "oPaginate" => array(
