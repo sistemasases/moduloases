@@ -398,6 +398,7 @@ function get_ases_report($general_fields=null, $conditions, $risk_fields=null, $
     $where_clause = " WHERE ";
     $sub_query_cohort = "";
     $sub_query_status = "";
+    $sub_query_icetex_status = "";
     $sub_query_academic = "";
     $sub_query_risks = "";
 
@@ -477,17 +478,30 @@ function get_ases_report($general_fields=null, $conditions, $risk_fields=null, $
 
                     $sub_query_status .= " LEFT JOIN (SELECT current_status.username, statuses_ases.nombre AS estado_ases
                                             FROM (SELECT MAX(status_ases.id) AS id, moodle_user.username
-                                                FROM mdl_talentospilos_est_estadoases AS status_ases 
-                                                    INNER JOIN mdl_talentospilos_user_extended AS user_extended ON status_ases.id_estudiante = user_extended.id_ases_user
-                                                    INNER JOIN mdl_user AS moodle_user ON moodle_user.id = user_extended.id_moodle_user
+                                                FROM {talentospilos_est_estadoases} AS status_ases 
+                                                    INNER JOIN {talentospilos_user_extended} AS user_extended ON status_ases.id_estudiante = user_extended.id_ases_user
+                                                    INNER JOIN {user} AS moodle_user ON moodle_user.id = user_extended.id_moodle_user
                                                     GROUP BY moodle_user.username) AS current_status
-                                            INNER JOIN mdl_talentospilos_est_estadoases AS status_ases ON status_ases.id = current_status.id
-                                            INNER JOIN mdl_talentospilos_estados_ases AS statuses_ases ON statuses_ases.id = status_ases.id_estado_ases
+                                            INNER JOIN {talentospilos_est_estadoases} AS status_ases ON status_ases.id = current_status.id
+                                            INNER JOIN {talentospilos_estados_ases} AS statuses_ases ON statuses_ases.id = status_ases.id_estado_ases
                                             ) AS query_status_ases ON query_status_ases.username = user_moodle.username";
                     break;
                 
                 case 'program_status':
-                    $select_clause = $select_clause.", $status_field";
+                    $select_clause = $select_clause.", ".$status_field;
+                    break;
+                case 'estado_icetex':
+                    $select_clause = $select_clause.", ".$status_field." AS estado_icetex";
+                    $sub_query_icetex_status .= " LEFT JOIN (SELECT current_status.username, icetex_statuses.nombre AS estado_icetex
+                                                FROM (SELECT MAX(icetex_status.id) AS id, user_moodle.username
+                                                      FROM {talentospilos_est_est_icetex} AS icetex_status
+                                                      INNER JOIN {talentospilos_user_extended} AS user_extended ON user_extended.id_ases_user = icetex_status.id_estudiante
+                                                      INNER JOIN {user} AS user_moodle ON user_moodle.id = user_extended.id_moodle_user
+                                                      GROUP BY user_moodle.username
+                                                      ) AS current_status
+                                                INNER JOIN {talentospilos_est_est_icetex} AS icetex_status ON icetex_status.id = current_status.id
+                                                INNER JOIN {talentospilos_estados_icetex} AS icetex_statuses ON icetex_status.id_estado_icetex = icetex_statuses.id
+                                                ) AS query_icetex_status ON query_icetex_status.username = user_moodle.username";
                     break;
             }
 
@@ -496,7 +510,7 @@ function get_ases_report($general_fields=null, $conditions, $risk_fields=null, $
 
     if(property_exists($actions, 'search_all_students_ar')){
         
-        $sql_query = $select_clause.$from_clause.$sub_query_cohort.$sub_query_status.$sub_query_academic;
+        $sql_query = $select_clause.$from_clause.$sub_query_cohort.$sub_query_status.$sub_query_icetex_status.$sub_query_academic;
         $result_query = $DB->get_records_sql($sql_query);
 
     }else if(property_exists($actions, 'search_assigned_students_ar')){
@@ -518,7 +532,7 @@ function get_ases_report($general_fields=null, $conditions, $risk_fields=null, $
 
                 $where_clause .= $conditions_query_directors;
 
-                $sql_query = $select_clause.$from_clause.$sub_query_cohort.$sub_query_status.$sub_query_academic.$where_clause;
+                $sql_query = $select_clause.$from_clause.$sub_query_cohort.$sub_query_status.$sub_query_icetex_status.$sub_query_academic.$where_clause;
                 $result_query = $DB->get_records_sql($sql_query);
 
                 break;
