@@ -94,7 +94,7 @@ define(['jquery',
 
             //Controles para el filtro de cohortes
             $('#conditions').on('change', function(){
-                if(('#conditions').val() != 'TODOS'){
+                if($('#conditions').val() != 'TODOS'){
                     $('#cohort_check').prop('checked', false);
                 }else{
                     $('#cohort_check').prop('checked', true);

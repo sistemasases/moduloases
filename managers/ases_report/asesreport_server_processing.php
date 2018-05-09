@@ -23,8 +23,8 @@ $fields_format = array(
     'name_program'=>'acad_program.nombre AS nombre_programa',
     'faculty'=>'faculty.nombre AS nombre_facultad',
     'ases_status'=>'query_status_ases.estado_ases',
-    'icetex_status'=>'',
-    'academic_program_status'=>''
+    'icetex_status'=>'query_icetex_status.estado_icetex',
+    'academic_program_status'=>'user_extended.program_status'
 );
 
 $columns_format = array(
@@ -41,7 +41,7 @@ $columns_format = array(
     'faculty'=>'Facultad',
     'ases_status'=>'Estado ASES',
     'icetex_status'=>'Estado ICETEX',
-    'academic_program_status'=>'Estado prorama'
+    'academic_program_status'=>'Estado programa'
 );
 
 if(isset($_POST['conditions'])){
