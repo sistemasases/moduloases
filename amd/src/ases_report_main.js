@@ -16,10 +16,11 @@ define(['jquery',
         'block_ases/buttons.html5',
         'block_ases/buttons.flash',
         'block_ases/buttons.print',
+        'block_ases/dataTables.fixedColumns',
         'block_ases/bootstrap',
         'block_ases/sweetalert'
         ],
-        function($, jszip, pdfmake, dataTables, autoFill, buttons, flash, html5, print, bootstrap, sweetalert) {
+        function($, jszip, pdfmake, dataTables, autoFill, buttons, flash, html5, print, fixedColumns, bootstrap, sweetalert) {
     return {
         init: function(){
 
@@ -93,7 +94,7 @@ define(['jquery',
 
             //Controles para el filtro de cohortes
             $('#conditions').on('change', function(){
-                if(('#conditions').val() != 'TODOS'){
+                if($('#conditions').val() != 'TODOS'){
                     $('#cohort_check').prop('checked', false);
                 }else{
                     $('#cohort_check').prop('checked', true);
@@ -103,9 +104,9 @@ define(['jquery',
             //Controles check all
             $('#contact_fields_check').on('change', function(){
                 if( $('#contact_fields_check').prop('checked') ) {
-                    $("input[name='fields[]']").prop('checked', true);
+                    $("#contact_fields input[type='checkbox']").prop('checked', true);
                 }else{
-                    $("input[name='fields[]']").prop('checked', false);
+                    $("#contact_fields input[type='checkbox']").prop('checked', false);
                 }
             });
 
@@ -173,7 +174,7 @@ define(['jquery',
         load_defaults_students: function(data){
 
             $("#div_table").html('');
-            $("#div_table").fadeIn(1000).append('<table id="tableResult" class="display" cellspacing="0" width="100%"><thead> </thead></table>');
+            $("#div_table").fadeIn(1000).append('<table id="tableResult" class="stripe row-border order-column" cellspacing="0" width="100%"><thead> </thead></table>');
 
             $("#tableResult").DataTable(data);
 

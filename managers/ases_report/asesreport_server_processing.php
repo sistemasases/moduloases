@@ -23,8 +23,8 @@ $fields_format = array(
     'name_program'=>'acad_program.nombre AS nombre_programa',
     'faculty'=>'faculty.nombre AS nombre_facultad',
     'ases_status'=>'query_status_ases.estado_ases',
-    'icetex_status'=>'',
-    'academic_program_status'=>''
+    'icetex_status'=>'query_icetex_status.estado_icetex',
+    'academic_program_status'=>'user_extended.program_status'
 );
 
 $columns_format = array(
@@ -41,7 +41,7 @@ $columns_format = array(
     'faculty'=>'Facultad',
     'ases_status'=>'Estado ASES',
     'icetex_status'=>'Estado ICETEX',
-    'academic_program_status'=>'Estado prorama'
+    'academic_program_status'=>'Estado programa'
 );
 
 if(isset($_POST['conditions'])){
@@ -98,34 +98,36 @@ if(isset($_POST['instance_id'])){
                     "header"=> true,
                     "footer"=> true
                 ),
+                "scrollX" => true,
+                "scrollCollapse" => true,
                 "language" => 
-                 array(
-                    "search"=> "Buscar:",
-                    "oPaginate" => array (
-                        "sFirst"=>    "Primero",
-                        "sLast"=>     "Último",
-                        "sNext"=>     "Siguiente",
-                        "sPrevious"=> "Anterior"
+                    array(
+                        "search"=> "Buscar:",
+                        "oPaginate" => array (
+                            "sFirst"=>    "Primero",
+                            "sLast"=>     "Último",
+                            "sNext"=>     "Siguiente",
+                            "sPrevious"=> "Anterior"
+                        ),
+                        "sProcessing"=>     "Procesando...",
+                        "sLengthMenu"=>     "Mostrar _MENU_ registros",
+                        "sZeroRecords"=>    "No se encontraron resultados",
+                        "sEmptyTable"=>     "Ningún dato disponible en esta tabla",
+                        "sInfo"=>           "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+                        "sInfoEmpty"=>      "Mostrando registros del 0 al 0 de un total de 0 registros",
+                        "sInfoFiltered"=>   "(filtrado de un total de _MAX_ registros)",
+                        "sInfoPostFix"=>    "",
+                        "sSearch"=>         "Buscar:",
+                        "sUrl"=>            "",
+                        "sInfoThousands"=>  ",",
+                        "sLoadingRecords"=> "Cargando...",
+                        "oAria"=> array(
+                            "sSortAscending"=>  ": Activar para ordenar la columna de manera ascendente",
+                            "sSortDescending"=> ": Activar para ordenar la columna de manera descendente"
+                        )
                     ),
-                    "sProcessing"=>     "Procesando...",
-                    "sLengthMenu"=>     "Mostrar _MENU_ registros",
-                    "sZeroRecords"=>    "No se encontraron resultados",
-                    "sEmptyTable"=>     "Ningún dato disponible en esta tabla",
-                    "sInfo"=>           "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
-                    "sInfoEmpty"=>      "Mostrando registros del 0 al 0 de un total de 0 registros",
-                    "sInfoFiltered"=>   "(filtrado de un total de _MAX_ registros)",
-                    "sInfoPostFix"=>    "",
-                    "sSearch"=>         "Buscar:",
-                    "sUrl"=>            "",
-                    "sInfoThousands"=>  ",",
-                    "sLoadingRecords"=> "Cargando...",
-                    "oAria"=> array(
-                        "sSortAscending"=>  ": Activar para ordenar la columna de manera ascendente",
-                        "sSortDescending"=> ": Activar para ordenar la columna de manera descendente"
-                    )
-                 ),
                 "autoFill"=>"true",
-                "dom"=> "lfrtiplB",
+                "dom"=> "lifrtpB",
                 "tableTools"=>array(
                     "sSwfPath"=>"../../style/swf/flashExport.swf"
                 ),
