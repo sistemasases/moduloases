@@ -8,8 +8,8 @@
 /**
  * @module block_ases/not_assigned_students
  */
-define(['jquery', 'block_ases/bootstrap', 'block_ases/jquery.dataTables', 'block_ases/sweetalert','block_ases/dphpforms_form_renderer'],
-    function($, bootstrap, datatables, swal,renderer_forms) {
+define(['jquery', 'block_ases/bootstrap', 'block_ases/jquery.dataTables', 'block_ases/sweetalert', 'block_ases/dphpforms_form_renderer'],
+    function($, bootstrap, datatables, swal, renderer_forms) {
 
         return {
 
@@ -63,7 +63,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/jquery.dataTables', 'block
                             dataType: "text",
                             cache: "false",
                             error: function(msg) {
-                              alert("Debe seleccionar solo un practicante y monitor a la vez");
+                                alert("Debe seleccionar solo un practicante y monitor a la vez");
                                 console.log("Error al asignar estudiantes" + msg);
                             },
                         });
@@ -72,6 +72,20 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/jquery.dataTables', 'block
                     }
                 });
 
+                //Controles para la tabla generada
+                $(document).on('click', '#tableAssign tbody tr td', function() {
+                    var pagina = "student_profile.php";
+                    var table = $("#tableAssign").DataTable();
+                    var colIndex = table.cell(this).index().column;
+
+                    if (colIndex <= 2) {
+                        $("#formulario").each(function() {
+                            this.reset;
+                        });
+                        location.href = pagina + location.search + "&student_code=" + table.cell(table.row(this).index(), 0).data();
+                    }
+                })
+
 
                 //Despliega monitores deacuerdo al practicante seleccionado
 
@@ -79,19 +93,19 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/jquery.dataTables', 'block
 
                     var user = $(this).val();
                     var source = "list_monitors";
-                    var instancia =instance_id;
+                    var instancia = instance_id;
 
                     $.ajax({
                         type: "POST",
                         data: {
                             user: user,
-                            instance:instancia,
+                            instance: instancia,
                             source: source
                         },
                         url: "../managers/ases_report/asesreport.php",
                         success: function(msg) {
-                           $("select#monitors").find('option').remove().end();
-                           $("select#monitors").append(msg);
+                            $("select#monitors").find('option').remove().end();
+                            $("select#monitors").append(msg);
                         },
                         dataType: "json",
                         cache: "false",
@@ -105,67 +119,67 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/jquery.dataTables', 'block
 
             },
 
-            create_assign_table : function(instance_id){
+            create_assign_table: function(instance_id) {
 
-              var dataString = $('#form_general_report').serializeArray();
+                var dataString = $('#form_general_report').serializeArray();
 
-              dataString.push({
-                  name: 'instance_id',
-                  value: instance_id
-              });
+                dataString.push({
+                    name: 'instance_id',
+                    value: instance_id
+                });
 
-              $("#not_assigned_students").html('<img class="icon-loading" src="../icon/loading.gif"/>');
-              $.ajax({
-                  type: "POST",
-                  data: dataString,
-                  url: "../managers/ases_report/load_not_assigned_students.php",
-                  success: function(msg) {
-                      $("#not_assigned_students").html('');
-                      $("#not_assigned_students").fadeIn(1000).append('<table id="tableAssign" class="display" cellspacing="0" width="100%"><thead> </thead></table>');
+                $("#not_assigned_students").html('<img class="icon-loading" src="../icon/loading.gif"/>');
+                $.ajax({
+                    type: "POST",
+                    data: dataString,
+                    url: "../managers/ases_report/load_not_assigned_students.php",
+                    success: function(msg) {
+                        $("#not_assigned_students").html('');
+                        $("#not_assigned_students").fadeIn(1000).append('<table id="tableAssign" class="display" cellspacing="0" width="100%"><thead> </thead></table>');
 
 
-                      var table = $("#tableAssign").DataTable(msg);
+                        var table = $("#tableAssign").DataTable(msg);
 
-                  },
+                    },
 
-                  dataType: "json",
-                  cache: "false",
-                  error: function(msg) {
-                      alert("Error al cargar estudiantes no asignados")
-                  },
-              });
+                    dataType: "json",
+                    cache: "false",
+                    error: function(msg) {
+                        alert("Error al cargar estudiantes no asignados")
+                    },
+                });
             },
             load_not_assigned_students: function(instance_id) {
 
-              var dataString = $('#form_general_report').serializeArray();
+                var dataString = $('#form_general_report').serializeArray();
 
-              dataString.push({
-                  name: 'instance_id',
-                  value: instance_id
-              });
+                dataString.push({
+                    name: 'instance_id',
+                    value: instance_id
+                });
 
-              $("#not_assigned_students").html('<img class="icon-loading" src="../icon/loading.gif"/>');
-              $.ajax({
-                  type: "POST",
-                  data: dataString,
-                  url: "../managers/ases_report/load_not_assigned_students.php",
-                  success: function(msg) {
-                      $("#not_assigned_students").html('');
-                      $("#not_assigned_students").fadeIn(1000).append('<table id="tableAssign" class="display" cellspacing="0" width="100%"><thead> </thead></table>');
+                $("#not_assigned_students").html('<img class="icon-loading" src="../icon/loading.gif"/>');
+                $.ajax({
+                    type: "POST",
+                    data: dataString,
+                    url: "../managers/ases_report/load_not_assigned_students.php",
+                    success: function(msg) {
+                        $("#not_assigned_students").html('');
+                        $("#not_assigned_students").fadeIn(1000).append('<table id="tableAssign" class="display" cellspacing="0" width="100%"><thead> </thead></table>');
 
 
-                      var table = $("#tableAssign").DataTable(msg);
+                        var table = $("#tableAssign").DataTable(msg);
 
-                  },
+                    },
 
-                  dataType: "json",
-                  cache: "false",
-                  error: function(msg) {
-                      alert("Error al cargar estudiantes no asignados")
-                  },
-              });
+                    dataType: "json",
+                    cache: "false",
+                    error: function(msg) {
+                        alert("Error al cargar estudiantes no asignados")
+                    },
+                });
 
-            },
+            }, 
 
 
             //Check the current instance
