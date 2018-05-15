@@ -28,10 +28,53 @@
 
     require_once(dirname(__FILE__). '/../../../../config.php');
     
-    // $criteria = array();
+    // El filtro con respuesta casteada no es completo.
+    //Criteria
+    /*{
+        "criteria":[
+            {
+                "operator":"AND",
+                "value":"XYZ"
+            },
+            {
+                "operator":"OR",
+                "value":"XXY"
+            }
+        ]
+    }*/
+
+    $test_criteria = json_decode( 
+        '{
+            "criteria":[
+                {
+                    "operator":"AND",
+                    "value":"XYZ"
+                },
+                {
+                    "operator":"OR",
+                    "value":"XXY"
+                }
+            ]
+        }' 
+    );
+
+    dphpforms_reverse_filter( "25", "none", $test_criteria );
+
     function dphpforms_reverse_filter($id_pregunta, $cast_to, $criteria){
         global $DB;
-        
+        if( $cast_to == "none" ){
+
+        };
+        $sql_criteria = "";
+        foreach( $criteria->criteria as $key => $criteria_element ){
+            if( $key == 0 ){
+                $sql_criteria .= "respuesta = '" . $criteria_element->value . "'";
+            }else{
+                $sql_criteria .= " " . $criteria_element->operator ." respuesta = '" . $criteria_element->value . "'";
+            };
+        };
+        $sql="SELECT *, NULLIF('respuesta','')::string FROM {talentospilos_df_respuesta} WHERE id_pregunta = '". $id_pregunta ."' AND " . $sql_criteria;
+        print_r( $sql );
     };
 
 ?>
