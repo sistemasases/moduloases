@@ -33,12 +33,14 @@
     /*{
         "criteria":[
             {
-                "operator":"AND",
-                "value":"XYZ"
+                "operator":">",
+                "value":"XYZ",
+                "logic_operator":"AND"
             },
             {
-                "operator":"OR",
-                "value":"XXY"
+                "operator":"<",
+                "value":"XXY",
+                "logic_operator":"OR"
             }
         ]
     }*/
@@ -47,34 +49,53 @@
         '{
             "criteria":[
                 {
-                    "operator":"AND",
-                    "value":"XYZ"
+                    "operator":">",
+                    "value":"2018-02-01"
                 },
                 {
-                    "operator":"OR",
-                    "value":"XXY"
+                    "operator":"<",
+                    "value":"2018-06-01"
                 }
             ]
         }' 
     );
 
-    dphpforms_reverse_filter( "25", "none", $test_criteria );
+    //Test
+    echo dphpforms_reverse_filter( "953", "DATE", $test_criteria );
 
     function dphpforms_reverse_filter($id_pregunta, $cast_to, $criteria){
         global $DB;
-        if( $cast_to == "none" ){
+        
+        $cast = "";
+        $double_presicion_cast = "";
 
+        if( $cast_to ){
+            $cast = ", NULLIF(respuesta,'')::$cast_to AS respuesta_casted";
+            if( $cast_to == "DATE" ){
+                $double_precision_cast = "AND respuesta ~ '[0-9]{4}-[0-9]{1,2}-[0-9]{1,2}'";
+            };
+        }else{
+            $cast = ", NULLIF(respuesta,'')::text AS respuesta_casted";
         };
+
         $sql_criteria = "";
         foreach( $criteria->criteria as $key => $criteria_element ){
             if( $key == 0 ){
-                $sql_criteria .= "respuesta = '" . $criteria_element->value . "'";
+                $sql_criteria .= "WHERE SC.respuesta_casted " . $criteria_element->operator . " '" . $criteria_element->value . "'";
             }else{
-                $sql_criteria .= " " . $criteria_element->operator ." respuesta = '" . $criteria_element->value . "'";
+                $sql_criteria .= " AND SC.respuesta_casted " . $criteria_element->operator . " '" . $criteria_element->value . "'";
             };
         };
-        $sql="SELECT *, NULLIF('respuesta','')::string FROM {talentospilos_df_respuesta} WHERE id_pregunta = '". $id_pregunta ."' AND " . $sql_criteria;
-        print_r( $sql );
+        $sql="SELECT * FROM ( SELECT *$cast FROM {talentospilos_df_respuestas} WHERE id_pregunta = '$id_pregunta' $double_precision_cast ) AS SC " . $sql_criteria;
+
+        $records = $DB->get_records_sql( $sql );
+        return json_encode(
+            array(
+                'results'=>$records
+            )
+        );
+        
+
     };
 
 ?>
