@@ -7,7 +7,7 @@
 /**
  * @module block_ases/ases_report_main
  */
-define(['jquery', 
+define(['jquery',
         'block_ases/jszip',
         'block_ases/pdfmake',
         'block_ases/jquery.dataTables',
@@ -28,55 +28,8 @@ define(['jquery',
             //Control para el botón 'Generar Reporte
             $("#send_form_btn").on('click', function() {
                 createTable();
-                createTableAssign();
             });
 
-            //Asignación de estudiantes a monitores/practicantes por parte de profesional. 
-            $(document).on('click', '#tableAssign tbody tr td #student_assign', function() {
-                var table = $("#tableAssign").DataTable();
-                var current_row = table.row($(this).parents('tr')).data();
-                var instance = getIdinstancia();
-                var student = current_row.username;
-                var monitores = $(this).closest('tr').find('#monitors').val();
-                var practicantes = $(this).closest('tr').find('#practicants').val();
-
-                var next = true;
-                var msg = "";
-                if (monitores == '-1') {
-                    next = false;
-                    msg += "* Debe elegir monitor a asignar \n";
-                }
-                if (practicantes == '-1') {
-                    next = false;
-                    msg += "*Debe elegir practicantes a asignar";
-                }
-
-                if (next) {
-                    $.ajax({
-                        type: "POST",
-                        data: {
-                            type: "assign_student",
-                            monitor: monitores,
-                            practicant: practicantes,
-                            instance: instance,
-                            student: student
-
-                        },
-                        url: "../managers/ases_report/asesreport.php",
-                        success: function(msg) {
-                            alert(msg);
-                        },
-
-                        dataType: "text",
-                        cache: "false",
-                        error: function(msg) {
-                            console.log("Error al asignar estudiantes" + msg);
-                        },
-                    });
-                } else {
-                    alert(msg);
-                }
-            });
 
             //Controles para la tabla generada
             $(document).on('click', '#tableResult tbody tr td', function() {
@@ -142,34 +95,7 @@ define(['jquery',
                 table.columns(colIndex - 1).search(this.value).draw();
             });
 
-            //Despliega monitores deacuerdo al practicante seleccionado
 
-            $(document).on('change', '#tableAssign tbody tr td select#practicants', function() {
-
-                var user = $(this).val();
-                var source = "list_monitors";
-                var instancia =getIdinstancia();
-
-                $.ajax({
-                    type: "POST",
-                    data: {
-                        user: user,
-                        instance:instancia,
-                        source: source
-                    },
-                    url: "../managers/ases_report/asesreport.php",
-                    success: function(msg) {
-                       $("select#monitors").find('option').remove().end();
-                       $("select#monitors").append(msg);
-                    },
-                    dataType: "json",
-                    cache: "false",
-                    error: function(msg) {
-                        alert("Error al cargar monitores con practicante seleccionado")
-                    },
-                });
-
-            });
         },
         load_defaults_students: function(data){
 
@@ -195,37 +121,7 @@ define(['jquery',
         }
     }
 
-    //Creación de tabla de asignaciones
-    function createTableAssign() {
-        
-        var dataString = $('#form_general_report').serializeArray();
 
-        dataString.push({
-            name: 'instance_id',
-            value: getIdinstancia()
-        });
-
-        $("#not_assigned_students").html('<img class="icon-loading" src="../icon/loading.gif"/>');
-        $.ajax({
-            type: "POST",
-            data: dataString,
-            url: "../managers/ases_report/load_not_assigned_students.php",
-            success: function(msg) {
-                $("#not_assigned_students").html('');
-                $("#not_assigned_students").fadeIn(1000).append('<table id="tableAssign" class="display" cellspacing="0" width="100%"><thead> </thead></table>');
-
-
-                var table = $("#tableAssign").DataTable(msg);
-
-            },
-
-            dataType: "json",
-            cache: "false",
-            error: function(msg) {
-                alert("Error al cargar estudiantes no asignados")
-            },
-        });
-    }
 
     // Creación de tabla general
     function createTable() {
@@ -248,7 +144,7 @@ define(['jquery',
 
                 $("#tableResult").DataTable(msg);
 
-              
+
                 $('#tableResult tr').each(function() {
                     $.each(this.cells, function() {
                         if ($(this).html() == 'Bajo') {
