@@ -73,7 +73,6 @@ function render_monitor_new_form($students_by_monitor, $period = null)
         $panel.= "<div id='student$student_code->username'  class='show collapse_v2 collapse border_rt' role='tabpanel' aria-labelledby='headingstudent$student_code->username' aria-expanded='true'>";
         $panel.= "<div class='panel-body'>";
 
-        // $panel.=render_student_trackings($monitor_trackings);
 
         $panel.= "</div>"; // End panel-body
         $panel.= "</div>"; // End collapse
@@ -118,7 +117,6 @@ function render_groupal_tracks_monitor_new_form($groupal_tracks, $monitor_id, $p
         $panel.= "<div id='groupal$monitor_id'  class='show collapse_v2 collapse border_rt' role='tabpanel' aria-labelledby='headinggroupal$monitor_id' aria-expanded='true'>";
         $panel.= "<div class='panel-body'>";
 
-        // $panel.=render_student_trackings($monitor_trackings);
 
         $panel.= "</div>"; // End panel-body
         $panel.= "</div>"; // End collapse
@@ -283,7 +281,7 @@ function render_student_trackings($peer_tracking_v2)
  *
  * @see filter_trackings_by_review($peer_tracking_v2)
  * @param peer_tracking_v2 --> Array of trackings
- * @return 
+ * @return
  *
  */
 
@@ -345,7 +343,7 @@ function filter_trackings_by_review($peer_tracking_v2)
  * @param $user_id --> id of user
  * @param $semester
  * @param $instance --> id of instance
- * @return Array 
+ * @return Array
  *
  */
 
@@ -365,7 +363,7 @@ if($user_kind=='profesional_ps'){
 
          $counting_advice=new stdClass();
          $counting_advice->code =$practicant->username;
-         $counting_advice->html="<h6><p class='text-right'><strong class='subpanel'>RP :</strong><label class='review_prof'>".$profesional_counting[0]."</label> - <strong class='subpanel'> N RP: </strong><label class='not_review_prof'>".$profesional_counting[1]."</label> - <strong class='subpanel'>TOTAL:</strong><label class='total_prof'>".($profesional_counting[0]+$profesional_counting[1])."</label></p><p class='text-right'><strong class='subpanel'>Rp :</strong><label class='review_pract'>".$profesional_counting[2]."</label> - <strong class='subpanel'> N Rp: </strong><label class='not_review_pract'>".$profesional_counting[3]."</label> - <strong class='subpanel'>TOTAL:</strong><label class='total_pract'>".($profesional_counting[2]+$profesional_counting[3])."</label></p></h6>";
+         //$counting_advice->html="<h6><p class='text-right'><strong class='subpanel'>RP :</strong><label class='review_prof'>".$profesional_counting[0]."</label> - <strong class='subpanel'> N RP: </strong><label class='not_review_prof'>".$profesional_counting[1]."</label> - <strong class='subpanel'>TOTAL:</strong><label class='total_prof'>".($profesional_counting[0]+$profesional_counting[1])."</label></p><p class='text-right'><strong class='subpanel'>Rp :</strong><label class='review_pract'>".$profesional_counting[2]."</label> - <strong class='subpanel'> N Rp: </strong><label class='not_review_pract'>".$profesional_counting[3]."</label> - <strong class='subpanel'>TOTAL:</strong><label class='total_pract'>".($profesional_counting[2]+$profesional_counting[3])."</label></p></h6>";
          array_push($array_final, $counting_advice);
 
         }
@@ -394,7 +392,7 @@ if($user_kind=='profesional_ps'){
 
 
 
-    return $array_final; 
+    return $array_final;
 
 
 }
@@ -410,7 +408,7 @@ if($user_kind=='profesional_ps'){
  * @param $array_people --> class of monitor or practicant
  * @param $dates_interval
  * @param $instance --> id of instance
- * @return Array 
+ * @return Array
  *
  */
 
@@ -431,7 +429,7 @@ if($user_kind=='PRACTICANTE'){
         $new_counting[1]+=$counting_trackings[1];
         $new_counting[2]+=$counting_trackings[2];
         $new_counting[3]+=$counting_trackings[3];
-    
+
 
     return $new_counting;
 
@@ -466,7 +464,7 @@ if($user_kind=='PRACTICANTE'){
  * @param $array_people --> Array of monitors or practicants
  * @param $dates_interval
  * @param $instance --> id of instance
- * @return Array 
+ * @return Array
  *
  */
 
@@ -540,7 +538,7 @@ function create_counting_advice($user_kind,$result){
   $advice.='<strong>Practicante</strong><br>';
   $advice.='Revisado :'.$result[2].' - No revisado : '.$result[3].' -  Total :'.($result[2]+$result[3]).'</div></div>';
 
-  return $advice;  
+  return $advice;
 }
 
 
