@@ -15,6 +15,8 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/jquery.dataTables', 'block
 
             init: function() {
 
+              console.log("pass");
+
                 var self = this;
                 var instance_id = self.get_id_instance();
                 self.load_not_assigned_students(instance_id);
