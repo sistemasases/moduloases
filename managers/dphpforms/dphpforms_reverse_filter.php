@@ -45,7 +45,7 @@
         ]
     }*/
 
-    $test_criteria = json_decode( 
+    /*$test_criteria = json_decode( 
         '{
             "criteria":[
                 {
@@ -61,7 +61,7 @@
     );
 
     //Test
-    echo dphpforms_reverse_filter( "953", "DATE", $test_criteria );
+    echo dphpforms_reverse_filter( "953", "DATE", $test_criteria );*/
 
     function dphpforms_reverse_filter($id_pregunta, $cast_to, $criteria){
         global $DB;
