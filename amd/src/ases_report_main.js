@@ -20,7 +20,7 @@ define(['jquery',
         'block_ases/bootstrap',
         'block_ases/sweetalert'
         ],
-        function($, jszip, pdfmake, dataTables, autoFill, buttons, flash, html5, print, fixedColumns, bootstrap, sweetalert) {
+        function($, jszip, pdfmake, dataTables, autoFill, buttons, html5, flash, print, fixedColumns, bootstrap, sweetalert) {
     return {
         init: function(){
 
