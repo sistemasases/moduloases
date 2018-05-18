@@ -63,6 +63,11 @@
     //Test
     echo dphpforms_reverse_filter( "953", "DATE", $test_criteria );*/
 
+    if( isset( $_GET['id_pregunta'] ) && isset( $_GET['cast'] ) && isset( $_GET['criterio'] ) ){
+        header('Content-Type: application/json');
+        echo dphpforms_reverse_filter( $_GET['id_pregunta'], $_GET['cast'], json_decode( $_GET['criterio'] ) );
+    };
+
     function dphpforms_reverse_filter($id_pregunta, $cast_to, $criteria){
         global $DB;
         
@@ -87,15 +92,12 @@
             };
         };
         $sql="SELECT * FROM ( SELECT *$cast FROM {talentospilos_df_respuestas} WHERE id_pregunta = '$id_pregunta' $double_precision_cast ) AS SC " . $sql_criteria;
-
         $records = $DB->get_records_sql( $sql );
         return json_encode(
             array(
-                'results'=>$records
+                'results'=> array_values( $records )
             )
         );
-        
-
     };
 
 ?>
