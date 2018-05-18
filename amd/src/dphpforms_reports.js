@@ -28,7 +28,7 @@
                     );
                 }else{
                     $('#progress_group').css('display','block');
-                    $.get( '../managers/dphpforms/dphpforms_reverse_filter.php?id_pregunta=953&cast=date&criterio={"criteria":[{"operator":">","value":"2015-02-01"},{"operator":"<","value":"111112-12-31"}]}', function( data ) {
+                    $.get( '../managers/dphpforms/dphpforms_reverse_filter.php?id_pregunta=953&cast=date&criterio={"criteria":[{"operator":">=","value":"'+start_date+'"},{"operator":"<=","value":"'+end_date+'"}]}', function( data ) {
                         var count_records = Object.keys( data['results'] ).length;
                         var increment = 100 / count_records;
                         var completed_records = [];
@@ -36,15 +36,28 @@
                         $.each(data['results'], function () {
                             $.get( '../managers/dphpforms/dphpforms_reverse_finder.php?respuesta_id=' + this.id, function( answer ) {
                                 $.get( '../managers/dphpforms/dphpforms_get_record.php?record_id=' + answer['result']['id_registro'], function( record ) {
-                                    completed_records.push( record );
-                                    progress += increment;
-                                    if( progress >= 100 ){
-                                        progress = 100;
+                                    
+                                    var seguimiento = [];
+                                    console.log( Object.keys( record['record']['campos'] ).length );
+                                    for( var x = 0; x <  Object.keys( record['record']['campos'] ).length; x++ ){
+                                        var pregunta = {
+                                            "id":record['record']['campos'][ x ]['respuesta'],
+                                            "enunciado":record['record']['campos'][ x ]['enunciado']
+                                        };
+                                        seguimiento.push( pregunta );
+                                        completed_records.push( seguimiento );
                                     };
-                                    $('#progress').text( progress );
+                                    progress ++;
+                                    $('#progress').text( ( 100 / count_records ) * progress );
+                                    console.log("Procesado");
+                                    console.log(seguimiento);
                                 });
                             });
+                            $('#progress').text( Math.round( progress ) );
                         });
+                        if( count_records == 0 ){ 
+                            $('#progress').text( 100 );
+                        };
                     });
                 };
             });
