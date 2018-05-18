@@ -203,6 +203,11 @@ class renderer extends plugin_renderer_base {
         return parent::render_from_template('block_ases/dphpforms_form_editor_comportamientos', $data);
     }
 
+    public function render_dphpforms_reports_page($page){
+        $data = $page->export_for_template($this);
+        return parent::render_from_template('block_ases/dphpforms_reports', $data);
+    }
+
     public function render_teachers_reports_page($page){
         $data = $page->export_for_template($this);
         return parent::render_from_template('block_ases/teachers_reports', $data);

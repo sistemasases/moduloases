@@ -292,7 +292,7 @@ function get_not_assign_students($general_fields=null, $conditions, $academic_fi
         $sql_query = $select_clause.$from_clause.$sub_query_cohort.$sub_query_status.$sub_query_academic;
         $result_query = $DB->get_records_sql($sql_query);
 
-    }else if(property_exists($actions, 'search_assigned_students_ar')){
+    }
 
         $user_id = $USER->id;
 
@@ -357,9 +357,6 @@ function get_not_assign_students($general_fields=null, $conditions, $academic_fi
                 break;
         }
             
-    }else{
-        return 'El usuario no tiene permisos para listar estudiantes en el reporte ASES';
-    }
 
     $result_to_return = array();
 
@@ -382,7 +379,7 @@ function get_not_assign_students($general_fields=null, $conditions, $academic_fi
  * @param $idinstancia  --> Instancia del módulo
  * @return Array 
  */
-function get_ases_report($general_fields=null, $conditions, $risk_fields=null, $academic_fields=null, $statuses_fields=null, $instance_id){
+function get_ases_report($general_fields=null, $conditions, $risk_fields=null, $academic_fields=null, $statuses_fields=null, $assignment_fields=null, $instance_id){
 
     global $DB, $USER;
 
@@ -401,6 +398,7 @@ function get_ases_report($general_fields=null, $conditions, $risk_fields=null, $
     $sub_query_icetex_status = "";
     $sub_query_academic = "";
     $sub_query_risks = "";
+    $sub_query_assignment_fields = "";
 
     if($general_fields){
         foreach($general_fields as $field){
@@ -464,7 +462,6 @@ function get_ases_report($general_fields=null, $conditions, $risk_fields=null, $
     }
 
     // Campos Estados del estudiante
-
     if($statuses_fields){
 
         foreach($statuses_fields as $status_field){
@@ -508,9 +505,31 @@ function get_ases_report($general_fields=null, $conditions, $risk_fields=null, $
         }
     }
 
+    //Campos Asignaciones personal socioeducativo
+    if($assignment_fields){
+
+        foreach($assignment_fields as $assignment_field){
+            $select_clause = $select_clause.", ".$assignment_field;
+        }
+
+        $sub_query_assignment_fields = " LEFT JOIN 
+                                         (SELECT moodle_user.username, CONCAT(monitor_name.firstname, CONCAT(' ', monitor_name.lastname)) AS monitor, trainer_users.trainer_name AS training
+                                          FROM {user} AS moodle_user
+                                           INNER JOIN {talentospilos_user_extended} AS user_extended ON moodle_user.id = user_extended.id_moodle_user
+                                           INNER JOIN {talentospilos_monitor_estud} AS monitor_student ON monitor_student.id_estudiante = user_extended.id_ases_user
+                                           INNER JOIN {user} AS monitor_name ON monitor_student.id_monitor = monitor_name.id
+                                           LEFT JOIN
+                                           (SELECT user_role.id_usuario, CONCAT(user_moodle.firstname, CONCAT(' ', user_moodle.lastname)) AS trainer_name
+                                            FROM {talentospilos_user_rol} AS user_role
+                                            INNER JOIN {user} AS user_moodle ON user_role.id_jefe = user_moodle.id
+                                            WHERE user_role.id_semestre = 23) AS trainer_users ON trainer_users.id_usuario = monitor_student.id_monitor
+                                          WHERE monitor_student.id_semestre = 23) AS assignments_query ON assignments_query.username = user_moodle.username
+                                         ";
+    }
+
     if(property_exists($actions, 'search_all_students_ar')){
         
-        $sql_query = $select_clause.$from_clause.$sub_query_cohort.$sub_query_status.$sub_query_icetex_status.$sub_query_academic;
+        $sql_query = $select_clause.$from_clause.$sub_query_cohort.$sub_query_status.$sub_query_icetex_status.$sub_query_academic.$sub_query_assignment_fields;
         $result_query = $DB->get_records_sql($sql_query);
 
     }else if(property_exists($actions, 'search_assigned_students_ar')){
@@ -532,7 +551,7 @@ function get_ases_report($general_fields=null, $conditions, $risk_fields=null, $
 
                 $where_clause .= $conditions_query_directors;
 
-                $sql_query = $select_clause.$from_clause.$sub_query_cohort.$sub_query_status.$sub_query_icetex_status.$sub_query_academic.$where_clause;
+                $sql_query = $select_clause.$from_clause.$sub_query_cohort.$sub_query_status.$sub_query_icetex_status.$sub_query_academic.$sub_query_assignment_fields.$where_clause;
                 $result_query = $DB->get_records_sql($sql_query);
 
                 break;
@@ -556,7 +575,7 @@ function get_ases_report($general_fields=null, $conditions, $risk_fields=null, $
 
                 $where_clause .= " t_monitor_practicante_profesional.id_profesional = $user_id AND monitor_student.id_semestre = $id_current_semester";
 
-                $sql_query = $select_clause.$from_clause.$sub_query_cohort.$sub_query_status.$sub_query_academic.$sub_query_ps_staff.$where_clause;
+                $sql_query = $select_clause.$from_clause.$sub_query_cohort.$sub_query_status.$sub_query_academic.$sub_query_icetex_status.$sub_query_assignment_fields.$sub_query_ps_staff.$where_clause;
 
                 $result_query = $DB->get_records_sql($sql_query);
                 
@@ -573,7 +592,7 @@ function get_ases_report($general_fields=null, $conditions, $risk_fields=null, $
                 
                 $where_clause .= " t_monitor_practicante.id_practicante = $user_id AND monitor_student.id_semestre = $id_current_semester";
 
-                $sql_query = $select_clause.$from_clause.$sub_query_cohort.$sub_query_status.$sub_query_academic.$sub_query_ps_staff.$where_clause;
+                $sql_query = $select_clause.$from_clause.$sub_query_cohort.$sub_query_status.$sub_query_academic.$sub_query_icetex_status.$sub_query_assignment_fields.$sub_query_ps_staff.$where_clause;
 
                 $result_query = $DB->get_records_sql($sql_query);
 
@@ -584,7 +603,7 @@ function get_ases_report($general_fields=null, $conditions, $risk_fields=null, $
                 $query_monitors = " INNER JOIN {talentospilos_monitor_estud} AS monitor_student ON monitor_student.id_estudiante = user_extended.id_ases_user";
                 $where_clause .= " monitor_student.id_monitor = $user_id AND monitor_student.id_semestre = $id_current_semester";
 
-                $sql_query = $select_clause.$from_clause.$sub_query_cohort.$sub_query_status.$sub_query_academic.$query_monitors.$where_clause;
+                $sql_query = $select_clause.$from_clause.$sub_query_cohort.$sub_query_status.$sub_query_academic.$sub_query_icetex_status.$sub_query_assignment_fields.$query_monitors.$where_clause;
                 $result_query = $DB->get_records_sql($sql_query);
 
                 break;
@@ -639,7 +658,7 @@ function get_default_ases_report($id_instance){
     array_push($columns, array("title"=>"Número de documento", "name"=>"num_doc", "data"=>"num_doc"));
     array_push($columns, array("title"=>"Cohorte", "name"=>"cohorts_students", "data"=>"cohorts_student"));
 
-    $default_students = get_ases_report($query_fields, $conditions, null, null, null, $id_instance);
+    $default_students = get_ases_report($query_fields, $conditions, null, null, null, null, $id_instance);
 
     $data_to_table = array(
         "bsort" => false,

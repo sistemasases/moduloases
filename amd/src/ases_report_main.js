@@ -16,11 +16,11 @@ define(['jquery',
         'block_ases/buttons.html5',
         'block_ases/buttons.flash',
         'block_ases/buttons.print',
-        'block_ases/dataTables.fixedColumns',
         'block_ases/bootstrap',
         'block_ases/sweetalert'
+        
         ],
-        function($, jszip, pdfmake, dataTables, autoFill, buttons, flash, html5, print, fixedColumns, bootstrap, sweetalert) {
+        function($, jszip, pdfmake, dataTables, autoFill, buttons, html5, flash, print, bootstrap, sweetalert) {
     return {
         init: function(){
 
@@ -84,6 +84,14 @@ define(['jquery',
                     $("input[name='risk_fields[]']").prop('checked', true);
                 }else{
                     $("input[name='risk_fields[]']").prop('checked', false);
+                }
+            });
+
+            $('#assignment_fields_check').on('change', function(){
+                if( $('#assignment_fields_check').prop('checked') ) {
+                    $("input[name='assignment_fields[]']").prop('checked', true);
+                }else{
+                    $("input[name='assignment_fields[]']").prop('checked', false);
                 }
             });
 

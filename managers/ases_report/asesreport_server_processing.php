@@ -7,6 +7,7 @@ $query_fields = array();
 $risk_fields = array();
 $academic_fields = array();
 $statuses_array = array();
+$assignment_fields = array();
 
 $name_columns = new stdClass();
 
@@ -24,7 +25,10 @@ $fields_format = array(
     'faculty'=>'faculty.nombre AS nombre_facultad',
     'ases_status'=>'query_status_ases.estado_ases',
     'icetex_status'=>'query_icetex_status.estado_icetex',
-    'academic_program_status'=>'user_extended.program_status'
+    'academic_program_status'=>'user_extended.program_status',
+    'professional'=>'assignments_query.professional',
+    'training'=>'assignments_query.training',
+    'monitor'=>'assignments_query.monitor'
 );
 
 $columns_format = array(
@@ -41,7 +45,10 @@ $columns_format = array(
     'faculty'=>'Facultad',
     'ases_status'=>'Estado ASES',
     'icetex_status'=>'Estado ICETEX',
-    'academic_program_status'=>'Estado programa'
+    'academic_program_status'=>'Estado programa',
+    'professional'=>'Profesional',
+    'training'=>'Practicante',
+    'monitor'=>'Monitor'
 );
 
 if(isset($_POST['conditions'])){
@@ -84,10 +91,17 @@ if(isset($_POST['status_fields'])){
     }
 }
 
+if(isset($_POST['assignment_fields'])){
+    foreach($_POST['assignment_fields'] as $assignment_field){
+        array_push($assignment_fields, $fields_format[$assignment_field]);
+        array_push($columns, array("title"=>$columns_format[$assignment_field], "name"=>explode('.', $fields_format[$assignment_field])[1], "data"=>explode('.', $fields_format[$assignment_field])[1]));
+    }
+}
+
 if(isset($_POST['instance_id'])){
     $counter = 0;
     
-    $result = get_ases_report($query_fields, $conditions, $risk_fields, $academic_fields, $statuses_array, $_POST['instance_id']);
+    $result = get_ases_report($query_fields, $conditions, $risk_fields, $academic_fields, $statuses_array, $assignment_fields, $_POST['instance_id']);
 
     $data = array(
                 "bsort" => false,
