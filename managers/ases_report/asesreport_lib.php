@@ -292,7 +292,7 @@ function get_not_assign_students($general_fields=null, $conditions, $academic_fi
         $sql_query = $select_clause.$from_clause.$sub_query_cohort.$sub_query_status.$sub_query_academic;
         $result_query = $DB->get_records_sql($sql_query);
 
-    }else if(property_exists($actions, 'search_assigned_students_ar')){
+    }
 
         $user_id = $USER->id;
 
@@ -357,9 +357,6 @@ function get_not_assign_students($general_fields=null, $conditions, $academic_fi
                 break;
         }
             
-    }else{
-        return 'El usuario no tiene permisos para listar estudiantes en el reporte ASES';
-    }
 
     $result_to_return = array();
 
