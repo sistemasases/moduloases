@@ -72,8 +72,8 @@ if(isset($_POST['academic_fields'])){
 }
 
 if(isset($_POST['risk_fields'])){
-    $select='<br/><select><option value=""></option><option value="N.R.">N.R.</option><option value="Bajo">Bajo</option><option value="Medio">Medio</option>
-          <option value="alto">Alto</option></select>';
+    $select='<br/><select class="select_risk"><option value=""></option><option value="N.R.">N.R.</option><option value="Bajo">Bajo</option><option value="Medio">Medio</option>
+          <option value="Alto">Alto</option></select>';
 
     foreach($_POST['risk_fields'] as $risk_field){
     
