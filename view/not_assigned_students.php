@@ -86,9 +86,12 @@ foreach ($actions as $act) {
 
 $data->menu           = $menu_option;
 $data->cohorts_checks = $cohorts_table;
-$PAGE->requires->js_call_amd('block_ases/ases_report_main', 'init');
-$PAGE->requires->js_call_amd('block_ases/not_assigned_students_main', 'init');
 
+
+if(!$data->message){
+	$PAGE->requires->js_call_amd('block_ases/ases_report_main', 'init');
+	$PAGE->requires->js_call_amd('block_ases/not_assigned_students_main', 'init');
+}
 
 // Nav configuration
 $coursenode = $PAGE->navigation->find($courseid, navigation_node::TYPE_COURSE);
