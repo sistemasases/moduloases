@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -14,15 +13,15 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
-
 /**
  * Estrategia ASES
  *
- * @author     Isabella Serna RamĆ­rez
+ * @author     Isabella Serna Ramirez
  * @package    block_ases
  * @copyright  2017 Isabella Serna RamĆ­rez <isabella.serna@correounivalle.edu.co>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
 require_once ('pilos_tracking_lib.php');
 require_once (dirname(__FILE__) . '/../lib/student_lib.php');
 require_once (dirname(__FILE__) . '/../dphpforms/dphpforms_get_record.php');
@@ -46,44 +45,61 @@ function render_monitor_new_form($students_by_monitor, $period = null)
         $student = explode("-", $student_code->username);
         $current_semester = get_current_semester();
         if ($period == null) {
-            $monitor_trackings = get_tracking_current_semester('student',$student[0], $current_semester->max);
+            $monitor_trackings = get_tracking_current_semester('student', $student[0], $current_semester->max);
         }
         else {
-            $monitor_trackings = get_tracking_current_semester('student',$student[0], $period);
+            $monitor_trackings = get_tracking_current_semester('student', $student[0], $period);
         }
 
-        $monitor_counting=filter_trackings_by_review($monitor_trackings);
-        $A=0;
-
+        $monitor_counting = filter_trackings_by_review($monitor_trackings);
 
         $panel.= "<a data-toggle='collapse' class='student collapsed btn btn-danger btn-univalle btn-card collapsed' data-parent='#accordion_students' style='text-decoration:none' href='#student" . $student_code->username . "'>";
         $panel.= "<div class='panel-heading heading_students_tracking'>";
         $panel.= "<h4 class='panel-title'>";
         $panel.= "$student_code->firstname $student_code->lastname";
         $panel.= "</h4>"; //End panel-title
-
-        $panel.="<div class='row'>
-              <div class='col-sm-11'><h6><p class='text-right'><strong>RP :</strong><label class='review_prof'>".$monitor_counting[0]."</label> - <strong> N RP: </strong><label class='not_review_prof'>".$monitor_counting[1]."</label> - <strong>TOTAL:</strong><label class='total_prof'>".($monitor_counting[0]+$monitor_counting[1])."</label></p><p class='text-right'><strong>Rp :</strong><label class='review_pract'>".$monitor_counting[2]."</label> - <strong> N Rp: </strong><label class='not_review_pract'>".$monitor_counting[3]."</label> - <strong>TOTAL:</strong><label class='total_pract'>".($monitor_counting[2]+$monitor_counting[3])."</label></p></h6></div>
+        $panel.= "<div class='row'>
+              <div class='col-sm-11'><h6><p class='text-right'><strong>RP :</strong><label class='review_prof'>" . $monitor_counting[0] . "</label> - <strong> N RP: </strong><label class='not_review_prof'>" . $monitor_counting[1] . "</label> - <strong>TOTAL:</strong><label class='total_prof'>" . ($monitor_counting[0] + $monitor_counting[1]) . "</label></p><p class='text-right'><strong>Rp :</strong><label class='review_pract'>" . $monitor_counting[2] . "</label> - <strong> N Rp: </strong><label class='not_review_pract'>" . $monitor_counting[3] . "</label> - <strong>TOTAL:</strong><label class='total_pract'>" . ($monitor_counting[2] + $monitor_counting[3]) . "</label></p></h6></div>
              <div class='col-sm-1'><span class='glyphicon glyphicon-chevron-left'></span></div>
              </div>";
-
-
         $panel.= "</div>"; //End panel-heading
         $panel.= "</a>";
         $panel.= "<div id='student$student_code->username'  class='show collapse_v2 collapse border_rt' role='tabpanel' aria-labelledby='headingstudent$student_code->username' aria-expanded='true'>";
         $panel.= "<div class='panel-body'>";
-
-
         $panel.= "</div>"; // End panel-body
         $panel.= "</div>"; // End collapse
     }
-
 
     return $panel;
 }
 
 
+/**
+ * Create group tracking toogle given a monitor_id
+ *
+ * @see aux_create_groupal_toggle($monitor_id)
+ * @param $monitor_id
+ * @return String
+ *
+ */
 
+function aux_create_groupal_toggle($monitor_id)
+{
+    $panel = "";
+    $panel.= "<a data-toggle='collapse' class='groupal collapsed btn btn-danger btn-univalle btn-card collapsed' data-parent='#accordion_students' style='text-decoration:none' href='#groupal" . $monitor_id . "'>";
+    $panel.= "<div class='panel-heading heading_students_tracking'>";
+    $panel.= "<h4 class='panel-title'>";
+    $panel.= "SEGUIMIENTOS GRUPALES";
+    $panel.= "<span class='glyphicon glyphicon-chevron-left'></span>";
+    $panel.= "</h4>"; //End panel-title
+    $panel.= "</div>"; //End panel-heading
+    $panel.= "</a>";
+    $panel.= "<div id='groupal$monitor_id'  class='show collapse_v2 collapse border_rt' role='tabpanel' aria-labelledby='headinggroupal$monitor_id' aria-expanded='true'>";
+    $panel.= "<div class='panel-body'>";
+    $panel.= "</div>"; // End panel-body
+    $panel.= "</div>"; // End collapse
+    return $panel;
+}
 
 /**
  * Get the toggle of the monitor with the groupal follow-ups of each student with the implementation of the new form
@@ -106,20 +122,11 @@ function render_groupal_tracks_monitor_new_form($groupal_tracks, $monitor_id, $p
             $monitor_trackings = get_tracking_grupal_monitor_current_semester($monitor_id, $period);
         }
 
-        $panel.= "<a data-toggle='collapse' class='groupal collapsed btn btn-danger btn-univalle btn-card collapsed' data-parent='#accordion_students' style='text-decoration:none' href='#groupal" . $monitor_id . "'>";
-        $panel.= "<div class='panel-heading heading_students_tracking'>";
-        $panel.= "<h4 class='panel-title'>";
-        $panel.= "SEGUIMIENTOS GRUPALES";
-        $panel.= "<span class='glyphicon glyphicon-chevron-left'></span>";
-        $panel.= "</h4>"; //End panel-title
-        $panel.= "</div>"; //End panel-heading
-        $panel.= "</a>";
-        $panel.= "<div id='groupal$monitor_id'  class='show collapse_v2 collapse border_rt' role='tabpanel' aria-labelledby='headinggroupal$monitor_id' aria-expanded='true'>";
-        $panel.= "<div class='panel-body'>";
+        $panel.= aux_create_groupal_toggle($monitor_id);
+    }
 
-
-        $panel.= "</div>"; // End panel-body
-        $panel.= "</div>"; // End collapse
+    if (!$groupal_tracks) {
+        $panel.= aux_create_groupal_toggle($monitor_id);
     }
 
     return $panel;
@@ -137,11 +144,8 @@ function render_groupal_tracks_monitor_new_form($groupal_tracks, $monitor_id, $p
 function render_practicant_new_form($monitors_of_pract, $instance, $period = null)
 {
     $panel = "";
-    $practicant_counting=[];
+    $practicant_counting = [];
     $current_semester = get_current_semester();
-
-
-
     foreach($monitors_of_pract as $monitor) {
         $monitor_id = $monitor->id_usuario;
         $students_by_monitor = get_students_of_monitor($monitor_id, $instance);
@@ -150,33 +154,26 @@ function render_practicant_new_form($monitors_of_pract, $instance, $period = nul
 
         $panel.= "<a data-toggle='collapse' class='monitor collapsed btn btn-danger btn-univalle btn-card collapsed' data-parent='#accordion_monitors' style='text-decoration:none' href='#monitor" . $monitor->username . "'>";
         $panel.= "<div class='panel-heading heading_monitors_tracking'>";
-
-
-        $panel.="<div class='row'><div class='col-sm-5'>";
+        $panel.= "<div class='row'><div class='col-sm-5'>";
         $panel.= "<h4 class='panel-title'>";
-
         $panel.= "$monitor->firstname $monitor->lastname";
         $panel.= "</h4></div>"; //End panel-title
-
-        $panel.="<div class='col-sm-1'>";
-        $panel.="<span class='glyphicon glyphicon-user subpanel' style='font-size: 20px;'></span> : ".count(get_students_of_monitor($monitor_id,$instance));
-
-        $panel.="</div>";
-        $panel.="<div class='col-sm-1'>";
-        $panel.="<button type='button' class='see_history btn red_button'>
+        $panel.= "<div class='col-sm-1'>";
+        $panel.= "<span class='glyphicon glyphicon-user subpanel' style='font-size: 20px;'></span> : " . count(get_students_of_monitor($monitor_id, $instance));
+        $panel.= "</div>";
+        $panel.= "<div class='col-sm-1'>";
+        $panel.= "<button type='button' class='see_history btn red_button'>
                 <span class='glyphicon glyphicon-time'></span> Ver horas</button>";
-        $panel.="</div>";
-        $panel.="<div class='col-sm-4' id=counting_" . $monitor->username .">";
-        $panel.='<div class="loader"></div>';
-
-        $panel.="</div>";
-        $panel.="<div class='col-sm-1'><span class='glyphicon glyphicon-chevron-left'></span></div>";
+        $panel.= "</div>";
+        $panel.= "<div class='col-sm-4' id=counting_" . $monitor->username . ">";
+        $panel.= '<div class="loader"></div>';
+        $panel.= "</div>";
+        $panel.= "<div class='col-sm-1'><span class='glyphicon glyphicon-chevron-left'></span></div>";
         $panel.= "</div>";
         $panel.= "</div>"; //End panel-heading
         $panel.= "</a>";
         $panel.= "<div id='monitor$monitor->username'  class='show collapse_v2 collapse border_rt' role='tabpanel' aria-labelledby='headingmonitor$monitor->username' aria-expanded='true'>";
         $panel.= "<div class='panel-body'>";
-
         $panel.= "</div>"; // End panel-body
         $panel.= "</div>"; // End collapse
     }
@@ -196,9 +193,8 @@ function render_practicant_new_form($monitors_of_pract, $instance, $period = nul
 function render_professional_new_form($practicant_of_prof, $instance, $period = null)
 {
     $panel = "";
-    $practicant_counting=[];
+    $practicant_counting = [];
     $current_semester = get_current_semester();
-
     foreach($practicant_of_prof as $practicant) {
         $panel.= "<div class='panel panel-default'>";
         $practicant_id = $practicant->id_usuario;
@@ -208,30 +204,23 @@ function render_professional_new_form($practicant_of_prof, $instance, $period = 
 
         $panel.= "<a data-toggle='collapse' class='practicant collapsed btn btn-danger btn-univalle btn-card collapsed' data-parent='#accordion_practicant' style='text-decoration:none' href='#practicant" . $practicant->username . "'>";
         $panel.= "<div class='panel-heading heading_practicant_tracking'>";
-
-        $panel.="<div class='row'><div class='col-sm-5'>";
+        $panel.= "<div class='row'><div class='col-sm-5'>";
         $panel.= "<h4 class='panel-title'>";
         $panel.= "$practicant->firstname $practicant->lastname";
         $panel.= "</h4></div>"; //End panel-title
-
-         $panel.="<div class='col-sm-1'>";
-         $panel.="<span class='glyphicon glyphicon-user subpanel' style='font-size: 20px;'></span> : ".count(get_monitors_of_pract($practicant_id,$instance));
-         $panel.="<br><span class='glyphicon glyphicon-education subpanel' style='font-size: 20px;'></span> : ".get_quantity_students_by_pract($practicant_id,$instance);
-         $panel.="</div>";
-         $panel.="<div class='col-sm-5' id=counting_" . $practicant->username .">";
-
-         $panel.='<div class="loader"></div>';
-
-         $panel.="</div>";
-         $panel.="<div class='col-sm-1'><span class='glyphicon glyphicon-chevron-left'></span></div>";
-         $panel.= "</div>";
-
-
+        $panel.= "<div class='col-sm-1'>";
+        $panel.= "<span class='glyphicon glyphicon-user subpanel' style='font-size: 20px;'></span> : " . count(get_monitors_of_pract($practicant_id, $instance));
+        $panel.= "<br /><span class='glyphicon glyphicon-education subpanel' style='font-size: 20px;'></span> : " . get_quantity_students_by_pract($practicant_id, $instance);
+        $panel.= "</div>";
+        $panel.= "<div class='col-sm-5' id=counting_" . $practicant->username . ">";
+        $panel.= '<div class="loader"></div>';
+        $panel.= "</div>";
+        $panel.= "<div class='col-sm-1'><span class='glyphicon glyphicon-chevron-left'></span></div>";
+        $panel.= "</div>";
         $panel.= "</div>"; //End panel-heading
         $panel.= "</a>";
         $panel.= "<div id='practicant$practicant->username'  class='show collapse_v2 collapse border_rt' role='tabpanel' aria-labelledby='heading_practicant_tracking$practicant->username' aria-expanded='true'>";
         $panel.= "<div class='panel-body'>";
-
         $panel.= "</div>"; // End panel-body
         $panel.= "</div>"; // End collapse
         $panel.= "</div>"; // End panel-collapse
@@ -287,19 +276,16 @@ function render_student_trackings($peer_tracking_v2)
 
 function filter_trackings_by_review($peer_tracking_v2)
 {
-    $array_review_trackings_prof =[];
-    $array_not_review_trackings_prof =[];
-
-    $array_review_trackings_pract =[];
-    $array_not_review_trackings_pract =[];
-
-
+    $array_review_trackings_prof = [];
+    $array_not_review_trackings_prof = [];
+    $array_review_trackings_pract = [];
+    $array_not_review_trackings_pract = [];
     if ($peer_tracking_v2) {
         foreach($peer_tracking_v2[0] as $key => $period) {
             $year_number = $period;
             foreach($period as $key => $tracking) {
                 $is_reviewed_prof = false;
-                $is_reviewed_pract=false;
+                $is_reviewed_pract = false;
                 foreach($tracking[record][campos] as $key => $review) {
                     if ($review[local_alias] == 'revisado_profesional') {
                         if ($review[respuesta] == 0) {
@@ -307,31 +293,31 @@ function filter_trackings_by_review($peer_tracking_v2)
                             $is_reviewed_prof = true;
                         }
                     }
+
                     if ($review[local_alias] == 'revisado_practicante') {
                         if ($review[respuesta] == 0) {
                             array_push($array_review_trackings_pract, $tracking);
                             $is_reviewed_pract = true;
                         }
                     }
-
                 }
 
                 if (!$is_reviewed_prof) {
-                     array_push($array_not_review_trackings_prof, $tracking);
+                    array_push($array_not_review_trackings_prof, $tracking);
                 }
+
                 if (!$is_reviewed_pract) {
-                     array_push($array_not_review_trackings_pract, $tracking);
+                    array_push($array_not_review_trackings_pract, $tracking);
                 }
             }
         }
     }
 
-    $counting=[];
-    $counting[0]=count($array_review_trackings_prof);
-    $counting[1]=count($array_not_review_trackings_prof);
-    $counting[2]=count($array_review_trackings_pract);
-    $counting[3]=count($array_not_review_trackings_pract);
-
+    $counting = [];
+    $counting[0] = count($array_review_trackings_prof);
+    $counting[1] = count($array_not_review_trackings_prof);
+    $counting[2] = count($array_review_trackings_pract);
+    $counting[3] = count($array_not_review_trackings_pract);
     return $counting;
 }
 
@@ -347,58 +333,38 @@ function filter_trackings_by_review($peer_tracking_v2)
  *
  */
 
-function auxiliary_specific_counting($user_kind,$user_id,$semester,$instance){
+function auxiliary_specific_counting($user_kind, $user_id, $semester, $instance)
+{
+    $array_final = array();
+    if ($user_kind == 'profesional_ps') {
+        $practicant_of_prof = get_pract_of_prof($user_id, $instance);
+        foreach($practicant_of_prof as $practicant) {
+            $practicant_id = $practicant->id_usuario;
+            $monitors_of_pract = get_monitors_of_pract($practicant_id, $instance);
+            $profesional_counting = calculate_specific_counting('PROFESIONAL', $monitors_of_pract, $semester->max, $instance);
+            $counting_advice = new stdClass();
+            $counting_advice->code = $practicant->username;
 
-$array_final = array();
+            // $counting_advice->html="<h6><p class='text-right'><strong class='subpanel'>RP :</strong><label class='review_prof'>".$profesional_counting[0]."</label> - <strong class='subpanel'> N RP: </strong><label class='not_review_prof'>".$profesional_counting[1]."</label> - <strong class='subpanel'>TOTAL:</strong><label class='total_prof'>".($profesional_counting[0]+$profesional_counting[1])."</label></p><p class='text-right'><strong class='subpanel'>Rp :</strong><label class='review_pract'>".$profesional_counting[2]."</label> - <strong class='subpanel'> N Rp: </strong><label class='not_review_pract'>".$profesional_counting[3]."</label> - <strong class='subpanel'>TOTAL:</strong><label class='total_pract'>".($profesional_counting[2]+$profesional_counting[3])."</label></p></h6>";
 
-
-if($user_kind=='profesional_ps'){
-    $practicant_of_prof=get_pract_of_prof($user_id,$instance);
-
-
-    foreach($practicant_of_prof as $practicant) {
-        $practicant_id = $practicant->id_usuario;
-        $monitors_of_pract = get_monitors_of_pract($practicant_id,$instance);
-        $profesional_counting = calculate_specific_counting('PROFESIONAL',$monitors_of_pract,$semester->max,$instance);
-
-         $counting_advice=new stdClass();
-         $counting_advice->code =$practicant->username;
-         //$counting_advice->html="<h6><p class='text-right'><strong class='subpanel'>RP :</strong><label class='review_prof'>".$profesional_counting[0]."</label> - <strong class='subpanel'> N RP: </strong><label class='not_review_prof'>".$profesional_counting[1]."</label> - <strong class='subpanel'>TOTAL:</strong><label class='total_prof'>".($profesional_counting[0]+$profesional_counting[1])."</label></p><p class='text-right'><strong class='subpanel'>Rp :</strong><label class='review_pract'>".$profesional_counting[2]."</label> - <strong class='subpanel'> N Rp: </strong><label class='not_review_pract'>".$profesional_counting[3]."</label> - <strong class='subpanel'>TOTAL:</strong><label class='total_pract'>".($profesional_counting[2]+$profesional_counting[3])."</label></p></h6>";
-         array_push($array_final, $counting_advice);
-
+            array_push($array_final, $counting_advice);
         }
-
-    }else if($user_kind=='practicante_ps'){
-
-
-        $monitors_of_pract =get_monitors_of_pract($user_id,$instance);
-
-
+    }
+    else
+    if ($user_kind == 'practicante_ps') {
+        $monitors_of_pract = get_monitors_of_pract($user_id, $instance);
         foreach($monitors_of_pract as $monitor) {
-        $monitor_id = $monitor->id_usuario;
-        $practicant_counting=calculate_specific_counting("PRACTICANTE",$monitor,$semester->max,$instance);
-
-        $counting_advice=new stdClass();
-
-        $counting_advice->code =$monitor->username;
-
-
-        $counting_advice->html="<h6><p class='text-right'><strong class='subpanel'>RP :</strong><label class='review_prof'>".$practicant_counting[0]."</label> - <strong class='subpanel'> N RP: </strong><label class='not_review_prof'>".$practicant_counting[1]."</label> - <strong class='subpanel'>TOTAL:</strong><label class='total_prof'>".($practicant_counting[0]+$practicant_counting[1])."</label></p><p class='text-right'><strong class='subpanel'>Rp :</strong><label class='review_pract'>".$practicant_counting[2]."</label> - <strong class='subpanel'> N Rp: </strong><label class='not_review_pract'>".$practicant_counting[3]."</label> - <strong class='subpanel'>TOTAL:</strong><label class='total_pract'>".($practicant_counting[2]+$practicant_counting[3])."</label></p></h6>";
-         array_push($array_final, $counting_advice);
+            $monitor_id = $monitor->id_usuario;
+            $practicant_counting = calculate_specific_counting("PRACTICANTE", $monitor, $semester->max, $instance);
+            $counting_advice = new stdClass();
+            $counting_advice->code = $monitor->username;
+            $counting_advice->html = "<h6><p class='text-right'><strong class='subpanel'>RP :</strong><label class='review_prof'>" . $practicant_counting[0] . "</label> - <strong class='subpanel'> N RP: </strong><label class='not_review_prof'>" . $practicant_counting[1] . "</label> - <strong class='subpanel'>TOTAL:</strong><label class='total_prof'>" . ($practicant_counting[0] + $practicant_counting[1]) . "</label></p><p class='text-right'><strong class='subpanel'>Rp :</strong><label class='review_pract'>" . $practicant_counting[2] . "</label> - <strong class='subpanel'> N Rp: </strong><label class='not_review_pract'>" . $practicant_counting[3] . "</label> - <strong class='subpanel'>TOTAL:</strong><label class='total_pract'>" . ($practicant_counting[2] + $practicant_counting[3]) . "</label></p></h6>";
+            array_push($array_final, $counting_advice);
         }
-
-
     }
 
-
-
     return $array_final;
-
-
 }
-
-
-
 
 /**
  * Calculate the  tracking count of the practitioner and professional roles
@@ -412,108 +378,36 @@ if($user_kind=='profesional_ps'){
  *
  */
 
-function calculate_specific_counting($user_kind,$person,$dates_interval,$instance){
-
+function calculate_specific_counting($user_kind, $person, $dates_interval, $instance)
+{
     $new_counting = array();
-    $new_counting[0]=0;
-    $new_counting[1]=0;
-    $new_counting[2]=0;
-    $new_counting[3]=0;
-
-if($user_kind=='PRACTICANTE'){
-
-        $tracking_current_semestrer=get_tracking_current_semester('monitor',$person->id_usuario, $dates_interval);
-        $counting_trackings=filter_trackings_by_review($tracking_current_semestrer);
-
-        $new_counting[0]+=$counting_trackings[0];
-        $new_counting[1]+=$counting_trackings[1];
-        $new_counting[2]+=$counting_trackings[2];
-        $new_counting[3]+=$counting_trackings[3];
-
-
-    return $new_counting;
-
-
-}else if ($user_kind=='PROFESIONAL'){
-
-     foreach ($person as $key => $monitor) {
-        $tracking_current_semestrer=get_tracking_current_semester('monitor',$monitor->id_usuario, $dates_interval);
-        $counting_trackings=filter_trackings_by_review($tracking_current_semestrer);
-
-        $new_counting[0]+=$counting_trackings[0];
-        $new_counting[1]+=$counting_trackings[1];
-        $new_counting[2]+=$counting_trackings[2];
-        $new_counting[3]+=$counting_trackings[3];
-     }
+    $new_counting[0] = 0;
+    $new_counting[1] = 0;
+    $new_counting[2] = 0;
+    $new_counting[3] = 0;
+    if ($user_kind == 'PRACTICANTE') {
+        $tracking_current_semestrer = get_tracking_current_semester('monitor', $person->id_usuario, $dates_interval);
+        $counting_trackings = filter_trackings_by_review($tracking_current_semestrer);
+        $new_counting[0]+= $counting_trackings[0];
+        $new_counting[1]+= $counting_trackings[1];
+        $new_counting[2]+= $counting_trackings[2];
+        $new_counting[3]+= $counting_trackings[3];
+        return $new_counting;
     }
-    return $new_counting;
-
-}
-
-
-
-
-
-
-
-/**
- * Calculate the general tracking count of the practitioner and professional roles
- *
- * @see calculate_general_counting($user_kind,$array_people,$intervalo_fechas,$instance)
- * @param $user_kind --> Name of role
- * @param $array_people --> Array of monitors or practicants
- * @param $dates_interval
- * @param $instance --> id of instance
- * @return Array
- *
- */
-
-function calculate_general_counting($user_kind,$array_people,$dates_interval,$instance){
-
-    $new_counting = array();
-    $new_counting[0]=0;
-    $new_counting[1]=0;
-    $new_counting[2]=0;
-    $new_counting[3]=0;
-
-if($user_kind=='PRACTICANTE'){
-      $i = 0;
-$len = count($array_people);
-
-    foreach ($array_people as $key => $monitor) {
-        $tracking_current_semestrer=get_tracking_current_semester('monitor',$monitor->id_usuario, $dates_interval);
-        $counting_trackings=filter_trackings_by_review($tracking_current_semestrer);
-
-        $new_counting[0]+=$counting_trackings[0];
-        $new_counting[1]+=$counting_trackings[1];
-        $new_counting[2]+=$counting_trackings[2];
-        $new_counting[3]+=$counting_trackings[3];
+    else
+    if ($user_kind == 'PROFESIONAL') {
+        foreach($person as $key => $monitor) {
+            $tracking_current_semestrer = get_tracking_current_semester('monitor', $monitor->id_usuario, $dates_interval);
+            $counting_trackings = filter_trackings_by_review($tracking_current_semestrer);
+            $new_counting[0]+= $counting_trackings[0];
+            $new_counting[1]+= $counting_trackings[1];
+            $new_counting[2]+= $counting_trackings[2];
+            $new_counting[3]+= $counting_trackings[3];
+        }
     }
 
     return $new_counting;
-
-
-}else if ($user_kind=='PROFESIONAL'){
-    foreach ($array_people as $key => $practicant) {
-
-     $monitors=get_monitors_of_pract($practicant->id_usuario,$instance);
-     foreach ($monitors as $key => $monitor) {
-        $tracking_current_semestrer=get_tracking_current_semester('monitor',$monitor->id_usuario, $dates_interval);
-        $counting_trackings=filter_trackings_by_review($tracking_current_semestrer);
-
-        $new_counting[0]+=$counting_trackings[0];
-        $new_counting[1]+=$counting_trackings[1];
-        $new_counting[2]+=$counting_trackings[2];
-        $new_counting[3]+=$counting_trackings[3];
-     }
-    }
-    return $new_counting;
-
 }
-
-
-}
-
 
 /**
  * Create the notice sign of the counts by professional and practicant
@@ -526,24 +420,19 @@ $len = count($array_people);
  *
  */
 
-function create_counting_advice($user_kind,$result){
-
-  $advice="";
-  $advice.='<h2> INFORMACIÓN DE  '.$user_kind.'</h2><hr>';
-  $advice.='<div class="row">';
-  $advice.='<div class="col-sm-6">';
-  $advice.='<strong>Profesional</strong><br>';
-  $advice.='Revisado :'.$result[0].' - No revisado : '.$result[1].' -  Total :'.($result[1]+$result[0]).'</div>';
-  $advice.='<div class="col-sm-6">';
-  $advice.='<strong>Practicante</strong><br>';
-  $advice.='Revisado :'.$result[2].' - No revisado : '.$result[3].' -  Total :'.($result[2]+$result[3]).'</div></div>';
-
-  return $advice;
+function create_counting_advice($user_kind, $result)
+{
+    $advice = "";
+    $advice.= '<h2> INFORMACIÓN DE  ' . $user_kind . '</h2><hr>';
+    $advice.= '<div class="row">';
+    $advice.= '<div class="col-sm-6">';
+    $advice.= '<strong>Profesional</strong><br />';
+    $advice.= 'Revisado :' . $result[0] . ' - No revisado : ' . $result[1] . ' -  Total :' . ($result[1] + $result[0]) . '</div>';
+    $advice.= '<div class="col-sm-6">';
+    $advice.= '<strong>Practicante</strong><br />';
+    $advice.= 'Revisado :' . $result[2] . ' - No revisado : ' . $result[3] . ' -  Total :' . ($result[2] + $result[3]) . '</div></div>';
+    return $advice;
 }
-
-
-
-
 
 /**
  * Formatting of array with dates of trackings
@@ -568,7 +457,6 @@ function format_dates_trackings(&$array_detail_peer_trackings_dphpforms, &$array
         }
     }
 }
-
 
 /**
  * FunciĆ³n que ordena en un array los trackings para imprimir
@@ -698,17 +586,14 @@ function get_peer_trackings_by_monitor($pares, $grupal, $codigoMonitor, $noMonit
     return $monitorstudents;
 }
 
-// //////////////////////////////////////////////////////////////////////////////////////////////
-// /////////////////////////////////////////////////////////////////////////////////////////////
-// ////////////////////////////////////////////////////////////////////////////////////////////
 
 function replace_content_inside_delimiters($start, $end, $new, $source)
 {
     return preg_replace('#(' . preg_quote($start) . ')(.*?)(' . preg_quote($end) . ')#si', '$1' . $new . '$3', $source);
 }
 
-/** FunciĆ³n que recorta el Toogle a mostrar deacuerdo a los permisos del usuario
- * Cuts the shown toogle according to an user licence
+/** 
+ * Function that erase parts of toogle according to  user permissions
  * @see show_according_permissions(&$table,$actions)
  * @param $table --> Toogle
  * @param $actions --> user permission (licence)
@@ -748,38 +633,6 @@ function show_according_permissions(&$table, $actions)
     return $table;
 }
 
-/*
-* 'Seguimiento pilos' functions which update on view
-*/
-
-// ******************************************************************************************************
-// ******************************************************************************************************
-// ******************************************************************************************************
-// SEPARATE BY SEMESTERS METHODS
-// ******************************************************************************************************
-// ******************************************************************************************************
-// ******************************************************************************************************
-
-/**
- * Evaluates tracking existence
- * @see has_tracking($seguimientos)
- * @param $seguimientos ---> html string
- * @return string html table
- *
- */
-
-function has_tracking($seguimientos)
-{
-    $table = "";
-    if ($seguimientos == "") {
-        $table.= "<p class='text-center'><strong>No existen seguimientos en el periodo seleccionado</strong></p>";
-    }
-    else {
-        $table.= $seguimientos;
-    }
-
-    return $table;
-}
 
 /**
  * Gets a select organized by existent periods
@@ -822,9 +675,5 @@ function get_people_select($people)
     $table.= '<span class="btn btn-info" id="consultar_persona" type="button">Consultar</span></form></div>';
     return $table;
 }
-
-
-
-
 
 ?>
