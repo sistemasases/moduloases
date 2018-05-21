@@ -518,9 +518,9 @@ function get_ases_report($general_fields=null, $conditions, $risk_fields=null, $
                                           FROM
         
                                             (SELECT monitor_student.id_monitor, moodle_user.username
-                                             FROM mdl_talentospilos_monitor_estud AS monitor_student
-                                             LEFT JOIN mdl_talentospilos_user_extended AS user_extended ON user_extended.id_ases_user = monitor_student.id_estudiante
-                                             INNER JOIN mdl_user AS moodle_user ON moodle_user.id = user_extended.id_moodle_user
+                                             FROM {talentospilos_monitor_estud} AS monitor_student
+                                             LEFT JOIN {talentospilos_user_extended} AS user_extended ON user_extended.id_ases_user = monitor_student.id_estudiante
+                                             INNER JOIN {user} AS moodle_user ON moodle_user.id = user_extended.id_moodle_user
                                              WHERE monitor_student.id_semestre = $id_current_semester AND monitor_student.id_instancia = $instance_id) AS monitor_student
                                             
                                             LEFT JOIN
@@ -528,25 +528,25 @@ function get_ases_report($general_fields=null, $conditions, $risk_fields=null, $
                                             (SELECT query_monitor.id_monitor, query_monitor.monitor_name AS monitor, query_trainer.trainer_name AS trainer, query_professional.professional_name AS professional
                                              FROM
                                               (SELECT user_role.id_usuario AS id_monitor, CONCAT(moodle_user.firstname, CONCAT(' ', moodle_user.lastname)) AS monitor_name, user_role.id_jefe AS id_boss_monitor
-                                               FROM mdl_talentospilos_user_rol AS user_role 
-                                               INNER JOIN mdl_user AS moodle_user ON user_role.id_usuario = moodle_user.id
-                                               WHERE id_rol = (SELECT id FROM mdl_talentospilos_rol AS role WHERE nombre_rol = 'monitor_ps') AND id_semestre = $id_current_semester AND id_instancia = $instance_id) AS query_monitor
+                                               FROM {talentospilos_user_rol} AS user_role 
+                                               INNER JOIN {user} AS moodle_user ON user_role.id_usuario = moodle_user.id
+                                               WHERE id_rol = (SELECT id FROM {talentospilos_rol} AS role WHERE nombre_rol = 'monitor_ps') AND id_semestre = $id_current_semester AND id_instancia = $instance_id) AS query_monitor
 
                                              INNER JOIN
                                             
                                              (SELECT user_role.id_usuario AS id_trainer, CONCAT(moodle_user.firstname, CONCAT(' ', moodle_user.lastname)) AS trainer_name, user_role.id_jefe AS id_boss_trainer
-                                              FROM mdl_talentospilos_user_rol AS user_role 
-                                              INNER JOIN mdl_user AS moodle_user ON user_role.id_usuario = moodle_user.id
-                                              WHERE id_rol = (SELECT id FROM mdl_talentospilos_rol AS role WHERE nombre_rol = 'practicante_ps') AND id_semestre = $id_current_semester AND id_instancia = $instance_id) AS query_trainer
+                                              FROM {talentospilos_user_rol} AS user_role 
+                                              INNER JOIN {user} AS moodle_user ON user_role.id_usuario = moodle_user.id
+                                              WHERE id_rol = (SELECT id FROM {talentospilos_rol} AS role WHERE nombre_rol = 'practicante_ps') AND id_semestre = $id_current_semester AND id_instancia = $instance_id) AS query_trainer
                                             
                                              ON query_monitor.id_boss_monitor = query_trainer.id_trainer
                                             
                                             INNER JOIN
                                             
                                             (SELECT user_role.id_usuario AS id_professional, CONCAT(moodle_user.firstname, CONCAT(' ', moodle_user.lastname)) AS professional_name
-                                            FROM mdl_talentospilos_user_rol AS user_role 
-                                            INNER JOIN mdl_user AS moodle_user ON user_role.id_usuario = moodle_user.id
-                                            WHERE id_rol = (SELECT id FROM mdl_talentospilos_rol AS role WHERE nombre_rol = 'profesional_ps') AND id_semestre = $id_current_semester AND id_instancia = $instance_id) AS query_professional
+                                            FROM {talentospilos_user_rol} AS user_role 
+                                            INNER JOIN {user} AS moodle_user ON user_role.id_usuario = moodle_user.id
+                                            WHERE id_rol = (SELECT id FROM {talentospilos_rol} AS role WHERE nombre_rol = 'profesional_ps') AND id_semestre = $id_current_semester AND id_instancia = $instance_id) AS query_professional
                                             
                                             ON query_professional.id_professional = query_trainer.id_boss_trainer) AS psico_staff
                                             
