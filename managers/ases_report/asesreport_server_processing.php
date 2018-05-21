@@ -27,7 +27,7 @@ $fields_format = array(
     'icetex_status'=>'query_icetex_status.estado_icetex',
     'academic_program_status'=>'user_extended.program_status',
     'professional'=>'assignments_query.professional',
-    'training'=>'assignments_query.training',
+    'training'=>'assignments_query.trainer',
     'monitor'=>'assignments_query.monitor'
 );
 
