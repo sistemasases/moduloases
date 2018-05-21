@@ -133,9 +133,12 @@ function get_role_ases($id)
  *
  * @see make_select_ficha($id, $student_code)
  * @param $id --> student id
+ * @param $rol
+ * @param $student_code
+ * @param $instance_id
  * @return string --> Containing the previous select
  */
-function make_select_ficha($id, $rol, $student_code)
+function make_select_ficha($id, $rol, $student_code, $instance_id)
 {
     global $DB;  
 
@@ -165,7 +168,7 @@ function make_select_ficha($id, $rol, $student_code)
         
     } else {
 
-        $asign .= process_info_assigned_students(get_all_student(), $student_code);   
+        $asign .= process_info_assigned_students(get_all_student($instance_id), $student_code);   
 
     }
     $asign .= "</select>";
@@ -294,7 +297,7 @@ function get_asigned_by_dir_prog($id)
  * @param $id --> dirrector id
  * @return array --> with every student
  */
-function get_all_student()      
+function get_all_student($instance_id)
 {
     global $DB;
 
@@ -303,7 +306,10 @@ function get_all_student()
 
     $query = "SELECT user_moodle.username, user_moodle.firstname, user_moodle.lastname
               FROM {user} AS user_moodle
-              INNER JOIN {talentospilos_user_extended} AS user_extended ON user_moodle.id = user_extended.id_moodle_user";
+              INNER JOIN {talentospilos_user_extended} AS user_extended ON user_moodle.id = user_extended.id_moodle_user
+              INNER JOIN {cohort_members} AS cohort_members ON cohort_members.userid = user_extended.id_moodle_user
+              INNER JOIN {talentospilos_inst_cohorte} AS instance_cohort ON instance_cohort.id_cohorte = cohort_members.cohortid
+              WHERE instance_cohort.id_instancia = $instance_id";
 
     $result = $DB->get_records_sql($query);
 
