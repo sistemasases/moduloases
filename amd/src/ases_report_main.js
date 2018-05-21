@@ -18,7 +18,6 @@ define(['jquery',
         'block_ases/buttons.print',
         'block_ases/bootstrap',
         'block_ases/sweetalert'
-        
         ],
         function($, jszip, pdfmake, dataTables, autoFill, buttons, html5, flash, print, bootstrap, sweetalert) {
     return {
@@ -156,11 +155,11 @@ define(['jquery',
                 $('#tableResult tr').each(function() {
                     $.each(this.cells, function() {
                         if ($(this).html() == 'Bajo') {
-                            $(this).addClass('bajo');
+                            $(this).addClass('riesgo_bajo');
                         } else if ($(this).html() == 'Medio') {
-                            $(this).addClass('medio');
+                            $(this).addClass('riesgo_medio');
                         } else if ($(this).html() == 'Alto') {
-                            $(this).addClass('alto');
+                            $(this).addClass('riesgo_alto');
                         }
                     });
                 });
