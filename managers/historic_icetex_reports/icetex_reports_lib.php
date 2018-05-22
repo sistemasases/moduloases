@@ -383,13 +383,13 @@ function get_count_active_no_res_students($cohort){
 
     $array_count = array();
 
-    $sql_query = "SELECT row_number() over(), Count(academ.id_estudiante) AS num_act_no_res, semestre.nombre AS semestre
+    $sql_query = "SELECT semestre.nombre AS semestre, Count(academ.id_estudiante) AS num_act_no_res
                     FROM {talentospilos_history_academ} AS academ
                     INNER JOIN {talentospilos_semestre} semestre ON semestre.id = academ.id_semestre
                     INNER JOIN {talentospilos_user_extended} uext ON uext.id_ases_user = academ.id_estudiante
                     INNER JOIN {cohort_members} co_mem ON co_mem.userid = uext.id_moodle_user
                     INNER JOIN {cohort} cohortm ON cohortm.id = co_mem.cohortid
-                    WHERE substring(cohortm.idnumber from 0 for 5) = '$cohort' OR substring(cohortm.idnumber from 0 for 6) = '$cohort'
+                    WHERE (substring(cohortm.idnumber from 0 for 5) = '$cohort' OR substring(cohortm.idnumber from 0 for 6) = '$cohort')
                     AND  academ.id 
                     NOT IN 
                     (SELECT id_history FROM {talentospilos_history_cancel})
@@ -398,9 +398,7 @@ function get_count_active_no_res_students($cohort){
                     NOT IN
 
                     (SELECT DISTINCT res_est.id_estudiante
-                    FROM {talentospilos_res_estudiante} AS res_est
-                    INNER JOIN {talentospilos_res_icetex} AS res_ice ON res_ice.id = res_est.id_resolucion
-                    INNER JOIN {talentospilos_semestre} semestre ON semestre.id = res_ice.id_semestre)
+                    FROM {talentospilos_res_estudiante} AS res_est)
                     GROUP BY semestre.nombre";
 
     $counts = $DB->get_records_sql($sql_query);
