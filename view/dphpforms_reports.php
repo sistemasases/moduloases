@@ -31,7 +31,7 @@ require_once $CFG->libdir . '/adminlib.php';
 require_once('../managers/lib/lib.php');
 require_once('../managers/instance_management/instance_lib.php');
 require_once ('../managers/menu_options.php');
-include_once "../managers/dphpforms/dphpforms_form_updater.php";
+include_once "../managers/dphpforms/dphpforms_reverse_filter.php";
 include('../lib.php');
 
 
@@ -41,11 +41,10 @@ global $USER;
 include "../classes/output/dphpforms_reports_page.php";
 include "../classes/output/renderer.php";
 
-$title = "Editor de formularios";
+$title = "Generador de reportes";
 $pagetitle = $title;
 $courseid = required_param('courseid', PARAM_INT);
 $blockid = required_param('instanceid', PARAM_INT);
-$student_code = optional_param('student_code', 0, PARAM_INT);
 
 $record = new stdClass();
 
@@ -63,8 +62,6 @@ $url = new moodle_url("/blocks/ases/view/dphpforms_form_builder.php", array('cou
 $coursenode = $PAGE->navigation->find($courseid, navigation_node::TYPE_COURSE);
 
 $rol = get_role_ases($USER->id);
-
-$record->forms = array_values(get_forms());
 
 $PAGE->set_context($contextcourse);
 $PAGE->set_context($contextblock);
