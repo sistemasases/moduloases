@@ -28,7 +28,8 @@
                     );
                 }else{
                     $('#progress_group').css('display','block');
-                    $.get( '../managers/dphpforms/dphpforms_reverse_filter.php?id_pregunta=1&cast=date&criterio={"criteria":[{"operator":">=","value":"'+start_date+'"},{"operator":"<=","value":"'+end_date+'"}]}', function( data ) {
+                    $('#progress').text( "Espere, puede tardar un par de minutos ..." );
+                    $.get( '../managers/dphpforms/dphpforms_reverse_filter.php?id_pregunta=seguimiento_pares_fecha&cast=date&criterio={"criteria":[{"operator":">=","value":"'+start_date+'"},{"operator":"<=","value":"'+end_date+'"}]}', function( data ) {
                         var count_records = Object.keys( data['results'] ).length;
                         var increment = 100 / count_records;
                         var completed_records = [];
@@ -41,7 +42,7 @@
                                     console.log( record['record']['campos']  );
                                     for( var x = 0; x <  Object.keys( record['record']['campos'] ).length; x++ ){
                                         var pregunta = {
-                                            "id":record['record']['campos'][ x ]['posicion'],
+                                            "id":record['record']['campos'][ x ]['id_pregunta'],
                                             "respuesra":record['record']['campos'][ x ]['respuesta'],
                                             "enunciado":record['record']['campos'][ x ]['enunciado']
                                         };
@@ -49,7 +50,7 @@
                                         completed_records.push( seguimiento );
                                     };
                                     progress ++;
-                                    $('#progress').text( ( 100 / count_records ) * progress );
+                                    $('#progress').text( (( 100 / count_records ) * progress).toFixed(2) );
                                     console.log("Procesado");
                                     console.log(seguimiento);
                                 });
