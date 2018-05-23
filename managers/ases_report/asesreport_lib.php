@@ -219,7 +219,7 @@ function getGraficEstado($cohorte){
 /**
  * Función que recupera datos para la tabla de ases_report, dado el estado, la cohorte y un conjunto de campos a extraer.
  *
- * @see get_ases_report()
+ * @see get_not_assign_students()
  * @param $column       --> Campos a seleccionar
  * @param $population   --> Estado y cohorte
  * @param $academic_fields --> Campos relacionados con el programa académico y facultad
@@ -432,7 +432,8 @@ function get_ases_report($general_fields=null, $conditions, $risk_fields=null, $
         }
 
         $sub_query_academic .= " INNER JOIN {talentospilos_programa} AS acad_program ON user_extended.id_academic_program = acad_program.id
-                                INNER JOIN {talentospilos_facultad} AS faculty ON faculty.id = acad_program.id_facultad";
+                                 INNER JOIN {talentospilos_facultad} AS faculty ON faculty.id = acad_program.id_facultad
+                                 LEFT JOIN {talentospilos_history_academ} AS academic_history ON academic_history.id_estudiante = user_extended.id_ases_user";
     }
 
     $select_clause = substr($select_clause, 0, -2);
@@ -564,7 +565,6 @@ function get_ases_report($general_fields=null, $conditions, $risk_fields=null, $
 
         $user_id = $USER->id;
         
-
         $sql_query = "SELECT roles.nombre_rol, user_role.id_programa 
                       FROM {talentospilos_user_rol} AS user_role 
                                                 INNER JOIN {talentospilos_rol} AS roles ON user_role.id_rol = roles.id
@@ -647,7 +647,6 @@ function get_ases_report($general_fields=null, $conditions, $risk_fields=null, $
     $result_to_return = array();
 
     foreach($result_query as $result){
-
         array_push($result_to_return, $result);
     }
 
