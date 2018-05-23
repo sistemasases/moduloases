@@ -434,6 +434,8 @@ function get_ases_report($general_fields=null, $conditions, $risk_fields=null, $
         $sub_query_academic .= " INNER JOIN {talentospilos_programa} AS acad_program ON user_extended.id_academic_program = acad_program.id
                                  INNER JOIN {talentospilos_facultad} AS faculty ON faculty.id = acad_program.id_facultad
                                  LEFT JOIN {talentospilos_history_academ} AS academic_history ON academic_history.id_estudiante = user_extended.id_ases_user";
+
+        $where_clause .= " academic_history.id_semestre = $id_current_semester AND ";
     }
 
     $select_clause = substr($select_clause, 0, -2);
