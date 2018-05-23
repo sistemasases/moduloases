@@ -11,16 +11,24 @@
         </div>
         <div class="row">
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <!--<div class="form-group">
+                    <label for="">#ID pregunta</label>
+                    <input type="number" name="" id="" class="form-control">
+                </div>-->
                 <div class="form-group">
                     <label for="">Fecha de inicio</label>
-                    <input type="date" name="" id="" class="form-control ajuste_fecha">
+                    <input type="date" name="" id="start_date" class="form-control ajuste_fecha">
                 </div>
                 <div class="form-group">
                     <label for="">Fecha de finalización</label>
-                    <input type="date" name="" id="" class="form-control ajuste_fecha">
+                    <input type="date" name="" id="end_date" class="form-control ajuste_fecha">
                 </div>
                 <div class="form-group">
-                    <button type="submit" class="btn btn-default btn-generar">Generar</button>
+                    <button id="btn-generar-reporte" type="submit" class="btn btn-default">Generar</button>
+                </div>
+                <div id="progress_group" class="form-group" style="display:none;">
+                        <hr>
+                        <span><strong>Progreso:</strong> <span id="progress">0</span>%</span>
                 </div>
             </div>
         </div>
