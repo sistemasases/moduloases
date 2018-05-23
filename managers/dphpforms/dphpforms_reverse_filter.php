@@ -76,6 +76,7 @@
 
         if( $cast_to ){
             $cast = ", NULLIF(respuesta,'')::$cast_to AS respuesta_casted";
+            $cast_to = strtoupper( $cast_to );
             if( $cast_to == "DATE" ){
                 $double_precision_cast = "AND respuesta ~ '[0-9]{4}-[0-9]{1,2}-[0-9]{1,2}'";
             };
