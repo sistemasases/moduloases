@@ -28,7 +28,7 @@
                     );
                 }else{
                     $('#progress_group').css('display','block');
-                    $.get( '../managers/dphpforms/dphpforms_reverse_filter.php?id_pregunta=953&cast=date&criterio={"criteria":[{"operator":">=","value":"'+start_date+'"},{"operator":"<=","value":"'+end_date+'"}]}', function( data ) {
+                    $.get( '../managers/dphpforms/dphpforms_reverse_filter.php?id_pregunta=1&cast=date&criterio={"criteria":[{"operator":">=","value":"'+start_date+'"},{"operator":"<=","value":"'+end_date+'"}]}', function( data ) {
                         var count_records = Object.keys( data['results'] ).length;
                         var increment = 100 / count_records;
                         var completed_records = [];
