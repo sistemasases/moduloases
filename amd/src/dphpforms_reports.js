@@ -38,10 +38,11 @@
                                 $.get( '../managers/dphpforms/dphpforms_get_record.php?record_id=' + answer['result']['id_registro'], function( record ) {
                                     
                                     var seguimiento = [];
-                                    console.log( Object.keys( record['record']['campos'] ).length );
+                                    console.log( record['record']['campos']  );
                                     for( var x = 0; x <  Object.keys( record['record']['campos'] ).length; x++ ){
                                         var pregunta = {
-                                            "id":record['record']['campos'][ x ]['respuesta'],
+                                            "id":record['record']['campos'][ x ]['posicion'],
+                                            "respuesra":record['record']['campos'][ x ]['respuesta'],
                                             "enunciado":record['record']['campos'][ x ]['enunciado']
                                         };
                                         seguimiento.push( pregunta );
