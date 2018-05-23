@@ -62,6 +62,7 @@
 
     //Test
     echo dphpforms_reverse_filter( "953", "DATE", $test_criteria );*/
+    // 
 
     if( isset( $_GET['id_pregunta'] ) && isset( $_GET['cast'] ) && isset( $_GET['criterio'] ) ){
         header('Content-Type: application/json');
@@ -73,6 +74,23 @@
         
         $cast = "";
         $double_presicion_cast = "";
+        $PREGUNTA_ID = -1;
+
+        if(!is_numeric($id_pregunta)){
+            $sql_alias = "SELECT id_pregunta FROM {talentospilos_df_alias} WHERE alias = '$id_pregunta'";
+            $preg_record = $DB->get_record_sql($sql_alias);
+            if($preg_record != null){
+                $PREGUNTA_ID = (int) $preg_record->id_pregunta;
+            }else{
+                return json_encode(
+                    array(
+                        'results'=> null
+                    )
+                );
+            };
+        }else{
+            $PREGUNTA_ID = $id_pregunta;
+        };
 
         if( $cast_to ){
             $cast = ", NULLIF(respuesta,'')::$cast_to AS respuesta_casted";
@@ -92,7 +110,7 @@
                 $sql_criteria .= " AND SC.respuesta_casted " . $criteria_element->operator . " '" . $criteria_element->value . "'";
             };
         };
-        $sql="SELECT * FROM ( SELECT *$cast FROM {talentospilos_df_respuestas} WHERE id_pregunta = '$id_pregunta' $double_precision_cast ) AS SC " . $sql_criteria;
+        $sql="SELECT * FROM ( SELECT *$cast FROM {talentospilos_df_respuestas} WHERE id_pregunta = '$PREGUNTA_ID' $double_precision_cast ) AS SC " . $sql_criteria;
         $records = $DB->get_records_sql( $sql );
         return json_encode(
             array(
