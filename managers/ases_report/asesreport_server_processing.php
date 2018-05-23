@@ -27,7 +27,7 @@ $fields_format = array(
     'icetex_status'=>'query_icetex_status.estado_icetex',
     'academic_program_status'=>'user_extended.program_status',
     'professional'=>'assignments_query.professional',
-    'training'=>'assignments_query.training',
+    'training'=>'assignments_query.trainer',
     'monitor'=>'assignments_query.monitor'
 );
 
@@ -72,8 +72,8 @@ if(isset($_POST['academic_fields'])){
 }
 
 if(isset($_POST['risk_fields'])){
-    $select='<br/><select><option value=""></option><option value="N.R.">N.R.</option><option value="Bajo">Bajo</option><option value="Medio">Medio</option>
-          <option value="alto">Alto</option></select>';
+    $select='<br/><select class="select_risk"><option value=""></option><option value="N.R.">N.R.</option><option value="Bajo">Bajo</option><option value="Medio">Medio</option>
+          <option value="Alto">Alto</option></select>';
 
     foreach($_POST['risk_fields'] as $risk_field){
     

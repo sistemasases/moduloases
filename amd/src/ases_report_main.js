@@ -18,7 +18,6 @@ define(['jquery',
         'block_ases/buttons.print',
         'block_ases/bootstrap',
         'block_ases/sweetalert'
-        
         ],
         function($, jszip, pdfmake, dataTables, autoFill, buttons, html5, flash, print, bootstrap, sweetalert) {
     return {
@@ -96,7 +95,7 @@ define(['jquery',
             });
 
             //Función para busqueda de los filtros de riesgos.
-            $(document).on('change', '#tableResult thead tr th select', function() {
+            $(document).on('change', '.select_risk', function() {
                 var table = $("#tableResult").DataTable();
                 var colIndex = $(this).parent().index() + 1;
                 var selectedText = $(this).parent().find(":selected").text();
@@ -156,11 +155,11 @@ define(['jquery',
                 $('#tableResult tr').each(function() {
                     $.each(this.cells, function() {
                         if ($(this).html() == 'Bajo') {
-                            $(this).addClass('bajo');
+                            $(this).addClass('riesgo_bajo');
                         } else if ($(this).html() == 'Medio') {
-                            $(this).addClass('medio');
+                            $(this).addClass('riesgo_medio');
                         } else if ($(this).html() == 'Alto') {
-                            $(this).addClass('alto');
+                            $(this).addClass('riesgo_alto');
                         }
                     });
                 });
@@ -168,12 +167,12 @@ define(['jquery',
                 $('#tableResult').bind("DOMSubtreeModified", function() {
                     $('#tableResult tr').each(function() {
                         $.each(this.cells, function() {
-                            if ($(this).html() == 'bajo') {
-                                $(this).addClass('bajo');
-                            } else if ($(this).html() == 'medio') {
-                                $(this).addClass('medio');
-                            } else if ($(this).html() == 'alto') {
-                                $(this).addClass('alto');
+                            if ($(this).html() == 'Bajo') {
+                                $(this).addClass('riesgo_bajo');
+                            } else if ($(this).html() == 'Medio') {
+                                $(this).addClass('riesgo_medio');
+                            } else if ($(this).html() == 'Alto') {
+                                $(this).addClass('riesgo_alto');
                             }
                         });
                     });
