@@ -76,11 +76,16 @@ function get_array_students_with_resolution(){
         array_push($array_historics, $historic);
     }
 
-    $array_spt_spp = array_merge($array_historics, $students_spt);
+    //$array_spt_spp = array_merge($array_historics, $students_spt);
+    $final_array = array_merge($array_historics, $students_spt);
 
     $students_no_res = get_active_no_res_students();
+    
+    foreach ($students_no_res as $stu_no_res) {
+        array_push($final_array, $stu_no_res);
+    }
 
-    $final_array = array_merge($array_spt_spp, $students_no_res);
+    //$final_array = array_merge($array_spt_spp, $students_no_res);
 
     return $final_array;
 }
@@ -306,7 +311,7 @@ function get_count_active_res_students($cohort){
                         INNER JOIN {talentospilos_user_extended} uext ON uext.id_ases_user = res_est.id_estudiante
                         INNER JOIN {cohort_members} co_mem ON uext.id_moodle_user = co_mem.userid
                         INNER JOIN {cohort} cohortm ON cohortm.id = co_mem.cohortid
-                        WHERE substring(cohortm.idnumber from 0 for 5) = '$cohort' OR substring(cohortm.idnumber from 0 for 6) = '$cohort'
+                        WHERE (substring(cohortm.idnumber from 0 for 5) = '$cohort' OR substring(cohortm.idnumber from 0 for 6) = '$cohort')
                         AND res_est.id_estudiante                        
                         
                         NOT IN 
@@ -413,6 +418,7 @@ function get_count_active_no_res_students($cohort){
 }
 
 //print_r(get_count_active_no_res_students('SPP1'));
+
 
 /**
  * Function that returns an array with all the necessary information for the summary report
