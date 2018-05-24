@@ -219,7 +219,8 @@ function get_all_semesters_names(){
 function get_all_resolutions_codes(){
     global $DB;
 
-    $resolutions_options = "<select><option value=''></option>";
+    $resolutions_options = "<select><option value=''></option> 
+                                    <option value='---'>---</option>";
 
     $sql_query = "SELECT codigo_resolucion FROM {talentospilos_res_icetex}";
 
