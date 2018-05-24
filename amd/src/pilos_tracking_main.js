@@ -135,7 +135,7 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                 if (namerol == "practicante_ps") {
 
                     consultar_seguimientos_persona(get_instance(), usuario);
-                    send_email_new_form(get_instance());
+                    send_email_new_form(get_instance()); 
 
 
 
@@ -151,6 +151,8 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                 } else if (namerol == "monitor_ps") {
 
                     consultar_seguimientos_persona(get_instance(), usuario);
+                    send_email_new_form(get_instance());
+
 
 
 
