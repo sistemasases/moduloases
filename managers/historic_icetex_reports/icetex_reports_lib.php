@@ -544,9 +544,10 @@ function get_active_no_res_students(){
                     WHERE academ.id 
                     NOT IN 
                     (SELECT id_history FROM {talentospilos_history_cancel})                    
-                    EXCEPT                     
-                    SELECT id_estudiante
-                    FROM {talentospilos_res_estudiante}";
+                    AND id_estudiante
+                    NOT IN                                         
+                    (SELECT id_estudiante
+                    FROM {talentospilos_res_estudiante})";
 
     $results = $DB->get_records_sql($sql_query);
 
