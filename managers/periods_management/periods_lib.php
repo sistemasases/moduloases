@@ -60,6 +60,8 @@ require_once(dirname(__FILE__). '/../../../../config.php');
      return $current_semester;
  }
 
+ //print_r(substr(get_current_semester()->nombre, 0, 4));
+
  /**
  * Function that returns the interval that represents a semester by its ID
  * 

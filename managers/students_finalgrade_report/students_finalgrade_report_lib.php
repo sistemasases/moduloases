@@ -25,6 +25,7 @@
  */
 
 require_once(dirname(__FILE__). '/../../../../config.php');
+require_once '../managers/periods_management/periods_lib.php';
 
 
 function get_students_and_finalgrades($instance_id){
