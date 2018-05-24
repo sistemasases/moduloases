@@ -92,7 +92,8 @@ $data->menu = $menu_option;
 //Getting role, username and email from current connected user
 
 $userrole = get_id_rol($USER->id,$blockid);
-$usernamerole= get_name_rol($userrole);
+if($userrole){
+$usernamerole= get_name_rol($userrole);}
 $username = $USER->username;
 $email = $USER->email;
 
