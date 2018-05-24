@@ -77,17 +77,19 @@ function get_array_students_with_resolution(){
     }
 
     //$array_spt_spp = array_merge($array_historics, $students_spt);
-    $final_array = array_merge($array_historics, $students_spt);
+    foreach($students_spt as $stu_spt){
+        array_push($array_historics, $stu_spt);
+    }    
 
     $students_no_res = get_active_no_res_students();
     
     foreach ($students_no_res as $stu_no_res) {
-        array_push($final_array, $stu_no_res);
+        array_push($array_historics, $stu_no_res);
     }
 
     //$final_array = array_merge($array_spt_spp, $students_no_res);
 
-    return $final_array;
+    return $array_historics;
 }
 
 //print_r(get_array_students_with_resolution());
@@ -537,7 +539,7 @@ function get_active_no_res_students(){
     $students = array();
     $final_students = array();
 
-    $sql_query = "SELECT id_estudiante
+    $sql_query = "SELECT id, id_estudiante
                     FROM {talentospilos_history_academ} AS academ
                     WHERE academ.id 
                     NOT IN 
