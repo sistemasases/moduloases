@@ -76,13 +76,20 @@ function get_array_students_with_resolution(){
         array_push($array_historics, $historic);
     }
 
-    $array_spt_spp = array_merge($array_historics, $students_spt);
+    //$array_spt_spp = array_merge($array_historics, $students_spt);
+    foreach($students_spt as $stu_spt){
+        array_push($array_historics, $stu_spt);
+    }    
 
     $students_no_res = get_active_no_res_students();
+    
+    foreach ($students_no_res as $stu_no_res) {
+        array_push($array_historics, $stu_no_res);
+    }
 
-    $final_array = array_merge($array_spt_spp, $students_no_res);
+    //$final_array = array_merge($array_spt_spp, $students_no_res);
 
-    return $final_array;
+    return $array_historics;
 }
 
 //print_r(get_array_students_with_resolution());
@@ -214,7 +221,8 @@ function get_all_semesters_names(){
 function get_all_resolutions_codes(){
     global $DB;
 
-    $resolutions_options = "<select><option value=''></option>";
+    $resolutions_options = "<select><option value=''></option> 
+                                    <option value='---'>---</option>";
 
     $sql_query = "SELECT codigo_resolucion FROM {talentospilos_res_icetex}";
 
@@ -306,7 +314,7 @@ function get_count_active_res_students($cohort){
                         INNER JOIN {talentospilos_user_extended} uext ON uext.id_ases_user = res_est.id_estudiante
                         INNER JOIN {cohort_members} co_mem ON uext.id_moodle_user = co_mem.userid
                         INNER JOIN {cohort} cohortm ON cohortm.id = co_mem.cohortid
-                        WHERE substring(cohortm.idnumber from 0 for 5) = '$cohort' OR substring(cohortm.idnumber from 0 for 6) = '$cohort'
+                        WHERE (substring(cohortm.idnumber from 0 for 5) = '$cohort' OR substring(cohortm.idnumber from 0 for 6) = '$cohort')
                         AND res_est.id_estudiante                        
                         
                         NOT IN 
@@ -413,6 +421,7 @@ function get_count_active_no_res_students($cohort){
 }
 
 //print_r(get_count_active_no_res_students('SPP1'));
+
 
 /**
  * Function that returns an array with all the necessary information for the summary report
@@ -530,14 +539,15 @@ function get_active_no_res_students(){
     $students = array();
     $final_students = array();
 
-    $sql_query = "SELECT id_estudiante
+    $sql_query = "SELECT id, id_estudiante
                     FROM {talentospilos_history_academ} AS academ
                     WHERE academ.id 
                     NOT IN 
                     (SELECT id_history FROM {talentospilos_history_cancel})                    
-                    EXCEPT                     
-                    SELECT id_estudiante
-                    FROM {talentospilos_res_estudiante}";
+                    AND id_estudiante
+                    NOT IN                                         
+                    (SELECT id_estudiante
+                    FROM {talentospilos_res_estudiante})";
 
     $results = $DB->get_records_sql($sql_query);
 
