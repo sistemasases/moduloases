@@ -51,8 +51,7 @@ function get_array_students_with_resolution(){
                     INNER JOIN {cohort_members} co_mem ON userm.id = co_mem.userid
                     INNER JOIN {cohort} cohortm ON co_mem.cohortid = cohortm.id
                     WHERE uextended.id_academic_program = res_est.id_programa 
-                        AND substring(cohortm.idnumber from 0 for 4) = 'SPP2'
-                        AND semestre.nombre = '2016A'";
+                        AND substring(cohortm.idnumber from 0 for 4) = 'SPP'";
 
     $historics = $DB->get_records_sql($sql_query);
 
