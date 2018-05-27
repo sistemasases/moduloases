@@ -305,7 +305,7 @@ function get_resolutions_for_report(){
 function get_count_active_res_students($cohort, $semester_name){
     global $DB;
 
-    $sql_query = "SELECT Count(res_est.id) AS num_act_res, semestre.nombre AS semestre, sum(res_est.monto_estudiante) AS monto_act_res
+    $sql_query = "SELECT Count(res_est.id) AS num_act_res, sum(res_est.monto_estudiante) AS monto_act_res
                     FROM {talentospilos_res_estudiante} AS res_est
                         INNER JOIN {talentospilos_res_icetex} res_ice ON res_ice.id = res_est.id_resolucion
                         INNER JOIN {talentospilos_semestre} semestre ON semestre.id = res_ice.id_semestre
@@ -314,7 +314,7 @@ function get_count_active_res_students($cohort, $semester_name){
                         INNER JOIN {cohort} cohortm ON cohortm.id = co_mem.cohortid
                         WHERE (substring(cohortm.idnumber from 0 for 5) = '$cohort' OR substring(cohortm.idnumber from 0 for 6) = '$cohort')
                         AND semestre.nombre = '$semester_name'
-                        AND res_est.id_estudiante                        
+                        AND res_est.id_estudiante                     
                         
                         NOT IN 
                         
@@ -350,7 +350,7 @@ function get_count_active_res_students($cohort, $semester_name){
 function get_count_inactive_res_students($cohort, $semester_name){
     global $DB;
 
-    $sql_query = "SELECT row_number() over(), Count(res_est.id) AS num_inact_res, sum(res_est.monto_estudiante) AS monto_inact_res 
+    $sql_query = "SELECT Count(res_est.id) AS num_inact_res, sum(res_est.monto_estudiante) AS monto_inact_res 
                     FROM {talentospilos_res_estudiante} AS res_est
                         INNER JOIN {talentospilos_user_extended} uext ON uext.id_ases_user = res_est.id_estudiante
                         INNER JOIN {talentospilos_history_academ} academ ON academ.id_estudiante = res_est.id_estudiante
@@ -387,7 +387,7 @@ function get_count_active_no_res_students($cohort, $semester_name){
                     INNER JOIN {talentospilos_user_extended} uexten ON uexten.id_ases_user = usu.id
                     INNER JOIN {cohort_members} coh_mem ON coh_mem.userid = uexten.id_moodle_user
                     INNER JOIN {cohort} cohorte ON cohorte.id = coh_mem.cohortid
-                    WHERE (substring(cohorte.idnumber from 0 for 5) = 'SPP2' OR substring(cohorte.idnumber from 0 for 6) = 'SPP2') 
+                    WHERE (substring(cohorte.idnumber from 0 for 5) = '$cohort' OR substring(cohorte.idnumber from 0 for 6) = '$cohort') 
                     
                     AND usu.id
                     
