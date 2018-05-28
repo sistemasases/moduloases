@@ -102,7 +102,8 @@ function get_inactive_res_students($semester, &$array_stu_inact_res){
     global $DB;
 
     $sql_query = "SELECT res_est.id, substring(moodle_user.username from 0 for 8) AS codigo, usu.num_doc,
-                    moodle_user.firstname, moodle_user.lastname, res_ice.codigo_resolucion, res_est.monto_estudiante, cancel.fecha_cancelacion AS fecha_cancel
+                    moodle_user.firstname, moodle_user.lastname, res_ice.codigo_resolucion, res_est.monto_estudiante, cancel.fecha_cancelacion AS fecha_cancel,
+                    substring(cohortm.idnumber from 0 for 5) AS cohorte
                                 FROM {talentospilos_res_estudiante} AS res_est
                                     INNER JOIN {talentospilos_res_icetex} res_ice ON res_ice.id = res_est.id_resolucion
                                     INNER JOIN {talentospilos_user_extended} uext ON uext.id_ases_user = res_est.id_estudiante
