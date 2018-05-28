@@ -84,7 +84,7 @@ function get_active_res_students($semester, $array_stu_act_res){
                         INNER JOIN {cohort_members} co_mem ON uext.id_moodle_user = co_mem.userid
                         INNER JOIN {cohort} cohortm ON cohortm.id = co_mem.cohortid
                         WHERE (substring(cohortm.idnumber from 0 for 4) = 'SPP')
-                        AND semestre.nombre = '$semester')"
+                        AND semestre.nombre = '$semester')";
 
     $students_act_res = $DB->get_records_sql($sql_query);
 
@@ -173,7 +173,7 @@ function get_active_no_res_students($semester, $array_act_no_res){
         $student->fecha_cancel = "---";
         $student->program_status = "---"; 
         $student->monto_estudiante = "$0";
-        $student->codigo_resolucion = "---"
+        $student->codigo_resolucion = "---";
 
         array_push($array_act_no_res, $student);
     }
