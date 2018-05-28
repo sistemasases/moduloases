@@ -37,7 +37,7 @@
 									<option value='---'>---</option>
 									<option value='ACTIVO'>ACTIVO</option>
 									<option value='INACTIVO'>INACTIVO</option>
-									</select>"
+									</select>";
 		array_push($columns, array("title"=>"Cohorte".$cohort_options, "name"=>"cohorte", "data"=>"cohorte"));
 		array_push($columns, array("title"=>"Código estudiante", "name"=>"codigo", "data"=>"codigo"));
 		array_push($columns, array("title"=>"Cédula", "name"=>"num_doc", "data"=>"num_doc"));
