@@ -187,7 +187,7 @@ function get_student_resolution_spt(){
     $array_historics = array();    
     
     $sql_query = "SELECT res_est.id, substring(cohortm.idnumber from 0 for 5) AS cohorte, substring(userm.username from 0 for 8) AS codigo, 
-                    usuario.num_doc, userm.firstname, userm.lastname, semestre.nombre, res.codigo_resolucion, monto_estudiante, res_est.id_estudiante, 
+                    usuario.num_doc, userm.firstname, userm.lastname, semestre.nombre AS nombre_semestre, res.codigo_resolucion, monto_estudiante, res_est.id_estudiante, 
                     res.id_semestre, res_est.id_programa                    
                     FROM {talentospilos_res_estudiante} AS res_est
                     INNER JOIN {talentospilos_res_icetex} res ON res.id = res_est.id_resolucion
