@@ -46,17 +46,16 @@ function get_array_students_with_resolution(){
         get_inactive_res_students($semestre, $array_historics);
         get_active_no_res_students($semestre, $array_historics);
     }
-
-    //$array_spt_spp = array_merge($array_historics, $students_spt);
-    //foreach($students_spt as $stu_spt){
-    //    array_push($array_historics, $stu_spt);
-    //}
+    
+    foreach($students_spt as $stu_spt){
+        array_push($array_historics, $stu_spt);
+    }
 
     return $array_historics;
 }
 
 //FUNCION NUEVA ACTIVOS-RESOLUCION
-function get_active_res_students($semester, $array_stu_act_res){
+function get_active_res_students($semester, &$array_stu_act_res){
     global $DB;
 
     $sql_query = "SELECT res_est.id_estudiante, substring(moodle_user.username from 0 for 8) AS codigo, usu.num_doc, moodle_user.firstname, moodle_user.lastname, 
@@ -99,7 +98,7 @@ function get_active_res_students($semester, $array_stu_act_res){
 }
 
 //FUNCION NUEVA INACTIVOS-RESOLUCION
-function get_inactive_res_students($semester, $array_stu_inact_res){
+function get_inactive_res_students($semester, &$array_stu_inact_res){
     global $DB;
 
     $sql_query = "SELECT res_est.id, substring(moodle_user.username from 0 for 8) AS codigo, usu.num_doc,
@@ -130,7 +129,7 @@ function get_inactive_res_students($semester, $array_stu_inact_res){
 }
 
 //Returns the student that does not have resolution
-function get_active_no_res_students($semester, $array_act_no_res){
+function get_active_no_res_students($semester, &$array_act_no_res){
     global $DB;
     
     $sql_query = "SELECT usu.id, substring(moodle_user.username from 0 for 8) AS codigo, usu.num_doc, moodle_user.firstname, 
