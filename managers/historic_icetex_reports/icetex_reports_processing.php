@@ -32,15 +32,21 @@
 		$cohort_options = get_all_cohort_names();
 		$semester_options = get_all_semesters_names();
 		$resolution_options = get_all_resolutions_codes();
+		$program_status_options = "<select>
+									<option value=''></option>
+									<option value='---'>---</option>
+									<option value='ACTIVO'>ACTIVO</option>
+									<option value='INACTIVO'>INACTIVO</option>
+									</select>"
 		array_push($columns, array("title"=>"Cohorte".$cohort_options, "name"=>"cohorte", "data"=>"cohorte"));
 		array_push($columns, array("title"=>"Código estudiante", "name"=>"codigo", "data"=>"codigo"));
 		array_push($columns, array("title"=>"Cédula", "name"=>"num_doc", "data"=>"num_doc"));
         array_push($columns, array("title"=>"Nombre", "name"=>"firstname", "data"=>"firstname"));
         array_push($columns, array("title"=>"Apellido", "name"=>"lastname", "data"=>"lastname"));
-		array_push($columns, array("title"=>"Semestre".$semester_options, "name"=>"nombre", "data"=>"nombre"));
+		array_push($columns, array("title"=>"Semestre".$semester_options, "name"=>"nombre_semestre", "data"=>"nombre_semestre"));
 		array_push($columns, array("title"=>"Código resolución".$resolution_options, "name"=>"codigo_resolucion", "data"=>"codigo_resolucion"));
         array_push($columns, array("title"=>"Monto", "className"=>"dt-body-right", "name"=>"monto_estudiante", "data"=>"monto_estudiante"));
-        array_push($columns, array("title"=>"Estado en el programa", "name"=>"program_status", "data"=>"program_status"));
+        array_push($columns, array("title"=>"Estado en el programa".$program_status_options, "name"=>"program_status", "data"=>"program_status"));
         array_push($columns, array("title"=>"Fecha de cancelación de semestre", "name"=>"fecha_cancel", "data"=>"fecha_cancel"));
 
 		$data = array(
