@@ -48,9 +48,9 @@ function get_array_students_with_resolution(){
     }
 
     //$array_spt_spp = array_merge($array_historics, $students_spt);
-    foreach($students_spt as $stu_spt){
-        array_push($array_historics, $stu_spt);
-    }
+    //foreach($students_spt as $stu_spt){
+    //    array_push($array_historics, $stu_spt);
+    //}
 
     return $array_historics;
 }
