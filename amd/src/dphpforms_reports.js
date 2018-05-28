@@ -45,7 +45,7 @@
                     keys.forEach(function(key) {
                         if (ctr > 0) result += columnDelimiter;
         
-                        result += item[key]['respuesra'];
+                        result += "\"" + item[key]['respuesra'] + "\"";
                         ctr++;
                     });
                     result += lineDelimiter;
