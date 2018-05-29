@@ -647,7 +647,6 @@ function get_ases_report($general_fields=null, $conditions, $risk_fields=null, $
 
                 $sql_query = $select_clause.$from_clause.$sub_query_cohort.$sub_query_status.$sub_query_academic.$sub_query_icetex_status.$sub_query_assignment_fields.$query_monitors.$where_clause;
                 $result_query = $DB->get_records_sql($sql_query);
-                print_r($sql_query);
 
                 break;
 
