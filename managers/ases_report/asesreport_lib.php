@@ -433,8 +433,20 @@ function get_ases_report($general_fields=null, $conditions, $risk_fields=null, $
 
         $sub_query_academic .= " INNER JOIN {talentospilos_programa} AS acad_program ON user_extended.id_academic_program = acad_program.id
                                  INNER JOIN {talentospilos_facultad} AS faculty ON faculty.id = acad_program.id_facultad
-                                 LEFT JOIN {talentospilos_history_academ} AS academic_history ON academic_history.id_estudiante = user_extended.id_ases_user";
+                                 LEFT JOIN {talentospilos_history_academ} AS academic_history ON academic_history.id_estudiante = user_extended.id_ases_user
+                                 LEFT JOIN (SELECT COUNT(estim.id) AS estimulos, academ.id_estudiante
+                                            FROM {talentospilos_history_academ} AS academ INNER JOIN {talentospilos_history_estim} AS estim ON academ.id = estim.id_history
+                                            GROUP BY (academ.id_estudiante))
+                                            AS estim_query
+                                            ON estim_query.id_estudiante = user_extended.id_ases_user
+                                 LEFT JOIN (SELECT COUNT(bajo.id) AS bajos, academ.id_estudiante
+                                            FROM {talentospilos_history_academ} AS academ INNER JOIN {talentospilos_history_bajos} AS bajo 
+                                                 ON academ.id = bajo.id_history
+                                            GROUP BY (academ.id_estudiante))
+                                            AS bajos_query
+                                            ON bajos_query.id_estudiante = user_extended.id_ases_user";
 
+                                   
         $where_clause .= " academic_history.id_semestre = $id_current_semester AND ";
     }
 
@@ -635,6 +647,7 @@ function get_ases_report($general_fields=null, $conditions, $risk_fields=null, $
 
                 $sql_query = $select_clause.$from_clause.$sub_query_cohort.$sub_query_status.$sub_query_academic.$sub_query_icetex_status.$sub_query_assignment_fields.$query_monitors.$where_clause;
                 $result_query = $DB->get_records_sql($sql_query);
+                print_r($sql_query);
 
                 break;
 
