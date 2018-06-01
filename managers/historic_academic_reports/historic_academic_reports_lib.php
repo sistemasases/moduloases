@@ -47,14 +47,14 @@ function get_datatable_array_Students($instance_id)
     array_push($columns, array("title" => "Apellido(s)", "name" => "lastname", "data" => "lastname"));
     array_push($columns, array("title" => "Semestre".$semester_options, "name" => "semestre", "data" => "semestre"));
     array_push($columns, array("title" => "Programa", "name" => "programa", "data" => "programa"));    
+    array_push($columns, array("title" => "Materias Perdidas", "name" => "perdidas", "data" => "perdidas"));
     array_push($columns, array("title" => "Cancela", "name" => "cancel", "data" => "cancel"));
     array_push($columns, array("title" => "Promedio Semestre", "name" => "promsem", "data" => "promsem"));
     array_push($columns, array("title" => "Gano Estimulo", "name" => "estim", "data" => "estim"));
     array_push($columns, array("title" => "Cae en Bajo", "name" => "bajo", "data" => "bajo"));
     array_push($columns, array("title" => "Promedio Acumulado", "name" => "promacum", "data" => "promacum"));
-    array_push($columns, array("title" => "Estimulos", "name" => "Numestim", "data" => "estim"));
-    array_push($columns, array("title" => "Bajos", "name" => "bajos", "data" => "bajos"));
-    array_push($columns, array("title" => "Materias Perdidas", "name" => "perdidas", "data" => "perdidas"));
+    array_push($columns, array("title" => "Estimulos Acumulados", "name" => "Numestim", "data" => "estim"));
+    array_push($columns, array("title" => "Bajos Acumulados", "name" => "bajos", "data" => "bajos"));
 
     $default_students = get_historic_report($instance_id);
 
@@ -124,7 +124,7 @@ function get_historic_report($id_instance)
                            promedio_semestre  AS promsem,
                            promedio_acumulado AS promacum,
                            programa.nombre    AS programa,
-                           cohorte.NAME       AS cohorte,
+                           cohorte.idnumber       AS cohorte,
                            json_materias
                 FROM       {talentospilos_history_academ} historic
                 INNER JOIN {talentospilos_usuario} usuario
@@ -160,7 +160,7 @@ function get_historic_report($id_instance)
         //validate estimulo
         $query_estimulo = "SELECT * FROM {talentospilos_history_estim} WHERE id_history = $historic->id ";
 
-        $estimulo = $DB->get_records_sql($query_estimulo);
+        $estimulo = $DB->get_record_sql($query_estimulo);
 
         if ($estimulo) {
             $historic->estim = $estimulo->puesto_ocupado;
@@ -171,10 +171,10 @@ function get_historic_report($id_instance)
         //validate bajo
         $query_bajo = "SELECT * FROM {talentospilos_history_bajos} WHERE id_history = $historic->id ";
 
-        $bajo = $DB->get_records_sql($query_bajo);
+        $bajo = $DB->get_record_sql($query_bajo);
 
         if ($bajo) {
-            $historic->bajo = "Bajo num: $bajo->numero_bajo";
+            $historic->bajo = $bajo->numero_bajo;
         } else {
             $historic->bajo = "NO";
         }
@@ -345,7 +345,7 @@ function get_cohort_names(){
 
     $cohorts_options = "<select><option value=''></option>";
 
-    $sql_query = "SELECT name AS cohort_name FROM {cohort} 
+    $sql_query = "SELECT idnumber AS cohort_name FROM {cohort} 
                     WHERE substring(idnumber from 0 for 3) = 'SP'";
 
     $cohorts = $DB->get_records_sql($sql_query);
