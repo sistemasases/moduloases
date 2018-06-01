@@ -94,7 +94,7 @@ define(['jquery',
                 }
             });
 
-            //Función para busqueda de los filtros de riesgos.
+            //Filtros de riesgos.
             $(document).on('change', '.select_risk', function() {
                 var table = $("#tableResult").DataTable();
                 var colIndex = $(this).parent().index() + 1;
@@ -102,6 +102,13 @@ define(['jquery',
                 table.columns(colIndex - 1).search(this.value).draw();
             });
 
+            //Filtros sobre asignaciones socioeducativas
+            $(document).on('change', '.filter_assignments', function() {
+                var table = $("#tableResult").DataTable();
+                var colIndex = $(this).parent().index() + 1;
+                var selectedText = $(this).parent().find(":selected").text();
+                table.columns(colIndex - 1).search(this.value).draw();
+            });
 
         },
         load_defaults_students: function(data){

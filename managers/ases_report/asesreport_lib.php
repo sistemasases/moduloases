@@ -759,4 +759,103 @@ function get_default_ases_report($id_instance){
     return $data_to_table;
 
 }
+
+/**
+ * Función que extrae los profesionales socioeducativos asignados para el periodo actual en una 
+ * instancia dada.
+ *
+ * @see get_professionals_by_instance
+ * @param $instance_id       --> Identificador de instancia
+ * @return Array 
+ */
+
+function get_professionals_by_instance($instance_id){
+    
+    global $DB;
+
+    $result = array();
+
+    $sql_query = "SELECT CONCAT(moodle_user.firstname, CONCAT(' ', moodle_user.lastname)) AS fullname
+                  FROM {talentospilos_user_rol} AS user_rol
+                       INNER JOIN {user} AS moodle_user ON moodle_user.id = user_rol.id_usuario
+                  WHERE id_rol = (SELECT id
+                                  FROM {talentospilos_rol}
+                                  WHERE nombre_rol = 'profesional_ps')
+                        AND id_instancia = $instance_id
+                        AND id_semestre =". get_current_semester()->max;
+
+    $result = $DB->get_records_sql($sql_query);
+
+    if(!$result){
+        array_push($result, array('fullname'=>'N.R.'));
+    }
+
+    return $result;
+}
+
+/**
+ * Función que extrae los practicantes socioeducativos asignados para el periodo actual en una 
+ * instancia dada.
+ *
+ * @see get_practicing_by_instance
+ * @param $instance_id       --> Identificador de instancia
+ * @return Array 
+ */
+
+function get_practicing_by_instance($instance_id){
+    
+    global $DB;
+
+    $result = array();
+
+    $sql_query = "SELECT CONCAT(moodle_user.firstname, CONCAT(' ', moodle_user.lastname)) AS fullname
+                  FROM {talentospilos_user_rol} AS user_rol
+                       INNER JOIN {user} AS moodle_user ON moodle_user.id = user_rol.id_usuario
+                  WHERE id_rol = (SELECT id
+                                  FROM {talentospilos_rol}
+                                  WHERE nombre_rol = 'practicante_ps')
+                        AND id_instancia = $instance_id
+                        AND id_semestre =". get_current_semester()->max;
+
+    $result = $DB->get_records_sql($sql_query);
+
+    if(!$result){
+        array_push($result, array('fullname'=>'N.R.'));
+    }
+
+    return $result;
+}
+
+/**
+ * Función que extrae los monitores socioeducativos asignados para el periodo actual en una 
+ * instancia dada.
+ *
+ * @see get_practicing_by_instance
+ * @param $instance_id       --> Identificador de instancia
+ * @return Array 
+ */
+
+function get_monitors_by_instance($instance_id){
+    
+    global $DB;
+
+    $result = array();
+
+    $sql_query = "SELECT CONCAT(moodle_user.firstname, CONCAT(' ', moodle_user.lastname)) AS fullname
+                  FROM {talentospilos_user_rol} AS user_rol
+                       INNER JOIN {user} AS moodle_user ON moodle_user.id = user_rol.id_usuario
+                  WHERE id_rol = (SELECT id
+                                  FROM {talentospilos_rol}
+                                  WHERE nombre_rol = 'monitor_ps')
+                        AND id_instancia = $instance_id
+                        AND id_semestre =". get_current_semester()->max;
+
+    $result = $DB->get_records_sql($sql_query);
+
+    if(!$result){
+        array_push($result, array('fullname'=>'N.R.'));
+    }
+
+    return $result;
+}
 ?>
