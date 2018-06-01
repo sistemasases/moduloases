@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<XMLDB PATH="blocks/ases/db" VERSION="20180430" COMMENT="XMLDB file for Moodle blocks/configurable_reports"
+<XMLDB PATH="blocks/ases/db" VERSION="20180601" COMMENT="XMLDB file for Moodle blocks/configurable_reports"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
 >
@@ -759,6 +759,7 @@
         <FIELD NAME="cod_retorno" TYPE="int" LENGTH="5" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="msg_retorno" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="dts_retorno" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="fecha_hora_registro" TYPE="text" NOTNULL="true" SEQUENCE="false"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
