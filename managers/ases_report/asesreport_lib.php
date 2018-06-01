@@ -278,7 +278,7 @@ function get_not_assign_students($general_fields=null, $conditions, $academic_fi
                                          WHERE cohorts.idnumber = '$conditions[0]'
                                          GROUP BY user_moodle.username) AS cohort_query ON cohort_query.username = user_moodle.username ";
     }else if($conditions[0] == 'TODOS'){
-        $sub_query_cohort .= " INNER JOIN (SELECT moodle_user.username, STRING_AGG(cohorts.idnumber, ', ') AS cohorts_student 
+        $sub_query_cohort .= " INNER JOIN (SELECT DISTINCT moodle_user.username, STRING_AGG(cohorts.idnumber, ', ') AS cohorts_student 
                                             FROM {cohort} AS cohort INNER JOIN {talentospilos_inst_cohorte} AS instance_cohort ON cohort.id = instance_cohort.id_cohorte
                                                                     INNER JOIN {cohort_members} AS cohort_member ON cohort_member.cohortid = cohort.id
                                                                     INNER JOIN {cohort} AS cohorts ON cohort_member.cohortid = cohorts.id
