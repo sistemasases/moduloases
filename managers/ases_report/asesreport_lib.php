@@ -272,7 +272,7 @@ function get_not_assign_students($general_fields=null, $conditions, $academic_fi
     // Condición cohorte
     if($conditions[0] != 'TODOS'){
 
-        $sub_query_cohort .= "INNER JOIN (SELECT user_moodle.username, STRING_AGG(cohorts.idnumber, ', ') AS cohorts_student
+        $sub_query_cohort .= "INNER JOIN (SELECT DISTINCT user_moodle.username, STRING_AGG(cohorts.idnumber, ', ') AS cohorts_student
                                          FROM {cohort_members} AS members_cohort INNER JOIN {user} AS user_moodle ON user_moodle.id = members_cohort.userid
                                                                                  INNER JOIN {cohort} AS cohorts ON cohorts.id = members_cohort.cohortid
                                          WHERE cohorts.idnumber = '$conditions[0]'
