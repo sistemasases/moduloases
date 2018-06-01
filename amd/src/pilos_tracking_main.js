@@ -61,7 +61,11 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                     if( rev_prof ){
                         $('.btn-dphpforms-delete-record').remove();
                         $('.btn-dphpforms-update').remove();
-                    }
+                    };
+
+                    if( rev_prac ){
+                        $('.btn-dphpforms-delete-record').remove();
+                    };
 
                     var count_buttons_dphpforms = $('.dphpforms-record .btn-dphpforms-univalle').length;
                     if( count_buttons_dphpforms == 2 ){
