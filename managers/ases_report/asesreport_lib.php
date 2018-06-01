@@ -782,7 +782,8 @@ function get_professionals_by_instance($instance_id){
                                   FROM {talentospilos_rol}
                                   WHERE nombre_rol = 'profesional_ps')
                         AND id_instancia = $instance_id
-                        AND id_semestre =". get_current_semester()->max;
+                        AND id_semestre =". get_current_semester()->max
+                        ."ORDER BY fullname";
 
     $result = $DB->get_records_sql($sql_query);
 
@@ -815,7 +816,8 @@ function get_practicing_by_instance($instance_id){
                                   FROM {talentospilos_rol}
                                   WHERE nombre_rol = 'practicante_ps')
                         AND id_instancia = $instance_id
-                        AND id_semestre =". get_current_semester()->max;
+                        AND id_semestre =". get_current_semester()->max
+                        ."ORDER BY fullname";
 
     $result = $DB->get_records_sql($sql_query);
 
@@ -848,7 +850,8 @@ function get_monitors_by_instance($instance_id){
                                   FROM {talentospilos_rol}
                                   WHERE nombre_rol = 'monitor_ps')
                         AND id_instancia = $instance_id
-                        AND id_semestre =". get_current_semester()->max;
+                        AND id_semestre =". get_current_semester()->max
+                  ."ORDER BY fullname";
 
     $result = $DB->get_records_sql($sql_query);
 
