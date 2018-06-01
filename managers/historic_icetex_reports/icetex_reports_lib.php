@@ -250,7 +250,7 @@ function get_student_cancel_date($id_student, $id_program, $id_semester){
 }
 
 /**
- * Function that returns a string with the names of all cohorts
+ * Function that returns a string with the names of all spp cohorts
  * 
  * @see get_all_cohort_names()
  * @return string

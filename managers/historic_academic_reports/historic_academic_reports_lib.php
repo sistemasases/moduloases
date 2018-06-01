@@ -25,6 +25,7 @@
 
 require_once __DIR__ . '/../../../../config.php';
 require_once '../managers/student_profile/academic_lib.php';
+require_once '../managers/historic_icetex_reports/icetex_reports_lib.php';
 
 /**
  * Función que recupera datos para la tabla de reporte historico academico por estudiantes,
@@ -36,12 +37,16 @@ require_once '../managers/student_profile/academic_lib.php';
  */
 function get_datatable_array_Students($instance_id)
 {
+    $cohort_options = get_cohort_names();
+    $semester_options = get_all_semesters_names();
     $default_students = $columns = array();
+    array_push($columns, array("title" => "Cohorte".$cohort_options, "name" => "cohorte", "data" => "cohorte"));    
     array_push($columns, array("title" => "Número de documento", "name" => "num_doc", "data" => "num_doc"));
     array_push($columns, array("title" => "Código estudiante", "name" => "username", "data" => "username"));
     array_push($columns, array("title" => "Nombre(s)", "name" => "firstname", "data" => "firstname"));
     array_push($columns, array("title" => "Apellido(s)", "name" => "lastname", "data" => "lastname"));
-    array_push($columns, array("title" => "Semestre", "name" => "semestre", "data" => "semestre"));
+    array_push($columns, array("title" => "Semestre".$semester_options, "name" => "semestre", "data" => "semestre"));
+    array_push($columns, array("title" => "Programa", "name" => "programa", "data" => "programa"));    
     array_push($columns, array("title" => "Cancela", "name" => "cancel", "data" => "cancel"));
     array_push($columns, array("title" => "Promedio Semestre", "name" => "promsem", "data" => "promsem"));
     array_push($columns, array("title" => "Gano Estimulo", "name" => "estim", "data" => "estim"));
@@ -50,8 +55,6 @@ function get_datatable_array_Students($instance_id)
     array_push($columns, array("title" => "Estimulos", "name" => "Numestim", "data" => "estim"));
     array_push($columns, array("title" => "Bajos", "name" => "bajos", "data" => "bajos"));
     array_push($columns, array("title" => "Materias Perdidas", "name" => "perdidas", "data" => "perdidas"));
-    array_push($columns, array("title" => "Programa", "name" => "programa", "data" => "programa"));
-    array_push($columns, array("title" => "Cohorte", "name" => "cohorte", "data" => "cohorte"));
 
     $default_students = get_historic_report($instance_id);
 
@@ -328,4 +331,30 @@ function get_Totals_report($instance_id)
 
     return $array_historic;
 
+}
+
+
+/**
+ * Function that returns a string with the names of all cohorts
+ * 
+ * @see get_cohort_names()
+ * @return string
+ */
+function get_cohort_names(){
+    global $DB;
+
+    $cohorts_options = "<select><option value=''></option>";
+
+    $sql_query = "SELECT name AS cohort_name FROM {cohort} 
+                    WHERE substring(idnumber from 0 for 3) = 'SP'";
+
+    $cohorts = $DB->get_records_sql($sql_query);
+
+    foreach($cohorts as $cohort){
+        $cohorts_options.= "<option value='$cohort->cohort_name'>$cohort->cohort_name</option>";
+    }
+
+    $cohorts_options .= "</select>";
+
+    return $cohorts_options;
 }
