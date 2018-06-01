@@ -349,15 +349,14 @@
                         var rev_prof = $('.dphpforms-record').find('.revisado_profesional').find('.checkbox').find('input[type=checkbox]').prop('checked');
                         var rev_prac = $('.dphpforms-record').find('.revisado_practicante').find('.checkbox').find('input[type=checkbox]').prop('checked');
                         var role_support = $('#dphpforms_role_support').attr('data-info');
-                        if( ( rev_prof || rev_prac ) && ( role_support != "sistemas" ) ){
+                        if( ( rev_prof ) && ( role_support != "sistemas" ) ){
                             $('.btn-dphpforms-delete-record').remove();
                             $('.btn-dphpforms-update').remove();
                         }
                         if( role_support == "dir_socioeducativo" ){
                             $('.btn-dphpforms-delete-record').remove();
                             $('.btn-dphpforms-update').remove();
-                        };
-                        
+                        };                        
 
                         var count_buttons_dphpforms = $('.dphpforms-record .btn-dphpforms-univalle').length;
                         if( count_buttons_dphpforms == 1 ){
