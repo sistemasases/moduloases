@@ -97,10 +97,35 @@ if(isset($_POST['status_fields'])){
     }
 }
 
-if(isset($_POST['assignment_fields'])){
+if(isset($_POST['assignment_fields']) && isset($_POST['instance_id'])){
     foreach($_POST['assignment_fields'] as $assignment_field){
+
+        if($assignment_field == 'professional'){
+            $professionals = get_professionals_by_instance($_POST['instance_id']);
+            $option = "<option>";
+            foreach($professionals as $professional){
+                $option .= $professional->fullname;
+                $option .= "</option>";
+            }
+        }elseif($assignment_field == 'training'){
+            $practs = get_practicing_by_instance($_POST['instance_id']);
+            $option = "<option>";
+            foreach($practs as $pract){
+                $option .= $pract->fullname;
+                $option .= "</option>";
+            }
+        }elseif($assignment_field == 'monitor'){
+            $monitors = get_monitors_by_instance($_POST['instance_id']);
+            $option = "<option>";
+            foreach($monitors as $monitor){
+                $option .= $monitor->fullname;
+                $option .= "</option>";
+            }
+        }
+
+        $filter_select = "<br><select class='filter_assignments'><option></option>$option</select>";
         array_push($assignment_fields, $fields_format[$assignment_field]);
-        array_push($columns, array("title"=>$columns_format[$assignment_field], "name"=>explode('.', $fields_format[$assignment_field])[1], "data"=>explode('.', $fields_format[$assignment_field])[1]));
+        array_push($columns, array("title"=>$columns_format[$assignment_field].$filter_select, "name"=>explode('.', $fields_format[$assignment_field])[1], "data"=>explode('.', $fields_format[$assignment_field])[1]));
     }
 }
 
