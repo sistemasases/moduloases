@@ -99,25 +99,26 @@ if(isset($_POST['status_fields'])){
 
 if(isset($_POST['assignment_fields']) && isset($_POST['instance_id'])){
     foreach($_POST['assignment_fields'] as $assignment_field){
-
+        
+        $option = "";
         if($assignment_field == 'professional'){
             $professionals = get_professionals_by_instance($_POST['instance_id']);
-            $option = "<option>";
             foreach($professionals as $professional){
+                $option = "<option>";
                 $option .= $professional->fullname;
                 $option .= "</option>";
             }
         }elseif($assignment_field == 'training'){
             $practs = get_practicing_by_instance($_POST['instance_id']);
-            $option = "<option>";
             foreach($practs as $pract){
+                $option = "<option>";
                 $option .= $pract->fullname;
                 $option .= "</option>";
             }
         }elseif($assignment_field == 'monitor'){
             $monitors = get_monitors_by_instance($_POST['instance_id']);
-            $option = "<option>";
             foreach($monitors as $monitor){
+                $option = "<option>";
                 $option .= $monitor->fullname;
                 $option .= "</option>";
             }
