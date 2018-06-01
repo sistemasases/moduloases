@@ -63,13 +63,17 @@
         
                 filename = 'export.csv';
         
-                if (!csv.match(/^data:text\/csv/i)) {
+                /*if (!csv.match(/^data:text\/csv/i)) {
                     csv = 'data:text/csv;charset=utf-8,' + csv;
-                }
-                data = encodeURI(csv);
+                }*/
+                //data = encodeURI(csv);
+                csvData = new Blob([csv], { type: 'text/csv' }); 
+                var csvUrl = URL.createObjectURL(csvData);
+                //a.href =  csvUrl;
         
                 link = document.createElement('a');
-                link.setAttribute('href', data);
+                //link.setAttribute('href', data);
+                link.href =  csvUrl;
                 link.setAttribute('download', filename);
                 link.click();
             };
