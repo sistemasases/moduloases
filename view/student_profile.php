@@ -1136,6 +1136,10 @@ if ($rol == 'dir_socioeducativo') {
     $record->dir_socioeducativo = true;
 }
 
+if ($rol == 'monitor_ps') {
+    $record->monitor_ps = true;
+}
+
 
 //Menu items are created
 $menu_option = create_menu_options($USER->id, $blockid, $courseid);

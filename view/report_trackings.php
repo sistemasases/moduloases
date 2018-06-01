@@ -173,6 +173,9 @@ if($usernamerole=='monitor_ps'){
 }
 $table_permissions=show_according_permissions($table,$actions);
 
+
+$data->rol = $usernamerole;
+
 $data->table_periods =$table_periods;
 $data->table=$table_permissions;
 $data->counting=$counting;

@@ -58,7 +58,7 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                     var rev_prof = $('.dphpforms-record').find('.revisado_profesional').find('.checkbox').find('input[type=checkbox]').prop('checked');
                     var rev_prac = $('.dphpforms-record').find('.revisado_practicante').find('.checkbox').find('input[type=checkbox]').prop('checked');
                                             
-                    if(  rev_prof || rev_prac  ){
+                    if( rev_prof ){
                         $('.btn-dphpforms-delete-record').remove();
                         $('.btn-dphpforms-update').remove();
                     }
