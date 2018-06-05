@@ -436,18 +436,17 @@ function get_ases_report($general_fields=null, $conditions, $risk_fields=null, $
                                  LEFT JOIN {talentospilos_history_academ} AS academic_history ON academic_history.id_estudiante = user_extended.id_ases_user
                                  LEFT JOIN (SELECT COUNT(estim.id) AS estimulos, academ.id_estudiante
                                             FROM {talentospilos_history_academ} AS academ INNER JOIN {talentospilos_history_estim} AS estim ON academ.id = estim.id_history
+                                            WHERE academ.id_semestre = $id_current_semester
                                             GROUP BY (academ.id_estudiante))
                                             AS estim_query
                                             ON estim_query.id_estudiante = user_extended.id_ases_user
                                  LEFT JOIN (SELECT COUNT(bajo.id) AS bajos, academ.id_estudiante
                                             FROM {talentospilos_history_academ} AS academ INNER JOIN {talentospilos_history_bajos} AS bajo 
                                                  ON academ.id = bajo.id_history
+                                            WHERE academ.id_semestre = $id_current_semester
                                             GROUP BY (academ.id_estudiante))
                                             AS bajos_query
                                             ON bajos_query.id_estudiante = user_extended.id_ases_user";
-
-                                   
-        $where_clause .= " academic_history.id_semestre = $id_current_semester AND ";
     }
 
     $select_clause = substr($select_clause, 0, -2);
@@ -455,9 +454,6 @@ function get_ases_report($general_fields=null, $conditions, $risk_fields=null, $
     // **** From clause ****
     $from_clause = " FROM {user} as user_moodle INNER JOIN {talentospilos_user_extended} AS user_extended ON user_moodle.id = user_extended.id_moodle_user
                                                 INNER JOIN {talentospilos_usuario} AS tp_user ON user_extended.id_ases_user = tp_user.id ";
-
-    // **** Where clause ****
-    //$where_clause .= " tp_ases_status.id_instancia = $instance_id";
 
     // Condición cohorte
     if($conditions[0] != 'TODOS'){
@@ -572,7 +568,8 @@ function get_ases_report($general_fields=null, $conditions, $risk_fields=null, $
 
     if(property_exists($actions, 'search_all_students_ar')){
         
-        $sql_query = $select_clause.$from_clause.$sub_query_cohort.$sub_query_status.$sub_query_icetex_status.$sub_query_academic.$sub_query_assignment_fields;
+        $sql_query = $select_clause.$from_clause.$sub_query_cohort.$sub_query_status.$sub_query_icetex_status.$sub_query_academic.$sub_query_assignment_fields.$where_clause;
+        print_r($sql_query);
         $result_query = $DB->get_records_sql($sql_query);
 
     }else if(property_exists($actions, 'search_assigned_students_ar')){
