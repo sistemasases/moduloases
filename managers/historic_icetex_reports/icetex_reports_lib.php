@@ -37,7 +37,17 @@ function get_array_students_with_resolution(){
 
     $array_historics = array();
 
-    $sql_query = "SELECT COUNT(spp_students.id_ases_user)
+        
+    $sql_query = "SELECT row_number() over(), spp_students.id_ases_user, spp_students.cohorte, spp_students.num_doc, substring(spp_students.username from 0 for 8) AS codigo, 
+                        spp_students.lastname, spp_students.firstname, spp_students.nombre_semestre, res_students.codigo_resolucion,
+                        res_students.monto_estudiante, cancel_students.fecha_cancel, academic_students.promedio_semestre,
+                        CASE WHEN (cancel_students.fecha_cancel IS NULL AND academic_students.promedio_semestre IS NOT NULL)
+                                    THEN 'ACTIVO'
+                            WHEN (cancel_students.fecha_cancel IS NULL AND res_students.codigo_resolucion IS NOT NULL)
+                                    THEN 'ACTIVO'		
+                            WHEN (cancel_students.fecha_cancel IS NOT NULL AND academic_students.promedio_semestre IS NULL)
+                                    THEN 'INACTIVO'		
+                        END AS program_status
                     FROM
                     (SELECT user_extended.id_ases_user, moodle_user.lastname, moodle_user.firstname, cohorts.idnumber, semestre.id AS id_semestre, semestre.nombre AS nombre_semestre, 
                         usuario.num_doc, moodle_user.username, substring(cohorts.idnumber from 0 for 5) AS cohorte
@@ -75,60 +85,8 @@ function get_array_students_with_resolution(){
                     ) AS academic_students
 
                     ON (spp_students.id_ases_user = academic_students.id_estudiante AND spp_students.id_semestre = academic_students.id_semestre)";
-        
-    
-    // $sql_query = "SELECT row_number() over(), spp_students.id_ases_user, spp_students.cohorte, spp_students.num_doc, substring(spp_students.username from 0 for 8) AS codigo, 
-    //                     spp_students.lastname, spp_students.firstname, spp_students.nombre_semestre, res_students.codigo_resolucion,
-    //                     res_students.monto_estudiante, cancel_students.fecha_cancel, academic_students.promedio_semestre,
-    //                     CASE WHEN (cancel_students.fecha_cancel IS NULL AND academic_students.promedio_semestre IS NOT NULL)
-    //                                 THEN 'ACTIVO'
-    //                         WHEN (cancel_students.fecha_cancel IS NULL AND res_students.codigo_resolucion IS NOT NULL)
-    //                                 THEN 'ACTIVO'		
-    //                         WHEN (cancel_students.fecha_cancel IS NOT NULL AND academic_students.promedio_semestre IS NULL)
-    //                                 THEN 'INACTIVO'		
-    //                     END AS program_status
-    //                 FROM
-    //                 (SELECT user_extended.id_ases_user, moodle_user.lastname, moodle_user.firstname, cohorts.idnumber, semestre.id AS id_semestre, semestre.nombre AS nombre_semestre, 
-    //                     usuario.num_doc, moodle_user.username, substring(cohorts.idnumber from 0 for 5) AS cohorte
-    //                 FROM {cohort_members} AS members
-    //                 INNER JOIN {cohort} AS cohorts ON members.cohortid = cohorts.id
-    //                 INNER JOIN {talentospilos_user_extended} AS user_extended ON user_extended.id_moodle_user = members.userid
-    //                 INNER JOIN {talentospilos_usuario} AS usuario ON usuario.id = user_extended.id_ases_user
-    //                 INNER JOIN {user} AS moodle_user ON moodle_user.id = user_extended.id_moodle_user
-    //                 CROSS JOIN {talentospilos_semestre} AS semestre 
-    //                 WHERE cohorts.idnumber LIKE 'SPP%') AS spp_students 
-
-    //                 LEFT JOIN 
-
-    //                 (SELECT res_student.id_estudiante, semestre.nombre, semestre.id AS id_semestre, res_icetex.id AS res_icetex, res_icetex.codigo_resolucion, res_student.monto_estudiante
-    //                 FROM {talentospilos_res_estudiante} AS res_student
-    //                 INNER JOIN {talentospilos_res_icetex} AS res_icetex ON res_icetex.id = res_student.id_resolucion
-    //                 INNER JOIN {talentospilos_semestre} AS semestre ON semestre.id = res_icetex.id_semestre
-    //                 ) AS res_students
-
-    //                 ON (spp_students.id_ases_user = res_students.id_estudiante AND spp_students.id_semestre = res_students.id_semestre)
-
-    //                 LEFT JOIN 
-
-    //                 (SELECT academ.id_estudiante, academ.id_semestre, to_timestamp(cancel.fecha_cancelacion) AS fecha_cancel
-    //                 FROM {talentospilos_history_academ} AS academ
-    //                 INNER JOIN {talentospilos_history_cancel} cancel ON cancel.id_history = academ.id
-    //                 ) AS cancel_students
-
-    //                 ON (spp_students.id_ases_user = cancel_students.id_estudiante AND spp_students.id_semestre = cancel_students.id_semestre)
-
-    //                 LEFT JOIN 
-
-    //                 (SELECT academic.id_estudiante, academic.id_semestre, academic.promedio_semestre
-    //                 FROM {talentospilos_history_academ} AS academic
-    //                 ) AS academic_students
-
-    //                 ON (spp_students.id_ases_user = academic_students.id_estudiante AND spp_students.id_semestre = academic_students.id_semestre)";
     
     $students = $DB->get_records_sql($sql_query);
-    print_r($students);
-    $student = $DB->get_record_sql($sql_query);
-    print_r($student);
 
     foreach ($students as $student) {
         $student->monto_estudiante = "$".number_format($student->monto_estudiante, 0, ',', '.');
