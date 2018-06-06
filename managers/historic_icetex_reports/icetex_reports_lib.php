@@ -46,7 +46,7 @@ function get_array_students_with_resolution(){
                                     THEN 'ACTIVO'		
                             WHEN (cancel_students.fecha_cancel IS NOT NULL AND academic_students.promedio_semestre IS NULL)
                                     THEN 'INACTIVO'		
-                        END AS program_status			
+                        END AS program_status
                     FROM
                     (SELECT user_extended.id_ases_user, moodle_user.lastname, moodle_user.firstname, cohorts.idnumber, semestre.id AS id_semestre, semestre.nombre AS nombre_semestre, 
                         usuario.num_doc, moodle_user.username, substring(cohorts.idnumber from 0 for 5) AS cohorte
@@ -88,6 +88,7 @@ function get_array_students_with_resolution(){
     $students = $DB->get_records_sql($sql_query);
 
     foreach ($students as $student) {
+        $student->monto_estudiante = "$".number_format($student->monto_estudiante, 0, ',', '.');
         array_push($array_historics, $student);
     }
 
