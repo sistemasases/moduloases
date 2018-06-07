@@ -43,8 +43,8 @@ function get_array_students_with_resolution(){
                         res_students.monto_estudiante, cancel_students.fecha_cancel, academic_students.promedio_semestre,
                         CASE WHEN (cancel_students.fecha_cancel IS NULL AND academic_students.promedio_semestre IS NOT NULL)
                                     THEN 'ACTIVO'
-                            WHEN (cancel_students.fecha_cancel IS NULL AND res_students.codigo_resolucion IS NOT NULL)
-                                    THEN 'ACTIVO'		
+                            WHEN (academic_students.promedio_semestre IS NULL)
+                                    THEN 'INACTIVO'		
                             WHEN (cancel_students.fecha_cancel IS NOT NULL AND academic_students.promedio_semestre IS NULL)
                                     THEN 'INACTIVO'		
                         END AS program_status
