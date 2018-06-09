@@ -564,6 +564,9 @@
                                 var response = JSON.parse(data);
                                 
                                 if(response['status'] == 0){
+                                    $.get( "../managers/pilos_tracking/api_pilos_tracking.php?function=update_last_user_risk&arg=" + get_student_code(), function( data ) {
+                                        console.log( data );
+                                    });
                                     var mensaje = '';
                                     if(response['message'] == 'Stored'){
                                         mensaje = 'Almacenado';
@@ -591,10 +594,6 @@
                                     $('#modal_v2_peer_tracking').fadeOut(300);
                                     $('#modal_primer_acercamiento').fadeOut(300);
                                     $('#modal_seguimiento_geografico').fadeOut(300);
-                                    
-                                    $.get( "../managers/pilos_tracking/api_pilos_tracking.php?function=update_last_user_risk&arg=" + get_student_code(), function( data ) {
-                                        console.log( data );
-                                    });
 
                                     $(formulario).find('button').prop( "disabled", false);
                                     $(formulario).find('a').attr( "disabled", false);
@@ -663,6 +662,9 @@
                             $.get( "../managers/dphpforms/dphpforms_delete_record.php?record_id="+record_id, function( data ) {
                                 var response = data;
                                 if(response['status'] == 0){
+                                    $.get( "../managers/pilos_tracking/api_pilos_tracking.php?function=update_last_user_risk&arg=" + get_student_code(), function( data ) {
+                                        console.log( data );
+                                    });
                                     swal(
                                         {title:'Información',
                                         text: 'Eliminado',

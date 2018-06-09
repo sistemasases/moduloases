@@ -842,8 +842,6 @@ function update_last_user_risk( $student_code ){
     }
     // End of get last risk geographic risk level.
 
-    
-    $last_tracking = null;
     $dates = array();
     $full_trackings = array();
     foreach ($trackings as $key => $tracking) {
@@ -856,25 +854,29 @@ function update_last_user_risk( $student_code ){
     };
 
     rsort( $dates );
-
+    $toFile = "";
+    
     for( $i = 0; $i < count( $dates ); $i++ ){
 
         $tracking_tmp = new stdClass();
-
-        for ($x = 0; x < count( $full_trackings ); $x++) {
-            if( $dates[$i] == strtotime( $full_trackings[x]->alias_key->respuesta ) ){
-                $tracking_tmp->id = $full_tracking->id_registro;
-                $tracking_tmp->fecha = strtotime( $full_tracking->alias_key->respuesta );
-                $tracking_tmp->json_full_tracking = json_encode( $full_tracking );
+        $tmp_date = "";
+        for ($x = 0; $x < count( $full_trackings ); $x++) {
+            
+            $tmp_date = $full_trackings[$x]->alias_key->respuesta;
+            if( $dates[$i] == strtotime( $tmp_date ) ){
+                $tracking_tmp->id = $full_trackings[$x]->id_registro;
+                $tracking_tmp->fecha = strtotime( $full_trackings[$x]->alias_key->respuesta );
+                $tracking_tmp->json_full_tracking = json_encode( $full_trackings[$x] );
+                //unset( $full_trackings[$x] );
+                $full_trackings[$x]->alias_key->respuesta = -1;
                 break;
-                unset( $array[$x] );
             };
         };
 
         $fields_tracking = json_decode( $tracking_tmp->json_full_tracking )->campos;
-            
+        
         foreach ($fields_tracking as $key => $field) {
-                
+            
             if( $field->local_alias == 'puntuacion_vida_uni' ){
                 if( $field->respuesta == '-#$%-' ){
                     //$vida_universitaria_risk_lvl = '0';
@@ -911,6 +913,7 @@ function update_last_user_risk( $student_code ){
                     };
                 };
             };
+            
             if( $field->local_alias == 'puntuacion_riesgo_individual' ){
                 if( $field->respuesta == '-#$%-' ){
                     //$individual_risk_lvl = '0';
