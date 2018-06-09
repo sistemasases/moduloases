@@ -798,9 +798,22 @@ function send_email_to_user( $tipoSeg, $codigoEnviarN1, $codigoEnviarN2, $codigo
  * Update every risk dimension with the last risk level stored in the database.
  * @see dphpforms_find_records( $form_alias, $pregunta_alias, $student_code, $order )
  * @param $student_code --> student_code
+ * @param $record_id --> ID student track
  * @return int 0, this process cannot be interrupted, and his return code is not important.
  */
-function update_last_user_risk( $student_code ){
+function update_last_user_risk( $student_code, $record_id ){
+
+    $student_track = null;
+    if( $record_id != -1 ){
+        $student_track = json_decode( dphpforms_get_record( $record_id, 'fecha', true ) )->record;
+        $fields_tracking = $student_track->campos;
+        for ($i = 0; $i < count( $fields_tracking ); $i++) {
+            if( $fields_tracking[$i]->local_alias == 'id_estudiante' ){
+                $student_code = $fields_tracking[$i]->respuesta;
+                break;
+            };
+        };
+    };
 
     global $DB;
 

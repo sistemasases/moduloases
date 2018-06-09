@@ -116,8 +116,8 @@
                         if (urlParameters[x].indexOf('student_code') >= 0) {
                             var intanceparameter = urlParameters[x].split('=');
                             return intanceparameter[1].split('-')[0];
-                        }
-                    }
+                        };
+                    };
                     return 0;
                 }
 
@@ -662,17 +662,16 @@
                             $.get( "../managers/dphpforms/dphpforms_delete_record.php?record_id="+record_id, function( data ) {
                                 var response = data;
                                 if(response['status'] == 0){
-                                    $.get( "../managers/pilos_tracking/api_pilos_tracking.php?function=update_last_user_risk&arg=" + get_student_code() + "&rid=" + record_id, function( data ) {
-                                        console.log( data );
+                                    $.get( "../managers/pilos_tracking/api_pilos_tracking.php?function=update_last_user_risk&arg=" + get_student_code() + "&rid=" + record_id, function( datax ) {
+                                        console.log( datax );
                                     });
                                     swal(
                                         {title:'Información',
                                         text: 'Eliminado',
                                         type: 'success'},
                                         function(){
-                                            $('#modal_v2_edit_peer_tracking').fadeOut( 300 );
-                                            //$('#dphpforms-peer-record-' + record_id).remove();
-                                            $('#modal_primer_acercamiento').fadeOut( 300 );
+                                            //$('#modal_v2_edit_peer_tracking').fadeOut( 300 );
+                                            //$('#modal_primer_acercamiento').fadeOut( 300 );
                                             location.reload();
                                         }
                                     );

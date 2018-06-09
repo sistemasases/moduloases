@@ -297,7 +297,7 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                                 var response = data;
                                 
                                 if(response['status'] == 0){
-                                    $.get( "../managers/pilos_tracking/api_pilos_tracking.php?function=update_last_user_risk&arg=" + student_code, function( data ) {
+                                    $.get( "../managers/pilos_tracking/api_pilos_tracking.php?function=update_last_user_risk&arg=" + student_code + "&rid=-1", function( data ) {
                                         console.log( data );
                                     });
                                     var mensaje = '';
