@@ -662,25 +662,31 @@
                             $.get( "../managers/dphpforms/dphpforms_delete_record.php?record_id="+record_id, function( data ) {
                                 var response = data;
                                 if(response['status'] == 0){
+                                    console.log( response );
                                     $.get( "../managers/pilos_tracking/api_pilos_tracking.php?function=update_last_user_risk&arg=" + get_student_code() + "&rid=" + record_id, function( datax ) {
                                         console.log( datax );
                                     });
-                                    swal(
-                                        {title:'Información',
-                                        text: 'Eliminado',
-                                        type: 'success'},
-                                        function(){
-                                            //$('#modal_v2_edit_peer_tracking').fadeOut( 300 );
-                                            //$('#modal_primer_acercamiento').fadeOut( 300 );
-                                            location.reload();
-                                        }
-                                    );
+                                    setTimeout(function(){
+                                        swal(
+                                            {title:'Información',
+                                            text: 'Eliminado',
+                                            type: 'success'},
+                                            function(){
+                                                //$('#modal_v2_edit_peer_tracking').fadeOut( 300 );
+                                                //$('#modal_primer_acercamiento').fadeOut( 300 );
+                                                location.reload();
+                                            }
+                                        );
+                                    }, 500);
+                                    
                                 }else if(response['status'] == -1){
-                                    swal(
-                                        'Error!',
-                                        response['message'],
-                                        'error'
-                                    );
+                                    setTimeout(function(){
+                                        swal(
+                                            'Error!',
+                                            response['message'],
+                                            'error'
+                                        );
+                                    }, 500);
                                 }
                             });
                         }
