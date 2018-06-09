@@ -662,7 +662,7 @@
                             $.get( "../managers/dphpforms/dphpforms_delete_record.php?record_id="+record_id, function( data ) {
                                 var response = data;
                                 if(response['status'] == 0){
-                                    $.get( "../managers/pilos_tracking/api_pilos_tracking.php?function=update_last_user_risk&arg=" + get_student_code(), function( data ) {
+                                    $.get( "../managers/pilos_tracking/api_pilos_tracking.php?function=update_last_user_risk&arg=" + get_student_code() + "&rid=" + record_id, function( data ) {
                                         console.log( data );
                                     });
                                     swal(
