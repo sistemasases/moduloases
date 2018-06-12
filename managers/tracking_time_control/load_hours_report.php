@@ -24,6 +24,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 require_once('tracking_time_control_lib.php');
+require_once('tracking_time_control_functions.php');
 require_once dirname(__FILE__) .'/../periods_management/periods_lib.php';
 
 
@@ -39,8 +40,7 @@ require_once dirname(__FILE__) .'/../periods_management/periods_lib.php';
             $final_hour=$_POST['final_hour'];
 
         }
-
-
+    
 
 
     }

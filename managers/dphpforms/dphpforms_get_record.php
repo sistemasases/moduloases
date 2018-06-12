@@ -28,8 +28,9 @@
 
     require_once(dirname(__FILE__). '/../../../../config.php');
     
+    //$_GET['source'] prevents collisions with other API calls.
 
-    if( isset( $_GET['record_id'] ) ){
+    if( isset( $_GET['record_id'] ) && ( !isset( $_GET['source'] ) ) ){
         header('Content-Type: application/json');
         $a_key = null;
         if(isset($_GET['alias_key'])){
@@ -38,9 +39,14 @@
         echo dphpforms_get_record( $_GET['record_id'], $a_key );
     }
     
-    function dphpforms_get_record($record_id, $alias_key){
+    function dphpforms_get_record($record_id, $alias_key, $super_su = false){
 
         global $DB;
+
+        $state = 'AND FR.estado = 1';
+        if( $super_su ){
+            $state = '';
+        };
 
         $sql = "SELECT * FROM {talentospilos_df_preguntas} P 
                 INNER JOIN (
@@ -54,7 +60,7 @@
                                         FROM {talentospilos_df_form_resp} AS FR 
                                         INNER JOIN {talentospilos_df_form_solu} AS FS 
                                         ON FR.id = FS.id_formulario_respuestas 
-                                        WHERE FR.id = '".$record_id."' AND FR.estado = 1
+                                        WHERE FR.id = '".$record_id."' $state
                                     ) AS FRS 
                                 ON FRS.id_respuesta = R.id) RF
                             ON RF.id_pregunta = FP.id_form_preg) TT

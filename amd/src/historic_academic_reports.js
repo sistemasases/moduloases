@@ -16,6 +16,14 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/jquery.dataTables', 'block
         init: function () {
             $(document).ready(function () {
 
+                ////Controles para la tabla historica academica
+			$(document).on('change', '#tableResultStudent thead tr th select', function () {
+				var table = $("#tableResultStudent").DataTable();
+		
+				var colIndex = $(this).parent().index()+1;
+				var selectedText=$(this).parent().find(":selected").text();
+				table.columns( colIndex-1 ).search( this.value ).draw();		
+			});
             });
         },
         load_table_students: function (data) {

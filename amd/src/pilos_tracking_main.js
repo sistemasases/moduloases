@@ -56,10 +56,16 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                 }else if( (form == 'seguimiento_pares')&&( action == 'update' ) ){
 
                     var rev_prof = $('.dphpforms-record').find('.revisado_profesional').find('.checkbox').find('input[type=checkbox]').prop('checked');
-                    
+                    var rev_prac = $('.dphpforms-record').find('.revisado_practicante').find('.checkbox').find('input[type=checkbox]').prop('checked');
+                                            
                     if( rev_prof ){
+                        $('.btn-dphpforms-delete-record').remove();
                         $('.btn-dphpforms-update').remove();
-                    }
+                    };
+
+                    if( rev_prac ){
+                        $('.btn-dphpforms-delete-record').remove();
+                    };
 
                     var count_buttons_dphpforms = $('.dphpforms-record .btn-dphpforms-univalle').length;
                     if( count_buttons_dphpforms == 2 ){
@@ -135,7 +141,7 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                 if (namerol == "practicante_ps") {
 
                     consultar_seguimientos_persona(get_instance(), usuario);
-                    send_email_new_form(get_instance());
+                    send_email_new_form(get_instance()); 
 
 
 
@@ -151,6 +157,8 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                 } else if (namerol == "monitor_ps") {
 
                     consultar_seguimientos_persona(get_instance(), usuario);
+                    send_email_new_form(get_instance());
+
 
 
 
@@ -183,7 +191,7 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
             });}
 
 
-                 function check_risks_tracking( flag ){
+                 function check_risks_tracking( flag, student_code ){
                    
 
                         var individual_risk = get_checked_risk_value_tracking('.puntuacion_riesgo_individual');
@@ -205,7 +213,7 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
 
                             var json_risks = {
                                 "function": "send_email_dphpforms",
-                                "student_code": get_student_code(),
+                                "student_code": student_code,
                                 "risks": [
                                     {
                                         "name":"Individual",
@@ -275,7 +283,8 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                     var url_processor = formulario.attr('action');
                     if(formulario.attr('action') == 'procesador.php'){
                         url_processor = '../managers/dphpforms/procesador.php';
-                    }
+                    };
+                    var student_code = formulario.find('.id_estudiante').find('input').val();
 
                     $.ajax({
                         type: 'POST',
@@ -288,13 +297,16 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                                 var response = data;
                                 
                                 if(response['status'] == 0){
+                                    $.get( "../managers/pilos_tracking/api_pilos_tracking.php?function=update_last_user_risk&arg=" + student_code + "&rid=-1", function( data ) {
+                                        console.log( data );
+                                    });
                                     var mensaje = '';
                                     if(response['message'] == 'Stored'){
                                         mensaje = 'Almacenado';
                                     }else if(response['message'] == 'Updated'){
                                         mensaje = 'Actualizado';
                                     }
-                                    //check_risks_tracking();
+                                    check_risks_tracking( false, student_code );
                                     swal(
                                         {title:'Información',
                                         text: mensaje,
@@ -514,7 +526,7 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                             var rev_prof = $('.dphpforms-record').find('.revisado_profesional').find('.checkbox').find('input[type=checkbox]').prop('checked');
                             var rev_prac = $('.dphpforms-record').find('.revisado_practicante').find('.checkbox').find('input[type=checkbox]').prop('checked');
                             
-                            if(rev_prof || rev_prac){
+                            if(rev_prof){ 
                                 $('.dphpforms-record').find('.btn-dphpforms-delete-record').remove();
                             }
 

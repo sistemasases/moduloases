@@ -112,13 +112,11 @@ function get_id_rol($userid, $blockid)
     global $DB;
 
     $current_semester = get_current_semester();
-    $sql_query = "SELECT id_rol FROM {talentospilos_user_rol} WHERE id_usuario=$userid AND id_instancia=$blockid AND id_semestre=$current_semester->max";
-    $consulta = $DB->get_records_sql($sql_query);
-    foreach($consulta as $tomarId) {
-        $idretornar = $tomarId->id_rol;
-    }
+    $sql_query = "SELECT id_rol FROM {talentospilos_user_rol} WHERE id_usuario=$userid AND id_instancia=$blockid AND id_semestre=$current_semester->max  and estado=1";
+    $consulta = $DB->get_record_sql($sql_query);
 
-    return $idretornar;
+
+    return $consulta->id_rol;
 }
 
 /* Función que retorna si un rol de usuario determinado puede hacer una acción

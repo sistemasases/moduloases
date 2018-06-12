@@ -92,7 +92,8 @@ $data->menu = $menu_option;
 //Getting role, username and email from current connected user
 
 $userrole = get_id_rol($USER->id,$blockid);
-$usernamerole= get_name_rol($userrole);
+if($userrole){
+$usernamerole= get_name_rol($userrole);}
 $username = $USER->username;
 $email = $USER->email;
 
@@ -172,6 +173,9 @@ if($usernamerole=='monitor_ps'){
 }
 $table_permissions=show_according_permissions($table,$actions);
 
+
+$data->rol = $usernamerole;
+
 $data->table_periods =$table_periods;
 $data->table=$table_permissions;
 $data->counting=$counting;
@@ -193,7 +197,7 @@ $PAGE->requires->css('/blocks/ases/style/creadorFormulario.css', true);
 
 $PAGE->requires->js_call_amd('block_ases/pilos_tracking_main','init');
 $PAGE->requires->js_call_amd('block_ases/groupal_tracking','init');
-//$PAGE->requires->js_call_amd('block_ases/dphpforms_form_renderer', 'init');
+$PAGE->requires->js_call_amd('block_ases/dphpforms_form_renderer', 'init');
 
 
 $PAGE->set_url($url);

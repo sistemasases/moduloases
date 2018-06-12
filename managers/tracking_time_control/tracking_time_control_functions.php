@@ -23,6 +23,36 @@
  * @copyright  2017 Isabella Serna Ramírez <isabella.serna@correounivalle.edu.co>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+require_once (dirname(__FILE__) . '/../dphpforms/dphpforms_get_record.php');
+
+
+/**
+ * Calculates the number of dedicated hours of a monitor on a given date.
+ * 
+ * @see calculate_hours($dates)
+ * @param $dates
+ * @return void
+ */
+
+function get_trackings_in_interval($monitor_trackings,$initial_date,$final_date){
+
+$array_tracks = [];
+
+foreach ($monitor_trackings as $key => $tracking) {
+     $record = dphpforms_get_record($tracking->id_registro,'fecha');
+     $format_record = json_decode( $record );
+
+     $tracking_date=$format_record->record->alias_key->respuesta;
+
+    if (($tracking_date >= $initial_date) && ($tracking_date <= $final_date))
+    {
+      array_push($array_tracks, $format_record->record);
+     }
+    }
+    return $array_tracks;
+}
+
+
 
 
 
@@ -93,20 +123,20 @@
     $final_time="";
 
 
-    foreach($date[campos] as  $review) {
+    foreach($date->campos as  $review) {
 
 
-        if ($review[local_alias] == 'fecha') {
-            $first_date =$review[respuesta];
+        if ($review->local_alias == 'fecha') {
+            $first_date =$review->respuesta;
             $register->date=$first_date;                    
         }
 
-        if($review[local_alias]=='hora_inicio'){
-            $initial_time.=$review[respuesta];
+        if($review->local_alias=='hora_inicio'){
+            $initial_time.=$review->respuesta;
         }
 
-        if($review[local_alias]=='hora_finalizacion'){
-            $final_time.=$review[respuesta];
+        if($review->local_alias=='hora_finalizacion'){
+            $final_time.=$review->respuesta;
         }
 
     if($initial_time && $final_time){

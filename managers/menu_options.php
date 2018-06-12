@@ -246,6 +246,17 @@ function create_menu_options($userid, $blockid, $courseid)
 
             }
 
+            if ($function == 'not_assigned_students') {
+                $url = new moodle_url("/blocks/ases/view/not_assigned_students.php", array(
+                    'courseid' => $courseid,
+                    'instanceid' => $blockid,
+                ));
+
+                $menu_options = '<li><a href= "' . $url . '"> Estudiantes sin asignar </a><li>';
+                $indexed['Estudiantes sin asignar'] = $menu_options;
+
+            }
+
         }
 
         //ORDENA

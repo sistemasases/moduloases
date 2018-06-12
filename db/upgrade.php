@@ -4,7 +4,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     global $DB;
     $dbman = $DB->get_manager();
     $result = true;
-    if ($oldversion < 2018052409579 ) {
+    if ($oldversion < 2018060109129 ) {
     //     // ************************************************************************************************************
     //     // Actualización que crea la tabla para los campos extendidos de usuario (Tabla: {talentospilos_user_extended})
     //     // Versión: 2018010911179
@@ -1059,45 +1059,121 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
         //     $result = $DB->insert_record('talentospilos_estad_programa', $record, true);
         // }
 
-        // Define field cantidad_estudiantes to be added to talentospilos_res_icetex.
-        $table = new xmldb_table('talentospilos_res_icetex');
-        $field = new xmldb_field('cantidad_estudiantes', XMLDB_TYPE_INTEGER, '20', null, null, null, null, 'fecha_resolucion');
+        // // Define field cantidad_estudiantes to be added to talentospilos_res_icetex.
+        // $table = new xmldb_table('talentospilos_res_icetex');
+        // $field = new xmldb_field('cantidad_estudiantes', XMLDB_TYPE_INTEGER, '20', null, null, null, null, 'fecha_resolucion');
 
-        // Conditionally launch add field cantidad_estudiantes.
+        // // Conditionally launch add field cantidad_estudiantes.
+        // if (!$dbman->field_exists($table, $field)) {
+        //     $dbman->add_field($table, $field);
+        // }
+
+        // // Define table talentospilos_res_estudiante to be dropped.
+        // $table = new xmldb_table('talentospilos_res_estudiante');
+
+        // // Conditionally launch drop table for talentospilos_res_estudiante.
+        // if ($dbman->table_exists($table)) {
+        //     $dbman->drop_table($table);
+        // }
+
+        // // Define table talentospilos_res_estudiante to be created.
+        // $table = new xmldb_table('talentospilos_res_estudiante');
+
+        // // Adding fields to table talentospilos_res_estudiante.
+        // $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        // $table->add_field('id_estudiante', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        // $table->add_field('id_resolucion', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        // $table->add_field('id_semestre', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        // $table->add_field('monto_estudiante', XMLDB_TYPE_NUMBER, '20, 2', null, XMLDB_NOTNULL, null, null);
+        // $table->add_field('id_estado_icetex', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+
+        // // Adding keys to table talentospilos_res_estudiante.
+        // $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+        // $table->add_key('uk_res_est', XMLDB_KEY_UNIQUE, array('id_estudiante', 'id_resolucion'));
+
+        // // Conditionally launch create table for talentospilos_res_estudiante.
+        // if (!$dbman->table_exists($table)) {
+        //     $dbman->create_table($table);
+        // }
+        
+        // /*Eliminación de los campos id_semestre y id_estado_icetex en la tabla
+        // talentospilos_res_estudiante */
+
+        // // Define field id_semestre to be dropped from talentospilos_res_estudiante.
+        // $table = new xmldb_table('talentospilos_res_estudiante');
+        // $field = new xmldb_field('id_semestre');
+ 
+        //  // Conditionally launch drop field id_semestre.
+        //  if ($dbman->field_exists($table, $field)) {
+        //      $dbman->drop_field($table, $field);
+        //  }
+
+        //  // Define field id_estado_icetex to be dropped from talentospilos_res_estudiante.
+        // $table = new xmldb_table('talentospilos_res_estudiante');
+        // $field = new xmldb_field('id_estado_icetex');
+
+        // // Conditionally launch drop field id_estado_icetex.
+        // if ($dbman->field_exists($table, $field)) {
+        //     $dbman->drop_field($table, $field);
+        // }
+
+        // // Define field id_programa to be added to talentospilos_res_estudiante.
+        // $table = new xmldb_table('talentospilos_res_estudiante');
+        // $field = new xmldb_field('id_programa', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null, null);
+
+        // // Conditionally launch add field id_programa.
+        // if (!$dbman->field_exists($table, $field)) {
+        //     $dbman->add_field($table, $field);
+        // }
+
+        // // ************************************************************************************************************
+        // // Actualización:
+        // // Se crea tabla para almacenar temporalmente los cambios de un formulario diligenciado en el tiempo
+        // // Versión en la que se incluye: GIT 4.2, Moodle: 2018053015359
+        // // ************************************************************************************************************
+        // // Define table talentospilos_df_dwarehouse to be created.
+        // $table = new xmldb_table('talentospilos_df_dwarehouse');
+
+        // // Adding fields to table talentospilos_df_dwarehouse.
+        // $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        // $table->add_field('id_usuario_moodle', XMLDB_TYPE_INTEGER, '20', null, XMLDB_NOTNULL, null, null);
+        // $table->add_field('accion', XMLDB_TYPE_TEXT, null, null, XMLDB_NOTNULL, null, null);
+        // $table->add_field('id_registro_respuesta_form', XMLDB_TYPE_INTEGER, '20', null, XMLDB_NOTNULL, null, null);
+        // $table->add_field('datos_previos', XMLDB_TYPE_TEXT, null, null, null, null, null);
+        // $table->add_field('datos_enviados', XMLDB_TYPE_TEXT, null, null, null, null, null);
+        // $table->add_field('datos_almacenados', XMLDB_TYPE_TEXT, null, null, null, null, null);
+        // $table->add_field('observaciones', XMLDB_TYPE_TEXT, null, null, null, null, null);
+        // $table->add_field('cod_retorno', XMLDB_TYPE_INTEGER, '5', null, null, null, null);
+        // $table->add_field('msg_retorno', XMLDB_TYPE_TEXT, null, null, null, null, null);
+        // $table->add_field('dts_retorno', XMLDB_TYPE_TEXT, null, null, null, null, null);
+
+        // // Adding keys to table talentospilos_df_dwarehouse.
+        // $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+
+        // // Adding indexes to table talentospilos_df_dwarehouse.
+        // $table->add_index('indice_df_dw_id_usuario_moodle', XMLDB_INDEX_NOTUNIQUE, array('id_usuario_moodle'));
+        // $table->add_index('df_dw_id_registro_respuesta_form', XMLDB_INDEX_NOTUNIQUE, array('id_registro_respuesta_form'));
+
+        // // Conditionally launch create table for talentospilos_df_dwarehouse.
+        // if (!$dbman->table_exists($table)) {
+        //     $dbman->create_table($table);
+        // }
+
+        // ************************************************************************************************************
+        // Actualización:
+        // Se crea tabla para almacenar temporalmente los cambios de un formulario diligenciado en el tiempo
+        // Versión en la que se incluye: GIT 4.5, Moodle: 2018060109129
+        // ************************************************************************************************************
+        // Define field fecha_hora_registro to be added to talentospilos_df_dwarehouse.
+        $table = new xmldb_table('talentospilos_df_dwarehouse');
+        $field = new xmldb_field('fecha_hora_registro', XMLDB_TYPE_DATETIME, null, null, XMLDB_NOTNULL, null, "now()", 'dts_retorno');
+
+        // Conditionally launch add field fecha_hora_registro.
         if (!$dbman->field_exists($table, $field)) {
             $dbman->add_field($table, $field);
         }
 
-        // Define table talentospilos_res_estudiante to be dropped.
-        $table = new xmldb_table('talentospilos_res_estudiante');
-
-        // Conditionally launch drop table for talentospilos_res_estudiante.
-        if ($dbman->table_exists($table)) {
-            $dbman->drop_table($table);
-        }
-
-        // Define table talentospilos_res_estudiante to be created.
-        $table = new xmldb_table('talentospilos_res_estudiante');
-
-        // Adding fields to table talentospilos_res_estudiante.
-        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
-        $table->add_field('id_estudiante', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
-        $table->add_field('id_resolucion', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
-        $table->add_field('id_semestre', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
-        $table->add_field('monto_estudiante', XMLDB_TYPE_NUMBER, '20, 2', null, XMLDB_NOTNULL, null, null);
-        $table->add_field('id_estado_icetex', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
-
-        // Adding keys to table talentospilos_res_estudiante.
-        $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
-        $table->add_key('uk_res_est', XMLDB_KEY_UNIQUE, array('id_estudiante', 'id_resolucion'));
-
-        // Conditionally launch create table for talentospilos_res_estudiante.
-        if (!$dbman->table_exists($table)) {
-            $dbman->create_table($table);
-        }
-
-        // Ases savepoint reached.
-        upgrade_block_savepoint(true, 2018052409579 , 'ases');
+        upgrade_block_savepoint(true, 2018060109129 , 'ases');
     
         return $result;
 
