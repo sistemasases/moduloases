@@ -412,7 +412,12 @@ function get_promedio_ponderado($id_estudiante, $id_programa)
 
     global $DB;
 
-    $query = "SELECT MAX(id_semestre), promedio_acumulado as prom
+    $query = "SELECT promedio_acumulado
+	      FROM {talentospilos_history_academ}
+              WHERE id_estudiante = $id_estudiante AND id_programa = $id_programa and 
+	            id_semestre = (SELECT MAX(id_semestre) FROM {talentospilos_history_academ} WHERE id_estudiante = $id_estudiante AND id_programa = $id_programa) 
+
+    	SELECT MAX(id_semestre), promedio_acumulado as prom
               FROM {talentospilos_history_academ}
               WHERE id_estudiante = $id_estudiante AND id_programa = $id_programa
               GROUP BY prom";
