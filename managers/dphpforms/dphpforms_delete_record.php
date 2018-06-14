@@ -26,8 +26,12 @@
 
 // Standard GPL and phpdocs
 
+    $_GET['source'] = 'dphpforms_delete_record'; // Prevents collisions with get_record API calls.
+
     require_once(dirname(__FILE__). '/../../../../config.php');
-        
+    require_once(dirname(__FILE__). '/dphpforms_get_record.php');
+    require_once( $CFG->libdir . '/adminlib.php');
+
     if( isset( $_GET['record_id'] ) ){
         header('Content-Type: application/json');
         echo dphpforms_delete_record( $_GET['record_id'] );
@@ -36,6 +40,7 @@
     function dphpforms_delete_record( $record_id ){
 
         global $DB;
+        global $USER;
 
         if(!is_numeric( $record_id )){
             return json_encode(
@@ -51,6 +56,9 @@
         $result = $DB->get_record_sql($sql);
         
         if($result){
+
+            $previous_data = dphpforms_get_record($record_id, null);
+            $current_data = null;
             
             $deleted_record = new stdClass();
             $deleted_record->id = $result->id;
@@ -60,13 +68,32 @@
             $deleted_record->fecha_hora_registro = $result->fecha_hora_registro;
             $deleted_record->estado = '0';
             $DB->update_record('talentospilos_df_form_resp', $deleted_record, $bulk=false);
-            return json_encode(
+
+            $retorno = json_encode(
                 array(
                     'status' => '0',
                     'message' => 'Deleted',
                     'data' => ''
                 )
             );
+
+            $stored_data = dphpforms_get_record($record_id, null);
+
+            $to_warehouse = new stdClass();
+            $to_warehouse->id_usuario_moodle = $USER->id;
+            $to_warehouse->accion = "DELETE";
+            $to_warehouse->id_registro_respuesta_form = $record_id;
+            $to_warehouse->datos_previos = $previous_data;
+            $to_warehouse->datos_enviados = $current_data;
+            $to_warehouse->datos_almacenados = $stored_data;
+            $to_warehouse->observaciones = "Eliminado lógico";
+            $to_warehouse->cod_retorno = json_decode($retorno)->status;
+            $to_warehouse->msg_retorno = json_decode($retorno)->message;
+            $to_warehouse->dts_retorno = json_encode(json_decode($retorno)->data);
+
+            $DB->insert_record('talentospilos_df_dwarehouse', $to_warehouse, $returnid=false, $bulk=false);
+
+            return $retorno;
             
         }else{
             return json_encode(

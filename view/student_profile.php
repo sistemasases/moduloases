@@ -57,7 +57,9 @@ $title = "Ficha estudiante";
 $pagetitle = $title;
 $courseid = required_param('courseid', PARAM_INT);
 $blockid = required_param('instanceid', PARAM_INT);
-$student_code = (string)optional_param('student_code', 0, PARAM_INT);
+$student_code = (string)optional_param('student_code', 0, PARAM_TEXT);
+
+print_r($student_code);
 
 require_login($courseid, false);
 
@@ -140,26 +142,26 @@ if ($student_code != 0) {
 
     // Estado ASES
     if($status_ases_array){
-        if($status_ases_array[$blockid]->nombre == "SEGUIMIENTO"){
-            $record->ases_status_t = "SEGUIMIENTO";
+        if($status_ases_array[$blockid]->nombre == "seguimiento"){
+            $record->ases_status_t = "seguimiento";
             $record->ases_status_description = "Se realiza seguimiento en esta instancia";
-        }else if($status_ases_array[$blockid]->nombre == "SIN SEGUIMIENTO"){
+        }else if($status_ases_array[$blockid]->nombre == "sinseguimiento"){
 
             $has_ases_status = verify_ases_status($ases_student->id);
 
             if($has_ases_status){
-                $record->ases_status_f = "SIN SEGUIMIENTO";
+                $record->ases_status_f = "sinseguimiento";
                 $record->ases_status_description = "Se realiza seguimiento en otra instancia";
             }else{
-                $record->ases_status_n = true;
+                $record->ases_status_n = "noasignado";
                 $record->ases_status_description = "No se realiza seguimiento";
             }
         }else{
-            $record->ases_status_n = true;
+            $record->ases_status_n = "noasignado";
             $record->ases_status_description = "No se realiza seguimiento";
         }
     }else{
-        $record->ases_status_n = true;
+        $record->ases_status_n = "noasignado";
         $record->ases_status_description = "No se realiza seguimiento";
     }
 
@@ -351,7 +353,7 @@ if ($student_code != 0) {
             break;
     }
 
-    $select = make_select_ficha($USER->id, $rol, $student_code);
+    $select = make_select_ficha($USER->id, $rol, $student_code, $blockid);
     $record->code = $select;
 
     // Loading academic information
@@ -1122,7 +1124,7 @@ if ($student_code != 0) {
 } else {
 
     $student_id = -1;
-    $select = make_select_ficha($USER->id, $rol, null);
+    $select = make_select_ficha($USER->id, $rol, null, $blockid);
     $record->code = $select;
 
 }
@@ -1130,6 +1132,14 @@ if ($student_code != 0) {
 if ($rol == 'sistemas') {
     $record->add_peer_tracking_lts = true;
     $record->sistemas = true;
+}
+
+if ($rol == 'dir_socioeducativo') {
+    $record->dir_socioeducativo = true;
+}
+
+if ($rol == 'monitor_ps') {
+    $record->monitor_ps = true;
 }
 
 

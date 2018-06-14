@@ -3,7 +3,7 @@
   {{#data}}
   {{> block_ases/side_menu}}
   <div class="container">
-  {{{message}}}
+    {{{message}}}
     {{#search_all_students_ar}}
       {{> block_ases/ar_search_students}}
     {{/search_all_students_ar}}
@@ -12,8 +12,9 @@
       {{> block_ases/ar_search_students}}
     {{/search_assigned_students_ar}}
 
-    {{#view_graphics_ar}}
-      {{> block_ases/ar_view_graphics}}
-    {{/view_graphics_ar}}
+    {{#view_summary_report}}
+      {{> block_ases/ar_view_summary}}
+    {{/view_summary_report}}
   {{/data}}
+
 </body>

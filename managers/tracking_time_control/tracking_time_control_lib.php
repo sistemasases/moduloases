@@ -91,15 +91,19 @@ function get_report_by_date($initial_date, $final_date, $default)
     return $DB->get_records_sql($sql_query);
 }
 
-function get_report_by_date_2($initial_date, $final_date, $default)
+function get_report_by_date_2($initial_date, $final_date,$monitorid)
 {
     global $DB;
     $interval = [];
     $interval[0] = $initial_date;
     $interval[1] = $final_date;
-    $monitor_code = explode("monitorid=", $_SERVER['REQUEST_URI']);
-    $monitor_trackings = get_tracking_current_semester('monitor', "$monitor_code[1]", 0, $interval);
-    return $monitor_trackings;
+    $monitor_code = $monitorid;
+
+    $seguimiento_monitor =   dphpforms_find_records( 'seguimiento_pares', 'seguimiento_pares_id_creado_por', $monitor_code, 'DESC' );
+
+    $trackings = json_decode( $seguimiento_monitor )->results;
+
+     return get_trackings_in_interval($trackings,$initial_date,$final_date);
 }
 
 /**
@@ -108,53 +112,51 @@ function get_report_by_date_2($initial_date, $final_date, $default)
  * @return array
  */
 
-function get_hours_per_days($init, $final, $default)
+function get_hours_per_days($init, $final,$monitorid)
 {
     global $DB;
-
-    //
 
     $register = new stdClass();
     $register->hours = 0;
     $register->minutes = 0;
     $register->total_minutes = 0;
     $final_array = [];
-    $peer_tracking_v2 = get_report_by_date_2($init, $final, $default);
+    $peer_tracking_v2 = get_report_by_date_2($init, $final,$monitorid);
     $first_date;
     date_default_timezone_set("America/Bogota");
+    
     if ($peer_tracking_v2)
     {
 
-        foreach($peer_tracking_v2[0] as $key => $period)
-        {
-            $year_number = $period;
-            foreach($period as $key => $tracking)
-            {
-                foreach($tracking[record][campos] as $key => $review)
-                {
-                    if ($review[local_alias] == 'fecha')
+        foreach ($peer_tracking_v2 as $key => $tracking) {
+            foreach ($tracking->campos as $key => $review) {
+                if ($review->local_alias == 'fecha')
                     {
-                        $first = $tracking[record][alias_key][respuesta];
+
+
+                        $first = $review->respuesta;
 
                         // Get the start and end of the day in unix format
 
                         $init_day = strtotime($first);
                         $final_day = date_create($first);
 
+
+
                         $final_day = strtotime(date_time_set($final_day, 23, 59, 59)->format('Y-m-d H:i:s'));
 
-                        if ($date === reset($tracking[record][campos]))
-                        {
-                            $first_date = $tracking[record][alias_key][respuesta];
-                        }
+                        if ($tracking === reset($peer_tracking_v2))
 
+                        {
+                            $first_date = strtotime($review->respuesta);
+                        }
                         // if $first_date is different than $first, all the time calculation variables are reset.
 
                         if (!($first_date >= $init_day && $first_date <= $final_day))
                         {
 
 
-                            $register->fecha = $first;
+                            $register->fecha=date('d-m-Y', $first_date);
                             $register->total_minutes+= $register->minutes;
                             $register->minutes = 0;
                             if ($register->hours > 0)
@@ -172,27 +174,30 @@ function get_hours_per_days($init, $final, $default)
                             $register->minutes = 0;
                             $register->total_minutes = 0;
                             $register->fecha = $first;
-                            $first_date = $first;
+                            $first_date = strtotime($first);
                         }
 
-                        $calculated_time = calculate_hours_2($tracking[record]);
-                        return $calculated_time;
+                        $calculated_time = calculate_hours_2($tracking);
                         if (isset($calculated_time->hours))
                         {
                             $register->hours+= $calculated_time->hours;
                             if (isset($calculated_time->minutes))
                             {
                                 $register->minutes+= $calculated_time->minutes;
+
                             }
                         }
                         else
                         {
                             $register->total_minutes+= $calculated_time->total_minutes;
+
                         }
 
-                        if ($date === end($tracking[record][campos]))
+
+
+                        if ($tracking === end($peer_tracking_v2))
                         {
-                            $register->fecha = date('d-m-Y', $first_date);
+                            $register->fecha=date('d-m-Y', $first_date);
                             $register->total_minutes+= $register->minutes;
                             $register->minutes = 0;
                             if ($register->hours > 0)
@@ -203,95 +208,15 @@ function get_hours_per_days($init, $final, $default)
                             {
                                 $register->total = $register->total_minutes . " Minutos.";
                             }
-
                             array_push($final_array, $register);
                         }
                     }
-                }
+
             }
         }
-    }
+
+            }
 
     return $final_array;
 
-    foreach($initial_hours_array as $date)
-    {
-
-        // Check if it is the first cycle
-        // *if it is the first cycle it assigns the first date of the array to the variable *first_date
-
-        $first = $date->fecha;
-
-        // Get the start and end of the day in unix format
-
-        $init_day = date("Y-m-d", $first);
-        $init_day = strtotime($init_day);
-        $final_day = date_create(date('Y-m-d', $first));
-        $final_day = strtotime(date_time_set($final_day, 23, 59, 59)->format('Y-m-d H:i:s'));
-        if ($date === reset($initial_hours_array))
-        {
-            $first_date = $date->fecha;
-        }
-
-        // if $first_date is different than $first, all the time calculation variables are reset.
-
-        if (!($first_date >= $init_day && $first_date <= $final_day))
-        {
-
-            // if($first_date!=$first){
-
-            $register->fecha = date('d-m-Y', $first_date);
-            $register->total_minutes+= $register->minutes;
-            $register->minutes = 0;
-            if ($register->hours > 0)
-            {
-                $register->total = "" . $register->hours . " Horas y " . $register->total_minutes . " Minutos.";
-            }
-            else
-            {
-                $register->total = $register->total_minutes . " Minutos.";
-            }
-
-            array_push($final_array, $register);
-            $register = new stdClass();
-            $register->hours = 0;
-            $register->minutes = 0;
-            $register->total_minutes = 0;
-            $register->fecha = $first;
-            $first_date = $first;
-        }
-
-        $calculated_time = calculate_hours($date);
-        if (isset($calculated_time->hours))
-        {
-            $register->hours+= $calculated_time->hours;
-            if (isset($calculated_time->minutes))
-            {
-                $register->minutes+= $calculated_time->minutes;
-            }
-        }
-        else
-        {
-            $register->total_minutes+= $calculated_time->total_minutes;
-        }
-
-        if ($date === end($initial_hours_array))
-        {
-            $register->fecha = date('d-m-Y', $first_date);
-            $register->total_minutes+= $register->minutes;
-            $register->minutes = 0;
-            if ($register->hours > 0)
-            {
-                $register->total = "" . $register->hours . " Horas y " . $register->total_minutes . " Minutos.";
-            }
-            else
-            {
-                $register->total = $register->total_minutes . " Minutos.";
-            }
-
-            array_push($final_array, $register);
-        }
-    }
-
-    return $final_array;
 }

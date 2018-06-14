@@ -35,7 +35,11 @@ require_once ('../dphpforms/dphpforms_records_finder.php');
 require_once ('../dphpforms/dphpforms_get_record.php');
 require_once '../user_management/user_lib.php';
 require_once '../role_management/role_management_lib.php';
+
 global $USER;
+
+
+
 
 if (isset($_POST['type']) && $_POST['type'] == "getInfo" && isset($_POST['instance']))
     {
@@ -50,6 +54,37 @@ if (isset($_POST['type']) && $_POST['type'] == "getInfo" && isset($_POST['instan
     $datos["name_rol"] = get_name_rol($datos["rol"]);
     echo json_encode($datos);
     }
+
+
+if (isset($_POST['type']) && $_POST['type'] == "user_specific_counting" && isset($_POST['instance']))
+    {
+
+    //Function that obtains the count of the subordinates given the authenticated user number
+
+
+    $user = $USER->id;
+    $role = get_id_rol_($USER->id, $_POST['instance']);
+    $role_name = get_name_rol($role);
+    $current_semester = get_current_semester();
+    $array_final=[];
+
+
+    if($role_name == 'profesional_ps'){
+       $array_final =auxiliary_specific_counting("profesional_ps",$user,$current_semester, $_POST['instance']);
+    
+    }else if($role_name =='practicante_ps'){
+       $array_final =auxiliary_specific_counting("practicante_ps",$user,$current_semester, $_POST['instance']);
+
+    }else if($role_name =='monitor_ps'){
+       $array_final =auxiliary_specific_counting("monitor_ps",$user,$current_semester, $_POST['instance']);
+
+    }
+
+
+      echo json_encode($array_final);  
+
+    }
+
 
 if (isset($_POST['type']) && isset($_POST['instance']) && $_POST['type'] == "get_groupal_trackings" && isset($_POST['student_code']))
     {
@@ -97,6 +132,8 @@ if (isset($_POST['type']) && isset($_POST['instance']) && $_POST['type'] == "get
     $array = render_monitor_new_form($students_by_monitor);
     $array_groupal_trackings_dphpforms = get_tracking_grupal_monitor_current_semester($monitor_id->id, $current_semester->max);
     $array.= render_groupal_tracks_monitor_new_form($array_groupal_trackings_dphpforms, $monitor_id->id);
+
+
     echo json_encode($array);
     }
 
@@ -105,10 +142,16 @@ if (isset($_POST['type']) && isset($_POST['instance']) && $_POST['type'] == "get
 
     // Get practicant of professional
 
+    $current_semester= get_current_semester();
+
     $practicant_id = search_user($_POST['practicant_code']);
     $monitors_of_pract = get_monitors_of_pract($practicant_id->id, $_POST['instance']);
     $array = render_practicant_new_form($monitors_of_pract, $_POST['instance']);
-    echo json_encode($array);
+    $msg = new stdClass();
+    $msg->render =$array;
+    $msg->counting= auxiliary_specific_counting("practicante_ps",$practicant_id->id,$current_semester, $_POST['instance']);
+
+    echo json_encode($msg);
     }
 
 if (isset($_POST['type']) && $_POST['type'] == "update_people" && isset($_POST['id']) && isset($_POST['instance']))

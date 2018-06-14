@@ -6,7 +6,7 @@
  * @license  http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables', 'block_ases/sweetalert2'], function ($) {
+define(['jquery', 'block_ases/bootstrap', 'block_ases/jquery.dataTables', 'block_ases/sweetalert2'], function ($) {
 
     return {
         /**
@@ -16,6 +16,14 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables', 'block_ases/s
         init: function () {
             $(document).ready(function () {
 
+                ////Controles para la tabla historica academica
+			$(document).on('change', '#tableResultStudent thead tr th select', function () {
+				var table = $("#tableResultStudent").DataTable();
+		
+				var colIndex = $(this).parent().index()+1;
+				var selectedText=$(this).parent().find(":selected").text();
+				table.columns( colIndex-1 ).search( this.value ).draw();		
+			});
             });
         },
         load_table_students: function (data) {

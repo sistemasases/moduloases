@@ -4,6 +4,8 @@
 
 <div class="container">
   {{#sistemas}}<div id="dphpforms_role_support" data-info="sistemas" style="display:none;"></div>{{/sistemas}}
+  {{#dir_socioeducativo}}<div id="dphpforms_role_support" data-info="dir_socioeducativo" style="display:none;"></div>{{/dir_socioeducativo}}
+  {{#monitor_ps}}<div id="dphpforms_role_support" data-info="monitor_ps" style="display:none;"></div>{{/monitor_ps}}
   <input type="text" class="hide" id="current_user_id" value="{{id_dphpforms_creado_por}}" />
 
   <form id="ficha_estudiante">
@@ -21,7 +23,7 @@
             <div class="icontip">
               <span class="glyphicon glyphicon-ok {{#ases_status_t}}i-tracking-t{{/ases_status_t}}{{#ases_status_f}}i-tracking-f{{/ases_status_f}}{{#ases_status_n}}i-tracking-n{{/ases_status_n}}" {{#update_ases_status_sp}} id="icon-tracking" {{/update_ases_status_sp}}></span>
               <span class="icontiptext" id="tip_ases_status">{{ases_status_description}}</span>
-              <input type="hidden" id="input_status_ases" value="{{ases_status_t}}{{ases_status_f}}">
+              <input type="hidden" id="input_status_ases" value="{{ases_status_t}}{{ases_status_f}}{{ases_status_n}}">
             </div>
           </div>
         </div>
@@ -637,7 +639,7 @@
   </div>
   <!-- End graphics Modal -->
 
-  <!-- Modal retiro-->
+  <!-- Modal retiro ASES-->
   <div class="mymodal" id="modal_dropout" name="modal_dropout">
     <div class="mymodal-content">
       <div class="mymodal-header col-sm-12">
@@ -659,7 +661,7 @@
             </div>
           </div>
           <div class="form-group">
-            <label for="detalle" class="col-sm-2">Descripción</label>
+            <label for="description_dropout" class="col-sm-2">Observación</label>
             <div class="col-sm-10">
               <textarea class="form-control medium-inline" id="description_dropout" name="detalle" maxlength="1000"></textarea>
             </div>
@@ -667,8 +669,8 @@
         </form>
       </div>
       <div class="mymodal-footer">
-        <button type="button" class="btn-primary" id="save_changes_dropout">Guardar</button>
-        <button type="button" class="btn-primary" id="goback_backdrop">Atrás</button>
+        <button type="button" class="btn-primary" id="save_changes_dropout">Continuar</button>
+        <button type="button" class="btn-primary" id="goback_backdrop">Cancelar</button>
       </div>
     </div>
   </div>

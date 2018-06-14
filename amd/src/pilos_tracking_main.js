@@ -5,7 +5,7 @@
  * @license  http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ases/datatables',  'block_ases/sweetalert', 'block_ases/select2'], function($,Modernizr,bootstrap, datatables, sweetalert, select2) {
+define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ases/jquery.dataTables',  'block_ases/sweetalert', 'block_ases/select2'], function($,Modernizr,bootstrap, datatables, sweetalert, select2) {
 
     return {
         init: function() {
@@ -25,6 +25,8 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
 
             $(document).on( "click", ".btn-dphpforms-close", function() {
                 $(this).closest('div[class="mymodal"]').fadeOut(300);
+
+
             });
 
             $('.outside').click(function(){
@@ -38,7 +40,6 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                   }, function(isConfirm) {
                     if (isConfirm) {
                         $(outside).parent('.mymodal').fadeOut(300);
-                        console.log( $(this).parent('.mymodal') );
                     }
                   });
                 
@@ -55,13 +56,18 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                 }else if( (form == 'seguimiento_pares')&&( action == 'update' ) ){
 
                     var rev_prof = $('.dphpforms-record').find('.revisado_profesional').find('.checkbox').find('input[type=checkbox]').prop('checked');
-                    
+                    var rev_prac = $('.dphpforms-record').find('.revisado_practicante').find('.checkbox').find('input[type=checkbox]').prop('checked');
+                                            
                     if( rev_prof ){
+                        $('.btn-dphpforms-delete-record').remove();
                         $('.btn-dphpforms-update').remove();
-                    }
+                    };
+
+                    if( rev_prac ){
+                        $('.btn-dphpforms-delete-record').remove();
+                    };
 
                     var count_buttons_dphpforms = $('.dphpforms-record .btn-dphpforms-univalle').length;
-                    console.log( count_buttons_dphpforms )
                     if( count_buttons_dphpforms == 2 ){
                         $('.dphpforms-record .btn-dphpforms-close').css( { 'margin-left' : ( ($('.dphpforms-updater').width()/2) - 30 ) + 'px'  } );
                     }else if( count_buttons_dphpforms == 3 ){
@@ -126,13 +132,16 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                 usuario["namerol"] = namerol;
 
 
+                create_specific_counting(usuario);
+
+
 
 
                 // when user is 'practicante' then has permissions
                 if (namerol == "practicante_ps") {
 
                     consultar_seguimientos_persona(get_instance(), usuario);
-                    send_email_new_form(get_instance());
+                    send_email_new_form(get_instance()); 
 
 
 
@@ -148,6 +157,8 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                 } else if (namerol == "monitor_ps") {
 
                     consultar_seguimientos_persona(get_instance(), usuario);
+                    send_email_new_form(get_instance());
+
 
 
 
@@ -180,7 +191,7 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
             });}
 
 
-                 function check_risks_tracking( flag ){
+                 function check_risks_tracking( flag, student_code ){
                    
 
                         var individual_risk = get_checked_risk_value_tracking('.puntuacion_riesgo_individual');
@@ -202,7 +213,7 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
 
                             var json_risks = {
                                 "function": "send_email_dphpforms",
-                                "student_code": get_student_code(),
+                                "student_code": student_code,
                                 "risks": [
                                     {
                                         "name":"Individual",
@@ -272,7 +283,8 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                     var url_processor = formulario.attr('action');
                     if(formulario.attr('action') == 'procesador.php'){
                         url_processor = '../managers/dphpforms/procesador.php';
-                    }
+                    };
+                    var student_code = formulario.find('.id_estudiante').find('input').val();
 
                     $.ajax({
                         type: 'POST',
@@ -285,13 +297,16 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                                 var response = data;
                                 
                                 if(response['status'] == 0){
+                                    $.get( "../managers/pilos_tracking/api_pilos_tracking.php?function=update_last_user_risk&arg=" + student_code + "&rid=-1", function( data ) {
+                                        console.log( data );
+                                    });
                                     var mensaje = '';
                                     if(response['message'] == 'Stored'){
                                         mensaje = 'Almacenado';
                                     }else if(response['message'] == 'Updated'){
                                         mensaje = 'Actualizado';
                                     }
-                                    //check_risks_tracking();
+                                    check_risks_tracking( false, student_code );
                                     swal(
                                         {title:'Información',
                                         text: mensaje,
@@ -351,6 +366,101 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                 $('.mymodal-close').click(function(){
                     $(this).parent().parent().parent().parent().fadeOut(300);
                 });
+
+
+                function create_specific_counting(user){
+                
+                $.ajax({
+                    type: "POST",
+                    data: {
+                        type: "user_specific_counting",
+                        user: user,
+                        instance:get_instance(),
+                    },
+                    url: "../managers/pilos_tracking/pilos_tracking_report.php",
+                    async: false,
+                    success: function(msg
+                        ) {
+
+                    var obj = msg;
+                    $.each( obj, function( index, value ){
+
+                        $("#counting_"+value.code).html(value.html);
+                    });
+                    generate_general_counting(user);
+                    $("#loading").fadeOut('slow');
+
+
+
+
+                    },
+                    dataType: "json",
+                    cache: "false",
+                    error: function(msg) {
+                       swal({
+                            title: "Oops !",
+                            text: "Se presentó un inconveniente al cargar conteo de usuarios",
+                            html: true,
+                            type: 'warning',
+                            confirmButtonColor: "#d51b23"
+                        });
+                    },
+                });
+
+                }
+
+
+                function generate_general_counting(user){
+
+                    var review_prof=0;
+                    var not_review_prof=0;
+                    var review_pract=0;
+                    var not_review_pract=0;
+                    var role;
+
+                    $(".review_prof").each(function( index,value ) {
+                        review_prof+=parseInt($(this).text(),10);
+                  });
+
+                    $(".not_review_prof").each(function( index,value ) {
+                        not_review_prof+=parseInt($(this).text(),10);
+                  });
+                    $(".review_pract").each(function( index,value ) {
+                        review_pract+=parseInt($(this).text(),10);
+                  });
+
+                    $(".not_review_pract").each(function( index,value ) {
+                        not_review_pract+=parseInt($(this).text(),10);
+                  });
+
+                if(user["namerol"]=='profesional_ps'){
+
+                  role="PROFESIONAL";  
+                }else if(user["namerol"]=='practicante_ps'){
+
+                role="PRACTICANTE";
+
+                }else if(user["namerol"]=='monitor_ps'){
+                role="MONITOR";
+
+                }else if(user["namerol"]=='sistemas'){
+                role="SISTEMAS";
+                }
+
+                advice="";
+                advice+='<h2> INFORMACIÓN DE  '+role+'</h2><hr>';
+                advice+='<div class="row">';
+                advice+='<div class="col-sm-6">';
+                advice+='<strong>Profesional</strong><br>';
+                advice+='Revisado :'+review_prof+' - No revisado : '+not_review_prof+' -  Total :'+(review_prof+not_review_prof)+'</div>';
+                advice+='<div class="col-sm-6">';
+                advice+='<strong>Practicante</strong><br>';
+                advice+='Revisado :'+review_pract+' - No revisado : '+not_review_pract+' -  Total :'+(review_pract+not_review_pract)+'</div></div>';
+
+                $("#div-header-info").html(advice);
+
+
+                }
 
                 function generate_attendance_table(students){
 
@@ -416,7 +526,7 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                             var rev_prof = $('.dphpforms-record').find('.revisado_profesional').find('.checkbox').find('input[type=checkbox]').prop('checked');
                             var rev_prac = $('.dphpforms-record').find('.revisado_practicante').find('.checkbox').find('input[type=checkbox]').prop('checked');
                             
-                            if(rev_prof || rev_prac){
+                            if(rev_prof){ 
                                 $('.dphpforms-record').find('.btn-dphpforms-delete-record').remove();
                             }
 
@@ -491,7 +601,14 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                     success: function(msg
                         ) {
                     $(practicant_id + " > div").empty();
-                    $(practicant_id + " > div").append(msg);
+                    $(practicant_id + " > div").append(msg.render);
+                    var html = msg.counting;
+
+                    $.each(html,function( index,value ) {
+                        $("#counting_"+value.code).html(value.html);
+                    });
+
+
                     monitor_load();
                     groupal_tracking_load();
                     },
@@ -566,7 +683,6 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
             $('a[class*="groupal"]').click(function() {
                 var student_code = $(this).attr('href').split("#groupal")[1];
                 var student_id = $(this).attr('href');
-                //console.log(student_id);
                 //Fill container with the information corresponding to the trackings of the selected student
                 $.ajax({
                     type: "POST",
@@ -579,7 +695,6 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                     async: false,
                     success: function(msg
                         ) {
-                    //console.log(msg);
                     $(student_id + " > div").empty();
                     $(student_id + " > div").append(msg);
                     edit_groupal_tracking_new_form();
@@ -608,7 +723,6 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
             the follow-ups of that date*/
 
             $('a[class*="student"]').click(function() {
-               // console.log("student : "+$(this).attr('href').split("#student")[1]);
                 var student_code = $(this).attr('href').split("#student")[1];
                 var student_id = $(this).attr('href');
                 //Fill container with the information corresponding to the trackings of the selected student
@@ -646,10 +760,10 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
             /*When click on the button "Ver horas", open a new tab with information of report time control about a
             determinated monitor*/
 
-            $('#see_history').click(function() {
+            $('.see_history').unbind().click(function(e) {
+
 
              var element =  $(this).parents().eq(3).attr('href').split("#monitor")[1];
-             console.log(element);
 
             $.ajax({
                     type: "POST",
@@ -660,7 +774,6 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                     url: "../managers/pilos_tracking/pilos_tracking_report.php",
                     async: false,
                     success: function(msg) {
-                        console.log(msg);
                         var current_url = window.location.href;
                         var next_url = current_url.replace("report_trackings", "tracking_time_control");
 
@@ -723,7 +836,6 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
 
                                 if (msg == "") {
                                     $('#reemplazarToogle').html('<label> No se encontraron registros </label>');
-                                    crear_conteo(usuario);
 
 
 
@@ -735,7 +847,6 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                                     groupal_tracking_load();
                                 }
                                 $(".well.col-md-10.col-md-offset-1.reporte-seguimiento.oculto").slideDown("slow");
-                                crear_conteo(usuario);
 
 
 
@@ -895,7 +1006,6 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
 
                     var id_register = dataObj['id_registro'];
                     var text = $("#observation_text");
-                    console.log()
 
 
                     if (text.val() == "") {
@@ -936,7 +1046,6 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                             async: false,
                             success: function(msg) {
                                 //If it was successful...
-                                console.log(msg);
 
                                 if (msg != "Error") {
                                     swal({

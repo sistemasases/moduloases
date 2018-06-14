@@ -1,6 +1,9 @@
 {{#data}}
-{{> block_ases/side_menu}}            
-<div class="container">
+<div id="dphpforms_role_support" data-info="{{rol}}" style="display:none;"></div>
+{{> block_ases/side_menu}} 
+<div id="loading">
+<img id="loading-image" src="../icon/load.gif" height="162" width="162"><div class="container">
+</div>
    <h2>SEGUIMIENTO PILOS</h2>
    <hr/>
    {{{message}}}
@@ -11,23 +14,25 @@
       <label class="col-md-offset-12" id="titulo"></label>
    </div>
    <div class="row">
+
       {{#view_trackings_rt}}
       <div data-spy="scroll" data-target=".navbar" data-offset="50" class="well col-md-12  reporte-seguimiento">
          {{{table_periods}}}
       </div>
       <div id='loadingmessage'>
-      <div class="well col-xs-12 col-sm-12 col-md-10 col-lg-10 col-md-offset-1 equalize text-center" id="div-header-info" style="height: 204.746px;"  id="conteo_principal" name="conteo_principal">
+      <div class="well col-xs-12 col-sm-12 col-md-10 col-lg-10 col-md-offset-1 equalize text-center" id="div-header-info" style="height: 204.746px;" name="main_counting">
 
      {{{counting}}}
     </div>
-     <img src="../icon/load.gif" class="se-pre-con" height="112" width="162">
-         
-    <div data-spy="scroll" data-target=".navbar" data-offset="50" class="well col-md-10 col-md-offset-1 reporte-seguimiento " style="display:none" id="reemplazarToogle" name="reemplazarToogle">
+
+    <div data-spy="scroll" data-target=".navbar" data-offset="50" class="well col-md-10 col-md-offset-1 reporte-seguimiento " id="reemplazarToogle" name="reemplazarToogle">
          {{{table}}}
+
       {{/view_trackings_rt}}
    </div>
    {{/data}}
 </form>
+
   <!-- MODALES DE SEGUIMIENTO -->
   <div class="mymodal" id="modal_v2_peer_tracking" name="modal_v2_pares">
     <div class="outside" ></div>

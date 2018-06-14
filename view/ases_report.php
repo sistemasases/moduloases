@@ -115,15 +115,13 @@ $coursenode = $PAGE->navigation->find($courseid, navigation_node::TYPE_COURSE);
 $blocknode = navigation_node::create('Reporte general',$url, null, 'block', $blockid);
 $coursenode->add_node($blocknode);
 
+$PAGE->requires->css('/blocks/ases/style/ases_report_style.css', true);
 $PAGE->requires->css('/blocks/ases/style/styles_pilos.css', true);
 $PAGE->requires->css('/blocks/ases/style/bootstrap_pilos.min.css', true);
 $PAGE->requires->css('/blocks/ases/style/sweetalert.css', true);
 $PAGE->requires->css('/blocks/ases/style/round-about_pilos.css', true);
-$PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/dataTables.foundation.min.css', true);
-$PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/jquery.dataTables.min.css', true);
-$PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/jquery.dataTables_themeroller.css', true);
-$PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/dataTables.tableTools.css', true);
-$PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/NewCSSExport/buttons.dataTables.min.css', true);
+$PAGE->requires->css('/blocks/ases/style/jquery.dataTables.min.css', true);
+$PAGE->requires->css('/blocks/ases/style/buttons.dataTables.min.css', true);
 $PAGE->requires->css('/blocks/ases/style/side_menu_style.css', true);
 
 $PAGE->requires->js_call_amd('block_ases/ases_report_main','init');

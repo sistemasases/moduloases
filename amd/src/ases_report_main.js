@@ -7,61 +7,28 @@
 /**
  * @module block_ases/ases_report_main
  */
-define(['jquery', 'block_ases/datatables', 'block_ases/buttons.flash', 'block_ases/jszip', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/buttons.html5', 'block_ases/buttons.print', 'block_ases/jqueryui'], function($, DataTable, flash, jszip, bootstrap, sweetalert, html, print, jqueryui) {
+define(['jquery',
+        'block_ases/jszip',
+        'block_ases/pdfmake',
+        'block_ases/jquery.dataTables',
+        'block_ases/dataTables.autoFill',
+        'block_ases/dataTables.buttons',
+        'block_ases/buttons.html5',
+        'block_ases/buttons.flash',
+        'block_ases/buttons.print',
+        'block_ases/bootstrap',
+        'block_ases/sweetalert'
+        ],
+        function($, jszip, pdfmake, dataTables, autoFill, buttons, html5, flash, print, bootstrap, sweetalert) {
     return {
         init: function(){
-            //Control para el botón 'Generar Reporte'
+
+            window.JSZip = jszip;
+            //Control para el botón 'Generar Reporte
             $("#send_form_btn").on('click', function() {
                 createTable();
-                createTableAssign();
             });
 
-            //Asignación de estudiantes a monitores/practicantes por parte de profesional. 
-            $(document).on('click', '#tableAssign tbody tr td #student_assign', function() {
-                var table = $("#tableAssign").DataTable();
-                var current_row = table.row($(this).parents('tr')).data();
-                var instance = getIdinstancia();
-                var student = current_row.username;
-                var monitores = $(this).closest('tr').find('#monitors').val();
-                var practicantes = $(this).closest('tr').find('#practicants').val();
-
-                var next = true;
-                var msg = "";
-                if (monitores == '-1') {
-                    next = false;
-                    msg += "* Debe elegir monitor a asignar \n";
-                }
-                if (practicantes == '-1') {
-                    next = false;
-                    msg += "*Debe elegir practicantes a asignar";
-                }
-
-                if (next) {
-                    $.ajax({
-                        type: "POST",
-                        data: {
-                            type: "assign_student",
-                            monitor: monitores,
-                            practicant: practicantes,
-                            instance: instance,
-                            student: student
-
-                        },
-                        url: "../managers/ases_report/asesreport.php",
-                        success: function(msg) {
-                            alert(msg);
-                        },
-
-                        dataType: "text",
-                        cache: "false",
-                        error: function(msg) {
-                            console.log("Error al asignar estudiantes" + msg);
-                        },
-                    });
-                } else {
-                    alert(msg);
-                }
-            });
 
             //Controles para la tabla generada
             $(document).on('click', '#tableResult tbody tr td', function() {
@@ -77,48 +44,77 @@ define(['jquery', 'block_ases/datatables', 'block_ases/buttons.flash', 'block_as
                 }
             });
 
-            //Función para busqueda de los filtros de riesgos.
+            //Controles para el filtro de cohortes
+            $('#conditions').on('change', function(){
+                if($('#conditions').val() != 'TODOS'){
+                    $('#cohort_check').prop('checked', false);
+                }else{
+                    $('#cohort_check').prop('checked', true);
+                }
+            });
 
-            $(document).on('change', '#tableResult thead tr th select', function() {
+            //Controles check all
+            $('#contact_fields_check').on('change', function(){
+                if( $('#contact_fields_check').prop('checked') ) {
+                    $("#contact_fields input[type='checkbox']").prop('checked', true);
+                }else{
+                    $("#contact_fields input[type='checkbox']").prop('checked', false);
+                }
+            });
+
+            $('#status_fields_check').on('change', function(){
+                if( $('#status_fields_check').prop('checked') ) {
+                    $("input[name='status_fields[]']").prop('checked', true);
+                }else{
+                    $("input[name='status_fields[]']").prop('checked', false);
+                }
+            });
+
+            $('#academic_fields_check').on('change', function(){
+                if( $('#academic_fields_check').prop('checked') ) {
+                    $("input[name='academic_fields[]']").prop('checked', true);
+                }else{
+                    $("input[name='academic_fields[]']").prop('checked', false);
+                }
+            });
+
+            $('#risk_fields_check').on('change', function(){
+                if( $('#risk_fields_check').prop('checked') ) {
+                    $("input[name='risk_fields[]']").prop('checked', true);
+                }else{
+                    $("input[name='risk_fields[]']").prop('checked', false);
+                }
+            });
+
+            $('#assignment_fields_check').on('change', function(){
+                if( $('#assignment_fields_check').prop('checked') ) {
+                    $("input[name='assignment_fields[]']").prop('checked', true);
+                }else{
+                    $("input[name='assignment_fields[]']").prop('checked', false);
+                }
+            });
+
+            //Filtros de riesgos.
+            $(document).on('change', '.select_risk', function() {
                 var table = $("#tableResult").DataTable();
                 var colIndex = $(this).parent().index() + 1;
                 var selectedText = $(this).parent().find(":selected").text();
                 table.columns(colIndex - 1).search(this.value).draw();
             });
 
-            //Despliega monitores deacuerdo al practicante seleccionado
-
-            $(document).on('change', '#tableAssign tbody tr td select#practicants', function() {
-
-                var user = $(this).val();
-                var source = "list_monitors";
-                var instancia =getIdinstancia();
-
-                $.ajax({
-                    type: "POST",
-                    data: {
-                        user: user,
-                        instance:instancia,
-                        source: source
-                    },
-                    url: "../managers/ases_report/asesreport.php",
-                    success: function(msg) {
-                       $("select#monitors").find('option').remove().end();
-                       $("select#monitors").append(msg);
-                    },
-                    dataType: "json",
-                    cache: "false",
-                    error: function(msg) {
-                        alert("Error al cargar monitores con practicante seleccionado")
-                    },
-                });
-
+            //Filtros sobre asignaciones socioeducativas
+            $(document).on('change', '.filter_assignments', function() {
+                var table = $("#tableResult").DataTable();
+                var colIndex = $(this).parent().index() + 1;
+                var selectedText = $(this).parent().find(":selected").text();
+                table.columns(colIndex - 1).search(this.value).draw();
             });
+
         },
         load_defaults_students: function(data){
 
             $("#div_table").html('');
-            $("#div_table").fadeIn(1000).append('<table id="tableResult" class="display" cellspacing="0" width="100%"><thead> </thead></table>');
+            $("#div_table").fadeIn(1000).append('<table id="tableResult" class="stripe row-border order-column" cellspacing="0" width="100%"><thead> </thead></table>');
 
             $("#tableResult").DataTable(data);
 
@@ -139,39 +135,7 @@ define(['jquery', 'block_ases/datatables', 'block_ases/buttons.flash', 'block_as
         }
     }
 
-    //Creación de tabla de asignaciones
-    function createTableAssign() {
-        
-        var dataString = $('#form_general_report').serializeArray();
 
-        dataString.push({
-            name: 'instance_id',
-            value: getIdinstancia()
-        });
-
-        $("#not_assigned_students").html('<img class="icon-loading" src="../icon/loading.gif"/>');
-        $.ajax({
-            type: "POST",
-            data: dataString,
-            url: "../managers/ases_report/load_not_assigned_students.php",
-            success: function(msg) {
-                //alert(msg.data);
-                //console.log(msg.columns);
-                $("#not_assigned_students").html('');
-                $("#not_assigned_students").fadeIn(1000).append('<table id="tableAssign" class="display" cellspacing="0" width="100%"><thead> </thead></table>');
-
-
-                $("#tableAssign").DataTable(msg);
-
-            },
-
-            dataType: "json",
-            cache: "false",
-            error: function(msg) {
-                alert("Error al cargar estudiantes no asignados")
-            },
-        });
-    }
 
     // Creación de tabla general
     function createTable() {
@@ -189,20 +153,20 @@ define(['jquery', 'block_ases/datatables', 'block_ases/buttons.flash', 'block_as
             data: dataString,
             url: "../managers/ases_report/asesreport_server_processing.php",
             success: function(msg) {
-
                 $("#div_table").html('');
                 $("#div_table").fadeIn(1000).append('<table id="tableResult" class="display" cellspacing="0" width="100%"><thead> </thead></table>');
 
                 $("#tableResult").DataTable(msg);
 
+
                 $('#tableResult tr').each(function() {
                     $.each(this.cells, function() {
                         if ($(this).html() == 'Bajo') {
-                            $(this).addClass('bajo');
+                            $(this).addClass('riesgo_bajo');
                         } else if ($(this).html() == 'Medio') {
-                            $(this).addClass('medio');
+                            $(this).addClass('riesgo_medio');
                         } else if ($(this).html() == 'Alto') {
-                            $(this).addClass('alto');
+                            $(this).addClass('riesgo_alto');
                         }
                     });
                 });
@@ -210,12 +174,12 @@ define(['jquery', 'block_ases/datatables', 'block_ases/buttons.flash', 'block_as
                 $('#tableResult').bind("DOMSubtreeModified", function() {
                     $('#tableResult tr').each(function() {
                         $.each(this.cells, function() {
-                            if ($(this).html() == 'bajo') {
-                                $(this).addClass('bajo');
-                            } else if ($(this).html() == 'medio') {
-                                $(this).addClass('medio');
-                            } else if ($(this).html() == 'alto') {
-                                $(this).addClass('alto');
+                            if ($(this).html() == 'Bajo') {
+                                $(this).addClass('riesgo_bajo');
+                            } else if ($(this).html() == 'Medio') {
+                                $(this).addClass('riesgo_medio');
+                            } else if ($(this).html() == 'Alto') {
+                                $(this).addClass('riesgo_alto');
                             }
                         });
                     });

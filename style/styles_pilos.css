@@ -26,11 +26,11 @@ header ul{
     background: #f5f5f5;
     position: absolute;
     top: 175px;
-    height: 25px;    
+    height: 25px;
     width: 100%;
 }
-header ul li{ 
-    display: inline-block;     
+header ul li{
+    display: inline-block;
     color: #d51b23;
     line-height: 25px;
     margin: 0 10px;
@@ -59,7 +59,7 @@ header ul li{
 }
 
 .reportes{ margin: 0 10%; }
-.reportes h2 span{ 
+.reportes h2 span{
     display: block;
     font-weight: lighter;
     font-size: 0.8em;
@@ -89,8 +89,8 @@ header ul li{
     margin: 30px;
     text-align: center;
 }
-.label_pilos{ 
-  width: 140px; 
+.label_pilos{
+  width: 140px;
   padding-top: 2px;
 }
 
@@ -115,7 +115,7 @@ header ul li{
     background: white;
     padding: 10px 50px 10px 15px;
     display: inline-block;
-  
+
 }
 #ficha_estudiante .cabecera > .col-md-4,
 #ficha_estudiante .cabecera > .col-md-6{
@@ -213,7 +213,7 @@ input[type=number]::-webkit-inner-spin-button {
 
 }
 
- 
+
 
 input[type=number] {
 
@@ -744,7 +744,25 @@ tr.shown td.details-control {
   height: 15%;
   margin-left: 45%;
   margin-top: 15px;
-  
+
+}
+
+#loading {
+   width: 100%;
+   height: 100%;
+   top: 0;
+   left: 0;
+   position: fixed;
+   display: block;
+   opacity: 0.7;
+   background-color: rgba(0,0,0,0.4);   z-index: 99;
+   text-align: center;
+}
+
+#loading-image {
+  position: absolute;
+  top: 45%;
+  left: 45%;
 }
 
 .accordion-container {
@@ -795,62 +813,62 @@ tr.shown td.details-control {
 }
 
 .button_gray{
-    background-color: gray; 
-    border: 1px solid gray; 
-    border-bottom: 1px solid gray; 
-    border-radius: 3px; 
-    -webkit-border-radius: 3px; 
-    -moz-border-radius: 3px; 
-    -ms-border-radius: 3px; 
-    -o-border-radius: 3px; 
-    box-shadow: inset 0 1px 0 0 gray; 
-    -webkit-box-shadow: 0 1px 0 0 gray inset; 
-    -moz-box-shadow: 0 1px 0 0 gray inset; 
-    -ms-box-shadow: 0 1px 0 0 gray inset; 
-    -o-box-shadow: 0 1px 0 0 gray inset; 
-    color: white; font-weight: bold; 
-    padding: 6px 20px; 
-    text-align: center; 
-    text-shadow: 0 -1px 0 #396715; 
+    background-color: gray;
+    border: 1px solid gray;
+    border-bottom: 1px solid gray;
+    border-radius: 3px;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    -ms-border-radius: 3px;
+    -o-border-radius: 3px;
+    box-shadow: inset 0 1px 0 0 gray;
+    -webkit-box-shadow: 0 1px 0 0 gray inset;
+    -moz-box-shadow: 0 1px 0 0 gray inset;
+    -ms-box-shadow: 0 1px 0 0 gray inset;
+    -o-box-shadow: 0 1px 0 0 gray inset;
+    color: white; font-weight: bold;
+    padding: 6px 20px;
+    text-align: center;
+    text-shadow: 0 -1px 0 #396715;
 }
 
 .button_blue{
-    background-color: #337ab7; 
-    border: 1px solid #2e6da4; 
-    border-bottom: 1px solid #337ab7; 
-    border-radius: 3px; 
-    -webkit-border-radius: 3px; 
-    -moz-border-radius: 3px; 
-    -ms-border-radius: 3px; 
-    -o-border-radius: 3px; 
-    box-shadow: inset 0 1px 0 0 #337ab7; 
-    -webkit-box-shadow: 0 1px 0 0 #337ab7 inset; 
-    -moz-box-shadow: 0 1px 0 0 #337ab7 inset; 
-    -ms-box-shadow: 0 1px 0 0 #337ab7 inset; 
-    -o-box-shadow: 0 1px 0 0 #337ab7 inset; 
-    color: white; font-weight: bold; 
-    padding: 6px 20px; 
-    text-align: center; 
+    background-color: #337ab7;
+    border: 1px solid #2e6da4;
+    border-bottom: 1px solid #337ab7;
+    border-radius: 3px;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    -ms-border-radius: 3px;
+    -o-border-radius: 3px;
+    box-shadow: inset 0 1px 0 0 #337ab7;
+    -webkit-box-shadow: 0 1px 0 0 #337ab7 inset;
+    -moz-box-shadow: 0 1px 0 0 #337ab7 inset;
+    -ms-box-shadow: 0 1px 0 0 #337ab7 inset;
+    -o-box-shadow: 0 1px 0 0 #337ab7 inset;
+    color: white; font-weight: bold;
+    padding: 6px 20px;
+    text-align: center;
 }
 
-.button_green{    
-    background-color: #5cb85c; 
-    border: 1px solid #4cae4c; 
-    border-bottom: 1px solid #5cb85c; 
-    border-radius: 3px; 
-    -webkit-border-radius: 3px; 
-    -moz-border-radius: 3px; 
-    -ms-border-radius: 3px; 
-    -o-border-radius: 3px; 
-    box-shadow: inset 0 1px 0 0 #5cb85c; 
-    -webkit-box-shadow: 0 1px 0 0 #5cb85c inset; 
-    -moz-box-shadow: 0 1px 0 0 #5cb85c inset; 
-    -ms-box-shadow: 0 1px 0 0 #5cb85c inset; 
-    -o-box-shadow: 0 1px 0 0 #5cb85c inset; 
-    color: white; font-weight: bold; 
-    padding: 6px 20px; 
-    text-align: center; 
-    
+.button_green{
+    background-color: #5cb85c;
+    border: 1px solid #4cae4c;
+    border-bottom: 1px solid #5cb85c;
+    border-radius: 3px;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    -ms-border-radius: 3px;
+    -o-border-radius: 3px;
+    box-shadow: inset 0 1px 0 0 #5cb85c;
+    -webkit-box-shadow: 0 1px 0 0 #5cb85c inset;
+    -moz-box-shadow: 0 1px 0 0 #5cb85c inset;
+    -ms-box-shadow: 0 1px 0 0 #5cb85c inset;
+    -o-box-shadow: 0 1px 0 0 #5cb85c inset;
+    color: white; font-weight: bold;
+    padding: 6px 20px;
+    text-align: center;
+
 }
 
 .button_green:hover{
@@ -874,22 +892,22 @@ tr.shown td.details-control {
     cursor: pointer;
 }
 
-.button_blue:active { 
-    border: 1px solid #204d74; 
-    box-shadow: 0 0 10px 5px #356b0b inset; 
-    -webkit-box-shadow: 0 0 10px 5px #356b0b inset; 
-    -moz-box-shadow: 0 0 10px 5px #356b0b inset; 
-    -ms-box-shadow: 0 0 10px 5px #356b0b inset; 
-    -o-box-shadow: 0 0 10px 5px #356b0b inset; 
+.button_blue:active {
+    border: 1px solid #204d74;
+    box-shadow: 0 0 10px 5px #356b0b inset;
+    -webkit-box-shadow: 0 0 10px 5px #356b0b inset;
+    -moz-box-shadow: 0 0 10px 5px #356b0b inset;
+    -ms-box-shadow: 0 0 10px 5px #356b0b inset;
+    -o-box-shadow: 0 0 10px 5px #356b0b inset;
 }
 
-.button_green:active { 
-    border: 1px solid #398439; 
-    box-shadow: 0 0 10px 5px #398439 inset; 
-    -webkit-box-shadow: 0 0 10px 5px #398439 inset; 
-    -moz-box-shadow: 0 0 10px 5px #398439 inset; 
-    -ms-box-shadow: 0 0 10px 5px #398439 inset; 
-    -o-box-shadow: 0 0 10px 5px #398439 inset; 
+.button_green:active {
+    border: 1px solid #398439;
+    box-shadow: 0 0 10px 5px #398439 inset;
+    -webkit-box-shadow: 0 0 10px 5px #398439 inset;
+    -moz-box-shadow: 0 0 10px 5px #398439 inset;
+    -ms-box-shadow: 0 0 10px 5px #398439 inset;
+    -o-box-shadow: 0 0 10px 5px #398439 inset;
 }
 
 #div_title_risk{
@@ -914,7 +932,7 @@ tr.shown td.details-control {
   border-radius: 0px 0px 0px 0px;
   -moz-border-radius: 0px 0 0px 0px;
   -webkit-border-radius: 0px 0px 0px 0px;
-  border: 0px solid #000000; 
+  border: 0px solid #000000;
 }
 
 .div_no_risk{
@@ -922,7 +940,7 @@ tr.shown td.details-control {
   margin-bottom: 5px;
   padding-top: 5px;
   padding-bottom: 5px;
-  word-wrap: break-word; 
+  word-wrap: break-word;
   text-align: center;
   background-color: #ffffff;
   border-left: 2px solid #D4D4D4;
@@ -1071,7 +1089,7 @@ input.no-borde-fondo.tema
 /*Tabla de seguimientos_pilos y textarea*/
 
 .table-info-pilos
-{ 
+{
   padding-top: 1%;
   padding-bottom: 1%;
   padding-left: 0;
@@ -1113,13 +1131,23 @@ input.no-borde-fondo.tema
 
 
 /* TABLA DE REPORTES */
-#tableResult td:nth-child(1), 
-#tableResult td:nth-child(2), 
+#tableResult td:nth-child(1),
+#tableResult td:nth-child(2),
 #tableResult td:nth-child(3) {
     text-decoration: underline;
     font-weight: bold;
     cursor: pointer;
 }
+
+/*Asignaciones */
+#tableAssign td:nth-child(1),
+#tableAssign td:nth-child(2),
+#tableAssign td:nth-child(3) {
+    text-decoration: underline;
+    font-weight: bold;
+    cursor: pointer;
+}
+
 
 /*Talentos profile*/
 #container_profile{
@@ -1134,21 +1162,21 @@ input.no-borde-fondo.tema
 .risk_graph_button,
 .risk_graph_button:active{
   width: 45% !important;
-  background-color: #337ab7; 
-  border: 1px solid #2e6da4; 
-  border-bottom: 1px solid #337ab7; 
-  border-radius: 3px; 
-  -webkit-border-radius: 3px; 
-  -moz-border-radius: 3px; 
-  -ms-border-radius: 3px; 
-  -o-border-radius: 3px; 
-  box-shadow: inset 0 1px 0 0 #337ab7; 
-  -webkit-box-shadow: 0 1px 0 0 #337ab7 inset; 
-  -moz-box-shadow: 0 1px 0 0 #337ab7 inset; 
-  -ms-box-shadow: 0 1px 0 0 #337ab7 inset; 
-  -o-box-shadow: 0 1px 0 0 #337ab7 inset; 
-  color: white; font-weight: bold; 
-  text-align: center; 
+  background-color: #337ab7;
+  border: 1px solid #2e6da4;
+  border-bottom: 1px solid #337ab7;
+  border-radius: 3px;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  -ms-border-radius: 3px;
+  -o-border-radius: 3px;
+  box-shadow: inset 0 1px 0 0 #337ab7;
+  -webkit-box-shadow: 0 1px 0 0 #337ab7 inset;
+  -moz-box-shadow: 0 1px 0 0 #337ab7 inset;
+  -ms-box-shadow: 0 1px 0 0 #337ab7 inset;
+  -o-box-shadow: 0 1px 0 0 #337ab7 inset;
+  color: white; font-weight: bold;
+  text-align: center;
   padding-left: 0px !important;
   padding-right: 0px !important;
   margin-left: 2.5%;
@@ -1254,7 +1282,7 @@ input.no-borde-fondo.tema
   margin-top: 2px !important;
   margin-bottom:5px;
   background-color: #E6E6E6;
-  padding-top: 3px; 
+  padding-top: 3px;
   padding-bottom: 3px;
   padding-left: 10px;
 }
@@ -1333,7 +1361,7 @@ input.no-borde-fondo.tema
   bottom:0;
   margin: auto;
   width: 100px;
-  
+
 }
 
 .tabla_docentes{
@@ -1378,63 +1406,63 @@ input.no-borde-fondo.tema
 .column-leader{
   width:15px !important;
 }
-    
+
 .div1{
   float:left;
   margin-left: auto;
   margin-right: auto;
 }
-    
+
 .centrarCabecera{
   text-align:center;
 }
  #modalCategories .mymodal-header{
   padding: 5px 10px;
 }
-    
+
 #inputValor{
   width : 47px !important;
 }
-    
+
 #tipoCalificacion{
   width : 168px !important;
 }
-    
+
 #catPadre{
   width: 220px!important;
 }
-    
+
 .level1{
   padding-left: 10px !important;
 }
-    
+
 .level2{
   padding-left: 40px !important;
 }
-    
+
 .level3{
   padding-left: 70px !important;
 }
-    
+
 .level4{
   padding-left: 100px !important;
 }
-    
+
 .level5{
   padding-left: 130px !important;
 }
-    
+
 .level6{
   padding-left: 160px !important;
 }
-    
+
 .divForm{
   padding-left: 30px !important;
 }
 
 .userfield{
   display: none;
-} 
+}
 
 .smallicon{
   display: none;

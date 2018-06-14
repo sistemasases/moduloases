@@ -158,7 +158,7 @@ function verify_ases_status($id_ases_student){
     $result = 0;
 
     foreach($array_status_instances as $instance){
-        if($instance->nombre == 'SEGUIMIENTO'){
+        if($instance->nombre == 'seguimiento'){
             return 1;
         }
     }
@@ -176,13 +176,13 @@ function verify_ases_status($id_ases_student){
  * @param $code_student
  * @return int
  */
-function update_status_ases($current_status, $new_status, $instance_id, $code_student){
+function update_status_ases($current_status, $new_status, $instance_id, $code_student, $reason=null, $observation=null){
 
     global $DB;
 
     date_default_timezone_set('America/Bogota');
 
-    if($current_status == ""){
+    if($current_status == "noasignado"){
         $id_current_status = 0;
     }else{
         $sql_query = "SELECT id FROM {talentospilos_estados_ases} WHERE nombre = '$current_status'";
@@ -200,7 +200,7 @@ function update_status_ases($current_status, $new_status, $instance_id, $code_st
     $today_timestamp = time();
     $record = new stdClass();
 
-    $sql_query = "SELECT id FROM {talentospilos_estados_ases} WHERE nombre = 'SIN SEGUIMIENTO'";
+    $sql_query = "SELECT id FROM {talentospilos_estados_ases} WHERE nombre = 'sinseguimiento'";
     $id_no_tracking_status = $DB->get_record_sql($sql_query)->id;
 
     // **************************************
@@ -212,15 +212,16 @@ function update_status_ases($current_status, $new_status, $instance_id, $code_st
         $record->id_estudiante = $id_ases_student;
         $record->fecha = $today_timestamp;
         $record->id_instancia = $instance->id_instancia;
+        $record->id_motivo_retiro = $reason;
 
         if($instance->id_instancia == $instance_id){
             $record->id_estado_ases = $id_new_status;
             $result = $DB->insert_record('talentospilos_est_estadoases', $record);
         }else{
-            if($new_status == 'SEGUIMIENTO' && ($instance->nombre == 'SEGUIMIENTO' || $instance->nombre == 'NO REGISTRA')){
+            if($new_status == 'seguimiento' && ($instance->nombre == 'seguimiento' || $instance->nombre == 'NO REGISTRA')){
                 $record->id_estado_ases = $id_no_tracking_status;
                 $result = $DB->insert_record('talentospilos_est_estadoases', $record);
-            }else if($instance->nombre == 'SIN SEGUIMIENTO'){
+            }else if($instance->nombre == 'sinseguimiento'){
                 $result = 1;
             }else{
                 $result = 0;
@@ -271,12 +272,23 @@ function get_trackings_student($id_ases, $tracking_type, $id_instance){
     return $tracking_array;
 }
  
-function get_tracking_current_semester($criterio,$student_id, $semester_id){
+function get_tracking_current_semester($criterio,$student_id, $semester_id,$intervals=null){
 
-    $interval = get_semester_interval($semester_id);
-    $fecha_inicio = getdate(strtotime($interval->fecha_inicio));
-    $fecha_fin = getdate(strtotime($interval->fecha_fin));
-    $ano_semester  = $fecha_inicio['year'];
+    
+
+    if($intervals!=null){
+
+
+        $fecha_inicio = getdate(strtotime($intervals[0]));
+        $fecha_fin = getdate(strtotime($intervals[1]));
+        $ano_semester  = $fecha_inicio['year'];
+
+    }else{
+        $interval = get_semester_interval($semester_id);
+        $fecha_inicio = getdate(strtotime($interval->fecha_inicio));
+        $fecha_fin = getdate(strtotime($interval->fecha_fin));
+        $ano_semester  = $fecha_inicio['year'];
+    }
 
    if($criterio=='student'){
       $array_peer_trackings_dphpforms = dphpforms_find_records('seguimiento_pares', 'seguimiento_pares_id_estudiante', $student_id, 'DESC');
