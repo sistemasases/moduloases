@@ -660,6 +660,8 @@ function get_ases_report($general_fields=null, $conditions, $risk_fields=null, $
         array_push($result_to_return, $result);
     }
 
+    print_r($sql_query);
+
     return $result_to_return;
 }
 
