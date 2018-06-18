@@ -4,7 +4,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     global $DB;
     $dbman = $DB->get_manager();
     $result = true;
-    if ($oldversion < 2018060109129 ) {
+    if ($oldversion < 2018061811179 ) {
     //     // ************************************************************************************************************
     //     // Actualización que crea la tabla para los campos extendidos de usuario (Tabla: {talentospilos_user_extended})
     //     // Versión: 2018010911179
@@ -1165,15 +1165,46 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
         // Versión en la que se incluye: GIT 4.5, Moodle: 2018060109129
         // ************************************************************************************************************
         // Define field fecha_hora_registro to be added to talentospilos_df_dwarehouse.
-        $table = new xmldb_table('talentospilos_df_dwarehouse');
-        $field = new xmldb_field('fecha_hora_registro', XMLDB_TYPE_DATETIME, null, null, XMLDB_NOTNULL, null, "now()", 'dts_retorno');
+        // $table = new xmldb_table('talentospilos_df_dwarehouse');
+        // $field = new xmldb_field('fecha_hora_registro', XMLDB_TYPE_DATETIME, null, null, XMLDB_NOTNULL, null, "now()", 'dts_retorno');
 
-        // Conditionally launch add field fecha_hora_registro.
+        // // Conditionally launch add field fecha_hora_registro.
+        // if (!$dbman->field_exists($table, $field)) {
+        //     $dbman->add_field($table, $field);
+        // }
+
+        // ************************************************************************************************************
+        // Actualización:
+        // Se cambia el tipo de campo de program_status en la tabla talentospilos_user_extended
+        // Versión en la que se incluye: GIT XXX, Moodle: 2018061810589
+        // ************************************************************************************************************
+
+        // Define field program_status to be dropped from talentospilos_user_extended.
+        $table = new xmldb_table('talentospilos_user_extended');
+        $field = new xmldb_field('program_status');
+
+        // Conditionally launch drop field program_status.
+        if ($dbman->field_exists($table, $field)) {
+            $dbman->drop_field($table, $field);
+        }
+
+        // Define field program_status to be added to talentospilos_user_extended.
+        $table = new xmldb_table('talentospilos_user_extended');
+        $field = new xmldb_field('program_status', XMLDB_TYPE_INTEGER, '10', null, null, null, '1', 'estado_seguimiento');
+
+        // Conditionally launch add field program_status.
         if (!$dbman->field_exists($table, $field)) {
             $dbman->add_field($table, $field);
         }
 
-        upgrade_block_savepoint(true, 2018060109129 , 'ases');
+        // Define key fk_program_status (foreign) to be added to talentospilos_user_extended.
+        $table = new xmldb_table('talentospilos_user_extended');
+        $key = new xmldb_key('fk_program_status', XMLDB_KEY_FOREIGN, array('program_status'), 'talentospilos_estad_programa', array('id'));
+
+        // Launch add key fk_program_status.
+        $dbman->add_key($table, $key);
+
+        upgrade_block_savepoint(true, 2018061811179 , 'ases');
     
         return $result;
 
