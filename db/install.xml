@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<XMLDB PATH="blocks/ases/db" VERSION="20180601" COMMENT="XMLDB file for Moodle blocks/configurable_reports"
+<XMLDB PATH="blocks/ases/db" VERSION="20180618" COMMENT="XMLDB file for Moodle blocks/configurable_reports"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
 >
@@ -704,12 +704,13 @@
         <FIELD NAME="id_moodle_user" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="false" COMMENT="Identificador del usuario Moodle, se relaciona con la tabla {user}"/>
         <FIELD NAME="id_ases_user" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="false" COMMENT="Identificador del usuario ASES, se relaciona con la tabla {talentospilos_usuario}"/>
         <FIELD NAME="id_academic_program" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="false" COMMENT="Identificador del programa acadpemico, se relaciona con la tabla {talentospilos_programa}"/>
-        <FIELD NAME="program_status" TYPE="binary" NOTNULL="true" SEQUENCE="false" COMMENT="Identificador de la cohorte. Se relaciona con la tabla {cohort}"/>
         <FIELD NAME="tracking_status" TYPE="int" LENGTH="1" NOTNULL="true" SEQUENCE="false" COMMENT="Identificador de la cohorte. Se relaciona con la tabla {cohort}"/>
         <FIELD NAME="estado_seguimiento" TYPE="int" LENGTH="1" NOTNULL="true" SEQUENCE="false" COMMENT="Identificador de la cohorte. Se relaciona con la tabla {cohort}"/>
+        <FIELD NAME="program_status" TYPE="int" LENGTH="10" NOTNULL="false" DEFAULT="1" SEQUENCE="false" COMMENT="Campo que representa el estado del estudiante en un programa académico determinado"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="fk_program_status" TYPE="foreign" FIELDS="program_status" REFTABLE="talentospilos_estad_programa" REFFIELDS="id" COMMENT="Llave foránea que apunta a la tabla talentospilos_est_programa"/>
       </KEYS>
     </TABLE>
     <TABLE NAME="talentospilos_instancia" COMMENT="Tabla que relaciona una instancia y características propias.">
