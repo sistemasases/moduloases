@@ -654,13 +654,13 @@ function get_ases_report($general_fields=null, $conditions, $risk_fields=null, $
         return 'El usuario no tiene permisos para listar estudiantes en el reporte ASES';
     }
 
+    print_r($sql_query);
+
     $result_to_return = array();
 
     foreach($result_query as $result){
         array_push($result_to_return, $result);
     }
-
-    print_r($sql_query);
 
     return $result_to_return;
 }
