@@ -59,8 +59,6 @@ $courseid = required_param('courseid', PARAM_INT);
 $blockid = required_param('instanceid', PARAM_INT);
 $student_code = (string)optional_param('student_code', 0, PARAM_TEXT);
 
-print_r($student_code);
-
 require_login($courseid, false);
 
 // Set up the page.
@@ -425,12 +423,11 @@ if ($student_code != 0) {
                                     array_push($seguimientos_ordenados->$array_tracking_date[$x]['year']->per_a, $array_detail_peer_trackings_dphpforms[$y]);
                                     $array_detail_peer_trackings_dphpforms[$y] = null;
                                     break;
-                                }
-
-                            }
-                        }
-                    }
-                }
+                                };
+                            };
+                        };
+                    };
+                };
             } else {
                 for ($y = 0; $y < count($array_detail_peer_trackings_dphpforms); $y++) {
                     if ($array_detail_peer_trackings_dphpforms[$y]) {
@@ -440,13 +437,12 @@ if ($student_code != 0) {
                                     array_push($seguimientos_ordenados->$array_tracking_date[$x]['year']->per_b, $array_detail_peer_trackings_dphpforms[$y]);
                                     $array_detail_peer_trackings_dphpforms[$y] = null;
                                     break;
-                                }
-
-                            }
-                        }
-                    }
-                }
-            }
+                                };
+                            };
+                        };
+                    };
+                };
+            };
         } else {
             array_push($seguimientos_ordenados->index, $array_tracking_date[$x]['year']);
             $seguimientos_ordenados->$array_tracking_date[$x]['year']->year = $array_tracking_date[$x]['year'];
@@ -455,7 +451,6 @@ if ($student_code != 0) {
 
             $seguimientos_ordenados->$array_tracking_date[$x]['year']->year = $array_tracking_date[$x]['year'];
             if (in_array($array_tracking_date[$x]['mon'], $periodo_a)) {
-
                 for ($y = 0; $y < count($array_detail_peer_trackings_dphpforms); $y++) {
                     if ($array_detail_peer_trackings_dphpforms[$y]) {
                         foreach ($array_detail_peer_trackings_dphpforms[$y]->record->campos as &$tracking) {
@@ -464,13 +459,12 @@ if ($student_code != 0) {
                                     array_push($seguimientos_ordenados->$array_tracking_date[$x]['year']->per_a, $array_detail_peer_trackings_dphpforms[$y]);
                                     $array_detail_peer_trackings_dphpforms[$y] = null;
                                     break;
-                                }
-                            }
-                        }
-                    }
-                }
+                                };
+                            };
+                        };
+                    };
+                };
             } else {
-
                 for ($y = 0; $y < count($array_detail_peer_trackings_dphpforms); $y++) {
                     if ($array_detail_peer_trackings_dphpforms[$y]) {
                         foreach ($array_detail_peer_trackings_dphpforms[$y]->record->campos as &$tracking) {
@@ -479,14 +473,14 @@ if ($student_code != 0) {
                                     array_push($seguimientos_ordenados->$array_tracking_date[$x]['year']->per_b, $array_detail_peer_trackings_dphpforms[$y]);
                                     $array_detail_peer_trackings_dphpforms[$y] = null;
                                     break;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
+                                };
+                            };
+                        };
+                    };
+                };
+            };
+        };
+    };
     //Fin de ordenamiento
 
     //echo json_encode($seguimientos_ordenados);
