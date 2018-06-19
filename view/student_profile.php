@@ -59,8 +59,6 @@ $courseid = required_param('courseid', PARAM_INT);
 $blockid = required_param('instanceid', PARAM_INT);
 $student_code = (string)optional_param('student_code', 0, PARAM_TEXT);
 
-print_r($student_code);
-
 require_login($courseid, false);
 
 // Set up the page.
