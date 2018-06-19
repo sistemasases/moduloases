@@ -425,12 +425,11 @@ if ($student_code != 0) {
                                     array_push($seguimientos_ordenados->$array_tracking_date[$x]['year']->per_a, $array_detail_peer_trackings_dphpforms[$y]);
                                     $array_detail_peer_trackings_dphpforms[$y] = null;
                                     break;
-                                }
-
-                            }
-                        }
-                    }
-                }
+                                };
+                            };
+                        };
+                    };
+                };
             } else {
                 for ($y = 0; $y < count($array_detail_peer_trackings_dphpforms); $y++) {
                     if ($array_detail_peer_trackings_dphpforms[$y]) {
@@ -440,13 +439,12 @@ if ($student_code != 0) {
                                     array_push($seguimientos_ordenados->$array_tracking_date[$x]['year']->per_b, $array_detail_peer_trackings_dphpforms[$y]);
                                     $array_detail_peer_trackings_dphpforms[$y] = null;
                                     break;
-                                }
-
-                            }
-                        }
-                    }
-                }
-            }
+                                };
+                            };
+                        };
+                    };
+                };
+            };
         } else {
             array_push($seguimientos_ordenados->index, $array_tracking_date[$x]['year']);
             $seguimientos_ordenados->$array_tracking_date[$x]['year']->year = $array_tracking_date[$x]['year'];
@@ -464,11 +462,11 @@ if ($student_code != 0) {
                                     array_push($seguimientos_ordenados->$array_tracking_date[$x]['year']->per_a, $array_detail_peer_trackings_dphpforms[$y]);
                                     $array_detail_peer_trackings_dphpforms[$y] = null;
                                     break;
-                                }
-                            }
-                        }
-                    }
-                }
+                                };
+                            };
+                        };
+                    };
+                };
             } else {
 
                 for ($y = 0; $y < count($array_detail_peer_trackings_dphpforms); $y++) {
@@ -479,14 +477,14 @@ if ($student_code != 0) {
                                     array_push($seguimientos_ordenados->$array_tracking_date[$x]['year']->per_b, $array_detail_peer_trackings_dphpforms[$y]);
                                     $array_detail_peer_trackings_dphpforms[$y] = null;
                                     break;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
+                                };
+                            };
+                        };
+                    };
+                };
+            };
+        };
+    };
     //Fin de ordenamiento
 
     //echo json_encode($seguimientos_ordenados);
