@@ -144,6 +144,8 @@ function make_select_ficha($id, $rol, $student_code, $instance_id)
 
     $sel = "";
 
+    $student_code = substr($student_code, 0, 7);
+
     if (is_null($student_code)) {
         $sel = "selected";
     }
