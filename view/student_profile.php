@@ -386,8 +386,9 @@ if ($student_code != 0) {
     // Student trackings (Seguimientos)
 
     //update_last_user_risk( $student_code );
+    $student_code_tok = strtok($student_code, "-");
 
-    $array_peer_trackings_dphpforms = dphpforms_find_records('seguimiento_pares', 'seguimiento_pares_id_estudiante', $student_code, 'DESC');
+    $array_peer_trackings_dphpforms = dphpforms_find_records('seguimiento_pares', 'seguimiento_pares_id_estudiante', $student_code_tok, 'DESC');
     $array_peer_trackings_dphpforms = json_decode($array_peer_trackings_dphpforms);
     $array_detail_peer_trackings_dphpforms = array();
     foreach ($array_peer_trackings_dphpforms->results as &$peer_trackings_dphpforms) {
@@ -1107,7 +1108,7 @@ if ($student_code != 0) {
     if ($record->form_seguimientos_geograficos == '') {
         $record->form_seguimientos_geograficos = "<strong><h3>Oops!: No se ha encontrado un formulario con el alias: <code>seguimientos_geograficos</code>.</h3></strong>";
     }
-    $seguimiento_geografico = json_decode( dphpforms_find_records('seguimiento_geografico', 'seg_geo_id_estudiante', $student_code, 'DESC') )->results;
+    $seguimiento_geografico = json_decode( dphpforms_find_records('seguimiento_geografico', 'seg_geo_id_estudiante', $student_code_tok, 'DESC') )->results;
     if($seguimiento_geografico){
         $record->actualizar_seguimiento_geografico = true;
         $record->id_seguimiento_geografico = array_values( $seguimiento_geografico )[0]->id_registro;
