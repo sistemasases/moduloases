@@ -35,9 +35,17 @@
         $a_key = null;
         if(isset($_GET['alias_key'])){
             $a_key = $_GET['alias_key'];
-        }
-        echo dphpforms_get_record( $_GET['record_id'], $a_key );
-    }
+        };
+        if( isset( $_GET['ksuper_su'] ) ){
+            $ksuper_su = false;
+            if( $_GET['ksuper_su'] == 'true' ){
+                $ksuper_su = true;
+            };
+            echo dphpforms_get_record( $_GET['record_id'], $a_key, $ksuper_su );
+        }else{
+            echo dphpforms_get_record( $_GET['record_id'], $a_key );
+        };
+    };
     
     function dphpforms_get_record($record_id, $alias_key, $super_su = false){
 
