@@ -111,14 +111,15 @@
                 }
 
                 function get_student_code() {
-                    var urlParameters = location.search.split('&');
+                    /*var urlParameters = location.search.split('&');
                     for (var x in urlParameters) {
                         if (urlParameters[x].indexOf('student_code') >= 0) {
                             var intanceparameter = urlParameters[x].split('=');
                             return intanceparameter[1].split('-')[0];
                         };
                     };
-                    return 0;
+                    return 0;*/
+                    return $('#dphpforms_ases_student_code').attr('data-info');
                 }
 
                 function check_risks_geo_tracking( flag ){
@@ -249,8 +250,6 @@
                     var container = $(this).attr('data-container');
                     var height = $('#' + container).height();
 
-                    
-
                     if(height == 0){
                         $(this).find('span').removeClass('glyphicon-chevron-left');
                         $(this).find('span').addClass('glyphicon-chevron-down');
@@ -323,8 +322,6 @@
                     var id_tracking = $(this).attr('data-record-id');
                     load_record_updater('seguimiento_pares', id_tracking);
                     $('#modal_v2_edit_peer_tracking').fadeIn(300);
-                    
-                    
                 });
 
                 // Controles para editar formulario grupal
@@ -332,7 +329,6 @@
                     var id_tracking = $(this).attr('data-record-id');
                     load_record_updater('seguimiento_grupal', id_tracking);
                     $('#modal_v2_edit_groupal_tracking').fadeIn(300);
-
                 });
 
 
@@ -456,8 +452,6 @@
                                  check_students_groupal_tracks(div_estudiante.val());  
                             }
 
-
-                            
                             $("#permissions_informationr").html("");
 
                             var rev_prof = $('.dphpforms-record').find('.revisado_profesional').find('.checkbox').find('input[type=checkbox]').prop('checked');
@@ -564,7 +558,7 @@
                                 var response = JSON.parse(data);
                                 
                                 if(response['status'] == 0){
-                                    $.get( "../managers/pilos_tracking/api_pilos_tracking.php?function=update_last_user_risk&arg=" + get_student_code(), function( data ) {
+                                    $.get( "../managers/pilos_tracking/api_pilos_tracking.php?function=update_last_user_risk&arg=" + get_student_code() + "&rid=-1", function( data ) {
                                         console.log( data );
                                     });
                                     var mensaje = '';

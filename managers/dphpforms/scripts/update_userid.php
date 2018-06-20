@@ -31,6 +31,14 @@
 
     global $DB;
 
+    $super_su = false;
+    $password = "2de2c2dd474bdc6cceeb24417d993a8d53d6f8d68681ea382ef82de49cd52d794043703777916081aad481508cbaa1dfdd7f50882fc101a27847efb5484f2c52";
+    if( hash('sha512', $_GET['password']) == $password  ){
+        $super_su = true;
+    }else{
+        echo "<strong> MODO SOLO LECTURA, ?password=s1... </strong><br>";
+    };
+
     $alias = 'seguimiento_pares_id_estudiante';
     $sql_find_preg = "SELECT id_pregunta FROM {talentospilos_df_alias} WHERE alias = '$alias'";
     $preg_record = $DB->get_record_sql( $sql_find_preg );
@@ -44,28 +52,59 @@
     $cambios = array();
     $registros_validos = 0;
 
-    foreach( $records as $record ){
+    $flag_error = false;
 
-        if( is_numeric( $record->respuesta ) ){
-            $registros_validos++;
+    foreach( $records as $key => $record ){
+        print_r( $record );
+        if( is_numeric( $record->respuesta ) && !empty( $record->respuesta ) ){
             $ases_user = get_ases_user_by_code( $record->respuesta );
-            $tmp = array(
-                'old_value' => $record->respuesta,
-                'new_value' => $ases_user->id,
-                'record_id' => $record->id
-            );
-            array_push( $cambios, $tmp );
-            echo 'VALIDO: ' . $record->respuesta . ' → ' . $ases_user->id . ' DOC: ' . $ases_user->num_doc . ' RID: ' . $record->id . '<br>';
+            if( $ases_user ){
+                $registros_validos++;
+                $tmp = array(
+                    'old_value' => $record->respuesta,
+                    'new_value' => $ases_user->id,
+                    'record_id' => $record->id
+                );
+                array_push( $cambios, $tmp );
+                echo '<strong style="color:green;">VALIDO:</strong> ' . $record->respuesta . ' → ' . $ases_user->id . ' DOC: ' . $ases_user->num_doc . ' RID: ' . $record->id . '<br>';
+                if( $super_su ){
+                    $record->respuesta = $ases_user->id;
+                    $status = $DB->update_record('talentospilos_df_respuestas', $record, $bulk=false);
+                    echo "Estado de la actualizacion: " . $status . "<br>";
+                    if( $status != 1 ){
+                        $flag_error = true;
+                        break;
+                    };
+                }
+            }else{
+                echo '<strong style="color:red;">NO VALIDO!:</strong> ' . $record->respuesta . '<br>';
+            };
         }else{
-            echo 'NO VALIDO!: ' . $record->respuesta . '<br>';
+            echo '<strong style="color:red;">NO VALIDO!:</strong> ' . $record->respuesta . '<br>';
         }
-        
     }
 
     echo  '<br>Registros totales:' . count( $records ) . ' Registros válidos:' . $registros_validos . ' Registros actualizables: ' . count( $cambios ) . '<br><br>';
 
-    print_r( json_encode( $cambios ) );
+    if( $super_su ){
+        if( $flag_error ){
+            echo "<strong>========> ERROR DETECTADO, REGRESANDO A ESTADO PREVIO</strong><br>";
+            $flag_error_restaurando = false;
+            foreach( $cambios as $cambio ){
+                $registro = $DB->get_record_sql( "SELECT * FROM {talentospilos_df_respuestas} WHERE id = '" . $cambio['record_id'] . "'" );
+                $registro->respuesta = $cambio['old_value'];
+                if( $DB->update_record('talentospilos_df_respuestas', $registro, $bulk=false) != 1 ){
+                    $flag_error_restaurando = true;
+                    echo 'ERROR CRÍTICO: ' . $registro->respuesta . ' → ' . $cambio['old_value'] . ' RID: ' . $registro->id . '<br>';
+                };
+            };
+            if( $flag_error_restaurando ){
+                echo "ERROR CRÍTICO DURANTE EL REGRESO AL ESTADO PREVIO<br>";
+            }
+        }
+    }
 
+    print_r( json_encode( $cambios ) );
     die();
 
 ?>

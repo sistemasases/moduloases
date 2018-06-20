@@ -39,6 +39,8 @@
             update_last_user_risk( $_GET['arg'], -1 );
             echo json_encode( array( 'error' => '0', 'message' => "" ) );
         }
-    }
+    }else{
+        echo json_encode( array( 'error' => '-1', 'message' => "arg, function, rid" ) );
+    };
 
 ?>
