@@ -1138,6 +1138,8 @@ if ($rol == 'monitor_ps') {
     $record->monitor_ps = true;
 }
 
+$record->ases_student_code = $dphpforms_ases_user;
+
 
 //Menu items are created
 $menu_option = create_menu_options($USER->id, $blockid, $courseid);
