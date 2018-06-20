@@ -57,7 +57,7 @@ $title = "Ficha estudiante";
 $pagetitle = $title;
 $courseid = required_param('courseid', PARAM_INT);
 $blockid = required_param('instanceid', PARAM_INT);
-$student_code = (string)optional_param('student_code', 0, PARAM_INT);
+$student_code = (string)optional_param('student_code', 0, PARAM_TEXT);
 
 require_login($courseid, false);
 
@@ -386,8 +386,9 @@ if ($student_code != 0) {
     // Student trackings (Seguimientos)
 
     //update_last_user_risk( $student_code );
+    $student_code_tok = strtok($student_code, "-");
 
-    $dphpforms_ases_user = get_ases_user_by_code( $student_code )->id;
+    $dphpforms_ases_user = get_ases_user_by_code( $student_code_tok )->id;
     $array_peer_trackings_dphpforms = dphpforms_find_records('seguimiento_pares', 'seguimiento_pares_id_estudiante', $dphpforms_ases_user, 'DESC');
     $array_peer_trackings_dphpforms = json_decode($array_peer_trackings_dphpforms);
     $array_detail_peer_trackings_dphpforms = array();
@@ -424,12 +425,11 @@ if ($student_code != 0) {
                                     array_push($seguimientos_ordenados->$array_tracking_date[$x]['year']->per_a, $array_detail_peer_trackings_dphpforms[$y]);
                                     $array_detail_peer_trackings_dphpforms[$y] = null;
                                     break;
-                                }
-
-                            }
-                        }
-                    }
-                }
+                                };
+                            };
+                        };
+                    };
+                };
             } else {
                 for ($y = 0; $y < count($array_detail_peer_trackings_dphpforms); $y++) {
                     if ($array_detail_peer_trackings_dphpforms[$y]) {
@@ -439,13 +439,12 @@ if ($student_code != 0) {
                                     array_push($seguimientos_ordenados->$array_tracking_date[$x]['year']->per_b, $array_detail_peer_trackings_dphpforms[$y]);
                                     $array_detail_peer_trackings_dphpforms[$y] = null;
                                     break;
-                                }
-
-                            }
-                        }
-                    }
-                }
-            }
+                                };
+                            };
+                        };
+                    };
+                };
+            };
         } else {
             array_push($seguimientos_ordenados->index, $array_tracking_date[$x]['year']);
             $seguimientos_ordenados->$array_tracking_date[$x]['year']->year = $array_tracking_date[$x]['year'];
@@ -454,7 +453,6 @@ if ($student_code != 0) {
 
             $seguimientos_ordenados->$array_tracking_date[$x]['year']->year = $array_tracking_date[$x]['year'];
             if (in_array($array_tracking_date[$x]['mon'], $periodo_a)) {
-
                 for ($y = 0; $y < count($array_detail_peer_trackings_dphpforms); $y++) {
                     if ($array_detail_peer_trackings_dphpforms[$y]) {
                         foreach ($array_detail_peer_trackings_dphpforms[$y]->record->campos as &$tracking) {
@@ -463,13 +461,12 @@ if ($student_code != 0) {
                                     array_push($seguimientos_ordenados->$array_tracking_date[$x]['year']->per_a, $array_detail_peer_trackings_dphpforms[$y]);
                                     $array_detail_peer_trackings_dphpforms[$y] = null;
                                     break;
-                                }
-                            }
-                        }
-                    }
-                }
+                                };
+                            };
+                        };
+                    };
+                };
             } else {
-
                 for ($y = 0; $y < count($array_detail_peer_trackings_dphpforms); $y++) {
                     if ($array_detail_peer_trackings_dphpforms[$y]) {
                         foreach ($array_detail_peer_trackings_dphpforms[$y]->record->campos as &$tracking) {
@@ -478,14 +475,14 @@ if ($student_code != 0) {
                                     array_push($seguimientos_ordenados->$array_tracking_date[$x]['year']->per_b, $array_detail_peer_trackings_dphpforms[$y]);
                                     $array_detail_peer_trackings_dphpforms[$y] = null;
                                     break;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
+                                };
+                            };
+                        };
+                    };
+                };
+            };
+        };
+    };
     //Fin de ordenamiento
 
     //echo json_encode($seguimientos_ordenados);
@@ -1112,7 +1109,7 @@ if ($student_code != 0) {
     if ($record->form_seguimientos_geograficos == '') {
         $record->form_seguimientos_geograficos = "<strong><h3>Oops!: No se ha encontrado un formulario con el alias: <code>seguimientos_geograficos</code>.</h3></strong>";
     }
-    $seguimiento_geografico = json_decode( dphpforms_find_records('seguimiento_geografico', 'seg_geo_id_estudiante', $student_code, 'DESC') )->results;
+    $seguimiento_geografico = json_decode( dphpforms_find_records('seguimiento_geografico', 'seg_geo_id_estudiante', $student_code_tok, 'DESC') )->results;
     if($seguimiento_geografico){
         $record->actualizar_seguimiento_geografico = true;
         $record->id_seguimiento_geografico = array_values( $seguimiento_geografico )[0]->id_registro;

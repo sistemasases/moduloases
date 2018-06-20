@@ -165,7 +165,8 @@ function assign_permissions($role_name, $fun_name){
     $sql_query = "SELECT t_cohort.name, t_cohort.idnumber
                   FROM {talentospilos_inst_cohorte} AS instance_cohort
                   INNER JOIN {cohort} AS t_cohort ON t_cohort.id = instance_cohort.id_cohorte
-                  WHERE id_instancia = $id_instance";
+                  WHERE id_instancia = $id_instance
+                  ORDER BY t_cohort.name ASC";
     
     $result_query = $DB->get_records_sql($sql_query);
 
