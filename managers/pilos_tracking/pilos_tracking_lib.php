@@ -796,12 +796,12 @@ function send_email_to_user( $tipoSeg, $codigoEnviarN1, $codigoEnviarN2, $codigo
 
 /**
  * Update every risk dimension with the last risk level stored in the database.
- * @see dphpforms_find_records( $form_alias, $pregunta_alias, $student_code, $order )
- * @param $student_code --> student_code
+ * @see dphpforms_find_records( $form_alias, $pregunta_alias, $ases_student_code, $order )
+ * @param $ases_student_code --> ases_student_code
  * @param $record_id --> ID student track
  * @return int 0, this process cannot be interrupted, and his return code is not important.
  */
-function update_last_user_risk( $student_code, $record_id ){
+function update_last_user_risk( $ases_student_code, $record_id ){
 
     $student_track = null;
     if( $record_id != -1 ){
@@ -809,7 +809,7 @@ function update_last_user_risk( $student_code, $record_id ){
         $fields_tracking = $student_track->campos;
         for ($i = 0; $i < count( $fields_tracking ); $i++) {
             if( $fields_tracking[$i]->local_alias == 'id_estudiante' ){
-                $student_code = $fields_tracking[$i]->respuesta;
+                $ases_student_code = $fields_tracking[$i]->respuesta;
                 break;
             };
         };
@@ -823,12 +823,13 @@ function update_last_user_risk( $student_code, $record_id ){
     $academico_risk_lvl = '0';
     $familiar_risk_lvl = '0';
     $individual_risk_lvl = '0';
-    $ases_user_id = get_ases_user_by_code($student_code)->id;
+    //$ases_user_id = get_ases_user_by_code($student_code)->id;
+    $ases_user_id = $ases_student_code;
 
     //Get all the records of the forms that contain the risk levels
-    $trackings = dphpforms_find_records( 'seguimiento_pares', 'seguimiento_pares_id_estudiante', $student_code, 'DESC' );
+    $trackings = dphpforms_find_records( 'seguimiento_pares', 'seguimiento_pares_id_estudiante', $ases_student_code, 'DESC' );
     $trackings = json_decode( $trackings )->results;
-    $geo_tracking = dphpforms_find_records( 'seguimiento_geografico', 'seg_geo_id_estudiante', $student_code, 'DESC' );
+    $geo_tracking = dphpforms_find_records( 'seguimiento_geografico', 'seg_geo_id_estudiante', $ases_student_code, 'DESC' );
     $geo_tracking = json_decode( $geo_tracking )->results;
 
     /* 
@@ -887,7 +888,6 @@ function update_last_user_risk( $student_code, $record_id ){
         };
 
         $fields_tracking = json_decode( $tracking_tmp->json_full_tracking )->campos;
-        
         foreach ($fields_tracking as $key => $field) {
             
             if( $field->local_alias == 'puntuacion_vida_uni' ){
@@ -1029,12 +1029,9 @@ function update_last_user_risk( $student_code, $record_id ){
                 $DB->insert_record( 'talentospilos_riesg_usuario', $new_user_risk, $returnid=false, $bulk=false );
             } 
         }
-
     }
-
     return 0;
-
-}
+};
 
 
 
