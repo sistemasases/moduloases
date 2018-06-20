@@ -36,8 +36,8 @@
     if( hash('sha512', $_GET['password']) == $password  ){
         $super_su = true;
     }else{
-        echo "<strong> MODO SOLO LECTURA </strong><br>";
-    }
+        echo "<strong> MODO SOLO LECTURA, ?password=s1... </strong><br>";
+    };
 
     $alias = 'seguimiento_pares_id_estudiante';
     $sql_find_preg = "SELECT id_pregunta FROM {talentospilos_df_alias} WHERE alias = '$alias'";
@@ -54,33 +54,34 @@
 
     $flag_error = false;
 
-    foreach( $records as $record ){
+    foreach( $records as $key => $record ){
         print_r( $record );
         if( is_numeric( $record->respuesta ) && !empty( $record->respuesta ) ){
-            $registros_validos++;
             $ases_user = get_ases_user_by_code( $record->respuesta );
-            $tmp = array(
-                'old_value' => $record->respuesta,
-                'new_value' => $ases_user->id,
-                'record_id' => $record->id
-            );
-            array_push( $cambios, $tmp );
-            echo 'VALIDO: ' . $record->respuesta . ' → ' . $ases_user->id . ' DOC: ' . $ases_user->num_doc . ' RID: ' . $record->id . '<br>';
-            
-            if( $super_su ){
-                $record->respuesta = $ases_user->id;
-                $status = $DB->update_record('talentospilos_df_respuestas', $record, $bulk=false);
-                echo "Estado de la actualizacion: " . $status . "<br>";
-                if( $status != 1 ){
-                    $flag_error = true;
-                    break;
-                };
-            }
-
+            if( $ases_user ){
+                $registros_validos++;
+                $tmp = array(
+                    'old_value' => $record->respuesta,
+                    'new_value' => $ases_user->id,
+                    'record_id' => $record->id
+                );
+                array_push( $cambios, $tmp );
+                echo '<strong style="color:green;">VALIDO:</strong> ' . $record->respuesta . ' → ' . $ases_user->id . ' DOC: ' . $ases_user->num_doc . ' RID: ' . $record->id . '<br>';
+                if( $super_su ){
+                    $record->respuesta = $ases_user->id;
+                    $status = $DB->update_record('talentospilos_df_respuestas', $record, $bulk=false);
+                    echo "Estado de la actualizacion: " . $status . "<br>";
+                    if( $status != 1 ){
+                        $flag_error = true;
+                        break;
+                    };
+                }
+            }else{
+                echo '<strong style="color:red;">NO VALIDO!:</strong> ' . $record->respuesta . '<br>';
+            };
         }else{
-            echo 'NO VALIDO!: ' . $record->respuesta . '<br>';
+            echo '<strong style="color:red;">NO VALIDO!:</strong> ' . $record->respuesta . '<br>';
         }
-        
     }
 
     echo  '<br>Registros totales:' . count( $records ) . ' Registros válidos:' . $registros_validos . ' Registros actualizables: ' . count( $cambios ) . '<br><br>';
