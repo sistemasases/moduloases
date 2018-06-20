@@ -803,10 +803,6 @@ function send_email_to_user( $tipoSeg, $codigoEnviarN1, $codigoEnviarN2, $codigo
  */
 function update_last_user_risk( $ases_student_code, $record_id ){
 
-    // $myfile = fopen("newfile.txt", "w") or die("Unable to open file!");
-    // fwrite($myfile, $ases_student_code);
-    // fclose($myfile);
-
     $student_track = null;
     if( $record_id != -1 ){
         $student_track = json_decode( dphpforms_get_record( $record_id, 'fecha', true ) )->record;
