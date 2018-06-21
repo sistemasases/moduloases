@@ -111,16 +111,12 @@
                 }
 
                 function get_student_code() {
-                    /*var urlParameters = location.search.split('&');
-                    for (var x in urlParameters) {
-                        if (urlParameters[x].indexOf('student_code') >= 0) {
-                            var intanceparameter = urlParameters[x].split('=');
-                            return intanceparameter[1].split('-')[0];
-                        };
-                    };
-                    return 0;*/
                     return $('#dphpforms_ases_student_code').attr('data-info');
-                }
+                };
+
+                function get_dphpforms_instance(){
+                    return $('#dphpforms_block_instance').attr('data-info');
+                };
 
                 function check_risks_geo_tracking( flag ){
                         var geo_risk = get_checked_risk_value_tracking('.seg_geo_nivel_riesgo');
@@ -268,6 +264,7 @@
                     $('.id_estudiante').find('input').val( get_student_code() );
                     var codigo_monitor = $('#current_user_id').val();
                     $('.id_creado_por').find('input').val(codigo_monitor);
+                    $('.id_instancia').find('input').val( get_dphpforms_instance() );
                     $('.dphpforms-response .btn-dphpforms-sendform').css( { 'margin-left' : ( ($('.dphpforms-response').width()/2) - ( $('.dphpforms-response .btn-dphpforms-univalle').outerWidth() /2) - ( $('.dphpforms-response .btn-dphpforms-close').outerWidth() /2) )  + 'px'  } );
                     
                 });
