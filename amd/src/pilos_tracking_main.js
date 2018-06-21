@@ -15,6 +15,7 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
             var id = 0;
             var name = "";
             var email = "";
+            var namerol = "";
 
 
              /**
@@ -125,7 +126,7 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                     },
                 });
 
-               name = "";
+                name = "";
                 var usuario = [];
                 usuario["id"] = id;
                 usuario["name"] = name;
