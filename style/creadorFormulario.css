@@ -294,6 +294,12 @@ pre, code {
     margin-right: 20px;
 }
 
+.btn-inasistencia{
+    padding-top: 10px;
+    display: flex;
+    justify-content: center;
+}
+
 /*Finalización de definición de estilos para el formulario de seguimientos*/
 
 /* Inicio definición de estilos para primer acercamiento */
