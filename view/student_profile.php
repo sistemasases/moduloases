@@ -1083,6 +1083,7 @@ if ($student_code != 0) {
     $record->form_seguimientos = null;
     $record->primer_acercamiento = null;
     $record->form_seguimientos = dphpforms_render_recorder('seguimiento_pares', $rol);
+    $record->form_inasistencia = dphpforms_render_recorder('inasistencia', $rol);
     
     if ($record->form_seguimientos == '') {
         $record->form_seguimientos = "<strong><h3>Oops!: No se ha encontrado un formulario con el alias: <code>seguimiento_pares</code>.</h3></strong>";
