@@ -24,17 +24,18 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 require_once('permissions_lib.php');
+    $title = "title";
     $columns = array();
-    array_push($columns, array("title"=>"Nombre", "name"=>"nombre_rol", "data"=>"nombre_rol"));
-    array_push($columns, array("title"=>"Descripción", "name"=>"descripcion", "data"=>"descripcion"));
-    array_push($columns, array("title"=>"", "name"=>"button", "data"=>"edit"));
+    array_push($columns, array($title=>"Nombre", "name"=>"nombre_rol", "data"=>"nombre_rol"));
+    array_push($columns, array($title=>"Descripción", "name"=>"descripcion", "data"=>"descripcion"));
+    array_push($columns, array($title=>"", "name"=>"button", "data"=>"edit"));
 
 
         $data = array(
                 "bsort" => false,
                 "columns" => $columns,
                 "data"=> get_roles_table(),
-                "language" => 
+                "language" =>
                  array(
                     "search"=> "Buscar:",
                     "oPaginate" => array (
@@ -59,6 +60,4 @@ require_once('permissions_lib.php');
                  "order"=> array(0, "desc" )
         );
     header('Content-Type: application/json');
-echo json_encode($data); 
-
-
+echo json_encode($data);
