@@ -28,56 +28,58 @@ require_once('permissions_lib.php');
 
 /**
  * Creates variables according to a speficif funcionality name
- * 
+ *
  * @see create_variablebyname($validation)
  * @param $validation --> object with values to create
  * @return void
  */
 
- function create_variablebyname($validation){
+function create_variablebyname($validation)
+{
 
-    $array_variable =[];
+    $array_variable = array();
 
     foreach ($validation as $key => $value) {
-        
+
         ${$value->nombre_accion} = true;
-        
+
         $name        = $value->nombre_accion;
         $data->$name = $name;
-        array_push($array_variable,$name);
-        array_push($array_variable,$data->$name);
+        array_push($array_variable, $name);
+        array_push($array_variable, $data->$name);
     }
 
     return $array_variable;
 
- }
+}
 
 
 /**
  * Function that gets all functionalities and their actions
- * @see get_functions_actions($rol)
- * @param $rol 
+ * @see get_functions_actions()
+ * @param $rol
  * @return string html with all functionalities obtained
  **/
 
-function get_functions_actions($rol){
-    $table = "";
+function get_functions_actions()
+{
+    $table     = "";
     $functions = get_functions();
 
 
-    foreach($functions as $function){
+    foreach ($functions as $function) {
 
-        $table .=' <div class="col-lg-3 col-md-3"><fieldset id="'.$function->id.'"><legend>'.$function->nombre_func.'</legend>';
+        $table .= ' <div class="col-lg-3 col-md-3"><fieldset id="' . $function->id . '"><legend>' . $function->nombre_func . '</legend>';
         $actions = get_actions_function($function->id);
-        foreach($actions as $action){
+        foreach ($actions as $action) {
 
 
-            $table.='<input type="checkbox" name="actions[]" "="" value="'.$action->id.'">'.$action->nombre_accion.'</br>';
-        
-        }  
-         
-    
-        $table.='</div>';
+            $table .= '<input type="checkbox" name="actions[]" "="" value="' . $action->id . '">' . $action->nombre_accion . '</br>';
+
+        }
+
+
+        $table .= '</div>';
 
     }
     return $table;
@@ -89,18 +91,19 @@ function get_functions_actions($rol){
 /**
  * Obtains a select given an array
  * @see get_roles_select($roles,$nombre_rol)
- * @param $roles --> array 
+ * @param $roles --> array
  * @param $nombre_rol --> name that will be assigned to the select
  * @return string html with the select obtained
  **/
-function get_roles_select($roles,$nombre_rol){
+function get_roles_select($roles, $nombre_rol)
+{
     $table = "";
-    $table.='<select class="form-pilos" id="'.$nombre_rol.'">';
-    $table.='<option></option>';
-    foreach($roles as $role){
-            $table.='<option value="'.$role->id.'">'.$role->nombre_rol.'</option>';
-     }
-    $table.='</select>';
+    $table .= '<select class="form-pilos" id="' . $nombre_rol . '">';
+    $table .= '<option></option>';
+    foreach ($roles as $role) {
+        $table .= '<option value="' . $role->id . '">' . $role->nombre_rol . '</option>';
+    }
+    $table .= '</select>';
     return $table;
 
 }
@@ -113,13 +116,14 @@ function get_roles_select($roles,$nombre_rol){
  * @param $nombre_function --> function name
  * @return string html with the select obtained
  **/
-function get_functions_select($functions,$nombre_function){
+function get_functions_select($functions, $nombre_function)
+{
     $table = "";
-    $table.='<select class="form-pilos" id="'.$nombre_function.'">';
-    foreach($functions as $function){
-            $table.='<option value="'.$function->id.'">'.$function->nombre_func.'</option>';
-     }
-    $table.='</select>';
+    $table .= '<select class="form-pilos" id="' . $nombre_function . '">';
+    foreach ($functions as $function) {
+        $table .= '<option value="' . $function->id . '">' . $function->nombre_func . '</option>';
+    }
+    $table .= '</select>';
     return $table;
 
 }
@@ -131,24 +135,15 @@ function get_functions_select($functions,$nombre_function){
  * @param $actions --> array containing actions information
  * @return string html with the select obtained
  **/
-function get_actions_select($actions){
+function get_actions_select($actions)
+{
     $table = "";
-    $table.='<select class="form-pilos" id="actions">';
-    foreach($actions as $action){
-            $table.='<option value="'.$action->id.'">'.$action->nombre_accion.'</option>';
-     }
-    $table.='</select>';
+    $table .= '<select class="form-pilos" id="actions">';
+    foreach ($actions as $action) {
+        $table .= '<option value="' . $action->id . '">' . $action->nombre_accion . '</option>';
+    }
+    $table .= '</select>';
     return $table;
 
 }
-
-
-
-
-
-
-
-
-
-
 ?>
