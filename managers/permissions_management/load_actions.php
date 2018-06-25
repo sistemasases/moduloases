@@ -37,7 +37,7 @@ require_once('permissions_lib.php');
                 "bsort" => false,
                 "columns" => $columns,
                 "data"=> get_actions_table(),
-                "language" => 
+                "language" =>
                  array(
                     "search"=> "Buscar:",
                     "oPaginate" => array (
@@ -62,6 +62,4 @@ require_once('permissions_lib.php');
                  "order"=> array(0, "desc" )
         );
     header('Content-Type: application/json');
-echo json_encode($data); 
-
-
+echo json_encode($data);

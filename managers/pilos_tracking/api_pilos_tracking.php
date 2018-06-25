@@ -27,16 +27,20 @@
 
     require_once(dirname(__FILE__). '/../../../../config.php');
     require_once(dirname(__FILE__).'/pilos_tracking_lib.php');
-
-    if( isset($_GET['function']) && isset($_GET['arg']) ){
-
-        if( ( $_GET['function'] == 'update_last_user_risk' ) && ( $_GET['arg'] != '' ) ){
+    //rid = record_id
+    //arg = student_code, i.e 142XXXX
+    if( isset($_GET['function']) && isset($_GET['arg']) && isset($_GET['rid']) ){
+        if( ( $_GET['function'] == 'update_last_user_risk' ) && ( $_GET['arg'] == '0' ) ){
             header('Content-Type: application/json');
-            update_last_user_risk( $_GET['arg'] );
+            update_last_user_risk( $_GET['arg'], $_GET['rid'] );
             echo json_encode( array( 'error' => '0', 'message' => "" ) );
-
+        }else if( ( $_GET['function'] == 'update_last_user_risk' ) && ( $_GET['arg'] != '0' ) ){
+            header('Content-Type: application/json');
+            update_last_user_risk( $_GET['arg'], -1 );
+            echo json_encode( array( 'error' => '0', 'message' => "" ) );
         }
-
-    }
+    }else{
+        echo json_encode( array( 'error' => '-1', 'message' => "arg, function, rid" ) );
+    };
 
 ?>

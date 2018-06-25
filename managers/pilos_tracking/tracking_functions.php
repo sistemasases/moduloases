@@ -42,18 +42,20 @@ function render_monitor_new_form($students_by_monitor, $period = null)
     $panel = "";
     foreach($students_by_monitor as $student) {
         $student_code = get_user_moodle($student->id_estudiante);
-        $student = explode("-", $student_code->username);
+        //$student = explode("-", $student_code->username);
+        //$student = explode("-", $student->id_estudiante + "-" );
+        $ases_student_code = $student->id_estudiante;
         $current_semester = get_current_semester();
         if ($period == null) {
-            $monitor_trackings = get_tracking_current_semester('student', $student[0], $current_semester->max);
+            $monitor_trackings = get_tracking_current_semester('student', $ases_student_code, $current_semester->max);
         }
         else {
-            $monitor_trackings = get_tracking_current_semester('student', $student[0], $period);
+            $monitor_trackings = get_tracking_current_semester('student', $ases_student_code, $period);
         }
 
         $monitor_counting = filter_trackings_by_review($monitor_trackings);
 
-        $panel.= "<a data-toggle='collapse' class='student collapsed btn btn-danger btn-univalle btn-card collapsed' data-parent='#accordion_students' style='text-decoration:none' href='#student" . $student_code->username . "'>";
+        $panel.= "<a data-toggle='collapse' class='student collapsed btn btn-danger btn-univalle btn-card collapsed' data-parent='#accordion_students' style='text-decoration:none' href='#student" . $ases_student_code . "'>";
         $panel.= "<div class='panel-heading heading_students_tracking'>";
         $panel.= "<h4 class='panel-title'>";
         $panel.= "$student_code->firstname $student_code->lastname";
@@ -64,7 +66,7 @@ function render_monitor_new_form($students_by_monitor, $period = null)
              </div>";
         $panel.= "</div>"; //End panel-heading
         $panel.= "</a>";
-        $panel.= "<div id='student$student_code->username'  class='show collapse_v2 collapse border_rt' role='tabpanel' aria-labelledby='headingstudent$student_code->username' aria-expanded='true'>";
+        $panel.= "<div id='student$ases_student_code'  class='show collapse_v2 collapse border_rt' role='tabpanel' aria-labelledby='headingstudent$ases_student_code' aria-expanded='true'>";
         $panel.= "<div class='panel-body'>";
         $panel.= "</div>"; // End panel-body
         $panel.= "</div>"; // End collapse

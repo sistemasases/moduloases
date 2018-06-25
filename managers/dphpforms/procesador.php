@@ -113,7 +113,7 @@ if($RECORD_ID){
     $DB->insert_record('talentospilos_df_dwarehouse', $to_warehouse, $returnid=false, $bulk=false);
 
 }else{
-
+    $previous_data = "";
     $current_data = $form_JSON;
     $retorno = dphpforms_new_store_respuesta($form_JSON);
     if( json_decode($retorno)->status == '0' ){

@@ -794,27 +794,57 @@ function send_email_to_user( $tipoSeg, $codigoEnviarN1, $codigoEnviarN2, $codigo
   
 }
 
-function update_last_user_risk( $student_code ){
+/**
+ * Update every risk dimension with the last risk level stored in the database.
+ * @see dphpforms_find_records( $form_alias, $pregunta_alias, $ases_student_code, $order )
+ * @param $ases_student_code --> ases_student_code
+ * @param $record_id --> ID student track
+ * @return int 0, this process cannot be interrupted, and his return code is not important.
+ */
+function update_last_user_risk( $ases_student_code, $record_id ){
+
+    $student_track = null;
+    if( $record_id != -1 ){
+        $student_track = json_decode( dphpforms_get_record( $record_id, 'fecha', true ) )->record;
+        $fields_tracking = $student_track->campos;
+        for ($i = 0; $i < count( $fields_tracking ); $i++) {
+            if( $fields_tracking[$i]->local_alias == 'id_estudiante' ){
+                $ases_student_code = $fields_tracking[$i]->respuesta;
+                break;
+            };
+        };
+    };
 
     global $DB;
 
-    $trackings = dphpforms_find_records( 'seguimiento_pares', 'seguimiento_pares_id_estudiante', $student_code, 'DESC' );
-    $trackings = json_decode( $trackings )->results;
+    $geo_risk_lvl = '0';
+    $vida_universitaria_risk_lvl = '0';
+    $economico_risk_lvl = '0';
+    $academico_risk_lvl = '0';
+    $familiar_risk_lvl = '0';
+    $individual_risk_lvl = '0';
+    //$ases_user_id = get_ases_user_by_code($student_code)->id;
+    $ases_user_id = $ases_student_code;
 
-    $geo_tracking = dphpforms_find_records( 'seguimiento_geografico', 'seg_geo_id_estudiante', $student_code, 'DESC' );
+    //Get all the records of the forms that contain the risk levels
+    $trackings = dphpforms_find_records( 'seguimiento_pares', 'seguimiento_pares_id_estudiante', $ases_student_code, 'DESC' );
+    $trackings = json_decode( $trackings )->results;
+    $geo_tracking = dphpforms_find_records( 'seguimiento_geografico', 'seg_geo_id_estudiante', $ases_student_code, 'DESC' );
     $geo_tracking = json_decode( $geo_tracking )->results;
+
+    /* 
+        Start get last risk lvl geo_tracking.
+        At it is only a single record, we just only need bring the last one.
+    */
     $full_geo_tracking = null;
     if( count( $geo_tracking ) > 0 ){
         $full_geo_tracking = json_decode( dphpforms_get_record( array_values( $geo_tracking )[0]->id_registro, 'fecha' ) )->record;
-    }  
-
-    $geo_risk_lvl = '0';
+    }
 
     if( $full_geo_tracking ){
 
         $fields =  $full_geo_tracking->campos;
         foreach ($fields as $key => $field) {
-        
             if( $field->local_alias == 'seg_geo_nivel_riesgo' ){
                 if( $field->respuesta == '-#$%-' ){
                     $geo_risk_lvl = '0';
@@ -824,83 +854,91 @@ function update_last_user_risk( $student_code ){
             }
         }
     }
+    // End of get last risk geographic risk level.
 
-    $last_tracking = null;
-
+    $dates = array();
+    $full_trackings = array();
     foreach ($trackings as $key => $tracking) {
 
         $full_tracking = json_decode( dphpforms_get_record( $tracking->id_registro, 'fecha' ) )->record;
-
-        if( !$last_tracking ){    
-
-            $last_tracking = new stdClass();
-            $last_tracking->id = $full_tracking->id_registro;
-            $last_tracking->fecha = strtotime( $full_tracking->alias_key->respuesta );
-            $last_tracking->json_full_tracking = json_encode( $full_tracking );
-
-        }else{
-
-            if( $last_tracking->fecha < strtotime( $full_tracking->alias_key->respuesta ) ){
-
-                $last_tracking->id = $full_tracking->id_registro;
-                $last_tracking->fecha = strtotime( $full_tracking->alias_key->respuesta );
-                $last_tracking->json_full_tracking = json_encode( $full_tracking );
-
-            }
-
-        }
-
-    }
-
-    $fields_tracking = json_decode( $last_tracking->json_full_tracking )->campos;
-
-    $ases_user_id = get_ases_user_by_code($student_code)->id;
-
-    $vida_universitaria_risk_lvl = '0';
-    $economico_risk_lvl = '0';
-    $academico_risk_lvl = '0';
-    $familiar_risk_lvl = '0';
-    $individual_risk_lvl = '0';
-
-    foreach ($fields_tracking as $key => $field) {
+        $track_date = strtotime( $full_tracking->alias_key->respuesta );
+        array_push( $dates, $track_date );
+        array_push( $full_trackings, $full_tracking );  
         
-        if( $field->local_alias == 'puntuacion_vida_uni' ){
-            if( $field->respuesta == '-#$%-' ){
-                $vida_universitaria_risk_lvl = '0';
-            }else{
-                $vida_universitaria_risk_lvl = $field->respuesta;
-            }
-        }
-        if( $field->local_alias == 'puntuacion_riesgo_economico' ){
-            if( $field->respuesta == '-#$%-' ){
-                $economico_risk_lvl = '0';
-            }else{
-                $economico_risk_lvl = $field->respuesta;
-            }
-        }
-        if( $field->local_alias == 'puntuacion_riesgo_academico' ){
-            if( $field->respuesta == '-#$%-' ){
-                $academico_risk_lvl = '0';
-            }else{
-                $academico_risk_lvl = $field->respuesta;
-            }
-        }
-        if( $field->local_alias == 'puntuacion_riesgo_familiar' ){
-            if( $field->respuesta == '-#$%-' ){
-                $familiar_risk_lvl = '0';
-            }else{
-                $familiar_risk_lvl = $field->respuesta;
-            }
-        }
-        if( $field->local_alias == 'puntuacion_riesgo_individual' ){
-            if( $field->respuesta == '-#$%-' ){
-                $individual_risk_lvl = '0';
-            }else{
-                $individual_risk_lvl = $field->respuesta;
-            }
-        }
+    };
 
-    }
+    rsort( $dates );
+    $toFile = "";
+    
+    for( $i = 0; $i < count( $dates ); $i++ ){
+
+        $tracking_tmp = new stdClass();
+        $tmp_date = "";
+        for ($x = 0; $x < count( $full_trackings ); $x++) {
+            
+            $tmp_date = $full_trackings[$x]->alias_key->respuesta;
+            if( $dates[$i] == strtotime( $tmp_date ) ){
+                $tracking_tmp->id = $full_trackings[$x]->id_registro;
+                $tracking_tmp->fecha = strtotime( $full_trackings[$x]->alias_key->respuesta );
+                $tracking_tmp->json_full_tracking = json_encode( $full_trackings[$x] );
+                //unset( $full_trackings[$x] );
+                $full_trackings[$x]->alias_key->respuesta = -1;
+                break;
+            };
+        };
+
+        $fields_tracking = json_decode( $tracking_tmp->json_full_tracking )->campos;
+        foreach ($fields_tracking as $key => $field) {
+            
+            if( $field->local_alias == 'puntuacion_vida_uni' ){
+                if( $field->respuesta == '-#$%-' ){
+                    //$vida_universitaria_risk_lvl = '0';
+                }else{
+                    if( $vida_universitaria_risk_lvl == '0' ){
+                        $vida_universitaria_risk_lvl = $field->respuesta;
+                    };
+                };
+            };
+            if( $field->local_alias == 'puntuacion_riesgo_economico' ){
+                if( $field->respuesta == '-#$%-' ){
+                    //$economico_risk_lvl = '0';
+                }else{
+                    if( $economico_risk_lvl == '0' ){
+                        $economico_risk_lvl = $field->respuesta;
+                    };
+                };
+            };
+            if( $field->local_alias == 'puntuacion_riesgo_academico' ){
+                if( $field->respuesta == '-#$%-' ){
+                    //$academico_risk_lvl = '0';
+                }else{
+                    if( $academico_risk_lvl == '0' ){
+                        $academico_risk_lvl = $field->respuesta;
+                    };
+                };
+            };
+            if( $field->local_alias == 'puntuacion_riesgo_familiar' ){
+                if( $field->respuesta == '-#$%-' ){
+                    //$familiar_risk_lvl = '0';
+                }else{
+                    if( $familiar_risk_lvl == '0' ){
+                        $familiar_risk_lvl = $field->respuesta;
+                    };
+                };
+            };
+            
+            if( $field->local_alias == 'puntuacion_riesgo_individual' ){
+                if( $field->respuesta == '-#$%-' ){
+                    //$individual_risk_lvl = '0';
+                }else{
+                    if( $individual_risk_lvl == '0' ){
+                        $individual_risk_lvl = $field->respuesta;
+                    };
+                };
+            };
+        };
+    };
+
 
     $risks = $DB->get_records_sql( "SELECT * FROM {talentospilos_riesgos_ases}" );
     foreach( $risks as $key => $risk ){
@@ -991,12 +1029,9 @@ function update_last_user_risk( $student_code ){
                 $DB->insert_record( 'talentospilos_riesg_usuario', $new_user_risk, $returnid=false, $bulk=false );
             } 
         }
-
     }
-
     return 0;
-
-}
+};
 
 
 

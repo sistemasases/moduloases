@@ -15,6 +15,7 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
             var id = 0;
             var name = "";
             var email = "";
+            var namerol = "";
 
 
              /**
@@ -125,7 +126,7 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                     },
                 });
 
-               name = "";
+                name = "";
                 var usuario = [];
                 usuario["id"] = id;
                 usuario["name"] = name;
@@ -191,7 +192,7 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
             });}
 
 
-                 function check_risks_tracking( flag ){
+            function check_risks_tracking( flag, student_code ){
                    
 
                         var individual_risk = get_checked_risk_value_tracking('.puntuacion_riesgo_individual');
@@ -213,7 +214,7 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
 
                             var json_risks = {
                                 "function": "send_email_dphpforms",
-                                "student_code": get_student_code(),
+                                "student_code": student_code,
                                 "risks": [
                                     {
                                         "name":"Individual",
@@ -265,7 +266,7 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                     
                 };
 
-                        function get_checked_risk_value_tracking( class_id ){
+            function get_checked_risk_value_tracking( class_id ){
                     var value = 0;
                     $( class_id ).find('.opcionesRadio').find('div').each(function(){
                         if($(this).find('label').find('input').is(':checked')){
@@ -283,7 +284,8 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                     var url_processor = formulario.attr('action');
                     if(formulario.attr('action') == 'procesador.php'){
                         url_processor = '../managers/dphpforms/procesador.php';
-                    }
+                    };
+                    var student_code = formulario.find('.id_estudiante').find('input').val();
 
                     $.ajax({
                         type: 'POST',
@@ -296,13 +298,16 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                                 var response = data;
                                 
                                 if(response['status'] == 0){
+                                    $.get( "../managers/pilos_tracking/api_pilos_tracking.php?function=update_last_user_risk&arg=" + student_code + "&rid=-1", function( data ) {
+                                        console.log( data );
+                                    });
                                     var mensaje = '';
                                     if(response['message'] == 'Stored'){
                                         mensaje = 'Almacenado';
                                     }else if(response['message'] == 'Updated'){
                                         mensaje = 'Actualizado';
                                     }
-                                    //check_risks_tracking();
+                                    check_risks_tracking( false, student_code );
                                     swal(
                                         {title:'Información',
                                         text: mensaje,
@@ -364,7 +369,7 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                 });
 
 
-                function create_specific_counting(user){
+            function create_specific_counting(user){
                 
                 $.ajax({
                     type: "POST",
@@ -406,7 +411,7 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                 }
 
 
-                function generate_general_counting(user){
+            function generate_general_counting(user){
 
                     var review_prof=0;
                     var not_review_prof=0;

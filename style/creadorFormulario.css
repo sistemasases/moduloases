@@ -160,7 +160,8 @@ pre, code {
 #modal_seguimiento_geografico > .mymodal-content,
 #modal_primer_acercamiento > .mymodal-content,
 #modal_v2_groupal_tracking > .mymodal-content,
-#modal_v2_edit_groupal_tracking > .mymodal-content{
+#modal_v2_edit_groupal_tracking > .mymodal-content,
+#modal_inasistencia > .mymodal-content{
     width: 80%;
     padding: 0px;
 }
@@ -292,6 +293,12 @@ pre, code {
     /*background-color: rgba(78, 12, 185, 0.3);*/
     position: fixed;
     margin-right: 20px;
+}
+
+.btn-inasistencia{
+    padding-top: 10px;
+    display: flex;
+    justify-content: center;
 }
 
 /*Finalización de definición de estilos para el formulario de seguimientos*/

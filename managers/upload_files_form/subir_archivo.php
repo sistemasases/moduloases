@@ -391,7 +391,9 @@ if (isset($_FILES['csv_file'])) {
                 array_push($temp_array, $result->id);
 
                 // remainder information is added to a temporary array that contains (id_talentos,id_programa,id_user, ACTIVO)
-                array_push($temp_array, 'ACTIVO');
+                // Query to program_status id
+                $program_status = $DB->get_record_sql("SELECT id FROM {talentospilos_estad_programa} WHERE nombre = 'ACTIVO' ")->id;
+                array_push($temp_array, $program_status);
 
                 //validate tracking_status
 
