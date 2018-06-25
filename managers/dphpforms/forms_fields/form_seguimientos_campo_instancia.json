@@ -1,6 +1,6 @@
 {
     "id_temporal": "cmp_xx",
-    "enunciado": "",
+    "enunciado": "id_instancia",
     "tipo_campo": "TEXTFIELD",
     "opciones_campo": null,
     "atributos_campo": {
