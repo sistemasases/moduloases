@@ -6,12 +6,17 @@
     <hr/>
     {{{message}}}
     <div class="panel-group">
+
+        {{#instance_setup_ic}}
+        {{> block_ases/ic_instance_management}}
+        {{/instance_setup_ic}}
+
         {{#cohort_assignment_ic}}
-        {{> block_ases/cohort_assignment_ic}}
+        {{> block_ases/ic_cohort_assignment}}
         {{/cohort_assignment_ic}}
 
         {{#admin_assignment_ic}}
-        {{> block_ases/admin_assignment_ic}}
+        {{> block_ases/ic_admin_assignment}}
         {{/admin_assignment_ic}}
     </div>
     {{#status}}
