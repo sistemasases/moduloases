@@ -31,36 +31,9 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/jquery.dataTables', 'block
                 dropdownAutoWidth: true,
             });
 
-            function evaluate_permission(name_permission) {
-                var result;
-                $.ajax({
-                    type: "POST",
-                    data: {
-                        data: "get_info_permission",
-                        instance: getIdinstancia(),
-                        name_permission: name_permission
-                    },
-                    url: "../managers/permissions_management/permissions_report.php",
-                    async: false,
-                    success: function(msg) {
-                        result = msg;
-                    },
-                    dataType: "text",
-                    cache: "false",
-                    error: function(msg) {
-                        swal({
-                            title: "error al evaluar permisos de la página",
-                            html: true,
-                            type: "error",
-                            confirmButtonColor: "#d51b23"
-                        });
-                    },
-                });
-                return result;
-            }
 
             $(document).ready(function() {
-                
+
                 var roleLoaded = false;
 
                 $('#academic_program_li').css({
@@ -372,7 +345,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/jquery.dataTables', 'block
                 var dataRole = $('#role_select').val();
                 var dataUsername = $('#users').val();
                 var dataStudents = new Array();
-                
+
                         $('input[name="array_students[]"]').each(function() {
                         dataStudents.push($(this).val().split(" - ")[0]);
 
@@ -476,7 +449,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/jquery.dataTables', 'block
                             },
                         });
                     } else if(dataRole == "director_prog"){
-                        
+
                         var academic_program_id = $('#academic_program_select').val();
 
                         $.ajax({
@@ -541,7 +514,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/jquery.dataTables', 'block
                     dropdownAutoWidth: true,
                 });
             }
-            
+
             function student_asignment(students) {
 
                 var contenedor = $("#contenedor_add_fields"); //ID del contenedor
@@ -554,11 +527,11 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/jquery.dataTables', 'block
                     for (var student in students) {
                         text += '<option value="' + students[student].username + '">' + students[student].username + ' - ' + students[student].firstname + ' ' + '' + students[student].lastname + '</option>';
                     }
-                    
+
                     $("#contenedor_add_fields").append('<div class="select-pilos"><select class="inputs_students" name="array_students[]" id="campo_' + FieldCount + '"">' + text + '</select></div>');
                     create_select2('campo_' + FieldCount);
                     count++;
-                
+
             }
 
             function loadStudents() {

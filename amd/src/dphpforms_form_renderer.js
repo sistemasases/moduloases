@@ -266,7 +266,26 @@
                     $('.id_creado_por').find('input').val(codigo_monitor);
                     $('.id_instancia').find('input').val( get_dphpforms_instance() );
                     $('.dphpforms-response .btn-dphpforms-sendform').css( { 'margin-left' : ( ($('.dphpforms-response').width()/2) - ( $('.dphpforms-response .btn-dphpforms-univalle').outerWidth() /2) - ( $('.dphpforms-response .btn-dphpforms-close').outerWidth() /2) )  + 'px'  } );
-                    
+                });
+
+                $('.btn-inasistencia').on('click', function() {
+                    var data_info = $(this).attr('data-info');
+                    if( data_info == 'inasistencia' ){
+                        $('#modal_inasistencia').fadeOut(300);
+                        $('#modal_v2_peer_tracking').fadeIn(300);
+                        $('.id_estudiante').find('input').val( get_student_code() );
+                        var codigo_monitor = $('#current_user_id').val();
+                        $('.id_creado_por').find('input').val(codigo_monitor);
+                        $('.id_instancia').find('input').val( get_dphpforms_instance() );
+                        $('.dphpforms-response .btn-dphpforms-sendform').css( { 'margin-left' : ( ($('.dphpforms-response').width()/2) - ( $('.dphpforms-response .btn-dphpforms-univalle').outerWidth() /2) - ( $('.dphpforms-response .btn-dphpforms-close').outerWidth() /2) )  + 'px'  } );
+                    }else{
+                        $('#modal_v2_peer_tracking').fadeOut(300);
+                        $('#modal_inasistencia').fadeIn(300);
+                        $('.in_id_estudiante').find('input').val( get_student_code() );
+                        var codigo_monitor = $('#current_user_id').val();
+                        $('.in_id_creado_por').find('input').val(codigo_monitor);
+                        $('.in_id_instancia').find('input').val( get_dphpforms_instance() );
+                    };
                 });
 
 

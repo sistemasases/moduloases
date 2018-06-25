@@ -113,7 +113,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/jquery.dataTables', 'block
 
             /**
              * Crea un ajax para llamar la accion que guarda la nueva accion en la base de datos
-             * @param Nombre 
+             * @param Nombre
              * @param Descripcion
              * @author Edgar Mauricio Ceron
              */
@@ -157,7 +157,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/jquery.dataTables', 'block
 
             /**
              * Crea un ajax para llamar la accion que guarda la nueva función en la base de datos
-             * @param Nombre 
+             * @param Nombre
              * @param Descripcion
              */
 
@@ -195,7 +195,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/jquery.dataTables', 'block
 
             /**
              * Crea un ajax para llamar la accion que guarda el nuevo perfil en la base de datos
-             * @param Nombre 
+             * @param Nombre
              * @param Descripcion
              */
 
@@ -232,7 +232,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/jquery.dataTables', 'block
 
             /**
              * Crea un ajax que asigna determinadas acciones a un pefil en la base de datos
-             * @param perfil 
+             * @param perfil
              * @param array acciones
              */
             function asignarAccionPerfil() {
@@ -267,7 +267,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/jquery.dataTables', 'block
 
             /**
              * Crea un ajax que asigna un usuario a un pefil en la base de datos
-             * @param perfil 
+             * @param perfil
              * @param array acciones
              */
             function asignarUsuarioPerfil(instance) {
@@ -308,7 +308,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/jquery.dataTables', 'block
 
             });
 
-
+            // Check the actions of a function according to the role
             $("#profiles_user").change(function() {
 
                 var user = $("#profiles_user").val();
@@ -347,6 +347,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/jquery.dataTables', 'block
                 var descripcion = table.cell(table.row($(this).parent()).index(), 1).data();
                 var funcionalidad = table.cell(table.row($(this).parent()).index(), 2).data();
 
+                $("#nombre_editar").prop('disabled', false);
                 $('#nombre_editar').val(nombre);
                 $('#descripcion_editar').val(descripcion);
 
@@ -367,6 +368,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/jquery.dataTables', 'block
 
                 } else {
                     $("#save_seg").attr("name", this.id + "_rol");
+                    $("#nombre_editar").prop('disabled', true);
                     $(".form-pilos.func").addClass('hide');
 
                 }
@@ -575,7 +577,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/jquery.dataTables', 'block
                         error: function(msg) {
                         alert("Error actualizar las funcionalidades")
                     },
-                    });  
+                    });
             }
 
             function update_general_tab(instance){
