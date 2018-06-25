@@ -16,11 +16,14 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Ases block
- * @author     Edgar Mauricio Ceron Florez
+ * Estrategia ASES
+ *
+ * @author     Isabella Serna Ramirez
  * @package    block_ases
+ * @copyright  Isabella serna Ramirez <isabella.serna@correounivalle.edu.co>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
 
 // Standard GPL and phpdocs
 require_once(__DIR__ . '/../../../config.php');
@@ -28,7 +31,7 @@ require_once($CFG->libdir.'/adminlib.php');
 require_once('../managers/permissions_management/permissions_functions.php');
 require_once ('../managers/permissions_management/permissions_lib.php');
 require_once ('../managers/validate_profile_action.php');
-require_once ('../managers/menu_options.php'); 
+require_once ('../managers/menu_options.php');
 require_once('../managers/pilos_tracking/pilos_tracking_lib.php');
 
 include('../lib.php');
@@ -61,7 +64,7 @@ $function = get_functions();
 $functions_table = get_functions_select($function,"functions");
 $functions = get_functions_select($function,"functions_table");
 
-$general_table  = get_functions_actions($usernamerole);
+$general_table  = get_functions_actions();
 
 //Menu items are created
 $menu_option = create_menu_options($USER->id, $blockid, $courseid);
@@ -109,11 +112,7 @@ $PAGE->requires->css('/blocks/ases/js/select2/css/select2.css', true);
 $PAGE->requires->css('/blocks/ases/style/side_menu_style.css', true);
 
 
-
-// $PAGE->requires->js('/blocks/ases/js/npm.js', true);
 $PAGE->requires->js_call_amd('block_ases/permissionsmanagement_main','init');
-
-//$PAGE->requires->js('/blocks/ases/js/create_action.js', true);
 
 $PAGE->set_url($url);
 $PAGE->set_title($title);

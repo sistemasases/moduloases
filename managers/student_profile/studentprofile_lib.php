@@ -274,7 +274,6 @@ function get_trackings_student($id_ases, $tracking_type, $id_instance){
  
 function get_tracking_current_semester($criterio,$student_id, $semester_id,$intervals=null){
 
-    
 
     if($intervals!=null){
 

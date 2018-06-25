@@ -26,7 +26,7 @@
 require_once(dirname(__FILE__) . '/../../../../config.php');
 
 
-//Functionalities   
+//Functionalities
 
 /**
  * Gets all functionalities from {talentospilos_funcionalidades} table
@@ -37,7 +37,7 @@ require_once(dirname(__FILE__) . '/../../../../config.php');
 function get_functions()
 {
     global $DB;
-    
+
     $sql_query = "SELECT * FROM {talentospilos_funcionalidad} ";
     return $DB->get_records_sql($sql_query);
 }
@@ -53,13 +53,13 @@ function get_functions_table()
     global $DB;
     $array           = Array();
     $functions_array = get_functions();
-    
+
     foreach ($functions_array as $function) {
 
         $function->edit= '   <button type="button" class="red glyphicon glyphicon-pencil"  id="'.  $function->id .'" data-toggle="modal" data-target="#edit"></button>';
 
         $function->delete= '   <button type="button" class="red glyphicon glyphicon-remove"  id="'.  $function->id .'"></button>';
-  
+
         array_push($array, $function);
     }
     return $array;
@@ -75,8 +75,8 @@ function get_functions_table()
 function get_functions_by_name($name)
 {
     global $DB;
-    
-    
+
+
     $sql_query = "SELECT * FROM {talentospilos_funcionalidad} where  nombre_func='$name'";
     return $DB->get_record_sql($sql_query);
 }
@@ -95,7 +95,7 @@ function get_functions_by_name($name)
 function get_action_by_name($name)
 {
     global $DB;
-    
+
     $sql_query = "SELECT * FROM {talentospilos_accion} WHERE nombre_accion ='$name'";
     return $DB->get_record_sql($sql_query);
 }
@@ -138,13 +138,12 @@ function modify_record($id,$table,$nombre,$descripcion,$funcionalidad)
     $record->id = $id;
     $record->descripcion =$descripcion;
 
+
     if($table=='accion'){
-     $record->nombre_accion =$nombre;  
+     $record->nombre_accion =$nombre;
      $record->id_funcionalidad=$funcionalidad;
     }else if($table =="funcionalidad"){
      $record->nombre_func =$nombre;
-    }else{
-      $record->nombre_rol =$nombre;
     }
 
     $tabla = "talentospilos_".$table;
@@ -168,7 +167,7 @@ function modify_record($id,$table,$nombre,$descripcion,$funcionalidad)
 
 /**
  * Gets all actions from  {talentospilos_accion} table by id
- * 
+ *
  * @see get_action_by_id($id)
  * @param $id ---> action id
  * @return object Representing the action
@@ -177,7 +176,7 @@ function modify_record($id,$table,$nombre,$descripcion,$funcionalidad)
 function get_action_by_id($id)
 {
     global $DB;
-    
+
     $sql_query = "SELECT * FROM {talentospilos_accion} WHERE id ='$id'";
     return $DB->get_record_sql($sql_query);
 }
@@ -191,7 +190,7 @@ function get_action_by_id($id)
 function get_actions()
 {
     global $DB;
-    
+
     $sql_query = "SELECT DISTINCT(accion.nombre_accion),accion.id,accion.descripcion,funcionalidad.nombre_func FROM {talentospilos_accion} accion
     INNER JOIN {talentospilos_funcionalidad} funcionalidad ON accion.id_funcionalidad = funcionalidad.id where estado=1";
     return $DB->get_records_sql($sql_query);
@@ -199,16 +198,16 @@ function get_actions()
 }
 
 /**
- * Gets all actions related to a functionality from  {talentospilos_accion} table 
+ * Gets all actions related to a functionality from  {talentospilos_accion} table
  * @see  get_actions_function($funcionalidad)
- * @param $funcionalidad --> functionality id 
+ * @param $funcionalidad --> functionality id
  * @return array filled of actions
  **/
 
 function get_actions_function($funcionalidad)
 {
     global $DB;
-    
+
     $sql_query = "SELECT * FROM {talentospilos_accion} WHERE estado=1 and id_funcionalidad=" . $funcionalidad;
     return $DB->get_records_sql($sql_query);
 }
@@ -224,7 +223,7 @@ function get_actions_function($funcionalidad)
 function is_action_in_functionality($id_action,$id_functionality)
 {
     global $DB;
-    
+
     $sql_query = "SELECT * FROM {talentospilos_accion} where id_funcionalidad='$id_functionality' and id='$id_action'";
     $exist = $DB->get_record_sql($sql_query);
     if($exist){
@@ -234,13 +233,18 @@ function is_action_in_functionality($id_action,$id_functionality)
     }
 }
 
+/**
+ * Returns array with of actions with two parameters more (button and link)-
+ * @see  get_actions_table()
+ * @return array
+ **/
 
 function get_actions_table()
 {
     global $DB;
     $array         = Array();
     $actions_array = get_actions();
-    
+
     foreach ($actions_array as $action) {
         $action->edit= '   <button type="button" class="red glyphicon glyphicon-pencil"  id="'. $action->id .'" data-toggle="modal" data-target="#edit"></button>';
 
@@ -255,7 +259,7 @@ function get_actions_table()
 //Role.
 
 /**
- * Gets all roles from {talentospilos_rol} table 
+ * Gets all roles from {talentospilos_rol} table
  * @see get_roles()
  * @return array filled with roles
  **/
@@ -263,13 +267,13 @@ function get_actions_table()
 function get_roles()
 {
     global $DB;
-    
+
     $sql_query = "SELECT * FROM {talentospilos_rol}";
     return $DB->get_records_sql($sql_query);
 }
 
 /**
- * Gets all records from {talentospilos_permisos_rol} table given a role 
+ * Gets all records from {talentospilos_permisos_rol} table given a role
  * @see  get_functions_by_role($id_role)
  * @param $id_role --> role id
  * @return array of records
@@ -278,14 +282,14 @@ function get_roles()
 function get_functions_by_role($id_role)
 {
     global $DB;
-    
+
     $sql_query      = "SELECT * FROM {talentospilos_permisos_rol} where id_rol=" . $id_role;
     $consult        = $DB->get_records_sql($sql_query);
     $array_selected = array();
     foreach ($consult as $record) {
         array_push($array_selected, $record->id_accion);
     }
-    
+
     return $array_selected;
 }
 
@@ -300,25 +304,24 @@ function get_functions_by_role_id($id_role){
 
     global $DB;
 
-    $sql_query = "SELECT DISTINCT funcionalidad.nombre_func FROM mdl_talentospilos_permisos_rol AS permisos_rol 
-                    INNER JOIN mdl_talentospilos_accion AS accion ON  permisos_rol.id_accion = accion.id 
-                    INNER JOIN mdl_talentospilos_funcionalidad AS funcionalidad ON accion.id_funcionalidad = funcionalidad.id  
+    $sql_query = "SELECT DISTINCT funcionalidad.nombre_func FROM mdl_talentospilos_permisos_rol AS permisos_rol
+                    INNER JOIN mdl_talentospilos_accion AS accion ON  permisos_rol.id_accion = accion.id
+                    INNER JOIN mdl_talentospilos_funcionalidad AS funcionalidad ON accion.id_funcionalidad = funcionalidad.id
                     WHERE id_rol =" . $id_role;
     $results = $DB->get_records_sql($sql_query);
     $array_functions = array();
     foreach ($results as $record){
         array_push($array_functions, $record->nombre_func);
     }
-    
+
     return $array_functions;
 
 }
 
-//get_functions_by_role_id(6);
 
 /**
  * Gets all roles with their delete field on system
- * 
+ *
  * @see get_roles_table()
  * @return array
  **/
@@ -328,11 +331,11 @@ function get_roles_table()
     global $DB;
     $array       = Array();
     $roles_array = get_roles();
-    
+
     foreach ($roles_array as $role) {
         if($role->nombre_rol=='sistemas'){
          $role->edit= '   <span class="red glyphicon glyphicon-ban-circle"></span>';
-        
+
         }else{
         $role->edit= '   <button type="button" class="red glyphicon glyphicon-pencil"  id="'.$role->id .'" data-toggle="modal" data-target="#edit"></button>';
     }
@@ -356,35 +359,35 @@ function delete_record($id, $source)
     global $DB;
     $record     = new stdClass();
     $record->id = $id;
-    $paso       = 1;
+    $paso       = true;
     try {
-        if ($source == 'accion' or $source == 'usuario_perfil') {
+        if ($source == 'accion' || $source == 'usuario_perfil') {
             $record->estado = 0;
             $paso           = $DB->update_record('talentospilos_' . $source, $record);
-            
+
         } else if ($source == 'perfil_accion') {
             $record->habilitado = 0;
             $paso               = $DB->update_record('talentospilos_' . $source, $record);
         }
-        
-        if ($paso == 1) {
+
+        if ($paso) {
             $msg        = new stdClass();
             $msg->title = "Éxito";
             $msg->text  = "Se eliminó satisfactoriamente el registro";
             $msg->type  = "success";
-            
+
         } else {
-            
+
             $msg->title = "Error";
             $msg->text  = "No se pudo eliminar el registro seleccionado";
             $msg->type  = "error";
-            
+
         }
-        
+
         return $msg;
     }
     catch (Exception $ex) {
-        
+
         $msg->title = "Inconveniente !";
         $msg->text  = $ex;
         $msg->type  = "error";

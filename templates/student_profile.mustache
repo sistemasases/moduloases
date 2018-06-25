@@ -6,6 +6,8 @@
   {{#sistemas}}<div id="dphpforms_role_support" data-info="sistemas" style="display:none;"></div>{{/sistemas}}
   {{#dir_socioeducativo}}<div id="dphpforms_role_support" data-info="dir_socioeducativo" style="display:none;"></div>{{/dir_socioeducativo}}
   {{#monitor_ps}}<div id="dphpforms_role_support" data-info="monitor_ps" style="display:none;"></div>{{/monitor_ps}}
+  <div id="dphpforms_ases_student_code" data-info="{{ases_student_code}}" style="display:none;"></div>
+  <div id="dphpforms_block_instance" data-info="{{instance}}" style="display:none;"></div>
   <input type="text" class="hide" id="current_user_id" value="{{id_dphpforms_creado_por}}" />
 
   <form id="ficha_estudiante">
@@ -236,10 +238,15 @@
     <div class="mymodal-content">
     
       <div class="mymodal-header col-sm-12">
-        <div class="col-sm-11">
+        <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9">
           <h4 class="" id="myModalLabel">Nuevo registro</h4>
         </div>
-        <div class="col-sm-1">
+        <div  class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
+            <div data-info="seguimiento" class="btn-inasistencia open-inasistencia btn btn-md btn-default" >
+              Registrar inasistencia
+            </div>
+        </div>
+        <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1">
           <span id="mymodal-v2-close" class="mymodal-close" aria-hidden="true">&times;</span>
         </div>
       </div>
@@ -259,6 +266,67 @@
 </div>
 
   <div class="mymodal" id="modal_v2_edit_peer_tracking" name="modal_edit_v2_pares">
+    <div class="outside" ></div>
+    <div class="mymodal-content">
+    
+      <div class="mymodal-header col-sm-12">
+        <div class="col-sm-11">
+          <h4 class="" id="myModalLabel">Visualización/Edición</h4>
+        </div>
+        <div class="col-sm-1">
+          <span id="mymodal-v2-close" class="mymodal-close" aria-hidden="true">&times;</span>
+        </div>
+      </div>
+      <div class="mymodal-body mymodal-body_v2 col-sm-12">
+        <div class="row">
+          <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            <div id="body_editor"></div>
+          </div>
+        </div>
+      </div>
+      <div class="mymodal-footer">
+          .
+      </div>
+    </div>
+    
+  </div>
+</div>
+<!-- FIN MODALES SEGUIMIENTO V2 -->
+
+<!-- MODALES DE INASISTENCIAS -->
+  <div class="mymodal" id="modal_inasistencia" name="modal_inasistencia">
+    <div class="outside" ></div>
+    <div class="mymodal-content">
+    
+      <div class="mymodal-header col-sm-12">
+        <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9">
+          <h4 class="" id="myModalLabel">Nuevo registro</h4>
+        </div>
+        <div  class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
+            <div data-info="inasistencia" class="btn-inasistencia open-inasistencia btn btn-md btn-default" >
+              Regresar a seguimiento
+            </div>
+        </div>
+        <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1">
+          <span id="mymodal-v2-close" class="mymodal-close" aria-hidden="true">&times;</span>
+        </div>
+      </div>
+      <div class="mymodal-body mymodal-body_v2 col-sm-12">
+        <div class="row">
+          <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            {{{form_inasistencia}}}
+          </div>
+        </div>
+      </div>
+      <div class="mymodal-footer">
+          .
+      </div>
+    </div>
+    
+  </div>
+</div>
+
+  <div class="mymodal" id="modal_edit_inasistencia" name="modal_edit_inasistencia">
     <div class="outside" ></div>
     <div class="mymodal-content">
     

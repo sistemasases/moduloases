@@ -117,8 +117,12 @@ function get_ases_user_by_code($code)
         return false;
     }
 
-    $add_fields = get_adds_fields_mi($id_moodle);
+    if( !$id_moodle ){
+        return false;
+    };
 
+    $add_fields = get_adds_fields_mi($id_moodle);
+    
     if($add_fields){
         $id_ases = $add_fields->idtalentos;
     }else{

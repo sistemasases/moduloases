@@ -15,6 +15,7 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
             var id = 0;
             var name = "";
             var email = "";
+            var namerol = "";
 
 
              /**
@@ -125,7 +126,7 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                     },
                 });
 
-               name = "";
+                name = "";
                 var usuario = [];
                 usuario["id"] = id;
                 usuario["name"] = name;
@@ -191,7 +192,7 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
             });}
 
 
-                 function check_risks_tracking( flag, student_code ){
+            function check_risks_tracking( flag, student_code ){
                    
 
                         var individual_risk = get_checked_risk_value_tracking('.puntuacion_riesgo_individual');
@@ -265,7 +266,7 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                     
                 };
 
-                        function get_checked_risk_value_tracking( class_id ){
+            function get_checked_risk_value_tracking( class_id ){
                     var value = 0;
                     $( class_id ).find('.opcionesRadio').find('div').each(function(){
                         if($(this).find('label').find('input').is(':checked')){
@@ -368,7 +369,7 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                 });
 
 
-                function create_specific_counting(user){
+            function create_specific_counting(user){
                 
                 $.ajax({
                     type: "POST",
@@ -410,7 +411,7 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                 }
 
 
-                function generate_general_counting(user){
+            function generate_general_counting(user){
 
                     var review_prof=0;
                     var not_review_prof=0;
