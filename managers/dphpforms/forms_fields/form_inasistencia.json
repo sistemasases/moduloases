@@ -19,7 +19,8 @@
                 "inputclass":"inasistencia_fecha",
                 "name": "in_name_date",
                 "required": "true",
-                "local_alias": "in_fecha"
+                "local_alias": "in_fecha",
+                "max": "today()"
             },
             "permisos_campo": [
                 {

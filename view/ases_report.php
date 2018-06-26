@@ -53,35 +53,40 @@ if(!consult_instance($blockid)){
 }
 
 require_login($courseid, false);
+
+$cohorts_groups = array(['id'=>'SPP', 'name'=>'Ser Pilo Paga'], 
+                        ['id'=>'SPE', 'name'=>'Condición de Excepción'],
+                        ['id'=>'3740', 'name'=>'Ingeniería Topográfica'],
+                        ['id'=>'OTROS', 'name'=>'Otros ASES']);
+
 $risks = get_riesgos();
 $cohorts = load_cohorts_by_instance($blockid);
+
+$cohorts_select = '';
+$cohorts_select.='<option value="TODOS">Todas las cohortes</option>';
+
+foreach($cohorts_groups as $cohort_group){
+    $cohorts_select.="<optgroup label='".$cohort_group['name']."'>";
+    $cohorts_select .= "<option val='".$cohort_group['id']."'>Todos ".$cohort_group['id']."</option>";
+    foreach($cohorts as $ch){
+        if(substr($ch->idnumber, 0, 3) == substr($cohort_group['id'], 0, 3)){
+            $cohorts_select.= "<option value='$ch->idnumber'>$ch->name</option>";
+        }
+    }
+    $cohorts_select.="</optgroup>";
+}
 
 //se crean los elementos del menu
 $menu_option = create_menu_options($id_current_user, $blockid, $courseid);
 
-
 $risks_table='';
-$cohorts_table='';
+
 
 // Carga de riesgos
 foreach($risks as $risk){
     $risks_table.='<div class="checkbox"><input type="checkbox" name="risk_fields[]" id="'.$risk->id.'" value="'.$risk->id.'" /> '.$risk->descripcion.'</div>';}
 
-// Carga de cohortes
-$cohorts_table.='<option value="TODOS">TODOS</option>';
 
-foreach ($cohorts as $cohort) {
-    $cohorts_table.='<option value="'.$cohort->idnumber.'">'.$cohort->name.'</option>';
-}
-
-// Carga de estado ASES
-$estados_ases = "";
-$estados_ases = "<option value='TODOS'>TODOS</option>";
-$ases_status_array = get_status_ases();
-
-foreach($ases_status_array as $ases_status){
-	$estados_ases .= "<option value='".$ases_status->id."'>".$ases_status->descripcion."</option>";
-}
 
 // Crea una clase con la información que se llevará al template.
 $data = new stdClass();
@@ -96,7 +101,7 @@ foreach($actions as $act){
 
 $data->menu = $menu_option;
 $data->risks_checks = $risks_table;
-$data->cohorts_checks = $cohorts_table;
+$data->cohorts_checks = $cohorts_select;
 $data->status_ases = $estados_ases;
 $contextcourse = context_course::instance($courseid);
 $contextblock =  context_block::instance($blockid);

@@ -21,8 +21,16 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/jquery.dataTables','block_
 
             self.load_cohorts_assigned();
 
+            var idnumber = $('#input_idnumber').val();
+            var description = $('#input_description').val();
+            
             $('span.unassigned_cohort').on('click', {object_function: self}, self.unassign_cohort);
             $('#button_assign_cohort').on('click', {object_function: self}, self.assign_cohort_instance);
+            $('#button_update_instance').on('click', function(){
+                var idnumber = $('#input_idnumber').val();
+                var description = $('#input_description').val();
+                self.update_info_instance(instance_id, idnumber, description);
+            });
 
         },
         get_cohorts_without_assignment: function(instance_id){
@@ -209,6 +217,48 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/jquery.dataTables','block_
                     );
                 },
             });
+        },
+        update_info_instance: function(instance_id, idnumber, description){
+
+
+            data = {
+                function: 'update_info_instance',
+                instance_id: instance_id,
+                idnumber: idnumber,
+                description: description
+            }
+
+            $.ajax({
+                type: "POST",
+                data: data,
+                url: "../managers/instance_management/instance_configuration_serverproc.php",
+                success: function(msg) {
+                    if(msg){
+                        swal(
+                            'Éxito',
+                            msg.msg,
+                            'success'
+                        );
+                    }else{
+                        swal(
+                            'Error',
+                            msg.msg,
+                            'error'
+                        );
+                    }
+                },
+                dataType: "json",
+                cache: false,
+                async: false,
+                error: function() {
+                    swal(
+                        'Error',
+                        'Error al actualizar la instancia',
+                        'error'
+                    );
+                },
+            });
+
         }
     };
 });

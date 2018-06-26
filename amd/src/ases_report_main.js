@@ -158,7 +158,6 @@ define(['jquery',
 
                 $("#tableResult").DataTable(msg);
 
-
                 $('#tableResult tr').each(function() {
                     $.each(this.cells, function() {
                         if ($(this).html() == 'Bajo') {

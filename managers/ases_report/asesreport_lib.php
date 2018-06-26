@@ -379,7 +379,13 @@ function get_not_assign_students($general_fields=null, $conditions, $academic_fi
  * @param $idinstancia  --> Instancia del módulo
  * @return Array 
  */
-function get_ases_report($general_fields=null, $conditions, $risk_fields=null, $academic_fields=null, $statuses_fields=null, $assignment_fields=null, $instance_id){
+function get_ases_report($general_fields=null, 
+                         $conditions, 
+                         $risk_fields=null, 
+                         $academic_fields=null, 
+                         $statuses_fields=null, 
+                         $assignment_fields=null, 
+                         $instance_id){
 
     global $DB, $USER;
 
@@ -392,28 +398,36 @@ function get_ases_report($general_fields=null, $conditions, $risk_fields=null, $
 
     // ***** Select clause *****
     $select_clause = "SELECT DISTINCT ";
-    $from_clause = "";
+    $from_clause = " FROM ";
     $where_clause = " WHERE ";
-    $sub_query_cohort = "";
-    $sub_query_status = "";
-    $sub_query_icetex_status = "";
-    $sub_query_academic = "";
-    $sub_query_risks = "";
-    $sub_query_assignment_fields = "";
+    $subquery_cohort = "";
 
+     $sub_query_status = "";
+     $sub_query_icetex_status = "";
+     $sub_query_academic = "";
+     $sub_query_risks = "";
+     $sub_query_assignment_fields = "";
+
+    // Clausula select para los campos generales del reporte ASES
     if($general_fields){
+        $counter_general_fields = 0;
         foreach($general_fields as $field){
-            $select_clause .= $field.', ';
+            $counter_general_fields++;
+            if($counter_general_fields == count($general_fields)){
+                $select_clause .= $field.' ';
+            }else{
+                $select_clause .= $field.', ';
+            }
         }
     }
 
+    // Subconsultas para el riesgo de usuario en las diferentes dimensiones
     if($risk_fields){
-
         foreach($risk_fields as $risk_field){
             $name_query = "SELECT * FROM {talentospilos_riesgos_ases} WHERE id =".$risk_field;
             $risk_name = $DB->get_record_sql($name_query)->nombre;
             
-            //calificacion_riesgo
+            // Riesgos asociado
             $select_clause = $select_clause." (SELECT 
                                                     CASE WHEN calificacion_riesgo = 1 THEN 'Bajo'
                                                          WHEN calificacion_riesgo = 2 THEN 'Medio'
@@ -426,96 +440,129 @@ function get_ases_report($general_fields=null, $conditions, $risk_fields=null, $
         }
     }
 
-    if($academic_fields){
-        foreach($academic_fields as $field){
-            $select_clause .= $field.', ';
-        }
-
-        $sub_query_academic .= " INNER JOIN {talentospilos_programa} AS acad_program ON user_extended.id_academic_program = acad_program.id
-                                 INNER JOIN {talentospilos_facultad} AS faculty ON faculty.id = acad_program.id_facultad
-                                 LEFT JOIN {talentospilos_history_academ} AS academic_history ON academic_history.id_estudiante = user_extended.id_ases_user
-                                 LEFT JOIN (SELECT COUNT(estim.id) AS estimulos, academ.id_estudiante
-                                            FROM {talentospilos_history_academ} AS academ INNER JOIN {talentospilos_history_estim} AS estim ON academ.id = estim.id_history
-                                            WHERE academ.id_semestre = $id_current_semester
-                                            GROUP BY (academ.id_estudiante))
-                                            AS estim_query
-                                            ON estim_query.id_estudiante = user_extended.id_ases_user
-                                 LEFT JOIN (SELECT COUNT(bajo.id) AS bajos, academ.id_estudiante
-                                            FROM {talentospilos_history_academ} AS academ INNER JOIN {talentospilos_history_bajos} AS bajo 
-                                                 ON academ.id = bajo.id_history
-                                            WHERE academ.id_semestre = $id_current_semester
-                                            GROUP BY (academ.id_estudiante))
-                                            AS bajos_query
-                                            ON bajos_query.id_estudiante = user_extended.id_ases_user";
+    // Fragmentos de la consulta, relacionados con los campos por defecto
+    if($conditions[0] == 'TODOS'){
+        $subquery_cohort = "(SELECT moodle_user.username, 
+                                moodle_user.firstname,  
+                                moodle_user.lastname,
+                                ases_user.num_doc,
+                                ases_user.id AS student_id,
+                                moodle_user.email,
+                                ases_user.celular,
+                                ases_user.direccion_res,
+                                STRING_AGG(cohort.idnumber, ', ') AS cohorts_student,
+                                program_statuses.nombre AS program_status,
+                                user_extended.id_academic_program	     
+                            FROM {cohort} AS cohort 
+                            INNER JOIN {talentospilos_inst_cohorte} AS instance_cohort ON cohort.id = instance_cohort.id_cohorte
+                            INNER JOIN {cohort_members} AS cohort_member ON cohort_member.cohortid = cohort.id
+                            INNER JOIN {user} AS moodle_user ON moodle_user.id = cohort_member.userid
+                            INNER JOIN {talentospilos_user_extended} AS user_extended ON user_extended.id_moodle_user = moodle_user.id
+                            INNER JOIN {talentospilos_usuario} AS ases_user ON ases_user.id = user_extended.id_ases_user
+                            INNER JOIN {talentospilos_estad_programa} AS program_statuses ON program_statuses.id = user_extended.program_status
+                            WHERE instance_cohort.id_instancia = $instance_id AND user_extended.tracking_status = 1
+                            GROUP BY moodle_user.username, 
+                                     moodle_user.firstname, 
+                                     moodle_user.lastname, 
+                                     student_id,
+                                     moodle_user.email,
+                                     ases_user.celular,
+                                     ases_user.direccion_res,
+                                     ases_user.num_doc, 
+                                     program_statuses.nombre, 
+                                     user_extended.id_academic_program) AS ases_students";
     }
 
-    $select_clause = substr($select_clause, 0, -2);
+    // if($academic_fields){
+    //     foreach($academic_fields as $field){
+    //         $select_clause .= $field.', ';
+    //     }
 
-    // **** From clause ****
-    $from_clause = " FROM {user} as user_moodle INNER JOIN {talentospilos_user_extended} AS user_extended ON user_moodle.id = user_extended.id_moodle_user
-                                                INNER JOIN {talentospilos_usuario} AS tp_user ON user_extended.id_ases_user = tp_user.id ";
+    //     $sub_query_academic .= " INNER JOIN {talentospilos_programa} AS acad_program ON user_extended.id_academic_program = acad_program.id
+    //                              INNER JOIN {talentospilos_facultad} AS faculty ON faculty.id = acad_program.id_facultad
+    //                              LEFT JOIN {talentospilos_history_academ} AS academic_history ON academic_history.id_estudiante = user_extended.id_ases_user
+    //                              LEFT JOIN (SELECT COUNT(estim.id) AS estimulos, academ.id_estudiante
+    //                                         FROM {talentospilos_history_academ} AS academ INNER JOIN {talentospilos_history_estim} AS estim ON academ.id = estim.id_history
+    //                                         WHERE academ.id_semestre = $id_current_semester
+    //                                         GROUP BY (academ.id_estudiante))
+    //                                         AS estim_query
+    //                                         ON estim_query.id_estudiante = user_extended.id_ases_user
+    //                              LEFT JOIN (SELECT COUNT(bajo.id) AS bajos, academ.id_estudiante
+    //                                         FROM {talentospilos_history_academ} AS academ INNER JOIN {talentospilos_history_bajos} AS bajo 
+    //                                              ON academ.id = bajo.id_history
+    //                                         WHERE academ.id_semestre = $id_current_semester
+    //                                         GROUP BY (academ.id_estudiante))
+    //                                         AS bajos_query
+    //                                         ON bajos_query.id_estudiante = user_extended.id_ases_user";
+    // }
 
-    // Condición cohorte
-    if($conditions[0] != 'TODOS'){
+    // $select_clause = substr($select_clause, 0, -2);
 
-        $sub_query_cohort .= "INNER JOIN (SELECT user_moodle.username, STRING_AGG(cohorts.idnumber, ', ') AS cohorts_student
-                                         FROM {cohort_members} AS members_cohort INNER JOIN {user} AS user_moodle ON user_moodle.id = members_cohort.userid
-                                                                                 INNER JOIN {cohort} AS cohorts ON cohorts.id = members_cohort.cohortid
-                                         WHERE cohorts.idnumber = '$conditions[0]'
-                                         GROUP BY user_moodle.username) AS all_students_cht ON all_students_cht.username = user_moodle.username ";
-    }else if($conditions[0] == 'TODOS'){
-        $sub_query_cohort .= " INNER JOIN (SELECT moodle_user.username, STRING_AGG(cohorts.idnumber, ', ') AS cohorts_student
-                                            FROM {cohort} AS cohort INNER JOIN {talentospilos_inst_cohorte} AS instance_cohort ON cohort.id = instance_cohort.id_cohorte
-                                                                    INNER JOIN {cohort_members} AS cohort_member ON cohort_member.cohortid = cohort.id
-                                                                    INNER JOIN {cohort} AS cohorts ON cohort_member.cohortid = cohorts.id
-                                                                    INNER JOIN {user} AS moodle_user ON moodle_user.id = cohort_member.userid
-                                            WHERE id_instancia = $instance_id
-                                            GROUP BY moodle_user.username) AS all_students_cht ON all_students_cht.username = user_moodle.username";
-    }
+    // // **** From clause ****
+    // $from_clause = " FROM {user} as user_moodle INNER JOIN {talentospilos_user_extended} AS user_extended ON user_moodle.id = user_extended.id_moodle_user
+    //                                             INNER JOIN {talentospilos_usuario} AS tp_user ON user_extended.id_ases_user = tp_user.id ";
 
-    // Campos Estados del estudiante
-    if($statuses_fields){
+    // // Condición cohorte
+    // if($conditions[0] != 'TODOS'){
 
-        foreach($statuses_fields as $status_field){
+    //     $sub_query_cohort .= "INNER JOIN (SELECT user_moodle.username, STRING_AGG(cohorts.idnumber, ', ') AS cohorts_student
+    //                                      FROM {cohort_members} AS members_cohort INNER JOIN {user} AS user_moodle ON user_moodle.id = members_cohort.userid
+    //                                                                              INNER JOIN {cohort} AS cohorts ON cohorts.id = members_cohort.cohortid
+    //                                      WHERE cohorts.idnumber = '$conditions[0]'
+    //                                      GROUP BY user_moodle.username) AS all_students_cht ON all_students_cht.username = user_moodle.username ";
+    // }else if($conditions[0] == 'TODOS'){
+    //     $sub_query_cohort .= " INNER JOIN (SELECT moodle_user.username, STRING_AGG(cohorts.idnumber, ', ') AS cohorts_student
+    //                                         FROM {cohort} AS cohort INNER JOIN {talentospilos_inst_cohorte} AS instance_cohort ON cohort.id = instance_cohort.id_cohorte
+    //                                                                 INNER JOIN {cohort_members} AS cohort_member ON cohort_member.cohortid = cohort.id
+    //                                                                 INNER JOIN {cohort} AS cohorts ON cohort_member.cohortid = cohorts.id
+    //                                                                 INNER JOIN {user} AS moodle_user ON moodle_user.id = cohort_member.userid
+    //                                         WHERE id_instancia = $instance_id
+    //                                         GROUP BY moodle_user.username) AS all_students_cht ON all_students_cht.username = user_moodle.username";
+    // }
 
-            switch(explode(".", $status_field)[1]){
-                case 'estado_ases':
-                    $select_clause = $select_clause.", (CASE WHEN $statuses_fields[0] = 'seguimiento' THEN 'SEGUIMIENTO'
-                                                        WHEN $statuses_fields[0] = 'noseguimiento' THEN 'NO SEGUIMIENTO'
-                                                        ELSE 'N.R.' 
-                                                        END) AS estado_ases";
+    // // Campos Estados del estudiante
+    // if($statuses_fields){
 
-                    $sub_query_status .= " LEFT JOIN (SELECT current_status.username, statuses_ases.nombre AS estado_ases
-                                            FROM (SELECT MAX(status_ases.id) AS id, moodle_user.username
-                                                FROM {talentospilos_est_estadoases} AS status_ases 
-                                                    INNER JOIN {talentospilos_user_extended} AS user_extended ON status_ases.id_estudiante = user_extended.id_ases_user
-                                                    INNER JOIN {user} AS moodle_user ON moodle_user.id = user_extended.id_moodle_user
-                                                    GROUP BY moodle_user.username) AS current_status
-                                            INNER JOIN {talentospilos_est_estadoases} AS status_ases ON status_ases.id = current_status.id
-                                            INNER JOIN {talentospilos_estados_ases} AS statuses_ases ON statuses_ases.id = status_ases.id_estado_ases
-                                            ) AS query_status_ases ON query_status_ases.username = user_moodle.username";
-                    break;
+    //     foreach($statuses_fields as $status_field){
+
+    //         switch(explode(".", $status_field)[1]){
+    //             case 'estado_ases':
+    //                 $select_clause = $select_clause.", (CASE WHEN $statuses_fields[0] = 'seguimiento' THEN 'SEGUIMIENTO'
+    //                                                     WHEN $statuses_fields[0] = 'noseguimiento' THEN 'NO SEGUIMIENTO'
+    //                                                     ELSE 'N.R.' 
+    //                                                     END) AS estado_ases";
+
+    //                 $sub_query_status .= " LEFT JOIN (SELECT current_status.username, statuses_ases.nombre AS estado_ases
+    //                                         FROM (SELECT MAX(status_ases.id) AS id, moodle_user.username
+    //                                             FROM {talentospilos_est_estadoases} AS status_ases 
+    //                                                 INNER JOIN {talentospilos_user_extended} AS user_extended ON status_ases.id_estudiante = user_extended.id_ases_user
+    //                                                 INNER JOIN {user} AS moodle_user ON moodle_user.id = user_extended.id_moodle_user
+    //                                                 GROUP BY moodle_user.username) AS current_status
+    //                                         INNER JOIN {talentospilos_est_estadoases} AS status_ases ON status_ases.id = current_status.id
+    //                                         INNER JOIN {talentospilos_estados_ases} AS statuses_ases ON statuses_ases.id = status_ases.id_estado_ases
+    //                                         ) AS query_status_ases ON query_status_ases.username = user_moodle.username";
+    //                 break;
                 
-                case 'program_status':
-                    $select_clause = $select_clause.", ".$status_field;
-                    break;
-                case 'estado_icetex':
-                    $select_clause = $select_clause.", ".$status_field." AS estado_icetex";
-                    $sub_query_icetex_status .= " LEFT JOIN (SELECT current_status.username, icetex_statuses.nombre AS estado_icetex
-                                                FROM (SELECT MAX(icetex_status.id) AS id, user_moodle.username
-                                                      FROM {talentospilos_est_est_icetex} AS icetex_status
-                                                      INNER JOIN {talentospilos_user_extended} AS user_extended ON user_extended.id_ases_user = icetex_status.id_estudiante
-                                                      INNER JOIN {user} AS user_moodle ON user_moodle.id = user_extended.id_moodle_user
-                                                      GROUP BY user_moodle.username
-                                                      ) AS current_status
-                                                INNER JOIN {talentospilos_est_est_icetex} AS icetex_status ON icetex_status.id = current_status.id
-                                                INNER JOIN {talentospilos_estados_icetex} AS icetex_statuses ON icetex_status.id_estado_icetex = icetex_statuses.id
-                                                ) AS query_icetex_status ON query_icetex_status.username = user_moodle.username";
-                    break;
-            }
+    //             case 'program_status':
+    //                 $select_clause = $select_clause.", ".$status_field;
+    //                 break;
+    //             case 'estado_icetex':
+    //                 $select_clause = $select_clause.", ".$status_field." AS estado_icetex";
+    //                 $sub_query_icetex_status .= " LEFT JOIN (SELECT current_status.username, icetex_statuses.nombre AS estado_icetex
+    //                                             FROM (SELECT MAX(icetex_status.id) AS id, user_moodle.username
+    //                                                   FROM {talentospilos_est_est_icetex} AS icetex_status
+    //                                                   INNER JOIN {talentospilos_user_extended} AS user_extended ON user_extended.id_ases_user = icetex_status.id_estudiante
+    //                                                   INNER JOIN {user} AS user_moodle ON user_moodle.id = user_extended.id_moodle_user
+    //                                                   GROUP BY user_moodle.username
+    //                                                   ) AS current_status
+    //                                             INNER JOIN {talentospilos_est_est_icetex} AS icetex_status ON icetex_status.id = current_status.id
+    //                                             INNER JOIN {talentospilos_estados_icetex} AS icetex_statuses ON icetex_status.id_estado_icetex = icetex_statuses.id
+    //                                             ) AS query_icetex_status ON query_icetex_status.username = user_moodle.username";
+    //                 break;
+    //         }
 
-        }
-    }
+    //     }
+    // }
 
     //Campos Asignaciones personal socioeducativo
     if($assignment_fields){
@@ -568,7 +615,7 @@ function get_ases_report($general_fields=null, $conditions, $risk_fields=null, $
 
     if(property_exists($actions, 'search_all_students_ar')){
         
-        $sql_query = $select_clause.$from_clause.$sub_query_cohort.$sub_query_status.$sub_query_icetex_status.$sub_query_academic.$sub_query_assignment_fields;
+        $sql_query = $select_clause.$from_clause.$subquery_cohort.$sub_query_status.$sub_query_icetex_status.$sub_query_academic.$sub_query_assignment_fields;
         $result_query = $DB->get_records_sql($sql_query);
 
     }else if(property_exists($actions, 'search_assigned_students_ar')){
@@ -678,15 +725,14 @@ function get_ases_report($general_fields=null, $conditions, $risk_fields=null, $
 function get_default_ases_report($id_instance){
 
     $query_fields = array();
-    array_push($query_fields, "user_moodle.username");
-    array_push($query_fields, "user_moodle.firstname");
-    array_push($query_fields, "user_moodle.lastname");
-    array_push($query_fields, "tp_user.num_doc");
-    array_push($query_fields, "all_students_cht.cohorts_student");
+    array_push($query_fields, "ases_students.username");
+    array_push($query_fields, "ases_students.firstname");
+    array_push($query_fields, "ases_students.lastname");
+    array_push($query_fields, "ases_students.num_doc");
+    array_push($query_fields, "ases_students.cohorts_student");
 
     $conditions = array();
     array_push($conditions, "TODOS");
-    //array_push($conditions, "TODOS");
 
     $columns = array();
     array_push($columns, array("title"=>"Código estudiante", "name"=>"username", "data"=>"username"));

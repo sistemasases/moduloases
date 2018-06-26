@@ -4,7 +4,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     global $DB;
     $dbman = $DB->get_manager();
     $result = true;
-    if ($oldversion < 2018061811179 ) {
+    if ($oldversion < 2018062515379 ) {
     //     // ************************************************************************************************************
     //     // Actualización que crea la tabla para los campos extendidos de usuario (Tabla: {talentospilos_user_extended})
     //     // Versión: 2018010911179
@@ -1204,7 +1204,42 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
         // Launch add key fk_program_status.
         $dbman->add_key($table, $key);
 
-        upgrade_block_savepoint(true, 2018061811179 , 'ases');
+
+        // ************************************************************************************************************
+        // Actualización:
+        // Se añade campo idnumber a la tabla talentospilos_instancia
+        // Versión en la que se incluye: GIT XXX, Moodle: 2018062515379
+        // ************************************************************************************************************
+
+        // Define field id_number to be added to talentospilos_instancia.
+        $table = new xmldb_table('talentospilos_instancia');
+        $field = new xmldb_field('id_number', XMLDB_TYPE_CHAR, '20', null, XMLDB_NOTNULL, null, 'changeme', 'descripcion');
+
+        // Conditionally launch add field id_number.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        $sql_query = "SELECT id FROM {talentospilos_instancia}";
+        $result_instances = $DB->get_records_sql($sql_query);
+        $counter = 0;
+
+        foreach($result_instances as $instance){
+            $counter++;
+            $record = new stdClass();
+            $record->id = $instance->id;
+            $record->id_number = 'changeme'+$counter;
+            $update_query = $DB->update_record('talentospilos_instancia', $record);
+        }
+
+        // Define key instance_uk_1 (unique) to be added to talentospilos_instancia.
+        $table = new xmldb_table('talentospilos_instancia');
+        $key = new xmldb_key('instance_uk_1', XMLDB_KEY_UNIQUE, array('id_number'));
+
+        // Launch add key instance_uk_1.
+        $dbman->add_key($table, $key);
+
+        upgrade_block_savepoint(true, 2018062515379 , 'ases');
     
         return $result;
 
