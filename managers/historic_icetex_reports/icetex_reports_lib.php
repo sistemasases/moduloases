@@ -42,11 +42,11 @@ function get_array_students_with_resolution(){
                     spp_students.lastname, spp_students.firstname, spp_students.nombre_semestre, res_students.codigo_resolucion,
                     res_students.monto_estudiante, academic_students.fecha_cancel, academic_students.promedio_semestre,
                     CASE WHEN (academic_students.fecha_cancel IS NULL AND academic_students.promedio_semestre IS NOT NULL)
-                                THEN 'ACTIVO'
+                                THEN '-ACTIVO'
                         WHEN (academic_students.promedio_semestre IS NULL)
-                                THEN 'INACTIVO'			
+                                THEN '-INACTIVO'			
                         WHEN (academic_students.fecha_cancel IS NOT NULL AND academic_students.promedio_semestre IS NULL)
-                                THEN 'INACTIVO'		
+                                THEN '-INACTIVO'		
                     END AS program_status					
                 FROM
                 (SELECT user_extended.id_ases_user, moodle_user.lastname, moodle_user.firstname, cohorts.idnumber, semestre.id AS id_semestre, semestre.nombre AS nombre_semestre, 
@@ -117,10 +117,10 @@ function get_student_resolution_spt(){
 
         if($cancel_date == false){
             $historic->fecha_cancel = "---";
-            $historic->program_status = "ACTIVO";
+            $historic->program_status = "-ACTIVO";
         }else{
             $historic->fecha_cancel = date("Y-m-d", $cancel_date);
-            $historic->program_status = "INACTIVO";
+            $historic->program_status = "-INACTIVO";
         }
 
         $historic->monto_estudiante = "$".number_format($historic->monto_estudiante, 0, ',', '.');

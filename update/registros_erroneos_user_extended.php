@@ -148,11 +148,62 @@ $registro_modificar20->program_status = 1;
 echo $DB->update_record('talentospilos_user_extended', $registro_modificar20);
 echo '<br>';
 
-$registro_modificar20 = new StdClass;
-$registro_modificar20->id = 690;
-$registro_modificar20->tracking_status = 0;
+$registro_modificar21 = new StdClass;
+$registro_modificar21->id = 690;
+$registro_modificar21->tracking_status = 0;
 
-echo $DB->update_record('talentospilos_user_extended', $registro_modificar20);
+echo $DB->update_record('talentospilos_user_extended', $registro_modificar21);
+echo '<br>';
+
+$registro_modificar22 = new StdClass;
+$registro_modificar22->id = 1356;
+$registro_modificar22->tracking_status = 1;
+
+echo $DB->update_record('talentospilos_user_extended', $registro_modificar22);
+echo '<br>';
+
+$registro_modificar23 = new StdClass;
+$registro_modificar23->id = 1350;
+$registro_modificar23->tracking_status = 1;
+
+echo $DB->update_record('talentospilos_user_extended', $registro_modificar23);
+echo '<br>';
+
+$registro_modificar24 = new StdClass;
+$registro_modificar24->id = 1415;
+$registro_modificar24->tracking_status = 1;
+
+echo $DB->update_record('talentospilos_user_extended', $registro_modificar24);
+echo '<br>';
+
+$registro_modificar25 = new StdClass;
+$registro_modificar25->id = 1425;
+$registro_modificar25->tracking_status = 1;
+
+echo $DB->update_record('talentospilos_user_extended', $registro_modificar25);
+echo '<br>';
+
+$registro_modificar26 = new StdClass;
+$registro_modificar26->id = 1456;
+$registro_modificar26->tracking_status = 1;
+
+echo $DB->update_record('talentospilos_user_extended', $registro_modificar26);
+echo '<br>';
+
+$registro_modificar27 = new StdClass;
+$registro_modificar27->id = 5034;
+$registro_modificar27->program_status = 1;
+$registro_modificar27->tracking_status = 1;
+
+echo $DB->update_record('talentospilos_user_extended', $registro_modificar27);
+echo '<br>';
+
+$registro_modificar28 = new StdClass;
+$registro_modificar28->id = 1289;
+$registro_modificar28->tracking_status = 0;
+
+echo $DB->update_record('talentospilos_user_extended', $registro_modificar28);
+
 echo '<br>';
 // $delete = echo $DB->execute("DELETE FROM {talentospilos_user_extended} WHERE id = 1066");
 $object_to_delete = array();
