@@ -90,6 +90,11 @@ if(!isset($object_to_render->status)){
     $object_to_render = $actions;
     $object_to_render->menu = $menu_option;
 
+    $info_instance = get_info_instance($blockid);
+
+    $object_to_render->idnumber = $info_instance->id_number;
+    $object_to_render->description = $info_instance->descripcion;
+
     $cohorts = get_cohorts_without_assignment($blockid);
     $cohorts_options = "";
 

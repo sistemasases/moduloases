@@ -1,4 +1,5 @@
 <?php
+
 require_once('asesreport_lib.php');
 
 $columns = array();
@@ -12,23 +13,27 @@ $assignment_fields = array();
 $name_columns = new stdClass();
 
 $fields_format = array(
-    'student_code'=>'user_moodle.username',
-    'firstname'=>'user_moodle.firstname',
-    'lastname'=>'user_moodle.lastname',
-    'document_id'=>'tp_user.num_doc',
-    'cohort'=>'all_students_cht.cohorts_student',
-    'email'=>'tp_user.emailpilos',
-    'cellphone'=>'tp_user.celular',
-    'address'=>'tp_user.direccion_res',
-    'program_code'=>'acad_program.cod_univalle AS cod_univalle',
+    'student_code'=>'ases_students.username',
+    'firstname'=>'ases_students.firstname',
+    'lastname'=>'ases_students.lastname',
+    'document_id'=>'ases_students.num_doc',
+    'cohort'=>'ases_students.cohorts_student',
+    'email'=>'ases_students.email',
+    'cellphone'=>'ases_students.celular',
+    'address'=>'ases_students.direccion_res',
+    
+    'program_code'=>'academic_program.cod_univalle AS cod_univalle',
     'name_program'=>'acad_program.nombre AS nombre_programa',
     'faculty'=>'faculty.nombre AS nombre_facultad',
-    'average'=>'academic_history.promedio_acumulado AS promedio_acumulado',
+
+    'average'=>'accum_average.promedio_acumulado AS promedio_acumulado',
     'academic_stimuli'=>'estim_query.estimulos AS estimulos',
-    'low_academic_performance'=>'bajos_query.bajos AS bajos',
-    'ases_status'=>'query_status_ases.estado_ases',
-    'icetex_status'=>'query_icetex_status.estado_icetex',
-    'academic_program_status'=>'user_extended.program_status',
+    'low_academic_performance'=>'history_bajo.bajos AS bajos',
+
+    'ases_status'=>'ases_status.ases_status_student',
+    'icetex_status'=>'icetex_status.icetex_status_student',
+    'academic_program_status'=>'ases_students.program_status',
+
     'professional'=>'assignments_query.professional',
     'training'=>'assignments_query.trainer',
     'monitor'=>'assignments_query.monitor'

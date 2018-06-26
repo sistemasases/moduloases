@@ -213,3 +213,47 @@ function unassign_cohort($idnumber_cohort, $id_instance){
 
     return $result;
 }
+
+/**
+ * Función que recupera la información de una instancia determinada
+ * 
+ * @see get_info_instance()
+ * @param id_instance  ---> ID instancia
+ * @return stdClass Array
+ */
+function get_info_instance($instance_id){
+
+    global $DB;
+
+    $sql_query = "SELECT * FROM {talentospilos_instancia} WHERE id_instancia = $instance_id";
+    $result = $DB->get_record_sql($sql_query);
+
+    return $result;
+}
+
+/**
+ * Función que actualiza los parámetros de una instancia
+ * 
+ * @see update_info_instance()
+ * @param id_instance  ---> ID instancia
+ * @param idnumber  ---> Identificador de la instancia
+ * @param description  ---> Descripción de la instancia
+ * @return stdClass Array
+ */
+function update_info_instance($id_instance, $idnumber, $description){
+
+    global $DB;
+
+    $sql_query = "SELECT id FROM {talentospilos_instancia} WHERE id_instancia = $id_instance";
+    $result = $DB->get_record_sql($sql_query);
+
+    $record = new stdClass();
+    $record->id = $result->id;
+    $record->id_instance = $id_instance;
+    $record->id_number = $idnumber;
+    $record->descripcion = $description;
+
+    $result = $DB->update_record('talentospilos_instancia', $record);
+
+    return $result;
+}

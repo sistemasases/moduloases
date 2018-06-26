@@ -51,6 +51,11 @@ if(isset($_POST['function'])){
                 unassign_cohort_server_proc($_POST['idnumber_cohort'], $_POST['instance_id']);
             }
             break;
+        case 'update_info_instance':
+            if(isset($_POST['instance_id']) && isset($_POST['idnumber']) && isset($_POST['description'])){
+                update_info_instance_server_proc($_POST['instance_id'], $_POST['idnumber'], $_POST['description']);
+            }
+            break;
     }
 }
 
@@ -198,4 +203,29 @@ function unassign_cohort_server_proc($id_number_cohort, $id_instance){
     echo json_encode($msg_to_return);
 }
 
-?>
+/**
+ * Función que organiza los datos a retornar a la interfaz gráfica 
+ * al solicitar actualizar una instancia determinada
+ * 
+ * @see unassign_cohort
+ * @param instance_id   ---> ID de la instancia
+ * @param idnumber  ---> Identificador de la instancia
+ * * @param description  ---> Descripción de la instancia
+ * @return JSON
+ */
+function update_info_instance_server_proc($instance_id, $idnumber, $description){
+
+    $msg_to_return = new stdClass();
+    $result_update = update_info_instance($instance_id, $idnumber, $description);
+
+    if($result_update){
+        $msg_to_return->status = 1;
+        $msg_to_return->msg = "Instancia actualizada con éxito.";
+    }else{
+        $msg_to_return->status = 0;
+        $msg_to_return->msg = "Error al actualizar la instancia";
+    }
+
+    echo json_encode($msg_to_return);
+
+}
