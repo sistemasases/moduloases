@@ -972,7 +972,6 @@ function get_practicing_by_instance($instance_id){
  * @param $instance_id       --> Identificador de instancia
  * @return Array 
  */
-
 function get_monitors_by_instance($instance_id){
     
     global $DB;
@@ -997,6 +996,29 @@ function get_monitors_by_instance($instance_id){
 
     return $result;
 }
+
+
+function get_info_spp_cohorts(){
+
+    global $DB;
+
+    $sql_query = "SELECT COUNT(ases_user.id) AS spp_number
+                  FROM {cohort} AS cohort 
+                  INNER JOIN {talentospilos_inst_cohorte} AS instance_cohort ON cohort.id = instance_cohort.id_cohorte
+                  INNER JOIN {cohort_members} AS cohort_member ON cohort_member.cohortid = cohort.id
+                  INNER JOIN {user} AS moodle_user ON moodle_user.id = cohort_member.userid
+                  INNER JOIN {talentospilos_user_extended} AS user_extended ON user_extended.id_moodle_user = moodle_user.id
+                  INNER JOIN {talentospilos_usuario} AS ases_user ON ases_user.id = user_extended.id_ases_user
+                  INNER JOIN {talentospilos_estad_programa} AS program_statuses ON program_statuses.id = user_extended.program_status
+                  WHERE instance_cohort.id_instancia = 450299 AND user_extended.tracking_status = 1
+                      AND cohort.idnumber LIKE 'SPP%'";
+    
+    $result = $DB->get_record_sql($sql_query);
+
+    print_r($result);
+}
+
+get_info_spp_cohorts();
 
 
 ?>
