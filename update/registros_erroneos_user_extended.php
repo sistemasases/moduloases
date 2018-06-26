@@ -203,6 +203,7 @@ $registro_modificar28->id = 1289;
 $registro_modificar28->tracking_status = 0;
 
 echo $DB->update_record('talentospilos_user_extended', $registro_modificar28);
+
 echo '<br>';
 // $delete = echo $DB->execute("DELETE FROM {talentospilos_user_extended} WHERE id = 1066");
 $object_to_delete = array();
