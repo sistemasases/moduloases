@@ -74,7 +74,7 @@ if($info_instance->id_number == 'ases'){
 
     foreach($cohorts_groups as $cohort_group){
         $cohorts_select.="<optgroup label='".$cohort_group['name']."'>";
-        $cohorts_select .= "<option val='".$cohort_group['id']."'>Todos ".$cohort_group['id']."</option>";
+        $cohorts_select .= "<option value='TODOS-".$cohort_group['id']."'>Todos ".$cohort_group['id']."</option>";
 
         foreach($cohorts as $ch){
             if(substr($ch->idnumber, 0, 3) == substr($cohort_group['id'], 0, 3)){
