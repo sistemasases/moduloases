@@ -74,7 +74,7 @@ if($info_instance->id_number == 'ases'){
 
     foreach($cohorts_groups as $cohort_group){
         $cohorts_select.="<optgroup label='".$cohort_group['name']."'>";
-        $cohorts_select .= "<option val='".$cohort_group['id']."'>Todos ".$cohort_group['id']."</option>";
+        $cohorts_select .= "<option value='TODOS-".$cohort_group['id']."'>Todos ".$cohort_group['id']."</option>";
 
         foreach($cohorts as $ch){
             if(substr($ch->idnumber, 0, 3) == substr($cohort_group['id'], 0, 3)){
@@ -91,8 +91,6 @@ if($info_instance->id_number == 'ases'){
     }
 }
 
-
-
 //se crean los elementos del menu
 $menu_option = create_menu_options($id_current_user, $blockid, $courseid);
 
@@ -102,7 +100,6 @@ $risks_table='';
 // Carga de riesgos
 foreach($risks as $risk){
     $risks_table.='<div class="checkbox"><input type="checkbox" name="risk_fields[]" id="'.$risk->id.'" value="'.$risk->id.'" /> '.$risk->descripcion.'</div>';}
-
 
 
 // Crea una clase con la información que se llevará al template.

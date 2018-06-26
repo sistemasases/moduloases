@@ -3,18 +3,19 @@ SELECT DISTINCT ases_students.username,
 		ases_students.lastname,
 		ases_students.num_doc,
                 ases_students.email,
-		ases_students.cohorts_student,
+                ases_students.cohorts_student,
                 ases_students.direccion_res,
-                academic_program.cod_univalle,
+                academic_program.cod_univalle AS cod_univalle,
 		academic_program.nombre AS academic_program_name,
                 
 		ases_status.ases_status_student,
 		icetex_status.icetex_status_student,
 		ases_students.program_status,
-		
 		faculty.nombre AS faculty_name,
+
 		accum_average.promedio_acumulado,
 		history_bajo.numero_bajo,
+        
 		assignments_query.monitor,
 		assignments_query.trainer,
 		assignments_query.professional
@@ -38,8 +39,16 @@ FROM (SELECT moodle_user.username,
      INNER JOIN {talentospilos_usuario} AS ases_user ON ases_user.id = user_extended.id_ases_user
      INNER JOIN {talentospilos_estad_programa} AS program_statuses ON program_statuses.id = user_extended.program_status
      WHERE instance_cohort.id_instancia = 450299 AND user_extended.tracking_status = 1
-     GROUP BY moodle_user.username, moodle_user.firstname, moodle_user.lastname, student_id, ases_user.num_doc, 
-              program_statuses.nombre, user_extended.id_academic_program) AS ases_students
+     GROUP BY moodle_user.username, 
+              moodle_user.firstname, 
+              moodle_user.lastname, 
+              student_id,
+              moodle_user.email,
+              ases_user.celular,
+              ases_user.direccion_res,
+              ases_user.num_doc, 
+              program_statuses.nombre, 
+              user_extended.id_academic_program) AS ases_students
 
 LEFT JOIN (SELECT current_ases_status.id_ases_student AS id_ases_student, 
                   historic_ases_statuses.nombre AS ases_status_student

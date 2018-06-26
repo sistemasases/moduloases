@@ -23,12 +23,12 @@ $fields_format = array(
     'address'=>'ases_students.direccion_res',
     
     'program_code'=>'academic_program.cod_univalle AS cod_univalle',
-    'name_program'=>'acad_program.nombre AS nombre_programa',
+    'name_program'=>'academic_program.nombre AS nombre_programa',
     'faculty'=>'faculty.nombre AS nombre_facultad',
 
     'average'=>'accum_average.promedio_acumulado AS promedio_acumulado',
-    'academic_stimuli'=>'estim_query.estimulos AS estimulos',
-    'low_academic_performance'=>'history_bajo.bajos AS bajos',
+    'academic_stimuli'=>'history_estim.numero_estimulos AS estimulos',
+    'low_academic_performance'=>'history_bajo.numero_bajo AS bajos',
 
     'ases_status'=>'ases_status.ases_status_student',
     'icetex_status'=>'icetex_status.icetex_status_student',
