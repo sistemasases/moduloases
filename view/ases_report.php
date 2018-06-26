@@ -54,27 +54,44 @@ if(!consult_instance($blockid)){
 
 require_login($courseid, false);
 
-$cohorts_groups = array(['id'=>'SPP', 'name'=>'Ser Pilo Paga'], 
-                        ['id'=>'SPE', 'name'=>'Condición de Excepción'],
-                        ['id'=>'3740', 'name'=>'Ingeniería Topográfica'],
-                        ['id'=>'OTROS', 'name'=>'Otros ASES']);
-
-$risks = get_riesgos();
+$info_instance = get_info_instance($blockid);
 $cohorts = load_cohorts_by_instance($blockid);
 
 $cohorts_select = '';
 $cohorts_select.='<option value="TODOS">Todas las cohortes</option>';
 
-foreach($cohorts_groups as $cohort_group){
-    $cohorts_select.="<optgroup label='".$cohort_group['name']."'>";
-    $cohorts_select .= "<option val='".$cohort_group['id']."'>Todos ".$cohort_group['id']."</option>";
-    foreach($cohorts as $ch){
-        if(substr($ch->idnumber, 0, 3) == substr($cohort_group['id'], 0, 3)){
-            $cohorts_select.= "<option value='$ch->idnumber'>$ch->name</option>";
+if($info_instance->id_number == 'ases'){
+
+    $cohorts_groups = array(['id'=>'SPP', 'name'=>'Ser Pilo Paga'], 
+                            ['id'=>'SPE', 'name'=>'Condición de Excepción'],
+                            ['id'=>'3740', 'name'=>'Ingeniería Topográfica'],
+                            ['id'=>'OTROS', 'name'=>'Otros ASES']);
+
+    $risks = get_riesgos();
+
+    $cohorts_select = '';
+    $cohorts_select.='<option value="TODOS">Todas las cohortes</option>';
+
+    foreach($cohorts_groups as $cohort_group){
+        $cohorts_select.="<optgroup label='".$cohort_group['name']."'>";
+        $cohorts_select .= "<option val='".$cohort_group['id']."'>Todos ".$cohort_group['id']."</option>";
+
+        foreach($cohorts as $ch){
+            if(substr($ch->idnumber, 0, 3) == substr($cohort_group['id'], 0, 3)){
+                $cohorts_select.= "<option value='$ch->idnumber'>$ch->name</option>";
+            }
         }
+
+        $cohorts_select.="</optgroup>";
     }
-    $cohorts_select.="</optgroup>";
+
+}else{
+    foreach($cohorts as $ch){
+        $cohorts_select.= "<option value='$ch->idnumber'>$ch->name</option>";
+    }
 }
+
+
 
 //se crean los elementos del menu
 $menu_option = create_menu_options($id_current_user, $blockid, $courseid);
