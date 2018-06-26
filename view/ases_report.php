@@ -91,8 +91,6 @@ if($info_instance->id_number == 'ases'){
     }
 }
 
-
-
 //se crean los elementos del menu
 $menu_option = create_menu_options($id_current_user, $blockid, $courseid);
 
@@ -102,7 +100,6 @@ $risks_table='';
 // Carga de riesgos
 foreach($risks as $risk){
     $risks_table.='<div class="checkbox"><input type="checkbox" name="risk_fields[]" id="'.$risk->id.'" value="'.$risk->id.'" /> '.$risk->descripcion.'</div>';}
-
 
 
 // Crea una clase con la información que se llevará al template.
