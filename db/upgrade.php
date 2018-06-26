@@ -1184,9 +1184,9 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
         $field = new xmldb_field('program_status');
 
         // Conditionally launch drop field program_status.
-        if ($dbman->field_exists($table, $field)) {
-            $dbman->drop_field($table, $field);
-        }
+        //if ($dbman->field_exists($table, $field)) {
+        //    $dbman->drop_field($table, $field);
+        //}
 
         // Define field program_status to be added to talentospilos_user_extended.
         $table = new xmldb_table('talentospilos_user_extended');
