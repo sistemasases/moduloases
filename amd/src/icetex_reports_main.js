@@ -6,7 +6,19 @@
  * @license  http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-define(['jquery', 'block_ases/bootstrap', 'block_ases/jquery.dataTables', 'block_ases/sweetalert','block_ases/select2', 'block_ases/jqueryui'], function($, bootstrap, datatablesnet, sweetalert, select2, jqueryui) {
+define(['jquery',
+        'block_ases/jszip',
+        'block_ases/pdfmake',
+        'block_ases/jquery.dataTables',
+        'block_ases/dataTables.autoFill',
+        'block_ases/dataTables.buttons',
+        'block_ases/buttons.html5',
+        'block_ases/buttons.flash',
+        'block_ases/buttons.print',
+        'block_ases/bootstrap',
+        'block_ases/sweetalert'
+        ],
+        function($, jszip, pdfmake, dataTables, autoFill, buttons, html5, flash, print, bootstrap, sweetalert) {
 
 	return {
 
