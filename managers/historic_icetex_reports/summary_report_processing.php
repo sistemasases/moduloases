@@ -64,7 +64,26 @@
                     	"sInfoThousands"=>  ",",
                     	"sLoadingRecords"=> "Cargando...",
                  	),
-					"order"=> array(0, "desc")
+					"order"=> array(0, "desc"),
+					"dom"=>'lifrtpB',
+
+					"buttons"=>array(
+						array(
+							"extend"=>'print',
+							"text"=>'Imprimir'
+						),
+						array(
+							"extend"=>'csvHtml5',
+							"text"=>'CSV'
+						),
+						array(
+							"extend" => "excel",
+											"text" => 'Excel',
+											"className" => 'buttons-excel',
+											"filename" => 'Export excel',
+											"extension" => '.xls'
+						)
+					)
 
 				);
 			header('Content-Type: application/json');
