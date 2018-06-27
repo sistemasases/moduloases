@@ -633,7 +633,7 @@ function get_ases_report($general_fields=null,
                 
                 case 'estimulos':
                     $select_clause .= $field.', ';
-                    $sub_query_academic = " LEFT JOIN (SELECT DISTINCT COUNT(puesto_ocupado) AS numero_estimulos, academic_history.id_estudiante
+                    $sub_query_academic .= " LEFT JOIN (SELECT DISTINCT COUNT(puesto_ocupado) AS numero_estimulos, academic_history.id_estudiante
                                             FROM {talentospilos_history_academ} AS academic_history
                                                 INNER JOIN {talentospilos_history_estim} AS history_stim ON history_stim.id_history = academic_history.id
                                             GROUP BY academic_history.id_estudiante
@@ -972,7 +972,6 @@ function get_practicing_by_instance($instance_id){
  * @param $instance_id       --> Identificador de instancia
  * @return Array 
  */
-
 function get_monitors_by_instance($instance_id){
     
     global $DB;
@@ -997,6 +996,25 @@ function get_monitors_by_instance($instance_id){
 
     return $result;
 }
+
+
+function get_info_spp_cohorts(){
+
+    global $DB;
+
+    $sql_query = "SELECT COUNT(cohort_member.userid) AS spp_number
+                  FROM {cohort} AS cohort 
+                       INNER JOIN {talentospilos_inst_cohorte} AS instance_cohort ON cohort.id = instance_cohort.id_cohorte
+                       INNER JOIN {cohort_members} AS cohort_member ON cohort_member.cohortid = cohort.id
+                       INNER JOIN {talentospilos_user_extended} AS user_extended ON user_extended.id_moodle_user = cohort_member.userid
+                  WHERE user_extended.tracking_status = 1 AND cohort.idnumber LIKE 'SPP%'";
+    
+    $result = $DB->get_record_sql($sql_query);
+
+    print_r($result);
+}
+
+//get_info_spp_cohorts();
 
 
 ?>
