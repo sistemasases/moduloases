@@ -633,7 +633,7 @@ function get_ases_report($general_fields=null,
                 
                 case 'estimulos':
                     $select_clause .= $field.', ';
-                    $sub_query_academic = " LEFT JOIN (SELECT DISTINCT COUNT(puesto_ocupado) AS numero_estimulos, academic_history.id_estudiante
+                    $sub_query_academic .= " LEFT JOIN (SELECT DISTINCT COUNT(puesto_ocupado) AS numero_estimulos, academic_history.id_estudiante
                                             FROM {talentospilos_history_academ} AS academic_history
                                                 INNER JOIN {talentospilos_history_estim} AS history_stim ON history_stim.id_history = academic_history.id
                                             GROUP BY academic_history.id_estudiante
@@ -1002,23 +1002,19 @@ function get_info_spp_cohorts(){
 
     global $DB;
 
-    $sql_query = "SELECT COUNT(ases_user.id) AS spp_number
+    $sql_query = "SELECT COUNT(cohort_member.userid) AS spp_number
                   FROM {cohort} AS cohort 
-                  INNER JOIN {talentospilos_inst_cohorte} AS instance_cohort ON cohort.id = instance_cohort.id_cohorte
-                  INNER JOIN {cohort_members} AS cohort_member ON cohort_member.cohortid = cohort.id
-                  INNER JOIN {user} AS moodle_user ON moodle_user.id = cohort_member.userid
-                  INNER JOIN {talentospilos_user_extended} AS user_extended ON user_extended.id_moodle_user = moodle_user.id
-                  INNER JOIN {talentospilos_usuario} AS ases_user ON ases_user.id = user_extended.id_ases_user
-                  INNER JOIN {talentospilos_estad_programa} AS program_statuses ON program_statuses.id = user_extended.program_status
-                  WHERE instance_cohort.id_instancia = 450299 AND user_extended.tracking_status = 1
-                      AND cohort.idnumber LIKE 'SPP%'";
+                       INNER JOIN {talentospilos_inst_cohorte} AS instance_cohort ON cohort.id = instance_cohort.id_cohorte
+                       INNER JOIN {cohort_members} AS cohort_member ON cohort_member.cohortid = cohort.id
+                       INNER JOIN {talentospilos_user_extended} AS user_extended ON user_extended.id_moodle_user = cohort_member.userid
+                  WHERE user_extended.tracking_status = 1 AND cohort.idnumber LIKE 'SPP%'";
     
     $result = $DB->get_record_sql($sql_query);
 
     print_r($result);
 }
 
-get_info_spp_cohorts();
+//get_info_spp_cohorts();
 
 
 ?>
