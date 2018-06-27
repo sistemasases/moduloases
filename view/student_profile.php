@@ -389,23 +389,48 @@ if ($student_code != 0) {
     $student_code_tok = strtok($student_code, "-");
 
     $dphpforms_ases_user = get_ases_user_by_code( $student_code_tok )->id;
+
+    // Pares
     $array_peer_trackings_dphpforms = dphpforms_find_records('seguimiento_pares', 'seguimiento_pares_id_estudiante', $dphpforms_ases_user, 'DESC');
     $array_peer_trackings_dphpforms = json_decode($array_peer_trackings_dphpforms);
+
+    // Inasistencia
+    $array_inasistencia_peer_trackings_dphpforms = dphpforms_find_records('inasistencia', 'inasistencia_id_estudiante', $dphpforms_ases_user, 'DESC');
+    $array_inasistencia_peer_trackings_dphpforms = json_decode($array_inasistencia_peer_trackings_dphpforms);
+    
+
     $array_detail_peer_trackings_dphpforms = array();
+    $array_detail_inasistencia_peer_trackings_dphpforms = array();
+
     foreach ($array_peer_trackings_dphpforms->results as &$peer_trackings_dphpforms) {
         array_push($array_detail_peer_trackings_dphpforms, json_decode(dphpforms_get_record($peer_trackings_dphpforms->id_registro, 'fecha')));
-    }
+    };
+
+    foreach ($array_inasistencia_peer_trackings_dphpforms->results as &$inasistencia_peer_trackings_dphpforms) {
+        array_push($array_detail_inasistencia_peer_trackings_dphpforms, json_decode(dphpforms_get_record($inasistencia_peer_trackings_dphpforms->id_registro, 'in_fecha')));
+    };
 
     $array_tracking_date = array();
+    $array_inasistencia_tracking_date = array();
+
     foreach ($array_detail_peer_trackings_dphpforms as &$peer_tracking) {
         foreach ($peer_tracking->record->campos as &$tracking) {
             if ($tracking->local_alias == 'fecha') {
                 array_push($array_tracking_date, strtotime($tracking->respuesta));
-            }
-        }
-    }
+            };
+        };
+    };
+
+    foreach ($array_detail_inasistencia_peer_trackings_dphpforms as &$inasistencia_peer_tracking) {
+        foreach ($inasistencia_peer_tracking->record->campos as &$tracking) {
+            if ($tracking->local_alias == 'in_fecha') {
+                array_push($array_inasistencia_tracking_date, strtotime($tracking->respuesta));
+            };
+        };
+    };
 
     rsort($array_tracking_date);
+    rsort($array_inasistencia_tracking_date);
 
     $seguimientos_ordenados = new stdClass();
     $seguimientos_ordenados->index = array();
@@ -485,8 +510,90 @@ if ($student_code != 0) {
     };
     //Fin de ordenamiento
 
+    $inasistencias_ordenadas = new stdClass();
+    $inasistencias_ordenadas->index = array();
+    //Inicio de ordenamiento para inasistencias
+    //$periodo_a = [1, 2, 3, 4, 5, 6, 7]; Se toma el periodo definido para el ordenamiento anterior
+    //periodo_b es el resto de meses;
+    for ($x = 0; $x < count($array_inasistencia_tracking_date); $x++) {
+        $string_date = $array_inasistencia_tracking_date[$x];
+        $array_inasistencia_tracking_date[$x] = getdate($array_inasistencia_tracking_date[$x]);
+        if (property_exists($inasistencias_ordenadas, $array_inasistencia_tracking_date[$x]['year'])) {
+            if (in_array($array_inasistencia_tracking_date[$x]['mon'], $periodo_a)) {
+                for ($y = 0; $y < count($array_detail_inasistencia_peer_trackings_dphpforms); $y++) {
+                    if ($array_detail_inasistencia_peer_trackings_dphpforms[$y]) {
+                        foreach ($array_detail_inasistencia_peer_trackings_dphpforms[$y]->record->campos as &$tracking) {
+                            if ($tracking->local_alias == 'in_fecha') {
+                                if (strtotime($tracking->respuesta) == $string_date) {
+                                    array_push($inasistencias_ordenadas->$array_inasistencia_tracking_date[$x]['year']->per_a, $array_detail_inasistencia_peer_trackings_dphpforms[$y]);
+                                    $array_detail_inasistencia_peer_trackings_dphpforms[$y] = null;
+                                    break;
+                                };
+                            };
+                        };
+                    };
+                };
+            } else {
+                for ($y = 0; $y < count($array_detail_inasistencia_peer_trackings_dphpforms); $y++) {
+                    if ($array_detail_inasistencia_peer_trackings_dphpforms[$y]) {
+                        foreach ($array_detail_inasistencia_peer_trackings_dphpforms[$y]->record->campos as &$tracking) {
+                            if ($tracking->local_alias == 'fecha') {
+                                if (strtotime($tracking->respuesta) == $string_date) {
+                                    array_push($inasistencias_ordenadas->$array_inasistencia_tracking_date[$x]['year']->per_b, $array_detail_inasistencia_peer_trackings_dphpforms[$y]);
+                                    $array_detail_inasistencia_peer_trackings_dphpforms[$y] = null;
+                                    break;
+                                };
+                            };
+                        };
+                    };
+                };
+            };
+        } else {
+            array_push($inasistencias_ordenadas->index, $array_inasistencia_tracking_date[$x]['year']);
+            $inasistencias_ordenadas->$array_inasistencia_tracking_date[$x]['year']->year = $array_inasistencia_tracking_date[$x]['year'];
+            $inasistencias_ordenadas->$array_inasistencia_tracking_date[$x]['year']->per_a = array();
+            $inasistencias_ordenadas->$array_inasistencia_tracking_date[$x]['year']->per_b = array();
+
+            $inasistencias_ordenadas->$array_inasistencia_tracking_date[$x]['year']->year = $array_inasistencia_tracking_date[$x]['year'];
+            if (in_array($array_inasistencia_tracking_date[$x]['mon'], $periodo_a)) {
+                for ($y = 0; $y < count($array_detail_inasistencia_peer_trackings_dphpforms); $y++) {
+                    if ($array_detail_inasistencia_peer_trackings_dphpforms[$y]) {
+                        foreach ($array_detail_inasistencia_peer_trackings_dphpforms[$y]->record->campos as &$tracking) {
+                            if ($tracking->local_alias == 'in_fecha') {
+                                if (strtotime($tracking->respuesta) == $string_date) {
+                                    array_push($inasistencias_ordenadas->$array_inasistencia_tracking_date[$x]['year']->per_a, $array_detail_inasistencia_peer_trackings_dphpforms[$y]);
+                                    $array_detail_inasistencia_peer_trackings_dphpforms[$y] = null;
+                                    break;
+                                };
+                            };
+                        };
+                    };
+                };
+            } else {
+                for ($y = 0; $y < count($array_detail_inasistencia_peer_trackings_dphpforms); $y++) {
+                    if ($array_detail_inasistencia_peer_trackings_dphpforms[$y]) {
+                        foreach ($array_detail_inasistencia_peer_trackings_dphpforms[$y]->record->campos as &$tracking) {
+                            if ($tracking->local_alias == 'in_fecha') {
+                                if (strtotime($tracking->respuesta) == $string_date) {
+                                    array_push($inasistencias_ordenadas->$array_inasistencia_tracking_date[$x]['year']->per_b, $array_detail_inasistencia_peer_trackings_dphpforms[$y]);
+                                    $array_detail_inasistencia_peer_trackings_dphpforms[$y] = null;
+                                    break;
+                                };
+                            };
+                        };
+                    };
+                };
+            };
+        };
+    };
+    //Fin de ordenamiento inasistencias
+
     //echo json_encode($seguimientos_ordenados);
     $seguimientos_array = json_decode(json_encode($seguimientos_ordenados), true);
+    $inasistencias_array = json_decode(json_encode($inasistencias_ordenadas), true);
+
+    $seguimientos_array = array_merge($seguimientos_array, $inasistencias_array);
+
     $array_periodos = array();
     for ($x = 0; $x < count($seguimientos_array['index']); $x++) {
         array_push($array_periodos, $seguimientos_array[$seguimientos_array['index'][$x]]);
