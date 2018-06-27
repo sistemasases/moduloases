@@ -24,7 +24,8 @@ define(['jquery',
 
 		init: function() {
 			
-			
+			window.JSZip = jszip;
+
 			$("#list-resolution-students-panel").on('click', function(){
 				load_report_students_resolution();
 				/*				
