@@ -205,6 +205,14 @@ $registro_modificar28->tracking_status = 0;
 echo $DB->update_record('talentospilos_user_extended', $registro_modificar28);
 
 echo '<br>';
+
+$registro_modificar29 = new StdClass;
+$registro_modificar29->id = 43;
+$registro_modificar29->id_semestre = 6;
+
+echo $DB->update_record('talentospilos_res_icetex', $registro_modificar29);
+
+echo '<br>';
 // $delete = echo $DB->execute("DELETE FROM {talentospilos_user_extended} WHERE id = 1066");
 $object_to_delete = array();
 $object_to_delete['id'] = 553;
