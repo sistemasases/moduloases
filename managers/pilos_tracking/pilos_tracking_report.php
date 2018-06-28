@@ -106,20 +106,20 @@ if (isset($_POST['type']) && $_POST['type'] == "consult_students_name" && isset(
     echo (get_names_students($_POST['students']));
     }
 
-if (isset($_POST['type']) && isset($_POST['instance']) && $_POST['type'] == "get_student_trackings" && isset($_POST['student_code']))
-    {
+if (isset($_POST['type']) && isset($_POST['instance']) && $_POST['type'] == "get_student_trackings" && isset($_POST['student_code'])){
 
-    // Function that obtains the peer trackings of a student.
+        // Function that obtains the peer trackings of a student.
 
-    $html_tracking_peer = "";
-    $student_code = explode("-", $_POST['student_code']);
-    $ases_student = get_ases_user_by_code($student_code[0]);
-    $student_id = $ases_student->id;
-    $current_semester = get_current_semester();
-    $array_peer_trackings_dphpforms = get_tracking_current_semester('student',$student_code[0], $current_semester->max);
-    $array = render_student_trackings($array_peer_trackings_dphpforms);
-    echo json_encode($array);
-    }
+        $html_tracking_peer = "";
+        $student_code = explode("-", $_POST['student_code']);
+        $ases_student = get_ases_user_by_code($student_code[0]);
+        $student_id = $ases_student->id;
+        $current_semester = get_current_semester();
+        $array_peer_trackings_dphpforms = get_tracking_current_semester('student',$student_code[0], $current_semester->max);
+        $array = render_student_trackings($array_peer_trackings_dphpforms);
+        echo json_encode($array);
+
+};
 
 if (isset($_POST['type']) && isset($_POST['instance']) && $_POST['type'] == "get_monitors_of_practicant" && isset($_POST['monitor_code']))
     {
