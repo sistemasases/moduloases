@@ -588,11 +588,8 @@ if ($student_code != 0) {
     };
     //Fin de ordenamiento inasistencias
 
-    //echo json_encode($seguimientos_ordenados);
     $seguimientos_array = json_decode(json_encode($seguimientos_ordenados), true);
     $inasistencias_array = json_decode(json_encode($inasistencias_ordenadas), true);
-
-    $seguimientos_array = array_merge($seguimientos_array, $inasistencias_array);
 
     $array_periodos = array();
     for ($x = 0; $x < count($seguimientos_array['index']); $x++) {
