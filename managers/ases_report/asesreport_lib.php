@@ -1004,14 +1004,13 @@ function get_info_spp_cohorts(){
 
     $sql_query = "SELECT COUNT(cohort_member.userid) AS spp_number
                   FROM {cohort} AS cohort 
-                       INNER JOIN {talentospilos_inst_cohorte} AS instance_cohort ON cohort.id = instance_cohort.id_cohorte
                        INNER JOIN {cohort_members} AS cohort_member ON cohort_member.cohortid = cohort.id
                        INNER JOIN {talentospilos_user_extended} AS user_extended ON user_extended.id_moodle_user = cohort_member.userid
                   WHERE user_extended.tracking_status = 1 AND cohort.idnumber LIKE 'SPP%'";
     
     $result = $DB->get_record_sql($sql_query);
 
-    print_r($result);
+    //print_r($result);
 }
 
 //get_info_spp_cohorts();

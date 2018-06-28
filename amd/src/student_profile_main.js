@@ -25,11 +25,9 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/d3', 'block_ases/sweetaler
                 height: 'resolve',
                 language: {
                     noResults: function() {
-
                         return "No hay resultado";
                     },
                     searching: function() {
-
                         return "Buscando..";
                     }
                 },
@@ -37,7 +35,8 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/d3', 'block_ases/sweetaler
 
             $("#asignados").on('change', function(){
                 var code = $('#asignados').val();
-                var student_code = code.split('-')[0];
+                var student_code = code.split(' ')[0];
+                console.log(student_code);
 
                 load_student(student_code);
             });
