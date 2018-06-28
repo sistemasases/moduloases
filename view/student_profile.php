@@ -411,7 +411,6 @@ if ($student_code != 0) {
     };
 
     $array_tracking_date = array();
-    //$array_inasistencia_tracking_date = array();
 
     foreach ($array_detail_peer_trackings_dphpforms as &$peer_tracking) {
         foreach ($peer_tracking->record->campos as &$tracking) {
