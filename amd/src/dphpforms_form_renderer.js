@@ -354,6 +354,19 @@
 
                     }else if( (form == 'primer_acercamiento' ) && ( action == 'update' )){ 
 
+                    }else if( (form == 'inasistencia' )&&( action == 'insert' )){
+
+                    }else if( (form == 'inasistencia')&&( action == 'update' ) ){
+
+                        var count_buttons_dphpforms = $('.dphpforms-record .btn-dphpforms-univalle').length;
+                        if( count_buttons_dphpforms == 1 ){
+                            $('.dphpforms-record .btn-dphpforms-univalle:eq(0)').css( { 'margin-left' : ( ($('.dphpforms-updater').width()/2) - ( $('.dphpforms-record .btn-dphpforms-close').outerWidth() /2) ) + 'px'  } );
+                        }else if( count_buttons_dphpforms == 2 ){
+                            $('.dphpforms-record .btn-dphpforms-univalle:eq(0)').css( { 'margin-left' : ( ($('.dphpforms-updater').width()/2) - 72 ) + 'px'  } );
+                        }else if( count_buttons_dphpforms == 3 ){
+                            $('.dphpforms-record .btn-dphpforms-univalle:eq(0)').css( { 'margin-left' : ( ($('.dphpforms-updater').width()/2) - 72 - 30) + 'px'  } );
+                        }
+                    
                     }else if( (form == 'seguimiento_pares' )&&( action == 'insert' )){
 
                     }else if( (form == 'seguimiento_pares')&&( action == 'update' ) ){
@@ -452,7 +465,7 @@
 
                 function load_record_updater(form_id, record_id){
                     $('.div').removeClass('regla_incumplida');
-                    $.get( "../managers/dphpforms/dphpforms_forms_core.php?form_id="+form_id+"&record_id="+record_id, function( data ) {
+                    $.get( "../managers/dphpforms/dphpforms_forms_core.php?form_id=&record_id="+record_id, function( data ) {
                             $("#body_editor").html("");
                             $('#body_editor').append( data );
 
@@ -512,11 +525,15 @@
                             var is_primer_acercamiento = data.indexOf('primer_acercamiento_');
                             if( is_primer_acercamiento != -1 ){
                                 custom_actions( 'primer_acercamiento', 'update' );
-                            }
+                            };
                             var is_seguimiento_pares = data.indexOf('seguimiento_de_pares_');
                             if( is_seguimiento_pares != -1 ){
                                 custom_actions( 'seguimiento_pares', 'update' );
-                            }
+                            };
+                            var is_inasistencia = data.indexOf('inasistencia');
+                            if( is_inasistencia != -1 ){
+                                custom_actions( 'inasistencia', 'update' );
+                            };
                            
                     });
                 }

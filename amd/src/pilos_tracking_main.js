@@ -52,6 +52,15 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
 
                 }else if( (form == 'primer_acercamiento' ) && ( action == 'update' )){ 
 
+                }else if( (form == 'inasistencia' )&&( action == 'insert' )){
+
+                }else if( (form == 'inasistencia')&&( action == 'update' ) ){
+
+                    var count_buttons_dphpforms = $('.dphpforms-record .btn-dphpforms-univalle').length;
+                    if( count_buttons_dphpforms == 4 ){
+                        $('.dphpforms-record .btn-dphpforms-univalle:eq(0)').css( { 'margin-left' : ( ($('.dphpforms-updater').width()/2) - 72 - 30 ) + 'px'  } );
+                    }
+                
                 }else if( (form == 'seguimiento_pares' )&&( action == 'insert' )){
 
                 }else if( (form == 'seguimiento_pares')&&( action == 'update' ) ){
@@ -69,9 +78,9 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                     };
 
                     var count_buttons_dphpforms = $('.dphpforms-record .btn-dphpforms-univalle').length;
-                    if( count_buttons_dphpforms == 2 ){
+                    if( (count_buttons_dphpforms == 3 )||(count_buttons_dphpforms == 2 ) ){
                         $('.dphpforms-record .btn-dphpforms-close').css( { 'margin-left' : ( ($('.dphpforms-updater').width()/2) - 30 ) + 'px'  } );
-                    }else if( count_buttons_dphpforms == 3 ){
+                    }else if( count_buttons_dphpforms == 4 ){
                         $('.dphpforms-record .btn-dphpforms-univalle:eq(0)').css( { 'margin-left' : ( ($('.dphpforms-updater').width()/2) - 72 - 30 ) + 'px'  } );
                     }
 
@@ -497,7 +506,7 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
 
 
                 function load_record_updater(form_id, record_id){
-                    $.get( "../managers/dphpforms/dphpforms_forms_core.php?form_id="+form_id+"&record_id="+record_id, function( data ) {
+                    $.get( "../managers/dphpforms/dphpforms_forms_core.php?form_id=&record_id="+record_id, function( data ) {
                          if(form_id =='seguimiento_grupal'){
 
                             $("#body_editor").html("");
@@ -518,7 +527,11 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                             var is_seguimiento_pares = data.indexOf('seguimiento_de_pares_');
                             if( is_seguimiento_pares != -1 ){
                                 custom_actions( 'seguimiento_pares', 'update' );
-                            }
+                            };
+                            var is_inasistencia = data.indexOf('inasistencia');
+                            if( is_inasistencia != -1 ){
+                                custom_actions( 'inasistencia', 'update' );
+                            };
                          }
                             
                            

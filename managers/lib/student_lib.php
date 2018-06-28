@@ -27,6 +27,8 @@
 
 require_once dirname(__FILE__) . '/../../../../config.php';
 
+require_once $CFG->dirroot.'/blocks/ases/managers/lib/lib.php';
+
 /**
  * Obtains an user object given user id from {talentospilos_usuario} table
  *
@@ -320,18 +322,29 @@ function get_assigned_monitor($id_student)
 
     $object_current_semester = get_current_semester_today();
 
-    $sql_query = "SELECT id_monitor FROM {talentospilos_monitor_estud} WHERE id_estudiante =" . $id_student . " AND id_semestre = " . $object_current_semester->id . ";";
+    $sql_query = "SELECT id_monitor 
+                  FROM {talentospilos_monitor_estud} 
+                  WHERE id_estudiante = ".$id_student." AND id_semestre = ".$object_current_semester->id.";";
+
+    $result = $DB->get_record_sql($sql_query);    
+    
     $id_monitor = $DB->get_record_sql($sql_query)->id_monitor;
 
     if ($id_monitor) {
-        $sql_query = "SELECT id, firstname, lastname, email FROM {user} WHERE id = " . $id_monitor;
+
+        $sql_query = "SELECT id, firstname, lastname, email 
+                      FROM {user} 
+                      WHERE id = ".$id_monitor;
+
         $monitor_object = $DB->get_record_sql($sql_query);
+
     } else {
         $monitor_object = array();
     }
-
     return $monitor_object;
 }
+
+get_assigned_monitor(108);
 
 /**
  * Obtains name, lastname and email from a practicant (practicante) assigned to a student, given the student id
