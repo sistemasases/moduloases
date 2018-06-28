@@ -42,7 +42,32 @@
         if(!$RECORD_ID){
             $html = $html .  "Error: variable registro ausente.";
             return $html;
-        }
+        };
+
+        $sql_respuestas = '
+        
+            SELECT * 
+            FROM {talentospilos_df_respuestas} AS R 
+            INNER JOIN 
+                (
+                    SELECT * 
+                    FROM {talentospilos_df_form_resp} AS FR 
+                    INNER JOIN {talentospilos_df_form_solu} AS FS 
+                    ON FR.id = FS.id_formulario_respuestas 
+                    WHERE FR.id = '.$RECORD_ID.'
+                ) AS FRS 
+            ON FRS.id_respuesta = R.id;
+        ';
+
+        $respuestas = array();
+        $result_respuestas = $DB->get_records_sql($sql_respuestas);
+        $result_respuestas = array_values($result_respuestas);
+
+        if( $id_completed_form == '' ){
+            if($result_respuestas){
+                $FORM_ID = $result_respuestas[0]->id_formulario;
+            };
+        };
 
         if(!is_numeric($id_completed_form)){
             $sql_alias = "SELECT id FROM {talentospilos_df_formularios} WHERE alias = '$id_completed_form' AND estado = 1";
@@ -50,10 +75,8 @@
             if($form_record){
                 $FORM_ID = $form_record->id;
             }
-        }
+        }; 
 
-        
-        
         $sql = '
         
             SELECT * FROM {talentospilos_df_tipo_campo} AS TC 
@@ -116,26 +139,6 @@
         //Dispara la actualización
         $html = $html .  '<input id="dphpforms_record_id" name="id_registro" value="'.$RECORD_ID.'" style="display:none;">';
         //Fin del disparador de actualización
-
-        $sql_respuestas = '
-        
-            SELECT * 
-            FROM {talentospilos_df_respuestas} AS R 
-            INNER JOIN 
-                (
-                    SELECT * 
-                    FROM {talentospilos_df_form_resp} AS FR 
-                    INNER JOIN {talentospilos_df_form_solu} AS FS 
-                    ON FR.id = FS.id_formulario_respuestas 
-                    WHERE FR.id = '.$RECORD_ID.'
-                ) AS FRS 
-            ON FRS.id_respuesta = R.id;
-        
-        ';
-
-        $respuestas = array();
-        $result_respuestas = $DB->get_records_sql($sql_respuestas);
-        $result_respuestas = array_values($result_respuestas);
 
         for($i = 0; $i < count($result_respuestas); $i++){
             $row_respuesta = $result_respuestas[$i];

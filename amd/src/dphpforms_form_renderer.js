@@ -452,7 +452,7 @@
 
                 function load_record_updater(form_id, record_id){
                     $('.div').removeClass('regla_incumplida');
-                    $.get( "../managers/dphpforms/dphpforms_forms_core.php?form_id="+form_id+"&record_id="+record_id, function( data ) {
+                    $.get( "../managers/dphpforms/dphpforms_forms_core.php?form_id=&record_id="+record_id, function( data ) {
                             $("#body_editor").html("");
                             $('#body_editor').append( data );
 
