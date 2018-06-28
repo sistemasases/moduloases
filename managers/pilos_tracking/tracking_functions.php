@@ -251,14 +251,14 @@ function render_student_trackings($peer_tracking_v2)
                 foreach($tracking[record][campos] as $key => $review) {
                     if ($review[local_alias] == 'revisado_profesional') {
                         if ($review[respuesta] == 0) {
-                            $form_rendered.= '<div id="dphpforms-peer-record-' . $tracking[record][id_registro] . '" class="card-block dphpforms-peer-record peer-tracking-record-review"  data-record-id="' . $tracking[record][id_registro] . '">Registro:   ' . $tracking[record][alias_key][respuesta] . '</div>';
+                            $form_rendered.= '<div id="dphpforms-peer-record-' . $tracking[record][id_registro] . '" class="card-block dphpforms-peer-record peer-tracking-record-review class-'.$tracking[record][alias].'"  data-record-id="' . $tracking[record][id_registro] . '">Registro:   ' . $tracking[record][alias_key][respuesta] . '</div>';
                             $is_reviewed = true;
                         }
                     }
                 }
 
                 if (!$is_reviewed) {
-                    $form_rendered.= '<div id="dphpforms-peer-record-' . $tracking[record][id_registro] . '" class="card-block dphpforms-peer-record peer-tracking-record"  data-record-id="' . $tracking[record][id_registro] . '">Registro:   ' . $tracking[record][alias_key][respuesta] . '</div>';
+                    $form_rendered.= '<div id="dphpforms-peer-record-' . $tracking[record][id_registro] . '" class="card-block dphpforms-peer-record peer-tracking-record class-'.$tracking[record][alias].'"  data-record-id="' . $tracking[record][id_registro] . '">Registro:   ' . $tracking[record][alias_key][respuesta] . '</div>';
                 }
             }
         }

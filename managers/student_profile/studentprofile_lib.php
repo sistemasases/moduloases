@@ -289,27 +289,48 @@ function get_tracking_current_semester($criterio,$student_id, $semester_id,$inte
         $ano_semester  = $fecha_inicio['year'];
     }
 
+    $array_peer_trackings_dphpforms = array();
+    $array_inasistencia_peer_trackings_dphpforms = array();
+
    if($criterio=='student'){
-      $array_peer_trackings_dphpforms = dphpforms_find_records('seguimiento_pares', 'seguimiento_pares_id_estudiante', $student_id, 'DESC');
-
+        $array_peer_trackings_dphpforms = dphpforms_find_records('seguimiento_pares', 'seguimiento_pares_id_estudiante', $student_id, 'DESC');
+        $array_inasistencia_peer_trackings_dphpforms = dphpforms_find_records('inasistencia', 'inasistencia_id_estudiante', $student_id, 'DESC');
    }else if($criterio=='monitor'){
-    $array_peer_trackings_dphpforms = dphpforms_find_records('seguimiento_pares', 'seguimiento_pares_id_creado_por', $student_id, 'DESC');
-   }
-
-    $array_peer_trackings_dphpforms = json_decode($array_peer_trackings_dphpforms);
-    $array_detail_peer_trackings_dphpforms = array();
-    foreach ($array_peer_trackings_dphpforms->results as &$peer_trackings_dphpforms) {
-        array_push($array_detail_peer_trackings_dphpforms, json_decode(dphpforms_get_record($peer_trackings_dphpforms->id_registro, 'fecha')));
+        $array_peer_trackings_dphpforms = dphpforms_find_records('seguimiento_pares', 'seguimiento_pares_id_creado_por', $student_id, 'DESC');
+        $array_inasistencia_peer_trackings_dphpforms = dphpforms_find_records('inasistencia', 'inasistencia_id_creado_por', $student_id, 'DESC');
     }
 
+    $array_peer_trackings_dphpforms = json_decode($array_peer_trackings_dphpforms);
+    $array_inasistencia_peer_trackings_dphpforms = json_decode($array_inasistencia_peer_trackings_dphpforms);
+
+    $array_detail_peer_trackings_dphpforms = array();
+    $array_detail_inasistencia_peer_trackings_dphpforms = array();
+
+    foreach ($array_peer_trackings_dphpforms->results as &$peer_trackings_dphpforms) {
+        array_push($array_detail_peer_trackings_dphpforms, json_decode(dphpforms_get_record($peer_trackings_dphpforms->id_registro, 'fecha')));
+    };
+
+    foreach ($array_inasistencia_peer_trackings_dphpforms->results as &$inasistencia_peer_trackings_dphpforms) {
+        array_push($array_detail_inasistencia_peer_trackings_dphpforms, json_decode(dphpforms_get_record($inasistencia_peer_trackings_dphpforms->id_registro, 'in_fecha')));
+    };
+
     $array_tracking_date = array();
+
     foreach ($array_detail_peer_trackings_dphpforms as &$peer_tracking) {
         foreach ($peer_tracking->record->campos as &$tracking) {
             if ($tracking->local_alias == 'fecha') {
                 array_push($array_tracking_date, strtotime($tracking->respuesta));
             }
         }
-    }
+    };
+
+    foreach ($array_detail_inasistencia_peer_trackings_dphpforms as &$inasistencia_peer_tracking) {
+        foreach ($inasistencia_peer_tracking->record->campos as &$tracking) {
+            if ($tracking->local_alias == 'in_fecha') {
+                array_push($array_tracking_date, strtotime($tracking->respuesta));
+            };
+        };
+    };
 
     rsort($array_tracking_date);
 
@@ -325,6 +346,7 @@ function get_tracking_current_semester($criterio,$student_id, $semester_id,$inte
         $array_tracking_date[$x] = getdate($array_tracking_date[$x]);
         if (property_exists($seguimientos_ordenados, $array_tracking_date[$x]['year'])) {
             if (in_array($array_tracking_date[$x]['mon'], $periodo_actual)) {
+                // Records where we expect to find
                 for ($y = 0; $y < count($array_detail_peer_trackings_dphpforms); $y++) {
                     if ($array_detail_peer_trackings_dphpforms[$y]) {
                         foreach ($array_detail_peer_trackings_dphpforms[$y]->record->campos as &$tracking) {
@@ -332,6 +354,20 @@ function get_tracking_current_semester($criterio,$student_id, $semester_id,$inte
                                 if (strtotime($tracking->respuesta) == $string_date) {
                                     array_push($seguimientos_ordenados->$array_tracking_date[$x]['year']->periodo, $array_detail_peer_trackings_dphpforms[$y]);
                                     $array_detail_peer_trackings_dphpforms[$y] = null;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+                //Inasistencia
+                for ($y = 0; $y < count($array_detail_inasistencia_peer_trackings_dphpforms); $y++) {
+                    if ($array_detail_inasistencia_peer_trackings_dphpforms[$y]) {
+                        foreach ($array_detail_inasistencia_peer_trackings_dphpforms[$y]->record->campos as &$tracking) {
+                            if ($tracking->local_alias == 'in_fecha') {
+                                if (strtotime($tracking->respuesta) == $string_date) {
+                                    array_push($seguimientos_ordenados->$array_tracking_date[$x]['year']->periodo, $array_detail_inasistencia_peer_trackings_dphpforms[$y]);
+                                    $array_detail_inasistencia_peer_trackings_dphpforms[$y] = null;
                                     break;
                                 }
                             }
@@ -347,7 +383,7 @@ function get_tracking_current_semester($criterio,$student_id, $semester_id,$inte
 
             //$seguimientos_ordenados->$array_tracking_date[$x]['year']->year = $array_tracking_date[$x]['year'];
             if(in_array($array_tracking_date[$x]['mon'], $periodo_actual)){
-                
+                // Records where we expect to find
                 for($y = 0; $y < count($array_detail_peer_trackings_dphpforms); $y++){
                     if($array_detail_peer_trackings_dphpforms[$y]){
                         foreach ($array_detail_peer_trackings_dphpforms[$y]->record->campos as &$tracking) {
@@ -355,6 +391,20 @@ function get_tracking_current_semester($criterio,$student_id, $semester_id,$inte
                                 if (strtotime($tracking->respuesta) == $string_date) {
                                     array_push($seguimientos_ordenados->$array_tracking_date[$x]['year']->periodo, $array_detail_peer_trackings_dphpforms[$y]);
                                     $array_detail_peer_trackings_dphpforms[$y] = null;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+                // Inasistencia
+                for($y = 0; $y < count($array_detail_inasistencia_peer_trackings_dphpforms); $y++){
+                    if($array_detail_inasistencia_peer_trackings_dphpforms[$y]){
+                        foreach ($array_detail_inasistencia_peer_trackings_dphpforms[$y]->record->campos as &$tracking) {
+                            if ($tracking->local_alias == 'in_fecha') {
+                                if (strtotime($tracking->respuesta) == $string_date) {
+                                    array_push($seguimientos_ordenados->$array_tracking_date[$x]['year']->periodo, $array_detail_inasistencia_peer_trackings_dphpforms[$y]);
+                                    $array_detail_inasistencia_peer_trackings_dphpforms[$y] = null;
                                     break;
                                 }
                             }
