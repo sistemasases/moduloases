@@ -97,15 +97,18 @@
                 );
                 if(($alias_key)&&(json_decode($respuesta->atributos_campo)->{'local_alias'} == $alias_key)){
                     $key = $tmp_respuesta;
-                }
+                };
                 array_push($respuestas, $tmp_respuesta);
-            }
-        }
+            };
+        };
+
+        $form_alias = $DB->get_record_sql( "SELECT alias FROM {talentospilos_df_formularios} WHERE id = " . $list_respuestas[0]->id_formulario )->alias;
 
         return json_encode(
             array(
                 'record' => array(
                     'id_formulario' => $list_respuestas[0]->id_formulario,
+                    'alias' => $form_alias,
                     'id_registro' => $list_respuestas[0]->id_formulario_respuestas,
                     'fecha_hora_registro' => $record_info->fecha_hora_registro,
                     'campos' => $respuestas,
