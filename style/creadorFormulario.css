@@ -326,3 +326,12 @@ pre, code {
 }
 
 /* Finalización de definición de estilos para seguimientos geográficos */
+
+/* Clases para los listados formularios existentes */
+.class-seguimiento_pares{
+
+}
+
+.class-inasistencia{
+    background-color:rgb(250, 221, 221);
+}
