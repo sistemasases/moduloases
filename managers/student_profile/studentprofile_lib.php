@@ -881,7 +881,7 @@ function validate_student($code_student){
 
     global $DB;
 
-    $sql_query = "SELECT id FROM {user} WHERE username LIKE '".$code_student."%'";
+    $sql_query = "SELECT id FROM {user} WHERE username = '".$code_student."'";
     $result_moodle_database = $DB->get_record_sql($sql_query);
 
     if($result_moodle_database){
