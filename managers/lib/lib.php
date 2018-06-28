@@ -220,7 +220,7 @@ function get_asigned_by_practicante($id)
 
     $query = "SELECT rol.id_usuario
               FROM {talentospilos_user_rol} AS rol
-              WHERE rol.id_jefe = $id AND rol.id_semestre = $id_semestre";
+              WHERE rol.id_jefe = $id AND rol.id_semestre = $id_semestre AND rol.estado = 1";
 
     $students = array();
 
@@ -250,8 +250,8 @@ function get_asigned_by_profesional($id)
     $id_semestre = $semestre->max;
 
     $query = "SELECT rol.id_usuario
-              FROM {talentospilos_user_rol} rol
-              WHERE rol.id_jefe = $id AND rol.id_semestre = $id_semestre";
+              FROM {talentospilos_user_rol} AS rol
+              WHERE rol.id_jefe = $id AND rol.id_semestre = $id_semestre AND rol.estado = 1";
 
     $students = array();
 
@@ -263,7 +263,6 @@ function get_asigned_by_profesional($id)
     return $students;
 }
 
-//print_r(get_asigned_by_profesional(122));
 /**
  * Gets all students assigned to a 'director_prog'
  *
