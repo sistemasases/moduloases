@@ -77,7 +77,7 @@
                 )
             );
 
-            $stored_data = dphpforms_get_record($record_id, null);
+            $stored_data = dphpforms_get_record($record_id, null, true);
 
             $to_warehouse = new stdClass();
             $to_warehouse->id_usuario_moodle = $USER->id;
