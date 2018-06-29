@@ -107,13 +107,6 @@ $success = $DB->execute($sql_query5);
 
 echo $success;
 echo '<br>';
-
-$registro_modificar5 = new StdClass;
-$registro_modificar5->id = 95;
-$registro_modificar5->num_doc = '1112792607';
-
-echo $DB->update_record('talentospilos_usuario', $registro_modificar5);
-echo '<br>';
 $registro_modificar6 = new StdClass;
 $registro_modificar6->id = 447;
 $registro_modificar6->id_ases_user = 103;
@@ -142,13 +135,6 @@ $sql_query5 = "UPDATE {talentospilos_res_estudiante} SET id_estudiante = 103 WHE
 $success = $DB->execute($sql_query5);
 
 echo $success;
-echo '<br>';
-$registro_modificar7 = new StdClass;
-$registro_modificar7->id = 103;
-$registro_modificar7->num_doc = '1124865827';
-
-echo $DB->update_record('talentospilos_usuario', $registro_modificar7);
-echo '<br>';
 
 $registro_modificar8 = new StdClass;
 $registro_modificar8->id = 952;
@@ -178,13 +164,6 @@ $sql_query5 = "UPDATE {talentospilos_res_estudiante} SET id_estudiante = 119 WHE
 $success = $DB->execute($sql_query5);
 
 echo $success;
-echo '<br>';
-$registro_modificar9 = new StdClass;
-$registro_modificar9->id = 119;
-$registro_modificar9->num_doc = '1107521592';
-
-echo $DB->update_record('talentospilos_usuario', $registro_modificar9);
-echo '<br>';
 
 echo '<br>';
 $registro_modificar10 = new StdClass;
