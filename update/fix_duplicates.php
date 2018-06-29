@@ -99,10 +99,6 @@ echo '<br>';
 $sql_query3 = "UPDATE {talentospilos_seg_estudiante} SET id_estudiante = 95 WHERE id_estudiante = 897";
 $success = $DB->execute($sql_query3);
 
-echo $success;
-echo '<br>';
-$sql_query4 = "UPDATE {talentospilos_riesg_usuario} SET id_usuario = 95 WHERE id_usuario = 897";
-$success = $DB->execute($sql_query4);
 
 echo $success;
 echo '<br>';
@@ -139,10 +135,6 @@ echo '<br>';
 $sql_query3 = "UPDATE {talentospilos_seg_estudiante} SET id_estudiante = 103 WHERE id_estudiante = 898";
 $success = $DB->execute($sql_query3);
 
-echo $success;
-echo '<br>';
-$sql_query4 = "UPDATE {talentospilos_riesg_usuario} SET id_usuario = 103 WHERE id_usuario = 898";
-$success = $DB->execute($sql_query4);
 
 echo $success;
 echo '<br>';
@@ -179,10 +171,6 @@ echo '<br>';
 $sql_query3 = "UPDATE {talentospilos_seg_estudiante} SET id_estudiante = 119 WHERE id_estudiante = 899";
 $success = $DB->execute($sql_query3);
 
-echo $success;
-echo '<br>';
-$sql_query4 = "UPDATE {talentospilos_riesg_usuario} SET id_usuario = 119 WHERE id_usuario = 899";
-$success = $DB->execute($sql_query4);
 
 echo $success;
 echo '<br>';
@@ -220,10 +208,6 @@ echo '<br>';
 $sql_query3 = "UPDATE {talentospilos_seg_estudiante} SET id_estudiante = 130 WHERE id_estudiante = 900";
 $success = $DB->execute($sql_query3);
 
-echo $success;
-echo '<br>';
-$sql_query4 = "UPDATE {talentospilos_riesg_usuario} SET id_usuario = 130 WHERE id_usuario = 900";
-$success = $DB->execute($sql_query4);
 
 echo $success;
 echo '<br>';
@@ -262,10 +246,6 @@ echo '<br>';
 $sql_query3 = "UPDATE {talentospilos_seg_estudiante} SET id_estudiante = 5085 WHERE id_estudiante = 701";
 $success = $DB->execute($sql_query3);
 
-echo $success;
-echo '<br>';
-$sql_query4 = "UPDATE {talentospilos_riesg_usuario} SET id_usuario = 5085 WHERE id_usuario = 701";
-$success = $DB->execute($sql_query4);
 
 echo $success;
 echo '<br>';
@@ -297,10 +277,6 @@ echo '<br>';
 $sql_query3 = "UPDATE {talentospilos_seg_estudiante} SET id_estudiante = 308 WHERE id_estudiante = 890";
 $success = $DB->execute($sql_query3);
 
-echo $success;
-echo '<br>';
-$sql_query4 = "UPDATE {talentospilos_riesg_usuario} SET id_usuario = 308 WHERE id_usuario = 890";
-$success = $DB->execute($sql_query4);
 
 echo $success;
 echo '<br>';
@@ -334,10 +310,6 @@ echo '<br>';
 $sql_query3 = "UPDATE {talentospilos_seg_estudiante} SET id_estudiante = 1879 WHERE id_estudiante = 548";
 $success = $DB->execute($sql_query3);
 
-echo $success;
-echo '<br>';
-$sql_query4 = "UPDATE {talentospilos_riesg_usuario} SET id_usuario = 1879 WHERE id_usuario = 548";
-$success = $DB->execute($sql_query4);
 
 echo $success;
 echo '<br>';
@@ -371,10 +343,6 @@ echo '<br>';
 $sql_query3 = "UPDATE {talentospilos_seg_estudiante} SET id_estudiante = 1952 WHERE id_estudiante = 185";
 $success = $DB->execute($sql_query3);
 
-echo $success;
-echo '<br>';
-$sql_query4 = "UPDATE {talentospilos_riesg_usuario} SET id_usuario = 1952 WHERE id_usuario = 185";
-$success = $DB->execute($sql_query4);
 
 echo $success;
 echo '<br>';
