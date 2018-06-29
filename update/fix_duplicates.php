@@ -114,11 +114,6 @@ $registro_modificar6->id_ases_user = 103;
 echo $DB->update_record('talentospilos_user_extended', $registro_modificar6);
 
 echo '<br>';
-
-$sql_query = "UPDATE {talentospilos_history_academ} SET id_estudiante = 103 WHERE id_estudiante = 898";
-$success = $DB->execute($sql_query);
-
-echo $success;
 echo '<br>';
 $sql_query2 = "UPDATE {talentospilos_demografia} SET id_usuario = 103 WHERE id_usuario = 898";
 $success = $DB->execute($sql_query2);
