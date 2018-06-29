@@ -30,6 +30,11 @@
     //rid = record_id
     //arg = student_code, i.e 142XXXX
     if( isset($_GET['function']) && isset($_GET['arg']) && isset($_GET['rid']) ){
+
+        if( isset($_GET['arg']) == 'undefined' ){
+            $_GET['arg'] = '0';
+        };
+
         if( ( $_GET['function'] == 'update_last_user_risk' ) && ( $_GET['arg'] == '0' ) ){
             header('Content-Type: application/json');
             update_last_user_risk( $_GET['arg'], $_GET['rid'] );
