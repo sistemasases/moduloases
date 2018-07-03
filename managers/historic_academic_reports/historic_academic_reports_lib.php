@@ -40,7 +40,7 @@ function get_datatable_array_Students($instance_id)
     $cohort_options = get_cohort_names();
     $semester_options = get_all_semesters_names();
     $default_students = $columns = array();
-    $estimulo_options = "<select>   
+    $estimulo_options = "<select>
                         <option value=''></option>
                         <option value='NO'>NO</option>
                         <option value='1'>1</option>
@@ -49,25 +49,25 @@ function get_datatable_array_Students($instance_id)
                         <option value='4'>4</option>
                         <option value='5'>5</option>
                         </select>";
-    $bajos_options = "<select>   
+    $bajos_options = "<select>
                         <option value=''></option>
                         <option value='NO'>NO</option>
                         <option value='1'>1</option>
                         <option value='2'>2</option>
                         <option value='3'>3</option>
                         </select>";
-    array_push($columns, array("title" => "Cohorte".$cohort_options, "name" => "cohorte", "data" => "cohorte"));    
+    array_push($columns, array("title" => "Cohorte" . $cohort_options, "name" => "cohorte", "data" => "cohorte"));
     array_push($columns, array("title" => "Número de documento", "name" => "num_doc", "data" => "num_doc"));
     array_push($columns, array("title" => "Código estudiante", "name" => "username", "data" => "username"));
     array_push($columns, array("title" => "Nombre(s)", "name" => "firstname", "data" => "firstname"));
     array_push($columns, array("title" => "Apellido(s)", "name" => "lastname", "data" => "lastname"));
-    array_push($columns, array("title" => "Semestre".$semester_options, "name" => "semestre", "data" => "semestre"));
-    array_push($columns, array("title" => "Programa", "name" => "programa", "data" => "programa"));    
+    array_push($columns, array("title" => "Semestre" . $semester_options, "name" => "semestre", "data" => "semestre"));
+    array_push($columns, array("title" => "Programa", "name" => "programa", "data" => "programa"));
     array_push($columns, array("title" => "Materias Perdidas", "name" => "perdidas", "data" => "perdidas"));
     array_push($columns, array("title" => "Cancela", "name" => "cancel", "data" => "cancel"));
     array_push($columns, array("title" => "Promedio Semestre", "name" => "promsem", "data" => "promsem"));
-    array_push($columns, array("title" => "Gano Estimulo".$estimulo_options, "name" => "estim", "data" => "estim"));
-    array_push($columns, array("title" => "Cae en Bajo".$bajos_options, "name" => "bajo", "data" => "bajo"));
+    array_push($columns, array("title" => "Gano Estimulo" . $estimulo_options, "name" => "estim", "data" => "estim"));
+    array_push($columns, array("title" => "Cae en Bajo" . $bajos_options, "name" => "bajo", "data" => "bajo"));
     array_push($columns, array("title" => "Promedio Acumulado", "name" => "promacum", "data" => "promacum"));
     array_push($columns, array("title" => "Estimulos Acumulados", "name" => "Numestim", "data" => "estim"));
     array_push($columns, array("title" => "Bajos Acumulados", "name" => "bajos", "data" => "bajos"));
@@ -161,14 +161,15 @@ function get_historic_report($id_instance)
     $historics = $DB->get_records_sql($query);
 
     foreach ($historics as $historic) {
-
         //validate cancel
         $query_cancel = "SELECT * FROM {talentospilos_history_cancel} WHERE id_history = $historic->id ";
 
         $cancel = $DB->get_record_sql($query_cancel);
 
         if ($cancel) {
-            $historic->cancel = $cancel->fecha_cancelacion;
+            $fecha = date('m/d/Y', $cancel->fecha_cancelacion);
+
+            $historic->cancel = $fecha;
         } else {
             $historic->cancel = "NO";
         }
@@ -207,10 +208,13 @@ function get_historic_report($id_instance)
         $materias = json_decode($historic->json_materias);
         $perdidas = 0;
 
-        foreach ($materias as $materia) {
-            if ($materia->nota < 3) {
-                $perdidas++;
+        if ($materias) {
+            foreach ($materias as $materia) {
+                if ($materia->nota < 3) {
+                    $perdidas++;
+                }
             }
+
         }
 
         $historic->perdidas = $perdidas;
@@ -294,7 +298,7 @@ function get_Totals_report($instance_id)
     global $DB;
     $array_historic = array();
 
-    $query = "SELECT semestre.nombre as semestre,
+    $query = "SELECT row_number() over(),semestre.nombre as semestre,
                      cohorte.name as cohorte,
                      COUNT(academ.id) as total
               FROM {talentospilos_history_academ} academ
@@ -312,14 +316,14 @@ function get_Totals_report($instance_id)
 
     foreach ($historics as $historic) {
 
-        $query_cancel = "SELECT COUNT(cancel.id) as inact,
+        $query_cancel = "SELECT row_number() over(), COUNT(cancel.id) as inact,
                                 semestre.nombre as semestre,
                                 cohorte.name as cohorte
                                 FROM {talentospilos_history_academ} academ
                         INNER JOIN {talentospilos_semestre} semestre
                         ON         academ.id_semestre = semestre.id
                         INNER JOIN {talentospilos_history_cancel} cancel
-                        ON         academ.id = cancel.id_history 
+                        ON         academ.id = cancel.id_history
                         INNER JOIN {talentospilos_user_extended} extend
                         ON         academ.id_estudiante = extend.id_ases_user
                         INNER JOIN {cohort_members} memb
@@ -331,11 +335,11 @@ function get_Totals_report($instance_id)
 
         $inact = $DB->get_record_sql($query_cancel);
 
-        if(!$inact){
+        if (!$inact) {
             $historic->inact = 0;
             $historic->act = $historic->total;
-        }else{
-            $historic->inact = $inact->inact;   
+        } else {
+            $historic->inact = $inact->inact;
             $historic->act = $historic->total - $inact->inact;
         }
 
@@ -349,25 +353,25 @@ function get_Totals_report($instance_id)
 
 }
 
-
 /**
  * Function that returns a string with the names of all cohorts
- * 
+ *
  * @see get_cohort_names()
  * @return string
  */
-function get_cohort_names(){
+function get_cohort_names()
+{
     global $DB;
 
     $cohorts_options = "<select><option value=''></option>";
 
-    $sql_query = "SELECT idnumber AS cohort_name FROM {cohort} 
+    $sql_query = "SELECT idnumber AS cohort_name FROM {cohort}
                     WHERE substring(idnumber from 0 for 3) = 'SP'";
 
     $cohorts = $DB->get_records_sql($sql_query);
 
-    foreach($cohorts as $cohort){
-        $cohorts_options.= "<option value='$cohort->cohort_name'>$cohort->cohort_name</option>";
+    foreach ($cohorts as $cohort) {
+        $cohorts_options .= "<option value='$cohort->cohort_name'>$cohort->cohort_name</option>";
     }
 
     $cohorts_options .= "</select>";
