@@ -28,7 +28,7 @@
     require_once(dirname(__FILE__). '/../../../../config.php');
     require_once(dirname(__FILE__).'/pilos_tracking_lib.php');
     //rid = record_id
-    //arg = student_code, i.e 142XXXX
+    //arg = student_code, i.e 142XXXX or undefined or 0
     if( isset($_GET['function']) && isset($_GET['arg']) && isset($_GET['rid']) ){
 
         if( isset($_GET['arg']) == 'undefined' ){
