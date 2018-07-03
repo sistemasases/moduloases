@@ -4,7 +4,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     global $DB;
     $dbman = $DB->get_manager();
     $result = true;
-    if ($oldversion < 2018062609489 ) {
+    if ($oldversion < 2018070310299 ) {
     //     // ************************************************************************************************************
     //     // Actualización que crea la tabla para los campos extendidos de usuario (Tabla: {talentospilos_user_extended})
     //     // Versión: 2018010911179
@@ -1180,29 +1180,29 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
         // ************************************************************************************************************
 
         // Define field program_status to be dropped from talentospilos_user_extended.
-        $table = new xmldb_table('talentospilos_user_extended');
-        $field = new xmldb_field('program_status');
+        // $table = new xmldb_table('talentospilos_user_extended');
+        // $field = new xmldb_field('program_status');
 
         // Conditionally launch drop field program_status.
-        if ($dbman->field_exists($table, $field)) {
-            $dbman->drop_field($table, $field);
-        }
+        // if ($dbman->field_exists($table, $field)) {
+        //     $dbman->drop_field($table, $field);
+        // }
 
         // Define field program_status to be added to talentospilos_user_extended.
-        $table = new xmldb_table('talentospilos_user_extended');
-        $field = new xmldb_field('program_status', XMLDB_TYPE_INTEGER, '10', null, null, null, '1', 'estado_seguimiento');
+        // $table = new xmldb_table('talentospilos_user_extended');
+        // $field = new xmldb_field('program_status', XMLDB_TYPE_INTEGER, '10', null, null, null, '1', 'estado_seguimiento');
 
         // Conditionally launch add field program_status.
-        if (!$dbman->field_exists($table, $field)) {
-            $dbman->add_field($table, $field);
-        }
+        // if (!$dbman->field_exists($table, $field)) {
+        //     $dbman->add_field($table, $field);
+        // }
 
         // Define key fk_program_status (foreign) to be added to talentospilos_user_extended.
-        $table = new xmldb_table('talentospilos_user_extended');
-        $key = new xmldb_key('fk_program_status', XMLDB_KEY_FOREIGN, array('program_status'), 'talentospilos_estad_programa', array('id'));
+        // $table = new xmldb_table('talentospilos_user_extended');
+        // $key = new xmldb_key('fk_program_status', XMLDB_KEY_FOREIGN, array('program_status'), 'talentospilos_estad_programa', array('id'));
 
         // Launch add key fk_program_status.
-        $dbman->add_key($table, $key);
+        // $dbman->add_key($table, $key);
 
 
         // ************************************************************************************************************
@@ -1212,34 +1212,59 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
         // ************************************************************************************************************
 
         // Define field id_number to be added to talentospilos_instancia.
-        $table = new xmldb_table('talentospilos_instancia');
-        $field = new xmldb_field('id_number', XMLDB_TYPE_CHAR, '20', null, XMLDB_NOTNULL, null, 'changeme', 'descripcion');
+        // $table = new xmldb_table('talentospilos_instancia');
+        // $field = new xmldb_field('id_number', XMLDB_TYPE_CHAR, '20', null, XMLDB_NOTNULL, null, 'changeme', 'descripcion');
 
         // Conditionally launch add field id_number.
+        // if (!$dbman->field_exists($table, $field)) {
+        //     $dbman->add_field($table, $field);
+        // }
+
+        // $sql_query = "SELECT id FROM {talentospilos_instancia}";
+        // $result_instances = $DB->get_records_sql($sql_query);
+        // $counter = 0;
+
+        // foreach($result_instances as $instance){
+        //     $counter++;
+        //     $record = new stdClass();
+        //     $record->id = $instance->id;
+        //     $record->id_number = 'changeme'+$counter;
+        //     $update_query = $DB->update_record('talentospilos_instancia', $record);
+        // }
+
+        // Define key instance_uk_1 (unique) to be added to talentospilos_instancia.
+        // $table = new xmldb_table('talentospilos_instancia');
+        // $key = new xmldb_key('instance_uk_1', XMLDB_KEY_UNIQUE, array('id_number'));
+
+        // Launch add key instance_uk_1.
+        // $dbman->add_key($table, $key);
+
+
+        // ************************************************************************************************************
+        // Actualización:
+        // Se añade campo navegador y usuario a la tabla talentospilos_df_dwarehouse
+        // Versión en la que se incluye: GIT XXX, Moodle: 2018062515379
+        // ************************************************************************************************************
+
+        // Define field navegador to be added to talentospilos_df_dwarehouse.
+        $table = new xmldb_table('talentospilos_df_dwarehouse');
+        $field = new xmldb_field('navegador', XMLDB_TYPE_TEXT, null, null, null, null, null, 'dts_retorno');
+
+        // Conditionally launch add field navegador.
         if (!$dbman->field_exists($table, $field)) {
             $dbman->add_field($table, $field);
         }
 
-        $sql_query = "SELECT id FROM {talentospilos_instancia}";
-        $result_instances = $DB->get_records_sql($sql_query);
-        $counter = 0;
+        // Define field url_request to be added to talentospilos_df_dwarehouse.
+        $table = new xmldb_table('talentospilos_df_dwarehouse');
+        $field = new xmldb_field('url_request', XMLDB_TYPE_TEXT, null, null, null, null, null, 'navegador');
 
-        foreach($result_instances as $instance){
-            $counter++;
-            $record = new stdClass();
-            $record->id = $instance->id;
-            $record->id_number = 'changeme'+$counter;
-            $update_query = $DB->update_record('talentospilos_instancia', $record);
+        // Conditionally launch add field url_request.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
         }
 
-        // Define key instance_uk_1 (unique) to be added to talentospilos_instancia.
-        $table = new xmldb_table('talentospilos_instancia');
-        $key = new xmldb_key('instance_uk_1', XMLDB_KEY_UNIQUE, array('id_number'));
-
-        // Launch add key instance_uk_1.
-        $dbman->add_key($table, $key);
-
-        upgrade_block_savepoint(true, 2018062609489 , 'ases');
+        upgrade_block_savepoint(true, 2018070310299 , 'ases');
     
         return $result;
 
