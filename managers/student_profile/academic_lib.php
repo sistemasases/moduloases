@@ -355,7 +355,7 @@ function make_html_semesters($semesters)
 
                 foreach ($materias as $materia) {
                     $perdida = "";
-                    if($materia->nota < 3){
+                    if(is_float($materia->nota + 0) and $materia->nota < 3){
                         $perdida = "perdida";
                     }
                     $descriptions .= "<div class = 'row $perdida'>
