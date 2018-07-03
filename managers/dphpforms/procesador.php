@@ -109,6 +109,8 @@ if($RECORD_ID){
     $to_warehouse->cod_retorno = json_decode($retorno)->status;
     $to_warehouse->msg_retorno = json_decode($retorno)->message;
     $to_warehouse->dts_retorno = json_encode(json_decode($retorno)->data);
+    $to_warehouse->navegador = $_SERVER['HTTP_USER_AGENT'];
+    $to_warehouse->url_request = $_SERVER['HTTP_REFERER'];
 
     $DB->insert_record('talentospilos_df_dwarehouse', $to_warehouse, $returnid=false, $bulk=false);
 
@@ -130,6 +132,8 @@ if($RECORD_ID){
         $to_warehouse->cod_retorno = json_decode($retorno)->status;
         $to_warehouse->msg_retorno = json_decode($retorno)->message;
         $to_warehouse->dts_retorno = json_encode(json_decode($retorno)->data);
+        $to_warehouse->navegador = $_SERVER['HTTP_USER_AGENT'];
+        $to_warehouse->url_request = $_SERVER['HTTP_REFERER'];
 
         $DB->insert_record('talentospilos_df_dwarehouse', $to_warehouse, $returnid=false, $bulk=false);
 
