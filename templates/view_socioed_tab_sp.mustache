@@ -1,6 +1,7 @@
 {{!-- Socioed tab --}}
 <div class="tab-pane" id="socioed_tab">
    <div id="accordion" role="tablist" aria-multiselectable="true">
+     {{#view_peer_trackings_sp}}
       <div class="panel panel-default" id="panelPares">
          <div class="panel-heading" role="tab" id="headingOne">
             <h4 class="panel-title">
@@ -10,7 +11,7 @@
             </h4>
          </div>
          <div id="collapseOne" class="panel-collapse collapse in form-pilos" role="tabpanel" aria-labelledby="headingOne">
-            
+
             {{#add_peer_tracking_sp}}
 
             {{#add_peer_tracking_lts}}
@@ -22,11 +23,11 @@
             Nuevo seguimiento
             </button>
             {{/add_peer_tracking_sp}}
-            
+
 
             <hr>
             <div class="peer_trackings_v2 well well_v2" id="peer_trackings_v2" name="peer_trackings_v2">
-               
+
                {{#peer_tracking_v2}}
                <div id="accordion_v2">
                     {{#periodos}}
@@ -74,7 +75,7 @@
 
                 </div>
                 {{/peer_tracking_v2}}
-                
+
             </div>
             <div class="well" id="peer_trackings" name="peer_trackings">
                {{{peer_tracking}}}
@@ -82,6 +83,8 @@
             <!-- Button trigger modal -->
          </div>
       </div>
+      {{/view_peer_trackings_sp}}
+      {{#view_groupal_trackings_sp}}
       <div class="panel panel-default" id="panelGrupal">
          <div class="panel-heading" role="tab" id="headingTwo">
             <h4 class="panel-title">
@@ -94,6 +97,8 @@
             <div class="ScrollStyle" id="list_grupal" name="list_grupal"></div>
          </div>
       </div>
+      {{/view_groupal_trackings_sp}}
+      {{#first_contact_sp}}
       <div class="panel panel-default" id="panelPrimerAcerca">
          <div class="panel-heading" role="tab" id="headingThree">
             <h4 class="panel-title">
@@ -106,17 +111,17 @@
             {{#registro_primer_acercamiento}}
             <button type="button" id="button_primer_acercamiento" class="btn-primary">
                 Registrar acercamiento
-            </button> 
+            </button>
             {{/registro_primer_acercamiento}}
             {{#actualizar_primer_acercamiento}}
             <button type="button" id="button_actualizar_primer_acercamiento" data-record-id="{{id_primer_acercamiento}}" class="btn-primary">
                 Ver/Actualizar acercamiento
-            </button> 
+            </button>
             {{/actualizar_primer_acercamiento}}
-            
-             
          </div>
       </div>
+      {{/first_contact_sp}}
+      {{#socioeducational_accompaniment_sp}}
       <div class="panel panel-default" id="panelAcompSocio">
          <div class="panel-heading" role="tab" id="headingFour">
             <h4 class="panel-title">
@@ -134,6 +139,8 @@
             </button>
          </div>
       </div>
+      {{/socioeducational_accompaniment_sp}}
+      {{#socioeducational_trackings_sp}}
       <div class="panel panel-default" id="panelSegSocio">
          <div class="panel-heading" role="tab" id="headingFive">
             <h4 class="panel-title">
@@ -148,9 +155,10 @@
             <!-- Button trigger modal -->
             <button type="submit" id="socioedu_add_segsocio" class="submit hide" data-toggle="modal" data-target="#myModalSegSocio">
             Adicionar nuevo
-            </button> 
+            </button>
          </div>
       </div>
+      {{/socioeducational_trackings_sp}}
    </div>
 </div>
 {{!-- End socied tab --}}
