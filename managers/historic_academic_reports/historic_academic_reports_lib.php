@@ -24,8 +24,8 @@
  */
 
 require_once __DIR__ . '/../../../../config.php';
-require_once '../managers/student_profile/academic_lib.php';
-require_once '../managers/historic_icetex_reports/icetex_reports_lib.php';
+require_once $CFG->dirroot.'/blocks/ases/managers/historic_icetex_reports/icetex_reports_lib.php';
+require_once $CFG->dirroot.'/blocks/ases/managers/student_profile/academic_lib.php';
 
 /**
  * Función que recupera datos para la tabla de reporte historico academico por estudiantes,
@@ -43,11 +43,7 @@ function get_datatable_array_Students($instance_id)
     $estimulo_options = "<select>
                         <option value=''></option>
                         <option value='NO'>NO</option>
-                        <option value='1'>1</option>
-                        <option value='2'>2</option>
-                        <option value='3'>3</option>
-                        <option value='4'>4</option>
-                        <option value='5'>5</option>
+                        <option value='SI'>SI</option>
                         </select>";
     $bajos_options = "<select>
                         <option value=''></option>
@@ -180,7 +176,7 @@ function get_historic_report($id_instance)
         $estimulo = $DB->get_record_sql($query_estimulo);
 
         if ($estimulo) {
-            $historic->estim = $estimulo->puesto_ocupado;
+            $historic->estim = "SI";
         } else {
             $historic->estim = "NO";
         }
@@ -377,4 +373,36 @@ function get_cohort_names()
     $cohorts_options .= "</select>";
 
     return $cohorts_options;
+}
+
+
+/**
+ * Function that returns a string with the posicion_estimulo
+ *
+ * @see get_posicion_estimulo($codigo, $programa, $semestre)
+ * @return string
+ */
+function get_posicion_estimulo($codigo, $programa, $semestre)
+{
+    global $DB;
+
+    $programa_obj = $DB->get_record('talentospilos_programa', array('nombre'=>$programa), $fields='*', $strictness=IGNORE_MISSING); 
+    $cod_programa = $programa_obj->cod_univalle ;
+
+    $query = "SELECT usex.id_ases_user as id, usmood.firstname, usmood.lastname
+              FROM {user} usmood INNER JOIN {talentospilos_user_extended} usex ON usmood.id = usex.id_moodle_user
+              WHERE usmood.username = '$codigo-$cod_programa' LIMIT 1";
+
+    $estudiante = $DB->get_record_sql($query);
+
+    $query_semestre = "SELECT * FROM {talentospilos_semestre} WHERE nombre = '$semestre'";
+    $semestre_obj = $DB->get_record_sql($query_semestre);
+
+    $query_puesto = "SELECT estim.puesto_ocupado as puesto
+                     FROM {talentospilos_history_academ} acad INNER JOIN {talentospilos_history_estim} estim ON acad.id = estim.id_history
+                     WHERE id_semestre = $semestre_obj->id AND id_programa = $programa_obj->id AND id_estudiante = $estudiante->id";
+
+    $puesto = $DB->get_record_sql($query_puesto)->puesto;
+
+    return "El estudiante $estudiante->firstname $estudiante->lastname obtuvo el <b> Puesto: $puesto </b> en los estimulos del programa $programa el semestre $semestre";
 }
