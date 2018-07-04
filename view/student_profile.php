@@ -1176,7 +1176,7 @@ if ($student_code != 0) {
 
     $record->registro_primer_acercamient = null;
     $record->editor_registro_primer_acercamiento = null;
-    $primer_acercamiento = json_decode( dphpforms_find_records('primer_acercamiento', 'primer_acercamiento_id_estudiante', $student_code, 'DESC') )->results;
+    $primer_acercamiento = json_decode( dphpforms_find_records('primer_acercamiento', 'primer_acercamiento_id_estudiante', $student_code_tok, 'DESC') )->results;
     
     if($primer_acercamiento){
         $record->actualizar_primer_acercamiento = true;
