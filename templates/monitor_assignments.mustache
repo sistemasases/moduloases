@@ -2,13 +2,16 @@
 <body>
     <div class="container">
         <div class="row">
-            <label for="">Seleccione al profesional:&nbsp;</label>
-            <select name="" id="">
-                <option value="">Pract1</option>
-                <option value="">Pract2</option>
-            </select>
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <span>Seleccione al profesional:&nbsp;</span>
+                <select name="" id="">
+                    {{#professionals}}
+                    <option value="" data-username="{{username}}">{{.}} </option>
+                    {{/professionals}}
+                </select>
+            </div>
         </div>
-        <div class="row">
+        <div class="row column_group">
             <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 column_items" >
                 <div class="assignment_item">
                     P1

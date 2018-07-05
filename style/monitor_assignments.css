@@ -1,5 +1,5 @@
 .assignment_item{
-    
+
     background-color: rgb(143, 23, 23);
     color: white;
     border-radius: 2px;
@@ -12,4 +12,8 @@
 .column_items{
     overflow-y: scroll; 
     height:400px;
+}
+
+.column_group{
+    margin-top: 2em;
 }

@@ -30,6 +30,7 @@ require_once $CFG->libdir . '/adminlib.php';
 
 require_once '../managers/monitor_assignments/monitor_assignments_lib.php';
 require_once '../managers/instance_management/instance_lib.php';
+require_once '../managers/ases_report/asesreport_lib.php';
 
 global $PAGE;
 global $USER;
@@ -57,7 +58,8 @@ $url = new moodle_url("/blocks/ases/view/monitor_assignments.php", array('course
 
 $record = new stdClass;
 
-$record->professionals = get_professionals( null, $blockid );
+$record->professionals = get_professionals_by_instance( $blockid );
+print_r($record->professionals);
 
 $PAGE->set_context($contextcourse);
 $PAGE->set_context($contextblock);
