@@ -57,7 +57,6 @@ $url = new moodle_url("/blocks/ases/view/monitor_assignments.php", array('course
 
 $record = new stdClass;
 
-
 $PAGE->set_context($contextcourse);
 $PAGE->set_context($contextblock);
 $PAGE->set_url($url);
@@ -69,6 +68,7 @@ $PAGE->requires->css('/blocks/ases/style/sweetalert.css', true);
 $PAGE->requires->css('/blocks/ases/style/sweetalert2.css', true);
 $PAGE->requires->css('/blocks/ases/style/c3.css', true);
 $PAGE->requires->css('/blocks/ases/style/switch.css', true);
+$PAGE->requires->css('/blocks/ases/style/monitor_assignments.css', true);
 
 $PAGE->requires->js_call_amd('block_ases/monitor_assignments', 'init');
 
