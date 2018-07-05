@@ -24,7 +24,8 @@
  */
 require_once(dirname(__FILE__). '/../../../../config.php');
 require_once $CFG->dirroot.'/blocks/ases/managers/lib/student_lib.php';
+require_once $CFG->dirroot.'/blocks/ases/managers/user_management/user_lib.php';
 
-    
+
 
 ?>

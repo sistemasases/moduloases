@@ -57,6 +57,8 @@ $url = new moodle_url("/blocks/ases/view/monitor_assignments.php", array('course
 
 $record = new stdClass;
 
+$record->professionals = get_professionals( null, $blockid );
+
 $PAGE->set_context($contextcourse);
 $PAGE->set_context($contextblock);
 $PAGE->set_url($url);
