@@ -31,9 +31,9 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/jquery.dataTables', 'block
 
                     if (colIndex == 10) {
                         if (table.cell(table.row(this).index(), 10).data() == 'SI') {
-                            var codigo = table.cell(table.row(this).index(), 2).data()
-                            var programa = table.cell(table.row(this).index(), 6).data()
-                            var semestre = table.cell(table.row(this).index(), 5).data()
+                            var codigo = table.cell(table.row(this).index(), 2).data();
+                            var programa = table.cell(table.row(this).index(), 6).data();
+                            var semestre = table.cell(table.row(this).index(), 5).data();
                             checkEstimulo(codigo, programa, semestre);
                         }
                     }
