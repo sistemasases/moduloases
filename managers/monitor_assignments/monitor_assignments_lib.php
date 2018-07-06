@@ -75,7 +75,14 @@ function monitor_assignments_get_monitors_by_instance( $instance_id ){
  *
  * @see monitor_assignments_get_students_by_instance 
  * @param $instance_id --> Identificador de instancia
- * @return Array 
+ * @return Array (
+ *      stdClass(
+ *          ->fullname
+ *          ->id_ases_user
+ *          ->cod_programa
+ *          ->nombre_programa
+ *      )
+ * )
  */
 
 function monitor_assignments_get_students_by_instance( $instance_id ){
@@ -110,6 +117,50 @@ function monitor_assignments_get_students_by_instance( $instance_id ){
             ON programa_0.id = moodle_ases_user_0.id_academic_program
         ) AS moodle_ases_user_programa_0
     ON moodle_user_0.id = moodle_ases_user_programa_0.id_moodle_user";
+
+    return $DB->get_records_sql($sql);
+
+}
+
+/**
+ * Función retorna todos los programas asociados a los estudiantes.
+ *
+ * @see monitor_assignments_get_students_programs 
+ * @param $instance_id --> Identificador de instancia
+ * @return Array (
+ *      stdClass(
+ *          ->cod_univalle
+ *          ->nombre_programa
+ *      )
+ * )
+ */
+
+function monitor_assignments_get_students_programs( $instance_id ){
+
+    global $DB;
+
+    $sql = "SELECT DISTINCT programa_0.cod_univalle, programa_0.nombre AS nombre_programa
+    FROM mdl_talentospilos_programa AS programa_0
+    INNER JOIN
+        (
+            SELECT user_ext_0.id_moodle_user, user_ext_0.id_ases_user, user_ext_0.id_academic_program
+            FROM mdl_talentospilos_user_extended AS user_ext_0
+            INNER JOIN
+                (
+                    SELECT DISTINCT cohort_members_0.userid as user_id
+                    FROM mdl_cohort_members AS cohort_members_0 
+                    INNER JOIN
+                        (
+                            SELECT id_cohorte 
+                            FROM mdl_talentospilos_inst_cohorte AS inst_cohorte_0 
+                            WHERE id_instancia = 450299
+                        ) AS inst_cohorte1
+                    ON inst_cohorte1.id_cohorte = cohort_members_0.cohortid
+                ) AS users_distinct_0
+            ON users_distinct_0.user_id = user_ext_0.id_moodle_user
+            WHERE user_ext_0.tracking_status = 1
+        ) AS moodle_ases_user_0
+    ON programa_0.id = moodle_ases_user_0.id_academic_program";
 
     return $DB->get_records_sql($sql);
 
