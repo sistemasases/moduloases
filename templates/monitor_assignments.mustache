@@ -13,6 +13,24 @@
                 {{/professionals}}
             </div>
         </div>
+        <div class="row">
+            <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                
+            </div>
+            <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                
+            </div>
+            <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                <span>Seleccione el programa:</span>
+                <select id="select-program" name="" id="">
+                    {{#students_programs}}
+                    {{#.}}
+                    <option value="" data-cod-programa="{{cod_programa}}" alt="{{nombre_programa}}">{{nombre_programa}}</option>
+                    {{/.}}
+                    {{/students_programs}}
+                </select>
+            </div>
+        </div>
         <div class="row column_group">
             <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 column_items" >
                 {{#practitioners}}

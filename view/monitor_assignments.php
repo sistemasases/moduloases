@@ -61,6 +61,7 @@ $record->professionals = array_values( monitor_assignments_get_professionals_by_
 $record->practitioners = array_values( monitor_assignments_get_practicing_by_instance( $blockid ) );
 $record->monitors = array_values( monitor_assignments_get_monitors_by_instance( $blockid ) );
 $record->students = array_values( monitor_assignments_get_students_by_instance( $blockid ) );
+$record->students_programs = array_values( monitor_assignments_get_students_programs( $blockid ) );
 
 $PAGE->set_context($contextcourse);
 $PAGE->set_context($contextblock);

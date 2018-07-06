@@ -129,7 +129,7 @@ function monitor_assignments_get_students_by_instance( $instance_id ){
  * @param $instance_id --> Identificador de instancia
  * @return Array (
  *      stdClass(
- *          ->cod_univalle
+ *          ->cod_programa
  *          ->nombre_programa
  *      )
  * )
@@ -139,21 +139,21 @@ function monitor_assignments_get_students_programs( $instance_id ){
 
     global $DB;
 
-    $sql = "SELECT DISTINCT programa_0.cod_univalle, programa_0.nombre AS nombre_programa
-    FROM mdl_talentospilos_programa AS programa_0
+    $sql = "SELECT DISTINCT programa_0.cod_univalle AS cod_programa, programa_0.nombre AS nombre_programa
+    FROM {talentospilos_programa} AS programa_0
     INNER JOIN
         (
             SELECT user_ext_0.id_moodle_user, user_ext_0.id_ases_user, user_ext_0.id_academic_program
-            FROM mdl_talentospilos_user_extended AS user_ext_0
+            FROM {talentospilos_user_extended} AS user_ext_0
             INNER JOIN
                 (
                     SELECT DISTINCT cohort_members_0.userid as user_id
-                    FROM mdl_cohort_members AS cohort_members_0 
+                    FROM {cohort_members} AS cohort_members_0 
                     INNER JOIN
                         (
                             SELECT id_cohorte 
-                            FROM mdl_talentospilos_inst_cohorte AS inst_cohorte_0 
-                            WHERE id_instancia = 450299
+                            FROM {talentospilos_inst_cohorte} AS inst_cohorte_0 
+                            WHERE id_instancia = $instance_id
                         ) AS inst_cohorte1
                     ON inst_cohorte1.id_cohorte = cohort_members_0.cohortid
                 ) AS users_distinct_0

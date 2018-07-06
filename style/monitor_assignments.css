@@ -22,3 +22,8 @@
 .column_group{
     margin-top: 2em;
 }
+
+#select-program{
+    width: 100%;
+    text-overflow: ellipsis;
+}
