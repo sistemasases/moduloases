@@ -6,119 +6,40 @@
                 <span>Seleccione al profesional:&nbsp;</span>
                 {{#professionals}}
                 <select name="" id="">
-                    {{#profesional usuario}}
+                    {{#.}}
                     <option value="" data-username="{{id}}">{{fullname}}</option>
-                    {{/profesional usuario}}
+                    {{/.}}
                 </select>
                 {{/professionals}}
             </div>
         </div>
         <div class="row column_group">
             <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 column_items" >
-                <div class="assignment_item">
-                    P1
+                {{#practitioners}}
+                {{#.}}
+                <div class="assignment_item" data-id="{{id}}">
+                    {{fullname}}
                 </div>
-                <div class="assignment_item">
-                    P2
-                </div>
-                <div class="assignment_item">
-                    P3
-                </div>
-                <div class="assignment_item">
-                    P4
-                </div>
-                <div class="assignment_item">
-                    P4
-                </div>
-                <div class="assignment_item">
-                    P4
-                </div>
-                <div class="assignment_item">
-                    P4
-                </div>
-                <div class="assignment_item">
-                    P4
-                </div>
-                <div class="assignment_item">
-                    P4
-                </div>
-                <div class="assignment_item">
-                    P4
-                </div>
-                <div class="assignment_item">
-                    P4
-                </div>
-                <div class="assignment_item">
-                    P4
-                </div>
-                <div class="assignment_item">
-                    P4
-                </div>
-                <div class="assignment_item">
-                    P4
-                </div>
-                <div class="assignment_item">
-                    P4
-                </div>
-                <div class="assignment_item">
-                    P4
-                </div>
-                <div class="assignment_item">
-                    P4
-                </div>
-                <div class="assignment_item">
-                    P4
-                </div>
-                <div class="assignment_item">
-                    P4
-                </div>
-                <div class="assignment_item">
-                    P4
-                </div>
-                <div class="assignment_item">
-                    P4
-                </div>
-                <div class="assignment_item">
-                    P4
-                </div>
-                <div class="assignment_item">
-                    P4
-                </div>
-                <div class="assignment_item">
-                    P4
-                </div>
-                <div class="assignment_item">
-                    P4
-                </div>
-                <div class="assignment_item">
-                    P4
-                </div>
-                <div class="assignment_item">
-                    P4
-                </div>
-                <div class="assignment_item">
-                    P4
-                </div>
-                <div class="assignment_item">
-                    P4
-                </div>
-                
+                {{/.}}
+                {{/practitioners}}
             </div>
             <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 column_items" >
-                <div class="assignment_item">
-                    X1
+                {{#monitors}}
+                {{#.}}
+                <div class="assignment_item" data-id="{{id}}">
+                    {{fullname}}
                 </div>
-                <div class="assignment_item">
-                    X2
-                </div>
-                <div class="assignment_item">
-                    X3
-                </div>
+                {{/.}}
+                {{/monitors}}
             </div>
             <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 column_items" >
-                <div class="assignment_item">
-                    T1
+                {{#students}}
+                {{#.}}
+                <div class="assignment_item" data-id="{{id}}" data-cod-programa="{{cod_programa}}" data-nombre-programa="{{nombre_programa}}">
+                    {{fullname}}
                 </div>
+                {{/.}}
+                {{/students}}
             </div>
         </div>
     </div>

@@ -25,7 +25,94 @@
 require_once(dirname(__FILE__). '/../../../../config.php');
 require_once $CFG->dirroot.'/blocks/ases/managers/lib/student_lib.php';
 require_once $CFG->dirroot.'/blocks/ases/managers/user_management/user_lib.php';
+require_once $CFG->dirroot.'/blocks/ases/managers/ases_report/asesreport_lib.php';
+require_once $CFG->dirroot.'/blocks/ases/managers/lib/lib.php';
 
+/**
+ * Función que renombra para clasificar la función get_professionals_by_instance en otras partes del plugin, el objetivo
+ * es dibujar un mapa de seguimiento para saber de donde provienen las funciones
+ *
+ * @see monitor_assignments_get_professionals_by_instance 
+ * @param $instance_id --> Identificador de instancia
+ * @return Array 
+ */
 
+function monitor_assignments_get_professionals_by_instance( $instance_id ){
+    // This function is in asesreport_lib.php
+    return get_professionals_by_instance( $instance_id );
+}
+
+/**
+ * Función que renombra para clasificar la función get_practicing_by_instance en otras partes del plugin, el objetivo
+ * es dibujar un mapa de seguimiento para saber de donde provienen las funciones
+ *
+ * @see monitor_assignments_get_practicing_by_instance 
+ * @param $instance_id --> Identificador de instancia
+ * @return Array 
+ */
+
+function monitor_assignments_get_practicing_by_instance( $instance_id ){
+    // This function is in asesreport_lib.php
+    return get_practicing_by_instance( $instance_id );
+}
+
+/**
+ * Función que renombra para clasificar la función get_monitors_by_instance en otras partes del plugin, el objetivo
+ * es dibujar un mapa de seguimiento para saber de donde provienen las funciones
+ *
+ * @see monitor_assignments_get_monitors_by_instance 
+ * @param $instance_id --> Identificador de instancia
+ * @return Array 
+ */
+
+function monitor_assignments_get_monitors_by_instance( $instance_id ){
+    // This function is in asesreport_lib.php
+    return get_monitors_by_instance( $instance_id );
+}
+
+/**
+ * Función que retorna todos los usuarios del sistema.
+ *
+ * @see monitor_assignments_get_students_by_instance 
+ * @param $instance_id --> Identificador de instancia
+ * @return Array 
+ */
+
+function monitor_assignments_get_students_by_instance( $instance_id ){
+
+    global $DB;
+
+    $sql = "SELECT CONCAT(moodle_user_0.firstname, CONCAT(' ', moodle_user_0.lastname)) AS fullname, moodle_ases_user_programa_0.id_ases_user AS id, moodle_ases_user_programa_0.cod_programa, moodle_ases_user_programa_0.nombre_programa
+    FROM {user} AS moodle_user_0
+    INNER JOIN 
+        (
+            SELECT moodle_ases_user_0.id_moodle_user, moodle_ases_user_0.id_ases_user, programa_0.cod_univalle AS cod_programa, programa_0.nombre AS nombre_programa
+            FROM {talentospilos_programa} AS programa_0
+            INNER JOIN
+                (
+                    SELECT user_ext_0.id_moodle_user, user_ext_0.id_ases_user, user_ext_0.id_academic_program
+                    FROM {talentospilos_user_extended} AS user_ext_0
+                    INNER JOIN
+                        (
+                            SELECT DISTINCT cohort_members_0.userid as user_id
+                            FROM {cohort_members} AS cohort_members_0 
+                            INNER JOIN
+                                (
+                                    SELECT id_cohorte 
+                                    FROM {talentospilos_inst_cohorte} AS inst_cohorte_0 
+                                    WHERE id_instancia = $instance_id
+                                ) AS inst_cohorte1
+                            ON inst_cohorte1.id_cohorte = cohort_members_0.cohortid
+                        ) AS users_distinct_0
+                    ON users_distinct_0.user_id = user_ext_0.id_moodle_user
+                    WHERE user_ext_0.tracking_status = 1
+                ) AS moodle_ases_user_0
+            ON programa_0.id = moodle_ases_user_0.id_academic_program
+        ) AS moodle_ases_user_programa_0
+    ON moodle_user_0.id = moodle_ases_user_programa_0.id_moodle_user";
+
+    return $DB->get_records_sql($sql);
+
+}
 
 ?>
