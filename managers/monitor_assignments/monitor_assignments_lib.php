@@ -123,7 +123,7 @@ function monitor_assignments_get_students_by_instance( $instance_id ){
 }
 
 /**
- * Función retorna todos los programas asociados a los estudiantes.
+ * Función retorna todos los programas asociados a los estudiantes de determinada instancia.
  *
  * @see monitor_assignments_get_students_programs 
  * @param $instance_id --> Identificador de instancia
