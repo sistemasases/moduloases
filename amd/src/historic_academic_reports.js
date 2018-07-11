@@ -36,8 +36,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/jquery.dataTables', 'block
                             var semestre = table.cell(table.row(this).index(), 5).data();
                             checkEstimulo(codigo, programa, semestre);
                         }
-                    }
-                    if(colIndex == 7){
+                    }else if(colIndex == 7){
                         if (table.cell(table.row(this).index(), 7).data() != '0') {
                             var codigo = table.cell(table.row(this).index(), 2).data();
                             var programa = table.cell(table.row(this).index(), 6).data();
@@ -45,7 +44,11 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/jquery.dataTables', 'block
                             var cant = table.cell(table.row(this).index(), 7).data();
                             checkLoses(codigo, programa, semestre, cant);
                         }
+                    }else if(colIndex == 2){
+                        location.href = "student_profile.php" + location.search + "&student_code=" + table.cell(table.row(this).index(), 2).data() + "-";
                     }
+
+                    
                 });
             });
         },
