@@ -37,6 +37,15 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/jquery.dataTables', 'block
                             checkEstimulo(codigo, programa, semestre);
                         }
                     }
+                    if(colIndex == 7){
+                        if (table.cell(table.row(this).index(), 7).data() != '0') {
+                            var codigo = table.cell(table.row(this).index(), 2).data();
+                            var programa = table.cell(table.row(this).index(), 6).data();
+                            var semestre = table.cell(table.row(this).index(), 5).data();
+                            var cant = table.cell(table.row(this).index(), 7).data();
+                            checkLoses(codigo, programa, semestre, cant);
+                        }
+                    }
                 });
             });
         },
@@ -59,6 +68,50 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/jquery.dataTables', 'block
         }
     };
 
+
+    /**
+     * @method checkLoses
+     * @desc Check the loses subjects
+     * @return {void}
+     */
+    function checkLoses(codigo, programa, semestre,cant) {
+        $.ajax({
+            type: "POST",
+            data: {
+                codigo: codigo,
+                programa: programa,
+                type: "check_loses",
+                semestre: semestre,
+            },
+            url: "../managers/historic_academic_reports/historic_academic_reports_processing.php",
+            success: function (msg) {
+                console.log(msg);
+                swal({
+                    title: "Materias Perdidas",
+                    type: "info",
+                    text: msg,
+                    html: true,
+                    showCancelButton: false,
+                    customClass: 'swal-wide',
+                    confirmButtonColor: "#DD6B55",
+                    confirmButtonText: "Cerrar",
+                    closeOnConfirm: true
+                });
+                $(".swal-wide").css({'width': '600px', 'margin-left':'-300px'});
+            },
+            dataType: "text",
+            cache: "false",
+            error: function (msg) {
+                console.log(msg);
+            },
+        });
+    };
+
+    /**
+     * @method checkEstimulo
+     * @desc Check the position of the "estimulo academico"
+     * @return {void}
+     */
     function checkEstimulo(codigo, programa, semestre) {
         $.ajax({
             type: "POST",

@@ -24,8 +24,8 @@
  */
 
 require_once __DIR__ . '/../../../../config.php';
-require_once $CFG->dirroot.'/blocks/ases/managers/historic_icetex_reports/icetex_reports_lib.php';
-require_once $CFG->dirroot.'/blocks/ases/managers/student_profile/academic_lib.php';
+require_once $CFG->dirroot . '/blocks/ases/managers/historic_icetex_reports/icetex_reports_lib.php';
+require_once $CFG->dirroot . '/blocks/ases/managers/student_profile/academic_lib.php';
 
 /**
  * Función que recupera datos para la tabla de reporte historico academico por estudiantes,
@@ -206,7 +206,7 @@ function get_historic_report($id_instance)
 
         if ($materias) {
             foreach ($materias as $materia) {
-                if ($materia->nota < 3) {
+                if (is_numeric($materia->nota) and $materia->nota < 3) {
                     $perdidas++;
                 }
             }
@@ -375,7 +375,6 @@ function get_cohort_names()
     return $cohorts_options;
 }
 
-
 /**
  * Function that returns a string with the posicion_estimulo
  *
@@ -386,8 +385,8 @@ function get_posicion_estimulo($codigo, $programa, $semestre)
 {
     global $DB;
 
-    $programa_obj = $DB->get_record('talentospilos_programa', array('nombre'=>$programa), $fields='*', $strictness=IGNORE_MISSING); 
-    $cod_programa = $programa_obj->cod_univalle ;
+    $programa_obj = $DB->get_record_sql("SELECT * FROM {talentospilos_programa} WHERE nombre = '$programa' LIMIT 1");
+    $cod_programa = $programa_obj->cod_univalle;
 
     $query = "SELECT usex.id_ases_user as id, usmood.firstname, usmood.lastname
               FROM {user} usmood INNER JOIN {talentospilos_user_extended} usex ON usmood.id = usex.id_moodle_user
@@ -404,5 +403,46 @@ function get_posicion_estimulo($codigo, $programa, $semestre)
 
     $puesto = $DB->get_record_sql($query_puesto)->puesto;
 
-    return "El estudiante $estudiante->firstname $estudiante->lastname obtuvo el <b> Puesto: $puesto </b> en los estimulos del programa $programa el semestre $semestre";
+    return "El estudiante $estudiante->firstname $estudiante->lastname <br>obtuvo el <b> Puesto: $puesto </b> en los estimulos del programa $programa el semestre $semestre";
+}
+
+/**
+ * Function that returns a string with the posicion_estimulo
+ *
+ * @see get_loses($codigo, $programa, $semestre)
+ * @return string
+ */
+function get_loses($codigo, $programa, $semestre)
+{
+    global $DB;
+
+    $programa_obj = $DB->get_record_sql("SELECT * FROM {talentospilos_programa} WHERE nombre = '$programa' LIMIT 1");
+    $cod_programa = $programa_obj->cod_univalle;
+
+    $query = "SELECT usex.id_ases_user as id, usmood.firstname, usmood.lastname
+              FROM {user} usmood INNER JOIN {talentospilos_user_extended} usex ON usmood.id = usex.id_moodle_user
+              WHERE usmood.username = '$codigo-$cod_programa' LIMIT 1";
+
+    $estudiante = $DB->get_record_sql($query);
+
+    $query_semestre = "SELECT * FROM {talentospilos_semestre} WHERE nombre = '$semestre'";
+    $semestre_obj = $DB->get_record_sql($query_semestre);
+
+    $query_materias = "SELECT json_materias as materias
+                     FROM {talentospilos_history_academ} acad
+                     WHERE id_semestre = $semestre_obj->id AND id_programa = $programa_obj->id AND id_estudiante = $estudiante->id";
+
+    $materias = $DB->get_record_sql($query_materias)->materias;
+
+    $json_materias = json_decode($materias);
+
+    $materias_perdidas = "Las materias perdidas por el estudiante $estudiante->firstname $estudiante->lastname el semestre $semestre en el programa $programa son: <br>";
+
+    foreach ($json_materias as $materia) {
+        if (is_numeric($materia->nota) and $materia->nota < 3) {
+            $materias_perdidas .= "Cod: $materia->codigo_materia Nombre: $materia->nombre_materia Nota: $materia->nota <br>";
+        }
+    }
+
+    return $materias_perdidas;
 }
