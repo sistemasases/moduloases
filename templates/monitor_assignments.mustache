@@ -4,13 +4,13 @@
         <div class="row">
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                 <span>Seleccione al profesional:&nbsp;</span>
-                {{#professionals}}
                 <select name="" id="">
+                    {{#professionals}}
                     {{#.}}
                     <option value="" data-username="{{id}}">{{fullname}}</option>
                     {{/.}}
+                    {{/professionals}}
                 </select>
-                {{/professionals}}
             </div>
         </div>
         <div class="row">
