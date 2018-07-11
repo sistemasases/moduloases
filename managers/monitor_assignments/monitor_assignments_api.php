@@ -1,5 +1,5 @@
-<?php
-// This file is part of Moodle - http://moodle.org/
+<?php 
+    // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -14,26 +14,22 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-
 /**
- * Estrategia ASES
+ * Dynamic PHP Forms
  *
- * @author     Camilo José Cruz Rivera
+ * @author     Jeison Cardona Gómez
  * @package    block_ases
- * @copyright  2018 Camilo José Cruz Rivera <cruz.camilo@correounivalle.edu.co>
+ * @copyright  2018 Jeison Cardona Gómez <jeison.cardona@correounivalle.edu.co>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-require_once('historic_academic_reports_lib.php');
+// Standard GPL and phpdocs
 
-  
- if(isset($_POST['codigo'])&&isset($_POST['programa'])&&isset($_POST['semestre'])&&isset($_POST['type'])){
+    require_once(dirname(__FILE__). '/../../../../config.php');
+    require_once(dirname(__FILE__).'/monitor_assignments_lib.php');
+    if( isset($_GET['function']) ){
 
-    if($_POST['type']=="check_estimulo"){
-        echo get_posicion_estimulo($_POST['codigo'],$_POST['programa'],$_POST['semestre'] );    
-    }elseif ($_POST['type'] == "check_loses") {
-        echo get_loses($_POST['codigo'],$_POST['programa'],$_POST['semestre'] );    
-    }
+        
+    };
 
-}
-
+?>
