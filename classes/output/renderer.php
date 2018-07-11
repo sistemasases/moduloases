@@ -218,4 +218,9 @@ class renderer extends plugin_renderer_base {
         return parent::render_from_template('block_ases/students_finalgrade_report', $data);
     }
 
+    public function render_monitor_assignments_page($page){
+        $data = $page->export_for_template($this);
+        return parent::render_from_template('block_ases/monitor_assignments', $data);
+    }
+
 }
