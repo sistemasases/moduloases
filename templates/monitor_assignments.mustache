@@ -21,8 +21,18 @@
                 
             </div>
             <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
-                <span>Seleccione el programa:</span>
+                <span>Filtro por facultad:</span>
+                <select id="select-faculty" name="" id="">
+                    <option value="" data-cod-programa="-1" alt="Todos">Todos</option>
+                    {{#students_faculty}}
+                    {{#.}}
+                    <option value="" data-id-facultad="{{id_facultad}}" alt="{{nombre_facultad}}">{{nombre_facultad}}</option>
+                    {{/.}}
+                    {{/students_faculty}}
+                </select><br>
+                <span>Filtro por programa:</span>
                 <select id="select-program" name="" id="">
+                    <option value="" data-cod-programa="-1" alt="Todos">Todos</option>
                     {{#students_programs}}
                     {{#.}}
                     <option value="" data-cod-programa="{{cod_programa}}" alt="{{nombre_programa}}">{{nombre_programa}}</option>

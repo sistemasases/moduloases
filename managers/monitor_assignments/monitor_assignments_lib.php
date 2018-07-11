@@ -172,4 +172,54 @@ function monitor_assignments_get_students_programs( $instance_id ){
 
 }
 
+/**
+ * Función retorna todas las facultades asociadas a los programas académicos de los estudiantes en una determinada instancia.
+ *
+ * @see monitor_assignments_get_students_faculty 
+ * @param $instance_id --> Identificador de instancia
+ * @return Array (
+ *      stdClass(
+ *          ->id_facultad
+ *          ->nombre_facultad
+ *      )
+ * )
+ */
+
+function monitor_assignments_get_students_faculty( $instance_id ){
+
+    global $DB;
+
+    $sql = "SELECT DISTINCT facultad_0.id AS id_facultad, facultad_0.nombre AS nombre_facultad
+    FROM mdl_talentospilos_facultad AS facultad_0
+    INNER JOIN 
+    (
+        SELECT moodle_ases_user_0.id_moodle_user, moodle_ases_user_0.id_ases_user, programa_0.cod_univalle AS cod_programa, programa_0.nombre AS nombre_programa, id_facultad
+        FROM mdl_talentospilos_programa AS programa_0
+        INNER JOIN
+        (
+            SELECT *
+            FROM mdl_talentospilos_user_extended AS user_ext_0
+            INNER JOIN
+            (
+                SELECT DISTINCT cohort_members_0.userid as user_id
+                FROM mdl_cohort_members AS cohort_members_0 
+                INNER JOIN
+                (
+                    SELECT id_cohorte 
+                    FROM mdl_talentospilos_inst_cohorte AS inst_cohorte_0 
+                    WHERE id_instancia = $instance_id
+                ) AS inst_cohorte1
+                ON inst_cohorte1.id_cohorte = cohort_members_0.cohortid
+            ) AS users_distinct_0
+            ON users_distinct_0.user_id = user_ext_0.id_moodle_user
+            WHERE user_ext_0.tracking_status = 1
+        ) AS moodle_ases_user_0
+        ON programa_0.id = moodle_ases_user_0.id_academic_program
+    ) AS moodle_ases_user_programa_0
+    ON facultad_0.id = moodle_ases_user_programa_0.id_facultad";
+
+    return $DB->get_records_sql($sql);
+
+}
+
 ?>
