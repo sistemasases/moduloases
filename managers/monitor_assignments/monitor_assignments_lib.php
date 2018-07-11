@@ -89,34 +89,40 @@ function monitor_assignments_get_students_by_instance( $instance_id ){
 
     global $DB;
 
-    $sql = "SELECT CONCAT(moodle_user_0.firstname, CONCAT(' ', moodle_user_0.lastname)) AS fullname, moodle_ases_user_programa_0.id_ases_user AS id, moodle_ases_user_programa_0.cod_programa, moodle_ases_user_programa_0.nombre_programa
+    $sql = "SELECT moodle_ases_user_programa_facultad_0.id_ases_user AS id, CONCAT(moodle_user_0.firstname, CONCAT(' ', moodle_user_0.lastname)) AS fullname, moodle_ases_user_programa_facultad_0.cod_programa, moodle_ases_user_programa_facultad_0.nombre_programa, moodle_ases_user_programa_facultad_0.id_facultad, moodle_ases_user_programa_facultad_0.nombre_facultad
     FROM {user} AS moodle_user_0
-    INNER JOIN 
+    INNER JOIN
         (
-            SELECT moodle_ases_user_0.id_moodle_user, moodle_ases_user_0.id_ases_user, programa_0.cod_univalle AS cod_programa, programa_0.nombre AS nombre_programa
-            FROM {talentospilos_programa} AS programa_0
-            INNER JOIN
+            SELECT moodle_ases_user_programa_0.id_moodle_user, moodle_ases_user_programa_0.id_ases_user, moodle_ases_user_programa_0.cod_programa, moodle_ases_user_programa_0.nombre_programa, facultad_0.id AS id_facultad, facultad_0.nombre AS nombre_facultad
+                FROM {talentospilos_facultad} AS facultad_0
+                INNER JOIN 
                 (
-                    SELECT user_ext_0.id_moodle_user, user_ext_0.id_ases_user, user_ext_0.id_academic_program
-                    FROM {talentospilos_user_extended} AS user_ext_0
+                    SELECT moodle_ases_user_0.id_moodle_user, moodle_ases_user_0.id_ases_user, programa_0.cod_univalle AS cod_programa, programa_0.nombre AS nombre_programa, id_facultad
+                    FROM {talentospilos_programa} AS programa_0
                     INNER JOIN
+                    (
+                        SELECT *
+                        FROM {talentospilos_user_extended} AS user_ext_0
+                        INNER JOIN
                         (
                             SELECT DISTINCT cohort_members_0.userid as user_id
                             FROM {cohort_members} AS cohort_members_0 
                             INNER JOIN
-                                (
-                                    SELECT id_cohorte 
-                                    FROM {talentospilos_inst_cohorte} AS inst_cohorte_0 
-                                    WHERE id_instancia = $instance_id
-                                ) AS inst_cohorte1
+                            (
+                                SELECT id_cohorte 
+                                FROM {talentospilos_inst_cohorte} AS inst_cohorte_0 
+                                WHERE id_instancia = $instance_id
+                            ) AS inst_cohorte1
                             ON inst_cohorte1.id_cohorte = cohort_members_0.cohortid
                         ) AS users_distinct_0
-                    ON users_distinct_0.user_id = user_ext_0.id_moodle_user
-                    WHERE user_ext_0.tracking_status = 1
-                ) AS moodle_ases_user_0
-            ON programa_0.id = moodle_ases_user_0.id_academic_program
-        ) AS moodle_ases_user_programa_0
-    ON moodle_user_0.id = moodle_ases_user_programa_0.id_moodle_user";
+                        ON users_distinct_0.user_id = user_ext_0.id_moodle_user
+                        WHERE user_ext_0.tracking_status = 1
+                    ) AS moodle_ases_user_0
+                    ON programa_0.id = moodle_ases_user_0.id_academic_program
+                ) AS moodle_ases_user_programa_0
+                ON facultad_0.id = moodle_ases_user_programa_0.id_facultad
+        ) AS moodle_ases_user_programa_facultad_0
+    ON moodle_ases_user_programa_facultad_0.id_moodle_user = moodle_user_0.id";
 
     return $DB->get_records_sql($sql);
 
