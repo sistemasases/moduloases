@@ -27,11 +27,13 @@
 require_once('historic_academic_reports_lib.php');
 
   
- if(isset($_POST['codigo'])&&isset($_POST['programa'])&&isset($_POST['semestre'])&&isset($_POST['type'])&&$_POST['type']=="check_estimulo"){
+ if(isset($_POST['codigo'])&&isset($_POST['programa'])&&isset($_POST['semestre'])&&isset($_POST['type'])){
 
-    $nombre = "nombre aqui";
-    $nombre_programa = $_POST['programa'];
-    $semestre = $_POST['semestre'];
-    echo get_posicion_estimulo($_POST['codigo'],$_POST['programa'],$_POST['semestre'] );
+    if($_POST['type']=="check_estimulo"){
+        echo get_posicion_estimulo($_POST['codigo'],$_POST['programa'],$_POST['semestre'] );    
+    }elseif ($_POST['type'] == "check_loses") {
+        echo get_loses($_POST['codigo'],$_POST['programa'],$_POST['semestre'] );    
+    }
+
 }
 

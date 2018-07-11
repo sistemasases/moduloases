@@ -56,3 +56,11 @@ $registro_modificar5->tracking_status = 1;
 echo $DB->update_record('talentospilos_user_extended', $registro_modificar5);
 
 echo '<br>';
+
+$registro_modificar6 = new StdClass;
+$registro_modificar6->id = 653;
+$registro_modificar6->tracking_status = 0;
+
+echo $DB->update_record('talentospilos_user_extended', $registro_modificar6);
+
+echo '<br>';
