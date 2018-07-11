@@ -91,27 +91,7 @@ if (isset($_FILES['file'])) {
             $isValidRow = true;
             /* VALIDATIONS OF FIELDS */
 
-            //validate codigo_estudiante
-            if (!is_null($associativeTitles['codigo_estudiante'])) {
-
-                $codigo_estudiante = $data[$associativeTitles['codigo_estudiante']];
-
-                if ($codigo_estudiante != '') {
-
-                    $id_estudiante = get_ases_id_by_code($codigo_estudiante);
-                    if (!$id_estudiante) {
-                        $isValidRow = false;
-                        array_push($detail_errors, [$line_count, $lc_wrongFile, ($associativeTitles['codigo_estudiante'] + 1), 'codigo_estudiante', 'No existe un estudiante ases asociado al codigo' . $data[$associativeTitles['codigo_estudiante']]]);
-                    }
-
-                } else {
-                    $isValidRow = false;
-                    array_push($detail_errors, [$line_count, $lc_wrongFile, ($associativeTitles['codigo_estudiante'] + 1), 'codigo_estudiante', 'El campo codigo_estudiante es obligatorio y se encuentra vacio']);
-                }
-
-            } else {
-                throw new MyException('La columna con el campo codigo_estudiante es obligatoria');
-            }
+            
 
             //validate programa
             if ($associativeTitles['programa'] != null) {
@@ -131,6 +111,28 @@ if (isset($_FILES['file'])) {
 
             } else {
                 throw new MyException('La columna con el campo programa es obligatoria');
+            }
+
+            //validate codigo_estudiante
+            if (!is_null($associativeTitles['codigo_estudiante'])) {
+
+                $codigo_estudiante = $data[$associativeTitles['codigo_estudiante']].'-'.$codigo_programa;
+
+                if ($codigo_estudiante != '') {
+
+                    $id_estudiante = get_ases_id_by_code($codigo_estudiante);
+                    if (!$id_estudiante) {
+                        $isValidRow = false;
+                        array_push($detail_errors, [$line_count, $lc_wrongFile, ($associativeTitles['codigo_estudiante'] + 1), 'codigo_estudiante', 'No existe un estudiante ases asociado al codigo' . $data[$associativeTitles['codigo_estudiante']]]);
+                    }
+
+                } else {
+                    $isValidRow = false;
+                    array_push($detail_errors, [$line_count, $lc_wrongFile, ($associativeTitles['codigo_estudiante'] + 1), 'codigo_estudiante', 'El campo codigo_estudiante es obligatorio y se encuentra vacio']);
+                }
+
+            } else {
+                throw new MyException('La columna con el campo codigo_estudiante es obligatoria');
             }
 
             //validate semestre
