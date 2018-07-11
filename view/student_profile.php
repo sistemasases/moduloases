@@ -1176,7 +1176,7 @@ if ($student_code != 0) {
 
     $record->registro_primer_acercamient = null;
     $record->editor_registro_primer_acercamiento = null;
-    $primer_acercamiento = json_decode( dphpforms_find_records('primer_acercamiento', 'primer_acercamiento_id_estudiante', $student_code_tok, 'DESC') )->results;
+    $primer_acercamiento = json_decode( dphpforms_find_records('primer_acercamiento', 'primer_acercamiento_id_estudiante', $dphpforms_ases_user, 'DESC') )->results;
     
     if($primer_acercamiento){
         $record->actualizar_primer_acercamiento = true;
@@ -1190,7 +1190,7 @@ if ($student_code != 0) {
     if ($record->form_seguimientos_geograficos == '') {
         $record->form_seguimientos_geograficos = "<strong><h3>Oops!: No se ha encontrado un formulario con el alias: <code>seguimientos_geograficos</code>.</h3></strong>";
     }
-    $seguimiento_geografico = json_decode( dphpforms_find_records('seguimiento_geografico', 'seg_geo_id_estudiante', $student_code_tok, 'DESC') )->results;
+    $seguimiento_geografico = json_decode( dphpforms_find_records('seguimiento_geografico', 'seg_geo_id_estudiante', $dphpforms_ases_user, 'DESC') )->results;
     if($seguimiento_geografico){
         $record->actualizar_seguimiento_geografico = true;
         $record->id_seguimiento_geografico = array_values( $seguimiento_geografico )[0]->id_registro;
