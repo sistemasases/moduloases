@@ -30,19 +30,6 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/jquery.dataTables', 'block
 
                     var colIndex = $(this).parent().index() + 1;
                     var valor = this.value;
-                    switch (valor) {
-                        case 'SPP12015A':
-                            valor = "Ser Pilo Paga 1 - 2015A";
-                            break;
-                        case 'SPP22016A':
-                            valor = "Ser Pilo Paga 2 - 2016A";
-                            break;
-                        case 'SPP32017A':
-                            valor = "Ser Pilo Paga 3 - 2017A";
-                            break;
-                        default:
-                            break;
-                    }
                     table.columns(colIndex - 1).search(valor).draw();
                 });
 
