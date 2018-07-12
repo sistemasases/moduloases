@@ -37,7 +37,7 @@ require_once $CFG->dirroot . '/blocks/ases/managers/student_profile/academic_lib
  */
 function get_datatable_array_Students($instance_id)
 {
-    $cohort_options = get_cohort_names();
+    $cohort_options = get_cohort_names($instance_id);
     $semester_options = get_all_semesters_names();
     $default_students = $columns = array();
     $estimulo_options = "<select>
@@ -136,7 +136,7 @@ function get_historic_report($id_instance)
                            promedio_semestre  AS promsem,
                            promedio_acumulado AS promacum,
                            programa.nombre    AS programa,
-                           cohorte.idnumber       AS cohorte,
+                           cohorte.name       AS cohorte,
                            json_materias
                 FROM       {talentospilos_history_academ} historic
                 INNER JOIN {talentospilos_usuario} usuario
@@ -234,7 +234,7 @@ function get_historic_report($id_instance)
 function get_datatable_array_totals($instance_id)
 {
     $default_students = $columns = array();
-    $cohort_options = get_cohort_names();
+    $cohort_options = get_cohort_names($instance_id);
     $semester_options = get_all_semesters_names();
 
     array_push($columns, array("title" => "Cohorte".$cohort_options, "name" => "cohorte", "data" => "cohorte"));
@@ -289,12 +289,12 @@ function get_datatable_array_totals($instance_id)
 
 /**
  * Retorna un arreglo con la informacion de la tabla de historico academico
- * @see get_Totals_report($instance_id)
+ * @see get_Totals_report($id_instance)
  * @param $id_instance --> id del modulo
  * @return Array --> info totals_historic_academic_report
  */
 
-function get_Totals_report($instance_id)
+function get_Totals_report($id_instance)
 {
 
     global $DB;
@@ -312,6 +312,9 @@ function get_Totals_report($instance_id)
               ON         memb.userid = extend.id_moodle_user
               INNER JOIN {cohort} cohorte
               ON         memb.cohortid = cohorte.id
+              WHERE memb.cohortid IN (SELECT id_cohorte
+                                    FROM   {talentospilos_inst_cohorte}
+                                    WHERE  id_instancia = $id_instance)
               GROUP BY semestre, cohorte";
 
     $historics = $DB->get_records_sql($query);
@@ -358,22 +361,24 @@ function get_Totals_report($instance_id)
 /**
  * Function that returns a string with the names of all cohorts
  *
- * @see get_cohort_names()
+ * @see get_cohort_names($id_instance)
  * @return string
  */
-function get_cohort_names()
+function get_cohort_names($id_instance)
 {
     global $DB;
 
-    $cohorts_options = "<select><option value=''></option>";
+    $cohorts_options = "<select style='width:150px !important'><option value=''></option>";
 
-    $sql_query = "SELECT idnumber AS cohort_name FROM {cohort}
-                    WHERE substring(idnumber from 0 for 3) = 'SP'";
+    $sql_query = "SELECT idnumber AS cohort_name, name as nombre FROM {cohort}
+                    WHERE  id IN (SELECT id_cohorte
+                                    FROM   {talentospilos_inst_cohorte}
+                                    WHERE  id_instancia = $id_instance)";
 
     $cohorts = $DB->get_records_sql($sql_query);
 
     foreach ($cohorts as $cohort) {
-        $cohorts_options .= "<option value='$cohort->cohort_name'>$cohort->cohort_name</option>";
+        $cohorts_options .= "<option value='$cohort->nombre'>$cohort->cohort_name</option>";
     }
 
     $cohorts_options .= "</select>";
