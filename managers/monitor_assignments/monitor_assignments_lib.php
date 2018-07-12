@@ -192,23 +192,23 @@ function monitor_assignments_get_students_faculty( $instance_id ){
     global $DB;
 
     $sql = "SELECT DISTINCT facultad_0.id AS id_facultad, facultad_0.nombre AS nombre_facultad
-    FROM mdl_talentospilos_facultad AS facultad_0
+    FROM {talentospilos_facultad} AS facultad_0
     INNER JOIN 
     (
         SELECT moodle_ases_user_0.id_moodle_user, moodle_ases_user_0.id_ases_user, programa_0.cod_univalle AS cod_programa, programa_0.nombre AS nombre_programa, id_facultad
-        FROM mdl_talentospilos_programa AS programa_0
+        FROM {talentospilos_programa} AS programa_0
         INNER JOIN
         (
             SELECT *
-            FROM mdl_talentospilos_user_extended AS user_ext_0
+            FROM {talentospilos_user_extended} AS user_ext_0
             INNER JOIN
             (
                 SELECT DISTINCT cohort_members_0.userid as user_id
-                FROM mdl_cohort_members AS cohort_members_0 
+                FROM {cohort_members} AS cohort_members_0 
                 INNER JOIN
                 (
                     SELECT id_cohorte 
-                    FROM mdl_talentospilos_inst_cohorte AS inst_cohorte_0 
+                    FROM {talentospilos_inst_cohorte} AS inst_cohorte_0 
                     WHERE id_instancia = $instance_id
                 ) AS inst_cohorte1
                 ON inst_cohorte1.id_cohorte = cohort_members_0.cohortid
@@ -242,29 +242,67 @@ function monitor_assignments_get_monitors_faculty( $instance_id ){
 
     global $DB;
 
-    $sql = "SELECT user_programa_0.id, user_programa_0.fullname, user_programa_0.cod_programa, user_programa_0.nombre_programa, user_programa_0.id_facultad, facultad_0.nombre AS nombre_facultad
-    FROM mdl_talentospilos_facultad AS facultad_0
+    $sql = "SELECT DISTINCT user_programa_0.id_facultad, facultad_0.nombre AS nombre_facultad
+    FROM {talentospilos_facultad} AS facultad_0
     INNER JOIN (
             SELECT user_0.id, user_0.fullname, user_0.cod_programa, programa_0.nombre AS nombre_programa, programa_0.id_facultad
-            FROM mdl_talentospilos_programa AS programa_0
+            FROM {talentospilos_programa} AS programa_0
             INNER JOIN (
                     SELECT CONCAT(moodle_user.firstname, CONCAT(' ', moodle_user.lastname)) AS fullname, moodle_user.id, cast(split_part(moodle_user.username, '-', 2) AS INTEGER) AS cod_programa
-                    FROM mdl_talentospilos_user_rol AS user_rol
-                    INNER JOIN mdl_user AS moodle_user ON moodle_user.id = user_rol.id_usuario
+                    FROM {talentospilos_user_rol} AS user_rol
+                    INNER JOIN {user} AS moodle_user ON moodle_user.id = user_rol.id_usuario
                     WHERE id_rol = (
                                 SELECT id
-                                FROM mdl_talentospilos_rol 
+                                FROM {talentospilos_rol} 
                                 WHERE nombre_rol = 'monitor_ps'
                             )
-                    AND id_instancia = $instance_id
-                    AND id_semestre = ". get_current_semester()->max ." ORDER BY fullname
+                    AND id_instancia = 450299
+                    AND id_semestre = 7 ORDER BY fullname
                    ) AS user_0
             ON user_0.cod_programa = programa_0.cod_univalle
            ) AS user_programa_0
     ON user_programa_0.id_facultad = facultad_0.id
-    ORDER BY fullname ASC";
+    ORDER BY nombre_facultad ASC";
 
-    return $DB->get_records_sql( $sql );;
+    return $DB->get_records_sql( $sql );
+
+}
+
+/**
+ * Función retorna todas los programas de los monitores en una determinada instancia.
+ *
+ * @see monitor_assignments_get_monitors_programs 
+ * @param $instance_id --> Identificador de instancia
+ * @return Array (
+ *      stdClass(
+ *          ->id_facultad
+ *          ->nombre_facultad
+ *      )
+ * )
+ */
+
+function monitor_assignments_get_monitors_programs( $instance_id ){
+
+    global $DB;
+
+    $sql = "SELECT DISTINCT user_0.cod_programa, programa_0.nombre AS nombre_programa
+    FROM {talentospilos_programa} AS programa_0
+    INNER JOIN (
+            SELECT CONCAT(moodle_user.firstname, CONCAT(' ', moodle_user.lastname)) AS fullname, moodle_user.id, cast(split_part(moodle_user.username, '-', 2) AS INTEGER) AS cod_programa
+            FROM {talentospilos_user_rol} AS user_rol
+            INNER JOIN {user} AS moodle_user ON moodle_user.id = user_rol.id_usuario
+            WHERE id_rol = (
+                        SELECT id
+                        FROM {talentospilos_rol} 
+                        WHERE nombre_rol = 'monitor_ps'
+                    )
+            AND id_instancia = 450299
+            AND id_semestre = 7 ORDER BY fullname
+           ) AS user_0
+    ON user_0.cod_programa = programa_0.cod_univalle
+    ORDER BY nombre_programa ASC";
+
+    return $DB->get_records_sql( $sql );
 
 }
 
