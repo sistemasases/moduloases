@@ -1,17 +1,18 @@
 .assignment_item{
-    background-color: rgb(143, 23, 23);
-    color: white;
+    background-color: #d8d8d8;
+    border-bottom: 2px solid #d8d8d8;
+    color: #000;
     border-radius: 2px;
-    margin-top: 2px;
-    padding: 0.5em;
+    margin-top: 3px;
     cursor: pointer;
+    padding: 0.5em;
+    border-top-left-radius: 0px;
+    border-bottom-left-radius: 20px;
 }
 
 .assignment_item:hover{
-    background-color: rgb(255, 226, 226);
-    color:#000;
-    transition: background-color 0.25ms linear ease-in-out;
-    transition: color 0.25ms linear ease-in-out;
+    border-bottom: 2px solid gray;
+    transition: border-bottom 0.25ms linear ease-in-out;
 }
 
 .column_items{
@@ -23,7 +24,49 @@
     margin-top: 2em;
 }
 
-#select-program{
-    width: 100%;
+#select-program, #select-faculty{
+    width: 30%;
     text-overflow: ellipsis;
+    display: inline;
+}
+
+.item-left-button, .item-right-button{
+    background-color: green;
+    display: inline;
+    border-radius: 2px;
+    color: #FFF;
+    cursor: pointer;
+
+}
+
+.item-left-button-disabled, .item-right-button-disabled{
+    background-color: rgb(61, 61, 61);
+    display: inline;
+    border-radius: 2px;
+    cursor: pointer;
+}
+
+.item-right-button, .item-right-button-disabled{
+    float: right;
+}
+
+.item-left-button, .item-left-button-disabled{
+    float: left;
+}
+
+.item-text{
+    display: inline;
+    padding-left: 0.3em;
+}
+
+.assigned{
+    border-left: 3px solid green;
+}
+
+.not-assigned{
+    border-left: 3px solid gray;
+}
+
+.active{
+    border-bottom: 2px solid rgb(255, 174, 0);
 }
