@@ -300,7 +300,7 @@ function get_Totals_report($id_instance)
     global $DB;
     $array_historic = array();
 
-    $query = "SELECT row_number() over(),semestre.nombre as semestre,
+    $query = "SELECT DISTINCT row_number() over(),semestre.nombre as semestre,
                      cohorte.name as cohorte,
                      COUNT(academ.id) as total
               FROM {talentospilos_history_academ} academ
@@ -314,7 +314,7 @@ function get_Totals_report($id_instance)
               ON         memb.cohortid = cohorte.id
               WHERE memb.cohortid IN (SELECT id_cohorte
                                     FROM   {talentospilos_inst_cohorte}
-                                    WHERE  id_instancia = $id_instance)
+                                    WHERE  id_instancia = $id_instance) AND extend.tracking_status = 1
               GROUP BY semestre, cohorte";
 
     $historics = $DB->get_records_sql($query);
