@@ -234,8 +234,11 @@ function get_historic_report($id_instance)
 function get_datatable_array_totals($instance_id)
 {
     $default_students = $columns = array();
-    array_push($columns, array("title" => "Cohorte", "name" => "cohorte", "data" => "cohorte"));
-    array_push($columns, array("title" => "Semestre", "name" => "semestre", "data" => "semestre"));
+    $cohort_options = get_cohort_names();
+    $semester_options = get_all_semesters_names();
+
+    array_push($columns, array("title" => "Cohorte".$cohort_options, "name" => "cohorte", "data" => "cohorte"));
+    array_push($columns, array("title" => "Semestre".$semester_options, "name" => "semestre", "data" => "semestre"));
     array_push($columns, array("title" => "Total Activos", "name" => "act", "data" => "act"));
     array_push($columns, array("title" => "Total Inactivos", "name" => "inact", "data" => "inact"));
     array_push($columns, array("title" => "Total Cohorte", "n" => "total", "data" => "total"));
