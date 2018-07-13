@@ -35,8 +35,24 @@
                     }else{
                         $(".monitor_item").removeClass("oculto-programa");
                     }
+                }else if( (user_type == "student") && (filter_type == "faculty") ){
+                    var faculty_id = $(this).find(":selected").attr("data-id-facultad");
+                    if( faculty_id != "-1" ){
+                        $(".student_item").removeClass("oculto-facultad");
+                        $(".student_item").not(".student_item[data-id-facultad='" + faculty_id + "']").addClass("oculto-facultad");
+                    }else{
+                        $(".student_item").removeClass("oculto-facultad");
+                    }
+                }else if( (user_type == "student") && (filter_type == "program") ){
+                    var program_id = $(this).find(":selected").attr("data-cod-programa");
+                    if( program_id != "-1" ){
+                        $(".student_item").removeClass("oculto-programa");
+                        $(".student_item").not(".student_item[data-cod-programa='" + program_id + "']").addClass("oculto-programa");
+                    }else{
+                        $(".student_item").removeClass("oculto-programa");
+                    }
                 }
-
+                
             });
 
         }
