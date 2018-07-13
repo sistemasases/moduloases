@@ -321,10 +321,35 @@ function monitor_assignments_get_monitors_programs( $instance_id ){
                         WHERE nombre_rol = 'monitor_ps'
                     )
             AND id_instancia = $instance_id
-            AND id_semestre = ". (int) get_current_semester()->max ." ORDER BY fullname
+            AND id_semestre = ". get_current_semester()->max ." ORDER BY fullname
            ) AS user_0
     ON user_0.cod_programa = programa_0.cod_univalle
     ORDER BY nombre_programa ASC";
+
+    return $DB->get_records_sql( $sql );
+
+}
+
+/**
+ * Función retorna todas las relaciones monitor-estudiante del semestre actual en una instancia
+ *
+ * @see monitor_assignments_get_monitors_faculty 
+ * @param $instance_id --> Identificador de instancia
+ * @return Array (
+ *      stdClass(
+ *          ->id_monitor
+ *          ->id_estudiante
+ *      )
+ * )
+ */
+
+function monitor_assignments_get_monitors_students_relationship_by_instance( $instance_id ){
+
+    global $DB;
+
+    $sql = "SELECT id_monitor, id_estudiante, id_instancia 
+    FROM mdl_talentospilos_monitor_estud 
+    WHERE id_semestre = ". get_current_semester()->max ." AND id_instancia = $instance_id";
 
     return $DB->get_records_sql( $sql );
 
