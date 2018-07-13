@@ -52,9 +52,8 @@
                         $(".student_item").removeClass("oculto-programa");
                     }
                 }
-                
-            });
 
+            });
         }
     };
 })
