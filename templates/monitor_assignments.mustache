@@ -20,8 +20,8 @@
             </div>
             <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
                 <span>Facultad:</span>
-                <select id="select-monitor-faculty" class="select-faculty" name="" id="">
-                    <option value="" data-cod-programa="-1" alt="TODOS">TODOS</option>
+                <select id="select-monitor-faculty" class="select-faculty" data-id="monitor_faculty" name="" >
+                    <option value="" data-id-facultad="-1" alt="TODOS">TODOS</option>
                     {{#monitors_faculty}}
                     {{#.}}
                     <option value="" data-id-facultad="{{id_facultad}}" alt="{{nombre_facultad}}">{{nombre_facultad}}</option>
@@ -29,7 +29,7 @@
                     {{/monitors_faculty}}
                 </select>&nbsp;
                 <span>Programa:</span>
-                <select id="select-monitor-program" class="select-program" name="" id="">
+                <select id="select-monitor-program" class="select-program" data-id="monitor_program" name="" >
                     <option value="" data-cod-programa="-1" alt="TODOS">TODOS</option>
                     {{#monitors_programs}}
                     {{#.}}
@@ -40,8 +40,8 @@
             </div>
             <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
                 <span>Facultad:</span>
-                <select id="select-student-faculty" class="select-faculty" name="" id="">
-                    <option value="" data-cod-programa="-1" alt="TODOS">TODOS</option>
+                <select id="select-student-faculty" class="select-faculty" data-id="student_faculty" name="" >
+                    <option value="" data-id-facultad="-1" alt="TODOS">TODOS</option>
                     {{#students_faculty}}
                     {{#.}}
                     <option value="" data-id-facultad="{{id_facultad}}" alt="{{nombre_facultad}}">{{nombre_facultad}}</option>
@@ -49,7 +49,7 @@
                     {{/students_faculty}}
                 </select>&nbsp;
                 <span>Programa:</span>
-                <select id="select-student-program" class="select-program" name="" id="">
+                <select id="select-student-program" class="select-program" data-id="student_program" name="" >
                     <option value="" data-cod-programa="-1" alt="TODOS">TODOS</option>
                     {{#students_programs}}
                     {{#.}}
@@ -74,7 +74,7 @@
             <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 column_items" >
                 {{#monitors}}
                 {{#.}}
-                <div class="assignment_item assigned" data-id="{{id}}" data-cod-programa="{{cod_programa}}" data-id-facultad="{{id_facultad}}">
+                <div class="monitor_item assignment_item assigned" data-id="{{id}}" data-cod-programa="{{cod_programa}}" data-id-facultad="{{id_facultad}}">
                     <div class="item-text">
                         {{fullname}}
                     </div>
@@ -88,7 +88,7 @@
             <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 column_items" >
                 {{#students}}
                 {{#.}}
-                <div class="assignment_item not-assigned" data-id="{{id}}" data-cod-programa="{{cod_programa}}" data-id-facultad="{{id_facultad}}">
+                <div class="student_item assignment_item not-assigned" data-id="{{id}}" data-cod-programa="{{cod_programa}}" data-id-facultad="{{id_facultad}}">
                     <div class="item-text">
                         {{fullname}}
                     </div>

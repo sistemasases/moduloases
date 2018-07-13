@@ -14,6 +14,31 @@
     return {
         init: function() {
             
+            $("select").change(function(){
+
+                var user_type = $(this).attr("data-id").split("_")[0]; // i.e monitor_faculty => monitor
+                var filter_type = $(this).attr("data-id").split("_")[1]; // i.e monitor_faculty => faculty
+
+                if( (user_type == "monitor") && (filter_type == "faculty") ){
+                    var faculty_id = $(this).find(":selected").attr("data-id-facultad");
+                    if( faculty_id != "-1" ){
+                        $(".monitor_item").removeClass("oculto-facultad");
+                        $(".monitor_item").not(".monitor_item[data-id-facultad='" + faculty_id + "']").addClass("oculto-facultad");
+                    }else{
+                        $(".monitor_item").removeClass("oculto-facultad");
+                    }
+                }else if( (user_type == "monitor") && (filter_type == "program") ){
+                    var program_id = $(this).find(":selected").attr("data-cod-programa");
+                    if( program_id != "-1" ){
+                        $(".monitor_item").removeClass("oculto-programa");
+                        $(".monitor_item").not(".monitor_item[data-cod-programa='" + program_id + "']").addClass("oculto-programa");
+                    }else{
+                        $(".monitor_item").removeClass("oculto-programa");
+                    }
+                }
+
+            });
+
         }
     };
 })
