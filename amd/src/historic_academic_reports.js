@@ -21,8 +21,16 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/jquery.dataTables', 'block
                     var table = $("#tableResultStudent").DataTable();
 
                     var colIndex = $(this).parent().index() + 1;
-                    var selectedText = $(this).parent().find(":selected").text();
                     table.columns(colIndex - 1).search(this.value).draw();
+                });
+
+                //Controles para la tabla historica totales
+                $(document).on('change', '#tableResultTotal thead tr th select', function () {
+                    var table = $("#tableResultTotal").DataTable();
+
+                    var colIndex = $(this).parent().index() + 1;
+                    var valor = this.value;
+                    table.columns(colIndex - 1).search(valor).draw();
                 });
 
                 $(document).on('click', '#tableResultStudent tbody tr td', function () {
@@ -36,8 +44,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/jquery.dataTables', 'block
                             var semestre = table.cell(table.row(this).index(), 5).data();
                             checkEstimulo(codigo, programa, semestre);
                         }
-                    }
-                    if(colIndex == 7){
+                    } else if (colIndex == 7) {
                         if (table.cell(table.row(this).index(), 7).data() != '0') {
                             var codigo = table.cell(table.row(this).index(), 2).data();
                             var programa = table.cell(table.row(this).index(), 6).data();
@@ -45,7 +52,11 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/jquery.dataTables', 'block
                             var cant = table.cell(table.row(this).index(), 7).data();
                             checkLoses(codigo, programa, semestre, cant);
                         }
+                    } else if (colIndex == 2) {
+                        location.href = "student_profile.php" + location.search + "&student_code=" + table.cell(table.row(this).index(), 2).data() + "-";
                     }
+
+
                 });
             });
         },
@@ -74,7 +85,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/jquery.dataTables', 'block
      * @desc Check the loses subjects
      * @return {void}
      */
-    function checkLoses(codigo, programa, semestre,cant) {
+    function checkLoses(codigo, programa, semestre, cant) {
         $.ajax({
             type: "POST",
             data: {
@@ -97,7 +108,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/jquery.dataTables', 'block
                     confirmButtonText: "Cerrar",
                     closeOnConfirm: true
                 });
-                $(".swal-wide").css({'width': '600px', 'margin-left':'-300px'});
+                $(".swal-wide").css({ 'width': '600px', 'margin-left': '-300px' });
             },
             dataType: "text",
             cache: "false",
