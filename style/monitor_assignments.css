@@ -7,7 +7,6 @@
     cursor: pointer;
     padding: 0.5em;
     border-top-left-radius: 0px;
-    border-bottom-left-radius: 20px;
 }
 
 .assignment_item:hover{

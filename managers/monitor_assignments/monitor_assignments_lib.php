@@ -66,8 +66,32 @@ function monitor_assignments_get_practicing_by_instance( $instance_id ){
  */
 
 function monitor_assignments_get_monitors_by_instance( $instance_id ){
-    // This function is in asesreport_lib.php
-    return get_monitors_by_instance( $instance_id );
+
+    global $DB;
+
+    $sql = "SELECT DISTINCT user_programa_0.id, user_programa_0.fullname, user_programa_0.cod_programa, user_programa_0.nombre_programa, facultad_0.id AS id_facultad, facultad_0.nombre AS nombre_facultad
+    FROM {talentospilos_facultad} AS facultad_0
+    INNER JOIN (
+            SELECT user_0.id, user_0.fullname, user_0.cod_programa, programa_0.nombre AS nombre_programa, programa_0.id_facultad
+            FROM {talentospilos_programa} AS programa_0
+            INNER JOIN (
+                    SELECT CONCAT(moodle_user.firstname, CONCAT(' ', moodle_user.lastname)) AS fullname, moodle_user.id, cast(nullif(split_part(moodle_user.username, '-', 2), '') AS INTEGER) AS cod_programa
+                    FROM {talentospilos_user_rol} AS user_rol
+                    INNER JOIN {user} AS moodle_user ON moodle_user.id = user_rol.id_usuario
+                    WHERE id_rol = (
+                                SELECT id
+                                FROM {talentospilos_rol} 
+                                WHERE nombre_rol = 'monitor_ps'
+                            )
+                    AND id_instancia = $instance_id
+                    AND id_semestre = ". get_current_semester()->max ." ORDER BY fullname
+                   ) AS user_0
+            ON user_0.cod_programa = programa_0.cod_univalle
+           ) AS user_programa_0
+    ON user_programa_0.id_facultad = facultad_0.id
+   ORDER BY fullname ASC";
+
+    return $DB->get_records_sql( $sql );
 }
 
 /**
