@@ -333,7 +333,7 @@ function monitor_assignments_get_monitors_programs( $instance_id ){
 /**
  * Función retorna todas las relaciones monitor-estudiante del semestre actual en una instancia
  *
- * @see monitor_assignments_get_monitors_faculty 
+ * @see monitor_assignments_get_monitors_students_relationship_by_instance
  * @param $instance_id --> Identificador de instancia
  * @return Array (
  *      stdClass(
@@ -351,6 +351,27 @@ function monitor_assignments_get_monitors_students_relationship_by_instance( $in
     FROM mdl_talentospilos_monitor_estud 
     WHERE id_semestre = ". get_current_semester()->max ." AND id_instancia = $instance_id";
 
+    return $DB->get_records_sql( $sql );
+
+}
+
+/**
+ * Función que retorna todas las relaciones profesional-practicante del semestre actual en una instancia
+ *
+ * @see monitor_assignments_get_profesional_practicant_relationship
+ * @param instance_id
+ * @return Array(
+ * 	stdClass(
+ *	    ->id_profesional
+ * 	    ->id_practicante
+ *	)
+ * )
+ */
+
+function monitor_assignments_get_profesional_practicant_relationship( $instance_id ){
+
+    global $DB;
+    $sql="";
     return $DB->get_records_sql( $sql );
 
 }
