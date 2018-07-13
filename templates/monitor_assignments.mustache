@@ -22,20 +22,20 @@
                 <span>Facultad:</span>
                 <select id="select-faculty" name="" id="">
                     <option value="" data-cod-programa="-1" alt="TODOS">TODOS</option>
-                    {{#students_faculty}}
+                    {{#monitors_faculty}}
                     {{#.}}
                     <option value="" data-id-facultad="{{id_facultad}}" alt="{{nombre_facultad}}">{{nombre_facultad}}</option>
                     {{/.}}
-                    {{/students_faculty}}
+                    {{/monitors_faculty}}
                 </select>&nbsp;
                 <span>Programa:</span>
                 <select id="select-program" name="" id="">
                     <option value="" data-cod-programa="-1" alt="TODOS">TODOS</option>
-                    {{#students_programs}}
+                    {{#monitors_programs}}
                     {{#.}}
                     <option value="" data-cod-programa="{{cod_programa}}" alt="{{nombre_programa}}">{{nombre_programa}}</option>
                     {{/.}}
-                    {{/students_programs}}
+                    {{/monitors_programs}}
                 </select>
             </div>
             <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
