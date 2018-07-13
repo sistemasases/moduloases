@@ -16,12 +16,15 @@
     <input type="text" class="hide" id="id_moodle" name="id_moodle" value="{{id_moodle}}" />
 
     <div class="row" id="div-header-profile">
-      <div class="col-xs-12 col-sm-10 col-md-10 col-lg-10 equalize" id="div-header-info">
+      
+      <div class="col-xs-12 col-sm-10 col-md-10 col-lg-10" id="div-header-info">
+
+        <!-- Select student -->
         <div class="row" id="div-select-student">
-          <div class="col-xs-11 col-sm-11">
+          <div class="col-xs-10 col-sm-10 col-md-10 col-lg-10">
             {{{code}}}
           </div>
-          <div class="col-xs-1 col-sm-1">
+          <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1">
             <div class="icontip">
               <span class="glyphicon glyphicon-ok {{#ases_status_t}}i-tracking-t{{/ases_status_t}}{{#ases_status_f}}i-tracking-f{{/ases_status_f}}{{#ases_status_n}}i-tracking-n{{/ases_status_n}}" {{#update_ases_status_sp}} id="icon-tracking" {{/update_ases_status_sp}}></span>
               <span class="icontiptext" id="tip_ases_status">{{ases_status_description}}</span>
@@ -29,34 +32,44 @@
             </div>
           </div>
         </div>
+        <!-- End select student -->
+
         <div class="row" id="row-general-fields">
-          <div class="col-xs-2 col-sm-1 div-general-fields" id="">
-            <select name="tipo_doc" class="" id="tipo_doc" name="tipo_doc" disabled>
-              <option value="T.I" {{doc_type_ti}}>T.I.</option>
-              <option value="C.C" {{doc_type_cc}}>C.C.</option>
-              <option value="C.R" {{doc_type_cr}}>C.R.</option>
+
+          <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1 div_general_fields" id="div_doc_type">
+            <select name="tipo_doc" class="form-control" id="tipo_doc" name="tipo_doc" disabled>
+              <option value="T.I" {{doc_type_ti}}>TI</option>
+              <option value="C.C" {{doc_type_cc}}>CC</option>
+              <option value="C.R" {{doc_type_cr}}>CR</option>
               <option id="EMPTY" {{doc_type_empty}}></option>
             </select>
           </div>
-          <div class="col-xs-3 col-sm-2 div-general-fields">
-            <input type="text" class="" name="num_doc" id="cedula" value="{{num_doc}}" size="12" maxlength="12" readonly>
+
+          <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 div_general_fields" id="div_input_cc">
+            <input type="text" class="form-control" name="num_doc" id="cedula" value="{{num_doc}}" size="12" maxlength="12" readonly>
           </div>
-          <div class="col-xs-1 col-sm-1 div-general-fields">
+          
+          <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1 div-general-fields">
             <span id="age">{{age}} años</span>
           </div>
-          <div class="col-xs-3 col-sm-3 div-general-fields">
+
+          <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5 div-general-fields">
             <span id="email">{{email_moodle}}</span>
           </div>
-          <div class="col-xs-2 col-sm-2 div-general-fields">
-            <span id="span-icetex-status">Estado ICETEX</span>
+
+          <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1 div-general-fields">
+            <span id="span-icetex-status">ICETEX</span>
           </div>
-          <div class="col-xs-2 col-sm-2 div-general-fields">
-            <select id="icetex_status" class="col-sm-10">
+
+          <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 div-general-fields" id="div_icetex_status">
+            <select id="icetex_status" class="form-control" disabled>
               {{{options_status_icetex}}}
             </select>
           </div>
         </div>
-        <hr id="hr_header">
+
+        <hr>
+
         <div class="col-xs-12 col-sm-8" id="div_academic_programs">
           <h4>Programas académicos</h4>
           <table class="table table-hover borderless">
@@ -97,6 +110,7 @@
             No registra programas académicos.
           {{/academic_programs}}
         </div>
+
         <div class="col-xs-12 col-sm-4" id="div_cohorts">
           <h4>Cohortes</h4>
           <table class="table table-sm table-hover borderless">
@@ -115,7 +129,7 @@
           {{/student_cohorts}}
         </div>
       </div>
-      <div class="col-xs-4 col-sm-2 col-md-2 col-lg-2 equalize" id="photo_div" style="background-image: url('../../../user/pix.php/{{id_user}}/f1.jpg'); background-repeat: no-repeat; background-size: 100% 100%;">
+      <div class="col-xs-4 col-sm-2 col-md-2 col-lg-2" id="photo_div" style="background-image: url('../../../user/pix.php/{{id_user}}/f1.jpg'); background-repeat: no-repeat; background-size: 100% 100%;">
       </div>
     </div>
 

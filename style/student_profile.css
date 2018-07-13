@@ -11,18 +11,58 @@
     border-left: 5px solid white;
 }
 
+
+
 .select2.select2-container.select2-container--default{
     width: 100% !important;
     font-size: 200%;
+    border-radius: 0 0 0px 0px;
+
 }
 
 .select2-container .select2-selection--single{
     height: 40px;
+    border-radius: 0 0 0px 0px;
 }
 
 .select2-container--default .select2-selection--single .select2-selection__rendered{
     line-height: 40px;
     font-weight: bold;
+    border-radius: 0 0 0px 0px;
+}
+
+/* Controles datos generales */
+.div_general_fields{
+    padding-top: 0px;
+    padding-bottom: 0px;
+}
+
+#div_input_cc{
+    padding-left: 0px;
+    padding-right: 0px;
+}
+
+#div_doc_type{
+    padding-right: 4px;
+}
+
+#tipo_doc{
+    padding: 0px 0px 0px 6px;
+    height: 100%;
+    position: relative;
+    border-radius: 0 0 0px 0px;
+}
+
+#cedula{
+    position: relative;
+    height: 100%;
+    width: 100%;
+    padding: 6px 0px 0px 5px;
+    border-radius: 0 0 0px 0px;
+}
+
+#div_icetex_status{
+    padding-right: 4px;
 }
 
 #row-general-fields{
@@ -34,6 +74,13 @@
     padding-top: 20px;
 }
 
+#icetex_status{
+    padding: 0px 0px 0px 6px;
+    height: 100%;
+    position: relative;
+    border-radius: 0 0 0px 0px;
+}
+
 hr{
     background-color: gray;
     height: 1px;
@@ -41,9 +88,7 @@ hr{
     margin-top: 5px;
 }
 
-.div-general-fields{
-    height:100%;
-}
+
 
 #icon-tracking{
     
