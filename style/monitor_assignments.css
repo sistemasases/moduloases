@@ -23,7 +23,7 @@
     margin-top: 2em;
 }
 
-#select-program, #select-faculty{
+.select-program, .select-faculty{
     width: 30%;
     text-overflow: ellipsis;
     display: inline;

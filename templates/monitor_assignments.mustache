@@ -20,7 +20,7 @@
             </div>
             <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
                 <span>Facultad:</span>
-                <select id="select-faculty" name="" id="">
+                <select id="select-monitor-faculty" class="select-faculty" name="" id="">
                     <option value="" data-cod-programa="-1" alt="TODOS">TODOS</option>
                     {{#monitors_faculty}}
                     {{#.}}
@@ -29,7 +29,7 @@
                     {{/monitors_faculty}}
                 </select>&nbsp;
                 <span>Programa:</span>
-                <select id="select-program" name="" id="">
+                <select id="select-monitor-program" class="select-program" name="" id="">
                     <option value="" data-cod-programa="-1" alt="TODOS">TODOS</option>
                     {{#monitors_programs}}
                     {{#.}}
@@ -40,7 +40,7 @@
             </div>
             <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
                 <span>Facultad:</span>
-                <select id="select-faculty" name="" id="">
+                <select id="select-student-faculty" class="select-faculty" name="" id="">
                     <option value="" data-cod-programa="-1" alt="TODOS">TODOS</option>
                     {{#students_faculty}}
                     {{#.}}
@@ -49,7 +49,7 @@
                     {{/students_faculty}}
                 </select>&nbsp;
                 <span>Programa:</span>
-                <select id="select-program" name="" id="">
+                <select id="select-student-program" class="select-program" name="" id="">
                     <option value="" data-cod-programa="-1" alt="TODOS">TODOS</option>
                     {{#students_programs}}
                     {{#.}}
