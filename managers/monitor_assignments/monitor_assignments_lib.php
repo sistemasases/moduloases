@@ -348,7 +348,7 @@ function monitor_assignments_get_monitors_students_relationship_by_instance( $in
     global $DB;
 
     $sql = "SELECT id_monitor, id_estudiante, id_instancia 
-    FROM mdl_talentospilos_monitor_estud 
+    FROM {talentospilos_monitor_estud} 
     WHERE id_semestre = ". get_current_semester()->max ." AND id_instancia = $instance_id";
 
     return $DB->get_records_sql( $sql );
@@ -358,7 +358,7 @@ function monitor_assignments_get_monitors_students_relationship_by_instance( $in
 /**
  * Función que retorna todas las relaciones profesional-practicante del semestre actual en una instancia
  *
- * @see monitor_assignments_get_profesional_practicant_relationship
+ * @see monitor_assignments_get_profesional_practicant_relationship_by_instance
  * @param instance_id
  * @return Array(
  * 	stdClass(
@@ -368,10 +368,26 @@ function monitor_assignments_get_monitors_students_relationship_by_instance( $in
  * )
  */
 
-function monitor_assignments_get_profesional_practicant_relationship( $instance_id ){
+function monitor_assignments_get_profesional_practicant_relationship_by_instance( $instance_id ){
 
     global $DB;
-    $sql="";
+
+    $sql="SELECT user_rol_1.id_jefe AS id_profesional, user_rol_1.id_usuario AS id_practicante
+	  FROM {talentospilos_user_rol} AS user_rol_1
+	  INNER JOIN (
+		SELECT id_usuario
+        	FROM {talentospilos_user_rol} AS user_rol_0
+	 	WHERE id_rol = ( 
+			SELECT id 
+			FROM {talentospilos_rol} 
+			WHERE nombre_rol = 'profesional_ps'
+		)
+	  AND id_instancia = $instance_id
+	  AND id_semestre = ". get_current_semester()->max . "
+	) AS profesionales_0
+	ON profesionales_0.id_usuario = id_jefe
+	WHERE user_rol_1.id_semestre = ". get_current_semester()->max;
+
     return $DB->get_records_sql( $sql );
 
 }
