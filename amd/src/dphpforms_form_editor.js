@@ -6,7 +6,7 @@
  */
  
  /**
-  * @module block_ases/dphpforms_form_builder
+  * @module block_ases/dphpforms_form_editor
   */
 
   define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/jqueryui','block_ases/select2'], function($, bootstrap, sweetalert, jqueryui, select2) {
@@ -450,4 +450,4 @@
             }
     };
       
-})
+});
