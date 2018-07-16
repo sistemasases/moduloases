@@ -70,6 +70,6 @@
     border-bottom: 2px solid rgb(255, 174, 0);
 }
 
-.oculto-facultad, .oculto-programa{
+.oculto-facultad, .oculto-programa, .oculto-jefe{
     display: none;
 }
