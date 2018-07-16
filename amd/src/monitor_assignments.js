@@ -42,7 +42,28 @@
                         $(".student_item[data-id='" + monitor_assignments_monitor_students[i].id_estudiante + "']").clone().appendTo("#student_assigned");
                     }
                 }
-                
+            });
+
+            // Loader of monitor_assignments_professional_practicant
+            $(".practicant_item").click(function(){
+                var data_id = $(this).attr("data-id"); // id_professional
+                $(".monitor_item").removeClass("assigned");
+                $(".monitor_item").removeClass("not-assigned");
+                $(".monitor_item").addClass("not-assigned");
+                $("#monitor_assigned").removeClass("items_assigned_empty");
+                $("#monitor_assigned").text("");
+                $('#monitor_column').animate({
+                    scrollTop: $('#monitor_column').scrollTop() + $('#monitor_assigned').position().top
+                }, 500);
+
+                for( var i = 0; i < monitor_assignments_professional_practicant.length; i++ ){
+                    if( monitor_assignments_professional_practicant[i].id_profesional == data_id ){
+                        
+                        $(".monitor_item[data-id='" + monitor_assignments_professional_practicant[i].id_practicante + "']").removeClass("not-assigned");
+                        $(".monitor_item[data-id='" + monitor_assignments_professional_practicant[i].id_practicante + "']").addClass("assigned");
+                        $(".monitor_item[data-id='" + monitor_assignments_professional_practicant[i].id_practicante + "']").clone().appendTo("#monitor_assigned");
+                    }
+                }
             });
             
             $("select").change(function(){

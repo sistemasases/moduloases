@@ -372,7 +372,7 @@ function monitor_assignments_get_profesional_practicant_relationship_by_instance
 
     global $DB;
 
-    $sql="SELECT user_rol_1.id_jefe AS id_profesional, user_rol_1.id_usuario AS id_practicante
+    $sql="SELECT user_rol_1.id, user_rol_1.id_jefe AS id_profesional, user_rol_1.id_usuario AS id_practicante
 	  FROM {talentospilos_user_rol} AS user_rol_1
 	  INNER JOIN (
 		SELECT id_usuario
