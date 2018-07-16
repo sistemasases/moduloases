@@ -11,8 +11,6 @@
     border-left: 5px solid white;
 }
 
-
-
 .select2.select2-container.select2-container--default{
     width: 100% !important;
     font-size: 200%;
@@ -53,6 +51,19 @@
     border-radius: 0 0 0px 0px;
 }
 
+#div_select_student{
+    padding-right: 0px;
+}
+
+#div-hr{
+    color: gray;
+    padding: 0px 15px 2px 15px;
+}
+
+#hr-general-fields{
+    margin-top: 10px;
+}
+
 #cedula{
     position: relative;
     height: 100%;
@@ -62,7 +73,8 @@
 }
 
 #div_icetex_status{
-    padding-right: 4px;
+    padding-left: 0px;
+    padding-right: 15px;
 }
 
 #row-general-fields{
@@ -80,15 +92,6 @@
     position: relative;
     border-radius: 0 0 0px 0px;
 }
-
-hr{
-    background-color: gray;
-    height: 1px;
-    border: 0px;
-    margin-top: 5px;
-}
-
-
 
 #icon-tracking{
     
