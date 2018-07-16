@@ -9,8 +9,13 @@
   * @module block_ases/student_profile_main
   */
 
-define(['jquery', 'block_ases/bootstrap', 'block_ases/d3', 'block_ases/sweetalert',
-        'block_ases/jqueryui','block_ases/select2', 'block_ases/Chart'], function($, bootstrap, d3, sweetalert) {
+define(['jquery', 
+        'block_ases/bootstrap', 
+        'block_ases/d3', 
+        'block_ases/sweetalert',
+        'block_ases/jqueryui',
+        'block_ases/select2', 
+        'block_ases/Chart'], function($, bootstrap, d3, sweetalert, jqueryui, select2, Chart) {
 
     return {
         init: function(data_init) {
@@ -20,6 +25,9 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/d3', 'block_ases/sweetaler
 
             var self = this;
 
+            
+
+            // Select search
             $("#asignados").select2({
                 width: 'resolve',
                 height: 'resolve',
@@ -70,7 +78,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/d3', 'block_ases/sweetaler
                 });
 
             $('#icon-tracking').on('click', function(){self.update_status_ases(parameters);});
-            // 
+            
             switch(parameters.tab){
                 case "socioed_tab":
                     $('#general_li').removeClass('active');
@@ -754,6 +762,36 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/d3', 'block_ases/sweetaler
     };
 
     function edit_profile_act() {
+
+        // Edit profile
+        $('#span-icon-edit').on('click', function(){
+
+            $(this).hide();
+            $('#tip-edit').hide();
+            $('#span-icon-save-profile').show();
+            $('#tip-save').show();
+            $('#span-icon-cancel-edit').show();
+            $('#tip-cancel').show();
+            $('#tipo_doc').prop('disabled', false);
+            $('#cedula').prop('readonly', false);
+            $('#icetex_status').prop('disabled', false);
+            
+        });
+
+        $('#span-icon-cancel-edit').on('click', function(){
+            $(this).hide();
+            $('#tip-cancel').hide();
+            $('#span-icon-save-profile').hide();
+            $('#tip-save').hide();
+            $('#span-icon-edit').show();
+            $('#tip-edit').show();
+            $('#tipo_doc').prop('disabled', true);
+            $('#cedula').prop('readonly', true);
+            $('#icetex_status').prop('disabled', true);
+        });
+
+        
+
         $("#editar_ficha").click(function() {
             $("#ficha_estudiante").find("input").prop("readonly", false);
             $("#observations_profile").prop("readonly", false);
@@ -1934,4 +1972,4 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/d3', 'block_ases/sweetaler
             }
         });
     };
-})
+});
