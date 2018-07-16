@@ -13,6 +13,37 @@
     
     return {
         init: function() {
+
+            var monitor_assignments_monitor_students;
+            var monitor_assignments_professional_practicant;
+
+            $(document).ready(function(){
+                monitor_assignments_monitor_students = JSON.parse( $("#monitor_assignments_monitor_students").text() );
+                monitor_assignments_professional_practicant = JSON.parse( $("#monitor_assignments_professional_practicant").text() );
+            });
+
+            // Loader of monitor_assignments_monitor_students
+            $(".monitor_item").click(function(){
+                var data_id = $(this).attr("data-id"); // id_monitor
+                $(".student_item").removeClass("assigned");
+                $(".student_item").removeClass("not-assigned");
+                $(".student_item").addClass("not-assigned");
+                $("#student_assigned").removeClass("items_assigned_empty");
+                $("#student_assigned").text("");
+                $('#student_column').animate({
+                    scrollTop: $('#student_column').scrollTop() + $('#student_assigned').position().top
+                }, 500);
+
+                for( var i = 0; i < monitor_assignments_monitor_students.length; i++ ){
+                    if( monitor_assignments_monitor_students[i].id_monitor == data_id ){
+                        
+                        $(".student_item[data-id='" + monitor_assignments_monitor_students[i].id_estudiante + "']").removeClass("not-assigned");
+                        $(".student_item[data-id='" + monitor_assignments_monitor_students[i].id_estudiante + "']").addClass("assigned");
+                        $(".student_item[data-id='" + monitor_assignments_monitor_students[i].id_estudiante + "']").clone().appendTo("#student_assigned");
+                    }
+                }
+                
+            });
             
             $("select").change(function(){
 

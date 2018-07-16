@@ -73,3 +73,20 @@
 .oculto-facultad, .oculto-programa, .oculto-jefe{
     display: none;
 }
+
+.items_assigned{
+
+}
+
+.items_assigned_empty{
+    font-style: italic;
+    font-size: 1.1em;
+    background-color: rgb(241, 241, 241);
+    border: 1px dotted #888888;
+    padding: 1em;
+    width: 100%;
+}
+
+.column-title{
+    font-size: 1.3em;
+}

@@ -347,11 +347,11 @@ function monitor_assignments_get_monitors_students_relationship_by_instance( $in
 
     global $DB;
 
-    $sql = "SELECT id_monitor, id_estudiante, id_instancia 
+    $sql = "SELECT id, id_monitor, id_estudiante 
     FROM {talentospilos_monitor_estud} 
     WHERE id_semestre = ". get_current_semester()->max ." AND id_instancia = $instance_id";
-
-    return $DB->get_records_sql( $sql );
+  
+    return $DB->get_records_sql( $sql );;
 
 }
 
