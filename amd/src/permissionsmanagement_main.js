@@ -15,6 +15,26 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/jquery.dataTables', 'block
         init: function() {
 
             select_user();
+            select_func();
+
+            function select_func() {
+                $("#functions").select2({
+                    placeholder: "Select a Program",
+                    language: {
+    
+                        noResults: function() {
+    
+                            return "No hay resultado";
+                        },
+                        searching: function() {
+    
+                            return "Buscando..";
+                        }
+                    },
+                    width: '36%',
+                    dropdownAutoWidth: true,
+                });
+            }
 
             function select_user(){
             $("#profiles_user").select2({
@@ -34,6 +54,9 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/jquery.dataTables', 'block
                 dropdownAutoWidth: true,
                 placeholder: "Seleccionar perfil"
             });}
+
+
+            
 
             var instance;
             $(document).ready(function() {
@@ -94,15 +117,21 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/jquery.dataTables', 'block
                     msj = "Nombre no puede ser nulo";
                 }
                 if (descripcion.length == 0) {
-                    msj = msj + "\nDescripcion no puede ser nulo";
+                    msj = msj + "<br>Descripcion no puede ser nulo";
                 }
 
-                if (id_funcionalidad.length == 0) {
-                    msj = msj + "\nFuncionalidad no puede ser nulo";
+                if (id_funcionalidad == -1) {
+                    msj = msj + "<br>Funcionalidad no puede ser nulo";
                 }
 
                 if (nombre.length == 0 || descripcion.length == 0) {
-                    alert(msj);
+                    swal({
+                        title: "Error al crear Acción.",
+                        text: msj,
+                        html: true,
+                        type: "warning",
+                        confirmButtonColor: "#d51b23"
+                    });
                 } else {
                     $.ajax({
                         type: "POST",
@@ -115,7 +144,13 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/jquery.dataTables', 'block
                         async: false,
                         success: function(msg) {
                             $("#formAction")[0].reset();
-                            alert(msg);
+                            swal({
+                                title: "",
+                                text: msg,
+                                type: "info",
+                                showCancelButton: false,
+                                showConfirmButton: true,
+                            });
                         }
                     });
                 }

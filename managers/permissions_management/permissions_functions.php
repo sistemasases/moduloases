@@ -120,6 +120,8 @@ function get_functions_select($functions, $nombre_function)
 {
     $table = "";
     $table .= '<select class="form-pilos" id="' . $nombre_function . '">';
+    $table.='<option value="-1" > ------------------------------------- </option>';
+
     foreach ($functions as $function) {
         $table .= '<option value="' . $function->id . '">' . $function->nombre_func . '</option>';
     }
