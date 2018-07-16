@@ -945,7 +945,7 @@ function get_practicing_by_instance($instance_id){
 
     $result = array();
 
-    $sql_query = "SELECT CONCAT(moodle_user.firstname, CONCAT(' ', moodle_user.lastname)) AS fullname, moodle_user.id
+    $sql_query = "SELECT CONCAT(moodle_user.firstname, CONCAT(' ', moodle_user.lastname)) AS fullname, moodle_user.id, user_rol.id_jefe
                   FROM {talentospilos_user_rol} AS user_rol
                        INNER JOIN {user} AS moodle_user ON moodle_user.id = user_rol.id_usuario
                   WHERE id_rol = (SELECT id

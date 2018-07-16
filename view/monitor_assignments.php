@@ -66,6 +66,7 @@ $record->students = array_values( monitor_assignments_get_students_by_instance( 
 $record->students_programs = array_values( monitor_assignments_get_students_programs( $blockid ) );
 $record->students_faculty = array_values( monitor_assignments_get_students_faculty( $blockid ) );
 $record->monitors_students_relationship = json_encode( array_values( monitor_assignments_get_monitors_students_relationship_by_instance( $blockid ) ) );
+$record->professional_practicant_relationship = json_encode( array_values( monitor_assignments_get_profesional_practicant_relationship_by_instance( $blockid ) ) );
 
 $PAGE->set_context($contextcourse);
 $PAGE->set_context($contextblock);
