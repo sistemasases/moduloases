@@ -21,7 +21,7 @@
                         params += url[i];
                     }
                     return params.replace(/#[a-zA-z]+_[a-zA-z]+/i, '');
-                }
+                };
 
                 $('#dphpforms-redirect-new-form').click(function(){
                     window.location.href = "dphpforms_form_builder.php" + get_url_parameters(window.location.href);
