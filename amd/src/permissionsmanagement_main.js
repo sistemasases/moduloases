@@ -34,40 +34,6 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/jquery.dataTables', 'block
                 dropdownAutoWidth: true,
                 placeholder: "Seleccionar perfil"
             });}
-            $("#profiles_prof").select2({
-
-                language: {
-
-                    noResults: function() {
-
-                        return "No hay resultado";
-                    },
-                    searching: function() {
-
-                        return "Buscando..";
-                    }
-                },
-                width: '40%',
-                dropdownAutoWidth: true,
-            });
-
-            $("#actions").select2({
-                dropdownAutoWidth: true,
-                width: '100%',
-                multiple: true,
-                language: {
-
-                    noResults: function() {
-
-                        return "No hay resultado";
-                    },
-                    searching: function() {
-
-                        return "Buscando..";
-                    }
-                },
-                dropdownAutoWidth: true,
-            });
 
             var instance;
             $(document).ready(function() {
