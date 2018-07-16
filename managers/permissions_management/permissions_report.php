@@ -51,14 +51,14 @@ if (isset($_POST['id']) && isset($_POST['type']) && isset($_POST[$SOURCE]) && $_
 
     echo json_encode(modify_record($_POST['id'], $_POST['table'], $_POST['nombre'], $_POST['descripcion'], $_POST['funcionalidad']));
 
-} elseif (isset($_POST[$SOURCE]) && $_POST[$SOURCE] == 'update_general_table' && isset($_POST['instance'])) {
+} else if (isset($_POST[$SOURCE]) && $_POST[$SOURCE] == 'update_general_table' && isset($_POST['instance'])) {
 
     //Returns general table where specify what actions belong to what functionality
 
     echo json_encode(get_functions_actions());
 
 
-} elseif ($_POST[$SOURCE] == 'update_functionality_select') {
+} else if ($_POST['source'] == 'update_functionality_select') {
 
     // Returns two selects with existing functionalities.
 
@@ -71,7 +71,7 @@ if (isset($_POST['id']) && isset($_POST['type']) && isset($_POST[$SOURCE]) && $_
     echo json_encode($array);
 
 
-} elseif ($_POST[$SOURCE] == 'update_role_select') {
+} elseif ($_POST['source'] == 'update_role_select') {
 
     // Returns a select with all existing roles.
 
