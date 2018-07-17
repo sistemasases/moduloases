@@ -48,13 +48,13 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/jquery.dataTables', 'block
             url: "../managers/academic_reports/academic_reports_processing.php",
             success: function(msg){
               //Display all lose subjects
-              swal({ 
+              swal({
                 title: "Notas Perdidas",
                 type: "info",
                 text: msg,
                 showCancelButton: false,
                 customClass: 'notas_perdidas',
-                confirmButtonColor: "#DD6B55", 
+                confirmButtonColor: "#DD6B55",
                 confirmButtonText: "Cerrar",
                 closeOnConfirm: true });
             },
@@ -63,8 +63,8 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/jquery.dataTables', 'block
             error: function(msg){
               console.log(msg);
             },
-          })
-        };
+          });
+        }
       });
 
       //Opens a new tab to display a course report, given the course id and the location
