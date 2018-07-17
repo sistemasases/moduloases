@@ -56,14 +56,15 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
                 $('.cat').each(function () {
                     var input = $(this).children().next('.text');
                     //input.attr('disabled', true);
-                    input.css('font-weight', 'bold')
+                    input.css('font-weight', 'bold');
                 })
+                $("[name^='grade']").prop('disabled', true);
+                $("a").removeAttr("href");
 
                 $('.course').each(function () {
                     var input = $(this).children().next('.text');
-                    //input.attr('disabled', true);
                     input.css('font-weight', 'bold');
-                    input.css('font-size', 16)
+                    input.css('font-size', 16);
                 })
 
                 $('.header').children().each(function () {
