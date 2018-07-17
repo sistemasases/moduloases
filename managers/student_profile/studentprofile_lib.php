@@ -999,6 +999,8 @@ function get_status_program_for_profile($id_ases_user){
             
             if($status->id == $academic_program->program_status){
                 $status->selected = 'selected';
+            }else{
+                unset($status->selected);
             }
             array_push($array_statuses, $status);
         }

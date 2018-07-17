@@ -252,5 +252,35 @@
     padding: 0px !important;
 }
 
+.risk_graph_button,
+.risk_graph_button:active{
+  width: 45% !important;
+  background-color: #337ab7;
+  border-bottom: 1px solid #337ab7;
+  border-radius: 0px;
+  -webkit-border-radius: 0px;
+  -moz-border-radius: 0px;
+  -ms-border-radius: 0px;
+  -o-border-radius: 0px;
+  box-shadow: inset 0 1px 0 0 #337ab7;
+  -webkit-box-shadow: 0 1px 0 0 #337ab7 inset;
+  -moz-box-shadow: 0 1px 0 0 #337ab7 inset;
+  -ms-box-shadow: 0 1px 0 0 #337ab7 inset;
+  -o-box-shadow: 0 1px 0 0 #337ab7 inset;
+  color: white; font-weight: bold;
+  text-align: center;
+  padding-left: 0px !important;
+  padding-right: 0px !important;
+  margin-left: 3px;
+  margin-right: 3px;
+}
+
+.risk_graph_button:hover{
+  color: #fff;
+  background-color: #286090;
+  border-color: #204d74;
+  cursor: pointer;
+}
+
 
 

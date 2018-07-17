@@ -270,6 +270,8 @@ if ($student_code != 0) {
 
     $risk_object = get_risk_by_student($student_id);
 
+    print_r($risk_object);
+
     $record->individual_risk = $risk_object['individual']->calificacion_riesgo;
     $record->familiar_risk = $risk_object['familiar']->calificacion_riesgo;
     $record->academic_risk = $risk_object['academico']->calificacion_riesgo;
@@ -279,60 +281,76 @@ if ($student_code != 0) {
     switch ($risk_object['individual']->calificacion_riesgo) {
         case 1:
             $record->individual_class = 'div_low_risk';
+            $record->level_individual = 1;
             break;
         case 2:
             $record->individual_class = 'div_medium_risk';
+            $record->level_individual = 2;
             break;
         case 3:
             $record->individual_class = 'div_high_risk';
+            $record->level_individual = 3;
             break;
         default:
             $record->individual_class = 'div_no_risk';
+            $record->level_individual = 0;
             break;
     }
 
     switch ($risk_object['familiar']->calificacion_riesgo) {
         case 1:
             $record->familiar_class = 'div_low_risk';
+            $record->level_familiar = 1;
             break;
         case 2:
             $record->familiar_class = 'div_medium_risk';
+            $record->level_familiar = 2;
             break;
         case 3:
             $record->familiar_class = 'div_high_risk';
+            $record->level_familiar = 3;
             break;
         default:
             $record->familiar_class = 'div_no_risk';
+            $record->level_familiar = 0;
             break;
     }
 
     switch ($risk_object['economico']->calificacion_riesgo) {
         case 1:
             $record->economic_class = 'div_low_risk';
+            $record->level_economic = 1;
             break;
         case 2:
             $record->economic_class = 'div_medium_risk';
+            $record->level_economic = 2;
             break;
         case 3:
             $record->economic_class = 'div_high_risk';
+            $record->level_economic = 3;
             break;
         default:
             $record->economic_class = 'div_no_risk';
+            $record->level_economic = 0;
             break;
     }
 
     switch ($risk_object['vida_universitaria']->calificacion_riesgo) {
         case 1:
             $record->life_class = 'div_low_risk';
+            $record->level_life = 1;
             break;
         case 2:
             $record->life_class = 'div_medium_risk';
+            $record->level_life = 2;
             break;
         case 3:
             $record->life_class = 'div_high_risk';
+            $record->level_life = 3;
             break;
         default:
             $record->life_class = 'div_no_risk';
+            $record->level_life = 0;
             break;
     }
 

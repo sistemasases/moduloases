@@ -145,10 +145,11 @@
           {{/student_cohorts}}
         </div>
       </div>
-      <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 equalize" id="photo_div" >
+      <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2" id="photo_div" >
       </div>
     </div>
 
+    <!-- Semaforo de riestos -->
     <div class="row div_risk">
       <div class="col-sm-1 no-padding-left">
         <div id="div_title_risk">
@@ -156,23 +157,23 @@
         </div>
       </div>
       <div class="col-sm-9 no-padding-left" id="div_bar_risks">
-         <div class="{{individual_class}} col-sm-2" id="individual_risk">
+         <div class="{{individual_class}} col-sm-2" data-risk-level="{{level_individual}}" id="individual_risk">
             <span><b>INDIVIDUAL</b></span>
          </div>
          <div hidden>{{individual_risk}}</div>
-         <div class="{{familiar_class}} col-sm-2" id="familiar_risk">
+         <div class="{{familiar_class}} col-sm-2" data-risk-level="{{level_familiar}}" id="familiar_risk">
             <b> <span>FAMILIAR</span></b>
          </div>
          <div hidden>{{familiar_risk}}</div>
-         <div class="{{academic_class}} col-sm-2" id="academic_risk">
+         <div class="{{academic_class}} col-sm-2" data-risk-level="{{level_academic}}" id="academic_risk">
             <b><span>ACADÉMICO</span></b>
          </div>
          <div hidden>{{academic_risk}}</div>
-         <div class="{{economic_class}} col-sm-2" id="economic_risk">
+         <div class="{{economic_class}} col-sm-2" data-risk-level="{{level_economic}}" id="economic_risk">
             <b><span>ECONÓMICO</span></b>
          </div>
          <div hidden>{{economic_risk}}</div>
-         <div class="{{life_class}} col-sm-2" id="life_risk">
+         <div class="{{life_class}} col-sm-2" data-risk-level="{{level_life}}" id="life_risk">
             <b>VIDA UNIV.</b>
          </div>
          <div hidden>{{life_risk}}</div>
