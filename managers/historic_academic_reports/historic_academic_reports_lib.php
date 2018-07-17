@@ -311,13 +311,20 @@ function get_Totals_report($id_instance)
               ON         academ.id_semestre = semestre.id
               INNER JOIN {talentospilos_user_extended} extend
               ON         academ.id_estudiante = extend.id_ases_user
+              INNER JOIN {user} user_moodle 
+              ON         user_moodle.id = extend.id_moodle_user
+              INNER JOIN {talentospilos_programa} programa
+              ON         academ.id_programa = programa.id
               INNER JOIN {cohort_members} memb
               ON         memb.userid = extend.id_moodle_user
               INNER JOIN {cohort} cohorte
               ON         memb.cohortid = cohorte.id
               WHERE memb.cohortid IN (SELECT id_cohorte
                                     FROM   {talentospilos_inst_cohorte}
-                                    WHERE  id_instancia = $id_instance) AND extend.tracking_status = 1
+                                    WHERE  id_instancia = $id_instance) AND extend.tracking_status = 1 AND 
+                                    username LIKE (SELECT CONCAT('%-', prg.cod_univalle)
+                                                   FROM {talentospilos_programa} prg 
+                                                   WHERE prg.id = programa.id)
               GROUP BY semestre, cohorte";
 
     $historics = $DB->get_records_sql($query);
