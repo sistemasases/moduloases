@@ -363,6 +363,19 @@ function delete_record($id, $source)
     try {
         if ($source == 'accion' || $source == 'usuario_perfil') {
             $record->estado = 0;
+            $nombre = $DB->get_record_sql("SELECT nombre_accion as nombre FROM {talentospilos_accion} WHERE id = $id")->nombre;
+            $nombre_borrado = $nombre."_droped";
+            $validate_drop = true;
+            while ($validate_drop) {
+                $validate_drop = $DB->get_record_sql("SELECT nombre_accion as nombre FROM {talentospilos_accion} WHERE nombre_accion = '$nombre_borrado' ");
+                if($validate_drop){
+                    $nombre_borrado .= '_droped';
+                }else{
+                    break;
+                }
+            }
+            $record->nombre_accion = $nombre_borrado;
+            
             $paso           = $DB->update_record('talentospilos_' . $source, $record);
 
         } else if ($source == 'perfil_accion') {

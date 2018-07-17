@@ -43,7 +43,7 @@ include("../classes/output/renderer.php");
 
 
 // Set up the page.
-$title = "Crear accion";
+$title = "Gestión de Permisos";
 $pagetitle = $title;
 $courseid = required_param('courseid', PARAM_INT);
 $blockid = required_param('instanceid', PARAM_INT);

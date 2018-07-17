@@ -1512,9 +1512,12 @@ input.no-borde-fondo.tema
 
 }
 
+.notas_perdidas{
+  width: 520px;
+}
 
 #content-edit{
-  width: 400px;
+  width: 420px;
 }
 
 #informacion{
