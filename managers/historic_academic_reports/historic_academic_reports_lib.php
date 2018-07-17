@@ -155,7 +155,10 @@ function get_historic_report($id_instance)
                 ON         memb.cohortid = cohorte.id
                 WHERE memb.cohortid IN (SELECT id_cohorte
                                     FROM   {talentospilos_inst_cohorte}
-                                    WHERE  id_instancia = $id_instance)";
+                                    WHERE  id_instancia = $id_instance) AND 
+                                    username LIKE (SELECT CONCAT('%-', prg.cod_univalle)
+                                                   FROM {talentospilos_programa} prg 
+                                                   WHERE prg.id = programa.id) ";
 
     $historics = $DB->get_records_sql($query);
 
