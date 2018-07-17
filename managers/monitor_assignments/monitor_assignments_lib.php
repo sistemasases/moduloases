@@ -419,7 +419,7 @@ function monitor_assignments_get_practicant_monitor_relationship_by_instance( $i
 			FROM {talentospilos_rol} 
 			WHERE nombre_rol = 'practicante_ps'
 		)
-	  AND id_instancia = $instance_id
+	  AND id_instancia = $instance_id 
 	  AND id_semestre = ". get_current_semester()->max . "
 	) AS practicantes_0
 	ON practicantes_0.id_usuario = id_jefe
