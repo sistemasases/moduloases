@@ -53,14 +53,21 @@
             /* In this request is only valid pass like param(Parameters) the instance identificatior, 
              * for this reason, the input param only can be equal in quantity to one.
              * */
+            
             if( count( $input->params ) == 1 ){
                 /**
                  * The instance value only can be a number.
                  */
                 
                 if( is_numeric( $input->params[0] ) ){
-
-                    echo json_encode( array_values( monitor_assignments_get_practicant_monitor_relationship_by_instance( $input->params[0] ) ) );
+                    
+                    echo json_encode( 
+                        array(
+                            "status_code" => 0,
+                            "error_code" => "",
+                            "data_response" => array_values( monitor_assignments_get_practicant_monitor_relationship_by_instance( $input->params[0] ) )
+                        )
+                    );
                     
                 }else{
                     return_with_code( -2 );
@@ -70,7 +77,8 @@
             }
 
         }else{
-            return_with_code( -2 );
+            // Function not defined
+            return_with_code( -4 );
         }
         
     }else{
@@ -85,7 +93,8 @@
                 echo json_encode(
                     array(
                         "status_code" => $code,
-                        "error_code" => "You are not allowed to access this resource."
+                        "error_code" => "You are not allowed to access this resource.",
+                        "data_response" => ""
                     )
                 );
                 break;
@@ -93,7 +102,8 @@
                 echo json_encode(
                     array(
                         "status_code" => $code,
-                        "error_code" => "Error in the scheme."
+                        "error_code" => "Error in the scheme.",
+                        "data_response" => ""
                     )
                 );
                 break;
@@ -101,7 +111,17 @@
                 echo json_encode(
                     array(
                         "status_code" => $code,
-                        "error_code" => "Invalid values in the parameters."
+                        "error_code" => "Invalid values in the parameters.",
+                        "data_response" => ""
+                    )
+                );
+                break;
+            case -4:
+                echo json_encode(
+                    array(
+                        "status_code" => $code,
+                        "error_code" => "Function not defined.",
+                        "data_response" => ""
                     )
                 );
                 break;
