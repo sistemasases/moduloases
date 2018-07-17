@@ -15,6 +15,26 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/jquery.dataTables', 'block
         init: function() {
 
             select_user();
+            select_func();
+
+            function select_func() {
+                $("#functions").select2({
+                    placeholder: "Select a Program",
+                    language: {
+    
+                        noResults: function() {
+    
+                            return "No hay resultado";
+                        },
+                        searching: function() {
+    
+                            return "Buscando..";
+                        }
+                    },
+                    width: '36%',
+                    dropdownAutoWidth: true,
+                });
+            }
 
             function select_user(){
             $("#profiles_user").select2({
@@ -34,40 +54,9 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/jquery.dataTables', 'block
                 dropdownAutoWidth: true,
                 placeholder: "Seleccionar perfil"
             });}
-            $("#profiles_prof").select2({
 
-                language: {
 
-                    noResults: function() {
-
-                        return "No hay resultado";
-                    },
-                    searching: function() {
-
-                        return "Buscando..";
-                    }
-                },
-                width: '40%',
-                dropdownAutoWidth: true,
-            });
-
-            $("#actions").select2({
-                dropdownAutoWidth: true,
-                width: '100%',
-                multiple: true,
-                language: {
-
-                    noResults: function() {
-
-                        return "No hay resultado";
-                    },
-                    searching: function() {
-
-                        return "Buscando..";
-                    }
-                },
-                dropdownAutoWidth: true,
-            });
+            
 
             var instance;
             $(document).ready(function() {
@@ -123,20 +112,32 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/jquery.dataTables', 'block
                 var descripcion = $("#descripcion").val().trim();
                 var id_funcionalidad = $("#functions").val();
                 var msj = "";
+                var error = false;
 
                 if (nombre.length == 0) {
                     msj = "Nombre no puede ser nulo";
+                    error = true;
                 }
                 if (descripcion.length == 0) {
-                    msj = msj + "\nDescripcion no puede ser nulo";
+                    msj = msj + "<br>Descripcion no puede ser nulo";
+                    error = true;
+
                 }
 
-                if (id_funcionalidad.length == 0) {
-                    msj = msj + "\nFuncionalidad no puede ser nulo";
+                if (id_funcionalidad == 0) {
+                    msj = msj + "<br>Funcionalidad no puede ser nulo";
+                    error = true;
+
                 }
 
-                if (nombre.length == 0 || descripcion.length == 0) {
-                    alert(msj);
+                if (error) {
+                    swal({
+                        title: "Error al crear Acción.",
+                        text: msj,
+                        html: true,
+                        type: "warning",
+                        confirmButtonColor: "#d51b23"
+                    });
                 } else {
                     $.ajax({
                         type: "POST",
@@ -149,7 +150,13 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/jquery.dataTables', 'block
                         async: false,
                         success: function(msg) {
                             $("#formAction")[0].reset();
-                            alert(msg);
+                            swal({
+                                title: "",
+                                text: msg,
+                                type: "info",
+                                showCancelButton: false,
+                                showConfirmButton: true,
+                            });
                         }
                     });
                 }
@@ -174,7 +181,13 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/jquery.dataTables', 'block
                 }
 
                 if (nombre.length == 0 || descripcion.length == 0) {
-                    alert(msj);
+                    swal({
+                        title: "Error al crear Funcionalidad.",
+                        text: msj,
+                        html: true,
+                        type: "warning",
+                        confirmButtonColor: "#d51b23"
+                    });
                 } else {
                     $.ajax({
                         type: "POST",
@@ -185,7 +198,13 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/jquery.dataTables', 'block
                         url: "../managers/ActionCreateAction.php",
                         success: function(msg) {
                             $("#formFuncion")[0].reset();
-                            alert(msg);
+                            swal({
+                                title: "",
+                                text: msg,
+                                type: "info",
+                                showCancelButton: false,
+                                showConfirmButton: true,
+                            });
                         },
                     });
                 }
