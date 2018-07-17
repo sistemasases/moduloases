@@ -24,8 +24,7 @@
                 monitor_assignments_practicant_monitor_relationship = JSON.parse( $("#monitor_assignments_practicant_monitor_relationship").text() );
             });
 
-            // Loader of monitor_assignments_monitor_students
-            $(".monitor_item").click(function(){
+            $(document).on('click', '.monitor_item', function() {
                 var data_id = $(this).attr("data-id"); // id_monitor
                 $(".student_item").removeClass("assigned");
                 $(".student_item").removeClass("not-assigned");
@@ -46,8 +45,7 @@
                 }
             });
 
-            // Loader of monitor_assignments_practicant_monitor_relationship
-            $(".practicant_item").click(function(){
+            $(document).on('click', '.practicant_item', function() {
                 var data_id = $(this).attr("data-id"); // id_professional
                 $(".monitor_item").removeClass("assigned");
                 $(".monitor_item").removeClass("not-assigned");
