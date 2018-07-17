@@ -16,7 +16,7 @@
     <input type="text" class="hide" id="id_moodle" name="id_moodle" value="{{id_moodle}}" />
 
     <div class="row" id="div-header-profile">
-      <div class="col-xs-10 col-sm-10 col-md-10 col-lg-10" id="div-header-info">
+      <div class="col-xs-10 col-sm-10 col-md-10 col-lg-10 equalize" id="div-header-info">
 
         <!-- Select student -->
         <div class="row" id="div-select-student">
@@ -145,7 +145,7 @@
           {{/student_cohorts}}
         </div>
       </div>
-      <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2" id="photo_div" >
+      <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 equalize" id="photo_div" >
       </div>
     </div>
 
@@ -183,7 +183,7 @@
          <div hidden>{{geographic_risk}}</div>
       </div>
       <div class="col-sm-2" id="div_buttons_risk">
-        <button class="risk_graph_button col-sm-6" type="button" id="view_graphic_button">Radial</button>
+        <button class="risk_graph_button col-sm-6" type="button" id="view_graph_radial_button">Radial</button>
         <button class="risk_graph_button col-sm-6" type="button" id="view_graphic_risk_button">Trayectoria</button>
       </div>
     </div>
@@ -718,21 +718,18 @@
   <!-- End modal Seguimiento pares-->
 
   <!-- Graphics Modal -->
-  <div class="mymodal" id="modal_risk_graph">
+  <div class="mymodal" id="modal_radial_graph">
     <div class="mymodal-content">
-      <div class="mymodal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span id="modal_risk_span" aria-hidden="true">&times;</span>
-        </button>
-        <h4 class="mymodal-title" id="myModalLabel">
-          <b>GRÁFICA POR:</b>
-        </h4>
-      </div>
+        <div class="mymodal-header col-sm-12">
+            <div class="col-sm-11">
+              <h4 class="" id="myModalLabel">Gráfica radial</h4>
+            </div>
+            <div class="col-sm-1">
+              <span id="mymodal-v2-close" class="mymodal-close" aria-hidden="true">&times;</span>
+            </div>
+        </div>
       <div class="mymodal-body" id="modal_risk_body">
-
-      </div>
-      <div class="mymodal-footer">
-        <button id="modal_risk_close" type="button" class="button btn btn-secondary">Cerrar</button>
+        <canvas id="canvas_radial_graph"></canvas>
       </div>
     </div>
   </div>
