@@ -157,6 +157,8 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/jquery.dataTables', 'block
                                 type: "info",
                                 showCancelButton: false,
                                 showConfirmButton: true,
+                            },function () {
+                                location.reload();
                             });
                         }
                     });
@@ -205,6 +207,8 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/jquery.dataTables', 'block
                                 type: "info",
                                 showCancelButton: false,
                                 showConfirmButton: true,
+                            },function () {
+                                location.reload();
                             });
                         },
                     });
@@ -256,6 +260,8 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/jquery.dataTables', 'block
                                 type: "info",
                                 showCancelButton: false,
                                 showConfirmButton: true,
+                            },function () {
+                                location.reload();
                             });
                         }
                     });
@@ -675,7 +681,8 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/jquery.dataTables', 'block
                             text: msg,
                             type: "error",
                             confirmButtonColor: "#d51b23"
-                        });                    },
+                        });
+                    },
                 });
             }
 
