@@ -763,7 +763,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/jquery.dataTables', 'block
                                 });
                         } else {
                             deleteMonitorWithoutStudents(currentUser,getIdinstancia());
-                            //updateRolUser();
+                            updateRolUser();
                             load_users();
                         }
 
@@ -816,6 +816,10 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/jquery.dataTables', 'block
                 data.push({
                     name: 'deleteMonitorWithoutStudents',
                     value: 'deleteMonitorWithoutStudents'
+                });
+                data.push({
+                  name: 'oldUser',
+                  value: JSON.stringify([currentUser.id, currentUser.username])
                 });
                 data.push({
                     name: 'idinstancia',
