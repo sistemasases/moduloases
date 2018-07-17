@@ -89,7 +89,6 @@
           <hr id="hr-general-fields">
         </div>
         
-
         <div class="col-xs-12 col-sm-8" id="div_academic_programs">
           <h4>Programas académicos</h4>
           <table class="table table-hover borderless">
@@ -105,14 +104,11 @@
                   {{/update_program_status_sp}}
                   {{^update_program_status_sp}}
                   <select class="select_statuses_program" id="select-{{academic_program_id}}" disabled>
-                  {{/update_program_status_sp}}
-                      <option value="ACTIVO">ACTIVO</option>
-                      <option value="APLAZADO">APLAZADO</option>
-                      <option value="EGRESADO">EGRESADO</option>
-                      <option value="INACTIVO">INACTIVO</option>
-                      <option value="NOREGISTRA">NO REGISTRA</option>
-                      <option value="RETIRADO">RETIRADO</option>
+                      {{#statuses}}
+                        <option value={{id}} {{selected}}>{{nombre}}</option>
+                      {{/statuses}}
                   </select>
+                  {{/update_program_status_sp}}
                 </td>
                 <td class="col-sm-1 td-middle">
                 {{#update_tracking_status_sp}}

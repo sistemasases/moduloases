@@ -775,6 +775,7 @@ define(['jquery',
             $('#tipo_doc').prop('disabled', false);
             $('#cedula').prop('readonly', false);
             $('#icetex_status').prop('disabled', false);
+            $('.select_statuses_program').prop('disabled', false);
             
         });
 
@@ -788,6 +789,7 @@ define(['jquery',
             $('#tipo_doc').prop('disabled', true);
             $('#cedula').prop('readonly', true);
             $('#icetex_status').prop('disabled', true);
+            $('.select_statuses_program').prop('disabled', true);
         });
 
         

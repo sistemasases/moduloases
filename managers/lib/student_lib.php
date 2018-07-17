@@ -489,9 +489,14 @@ function get_academic_programs_by_student($id_ases_user){
     $result_to_return = new stdClass();
     $array_result = array();
 
-    $sql_query = "SELECT user_extended.id_moodle_user, academic_program.id AS academic_program_id, academic_program.cod_univalle, 
-                         academic_program.nombre AS nombre_programa, academic_program.jornada, faculty.nombre AS nombre_facultad,
-                         user_extended.program_status, user_extended.tracking_status
+    $sql_query = "SELECT user_extended.id_moodle_user, 
+                         academic_program.id AS academic_program_id, 
+                         academic_program.cod_univalle, 
+                         academic_program.nombre AS nombre_programa, 
+                         academic_program.jornada, 
+                         faculty.nombre AS nombre_facultad,
+                         user_extended.program_status, 
+                         user_extended.tracking_status
                   FROM {talentospilos_user_extended} AS user_extended
                        INNER JOIN {talentospilos_programa} AS academic_program ON user_extended.id_academic_program = academic_program.id
                        INNER JOIN {talentospilos_facultad} AS faculty ON academic_program.id_facultad = faculty.id

@@ -950,8 +950,7 @@ function validate_student($code_student){
  * @return object representing the user
  */
 
-function get_name_by_username($username)
-{
+function get_name_by_username($username){
     global $DB;
 
     $sql_query = "SELECT * FROM {user} WHERE username LIKE '$username%'";
@@ -960,4 +959,54 @@ function get_name_by_username($username)
     return $user;
 }
 
+/**
+ * Gets 
+ *
+ * @see get_academic_program_statuses($username)
+  * @return object's array with academic program statuses
+ */
+function get_status_program_for_profile($id_ases_user){
 
+    global $DB;
+
+    $sql_query = "SELECT user_extended.id_moodle_user, 
+                         academic_program.id AS academic_program_id, 
+                         academic_program.cod_univalle, 
+                         academic_program.nombre AS nombre_programa, 
+                         academic_program.jornada, 
+                         faculty.nombre AS nombre_facultad,
+                         user_extended.program_status, 
+                         user_extended.tracking_status
+                  FROM {talentospilos_user_extended} AS user_extended
+                       INNER JOIN {talentospilos_programa} AS academic_program ON user_extended.id_academic_program = academic_program.id
+                       INNER JOIN {talentospilos_facultad} AS faculty ON academic_program.id_facultad = faculty.id
+                  WHERE id_ases_user = $id_ases_user";
+    
+    $academic_program_student = $DB->get_records_sql($sql_query);
+
+    $sql_query = "SELECT *
+                  FROM {talentospilos_estad_programa}";
+    
+    $academic_program_statuses = $DB->get_records_sql($sql_query);
+
+    $array_result = array();
+
+    foreach($academic_program_student as $academic_program){
+
+        $array_statuses = array();
+
+        foreach($academic_program_statuses as $status){
+            
+            if($status->id == $academic_program->program_status){
+                $status->selected = 'selected';
+            }
+            array_push($array_statuses, $status);
+        }
+
+        $academic_program->statuses = $array_statuses; 
+
+        array_push($array_result, $academic_program);
+    }
+
+    return $array_result;
+}
