@@ -16,10 +16,12 @@
 
             var monitor_assignments_monitor_students;
             var monitor_assignments_professional_practicant;
+            var monitor_assignments_practicant_monitor_relationship;
 
             $(document).ready(function(){
                 monitor_assignments_monitor_students = JSON.parse( $("#monitor_assignments_monitor_students").text() );
                 monitor_assignments_professional_practicant = JSON.parse( $("#monitor_assignments_professional_practicant").text() );
+                monitor_assignments_practicant_monitor_relationship = JSON.parse( $("#monitor_assignments_practicant_monitor_relationship").text() );
             });
 
             // Loader of monitor_assignments_monitor_students
@@ -44,7 +46,7 @@
                 }
             });
 
-            // Loader of monitor_assignments_professional_practicant
+            // Loader of monitor_assignments_practicant_monitor_relationship
             $(".practicant_item").click(function(){
                 var data_id = $(this).attr("data-id"); // id_professional
                 $(".monitor_item").removeClass("assigned");
@@ -56,12 +58,12 @@
                     scrollTop: $('#monitor_column').scrollTop() + $('#monitor_assigned').position().top
                 }, 500);
 
-                for( var i = 0; i < monitor_assignments_professional_practicant.length; i++ ){
-                    if( monitor_assignments_professional_practicant[i].id_profesional == data_id ){
+                for( var i = 0; i < monitor_assignments_practicant_monitor_relationship.length; i++ ){
+                    if( monitor_assignments_practicant_monitor_relationship[i].id_practicante == data_id ){
                         
-                        $(".monitor_item[data-id='" + monitor_assignments_professional_practicant[i].id_practicante + "']").removeClass("not-assigned");
-                        $(".monitor_item[data-id='" + monitor_assignments_professional_practicant[i].id_practicante + "']").addClass("assigned");
-                        $(".monitor_item[data-id='" + monitor_assignments_professional_practicant[i].id_practicante + "']").clone().appendTo("#monitor_assigned");
+                        $(".monitor_item[data-id='" + monitor_assignments_practicant_monitor_relationship[i].id_monitor + "']").removeClass("not-assigned");
+                        $(".monitor_item[data-id='" + monitor_assignments_practicant_monitor_relationship[i].id_monitor + "']").addClass("assigned");
+                        $(".monitor_item[data-id='" + monitor_assignments_practicant_monitor_relationship[i].id_monitor + "']").clone().appendTo("#monitor_assigned");
                     }
                 }
             });
