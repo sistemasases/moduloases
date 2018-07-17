@@ -53,6 +53,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/jquery.dataTables', 'block
                 type: "info",
                 text: msg,
                 showCancelButton: false,
+                customClass: 'notas_perdidas',
                 confirmButtonColor: "#DD6B55", 
                 confirmButtonText: "Cerrar",
                 closeOnConfirm: true });

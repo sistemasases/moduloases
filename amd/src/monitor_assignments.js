@@ -6,7 +6,7 @@
  */
  
  /**
-  * @module block_ases/dphpforms_form_builder
+  * @module block_ases/monitor_assignments
   */
 
  define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/jqueryui','block_ases/select2'], function($, bootstrap, sweetalert, jqueryui, select2) {
@@ -51,9 +51,17 @@
                     }else{
                         $(".student_item").removeClass("oculto-programa");
                     }
+                }else if( (user_type == "professional") ){
+                    var boss_id = $(this).find(":selected").attr("data-id");
+                    if( boss_id != "-1" ){
+                        $(".practicant_item").removeClass("oculto-jefe");
+                        $(".practicant_item").not(".practicant_item[data-id-jefe='" + boss_id + "']").addClass("oculto-jefe");
+                    }else{
+                        $(".practicant_item").removeClass("oculto-jefe");
+                    }
                 }
 
             });
         }
     };
-})
+});
