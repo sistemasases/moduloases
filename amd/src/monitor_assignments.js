@@ -49,6 +49,8 @@
             $(document).on('click', '.practicant_item', function() {
 
                 var object_selected = $(this);
+                $("#monitor_assigned").addClass("items_assigned_empty");
+                $("#monitor_assigned").html("Consultando <span>.</span><span>.</span><span>.</span>");
 
                 $.ajax({
                     type: "POST",
@@ -70,20 +72,29 @@
                             $(".student_item").addClass("not-assigned");
                             $("#student_assigned").text("No ha seleccionado un monitor.");
                             $("#student_assigned").addClass("items_assigned_empty");
-                            $("#monitor_assigned").removeClass("items_assigned_empty");
                             $("#monitor_assigned").text("");
                             $('#monitor_column').animate({
                                 scrollTop: $('#monitor_column').scrollTop() + $('#monitor_assigned').position().top
                             }, 500);
-
+                            var elements = false;
                             for( var i = 0; i < monitor_assignments_practicant_monitor_relationship.length; i++ ){
                                 if( monitor_assignments_practicant_monitor_relationship[i].id_practicante == data_id ){
                                     
+                                    if( !elements ){
+                                        elements = true;
+                                        $("#monitor_assigned").removeClass("items_assigned_empty");
+                                    }
+
                                     $(".monitor_item[data-id='" + monitor_assignments_practicant_monitor_relationship[i].id_monitor + "']").removeClass("not-assigned");
                                     $(".monitor_item[data-id='" + monitor_assignments_practicant_monitor_relationship[i].id_monitor + "']").addClass("assigned");
                                     $(".monitor_item[data-id='" + monitor_assignments_practicant_monitor_relationship[i].id_monitor + "']").clone().appendTo("#monitor_assigned");
                                 }
                             }
+
+                            if( !elements ){
+                                $("#monitor_assigned").text("No tiene monitores asignados.");
+                            }
+
                         }else{
                             console.log( data );
                         }
