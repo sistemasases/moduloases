@@ -20,3 +20,11 @@ img.icon{
     width: 50px;
     word-wrap: break-word;
 }
+
+.range{
+    display:none !important;
+}
+
+#padre{
+    width: 400px;
+}

@@ -537,7 +537,7 @@ function print_table_categories($report)
                 if (isCategory($content)) {
                     $categoryid = explode("_", $id)[1];
                     $weight = getweightofCategory($categoryid);
-                    if (!$weight || intval($weight) === 0) {
+                    if (!$weight) {
                         $weight = '-';
                     } else {
                         $weight = '(' . floatval($weight) . ' %)';
@@ -560,7 +560,7 @@ function print_table_categories($report)
                 } else {
                     $id_item = explode("_", $id)[1];
                     $weight = getweightofItem($id_item);
-                    if (!$weight || intval($weight) === 0) {
+                    if (!$weight) {
                         $weight = '-';
                     } else {
                         $weight = '(' . floatval($weight) . ' %)';
@@ -750,7 +750,7 @@ function getweightofCategory($id)
 
     $sql_query = "SELECT aggregationcoef as weight
                   FROM {grade_items} item INNER JOIN {grade_categories} cat on item.iteminstance=cat.id
-                  WHERE cat.id = " . $id;
+                  WHERE cat.id = " . $id . " AND categoryid IS NULL";
 
     $output = $DB->get_record_sql($sql_query);
     if ($output) {
