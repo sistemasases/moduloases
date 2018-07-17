@@ -26,6 +26,9 @@
 
             $(document).on('click', '.monitor_item', function() {
                 var data_id = $(this).attr("data-id"); // id_monitor
+                $(".monitor_item").removeClass("active");
+                $(this).addClass("active");
+                $(".monitor_item[data-id='" + data_id + "']").addClass("active");
                 $(".student_item").removeClass("assigned");
                 $(".student_item").removeClass("not-assigned");
                 $(".student_item").addClass("not-assigned");
@@ -47,9 +50,16 @@
 
             $(document).on('click', '.practicant_item', function() {
                 var data_id = $(this).attr("data-id"); // id_professional
+                $(".practicant_item").removeClass("active");
+                $(this).addClass("active");
                 $(".monitor_item").removeClass("assigned");
                 $(".monitor_item").removeClass("not-assigned");
                 $(".monitor_item").addClass("not-assigned");
+                $(".student_item").removeClass("assigned");
+                $(".student_item").removeClass("not-assigned");
+                $(".student_item").addClass("not-assigned");
+                $("#student_assigned").text("No ha seleccionado un monitor.");
+                $("#student_assigned").addClass("items_assigned_empty");
                 $("#monitor_assigned").removeClass("items_assigned_empty");
                 $("#monitor_assigned").text("");
                 $('#monitor_column').animate({
@@ -65,6 +75,13 @@
                     }
                 }
             });
+
+            $(document).on('click', '.student_item', function(){
+                $(".student_item").removeClass("active");
+                $(this).addClass("active");
+                $(".student_item[data-id='" + data_id + "']").addClass("active");
+            });
+
             
             $("select").change(function(){
 
