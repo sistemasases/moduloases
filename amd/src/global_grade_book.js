@@ -195,6 +195,8 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
              * @return {void}
              */
             function bloquearTotales() {
+                $("a").removeAttr("href");
+
                 $('.cat').each(function () {
                     var input = $(this).children().next('.text');
                     input.attr('disabled', true);

@@ -750,7 +750,7 @@ function getweightofCategory($id)
 
     $sql_query = "SELECT aggregationcoef as weight
                   FROM {grade_items} item INNER JOIN {grade_categories} cat on item.iteminstance=cat.id
-                  WHERE cat.id = " . $id . " AND categoryid IS NULL";
+                  WHERE cat.id = " . $id . " AND itemtype = 'category'";
 
     $output = $DB->get_record_sql($sql_query);
     if ($output) {
