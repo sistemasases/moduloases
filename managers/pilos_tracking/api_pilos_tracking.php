@@ -29,20 +29,27 @@
     require_once(dirname(__FILE__).'/pilos_tracking_lib.php');
     //rid = record_id
     //arg = student_code, i.e 142XXXX or undefined or 0
+
+    
+
     if( isset($_GET['function']) && isset($_GET['arg']) && isset($_GET['rid']) ){
 
-        if( isset($_GET['arg']) == 'undefined' ){
+        if( $_GET['arg'] == 'undefined' ){
             $_GET['arg'] = '0';
         };
 
         if( ( $_GET['function'] == 'update_last_user_risk' ) && ( $_GET['arg'] == '0' ) ){
+
             header('Content-Type: application/json');
             update_last_user_risk( $_GET['arg'], $_GET['rid'] );
             echo json_encode( array( 'error' => '0', 'message' => "" ) );
+
         }else if( ( $_GET['function'] == 'update_last_user_risk' ) && ( $_GET['arg'] != '0' ) ){
+
             header('Content-Type: application/json');
             update_last_user_risk( $_GET['arg'], -1 );
             echo json_encode( array( 'error' => '0', 'message' => "" ) );
+
         }
     }else{
         echo json_encode( array( 'error' => '-1', 'message' => "arg, function, rid" ) );
