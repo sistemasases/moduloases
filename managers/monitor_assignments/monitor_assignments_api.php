@@ -76,6 +76,30 @@
                 return_with_code( -2 );
             }
 
+        }else if( ( $input->function == "get_monitors_students_relationship_by_instance" ) ){
+
+            if( count( $input->params ) == 1 ){
+                /**
+                 * The instance value only can be a number.
+                 */
+                
+                if( is_numeric( $input->params[0] ) ){
+                    
+                    echo json_encode( 
+                        array(
+                            "status_code" => 0,
+                            "error_code" => "",
+                            "data_response" => array_values( monitor_assignments_get_monitors_students_relationship_by_instance( $input->params[0] ) )
+                        )
+                    );
+                    
+                }else{
+                    return_with_code( -2 );
+                }
+            }else{
+                return_with_code( -2 );
+            }
+
         }else{
             // Function not defined
             return_with_code( -4 );
