@@ -49,8 +49,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/jquery.dataTables', 'block
                             var codigo = table.cell(table.row(this).index(), 2).data();
                             var programa = table.cell(table.row(this).index(), 6).data();
                             var semestre = table.cell(table.row(this).index(), 5).data();
-                            var cant = table.cell(table.row(this).index(), 7).data();
-                            checkLoses(codigo, programa, semestre, cant);
+                            checkLoses(codigo, programa, semestre);
                         }
                     } else if (colIndex == 2) {
                         location.href = "student_profile.php" + location.search + "&student_code=" + table.cell(table.row(this).index(), 2).data() + "-";
@@ -85,7 +84,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/jquery.dataTables', 'block
      * @desc Check the loses subjects
      * @return {void}
      */
-    function checkLoses(codigo, programa, semestre, cant) {
+    function checkLoses(codigo, programa, semestre) {
         $.ajax({
             type: "POST",
             data: {
@@ -116,7 +115,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/jquery.dataTables', 'block
                 console.log(msg);
             },
         });
-    };
+    }
 
     /**
      * @method checkEstimulo
