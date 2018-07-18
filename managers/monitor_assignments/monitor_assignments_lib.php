@@ -347,11 +347,11 @@ function monitor_assignments_get_monitors_students_relationship_by_instance( $in
 
     global $DB;
 
-    $sql = "SELECT id_monitor, id_estudiante, id_instancia 
+    $sql = "SELECT id, id_monitor, id_estudiante 
     FROM {talentospilos_monitor_estud} 
     WHERE id_semestre = ". get_current_semester()->max ." AND id_instancia = $instance_id";
-
-    return $DB->get_records_sql( $sql );
+  
+    return $DB->get_records_sql( $sql );;
 
 }
 
@@ -372,7 +372,7 @@ function monitor_assignments_get_profesional_practicant_relationship_by_instance
 
     global $DB;
 
-    $sql="SELECT user_rol_1.id_jefe AS id_profesional, user_rol_1.id_usuario AS id_practicante
+    $sql="SELECT user_rol_1.id, user_rol_1.id_jefe AS id_profesional, user_rol_1.id_usuario AS id_practicante
 	  FROM {talentospilos_user_rol} AS user_rol_1
 	  INNER JOIN (
 		SELECT id_usuario
@@ -391,5 +391,43 @@ function monitor_assignments_get_profesional_practicant_relationship_by_instance
     return $DB->get_records_sql( $sql );
 
 }
+
+/**
+ * Función que retorna todas las relaciones practicante-monitor del semestre actual en una instancia
+ *
+ * @see monitor_assignments_get_practicant_monitor_relationship_by_instance
+ * @param instance_id
+ * @return Array(
+ * 	stdClass(
+ *	    ->id_practicante
+ * 	    ->id_monitor
+ *	)
+ * )
+ */
+
+function monitor_assignments_get_practicant_monitor_relationship_by_instance( $instance_id ){
+
+    global $DB;
+
+    $sql="SELECT user_rol_1.id, user_rol_1.id_jefe AS id_practicante, user_rol_1.id_usuario AS id_monitor
+	  FROM {talentospilos_user_rol} AS user_rol_1
+	  INNER JOIN (
+		SELECT id_usuario
+        	FROM {talentospilos_user_rol} AS user_rol_0
+	 	WHERE id_rol = ( 
+			SELECT id 
+			FROM {talentospilos_rol} 
+			WHERE nombre_rol = 'practicante_ps'
+		)
+	  AND id_instancia = $instance_id 
+	  AND id_semestre = ". get_current_semester()->max . "
+	) AS practicantes_0
+	ON practicantes_0.id_usuario = id_jefe
+	WHERE user_rol_1.id_semestre = ". get_current_semester()->max;
+
+    return $DB->get_records_sql( $sql );
+
+}
+
 
 ?>

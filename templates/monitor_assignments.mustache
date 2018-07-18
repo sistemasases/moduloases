@@ -2,15 +2,19 @@
 <body>
     <div id="monitor_assignments_monitor_students" style="display:none">{{{monitors_students_relationship}}}</div>
     <div id="monitor_assignments_professional_practicant" style="display:none">{{{professional_practicant_relationship}}}</div>
+    <div id="monitor_assignments_practicant_monitor_relationship" style="display:none">{{{practicant_monitor_relationship}}}</div>
+    
     <div class="container-fluid">
         <div class="row">
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                <H2>Sistema de asignaciones</H2>
+                <h2>Sistema de asignaciones</h2>
                 <hr>
             </div>
         </div>
         <div class="row">
             <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                <span class="column-title">Practicantes</span>
+                <hr>
                 <span>Profesional:&nbsp;</span>
                 <select id="select-professional" data-id="professional_selector" name="">
                     <option value="" data-id="-1" alt="TODOS">TODOS</option>
@@ -22,6 +26,8 @@
                 </select>
             </div>
             <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                <span class="column-title">Monitores</span>
+                <hr>
                 <span>Facultad:</span>
                 <select id="select-monitor-faculty" class="select-faculty" data-id="monitor_faculty" name="" >
                     <option value="" data-id-facultad="-1" alt="TODOS">TODOS</option>
@@ -42,6 +48,8 @@
                 </select>
             </div>
             <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                <span class="column-title">Estudiantes</span>
+                <hr>
                 <span>Facultad:</span>
                 <select id="select-student-faculty" class="select-faculty" data-id="student_faculty" name="" >
                     <option value="" data-id-facultad="-1" alt="TODOS">TODOS</option>
@@ -74,10 +82,12 @@
                 {{/.}}
                 {{/practitioners}}
             </div>
-            <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 column_items" >
+            <div id="monitor_column" class="col-xs-4 col-sm-4 col-md-4 col-lg-4 column_items monitor_column" >
+                <div id="monitor_assigned" class="items_assigned items_assigned_empty">No ha seleccionado un practicante.</div>
+                <hr>
                 {{#monitors}}
                 {{#.}}
-                <div class="monitor_item assignment_item not_assigned" data-id="{{id}}" data-cod-programa="{{cod_programa}}" data-id-facultad="{{id_facultad}}">
+                <div class="monitor_item assignment_item not-assigned" data-id="{{id}}" data-cod-programa="{{cod_programa}}" data-id-facultad="{{id_facultad}}">
                     <div class="item-text">
                         {{fullname}}
                     </div>
@@ -88,7 +98,9 @@
                 {{/.}}
                 {{/monitors}}
             </div>
-            <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 column_items" >
+            <div id="student_column" class="col-xs-4 col-sm-4 col-md-4 col-lg-4 column_items " >
+                <div id="student_assigned" class="items_assigned items_assigned_empty">No ha seleccionado un monitor.</div>
+                <hr>
                 {{#students}}
                 {{#.}}
                 <div class="student_item assignment_item not-assigned" data-id="{{id}}" data-cod-programa="{{cod_programa}}" data-id-facultad="{{id_facultad}}">

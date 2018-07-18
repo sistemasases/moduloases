@@ -66,10 +66,61 @@
     border-left: 3px solid gray;
 }
 
-.active{
+.active, .active:hover{
     border-bottom: 2px solid rgb(255, 174, 0);
 }
 
 .oculto-facultad, .oculto-programa, .oculto-jefe{
     display: none;
+}
+
+.items_assigned{
+
+}
+
+.items_assigned_empty{
+    font-style: italic;
+    font-size: 1.1em;
+    background-color: rgb(241, 241, 241);
+    border: 1px dotted #888888;
+    padding: 1em;
+    width: 100%;
+}
+
+.column-title{
+    font-size: 1.3em;
+}
+
+@-webkit-keyframes opacity {
+    0% { opacity: 1; }
+    100% { opacity: 0; }
+}
+@-moz-keyframes opacity {
+    0% { opacity: 1; }
+    100% { opacity: 0; }
+}
+
+.items_assigned_empty span {
+    -webkit-animation-name: opacity;
+    -webkit-animation-duration: 1s;
+    -webkit-animation-iteration-count: infinite;
+    
+    -moz-animation-name: opacity;
+    -moz-animation-duration: 1s;
+    -moz-animation-iteration-count: infinite;
+}
+
+.items_assigned_empty span:nth-child(1) {
+    -webkit-animation-delay: 100ms;
+    -moz-animation-delay: 100ms;
+}
+
+.items_assigned_empty span:nth-child(2) {
+    -webkit-animation-delay: 300ms;
+    -moz-animation-delay: 300ms;
+}
+
+.items_assigned_empty span:nth-child(3) {
+    -webkit-animation-delay: 500ms;
+    -moz-animation-delay: 500ms;
 }

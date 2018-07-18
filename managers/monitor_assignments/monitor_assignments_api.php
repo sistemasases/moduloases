@@ -27,9 +27,132 @@
 
     require_once(dirname(__FILE__). '/../../../../config.php');
     require_once(dirname(__FILE__).'/monitor_assignments_lib.php');
-    if( isset($_GET['function']) ){
 
+    header('Content-Type: application/json');
+
+    global $USER;
+    
+    $raw_data = file_get_contents("php://input");
+    
+    // Validation if the user is logged. 
+    if( $USER->id == 0 ){
+        return_with_code( -1 );
+    }
+
+    $input = json_decode( $raw_data );
+
+    // Example of valid input. params = Parameters
+    // { "function":"get_monitors_by_instance", "params":[ instance_id ] }
+
+    if( isset($input->function) && isset($input->params) ){
+
+        // Get practicant monitor relationship by instance
+        // params[0] => instance_id
+        if( ( $input->function == "get_practicant_monitor_relationship_by_instance" ) ){
+
+            /* In this request is only valid pass like param(Parameters) the instance identificatior, 
+             * for this reason, the input param only can be equal in quantity to one.
+             * */
+            
+            if( count( $input->params ) == 1 ){
+                /**
+                 * The instance value only can be a number.
+                 */
+                
+                if( is_numeric( $input->params[0] ) ){
+                    
+                    echo json_encode( 
+                        array(
+                            "status_code" => 0,
+                            "error_code" => "",
+                            "data_response" => array_values( monitor_assignments_get_practicant_monitor_relationship_by_instance( $input->params[0] ) )
+                        )
+                    );
+                    
+                }else{
+                    return_with_code( -2 );
+                }
+            }else{
+                return_with_code( -2 );
+            }
+
+        }else if( ( $input->function == "get_monitors_students_relationship_by_instance" ) ){
+
+            if( count( $input->params ) == 1 ){
+                /**
+                 * The instance value only can be a number.
+                 */
+                
+                if( is_numeric( $input->params[0] ) ){
+                    
+                    echo json_encode( 
+                        array(
+                            "status_code" => 0,
+                            "error_code" => "",
+                            "data_response" => array_values( monitor_assignments_get_monitors_students_relationship_by_instance( $input->params[0] ) )
+                        )
+                    );
+                    
+                }else{
+                    return_with_code( -2 );
+                }
+            }else{
+                return_with_code( -2 );
+            }
+
+        }else{
+            // Function not defined
+            return_with_code( -4 );
+        }
         
-    };
+    }else{
+        return_with_code( -2 );
+    }
+
+    function return_with_code( $code ){
+        
+        switch( $code ){
+
+            case -1:
+                echo json_encode(
+                    array(
+                        "status_code" => $code,
+                        "error_code" => "You are not allowed to access this resource.",
+                        "data_response" => ""
+                    )
+                );
+                break;
+            case -2:
+                echo json_encode(
+                    array(
+                        "status_code" => $code,
+                        "error_code" => "Error in the scheme.",
+                        "data_response" => ""
+                    )
+                );
+                break;
+            case -3:
+                echo json_encode(
+                    array(
+                        "status_code" => $code,
+                        "error_code" => "Invalid values in the parameters.",
+                        "data_response" => ""
+                    )
+                );
+                break;
+            case -4:
+                echo json_encode(
+                    array(
+                        "status_code" => $code,
+                        "error_code" => "Function not defined.",
+                        "data_response" => ""
+                    )
+                );
+                break;
+
+        }
+
+        die();
+    }
 
 ?>
