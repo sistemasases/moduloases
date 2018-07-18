@@ -825,6 +825,7 @@ function update_last_user_risk( $ases_student_code, $record_id ){
     $individual_risk_lvl = '0';
     //$ases_user_id = get_ases_user_by_code($student_code)->id;
     $ases_user_id = $ases_student_code;
+    
 
     //Get all the records of the forms that contain the risk levels
     $trackings = dphpforms_find_records( 'seguimiento_pares', 'seguimiento_pares_id_estudiante', $ases_student_code, 'DESC' );
@@ -938,7 +939,6 @@ function update_last_user_risk( $ases_student_code, $record_id ){
             };
         };
     };
-
 
     $risks = $DB->get_records_sql( "SELECT * FROM {talentospilos_riesgos_ases}" );
     foreach( $risks as $key => $risk ){

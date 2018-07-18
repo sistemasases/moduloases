@@ -1,10 +1,10 @@
- /**
- * Grade book management
- * @module amd/src/global_grade_book
- * @author Camilo José Cruz rivera
- * @copyright 2018 Camilo José Cruz Rivera <cruz.camilo@correounivalle.edu.co> 
- * @license  http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
+/**
+* Grade book management
+* @module amd/src/global_grade_book
+* @author Camilo José Cruz rivera
+* @copyright 2018 Camilo José Cruz Rivera <cruz.camilo@correounivalle.edu.co> 
+* @license  http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+*/
 define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/jqueryui'], function ($, bootstrap, sweetalert, jqueryui) {
 
     return {
@@ -18,7 +18,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
                 bloquearTotales();
                 if ($('.gradingerror').length != 0) {
                     //Redirect to a new page given the course id 
-                    new_page = location.origin + "/moodle/grade/report/grader/index.php?id=" + getCourseid();
+                    var new_page = location.origin + "/moodle/grade/report/grader/index.php?id=" + getCourseid();
                     swal({
                         title: "Recalculando ítems.",
                         text: "Debido al proceso de actualización del campus virtual se debe realizar este paso.\nGracias por su paciencia \nDe seguir presentando este problema, por favor dirigirse al area de sistemas Ases",
@@ -98,19 +98,21 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
                         },
                         dataType: "json",
                         cache: "false",
-                        error: function (msg) { console.log(msg) },
+                        error: function (msg) {
+                             console.log(msg); 
+                        }
                     });
-                };
-            })
+                }
+            });
 
             $(document).on('focus', '.text', function () {
                 grade = $(this).val();
                 //console.log(grade);
-            })
+            });
 
             $(document).on('keypress', '.text', function (e) {
 
-                tecla = (document.all) ? e.keyCode : e.which;
+                var tecla = (document.all) ? e.keyCode : e.which;
 
                 //backspace to delete and (.)  always allows it
                 if (tecla == 8 || tecla == 46) {
@@ -134,7 +136,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
              * @param {integer} course_id
              * @return {boolean} 
              */
-            function update_grade_items(course_id){
+            function update_grade_items(course_id) {
 
                 var curso = course_id;
                 var data = { type: 'update_grade_items', course: curso };
@@ -145,17 +147,17 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
                     url: "../managers/grade_categories/grader_processing.php",
                     async: false,
                     success: function (msg) {
-                        if(msg == '1'){
+                        if (msg == '1') {
                             console.log('update ok');
-                        }else{
+                        } else {
                             console.log('update fail');
                         }
                     },
                     dataType: "text",
                     cache: "false",
-                    error: function (msg) { console.log(msg) },
+                    error: function (msg) { console.log(msg); },
                 });
-            };
+            }
             /**
              * @method validateNota
              * @desc Verifies if a grade is correct value (not empty or within a range)
@@ -195,22 +197,24 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
              * @return {void}
              */
             function bloquearTotales() {
+                $("a").removeAttr("href");
+
                 $('.cat').each(function () {
                     var input = $(this).children().next('.text');
                     input.attr('disabled', true);
-                    input.css('font-weight', 'bold')
-                })
+                    input.css('font-weight', 'bold');
+                });
 
                 $('.course').each(function () {
                     var input = $(this).children().next('.text');
                     input.attr('disabled', true);
                     input.css('font-weight', 'bold');
-                    input.css('font-size', 16)
-                })
+                    input.css('font-size', 16);
+                });
 
                 $('.header').children().each(function () {
                     $(this).removeAttr('href');
-                })
+                });
             }
 
 
@@ -234,11 +238,11 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
                                     var pagina = "student_profile.php";
                                     var url = pagina + location.search + "&student_code=" + code;
                                     //window.open(url, '_blank');
-                                })
+                                });
                             });
                         }
-                    };
-                })
+                    }
+                });
             }
 
             /**
@@ -267,7 +271,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
                 var pilos = new Array;
                 $("#students-pilos").children().each(function () {
                     pilos.push($(this).attr("id"));
-                })
+                });
                 return pilos;
             }
 
@@ -285,11 +289,8 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
                         return curso;
                     }
                 }
-                
             }
- 
-
         }
-    }
+    };
 });
 
