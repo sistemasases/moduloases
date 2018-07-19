@@ -1184,7 +1184,7 @@ input.no-borde-fondo.tema
     height: 100%; /* Full height */
     background-color: rgb(0,0,0); /* Fallback color */
     background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
-    overflow: auto;
+    overflow: scroll;
 }
 
 /* Modal Content/Box */
@@ -1194,8 +1194,6 @@ input.no-borde-fondo.tema
     padding: 20px;
     border: 1px solid #888;
     width: 60%;
-    margin-bottom: 20px;
-    margin-top: 15%;
 }
 
 /* The Close Button */
@@ -1215,12 +1213,12 @@ input.no-borde-fondo.tema
 
 /* Modal Header */
 .mymodal-header {
-    padding-top: 10px;
-    padding-bottom: 10px;
-    padding-left: 10px;
-    padding-right: 10px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding-left: 5px;
+    padding-right: 5px;
     margin-top: 0px;
-    margin-right: 10px;
+    margin-right: 0px;
     background-color: #D8D8D8;
     color: black;
 }
@@ -1228,7 +1226,7 @@ input.no-borde-fondo.tema
 /* Modal Body */
 .mymodal-body {
   margin-top: 30px;
-  padding: 10px;
+  padding: 10px;  
 }
 
 /* Modal Footer */

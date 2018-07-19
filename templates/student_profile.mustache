@@ -19,16 +19,19 @@
       <div class="col-xs-10 col-sm-10 col-md-10 col-lg-10 equalize" id="div-header-info">
 
         <!-- Select student -->
-        <div class="row" id="div-select-student">
+        <div class="row" id="div-code-student">
+          <div class="col-sm-1" id="div-instance-icon">
+            <span class="glyphicon glyphicon-ok {{#ases_status_t}}i-tracking-t{{/ases_status_t}}{{#ases_status_f}}i-tracking-f{{/ases_status_f}}{{#ases_status_n}}i-tracking-n{{/ases_status_n}} tooltip-v1 col-sm-6" 
+                  {{#update_ases_status_sp}} id="icon-tracking" {{/update_ases_status_sp}}
+                  data-toggle="tooltip" 
+                  data-placement="top"
+                  title="{{ases_status_description}}"></span>
+            <input type="hidden" id="input_status_ases" value="{{ases_status_t}}{{ases_status_f}}{{ases_status_n}}">
+            <span>ASES</span>
+          </div>
+            
           <div class="col-xs-10 col-sm-10 col-md-10 col-lg-10" id ="div_select_student">
             {{{code}}}
-          </div>
-          <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1" id="div-icon-tracking">
-            <div class="icontip">
-              <span class="glyphicon glyphicon-ok {{#ases_status_t}}i-tracking-t{{/ases_status_t}}{{#ases_status_f}}i-tracking-f{{/ases_status_f}}{{#ases_status_n}}i-tracking-n{{/ases_status_n}} col-sm-6 col-sm-offset-3" {{#update_ases_status_sp}} id="icon-tracking" {{/update_ases_status_sp}}></span>
-              <span class="icontiptext" id="tip_ases_status">{{ases_status_description}}</span>
-              <input type="hidden" id="input_status_ases" value="{{ases_status_t}}{{ases_status_f}}{{ases_status_n}}">
-            </div>
           </div>
 
           <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1" id="div-icon-edit">
@@ -44,9 +47,7 @@
                 <span class="col-sm-6 col-sm-offset-6" id="span-icon-cancel-edit" hidden></span>
                 <span class="icontiptext" id="tip-cancel" hidden>Cancelar edición</span>
             </div>
-            
           </div>
-
         </div>
         <!-- End select student -->
 
@@ -82,7 +83,6 @@
               {{{options_status_icetex}}}
             </select>
           </div>
-          
         </div>
 
         <div class="row" id="div-hr">
@@ -719,7 +719,7 @@
 
   <!-- Graphics Modal -->
   <div class="mymodal" id="modal_radial_graph">
-    <div class="mymodal-content">
+    <div class="mymodal-content" id="modal-content-radial-graph">
         <div class="mymodal-header col-sm-12">
             <div class="col-sm-11">
               <h4 class="" id="myModalLabel">Gráfica radial</h4>
@@ -729,7 +729,9 @@
             </div>
         </div>
       <div class="mymodal-body" id="modal_risk_body">
-        <canvas id="canvas_radial_graph"></canvas>
+        <div id="div_graph_radial">
+          <canvas id="canvas_radial_graph"></canvas>
+        </div>
       </div>
     </div>
   </div>

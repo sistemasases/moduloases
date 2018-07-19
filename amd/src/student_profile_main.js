@@ -20,6 +20,9 @@
 return {
  init: function(data_init) {
      // Carga una determinada pestaña
+
+     $('[data-toggle="tooltip"]').tooltip(); 
+     
      var parameters = get_url_parameters(document.location.search);
      var panel_collapse = $('.panel-collapse.collapse.in');
 
@@ -42,7 +45,6 @@ return {
      $("#asignados").on('change', function(){
          var code = $('#asignados').val();
          var student_code = code.split(' ')[0];
-         console.log(student_code);
 
          load_student(student_code);
      });
@@ -476,22 +478,52 @@ return {
     
      var ctx = document.getElementById('canvas_radial_graph').getContext('2d');
     
-     var individual_level = $('#individual_risk').attr('data-risk-level');
-     var familiar_level = $('#familiar_risk').attr('data-risk-level');
-     var academic_level = $('#academic_risk').attr('data-risk-level');
-     var economic_level = $('#economic_risk').attr('data-risk-level');
-     var life_level = $('#life_risk').attr('data-risk-level');
+    var individual_level;
+    var familiar_level;
+    var academic_level;
+    var economic_level;
+    var life_level; 
 
+    if($('#individual_risk').attr('data-risk-level') == 0){
+        individual_level = 4;
+    }else{
+        individual_level = $('#individual_risk').attr('data-risk-level');
+    }
+
+    if($('#familiar_risk').attr('data-risk-level') == 0){
+        familiar_level = 4;
+    }else{
+        familiar_level = $('#familiar_risk').attr('data-risk-level');
+    }
+
+    if($('#academic_risk').attr('data-risk-level') == 0){
+        academic_level = 4;
+    }else{
+        academic_level = $('#academic_risk').attr('data-risk-level');
+    }
+
+    if($('#economic_risk').attr('data-risk-level') == 0){
+        economic_level = 4;
+    }else{
+        economic_level = $('#economic_risk').attr('data-risk-level');
+    }
+
+    if($('#life_risk').attr('data-risk-level') == 0){
+        life_level = 4;
+    }else{
+        life_level = $('#life_risk').attr('data-risk-level');
+    }
+     
      $('#modal_radial_graph').fadeIn(200);
 
      var data = {
         labels: ['Individual', 'Familiar', 'Académico', 'Económico', 'Vida universitaria'],
         datasets: [{
-            data: [individual_level, familiar_level, academic_level, economic_level, life_level],
-            fillColor : "rgba(220,220,220,0.5)",
-			strokeColor : "rgba(220,220,220,1)",
-			pointColor : "rgba(220,220,220,1)",
-			pointStrokeColor : "#fff",
+            data: [4 - individual_level, 4 - familiar_level, 4 - academic_level, 4 - economic_level, 4 - life_level],
+            backgroundColor: 'rgba(255, 99, 132, 0.4)',
+            borderColor: ['rgba(255,99,132,1)'],
+            borderWidth: 2,
+            fontsize: 12
         }]
     }
 
@@ -501,30 +533,26 @@ return {
             beginAtZero: true,
             min: 0,
             max: 3,
-            stepSize: 1
+            stepSize: 1,
+            display: false
           },
           pointLabels: {
-            fontSize: 18
-          }
+            fontSize: 12
+          },
+          scaleLabel:{
+            fontsize: 10
+          },
         },
         legend: {
           display: false
-        },
-        animation: true,
-        animationSteps : 60,
-	    animationEasing : "easeOutQuart",
-    	onAnimationComplete : null
+        }
     };
 
     var radar_chart = new Chart(ctx, {
         type: 'radar',
         data: data,
         options: chart_options
-    });
-
-    
-
-    
+    });   
  }
 };
 

@@ -4,7 +4,12 @@
 
 #div-header-profile{
     margin-bottom: 10px;
-    margin-top: 20px;
+    margin-top: 10px;
+}
+
+#div-instance-name{
+    background: #D4D4D4;
+    height: 30px;
 }
 
 #photo_div{
@@ -55,8 +60,18 @@
     border-radius: 0 0 0px 0px;
 }
 
+#div-instance-icon{
+    padding-right: 5px;
+    align-self: center;
+}
+
 #div_select_student{
     padding-right: 0px;
+    padding-left: 0px;
+}
+
+#div-code-student{
+    margin-top: 15px;
 }
 
 #div-hr{
@@ -100,9 +115,9 @@
 
 #icon-tracking{
     position: relative;
-    font-size: 35px; 
+    font-size: 30px; 
     cursor: pointer;
-    
+    padding-left: 0px;
 }
 
 #div-icon-tracking{
@@ -161,21 +176,21 @@
 
 .i-tracking-t{
     color: green !important;
-    font-size: 20px;
+    font-size: 12px;
     position: relative;
     transition:all .5s ease-in-out;
 }
 
 .i-tracking-f{
     color: rgb(128, 186, 128) !important;
-    font-size: 20px;
+    font-size: 12px;
     position: relative;
     transition:all .5s ease-in-out;
 }
 
 .i-tracking-n{
     color: gray !important;
-    font-size: 20px;
+    font-size: 12px;
     position: relative;
     transition:all .5s ease-in-out;
 }
@@ -221,35 +236,45 @@
 
 /*Tool tip*/
 
-.icontip {
-    position: relative;
-    display: inline-block;
-    /* border-bottom: 1px dotted black; */
+.tooltip-v1 + .tooltip > .tooltip-inner {
+    background-color: #73AD21; 
+    color: #FFFFFF; 
+    border: 1px solid green; 
+    padding: 15px;
+    font-size: 12px;
+}
+/* Tooltip on top */
+.tooltip-v1 + .tooltip.top > .tooltip-arrow {
+    border-top: 5px solid green;
+}
+/* Tooltip on bottom */
+.tooltip-v1 + .tooltip.bottom > .tooltip-arrow {
+    border-bottom: 5px solid blue;
+}
+/* Tooltip on left */
+.tooltip-v1 + .tooltip.left > .tooltip-arrow {
+    border-left: 5px solid red;
+}
+/* Tooltip on right */
+.tooltip-v1 + .tooltip.right > .tooltip-arrow {
+    border-right: 5px solid black;
 }
 
-.icontip .icontiptext {
-    width: 160px;
-    bottom: 100%;
-    left: 50%; 
-    margin-left: -80px;
-    visibility: hidden;
-    background-color: rgb(230, 230, 230);
-    color: black;
-    text-align: center;
-    border-radius: 0px;
-    padding: 5px 0;
-
-    /* Position the tooltip */
-    position: absolute;
-    z-index: 1;
-}
-
-.icontip:hover .icontiptext {
-    visibility: visible;
-}
+/* Risks styles */
 
 #modal_riesgos > .mymodal-content{
     padding: 0px !important;
+
+}
+
+#div_graph_radial{
+    position: relative;
+    margin-top: 5% !important;
+}
+
+#modal-content-radial-graph{
+    margin-top: 10% !important;
+    
 }
 
 .risk_graph_button,
