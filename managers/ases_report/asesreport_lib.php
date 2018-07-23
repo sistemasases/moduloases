@@ -19,16 +19,21 @@ function get_riesgos(){
 }
 
 /**
- * @deprecated
- * @deprecated No utilizado
- * Función que recupera cohortes
- * @see getCohorte()
- * @return Array Cohortes
+ * Función que recupera cohortes dado su idnumber
+ * @see get_cohorts_by_idnumber()
+ * @param $idnumber --> Nombre de la cohorte
+ * @return Array cohorts
  */
-function get_cohortes(){
+function get_cohorts_by_idnumber($id_number){
+
     global $DB;
-    $sql_query = "SELECT * FROM {cohort}";
+
+    $sql_query = "SELECT id, name, idnumber 
+                  FROM {cohort}
+                  WHERE idnumber LIKE '$id_number%'";
+
     $result = $DB->get_records_sql($sql_query);
+
     return $result;
 }
 
@@ -420,7 +425,7 @@ function get_ases_report($general_fields=null,
         }
     }
 
-    // Subconsultas para el riesgo de usuario en las diferentes dimensiones
+    // Subconsultas para el riesgo de usuario en las diferentes dimensiones de riesgo
     if($risk_fields){
         foreach($risk_fields as $risk_field){
             $name_query = "SELECT * FROM {talentospilos_riesgos_ases} WHERE id =".$risk_field;
@@ -439,7 +444,7 @@ function get_ases_report($general_fields=null,
         }
     }
 
-    // Fragmentos de la consulta, relacionados con los campos por defecto
+    // Subconsulta relacionados con los campos por defecto
     if($conditions[0] == 'TODOS'){
         $subquery_cohort = "(SELECT moodle_user.username, 
                                 moodle_user.firstname,  
@@ -537,6 +542,7 @@ function get_ases_report($general_fields=null,
                                      user_extended.id_academic_program) AS ases_students";
     }
 
+    // Subconsutlas relacionadas con los campos de estado
     if($statuses_fields){
         foreach($statuses_fields as $status_field){
             switch(explode(".", $status_field)[1]){
@@ -586,6 +592,7 @@ function get_ases_report($general_fields=null,
         }
     }
 
+    // Subconsultas relacionadas con los campos académicos
     if($academic_fields){
 
         $sub_query_academic .= " INNER JOIN {talentospilos_programa} AS academic_program ON academic_program.id = ases_students.id_academic_program";
@@ -646,7 +653,7 @@ function get_ases_report($general_fields=null,
 
     $select_clause = substr($select_clause, 0, -2);
 
-    //Campos Asignaciones personal socioeducativo
+    // Campos asignaciones personal socioeducativo
     if($assignment_fields){
 
         foreach($assignment_fields as $assignment_field){
@@ -730,14 +737,14 @@ function get_ases_report($general_fields=null,
 
                 $where_clause .= $conditions_query_directors;
 
-                $sql_query = $select_clause.$from_clause.$sub_query_cohort.$sub_query_status.$sub_query_icetex_status.$sub_query_academic.$sub_query_assignment_fields.$where_clause;
+                $sql_query = $select_clause.$from_clause.$subquery_cohort.$sub_query_status.$sub_query_icetex_status.$sub_query_academic.$sub_query_assignment_fields.$where_clause;
                 $result_query = $DB->get_records_sql($sql_query);
 
                 break;
 
             case 'profesional_ps':
 
-                $sub_query_ps_staff = " INNER JOIN {talentospilos_monitor_estud} AS monitor_student ON monitor_student.id_estudiante = user_extended.id_ases_user
+                $sub_query_ps_staff = " INNER JOIN {talentospilos_monitor_estud} AS monitor_student ON monitor_student.id_estudiante = ases_students.student_id
                                         INNER JOIN (SELECT t_monitor_practicante.id_monitor, t_monitor_practicante.id_practicante, t_practicante_profesional.id_profesional
                                                 FROM
                                                 (SELECT id_usuario AS id_monitor, id_jefe AS id_practicante 
@@ -754,7 +761,7 @@ function get_ases_report($general_fields=null,
 
                 $where_clause .= " t_monitor_practicante_profesional.id_profesional = $user_id AND monitor_student.id_semestre = $id_current_semester";
 
-                $sql_query = $select_clause.$from_clause.$sub_query_cohort.$sub_query_status.$sub_query_academic.$sub_query_icetex_status.$sub_query_assignment_fields.$sub_query_ps_staff.$where_clause;
+                $sql_query = $select_clause.$from_clause.$subquery_cohort.$sub_query_status.$sub_query_academic.$sub_query_icetex_status.$sub_query_assignment_fields.$sub_query_ps_staff.$where_clause;
 
                 $result_query = $DB->get_records_sql($sql_query);
                 
@@ -762,7 +769,7 @@ function get_ases_report($general_fields=null,
 
             case 'practicante_ps':
             
-                $sub_query_ps_staff = " INNER JOIN {talentospilos_monitor_estud} AS monitor_student ON monitor_student.id_estudiante = user_extended.id_ases_user
+                $sub_query_ps_staff = " INNER JOIN {talentospilos_monitor_estud} AS monitor_student ON monitor_student.id_estudiante = ases_students.student_id
                                         INNER JOIN (SELECT id_usuario AS id_monitor, id_jefe AS id_practicante 
                                                     FROM {talentospilos_user_rol} AS user_rol
                                                         INNER JOIN {talentospilos_rol} AS rol ON user_rol.id_rol = rol.id
@@ -771,7 +778,7 @@ function get_ases_report($general_fields=null,
                 
                 $where_clause .= " t_monitor_practicante.id_practicante = $user_id AND monitor_student.id_semestre = $id_current_semester";
 
-                $sql_query = $select_clause.$from_clause.$sub_query_cohort.$sub_query_status.$sub_query_academic.$sub_query_icetex_status.$sub_query_assignment_fields.$sub_query_ps_staff.$where_clause;
+                $sql_query = $select_clause.$from_clause.$subquery_cohort.$sub_query_status.$sub_query_academic.$sub_query_icetex_status.$sub_query_assignment_fields.$sub_query_ps_staff.$where_clause;
 
                 $result_query = $DB->get_records_sql($sql_query);
 
@@ -779,10 +786,10 @@ function get_ases_report($general_fields=null,
 
             case 'monitor_ps':
 
-                $query_monitors = " INNER JOIN {talentospilos_monitor_estud} AS monitor_student ON monitor_student.id_estudiante = user_extended.id_ases_user";
+                $query_monitors = " INNER JOIN {talentospilos_monitor_estud} AS monitor_student ON monitor_student.id_estudiante = ases_students.student_id";
                 $where_clause .= " monitor_student.id_monitor = $user_id AND monitor_student.id_semestre = $id_current_semester";
 
-                $sql_query = $select_clause.$from_clause.$sub_query_cohort.$sub_query_status.$sub_query_academic.$sub_query_icetex_status.$sub_query_assignment_fields.$query_monitors.$where_clause;
+                $sql_query = $select_clause.$from_clause.$subquery_cohort.$sub_query_status.$sub_query_academic.$sub_query_icetex_status.$sub_query_assignment_fields.$query_monitors.$where_clause;
                 $result_query = $DB->get_records_sql($sql_query);
 
                 break;
@@ -998,9 +1005,22 @@ function get_monitors_by_instance($instance_id){
 }
 
 
-function get_info_spp_cohorts(){
+function get_html_summary_spp_cohorts(){
 
     global $DB;
+
+    $result_summary = array();
+
+    $cohorts_spp = get_cohorts_by_idnumber('SPP');
+
+    foreach($cohorts_spp as $cohort_spp){
+        $cohort = new stdClass();
+        $cohort->id = $cohort_spp->id;
+        $cohort->name = $cohort_spp->name;
+        $cohort->idnumber = $cohort_spp->idnumber;
+
+        array_push($result_summary, $cohort);
+    }
 
     $sql_query = "SELECT COUNT(cohort_member.userid) AS spp_number
                   FROM {cohort} AS cohort 
@@ -1010,10 +1030,8 @@ function get_info_spp_cohorts(){
     
     $result = $DB->get_record_sql($sql_query);
 
-    //print_r($result);
+    //print_r($result_summary);
+    return $result_summary;
 }
 
-//get_info_spp_cohorts();
-
-
-?>
+//get_html_summary_spp_cohorts();

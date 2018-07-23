@@ -1267,9 +1267,9 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
         // ************************************************************************************************************
         // Actualización:
         // Se actualizan el conjunto de Estados Icetex
-        // Versión en la que se incluye: GIT XXX, Moodle: 2018062515379
+        // Versión en la que se incluye: GIT XXX, Moodle: 2018071910049
         // ************************************************************************************************************
-
+        
 
 
         upgrade_block_savepoint(true, 2018071910049 , 'ases');

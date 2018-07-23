@@ -5,3 +5,7 @@
 #div_table{
     margin-bottom:20px !important;
 }
+
+.panel.no-border-radius {
+    border-radius: 0;
+}
