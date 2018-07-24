@@ -89,6 +89,43 @@
                 });
             });
 
+            $(document).on( 'click', '.add', function() {
+
+                var item = $(this).parent();
+                var data_item_0 = -1; // monitor_id or practicant_id
+                var data_item_1 = item.attr("data-id");
+                var item_type = item.attr("data-item");
+
+                var api_function = "";
+
+                if( item_type == "student" ){
+                    api_function = "monitor_assignments_create_monitor_student_relationship";
+                    data_item_0 =  $(".monitor_item.active").attr("data-id");
+                }else if( item_type == "monitor" ){
+                    api_function = ""; // Undefined
+                    data_item_0 =  $(".practicant_item.active").attr("data-id");
+                }
+
+                $.ajax({
+                    type: "POST",
+                    url: "../managers/monitor_assignments/monitor_assignments_api.php",
+                    data: JSON.stringify({ "function": api_function, "params": [ 450299, data_item_0 ,data_item_1 ] }),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function(data){
+                        if( data.status_code == 0 ){
+                            console.log( data );
+                        }else{
+                            console.log( data );
+                        }
+                    },
+                    failure: function(errMsg) {
+                        console.log(errMsg);
+                    }
+                });
+
+            });
+
             $(document).on('click', '.practicant_item', function() {
 
                 var object_selected = $(this);
@@ -159,6 +196,7 @@
             });
 
             $(document).on('click', '.student_item', function(){
+                var data_id = $(this).attr("data-id"); // student_id
                 $(".student_item").removeClass("active");
                 $(this).addClass("active");
                 $(".student_item[data-id='" + data_id + "']").addClass("active");

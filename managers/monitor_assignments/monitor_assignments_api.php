@@ -41,6 +41,14 @@
 
     $input = json_decode( $raw_data );
 
+    /**
+     * Api para el control de las asignaciones de monitor - practicante y monitor - estudiante.
+     * @author Jeison Cardona Gomez
+     * @see monitor_assignments_lib.php
+     * @param json $input This input is a json with a function name and their respective parameters. The order of these parameters is very important. See every function to notice of their parameters order.
+     * @return json The structure is {"status_code":int, "error_message":string, "data_response":string }
+    */
+
     // Example of valid input. params = Parameters
     // { "function":"get_monitors_by_instance", "params":[ instance_id ] }
 
@@ -66,7 +74,7 @@
                     echo json_encode( 
                         array(
                             "status_code" => 0,
-                            "error_code" => "",
+                            "error_message" => "",
                             "data_response" => array_values( monitor_assignments_get_practicant_monitor_relationship_by_instance( $input->params[0] ) )
                         )
                     );
@@ -92,7 +100,7 @@
                     echo json_encode( 
                         array(
                             "status_code" => 0,
-                            "error_code" => "",
+                            "error_message" => "",
                             "data_response" => array_values( monitor_assignments_get_monitors_students_relationship_by_instance( $input->params[0] ) )
                         )
                     );
@@ -122,7 +130,7 @@
                     echo json_encode( 
                         array(
                             "status_code" => 0,
-                            "error_code" => "",
+                            "error_message" => "",
                             "data_response" => ""
                         )
                     );
@@ -151,7 +159,7 @@
                 echo json_encode(
                     array(
                         "status_code" => $code,
-                        "error_code" => "You are not allowed to access this resource.",
+                        "error_message" => "You are not allowed to access this resource.",
                         "data_response" => ""
                     )
                 );
@@ -160,7 +168,7 @@
                 echo json_encode(
                     array(
                         "status_code" => $code,
-                        "error_code" => "Error in the scheme.",
+                        "error_message" => "Error in the scheme.",
                         "data_response" => ""
                     )
                 );
@@ -169,7 +177,7 @@
                 echo json_encode(
                     array(
                         "status_code" => $code,
-                        "error_code" => "Invalid values in the parameters.",
+                        "error_message" => "Invalid values in the parameters.",
                         "data_response" => ""
                     )
                 );
@@ -178,7 +186,7 @@
                 echo json_encode(
                     array(
                         "status_code" => $code,
-                        "error_code" => "Function not defined.",
+                        "error_message" => "Function not defined.",
                         "data_response" => ""
                     )
                 );

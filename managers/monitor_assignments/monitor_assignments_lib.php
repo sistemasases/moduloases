@@ -440,7 +440,7 @@ function monitor_assignments_get_practicant_monitor_relationship_by_instance( $i
             WHERE id_monitor = $monitor_id 
                 AND id_estudiante = $student_id
                 AND id_instancia = $instance_id
-                AND id_semestre $current_id_semester";
+                AND id_semestre = $current_id_semester";
     
     $record = $DB->get_record_sql( $sql );
 
