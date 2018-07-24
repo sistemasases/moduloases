@@ -69,7 +69,8 @@
                                 }
                             }
 
-                            $("#student_assigned").find(".student_item").removeClass("item-general-list");
+                            // Error cuando de carga con el filtro.
+                            //$("#student_assigned").find(".student_item").removeClass("item-general-list");
                             $("#student_assigned").find(".student_item").find(".item-right-button.add").addClass("oculto-asignar");
                             $("#student_assigned").find(".student_item").find(".item-right-button.delete").removeClass("oculto-eliminar");
 
@@ -138,7 +139,7 @@
                                 }
                             }
 
-                            $("#monitor_assigned").find(".monitor_item").removeClass("item-general-list");
+                            //$("#monitor_assigned").find(".monitor_item").removeClass("item-general-list");
                             $("#monitor_assigned").find(".monitor_item").find(".item-right-button.add").addClass("oculto-asignar");
                             $("#monitor_assigned").find(".monitor_item").find(".item-right-button.delete").removeClass("oculto-eliminar");
 
