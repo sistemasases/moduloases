@@ -31,9 +31,9 @@ require_once $CFG->dirroot.'/blocks/ases/managers/lib/lib.php';
 /**
  * Función que renombra para clasificar la función get_professionals_by_instance en otras partes del plugin, el objetivo
  * es dibujar un mapa de seguimiento para saber de donde provienen las funciones
- *
- * @see monitor_assignments_get_professionals_by_instance 
- * @param $instance_id --> Identificador de instancia
+ * @author Jeison Cardona Gómez.
+ * @see asesreport_lib.php
+ * @param int $instance_id Instance identificator.
  * @return Array 
  */
 
@@ -45,9 +45,9 @@ function monitor_assignments_get_professionals_by_instance( $instance_id ){
 /**
  * Función que renombra para clasificar la función get_practicing_by_instance en otras partes del plugin, el objetivo
  * es dibujar un mapa de seguimiento para saber de donde provienen las funciones
- *
- * @see monitor_assignments_get_practicing_by_instance 
- * @param $instance_id --> Identificador de instancia
+ * @author Jeison Cardona Gómez.
+ * @see asesreport_lib.php
+ * @param int $instance_id Instance identificator.
  * @return Array 
  */
 
@@ -59,9 +59,8 @@ function monitor_assignments_get_practicing_by_instance( $instance_id ){
 /**
  * Función que renombra para clasificar la función get_monitors_by_instance en otras partes del plugin, el objetivo
  * es dibujar un mapa de seguimiento para saber de donde provienen las funciones
- *
- * @see monitor_assignments_get_monitors_by_instance 
- * @param $instance_id --> Identificador de instancia
+ * @author Jeison Cardona Gómez.
+ * @param int $instance_id Instance identificator.
  * @return Array 
  */
 
@@ -96,9 +95,8 @@ function monitor_assignments_get_monitors_by_instance( $instance_id ){
 
 /**
  * Función que retorna todos los usuarios del sistema.
- *
- * @see monitor_assignments_get_students_by_instance 
- * @param $instance_id --> Identificador de instancia
+ * @author Jeison Cardona Gómez.
+ * @param int $instance_id Instance identificator.
  * @return Array (
  *      stdClass(
  *          ->fullname
@@ -155,9 +153,8 @@ function monitor_assignments_get_students_by_instance( $instance_id ){
 
 /**
  * Función retorna todos los programas asociados a los estudiantes de determinada instancia.
- *
- * @see monitor_assignments_get_students_programs 
- * @param $instance_id --> Identificador de instancia
+ * @author Jeison Cardona Gómez.
+ * @param int $instance_id Instance identificator.
  * @return Array (
  *      stdClass(
  *          ->cod_programa
@@ -200,9 +197,8 @@ function monitor_assignments_get_students_programs( $instance_id ){
 
 /**
  * Función retorna todas las facultades asociadas a los programas académicos de los estudiantes en una determinada instancia.
- *
- * @see monitor_assignments_get_students_faculty 
- * @param $instance_id --> Identificador de instancia
+ * @author Jeison Cardona Gómez.
+ * @param int $instance_id Instance identificator.
  * @return Array (
  *      stdClass(
  *          ->id_facultad
@@ -251,9 +247,8 @@ function monitor_assignments_get_students_faculty( $instance_id ){
 
 /**
  * Función retorna todas las facultades asociadas a los programas académicos de los monitores en una determinada instancia.
- *
- * @see monitor_assignments_get_monitors_faculty 
- * @param $instance_id --> Identificador de instancia
+ * @author Jeison Cardona Gómez.
+ * @param int $instance_id Instance identificator.
  * @return Array (
  *      stdClass(
  *          ->id_facultad
@@ -294,9 +289,8 @@ function monitor_assignments_get_monitors_faculty( $instance_id ){
 
 /**
  * Función retorna todas los programas de los monitores en una determinada instancia.
- *
- * @see monitor_assignments_get_monitors_programs 
- * @param $instance_id --> Identificador de instancia
+ * @author Jeison Cardona Gómez.
+ * @param int $instance_id Instance identificator.
  * @return Array (
  *      stdClass(
  *          ->id_facultad
@@ -332,9 +326,8 @@ function monitor_assignments_get_monitors_programs( $instance_id ){
 
 /**
  * Función retorna todas las relaciones monitor-estudiante del semestre actual en una instancia
- *
- * @see monitor_assignments_get_monitors_students_relationship_by_instance
- * @param $instance_id --> Identificador de instancia
+ * @author Jeison Cardona Gómez.
+ * @param int $instance_id Instance identificator.
  * @return Array (
  *      stdClass(
  *          ->id_monitor
@@ -357,9 +350,8 @@ function monitor_assignments_get_monitors_students_relationship_by_instance( $in
 
 /**
  * Función que retorna todas las relaciones profesional-practicante del semestre actual en una instancia
- *
- * @see monitor_assignments_get_profesional_practicant_relationship_by_instance
- * @param instance_id
+ * @author Jeison Cardona Gómez.
+ * @param int $instance_id Instance identificator.
  * @return Array(
  * 	stdClass(
  *	    ->id_profesional
@@ -394,9 +386,8 @@ function monitor_assignments_get_profesional_practicant_relationship_by_instance
 
 /**
  * Función que retorna todas las relaciones practicante-monitor del semestre actual en una instancia
- *
- * @see monitor_assignments_get_practicant_monitor_relationship_by_instance
- * @param instance_id
+ * @author Jeison Cardona Gómez.
+ * @param int $instance_id Instance identificator.
  * @return Array(
  * 	stdClass(
  *	    ->id_practicante
@@ -428,6 +419,46 @@ function monitor_assignments_get_practicant_monitor_relationship_by_instance( $i
     return $DB->get_records_sql( $sql );
 
 }
+
+/**
+ * Función que asigna un monitor a un estudiante, en determinada instancia en el semestre actual
+ * @author Jeison Cardona Gómez.
+ * @param int $instance_id Instance indentificator.
+ * @param int $monitor_id Monitor identificator.
+ * @param int $student_id Student Ases identificator.
+ * @return int
+ */
+
+ function monitor_assignments_create_monitor_student_relationship( $instance_id, $monitor_id, $student_id ){
+
+    global $DB;
+
+    $current_id_semester = get_current_semester()->max;
+
+    $sql = "SELECT * 
+            FROM {talentospilos_monitor_estud} 
+            WHERE id_monitor = $monitor_id 
+                AND id_estudiante = $student_id
+                AND id_instancia = $instance_id
+                AND id_semestre $current_id_semester";
+    
+    $record = $DB->get_record_sql( $sql );
+
+    if( !$record ){
+
+        $new_relation = new stdClass();
+        $new_relation->id_monitor = $monitor_id;
+        $new_relation->id_estudiante = $student_id;
+        $new_relation->id_instancia = $instance_id;
+        $new_relation->id_semestre = $current_id_semester;
+
+        return $DB->insert_record('talentospilos_monitor_estud', $new_relation, $returnid=false, $bulk=false);
+
+    }else{
+        return -2;
+    }
+
+ }
 
 
 ?>

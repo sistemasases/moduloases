@@ -55,6 +55,8 @@
              * */
             
             if( count( $input->params ) == 1 ){
+
+                // Order of params
                 /**
                  * The instance value only can be a number.
                  */
@@ -79,6 +81,8 @@
         }else if( ( $input->function == "get_monitors_students_relationship_by_instance" ) ){
 
             if( count( $input->params ) == 1 ){
+
+                // Order of params
                 /**
                  * The instance value only can be a number.
                  */
@@ -90,6 +94,36 @@
                             "status_code" => 0,
                             "error_code" => "",
                             "data_response" => array_values( monitor_assignments_get_monitors_students_relationship_by_instance( $input->params[0] ) )
+                        )
+                    );
+                    
+                }else{
+                    return_with_code( -2 );
+                }
+            }else{
+                return_with_code( -2 );
+            }
+
+        }else if( ( $input->function == "monitor_assignments_create_monitor_student_relationship" ) ){
+
+            if( count( $input->params ) == 3 ){
+
+                // Order of params
+                /**
+                 * The instance value only can be a number.
+                 * The monitor value only can be a number.
+                 * The student calue only can be a number.
+                 */
+                
+                if( is_numeric( $input->params[0] ) && is_numeric( $input->params[1] ) && is_numeric( $input->params[2] ) ){
+                    
+                    $return_value = monitor_assignments_create_monitor_student_relationship( $input->params[0], $input->params[1], $input->params[2] );
+
+                    echo json_encode( 
+                        array(
+                            "status_code" => 0,
+                            "error_code" => "",
+                            "data_response" => ""
                         )
                     );
                     
