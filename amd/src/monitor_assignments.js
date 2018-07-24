@@ -25,6 +25,7 @@
                 var object_selected = $(this);
                 $("#student_assigned").addClass("items_assigned_empty");
                 $("#student_assigned").html("Consultando <span>.</span><span>.</span><span>.</span>");
+                $(".student_item").removeClass("oculto-asignado");
 
                 $.ajax({
                     type: "POST",
@@ -60,11 +61,20 @@
                                     $(".student_item[data-id='" + monitor_assignments_monitor_students_relationship[i].id_estudiante + "']").removeClass("not-assigned");
                                     $(".student_item[data-id='" + monitor_assignments_monitor_students_relationship[i].id_estudiante + "']").addClass("assigned");
                                     $(".student_item[data-id='" + monitor_assignments_monitor_students_relationship[i].id_estudiante + "']").clone().appendTo("#student_assigned");
+
+                                }else{
+                                    $(".student_item[data-id='" + monitor_assignments_monitor_students_relationship[i].id_estudiante + "']").find(".item-right-button.add").addClass("oculto-asignar");
+                                    $(".student_item[data-id='" + monitor_assignments_monitor_students_relationship[i].id_estudiante + "']").find(".item-right-button.delete").addClass("oculto-eliminar");
+                                    $(".student_item[data-id='" + monitor_assignments_monitor_students_relationship[i].id_estudiante + "']").addClass("oculto-asignado");
                                 }
                             }
 
+                            $("#student_assigned").find(".student_item").find(".item-right-button.add").addClass("oculto-asignar");
+                            $("#student_assigned").find(".student_item").find(".item-right-button.delete").removeClass("oculto-eliminar");
+
                             if( !elements ){
-                                $("#student_assigned").text("No tiene monitores asignados.");
+                                $("#student_assigned").addClass("items_assigned_empty");
+                                $("#student_assigned").text("No tiene estudiantes asignados.");
                             }
                             
                         }else{
@@ -82,6 +92,7 @@
                 var object_selected = $(this);
                 $("#monitor_assigned").addClass("items_assigned_empty");
                 $("#monitor_assigned").html("Consultando <span>.</span><span>.</span><span>.</span>");
+                $(".monitor_item").removeClass("oculto-asignado");
 
                 $.ajax({
                     type: "POST",
@@ -119,10 +130,18 @@
                                     $(".monitor_item[data-id='" + monitor_assignments_practicant_monitor_relationship[i].id_monitor + "']").removeClass("not-assigned");
                                     $(".monitor_item[data-id='" + monitor_assignments_practicant_monitor_relationship[i].id_monitor + "']").addClass("assigned");
                                     $(".monitor_item[data-id='" + monitor_assignments_practicant_monitor_relationship[i].id_monitor + "']").clone().appendTo("#monitor_assigned");
+                                }else{
+                                    $(".monitor_item[data-id='" + monitor_assignments_practicant_monitor_relationship[i].id_monitor + "']").find(".item-right-button.add").addClass("oculto-asignar");
+                                    $(".monitor_item[data-id='" + monitor_assignments_practicant_monitor_relationship[i].id_monitor + "']").find(".item-right-button.delete").addClass("oculto-eliminar");
+                                    $(".monitor_item[data-id='" + monitor_assignments_practicant_monitor_relationship[i].id_monitor + "']").addClass("oculto-asignado");
                                 }
                             }
 
+                            $("#monitor_assigned").find(".monitor_item").find(".item-right-button.add").addClass("oculto-asignar");
+                            $("#monitor_assigned").find(".monitor_item").find(".item-right-button.delete").removeClass("oculto-eliminar");
+
                             if( !elements ){
+                                $("#monitor_assigned").addClass("items_assigned_empty");
                                 $("#monitor_assigned").text("No tiene monitores asignados.");
                             }
 
