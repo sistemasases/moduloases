@@ -69,6 +69,7 @@
                                 }
                             }
 
+                            $("#student_assigned").find(".student_item").removeClass("item-general-list");
                             $("#student_assigned").find(".student_item").find(".item-right-button.add").addClass("oculto-asignar");
                             $("#student_assigned").find(".student_item").find(".item-right-button.delete").removeClass("oculto-eliminar");
 
@@ -137,6 +138,7 @@
                                 }
                             }
 
+                            $("#monitor_assigned").find(".monitor_item").removeClass("item-general-list");
                             $("#monitor_assigned").find(".monitor_item").find(".item-right-button.add").addClass("oculto-asignar");
                             $("#monitor_assigned").find(".monitor_item").find(".item-right-button.delete").removeClass("oculto-eliminar");
 
@@ -170,45 +172,44 @@
                 if( (user_type == "monitor") && (filter_type == "faculty") ){
                     var faculty_id = $(this).find(":selected").attr("data-id-facultad");
                     if( faculty_id != "-1" ){
-                        $(".monitor_item").removeClass("oculto-facultad");
-                        $(".monitor_item").not(".monitor_item[data-id-facultad='" + faculty_id + "']").addClass("oculto-facultad");
+                        $(".item-general-list.monitor_item").removeClass("oculto-facultad");
+                        $(".item-general-list.monitor_item").not(".item-general-list.monitor_item[data-id-facultad='" + faculty_id + "']").addClass("oculto-facultad");
                     }else{
-                        $(".monitor_item").removeClass("oculto-facultad");
+                        $(".item-general-list.monitor_item").removeClass("oculto-facultad");
                     }
                 }else if( (user_type == "monitor") && (filter_type == "program") ){
                     var program_id = $(this).find(":selected").attr("data-cod-programa");
                     if( program_id != "-1" ){
-                        $(".monitor_item").removeClass("oculto-programa");
-                        $(".monitor_item").not(".monitor_item[data-cod-programa='" + program_id + "']").addClass("oculto-programa");
+                        $(".item-general-list.monitor_item").removeClass("oculto-programa");
+                        $(".item-general-list.monitor_item").not(".item-general-list.monitor_item[data-cod-programa='" + program_id + "']").addClass("oculto-programa");
                     }else{
-                        $(".monitor_item").removeClass("oculto-programa");
+                        $(".item-general-list.monitor_item").removeClass("oculto-programa");
                     }
                 }else if( (user_type == "student") && (filter_type == "faculty") ){
                     var faculty_id = $(this).find(":selected").attr("data-id-facultad");
                     if( faculty_id != "-1" ){
-                        $(".student_item").removeClass("oculto-facultad");
-                        $(".student_item").not(".student_item[data-id-facultad='" + faculty_id + "']").addClass("oculto-facultad");
+                        $(".item-general-list.student_item").removeClass("oculto-facultad");
+                        $(".item-general-list.student_item").not(".item-general-list.student_item[data-id-facultad='" + faculty_id + "']").addClass("oculto-facultad");
                     }else{
-                        $(".student_item").removeClass("oculto-facultad");
+                        $(".item-general-list.student_item").removeClass("oculto-facultad");
                     }
                 }else if( (user_type == "student") && (filter_type == "program") ){
                     var program_id = $(this).find(":selected").attr("data-cod-programa");
                     if( program_id != "-1" ){
-                        $(".student_item").removeClass("oculto-programa");
-                        $(".student_item").not(".student_item[data-cod-programa='" + program_id + "']").addClass("oculto-programa");
+                        $(".item-general-list.student_item").removeClass("oculto-programa");
+                        $(".item-general-list.student_item").not(".item-general-list.student_item[data-cod-programa='" + program_id + "']").addClass("oculto-programa");
                     }else{
-                        $(".student_item").removeClass("oculto-programa");
+                        $(".item-general-list.student_item").removeClass("oculto-programa");
                     }
                 }else if( (user_type == "professional") ){
                     var boss_id = $(this).find(":selected").attr("data-id");
                     if( boss_id != "-1" ){
-                        $(".practicant_item").removeClass("oculto-jefe");
-                        $(".practicant_item").not(".practicant_item[data-id-jefe='" + boss_id + "']").addClass("oculto-jefe");
+                        $(".item-general-list.practicant_item").removeClass("oculto-jefe");
+                        $(".item-general-list.practicant_item").not(".item-general-list.practicant_item[data-id-jefe='" + boss_id + "']").addClass("oculto-jefe");
                     }else{
-                        $(".practicant_item").removeClass("oculto-jefe");
+                        $(".item-general-list.practicant_item").removeClass("oculto-jefe");
                     }
                 }
-
             });
         }
     };
