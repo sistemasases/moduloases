@@ -1,26 +1,68 @@
 
 <div class="row">
-    <div class="col-sm-6">
+    <div class="col-sm-6" id="div-summary-spp">
         <div class="panel panel-success no-border-radius">
-            <div class="panel-heading col-sm-12">
-                <div class="col-sm-6"><b>Ser Pilo Paga</b></div>
-                <div class="col-sm-6">Total estudiantes: 99999</div>
+            <div class="panel-heading col-sm-12 no-padding-col panel-heading-summary" data-target="#panel-body-spp">
+                <div class="col-sm-1"><span class="glyphicon glyphicon-chevron-right"></span></div>
+                <div class="col-sm-3"><b>Ser Pilo Paga</b></div>
+                <div class="col-sm-3"><b>Seguimiento:</b> 99999</div>
+                <div class="col-sm-3"><b>Activos SRA:</b> 99999</div>
+                <div class="col-sm-2"><b>Total:</b> 99999</div>
             </div>
-            <div class="panel-body">
+
+            <div class="panel-body" id="panel-body-spp" hidden>
                 {{#summary_spp_cohorts}}
-                    <div class="col-sm-12">
-                        {{name}}
-                    </div> 
-                    <div class="col-sm-12">
-                        Activos:
-                        Inactivos:
-                    </div>               
+                <div class="summary-title col-sm-12 no-padding-col" data-target="#info-spp-{{id}}" data-icon="#icon-spp-{{id}}">
+                    <span class="glyphicon glyphicon-chevron-right" id="icon-spp-{{id}}"></span>
+                    <b>{{name}}</b>
+                </div> 
+                    
+                <div class="summary-content col-sm-12 no-padding-col" id="info-spp-{{id}}" hidden>
+                    <hr class="no-padding hr-summary">
+                    <div class="col-sm-6 no-padding-col">
+                        <div class="col-sm-12 no-padding-col">
+                            <div class="col-sm-6">Activos</div>
+                            <div class="col-sm-6">9999</div>
+                        </div>
+                        <div class="col-sm-12 no-padding-col">
+                            <div class="col-sm-6">Inactivos</div>
+                            <div class="col-sm-6">9999</div>
+                        </div>
+                        <div class="col-sm-12 no-padding-col">
+                            <div class="col-sm-6">Aplazados</div>
+                            <div class="col-sm-6">9999</div>
+                        </div> 
+                        <div class="col-sm-12 no-padding-col">
+                            <div class="col-sm-6">Retirados</div>
+                            <div class="col-sm-6">9999</div>
+                        </div>
+                        <div class="col-sm-12 no-padding-col">
+                            <div class="col-sm-6">No registra</div>
+                            <div class="col-sm-6">9999</div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 no-padding-col">
+                        <div class="col-sm-12">
+                            <div class="col-sm-6">Seguimiento</div>
+                            <div class="col-sm-6">9999</div>
+                        </div>
+                        <div class="col-sm-12">
+                            <div class="col-sm-6">Sin seguimiento</div>
+                            <div class="col-sm-6">9999</div>
+                        </div>
+                        <div class="col-sm-12">
+                            <div class="col-sm-6">No registra</div>
+                            <div class="col-sm-6">9999</div>
+                        </div>
+                    </div>
+                </div>
+                               
                 {{/summary_spp_cohorts}}
             </div>
         </div>
     </div>
         
-    <div class="col-sm-6">
+    <div class="col-sm-6" id="div-summary-ce">
         <div class="panel panel-success no-border-radius">
             <div class="panel-heading col-sm-12">Condición de Excepción</div>
             <div class="panel-body">
@@ -30,8 +72,8 @@
     </div>
 </div>
 
-
-    <div class="col-sm-6">
+<div class="row">
+    <div class="col-sm-6" id="div-summary-it">
         <div class="panel panel-success no-border-radius">
             <div class="panel-heading">Ingeniería Topográfica</div>
             <div class="panel-body">
@@ -40,7 +82,7 @@
         </div>
     </div>
 
-    <div class="col-sm-6">
+    <div class="col-sm-6" id="div-summary-oa">
         <div class="panel panel-success no-border-radius">
             <div class="panel-heading">Otros ases</div>
             <div class="panel-body">
@@ -48,3 +90,7 @@
             </div>
         </div>
     </div>
+</div>
+
+
+    
