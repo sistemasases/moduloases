@@ -26,9 +26,40 @@ define(['jquery',
                 window.JSZip = jszip;
                 //Control para el botón 'Generar Reporte
                 $("#send_form_btn").on('click', function () {
+                    
                     createTable();
-                });
 
+                    var cohorts = $('#conditions').val();
+
+                    console.log(cohorts.substring(0, 2));
+
+                    if(cohorts == 'TODOS'){
+                        $('#div-summary-spp').prop('hidden', false);
+                        $('#div-summary-ce').prop('hidden', false);
+                        $('#div-summary-it').prop('hidden', false);
+                        $('#div-summary-oa').prop('hidden', false);
+                    }else if(cohorts == 'TODOS-SPP' || cohorts.substring(0, 3) == 'SPP'){
+                        $('#div-summary-spp').prop('hidden', false);
+                        $('#div-summary-ce').prop('hidden', true);
+                        $('#div-summary-it').prop('hidden', true);
+                        $('#div-summary-oa').prop('hidden', true);
+                    }else if(cohorts == 'TODOS-SPE' || cohorts.substring(0, 3) == 'SPE'){
+                        $('#div-summary-spp').prop('hidden', true);
+                        $('#div-summary-ce').prop('hidden', false);
+                        $('#div-summary-it').prop('hidden', true);
+                        $('#div-summary-oa').prop('hidden', true);
+                    }else if(cohorts == 'TODOS-3740' || cohorts.substring(0, 4) == '3740'){
+                        $('#div-summary-spp').prop('hidden', true);
+                        $('#div-summary-ce').prop('hidden', false);
+                        $('#div-summary-it').prop('hidden', true);
+                        $('#div-summary-oa').prop('hidden', true);
+                    }else if(cohorts == 'TODOS-OTROS'){
+                        $('#div-summary-spp').prop('hidden', true);
+                        $('#div-summary-ce').prop('hidden', false);
+                        $('#div-summary-it').prop('hidden', true);
+                        $('#div-summary-oa').prop('hidden', true);
+                    }
+                });
 
                 //Controles para la tabla generada
                 $(document).on('click', '#tableResult tbody tr td', function () {
@@ -109,6 +140,51 @@ define(['jquery',
                     var selectedText = $(this).parent().find(":selected").text();
                     table.columns(colIndex - 1).search(this.value).draw();
                 });
+
+                //Controles sobre el resumen de estudiantes
+                $(document).on('click', '.summary-title', function(){
+
+                    // Icono de la lista
+                    var icon = $($(this).data('icon'));
+
+                    if(icon.hasClass('glyphicon-chevron-right')){
+                        icon.removeClass("glyphicon-chevron-right");
+                        icon.addClass("glyphicon-chevron-down");
+                    }else{
+                        icon.addClass("glyphicon-chevron-right");
+                        icon.removeClass("glyphicon-chevron-down");
+                    }                   
+
+                    var target = $($(this).data('target')); 
+                    if(target.css('display') != "none"){
+                        target.hide(300);
+                    }else{
+                        target.show(300);
+                    }
+                });
+
+                $('.panel-heading-summary').on('click', function(){
+
+                    // var icon = $($(this)).data('icon');
+
+                    // if(icon.hasClass('glyphicon-chevron-right')){
+                    //     icon.removeClass("glyphicon-chevron-right");
+                    //     icon.addClass("glyphicon-chevron-down");
+                    // }else{
+                    //     icon.addClass("glyphicon-chevron-right");
+                    //     icon.removeClass("glyphicon-chevron-down");
+                    // }
+
+                    var target = $($(this).data('target')); 
+                    if(target.css('display') != "none"){
+                        target.hide(300);
+                    }else{
+                        target.show(300);
+                    }
+
+                });
+
+                
 
             },
             load_defaults_students: function (data) {
