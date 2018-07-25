@@ -14,15 +14,12 @@
     return {
         init: function() {
 
-            var monitor_assignments_professional_practicant;
-            
-            $(document).ready(function(){
-                monitor_assignments_professional_practicant = JSON.parse( $("#monitor_assignments_professional_practicant").text() );
-            });
+            /**
+             * data_id => id_monitor
+            */
+            function load_assigned_students( instance_id, data_id ){
 
-            $(document).on('click', '.monitor_item', function() {
 
-                var object_selected = $(this);
                 $("#student_assigned").addClass("items_assigned_empty");
                 $("#student_assigned").html("Consultando <span>.</span><span>.</span><span>.</span>");
                 $(".student_item").removeClass("oculto-asignado");
@@ -30,14 +27,13 @@
                 $.ajax({
                     type: "POST",
                     url: "../managers/monitor_assignments/monitor_assignments_api.php",
-                    data: JSON.stringify({ "function": "get_monitors_students_relationship_by_instance", "params": [ 450299 ] }),
+                    data: JSON.stringify({ "function": "get_monitors_students_relationship_by_instance", "params": [ instance_id ] }),
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
                     success: function(data){
                         if( data.status_code == 0 ){
 
                             var monitor_assignments_monitor_students_relationship = data.data_response;
-                            var data_id = object_selected.attr("data-id"); // id_monitor
                             $(".monitor_item").removeClass("active");
                             $(this).addClass("active");
                             $(".monitor_item[data-id='" + data_id + "']").addClass("active");
@@ -87,6 +83,20 @@
                         console.log(errMsg);
                     }
                 });
+
+            };
+
+            var monitor_assignments_professional_practicant;
+            
+            $(document).ready(function(){
+                monitor_assignments_professional_practicant = JSON.parse( $("#monitor_assignments_professional_practicant").text() );
+            });
+
+            $(document).on('click', '.monitor_item', function() {
+
+                var object_selected = $(this);
+                load_assigned_students( 450299 ,object_selected.attr("data-id")  );
+                
             });
 
             $(document).on( 'click', '.add', function() {
