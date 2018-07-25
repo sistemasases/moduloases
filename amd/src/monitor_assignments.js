@@ -91,6 +91,8 @@
 
             $(document).on( 'click', '.add', function() {
 
+                var current_item = $(this);
+
                 var item = $(this).parent();
                 var data_item_0 = -1; // monitor_id or practicant_id
                 var data_item_1 = item.attr("data-id");
@@ -128,6 +130,8 @@
 
             $(document).on( 'click', '.delete', function() {
 
+                var current_item = $(this);
+
                 var item = $(this).parent();
                 var data_item_0 = -1; // monitor_id or practicant_id
                 var data_item_1 = item.attr("data-id");
@@ -151,8 +155,32 @@
                     dataType: "json",
                     success: function(data){
                         if( data.status_code == 0 ){
-                            console.log( data );
+                            setTimeout(function(){
+                                swal(
+                                    {title:'Información',
+                                    text: 'Asignación eliminada correctamente',
+                                    type: 'success'},
+                                    function(){}
+                                );
+                            }, 0);
+                        }else if( data.status_code == 1 ){
+                            setTimeout(function(){
+                                swal(
+                                    {title:'Información',
+                                    text: 'Está intentando eliminar una asignación que ya no existe.',
+                                    type: 'info'},
+                                    function(){}
+                                );
+                            }, 0);
                         }else{
+                            setTimeout(function(){
+                                swal(
+                                    {title:'Error',
+                                    text: 'Reporte este error.',
+                                    type: 'error'},
+                                    function(){}
+                                );
+                            }, 0);
                             console.log( data );
                         }
                     },
