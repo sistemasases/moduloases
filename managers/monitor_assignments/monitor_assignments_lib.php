@@ -518,6 +518,38 @@ function monitor_assignments_create_practicant_monitor_relationship( $instance_i
 
     $current_id_semester = get_current_semester()->max;
 
+    $sql = "SELECT id FROM {talentospilos_rol} WHERE nombre_rol = 'monitor_ps'";
+    $id_rol = $DB->get_record_sql( $sql )->id;
+
+    $sql = "SELECT * 
+            FROM {talentospilos_user_rol} 
+            WHERE id_rol = $id_rol
+                AND id_usuario = $monitor_id 
+                AND estado = 1
+                AND id_semestre = $current_id_semester
+                AND id_jefe = $practicant_id
+                AND id_instancia = $instance_id";
+    
+    $record = $DB->get_record_sql( $sql );
+
+    if( !$record ){
+
+        $new_relation = new stdClass();
+        $new_relation->id_rol = $id_rol;
+        $new_relation->id_usuario = $monitor_id;
+        $new_relation->estado = 1;
+        $new_relation->id_semestre = $current_id_semester;
+        $new_relation->id_jefe = $practicant_id;
+        $new_relation->id_instancia = $instance_id;
+        $new_relation->id_programa = null;
+
+        return $DB->insert_record('talentospilos_user_rol', $new_relation, $returnid=true, $bulk=false);
+
+    }else{
+
+        return null;
+
+    }
     
  }
 
