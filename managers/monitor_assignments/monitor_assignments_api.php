@@ -163,7 +163,7 @@
                     
                     $return_value = monitor_assignments_delete_monitor_student_relationship( $input->params[0], $input->params[1], $input->params[2] );
                     
-                    if( $return_value === 0 ){
+                    if( $return_value ){
 
                         echo json_encode( 
                             array(
@@ -174,7 +174,13 @@
                         );
 
                     }else{
-                        return_with_code( -99 );
+                        echo json_encode( 
+                            array(
+                                "status_code" => 1,
+                                "error_message" => "",
+                                "data_response" => "the record does not exist"
+                            )
+                        );
                     }
                     
                 }else{
