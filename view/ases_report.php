@@ -129,6 +129,11 @@ $data_to_table = get_default_ases_report($blockid);
 $params = new stdClass();
 $params->table = $data_to_table;
 
+// ---------------------------------------------
+// Carga información resumen
+// ---------------------------------------------
+$data->summary_spp_cohorts = get_html_summary_spp_cohorts();
+
 // Navigation setup
 $coursenode = $PAGE->navigation->find($courseid, navigation_node::TYPE_COURSE);
 $blocknode = navigation_node::create('Reporte general',$url, null, 'block', $blockid);
