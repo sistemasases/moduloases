@@ -26,6 +26,9 @@
                 $("#student_assigned").addClass("items_assigned_empty");
                 $("#student_assigned").html("Consultando <span>.</span><span>.</span><span>.</span>");
                 $(".student_item").removeClass("oculto-asignado");
+                $('#student_column').animate({
+                    scrollTop: $('#student_column').scrollTop() + $('#student_assigned').position().top
+                }, 0);
 
                 $.ajax({
                     type: "POST",
@@ -44,9 +47,7 @@
                             $(".student_item").addClass("not-assigned");
                             $("#student_assigned").removeClass("items_assigned_empty");
                             $("#student_assigned").text("");
-                            $('#student_column').animate({
-                                scrollTop: $('#student_column').scrollTop() + $('#student_assigned').position().top
-                            }, 500);
+                            
                             var elements = false;
                             for( var i = 0; i < monitor_assignments_monitor_students_relationship.length; i++ ){
                                 if( monitor_assignments_monitor_students_relationship[i].id_monitor == data_id ){
@@ -98,6 +99,9 @@
                 $("#monitor_assigned").addClass("items_assigned_empty");
                 $("#monitor_assigned").html("Consultando <span>.</span><span>.</span><span>.</span>");
                 $(".monitor_item").removeClass("oculto-asignado");
+                $('#monitor_column').animate({
+                    scrollTop: $('#monitor_column').scrollTop() + $('#monitor_assigned').position().top
+                }, 0);
 
                 $.ajax({
                     type: "POST",
@@ -119,9 +123,6 @@
                             $("#student_assigned").text("No ha seleccionado un monitor.");
                             $("#student_assigned").addClass("items_assigned_empty");
                             $("#monitor_assigned").text("");
-                            $('#monitor_column').animate({
-                                scrollTop: $('#monitor_column').scrollTop() + $('#monitor_assigned').position().top
-                            }, 500);
                             var elements = false;
                             for( var i = 0; i < monitor_assignments_practicant_monitor_relationship.length; i++ ){
                                 if( monitor_assignments_practicant_monitor_relationship[i].id_practicante == data_id ){
