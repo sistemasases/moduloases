@@ -15,8 +15,10 @@
         init: function() {
 
             /**
-             * data_id => id_monitor
-            */
+             * 
+             * @param {int} instance_id 
+             * @param {int} data_id monitor identificator
+             */
             function load_assigned_students( instance_id, data_id ){
 
 
@@ -35,7 +37,6 @@
 
                             var monitor_assignments_monitor_students_relationship = data.data_response;
                             $(".monitor_item").removeClass("active");
-                            $(this).addClass("active");
                             $(".monitor_item[data-id='" + data_id + "']").addClass("active");
                             $(".student_item").removeClass("assigned");
                             $(".student_item").removeClass("not-assigned");
@@ -86,17 +87,94 @@
 
             };
 
-            var monitor_assignments_professional_practicant;
+            /**
+             * 
+             * @param {int} instance_id 
+             * @param {int} data_id practicant identificator
+             */
+            function load_assigned_monitors( instance_id, data_id ){
+
+                $("#monitor_assigned").addClass("items_assigned_empty");
+                $("#monitor_assigned").html("Consultando <span>.</span><span>.</span><span>.</span>");
+                $(".monitor_item").removeClass("oculto-asignado");
+
+                $.ajax({
+                    type: "POST",
+                    url: "../managers/monitor_assignments/monitor_assignments_api.php",
+                    data: JSON.stringify({ "function": "get_practicant_monitor_relationship_by_instance", "params": [ instance_id ] }),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function(data){
+                        if( data.status_code == 0 ){
+                            var monitor_assignments_practicant_monitor_relationship = data.data_response;
+                            $(".practicant_item").removeClass("active");
+                            $(".practicant_item[data-id='" + data_id + "']").addClass("active");
+                            $(".monitor_item").removeClass("assigned");
+                            $(".monitor_item").removeClass("not-assigned");
+                            $(".monitor_item").addClass("not-assigned");
+                            $(".student_item").removeClass("assigned");
+                            $(".student_item").removeClass("not-assigned");
+                            $(".student_item").addClass("not-assigned");
+                            $("#student_assigned").text("No ha seleccionado un monitor.");
+                            $("#student_assigned").addClass("items_assigned_empty");
+                            $("#monitor_assigned").text("");
+                            $('#monitor_column').animate({
+                                scrollTop: $('#monitor_column').scrollTop() + $('#monitor_assigned').position().top
+                            }, 500);
+                            var elements = false;
+                            for( var i = 0; i < monitor_assignments_practicant_monitor_relationship.length; i++ ){
+                                if( monitor_assignments_practicant_monitor_relationship[i].id_practicante == data_id ){
+                                    
+                                    if( !elements ){
+                                        elements = true;
+                                        $("#monitor_assigned").removeClass("items_assigned_empty");
+                                    }
+
+                                    $(".monitor_item[data-id='" + monitor_assignments_practicant_monitor_relationship[i].id_monitor + "']").removeClass("not-assigned");
+                                    $(".monitor_item[data-id='" + monitor_assignments_practicant_monitor_relationship[i].id_monitor + "']").addClass("assigned");
+                                    $(".monitor_item[data-id='" + monitor_assignments_practicant_monitor_relationship[i].id_monitor + "']").clone().appendTo("#monitor_assigned");
+                                }else{
+                                    $(".monitor_item[data-id='" + monitor_assignments_practicant_monitor_relationship[i].id_monitor + "']").find(".item-right-button.add").addClass("oculto-asignar");
+                                    $(".monitor_item[data-id='" + monitor_assignments_practicant_monitor_relationship[i].id_monitor + "']").find(".item-right-button.delete").addClass("oculto-eliminar");
+                                    $(".monitor_item[data-id='" + monitor_assignments_practicant_monitor_relationship[i].id_monitor + "']").addClass("oculto-asignado");
+                                }
+                            }
+
+                            //$("#monitor_assigned").find(".monitor_item").removeClass("item-general-list");
+                            $("#monitor_assigned").find(".monitor_item").find(".item-right-button.add").addClass("oculto-asignar");
+                            $("#monitor_assigned").find(".monitor_item").find(".item-right-button.delete").removeClass("oculto-eliminar");
+
+                            if( !elements ){
+                                $("#monitor_assigned").addClass("items_assigned_empty");
+                                $("#monitor_assigned").text("No tiene monitores asignados.");
+                            }
+
+                        }else{
+                            console.log( data );
+                        }
+                    },
+                    failure: function(errMsg) {
+                        console.log(errMsg);
+                    }
+                });
+            };
+
+            /*var monitor_assignments_professional_practicant;
             
             $(document).ready(function(){
                 monitor_assignments_professional_practicant = JSON.parse( $("#monitor_assignments_professional_practicant").text() );
+            });*/
+
+            $(document).on('click', '.practicant_item', function() {
+
+                load_assigned_monitors( 450299, $(this).attr("data-id") );
+
             });
 
             $(document).on('click', '.monitor_item', function() {
 
-                var object_selected = $(this);
-                load_assigned_students( 450299 ,object_selected.attr("data-id")  );
-                
+                load_assigned_students( 450299 , $(this).attr("data-id")  );
+
             });
 
             $(document).on( 'click', '.add', function() {
@@ -131,7 +209,13 @@
                                     {title:'Información',
                                     text: 'Asignación registrada correctamente.',
                                     type: 'success'},
-                                    function(){}
+                                    function(){
+                                        if( item_type == "student" ){
+                                            load_assigned_students( 450299 , data_item_0 );
+                                        }else if( item_type == "monitor" ){
+
+                                        }
+                                    }
                                 );
                             }, 0);
                         }else if( data.status_code === -5 ){
@@ -195,7 +279,13 @@
                                     {title:'Información',
                                     text: 'Asignación eliminada correctamente',
                                     type: 'success'},
-                                    function(){}
+                                    function(){
+                                        if( item_type == "student" ){
+                                            load_assigned_students( 450299 , data_item_0 );
+                                        }else if( item_type == "monitor" ){
+
+                                        }
+                                    }
                                 );
                             }, 0);
                         }else if( data.status_code === 1 ){
@@ -224,75 +314,6 @@
                     }
                 });
 
-            });
-
-            $(document).on('click', '.practicant_item', function() {
-
-                var object_selected = $(this);
-                $("#monitor_assigned").addClass("items_assigned_empty");
-                $("#monitor_assigned").html("Consultando <span>.</span><span>.</span><span>.</span>");
-                $(".monitor_item").removeClass("oculto-asignado");
-
-                $.ajax({
-                    type: "POST",
-                    url: "../managers/monitor_assignments/monitor_assignments_api.php",
-                    data: JSON.stringify({ "function": "get_practicant_monitor_relationship_by_instance", "params": [ 450299 ] }),
-                    contentType: "application/json; charset=utf-8",
-                    dataType: "json",
-                    success: function(data){
-                        if( data.status_code == 0 ){
-                            var monitor_assignments_practicant_monitor_relationship = data.data_response;
-                            var data_id = object_selected.attr("data-id"); // id_practicante
-                            $(".practicant_item").removeClass("active");
-                            object_selected.addClass("active");
-                            $(".monitor_item").removeClass("assigned");
-                            $(".monitor_item").removeClass("not-assigned");
-                            $(".monitor_item").addClass("not-assigned");
-                            $(".student_item").removeClass("assigned");
-                            $(".student_item").removeClass("not-assigned");
-                            $(".student_item").addClass("not-assigned");
-                            $("#student_assigned").text("No ha seleccionado un monitor.");
-                            $("#student_assigned").addClass("items_assigned_empty");
-                            $("#monitor_assigned").text("");
-                            $('#monitor_column').animate({
-                                scrollTop: $('#monitor_column').scrollTop() + $('#monitor_assigned').position().top
-                            }, 500);
-                            var elements = false;
-                            for( var i = 0; i < monitor_assignments_practicant_monitor_relationship.length; i++ ){
-                                if( monitor_assignments_practicant_monitor_relationship[i].id_practicante == data_id ){
-                                    
-                                    if( !elements ){
-                                        elements = true;
-                                        $("#monitor_assigned").removeClass("items_assigned_empty");
-                                    }
-
-                                    $(".monitor_item[data-id='" + monitor_assignments_practicant_monitor_relationship[i].id_monitor + "']").removeClass("not-assigned");
-                                    $(".monitor_item[data-id='" + monitor_assignments_practicant_monitor_relationship[i].id_monitor + "']").addClass("assigned");
-                                    $(".monitor_item[data-id='" + monitor_assignments_practicant_monitor_relationship[i].id_monitor + "']").clone().appendTo("#monitor_assigned");
-                                }else{
-                                    $(".monitor_item[data-id='" + monitor_assignments_practicant_monitor_relationship[i].id_monitor + "']").find(".item-right-button.add").addClass("oculto-asignar");
-                                    $(".monitor_item[data-id='" + monitor_assignments_practicant_monitor_relationship[i].id_monitor + "']").find(".item-right-button.delete").addClass("oculto-eliminar");
-                                    $(".monitor_item[data-id='" + monitor_assignments_practicant_monitor_relationship[i].id_monitor + "']").addClass("oculto-asignado");
-                                }
-                            }
-
-                            //$("#monitor_assigned").find(".monitor_item").removeClass("item-general-list");
-                            $("#monitor_assigned").find(".monitor_item").find(".item-right-button.add").addClass("oculto-asignar");
-                            $("#monitor_assigned").find(".monitor_item").find(".item-right-button.delete").removeClass("oculto-eliminar");
-
-                            if( !elements ){
-                                $("#monitor_assigned").addClass("items_assigned_empty");
-                                $("#monitor_assigned").text("No tiene monitores asignados.");
-                            }
-
-                        }else{
-                            console.log( data );
-                        }
-                    },
-                    failure: function(errMsg) {
-                        console.log(errMsg);
-                    }
-                });
             });
 
             $(document).on('click', '.student_item', function(){
