@@ -133,12 +133,48 @@
                             array(
                                 "status_code" => 0,
                                 "error_message" => "",
-                                "data_response" => ""
+                                "data_response" => "created"
                             )
                         );
 
                     }else{
                         return_with_code( -5 );
+                    }
+                    
+                }else{
+                    return_with_code( -2 );
+                }
+            }else{
+                return_with_code( -2 );
+            }
+
+        }else if( ( $input->function == "monitor_assignments_delete_monitor_student_relationship" ) ){
+
+            if( count( $input->params ) == 3 ){
+
+                // Order of params
+                /**
+                 * The instance value only can be a number.
+                 * The monitor value only can be a number.
+                 * The student calue only can be a number.
+                 */
+                
+                if( is_numeric( $input->params[0] ) && is_numeric( $input->params[1] ) && is_numeric( $input->params[2] ) ){
+                    
+                    $return_value = monitor_assignments_delete_monitor_student_relationship( $input->params[0], $input->params[1], $input->params[2] );
+                    
+                    if( $return_value === 0 ){
+
+                        echo json_encode( 
+                            array(
+                                "status_code" => 0,
+                                "error_message" => "",
+                                "data_response" => "deleted"
+                            )
+                        );
+
+                    }else{
+                        return_with_code( -99 );
                     }
                     
                 }else{
@@ -203,6 +239,16 @@
                     array(
                         "status_code" => $code,
                         "error_message" => "Duplicate.",
+                        "data_response" => ""
+                    )
+                );
+                break;
+            
+            case -99:
+                echo json_encode(
+                    array(
+                        "status_code" => $code,
+                        "error_message" => "critical error.",
                         "data_response" => ""
                     )
                 );

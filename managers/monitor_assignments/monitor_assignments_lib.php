@@ -488,18 +488,16 @@ function monitor_assignments_delete_monitor_student_relationship( $instance_id, 
 
     if( !$record ){
 
-        $new_relation = new stdClass();
-        $new_relation->id_monitor = $monitor_id;
-        $new_relation->id_estudiante = $student_id;
-        $new_relation->id_instancia = $instance_id;
-        $new_relation->id_semestre = $current_id_semester;
+        $sql = "DELETE FROM {talentospilos_monitor_estud} 
+        WHERE id_monitor = $monitor_id 
+            AND id_estudiante = $student_id
+            AND id_instancia = $instance_id
+            AND id_semestre = $current_id_semester";
 
-        return $DB->insert_record('talentospilos_monitor_estud', $new_relation, $returnid=true, $bulk=false);
+        return $DB->execute( $sql );
 
     }else{
-
-        return null;
-        
+        return 0;
     }
 
  }
