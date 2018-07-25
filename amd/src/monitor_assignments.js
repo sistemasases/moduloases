@@ -115,10 +115,35 @@
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
                     success: function(data){
-                        if( data.status_code == 0 ){
-                            console.log( data );
+                        if( data.status_code === 0 ){
+                            setTimeout(function(){
+                                swal(
+                                    {title:'Información',
+                                    text: 'Asignación registrada correctamente.',
+                                    type: 'success'},
+                                    function(){}
+                                );
+                            }, 0);
+                        }else if( data.status_code === -5 ){
+
+                            setTimeout(function(){
+                                swal(
+                                    {title:'Información',
+                                    text: 'La asignación ya existe en el periodo actual, si tiene problemas con esto, puede probar de nuevo recargando la pestaña.',
+                                    type: 'info'},
+                                    function(){}
+                                );
+                            }, 0);
+
                         }else{
-                            console.log( data );
+                            setTimeout(function(){
+                                swal(
+                                    {title:'Error',
+                                    text: 'Reporte este error.',
+                                    type: 'error'},
+                                    function(){}
+                                );
+                            }, 0);
                         }
                     },
                     failure: function(errMsg) {
@@ -154,7 +179,7 @@
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
                     success: function(data){
-                        if( data.status_code == 0 ){
+                        if( data.status_code === 0 ){
                             setTimeout(function(){
                                 swal(
                                     {title:'Información',
@@ -163,11 +188,11 @@
                                     function(){}
                                 );
                             }, 0);
-                        }else if( data.status_code == 1 ){
+                        }else if( data.status_code === 1 ){
                             setTimeout(function(){
                                 swal(
                                     {title:'Información',
-                                    text: 'Está intentando eliminar una asignación que ya no existe.',
+                                    text: 'Está intentando eliminar una asignación que ya no existe, si tiene problemas con esto, puede probar de nuevo recargando la pestaña.',
                                     type: 'info'},
                                     function(){}
                                 );
