@@ -190,6 +190,41 @@
                 return_with_code( -2 );
             }
 
+        }else if( ( $input->function == "monitor_assignments_create_practicant_monitor_relationship" ) ){
+
+            if( count( $input->params ) == 3 ){
+
+                // Order of params
+                /**
+                 * The instance value only can be a number.
+                 * The practicant value only can be a number.
+                 * The monitor calue only can be a number.
+                 */
+                
+                if( is_numeric( $input->params[0] ) && is_numeric( $input->params[1] ) && is_numeric( $input->params[2] ) ){
+                    
+                    $return_value = monitor_assignments_create_practicant_monitor_relationship( $input->params[0], $input->params[1], $input->params[2] );
+                    
+                    if( $return_value ){
+
+                        echo json_encode( 
+                            array(
+                                "status_code" => 0,
+                                "error_message" => "",
+                                "data_response" => "created"
+                            )
+                        );
+                    }else{
+                        return_with_code( -5 );
+                    }
+                    
+                }else{
+                    return_with_code( -2 );
+                }
+            }else{
+                return_with_code( -2 );
+            }
+
         }else{
             // Function not defined
             return_with_code( -4 );
