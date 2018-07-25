@@ -40,7 +40,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
             $(document).on('focus', '.text', function () {
                 grade = $(this).val();
                 //console.log(grade);
-            })
+            });
 
             $(document).on('click', '.reload', function () {
 
@@ -57,7 +57,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
                     var input = $(this).children().next('.text');
                     //input.attr('disabled', true);
                     input.css('font-weight', 'bold');
-                })
+                });
                 $("[name^='grade']").prop('disabled', true);
                 $("a").removeAttr("href");
 
@@ -65,11 +65,11 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
                     var input = $(this).children().next('.text');
                     input.css('font-weight', 'bold');
                     input.css('font-size', 16);
-                })
+                });
 
                 $('.header').children().each(function () {
                     $(this).removeAttr('href');
-                })
+                });
             }
 
 
@@ -93,11 +93,11 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
                                     var pagina = "student_profile.php";
                                     var url = pagina + location.search + "&student_code=" + code;
                                     //window.open(url, '_blank');
-                                })
+                                });
                             });
                         }
-                    };
-                })
+                    }
+                });
             }
 
             /**
@@ -125,7 +125,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
                 var pilos = new Array;
                 $("#students-pilos").children().each(function () {
                     pilos.push($(this).attr("id"));
-                })
+                });
                 return pilos;
             }
 
@@ -143,11 +143,8 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
                         return curso;
                     }
                 }
-                
             }
- 
-
         }
-    }
+    };
 });
 
