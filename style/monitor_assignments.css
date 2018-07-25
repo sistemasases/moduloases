@@ -52,6 +52,17 @@
     background-color: rgb(107, 0, 0);
 }
 
+.transfer{
+    background-color: rgb(3, 47, 167);
+    padding-left: 0.3em;
+    padding-right: 0.3em;
+    margin-right: 0.3em;
+}
+
+.transfer:hover{
+    background-color: rgb(0, 20, 73);
+}
+
 .item-left-button-disabled, .item-right-button-disabled{
     background-color: rgb(61, 61, 61);
     display: inline;
@@ -84,7 +95,7 @@
     border-bottom: 2px solid rgb(255, 174, 0);
 }
 
-.oculto-facultad, .oculto-programa, .oculto-jefe, .oculto-asignar, .oculto-eliminar, .oculto-asignado{
+.oculto-facultad, .oculto-programa, .oculto-jefe, .oculto-asignar, .oculto-eliminar, .oculto-asignado, .oculto-tranferir{
     display: none;
 }
 

@@ -421,12 +421,12 @@ function monitor_assignments_get_practicant_monitor_relationship_by_instance( $i
 }
 
 /**
- * Función que asigna un monitor a un estudiante, en determinada instancia en el semestre actual.
+ * Función que asigna un monitor a un estudiante en determinada instancia, en el semestre actual.
  * @author Jeison Cardona Gómez.
  * @param int $instance_id Instance indentificator.
  * @param int $monitor_id Monitor identificator.
  * @param int $student_id Student Ases identificator.
- * @return int record id
+ * @return int id
  */
 
  function monitor_assignments_create_monitor_student_relationship( $instance_id, $monitor_id, $student_id ){
@@ -463,7 +463,7 @@ function monitor_assignments_get_practicant_monitor_relationship_by_instance( $i
  }
 
  /**
- * Función que elimina la asignación de un monitor a un estudiante, en determinada instancia en el semestre actual.
+ * Función que elimina la asignación de un monitor a un estudiante en determinada instancia, en el semestre actual.
  * @author Jeison Cardona Gómez.
  * @param int $instance_id Instance indentificator.
  * @param int $monitor_id Monitor identificator.
@@ -501,6 +501,24 @@ function monitor_assignments_delete_monitor_student_relationship( $instance_id, 
         return null;
     }
 
+ }
+
+ /**
+ * Función que asigna un monitor a un practicante en determinada instancia, en el semestre actual.
+ * @author Jeison Cardona Gómez.
+ * @param int $instance_id Instance indentificator.
+ * @param int $practicant_id Practicant identificator.
+ * @param int $monitor_id Monitor identificator.
+ * @return int id
+ */
+
+function monitor_assignments_create_practicant_monitor_relationship( $instance_id, $practicant_id, $monitor_id ){
+
+    global $DB;
+
+    $current_id_semester = get_current_semester()->max;
+
+    
  }
 
 
