@@ -188,6 +188,7 @@
             $(document).on( 'click', '.add', function() {
 
                 var current_item = $(this);
+                var instance_id = $("#monitor_assignments_instance_id").data("instance-id");
 
                 var item = $(this).parent();
                 var data_item_0 = -1; // monitor_id or practicant_id
@@ -207,7 +208,7 @@
                 $.ajax({
                     type: "POST",
                     url: "../managers/monitor_assignments/monitor_assignments_api.php",
-                    data: JSON.stringify({ "function": api_function, "params": [ 450299, data_item_0 ,data_item_1 ] }),
+                    data: JSON.stringify({ "function": api_function, "params": [ instance_id, data_item_0 ,data_item_1 ] }),
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
                     success: function(data){
@@ -219,7 +220,7 @@
                                     type: 'success'},
                                     function(){
                                         if( item_type == "student" ){
-                                            load_assigned_students( 450299 , data_item_0 );
+                                            load_assigned_students( instance_id , data_item_0 );
                                             item.find(".add").addClass("oculto-asignar");
                                         }else if( item_type == "monitor" ){
 
@@ -259,6 +260,7 @@
             $(document).on( 'click', '.delete', function() {
 
                 var current_item = $(this);
+                var instance_id = $("#monitor_assignments_instance_id").data("instance-id");
 
                 var item = $(this).parent();
                 var data_item_0 = -1; // monitor_id or practicant_id
@@ -278,7 +280,7 @@
                 $.ajax({
                     type: "POST",
                     url: "../managers/monitor_assignments/monitor_assignments_api.php",
-                    data: JSON.stringify({ "function": api_function, "params": [ 450299, data_item_0 ,data_item_1 ] }),
+                    data: JSON.stringify({ "function": api_function, "params": [ instance_id, data_item_0 ,data_item_1 ] }),
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
                     success: function(data){
@@ -290,7 +292,7 @@
                                     type: 'success'},
                                     function(){
                                         if( item_type == "student" ){
-                                            load_assigned_students( 450299 , data_item_0 );
+                                            load_assigned_students( instance_id , data_item_0 );
                                             item.find(".add").removeClass("oculto-asignar");
                                         }else if( item_type == "monitor" ){
 

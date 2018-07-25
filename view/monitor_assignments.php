@@ -57,6 +57,7 @@ $url = new moodle_url("/blocks/ases/view/monitor_assignments.php", array('course
 
 $record = new stdClass;
 
+$record->instance_id = $blockid;
 $record->professionals = array_values( monitor_assignments_get_professionals_by_instance( $blockid ) );
 $record->practitioners = array_values( monitor_assignments_get_practicing_by_instance( $blockid ) );
 $record->monitors = array_values( monitor_assignments_get_monitors_by_instance( $blockid ) );
