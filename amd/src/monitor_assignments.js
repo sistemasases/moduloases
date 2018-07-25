@@ -6,6 +6,7 @@
  */
  
  /**
+  * @author Jeison Cardona Gómez <jeison.cardona@correounivalle.edu.co>
   * @module block_ases/monitor_assignments
   */
 
@@ -16,8 +17,8 @@
 
             /**
              * 
-             * @param {int} instance_id 
-             * @param {int} data_id monitor identificator
+             * @param {Number} instance_id 
+             * @param {Number} data_id monitor identificator
              */
             function load_assigned_students( instance_id, data_id ){
 
@@ -89,8 +90,8 @@
 
             /**
              * 
-             * @param {int} instance_id 
-             * @param {int} data_id practicant identificator
+             * @param {Number} instance_id 
+             * @param {Number} data_id practicant identificator
              */
             function load_assigned_monitors( instance_id, data_id ){
 
@@ -177,6 +178,13 @@
 
             });
 
+            $(document).on('click', '.student_item', function(){
+                var data_id = $(this).attr("data-id"); // student_id
+                $(".student_item").removeClass("active");
+                $(this).addClass("active");
+                $(".student_item[data-id='" + data_id + "']").addClass("active");
+            });
+
             $(document).on( 'click', '.add', function() {
 
                 var current_item = $(this);
@@ -212,6 +220,7 @@
                                     function(){
                                         if( item_type == "student" ){
                                             load_assigned_students( 450299 , data_item_0 );
+                                            item.find(".add").addClass("oculto-asignar");
                                         }else if( item_type == "monitor" ){
 
                                         }
@@ -282,6 +291,7 @@
                                     function(){
                                         if( item_type == "student" ){
                                             load_assigned_students( 450299 , data_item_0 );
+                                            item.find(".add").removeClass("oculto-asignar");
                                         }else if( item_type == "monitor" ){
 
                                         }
@@ -316,14 +326,6 @@
 
             });
 
-            $(document).on('click', '.student_item', function(){
-                var data_id = $(this).attr("data-id"); // student_id
-                $(".student_item").removeClass("active");
-                $(this).addClass("active");
-                $(".student_item[data-id='" + data_id + "']").addClass("active");
-            });
-
-            
             $("select").change(function(){
 
                 var user_type = $(this).attr("data-id").split("_")[0]; // i.e monitor_faculty => monitor
