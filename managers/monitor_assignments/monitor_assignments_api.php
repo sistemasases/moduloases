@@ -126,14 +126,20 @@
                 if( is_numeric( $input->params[0] ) && is_numeric( $input->params[1] ) && is_numeric( $input->params[2] ) ){
                     
                     $return_value = monitor_assignments_create_monitor_student_relationship( $input->params[0], $input->params[1], $input->params[2] );
+                    
+                    if( $return_value ){
 
-                    echo json_encode( 
-                        array(
-                            "status_code" => 0,
-                            "error_message" => "",
-                            "data_response" => ""
-                        )
-                    );
+                        echo json_encode( 
+                            array(
+                                "status_code" => 0,
+                                "error_message" => "",
+                                "data_response" => ""
+                            )
+                        );
+
+                    }else{
+                        return_with_code( -5 );
+                    }
                     
                 }else{
                     return_with_code( -2 );
@@ -187,6 +193,16 @@
                     array(
                         "status_code" => $code,
                         "error_message" => "Function not defined.",
+                        "data_response" => ""
+                    )
+                );
+                break;
+            
+            case -5:
+                echo json_encode(
+                    array(
+                        "status_code" => $code,
+                        "error_message" => "Duplicate.",
                         "data_response" => ""
                     )
                 );

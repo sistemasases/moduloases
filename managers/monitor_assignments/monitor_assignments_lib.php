@@ -421,12 +421,12 @@ function monitor_assignments_get_practicant_monitor_relationship_by_instance( $i
 }
 
 /**
- * Función que asigna un monitor a un estudiante, en determinada instancia en el semestre actual
+ * Función que asigna un monitor a un estudiante, en determinada instancia en el semestre actual.
  * @author Jeison Cardona Gómez.
  * @param int $instance_id Instance indentificator.
  * @param int $monitor_id Monitor identificator.
  * @param int $student_id Student Ases identificator.
- * @return int
+ * @return int record id
  */
 
  function monitor_assignments_create_monitor_student_relationship( $instance_id, $monitor_id, $student_id ){
@@ -452,10 +452,54 @@ function monitor_assignments_get_practicant_monitor_relationship_by_instance( $i
         $new_relation->id_instancia = $instance_id;
         $new_relation->id_semestre = $current_id_semester;
 
-        return $DB->insert_record('talentospilos_monitor_estud', $new_relation, $returnid=false, $bulk=false);
+        return $DB->insert_record('talentospilos_monitor_estud', $new_relation, $returnid=true, $bulk=false);
 
     }else{
-        return -2;
+
+        return null;
+
+    }
+
+ }
+
+ /**
+ * Función que elimina la asignación de un monitor a un estudiante, en determinada instancia en el semestre actual.
+ * @author Jeison Cardona Gómez.
+ * @param int $instance_id Instance indentificator.
+ * @param int $monitor_id Monitor identificator.
+ * @param int $student_id Student Ases identificator.
+ * @return int
+ */
+
+function monitor_assignments_delete_monitor_student_relationship( $instance_id, $monitor_id, $student_id ){
+
+    global $DB;
+
+    $current_id_semester = get_current_semester()->max;
+
+    $sql = "SELECT * 
+            FROM {talentospilos_monitor_estud} 
+            WHERE id_monitor = $monitor_id 
+                AND id_estudiante = $student_id
+                AND id_instancia = $instance_id
+                AND id_semestre = $current_id_semester";
+    
+    $record = $DB->get_record_sql( $sql );
+
+    if( !$record ){
+
+        $new_relation = new stdClass();
+        $new_relation->id_monitor = $monitor_id;
+        $new_relation->id_estudiante = $student_id;
+        $new_relation->id_instancia = $instance_id;
+        $new_relation->id_semestre = $current_id_semester;
+
+        return $DB->insert_record('talentospilos_monitor_estud', $new_relation, $returnid=true, $bulk=false);
+
+    }else{
+
+        return null;
+        
     }
 
  }
