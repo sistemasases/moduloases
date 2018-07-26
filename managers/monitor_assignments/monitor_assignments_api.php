@@ -56,7 +56,7 @@
 
         // Get practicant monitor relationship by instance
         // params[0] => instance_id
-        if( ( $input->function == "get_practicant_monitor_relationship_by_instance" ) ){
+        if( $input->function == "get_practicant_monitor_relationship_by_instance" ){
 
             /* In this request is only valid pass like param(Parameters) the instance identificatior, 
              * for this reason, the input param only can be equal in quantity to one.
@@ -86,7 +86,7 @@
                 return_with_code( -2 );
             }
 
-        }else if( ( $input->function == "get_monitors_students_relationship_by_instance" ) ){
+        }else if( $input->function == "get_monitors_students_relationship_by_instance" ){
 
             if( count( $input->params ) == 1 ){
 
@@ -112,7 +112,7 @@
                 return_with_code( -2 );
             }
 
-        }else if( ( $input->function == "monitor_assignments_create_monitor_student_relationship" ) ){
+        }else if( $input->function == "create_monitor_student_relationship" ){
 
             if( count( $input->params ) == 3 ){
 
@@ -148,7 +148,7 @@
                 return_with_code( -2 );
             }
 
-        }else if( ( $input->function == "monitor_assignments_delete_monitor_student_relationship" ) ){
+        }else if( $input->function == "delete_monitor_student_relationship" ){
 
             if( count( $input->params ) == 3 ){
 
@@ -190,7 +190,7 @@
                 return_with_code( -2 );
             }
 
-        }else if( ( $input->function == "monitor_assignments_create_practicant_monitor_relationship" ) ){
+        }else if( $input->function == "create_practicant_monitor_relationship" ){
 
             if( count( $input->params ) == 3 ){
 

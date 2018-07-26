@@ -199,10 +199,10 @@
                 var api_function = "";
 
                 if( item_type == "student" ){
-                    api_function = "monitor_assignments_create_monitor_student_relationship";
+                    api_function = "create_monitor_student_relationship";
                     data_item_0 =  $(".monitor_item.active").attr("data-id");
                 }else if( item_type == "monitor" ){
-                    api_function = ""; // Undefined
+                    api_function = "create_practicant_monitor_relationship";
                     data_item_0 =  $(".practicant_item.active").attr("data-id");
                 }
 
@@ -224,21 +224,33 @@
                                             load_assigned_students( instance_id , data_item_0 );
                                             item.find(".add").addClass("oculto-asignar");
                                         }else if( item_type == "monitor" ){
-
+                                            //load_assigned_monitors( instance_id , data_item_0 );
+                                            //item.find(".add").addClass("oculto-asignar");
                                         }
                                     }
                                 );
                             }, 0);
                         }else if( data.status_code === -5 ){
 
-                            setTimeout(function(){
-                                swal(
-                                    {title:'Información',
-                                    text: 'La asignación ya existe en el periodo actual, si tiene problemas con esto, puede probar de nuevo recargando la pestaña.',
-                                    type: 'info'},
-                                    function(){}
-                                );
-                            }, 0);
+                            if( item_type == "student" ){
+                                setTimeout(function(){
+                                    swal(
+                                        {title:'Información',
+                                        text: 'La asignación ya existe en el periodo actual, si tiene problemas con esto, puede probar de nuevo recargando la pestaña.',
+                                        type: 'info'},
+                                        function(){}
+                                    );
+                                }, 0);
+                            }else if( item_type == "monitor" ){
+                                setTimeout(function(){
+                                    swal(
+                                        {title:'Información',
+                                        text: 'Este monitor ya se encuentra asignado.',
+                                        type: 'info'},
+                                        function(){}
+                                    );
+                                }, 0);
+                            }
 
                         }else{
                             setTimeout(function(){
@@ -271,7 +283,7 @@
                 var api_function = "";
 
                 if( item_type == "student" ){
-                    api_function = "monitor_assignments_delete_monitor_student_relationship";
+                    api_function = "delete_monitor_student_relationship";
                     data_item_0 =  $(".monitor_item.active").attr("data-id");
                 }else if( item_type == "monitor" ){
                     api_function = ""; // Undefined
