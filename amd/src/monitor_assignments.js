@@ -167,26 +167,26 @@
                 monitor_assignments_professional_practicant = JSON.parse( $("#monitor_assignments_professional_practicant").text() );
             });*/
 
-            $(document).on('click', '.practicant_item', function() {
+            $(document).on( 'click', '.practicant_item', function() {
 
-                load_assigned_monitors( 450299, $(this).attr("data-id") );
-
-            });
-
-            $(document).on('click', '.monitor_item', function() {
-
-                load_assigned_students( 450299 , $(this).attr("data-id")  );
+                load_assigned_monitors( $("#monitor_assignments_instance_id").data("instance-id"), $(this).attr("data-id") );
 
             });
 
-            $(document).on('click', '.student_item', function(){
+            $(document).on( 'click', '.monitor_item', function() {
+                load_assigned_students( $("#monitor_assignments_instance_id").data("instance-id") , $(this).attr("data-id")  );
+            });
+
+            $(document).on( 'click', '.student_item', function(){
                 var data_id = $(this).attr("data-id"); // student_id
                 $(".student_item").removeClass("active");
                 $(this).addClass("active");
                 $(".student_item[data-id='" + data_id + "']").addClass("active");
             });
 
-            $(document).on( 'click', '.add', function() {
+            $(document).on( 'click', '.add', function(e) {
+
+                e.stopImmediatePropagation();
 
                 var current_item = $(this);
                 var instance_id = $("#monitor_assignments_instance_id").data("instance-id");
@@ -224,8 +224,8 @@
                                             load_assigned_students( instance_id , data_item_0 );
                                             item.find(".add").addClass("oculto-asignar");
                                         }else if( item_type == "monitor" ){
-                                            //load_assigned_monitors( instance_id , data_item_0 );
-                                            //item.find(".add").addClass("oculto-asignar");
+                                            load_assigned_monitors( instance_id , data_item_0 );
+                                            item.find(".add").addClass("oculto-asignar");
                                         }
                                     }
                                 );
@@ -270,7 +270,9 @@
 
             });
 
-            $(document).on( 'click', '.delete', function() {
+            $(document).on( 'click', '.delete', function(e) {
+
+                e.stopImmediatePropagation();
 
                 var current_item = $(this);
                 var instance_id = $("#monitor_assignments_instance_id").data("instance-id");
@@ -286,7 +288,7 @@
                     api_function = "delete_monitor_student_relationship";
                     data_item_0 =  $(".monitor_item.active").attr("data-id");
                 }else if( item_type == "monitor" ){
-                    api_function = ""; // Undefined
+                    api_function = "delete_practicant_monitor_relationship";
                     data_item_0 =  $(".practicant_item.active").attr("data-id");
                 }
 
@@ -308,7 +310,8 @@
                                             load_assigned_students( instance_id , data_item_0 );
                                             item.find(".add").removeClass("oculto-asignar");
                                         }else if( item_type == "monitor" ){
-
+                                            load_assigned_monitors( instance_id , data_item_0 );
+                                            item.find(".add").addClass("oculto-asignar");
                                         }
                                     }
                                 );

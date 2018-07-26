@@ -83,7 +83,9 @@ function monitor_assignments_get_monitors_by_instance( $instance_id ){
                                 WHERE nombre_rol = 'monitor_ps'
                             )
                     AND id_instancia = $instance_id
-                    AND id_semestre = ". get_current_semester()->max ." ORDER BY fullname
+                    AND id_semestre = ". get_current_semester()->max ." 
+                    AND estado = 1 
+                    ORDER BY fullname
                    ) AS user_0
             ON user_0.cod_programa = programa_0.cod_univalle
            ) AS user_programa_0
@@ -276,7 +278,9 @@ function monitor_assignments_get_monitors_faculty( $instance_id ){
                                 WHERE nombre_rol = 'monitor_ps'
                             )
                     AND id_instancia = $instance_id
-                    AND id_semestre = ". get_current_semester()->max ." ORDER BY fullname
+                    AND id_semestre = ". get_current_semester()->max ." 
+                    AND estado = 1 
+                    ORDER BY fullname
                    ) AS user_0
             ON user_0.cod_programa = programa_0.cod_univalle
            ) AS user_programa_0
@@ -315,7 +319,9 @@ function monitor_assignments_get_monitors_programs( $instance_id ){
                         WHERE nombre_rol = 'monitor_ps'
                     )
             AND id_instancia = $instance_id
-            AND id_semestre = ". get_current_semester()->max ." ORDER BY fullname
+            AND id_semestre = ". get_current_semester()->max ." 
+            AND estado = 1 
+            ORDER BY fullname
            ) AS user_0
     ON user_0.cod_programa = programa_0.cod_univalle
     ORDER BY nombre_programa ASC";
@@ -375,7 +381,8 @@ function monitor_assignments_get_profesional_practicant_relationship_by_instance
 			WHERE nombre_rol = 'profesional_ps'
 		)
 	  AND id_instancia = $instance_id
-	  AND id_semestre = ". get_current_semester()->max . "
+      AND id_semestre = ". get_current_semester()->max . "
+      AND estado = 1
 	) AS profesionales_0
 	ON profesionales_0.id_usuario = id_jefe
 	WHERE user_rol_1.id_semestre = ". get_current_semester()->max;
@@ -411,7 +418,8 @@ function monitor_assignments_get_practicant_monitor_relationship_by_instance( $i
 			WHERE nombre_rol = 'practicante_ps'
 		)
 	  AND id_instancia = $instance_id 
-	  AND id_semestre = ". get_current_semester()->max . "
+      AND id_semestre = ". get_current_semester()->max . "
+      AND estado = 1
 	) AS practicantes_0
 	ON practicantes_0.id_usuario = id_jefe
 	WHERE user_rol_1.id_semestre = ". get_current_semester()->max;
@@ -526,6 +534,7 @@ function monitor_assignments_create_practicant_monitor_relationship( $instance_i
             FROM {talentospilos_user_rol} 
             WHERE id_rol = $id_rol
                 AND id_usuario = $monitor_id
+                AND estado = 1
                 AND id_semestre = $current_id_semester
                 AND id_jefe IS NULL
                 AND id_instancia = $instance_id";
@@ -534,7 +543,6 @@ function monitor_assignments_create_practicant_monitor_relationship( $instance_i
 
     if( $record ){
 
-        $record->estado = 1;
         $record->id_jefe = $practicant_id;
 
         return $DB->update_record('talentospilos_user_rol', $record, $bulk=false);
@@ -545,6 +553,44 @@ function monitor_assignments_create_practicant_monitor_relationship( $instance_i
 
     }
     
+ }
+
+
+ /**
+ * Función que elimina la asignación de un practicante a un monitor en determinada instancia, en el semestre actual.
+ * @author Jeison Cardona Gómez.
+ * @param int $instance_id Instance indentificator.
+ * @param int $practicant_id Practicant identificator.
+ * @param int $monitor_id Monitor identificator.
+ * @return int
+ */
+
+function monitor_assignments_delete_practicant_monitor_relationship( $instance_id, $practicant_id, $monitor_id ){
+
+    global $DB;
+
+    $current_id_semester = get_current_semester()->max;
+
+    $sql = "SELECT * 
+            FROM {talentospilos_user_rol} 
+            WHERE id_usuario = $monitor_id 
+                AND estado = 1
+                AND id_semestre = $current_id_semester
+                AND id_jefe = $practicant_id
+                AND id_instancia = $instance_id";
+    
+    $record = $DB->get_record_sql( $sql );
+
+    if( $record ){
+
+        $record->id_jefe = null;
+
+        return $DB->update_record('talentospilos_user_rol', $record, $bulk=false);
+
+    }else{
+        return null;
+    }
+
  }
 
 
