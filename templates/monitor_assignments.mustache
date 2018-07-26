@@ -105,14 +105,14 @@
                 {{#monitors}}
                 {{#.}}
                 <div class="monitor_item assignment_item not-assigned item-general-list" data-name="{{fullname}}" data-id="{{id}}" data-item="monitor" data-cod-programa="{{cod_programa}}" data-id-facultad="{{id_facultad}}">
-                    <div class="item-text">
-                        {{fullname}}
-                    </div>
-                    <div class="item-right-button add" data-toggle="tooltip" title="Asignar.">
+                    <div class="item-left-button add" data-toggle="tooltip" title="Asignar.">
                         <span class="glyphicon glyphicon-chevron-left"></span>
                     </div>
-                    <div class="item-right-button delete oculto-eliminar" data-toggle="tooltip" title="Quitar asignación.">
+                    <div class="item-left-button delete oculto-eliminar" data-toggle="tooltip" title="Quitar asignación.">
                         <span class="glyphicon glyphicon-remove"></span>
+                    </div>
+                    <div class="item-text">
+                        {{fullname}}
                     </div>
                     <div class="item-right-button transfer" data-toggle="tooltip" title="Transferir las asignaciones a otro monitor.">
                         <span class="glyphicon glyphicon-transfer"></span>
@@ -127,14 +127,14 @@
                 {{#students}}
                 {{#.}}
                 <div class="student_item assignment_item not-assigned item-general-list" data-name="{{fullname}}" data-id="{{id}}" data-item="student" data-cod-programa="{{cod_programa}}" data-id-facultad="{{id_facultad}}">
-                    <div class="item-text">
-                        {{fullname}}
-                    </div>
-                    <div class="item-right-button add" data-toggle="tooltip" title="Asignar.">
+                    <div class="item-left-button add" data-toggle="tooltip" title="Asignar.">
                         <span class="glyphicon glyphicon-chevron-left"></span>
                     </div>
-                    <div class="item-right-button delete oculto-eliminar" data-toggle="tooltip" title="Quitar asignación.">
+                    <div class="item-left-button delete oculto-eliminar" data-toggle="tooltip" title="Quitar asignación.">
                         <span class="glyphicon glyphicon-remove"></span>
+                    </div>
+                    <div class="item-text">
+                        {{fullname}}
                     </div>
                 </div>
                 {{/.}}

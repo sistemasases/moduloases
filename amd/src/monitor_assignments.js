@@ -42,7 +42,7 @@
                             var monitor_assignments_monitor_students_relationship = data.data_response;
                             $(".monitor_item").removeClass("active");
                             $(".monitor_item[data-id='" + data_id + "']").addClass("active");
-                            $(".student_item").find(".item-right-button.add").removeClass("oculto-asignar")
+                            $(".student_item").find(".add").removeClass("oculto-asignar")
                             $(".student_item").removeClass("assigned");
                             $(".student_item").removeClass("not-assigned");
                             $(".student_item").addClass("not-assigned");
@@ -60,20 +60,20 @@
                                     
                                     $(".student_item[data-id='" + monitor_assignments_monitor_students_relationship[i].id_estudiante + "']").removeClass("not-assigned");
                                     $(".student_item[data-id='" + monitor_assignments_monitor_students_relationship[i].id_estudiante + "']").addClass("assigned");
-                                    $(".student_item[data-id='" + monitor_assignments_monitor_students_relationship[i].id_estudiante + "']").find(".item-right-button.add").addClass("oculto-asignar");
+                                    $(".student_item[data-id='" + monitor_assignments_monitor_students_relationship[i].id_estudiante + "']").find(".add").addClass("oculto-asignar");
                                     $(".student_item[data-id='" + monitor_assignments_monitor_students_relationship[i].id_estudiante + "']").clone().appendTo("#student_assigned");
 
                                 }else{
-                                    $(".student_item[data-id='" + monitor_assignments_monitor_students_relationship[i].id_estudiante + "']").find(".item-right-button.add").addClass("oculto-asignar");
-                                    $(".student_item[data-id='" + monitor_assignments_monitor_students_relationship[i].id_estudiante + "']").find(".item-right-button.delete").addClass("oculto-eliminar");
+                                    $(".student_item[data-id='" + monitor_assignments_monitor_students_relationship[i].id_estudiante + "']").find(".add").addClass("oculto-asignar");
+                                    $(".student_item[data-id='" + monitor_assignments_monitor_students_relationship[i].id_estudiante + "']").find(".delete").addClass("oculto-eliminar");
                                     $(".student_item[data-id='" + monitor_assignments_monitor_students_relationship[i].id_estudiante + "']").addClass("oculto-asignado");
                                 }
                             }
 
                             // Error cuando de carga con el filtro.
                             //$("#student_assigned").find(".student_item").removeClass("item-general-list");
-                            $("#student_assigned").find(".student_item").find(".item-right-button.add").addClass("oculto-asignar");
-                            $("#student_assigned").find(".student_item").find(".item-right-button.delete").removeClass("oculto-eliminar");
+                            $("#student_assigned").find(".student_item").find(".add").addClass("oculto-asignar");
+                            $("#student_assigned").find(".student_item").find(".delete").removeClass("oculto-eliminar");
 
                             if( !elements ){
                                 $("#student_assigned").addClass("items_assigned_empty");
@@ -116,7 +116,7 @@
                             var monitor_assignments_practicant_monitor_relationship = data.data_response;
                             $(".practicant_item").removeClass("active");
                             $(".practicant_item[data-id='" + data_id + "']").addClass("active");
-                            $(".monitor_item").find(".item-right-button.add").removeClass("oculto-asignar")
+                            $(".monitor_item").find(".add").removeClass("oculto-asignar")
                             $(".monitor_item").removeClass("assigned");
                             $(".monitor_item").removeClass("not-assigned");
                             $(".monitor_item").addClass("not-assigned");
@@ -137,18 +137,18 @@
 
                                     $(".monitor_item[data-id='" + monitor_assignments_practicant_monitor_relationship[i].id_monitor + "']").removeClass("not-assigned");
                                     $(".monitor_item[data-id='" + monitor_assignments_practicant_monitor_relationship[i].id_monitor + "']").addClass("assigned");
-                                    $(".monitor_item[data-id='" + monitor_assignments_practicant_monitor_relationship[i].id_monitor + "']").find(".item-right-button.add").addClass("oculto-asignar");
+                                    $(".monitor_item[data-id='" + monitor_assignments_practicant_monitor_relationship[i].id_monitor + "']").find(".add").addClass("oculto-asignar");
                                     $(".monitor_item[data-id='" + monitor_assignments_practicant_monitor_relationship[i].id_monitor + "']").clone().appendTo("#monitor_assigned");
                                 }else{
-                                    $(".monitor_item[data-id='" + monitor_assignments_practicant_monitor_relationship[i].id_monitor + "']").find(".item-right-button.add").addClass("oculto-asignar");
-                                    $(".monitor_item[data-id='" + monitor_assignments_practicant_monitor_relationship[i].id_monitor + "']").find(".item-right-button.delete").addClass("oculto-eliminar");
+                                    $(".monitor_item[data-id='" + monitor_assignments_practicant_monitor_relationship[i].id_monitor + "']").find(".add").addClass("oculto-asignar");
+                                    $(".monitor_item[data-id='" + monitor_assignments_practicant_monitor_relationship[i].id_monitor + "']").find(".delete").addClass("oculto-eliminar");
                                     $(".monitor_item[data-id='" + monitor_assignments_practicant_monitor_relationship[i].id_monitor + "']").addClass("oculto-asignado");
                                 }
                             }
 
                             //$("#monitor_assigned").find(".monitor_item").removeClass("item-general-list");
-                            $("#monitor_assigned").find(".monitor_item").find(".item-right-button.add").addClass("oculto-asignar");
-                            $("#monitor_assigned").find(".monitor_item").find(".item-right-button.delete").removeClass("oculto-eliminar");
+                            $("#monitor_assigned").find(".monitor_item").find(".add").addClass("oculto-asignar");
+                            $("#monitor_assigned").find(".monitor_item").find(".delete").removeClass("oculto-eliminar");
 
                             if( !elements ){
                                 $("#monitor_assigned").addClass("items_assigned_empty");
@@ -169,7 +169,7 @@
                 $('.student_item').removeClass("oculto-filtro-nombre");
                 var filter_value = $(this).val();
                 if (filter_value != ""){
-                    $('.student_item').not('.item-general-list.student_item[data-name*="' + filter_value.toUpperCase() + '"]').addClass("oculto-filtro-nombre");
+                    $('.student_item').not("#student_assigned .student_item").not('.item-general-list.student_item[data-name*="' + filter_value.toUpperCase() + '"]').addClass("oculto-filtro-nombre");
                 }
             });
 
@@ -177,7 +177,7 @@
                 $('.monitor_item').removeClass("oculto-filtro-nombre");
                 var filter_value = $(this).val();
                 if (filter_value != ""){
-                    $('.monitor_item').not('.item-general-list.monitor_item[data-name*="' + filter_value.toUpperCase() + '"]').addClass("oculto-filtro-nombre");
+                    $('.monitor_item').not("#monitor_assigned .monitor_item").not('.item-general-list.monitor_item[data-name*="' + filter_value.toUpperCase() + '"]').addClass("oculto-filtro-nombre");
                 }
             });
 
@@ -383,7 +383,7 @@
                     var faculty_id = $(this).find(":selected").attr("data-id-facultad");
                     if( faculty_id != "-1" ){
                         $(".item-general-list.monitor_item").removeClass("oculto-facultad");
-                        $(".item-general-list.monitor_item").not(".item-general-list.monitor_item[data-id-facultad='" + faculty_id + "']").addClass("oculto-facultad");
+                        $(".item-general-list.monitor_item").not("#monitor_assigned .monitor_item").not(".item-general-list.monitor_item[data-id-facultad='" + faculty_id + "']").addClass("oculto-facultad");
                     }else{
                         $(".item-general-list.monitor_item").removeClass("oculto-facultad");
                     }
@@ -391,7 +391,7 @@
                     var program_id = $(this).find(":selected").attr("data-cod-programa");
                     if( program_id != "-1" ){
                         $(".item-general-list.monitor_item").removeClass("oculto-programa");
-                        $(".item-general-list.monitor_item").not(".item-general-list.monitor_item[data-cod-programa='" + program_id + "']").addClass("oculto-programa");
+                        $(".item-general-list.monitor_item").not("#monitor_assigned .monitor_item").not(".item-general-list.monitor_item[data-cod-programa='" + program_id + "']").addClass("oculto-programa");
                     }else{
                         $(".item-general-list.monitor_item").removeClass("oculto-programa");
                     }
@@ -399,7 +399,7 @@
                     var faculty_id = $(this).find(":selected").attr("data-id-facultad");
                     if( faculty_id != "-1" ){
                         $(".item-general-list.student_item").removeClass("oculto-facultad");
-                        $(".item-general-list.student_item").not(".item-general-list.student_item[data-id-facultad='" + faculty_id + "']").addClass("oculto-facultad");
+                        $(".item-general-list.student_item").not("#student_assigned .student_item").not(".item-general-list.student_item[data-id-facultad='" + faculty_id + "']").addClass("oculto-facultad");
                     }else{
                         $(".item-general-list.student_item").removeClass("oculto-facultad");
                     }
@@ -407,7 +407,7 @@
                     var program_id = $(this).find(":selected").attr("data-cod-programa");
                     if( program_id != "-1" ){
                         $(".item-general-list.student_item").removeClass("oculto-programa");
-                        $(".item-general-list.student_item").not(".item-general-list.student_item[data-cod-programa='" + program_id + "']").addClass("oculto-programa");
+                        $(".item-general-list.student_item").not("#student_assigned .student_item").not(".item-general-list.student_item[data-cod-programa='" + program_id + "']").addClass("oculto-programa");
                     }else{
                         $(".item-general-list.student_item").removeClass("oculto-programa");
                     }

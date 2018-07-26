@@ -37,30 +37,32 @@
 }
 
 .add{
-    background-color: green;
+    background-color: rgb(83, 146, 83);
+    margin-right: 0.5em;
 }
 
 .add:hover{
-    background-color: rgb(0, 65, 0);
+    background-color: rgb(0, 172, 0);
 }
 
 .delete{
-    background-color: red;
+    background-color: rgb(255, 163, 163);
+    margin-right: 0.5em;
 }
 
 .delete:hover{
-    background-color: rgb(107, 0, 0);
+    background-color: rgb(194, 0, 0);
 }
 
 .transfer{
-    background-color: rgb(3, 47, 167);
+    background-color: rgb(140, 171, 255);
     padding-left: 0.3em;
     padding-right: 0.3em;
     margin-right: 0.3em;
 }
 
 .transfer:hover{
-    background-color: rgb(0, 20, 73);
+    background-color: rgb(0, 54, 201);
 }
 
 .item-left-button-disabled, .item-right-button-disabled{
