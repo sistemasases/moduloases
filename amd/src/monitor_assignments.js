@@ -42,6 +42,7 @@
                             var monitor_assignments_monitor_students_relationship = data.data_response;
                             $(".monitor_item").removeClass("active");
                             $(".monitor_item[data-id='" + data_id + "']").addClass("active");
+                            $(".student_item").find(".item-right-button.add").removeClass("oculto-asignar")
                             $(".student_item").removeClass("assigned");
                             $(".student_item").removeClass("not-assigned");
                             $(".student_item").addClass("not-assigned");
@@ -59,6 +60,7 @@
                                     
                                     $(".student_item[data-id='" + monitor_assignments_monitor_students_relationship[i].id_estudiante + "']").removeClass("not-assigned");
                                     $(".student_item[data-id='" + monitor_assignments_monitor_students_relationship[i].id_estudiante + "']").addClass("assigned");
+                                    $(".student_item[data-id='" + monitor_assignments_monitor_students_relationship[i].id_estudiante + "']").find(".item-right-button.add").addClass("oculto-asignar");
                                     $(".student_item[data-id='" + monitor_assignments_monitor_students_relationship[i].id_estudiante + "']").clone().appendTo("#student_assigned");
 
                                 }else{
@@ -114,6 +116,7 @@
                             var monitor_assignments_practicant_monitor_relationship = data.data_response;
                             $(".practicant_item").removeClass("active");
                             $(".practicant_item[data-id='" + data_id + "']").addClass("active");
+                            $(".monitor_item").find(".item-right-button.add").removeClass("oculto-asignar")
                             $(".monitor_item").removeClass("assigned");
                             $(".monitor_item").removeClass("not-assigned");
                             $(".monitor_item").addClass("not-assigned");
@@ -134,6 +137,7 @@
 
                                     $(".monitor_item[data-id='" + monitor_assignments_practicant_monitor_relationship[i].id_monitor + "']").removeClass("not-assigned");
                                     $(".monitor_item[data-id='" + monitor_assignments_practicant_monitor_relationship[i].id_monitor + "']").addClass("assigned");
+                                    $(".monitor_item[data-id='" + monitor_assignments_practicant_monitor_relationship[i].id_monitor + "']").find(".item-right-button.add").addClass("oculto-asignar");
                                     $(".monitor_item[data-id='" + monitor_assignments_practicant_monitor_relationship[i].id_monitor + "']").clone().appendTo("#monitor_assigned");
                                 }else{
                                     $(".monitor_item[data-id='" + monitor_assignments_practicant_monitor_relationship[i].id_monitor + "']").find(".item-right-button.add").addClass("oculto-asignar");
