@@ -165,6 +165,32 @@
                 });
             };
 
+            $( "#student-name-filter" ).keyup(function() {
+                $('.student_item').removeClass("oculto-filtro-nombre");
+                var filter_value = $(this).val();
+                if (filter_value != ""){
+                    $('.student_item').not('.item-general-list.student_item[data-name*="' + filter_value.toUpperCase() + '"]').addClass("oculto-filtro-nombre");
+                }
+            });
+
+            $( "#monitor-name-filter" ).keyup(function() {
+                $('.monitor_item').removeClass("oculto-filtro-nombre");
+                var filter_value = $(this).val();
+                if (filter_value != ""){
+                    $('.monitor_item').not('.item-general-list.monitor_item[data-name*="' + filter_value.toUpperCase() + '"]').addClass("oculto-filtro-nombre");
+                }
+            });
+
+            $("#btn-student-name-filter").click(function(){
+                $("#student-name-filter").val("");
+                $('.student_item').removeClass("oculto-filtro-nombre");
+            });
+
+            $("#btn-monitor-name-filter").click(function(){
+                $("#monitor-name-filter").val("");
+                $('.monitor_item').removeClass("oculto-filtro-nombre");
+            });
+
             /*var monitor_assignments_professional_practicant;
             
             $(document).ready(function(){

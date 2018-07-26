@@ -13,7 +13,7 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+            <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 filters">
                 <span class="column-title">Practicantes</span>
                 <hr>
                 <span>Profesional:&nbsp;</span>
@@ -26,7 +26,7 @@
                     {{/professionals}}
                 </select>
             </div>
-            <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+            <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 filters">
                 <span class="column-title">Monitores</span>
                 <hr>
                 <span>Facultad:</span>
@@ -47,8 +47,16 @@
                     {{/.}}
                     {{/monitors_programs}}
                 </select>
+                <div class="filtro">
+                    <div class="input-group">
+                        <input id="monitor-name-filter" type="text" class="form-control ajuste-input" placeholder="Buscar por nombre ... ">
+                        <span class="input-group-btn">
+                          <button id="btn-monitor-name-filter" class="btn btn-default ajuste-btn" type="button">Limpiar!</button>
+                        </span>
+                      </div>
+                </div>
             </div>
-            <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+            <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 filters">
                 <span class="column-title">Estudiantes</span>
                 <hr>
                 <span>Facultad:</span>
@@ -69,13 +77,21 @@
                     {{/.}}
                     {{/students_programs}}
                 </select>
+                <div class="filtro">
+                    <div class="input-group">
+                        <input id="student-name-filter" type="text" class="form-control ajuste-input" placeholder="Buscar por nombre ... ">
+                        <span class="input-group-btn">
+                          <button id="btn-student-name-filter" class="btn btn-default ajuste-btn" type="button">Limpiar!</button>
+                        </span>
+                      </div>
+                </div>
             </div>
         </div>
         <div class="row column_group">
             <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 column_items" >
                 {{#practitioners}}
                 {{#.}}
-                <div class="practicant_item assignment_item not-assigned item-general-list" data-id="{{id}}" data-item="practicant" data-id-jefe={{id_jefe}}>
+                <div class="practicant_item assignment_item not-assigned item-general-list" data-name="{{fullname}}" data-id="{{id}}" data-item="practicant" data-id-jefe={{id_jefe}}>
                     <div class="item-text">
                         {{fullname}}
                     </div>
@@ -88,7 +104,7 @@
                 <hr>
                 {{#monitors}}
                 {{#.}}
-                <div class="monitor_item assignment_item not-assigned item-general-list" data-id="{{id}}" data-item="monitor" data-cod-programa="{{cod_programa}}" data-id-facultad="{{id_facultad}}">
+                <div class="monitor_item assignment_item not-assigned item-general-list" data-name="{{fullname}}" data-id="{{id}}" data-item="monitor" data-cod-programa="{{cod_programa}}" data-id-facultad="{{id_facultad}}">
                     <div class="item-text">
                         {{fullname}}
                     </div>
@@ -110,7 +126,7 @@
                 <hr>
                 {{#students}}
                 {{#.}}
-                <div class="student_item assignment_item not-assigned item-general-list" data-id="{{id}}" data-item="student" data-cod-programa="{{cod_programa}}" data-id-facultad="{{id_facultad}}">
+                <div class="student_item assignment_item not-assigned item-general-list" data-name="{{fullname}}" data-id="{{id}}" data-item="student" data-cod-programa="{{cod_programa}}" data-id-facultad="{{id_facultad}}">
                     <div class="item-text">
                         {{fullname}}
                     </div>

@@ -95,7 +95,7 @@
     border-bottom: 2px solid rgb(255, 174, 0);
 }
 
-.oculto-facultad, .oculto-programa, .oculto-jefe, .oculto-asignar, .oculto-eliminar, .oculto-asignado, .oculto-tranferir{
+.oculto-facultad, .oculto-programa, .oculto-jefe, .oculto-asignar, .oculto-eliminar, .oculto-asignado, .oculto-tranferir, .oculto-filtro-nombre{
     display: none;
 }
 
@@ -148,4 +148,32 @@
 .items_assigned_empty span:nth-child(3) {
     -webkit-animation-delay: 500ms;
     -moz-animation-delay: 500ms;
+}
+
+.filtro{
+    margin-top: 1em;
+}
+
+.ajuste-input{
+    height: 30px !important;
+}
+
+.ajuste-btn, .ajuste-btn:focus{
+    height: 30px !important;
+    paddint: 0px !important;
+    background-color: #d51b23 !important;
+    border-color: #d43f3a !important;
+    border-radius: 0px;
+    color: #FFF;
+    border-top-right-radius: 2px !important;
+    border-bottom-right-radius: 2px !important;
+}
+
+.ajuste-btn:hover{
+    background-color: #d43f3a !important;
+    color: #FFF;
+}
+
+.filters{
+    text-align: center;
 }
