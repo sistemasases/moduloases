@@ -5,7 +5,7 @@
     border-radius: 2px;
     margin-top: 3px;
     cursor: pointer;
-    padding: 0.5em;
+    padding: 0.25em;
     border-top-left-radius: 0px;
 }
 
@@ -95,6 +95,7 @@
 
 .active, .active:hover{
     border-bottom: 2px solid rgb(255, 174, 0);
+    background-color: rgb(172, 172, 172);
 }
 
 .oculto-facultad, .oculto-programa, .oculto-jefe, .oculto-asignar, .oculto-eliminar, .oculto-asignado, .oculto-tranferir, .oculto-filtro-nombre{
@@ -178,4 +179,12 @@
 
 .filters{
     text-align: center;
+}
+
+.hr-title{
+    margin-top: 0px;
+}
+
+.filter-active{
+    border-color: rgb(46, 189, 255) !important;
 }

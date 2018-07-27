@@ -33,7 +33,7 @@ require_once $CFG->dirroot.'/blocks/ases/managers/lib/lib.php';
  * es dibujar un mapa de seguimiento para saber de donde provienen las funciones
  * @author Jeison Cardona Gómez.
  * @see asesreport_lib.php
- * @param int $instance_id Instance identificator.
+ * @param int $instance_id Instance id.
  * @return Array 
  */
 
@@ -47,7 +47,7 @@ function monitor_assignments_get_professionals_by_instance( $instance_id ){
  * es dibujar un mapa de seguimiento para saber de donde provienen las funciones
  * @author Jeison Cardona Gómez.
  * @see asesreport_lib.php
- * @param int $instance_id Instance identificator.
+ * @param int $instance_id Instance id.
  * @return Array 
  */
 
@@ -60,7 +60,7 @@ function monitor_assignments_get_practicing_by_instance( $instance_id ){
  * Función que renombra para clasificar la función get_monitors_by_instance en otras partes del plugin, el objetivo
  * es dibujar un mapa de seguimiento para saber de donde provienen las funciones
  * @author Jeison Cardona Gómez.
- * @param int $instance_id Instance identificator.
+ * @param int $instance_id Instance id.
  * @return Array 
  */
 
@@ -98,7 +98,7 @@ function monitor_assignments_get_monitors_by_instance( $instance_id ){
 /**
  * Función que retorna todos los usuarios del sistema.
  * @author Jeison Cardona Gómez.
- * @param int $instance_id Instance identificator.
+ * @param int $instance_id Instance id.
  * @return Array (
  *      stdClass(
  *          ->fullname
@@ -156,7 +156,7 @@ function monitor_assignments_get_students_by_instance( $instance_id ){
 /**
  * Función retorna todos los programas asociados a los estudiantes de determinada instancia.
  * @author Jeison Cardona Gómez.
- * @param int $instance_id Instance identificator.
+ * @param int $instance_id Instance id.
  * @return Array (
  *      stdClass(
  *          ->cod_programa
@@ -200,7 +200,7 @@ function monitor_assignments_get_students_programs( $instance_id ){
 /**
  * Función retorna todas las facultades asociadas a los programas académicos de los estudiantes en una determinada instancia.
  * @author Jeison Cardona Gómez.
- * @param int $instance_id Instance identificator.
+ * @param int $instance_id Instance id.
  * @return Array (
  *      stdClass(
  *          ->id_facultad
@@ -250,7 +250,7 @@ function monitor_assignments_get_students_faculty( $instance_id ){
 /**
  * Función retorna todas las facultades asociadas a los programas académicos de los monitores en una determinada instancia.
  * @author Jeison Cardona Gómez.
- * @param int $instance_id Instance identificator.
+ * @param int $instance_id Instance id.
  * @return Array (
  *      stdClass(
  *          ->id_facultad
@@ -294,7 +294,7 @@ function monitor_assignments_get_monitors_faculty( $instance_id ){
 /**
  * Función retorna todas los programas de los monitores en una determinada instancia.
  * @author Jeison Cardona Gómez.
- * @param int $instance_id Instance identificator.
+ * @param int $instance_id Instance id.
  * @return Array (
  *      stdClass(
  *          ->id_facultad
@@ -333,7 +333,7 @@ function monitor_assignments_get_monitors_programs( $instance_id ){
 /**
  * Función retorna todas las relaciones monitor-estudiante del semestre actual en una instancia
  * @author Jeison Cardona Gómez.
- * @param int $instance_id Instance identificator.
+ * @param int $instance_id Instance id.
  * @return Array (
  *      stdClass(
  *          ->id_monitor
@@ -357,7 +357,7 @@ function monitor_assignments_get_monitors_students_relationship_by_instance( $in
 /**
  * Función que retorna todas las relaciones profesional-practicante del semestre actual en una instancia
  * @author Jeison Cardona Gómez.
- * @param int $instance_id Instance identificator.
+ * @param int $instance_id Instance id.
  * @return Array(
  * 	stdClass(
  *	    ->id_profesional
@@ -394,7 +394,7 @@ function monitor_assignments_get_profesional_practicant_relationship_by_instance
 /**
  * Función que retorna todas las relaciones practicante-monitor del semestre actual en una instancia
  * @author Jeison Cardona Gómez.
- * @param int $instance_id Instance identificator.
+ * @param int $instance_id Instance id.
  * @return Array(
  * 	stdClass(
  *	    ->id_practicante
@@ -431,9 +431,9 @@ function monitor_assignments_get_practicant_monitor_relationship_by_instance( $i
 /**
  * Función que asigna un monitor a un estudiante en determinada instancia, en el semestre actual.
  * @author Jeison Cardona Gómez.
- * @param int $instance_id Instance indentificator.
- * @param int $monitor_id Monitor identificator.
- * @param int $student_id Student Ases identificator.
+ * @param int $instance_id Instance id.
+ * @param int $monitor_id Monitor id.
+ * @param int $student_id Student Ases id.
  * @return int id
  */
 
@@ -473,9 +473,9 @@ function monitor_assignments_get_practicant_monitor_relationship_by_instance( $i
  /**
  * Función que elimina la asignación de un monitor a un estudiante en determinada instancia, en el semestre actual.
  * @author Jeison Cardona Gómez.
- * @param int $instance_id Instance indentificator.
- * @param int $monitor_id Monitor identificator.
- * @param int $student_id Student Ases identificator.
+ * @param int $instance_id Instance id.
+ * @param int $monitor_id Monitor id.
+ * @param int $student_id Student Ases id.
  * @return int
  */
 
@@ -514,9 +514,9 @@ function monitor_assignments_delete_monitor_student_relationship( $instance_id, 
  /**
  * Función que asigna un monitor a un practicante en determinada instancia, en el semestre actual.
  * @author Jeison Cardona Gómez.
- * @param int $instance_id Instance indentificator.
- * @param int $practicant_id Practicant identificator.
- * @param int $monitor_id Monitor identificator.
+ * @param int $instance_id Instance id.
+ * @param int $practicant_id Practicant id.
+ * @param int $monitor_id Monitor id.
  * @return int id
  */
 
@@ -559,9 +559,9 @@ function monitor_assignments_create_practicant_monitor_relationship( $instance_i
  /**
  * Función que elimina la asignación de un practicante a un monitor en determinada instancia, en el semestre actual.
  * @author Jeison Cardona Gómez.
- * @param int $instance_id Instance indentificator.
- * @param int $practicant_id Practicant identificator.
- * @param int $monitor_id Monitor identificator.
+ * @param int $instance_id Instance id.
+ * @param int $practicant_id Practicant id.
+ * @param int $monitor_id Monitor id.
  * @return int
  */
 
@@ -592,6 +592,40 @@ function monitor_assignments_delete_practicant_monitor_relationship( $instance_i
     }
 
  }
+
+ /**
+  * Función que permite transferir las asignaciones de un monitor a otro monitor, en determinada instancia, en el 
+  * semestre actual.
+  *
+  * @param int $old_monitor_id 
+  * @param int $new_monitor_id
+  * @param int $instance_id
+  */
+
+  function monitor_assignments_transfer( $old_monitor_id, $new_monitor_id, $instance_id ){
+
+    global $DB;
+
+    $current_id_semester = get_current_semester()->max;
+
+    // Get old monitor asignations
+    $sql = "SELECT id, id_monitor, id_estudiante 
+            FROM {talentospilos_monitor_estud} 
+            WHERE id_semestre = ". get_current_semester()->max ." AND id_instancia = $instance_id AND id_monitor = $old_monitor_id";
+  
+    $asignations = $DB->get_records_sql( $sql );
+    if( $asignations ){
+
+        $asignations_size = count($asignations);
+        for($i = 0; $i < $asignations_size; $i++){
+            
+        }
+
+    }else{
+        return 0;
+    }
+
+  }
 
 
 ?>

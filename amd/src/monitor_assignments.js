@@ -169,7 +169,10 @@
                 $('.student_item').removeClass("oculto-filtro-nombre");
                 var filter_value = $(this).val();
                 if (filter_value != ""){
-                    $('.student_item').not("#student_assigned .student_item").not('.item-general-list.student_item[data-name*="' + filter_value.toUpperCase() + '"]').addClass("oculto-filtro-nombre");
+                    $('.student_item').not('.item-general-list.student_item[data-name*="' + filter_value.toUpperCase() + '"]').addClass("oculto-filtro-nombre");
+                    $(this).addClass("filter-active");
+                }else{
+                    $(this).removeClass("filter-active");
                 }
             });
 
@@ -177,18 +180,23 @@
                 $('.monitor_item').removeClass("oculto-filtro-nombre");
                 var filter_value = $(this).val();
                 if (filter_value != ""){
-                    $('.monitor_item').not("#monitor_assigned .monitor_item").not('.item-general-list.monitor_item[data-name*="' + filter_value.toUpperCase() + '"]').addClass("oculto-filtro-nombre");
+                    $('.monitor_item').not('.item-general-list.monitor_item[data-name*="' + filter_value.toUpperCase() + '"]').addClass("oculto-filtro-nombre");
+                    $(this).addClass("filter-active");
+                }else{
+                    $(this).removeClass("filter-active");
                 }
             });
 
             $("#btn-student-name-filter").click(function(){
                 $("#student-name-filter").val("");
                 $('.student_item').removeClass("oculto-filtro-nombre");
+                $("#student-name-filter").removeClass("filter-active");
             });
 
             $("#btn-monitor-name-filter").click(function(){
                 $("#monitor-name-filter").val("");
                 $('.monitor_item').removeClass("oculto-filtro-nombre");
+                $("#monitor-name-filter").removeClass("filter-active");
             });
 
             /*var monitor_assignments_professional_practicant;
@@ -382,41 +390,51 @@
                 if( (user_type == "monitor") && (filter_type == "faculty") ){
                     var faculty_id = $(this).find(":selected").attr("data-id-facultad");
                     if( faculty_id != "-1" ){
+                        $(this).addClass("filter-active");
                         $(".item-general-list.monitor_item").removeClass("oculto-facultad");
-                        $(".item-general-list.monitor_item").not("#monitor_assigned .monitor_item").not(".item-general-list.monitor_item[data-id-facultad='" + faculty_id + "']").addClass("oculto-facultad");
+                        $(".item-general-list.monitor_item").not(".item-general-list.monitor_item[data-id-facultad='" + faculty_id + "']").addClass("oculto-facultad");
                     }else{
+                        $(this).removeClass("filter-active");
                         $(".item-general-list.monitor_item").removeClass("oculto-facultad");
                     }
                 }else if( (user_type == "monitor") && (filter_type == "program") ){
                     var program_id = $(this).find(":selected").attr("data-cod-programa");
                     if( program_id != "-1" ){
+                        $(this).addClass("filter-active");
                         $(".item-general-list.monitor_item").removeClass("oculto-programa");
-                        $(".item-general-list.monitor_item").not("#monitor_assigned .monitor_item").not(".item-general-list.monitor_item[data-cod-programa='" + program_id + "']").addClass("oculto-programa");
+                        $(".item-general-list.monitor_item").not(".item-general-list.monitor_item[data-cod-programa='" + program_id + "']").addClass("oculto-programa");
                     }else{
+                        $(this).removeClass("filter-active");
                         $(".item-general-list.monitor_item").removeClass("oculto-programa");
                     }
                 }else if( (user_type == "student") && (filter_type == "faculty") ){
                     var faculty_id = $(this).find(":selected").attr("data-id-facultad");
                     if( faculty_id != "-1" ){
+                        $(this).addClass("filter-active");
                         $(".item-general-list.student_item").removeClass("oculto-facultad");
-                        $(".item-general-list.student_item").not("#student_assigned .student_item").not(".item-general-list.student_item[data-id-facultad='" + faculty_id + "']").addClass("oculto-facultad");
+                        $(".item-general-list.student_item").not(".item-general-list.student_item[data-id-facultad='" + faculty_id + "']").addClass("oculto-facultad");
                     }else{
+                        $(this).removeClass("filter-active");
                         $(".item-general-list.student_item").removeClass("oculto-facultad");
                     }
                 }else if( (user_type == "student") && (filter_type == "program") ){
                     var program_id = $(this).find(":selected").attr("data-cod-programa");
                     if( program_id != "-1" ){
+                        $(this).addClass("filter-active");
                         $(".item-general-list.student_item").removeClass("oculto-programa");
-                        $(".item-general-list.student_item").not("#student_assigned .student_item").not(".item-general-list.student_item[data-cod-programa='" + program_id + "']").addClass("oculto-programa");
+                        $(".item-general-list.student_item").not(".item-general-list.student_item[data-cod-programa='" + program_id + "']").addClass("oculto-programa");
                     }else{
+                        $(this).removeClass("filter-active");
                         $(".item-general-list.student_item").removeClass("oculto-programa");
                     }
                 }else if( (user_type == "professional") ){
                     var boss_id = $(this).find(":selected").attr("data-id");
                     if( boss_id != "-1" ){
+                        $(this).addClass("filter-active");
                         $(".item-general-list.practicant_item").removeClass("oculto-jefe");
                         $(".item-general-list.practicant_item").not(".item-general-list.practicant_item[data-id-jefe='" + boss_id + "']").addClass("oculto-jefe");
                     }else{
+                        $(this).removeClass("filter-active");
                         $(".item-general-list.practicant_item").removeClass("oculto-jefe");
                     }
                 }
