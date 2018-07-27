@@ -70,6 +70,11 @@ $record->monitors_students_relationship = json_encode( array_values( monitor_ass
 $record->professional_practicant_relationship = json_encode( array_values( monitor_assignments_get_profesional_practicant_relationship_by_instance( $blockid ) ) );
 $record->practicant_monitor_relationship = json_encode( array_values( monitor_assignments_get_practicant_monitor_relationship_by_instance( $blockid ) ) );
 
+$coursenode = $PAGE->navigation->find($courseid, navigation_node::TYPE_COURSE);
+$blocknode = navigation_node::create('Asignaciones',$url, null, 'block', $blockid);
+$coursenode->add_node($blocknode);
+$blocknode->make_active();
+
 $PAGE->set_context($contextcourse);
 $PAGE->set_context($contextblock);
 $PAGE->set_url($url);
@@ -86,6 +91,7 @@ $PAGE->requires->css('/blocks/ases/style/monitor_assignments.css', true);
 $PAGE->requires->js_call_amd('block_ases/monitor_assignments', 'init');
 
 $output = $PAGE->get_renderer('block_ases');
+
 
 echo $output->header();
 $monitor_assignments_page = new \block_ases\output\monitor_assignments_page($record);
