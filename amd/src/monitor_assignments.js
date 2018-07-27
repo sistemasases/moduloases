@@ -72,8 +72,6 @@
                                 }
                             }
 
-                            // Error cuando de carga con el filtro.
-                            //$("#student_assigned").find(".student_item").removeClass("item-general-list");
                             $("#student_assigned").find(".student_item").find(".add").addClass("oculto-asignar");
                             $("#student_assigned").find(".student_item").find(".delete").removeClass("oculto-eliminar");
 
