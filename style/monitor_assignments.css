@@ -5,7 +5,7 @@
     border-radius: 2px;
     margin-top: 3px;
     cursor: pointer;
-    padding: 0.5em;
+    padding: 0.25em;
     border-top-left-radius: 0px;
 }
 
@@ -30,12 +30,39 @@
 }
 
 .item-left-button, .item-right-button{
-    background-color: green;
     display: inline;
-    border-radius: 2px;
+    border-radius: 1px;
     color: #FFF;
     cursor: pointer;
+}
 
+.add{
+    background-color: rgb(83, 146, 83);
+    margin-right: 0.5em;
+}
+
+.add:hover{
+    background-color: rgb(0, 172, 0);
+}
+
+.delete{
+    background-color: rgb(255, 163, 163);
+    margin-right: 0.5em;
+}
+
+.delete:hover{
+    background-color: rgb(194, 0, 0);
+}
+
+.transfer{
+    background-color: rgb(140, 171, 255);
+    padding-left: 0.3em;
+    padding-right: 0.3em;
+    margin-right: 0.3em;
+}
+
+.transfer:hover{
+    background-color: rgb(0, 54, 201);
 }
 
 .item-left-button-disabled, .item-right-button-disabled{
@@ -68,9 +95,13 @@
 
 .active, .active:hover{
     border-bottom: 2px solid rgb(255, 174, 0);
+    background-color: rgb(172, 172, 172);
 }
 
-.oculto-facultad, .oculto-programa, .oculto-jefe{
+.oculto-facultad, .oculto-programa, 
+.oculto-jefe, .oculto-asignar, 
+.oculto-eliminar, .oculto-asignado, 
+.oculto-tranferir, .oculto-filtro-nombre{
     display: none;
 }
 
@@ -123,4 +154,59 @@
 .items_assigned_empty span:nth-child(3) {
     -webkit-animation-delay: 500ms;
     -moz-animation-delay: 500ms;
+}
+
+.filtro{
+    margin-top: 1em;
+}
+
+.ajuste-input{
+    height: 30px !important;
+}
+
+.ajuste-btn, .ajuste-btn:focus{
+    height: 30px !important;
+    paddint: 0px !important;
+    background-color: #d51b23 !important;
+    border-color: #d43f3a !important;
+    border-radius: 0px;
+    color: #FFF;
+    border-top-right-radius: 2px !important;
+    border-bottom-right-radius: 2px !important;
+}
+
+.ajuste-btn:hover{
+    background-color: #d43f3a !important;
+    color: #FFF;
+}
+
+.filters{
+    text-align: center;
+}
+
+.hr-title{
+    margin-top: 0px;
+}
+
+.filter-active{
+    border-color: rgb(46, 189, 255) !important;
+}
+
+.modal{
+    left: 50% !important;
+    bottom: auto;
+    padding: 0px !important;
+}
+
+.modal-dialog{
+    margin: 0px !important;
+    width: 100%;
+}
+
+.modal-backdrop{
+    background-color: rgba(0, 0, 0, 0.4) !important;
+}
+
+#modalTransferLongTitle{
+    font-size: 1.3em;
 }
