@@ -98,7 +98,10 @@
     background-color: rgb(172, 172, 172);
 }
 
-.oculto-facultad, .oculto-programa, .oculto-jefe, .oculto-asignar, .oculto-eliminar, .oculto-asignado, .oculto-tranferir, .oculto-filtro-nombre{
+.oculto-facultad, .oculto-programa, 
+.oculto-jefe, .oculto-asignar, 
+.oculto-eliminar, .oculto-asignado, 
+.oculto-tranferir, .oculto-filtro-nombre{
     display: none;
 }
 
@@ -187,4 +190,23 @@
 
 .filter-active{
     border-color: rgb(46, 189, 255) !important;
+}
+
+.modal{
+    left: 50% !important;
+    bottom: auto;
+    padding: 0px !important;
+}
+
+.modal-dialog{
+    margin: 0px !important;
+    width: 100%;
+}
+
+.modal-backdrop{
+    background-color: rgba(0, 0, 0, 0.4) !important;
+}
+
+#modalTransferLongTitle{
+    font-size: 1.3em;
 }

@@ -597,32 +597,34 @@ function monitor_assignments_delete_practicant_monitor_relationship( $instance_i
   * Función que permite transferir las asignaciones de un monitor a otro monitor, en determinada instancia, en el 
   * semestre actual.
   *
+  * @param int $instance_id
   * @param int $old_monitor_id 
   * @param int $new_monitor_id
-  * @param int $instance_id
   */
 
-  function monitor_assignments_transfer( $old_monitor_id, $new_monitor_id, $instance_id ){
+  function monitor_assignments_transfer( $instance_id, $old_monitor_id, $new_monitor_id ){
 
     global $DB;
 
     $current_id_semester = get_current_semester()->max;
 
     // Get old monitor asignations
-    $sql = "SELECT id, id_monitor, id_estudiante 
+    $sql = "SELECT * 
             FROM {talentospilos_monitor_estud} 
             WHERE id_semestre = ". get_current_semester()->max ." AND id_instancia = $instance_id AND id_monitor = $old_monitor_id";
   
     $asignations = $DB->get_records_sql( $sql );
     if( $asignations ){
 
-        $asignations_size = count($asignations);
-        for($i = 0; $i < $asignations_size; $i++){
-            
-        }
+        foreach($asignations as &$asignation){
 
+            $asignation->id_monitor = $new_monitor_id;
+            $DB->update_record('talentospilos_monitor_estud', $asignation, $bulk=false);
+
+        }
+        return 1;
     }else{
-        return 0;
+        return null;
     }
 
   }

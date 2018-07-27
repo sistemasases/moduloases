@@ -117,6 +117,7 @@
                             $(".practicant_item").removeClass("active");
                             $(".practicant_item[data-id='" + data_id + "']").addClass("active");
                             $(".monitor_item").find(".add").removeClass("oculto-asignar")
+                            $(".monitor_item").find(".transfer").removeClass("oculto-tranferir");
                             $(".monitor_item").removeClass("assigned");
                             $(".monitor_item").removeClass("not-assigned");
                             $(".monitor_item").addClass("not-assigned");
@@ -139,9 +140,7 @@
                                     $(".monitor_item[data-id='" + monitor_assignments_practicant_monitor_relationship[i].id_monitor + "']").addClass("assigned");
                                     $(".monitor_item[data-id='" + monitor_assignments_practicant_monitor_relationship[i].id_monitor + "']").find(".add").addClass("oculto-asignar");
                                     $(".monitor_item[data-id='" + monitor_assignments_practicant_monitor_relationship[i].id_monitor + "']").clone().appendTo("#monitor_assigned");
-                               
                                     $(".monitor_item[data-id='" + monitor_assignments_practicant_monitor_relationship[i].id_monitor + "']").not("#monitor_assigned .monitor_item").addClass("oculto-asignado");
-
                                 }else{
                                     $(".monitor_item[data-id='" + monitor_assignments_practicant_monitor_relationship[i].id_monitor + "']").find(".add").addClass("oculto-asignar");
                                     $(".monitor_item[data-id='" + monitor_assignments_practicant_monitor_relationship[i].id_monitor + "']").find(".delete").addClass("oculto-eliminar");
@@ -149,9 +148,9 @@
                                 }
                             }
 
-                            //$("#monitor_assigned").find(".monitor_item").removeClass("item-general-list");
                             $("#monitor_assigned").find(".monitor_item").find(".add").addClass("oculto-asignar");
                             $("#monitor_assigned").find(".monitor_item").find(".delete").removeClass("oculto-eliminar");
+                            $(".monitor_item").not("#monitor_assigned .monitor_item").find(".transfer").addClass("oculto-tranferir");
 
                             if( !elements ){
                                 $("#monitor_assigned").addClass("items_assigned_empty");
@@ -383,6 +382,83 @@
                     }
                 });
 
+            });
+
+            $(document).on( 'click', '.transfer', function(e) {
+
+                e.stopImmediatePropagation();
+
+                var name_original_monitor = $(this).parent().data("name");
+                var id_old_monitor = $(this).parent().data("id");
+
+                $('#modalTransfer').modal('show');
+                $("#old_monitor_name").text(name_original_monitor);
+                
+                var options = '<option value="" disabled selected>Seleccione un monitor</option>\n';
+                $("#monitor_assigned > .monitor_item").each(function(){
+                    var name = $(this).data("name");
+                    var id_new_monitor = $(this).data("id");
+                    options += '<option data-old="' + id_old_monitor + '" data-new="' + id_new_monitor + '">' + name + '</option>\n';
+                });
+
+                $("#transfer-monitor-list").html("");
+                $("#transfer-monitor-list").append( options );
+
+            });
+
+            $(document).on( 'click', '#btn-execute-transfer', function(e){
+
+                $('#modalTransfer').modal('hide');
+
+                var instance_id = $("#monitor_assignments_instance_id").data("instance-id");
+                var api_function = "transfer";
+                var id_old_monitor = $("#transfer-monitor-list").find(":selected").data("old");
+                var id_new_monitor = $("#transfer-monitor-list").find(":selected").data("new");
+
+                $.ajax({
+                    type: "POST",
+                    url: "../managers/monitor_assignments/monitor_assignments_api.php",
+                    data: JSON.stringify({ "function": api_function, "params": [ instance_id, id_old_monitor ,id_new_monitor ] }),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function(data){
+                        if( data.status_code === 0 ){
+                            setTimeout(function(){
+                                swal(
+                                    {title:'Información',
+                                    text: 'Estudiantes transferidos correctamente.',
+                                    type: 'success'},
+                                    function(){
+                                        load_assigned_students( instance_id, id_new_monitor );
+                                    }
+                                );
+                            }, 0);
+                        }else if( data.status_code === 1 ){
+                            setTimeout(function(){
+                                swal(
+                                    {title:'Información',
+                                    text: 'El monitor no tiene estudiantes para transferir.',
+                                    type: 'info'},
+                                    function(){}
+                                );
+                            }, 0);
+                        }else{
+                            setTimeout(function(){
+                                swal(
+                                    {title:'Error',
+                                    text: 'Reporte este error.',
+                                    type: 'error'},
+                                    function(){}
+                                );
+                                swal.close();
+                            }, 0);
+                            console.log( data );
+                        }
+                    },
+                    failure: function(errMsg) {
+                        console.log(errMsg);
+                    }
+                });
             });
 
             $("select").change(function(){

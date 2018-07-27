@@ -99,7 +99,7 @@
                 {{#monitors}}
                 {{#.}}
                 <div class="monitor_item assignment_item not-assigned item-general-list" data-name="{{fullname}}" data-id="{{id}}" data-item="monitor" data-cod-programa="{{cod_programa}}" data-id-facultad="{{id_facultad}}">
-                    <div class="item-left-button add" data-toggle="tooltip" title="Asignar.">
+                    <div class="item-left-button add oculto-asignar" data-toggle="tooltip" title="Asignar.">
                         <span class="glyphicon glyphicon-chevron-left"></span>
                     </div>
                     <div class="item-left-button delete oculto-eliminar" data-toggle="tooltip" title="Quitar asignación.">
@@ -108,7 +108,7 @@
                     <div class="item-text">
                         {{fullname}}
                     </div>
-                    <div class="item-right-button transfer" data-toggle="tooltip" title="Transferir las asignaciones a otro monitor.">
+                    <div class="item-right-button transfer oculto-tranferir" data-toggle="tooltip" title="Transferir las asignaciones a otro monitor.">
                         <span class="glyphicon glyphicon-transfer"></span>
                     </div>
                 </div>
@@ -121,7 +121,7 @@
                 {{#students}}
                 {{#.}}
                 <div class="student_item assignment_item not-assigned item-general-list" data-name="{{fullname}}" data-id="{{id}}" data-item="student" data-cod-programa="{{cod_programa}}" data-id-facultad="{{id_facultad}}">
-                    <div class="item-left-button add" data-toggle="tooltip" title="Asignar.">
+                    <div class="item-left-button add oculto-asignar" data-toggle="tooltip" title="Asignar.">
                         <span class="glyphicon glyphicon-chevron-left"></span>
                     </div>
                     <div class="item-left-button delete oculto-eliminar" data-toggle="tooltip" title="Quitar asignación.">
@@ -133,6 +133,32 @@
                 </div>
                 {{/.}}
                 {{/students}}
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="modalTransfer" tabindex="-1" role="dialog" aria-labelledby="modalTransferTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <span class="modal-title" id="modalTransferLongTitle">Transferencia de asignaciones entre monitores</span>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                Se van a transferir los estudiantes del monitor <strong id="old_monitor_name" >AAAAA BBBBBBB CCCCCC</strong> al monitor:
+                <select name="" id="transfer-monitor-list" placeholder="Seleccione un monitor">
+                    <option value="" disabled selected>Seleccione un monitor</option>
+                    <option value="">b</option>
+                    <option value="">c</option>
+                </select>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button id="btn-execute-transfer" type="button" class="btn btn-primary">Transferir</button>
+                </div>
             </div>
         </div>
     </div>

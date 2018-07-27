@@ -268,6 +268,48 @@
                 return_with_code( -2 );
             }
 
+        }else if( $input->function == "transfer" ){
+
+            if( count( $input->params ) == 3 ){
+
+                // Order of params
+                /**
+                 * The instance value only can be a number.
+                 * The old_monitor_id value only can be a number.
+                 * The new_monitor_id value only can be a number.
+                 */
+                
+                if( is_numeric( $input->params[0] ) && is_numeric( $input->params[1] ) && is_numeric( $input->params[2] ) ){
+                    
+                    $return_value = monitor_assignments_transfer( $input->params[0], $input->params[1], $input->params[2] );
+                    
+                    if( $return_value ){
+
+                        echo json_encode( 
+                            array(
+                                "status_code" => 0,
+                                "error_message" => "",
+                                "data_response" => "transfered"
+                            )
+                        );
+
+                    }else{
+                        echo json_encode( 
+                            array(
+                                "status_code" => 1,
+                                "error_message" => "",
+                                "data_response" => "empty"
+                            )
+                        );
+                    }
+                    
+                }else{
+                    return_with_code( -2 );
+                }
+            }else{
+                return_with_code( -2 );
+            }
+
         }else{
             // Function not defined
             return_with_code( -4 );
