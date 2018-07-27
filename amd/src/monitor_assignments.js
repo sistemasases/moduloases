@@ -63,6 +63,8 @@
                                     $(".student_item[data-id='" + monitor_assignments_monitor_students_relationship[i].id_estudiante + "']").find(".add").addClass("oculto-asignar");
                                     $(".student_item[data-id='" + monitor_assignments_monitor_students_relationship[i].id_estudiante + "']").clone().appendTo("#student_assigned");
 
+                                    $(".student_item[data-id='" + monitor_assignments_monitor_students_relationship[i].id_estudiante + "']").not("#student_assigned .student_item").addClass("oculto-asignado");
+
                                 }else{
                                     $(".student_item[data-id='" + monitor_assignments_monitor_students_relationship[i].id_estudiante + "']").find(".add").addClass("oculto-asignar");
                                     $(".student_item[data-id='" + monitor_assignments_monitor_students_relationship[i].id_estudiante + "']").find(".delete").addClass("oculto-eliminar");
@@ -139,6 +141,9 @@
                                     $(".monitor_item[data-id='" + monitor_assignments_practicant_monitor_relationship[i].id_monitor + "']").addClass("assigned");
                                     $(".monitor_item[data-id='" + monitor_assignments_practicant_monitor_relationship[i].id_monitor + "']").find(".add").addClass("oculto-asignar");
                                     $(".monitor_item[data-id='" + monitor_assignments_practicant_monitor_relationship[i].id_monitor + "']").clone().appendTo("#monitor_assigned");
+                               
+                                    $(".monitor_item[data-id='" + monitor_assignments_practicant_monitor_relationship[i].id_monitor + "']").not("#monitor_assigned .monitor_item").addClass("oculto-asignado");
+
                                 }else{
                                     $(".monitor_item[data-id='" + monitor_assignments_practicant_monitor_relationship[i].id_monitor + "']").find(".add").addClass("oculto-asignar");
                                     $(".monitor_item[data-id='" + monitor_assignments_practicant_monitor_relationship[i].id_monitor + "']").find(".delete").addClass("oculto-eliminar");
