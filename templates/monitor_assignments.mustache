@@ -1,20 +1,15 @@
 {{#data}}
 <body>
-    <div id="monitor_assignments_monitor_students" style="display:none">{{{monitors_students_relationship}}}</div>
-    <div id="monitor_assignments_professional_practicant" style="display:none">{{{professional_practicant_relationship}}}</div>
-    <div id="monitor_assignments_practicant_monitor_relationship" style="display:none">{{{practicant_monitor_relationship}}}</div>
-    
+    <div id="monitor_assignments_monitor_students" style="display:none;">{{{monitors_students_relationship}}}</div>
+    <div id="monitor_assignments_professional_practicant" style="display:none;">{{{professional_practicant_relationship}}}</div>
+    <div id="monitor_assignments_practicant_monitor_relationship" style="display:none;">{{{practicant_monitor_relationship}}}</div>
+    <div id="monitor_assignments_instance_id" data-instance-id="{{instance_id}}" style="display:none;"></div>
+
     <div class="container-fluid">
         <div class="row">
-            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                <h2>Sistema de asignaciones</h2>
-                <hr>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+            <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 filters">
                 <span class="column-title">Practicantes</span>
-                <hr>
+                <hr class="hr-title">
                 <span>Profesional:&nbsp;</span>
                 <select id="select-professional" data-id="professional_selector" name="">
                     <option value="" data-id="-1" alt="TODOS">TODOS</option>
@@ -25,9 +20,9 @@
                     {{/professionals}}
                 </select>
             </div>
-            <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+            <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 filters">
                 <span class="column-title">Monitores</span>
-                <hr>
+                <hr class="hr-title">
                 <span>Facultad:</span>
                 <select id="select-monitor-faculty" class="select-faculty" data-id="monitor_faculty" name="" >
                     <option value="" data-id-facultad="-1" alt="TODOS">TODOS</option>
@@ -46,10 +41,18 @@
                     {{/.}}
                     {{/monitors_programs}}
                 </select>
+                <div class="filtro">
+                    <div class="input-group">
+                        <input id="monitor-name-filter" type="text" class="form-control ajuste-input" placeholder="Buscar por nombre ... ">
+                        <span class="input-group-btn">
+                          <button id="btn-monitor-name-filter" class="btn btn-default ajuste-btn" type="button">Limpiar!</button>
+                        </span>
+                      </div>
+                </div>
             </div>
-            <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+            <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 filters">
                 <span class="column-title">Estudiantes</span>
-                <hr>
+                <hr class="hr-title">
                 <span>Facultad:</span>
                 <select id="select-student-faculty" class="select-faculty" data-id="student_faculty" name="" >
                     <option value="" data-id-facultad="-1" alt="TODOS">TODOS</option>
@@ -68,13 +71,21 @@
                     {{/.}}
                     {{/students_programs}}
                 </select>
+                <div class="filtro">
+                    <div class="input-group">
+                        <input id="student-name-filter" type="text" class="form-control ajuste-input" placeholder="Buscar por nombre ... ">
+                        <span class="input-group-btn">
+                          <button id="btn-student-name-filter" class="btn btn-default ajuste-btn" type="button">Limpiar!</button>
+                        </span>
+                      </div>
+                </div>
             </div>
         </div>
         <div class="row column_group">
             <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 column_items" >
                 {{#practitioners}}
                 {{#.}}
-                <div class="practicant_item assignment_item not-assigned" data-id="{{id}}" data-id-jefe={{id_jefe}}>
+                <div class="practicant_item assignment_item not-assigned item-general-list" data-name="{{fullname}}" data-id="{{id}}" data-item="practicant" data-id-jefe={{id_jefe}}>
                     <div class="item-text">
                         {{fullname}}
                     </div>
@@ -87,12 +98,18 @@
                 <hr>
                 {{#monitors}}
                 {{#.}}
-                <div class="monitor_item assignment_item not-assigned" data-id="{{id}}" data-cod-programa="{{cod_programa}}" data-id-facultad="{{id_facultad}}">
+                <div class="monitor_item assignment_item not-assigned item-general-list" data-name="{{fullname}}" data-id="{{id}}" data-item="monitor" data-cod-programa="{{cod_programa}}" data-id-facultad="{{id_facultad}}">
+                    <div class="item-left-button add oculto-asignar" data-toggle="tooltip" title="Asignar.">
+                        <span class="glyphicon glyphicon-chevron-left"></span>
+                    </div>
+                    <div class="item-left-button delete oculto-eliminar" data-toggle="tooltip" title="Quitar asignación.">
+                        <span class="glyphicon glyphicon-remove"></span>
+                    </div>
                     <div class="item-text">
                         {{fullname}}
                     </div>
-                    <div class="item-right-button">
-                        <span class="glyphicon glyphicon-chevron-left"></span>
+                    <div class="item-right-button transfer oculto-tranferir" data-toggle="tooltip" title="Transferir las asignaciones a otro monitor.">
+                        <span class="glyphicon glyphicon-transfer"></span>
                     </div>
                 </div>
                 {{/.}}
@@ -103,13 +120,45 @@
                 <hr>
                 {{#students}}
                 {{#.}}
-                <div class="student_item assignment_item not-assigned" data-id="{{id}}" data-cod-programa="{{cod_programa}}" data-id-facultad="{{id_facultad}}">
+                <div class="student_item assignment_item not-assigned item-general-list" data-name="{{fullname}}" data-id="{{id}}" data-item="student" data-cod-programa="{{cod_programa}}" data-id-facultad="{{id_facultad}}">
+                    <div class="item-left-button add oculto-asignar" data-toggle="tooltip" title="Asignar.">
+                        <span class="glyphicon glyphicon-chevron-left"></span>
+                    </div>
+                    <div class="item-left-button delete oculto-eliminar" data-toggle="tooltip" title="Quitar asignación.">
+                        <span class="glyphicon glyphicon-remove"></span>
+                    </div>
                     <div class="item-text">
                         {{fullname}}
                     </div>
                 </div>
                 {{/.}}
                 {{/students}}
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="modalTransfer" tabindex="-1" role="dialog" aria-labelledby="modalTransferTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <span class="modal-title" id="modalTransferLongTitle">Transferencia de asignaciones entre monitores</span>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                Se van a transferir los estudiantes del monitor <strong id="old_monitor_name" >AAAAA BBBBBBB CCCCCC</strong> al monitor:
+                <select name="" id="transfer-monitor-list" placeholder="Seleccione un monitor">
+                    <option value="" disabled selected>Seleccione un monitor</option>
+                    <option value="">b</option>
+                    <option value="">c</option>
+                </select>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button id="btn-execute-transfer" type="button" class="btn btn-primary">Transferir</button>
+                </div>
             </div>
         </div>
     </div>
