@@ -62,6 +62,10 @@ return {
 
      var current_tracking_status = "";
 
+     // Manage edit icon
+     var height_div_cohorts = $('#div_cohorts').height();
+     $('#div-icon-edit').height(height_div_cohorts);
+
      $('div.slider.round').click(function(event){current_tracking_status = event.target.parentElement.children[0].checked;});
 
      $('.input-tracking').on('change', {current_tracking_status: current_tracking_status},

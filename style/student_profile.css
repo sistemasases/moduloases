@@ -72,6 +72,8 @@
 
 #div-code-student{
     margin-top: 15px;
+    padding-left: 15px;
+    padding-bottom: 0px;
 }
 
 #div-hr{
@@ -125,8 +127,21 @@
 }
 
 #div-icon-edit{
-    padding: 5px 0px 0px 0px;
+    padding: 0px 0px 0px 0px;
+    height: 90px;
+}
 
+#div-icon-edit > #span-icon-edit,
+#div-icon-edit > #span-icon-cancel-edit{ 
+    position: absolute; 
+    right: 0; 
+    bottom: 0;
+}
+
+#div-icon-edit > #span-icon-save-profile{
+    position: absolute; 
+    right: 31; 
+    bottom: 0;
 }
 
 #span-icon-edit{

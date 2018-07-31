@@ -20,6 +20,11 @@
 
         <!-- Select student -->
         <div class="row" id="div-code-student">
+                      
+          <div class="col-xs-11 col-sm-11 col-md-11 col-lg-11" id ="div_select_student">
+            {{{code}}}
+          </div>
+
           <div class="col-sm-1" id="div-instance-icon">
             <span class="glyphicon glyphicon-ok {{#ases_status_t}}i-tracking-t{{/ases_status_t}}{{#ases_status_f}}i-tracking-f{{/ases_status_f}}{{#ases_status_n}}i-tracking-n{{/ases_status_n}} tooltip-v1 col-sm-6" 
                   {{#update_ases_status_sp}} id="icon-tracking" {{/update_ases_status_sp}}
@@ -29,25 +34,8 @@
             <input type="hidden" id="input_status_ases" value="{{ases_status_t}}{{ases_status_f}}{{ases_status_n}}">
             <span>ASES</span>
           </div>
-            
-          <div class="col-xs-10 col-sm-10 col-md-10 col-lg-10" id ="div_select_student">
-            {{{code}}}
-          </div>
 
-          <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1" id="div-icon-edit">
-            <div class="icontip">
-                <span class="col-sm-6 col-sm-offset-6" id="span-icon-edit"></span>
-                <span class="icontiptext" id="tip-edit">Editar ficha</span>
-            </div>
-            <div class="icontip">
-                <span class="col-sm-6" id="span-icon-save-profile" hidden></span>
-                <span class="icontiptext" id="tip-save" hidden>Guardar cambios</span>
-            </div>
-            <div class="icontip">
-                <span class="col-sm-6 col-sm-offset-6" id="span-icon-cancel-edit" hidden></span>
-                <span class="icontiptext" id="tip-cancel" hidden>Cancelar edición</span>
-            </div>
-          </div>
+          
         </div>
         <!-- End select student -->
 
@@ -89,7 +77,7 @@
           <hr id="hr-general-fields">
         </div>
         
-        <div class="col-xs-12 col-sm-8" id="div_academic_programs">
+        <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8" id="div_academic_programs">
           <h4>Programas académicos</h4>
           <table class="table table-hover borderless">
             <tbody>
@@ -127,7 +115,7 @@
           {{/academic_programs}}
         </div>
 
-        <div class="col-xs-12 col-sm-4" id="div_cohorts">
+        <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3" id="div_cohorts">
           <h4>Cohortes</h4>
           <table class="table table-sm table-hover borderless">
             <tbody>
@@ -144,6 +132,30 @@
             No registra cohortes asociadas.
           {{/student_cohorts}}
         </div>
+
+        <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1" id="div-icon-edit">
+            <span class="col-sm-12 tooltip-v1" id="span-icon-edit"
+                  data-toggle="tooltip" 
+                  data-placement="top"
+                  title="Editar ficha">
+            </span>
+
+            <span class="col-sm-6 tooltip-v1" id="span-icon-save-profile" 
+                  data-toggle="tooltip" 
+                  data-placement="top"
+                  title="Guardar cambios"
+                  hidden>
+            </span>
+
+            <span class="col-sm-6 tooltip-v1" id="span-icon-cancel-edit"
+                  data-toggle="tooltip" 
+                  data-placement="top"
+                  title="Cancelar edición"
+                  hidden>
+            </span>
+
+        </div>
+
       </div>
       <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 equalize" id="photo_div" >
       </div>
