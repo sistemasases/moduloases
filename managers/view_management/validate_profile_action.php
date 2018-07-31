@@ -40,7 +40,7 @@
     }
     
      /**
-     * Función que retorna el semestre actual 
+     * Función que retorna el identificador del semestre actual 
      * @see get_current_semester()
      * @return cadena de texto que representa el semestre actual
      */
