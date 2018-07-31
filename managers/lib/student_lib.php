@@ -344,8 +344,6 @@ function get_assigned_monitor($id_student)
     return $monitor_object;
 }
 
-get_assigned_monitor(108);
-
 /**
  * Obtains name, lastname and email from a practicant (practicante) assigned to a student, given the student id
  *
