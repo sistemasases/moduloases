@@ -1004,34 +1004,221 @@ function get_monitors_by_instance($instance_id){
     return $result;
 }
 
-
-function get_html_summary_spp_cohorts(){
+/**
+ * Función que devuelve el resumen de un grupo de cohortes
+ * dado un identificador de cohorte o un fragmento de el
+ *
+ * @see get_summary_group_cohorts
+ * @param $number_id  -->  Identificador de cohorte
+ * @param $instance_id  -->  Identificador de la instancia
+ * @return Array 
+ */
+function get_summary_group_cohorts($number_id, $instance_id){
 
     global $DB;
 
     $result_summary = array();
+    $result_cohorts = array();
 
-    $cohorts_spp = get_cohorts_by_idnumber('SPP');
+    $cohorts = get_cohorts_by_idnumber($number_id);
 
-    foreach($cohorts_spp as $cohort_spp){
+    foreach($cohorts as $ch){
         $cohort = new stdClass();
-        $cohort->id = $cohort_spp->id;
-        $cohort->name = $cohort_spp->name;
-        $cohort->idnumber = $cohort_spp->idnumber;
+        $cohort->id = $ch->id;
+        $cohort->name = $ch->name;
+        $cohort->idnumber = $ch->idnumber;
+        $cohort->summary_sra = count_student_by_cohort($ch->idnumber, 'sra', $instance_id);
+        $cohort->summary_ases = count_student_by_cohort($ch->idnumber, 'ases', $instance_id);
 
-        array_push($result_summary, $cohort);
+        array_push($result_cohorts, $cohort);
     }
 
-    $sql_query = "SELECT COUNT(cohort_member.userid) AS spp_number
+    $result_summary['cohorts'] = $result_cohorts;
+
+    // Total de estudiantes en el grupo de cohortes
+    $sql_query = "SELECT COUNT(cohort_member.userid) AS total_number
                   FROM {cohort} AS cohort 
                        INNER JOIN {cohort_members} AS cohort_member ON cohort_member.cohortid = cohort.id
                        INNER JOIN {talentospilos_user_extended} AS user_extended ON user_extended.id_moodle_user = cohort_member.userid
-                  WHERE user_extended.tracking_status = 1 AND cohort.idnumber LIKE 'SPP%'";
+                  WHERE user_extended.tracking_status = 1 
+                        AND cohort.idnumber LIKE '$number_id%'";
     
     $result = $DB->get_record_sql($sql_query);
 
-    //print_r($result_summary);
+    $result_summary['total_students'] = $result->total_number;
+
+    // Total de estudiantes activos en SRA
+    $sql_query = "SELECT COUNT(cohort_member.userid) AS total_sra
+                  FROM {cohort} AS cohort 
+                    INNER JOIN {cohort_members} AS cohort_member ON cohort_member.cohortid = cohort.id
+                    INNER JOIN {talentospilos_user_extended} AS user_extended ON user_extended.id_moodle_user = cohort_member.userid
+                  WHERE user_extended.tracking_status = 1 
+                        AND (user_extended.program_status = (SELECT id FROM {talentospilos_estad_programa} WHERE nombre = 'ACTIVO')
+                             OR user_extended.program_status = (SELECT id FROM {talentospilos_estad_programa} WHERE nombre = 'REGULARIZADO')
+                             OR user_extended.program_status = (SELECT id FROM {talentospilos_estad_programa} WHERE nombre = 'ADMISION'))
+                        AND cohort.idnumber LIKE '$number_id%'";
+
+    $result = $DB->get_record_sql($sql_query);
+
+    $result_summary['total_sra'] = $result->total_sra;
+
+    // Total de estudiantes con seguimiento en la estrategia ASES
+    $sql_query = "SELECT COUNT(cohort_member.userid) AS total_tracking
+                  FROM {cohort} AS cohort 
+                       INNER JOIN {cohort_members} AS cohort_member ON cohort_member.cohortid = cohort.id
+                       INNER JOIN {talentospilos_user_extended} AS user_extended ON user_extended.id_moodle_user = cohort_member.userid
+                       INNER JOIN (SELECT MAX(status.fecha) AS fecha, id_estudiante 
+                                   FROM {talentospilos_est_estadoases} AS status
+                                   WHERE status.id_estado_ases = (SELECT id
+                                                                  FROM {talentospilos_estados_ases} AS ases_status 
+                                                                  WHERE ases_status.nombre = 'seguimiento')
+                                         AND status.id_instancia = $instance_id
+                                   GROUP BY  id_estudiante) AS student_ases_status ON student_ases_status.id_estudiante = user_extended.id_ases_user  
+                  WHERE user_extended.tracking_status = 1
+                        AND cohort.idnumber LIKE '$number_id%'";
+
+    $result = $DB->get_record_sql($sql_query);
+
+    $result_summary['total_tracking'] = $result->total_tracking;
+    
     return $result_summary;
 }
 
-//get_html_summary_spp_cohorts();
+/**
+ * Función que devuelve el conteo de estudiantes dado 
+ * un estado y una cohorte
+ *
+ * @see count_student_by_cohort
+ * @param $number_id  -->  Identificador de cohorte
+ * @param $status_type -->  Estado por el cual se filtrará el conteo
+ * @param $instance_id  -->  Identificador de la instancia
+ * @return Array 
+ */
+
+ function count_student_by_cohort($number_id, $status_type, $instance_id){
+
+    global $DB;
+
+    $summary_cohorts = array();
+
+    if($status_type == 'sra'){
+
+        $sql_query = "SELECT *
+                      FROM {talentospilos_estad_programa}";
+
+        $program_statuses = $DB->get_records_sql($sql_query);
+
+        foreach($program_statuses as $status){
+
+            $sql_query = "SELECT COUNT(cohort_member.userid) AS total_sra
+                      FROM {cohort} AS cohort 
+                        INNER JOIN {cohort_members} AS cohort_member ON cohort_member.cohortid = cohort.id
+                        INNER JOIN {talentospilos_user_extended} AS user_extended ON user_extended.id_moodle_user = cohort_member.userid
+                      WHERE user_extended.tracking_status = 1 
+                        AND user_extended.program_status = (SELECT id FROM {talentospilos_estad_programa} WHERE nombre = '$status->nombre')
+                        AND cohort.idnumber = '$number_id'";
+            
+            $result = $DB->get_record_sql($sql_query);;
+
+            $summary_cohort['name'] = $status->nombre;
+            $summary_cohort['total'] = $result->total_sra;
+
+            array_push($summary_cohorts, $summary_cohort);
+        }        
+
+    }elseif($status_type == 'ases'){
+
+        $names_mask = array();
+        $names_mask['seguimiento'] = 'SEGUIMIENTO';
+        $names_mask['sinseguimiento'] = 'SIN SEGUIMIENTO';
+
+        $sql_query = "SELECT *
+                      FROM {talentospilos_estados_ases}";
+
+        $ases_statuses = $DB->get_records_sql($sql_query);
+        
+        foreach($ases_statuses as $status){
+
+            $sql_query = "SELECT COUNT(cohort_member.userid) AS total_tracking
+                    FROM {cohort} AS cohort 
+                        INNER JOIN {cohort_members} AS cohort_member ON cohort_member.cohortid = cohort.id
+                        INNER JOIN {talentospilos_user_extended} AS user_extended ON user_extended.id_moodle_user = cohort_member.userid
+                        INNER JOIN (SELECT MAX(status.fecha) AS fecha, id_estudiante 
+                                    FROM {talentospilos_est_estadoases} AS status
+                                    WHERE status.id_estado_ases = (SELECT id
+                                                                    FROM {talentospilos_estados_ases} AS ases_status 
+                                                                    WHERE ases_status.nombre = '$status->nombre')
+                                            AND status.id_instancia = $instance_id
+                                    GROUP BY  id_estudiante) AS student_ases_status ON student_ases_status.id_estudiante = user_extended.id_ases_user  
+                    WHERE user_extended.tracking_status = 1
+                            AND cohort.idnumber LIKE '$number_id%'";
+
+            $result = $DB->get_record_sql($sql_query);
+
+            $summary_cohort['name'] = $names_mask[$status->nombre];
+            $summary_cohort['total'] = $result->total_tracking;
+
+            array_push($summary_cohorts, $summary_cohort);
+        }
+
+    }else{
+
+    }
+  
+    return $summary_cohorts;
+}
+
+/**
+ * Función que retorna el conjunto de estados ASES
+ *
+ * @see get_ases_statuses
+ * @return Array 
+ */
+function get_ases_statuses(){
+
+    global $DB;
+
+    $sql_query = "SELECT *
+                  FROM {talentospilos_estados_ases}";
+
+    $result = $DB->get_records_sql($sql_query);
+
+    return $result;
+}
+
+/**
+ * Función que retorna el conjunto de estados en SRA
+ *
+ * @see get_academic_program_statuses
+ * @return Array 
+ */
+function get_academic_program_statuses(){
+
+    global $DB;
+
+    $sql_query = "SELECT *
+                  FROM {talentospilos_estad_programa}";
+
+    $result = $DB->get_records_sql($sql_query);
+
+    return $result;
+}
+
+/**
+ * Función que retorna el conjunto de estados en ICETEX
+ *
+ * @see get_icetex_statuses
+ * @return Array 
+ */
+// function get_icetex_statuses(){
+
+//     global $DB;
+
+//     $sql_query = "SELECT *
+//                   FROM {talentospilos_estados_icetex}";
+
+//     $result = $DB->get_records_sql($sql_query);
+
+//     return $result;
+// }
+
