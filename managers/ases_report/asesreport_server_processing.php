@@ -97,8 +97,48 @@ if(isset($_POST['risk_fields'])){
 
 if(isset($_POST['status_fields'])){
     foreach($_POST['status_fields'] as $status_field){
+
+        $option = "";
+
+        switch($status_field){
+
+            case 'ases_status':
+
+                $ases_statuses = get_ases_statuses();
+
+                foreach($ases_statuses as $status){
+                    $option .= "<option>";
+                    $option .= $status->nombre;
+                    $option .= "</option>";
+                }
+
+                break;
+
+            case 'icetex_status':
+
+                $option.= "<option>ACTIVO</option>";
+                $option.= "<option>INACTIVO</option>";
+
+                break;
+            
+            case 'academic_program_status':
+
+                $academic_program_statuses = get_academic_program_statuses();
+
+                foreach($academic_program_statuses as $status){
+                    $option .= "<option>";
+                    $option .= $status->nombre;
+                    $option .= "</option>";
+                }
+
+                break;
+
+        }
+
+        $filter_statuses = "<br><select class='select_filter_statuses'>$option</select>";
+
         array_push($statuses_array, $fields_format[$status_field]);
-        array_push($columns, array("title"=>$columns_format[$status_field], "name"=>explode('.', $fields_format[$status_field])[1], "data"=>explode('.', $fields_format[$status_field])[1]));
+        array_push($columns, array("title"=>$columns_format[$status_field].$filter_statuses, "name"=>explode('.', $fields_format[$status_field])[1], "data"=>explode('.', $fields_format[$status_field])[1]));
     }
 }
 

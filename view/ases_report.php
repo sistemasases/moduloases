@@ -132,7 +132,10 @@ $params->table = $data_to_table;
 // ---------------------------------------------
 // Carga información resumen
 // ---------------------------------------------
-$data->summary_spp_cohorts = get_html_summary_spp_cohorts();
+$data->summary_spp_cohorts = get_summary_group_cohorts('SPP', $blockid);
+$data->summary_spe_cohorts = get_summary_group_cohorts('SPE', $blockid);
+$data->summary_oa_cohorts = get_summary_group_cohorts('Otros', $blockid);
+$data->summary_3740_cohorts = get_summary_group_cohorts('3740', $blockid);
 
 // Navigation setup
 $coursenode = $PAGE->navigation->find($courseid, navigation_node::TYPE_COURSE);

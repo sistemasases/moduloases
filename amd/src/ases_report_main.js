@@ -17,7 +17,7 @@ define(['jquery',
     'block_ases/buttons.flash',
     'block_ases/buttons.print',
     'block_ases/bootstrap',
-    'block_ases/sweetalert'
+    'block_ases/sweetalert2'
 ],
     function ($, jszip, pdfmake, dataTables, autoFill, buttons, html5, flash, print, bootstrap, sweetalert) {
         return {
@@ -31,33 +31,31 @@ define(['jquery',
 
                     var cohorts = $('#conditions').val();
 
-                    console.log(cohorts.substring(0, 2));
-
                     if(cohorts == 'TODOS'){
                         $('#div-summary-spp').prop('hidden', false);
-                        $('#div-summary-ce').prop('hidden', false);
-                        $('#div-summary-it').prop('hidden', false);
+                        $('#div-summary-spe').prop('hidden', false);
+                        $('#div-summary-3740').prop('hidden', false);
                         $('#div-summary-oa').prop('hidden', false);
                     }else if(cohorts == 'TODOS-SPP' || cohorts.substring(0, 3) == 'SPP'){
                         $('#div-summary-spp').prop('hidden', false);
-                        $('#div-summary-ce').prop('hidden', true);
-                        $('#div-summary-it').prop('hidden', true);
+                        $('#div-summary-spe').prop('hidden', true);
+                        $('#div-summary-3740').prop('hidden', true);
                         $('#div-summary-oa').prop('hidden', true);
                     }else if(cohorts == 'TODOS-SPE' || cohorts.substring(0, 3) == 'SPE'){
                         $('#div-summary-spp').prop('hidden', true);
-                        $('#div-summary-ce').prop('hidden', false);
-                        $('#div-summary-it').prop('hidden', true);
+                        $('#div-summary-spe').prop('hidden', false);
+                        $('#div-summary-3740').prop('hidden', true);
                         $('#div-summary-oa').prop('hidden', true);
                     }else if(cohorts == 'TODOS-3740' || cohorts.substring(0, 4) == '3740'){
                         $('#div-summary-spp').prop('hidden', true);
-                        $('#div-summary-ce').prop('hidden', false);
-                        $('#div-summary-it').prop('hidden', true);
+                        $('#div-summary-spe').prop('hidden', true);
+                        $('#div-summary-3740').prop('hidden', false);
                         $('#div-summary-oa').prop('hidden', true);
                     }else if(cohorts == 'TODOS-OTROS'){
                         $('#div-summary-spp').prop('hidden', true);
-                        $('#div-summary-ce').prop('hidden', false);
-                        $('#div-summary-it').prop('hidden', true);
-                        $('#div-summary-oa').prop('hidden', true);
+                        $('#div-summary-spe').prop('hidden', true);
+                        $('#div-summary-3740').prop('hidden', true);
+                        $('#div-summary-oa').prop('hidden', false);
                     }
                 });
 
@@ -141,6 +139,14 @@ define(['jquery',
                     table.columns(colIndex - 1).search(this.value).draw();
                 });
 
+                //Filtros sobre estados 
+                $(document).on('change', '.select_filter_statuses', function () {
+                    var table = $("#tableResult").DataTable();
+                    var colIndex = $(this).parent().index() + 1;
+                    var selectedText = $(this).parent().find(":selected").text();
+                    table.columns(colIndex - 1).search(this.value).draw();
+                });
+
                 //Controles sobre el resumen de estudiantes
                 $(document).on('click', '.summary-title', function(){
 
@@ -165,15 +171,15 @@ define(['jquery',
 
                 $('.panel-heading-summary').on('click', function(){
 
-                    // var icon = $($(this)).data('icon');
+                    var icon = $(this).find('.icon-group-cohort');
 
-                    // if(icon.hasClass('glyphicon-chevron-right')){
-                    //     icon.removeClass("glyphicon-chevron-right");
-                    //     icon.addClass("glyphicon-chevron-down");
-                    // }else{
-                    //     icon.addClass("glyphicon-chevron-right");
-                    //     icon.removeClass("glyphicon-chevron-down");
-                    // }
+                    if(icon.hasClass('glyphicon-chevron-right')){
+                        icon.removeClass("glyphicon-chevron-right");
+                        icon.addClass("glyphicon-chevron-down");
+                    }else{
+                        icon.addClass("glyphicon-chevron-right");
+                        icon.removeClass("glyphicon-chevron-down");
+                    }
 
                     var target = $($(this).data('target')); 
                     if(target.css('display') != "none"){
