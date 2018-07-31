@@ -112,7 +112,46 @@
                         var progress = 0;
                         var indices_conocidos = [];
                         var cc = 1;
-                        $.each(data['results'], function () {
+
+                        for( var x = 0; x < count_records; x++ ){
+                            console.log( " => " +  data['results'][x]['id']  );
+                            $.get( '../managers/dphpforms/dphpforms_reverse_finder.php?respuesta_id=' + data['results'][x]['id'], function( answer ) {
+                                $.get( '../managers/dphpforms/dphpforms_get_record.php?record_id=' + answer['result']['id_registro'], function( record ) {
+                                    
+                                    console.log( "Descargando: " + 'http://127.0.0.1/moodle34/blocks/ases/managers/dphpforms/dphpforms_get_record.php?record_id=' + answer['result']['id_registro'] );
+
+                                    var seguimiento = [];
+                                    //console.log( record['record']['campos']  );
+                                    for( var x = 0; x <  Object.keys( record['record']['campos'] ).length; x++ ){
+                                        seguimiento[ parseInt( record['record']['campos'][ x ]['id_pregunta'] ) ] = {
+                                            "enunciado":record['record']['campos'][ x ]['enunciado'],
+                                            "respuesra":record['record']['campos'][ x ]['respuesta']
+                                        };
+                                        completed_records.push( seguimiento );
+                                        if( !is_in_array( indices_conocidos, parseInt( record['record']['campos'][ x ]['id_pregunta'] ) ) ){
+                                            indices_conocidos.push( parseInt( record['record']['campos'][ x ]['id_pregunta'] ) );
+                                        };
+                                    };
+
+                                    console.log(cc);
+                                    cc++;
+                                    progress ++;
+                                    $('#progress').text( (( 100 / count_records ) * progress).toFixed( 2 ) + "%" );
+                                    console.log( "Procesado: " + answer['result']['id_registro'] );
+                                    console.log( seguimiento );
+                                    console.log( indices_conocidos );
+                                    console.log( progress + " === " + count_records );
+                                    if( progress == count_records ){
+                                        console.log("CSV!!!!!!!!");
+                                        downloadCSV( completed_records );
+                                    };
+                                });
+                            });
+                            $('#progress').text( Math.round( progress ) );
+                        }
+
+
+                        /*$.each(data['results'], function () {
                             $.get( '../managers/dphpforms/dphpforms_reverse_finder.php?respuesta_id=' + this.id, function( answer ) {
                                 $.get( '../managers/dphpforms/dphpforms_get_record.php?record_id=' + answer['result']['id_registro'], function( record ) {
                                     
@@ -146,7 +185,7 @@
                                 });
                             });
                             $('#progress').text( Math.round( progress ) );
-                        });
+                        });*/
                         if( count_records == 0 ){ 
                             $('#progress').text( 100 );
                         };
