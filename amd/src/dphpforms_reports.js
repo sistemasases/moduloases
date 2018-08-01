@@ -45,7 +45,7 @@
                     keys.forEach(function(key) {
                         if (ctr > 0) result += columnDelimiter;
         
-                        result += "\"" + item[key]['respuesra'] + "\"";
+                        result += "\"" + item[key]['respuesta'] + "\"";
                         ctr++;
                     });
                     result += lineDelimiter;
@@ -55,20 +55,38 @@
             };
 
             function downloadCSV( data_ ) {  
-                var data, filename, link;
+
+                var filename, link;
+                //console.log(data_);
                 var csv = convertArrayOfObjectsToCSV({
                     data: data_
                 });
-                if (csv == null) return;
-        
-                filename = 'export.csv';
-        
                 
+
+                if( csv == null ){
+                    return
+                };
+                
+                filename = 'reporte.csv';
+
                 /*if (!csv.match(/^data:text\/csv/i)) {
                     csv = 'data:text/csv;charset=utf-8,' + csv;
                 }*/
                 //data = encodeURI(csv);
-                //v2 csvData = new Blob([csv], { type: 'text/csv' }); 
+                
+                csvData = new Blob([csv], { type: 'text/csv' }); 
+
+                var link = document.createElement("a");
+                if (link.download !== undefined) {
+                    var url = URL.createObjectURL(csvData);
+                    link.setAttribute("href", url);
+                    link.setAttribute("download", filename);
+                    link.style = "visibility:hidden";
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                } 
+
                 //v2 var csvUrl = URL.createObjectURL(csvData);
                 //a.href =  csvUrl;
         
@@ -78,7 +96,7 @@
                 //v2 link.setAttribute('download', filename);
                 //v2 link.click();
 
-                var downloadLink = document.createElement("a");
+                /*var downloadLink = document.createElement("a");
                 var blob = new Blob(["\ufeff", csv]);
                 var url = URL.createObjectURL(blob);
                 downloadLink.href = url;
@@ -86,7 +104,7 @@
 
                 document.body.appendChild(downloadLink);
                 downloadLink.click();
-                document.body.removeChild(downloadLink);
+                document.body.removeChild(downloadLink);*/
 
             };
 
@@ -111,81 +129,44 @@
                         var completed_records = [];
                         var progress = 0;
                         var indices_conocidos = [];
-                        var cc = 1;
 
                         for( var x = 0; x < count_records; x++ ){
-                            console.log( " => " +  data['results'][x]['id']  );
+
                             $.get( '../managers/dphpforms/dphpforms_reverse_finder.php?respuesta_id=' + data['results'][x]['id'], function( answer ) {
                                 $.get( '../managers/dphpforms/dphpforms_get_record.php?record_id=' + answer['result']['id_registro'], function( record ) {
                                     
-                                    console.log( "Descargando: " + 'http://127.0.0.1/moodle34/blocks/ases/managers/dphpforms/dphpforms_get_record.php?record_id=' + answer['result']['id_registro'] );
-
-                                    var seguimiento = [];
-                                    //console.log( record['record']['campos']  );
-                                    for( var x = 0; x <  Object.keys( record['record']['campos'] ).length; x++ ){
-                                        seguimiento[ parseInt( record['record']['campos'][ x ]['id_pregunta'] ) ] = {
-                                            "enunciado":record['record']['campos'][ x ]['enunciado'],
-                                            "respuesra":record['record']['campos'][ x ]['respuesta']
-                                        };
-                                        completed_records.push( seguimiento );
-                                        if( !is_in_array( indices_conocidos, parseInt( record['record']['campos'][ x ]['id_pregunta'] ) ) ){
-                                            indices_conocidos.push( parseInt( record['record']['campos'][ x ]['id_pregunta'] ) );
+                                   var seguimiento = [];
+                                   
+                                   if(  Object.keys( record['record'] ).length > 0  ){
+                                        for( var x = 0; x <  Object.keys( record['record']['campos'] ).length; x++ ){
+                                            seguimiento[ parseInt( record['record']['campos'][ x ]['id_pregunta'] ) ] = {
+                                                "enunciado":record['record']['campos'][ x ]['enunciado'],
+                                                "respuesta":record['record']['campos'][ x ]['respuesta']
+                                            };
+                                            completed_records.push( seguimiento );
+                                            if( !is_in_array( indices_conocidos, parseInt( record['record']['campos'][ x ]['id_pregunta'] ) ) ){
+                                                indices_conocidos.push( parseInt( record['record']['campos'][ x ]['id_pregunta'] ) );
+                                            };
                                         };
                                     };
 
-                                    console.log(cc);
-                                    cc++;
                                     progress ++;
                                     $('#progress').text( (( 100 / count_records ) * progress).toFixed( 2 ) + "%" );
                                     console.log( "Procesado: " + answer['result']['id_registro'] );
-                                    console.log( seguimiento );
-                                    console.log( indices_conocidos );
+                                    //console.log( seguimiento );
+                                    //console.log( indices_conocidos );
                                     console.log( progress + " === " + count_records );
                                     if( progress == count_records ){
                                         console.log("CSV!!!!!!!!");
                                         downloadCSV( completed_records );
                                     };
+                                    
+                                }).fail(function(err) {
+                                    console.log(err);
                                 });
                             });
                             $('#progress').text( Math.round( progress ) );
                         }
-
-
-                        /*$.each(data['results'], function () {
-                            $.get( '../managers/dphpforms/dphpforms_reverse_finder.php?respuesta_id=' + this.id, function( answer ) {
-                                $.get( '../managers/dphpforms/dphpforms_get_record.php?record_id=' + answer['result']['id_registro'], function( record ) {
-                                    
-                                    //console.log( "Descargando:" + '../managers/dphpforms/dphpforms_get_record.php?record_id=' + answer['result']['id_registro'] );
-
-                                    var seguimiento = [];
-                                    //console.log( record['record']['campos']  );
-                                    for( var x = 0; x <  Object.keys( record['record']['campos'] ).length; x++ ){
-                                        seguimiento[ parseInt( record['record']['campos'][ x ]['id_pregunta'] ) ] = {
-                                            "enunciado":record['record']['campos'][ x ]['enunciado'],
-                                            "respuesra":record['record']['campos'][ x ]['respuesta']
-                                        };
-                                        completed_records.push( seguimiento );
-                                        if( !is_in_array( indices_conocidos, parseInt( record['record']['campos'][ x ]['id_pregunta'] ) ) ){
-                                            indices_conocidos.push( parseInt( record['record']['campos'][ x ]['id_pregunta'] ) );
-                                        };
-                                    };
-
-                                    console.log(cc);
-                                    cc++;
-                                    progress ++;
-                                    $('#progress').text( (( 100 / count_records ) * progress).toFixed( 2 ) + "%" );
-                                    console.log( "Procesado: " + answer['result']['id_registro'] );
-                                    console.log( seguimiento );
-                                    console.log( indices_conocidos );
-                                    console.log( progress + " === " + count_records );
-                                    if( progress == count_records ){
-                                        console.log("CSV!!!!!!!!");
-                                        downloadCSV( completed_records );
-                                    };
-                                });
-                            });
-                            $('#progress').text( Math.round( progress ) );
-                        });*/
                         if( count_records == 0 ){ 
                             $('#progress').text( 100 );
                         };
