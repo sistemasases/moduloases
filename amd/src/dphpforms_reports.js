@@ -128,10 +128,9 @@
 
                                     progress ++;
                                     $('#progress').text( (( 100 / count_records ) * progress).toFixed( 2 ) + "%" );
-                                    console.log( "Procesado: " + answer['result']['id_registro'] );
-                                    console.log( progress + " === " + count_records );
+                                    //console.log( "Procesado: " + answer['result']['id_registro'] );
+                                    //console.log( progress + " === " + count_records );
                                     if( progress == count_records ){
-                                        console.log("CSV!!!!!!!!");
                                         downloadCSV( completed_records );
                                     };
                                     
