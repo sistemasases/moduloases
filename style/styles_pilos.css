@@ -141,10 +141,11 @@ header ul li{
 }
 #ficha_estudiante .tab-content>.tab-pane{
     padding: 20px 20px;
+    border: 0px;
 }
 #ficha_estudiante .tab-content{
     background-color: rgb(233, 233, 233);
-    border: 1px solid rgb(233, 233, 233);;
+    border: 0px solid rgb(233, 233, 233);;
     border-top-color: transparent;
     margin-bottom: 0px;
 }
