@@ -57,7 +57,6 @@
             function downloadCSV( data_ ) {  
 
                 var filename, link;
-                //console.log(data_);
                 var csv = convertArrayOfObjectsToCSV({
                     data: data_
                 });
@@ -68,12 +67,6 @@
                 };
                 
                 filename = 'reporte.csv';
-
-                /*if (!csv.match(/^data:text\/csv/i)) {
-                    csv = 'data:text/csv;charset=utf-8,' + csv;
-                }*/
-                //data = encodeURI(csv);
-                
                 csvData = new Blob([csv], { type: 'text/csv' }); 
 
                 var link = document.createElement("a");
@@ -85,26 +78,7 @@
                     document.body.appendChild(link);
                     link.click();
                     document.body.removeChild(link);
-                } 
-
-                //v2 var csvUrl = URL.createObjectURL(csvData);
-                //a.href =  csvUrl;
-        
-                //v2 link = document.createElement('a');
-                //link.setAttribute('href', data);
-                //v2 link.href =  csvUrl;
-                //v2 link.setAttribute('download', filename);
-                //v2 link.click();
-
-                /*var downloadLink = document.createElement("a");
-                var blob = new Blob(["\ufeff", csv]);
-                var url = URL.createObjectURL(blob);
-                downloadLink.href = url;
-                downloadLink.download = "data.csv";
-
-                document.body.appendChild(downloadLink);
-                downloadLink.click();
-                document.body.removeChild(downloadLink);*/
+                };
 
             };
 
