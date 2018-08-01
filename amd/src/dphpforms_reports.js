@@ -95,11 +95,13 @@
                         function(){}
                     );
                 }else{
+                    
                     $('#progress_group').css('display','block');
-                    $('#progress').text( "Espere, puede tardar un par de minutos ..." );
+                    $('#progress').text( "Espere, esto puede tardar un par de minutos dependiendo de su red y ordenador..." );
+                    
                     $.get( '../managers/dphpforms/dphpforms_reverse_filter.php?id_pregunta=seguimiento_pares_fecha&cast=date&criterio={"criteria":[{"operator":">=","value":"'+start_date+'"},{"operator":"<=","value":"'+end_date+'"}]}', function( data ) {
+                    
                         var count_records = Object.keys( data['results'] ).length;
-                        var increment = 100 / count_records;
                         var completed_records = [];
                         var progress = 0;
                         var indices_conocidos = [];
@@ -117,18 +119,16 @@
                                                 "enunciado":record['record']['campos'][ x ]['enunciado'],
                                                 "respuesta":record['record']['campos'][ x ]['respuesta']
                                             };
-                                            completed_records.push( seguimiento );
                                             if( !is_in_array( indices_conocidos, parseInt( record['record']['campos'][ x ]['id_pregunta'] ) ) ){
                                                 indices_conocidos.push( parseInt( record['record']['campos'][ x ]['id_pregunta'] ) );
                                             };
                                         };
+                                        completed_records.push( seguimiento );
                                     };
 
                                     progress ++;
                                     $('#progress').text( (( 100 / count_records ) * progress).toFixed( 2 ) + "%" );
                                     console.log( "Procesado: " + answer['result']['id_registro'] );
-                                    //console.log( seguimiento );
-                                    //console.log( indices_conocidos );
                                     console.log( progress + " === " + count_records );
                                     if( progress == count_records ){
                                         console.log("CSV!!!!!!!!");
