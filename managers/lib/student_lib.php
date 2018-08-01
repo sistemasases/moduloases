@@ -328,7 +328,13 @@ function get_assigned_monitor($id_student)
 
     $result = $DB->get_record_sql($sql_query);    
     
-    $id_monitor = $DB->get_record_sql($sql_query)->id_monitor;
+    $monitor = $DB->get_record_sql($sql_query);
+    $id_monitor = -1;
+    if($monitor){
+        $id_monitor = $monitor->id_monitor;
+    }else{
+        return array();
+    }
 
     if ($id_monitor) {
 
