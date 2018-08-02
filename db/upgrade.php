@@ -4,7 +4,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     global $DB;
     $dbman = $DB->get_manager();
     $result = true;
-    if ($oldversion < 2018071910049 ) {
+    if ($oldversion < 2018080216180 ) {
     //     // ************************************************************************************************************
     //     // Actualización que crea la tabla para los campos extendidos de usuario (Tabla: {talentospilos_user_extended})
     //     // Versión: 2018010911179
@@ -1247,32 +1247,58 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
         // ************************************************************************************************************
 
         // Define field navegador to be added to talentospilos_df_dwarehouse.
-        $table = new xmldb_table('talentospilos_df_dwarehouse');
-        $field = new xmldb_field('navegador', XMLDB_TYPE_TEXT, null, null, null, null, null, 'dts_retorno');
+        // $table = new xmldb_table('talentospilos_df_dwarehouse');
+        // $field = new xmldb_field('navegador', XMLDB_TYPE_TEXT, null, null, null, null, null, 'dts_retorno');
 
-        // Conditionally launch add field navegador.
-        if (!$dbman->field_exists($table, $field)) {
-            $dbman->add_field($table, $field);
-        }
+        // // Conditionally launch add field navegador.
+        // if (!$dbman->field_exists($table, $field)) {
+        //     $dbman->add_field($table, $field);
+        // }
 
-        // Define field url_request to be added to talentospilos_df_dwarehouse.
-        $table = new xmldb_table('talentospilos_df_dwarehouse');
-        $field = new xmldb_field('url_request', XMLDB_TYPE_TEXT, null, null, null, null, null, 'navegador');
+        // // Define field url_request to be added to talentospilos_df_dwarehouse.
+        // $table = new xmldb_table('talentospilos_df_dwarehouse');
+        // $field = new xmldb_field('url_request', XMLDB_TYPE_TEXT, null, null, null, null, null, 'navegador');
 
-        // Conditionally launch add field url_request.
-        if (!$dbman->field_exists($table, $field)) {
-            $dbman->add_field($table, $field);
+        // // Conditionally launch add field url_request.
+        // if (!$dbman->field_exists($table, $field)) {
+        //     $dbman->add_field($table, $field);
+        // }
+
+                // ************************************************************************************************************
+        // Actualización:
+        // Se actualizan el conjunto de Estados Icetex
+        // Versión en la que se incluye: GIT XXX, Moodle: 2018071910049
+                                                            
+        // ************************************************************************************************************
+        
+        $table = new xmldb_table('talentospilos_alertas_academ');
+
+        // Adding fields to table talentospilos_alertas_academ.
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        $table->add_field('id_estudiante', XMLDB_TYPE_INTEGER, '20', null, null, null, null);
+        $table->add_field('id_item', XMLDB_TYPE_INTEGER, '20', null, null, null, null);
+        $table->add_field('nota', XMLDB_TYPE_INTEGER, '20', null, null, null, null);
+        $table->add_field('id_user_registra', XMLDB_TYPE_INTEGER, '20', null, null, null, null);
+        $table->add_field('fecha', XMLDB_TYPE_INTEGER, '20', null, null, null, null);
+
+        // Adding keys to table talentospilos_alertas_academ.
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+
+        // Conditionally launch create table for talentospilos_alertas_academ.
+        if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
         }
 
         // ************************************************************************************************************
         // Actualización:
-        // Se actualizan el conjunto de Estados Icetex
-        // Versión en la que se incluye: GIT XXX, Moodle: 2018071910049
+        // Se crea tabla de logs de alertas academicas
+        // Versión en la que se incluye: GIT XXX, Moodle: 2018080216180
+                                                            
         // ************************************************************************************************************
         
 
 
-        upgrade_block_savepoint(true, 2018071910049 , 'ases');
+        upgrade_block_savepoint(true, 2018080216180 , 'ases');
     
         return $result;
 
