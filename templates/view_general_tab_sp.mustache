@@ -2,69 +2,70 @@
 <div class="tab-pane active p-t-100" id="general_tab">
     <div class="row">
         <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
-            <h3>INFORMACIÓN DEL ESTUDIANTE</h3>
+            <h3 class="h-sections-general-tab" id="h-student-info">INFORMACIÓN DEL ESTUDIANTE</h3>
+            <hr class="hr-general-tab-fields">
+
             <div class="row">
-                <label for="dir1" class="col-sm-4">Dirección</label>
-                <div class="input-group col-sm-8">
-                    <input type="text" class="form-control" readonly name="direccion_res" id="dir1" value="{{res_address}}" maxlength="100">
+                <label for="input-dir-res" class="col-xs-3 col-sm-3 col-md-3 col-lg-3 label_fields_general_tab">Dirección residencia</label>
+                <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9 div_fields_general_tab" id="div-input-dir-res">
+                    <input type="text" class="input_fields_general_tab" name="direccion_res" id="input-dir-res" value="{{res_address}}" maxlength="100" readonly>
+                </div>
+            </div>
+
+            <div class="row">
+                <label for="tel_res" class="col-xs-3 col-sm-3 col-md-3 col-lg-3 label_fields_general_tab">Teléfono residencia</label>
+                <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9 div_fields_general_tab" id="div-input-tel-res">
+                    <input type="tel" class="input_fields_general_tab" name="tel_res" id="tel_res" readonly value="{{res_tel}}" maxlength="15">
                 </div>
             </div>
             <div class="row">
-                <label for="tel1" class="control-label col-sm-4">Teléfono 1</label>
-                <div class="input-group col-sm-8">
-                    <input type="tel" class="form-control" name="tel_ini" id="tel1" readonly value="{{init_tel}}" maxlength="15">
+                <label for="tel3" class="col-xs-3 col-sm-3 col-md-3 col-lg-3 label_fields_general_tab">Celular</label>
+                <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9 div_fields_general_tab" id="div-input-cellphone">
+                    <input type="tel" class="input_fields_general_tab" name="celular" id="cellphone" readonly value="{{cell_phone}}" maxlength="15">
                 </div>
             </div>
             <div class="row">
-                <label for="tel2" class="control-label col-sm-4">Teléfono 2</label>
-                <div class="input-group col-sm-8">
-                    <input type="tel" class="form-control" name="tel_res" id="tel2" readonly value="{{res_tel}}" maxlength="15">
+                <label for="email_alt" class="col-xs-3 col-sm-3 col-md-3 col-lg-3 label_fields_general_tab">Email alternativo</label>
+                <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9 div_fields_general_tab" id="div-input-email-alt">
+                    <input type="email" class="input_fields_general_tab" name="emailpilos" id="email_alt" readonly value="{{emailpilos}}" maxlength="100" required />
+                </div>
+            </div>
+
+            <h3 class="h-sections-general-tab">INFORMACIÓN DEL ACUDIENTE</h3>
+            <hr class="hr-general-tab-fields">
+
+            <div class="row">
+                <label for="nombre_acudiente" class="col-xs-3 col-sm-3 col-md-3 col-lg-3 label_fields_general_tab">Nombre completo</label>
+                <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9 div_fields_general_tab" id="div-input-email-alt">
+                    <input type="text" class="input_fields_general_tab" name="acudiente" id="nombre_acudiente" value="{{attendant}}" maxlength="100" readonly/>
                 </div>
             </div>
             <div class="row">
-                <label for="tel3" class="control-label col-sm-4">Teléfono 3</label>
-                <div class="input-group col-sm-8">
-                    <input type="tel" class="form-control" name="celular" id="tel3" readonly value="{{cell_phone}}" maxlength="15">
+                <label for="tel4" class="col-xs-3 col-sm-3 col-md-3 col-lg-3 label_fields_general_tab">Teléfono</label>
+                <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9 div_fields_general_tab">
+                    <input type="tel" class="input_fields_general_tab" name="tel_acudiente" id="tel4" value="{{attendant_tel}}" maxlength="15" readonly/>
+                </div>
+            </div>
+            
+            <h3 class="h-sections-general-tab">INFORMACIÓN PROFESIONAL Y MONITOR</h3>
+            <hr class="hr-general-tab-fields">
+
+            <div class="row">
+                <label for="profesional_ps" class="col-xs-3 col-sm-3 col-md-3 col-lg-3 label_fields_general_tab">Profesional</label>
+                <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9 div_fields_general_tab">
+                    <span class="span-staff-ps">{{professional_fullname}}</span>
                 </div>
             </div>
             <div class="row">
-                <label for="email2" class="control-label col-sm-4">Email alternativo</label>
-                <div class="input-group col-sm-8">
-                    <input type="email" class="form-control" name="emailpilos" id="email2" readonly value="{{emailpilos}}" maxlength="100" required />
-                </div>
-            </div>
-            <hr>
-            <h3>INFORMACIÓN DEL ACUDIENTE</h3>
-            <div class="row">
-                <label for="nombre_acudiente" class="control-label col-sm-4">Nombre</label>
-                <div class="input-group col-md-8">
-                    <input type="text" class="form-control" readonly name="acudiente" id="nombre_acudiente" value="{{attendant}}" maxlength="100" />
+                <label for="practicante_ps" class="col-xs-3 col-sm-3 col-md-3 col-lg-3 label_fields_general_tab">Practicante</label>
+                <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9 div_fields_general_tab">
+                    <span class="span-staff-ps">{{trainee_fullname}}</span>
                 </div>
             </div>
             <div class="row">
-                <label for="tel4" class="control-label col-sm-4">Teléfono Acudiente</label>
-                <div class="input-group col-md-8">
-                    <input type="tel" class="form-control" name="tel_acudiente" id="tel4" readonly value="{{attendant_tel}}" maxlength="15" />
-                </div>
-            </div>
-            <hr>
-            <h3>INFORMACIÓN PROFESIONAL Y MONITOR</h3>
-            <div class="row">
-                <label for="profesional_ps" class="control-label col-sm-4">Profesional</label>
-                <div class="input-group col-md-7">
-                    <span>{{professional_fullname}}</span>
-                </div>
-            </div>
-            <div class="row">
-                <label for="practicante_ps" class="control-label col-sm-4">Practicante</label>
-                <div class="input-group col-md-7">
-                    <span>{{trainee_fullname}}</span>
-                </div>
-            </div>
-            <div class="row">
-                <label for="monitor_ps" class="control-label col-sm-4">Monitor</label>
-                <div class="input-group col-md-7">
-                    <span>{{monitor_fullname}}</span>
+                <label for="monitor_ps" class="col-xs-3 col-sm-3 col-md-3 col-lg-3 label_fields_general_tab">Monitor</label>
+                <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9 div_fields_general_tab">
+                    <span class="span-staff-ps">{{monitor_fullname}}</span>
                 </div>
             </div>
         </div>
@@ -78,17 +79,6 @@
             </div>
         </div>
     </div>
-    <br>
-    <div class="col-sm-12" id="buttons_edit_div">
-        <div class="col-sm-2 col-sm-offset-4">
-            <button class="btn-primary" type="button" id="save" name="save">Actualizar Datos</button>
-        </div>
-        <div class="col-sm-1-col-sm-offset-1">
-            <button class="btn-primary col-sm-1" type="button" id="cancel">Cancelar</button>
-        </div>        
-        {{#update_general_tab_sp}}
-        <button class="btn-primary col-sm-2 col-sm-offset-5" type="button" id="editar_ficha">Editar Ficha</button>
-        {{/update_general_tab_sp}}
-    </div>
+
 </div>
 {{!-- End general tab --}}
