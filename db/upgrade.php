@@ -1273,6 +1273,10 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
         
         $table = new xmldb_table('talentospilos_alertas_academ');
 
+           // Conditionally launch drop table for talentospilos_alertas_academ.
+        if ($dbman->table_exists($table)) {
+            $dbman->drop_table($table);
+        }
         // Adding fields to table talentospilos_alertas_academ.
         $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
         $table->add_field('id_estudiante', XMLDB_TYPE_INTEGER, '20', null, null, null, null);
@@ -1283,6 +1287,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
 
         // Adding keys to table talentospilos_alertas_academ.
         $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+        $table->add_key('unique_key', XMLDB_KEY_UNIQUE, array('id_item', 'id_estudiante'));
 
         // Conditionally launch create table for talentospilos_alertas_academ.
         if (!$dbman->table_exists($table)) {
