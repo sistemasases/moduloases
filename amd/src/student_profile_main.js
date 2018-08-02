@@ -62,9 +62,10 @@ return {
 
      var current_tracking_status = "";
 
-     // Manage edit icon
+     // ******* Manage edition ******
      var height_div_cohorts = $('#div_cohorts').height();
      $('#div-icon-edit').height(height_div_cohorts);
+     this.edit_profile();     
 
      $('div.slider.round').click(function(event){current_tracking_status = event.target.parentElement.children[0].checked;});
 
@@ -100,33 +101,10 @@ return {
 
      var modal_peer_tracking = $('#modal_peer_tracking');
 
-     edit_profile_act();
      modal_manage();
      modal_peer_tracking_manage();
      modal_risk_graphic_manage();
 
-     $('#save').click(function() {
-         save_profile();
-     });
-
-     $("#cancel").click(function() {
-
-         swal({
-             title: "¿Estas seguro/a de cancelar?",
-             text: "Los cambios realizados no serán tomados en cuenta y se perderán",
-             type: "warning",
-             showCancelButton: true,
-             confirmButtonColor: "#d51b23",
-             confirmButtonText: "Si!",
-             cancelButtonText: "No",
-             closeOnConfirm: true,
-             },
-             function(isConfirm) {
-                 if (isConfirm) {
-                     cancel_edition();
-                 }
-             });
-     });
 
      // Controles para el modal: "Añadir nuevo seguimiento"
 
@@ -557,55 +535,42 @@ return {
         data: data,
         options: chart_options
     });   
+ },edit_profile(){
+
+    $('#span-icon-edit').on('click', function(){
+        $(this).hide();
+        $('#tip-edit').hide();
+        $('#span-icon-save-profile').show();
+        $('#tip-save').show();
+        $('#span-icon-cancel-edit').show();
+        $('#tip-cancel').show();
+        $('#tipo_doc').prop('disabled', false);
+        $('#cedula').prop('readonly', false);
+        $('#icetex_status').prop('disabled', false);
+        $('.select_statuses_program').prop('disabled', false);
+        $('.input_fields_general_tab').prop('readonly', false);
+
+    });
+
+    $('#span-icon-cancel-edit').on('click', function(){
+        $(this).hide();
+        $('#tip-cancel').hide();
+        $('#span-icon-save-profile').hide();
+        $('#tip-save').hide();
+        $('#span-icon-edit').show();
+        $('#tip-edit').show();
+        $('#tipo_doc').prop('disabled', true);
+        $('#cedula').prop('readonly', true);
+        $('#icetex_status').prop('disabled', true);
+        $('.select_statuses_program').prop('disabled', true);
+        $('.input_fields_general_tab').prop('readonly', true);
+    });
  }
 };
 
 function edit_profile_act() {
 
- // Edit profile
- $('#span-icon-edit').on('click', function(){
 
-     $(this).hide();
-     $('#tip-edit').hide();
-     $('#span-icon-save-profile').show();
-     $('#tip-save').show();
-     $('#span-icon-cancel-edit').show();
-     $('#tip-cancel').show();
-     $('#tipo_doc').prop('disabled', false);
-     $('#cedula').prop('readonly', false);
-     $('#icetex_status').prop('disabled', false);
-     $('.select_statuses_program').prop('disabled', false);
-     
- });
-
- $('#span-icon-cancel-edit').on('click', function(){
-     $(this).hide();
-     $('#tip-cancel').hide();
-     $('#span-icon-save-profile').hide();
-     $('#tip-save').hide();
-     $('#span-icon-edit').show();
-     $('#tip-edit').show();
-     $('#tipo_doc').prop('disabled', true);
-     $('#cedula').prop('readonly', true);
-     $('#icetex_status').prop('disabled', true);
-     $('.select_statuses_program').prop('disabled', true);
- });
-
- 
-
- $("#editar_ficha").click(function() {
-     $("#ficha_estudiante").find("input").prop("readonly", false);
-     $("#observations_profile").prop("readonly", false);
-     $("#profesional_ps").prop("readonly", true);
-     $("#practicante_ps").prop("readonly", true);
-     $("#monitor_ps").prop("readonly", true);
-     $("#ficha_estudiante").find("select").prop("disabled", false);
-     $(this).hide();
-     $("#ficha_estudiante #cancel").fadeIn();
-     $("#ficha_estudiante #save").fadeIn();
-     $('#ficha_estudiante #codigo').attr('readonly', true);
-     $('#ficha_estudiante #search').fadeOut();
- });
 }
 
 function cancel_edition() {
