@@ -32,6 +32,7 @@ require_once('../managers/lib/lib.php');
 require_once('../managers/instance_management/instance_lib.php');
 require_once ('../managers/menu_options.php');
 include_once "../managers/dphpforms/dphpforms_reverse_filter.php";
+include_once "../managers/dphpforms/dphpforms_form_updater.php";
 include('../lib.php');
 
 
@@ -62,6 +63,21 @@ $url = new moodle_url("/blocks/ases/view/dphpforms_form_builder.php", array('cou
 $coursenode = $PAGE->navigation->find($courseid, navigation_node::TYPE_COURSE);
 
 $rol = get_role_ases($USER->id);
+
+// dphpforms_form_updater.php->get_alias()
+$record->alias_preguntas_globales = array_values(get_alias());
+$preguntas_form = array_values(get_preguntas_form("seguimiento_pares"));
+
+$preguntas_form_short = array();
+foreach( $preguntas_form as &$pregunta ){
+    array_push( $preguntas_form_short, array(
+            'id' => $pregunta->id,
+            'enunciado' => $pregunta->enunciado
+        ) 
+    );
+}
+
+$record->preguntas = json_encode( $preguntas_form_short );
 
 $PAGE->set_context($contextcourse);
 $PAGE->set_context($contextblock);

@@ -361,6 +361,14 @@
 
         global $DB;
 
+        if(!is_numeric($form_id)){
+            $sql_alias = "SELECT id FROM {talentospilos_df_formularios} WHERE alias = '$form_id'";
+            $form_record = $DB->get_record_sql($sql_alias);
+            if($form_record != null){
+                $form_id = (int) $form_record->id;
+            }
+        }
+
         $sql = "SELECT * FROM {talentospilos_df_tipo_campo} AS TC 
         INNER JOIN (
             SELECT * FROM {talentospilos_df_preguntas} AS P 
