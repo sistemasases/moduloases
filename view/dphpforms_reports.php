@@ -72,7 +72,8 @@ $preguntas_form_short = array();
 foreach( $preguntas_form as &$pregunta ){
     array_push( $preguntas_form_short, array(
             'id' => $pregunta->id,
-            'enunciado' => $pregunta->enunciado
+            'enunciado' => $pregunta->enunciado,
+            'local_alias' => json_decode($pregunta->atributos_campo)->local_alias
         ) 
     );
 }

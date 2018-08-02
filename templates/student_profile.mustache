@@ -74,7 +74,7 @@
         </div>
 
         <div class="row" id="div-hr">
-          <hr id="hr-general-fields">
+          <hr class="hr-general-fields">
         </div>
         
         <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8" id="div_academic_programs">
@@ -132,29 +132,30 @@
             No registra cohortes asociadas.
           {{/student_cohorts}}
         </div>
-
+        {{#update_general_tab_sp}}
+        
         <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1" id="div-icon-edit">
-            <span class="col-sm-12 tooltip-v1" id="span-icon-edit"
-                  data-toggle="tooltip" 
-                  data-placement="top"
-                  title="Editar ficha">
-            </span>
+          <span class="col-sm-12 tooltip-v1" id="span-icon-edit"
+                data-toggle="tooltip" 
+                data-placement="top"
+                title="Editar ficha">
+          </span>
 
-            <span class="col-sm-6 tooltip-v1" id="span-icon-save-profile" 
-                  data-toggle="tooltip" 
-                  data-placement="top"
-                  title="Guardar cambios"
-                  hidden>
-            </span>
+          <span class="col-sm-6 tooltip-v1" id="span-icon-save-profile" 
+                data-toggle="tooltip" 
+                data-placement="top"
+                title="Guardar cambios"
+                hidden>
+          </span>
 
-            <span class="col-sm-6 tooltip-v1" id="span-icon-cancel-edit"
-                  data-toggle="tooltip" 
-                  data-placement="top"
-                  title="Cancelar edición"
-                  hidden>
-            </span>
-
+          <span class="col-sm-6 tooltip-v1" id="span-icon-cancel-edit"
+                data-toggle="tooltip" 
+                data-placement="top"
+                title="Cancelar edición"
+                hidden>
+          </span>
         </div>
+        {{/update_general_tab_sp}}
 
       </div>
       <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 equalize" id="photo_div" >
