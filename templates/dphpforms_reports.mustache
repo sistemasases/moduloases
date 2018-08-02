@@ -11,6 +11,20 @@
         </div>
         <div class="row">
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <span><strong>Filtro:</strong>&nbsp;</span>
+                <select name="" id="" disabled>
+                    <option value="" disabled>Seleccione un alias de pregunta</option>
+                    {{#alias_preguntas_globales}}
+                    {{#.}}
+                    <option value="{{id_pregunta}}">{{alias}}</option>
+                    {{/.}}
+                    {{/alias_preguntas_globales}}
+                </select>
+                <hr>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                 <div class="form-group">
                     <label for="">Fecha de inicio</label>
                     <input type="date" name="" id="start_date" class="form-control ajuste_fecha">
