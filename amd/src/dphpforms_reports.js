@@ -44,8 +44,12 @@
                     ctr = 0;
                     keys.forEach(function(key) {
                         if (ctr > 0) result += columnDelimiter;
-        
-                        result += "\"" + item[key]['respuesta'] + "\"";
+                        try {
+                            result += "\"" + item[key]['respuesta'].replace(/"/g, '\'') + "\"";
+                        } catch (error) {
+                            console.log(error);
+                        }
+                        
                         ctr++;
                     });
                     result += lineDelimiter;
@@ -95,6 +99,9 @@
                         function(){}
                     );
                 }else{
+
+                    var preguntas = JSON.parse( $("#dphpforms-reports-preguntas").html());
+                    
                     
                     $('#progress_group').css('display','block');
                     $("#message").removeClass("alert alert-success");
@@ -108,32 +115,44 @@
                         var progress = 0;
                         var indices_conocidos = [];
 
-                        for( var x = 0; x < count_records; x++ ){
+                        for( var t = 0; t < count_records; t++ ){
 
-                            $.get( '../managers/dphpforms/dphpforms_reverse_finder.php?respuesta_id=' + data['results'][x]['id'], function( answer ) {
+                            $.get( '../managers/dphpforms/dphpforms_reverse_finder.php?respuesta_id=' + data['results'][t]['id'], function( answer ) {
                                 $.get( '../managers/dphpforms/dphpforms_get_record.php?record_id=' + answer['result']['id_registro'], function( record ) {
                                     
-                                   var seguimiento = [];
-                                   
                                    if(  Object.keys( record['record'] ).length > 0  ){
+
+                                        var seguimiento = [];
+                                        var seguimiento_base = $.extend( true, {}, preguntas );
+
                                         for( var x = 0; x <  Object.keys( record['record']['campos'] ).length; x++ ){
-                                            seguimiento[ parseInt( record['record']['campos'][ x ]['id_pregunta'] ) ] = {
+
+                                            for( var k = 0; k < Object.keys( seguimiento_base ).length; k++ ){
+                                                if( seguimiento_base[k].id == parseInt( record['record']['campos'][ x ]['id_pregunta'] ) ){
+                                                    seguimiento_base[k].respuesta = record['record']['campos'][ x ]['respuesta'];
+                                                }
+                                            }
+
+                                            /*seguimiento[ parseInt( record['record']['campos'][ x ]['id_pregunta'] ) ] = {
                                                 "enunciado":record['record']['campos'][ x ]['enunciado'],
                                                 "respuesta":record['record']['campos'][ x ]['respuesta']
                                             };
                                             if( !is_in_array( indices_conocidos, parseInt( record['record']['campos'][ x ]['id_pregunta'] ) ) ){
                                                 indices_conocidos.push( parseInt( record['record']['campos'][ x ]['id_pregunta'] ) );
-                                            };
+                                            };*/
                                         };
-                                        completed_records.push( seguimiento );
+                                        completed_records.push( seguimiento_base );
+                                        console.log(seguimiento_base);
                                     };
 
                                     progress ++;
                                     $('#progress').text( (( 100 / count_records ) * progress).toFixed( 2 ) );
                                     if( progress == count_records ){
+                                        console.log( indices_conocidos );
                                         $("#message").removeClass("alert alert-info");
                                         $("#message").addClass("alert alert-success");
                                         $("#message").html( "<strong>Info!</strong>  Reporte generado." );
+                                        console.log(completed_records);
                                         downloadCSV( completed_records );
                                     };
                                     
