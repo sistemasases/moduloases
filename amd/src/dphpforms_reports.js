@@ -97,7 +97,9 @@
                 }else{
                     
                     $('#progress_group').css('display','block');
-                    $('#progress').text( "Espere, esto puede tardar un par de minutos dependiendo de su red y ordenador..." );
+                    $("#message").removeClass("alert alert-success");
+                    $("#message").addClass("alert alert-info");
+                    $('#message').html( "<strong>Info!</strong> Se está generando el reporte, esto puede tardar un par de minutos dependiendo de su conexión a internet, capacidad del ordenador y rapidez del campus virtual." );
                     
                     $.get( '../managers/dphpforms/dphpforms_reverse_filter.php?id_pregunta=seguimiento_pares_fecha&cast=date&criterio={"criteria":[{"operator":">=","value":"'+start_date+'"},{"operator":"<=","value":"'+end_date+'"}]}', function( data ) {
                     
@@ -127,10 +129,11 @@
                                     };
 
                                     progress ++;
-                                    $('#progress').text( (( 100 / count_records ) * progress).toFixed( 2 ) + "%" );
-                                    //console.log( "Procesado: " + answer['result']['id_registro'] );
-                                    //console.log( progress + " === " + count_records );
+                                    $('#progress').text( (( 100 / count_records ) * progress).toFixed( 2 ) );
                                     if( progress == count_records ){
+                                        $("#message").removeClass("alert alert-info");
+                                        $("#message").addClass("alert alert-success");
+                                        $("#message").html( "<strong>Info!</strong>  Reporte generado." );
                                         downloadCSV( completed_records );
                                     };
                                     
@@ -142,6 +145,9 @@
                         }
                         if( count_records == 0 ){ 
                             $('#progress').text( 100 );
+                            $("#message").removeClass("alert alert-info");
+                            $("#message").addClass("alert alert-success");
+                            $("#message").html( "<strong>Info!</strong>  Reporte generado." );
                         };
                     });
                 };
