@@ -43,7 +43,7 @@ class block_ases_observer{
 
         $eventData = $event->get_data();
         $eventData = json_encode($eventData);
-
+///INICIO PRUEBA
         $obj = new stdClass;
         date_default_timezone_set("America/Bogota");
         $today = time();
@@ -60,7 +60,7 @@ class block_ases_observer{
         $alerta->fecha = $today;
         // $DB->insert_record('talentospilos_alertas_academ', $alerta);
         $DB->insert_record('talentospilos_history_academ', $obj);
-        
+    ////FIN PRUEBA    
 
     }
 }
