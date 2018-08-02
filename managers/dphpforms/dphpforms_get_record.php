@@ -100,6 +100,8 @@
                 };
                 array_push($respuestas, $tmp_respuesta);
             };
+        }else{
+            return json_encode( array( 'record' => array() ) );
         };
 
         $form_alias = $DB->get_record_sql( "SELECT alias FROM {talentospilos_df_formularios} WHERE id = " . $list_respuestas[0]->id_formulario )->alias;
