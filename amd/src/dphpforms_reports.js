@@ -23,6 +23,36 @@
                 return false;
             };
 
+            function custom_actions( report, form_type ){
+                if( form_type == "seguimiento_pares" ){
+                    var report_size = report.length;
+                    for( var x = 0; x < report_size; x++){
+                        var id_estudiante = false;
+                        var id_creado_por = false;
+                        for( var y = 0; y < Object.keys(report[x]).length; y++ ){
+                            if( !id_estudiante || !id_creado_por ){
+                                if( report[x][y].local_alias == "id_estudiante" ){
+                                    id_estudiante = report[x][y].respuesta;
+                                }
+                                if( report[x][y].local_alias == "id_creado_por" ){
+                                    id_creado_por = report[x][y].respuesta;
+                                }
+                            }else{
+                                break;
+                            }
+                        }
+                        $.get( '../managers/dphpforms/.php', function( data ) {
+
+                        });
+                        $.get( '../managers/dphpforms/.php', function( data ) {
+                            
+                        });
+                    }
+                }else{
+                    return report;
+                }
+            }
+
             function convertArrayOfObjectsToCSV(args) {  
                 var result, ctr, keys, columnDelimiter, lineDelimiter, data;
         
