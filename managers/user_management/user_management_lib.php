@@ -79,11 +79,11 @@ function user_management_get_student_monitor( $ases_id ){
 }
 
 function user_management_get_monitor_practicant( $user_id ){
-    return $DB->user_management_get_boss( $sql );
+    return user_management_get_boss( $user_id );
 }
 
 function user_management_get_practicant_prof( $user_id ){
-    return $DB->user_management_get_boss( $sql );
+    return user_management_get_boss( $user_id );
 }
 
 function user_management_get_stud_mon_prac_prof( $ases_id ){
@@ -93,9 +93,9 @@ function user_management_get_stud_mon_prac_prof( $ases_id ){
     $prof = null;
 
     $monitor =  user_management_get_student_monitor( $ases_id );
-    if( !$monitor ){
+    if( $monitor ){
         $pract = user_management_get_monitor_practicant( $monitor->id );
-        if( !$prac ){
+        if( $pract ){
             $prof = user_management_get_practicant_prof( $pract->id );
         }
     }
