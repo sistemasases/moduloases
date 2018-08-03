@@ -44,22 +44,22 @@ class block_ases_observer{
         $eventData = $event->get_data();
         $eventData = json_encode($eventData);
 ///INICIO PRUEBA
-        $obj = new stdClass;
-        date_default_timezone_set("America/Bogota");
-        $today = time();
-        $obj->id_estudiante=$today;
-        $obj->id_semestre = 1;
-        $obj->id_programa = 0;
-        $obj->json_materias = $eventData;
+        // $obj = new stdClass;
+        // date_default_timezone_set("America/Bogota");
+        // $today = time();
+        // $obj->id_estudiante=$today;
+        // $obj->id_semestre = 1;
+        // $obj->id_programa = 0;
+        // $obj->json_materias = $eventData;
 
 
-        $alerta->id_estudiante = 666;
-        $alerta->id_item = 666;
-        $alerta->id_user_registra = 666;
-        $alerta->nota = 0;
-        $alerta->fecha = $today;
-        // $DB->insert_record('talentospilos_alertas_academ', $alerta);
-        $DB->insert_record('talentospilos_history_academ', $obj);
+        // $alerta->id_estudiante = 666;
+        // $alerta->id_item = 666;
+        // $alerta->id_user_registra = 666;
+        // $alerta->nota = 0;
+        // $alerta->fecha = $today;
+        // // $DB->insert_record('talentospilos_alertas_academ', $alerta);
+        // $DB->insert_record('talentospilos_history_academ', $obj);
     ////FIN PRUEBA    
 
     }
