@@ -1266,7 +1266,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
 
         // ************************************************************************************************************
         // Actualización:
-        // Se crea tabla de logs de alertas academicas
+        // Se crea tabla de logs de alertas academicas.
         // Versión en la que se incluye: GIT XXX, Moodle: 2018080217279
                                                             
         // ************************************************************************************************************
