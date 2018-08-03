@@ -197,7 +197,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
              * @return {void}
              */
             function bloquearTotales() {
-                $("#user-grades a").removeAttr("href");
+                $("a").removeAttr("href");
 
                 $('.cat').each(function () {
                     var input = $(this).children().next('.text');
