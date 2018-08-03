@@ -4,7 +4,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     global $DB;
     $dbman = $DB->get_manager();
     $result = true;
-    if ($oldversion < 2018080217270 ) {
+    if ($oldversion < 2018080217279 ) {
     //     // ************************************************************************************************************
     //     // Actualización que crea la tabla para los campos extendidos de usuario (Tabla: {talentospilos_user_extended})
     //     // Versión: 2018010911179
@@ -1297,13 +1297,13 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
         // ************************************************************************************************************
         // Actualización:
         // Se crea tabla de logs de alertas academicas
-        // Versión en la que se incluye: GIT XXX, Moodle: 2018080217270
+        // Versión en la que se incluye: GIT XXX, Moodle: 2018080217279
                                                             
         // ************************************************************************************************************
         
 
 
-        upgrade_block_savepoint(true, 2018080217270 , 'ases');
+        upgrade_block_savepoint(true, 2018080217279 , 'ases');
     
         return $result;
 
