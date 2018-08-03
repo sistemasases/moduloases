@@ -270,8 +270,6 @@ if ($student_code != 0) {
 
     $risk_object = get_risk_by_student($student_id);
 
-    print_r($risk_object);
-
     $record->individual_risk = $risk_object['individual']->calificacion_riesgo;
     $record->familiar_risk = $risk_object['familiar']->calificacion_riesgo;
     $record->academic_risk = $risk_object['academico']->calificacion_riesgo;
