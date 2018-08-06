@@ -24,11 +24,15 @@
             };
 
             function custom_actions( report, form_type ){
+                
                 if( form_type == "seguimiento_pares" ){
+                    
                     var report_size = report.length;
                     for( var x = 0; x < report_size; x++){
-                        var id_estudiante = false;
-                        var id_creado_por = false;
+
+                        var id_estudiante = null;
+                        var id_creado_por = null;
+
                         for( var y = 0; y < Object.keys(report[x]).length; y++ ){
                             if( !id_estudiante || !id_creado_por ){
                                 if( report[x][y].local_alias == "id_estudiante" ){
@@ -41,13 +45,52 @@
                                 break;
                             }
                         }
-                        $.get( '../managers/dphpforms/.php', function( data ) {
 
-                        });
-                        $.get( '../managers/dphpforms/.php', function( data ) {
-                            
+                        $.ajax({
+                            type: "POST",
+                            url: "../managers/user_management/user_management_api.php",
+                            data: JSON.stringify({ "function": "get_crea_stud_mon_prac_prof", "params": [ id_estudiante, id_creado_por ] }),
+                            contentType: "application/json; charset=utf-8",
+                            dataType: "json",
+                            async: false,  
+                            success: function(data){
+                                report[x][Object.keys(report[x]).length] = { 
+                                    enunciado:"created_by", 
+                                    id:"00", 
+                                    local_alias:"created_by",
+                                    respuesta: data.data_response.created_by.firstname + " " + data.data_response.created_by.lastname
+                                };
+                                report[x][Object.keys(report[x]).length] = { 
+                                    enunciado:"student_name", 
+                                    id:"00", 
+                                    local_alias:"student_name",
+                                    respuesta: data.data_response.student.firstname + " " + data.data_response.student.lastname
+                                };
+                                report[x][Object.keys(report[x]).length] = { 
+                                    enunciado:"monitor_name", 
+                                    id:"00", 
+                                    local_alias:"monitor_name",
+                                    respuesta: data.data_response.monitor.firstname + " " + data.data_response.monitor.lastname
+                                };
+                                report[x][Object.keys(report[x]).length] = { 
+                                    enunciado:"practicing_name", 
+                                    id:"00", 
+                                    local_alias:"practicing_name",
+                                    respuesta: data.data_response.practicing.firstname + " " + data.data_response.practicing.lastname
+                                };
+                                report[x][Object.keys(report[x]).length] = { 
+                                    enunciado:"professional_name", 
+                                    id:"00", 
+                                    local_alias:"professional_name",
+                                    respuesta: data.data_response.professional.firstname + " " + data.data_response.professional.lastname
+                                };
+                            },
+                            failure: function(errMsg) {
+                                console.log(errMsg);
+                            }
                         });
                     }
+                    return report;
                 }else{
                     return report;
                 }
@@ -68,7 +111,13 @@
               
                 var enunciados = [];
                 for( var x = 0; x <  Object.keys(data[0]).length; x++ ){
-                    enunciados.push( data[0][x].local_alias );
+                    try {
+                        enunciados.push( data[0][x].local_alias );
+                    } catch (error) {
+                        console.log( "ERROR" );
+                        console.log( data[0] );
+                    }
+                    
                 }
         
                 result = '';
@@ -172,7 +221,8 @@
                                         $("#message").removeClass("alert alert-info");
                                         $("#message").addClass("alert alert-success");
                                         $("#message").html( "<strong>Info!</strong>  Reporte generado." );
-                                        downloadCSV( completed_records );
+                                        //custom_actions( completed_records, "seguimiento_pares" );
+                                        downloadCSV( custom_actions( completed_records, "seguimiento_pares" ) );
                                     };
                                     
                                 }).fail(function(err) {

@@ -108,8 +108,15 @@ function user_management_get_practicing_prof( $user_id ){
 
 /**
  * Funcion that return student, monitor, practicing and professional related to student.
+ * @author Jeison Cardona Gómez. <jeison.cardona@correounivalle.edu.co>
+ * @param int $ases_id
+ * @return stdClass
  */
 function user_management_get_stud_mon_prac_prof( $ases_id ){
+
+    if( !$ases_id ){
+        return null;
+    }
 
     $student = null;
     $monitor = null;
@@ -136,6 +143,19 @@ function user_management_get_stud_mon_prac_prof( $ases_id ){
 
     return $stud_mon_prac_prof;
 }
+
+function user_management_get_crea_stud_mon_prac_prof( $ases_id, $created_by_id ){
+
+    if( !$ases_id || !$created_by_id ){
+        return null;
+    }
+
+    $to_return = user_management_get_stud_mon_prac_prof( $ases_id );
+    $to_return->created_by = user_management_get_moodle_user( $created_by_id );
+
+    return $to_return;
+}
+
 
 
 ?>
