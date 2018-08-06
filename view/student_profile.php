@@ -112,13 +112,13 @@ if ($student_code != 0) {
     array_push($data_init, $academic_programs);
 
     switch ($ases_student->tipo_doc){
-        case "T.I":
+        case "TI":
             $record->doc_type_ti = "selected";
             break;
-        case "C.C":
+        case "CC":
             $record->doc_type_cc = "selected";
             break;
-        case "C.R":
+        case "CR":
             $record->doc_type_cr = "selected";
             break;
         case "EMPTY":
