@@ -30,10 +30,34 @@
                     var report_size = report.length;
                     for( var x = 0; x < report_size; x++){
 
+                        var pos_firstname = -1;
+                        var pos_lastname = -1;
+
                         var id_estudiante = null;
                         var id_creado_por = null;
 
                         for( var y = 0; y < Object.keys(report[x]).length; y++ ){
+                            if( report[x][y].respuesta == "-#$%-" ){
+                                report[x][y].respuesta = "";
+                            }
+                            if( report[x][y].local_alias == "revisado_profesional" ){
+                                
+                                if( report[x][y].respuesta == "0" ){
+                                    report[x][y].respuesta = "marcado"
+                                }else if( report[x][y].respuesta == "-1" ){
+                                    report[x][y].respuesta = "no_marcado"
+                                }
+
+                            }
+                            if( report[x][y].local_alias == "revisado_practicante" ){
+                                
+                                if( report[x][y].respuesta == "0" ){
+                                    report[x][y].respuesta = "marcado"
+                                }else if( report[x][y].respuesta == "-1" ){
+                                    report[x][y].respuesta = "no_marcado"
+                                }
+
+                            }
                             if( !id_estudiante || !id_creado_por ){
                                 if( report[x][y].local_alias == "id_estudiante" ){
                                     id_estudiante = report[x][y].respuesta;
@@ -41,8 +65,6 @@
                                 if( report[x][y].local_alias == "id_creado_por" ){
                                     id_creado_por = report[x][y].respuesta;
                                 }
-                            }else{
-                                break;
                             }
                         }
 
@@ -54,18 +76,6 @@
                             dataType: "json",
                             async: false,  
                             success: function(data){
-                                report[x][Object.keys(report[x]).length] = { 
-                                    enunciado:"created_by", 
-                                    id:"00", 
-                                    local_alias:"created_by",
-                                    respuesta: data.data_response.created_by.firstname + " " + data.data_response.created_by.lastname
-                                };
-                                report[x][Object.keys(report[x]).length] = { 
-                                    enunciado:"student_name", 
-                                    id:"00", 
-                                    local_alias:"student_name",
-                                    respuesta: data.data_response.student.firstname + " " + data.data_response.student.lastname
-                                };
                                 report[x][Object.keys(report[x]).length] = { 
                                     enunciado:"monitor_name", 
                                     id:"00", 
@@ -83,6 +93,24 @@
                                     id:"00", 
                                     local_alias:"professional_name",
                                     respuesta: data.data_response.professional.firstname + " " + data.data_response.professional.lastname
+                                };
+                                report[x][Object.keys(report[x]).length] = { 
+                                    enunciado:"created_by", 
+                                    id:"00", 
+                                    local_alias:"created_by",
+                                    respuesta: data.data_response.created_by.firstname + " " + data.data_response.created_by.lastname
+                                };
+                                report[x][Object.keys(report[x]).length] = { 
+                                    enunciado:"student_firstname", 
+                                    id:"00", 
+                                    local_alias:"student_firstname",
+                                    respuesta: data.data_response.student.firstname
+                                };
+                                report[x][Object.keys(report[x]).length] = { 
+                                    enunciado:"student_lastname", 
+                                    id:"00", 
+                                    local_alias:"student_lastname",
+                                    respuesta: data.data_response.student.lastname
                                 };
                             },
                             failure: function(errMsg) {
