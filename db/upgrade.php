@@ -4,7 +4,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     global $DB;
     $dbman = $DB->get_manager();
     $result = true;
-    if ($oldversion < 2018080217279 ) {
+    if ($oldversion < 2018080609059 ) {
     //     // ************************************************************************************************************
     //     // Actualización que crea la tabla para los campos extendidos de usuario (Tabla: {talentospilos_user_extended})
     //     // Versión: 2018010911179
@@ -1263,17 +1263,10 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
         // if (!$dbman->field_exists($table, $field)) {
         //     $dbman->add_field($table, $field);
         // }
-
-                // ************************************************************************************************************
-        // Actualización:
-        // Se actualizan el conjunto de Estados Icetex
-        // Versión en la que se incluye: GIT XXX, Moodle: 2018071910049
-                                                            
         // ************************************************************************************************************
         
         $table = new xmldb_table('talentospilos_alertas_academ');
-
-           // Conditionally launch drop table for talentospilos_alertas_academ.
+            // Conditionally launch drop table for talentospilos_alertas_academ.
         if ($dbman->table_exists($table)) {
             $dbman->drop_table($table);
         }
@@ -1284,26 +1277,20 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
         $table->add_field('nota', XMLDB_TYPE_INTEGER, '20', null, null, null, null);
         $table->add_field('id_user_registra', XMLDB_TYPE_INTEGER, '20', null, null, null, null);
         $table->add_field('fecha', XMLDB_TYPE_INTEGER, '20', null, null, null, null);
-
-        // Adding keys to table talentospilos_alertas_academ.
+         // Adding keys to table talentospilos_alertas_academ.
         $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
         $table->add_key('unique_key', XMLDB_KEY_UNIQUE, array('id_item', 'id_estudiante'));
-
-        // Conditionally launch create table for talentospilos_alertas_academ.
+         // Conditionally launch create table for talentospilos_alertas_academ.
         if (!$dbman->table_exists($table)) {
             $dbman->create_table($table);
         }
-
-        // ************************************************************************************************************
+         // ************************************************************************************************************
         // Actualización:
-        // Se crea tabla de logs de alertas academicas.
-        // Versión en la que se incluye: GIT XXX, Moodle: 2018080217279
-                                                            
-        // ************************************************************************************************************
-        
+        // Se crea tabla de logs de alertas academicas
+        // Versión en la que se incluye: GIT XXX, Moodle: 2018080609050
 
 
-        upgrade_block_savepoint(true, 2018080217279 , 'ases');
+        upgrade_block_savepoint(true, 2018080609059 , 'ases');
     
         return $result;
 

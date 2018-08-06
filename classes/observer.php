@@ -13,8 +13,7 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
-
-/**
+ /**
  * 
  *
  *
@@ -22,26 +21,17 @@
  * @copyright  2018 Iader E. García G.
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-
-defined('MOODLE_INTERNAL') || die();
+ defined('MOODLE_INTERNAL') || die();
 require_once dirname(__FILE__) . '/../../../config.php';
-
-class block_ases_observer{
-
-    public static function user_graded(\core\event\user_graded $event)
+ class block_ases_observer{
+     public static function user_graded(\core\event\user_graded $event)
     {
         global $DB;
-
-        self::process_event($event);
-
-    }
-
-    protected static function process_event($event){
-
-        global $DB;
-
-        $eventData = $event->get_data();
+         self::process_event($event);
+     }
+     protected static function process_event($event){
+         global $DB;
+         $eventData = $event->get_data();
         $eventData = json_encode($eventData);
 ///INICIO PRUEBA
         // $obj = new stdClass;
@@ -51,9 +41,7 @@ class block_ases_observer{
         // $obj->id_semestre = 1;
         // $obj->id_programa = 0;
         // $obj->json_materias = $eventData;
-
-
-        // $alerta->id_estudiante = 666;
+         // $alerta->id_estudiante = 666;
         // $alerta->id_item = 666;
         // $alerta->id_user_registra = 666;
         // $alerta->nota = 0;
@@ -61,6 +49,5 @@ class block_ases_observer{
         // // $DB->insert_record('talentospilos_alertas_academ', $alerta);
         // $DB->insert_record('talentospilos_history_academ', $obj);
     ////FIN PRUEBA    
-
-    }
+     }
 }
