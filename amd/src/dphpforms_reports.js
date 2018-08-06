@@ -23,6 +23,36 @@
                 return false;
             };
 
+            function custom_actions( report, form_type ){
+                if( form_type == "seguimiento_pares" ){
+                    var report_size = report.length;
+                    for( var x = 0; x < report_size; x++){
+                        var id_estudiante = false;
+                        var id_creado_por = false;
+                        for( var y = 0; y < Object.keys(report[x]).length; y++ ){
+                            if( !id_estudiante || !id_creado_por ){
+                                if( report[x][y].local_alias == "id_estudiante" ){
+                                    id_estudiante = report[x][y].respuesta;
+                                }
+                                if( report[x][y].local_alias == "id_creado_por" ){
+                                    id_creado_por = report[x][y].respuesta;
+                                }
+                            }else{
+                                break;
+                            }
+                        }
+                        $.get( '../managers/dphpforms/.php', function( data ) {
+
+                        });
+                        $.get( '../managers/dphpforms/.php', function( data ) {
+                            
+                        });
+                    }
+                }else{
+                    return report;
+                }
+            }
+
             function convertArrayOfObjectsToCSV(args) {  
                 var result, ctr, keys, columnDelimiter, lineDelimiter, data;
         
@@ -33,19 +63,25 @@
         
                 columnDelimiter = args.columnDelimiter || ',';
                 lineDelimiter = args.lineDelimiter || '\n';
-        
+                
                 keys = Object.keys(data[0]);
+              
+                var enunciados = [];
+                for( var x = 0; x <  Object.keys(data[0]).length; x++ ){
+                    enunciados.push( data[0][x].local_alias );
+                }
         
                 result = '';
-                result += keys.join(columnDelimiter);
+                result += enunciados.join(columnDelimiter);
                 result += lineDelimiter;
         
                 data.forEach(function(item) {
                     ctr = 0;
                     keys.forEach(function(key) {
                         if (ctr > 0) result += columnDelimiter;
-        
-                        result += "\"" + item[key]['respuesta'] + "\"";
+                        try {
+                            result += "\"" + item[key]['respuesta'].replace(/"/g, '\'') + "\"";
+                        } catch (error) {}
                         ctr++;
                     });
                     result += lineDelimiter;
@@ -95,42 +131,47 @@
                         function(){}
                     );
                 }else{
+
+                    var preguntas = JSON.parse( $("#dphpforms-reports-preguntas").html());
+                    
                     
                     $('#progress_group').css('display','block');
-                    $('#progress').text( "Espere, esto puede tardar un par de minutos dependiendo de su red y ordenador..." );
+                    $("#message").removeClass("alert alert-success");
+                    $("#message").addClass("alert alert-info");
+                    $('#message').html( "<strong>Info!</strong> Se está generando el reporte, esto puede tardar un par de minutos dependiendo de su conexión a internet, capacidad del ordenador y rapidez del campus virtual." );
                     
                     $.get( '../managers/dphpforms/dphpforms_reverse_filter.php?id_pregunta=seguimiento_pares_fecha&cast=date&criterio={"criteria":[{"operator":">=","value":"'+start_date+'"},{"operator":"<=","value":"'+end_date+'"}]}', function( data ) {
                     
                         var count_records = Object.keys( data['results'] ).length;
                         var completed_records = [];
                         var progress = 0;
-                        var indices_conocidos = [];
 
-                        for( var x = 0; x < count_records; x++ ){
+                        for( var t = 0; t < count_records; t++ ){
 
-                            $.get( '../managers/dphpforms/dphpforms_reverse_finder.php?respuesta_id=' + data['results'][x]['id'], function( answer ) {
+                            $.get( '../managers/dphpforms/dphpforms_reverse_finder.php?respuesta_id=' + data['results'][t]['id'], function( answer ) {
                                 $.get( '../managers/dphpforms/dphpforms_get_record.php?record_id=' + answer['result']['id_registro'], function( record ) {
                                     
-                                   var seguimiento = [];
-                                   
                                    if(  Object.keys( record['record'] ).length > 0  ){
+
+                                        var seguimiento_base = $.extend( true, {}, preguntas );
+
                                         for( var x = 0; x <  Object.keys( record['record']['campos'] ).length; x++ ){
-                                            seguimiento[ parseInt( record['record']['campos'][ x ]['id_pregunta'] ) ] = {
-                                                "enunciado":record['record']['campos'][ x ]['enunciado'],
-                                                "respuesta":record['record']['campos'][ x ]['respuesta']
-                                            };
-                                            if( !is_in_array( indices_conocidos, parseInt( record['record']['campos'][ x ]['id_pregunta'] ) ) ){
-                                                indices_conocidos.push( parseInt( record['record']['campos'][ x ]['id_pregunta'] ) );
-                                            };
+
+                                            for( var k = 0; k < Object.keys( seguimiento_base ).length; k++ ){
+                                                if( seguimiento_base[k].id == parseInt( record['record']['campos'][ x ]['id_pregunta'] ) ){
+                                                    seguimiento_base[k].respuesta = record['record']['campos'][ x ]['respuesta'];
+                                                }
+                                            }
                                         };
-                                        completed_records.push( seguimiento );
+                                        completed_records.push( seguimiento_base );
                                     };
 
                                     progress ++;
-                                    $('#progress').text( (( 100 / count_records ) * progress).toFixed( 2 ) + "%" );
-                                    //console.log( "Procesado: " + answer['result']['id_registro'] );
-                                    //console.log( progress + " === " + count_records );
+                                    $('#progress').text( (( 100 / count_records ) * progress).toFixed( 2 ) );
                                     if( progress == count_records ){
+                                        $("#message").removeClass("alert alert-info");
+                                        $("#message").addClass("alert alert-success");
+                                        $("#message").html( "<strong>Info!</strong>  Reporte generado." );
                                         downloadCSV( completed_records );
                                     };
                                     
@@ -142,6 +183,9 @@
                         }
                         if( count_records == 0 ){ 
                             $('#progress').text( 100 );
+                            $("#message").removeClass("alert alert-info");
+                            $("#message").addClass("alert alert-success");
+                            $("#message").html( "<strong>Info!</strong>  Reporte generado." );
                         };
                     });
                 };

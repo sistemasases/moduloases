@@ -1,20 +1,31 @@
 {{#data}}
 <body>
+    <div id="dphpforms-reports-preguntas" style="display:none;">{{{preguntas}}}</div>
     <div class="container">
         <div class="row">
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                 <h2>
-                    Reportes
+                    Reportes de formularios dinámicos
                 </h2>
                 <hr>
             </div>
         </div>
         <div class="row">
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                <!--<div class="form-group">
-                    <label for="">#ID pregunta</label>
-                    <input type="number" name="" id="" class="form-control">
-                </div>-->
+                <span><strong>Filtro:</strong>&nbsp;</span>
+                <select name="" id="" disabled>
+                    <option value="" disabled>Seleccione un alias de pregunta</option>
+                    {{#alias_preguntas_globales}}
+                        {{#.}}
+                    <option value="{{id_pregunta}}">{{alias}}</option>
+                        {{/.}}
+                    {{/alias_preguntas_globales}}
+                </select>
+                <hr>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                 <div class="form-group">
                     <label for="">Fecha de inicio</label>
                     <input type="date" name="" id="start_date" class="form-control ajuste_fecha">
@@ -27,8 +38,9 @@
                     <button id="btn-generar-reporte" type="submit" class="btn btn-default">Generar</button>
                 </div>
                 <div id="progress_group" class="form-group" style="display:none;">
-                        <hr>
-                        <span><strong>Progreso:</strong> <span id="progress">0%</span></span>
+                    <hr>
+                    <div id="message"></div><br>
+                    <span><strong>Progreso:</strong> <span id="progress">0</span>%</span>
                 </div>
             </div>
         </div>
