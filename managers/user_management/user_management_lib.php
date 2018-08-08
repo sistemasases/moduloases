@@ -158,7 +158,6 @@ function user_management_get_stud_mon_prac_prof( $ases_id ){
     $student = user_management_get_ases_user( $ases_id );
     if( $student ){
         $student_username = user_management_get_full_ases_user( $ases_id )->username;
-        //$student_username = $ases_id;
         $student->id = $ases_id;
         $monitor =  user_management_get_student_monitor( $ases_id );
         if( $monitor ){

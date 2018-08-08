@@ -36,6 +36,8 @@
                         var id_estudiante = null;
                         var id_creado_por = null;
 
+                        var deleted = false;
+
                         for( var y = 0; y < Object.keys(report[x]).length; y++ ){
                             if( report[x][y].respuesta == "-#$%-" ){
                                 report[x][y].respuesta = "";
@@ -66,6 +68,16 @@
                                     id_creado_por = report[x][y].respuesta;
                                 }
                             }
+                            if( report[x][y].local_alias == "id_estudiante" ){
+                                if(report[x][y].respuesta == ""){
+                                    delete report[x];
+                                    deleted = true;
+                                }
+                            }
+                        }
+
+                        if(!deleted){
+                            continue;
                         }
 
                         $.ajax({
@@ -269,9 +281,9 @@
                                     };
 
                                     progress ++;
-                                    $(".progress-bar").width( (( 100 / count_records ) * progress).toFixed( 2 ) + "%" );
-                                    $(".progress-bar").html( (( 100 / count_records ) * progress).toFixed( 2 ) + "%" );
-                                    $(".progress-bar").attr( "aria-valuenow", (( 100 / count_records ) * progress).toFixed( 2 ) );
+                                    $(".progress-bar").width( (( 100 / count_records ) * progress).toFixed( 0 ) + "%" );
+                                    $(".progress-bar").html( (( 100 / count_records ) * progress).toFixed( 0 ) + "%" );
+                                    $(".progress-bar").attr( "aria-valuenow", (( 100 / count_records ) * progress).toFixed( 0 ) );
                                     if( progress == count_records ){
                                         $("#message").removeClass("alert alert-info");
                                         $("#message").addClass("alert alert-success");
