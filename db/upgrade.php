@@ -4,7 +4,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     global $DB;
     $dbman = $DB->get_manager();
     $result = true;
-    if ($oldversion < 2018080616479 ) {
+    if ($oldversion < 2018080815349 ) {
     //     // ************************************************************************************************************
     //     // Actualización que crea la tabla para los campos extendidos de usuario (Tabla: {talentospilos_user_extended})
     //     // Versión: 2018010911179
@@ -1309,9 +1309,53 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
         // Conditionally launch create table for talentospilos_tipo_documento.
         if (!$dbman->table_exists($table)) {
             $dbman->create_table($table);
-        }  
+        }
 
-        upgrade_block_savepoint(true, 2018080616479 , 'ases');
+        // ************************************************************************************************************
+        // Actualización:
+        // Se cambia el tipo de dato para el campo tipo_doc_ini en la tabla talentospilos_usuario
+        // Versión en la que se incluye: GIT XXX, Moodle: 2018080815349
+        // ************************************************************************************************************        
+        // Changing type of field tipo_doc_ini on table talentospilos_usuario to int.
+        $table = new xmldb_table('talentospilos_usuario');
+        $field = new xmldb_field('tipo_doc_ini', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null, 'id');
+
+        // Launch change of type for field tipo_doc_ini.
+        $dbman->change_field_type($table, $field);
+
+        // ************************************************************************************************************
+        // Actualización:
+        // Se cambia el tipo de dato para el campo tipo_doc en la tabla talentospilos_usuario
+        // Versión en la que se incluye: GIT XXX, Moodle: 2018080815349
+        // ************************************************************************************************************        
+        // Changing type of field tipo_doc_ini on table talentospilos_usuario to int.
+        $table = new xmldb_table('talentospilos_usuario');
+        $field = new xmldb_field('tipo_doc', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null, 'id');
+
+        // Launch change of type for field tipo_doc_ini.
+        $dbman->change_field_type($table, $field);
+
+        // ************************************************************************************************************
+        // Actualización:
+        // Se crean las llaves foráneas de los campos tipo_doc y tipo_doc_ini en la tabla talentospilos_usuario,
+        // Las cuales apuntan a la tabla talentospilos_tipo_documento
+        // Versión en la que se incluye: GIT XXX, Moodle: 2018080815349
+        // ************************************************************************************************************    
+        // Define key doc_ini_type_fk (foreign) to be added to talentospilos_usuario.
+        $table = new xmldb_table('talentospilos_usuario');
+        $key = new xmldb_key('doc_ini_type_fk', XMLDB_KEY_FOREIGN, array('tipo_doc_ini'), 'talentospilos_tipo_documento', array('id'));
+
+        // Launch add key doc_ini_type_fk.
+        $dbman->add_key($table, $key);
+
+        // Define key tipo_doc_fk (foreign) to be added to talentospilos_usuario.
+        $table = new xmldb_table('talentospilos_usuario');
+        $key = new xmldb_key('tipo_doc_fk', XMLDB_KEY_FOREIGN, array('tipo_doc'), 'talentospilos_tipo_documento', array('id'));
+ 
+        // Launch add key tipo_doc_fk.
+        $dbman->add_key($table, $key);
+
+        upgrade_block_savepoint(true, 2018080815349 , 'ases');
     
         return $result;
 
