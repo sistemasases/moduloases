@@ -320,11 +320,11 @@ function get_assigned_monitor($id_student)
 
     global $DB;
 
-    $object_current_semester = get_current_semester_today();
+    $object_current_semester = get_current_semester();
 
     $sql_query = "SELECT id_monitor 
                   FROM {talentospilos_monitor_estud} 
-                  WHERE id_estudiante = ".$id_student." AND id_semestre = ".$object_current_semester->id.";";
+                  WHERE id_estudiante = ".$id_student." AND id_semestre = ".$object_current_semester->max.";";
 
     $result = $DB->get_record_sql($sql_query);    
     
