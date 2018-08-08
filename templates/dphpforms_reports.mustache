@@ -10,7 +10,7 @@
                 <hr>
             </div>
         </div>
-        <div class="row">
+        <!--<div class="row">
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                 <span><strong>Filtro:</strong>&nbsp;</span>
                 <select name="" id="" disabled>
@@ -23,7 +23,7 @@
                 </select>
                 <hr>
             </div>
-        </div>
+        </div>-->
         <div class="row">
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                 <div class="form-group col-xs-6 col-sm-6 col-md-6 col-lg-6">
@@ -40,7 +40,12 @@
                 <div id="progress_group" class="form-group" style="display:none;">
                     <hr>
                     <div id="message"></div><br>
-                    <span><strong>Progreso:</strong> <span id="progress">0</span>%</span>
+                    <span><strong>Progreso:</strong></span>
+                    <div class="progress">
+                        <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width:0%">
+                          40%
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

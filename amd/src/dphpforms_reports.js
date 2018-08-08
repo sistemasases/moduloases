@@ -101,6 +101,12 @@
                                     respuesta: data.data_response.created_by.firstname + " " + data.data_response.created_by.lastname
                                 };
                                 report[x][Object.keys(report[x]).length] = { 
+                                    enunciado:"student_code", 
+                                    id:"00", 
+                                    local_alias:"student_code",
+                                    respuesta: data.data_response.student_username.split("-")[0]
+                                };
+                                report[x][Object.keys(report[x]).length] = { 
                                     enunciado:"student_firstname", 
                                     id:"00", 
                                     local_alias:"student_firstname",
@@ -117,6 +123,23 @@
                                 console.log(errMsg);
                             }
                         });
+
+                        var fields_to_move = 3;
+
+                        for( var k = Object.keys(report[x]).length - 1; k >= 0 ; k-- ){
+                            report[x][k+fields_to_move] = $.extend( true, {}, report[x][k] );
+                        }
+
+                        report[x][0] = $.extend( true, {}, report[x][Object.keys(report[x]).length - 3] );
+                        report[x][1] = $.extend( true, {}, report[x][Object.keys(report[x]).length - 2] );
+                        report[x][2] = $.extend( true, {}, report[x][Object.keys(report[x]).length - 1] );
+
+                        delete report[x][Object.keys(report[x]).length - 1];
+                        delete report[x][Object.keys(report[x]).length - 1];
+                        delete report[x][Object.keys(report[x]).length - 1];
+
+                        //console.log(report[x]);
+
                     }
                     return report;
                 }else{
@@ -211,7 +234,9 @@
 
                     var preguntas = JSON.parse( $("#dphpforms-reports-preguntas").html());
                     
-                    
+                    $(".progress-bar").width( "0%" );
+                    $(".progress-bar").html( "0%" );
+                    $(".progress-bar").attr( "aria-valuenow", "0" );
                     $('#progress_group').css('display','block');
                     $("#message").removeClass("alert alert-success");
                     $("#message").addClass("alert alert-info");
@@ -244,7 +269,9 @@
                                     };
 
                                     progress ++;
-                                    $('#progress').text( (( 100 / count_records ) * progress).toFixed( 2 ) );
+                                    $(".progress-bar").width( (( 100 / count_records ) * progress).toFixed( 2 ) + "%" );
+                                    $(".progress-bar").html( (( 100 / count_records ) * progress).toFixed( 2 ) + "%" );
+                                    $(".progress-bar").attr( "aria-valuenow", (( 100 / count_records ) * progress).toFixed( 2 ) );
                                     if( progress == count_records ){
                                         $("#message").removeClass("alert alert-info");
                                         $("#message").addClass("alert alert-success");

@@ -28,6 +28,19 @@ require_once $CFG->dirroot.'/blocks/ases/managers/user_management/user_lib.php';
 require_once $CFG->dirroot.'/blocks/ases/managers/ases_report/asesreport_lib.php';
 require_once $CFG->dirroot.'/blocks/ases/managers/lib/lib.php';
 
+function user_management_get_full_moodle_user( $user_id ){
+
+    global $DB;
+
+    if( !$user_id ){
+        return null;
+    }
+
+    $sql = "SELECT * FROM {user} AS U WHERE U.id = $user_id";
+
+    return $DB->get_record_sql( $sql );
+}
+
 function user_management_get_moodle_user( $user_id ){
 
     global $DB;
@@ -37,6 +50,24 @@ function user_management_get_moodle_user( $user_id ){
     }
 
     $sql = "SELECT U.id, U.firstname, U.lastname FROM {user} AS U WHERE U.id = $user_id";
+
+    return $DB->get_record_sql( $sql );
+}
+
+function user_management_get_full_ases_user( $ases_id ){
+
+    global $DB;
+
+    if( !$ases_id ){
+        return null;
+    }
+
+    $sql = "SELECT  * 
+            FROM {user} WHERE id = (
+                    SELECT id_moodle_user AS id_moodle 
+                    FROM {talentospilos_user_extended} 
+                    WHERE id_ases_user = $ases_id
+                )";
 
     return $DB->get_record_sql( $sql );
 }
@@ -118,6 +149,7 @@ function user_management_get_stud_mon_prac_prof( $ases_id ){
         return null;
     }
 
+    $student_username = null;
     $student = null;
     $monitor = null;
     $pract = null;
@@ -125,6 +157,8 @@ function user_management_get_stud_mon_prac_prof( $ases_id ){
 
     $student = user_management_get_ases_user( $ases_id );
     if( $student ){
+        $student_username = user_management_get_full_ases_user( $ases_id )->username;
+        //$student_username = $ases_id;
         $student->id = $ases_id;
         $monitor =  user_management_get_student_monitor( $ases_id );
         if( $monitor ){
@@ -137,6 +171,7 @@ function user_management_get_stud_mon_prac_prof( $ases_id ){
 
     $stud_mon_prac_prof = new stdClass();
     $stud_mon_prac_prof->student = $student;
+    $stud_mon_prac_prof->student_username = $student_username;
     $stud_mon_prac_prof->monitor = $monitor;
     $stud_mon_prac_prof->practicing = $pract;
     $stud_mon_prac_prof->professional = $prof;
