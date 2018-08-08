@@ -367,7 +367,7 @@ if ($student_code != 0) {
             break;
     }
 
-    $select = make_select_ficha($USER->id, $rol, $student_code, $blockid);
+    $select = make_select_ficha($USER->id, $rol, $student_code, $blockid, $actions);
     $record->code = $select;
 
     // Loading academic information
@@ -1220,7 +1220,7 @@ if ($student_code != 0) {
 } else {
 
     $student_id = -1;
-    $select = make_select_ficha($USER->id, $rol, null, $blockid);
+    $select = make_select_ficha($USER->id, $rol, null, $blockid, $actions);
     $record->code = $select;
 
 }

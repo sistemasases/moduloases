@@ -138,8 +138,8 @@ function get_role_ases($id)
  * @param $instance_id
  * @return string --> Containing the previous select
  */
-function make_select_ficha($id, $rol, $student_code, $instance_id)
-{
+function make_select_ficha($id, $rol, $student_code, $instance_id, $actions){
+
     global $DB;  
 
     $sel = "";
@@ -152,26 +152,28 @@ function make_select_ficha($id, $rol, $student_code, $instance_id)
 
     $asign = "<select name='asignados' id='asignados' style='width:100%'><option $sel>Seleccione un estudiante</option>";
 
-    if ($rol == 'profesional_ps') {
+    if(property_exists($actions, 'search_assigned_students_sp')){
+        if ($rol == 'profesional_ps') {
 
-        $asign .= process_info_assigned_students(get_asigned_by_profesional($id), $student_code);
-
-    } elseif ($rol == 'practicante_ps') {
-
-        $asign .= process_info_assigned_students(get_asigned_by_practicante($id), $student_code);
-
-    } elseif ($rol == 'monitor_ps') {
-
-        $asign .= process_info_assigned_students(get_asigned_by_monitor($id), $student_code);
-
-    }elseif ($rol == 'director_prog') {
-
-        $asign .= process_info_assigned_students(get_asigned_by_dir_prog($id), $student_code);   
-        
-    } else {
-
+            $asign .= process_info_assigned_students(get_asigned_by_profesional($id), $student_code);
+    
+        } elseif ($rol == 'practicante_ps') {
+    
+            $asign .= process_info_assigned_students(get_asigned_by_practicante($id), $student_code);
+    
+        } elseif ($rol == 'monitor_ps') {
+    
+            $asign .= process_info_assigned_students(get_asigned_by_monitor($id), $student_code);
+    
+        }elseif ($rol == 'director_prog') {
+    
+            $asign .= process_info_assigned_students(get_asigned_by_dir_prog($id), $student_code);   
+            
+        }
+    }elseif(property_exists($actions, 'search_student_sp')) {
         $asign .= process_info_assigned_students(get_all_student($instance_id), $student_code);   
-
+    }else{
+        $asign .= "El usuario no tiene permisos para buscar estudiantes";
     }
     $asign .= "</select>";
     return $asign;
