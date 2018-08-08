@@ -65,7 +65,7 @@ return {
      // ******* Manage edition ******
      var height_div_cohorts = $('#div_cohorts').height();
      $('#div-icon-edit').height(height_div_cohorts);
-     this.edit_profile();     
+     this.edit_profile(self);     
 
      $('div.slider.round').click(function(event){current_tracking_status = event.target.parentElement.children[0].checked;});
 
@@ -104,7 +104,6 @@ return {
      modal_manage();
      modal_peer_tracking_manage();
      modal_risk_graphic_manage();
-
 
      // Controles para el modal: "Añadir nuevo seguimiento"
 
@@ -148,7 +147,6 @@ return {
          var id_tracking = id_button.substring(14);
          
          load_tracking_peer(id_tracking);           
-
      });
 
      $('.btn-danger.delete_peer_tracking').on('click', function(){
@@ -183,6 +181,7 @@ return {
          $('#modal_riesgos').fadeIn(200);
          graficar();
      });
+
      $('#mymodal-riesgo-close').click(function(){
          $('#modal_riesgos').fadeOut(200);
      });
@@ -270,7 +269,6 @@ return {
              new_status = 'seguimiento';
              break;
          default:
-             
      }
 
      if(current_status == 'sinseguimiento'){
@@ -339,7 +337,6 @@ return {
                                      msg.msg,
                                      msg.status
                                  );
-                                 
                              },
                              dataType: "json",
                              cache: "false",
@@ -458,7 +455,7 @@ return {
      return query_string;
  },graph_radial: function(){
     
-     var ctx = document.getElementById('canvas_radial_graph').getContext('2d');
+    var ctx = document.getElementById('canvas_radial_graph').getContext('2d');
     
     var individual_level;
     var familiar_level;
@@ -535,8 +532,10 @@ return {
         data: data,
         options: chart_options
     });   
- },edit_profile(){
+ },edit_profile: function(object_function){
 
+    var form_wihtout_changes = $('#ficha_estudiante').serializeArray();
+    
     $('#span-icon-edit').on('click', function(){
         $(this).hide();
         $('#tip-edit').hide();
@@ -545,163 +544,138 @@ return {
         $('#span-icon-cancel-edit').show();
         $('#tip-cancel').show();
         $('#tipo_doc').prop('disabled', false);
-        $('#cedula').prop('readonly', false);
+        $('#num_doc').prop('readonly', false);
         $('#icetex_status').prop('disabled', false);
+        $('#observacion').prop('readonly', false);
         $('.select_statuses_program').prop('disabled', false);
         $('.input_fields_general_tab').prop('readonly', false);
-
     });
 
-    $('#span-icon-cancel-edit').on('click', function(){
-        $(this).hide();
-        $('#tip-cancel').hide();
-        $('#span-icon-save-profile').hide();
-        $('#tip-save').hide();
-        $('#span-icon-edit').show();
-        $('#tip-edit').show();
-        $('#tipo_doc').prop('disabled', true);
-        $('#cedula').prop('readonly', true);
-        $('#icetex_status').prop('disabled', true);
-        $('.select_statuses_program').prop('disabled', true);
-        $('.input_fields_general_tab').prop('readonly', true);
+    $('#span-icon-cancel-edit').on('click', {form: form_wihtout_changes}, function(data){
+        swal({
+            title: "¿Desea cancelar la edición?",
+            text: "Los cambios no guardados se perderán",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#d51b23",
+            confirmButtonText: "Si",
+            cancelButtonText: "No",
+            closeOnConfirm: true,
+            allowEscapeKey: false
+
+        },
+        function(isConfirm) {
+            if (isConfirm) {
+                object_function.cancel_edition();
+                object_function.revert_changes(data.data.form);
+            }
+        });        
     });
+
+    $('#span-icon-save-profile').on('click', function(){
+        
+        var form_with_changes = $('#ficha_estudiante').serializeArray();
+
+        var result_validation = object_function.validate_form(form_with_changes);
+
+        if(result_validation.status == "error"){
+            swal(result_validation.title,
+                 result_validation.msg,
+                 result_validation.status);
+        }else{
+            object_function.save_form_edit_profile(form_with_changes, object_function);
+        }
+    });    
+ },validate_form: function(form){
+    
+    for(field in form){
+        
+        var msg = new Object();
+
+        msg.title = "Éxito";
+        msg.msg = "El formulario fue validado con éxito";
+        msg.status = "success";
+
+        switch(form[field].name){
+            case "num_doc":
+            case "tel_res":
+            case "celular":
+            case "tel_acudiente":
+                if(has_letters(form[field].value)){
+                    msg.title = "Error";
+                    msg.status = "error";
+                    msg.msg = "El campo "+form[field].name+" solo debe contener números";
+                    return msg;
+                };
+                break;
+            case "emailpilos":
+                console.log(is_email(form[field].value));
+                if(!is_email(form[field].value)){
+                    msg.title = "Error";
+                    msg.status = "error";
+                    msg.msg = "El campo "+form[field].name+" no tiene el formato de un correo electrónico";
+                    return msg;
+                };
+                break;
+        };
+    };
+
+    return msg;
+ },save_form_edit_profile: function(form, object_function){
+
+    $.ajax({
+        type: "POST",
+        data: {
+            func: 'save_profile',
+            form: form
+        },
+        url: "../managers/student_profile/studentprofile_serverproc.php",
+        success: function(msg) {
+
+            swal(
+                msg.title,
+                msg.msg,
+                msg.status
+            );
+        },
+        dataType: "json",
+        cache: "false",
+        error: function(msg) {
+            swal(
+                msg.title,
+                msg.msg,
+                msg.status
+            );
+        },
+    });
+
+    object_function.cancel_edition();
+
+ },cancel_edition: function(){
+
+    // Deshabilitar campos para el ingreso de datos
+
+    $('#span-icon-cancel-edit').hide();
+    $('#tip-cancel').hide();
+    $('#span-icon-save-profile').hide();
+    $('#tip-save').hide();
+    $('#span-icon-edit').show();
+    $('#tip-edit').show();
+    $('#tipo_doc').prop('disabled', true);
+    $('#num_doc').prop('readonly', true);
+    $('#icetex_status').prop('disabled', true);
+    $('#observacion').prop('readonly', true);
+    $('.select_statuses_program').prop('disabled', true);
+    $('.input_fields_general_tab').prop('readonly', true);
+
+ },revert_changes: function(form){
+    // Revertir cualquier cambio después de cancelar la edición
+    for(field in form){
+        $('#'+form[field].name).val(form[field].value);
+    }
  }
 };
 
-function edit_profile_act() {
-
-
-}
-
-function cancel_edition() {
-
- $("#ficha_estudiante").find("input, textarea").prop("readonly", true);
- $("#ficha_estudiante").find("select").prop("disabled", true);
- $(this).hide();
- $("#ficha_estudiante #save").fadeOut();
- $('#ficha_estudiante #cancel').fadeOut();
- $("#ficha_estudiante #editar_ficha").fadeIn();
- $('#ficha_estudiante #codigo').attr('readonly', false);
- $('#ficha_estudiante #search').fadeIn();
-}
-
-function go_back() {
- $("#go_back").on('click', function() {
-     var page = 'ases_report.php';
-     var search = location.search.split('&');
-     location.href = page + search[0] + '&' + search[1];
- });
-}
-
-function save_profile() {
- var form = $('#ficha_estudiante').serializeArray();
- if (validateFormProfile(form)) {
-     var form_json = JSON.stringify(form);
-     $.ajax({
-         type: "POST",
-         data: {
-             func: 'save_profile',
-             form: form
-         },
-         url: "../managers/student_profile/studentprofile_serverproc.php",
-         success: function(msg) {
-
-             swal(
-                 msg.title,
-                 msg.msg,
-                 msg.status
-             );
-         },
-         dataType: "json",
-         cache: "false",
-         error: function(msg) {
-             swal(
-                 msg.title,
-                 msg.msg,
-                 msg.status
-             );
-         },
-     });
- }
- cancel_edition();
-}
-
-function validateFormProfile(form) {
-
- // Validación documento
- if (has_letters(form[4].value)) {
-     swal('Error',
-         'El campo "Documento" solo debe contener números',
-         'error');
-     return 0;
- }
- // Validación documento vacio
- else if (form[4].value == "") {
-     swal('Error',
-         'El campo "Documento" no puede estar vacio',
-         'error');
-     return 0;
- }
- // Validación tipo de documento vacio
- else if (form[3].value == "") {
-     swal('Error',
-         'El campo "Tipo de documento" no puede estar vacio',
-         'error');
-     return 0;
- }
- // Validación campo teléfono 1
- else if (has_letters(form[6].value)) {
-     swal('Error',
-         'El campo "Teléfono 1" solo debe contener números',
-         'error');
-     return 0;
- }
- // Validación campo teléfono 2
- else if (has_letters(form[7].value)) {
-     swal('Error',
-         'El campo "Teléfono 2" solo debe contener números',
-         'error');
-     return 0;
- }
- // Validación campo teléfono 3
- else if (has_letters(form[8].value)) {
-     swal('Error',
-         'El campo "Teléfono 3" solo debe contener números',
-         'error');
-     return 0;
- }
- // Validación campo email alternativo (emailpilos) no vacio
- else if (form[9].value == "") {
-     swal('Error',
-         'El campo "Email alternativo" no puede estar vacio',
-         'error');
-     return 0;
- }
- // Validación formato email alternativo (emailpilos)
- else if (is_email(form[9].value)) {
-     swal('Error',
-         'El formato del correo alternativo es incorrecto. \n El formato correcto debería ser ejemplo@ejemplo.com',
-         'error');
-     return 0;
- }
- // Validación nombre acudiente no vacio
- else if (form[10].value == "") {
-     swal('Error',
-         'El campo "Nombre acudiente" no puede estar vacio',
-         'error');
-     return 0;
- }
- // Validación teléfono acudiente solo números
- else if (has_letters(form[11].value)) {
-     swal('Error',
-         'El campo "Teléfono acudiente" solo debe contener números',
-         'error');
-     return 0;
- }
- else {
-     return 1;
- }
-}
 
 // Funciones para la validación de formularios
 function has_letters(str) {
@@ -728,10 +702,10 @@ function has_numbers(str) {
 function is_email(str) {
  var email_regex = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
  if (email_regex.test(str)) {
-     return 0;
+     return 1;
  }
  else {
-     return 1;
+     return 0;
  }
 }
 
@@ -1461,7 +1435,6 @@ $.ajax({
          },
      });
 }
-
 
 function load_risk_values() {
  var idUser = $('#idtalentos').val();

@@ -401,10 +401,7 @@ if ($student_code != 0) {
 
     // Student trackings (Seguimientos)
 
-    //update_last_user_risk( $student_code );
-    $student_code_tok = strtok($student_code, "-");
-
-    $dphpforms_ases_user = get_ases_user_by_code( $student_code_tok )->id;
+    $dphpforms_ases_user = get_ases_user_by_code( $student_code )->id;
 
     // Pares
     $array_peer_trackings_dphpforms = dphpforms_find_records('seguimiento_pares', 'seguimiento_pares_id_estudiante', $dphpforms_ases_user, 'DESC');
