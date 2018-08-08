@@ -160,7 +160,7 @@ function save_profile($form){
     
     global $DB;
     
-    try{
+    //try{
         $id_ases = $form[0]['value'];
         $msg = new stdClass();
 
@@ -169,7 +169,13 @@ function save_profile($form){
         
         // Required fields are inserted
         for($i = 0; $i < count($form); $i++){
-            $obj_updatable[$form[$i]['name']] = $form[$i]['value'];
+            if($form[$i]['name'] == "tipo_doc" || $form[$i]['name'] == "tipo_doc_ini"){
+                $sql_query = "SELECT id FROM {talentospilos_tipo_documento} WHERE nombre = '".$form[$i]['value']."'";
+                $id_doc_type = $DB->get_record_sql($sql_query)->id;
+                $obj_updatable[$form[$i]['name']] = $id_doc_type;
+            }else{
+                $obj_updatable[$form[$i]['name']] = $form[$i]['value'];
+            }            
         }
         $obj_updatable = (object) $obj_updatable;
         //an id is assigned to update
@@ -198,15 +204,15 @@ function save_profile($form){
         
         echo json_encode($msg);
         
-    }catch(Exception $e){
+    //}catch(Exception $e){
         
-        $msg->title = "Error";
-        $msg->status = "error";
-        $msg->msg = "No ha sido posible comunicarse con el servidor.";
+    //    $msg->title = "Error";
+    //    $msg->status = "error";
+    //    $msg->msg = "No ha sido posible comunicarse con el servidor.";
         
-        echo json_encode($msg);
+    //    echo json_encode($msg);
        
-    }
+    //}
 }
 
  /**
