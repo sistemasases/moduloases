@@ -362,13 +362,13 @@ function get_assigned_pract($id_student)
 
     global $DB;
 
-    $object_current_semester = get_current_semester_today();
+    $object_current_semester = get_current_semester();
 
-    $sql_query = "SELECT id_monitor FROM {talentospilos_monitor_estud} WHERE id_estudiante =" . $id_student . " AND id_semestre = " . $object_current_semester->id . ";";
+    $sql_query = "SELECT id_monitor FROM {talentospilos_monitor_estud} WHERE id_estudiante =" . $id_student . " AND id_semestre = " . $object_current_semester->max . ";";
     $id_monitor = $DB->get_record_sql($sql_query)->id_monitor;
 
     if ($id_monitor) {
-        $sql_query = "SELECT id_jefe FROM {talentospilos_user_rol} WHERE id_usuario = " . $id_monitor . " AND id_semestre = " . $object_current_semester->id . ";";
+        $sql_query = "SELECT id_jefe FROM {talentospilos_user_rol} WHERE id_usuario = " . $id_monitor . " AND id_semestre = " . $object_current_semester->max . ";";
         $id_trainee = $DB->get_record_sql($sql_query)->id_jefe;
 
         if ($id_trainee) {
@@ -396,16 +396,16 @@ function get_assigned_professional($id_student)
 
     global $DB;
 
-    $object_current_semester = get_current_semester_today();
+    $object_current_semester = get_current_semester();
 
-    $sql_query = "SELECT id_monitor FROM {talentospilos_monitor_estud} WHERE id_estudiante =" . $id_student . " AND id_semestre = " . $object_current_semester->id . ";";
+    $sql_query = "SELECT id_monitor FROM {talentospilos_monitor_estud} WHERE id_estudiante =" . $id_student . " AND id_semestre = " . $object_current_semester->max . ";";
     $id_monitor = $DB->get_record_sql($sql_query);
 
     if ($id_monitor) {
 
         $sql_query = "SELECT id_jefe
                       FROM {talentospilos_user_rol}
-                      WHERE id_usuario = $id_monitor->id_monitor AND id_semestre = $object_current_semester->id";
+                      WHERE id_usuario = $id_monitor->id_monitor AND id_semestre = $object_current_semester->max";
 
         $id_trainee = $DB->get_record_sql($sql_query)->id_jefe;
 
@@ -413,7 +413,7 @@ function get_assigned_professional($id_student)
 
             $sql_query = "SELECT id_jefe
                           FROM {talentospilos_user_rol}
-                          WHERE id_usuario = $id_trainee AND id_semestre = $object_current_semester->id;";
+                          WHERE id_usuario = $id_trainee AND id_semestre = $object_current_semester->max;";
 
             $id_professional = $DB->get_record_sql($sql_query)->id_jefe;
 
