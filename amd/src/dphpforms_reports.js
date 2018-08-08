@@ -24,12 +24,42 @@
             };
 
             function custom_actions( report, form_type ){
+                
                 if( form_type == "seguimiento_pares" ){
+                    
                     var report_size = report.length;
                     for( var x = 0; x < report_size; x++){
-                        var id_estudiante = false;
-                        var id_creado_por = false;
+
+                        var pos_firstname = -1;
+                        var pos_lastname = -1;
+
+                        var id_estudiante = null;
+                        var id_creado_por = null;
+
+                        var deleted = false;
+
                         for( var y = 0; y < Object.keys(report[x]).length; y++ ){
+                            if( report[x][y].respuesta == "-#$%-" ){
+                                report[x][y].respuesta = "";
+                            }
+                            if( report[x][y].local_alias == "revisado_profesional" ){
+                                
+                                if( report[x][y].respuesta == "0" ){
+                                    report[x][y].respuesta = "marcado"
+                                }else if( report[x][y].respuesta == "-1" ){
+                                    report[x][y].respuesta = "no_marcado"
+                                }
+
+                            }
+                            if( report[x][y].local_alias == "revisado_practicante" ){
+                                
+                                if( report[x][y].respuesta == "0" ){
+                                    report[x][y].respuesta = "marcado"
+                                }else if( report[x][y].respuesta == "-1" ){
+                                    report[x][y].respuesta = "no_marcado"
+                                }
+
+                            }
                             if( !id_estudiante || !id_creado_por ){
                                 if( report[x][y].local_alias == "id_estudiante" ){
                                     id_estudiante = report[x][y].respuesta;
@@ -37,17 +67,93 @@
                                 if( report[x][y].local_alias == "id_creado_por" ){
                                     id_creado_por = report[x][y].respuesta;
                                 }
-                            }else{
-                                break;
+                            }
+                            if( report[x][y].local_alias == "id_estudiante" ){
+                                if(report[x][y].respuesta == ""){
+                                    delete report[x];
+                                    deleted = true;
+                                }
                             }
                         }
-                        $.get( '../managers/dphpforms/.php', function( data ) {
 
+                        if(!deleted){
+                            continue;
+                        }
+
+                        $.ajax({
+                            type: "POST",
+                            url: "../managers/user_management/user_management_api.php",
+                            data: JSON.stringify({ "function": "get_crea_stud_mon_prac_prof", "params": [ id_estudiante, id_creado_por ] }),
+                            contentType: "application/json; charset=utf-8",
+                            dataType: "json",
+                            async: false,  
+                            success: function(data){
+                                report[x][Object.keys(report[x]).length] = { 
+                                    enunciado:"monitor_name", 
+                                    id:"00", 
+                                    local_alias:"monitor_name",
+                                    respuesta: data.data_response.monitor.firstname + " " + data.data_response.monitor.lastname
+                                };
+                                report[x][Object.keys(report[x]).length] = { 
+                                    enunciado:"practicing_name", 
+                                    id:"00", 
+                                    local_alias:"practicing_name",
+                                    respuesta: data.data_response.practicing.firstname + " " + data.data_response.practicing.lastname
+                                };
+                                report[x][Object.keys(report[x]).length] = { 
+                                    enunciado:"professional_name", 
+                                    id:"00", 
+                                    local_alias:"professional_name",
+                                    respuesta: data.data_response.professional.firstname + " " + data.data_response.professional.lastname
+                                };
+                                report[x][Object.keys(report[x]).length] = { 
+                                    enunciado:"created_by", 
+                                    id:"00", 
+                                    local_alias:"created_by",
+                                    respuesta: data.data_response.created_by.firstname + " " + data.data_response.created_by.lastname
+                                };
+                                report[x][Object.keys(report[x]).length] = { 
+                                    enunciado:"student_code", 
+                                    id:"00", 
+                                    local_alias:"student_code",
+                                    respuesta: data.data_response.student_username.split("-")[0]
+                                };
+                                report[x][Object.keys(report[x]).length] = { 
+                                    enunciado:"student_firstname", 
+                                    id:"00", 
+                                    local_alias:"student_firstname",
+                                    respuesta: data.data_response.student.firstname
+                                };
+                                report[x][Object.keys(report[x]).length] = { 
+                                    enunciado:"student_lastname", 
+                                    id:"00", 
+                                    local_alias:"student_lastname",
+                                    respuesta: data.data_response.student.lastname
+                                };
+                            },
+                            failure: function(errMsg) {
+                                console.log(errMsg);
+                            }
                         });
-                        $.get( '../managers/dphpforms/.php', function( data ) {
-                            
-                        });
+
+                        var fields_to_move = 3;
+
+                        for( var k = Object.keys(report[x]).length - 1; k >= 0 ; k-- ){
+                            report[x][k+fields_to_move] = $.extend( true, {}, report[x][k] );
+                        }
+
+                        report[x][0] = $.extend( true, {}, report[x][Object.keys(report[x]).length - 3] );
+                        report[x][1] = $.extend( true, {}, report[x][Object.keys(report[x]).length - 2] );
+                        report[x][2] = $.extend( true, {}, report[x][Object.keys(report[x]).length - 1] );
+
+                        delete report[x][Object.keys(report[x]).length - 1];
+                        delete report[x][Object.keys(report[x]).length - 1];
+                        delete report[x][Object.keys(report[x]).length - 1];
+
+                        //console.log(report[x]);
+
                     }
+                    return report;
                 }else{
                     return report;
                 }
@@ -68,7 +174,13 @@
               
                 var enunciados = [];
                 for( var x = 0; x <  Object.keys(data[0]).length; x++ ){
-                    enunciados.push( data[0][x].local_alias );
+                    try {
+                        enunciados.push( data[0][x].local_alias );
+                    } catch (error) {
+                        console.log( "ERROR" );
+                        console.log( data[0] );
+                    }
+                    
                 }
         
                 result = '';
@@ -134,7 +246,9 @@
 
                     var preguntas = JSON.parse( $("#dphpforms-reports-preguntas").html());
                     
-                    
+                    $(".progress-bar").width( "0%" );
+                    $(".progress-bar").html( "0%" );
+                    $(".progress-bar").attr( "aria-valuenow", "0" );
                     $('#progress_group').css('display','block');
                     $("#message").removeClass("alert alert-success");
                     $("#message").addClass("alert alert-info");
@@ -167,12 +281,15 @@
                                     };
 
                                     progress ++;
-                                    $('#progress').text( (( 100 / count_records ) * progress).toFixed( 2 ) );
+                                    $(".progress-bar").width( (( 100 / count_records ) * progress).toFixed( 0 ) + "%" );
+                                    $(".progress-bar").html( (( 100 / count_records ) * progress).toFixed( 0 ) + "%" );
+                                    $(".progress-bar").attr( "aria-valuenow", (( 100 / count_records ) * progress).toFixed( 0 ) );
                                     if( progress == count_records ){
                                         $("#message").removeClass("alert alert-info");
                                         $("#message").addClass("alert alert-success");
                                         $("#message").html( "<strong>Info!</strong>  Reporte generado." );
-                                        downloadCSV( completed_records );
+                                        //custom_actions( completed_records, "seguimiento_pares" );
+                                        downloadCSV( custom_actions( completed_records, "seguimiento_pares" ) );
                                     };
                                     
                                 }).fail(function(err) {
