@@ -623,6 +623,8 @@ return {
     return msg;
  },save_form_edit_profile: function(form, object_function){
 
+    console.log(form);
+
     $.ajax({
         type: "POST",
         data: {
