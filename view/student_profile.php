@@ -121,7 +121,7 @@ if ($student_code != 0) {
         case "CR":
             $record->doc_type_cr = "selected";
             break;
-        case "EMPTY":
+        case "NR":
             $record->doc_type_empty = "selected";
             break;
     }
