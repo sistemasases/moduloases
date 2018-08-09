@@ -42,6 +42,23 @@
                             if( report[x][y].respuesta == "-#$%-" ){
                                 report[x][y].respuesta = "";
                             }
+                            
+                            if( 
+                                report[x][y].local_alias == "puntuacion_riesgo_individual" ||
+                                report[x][y].local_alias == "puntuacion_riesgo_familiar" ||
+                                report[x][y].local_alias == "puntuacion_riesgo_academico" ||
+                                report[x][y].local_alias == "puntuacion_riesgo_economico" ||
+                                report[x][y].local_alias == "puntuacion_vida_uni"
+                             ){
+                                if( report[x][y].respuesta == "1" ){
+                                    report[x][y].respuesta = "bajo"
+                                }else if( report[x][y].respuesta == "2" ){
+                                    report[x][y].respuesta = "medio"
+                                }else if( report[x][y].respuesta == "3" ){
+                                    report[x][y].respuesta = "alto"
+                                }
+                            }
+
                             if( report[x][y].local_alias == "revisado_profesional" ){
                                 
                                 if( report[x][y].respuesta == "0" ){
@@ -68,71 +85,80 @@
                                     id_creado_por = report[x][y].respuesta;
                                 }
                             }
-                            if( report[x][y].local_alias == "id_estudiante" ){
-                                if(report[x][y].respuesta == ""){
-                                    delete report[x];
-                                    deleted = true;
-                                }
-                            }
+                            
                         }
 
-                        if(!deleted){
-                            continue;
-                        }
+                        var instance_id = parseInt($("#dphpforms-instance-id").data("instance-id"));
 
                         $.ajax({
                             type: "POST",
                             url: "../managers/user_management/user_management_api.php",
-                            data: JSON.stringify({ "function": "get_crea_stud_mon_prac_prof", "params": [ id_estudiante, id_creado_por ] }),
+                            data: JSON.stringify({ "function": "get_crea_stud_mon_prac_prof", "params": [ id_estudiante, id_creado_por, instance_id ] }),
                             contentType: "application/json; charset=utf-8",
                             dataType: "json",
                             async: false,  
                             success: function(data){
+
                                 report[x][Object.keys(report[x]).length] = { 
                                     enunciado:"monitor_name", 
                                     id:"00", 
                                     local_alias:"monitor_name",
-                                    respuesta: data.data_response.monitor.firstname + " " + data.data_response.monitor.lastname
+                                    respuesta: String(data.data_response.monitor.firstname) + " " + String(data.data_response.monitor.lastname)
                                 };
+
                                 report[x][Object.keys(report[x]).length] = { 
                                     enunciado:"practicing_name", 
                                     id:"00", 
                                     local_alias:"practicing_name",
-                                    respuesta: data.data_response.practicing.firstname + " " + data.data_response.practicing.lastname
+                                    respuesta: String(data.data_response.practicing.firstname) + " " + String(data.data_response.practicing.lastname)
                                 };
+
                                 report[x][Object.keys(report[x]).length] = { 
                                     enunciado:"professional_name", 
                                     id:"00", 
                                     local_alias:"professional_name",
-                                    respuesta: data.data_response.professional.firstname + " " + data.data_response.professional.lastname
+                                    respuesta: String(data.data_response.professional.firstname) + " " + String(data.data_response.professional.lastname)
                                 };
+
                                 report[x][Object.keys(report[x]).length] = { 
                                     enunciado:"created_by", 
                                     id:"00", 
                                     local_alias:"created_by",
-                                    respuesta: data.data_response.created_by.firstname + " " + data.data_response.created_by.lastname
+                                    respuesta: String(data.data_response.created_by.firstname) + " " + String(data.data_response.created_by.lastname)
                                 };
+
+                                var username = data.data_response.student_username;
+                                if( username ){
+                                    username = data.data_response.student_username.split("-")[0];
+                                }else{
+                                    username = "null";
+                                }
+
                                 report[x][Object.keys(report[x]).length] = { 
                                     enunciado:"student_code", 
                                     id:"00", 
                                     local_alias:"student_code",
-                                    respuesta: data.data_response.student_username.split("-")[0]
+                                    respuesta: username
                                 };
+
                                 report[x][Object.keys(report[x]).length] = { 
                                     enunciado:"student_firstname", 
                                     id:"00", 
                                     local_alias:"student_firstname",
-                                    respuesta: data.data_response.student.firstname
+                                    respuesta: String(data.data_response.student.firstname)
                                 };
+
                                 report[x][Object.keys(report[x]).length] = { 
                                     enunciado:"student_lastname", 
                                     id:"00", 
                                     local_alias:"student_lastname",
-                                    respuesta: data.data_response.student.lastname
-                                };
+                                    respuesta: String(data.data_response.student.lastname)
+                                };        
+                                
                             },
                             failure: function(errMsg) {
                                 console.log(errMsg);
+                                
                             }
                         });
 
@@ -149,8 +175,6 @@
                         delete report[x][Object.keys(report[x]).length - 1];
                         delete report[x][Object.keys(report[x]).length - 1];
                         delete report[x][Object.keys(report[x]).length - 1];
-
-                        //console.log(report[x]);
 
                     }
                     return report;
