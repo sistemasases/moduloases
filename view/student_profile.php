@@ -112,16 +112,16 @@ if ($student_code != 0) {
     array_push($data_init, $academic_programs);
 
     switch ($ases_student->tipo_doc){
-        case "T.I":
+        case "TI":
             $record->doc_type_ti = "selected";
             break;
-        case "C.C":
+        case "CC":
             $record->doc_type_cc = "selected";
             break;
-        case "C.R":
+        case "CR":
             $record->doc_type_cr = "selected";
             break;
-        case "EMPTY":
+        case "NR":
             $record->doc_type_empty = "selected";
             break;
     }
@@ -367,7 +367,7 @@ if ($student_code != 0) {
             break;
     }
 
-    $select = make_select_ficha($USER->id, $rol, $student_code, $blockid);
+    $select = make_select_ficha($USER->id, $rol, $student_code, $blockid, $actions);
     $record->code = $select;
 
     // Loading academic information
@@ -1220,7 +1220,7 @@ if ($student_code != 0) {
 } else {
 
     $student_id = -1;
-    $select = make_select_ficha($USER->id, $rol, null, $blockid);
+    $select = make_select_ficha($USER->id, $rol, null, $blockid, $actions);
     $record->code = $select;
 
 }

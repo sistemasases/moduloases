@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<XMLDB PATH="blocks/ases/db" VERSION="20180703" COMMENT="XMLDB file for Moodle blocks/configurable_reports"
+<XMLDB PATH="blocks/ases/db" VERSION="20180808" COMMENT="XMLDB file for Moodle blocks/configurable_reports"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
 >
@@ -83,9 +83,9 @@
     <TABLE NAME="talentospilos_usuario" COMMENT="Tabla con la información detallada de un estudiante adscrito a la Estrategia ASES.">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
-        <FIELD NAME="tipo_doc_ini" TYPE="char" LENGTH="4" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="tipo_doc_ini" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="num_doc_ini" TYPE="char" LENGTH="100" NOTNULL="true" SEQUENCE="false"/>
-        <FIELD NAME="tipo_doc" TYPE="char" LENGTH="4" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="tipo_doc" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="num_doc" TYPE="char" LENGTH="100" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="dir_ini" TYPE="char" LENGTH="50" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="barrio_ini" TYPE="char" LENGTH="50" NOTNULL="false" SEQUENCE="false"/>
@@ -119,6 +119,8 @@
         <KEY NAME="usuario_fk4" TYPE="foreign" FIELDS="id_discapacidad" REFTABLE="talentospilos_discap_men" REFFIELDS="id" COMMENT="XMLDB foreign key 'usuario_fk4'"/>
         <KEY NAME="unique_doc_in" TYPE="unique" FIELDS="num_doc_ini" COMMENT="XMLDB foreign key 'unique_doc_in'"/>
         <KEY NAME="unique_doc" TYPE="unique" FIELDS="num_doc" COMMENT="XMLDB foreign key 'unique_doc'"/>
+        <KEY NAME="doc_ini_type_fk" TYPE="foreign" FIELDS="tipo_doc_ini" REFTABLE="talentospilos_tipo_documento" REFFIELDS="id" COMMENT="Llave primaria que apunta a la tabla talentospilos_tipo_documento"/>
+        <KEY NAME="tipo_doc_fk" TYPE="foreign" FIELDS="tipo_doc" REFTABLE="talentospilos_tipo_documento" REFFIELDS="id" COMMENT="Llave foránea que apunta a la tabla talentospilos_tipo_documento"/>
       </KEYS>
     </TABLE>
     <TABLE NAME="talentospilos_semestre" COMMENT="Tabla donde se registra loss periodos académicos">
@@ -772,6 +774,16 @@
         <INDEX NAME="indice_df_dw_id_usuario_moodle" UNIQUE="false" FIELDS="id_usuario_moodle"/>
         <INDEX NAME="df_dw_id_registro_respuesta_form" UNIQUE="false" FIELDS="id_registro_respuesta_form"/>
       </INDEXES>
+    </TABLE>
+    <TABLE NAME="talentospilos_tipo_documento" COMMENT="Tabla que almacena los posibles tipos de documento para los estudiantes incluidos en la Estrategia Ases">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="nombre" TYPE="char" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Siglas que representan el tipo de documento"/>
+        <FIELD NAME="descripcion" TYPE="char" LENGTH="100" NOTNULL="true" SEQUENCE="false" COMMENT="Descripción del Tipo de Documento"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
     </TABLE>
   </TABLES>
 </XMLDB>
