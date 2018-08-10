@@ -130,7 +130,7 @@ function user_management_get_ases_user( $ases_id ){
     }
 }
 
-function user_management_get_boss( $user_id, $instance_id ){
+function user_management_get_boss( $user_id, $instance_id, $semester_id ){
 
     global $DB;
 
@@ -146,7 +146,7 @@ function user_management_get_boss( $user_id, $instance_id ){
     INNER JOIN (
             SELECT id_jefe
             FROM {talentospilos_user_rol}
-            WHERE id_semestre = ". get_current_semester()->max ." AND id_usuario = $user_id AND estado = 1 AND id_instancia = $instance_id
+            WHERE id_semestre = $semester_id AND id_usuario = $user_id AND id_instancia = $instance_id
         ) AS MS 
     ON MS.id_jefe = U.id";
 
@@ -163,7 +163,7 @@ function user_management_get_boss( $user_id, $instance_id ){
     }
 }
 
-function user_management_get_student_monitor( $ases_id, $instance_id ){
+function user_management_get_student_monitor( $ases_id, $instance_id, $semester_id ){
 
     global $DB;
 
@@ -176,7 +176,7 @@ function user_management_get_student_monitor( $ases_id, $instance_id ){
     INNER JOIN (
             SELECT id_monitor
             FROM {talentospilos_monitor_estud}
-            WHERE id_semestre = ". get_current_semester()->max ." AND id_estudiante = $ases_id AND id_instancia = $instance_id
+            WHERE id_semestre = $semester_id AND id_estudiante = $ases_id AND id_instancia = $instance_id
         ) AS MS 
     ON MS.id_monitor = U.id";
 
@@ -193,12 +193,12 @@ function user_management_get_student_monitor( $ases_id, $instance_id ){
     }
 }
 
-function user_management_get_monitor_practicing( $user_id, $instance_id ){
-    return user_management_get_boss( $user_id, $instance_id );
+function user_management_get_monitor_practicing( $user_id, $instance_id, $semester_id ){
+    return user_management_get_boss( $user_id, $instance_id, $semester_id );
 }
 
-function user_management_get_practicing_prof( $user_id, $instance_id ){
-    return user_management_get_boss( $user_id, $instance_id );
+function user_management_get_practicing_prof( $user_id, $instance_id, $semester_id ){
+    return user_management_get_boss( $user_id, $instance_id, $semester_id );
 }
 
 /**
@@ -208,7 +208,7 @@ function user_management_get_practicing_prof( $user_id, $instance_id ){
  * @param int $instance_id
  * @return stdClass
  */
-function user_management_get_stud_mon_prac_prof( $ases_id, $instance_id ){
+function user_management_get_stud_mon_prac_prof( $ases_id, $instance_id, $semester_id ){
 
     if( !$ases_id ){
         return null;
@@ -227,11 +227,11 @@ function user_management_get_stud_mon_prac_prof( $ases_id, $instance_id ){
             $student_username = $full_ases_user->username;
             $student->id = (string) $ases_id;
         }
-        $monitor =  user_management_get_student_monitor( $ases_id, $instance_id );
+        $monitor =  user_management_get_student_monitor( $ases_id, $instance_id, $semester_id );
         if( $monitor ){
-            $pract = user_management_get_monitor_practicing( $monitor->id, $instance_id );
+            $pract = user_management_get_monitor_practicing( $monitor->id, $instance_id, $semester_id );
             if( $pract ){
-                $prof = user_management_get_practicing_prof( $pract->id, $instance_id );
+                $prof = user_management_get_practicing_prof( $pract->id, $instance_id, $semester_id );
             }
         }
     }
@@ -246,13 +246,13 @@ function user_management_get_stud_mon_prac_prof( $ases_id, $instance_id ){
     return $stud_mon_prac_prof;
 }
 
-function user_management_get_crea_stud_mon_prac_prof( $ases_id, $created_by_id, $instance_id ){
+function user_management_get_crea_stud_mon_prac_prof( $ases_id, $created_by_id, $instance_id, $semester_id ){
 
     if( !$ases_id || !$created_by_id ){
         return null;
     }
 
-    $to_return = user_management_get_stud_mon_prac_prof( $ases_id, $instance_id );
+    $to_return = user_management_get_stud_mon_prac_prof( $ases_id, $instance_id, $semester_id );
     $to_return->created_by = user_management_get_moodle_user( $created_by_id );
 
     return $to_return;

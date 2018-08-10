@@ -54,29 +54,31 @@
 
     if( isset($input->function) && isset($input->params) ){
 
-        // Get practicant monitor relationship by instance
-        // params[0] => instance_id
+        /* Params: student_ases_id, instance_id, semester_id
+        * */
+        
         if( $input->function == "get_stud_mon_prac_prof" ){
 
             /* In this request is only valid pass like param(Parameters) the instance identificatior, 
              * for this reason, the input param only can be equal in quantity to one.
              * */
             
-            if( count( $input->params ) == 2 ){
+            if( count( $input->params ) == 3 ){
 
                 // Order of params
                 /**
-                 * The student_code value only can be a number.
+                 * The student_ases_id value only can be a number.
                  * The instance_id value only can be a number.
+                 * The semester_id value only can be  a number.
                  */
                 
-                if( is_numeric( $input->params[0] ) && is_numeric( $input->params[1] ) ){
+                if( is_numeric( $input->params[0] ) && is_numeric( $input->params[1] ) && is_numeric( $input->params[2] ) ){
                     
                     echo json_encode( 
                         array(
                             "status_code" => 0,
                             "error_message" => "",
-                            "data_response" => user_management_get_stud_mon_prac_prof( $input->params[0], $input->params[1] )
+                            "data_response" => user_management_get_stud_mon_prac_prof( $input->params[0], $input->params[1], $input->params[2] )
                         )
                     );
                     
@@ -89,25 +91,26 @@
 
         }else if( $input->function == "get_crea_stud_mon_prac_prof" ){
 
-            /* Params: student_ases_id, created_by_id
+            /* Params: student_ases_id, created_by_id, instance_id, semester_id
              * */
             
-            if( count( $input->params ) == 3 ){
+            if( count( $input->params ) == 4 ){
 
                 // Order of params
                 /**
                  * The student_ases_id value only can be a number.
                  * The created_by_id value only can be a number.
                  * The instance_id value only can be a number.
+                 * The semester_id value only can be a number.
                  */
                 
-                if( is_numeric( $input->params[0] ) && is_numeric( $input->params[1] ) && is_numeric( $input->params[2] ) ){
+                if( is_numeric( $input->params[0] ) && is_numeric( $input->params[1] ) && is_numeric( $input->params[2] ) && is_numeric( $input->params[3] ) ){
                     
                     echo json_encode( 
                         array(
                             "status_code" => 0,
                             "error_message" => "",
-                            "data_response" => user_management_get_crea_stud_mon_prac_prof( $input->params[0], $input->params[1], $input->params[2] )
+                            "data_response" => user_management_get_crea_stud_mon_prac_prof( $input->params[0], $input->params[1], $input->params[2], $input->params[3] )
                         )
                     );
                     
