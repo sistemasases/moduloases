@@ -42,9 +42,16 @@
                     <hr>
                     <div id="message"></div><br>
                     <span><strong>Progreso:</strong></span>
-                    <div class="progress">
+                    <h3>Descargando datos:</h3>
+                    <div id="progress-download" class="progress">
                         <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width:0%">
-                          40%
+                          0%
+                        </div>
+                    </div>
+                    <h3>Generando CSV:</h3>
+                    <div id="progress-custom" class="progress">
+                        <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width:0%">
+                          0%
                         </div>
                     </div>
                 </div>
