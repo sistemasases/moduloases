@@ -43,10 +43,9 @@
 
           <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1 div_general_fields" id="div_doc_type">
             <select name="tipo_doc" class="form-control" id="tipo_doc" name="tipo_doc" disabled>
-              <option value="TI" {{doc_type_ti}}>TI</option>
-              <option value="CC" {{doc_type_cc}}>CC</option>
-              <option value="CR" {{doc_type_cr}}>CR</option>
-              <option id="EMPTY" {{doc_type_empty}}>NR</option>
+              {{#document_type}}
+                <option value="{{nombre}}" {{selected}}>{{nombre}}</option>
+              {{/document_type}}
             </select>
           </div>
 
@@ -101,7 +100,7 @@
                 <td class="col-sm-1 td-middle">
                 {{#update_tracking_status_sp}}
                   <label class="switch">
-                    <input class="input-tracking" type="checkbox" id="div_flags_{{academic_program_id}}">
+                    <input class="input-tracking" type="checkbox" id="div_flags_{{academic_program_id}}" disabled>
                     <div class="slider round"></div>
                   </label>
                 {{/update_tracking_status_sp}}

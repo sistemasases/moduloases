@@ -961,10 +961,10 @@ function get_name_by_username($username){
 }
 
 /**
- * Gets 
+ * Retorna el conjunto de estados para ser puestos en la ficha general del estudiante
  *
  * @see get_academic_program_statuses($username)
-  * @return object's array with academic program statuses
+ * @return object array with academic program statuses
  */
 function get_status_program_for_profile($id_ases_user){
 
@@ -1012,4 +1012,80 @@ function get_status_program_for_profile($id_ases_user){
     }
 
     return $array_result;
+}
+
+/**
+ * Retorna el conjunto de posibles tipos de documento de identidad para un estudiante en particular
+ * marcando cual figura en su registro en la tabla talentospilos_usuario asociado al campo num_doc
+ *
+ * @see get_document_types_for_profile($username)
+ * @return object array with academic program statuses
+ */
+function get_document_types_for_profile($id_ases_user){
+    
+    global $DB;
+
+    $array_result = array();
+
+    $sql_query = "SELECT *
+                  FROM {talentospilos_tipo_documento}";
+
+    $result_types = $DB->get_records_sql($sql_query);
+
+    $sql_query = "SELECT tipo_doc
+                  FROM {talentospilos_usuario}
+                  WHERE id = $id_ases_user";
+    
+    $result_doc_user = $DB->get_record_sql($sql_query);
+
+    foreach($result_types as &$type){
+        if($type->id == $result_doc_user->tipo_doc){
+            $type->selected = "selected";
+        }else{
+            $type->selected = "";
+        }
+        
+        array_push($array_result, $type);
+    }
+
+    return $array_result;
+}
+
+/**
+ * Actualiza el tracking status * 
+ *
+ * @see get_document_types_for_profile($username)
+ * @return object array with academic program statuses
+ */
+function update_tracking_status($id_ases_user, $id_academic_program){
+
+    global $DB;
+
+    $sql_query = "SELECT id
+                  FROM {talentospilos_user_extended}
+                  WHERE id_ases_user = $id_ases_user AND id_academic_program = $id_academic_program";
+
+    $id_reg_user_extended = $DB->get_record_sql($sql_query)->id;
+
+    $sql_query = "SELECT id
+                  FROM {talentospilos_user_extended}
+                  WHERE id_ases_user = $id_ases_user";
+
+    $array_reg_user_extended = $DB->get_records_sql($sql_query);
+
+    $record = new stdClass();
+
+    foreach($array_reg_user_extended as $reg){
+        $record->id = $reg->id;
+        $record->tracking_status = 0;
+
+        $DB->update_record('talentospilos_user_extended', $record);
+    }
+
+    $record->id = $id_reg_user_extended;
+    $record->tracking_status = 1;
+
+    $result = $DB->update_record('talentospilos_user_extended', $record);
+
+    return $result;
 }
