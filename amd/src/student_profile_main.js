@@ -52,7 +52,7 @@ return {
      // Manage statuses
      for (var i = 0, len = data_init.length; i < len; i++){
          $('#select-'+data_init[i].academic_program_id+' option[value='+data_init[i].program_status+']').attr('selected', true);
-         if(data_init[i].program_status == "ACTIVO"){
+         if(data_init[i].program_status == "1"){
              $('#tr-'+data_init[i].id_moodle_user).addClass('is-active');
          }
          if(data_init[i].tracking_status == "1"){
