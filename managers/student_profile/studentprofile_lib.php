@@ -961,10 +961,10 @@ function get_name_by_username($username){
 }
 
 /**
- * Gets 
+ * Retorna el conjunto de estados para ser puestos en la ficha general del estudiante
  *
  * @see get_academic_program_statuses($username)
-  * @return object's array with academic program statuses
+ * @return object array with academic program statuses
  */
 function get_status_program_for_profile($id_ases_user){
 
@@ -1009,6 +1009,43 @@ function get_status_program_for_profile($id_ases_user){
         $academic_program->statuses = $array_statuses; 
 
         array_push($array_result, $academic_program);
+    }
+
+    return $array_result;
+}
+
+/**
+ * Retorna el conjunto de posibles tipos de documento de identidad para un estudiante en particular
+ * marcando cual figura en su registro en la tabla talentospilos_usuario asociado al campo num_doc
+ *
+ * @see get_document_types_for_profile($username)
+ * @return object array with academic program statuses
+ */
+function get_document_types_for_profile($id_ases_user){
+    
+    global $DB;
+
+    $array_result = array();
+
+    $sql_query = "SELECT *
+                  FROM {talentospilos_tipo_documento}";
+
+    $result_types = $DB->get_records_sql($sql_query);
+
+    $sql_query = "SELECT tipo_doc
+                  FROM {talentospilos_usuario}
+                  WHERE id = $id_ases_user";
+    
+    $result_doc_user = $DB->get_record_sql($sql_query);
+
+    foreach($result_types as &$type){
+        if($type->id == $result_doc_user->tipo_doc){
+            $type->selected = "selected";
+        }else{
+            $type->selected = "";
+        }
+        
+        array_push($array_result, $type);
     }
 
     return $array_result;

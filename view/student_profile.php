@@ -102,30 +102,18 @@ if ($student_code != 0) {
     $student_cohorts = get_cohorts_by_student($id_user_moodle);
     $status_ases_array = get_ases_status($ases_student->id, $blockid);
 
+    $document_type = get_document_types_for_profile($ases_student->id);
+
     $record->id_moodle = $id_user_moodle;
     $record->id_ases = $student_id;
     $record->email_moodle = $user_moodle->email_moodle;
     $record->age = substr($ases_student->age, 0, 2);
     $record->academic_programs = $academic_programs;
     $record->student_cohorts = $student_cohorts;
+    $record->document_type = $document_type;
 
     array_push($data_init, $academic_programs);
-
-    switch ($ases_student->tipo_doc){
-        case "TI":
-            $record->doc_type_ti = "selected";
-            break;
-        case "CC":
-            $record->doc_type_cc = "selected";
-            break;
-        case "CR":
-            $record->doc_type_cr = "selected";
-            break;
-        case "NR":
-            $record->doc_type_empty = "selected";
-            break;
-    }
-
+    
     // General file (ficha general) information
 
     $record->res_address = $ases_student->direccion_res;
