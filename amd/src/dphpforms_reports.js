@@ -183,6 +183,7 @@
                         $("#progress-custom").find("div").attr( "aria-valuenow", (( 100 / report_size ) * (x+1)).toFixed( 0 ) );
 
                     }
+
                     $("#progress-custom").find("div").addClass("progress-bar-success");
                     $("#message").removeClass("alert alert-info");
                     $("#message").addClass("alert alert-success");
@@ -190,6 +191,12 @@
                     
                     return report;
                 }else{
+
+                    $("#progress-custom").find("div").addClass("progress-bar-success");
+                    $("#message").removeClass("alert alert-info");
+                    $("#message").addClass("alert alert-success");
+                    $("#message").html( "<strong>Info!</strong>  Reporte generado." );
+
                     return report;
                 }
             }
