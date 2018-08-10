@@ -26,7 +26,7 @@
 // Standard GPL and phpdocs
 
     require_once(dirname(__FILE__). '/../../../../config.php');
-    require_once(dirname(__FILE__).'/user_management_lib.php');
+    require_once(dirname(__FILE__).'/periods_lib.php');
 
     header('Content-Type: application/json');
 
@@ -54,63 +54,29 @@
 
     if( isset($input->function) && isset($input->params) ){
 
-        /* Params: student_ases_id, instance_id, semester_id
-        * */
-        
-        if( $input->function == "get_stud_mon_prac_prof" ){
+        // Get practicant monitor relationship by instance
+        // params[0] => instance_id
+        if( $input->function == "get_current_semester_by_apprx_interval" ){
 
             /* In this request is only valid pass like param(Parameters) the instance identificatior, 
              * for this reason, the input param only can be equal in quantity to one.
              * */
             
-            if( count( $input->params ) == 3 ){
+            if( count( $input->params ) == 2 ){
 
                 // Order of params
                 /**
-                 * The student_ases_id value only can be a number.
-                 * The instance_id value only can be a number.
-                 * The semester_id value only can be  a number.
+                 * The starting_date value only can be date.
+                 * The ending_date value only can be date.
                  */
                 
-                if( is_numeric( $input->params[0] ) && is_numeric( $input->params[1] ) && is_numeric( $input->params[2] ) ){
+                if( is_string( $input->params[0] ) && is_string( $input->params[1] ) ){
                     
                     echo json_encode( 
                         array(
                             "status_code" => 0,
                             "error_message" => "",
-                            "data_response" => user_management_get_stud_mon_prac_prof( $input->params[0], $input->params[1], $input->params[2] )
-                        )
-                    );
-                    
-                }else{
-                    return_with_code( -2 );
-                }
-            }else{
-                return_with_code( -2 );
-            }
-
-        }else if( $input->function == "get_crea_stud_mon_prac_prof" ){
-
-            /* Params: student_ases_id, created_by_id, instance_id, semester_id
-             * */
-            
-            if( count( $input->params ) == 4 ){
-
-                // Order of params
-                /**
-                 * The student_ases_id value only can be a number.
-                 * The created_by_id value only can be a number.
-                 * The instance_id value only can be a number.
-                 * The semester_id value only can be a number.
-                 */
-                
-                if( is_numeric( $input->params[0] ) && is_numeric( $input->params[1] ) && is_numeric( $input->params[2] ) && is_numeric( $input->params[3] ) ){
-                    
-                    echo json_encode( 
-                        array(
-                            "status_code" => 0,
-                            "error_message" => "",
-                            "data_response" => user_management_get_crea_stud_mon_prac_prof( $input->params[0], $input->params[1], $input->params[2], $input->params[3] )
+                            "data_response" => periods_management_get_current_semester_by_apprx_interval( $input->params[0], $input->params[1] )
                         )
                     );
                     

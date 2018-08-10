@@ -44,6 +44,33 @@ require_once(dirname(__FILE__). '/../../../../config.php');
      return $current_semester;
  }
 
+ /**
+ * Functions that returns the current semester in a given approximate interval
+ * @author Jeison Cardona Gómez <jeison.cardona@correounivalle.edu.co>
+ * @param string $start_date With postgres fortmat YYYY-MM-DD
+ * @param string $end_date With postgres fortmat YYYY-MM-DD
+ * @return int $to_return id_semester
+ */
+
+function periods_management_get_current_semester_by_apprx_interval( $start_date, $end_date ){
+     
+    global $DB;
+
+    $sql = "SELECT id 
+                    FROM mdl_talentospilos_semestre 
+                    WHERE fecha_inicio <= '$start_date' 
+                    AND fecha_fin >= '$end_date'";
+
+    $to_return = $DB->get_record_sql( $sql );
+
+    if( $to_return ){
+        return $to_return->id;
+    }else{
+        return null;
+    }
+
+}
+
 /**
  * Function that returns the current semester
  * 
