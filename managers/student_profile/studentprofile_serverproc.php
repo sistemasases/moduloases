@@ -139,6 +139,24 @@ if(isset($_POST['func'])){
         validate_student_proc($code_student);
     }else if($_POST['func'] == 'send_email'){
         send_email($_POST["risk_array"], $_POST["observations_array"],'' ,$_POST["id_student_moodle"], $_POST["id_student_pilos"], $_POST["date"],'', '', $_POST["url"]);
+    }else if($_POST['func'] == 'update_tracking_status'){
+        $id_ases_student = $_POST['id_ases_student'];
+        $id_academic_program = $_POST['id_academic_program'];
+        $result = update_tracking_status($id_ases_student, $id_academic_program);
+
+        if($result){
+            $msg =  new stdClass();
+            $msg->title = "Éxito";
+            $msg->msg = "El campo se ha actualizado con éxito";
+            $msg->status = "success";
+            echo json_encode($msg);
+        }else{
+            $msg =  new stdClass();
+            $msg->title = "Error";
+            $msg->msg = "Error al actualizar el campo";
+            $msg->status = "error";
+            echo json_encode($msg);
+        }
     }else{
         $msg->msg = "No se reconoce la función a ejecutar. Contacte al área de sistemas.";
         echo json_encode($msg);
@@ -436,3 +454,4 @@ function validate_student_proc($code_student){
     echo $confirm_msg;
 
 }
+

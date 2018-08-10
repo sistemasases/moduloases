@@ -403,7 +403,7 @@ return {
          if(has_tracking_status.tracking_status){
              swal({
                  title: "¿Está seguro/a de cambiar el estado?",
-                 text: "Texto a cambiar",
+                 text: "Se alternará el perfil de Moodle asociado al estudiante al cual se el realiza seguimiento",
                  type: "warning",
                  showCancelButton: true,
                  confirmButtonColor: "#d51b23",
@@ -414,8 +414,42 @@ return {
              },
              function(isConfirm) {
                  if (isConfirm) {
-                     element.prop('checked', true);
-                     $('#div_flags_'+has_tracking_status.academic_program_id).prop('checked', false);
+                    $('.input-tracking').prop('checked', false);
+                    element.prop('checked', true);
+
+                    var id_ases_student = $('#id_ases').val();
+                    var id_academic_program = element[0].id;
+                    id_academic_program = id_academic_program.split("_")[2];
+
+                    $.ajax({
+                        type: "POST",
+                        data: {
+                            func: 'update_tracking_status',
+                            id_ases_student: id_ases_student,
+                            id_academic_program: id_academic_program
+                        },
+                        url: "../managers/student_profile/studentprofile_serverproc.php",
+                        success: function(msg) {
+                            setTimeout(function(){
+                                swal(
+                                    msg.title,
+                                    msg.msg,
+                                    msg.status
+                                );
+                            }, 100);
+                        },
+                        dataType: "json",
+                        cache: "false",
+                        error: function(msg) {
+                            setTimeout(function(){
+                                swal(
+                                    msg.title,
+                                    msg.msg,
+                                    msg.status
+                                );
+                            }, 100);
+                        },
+                    });
                  }
                  else {
                      if(current_status){
@@ -549,6 +583,7 @@ return {
         $('#observacion').prop('readonly', false);
         $('.select_statuses_program').prop('disabled', false);
         $('.input_fields_general_tab').prop('readonly', false);
+        $('.input-tracking').prop('disabled', false);
     });
 
     $('#span-icon-cancel-edit').on('click', {form: form_wihtout_changes}, function(data){
@@ -667,6 +702,7 @@ return {
     $('#observacion').prop('readonly', true);
     $('.select_statuses_program').prop('disabled', true);
     $('.input_fields_general_tab').prop('readonly', true);
+    $('.input-tracking').prop('disabled', true);
 
  },revert_changes: function(form){
     // Revertir cualquier cambio después de cancelar la edición

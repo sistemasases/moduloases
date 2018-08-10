@@ -1050,3 +1050,42 @@ function get_document_types_for_profile($id_ases_user){
 
     return $array_result;
 }
+
+/**
+ * Actualiza el tracking status * 
+ *
+ * @see get_document_types_for_profile($username)
+ * @return object array with academic program statuses
+ */
+function update_tracking_status($id_ases_user, $id_academic_program){
+
+    global $DB;
+
+    $sql_query = "SELECT id
+                  FROM {talentospilos_user_extended}
+                  WHERE id_ases_user = $id_ases_user AND id_academic_program = $id_academic_program";
+
+    $id_reg_user_extended = $DB->get_record_sql($sql_query)->id;
+
+    $sql_query = "SELECT id
+                  FROM {talentospilos_user_extended}
+                  WHERE id_ases_user = $id_ases_user";
+
+    $array_reg_user_extended = $DB->get_records_sql($sql_query);
+
+    $record = new stdClass();
+
+    foreach($array_reg_user_extended as $reg){
+        $record->id = $reg->id;
+        $record->tracking_status = 0;
+
+        $DB->update_record('talentospilos_user_extended', $record);
+    }
+
+    $record->id = $id_reg_user_extended;
+    $record->tracking_status = 1;
+
+    $result = $DB->update_record('talentospilos_user_extended', $record);
+
+    return $result;
+}
