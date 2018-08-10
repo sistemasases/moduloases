@@ -68,6 +68,8 @@ $rol = get_role_ases($USER->id);
 $record->alias_preguntas_globales = array_values(get_alias());
 $preguntas_form = array_values(get_preguntas_form("seguimiento_pares"));
 
+$record->dphpforms_instance_id = $blockid;
+
 $preguntas_form_short = array();
 foreach( $preguntas_form as &$pregunta ){
     array_push( $preguntas_form_short, array(
