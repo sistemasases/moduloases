@@ -257,6 +257,28 @@ function create_menu_options($userid, $blockid, $courseid)
 
             }
 
+            if ($function == 'dphpforms_reports') {
+                $url = new moodle_url("/blocks/ases/view/dphpforms_reports.php", array(
+                    'courseid' => $courseid,
+                    'instanceid' => $blockid,
+                ));
+
+                $menu_options = '<li><a href= "' . $url . '"> Reporte de seguimientos </a><li>';
+                $indexed['Reporte de seguimientos'] = $menu_options;
+
+            }
+
+            if ($function == 'monitor_assignments') {
+                $url = new moodle_url("/blocks/ases/view/monitor_assignments.php", array(
+                    'courseid' => $courseid,
+                    'instanceid' => $blockid,
+                ));
+
+                $menu_options = '<li><a href= "' . $url . '"> Gestión de Asignaciones </a><li>';
+                $indexed['Gestión de Asignaciones'] = $menu_options;
+
+            }
+
         }
 
         //ORDENA
