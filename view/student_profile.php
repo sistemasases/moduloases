@@ -166,6 +166,8 @@ if ($student_code != 0) {
     }
 
     $record->options_status_icetex = $options_status_icetex;
+    $record->icetex_status_description = $icetex_statuses[$status_icetex_student->id_estado_icetex]->descripcion;
+    $record->icetex_status_name = substr($icetex_statuses[$status_icetex_student->id_estado_icetex]->nombre, 3);
 
     $monitor_object = new stdClass();
     $trainee_object = new stdClass();
