@@ -73,16 +73,7 @@ define(['jquery',
                     }
                 });
 
-                //Controles para el filtro de cohortes
-                $('#conditions').on('change', function () {
-                    if ($('#conditions').val() != 'TODOS') {
-                        $('#cohort_check').prop('checked', false);
-                    } else {
-                        $('#cohort_check').prop('checked', true);
-                    }
-                });
-
-                //Controles check all
+                //Controles check all 
                 $('#contact_fields_check').on('change', function () {
                     if ($('#contact_fields_check').prop('checked')) {
                         $("#contact_fields input[type='checkbox']").prop('checked', true);

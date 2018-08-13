@@ -2,6 +2,7 @@
 
 require_once('asesreport_lib.php');
 
+$counter_columns = 5;
 $columns = array();
 $conditions = array(); // Condiciones para la consulta
 $query_fields = array();
@@ -70,12 +71,14 @@ if(isset($_POST['conditions'])){
 
 if(isset($_POST['fields'])){
     foreach($_POST['fields'] as $field){
+        $counter_columns += 1;
         array_push($query_fields, $fields_format[$field]);
         array_push($columns,  array("title"=>$columns_format[$field], "name"=>explode('.', $fields_format[$field])[1], "data"=>explode('.', $fields_format[$field])[1]));
     }
 }
 
 if(isset($_POST['academic_fields'])){
+    $counter_columns += 1;
     foreach($_POST['academic_fields'] as $academic_field){
         array_push($academic_fields, $fields_format[$academic_field]);
         array_push($columns, array("title"=>$columns_format[$academic_field], "name"=>explode(' ', $fields_format[$academic_field])[2], "data"=>explode(' ', $fields_format[$academic_field])[2]));
@@ -96,9 +99,17 @@ if(isset($_POST['risk_fields'])){
 }
 
 if(isset($_POST['status_fields'])){
+
+    $array_statuses = array(
+        'seguimiento' => 'SEGUIMIENTO',
+        'sinseguimiento' => 'SIN SEGUIMIENTO'
+    );
+
     foreach($_POST['status_fields'] as $status_field){
 
         $option = "";
+        $option .= "<option value =''></option>";
+        $option .= "<option value ='N.R.'>N.R.</option>";
 
         switch($status_field){
 
@@ -107,8 +118,8 @@ if(isset($_POST['status_fields'])){
                 $ases_statuses = get_ases_statuses();
 
                 foreach($ases_statuses as $status){
-                    $option .= "<option>";
-                    $option .= $status->nombre;
+                    $option .= "<option value ='$status->nombre'>";
+                    $option .= $array_statuses[$status->nombre];
                     $option .= "</option>";
                 }
 
@@ -138,7 +149,10 @@ if(isset($_POST['status_fields'])){
         $filter_statuses = "<br><select class='select_filter_statuses'>$option</select>";
 
         array_push($statuses_array, $fields_format[$status_field]);
-        array_push($columns, array("title"=>$columns_format[$status_field].$filter_statuses, "name"=>explode('.', $fields_format[$status_field])[1], "data"=>explode('.', $fields_format[$status_field])[1]));
+        array_push($columns, array("title" => $columns_format[$status_field].$filter_statuses, 
+                                   "name" => explode('.', $fields_format[$status_field])[1], 
+                                   "data" => explode('.', $fields_format[$status_field])[1],
+                                   "className" => "nosort"));
     }
 }
 
@@ -240,8 +254,14 @@ if(isset($_POST['instance_id'])){
                                 "filename" => 'Export excel',
                                 "extension" => '.xls'
                             ),
-                        )
-        );
+                        ),
+                "columnDefs" => array(
+                    array(
+                        "orderable" => false,
+                        "targets" => "nosort"
+                    )
+                ),
+                    );
 
     header('Content-Type: application/json');
 

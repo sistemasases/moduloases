@@ -274,7 +274,8 @@
 
 #age,
 #email,
-#span-icetex-status{
+#span-icetex-status,
+#span-icetex-name{
     padding-top: 7px;
 }
 

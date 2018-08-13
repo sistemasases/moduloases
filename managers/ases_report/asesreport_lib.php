@@ -550,38 +550,41 @@ function get_ases_report($general_fields=null,
 
                     $select_clause .= $status_field.", ";
 
-                    $sub_query_status .= " LEFT JOIN (SELECT current_ases_status.id_ases_student AS id_ases_student, 
-                                                    historic_ases_statuses.nombre AS ases_status_student
-                                          FROM
-                                            (SELECT student_ases_status.id_estudiante AS id_ases_student,
-                                                    MAX(student_ases_status.fecha) AS fecha
-                                            FROM {talentospilos_est_estadoases} AS student_ases_status
-                                            WHERE id_instancia = $instance_id
-                                            GROUP BY student_ases_status.id_estudiante) AS current_ases_status
-                                          INNER JOIN
-                                          (SELECT student_ases_status.id_estudiante, 
-                                                  student_ases_status.fecha, ases_statuses.nombre
-                                           FROM {talentospilos_est_estadoases} AS student_ases_status
-                                                INNER JOIN {talentospilos_estados_ases} AS ases_statuses ON ases_statuses.id = student_ases_status.id_estado_ases) AS historic_ases_statuses
-                                           ON (historic_ases_statuses.id_estudiante = current_ases_status.id_ases_student AND historic_ases_statuses.fecha = current_ases_status.fecha)
-                                           ) AS ases_status ON ases_status.id_ases_student = ases_students.student_id";
+                    $sub_query_status .= " LEFT JOIN (SELECT current_ases_status.id_ases_student AS id_ases_student,
+                                                        CASE WHEN historic_ases_statuses.nombre = 'seguimiento' THEN 'SEGUIMIENTO'
+                                                             WHEN historic_ases_statuses.nombre = 'sinseguimiento' THEN 'SIN SEGUIMIENTO'
+                                                             ELSE 'N.R.' 
+                                                        END AS ases_status_student
+                                                      FROM
+                                                        (SELECT student_ases_status.id_estudiante AS id_ases_student,
+                                                                MAX(student_ases_status.fecha) AS fecha
+                                                        FROM {talentospilos_est_estadoases} AS student_ases_status
+                                                        WHERE id_instancia = $instance_id
+                                                        GROUP BY student_ases_status.id_estudiante) AS current_ases_status
+                                                      INNER JOIN
+                                                      (SELECT student_ases_status.id_estudiante, 
+                                                            student_ases_status.fecha, ases_statuses.nombre
+                                                      FROM {talentospilos_est_estadoases} AS student_ases_status
+                                                            INNER JOIN {talentospilos_estados_ases} AS ases_statuses ON ases_statuses.id = student_ases_status.id_estado_ases) AS historic_ases_statuses
+                                                      ON (historic_ases_statuses.id_estudiante = current_ases_status.id_ases_student AND historic_ases_statuses.fecha = current_ases_status.fecha)
+                                                      ) AS ases_status ON ases_status.id_ases_student = ases_students.student_id";
                     break;
                 case 'icetex_status_student':
 
                     $select_clause .= $status_field.", ";
 
                     $sub_query_status .= " LEFT JOIN (SELECT current_icetex_status.id_ases_student AS id_ases_student, 
-                                                      historic_icetex_statuses.nombre AS icetex_status_student
-                                            FROM
-                                          (SELECT student_icetex_status.id_estudiante AS id_ases_student,
-                                                  MAX(student_icetex_status.fecha) AS fecha
-                                          FROM {talentospilos_est_est_icetex} AS student_icetex_status
-                                          GROUP BY student_icetex_status.id_estudiante) AS current_icetex_status
-                                          INNER JOIN
-                                          (SELECT student_icetex_status.id_estudiante, student_icetex_status.fecha, icetex_statuses.nombre
-                                          FROM {talentospilos_est_est_icetex} AS student_icetex_status
-                                               INNER JOIN {talentospilos_estados_icetex} AS icetex_statuses ON icetex_statuses.id = student_icetex_status.id_estado_icetex) AS historic_icetex_statuses
-                                          ON (historic_icetex_statuses.id_estudiante = current_icetex_status.id_ases_student AND historic_icetex_statuses.fecha = current_icetex_status.fecha)) AS icetex_status ON icetex_status.id_ases_student = ases_students.student_id";
+                                                      historic_icetex_statuses.descripcion AS icetex_status_student
+                                                      FROM
+                                                        (SELECT student_icetex_status.id_estudiante AS id_ases_student,
+                                                                MAX(student_icetex_status.fecha) AS fecha
+                                                        FROM {talentospilos_est_est_icetex} AS student_icetex_status
+                                                        GROUP BY student_icetex_status.id_estudiante) AS current_icetex_status
+                                                        INNER JOIN
+                                                        (SELECT student_icetex_status.id_estudiante, student_icetex_status.fecha, icetex_statuses.descripcion
+                                                        FROM {talentospilos_est_est_icetex} AS student_icetex_status
+                                                        INNER JOIN {talentospilos_estados_icetex} AS icetex_statuses ON icetex_statuses.id = student_icetex_status.id_estado_icetex) AS historic_icetex_statuses
+                                                        ON (historic_icetex_statuses.id_estudiante = current_icetex_status.id_ases_student AND historic_icetex_statuses.fecha = current_icetex_status.fecha)) AS icetex_status ON icetex_status.id_ases_student = ases_students.student_id";
                     break;
                 case 'program_status':
 
@@ -852,6 +855,12 @@ function get_default_ases_report($id_instance){
         "fixedHeader"=> array(
             "header"=> true,
             "footer"=> true
+        ),
+        "columnDefs" => array(
+            array(
+                "orderable" => false,
+                "targets" => 'nosort'
+            )
         ),
         "language" => 
             array(
