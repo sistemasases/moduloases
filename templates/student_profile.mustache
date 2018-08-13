@@ -66,9 +66,20 @@
           </div>
 
           <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 div-general-fields" id="div_icetex_status">
-            <select id="icetex_status" class="form-control" disabled>
-              {{{options_status_icetex}}}
-            </select>
+            {{#update_icetex_status_sp}}
+              <select id="icetex_status" class="form-control" disabled>
+                {{{options_status_icetex}}}
+              </select>
+            {{/update_icetex_status_sp}}
+            {{^update_icetex_status_sp}}
+              <span class= "col-sm-2 tooltip-v1"
+                    id = "span-icetex-name";
+                    data-toggle= "tooltip" 
+                    data-placement= "top"
+                    title= "{{icetex_status_name}}">
+                    {{icetex_status_description}}
+              </span>
+            {{/update_icetex_status_sp}}
           </div>
         </div>
 
