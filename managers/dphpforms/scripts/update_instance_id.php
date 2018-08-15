@@ -32,10 +32,10 @@
     global $DB;
 
     // Records to update
-    $RTU = "SELECT id AS id_formulario_respuestas
+    $records_to_update = "SELECT id AS id_formulario_respuestas
     FROM mdl_talentospilos_df_form_resp 
     WHERE estado = 1 AND id_formulario = (
-        SELECT id FROM mdl_talentospilos_df_formularios WHERE alias = 'seguimiento_pares' AND estado = 1
+            SELECT id FROM mdl_talentospilos_df_formularios WHERE alias = 'seguimiento_pares' AND estado = 1
         ) 
 
     EXCEPT 
@@ -44,6 +44,15 @@
     FROM mdl_talentospilos_df_form_solu AS FS 
     INNER JOIN mdl_talentospilos_df_respuestas AS R 
     ON FS.id_respuesta = R.id WHERE R.id_pregunta = 60";
+
+    $records = $DB->get_records_sql( $records_to_update );
+
+    foreach( $records as &$record ){
+
+        $record_id = $record->id_formulario_respuestas;
+        
+
+    }
     
     die();
 
