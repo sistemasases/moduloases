@@ -52,6 +52,7 @@ global $USER;
 include "../classes/output/student_profile_page.php";
 include "../classes/output/renderer.php";
 
+
 // Set up the page.
 $title = "Ficha estudiante";
 $pagetitle = $title;
