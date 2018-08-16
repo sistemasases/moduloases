@@ -74,6 +74,10 @@ function user_management_get_moodle_user( $user_id ){
     }
 }
 
+/**
+ * 
+ * @return stdClass Moodle user associated to an Ases identifier.
+ */
 function user_management_get_full_ases_user( $ases_id ){
 
     global $DB;
