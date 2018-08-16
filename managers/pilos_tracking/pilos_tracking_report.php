@@ -33,14 +33,11 @@ require_once ('../seguimiento_grupal/seguimientogrupal_lib.php');
 require_once ('../dphpforms/dphpforms_forms_core.php');
 require_once ('../dphpforms/dphpforms_records_finder.php');
 require_once ('../dphpforms/dphpforms_get_record.php');
-require_once '../user_management/user_lib.php';
-require_once '../role_management/role_management_lib.php';
-require_once(dirname(__FILE__).'/../user_management/user_management_lib.php');
+require_once ('../user_management/user_lib.php');
+require_once ('../role_management/role_management_lib.php');
+require_once $CFG->dirroot . '/blocks/ases/managers/user_management/user_management_lib.php';
 
 global $USER;
-
-
-
 
 if (isset($_POST['type']) && $_POST['type'] == "getInfo" && isset($_POST['instance']))
     {
@@ -232,15 +229,14 @@ if (isset($_POST['type']) && $_POST['type'] == "send_email_to_user" && isset($_P
     $place = $_POST['place'];
     if ($_POST['form'] == 'new_form')
         {
-        $register = dphpforms_get_record($_POST['id_tracking'], 'id_estudiante');
-        $json = json_decode($register, true);
-        $id_moodle_student = user_management_get_full_ases_user($json['record']['alias_key']['respuesta']);
-        $id_ases_student = $json['record']['alias_key']['respuesta'];
-        echo ">>>>>>>>>>>>" . $id_ases_student;
-        $monitor_code = get_student_monitor($id_ases_student, $_POST['semester'], $_POST['instance']);
-        $practicant_code = get_boss_of_monitor_by_semester($monitor_code, $_POST['semester'], $_POST['instance']);
-        $profesional_code = get_boss_of_monitor_by_semester($practicant_code->id_jefe, $_POST['semester'], $_POST['instance']);
-        echo send_email_to_user($_POST['tracking_type'], $monitor_code, $practicant_code->id_jefe, $profesional_code->id_jefe, $_POST['date'], $id_moodle_student->firstname . " " . $id_moodle_student->lastname, $_POST['message_to_send'], $place);
+            $register = dphpforms_get_record($_POST['id_tracking'], 'id_estudiante');
+            $json = json_decode($register, true);
+            $id_moodle_student = user_management_get_full_ases_user($json['record']['alias_key']['respuesta']);
+            $id_ases_student = $json['record']['alias_key']['respuesta'];
+            $monitor_code = get_student_monitor($id_ases_student, $_POST['semester'], $_POST['instance']);
+            $practicant_code = get_boss_of_monitor_by_semester($monitor_code, $_POST['semester'], $_POST['instance']);
+            $profesional_code = get_boss_of_monitor_by_semester($practicant_code->id_jefe, $_POST['semester'], $_POST['instance']);
+            echo send_email_to_user($_POST['tracking_type'], $monitor_code, $practicant_code->id_jefe, $profesional_code->id_jefe, $_POST['date'], $id_moodle_student->firstname . " " . $id_moodle_student->lastname, $_POST['message_to_send'], $place);
         }
     }
 
