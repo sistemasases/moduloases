@@ -5247,8 +5247,8 @@
                                 {
                                     "rol": "monitor_ps",
                                     "permisos": [
-                                        "lectura",
-                                        "escritura"
+                                        "",
+                                        ""
                                     ]
                                 },
                                 {
