@@ -1071,7 +1071,8 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                                     text.val("");
 
                                 } else {
-                                    console.log("mensaje error : "+msg);
+                                    console.log("mensaje error : ");
+                                    console.log( msg )
                                     swal({
                                         title: "error al enviar el correo al monitor",
                                         html: true,
@@ -1083,7 +1084,8 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                             dataType: "text",
                             cache: "false",
                             error: function(msg) {
-                                console.log("mensaje error : "+msg);
+                                console.log( "mensaje error : " );
+                                console.log( msg );
                             swal(
                                  'ERROR!',
                                  'Oops!, Se presentó un error al enviar el correo',
