@@ -331,7 +331,7 @@ if (isset($_FILES['csv_file'])) {
                     $record->fecha = time();
                     $DB->insert_record('talentospilos_est_estadoases', $record, false);
 
-                    $state_icetex = $DB->get_record_sql("SELECT id FROM {talentospilos_estados_icetex} WHERE nombre = 'ACTIVO'")->id;
+                    $state_icetex = $DB->get_record_sql("SELECT id FROM {talentospilos_estados_icetex} WHERE nombre = '5. IES renovó, ICETEX pendiente de giro'")->id;
 
                     $record = new stdClass;
                     $record->id_estudiante = $id_register;
