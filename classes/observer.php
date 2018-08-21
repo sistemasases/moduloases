@@ -49,5 +49,11 @@ require_once dirname(__FILE__) . '/../../../config.php';
         }
      }
 
+     public function isASES($id_estudiante){
+        global $DB;
+
+        $query = "SELECT id_ases_user";
+     }
+
      
 }
