@@ -259,13 +259,18 @@
                 })
 
                 $('#button_add_v2_track').on('click', function() {
+                    
                     $('div').removeClass('regla_incumplida');
                     $('#modal_v2_peer_tracking').fadeIn(300);
                     $('.id_estudiante').find('input').val( get_student_code() );
                     var codigo_monitor = $('#current_user_id').val();
                     $('.id_creado_por').find('input').val(codigo_monitor);
                     $('.id_instancia').find('input').val( get_dphpforms_instance() );
+                    $('.id_monitor').find('input').val( $("#dphpforms_monitor_id").data("info") );
+                    $('.id_practicante').find('input').val( $("#dphpforms_practicing_id").data("info") );
+                    $('.id_profesional').find('input').val( $("#dphpforms_professional_id").data("info") );
                     $('.dphpforms-response .btn-dphpforms-sendform').css( { 'margin-left' : ( ($('.dphpforms-response').width()/2) - ( $('.dphpforms-response .btn-dphpforms-univalle').outerWidth() /2) - ( $('.dphpforms-response .btn-dphpforms-close').outerWidth() /2) )  + 'px'  } );
+                
                 });
 
                 $('.btn-inasistencia').on('click', function() {
@@ -277,6 +282,9 @@
                         var codigo_monitor = $('#current_user_id').val();
                         $('.id_creado_por').find('input').val(codigo_monitor);
                         $('.id_instancia').find('input').val( get_dphpforms_instance() );
+                        $('.id_monitor').find('input').val( $("#dphpforms_monitor_id").data("info") );
+                        $('.id_practicante').find('input').val( $("#dphpforms_practicing_id").data("info") );
+                        $('.id_profesional').find('input').val( $("#dphpforms_professional_id").data("info") );
                         $('.dphpforms-response .btn-dphpforms-sendform').css( { 'margin-left' : ( ($('.dphpforms-response').width()/2) - ( $('.dphpforms-response .btn-dphpforms-univalle').outerWidth() /2) - ( $('.dphpforms-response .btn-dphpforms-close').outerWidth() /2) )  + 'px'  } );
                     }else{
                         $('#modal_v2_peer_tracking').fadeOut(300);
@@ -285,6 +293,9 @@
                         var codigo_monitor = $('#current_user_id').val();
                         $('.in_id_creado_por').find('input').val(codigo_monitor);
                         $('.in_id_instancia').find('input').val( get_dphpforms_instance() );
+                        $('.in_id_monitor').find('input').val( $("#dphpforms_monitor_id").data("info") );
+                        $('.in_id_practicante').find('input').val( $("#dphpforms_practicing_id").data("info") );
+                        $('.in_id_profesional').find('input').val( $("#dphpforms_professional_id").data("info") );
                     };
                 });
 
@@ -556,7 +567,7 @@
                     var is_seguimiento_geografico = $(this).attr('id').indexOf( 'seguimiento_geografico_' );
                     var is_seguimiento_grupal = $(this).attr('id').indexOf( 'seguimiento_grupal_' );
 
-                        if( is_seguimiento_geografico != -1 ){
+                    if( is_seguimiento_geografico != -1 ){
                             custom_actions( 'seguimiento_geografico_', 'insert' );
                     }
 

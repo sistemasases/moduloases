@@ -43,6 +43,8 @@ require_once '../managers/menu_options.php';
 require_once '../managers/dphpforms/dphpforms_forms_core.php';
 require_once '../managers/dphpforms/dphpforms_records_finder.php';
 require_once '../managers/dphpforms/dphpforms_get_record.php';
+require_once '../managers/user_management/user_management_lib.php';
+require_once '../managers/periods_management/periods_lib.php';
 
 include '../lib.php';
 
@@ -1231,6 +1233,14 @@ if ($rol == 'monitor_ps') {
 
 $record->ases_student_code = $dphpforms_ases_user;
 $record->instance = $blockid;
+
+// periods_lib.php contains get_current_semester()
+$record->current_semester = get_current_semester()->max;
+
+$stud_mon_prac_prof = user_management_get_stud_mon_prac_prof( $record->ases_student_code, $record->instance, $record->current_semester );
+$record->monitor_id = $stud_mon_prac_prof->monitor->id;
+$record->practicing_id = $stud_mon_prac_prof->practicing->id;
+$record->professional_id = $stud_mon_prac_prof->professional->id;
 
 
 //Menu items are created
