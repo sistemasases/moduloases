@@ -24,12 +24,30 @@
 defined('MOODLE_INTERNAL') || die();
 require_once dirname(__FILE__) . '/../../../config.php';
 class block_ases_observer
-{
+{   
+    /**
+     * Verify if a \core\event\user_graded event is launched
+     *
+     * @see user_graded(\core\event\user_graded $event)
+     * @param $event --> event launched
+     *
+     * @return void 
+     */
     public static function user_graded(\core\event\user_graded $event)
     {
         global $DB;
         self::process_event($event);
     }
+
+    /**
+     * Collects the information of the throwing event and if the note is less than 3 and the student belongs to ASES 
+     * it keeps a record in the table 'talentospilos_alertas_academ' and sends the mail with the alert
+     *
+     * @see _process_event($event)
+     * @param $event --> event launched
+     *
+     * @return void 
+     */
     protected static function _process_event($event)
     {
         global $DB;
@@ -51,6 +69,14 @@ class block_ases_observer
         }
     }
 
+    /**
+     * Verify if a student belongs to ASES and his ases_status is seguimiento
+     *
+     * @see isASES($id_estudiante)
+     * @param $id_estudiante --> user id
+     *
+     * @return boolean --> true if belongs, false otherwise.
+     */
     public function isASES($id_estudiante)
     {
         global $DB;
