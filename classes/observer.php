@@ -31,23 +31,23 @@ require_once dirname(__FILE__) . '/../../../config.php';
      }
      protected static function process_event($event){
          global $DB;
-         $eventData = $event->get_data();
-        $eventData = json_encode($eventData);
-///INICIO PRUEBA
-        // $obj = new stdClass;
-        // date_default_timezone_set("America/Bogota");
-        // $today = time();
-        // $obj->id_estudiante=$today;
-        // $obj->id_semestre = 1;
-        // $obj->id_programa = 0;
-        // $obj->json_materias = $eventData;
-         // $alerta->id_estudiante = 666;
-        // $alerta->id_item = 666;
-        // $alerta->id_user_registra = 666;
-        // $alerta->nota = 0;
-        // $alerta->fecha = $today;
-        // // $DB->insert_record('talentospilos_alertas_academ', $alerta);
-        // $DB->insert_record('talentospilos_history_academ', $obj);
-    ////FIN PRUEBA    
+        $eventData = $event->get_data();
+        $alerta = new stdClass;
+        date_default_timezone_set("America/Bogota");
+        $today = time();
+        $alerta->id_estudiante = $event->relateduserid;
+        $alerta->id_item = $event->other['itemid'];
+        $alerta->id_user_registra = $event->userid;
+        $alerta->nota = $event->other['finalgrade'];
+        $alerta->fecha = $today;
+        if($alerta->id_user_registra != -1 and $alerta->nota < 3){
+            $succes = $DB->insert_record('talentospilos_alertas_academ', $alerta);
+        }
+
+        if($succes){
+            
+        }
      }
+
+     
 }
