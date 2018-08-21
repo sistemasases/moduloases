@@ -263,8 +263,8 @@ function create_menu_options($userid, $blockid, $courseid)
                     'instanceid' => $blockid,
                 ));
 
-                $menu_options = '<li><a href= "' . $url . '"> Reporte de seguimientos </a><li>';
-                $indexed['Reporte de seguimientos'] = $menu_options;
+                $menu_options = '<li><a href= "' . $url . '"> Reporte de formularios </a><li>';
+                $indexed['Reporte de formularios'] = $menu_options;
 
             }
 
