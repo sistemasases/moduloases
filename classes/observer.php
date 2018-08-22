@@ -23,6 +23,9 @@
  */
 defined('MOODLE_INTERNAL') || die();
 require_once dirname(__FILE__) . '/../../../config.php';
+require_once $CFG->dirroot . '/blocks/ases/managers/lib/student_lib.php';
+
+
 class block_ases_observer
 {   
     /**
@@ -48,7 +51,7 @@ class block_ases_observer
      *
      * @return void 
      */
-    protected static function _process_event($event)
+    protected static function process_event($event)
     {
         global $DB;
         $eventData = $event->get_data();
@@ -60,12 +63,12 @@ class block_ases_observer
         $alerta->id_user_registra = $event->userid;
         $alerta->nota = $event->other['finalgrade'];
         $alerta->fecha = $today;
-        if ($alerta->id_user_registra != -1 and $alerta->nota < 3 and isASES($alerta->id_estudiante)) {
+        if ($alerta->id_user_registra != -1 and $alerta->nota < 3 and self::isASES($alerta->id_estudiante)) {
             $succes = $DB->insert_record('talentospilos_alertas_academ', $alerta);
         }
 
         if ($succes) {
-            send_email_alert($alerta->id_estudiante, $alerta->id_item, $alerta->nota, $event->courseid);
+            self::send_email_alert($alerta->id_estudiante, $alerta->id_item, $alerta->nota, $event->courseid);
         }
     }
 
@@ -77,7 +80,7 @@ class block_ases_observer
      *
      * @return boolean --> true if belongs, false otherwise.
      */
-    public function isASES($id_estudiante)
+    public static function isASES($id_estudiante)
     {
         global $DB;
 
@@ -108,7 +111,7 @@ class block_ases_observer
      * @return boolean --> true if there's a successful update, false otherwise.
      */
 
-    public function send_email_alert($userid, $itemid, $grade, $courseid)
+    public static function send_email_alert($userid, $itemid, $grade, $courseid)
     {
         global $USER;
         global $DB;
