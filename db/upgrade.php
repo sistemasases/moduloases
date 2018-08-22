@@ -4,7 +4,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     global $DB;
     $dbman = $DB->get_manager();
     $result = true;
-    if ($oldversion < 2018082217229 ) {
+    if ($oldversion < 2018082217309 ) {
     //     // ************************************************************************************************************
     //     // Actualización que crea la tabla para los campos extendidos de usuario (Tabla: {talentospilos_user_extended})
     //     // Versión: 2018010911179
@@ -1341,7 +1341,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
     $table->add_field('id_estudiante', XMLDB_TYPE_INTEGER, '20', null, null, null, null);
     $table->add_field('id_item', XMLDB_TYPE_INTEGER, '20', null, null, null, null);
-    $table->add_field('nota', XMLDB_TYPE_NUMBER, '20', null, null, null, null);
+    $table->add_field('nota', XMLDB_TYPE_FLOAT, '20', null, null, null, null);
     $table->add_field('id_user_registra', XMLDB_TYPE_INTEGER, '20', null, null, null, null);
     $table->add_field('fecha', XMLDB_TYPE_INTEGER, '20', null, null, null, null);
      // Adding keys to table talentospilos_alertas_academ.
@@ -1356,7 +1356,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     // Se crea tabla de logs de alertas academicas
     // Versión en la que se incluye: GIT XXX, Moodle: 2018080609050
 
-        upgrade_block_savepoint(true, 2018082217229 , 'ases');
+        upgrade_block_savepoint(true, 2018082217309 , 'ases');
     
         return $result;
 
