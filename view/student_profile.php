@@ -91,16 +91,33 @@ $record = $actions;
 $data_init = array();
 
 $rol = get_role_ases($USER->id);
+$html_profile_image = "";
+/**
+ * @param int $mdl_user Moodle user ID
+ * @return string  $html_profile_image Standard $OUPUT profile image html
+ */
+function getHtmlProfileImage($mdl_user_id): string {
+    global $DB, $OUTPUT;
+    $html_profile_image = "";
+    $mdl_user =   user_management_get_full_moodle_user ($mdl_user_id);;
+    $html_profile_image = $OUTPUT->user_picture($mdl_user, array('size'=>200, 'link'=> false));
+    return $html_profile_image;
+}
 
 if ($student_code != 0) {
-
+    
     $ases_student = get_ases_user_by_code($student_code);
 
     $student_id = $ases_student->id;
-
+    
     // Student information to display on file header (ficha)
     $id_user_moodle = get_id_user_moodle($ases_student->id);
+
+
     $user_moodle = get_moodle_user($id_user_moodle);
+    
+    
+    $html_profile_image = getHtmlProfileImage($id_user_moodle);
     $academic_programs = get_status_program_for_profile($student_id);
     $student_cohorts = get_cohorts_by_student($id_user_moodle);
     $status_ases_array = get_ases_status($ases_student->id, $blockid);
@@ -1233,6 +1250,7 @@ if ($rol == 'monitor_ps') {
 
 $record->ases_student_code = $dphpforms_ases_user;
 $record->instance = $blockid;
+$record->html_profile_image = $html_profile_image;
 
 // periods_lib.php contains get_current_semester()
 $record->current_semester = get_current_semester()->max;

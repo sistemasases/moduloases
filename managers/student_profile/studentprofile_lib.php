@@ -22,12 +22,38 @@
  * @copyright  2018 Iader E. García <iadergg@gmail.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
 require_once(dirname(__FILE__). '/../../../../config.php');
 require_once $CFG->dirroot.'/blocks/ases/managers/lib/student_lib.php';
 require_once $CFG->dirroot.'/blocks/ases/managers/dphpforms/dphpforms_forms_core.php';
 require_once $CFG->dirroot.'/blocks/ases/managers/dphpforms/dphpforms_records_finder.php';
 require_once $CFG->dirroot.'/blocks/ases/managers/dphpforms/dphpforms_get_record.php';
 require_once $CFG->dirroot.'/blocks/ases/managers/periods_management/periods_lib.php';
+
+require_once("$CFG->libdir/formslib.php");
+
+
+require_once($CFG->dirroot.'/user/edit_form.php');
+require_once($CFG->dirroot.'/user/editlib.php');
+require_once($CFG->dirroot.'/user/profile/lib.php');
+require_once($CFG->dirroot.'/user/lib.php');
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 /**
  * Gets all reasons a student quit or delay studies
@@ -46,6 +72,48 @@ require_once $CFG->dirroot.'/blocks/ases/managers/periods_management/periods_lib
      return $reasons_array;
  }
  
+
+/**
+ * Update the user image profile from php file by user id
+ * @param $mdl_user_id Moodle user ID
+ * @param $php_file PHP standard image
+ * @return boolean
+ */
+function update_user_image_profile($mdl_user_id, $php_file) {
+    global $CFG, $DB, $PAGE;
+    $personalcontext = context_user::instance($mdl_user_id);
+
+$PAGE->set_context($personalcontext);
+
+// Prepare the editor and create form.
+$editoroptions = array(
+    'maxfiles'   => EDITOR_UNLIMITED_FILES,
+    'maxbytes'   => $CFG->maxbytes,
+    'trusttext'  => false,
+    'forcehttps' => false,
+    'context'    => $personalcontext
+);
+$user = $DB->get_record('user', array('id' => $mdl_user_id));
+
+$user = file_prepare_standard_editor($user, 'description', $editoroptions, $personalcontext, 'user', 'profile', 0);
+// Prepare filemanager draft area.
+$draftitemid = 0;
+
+$filemanagercontext = $editoroptions['context'];
+$filemanageroptions = array('maxbytes'       => $CFG->maxbytes,
+                             'subdirs'        => 0,
+                             'maxfiles'       => 1,
+                             'accepted_types' => 'web_image');
+file_prepare_draft_area($draftitemid, $filemanagercontext->id, 'user', 'newicon', 0, $filemanageroptions);
+$user->imagefile = $draftitemid;
+// Create form.
+$userform = new user_edit_form('', array(
+    'editoroptions' => $editoroptions,
+    'filemanageroptions' => $filemanageroptions,
+    'user' => $user));
+
+    print_r($userform->get_data());
+}
  /**
  * Gets a set of ASES status
  *
@@ -1050,6 +1118,13 @@ function get_document_types_for_profile($id_ases_user){
 
     return $array_result;
 }
+
+
+/**
+ * Update the user profile image 
+ * @param $newUser [id, newfile]
+ * @return $
+ */
 
 /**
  * Actualiza el tracking status * 
