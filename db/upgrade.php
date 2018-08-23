@@ -4,7 +4,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     global $DB;
     $dbman = $DB->get_manager();
     $result = true;
-    if ($oldversion < 2018080815349 ) {
+    if ($oldversion < 2018082217309 ) {
     //     // ************************************************************************************************************
     //     // Actualización que crea la tabla para los campos extendidos de usuario (Tabla: {talentospilos_user_extended})
     //     // Versión: 2018010911179
@@ -1265,29 +1265,6 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
         // }
         // ************************************************************************************************************
         
-        $table = new xmldb_table('talentospilos_alertas_academ');
-            // Conditionally launch drop table for talentospilos_alertas_academ.
-        if ($dbman->table_exists($table)) {
-            $dbman->drop_table($table);
-        }
-        // Adding fields to table talentospilos_alertas_academ.
-        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
-        $table->add_field('id_estudiante', XMLDB_TYPE_INTEGER, '20', null, null, null, null);
-        $table->add_field('id_item', XMLDB_TYPE_INTEGER, '20', null, null, null, null);
-        $table->add_field('nota', XMLDB_TYPE_INTEGER, '20', null, null, null, null);
-        $table->add_field('id_user_registra', XMLDB_TYPE_INTEGER, '20', null, null, null, null);
-        $table->add_field('fecha', XMLDB_TYPE_INTEGER, '20', null, null, null, null);
-         // Adding keys to table talentospilos_alertas_academ.
-        $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
-        $table->add_key('unique_key', XMLDB_KEY_UNIQUE, array('id_item', 'id_estudiante'));
-         // Conditionally launch create table for talentospilos_alertas_academ.
-        if (!$dbman->table_exists($table)) {
-            $dbman->create_table($table);
-        }
-         // ************************************************************************************************************
-        // Actualización:
-        // Se crea tabla de logs de alertas academicas
-        // Versión en la que se incluye: GIT XXX, Moodle: 2018080609050
 
 
         // ************************************************************************************************************
@@ -1296,66 +1273,90 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
         // Versión en la que se incluye: GIT XXX, Moodle: 2018080616479
         // ************************************************************************************************************
         // Define table talentospilos_tipo_documento to be created.
-        $table = new xmldb_table('talentospilos_tipo_documento');
+        // $table = new xmldb_table('talentospilos_tipo_documento');
 
-        // Adding fields to table talentospilos_tipo_documento.
-        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
-        $table->add_field('nombre', XMLDB_TYPE_CHAR, '10', null, XMLDB_NOTNULL, null, null);
-        $table->add_field('descripcion', XMLDB_TYPE_CHAR, '100', null, XMLDB_NOTNULL, null, null);
+        // // Adding fields to table talentospilos_tipo_documento.
+        // $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        // $table->add_field('nombre', XMLDB_TYPE_CHAR, '10', null, XMLDB_NOTNULL, null, null);
+        // $table->add_field('descripcion', XMLDB_TYPE_CHAR, '100', null, XMLDB_NOTNULL, null, null);
 
-        // Adding keys to table talentospilos_tipo_documento.
-        $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+        // // Adding keys to table talentospilos_tipo_documento.
+        // $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
 
-        // Conditionally launch create table for talentospilos_tipo_documento.
-        if (!$dbman->table_exists($table)) {
-            $dbman->create_table($table);
-        }
+        // // Conditionally launch create table for talentospilos_tipo_documento.
+        // if (!$dbman->table_exists($table)) {
+        //     $dbman->create_table($table);
+        // }
 
-        // ************************************************************************************************************
-        // Actualización:
-        // Se cambia el tipo de dato para el campo tipo_doc_ini en la tabla talentospilos_usuario
-        // Versión en la que se incluye: GIT XXX, Moodle: 2018080815349
-        // ************************************************************************************************************        
-        // Changing type of field tipo_doc_ini on table talentospilos_usuario to int.
-        $table = new xmldb_table('talentospilos_usuario');
-        $field = new xmldb_field('tipo_doc_ini', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null, 'id');
+        // // ************************************************************************************************************
+        // // Actualización:
+        // // Se cambia el tipo de dato para el campo tipo_doc_ini en la tabla talentospilos_usuario
+        // // Versión en la que se incluye: GIT XXX, Moodle: 2018080815349
+        // // ************************************************************************************************************        
+        // // Changing type of field tipo_doc_ini on table talentospilos_usuario to int.
+        // $table = new xmldb_table('talentospilos_usuario');
+        // $field = new xmldb_field('tipo_doc_ini', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null, 'id');
 
-        // Launch change of type for field tipo_doc_ini.
-        $dbman->change_field_type($table, $field);
+        // // Launch change of type for field tipo_doc_ini.
+        // $dbman->change_field_type($table, $field);
 
-        // ************************************************************************************************************
-        // Actualización:
-        // Se cambia el tipo de dato para el campo tipo_doc en la tabla talentospilos_usuario
-        // Versión en la que se incluye: GIT XXX, Moodle: 2018080815349
-        // ************************************************************************************************************        
-        // Changing type of field tipo_doc_ini on table talentospilos_usuario to int.
-        $table = new xmldb_table('talentospilos_usuario');
-        $field = new xmldb_field('tipo_doc', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null, 'id');
+        // // ************************************************************************************************************
+        // // Actualización:
+        // // Se cambia el tipo de dato para el campo tipo_doc en la tabla talentospilos_usuario
+        // // Versión en la que se incluye: GIT XXX, Moodle: 2018080815349
+        // // ************************************************************************************************************        
+        // // Changing type of field tipo_doc_ini on table talentospilos_usuario to int.
+        // $table = new xmldb_table('talentospilos_usuario');
+        // $field = new xmldb_field('tipo_doc', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null, 'id');
 
-        // Launch change of type for field tipo_doc_ini.
-        $dbman->change_field_type($table, $field);
+        // // Launch change of type for field tipo_doc_ini.
+        // $dbman->change_field_type($table, $field);
 
-        // ************************************************************************************************************
-        // Actualización:
-        // Se crean las llaves foráneas de los campos tipo_doc y tipo_doc_ini en la tabla talentospilos_usuario,
-        // Las cuales apuntan a la tabla talentospilos_tipo_documento
-        // Versión en la que se incluye: GIT XXX, Moodle: 2018080815349
-        // ************************************************************************************************************    
-        // Define key doc_ini_type_fk (foreign) to be added to talentospilos_usuario.
-        $table = new xmldb_table('talentospilos_usuario');
-        $key = new xmldb_key('doc_ini_type_fk', XMLDB_KEY_FOREIGN, array('tipo_doc_ini'), 'talentospilos_tipo_documento', array('id'));
+        // // ************************************************************************************************************
+        // // Actualización:
+        // // Se crean las llaves foráneas de los campos tipo_doc y tipo_doc_ini en la tabla talentospilos_usuario,
+        // // Las cuales apuntan a la tabla talentospilos_tipo_documento
+        // // Versión en la que se incluye: GIT XXX, Moodle: 2018080815349
+        // // ************************************************************************************************************    
+        // // Define key doc_ini_type_fk (foreign) to be added to talentospilos_usuario.
+        // $table = new xmldb_table('talentospilos_usuario');
+        // $key = new xmldb_key('doc_ini_type_fk', XMLDB_KEY_FOREIGN, array('tipo_doc_ini'), 'talentospilos_tipo_documento', array('id'));
 
-        // Launch add key doc_ini_type_fk.
-        $dbman->add_key($table, $key);
+        // // Launch add key doc_ini_type_fk.
+        // $dbman->add_key($table, $key);
 
-        // Define key tipo_doc_fk (foreign) to be added to talentospilos_usuario.
-        $table = new xmldb_table('talentospilos_usuario');
-        $key = new xmldb_key('tipo_doc_fk', XMLDB_KEY_FOREIGN, array('tipo_doc'), 'talentospilos_tipo_documento', array('id'));
+        // // Define key tipo_doc_fk (foreign) to be added to talentospilos_usuario.
+        // $table = new xmldb_table('talentospilos_usuario');
+        // $key = new xmldb_key('tipo_doc_fk', XMLDB_KEY_FOREIGN, array('tipo_doc'), 'talentospilos_tipo_documento', array('id'));
  
-        // Launch add key tipo_doc_fk.
-        $dbman->add_key($table, $key);
+        // // Launch add key tipo_doc_fk.
+        // $dbman->add_key($table, $key);
 
-        upgrade_block_savepoint(true, 2018080815349 , 'ases');
+        $table = new xmldb_table('talentospilos_alertas_academ');
+        // Conditionally launch drop table for talentospilos_alertas_academ.
+    if ($dbman->table_exists($table)) {
+        $dbman->drop_table($table);
+    }
+    // Adding fields to table talentospilos_alertas_academ.
+    $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+    $table->add_field('id_estudiante', XMLDB_TYPE_INTEGER, '20', null, null, null, null);
+    $table->add_field('id_item', XMLDB_TYPE_INTEGER, '20', null, null, null, null);
+    $table->add_field('nota', XMLDB_TYPE_FLOAT, '20', null, null, null, null);
+    $table->add_field('id_user_registra', XMLDB_TYPE_INTEGER, '20', null, null, null, null);
+    $table->add_field('fecha', XMLDB_TYPE_INTEGER, '20', null, null, null, null);
+     // Adding keys to table talentospilos_alertas_academ.
+    $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+    $table->add_key('unique_key', XMLDB_KEY_UNIQUE, array('id_item', 'id_estudiante'));
+     // Conditionally launch create table for talentospilos_alertas_academ.
+    if (!$dbman->table_exists($table)) {
+        $dbman->create_table($table);
+    }
+     // ************************************************************************************************************
+    // Actualización:
+    // Se crea tabla de logs de alertas academicas
+    // Versión en la que se incluye: GIT XXX, Moodle: 2018080609050
+
+        upgrade_block_savepoint(true, 2018082217309 , 'ases');
     
         return $result;
 
