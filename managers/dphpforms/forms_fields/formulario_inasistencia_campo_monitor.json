@@ -7,7 +7,7 @@
         "maxlength": "1000",
         "class": "col-xs-12 col-sm-12 col-md-12 col-lg-12 oculto inasistencia_id_monitor",
         "name": "in_name_id_monitor",
-        "required": "true",
+        "required": "false",
         "local_alias": "in_id_monitor"
     },
     "permisos_campo": [
