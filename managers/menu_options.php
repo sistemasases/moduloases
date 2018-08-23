@@ -274,8 +274,8 @@ function create_menu_options($userid, $blockid, $courseid)
                     'instanceid' => $blockid,
                 ));
 
-                $menu_options = '<li><a href= "' . $url . '"> Gestión de Asignaciones </a><li>';
-                $indexed['Gestión de Asignaciones'] = $menu_options;
+                $menu_options = '<li><a href= "' . $url . '"> Gestión de asignaciones </a><li>';
+                $indexed['Gestión de asignaciones'] = $menu_options;
 
             }
 
