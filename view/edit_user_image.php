@@ -34,6 +34,15 @@ require_once('../managers/instance_management/instance_lib.php');
 require_once ('../managers/validate_profile_action.php');
 require_once ('../managers/menu_options.php');
 require_once('../classes/output/edit_user_image_page.php');
+
+
+$courseid  = required_param('courseid', PARAM_INT);
+require_login($courseid, false);
+$blockid   = required_param('instanceid', PARAM_INT);
+$actions = authenticate_user_view($USER->id, $blockid);
+if (!isset($actions->update_user_profile_image_)) {
+ redirect(new moodle_url('/'));
+}
 global $PAGE;
 $filemanageroptions = array('maxbytes'       => $CFG->maxbytes,
                              'subdirs'        => 0,
@@ -50,10 +59,10 @@ class user_edit_form extends moodleform {
         $mform->addRule('imagefile', null, 'required');
 
         //normally you use add_action_buttons instead of this code
-$buttonarray=array();
-$buttonarray[] = $mform->createElement('submit', 'submitbutton', get_string('savechanges'));
-$buttonarray[] = $mform->createElement('cancel');
-$mform->addGroup($buttonarray, 'buttonar', '', ' ', false);
+        $buttonarray=array();
+        $buttonarray[] = $mform->createElement('submit', 'submitbutton', get_string('savechanges'));
+        $buttonarray[] = $mform->createElement('cancel');
+        $mform->addGroup($buttonarray, 'buttonar', '', ' ', false);
     }
     //Custom validation should be added here
     function validation($data, $files) {
@@ -73,18 +82,18 @@ require_once('../managers/query.php');
 // Set up the page.
 $title     = "Edición de imágene de usuario";
 $pagetitle = $title;
-$courseid  = required_param('courseid', PARAM_INT);
-$blockid   = required_param('instanceid', PARAM_INT);
+
+
 $mdl_user_id =  required_param('userid', PARAM_INT);
 $url_return =  required_param('url_return', PARAM_TEXT);
-echo $url_return;
 function save_image($image_form_data, $mdl_user_id) {
     $usernew = new class{};
     $usernew = $image_form_data;
     $usernew->id = $mdl_user_id;
     core_user::update_picture($usernew, $filemanageroptions);
 }
-require_login($courseid, false);
+
+
 
 $contextcourse = context_course::instance($courseid);
 $contextblock  = context_block::instance($blockid);

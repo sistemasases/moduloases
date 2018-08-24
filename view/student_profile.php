@@ -1247,7 +1247,13 @@ if ($rol == 'dir_socioeducativo') {
 if ($rol == 'monitor_ps') {
     $record->monitor_ps = true;
 }
-
+/** Update user image */
+$show_html_elements_update_user_profile_image = false;
+if (isset($actions->update_user_profile_image)) {
+    $show_html_elements_update_user_profile_image = true;
+}
+$record->show_html_elements_update_user_profile_image = $show_html_elements_update_user_profile_image;
+/** End of Update user image  */
 $record->ases_student_code = $dphpforms_ases_user;
 $record->instance = $blockid;
 $record->html_profile_image = $html_profile_image;
@@ -1259,7 +1265,7 @@ $url_update_user_image           = new moodle_url("/blocks/ases/view/edit_user_i
     'userid' => $id_user_moodle_,
     'url_return' => $url
 ));
-$record->update_profile_image_url = $url_update_user_image;
+$record->update_profile_image_url = $url_update_user_image; 
 
 // periods_lib.php contains get_current_semester()
 $record->current_semester = get_current_semester()->max;

@@ -378,10 +378,10 @@
 .profile-image > .open-profile-image > a:hover {
     color: white;
 }
-.profile-image:hover img {
+.profile-image-can-update:hover img {
     opacity: 0.3;
 }
-.profile-image:hover .open-profile-image{
+.profile-image-can-update:hover .open-profile-image {
 opacity: 1;
 }
 

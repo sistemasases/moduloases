@@ -150,12 +150,13 @@
 
       </div>
       <!-- Profile image html, see $OUTPUT->user_picture -->
-      <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 profile-image">
+      <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 {{#show_html_elements_update_user_profile_image}}profile-image-can-update{{/show_html_elements_update_user_profile_image}} profile-image">
         {{{html_profile_image}}}
-
+        {{#show_html_elements_update_user_profile_image}}
         <div class="open-profile-image">
-          <a href="{{{update_profile_image_url}}}" class="a-_button"> <button type=button id="view_form_update_profile_image_" class="open-button"> Cambiar imágen de perfil </button> </a>
+         <a href="{{{update_profile_image_url}}}"> <button type=button id="view_form_update_profile_image_" class="open-button"> Cambiar imágen de perfil </button></a>
         </div>
+        {{/show_html_elements_update_user_profile_image}}
       </div>
     </div>
 
@@ -753,14 +754,15 @@
 <div class="mymodal" id="profile_image_update">
   <div class="mymodal-content" id="modal-content-radial-graph">
     <div class="mymodal-header col-sm-12">
-      <h3> Cambiar imagen de usuario</h3>
+      <div class="col-sm-11">
+        <h4 class="" id="myModalLabel">Cambiar imagen del usuario</h4>
+      </div>
+      <div class="col-sm-1">
+        <span class="mymodal-close" aria-hidden="true">&times;</span>
+      </div>
     </div>
     <div class="mymodal-body" id="modal_risk_body">
-      <form>
-        <label> Seleccione la imagen</label>
-        <input type="file" value="20" id="profile-image-input">
-        <button id="send-profile-image" type="button" > Update image </button>
-      </form>
+      {{{update_profile_image_form}}}
 
     </div>
   </div>
