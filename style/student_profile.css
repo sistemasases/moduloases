@@ -403,3 +403,11 @@ background-color: red;
 color: white;
 cursor: pointer;
 }
+/* -> Update user image */
+
+.update-profile-image-modal-body > form > fieldset{
+    min-width: 200;
+}
+.update-profile-image-modal-body > form > fieldset > div > .fitem > .fitemtitle {
+    text-align: left;
+}

@@ -154,7 +154,7 @@
         {{{html_profile_image}}}
         {{#show_html_elements_update_user_profile_image}}
         <div class="open-profile-image">
-         <a href="{{{update_profile_image_url}}}"> <button type=button id="view_form_update_profile_image_" class="open-button"> Cambiar imágen de perfil </button></a>
+         <button type=button id="view_form_update_profile_image" class="open-button"> Cambiar imágen de perfil </button>
         </div>
         {{/show_html_elements_update_user_profile_image}}
       </div>
@@ -750,8 +750,10 @@
 
 <!-- End modal Seguimiento pares-->
 
+{{#show_html_elements_update_user_profile_image}}
 <!-- Profile image update Modal -->
-<div class="mymodal" id="profile_image_update">
+
+<div class="mymodal update-profile-image-modal" id="profile_image_update">
   <div class="mymodal-content" id="modal-content-radial-graph">
     <div class="mymodal-header col-sm-12">
       <div class="col-sm-11">
@@ -761,13 +763,14 @@
         <span class="mymodal-close" aria-hidden="true">&times;</span>
       </div>
     </div>
-    <div class="mymodal-body" id="modal_risk_body">
+    <div class="mymodal-body update-profile-image-modal-body" id="modal_risk_body">
       {{{update_profile_image_form}}}
-
+      <button id="update-profile-image-button"> hola </button>
     </div>
   </div>
 </div>
-<!-- Profile image update  Modal -->
+<!-- End Profile image update  Modal -->
+{{/show_html_elements_update_user_profile_image}}
 
 
 <!-- Modal retiro ASES-->

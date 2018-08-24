@@ -27,6 +27,7 @@
 // Standard GPL and phpdocs
 require_once __DIR__ . '/../../../config.php';
 require_once $CFG->libdir . '/adminlib.php';
+require_once("$CFG->libdir/formslib.php");
 
 require_once '../managers/lib/student_lib.php';
 require_once '../managers/lib/lib.php';
@@ -1253,6 +1254,29 @@ if (isset($actions->update_user_profile_image)) {
     $show_html_elements_update_user_profile_image = true;
 }
 $record->show_html_elements_update_user_profile_image = $show_html_elements_update_user_profile_image;
+
+class user_image_edit_form extends moodleform {
+    //Add elements to form
+    public function definition() {
+        global $CFG;
+ 
+        $mform = $this->_form; // Don't forget the underscore! 
+
+        $mform->addElement('filepicker', 'imagefile', 'Nueva imágen de perfil'); // Add elements to your form
+        $mform->addRule('imagefile', null, 'required');
+        //normally you use add_action_buttons instead of this code
+        $buttonarray=array();
+        $buttonarray[] = $mform->createElement('submit', 'submitbutton', get_string('savechanges'));
+       // $buttonarray[] = $mform->createElement('cancel');
+        $mform->addGroup($buttonarray, 'buttonar', '', ' ', false);
+    }
+    //Custom validation should be added here
+    function validation($data, $files) {
+        return array();
+    }
+}
+$_user_image_edit_form = new user_image_edit_form(null,null,'post',null,array('id'=>'update_user_profile_image'));
+$record->update_profile_image_form = $_user_image_edit_form->render();
 /** End of Update user image  */
 $record->ases_student_code = $dphpforms_ases_user;
 $record->instance = $blockid;
@@ -1309,7 +1333,8 @@ $PAGE->requires->js_call_amd('block_ases/student_profile_main', 'equalize');
 $PAGE->requires->js_call_amd('block_ases/geographic_main', 'init');
 $PAGE->requires->js_call_amd('block_ases/dphpforms_form_renderer', 'init');
 $PAGE->requires->js_call_amd('block_ases/academic_profile_main', 'init');
-
+$PAGE->requires->yui_module('moodle-block_ases-modulename', 'M.block_ases.init_modulename',
+                array(array('aparam'=>'paramvalue')));
 $output = $PAGE->get_renderer('block_ases');
 
 echo $output->header();

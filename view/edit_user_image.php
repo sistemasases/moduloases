@@ -43,6 +43,7 @@ $actions = authenticate_user_view($USER->id, $blockid);
 if (!isset($actions->update_user_profile_image_)) {
  redirect(new moodle_url('/'));
 }
+$show_html_elements_update_user_profile_image = true;
 global $PAGE;
 $filemanageroptions = array('maxbytes'       => $CFG->maxbytes,
                              'subdirs'        => 0,
@@ -135,7 +136,6 @@ $PAGE->requires->css('/blocks/ases/style/side_menu_style.css', true);
 $PAGE->requires->js_call_amd('block_ases/uploaddata_main', 'init');
 
 $output = $PAGE->get_renderer('block_ases');
-$PAGE->requires->css('/blocks/ases/style/edit_user_image.css', true);
 
 echo $output->header();  
 /** Creando el formulario  */
