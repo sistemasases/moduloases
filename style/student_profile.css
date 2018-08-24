@@ -371,16 +371,21 @@
 .profile-image > a > img {
     width: 100%;
 }
-
-
+.profile-image > .open-profile-image > a {
+    text-decoration: none;
+    color: white;
+}
+.profile-image > .open-profile-image > a:hover {
+    color: white;
+}
 .profile-image:hover img {
     opacity: 0.3;
-  }
-  .profile-image:hover .open-profile-image{
-    opacity: 1;
-  }
+}
+.profile-image:hover .open-profile-image{
+opacity: 1;
+}
 
-  .open-profile-image {
+.open-profile-image {
     transition: .2s ease;
     opacity: 0;
     position: absolute;
@@ -389,12 +394,12 @@
     transform: translate(-50%, -50%);
     -ms-transform: translate(-50%, -50%);
     text-align: center;
-  
- 
-  }
-
-  .open-profile-image > .open-button {
-    background-color: red;
-    color: white;
-    cursor: pointer;
-  }
+}
+.profile-image > .userpicture {
+    border-radius: 0;
+}
+.open-profile-image > .open-button {
+background-color: red;
+color: white;
+cursor: pointer;
+}

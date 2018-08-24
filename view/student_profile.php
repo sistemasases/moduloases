@@ -103,7 +103,7 @@ function getHtmlProfileImage($mdl_user_id): string {
     $html_profile_image = $OUTPUT->user_picture($mdl_user, array('size'=>200, 'link'=> false));
     return $html_profile_image;
 }
-
+$id_user_moodle_ = null;
 if ($student_code != 0) {
     
     $ases_student = get_ases_user_by_code($student_code);
@@ -112,7 +112,7 @@ if ($student_code != 0) {
     
     // Student information to display on file header (ficha)
     $id_user_moodle = get_id_user_moodle($ases_student->id);
-
+    $id_user_moodle_ = $id_user_moodle;
 
     $user_moodle = get_moodle_user($id_user_moodle);
     
@@ -1251,6 +1251,15 @@ if ($rol == 'monitor_ps') {
 $record->ases_student_code = $dphpforms_ases_user;
 $record->instance = $blockid;
 $record->html_profile_image = $html_profile_image;
+
+// Url for update user image profile
+$url_update_user_image           = new moodle_url("/blocks/ases/view/edit_user_image.php", array(
+    'courseid' => $courseid,
+    'instanceid' => $blockid,
+    'userid' => $id_user_moodle_,
+    'url_return' => $url
+));
+$record->update_profile_image_url = $url_update_user_image;
 
 // periods_lib.php contains get_current_semester()
 $record->current_semester = get_current_semester()->max;

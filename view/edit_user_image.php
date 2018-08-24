@@ -35,25 +35,34 @@ require_once ('../managers/validate_profile_action.php');
 require_once ('../managers/menu_options.php');
 require_once('../classes/output/edit_user_image_page.php');
 global $PAGE;
-
-class user_edit_form_ extends moodleform {
+$filemanageroptions = array('maxbytes'       => $CFG->maxbytes,
+                             'subdirs'        => 0,
+                             'maxfiles'       => 1,
+                             'accepted_types' => 'web_image');
+class user_edit_form extends moodleform {
     //Add elements to form
     public function definition() {
         global $CFG;
  
         $mform = $this->_form; // Don't forget the underscore! 
-        $mform->addElement('text', 'email', get_string('email')); // Add elements to your form
-        $mform->setType('email', PARAM_NOTAGS);                   //Set type of element
-        $mform->setDefault('email', 'Please enter email');        //Default value
 
-        $mform->addElement('filepicker', 'userfile', 'Nueva imágen de perfil'); // Add elements to your form
-        $mform->setType('email', PARAM_NOTAGS);                   //Set type of element
+        $mform->addElement('filepicker', 'imagefile', 'Nueva imágen de perfil'); // Add elements to your form
+        $mform->addRule('imagefile', null, 'required');
+
+        //normally you use add_action_buttons instead of this code
+$buttonarray=array();
+$buttonarray[] = $mform->createElement('submit', 'submitbutton', get_string('savechanges'));
+$buttonarray[] = $mform->createElement('cancel');
+$mform->addGroup($buttonarray, 'buttonar', '', ' ', false);
     }
     //Custom validation should be added here
     function validation($data, $files) {
         return array();
     }
 }
+
+
+
 //moodleform is defined in formslib.php
 require_once("$CFG->libdir/formslib.php");
  
@@ -66,14 +75,24 @@ $title     = "Edición de imágene de usuario";
 $pagetitle = $title;
 $courseid  = required_param('courseid', PARAM_INT);
 $blockid   = required_param('instanceid', PARAM_INT);
-
+$mdl_user_id =  required_param('userid', PARAM_INT);
+$url_return =  required_param('url_return', PARAM_TEXT);
+echo $url_return;
+function save_image($image_form_data, $mdl_user_id) {
+    $usernew = new class{};
+    $usernew = $image_form_data;
+    $usernew->id = $mdl_user_id;
+    core_user::update_picture($usernew, $filemanageroptions);
+}
 require_login($courseid, false);
 
 $contextcourse = context_course::instance($courseid);
 $contextblock  = context_block::instance($blockid);
 $url           = new moodle_url("/blocks/ases/view/edit_user_image.php", array(
     'courseid' => $courseid,
-    'instanceid' => $blockid
+    'instanceid' => $blockid,
+    'userid' => $mdl_user_id,
+    'url_return' => $url_return
 ));
 
 // Instance is consulted for its registration
@@ -107,8 +126,31 @@ $PAGE->requires->css('/blocks/ases/style/side_menu_style.css', true);
 $PAGE->requires->js_call_amd('block_ases/uploaddata_main', 'init');
 
 $output = $PAGE->get_renderer('block_ases');
+$PAGE->requires->css('/blocks/ases/style/edit_user_image.css', true);
 
 echo $output->header();  
-$user_edit_form = new user_edit_form_();
-echo $user_edit_form->render();
+/** Creando el formulario  */
+
+
+$user_edit_form = new user_edit_form($url);
+
+//Form processing and displaying is done here
+if ($user_edit_form->is_cancelled()) {
+    //Handle form cancel operation, if cancel button is present on form
+    redirect($url_return);
+} else if ($image_data = $user_edit_form->get_data()) {
+    print_r($image_data);
+    save_image($image_data, $mdl_user_id);
+    redirect($url_return);
+  //In this case you process validated data. $mform->get_data() returns data posted in form.
+} else {
+  // this branch is executed if the form is submitted but the data doesn't validate and the form should be redisplayed
+  // or on the first display of the form.
+ 
+  //Set default data (if any)
+  $user_edit_form->set_data($toform);
+  //displays the form
+  $user_edit_form->display(null);
+}
+$PAGE->requires->js_call_amd('block_ases/editar_imagen_perfil', 'init');
 echo $output->footer();
