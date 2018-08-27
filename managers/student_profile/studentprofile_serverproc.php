@@ -157,7 +157,15 @@ if(isset($_POST['func'])){
             $msg->status = "error";
             echo json_encode($msg);
         }
-    }else{
+    } else if($_POST['func'] == 'update_user_image'){
+        $new_user_image = $_FILES['new_image_file'];
+        $user_id = $_POST['mdl_user_id'];
+        $user = new class{};
+        $user->id = $user_id;
+        update_user_image_profile($user->id, 0);
+        print_r($user_id);
+       
+    } else{
         $msg->msg = "No se reconoce la función a ejecutar. Contacte al área de sistemas.";
         echo json_encode($msg);
     }
