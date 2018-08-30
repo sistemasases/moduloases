@@ -76,6 +76,11 @@
             if($result_2){
                 $instance_id = $result_2->id_instancia;
             }
+
+            if( $instance_id != 450299 ){
+                continue;
+            }
+
             echo "rid: "  . $record_id . " ases_id: " . $ases_id . " instancia: " . $instance_id;
 
             // Registrar respuesta[ instancia ]
