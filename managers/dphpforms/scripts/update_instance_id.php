@@ -94,7 +94,7 @@
 
             $id_registrado = $DB->insert_record( 'talentospilos_df_form_solu', $new_form_solu, $returnid=true, $bulk=false );
             
-            echo " Registrado con el id: " . $id_registrado;
+            echo " Registrado con el id: " . $id_registrado . "<br>";
 
         }else{
             $faltantes++;
