@@ -88,48 +88,6 @@ function get_array_students_with_resolution(){
     return $array_historics;
 }
 
-function get_student_resolution_spt(){
-    global $DB;
-
-    $array_historics = array();    
-    
-    $sql_query = "SELECT res_est.id, substring(cohortm.idnumber from 0 for 5) AS cohorte, substring(userm.username from 0 for 8) AS codigo, 
-                    usuario.num_doc, userm.firstname, userm.lastname, semestre.nombre AS nombre_semestre, res.codigo_resolucion, monto_estudiante, res_est.id_estudiante, 
-                    res.id_semestre, res_est.id_programa                    
-                    FROM {talentospilos_res_estudiante} AS res_est
-                    INNER JOIN {talentospilos_res_icetex} res ON res.id = res_est.id_resolucion
-                    INNER JOIN {talentospilos_semestre} semestre ON semestre.id = res.id_semestre 
-                    INNER JOIN {talentospilos_usuario} usuario ON usuario.id = res_est.id_estudiante 
-                    INNER JOIN {talentospilos_user_extended} uextended ON usuario.id = uextended.id_ases_user 
-                    INNER JOIN {user} userm ON uextended.id_moodle_user = userm.id
-                    INNER JOIN {cohort_members} co_mem ON userm.id = co_mem.userid
-                    INNER JOIN {cohort} cohortm ON co_mem.cohortid = cohortm.id
-                    WHERE res_est.id_programa = 1 AND substring(cohortm.idnumber from 0 for 4) = 'SPT'";
-
-    $historics = $DB->get_records_sql($sql_query);
-
-    foreach ($historics as $historic) {
-        $student_id = $historic->id_estudiante;
-        $program_id = $historic->id_programa;
-        $semester_id = $historic->id_semestre;
-
-        $cancel_date = get_student_cancel_date($student_id, $program_id, $semester_id);
-
-        if($cancel_date == false){
-            $historic->fecha_cancel = "---";
-            $historic->program_status = "-ACTIVO";
-        }else{
-            $historic->fecha_cancel = date("Y-m-d", $cancel_date);
-            $historic->program_status = "-INACTIVO";
-        }
-
-        $historic->monto_estudiante = "$".number_format($historic->monto_estudiante, 0, ',', '.');
-        array_push($array_historics, $historic);
-    }
-
-    return $array_historics;
-}
-
 /**
  * Function that returns the date when an student quitted a program in the semester 
  * 
@@ -298,7 +256,9 @@ function get_resolutions_for_report(){
 function get_count_active_res_students($cohort){
     global $DB;
 
-    $sql_query = "SELECT semestre.nombre AS nombre_semestre, Count(res_est.id) AS num_act_res, sum(res_est.monto_estudiante) AS monto_act_res
+    $array_active_res = array();
+
+    $sql_query = "SELECT semestre.nombre AS semestre, Count(res_est.id) AS num_act_res, sum(res_est.monto_estudiante) AS monto_act_res
                     FROM {talentospilos_res_estudiante} AS res_est
                         INNER JOIN {talentospilos_res_icetex} res_ice ON res_ice.id = res_est.id_resolucion
                         INNER JOIN {talentospilos_semestre} semestre ON semestre.id = res_ice.id_semestre
@@ -320,14 +280,18 @@ function get_count_active_res_students($cohort){
                         
                     GROUP BY semestre.nombre";
 
-    $count = $DB->get_record_sql($sql_query);
+    $count = $DB->get_records_sql($sql_query);
+    
+    foreach($count as $record){
+        $record->cohort = $cohort;
+        $record->monto_act_res = "$".number_format($record->monto_act_res, 0, ',', '.');
+        array_push($array_active_res, $record);
+    }
 
-    $count->monto_act_res = "$".number_format($count->monto_act_res, 0, ',', '.');
-
-    return $count;
+    return $array_active_res;
 }
 
-//print_r(get_count_active_res_students('SPP1'));
+//print_r(get_count_active_res_students('SPP2'));
 
 /**
  * Function that returns an array with all the inactive students that belong to a resolution
@@ -339,7 +303,9 @@ function get_count_active_res_students($cohort){
 function get_count_inactive_res_students($cohort){
     global $DB;
 
-    $sql_query = "SELECT semestre.nombre AS nombre_semestre, Count(res_est.id) AS num_inact_res, sum(res_est.monto_estudiante) AS monto_inact_res
+    $array_inactive_res = array();
+
+    $sql_query = "SELECT semestre.nombre AS semestre, Count(res_est.id) AS num_inact_res, sum(res_est.monto_estudiante) AS monto_inact_res
                     FROM {talentospilos_res_estudiante} AS res_est
                         INNER JOIN {talentospilos_res_icetex} res_ice ON res_ice.id = res_est.id_resolucion
                         INNER JOIN {talentospilos_semestre} semestre ON semestre.id = res_ice.id_semestre
@@ -361,19 +327,25 @@ function get_count_inactive_res_students($cohort){
                         
                     GROUP BY semestre.nombre";
 
-    $count = $DB->get_record_sql($sql_query);
-    $count->monto_inact_res = "$".number_format($count->monto_inact_res, 0, ',', '.');
+    $count = $DB->get_records_sql($sql_query);
 
-    return $count;
+    foreach($count as $record){
+        $record->cohort = $cohort;
+        $record->monto_inact_res = "$".number_format($record->monto_inact_res, 0, ',', '.');
+        array_push($array_inactive_res, $record);
+    }
+
+    return $array_inactive_res;
 }
 
-//print_r(get_count_inactive_res_students('SPP1'));
+//print_r(get_count_inactive_res_students('SPP2'));
 
 /**
  * Function that returns an array with the number of students that are active and don't belong to a resolution
  * 
- * @see get_count_active_no_res_students($cohort)
+ * @see get_count_active_no_res_students($cohort, $semester_name)
  * @param $cohort -> name of the cohort
+ * @param $semester_name -> name of the semester
  * @return array
  */
 function get_count_active_no_res_students($cohort, $semester_name){
@@ -384,9 +356,9 @@ function get_count_active_no_res_students($cohort, $semester_name){
                     INNER JOIN {talentospilos_user_extended} uexten ON uexten.id_ases_user = usu.id
                     INNER JOIN {cohort_members} coh_mem ON coh_mem.userid = uexten.id_moodle_user
                     INNER JOIN {cohort} cohorte ON cohorte.id = coh_mem.cohortid
-                    WHERE (substring(cohorte.idnumber from 0 for 5) = '$cohort' OR substring(cohorte.idnumber from 0 for 6) = '$cohort') 
+                    WHERE cohorte.idnumber LIKE '$cohort%' 
                     
-                    AND usu.id
+                    AND (usu.id
                     
                     NOT IN
 
@@ -398,10 +370,10 @@ function get_count_active_no_res_students($cohort, $semester_name){
                     INNER JOIN {talentospilos_user_extended} uext ON uext.id_ases_user = academ.id
                     INNER JOIN {cohort_members} co_mem ON co_mem.userid = uext.id_moodle_user
                     INNER JOIN {cohort} cohortm ON cohortm.id = co_mem.cohortid
-                    WHERE (substring(cohortm.idnumber from 0 for 5) = '$cohort' OR substring(cohortm.idnumber from 0 for 6) = '$cohort')   
-                    AND semestre.nombre = '$semester_name')
+                    WHERE cohortm.idnumber LIKE '$cohort%'   
+                    AND semestre.nombre = '$semester_name'))
                     
-                    AND usu.id
+                    AND (usu.id
                     
                     NOT IN 
                     
@@ -409,7 +381,11 @@ function get_count_active_no_res_students($cohort, $semester_name){
                     FROM {talentospilos_history_academ} academ
                     INNER JOIN {talentospilos_history_cancel} AS cancel ON cancel.id_history = academ.id
                     INNER JOIN {talentospilos_semestre} AS semes ON semes.id = academ.id_semestre
-                    WHERE semes.nombre = '$semester_name')";    
+                    INNER JOIN {talentospilos_user_extended} uexte ON uexte.id_ases_user = academ.id_estudiante
+                    INNER JOIN {cohort_members} co_memb ON co_memb.userid = uexte.id_moodle_user
+                    INNER JOIN {cohort} cohort_m ON cohort_m.id = co_memb.cohortid
+                    WHERE semes.nombre = '$semester_name'
+                    AND cohort_m.idnumber LIKE '$cohort%'))";
 
     $count = $DB->get_record_sql($sql_query);
 
@@ -420,14 +396,39 @@ function get_count_active_no_res_students($cohort, $semester_name){
     return $count;
 }
 
-//print_r(get_count_active_no_res_students('SPP2'));
+//print_r(get_count_active_no_res_students('SPP2', '2016A'));
 
-function get_semesters_names(){
+function get_semester_from_cohort($cohort){
+    global $DB;
+
+    $sql_query = "SELECT substring(idnumber from 5 for 5) AS semestre FROM {cohort}
+                    WHERE idnumber LIKE '$cohort%'";
+
+    $record = $DB->get_record_sql($sql_query);
+
+    return $record->semestre;
+}
+
+//print_r(get_semester_from_cohort('SPP2'));
+
+function get_id_semester_from_name($sem_name){
+    global $DB;
+
+    $sql_query = "SELECT id FROM {talentospilos_semestre} WHERE nombre = '$sem_name'";
+
+    $record = $DB->get_record_sql($sql_query);
+
+    return $record->id;
+}
+
+//print_r(get_id_semester_from_name(get_semester_from_cohort('SPP2')));
+
+function get_semesters_names($semester_id){
     global $DB;
 
     $array_semesters = array();
 
-    $sql_query = "SELECT nombre FROM {talentospilos_semestre}";
+    $sql_query = "SELECT nombre FROM {talentospilos_semestre} WHERE id >= $semester_id";
 
     $semesters = $DB->get_records_sql($sql_query);
 
@@ -436,8 +437,9 @@ function get_semesters_names(){
     }
 
     return $array_semesters;
-
 }
+
+//print_r(get_semesters_names(get_id_semester_from_name(get_semester_from_cohort('SPP3'))));
 
 /**
  * Function that returns an array with all the necessary information for the summary report
@@ -448,20 +450,19 @@ function get_semesters_names(){
  */
 function get_info_summary_report($cohort){
 
-    $array_act_res = array();
-    $array_inact_res = array();
+    $array_act_res = get_count_active_res_students($cohort);
+    $array_inact_res = get_count_inactive_res_students($cohort);
     $array_act_no_res = array();
 
     $array_objects = array();
 
-    $semesters = get_semesters_names();
+    $semes_name = get_semester_from_cohort($cohort);
+    $id_semester = get_id_semester_from_name($semes_name);
+    $semesters = get_semesters_names($id_semester);
+
     foreach($semesters as $semester){
-        $count_act_res = get_count_active_res_students($cohort, $semester);
-        $count_inact_res = get_count_inactive_res_students($cohort, $semester);
         $count_act_no_res = get_count_active_no_res_students($cohort, $semester);
 
-        array_push($array_act_res, $count_act_res);
-        array_push($array_inact_res, $count_inact_res);
         array_push($array_act_no_res, $count_act_no_res);
     }
 
@@ -553,7 +554,7 @@ function get_info_summary_report($cohort){
     return $array_final;
 }
 
-//print_r(get_info_summary_report('SPP2'));
+//print_r(get_info_summary_report('SPP3'));
 
 /**
  * Function that returns an array containing the information of an student
