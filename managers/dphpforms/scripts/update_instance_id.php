@@ -66,6 +66,7 @@
         $ases_id = $result->respuesta;
 
         if($ases_id){
+
             //Obtenemos la instancia de un estudiante ases.
             $sql_ = "SELECT * FROM mdl_talentospilos_est_estadoases WHERE id_estudiante = $ases_id ORDER BY fecha DESC LIMIT 1";
 
@@ -75,20 +76,40 @@
             if($result_2){
                 $instance_id = $result_2->id_instancia;
             }
-            echo "rid: "  . $record_id . " ases_id: " . $ases_id . " instancia: " . $instance_id  . "<br>";
+
+            if( $instance_id != 450299 ){
+                continue;
+            }
+
+            echo "rid: "  . $record_id . " ases_id: " . $ases_id . " instancia: " . $instance_id;
+
+            // Registrar respuesta[ instancia ]
 
             $new_respuesta = new stdClass();
             $new_respuesta->id_pregunta = 60;
             $new_respuesta->respuesta = $instance_id;
 
+            $id_record_respuesta = $DB->insert_record( 'talentospilos_df_respuestas', $new_respuesta, $returnid=true, $bulk=false );
+
+            // Registrar en talentospilos_df_form_solu
+
+            $new_form_solu = new stdClass();
+            $new_form_solu->id_formulario_respuestas = $record_id;
+            $new_form_solu->id_respuesta = $id_record_respuesta;
+
+            $id_registrado = $DB->insert_record( 'talentospilos_df_form_solu', $new_form_solu, $returnid=true, $bulk=false );
             
+            echo " Registrado con el id: " . $id_registrado . "<br>";
 
         }else{
             $faltantes++;
         }
         
     }
+
     echo "<hr>Estudiantes sin instancia: <strong>" . $faltantes . "</strong><br><hr>";
+
+
     
     die();
 

@@ -118,7 +118,33 @@ return {
 
          init_form_tracking();
      });
-
+     // Open set profile image form in modal
+     $('#view_form_update_profile_image').on('click', function() {
+         $('#profile_image_update').show();
+     });
+     // Save image to backend
+     $('#send-profile-image').on('click', function () {
+        var data = new FormData();
+        data.append('mdl_user_id', $('#id_moodle').val());
+        data.append('new_image_file', document.getElementById('profile-image-input').files[0]);
+        data.append('func', 'update_user_image');
+        $.ajax({
+            url: '../managers/student_profile/studentprofile_serverproc.php',
+            data: data,
+            cache: false,
+            contentType: false,
+            processData: false,
+            method: 'POST',
+            type: 'POST', // For jQuery < 1.9
+            success: function(data){
+                alert(data);
+            },
+            error: function (data) {
+                console.log(data)
+            }
+        });
+         console.log(data);
+     });
      // Guardar segumiento
      $('#save_tracking_btn').on('click', function() {
          save_tracking_peer();

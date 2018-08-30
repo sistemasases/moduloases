@@ -91,16 +91,33 @@ $record = $actions;
 $data_init = array();
 
 $rol = get_role_ases($USER->id);
-
+$html_profile_image = "";
+/**
+ * @param int $mdl_user Moodle user ID
+ * @return string  $html_profile_image Standard $OUPUT profile image html
+ */
+function getHtmlProfileImage($mdl_user_id): string {
+    global $DB, $OUTPUT;
+    $html_profile_image = "";
+    $mdl_user =   user_management_get_full_moodle_user ($mdl_user_id);;
+    $html_profile_image = $OUTPUT->user_picture($mdl_user, array('size'=>200, 'link'=> false));
+    return $html_profile_image;
+}
+$id_user_moodle_ = null;
 if ($student_code != 0) {
-
+    
     $ases_student = get_ases_user_by_code($student_code);
 
     $student_id = $ases_student->id;
-
+    
     // Student information to display on file header (ficha)
     $id_user_moodle = get_id_user_moodle($ases_student->id);
+    $id_user_moodle_ = $id_user_moodle;
+
     $user_moodle = get_moodle_user($id_user_moodle);
+    
+    
+    $html_profile_image = getHtmlProfileImage($id_user_moodle);
     $academic_programs = get_status_program_for_profile($student_id);
     $student_cohorts = get_cohorts_by_student($id_user_moodle);
     $status_ases_array = get_ases_status($ases_student->id, $blockid);
@@ -1230,9 +1247,25 @@ if ($rol == 'dir_socioeducativo') {
 if ($rol == 'monitor_ps') {
     $record->monitor_ps = true;
 }
-
+/** Update user image */
+$show_html_elements_update_user_profile_image = false;
+if (isset($actions->update_user_profile_image)) {
+    $show_html_elements_update_user_profile_image = true;
+}
+$record->show_html_elements_update_user_profile_image = $show_html_elements_update_user_profile_image;
+/** End of Update user image  */
 $record->ases_student_code = $dphpforms_ases_user;
 $record->instance = $blockid;
+$record->html_profile_image = $html_profile_image;
+
+// Url for update user image profile
+$url_update_user_image           = new moodle_url("/blocks/ases/view/edit_user_image.php", array(
+    'courseid' => $courseid,
+    'instanceid' => $blockid,
+    'userid' => $id_user_moodle_,
+    'url_return' => $url
+));
+$record->update_profile_image_url = $url_update_user_image; 
 
 // periods_lib.php contains get_current_semester()
 $record->current_semester = get_current_semester()->max;
