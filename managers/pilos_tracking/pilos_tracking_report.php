@@ -227,9 +227,15 @@ if (isset($_POST['type']) && $_POST['type'] == "send_email_to_user" && isset($_P
     fin de evitar problemas con otros script que hagan uso del mĆ©todo.
     */
     $place = $_POST['place'];
+    $tracking_type = $_POST['tracking_type'];
     if ($_POST['form'] == 'new_form')
         {
-            $register = dphpforms_get_record($_POST['id_tracking'], 'id_estudiante');
+            $register = null;
+            if( $tracking_type == "individual" ){
+                $register = dphpforms_get_record($_POST['id_tracking'], 'id_estudiante');
+            }elseif ( $tracking_type == "individual_inasistencia" ) {
+                $register = dphpforms_get_record($_POST['id_tracking'], 'in_id_estudiante');
+            }
             $json = json_decode($register, true);
             $id_moodle_student = user_management_get_full_ases_user($json['record']['alias_key']['respuesta']);
             $id_ases_student = $json['record']['alias_key']['respuesta'];
