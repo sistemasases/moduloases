@@ -49,7 +49,7 @@ $filemanageroptions = array('maxbytes'       => $CFG->maxbytes,
                              'subdirs'        => 0,
                              'maxfiles'       => 1,
                              'accepted_types' => 'web_image');
-class user_edit_form extends moodleform {
+class user_image_edit_form extends moodleform {
     //Add elements to form
     public function definition() {
         global $CFG;
@@ -86,6 +86,7 @@ $pagetitle = $title;
 
 
 $mdl_user_id =  required_param('userid', PARAM_INT);
+echo $mdl_user_id;
 $url_return =  required_param('url_return', PARAM_TEXT);
 function save_image($image_form_data, $mdl_user_id) {
     $usernew = new class{};
@@ -141,25 +142,26 @@ echo $output->header();
 /** Creando el formulario  */
 
 
-$user_edit_form = new user_edit_form($url);
-
+$user_image_edit_form = new user_image_edit_form($url);
+$user_image_edit_form->set_data($_POST);
 //Form processing and displaying is done here
-if ($user_edit_form->is_cancelled()) {
+if ($user_image_edit_form->is_cancelled()) {
     //Handle form cancel operation, if cancel button is present on form
+    echo 'neeeeeee';
     redirect($url_return);
-} else if ($image_data = $user_edit_form->get_data()) {
+} else if ($image_data = $user_image_edit_form->get_data()) {
     print_r($image_data);
     save_image($image_data, $mdl_user_id);
+    echo 'reeeeee';
     redirect($url_return);
   //In this case you process validated data. $mform->get_data() returns data posted in form.
 } else {
   // this branch is executed if the form is submitted but the data doesn't validate and the form should be redisplayed
   // or on the first display of the form.
- 
   //Set default data (if any)
-  $user_edit_form->set_data($toform);
+  $user_image_edit_form->set_data($toform);
   //displays the form
-  $user_edit_form->display(null);
+  $user_image_edit_form->display(null);
 }
 $PAGE->requires->js_call_amd('block_ases/editar_imagen_perfil', 'init');
 echo $output->footer();

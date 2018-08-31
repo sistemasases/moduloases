@@ -15,7 +15,7 @@ YUI.add('moodle-block_ases-modulename', function(Y) {
             //Y.one('#id_cancel').set('disabled', 'disabled');
          
             // Send the request
-            Y.io('http://localhost/moodle34/blocks/ases/view/edit_user_image.php?courseid=25643&instanceid=450299&userid=93491&url_return=http%3A%2F%2Flocalhost%2Fmoodle34%2Fblocks%2Fases%2Fview%2Fstudent_profile.php%3Fcourseid%3D25643%26amp%3Binstanceid%3D450299%26amp%3Bstudent_code%3D1522006-3746', {
+            Y.io('http://localhost/moodle34_luis/blocks/ases/view/edit_user_image.php', {
                 method: 'POST',
                 on: {
                     success: function(id, o) {

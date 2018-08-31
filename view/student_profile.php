@@ -1275,8 +1275,15 @@ class user_image_edit_form extends moodleform {
         return array();
     }
 }
-$_user_image_edit_form = new user_image_edit_form(null,null,'post',null,array('id'=>'update_user_profile_image'));
-$record->update_profile_image_form = $_user_image_edit_form->render();
+$urlll          = new moodle_url("/blocks/ases/view/edit_user_image.php", array(
+    'courseid' => 25643,
+    'instanceid' => 450299,
+    'userid' => 73392,
+    'url_return' => 55
+));
+$_user_image_edit_form = new user_image_edit_form($urlll,null,'post',null,array('id'=>'update_user_profile_image'));
+$_user_image_edit_form->set_data($toform);
+$record->update_profile_image_form = $_user_image_edit_form->render(null);
 /** End of Update user image  */
 $record->ases_student_code = $dphpforms_ases_user;
 $record->instance = $blockid;
@@ -1341,3 +1348,37 @@ echo $output->header();
 $student_profile_page = new \block_ases\output\student_profile_page($record);
 echo $output->render($student_profile_page);
 echo $output->footer();
+
+/**
+ * 
+ * Create a file
+ * 
+ */
+
+
+$fs = get_file_storage();
+ 
+// Prepare file record object
+$fileinfo = array(
+    'contextid' => $contextblock->id, // ID of context
+    'component' => 'mod_mymodule',     // usually = table name
+    'filearea' => 'myarea',     // usually = table name
+    'itemid' => 0,               // usually = ID of row in table
+    'filepath' => '/',           // any path beginning and ending in /
+    'filename' => 'myfile.txt'); // any filename
+ 
+// Create file containing text 'hello world'
+//$fs->create_file_from_string($fileinfo, 'hello world');
+$out = array();
+ 
+$fs = get_file_storage();
+$files = $fs->get_area_files( $contextblock->id, 'mod_mymodule', 'myarea', 0);
+foreach ($files as $file) {
+    $filename = $file->get_filename();
+    $url = moodle_url::make_pluginfile_url($file->get_contextid(), $file->get_component(), $file->get_filearea(), $file->get_itemid(), $file->get_filepath(), $file->get_filename());
+    $out[] = html_writer::link($url, $filename);
+}
+$br = html_writer::empty_tag('br');
+print_r($out);
+
+/** */
