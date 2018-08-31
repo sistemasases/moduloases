@@ -4,7 +4,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     global $DB;
     $dbman = $DB->get_manager();
     $result = true;
-    if ($oldversion < 2018082217309 ) {
+    if ($oldversion < 2018083110300 ) {
     //     // ************************************************************************************************************
     //     // Actualización que crea la tabla para los campos extendidos de usuario (Tabla: {talentospilos_user_extended})
     //     // Versión: 2018010911179
@@ -1351,12 +1351,41 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     if (!$dbman->table_exists($table)) {
         $dbman->create_table($table);
     }
+
+
+
+     // ************************************************************************************************************
+    // Actualización:
+    // Se crea tabla de el super super usuario de el bloque 
+    // Versión en la que se incluye: GIT XXX, Moodle: 2018083109510
+
+
+        // Define table talentospilos_superadmin to be created.
+        $table = new xmldb_table('talentospilos_superadmin');
+
+        // Adding fields to table talentospilos_superadmin.
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        $table->add_field('id_usuario', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('fecha_registro', XMLDB_TYPE_INTEGER, '20', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('fecha_ultima_modificacion', XMLDB_TYPE_INTEGER, '20', null, null, null, null);
+        $table->add_field('estado', XMLDB_TYPE_INTEGER, '2', null, null, null, '1');
+
+        // Adding keys to table talentospilos_superadmin.
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+        $table->add_key('fk_id_usuario', XMLDB_KEY_FOREIGN, array('id_usuario'), 'user', array('id'));
+
+        // Conditionally launch create table for talentospilos_superadmin.
+        if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
+        }
+
+
      // ************************************************************************************************************
     // Actualización:
     // Se crea tabla de logs de alertas academicas
     // Versión en la que se incluye: GIT XXX, Moodle: 2018080609050
 
-        upgrade_block_savepoint(true, 2018082217309 , 'ases');
+        upgrade_block_savepoint(true, 2018083110300 , 'ases');
     
         return $result;
 

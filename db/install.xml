@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<XMLDB PATH="blocks/ases/db" VERSION="20180808" COMMENT="XMLDB file for Moodle blocks/configurable_reports"
+<XMLDB PATH="blocks/ases/db" VERSION="20180831" COMMENT="XMLDB file for Moodle blocks/configurable_reports"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
 >
@@ -783,6 +783,19 @@
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="talentospilos_superadmin" COMMENT="Tabla para almacenar el id del superadmin del bloque">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="id_usuario" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="El id del usuario de moodle que sera el superadmin del bloque"/>
+        <FIELD NAME="fecha_registro" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="false" COMMENT="Fecha en que el usuario se ha marcado como un super administrador"/>
+        <FIELD NAME="fecha_ultima_modificacion" TYPE="int" LENGTH="20" NOTNULL="false" SEQUENCE="false" COMMENT="Fecha en que se ha modificado el estado del superadministrador"/>
+        <FIELD NAME="estado" TYPE="int" LENGTH="2" NOTNULL="false" DEFAULT="1" SEQUENCE="false" COMMENT="El estado de el usuario, puede tomar los valores 0 = INACTIVO, 1 = ACTIVO"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="fk_id_usuario" TYPE="foreign" FIELDS="id_usuario" REFTABLE="user" REFFIELDS="id" COMMENT="Llave foranea que fuerza a que el superadministrador sea un usuario de moodle registrado"/>
       </KEYS>
     </TABLE>
   </TABLES>
