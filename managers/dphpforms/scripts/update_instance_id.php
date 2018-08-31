@@ -108,8 +108,6 @@
     }
 
     echo "<hr>Estudiantes sin instancia: <strong>" . $faltantes . "</strong><br><hr>";
-
-
     
     die();
 
