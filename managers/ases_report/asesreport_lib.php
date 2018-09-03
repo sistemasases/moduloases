@@ -736,7 +736,7 @@ function get_ases_report($general_fields=null,
         switch($user_role->nombre_rol){
             case 'director_prog':
 
-                $conditions_query_directors = " user_extended.id_academic_program = $user_role->id_programa";
+                $conditions_query_directors = " ases_students.id_academic_program = $user_role->id_programa";
 
                 $where_clause .= $conditions_query_directors;
 
