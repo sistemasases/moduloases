@@ -24,6 +24,7 @@ function authenticate_user_view($userid, $blockid,$vista=null)
     // obtiene nombre de la vista actual.
 
     $function_name = explode(".php", $aux_function_name[5]) [0];
+   
     if($vista){
         $function_name=$vista;
     }
@@ -56,6 +57,7 @@ function get_actions_view($function_name,$userid,$blockid,$vista=null){
                             $value->nombre_accion
                         } = true;
                         $name = $value->nombre_accion;
+
                         $data->$name = $name;
                     }
 

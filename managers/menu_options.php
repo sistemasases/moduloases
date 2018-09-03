@@ -279,6 +279,21 @@ function create_menu_options($userid, $blockid, $courseid)
 
             }
 
+
+            if ($function == 'backup_forms') {
+                $url = new moodle_url("/blocks/ases/view/backup_forms.php", array(
+                    'courseid' => $courseid,
+                    'instanceid' => $blockid,
+                ));
+
+                $menu_options = '<li><a href= "' . $url . '">Reporte backup<span class="badge badge-secondary">New</span> </a><li>';
+
+                
+                $indexed['Reporte backup'] = $menu_options;
+
+            }
+
+
         }
 
         //ORDENA
