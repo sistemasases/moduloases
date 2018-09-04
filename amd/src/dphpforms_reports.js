@@ -9,12 +9,73 @@
   * @module block_ases/dphpforms_reports
   */
 
-  define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/jqueryui','block_ases/select2'], function($, bootstrap, sweetalert, jqueryui, select2) {
+define([
+    'jquery', 
+    'block_ases/jszip',
+    'block_ases/jquery.dataTables',
+    'block_ases/dataTables.autoFill',
+    'block_ases/dataTables.buttons',
+    'block_ases/buttons.html5',
+    'block_ases/buttons.flash',
+    'block_ases/buttons.print',
+    'block_ases/bootstrap', 
+    'block_ases/sweetalert', 
+    'block_ases/jqueryui',
+    'block_ases/select2'
+], function($, jszip, dataTables, autoFill, buttons, html5, flash, print, bootstrap, sweetalert, jqueryui, select2) {
     
     return {
         init: function() {
 
+            window.JSZip = jszip;
+            $("#dphpform_datatable").DataTable(
+                { 
+                    "bsort" : false,
+                    "data": [
+                        {
+                            "op":55,
+                            "casa": 0
+                        },
+                        {
+                            "casa":5,
+                            "op": 14
+                        }
+                    ],
+                    "columns" : [
+                        {
+                            "title" : "t", 
+                            "name" : "casita", 
+                            "data" : "casa",
+                        },
+                        {
+                            "title" : "op", 
+                            "name" : "op", 
+                            "data" : "op",
+                        },
+                    ],
+                    "dom":"lifrtpB",
+                    "buttons" : [
+                        {
+                            "extend" : "print",
+                            "text" : 'Imprimir'
+                        },{
+                            "extend" : "csv",
+                            "text" : 'CSV'
+                        },{
+                            "extend" : "excel",
+                            "text" : 'Excel',
+                            "className" : 'buttons-excel',
+                            "filename" : 'Export excel',
+                            "extension" : '.xls'
+                        }   
+                    ]
+                }
+            );
             var id_semester = null;
+
+            function render_datatable( records ){
+                console.log( records );
+            };
 
             function is_in_array( array_, new_element ){
                 for( var i = 0; i < array_.length; i++ ){
@@ -317,6 +378,7 @@
                         
                             var count_records = Object.keys( data['results'] ).length;
                             var completed_records = [];
+                            var completed_records_datatable = [];
                             var progress = 0;
 
                             for( var t = 0; t < count_records; t++ ){
@@ -333,9 +395,11 @@
                                                 for( var k = 0; k < Object.keys( seguimiento_base ).length; k++ ){
                                                     if( seguimiento_base[k].id == parseInt( record['record']['campos'][ x ]['id_pregunta'] ) ){
                                                         seguimiento_base[k].respuesta = record['record']['campos'][ x ]['respuesta'];
+                                                                                                                
                                                     }
                                                 }
                                             };
+
                                             completed_records.push( seguimiento_base );
                                         };
 
@@ -345,7 +409,9 @@
                                         $("#progress-download").find("div").attr( "aria-valuenow", (( 100 / count_records ) * progress).toFixed( 0 ) );
                                         if( progress == count_records ){
                                             $("#progress-download").find("div").addClass("progress-bar-success");
-                                            downloadCSV( custom_actions( completed_records, "seguimiento_pares" ) );
+                                            var tight_records = custom_actions( completed_records, "seguimiento_pares" );
+                                            render_datatable( tight_records );
+                                            downloadCSV( tight_records );
                                         };
                                         
                                     }).fail(function(err) {
