@@ -29,6 +29,7 @@ require_once(__DIR__ . '/../../../config.php');
 require_once($CFG->libdir.'/adminlib.php');
 require_once ('../managers/validate_profile_action.php');
 require_once ('../managers/menu_options.php');
+require_once '../managers/dphpforms/dphpforms_dwarehouse_lib.php';
 
 
 global $PAGE;
@@ -62,7 +63,21 @@ $data->menu = $menu_option;
 
 $PAGE->requires->css('/blocks/ases/style/side_menu_style.css', true);
 $PAGE->requires->css('/blocks/ases/style/bootstrap.min.css', true);
+$PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/dataTables.foundation.css', true);
+$PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/dataTables.foundation.min.css', true);
+$PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/dataTables.jqueryui.css', true);
+$PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/dataTables.jqueryui.min.css', true);
+$PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/jquery.dataTables.css', true);
+$PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/jquery.dataTables.min.css', true);
+$PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/jquery.dataTables_themeroller.css', true);
+$PAGE->requires->css('/blocks/ases/js/select2/css/select2.css', true);
 
+$PAGE->requires->js_call_amd('block_ases/students_backup_reports_main', 'init');
+$tableReport = get_array_for_reports($blockid);
+$paramReport = new stdClass();
+$paramReport->table = $tableReport;
+
+$PAGE->requires->js_call_amd('block_ases/backup_reports_main', 'load_table_backup_report', $paramReport);
 
 //$PAGE->requires->css('/blocks/ases/style/forms_pilos.css', true);
 
