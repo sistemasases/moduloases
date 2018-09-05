@@ -113,7 +113,8 @@ define(['jquery',
                         $("input[name='assignment_fields[]']").prop('checked', false);
                     }
                 });
-
+                     
+                
                 //Filtros de riesgos.
                 $(document).on('change', '.select_risk', function () {
                     var table = $("#tableResult").DataTable();
@@ -129,15 +130,17 @@ define(['jquery',
                     var selectedText = $(this).parent().find(":selected").text();
                     table.columns(colIndex - 1).search(this.value).draw();
                 });
-
+                
                 //Filtros sobre estados 
-                $(document).on('change', '.select_filter_statuses', function () {
+                $(document).on('change', '.select_filter_statuses', function () {     
                     var table = $("#tableResult").DataTable();
                     var colIndex = $(this).parent().index() + 1;
-                    var selectedText = $(this).parent().find(":selected").text();
-                    table.columns(colIndex - 1).search(this.value).draw();
+                    var selectedText = $(this).parent().find(":selected").text();                               
+                    table.columns(colIndex - 1).search(selectedText).draw();
+                    $.fn.dataTable.ext.search.pop()
                 });
 
+                
                 //Controles sobre el resumen de estudiantes
                 $(document).on('click', '.summary-title', function(){
 
