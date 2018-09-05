@@ -1278,8 +1278,8 @@ class user_image_edit_form extends moodleform {
 $urlll          = new moodle_url("/blocks/ases/view/edit_user_image.php", array(
     'courseid' => 25643,
     'instanceid' => 450299,
-    'userid' => 73392,
-    'url_return' => 55
+    'userid' => 93491,
+    'url_return' => $url
 ));
 $_user_image_edit_form = new user_image_edit_form($urlll,null,'post',null,array('id'=>'update_user_profile_image'));
 $_user_image_edit_form->set_data($toform);
@@ -1361,8 +1361,8 @@ $fs = get_file_storage();
 // Prepare file record object
 $fileinfo = array(
     'contextid' => $contextblock->id, // ID of context
-    'component' => 'mod_mymodule',     // usually = table name
-    'filearea' => 'myarea',     // usually = table name
+    'component' => 'ases',     // usually = table name
+    'filearea' => 'profile_image',     // usually = table name
     'itemid' => 0,               // usually = ID of row in table
     'filepath' => '/',           // any path beginning and ending in /
     'filename' => 'myfile.txt'); // any filename
@@ -1372,7 +1372,7 @@ $fileinfo = array(
 $out = array();
  
 $fs = get_file_storage();
-$files = $fs->get_area_files( $contextblock->id, 'mod_mymodule', 'myarea', 0);
+$files = $fs->get_area_files( $contextblock->id, 'ases', 'profile_image', 0);
 foreach ($files as $file) {
     $filename = $file->get_filename();
     $url = moodle_url::make_pluginfile_url($file->get_contextid(), $file->get_component(), $file->get_filearea(), $file->get_itemid(), $file->get_filepath(), $file->get_filename());

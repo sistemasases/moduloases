@@ -92,7 +92,7 @@ function save_image($image_form_data, $mdl_user_id) {
     $usernew = new class{};
     $usernew = $image_form_data;
     $usernew->id = $mdl_user_id;
-    core_user::update_picture($usernew, $filemanageroptions);
+    update_picture($usernew, $filemanageroptions);
 }
 
 
@@ -142,17 +142,65 @@ echo $output->header();
 /** Creando el formulario  */
 
 
+
+function update_picture(stdClass $usernew, $filemanageroptions = array()) {
+    global $CFG, $DB, $contextblock;
+    require_once("$CFG->libdir/gdlib.php");
+
+
+    $newpicture = $user->picture;
+    // Get file_storage to process files.
+    
+    $fs = get_file_storage();
+    if (!empty($usernew->deletepicture)) {
+        // The user has chosen to delete the selected users picture.
+        
+        $fs->delete_area_files($context, 'ases', 'profile_image'); // Drop all images in area.
+        $newpicture = 0;
+
+    } else {
+        // Save newly uploaded file, this will avoid context mismatch for newly created users.
+        file_save_draft_area_files($usernew->imagefile, $context, 'ases', 'profile_image', 0, $filemanageroptions);
+        
+        $context = context_user::instance($usernew->id, MUST_EXIST);
+        if (($iconfiles = $fs->get_area_files($context, 'ases', 'profile_image')) && count($iconfiles) == 2) {
+            // Get file which was uploaded in draft area.
+            foreach ($iconfiles as $file) {
+                if (!$file->is_directory()) {
+                    break;
+                }
+            }
+            // Copy file to temporary location and the send it for processing icon.
+            if ($iconfile = $file->copy_content_to_temp()) {
+                // There is a new image that has been uploaded.
+                // Process the new image and set the user to make use of it.
+                // NOTE: Uploaded images always take over Gravatar.
+                $newpicture = (int)process_new_icon($context, 'ases', 'profile_image', 0, $iconfile);
+                // Delete temporary file.
+                @unlink($iconfile);
+                // Remove uploaded file.
+                $fs->delete_area_files($context, 'ases', 'profile_image');
+            } else {
+                // Something went wrong while creating temp file.
+                // Remove uploaded file.
+                $fs->delete_area_files($context, 'ases', 'profile_image');
+                return false;
+            }
+        }
+    }
+
+
+}
+
 $user_image_edit_form = new user_image_edit_form($url);
 $user_image_edit_form->set_data($_POST);
 //Form processing and displaying is done here
 if ($user_image_edit_form->is_cancelled()) {
     //Handle form cancel operation, if cancel button is present on form
-    echo 'neeeeeee';
     redirect($url_return);
 } else if ($image_data = $user_image_edit_form->get_data()) {
-    print_r($image_data);
     save_image($image_data, $mdl_user_id);
-    echo 'reeeeee';
+    print_r ($contextblock->id);
     redirect($url_return);
   //In this case you process validated data. $mform->get_data() returns data posted in form.
 } else {

@@ -149,7 +149,7 @@ return {
      $('#save_tracking_btn').on('click', function() {
          save_tracking_peer();
      });
-
+     $('fieldset').removeClass('hidden');
      // Controles sobre limpiar funcionario
      $('#clean_individual_risk').on('click', function(){
          $('#no_value_individual').prop('checked', true);

@@ -5,7 +5,6 @@ YUI.add('moodle-block_ases-modulename', function(Y) {
     };
     Y.extend(MODULENAME, Y.Base, {
         initializer : function(config) { // 'config' contains the parameter values
-            alert('I am in initializer');
             Y.one('#update-profile-image-button').on('click', function () {
                 console.log('hola');
                             // If your form has a cancel button, you need to disable it, otherwise it'll be sent with the request
@@ -15,7 +14,7 @@ YUI.add('moodle-block_ases-modulename', function(Y) {
             //Y.one('#id_cancel').set('disabled', 'disabled');
          
             // Send the request
-            Y.io('http://localhost/moodle34_luis/blocks/ases/view/edit_user_image.php', {
+            Y.io('http://localhost/moodle_luis/blocks/ases/view/edit_user_image.php', {
                 method: 'POST',
                 on: {
                     success: function(id, o) {
@@ -67,7 +66,6 @@ YUI.add('moodle-block_ases-modulename', function(Y) {
                                                  // This is to avoid to overwrite previously loaded module with same name.
 
     M.block_ases.init_modulename = function(config) { // 'config' contains the parameter values
-        alert('I am in the javascript module, Yeah!');
         return new MODULENAME(config); // 'config' contains the parameter values
     };
   }, '@VERSION@', {
