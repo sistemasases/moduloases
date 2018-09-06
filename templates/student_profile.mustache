@@ -150,7 +150,7 @@
 
       </div>
       <!-- Profile image html, see $OUTPUT->user_picture -->
-      <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 {{#show_html_elements_update_user_profile_image}}profile-image-can-update{{/show_html_elements_update_user_profile_image}} profile-image">
+      <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 equalize {{#show_html_elements_update_user_profile_image}}profile-image-can-update{{/show_html_elements_update_user_profile_image}} profile-image">
         {{{html_profile_image}}}
         {{#show_html_elements_update_user_profile_image}}
         <div class="open-profile-image">
@@ -765,7 +765,6 @@
     </div>
     <div class="mymodal-body update-profile-image-modal-body" id="modal_risk_body">
       {{{update_profile_image_form}}}
-      <button id="update-profile-image-button"> hola </button>
     </div>
   </div>
 </div>

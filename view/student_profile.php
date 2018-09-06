@@ -46,7 +46,7 @@ require_once '../managers/dphpforms/dphpforms_records_finder.php';
 require_once '../managers/dphpforms/dphpforms_get_record.php';
 require_once '../managers/user_management/user_management_lib.php';
 require_once '../managers/periods_management/periods_lib.php';
-
+require_once '../classes/AsesUser.php';
 include '../lib.php';
 
 global $PAGE;
@@ -100,17 +100,19 @@ $html_profile_image = "";
 function getHtmlProfileImage($mdl_user_id): string {
     global $DB, $OUTPUT;
     $html_profile_image = "";
-    $mdl_user =   user_management_get_full_moodle_user ($mdl_user_id);;
+    $mdl_user =   user_management_get_full_moodle_user ($mdl_user_id);
     $html_profile_image = $OUTPUT->user_picture($mdl_user, array('size'=>200, 'link'=> false));
     return $html_profile_image;
 }
 $id_user_moodle_ = null;
+$ases_student = null;
 if ($student_code != 0) {
     
     $ases_student = get_ases_user_by_code($student_code);
 
     $student_id = $ases_student->id;
-    
+    //echo $student_id ;
+    //die;
     // Student information to display on file header (ficha)
     $id_user_moodle = get_id_user_moodle($ases_student->id);
     $id_user_moodle_ = $id_user_moodle;
@@ -118,7 +120,7 @@ if ($student_code != 0) {
     $user_moodle = get_moodle_user($id_user_moodle);
     
     
-    $html_profile_image = getHtmlProfileImage($id_user_moodle);
+    $html_profile_image = AsesUser::get_HTML_img_profile_image($contextblock->id, $ases_student->id);
     $academic_programs = get_status_program_for_profile($student_id);
     $student_cohorts = get_cohorts_by_student($id_user_moodle);
     $status_ases_array = get_ases_status($ases_student->id, $blockid);
@@ -1276,9 +1278,9 @@ class user_image_edit_form extends moodleform {
     }
 }
 $urlll          = new moodle_url("/blocks/ases/view/edit_user_image.php", array(
-    'courseid' => 25643,
-    'instanceid' => 450299,
-    'userid' => 93491,
+    'courseid' => $courseid,
+    'instanceid' => $blockid,
+    'ases_user_id' => $ases_student->id,
     'url_return' => $url
 ));
 $_user_image_edit_form = new user_image_edit_form($urlll,null,'post',null,array('id'=>'update_user_profile_image'));
@@ -1340,8 +1342,6 @@ $PAGE->requires->js_call_amd('block_ases/student_profile_main', 'equalize');
 $PAGE->requires->js_call_amd('block_ases/geographic_main', 'init');
 $PAGE->requires->js_call_amd('block_ases/dphpforms_form_renderer', 'init');
 $PAGE->requires->js_call_amd('block_ases/academic_profile_main', 'init');
-$PAGE->requires->yui_module('moodle-block_ases-modulename', 'M.block_ases.init_modulename',
-                array(array('aparam'=>'paramvalue')));
 $output = $PAGE->get_renderer('block_ases');
 
 echo $output->header();
@@ -1349,36 +1349,3 @@ $student_profile_page = new \block_ases\output\student_profile_page($record);
 echo $output->render($student_profile_page);
 echo $output->footer();
 
-/**
- * 
- * Create a file
- * 
- */
-
-
-$fs = get_file_storage();
- 
-// Prepare file record object
-$fileinfo = array(
-    'contextid' => $contextblock->id, // ID of context
-    'component' => 'ases',     // usually = table name
-    'filearea' => 'profile_image',     // usually = table name
-    'itemid' => 0,               // usually = ID of row in table
-    'filepath' => '/',           // any path beginning and ending in /
-    'filename' => 'myfile.txt'); // any filename
- 
-// Create file containing text 'hello world'
-//$fs->create_file_from_string($fileinfo, 'hello world');
-$out = array();
- 
-$fs = get_file_storage();
-$files = $fs->get_area_files( $contextblock->id, 'ases', 'profile_image', 0);
-foreach ($files as $file) {
-    $filename = $file->get_filename();
-    $url = moodle_url::make_pluginfile_url($file->get_contextid(), $file->get_component(), $file->get_filearea(), $file->get_itemid(), $file->get_filepath(), $file->get_filename());
-    $out[] = html_writer::link($url, $filename);
-}
-$br = html_writer::empty_tag('br');
-print_r($out);
-
-/** */
