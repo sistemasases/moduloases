@@ -52,8 +52,6 @@
     // Example of valid input. params = Parameters
     // { "function":"LA_FUNCION", "params":[ id_user , id_form ] }
 
-
-
     if( isset($input->function) && isset($input->params) ){
 
         if( $input->function == "get_user_form" ){
@@ -76,7 +74,37 @@
                         array(
                             "status_code" => 0,
                             "error_message" => "",
-                            "data_response" => dphpforms_get_only_form_dwarehouse( $input->params[0] )
+                            "data_response" =>dphpforms_get_only_form_dwarehouse( $input->params[0] )
+                        )
+                    );
+                    
+                }else{
+                    return_with_code( -2 );
+                }
+            }else{
+                return_with_code( -2 );
+            }
+
+        }else if( $input->function == "get_list_forms" ){
+
+            /* In this request is only valid pass like param(Parameters) the instance identificatior, 
+             * for this reason, the input param only can be equal in quantity to one.
+             * */
+            
+            if( count( $input->params ) == 0){
+
+                // Order of params
+                /*
+                 * The id_form value only can be a number.
+                 */
+                
+                if( is_numeric( $input->params[0] )  ){
+                    
+                    echo json_encode( 
+                        array(
+                            "status_code" => 0,
+                            "error_message" => "",
+                            "data_response" =>dphpforms_get_forms_dwarehouse(  )
                         )
                     );
                     

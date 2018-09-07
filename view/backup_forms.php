@@ -73,11 +73,13 @@ $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/jquery.dataTables_t
 $PAGE->requires->css('/blocks/ases/js/select2/css/select2.css', true);
 
 $PAGE->requires->js_call_amd('block_ases/students_backup_reports_main', 'init');
-$tableReport = get_array_for_reports($blockid);
+//$tableReport = get_array_for_reports($blockid);
 $paramReport = new stdClass();
 $paramReport->table = $tableReport;
 
-$PAGE->requires->js_call_amd('block_ases/backup_reports_main', 'load_table_backup_report', $paramReport);
+//$PAGE->requires->js_call_amd('block_ases/backup_reports_main', 'load_table_backup_report', $paramReport);
+$PAGE->requires->js_call_amd('block_ases/dphpforms_backup_forms', 'init');
+
 
 //$PAGE->requires->css('/blocks/ases/style/forms_pilos.css', true);
 
