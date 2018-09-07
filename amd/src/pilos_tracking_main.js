@@ -1033,10 +1033,21 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                         // Gets text message and monitor id to send the email
                         var tracking_type = 'individual';
                         var monitor_code = $('.id_creado_por').find('input').val();
+                        if(monitor_code == ""){
+                            monitor_code = $('.in_id_creado_por').find('input').val();
+                            tracking_type = 'individual_inasistencia';
+                        }
                         var date = $('.fecha').find('input').val();
+                        if(date == ""){
+                            date = $('.in_fecha').find('input').val();
+                        }
                         var message_to_send = text.val();
                         var semester=$("#periodos").val();
                         var place = $('.lugar').find('input').val();
+                        if(place == ""){
+                            place = $('.in_lugar').find('input').val();
+                        }
+
 
                         //Text area is clear again
                         var answer = "";

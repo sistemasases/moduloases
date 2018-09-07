@@ -43,7 +43,7 @@
     SELECT FS.id_formulario_respuestas 
     FROM {talentospilos_df_form_solu} AS FS 
     INNER JOIN {talentospilos_df_respuestas} AS R 
-    ON FS.id_respuesta = R.id WHERE R.id_pregunta = 60";
+    ON FS.id_respuesta = R.id WHERE R.id_pregunta = 54";
 
     $records = $DB->get_records_sql( $records_to_update );
 
@@ -86,7 +86,7 @@
             // Registrar respuesta[ instancia ]
 
             $new_respuesta = new stdClass();
-            $new_respuesta->id_pregunta = 60;
+            $new_respuesta->id_pregunta = 54;
             $new_respuesta->respuesta = $instance_id;
 
             $id_record_respuesta = $DB->insert_record( 'talentospilos_df_respuestas', $new_respuesta, $returnid=true, $bulk=false );
@@ -108,8 +108,6 @@
     }
 
     echo "<hr>Estudiantes sin instancia: <strong>" . $faltantes . "</strong><br><hr>";
-
-
     
     die();
 

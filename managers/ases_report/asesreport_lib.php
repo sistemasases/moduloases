@@ -551,8 +551,8 @@ function get_ases_report($general_fields=null,
                     $select_clause .= $status_field.", ";
 
                     $sub_query_status .= " LEFT JOIN (SELECT current_ases_status.id_ases_student AS id_ases_student,
-                                                        CASE WHEN historic_ases_statuses.nombre = 'seguimiento' THEN 'SEGUIMIENTO'
-                                                             WHEN historic_ases_statuses.nombre = 'sinseguimiento' THEN 'SIN SEGUIMIENTO'
+                                                        CASE WHEN historic_ases_statuses.nombre = 'seguimiento' THEN '-SEGUIMIENTO'
+                                                             WHEN historic_ases_statuses.nombre = 'sinseguimiento' THEN '-SIN SEGUIMIENTO'
                                                              ELSE 'N.R.' 
                                                         END AS ases_status_student
                                                       FROM
@@ -574,14 +574,16 @@ function get_ases_report($general_fields=null,
                     $select_clause .= $status_field.", ";
 
                     $sub_query_status .= " LEFT JOIN (SELECT current_icetex_status.id_ases_student AS id_ases_student, 
-                                                      historic_icetex_statuses.descripcion AS icetex_status_student
+                                                        CASE WHEN historic_icetex_statuses.nombre IN ('APLAZADO', 'EGRESADO', 'RETIRADO') THEN 'INACTIVO'
+                                                             ELSE historic_icetex_statuses.nombre
+                                                        END AS icetex_status_student                                                      
                                                       FROM
                                                         (SELECT student_icetex_status.id_estudiante AS id_ases_student,
                                                                 MAX(student_icetex_status.fecha) AS fecha
                                                         FROM {talentospilos_est_est_icetex} AS student_icetex_status
                                                         GROUP BY student_icetex_status.id_estudiante) AS current_icetex_status
                                                         INNER JOIN
-                                                        (SELECT student_icetex_status.id_estudiante, student_icetex_status.fecha, icetex_statuses.descripcion
+                                                        (SELECT student_icetex_status.id_estudiante, student_icetex_status.fecha, icetex_statuses.nombre
                                                         FROM {talentospilos_est_est_icetex} AS student_icetex_status
                                                         INNER JOIN {talentospilos_estados_icetex} AS icetex_statuses ON icetex_statuses.id = student_icetex_status.id_estado_icetex) AS historic_icetex_statuses
                                                         ON (historic_icetex_statuses.id_estudiante = current_icetex_status.id_ases_student AND historic_icetex_statuses.fecha = current_icetex_status.fecha)) AS icetex_status ON icetex_status.id_ases_student = ases_students.student_id";
@@ -1263,6 +1265,25 @@ function get_academic_program_statuses(){
 
     $sql_query = "SELECT *
                   FROM {talentospilos_estad_programa}";
+
+    $result = $DB->get_records_sql($sql_query);
+
+    return $result;
+}
+
+/**
+ * Función que retorna el conjunto de estados en ICETEX
+ *
+ * @see get_icetex_states
+ * @return Array 
+ */
+
+function get_icetex_states(){
+
+    global $DB;
+
+    $sql_query = "SELECT *
+                  FROM {talentospilos_estados_icetex}";
 
     $result = $DB->get_records_sql($sql_query);
 
