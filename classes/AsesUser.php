@@ -30,7 +30,6 @@ require_once ('../managers/lib/student_lib.php');
 
 class AsesUser {
     public $id = -1;
-
     function __construct($id) {
         $this->id = $id;
     }
@@ -57,7 +56,7 @@ class AsesUser {
      * @param int $context_block_id  Ases block context id
      * @return string HTML <img> element
      */
-    public static function get_HTML_img_profile_image(int $context_block_id,  int $ases_student_id, string $width = '100%', string $height = '100%', $class = ''): string {
+    public static function get_HTML_img_profile_image(int $context_block_id,  int $ases_student_id, string $width = '100%', string $height = '', $class = ''): string {
         global $OUTPUT;
         $image_url = AsesUser::get_URL_profile_image($context_block_id,  $ases_student_id );
         if ($image_url != '') {
