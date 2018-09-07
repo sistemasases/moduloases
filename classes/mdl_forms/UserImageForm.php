@@ -11,7 +11,6 @@ class user_image_edit_form extends moodleform {
         //normally you use add_action_buttons instead of this code
         $buttonarray=array();
         $buttonarray[] = $mform->createElement('submit', 'submitbutton', get_string('savechanges'));
-        $buttonarray[] = $mform->createElement('cancel');
         $mform->addGroup($buttonarray, 'buttonar', '', ' ', false);
     }
     //Custom validation should be added here
