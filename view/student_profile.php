@@ -47,6 +47,7 @@ require_once '../managers/dphpforms/dphpforms_get_record.php';
 require_once '../managers/user_management/user_management_lib.php';
 require_once '../managers/periods_management/periods_lib.php';
 require_once '../classes/AsesUser.php';
+require_once '../classes/mdl_forms/UserImageForm.php';
 include '../lib.php';
 
 global $PAGE;
@@ -1257,33 +1258,14 @@ if (isset($actions->update_user_profile_image)) {
 }
 $record->show_html_elements_update_user_profile_image = $show_html_elements_update_user_profile_image;
 
-class user_image_edit_form extends moodleform {
-    //Add elements to form
-    public function definition() {
-        global $CFG;
- 
-        $mform = $this->_form; // Don't forget the underscore! 
 
-        $mform->addElement('filepicker', 'imagefile', 'Nueva imágen de perfil'); // Add elements to your form
-        $mform->addRule('imagefile', null, 'required');
-        //normally you use add_action_buttons instead of this code
-        $buttonarray=array();
-        $buttonarray[] = $mform->createElement('submit', 'submitbutton', get_string('savechanges'));
-       // $buttonarray[] = $mform->createElement('cancel');
-        $mform->addGroup($buttonarray, 'buttonar', '', ' ', false);
-    }
-    //Custom validation should be added here
-    function validation($data, $files) {
-        return array();
-    }
-}
-$urlll          = new moodle_url("/blocks/ases/view/edit_user_image.php", array(
+$url_user_edit_image_form_manager        = new moodle_url("/blocks/ases/view/edit_user_image.php", array(
     'courseid' => $courseid,
     'instanceid' => $blockid,
     'ases_user_id' => $ases_student->id,
     'url_return' => $url
 ));
-$_user_image_edit_form = new user_image_edit_form($urlll,null,'post',null,array('id'=>'update_user_profile_image'));
+$_user_image_edit_form = new user_image_edit_form($url_user_edit_image_form_manager,null,'post',null,array('id'=>'update_user_profile_image'));
 $_user_image_edit_form->set_data($toform);
 $record->update_profile_image_form = $_user_image_edit_form->render(null);
 /** End of Update user image  */
