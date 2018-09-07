@@ -5,6 +5,10 @@
 #div-header-profile{
     margin-bottom: 10px;
     margin-top: 10px;
+    display: flex;
+    display: -ms-flex;
+	display: -webkit-flex;
+    align-items: center;
 }
 
 #div-instance-name{
@@ -362,9 +366,6 @@
 
 /* Profile image */
 
-.profile-image {
-    margin-top: 0.8%;
-}
 .profile-image > img {
     width: 100%;
 }
@@ -402,4 +403,12 @@ opacity: 1;
 background-color: red;
 color: white;
 cursor: pointer;
+}
+/* -> Update user image */
+
+.update-profile-image-modal-body > form > fieldset{
+    min-width: 200;
+}
+.update-profile-image-modal-body > form > fieldset > div > .fitem > .fitemtitle {
+    text-align: left;
 }

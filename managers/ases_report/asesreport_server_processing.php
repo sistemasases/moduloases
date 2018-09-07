@@ -101,15 +101,14 @@ if(isset($_POST['risk_fields'])){
 if(isset($_POST['status_fields'])){
 
     $array_statuses = array(
-        'seguimiento' => 'SEGUIMIENTO',
-        'sinseguimiento' => 'SIN SEGUIMIENTO'
+        'seguimiento' => '-SEGUIMIENTO',
+        'sinseguimiento' => '-SIN SEGUIMIENTO'
     );
 
     foreach($_POST['status_fields'] as $status_field){
 
         $option = "";
         $option .= "<option value =''></option>";
-        $option .= "<option value ='N.R.'>N.R.</option>";
 
         switch($status_field){
 
@@ -118,8 +117,9 @@ if(isset($_POST['status_fields'])){
                 $ases_statuses = get_ases_statuses();
 
                 foreach($ases_statuses as $status){
-                    $option .= "<option value ='$status->nombre'>";
-                    $option .= $array_statuses[$status->nombre];
+                    $value = $array_statuses[$status->nombre];
+                    $option .= "<option value ='$value'>";
+                    $option .= $value;
                     $option .= "</option>";
                 }
 
@@ -127,9 +127,30 @@ if(isset($_POST['status_fields'])){
 
             case 'icetex_status':
 
-                $option.= "<option>ACTIVO</option>";
-                $option.= "<option>INACTIVO</option>";
+                $icetex_statuses = get_icetex_states();
+                $set_name_inactive = true;
 
+                foreach($icetex_statuses as $status){                    
+                    
+                    switch($status->nombre){
+
+                        case 'APLAZADO':
+                        case 'EGRESADO':
+                        case 'RETIRADO':
+                            if($set_name_inactive){
+                                $option .= "<option>";
+                                $option .= "INACTIVO";
+                                $option .= "</option>";
+                                $set_name_inactive = false;
+                            }
+                            break;
+                        default:
+                            $option .= "<option>";
+                            $option .= $status->nombre;
+                            $option .= "</option>";
+                            break;
+                    }                         
+                } 
                 break;
             
             case 'academic_program_status':
