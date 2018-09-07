@@ -27,6 +27,7 @@
 // Standard GPL and phpdocs
 require_once __DIR__ . '/../../../config.php';
 require_once $CFG->libdir . '/adminlib.php';
+require_once("$CFG->libdir/formslib.php");
 
 require_once '../managers/lib/student_lib.php';
 require_once '../managers/lib/lib.php';
@@ -45,7 +46,8 @@ require_once '../managers/dphpforms/dphpforms_records_finder.php';
 require_once '../managers/dphpforms/dphpforms_get_record.php';
 require_once '../managers/user_management/user_management_lib.php';
 require_once '../managers/periods_management/periods_lib.php';
-
+require_once '../classes/AsesUser.php';
+require_once '../classes/mdl_forms/UserImageForm.php';
 include '../lib.php';
 
 global $PAGE;
@@ -100,17 +102,19 @@ $html_profile_image = "";
 function getHtmlProfileImage($mdl_user_id): string {
     global $DB, $OUTPUT;
     $html_profile_image = "";
-    $mdl_user =   user_management_get_full_moodle_user ($mdl_user_id);;
+    $mdl_user =   user_management_get_full_moodle_user ($mdl_user_id);
     $html_profile_image = $OUTPUT->user_picture($mdl_user, array('size'=>200, 'link'=> false));
     return $html_profile_image;
 }
 $id_user_moodle_ = null;
+$ases_student = null;
 if ($student_code != 0) {
     
     $ases_student = get_ases_user_by_code($student_code);
 
     $student_id = $ases_student->id;
-    
+    //echo $student_id ;
+    //die;
     // Student information to display on file header (ficha)
     $id_user_moodle = get_id_user_moodle($ases_student->id);
     $id_user_moodle_ = $id_user_moodle;
@@ -118,7 +122,7 @@ if ($student_code != 0) {
     $user_moodle = get_moodle_user($id_user_moodle);
     
     
-    $html_profile_image = getHtmlProfileImage($id_user_moodle);
+    $html_profile_image = AsesUser::get_HTML_img_profile_image($contextblock->id, $ases_student->id);
     $academic_programs = get_status_program_for_profile($student_id);
     $student_cohorts = get_cohorts_by_student($id_user_moodle);
     $status_ases_array = get_ases_status($ases_student->id, $blockid);
@@ -1254,6 +1258,17 @@ if (isset($actions->update_user_profile_image)) {
     $show_html_elements_update_user_profile_image = true;
 }
 $record->show_html_elements_update_user_profile_image = $show_html_elements_update_user_profile_image;
+
+
+$url_user_edit_image_form_manager        = new moodle_url("/blocks/ases/view/edit_user_image.php", array(
+    'courseid' => $courseid,
+    'instanceid' => $blockid,
+    'ases_user_id' => $ases_student->id,
+    'url_return' => $url
+));
+$_user_image_edit_form = new user_image_edit_form($url_user_edit_image_form_manager,null,'post',null,array('id'=>'update_user_profile_image'));
+$_user_image_edit_form->set_data($toform);
+$record->update_profile_image_form = $_user_image_edit_form->render(null);
 /** End of Update user image  */
 $record->ases_student_code = $dphpforms_ases_user;
 $record->instance = $blockid;
@@ -1310,10 +1325,10 @@ $PAGE->requires->js_call_amd('block_ases/student_profile_main', 'equalize');
 $PAGE->requires->js_call_amd('block_ases/geographic_main', 'init');
 $PAGE->requires->js_call_amd('block_ases/dphpforms_form_renderer', 'init');
 $PAGE->requires->js_call_amd('block_ases/academic_profile_main', 'init');
-
 $output = $PAGE->get_renderer('block_ases');
 
 echo $output->header();
 $student_profile_page = new \block_ases\output\student_profile_page($record);
 echo $output->render($student_profile_page);
 echo $output->footer();
+
