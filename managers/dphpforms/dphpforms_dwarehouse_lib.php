@@ -26,7 +26,8 @@
 require_once(dirname(__FILE__). '/../../../../config.php');
 require_once $CFG->dirroot.'/blocks/ases/managers/lib/lib.php';
 
-function get_list_forms(){
+
+function get_list_form(){
     global $DB;
     $forms_dwarehouse_array = array();
  
@@ -34,20 +35,19 @@ function get_list_forms(){
             FROM {talentospilos_df_dwarehouse} AS dwarehouse ";
     $results = $DB->get_records_sql($sql);
 
-    /*foreach ($results as $record) {
+    foreach ($results as $record) {
      
 
         array_push($forms_dwarehouse_array, $record);
-    }*/
+    }
     
-   return $results;
+   return $forms_dwarehouse_array;
 }
 
-function dphpforms_get_only_form_dwarehouse($id_form){
+function dphpforms_get_only_form($id_form){
     global $DB;
     $form_dwarehouse_array = array();
-    $id_form= 1; 
-
+  
     $sql = "SELECT id_usuario_moodle AS id_user, accion AS name_action, datos_previos AS dp_form, datos_enviados AS de_form, datos_almacenados AS da_form, 
     fecha_hora_registro AS fecha_form FROM {talentospilos_df_dwarehouse} AS dwarehouse WHERE dwarehouse.id = $id_form ";
 
@@ -58,21 +58,11 @@ function dphpforms_get_only_form_dwarehouse($id_form){
     return $form_dwarehouse_array;
 }
 
-function get_columnss_list(){
-    $columns = array();
-    array_push($columns, array("title"=>"Id usuario", "name"=>"id_user", "data"=>"id_user"));
-    array_push($columns, array("title"=>"Nombre", "name"=>"name_user", "data"=>"name_user"));
-    array_push($columns, array("title"=>"Acción", "name"=>"name_accion", "data"=>"name_accion"));
-    array_push($columns, array("title"=>"Fecha", "name"=>"fecha_act", "data"=>"fecha_act"));
 
-} 
 
 
     /*$columns = array();
-    array_push($columns, array("title"=>"Id usuario", "name"=>"id_user", "data"=>"id_user"));
-    array_push($columns, array("title"=>"Nombre", "name"=>"name_user", "data"=>"name_user"));
-    array_push($columns, array("title"=>"Acción", "name"=>"name_accion", "data"=>"name_accion"));
-    array_push($columns, array("title"=>"Fecha", "name"=>"fecha_act", "data"=>"fecha_act"));
+   
 
     $data = array(
         "bsort" => false,

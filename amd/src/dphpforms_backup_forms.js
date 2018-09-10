@@ -29,68 +29,40 @@
             window.JSZip = jszip;
            $(document).ready(function(){
                     $.ajax({
+
                         type: "POST",
-                        url: "../managers/dphpforms/dphpforms_dwarehouse_api.php",
-                        data: JSON.stringify({ "function": "get_list_forms" , "params": [0]}),
-                        contentType: "application/json; charset=utf-8",
-                        dataType: "json",
-                        async: true,  
-                        success: function(data){
-                           
-                           prueba(data);
+			        data: {loadF: 'loadForms'},
+			        url: "../managers/dphpforms/dphpforms_dwarehouse_api.php",
+			        success: function(msg){
+				        $("#div_table_forms").empty();
+				        $("#div_table_forms").append('<table id="tableBackupForms" class="display" cellspacing="0" width="100%"><thead><thead></table>');
+				        var table = $("#tableBackupForms").DataTable(msg);
+			        	$('#div_table_forms').css('cursor', 'pointer');			
+		        	},
+			        dataType: "json",
+                    cache: false,
+                    async: true,
+
+                        failure: function(msg) {}
+                    });
 
 
-                        },
-                        failure: function(errMsg) {alert("Cuidad 2");}
+                    $(document).on('click','#tableBackupForms tbody tr td', function() {
+                        var valores="";
+ 
+                        // Obtenemos todos los valores contenidos en los <td> de la fila
+                        // seleccionada
+                        $(this).parents("tr").find("td").each(function(){
+                            valores =$(this).html();
+                        });
+             
+                        alert(valores);
+
+                      	
                     });
                 });
 
-            function prueba(data){ 
-                var respuesta = data['data_response'];
-                $("#div_table_report").DataTable(
-                    { 
-                        "bsort" : false,
-                        "data": [
-                            {
-                                "op":55,
-                                "casa": 0
-                            },
-                            {
-                                "casa":5,
-                                "op": 14
-                            }
-                        ],
-                        "columns" : [
-                            {
-                                "title" : "t", 
-                                "name" : "casita", 
-                                "data" : "casa",
-                            },
-                            {
-                                "title" : "op", 
-                                "name" : "op", 
-                                "data" : "op",
-                            },
-                        ],
-                        "dom":"lifrtpB",
-                        "buttons" : [
-                            {
-                                "extend" : "print",
-                                "text" : 'Imprimir'
-                            },{
-                                "extend" : "csv",
-                                "text" : 'CSV'
-                            },{
-                                "extend" : "excel",
-                                "text" : 'Excel',
-                                "className" : 'buttons-excel',
-                                "filename" : 'Export excel',
-                                "extension" : '.xls'
-                            }   
-                        ]
-                    }
-                );
-            };
+            
                 
         }
 

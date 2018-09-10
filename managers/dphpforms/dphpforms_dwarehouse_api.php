@@ -28,18 +28,6 @@
     require_once(dirname(__FILE__). '/../../../../config.php');
     require_once(dirname(__FILE__).'/dphpforms_dwarehouse_lib.php');
 
-    header('Content-Type: application/json');
-
-    global $USER;
-    
-    $raw_data = file_get_contents("php://input");
-    
-    // Validation if the user is logged. 
-    // if( $USER->id == 0 ){
-    //    return_with_code( -1 );
-    //}
-
-    $input = json_decode( $raw_data );
 
     /**
      * Api la consulta de datos respecto a usuarios, y formularios.
@@ -51,147 +39,67 @@
 
     // Example of valid input. params = Parameters
     // { "function":"LA_FUNCION", "params":[ id_user , id_form ] }
-
-    if( isset($input->function) && isset($input->params) ){
-
-        if( $input->function == "get_user_form" ){
-
-            /* In this request is only valid pass like param(Parameters) the instance identificatior, 
-             * for this reason, the input param only can be equal in quantity to one.
-             * */
-            
-            if( count( $input->params ) == 1 ){
-
-                
-                // Order of params
-                /*
-                 * The id_form value only can be a number.
-                 */
-                
-                if( is_numeric( $input->params[0] )  ){
-                    
-                    echo json_encode( 
-                        array(
-                            "status_code" => 0,
-                            "error_message" => "",
-                            "data_response" =>dphpforms_get_only_form_dwarehouse( $input->params[0] )
+if(isset($_POST['loadF']) && $_POST['loadF'] == 'loadForms'){		
+            $columns = array();
+            array_push($columns, array("title"=>"Id usuario", "name"=>"id_user", "data"=>"id_user"));
+            array_push($columns, array("title"=>"Acción", "name"=>"name_accion", "data"=>"name_accion"));
+            array_push($columns, array("title"=>"Id respuesta", "name"=>"id_respuesta", "data"=>"id_respuesta"));
+            array_push($columns, array("title"=>"Fecha", "name"=>"fecha_act", "data"=>"fecha_act"));
+            array_push($columns, array("title"=>"Identificador", "name"=>"id_form", "data"=>"id"));
+    
+            $data = array(
+                        "bsort" => false,
+                        "columns" => $columns,
+                        "data" =>get_list_form(),
+                        "language" => 
+                         array(
+                            "search"=> "Buscar:",
+                            "oPaginate" => array(
+                                "sFirst"=>    "Primero",
+                                "sLast"=>     "Último",
+                                "sNext"=>     "Siguiente",
+                                "sPrevious"=> "Anterior"
+                                ),
+                            "sProcessing"=>     "Procesando...",
+                            "sLengthMenu"=>     "Mostrar _MENU_ registros",
+                            "sZeroRecords"=>    "No se encontraron resultados",
+                            "sEmptyTable"=>     "Ningún dato disponible en esta tabla",
+                            "sInfo"=>           "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+                            "sInfoEmpty"=>      "Mostrando registros del 0 al 0 de un total de 0 registros",
+                            "sInfoFiltered"=>   "(filtrado de un total de _MAX_ registros)",
+                            "sInfoPostFix"=>    "",
+                            "sSearch"=>         "Buscar:",
+                            "sUrl"=>            "",
+                            "sInfoThousands"=>  ",",
+                            "sLoadingRecords"=> "Cargando...",
+                         ),
+                        "order"=> array(0, "desc"),
+                        "dom"=>'lifrtpB',
+    
+                        "buttons"=>array(
+                            array(
+                                "extend"=>'print',
+                                "text"=>'Imprimir'
+                            ),
+                            array(
+                                "extend"=>'csvHtml5',
+                                "text"=>'CSV'
+                            ),
+                            array(
+                                "extend" => "excel",
+                                                "text" => 'Excel',
+                                                "className" => 'buttons-excel',
+                                                "filename" => 'Export excel',
+                                                "extension" => '.xls'
+                            )
                         )
+    
                     );
-                    
-                }else{
-                    return_with_code( -2 );
-                }
-            }else{
-                return_with_code( -2 );
-            }
+                header('Content-Type: application/json');
+            echo json_encode($data);
+        } 
 
-        }else if( $input->function == "get_list_forms" ){
+      
 
-            /* In this request is only valid pass like param(Parameters) the instance identificatior, 
-             * for this reason, the input param only can be equal in quantity to one.
-             * */
-            
-            if( count( $input->params ) == 0){
-
-                // Order of params
-                /*
-                 * The id_form value only can be a number.
-                 */
-                
-                if( is_numeric( $input->params[0] )  ){
-                    
-                    echo json_encode( 
-                        array(
-                            "status_code" => 0,
-                            "error_message" => "",
-                            "data_response" =>dphpforms_get_forms_dwarehouse(  )
-                        )
-                    );
-                    
-                }else{
-                    return_with_code( -2 );
-                }
-            }else{
-                return_with_code( -2 );
-            }
-
-        }else{
-            // Function not defined
-            return_with_code( -4 );
-        }
         
-    }else{
-        return_with_code( -2 );
-    }
-
-
-
-
-
-    function return_with_code( $code ){
-        
-        switch( $code ){
-
-            case -1:
-                echo json_encode(
-                    array(
-                        "status_code" => $code,
-                        "error_message" => "You are not allowed to access this resource.",
-                        "data_response" => ""
-                    )
-                );
-                break;
-            case -2:
-                echo json_encode(
-                    array(
-                        "status_code" => $code,
-                        "error_message" => "Error in the scheme.",
-                        "data_response" => ""
-                    )
-                );
-                break;
-            case -3:
-                echo json_encode(
-                    array(
-                        "status_code" => $code,
-                        "error_message" => "Invalid values in the parameters.",
-                        "data_response" => ""
-                    )
-                );
-                break;
-            case -4:
-                echo json_encode(
-                    array(
-                        "status_code" => $code,
-                        "error_message" => "Function not defined.",
-                        "data_response" => ""
-                    )
-                );
-                break;
-            
-            case -5:
-                echo json_encode(
-                    array(
-                        "status_code" => $code,
-                        "error_message" => "Duplicate.",
-                        "data_response" => ""
-                    )
-                );
-                break;
-            
-            case -99:
-                echo json_encode(
-                    array(
-                        "status_code" => $code,
-                        "error_message" => "critical error.",
-                        "data_response" => ""
-                    )
-                );
-                break;
-
-        }
-
-        die();
-    }
-
 ?>

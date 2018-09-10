@@ -72,7 +72,7 @@ $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/jquery.dataTables.m
 $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/jquery.dataTables_themeroller.css', true);
 $PAGE->requires->css('/blocks/ases/js/select2/css/select2.css', true);
 
-$PAGE->requires->js_call_amd('block_ases/students_backup_reports_main', 'init');
+//$PAGE->requires->js_call_amd('block_ases/students_backup_reports_main', 'init');
 //$tableReport = get_array_for_reports($blockid);
 $paramReport = new stdClass();
 $paramReport->table = $tableReport;
