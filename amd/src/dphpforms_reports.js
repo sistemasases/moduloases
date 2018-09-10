@@ -27,63 +27,110 @@ define([
     return {
         init: function() {
 
-            window.JSZip = jszip;
-            $("#dphpform_datatable").DataTable(
-                { 
-                    "bsort" : false,
-                    "data": [
-                        {
-                            "op":55,
-                            "casa": 0
-                        },
-                        {
-                            "casa":5,
-                            "op": 14
-                        }
-                    ],
-                    "columns" : [
-                        {
-                            "title" : "t", 
-                            "name" : "casita", 
-                            "data" : "casa",
-                        },
-                        {
-                            "title" : "op", 
-                            "name" : "op", 
-                            "data" : "op",
-                        },
-                    ],
-                    "dom":"lifrtpB",
-                    "buttons" : [
-                        {
-                            "extend" : "print",
-                            "text" : 'Imprimir'
-                        },{
-                            "extend" : "csv",
-                            "text" : 'CSV'
-                        },{
-                            "extend" : "excel",
-                            "text" : 'Excel',
-                            "className" : 'buttons-excel',
-                            "filename" : 'Export excel',
-                            "extension" : '.xls'
-                        }   
-                    ]
-                }
-            );
+            window.JSZip = jszip;            
             var id_semester = null;
 
             function render_datatable( records ){
                 console.log( records );
-            };
-
-            function is_in_array( array_, new_element ){
-                for( var i = 0; i < array_.length; i++ ){
-                    if( array_[i] == new_element ){
-                        return true;
-                    };
-                };
-                return false;
+                console.log('gets in');
+                $("#dphpform_datatable").DataTable(
+                    { 
+                        "bsort" : false,
+                        "data": [
+                            {
+                                "student_code":1423124,
+                                "student_firstname": "JOAN MANUEL",
+                                "student_lastname": "TOVAR GUZMÁN",
+                                // "fecha":"",
+                                // "lugar":"",
+                                // "hora_inicio":"",
+                                // "hora_finalizacion":"",
+                                // "tema": "",
+                                // "objetivos": ""
+                                
+                            },
+                            {
+                                "student_code":1423437,
+                                "student_firstname": "JUAN PABLO",
+                                "student_lastname": "MORENO MUÑOZ",
+                                // "fecha":"",
+                                // "lugar":"",
+                                // "hora_inicio":"",
+                                // "hora_finalizacion":"",
+                                // "tema": "",
+                                // "objetivos": ""
+                                
+                            }
+                        ],
+                        "columns" : 
+                        [
+                            {
+                                "title" : "Código estudiante", 
+                                "name" : "student_code", 
+                                "data" : "student_code",
+                            },
+                            {
+                                "title" : "Nombre(s)", 
+                                "name" : "student_firstname", 
+                                "data" : "student_firstname",
+                            },
+                            {
+                                "title" : "Apellido(s)", 
+                                "name" : "student_lastname", 
+                                "data" : "student_lastname",
+                            }
+                            //,
+                            // {
+                            //     "title" : "Fecha", 
+                            //     "name" : "fecha", 
+                            //     "data" : "fecha",
+                            // },
+                            // {
+                            //     "title" : "Lugar", 
+                            //     "name" : "lugar", 
+                            //     "data" : "lugar",
+                            // },
+                            // {
+                            //     "title" : "Hora Inicio", 
+                            //     "name" : "hora_inicio", 
+                            //     "data" : "hora_inicio",
+                            // },
+                            // {
+                            //     "title" : "Hora Finalizacion", 
+                            //     "name" : "hora_finalizacion", 
+                            //     "data" : "hora_finalizacion",
+                            // },    
+                            // {
+                            //     "title" : "Tema", 
+                            //     "name" : "tema", 
+                            //     "data" : "tema",
+                            // },
+                            // {
+                            //     "title" : "Objetivos", 
+                            //     "name" : "objetivos", 
+                            //     "data" : "objetivos",
+                            // }
+                                                
+                        ]
+                        ,
+                        "dom":"lifrtpB",
+                        "buttons" : [
+                            {
+                                "extend" : "print",
+                                "text" : 'Imprimir'
+                            },{
+                                "extend" : "csv",
+                                "text" : 'CSV'
+                            },{
+                                "extend" : "excel",
+                                "text" : 'Excel',
+                                "className" : 'buttons-excel',
+                                "filename" : 'Export excel',
+                                "extension" : '.xls'
+                            }   
+                        ]
+                    }
+                );
             };
 
             function custom_actions( report, form_type ){
