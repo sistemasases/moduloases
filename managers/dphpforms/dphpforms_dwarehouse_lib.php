@@ -44,12 +44,12 @@ function get_list_form(){
    return $forms_dwarehouse_array;
 }
 
-function dphpforms_get_only_form($id_form){
+function get_form_switch_id($id_form){
     global $DB;
     $form_dwarehouse_array = array();
   
     $sql = "SELECT id_usuario_moodle AS id_user, accion AS name_action, datos_previos AS dp_form, datos_enviados AS de_form, datos_almacenados AS da_form, 
-    fecha_hora_registro AS fecha_form FROM {talentospilos_df_dwarehouse} AS dwarehouse WHERE dwarehouse.id = $id_form ";
+    fecha_hora_registro AS fecha_form FROM {talentospilos_df_dwarehouse} AS dwarehouse WHERE dwarehouse.id = $id_form  ";
 
     $results = $DB->get_records_sql($sql);
     foreach ($results as $record) {
@@ -57,39 +57,3 @@ function dphpforms_get_only_form($id_form){
     }
     return $form_dwarehouse_array;
 }
-
-
-
-
-    /*$columns = array();
-   
-
-    $data = array(
-        "bsort" => false,
-        "columns" => $columns,
-        "data" => dphpforms_get_forms_dwarehouse(),
-        "language" => 
-         array(
-            "search"=> "Buscar:",
-            "oPaginate" => array(
-                "sFirst"=>    "Primero",
-                "sLast"=>     "Último",
-                "sNext"=>     "Siguiente",
-                "sPrevious"=> "Anterior"
-                ),
-            "sProcessing"=>     "Procesando...",
-            "sLengthMenu"=>     "Mostrar _MENU_ registros",
-            "sZeroRecords"=>    "No se encontraron resultados",
-            "sEmptyTable"=>     "Ningún dato disponible en esta tabla",
-            "sInfo"=>           "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
-            "sInfoEmpty"=>      "Mostrando registros del 0 al 0 de un total de 0 registros",
-            "sInfoFiltered"=>   "(filtrado de un total de _MAX_ registros)",
-            "sInfoPostFix"=>    "",
-            "sSearch"=>         "Buscar:",
-            "sUrl"=>            "",
-            "sInfoThousands"=>  ",",
-            "sLoadingRecords"=> "Cargando...",
-         ),
-        "order"=> array(0, "desc")
-
-    );*/

@@ -70,6 +70,7 @@ $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/dataTables.jqueryui
 $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/jquery.dataTables.css', true);
 $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/jquery.dataTables.min.css', true);
 $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/jquery.dataTables_themeroller.css', true);
+$PAGE->requires->css('/blocks/ases/style/styles_pilos.css', true);
 $PAGE->requires->css('/blocks/ases/js/select2/css/select2.css', true);
 
 //$PAGE->requires->js_call_amd('block_ases/students_backup_reports_main', 'init');
