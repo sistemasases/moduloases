@@ -33,6 +33,7 @@ define([
             function render_datatable( records ){
                 console.log( records );
                 console.log('gets in');
+                
                 $("#dphpform_datatable").DataTable(
                     { 
                         "bsort" : false,
@@ -41,24 +42,47 @@ define([
                                 "student_code":1423124,
                                 "student_firstname": "JOAN MANUEL",
                                 "student_lastname": "TOVAR GUZMÁN",
-                                // "fecha":"",
-                                // "lugar":"",
-                                // "hora_inicio":"",
-                                // "hora_finalizacion":"",
-                                // "tema": "",
-                                // "objetivos": ""
-                                
+                                "fecha":"",
+                                "lugar":"",
+                                "hora_inicio":"",
+                                "hora_finalizacion":"",
+                                "tema": "",
+                                "objetivos": "",
+                                "comentarios_individual":"",
+                                "puntuacion_riesgo_individual":"",
+                                "tematicas_individual":"",
+                                "comentarios_familiar":"",
+                                "puntuacion_riesgo_familiar":"",
+                                "tematicas_familiar":"",
+                                "comentarios_academico":"",
+                                "puntuacion_riesgo_academico":"",
+                                "tematicas_academico":"",
+                                "comentarios_economico":"",
+                                "puntuacion_riesgo_economico":"",
+                                "tematicas_economico":""                                
                             },
                             {
                                 "student_code":1423437,
                                 "student_firstname": "JUAN PABLO",
                                 "student_lastname": "MORENO MUÑOZ",
-                                // "fecha":"",
-                                // "lugar":"",
-                                // "hora_inicio":"",
-                                // "hora_finalizacion":"",
-                                // "tema": "",
-                                // "objetivos": ""
+                                "fecha":"",
+                                "lugar":"",
+                                "hora_inicio":"",
+                                "hora_finalizacion":"",
+                                "tema": "",
+                                "objetivos": "",
+                                "comentarios_individual":"",
+                                "puntuacion_riesgo_individual":"",
+                                "tematicas_individual":"",
+                                "comentarios_familiar":"",
+                                "puntuacion_riesgo_familiar":"",
+                                "tematicas_familiar":"",
+                                "comentarios_academico":"",
+                                "puntuacion_riesgo_academico":"",
+                                "tematicas_academico":"",
+                                "comentarios_economico":"",
+                                "puntuacion_riesgo_economico":"",
+                                "tematicas_economico":""  
                                 
                             }
                         ],
@@ -67,49 +91,109 @@ define([
                             {
                                 "title" : "Código estudiante", 
                                 "name" : "student_code", 
-                                "data" : "student_code",
+                                "data" : "student_code"
                             },
                             {
                                 "title" : "Nombre(s)", 
                                 "name" : "student_firstname", 
-                                "data" : "student_firstname",
+                                "data" : "student_firstname"
                             },
                             {
                                 "title" : "Apellido(s)", 
                                 "name" : "student_lastname", 
-                                "data" : "student_lastname",
+                                "data" : "student_lastname"
                             }
-                            //,
-                            // {
-                            //     "title" : "Fecha", 
-                            //     "name" : "fecha", 
-                            //     "data" : "fecha",
-                            // },
-                            // {
-                            //     "title" : "Lugar", 
-                            //     "name" : "lugar", 
-                            //     "data" : "lugar",
-                            // },
-                            // {
-                            //     "title" : "Hora Inicio", 
-                            //     "name" : "hora_inicio", 
-                            //     "data" : "hora_inicio",
-                            // },
-                            // {
-                            //     "title" : "Hora Finalizacion", 
-                            //     "name" : "hora_finalizacion", 
-                            //     "data" : "hora_finalizacion",
-                            // },    
-                            // {
-                            //     "title" : "Tema", 
-                            //     "name" : "tema", 
-                            //     "data" : "tema",
-                            // },
-                            // {
-                            //     "title" : "Objetivos", 
-                            //     "name" : "objetivos", 
-                            //     "data" : "objetivos",
-                            // }
+                            ,
+                            {
+                                "title" : "Fecha", 
+                                "name" : "fecha", 
+                                "data" : "fecha"
+                            },
+                            {
+                                "title" : "Lugar", 
+                                "name" : "lugar", 
+                                "data" : "lugar"
+                            },
+                            {
+                                "title" : "Hora Inicio", 
+                                "name" : "hora_inicio", 
+                                "data" : "hora_inicio"
+                            },
+                            {
+                                "title" : "Hora Finalizacion", 
+                                "name" : "hora_finalizacion", 
+                                "data" : "hora_finalizacion"
+                            },    
+                            {
+                                "title" : "Tema", 
+                                "name" : "tema", 
+                                "data" : "tema"
+                            },
+                            {
+                                "title" : "Objetivos", 
+                                "name" : "objetivos", 
+                                "data" : "objetivos"
+                            },    
+                            {
+                                "title" : "Comentario individual", 
+                                "name" : "comentarios_individual", 
+                                "data" : "comentarios_individual"
+                            },
+                            {
+                                "title" : "Punt. riesgo individual", 
+                                "name" : "puntuacion_riesgo_individual", 
+                                "data" : "puntuacion_riesgo_individual"
+                            },
+                            {
+                                "title" : "Temáticas individuales", 
+                                "name" : "tematicas_individual", 
+                                "data" : "tematicas_individual"
+                            },
+                            {
+                                "title" : "Comentario familiar", 
+                                "name" : "comentarios_familiar", 
+                                "data" : "comentarios_familiar"
+                            },
+                            {
+                                "title" : "Punt. riesgo familiar", 
+                                "name" : "puntuacion_riesgo_familiar", 
+                                "data" : "puntuacion_riesgo_familiar"
+                            },
+                            {
+                                "title" : "Temáticas familiar", 
+                                "name" : "tematicas_familiar", 
+                                "data" : "tematicas_familiar"
+                            },
+                            {
+                                "title" : "Comentario académico", 
+                                "name" : "comentarios_academico", 
+                                "data" : "comentarios_academico"
+                            },
+                            {
+                                "title" : "Punt. riesgo académico", 
+                                "name" : "puntuacion_riesgo_academico", 
+                                "data" : "puntuacion_riesgo_academico"
+                            },
+                            {
+                                "title" : "Temáticas académico", 
+                                "name" : "tematicas_academico", 
+                                "data" : "tematicas_academico"
+                            },
+                            {
+                                "title" : "Comentario Económico", 
+                                "name" : "comentarios_economico", 
+                                "data" : "comentarios_economico"
+                            },
+                            {
+                                "title" : "Punt. riesgo Económico", 
+                                "name" : "puntuacion_riesgo_economico", 
+                                "data" : "puntuacion_riesgo_economico"
+                            },
+                            {
+                                "title" : "Temáticas Económico", 
+                                "name" : "tematicas_economico", 
+                                "data" : "tematicas_economico"
+                            },
                                                 
                         ]
                         ,
@@ -132,6 +216,7 @@ define([
                     }
                 );
             };
+            
 
             function custom_actions( report, form_type ){
                 
@@ -491,3 +576,4 @@ define([
     };
       
 });
+
