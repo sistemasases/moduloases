@@ -109,6 +109,14 @@
             echo json_encode($data);
 
 
+        } else if ($_POST['loadF']== 'get_id_user'){
+            if( count($_POST['param']) == 1 ){
+                //Consulta para codigo
+                $data = get_id_switch_user($_POST['param']);
+
+                echo $data;
+
+            }else{    return_with_code( -2 ); }
         }else if( $_POST['loadF'] == "get_form" ){
 
             /* Params: student_ases_id, created_by_id, instance_id, semester_id

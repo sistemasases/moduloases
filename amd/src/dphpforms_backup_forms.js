@@ -61,30 +61,63 @@ define([
                 get_only_form(valores);
 
                // $('#modalFormulario').show();
-               
-
 
             });
 
+          
+             $('#generarFiltro').on('click', function () {
+                    var porId= document.getElementById("filtroCodigoUsuario").value;
+                    var codigoUsuario = porId;
+                    get_id_switch_user(codigoUsuario);
+    
+             });
+             
+            function get_id_switch_user(cod_user){
+                $.ajax({
+                    type: "POST",
+                    data:{loadF: 'get_id_user', param: cod_user},
+                    url: "../managers/dphpforms/dphpforms_dwarehouse_api.php",
+                    success: function (msg) {
+                        $("#div_table_user").empty();
+                        $("#div_table_user").append('<table id="tableUser" class="display" cellspacing="0" width="100%"><thead><thead></table>');
+                        var table = $("#tableUser").DataTable(msg);
+                        $('#div_table_user').css('cursor', 'pointer');
+                           /* swal(
+                                "Error",
+                                "No se encuentra un estudiante asociado al código ingresado",
+                                "error"
+                            );*/
+                        
+                        
+                    },
+                    dataType: "json",
+                    cache: false,
+                    async: true,
 
+                    failure: function (msg) { }
+                });
+            } 
 
-            function get_only_form(id){
+            
+          
+
+            function get_only_form(id_form){
                 //Get form switch id
                 $.ajax({
                     type: "POST",
-                    data:{loadF: 'get_form', params: id},
+                    data:{loadF: 'get_form', params: id_form},
                     url: "../managers/dphpforms/dphpforms_dwarehouse_api.php",
-                    success: function (data) {
+                    success: function (msg) {
                         $("#div_table_form").empty();
                         $("#div_table_form").append('<table id="tableBackupForm" class="display" cellspacing="0" width="100%"><thead><thead></table>');
-                        var table = $("#tableBackupForm").DataTable(data);
+                        var table = $("#tableBackupForm").DataTable(msg);
                         $('#div_table_form').css('cursor', 'pointer');
                     },
                     dataType: "json",
                     cache: false,
                     async: true,
 
-                    failure: function (data) { }
+                    failure: function (msg) { }
                 });
             }
 

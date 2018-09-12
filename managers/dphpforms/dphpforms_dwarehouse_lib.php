@@ -57,3 +57,16 @@ function get_form_switch_id($id_form){
     }
     return $form_dwarehouse_array;
 }
+
+function get_id_switch_user($id_user){
+    global $DB;
+    $form_dwarehouse_array = array();
+  
+    $sql = "SELECT id AS cod_user FROM {user} AS user WHERE user.username = $id_user  ";
+
+    $results = $DB->get_records_sql($sql);
+    foreach ($results as $record) {
+        array_push($form_dwarehouse_array, $record);
+    }
+    return $results;
+}
