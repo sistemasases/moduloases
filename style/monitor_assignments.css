@@ -210,3 +210,8 @@
 #modalTransferLongTitle{
     font-size: 1.3em;
 }
+
+.username{
+    font-style: italic;
+    font-size: 0.9em;
+}
