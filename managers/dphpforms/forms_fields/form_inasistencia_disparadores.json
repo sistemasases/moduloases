@@ -1,0 +1,1539 @@
+[
+    {
+        "disparador": "67",
+        "condiciones": [
+            {
+                "condicion": "marcado",
+                "comportamiento_condicion_cumplida": [
+                    {
+                        "campo": "55",
+                        "permisos": [
+                            {
+                                "rol": "administrativo",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "reportes",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "profesional_ps",
+                                "permisos": [
+                                    "lectura"
+                                ]
+                            },
+                            {
+                                "rol": "monitor_ps",
+                                "permisos": [
+                                    "lectura"
+                                ]
+                            },
+                            {
+                                "rol": "estudiante_t",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "sistemas",
+                                "permisos": [
+                                    "lectura",
+                                    "escritura"
+                                ]
+                            },
+                            {
+                                "rol": "practicante_ps",
+                                "permisos": [
+                                    "lectura"
+                                ]
+                            },
+                            {
+                                "rol": "geografo",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "academico",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "director_prog",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "geografico",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "dir_socioeducativo",
+                                "permisos": [
+                                    "lectura"
+                                ]
+                            },
+                            {
+                                "rol": "financiero",
+                                "permisos": []
+                            }
+                        ]
+                    },
+                    {
+                        "campo": "56",
+                        "permisos": [
+                            {
+                                "rol": "administrativo",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "reportes",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "profesional_ps",
+                                "permisos": [
+                                    "lectura"
+                                ]
+                            },
+                            {
+                                "rol": "monitor_ps",
+                                "permisos": [
+                                    "lectura"
+                                ]
+                            },
+                            {
+                                "rol": "estudiante_t",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "sistemas",
+                                "permisos": [
+                                    "lectura",
+                                    "escritura"
+                                ]
+                            },
+                            {
+                                "rol": "practicante_ps",
+                                "permisos": [
+                                    "lectura"
+                                ]
+                            },
+                            {
+                                "rol": "geografo",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "academico",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "director_prog",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "geografico",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "dir_socioeducativo",
+                                "permisos": [
+                                    "lectura"
+                                ]
+                            },
+                            {
+                                "rol": "financiero",
+                                "permisos": []
+                            }
+                        ]
+                    },
+                    {
+                        "campo": "57",
+                        "permisos": [
+                            {
+                                "rol": "administrativo",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "reportes",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "profesional_ps",
+                                "permisos": [
+                                    "lectura"
+                                ]
+                            },
+                            {
+                                "rol": "monitor_ps",
+                                "permisos": [
+                                    "lectura"
+                                ]
+                            },
+                            {
+                                "rol": "estudiante_t",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "sistemas",
+                                "permisos": [
+                                    "lectura",
+                                    "escritura"
+                                ]
+                            },
+                            {
+                                "rol": "practicante_ps",
+                                "permisos": [
+                                    "lectura"
+                                ]
+                            },
+                            {
+                                "rol": "geografo",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "academico",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "director_prog",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "geografico",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "dir_socioeducativo",
+                                "permisos": [
+                                    "lectura"
+                                ]
+                            },
+                            {
+                                "rol": "financiero",
+                                "permisos": []
+                            }
+                        ]
+                    },
+                    {
+                        "campo": "58",
+                        "permisos": [
+                            {
+                                "rol": "administrativo",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "reportes",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "profesional_ps",
+                                "permisos": [
+                                    "lectura"
+                                ]
+                            },
+                            {
+                                "rol": "monitor_ps",
+                                "permisos": [
+                                    "lectura"
+                                ]
+                            },
+                            {
+                                "rol": "estudiante_t",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "sistemas",
+                                "permisos": [
+                                    "lectura",
+                                    "escritura"
+                                ]
+                            },
+                            {
+                                "rol": "practicante_ps",
+                                "permisos": [
+                                    "lectura"
+                                ]
+                            },
+                            {
+                                "rol": "geografo",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "academico",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "director_prog",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "geografico",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "dir_socioeducativo",
+                                "permisos": [
+                                    "lectura"
+                                ]
+                            },
+                            {
+                                "rol": "financiero",
+                                "permisos": []
+                            }
+                        ]
+                    },
+                    {
+                        "campo": "59",
+                        "permisos": [
+                            {
+                                "rol": "administrativo",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "reportes",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "profesional_ps",
+                                "permisos": [
+                                    "lectura"
+                                ]
+                            },
+                            {
+                                "rol": "monitor_ps",
+                                "permisos": [
+                                    "lectura"
+                                ]
+                            },
+                            {
+                                "rol": "estudiante_t",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "sistemas",
+                                "permisos": [
+                                    "lectura",
+                                    "escritura"
+                                ]
+                            },
+                            {
+                                "rol": "practicante_ps",
+                                "permisos": [
+                                    "lectura"
+                                ]
+                            },
+                            {
+                                "rol": "geografo",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "academico",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "director_prog",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "geografico",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "dir_socioeducativo",
+                                "permisos": [
+                                    "lectura"
+                                ]
+                            },
+                            {
+                                "rol": "financiero",
+                                "permisos": []
+                            }
+                        ]
+                    },
+                    {
+                        "campo": "60",
+                        "permisos": [
+                            {
+                                "rol": "administrativo",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "reportes",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "profesional_ps",
+                                "permisos": [
+                                    "lectura"
+                                ]
+                            },
+                            {
+                                "rol": "monitor_ps",
+                                "permisos": [
+                                    "lectura"
+                                ]
+                            },
+                            {
+                                "rol": "estudiante_t",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "sistemas",
+                                "permisos": [
+                                    "lectura",
+                                    "escritura"
+                                ]
+                            },
+                            {
+                                "rol": "practicante_ps",
+                                "permisos": [
+                                    "lectura"
+                                ]
+                            },
+                            {
+                                "rol": "geografo",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "academico",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "director_prog",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "geografico",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "dir_socioeducativo",
+                                "permisos": [
+                                    "lectura"
+                                ]
+                            },
+                            {
+                                "rol": "financiero",
+                                "permisos": []
+                            }
+                        ]
+                    },
+                    {
+                        "campo": "64",
+                        "permisos": [
+                            {
+                                "rol": "administrativo",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "reportes",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "profesional_ps",
+                                "permisos": [
+                                    "lectura"
+                                ]
+                            },
+                            {
+                                "rol": "monitor_ps",
+                                "permisos": [
+                                    "lectura"
+                                ]
+                            },
+                            {
+                                "rol": "estudiante_t",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "sistemas",
+                                "permisos": [
+                                    "lectura",
+                                    "escritura"
+                                ]
+                            },
+                            {
+                                "rol": "practicante_ps",
+                                "permisos": [
+                                    "lectura"
+                                ]
+                            },
+                            {
+                                "rol": "geografo",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "academico",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "director_prog",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "geografico",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "dir_socioeducativo",
+                                "permisos": [
+                                    "lectura"
+                                ]
+                            },
+                            {
+                                "rol": "financiero",
+                                "permisos": []
+                            }
+                        ]
+                    },
+                    {
+                        "campo": "65",
+                        "permisos": [
+                            {
+                                "rol": "administrativo",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "reportes",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "profesional_ps",
+                                "permisos": [
+                                    "lectura"
+                                ]
+                            },
+                            {
+                                "rol": "monitor_ps",
+                                "permisos": [
+                                    "lectura"
+                                ]
+                            },
+                            {
+                                "rol": "estudiante_t",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "sistemas",
+                                "permisos": [
+                                    "lectura",
+                                    "escritura"
+                                ]
+                            },
+                            {
+                                "rol": "practicante_ps",
+                                "permisos": [
+                                    "lectura"
+                                ]
+                            },
+                            {
+                                "rol": "geografo",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "academico",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "director_prog",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "geografico",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "dir_socioeducativo",
+                                "permisos": [
+                                    "lectura"
+                                ]
+                            },
+                            {
+                                "rol": "financiero",
+                                "permisos": []
+                            }
+                        ]
+                    },
+                    {
+                        "campo": "66",
+                        "permisos": [
+                            {
+                                "rol": "administrativo",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "reportes",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "profesional_ps",
+                                "permisos": [
+                                    "lectura"
+                                ]
+                            },
+                            {
+                                "rol": "monitor_ps",
+                                "permisos": [
+                                    "lectura"
+                                ]
+                            },
+                            {
+                                "rol": "estudiante_t",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "sistemas",
+                                "permisos": [
+                                    "lectura",
+                                    "escritura"
+                                ]
+                            },
+                            {
+                                "rol": "practicante_ps",
+                                "permisos": [
+                                    "lectura"
+                                ]
+                            },
+                            {
+                                "rol": "geografo",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "academico",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "director_prog",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "geografico",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "dir_socioeducativo",
+                                "permisos": [
+                                    "lectura"
+                                ]
+                            },
+                            {
+                                "rol": "financiero",
+                                "permisos": []
+                            }
+                        ]
+                    },
+                    {
+                        "campo": "67",
+                        "permisos": [
+                            {
+                                "rol": "administrativo",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "reportes",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "profesional_ps",
+                                "permisos": [
+                                    "lectura"
+                                ]
+                            },
+                            {
+                                "rol": "monitor_ps",
+                                "permisos": [
+                                    "lectura"
+                                ]
+                            },
+                            {
+                                "rol": "estudiante_t",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "sistemas",
+                                "permisos": [
+                                    "lectura",
+                                    "escritura"
+                                ]
+                            },
+                            {
+                                "rol": "practicante_ps",
+                                "permisos": [
+                                    "lectura"
+                                ]
+                            },
+                            {
+                                "rol": "geografo",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "academico",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "director_prog",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "geografico",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "dir_socioeducativo",
+                                "permisos": [
+                                    "lectura"
+                                ]
+                            },
+                            {
+                                "rol": "financiero",
+                                "permisos": []
+                            }
+                        ]
+                    },
+                    {
+                        "campo": "68",
+                        "permisos": [
+                            {
+                                "rol": "administrativo",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "reportes",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "profesional_ps",
+                                "permisos": [
+                                    "lectura"
+                                ]
+                            },
+                            {
+                                "rol": "monitor_ps",
+                                "permisos": [
+                                    "lectura"
+                                ]
+                            },
+                            {
+                                "rol": "estudiante_t",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "sistemas",
+                                "permisos": [
+                                    "lectura",
+                                    "escritura"
+                                ]
+                            },
+                            {
+                                "rol": "practicante_ps",
+                                "permisos": [
+                                    "lectura"
+                                ]
+                            },
+                            {
+                                "rol": "geografo",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "academico",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "director_prog",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "geografico",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "dir_socioeducativo",
+                                "permisos": [
+                                    "lectura"
+                                ]
+                            },
+                            {
+                                "rol": "financiero",
+                                "permisos": []
+                            }
+                        ]
+                    }
+                ],
+                "comportamiento_condicion_no_cumplida": [
+                    {
+                        "campo": "55",
+                        "permisos": [
+                            {
+                                "rol": "administrativo",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "reportes",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "profesional_ps",
+                                "permisos": [
+                                    "lectura",
+                                    "escritura"
+                                ]
+                            },
+                            {
+                                "rol": "monitor_ps",
+                                "permisos": [
+                                    "lectura",
+                                    "escritura"
+                                ]
+                            },
+                            {
+                                "rol": "estudiante_t",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "sistemas",
+                                "permisos": [
+                                    "lectura",
+                                    "escritura"
+                                ]
+                            },
+                            {
+                                "rol": "practicante_ps",
+                                "permisos": [
+                                    "lectura",
+                                    "escritura"
+                                ]
+                            },
+                            {
+                                "rol": "geografo",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "academico",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "director_prog",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "geografico",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "dir_socioeducativo",
+                                "permisos": [
+                                    "lectura"
+                                ]
+                            },
+                            {
+                                "rol": "financiero",
+                                "permisos": []
+                            }
+                        ]
+                    },
+                    {
+                        "campo": "56",
+                        "permisos": [
+                            {
+                                "rol": "administrativo",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "reportes",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "profesional_ps",
+                                "permisos": [
+                                    "lectura",
+                                    "escritura"
+                                ]
+                            },
+                            {
+                                "rol": "monitor_ps",
+                                "permisos": [
+                                    "lectura",
+                                    "escritura"
+                                ]
+                            },
+                            {
+                                "rol": "estudiante_t",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "sistemas",
+                                "permisos": [
+                                    "lectura",
+                                    "escritura"
+                                ]
+                            },
+                            {
+                                "rol": "practicante_ps",
+                                "permisos": [
+                                    "lectura",
+                                    "escritura"
+                                ]
+                            },
+                            {
+                                "rol": "geografo",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "academico",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "director_prog",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "geografico",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "dir_socioeducativo",
+                                "permisos": [
+                                    "lectura"
+                                ]
+                            },
+                            {
+                                "rol": "financiero",
+                                "permisos": []
+                            }
+                        ]
+                    },
+                    {
+                        "campo": "57",
+                        "permisos": [
+                            {
+                                "rol": "administrativo",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "reportes",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "profesional_ps",
+                                "permisos": [
+                                    "lectura",
+                                    "escritura"
+                                ]
+                            },
+                            {
+                                "rol": "monitor_ps",
+                                "permisos": [
+                                    "lectura",
+                                    "escritura"
+                                ]
+                            },
+                            {
+                                "rol": "estudiante_t",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "sistemas",
+                                "permisos": [
+                                    "lectura",
+                                    "escritura"
+                                ]
+                            },
+                            {
+                                "rol": "practicante_ps",
+                                "permisos": [
+                                    "lectura",
+                                    "escritura"
+                                ]
+                            },
+                            {
+                                "rol": "geografo",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "academico",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "director_prog",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "geografico",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "dir_socioeducativo",
+                                "permisos": [
+                                    "lectura"
+                                ]
+                            },
+                            {
+                                "rol": "financiero",
+                                "permisos": []
+                            }
+                        ]
+                    },
+                    {
+                        "campo": "58",
+                        "permisos": [
+                            {
+                                "rol": "administrativo",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "reportes",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "profesional_ps",
+                                "permisos": [
+                                    "lectura",
+                                    "escritura"
+                                ]
+                            },
+                            {
+                                "rol": "monitor_ps",
+                                "permisos": [
+                                    "lectura",
+                                    "escritura"
+                                ]
+                            },
+                            {
+                                "rol": "estudiante_t",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "sistemas",
+                                "permisos": [
+                                    "lectura",
+                                    "escritura"
+                                ]
+                            },
+                            {
+                                "rol": "practicante_ps",
+                                "permisos": [
+                                    "lectura",
+                                    "escritura"
+                                ]
+                            },
+                            {
+                                "rol": "geografo",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "academico",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "director_prog",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "geografico",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "dir_socioeducativo",
+                                "permisos": [
+                                    "lectura"
+                                ]
+                            },
+                            {
+                                "rol": "financiero",
+                                "permisos": []
+                            }
+                        ]
+                    },
+                    {
+                        "campo": "59",
+                        "permisos": [
+                            {
+                                "rol": "administrativo",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "reportes",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "profesional_ps",
+                                "permisos": [
+                                    "lectura",
+                                    "escritura"
+                                ]
+                            },
+                            {
+                                "rol": "monitor_ps",
+                                "permisos": [
+                                    "lectura",
+                                    "escritura"
+                                ]
+                            },
+                            {
+                                "rol": "estudiante_t",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "sistemas",
+                                "permisos": [
+                                    "lectura",
+                                    "escritura"
+                                ]
+                            },
+                            {
+                                "rol": "practicante_ps",
+                                "permisos": [
+                                    "lectura",
+                                    "escritura"
+                                ]
+                            },
+                            {
+                                "rol": "geografo",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "academico",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "director_prog",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "geografico",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "dir_socioeducativo",
+                                "permisos": [
+                                    "lectura"
+                                ]
+                            },
+                            {
+                                "rol": "financiero",
+                                "permisos": []
+                            }
+                        ]
+                    },
+                    {
+                        "campo": "60",
+                        "permisos": [
+                            {
+                                "rol": "administrativo",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "reportes",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "profesional_ps",
+                                "permisos": [
+                                    "lectura",
+                                    "escritura"
+                                ]
+                            },
+                            {
+                                "rol": "monitor_ps",
+                                "permisos": [
+                                    "lectura",
+                                    "escritura"
+                                ]
+                            },
+                            {
+                                "rol": "estudiante_t",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "sistemas",
+                                "permisos": [
+                                    "lectura",
+                                    "escritura"
+                                ]
+                            },
+                            {
+                                "rol": "practicante_ps",
+                                "permisos": [
+                                    "lectura",
+                                    "escritura"
+                                ]
+                            },
+                            {
+                                "rol": "geografo",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "academico",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "director_prog",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "geografico",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "dir_socioeducativo",
+                                "permisos": [
+                                    "lectura"
+                                ]
+                            },
+                            {
+                                "rol": "financiero",
+                                "permisos": []
+                            }
+                        ]
+                    },
+                    {
+                        "campo": "64",
+                        "permisos": [
+                            {
+                                "rol": "administrativo",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "reportes",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "profesional_ps",
+                                "permisos": [
+                                    "lectura",
+                                    "escritura"
+                                ]
+                            },
+                            {
+                                "rol": "monitor_ps",
+                                "permisos": [
+                                    "lectura",
+                                    "escritura"
+                                ]
+                            },
+                            {
+                                "rol": "estudiante_t",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "sistemas",
+                                "permisos": [
+                                    "lectura",
+                                    "escritura"
+                                ]
+                            },
+                            {
+                                "rol": "practicante_ps",
+                                "permisos": [
+                                    "lectura",
+                                    "escritura"
+                                ]
+                            },
+                            {
+                                "rol": "geografo",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "academico",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "director_prog",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "geografico",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "dir_socioeducativo",
+                                "permisos": [
+                                    "lectura"
+                                ]
+                            },
+                            {
+                                "rol": "financiero",
+                                "permisos": []
+                            }
+                        ]
+                    },
+                    {
+                        "campo": "65",
+                        "permisos": [
+                            {
+                                "rol": "administrativo",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "reportes",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "profesional_ps",
+                                "permisos": [
+                                    "lectura",
+                                    "escritura"
+                                ]
+                            },
+                            {
+                                "rol": "monitor_ps",
+                                "permisos": [
+                                    "lectura",
+                                    "escritura"
+                                ]
+                            },
+                            {
+                                "rol": "estudiante_t",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "sistemas",
+                                "permisos": [
+                                    "lectura",
+                                    "escritura"
+                                ]
+                            },
+                            {
+                                "rol": "practicante_ps",
+                                "permisos": [
+                                    "lectura",
+                                    "escritura"
+                                ]
+                            },
+                            {
+                                "rol": "geografo",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "academico",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "director_prog",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "geografico",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "dir_socioeducativo",
+                                "permisos": [
+                                    "lectura"
+                                ]
+                            },
+                            {
+                                "rol": "financiero",
+                                "permisos": []
+                            }
+                        ]
+                    },
+                    {
+                        "campo": "66",
+                        "permisos": [
+                            {
+                                "rol": "administrativo",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "reportes",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "profesional_ps",
+                                "permisos": [
+                                    "lectura",
+                                    "escritura"
+                                ]
+                            },
+                            {
+                                "rol": "monitor_ps",
+                                "permisos": [
+                                    "lectura"
+                                ]
+                            },
+                            {
+                                "rol": "estudiante_t",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "sistemas",
+                                "permisos": [
+                                    "lectura",
+                                    "escritura"
+                                ]
+                            },
+                            {
+                                "rol": "practicante_ps",
+                                "permisos": [
+                                    "lectura",
+                                    "escritura"
+                                ]
+                            },
+                            {
+                                "rol": "geografo",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "academico",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "director_prog",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "geografico",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "dir_socioeducativo",
+                                "permisos": [
+                                    "lectura"
+                                ]
+                            },
+                            {
+                                "rol": "financiero",
+                                "permisos": []
+                            }
+                        ]
+                    },
+                    {
+                        "campo": "67",
+                        "permisos": [
+                            {
+                                "rol": "administrativo",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "reportes",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "profesional_ps",
+                                "permisos": [
+                                    "lectura"
+                                ]
+                            },
+                            {
+                                "rol": "monitor_ps",
+                                "permisos": [
+                                    "lectura"
+                                ]
+                            },
+                            {
+                                "rol": "estudiante_t",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "sistemas",
+                                "permisos": [
+                                    "lectura",
+                                    "escritura"
+                                ]
+                            },
+                            {
+                                "rol": "practicante_ps",
+                                "permisos": [
+                                    "lectura",
+                                    "escritura"
+                                ]
+                            },
+                            {
+                                "rol": "geografo",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "academico",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "director_prog",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "geografico",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "dir_socioeducativo",
+                                "permisos": [
+                                    "lectura"
+                                ]
+                            },
+                            {
+                                "rol": "financiero",
+                                "permisos": []
+                            }
+                        ]
+                    },
+                    {
+                        "campo": "68",
+                        "permisos": [
+                            {
+                                "rol": "administrativo",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "reportes",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "profesional_ps",
+                                "permisos": [
+                                    "lectura",
+                                    "escritura"
+                                ]
+                            },
+                            {
+                                "rol": "monitor_ps",
+                                "permisos": [
+                                    "lectura"
+                                ]
+                            },
+                            {
+                                "rol": "estudiante_t",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "sistemas",
+                                "permisos": [
+                                    "lectura",
+                                    "escritura"
+                                ]
+                            },
+                            {
+                                "rol": "practicante_ps",
+                                "permisos": [
+                                    "lectura",
+                                    "escritura"
+                                ]
+                            },
+                            {
+                                "rol": "geografo",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "academico",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "director_prog",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "geografico",
+                                "permisos": []
+                            },
+                            {
+                                "rol": "dir_socioeducativo",
+                                "permisos": [
+                                    "lectura"
+                                ]
+                            },
+                            {
+                                "rol": "financiero",
+                                "permisos": []
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+]
