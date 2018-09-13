@@ -110,11 +110,10 @@
 
 
         } else if ($_POST['loadF']== 'get_id_user'){
-            if( count($_POST['param']) == 1 ){
+            if( count($_POST['params']) == 1 ){
                 //Consulta para codigo
-                $data = get_id_switch_user($_POST['param']);
-
-                echo $data;
+                $data = get_id_switch_user($_POST['params']);
+                echo json_encode($data);
 
             }else{    return_with_code( -2 ); }
         }else if( $_POST['loadF'] == "get_form" ){
@@ -203,7 +202,7 @@
         }
         
     }else{
-        return_with_code( -2 );
+        return_with_code( -1 );
     }
 
     function return_with_code( $code ){

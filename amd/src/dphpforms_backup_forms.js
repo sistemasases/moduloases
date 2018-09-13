@@ -67,34 +67,25 @@ define([
           
              $('#generarFiltro').on('click', function () {
                     var porId= document.getElementById("filtroCodigoUsuario").value;
-                    var codigoUsuario = porId;
-                    get_id_switch_user(codigoUsuario);
-    
+                    alert(porId);
+                    get_id_switch_user(porId);
+
              });
              
             function get_id_switch_user(cod_user){
                 $.ajax({
                     type: "POST",
-                    data:{loadF: 'get_id_user', param: cod_user},
+                    data:{loadF: 'get_id_user', params: cod_user},
                     url: "../managers/dphpforms/dphpforms_dwarehouse_api.php",
                     success: function (msg) {
-                        $("#div_table_user").empty();
-                        $("#div_table_user").append('<table id="tableUser" class="display" cellspacing="0" width="100%"><thead><thead></table>');
-                        var table = $("#tableUser").DataTable(msg);
-                        $('#div_table_user').css('cursor', 'pointer');
-                           /* swal(
-                                "Error",
-                                "No se encuentra un estudiante asociado al código ingresado",
-                                "error"
-                            );*/
-                        
-                        
+                        $("#div_code_user").empty();
+                        $("#div_code_user").append('<strong>Identificador: </strong>'+msg[0].cod_user+'  '+'<strong>Nombre: </strong>'+msg[0].name_user);
+                     
                     },
-                    dataType: "json",
                     cache: false,
                     async: true,
 
-                    failure: function (msg) { }
+                    error: function (msg) { alert("No encontrado")}
                 });
             } 
 
