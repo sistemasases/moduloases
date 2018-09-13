@@ -171,7 +171,11 @@
                 $('.student_item').removeClass("oculto-filtro-nombre");
                 var filter_value = $(this).val();
                 if (filter_value != ""){
-                    $('.student_item').not('.item-general-list.student_item[data-name*="' + filter_value.toUpperCase() + '"]').addClass("oculto-filtro-nombre");
+                    if(/\d/.test(filter_value)){
+                        $('.student_item').not('.item-general-list.student_item[data-username*="' + filter_value.toUpperCase() + '"]').addClass("oculto-filtro-nombre");
+                    }else{
+                        $('.student_item').not('.item-general-list.student_item[data-name*="' + filter_value.toUpperCase() + '"]').addClass("oculto-filtro-nombre");
+                    }
                     $(this).addClass("filter-active");
                 }else{
                     $(this).removeClass("filter-active");
@@ -182,7 +186,11 @@
                 $('.monitor_item').removeClass("oculto-filtro-nombre");
                 var filter_value = $(this).val();
                 if (filter_value != ""){
-                    $('.monitor_item').not('.item-general-list.monitor_item[data-name*="' + filter_value.toUpperCase() + '"]').addClass("oculto-filtro-nombre");
+                    if(/\d/.test(filter_value)){
+                        $('.monitor_item').not('.item-general-list.monitor_item[data-username*="' + filter_value.toUpperCase() + '"]').addClass("oculto-filtro-nombre");
+                    }else{
+                        $('.monitor_item').not('.item-general-list.monitor_item[data-name*="' + filter_value.toUpperCase() + '"]').addClass("oculto-filtro-nombre");
+                    }
                     $(this).addClass("filter-active");
                 }else{
                     $(this).removeClass("filter-active");
