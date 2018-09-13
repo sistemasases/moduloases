@@ -48,6 +48,28 @@ function get_user_moodle($id)
 
     return $user;
 }
+/**
+ * Retorna los usuarios ases homonimos a un usuario de moodle
+ * @param string $mdl_username Username completo de moodle
+ * @return array Nombres y apellidos de los usuarios ases [array('firstname', 'lastname')...] Array vacio si no hay homonimos
+ */
+
+function get_ases_users_by_mdl_username_prefix($mdl_username) {
+    global $DB;
+    $sql = "
+    select  mdl_user.username ,mdl_user.firstname, mdl_user.lastname from {user}, {talentospilos_user_extended} tp_user_ext, {talentospilos_usuario} tp_user  
+    where  mdl_user.id = tp_user_ext.id_moodle_user and tp_user.id = tp_user_ext.id_ases_user
+    
+    and mdl_user.firstname in (select  mdl_user_.firstname
+    from {user} mdl_user_ where mdl_user_.username = '$mdl_username')
+    
+    and mdl_user.lastname in (select  mdl_user_.lastname
+    from  {user} mdl_user_ where mdl_user_.username = '$mdl_username')";
+    $ases_users = $DB->get_records_sql($sql);
+    return $ases_users;
+   
+}
+
 
 /**
  * Función que recupera los campos de usuario de la tabla {talentospilos_usuario}

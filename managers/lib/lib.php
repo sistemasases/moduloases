@@ -47,7 +47,27 @@ function load_programs()
 
     return $array_programs;
 }
+/**
+ * Extract student code normalized specific for univalle, empty string
+ * is returned if the input is invalid value
+ * @param string $value String than represents student code in finite diferent forms 
+ * @return string normalized student code
+ * @example 1327951 -> 1327951
+ * @example 201327951 -> 1327951
+ * @example 1327951-3743 -> 1327951
+ */
+function extract_normalized_code($value) {
+    $value_length = strlen($value);
+    if ($value_length == 7) {
+        return $value;
+    } else if( ($value_length == 12 || $value_length == 11) && strpos($value, '-') !== false) {
+        return explode('-', $value )[0];
+    } else {
+            return '';
+    }
 
+
+}
 /**
  * Gets all academic programs that are stored on talentospilos_programa table corresponding to CALI city
  *
