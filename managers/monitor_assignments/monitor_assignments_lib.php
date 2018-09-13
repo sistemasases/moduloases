@@ -40,7 +40,7 @@ function monitor_assignments_get_professionals_by_instance( $instance_id ){
 
     global $DB;
 
-    $sql = "SELECT CONCAT(moodle_user.firstname, CONCAT(' ', moodle_user.lastname)) AS fullname, moodle_user.id
+    $sql = "SELECT CONCAT(moodle_user.firstname, CONCAT(' ', moodle_user.lastname)) AS fullname, moodle_user.id, moodle_user.username
     FROM {talentospilos_user_rol} AS user_rol
     INNER JOIN {user} AS moodle_user ON moodle_user.id = user_rol.id_usuario
     WHERE id_rol = (SELECT id FROM {talentospilos_rol} WHERE nombre_rol = 'profesional_ps')
@@ -62,7 +62,7 @@ function monitor_assignments_get_practicing_by_instance( $instance_id ){
 
     global $DB;
 
-    $sql = "SELECT CONCAT(moodle_user.firstname, CONCAT(' ', moodle_user.lastname)) AS fullname, moodle_user.id, user_rol.id_jefe
+    $sql = "SELECT CONCAT(moodle_user.firstname, CONCAT(' ', moodle_user.lastname)) AS fullname, moodle_user.id, user_rol.id_jefe, moodle_user.username
     FROM {talentospilos_user_rol} AS user_rol
     INNER JOIN {user} AS moodle_user ON moodle_user.id = user_rol.id_usuario
     WHERE id_rol = (SELECT id FROM {talentospilos_rol} WHERE nombre_rol = 'practicante_ps')
@@ -85,13 +85,13 @@ function monitor_assignments_get_monitors_by_instance( $instance_id ){
 
     global $DB;
 
-    $sql = "SELECT DISTINCT user_programa_0.id, user_programa_0.fullname, user_programa_0.cod_programa, user_programa_0.nombre_programa, facultad_0.id AS id_facultad, facultad_0.nombre AS nombre_facultad
+    $sql = "SELECT DISTINCT user_programa_0.id, user_programa_0.fullname, user_programa_0.cod_programa, user_programa_0.nombre_programa, facultad_0.id AS id_facultad, facultad_0.nombre AS nombre_facultad, user_programa_0.username
     FROM {talentospilos_facultad} AS facultad_0
     INNER JOIN (
-            SELECT user_0.id, user_0.fullname, user_0.cod_programa, programa_0.nombre AS nombre_programa, programa_0.id_facultad
+            SELECT user_0.id, user_0.fullname, user_0.cod_programa, programa_0.nombre AS nombre_programa, programa_0.id_facultad, user_0.username
             FROM {talentospilos_programa} AS programa_0
             INNER JOIN (
-                    SELECT CONCAT(moodle_user.firstname, CONCAT(' ', moodle_user.lastname)) AS fullname, moodle_user.id, cast(nullif(split_part(moodle_user.username, '-', 2), '') AS INTEGER) AS cod_programa
+                    SELECT CONCAT(moodle_user.firstname, CONCAT(' ', moodle_user.lastname)) AS fullname, moodle_user.id, moodle_user.username, cast(nullif(split_part(moodle_user.username, '-', 2), '') AS INTEGER) AS cod_programa
                     FROM {talentospilos_user_rol} AS user_rol
                     INNER JOIN {user} AS moodle_user ON moodle_user.id = user_rol.id_usuario
                     WHERE id_rol = (
@@ -130,7 +130,7 @@ function monitor_assignments_get_students_by_instance( $instance_id ){
 
     global $DB;
 
-    $sql = "SELECT moodle_ases_user_programa_facultad_0.id_ases_user AS id, CONCAT(moodle_user_0.firstname, CONCAT(' ', moodle_user_0.lastname)) AS fullname, moodle_ases_user_programa_facultad_0.cod_programa, moodle_ases_user_programa_facultad_0.nombre_programa, moodle_ases_user_programa_facultad_0.id_facultad, moodle_ases_user_programa_facultad_0.nombre_facultad
+    $sql = "SELECT moodle_ases_user_programa_facultad_0.id_ases_user AS id, CONCAT(moodle_user_0.firstname, CONCAT(' ', moodle_user_0.lastname)) AS fullname, moodle_ases_user_programa_facultad_0.cod_programa, moodle_ases_user_programa_facultad_0.nombre_programa, moodle_ases_user_programa_facultad_0.id_facultad, moodle_ases_user_programa_facultad_0.nombre_facultad, moodle_user_0.username
     FROM {user} AS moodle_user_0
     INNER JOIN
         (
