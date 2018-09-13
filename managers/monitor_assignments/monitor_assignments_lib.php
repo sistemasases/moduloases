@@ -32,28 +32,45 @@ require_once $CFG->dirroot.'/blocks/ases/managers/lib/lib.php';
  * Función que renombra para clasificar la función get_professionals_by_instance en otras partes del plugin, el objetivo
  * es dibujar un mapa de seguimiento para saber de donde provienen las funciones
  * @author Jeison Cardona Gómez. <jeison.cardona@correounivalle.edu.co>
- * @see asesreport_lib.php
  * @param int $instance_id Instance id.
  * @return Array 
  */
 
 function monitor_assignments_get_professionals_by_instance( $instance_id ){
-    // This function is in asesreport_lib.php
-    return get_professionals_by_instance( $instance_id );
+
+    global $DB;
+
+    $sql = "SELECT CONCAT(moodle_user.firstname, CONCAT(' ', moodle_user.lastname)) AS fullname, moodle_user.id
+    FROM {talentospilos_user_rol} AS user_rol
+    INNER JOIN {user} AS moodle_user ON moodle_user.id = user_rol.id_usuario
+    WHERE id_rol = (SELECT id FROM {talentospilos_rol} WHERE nombre_rol = 'profesional_ps')
+    AND id_instancia = $instance_id
+    AND estado = 1
+    AND id_semestre =". get_current_semester()->max ." ORDER BY fullname";
+    return $DB->get_records_sql( $sql );
 }
 
 /**
  * Función que renombra para clasificar la función get_practicing_by_instance en otras partes del plugin, el objetivo
  * es dibujar un mapa de seguimiento para saber de donde provienen las funciones
  * @author Jeison Cardona Gómez. <jeison.cardona@correounivalle.edu.co>
- * @see asesreport_lib.php
  * @param int $instance_id Instance id.
  * @return Array 
  */
 
 function monitor_assignments_get_practicing_by_instance( $instance_id ){
-    // This function is in asesreport_lib.php
-    return get_practicing_by_instance( $instance_id );
+
+    global $DB;
+
+    $sql = "SELECT CONCAT(moodle_user.firstname, CONCAT(' ', moodle_user.lastname)) AS fullname, moodle_user.id, user_rol.id_jefe
+    FROM {talentospilos_user_rol} AS user_rol
+    INNER JOIN {user} AS moodle_user ON moodle_user.id = user_rol.id_usuario
+    WHERE id_rol = (SELECT id FROM {talentospilos_rol} WHERE nombre_rol = 'practicante_ps')
+    AND id_instancia = $instance_id
+    AND estado = 1
+    AND id_semestre = ". get_current_semester()->max." ORDER BY fullname";
+
+    return $DB->get_records_sql( $sql );
 }
 
 /**
