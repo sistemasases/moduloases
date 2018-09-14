@@ -1357,6 +1357,14 @@ input.no-borde-fondo.tema
 .btn-acept{
   float: right;
 }
+.div_info_user{
+
+  padding-top: 9px;
+  padding-bottom: 9px;
+  margin-bottom: 0px;
+  font-size: 16px;
+
+}
 
 .new{
   color: white;
