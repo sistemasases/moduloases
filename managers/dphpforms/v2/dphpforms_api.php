@@ -25,8 +25,7 @@
 
 // Standard GPL and phpdocs
 
-    require_once(dirname(__FILE__). '/../../../../config.php');
-    require_once(dirname(__FILE__).'/user_management_lib.php');
+    require_once(dirname(__FILE__).'/dphpforms_lib.php');
 
     header('Content-Type: application/json');
 
@@ -72,7 +71,7 @@
                         array(
                             "status_code" => 0,
                             "error_message" => "",
-                            "data_response" => ""
+                            "data_response" => dphpformsV2_find_records( $Xquery )
                         )
                     );
                     

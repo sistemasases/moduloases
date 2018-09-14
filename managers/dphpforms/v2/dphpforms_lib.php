@@ -22,8 +22,17 @@
  * @copyright  2018 Jeison Cardona Gómez <jeison.cardona@correounivalle.edu.co>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-require_once(dirname(__FILE__). '/../../../../config.php');
+require_once(dirname(__FILE__). '/../../../../../config.php');
 
+$xQuery = new stdClass();
+$xQuery->form = "inasistencia"; // Can be alias(String) or idntifier(Number)
+$xQuery->filterFields = [["id_estudiante", "value"],["id_creado_por", "value"],["id_instancia", "value"]];
+$xQuery->orderField = "id_instancia";
+$xQuery->orderByDatabaseRecordDate = false; // If true, orderField is ignored
+$xQuery->order = [ "ASC", "DESC" ];
+$xQuery->like  = [["id_estudiante", true], ["id_creado_por", true], ["id_instancia", false]];
+$xQuery->record_status = [ "deleted", "!deleted" ];
+$xQuery->selectedFields = [ "id_creado_por", "id_estudiante" ]; // RecordId and BatabaseRecordDate are selected by default.
 
 /**
  * 
@@ -32,7 +41,63 @@ require_once(dirname(__FILE__). '/../../../../config.php');
  * @param int 
  * @return stdClass
  */
+ function dphpformsV2_find_records( $query ){
+   
+ }
 
+ //dphpformsV2_find_records( $xQuery );
+
+ /**
+ * Function that return the basic dynamic form information.
+ * @author Jeison Cardona Gómez. <jeison.cardona@correounivalle.edu.co>
+ * @param int/$string Alias or identifier 
+ * @return stdClass
+ */
+ function dphpformsV2_get_form_info( $alias_identifier ){
+    
+    global $DB;
+
+    $criteria = "id = $alias_identifier";
+    if( !is_numeric( $alias_identifier ) ){
+        $criteria = "alias = '$alias_identifier'";
+    }
+
+    $sql = "SELECT id, nombre, alias, descripcion, method, action, enctype, fecha_hora_registro, estado 
+    FROM {talentospilos_df_formularios} 
+    WHERE $criteria
+    AND estado = 1";
+
+    return $DB->get_record_sql( $sql );
+
+ }
+
+ /**
+ * Function that return a list of forms by criteria.
+ * @author Jeison Cardona Gómez. <jeison.cardona@correounivalle.edu.co>
+ * @param int/$string Alias or identifier 
+ * @return stdClass
+ */
+function dphpformsV2_get_find_forms( $column_name, $value, $using_like = false, $status = 1 ){
+    
+    global $DB;
+
+    if( !$column_name || !$value ){
+        return [];
+    }
+
+    $criteria = "$column_name = '$value'";
+    if( $using_like == true ){
+        $criteria = "LIKE $column_name '%$value%'";
+    }
+
+    $sql = "SELECT id, nombre, alias, descripcion, method, action, enctype, fecha_hora_registro, estado 
+    FROM {talentospilos_df_formularios} 
+    WHERE $criteria
+    AND estado = $status";
+
+    return $DB->get_records_sql( $sql );
+
+ }
 
 
 ?>
