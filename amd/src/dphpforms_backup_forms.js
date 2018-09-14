@@ -70,6 +70,7 @@ define([
                 get_id_switch_user(porId);
 
             });
+            
 
             function get_id_switch_user(cod_user) {
                 $.ajax({
