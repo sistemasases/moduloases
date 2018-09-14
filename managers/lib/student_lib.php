@@ -57,7 +57,7 @@ function get_user_moodle($id)
 function get_ases_users_by_mdl_username_prefix($mdl_username) {
     global $DB;
     $sql = "
-    select  mdl_user.username ,mdl_user.firstname, mdl_user.lastname from {user}, {talentospilos_user_extended} tp_user_ext, {talentospilos_usuario} tp_user  
+    select mdl_user.username ,mdl_user.firstname, mdl_user.lastname from {user}, {talentospilos_user_extended} tp_user_ext, {talentospilos_usuario} tp_user  
     where  mdl_user.id = tp_user_ext.id_moodle_user and tp_user.id = tp_user_ext.id_ases_user
     
     and mdl_user.firstname in (select  mdl_user_.firstname
