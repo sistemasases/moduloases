@@ -35,9 +35,9 @@
     $raw_data = file_get_contents("php://input");
     
     // Validation if the user is logged. 
-    // if( $USER->id == 0 ){
-    //    return_with_code( -1 );
-    //}
+    if( $USER->id == 0 ){
+       return_with_code( -1 );
+    }
 
     $input = json_decode( $raw_data );
 
