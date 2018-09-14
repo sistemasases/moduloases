@@ -1,40 +1,43 @@
-{{#data}}   
-{{> block_ases/side_menu}}
+{{#data}} {{> block_ases/side_menu}}
 <div class="container">
-    <h2>REPORTE DE BACKUP</h2>  
-<div class="row">
-      <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
-          <input id="filtroCodigoUsuario" name="idFiltro" type="text" class="form-control" placeholder="Ingrese el código del estudiante" style="
+  <h2>REPORTE DE BACKUP</h2>
+
+  <hr style="background-color: red; height: 1px; border: 0">
+  <div class="row">
+    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+      <input id="filtroCodigoUsuario" name="idFiltro" type="text" class="form-control" placeholder="Ingrese el código del estudiante" style="
           height: 40px; font-size:16px">
-       </div>
-       <div  id="div_code_user" class="col-lg-6 col-md-6 col-sm-6 col-xs-6 alert alert-danger">
-          <strong>Identificador: </strong> Codigo estudiante <strong> Nombre: </strong> Nombre estudiante
-        </div> 
-       
-       
-          
-        
-
-    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
-        <input class="btn-danger"  type="button" id = "generarFiltro"style=" width: 170px; height: 39px;margin-top: 0px;" value="Buscar">
     </div>
-</div>
 
-<hr style="background-color: red; height: 1px; border: 0">
-<div class="row">
-     <div  id="div_table_forms">
-                     </div>   
- </div>
+    <div id="div_code_user" class="col-lg-2 col-md-2 col-sm-2 col-xs-2 alert alert-danger div_info_user">
+      <strong>Usuario: </strong> Moodle
+    </div>
 
-<div class="row">
-  <h2>REPORTE DE BACKUP</h2>  
-   <div  id="div_table_form">
-                   </div>   
-   
-  <!--end panel-group-->
-</div>
+    <div id="div_name_user" class="col-lg-4 col-md-4 col-sm-4 col-xs-4 alert alert-danger div_info_user">
+      <strong> Nombre: </strong> Nombre
+    </div>
 
-{{/data}}
+
+    <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
+      <input class="btn-danger" type="button" id="generarFiltro" style=" width: 170px; height: 39px;margin-top: 0px;" value="Buscar">
+    </div>
+  </div>
+
+  <hr style="background-color: red; height: 1px; border: 0">
+  <div class="row">
+    <div id="div_table_forms">
+    </div>
+  </div>
+
+  <div class="row">
+    <h2>REPORTE DE BACKUP</h2>
+    <div id="div_table_form">
+    </div>
+
+    <!--end panel-group-->
+  </div>
+
+  {{/data}}
 </div>
 
 <div class="mymodal" id="modalFormulario" name="modalFormulario">
@@ -51,15 +54,13 @@
     <div class="mymodal-body mymodal-body_v2 col-sm-12">
       <div class="row">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-          <div >ESTE ES EL FORMULARIO</div>
-          
+          <div>ESTE ES EL FORMULARIO</div>
+
         </div>
       </div>
     </div>
     <div class="mymodal-footer">
-     .
+      .
     </div>
   </div>
 </div>
-
- 

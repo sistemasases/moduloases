@@ -66,6 +66,8 @@ $PAGE->requires->css('/blocks/ases/style/bootstrap.min.css', true);
 $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/dataTables.foundation.css', true);
 $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/dataTables.foundation.min.css', true);
 $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/dataTables.jqueryui.css', true);
+$PAGE->requires->css('/blocks/ases/style/sweetalert.css', true);
+$PAGE->requires->css('/blocks/ases/style/sweetalert2.css', true);
 $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/dataTables.jqueryui.min.css', true);
 $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/jquery.dataTables.css', true);
 $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/jquery.dataTables.min.css', true);

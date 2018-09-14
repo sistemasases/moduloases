@@ -51,11 +51,11 @@
              * for this reason, the input param only can be equal in quantity to one.
              * */
               $columns = array();
-            array_push($columns, array("title"=>"Id usuario", "name"=>"id_user", "data"=>"id_user"));
+            array_push($columns, array("title"=>"Usuario", "name"=>"id_user", "data"=>"id_user"));
             array_push($columns, array("title"=>"Acción", "name"=>"name_accion", "data"=>"name_accion"));
             array_push($columns, array("title"=>"Id respuesta", "name"=>"id_respuesta", "data"=>"id_respuesta"));
             array_push($columns, array("title"=>"Fecha", "name"=>"fecha_act", "data"=>"fecha_act"));
-            array_push($columns, array("title"=>"Identificador", "name"=>"id_form", "data"=>"id"));
+            array_push($columns, array("title"=>"Formulario", "name"=>"id_form", "data"=>"id"));
     
             $data = array(
                         "bsort" => false,

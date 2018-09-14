@@ -45,7 +45,7 @@ define([
 
                     failure: function (msg) { }
                 });
-  
+
             });
 
             $(document).on('click', '#tableBackupForms tbody tr td', function () {
@@ -60,43 +60,51 @@ define([
                 alert(valores);
                 get_only_form(valores);
 
-               // $('#modalFormulario').show();
+                // $('#modalFormulario').show();
 
             });
 
-          
-             $('#generarFiltro').on('click', function () {
-                    var porId= document.getElementById("filtroCodigoUsuario").value;
-                    alert(porId);
-                    get_id_switch_user(porId);
 
-             });
-             
-            function get_id_switch_user(cod_user){
+            $('#generarFiltro').on('click', function () {
+                var porId = document.getElementById("filtroCodigoUsuario").value;
+                get_id_switch_user(porId);
+
+            });
+
+            function get_id_switch_user(cod_user) {
                 $.ajax({
                     type: "POST",
-                    data:{loadF: 'get_id_user', params: cod_user},
+                    data: { loadF: 'get_id_user', params: cod_user },
                     url: "../managers/dphpforms/dphpforms_dwarehouse_api.php",
                     success: function (msg) {
+                        if(msg.length === 0){
+                            swal(
+                                'USER NOT FOUND',
+                                'Oooops! Incorrect code',
+                                'warning'
+                            );
+                        }else {
                         $("#div_code_user").empty();
-                        $("#div_code_user").append('<strong>Identificador: </strong>'+msg[0].cod_user+'  '+'<strong>Nombre: </strong>'+msg[0].name_user);
-                     
+                        $("#div_code_user").append('<strong>Usuario: </strong>' + msg[0].cod_user);
+                        $("#div_name_user").empty();
+                        $("#div_name_user").append('<strong>Nombre: </strong>' + msg[0].name_user);
+                        }
                     },
                     cache: false,
                     async: true,
 
-                    error: function (msg) { alert("No encontrado")}
+                    failure: function (msg) { alert("No encontrado") }
                 });
-            } 
+            }
 
-            
-          
 
-            function get_only_form(id_form){
+
+
+            function get_only_form(id_form) {
                 //Get form switch id
                 $.ajax({
                     type: "POST",
-                    data:{loadF: 'get_form', params: id_form},
+                    data: { loadF: 'get_form', params: id_form },
                     url: "../managers/dphpforms/dphpforms_dwarehouse_api.php",
                     success: function (msg) {
                         $("#div_table_form").empty();
