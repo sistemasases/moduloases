@@ -107,6 +107,7 @@
     // }
 
     // print_r( json_encode( $cambios ) );
+    echo "Script obsoleto.";
     die();
 
 ?>

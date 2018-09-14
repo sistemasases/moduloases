@@ -56,9 +56,27 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
 
                 }else if( (form == 'inasistencia')&&( action == 'update' ) ){
 
+                    var rev_prof = $('.dphpforms-record').find('.in_revisado_profesional').find('.checkbox').find('input[type=checkbox]').prop('checked');
+                    var rev_prac = $('.dphpforms-record').find('.in_revisado_practicante').find('.checkbox').find('input[type=checkbox]').prop('checked');
+                    var role_support = $('#dphpforms_role_support').attr('data-info');
+                    if( ( rev_prof ) && ( role_support != "sistemas" ) ){
+                        $('.btn-dphpforms-delete-record').remove();
+                        $('.btn-dphpforms-update').remove();
+                    }
+                    if( role_support == "dir_socioeducativo" ){
+                        $('.btn-dphpforms-delete-record').remove();
+                        $('.btn-dphpforms-update').remove();
+                    };    
+
                     var count_buttons_dphpforms = $('.dphpforms-record .btn-dphpforms-univalle').length;
-                    if( count_buttons_dphpforms == 4 ){
-                        $('.dphpforms-record .btn-dphpforms-univalle:eq(0)').css( { 'margin-left' : ( ($('.dphpforms-updater').width()/2) - 72 - 30 ) + 'px'  } );
+                    if( count_buttons_dphpforms == 1 ){
+                        $('.dphpforms-record .btn-dphpforms-univalle:eq(0)').css( { 'margin-left' : ( ($('.dphpforms-updater').width()/2) - ( $('.dphpforms-record .btn-dphpforms-close').outerWidth() /2) ) + 'px'  } );
+                    }else if( count_buttons_dphpforms == 2 ){
+                        $('.dphpforms-record .btn-dphpforms-univalle:eq(0)').css( { 'margin-left' : ( ($('.dphpforms-updater').width()/2) - 72 ) + 'px'  } );
+                    }else if( count_buttons_dphpforms == 3 ){
+                        $('.dphpforms-record .btn-dphpforms-univalle:eq(0)').css( { 'margin-left' : ( ($('.dphpforms-updater').width()/2) - 72 - 30) + 'px'  } );
+                    }else if( count_buttons_dphpforms == 4 ){
+                        $('.dphpforms-record .btn-dphpforms-univalle:eq(0)').css( { 'margin-left' : ( ($('.dphpforms-updater').width()/2) - 72 - 30) + 'px'  } );
                     }
                 
                 }else if( (form == 'seguimiento_pares' )&&( action == 'insert' )){
