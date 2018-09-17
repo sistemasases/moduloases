@@ -34,13 +34,15 @@
                 <div class="form-group col-xs-6 col-sm-6 col-md-6 col-lg-6">
                     <label for="">Fecha de finalización</label>
                     <input type="date" name="" id="end_date" class="form-control ajuste_fecha">
-                </div>
+                </div>                
                 <div class="form-group">
                     <button id="btn-generar-reporte" type="submit" class="btn btn-default">Generar</button>
                 </div>
-                <div>                    
-                    <table id="dphpform_datatable" class="table"
-                    cellspacing="0" width="100%"><thead> </thead></table>
+                <div class="dataTables_scrollBody" style="position: relative; overflow: auto; width: 100%;">
+                    <div>                    
+                        <table id="dphpform_datatable" class="table"
+                        cellspacing="0" width="100%"><thead> </thead></table>
+                    </div>
                 </div>
                 <div id="progress_group" class="form-group" style="display:none;">
                     <hr>
