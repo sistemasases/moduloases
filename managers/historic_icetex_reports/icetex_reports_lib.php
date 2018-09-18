@@ -402,8 +402,9 @@ function get_count_active_no_res_students($cohort, $semester_name){
 
     $count = $DB->get_record_sql($sql_query);
 
+    $amount_no_res = $count->num_act_no_res * 6000000;
     $count->cohort = $cohort;
-    $count->monto_act_no_res = "$0";
+    $count->monto_act_no_res = "$".number_format($amount_no_res, 0, ',', '.');;
     $count->semestre = $semester_name;
 
     return $count;
@@ -411,10 +412,8 @@ function get_count_active_no_res_students($cohort, $semester_name){
 
 //print_r(get_count_active_no_res_students('SPP2', '2018B'));
 
-function get_count_inactive_no_res_students($cohort){
+function get_count_inactive_no_res_students($cohort, $semester_name){
     global $DB;
-
-    $array_inact_no_res = array(); 
 
     $sql_query = "SELECT Count(usuarios.student_id) AS num_inact_no_res FROM					
                             (SELECT moodle_user.username, 
@@ -468,9 +467,12 @@ function get_count_inactive_no_res_students($cohort){
     $amount_no_res = $count->num_inact_no_res * 6000000; 
     $count->cohort = $cohort;
     $count->monto_inact_no_res = "$".number_format($amount_no_res, 0, ',', '.');
+    $count->semestre = $semester_name;
 
     return $count;
 }
+
+//print_r(get_count_inactive_no_res_students('SPP2', '2017A'));
 
 function get_semester_from_cohort($cohort){
     global $DB;
@@ -527,7 +529,7 @@ function get_info_summary_report($cohort){
     $array_act_res = get_count_active_res_students($cohort);
     $array_inact_res = get_count_inactive_res_students($cohort);
     $array_act_no_res = array();
-    $array_inact_no_res = get_count_inactive_no_res_students($cohort);
+    $array_inact_no_res = array();
 
     $array_objects = array();
 
@@ -537,8 +539,10 @@ function get_info_summary_report($cohort){
 
     foreach($semesters as $semester){
         $count_act_no_res = get_count_active_no_res_students($cohort, $semester);
+        $count_inact_no_res = get_count_inactive_no_res_students($cohort, $semester);
 
         array_push($array_act_no_res, $count_act_no_res);
+        array_push($array_inact_no_res, $count_inact_no_res);
     }
 
     if(count($array_act_res) > 0){
@@ -604,7 +608,7 @@ function get_info_summary_report($cohort){
                 $array_objects[$inact_no_res->semestre]->cohort = $inact_no_res->cohort;
 
             }else{
-                $array_objects[$act_res->semestre] = new stdClass();
+                $array_objects[$inact_no_res->semestre] = new stdClass();
                 $array_objects[$inact_no_res->semestre]->num_inact_no_res = $inact_no_res->num_inact_no_res;
                 $array_objects[$inact_no_res->semestre]->monto_inact_no_res = $inact_no_res->monto_inact_no_res;
                 $array_objects[$inact_no_res->semestre]->semestre = $inact_no_res->semestre;
@@ -620,7 +624,7 @@ function get_info_summary_report($cohort){
     foreach($array_objects as $object){
 
         if(!isset($object->num_act_res)){
-            $object->num_act_res = "---";
+            $object->num_act_res = 0;
         }
 
         if(!isset($object->monto_act_res)){
@@ -628,7 +632,7 @@ function get_info_summary_report($cohort){
         }
 
         if(!isset($object->num_inact_res)){
-            $object->num_inact_res = "---";
+            $object->num_inact_res = 0;
         }
 
         if(!isset($object->monto_inact_res)){
@@ -636,7 +640,7 @@ function get_info_summary_report($cohort){
         }
 
         if(!isset($object->num_act_no_res)){
-            $object->num_act_no_res = "---";
+            $object->num_act_no_res = 0;
         }
 
         if(!isset($object->monto_act_no_res)){
@@ -644,12 +648,15 @@ function get_info_summary_report($cohort){
         }
 
         if(!isset($object->num_inact_no_res)){
-            $object->num_inact_no_res = "---";
+            $object->num_inact_no_res = 0;
         }
 
         if(!isset($object->monto_inact_no_res)){
             $object->monto_inact_no_res = "---";
         }
+
+        $object->total_students = $object->num_act_res + $object->num_inact_res 
+                                    + $object->num_act_no_res + $object->num_inact_no_res;
 
         array_push($array_final, $object);
     }
