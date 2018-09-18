@@ -38,7 +38,8 @@
 		array_push($columns, array("title"=>"Estudiantes activos sin res.", "name"=>"num_act_no_res", "data"=>"num_act_no_res"));
 		array_push($columns, array("title"=>"Monto", "className"=>"dt-body-right", "name"=>"monto_act_no_res", "data"=>"monto_act_no_res"));
 		array_push($columns, array("title"=>"Estudiantes inactivos sin res.", "name"=>"num_inact_no_res", "data"=>"num_inact_no_res"));
-		array_push($columns, array("title"=>"Monto", "className"=>"dt-body-right", "name"=>"monto_inact_no_res", "data"=>"monto_inact_no_res"));
+		array_push($columns, array("title"=>"Monto aprox.", "className"=>"dt-body-right", "name"=>"monto_inact_no_res", "data"=>"monto_inact_no_res"));
+		array_push($columns, array("title"=>"Total estudiantes", "name"=>"total_students", "data"=>"total_students"));
 
 		$data = array(
 					"bsort" => false,
