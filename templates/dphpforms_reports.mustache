@@ -36,8 +36,8 @@
                     <input type="date" name="" id="end_date" class="form-control ajuste_fecha">
                 </div>
                 
-                <div class="row">
-                    <!-- Columna de campos base -->
+                <!--<div class="row">
+                    -- Columna de campos base --
                     <div class="col-sm-12" hidden>
                         <fieldset id="base_fields">
                             <legend>Campos base</legend>
@@ -71,7 +71,7 @@
                         </fieldset>
                     </div>
 
-                    <!-- Columna de comentarios -->
+                    -- Columna de comentarios --
                     <div class="col-sm-2 col-md-2" hidden>
                         <fieldset id="comments_fields">
                             <legend><input type="checkbox" id="comments_fields_check"> Comentarios</legend>
@@ -93,7 +93,7 @@
                         </fieldset>
                     </div>
 
-                    <!-- Columna de riesgos -->
+                    -- Columna de riesgos --
                     <div class="col-sm-2 col-md-2" hidden>
                         <fieldset id="risks_fields">
                             <legend><input type="checkbox" id="risks_fields_check"> Familiar</legend>
@@ -115,7 +115,7 @@
                         </fieldset>
                     </div>
                     
-                    <!-- Columna de temáticas -->
+                    -- Columna de temáticas --
                     <div class="col-sm-2 col-md-2" hidden>
                         <fieldset id="themes_fields">
                             <legend><input type="checkbox" id="themes_fields_check"> Temáticas</legend>
@@ -133,7 +133,7 @@
                             </div>
                         </fieldset>
                     </div> 
-                </div>
+                </div>-->
                                                              
 
                 <div class="col-sm-12">
@@ -144,26 +144,28 @@
                     </div>
                 </div>
 
-                <div class="dataTables_scrollBody" style="position: relative; overflow: auto; width: 100%;">
+                <!--<div class="dataTables_scrollBody" style="position: relative; overflow: auto; width: 100%;">
                     <div>                    
                         <table id="dphpform_datatable" class="table"
                         cellspacing="0" width="100%"><thead> </thead></table>
                     </div>
-                </div>
-                <div id="progress_group" class="form-group" style="display:none;">
-                    <hr>
-                    <div id="message"></div><br>
-                    <span><strong>Progreso:</strong></span>
-                    <h3>Descargando datos:</h3>
-                    <div id="progress-download" class="progress">
-                        <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width:0%">
-                          0%
+                </div>-->
+                <div class="row">
+                    <div id="progress_group" class="form-group col-xs-12 col-sm-12 col-md-12 col-lg-12" style="display:none;">
+                        <hr>
+                        <div id="message"></div><br>
+                        <span><strong>Progreso:</strong></span>
+                        <h3>Descargando datos:</h3>
+                        <div id="progress-download" class="progress">
+                            <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width:0%">
+                              0%
+                            </div>
                         </div>
-                    </div>
-                    <h3>Generando CSV:</h3>
-                    <div id="progress-custom" class="progress">
-                        <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width:0%">
-                          0%
+                        <h3>Generando CSV:</h3>
+                        <div id="progress-custom" class="progress">
+                            <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width:0%">
+                              0%
+                            </div>
                         </div>
                     </div>
                 </div>
