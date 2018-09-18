@@ -647,8 +647,8 @@ define([
                                         if( progress == count_records ){
                                             $("#progress-download").find("div").addClass("progress-bar-success");
                                             var tight_records = custom_actions( completed_records, "seguimiento_pares" );
-                                            render_datatable( tight_records );
-                                            //downloadCSV( tight_records );
+                                            //render_datatable( tight_records );
+                                            downloadCSV( tight_records );
                                         };
                                         
                                     }).fail(function(err) {
