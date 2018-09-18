@@ -42,6 +42,11 @@ $xQuery->selectedFields = [ "id_creado_por", "id_estudiante" ]; // RecordId and 
  * @return stdClass
  */
  function dphpformsV2_find_records( $query ){
+
+    $form = dphpformsV2_get_form_info( $query->form );
+    if( $form ){
+
+    }
    
  }
 
@@ -88,6 +93,29 @@ function dphpformsV2_get_find_forms( $column_name, $value, $using_like = false, 
     $criteria = "$column_name = '$value'";
     if( $using_like == true ){
         $criteria = "LIKE $column_name '%$value%'";
+    }
+
+    $sql = "SELECT id, nombre, alias, descripcion, method, action, enctype, fecha_hora_registro, estado 
+    FROM {talentospilos_df_formularios} 
+    WHERE $criteria
+    AND estado = $status";
+
+    return $DB->get_records_sql( $sql );
+
+ }
+
+ /**
+ * Function that return a list of form fields.
+ * @author Jeison Cardona Gómez. <jeison.cardona@correounivalle.edu.co>
+ * @param int $form_id 
+ * @return stdClass
+ */
+function dphpformsV2_get_fields_form( $form_id ){
+    
+    global $DB;
+
+    if( !is_numeric( $form_id ) ){
+        return [];
     }
 
     $sql = "SELECT id, nombre, alias, descripcion, method, action, enctype, fecha_hora_registro, estado 
