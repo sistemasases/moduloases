@@ -1,7 +1,6 @@
-{{#data}} {{> block_ases/side_menu}}
+ {{#data}} {{> block_ases/side_menu}} {{#backup_forms_bf}}
 <div class="container">
   <h2>REPORTE DE BACKUP</h2>
-
   <hr style="background-color: red; height: 1px; border: 0">
   <div class="row">
     <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
@@ -29,38 +28,38 @@
     </div>
   </div>
 
-  <div class="row">
-    <h2>REPORTE DE BACKUP</h2>
-    <div id="div_table_form">
-    </div>
 
-    <!--end panel-group-->
-  </div>
+  <div class="mymodal" id="modal_JSON" name="modal_JSON">
+    <div class="outside"></div>
+    <div class="mymodal-content">
 
-  {{/data}}
-</div>
-
-<div class="mymodal" id="modalFormulario" name="modalFormulario">
-  <div class="outside"></div>
-  <div class="mymodal-content">
-    <div class="mymodal-header col-sm-12">
-      <div class="col-sm-11">
-        <h4 class="" id="myModalLabel">Formulario</h4>
-      </div>
-      <div class="col-sm-1">
-        <span id="mymodal-close" class="mymodal-close" aria-hidden="true">&times;</span>
-      </div>
-    </div>
-    <div class="mymodal-body mymodal-body_v2 col-sm-12">
-      <div class="row">
-        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-          <div>ESTE ES EL FORMULARIO</div>
-
+      <div class="mymodal-header col-sm-12">
+        <div class="col-sm-11">
+          <h4 class="" id="myModalLabel"> <h2>REPORTE DE BACKUP</h2>
+            <hr style="background-color: red; height: 1px; border: 0">
+          </h4>
+        </div>
+        <div class="col-sm-1">
+          <span id="mymodal-v2-close" class="mymodal-close" aria-hidden="true">&times;</span>
         </div>
       </div>
+      <div class="mymodal-body mymodal-body_v2 col-sm-12">
+        <div class="row">
+          <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            <div id="div_JSONform">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="mymodal-footer" style="text-align: center">
+        <button id="btn-close-modal" class=" btn-danger-close"> Cerrar
+        </button>
+      </div>
     </div>
-    <div class="mymodal-footer">
-      .
-    </div>
+
   </div>
+
+  {{/backup_forms_bf}}
+  <!--end panel-group-->
+  {{/data}}
 </div>

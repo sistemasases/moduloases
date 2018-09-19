@@ -26,6 +26,11 @@
 require_once(dirname(__FILE__). '/../../../../config.php');
 require_once $CFG->dirroot.'/blocks/ases/managers/lib/lib.php';
 
+/**
+ * Function load all registers of mdl_talentospilos_df_dwarehouse
+ * @see get_list_form()
+ * @return array
+ **/
 
 function get_list_form(){
     global $DB;
@@ -36,19 +41,22 @@ function get_list_form(){
     $results = $DB->get_records_sql($sql);
 
     foreach ($results as $record) {
-     
-
         array_push($forms_dwarehouse_array, $record);
     }
-    
    return $forms_dwarehouse_array;
 }
+/**
+ * Function that load a form switch id_form sent
+ * @see get_form_switch_id($id_form)
+ * @param $id_form---> id
+ * @return array
+ **/
 
 function get_form_switch_id($id_form){
     global $DB;
     $form_dwarehouse_array = array();
   
-    $sql = "SELECT id_usuario_moodle AS id_user, accion AS name_action, datos_previos AS dp_form, datos_enviados AS de_form, datos_almacenados AS da_form, 
+    $sql = "SELECT id_usuario_moodle AS id_user, accion AS name_action, datos_previos AS datos_previos, datos_enviados AS datos_enviados, datos_almacenados AS datos_almacenados, 
     fecha_hora_registro AS fecha_form FROM {talentospilos_df_dwarehouse} AS dwarehouse WHERE dwarehouse.id = $id_form  ";
 
     $results = $DB->get_records_sql($sql);
@@ -58,6 +66,12 @@ function get_form_switch_id($id_form){
     return $form_dwarehouse_array;
 }
 
+/**
+ * Function that load identifier and firstname of one user in mdl_user switch username sent
+ * @see get_id_switch_user($id_user)
+ * @param $id_user---> username
+ * @return array
+ **/
 function get_id_switch_user($id_user){
     global $DB;
     $form_dwarehouse_array = array();
