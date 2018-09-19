@@ -35,83 +35,12 @@ define([
                 console.log( records );
                 console.log('gets in');
                 
+                
                 $("#dphpform_datatable").DataTable(
                     { 
+                        "retrieve": true,
                         "bsort" : false,
-                        "data" : dataForms, 
-                        // "data": [
-                        //     {
-                        //         "student_code":1423124,
-                        //         "student_firstname": "JOAN MANUEL",
-                        //         "student_lastname": "TOVAR GUZMÁN",
-                        //         "fecha":"",
-                        //         "lugar":"",
-                        //         "hora_inicio":"",
-                        //         "hora_finalizacion":"",
-                        //         "tema": "",
-                        //         "objetivos": "",
-                        //         "comentarios_individual":"",
-                        //         "puntuacion_riesgo_individual":"",
-                        //         "tematicas_individual":"",
-                        //         "comentarios_familiar":"",
-                        //         "puntuacion_riesgo_familiar":"",
-                        //         "tematicas_familiar":"",
-                        //         "comentarios_academico":"",
-                        //         "puntuacion_riesgo_academico":"",
-                        //         "tematicas_academico":"",
-                        //         "comentarios_economico":"",
-                        //         "puntuacion_riesgo_economico":"",
-                        //         "tematicas_economico":"",
-                        //         "comentarios_vida_uni":"",
-                        //         "puntuacion_vida_uni":"",
-                        //         "observaciones_seguimientos":"",
-                        //         "revisado_profesional":"",
-                        //         "revisado_practicante":"",
-                        //         "id_estudiante":"",
-                        //         "id_instancia":"",
-                        //         "monitor_name":"",
-                        //         "practicing_name":"",
-                        //         "professional_name":"",
-                        //         "id_creado_por":"",
-                        //         "created_by":""
-                        //     },
-                        //     {
-                        //         "student_code":1423437,
-                        //         "student_firstname": "JUAN PABLO",
-                        //         "student_lastname": "MORENO MUÑOZ",
-                        //         "fecha":"",
-                        //         "lugar":"",
-                        //         "hora_inicio":"",
-                        //         "hora_finalizacion":"",
-                        //         "tema": "",
-                        //         "objetivos": "",
-                        //         "comentarios_individual":"",
-                        //         "puntuacion_riesgo_individual":"",
-                        //         "tematicas_individual":"",
-                        //         "comentarios_familiar":"",
-                        //         "puntuacion_riesgo_familiar":"",
-                        //         "tematicas_familiar":"",
-                        //         "comentarios_academico":"",
-                        //         "puntuacion_riesgo_academico":"",
-                        //         "tematicas_academico":"",
-                        //         "comentarios_economico":"",
-                        //         "puntuacion_riesgo_economico":"",
-                        //         "tematicas_economico":"",
-                        //         "comentarios_vida_uni":"",
-                        //         "puntuacion_vida_uni":"",
-                        //         "observaciones_seguimientos":"",
-                        //         "revisado_profesional":"",
-                        //         "revisado_practicante":"",
-                        //         "id_estudiante":"",
-                        //         "id_instancia":"",
-                        //         "monitor_name":"",
-                        //         "practicing_name":"",
-                        //         "professional_name":"",
-                        //         "id_creado_por":"",
-                        //         "created_by":""  
-                                
-                        //     }
-                        // ],
+                        "data" : dataForms,                         
                         "columns" : 
                         [
                             {
@@ -302,6 +231,43 @@ define([
                 );
             };
             
+            $('#base_fields_check').on('change', function () {
+                if ($('#base_fields_check').prop('checked')) {
+                    $("#base_fields input[type='checkbox']").prop('checked', true);
+                } else {
+                    $("#base_fields input[type='checkbox']").prop('checked', false);
+                }
+            });
+            $('#dimensions_fields_check').on('change', function () {
+                if ($('#dimensions_fields_check').prop('checked')) {
+                    $("#dimensions_fields input[type='checkbox']").prop('checked', true);
+                } else {
+                    $("#dimensions_fields input[type='checkbox']").prop('checked', false);
+                }
+            });
+            $('#comments_fields_check').on('change', function () {
+                if ($('#comments_fields_check').prop('checked')) {
+                    $("#comments_fields input[type='checkbox']").prop('checked', true);
+                } else {
+                    $("#comments_fields input[type='checkbox']").prop('checked', false);
+                }
+            });
+            $('#risks_fields_check').on('change', function () {
+                if ($('#risks_fields_check').prop('checked')) {
+                    $("#risks_fields input[type='checkbox']").prop('checked', true);
+                } else {
+                    $("#risks_fields input[type='checkbox']").prop('checked', false);
+                }
+            });
+            $('#themes_fields_check').on('change', function () {
+                if ($('#themes_fields_check').prop('checked')) {
+                    $("#themes_fields input[type='checkbox']").prop('checked', true);
+                } else {
+                    $("#themes_fields input[type='checkbox']").prop('checked', false);
+                }
+            });
+
+
             function process_data( records ){
 
                 var result = [];
