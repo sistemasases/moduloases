@@ -45,7 +45,12 @@ define(['jquery',
 
 			$("#report_button").on('click', function() {
 				var cohort = $("#cohort_select select").val();
-				load_summary_report(cohort);				
+				if(cohort == ""){
+					swal("Información", "Seleccione una cohorte válida", "info");
+				}
+				else{					
+					load_summary_report(cohort);
+				}								
 			});
 
 			//Controles para la tabla de los estudianes con resolución

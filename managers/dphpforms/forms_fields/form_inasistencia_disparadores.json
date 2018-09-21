@@ -1407,7 +1407,8 @@
                             {
                                 "rol": "profesional_ps",
                                 "permisos": [
-                                    "lectura"
+                                    "lectura",
+                                    "escritura"
                                 ]
                             },
                             {
@@ -1537,3 +1538,4 @@
         ]
     }
 ]
+                    
