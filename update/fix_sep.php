@@ -1,8 +1,11 @@
 <?php
 
-require_once(dirname(__FILE__). '/../../../config.php');
+/*require_once(dirname(__FILE__). '/../../../config.php');
 
 global $DB;
 $table = 'talentospilos_usuario';
 print_r($DB->delete_records($table, array('id'=>'7820')));
-print_r($DB->delete_records($table, array('id'=>'7742')));
+print_r($DB->delete_records($table, array('id'=>'7742')));*/
+
+echo "Script obsoleto.";
+die();
