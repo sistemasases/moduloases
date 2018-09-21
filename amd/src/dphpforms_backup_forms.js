@@ -51,10 +51,9 @@ define([
 
                 // Obtenemos todos los valores contenidos en los <td> de la fila
                 // seleccionada
-                $(this).parents("tr").find("td").each(function () {
-                    valores = $(this).html();
-                });
-                alert(valores);
+               valores =  $(this).parents("tr").find("td:first").html();
+                 
+               // alert(valores);
                 get_only_form(valores);
 
             });
