@@ -31,11 +31,13 @@
 
 require_once(__DIR__ . '/../../../config.php');
 require_once($CFG->libdir.'/adminlib.php');
+require_once($CFG->dirroot.'/cohort/lib.php');
+
 require_once('../managers/ases_report/asesreport_lib.php');
 require_once('../managers/permissions_management/permissions_lib.php');
 require_once("../managers/lib/cohort_lib.php");
 require_once("../managers/lib/student_lib.php");
-require_once('../classes/mdl_forms/SearchMoodleUser.php');
+require_once('../classes/mdl_forms/AddUserToCohort.php');
 
 
 require_once('../managers/validate_profile_action.php');
@@ -58,45 +60,35 @@ $id_current_user = $USER->id;
 
 $url = new moodle_url('/blocks/ases/view/check_pre_ases_inscription.php', array('courseid' => $courseid, 'instanceid' => $blockid));
 require_login($courseid, false);
-$search_moodle_user = new search_moodle_user($url);
+$add_user_to_cohort_form = new add_user_to_cohort($url);
 
 //Form processing and displaying is done here
-if ($search_moodle_user->is_cancelled()) {
+if ($add_user_to_cohort_form->is_cancelled()) {
     //Handle form cancel operation, if cancel button is present on form
     
-} else if ($data = $search_moodle_user->get_data()) {
-    $user_exists = $DB->record_exists('user', array('username' => $data->username));
-    
-  //In this case you process validated data. $mform->get_data() returns data posted in form.
 } 
 $output = $PAGE->get_renderer('block_ases');
 echo $output->header();
-if (!$user_exists) {
-    echo html_writer::tag('h1', " El usuario no existe en la base de datos moodle");
-    $url_create_moodle_user = new moodle_url('/blocks/ases/view/ases_user_creation.php', 
-    array('courseid' => $courseid, 'instanceid' => $blockid, 'username'=>$search_moodle_user->get_data()->username));
 
-    echo html_writer::tag('h3', 
-    html_writer::tag('a', "Puede añadirlo a al campus virtual en el siguiente enlace",
-    array('href' => $url_create_moodle_user)));
+if ($add_user_to_cohort_form->is_submitted() && $errors = $add_user_to_cohort_form->validation((array)$add_user_to_cohort_form->get_submitted_data())) {
+    if($errors['username']) {
+        echo html_writer::tag('h1', " El usuario no existe en la base de datos moodle");
+        $url_create_moodle_user = new moodle_url('/blocks/ases/view/ases_user_creation.php', 
+        array('courseid' => $courseid, 'instanceid' => $blockid, 'username'=>$add_user_to_cohort_form->get_submitted_data()->username));
     
-} else {
-    // If the user with code given have one ases user, return std object, if have more than one return an array of registries
-    $ases_students = get_ases_users_by_mdl_username_prefix($search_moodle_user->get_data()->username);
-
-    echo html_writer::tag('h3', " El usuario moodle es valido");
-    if ($ases_students && count($ases_students)>=1) {
-        echo html_writer::tag('h3', "El usuario tiene registros en ASES");
-        print_r(  $ases_students);
-    } else if (!$ases_students) {
-        echo html_writer::tag('h3', "El usuario no tiene registros en ASES");
         echo html_writer::tag('h3', 
-        html_writer::tag('a', "Puede añadirlo a la cohorte en el siguiente enlace",
-        array('href' => $manage_cohorts_url)));
+        html_writer::tag('a', "Puede añadirlo a al campus virtual en el siguiente enlace",
+        array('href' => $url_create_moodle_user)));
     }
 
 }
+if ($data = $add_user_to_cohort_form->get_data()) {
+    $mdl_user = $DB->get_record('user', array('username' => $data->username));
+    cohort_add_member( $data->cohort, $mdl_user->id);
+    echo html_writer::tag('h3', " El usuario $mdl_user->firstname $mdl_user->lastname ha sido añadido a la cohorte que ha seleccionado");    
 
-$search_moodle_user->display();
+  //In this case you process validated data. $mform->get_data() returns data posted in form.
+} 
+$add_user_to_cohort_form->display();
 echo $output->footer();
 ?>

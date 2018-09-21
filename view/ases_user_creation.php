@@ -55,26 +55,26 @@ $pagetitle = 'Creacion de usuarios ASES';
 $courseid = required_param('courseid', PARAM_INT);
 $user_name = optional_param('username', '', PARAM_TEXT);
 $blockid = required_param('instanceid', PARAM_INT);
+$url = new moodle_url("/blocks/ases/view/ases_user_creation.php",array('courseid' => $courseid, 'instanceid' => $blockid));
+
+$returnto = optional_param('returnto', $url, PARAM_TEXT);
 $id_current_user = $USER->id;
 $actions = authenticate_user_view($USER->id, $blockid);
 if (!isset($actions->create_moodle_user)) {
-    redirect(new moodle_url('/'), "No tienes permiso para acceder a la creación de usuarios",1);
+    redirect(new moodle_url('/'), "No tienes permiso para acceder a la creación de usuarios moodle",1);
 }
 // Instance is consulted for its registration
 if(!consult_instance($blockid)){
     header("Location: instance_configuration.php?courseid=$courseid&instanceid=$blockid");
-    die();
 }
 
 require_login($courseid, false);
-
 
 
 /* */
 $contextcourse = context_course::instance($courseid);
 $contextblock =  context_block::instance($blockid);
 
-$url = new moodle_url("/blocks/ases/view/ases_user_creation.php",array('courseid' => $courseid, 'instanceid' => $blockid));
 $search_moodle_user = new search_moodle_user($url);
 
 /*
@@ -112,7 +112,7 @@ $PAGE->set_title($pagetitle);
 $PAGE->set_heading($pagetitle);
 
 $output = $PAGE->get_renderer('block_ases');
-$ases_user_creation = new \block_ases\output\ases_user_creation($data);
+//$ases_user_creation = new \block_ases\output\ases_user_creation($data);
 //echo $output->render($ases_user_creation);    
 //$search_moodle_user->display();
 
@@ -142,7 +142,7 @@ $userform = new user_editadvanced_form(new moodle_url($PAGE->url, array('returnt
 echo $output->header();
 
 if ($userform->is_cancelled()) {
-    die;
+    
 } else if ($usernew = $userform->get_data()) {
     $usercreated = false;
     if (empty($usernew->auth)) {
@@ -181,6 +181,8 @@ if ($userform->is_cancelled()) {
 if ($usercreated) {
     html_writer::tag('h4', "Usuario creado con exito");
 }
+
+
 $userform->display();
 
 echo $output->footer();

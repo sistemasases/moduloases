@@ -29,21 +29,65 @@ defined('MOODLE_INTERNAL') || die;
  * Common functions to cohort than does not exists in moodle core
  */
 class cohort_lib {
+
     /**
-    * Return all moodle cohorts filtered by id_instance
-    * @param string $id_instance
-    * @return array $cohorts Cohorts filtered by id_instance, empty array if does not exists 
+     * Check if an user by moodle username is member of a given cohort id
+     * @param string $mdl_username Moodle username
+     * @param int $mdl_cohort_id Moodle cohort id
+     * @see {@linkg https://docs.moodle.org/35/en/Cohorts}
+     * @return bool 
+     */
+    public static function is_registred_in_cohort($mdl_username, $mdl_cohort_id) {
+        $user_cohorts = cohort_lib::get_cohorts_for_user($mdl_username);
+        foreach ($user_cohorts as $user_cohort) {
+            if($user_cohort->id == $mdl_cohort_id) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Return moodle cohorts where an user is registred, by moodle username
+     * @param string $mdl_username Moodle user name
+     * @return array Moodle Cohorts [stdObject(id, contextid, idnumber, name)...]
+     */
+    public static function get_cohorts_for_user($mdl_username) {
+        global $DB;
+
+        $sql = "SELECT mdl_c.id,  mdl_c.contextid, mdl_c.idnumber, name  
+        FROM {cohort} AS mdl_c 
+            INNER JOIN 
+            {talentospilos_inst_cohorte} AS ases_c 
+            ON mdl_c.id = ases_c.id_cohorte
+            INNER JOIN 
+            {cohort_members} AS mdl_cms
+            ON
+            mdl_c.id = mdl_cms.cohortid
+            INNER JOIN mdl_user as mdl_u
+            ON 
+            mdl_u.id = mdl_cms.userid
+        WHERE mdl_u.username = '$mdl_username' ";
+        $cohorts = $DB->get_records_sql($sql);
+        return $cohorts;
+    }
+
+    /**
+    * Return all moodle cohorts filtered by id_instance 
+    * @return array $cohorts Cohorts filtered by id_instance, empty array if does not exists
+    * @example [stdObj {id, contextid, idnumber, name}] 
     * @see {@link https://docs.moodle.org/35/en/Cohorts}
     */
-    public static function get_cohorts($id_instance)
+    public static function get_cohorts()
     {
         global $DB;
 
 
-        $sql_query = "SELECT * FROM {cohort}
-                        WHERE  id IN (SELECT id_cohorte
-                                        FROM   {talentospilos_inst_cohorte}
-                                        WHERE  id_instancia = $id_instance)";
+        $sql_query = "SELECT mdl_c.id, mdl_c.contextid, mdl_c.idnumber, name  
+                        FROM {cohort} AS mdl_c 
+                        INNER JOIN 
+                        {talentospilos_inst_cohorte} AS ases_c 
+                        ON mdl_c.id = ases_c.id_cohorte";
 
         $cohorts = $DB->get_records_sql($sql_query);
         return $cohorts;
