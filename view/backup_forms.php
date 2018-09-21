@@ -47,7 +47,11 @@ $blockid = required_param('instanceid', PARAM_INT);
 // Menu items are created
 $menu_option = create_menu_options($USER->id, $blockid, $courseid);
 
-
+// Nav configuration
+$coursenode = $PAGE->navigation->find($courseid, navigation_node::TYPE_COURSE);
+$blocknode = navigation_node::create('Reporte formularios', new moodle_url("/blocks/ases/view/backup_forms.php", array('courseid' => $courseid, 'instanceid' => $blockid)), null, 'block', $blockid);
+$coursenode->add_node($blocknode);
+$blocknode->make_active();
 $url = new moodle_url("/blocks/ases/view/backup_forms.php", array('courseid' => $courseid, 'instanceid' => $blockid));
 
 $PAGE->set_url($url);
@@ -61,7 +65,7 @@ $data = $actions;
 $data->menu = $menu_option;
 
 
-$PAGE->requires->css('/blocks/ases/style/side_menu_style.css', true);
+
 $PAGE->requires->css('/blocks/ases/style/bootstrap.min.css', true);
 $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/dataTables.foundation.css', true);
 $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/dataTables.foundation.min.css', true);
@@ -72,20 +76,17 @@ $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/dataTables.jqueryui
 $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/jquery.dataTables.css', true);
 $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/jquery.dataTables.min.css', true);
 $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/jquery.dataTables_themeroller.css', true);
+$PAGE->requires->css('/blocks/ases/style/side_menu_style.css', true);
 $PAGE->requires->css('/blocks/ases/style/styles_pilos.css', true);
 $PAGE->requires->css('/blocks/ases/js/select2/css/select2.css', true);
 $PAGE->requires->css('/blocks/ases/style/beautify-json.css', true);
 
-//$PAGE->requires->js_call_amd('block_ases/students_backup_reports_main', 'init');
-//$tableReport = get_array_for_reports($blockid);
+
 $paramReport = new stdClass();
 $paramReport->table = $tableReport;
-
-//$PAGE->requires->js_call_amd('block_ases/backup_reports_main', 'load_table_backup_report', $paramReport);
 $PAGE->requires->js_call_amd('block_ases/dphpforms_backup_forms', 'init');
 
 
-//$PAGE->requires->css('/blocks/ases/style/forms_pilos.css', true);
 
 $output = $PAGE->get_renderer('block_ases');
 $index_page = new \block_ases\output\backup_forms_page($data);
