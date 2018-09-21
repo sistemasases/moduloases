@@ -49,7 +49,7 @@ define([
             $(document).on('click', '#tableBackupForms tbody tr td', function () {
                 var valores = "";
 
-                // Obtenemos todos los valores contenidos en los <td> de la fila
+                // Obtenemos la primer columna de la fila seleccionada
                 // seleccionada
                valores =  $(this).parents("tr").find("td:first").html();
                  
@@ -62,6 +62,14 @@ define([
             $('#generarFiltro').on('click', function () {
                 var porId = document.getElementById("filtroCodigoUsuario").value;
                 get_id_switch_user(porId);
+
+            });
+
+            $('#load_like').on('click', function () {
+                var columna = document.getElementById("typecolumn_select").value;
+                var cadena = document.getElementById("filtroLike").value;
+                //alert (columna);
+                get_like_cadena_in_column(cadena, columna);
 
             });
 
@@ -316,6 +324,31 @@ define([
                 }
             }(jQuery));
 
+
+            function get_like_cadena_in_column(cad, column){
+                //Realiza la consulta del atributo según la cadena enviada, y el atributo seleccionado
+                //Muestra los resultados en pantalla en el Data Table
+                $.ajax({
+                    type: "POST",
+                    data: { loadF: 'get_like', params: [cad, column] },
+                    url: "../managers/dphpforms/dphpforms_dwarehouse_api.php",
+                    success: function (msg) {
+                        if (msg.length === 0) {
+                            swal(
+                                'ATTRIBUTE NOT FOUND',
+                                'Oooops! Zero results',
+                                'warning'
+                            );
+                        } else {
+                          //Filtrar data table
+                        }
+                    },
+                    cache: false,
+                    async: true,
+
+                    failure: function (msg) { alert("No encontrado") }
+                });
+            }
 
             function get_id_switch_user(cod_user) {
                 //Realizar la consulta del estudiante según el codigo ingresado

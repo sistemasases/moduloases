@@ -44,7 +44,7 @@
             array_push($columns, array("title"=>"Usuario", "name"=>"id_user", "data"=>"id_user"));
             array_push($columns, array("title"=>"Acción", "name"=>"name_accion", "data"=>"name_accion"));
             array_push($columns, array("title"=>"Id respuesta", "name"=>"id_respuesta", "data"=>"id_respuesta"));
-            array_push($columns, array("title"=>"Fecha", "name"=>"fecha_act", "data"=>"fecha_act"));
+            array_push($columns, array("title"=>"Fecha", "name"=>"fecha_act", "data"=>"fecha_act" ));
            
     
             $data = array(
@@ -117,13 +117,18 @@
              //Get form data switch id form
                
                     $data = get_form_switch_id($_POST['params']);
-                       
                     echo json_encode($data);
                     
             }else{     
                 return_with_code( -2 );
             }
-        }else{
+        } else if ($_POST['loadF']== "get_like"){
+             //Example of loadF: get_like valid: 
+            //data: get_like   params: [cad, column]
+            $data = get_like($_POST['params'][0],$_POST['params'][1]);
+            echo json_encode($data);
+
+        } else{
             // Function not defined
             return_with_code( -4 );
         }

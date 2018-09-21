@@ -83,3 +83,20 @@ function get_id_switch_user($id_user){
     }
     return $form_dwarehouse_array;
 }
+
+/**
+ * Function that load identifier and firstname of one user in mdl_user switch username sent
+ * @see get_id_switch_user($id_user)
+ * @param $id_user---> username
+ * @return array
+ **/
+function get_like($cadena, $atributo){
+    global $DB;
+    $form_dwarehouse_array = array();
+  
+    $sql = "SELECT * FROM {talentos_pilos_dwarehouse} AS u WHERE u.$atributo LIKE '%$cadena%' ";
+    $results = $DB->get_records_sql($sql);
+    //RETORNAR LO QUE SE DEBE
+    //QUEDO AQUÍ
+    return $form_dwarehouse_array;
+}

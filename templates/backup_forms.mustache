@@ -1,10 +1,10 @@
- {{#data}} {{> block_ases/side_menu}}  {{#backup_forms_bf}}
+ {{#data}} {{> block_ases/side_menu}} {{#backup_forms_bf}}
 <div class="container">
   <h2>REPORTE DE BACKUP</h2>
   <hr style="background-color: red; height: 1px; border: 0">
   <div class="row">
     <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
-      <input id="filtroCodigoUsuario" name="idFiltro" type="text" class="form-control" placeholder="Ingrese el código del estudiante" style="
+      <input id="filtroCodigoUsuario" name="idFiltro" type="text" class="form-control" placeholder="Ingrese el código del monitor" style="
           height: 40px; font-size:16px">
     </div>
 
@@ -22,6 +22,42 @@
     </div>
   </div>
 
+ <hr>
+   
+      <div class="row">
+        <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10">
+            <input id="filtroLike" name="idFiltroLike" type="text" class="form-control" placeholder="Ingrese el texto a consultar" style="
+            height: 40px; font-size:16px">
+        </div>
+        <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+            <input class="btn-danger" type="button" id="load_like" style=" width: 170px; height: 39px;margin-top: 0px;" value="Buscar">
+        </div>
+      </div>
+      <div class="row">
+          <label class="col-lg-4 col-md-4 col-sm-4 col-xs-4" for="typecolumn_select" style="font-size:14px">Seleccione el atributo a consultar</label>
+          <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8" style="padding-left: 0px;padding-right: 0px">
+
+             <select id="typecolumn_select" name="typecolumn_select" >
+                <option value="id">Id</option>
+                <option value="Id_usuario">Id usuario moodle</option>
+                <option value="Accion">Acción</option>
+                <option value="Id_respuesta">Id respuesta</option>
+                <option value="datos_previos">Datos previos</option>
+                <option value="datos_enviados">Datos enviados</option>
+                <option value="datos_almacenados">Datos almacenados</option>
+                <option value="observaciones">Observaciones</option>
+                <option value="cod_retorno">Código retorno</option>
+                <option value="mensaje_retorno">Mensaje retorno</option>
+                <option value="datos_retorno">Datos retorno</option>
+                <option value="fecha_hora">Fecha y hora</option>
+                <option value="navegador">Navegador</option>
+                <option value="url">Url</option>
+             </select>
+          </div> 
+        </div>
+          
+  
+
   <hr style="background-color: red; height: 1px; border: 0">
   <div class="row">
     <div id="div_table_forms">
@@ -35,7 +71,8 @@
 
       <div class="mymodal-header col-sm-12">
         <div class="col-sm-11">
-          <h4 class="" id="myModalLabel"> <h2>REPORTE DE BACKUP</h2>
+          <h4 class="" id="myModalLabel">
+            <h2>REPORTE DE BACKUP</h2>
             <hr style="background-color: red; height: 1px; border: 0">
           </h4>
         </div>
