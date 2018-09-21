@@ -29,7 +29,23 @@ require_once ('../managers/user_management/user_management_lib.php');
 require_once ('../managers/lib/student_lib.php');
 
 class AsesUser {
-    public $id = -1;
+    public $tipo_doc_ini = -1;
+    public $tipo_doc;
+    public $num_doc;
+    public $id_ciudad_ini;
+    public $id_ciudad_res;
+    public $fecha_nac;
+    public $id_ciudad_nac;
+    public $sexo;
+    public $estado;
+    public $id_discapacidad;
+    public $ayuda_disc;
+    public $estado_ases;
+
+    public static function validate_tipo_doc() {
+
+    }
+
     function __construct($id) {
         $this->id = $id;
     }

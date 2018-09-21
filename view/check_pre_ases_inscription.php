@@ -70,10 +70,10 @@ if ($add_user_to_cohort_form->is_cancelled()) {
 $output = $PAGE->get_renderer('block_ases');
 echo $output->header();
 
-if ($add_user_to_cohort_form->is_submitted() && $errors = $add_user_to_cohort_form->validation((array)$add_user_to_cohort_form->get_submitted_data())) {
+if ($add_user_to_cohort_form->is_submitted() && $errors = $add_user_to_cohort_form->validation((array)$add_user_to_cohort_form->get_submitted_data(), array())) {
     if($errors['username']) {
         echo html_writer::tag('h1', " El usuario no existe en la base de datos moodle");
-        $url_create_moodle_user = new moodle_url('/blocks/ases/view/ases_user_creation.php', 
+        $url_create_moodle_user = new moodle_url('/blocks/ases/view/moodle_user_creation.php', 
         array('courseid' => $courseid, 'instanceid' => $blockid, 'username'=>$add_user_to_cohort_form->get_submitted_data()->username));
     
         echo html_writer::tag('h3', 

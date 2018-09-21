@@ -27,10 +27,7 @@
  */
 
 // Standard GPL and phpdocs
-error_reporting(-1);
-ini_set('display_errors', 'On');
 require_once(__DIR__ . '/../../../config.php');
-require_once($CFG->libdir.'/adminlib.php');
 require_once('../managers/ases_report/asesreport_lib.php');
 require_once('../managers/permissions_management/permissions_lib.php');
 require_once("../managers/lib/cohort_lib.php");
@@ -41,16 +38,12 @@ require_once($CFG->dirroot.'/webservice/lib.php');
 
 require_once('../managers/validate_profile_action.php');
 require_once('../managers/menu_options.php');
-require_once("../classes/mdl_forms/UserImageForm.php");
 require_once($CFG->dirroot.'/user/editadvanced_form.php');
 include('../lib.php');
 global $PAGE;
 
-include("../classes/output/ases_user_creation_page.php");
-include("../classes/output/renderer.php");
-
 // Set up the page.
-$pagetitle = 'Creacion de usuarios ASES';
+$pagetitle = 'Creacion de usuarios Moodle';
 $courseid = required_param('courseid', PARAM_INT);
 $user_name = optional_param('username', '', PARAM_TEXT);
 $blockid = required_param('instanceid', PARAM_INT);
@@ -59,8 +52,6 @@ $url = new moodle_url("/blocks/ases/view/moodle_user_creation.php",array('course
 $returnto = optional_param('returnto', $url, PARAM_TEXT);
 $id_current_user = $USER->id;
 $actions = authenticate_user_view($USER->id, $blockid);
-print_r($actions);
-die;
 if (!isset($actions->create_mdl_user)) {
     redirect(new moodle_url('/'), "No tienes permiso para acceder a la creación de usuarios moodle",1);
 }
@@ -72,19 +63,10 @@ if(!consult_instance($blockid)){
 require_login($courseid, false);
 
 
-/* */
+
 $contextcourse = context_course::instance($courseid);
 $contextblock =  context_block::instance($blockid);
-
-
-/*
-Start search moodle user step
-*/
-
-/*
-User standard
-
-*/
+/** */
 $user = new stdClass();
 $user->id = -1;
 $user->auth = 'manual';
@@ -92,7 +74,7 @@ $user->confirmed = 1;
 $user->deleted = 0;
 $user->timezone = '99';
 $user->username = $user_name;
-
+/** */
 $usercreated = false;
 
 $PAGE->requires->css('/blocks/ases/style/ases_report_style.css', true);
