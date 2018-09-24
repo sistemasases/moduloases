@@ -99,7 +99,11 @@ function get_like($cadena, $atributo){
         $sql = "SELECT id AS id , id_usuario_moodle AS id_user,  accion AS name_accion, id_registro_respuesta_form AS id_respuesta, 
         fecha_hora_registro AS fecha_act , navegador AS nav
         FROM {talentospilos_df_dwarehouse} AS u WHERE TRIM(TO_CHAR(u.$atributo, '99999999999999999')) LIKE '%$cadena%' ";
-    }else {
+    }else if ($atributo== "fecha_hora_registro"){
+        $sql = "SELECT id AS id , id_usuario_moodle AS id_user,  accion AS name_accion, id_registro_respuesta_form AS id_respuesta, 
+        fecha_hora_registro AS fecha_act , navegador AS nav
+        FROM {talentospilos_df_dwarehouse} AS u WHERE TO_CHAR(u.$atributo, 'YYYY-MM-DD HH24:MI:SS.US') LIKE '%$cadena%' ";
+    }else{
         //The other attributes of table are text type
     $sql = "SELECT id AS id , id_usuario_moodle AS id_user,  accion AS name_accion, id_registro_respuesta_form AS id_respuesta, 
     fecha_hora_registro AS fecha_act , navegador AS nav
