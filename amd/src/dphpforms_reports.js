@@ -78,14 +78,16 @@ define([
                         "data" : "tema"
                     },
                     {
+                        "class": "big-col",
                         "title" : "Objetivos", 
                         "name" : "objetivos", 
                         "data" : "objetivos"
                     },    
                     {
+                        "class": "big-col",
                         "title" : "Comentario individual", 
                         "name" : "comentarios_individual", 
-                        "data" : "comentarios_individual",
+                        "data" : "comentarios_individual"
                     },
                     {
                         "title" : "Punt. riesgo individual", 
@@ -98,6 +100,7 @@ define([
                         "data" : "tematicas_individual"
                     },
                     {
+                        "class": "big-col",
                         "title" : "Comentario familiar", 
                         "name" : "comentarios_familiar", 
                         "data" : "comentarios_familiar"
@@ -113,6 +116,7 @@ define([
                         "data" : "tematicas_familiar"
                     },
                     {
+                        "class": "big-col",
                         "title" : "Comentario académico", 
                         "name" : "comentarios_academico", 
                         "data" : "comentarios_academico"
@@ -128,6 +132,7 @@ define([
                         "data" : "tematicas_academico"
                     },
                     {
+                        "class": "big-col",
                         "title" : "Comentario Económico", 
                         "name" : "comentarios_economico", 
                         "data" : "comentarios_economico"
@@ -142,6 +147,7 @@ define([
                         "name" : "tematicas_economico", 
                         "data" : "tematicas_economico"
                     },{
+                        "class": "big-col",
                         "title" : "Comentario Vida Universitaria", 
                         "name" : "comentarios_vida_uni", 
                         "data" : "comentarios_vida_uni"
@@ -152,6 +158,7 @@ define([
                         "data" : "puntuacion_vida_uni"
                     },
                     {
+                        "class": "big-col",
                         "title" : "Observaciones seguimientos", 
                         "name" : "observaciones_seguimientos", 
                         "data" : "observaciones_seguimientos"
@@ -239,7 +246,7 @@ define([
                                     "filename" : 'Export excel',
                                     "extension" : '.xls'
                                 }   
-                            ]
+                            ]                           
                         }
                     );
                     table.draw();
