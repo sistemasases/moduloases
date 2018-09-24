@@ -35,150 +35,158 @@
                     <label for="">Fecha de finalización</label>
                     <input type="date" name="" id="end_date" class="form-control ajuste_fecha">
                 </div>                
-                
-                <!-- Columna de campos base -->
-                <div class="col-sm-3 col-md-3">
-                    <fieldset id="base_fields">
-                        <legend><input type="checkbox" id="base_fields_check"> Campos base</legend>
-                        <div class="col-sm-6 col-md-6">
-                            <div class="checkbox">
-                                <input type="checkbox" name="base_fields[]" value="student_code" onchange="check(this)" onclick="check(this)" checked="checked"> Código
+                <div class="row">
+                    <!-- Columna de campos base -->
+                    <div class="col-sm-4 col-md-4 ">
+                        <fieldset id="base_fields">
+                            <legend><input type="checkbox" id="base_fields_check"> Campos base</legend>
+                            <div class="col-sm-6 col-md-6">
+                                <div class="checkbox-container">
+                                    <input type="checkbox" name="base_fields[]" id="student_code" "value="student_code" onchange="check(this)" onclick="check(this)" checked="checked"> Código
+                                </div>
+                                <div class="checkbox-container">
+                                    <input type="checkbox" name="base_fields[]" id="student_firstname" value="firstname" onchange="check(this)" onclick="check(this)" checked="checked"> Nombres
+                                </div>
+                                <div class="checkbox-container">
+                                    <input type="checkbox" name="base_fields[]" id="student_lastname" value="lastname" onchange="check(this)" onclick="check(this)" checked="checked"> Apellidos
+                                </div>
+                                <div class="checkbox-container">
+                                    <input type="checkbox" name="base_fields[]" id="fecha" value="fecha" onchange="check(this)" onclick="check(this)" checked="checked"> Fecha
+                                </div>
+                                <div class="checkbox-container">
+                                    <input type="checkbox" name="base_fields[]" id="lugar" value="lugar" onchange="check(this)" onclick="check(this)" checked="checked"> Lugar
+                                </div>
                             </div>
-                            <div class="checkbox">
-                                <input type="checkbox" name="base_fields[]" value="firstname" onchange="check(this)" onclick="check(this)" checked="checked">Nombres
+                            <div class="col-sm-6 col-md-6">
+                                <div class="checkbox-container">
+                                    <input type="checkbox" name="base_fields[]" id="hora_inicio" value="hora_inicio"  onchange="check(this)" onclick="check(this)" checked="checked">Hora Inicio
+                                </div>
+                                <div class="checkbox-container">
+                                    <input type="checkbox" name="base_fields[]" id="hora_finalizacion" value="hora_fin"  onchange="check(this)" onclick="check(this)" checked="checked">Hora Fin
+                                </div>
+                                <div class="checkbox-container">
+                                    <input type="checkbox" name="base_fields[]" id="tema" value="tema"  onchange="check(this)" onclick="check(this)" checked="checked">Tema
+                                </div>
+                                <div class="checkbox-container">
+                                    <input type="checkbox" name="base_fields[]" id="objetivos" value="objetivos"  onchange="check(this)" onclick="check(this)">Objetivos
+                                </div>
+                                <div class="checkbox-container">
+                                    <input type="checkbox" name="base_fields[]" id="observaciones_seguimientos" value="observaciones_seguimientos"  onchange="check(this)" onclick="check(this)">Observaciones
+                                </div>
                             </div>
-                            <div class="checkbox">
-                                <input type="checkbox" name="base_fields[]" value="lastname" onchange="check(this)" onclick="check(this)" checked="checked">Apellidos
-                            </div>
-                            <div class="checkbox">
-                                <input type="checkbox" name="base_fields[]" value="fecha" onchange="check(this)" onclick="check(this)" checked="checked">Fecha
-                            </div>
-                            <div class="checkbox">
-                                <input type="checkbox" name="base_fields[]" value="lugar" onchange="check(this)" onclick="check(this)" checked="checked">Lugar
-                            </div>
-                        </div>
-                        <div class="col-sm-6 col-md-6">
-                            <div class="checkbox">
-                                <input type="checkbox" name="base_fields[]" value="hora_inicio"  onchange="check(this)" onclick="check(this)" checked="checked">Hora Inicio
-                            </div>
-                            <div class="checkbox">
-                                <input type="checkbox" name="base_fields[]" value="hora_fin"  onchange="check(this)" onclick="check(this)" checked="checked">Hora Fin
-                            </div>
-                            <div class="checkbox">
-                                <input type="checkbox" name="base_fields[]" value="tema"  onchange="check(this)" onclick="check(this)" checked="checked">Tema
-                            </div>
-                            <div class="checkbox">
-                                <input type="checkbox" name="base_fields[]" value="objetivos"  onchange="check(this)" onclick="check(this)">Objetivos
-                            </div>
-                            <div class="checkbox">
-                                <input type="checkbox" name="base_fields[]" value="observaciones_seguimientos"  onchange="check(this)" onclick="check(this)">Observaciones
-                            </div>
-                        </div>
-                    </fieldset>
+                        </fieldset>
+                    </div>
+
+                    <!-- Columna de comentarios -->
+                    <div class="col-sm-3 col-md-3">
+                        <fieldset id="dimensions_fields">
+                            <legend><input type="checkbox" id="dimensions_fields_check"> Dimensiones</legend>
+                            <fieldset id="comments_fields">                            
+                                <div class="checkbox-container">
+                                    <input type="checkbox" id="comments_fields_check"> Comentarios
+                                </div>
+                                <div hidden>
+                                    <div class="checkbox-container">
+                                        <input type="checkbox" name="comment_fields[]" id="comentarios_individual" value="comentarios_individual" onchange="check(this)" onclick="check(this)">Comentario Individual
+                                    </div>
+                                    <div class="checkbox-container">
+                                        <input type="checkbox" name="comment_fields[]" id="comentarios_familiar" value="comentarios_familiar" onchange="check(this)" onclick="check(this)">Comentario Familiar
+                                    </div>
+                                    <div class="checkbox-container">
+                                        <input type="checkbox" name="comment_fields[]" id="comentarios_academico" value="comentarios_academico" onchange="check(this)" onclick="check(this)">Comentario Académico
+                                    </div>
+                                    <div class="checkbox-container">
+                                        <input type="checkbox" name="comment_fields[]" id="comentarios_economico" value="comentarios_economico" onchange="check(this)" onclick="check(this)">Comentario Económico
+                                    </div>
+                                    <div class="checkbox-container">
+                                        <input type="checkbox" name="comment_fields[]" id="comentarios_vida_uni" value="comentarios_vida_uni" onchange="check(this)" onclick="check(this)">Comentario V. Universitaria
+                                    </div>
+                            
+                            </fieldset>
+                            <fieldset id="risks_fields">
+                                <div class="checkbox-container">
+                                    <input type="checkbox" id="risks_fields_check" checked="checked"> Riesgos
+                                <div>
+                                <div hidden>
+                                    <div class="checkbox-container">
+                                        <input type="checkbox" name="risks_fields[]" id="puntuacion_riesgo_individual" value="puntuacion_riesgo_individual" onchange="check(this)" onclick="check(this)" checked="checked"> Riesgo Individual
+                                    </div>
+                                    <div class="checkbox-container">
+                                        <input type="checkbox" name="risks_fields[]" id="puntuacion_riesgo_familiar" value="puntuacion_riesgo_familiar" onchange="check(this)" onclick="check(this)" checked="checked"> Riesgo Familiar
+                                    </div>
+                                    <div class="checkbox-container">
+                                        <input type="checkbox" name="risks_fields[]" id="puntuacion_riesgo_academico" value="puntuacion_riesgo_academico" onchange="check(this)" onclick="check(this)" checked="checked"> Riesgo Académico
+                                    </div>
+                                    <div class="checkbox-container">
+                                        <input type="checkbox" name="risks_fields[]" id="puntuacion_riesgo_economico" value="puntuacion_riesgo_economico" onchange="check(this)" onclick="check(this)" checked="checked"> Riesgo Económico
+                                    </div>
+                                    <div class="checkbox-container">
+                                        <input type="checkbox" name="risks_fields[]" id="puntuacion_vida_uni" value="puntuacion_vida_uni" onchange="check(this)" onclick="check(this)" checked="checked"> Punt. V. Universitaria
+                                    </div>   
+                                </div>
+                            </fieldset>
+                            <fieldset id="themes_fields">                    
+                                <div class="checkbox-container">
+                                    <input type="checkbox" id="themes_fields_check" onchange="check(this)" onclick="check(this)" checked="checked"> Temáticas
+                                <div>
+                                <div hidden>
+                                    <div class="checkbox-container">
+                                        <input type="checkbox" name="themes_fields[]" id="tematicas_individual" value="tematicas_individual" onchange="check(this)" onclick="check(this)" checked="checked"> Temáticas Individuales
+                                    </div>
+                                    <div class="checkbox-container">
+                                        <input type="checkbox" name="themes_fields[]" id="tematicas_familiar" value="tematicas_familiar" onchange="check(this)" onclick="check(this)" checked="checked"> Temáticas Familiares
+                                    </div>
+                                    <div class="checkbox-container">
+                                        <input type="checkbox" name="themes_fields[]" id="tematicas_academico" value="tematicas_academico" onchange="check(this)" onclick="check(this)" checked="checked"> Temáticas Académicas
+                                    </div>
+                                    <div class="checkbox-container">
+                                        <input type="checkbox" name="themes_fields[]" id="tematicas_economico" value="tematicas_economico" onchange="check(this)" onclick="check(this)" checked="checked"> Temáticas Económicas
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </fieldset>
+                    </div>                           
                 </div>
-
-                <!-- Columna de comentarios -->
-                <div class="col-sm-3 col-md-3">
-                    <fieldset id="dimensions_fields">
-                        <legend><input type="checkbox" id="dimensions_fields_check"> Dimensiones</legend>
-                        <fieldset id="comments_fields">                            
-                            <div class="checkbox">
-                                <input type="checkbox" id="comments_fields_check"> Comentarios
+                <div class="row">                                                     
+                    <div class="col-sm-12">
+                        <div class="col-sm-2 col-sm-offset-5">
+                            <div class="form-group">
+                                <button id="btn-generar-reporte" type="submit" class="btn btn-default">Generar</button>
                             </div>
-                            <div hidden>
-                                <div class="checkbox">
-                                    <input type="checkbox" name="comment_fields[]" value="comentarios_individual" onchange="check(this)" onclick="check(this)">Comentario Individual
-                                </div>
-                                <div class="checkbox">
-                                    <input type="checkbox" name="comment_fields[]" value="comentarios_familiar" onchange="check(this)" onclick="check(this)">Comentario Familiar
-                                </div>
-                                <div class="checkbox">
-                                    <input type="checkbox" name="comment_fields[]" value="comentarios_academico" onchange="check(this)" onclick="check(this)">Comentario Académico
-                                </div>
-                                <div class="checkbox">
-                                    <input type="checkbox" name="comment_fields[]" value="comentarios_economico" onchange="check(this)" onclick="check(this)">Comentario Económico
-                                </div>
-                                <div class="checkbox">
-                                    <input type="checkbox" name="comment_fields[]" value="comentarios_vida_uni" onchange="check(this)" onclick="check(this)">Comentario V. Universitaria
-                                </div>
-                        
-                        </fieldset>
-                        <fieldset id="risks_fields">
-                            <div class="checkbox">
-                                <input type="checkbox" id="risks_fields_check" checked="checked"> Riesgos
-                            <div>
-                            <div hidden>
-                                <div class="checkbox">
-                                    <input type="checkbox" name="risks_fields[]" value="puntuacion_riesgo_individual" onchange="check(this)" onclick="check(this)" checked="checked"> Riesgo Individual
-                                </div>
-                                <div class="checkbox">
-                                    <input type="checkbox" name="risks_fields[]" value="puntuacion_riesgo_familiar" onchange="check(this)" onclick="check(this)" checked="checked"> Riesgo Familiar
-                                </div>
-                                <div class="checkbox">
-                                    <input type="checkbox" name="risks_fields[]" value="puntuacion_riesgo_academico" onchange="check(this)" onclick="check(this)" checked="checked"> Riesgo Académico
-                                </div>
-                                <div class="checkbox">
-                                    <input type="checkbox" name="risks_fields[]" value="puntuacion_riesgo_economico" onchange="check(this)" onclick="check(this)" checked="checked"> Riesgo Económico
-                                </div>
-                                <div class="checkbox">
-                                    <input type="checkbox" name="risks_fields[]" value="puntuacion_vida_uni" onchange="check(this)" onclick="check(this)" checked="checked"> Punt. V. Universitaria
-                                </div>   
-                            </div>
-                        </fieldset>
-                        <fieldset id="themes_fields">                    
-                            <div class="checkbox">
-                                <input type="checkbox" id="themes_fields_check" onchange="check(this)" onclick="check(this)" checked="checked"> Temáticas
-                            <div>
-                            <div hidden>
-                                <div class="checkbox">
-                                    <input type="checkbox" name="themes_fields[]" value="tematicas_individual" onchange="check(this)" onclick="check(this)" checked="checked"> Temáticas Individuales
-                                </div>
-                                <div class="checkbox">
-                                    <input type="checkbox" name="themes_fields[]" value="tematicas_familiar" onchange="check(this)" onclick="check(this)" checked="checked"> Temáticas Familiares
-                                </div>
-                                <div class="checkbox">
-                                    <input type="checkbox" name="themes_fields[]" value="tematicas_academico" onchange="check(this)" onclick="check(this)" checked="checked"> Temáticas Académicas
-                                </div>
-                                <div class="checkbox">
-                                    <input type="checkbox" name="themes_fields[]" value="tematicas_economico" onchange="check(this)" onclick="check(this)" checked="checked"> Temáticas Económicas
-                                </div>
-                            </div>
-                        </fieldset>
-                    </fieldset>
-                </div>                           
-                                                             
-
-                <div class="col-sm-12">
-                    <div class="col-sm-2 col-sm-offset-5">
-                        <div class="form-group">
-                            <button id="btn-generar-reporte" type="submit" class="btn btn-default">Generar</button>
                         </div>
                     </div>
                 </div>
-
+                <div class="row">
+                    <div id="progress_group" class="form-group" style="display:none;">
+                        <hr>
+                        <!--<span><strong>Progreso:</strong></span>-->                  
+                        <div class="col-sm-6 col-md-6">
+                        <h3>Descargando datos:</h3>
+                        <div id="progress-download" class="progress">
+                            <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width:0%">
+                            0%
+                            </div>
+                        </div>
+                        </div>
+                        <div class="col-sm-6 col-md-6">
+                        <h3>Generando CSV:</h3>
+                        <div id="progress-custom" class="progress">
+                            <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width:0%">
+                            0%
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div id="message"></div><br>
+                </div>
                 <div class="dataTables_scrollBody" style="position: relative; overflow: auto; width: 100%;">
                     <div>                    
                         <table id="dphpform_datatable" class="table"
                         cellspacing="0" width="100%"><thead> </thead></table>
                     </div>
                 </div>
-                <div id="progress_group" class="form-group" style="display:none;">
-                    <hr>
-                    <div id="message"></div><br>
-                    <span><strong>Progreso:</strong></span>
-                    <h3>Descargando datos:</h3>
-                    <div id="progress-download" class="progress">
-                        <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width:0%">
-                          0%
-                        </div>
-                    </div>
-                    <h3>Generando CSV:</h3>
-                    <div id="progress-custom" class="progress">
-                        <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width:0%">
-                          0%
-                        </div>
-                    </div>
-                </div>
+                
             </div>
         </div>
     </div>

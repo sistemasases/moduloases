@@ -29,206 +29,221 @@ define([
 
             window.JSZip = jszip;            
             var id_semester = null;
+            
+
 
             function render_datatable( records ){
-                var dataForms = process_data( records );
-                console.log( records );
-                console.log('gets in');
+                var dataForms = process_data( records );   
                 
-                
-                $("#dphpform_datatable").DataTable(
-                    { 
-                        "retrieve": true,
-                        "bsort" : false,
-                        "data" : dataForms,                         
-                        "columns" : 
-                        [
-                            {
-                                "title" : "Código estudiante", 
-                                "name" : "student_code", 
-                                "data" : "student_code"
-                            },
-                            {
-                                "title" : "Nombre(s)", 
-                                "name" : "student_firstname", 
-                                "data" : "student_firstname"
-                            },
-                            {
-                                "title" : "Apellido(s)", 
-                                "name" : "student_lastname", 
-                                "data" : "student_lastname"
-                            }
-                            ,
-                            {
-                                "title" : "Fecha", 
-                                "name" : "fecha", 
-                                "data" : "fecha"
-                            },
-                            {
-                                "title" : "Lugar", 
-                                "name" : "lugar", 
-                                "data" : "lugar"
-                            },
-                            {
-                                "title" : "Hora Inicio", 
-                                "name" : "hora_inicio", 
-                                "data" : "hora_inicio"
-                            },
-                            {
-                                "title" : "Hora Finalizacion", 
-                                "name" : "hora_finalizacion", 
-                                "data" : "hora_finalizacion"
-                            },    
-                            {
-                                "title" : "Tema", 
-                                "name" : "tema", 
-                                "data" : "tema"
-                            },
-                            {
-                                "title" : "Objetivos", 
-                                "name" : "objetivos", 
-                                "data" : "objetivos"
-                            },    
-                            {
-                                "title" : "Comentario individual", 
-                                "name" : "comentarios_individual", 
-                                "data" : "comentarios_individual"
-                            },
-                            {
-                                "title" : "Punt. riesgo individual", 
-                                "name" : "puntuacion_riesgo_individual", 
-                                "data" : "puntuacion_riesgo_individual"
-                            },
-                            {
-                                "title" : "Temáticas individuales", 
-                                "name" : "tematicas_individual", 
-                                "data" : "tematicas_individual"
-                            },
-                            {
-                                "title" : "Comentario familiar", 
-                                "name" : "comentarios_familiar", 
-                                "data" : "comentarios_familiar"
-                            },
-                            {
-                                "title" : "Punt. riesgo familiar", 
-                                "name" : "puntuacion_riesgo_familiar", 
-                                "data" : "puntuacion_riesgo_familiar"
-                            },
-                            {
-                                "title" : "Temáticas familiar", 
-                                "name" : "tematicas_familiar", 
-                                "data" : "tematicas_familiar"
-                            },
-                            {
-                                "title" : "Comentario académico", 
-                                "name" : "comentarios_academico", 
-                                "data" : "comentarios_academico"
-                            },
-                            {
-                                "title" : "Punt. riesgo académico", 
-                                "name" : "puntuacion_riesgo_academico", 
-                                "data" : "puntuacion_riesgo_academico"
-                            },
-                            {
-                                "title" : "Temáticas académico", 
-                                "name" : "tematicas_academico", 
-                                "data" : "tematicas_academico"
-                            },
-                            {
-                                "title" : "Comentario Económico", 
-                                "name" : "comentarios_economico", 
-                                "data" : "comentarios_economico"
-                            },
-                            {
-                                "title" : "Punt. riesgo Económico", 
-                                "name" : "puntuacion_riesgo_economico", 
-                                "data" : "puntuacion_riesgo_economico"
-                            },
-                            {
-                                "title" : "Temáticas Económico", 
-                                "name" : "tematicas_economico", 
-                                "data" : "tematicas_economico"
-                            },{
-                                "title" : "Comentario Vida Universitaria", 
-                                "name" : "comentarios_vida_uni", 
-                                "data" : "comentarios_vida_uni"
-                            },
-                            {
-                                "title" : "Punt. Vida Universitaria", 
-                                "name" : "puntuacion_vida_uni", 
-                                "data" : "puntuacion_vida_uni"
-                            },
-                            {
-                                "title" : "Observaciones seguimientos", 
-                                "name" : "observaciones_seguimientos", 
-                                "data" : "observaciones_seguimientos"
-                            },
-                            {
-                                "title" : "Revisado Profesional", 
-                                "name" : "revisado_profesional", 
-                                "data" : "revisado_profesional"
-                            },
-                            {
-                                "title" : "Revisado Practicante", 
-                                "name" : "revisado_practicante", 
-                                "data" : "revisado_practicante"
-                            },
-                            {
-                                "title" : "ID Estudiante", 
-                                "name" : "id_estudiante", 
-                                "data" : "id_estudiante"
-                            },
-                            {
-                                "title" : "ID Instancia", 
-                                "name" : "id_instancia", 
-                                "data" : "id_instancia"
-                            },
-                            {
-                                "title" : "Nombre Monitor", 
-                                "name" : "monitor_name", 
-                                "data" : "monitor_name"
-                            },
-                            {
-                                "title" : "Nombre Practicante", 
-                                "name" : "practicing_name", 
-                                "data" : "practicing_name"
-                            },
-                            {
-                                "title" : "Nombre Profesional", 
-                                "name" : "professional_name", 
-                                "data" : "professional_name"
-                            },
-                            {
-                                "title" : "ID creado por", 
-                                "name" : "id_creado_por", 
-                                "data" : "id_creado_por"
-                            },
-                            {
-                                "title" : "Creado por", 
-                                "name" : "created_by", 
-                                "data" : "created_by"
-                            },
-                                                
-                        ]
-                        ,
-                        "dom":"lifrtpB",
-                        "buttons" : [
-                            {
-                                "extend" : "print",
-                                "text" : 'Imprimir'
-                            },{
-                                "extend" : "csv",
-                                "text" : 'CSV'
-                            },{
-                                "extend" : "excel",
-                                "text" : 'Excel',
-                                "className" : 'buttons-excel',
-                                "filename" : 'Export excel',
-                                "extension" : '.xls'
-                            }   
-                        ]
+                var columns_table = [
+                    {
+                        "title" : "Código estudiante", 
+                        "name" : "student_code", 
+                        "data" : "student_code",
+                    },
+                    {
+                        "title" : "Nombre(s)", 
+                        "name" : "student_firstname", 
+                        "data" : "student_firstname"
+                    },
+                    {
+                        "title" : "Apellido(s)", 
+                        "name" : "student_lastname", 
+                        "data" : "student_lastname"
                     }
-                );
+                    ,
+                    {
+                        "title" : "Fecha", 
+                        "name" : "fecha", 
+                        "data" : "fecha"
+                    },
+                    {
+                        "title" : "Lugar", 
+                        "name" : "lugar", 
+                        "data" : "lugar"
+                    },
+                    {
+                        "title" : "Hora Inicio", 
+                        "name" : "hora_inicio", 
+                        "data" : "hora_inicio"
+                    },
+                    {
+                        "title" : "Hora Finalizacion", 
+                        "name" : "hora_finalizacion", 
+                        "data" : "hora_finalizacion"
+                    },    
+                    {
+                        "title" : "Tema", 
+                        "name" : "tema", 
+                        "data" : "tema"
+                    },
+                    {
+                        "title" : "Objetivos", 
+                        "name" : "objetivos", 
+                        "data" : "objetivos"
+                    },    
+                    {
+                        "title" : "Comentario individual", 
+                        "name" : "comentarios_individual", 
+                        "data" : "comentarios_individual",
+                    },
+                    {
+                        "title" : "Punt. riesgo individual", 
+                        "name" : "puntuacion_riesgo_individual", 
+                        "data" : "puntuacion_riesgo_individual"
+                    },
+                    {
+                        "title" : "Temáticas individuales", 
+                        "name" : "tematicas_individual", 
+                        "data" : "tematicas_individual"
+                    },
+                    {
+                        "title" : "Comentario familiar", 
+                        "name" : "comentarios_familiar", 
+                        "data" : "comentarios_familiar"
+                    },
+                    {
+                        "title" : "Punt. riesgo familiar", 
+                        "name" : "puntuacion_riesgo_familiar", 
+                        "data" : "puntuacion_riesgo_familiar"
+                    },
+                    {
+                        "title" : "Temáticas familiar", 
+                        "name" : "tematicas_familiar", 
+                        "data" : "tematicas_familiar"
+                    },
+                    {
+                        "title" : "Comentario académico", 
+                        "name" : "comentarios_academico", 
+                        "data" : "comentarios_academico"
+                    },
+                    {
+                        "title" : "Punt. riesgo académico", 
+                        "name" : "puntuacion_riesgo_academico", 
+                        "data" : "puntuacion_riesgo_academico"
+                    },
+                    {
+                        "title" : "Temáticas académico", 
+                        "name" : "tematicas_academico", 
+                        "data" : "tematicas_academico"
+                    },
+                    {
+                        "title" : "Comentario Económico", 
+                        "name" : "comentarios_economico", 
+                        "data" : "comentarios_economico"
+                    },
+                    {
+                        "title" : "Punt. riesgo Económico", 
+                        "name" : "puntuacion_riesgo_economico", 
+                        "data" : "puntuacion_riesgo_economico"
+                    },
+                    {
+                        "title" : "Temáticas Económico", 
+                        "name" : "tematicas_economico", 
+                        "data" : "tematicas_economico"
+                    },{
+                        "title" : "Comentario Vida Universitaria", 
+                        "name" : "comentarios_vida_uni", 
+                        "data" : "comentarios_vida_uni"
+                    },
+                    {
+                        "title" : "Punt. Vida Universitaria", 
+                        "name" : "puntuacion_vida_uni", 
+                        "data" : "puntuacion_vida_uni"
+                    },
+                    {
+                        "title" : "Observaciones seguimientos", 
+                        "name" : "observaciones_seguimientos", 
+                        "data" : "observaciones_seguimientos"
+                    },
+                    {
+                        "title" : "Revisado Profesional", 
+                        "name" : "revisado_profesional", 
+                        "data" : "revisado_profesional"
+                    },
+                    {
+                        "title" : "Revisado Practicante", 
+                        "name" : "revisado_practicante", 
+                        "data" : "revisado_practicante"
+                    },
+                    {
+                        "title" : "ID Estudiante", 
+                        "name" : "id_estudiante", 
+                        "data" : "id_estudiante"
+                    },
+                    {
+                        "title" : "ID Instancia", 
+                        "name" : "id_instancia", 
+                        "data" : "id_instancia"
+                    },
+                    {
+                        "title" : "Nombre Monitor", 
+                        "name" : "monitor_name", 
+                        "data" : "monitor_name"
+                    },
+                    {
+                        "title" : "Nombre Practicante", 
+                        "name" : "practicing_name", 
+                        "data" : "practicing_name"
+                    },
+                    {
+                        "title" : "Nombre Profesional", 
+                        "name" : "professional_name", 
+                        "data" : "professional_name"
+                    },
+                    {
+                        "title" : "ID creado por", 
+                        "name" : "id_creado_por", 
+                        "data" : "id_creado_por"
+                    },
+                    {
+                        "title" : "Creado por", 
+                        "name" : "created_by", 
+                        "data" : "created_by"
+                    },
+                                        
+                ];
+    
+                var columns_show = columns_table.map(column => {                                     
+                    if(!$("#" + column.name).prop('checked')){
+                        column.visible = false;
+                    };
+                    return column;
+                })                
+
+                if ($.fn.dataTable.isDataTable('#dphpform_datatable')) {
+                    $('#dphpform_datatable').DataTable().destroy();    
+                    $('#dphpform_datatable tbody').empty();                    
+                }
+                
+                //else {             
+                    //$('#dphpform_datatable tbody').empty();
+                    var table = $("#dphpform_datatable").DataTable(
+                        { 
+                            "retrieve": true,                          
+                            "bsort" : false,
+                            "data" : dataForms,                         
+                            "columns" : columns_show,
+                            "dom":"lifrtpB",
+                            "buttons" : [
+                                {
+                                    "extend" : "print",
+                                    "text" : 'Imprimir'
+                                },{
+                                    "extend" : "csv",
+                                    "text" : 'CSV'
+                                },{
+                                    "extend" : "excel",
+                                    "text" : 'Excel',
+                                    "className" : 'buttons-excel',
+                                    "filename" : 'Export excel',
+                                    "extension" : '.xls'
+                                }   
+                            ]
+                        }
+                    );
+                    table.draw();
+                //};
             };
             
             $('#base_fields_check').on('change', function () {
@@ -285,7 +300,7 @@ define([
                     });                 
                     result.push(infoEstudiante); 
                 });
-                console.log(result);
+                
                 return result;
             };
 
@@ -452,6 +467,7 @@ define([
                     $("#message").removeClass("alert alert-info");
                     $("#message").addClass("alert alert-success");
                     $("#message").html( "<strong>Info!</strong>  Reporte generado." );
+                    $("#progress_group").addClass("hidden");
                     
                     return report;
                 }else{
@@ -460,6 +476,7 @@ define([
                     $("#message").removeClass("alert alert-info");
                     $("#message").addClass("alert alert-success");
                     $("#message").html( "<strong>Info!</strong>  Reporte generado." );
+                    $("#progress_group").addClass("hidden");
 
                     return report;
                 }
@@ -573,6 +590,7 @@ define([
                         $(".progress-bar").html( "0%" );
                         $(".progress-bar").attr( "aria-valuenow", "0" );
                         $('#progress_group').css('display','block');
+                        $("#progress_group").removeClass("hidden");
                         $("#message").removeClass("alert alert-success");
                         $("#message").addClass("alert alert-info");
                         $('#message').html( "<strong>Info!</strong> Se está generando el reporte, esto puede tardar un par de minutos dependiendo de su conexión a internet, capacidad del ordenador y rapidez del campus virtual." );
@@ -628,6 +646,8 @@ define([
                                 $("#message").removeClass("alert alert-info");
                                 $("#message").addClass("alert alert-success");
                                 $("#message").html( "<strong>Info!</strong>  Reporte generado." );
+                                $("#progress_group").addClass("hidden");
+                                
                             };
                         });
 
