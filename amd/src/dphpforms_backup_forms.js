@@ -330,7 +330,7 @@ define([
                 //Muestra los resultados en pantalla en el Data Table
                 $.ajax({
                     type: "POST",
-                    data: { loadF: 'get_like', params: [cad, column] },
+                    data: { loadF: 'get_like', cadena:cad, atributo: column},
                     url: "../managers/dphpforms/dphpforms_dwarehouse_api.php",
                     success: function (msg) {
                         if (msg.length === 0) {
@@ -341,6 +341,10 @@ define([
                             );
                         } else {
                           //Filtrar data table
+                          $("#div_table_forms").empty();
+                          $("#div_table_forms").append('<table id="tableBackupForms" class="display" cellspacing="0" width="100%"><thead><thead></table>');
+                          var table = $("#tableBackupForms").DataTable(msg);
+                          $('#div_table_forms').css('cursor', 'pointer');
                         }
                     },
                     cache: false,

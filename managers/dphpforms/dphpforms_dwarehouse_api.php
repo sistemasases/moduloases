@@ -35,7 +35,7 @@
         //In JavaScript document (dphpforms_backup_forms.js) a load request is sent (loadF)
         //loadF can be: loadForms, get_form, get_id_user
         
-        if(  $_POST['loadF'] ==  "loadForms" ){
+        if(  $_POST['loadF'] ==  "loadForms" || $_POST['loadF']=="get_like" ){
             //Example of loadF: loadForms valid: 
             //data: loadForms does not require params
 
@@ -45,12 +45,15 @@
             array_push($columns, array("title"=>"Acción", "name"=>"name_accion", "data"=>"name_accion"));
             array_push($columns, array("title"=>"Id respuesta", "name"=>"id_respuesta", "data"=>"id_respuesta"));
             array_push($columns, array("title"=>"Fecha", "name"=>"fecha_act", "data"=>"fecha_act" ));
-           
+            array_push($columns, array("title"=>"Navegador", "name"=>"nav", "data"=>"nav" ));
+
+            if($_POST['loadF']=="loadForms"){$retorno = get_list_form();}
+                else if($_POST['loadF']=="get_like"){$retorno=get_like($_POST['cadena'],$_POST['atributo']);}
     
             $data = array(
                         "bsort" => false,
                         "columns" => $columns,
-                        "data" =>get_list_form(),
+                         "data" =>$retorno,
                         "language" => 
                          array(
                             "search"=> "Buscar:",
@@ -122,12 +125,6 @@
             }else{     
                 return_with_code( -2 );
             }
-        } else if ($_POST['loadF']== "get_like"){
-             //Example of loadF: get_like valid: 
-            //data: get_like   params: [cad, column]
-            $data = get_like($_POST['params'][0],$_POST['params'][1]);
-            echo json_encode($data);
-
         } else{
             // Function not defined
             return_with_code( -4 );

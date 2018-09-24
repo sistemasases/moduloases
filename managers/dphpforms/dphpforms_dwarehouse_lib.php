@@ -36,7 +36,8 @@ function get_list_form(){
     global $DB;
     $forms_dwarehouse_array = array();
  
-    $sql = "SELECT id AS id , id_usuario_moodle AS id_user,  accion AS name_accion, id_registro_respuesta_form AS id_respuesta, fecha_hora_registro AS fecha_act 
+    $sql = "SELECT id AS id , id_usuario_moodle AS id_user,  accion AS name_accion, id_registro_respuesta_form AS id_respuesta, 
+            fecha_hora_registro AS fecha_act,  navegador AS nav
             FROM {talentospilos_df_dwarehouse} AS dwarehouse ";
     $results = $DB->get_records_sql($sql);
 
@@ -93,10 +94,21 @@ function get_id_switch_user($id_user){
 function get_like($cadena, $atributo){
     global $DB;
     $form_dwarehouse_array = array();
-  
-    $sql = "SELECT * FROM {talentos_pilos_dwarehouse} AS u WHERE u.$atributo LIKE '%$cadena%' ";
+    if($atributo== "id"|| $atributo == "id_usuario_moodle" || $atributo == "id_registro_respuesta_form" || $atributo == "cod_retorno"){
+        //Convert bigint to char
+        $sql = "SELECT id AS id , id_usuario_moodle AS id_user,  accion AS name_accion, id_registro_respuesta_form AS id_respuesta, 
+        fecha_hora_registro AS fecha_act , navegador AS nav
+        FROM {talentospilos_df_dwarehouse} AS u WHERE TRIM(TO_CHAR(u.$atributo, '99999999999999999')) LIKE '%$cadena%' ";
+    }else {
+        //The other attributes of table are text type
+    $sql = "SELECT id AS id , id_usuario_moodle AS id_user,  accion AS name_accion, id_registro_respuesta_form AS id_respuesta, 
+    fecha_hora_registro AS fecha_act , navegador AS nav
+     FROM {talentospilos_df_dwarehouse} AS u WHERE u.$atributo LIKE '%$cadena%' ";
+    
+    }
     $results = $DB->get_records_sql($sql);
-    //RETORNAR LO QUE SE DEBE
-    //QUEDO AQUÍ
+    foreach ($results as $record) {
+        array_push($form_dwarehouse_array, $record);
+    }
     return $form_dwarehouse_array;
 }
