@@ -26,7 +26,7 @@
 
 // Standard GPL and phpdocs
 
-    require_once(dirname(__FILE__). '/../../../../../config.php');
+    /*require_once(dirname(__FILE__). '/../../../../../config.php');
     require_once(dirname(__FILE__). '/../../lib/student_lib.php');
 
     global $DB;
@@ -107,8 +107,10 @@
         
     }
 
-    echo "<hr>Estudiantes sin instancia: <strong>" . $faltantes . "</strong><br><hr>";
+    echo "<hr>Estudiantes sin instancia: <strong>" . $faltantes . "</strong><br><hr>";*/
     
+    echo "Script obsoleto.";
+
     die();
 
 ?>
