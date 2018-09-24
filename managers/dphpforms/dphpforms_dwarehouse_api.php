@@ -38,6 +38,8 @@
         if(  $_POST['loadF'] ==  "loadForms" || $_POST['loadF']=="get_like" ){
             //Example of loadF: loadForms valid: 
             //data: loadForms does not require params
+            //Example of loadF: get_like valid: 
+            //data: get_like require cadena and atributo params
 
               $columns = array();
             array_push($columns, array("title"=>"Formulario", "name"=>"id_form", "data"=>"id"));
