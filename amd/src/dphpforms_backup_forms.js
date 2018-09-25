@@ -389,13 +389,14 @@ define([
                     type: "POST",
                     data: { loadF: 'get_form', params: id_form },
                     url: "../managers/dphpforms/dphpforms_dwarehouse_api.php",
-                    success: function (msg) {
-                        create_beautifyJSON(msg);
-                    },
                     dataType: "json",
                     cache: false,
                     async: true,
-
+                    success: function (msg) {
+                        //msg.datos_previos = JSON.stringify(msg.datos_previos);
+                        console.log(msg);
+                        create_beautifyJSON(msg);
+                    },
                     failure: function (msg) { }
                 });
             }
@@ -403,7 +404,8 @@ define([
             function create_beautifyJSON(param) {
                 //Show beautifyJSON in modal
                 $("#div_JSONform").empty();
-                var json = JSON.stringify(param);
+                //var json = JSON.stringify(param);
+               var json = JSON.stringify(param);
                 $("#div_JSONform").append(json);
                 $('#div_JSONform').beautifyJSON({
                     type: "flexible",

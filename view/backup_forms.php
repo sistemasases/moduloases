@@ -43,7 +43,7 @@ $title = "Backup forms";
 $pagetitle = $title;
 $courseid = required_param('courseid', PARAM_INT);
 $blockid = required_param('instanceid', PARAM_INT);
-
+print_r ("Actualizado");
 // Menu items are created
 $menu_option = create_menu_options($USER->id, $blockid, $courseid);
 
