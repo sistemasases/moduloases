@@ -1,3 +1,4 @@
+
 <?php 
     // This file is part of Moodle - http://moodle.org/
 //
@@ -29,38 +30,32 @@
     require_once(dirname(__FILE__).'/dphpforms_dwarehouse_lib.php');
 
     header('Content-Type: application/json');
-    /**
-     * Api la consulta de datos respecto a usuarios, y formularios.
-     * @author Juan Pablo Castro
-     * @see user_management_lib.php
-     * @param json $input This input is a json with a function name and their respective parameters. The order of these parameters is very important. See every function to notice of their parameters order.
-     * @return json The structure is {"status_code":int, "error_message":string, "data_response":string }
-    */
-
-    // Example of valid input. params = Parameters
-    // { "function":"LA_FUNCION", "params":[ id_user , id_form ] }
 
     if( isset($_POST['loadF'])){
-
-        /* Params: student_ases_id, instance_id, semester_id
-        * */
+        //In JavaScript document (dphpforms_backup_forms.js) a load request is sent (loadF)
+        //loadF can be: loadForms, get_form, get_id_user
         
-        if(  $_POST['loadF'] ==  "loadForms" ){
+        if(  $_POST['loadF'] ==  "loadForms" || $_POST['loadF']=="get_like" ){
+            //Example of loadF: loadForms valid: 
+            //data: loadForms does not require params
+            //Example of loadF: get_like valid: 
+            //data: get_like require cadena and atributo params
 
-            /* In this request is only valid pass like param(Parameters) the instance identificatior, 
-             * for this reason, the input param only can be equal in quantity to one.
-             * */
               $columns = array();
+            array_push($columns, array("title"=>"Formulario", "name"=>"id_form", "data"=>"id"));
             array_push($columns, array("title"=>"Usuario", "name"=>"id_user", "data"=>"id_user"));
             array_push($columns, array("title"=>"Acción", "name"=>"name_accion", "data"=>"name_accion"));
             array_push($columns, array("title"=>"Id respuesta", "name"=>"id_respuesta", "data"=>"id_respuesta"));
-            array_push($columns, array("title"=>"Fecha", "name"=>"fecha_act", "data"=>"fecha_act"));
-            array_push($columns, array("title"=>"Formulario", "name"=>"id_form", "data"=>"id"));
+            array_push($columns, array("title"=>"Fecha", "name"=>"fecha_act", "data"=>"fecha_act" ));
+            array_push($columns, array("title"=>"Navegador", "name"=>"nav", "data"=>"nav" ));
+
+            if($_POST['loadF']=="loadForms"){$retorno = get_list_form();}
+                else if($_POST['loadF']=="get_like"){$retorno=get_like($_POST['cadena'],$_POST['atributo']);}
     
             $data = array(
                         "bsort" => false,
                         "columns" => $columns,
-                        "data" =>get_list_form(),
+                         "data" =>$retorno,
                         "language" => 
                          array(
                             "search"=> "Buscar:",
@@ -110,6 +105,8 @@
 
 
         } else if ($_POST['loadF']== 'get_id_user'){
+            //Example of loadF: get_id_user valid: 
+            //data: get_id_user   params: cod_user
             if( count($_POST['params']) == 1 ){
                 //Consulta para codigo
                 $data = get_id_switch_user($_POST['params']);
@@ -117,90 +114,23 @@
 
             }else{    return_with_code( -2 ); }
         }else if( $_POST['loadF'] == "get_form" ){
-
-            /* Params: student_ases_id, created_by_id, instance_id, semester_id
-             * */
-           
+            //Example of loadF: get_form valid: 
+            //data: get_form   params: id_form
+          
             if( count($_POST['params']) == 1 ){
 
-                // Order of params
-                /**
-                 * The student_ases_id value only can be a number.
-                 * The created_by_id value only can be a number.
-                 * The instance_id value only can be a number.
-                 * The semester_id value only can be a number.
-                 */
-                    $columns = array();
-                    array_push($columns, array("title"=>"Id usuario", "name"=>"id_user", "data"=>"id_user"));
-                    array_push($columns, array("title"=>"Acción", "name"=>"name_accion", "data"=>"name_action"));
-                    array_push($columns, array("title"=>"Datos previos", "name"=>"dp_form", "data"=>"dp_form"));
-                    array_push($columns, array("title"=>"Datos enviados", "name"=>"de_form", "data"=>"de_form"));
-                    array_push($columns, array("title"=>"Datos almacenados", "name"=>"da_form", "data"=>"da_form"));
-                    array_push($columns, array("title"=>"Fecha", "name"=>"fecha_act", "data"=>"fecha_form"));
-                  
-            
-                    $data = array(
-                                "bsort" => false,
-                                "columns" => $columns,
-                                "data" =>get_form_switch_id($_POST['params']),
-                                "language" => 
-                                 array(
-                                    "search"=> "Buscar:",
-                                    "oPaginate" => array(
-                                        "sFirst"=>    "Primero",
-                                        "sLast"=>     "Último",
-                                        "sNext"=>     "Siguiente",
-                                        "sPrevious"=> "Anterior"
-                                        ),
-                                    "sProcessing"=>     "Procesando...",
-                                    "sLengthMenu"=>     "Mostrar _MENU_ registros",
-                                    "sZeroRecords"=>    "No se encontraron resultados",
-                                    "sEmptyTable"=>     "Ningún dato disponible en esta tabla",
-                                    "sInfo"=>           "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
-                                    "sInfoEmpty"=>      "Mostrando registros del 0 al 0 de un total de 0 registros",
-                                    "sInfoFiltered"=>   "(filtrado de un total de _MAX_ registros)",
-                                    "sInfoPostFix"=>    "",
-                                    "sSearch"=>         "Buscar:",
-                                    "sUrl"=>            "",
-                                    "sInfoThousands"=>  ",",
-                                    "sLoadingRecords"=> "Cargando...",
-                                 ),
-                                "order"=> array(0, "desc"),
-                                "dom"=>'lifrtpB',
-            
-                                "buttons"=>array(
-                                    array(
-                                        "extend"=>'print',
-                                        "text"=>'Imprimir'
-                                    ),
-                                    array(
-                                        "extend"=>'csvHtml5',
-                                        "text"=>'CSV'
-                                    ),
-                                    array(
-                                        "extend" => "excel",
-                                                        "text" => 'Excel',
-                                                        "className" => 'buttons-excel',
-                                                        "filename" => 'Export excel',
-                                                        "extension" => '.xls'
-                                    )
-                                )
-            
-                            );
-                       
+             //Get form data switch id form
+               
+                    $data = get_form_switch_id($_POST['params']);
                     echo json_encode($data);
                     
-                
-            }else{
-                
+            }else{     
                 return_with_code( -2 );
             }
-
-        }else{
+        } else{
             // Function not defined
             return_with_code( -4 );
         }
-        
     }else{
         return_with_code( -1 );
     }
@@ -272,14 +202,6 @@
     }
 
 
-
-
-
-
-if(isset($_POST['loadF']) && $_POST['loadF'] == 'loadForms'){		
-          
-
-        } 
 
         
 ?>
