@@ -47,7 +47,12 @@ function get_array_students_with_resolution(){
                                 THEN '-INACTIVO'			
                         WHEN (academic_students.fecha_cancel IS NOT NULL AND academic_students.promedio_semestre IS NULL)
                                 THEN '-INACTIVO'		
-                    END AS program_status					
+                    END AS program_status,
+                    CASE WHEN (res_students.codigo_resolucion IS NULL)
+                                THEN '---'
+						WHEN (res_students.codigo_resolucion IS NOT NULL)
+								THEN res_students.codigo_resolucion
+                    END AS codigo_resolucion
                 FROM
                 (SELECT user_extended.id_ases_user, moodle_user.lastname, moodle_user.firstname, cohorts.idnumber, semestre.id AS id_semestre, semestre.nombre AS nombre_semestre, 
                     usuario.num_doc, moodle_user.username, substring(cohorts.idnumber from 0 for 5) AS cohorte
@@ -87,6 +92,8 @@ function get_array_students_with_resolution(){
 
     return $array_historics;
 }
+
+//print_r(get_array_students_with_resolution());
 
 /**
  * Function that returns the date when an student quitted a program in the semester 
