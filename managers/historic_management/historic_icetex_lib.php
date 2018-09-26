@@ -166,3 +166,93 @@ function update_resolution_credit_note($id_resolution, $credit_note){
 }
 
 //print_r(update_resolution_credit_note(10, 'Hey'));
+
+/**
+ * Returns the id of the icetex_status given its name
+ * 
+ * @see get_id_icetex_status($icetex_status)
+ * @param $icetex_status -> name of the icetex status
+ * @return integer||boolean
+ */
+function get_id_icetex_status($icetex_status){
+    global $DB;
+
+    $sql_query = "SELECT id FROM {talentospilos_estados_icetex} WHERE nombre = '$icetex_status";
+
+    $id_icetex_status = $DB->get_record_sql($sql_query);
+
+    if(!$id_icetex_status){
+        return false;
+    }else{
+        return $id_icetex_status->id;
+    }
+}
+
+/**
+ * validate a register in table talentospilos_hist_est_ice
+ *
+ * @see validate_historic_status_register($id_student, $id_semester, $icetex_status)
+ * @param $id_student --> id from table talentospilos_usuario
+ * @param $id_semester --> id from table talentospilos_semestre
+ * @param $icetex_status --> name of the icetex status
+ * @return Object|boolean
+ */
+function validate_historic_status_register($id_student, $id_semester, $id_icetex_status)
+{
+    global $DB;
+
+    $sql_query = "SELECT id FROM {talentospilos_hist_est_ice} WHERE id_estudiante = $id_student AND id_semestre = $id_semester 
+                                                                    AND id_estado_icetex = $id_icetex_status";
+    return $DB->get_record_sql($sql_query);
+
+}
+
+/**
+ * Updates or inserts a register in the talentospilos_hist_est_ice table
+ * 
+ * @see update_historic_icetex_status($student_id, $semester_id, $icetex_status)
+ * @param $student_id -> id of the student
+ * @param $semester_id -> id of the semester
+ * @param $icetex_status -> name of the icetex status
+ * @return integer||boolean
+ */
+function update_historic_icetex_status($student_id, $semester_id, $id_icetex_status){
+    global $DB;
+
+    //validate existence
+    $result = validate_historic_status_register($student_id, $semester_id, $id_icetex_status);
+    $object_historic = new StdClass;
+
+    if(!$result){
+        //INSERTION
+
+        $object_historic->id_estudiante = $student_id;
+        $object_historic->id_semestre = $semester_id;
+        $object_historic->id_estado_icetex = $id_icetex_status;
+
+        $insert = $DB->insert_record('talentospilos_hist_est_ice', $object_historic, true);
+
+        if ($insert) {
+            return $insert;
+        } else {
+            return false;
+        }
+
+    }else{
+        //UPDATE
+        $id_historic = $result->id;
+
+        $object_historic->id = $id_historic;
+        $object_historic->id_estudiante = $student_id;
+        $object_historic->id_semestre = $semester_id;
+        $object_historic->id_estado_icetex = $id_icetex_status;
+
+        $update = $DB->update_record('talentospilos_hist_est_ice', $object_historic);
+
+        if ($update) {
+            return $id_historic;
+        } else {
+            return false;
+        }
+    }    
+}
