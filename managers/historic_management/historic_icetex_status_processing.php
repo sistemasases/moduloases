@@ -40,7 +40,7 @@ if (isset($_FILES['file'])) {
         $nombre = $archivo['name'];
 
         $rootFolder = "../../view/archivos_subidos/historic/icetex_status/files/";
-        $zipFolfer = "../../view/archivos_subidos/historic/icetex_status/comprimidos/";
+        $zipFolder = "../../view/archivos_subidos/historic/icetex_status/comprimidos/";
 
         //validate and create folders
         if (!file_exists($rootFolder)) {
