@@ -40,7 +40,7 @@ if (isset($_FILES['file'])) {
         $nombre = $archivo['name'];
 
         $rootFolder = "../../view/archivos_subidos/historic/icetex_status/files/";
-       $zipFolfer = "../../view/archivos_subidos/historic/icetex_status/comprimidos/";
+        $zipFolfer = "../../view/archivos_subidos/historic/icetex_status/comprimidos/";
 
         //validate and create folders
         if (!file_exists($rootFolder)) {
@@ -96,7 +96,7 @@ if (isset($_FILES['file'])) {
             //validate cedula_estudiante
             if (!is_null($associativeTitles['cedula_estudiante'])) {
 
-                $cedula_estudiante = $data[$associativeTitles['cedula_estudiante']].'-'.$codigo_programa;
+                $cedula_estudiante = $data[$associativeTitles['cedula_estudiante']];
 
                 if ($cedula_estudiante != '') {
 

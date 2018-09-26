@@ -177,7 +177,7 @@ function update_resolution_credit_note($id_resolution, $credit_note){
 function get_id_icetex_status($icetex_status){
     global $DB;
 
-    $sql_query = "SELECT id FROM {talentospilos_estados_icetex} WHERE nombre = '$icetex_status";
+    $sql_query = "SELECT id FROM {talentospilos_estados_icetex} WHERE nombre = '$icetex_status'";
 
     $id_icetex_status = $DB->get_record_sql($sql_query);
 
