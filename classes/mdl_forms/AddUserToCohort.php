@@ -23,7 +23,6 @@ class add_user_to_cohort extends moodleform {
     }
     function  validation($data, $files) {
         $parent_errors = parent::validation($data, $files);
-        print_r($parent_errors);
         global $DB;
         $errors = array();
         $user_exists = $DB->record_exists('user', array('username' => $data['username']));

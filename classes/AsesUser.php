@@ -33,11 +33,11 @@ class AsesUser {
     public $tipo_doc;
     public $num_doc;
     public $id_ciudad_ini;
-    public $id_ciudad_res;
+    public $id_ciudad_res; 
     public $fecha_nac;
-    public $id_ciudad_nac;
-    public $sexo;
-    public $estado;
+    public $id_ciudad_nac; // see Municipio
+    public $sexo; // see Gender
+    public $estado; // see EstadoAses
     public $id_discapacidad;
     public $ayuda_disc;
     public $estado_ases;

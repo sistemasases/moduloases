@@ -47,8 +47,6 @@ require_once('../managers/menu_options.php');
 include('../lib.php');
 
 
-include("../classes/output/ases_user_creation_page.php");
-include("../classes/output/renderer.php");
 
 $ases_context = cohort_lib::get_ases_context();
 $manage_cohorts_url = cohort_lib::get_context_management_url();
