@@ -118,7 +118,7 @@ define([
                                 } else if (input.charAt(i) == ']') {
                                     indent = indent.substring(0, (indent.length - 18));
                                     text += '<br>' + indent;
-                                    text += input.charAt(i)
+                                    text += input.charAt(i);
                                     s.pop();
                                 } else if (input.charAt(i) == '}') {
                                     indent = indent.substring(0, (indent.length - 18));
@@ -129,7 +129,7 @@ define([
                                             text += indent;
                                         }
                                 } else if (input.charAt(i) == '\"' && peek(s) == '\"') {
-                                    text += input.charAt(i)
+                                    text += input.charAt(i);
                                     s.pop();
                                 } else if (input.charAt(i) == ',' && peek(s) != '\"') {
                                     text += input.charAt(i) + '<br>';
@@ -137,7 +137,7 @@ define([
                                 } else if (input.charAt(i) == '\n') {
                                 } else if (input.charAt(i) == ' ' && peek(s) != '\"') {
                                 } else {
-                                    text += input.charAt(i)
+                                    text += input.charAt(i);
                                 }
                             }
                             this.innerHTML = text;
@@ -154,7 +154,7 @@ define([
                             if (settings.hoverable) {
                                 var hoverabler = "<div class='hoverable'>";
                             } else {
-                                var hoverabler = "<div>"
+                                var hoverabler = "<div>";
                             }
                             text += "<div id='json'>";
                             s_html.push("</div>");
@@ -202,7 +202,7 @@ define([
                                             text += s_html.pop();
                                         }
                                 } else if (input.charAt(i) == '\"' && peek(s) == '\"') {
-                                    text += input.charAt(i)
+                                    text += input.charAt(i);
                                     s.pop();
                                 } else if (input.charAt(i) == ',' && peek(s) != '\"') {
                                     text += input.charAt(i);
@@ -212,7 +212,7 @@ define([
                                 } else if (input.charAt(i) == '\n') {
                                 } else if (input.charAt(i) == ' ' && peek(s) != '\"') {
                                 } else {
-                                    text += input.charAt(i)
+                                    text += input.charAt(i);
                                 }
                             }
                             this.innerHTML = text;
@@ -229,7 +229,7 @@ define([
                             if (settings.hoverable) {
                                 var hoverabler = "<div class='hoverable'>";
                             } else {
-                                var hoverabler = "<div>"
+                                var hoverabler = "<div>";
                             }
                             function peek(stack) {
                                 var val = stack.pop();
@@ -303,7 +303,7 @@ define([
                             text += hoverabler + "{" + collapser_obj;
                             s_html.push("");
                             s_html.push("</div>");
-                            s_html.push("</ul>")
+                            s_html.push("</ul>");
                             iterateObject(json);
                             text += "</ul></div></div>";
                             this.innerHTML = text;
