@@ -186,7 +186,7 @@ function save_profile($form){
     
     global $DB;
     
-    //try{
+    try{
         $id_ases = $form[0]['value'];
         $msg = new stdClass();
 
@@ -221,24 +221,21 @@ function save_profile($form){
             $msg->status = "success";
             $msg->msg = "La información se ha almacenado correctamente";
         }else{
-            $msg->title = "Error";
-            $msg->status = "error";
-            $msg->msg = "Error al guardar la información. 
-                         Posibles Causas: Si usted cambió el número de cedula, es posible que el nuevo número ya exista en la base de datos. 
-                                          Revise los cambios realizados e intentelo de nuevo.";
-        }
+            }
         
         echo json_encode($msg);
         
-    //}catch(Exception $e){
+    }catch(Exception $e){
         
-    //    $msg->title = "Error";
-    //    $msg->status = "error";
-    //    $msg->msg = "No ha sido posible comunicarse con el servidor.";
-        
-    //    echo json_encode($msg);
+        $msg->title = "Error";
+        $msg->status = "error";
+        $msg->msg = "Error al guardar la información. 
+                        Posibles Causas: Si usted cambió el número de cedula, es posible que el nuevo número ya exista en la base de datos. 
+                                        Revise los cambios realizados e intentelo de nuevo.";
+
+       echo json_encode($msg);
        
-    //}
+    }
 }
 
  /**

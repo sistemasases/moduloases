@@ -27,63 +27,288 @@ define([
     return {
         init: function() {
 
-            window.JSZip = jszip;
-            $("#dphpform_datatable").DataTable(
-                { 
-                    "bsort" : false,
-                    "data": [
-                        {
-                            "op":55,
-                            "casa": 0
-                        },
-                        {
-                            "casa":5,
-                            "op": 14
-                        }
-                    ],
-                    "columns" : [
-                        {
-                            "title" : "t", 
-                            "name" : "casita", 
-                            "data" : "casa",
-                        },
-                        {
-                            "title" : "op", 
-                            "name" : "op", 
-                            "data" : "op",
-                        },
-                    ],
-                    "dom":"lifrtpB",
-                    "buttons" : [
-                        {
-                            "extend" : "print",
-                            "text" : 'Imprimir'
-                        },{
-                            "extend" : "csv",
-                            "text" : 'CSV'
-                        },{
-                            "extend" : "excel",
-                            "text" : 'Excel',
-                            "className" : 'buttons-excel',
-                            "filename" : 'Export excel',
-                            "extension" : '.xls'
-                        }   
-                    ]
-                }
-            );
+            window.JSZip = jszip;            
             var id_semester = null;
+            
+
 
             function render_datatable( records ){
-                console.log( records );
-            };
-
-            function is_in_array( array_, new_element ){
-                for( var i = 0; i < array_.length; i++ ){
-                    if( array_[i] == new_element ){
-                        return true;
+                var dataForms = process_data( records );   
+                
+                var columns_table = [
+                    {
+                        "title" : "Código estudiante", 
+                        "name" : "student_code", 
+                        "data" : "student_code",
+                    },
+                    {
+                        "title" : "Nombre(s)", 
+                        "name" : "student_firstname", 
+                        "data" : "student_firstname"
+                    },
+                    {
+                        "title" : "Apellido(s)", 
+                        "name" : "student_lastname", 
+                        "data" : "student_lastname"
+                    }
+                    ,
+                    {
+                        "title" : "Fecha", 
+                        "name" : "fecha", 
+                        "data" : "fecha"
+                    },
+                    {
+                        "title" : "Lugar", 
+                        "name" : "lugar", 
+                        "data" : "lugar"
+                    },
+                    {
+                        "title" : "Hora Inicio", 
+                        "name" : "hora_inicio", 
+                        "data" : "hora_inicio"
+                    },
+                    {
+                        "title" : "Hora Finalizacion", 
+                        "name" : "hora_finalizacion", 
+                        "data" : "hora_finalizacion"
+                    },    
+                    {
+                        "title" : "Tema", 
+                        "name" : "tema", 
+                        "data" : "tema"
+                    },
+                    {
+                        "class": "big-col",
+                        "title" : "Objetivos", 
+                        "name" : "objetivos", 
+                        "data" : "objetivos"
+                    },    
+                    {
+                        "class": "big-col",
+                        "title" : "Comentario individual", 
+                        "name" : "comentarios_individual", 
+                        "data" : "comentarios_individual"
+                    },
+                    {
+                        "title" : "Punt. riesgo individual", 
+                        "name" : "puntuacion_riesgo_individual", 
+                        "data" : "puntuacion_riesgo_individual"
+                    },
+                    {
+                        "title" : "Temáticas individuales", 
+                        "name" : "tematicas_individual", 
+                        "data" : "tematicas_individual"
+                    },
+                    {
+                        "class": "big-col",
+                        "title" : "Comentario familiar", 
+                        "name" : "comentarios_familiar", 
+                        "data" : "comentarios_familiar"
+                    },
+                    {
+                        "title" : "Punt. riesgo familiar", 
+                        "name" : "puntuacion_riesgo_familiar", 
+                        "data" : "puntuacion_riesgo_familiar"
+                    },
+                    {
+                        "title" : "Temáticas familiar", 
+                        "name" : "tematicas_familiar", 
+                        "data" : "tematicas_familiar"
+                    },
+                    {
+                        "class": "big-col",
+                        "title" : "Comentario académico", 
+                        "name" : "comentarios_academico", 
+                        "data" : "comentarios_academico"
+                    },
+                    {
+                        "title" : "Punt. riesgo académico", 
+                        "name" : "puntuacion_riesgo_academico", 
+                        "data" : "puntuacion_riesgo_academico"
+                    },
+                    {
+                        "title" : "Temáticas académico", 
+                        "name" : "tematicas_academico", 
+                        "data" : "tematicas_academico"
+                    },
+                    {
+                        "class": "big-col",
+                        "title" : "Comentario Económico", 
+                        "name" : "comentarios_economico", 
+                        "data" : "comentarios_economico"
+                    },
+                    {
+                        "title" : "Punt. riesgo Económico", 
+                        "name" : "puntuacion_riesgo_economico", 
+                        "data" : "puntuacion_riesgo_economico"
+                    },
+                    {
+                        "title" : "Temáticas Económico", 
+                        "name" : "tematicas_economico", 
+                        "data" : "tematicas_economico"
+                    },{
+                        "class": "big-col",
+                        "title" : "Comentario Vida Universitaria", 
+                        "name" : "comentarios_vida_uni", 
+                        "data" : "comentarios_vida_uni"
+                    },
+                    {
+                        "title" : "Punt. Vida Universitaria", 
+                        "name" : "puntuacion_vida_uni", 
+                        "data" : "puntuacion_vida_uni"
+                    },
+                    {
+                        "class": "big-col",
+                        "title" : "Observaciones seguimientos", 
+                        "name" : "observaciones_seguimientos", 
+                        "data" : "observaciones_seguimientos"
+                    },
+                    {
+                        "title" : "Revisado Profesional", 
+                        "name" : "revisado_profesional", 
+                        "data" : "revisado_profesional"
+                    },
+                    {
+                        "title" : "Revisado Practicante", 
+                        "name" : "revisado_practicante", 
+                        "data" : "revisado_practicante"
+                    },
+                    {
+                        "title" : "ID Estudiante", 
+                        "name" : "id_estudiante", 
+                        "data" : "id_estudiante"
+                    },
+                    {
+                        "title" : "ID Instancia", 
+                        "name" : "id_instancia", 
+                        "data" : "id_instancia"
+                    },
+                    {
+                        "title" : "Nombre Monitor", 
+                        "name" : "monitor_name", 
+                        "data" : "monitor_name"
+                    },
+                    {
+                        "title" : "Nombre Practicante", 
+                        "name" : "practicing_name", 
+                        "data" : "practicing_name"
+                    },
+                    {
+                        "title" : "Nombre Profesional", 
+                        "name" : "professional_name", 
+                        "data" : "professional_name"
+                    },
+                    {
+                        "title" : "ID creado por", 
+                        "name" : "id_creado_por", 
+                        "data" : "id_creado_por"
+                    },
+                    {
+                        "title" : "Creado por", 
+                        "name" : "created_by", 
+                        "data" : "created_by"
+                    },
+                                        
+                ];
+    
+                var columns_show = columns_table.map(column => {                                     
+                    if(!$("#" + column.name).prop('checked')){
+                        column.visible = false;
                     };
-                };
-                return false;
+                    return column;
+                })                
+
+                if ($.fn.dataTable.isDataTable('#dphpform_datatable')) {
+                    $('#dphpform_datatable').DataTable().destroy();    
+                    $('#dphpform_datatable tbody').empty();                    
+                }
+                
+                //else {             
+                    //$('#dphpform_datatable tbody').empty();
+                    var table = $("#dphpform_datatable").DataTable(
+                        { 
+                            "retrieve": true,                          
+                            "bsort" : false,
+                            "data" : dataForms,                         
+                            "columns" : columns_show,
+                            "dom":"lifrtpB",
+                            "buttons" : [
+                                {
+                                    "extend" : "print",
+                                    "text" : 'Imprimir'
+                                },{
+                                    "extend" : "csv",
+                                    "text" : 'CSV'
+                                },{
+                                    "extend" : "excel",
+                                    "text" : 'Excel',
+                                    "className" : 'buttons-excel',
+                                    "filename" : 'Export excel',
+                                    "extension" : '.xls'
+                                }   
+                            ]                           
+                        }
+                    );
+                    table.draw();
+                //};
+            };
+            
+            $('#base_fields_check').on('change', function () {
+                if ($('#base_fields_check').prop('checked')) {
+                    $("#base_fields input[type='checkbox']").prop('checked', true);
+                } else {
+                    $("#base_fields input[type='checkbox']").prop('checked', false);
+                }
+            });
+            $('#dimensions_fields_check').on('change', function () {
+                if ($('#dimensions_fields_check').prop('checked')) {
+                    $("#dimensions_fields input[type='checkbox']").prop('checked', true);
+                } else {
+                    $("#dimensions_fields input[type='checkbox']").prop('checked', false);
+                }
+            });
+            $('#comments_fields_check').on('change', function () {
+                if ($('#comments_fields_check').prop('checked')) {
+                    $("#comments_fields input[type='checkbox']").prop('checked', true);
+                } else {
+                    $("#comments_fields input[type='checkbox']").prop('checked', false);
+                }
+            });
+            $('#risks_fields_check').on('change', function () {
+                if ($('#risks_fields_check').prop('checked')) {
+                    $("#risks_fields input[type='checkbox']").prop('checked', true);
+                } else {
+                    $("#risks_fields input[type='checkbox']").prop('checked', false);
+                }
+            });
+            $('#themes_fields_check').on('change', function () {
+                if ($('#themes_fields_check').prop('checked')) {
+                    $("#themes_fields input[type='checkbox']").prop('checked', true);
+                } else {
+                    $("#themes_fields input[type='checkbox']").prop('checked', false);
+                }
+            });
+
+
+            function process_data( records ){
+
+                var result = [];
+                
+                records.map(formulario =>{
+                    var infoEstudiante = {}; 
+                                                                                                                  
+                    Object.values(formulario).map(element => {
+                        if(element.respuesta !== undefined){
+                            infoEstudiante[element.local_alias] = element.respuesta;   
+                        }else{
+                            infoEstudiante[element.local_alias] = "N.R.";
+                        }                     
+                        
+                    });                 
+                    result.push(infoEstudiante); 
+                });
+                
+                return result;
             };
 
             function custom_actions( report, form_type ){
@@ -249,6 +474,7 @@ define([
                     $("#message").removeClass("alert alert-info");
                     $("#message").addClass("alert alert-success");
                     $("#message").html( "<strong>Info!</strong>  Reporte generado." );
+                    $("#progress_group").addClass("hidden");
                     
                     return report;
                 }else{
@@ -257,6 +483,7 @@ define([
                     $("#message").removeClass("alert alert-info");
                     $("#message").addClass("alert alert-success");
                     $("#message").html( "<strong>Info!</strong>  Reporte generado." );
+                    $("#progress_group").addClass("hidden");
 
                     return report;
                 }
@@ -370,6 +597,7 @@ define([
                         $(".progress-bar").html( "0%" );
                         $(".progress-bar").attr( "aria-valuenow", "0" );
                         $('#progress_group').css('display','block');
+                        $("#progress_group").removeClass("hidden");
                         $("#message").removeClass("alert alert-success");
                         $("#message").addClass("alert alert-info");
                         $('#message').html( "<strong>Info!</strong> Se está generando el reporte, esto puede tardar un par de minutos dependiendo de su conexión a internet, capacidad del ordenador y rapidez del campus virtual." );
@@ -411,7 +639,7 @@ define([
                                             $("#progress-download").find("div").addClass("progress-bar-success");
                                             var tight_records = custom_actions( completed_records, "seguimiento_pares" );
                                             render_datatable( tight_records );
-                                            downloadCSV( tight_records );
+                                            //downloadCSV( tight_records );
                                         };
                                         
                                     }).fail(function(err) {
@@ -425,6 +653,8 @@ define([
                                 $("#message").removeClass("alert alert-info");
                                 $("#message").addClass("alert alert-success");
                                 $("#message").html( "<strong>Info!</strong>  Reporte generado." );
+                                $("#progress_group").addClass("hidden");
+                                
                             };
                         });
 
@@ -444,3 +674,4 @@ define([
     };
       
 });
+

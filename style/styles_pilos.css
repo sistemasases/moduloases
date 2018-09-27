@@ -609,6 +609,12 @@ fieldset[disabled] .btn-warning.focus {
   background-color: #d9534f;
   border-color: #d43f3a;
 }
+.btn-danger-close {
+  color: #fff;
+  background-color: #d9534f;
+  border-color: #d43f3a;
+}
+
 .btn-danger:focus,
 .btn-danger.focus {
   color: #fff;
@@ -1007,7 +1013,7 @@ a.panel_heading.heading_semester_tracking:-web-kit-any-link{
   text-decoration:none;
 }
 
-a.collapsed .heading_semester_tracking{
+a.collapsed .hading_semester_tracking{
   background-color: #E5E5E5;
   color: black;
 
@@ -1356,6 +1362,14 @@ input.no-borde-fondo.tema
 
 .btn-acept{
   float: right;
+}
+.div_info_user{
+
+  padding-top: 9px;
+  padding-bottom: 9px;
+  margin-bottom: 0px;
+  font-size: 16px;
+
 }
 
 .new{

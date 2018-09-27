@@ -26,38 +26,176 @@
             </div>
         </div>-->
         <div class="row">
-            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                <div class="form-group col-xs-6 col-sm-6 col-md-6 col-lg-6">
-                    <label for="">Fecha de inicio</label>
-                    <input type="date" name="" id="start_date" class="form-control ajuste_fecha">
+
+            <div class="row">
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <div class="form-group col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                        <label for="">Fecha de inicio</label>
+                        <input type="date" name="" id="start_date" class="form-control ajuste_fecha">
+                    </div>
+                    <div class="form-group col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                        <label for="">Fecha de finalización</label>
+                        <input type="date" name="" id="end_date" class="form-control ajuste_fecha">
+                    </div>
+                </div> 
+            </div>               
+            <div class="row">
+                <!-- Columna de campos base -->
+                <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5">
+                    <fieldset id="base_fields">
+                        <legend><input type="checkbox" id="base_fields_check"> Campos base</legend>
+                        <div class="col-sm-6 col-md-6">
+
+                            <div class="checkbox">
+                                <input type="checkbox" name="base_fields[]" id="student_code" value="student_code"  checked="checked"> Código
+                            </div>
+                            <div class="checkbox">
+                                <input type="checkbox" name="base_fields[]" id="student_firstname" value="firstname"  checked="checked"> Nombres
+                            </div>
+                            <div class="checkbox">
+                                <input type="checkbox" name="base_fields[]" id="student_lastname" value="lastname"  checked="checked"> Apellidos
+                            </div>
+                            <div class="checkbox">
+                                <input type="checkbox" name="base_fields[]" id="fecha" value="fecha"  checked="checked"> Fecha
+                            </div>
+                            <div class="checkbox">
+                                <input type="checkbox" name="base_fields[]" id="lugar" value="lugar"  checked="checked"> Lugar
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-md-6">
+                            <div class="checkbox">
+                                <input type="checkbox" name="base_fields[]" id="hora_inicio" value="hora_inicio"   checked="checked">Hora Inicio
+                            </div>
+
+
+                            <div class="checkbox">
+                                <input type="checkbox" name="base_fields[]" id="hora_finalizacion" value="hora_fin"   checked="checked">Hora Fin
+                            </div>
+                            <div class="checkbox">
+                                <input type="checkbox" name="base_fields[]" id="tema" value="tema"   checked="checked">Tema
+                            </div>
+                            <div class="checkbox">
+                                <input type="checkbox" name="base_fields[]" id="objetivos" value="objetivos"  >Objetivos
+                            </div>
+                            <div class="checkbox">
+                                <input type="checkbox" name="base_fields[]" id="observaciones_seguimientos" value="observaciones_seguimientos"  >Observaciones
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>                    
+                
+                <!-- Columna de Dimensiones -->
+                <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+                    <fieldset id="dimensions_fields">
+                        <legend><input type="checkbox" id="dimensions_fields_check"> Dimensiones</legend>
+                        <fieldset id="comments_fields">                            
+                            <div class="checkbox">
+                                <input type="checkbox" id="comments_fields_check"> Comentarios
+                            </div>
+                            <div hidden>
+                                <div class="checkbox">
+                                    <input type="checkbox" name="comment_fields[]" id="comentarios_individual" value="comentarios_individual" >Comentario Individual
+                                </div>
+                                <div class="checkbox">
+                                    <input type="checkbox" name="comment_fields[]" id="comentarios_familiar" value="comentarios_familiar" >Comentario Familiar
+                                </div>
+                                <div class="checkbox">
+                                    <input type="checkbox" name="comment_fields[]" id="comentarios_academico" value="comentarios_academico" >Comentario Académico
+                                </div>
+                                <div class="checkbox">
+                                    <input type="checkbox" name="comment_fields[]" id="comentarios_economico" value="comentarios_economico" >Comentario Económico
+                                </div>
+                                <div class="checkbox">
+                                    <input type="checkbox" name="comment_fields[]" id="comentarios_vida_uni" value="comentarios_vida_uni" >Comentario V. Universitaria
+                                </div>
+                            </div>
+                        </fieldset>
+                        <fieldset id="risks_fields">
+                            <div class="checkbox">
+                                <input type="checkbox" id="risks_fields_check" checked="checked"> Riesgos
+                            <div>
+                            <div hidden>
+                                <div class="checkbox">
+                                    <input type="checkbox" name="risks_fields[]" id="puntuacion_riesgo_individual" value="puntuacion_riesgo_individual"  checked="checked"> Riesgo Individual
+                                </div>
+                                <div class="checkbox">
+                                    <input type="checkbox" name="risks_fields[]" id="puntuacion_riesgo_familiar" value="puntuacion_riesgo_familiar"  checked="checked"> Riesgo Familiar
+                                </div>
+                                <div class="checkbox">
+                                    <input type="checkbox" name="risks_fields[]" id="puntuacion_riesgo_academico" value="puntuacion_riesgo_academico"  checked="checked"> Riesgo Académico
+                                </div>
+                                <div class="checkbox">
+                                    <input type="checkbox" name="risks_fields[]" id="puntuacion_riesgo_economico" value="puntuacion_riesgo_economico"  checked="checked"> Riesgo Económico
+                                </div>
+                                <div class="checkbox">
+                                    <input type="checkbox" name="risks_fields[]" id="puntuacion_vida_uni" value="puntuacion_vida_uni"  checked="checked"> Punt. V. Universitaria
+                                </div>   
+                            </div>
+                        </fieldset>
+                        <fieldset id="themes_fields">                    
+                            <div class="checkbox">
+                                <input type="checkbox" id="themes_fields_check"  checked="true"> Temáticas
+                            <div>
+                            <div hidden>
+                                <div class="checkbox">
+                                    <input type="checkbox" name="themes_fields[]" id="tematicas_individual" value="tematicas_individual"  checked="true"> Temáticas Individuales
+                                </div>
+                                <div class="checkbox">
+                                    <input type="checkbox" name="themes_fields[]" id="tematicas_familiar" value="tematicas_familiar"  checked="checked"> Temáticas Familiares
+                                </div>
+                                <div class="checkbox">
+                                    <input type="checkbox" name="themes_fields[]" id="tematicas_academico" value="tematicas_academico"  checked="checked"> Temáticas Académicas
+                                </div>
+                                <div class="checkbox">
+                                    <input type="checkbox" name="themes_fields[]" id="tematicas_economico" value="tematicas_economico"  checked="checked"> Temáticas Económicas
+                                </div>
+
+                            </div>
+                        </fieldset>
+                    </fieldset>
+                </div>                           
+            </div>
+                <div class="row">                                                     
+                    <div class="col-sm-12">
+                        <div class="col-sm-2 col-sm-offset-5">
+                            <div class="form-group">
+                                <button id="btn-generar-reporte" type="submit" class="btn btn-default">Generar</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="form-group col-xs-6 col-sm-6 col-md-6 col-lg-6">
-                    <label for="">Fecha de finalización</label>
-                    <input type="date" name="" id="end_date" class="form-control ajuste_fecha">
+                <div class="row">
+                    <div id="progress_group" class="form-group" style="display:none;">
+                        <hr>
+                        <!--<span><strong>Progreso:</strong></span>-->                  
+                        <div class="col-sm-6 col-md-6">
+                        <h3>Descargando datos:</h3>
+                        <div id="progress-download" class="progress">
+                            <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width:0%">
+                            0%
+                            </div>
+                        </div>
+                        </div>
+                        <div class="col-sm-6 col-md-6">
+                        <h3>Generando CSV:</h3>
+                        <div id="progress-custom" class="progress">
+                            <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width:0%">
+                            0%
+                            </div>
+
+                        </div>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <button id="btn-generar-reporte" type="submit" class="btn btn-default">Generar</button>
-                </div>
-                <div>
-                    <!--<table id="dphpform_datatable"></table>-->
-                </div>
-                <div id="progress_group" class="form-group" style="display:none;">
-                    <hr>
+                <div class="row">
                     <div id="message"></div><br>
-                    <span><strong>Progreso:</strong></span>
-                    <h3>Descargando datos:</h3>
-                    <div id="progress-download" class="progress">
-                        <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width:0%">
-                          0%
-                        </div>
-                    </div>
-                    <h3>Generando CSV:</h3>
-                    <div id="progress-custom" class="progress">
-                        <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width:0%">
-                          0%
-                        </div>
-                    </div>
                 </div>
+                <div class="dataTables_scrollBody" style="position: relative; overflow: auto; width: 100%;">
+
+                    <div>                    
+                        <table id="dphpform_datatable" class="table"
+                        cellspacing="0" width="100%"><thead> </thead></table>
+                    </div>
+                </div>                
             </div>
         </div>
     </div>
