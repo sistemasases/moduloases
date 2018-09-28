@@ -4,7 +4,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     global $DB;
     $dbman = $DB->get_manager();
     $result = true;
-    if ($oldversion < 2018083110300 ) {
+    if ($oldversion < 2018092710500 ) {
     //     // ************************************************************************************************************
     //     // Actualización que crea la tabla para los campos extendidos de usuario (Tabla: {talentospilos_user_extended})
     //     // Versión: 2018010911179
@@ -1332,25 +1332,25 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
         // // Launch add key tipo_doc_fk.
         // $dbman->add_key($table, $key);
 
-        $table = new xmldb_table('talentospilos_alertas_academ');
+        //$table = new xmldb_table('talentospilos_alertas_academ');
         // Conditionally launch drop table for talentospilos_alertas_academ.
-    if ($dbman->table_exists($table)) {
-        $dbman->drop_table($table);
-    }
+    // if ($dbman->table_exists($table)) {
+    //     $dbman->drop_table($table);
+    // }
     // Adding fields to table talentospilos_alertas_academ.
-    $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
-    $table->add_field('id_estudiante', XMLDB_TYPE_INTEGER, '20', null, null, null, null);
-    $table->add_field('id_item', XMLDB_TYPE_INTEGER, '20', null, null, null, null);
-    $table->add_field('nota', XMLDB_TYPE_FLOAT, '20', null, null, null, null);
-    $table->add_field('id_user_registra', XMLDB_TYPE_INTEGER, '20', null, null, null, null);
-    $table->add_field('fecha', XMLDB_TYPE_INTEGER, '20', null, null, null, null);
+    // $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+    // $table->add_field('id_estudiante', XMLDB_TYPE_INTEGER, '20', null, null, null, null);
+    // $table->add_field('id_item', XMLDB_TYPE_INTEGER, '20', null, null, null, null);
+    // $table->add_field('nota', XMLDB_TYPE_FLOAT, '20', null, null, null, null);
+    // $table->add_field('id_user_registra', XMLDB_TYPE_INTEGER, '20', null, null, null, null);
+    // $table->add_field('fecha', XMLDB_TYPE_INTEGER, '20', null, null, null, null);
      // Adding keys to table talentospilos_alertas_academ.
-    $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
-    $table->add_key('unique_key', XMLDB_KEY_UNIQUE, array('id_item', 'id_estudiante'));
+    // $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+    // $table->add_key('unique_key', XMLDB_KEY_UNIQUE, array('id_item', 'id_estudiante'));
      // Conditionally launch create table for talentospilos_alertas_academ.
-    if (!$dbman->table_exists($table)) {
-        $dbman->create_table($table);
-    }
+    // if (!$dbman->table_exists($table)) {
+    //     $dbman->create_table($table);
+    // }
 
 
 
@@ -1361,23 +1361,23 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
 
 
         // Define table talentospilos_superadmin to be created.
-        $table = new xmldb_table('talentospilos_superadmin');
+        //$table = new xmldb_table('talentospilos_superadmin');
 
         // Adding fields to table talentospilos_superadmin.
-        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
-        $table->add_field('id_usuario', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
-        $table->add_field('fecha_registro', XMLDB_TYPE_INTEGER, '20', null, XMLDB_NOTNULL, null, null);
-        $table->add_field('fecha_ultima_modificacion', XMLDB_TYPE_INTEGER, '20', null, null, null, null);
-        $table->add_field('estado', XMLDB_TYPE_INTEGER, '2', null, null, null, '1');
+        //$table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        //$table->add_field('id_usuario', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        //$table->add_field('fecha_registro', XMLDB_TYPE_INTEGER, '20', null, XMLDB_NOTNULL, null, null);
+        //$table->add_field('fecha_ultima_modificacion', XMLDB_TYPE_INTEGER, '20', null, null, null, null);
+        //$table->add_field('estado', XMLDB_TYPE_INTEGER, '2', null, null, null, '1');
 
         // Adding keys to table talentospilos_superadmin.
-        $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
-        $table->add_key('fk_id_usuario', XMLDB_KEY_FOREIGN, array('id_usuario'), 'user', array('id'));
+        //$table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+        //$table->add_key('fk_id_usuario', XMLDB_KEY_FOREIGN, array('id_usuario'), 'user', array('id'));
 
         // Conditionally launch create table for talentospilos_superadmin.
-        if (!$dbman->table_exists($table)) {
-            $dbman->create_table($table);
-        }
+        //if (!$dbman->table_exists($table)) {
+        //    $dbman->create_table($table);
+        //}
 
 
      // ************************************************************************************************************
@@ -1385,7 +1385,56 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     // Se crea tabla de logs de alertas academicas
     // Versión en la que se incluye: GIT XXX, Moodle: 2018080609050
 
-        upgrade_block_savepoint(true, 2018083110300 , 'ases');
+
+    // ************************************************************************************************************
+    // Actualización:
+    // Se crea tabla de histórico estados ICETEX
+    // Versión en la que se incluye: GIT XXX, Moodle: 
+
+        // Define table talentospilos_hist_est_ice to be created.
+        // $table = new xmldb_table('talentospilos_hist_est_ice');
+
+        // Adding fields to table talentospilos_hist_est_ice.
+        // $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        // $table->add_field('id_estudiante', XMLDB_TYPE_INTEGER, '20', null, XMLDB_NOTNULL, null, null);
+        // $table->add_field('id_estado_icetex', XMLDB_TYPE_INTEGER, '20', null, XMLDB_NOTNULL, null, null);
+        // $table->add_field('id_semestre', XMLDB_TYPE_INTEGER, '20', null, XMLDB_NOTNULL, null, null);
+
+        // Adding keys to table talentospilos_hist_est_ice.
+        //$table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+
+        // Conditionally launch create table for talentospilos_hist_est_ice.
+        //if (!$dbman->table_exists($table)) {
+        //    $dbman->create_table($table);
+        //}
+
+    //Actualización: 
+    //Se borra tabla talentospilos_hist_est_ice
+
+        // Define table talentospilos_hist_est_ice to be created.
+        $table = new xmldb_table('talentospilos_hist_est_ice');
+
+        if ($dbman->table_exists($table)) {
+                $dbman->drop_table($table);
+            }       
+
+        // Adding fields to table talentospilos_hist_est_ice.
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        $table->add_field('id_estudiante', XMLDB_TYPE_INTEGER, '20', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('id_semestre', XMLDB_TYPE_INTEGER, '20', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('id_estado_icetex', XMLDB_TYPE_INTEGER, '20', null, XMLDB_NOTNULL, null, null);
+
+        // Adding keys to table talentospilos_hist_est_ice.
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+        $table->add_key('uk_hist_est_ice', XMLDB_KEY_UNIQUE, array('id_estudiante', 'id_semestre'));
+
+        // Conditionally launch create table for talentospilos_hist_est_ice.
+        if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
+        }
+    
+
+        upgrade_block_savepoint(true, 2018092710500 , 'ases');
     
         return $result;
 

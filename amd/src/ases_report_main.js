@@ -278,4 +278,4 @@ define(['jquery',
             }
             return 0;
         }
-    })
+    });
