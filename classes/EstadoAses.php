@@ -1,7 +1,7 @@
 <?php
 require_once(__DIR__.'/DAO/IBaseDAO.php');
 require_once(__DIR__.'/DAO/BaseDAO.php');
-class EstadoAses extends BaseDAO implements IBaseDAO {
+class EstadoAses extends BaseDAO {
     public $id;
     public $descripcion;
     public $nombre;
@@ -9,8 +9,9 @@ class EstadoAses extends BaseDAO implements IBaseDAO {
     public static function get_table_name(): string {
         return 'talentospilos_estados_ases';
     }
+    public function format() {
 
-    
+    }
     /**
      * Obtener los estados ASES con una descripcion legible
      * @return array Array donde las llaves son los id de los estados ASES y el valor es el nombre de el estado

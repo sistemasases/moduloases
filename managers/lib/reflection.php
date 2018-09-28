@@ -7,6 +7,7 @@ namespace reflection;
  * @param string|Class $class_name
  * @param object $sourceObject
  * @return object
+ * @throws \ErrorException if the properties of the instance and std object are distinct
  */
 function __cast($class_name_or_class, $sourceObject)
 {
@@ -69,6 +70,7 @@ function assign_properties_to($stdObjectOrArrayFrom, $instanceTo) {
  * Return object or class properties in array
  * @param stdObject|string Object or class  name
  * @return array Array of string than contains the property names
+ * @throws \ErrorException if the argument passed is class name and this does not exist
  */
 function get_properties($stdObj_or_class){
     if(is_string($stdObj_or_class)){
@@ -88,6 +90,7 @@ function get_properties($stdObj_or_class){
  * @param stdObject | classInstance $obj Object to validate
  * @param string | Class Class to constrastand the $obj
  * @return bool If the stdObj have the same properties than the class (without taking into account accessibility) return true, false otherwise
+ * @throws \ErrorException if the argument passed is class name and this does not exist
  */ 
 function valid_std_object($obj, $class_name_or_class) {
     if(!class_exists($class_name_or_class)) {
@@ -103,7 +106,8 @@ function valid_std_object($obj, $class_name_or_class) {
  * @param stdObj | array $stdObj_or_array Source object
  * @param string | class Class to make instance based in stdObj
  * @return class Instance of object based in the properties of stdObj or array of type class
- */ 
+ * @throws \ErrorException if the argument passed is class name and this does not exist
+ */
 function make_from_std_object($stdObj_or_array, $class) {
  
     if(!class_exists($class)) {
@@ -117,7 +121,7 @@ function make_from_std_object($stdObj_or_array, $class) {
    
     if (!\reflection\valid_std_object($stdObj_or_array, $class)) {
         
-        throw new \Exception("El nuevo objeto no tiene las mismas propiedades que la clase '$class'");
+        throw new \Exception("The new object does not have the same properties than the class '$class'");
     } else {
         
         return \reflection\__cast($class, $stdObj_or_array);

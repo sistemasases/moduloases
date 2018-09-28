@@ -1,8 +1,7 @@
 <?php
-require_once(__DIR__.'/DAO/IBaseDAO.php');
 require_once(__DIR__.'/DAO/BaseDAO.php');
 
-class Discapacidad extends BaseDAO implements IBaseDAO {
+class Discapacidad extends BaseDAO {
     const ID ='id';
     const CODIGO_MEN = 'codigo_men';
     const NOMBRE = 'nombre';

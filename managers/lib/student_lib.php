@@ -35,6 +35,7 @@ require_once $CFG->dirroot.'/blocks/ases/managers/lib/lib.php';
  * @see get_user_moodle($id)
  * @param $id --> moodle user id
  * @return object
+ * @throws dml_exception A DML specific exception is thrown for any errors.
  */
 function get_user_moodle($id)
 {

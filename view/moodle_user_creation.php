@@ -16,9 +16,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Paso a paso para la creacion de un usuario ases, la cual esta echa para ser una 
- * secuencia de acciones las cuales estan orientadas a validar los datos 
- * y por ultimo insertar el usuario en la base de datos
+ * Creación de usuarios de moodle desde el bloque ases
  *
  * @author     Luis Gerardo Manrique Cardona
  * @package    block_ases
@@ -27,7 +25,10 @@
  */
 
 // Standard GPL and phpdocs
+error_reporting(-1);
+ini_set('display_errors', 'On');
 require_once(__DIR__ . '/../../../config.php');
+require_once($CFG->libdir.'/adminlib.php');
 require_once('../managers/ases_report/asesreport_lib.php');
 require_once('../managers/permissions_management/permissions_lib.php');
 require_once("../managers/lib/cohort_lib.php");
@@ -41,6 +42,9 @@ require_once('../managers/menu_options.php');
 require_once($CFG->dirroot.'/user/editadvanced_form.php');
 include('../lib.php');
 global $PAGE;
+
+include("../classes/output/ases_user_creation_page.php");
+include("../classes/output/renderer.php");
 
 // Set up the page.
 $pagetitle = 'Creacion de usuarios Moodle';
@@ -63,10 +67,19 @@ if(!consult_instance($blockid)){
 require_login($courseid, false);
 
 
-
+/* */
 $contextcourse = context_course::instance($courseid);
 $contextblock =  context_block::instance($blockid);
-/** */
+
+
+/*
+Start search moodle user step
+*/
+
+/*
+User standard
+
+*/
 $user = new stdClass();
 $user->id = -1;
 $user->auth = 'manual';
@@ -74,7 +87,7 @@ $user->confirmed = 1;
 $user->deleted = 0;
 $user->timezone = '99';
 $user->username = $user_name;
-/** */
+
 $usercreated = false;
 
 $PAGE->requires->css('/blocks/ases/style/ases_report_style.css', true);

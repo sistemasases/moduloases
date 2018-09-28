@@ -1,7 +1,6 @@
 <?php
 require_once(__DIR__.'/DAO/BaseDAO.php');
-require_once(__DIR__.'/DAO/IBaseDAO.php');
-class Municipio extends BaseDAO implements IBaseDAO {
+class Municipio extends BaseDAO  {
     public $id;
     public $codigodivipola;
     public $cod_depto;
@@ -11,6 +10,7 @@ class Municipio extends BaseDAO implements IBaseDAO {
     /**
      * Retorna el municipio por defecto
      * @return Municipio Municipio por defecto
+     * @throws
      */
     public static function get_municipio_por_defecto( ) {
         global $DB;

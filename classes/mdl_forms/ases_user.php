@@ -10,7 +10,7 @@ require_once(__DIR__.'/../AsesUser.php');
 require_once(__DIR__.'/../Municipio.php');
 require_once(__DIR__.'/../Discapacidad.php');
 require_once(__DIR__.'/../Estamento.php');
-class ases_user_creation extends moodleform {
+class ases_user_ extends moodleform {
     //Add elements to form
     public function definition() {
         global $CFG;

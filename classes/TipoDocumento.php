@@ -1,8 +1,8 @@
 <?php
 require_once(__DIR__.'/traits/from_std_object_or_array.php');
-require_once(__DIR__.'/DAO/IBaseDAO.php');
 require_once(__DIR__.'/DAO/BaseDAO.php');
-class TipoDocumento extends BaseDAO implements IBaseDAO {
+class TipoDocumento extends BaseDAO  {
+    const TABLE_NAME = 'talentospilos_tipo_documento';
     public $id;
     public $nombre;
     public $descripcion;
@@ -10,7 +10,7 @@ class TipoDocumento extends BaseDAO implements IBaseDAO {
      * See BaseDAO::get_table_name
      */
     public static function get_table_name(): string {
-        return 'talentospilos_tipo_documento';
+        return TipoDocumento::TABLE_NAME;
     }
     /**
      * Obtener los tipos de documento con una descripcion legible
