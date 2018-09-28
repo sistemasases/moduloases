@@ -27,28 +27,107 @@ defined('MOODLE_INTERNAL') || die;
 
 require_once ('../managers/user_management/user_management_lib.php');
 require_once ('../managers/lib/student_lib.php');
-
-class AsesUser {
+require_once(__DIR__.'/DAO/IBaseDAO.php');
+require_once(__DIR__.'/DAO/BaseDAO.php');
+require_once(__DIR__.'/Estado.php');
+class AsesUser extends BaseDAO implements IBaseDAO {
+    const TIPO_DOCUMENTO = 'tipo_doc';
+    const TIPO_DOCUMENTO_INICIAL = 'tipo_doc_ini';
+    const ID_CIUDAD_INICIAL = 'id_ciudad_ini';
+    const ID_CIUDAD_RESIDENCIA = 'id_ciudad_res';
+    const FECHA_NACIMIENTO = 'fecha_nac';
+    const ID_CIUDAD_NACIMIENTO = 'id_ciudad_nac';
+    const SEXO = 'sexo';
+    const ESTADO = 'estado';
+    const ID_DISCAPACIDAD = 'id_discapacidad';
+    const AYUDA_DISCAPACIDAD = 'ayuda_disc';
+    const ESTADO_ASES = 'estado_ases';
+    const NUMERO_DOCUMENTO = 'num_doc';
+    const NUMERO_DOCUMENTO_INICIAL = 'num_doc_ini';
     public $tipo_doc_ini = -1;
     public $tipo_doc;
     public $num_doc;
+    public $num_doc_ini;
     public $id_ciudad_ini;
     public $id_ciudad_res; 
     public $fecha_nac;
     public $id_ciudad_nac; // see Municipio
     public $sexo; // see Gender
-    public $estado; // see EstadoAses
+    public $estado; 
     public $id_discapacidad;
     public $ayuda_disc;
-    public $estado_ases;
+    public $estado_ases;// see EstadoAses
+    public $dir_ini; //Dirección inicial
+    public $direccion_res; //Dirección residencia
+    public $celular;
+    public $emailpilos;
+    public $acudiente;
+    public $observacion;
+    public $colegio;
+    public $barrio_ini; //Barrio procedencia
+    public $barrio_res; //Barrio residencia
+    public $id;
+    public $tel_acudiente;
+    public $tel_ini; // Telefono procedencia
+    public $tel_res; // Telefono residencia;
+    public $estamento; // Tipo colegio
+    public $grupo;
 
+    public function __construct() {
+        $this->id_discapacidad = Discapacidad::ID_NO_APLICA;
+        $this->dir_ini = BaseDAO::NO_REGISTRA;
+        $this->direccion_res = BaseDAO::NO_REGISTRA;
+        $this->celular = 0;
+        $this->emailpilos = BaseDAO::NO_REGISTRA;
+        $this->acudiente = BaseDAO::NO_REGISTRA;
+        $this->observacion = BaseDAO::NO_REGISTRA;
+        $this->colegio = BaseDAO::NO_REGISTRA;
+        $this->barrio_ini = BaseDAO::NO_REGISTRA;
+        $this->barrio_res = BaseDAO::NO_REGISTRA;
+        $this->tel_acudiente ='';
+        $this->tel_ini = '';
+        $this->tel_res = '';
+        $this->estado = Estado::ACTIVO;
+        $this->estamento = BaseDAO::NO_REGISTRA;
+        $this->grupo = 0;
+    }
     public static function validate_tipo_doc() {
 
     }
-
-    function __construct($id) {
-        $this->id = $id;
+    public static function get_not_null_fields_and_default_in_db(): array {
+        return array (
+            AsesUser::ESTADO,
+            AsesUser::AYUDA_DISCAPACIDAD,
+            AsesUser::ESTADO_ASES
+        );
     }
+    public function format() {
+        return $this;
+    }
+    
+    /**
+     * Check if self document number is taken by another ases user than exist in database
+     * @return bool True if already exists, false otherwise
+     */
+    public function num_doc_already_exist(): bool {
+        return AsesUser::_num_doc_already_exist($this->num_doc);
+    }
+    /**
+     * Check if some document number is taken by another ases user than exist in database
+     * @param string $num_doc Document number 
+     * @return bool True if already exists, false otherwise
+     */
+    public static function _num_doc_already_exist($num_doc) {
+        global $DB;
+        if ($DB->record_exists(AsesUser::get_table_name(), array(AsesUser::NUMERO_DOCUMENTO=>$num_doc ))) {
+            return true;
+        }
+        return false;
+    }
+    public static function get_table_name(): string {
+        return 'talentospilos_usuario';
+    }
+
     /**
      * Return the user profile image URL, if not user profile image exist return empty string.
      * @param int $ases_student_id  Ases student id

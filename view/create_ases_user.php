@@ -11,7 +11,9 @@ $add_ases_user_form = new ases_user_creation();
 
 echo $output->header();
 
-if ($data = $add_ases_user_form->get_data()) {
+if ($add_ases_user_form->is_validated()) {
+    $ases_user = $add_ases_user_form->get_ases_user();
+    $ases_user->save();
 } else {
 }
 $add_ases_user_form->display();

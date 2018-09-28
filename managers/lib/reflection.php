@@ -44,9 +44,13 @@ function __cast($class_name_or_class, $sourceObject)
  * @throws \ErrorException if the properties of the instance and std object are distinct
  */
 function assign_properties_to($stdObjectOrArrayFrom, $instanceTo) {
+    
     $stdObject = (object) $stdObjectOrArrayFrom;
-    if (get_properties($stdObject) != get_properties($instanceTo)) {
-        throw new \ErrorException("Both obejects should be have the exactly the same properties");
+    $class_name_to = get_class($instanceTo);
+
+    $shared_properties = array_intersect(get_properties($stdObject), get_properties($instanceTo));
+    if (!$shared_properties) {
+        throw new \ErrorException("Cannot assign the given object to instance of $class_name_to");
     }
     $sourceReflection = new \ReflectionObject($stdObject);
     $sourceProperties = $sourceReflection->getProperties();
@@ -54,9 +58,12 @@ function assign_properties_to($stdObjectOrArrayFrom, $instanceTo) {
         $sourceProperty->setAccessible(true);
         $name = $sourceProperty->getName();
         $value = $sourceProperty->getValue($stdObject);
-        $instanceTo->$name = $value;
       
+        if (in_array($name, $shared_properties) && $value && $value != '') {
+            $instanceTo->$name = $value;
         }
+      
+    }
 }
 /**
  * Return object or class properties in array

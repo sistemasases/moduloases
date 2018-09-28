@@ -1,19 +1,13 @@
 <?php
-require_once(__DIR__.'/traits/from_std_object_or_array.php');
 require_once(__DIR__.'/DAO/BaseDAO.php');
-class Municipio extends BaseDAO {
-    use from_std_object_or_array;
+require_once(__DIR__.'/DAO/IBaseDAO.php');
+class Municipio extends BaseDAO implements IBaseDAO {
     public $id;
     public $codigodivipola;
     public $cod_depto;
     public $nombre;
-    /**
-     * Retorna los muncipios existentes 
-     * @return array<Municipio> Municipios existentes en el sistema
-     */
-    public static function get_municipios(){
-        return '''';
-    }
+
+    const NO_REGISTRA = 'NO REGISTRA';
     /**
      * Retorna el municipio por defecto
      * @return Municipio Municipio por defecto
@@ -32,12 +26,18 @@ class Municipio extends BaseDAO {
         $municipio->from_std_object_or_array($municipio_db);
         return $municipio;
     }
+    public function format() {
+        return $this;
+    }
+    public static function get_table_name(): string {
+        return 'talentospilos_municipio';
+    }
     /**
      * Obtener los municipios con una descripcion legible
      * @return array Array donde las llaves son los id de los municipios y el valor es el nombre del municipio
      */
-    public static function getOptions() {
-        $municipios = Municipio::get_municipios();
+    public static function get_options() {
+        $municipios = Municipio::get_all();
         $opciones = array();
         foreach($municipios as $municipio) {
             $opciones[$municipio->id] = $municipio->nombre;
