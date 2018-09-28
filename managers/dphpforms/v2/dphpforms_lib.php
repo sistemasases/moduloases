@@ -23,6 +23,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 require_once(dirname(__FILE__). '/../../../../../config.php');
+header('Content-Type: application/json');
 
 $xQuery = new stdClass();
 $xQuery->form = "inasistencia"; // Can be alias(String) or idntifier(Number)
@@ -33,6 +34,8 @@ $xQuery->order = [ "ASC", "DESC" ];
 $xQuery->like  = [["id_estudiante", true], ["id_creado_por", true], ["id_instancia", false]];
 $xQuery->record_status = [ "deleted", "!deleted" ];
 $xQuery->selectedFields = [ "id_creado_por", "id_estudiante" ]; // RecordId and BatabaseRecordDate are selected by default.
+
+print_r( json_encode(dphpformsV2_find_records( $xQuery )) );
 
 /**
  * 
@@ -45,7 +48,11 @@ $xQuery->selectedFields = [ "id_creado_por", "id_estudiante" ]; // RecordId and 
 
     $form = dphpformsV2_get_form_info( $query->form );
     if( $form ){
+        
+        
 
+    }else{
+        return null;
     }
    
  }
