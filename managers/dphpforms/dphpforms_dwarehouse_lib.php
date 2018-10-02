@@ -55,9 +55,9 @@ function get_list_form(){
 
 function get_form_switch_id($id_form){
     global $DB;
-    $form_dwarehouse_array = array();
   //id_usuario_moodle AS id_user, accion AS name_action, datos_previos AS datos_previos, datos_enviados AS datos_enviados, datos_almacenados AS datos_almacenados, 
 //  fecha_hora_registro AS fecha_form
+				
     $sql = "SELECT * FROM {talentospilos_df_dwarehouse} AS dwarehouse WHERE dwarehouse.id = $id_form  ";
 
     $results = $DB->get_records_sql($sql);
@@ -65,7 +65,7 @@ function get_form_switch_id($id_form){
         array_push($form_dwarehouse_array, $record);
     }*/
    
-    return array('result'=>$results);
+    return $results;
 }
 
 /**
