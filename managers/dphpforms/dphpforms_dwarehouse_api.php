@@ -120,8 +120,8 @@
             if( count($_POST['params']) == 1 ){
 
              //Get form data switch id form
-               
-                    $data = get_form_switch_id($_POST['params']);
+
+             $data = get_form_switch_id($_POST['params']);
                     echo json_encode($data);
                     
             }else{     

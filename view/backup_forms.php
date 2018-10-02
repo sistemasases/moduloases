@@ -65,7 +65,6 @@ $data = $actions;
 $data->menu = $menu_option;
 
 
-
 $PAGE->requires->css('/blocks/ases/style/bootstrap.min.css', true);
 $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/dataTables.foundation.css', true);
 $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/dataTables.foundation.min.css', true);
@@ -78,6 +77,7 @@ $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/jquery.dataTables.m
 $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/jquery.dataTables_themeroller.css', true);
 $PAGE->requires->css('/blocks/ases/style/side_menu_style.css', true);
 $PAGE->requires->css('/blocks/ases/style/styles_pilos.css', true);
+$PAGE->requires->css('/blocks/ases/style/creadorFormulario.css', true);
 $PAGE->requires->css('/blocks/ases/js/select2/css/select2.css', true);
 $PAGE->requires->css('/blocks/ases/style/beautify-json.css', true);
 
@@ -85,7 +85,6 @@ $PAGE->requires->css('/blocks/ases/style/beautify-json.css', true);
 $paramReport = new stdClass();
 $paramReport->table = $tableReport;
 $PAGE->requires->js_call_amd('block_ases/dphpforms_backup_forms', 'init');
-
 
 
 $output = $PAGE->get_renderer('block_ases');
