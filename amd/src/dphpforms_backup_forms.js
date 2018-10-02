@@ -72,6 +72,23 @@ define([
                 get_like_cadena_in_column(cadena, columna);
 
             });
+            
+            $('.outside').click(function(){
+                var outside = $(this);
+                swal({
+                    title: 'Confirmación de salida',
+                    text: "",
+                    type: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Salir'
+                  }, function(isConfirm) {
+                    if (isConfirm) {
+                        $(outside).parent('.mymodal').fadeOut(300);
+                        console.log( $(this).parent('.mymodal') );
+                    }
+                  });
+                
+            });
 
             (function ($) {
                 $.fn.beautifyJSON = function (options) {
@@ -394,7 +411,15 @@ define([
                     async: true,
                     success: function (msg) {
                         //msg.datos_previos = JSON.stringify(msg.datos_previos);
-                        console.log(msg);
+                       
+                        // console.log(msg[id_form].datos_previos);
+                        //Items of JSON are encode
+                        if(msg[id_form].datos_previos != "" ){
+                        msg[id_form].datos_previos = JSON.parse(msg[id_form].datos_previos);}
+                        if( msg[id_form].datos_enviados != "" ){
+                        msg[id_form].datos_enviados = JSON.parse(msg[id_form].datos_enviados);}
+                        if( msg[id_form].datos_almacenados != ""){
+                        msg[id_form].datos_almacenados = JSON.parse(msg[id_form].datos_almacenados);}
                         create_beautifyJSON(msg);
                     },
                     failure: function (msg) { }
@@ -404,8 +429,9 @@ define([
             function create_beautifyJSON(param) {
                 //Show beautifyJSON in modal
                 $("#div_JSONform").empty();
-                //var json = JSON.stringify(param);
                var json = JSON.stringify(param);
+               //json[0].
+              //var json = JSON.parse(param);
                 $("#div_JSONform").append(json);
                 $('#div_JSONform').beautifyJSON({
                     type: "flexible",
