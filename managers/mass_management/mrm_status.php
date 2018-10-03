@@ -165,18 +165,15 @@ if (isset($_FILES['file']) || isset($_POST['idinstancia'])) {
             } else {
                 throw new MyException('el campo "estado_programa"  es obligatorio');
             }
-
+            
+            $has_tracking_status = false;
             //validate tracking_status
             if ($associativeTitles['tracking_status'] !== null) {
                 $tracking_status = $data[$associativeTitles['tracking_status']];
 
-                if ($tracking_status != 1 && $tracking_status != 0) {
-                    $isValidRow = false;
-                    array_push($detail_erros, [$line_count, $lc_wrongFile, ($associativeTitles['tracking_status'] + 1), 'tracking_status', 'Tracking_status solo puede ser 1 o 0']);
+                if ($tracking_status != "" && $tracking_status != 'undefined') {
+                    $has_tracking_status = true;
                 }
-
-            } else {
-                throw new MyException('el campo "tracking_status"  es obligatorio');
             }
 
             //validate motivo_ases
@@ -231,10 +228,18 @@ if (isset($_FILES['file']) || isset($_POST['idinstancia'])) {
                 continue;
             } else {
 
-                $result = update_status_student($id_user_extended, $id_talentos, $id_estado_ases, $id_estado_icetex, $id_estado_programa, $tracking_status, $id_motivo_ases, $id_motivo_icetex);
+                $result = update_status_student($id_user_extended, $id_talentos, $id_estado_ases, $id_estado_icetex, $id_estado_programa, $id_motivo_ases, $id_motivo_icetex);
 
                 if ($result) {
+                    $id_update = $result;
                     array_push($success_rows, $data);
+                    if($has_tracking_status){
+                        if(!update_tracking_status($id_update, $tracking_status)){
+                            array_push($detail_erros, [$line_count, $lc_wrongFile, 'Error al registrar tracking_status', 'Error Servidor', 'Error del server registrando el tracking status']);
+                            array_push($wrong_rows, $data);
+                            $lc_wrongFile++;
+                        }
+                    }
                 } else {
                     array_push($detail_erros, [$line_count, $lc_wrongFile, 'Error actualizando estado', 'Error asignando rol', 'Error del server asignando rol']);
                     array_push($wrong_rows, $data);
@@ -345,16 +350,15 @@ function getAssociativeTitles($array)
 /**
  * Update all student's status
  *
- * @see update_status_student($id_moodle, $id_talentos, $id_estado_ases, $id_estado_icetex, $id_estado_programa, $tracking_status)
+ * @see update_status_student($id_moodle, $id_talentos, $id_estado_ases, $id_estado_icetex, $id_estado_programa)
  * @param $id_moodle --> id of {user} table
  * @param $id_talentos --> id of {talentospilos_usuario} table
  * @param $id_estado_ases --> id of {talentospilos_estados_ases} table
  * @param $id_estado_icetex --> id of {talentospilos_estados_icetex} table
  * @param $id_estado_programa --> program_status of {talentospilos_user_extended}
- * @param $tracking_status --> tracking_status of {talentospilos_user_extended}
  * @return boolean
  */
-function update_status_student($id_user_extended, $id_talentos, $id_estado_ases, $id_estado_icetex, $id_estado_programa, $tracking_status, $id_motivo_ases, $id_motivo_icetex)
+function update_status_student($id_user_extended, $id_talentos, $id_estado_ases, $id_estado_icetex, $id_estado_programa, $id_motivo_ases, $id_motivo_icetex)
 {
     global $DB;
 
@@ -362,7 +366,6 @@ function update_status_student($id_user_extended, $id_talentos, $id_estado_ases,
     $object_user_extended_update = new stdClass;
     $object_user_extended_update->id = $id_user_extended;
     $object_user_extended_update->program_status = $id_estado_programa;
-    $object_user_extended_update->tracking_status = $tracking_status;
 
     $update = $DB->update_record('talentospilos_user_extended', $object_user_extended_update);
 
@@ -429,4 +432,20 @@ function update_status_student($id_user_extended, $id_talentos, $id_estado_ases,
     }
 
     return true;
+}
+
+function update_tracking_status($id_update_record, $track_status){
+    global $DB;
+
+    $object_user_extended_update = new stdClass;
+    $object_user_extended_update->id = $id_update_record;
+    $object_user_extended_update->tracking_status = $track_status;
+
+    $result = $DB->update_record('talentospilos_user_extended', $object_user_extended_update);
+
+    if (!$result){
+        return false;
+    } else {
+        return true;
+    }
 }
