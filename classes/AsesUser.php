@@ -25,14 +25,180 @@
  */
 defined('MOODLE_INTERNAL') || die;
 
-require_once ('../managers/user_management/user_management_lib.php');
-require_once ('../managers/lib/student_lib.php');
 
-class AsesUser {
-    public $id = -1;
-    function __construct($id) {
-        $this->id = $id;
+require_once(__DIR__.'/DAO/BaseDAO.php');
+require_once(__DIR__.'/Estado.php');
+class AsesUser extends BaseDAO  {
+    const TIPO_DOCUMENTO = 'tipo_doc';
+    const TIPO_DOCUMENTO_INICIAL = 'tipo_doc_ini';
+    const ID_CIUDAD_INICIAL = 'id_ciudad_ini';
+    const ID_CIUDAD_RESIDENCIA = 'id_ciudad_res';
+    const FECHA_NACIMIENTO = 'fecha_nac';
+    const ID_CIUDAD_NACIMIENTO = 'id_ciudad_nac';
+    const SEXO = 'sexo';
+    const ESTADO = 'estado';
+    const ID_DISCAPACIDAD = 'id_discapacidad';
+    const AYUDA_DISCAPACIDAD = 'ayuda_disc';
+    const ESTADO_ASES = 'estado_ases';
+    const NUMERO_DOCUMENTO = 'num_doc';
+    const NUMERO_DOCUMENTO_INICIAL = 'num_doc_ini';
+    public $tipo_doc_ini = -1;
+    public $tipo_doc;
+    public $num_doc;
+    public $num_doc_ini;
+    public $id_ciudad_ini;
+    public $id_ciudad_res; 
+    public $fecha_nac;
+    public $id_ciudad_nac; // see Municipio
+    public $sexo; // see Gender
+    public $estado; 
+    public $id_discapacidad;
+    public $ayuda_disc;
+    public $estado_ases;// see EstadoAses
+    public $dir_ini; //Dirección inicial
+    public $direccion_res; //Dirección residencia
+    public $celular;
+    public $emailpilos;
+    public $acudiente;
+    public $observacion;
+    public $colegio;
+    public $barrio_ini; //Barrio procedencia
+    public $barrio_res; //Barrio residencia
+    public $id;
+    public $tel_acudiente;
+    public $tel_ini; // Telefono procedencia
+    public $tel_res; // Telefono residencia;
+    public $estamento; // Tipo colegio
+    public $grupo;
+
+    public function __construct() {
+        $this->id_discapacidad = Discapacidad::ID_NO_APLICA;
+        $this->dir_ini = BaseDAO::NO_REGISTRA;
+        $this->direccion_res = BaseDAO::NO_REGISTRA;
+        $this->celular = 0;
+        $this->emailpilos = BaseDAO::NO_REGISTRA;
+        $this->acudiente = BaseDAO::NO_REGISTRA;
+        $this->observacion = BaseDAO::NO_REGISTRA;
+        $this->colegio = BaseDAO::NO_REGISTRA;
+        $this->barrio_ini = BaseDAO::NO_REGISTRA;
+        $this->barrio_res = BaseDAO::NO_REGISTRA;
+        $this->tel_acudiente ='';
+        $this->tel_ini = '';
+        $this->tel_res = '';
+        $this->estado = Estado::ACTIVO;
+        $this->estamento = BaseDAO::NO_REGISTRA;
+        $this->grupo = 0;
     }
+
+    /**
+     * Return all table columns of AsesUser table
+     * @return array
+     */
+    public static function get_table_columns() {
+        return array(
+            AsesUser::AYUDA_DISCAPACIDAD,
+            AsesUser::ESTADO,
+            AsesUser::ESTADO_ASES,
+            AsesUser::FECHA_NACIMIENTO,
+            AsesUser::ID_CIUDAD_INICIAL,
+            AsesUser::ID_CIUDAD_NACIMIENTO,
+            AsesUser::SEXO,
+            AsesUser::TIPO_DOCUMENTO_INICIAL,
+            AsesUser::NUMERO_DOCUMENTO_INICIAL,
+            AsesUser::ID_DISCAPACIDAD,
+            AsesUser::ID_CIUDAD_RESIDENCIA
+        );
+    }
+    /**
+     * Obtener los usuarios ASES, sus id y sus nombres en un array
+     * @return array Array donde las llaves son los id de los usuarios ASES y el valor es el nombre del usuario
+     */
+    public static function get_options(): array {
+        global $DB;
+        $options = array();
+        $ases_users_with_names = AsesUser::get_ases_users_with_names();
+        foreach($ases_users_with_names as $ases_user) {
+            $user_name = $ases_user->firstname.' '.$ases_user->lastname;
+            $options[$ases_user->id] =  $user_name;
+        }
+        return $options;
+    }
+    /**
+     * Return ases user with names, have the same properties than AsesUser,
+     * with two aditional properties: firstname and lastname
+     * @returns array Array with ASES users and names
+     */
+    public static function get_ases_users_with_names() {
+        global $DB;
+        $sql =
+            "
+            SELECT tp_u.id, mdl_user.firstname, mdl_user.lastname FROM {talentospilos_usuario} tp_u, {talentospilos_user_extended} tp_uext, {user} mdl_user
+            WHERE
+              mdl_user.id = tp_uext.id_moodle_user
+            AND
+              tp_uext.id_ases_user = tp_u.id    
+        ";
+        return $DB->get_records_sql($sql);
+    }
+    /**
+     * Return Moodle user related to this ases user
+     * @return object Instance of moodle user
+     * @throws dml_exception A DML specific exception is thrown for any errors.
+     * @see https://docs.moodle.org/dev/Database_schema_introduction, mdl_user table
+     */
+    public function get_moodle_user() {
+        $user_extended = $this->get_user_extended();
+        return get_user_moodle($user_extended->id_moodle_user);
+    }
+
+    /**
+     * Return ases user extended related tho this ases user
+     * @return AsesUserExtended
+     * @throws dml_exception
+     */
+    public function get_user_extended(): AsesUserExtended {
+        global $DB;
+        $user_extended = new AsesUserExtended();
+        $user_extended->make_from($DB->get_record(AsesUserExtended::TABLE_NAME, array(AsesUserExtended::ID_ASES_USER=>$this->id)));
+        return $user_extended;
+    }
+    public static function validate_tipo_doc() {
+
+    }
+    public static function get_not_null_fields_and_default_in_db(): array {
+        return array (
+            AsesUser::ESTADO,
+            AsesUser::AYUDA_DISCAPACIDAD,
+            AsesUser::ESTADO_ASES
+        );
+    }
+    public function format() {
+        return $this;
+    }
+    
+    /**
+     * Check if self document number is taken by another ases user than exist in database
+     * @return bool True if already exists, false otherwise
+     */
+    public function num_doc_already_exist(): bool {
+        return AsesUser::exists(array(AsesUser::NUMERO_DOCUMENTO=>$this->num_doc));
+    }
+    /**
+     * Check if some document number is taken by another ases user than exist in database
+     * @param string $num_doc Document number 
+     * @return bool True if already exists, false otherwise
+     */
+    public static function _num_doc_already_exist($num_doc) {
+        global $DB;
+        if ($DB->record_exists(AsesUser::get_table_name(), array(AsesUser::NUMERO_DOCUMENTO=>$num_doc ))) {
+            return true;
+        }
+        return false;
+    }
+    public static function get_table_name(): string {
+        return 'talentospilos_usuario';
+    }
+
     /**
      * Return the user profile image URL, if not user profile image exist return empty string.
      * @param int $ases_student_id  Ases student id

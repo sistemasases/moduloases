@@ -25,7 +25,7 @@
 require_once(__DIR__ . '/../../../config.php');
 require_once("$CFG->libdir/formslib.php");
 require_once('../managers/validate_profile_action.php');
-require_once("../classes/mdl_forms/UserImageForm.php");
+require_once("../classes/mdl_forms/user_image_form.php");
 
 $courseid  = required_param('courseid', PARAM_INT);
 require_login($courseid, false);
@@ -54,7 +54,7 @@ $url           = new moodle_url("/blocks/ases/view/edit_user_image.php", array(
     'url_return' => $url_return
 ));
 /** Creando el formulario  */
-$user_image_edit_form = new user_image_edit_form($url);
+$user_image_edit_form = new user_image_form($url);
 
 //Form processing and displaying is done here
 if ($user_image_edit_form->is_cancelled()) {
