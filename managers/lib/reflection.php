@@ -50,6 +50,7 @@ function assign_properties_to($stdObjectOrArrayFrom, $instanceTo) {
     $class_name_to = get_class($instanceTo);
 
     $shared_properties = array_intersect(get_properties($stdObject), get_properties($instanceTo));
+
     if (!$shared_properties) {
         throw new \ErrorException("Cannot assign the given object to instance of $class_name_to");
     }
@@ -60,7 +61,7 @@ function assign_properties_to($stdObjectOrArrayFrom, $instanceTo) {
         $name = $sourceProperty->getName();
         $value = $sourceProperty->getValue($stdObject);
       
-        if (in_array($name, $shared_properties) && $value && $value != '') {
+        if (in_array($name, $shared_properties) && $value != '') {
             $instanceTo->$name = $value;
         }
       

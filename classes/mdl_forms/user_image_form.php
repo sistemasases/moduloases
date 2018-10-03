@@ -2,7 +2,7 @@
 defined('MOODLE_INTERNAL') || die;
 require_once($CFG->libdir.'/formslib.php');
 
-class user_image_edit_form extends moodleform {
+class user_image_form extends moodleform {
     //Add elements to form
     public function definition() {
         global $CFG;

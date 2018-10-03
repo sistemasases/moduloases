@@ -23,7 +23,7 @@ abstract class BaseDAO {
      * @param object $object Initial object to be proccesed
      * @return object Object without the undefined properties
      */
-    private function __delete_not_null_fields_than_have_predefined_values_in_db($CLASS, $object): stdClass {
+    private function __delete_not_null_fields_than_have_predefined_values_in_db($CLASS, $object) {
         if(!method_exists( $CLASS, 'get_not_null_fields_and_default_in_db')) {
             return $object;
         }
@@ -38,8 +38,9 @@ abstract class BaseDAO {
     }
     /**
      * Assign self properties from std object than can have less properties than $this object
-     * but cannot have aditional properties than $this
-     * @param mixed $std_object Source object 
+     * Only the shared properties between objects are assigned, the aditional properties are skipped
+     * @param mixed $std_object Source object
+     * @throws \ErrorException If 0 properties are shared between objects
      */
     public function make_from($std_object) {
         \reflection\assign_properties_to($std_object, $this);
@@ -58,6 +59,35 @@ abstract class BaseDAO {
         return $objects;
     }
 
+    /**
+     * Return object instances from database than satisfy the conditions given
+     * @param $conditions Array key-value than gets the conditions for get the objects
+     * @example $conditions =  array('username'=> 'Camilo', 'lastname'=> 'Cifuentes')
+     * @example $conditions = array(AsesUser::USER_NAME => 'Camilo', AsesUser::LAST_NAME => 'Cifuentes')
+     * @return array Object instance if exists in database, empty array if does not exist
+     * @throws dml_exception
+     *
+     */
+    public static function get_by($conditions) {
+        global $DB;
+        $CLASS = get_called_class();
+        return $CLASS::make_objects_from_std_objects_or_arrays($DB->get_records($CLASS::get_table_name(), $conditions));
+    }
+
+    /**
+     * Check if object exists in database based in an array of a  given conditions
+     * @param $conditions Array key-value than gets the conditions for get the objects
+     * @example $conditions =  array('username'=> 'Camilo', 'lastname'=> 'Cifuentes')
+     * @example $conditions = array(AsesUser::USER_NAME => 'Camilo', AsesUser::LAST_NAME => 'Cifuentes')
+     * @return bool
+     * @throws dml_exception
+     */
+    public static function exists($conditions) {
+        global $DB;
+        $CLASS = get_called_class();
+        $table_name = $CLASS::get_table_name();
+        return $DB->record_exists($table_name, $conditions);
+    }
     /**
      * Return simple string than represents the table name without prefix
      * @example return 'talentospilos_usuario';

@@ -1,6 +1,11 @@
 <?php
 require_once(__DIR__.'/DAO/BaseDAO.php');
 
+/**
+ * Class AsesUserExtended, Relation between moodle user and Ases user, and save the tracking and program status
+ * of the student
+ * @see database table talentospilos_user_extended
+ */
 class AsesUserExtended extends BaseDAO {
     const TABLE_NAME = 'talentospilos_user_extended';
     const ID_ASES_USER = 'id_ases_user';

@@ -37,7 +37,7 @@ require_once('../managers/ases_report/asesreport_lib.php');
 require_once('../managers/permissions_management/permissions_lib.php');
 require_once("../managers/lib/cohort_lib.php");
 require_once("../managers/lib/student_lib.php");
-require_once('../classes/mdl_forms/AddUserToCohort.php');
+require_once('../classes/mdl_forms/add_user_to_cohort.php');
 
 
 require_once('../managers/validate_profile_action.php');

@@ -36,10 +36,11 @@ require_once(__DIR__ . '/../classes/mdl_forms/ases_user_extended.php');
 $output = $PAGE->get_renderer('block_ases');
 echo $output->header();
 
-echo var_dump(AsesUserExtended::check_if_exists_by_ases_user_id(2));
 
 $user_extended_form = new ases_user_extended();
 if($data = $user_extended_form->get_data()) {
+    $ases_user_extended = $user_extended_form->get_ases_user_extended();
+    $ases_user_extended->save();
 }
 $user_extended_form->display();
 echo $output->footer();
