@@ -1,7 +1,7 @@
 <?php
 require_once(__DIR__.'/../traits/from_std_object_or_array.php');
 require_once(__DIR__.'/../../managers/lib/reflection.php');
-use reflection;
+//B
 abstract class BaseDAO {
     use from_std_object_or_array;
     const NO_REGISTRA = 'NO REGISTRA';
