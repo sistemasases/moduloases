@@ -181,7 +181,7 @@ class AsesUser extends BaseDAO  {
      * @return bool True if already exists, false otherwise
      */
     public function num_doc_already_exist(): bool {
-        return AsesUser::_num_doc_already_exist($this->num_doc);
+        return AsesUser::exists(array(AsesUser::NUMERO_DOCUMENTO=>$this->num_doc));
     }
     /**
      * Check if some document number is taken by another ases user than exist in database

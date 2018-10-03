@@ -94,6 +94,21 @@ class cohort_lib {
     }
 
     /**
+     * Returns array contains the id of cohorts as keys and name as values
+     * @see https://docs.moodle.org/dev/lib/formslib.php_Form_Definition#select
+     * @return array
+     * @example Return type is array with the form ('cohortId'->cohortName...)
+     */
+    public static function get_options() {
+        $ases_cohorts = cohort_lib::get_cohorts();
+        $ases_cohorts_options = [];
+        foreach($ases_cohorts as $ases_cohort) {
+            $ases_cohorts_options[$ases_cohort->id] = $ases_cohort->name;
+        }
+        return $ases_cohorts_options;
+    }
+
+    /**
      * Get the moodle url of ases cohort configuration
      * @return moodle_url Absolute url of page for configurations, empty string if some error occurs
      * @example http://localhost/moodle/cohort/index.php?contextid=934651

@@ -7,13 +7,21 @@ require_once(__DIR__.'/../../managers/lib/cohort_lib.php');
  * @example username = '1327951-3743'
  */
 class add_user_to_cohort extends moodleform {
-    public function definition() {
+    const NULL_COHORT_ID = -1;
+    const NULL_COHORT_NAME = '-------';
+    public function definition()
+    {
         global $CFG;
-        $ases_cohorts_options = $this->get_cohort_options();
+        $ases_cohorts_options = cohort_lib::get_options();
+
+        /* add a null cohort and mark it as default */
+        $ases_cohorts_options[add_user_to_cohort::NULL_COHORT_ID] = add_user_to_cohort::NULL_COHORT_NAME;
+
         $mform = $this->_form; // Don't forget the underscore! 
         $mform->addElement('text', 'username', 'Nombre de usuario moodle' , null); // Add elements to your form
         $mform->addRule('username', null, 'required');
         $mform->addElement('select', 'cohort', 'Cohorte ASES' , $ases_cohorts_options); // Add elements to your form
+        $mform->setDefault('cohort', add_user_to_cohort::NULL_COHORT_ID);
         $mform->addRule('cohort', null, 'required');
         //normally you use add_action_buttons instead of this code
         $buttonarray=array();
@@ -32,23 +40,13 @@ class add_user_to_cohort extends moodleform {
         if(cohort_lib::is_registred_in_cohort($data['username'],$data['cohort'])){
             $errors['cohort'] = "El usuario ya esta inscrito en la cohorte dada";
         }
+        if ($data['cohort'] == add_user_to_cohort::NULL_COHORT_ID) {
+            $errors['cohort'] = "Debe seleccionar una cohorte válida";
+        }
         return $errors;
     }
 
-    /**
-     * Returns array for html select than contains the id of cohorts as keys and name as values
-     * @see https://docs.moodle.org/dev/lib/formslib.php_Form_Definition#select
-     * @return array 
-     * @example Return type is array with the form ('cohortId'->cohortName...)
-     */
-    private function get_cohort_options() {
-        $ases_cohorts = cohort_lib::get_cohorts();
-        $ases_cohorts_options = [];
-        foreach($ases_cohorts as $ases_cohort) {
-            $ases_cohorts_options[$ases_cohort->id] = $ases_cohort->name;
-        }
-        return $ases_cohorts_options;
-    }
+
 
 
 }
