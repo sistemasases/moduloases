@@ -1,6 +1,5 @@
 <?php
 require_once(__DIR__.'/../../managers/lib/reflection.php');
-use reflection;
 trait from_std_object_or_array {
     public function from_std_object_or_array($stdObjectOrArrayFrom) {
        \reflection\assign_properties_to($stdObjectOrArrayFrom, $this);
