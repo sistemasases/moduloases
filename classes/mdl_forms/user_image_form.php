@@ -29,19 +29,24 @@ require_once($CFG->libdir.'/formslib.php');
 class user_image_form extends moodleform {
     //Add elements to form
     public function definition() {
-        global $CFG;
- 
-        $mform = $this->_form; // Don't forget the underscore! 
+
+        $mform = $this->_form; // Don't forget the underscore!
+
+        $mform->addElement('header', 'Actualización de imágen de usuario ASES');
         $mform->addElement('filepicker', 'imagefile', 'Nueva imágen de perfil' , null, array('accepted_types' => 'web_image')); // Add elements to your form
-        $mform->addRule('imagefile', null, 'required');
+        $mform->addRule('imagefile', "Debe ingresar una imagen", 'required');
         //normally you use add_action_buttons instead of this code
         $buttonarray=array();
         $buttonarray[] = $mform->createElement('submit', 'submitbutton', get_string('savechanges'));
         $mform->addGroup($buttonarray, 'buttonar', '', ' ', false);
     }
-    //Custom validation should be added here
-    function validation($data, $files) {
-        return array();
+    public function get_errors(): array {
+        $files = array();
+        $this->_validate_files($files);
+        $common_errors = $this->_form->_errors;
+        return $common_errors;
+
     }
+
 }
 ?>

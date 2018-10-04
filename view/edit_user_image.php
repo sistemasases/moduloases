@@ -65,11 +65,16 @@ if ($user_image_edit_form->is_cancelled()) {
     $ases_user_id, array('subdirs' => 0, 'maxbytes' => $maxbytes, 'maxfiles' => 50));
     redirect($url_return);
   //In this case you process validated data. $mform->get_data() returns data posted in form.
+} else if(!$user_image_edit_form->is_validated()){
+    $errors = $user_image_edit_form->get_errors();
+    $error_messages = array_values($errors);
+    $error_messages_string = implode(',', $error_messages);
+    redirect($url_return, "No se ha podido actualizar la imagen de usuario: $error_messages_string", null, \core\output\notification::NOTIFY_ERROR);
 } else {
-  // this branch is executed if the form is submitted but the data doesn't validate and the form should be redisplayed
-  // or on the first display of the form.
-  //Set default data (if any)
-  $user_image_edit_form->set_data($toform);
-  //displays the form
-  $user_image_edit_form->display(null);
+    // this branch is executed if the form is submitted but the data doesn't validate and the form should be redisplayed
+    // or on the first display of the form.
+    //Set default data (if any)
+    $user_image_edit_form->set_data($toform);
+    //displays the form
+    $user_image_edit_form->display(null);
 };
