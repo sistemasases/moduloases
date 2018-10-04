@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Form for upload user image to Ases Users
+ * Create program view
  *
  * @author     Luis Gerardo Manrique Cardona
  * @package    block_ases
@@ -23,25 +23,27 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die;
-require_once($CFG->libdir.'/formslib.php');
 
-class user_image_form extends moodleform {
-    //Add elements to form
-    public function definition() {
-        global $CFG;
- 
-        $mform = $this->_form; // Don't forget the underscore! 
-        $mform->addElement('filepicker', 'imagefile', 'Nueva imágen de perfil' , null, array('accepted_types' => 'web_image')); // Add elements to your form
-        $mform->addRule('imagefile', null, 'required');
-        //normally you use add_action_buttons instead of this code
-        $buttonarray=array();
-        $buttonarray[] = $mform->createElement('submit', 'submitbutton', get_string('savechanges'));
-        $mform->addGroup($buttonarray, 'buttonar', '', ' ', false);
+require_once(__DIR__ . '/../../../config.php');
+require_once('../managers/validate_profile_action.php');
+
+require_once(__DIR__ . '/../classes/mdl_forms/program_form.php');
+
+$output = $PAGE->get_renderer('block_ases');
+
+$program_form = new program_form();
+
+echo $output->header();
+
+if ($program_form->is_validated()) {
+    $program = $program_form->get_program();
+    if ($program->save()) {
+        \core\notification::success("Se ha almacenado correctamente el programa '$program->nombre'");
     }
-    //Custom validation should be added here
-    function validation($data, $files) {
-        return array();
-    }
+} else {
 }
+$program_form->display();
+echo $output->footer();
+
+
 ?>

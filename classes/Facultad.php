@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Form for upload user image to Ases Users
+ * Facultad functions, utilities and class definition
  *
  * @author     Luis Gerardo Manrique Cardona
  * @package    block_ases
@@ -23,25 +23,31 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die;
-require_once($CFG->libdir.'/formslib.php');
+/**
+ * Facultad class
+ * @see table talentospilos_facultad
+ */
+require_once(__DIR__.'/../classes/DAO/BaseDAO.php');
+class Facultad extends BaseDAO {
+    const ID = 'id';
+    const NOMBRE = 'nombre';
+    const CODIGO_UNIVALLE = 'cod_univalle';
+    public $id;
+    public $nombre;
+    public $cod_univalle;
 
-class user_image_form extends moodleform {
-    //Add elements to form
-    public function definition() {
-        global $CFG;
- 
-        $mform = $this->_form; // Don't forget the underscore! 
-        $mform->addElement('filepicker', 'imagefile', 'Nueva imágen de perfil' , null, array('accepted_types' => 'web_image')); // Add elements to your form
-        $mform->addRule('imagefile', null, 'required');
-        //normally you use add_action_buttons instead of this code
-        $buttonarray=array();
-        $buttonarray[] = $mform->createElement('submit', 'submitbutton', get_string('savechanges'));
-        $mform->addGroup($buttonarray, 'buttonar', '', ' ', false);
+
+    public static function get_table_name(): string
+    {
+        return 'talentospilos_facultad';
     }
-    //Custom validation should be added here
-    function validation($data, $files) {
-        return array();
+    /**
+     * Obtener las Facultades en un array clave valor (principalmente para uso de select en formularios)
+     * donde las llaves son el id de la facultad y los valores son los nombres de las facultades
+     * @return array Array
+     */
+    public static function get_options(): array {
+        $fields = Facultad::ID.','.Facultad::NOMBRE;
+        return parent::_get_options($fields, Facultad::NOMBRE);
     }
 }
-?>

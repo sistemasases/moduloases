@@ -16,20 +16,15 @@ class Discapacidad extends BaseDAO {
         return 'talentospilos_discap_men';
     }
 
-    public function format() {
-        return $this;
-    } 
+
     /**
      * Obtener las discapacidades con una descripcion legible
      * @return array Array donde las llaves son los id de las discapacidades y el valor es el nombre de la discapacidad
      */
     public static function get_options() {
-        $discapacidades = Discapacidad::get_all();
-        $opciones = array();
-        foreach($discapacidades as $discapacidad) {
-            $opciones[$discapacidad->id] = $discapacidad->nombre;
-        }
-        return $opciones;
+        $format = Discapacidad::ID.','.Discapacidad::NOMBRE;
+        return parent::_get_options($format);
+
     }
 
 }

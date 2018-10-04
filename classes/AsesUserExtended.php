@@ -18,12 +18,7 @@ class AsesUserExtended extends BaseDAO {
     public $tracking_status;
     public $program_status;
 
-    /**
-     * @return $this
-     */
-    public function format() {
-        return $this;
-    }
+
     public  static function get_table_name(): string {
         return AsesUserExtended::TABLE_NAME;
     }

@@ -15,35 +15,26 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Creación de usuarios extendidos
+ * Jornada class definition
  *
  * @author     Luis Gerardo Manrique Cardona
  * @package    block_ases
  * @copyright  2016 Luis Gerardo Manrique Cardona <luis.manrique@correounivalle.edu.co>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-ini_set('display_startup_errors', 1);
-ini_set('display_errors', 1);
-error_reporting(-1);
-
-require_once(__DIR__ . '/../../../config.php');
-require_once('../managers/validate_profile_action.php');
-
-require_once(__DIR__ . '/../classes/AsesUserExtended.php');
-require_once(__DIR__ . '/../classes/mdl_forms/ases_user_extended_form.php');
-
-$output = $PAGE->get_renderer('block_ases');
-echo $output->header();
-
-
-$user_extended_form = new ases_user_extended_form();
-if($data = $user_extended_form->get_data()) {
-    $ases_user_extended = $user_extended_form->get_ases_user_extended();
-    $ases_user_extended->save();
+class Jornada {
+    const DIURNA = 'DIURNA';
+    const NOCTURNA = 'NOCTURNA';
+    const VESPERTINA = 'VESPERTINA';
+    /**
+     * Obtener las Jornadas en un array clave valor (principalmente para uso de select en formularios)
+     * @return array Array
+     */
+    public static function get_options(): array {
+        return array(
+            Jornada::NOCTURNA=>Jornada::NOCTURNA,
+            Jornada::DIURNA=>Jornada::DIURNA,
+            Jornada::VESPERTINA=>Jornada::VESPERTINA
+        );
+    }
 }
-$user_extended_form->display();
-echo $output->footer();
-
-
-?>

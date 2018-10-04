@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Creación de usuarios extendidos
+ * Sede class definition
  *
  * @author     Luis Gerardo Manrique Cardona
  * @package    block_ases
@@ -23,27 +23,28 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-ini_set('display_startup_errors', 1);
-ini_set('display_errors', 1);
-error_reporting(-1);
+require_once(__DIR__.'/../classes/DAO/BaseDAO.php');
 
-require_once(__DIR__ . '/../../../config.php');
-require_once('../managers/validate_profile_action.php');
+class Sede extends BaseDAO {
 
-require_once(__DIR__ . '/../classes/AsesUserExtended.php');
-require_once(__DIR__ . '/../classes/mdl_forms/ases_user_extended_form.php');
+    const ID = 'id';
+    const ID_CIUDAD = 'id_ciudad';
+    const NOMBRE = 'nombre';
 
-$output = $PAGE->get_renderer('block_ases');
-echo $output->header();
-
-
-$user_extended_form = new ases_user_extended_form();
-if($data = $user_extended_form->get_data()) {
-    $ases_user_extended = $user_extended_form->get_ases_user_extended();
-    $ases_user_extended->save();
+    public $id;
+    public $id_ciudad;
+    public $cod_univalle;
+    public $nombre;
+    public static function get_table_name(): string {
+        return 'talentospilos_sede';
+    }
+    /**
+     * Obtener las Sedes en un array clave valor (principalmente para uso de select en formularios)
+     * donde las llaves son el id de la sede y los valores son los nombres de la sede
+     * @return array Array
+     */
+    public static function get_options() {
+        $fields = Sede::ID.','.Sede::NOMBRE;
+        return parent::_get_options($fields, Sede::NOMBRE);
+    }
 }
-$user_extended_form->display();
-echo $output->footer();
-
-
-?>

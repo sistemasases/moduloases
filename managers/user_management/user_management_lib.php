@@ -27,7 +27,12 @@ require_once $CFG->dirroot.'/blocks/ases/managers/lib/student_lib.php';
 require_once $CFG->dirroot.'/blocks/ases/managers/user_management/user_lib.php';
 require_once $CFG->dirroot.'/blocks/ases/managers/ases_report/asesreport_lib.php';
 require_once $CFG->dirroot.'/blocks/ases/managers/lib/lib.php';
-
+/**
+ * Return a Moodle user based in moodle user id from database
+ * @param $user_id
+ * @return mixed|null Return the moodle user, null if was not found
+ * @throws dml_exception
+ */
 function user_management_get_full_moodle_user( $user_id ){
 
     global $DB;

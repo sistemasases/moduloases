@@ -37,7 +37,7 @@ require_once('../managers/ases_report/asesreport_lib.php');
 require_once('../managers/permissions_management/permissions_lib.php');
 require_once("../managers/lib/cohort_lib.php");
 require_once("../managers/lib/student_lib.php");
-require_once('../classes/mdl_forms/add_user_to_cohort.php');
+require_once('../classes/mdl_forms/add_user_to_cohort_form.php');
 
 
 require_once('../managers/validate_profile_action.php');
@@ -58,7 +58,7 @@ $id_current_user = $USER->id;
 
 $url = new moodle_url('/blocks/ases/view/check_pre_ases_inscription.php', array('courseid' => $courseid, 'instanceid' => $blockid));
 require_login($courseid, false);
-$add_user_to_cohort_form = new add_user_to_cohort($url);
+$add_user_to_cohort_form = new add_user_to_cohort_form($url);
 
 //Form processing and displaying is done here
 if ($add_user_to_cohort_form->is_cancelled()) {
