@@ -44,7 +44,7 @@ $records = $DB->get_records_sql("SELECT * FROM {talentospilos_user_extended} WHE
 print_r( json_encode($records) . "<br><br><hr>" );
 
 // --------------
-echo "Datos previos_3...<br>";
+/*echo "Datos previos_3...<br>";
 $record = $DB->get_record_sql("SELECT * FROM {talentospilos_user_extended} WHERE id = 5537");
 print_r( json_encode($record) );
 $record->id_ases_user = 102;
@@ -109,6 +109,8 @@ echo "Resultado:<br>";
 $record = $DB->get_record_sql("SELECT * FROM {talentospilos_user_extended} WHERE id = 1356");
 print_r( json_encode($record) . "<br><br><hr>" );
 // --------------
+*/
 
+echo "Nada pendiende."
 
 die();

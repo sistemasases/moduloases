@@ -47,7 +47,7 @@ require_once '../managers/dphpforms/dphpforms_get_record.php';
 require_once '../managers/user_management/user_management_lib.php';
 require_once '../managers/periods_management/periods_lib.php';
 require_once '../classes/AsesUser.php';
-require_once '../classes/mdl_forms/UserImageForm.php';
+require_once '../classes/mdl_forms/user_image_form.php';
 include '../lib.php';
 
 global $PAGE;
@@ -1266,7 +1266,7 @@ $url_user_edit_image_form_manager        = new moodle_url("/blocks/ases/view/edi
     'ases_user_id' => $ases_student->id,
     'url_return' => $url
 ));
-$_user_image_edit_form = new user_image_edit_form($url_user_edit_image_form_manager,null,'post',null,array('id'=>'update_user_profile_image'));
+$_user_image_edit_form = new user_image_form($url_user_edit_image_form_manager,null,'post',null,array('id'=>'update_user_profile_image'));
 $_user_image_edit_form->set_data($toform);
 $record->update_profile_image_form = $_user_image_edit_form->render(null);
 /** End of Update user image  */
