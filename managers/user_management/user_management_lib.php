@@ -52,6 +52,17 @@ function user_management_get_full_moodle_user( $user_id ){
     }
 }
 
+/**
+ * Check if exists some Moodle user with ID equal to user id given
+ * @param $user_id Moodle user ID to check
+ * @return bool true if exist user in database, false otherwise
+ * @throws dml_exception A DML specific exception is thrown for any errors.
+ */
+function user_management_moodle_user_exists( $user_id ): bool {
+    global $DB;
+    return $DB->record_exists('user', array('username' => $user_id));
+}
+
 function user_management_get_moodle_user( $user_id ){
 
     global $DB;

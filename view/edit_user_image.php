@@ -32,7 +32,7 @@ require_login($courseid, false);
 $blockid   = required_param('instanceid', PARAM_INT);
 $actions = authenticate_user_view($USER->id, $blockid);
 if (!isset($actions->update_user_profile_image_)) {
- redirect(new moodle_url('/'));
+ redirect(new moodle_url('/'), "No tienes permisos para cambiar la imagen de un usuario ASES", null, \core\output\notification::NOTIFY_ERROR);
 }
 $show_html_elements_update_user_profile_image = true;
 $filemanageroptions = array('maxbytes'       => $CFG->maxbytes,
@@ -41,8 +41,7 @@ $filemanageroptions = array('maxbytes'       => $CFG->maxbytes,
                              'accepted_types' => 'web_image');
 
 $ases_user_id =  required_param('ases_user_id', PARAM_INT);
-//echo $ases_user_id ;
-//die;
+
 $url_return =  required_param('url_return', PARAM_TEXT);
 
 $contextcourse = context_course::instance($courseid);

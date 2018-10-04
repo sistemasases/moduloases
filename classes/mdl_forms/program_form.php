@@ -63,6 +63,12 @@ class program_form extends moodleform {
         $buttonarray[] = $mform->createElement('submit', 'submitbutton', get_string('savechanges'));
         $mform->addGroup($buttonarray, 'buttonar', '', ' ', false);
     }
+
+    public function get_errors(): array {
+        $files = array();
+        $this->_validate_files($files);
+        return $this->validation($this->get_data(), $files);
+    }
     public function validation($data, $files): array {
         $program = new Programa($data);
 

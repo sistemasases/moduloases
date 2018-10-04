@@ -33,14 +33,10 @@ class add_user_to_cohort_form extends moodleform {
         global $CFG;
         $ases_cohorts_options = cohort_lib::get_options();
 
-        /* add a null cohort and mark it as default */
-        $ases_cohorts_options[add_user_to_cohort_form::NULL_COHORT_ID] = add_user_to_cohort_form::NULL_COHORT_NAME;
-
         $mform = $this->_form; // Don't forget the underscore! 
         $mform->addElement('text', 'username', 'Nombre de usuario moodle' , null); // Add elements to your form
         $mform->addRule('username', null, 'required');
-        $mform->addElement('select', 'cohort', 'Cohorte ASES' , $ases_cohorts_options); // Add elements to your form
-        $mform->setDefault('cohort', add_user_to_cohort_form::NULL_COHORT_ID);
+        $mform->addElement('searchableselector', 'cohort', 'Cohorte ASES' , $ases_cohorts_options); // Add elements to your form
         $mform->addRule('cohort', null, 'required');
         //normally you use add_action_buttons instead of this code
         $buttonarray=array();
@@ -48,19 +44,23 @@ class add_user_to_cohort_form extends moodleform {
         $buttonarray[] = $mform->createElement('submit', 'cancel', get_string('cancel'));
         $mform->addGroup($buttonarray, 'buttonar', '', ' ', false);
     }
+    function get_errors(): array {
+        $common_errors = $this->_form->_errors;
+        $custom_erros = $this->validation((array) $this->get_data(), array());
+        $errors = array_merge($custom_erros,  $common_errors);
+        return $errors;
+    }
     function  validation($data, $files) {
-        $parent_errors = parent::validation($data, $files);
         global $DB;
         $errors = array();
-        $user_exists = $DB->record_exists('user', array('username' => $data['username']));
-        if (!$user_exists) {
-            $errors['username'] = "El usurio moodle no existe";
-        }
-        if(cohort_lib::is_registred_in_cohort($data['username'],$data['cohort'])){
-            $errors['cohort'] = "El usuario ya esta inscrito en la cohorte dada";
-        }
-        if ($data['cohort'] == add_user_to_cohort_form::NULL_COHORT_ID) {
-            $errors['cohort'] = "Debe seleccionar una cohorte válida";
+        if ($data['username'] && $data['username'] != '') {
+            $mdl_user_exists = $DB->record_exists('user', array('username' => $data['username']));
+            if (!$mdl_user_exists) {
+                $errors['username'] = "El usurio moodle no existe";
+            }
+            if (cohort_lib::is_registred_in_cohort($data['username'], $data['cohort'])) {
+                $errors['cohort'] = "El usuario ya esta inscrito en la cohorte dada";
+            }
         }
         return $errors;
     }

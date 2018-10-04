@@ -56,7 +56,7 @@ $courseid = required_param('courseid', PARAM_INT);
 $blockid = required_param('instanceid', PARAM_INT);
 $id_current_user = $USER->id;
 
-$url = new moodle_url('/blocks/ases/view/check_pre_ases_inscription.php', array('courseid' => $courseid, 'instanceid' => $blockid));
+$url = new moodle_url('/blocks/ases/view/add_moodle_user_to_cohort.php', array('courseid' => $courseid, 'instanceid' => $blockid));
 require_login($courseid, false);
 $add_user_to_cohort_form = new add_user_to_cohort_form($url);
 
@@ -68,22 +68,24 @@ if ($add_user_to_cohort_form->is_cancelled()) {
 $output = $PAGE->get_renderer('block_ases');
 echo $output->header();
 
-if ($add_user_to_cohort_form->is_submitted() && $errors = $add_user_to_cohort_form->validation((array)$add_user_to_cohort_form->get_submitted_data(), array())) {
+if ($add_user_to_cohort_form->is_submitted() ) {
+
+    $errors = $add_user_to_cohort_form->get_errors();
     if($errors['username']) {
-        echo html_writer::tag('h1', " El usuario no existe en la base de datos moodle");
         $url_create_moodle_user = new moodle_url('/blocks/ases/view/moodle_user_creation.php', 
         array('courseid' => $courseid, 'instanceid' => $blockid, 'username'=>$add_user_to_cohort_form->get_submitted_data()->username));
     
-        echo html_writer::tag('h3', 
-        html_writer::tag('a', "Puede añadirlo a al campus virtual en el siguiente enlace",
+        $add_user_link =  html_writer::tag('p',
+            "El usuario no existe en la base de datos moodle.     " . html_writer::tag('a', "Puede añadirlo a al campus virtual en el siguiente enlace",
         array('href' => $url_create_moodle_user)));
+        \core\notification::info($add_user_link);
     }
 
 }
 if ($data = $add_user_to_cohort_form->get_data()) {
     $mdl_user = $DB->get_record('user', array('username' => $data->username));
     cohort_add_member( $data->cohort, $mdl_user->id);
-    echo html_writer::tag('h3', " El usuario $mdl_user->firstname $mdl_user->lastname ha sido añadido a la cohorte que ha seleccionado");    
+    echo \core\notification::success(" El usuario $mdl_user->firstname $mdl_user->lastname ha sido añadido a la cohorte que ha seleccionado");
 
   //In this case you process validated data. $mform->get_data() returns data posted in form.
 } 
