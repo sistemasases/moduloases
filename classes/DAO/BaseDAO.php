@@ -28,6 +28,7 @@ require_once(__DIR__.'/../../managers/lib/reflection.php');
 defined('MOODLE_INTERNAL') || die;
 abstract class BaseDAO {
     use from_std_object_or_array;
+    public $_errors;
 
     public function __construct($data = null)
     {
@@ -35,7 +36,7 @@ abstract class BaseDAO {
             $this->make_from($data);
         }
     }
-
+    public abstract function get_numeric_fields();
     const NO_REGISTRA = 'NO REGISTRA';
     /**
      * Save object to database
@@ -146,7 +147,16 @@ abstract class BaseDAO {
         if(!$CLASS::valid_conditions($conditions)) {
             throw new ErrorException("The given columns for conditions array are invalid, active debug mode for show de debug backtrace");
         }
-        return $CLASS::make_objects_from_std_objects_or_arrays($DB->get_records($CLASS::get_table_name(), $conditions, $sort, '*', $limitfrom, $limitnum ));
+        $db_records = $DB->get_records($CLASS::get_table_name(), $conditions, $sort, '*', $limitfrom, $limitnum );
+        if(count($db_records)>0) {
+            return $CLASS::make_objects_from_std_objects_or_arrays($db_records);
+        }
+        if(count($db_records)==1) {
+            $db_record = $db_records[0];
+            return new $CLASS($db_record);
+        }
+        return array();
+
     }
 
     /**

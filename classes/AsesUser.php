@@ -28,6 +28,8 @@ defined('MOODLE_INTERNAL') || die;
 require_once(__DIR__.'/../managers/user_management/user_management_lib.php');
 require_once(__DIR__.'/DAO/BaseDAO.php');
 require_once(__DIR__.'/Estado.php');
+
+
 class AsesUser extends BaseDAO  {
     const TIPO_DOCUMENTO = 'tipo_doc';
     const TIPO_DOCUMENTO_INICIAL = 'tipo_doc_ini';
@@ -101,7 +103,6 @@ class AsesUser extends BaseDAO  {
      * @return array Array donde las llaves son los id de los usuarios ASES y el valor es el nombre del usuario
      */
     public static function get_options(): array {
-        global $DB;
         $options = array();
         $ases_users_with_names = AsesUser::get_ases_users_with_names();
         foreach($ases_users_with_names as $ases_user) {
