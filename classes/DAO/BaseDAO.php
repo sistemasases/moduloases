@@ -26,18 +26,148 @@ require_once(__DIR__.'/../../managers/lib/reflection.php');
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 defined('MOODLE_INTERNAL') || die;
-abstract class BaseDAO {
+require_once (__DIR__.'/../Errors/Factories/FieldValidationErrorFactory.php');
+abstract class BaseDAO
+{
     use from_std_object_or_array;
-    public $_errors;
 
+    const NO_REGISTRA = 'NO REGISTRA';
+
+    private $_errors = array();
+
+    /**
+     * This variable contains the same errors than $_erros but are agrouped by the class properties, if exist
+     * some error than does not related with a unique class attribute this is stored in $_errors_object->generic_errors
+     *
+     * Example
+     * The class Foo have two properties, $a and $b, $a is required and $b should be numeric, but
+     * as shown below:
+     *
+     * '''class Foo extends BaseDAO {
+     *  public $a;
+     *  public $b;
+     *
+     *  public function __construct($a, $b) {
+     *      $this->a = $a;
+     *      $this->b = $b;
+     *  }
+     * }'''
+     * If you have an instance '''$fo = new Foo(null, 'some_no_numeric');''' and execute
+     * @var
+     */
+    private $_errors_object;
     public function __construct($data = null)
     {
-        if ( $data ) {
+        if ($data) {
             $this->make_from($data);
         }
     }
-    public abstract function get_numeric_fields();
-    const NO_REGISTRA = 'NO REGISTRA';
+
+
+    /**
+     * Clean errors
+     */
+    private function clean_errors() {
+        $this->_errors = array();
+    }
+
+    /**
+     * Check if the current object is valid, and if is not valid add all the errors and make
+     * these available by calling get_errors
+     * @see get_errors
+     * @return bool
+     */
+    public function valid(): bool {
+        $this->clean_errors();
+        $valid = true;
+        /* If at least one field than should be numeric is not numeric*/
+        if( count($this->validate_numeric_fields()) > 0 ) {
+            $valid = false;
+        }
+        /* If at least one field than should be required is empty or null */
+        if( count($this->validate_required_fields()) > 0 ) {
+            $valid = false;
+        }
+        return $valid;
+    }
+
+    /**
+     * Check if all fields of the object than are required have some value, and return an array with the names
+     * of the fields than are invalid, empty array is returned otherwise.
+     *
+     * Also, if an error is found, this can be returned calling the function get_errors()
+     * @see get_errors
+     * @return array Array of string where each string is the name of a column than have incorrect format
+     */
+    private function validate_required_fields(): array {
+        $required_fields = $this->get_required_fields();
+        foreach($required_fields as $required_field) {
+            if(!property_exists($this, $required_field)) {
+                array_push($this->_errors, FieldValidationErrorFactory::required_field_is_empty());
+                continue;
+            } else if($this->{$required_field} == '') {
+                array_push($this->_errors, FieldValidationErrorFactory::required_field_is_empty());
+                continue;
+            }
+        }
+    }
+
+    /**
+     * Check if all fields of the object than should be numeric are numeric, and return an array with the names
+     * of the fields than are invalid, empty array is returned otherwise.
+     *
+     * Also, if an error is found, this can be returned calling the function get_errors()
+     * @see is_numeric
+     * @see get_errors
+     * @return array Array of string where each string is the name of a column than have incorrect format
+     */
+    private function validate_numeric_fields(): array {
+        $nuemric_fields = $this->get_numeric_fields();
+        $numeric_fields_failed = array();
+        foreach($nuemric_fields as $nuemric_field) {
+            if(!is_numeric($this->{$nuemric_field})) {
+                array_push($numeric_fields_failed, $nuemric_field);
+                array_push($this->_errors, FieldValidationErrorFactory::numeric_field_required());
+            }
+        }
+        return $numeric_fields_failed;
+    }
+
+    /**
+     * Return errors, instances of AsesError if at least one error exists, emtpy array otherwise
+     * @see AsesError
+     * @return array
+     */
+    public function get_errors(): array {
+        return $this->_errors;
+    }
+    /**
+     * Overload this function in the child classes if this have numeric
+     * fields, otherwise is not necesary this definition
+     *
+     * Return the object attributes than should be numeric, if the class
+     * does not have any numeric attributes return empty array
+     * @return array Array of string than represents the column names where
+     * the column is type int, double or bigint and the current value is not
+     */
+    public function get_numeric_fields(): array {
+        return array();
+    }
+
+    /**
+     * Overload this function in the child classes if this have required
+     * fields, otherwise is not necesary this definition
+     *
+     * Return the object attributes than should be required, if the class
+     * does not have any required attributes return empty array
+     * @return array Array of string than represents the column names where
+     * the column required and the current value is empty
+     */
+    public function get_required_fields(): array {
+        return array();
+    }
+
+
     /**
      * Save object to database
      * @return bool|int id if was sucessfull created return id false otherwise
@@ -180,9 +310,11 @@ abstract class BaseDAO {
     /**
      * Check if the given conditions are valid, this is, all the column names expressed in the kys of the array
      * exists in the current DAO model
-     * @param array $conditions Key value array where the keys are the column names and the
+     * @param array $conditions Key value array where the keys are the column names and the values are some
+     * (in this method the values does not matter, only check the keys)
      * @return bool True if the condition columns are valid
-     * @see https://docs.moodle.org/dev/Data_manipulation_API
+     * @see https://docs.moodle.org/dev/Data_manipulation_API array conditions is common used and here conditions array
+     * is the same
      */
     private static function valid_conditions(array $conditions): bool {
         $condition_column_names = array_keys($conditions);

@@ -64,25 +64,17 @@ class Programa extends BaseDAO {
             Programa::ID_SEDE
         );
     }
-    public function validate_numeric_fields(): array {
-        $nuemric_fields = $this->get_numeric_fields();
-        $numeric_fields_failed = array();
-        foreach($nuemric_fields as $nuemric_field) {
-            if(!is_numeric($this->{$nuemric_field})) {
-                array_push($numeric_fields_failed, $nuemric_field);
-            }
-        }
-        return $numeric_fields_failed;
-    }
+
+
     /**
-     * Validate the current object
-     * @return true|array True if the Object is valid, an array of errors otherwise
-     * @throws dml_exception
+     * Validate the current object, if at least one error is detected return false and
+     * add make disponible the error calling get_errors()
+     * @return bool
      */
-    public function validate() {
+    public function valid(): bool {
         $numeric_fields_failed = $this->validate_numeric_fields();
-        if(count($numeric_fields_failed)) {
-            return $numeric_fields_failed;
+        if(count($numeric_fields_failed)>0) {
+            return false;
         }
         return $this->validate_unique_key();
 

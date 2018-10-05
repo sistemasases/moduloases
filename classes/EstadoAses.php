@@ -7,6 +7,10 @@ class EstadoAses extends BaseDAO {
     public $id;
     public $descripcion;
     public $nombre;
+    public function get_numeric_fields()
+    {
+
+    }
 
     public static function get_table_name(): string {
         return 'talentospilos_estados_ases';

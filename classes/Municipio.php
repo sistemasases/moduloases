@@ -3,6 +3,8 @@ require_once(__DIR__.'/DAO/BaseDAO.php');
 class Municipio extends BaseDAO  {
     const ID = 'id';
     const NOMBRE = 'nombre';
+    const CODIGO_DIVIPOLA = 'codigodivipola';
+    const CODIGO_DEPARTAMETO = 'cod_depto';
     public $id;
     public $codigodivipola;
     public $cod_depto;
@@ -27,6 +29,15 @@ class Municipio extends BaseDAO  {
         $municipio = new Municipio();
         $municipio->from_std_object_or_array($municipio_db);
         return $municipio;
+    }
+
+
+    public function get_numeric_fields(): array {
+        return array(
+            Municipio::CODIGO_DEPARTAMETO,
+            Municipio::ID,
+            Municipio::CODIGO_DIVIPOLA
+        );
     }
 
     public static function get_table_name(): string {
