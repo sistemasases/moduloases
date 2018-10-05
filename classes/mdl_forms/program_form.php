@@ -48,8 +48,9 @@ class program_form extends moodleform {
         $mform->addElement('text', 'codigosnies', 'Codigo SNIES');
         $mform->addRule('codigosnies', null, 'required');
 
-        $mform->addElement('text', 'cod_univalle', 'Codigo Univalle');
+        $mform->addElement('text', 'cod_univalle', 'Codigo Univalle', null);
         $mform->addRule('cod_univalle', null, 'required');
+        $mform->addRule('cod_univalle', null, 'numeric');
 
         $mform->addElement('searchableselector', 'jornada', 'Jornada', $jornada_options);
         $mform->addRule('jornada', null, 'required');
@@ -70,6 +71,7 @@ class program_form extends moodleform {
         return $this->validation($this->get_data(), $files);
     }
     public function validation($data, $files): array {
+        parent::validation($data, $files);
         $program = new Programa($data);
 
 
@@ -79,9 +81,9 @@ class program_form extends moodleform {
                 Programa::JORNADA=>$program->jornada,
                 Programa::CODIGO_UNIVALLE=>$program->cod_univalle,
                 Programa::ID_SEDE=>$program->id_sede));
-                \core\notification::error("Ya existe un programa con la misma jornada, codigo univalle y sede, este es '$repeated_program->nombre'");
-            /* If array is not empty, error is detected, but here is no specific field error */
-            return array('some error');
+            \core\notification::error("Ya existe un programa con la misma jornada, codigo univalle y sede, este es '$repeated_program->nombre'");
+            /* If array is not empty, error is detected, but here is no specific field error*/
+             array('some error');
         }
         return array();
     }

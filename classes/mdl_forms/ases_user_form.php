@@ -118,8 +118,8 @@ class ases_user_form extends moodleform {
         $data->fecha_nac = $date;
         $data->num_doc_ini = $data->num_doc;
         $data->tipo_doc_ini = $data->tipo_doc;
-        $ases_user = new AsesUser();
-        $ases_user->make_from($data);
+
+        $ases_user = new AsesUser($data);
         return $ases_user;
     }
     //Custom validation should be added here

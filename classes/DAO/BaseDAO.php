@@ -28,6 +28,7 @@ require_once(__DIR__.'/../../managers/lib/reflection.php');
 defined('MOODLE_INTERNAL') || die;
 abstract class BaseDAO {
     use from_std_object_or_array;
+    public $_errors;
 
     public function __construct($data = null)
     {
@@ -35,7 +36,7 @@ abstract class BaseDAO {
             $this->make_from($data);
         }
     }
-
+    public abstract function get_numeric_fields();
     const NO_REGISTRA = 'NO REGISTRA';
     /**
      * Save object to database

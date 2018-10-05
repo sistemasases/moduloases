@@ -41,6 +41,7 @@ class Sede extends BaseDAO {
     /**
      * Obtener las Sedes en un array clave valor (principalmente para uso de select en formularios)
      * donde las llaves son el id de la sede y los valores son los nombres de la sede
+     * @see
      * @return array Array
      */
     public static function get_options() {

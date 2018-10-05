@@ -32,6 +32,9 @@ class Programa extends BaseDAO {
     const CODIGO_UNIVALLE = 'cod_univalle';
     const ID_SEDE = 'id_sede';
     const JORNADA = 'jornada';
+    const CODIGO_SNIES = 'codigosnies';
+    const ID_FACULTAD= 'id_facultad';
+
     public $id;
     public $codigosnies;
     public $cod_univalle;
@@ -52,20 +55,44 @@ class Programa extends BaseDAO {
         return parent::_get_options($fields, Programa::NOMBRE);
 
     }
-
+    public function get_numeric_fields(): array {
+        return array(
+            Programa::ID,
+            Programa::CODIGO_SNIES,
+            Programa::CODIGO_UNIVALLE,
+            Programa::ID_FACULTAD,
+            Programa::ID_SEDE
+        );
+    }
+    public function validate_numeric_fields(): array {
+        $nuemric_fields = $this->get_numeric_fields();
+        $numeric_fields_failed = array();
+        foreach($nuemric_fields as $nuemric_field) {
+            if(!is_numeric($this->{$nuemric_field})) {
+                array_push($numeric_fields_failed, $nuemric_field);
+            }
+        }
+        return $numeric_fields_failed;
+    }
     /**
      * Validate the current object
      * @return true|array True if the Object is valid, an array of errors otherwise
      * @throws dml_exception
      */
     public function validate() {
+        $numeric_fields_failed = $this->validate_numeric_fields();
+        if(count($numeric_fields_failed)) {
+            return $numeric_fields_failed;
+        }
         return $this->validate_unique_key();
+
     }
     /**
      * Check if the unique constrain (cod_univalle, id_sede, jornada) is not not violated
      * @return bool
      * @throws dml_exception
      */
+
     public function valid_unique_key(): bool {
         $conditions = array(
             Programa::JORNADA=>$this->jornada,
