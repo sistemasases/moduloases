@@ -146,7 +146,16 @@ abstract class BaseDAO {
         if(!$CLASS::valid_conditions($conditions)) {
             throw new ErrorException("The given columns for conditions array are invalid, active debug mode for show de debug backtrace");
         }
-        return $CLASS::make_objects_from_std_objects_or_arrays($DB->get_records($CLASS::get_table_name(), $conditions, $sort, '*', $limitfrom, $limitnum ));
+        $db_records = $DB->get_records($CLASS::get_table_name(), $conditions, $sort, '*', $limitfrom, $limitnum );
+        if(count($db_records)>0) {
+            return $CLASS::make_objects_from_std_objects_or_arrays($db_records);
+        }
+        if(count($db_records)==1) {
+            $db_record = $db_records[0];
+            return new $CLASS($db_record);
+        }
+        return array();
+
     }
 
     /**

@@ -36,7 +36,7 @@ $program_form = new program_form();
 echo $output->header();
 
 if ($program_form->is_validated()) {
-    $program = $program_form->get_program();
+    //$program = $program_form->get_program();
     if ($program->save()) {
         \core\notification::success("Se ha almacenado correctamente el programa '$program->nombre'");
     }

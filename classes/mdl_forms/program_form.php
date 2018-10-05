@@ -74,10 +74,11 @@ class program_form extends moodleform {
 
 
         if (!$program->valid_unique_key()) {
+
             $repeated_program = Programa::get_by(array(
                 Programa::JORNADA=>$program->jornada,
                 Programa::CODIGO_UNIVALLE=>$program->cod_univalle,
-                Programa::ID_SEDE=>$program->id_sede))[0];
+                Programa::ID_SEDE=>$program->id_sede));
                 \core\notification::error("Ya existe un programa con la misma jornada, codigo univalle y sede, este es '$repeated_program->nombre'");
             /* If array is not empty, error is detected, but here is no specific field error */
             return array('some error');
@@ -91,8 +92,10 @@ class program_form extends moodleform {
      * @return Programa Extracted program
      */
     public function get_program(): Programa {
+
         $program = new Programa();
         $form_data = $this->get_data();
+
         $program->make_from($form_data);
         return $program;
     }
