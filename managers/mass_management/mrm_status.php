@@ -434,13 +434,30 @@ function update_status_student($id_user_extended, $id_talentos, $id_estado_ases,
     return true;
 }
 
+function get_tracking_status($id_user_extended){
+    global $DB;
+
+    $sql_query = "SELECT tracking_status FROM {talentospilos_user_extended} WHERE id = $id_user_extended";
+
+    $result = $DB->get_record_sql($sql_query);
+
+    return $result->tracking_status;
+}
+
 function update_tracking_status($id_update_record, $track_status){
     global $DB;
 
     $object_user_extended_update = new stdClass;
     $object_user_extended_update->id = $id_update_record;
-    $object_user_extended_update->tracking_status = $track_status;
 
+    if($track_status == ""){
+        $tracking_stat = get_tracking_status($id_update_record);
+        $object_user_extended_update->tracking_status = $tracking_stat;
+
+    }else{
+        $object_user_extended_update->tracking_status = $track_status;
+    }
+    
     $result = $DB->update_record('talentospilos_user_extended', $object_user_extended_update);
 
     if (!$result){
