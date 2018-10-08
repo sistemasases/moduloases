@@ -273,18 +273,18 @@ function get_count_active_res_students($cohort){
                         INNER JOIN {cohort_members} co_mem ON uext.id_moodle_user = co_mem.userid
                         INNER JOIN {cohort} cohortm ON cohortm.id = co_mem.cohortid
                         WHERE cohortm.idnumber LIKE '$cohort%' AND uext.tracking_status = 1
-                        AND (res_est.id_estudiante
+                        AND ((res_est.id_estudiante, semestre.nombre)
 
                             NOT IN 
                             
-                            (SELECT academ.id_estudiante 
+                            (SELECT DISTINCT academ.id_estudiante, semest.nombre 
                             FROM {talentospilos_history_academ} AS academ
                             INNER JOIN {talentospilos_semestre} AS semest ON semest.id = academ.id_semestre
-                            INNER JOIN {talentospilos_user_extended} uext ON uext.id_ases_user = academ.id_estudiante
-                            INNER JOIN {talentospilos_history_cancel} cancel ON cancel.id_history = academ.id
+                            INNER JOIN {talentospilos_user_extended} uext ON uext.id_ases_user = academ.id_estudiante                            
                             INNER JOIN {cohort_members} co_mem ON uext.id_moodle_user = co_mem.userid
                             INNER JOIN {cohort} cohortm ON cohortm.id = co_mem.cohortid
-                            WHERE cohortm.idnumber LIKE '$cohort%'))
+                            WHERE cohortm.idnumber LIKE '$cohort%' AND academ.promedio_semestre IS NULL 
+                            AND uext.tracking_status = 1))
                         
                     GROUP BY semestre.nombre";
 
