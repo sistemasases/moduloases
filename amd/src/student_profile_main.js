@@ -843,6 +843,7 @@ function manage_icetex_status() {
 
                      var result_status = save_icetex_status();
 
+                     
                      swal(
                          result_status.title,
                          result_status.msg,
