@@ -38,7 +38,6 @@ if (isset($_FILES['file']) || isset($_POST['idinstancia'])) {
         $zipFolder = "../../view/archivos_subidos/mrm/status/comprimidos/";
         
         if (!file_exists($rootFolder)) {
-            //echo $rootFolder;
             mkdir($rootFolder, 0777, true);
         }
         if (!file_exists($zipFolder)) {
@@ -231,10 +230,10 @@ if (isset($_FILES['file']) || isset($_POST['idinstancia'])) {
                 $result = update_status_student($id_user_extended, $id_talentos, $id_estado_ases, $id_estado_icetex, $id_estado_programa, $id_motivo_ases, $id_motivo_icetex);
 
                 if ($result) {
-                    $id_update = $result;
+                    $id_update = $id_user_extended;
                     array_push($success_rows, $data);
-                    if($has_tracking_status){
-                        if(!update_tracking_status($id_update, $tracking_status)){
+                    if($has_tracking_status){                                 
+                        if(!update_tracking_status($id_update, $tracking_status)){                            
                             array_push($detail_erros, [$line_count, $lc_wrongFile, 'Error al registrar tracking_status', 'Error Servidor', 'Error del server registrando el tracking status']);
                             array_push($wrong_rows, $data);
                             $lc_wrongFile++;
@@ -450,7 +449,7 @@ function update_tracking_status($id_update_record, $track_status){
     $object_user_extended_update = new stdClass;
     $object_user_extended_update->id = $id_update_record;
 
-    if($track_status == ""){
+    if($track_status === ''){
         $tracking_stat = get_tracking_status($id_update_record);
         $object_user_extended_update->tracking_status = $tracking_stat;
 
@@ -460,9 +459,9 @@ function update_tracking_status($id_update_record, $track_status){
     
     $result = $DB->update_record('talentospilos_user_extended', $object_user_extended_update);
 
-    if (!$result){
-        return false;
-    } else {
+    if($result === true){
         return true;
-    }
+    }else {
+        return false;
+    }    
 }
