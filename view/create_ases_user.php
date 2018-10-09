@@ -25,18 +25,36 @@
 require_once(__DIR__ . '/../../../config.php');
 require_once('../managers/validate_profile_action.php');
 
-require_once(__DIR__ . '/../classes/mdl_forms/ases_user_form.php');
+require_once(__DIR__ .'/../classes/mdl_forms/ases_user_form.php');
+
+require_login($courseid, false);
 
 $output = $PAGE->get_renderer('block_ases');
 
-$add_ases_user_form = new ases_user_form();
+$pagetitle = 'Creacion de usuarios ASES';
+$courseid = required_param('courseid', PARAM_INT);
+$blockid = required_param('instanceid', PARAM_INT);
+$actions = authenticate_user_view($USER->id, $blockid);
+if ( !isset($actions->create_ases_user) ) {
+    redirect(new moodle_url('/'), "No tienes permiso para acceder a la creación de usuario ASES",1);
+}
+$url = new moodle_url("/blocks/ases/view/create_ases_user.php",array('courseid' => $courseid, 'instanceid' => $blockid));
+$PAGE->set_title($pagetitle);
+$add_ases_user_form = new ases_user_form($url);
 
 echo $output->header();
 
 if ($add_ases_user_form->is_validated()) {
     $ases_user = $add_ases_user_form->get_ases_user();
-    $ases_user->save();
-} else {
+    if($ases_user->save()) {
+        \core\notification::success("Se ha creado el usuario número de documento '$ases_user->num_doc'");
+    } else {
+        \core\notification::error("Se ha encontrado un error no soportado");
+        /* @var AsesError $error*/
+        foreach($ases_user->get_errors() as $error) {
+            \core\notification::error($error->message);
+        }
+    }
 }
 $add_ases_user_form->display();
 echo $output->footer();

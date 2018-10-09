@@ -23,7 +23,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 defined('MOODLE_INTERNAL') || die;
-
+require_once(__DIR__.'/Errors/Factories/DatabaseErrorFactory.php');
 require_once(__DIR__.'/DAO/BaseDAO.php');
 
 class Programa extends BaseDAO {
@@ -69,16 +69,19 @@ class Programa extends BaseDAO {
     /**
      * Validate the current object, if at least one error is detected return false and
      * add make disponible the error calling get_errors()
+     * WARNING you should never call this method, call $this->valid(), this will be execute this method
      * @return bool
      */
-    public function valid(): bool {
-        $numeric_fields_failed = $this->validate_numeric_fields();
-        if(count($numeric_fields_failed)>0) {
+    public function _custom_validation(): bool {
+        if(!$this->valid_unique_key()) {
+
+            $this->add_error(DatabaseErrorFactory::unique_key_constraint_violation($this));
             return false;
         }
-        return $this->validate_unique_key();
+        return true;
 
     }
+
     /**
      * Check if the unique constrain (cod_univalle, id_sede, jornada) is not not violated
      * @return bool

@@ -29,19 +29,44 @@ require_once('../managers/validate_profile_action.php');
 
 require_once(__DIR__ . '/../classes/mdl_forms/program_form.php');
 
+
+$pagetitle = 'Creacion de programas ASES';
+$courseid = required_param('courseid', PARAM_INT);
+$blockid = required_param('instanceid', PARAM_INT);
+
+require_login($courseid, false);
+$actions = authenticate_user_view($USER->id, $blockid);
+if (!isset($actions->create_program)) {
+    redirect(new moodle_url('/'), "No tienes permiso para acceder a la creación de programas ASES",1);
+}
+$url = new moodle_url("/blocks/ases/view/create_program.php",array('courseid' => $courseid, 'instanceid' => $blockid));
+$PAGE->set_title($pagetitle);
+
 $output = $PAGE->get_renderer('block_ases');
 
-$program_form = new program_form();
+$program_form = new program_form($url);
 
 echo $output->header();
 
 if ($program_form->is_submitted() && $program_form->is_validated()) {
 
     $program = $program_form->get_program();
-    if ($program->save()) {
+    if ($program->valid()) {
+        $program->save();
         \core\notification::success("Se ha almacenado correctamente el programa '$program->nombre'");
+    } else {
+
+        /* @var AsesError $error*/
+        foreach($program->get_errors() as $error) {
+            \core\notification::error($error->message);
+        }
     }
 } else {
+    $errors = $program_form->get_errors();
+
+    if($errors[BaseDAO::GENERIC_ERRORS_FIELD]) {
+        \core\notification::error($errors[BaseDAO::GENERIC_ERRORS_FIELD]);
+    }
 }
 $program_form->display();
 echo $output->footer();

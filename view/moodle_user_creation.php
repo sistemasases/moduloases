@@ -49,13 +49,16 @@ include("../classes/output/renderer.php");
 // Set up the page.
 $pagetitle = 'Creacion de usuarios Moodle';
 $courseid = required_param('courseid', PARAM_INT);
-$user_name = optional_param('username', '', PARAM_TEXT);
 $blockid = required_param('instanceid', PARAM_INT);
+
+$user_name = optional_param('username', '', PARAM_TEXT);
 $url = new moodle_url("/blocks/ases/view/moodle_user_creation.php",array('courseid' => $courseid, 'instanceid' => $blockid));
 
 $returnto = optional_param('returnto', $url, PARAM_TEXT);
 $id_current_user = $USER->id;
 $actions = authenticate_user_view($USER->id, $blockid);
+require_login($courseid, false);
+
 if (!isset($actions->create_mdl_user)) {
     redirect(new moodle_url('/'), "No tienes permiso para acceder a la creación de usuarios moodle",1);
 }
@@ -64,7 +67,6 @@ if(!consult_instance($blockid)){
     header("Location: instance_configuration.php?courseid=$courseid&instanceid=$blockid");
 }
 
-require_login($courseid, false);
 
 
 /* */

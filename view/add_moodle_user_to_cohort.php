@@ -46,14 +46,19 @@ require_once('../managers/menu_options.php');
 
 include('../lib.php');
 
+$pagetitle = 'Adición de usuarios ASES a las cohortes';
+$courseid = required_param('courseid', PARAM_INT);
+$blockid = required_param('instanceid', PARAM_INT);
 
+require_login($courseid, false);
+$actions = authenticate_user_view($USER->id, $blockid);
+if (!isset($actions->add_moodle_user_to_cohort)) {
+    redirect(new moodle_url('/'), "No tienes permiso para adicionar un usuario moodle a una cohorte ASES",1);
+}
 
 $ases_context = cohort_lib::get_ases_context();
 $manage_cohorts_url = cohort_lib::get_context_management_url();
 // Set up the page.
-$pagetitle = 'Creacion de usuarios ASES';
-$courseid = required_param('courseid', PARAM_INT);
-$blockid = required_param('instanceid', PARAM_INT);
 $id_current_user = $USER->id;
 
 $url = new moodle_url('/blocks/ases/view/add_moodle_user_to_cohort.php', array('courseid' => $courseid, 'instanceid' => $blockid));

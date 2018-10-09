@@ -48,7 +48,7 @@ class program_form extends moodleform {
         $mform->addElement('text', 'codigosnies', 'Codigo SNIES');
         $mform->addRule('codigosnies', null, 'required');
 
-        $mform->addElement('text', 'cod_univalle', 'Codigo Univalle', null);
+        $mform->addElement('text', 'cod_univalle', 'Codigo Univalle', array('type'=>'number'));
         $mform->addRule('cod_univalle', null, 'required');
         $mform->addRule('cod_univalle', null, 'numeric');
 
@@ -66,26 +66,29 @@ class program_form extends moodleform {
     }
 
     public function get_errors(): array {
-        $files = array();
-        $this->_validate_files($files);
-        return $this->validation($this->get_data(), $files);
+        $common_errors = $this->_form->_errors;
+        $custom_erros = $this->validation((array) $this->get_data(), array());
+        $errors = array_merge($custom_erros,  $common_errors);
+        return $errors;
     }
     public function validation($data, $files): array {
         parent::validation($data, $files);
         $program = new Programa($data);
 
+        $errors = array();
 
-        if (!$program->valid_unique_key()) {
-
-            $repeated_program = Programa::get_by(array(
-                Programa::JORNADA=>$program->jornada,
-                Programa::CODIGO_UNIVALLE=>$program->cod_univalle,
-                Programa::ID_SEDE=>$program->id_sede));
-            \core\notification::error("Ya existe un programa con la misma jornada, codigo univalle y sede, este es '$repeated_program->nombre'");
-            /* If array is not empty, error is detected, but here is no specific field error*/
-             array('some error');
+        if (!$program->valid()) {
+            if ($program->has_error(DatabaseErrorFactory::UNIQUE_KEY_CONSTRAINT_VIOLATION)) {
+                /* @var Programa $repeated_program */
+                $repeated_program = Programa::get_by(array(
+                    Programa::JORNADA => $program->jornada,
+                    Programa::CODIGO_UNIVALLE => $program->cod_univalle,
+                    Programa::ID_SEDE => $program->id_sede));
+                /* If array is not empty, error     is detected, but here is no specific field error*/
+                $errors[BaseDAO::GENERIC_ERRORS_FIELD]="Ya existe un programa con la misma jornada, codigo univalle y sede, este es '$repeated_program->nombre'";
+            }
         }
-        return array();
+        return $errors;
     }
     /**
      * Return an instance of Programa extracted of the form data

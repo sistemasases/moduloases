@@ -27,9 +27,13 @@ require_once(__DIR__.'/../../managers/lib/reflection.php');
  */
 defined('MOODLE_INTERNAL') || die;
 require_once (__DIR__.'/../Errors/Factories/FieldValidationErrorFactory.php');
+require_once (__DIR__.'/../Errors/AsesError.php');
 abstract class BaseDAO
 {
+
     use from_std_object_or_array;
+
+    const GENERIC_ERRORS_FIELD = 'generic_errors';
 
     const NO_REGISTRA = 'NO REGISTRA';
 
@@ -37,7 +41,7 @@ abstract class BaseDAO
 
     /**
      * This variable contains the same errors than $_erros but are agrouped by the class properties, if exist
-     * some error than does not related with a unique class attribute this is stored in $_errors_object->generic_errors
+     * some error than does not related with a unique class attribute this is stored in $_errors_object['generic_errors']
      *
      * Example
      * The class Foo have two properties, $a and $b, $a is required and $b should be numeric, but
@@ -52,10 +56,19 @@ abstract class BaseDAO
      *      $this->b = $b;
      *  }
      * }'''
-     * If you have an instance '''$fo = new Foo(null, 'some_no_numeric');''' and execute
+     * If you have an instance '''$fo = new Foo(null, 'some_no_numeric');''' and execute $this->valid()
+     * the $_errors_array should be equal to
+     *'''
+     * array(
+     *  'a' => AsesError(10, 'El campo es requerido'),
+     *  'b' => AsesError(11, 'El campo debe ser numerico')
+     * );
+     *
+     *'''
+     *And you can access this error array via $this->get_errors_array();
      * @var
      */
-    private $_errors_object;
+    private $_errors_array;
     public function __construct($data = null)
     {
         if ($data) {
@@ -63,32 +76,58 @@ abstract class BaseDAO
         }
     }
 
-
+    public function has_error($error_id): bool {
+        $this->valid();
+        /* @var AsesError $error*/
+        foreach ($this->_errors as $error) {
+            if($error->code == $error_id) {
+                return true;
+            }
+        }
+        return false;
+    }
     /**
      * Clean errors
      */
     private function clean_errors() {
         $this->_errors = array();
+        $this->_errors_array = array();
     }
-
+    /**
+     * Custom validation method, rewrite this if you need make some aditional validation, this method
+     * should be called when $this->valid() is called
+     *
+     * You also should add the errors using the method $this->add_error()
+     *
+     * @return bool True if the custom validation has not found any error
+     * @see add_error
+     */
     /**
      * Check if the current object is valid, and if is not valid add all the errors and make
      * these available by calling get_errors
      * @see get_errors
      * @return bool
      */
+    public function _custom_validation(): bool {
+        return true;
+    }
     public function valid(): bool {
+
         $this->clean_errors();
-        $valid = true;
         /* If at least one field than should be numeric is not numeric*/
-        if( count($this->validate_numeric_fields()) > 0 ) {
-            $valid = false;
+        if( !$this->validate_numeric_fields()) {
+
+            return false;
         }
         /* If at least one field than should be required is empty or null */
-        if( count($this->validate_required_fields()) > 0 ) {
-            $valid = false;
+        if( !$this->validate_required_fields() ) {
+
+            return false;
         }
-        return $valid;
+        if( !$this->_custom_validation()) {
+            return  false;
+        }
+        return true;
     }
 
     /**
@@ -97,21 +136,43 @@ abstract class BaseDAO
      *
      * Also, if an error is found, this can be returned calling the function get_errors()
      * @see get_errors
-     * @return array Array of string where each string is the name of a column than have incorrect format
+     * @return bool True if all the requried fields have some value
      */
-    private function validate_required_fields(): array {
+    private function validate_required_fields(): bool {
+        $valid = true;
         $required_fields = $this->get_required_fields();
+        $required_field_is_empty_error = FieldValidationErrorFactory::required_field_is_empty();
         foreach($required_fields as $required_field) {
             if(!property_exists($this, $required_field)) {
-                array_push($this->_errors, FieldValidationErrorFactory::required_field_is_empty());
+                $this->add_error($required_field_is_empty_error, $required_field);
+                $valid = false;
                 continue;
             } else if($this->{$required_field} == '') {
-                array_push($this->_errors, FieldValidationErrorFactory::required_field_is_empty());
+                $this->add_error($required_field_is_empty_error, $required_field);
+                $valid = false;
                 continue;
             }
         }
+        return $valid;
     }
 
+    /**
+     * Add an error to the current object,
+     * @param AsesError $error
+     * @param string $fieldname Field (or object property) where the error is found, default is generic
+     * errors field, this means than the error is not related with any object field or means than the error
+     * is related to more than one field at the same time
+     *
+     */
+    public function add_error(AsesError $error, $fieldname = BaseDAO::GENERIC_ERRORS_FIELD ) {
+        array_push($this->_errors, $error);
+
+        if(!$this->_errors_array[$fieldname]) {
+            $this->_errors_array[$fieldname] = array ($error);
+        } else {
+            array_push($this->_errors_array[$fieldname] , $error);
+        }
+    }
     /**
      * Check if all fields of the object than should be numeric are numeric, and return an array with the names
      * of the fields than are invalid, empty array is returned otherwise.
@@ -119,18 +180,19 @@ abstract class BaseDAO
      * Also, if an error is found, this can be returned calling the function get_errors()
      * @see is_numeric
      * @see get_errors
-     * @return array Array of string where each string is the name of a column than have incorrect format
+     * @see get_numeric_fields
+     * @return bool True if all object properties than should be numeric are numeric
      */
-    private function validate_numeric_fields(): array {
+    private function validate_numeric_fields(): bool {
+        $valid = true;
         $nuemric_fields = $this->get_numeric_fields();
-        $numeric_fields_failed = array();
-        foreach($nuemric_fields as $nuemric_field) {
-            if(!is_numeric($this->{$nuemric_field})) {
-                array_push($numeric_fields_failed, $nuemric_field);
-                array_push($this->_errors, FieldValidationErrorFactory::numeric_field_required());
+        foreach($nuemric_fields as $numeric_field) {
+            if($this->$numeric_field && !is_numeric($this->$numeric_field)) {
+                $this->add_error(FieldValidationErrorFactory::numeric_field_required(array('field' => $numeric_field)), $numeric_field);
+                $valid = false;
             }
         }
-        return $numeric_fields_failed;
+        return $valid;
     }
 
     /**
@@ -140,6 +202,14 @@ abstract class BaseDAO
      */
     public function get_errors(): array {
         return $this->_errors;
+    }
+    /**
+     * Return errors array, AsesError agrouped under the object fields or generic errors
+     * @see AsesError
+     * @return array
+     */
+    public function get_errors_array(): array {
+        return $this->_errors_array;
     }
     /**
      * Overload this function in the child classes if this have numeric
@@ -266,25 +336,26 @@ abstract class BaseDAO
      * @example $conditions =  array('username'=> 'Camilo', 'lastname'=> 'Cifuentes')
      * @example $conditions = array(AsesUser::USER_NAME => 'Camilo', AsesUser::LAST_NAME => 'Cifuentes')
      * @see https://docs.moodle.org/dev/Data_manipulation_API
-     * @return array Object instance if exists in database, empty array if does not exist
+     * @return array|object Object instance if exists in database, empty array if does not exist
      * @throws dml_exception
      * @throws ErrorException If the given conditions specify invalid column names throws an error
      *
      */
-    public static function get_by($conditions,  $sort='',  $limitfrom=0, $limitnum=0): array {
+    public static function get_by($conditions,  $sort='',  $limitfrom=0, $limitnum=0) {
         global $DB;
         $CLASS = get_called_class();
         if(!$CLASS::valid_conditions($conditions)) {
             throw new ErrorException("The given columns for conditions array are invalid, active debug mode for show de debug backtrace");
         }
         $db_records = $DB->get_records($CLASS::get_table_name(), $conditions, $sort, '*', $limitfrom, $limitnum );
-        if(count($db_records)>0) {
-            return $CLASS::make_objects_from_std_objects_or_arrays($db_records);
-        }
-        if(count($db_records)==1) {
-            $db_record = $db_records[0];
+        if( count($db_records)==1 ) {
+            $db_record = reset($db_records);
             return new $CLASS($db_record);
         }
+        if( count($db_records)>0 ) {
+            return $CLASS::make_objects_from_std_objects_or_arrays($db_records);
+        }
+
         return array();
 
     }

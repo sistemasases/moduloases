@@ -10,7 +10,7 @@ class TipoDocumento extends BaseDAO  {
     public $nombre;
     public $descripcion;
 
-    public function get_numeric_fields()
+    public function get_numeric_fields(): array
     {
         return array(TipoDocumento::ID);
     }

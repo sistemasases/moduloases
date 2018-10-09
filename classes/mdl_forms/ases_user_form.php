@@ -64,15 +64,16 @@ class ases_user_form extends moodleform {
         $mform->addElement('date_selector', 'fecha_nac', 'Fecha de nacimiento', $date_options_fecha_nac);
         $mform->addRule('fecha_nac', null, 'required');
 
-        $mform->addElement('select', 'id_ciudad_nac', 'Ciudad nacimiento' , $cidades_options); 
+        $mform->addElement('searchableselector', 'id_ciudad_nac', 'Ciudad nacimiento' , $cidades_options);
         $mform->setDefault('id_ciudad_nac', $ciudad_por_defecto->id);
         $mform->addRule('id_ciudad_nac', null, 'required');
 
-        $mform->addElement('select', 'id_ciudad_ini', 'Ciudad inicial' , $cidades_options);
+        $mform->addElement('searchableselector', 'id_ciudad_ini', 'Ciudad inicial' , $cidades_options);
         $mform->setDefault('id_ciudad_ini', $ciudad_por_defecto->id);
         $mform->addRule('id_ciudad_ini', null, 'required');
        
         $mform->addElement('select', 'sexo', 'Sexo' , $gender_options);
+
         $mform->addRule('sexo', null, 'required');
 
         $mform->addElement('text', 'barrio_ini', 'Barrio de procedencia');

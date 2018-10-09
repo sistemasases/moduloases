@@ -7,6 +7,7 @@ class Discapacidad extends BaseDAO {
     const NOMBRE = 'nombre';
 
     const ID_NO_APLICA = 1;
+    const ID_DISCAPACIDAD_POR_DEFECTO = Discapacidad::ID_NO_APLICA;
 
     public $id;
     public $codigo_men;
