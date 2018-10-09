@@ -157,10 +157,11 @@ $userform = new user_edit_form('', array(
 
     global $DB;
 
-    $sql_query = "SELECT MAX(fecha), id_estado_icetex 
+    $sql_query = "SELECT id_estado_icetex 
                   FROM {talentospilos_est_est_icetex} 
-                  WHERE id_estudiante = $ases_student_id
-                  GROUP BY id_estado_icetex";
+                  WHERE fecha = (SELECT MAX(fecha) 
+                                 FROM {talentospilos_est_est_icetex} 
+                                 WHERE id_estudiante = $ases_student_id)";
     
     $icetex_status_student = $DB->get_record_sql($sql_query);
 
