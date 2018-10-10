@@ -40,7 +40,7 @@ function get_array_students_with_resolution(){
         
     $sql_query = "SELECT row_number() over(), spp_students.id_ases_user, spp_students.cohorte, spp_students.num_doc, substring(spp_students.username from 0 for 8) AS codigo, 
                     spp_students.lastname, spp_students.firstname, spp_students.nombre_semestre, res_students.codigo_resolucion,
-                    res_students.monto_estudiante, academic_students.fecha_cancel, academic_students.promedio_semestre,
+                    res_students.monto_estudiante, academic_students.fecha_cancel, academic_students.promedio_semestre, status_icetex.nombre_estado,
                     CASE WHEN (academic_students.fecha_cancel IS NULL AND academic_students.promedio_semestre IS NOT NULL)
                                 THEN '-ACTIVO'
                         WHEN (academic_students.promedio_semestre IS NULL)
@@ -79,7 +79,15 @@ function get_array_students_with_resolution(){
                 FROM {talentospilos_history_academ} AS academ
                 LEFT JOIN {talentospilos_history_cancel} cancel ON cancel.id_history = academ.id) AS academic_students
 
-                ON (spp_students.id_ases_user = academic_students.id_estudiante AND spp_students.id_semestre = academic_students.id_semestre)";
+                ON (spp_students.id_ases_user = academic_students.id_estudiante AND spp_students.id_semestre = academic_students.id_semestre)
+                
+                LEFT JOIN
+                
+                (SELECT hist_stat.id_estudiante, est_icetex.nombre AS nombre_estado, hist_stat.id_semestre
+                FROM {talentospilos_hist_est_ice} AS hist_stat 
+                INNER JOIN {talentospilos_estados_icetex} AS est_icetex ON est_icetex.id = hist_stat.id_estado_icetex) AS status_icetex
+                
+                ON (spp_students.id_ases_user = status_icetex.id_estudiante AND spp_students.id_semestre = status_icetex.id_semestre)";
     
     $students = $DB->get_records_sql($sql_query);
 
