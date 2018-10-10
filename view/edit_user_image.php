@@ -32,7 +32,7 @@ require_login($courseid, false);
 $blockid   = required_param('instanceid', PARAM_INT);
 $actions = authenticate_user_view($USER->id, $blockid);
 if (!isset($actions->update_user_profile_image_)) {
- redirect(new moodle_url('/'));
+ redirect(new moodle_url('/'), "No tienes permisos para cambiar la imagen de un usuario ASES", null, \core\output\notification::NOTIFY_ERROR);
 }
 $show_html_elements_update_user_profile_image = true;
 $filemanageroptions = array('maxbytes'       => $CFG->maxbytes,
@@ -41,8 +41,7 @@ $filemanageroptions = array('maxbytes'       => $CFG->maxbytes,
                              'accepted_types' => 'web_image');
 
 $ases_user_id =  required_param('ases_user_id', PARAM_INT);
-//echo $ases_user_id ;
-//die;
+
 $url_return =  required_param('url_return', PARAM_TEXT);
 
 $contextcourse = context_course::instance($courseid);
@@ -65,11 +64,16 @@ if ($user_image_edit_form->is_cancelled()) {
     $ases_user_id, array('subdirs' => 0, 'maxbytes' => $maxbytes, 'maxfiles' => 50));
     redirect($url_return);
   //In this case you process validated data. $mform->get_data() returns data posted in form.
+} else if(!$user_image_edit_form->is_validated()){
+    $errors = $user_image_edit_form->get_errors();
+    $error_messages = array_values($errors);
+    $error_messages_string = implode(',', $error_messages);
+    redirect($url_return, "No se ha podido actualizar la imagen de usuario: $error_messages_string", null, \core\output\notification::NOTIFY_ERROR);
 } else {
-  // this branch is executed if the form is submitted but the data doesn't validate and the form should be redisplayed
-  // or on the first display of the form.
-  //Set default data (if any)
-  $user_image_edit_form->set_data($toform);
-  //displays the form
-  $user_image_edit_form->display(null);
+    // this branch is executed if the form is submitted but the data doesn't validate and the form should be redisplayed
+    // or on the first display of the form.
+    //Set default data (if any)
+    $user_image_edit_form->set_data($toform);
+    //displays the form
+    $user_image_edit_form->display(null);
 };

@@ -22,22 +22,28 @@
  * @copyright  2016 Luis Gerardo Manrique Cardona <luis.manrique@correounivalle.edu.co>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-ini_set('display_startup_errors', 1);
-ini_set('display_errors', 1);
-error_reporting(-1);
-
 require_once(__DIR__ . '/../../../config.php');
 require_once('../managers/validate_profile_action.php');
 
 require_once(__DIR__ . '/../classes/AsesUserExtended.php');
-require_once(__DIR__ . '/../classes/mdl_forms/ases_user_extended.php');
+require_once(__DIR__ . '/../classes/mdl_forms/ases_user_extended_form.php');
+
+$pagetitle = 'Crear usuario extendido ASES';
+$courseid = required_param('courseid', PARAM_INT);
+$blockid = required_param('instanceid', PARAM_INT);
+
+require_login($courseid, false);
+$actions = authenticate_user_view($USER->id, $blockid);
+if ( !isset($actions->create_user_extended )) {
+    redirect(new moodle_url('/'), "No tienes permiso para adicionar un usuario extendido ASES",1);
+}
+
 
 $output = $PAGE->get_renderer('block_ases');
 echo $output->header();
 
 
-$user_extended_form = new ases_user_extended();
+$user_extended_form = new ases_user_extended_form();
 if($data = $user_extended_form->get_data()) {
     $ases_user_extended = $user_extended_form->get_ases_user_extended();
     $ases_user_extended->save();

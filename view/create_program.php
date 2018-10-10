@@ -15,48 +15,60 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Creación de usuarios ASES
+ * Create program view
  *
  * @author     Luis Gerardo Manrique Cardona
  * @package    block_ases
- * @copyright  2016 Luis Gerardo Manrique Cardona <luis.manrique@correounivalle.edu.co>
+ * @copyright  2018 Luis Gerardo Manrique Cardona <luis.manrique@correounivalle.edu.co>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
+
 require_once(__DIR__ . '/../../../config.php');
 require_once('../managers/validate_profile_action.php');
 
-require_once(__DIR__ .'/../classes/mdl_forms/ases_user_form.php');
+require_once(__DIR__ . '/../classes/mdl_forms/program_form.php');
+
+
+$pagetitle = 'Creacion de programas ASES';
+$courseid = required_param('courseid', PARAM_INT);
+$blockid = required_param('instanceid', PARAM_INT);
 
 require_login($courseid, false);
+$actions = authenticate_user_view($USER->id, $blockid);
+if (!isset($actions->create_program)) {
+    redirect(new moodle_url('/'), "No tienes permiso para acceder a la creación de programas ASES",1);
+}
+$url = new moodle_url("/blocks/ases/view/create_program.php",array('courseid' => $courseid, 'instanceid' => $blockid));
+$PAGE->set_title($pagetitle);
 
 $output = $PAGE->get_renderer('block_ases');
 
-$pagetitle = 'Creacion de usuarios ASES';
-$courseid = required_param('courseid', PARAM_INT);
-$blockid = required_param('instanceid', PARAM_INT);
-$actions = authenticate_user_view($USER->id, $blockid);
-if ( !isset($actions->create_ases_user) ) {
-    redirect(new moodle_url('/'), "No tienes permiso para acceder a la creación de usuario ASES",1);
-}
-$url = new moodle_url("/blocks/ases/view/create_ases_user.php",array('courseid' => $courseid, 'instanceid' => $blockid));
-$PAGE->set_title($pagetitle);
-$add_ases_user_form = new ases_user_form($url);
+$program_form = new program_form($url);
 
 echo $output->header();
 
-if ($add_ases_user_form->is_validated()) {
-    $ases_user = $add_ases_user_form->get_ases_user();
-    if($ases_user->save()) {
-        \core\notification::success("Se ha creado el usuario número de documento '$ases_user->num_doc'");
+if ($program_form->is_submitted() && $program_form->is_validated()) {
+
+    $program = $program_form->get_program();
+    if ($program->valid()) {
+        $program->save();
+        \core\notification::success("Se ha almacenado correctamente el programa '$program->nombre'");
     } else {
-        \core\notification::error("Se ha encontrado un error no soportado");
+
         /* @var AsesError $error*/
-        foreach($ases_user->get_errors() as $error) {
+        foreach($program->get_errors() as $error) {
             \core\notification::error($error->message);
         }
     }
+} else {
+    $errors = $program_form->get_errors();
+
+    if($errors[BaseDAO::GENERIC_ERRORS_FIELD]) {
+        \core\notification::error($errors[BaseDAO::GENERIC_ERRORS_FIELD]);
+    }
 }
-$add_ases_user_form->display();
+$program_form->display();
 echo $output->footer();
 
 
