@@ -28,18 +28,10 @@ require_once(__DIR__.'/../TrackingStatus.php');
 require_once(__DIR__.'/../EstadoPrograma.php');
 require_once(__DIR__.'/../Programa.php');
 
-class ases_user_extended extends moodleform {
+class ases_user_extended_form extends moodleform {
     public function definition()
     {
 
-        /**
-         *     public $id;
-        public $id_moodle_user;
-        public $id_ases_user;
-        public $id_academic_program;
-        public $tracking_status;
-        public $program_status;
-         */
         $mform = $this->_form;
         $tracking_status_options = TrackingStatus::get_options();
         $ases_user_options = AsesUser::get_options();

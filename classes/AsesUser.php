@@ -25,9 +25,11 @@
  */
 defined('MOODLE_INTERNAL') || die;
 
-
+require_once(__DIR__.'/../managers/user_management/user_management_lib.php');
 require_once(__DIR__.'/DAO/BaseDAO.php');
 require_once(__DIR__.'/Estado.php');
+
+
 class AsesUser extends BaseDAO  {
     const TIPO_DOCUMENTO = 'tipo_doc';
     const TIPO_DOCUMENTO_INICIAL = 'tipo_doc_ini';
@@ -42,6 +44,7 @@ class AsesUser extends BaseDAO  {
     const ESTADO_ASES = 'estado_ases';
     const NUMERO_DOCUMENTO = 'num_doc';
     const NUMERO_DOCUMENTO_INICIAL = 'num_doc_ini';
+    const ID = 'id';
     public $tipo_doc_ini = -1;
     public $tipo_doc;
     public $num_doc;
@@ -71,7 +74,7 @@ class AsesUser extends BaseDAO  {
     public $estamento; // Tipo colegio
     public $grupo;
 
-    public function __construct() {
+    public function __construct($data = null) {
         $this->id_discapacidad = Discapacidad::ID_NO_APLICA;
         $this->dir_ini = BaseDAO::NO_REGISTRA;
         $this->direccion_res = BaseDAO::NO_REGISTRA;
@@ -82,39 +85,23 @@ class AsesUser extends BaseDAO  {
         $this->colegio = BaseDAO::NO_REGISTRA;
         $this->barrio_ini = BaseDAO::NO_REGISTRA;
         $this->barrio_res = BaseDAO::NO_REGISTRA;
-        $this->tel_acudiente ='';
+        $this->tel_acudiente = '';
         $this->tel_ini = '';
         $this->tel_res = '';
         $this->estado = Estado::ACTIVO;
         $this->estamento = BaseDAO::NO_REGISTRA;
         $this->grupo = 0;
+        if($data) {
+            parent::__construct($data);
+        }
+
     }
 
-    /**
-     * Return all table columns of AsesUser table
-     * @return array
-     */
-    public static function get_table_columns() {
-        return array(
-            AsesUser::AYUDA_DISCAPACIDAD,
-            AsesUser::ESTADO,
-            AsesUser::ESTADO_ASES,
-            AsesUser::FECHA_NACIMIENTO,
-            AsesUser::ID_CIUDAD_INICIAL,
-            AsesUser::ID_CIUDAD_NACIMIENTO,
-            AsesUser::SEXO,
-            AsesUser::TIPO_DOCUMENTO_INICIAL,
-            AsesUser::NUMERO_DOCUMENTO_INICIAL,
-            AsesUser::ID_DISCAPACIDAD,
-            AsesUser::ID_CIUDAD_RESIDENCIA
-        );
-    }
     /**
      * Obtener los usuarios ASES, sus id y sus nombres en un array
      * @return array Array donde las llaves son los id de los usuarios ASES y el valor es el nombre del usuario
      */
     public static function get_options(): array {
-        global $DB;
         $options = array();
         $ases_users_with_names = AsesUser::get_ases_users_with_names();
         foreach($ases_users_with_names as $ases_user) {
@@ -148,7 +135,7 @@ class AsesUser extends BaseDAO  {
      */
     public function get_moodle_user() {
         $user_extended = $this->get_user_extended();
-        return get_user_moodle($user_extended->id_moodle_user);
+        return user_management_get_full_moodle_user($user_extended->id_moodle_user);
     }
 
     /**
@@ -172,10 +159,7 @@ class AsesUser extends BaseDAO  {
             AsesUser::ESTADO_ASES
         );
     }
-    public function format() {
-        return $this;
-    }
-    
+
     /**
      * Check if self document number is taken by another ases user than exist in database
      * @return bool True if already exists, false otherwise

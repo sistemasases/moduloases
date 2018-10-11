@@ -2,13 +2,13 @@
     "name": "ases/block_ases",
     "description": "Ases block for \"Talentos pilos\" management in moodle",
     "type": "project",
-    "require": {
-        "doctrine/orm": "^2.6"
-    },
     "authors": [
         {
             "name": "ESTRATEGIA ASES UNIVALLE",
             "email": "sistemas.ases@correounivalle.edu.co"
         }
-    ]
+    ],
+    "require-dev": {
+        "nette/php-generator": "^3.0"
+    }
 }
