@@ -161,7 +161,7 @@ $userform = new user_edit_form('', array(
                   FROM {talentospilos_est_est_icetex} 
                   WHERE fecha = (SELECT MAX(fecha) 
                                  FROM {talentospilos_est_est_icetex} 
-                                 WHERE id_estudiante = $ases_student_id)";
+                                 WHERE id_estudiante = $ases_student_id) AND id_estudiante = $ases_student_id";
     
     $icetex_status_student = $DB->get_record_sql($sql_query);
 
