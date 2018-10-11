@@ -11,6 +11,9 @@ class AsesUserExtended extends BaseDAO {
     const ID_ASES_USER = 'id_ases_user';
     const ID_MOODLE_USER = 'id_moodle_user';
     const TRACKING_STATUS = 'tracking_status';
+    const ID = 'id';
+    const ID_ACADEMIC_PROGRAM = 'id_academic_program';
+    const PROGRAM_STATUS = 'program_stauts';
     public $id;
     public $id_moodle_user;
     public $id_ases_user;
@@ -18,12 +21,16 @@ class AsesUserExtended extends BaseDAO {
     public $tracking_status;
     public $program_status;
 
-    /**
-     * @return $this
-     */
-    public function format() {
-        return $this;
+    public function get_numeric_fields(): array  {
+        return array (
+            AsesUserExtended::ID_ACADEMIC_PROGRAM,
+            AsesUserExtended::ID,
+            AsesUserExtended::ID_ASES_USER,
+            AsesUserExtended::ID_MOODLE_USER,
+            AsesUserExtended::PROGRAM_STATUS
+        );
     }
+
     public  static function get_table_name(): string {
         return AsesUserExtended::TABLE_NAME;
     }

@@ -1,6 +1,10 @@
 <?php
 require_once(__DIR__.'/DAO/BaseDAO.php');
 class Municipio extends BaseDAO  {
+    const ID = 'id';
+    const NOMBRE = 'nombre';
+    const CODIGO_DIVIPOLA = 'codigodivipola';
+    const CODIGO_DEPARTAMETO = 'cod_depto';
     public $id;
     public $codigodivipola;
     public $cod_depto;
@@ -26,9 +30,16 @@ class Municipio extends BaseDAO  {
         $municipio->from_std_object_or_array($municipio_db);
         return $municipio;
     }
-    public function format() {
-        return $this;
+
+
+    public function get_numeric_fields(): array {
+        return array(
+            Municipio::CODIGO_DEPARTAMETO,
+            Municipio::ID,
+            Municipio::CODIGO_DIVIPOLA
+        );
     }
+
     public static function get_table_name(): string {
         return 'talentospilos_municipio';
     }
@@ -37,12 +48,8 @@ class Municipio extends BaseDAO  {
      * @return array Array donde las llaves son los id de los municipios y el valor es el nombre del municipio
      */
     public static function get_options() {
-        $municipios = Municipio::get_all();
-        $opciones = array();
-        foreach($municipios as $municipio) {
-            $opciones[$municipio->id] = $municipio->nombre;
-        }
-        return $opciones;
+        $fields = Municipio::ID.','.Municipio::NOMBRE;
+        return parent::_get_options($fields, Municipio::NOMBRE);
     }
 }
 
