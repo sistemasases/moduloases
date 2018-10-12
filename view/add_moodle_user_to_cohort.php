@@ -38,6 +38,7 @@ require_once('../managers/permissions_management/permissions_lib.php');
 require_once("../managers/lib/cohort_lib.php");
 require_once("../managers/lib/student_lib.php");
 require_once('../classes/mdl_forms/add_user_to_cohort_form.php');
+require_once("../managers/user_creation_process/user_creation_process_lib.php");
 
 
 require_once('../managers/validate_profile_action.php');
@@ -49,6 +50,9 @@ include('../lib.php');
 $pagetitle = 'Adición de usuarios ASES a las cohortes';
 $courseid = required_param('courseid', PARAM_INT);
 $blockid = required_param('instanceid', PARAM_INT);
+$username = optional_param('username', '', PARAM_TEXT);
+$continue = optional_param('continue', false, PARAM_BOOL);
+$user_created = optional_param('user_created', false, PARAM_BOOL);
 
 require_login($courseid, false);
 $actions = authenticate_user_view($USER->id, $blockid);
@@ -61,9 +65,16 @@ $manage_cohorts_url = cohort_lib::get_context_management_url();
 // Set up the page.
 $id_current_user = $USER->id;
 
-$url = new moodle_url('/blocks/ases/view/add_moodle_user_to_cohort.php', array('courseid' => $courseid, 'instanceid' => $blockid));
+$url = new moodle_url('/blocks/ases/view/add_moodle_user_to_cohort.php',
+    array(
+        'courseid' => $courseid,
+        'instanceid' => $blockid,
+        'continue'=>$continue,
+        'user_created'=>$user_created
+    ));
 require_login($courseid, false);
-$add_user_to_cohort_form = new add_user_to_cohort_form($url);
+
+$add_user_to_cohort_form = new add_user_to_cohort_form($url,  array('username'=>$username));
 
 //Form processing and displaying is done here
 if ($add_user_to_cohort_form->is_cancelled()) {
@@ -73,27 +84,46 @@ if ($add_user_to_cohort_form->is_cancelled()) {
 $output = $PAGE->get_renderer('block_ases');
 echo $output->header();
 
-if ($add_user_to_cohort_form->is_submitted() ) {
+$user = $DB->get_record('user', array('username' => $username));
+
+if ($add_user_to_cohort_form->is_submitted() && !$add_user_to_cohort_form->is_validated() ) {
 
     $errors = $add_user_to_cohort_form->get_errors();
+    $data = $add_user_to_cohort_form->get_submitted_data();
     if($errors['username']) {
-        $url_create_moodle_user = new moodle_url('/blocks/ases/view/moodle_user_creation.php', 
-        array('courseid' => $courseid, 'instanceid' => $blockid, 'username'=>$add_user_to_cohort_form->get_submitted_data()->username));
+
+        $url_create_moodle_user = \user_creation_process\generate_create_moodle_user_url($blockid, $courseid, $data->username, 'true');
     
         $add_user_link =  html_writer::tag('p',
-            "El usuario no existe en la base de datos moodle.     " . html_writer::tag('a', "Puede añadirlo a al campus virtual en el siguiente enlace",
+            "El usuario no existe en la base de datos moodle.     " . html_writer::tag('a', "Puede añadirlo a al Campus Virtual en el siguiente enlace",
         array('href' => $url_create_moodle_user)));
         \core\notification::info($add_user_link);
     }
 
 }
+$usuario_aniadido = false;
 if ($data = $add_user_to_cohort_form->get_data()) {
     $mdl_user = $DB->get_record('user', array('username' => $data->username));
     cohort_add_member( $data->cohort, $mdl_user->id);
     echo \core\notification::success(" El usuario $mdl_user->firstname $mdl_user->lastname ha sido añadido a la cohorte que ha seleccionado");
+    $usuario_aniadido = true;
 
-  //In this case you process validated data. $mform->get_data() returns data posted in form.
-} 
+}
+if ($user_created) {
+    \core\notification::success('Se ha creado el usuario moodle');
+}
+if($continue && $usuario_aniadido ){
+
+    $url = \user_creation_process\generate_create_ases_user_url($blockid, $courseid, $data->username,true);
+    redirect($url);
+}
+
+if ( $user ) {
+    \core\notification::info("Editando actualmente al usuario $user->firstname $user->lastname");
+}
+
+
+
 $add_user_to_cohort_form->display();
 echo $output->footer();
 ?>

@@ -33,6 +33,7 @@ require_once('../managers/ases_report/asesreport_lib.php');
 require_once('../managers/permissions_management/permissions_lib.php');
 require_once("../managers/lib/cohort_lib.php");
 require_once("../managers/lib/student_lib.php");
+require_once("../managers/user_creation_process/user_creation_process_lib.php");
 require_once($CFG->dirroot.'/user/editlib.php');
 
 require_once($CFG->dirroot.'/webservice/lib.php');
@@ -50,9 +51,10 @@ include("../classes/output/renderer.php");
 $pagetitle = 'Creacion de usuarios Moodle';
 $courseid = required_param('courseid', PARAM_INT);
 $blockid = required_param('instanceid', PARAM_INT);
+$continue = optional_param('continue', false, PARAM_BOOL);
 
 $user_name = optional_param('username', '', PARAM_TEXT);
-$url = new moodle_url("/blocks/ases/view/moodle_user_creation.php",array('courseid' => $courseid, 'instanceid' => $blockid));
+$url = new moodle_url("/blocks/ases/view/moodle_user_creation.php",array('courseid' => $courseid, 'instanceid' => $blockid, 'continue'=>$continue));
 
 $returnto = optional_param('returnto', $url, PARAM_TEXT);
 $id_current_user = $USER->id;
@@ -132,7 +134,7 @@ file_prepare_draft_area($draftitemid, $filemanagercontext->id, 'user', 'newicon'
 $user->imagefile = $draftitemid;
 $userform = new user_editadvanced_form(new moodle_url($PAGE->url, array('returnto' => $returnto)), array(
     'user' => $user));
-//echo $output->standard_head_html(); 
+
 echo $output->header();
 
 if ($userform->is_cancelled()) {
@@ -171,9 +173,16 @@ if ($userform->is_cancelled()) {
             }
         }
         $usercreated = true;
+} elseif ($userform->is_submitted() && !$userform->is_validated()){
+    \core\notification::error('Se han encontrado errores al procesar');
+}
+
+if ( $continue && $usercreated) {
+    $url = \user_creation_process\generate_add_user_to_cohort_url($blockid, $courseid, $usernew->username, true, true);
+    redirect($url);
 }
 if ($usercreated) {
-    html_writer::tag('h4', "Usuario creado con exito");
+    \core\notification::success("Usuario creado con exito");
 }
 
 

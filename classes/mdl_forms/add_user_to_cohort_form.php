@@ -26,14 +26,21 @@ require_once(__DIR__.'/../../managers/lib/cohort_lib.php');
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class add_user_to_cohort_form extends moodleform {
-    const NULL_COHORT_ID = -1;
-    const NULL_COHORT_NAME = '-------';
+
+    public function __construct( $action = null, $customdata = null, string $method = 'post', string $target = '',  $attributes = null, bool $editable = true,  $ajaxformdata = null)
+    {
+
+        parent::__construct($action, $customdata, $method, $target, $attributes, $editable, $ajaxformdata);
+    }
+
     public function definition()
     {
-        global $CFG;
         $ases_cohorts_options = cohort_lib::get_options();
 
-        $mform = $this->_form; // Don't forget the underscore! 
+
+
+        $mform = $this->_form; // Don't forget the underscore!
+        $mform->addElement('header', 'myheader', 'Añadir usuarios moodle a cohortes');
         $mform->addElement('text', 'username', 'Nombre de usuario moodle' , null); // Add elements to your form
         $mform->addRule('username', null, 'required');
         $mform->addElement('searchableselector', 'cohort', 'Cohorte ASES' , $ases_cohorts_options); // Add elements to your form
@@ -43,6 +50,10 @@ class add_user_to_cohort_form extends moodleform {
         $buttonarray[] = $mform->createElement('submit', 'submitbutton', 'Adicionar  usuario a la cohorte');
         $buttonarray[] = $mform->createElement('submit', 'cancel', get_string('cancel'));
         $mform->addGroup($buttonarray, 'buttonar', '', ' ', false);
+
+        if($this->_customdata) {
+            $this->set_data($this->_customdata);
+        }
     }
     function get_errors(): array {
         $common_errors = $this->_form->_errors;

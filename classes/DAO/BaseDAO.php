@@ -28,6 +28,8 @@ require_once(__DIR__.'/../../managers/lib/reflection.php');
 defined('MOODLE_INTERNAL') || die;
 require_once (__DIR__.'/../Errors/Factories/FieldValidationErrorFactory.php');
 require_once (__DIR__.'/../Errors/AsesError.php');
+require_once(__DIR__.'/../../vendor/autoload.php');
+use NilPortugues\Sql\QueryBuilder\Builder\GenericBuilder;
 abstract class BaseDAO
 {
 
@@ -36,7 +38,7 @@ abstract class BaseDAO
     const GENERIC_ERRORS_FIELD = 'generic_errors';
 
     const NO_REGISTRA = 'NO REGISTRA';
-
+    public $builder ;
     private $_errors = array();
 
     /**
@@ -71,11 +73,14 @@ abstract class BaseDAO
     private $_errors_array;
     public function __construct($data = null)
     {
+        $this->builder = new GenericBuilder();
         if ($data) {
             $this->make_from($data);
         }
     }
-
+    public static function get_builder(): GenericBuilder {
+        return new GenericBuilder();
+    }
     public function has_error($error_id): bool {
         $this->valid();
         /* @var AsesError $error*/
@@ -185,7 +190,8 @@ abstract class BaseDAO
      */
     private function validate_numeric_fields(): bool {
         $valid = true;
-        $nuemric_fields = $this->get_numeric_fields();
+        $CLASS = get_called_class();
+        $nuemric_fields = $CLASS->get_numeric_fields();
         foreach($nuemric_fields as $numeric_field) {
             if($this->$numeric_field && !is_numeric($this->$numeric_field)) {
                 $this->add_error(FieldValidationErrorFactory::numeric_field_required(array('field' => $numeric_field)), $numeric_field);
@@ -220,7 +226,7 @@ abstract class BaseDAO
      * @return array Array of string than represents the column names where
      * the column is type int, double or bigint and the current value is not
      */
-    public function get_numeric_fields(): array {
+    public static function get_numeric_fields(): array {
         return array();
     }
 
@@ -240,7 +246,7 @@ abstract class BaseDAO
 
     /**
      * Save object to database
-     * @return bool|int id if was sucessfull created return id false otherwise
+     * @return false|int id if was sucessfull created return id false otherwise
      * @throws dml_exception A DML specific exception is thrown for any errors.
      */
     public function save() {
@@ -248,7 +254,11 @@ abstract class BaseDAO
         $CLASS = get_called_class();
         $this->format();
         $safety_save_object = $this->__delete_not_null_fields_than_have_predefined_values_in_db($CLASS, $this);
-        return $DB->insert_record($CLASS::get_table_name(), $safety_save_object );
+        $record_id =  $DB->insert_record($CLASS::get_table_name(), $safety_save_object );
+        if(property_exists($this, 'id')) {
+            $this->id = $record_id;
+        }
+        return $record_id;
     }
     /**
      * Check if object have null properties, and create a new object than does not have
@@ -360,6 +370,14 @@ abstract class BaseDAO
 
     }
 
+    /**
+     * Return all not null fields of the object and than have default value defined
+     * in the database
+     * @return array
+     */
+    public static function get_not_null_fields_and_default_in_db(): array {
+        return array();
+    }
     /**
      * Check if object exists in database based in an array of a  given conditions
      * @param $conditions Array key-value than gets the conditions for get the objects

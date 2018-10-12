@@ -21,7 +21,7 @@ class AsesUserExtended extends BaseDAO {
     public $tracking_status;
     public $program_status;
 
-    public function get_numeric_fields(): array  {
+    public static function get_numeric_fields(): array  {
         return array (
             AsesUserExtended::ID_ACADEMIC_PROGRAM,
             AsesUserExtended::ID,

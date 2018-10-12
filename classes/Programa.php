@@ -55,7 +55,7 @@ class Programa extends BaseDAO {
         return parent::_get_options($fields, Programa::NOMBRE);
 
     }
-    public function get_numeric_fields(): array {
+    public static function get_numeric_fields(): array {
         return array(
             Programa::ID,
             Programa::CODIGO_SNIES,

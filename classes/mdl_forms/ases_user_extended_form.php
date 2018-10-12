@@ -39,8 +39,10 @@ class ases_user_extended_form extends moodleform {
         $program_status_options = EstadoPrograma::get_options();
         $program_options = Programa::get_options();
 
+        $mform->addElement('header', 'myheader', 'Usuario extended Ases');
+
         $mform->addElement('text', 'moodle_user_name', 'Nombre de usuario moodle');
-        $mform->addElement('select', 'id_ases_user', 'Usuario ASES', $ases_user_options);
+        $mform->addElement('searchableselector', 'id_ases_user', 'Usuario ASES', $ases_user_options);
         $mform->addElement('checkbox', 'inactive_previus_track_stat', 'Desactivar seguimientos previos');
 
         $mform->addElement('select', 'tracking_status', 'Estado de seguimiento', $tracking_status_options);
@@ -74,7 +76,6 @@ class ases_user_extended_form extends moodleform {
         $ases_user_extended->make_from($validated_form_data);
         /* The shared properties between of form data and user extended are all exept one, id_moodle_user */
         $ases_user_extended->id_moodle_user = $DB->get_record('user' , array('username'=> $validated_form_data->moodle_user_name))->id;
-        print_r($ases_user_extended);
         return $ases_user_extended;
     }
     public function validation($data, $files): array {

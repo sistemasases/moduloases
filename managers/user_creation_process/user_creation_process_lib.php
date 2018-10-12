@@ -47,4 +47,48 @@ const CREATE_MOODLE_USER_URL  = '/blocks/ases/view/moodle_user_creation.php';
 const CREATE_ASES_USER_URL  = '/blocks/ases/view/create_ases_user.php';
 const CREATE_UPDATE_USER_URL = '/blocks/ases/view/create_user_extended.php'; // actualiza user
 
+function generate_add_user_to_cohort_url($blockid, $courseid, $username, $continue=true, $user_created = false): \moodle_url {
+    $url = new \moodle_url(ADD_USER_TO_COHORT_URL,
+        array(
+            'courseid' => $courseid,
+            'instanceid' => $blockid,
+            'username'=> $username,
+            'continue'=>$continue,
+            'user_created'=>$user_created));
+    return $url;
+}
+
+
+
+function generate_create_moodle_user_url($blockid, $courseid, $username, $continue=true): \moodle_url {
+    $url = new \moodle_url(CREATE_MOODLE_USER_URL,
+        array(
+            'courseid' => $courseid,
+            'instanceid' => $blockid,
+            'username'=> $username,
+            'continue'=>$continue));
+    return $url;
+}
+
+
+function generate_create_ases_user_url($blockid, $courseid, $username, $continue=true): \moodle_url {
+    $url = new \moodle_url(CREATE_ASES_USER_URL,
+        array(
+            'courseid' => $courseid,
+            'instanceid' => $blockid,
+            'username'=> $username,
+            'continue'=>$continue));
+    return $url;
+}
+
+
+function generate_create_ases_update_user_extended_url($blockid, $courseid, $username, $continue=true): \moodle_url {
+    $url = new \moodle_url(CREATE_UPDATE_USER_URL,
+        array(
+            'courseid' => $courseid,
+            'instanceid' => $blockid,
+            'username'=> $username,
+            'continue'=>$continue));
+    return $url;
+}
 

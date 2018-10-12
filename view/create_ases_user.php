@@ -26,6 +26,7 @@ require_once(__DIR__ . '/../../../config.php');
 require_once('../managers/validate_profile_action.php');
 
 require_once(__DIR__ .'/../classes/mdl_forms/ases_user_form.php');
+require_once(__DIR__.'/../managers/user_creation_process/user_creation_process_lib.php');
 
 require_login($courseid, false);
 
@@ -34,20 +35,40 @@ $output = $PAGE->get_renderer('block_ases');
 $pagetitle = 'Creacion de usuarios ASES';
 $courseid = required_param('courseid', PARAM_INT);
 $blockid = required_param('instanceid', PARAM_INT);
+$username = optional_param('username', '', PARAM_TEXT);
+$continue = optional_param('continue', false, PARAM_BOOL);
+
+$mdl_user = null;
+
+if ( $username ) {
+    $mdl_user = $DB->get_record('user', array('username'=>$username));
+}
+
+if( $mdl_user ) {
+    \core\notification::info("Editando actualmente al usuario $mdl_user->firstname $mdl_user->lastname");
+}
+
 $actions = authenticate_user_view($USER->id, $blockid);
 if ( !isset($actions->create_ases_user) ) {
     redirect(new moodle_url('/'), "No tienes permiso para acceder a la creación de usuario ASES",1);
 }
-$url = new moodle_url("/blocks/ases/view/create_ases_user.php",array('courseid' => $courseid, 'instanceid' => $blockid));
+$url = new moodle_url("/blocks/ases/view/create_ases_user.php",
+    array(
+        'courseid' => $courseid,
+        'instanceid' => $blockid,
+        'continue'=>$continue,
+        'username'=>$username));
 $PAGE->set_title($pagetitle);
 $add_ases_user_form = new ases_user_form($url);
 
 echo $output->header();
 
+$ases_user_created = false;
 if ($add_ases_user_form->is_validated()) {
     $ases_user = $add_ases_user_form->get_ases_user();
     if($ases_user->save()) {
         \core\notification::success("Se ha creado el usuario número de documento '$ases_user->num_doc'");
+        $ases_user_created = true;
     } else {
         \core\notification::error("Se ha encontrado un error no soportado");
         /* @var AsesError $error*/
@@ -55,6 +76,11 @@ if ($add_ases_user_form->is_validated()) {
             \core\notification::error($error->message);
         }
     }
+}
+
+if ( $continue && $ases_user_created ) {
+    $url = \user_creation_process\generate_create_ases_update_user_extended_url($blockid, $courseid, $username, true);
+    redirect($url);
 }
 $add_ases_user_form->display();
 echo $output->footer();
