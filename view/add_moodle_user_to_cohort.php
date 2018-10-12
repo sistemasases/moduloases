@@ -76,9 +76,8 @@ require_login($courseid, false);
 
 $add_user_to_cohort_form = new add_user_to_cohort_form($url,  array('username'=>$username));
 
-//Form processing and displaying is done here
 if ($add_user_to_cohort_form->is_cancelled()) {
-    //Handle form cancel operation, if cancel button is present on form
+
     
 } 
 $output = $PAGE->get_renderer('block_ases');
@@ -90,18 +89,24 @@ if ($add_user_to_cohort_form->is_submitted() && !$add_user_to_cohort_form->is_va
 
     $errors = $add_user_to_cohort_form->get_errors();
     $data = $add_user_to_cohort_form->get_submitted_data();
-    if($errors['username']) {
 
-        $url_create_moodle_user = \user_creation_process\generate_create_moodle_user_url($blockid, $courseid, $data->username, 'true');
-    
-        $add_user_link =  html_writer::tag('p',
-            "El usuario no existe en la base de datos moodle.     " . html_writer::tag('a', "Puede añadirlo a al Campus Virtual en el siguiente enlace",
-        array('href' => $url_create_moodle_user)));
-        \core\notification::info($add_user_link);
+    if($errors['username']) {
+        /* Si existe un error en username, pero esta bien escrito*/
+        if(valid_moodle_username($data->username)) {
+            $url_create_moodle_user = \user_creation_process\generate_create_moodle_user_url($blockid, $courseid, $data->username, 'true');
+
+            $add_user_link = html_writer::tag('p',
+                "El usuario no existe en la base de datos moodle.     " . html_writer::tag('a', "Puede añadirlo a al Campus Virtual en el siguiente enlace",
+                    array('href' => $url_create_moodle_user)));
+            /* Si el nombre de usuario moodle es correcto pero no existe, mostrar el enlace para añadirlo */
+
+            \core\notification::info($add_user_link);
+        }
     }
 
 }
 $usuario_aniadido = false;
+/* Si el form es valido añadir el usuario dado a la cohorte seleccionada */
 if ($data = $add_user_to_cohort_form->get_data()) {
     $mdl_user = $DB->get_record('user', array('username' => $data->username));
     cohort_add_member( $data->cohort, $mdl_user->id);
@@ -109,13 +114,14 @@ if ($data = $add_user_to_cohort_form->get_data()) {
     $usuario_aniadido = true;
 
 }
-if ($user_created) {
+if ( $user_created ) {
     \core\notification::success('Se ha creado el usuario moodle');
 }
-if($continue && $usuario_aniadido ){
+if( $continue && $usuario_aniadido ){
 
     $url = \user_creation_process\generate_create_ases_user_url($blockid, $courseid, $data->username,true);
-    redirect($url);
+    \core\notification::add(" El usuario $mdl_user->firstname $mdl_user->lastname ha sido añadido a la cohorte que ha seleccionado", \core\output\notification::NOTIFY_INFO);
+    redirect($url, null, 3000000);
 }
 
 if ( $user ) {

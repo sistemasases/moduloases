@@ -22,9 +22,13 @@
  * @copyright  2018 Luis Gerardo Manrique Cardona <luis.manrique@correounivalle.edu.co>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
+use function Latitude\QueryBuilder\{identifyAll, alias, listing, on, fn, param};
+
 defined('MOODLE_INTERNAL') || die;
 require_once(__DIR__.'/Errors/Factories/DatabaseErrorFactory.php');
 require_once(__DIR__.'/DAO/BaseDAO.php');
+require_once(__DIR__.'/Sede.php');
 
 class Programa extends BaseDAO {
     const ID = 'id';
@@ -45,16 +49,44 @@ class Programa extends BaseDAO {
 
     /**
      * Retorna un array clave valor el cual tiene como llaves los id de programa y los valores son los nombres
-     * de programas existentes en la base de datos
+     * de programas existentes en la base de datos concatenados con la jornada
      * @return array
-     * @see BaseDAO::_get_options()
      * @throws dml_exception
      */
     public static function get_options(): array {
-        $fields = Programa::ID.','.Programa::NOMBRE;
-        return parent::_get_options($fields, Programa::NOMBRE);
 
+        global $DB;
+        $options = array();
+        $campos_select_programa= Programa::get_column_names('programa');
+        $campos_select_sede = [
+            alias('sede.'.Sede::NOMBRE, 'nombre_sede')
+        ];
+        $campos_select = array_merge($campos_select_programa, $campos_select_sede);
+
+        $query = Programa::get_factory()
+            ->select(
+                'programa.'.Programa::ID,
+                alias(
+                    fn(
+                        'concat_ws',
+                        param(' - '),
+                        'programa.'.Programa::NOMBRE,
+                        'programa.'.Programa::JORNADA, 'sede.'.Sede::NOMBRE
+                    ),
+                    'option_name'
+                )
+            )
+            ->from(alias(Programa::get_table_name_for_moodle(), 'programa'))
+            ->innerJoin(
+                alias(Sede::get_table_name_for_moodle(), 'sede'),
+                on('programa.'.Programa::ID_SEDE, 'sede.'.Sede::ID)
+            )
+            ->compile();
+        /* @var Programa $programa */
+        $options = $DB->get_records_sql_menu($query->sql(), $query->params());
+        return $options;
     }
+
     public static function get_numeric_fields(): array {
         return array(
             Programa::ID,
@@ -70,6 +102,7 @@ class Programa extends BaseDAO {
      * Validate the current object, if at least one error is detected return false and
      * add make disponible the error calling get_errors()
      * WARNING you should never call this method, call $this->valid(), this will be execute this method
+     * @see get_errors
      * @return bool
      */
     public function _custom_validation(): bool {

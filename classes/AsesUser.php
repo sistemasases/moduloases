@@ -34,9 +34,10 @@ require_once(__DIR__.'/DAO/BaseDAO.php');
 require_once(__DIR__.'/Estado.php');
 require_once(__DIR__.'/EstadoAsesRegistro.php');
 require_once(__DIR__.'/EstadoAses.php');
+require_once(__DIR__.'/Discapacidad.php');
 require_once(__DIR__.'/EstadoIcetexRegistro.php');
 require_once(__DIR__.'/EstadoIcetex.php');
-
+require_once(__DIR__.'/Errors/Factories/DatabaseErrorFactory.php');
 class AsesUser extends BaseDAO  {
     const TIPO_DOCUMENTO = 'tipo_doc';
     const TIPO_DOCUMENTO_INICIAL = 'tipo_doc_ini';
@@ -111,8 +112,11 @@ class AsesUser extends BaseDAO  {
      * @throws dml_exception
      */
     public function save() {
-        parent::save();
 
+        if (!$this->valid()) {
+            return false;
+        }
+        parent::save();
         /* Insert EstadoAsesRegistro record related to this AsesUser */
         $estado_ases_registro = new EstadoAsesRegistro();
         $estado_ases_registro->id_estudiante = $this->id;
@@ -121,14 +125,27 @@ class AsesUser extends BaseDAO  {
         $estado_ases_registro->save();
 
         /* Insert EstadoIcetexRegistro record related to this AsesUser */
-        $estado_icetex = new EstadoIcetexRegistro();
-        $estado_icetex->id_estudiante = $this->id;
+        $estado_icetex_registro = new EstadoIcetexRegistro();
+        $estado_icetex_registro->id_estudiante = $this->id;
         $estado_icetex_default = EstadoIcetex::get_default_estado_icetex();
-        $estado_icetex->id_estado_icetex = $estado_icetex_default->id;
-        $estado_icetex->save();
+        $estado_icetex_registro->id_estado_icetex = $estado_icetex_default->id;
+        $estado_icetex_registro->save();
+
         return $this->id;
 
     }
+    public function _custom_validation(): bool
+    {
+        $valid = true;
+        $estado_icetex_default = EstadoIcetex::get_default_estado_icetex();
+        if ( !$estado_icetex_default ) {
+            $nombre_default_estado_icetex = EstadoIcetex::NOMBRE_DEFAULT_ESTADO_ICETEX;
+            $this->add_error(DatabaseErrorFactory::registry_not_found("No se ha encontrado el estado icetex por defecto, el nombre de este es $nombre_default_estado_icetex "));
+            $valid = false;
+        }
+        return $valid;
+    }
+
     /**
      * Obtener los usuarios ASES, sus id y sus nombres en un array
      * @return array Array donde las llaves son los id de los usuarios ASES y el valor es el nombre del usuario

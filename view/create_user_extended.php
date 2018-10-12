@@ -27,12 +27,14 @@ require_once('../managers/validate_profile_action.php');
 
 require_once(__DIR__ . '/../classes/AsesUserExtended.php');
 require_once(__DIR__ . '/../classes/mdl_forms/ases_user_extended_form.php');
+require_once(__DIR__ . '/../classes/AsesUser.php');
 require_once(__DIR__.'/../managers/user_creation_process/user_creation_process_lib.php');
 
 $pagetitle = 'Crear usuario extendido ASES';
 $courseid = required_param('courseid', PARAM_INT);
 $blockid = required_param('instanceid', PARAM_INT);
 $username = optional_param('username', null, PARAM_TEXT);
+$num_doc = optional_param('num_doc', null, PARAM_TEXT);
 $continue = optional_param('continue', false, PARAM_BOOL);
 
 
@@ -56,13 +58,32 @@ if( $mdl_user ) {
 $output = $PAGE->get_renderer('block_ases');
 echo $output->header();
 
-$user_extended_form = new ases_user_extended_form( new moodle_url(\user_creation_process\CREATE_UPDATE_USER_URL,
-    array(
-       'instanceid'=>$blockid,
-       'courseid'=>$courseid,
-       'username'=>$username,
-        'continue'=>$continue
-    )));
+/* Data for init the form */
+/* @var AsesUserExtendedFormData $custom_data */
+$custom_data = null;
+if ( $num_doc ) {
+    /* @var AsesUser $ases_user */
+    $ases_user = AsesUser::get_by(array(AsesUser::NUMERO_DOCUMENTO=> $num_doc));
+
+    if ( $ases_user ) {
+        $custom_data->id_ases_user = $ases_user->id;
+    }
+
+}
+if ( $username ) {
+    $custom_data->moodle_user_name = $username;
+}
+$user_extended_form = new ases_user_extended_form(
+    new moodle_url(\user_creation_process\CREATE_UPDATE_USER_URL,
+        array(
+            'instanceid'=>$blockid,
+            'courseid'=>$courseid,
+            'username'=>$username,
+            'continue'=>$continue
+        )
+    ),
+    $custom_data
+    );
 
 $user_extended_created = false;
 

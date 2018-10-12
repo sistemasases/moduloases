@@ -54,11 +54,12 @@ class AsesUserExtended extends BaseDAO {
         $id_user = -1;
         if ($type == 'number' || $type == 'integer' || $type == 'string') {
             $id_user = $id_ases_user_or_ases_user;
-        } elseif (is_a($id_ases_user_or_ases_user, AsesUser)) {
+        } elseif (is_a($id_ases_user_or_ases_user, AsesUser::get_class_name())) {
             $id_user = $id_ases_user_or_ases_user->id;
         } else{
             throw new TypeError("Invalid type, given: $type, spected string, int or AsesUser instance");
         }
+
         return $id_user;
     }
     /**

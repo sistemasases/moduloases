@@ -4,9 +4,60 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "4838d263e340a34da11f11b89623f1bf",
-    "content-hash": "59b5266b07a542c90e0556fbfcd604ed",
+    "hash": "1de09b4c756199a1335998d07c62a5dd",
+    "content-hash": "05a290937c65b877a1e2f22135099c14",
     "packages": [
+        {
+            "name": "latitude/latitude",
+            "version": "3.1.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/shadowhand/latitude.git",
+                "reference": "2b76eab67eef05bf88f2505cea2c4c11033f27c2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/shadowhand/latitude/zipball/2b76eab67eef05bf88f2505cea2c4c11033f27c2",
+                "reference": "2b76eab67eef05bf88f2505cea2c4c11033f27c2",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.1"
+            },
+            "require-dev": {
+                "eloquent/liberator": "^2.0",
+                "hoa/devtools": "^1.17",
+                "hoa/ruler": "2.17.05.16",
+                "phpstan/phpstan": "^0.9.1",
+                "phpunit/phpunit": "^6.0",
+                "vimeo/psalm": "^0.3.88"
+            },
+            "suggest": {
+                "hoa/ruler": "Adds support for creating criteria from strings"
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "src/functions.php"
+                ],
+                "psr-4": {
+                    "Latitude\\QueryBuilder\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Woody Gilk",
+                    "email": "woody.gilk@gmail.com",
+                    "homepage": "https://github.com/shadowhand"
+                }
+            ],
+            "description": "A SQL query builder with zero dependencies",
+            "time": "2018-05-09 14:39:02"
+        },
         {
             "name": "nilportugues/sql-query-builder",
             "version": "1.6.0",

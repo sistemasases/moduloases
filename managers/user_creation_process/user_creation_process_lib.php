@@ -82,13 +82,17 @@ function generate_create_ases_user_url($blockid, $courseid, $username, $continue
 }
 
 
-function generate_create_ases_update_user_extended_url($blockid, $courseid, $username, $continue=true): \moodle_url {
-    $url = new \moodle_url(CREATE_UPDATE_USER_URL,
-        array(
-            'courseid' => $courseid,
-            'instanceid' => $blockid,
-            'username'=> $username,
-            'continue'=>$continue));
+function generate_create_ases_update_user_extended_url($blockid, $courseid, $username, $num_doc=null, $continue=true): \moodle_url {
+    $params =  array(
+        'courseid' => $courseid,
+        'instanceid' => $blockid,
+        'username'=> $username,
+        'continue'=>$continue);
+    if( $num_doc ) {
+        $params['num_doc'] = $num_doc;
+    }
+    $url = new \moodle_url(CREATE_UPDATE_USER_URL, $params);
+
     return $url;
 }
 

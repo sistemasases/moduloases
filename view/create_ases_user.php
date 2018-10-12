@@ -66,11 +66,11 @@ echo $output->header();
 $ases_user_created = false;
 if ($add_ases_user_form->is_validated()) {
     $ases_user = $add_ases_user_form->get_ases_user();
-    if($ases_user->save()) {
+    if($ases_user->valid()) {
+        $ases_user->save();
         \core\notification::success("Se ha creado el usuario número de documento '$ases_user->num_doc'");
         $ases_user_created = true;
     } else {
-        \core\notification::error("Se ha encontrado un error no soportado");
         /* @var AsesError $error*/
         foreach($ases_user->get_errors() as $error) {
             \core\notification::error($error->message);
@@ -79,7 +79,7 @@ if ($add_ases_user_form->is_validated()) {
 }
 
 if ( $continue && $ases_user_created ) {
-    $url = \user_creation_process\generate_create_ases_update_user_extended_url($blockid, $courseid, $username, true);
+    $url = \user_creation_process\generate_create_ases_update_user_extended_url($blockid, $courseid, $username, $ases_user->num_doc, true);
     redirect($url);
 }
 $add_ases_user_form->display();
