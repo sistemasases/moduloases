@@ -1271,6 +1271,7 @@ $_user_image_edit_form->set_data($toform);
 $record->update_profile_image_form = $_user_image_edit_form->render(null);
 /** End of Update user image  */
 $record->ases_student_code = $dphpforms_ases_user;
+$record->student_username = user_management_get_moodle_user_with_tracking_status_1( $dphpforms_ases_user )->username;
 $record->instance = $blockid;
 $record->html_profile_image = $html_profile_image;
 

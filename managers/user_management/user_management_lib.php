@@ -27,6 +27,41 @@ require_once $CFG->dirroot.'/blocks/ases/managers/lib/student_lib.php';
 require_once $CFG->dirroot.'/blocks/ases/managers/user_management/user_lib.php';
 require_once $CFG->dirroot.'/blocks/ases/managers/ases_report/asesreport_lib.php';
 require_once $CFG->dirroot.'/blocks/ases/managers/lib/lib.php';
+
+/**
+ * Function that return a moodle user. This moodle user is the user
+ * with tracking_status = 1 at talentospilos_user_extended
+ * @author Jeison Cardona Gómez. <jeison.cardona@correounivalle.edu.co>
+ * @param $ases_id
+ * @return mixed|null Return the moodle user, null if was not found
+ * @throws dml_exception
+ */
+function user_management_get_moodle_user_with_tracking_status_1( $ases_id ){
+
+    global $DB;
+
+    if( !is_numeric($ases_id) ){
+        return null;
+    }
+
+    $sql = "SELECT * 
+            FROM {user} AS U 
+            WHERE U.id = (
+                            SELECT id_moodle_user 
+                            FROM {talentospilos_user_extended} 
+                            WHERE id_ases_user = $ases_id
+                        )";
+
+    $to_return = $DB->get_record_sql( $sql );
+    
+    if( $to_return ){
+        return $to_return;
+    }else{
+        return null;
+    }
+}
+
+
 /**
  * Return a Moodle user based in moodle user id from database
  * @param $user_id
