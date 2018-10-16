@@ -288,7 +288,7 @@ class AsesUser extends BaseDAO  {
         }
     }
 }
-class AsesUserWithNames extends BaseDAO {
+class AsesUserWithNames extends AsesUser {
     public $firstname;
     public $lastname;
     public static  function get_table_name(): string {
