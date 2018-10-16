@@ -28,16 +28,16 @@ require_once('../managers/validate_profile_action.php');
 require_once(__DIR__ .'/../classes/mdl_forms/ases_user_form.php');
 require_once(__DIR__.'/../managers/user_creation_process/user_creation_process_lib.php');
 
-require_login($courseid, false);
 
-$output = $PAGE->get_renderer('block_ases');
 
-$pagetitle = 'Creacion de usuarios ASES';
 $courseid = required_param('courseid', PARAM_INT);
+require_login($courseid, false);
 $blockid = required_param('instanceid', PARAM_INT);
 $username = optional_param('username', '', PARAM_TEXT);
 $continue = optional_param('continue', false, PARAM_BOOL);
+$output = $PAGE->get_renderer('block_ases');
 
+$pagetitle = 'Creacion de usuarios ASES';
 $mdl_user = null;
 
 if ( $username ) {
