@@ -16,7 +16,7 @@ class Discapacidad extends BaseDAO {
     public static function get_table_name(): string {
         return 'talentospilos_discap_men';
     }
-    public function get_numeric_fields(): array
+    public static function get_numeric_fields(): array
     {
         return array(Discapacidad::ID, Discapacidad::CODIGO_MEN);
     }

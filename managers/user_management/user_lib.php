@@ -23,6 +23,8 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use core_user\search\user;
+
 require_once(dirname(__FILE__) . '/../../../../config.php');
 require_once(dirname(__FILE__) . '/../periods_management/periods_lib.php');
 require_once(dirname(__FILE__) . '/../lib/student_lib.php');
@@ -129,7 +131,30 @@ function get_boss_users($id_rol, $idinstancia)
     return $DB->get_records_sql($sql_query);
 }
 
+/**
+ * Function than gets the regex used by Univalle for the moodle usernames
+ *
+ * Current format is in the form 1327951-3794
+ * @return string Regex
+ */
 
+function get_username_moodle_regex(): string {
+    return '/[0-9]{7}-[0-9]{4}/';
+}
+
+/**
+ * Check if a string given is a valid user name
+ *
+ * @see get_username_moodle_regex()
+ * @param string $username
+ * @return bool True if the moodle username is valid
+ */
+function valid_moodle_username(string $username): bool {
+    if( preg_match(get_username_moodle_regex(), $username) == 0) {
+        return false;
+    }
+    return true;
+}
 /**
  * Function that gets the user's id given his username
  * @see get_userid_by_username($username)
