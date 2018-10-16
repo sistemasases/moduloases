@@ -26,7 +26,7 @@
 defined('MOODLE_INTERNAL') || die;
 require_once(__DIR__.'/../vendor/autoload.php');
 
-use NilPortugues\Sql\QueryBuilder\Builder\GenericBuilder;
+use function Latitude\QueryBuilder\{alias, on, listing, identifyAll};
 
 
 require_once(__DIR__.'/../managers/user_management/user_management_lib.php');
@@ -38,6 +38,8 @@ require_once(__DIR__.'/Discapacidad.php');
 require_once(__DIR__.'/EstadoIcetexRegistro.php');
 require_once(__DIR__.'/EstadoIcetex.php');
 require_once(__DIR__.'/Errors/Factories/DatabaseErrorFactory.php');
+
+
 class AsesUser extends BaseDAO  {
     const TIPO_DOCUMENTO = 'tipo_doc';
     const TIPO_DOCUMENTO_INICIAL = 'tipo_doc_ini';
@@ -173,23 +175,26 @@ class AsesUser extends BaseDAO  {
     /**
      * Return ases user with names, have the same properties than AsesUser,
      * with two aditional properties: firstname and lastname
-     * @returns array Array with ASES users and names
+     * @returns array array of  AsesUserWithNames Ases users with names
      */
-    public static function get_ases_users_with_names() {
+    public static function get_ases_users_with_names(): array {
         global $DB;
-        $default_column_names = AsesUser::get_column_names();
-        $sql =
-            "
-            SELECT tp_u.id, mdl_user.firstname, mdl_user.lastname, tp_u.num_doc 
-            FROM {talentospilos_user_extended} tp_uext, {user} mdl_user, {talentospilos_usuario} tp_u
-            WHERE
-              mdl_user.id = tp_uext.id_moodle_user
-            AND
-              tp_uext.id_ases_user = tp_u.id
-            AND  
-              tp_u.id = tp_uext.id_ases_user 
-        ";
-        return $DB->get_records_sql($sql);
+        $query = BaseDAO::get_factory()
+            ->select(
+                'mdl_user.firstname',
+                'mdl_user.lastname',
+                listing(identifyAll(AsesUser::get_column_names('ases_user'))))
+            ->from(alias(AsesUser::get_table_name_for_moodle(), 'ases_user'))
+            ->innerJoin(
+                alias(AsesUserExtended::get_table_name_for_moodle(), 'ases_user_ext'),
+                on('ases_user.'.AsesUser::ID, 'ases_user_ext.'.AsesUserExtended::ID_ASES_USER))
+            ->innerJoin(
+                alias('{user}', 'mdl_user'),
+                on('ases_user_ext.'.AsesUserExtended::ID_MOODLE_USER, 'mdl_user.id'))
+            ->compile();
+
+        $results = $DB->get_records_sql($query->sql());
+        return AsesUserWithNames::make_objects_from_std_objects_or_arrays($results);
     }
     /**
      * Return Moodle user related to this ases user
@@ -283,5 +288,11 @@ class AsesUser extends BaseDAO  {
         }
     }
 }
-
+class AsesUserWithNames extends BaseDAO {
+    public $firstname;
+    public $lastname;
+    public static  function get_table_name(): string {
+        return '';
+    }
+}
 ?>
