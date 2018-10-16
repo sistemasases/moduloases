@@ -8,11 +8,7 @@
             "email": "sistemas.ases@correounivalle.edu.co"
         }
     ],
-    "require-dev": {
-        "nette/php-generator": "^3.0"
-    },
     "require": {
-        "nilportugues/sql-query-builder": "^1.6",
         "latitude/latitude": "^3.1"
     }
 }
