@@ -4,7 +4,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     global $DB;
     $dbman = $DB->get_manager();
     $result = true;
-    if ($oldversion < 2018092710500 ) {
+    if ($oldversion < 2018101715180 ) {
     //     // ************************************************************************************************************
     //     // Actualización que crea la tabla para los campos extendidos de usuario (Tabla: {talentospilos_user_extended})
     //     // Versión: 2018010911179
@@ -1439,14 +1439,14 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
         // Versión en la que se incluye: GIT XXX, Moodle: 2018062515379
         // ************************************************************************************************************    
 
-        // Define field pais to be added to talentospilos_usuario.
-            $table = new xmldb_table('talentospilos_usuario');
-            $field = new xmldb_field('pais', XMLDB_TYPE_CHAR, '200', null, XMLDB_NOTNULL, null, null, 'ayuda_disc');
-
-            // Conditionally launch add field pais.
-            if (!$dbman->field_exists($table, $field)) {
-            $dbman->add_field($table, $field);
-            }
+          // Define field pais to be added to talentospilos_usuario.
+          $table = new xmldb_table('talentospilos_usuario');
+          $field = new xmldb_field('pais', XMLDB_TYPE_CHAR, '200', null, null, null, null, 'ayuda_disc');
+  
+          // Conditionally launch add field pais.
+          if (!$dbman->field_exists($table, $field)) {
+              $dbman->add_field($table, $field);
+          }
 
             // Define field vive_con to be added to talentospilos_usuario.
             $table = new xmldb_table('talentospilos_usuario');
@@ -1456,58 +1456,59 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
             if (!$dbman->field_exists($table, $field)) {
                 $dbman->add_field($table, $field);
             }
-             // Define field tiene_hijo to be added to talentospilos_usuario.
-             $table = new xmldb_table('talentospilos_usuario');
-             $field = new xmldb_field('tiene_hijo', XMLDB_TYPE_BINARY, null, null, XMLDB_NOTNULL, null, null, 'vive_con');
-     
-             // Conditionally launch add field tiene_hijo.
-             if (!$dbman->field_exists($table, $field)) {
-                 $dbman->add_field($table, $field);
-             }
-                // Define field id_cond_excepcion to be added to talentospilos_usuario.
-            $table = new xmldb_table('talentospilos_usuario');
-            $field = new xmldb_field('id_cond_excepcion', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null, 'tiene_hijo');
+            // Define field tiene_hijo to be added to talentospilos_usuario.
+        $table = new xmldb_table('talentospilos_usuario');
+        $field = new xmldb_field('tiene_hijo', XMLDB_TYPE_BINARY, null, null, null, null, null, 'vive_con');
 
-            // Conditionally launch add field id_cond_excepcion.
-            if (!$dbman->field_exists($table, $field)) {
+        // Conditionally launch add field tiene_hijo.
+        if (!$dbman->field_exists($table, $field)) {
             $dbman->add_field($table, $field);
-            }
+        }
+             // Define field id_cond_excepcion to be added to talentospilos_usuario.
+        $table = new xmldb_table('talentospilos_usuario');
+        $field = new xmldb_field('id_cond_excepcion', XMLDB_TYPE_INTEGER, '10', null, null, null, null, 'tiene_hijo');
+
+        // Conditionally launch add field id_cond_excepcion.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
 
               // Define field id_estado_civil to be added to talentospilos_usuario.
-            $table = new xmldb_table('talentospilos_usuario');
-            $field = new xmldb_field('id_estado_civil', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null, 'id_cond_excepcion');
-
-            // Conditionally launch add field id_estado_civil.
-            if (!$dbman->field_exists($table, $field)) {
-            $dbman->add_field($table, $field);
-            }
-
-                 // Define field id_identidad_gen to be added to talentospilos_usuario.
         $table = new xmldb_table('talentospilos_usuario');
-        $field = new xmldb_field('id_identidad_gen', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null, 'id_estado_civil');
+        $field = new xmldb_field('id_estado_civil', XMLDB_TYPE_INTEGER, '10', null, null, null, null, 'id_cond_excepcion');
+
+        // Conditionally launch add field id_estado_civil.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+            // Define field id_identidad_gen to be added to talentospilos_usuario.
+        $table = new xmldb_table('talentospilos_usuario');
+        $field = new xmldb_field('id_identidad_gen', XMLDB_TYPE_INTEGER, '10', null, null, null, null, 'id_estado_civil');
 
         // Conditionally launch add field id_identidad_gen.
         if (!$dbman->field_exists($table, $field)) {
             $dbman->add_field($table, $field);
         }
 
-           // Define field id_act_simultanea to be added to talentospilos_usuario.
-           $table = new xmldb_table('talentospilos_usuario');
-           $field = new xmldb_field('id_act_simultanea', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null, 'id_identidad_gen');
-   
-           // Conditionally launch add field id_act_simultanea.
-           if (!$dbman->field_exists($table, $field)) {
-               $dbman->add_field($table, $field);
-           }
+         // Define field id_act_simultanea to be added to talentospilos_usuario.
+         $table = new xmldb_table('talentospilos_usuario');
+         $field = new xmldb_field('id_act_simultanea', XMLDB_TYPE_INTEGER, '10', null, null, null, null, 'id_identidad_gen');
+ 
+         // Conditionally launch add field id_act_simultanea.
+         if (!$dbman->field_exists($table, $field)) {
+             $dbman->add_field($table, $field);
+         }
 
-             // Define field id_economics_data to be added to talentospilos_usuario.
+          // Define field id_economics_data to be added to talentospilos_usuario.
         $table = new xmldb_table('talentospilos_usuario');
-        $field = new xmldb_field('id_economics_data', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null, 'id_act_simultanea');
+        $field = new xmldb_field('id_economics_data', XMLDB_TYPE_INTEGER, '10', null, null, null, null, 'id_act_simultanea');
 
         // Conditionally launch add field id_economics_data.
         if (!$dbman->field_exists($table, $field)) {
             $dbman->add_field($table, $field);
         }
+
 
            // Define field anio_ingreso to be added to talentospilos_usuario.
            $table = new xmldb_table('talentospilos_usuario');
@@ -1744,7 +1745,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
             }
      
 
-        upgrade_block_savepoint(true, 2018092710500 , 'ases');
+        upgrade_block_savepoint(true, 2018101715180 , 'ases');
     
         return $result;
 
