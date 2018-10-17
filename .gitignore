@@ -1,3 +1,4 @@
 view/archivos_subidos/
 composer.lock
 /vendor/*
+/node_modules
