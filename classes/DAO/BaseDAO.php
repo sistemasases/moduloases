@@ -28,15 +28,23 @@ require_once(__DIR__.'/../../managers/lib/reflection.php');
 defined('MOODLE_INTERNAL') || die;
 require_once (__DIR__.'/../Errors/Factories/FieldValidationErrorFactory.php');
 require_once (__DIR__.'/../Errors/AsesError.php');
+require_once(__DIR__.'/../../vendor/autoload.php');
+use Latitude\QueryBuilder\Engine\PostgresEngine;
+use Latitude\QueryBuilder\QueryFactory;
+
+$__factory  = new QueryFactory(new PostgresEngine());
 abstract class BaseDAO
 {
 
     use from_std_object_or_array;
 
+
+    /* @var QueryFactory $_factory*/
+    private $_factory;
+
     const GENERIC_ERRORS_FIELD = 'generic_errors';
 
     const NO_REGISTRA = 'NO REGISTRA';
-
     private $_errors = array();
 
     /**
@@ -68,14 +76,23 @@ abstract class BaseDAO
      *And you can access this error array via $this->get_errors_array();
      * @var
      */
-    private $_errors_array;
+    private $_errors_object;
     public function __construct($data = null)
     {
+
         if ($data) {
             $this->make_from($data);
+
         }
     }
-
+    public function _get_factory(): QueryFactory {
+        global $__factory;
+        return $__factory ;
+    }
+    public static function get_factory(): QueryFactory {
+        global $__factory;
+        return $__factory;
+    }
     public function has_error($error_id): bool {
         $this->valid();
         /* @var AsesError $error*/
@@ -86,12 +103,16 @@ abstract class BaseDAO
         }
         return false;
     }
+
+    public static function get_class_name(): string {
+        return get_called_class();
+    }
     /**
      * Clean errors
      */
     private function clean_errors() {
         $this->_errors = array();
-        $this->_errors_array = array();
+        $this->_errors_object = new \stdClass();
     }
     /**
      * Custom validation method, rewrite this if you need make some aditional validation, this method
@@ -167,10 +188,10 @@ abstract class BaseDAO
     public function add_error(AsesError $error, $fieldname = BaseDAO::GENERIC_ERRORS_FIELD ) {
         array_push($this->_errors, $error);
 
-        if(!$this->_errors_array[$fieldname]) {
-            $this->_errors_array[$fieldname] = array ($error);
+        if(!isset($this->_errors_object->$fieldname)) {
+            $this->_errors_object->$fieldname = array ($error);
         } else {
-            array_push($this->_errors_array[$fieldname] , $error);
+            array_push($this->_errors_object->$fieldname , $error);
         }
     }
     /**
@@ -204,12 +225,18 @@ abstract class BaseDAO
         return $this->_errors;
     }
     /**
-     * Return errors array, AsesError agrouped under the object fields or generic errors
+     * Return errors array, AsesError agrouped under the object fields or generic errors,
+     * the errors object have at most the same properties than the object where are the
+     * errors, for example, if you get the errors of the class A and this have the
+     * properties $b and $c, $errors can have $errors->b and $errros->c, if exist
+     * errors on field b or c, and both $errros->c and $errors->b are an array of
+     * AsesError instances
+     * @see $this->_errors_object
      * @see AsesError
-     * @return array
+     * @return object
      */
-    public function get_errors_array(): array {
-        return $this->_errors_array;
+    public function get_errors_object(): object {
+        return $this->_errors_object;
     }
     /**
      * Overload this function in the child classes if this have numeric
@@ -220,7 +247,7 @@ abstract class BaseDAO
      * @return array Array of string than represents the column names where
      * the column is type int, double or bigint and the current value is not
      */
-    public function get_numeric_fields(): array {
+    public static function get_numeric_fields(): array {
         return array();
     }
 
@@ -240,7 +267,7 @@ abstract class BaseDAO
 
     /**
      * Save object to database
-     * @return bool|int id if was sucessfull created return id false otherwise
+     * @return false|int id if was sucessfull created return id false otherwise
      * @throws dml_exception A DML specific exception is thrown for any errors.
      */
     public function save() {
@@ -248,7 +275,11 @@ abstract class BaseDAO
         $CLASS = get_called_class();
         $this->format();
         $safety_save_object = $this->__delete_not_null_fields_than_have_predefined_values_in_db($CLASS, $this);
-        return $DB->insert_record($CLASS::get_table_name(), $safety_save_object );
+        $record_id =  $DB->insert_record($CLASS::get_table_name(), $safety_save_object );
+        if(property_exists($this, 'id')) {
+            $this->id = $record_id;
+        }
+        return $record_id;
     }
     /**
      * Check if object have null properties, and create a new object than does not have
@@ -258,6 +289,7 @@ abstract class BaseDAO
      * @return object Object without the undefined properties
      */
     private function __delete_not_null_fields_than_have_predefined_values_in_db($CLASS, $object) {
+        /* @var BaseDAO $CLASS */
         if(!method_exists( $CLASS, 'get_not_null_fields_and_default_in_db')) {
             return $object;
         }
@@ -312,6 +344,7 @@ abstract class BaseDAO
     }
     public  static function get_all() {
         global $DB;
+        /* @var BaseDAO $CLASS */
         $CLASS = get_called_class();
         $nombre_tabla = $CLASS::get_table_name() ;
         $sql = 
@@ -336,13 +369,14 @@ abstract class BaseDAO
      * @example $conditions =  array('username'=> 'Camilo', 'lastname'=> 'Cifuentes')
      * @example $conditions = array(AsesUser::USER_NAME => 'Camilo', AsesUser::LAST_NAME => 'Cifuentes')
      * @see https://docs.moodle.org/dev/Data_manipulation_API
-     * @return array|object Object instance if exists in database, empty array if does not exist
+     * @return false|object Object instance if exists in database, empty array if does not exist
      * @throws dml_exception
      * @throws ErrorException If the given conditions specify invalid column names throws an error
      *
      */
     public static function get_by($conditions,  $sort='',  $limitfrom=0, $limitnum=0) {
         global $DB;
+        /* @var BaseDAO $CLASS */
         $CLASS = get_called_class();
         if(!$CLASS::valid_conditions($conditions)) {
             throw new ErrorException("The given columns for conditions array are invalid, active debug mode for show de debug backtrace");
@@ -356,10 +390,18 @@ abstract class BaseDAO
             return $CLASS::make_objects_from_std_objects_or_arrays($db_records);
         }
 
-        return array();
+        return false;
 
     }
 
+    /**
+     * Return all not null fields of the object and than have default value defined
+     * in the database
+     * @return array
+     */
+    public static function get_not_null_fields_and_default_in_db(): array {
+        return array();
+    }
     /**
      * Check if object exists in database based in an array of a  given conditions
      * @param $conditions Array key-value than gets the conditions for get the objects
@@ -389,6 +431,7 @@ abstract class BaseDAO
      */
     private static function valid_conditions(array $conditions): bool {
         $condition_column_names = array_keys($conditions);
+        /* @var BaseDAO $CLASS */
         $CLASS = get_called_class();
         $invalid_column_names = array_diff($condition_column_names, $CLASS::get_column_names());
         $debug_backtrace = debug_backtrace();
@@ -399,6 +442,16 @@ abstract class BaseDAO
             return false;
         }
         return true;
+    }
+    /**
+     * Return the common format for table name at moodle query, this is
+     * adding brackets to the name, for example {talentospilos_usuario}
+     * @return string
+     */
+    public function get_table_name_for_moodle() {
+        /* @var BaseDAO $CLASS */
+        $CLASS = get_called_class();
+        return '{'.$CLASS::get_table_name(). '}';
     }
     /**
      * Return simple string than represents the table name without prefix
@@ -419,11 +472,19 @@ abstract class BaseDAO
 
     /**
      * Return the column names of the DAO
+     * @param string $rename new table name, and add this to the column names
+     *  for example, if $rename  = 'u' return array ('u.id', 'u.'name'...)
      * @return array Array of strings than contains the column names
      * @throws ErrorException
      */
-    public static function get_column_names(): array {
-        return \reflection\get_properties(get_called_class());
+    public static function get_column_names( string $rename = null ): array {
+        $column_names =  \reflection\get_properties(get_called_class());
+        if ( $rename ) {
+            foreach($column_names as &$column_name) {
+                $column_name = "$rename.".$column_name;
+            }
+        }
+        return $column_names;
     }
 }
 

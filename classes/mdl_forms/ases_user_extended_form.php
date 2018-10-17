@@ -28,7 +28,17 @@ require_once(__DIR__.'/../TrackingStatus.php');
 require_once(__DIR__.'/../EstadoPrograma.php');
 require_once(__DIR__.'/../Programa.php');
 
+class AsesUserExtendedFormData {
+    public $moodle_user_name;
+    public $id_ases_user;
+}
+
+/**
+ * Class ases_user_extended_form
+ * @property AsesUserExtendedFormData $_customdata
+ */
 class ases_user_extended_form extends moodleform {
+
     public function definition()
     {
 
@@ -39,8 +49,10 @@ class ases_user_extended_form extends moodleform {
         $program_status_options = EstadoPrograma::get_options();
         $program_options = Programa::get_options();
 
+        $mform->addElement('header', 'myheader', 'Usuario extended Ases');
+
         $mform->addElement('text', 'moodle_user_name', 'Nombre de usuario moodle');
-        $mform->addElement('select', 'id_ases_user', 'Usuario ASES', $ases_user_options);
+        $mform->addElement('searchableselector', 'id_ases_user', 'Usuario ASES', $ases_user_options);
         $mform->addElement('checkbox', 'inactive_previus_track_stat', 'Desactivar seguimientos previos');
 
         $mform->addElement('select', 'tracking_status', 'Estado de seguimiento', $tracking_status_options);
@@ -53,9 +65,36 @@ class ases_user_extended_form extends moodleform {
         $mform->addRule('program_status', null, 'required');
         $mform->addRule('id_academic_program', null, 'required');
 
+        $mform->addHelpButton('id_academic_program',
+            'academic_program_with_headquarters_and_shift', 'block_ases' );
         $buttonarray=array();
         $buttonarray[] = $mform->createElement('submit', 'submitbutton', get_string('savechanges'));
         $mform->addGroup($buttonarray, 'buttonar', '', ' ', false);
+
+        if($this->_customdata) {
+            $this->set_data($this->_customdata);
+        }
+    }
+
+    public function after_definition()
+    {
+
+        /* If an id_ases_user is given, set id aser user is not posible by normal methods*/
+        if(isset($this->_customdata->id_ases_user)) {
+            /* @var MoodleQuickForm_searchableselector $id_ases_user_element */
+            $id_ases_user_element = $this->_form->getElement('id_ases_user');
+            $id_ases_user_element->updateAttributes(array('disabled'));
+
+        }
+        if ($this->_customdata) {
+            /* If an moodle user name is given, set username is not possible for normal methods*/
+            if(isset($this->_customdata->moodle_user_name)) {
+                /* @var MoodleQuickForm_text $moodle_user_name_element */
+                $moodle_user_name_element = $this->_form->getElement('moodle_user_name');
+                $moodle_user_name_element->updateAttributes(array('disabled'));
+            }
+
+        }
     }
 
     /**
@@ -72,15 +111,19 @@ class ases_user_extended_form extends moodleform {
         }
         $ases_user_extended = new AsesUserExtended();
         $ases_user_extended->make_from($validated_form_data);
+
         /* The shared properties between of form data and user extended are all exept one, id_moodle_user */
         $ases_user_extended->id_moodle_user = $DB->get_record('user' , array('username'=> $validated_form_data->moodle_user_name))->id;
-        print_r($ases_user_extended);
         return $ases_user_extended;
     }
     public function validation($data, $files): array {
         global $DB;
+        if(count($this->_form->_errors)>0) {
+            return $this->_form->_errors;
+        }
         $ases_user_extended = new AsesUserExtended();
         $ases_user_extended->make_from($data);
+
         if($data['inactive_previus_track_stat']) {
             AsesUserExtended::disable_all_tracking_status($ases_user_extended->id_ases_user);
         }
@@ -96,6 +139,7 @@ class ases_user_extended_form extends moodleform {
         if (!$mdl_user_exists) {
             $errors['moodle_user_name'] = "El usurio moodle no existe";
         }
+
         return $errors;
     }
 }
