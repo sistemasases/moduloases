@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/sistemasases/moduloases/issues"
   },
-  "homepage": "https://github.com/sistemasases/moduloases#readme"
+  "homepage": "https://github.com/sistemasases/moduloases#readme",
+  "devDependencies": {
+    "stylelint": "^9.6.0"
+  }
 }
