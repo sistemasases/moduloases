@@ -28,6 +28,46 @@ require_once $CFG->dirroot.'/blocks/ases/managers/user_management/user_lib.php';
 require_once $CFG->dirroot.'/blocks/ases/managers/ases_report/asesreport_lib.php';
 require_once $CFG->dirroot.'/blocks/ases/managers/lib/lib.php';
 
+/**
+ * Function that return a moodle user. This moodle user is the user
+ * with tracking_status = 1 at talentospilos_user_extended
+ * @author Jeison Cardona Gómez. <jeison.cardona@correounivalle.edu.co>
+ * @param $ases_id
+ * @return mixed|null Return the moodle user, null if was not found
+ * @throws dml_exception
+ */
+function user_management_get_moodle_user_with_tracking_status_1( $ases_id ){
+
+    global $DB;
+
+    if( !is_numeric($ases_id) ){
+        return null;
+    }
+
+    $sql = "SELECT * 
+            FROM {user} AS U 
+            WHERE U.id = (
+                            SELECT id_moodle_user 
+                            FROM {talentospilos_user_extended} 
+                            WHERE id_ases_user = $ases_id
+                        )";
+
+    $to_return = $DB->get_record_sql( $sql );
+    
+    if( $to_return ){
+        return $to_return;
+    }else{
+        return null;
+    }
+}
+
+
+/**
+ * Return a Moodle user based in moodle user id from database
+ * @param $user_id
+ * @return mixed|null Return the moodle user, null if was not found
+ * @throws dml_exception
+ */
 function user_management_get_full_moodle_user( $user_id ){
 
     global $DB;
@@ -45,6 +85,17 @@ function user_management_get_full_moodle_user( $user_id ){
     }else{
         return null;
     }
+}
+
+/**
+ * Check if exists some Moodle user with ID equal to user id given
+ * @param $user_id Moodle user ID to check
+ * @return bool true if exist user in database, false otherwise
+ * @throws dml_exception A DML specific exception is thrown for any errors.
+ */
+function user_management_moodle_user_exists( $user_id ): bool {
+    global $DB;
+    return $DB->record_exists('user', array('username' => $user_id));
 }
 
 function user_management_get_moodle_user( $user_id ){
