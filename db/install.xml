@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<XMLDB PATH="blocks/ases/db" VERSION="20181008" COMMENT="XMLDB file for Moodle blocks/configurable_reports"
+<XMLDB PATH="blocks/ases/db" VERSION="20181017" COMMENT="XMLDB file for Moodle blocks/configurable_reports"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
 >
@@ -122,6 +122,8 @@
         <FIELD NAME="id_economics_data" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="anio_ingreso" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="actividades_ocio_deporte" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="id_schema_json" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="json_detalle" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
@@ -902,6 +904,16 @@
         <FIELD NAME="nivel_educ_padres" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="situa_laboral_padres" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="expectativas_laborales" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="talentospilos_json_schema" COMMENT="Contiene los esquemas válidos de JSON que se utilizan en el sistema">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="json_schema" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="alias" TYPE="char" LENGTH="200" NOTNULL="false" SEQUENCE="false"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
