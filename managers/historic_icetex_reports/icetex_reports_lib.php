@@ -332,41 +332,85 @@ function get_count_inactive_res_students($cohort){
 
     $array_inactive_res = array();
 
-    $sql_query = "SELECT semestre.nombre AS semestre, Count(DISTINCT res_est.id_estudiante) AS num_inact_res, sum(res_est.monto_estudiante) AS monto_inact_res
-                    FROM {talentospilos_res_estudiante} AS res_est
-                        INNER JOIN {talentospilos_res_icetex} res_ice ON res_ice.id = res_est.id_resolucion
-                        INNER JOIN {talentospilos_semestre} semestre ON semestre.id = res_ice.id_semestre
-                        INNER JOIN {talentospilos_user_extended} uext ON uext.id_ases_user = res_est.id_estudiante
-                        INNER JOIN {cohort_members} co_mem ON uext.id_moodle_user = co_mem.userid
-                        INNER JOIN {cohort} cohortm ON cohortm.id = co_mem.cohortid
-                        WHERE cohortm.idnumber LIKE '$cohort%' AND uext.tracking_status = 1
-                        AND ((res_est.id_estudiante, res_ice.id_semestre)
-
-                            NOT IN 
+    $sql_query = "SELECT semestre, sum(num_inact_res) AS num_inact_res, sum(monto_inact_res) AS monto_inact_res                            
+                            FROM
                             
-                            (SELECT academ.id_estudiante, academ.id_semestre
-                            FROM {talentospilos_history_academ} AS academ
-                            INNER JOIN {talentospilos_semestre} AS semest ON semest.id = academ.id_semestre
-                            INNER JOIN {talentospilos_user_extended} uext ON uext.id_ases_user = academ.id_estudiante                            
-                            INNER JOIN {cohort_members} co_mem ON uext.id_moodle_user = co_mem.userid
-                            INNER JOIN {cohort} cohortm ON cohortm.id = co_mem.cohortid
-                            WHERE cohortm.idnumber LIKE '$cohort%' AND academ.promedio_semestre IS NOT NULL 
-                            AND uext.tracking_status = 1))
-
-                        OR ((res_est.id_estudiante, res_ice.id_semestre)
-                        
-                        IN 
-                        
-                        (SELECT DISTINCT hist_ice.id_estudiante, hist_ice.id_semestre
-                        FROM {talentospilos_hist_est_ice} AS hist_ice
-                        INNER JOIN {talentospilos_semestre} sem ON sem.id = hist_ice.id_semestre
-                        INNER JOIN {talentospilos_user_extended} uext ON uext.id_ases_user = hist_ice.id_estudiante
-                        INNER JOIN {cohort_members} co_mem ON co_mem.userid = uext.id_moodle_user
-                        INNER JOIN {cohort} cohortm ON cohortm.id = co_mem.cohortid
-                        WHERE cohortm.idnumber LIKE '$cohort%' AND hist_ice.id_estado_icetex != 5
-                        AND uext.tracking_status = 1))
-                        
-                    GROUP BY semestre.nombre";
+                            (SELECT semestre.nombre AS semestre, Count(DISTINCT res_est.id_estudiante) AS num_inact_res, sum(res_est.monto_estudiante) AS monto_inact_res
+                                                FROM {talentospilos_res_estudiante} AS res_est
+                                                    INNER JOIN {talentospilos_res_icetex} res_ice ON res_ice.id = res_est.id_resolucion
+                                                    INNER JOIN {talentospilos_semestre} semestre ON semestre.id = res_ice.id_semestre
+                                                    INNER JOIN {talentospilos_user_extended} uext ON uext.id_ases_user = res_est.id_estudiante
+                                                    INNER JOIN {cohort_members} co_mem ON uext.id_moodle_user = co_mem.userid
+                                                    INNER JOIN {cohort} cohortm ON cohortm.id = co_mem.cohortid
+                                                    WHERE cohortm.idnumber LIKE '$cohort%' AND uext.tracking_status = 1
+                                                    AND ((res_est.id_estudiante, res_ice.id_semestre)
+                            
+                                                        NOT IN 
+                                                        
+                                                        (SELECT academ.id_estudiante, academ.id_semestre
+                                                        FROM {talentospilos_history_academ} AS academ
+                                                        INNER JOIN {talentospilos_semestre} AS semest ON semest.id = academ.id_semestre
+                                                        INNER JOIN {talentospilos_user_extended} uext ON uext.id_ases_user = academ.id_estudiante                            
+                                                        INNER JOIN {cohort_members} co_mem ON uext.id_moodle_user = co_mem.userid
+                                                        INNER JOIN {cohort} cohortm ON cohortm.id = co_mem.cohortid
+                                                        WHERE cohortm.idnumber LIKE '$cohort%' AND academ.promedio_semestre IS NOT NULL 
+                                                        AND uext.tracking_status = 1))
+                            
+                                                    OR ((res_est.id_estudiante, res_ice.id_semestre)
+                                                    
+                                                    IN 
+                                                    
+                                                    (SELECT DISTINCT hist_ice.id_estudiante, hist_ice.id_semestre
+                                                    FROM {talentospilos_hist_est_ice} AS hist_ice
+                                                    INNER JOIN {talentospilos_semestre} sem ON sem.id = hist_ice.id_semestre
+                                                    INNER JOIN {talentospilos_user_extended} uext ON uext.id_ases_user = hist_ice.id_estudiante
+                                                    INNER JOIN {cohort_members} co_mem ON co_mem.userid = uext.id_moodle_user
+                                                    INNER JOIN {cohort} cohortm ON cohortm.id = co_mem.cohortid
+                                                    WHERE cohortm.idnumber LIKE '$cohort%' AND hist_ice.id_estado_icetex != 5
+                                                    AND uext.tracking_status = 1))
+                                                    
+                                                GROUP BY semestre.nombre
+                                                
+                                    UNION ALL
+                                    
+                            SELECT semestre.nombre AS semestre, Count(res_est.id) AS num_inact_res, sum(res_est.monto_estudiante) AS monto_inact_res
+                                                FROM {talentospilos_res_estudiante} AS res_est
+                                                    INNER JOIN {talentospilos_res_icetex} res_ice ON res_ice.id = res_est.id_resolucion
+                                                    INNER JOIN {talentospilos_semestre} semestre ON semestre.id = res_ice.id_semestre
+                                                    INNER JOIN {talentospilos_user_extended} uext ON uext.id_ases_user = res_est.id_estudiante
+                                                    INNER JOIN {cohort_members} co_mem ON uext.id_moodle_user = co_mem.userid
+                                                    INNER JOIN {cohort} cohortm ON cohortm.id = co_mem.cohortid
+                                                    WHERE cohortm.idnumber LIKE '$cohort%' AND uext.tracking_status = 1
+                                                    AND ((res_est.id_estudiante, res_ice.id_semestre)
+                            
+                                                        IN 
+                                                        
+                                                        (SELECT DISTINCT academ.id_estudiante, academ.id_semestre
+                                                        FROM {talentospilos_history_academ} AS academ
+                                                        INNER JOIN {talentospilos_semestre} AS semest ON semest.id = academ.id_semestre
+                                                        INNER JOIN {talentospilos_user_extended} uext ON uext.id_ases_user = academ.id_estudiante                            
+                                                        INNER JOIN {cohort_members} co_mem ON uext.id_moodle_user = co_mem.userid
+                                                        INNER JOIN {cohort} cohortm ON cohortm.id = co_mem.cohortid
+                                                        WHERE cohortm.idnumber LIKE '$cohort%' AND academ.promedio_semestre IS NOT NULL 
+                                                        AND uext.tracking_status = 1))
+                            
+                                                    AND ((res_est.id_estudiante, res_ice.id_semestre)
+                                                    
+                                                        NOT IN 
+                                                        
+                                                        (SELECT DISTINCT hist_ice.id_estudiante, hist_ice.id_semestre
+                                                        FROM {talentospilos_hist_est_ice} AS hist_ice
+                                                        INNER JOIN {talentospilos_semestre} sem ON sem.id = hist_ice.id_semestre
+                                                        INNER JOIN {talentospilos_user_extended} uext ON uext.id_ases_user = hist_ice.id_estudiante
+                                                        INNER JOIN {cohort_members} co_mem ON co_mem.userid = uext.id_moodle_user
+                                                        INNER JOIN {cohort} cohortm ON cohortm.id = co_mem.cohortid
+                                                        WHERE cohortm.idnumber LIKE '$cohort%' AND (hist_ice.id_estado_icetex = 5 OR hist_ice.id_estado_icetex = 3)
+                                                        AND uext.tracking_status = 1))
+                                                    
+                                                GROUP BY semestre.nombre
+                            ) inact_res
+                            
+                            GROUP BY semestre";
 
     $count = $DB->get_records_sql($sql_query);
 
@@ -432,7 +476,7 @@ function get_count_active_no_res_students($cohort, $semester_name){
                                     
                                     IN
 
-                                    (SELECT DISTINCT hist_ice.id_estudiante, hist_ice.id_semestre
+                                    (SELECT DISTINCT hist_ice.id_estudiante
                                     FROM {talentospilos_hist_est_ice} AS hist_ice
                                     INNER JOIN {talentospilos_semestre} sem ON sem.id = hist_ice.id_semestre
                                     INNER JOIN {talentospilos_user_extended} uext ON uext.id_ases_user = hist_ice.id_estudiante
@@ -509,7 +553,7 @@ function get_count_inactive_no_res_students($cohort, $semester_name){
                                     
                                     IN
 
-                                    (SELECT DISTINCT hist_ice.id_estudiante, hist_ice.id_semestre
+                                    (SELECT DISTINCT hist_ice.id_estudiante
                                     FROM {talentospilos_hist_est_ice} AS hist_ice
                                     INNER JOIN {talentospilos_semestre} sem ON sem.id = hist_ice.id_semestre
                                     INNER JOIN {talentospilos_user_extended} uext ON uext.id_ases_user = hist_ice.id_estudiante
