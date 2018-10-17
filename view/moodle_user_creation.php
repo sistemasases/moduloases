@@ -29,24 +29,27 @@ error_reporting(-1);
 ini_set('display_errors', 'On');
 require_once(__DIR__ . '/../../../config.php');
 require_once($CFG->libdir.'/adminlib.php');
+
 require_once('../managers/ases_report/asesreport_lib.php');
 require_once('../managers/permissions_management/permissions_lib.php');
 require_once("../managers/lib/cohort_lib.php");
 require_once("../managers/lib/student_lib.php");
 require_once("../managers/user_creation_process/user_creation_process_lib.php");
-require_once($CFG->dirroot.'/user/editlib.php');
 
+require_once($CFG->dirroot.'/user/editlib.php');
 require_once($CFG->dirroot.'/webservice/lib.php');
+require_once($CFG->libdir.'/formslib.php');
 
 require_once('../managers/validate_profile_action.php');
 require_once('../managers/menu_options.php');
-require_once($CFG->dirroot . '/user/editadvanced_form.php');
 include('../lib.php');
-global $PAGE;
+
+require_once(__DIR__.'/../classes/mdl_forms/moodle_user_creation_ases_version.php');
 
 include("../classes/output/ases_user_creation_page.php");
 include("../classes/output/renderer.php");
 
+global $PAGE;
 
 // Set up the page.
 
@@ -66,25 +69,7 @@ $PAGE->requires->js_call_amd('block_ases/ases_report_main','load_defaults_studen
 $PAGE->requires->js_call_amd('block_ases/fix_hidden_fieldset', 'init');
 
 
-class user_editadvanced_form_ases extends user_editadvanced_form {
-    function definition_after_data()
-    {
-        $mform = $this->_form;
-        if ($mform->elementExists('deletepicture')) {
-            $mform->removeElement('deletepicture');
-        }
-        if ($mform->elementExists('currentpicture')) {
-            $mform->removeElement('currentpicture');
-        }
-        if ($mform->elementExists('imagefile')) {
-            $mform->removeElement('imagefile');
-        }
-        if ($mform->elementExists('imagealt')) {
-            $mform->removeElement('imagealt');
-        }
 
-    }
-}
 
 
 $pagetitle = 'Creacion de usuarios Moodle';
@@ -167,7 +152,7 @@ $filemanageroptions = array('maxbytes'       => $CFG->maxbytes,
 $filemanagercontext = $editoroptions['context'];
 file_prepare_draft_area($draftitemid, $filemanagercontext->id, 'user', 'newicon', 0, $filemanageroptions);
 $user->imagefile = $draftitemid;
-$userform = new user_editadvanced_form_ases(new moodle_url($PAGE->url, array('returnto' => $returnto)), array(
+$userform = new moodle_user_creation_ases_version(new moodle_url($PAGE->url, array('returnto' => $returnto)), array(
     'user' => $user));
 
 echo $output->header();
