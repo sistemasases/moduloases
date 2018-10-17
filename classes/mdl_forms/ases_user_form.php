@@ -37,8 +37,6 @@ require_once(__DIR__.'/../Estamento.php');
 class ases_user_form extends moodleform {
     //Add elements to form
     public function definition() {
-        global $CFG;
-
         $gender_options = Gender::get_options();
         $tipo_doc_options = TipoDocumento::get_options();
         $cidades_options = Municipio::get_options();
