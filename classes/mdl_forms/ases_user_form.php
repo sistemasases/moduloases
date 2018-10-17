@@ -73,7 +73,7 @@ class ases_user_form extends moodleform {
         $mform->setDefault('id_ciudad_ini', $ciudad_por_defecto->id);
         $mform->addRule('id_ciudad_ini', null, 'required');
        
-        $mform->addElement('select', 'sexo', 'Sexo' , $gender_options);
+        $mform->addElement('searchableselector', 'sexo', 'Sexo' , $gender_options);
 
         $mform->addRule('sexo', null, 'required');
 
