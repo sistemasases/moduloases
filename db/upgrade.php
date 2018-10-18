@@ -4,7 +4,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     global $DB;
     $dbman = $DB->get_manager();
     $result = true;
-    if ($oldversion < 2018101715180 ) {
+    if ($oldversion < 2018101810540 ) {
     //     // ************************************************************************************************************
     //     // Actualización que crea la tabla para los campos extendidos de usuario (Tabla: {talentospilos_user_extended})
     //     // Versión: 2018010911179
@@ -1743,9 +1743,19 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
             if (!$dbman->table_exists($table)) {
                 $dbman->create_table($table);
             }
+
+                    // Define field alias to be added to talentospilos_cond_excepcion.
+        $table = new xmldb_table('talentospilos_cond_excepcion');
+        $field = new xmldb_field('alias', XMLDB_TYPE_CHAR, '100', null, null, null, null, 'condicion_excepcion');
+
+        // Conditionally launch add field alias.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+     
      
 
-        upgrade_block_savepoint(true, 2018101715180 , 'ases');
+        upgrade_block_savepoint(true, 2018101810540 , 'ases');
     
         return $result;
 
