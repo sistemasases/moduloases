@@ -111,6 +111,8 @@ $ases_student = null;
 if ($student_code != 0) {
     
     $ases_student = get_ases_user_by_code($student_code);
+ 
+    
 
     $student_id = $ases_student->id;
     //echo $student_id ;
@@ -149,6 +151,46 @@ if ($student_code != 0) {
     $record->attendant = $ases_student->acudiente;
     $record->attendant_tel = $ases_student->tel_acudiente;
     $record->num_doc = $ases_student->num_doc;
+    
+    //Código temporal, mientras se define carga de datos
+    //---------------------------------------------------------------------------
+    
+    //Código temporal, mientras se definen los posibles paises en la tabla
+    if($ases_student->pais == null){
+        $record->country = "Colombia";
+    }else{
+        $record->country = $ases_student->pais;}
+
+    //Código temporal vive_con
+      if($ases_student->vive_con == null){
+        $record->vive_con = "NO DEFINIDO";
+    }else{
+        $record->vive_con = $ases_student->vive_con;}
+
+    
+    //Código temporal tiene_hijo
+        
+    if($ases_student->tiene_hijo == null){
+        $record->sons = "NO DEFINIDO";
+    }else{
+        if($ases_student->tiene_hijo == false){
+        $record->sons = "NO";
+        }
+        if($ases_student->tiene_hijo == true){
+            $record->sons = "SÍ";
+            }
+        }
+
+    //Extraer condición de excepción del usuario, según id registrado
+       if($ases_student->id_cond_excepcion == null){
+        $record->cond_excep = "NO DEFINIDO";
+    }else {
+        $cond_excepcion = get_cond_excepcion_by_id($ases_student->id_cond_excepcion);
+        $record->cond_excep = $cond_excepcion->condicion_excepcion;
+    }
+    
+    //---------------------------------------------------------------------------
+
     $record->observations = $ases_student->observacion;
 
     // Estado ASES
