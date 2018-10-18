@@ -49,7 +49,7 @@ function user_management_get_moodle_user_with_tracking_status_1( $ases_id ){
             WHERE U.id = (
                             SELECT id_moodle_user 
                             FROM {talentospilos_user_extended} 
-                            WHERE id_ases_user = $ases_id
+                            WHERE id_ases_user = $ases_id AND tracking_status = 1
                         )";
 
     $to_return = $DB->get_record_sql( $sql );

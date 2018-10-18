@@ -8,7 +8,7 @@ $new_program = new stdClass();
 $new_program->codigosnies = 104614;
 $new_program->cod_univalle = 2722;
 $new_program->nombre = "TECNOLOGIA EN MANTENIMIENTO DE SISTEMAS ELECTROMECANICOS";
-$new_program->id_sede = 7;
+$new_program->id_sede = 9;
 $new_program->jornada = "NOCTURNA";
 $new_program->id_facultad = 8;
 
