@@ -1729,23 +1729,29 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
         // Versión en la que se incluye: GIT XXX, Moodle: 
 
          
-                 // Define table talentospilos_cond_excepcion to be created.
+            // Define table talentospilos_cond_excepcion to be created.
+            $table = new xmldb_table('talentospilos_cond_excepcion');
+
+            // Adding fields to table talentospilos_cond_excepcion.
+            $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+            $table->add_field('condicion_excepcion', XMLDB_TYPE_TEXT, null, null, null, null, null);
+    
+            // Adding keys to table talentospilos_cond_excepcion.
+            $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+    
+            // Conditionally launch create table for talentospilos_cond_excepcion.
+            if (!$dbman->table_exists($table)) {
+                $dbman->create_table($table);
+            }
+
+                    // Define field alias to be added to talentospilos_cond_excepcion.
         $table = new xmldb_table('talentospilos_cond_excepcion');
+        $field = new xmldb_field('alias', XMLDB_TYPE_CHAR, '100', null, null, null, null, 'condicion_excepcion');
 
-        // Adding fields to table talentospilos_cond_excepcion.
-        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
-        $table->add_field('condicion_excepcion', XMLDB_TYPE_TEXT, null, null, null, null, null);
-        $table->add_field('alias', XMLDB_TYPE_CHAR, '100', null, null, null, null);
-
-        // Adding keys to table talentospilos_cond_excepcion.
-        $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
-
-        // Conditionally launch create table for talentospilos_cond_excepcion.
-        if (!$dbman->table_exists($table)) {
-            $dbman->create_table($table);
+        // Conditionally launch add field alias.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
         }
-
-
      
      
 
