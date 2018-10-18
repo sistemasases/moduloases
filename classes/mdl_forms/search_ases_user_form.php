@@ -27,21 +27,31 @@
 defined('MOODLE_INTERNAL') || die;
 require_once($CFG->libdir.'/formslib.php');
 
-defined('MOODLE_INTERNAL') || die;
-require_once($CFG->libdir.'/formslib.php');
-require_once(__DIR__.'/../AsesUser.php');
+/**
+ * Class search_ases_user_form_data
+ * @property string $num_doc
+ * @property string $codigo_est
+ */
+abstract class search_ases_user_form_data {
+
+}
+
+/**
+ * Class search_ases_user_form
+ * @method  search_ases_user_form_data get_data()
+ */
 class search_ases_user_form extends moodleform {
     //Add elements to form
     public function definition() {
 
         $mform = $this->_form; // Don't forget the underscore!
 
-        $mform->addElement('header', 'Buscar usuario ASES');
-        $mform->addElement(AsesUser::NUMERO_DOCUMENTO, 'text', 'Número de documento'); // Add elements to your form
-        $mform->addElement('codigo_est', 'text', 'Código estudiante'); // Add elements to your form
+        $mform->addElement('header', 'header',   'Buscar usuario ASES');
+        $mform->addElement('text', 'num_doc', 'Numero de documento'); // Add elements to your form
+        $mform->addElement('text', 'codigo_est', 'Codigo estudiante'); // Add elements to your form
         //normally you use add_action_buttons instead of this code
         $buttonarray=array();
-        $buttonarray[] = $mform->createElement('submit', 'submitbutton', get_string('send'));
+        $buttonarray[] = $mform->createElement('submit', 'submitbutton', get_string('search'));
         $mform->addGroup($buttonarray, 'buttonar', '', ' ', false);
     }
     public function get_errors(): array {
@@ -53,4 +63,6 @@ class search_ases_user_form extends moodleform {
     }
 
 }
+
+
 ?>

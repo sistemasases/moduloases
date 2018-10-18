@@ -25,8 +25,7 @@
  */
 
 // Standard GPL and phpdocs
-error_reporting(-1);
-ini_set('display_errors', 'On');
+
 require_once(__DIR__ . '/../../../config.php');
 require_once($CFG->libdir.'/adminlib.php');
 
@@ -46,31 +45,11 @@ include('../lib.php');
 
 require_once(__DIR__.'/../classes/mdl_forms/moodle_user_creation_ases_version.php');
 
-include("../classes/output/ases_user_creation_page.php");
-include("../classes/output/renderer.php");
+
 
 global $PAGE;
 
 // Set up the page.
-
-
-
-$PAGE->requires->css('/blocks/ases/style/ases_report_style.css', true);
-$PAGE->requires->css('/blocks/ases/style/styles_pilos.css', true);
-$PAGE->requires->css('/blocks/ases/style/bootstrap_pilos.min.css', true);
-$PAGE->requires->css('/blocks/ases/style/sweetalert.css', true);
-$PAGE->requires->css('/blocks/ases/style/round-about_pilos.css', true);
-$PAGE->requires->css('/blocks/ases/style/jquery.dataTables.min.css', true);
-$PAGE->requires->css('/blocks/ases/style/buttons.dataTables.min.css', true);
-$PAGE->requires->css('/blocks/ases/style/side_menu_style.css', true);
-
-$PAGE->requires->js_call_amd('block_ases/ases_report_main','init');
-$PAGE->requires->js_call_amd('block_ases/ases_report_main','load_defaults_students', $params);
-$PAGE->requires->js_call_amd('block_ases/fix_hidden_fieldset', 'init');
-
-
-
-
 
 $pagetitle = 'Creacion de usuarios Moodle';
 $courseid = required_param('courseid', PARAM_INT);
@@ -97,8 +76,93 @@ if (!isset($actions->create_mdl_user)) {
 if(!consult_instance($blockid)){
     header("Location: instance_configuration.php?courseid=$courseid&instanceid=$blockid");
 }
+$PAGE->requires->css('/blocks/ases/style/progress_bar_component.css');
 
+/**
+ * View lib
+ * @throws coding_exception
+ */
+/**
+ * If moodle user creation actually is part of all ASES user creation procces, we need
+ * progress_bar component
+ * @throws coding_exception
+ */
+function multiple_steps() {
+    global $PAGE, $output;
+    $PAGE->requires->js_call_amd('block_ases/progress_bar_component', 'init');
+    $template_data = new stdClass();
+    $template_data->items = \user_creation_process\get_steps(\user_creation_process\CREATE_MOODLE_USER);
+    $student_profile_page = new \block_ases\output\progress_bar_component($template_data);
+    echo $output->render($student_profile_page);
+}
 
+/**
+ * Because we are using the moodle functions for create users and algo a form than inherit of moodle user form
+ * we need have prepare with anticipation an user to create the form,
+ * @see moodle/user/edit.php
+ * @return stdClass
+ * @throws dml_exception
+ */
+function prepare_user(): stdClass {
+    global $user_name;
+    $user = new stdClass();
+    $user->id = -1;
+    $user->auth = 'manual';
+    $user->confirmed = 1;
+    $user->deleted = 0;
+    $user->timezone = '99';
+    $user->username = $user_name;
+// Load user preferences.
+    useredit_load_preferences($user);
+// Load custom profile fields data.
+    profile_load_data($user);
+// User interests.
+    $user->interests = core_tag_tag::get_item_tags_array('core', 'user', $id);
+
+    $coursecontext = context_system::instance();   // SYSTEM context.
+// This is a new user, we don't want to add files here.
+    $editoroptions = array(
+        'maxfiles' => 0,
+        'maxbytes' => 0,
+        'trusttext' => false,
+        'forcehttps' => false,
+        'context' => $coursecontext
+    );
+
+    $filemanageroptions = array('maxbytes'       => $CFG->maxbytes,
+        'subdirs'        => 0,
+        'maxfiles'       => 1,
+        'accepted_types' => 'web_image');
+    $filemanagercontext = $editoroptions['context'];
+    file_prepare_draft_area($draftitemid, $filemanagercontext->id, 'user', 'newicon', 0, $filemanageroptions);
+    $draftitemid = 0;
+    $user->imagefile = $draftitemid;
+    return $user;
+}
+/**
+ * Because we are using the moodle functions for create users and algo a form than inherit of moodle user form
+ * we need have post proccess user arrive from form before save this
+ * @see moodle/user/edit.php
+ * @return stdClass
+ * @throws dml_exception
+ */
+function post_process_user( $usernew ) {
+    $coursecontext = context_system::instance();   // SYSTEM context.
+// This is a new user, we don't want to add files here.
+    $editoroptions = array(
+        'maxfiles' => 0,
+        'maxbytes' => 0,
+        'trusttext' => false,
+        'forcehttps' => false,
+        'context' => $coursecontext
+    );
+    $usernew = file_postupdate_standard_editor($usernew, 'description', $editoroptions, null, 'user', 'profile', null);
+    return $usernew;
+}
+
+/**
+ * End view lib
+ */
 
 /* */
 $contextcourse = context_course::instance($courseid);
@@ -109,23 +173,7 @@ $contextblock =  context_block::instance($blockid);
 Start search moodle user step
 */
 
-/*
-User standard
 
-*/
-$user = new stdClass();
-$user->id = -1;
-$user->auth = 'manual';
-$user->confirmed = 1;
-$user->deleted = 0;
-$user->timezone = '99';
-$user->username = $user_name;
-// Load user preferences.
-useredit_load_preferences($user);
-// Load custom profile fields data.
-profile_load_data($user);
-// User interests.
-$user->interests = core_tag_tag::get_item_tags_array('core', 'user', $id);
 
 $usercreated = false;
 
@@ -133,34 +181,15 @@ $usercreated = false;
 
 $output = $PAGE->get_renderer('block_ases');
 
-
-
-$coursecontext = context_system::instance();   // SYSTEM context.
-// This is a new user, we don't want to add files here.
-$editoroptions = array(
-    'maxfiles' => 0,
-    'maxbytes' => 0,
-    'trusttext' => false,
-    'forcehttps' => false,
-    'context' => $coursecontext
-);
-
-$filemanageroptions = array('maxbytes'       => $CFG->maxbytes,
-    'subdirs'        => 0,
-    'maxfiles'       => 1,
-    'accepted_types' => 'web_image');
-$filemanagercontext = $editoroptions['context'];
-file_prepare_draft_area($draftitemid, $filemanagercontext->id, 'user', 'newicon', 0, $filemanageroptions);
-$user->imagefile = $draftitemid;
+$user = prepare_user();
 $userform = new moodle_user_creation_ases_version(new moodle_url($PAGE->url, array('returnto' => $returnto)), array(
     'user' => $user));
-
 echo $output->header();
 
 if ($userform->is_cancelled()) {
 
 } else if ($usernew = $userform->get_data()) {
-    $usercreated = false;
+    $usernew = post_process_user($usernew);
     if (empty($usernew->auth)) {
         // User editing self.
         $authplugin = get_auth_plugin($user->auth);
@@ -168,7 +197,7 @@ if ($userform->is_cancelled()) {
     } else {
         $authplugin = get_auth_plugin($usernew->auth);
     }
-    $usernew = file_postupdate_standard_editor($usernew, 'description', $editoroptions, null, 'user', 'profile', null);
+
 
     unset($usernew->id);
     $createpassword = !empty($usernew->createpassword);
@@ -192,7 +221,9 @@ if ($userform->is_cancelled()) {
             debugging(get_string('cannotupdatepasswordonextauth', '', '', $usernew->auth), DEBUG_NONE);
         }
     }
-    $usercreated = true;
+    if ( $usernew->id ) {
+        $usercreated = true;
+    }
 } elseif ($userform->is_submitted() && !$userform->is_validated()){
     \core\notification::error('Se han encontrado errores al procesar');
 }
@@ -205,7 +236,13 @@ if ($usercreated) {
     \core\notification::success("Usuario creado con exito");
 }
 
-echo $userform->render();
+
+if ( $continue ) {
+    multiple_steps();
+}
+
+
+$userform->display();
 
 
 echo $output->footer();

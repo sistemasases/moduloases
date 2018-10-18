@@ -26,7 +26,7 @@
 defined('MOODLE_INTERNAL') || die;
 require_once(__DIR__.'/../vendor/autoload.php');
 
-use function Latitude\QueryBuilder\{alias, on, listing, identifyAll};
+use function Latitude\QueryBuilder\{alias, on, listing, identifyAll, field};
 
 
 require_once(__DIR__.'/../managers/user_management/user_management_lib.php');
@@ -175,9 +175,12 @@ class AsesUser extends BaseDAO  {
     /**
      * Return ases user with names, have the same properties than AsesUser,
      * with two aditional properties: firstname and lastname
+     * @param array $conditions Key value array where the keys are the column names and the values
+     * say what value shuld exactly have the database record for was returned, if $conditions is equal to
+     * '''array('id'=>1) this implies where id = 1 in the executed query
      * @returns array array of  AsesUserWithNames Ases users with names
      */
-    public static function get_ases_users_with_names(): array {
+    public static function get_ases_users_with_names($conditions = null): array {
         global $DB;
         $query = BaseDAO::get_factory()
             ->select(
@@ -190,10 +193,15 @@ class AsesUser extends BaseDAO  {
                 on('ases_user.'.AsesUser::ID, 'ases_user_ext.'.AsesUserExtended::ID_ASES_USER))
             ->innerJoin(
                 alias('{user}', 'mdl_user'),
-                on('ases_user_ext.'.AsesUserExtended::ID_MOODLE_USER, 'mdl_user.id'))
-            ->compile();
-
+                on('ases_user_ext.'.AsesUserExtended::ID_MOODLE_USER, 'mdl_user.id'));
+        if( $conditions ) {
+            foreach($conditions as $colum_name => $value) {
+                $query->andWhere(field($colum_name)->eq($value));
+            }
+        }
+        $query->compile();
         $results = $DB->get_records_sql($query->sql());
+        echo $query->sql();die;
         return AsesUserWithNames::make_objects_from_std_objects_or_arrays($results);
     }
     /**

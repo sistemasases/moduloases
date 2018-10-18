@@ -1,14 +1,9 @@
-
+{{#data}}
 <div class="progressbar-container">
     <ul class="progressbar">
-        <li >login</li>
-        <li class="active"> choose interest</li>
-        <li>add friends</li>
-        <li>add friends</li>
-        <li>add friends</li>
-        <li>add friends</li>
-        <li>add friends</li>
-        <li>add friends</li>
-        <li>View map</li>
+        {{#items}}
+            <li class=" {{#is_current_active}} active {{/is_current_active}} "> {{name}}</li>
+        {{/items}}
     </ul>
 </div>
+{{/data}}
