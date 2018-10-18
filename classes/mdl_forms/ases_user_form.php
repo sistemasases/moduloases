@@ -1,4 +1,28 @@
-<?php 
+<?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
+/**
+ * Form for create Ases User
+ *
+ * @author     Luis Gerardo Manrique Cardona
+ * @package    block_ases
+ * @copyright  2018 Luis Gerardo Manrique Cardona <luis.manrique@correounivalle.edu.co>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
 defined('MOODLE_INTERNAL') || die;
 
 error_reporting(E_ALL);
@@ -10,7 +34,7 @@ require_once(__DIR__.'/../AsesUser.php');
 require_once(__DIR__.'/../Municipio.php');
 require_once(__DIR__.'/../Discapacidad.php');
 require_once(__DIR__.'/../Estamento.php');
-class ases_user_ extends moodleform {
+class ases_user_form extends moodleform {
     //Add elements to form
     public function definition() {
         global $CFG;
@@ -26,11 +50,14 @@ class ases_user_ extends moodleform {
             'startyear' => 1920, 
             'stopyear'  => date("Y")
         );
-        $mform->addElement('text', 'num_doc', 'Número de documento' , null); 
+
+        $mform->addElement('header', 'myheader', 'Usuario Ases');
+
+        $mform->addElement('text', 'num_doc', 'Número de documento' , null);
         $mform->addRule('num_doc', null, 'required');
         $mform->addRule('num_doc', 'El número de documento debe contener solo numeros', 'numeric');  
 
-        $mform->addElement('select', 'tipo_doc', 'Tipo de documento' , $tipo_doc_options); 
+        $mform->addElement('searchableselector', 'tipo_doc', 'Tipo de documento' , $tipo_doc_options);
         $mform->addRule('tipo_doc', null, 'required');
 
         $mform->addElement('select', 'id_ciudad_res', 'Ciudad de residencia' , $cidades_options); 
@@ -40,15 +67,16 @@ class ases_user_ extends moodleform {
         $mform->addElement('date_selector', 'fecha_nac', 'Fecha de nacimiento', $date_options_fecha_nac);
         $mform->addRule('fecha_nac', null, 'required');
 
-        $mform->addElement('select', 'id_ciudad_nac', 'Ciudad nacimiento' , $cidades_options); 
+        $mform->addElement('searchableselector', 'id_ciudad_nac', 'Ciudad nacimiento' , $cidades_options);
         $mform->setDefault('id_ciudad_nac', $ciudad_por_defecto->id);
         $mform->addRule('id_ciudad_nac', null, 'required');
 
-        $mform->addElement('select', 'id_ciudad_ini', 'Ciudad inicial' , $cidades_options);
+        $mform->addElement('searchableselector', 'id_ciudad_ini', 'Ciudad inicial' , $cidades_options);
         $mform->setDefault('id_ciudad_ini', $ciudad_por_defecto->id);
         $mform->addRule('id_ciudad_ini', null, 'required');
        
         $mform->addElement('select', 'sexo', 'Sexo' , $gender_options);
+
         $mform->addRule('sexo', null, 'required');
 
         $mform->addElement('text', 'barrio_ini', 'Barrio de procedencia');
@@ -94,8 +122,8 @@ class ases_user_ extends moodleform {
         $data->fecha_nac = $date;
         $data->num_doc_ini = $data->num_doc;
         $data->tipo_doc_ini = $data->tipo_doc;
-        $ases_user = new AsesUser();
-        $ases_user->make_from($data);
+
+        $ases_user = new AsesUser($data);
         return $ases_user;
     }
     //Custom validation should be added here

@@ -48,11 +48,12 @@ function assign_properties_to($stdObjectOrArrayFrom, $instanceTo) {
     
     $stdObject = (object) $stdObjectOrArrayFrom;
     $class_name_to = get_class($instanceTo);
-
-    $shared_properties = array_intersect(get_properties($stdObject), get_properties($instanceTo));
-
+    $std_object_properties = get_properties($stdObject);
+    $shared_properties = array_intersect($std_object_properties, get_properties($instanceTo));
+    $std_object_properties_string = implode(', ', get_properties($stdObject));
     if (!$shared_properties) {
-        throw new \ErrorException("Cannot assign the given object to instance of $class_name_to");
+
+        throw new \ErrorException("Cannot assign the given object to instance of $class_name_to because doesent have the shared properties, the object given have the properties $std_object_properties_string");
     }
     $sourceReflection = new \ReflectionObject($stdObject);
     $sourceProperties = $sourceReflection->getProperties();
