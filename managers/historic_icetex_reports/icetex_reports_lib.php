@@ -503,13 +503,7 @@ function get_count_inactive_no_res_students($cohort, $semester_name){
     $sql_query = "SELECT sum(num_inact_no_res) AS num_inact_no_res
                         FROM
                         (SELECT Count(usuarios.student_id) AS num_inact_no_res FROM					
-                                            (SELECT moodle_user.username, 
-                                                    moodle_user.firstname,  
-                                                    moodle_user.lastname,
-                                                    ases_user.num_doc,
-                                                    ases_user.id AS student_id,
-                                                    program_statuses.nombre AS program_status,
-                                                    user_extended.id_academic_program	     
+                                            (SELECT ases_user.id AS student_id                                                    	     
                                                 FROM {cohort} AS cohort
                                                 INNER JOIN {cohort_members} AS cohort_member ON cohort_member.cohortid = cohort.id
                                                 INNER JOIN {user} AS moodle_user ON moodle_user.id = cohort_member.userid
