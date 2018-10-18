@@ -51,10 +51,11 @@
                     <input type="text" class="input_fields_general_tab" name="tiene_hijo" id="tiene_hijo" readonly value="{{sons}}" maxlength="100" required />
                 </div>
             </div>
-
-            <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 div-general-fields" id="div_cond_excepcion">
+            <div class="row">
+            <label for="cond_excep" class="col-xs-3 col-sm-3 col-md-3 col-lg-3 label_fields_general_tab">Condición de excepción </label>
+            <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 div_cond" id="div_cond_excepcion">
                 {{#update_icetex_status_sp}}
-                <select id="cond_excepcion" class="form-control" disabled>
+                <select id="cond_excep" class="form-control" >
                   {{{options_status_icetex}}}
                 </select>
                 {{/update_icetex_status_sp}} {{^update_icetex_status_sp}}
@@ -63,6 +64,8 @@
                 </span>
                 {{/update_icetex_status_sp}}
               </div>
+              </div>
+
 
             <h3 class="h-sections-general-tab">INFORMACIÓN DEL ACUDIENTE</h3>
             <hr class="hr-general-tab-fields">
