@@ -26,8 +26,11 @@
 
 require_once(dirname(__FILE__). '/../../../../config.php');
 require_once '../managers/periods_management/periods_lib.php';
-
-
+require_once(__DIR__.'/../../vendor/autoload.php');
+require_once (__DIR__.'/../../classes/DAO/BaseDAO.php');
+require_once (__DIR__.'/../../classes/AsesUserExtended.php');
+use function Latitude\QueryBuilder\{alias, on, fn, field, param, QueryInterface, express, criteria, identifyAll, listing};
+use \Latitude\QueryBuilder\Query\SelectQuery;
 function get_students_and_finalgrades($instance_id){
     global $DB;
 
@@ -96,9 +99,11 @@ function get_students_and_finalgrades($instance_id){
 }
 
 
+
+
 function get_finalgrade_by_student_and_course($student_id, $course_id){
     global $DB;
-    
+
     $query = "SELECT finalgrade 
                 FROM {grade_grades} AS grades
                 INNER JOIN {grade_items} items ON items.id = grades.itemid
@@ -128,7 +133,223 @@ function get_students_grades($student_id, $course_id){
         $grades.= "$record->it_name : $formatted_grade ";
     }
 
-    return $grades;    
+    return $grades;
+}
+
+/**
+ * Class ReporteDocente
+ *
+ * Dummy class for ReporteDocente
+ *
+ * @property $cod_materia Codigo de la materia univalle
+ * @property $nomber_unidad_academica
+ * @property $nombre_profesor
+ * @property $numero_items_creados Numero de items creados con notas registradas
+ * @property $numero_estudiantes_perdiendo Número de estudiantes ASES que van ganando la materia
+ * @property $numero_estudiantes_ganando Número de estudiantes ASES que van perdiendo la materia
+ * @property $numero_estudiantes_sin_nota Numero de estudiantes ASES que no tienen nota
+ * @property $total_estudiantes_curso Total de estudiantes ASES que están en ese curso
+ */
+class ReporteDocente{};
+
+/*
+ *
+ * SELECT concat_ws(' ',firstname,lastname) AS fullname
+                        FROM
+                        (SELECT usuario.firstname,
+                                usuario.lastname,
+                                userenrol.timecreated
+                        FROM {course} cursoP
+                        INNER JOIN {context} cont ON cont.instanceid = cursoP.id
+                        INNER JOIN {role_assignments} rol ON cont.id = rol.contextid
+                        INNER JOIN {user} usuario ON rol.userid = usuario.id
+                        INNER JOIN {enrol} enrole ON cursoP.id = enrole.courseid
+                        INNER JOIN {user_enrolments} userenrol ON (enrole.id = userenrol.enrolid
+                                                                        AND usuario.id = userenrol.userid)
+                        WHERE cont.contextlevel = 50
+                            AND rol.roleid = 3
+                            AND cursoP.id = courses.id
+                        ORDER BY userenrol.timecreated ASC
+                        LIMIT 1) AS subc) AS nombre_profe,
+ */
+/**
+ * Tablas retornadas: cursoP, rol, usuario, enrole, userenrol, cont {context}
+ * Columnas retornadas: usuario.id, usuario.firstname, usuario.lastname
+ *
+ * @return SelectQuery
+ */
+function _select_moodle_teachers(): SelectQuery {
+    return BaseDAO::get_factory()
+        ->select(
+            'usuario.id',
+            'usuario.firstname',
+            'usuario.lastname',
+            alias('cursoP.id', 'curso_profesor_id' ))
+        ->from(alias('{course}', 'cursoP'))
+        ->innerJoin(alias('{context}','cont'), on('cont.instanceid','cursoP.id'))
+        ->innerJoin(alias('{role_assignments}','rol'), on('cont.id','rol.contextid'))
+        ->innerJoin(alias('{user}','usuario'), on('rol.userid','usuario.id'))
+        ->innerJoin(alias('{enrol}','enrole'), on('cursoP.id','enrole.courseid'))
+        ->innerJoin(alias('{user_enrolments}','userenrol'),
+            on('enrole.id', 'userenrol.enrolid')->and(
+                    on('usuario.id', 'userenrol.userid')
+                ))
+        //->limit(1);
+        ->where(field('cont.contextlevel')->eq(param(50)))
+        ->andWhere(field('rol.roleid')->eq(param(3)))
+        ->orderBy('userenrol.timecreated', 'ASC');
+}
+
+function _select_ases_teachers(): SelectQuery {
+    return BaseDAO::get_factory()
+        ->select()
+        ->from(
+            alias(
+                subquery(_select_moodle_teachers()),
+                'moodle_teachers'
+            )
+        ->where(field('moodle_teachers.curso_profesor_id')->in()));
+}
+
+function _select_teachers_name(): SelectQuery {
+    return BaseDAO::get_factory()
+        ->select(
+            alias(
+                fn('concat_ws', param(' '), 'firstname', 'lastname'),
+        'fullname'))
+        ->from(
+            subquery()
+        );
+}
+
+
+
+function _select_user_enrols(): SelectQuery {
+    return BaseDAO::get_factory()
+        ->select(
+            'members.cohortid',
+            alias('enrols.courseid', 'id_course'),
+            alias('students.id', 'student_id') ,
+            alias('students.firstname', 'student_name'),
+            alias('students.lastname', 'student_lastname'),
+            alias(
+                express('substring(students.username from %s for %s)', param(0), param(8)),
+                'student_code'
+            ))
+        ->from(alias('{cohort_members}', 'members'))
+        ->innerJoin(alias('{cohort}', 'cohorts'), on('cohorts.id' , 'members.cohortid'))
+        ->innerJoin(alias('{user_enrolments}','enrolments'), on('enrolments.userid', 'members.userid'))
+        ->innerJoin(alias('{user}','students'), on('enrolments.userid', 'students.id'))
+        ->innerJoin(alias('{enrol}', 'enrols'), on('enrols.id', 'enrolments.enrolid'));
+}
+/**
+SELECT DISTINCT enrols.courseid AS id_course, students.id AS student_id, students.firstname AS student_name, students.lastname AS student_lastname,
+substring(students.username from 0 for 8) AS student_code
+FROM {cohort_members} AS members
+INNER JOIN {cohort} AS cohorts ON cohorts.id = members.cohortid
+INNER JOIN {user_enrolments} AS enrolments ON  enrolments.userid = members.userid
+INNER JOIN {user} AS students ON enrolments.userid = students.id
+INNER JOIN {enrol} AS enrols ON enrols.id = enrolments.enrolid
+WHERE members.cohortid IN (SELECT id_cohorte
+FROM   {talentospilos_inst_cohorte}
+WHERE  id_instancia = $instance_id)) AS cursos_ases
+ */
+function _select_ids_cursos_ases($id_instancia): SelectQuery {
+    $factory = BaseDAO::get_factory();
+    return $factory
+        ->selectDistinct()
+        ->from(
+            subquery(
+                _select_user_enrols(),
+                'user_enrols'
+            ));
+       /* ->where(
+            field('user_enrols.cohortid')
+            ->in(
+                    $factory
+                        ->select('id_instancia')
+                        ->from(subquery(
+                            _select_instancias_cohorte($id_instancia),
+                            'instancias_cohorte'))
+            )
+        );*/
+
+}
+
+
+$sql = "
+SELECT DISTINCT enrols.courseid AS id_course, students.id AS student_id, students.firstname AS student_name, students.lastname AS student_lastname,
+substring(students.username from 0 for 8) AS student_code
+FROM {cohort_members} AS members 
+INNER JOIN {cohort} AS cohorts ON cohorts.id = members.cohortid
+INNER JOIN {user_enrolments} AS enrolments ON  enrolments.userid = members.userid
+INNER JOIN {user} AS students ON enrolments.userid = students.id
+INNER JOIN {enrol} AS enrols ON enrols.id = enrolments.enrolid
+WHERE members.cohortid IN (SELECT id_cohorte
+FROM   {talentospilos_inst_cohorte}
+WHERE  id_instancia =450299)";
+echo '<pre>';
+//print_r($DB->get_records_sql($sql));die;
+echo '</pre>';
+
+/**
+ * Tablas retornadas: user_extended, ases_user, mdl_user
+ *
+ * Columnas retornadas:
+ *  AsesUserExtended::get_column_names()
+ *  AsesUser::get_column_names()
+ *  firstname
+ *  lastname
+ *  mdl_user_id
+ *
+ * @return SelectQuery
+ * @throws ErrorException
+ */
+function _select_estudiantes_ases(): SelectQuery {
+    $column_names = [];
+    $aditional_column_names = [
+      'mdl_user.firstname',
+      'mdl_user.lastname',
+        alias('mdl_user.id', 'mdl_user_id')
+    ];
+    $column_names = array_merge($column_names, AsesUserExtended::get_column_names('user_extended'));
+    $column_names = array_merge($column_names, AsesUser::get_column_names('ases_user'));
+    $column_names = array_merge($column_names, $aditional_column_names);
+    return BaseDAO::get_factory()
+        ->select(
+            listing(identifyAll($column_names)))
+        ->from(
+            alias('{user}', 'mdl_user'))
+        ->innerJoin(
+            alias(AsesUserExtended::get_table_name_for_moodle(), 'user_extended'),
+            on('mdl_user.id', 'user_extended.'.AsesUserExtended::ID_MOODLE_USER))
+        ->innerJoin(
+            alias(AsesUser::get_table_name_for_moodle(), 'ases_user'),
+            on('user_extended.'.AsesUserExtended::ID_ASES_USER, 'ases_user.'.AsesUser::ID))
+        ;
+}
+
+
+/**
+ * Return a select containing all the ases cohorts
+ *
+ * Tables returned:
+ *  instancia_cohorte
+ *
+ * Columns returned:
+ * All from talentospilos_inst_cohorte
+ *
+ * @param $id_instancia Id ASES instance
+ * @param string $table_raname
+ * @return SelectQuery
+ */
+function _select_instancias_cohorte($id_instancia): SelectQuery{
+    $factory = BaseDAO::get_factory();
+    $INSTANCIA_COHORTE = 'instancia_cohorte';
+    return $factory
+        ->select()
+        ->from(alias('{talentospilos_inst_cohorte}', $INSTANCIA_COHORTE))
+        ->where(field($INSTANCIA_COHORTE.'.id_instancia')->eq($id_instancia));
 }
 
 function get_datatable_array_for_finalgrade_report($instance_id){
@@ -145,7 +366,7 @@ function get_datatable_array_for_finalgrade_report($instance_id){
 					"bsort" => false,
 					"columns" => $columns,
 					"data" => get_students_and_finalgrades($instance_id),
-					"language" => 
+					"language" =>
                 	 array(
                     	"search"=> "Buscar:",
                     	"oPaginate" => array(
