@@ -44,7 +44,7 @@ require_once(__DIR__ . '/../classes/mdl_forms/search_ases_user_form.php');
 require_once(__DIR__ . '/../classes/AsesUser.php');
 include "../classes/output/renderer.php";
 include "../classes/output/progress_bar_component.php";
-
+include '../managers/students_finalgrade_report/students_finalgrade_report_lib.php';
 
 $pagetitle = 'Busqueda de usuarios ASES';
 $courseid = required_param('courseid', PARAM_INT);
@@ -85,6 +85,14 @@ if ($search_ases_user_form->is_submitted() && $search_ases_user_form->is_validat
 } else {
 
 }
+//$c_query = _select_instancias_cohorte($blockid)->compile();
+
+//print_r($DB->get_records_sql($c_query->sql(), $c_query->params()));
+print _select_ids_cursos_ases($blockid)->compile()->sql();
+
+$c_query = _select_ids_cursos_ases($blockid)->compile();
+
+print_r($DB->get_records_sql($c_query->sql(), $c_query->params()));
 
 $search_ases_user_form->display();
 
