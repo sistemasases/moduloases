@@ -35,8 +35,8 @@ $xQuery->form = "seguimiento_pares"; // Can be alias(String) or idntifier(Number
                          ["id_monitor",[["value","="]], true]
                         ];*/
 $xQuery->filterFields = [
-                            ["fecha", [["2018-01-01",">"]], true], 
-                            ["fecha", [["2018-07-01","<"]], true], 
+                            ["fecha", [["2018-07-01",">"],["2018-07-05","<"]], true],
+                            ["id_monitor",[["value","="]], true]
                            ];
 $xQuery->orderFields = [
                         ["id_instancia","ASC"], 
@@ -206,7 +206,7 @@ echo json_encode( dphpformsV2_find_records( $xQuery ) );
              * next: Warning This function may return Boolean FALSE, but may also return a non-Boolean value which evaluates to FALSE
              */
             if( next( $query->filterFields[0][1] ) ) {
-                $criteria .= " OR ";
+                $criteria .= " AND ";
             }
         }
 
