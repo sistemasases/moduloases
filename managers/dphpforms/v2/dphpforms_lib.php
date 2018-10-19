@@ -28,10 +28,11 @@ header('Content-Type: application/json');
 $xQuery = new stdClass();
 $xQuery->form = "seguimiento_pares"; // Can be alias(String) or idntifier(Number)
 $xQuery->filterFields = [
-                         ["id_estudiante", [["428","="]], true],
-                         ["lugar", [["Plazoleta de ingenieria","!="]], true],
-                         ["id_instancia", [["value","="]], false], 
-                         ["id_monitor",[["value","="]], false]
+                         ["id_estudiante", [["428","="]], false],
+                         ["lugar", [["Plazoleta de ingenieria","!="],["Biblioteca","!="]], false],
+                         ["fecha", [["2018-07-01",">"]], true], 
+                         ["id_instancia", [["value","="]], true], 
+                         ["id_monitor",[["value","="]], true]
                         ];
 $xQuery->orderFields = [
                         ["id_instancia","ASC"], 
@@ -196,11 +197,11 @@ echo json_encode( dphpformsV2_find_records( $xQuery ) );
         // Criteria base: R.id_pregunta = XX AND R.respuesta = 'ABC'
         $criteria = "";
         foreach( $query->filterFields[0][1] as $filterValue ){
-            $criteria .= "(R.id_pregunta =" .$list_fields_alias_id[$query->filterFields[0][0]]. " AND R.respuesta = '". $filterValue[0] . "')";
+            $criteria .= "(R.id_pregunta = " .$list_fields_alias_id[$query->filterFields[0][0]]. " AND R.respuesta ".$filterValue[1]." '". $filterValue[0] . "')";
             /**
              * next: Warning This function may return Boolean FALSE, but may also return a non-Boolean value which evaluates to FALSE
              */
-            if( next( $items ) ) {
+            if( next( $query->filterFields[0][1] ) ) {
                 $criteria .= " OR ";
             }
         }
@@ -220,17 +221,35 @@ echo json_encode( dphpformsV2_find_records( $xQuery ) );
                               FROM {talentospilos_df_respuestas} AS R3 
                               INNER JOIN ( $inner_join_more_responses ) AS IJMR ON id_respuesta = R3.id";
 
-        $where_clause = "";
+        $where_clause = "WHERE ";
         if( count( $query->filterFields ) > 1 ){
-            $first = true;
+            
+            $first_filter_field = true;
+            
             foreach( $query->filterFields as $filterField ){
-                if( $first ){
-                    $first = false;
-                    $where_clause  = "WHERE ( id_pregunta = ".$list_fields_alias_id[$query->filterFields[0][0]]." AND respuesta = '". $query->filterFields[0][1] . "' )";
+
+                $fieldAlias = $filterField[0];
+                $filterValues = $filterField[1];
+                $optional =  $filterField[2];
+
+                $filter_where = "";
+                if( !$first_filter_field ){
+                    $filter_where .= " AND ";
                 }else{
-                    $where_clause .= " OR ( id_pregunta = ".$list_fields_alias_id[$filterField[0]]." AND respuesta = '". $filterField[1] . "' )";
+                    $first_filter_field = false;
                 }
+
+                foreach( $filterValues as $filterValue ){
+                    $filter_where .= "(id_pregunta = " .$list_fields_alias_id[$fieldAlias]. " AND respuesta ".$filterValue[1]." '". $filterValue[0] . "')";
+                    if( next($filterValues) ){
+                        $filter_where .= " OR ";
+                    }
+                }
+
+                $where_clause .= $filter_where;
+
             }
+    
         };
 
         $sql_query = $inner_join_values . " " . $where_clause;
@@ -249,10 +268,9 @@ echo json_encode( dphpformsV2_find_records( $xQuery ) );
         $grouped_records[ $record->id_formulario_respuestas ][ $record->id_pregunta ] = $record->respuesta;
      };
 
-     print_r( $sql_query );
-     print_r( $records );
+     echo( $sql_query );
+     
      print_r( $grouped_records );
-     print_r( $list_fields_id_alias );
 
      $valid_records = [];
      //Si el registro agrupado tiene los campos para filtrar
