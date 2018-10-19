@@ -85,14 +85,112 @@ if ($search_ases_user_form->is_submitted() && $search_ases_user_form->is_validat
 } else {
 
 }
-//$c_query = _select_instancias_cohorte($blockid)->compile();
+/*
+$c_query = _select_cursos_ases_with_teacher()->compile();
+//echo $c_query->sql();
+print_r($c_query->params());
+print_r($c_query->sql());
+echo '<pre>';
+$ases_courses_with_teacher= $DB->get_records_sql($c_query->sql(), $c_query->params());
+print_r($ases_courses_with_teacher);*/
+$semestre_object = get_current_semester();
+$sem = $semestre_object->nombre;
+$id_semestre = $semestre_object->max;
+$año = substr($sem,0,4);
 
-//print_r($DB->get_records_sql($c_query->sql(), $c_query->params()));
-print _select_ids_cursos_ases($blockid)->compile()->sql();
+if(substr($sem,4,1) == 'A'){
+    $semestre = $año.'02';
+}else if(substr($sem,4,1) == 'B'){
+    $semestre = $año.'08';
+}
+$sql = <<<SQL
+SELECT DISTINCT ON (mdl_user.id) moodle_courses.fullname, mdl_user.firstname, mdl_user.lastname, moodle_courses.curso_id FROM 
+  
+    {user} as mdl_user
+    inner join {role_assignments} as mdl_role_assignments
+    on mdl_user.id = mdl_role_assignments.userid
+    inner join {role} as mdl_role
+    on mdl_role.id = mdl_role_assignments.roleid
+   
+    
+    inner join {context} as mdl_context
+    on mdl_context.id = mdl_role_assignments.contextid
+    inner join (
+        SELECT DISTINCT curso.id as curso_id, curso.fullname, curso.shortname    
+                   FROM {course} curso
+            INNER JOIN {enrol} ROLE ON curso.id = role.courseid
+            INNER JOIN {user_enrolments} enrols ON enrols.enrolid = role.id
+            WHERE SUBSTRING(curso.shortname FROM 15 FOR 6) = '$semestre' AND enrols.userid IN
+                (SELECT user_m.id
+                    FROM  {user} user_m
+                    INNER JOIN {talentospilos_user_extended} extended ON user_m.id = extended.id_moodle_user
+                    INNER JOIN {talentospilos_usuario} user_t ON extended.id_ases_user = user_t.id
+                    INNER JOIN {talentospilos_est_estadoases} estado_u ON user_t.id = estado_u.id_estudiante
+                    INNER JOIN {talentospilos_estados_ases} estados ON estados.id = estado_u.id_estado_ases
+                    WHERE estados.nombre = 'seguimiento' )
+                    ) AS moodle_courses
+      on moodle_courses.curso_id = mdl_context.instanceid
 
-$c_query = _select_ids_cursos_ases($blockid)->compile();
+SQL;
 
-print_r($DB->get_records_sql($c_query->sql(), $c_query->params()));
+
+$cursos = $DB->get_records_sql($sql);
+
+
+
+echo '<pre>';
+foreach($cursos as $ases_course) {
+    $ases_course->items_with_grades = get_items_con_notas($ases_course->curso_id);
+}
+print_r($cursos);
+echo '</pre>';
+
+/*
+$semestre_object = get_current_semester();
+$sem = $semestre_object->nombre;
+$id_semestre = $semestre_object->max;
+$año = substr($sem,0,4);
+
+if(substr($sem,4,1) == 'A'){
+    $semestre = $año.'02';
+}else if(substr($sem,4,1) == 'B'){
+    $semestre = $año.'08';
+}
+$sql = <<<SQL
+SELECT DISTINCT ON (mdl_user.id) * FROM 
+  
+    {user} as mdl_user
+    inner join {role_assignments} as mdl_role_assignments
+    on mdl_user.id = mdl_role_assignments.userid
+    inner join {role} as mdl_role
+    on mdl_role.id = mdl_role_assignments.roleid
+   
+    
+    inner join {context} as mdl_context
+    on mdl_context.id = mdl_role_assignments.contextid
+    inner join (
+        SELECT DISTINCT curso.id as curso_id, curso.fullname, curso.shortname    
+                   FROM {course} curso
+            INNER JOIN {enrol} ROLE ON curso.id = role.courseid
+            INNER JOIN {user_enrolments} enrols ON enrols.enrolid = role.id
+            WHERE SUBSTRING(curso.shortname FROM 15 FOR 6) = '$semestre' AND enrols.userid IN
+                (SELECT user_m.id
+                    FROM  {user} user_m
+                    INNER JOIN {talentospilos_user_extended} extended ON user_m.id = extended.id_moodle_user
+                    INNER JOIN {talentospilos_usuario} user_t ON extended.id_ases_user = user_t.id
+                    INNER JOIN {talentospilos_est_estadoases} estado_u ON user_t.id = estado_u.id_estudiante
+                    INNER JOIN {talentospilos_estados_ases} estados ON estados.id = estado_u.id_estado_ases
+                    WHERE estados.nombre = 'seguimiento' )
+                    ) AS moodle_courses
+      on moodle_courses.curso_id = mdl_context.instanceid
+
+SQL;
+echo '<pre>';
+
+print_r($DB->get_records_sql($sql));
+echo '</pre>';
+
+*/
 
 $search_ases_user_form->display();
 
