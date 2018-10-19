@@ -4,7 +4,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     global $DB;
     $dbman = $DB->get_manager();
     $result = true;
-    if ($oldversion < 2018101910540 ) {
+    if ($oldversion < 2018101911400 ) {
     //     // ************************************************************************************************************
     //     // Actualización que crea la tabla para los campos extendidos de usuario (Tabla: {talentospilos_user_extended})
     //     // Versión: 2018010911179
@@ -1448,6 +1448,23 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
               $dbman->add_field($table, $field);
           }
 
+          //Modificar tipo de dato y nombre
+
+                  // Rename field id_pais on table talentospilos_usuario to NEWNAMEGOESHERE.
+        $table = new xmldb_table('talentospilos_usuario');
+        $field = new xmldb_field('pais', XMLDB_TYPE_CHAR, '200', null, null, null, null,'ayuda_disc');
+
+        // Launch rename field id_pais.
+        $dbman->rename_field($table, $field, 'id_pais');
+
+          // Changing type of field id_pais on table talentospilos_usuario to int.
+          $table = new xmldb_table('talentospilos_usuario');
+          $field = new xmldb_field('id_pais', XMLDB_TYPE_INTEGER, '10', null, null, null, null, 'ayuda_disc');
+  
+          // Launch change of type for field id_pais.
+          $dbman->change_field_type($table, $field);
+
+
             // Define field vive_con to be added to talentospilos_usuario.
             $table = new xmldb_table('talentospilos_usuario');
             $field = new xmldb_field('vive_con', XMLDB_TYPE_TEXT, null, null, null, null, null, 'pais');
@@ -1640,14 +1657,16 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
             $dbman->create_table($table);
         }
 
-           // Define field bandera to be added to talentospilos_etnia.
-           $table = new xmldb_table('talentospilos_etnia');
-           $field = new xmldb_field('bandera', XMLDB_TYPE_CHAR, '200', null, null, null, null, 'etnia');
-   
-           // Conditionally launch add field bandera.
-           if (!$dbman->field_exists($table, $field)) {
-               $dbman->add_field($table, $field);
-           }
+             // Define field opcion_general to be added to talentospilos_etnia.
+             $table = new xmldb_table('talentospilos_etnia');
+             $field = new xmldb_field('opcion_general', XMLDB_TYPE_BINARY, null, null, null, null, null, 'etnia');
+     
+             // Conditionally launch add field opcion_general.
+             if (!$dbman->field_exists($table, $field)) {
+                 $dbman->add_field($table, $field);
+             }
+     
+
 
 
         // ************************************************************************************************************
@@ -1691,14 +1710,15 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
                     $dbman->create_table($table);
                 }
 
-                     // Define field bandera to be added to talentospilos_act_simultanea.
+           // Define field opcion_general to be added to talentospilos_act_simultanea.
         $table = new xmldb_table('talentospilos_act_simultanea');
-        $field = new xmldb_field('bandera', XMLDB_TYPE_CHAR, '200', null, null, null, null, 'actividad');
+        $field = new xmldb_field('opcion_general', XMLDB_TYPE_BINARY, null, null, null, null, null, 'actividad');
 
-        // Conditionally launch add field bandera.
+        // Conditionally launch add field opcion_general.
         if (!$dbman->field_exists($table, $field)) {
             $dbman->add_field($table, $field);
         }
+
 
         // ************************************************************************************************************
         // Actualización:
@@ -1721,14 +1741,14 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
             $dbman->create_table($table);
         }
 
-            // Define field bandera to be added to talentospilos_identidad_gen.
-            $table = new xmldb_table('talentospilos_identidad_gen');
-            $field = new xmldb_field('bandera', XMLDB_TYPE_CHAR, '200', null, null, null, null, 'genero');
-    
-            // Conditionally launch add field bandera.
-            if (!$dbman->field_exists($table, $field)) {
-                $dbman->add_field($table, $field);
-            }
+                // Define field opcion_general to be added to talentospilos_identidad_gen.
+        $table = new xmldb_table('talentospilos_identidad_gen');
+        $field = new xmldb_field('opcion_general', XMLDB_TYPE_BINARY, null, null, null, null, null, 'genero');
+
+        // Conditionally launch add field opcion_general.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
 
         // ************************************************************************************************************
         // Actualización:
@@ -1754,13 +1774,13 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
         // Se crea tabla de sexos válidos en el sistema
         // Versión en la que se incluye: GIT XXX, Moodle: 
 
-               // Define table talentospilos_sexo to be created.
+        // Define table talentospilos_sexo to be created.
         $table = new xmldb_table('talentospilos_sexo');
 
         // Adding fields to table talentospilos_sexo.
         $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
         $table->add_field('sexo', XMLDB_TYPE_CHAR, '200', null, null, null, null);
-        $table->add_field('bandera', XMLDB_TYPE_CHAR, '200', null, null, null, null);
+        $table->add_field('opcion_general', XMLDB_TYPE_BINARY, null, null, null, null, null);
 
         // Adding keys to table talentospilos_sexo.
         $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
@@ -1769,6 +1789,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
         if (!$dbman->table_exists($table)) {
             $dbman->create_table($table);
         }
+
 
         // ************************************************************************************************************
         // Actualización:
@@ -1822,7 +1843,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
      
      
 
-        upgrade_block_savepoint(true, 2018101910540 , 'ases');
+        upgrade_block_savepoint(true, 2018101911400 , 'ases');
     
         return $result;
 
