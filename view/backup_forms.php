@@ -24,12 +24,15 @@
  */
 
 // Standard GPL and phpdocs
-
 require_once(__DIR__ . '/../../../config.php');
 require_once($CFG->libdir.'/adminlib.php');
 require_once ('../managers/validate_profile_action.php');
 require_once ('../managers/menu_options.php');
+require_once '../managers/user_management/user_lib.php';
 require_once '../managers/dphpforms/dphpforms_dwarehouse_lib.php';
+require_once '../managers/instance_management/instance_lib.php';
+require_once '../managers/dateValidator.php';
+require_once '../managers/permissions_management/permissions_lib.php';
 
 
 global $PAGE;
@@ -41,18 +44,28 @@ include '../lib.php';
 // Variables for setup the page.
 $title = "Backup forms";
 $pagetitle = $title;
+
 $courseid = required_param('courseid', PARAM_INT);
 $blockid = required_param('instanceid', PARAM_INT);
-print_r ("Actualizado");
+require_login($courseid, false);
+
+// Set up the page.
+if (!consult_instance($blockid)) {
+    header("Location: instanceconfiguration.php?courseid=$courseid&instanceid=$blockid");
+}
+
+$contextcourse = context_course::instance($courseid);
+$contextblock = context_block::instance($blockid);
 // Menu items are created
 $menu_option = create_menu_options($USER->id, $blockid, $courseid);
+$url = new moodle_url("/blocks/ases/view/backup_forms.php", array('courseid' => $courseid, 'instanceid' => $blockid));
+
 
 // Nav configuration
 $coursenode = $PAGE->navigation->find($courseid, navigation_node::TYPE_COURSE);
 $blocknode = navigation_node::create('Reporte formularios', new moodle_url("/blocks/ases/view/backup_forms.php", array('courseid' => $courseid, 'instanceid' => $blockid)), null, 'block', $blockid);
 $coursenode->add_node($blocknode);
 $blocknode->make_active();
-$url = new moodle_url("/blocks/ases/view/backup_forms.php", array('courseid' => $courseid, 'instanceid' => $blockid));
 
 $PAGE->set_url($url);
 $PAGE->set_title($title);
