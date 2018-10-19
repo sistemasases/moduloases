@@ -112,9 +112,9 @@
         <FIELD NAME="grupo" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="id_discapacidad" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="ayuda_disc" TYPE="char" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
-        <FIELD NAME="pais" TYPE="char" LENGTH="200" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="id_pais" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="vive_con" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="tiene_hijo" TYPE="binary" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="tiene_hijo" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="id_cond_excepcion" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="id_estado_civil" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="id_identidad_gen" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
@@ -838,7 +838,7 @@
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="etnia" TYPE="char" LENGTH="200" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="bandera" TYPE="char" LENGTH="200" NOTNULL="false" SEQUENCE="false" COMMENT="Define las etnias a principales a mostrar como opción en el sistema"/>
+        <FIELD NAME="opcion_general" TYPE="int" LENGTH="1" NOTNULL="false" SEQUENCE="false" COMMENT="Define las etnias a principales a mostrar como opción en el sistema"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
@@ -857,7 +857,7 @@
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="genero" TYPE="char" LENGTH="200" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="bandera" TYPE="char" LENGTH="200" NOTNULL="false" SEQUENCE="false" COMMENT="Define cuáles géneros son los principales para mostrar como opción en el sistema"/>
+        <FIELD NAME="opcion_general" TYPE="int" LENGTH="1" NOTNULL="false" SEQUENCE="false" COMMENT="Define cuáles géneros son los principales para mostrar como opción en el sistema"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
@@ -867,7 +867,7 @@
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="actividad" TYPE="char" LENGTH="200" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="bandera" TYPE="char" LENGTH="200" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="opcion_general" TYPE="int" LENGTH="1" NOTNULL="false" SEQUENCE="false"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
@@ -936,7 +936,7 @@
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="sexo" TYPE="char" LENGTH="200" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="bandera" TYPE="char" LENGTH="200" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="opcion_general" TYPE="int" LENGTH="1" NOTNULL="false" SEQUENCE="false"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
