@@ -206,7 +206,8 @@ echo json_encode( dphpformsV2_find_records( $xQuery ) );
              * next: Warning This function may return Boolean FALSE, but may also return a non-Boolean value which evaluates to FALSE
              */
             if( next( $query->filterFields[0][1] ) ) {
-                $criteria .= " AND ";
+                // http://127.0.0.1/moodle34/blocks/ases/managers/dphpforms/v2/dphpforms_lib.php
+                $criteria .= " AND "; // Manejar AND o OR
             }
         }
 
