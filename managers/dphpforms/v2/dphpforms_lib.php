@@ -28,22 +28,17 @@ header('Content-Type: application/json');
 $xQuery = new stdClass();
 $xQuery->form = "seguimiento_pares"; // Can be alias(String) or idntifier(Number)
 $xQuery->filterFields = [
-                         ["id_estudiante", "428", true, "="],
-                         ["lugar", "Plazoleta de ingenieria", true, "!="],
-                         ["id_instancia", "value", false, "="], 
-                         ["id_monitor","value", false, "="]
+                         ["id_estudiante", [["428","="]], true],
+                         ["lugar", [["Plazoleta de ingenieria","!="]], true],
+                         ["id_instancia", [["value","="]], false], 
+                         ["id_monitor",[["value","="]], false]
                         ];
 $xQuery->orderFields = [
                         ["id_instancia","ASC"], 
                         ["id_creado_por", "DESC"]  
                        ];
 $xQuery->orderByDatabaseRecordDate = false; // If true, orderField is ignored
-$xQuery->likeFields  = [
-                        ["id_estudiante", true], 
-                        ["lugar", true], 
-                        ["id_instancia", true], 
-                        ["id_monitor", true]
-                       ];
+
 $xQuery->recordStatus = [ "!deleted", "!deleted" ];// options "deleted" or "!deleted", can be both.
 $xQuery->selectedFields = [ "id_creado_por", "id_estudiante" ]; // RecordId and BatabaseRecordDate are selected by default.
 
@@ -68,7 +63,7 @@ echo json_encode( dphpformsV2_find_records( $xQuery ) );
         $list_fields_alias_id = [];
         $list_fields_id_alias = [];
         $list_fields_data_type = [];
-        $list_valid_operators = ["=",">","<",">=","<=","!="];
+        $list_valid_operators = ["=",">","<",">=","<=","!=", "LIKE"];
         foreach( $fields as $field ){
             array_push( $list_fields_alias, $field->local_alias );
             $list_fields_alias_id[$field->local_alias] = $field->id_pregunta;
@@ -77,7 +72,7 @@ echo json_encode( dphpformsV2_find_records( $xQuery ) );
         };
         //Validation if the filter fields exist.
         foreach( $query->filterFields as $filterField ){
-           if( count( $filterField ) == 4 ){
+           if( count( $filterField ) == 3 ){
                 if( !in_array( $filterField[0], $list_fields_alias ) ){
                     return [
                         "status_code" => -1,
@@ -92,12 +87,30 @@ echo json_encode( dphpformsV2_find_records( $xQuery ) );
                         "data_response" => ""
                     ];
                 };
-                if( !in_array( $filterField[3], $list_valid_operators ) ){
+                if( gettype( $filterField[1] ) !== "array" ){
                     return [
                         "status_code" => -1,
-                        "error_message" => "QUERY->filterFields: ".json_encode($filterField)." DOES NOT HAVE A VALID OPERATOR, USE ".json_encode($list_valid_operators)." NOT ". $filterField[3],
+                        "error_message" => "QUERY->filterFields: ".json_encode($filterField)." DOES NOT MATCH WITH THE STRUCTURE. [...,[\"value\",\"operator\"],...]  ",
                         "data_response" => ""
                     ];
+                }else{
+                    foreach( $filterField[1] as $filterValues  ){
+                        if( count( $filterValues ) != 2 ){
+                            return [
+                                "status_code" => -1,
+                                "error_message" => "QUERY->filterFields: ".json_encode($filterValues)." DOES NOT MATCH WITH THE STRUCTURE. [\"value\",\"operator\"]  ",
+                                "data_response" => ""
+                            ];      
+                        }else{
+                            if( !in_array( $filterValues[1], $list_valid_operators ) ){
+                                return [
+                                    "status_code" => -1,
+                                    "error_message" => "QUERY->filterFields: ".json_encode($filterValues)." DOES NOT HAVE A VALID OPERATOR, USE ".json_encode($list_valid_operators)." NOT ". $filterValues[1],
+                                    "data_response" => ""
+                                ];
+                            }
+                        }
+                    }
                 };
            }else{
             return [
@@ -133,48 +146,7 @@ echo json_encode( dphpformsV2_find_records( $xQuery ) );
              ];
             };
          };
-         //Validation if the like fields exist.
-         foreach( $query->likeFields as $likeField ){
-            if( count( $likeField ) == 2 ){
-                 if( !in_array( $likeField[0], $list_fields_alias ) ){
-                     return [
-                         "status_code" => -1,
-                         "error_message" => "QUERY->likeFields: ".json_encode($likeField)." DOES NOT EXIST AS A FIELD",
-                         "data_response" => ""
-                     ];
-                 }else{
-                     if( !( ($likeField[1] === true) || ($likeField[1] === false) ) ){
-                        return [
-                            "status_code" => -1,
-                            "error_message" => "QUERY->likeFields: ".json_encode($likeField)." DOES NOT HAVE A VALID VALUE, USE true OR false",
-                            "data_response" => ""
-                        ];
-                     };
-                 };
-            }else{
-             return [
-                 "status_code" => -1,
-                 "error_message" => "QUERY->likeFields: ".json_encode($likeField)." DOES NOT MATCH WITH THE STRUCTURE [\"alias_field\", true or false]",
-                 "data_response" => ""
-             ];
-            };
-         };
-         //Validation if the likeFields are declared in the filterFields.
-         foreach( $query->likeFields as $likeField ){
-            $exist = false;
-            foreach( $query->filterFields as $filterField ){
-                if( $filterField[0] === $likeField[0] ){
-                    $exist = true;
-                };
-            };
-            if(!$exist){
-                return [
-                    "status_code" => -1,
-                    "error_message" => "QUERY->likeFields: ".json_encode($likeField)." ARE NOT DECLARED IN QUERY->filterFields",
-                    "data_response" => ""
-                ];
-            };
-         };
+         
          //Validation if the selected fields exist.
          foreach( $query->selectedFields as $selectedField ){
             if( !in_array( $selectedField, $list_fields_alias ) ){
@@ -221,13 +193,24 @@ echo json_encode( dphpformsV2_find_records( $xQuery ) );
      //Find with where clause
      if( count( $query->filterFields ) > 0 ){
 
+        // Criteria base: R.id_pregunta = XX AND R.respuesta = 'ABC'
+        $criteria = "";
+        foreach( $query->filterFields[0][1] as $filterValue ){
+            $criteria .= "(R.id_pregunta =" .$list_fields_alias_id[$query->filterFields[0][0]]. " AND R.respuesta = '". $filterValue[0] . "')";
+            /**
+             * next: Warning This function may return Boolean FALSE, but may also return a non-Boolean value which evaluates to FALSE
+             */
+            if( next( $items ) ) {
+                $criteria .= " OR ";
+            }
+        }
+
         //Find by the firt param the records id.
         $sql_first_parameter = "SELECT DISTINCT FS.id_formulario_respuestas
                                 FROM {talentospilos_df_respuestas} AS R
                                 INNER JOIN {talentospilos_df_form_solu} AS FS ON FS.id_respuesta = R.id
-                                WHERE R.id_pregunta = ".$list_fields_alias_id[$query->filterFields[0][0]]." 
-                                AND R.respuesta = '". $query->filterFields[0][1] . "'";
-
+                                WHERE " . $criteria;
+        
         $inner_join_more_responses = "SELECT id_respuesta, FS1.id_formulario_respuestas
                                       FROM {talentospilos_df_form_solu} AS FS1 
                                       INNER JOIN ($sql_first_parameter) AS PQ ON FS1.id_formulario_respuestas = PQ.id_formulario_respuestas 
@@ -266,6 +249,8 @@ echo json_encode( dphpformsV2_find_records( $xQuery ) );
         $grouped_records[ $record->id_formulario_respuestas ][ $record->id_pregunta ] = $record->respuesta;
      };
 
+     print_r( $sql_query );
+     print_r( $records );
      print_r( $grouped_records );
      print_r( $list_fields_id_alias );
 
