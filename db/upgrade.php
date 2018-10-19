@@ -4,7 +4,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     global $DB;
     $dbman = $DB->get_manager();
     $result = true;
-    if ($oldversion < 2018101913420 ) {
+    if ($oldversion < 2018101917100 ) {
     //     // ************************************************************************************************************
     //     // Actualización que crea la tabla para los campos extendidos de usuario (Tabla: {talentospilos_user_extended})
     //     // Versión: 2018010911179
@@ -1828,10 +1828,316 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
         if (!$dbman->field_exists($table, $field)) {
             $dbman->add_field($table, $field);
         }
+
+
+                     // Define field alias to be added to talentospilos_df_tipo_campo.
+                     $table = new xmldb_table('talentospilos_df_tipo_campo');
+                     $field = new xmldb_field('expresion_regular', XMLDB_TYPE_TEXT, null, null, null, null, null, 'fecha_hora_registro');
+             
+                     // Conditionally launch add field alias.
+                     if (!$dbman->field_exists($table, $field)) {
+                         $dbman->add_field($table, $field);
+                     }
+
+
+
+     
+//Insert register into database
+$array_tables = array();
+array_push($array_tables,"talentospilos_cond_excepcion","talentospilos_act_simultanea", 
+            "talentospilos_sexo","talentospilos_identidad_gen","talentospilos_etnia", "talentospilos_estado_civil", "talentospilos_pais");
+
+
+
+//Insert for each table
+for($t=0; $t<count($array_tables);$t++){
+$array_elements = array();
+$array_aditional = array();
+$new_register = new stdClass();
+
+$table  = $array_tables[$t];
+//Data switch table
+if($table=="talentospilos_cond_excepcion"){
+//Data to cond_excepcion
+array_push($array_elements,"Indígena (I.N.)", "Los más altos puntajes en el Examen de Estado (M.A.P.)", "Comunidades Afrocolombianas (C.A.)", "Cupo (C.U.)"
+                                , "Programa de Reinserción (P.R.)","Los más altos puntajes en el Examen de Estado, de los colegios oficiales en los municipios del Departamento del Valle del Cauca (M.P.M.)"
+                                , "Aspirantes que estén realizando actualmente su último año de bachillerato, provenientes de Departamentos donde no existen sedes ni seccionales de Instituciones de Educación Superior (D.N.I)"
+                                , "Aspirantes que estén realizando actualmente su último año de bachillerato, que provengan de Municipios de difícil acceso o con problemas de orden público (M.D.P.)"
+                                ,  "Población Desplazada. (P.D.)", "Ninguna de las anteriores") ;
+array_push($array_aditional,"I.N.", "M.A.P.", "C.A.", "C.U."
+                                , "P.R.","M.P.M."
+                                , "D.N.I"
+                                , "M.D.P."
+                                ,  "P.D.", "N.A") ;
+}
+if($table=="talentospilos_act_simultanea"){
+//Data to act_simultanea
+array_push($array_elements, "Monitor","Docente","Empleado","Ninguna") ;
+}
+if($table == "talentospilos_sexo"){
+//Data to sexo
+array_push($array_elements, "Masculino","Femenino")  ;
+}
+if($table == "talentospilos_identidad_gen"){
+    //Data to genero
+    array_push($array_elements, "Hombre", "Mujer","Transgénero femenino", "Transgénero masculino", "Persona sin género");
+}
+if($table == "talentospilos_etnia"){
+        //Data to etnia
+        array_push($array_elements, "Indígena","Rom", "Raizal del archipiélago de San Andres y Providencia", "Palenquero de San Basilo", "Negro(a), Mulato(a), Afrocolombiano(a), Afrodescendiente",
+                                    "Blanco(a), Mestizo(a)", "Ninguno de los anteriores");    
+}
+if($table == "talentospilos_estado_civil"){
+    //Data to estado_civil
+    array_push($array_elements, "Casado(a)", "Soltero(a)", "Divorciado(a)","Separado(a)","Unión libre","Viudo(a)");
+}
+if($table == "talentospilos_pais"){
+    //Data to pais
+    array_push($array_elements, "Afghanistan",
+    "Albania",
+    "Algeria",
+    "Andorra",
+    "Angola",
+    "Antigua and Barbuda",
+    "Argentina",
+    "Armenia",
+    "Australia",
+    "Austria",
+    "Azerbaijan",
+    "Bahamas",
+    "Bahrain",
+    "Bangladesh",
+    "Barbados",
+    "Belarus",
+    "Belgium",
+    "Belize",
+    "Benin",
+    "Bhutan",
+    "Bolivia",
+    "Bosnia and Herzegovina",
+    "Botswana",
+    "Brazil",
+    "Brunei",
+    "Bulgaria",
+    "Burkina Faso",
+    "Burundi",
+    "Cambodia",
+    "Cameroon",
+    "Canada",
+    "Cape Verde",
+    "Central African Republic",
+    "Chad",
+    "Chile",
+    "China",
+    "Colombia",
+    "Comoros",
+    "Congo (Brazzaville)",
+    "Congo",
+    "Costa Rica",
+    "Cote d'Ivoire",
+    "Croatia",
+    "Cuba",
+    "Cyprus",
+    "Czech Republic",
+    "Denmark",
+    "Djibouti",
+    "Dominica",
+    "Dominican Republic",
+    "East Timor (Timor Timur)",
+    "Ecuador",
+    "Egypt",
+    "El Salvador",
+    "Equatorial Guinea",
+    "Eritrea",
+    "Estonia",
+    "Ethiopia",
+    "Fiji",
+    "Finland",
+    "France",
+    "Gabon",
+    "Gambia, The",
+    "Georgia",
+    "Germany",
+    "Ghana",
+    "Greece",
+    "Grenada",
+    "Guatemala",
+    "Guinea",
+    "Guinea-Bissau",
+    "Guyana",
+    "Haiti",
+    "Honduras",
+    "Hungary",
+    "Iceland",
+    "India",
+    "Indonesia",
+    "Iran",
+    "Iraq",
+    "Ireland",
+    "Israel",
+    "Italy",
+    "Jamaica",
+    "Japan",
+    "Jordan",
+    "Kazakhstan",
+    "Kenya",
+    "Kiribati",
+    "Korea, North",
+    "Korea, South",
+    "Kuwait",
+    "Kyrgyzstan",
+    "Laos",
+    "Latvia",
+    "Lebanon",
+    "Lesotho",
+    "Liberia",
+    "Libya",
+    "Liechtenstein",
+    "Lithuania",
+    "Luxembourg",
+    "Macedonia",
+    "Madagascar",
+    "Malawi",
+    "Malaysia",
+    "Maldives",
+    "Mali",
+    "Malta",
+    "Marshall Islands",
+    "Mauritania",
+    "Mauritius",
+    "Mexico",
+    "Micronesia",
+    "Moldova",
+    "Monaco",
+    "Mongolia",
+    "Morocco",
+    "Mozambique",
+    "Myanmar",
+    "Namibia",
+    "Nauru",
+    "Nepa",
+    "Netherlands",
+    "New Zealand",
+    "Nicaragua",
+    "Niger",
+    "Nigeria",
+    "Norway",
+    "Oman",
+    "Pakistan",
+    "Palau",
+    "Panama",
+    "Papua New Guinea",
+    "Paraguay",
+    "Peru",
+    "Philippines",
+    "Poland",
+    "Portugal",
+    "Qatar",
+    "Romania",
+    "Russia",
+    "Rwanda",
+    "Saint Kitts and Nevis",
+    "Saint Lucia",
+    "Saint Vincent",
+    "Samoa",
+    "San Marino",
+    "Sao Tome and Principe",
+    "Saudi Arabia",
+    "Senegal",
+    "Serbia and Montenegro",
+    "Seychelles",
+    "Sierra Leone",
+    "Singapore",
+    "Slovakia",
+    "Slovenia",
+    "Solomon Islands",
+    "Somalia",
+    "South Africa",
+    "Spain",
+    "Sri Lanka",
+    "Sudan",
+    "Suriname",
+    "Swaziland",
+    "Sweden",
+    "Switzerland",
+    "Syria",
+    "Taiwan",
+    "Tajikistan",
+    "Tanzania",
+    "Thailand",
+    "Togo",
+    "Tonga",
+    "Trinidad and Tobago",
+    "Tunisia",
+    "Turkey",
+    "Turkmenistan",
+    "Tuvalu",
+    "Uganda",
+    "Ukraine",
+    "United Arab Emirates",
+    "United Kingdom",
+    "United States",
+    "Uruguay",
+    "Uzbekistan",
+    "Vanuatu",
+    "Vatican City",
+    "Venezuela",
+    "Vietnam",
+    "Yemen",
+    "Zambia",
+    "Zimbabwe");
+}
+
+//INSERT INTO DB
+for  ($i = 0; $i < count($array_elements); $i++){
+
+    //CREATE OBJECT FOR EACH ELEMENT
+    if($table== "talentospilos_cond_excepcion"){
+    $new_register->condicion_excepcion = $array_elements[$i];  
+    $new_register->alias = $array_aditional[$i];
+    $condition = 'condicion_excepcion';
+    }
+    if($table== "talentospilos_act_simultanea"){
+        $new_register->actividad = $array_elements[$i];  
+        $new_register->opcion_general = 1;
+        $condition = 'actividad';
+        }
+    if($table=="talentospilos_sexo"){
+        $new_register->sexo = $array_elements[$i];  
+        $new_register->opcion_general = 1;
+        $condition = 'sexo';
+    }
+    if($table=="talentospilos_identidad_gen"){
+        $new_register->genero = $array_elements[$i];  
+        $new_register->opcion_general = 1;
+        $condition = 'genero';
+    }
+    if($table=="talentospilos_etnia"){
+        $new_register->etnia = $array_elements[$i];  
+        $new_register->opcion_general = 1;
+        $condition = 'etnia';
+    }
+    if($table=="talentospilos_estado_civil"){
+        $new_register->estado_civil = $array_elements[$i];  
+        $condition = 'estado_civil';
+    }
+    if($table=="talentospilos_pais"){
+        $new_register->pais = $array_elements[$i];  
+        $condition = 'pais';
+    }
+
+    if( !$DB->record_exists($table,array($condition=> $array_elements[$i]))){
+        $DB->insert_record($table, $new_register, true)    ;
+    }
+    }
+
+unset($array_elements,$array_aditional,$new_register, $table);
+}
+
      
      
 
-        upgrade_block_savepoint(true, 2018101913420 , 'ases');
+        upgrade_block_savepoint(true, 2018101917100 , 'ases');
     
         return $result;
 
