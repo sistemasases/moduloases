@@ -4,7 +4,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     global $DB;
     $dbman = $DB->get_manager();
     $result = true;
-    if ($oldversion < 2018101810540 ) {
+    if ($oldversion < 2018101910540 ) {
     //     // ************************************************************************************************************
     //     // Actualización que crea la tabla para los campos extendidos de usuario (Tabla: {talentospilos_user_extended})
     //     // Versión: 2018010911179
@@ -1640,6 +1640,15 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
             $dbman->create_table($table);
         }
 
+           // Define field bandera to be added to talentospilos_etnia.
+           $table = new xmldb_table('talentospilos_etnia');
+           $field = new xmldb_field('bandera', XMLDB_TYPE_CHAR, '200', null, null, null, null, 'etnia');
+   
+           // Conditionally launch add field bandera.
+           if (!$dbman->field_exists($table, $field)) {
+               $dbman->add_field($table, $field);
+           }
+
 
         // ************************************************************************************************************
         // Actualización:
@@ -1682,6 +1691,15 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
                     $dbman->create_table($table);
                 }
 
+                     // Define field bandera to be added to talentospilos_act_simultanea.
+        $table = new xmldb_table('talentospilos_act_simultanea');
+        $field = new xmldb_field('bandera', XMLDB_TYPE_CHAR, '200', null, null, null, null, 'actividad');
+
+        // Conditionally launch add field bandera.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
         // ************************************************************************************************************
         // Actualización:
         // Se crea tabla de identidad de género
@@ -1703,6 +1721,15 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
             $dbman->create_table($table);
         }
 
+            // Define field bandera to be added to talentospilos_identidad_gen.
+            $table = new xmldb_table('talentospilos_identidad_gen');
+            $field = new xmldb_field('bandera', XMLDB_TYPE_CHAR, '200', null, null, null, null, 'genero');
+    
+            // Conditionally launch add field bandera.
+            if (!$dbman->field_exists($table, $field)) {
+                $dbman->add_field($table, $field);
+            }
+
         // ************************************************************************************************************
         // Actualización:
         // Se crea tabla de estado civil
@@ -1722,6 +1749,46 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
          if (!$dbman->table_exists($table)) {
              $dbman->create_table($table);
          }
+         // ************************************************************************************************************
+        // Actualización:
+        // Se crea tabla de sexos válidos en el sistema
+        // Versión en la que se incluye: GIT XXX, Moodle: 
+
+               // Define table talentospilos_sexo to be created.
+        $table = new xmldb_table('talentospilos_sexo');
+
+        // Adding fields to table talentospilos_sexo.
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        $table->add_field('sexo', XMLDB_TYPE_CHAR, '200', null, null, null, null);
+        $table->add_field('bandera', XMLDB_TYPE_CHAR, '200', null, null, null, null);
+
+        // Adding keys to table talentospilos_sexo.
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+
+        // Conditionally launch create table for talentospilos_sexo.
+        if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
+        }
+
+        // ************************************************************************************************************
+        // Actualización:
+        // Se crea tabla de paises
+        // Versión en la que se incluye: GIT XXX, Moodle: 
+
+             // Define table talentospilos_pais to be created.
+        $table = new xmldb_table('talentospilos_pais');
+
+        // Adding fields to table talentospilos_pais.
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        $table->add_field('pais', XMLDB_TYPE_CHAR, '200', null, null, null, null);
+
+        // Adding keys to table talentospilos_pais.
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+
+        // Conditionally launch create table for talentospilos_pais.
+        if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
+        }
 
         // ************************************************************************************************************
         // Actualización:
@@ -1755,7 +1822,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
      
      
 
-        upgrade_block_savepoint(true, 2018101810540 , 'ases');
+        upgrade_block_savepoint(true, 2018101910540 , 'ases');
     
         return $result;
 
