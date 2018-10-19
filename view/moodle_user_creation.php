@@ -246,13 +246,16 @@ $userform->display();
 
 
 echo $output->footer();
+echo
+    /** @lang  HTML */
+<<<TAG
 
-
-echo "
 <script>
+
 /*For some reason, the button fieldset is hidden by default, this code fix this*/
             $(document).ready(function(){
                 $('fieldset').removeClass('hidden');
             });
  </script>
-";
+
+TAG;
