@@ -27,13 +27,17 @@ header('Content-Type: application/json');
 
 $xQuery = new stdClass();
 $xQuery->form = "seguimiento_pares"; // Can be alias(String) or idntifier(Number)
-$xQuery->filterFields = [
+/*$xQuery->filterFields = [
                          ["id_estudiante", [["428","="]], false],
-                         ["lugar", [["Plazoleta de ingenieria","!="],["Biblioteca","!="]], false],
+                         ["lugar", [["Plazoleta de ingenieria","!="],["Biblioteca","!="],["Edificio 320","!="]], false],
                          ["fecha", [["2018-07-01",">"]], true], 
                          ["id_instancia", [["value","="]], true], 
                          ["id_monitor",[["value","="]], true]
-                        ];
+                        ];*/
+$xQuery->filterFields = [
+                            ["fecha", [["2018-01-01",">"]], true], 
+                            ["fecha", [["2018-07-01","<"]], true], 
+                           ];
 $xQuery->orderFields = [
                         ["id_instancia","ASC"], 
                         ["id_creado_por", "DESC"]  
@@ -233,8 +237,17 @@ echo json_encode( dphpformsV2_find_records( $xQuery ) );
                 $optional =  $filterField[2];
 
                 $filter_where = "";
+                
                 if( !$first_filter_field ){
-                    $filter_where .= " AND ";
+
+                    if( $tmpNextFilterField = next($query->filterFields) ){
+                        if( $tmpNextFilterField[2] ){
+                            $filter_where .= " OR ";
+                        }else{
+                            $filter_where .= " AND ";
+                        }
+                    }
+                    
                 }else{
                     $first_filter_field = false;
                 }
@@ -269,7 +282,7 @@ echo json_encode( dphpformsV2_find_records( $xQuery ) );
      };
 
      echo( $sql_query );
-     
+     print_r( $records );
      print_r( $grouped_records );
 
      $valid_records = [];
