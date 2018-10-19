@@ -50,11 +50,14 @@ class ases_user_form extends moodleform {
             'startyear' => 1920, 
             'stopyear'  => date("Y")
         );
-        $mform->addElement('text', 'num_doc', 'Número de documento' , null); 
+
+        $mform->addElement('header', 'myheader', 'Usuario Ases');
+
+        $mform->addElement('text', 'num_doc', 'Número de documento' , null);
         $mform->addRule('num_doc', null, 'required');
         $mform->addRule('num_doc', 'El número de documento debe contener solo numeros', 'numeric');  
 
-        $mform->addElement('select', 'tipo_doc', 'Tipo de documento' , $tipo_doc_options); 
+        $mform->addElement('searchableselector', 'tipo_doc', 'Tipo de documento' , $tipo_doc_options);
         $mform->addRule('tipo_doc', null, 'required');
 
         $mform->addElement('select', 'id_ciudad_res', 'Ciudad de residencia' , $cidades_options); 

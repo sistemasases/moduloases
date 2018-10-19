@@ -32,7 +32,7 @@ class Municipio extends BaseDAO  {
     }
 
 
-    public function get_numeric_fields(): array {
+    public static function get_numeric_fields(): array {
         return array(
             Municipio::CODIGO_DEPARTAMETO,
             Municipio::ID,

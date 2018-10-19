@@ -4,7 +4,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     global $DB;
     $dbman = $DB->get_manager();
     $result = true;
-    if ($oldversion < 2018092710500 ) {
+    if ($oldversion < 2018101810540 ) {
     //     // ************************************************************************************************************
     //     // Actualización que crea la tabla para los campos extendidos de usuario (Tabla: {talentospilos_user_extended})
     //     // Versión: 2018010911179
@@ -1412,29 +1412,350 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     //Se borra tabla talentospilos_hist_est_ice
 
         // Define table talentospilos_hist_est_ice to be created.
-        $table = new xmldb_table('talentospilos_hist_est_ice');
+        // $table = new xmldb_table('talentospilos_hist_est_ice');
 
-        if ($dbman->table_exists($table)) {
-                $dbman->drop_table($table);
-            }       
+        // if ($dbman->table_exists($table)) {
+        //         $dbman->drop_table($table);
+        //     }       
 
-        // Adding fields to table talentospilos_hist_est_ice.
+        // // Adding fields to table talentospilos_hist_est_ice.
+        // $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        // $table->add_field('id_estudiante', XMLDB_TYPE_INTEGER, '20', null, XMLDB_NOTNULL, null, null);
+        // $table->add_field('id_semestre', XMLDB_TYPE_INTEGER, '20', null, XMLDB_NOTNULL, null, null);
+        // $table->add_field('id_estado_icetex', XMLDB_TYPE_INTEGER, '20', null, XMLDB_NOTNULL, null, null);
+
+        // // Adding keys to table talentospilos_hist_est_ice.
+        // $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+        // $table->add_key('uk_hist_est_ice', XMLDB_KEY_UNIQUE, array('id_estudiante', 'id_semestre'));
+
+        // // Conditionally launch create table for talentospilos_hist_est_ice.
+        // if (!$dbman->table_exists($table)) {
+        //     $dbman->create_table($table);
+        // }
+
+        // ************************************************************************************************************
+        // Actualización:
+        // Se añade campo pais, vive_con, tiene_hijo  a la tabla talentospilos_usuario
+        // Versión en la que se incluye: GIT XXX, Moodle: 2018062515379
+        // ************************************************************************************************************    
+
+          // Define field pais to be added to talentospilos_usuario.
+          $table = new xmldb_table('talentospilos_usuario');
+          $field = new xmldb_field('pais', XMLDB_TYPE_CHAR, '200', null, null, null, null, 'ayuda_disc');
+  
+          // Conditionally launch add field pais.
+          if (!$dbman->field_exists($table, $field)) {
+              $dbman->add_field($table, $field);
+          }
+
+            // Define field vive_con to be added to talentospilos_usuario.
+            $table = new xmldb_table('talentospilos_usuario');
+            $field = new xmldb_field('vive_con', XMLDB_TYPE_TEXT, null, null, null, null, null, 'pais');
+    
+            // Conditionally launch add field vive_con.
+            if (!$dbman->field_exists($table, $field)) {
+                $dbman->add_field($table, $field);
+            }
+            // Define field tiene_hijo to be added to talentospilos_usuario.
+        $table = new xmldb_table('talentospilos_usuario');
+        $field = new xmldb_field('tiene_hijo', XMLDB_TYPE_BINARY, null, null, null, null, null, 'vive_con');
+
+        // Conditionally launch add field tiene_hijo.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+             // Define field id_cond_excepcion to be added to talentospilos_usuario.
+        $table = new xmldb_table('talentospilos_usuario');
+        $field = new xmldb_field('id_cond_excepcion', XMLDB_TYPE_INTEGER, '10', null, null, null, null, 'tiene_hijo');
+
+        // Conditionally launch add field id_cond_excepcion.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+              // Define field id_estado_civil to be added to talentospilos_usuario.
+        $table = new xmldb_table('talentospilos_usuario');
+        $field = new xmldb_field('id_estado_civil', XMLDB_TYPE_INTEGER, '10', null, null, null, null, 'id_cond_excepcion');
+
+        // Conditionally launch add field id_estado_civil.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+            // Define field id_identidad_gen to be added to talentospilos_usuario.
+        $table = new xmldb_table('talentospilos_usuario');
+        $field = new xmldb_field('id_identidad_gen', XMLDB_TYPE_INTEGER, '10', null, null, null, null, 'id_estado_civil');
+
+        // Conditionally launch add field id_identidad_gen.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+         // Define field id_act_simultanea to be added to talentospilos_usuario.
+         $table = new xmldb_table('talentospilos_usuario');
+         $field = new xmldb_field('id_act_simultanea', XMLDB_TYPE_INTEGER, '10', null, null, null, null, 'id_identidad_gen');
+ 
+         // Conditionally launch add field id_act_simultanea.
+         if (!$dbman->field_exists($table, $field)) {
+             $dbman->add_field($table, $field);
+         }
+
+          // Define field id_economics_data to be added to talentospilos_usuario.
+        $table = new xmldb_table('talentospilos_usuario');
+        $field = new xmldb_field('id_economics_data', XMLDB_TYPE_INTEGER, '10', null, null, null, null, 'id_act_simultanea');
+
+        // Conditionally launch add field id_economics_data.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+
+           // Define field anio_ingreso to be added to talentospilos_usuario.
+           $table = new xmldb_table('talentospilos_usuario');
+           $field = new xmldb_field('anio_ingreso', XMLDB_TYPE_INTEGER, '10', null, null, null, null, 'id_economics_data');
+   
+           // Conditionally launch add field anio_ingreso.
+           if (!$dbman->field_exists($table, $field)) {
+               $dbman->add_field($table, $field);
+           }
+
+
+           // Define field actividades_ocio_deporte to be added to talentospilos_usuario.
+        $table = new xmldb_table('talentospilos_usuario');
+        $field = new xmldb_field('actividades_ocio_deporte', XMLDB_TYPE_TEXT, null, null, null, null, null, 'anio_ingreso');
+
+        // Conditionally launch add field actividades_ocio_deporte.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+           // Define field id_schema_json to be added to talentospilos_usuario.
+           $table = new xmldb_table('talentospilos_usuario');
+           $field = new xmldb_field('id_schema_json', XMLDB_TYPE_INTEGER, '10', null, null, null, null, 'actividades_ocio_deporte');
+   
+           // Conditionally launch add field id_schema_json.
+           if (!$dbman->field_exists($table, $field)) {
+               $dbman->add_field($table, $field);
+           }
+
+             // Define field json_detalle to be added to talentospilos_usuario.
+        $table = new xmldb_table('talentospilos_usuario');
+        $field = new xmldb_field('json_detalle', XMLDB_TYPE_TEXT, null, null, null, null, null, 'id_schema_json');
+
+        // Conditionally launch add field json_detalle.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+
+        // ************************************************************************************************************
+         // Actualización:
+        // Se crea tabla de esquemas JSON
+         // Versión en la que se incluye: GIT XXX, Moodle: 
+
+               // Define table talentospilos_json_schema to be created.
+               $table = new xmldb_table('talentospilos_json_schema');
+
+               // Adding fields to table talentospilos_json_schema.
+               $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+               $table->add_field('json_schema', XMLDB_TYPE_TEXT, null, null, null, null, null);
+               $table->add_field('alias', XMLDB_TYPE_CHAR, '200', null, null, null, null);
+       
+               // Adding keys to table talentospilos_json_schema.
+               $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+       
+               // Conditionally launch create table for talentospilos_json_schema.
+               if (!$dbman->table_exists($table)) {
+                   $dbman->create_table($table);
+               }
+       
+        // ************************************************************************************************************
+        // Actualización:
+        // Se crea tabla de datos económicos de un usuario
+        // Versión en la que se incluye: GIT XXX, Moodle: 
+
+            // Define table talentospilos_economics_data to be created.
+        $table = new xmldb_table('talentospilos_economics_data');
+
+        // Adding fields to table talentospilos_economics_data.
         $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
-        $table->add_field('id_estudiante', XMLDB_TYPE_INTEGER, '20', null, XMLDB_NOTNULL, null, null);
-        $table->add_field('id_semestre', XMLDB_TYPE_INTEGER, '20', null, XMLDB_NOTNULL, null, null);
-        $table->add_field('id_estado_icetex', XMLDB_TYPE_INTEGER, '20', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('estrato', XMLDB_TYPE_INTEGER, '10', null, null, null, null);
+        $table->add_field('prestacion_economica', XMLDB_TYPE_CHAR, '200', null, null, null, null);
+        $table->add_field('beca', XMLDB_TYPE_CHAR, '200', null, null, null, null);
+        $table->add_field('ayuda_transporte', XMLDB_TYPE_BINARY, null, null, XMLDB_NOTNULL, null, null);
+        $table->add_field('ayuda_materiales', XMLDB_TYPE_BINARY, null, null, XMLDB_NOTNULL, null, null);
+        $table->add_field('solvencia_econo', XMLDB_TYPE_INTEGER, '10', null, null, null, null);
+        $table->add_field('ocupacion_padres', XMLDB_TYPE_TEXT, null, null, null, null, null);
+        $table->add_field('nivel_educ_padres', XMLDB_TYPE_TEXT, null, null, null, null, null);
+        $table->add_field('situa_laboral_padres', XMLDB_TYPE_TEXT, null, null, null, null, null);
+        $table->add_field('expectativas_laborales', XMLDB_TYPE_TEXT, null, null, null, null, null);
 
-        // Adding keys to table talentospilos_hist_est_ice.
+        // Adding keys to table talentospilos_economics_data.
         $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
-        $table->add_key('uk_hist_est_ice', XMLDB_KEY_UNIQUE, array('id_estudiante', 'id_semestre'));
 
-        // Conditionally launch create table for talentospilos_hist_est_ice.
+        // Conditionally launch create table for talentospilos_economics_data.
         if (!$dbman->table_exists($table)) {
             $dbman->create_table($table);
         }
-    
+        // ************************************************************************************************************
+        // Actualización:
+        // Se crea tabla que relaciona a un usuario con un detalle de una institución educativa y sus particularidades
+        // Versión en la que se incluye: GIT XXX, Moodle: 
 
-        upgrade_block_savepoint(true, 2018092710500 , 'ases');
+            // Define table talentospilos_user_institu to be created.
+            $table = new xmldb_table('talentospilos_user_institu');
+
+            // Adding fields to table talentospilos_user_institu.
+            $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+            $table->add_field('id_usuario', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+            $table->add_field('institucion', XMLDB_TYPE_CHAR, '200', null, XMLDB_NOTNULL, null, null);
+            $table->add_field('nivel_formacion', XMLDB_TYPE_CHAR, '200', null, XMLDB_NOTNULL, null, null);
+            $table->add_field('apoyos_recibidos', XMLDB_TYPE_TEXT, null, null, null, null, null);
+    
+            // Adding keys to table talentospilos_user_institu.
+            $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+    
+            // Conditionally launch create table for talentospilos_user_institu.
+            if (!$dbman->table_exists($table)) {
+                $dbman->create_table($table);
+            }
+
+        // ************************************************************************************************************
+        // Actualización:
+        // Se crea tabla de etnias
+        // Versión en la que se incluye: GIT XXX, Moodle:             
+
+         // Define table talentospilos_etnia to be created.
+        $table = new xmldb_table('talentospilos_etnia');
+
+        // Adding fields to table talentospilos_etnia.
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        $table->add_field('etnia', XMLDB_TYPE_CHAR, '200', null, null, null, null);
+
+        // Adding keys to table talentospilos_etnia.
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+
+        // Conditionally launch create table for talentospilos_etnia.
+        if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
+        }
+
+
+        // ************************************************************************************************************
+        // Actualización:
+        // Se crea tabla que relaciona a un usuario con una etnia
+        // Versión en la que se incluye: GIT XXX, Moodle: 
+
+                  // Define table talentospilos_etnia_usuario to be created.
+        $table = new xmldb_table('talentospilos_etnia_usuario');
+
+        // Adding fields to table talentospilos_etnia_usuario.
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        $table->add_field('id_usuario', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('id_etnia', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+
+        // Adding keys to table talentospilos_etnia_usuario.
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+
+        // Conditionally launch create table for talentospilos_etnia_usuario.
+        if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
+        }
+
+        // ************************************************************************************************************
+        // Actualización:
+        // Se crea tabla de actividades simultáneas, actividades que pueden ser realizadas por un usuario
+        // Versión en la que se incluye: GIT XXX, Moodle: 
+
+                // Define table talentospilos_act_simultanea to be created.
+                $table = new xmldb_table('talentospilos_act_simultanea');
+
+                // Adding fields to table talentospilos_act_simultanea.
+                $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+                $table->add_field('actividad', XMLDB_TYPE_CHAR, '200', null, null, null, null);
+        
+                // Adding keys to table talentospilos_act_simultanea.
+                $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+        
+                // Conditionally launch create table for talentospilos_act_simultanea.
+                if (!$dbman->table_exists($table)) {
+                    $dbman->create_table($table);
+                }
+
+        // ************************************************************************************************************
+        // Actualización:
+        // Se crea tabla de identidad de género
+        // Versión en la que se incluye: GIT XXX, Moodle: 
+
+
+                  // Define table talentospilos_identidad_gen to be created.
+        $table = new xmldb_table('talentospilos_identidad_gen');
+
+        // Adding fields to table talentospilos_identidad_gen.
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        $table->add_field('genero', XMLDB_TYPE_CHAR, '200', null, null, null, null);
+
+        // Adding keys to table talentospilos_identidad_gen.
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+
+        // Conditionally launch create table for talentospilos_identidad_gen.
+        if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
+        }
+
+        // ************************************************************************************************************
+        // Actualización:
+        // Se crea tabla de estado civil
+        // Versión en la que se incluye: GIT XXX, Moodle: 
+
+         // Define table talentospilos_estado_civil to be created.
+         $table = new xmldb_table('talentospilos_estado_civil');
+
+         // Adding fields to table talentospilos_estado_civil.
+         $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+         $table->add_field('estado_civil', XMLDB_TYPE_CHAR, '200', null, null, null, null);
+ 
+         // Adding keys to table talentospilos_estado_civil.
+         $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+ 
+         // Conditionally launch create table for talentospilos_estado_civil.
+         if (!$dbman->table_exists($table)) {
+             $dbman->create_table($table);
+         }
+
+        // ************************************************************************************************************
+        // Actualización:
+        // Se crea tabla de condiciones de excepción de la Universidad del Valle
+        // Versión en la que se incluye: GIT XXX, Moodle: 
+
+         
+            // Define table talentospilos_cond_excepcion to be created.
+            $table = new xmldb_table('talentospilos_cond_excepcion');
+
+            // Adding fields to table talentospilos_cond_excepcion.
+            $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+            $table->add_field('condicion_excepcion', XMLDB_TYPE_TEXT, null, null, null, null, null);
+    
+            // Adding keys to table talentospilos_cond_excepcion.
+            $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+    
+            // Conditionally launch create table for talentospilos_cond_excepcion.
+            if (!$dbman->table_exists($table)) {
+                $dbman->create_table($table);
+            }
+
+                    // Define field alias to be added to talentospilos_cond_excepcion.
+        $table = new xmldb_table('talentospilos_cond_excepcion');
+        $field = new xmldb_field('alias', XMLDB_TYPE_CHAR, '100', null, null, null, null, 'condicion_excepcion');
+
+        // Conditionally launch add field alias.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+     
+     
+
+        upgrade_block_savepoint(true, 2018101810540 , 'ases');
     
         return $result;
 

@@ -24,12 +24,20 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 defined('MOODLE_INTERNAL') || die;
+require_once(__DIR__.'/../vendor/autoload.php');
+
+use NilPortugues\Sql\QueryBuilder\Builder\GenericBuilder;
+
 
 require_once(__DIR__.'/../managers/user_management/user_management_lib.php');
 require_once(__DIR__.'/DAO/BaseDAO.php');
 require_once(__DIR__.'/Estado.php');
-
-
+require_once(__DIR__.'/EstadoAsesRegistro.php');
+require_once(__DIR__.'/EstadoAses.php');
+require_once(__DIR__.'/Discapacidad.php');
+require_once(__DIR__.'/EstadoIcetexRegistro.php');
+require_once(__DIR__.'/EstadoIcetex.php');
+require_once(__DIR__.'/Errors/Factories/DatabaseErrorFactory.php');
 class AsesUser extends BaseDAO  {
     const TIPO_DOCUMENTO = 'tipo_doc';
     const TIPO_DOCUMENTO_INICIAL = 'tipo_doc_ini';
@@ -98,15 +106,67 @@ class AsesUser extends BaseDAO  {
     }
 
     /**
+     * Custom save, the ases user save is not limited to save an user in table ases user, also need create
+     * one registry in estado ases registro (EstadoAsesRegistro) and estado icetex registro (EstadoIcetexRegistro)
+     * @return bool|int|void
+     * @throws dml_exception
+     */
+    public function save() {
+
+        if (!$this->valid()) {
+            return false;
+        }
+        parent::save();
+        /* Insert EstadoAsesRegistro record related to this AsesUser */
+        $estado_ases_registro = new EstadoAsesRegistro();
+        $estado_ases_registro->id_estudiante = $this->id;
+        $estado_ases_default = EstadoAses::get_estado_ases_default();
+        $estado_ases_registro->id_estado_ases =  $estado_ases_default->id;
+        $estado_ases_registro->save();
+
+        /* Insert EstadoIcetexRegistro record related to this AsesUser */
+        $estado_icetex_registro = new EstadoIcetexRegistro();
+        $estado_icetex_registro->id_estudiante = $this->id;
+        $estado_icetex_default = EstadoIcetex::get_default_estado_icetex();
+        $estado_icetex_registro->id_estado_icetex = $estado_icetex_default->id;
+        $estado_icetex_registro->save();
+
+        return $this->id;
+
+    }
+    public function _custom_validation(): bool
+    {
+        $valid = true;
+        $estado_icetex_default = EstadoIcetex::get_default_estado_icetex();
+        if ( !$estado_icetex_default ) {
+            $nombre_default_estado_icetex = EstadoIcetex::NOMBRE_DEFAULT_ESTADO_ICETEX;
+            $this->add_error(DatabaseErrorFactory::registry_not_found("No se ha encontrado el estado icetex por defecto, el nombre de este es $nombre_default_estado_icetex "));
+            $valid = false;
+        }
+        return $valid;
+    }
+
+    /**
      * Obtener los usuarios ASES, sus id y sus nombres en un array
      * @return array Array donde las llaves son los id de los usuarios ASES y el valor es el nombre del usuario
      */
     public static function get_options(): array {
+        $fields = AsesUser::ID.','.AsesUser::NUMERO_DOCUMENTO;
+        return parent::_get_options($fields);
+    }
+
+    /**
+     * Obtener los usuarios ASES, sus id y sus cedulas contatenadas con los nombres en un array
+     * @return array Array donde las llaves son los id de los usuarios ASES y el valor es su número de
+     * identificación concatenado con su nombre del usuario completo
+     */
+    public static function get_options_with_num_doc(): array {
         $options = array();
         $ases_users_with_names = AsesUser::get_ases_users_with_names();
+        /* @var AsesUser $ases_user  Ases user with aditional fields, first name and lastname */
         foreach($ases_users_with_names as $ases_user) {
             $user_name = $ases_user->firstname.' '.$ases_user->lastname;
-            $options[$ases_user->id] =  $user_name;
+            $options[$ases_user->id] = $ases_user->num_doc.'-'.$user_name;
         }
         return $options;
     }
@@ -117,13 +177,17 @@ class AsesUser extends BaseDAO  {
      */
     public static function get_ases_users_with_names() {
         global $DB;
+        $default_column_names = AsesUser::get_column_names();
         $sql =
             "
-            SELECT tp_u.id, mdl_user.firstname, mdl_user.lastname FROM {talentospilos_usuario} tp_u, {talentospilos_user_extended} tp_uext, {user} mdl_user
+            SELECT tp_u.id, mdl_user.firstname, mdl_user.lastname, tp_u.num_doc 
+            FROM {talentospilos_user_extended} tp_uext, {user} mdl_user, {talentospilos_usuario} tp_u
             WHERE
               mdl_user.id = tp_uext.id_moodle_user
             AND
-              tp_uext.id_ases_user = tp_u.id    
+              tp_uext.id_ases_user = tp_u.id
+            AND  
+              tp_u.id = tp_uext.id_ases_user 
         ";
         return $DB->get_records_sql($sql);
     }
