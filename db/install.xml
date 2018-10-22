@@ -114,7 +114,7 @@
         <FIELD NAME="ayuda_disc" TYPE="char" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="id_pais" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="vive_con" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="tiene_hijo" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="hijos" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="id_cond_excepcion" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="id_estado_civil" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="id_identidad_gen" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
