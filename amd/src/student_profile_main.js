@@ -608,6 +608,7 @@ return {
         $('#tipo_doc').prop('disabled', false);
         $('#num_doc').prop('readonly', false);
         $('#icetex_status').prop('disabled', false);
+        $('#cond_excepcion').prop('disabled', false);
         $('#observacion').prop('readonly', false);
         $('.select_statuses_program').prop('disabled', false);
         $('.input_fields_general_tab').prop('readonly', false);
@@ -685,12 +686,14 @@ return {
 
     return msg;
  },save_form_edit_profile: function(form, object_function){
-
+    var option = document.getElementById("cond_excepcion").value;
+    alert(option);
     $.ajax({
         type: "POST",
         data: {
             func: 'save_profile',
-            form: form
+            form: form,
+            selected:option
         },
         url: "../managers/student_profile/studentprofile_serverproc.php",
         success: function(msg) {
@@ -727,6 +730,7 @@ return {
     $('#tipo_doc').prop('disabled', true);
     $('#num_doc').prop('readonly', true);
     $('#icetex_status').prop('disabled', true);
+    $('#cond_excepcion').prop('disabled', true);
     $('#observacion').prop('readonly', true);
     $('.select_statuses_program').prop('disabled', true);
     $('.input_fields_general_tab').prop('readonly', true);

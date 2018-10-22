@@ -208,7 +208,18 @@ function save_profile($form){
         $obj_updatable->id = $id_ases;
 
         $sql_query = "SELECT observacion FROM {talentospilos_usuario} WHERE id = $id_ases";
+
+        $sql_query2 = "SELECT * FROM {talentospilos_usuario} WHERE id = $id_ases";
+        $user_record = $DB->get_record_sql($sql_query2);
         $observations = $DB->get_record_sql($sql_query)->observacion;
+
+        if($user_record->id_cond_excepcion != null){
+        //Update id_cond_excepcion to id_cond_selected    
+        $obj_updatable->id_cond_excepcion = $_POST['selected'];}
+        else {
+        //Update null to 10 (Ninguna de las anteriores)    
+        $obj_updatable->id_cond_excepcion = 10;    
+        }
 
         $conc_observations = $obj_updatable->observacion."\n".$observations;
 
