@@ -1435,7 +1435,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
 
         // ************************************************************************************************************
         // Actualización:
-        // Se añade campo pais, vive_con, tiene_hijo  a la tabla talentospilos_usuario
+        // Se añade campo pais, vive_con, hijos  a la tabla talentospilos_usuario
         // Versión en la que se incluye: GIT XXX, Moodle: 2018062515379
         // ************************************************************************************************************    
 
@@ -1457,18 +1457,17 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
             if (!$dbman->field_exists($table, $field)) {
                 $dbman->add_field($table, $field);
             }
-         // Define field tiene_hijo to be added to talentospilos_usuario.
-         $table = new xmldb_table('talentospilos_usuario');
-         $field = new xmldb_field('tiene_hijo', XMLDB_TYPE_INTEGER, '2', null, null, null, null, 'vive_con');
- 
-         // Conditionally launch add field tiene_hijo.
-         if (!$dbman->field_exists($table, $field)) {
-             $dbman->add_field($table, $field);
-         }
- 
+      // Define field hijos to be added to talentospilos_usuario.
+      $table = new xmldb_table('talentospilos_usuario');
+      $field = new xmldb_field('hijos', XMLDB_TYPE_TEXT, null, null, null, null, null, 'vive_con');
+
+      // Conditionally launch add field hijos.
+      if (!$dbman->field_exists($table, $field)) {
+          $dbman->add_field($table, $field);
+      }
              // Define field id_cond_excepcion to be added to talentospilos_usuario.
         $table = new xmldb_table('talentospilos_usuario');
-        $field = new xmldb_field('id_cond_excepcion', XMLDB_TYPE_INTEGER, '10', null, null, null, null, 'tiene_hijo');
+        $field = new xmldb_field('id_cond_excepcion', XMLDB_TYPE_INTEGER, '10', null, null, null, null, 'hijos');
 
         // Conditionally launch add field id_cond_excepcion.
         if (!$dbman->field_exists($table, $field)) {
