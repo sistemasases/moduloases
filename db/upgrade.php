@@ -4,7 +4,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     global $DB;
     $dbman = $DB->get_manager();
     $result = true;
-    if ($oldversion < 2018102213550 ) {
+    if ($oldversion < 2018102214470 ) {
     //     // ************************************************************************************************************
     //     // Actualización que crea la tabla para los campos extendidos de usuario (Tabla: {talentospilos_user_extended})
     //     // Versión: 2018010911179
@@ -1451,7 +1451,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
 
             // Define field vive_con to be added to talentospilos_usuario.
             $table = new xmldb_table('talentospilos_usuario');
-            $field = new xmldb_field('vive_con', XMLDB_TYPE_TEXT, null, null, null, null, null, 'pais');
+            $field = new xmldb_field('vive_con', XMLDB_TYPE_TEXT, null, null, null, null, null, 'id_pais');
     
             // Conditionally launch add field vive_con.
             if (!$dbman->field_exists($table, $field)) {
@@ -2138,7 +2138,7 @@ unset($array_elements,$array_aditional,$new_register, $table);
      
      
 
-        upgrade_block_savepoint(true, 2018102213550 , 'ases');
+        upgrade_block_savepoint(true, 2018102214470 , 'ases');
     
         return $result;
 
