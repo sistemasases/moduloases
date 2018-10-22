@@ -73,6 +73,9 @@ require_once($CFG->dirroot.'/user/lib.php');
  }
  
 
+
+
+
 /**
  * Update the user image profile from php file by user id
  * @param $mdl_user_id Moodle user ID
@@ -130,6 +133,21 @@ $userform = new user_edit_form('', array(
      
      return $status_ases_array;
  }
+
+ /**
+ * Get Condición de excepción por id registrado
+ *
+ * @see get_cond_excepcion_by_id($id_cond)
+ * @param $id_cond --> it represent any condition exception register from talentospilos_cond_excepcion
+ * @return object --> with CONDICIÓN DE EXCEPCIÓN information
+ */
+
+function  get_cond_excepcion()
+{
+    global $DB; 
+   $sql_query = "SELECT * FROM {talentospilos_cond_excepcion}";
+   return $DB->get_records_sql($sql_query);
+}
  
 /**
  * Gets a set of ICETEX status

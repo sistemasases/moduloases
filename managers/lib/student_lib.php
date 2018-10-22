@@ -162,22 +162,6 @@ function get_ases_user_by_code($code)
 }
 
 /**
- * Get Condición de excepción por id registrado
- *
- * @see get_cond_excepcion_by_id($id_cond)
- * @param $id_cond --> it represent any condition exception register from talentospilos_cond_excepcion
- * @return object --> with CONDICIÓN DE EXCEPCIÓN information
- */
-
- function  get_cond_excepcion_by_id($id_cond)
- {
-     global $DB; 
-    $sql_query = "SELECT * FROM {talentospilos_cond_excepcion} WHERE id = $id_cond";
-    return $DB->get_record_sql($sql_query);
- }
-
-
-/**
  * Gets ASES student status
  *
  * @see get_student_ases_status($id)

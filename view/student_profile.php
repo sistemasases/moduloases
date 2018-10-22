@@ -182,13 +182,41 @@ if ($student_code != 0) {
         }
 
     //Extraer condición de excepción del usuario, según id registrado
-       if($ases_student->id_cond_excepcion == null){
-        $record->cond_excep = "NO DEFINIDO";
-    }else {
-        $cond_excepcion = get_cond_excepcion_by_id($ases_student->id_cond_excepcion);
-        $record->cond_excep = $cond_excepcion->condicion_excepcion;
-    }
+        //tRAE CONDICIONES DE EXCEPCIÓN
+        $cond_excepcion = get_cond_excepcion();
+        $options_cond_excepcion = '';
     
+        $cond_excepcion_student->id_cond_excep = $ases_student->id_cond_excepcion;
+
+        if($ases_student->id_cond_excepcion == null){
+         $options_cond_excepcion .= "<option value='10' selected='selected'>N.A</option>";   
+        //Eliminar condición de excepción agregada en opciones condiciones de excepcion
+         $i = 0;
+        foreach($cond_excepcion as $array_cond){
+
+            if($array_cond->alias=='N.A'){
+                $pos = $i;
+                echo $pos;
+            } 
+        $i++;
+        }
+        
+        array_splice($cond_excepcion,$pos,1);
+        }
+    
+        foreach($cond_excepcion as $cond){
+            if($cond_excepcion_student->id_cond_excep == $cond->id){
+                $options_cond_excepcion .= "<option value='$cond->id' selected='selected'>$cond->alias</option>";
+            }else{
+                $options_cond_excepcion .= "<option value='$cond->id'>$cond->alias</option>";
+            }
+        }
+    
+        $record->options_cond_excepcion = $options_cond_excepcion;
+     
+        //$record->icetex_status_description = $icetex_statuses[$status_icetex_student->id_estado_icetex]->descripcion;
+
+
     //---------------------------------------------------------------------------
 
     $record->observations = $ases_student->observacion;
