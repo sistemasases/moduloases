@@ -4,7 +4,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     global $DB;
     $dbman = $DB->get_manager();
     $result = true;
-    if ($oldversion < 2018101917100 ) {
+    if ($oldversion < 2018102208100 ) {
     //     // ************************************************************************************************************
     //     // Actualización que crea la tabla para los campos extendidos de usuario (Tabla: {talentospilos_user_extended})
     //     // Versión: 2018010911179
@@ -2025,6 +2025,7 @@ if($table == "talentospilos_pais"){
     "Oman",
     "Pakistan",
     "Palau",
+    "Palestina",
     "Panama",
     "Papua New Guinea",
     "Paraguay",
@@ -2137,7 +2138,7 @@ unset($array_elements,$array_aditional,$new_register, $table);
      
      
 
-        upgrade_block_savepoint(true, 2018101917100 , 'ases');
+        upgrade_block_savepoint(true, 2018102208100 , 'ases');
     
         return $result;
 
