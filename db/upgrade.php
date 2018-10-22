@@ -4,7 +4,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     global $DB;
     $dbman = $DB->get_manager();
     $result = true;
-    if ($oldversion < 2018102208100 ) {
+    if ($oldversion < 2018102213550 ) {
     //     // ************************************************************************************************************
     //     // Actualización que crea la tabla para los campos extendidos de usuario (Tabla: {talentospilos_user_extended})
     //     // Versión: 2018010911179
@@ -1457,14 +1457,15 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
             if (!$dbman->field_exists($table, $field)) {
                 $dbman->add_field($table, $field);
             }
-      // Define field tiene_hijo to be added to talentospilos_usuario.
-      $table = new xmldb_table('talentospilos_usuario');
-      $field = new xmldb_field('tiene_hijo', XMLDB_TYPE_TEXT, null, null, null, null, null, 'vive_con');
-
-      // Conditionally launch add field tiene_hijo.
-      if (!$dbman->field_exists($table, $field)) {
-          $dbman->add_field($table, $field);
-      }
+         // Define field tiene_hijo to be added to talentospilos_usuario.
+         $table = new xmldb_table('talentospilos_usuario');
+         $field = new xmldb_field('tiene_hijo', XMLDB_TYPE_INTEGER, '2', null, null, null, null, 'vive_con');
+ 
+         // Conditionally launch add field tiene_hijo.
+         if (!$dbman->field_exists($table, $field)) {
+             $dbman->add_field($table, $field);
+         }
+ 
              // Define field id_cond_excepcion to be added to talentospilos_usuario.
         $table = new xmldb_table('talentospilos_usuario');
         $field = new xmldb_field('id_cond_excepcion', XMLDB_TYPE_INTEGER, '10', null, null, null, null, 'tiene_hijo');
@@ -2138,7 +2139,7 @@ unset($array_elements,$array_aditional,$new_register, $table);
      
      
 
-        upgrade_block_savepoint(true, 2018102208100 , 'ases');
+        upgrade_block_savepoint(true, 2018102213550 , 'ases');
     
         return $result;
 
