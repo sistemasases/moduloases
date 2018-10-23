@@ -779,7 +779,7 @@ function get_info_summary_report($cohort){
         }
 
         if(!isset($object->monto_act_res)){
-            $object->monto_act_res = "---";
+            $object->monto_act_res = "$0";
         }
 
         if(!isset($object->num_inact_res)){
@@ -787,7 +787,7 @@ function get_info_summary_report($cohort){
         }
 
         if(!isset($object->monto_inact_res)){
-            $object->monto_inact_res = "---";
+            $object->monto_inact_res = "$0";
         }
 
         if(!isset($object->num_act_no_res)){
@@ -795,7 +795,7 @@ function get_info_summary_report($cohort){
         }
 
         if(!isset($object->monto_act_no_res)){
-            $object->monto_act_no_res = "---";
+            $object->monto_act_no_res = "$0";
         }
 
         if(!isset($object->num_inact_no_res)){
@@ -803,7 +803,7 @@ function get_info_summary_report($cohort){
         }
 
         if(!isset($object->monto_inact_no_res)){
-            $object->monto_inact_no_res = "---";
+            $object->monto_inact_no_res = "$0";
         }
 
         $object->total_students = $object->num_act_res + $object->num_inact_res 

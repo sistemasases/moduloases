@@ -39,6 +39,21 @@ define(['jquery',
 				*/
 			});
 
+			jQuery.fn.dataTable.Api.register( 'sum()', function ( ) {
+				var result = 0;
+				return this.flatten().reduce( function ( a, b ) {
+					if ( typeof a === 'string' ) {
+						a = a.replace(/[\$.]/g, '') * 1;
+					}
+					if ( typeof b === 'string' ) {
+						b = b.replace(/[\$.]/g, '') * 1;
+					}
+			 
+					result = parseInt(a, 10) + parseInt(b, 10);
+					return result;
+				}, 0 );
+			} );
+
 			$("#list-resolutions-panel").on('click', function(){
 				load_resolutions();								
 			});
@@ -127,8 +142,30 @@ define(['jquery',
 			url: "../managers/historic_icetex_reports/summary_report_processing.php",
 			success: function(msg){
 				$("#div_report_summary").empty();
-				$("#div_report_summary").append('<table id="tableSummary" class="display" cellspacing="0" width="100%"><thead><thead></table>');
+				$("#div_report_summary").append('<table id="tableSummary" class="display" cellspacing="0" width="100%"><thead><thead><tfoot id="table_summ_foot"><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th></tfoot></table>');
 				var table = $("#tableSummary").DataTable(msg);
+				//var api = this.api(), data;
+				var total_inact_no_res = table.column( 9 ).data().sum();
+				var total_act_res = table.column( 3 ).data().sum();
+				var total_inact_res = table.column( 5 ).data().sum();
+				var total_act_no_res = table.column( 7 ).data().sum();
+
+				$( table.column( 3 ).footer() ).html(
+					'$'+total_act_res
+				);
+
+				$( table.column( 5 ).footer() ).html(
+					'$'+total_inact_res
+				);
+
+				$( table.column( 7 ).footer() ).html(
+					'$'+total_act_no_res
+				);
+
+				$( table.column( 9 ).footer() ).html(
+					'$'+total_inact_no_res
+				);
+				
 				$('#div_report_summary').css('cursor', 'pointer');			
 			},
 			dataType: "json",
@@ -137,6 +174,8 @@ define(['jquery',
 				swal("Error", "Error al cargar el reporte", "error");
 			}
 		});
+		
+		
 		
 	}
 	
