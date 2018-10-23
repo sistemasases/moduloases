@@ -77,13 +77,16 @@ function get_form_switch_id($id_form){
 function get_id_switch_user($id_user){
     global $DB;
     $form_dwarehouse_array = array();
-  
-    $sql = "SELECT id AS cod_user, firstname AS name_user FROM {user} AS u WHERE u.username = '$id_user' ";
+  if(strlen($id_user)==7){
+    $sql = "SELECT id AS cod_user, firstname AS name_user FROM {user} AS u WHERE u.username LIKE '$id_user%' ";
     $results = $DB->get_records_sql($sql);
     foreach ($results as $record) {
         array_push($form_dwarehouse_array, $record);
     }
+  
+}
     return $form_dwarehouse_array;
+
 }
 
 /**
