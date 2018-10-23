@@ -195,13 +195,21 @@ function save_profile($form){
         
         // Required fields are inserted
         for($i = 0; $i < count($form); $i++){
+          
             if($form[$i]['name'] == "tipo_doc" || $form[$i]['name'] == "tipo_doc_ini"){
                 $sql_query = "SELECT id FROM {talentospilos_tipo_documento} WHERE nombre = '".$form[$i]['value']."'";
                 $id_doc_type = $DB->get_record_sql($sql_query)->id;
                 $obj_updatable[$form[$i]['name']] = $id_doc_type;
             }else{
                 $obj_updatable[$form[$i]['name']] = $form[$i]['value'];
-            }            
+            }
+            if($form[$i]['name']=="cond_excepcion"){
+                $cond = $form[$i]['value'];
+            }
+            if($form[$i]['name']=="pais"){
+                $pais = $form[$i]['value'];
+            }
+                        
         }
         $obj_updatable = (object) $obj_updatable;
         //an id is assigned to update
@@ -213,14 +221,10 @@ function save_profile($form){
         $user_record = $DB->get_record_sql($sql_query2);
         $observations = $DB->get_record_sql($sql_query)->observacion;
 
-        if($user_record->id_cond_excepcion != null){
-        //Update id_cond_excepcion to id_cond_selected    
-        $obj_updatable->id_cond_excepcion = $_POST['selected'];}
-        else {
-        //Update null to 10 (Ninguna de las anteriores)    
-        $obj_updatable->id_cond_excepcion = 10;    
-        }
-
+        //Agregar campos nuevos
+        $obj_updatable->id_cond_excepcion = $cond;
+        $obj_updatable->id_pais = $pais;
+        //____________________________________________
         $conc_observations = $obj_updatable->observacion."\n".$observations;
 
         $obj_updatable->observacion = $conc_observations;

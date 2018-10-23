@@ -1,4 +1,5 @@
 {{!-- General tab --}}
+
 <div class="tab-pane active p-t-100" id="general_tab">
     <div class="row">
         <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
@@ -31,14 +32,35 @@
                 </div>
             </div>
 
-              <div class="row">
-                <label for="pais" class="col-xs-3 col-sm-3 col-md-3 col-lg-3 label_fields_general_tab">País origen</label>
-                <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9 div_fields_general_tab" id="div-input-pais">
-                    <input type="text" class="input_fields_general_tab" name="pais" id="pais" readonly value="{{country}}" maxlength="100" required />
-                </div>
-            </div>
-
             <div class="row">
+                <label for="pais" class="col-xs-3 col-sm-3 col-md-3 col-lg-3 label_fields_general_tab">País de origen </label>
+                <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 div_cond" id="div_pais">
+                    <select id="pais" name = "pais" disabled >
+                      {{{options_pais}}}
+                    </select>
+                  </div>
+                  </div>
+
+           
+            <div class="row">
+            <label for="cond_excep" class="col-xs-3 col-sm-3 col-md-3 col-lg-3 label_fields_general_tab">Condición de excepción </label>
+            <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 div_cond" id="div_cond_excepcion">
+                <select id="cond_excepcion" name = "cond_excepcion" disabled >
+                  {{{options_cond_excepcion}}}
+                </select>
+              </div>
+              </div>
+
+              <div class="row">
+                <label for="genero" class="col-xs-3 col-sm-3 col-md-3 col-lg-3 label_fields_general_tab">Identidad de género </label>
+                <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 div_cond" id="div_genero">
+                    <select id="genero" name = "genero"  >
+                      {{{options_genero}}}
+                    </select>
+                  </div>
+                  </div>
+
+              <div class="row">
                 <label for="vive_con" class="col-xs-3 col-sm-3 col-md-3 col-lg-3 label_fields_general_tab">Vive con</label>
                 <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9 div_fields_general_tab" id="div-input-vive_con">
                     <input type="text" class="input_fields_general_tab" name="vive_con" id="vive_con" readonly value="{{vive_con}}" maxlength="100" required />
@@ -51,16 +73,6 @@
                     <input type="text" class="input_fields_general_tab" name="tiene_hijo" id="tiene_hijo" readonly value="{{sons}}" maxlength="100" required />
                 </div>
             </div>
-            <div class="row">
-            <label for="cond_excep" class="col-xs-3 col-sm-3 col-md-3 col-lg-3 label_fields_general_tab">Condición de excepción </label>
-            <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 div_cond" id="div_cond_excepcion">
-                {{#update_icetex_status_sp}}
-                <select id="cond_excepcion" name = "cond_excepcion"class="form-control" disabled>
-                  {{{options_cond_excepcion}}}
-                </select>
-                {{/update_icetex_status_sp}} 
-              </div>
-              </div>
 
 
             <h3 class="h-sections-general-tab">INFORMACIÓN DEL ACUDIENTE</h3>

@@ -135,10 +135,9 @@ $userform = new user_edit_form('', array(
  }
 
  /**
- * Get Condición de excepción por id registrado
+ * Get Condición de excepción registradas
  *
  * @see get_cond_excepcion_by_id($id_cond)
- * @param $id_cond --> it represent any condition exception register from talentospilos_cond_excepcion
  * @return object --> with CONDICIÓN DE EXCEPCIÓN information
  */
 
@@ -146,6 +145,33 @@ function  get_cond_excepcion()
 {
     global $DB; 
    $sql_query = "SELECT * FROM {talentospilos_cond_excepcion}";
+   return $DB->get_records_sql($sql_query);
+}
+/**
+ * Get paises registrados
+ *
+ * @see get_paises()
+ * @return object --> with CONDICIÓN DE EXCEPCIÓN information
+ */
+
+function  get_paises()
+{
+    global $DB; 
+   $sql_query = "SELECT * FROM {talentospilos_pais}";
+   return $DB->get_records_sql($sql_query);
+}
+
+/**
+ * Get generos registrados
+ *
+ * @see get_generos()
+ * @return object --> with CONDICIÓN DE EXCEPCIÓN information
+ */
+
+function  get_generos()
+{
+    global $DB; 
+   $sql_query = "SELECT * FROM {talentospilos_identidad_gen}";
    return $DB->get_records_sql($sql_query);
 }
  

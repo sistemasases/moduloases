@@ -155,11 +155,63 @@ if ($student_code != 0) {
     //Código temporal, mientras se define carga de datos
     //---------------------------------------------------------------------------
     
-    //Código temporal, mientras se definen los posibles paises en la tabla
-    if($ases_student->pais == null){
-        $record->country = "Colombia";
-    }else{
-        $record->country = $ases_student->pais;}
+    //TRAE PAISES
+    $paises= get_paises();
+    $options_pais = '';
+
+    $pais_student->id_pais = $ases_student->id_pais;
+    //Buscar la posición del pais Colombia
+    $i=0;
+    foreach($paises as $pais){
+        if($pais->pais=="Colombia"){
+        $posp=$i;
+        $options_pais .= "<optgroup label='Populares'> <option value='$pais->id'>$pais->pais</option> </optgroup>" ;   
+        break; }
+        $i++;
+    }
+
+    //Eliminar país Colombia puesto al inicio
+    array_splice($paises,$posp,1);
+   
+    $options_pais .= "<optgroup label = 'Otros'>";
+    foreach($paises as $pais){
+        if($pais_student->id_pais == $pais->id){
+            $options_pais .= "<option value='$pais->id' selected='selected'>$pais->pais</option>";
+        }else{
+            $options_pais .= "<option value='$pais->id'>$pais->pais</option>";
+        }
+    }
+    $options_pais .= "</optgroup>";   
+
+    $record->options_pais = $options_pais;
+
+    //TRAE GENEROS
+    $generos= get_generos();
+    $options_generos = '';
+
+    $genero_student->id_identidad_gen = $ases_student->id_identidad_gen;
+  
+   
+    foreach($generos as $genero){
+        if($genero_student->id_identidad_gen == $genero->id){
+            if($genero->opcion_general == 1){
+            $options_generos .= "<option value='$genero->id' selected='selected'>$genero->genero</option>";}
+            else {
+            //Seleccionar otro y mostrar en textfield cual 
+            $otro_genero = $genero->genero; 
+            $options_generos .= "<option value='0' selected='selected'>Otro: $otro_genero</option>";
+              
+            }
+        }else{
+            if($genero->opcion_general == 1){
+            $options_generos .= "<option value='$genero->id'>$genero->genero</option>";}
+
+        }
+    }
+
+
+    $record->options_genero = $options_generos;
+ 
 
     //Código temporal vive_con
       if($ases_student->vive_con == null){
@@ -182,40 +234,37 @@ if ($student_code != 0) {
         }
 
     //Extraer condición de excepción del usuario, según id registrado
-        //tRAE CONDICIONES DE EXCEPCIÓN
+        //TRAE CONDICIONES DE EXCEPCIÓN
         $cond_excepcion = get_cond_excepcion();
         $options_cond_excepcion = '';
     
         $cond_excepcion_student->id_cond_excep = $ases_student->id_cond_excepcion;
 
-        if($ases_student->id_cond_excepcion == null){
-         $options_cond_excepcion .= "<option value='10' selected='selected'>N.A</option>";   
-        //Eliminar condición de excepción agregada en opciones condiciones de excepcion
+       
+        
          $i = 0;
         foreach($cond_excepcion as $array_cond){
-
             if($array_cond->alias=='N.A'){
+                $options_cond_excepcion .= "<option title='$array_cond->condicion_excepcion' value='$array_cond->id'>$array_cond->alias</option>";   
                 $pos = $i;
-                echo $pos;
+                break;
             } 
         $i++;
         }
-        
+        //Eliminar condición de excepción agregada en opciones condiciones de excepcion
         array_splice($cond_excepcion,$pos,1);
-        }
+        
+        
     
         foreach($cond_excepcion as $cond){
             if($cond_excepcion_student->id_cond_excep == $cond->id){
-                $options_cond_excepcion .= "<option value='$cond->id' selected='selected'>$cond->alias</option>";
+                $options_cond_excepcion .= "<option title='$cond->condicion_excepcion' value='$cond->id' selected='selected'>$cond->alias</option>";
             }else{
-                $options_cond_excepcion .= "<option value='$cond->id'>$cond->alias</option>";
+                $options_cond_excepcion .= "<option title='$cond->condicion_excepcion' value='$cond->id'>$cond->alias</option>";
             }
         }
     
         $record->options_cond_excepcion = $options_cond_excepcion;
-     
-        //$record->icetex_status_description = $icetex_statuses[$status_icetex_student->id_estado_icetex]->descripcion;
-
 
     //---------------------------------------------------------------------------
 
