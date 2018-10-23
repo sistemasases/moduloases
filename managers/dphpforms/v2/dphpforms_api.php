@@ -25,8 +25,7 @@
 
 // Standard GPL and phpdocs
 
-    require_once(dirname(__FILE__). '/../../../../config.php');
-    require_once(dirname(__FILE__).'/user_management_lib.php');
+    require_once(dirname(__FILE__).'/dphpforms_lib.php');
 
     header('Content-Type: application/json');
 
@@ -35,82 +34,44 @@
     $raw_data = file_get_contents("php://input");
     
     // Validation if the user is logged. 
-    if( $USER->id == 0 ){
-       return_with_code( -1 );
-    }
+    // if( $USER->id == 0 ){
+    //    return_with_code( -1 );
+    //}
 
     $input = json_decode( $raw_data );
 
     /**
      * Api la consulta de datos respecto a estudiantes, monitores, practicantes y profesionales.
      * @author Jeison Cardona Gomez
-     * @see user_management_lib.php
+     * @see dphpforms_lib.php
      * @param json $input This input is a json with a function name and their respective parameters. The order of these parameters is very important. See every function to notice of their parameters order.
      * @return json The structure is {"status_code":int, "error_message":string, "data_response":string }
     */
 
     // Example of valid input. params = Parameters
-    // { "function":"user_management_get_stud_mon_prac_prof", "params":[ ases_student_code ] }
+    // { "function":"function_name", "params":[ "x" ] }
 
     if( isset($input->function) && isset($input->params) ){
 
         /* Params: student_ases_id, instance_id, semester_id
         * */
         
-        if( $input->function == "get_stud_mon_prac_prof" ){
+        if( $input->function == "find_records" ){
 
             /* In this request is only valid pass like param(Parameters) the instance identificatior, 
              * for this reason, the input param only can be equal in quantity to one.
              * */
             
-            if( count( $input->params ) == 3 ){
+            if( count( $input->params ) == 0 ){
 
-                // Order of params
-                /**
-                 * The student_ases_id value only can be a number.
-                 * The instance_id value only can be a number.
-                 * The semester_id value only can be  a number.
-                 */
-                
-                if( is_numeric( $input->params[0] ) && is_numeric( $input->params[1] ) && is_numeric( $input->params[2] ) ){
+                // Validation                
+                if( true ){
                     
                     echo json_encode( 
                         array(
                             "status_code" => 0,
                             "error_message" => "",
-                            "data_response" => user_management_get_stud_mon_prac_prof( $input->params[0], $input->params[1], $input->params[2] )
-                        )
-                    );
-                    
-                }else{
-                    return_with_code( -2 );
-                }
-            }else{
-                return_with_code( -2 );
-            }
-
-        }else if( $input->function == "get_crea_stud_mon_prac_prof" ){
-
-            /* Params: student_ases_id, created_by_id, instance_id, semester_id
-             * */
-            
-            if( count( $input->params ) == 4 ){
-
-                // Order of params
-                /**
-                 * The student_ases_id value only can be a number.
-                 * The created_by_id value only can be a number.
-                 * The instance_id value only can be a number.
-                 * The semester_id value only can be a number.
-                 */
-                
-                if( is_numeric( $input->params[0] ) && is_numeric( $input->params[1] ) && is_numeric( $input->params[2] ) && is_numeric( $input->params[3] ) ){
-                    
-                    echo json_encode( 
-                        array(
-                            "status_code" => 0,
-                            "error_message" => "",
-                            "data_response" => user_management_get_crea_stud_mon_prac_prof( $input->params[0], $input->params[1], $input->params[2], $input->params[3] )
+                            "data_response" => dphpformsV2_find_records( $Xquery )
                         )
                     );
                     
@@ -130,6 +91,7 @@
         return_with_code( -2 );
     }
 
+    // Reserved status code list [-1, -2, -3 ,-4 ,-99]
     function return_with_code( $code ){
         
         switch( $code ){
@@ -166,16 +128,6 @@
                     array(
                         "status_code" => $code,
                         "error_message" => "Function not defined.",
-                        "data_response" => ""
-                    )
-                );
-                break;
-            
-            case -5:
-                echo json_encode(
-                    array(
-                        "status_code" => $code,
-                        "error_message" => "Duplicate.",
                         "data_response" => ""
                     )
                 );
