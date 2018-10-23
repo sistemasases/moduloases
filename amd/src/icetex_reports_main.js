@@ -50,7 +50,7 @@ define(['jquery',
 					}
 			 
 					result = parseInt(a, 10) + parseInt(b, 10);
-					return result;
+					return result.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 				}, 0 );
 			} );
 
