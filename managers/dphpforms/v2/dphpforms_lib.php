@@ -35,8 +35,9 @@ $xQuery->form = "seguimiento_pares"; // Can be alias(String) or idntifier(Number
                          ["id_monitor",[["value","="]], true]
                         ];*/
 $xQuery->filterFields = [
-                            ["fecha", [["2018-07-01",">"],["2018-07-05","<"]], true],
-                            ["id_monitor",[["value","="]], true]
+                            ["fecha", [["2018-02-01",">="],["2018-07-31","<="]], false],
+                            ["id_instancia", [["450299","="]], false],
+                            ["revisado_profesional",[["0","="]],false]
                            ];
 $xQuery->orderFields = [
                         ["id_instancia","ASC"], 
@@ -238,25 +239,24 @@ echo json_encode( dphpformsV2_find_records( $xQuery ) );
                 $optional =  $filterField[2];
 
                 $filter_where = "";
+                $belongs_block_AND = false;
                 
                 if( !$first_filter_field ){
-
                     if( $tmpNextFilterField = next($query->filterFields) ){
-                        if( $tmpNextFilterField[2] ){
-                            $filter_where .= " OR ";
-                        }else{
-                            $filter_where .= " AND ";
-                        }
+                        $filter_where .= " OR ";
                     }
-                    
                 }else{
                     $first_filter_field = false;
+                }
+
+                if( $optional ){
+                    $belongs_block_AND = false;
                 }
 
                 foreach( $filterValues as $filterValue ){
                     $filter_where .= "(id_pregunta = " .$list_fields_alias_id[$fieldAlias]. " AND respuesta ".$filterValue[1]." '". $filterValue[0] . "')";
                     if( next($filterValues) ){
-                        $filter_where .= " OR ";
+                        $filter_where .= " AND ";
                     }
                 }
 
@@ -275,30 +275,41 @@ echo json_encode( dphpformsV2_find_records( $xQuery ) );
      $records_ids =  [];
      $grouped_records = [];
      foreach( $records as $record ){
-        if( !in_array( $record->id_formulario_respuestas, $records_ids ) ){
-            array_push( $records_ids, $record->id_formulario_respuestas );
-            $grouped_records[ $record->id_formulario_respuestas ][ "fecha_hora_registro" ] = strtotime($record->fecha_hora_registro);
-        };
+        array_push( $records_ids, $record->id_formulario_respuestas );
+        $grouped_records[ $record->id_formulario_respuestas ][ "fecha_hora_registro" ] = strtotime($record->fecha_hora_registro);
         $grouped_records[ $record->id_formulario_respuestas ][ $record->id_pregunta ] = $record->respuesta;
      };
 
-     echo( $sql_query );
-     print_r( $records );
-     print_r( $grouped_records );
+     $records_ids = array_values(array_unique( $records_ids ));
+
+     echo( $sql_query . "\n" );
+     //print_r( $grouped_records );
+     //print_r( $list_fields_id_alias );
 
      $valid_records = [];
      //Si el registro agrupado tiene los campos para filtrar
      foreach($records_ids as $record_id){
+         
          $record_completed = true;
          foreach( $query->filterFields as $filterField ){
             $field_alias = $filterField[0];
+            $id_field = $list_fields_alias_id[ $field_alias ];
             $value_to_comparate = $filterField[1];
             $optional = $filterField[2];
             $operator = $filterField[3];
-            $exist_in_grouped_record = array_key_exists( $field_alias, $grouped_records[$record_id] );
-            
+            $exist_in_grouped_record = array_key_exists( $id_field, $grouped_records[$record_id] );
+            if( !$exist_in_grouped_record && !$optional ){
+                $record_completed = false;
+            }
          };
+         if($record_completed){
+             array_push($valid_records,$grouped_records[$record_id]);
+         }
      }
+
+     //print_r("\nVALIDOS\n");
+     print_r( $valid_records );
+
  }
 
 function dphpformsV2_apply_operators( $expected_value, $operator, $input_value ){
