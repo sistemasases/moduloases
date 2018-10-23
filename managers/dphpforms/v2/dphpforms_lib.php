@@ -35,9 +35,8 @@ $xQuery->form = "seguimiento_pares"; // Can be alias(String) or idntifier(Number
                          ["id_monitor",[["value","="]], true]
                         ];*/
 $xQuery->filterFields = [
-                            ["fecha", [["2018-02-01",">="],["2018-07-31","<="]], false],
-                            ["id_instancia", [["450299","="]], false],
-                            ["revisado_profesional",[["0","="]],false]
+                            ["fecha", [["2018-08-01",">"]], false], 
+                            ["id_estudiante",[["2820","="]], false]
                            ];
 $xQuery->orderFields = [
                         ["id_instancia","ASC"], 
@@ -199,24 +198,21 @@ echo json_encode( dphpformsV2_find_records( $xQuery ) );
      //Find with where clause
      if( count( $query->filterFields ) > 0 ){
 
-        // Criteria base: R.id_pregunta = XX AND R.respuesta = 'ABC'
+        /*// Criteria base: R.id_pregunta = XX AND R.respuesta = 'ABC'
         $criteria = "";
         foreach( $query->filterFields[0][1] as $filterValue ){
             $criteria .= "(R.id_pregunta = " .$list_fields_alias_id[$query->filterFields[0][0]]. " AND R.respuesta ".$filterValue[1]." '". $filterValue[0] . "')";
-            /**
-             * next: Warning This function may return Boolean FALSE, but may also return a non-Boolean value which evaluates to FALSE
-             */
+
             if( next( $query->filterFields[0][1] ) ) {
                 // http://127.0.0.1/moodle34/blocks/ases/managers/dphpforms/v2/dphpforms_lib.php
                 $criteria .= " AND "; // Manejar AND o OR
             }
-        }
+         }*/
 
         //Find by the firt param the records id.
         $sql_first_parameter = "SELECT DISTINCT FS.id_formulario_respuestas
                                 FROM {talentospilos_df_respuestas} AS R
-                                INNER JOIN {talentospilos_df_form_solu} AS FS ON FS.id_respuesta = R.id
-                                WHERE " . $criteria;
+                                INNER JOIN {talentospilos_df_form_solu} AS FS ON FS.id_respuesta = R.id";
         
         $inner_join_more_responses = "SELECT id_respuesta, FS1.id_formulario_respuestas
                                       FROM {talentospilos_df_form_solu} AS FS1 
@@ -277,6 +273,7 @@ echo json_encode( dphpformsV2_find_records( $xQuery ) );
      foreach( $records as $record ){
         array_push( $records_ids, $record->id_formulario_respuestas );
         $grouped_records[ $record->id_formulario_respuestas ][ "fecha_hora_registro" ] = strtotime($record->fecha_hora_registro);
+        $grouped_records[ $record->id_formulario_respuestas ][ "record_id" ] = $record->id_formulario_respuestas;
         $grouped_records[ $record->id_formulario_respuestas ][ $record->id_pregunta ] = $record->respuesta;
      };
 
