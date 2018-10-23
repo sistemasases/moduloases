@@ -35,9 +35,13 @@ $xQuery->form = "seguimiento_pares"; // Can be alias(String) or idntifier(Number
                          ["id_monitor",[["value","="]], true]
                         ];*/
 $xQuery->filterFields = [
-                            ["fecha", [["2018-08-01",">"]], false], 
-                            ["id_estudiante",[["2820","="]], false]
-                           ];
+                         ["fecha", [
+                             ["2018-08-01",">"]
+                            ], false], 
+                         ["id_estudiante",[
+                             ["2820","="]
+                            ], false]
+                        ];
 $xQuery->orderFields = [
                         ["id_instancia","ASC"], 
                         ["id_creado_por", "DESC"]  
