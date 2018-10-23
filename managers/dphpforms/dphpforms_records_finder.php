@@ -26,7 +26,8 @@
 // Standard GPL and phpdocs
 
     require_once(dirname(__FILE__). '/../../../../config.php');
-    
+    // Documentación en progreso:
+    //Interfaz para peticiones asincrónicas. Debe migrarse a la api con php://input.
     if( isset($_GET['form_id']) && isset($_GET['pregunta_id']) && isset($_GET['criterio']) && isset($_GET['order'])){
         header('Content-Type: application/json');
 
@@ -40,7 +41,6 @@
         }else{
             echo dphpforms_find_records($_GET['form_id'], $_GET['pregunta_id'], $_GET['criterio'], $_GET['order'], $_GET[ 'using_like' ] );
         }  
-        
         
     }
     
@@ -86,50 +86,30 @@
 
         $sql = "";
 
-        $estado = "AND FR.estado = 1";
+        $estado = "AND FR.estado = 1"; // Estado del seguimiento, 0 es eliminado, 1 lo contrario.
+        $type_search = "R.respuesta = '" . $criterio . "'"; // Establece que la busqueda sobre el campo de respuesta se realizará usando el = por defecto.
 
+        // Permite la consulta de registros eliminados.
         if( $super_su == 'true' ){
             $estado = "";
         }
 
+        $sql = "SELECT FRS.id_formulario_respuestas AS id_registro, FRS.fecha_hora_registro_respuesta AS fecha_hora_registro
+        FROM {talentospilos_df_respuestas} AS R 
+        INNER JOIN 
+            (
+                SELECT FR.id_formulario, FR.fecha_hora_registro AS fecha_hora_registro_respuesta, FS.id_formulario_respuestas, FS.id_respuesta
+                FROM {talentospilos_df_form_resp} AS FR 
+                INNER JOIN {talentospilos_df_form_solu} AS FS 
+                ON FR.id = FS.id_formulario_respuestas 
+        WHERE FR.id_formulario = '" . $FORM_ID . "' ".$estado."
+            ) AS FRS 
+        ON FRS.id_respuesta = R.id
+        WHERE $type_search AND R.id_pregunta = '" . $PREGUNTA_ID . "'
+        ORDER BY FRS.fecha_hora_registro_respuesta " . $order;
+
         if( $using_like == 'true' ){
-
-            $sql = "SELECT FRS.id_formulario_respuestas AS id_registro, FRS.fecha_hora_registro_respuesta AS fecha_hora_registro
-            FROM {talentospilos_df_respuestas} AS R 
-            INNER JOIN 
-                (
-                    SELECT FR.id_formulario, FR.fecha_hora_registro AS fecha_hora_registro_respuesta, FS.id_formulario_respuestas, FS.id_respuesta
-                    FROM {talentospilos_df_form_resp} AS FR 
-                    INNER JOIN {talentospilos_df_form_solu} AS FS 
-                    ON FR.id = FS.id_formulario_respuestas 
-            WHERE FR.id_formulario = '" . $FORM_ID . "' ".$estado."
-                ) AS FRS 
-            ON FRS.id_respuesta = R.id
-            WHERE R.respuesta LIKE '%" . $criterio . "%' AND R.id_pregunta = '" . $PREGUNTA_ID . "'
-            ORDER BY FRS.fecha_hora_registro_respuesta " . $order;
-
-        }else if( $using_like == 'false' ){
-
-            $sql = "SELECT FRS.id_formulario_respuestas AS id_registro, FRS.fecha_hora_registro_respuesta AS fecha_hora_registro
-            FROM {talentospilos_df_respuestas} AS R 
-            INNER JOIN 
-                (
-                    SELECT FR.id_formulario, FR.fecha_hora_registro AS fecha_hora_registro_respuesta, FS.id_formulario_respuestas, FS.id_respuesta
-                    FROM {talentospilos_df_form_resp} AS FR 
-                    INNER JOIN {talentospilos_df_form_solu} AS FS 
-                    ON FR.id = FS.id_formulario_respuestas 
-            WHERE FR.id_formulario = '" . $FORM_ID . "' ".$estado."
-                ) AS FRS 
-            ON FRS.id_respuesta = R.id
-            WHERE R.respuesta = '" . $criterio . "' AND R.id_pregunta = '" . $PREGUNTA_ID . "'
-            ORDER BY FRS.fecha_hora_registro_respuesta " . $order;
-
-        }else{
-            return json_encode(
-                array(
-                    'results' => array()
-                )
-            );
+            $type_search = "R.respuesta LIKE '%" . $criterio . "%'";
         }
 
         $resultados = $DB->get_records_sql($sql);
