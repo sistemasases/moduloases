@@ -34,7 +34,7 @@
 
             <div class="row">
                 <label for="pais" class="col-xs-3 col-sm-3 col-md-3 col-lg-3 label_fields_general_tab">País de origen </label>
-                <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 div_cond" id="div_pais">
+                <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 div_select" id="div_pais">
                     <select id="pais" name = "pais" disabled >
                       {{{options_pais}}}
                     </select>
@@ -42,7 +42,7 @@
                   </div>
 
            
-            <div class="row">
+            <div class="row ">
             <label for="cond_excep" class="col-xs-3 col-sm-3 col-md-3 col-lg-3 label_fields_general_tab">Condición de excepción </label>
             <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 div_cond" id="div_cond_excepcion">
                 <select id="cond_excepcion" name = "cond_excepcion" disabled >
@@ -53,10 +53,14 @@
 
               <div class="row">
                 <label for="genero" class="col-xs-3 col-sm-3 col-md-3 col-lg-3 label_fields_general_tab">Identidad de género </label>
-                <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 div_cond" id="div_genero">
-                    <select id="genero" name = "genero"  >
+                <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 div_select" id="div_genero">
+                    <select id="genero" name = "genero" disabled >
                       {{{options_genero}}}
                     </select>
+                  </div>
+                  <label id="lb_otro" style="padding: 5px 0px 0px 0px" class="col-xs-1 col-sm-1 col-md-1 col-lg-1 label_fields_general_tab" hidden>¿Cuál?</label>
+                  <div id="div_otro_genero" class="col-lg-4 col-md-4 col-sm-4 col-xs-4 div_otro_gen" hidden>
+                    <input disabled placeholder="¿Cuál?" value = "{{otro}}" type="text" class="input_fields_general_tab_otro" name="otro_genero" id="otro_genero"  maxlength="100" required />
                   </div>
                   </div>
 

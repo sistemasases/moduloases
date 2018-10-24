@@ -191,16 +191,17 @@ if ($student_code != 0) {
 
     $genero_student->id_identidad_gen = $ases_student->id_identidad_gen;
   
-   
+   $otro_genero ="";
+   $control = true;
     foreach($generos as $genero){
         if($genero_student->id_identidad_gen == $genero->id){
             if($genero->opcion_general == 1){
             $options_generos .= "<option value='$genero->id' selected='selected'>$genero->genero</option>";}
             else {
             //Seleccionar otro y mostrar en textfield cual 
-            $otro_genero = $genero->genero; 
-            $options_generos .= "<option value='0' selected='selected'>Otro: $otro_genero</option>";
-              
+            $otro_genero = $genero->genero;   
+            $options_generos .= "<option selected='selected' value='0'>Otro</option>"; 
+            $control = false;
             }
         }else{
             if($genero->opcion_general == 1){
@@ -209,9 +210,14 @@ if ($student_code != 0) {
         }
     }
 
+    
+           if($control){$options_generos .= "<option value='0'>Otro</option>"; } 
+        
+    
+
 
     $record->options_genero = $options_generos;
- 
+    $record->otro = $otro_genero;
 
     //Código temporal vive_con
       if($ases_student->vive_con == null){

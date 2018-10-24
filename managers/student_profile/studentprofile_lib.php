@@ -151,7 +151,7 @@ function  get_cond_excepcion()
  * Get paises registrados
  *
  * @see get_paises()
- * @return object --> with CONDICIÓN DE EXCEPCIÓN information
+ * @return object --> with PAIS information
  */
 
 function  get_paises()
@@ -160,6 +160,61 @@ function  get_paises()
    $sql_query = "SELECT * FROM {talentospilos_pais}";
    return $DB->get_records_sql($sql_query);
 }
+
+/**
+ * Update genero
+ *
+ * @see update_record_genero($genero)
+ * @param $genero
+ */
+function update_record_genero($genero){
+    global $DB;
+    $genero_M =strtoupper($genero->genero);
+  
+ if( !$DB->record_exists("talentospilos_identidad_gen",array('genero'=> $genero_M))){
+     $genero->genero  = $genero_M;
+    $DB->update_record("talentospilos_identidad_gen", $genero);
+ }
+
+}
+
+/**
+ * Insert genero
+ *
+ * @see add_record_genero($genero)
+ * @param $genero
+ */
+function add_record_genero($genero){
+    global $DB;
+    $genero_M =strtoupper($genero);
+  
+ if( !$DB->record_exists("talentospilos_identidad_gen",array('genero'=> $genero_M))){
+    $new_genero = new stdClass();
+    $new_genero->genero = $genero_M;
+    $new_genero->opcion_general = 0;
+    $DB->insert_record("talentospilos_identidad_gen", $new_genero, true);
+ }
+
+}
+
+/**
+ * Get ID genero del parámetro
+ *
+ * @see get_id_genero()
+ * @param $genero 
+ * @return int --> with id genero
+ */
+
+function get_id_genero($genero){
+
+    global $DB;
+    $genero_M =strtoupper($genero);
+    $sql_query = "SELECT id FROM {talentospilos_identidad_gen} WHERE genero = '$genero_M'";
+    $id_genero = $DB->get_record_sql($sql_query);
+    $id_genero = $id_genero->id;
+    return $id_genero;
+    
+    }
 
 /**
  * Get generos registrados

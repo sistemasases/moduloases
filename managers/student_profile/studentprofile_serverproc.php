@@ -209,6 +209,12 @@ function save_profile($form){
             if($form[$i]['name']=="pais"){
                 $pais = $form[$i]['value'];
             }
+            if($form[$i]['name']=="genero"){
+                $genero = $form[$i]['value'];
+            }
+            if($form[$i]['name']=="otro_genero"){
+                $otro = $form[$i]['value'];
+            }
                         
         }
         $obj_updatable = (object) $obj_updatable;
@@ -217,11 +223,30 @@ function save_profile($form){
 
         $sql_query = "SELECT observacion FROM {talentospilos_usuario} WHERE id = $id_ases";
 
-        $sql_query2 = "SELECT * FROM {talentospilos_usuario} WHERE id = $id_ases";
-        $user_record = $DB->get_record_sql($sql_query2);
         $observations = $DB->get_record_sql($sql_query)->observacion;
 
         //Agregar campos nuevos
+        if($genero == 0){
+            
+            if($_POST['option']==""){
+            //Agregar otro género a la base de datos de generos (si no existe), y guardar en usuario
+            add_record_genero($otro);
+            }else {
+            //Actualizar género en base de datos y guardar en usuario
+            $id_otro_genero = get_id_genero($_POST['option']);
+            $gen = new stdClass();
+            $gen->id = $id_otro_genero;
+            $gen->genero = $otro;
+            $gen->opcion_general = 0;
+            update_record_genero($gen);
+            }
+            $id_otro_genero = get_id_genero($otro);
+            
+           $obj_updatable->id_identidad_gen = $id_otro_genero;
+        }else{
+            //Guardar con género existente en opciones generales
+            $obj_updatable->id_identidad_gen = $genero; 
+        }
         $obj_updatable->id_cond_excepcion = $cond;
         $obj_updatable->id_pais = $pais;
         //____________________________________________

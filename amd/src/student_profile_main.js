@@ -216,6 +216,12 @@ return {
 
  },equalize: function(){
      $( document ).ready(function() {
+        if(document.getElementById("genero").value == 0){
+            $('#lb_otro').show();
+            $('#div_otro_genero').show();
+            //$('#otro_genero').prop('disabled', true);
+        }
+
          var heights = $(".equalize").map(function() {
              return $(this).height();
          }).get(),
@@ -597,6 +603,7 @@ return {
  },edit_profile: function(object_function){
 
     var form_wihtout_changes = $('#ficha_estudiante').serializeArray();
+    var update_or_insert = document.getElementById("otro_genero").value ;
     
     $('#span-icon-edit').on('click', function(){
         $(this).hide();
@@ -609,11 +616,25 @@ return {
         $('#num_doc').prop('readonly', false);
         $('#icetex_status').prop('disabled', false);
         $('#pais').prop('disabled', false);
+        $('#genero').prop('disabled', false);
         $('#cond_excepcion').prop('disabled', false);
         $('#observacion').prop('readonly', false);
         $('.select_statuses_program').prop('disabled', false);
         $('.input_fields_general_tab').prop('readonly', false);
         $('.input-tracking').prop('disabled', false);
+        $('#genero').on('click', function(){
+            if((document.getElementById("genero").value) == 0){
+                $("#div_otro_genero").show();
+                $('#lb_otro').show();
+                $('#otro_genero').prop('disabled', false);
+                $('#otro_genero').prop('required',true);
+            }else {
+                $("#div_otro_genero").hide();  
+                $('#lb_otro').hide();
+                $('#otro_genero').prop('disabled', true);
+                $('#otro_genero').prop('required',false);
+            }
+        });
     });
 
     $('#span-icon-cancel-edit').on('click', {form: form_wihtout_changes}, function(data){
@@ -642,13 +663,12 @@ return {
         var form_with_changes = $('#ficha_estudiante').serializeArray();
 
         var result_validation = object_function.validate_form(form_with_changes);
-
         if(result_validation.status == "error"){
             swal(result_validation.title,
                  result_validation.msg,
                  result_validation.status);
         }else{
-            object_function.save_form_edit_profile(form_with_changes, object_function);
+            object_function.save_form_edit_profile(form_with_changes, object_function, update_or_insert);
         }
     });    
  },validate_form: function(form){
@@ -662,6 +682,21 @@ return {
         msg.status = "success";
 
         switch(form[field].name){
+            case "otro_genero":
+
+        if((document.getElementById("otro_genero").value) == "" && $('#otro_genero').attr("required")){
+                msg.title = "Error";
+                msg.status = "error";
+                msg.msg = "El campo "+form[field].name+" es obligatorio";
+                return msg;  
+            }
+        if(has_numbers(form[field].value)){
+             msg.title = "Error";
+                    msg.status = "error";
+                    msg.msg = "El campo "+form[field].name+" no debe contener números";
+                    return msg;
+        }    
+            break;
             case "num_doc":
             case "tel_res":
             case "celular":
@@ -686,12 +721,13 @@ return {
     };
 
     return msg;
- },save_form_edit_profile: function(form, object_function){
+ },save_form_edit_profile: function(form, object_function, control){
     $.ajax({
         type: "POST",
         data: {
             func: 'save_profile',
-            form: form
+            form: form,
+            option: control
         },
         url: "../managers/student_profile/studentprofile_serverproc.php",
         success: function(msg) {
@@ -728,6 +764,10 @@ return {
     $('#tipo_doc').prop('disabled', true);
     $('#num_doc').prop('readonly', true);
     $('#icetex_status').prop('disabled', true);
+    $('#genero').prop('disabled', true);
+    $('#div_otro_genero').hide();
+    $('#lb_otro').hide();
+    $('#otro_genero').prop('disabled', true);
     $('#cond_excepcion').prop('disabled', true);
     $('#pais').prop('disabled', true);
     $('#observacion').prop('readonly', true);
@@ -740,6 +780,7 @@ return {
     for(field in form){
         $('#'+form[field].name).val(form[field].value);
     }
+    location.reload(true);
  }
 };
 

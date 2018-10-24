@@ -42,8 +42,18 @@
     padding-bottom: 0px;
 }
 .div_cond{
-    padding-top: 0px;
+    
+    padding-top: 7px;
     padding-left: 0px;
+    padding-right: 0px;
+}
+.div_select{
+
+    padding-left: 0px;
+    padding-right: 0px;
+}
+.div_otro_gen{
+padding: 0px 0px 0px 0px !important;
 }
 
 .div_fields_general_tab{
@@ -57,6 +67,14 @@
     width: 100% !important;
     padding: 0px 0px 0px 0px !important;
     border-radius: 0 0 0px 0px !important;
+}
+.input_fields_general_tab_otro{
+    position: relative !important;
+    height: 30px !important;
+    width: 100% !important;
+    padding: 0px 0px 0px 0px !important;
+    border-radius: 0 0 0px 0px !important;
+    margin-top: 0px;
 }
 
 .label_fields_general_tab{
