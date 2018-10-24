@@ -141,11 +141,9 @@ function get_items_con_notas($courseid){
        (
        -- La primer nota de el item, la lista de notas esta ordenada, si hay un nulo por defecto estara de primero, por tanto
        -- si el primer valor de esta subconsulta no es nulo ninguno lo es
-       SELECT mdl_grade_grades.finalgrade 
-       from {grade_items} as mdl_grade_items 
-              inner join {grade_grades} as mdl_grade_grades
-                ON mdl_grade_items.id = mdl_grade_grades.itemid 
-       where  mdl_grade_items.courseid = $courseid
+select mdl_grade_grades.finalgrade from {grade_items} mdl_grade_items inner join  {grade_grades} mdl_grade_grades
+    on mdl_grade_items.id = mdl_grade_grades.itemid
+where mdl_grade_items.courseid = $courseid 
        order by mdl_grade_grades.finalgrade asc  limit 1
 
      ) is not null

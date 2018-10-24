@@ -103,6 +103,7 @@ if(substr($sem,4,1) == 'A'){
 }else if(substr($sem,4,1) == 'B'){
     $semestre = $año.'08';
 }
+echo $semestre;
 $sql = <<<SQL
 SELECT DISTINCT ON (mdl_user.id) moodle_courses.fullname, mdl_user.firstname, mdl_user.lastname, moodle_courses.curso_id FROM 
   
@@ -130,9 +131,9 @@ SELECT DISTINCT ON (mdl_user.id) moodle_courses.fullname, mdl_user.firstname, md
                     WHERE estados.nombre = 'seguimiento' )
                     ) AS moodle_courses
       on moodle_courses.curso_id = mdl_context.instanceid
+      where mdl_role_assignments.roleid = 3
 
 SQL;
-
 
 $cursos = $DB->get_records_sql($sql);
 
