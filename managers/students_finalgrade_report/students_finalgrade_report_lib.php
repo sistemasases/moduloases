@@ -564,28 +564,28 @@ INNER JOIN      {context} AS mdl_context
 ON              mdl_context.id = mdl_role_assignments.contextid
 INNER JOIN
                 (
-                                SELECT DISTINCT curso.id AS curso_id,
-                                                curso.fullname,
-                                                curso.shortname
-                                FROM            {course} curso
-                                INNER JOIN      {enrol} role
-                                ON              curso.id = role.courseid
-                                INNER JOIN      {user_enrolments} enrols
-                                ON              enrols.enrolid = role.id
-                                WHERE           substring(curso.shortname FROM 15 FOR 6) = '$semestre'
-                                AND             enrols.userid IN
+                                SELECT DISTINCT mdl_course.id AS curso_id,
+                                                mdl_course.fullname,
+                                                mdl_course.shortname
+                                FROM            {course} mdl_course
+                                INNER JOIN      {enrol} mdl_enrol
+                                ON              mdl_course.id = mdl_enrol.courseid
+                                INNER JOIN      {user_enrolments} mdl_user_enrolments
+                                ON              mdl_user_enrolments.enrolid = mdl_enrol.id
+                                WHERE           substring(mdl_course.shortname FROM 15 FOR 6) = '$semestre'
+                                AND             mdl_user_enrolments.userid IN
                                                 (
-                                                           SELECT     user_m.id
-                                                           FROM       {user} user_m
-                                                           INNER JOIN {talentospilos_user_extended} extended
-                                                           ON         user_m.id = extended.id_moodle_user
-                                                           INNER JOIN {talentospilos_usuario} user_t
-                                                           ON         extended.id_ases_user = user_t.id
-                                                           INNER JOIN {talentospilos_est_estadoases} estado_u
-                                                           ON         user_t.id = estado_u.id_estudiante
-                                                           INNER JOIN {talentospilos_estados_ases} estados
-                                                           ON         estados.id = estado_u.id_estado_ases
-                                                           WHERE      estados.nombre = 'seguimiento' ) ) AS moodle_course
+                                                           SELECT     mdl_user.id
+                                                           FROM       {user} mdl_user
+                                                           INNER JOIN {talentospilos_user_extended} mdl_talentospilos_user_extended
+                                                           ON         mdl_user.id = mdl_talentospilos_user_extended.id_moodle_user
+                                                           INNER JOIN {talentospilos_usuario} mdl_talentospilos_usuario
+                                                           ON         mdl_talentospilos_user_extended.id_ases_user = mdl_talentospilos_usuario.id
+                                                           INNER JOIN {talentospilos_est_estadoases} mdl_talentospilos_est_estadoases
+                                                           ON         mdl_talentospilos_usuario.id = mdl_talentospilos_est_estadoases.id_estudiante
+                                                           INNER JOIN {talentospilos_estados_ases} mdl_talentospilos_estados_ases
+                                                           ON         mdl_talentospilos_estados_ases.id = mdl_talentospilos_est_estadoases.id_estado_ases
+                                                           WHERE      mdl_talentospilos_estados_ases.nombre = 'seguimiento' ) ) AS moodle_course
 ON              moodle_course.curso_id = mdl_context.instanceid
 WHERE           mdl_role_assignments.roleid = 3
 
