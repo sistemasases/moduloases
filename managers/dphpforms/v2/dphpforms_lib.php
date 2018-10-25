@@ -47,7 +47,7 @@ $xQuery->orderFields = [
                         ["id_estudiante", "DESC"]  
                        ];
 
-$xQuery->orderByDatabaseRecordDate = false; // If true, orderField is ignored
+$xQuery->orderByDatabaseRecordDate = false; // If true, orderField is ignored. DESC
 
 $xQuery->recordStatus = [ "!deleted", "deleted" ];// options "deleted" or "!deleted", can be both. Empty = both.
 //No soportado aun
@@ -286,7 +286,7 @@ echo json_encode( dphpformsV2_find_records( $xQuery ) );
      $grouped_records = [];
      foreach( $records as $record ){
         array_push( $records_ids, $record->id_formulario_respuestas );
-        $grouped_records[ $record->id_formulario_respuestas ][ "db_timestamp" ] = strtotime($record->fecha_hora_registro);
+        $grouped_records[ $record->id_formulario_respuestas ][ "registered_timestamp" ] = strtotime($record->fecha_hora_registro);
         $grouped_records[ $record->id_formulario_respuestas ][ "record_id" ] = $record->id_formulario_respuestas;
         $grouped_records[ $record->id_formulario_respuestas ][ $record->id_pregunta ] = $record->respuesta;
      };
@@ -331,10 +331,15 @@ echo json_encode( dphpformsV2_find_records( $xQuery ) );
             if( strtoupper( $order ) === "ASC" ){
                 array_multisort($key_to_sort, SORT_ASC, $valid_records);
             }elseif( strtoupper( $order ) === "DESC"  ){
-                echo $order;
                 array_multisort($key_to_sort, SORT_DESC, $valid_records);
             }
         }   
+     }else{
+        $key_to_sort = array(); 
+        foreach ($valid_records as $key => $record){
+            $key_to_sort[$key] = $record[ "registered_timestamp" ];
+        }
+        array_multisort($key_to_sort, SORT_DESC, $valid_records);
      }
 
      print_r( $valid_records );
