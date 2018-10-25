@@ -39,12 +39,12 @@ $xQuery->filterFields = [
                              ["2018-01-01",">"]
                             ], false], 
                          ["id_estudiante",[
-                             ["428","="]
+                             ["%%","LIKE"]
                             ], false]
                         ];
 $xQuery->orderFields = [
-                        ["id_instancia","ASC"], 
-                        ["id_creado_por", "DESC"]  
+                        ["fecha","ASC"], 
+                        ["id_estudiante", "DESC"]  
                        ];
 
 $xQuery->orderByDatabaseRecordDate = false; // If true, orderField is ignored
@@ -231,7 +231,7 @@ echo json_encode( dphpformsV2_find_records( $xQuery ) );
         $inner_join_more_responses = "SELECT id_respuesta, FS1.id_formulario_respuestas
                                       FROM {talentospilos_df_form_solu} AS FS1 
                                       INNER JOIN ( $sql_first_parameter ) AS PQ ON FS1.id_formulario_respuestas = PQ.id_formulario_respuestas 
-                                      ORDER BY FS1.id_formulario_respuestas";
+                                      ORDER BY FS1.id_formulario_respuestas ASC";
         
         $inner_join_values = "SELECT R3.id, IJMR.id_formulario_respuestas, R3.respuesta, R3.id_pregunta, R3.fecha_hora_registro
                               FROM {talentospilos_df_respuestas} AS R3 
@@ -286,7 +286,7 @@ echo json_encode( dphpformsV2_find_records( $xQuery ) );
      $grouped_records = [];
      foreach( $records as $record ){
         array_push( $records_ids, $record->id_formulario_respuestas );
-        $grouped_records[ $record->id_formulario_respuestas ][ "fecha_hora_registro" ] = strtotime($record->fecha_hora_registro);
+        $grouped_records[ $record->id_formulario_respuestas ][ "db_timestamp" ] = strtotime($record->fecha_hora_registro);
         $grouped_records[ $record->id_formulario_respuestas ][ "record_id" ] = $record->id_formulario_respuestas;
         $grouped_records[ $record->id_formulario_respuestas ][ $record->id_pregunta ] = $record->respuesta;
      };
@@ -316,6 +316,25 @@ echo json_encode( dphpformsV2_find_records( $xQuery ) );
              //array_push($valid_records,$record_id);
              array_push($valid_records,$grouped_records[$record_id]);
          }
+     }
+
+     if( !$query->orderByDatabaseRecordDate ){
+        foreach ($query->orderFields as $orderField) {
+
+            $alias = $orderField[0];
+            $order = $orderField[1];
+            $key_to_sort = array(); 
+
+            foreach ($valid_records as $key => $record){
+                $key_to_sort[$key] = $record[ $list_fields_alias_id[ $alias ] ];
+            }
+            if( strtoupper( $order ) === "ASC" ){
+                array_multisort($key_to_sort, SORT_ASC, $valid_records);
+            }elseif( strtoupper( $order ) === "DESC"  ){
+                echo $order;
+                array_multisort($key_to_sort, SORT_DESC, $valid_records);
+            }
+        }   
      }
 
      print_r( $valid_records );
