@@ -39,8 +39,9 @@ $xQuery->filterFields = [
                              ["2018-01-01",">"]
                             ], false], 
                          ["id_estudiante",[
-                             ["%%","LIKE"]
-                            ], false]
+                             ["428","LIKE"]
+                            ], false],
+                         ["lugar", [["Biblioteca","!="]], true]
                         ];
 $xQuery->orderFields = [
                         ["fecha","ASC"], 
