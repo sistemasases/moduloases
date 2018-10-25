@@ -137,7 +137,7 @@ $userform = new user_edit_form('', array(
  /**
  * Get Condición de excepción registradas
  *
- * @see get_cond_excepcion_by_id($id_cond)
+ * @see get_cond_excepcion()
  * @return object --> with CONDICIÓN DE EXCEPCIÓN information
  */
 
@@ -145,6 +145,20 @@ function  get_cond_excepcion()
 {
     global $DB; 
    $sql_query = "SELECT * FROM {talentospilos_cond_excepcion}";
+   return $DB->get_records_sql($sql_query);
+}
+
+ /**
+ * Get estados civiles registrados
+ *
+ * @see get_estados_civiles($id_cond)
+ * @return object --> with ESTADO CIVIL information
+ */
+
+function  get_estados_civiles()
+{
+    global $DB; 
+   $sql_query = "SELECT * FROM {talentospilos_estado_civil}";
    return $DB->get_records_sql($sql_query);
 }
 /**
@@ -160,6 +174,61 @@ function  get_paises()
    $sql_query = "SELECT * FROM {talentospilos_pais}";
    return $DB->get_records_sql($sql_query);
 }
+
+/**
+ * Update genero
+ *
+ * @see update_record_genero($genero)
+ * @param $genero
+ */
+function update_record_act($act){
+    global $DB;
+    $act_M =strtoupper($act->actividad);
+  
+ if( !$DB->record_exists("talentospilos_act_simultanea",array('actividad'=> $act_M))){
+     $act->actividad  = $act_M;
+    $DB->update_record("talentospilos_act_simultanea", $act);
+ }
+
+}
+
+/**
+ * Insert genero
+ *
+ * @see add_record_genero($genero)
+ * @param $genero
+ */
+function add_record_act($act){
+    global $DB;
+    $act_M =strtoupper($act);
+  
+ if( !$DB->record_exists("talentospilos_act_simultanea",array('actividad'=> $act_M))){
+    $new_act = new stdClass();
+    $new_act->actividad = $act_M;
+    $new_act->opcion_general = 0;
+    $DB->insert_record("talentospilos_act_simultanea", $new_act, true);
+ }
+
+}
+
+/**
+ * Get ID genero del parámetro
+ *
+ * @see get_id_genero()
+ * @param $genero 
+ * @return int --> with id genero
+ */
+
+function get_id_act($act){
+
+    global $DB;
+    $act_M =strtoupper($act);
+    $sql_query = "SELECT id FROM {talentospilos_act_simultanea} WHERE actividad = '$act_M'";
+    $id_act = $DB->get_record_sql($sql_query);
+    $id_act = $id_act->id;
+    return $id_act;
+    
+    }
 
 /**
  * Update genero
@@ -227,6 +296,20 @@ function  get_generos()
 {
     global $DB; 
    $sql_query = "SELECT * FROM {talentospilos_identidad_gen}";
+   return $DB->get_records_sql($sql_query);
+}
+
+/**
+ * Get actividades simultaneas registrados
+ *
+ * @see get_act_simultaneas()
+ * @return object --> with CONDICIÓN DE EXCEPCIÓN information
+ */
+
+function  get_act_simultaneas()
+{
+    global $DB; 
+   $sql_query = "SELECT * FROM {talentospilos_act_simultanea}";
    return $DB->get_records_sql($sql_query);
 }
  

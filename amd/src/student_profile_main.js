@@ -219,7 +219,10 @@ return {
         if(document.getElementById("genero").value == 0){
             $('#lb_otro').show();
             $('#div_otro_genero').show();
-            //$('#otro_genero').prop('disabled', true);
+        }
+        if(document.getElementById("act_simultanea").value == 0){
+            $('#lb_otro_act').show();
+            $('#div_otro_act').show();
         }
 
          var heights = $(".equalize").map(function() {
@@ -603,8 +606,9 @@ return {
  },edit_profile: function(object_function){
 
     var form_wihtout_changes = $('#ficha_estudiante').serializeArray();
-    var update_or_insert = document.getElementById("otro_genero").value ;
-    
+    var update_or_insert1 = document.getElementById("otro_genero").value ;
+    var update_or_insert2 = document.getElementById("otro_act_simultanea").value;
+  
     $('#span-icon-edit').on('click', function(){
         $(this).hide();
         $('#tip-edit').hide();
@@ -618,21 +622,38 @@ return {
         $('#pais').prop('disabled', false);
         $('#genero').prop('disabled', false);
         $('#cond_excepcion').prop('disabled', false);
+        $('#act_simultanea').prop('disabled', false);
+        $('#otro_genero').prop('disabled', false);
+        $('#otro_act_simultanea').prop('disabled', false);
+        $('#estado_civil').prop('disabled', false);
         $('#observacion').prop('readonly', false);
         $('.select_statuses_program').prop('disabled', false);
-        $('.input_fields_general_tab').prop('readonly', false);
+        $('.input_fields_general_tab').prop('readonly', false);  
         $('.input-tracking').prop('disabled', false);
+        //Recorrer table y habilitar inputs
+        $(".table_vive_con td").find(':input').each(function(){
+            alert($(this).val());
+            });
         $('#genero').on('click', function(){
             if((document.getElementById("genero").value) == 0){
                 $("#div_otro_genero").show();
                 $('#lb_otro').show();
-                $('#otro_genero').prop('disabled', false);
                 $('#otro_genero').prop('required',true);
             }else {
                 $("#div_otro_genero").hide();  
                 $('#lb_otro').hide();
-                $('#otro_genero').prop('disabled', true);
                 $('#otro_genero').prop('required',false);
+            }
+        });
+        $('#act_simultanea').on('click', function(){
+            if((document.getElementById("act_simultanea").value) == 0){
+                $("#div_otro_act").show();
+                $('#lb_otro_act').show();
+                $('#otro_act_simultanea').prop('required',true);
+            }else {
+                $("#div_otro_act").hide();  
+                $('#lb_otro_act').hide();
+                $('#otro_act_simultanea').prop('required',false);
             }
         });
     });
@@ -668,7 +689,9 @@ return {
                  result_validation.msg,
                  result_validation.status);
         }else{
-            object_function.save_form_edit_profile(form_with_changes, object_function, update_or_insert);
+            object_function.save_form_edit_profile(form_with_changes, object_function, update_or_insert1, update_or_insert2);
+            $('#otro_genero').prop('disabled', true);
+            $('#otro_act_simultanea').prop('disabled', true);
         }
     });    
  },validate_form: function(form){
@@ -697,6 +720,21 @@ return {
                     return msg;
         }    
             break;
+            case "otro_act_simultanea":
+
+        if((document.getElementById("otro_act_simultanea").value) == "" && $('#otro_act_simultanea').attr("required")){
+            msg.title = "Error";
+            msg.status = "error";
+            msg.msg = "El campo "+form[field].name+" es obligatorio";
+            return msg;  
+        }
+    if(has_numbers(form[field].value)){
+         msg.title = "Error";
+                msg.status = "error";
+                msg.msg = "El campo "+form[field].name+" no debe contener números";
+                return msg;
+    }  
+            break;
             case "num_doc":
             case "tel_res":
             case "celular":
@@ -721,13 +759,14 @@ return {
     };
 
     return msg;
- },save_form_edit_profile: function(form, object_function, control){
+ },save_form_edit_profile: function(form, object_function, control1, control2){
     $.ajax({
         type: "POST",
         data: {
             func: 'save_profile',
             form: form,
-            option: control
+            option1: control1,
+            option2: control2
         },
         url: "../managers/student_profile/studentprofile_serverproc.php",
         success: function(msg) {
@@ -737,6 +776,7 @@ return {
                 msg.msg,
                 msg.status
             );
+           
         },
         dataType: "json",
         cache: "false",
@@ -765,10 +805,9 @@ return {
     $('#num_doc').prop('readonly', true);
     $('#icetex_status').prop('disabled', true);
     $('#genero').prop('disabled', true);
-    $('#div_otro_genero').hide();
-    $('#lb_otro').hide();
-    $('#otro_genero').prop('disabled', true);
     $('#cond_excepcion').prop('disabled', true);
+    $('#act_simultanea').prop('disabled', true);
+    $('#estado_civil').prop('disabled', true);
     $('#pais').prop('disabled', true);
     $('#observacion').prop('readonly', true);
     $('.select_statuses_program').prop('disabled', true);

@@ -215,6 +215,15 @@ function save_profile($form){
             if($form[$i]['name']=="otro_genero"){
                 $otro = $form[$i]['value'];
             }
+            if($form[$i]['name']== "estado_civil"){
+                $estado_civil = $form[$i]['value'];
+            }
+            if($form[$i]['name']== "act_simultanea"){
+                $act_sim = $form[$i]['value'];
+            }
+            if($form[$i]['name']== "otro_act_simultanea"){
+                $otro_act_sim = $form[$i]['value'];
+            }
                         
         }
         $obj_updatable = (object) $obj_updatable;
@@ -226,14 +235,37 @@ function save_profile($form){
         $observations = $DB->get_record_sql($sql_query)->observacion;
 
         //Agregar campos nuevos
+        if($act_sim == 0){
+            
+            if($_POST['option2']==""){
+            //Agregar otra actividad a la base de datos de act_simultanea (si no existe), y guardar en usuario
+            add_record_act($otro_act_sim);
+            }else {
+            //Actualizar actividad en base de datos y guardar en usuario
+            $id_otro_act = get_id_act($_POST['option2']);
+            $act = new stdClass();
+            $act->id = $id_otro_act;
+            $act->actividad = $otro_act_sim;
+            $act->opcion_general = 0;
+            update_record_act($act);
+            }
+            $id_otro_act= get_id_act($otro_act_sim);
+            
+           $obj_updatable->id_act_simultanea = $id_otro_act;
+        }else{
+            //Guardar con género existente en opciones generales
+            $obj_updatable->id_act_simultanea = $act_sim; 
+        }
+
+
         if($genero == 0){
             
-            if($_POST['option']==""){
+            if($_POST['option1']==""){
             //Agregar otro género a la base de datos de generos (si no existe), y guardar en usuario
             add_record_genero($otro);
             }else {
             //Actualizar género en base de datos y guardar en usuario
-            $id_otro_genero = get_id_genero($_POST['option']);
+            $id_otro_genero = get_id_genero($_POST['option1']);
             $gen = new stdClass();
             $gen->id = $id_otro_genero;
             $gen->genero = $otro;
@@ -247,6 +279,8 @@ function save_profile($form){
             //Guardar con género existente en opciones generales
             $obj_updatable->id_identidad_gen = $genero; 
         }
+
+        $obj_updatable->id_estado_civil = $estado_civil;
         $obj_updatable->id_cond_excepcion = $cond;
         $obj_updatable->id_pais = $pais;
         //____________________________________________

@@ -154,7 +154,58 @@ if ($student_code != 0) {
     
     //Código temporal, mientras se define carga de datos
     //---------------------------------------------------------------------------
+    //Personas con quien vive
+//     <tr>
+//     <td>John</td>
+//     <td>john@example.com</td>
+//   </tr>
+      //Código temporal vive_con
+      $personas = '';
+      if($ases_student->vive_con == null){
+        $record->vive_con = "NO DEFINIDO";
+    }else{
+        $record->vive_con = $ases_student->vive_con;
+        //Extraer json y decodificar
+        $objeto_json = json_decode($ases_student->vive_con);
+        //Recorrer el objeto json (array) y contruir los tr y td de la tabla
+        foreach($objeto_json as $objeto){
+           $personas  .= "<tr> <td>  <input  class= 'input_fields_general_tab' readonly type='text' value='$objeto->name' /></td>
+           <td><input  class= 'input_fields_general_tab' readonly type='text' value='$objeto->parentesco' /></td><td></td></tr>";
+        }
+
+    $record->personas_con_quien_vive = $personas;}
+
+    //TRAE ESTADOS CIVILES
+     $estados= get_estados_civiles();
+    $options_estado_civil = '';
+
+    $estado_student->id_estado_civil = $ases_student->id_estado_civil;
+     //Buscar la posición del estado civil soltero, colocar al inicio del select
+
+     $i = 0;
+    foreach($estados as $estado){
+        if($estado->estado_civil=='Soltero(a)'){
+            $options_estado_civil .= "<option value='$estado->id'>$estado->estado_civil</option>";   
+            $pose = $i;
+            break;
+        } 
+    $i++;
+    }
+    //Eliminar estado civil agregado al inicio del select del array
+    array_splice($estados,$pose,1);
     
+    
+    foreach($estados as $estado){
+        if($estado_student->id_estado_civil == $estado->id){
+            $options_estado_civil .= "<option value='$estado->id' selected='selected'>$estado->estado_civil</option>";
+        }else{
+            $options_estado_civil .= "<option value='$estado->id'>$estado->estado_civil</option>";
+        }
+    }
+
+    $record->options_estado_civil = $options_estado_civil;
+
+
     //TRAE PAISES
     $paises= get_paises();
     $options_pais = '';
@@ -191,7 +242,7 @@ if ($student_code != 0) {
 
     $genero_student->id_identidad_gen = $ases_student->id_identidad_gen;
   
-   $otro_genero ="";
+   $otro ="";
    $control = true;
     foreach($generos as $genero){
         if($genero_student->id_identidad_gen == $genero->id){
@@ -199,7 +250,7 @@ if ($student_code != 0) {
             $options_generos .= "<option value='$genero->id' selected='selected'>$genero->genero</option>";}
             else {
             //Seleccionar otro y mostrar en textfield cual 
-            $otro_genero = $genero->genero;   
+            $otro= $genero->genero;   
             $options_generos .= "<option selected='selected' value='0'>Otro</option>"; 
             $control = false;
             }
@@ -217,7 +268,52 @@ if ($student_code != 0) {
 
 
     $record->options_genero = $options_generos;
-    $record->otro = $otro_genero;
+    $record->otro = $otro;
+
+      //TRAE ACTIVIDADES SIMULTANEAS
+      $act_simultaneas= get_act_simultaneas();
+      $options_act_simultaneas = '';
+  
+      $act_simultanea_student->id_act_simultanea= $ases_student->id_act_simultanea;
+     //Buscar la posición de la actividad Ninguna
+     $i=0;
+     foreach($act_simultaneas as $act){
+         if($act->actividad=="Ninguna"){
+         $posa=$i;
+         $options_act_simultaneas .= "<option value='$act->id'>$act->actividad</option>" ;   
+         break; }
+         $i++;
+     }
+ 
+     //Eliminar actividad Ninguna puesta al inicio
+     array_splice($act_simultaneas,$posa,1);
+     $control = true;
+     $otro="";
+      foreach($act_simultaneas as $act){
+          if($act_simultanea_student->id_act_simultanea == $act->id){
+              if($act->opcion_general == 1){
+              $options_act_simultaneas .= "<option value='$act->id' selected='selected'>$act->actividad</option>";}
+              else {
+              //Seleccionar otro y mostrar en textfield cual 
+              $otro = $act->actividad;   
+              $options_act_simultaneas .= "<option selected='selected' value='0'>Otro</option>"; 
+              $control = false;
+              }
+          }else{
+              if($act->opcion_general == 1){
+              $options_act_simultaneas .= "<option value='$act->id'>$act->actividad</option>";}
+  
+          }
+      }
+  
+      
+             if($control){$options_act_simultaneas .= "<option value='0'>Otro</option>"; } 
+          
+      
+  
+  
+      $record->options_act_simultanea = $options_act_simultaneas;
+      $record->otro_act = $otro;
 
     //Código temporal vive_con
       if($ases_student->vive_con == null){
