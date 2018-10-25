@@ -36,19 +36,21 @@ $xQuery->form = "seguimiento_pares"; // Can be alias(String) or idntifier(Number
                         ];*/
 $xQuery->filterFields = [
                          ["fecha", [
-                             ["2018-08-01",">"]
+                             ["2018-01-01",">"]
                             ], false], 
                          ["id_estudiante",[
-                             ["2820","="]
+                             ["428","="]
                             ], false]
                         ];
 $xQuery->orderFields = [
                         ["id_instancia","ASC"], 
                         ["id_creado_por", "DESC"]  
                        ];
+
 $xQuery->orderByDatabaseRecordDate = false; // If true, orderField is ignored
 
-$xQuery->recordStatus = [ "!deleted", "!deleted" ];// options "deleted" or "!deleted", can be both.
+$xQuery->recordStatus = [ "!deleted", "deleted" ];// options "deleted" or "!deleted", can be both. Empty = both.
+//No soportado aun
 $xQuery->selectedFields = [ "id_creado_por", "id_estudiante" ]; // RecordId and BatabaseRecordDate are selected by default.
 
 echo json_encode( dphpformsV2_find_records( $xQuery ) );
@@ -202,25 +204,33 @@ echo json_encode( dphpformsV2_find_records( $xQuery ) );
      //Find with where clause
      if( count( $query->filterFields ) > 0 ){
 
-        /*// Criteria base: R.id_pregunta = XX AND R.respuesta = 'ABC'
-        $criteria = "";
-        foreach( $query->filterFields[0][1] as $filterValue ){
-            $criteria .= "(R.id_pregunta = " .$list_fields_alias_id[$query->filterFields[0][0]]. " AND R.respuesta ".$filterValue[1]." '". $filterValue[0] . "')";
-
-            if( next( $query->filterFields[0][1] ) ) {
-                // http://127.0.0.1/moodle34/blocks/ases/managers/dphpforms/v2/dphpforms_lib.php
-                $criteria .= " AND "; // Manejar AND o OR
+        $flag_deleted = false;
+        $flag_non_deleted = false;
+        foreach( $query->recordStatus as $status ){
+            if( $status === "deleted" ){
+                $flag_deleted = true;
+            }elseif( $status === "!deleted" ){
+                $flag_non_deleted = true;
             }
-         }*/
+        }
 
-        //Find by the firt param the records id.
-        $sql_first_parameter = "SELECT DISTINCT FS.id_formulario_respuestas
-                                FROM {talentospilos_df_respuestas} AS R
-                                INNER JOIN {talentospilos_df_form_solu} AS FS ON FS.id_respuesta = R.id";
+        $status = "";
+        if( !$flag_deleted && $flag_non_deleted ){
+            $status = "1";
+        }elseif( $flag_deleted && !$flag_non_deleted ){
+            $status = "0";
+        }
         
+        $sql_first_parameter = "SELECT DISTINCT id AS id_formulario_respuestas
+                                FROM {talentospilos_df_form_resp}";
+        
+        if( $status !== "" ){
+            $sql_first_parameter .= " WHERE estado = $status";
+        }
+
         $inner_join_more_responses = "SELECT id_respuesta, FS1.id_formulario_respuestas
                                       FROM {talentospilos_df_form_solu} AS FS1 
-                                      INNER JOIN ($sql_first_parameter) AS PQ ON FS1.id_formulario_respuestas = PQ.id_formulario_respuestas 
+                                      INNER JOIN ( $sql_first_parameter ) AS PQ ON FS1.id_formulario_respuestas = PQ.id_formulario_respuestas 
                                       ORDER BY FS1.id_formulario_respuestas";
         
         $inner_join_values = "SELECT R3.id, IJMR.id_formulario_respuestas, R3.respuesta, R3.id_pregunta, R3.fecha_hora_registro
@@ -284,10 +294,9 @@ echo json_encode( dphpformsV2_find_records( $xQuery ) );
      $records_ids = array_values(array_unique( $records_ids ));
 
      echo( $sql_query . "\n" );
-     //print_r( $grouped_records );
-     //print_r( $list_fields_id_alias );
 
      $valid_records = [];
+
      //Si el registro agrupado tiene los campos para filtrar
      foreach($records_ids as $record_id){
          
@@ -304,12 +313,37 @@ echo json_encode( dphpformsV2_find_records( $xQuery ) );
             }
          };
          if($record_completed){
+             //array_push($valid_records,$record_id);
              array_push($valid_records,$grouped_records[$record_id]);
          }
      }
 
-     //print_r("\nVALIDOS\n");
      print_r( $valid_records );
+
+     /*$sql = "";
+     $filter = "";
+     $ids = "";
+
+     foreach( $query->selectedFields as $selectedField ){
+        $filter .= "R.id_pregunta = " . $list_fields_alias_id[ $selectedField ];
+        if( next( $query->selectedFields ) ){
+            $filter .= " OR ";
+        }
+     }
+
+     foreach( $valid_records as $record_id ){
+        $ids .= "FS.id_formulario_respuestas = $record_id";
+        if( next($valid_records) ){
+            $ids .= " OR ";
+        }
+     }
+
+     $sql .= "SELECT *
+        FROM {talentospilos_df_respuestas} AS R
+        INNER JOIN {talentospilos_df_form_solu} AS FS ON FS.id_respuesta = R.id
+        WHERE ( $ids ) AND ( $filter )";
+
+    $DB->get_records_sql( $sql );*/
 
  }
 
