@@ -25,36 +25,26 @@
 require_once(dirname(__FILE__). '/../../../../../config.php');
 header('Content-Type: application/json');
 
-$xQuery = new stdClass();
+/*$xQuery = new stdClass();
 $xQuery->form = "seguimiento_pares"; // Can be alias(String) or idntifier(Number)
-/*$xQuery->filterFields = [
-                         ["id_estudiante", [["428","="]], false],
-                         ["lugar", [["Plazoleta de ingenieria","!="],["Biblioteca","!="],["Edificio 320","!="]], false],
-                         ["fecha", [["2018-07-01",">"]], true], 
-                         ["id_instancia", [["value","="]], true], 
-                         ["id_monitor",[["value","="]], true]
-                        ];*/
 $xQuery->filterFields = [
-                         ["fecha", [
-                             ["2018-01-01",">"]
-                            ], false], 
                          ["id_estudiante",[
                              ["428","LIKE"]
                             ], false],
-                         ["lugar", [["Biblioteca","!="]], true]
+                        ["fecha",[
+                             ["%%","LIKE"]
+                            ], false]
                         ];
 $xQuery->orderFields = [
-                        ["fecha","ASC"], 
-                        ["id_estudiante", "DESC"]  
+                        ["fecha","DESC"]
                        ];
 
 $xQuery->orderByDatabaseRecordDate = false; // If true, orderField is ignored. DESC
-
-$xQuery->recordStatus = [ "!deleted", "deleted" ];// options "deleted" or "!deleted", can be both. Empty = both.
+$xQuery->recordStatus = [ "!deleted" ];// options "deleted" or "!deleted", can be both. Empty = both.
 //No soportado aun
 $xQuery->selectedFields = [ "id_creado_por", "id_estudiante" ]; // RecordId and BatabaseRecordDate are selected by default.
 
-echo json_encode( dphpformsV2_find_records( $xQuery ) );
+echo json_encode( dphpformsV2_find_records( $xQuery ) );*/
 
 /**
  * 
@@ -238,9 +228,9 @@ echo json_encode( dphpformsV2_find_records( $xQuery ) );
                               FROM {talentospilos_df_respuestas} AS R3 
                               INNER JOIN ( $inner_join_more_responses ) AS IJMR ON id_respuesta = R3.id";
 
-        $where_clause = "WHERE ";
-        if( count( $query->filterFields ) > 1 ){
-            
+        $where_clause = "";
+        if( count( $query->filterFields ) > 0 ){
+            $where_clause = "WHERE ";
             $first_filter_field = true;
             
             foreach( $query->filterFields as $filterField ){
@@ -287,14 +277,14 @@ echo json_encode( dphpformsV2_find_records( $xQuery ) );
      $grouped_records = [];
      foreach( $records as $record ){
         array_push( $records_ids, $record->id_formulario_respuestas );
-        $grouped_records[ $record->id_formulario_respuestas ][ "registered_timestamp" ] = strtotime($record->fecha_hora_registro);
-        $grouped_records[ $record->id_formulario_respuestas ][ "record_id" ] = $record->id_formulario_respuestas;
+        $grouped_records[ $record->id_formulario_respuestas ][ "fecha_hora_registro" ] = strtotime($record->fecha_hora_registro);
+        $grouped_records[ $record->id_formulario_respuestas ][ "id_registro" ] = $record->id_formulario_respuestas;
         $grouped_records[ $record->id_formulario_respuestas ][ $record->id_pregunta ] = $record->respuesta;
      };
 
      $records_ids = array_values(array_unique( $records_ids ));
 
-     echo( $sql_query . "\n" );
+     //echo( $sql_query . "\n" );
 
      $valid_records = [];
 
@@ -343,7 +333,7 @@ echo json_encode( dphpformsV2_find_records( $xQuery ) );
         array_multisort($key_to_sort, SORT_DESC, $valid_records);
      }
 
-     print_r( $valid_records );
+     //print_r( $valid_records );
 
      /*$sql = "";
      $filter = "";
@@ -369,6 +359,8 @@ echo json_encode( dphpformsV2_find_records( $xQuery ) );
         WHERE ( $ids ) AND ( $filter )";
 
     $DB->get_records_sql( $sql );*/
+
+    return array( "results" => $valid_records);
 
  }
 
