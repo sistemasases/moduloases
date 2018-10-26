@@ -283,7 +283,7 @@ function filter_trackings_by_review($peer_tracking_v2)
     $not_rev_pro = 0;
     $rev_prac = 0;
     $not_rev_prac = 0;
-    
+
     foreach( $peer_tracking_v2 as $track ){
         if( $track["revisado_profesional"] == 0 ){
             $rev_pro++;
