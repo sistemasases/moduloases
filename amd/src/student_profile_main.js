@@ -638,7 +638,7 @@ return {
          */    var nuevaFila;
                 nuevaFila+=" <tr><td> <input   name = 'name_person'class= 'input_fields_general_tab'  type='text' value='' /></td>";
                 nuevaFila+="<td> <input   name = 'parentesco_person'class= 'input_fields_general_tab'  type='text' value='' /></td>";
-                nuevaFila+="<td> </td>  <span class='col-sm-12 tooltip-v1' name='span-icon-delete_person' data-toggle='tooltip' data-placement='top' title='Eliminar persona'></tr>";
+                nuevaFila+="<td> </td> <button class='bt_delete_person' title='Eliminar persona' name  = 'btn_delete_person'>X</button></tr>";
 
                
             $("#table_vive_con").append(nuevaFila);

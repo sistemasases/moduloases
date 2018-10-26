@@ -84,6 +84,11 @@ padding: 0px 0px 0px 0px !important;
     margin-left:  7px;
     margin-bottom: 0px;
 }
+.bt_delete_person{
+    background-color: red;
+    font-weight: bold;
+
+}
 
 #div_input_cc{
     padding-left: 0px;

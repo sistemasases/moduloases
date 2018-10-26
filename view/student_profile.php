@@ -173,9 +173,7 @@ if ($student_code != 0) {
         foreach($objeto_json as $objeto){
            $personas  .= "<tr> <td>  <input   name = 'name_person'class= 'input_fields_general_tab' readonly type='text' value='$objeto->name' /></td>
            <td><input name = 'parentesco_person'  class= 'input_fields_general_tab' readonly type='text' value='$objeto->parentesco' /></td> <td>
-           <span class='col-sm-12 tooltip-v1' name='span-icon-delete_person' 
-           data-toggle='tooltip' data-placement='top' title='Eliminar persona'>
-           </span></td></tr>";
+           <button class='bt_delete_person' title='Eliminar persona' name  = 'btn_delete_person' hidden>X</button></td></tr>";
         }
 
    }
