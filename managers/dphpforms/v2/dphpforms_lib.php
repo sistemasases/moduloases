@@ -23,18 +23,24 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 require_once(dirname(__FILE__). '/../../../../../config.php');
-header('Content-Type: application/json');
+/*header('Content-Type: application/json');
 
-/*$xQuery = new stdClass();
+$xQuery = new stdClass();
 $xQuery->form = "seguimiento_pares"; // Can be alias(String) or idntifier(Number)
 $xQuery->filterFields = [
                          ["id_estudiante",[
-                             ["428","LIKE"]
+                             ["%%","LIKE"]
                             ], false],
                         ["fecha",[
                              ["%%","LIKE"]
-                            ], false]
-                        ];
+                            ], false],
+                        ["revisado_practicante",[
+                            ["%%","LIKE"]
+                           ], false],
+                       ["revisado_profesional",[
+                        ["%%","LIKE"]
+                       ], false]
+                   ];
 $xQuery->orderFields = [
                         ["fecha","DESC"]
                        ];
@@ -279,7 +285,7 @@ echo json_encode( dphpformsV2_find_records( $xQuery ) );*/
         array_push( $records_ids, $record->id_formulario_respuestas );
         $grouped_records[ $record->id_formulario_respuestas ][ "fecha_hora_registro" ] = strtotime($record->fecha_hora_registro);
         $grouped_records[ $record->id_formulario_respuestas ][ "id_registro" ] = $record->id_formulario_respuestas;
-        $grouped_records[ $record->id_formulario_respuestas ][ $record->id_pregunta ] = $record->respuesta;
+        $grouped_records[ $record->id_formulario_respuestas ][ $list_fields_id_alias[ $record->id_pregunta ] ] = $record->respuesta;
      };
 
      $records_ids = array_values(array_unique( $records_ids ));
@@ -298,7 +304,7 @@ echo json_encode( dphpformsV2_find_records( $xQuery ) );*/
             $value_to_comparate = $filterField[1];
             $optional = $filterField[2];
             $operator = $filterField[3];
-            $exist_in_grouped_record = array_key_exists( $id_field, $grouped_records[$record_id] );
+            $exist_in_grouped_record = array_key_exists( $field_alias, $grouped_records[$record_id] );
             if( !$exist_in_grouped_record && !$optional ){
                 $record_completed = false;
             }
@@ -317,7 +323,7 @@ echo json_encode( dphpformsV2_find_records( $xQuery ) );*/
             $key_to_sort = array(); 
 
             foreach ($valid_records as $key => $record){
-                $key_to_sort[$key] = $record[ $list_fields_alias_id[ $alias ] ];
+                $key_to_sort[$key] = $record[ $alias ];
             }
             if( strtoupper( $order ) === "ASC" ){
                 array_multisort($key_to_sort, SORT_ASC, $valid_records);
@@ -360,13 +366,9 @@ echo json_encode( dphpformsV2_find_records( $xQuery ) );*/
 
     $DB->get_records_sql( $sql );*/
 
-    return array( "results" => $valid_records);
+    return $valid_records;
 
  }
-
-function dphpformsV2_apply_operators( $expected_value, $operator, $input_value ){
-    
-}
 
  /**
  * Function that return the basic dynamic form information.
