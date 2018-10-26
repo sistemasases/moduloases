@@ -164,8 +164,8 @@ function render_practicant_new_form($monitors_of_pract, $instance, $period = nul
         $panel.= "<span class='glyphicon glyphicon-user subpanel' style='font-size: 20px;'></span> : " . count(get_students_of_monitor($monitor_id, $instance));
         $panel.= "</div>";
         $panel.= "<div class='col-sm-1'>";
-        $panel.= "<button type='button' class='see_history btn red_button'>
-                <span class='glyphicon glyphicon-time'></span> Ver horas</button>";
+        $panel.= "<!--<button type='button' class='see_history btn red_button'>
+                 <span class='glyphicon glyphicon-time'></span> Ver horas</button>-->";
         $panel.= "</div>";
         $panel.= "<div class='col-sm-4' id=counting_" . $monitor->username . ">";
         $panel.= '<div class="loader"></div>';
