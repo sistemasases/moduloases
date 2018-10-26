@@ -23,18 +23,24 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 require_once(dirname(__FILE__). '/../../../../../config.php');
-//header('Content-Type: application/json');
+/*header('Content-Type: application/json');
 
-/*$xQuery = new stdClass();
+$xQuery = new stdClass();
 $xQuery->form = "seguimiento_pares"; // Can be alias(String) or idntifier(Number)
 $xQuery->filterFields = [
                          ["id_estudiante",[
-                             ["428","LIKE"]
+                             ["%%","LIKE"]
                             ], false],
                         ["fecha",[
                              ["%%","LIKE"]
-                            ], false]
-                        ];
+                            ], false],
+                        ["revisado_practicante",[
+                            ["%%","LIKE"]
+                           ], false],
+                       ["revisado_profesional",[
+                        ["%%","LIKE"]
+                       ], false]
+                   ];
 $xQuery->orderFields = [
                         ["fecha","DESC"]
                        ];
