@@ -161,20 +161,25 @@ if ($student_code != 0) {
 //   </tr>
       //Código temporal vive_con
       $personas = '';
-      if($ases_student->vive_con == null){
+      if($ases_student->vive_con == null || $ases_student->vive_con == 'NO DEFINIDO'){
         $record->vive_con = "NO DEFINIDO";
+        // $personas  .= "<tr> <td>  <input  class= 'input_fields_general_tab' readonly type='text' value='NO DEFINIDO' /></td>
+        // <td><input  class= 'input_fields_general_tab' readonly type='text' value='NO DEFINIDO' /></td><td></td></tr>";
     }else{
         $record->vive_con = $ases_student->vive_con;
         //Extraer json y decodificar
         $objeto_json = json_decode($ases_student->vive_con);
         //Recorrer el objeto json (array) y contruir los tr y td de la tabla
         foreach($objeto_json as $objeto){
-           $personas  .= "<tr> <td>  <input  class= 'input_fields_general_tab' readonly type='text' value='$objeto->name' /></td>
-           <td><input  class= 'input_fields_general_tab' readonly type='text' value='$objeto->parentesco' /></td><td></td></tr>";
+           $personas  .= "<tr> <td>  <input   name = 'name_person'class= 'input_fields_general_tab' readonly type='text' value='$objeto->name' /></td>
+           <td><input name = 'parentesco_person'  class= 'input_fields_general_tab' readonly type='text' value='$objeto->parentesco' /></td> <td>
+           <span class='col-sm-12 tooltip-v1' name='span-icon-delete_person' 
+           data-toggle='tooltip' data-placement='top' title='Eliminar persona'>
+           </span></td></tr>";
         }
 
-    $record->personas_con_quien_vive = $personas;}
-
+   }
+   $record->personas_con_quien_vive = $personas;
     //TRAE ESTADOS CIVILES
      $estados= get_estados_civiles();
     $options_estado_civil = '';

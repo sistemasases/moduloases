@@ -608,7 +608,7 @@ return {
     var form_wihtout_changes = $('#ficha_estudiante').serializeArray();
     var update_or_insert1 = document.getElementById("otro_genero").value ;
     var update_or_insert2 = document.getElementById("otro_act_simultanea").value;
-  
+    var json_personas_incial = document.getElementById("vive_con").value;
     $('#span-icon-edit').on('click', function(){
         $(this).hide();
         $('#tip-edit').hide();
@@ -630,10 +630,19 @@ return {
         $('.select_statuses_program').prop('disabled', false);
         $('.input_fields_general_tab').prop('readonly', false);  
         $('.input-tracking').prop('disabled', false);
-        //Recorrer table y habilitar inputs
-        $(".table_vive_con td").find(':input').each(function(){
-            alert($(this).val());
-            });
+        $('#div_add_persona_vive').show();
+        $('#edit_person_vive').show();
+        $('#input_button_add_person').on('click', function(){
+        /**
+         * Funcion para añadir una nueva columna en la tabla
+         */    var nuevaFila;
+                nuevaFila+=" <tr><td> <input   name = 'name_person'class= 'input_fields_general_tab'  type='text' value='' /></td>";
+                nuevaFila+="<td> <input   name = 'parentesco_person'class= 'input_fields_general_tab'  type='text' value='' /></td>";
+                nuevaFila+="<td> </td>  <span class='col-sm-12 tooltip-v1' name='span-icon-delete_person' data-toggle='tooltip' data-placement='top' title='Eliminar persona'></tr>";
+
+               
+            $("#table_vive_con").append(nuevaFila);
+        });
         $('#genero').on('click', function(){
             if((document.getElementById("genero").value) == 0){
                 $("#div_otro_genero").show();
@@ -682,14 +691,36 @@ return {
     $('#span-icon-save-profile').on('click', function(){
         
         var form_with_changes = $('#ficha_estudiante').serializeArray();
+         
 
         var result_validation = object_function.validate_form(form_with_changes);
+
         if(result_validation.status == "error"){
             swal(result_validation.title,
                  result_validation.msg,
                  result_validation.status);
         }else{
-            object_function.save_form_edit_profile(form_with_changes, object_function, update_or_insert1, update_or_insert2);
+              //Recorrer table 
+           var data_persons = [];
+           var objeto;
+           var name_persons = [];
+           var parentesco_persons = [];
+           $(".table_vive_con td").find(':input').each(function(){
+               
+            if($(this).attr('name') == "name_person"){
+           name_persons.push($(this).val());
+            }
+            if($(this).attr('name') == "parentesco_person"){
+           parentesco_persons.push($(this).val());  
+            }
+   
+               });
+            for (var i = 0; i < name_persons.length; i ++){
+                objeto = {name: name_persons[i], parentesco: parentesco_persons[i]};
+                data_persons.push(objeto);
+            }
+            data_persons = JSON.stringify(data_persons);
+            object_function.save_form_edit_profile(form_with_changes, object_function, update_or_insert1, update_or_insert2, data_persons);
             $('#otro_genero').prop('disabled', true);
             $('#otro_act_simultanea').prop('disabled', true);
         }
@@ -705,6 +736,21 @@ return {
         msg.status = "success";
 
         switch(form[field].name){
+            case "name_person":
+           if(form[field].value == "") {
+            msg.title = "Error";
+            msg.status = "error";
+            msg.msg = "El campo "+form[field].name+" es obligatorio";
+            return msg;  
+             }
+         if(has_numbers(form[field].value)){
+         msg.title = "Error";
+                msg.status = "error";
+                msg.msg = "El campo "+form[field].name+" no debe contener números";
+                return msg;
+            }   
+           
+            break;
             case "otro_genero":
 
         if((document.getElementById("otro_genero").value) == "" && $('#otro_genero').attr("required")){
@@ -759,14 +805,15 @@ return {
     };
 
     return msg;
- },save_form_edit_profile: function(form, object_function, control1, control2){
+ },save_form_edit_profile: function(form, object_function, control1, control2, json){
     $.ajax({
         type: "POST",
         data: {
             func: 'save_profile',
             form: form,
             option1: control1,
-            option2: control2
+            option2: control2,
+            vive_con: json
         },
         url: "../managers/student_profile/studentprofile_serverproc.php",
         success: function(msg) {

@@ -235,6 +235,8 @@ function save_profile($form){
         $observations = $DB->get_record_sql($sql_query)->observacion;
 
         //Agregar campos nuevos
+
+        
         if($act_sim == 0){
             
             if($_POST['option2']==""){
@@ -280,6 +282,7 @@ function save_profile($form){
             $obj_updatable->id_identidad_gen = $genero; 
         }
 
+        $obj_updatable->vive_con = $_POST['vive_con'];
         $obj_updatable->id_estado_civil = $estado_civil;
         $obj_updatable->id_cond_excepcion = $cond;
         $obj_updatable->id_pais = $pais;
