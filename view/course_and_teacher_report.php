@@ -77,6 +77,7 @@ $PAGE->requires->css('/blocks/ases/style/sweetalert2.css', true);
 $PAGE->requires->css('/blocks/ases/style/round-about_pilos.css', true);
 $PAGE->requires->css('/blocks/ases/style/academic_reports_style.css', true);
 $PAGE->requires->css('/blocks/ases/style/side_menu_style.css', true);
+$PAGE->requires->css('/blocks/ases/style/course_and_teacher_report.css', true);
 
 
 
@@ -90,12 +91,11 @@ $data->menu = $menu_option;
 
 echo $output->header();
 
-$cursos = get_datatable_array_for_course_teacher_report();
+$cursos = get_datatable_array_for_course_teacher_report($blockid);
 
 $paramReport->table = $cursos;
 
 $PAGE->requires->js_call_amd('block_ases/course_and_teacher_report', 'load_report', $paramReport);
-
 $output = $PAGE->get_renderer('block_ases');
 
 $course_and_teacher_report = new \block_ases\output\course_and_teacher_report_page($data);

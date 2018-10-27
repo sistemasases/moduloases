@@ -8,21 +8,26 @@
 
 define(['jquery', 'block_ases/bootstrap', 'block_ases/jquery.dataTables', 'block_ases/sweetalert2'], function($){
 
-    return{
-        init: function(){
-            $(document).ready(function(){
+    return {
+        init: function () {
+            $(document).ready(function () {
 
             });
         },
 
         load_report: function (data) {
-            console.log(data);
             $("#div_table_report").html('');
             $("#div_table_report").fadeIn(1000).append('<table id="tableFinalgradesReport" class="table"' +
                 ' cellspacing="0" width="100%"><thead> </thead></table>');
-
             $("#tableFinalgradesReport").DataTable(data);
-        }
+
+            // Añadir
+            $("th").each(function(index) {
+                data.columns[index].description? $(this).attr('title', data.columns[index].description): null;
+
+            });
+        },
+
     };
 
 });

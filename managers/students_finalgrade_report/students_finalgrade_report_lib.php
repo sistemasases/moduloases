@@ -370,9 +370,9 @@ function _select_estudiantes_ases_estado() {
 /**
  * Class ItemReporteCursoProfesores
  *
- * @property  int $curso_id Id del curso moodle
- * @property string $fullname Nombre completo de el curso moodle
- * @property  string $shortname Nombre corto
+ * @property string $curso Codigo del curso seguid de el Nombre completo de el curso moodle
+ *  ejemplo: PSICOLOGÍA EDUCATIVA I  402200M
+ * @property 'SI'|'NO' $critial String indicando si la materia es critica o no
  * @property string $nombre_profesor Nombre completo de el profesor (nombres y apellidos)
  * @property int $estudiantes_sin_ninguna_nota  Estudiantes que no han recibido ninguna nota en el curso, ninguna nota
  *  en una actividad en la cual almenos un estudiante halla recibido nota
@@ -388,11 +388,14 @@ function _select_estudiantes_ases_estado() {
 class ItemReporteCursoProfesores {};
 
 /**
- * @return array Array de elementos de tipo ItemReporteCursoProfesores
+ * Return all courses with teacher and aditional info about students course status based in moodle grade items
+ * @see https://docs.moodle.org/all/es/%C3%8Dtems_de_calificaci%C3%B3n
+ * @see Tables: mdl_grade_items, mdl_user, mdl_course, mdl_grade_grades
+ * @return array Array of ItemReporteCursoProfesores
  * @throws dml_exception
  */
 
-function get_reporte_curso_profesores() {
+function get_reporte_curso_profesores($id_instancia) {
     global $DB;
     $semestre_object = get_current_semester();
     $sem = $semestre_object->nombre;
@@ -405,39 +408,58 @@ function get_reporte_curso_profesores() {
     }
 
     $sql = <<<SQL
- SELECT DISTINCT ON ( mdl_user.id ) 
-                 moodle_course.curso_id,
-                moodle_course.fullname,
-                moodle_course.shortname,
+ SELECT DISTINCT ON ( moodle_course.curso_id ) 
+                concat_ws(' ',  moodle_course.fullname, substring(moodle_course.shortname from 4 for 7)) as curso,
                 Concat_ws(' ', mdl_user.firstname, mdl_user.lastname) AS nombre_profesor,
+                case
+      when (select id from {course} mdl_course
+            where mdl_course.id = moodle_course.curso_id
+            and substring(mdl_course.shortname from 4 for 7)
+            in (
+            select mdl_talentospilos_materias_criti.codigo_materia
+            from mdl_talentospilos_materias_criti
+
+            ) limit 1) is null
+      then 'NO'
+      else
+          'SI'
+      END AS  critica,
                 (
-                       SELECT Count(*) filter (WHERE notas_mas_bajas_estudiantes.first_note IS NULL) AS cantidad_estudiantes_sin_notas
-                       FROM   (
-                                         SELECT     firstname,
-                                                    (
-                                                                    SELECT DISTINCT  ON( mdl_grade_grades.finalgrade) finalgrade
-                                                                    FROM            {grade_grades} mdl_grade_grades
-                                                                    INNER JOIN      {user} mdl_user
-                                                                    ON              mdl_user.id = mdl_grade_grades.userid
-                                                                    INNER JOIN      {grade_items} mdl_grade_items
-                                                                    ON              mdl_grade_items.id = mdl_grade_grades.itemid
-                                                                    INNER JOIN      {course} mdl_course
-                                                                    ON              mdl_course.id = mdl_grade_items.courseid
-                                                                    WHERE           mdl_user.id = _mdl_user.id
-                                                                    AND             mdl_course.id = _mdl_course.id
-                                                                    ORDER BY        mdl_grade_grades.finalgrade ASC limit 1) AS first_note --if at least one grade is not null the first is this, otherwise the first note is null
-                                         FROM       {user} _mdl_user
-                                         INNER JOIN {talentospilos_user_extended} mdl_talentospilos_user_extended
-                                         ON         _mdl_user.id = mdl_talentospilos_user_extended.id_moodle_user
-                                         AND        mdl_talentospilos_user_extended.tracking_status = 1
-                                         INNER JOIN {role_assignments} mdl_role_assignments
-                                         ON         _mdl_user.id = mdl_role_assignments.userid
-                                         INNER JOIN {context} mdl_context
-                                         ON         mdl_context.id = mdl_role_assignments.contextid
-                                         INNER JOIN {course} AS _mdl_course
-                                         ON         _mdl_course.id = mdl_context.instanceid
-                                         WHERE      _mdl_course.id = moodle_course.curso_id
-                                         AND        mdl_role_assignments.roleid = 5) AS notas_mas_bajas_estudiantes ) AS estudiantes_sin_ninguna_nota,
+                    select count(*) filter (where first_note is null)  from (
+SELECT distinct  on (id) *
+  FROM   (
+         SELECT     firstname, _mdl_user.id,
+                    (
+                    SELECT DISTINCT  ON( mdl_grade_grades.finalgrade) finalgrade
+                    FROM            mdl_grade_grades
+             INNER JOIN       mdl_user
+             ON              mdl_user.id = mdl_grade_grades.userid
+             INNER JOIN      mdl_grade_items
+             ON              mdl_grade_items.id = mdl_grade_grades.itemid
+             INNER JOIN       mdl_course
+             ON              mdl_course.id = mdl_grade_items.courseid
+             WHERE           mdl_user.id = _mdl_user.id
+             AND             mdl_course.id = _mdl_course.id
+             ORDER BY        mdl_grade_grades.finalgrade ASC limit 1) AS first_note --if at least one grade is not null the first is this, otherwise the first note is null
+      FROM       mdl_user as _mdl_user
+      INNER JOIN  mdl_talentospilos_user_extended
+      ON         _mdl_user.id = mdl_talentospilos_user_extended.id_moodle_user
+      AND        mdl_talentospilos_user_extended.tracking_status = 1
+
+      INNER JOIN mdl_role_assignments
+      ON         _mdl_user.id = mdl_role_assignments.userid
+      INNER JOIN  mdl_talentospilos_est_estadoases
+      ON mdl_talentospilos_est_estadoases.id_estudiante = mdl_talentospilos_user_extended.id_ases_user
+      inner join mdl_talentospilos_estados_ases
+      on mdl_talentospilos_est_estadoases.id_estado_ases = mdl_talentospilos_estados_ases.id
+      INNER JOIN  mdl_context
+      ON         mdl_context.id = mdl_role_assignments.contextid
+      INNER JOIN mdl_course as _mdl_course
+      ON         _mdl_course.id = mdl_context.instanceid
+      WHERE      _mdl_course.id = moodle_course.curso_id
+      AND mdl_talentospilos_estados_ases.nombre = 'seguimiento'
+      AND        mdl_role_assignments.roleid = 5)as notas_mas_bajas_estudiantes
+     where  notas_mas_bajas_estudiantes.first_note IS NULL) as estudiantes_sin_ninguna_nota ) AS estudiantes_sin_ninguna_nota,
                 -- Cantidad de estudiantes con mas de el 50% de las notas calificadas perdidas o no entregadas
                 (
                        SELECT count(*)
@@ -473,14 +495,19 @@ function get_reporte_curso_profesores() {
                                          ON         _mdl_user.id = mdl_grade_grades.userid
                                          INNER JOIN {talentospilos_user_extended} mdl_talentospilos_user_extended
                                          ON         _mdl_user.id = mdl_talentospilos_user_extended.id_moodle_user
+                                                     inner join mdl_talentospilos_est_estadoases
+            on mdl_talentospilos_est_estadoases.id_estudiante = mdl_talentospilos_user_extended.id_ases_user
+            inner join mdl_talentospilos_estados_ases
+            on mdl_talentospilos_est_estadoases.id_estado_ases = mdl_talentospilos_estados_ases.id
                                          WHERE      mdl_grade_items.courseid = moodle_course.curso_id
                                          AND        mdl_grade_items.itemtype != 'category'
                                          AND        mdl_talentospilos_user_extended.tracking_status = 1
                                          AND        mdl_grade_items.itemtype != 'course'
+                                         and mdl_talentospilos_estados_ases.nombre = 'seguimiento'
                                          AND        mdl_grade_grades.finalgrade IS NOT NULL
                                          GROUP BY   _mdl_user.id) AS usuarios_y_notas_perdidas
                        WHERE  (
-                                     usuarios_y_notas_perdidas.cantidad_notas_perdidas + usuarios_y_notas_perdidas.cantidad_notas_calificadas_y_no_entregadas) >=
+                                     usuarios_y_notas_perdidas.cantidad_notas_perdidas + usuarios_y_notas_perdidas.cantidad_notas_calificadas_y_no_entregadas) >= --usuarios perdiendo la mitad o mas de las notas
                               (
                                      --Piso de el 50% de items de un curso
                                      SELECT ceil(count(*) * 0.5)
@@ -491,53 +518,66 @@ function get_reporte_curso_profesores() {
                                                             ON              mdl_grade_items.id = mdl_grade_grades.itemid
                                                             WHERE           mdl_grade_items.courseid = moodle_course.curso_id
                                                             AND             mdl_grade_items.itemtype != 'category'
-                                                            AND             mdl_grade_items.itemtype != 'course'
+                                                            AND             mdl_grade_items.itemtype != 'course' 
                                                             AND             finalgrade IS NOT NULL) AS a )) AS estudiantes_perdiendo ,
                 (
-                       SELECT count(*)
-                       FROM   (
-                                         --Usuarios  con mas de el 50% de items ganados en una materia
-                                         SELECT     count(finalgrade) filter (WHERE finalgrade >= grademax *0.6) AS cantidad_notas_ganadas ,
-                                                    mdl_user.*
-                                         FROM       {grade_grades} mdl_grade_grades
-                                         INNER JOIN {grade_items} mdl_grade_items
-                                         ON         mdl_grade_items.id = mdl_grade_grades.itemid
-                                         INNER JOIN {user} mdl_user
-                                         ON         mdl_user.id = mdl_grade_grades.userid
-                                         INNER JOIN {talentospilos_user_extended} mdl_talentospilos_user_extended
-                                         ON         mdl_user.id = mdl_talentospilos_user_extended.id_moodle_user
-                                         WHERE      mdl_grade_items.courseid = moodle_course.curso_id
-                                         AND        mdl_grade_items.itemtype != 'category'
-                                         AND        mdl_grade_items.itemtype != 'course'
-                                         AND        mdl_grade_grades.finalgrade IS NOT NULL
-                                         GROUP BY   mdl_user.id) AS usuarios_y_notas_ganadas
-                       WHERE  usuarios_y_notas_ganadas.cantidad_notas_ganadas >=
-                              (
-                                     --Piso de el 50% de items de un curso
-                                     SELECT ceil(count(*) * 0.5)
-                                     FROM   (
-                                                            SELECT DISTINCT ON (mdl_grade_items.id) *
-                                                            FROM            {grade_items} mdl_grade_items
-                                                            INNER JOIN      {grade_grades} mdl_grade_grades
-                                                            ON              mdl_grade_items.id = mdl_grade_grades.itemid
-                                                            WHERE           mdl_grade_items.courseid = moodle_course.curso_id
-                                                            AND             mdl_grade_items.itemtype != 'category'
-                                                            AND             mdl_grade_items.itemtype != 'course'
-                                                            AND             finalgrade IS NOT NULL) AS a )) AS estudiantes_ganando,
+                     SELECT count(*)
+FROM   (
+       --Usuarios  con mas de el 50% de items perdidos en una materia
+       SELECT     count(finalgrade) filter (WHERE finalgrade < grademax * 0.6 ) AS cantidad_notas_perdidas ,
+                  _mdl_user.*
+       FROM        mdl_grade_grades
+           INNER JOIN  mdl_grade_items
+           ON         mdl_grade_items.id = mdl_grade_grades.itemid
+           INNER JOIN mdl_user AS _mdl_user
+           ON         _mdl_user.id = mdl_grade_grades.userid
+           INNER JOIN  mdl_talentospilos_user_extended
+           ON         _mdl_user.id = mdl_talentospilos_user_extended.id_moodle_user
+           inner join mdl_talentospilos_est_estadoases
+           on mdl_talentospilos_est_estadoases.id_estudiante = mdl_talentospilos_user_extended.id_ases_user
+           inner join mdl_talentospilos_estados_ases
+           on mdl_talentospilos_est_estadoases.id_estado_ases = mdl_talentospilos_estados_ases.id
+           WHERE      mdl_grade_items.courseid = 38740
+           AND        mdl_grade_items.itemtype != 'category'
+           AND        mdl_talentospilos_user_extended.tracking_status = 1
+           AND        mdl_grade_items.itemtype != 'course'
+           and mdl_talentospilos_estados_ases.nombre = 'seguimiento'
+           AND        mdl_grade_grades.finalgrade IS NOT NULL
+           GROUP BY   _mdl_user.id) AS usuarios_y_notas_perdidas
+WHERE  (
+           usuarios_y_notas_perdidas.cantidad_notas_perdidas ) < --usuarios perdiendo la mitad o mas de las notas
+       (
+       --Piso de el 50% de items de un curso
+       SELECT ceil(count(*) * 0.5)
+       FROM   (
+              SELECT DISTINCT ON (mdl_grade_items.id) *
+              FROM             mdl_grade_items
+                  INNER JOIN      mdl_grade_grades
+                  ON              mdl_grade_items.id = mdl_grade_grades.itemid
+                  WHERE           mdl_grade_items.courseid = 38740
+                  AND             mdl_grade_items.itemtype != 'category'
+                  AND             mdl_grade_items.itemtype != 'course'
+                  AND             finalgrade IS NOT NULL) AS a )) AS estudiantes_ganando,
                 (
-                           SELECT     count(*)
-                           FROM       mdl_user
-                           INNER JOIN mdl_role_assignments
-                           ON         mdl_user.id = mdl_role_assignments.userid
-                           INNER JOIN mdl_context
-                           ON         mdl_context.id = mdl_role_assignments.contextid
-                           INNER JOIN mdl_course
-                           ON         mdl_course.id = mdl_context.instanceid
-                           INNER JOIN mdl_talentospilos_user_extended
-                           ON         mdl_user.id = mdl_talentospilos_user_extended.id_moodle_user
-                           WHERE      mdl_role_assignments.roleid = 5
-                           AND        mdl_talentospilos_user_extended.tracking_status = 1
-                           AND        mdl_course.id = moodle_course.curso_id ) AS cantidad_estudiantes_ases,
+                select count(*) from (
+                          SELECT    distinct  on (mdl_user.id) mdl_user.id
+FROM       mdl_user
+             INNER JOIN mdl_role_assignments
+               ON         mdl_user.id = mdl_role_assignments.userid
+             INNER JOIN mdl_context
+               ON         mdl_context.id = mdl_role_assignments.contextid
+             INNER JOIN mdl_course
+               ON         mdl_course.id = mdl_context.instanceid
+             INNER JOIN mdl_talentospilos_user_extended
+               ON         mdl_user.id = mdl_talentospilos_user_extended.id_moodle_user
+            inner join mdl_talentospilos_est_estadoases
+            on mdl_talentospilos_est_estadoases.id_estudiante = mdl_talentospilos_user_extended.id_ases_user
+            inner join mdl_talentospilos_estados_ases
+            on mdl_talentospilos_est_estadoases.id_estado_ases = mdl_talentospilos_estados_ases.id
+WHERE      mdl_role_assignments.roleid = 5
+  AND        mdl_talentospilos_user_extended.tracking_status = 1
+  AND        mdl_course.id = moodle_course.curso_id
+and mdl_talentospilos_estados_ases.nombre = 'seguimiento' ) AS id_estudiantes_ases ) AS cantidad_estudiantes_ases,
                 (
                        SELECT count(*)
                        FROM   (
@@ -564,30 +604,32 @@ INNER JOIN      {context} AS mdl_context
 ON              mdl_context.id = mdl_role_assignments.contextid
 INNER JOIN
                 (
-                                SELECT DISTINCT mdl_course.id AS curso_id,
-                                                mdl_course.fullname,
-                                                mdl_course.shortname
-                                FROM            {course} mdl_course
-                                INNER JOIN      {enrol} mdl_enrol
-                                ON              mdl_course.id = mdl_enrol.courseid
-                                INNER JOIN      {user_enrolments} mdl_user_enrolments
-                                ON              mdl_user_enrolments.enrolid = mdl_enrol.id
-                                WHERE           substring(mdl_course.shortname FROM 15 FOR 6) = '$semestre'
-                                AND             mdl_user_enrolments.userid IN
-                                                (
-                                                           SELECT     mdl_user.id
-                                                           FROM       {user} mdl_user
-                                                           INNER JOIN {talentospilos_user_extended} mdl_talentospilos_user_extended
-                                                           ON         mdl_user.id = mdl_talentospilos_user_extended.id_moodle_user
-                                                           INNER JOIN {talentospilos_usuario} mdl_talentospilos_usuario
-                                                           ON         mdl_talentospilos_user_extended.id_ases_user = mdl_talentospilos_usuario.id
-                                                           INNER JOIN {talentospilos_est_estadoases} mdl_talentospilos_est_estadoases
-                                                           ON         mdl_talentospilos_usuario.id = mdl_talentospilos_est_estadoases.id_estudiante
-                                                           INNER JOIN {talentospilos_estados_ases} mdl_talentospilos_estados_ases
-                                                           ON         mdl_talentospilos_estados_ases.id = mdl_talentospilos_est_estadoases.id_estado_ases
-                                                           WHERE      mdl_talentospilos_estados_ases.nombre = 'seguimiento' ) ) AS moodle_course
-ON              moodle_course.curso_id = mdl_context.instanceid
-WHERE           mdl_role_assignments.roleid = 3
+          select distinct  on (mdl_course.id)
+                            mdl_course.id AS curso_id,
+                            mdl_course.fullname,
+                            mdl_course.shortname
+        from {user} mdl_user
+        inner join {talentospilos_user_extended} mdl_talentospilos_user_extended
+            on mdl_user.id = mdl_talentospilos_user_extended.id_moodle_user
+        inner join {cohort_members} mdl_cohort_members
+            on mdl_cohort_members.userid = mdl_user.id
+        inner join {talentospilos_inst_cohorte} mdl_talentospilos_inst_cohorte
+            on mdl_talentospilos_inst_cohorte.id_cohorte = mdl_cohort_members.cohortid
+        inner join {role_assignments} mdl_role_assignments
+            on mdl_role_assignments.userid = mdl_user.id
+        inner join {context} mdl_context
+            on mdl_role_assignments.contextid = mdl_context.id
+        inner join {course} mdl_course
+            on mdl_course.id = mdl_context.instanceid
+        inner join {talentospilos_est_estadoases} mdl_talentospilos_est_estadoases
+            on mdl_talentospilos_user_extended.id_ases_user = mdl_talentospilos_est_estadoases.id_estudiante
+        inner join {talentospilos_estados_ases} mdl_talentospilos_estados_ases
+            on mdl_talentospilos_est_estadoases.id_estado_ases = mdl_talentospilos_estados_ases.id
+        where mdl_talentospilos_estados_ases.nombre='seguimiento'
+        and mdl_talentospilos_inst_cohorte.id_instancia = $id_instancia
+        and substring(mdl_course.shortname from 15 for 6) = '$semestre' ) AS moodle_course
+        ON              moodle_course.curso_id = mdl_context.instanceid
+        WHERE           mdl_role_assignments.roleid = 3
 
 
 SQL;
@@ -706,27 +748,43 @@ function get_datatable_array_for_finalgrade_report($instance_id){
     return $data;
 }
 
+/**
+ * Return the column for datatables for detail data, in other words, the column with '+' symbol in
+ * the datatable
+ * @see https://datatables.net/examples/api/row_details.html
+ * @return array
+ */
+function get_datatable_class_column(): array {
+    return array(
+        "class"=> "details-control",
+        "orderable"=>      false,
+        "data"=>           null,
+        "defaultContent"=> "");
+}
 
 function get_datatable_array_for_course_teacher_report($instance_id) {
     $common_language_config = get_datatable_common_language_config();
-    $data = array_values(get_reporte_curso_profesores());
     $columns = array();
-    array_push($columns, array("title"=>"Nombre de el curso", "name"=>'fullname', "data"=>"fullname"));
-    array_push($columns, array("title"=>"Nombre corto de curso", "name"=>'shortname', "data"=>"shortname"));
-    array_push($columns, array("title"=>"Nombre de el profesor", "name"=>"nombre_profesor", "data"=>"nombre_profesor"));
-    array_push($columns, array("title"=>"Cantidad de items", "name"=>"cantidad_items", "data"=>"cantidad_items"));
-    array_push($columns, array("title"=>"Cantidad de estudiantes ASES", "name"=>"cantidad_estudiantes_ases", "data"=>"cantidad_estudiantes_ases"));
-    array_push($columns, array("title"=>"Cantidad de items creados", "name"=>'cantidad_items', "data"=>"cantidad_items"));
-    array_push($columns, array("title"=>"Cantidad de items con almenos una nota", "name"=>"items_con_almenos_una_nota", "data"=>"items_con_almenos_una_nota"));
-    array_push($columns, array("title"=>"Estudiantes sin ningun item calificado", "name"=>"estudiantes_sin_ninguna_nota", "data"=>"estudiantes_sin_ninguna_nota"));
-    array_push($columns, array("title"=>"Estudiantes perdiendo mas de la mitad de los items calificados", "name"=>"estudiantes_perdiendo", "data"=>"estudiantes_perdiendo"));
-    array_push($columns, array("title"=>"Estudiantes ganando mas de la mitad de los items calificados", "name"=>"estudiantes_ganando", "data"=>"estudiantes_ganando"));
+    /* Index of column  'Est < 50' (starting from 0)*/
+    $est_lt_50_colum_index = 2;
+
+    $data = array_values(get_reporte_curso_profesores($instance_id));
+    array_push($columns, array("title"=>"Curso", "name"=>'curso', "data"=>"curso"));
+    array_push($columns, array("title"=>"Profesor", "name"=>"nombre_profesor", "data"=>"nombre_profesor", "description"=>'Nombre del profesor'));
+    array_push($columns, array("title"=>"Est < 50%", "name"=>"estudiantes_perdiendo", "data"=>"estudiantes_perdiendo", 'description'=>'Estudiantes perdiendo más de la mitad de los items calificados', 'className'=>'est_lt_50'));
+    array_push($columns, array("title"=>"Est >=50%", "name"=>"estudiantes_ganando", "data"=>"estudiantes_ganando", "description"=>"Estudiantes ganando más de la mitad de los items calificados"));
+    array_push($columns, array("title"=>"Est. sin notas", "name"=>"estudiantes_sin_ninguna_nota", "data"=>"estudiantes_sin_ninguna_nota", "description"=>"Estudiantes sin ningún item calificado"));
+    array_push($columns, array("title"=>"Estudiantes", "name"=>"cantidad_estudiantes_ases", "data"=>"cantidad_estudiantes_ases", 'description'=>'Cantidad de estudiantes ASES'));
+    array_push($columns, array("title"=>"Items <br> calificados", "name"=>"items_con_almenos_una_nota", "data"=>"items_con_almenos_una_nota", 'description'=>'Cantidad de items en los cuales almenos un estudiante tiene una nota'));
+    array_push($columns, array("title"=>"Items", "name"=>"cantidad_items", "data"=>"cantidad_items", 'description'=>'Cantidad de items calificables de el curso'));
+    array_push($columns, array("title"=>"Critica", "name"=>"critica", "data"=>"critica", "description"=>'Indica si la materia ha sido marcada como critica por ASES'));
+
     $data = array(
         "bsort" => false,
         "columns" => $columns,
         "data" => $data,
         "language" => $common_language_config,
-        "order"=> array(0, "desc")
+        "order"=> array($est_lt_50_colum_index, "desc")
 
     );
     return $data;

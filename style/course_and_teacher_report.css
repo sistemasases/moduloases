@@ -1,0 +1,4 @@
+/* Estilo de la columna de los estudiantes que tienen menos de la mitad de items ganados en un curso*/
+.est_lt_50 {
+    font-weight: bold;
+}
