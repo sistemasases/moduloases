@@ -47,10 +47,10 @@ function render_monitor_new_form($students_by_monitor, $period = null)
         $ases_student_code = $student->id_estudiante;
         $current_semester = get_current_semester();
         if ($period == null) {
-            $monitor_trackings = get_tracking_current_semester('student', $ases_student_code, $current_semester->max);
+            $monitor_trackings = get_tracking_current_semesterV2('student', $ases_student_code, $current_semester->max);
         }
         else {
-            $monitor_trackings = get_tracking_current_semester('student', $ases_student_code, $period);
+            $monitor_trackings = get_tracking_current_semesterV2('student', $ases_student_code, $period);
         }
 
         $monitor_counting = filter_trackings_by_review($monitor_trackings);
@@ -164,8 +164,8 @@ function render_practicant_new_form($monitors_of_pract, $instance, $period = nul
         $panel.= "<span class='glyphicon glyphicon-user subpanel' style='font-size: 20px;'></span> : " . count(get_students_of_monitor($monitor_id, $instance));
         $panel.= "</div>";
         $panel.= "<div class='col-sm-1'>";
-        $panel.= "<button type='button' class='see_history btn red_button'>
-                <span class='glyphicon glyphicon-time'></span> Ver horas</button>";
+        $panel.= "<!--<button type='button' class='see_history btn red_button'>
+                 <span class='glyphicon glyphicon-time'></span> Ver horas</button>-->";
         $panel.= "</div>";
         $panel.= "<div class='col-sm-4' id=counting_" . $monitor->username . ">";
         $panel.= '<div class="loader"></div>';
@@ -278,48 +278,31 @@ function render_student_trackings($peer_tracking_v2)
 
 function filter_trackings_by_review($peer_tracking_v2)
 {
-    $array_review_trackings_prof = [];
-    $array_not_review_trackings_prof = [];
-    $array_review_trackings_pract = [];
-    $array_not_review_trackings_pract = [];
-    if ($peer_tracking_v2) {
-        foreach($peer_tracking_v2[0] as $key => $period) {
-            $year_number = $period;
-            foreach($period as $key => $tracking) {
-                $is_reviewed_prof = false;
-                $is_reviewed_pract = false;
-                foreach($tracking[record][campos] as $key => $review) {
-                    if ($review[local_alias] == 'revisado_profesional') {
-                        if ($review[respuesta] == 0) {
-                            array_push($array_review_trackings_prof, $tracking);
-                            $is_reviewed_prof = true;
-                        }
-                    }
 
-                    if ($review[local_alias] == 'revisado_practicante') {
-                        if ($review[respuesta] == 0) {
-                            array_push($array_review_trackings_pract, $tracking);
-                            $is_reviewed_pract = true;
-                        }
-                    }
-                }
+    $rev_pro = 0;
+    $not_rev_pro = 0;
+    $rev_prac = 0;
+    $not_rev_prac = 0;
 
-                if (!$is_reviewed_prof) {
-                    array_push($array_not_review_trackings_prof, $tracking);
-                }
-
-                if (!$is_reviewed_pract) {
-                    array_push($array_not_review_trackings_pract, $tracking);
-                }
-            }
+    foreach( $peer_tracking_v2 as $track ){
+        if( $track["revisado_profesional"] == 0 ){
+            $rev_pro++;
+        }else{
+            $not_rev_pro++;
+        }
+        if( $track["revisado_practicante"] == 0 ){
+            $rev_prac++;
+        }else{
+            $not_rev_prac++;
         }
     }
 
     $counting = [];
-    $counting[0] = count($array_review_trackings_prof);
-    $counting[1] = count($array_not_review_trackings_prof);
-    $counting[2] = count($array_review_trackings_pract);
-    $counting[3] = count($array_not_review_trackings_pract);
+    $counting[0] = $rev_pro;
+    $counting[1] = $not_rev_pro;
+    $counting[2] = $rev_prac;
+    $counting[3] = $not_rev_prac;
+
     return $counting;
 }
 
@@ -388,7 +371,7 @@ function calculate_specific_counting($user_kind, $person, $dates_interval, $inst
     $new_counting[2] = 0;
     $new_counting[3] = 0;
     if ($user_kind == 'PRACTICANTE') {
-        $tracking_current_semestrer = get_tracking_current_semester('monitor', $person->id_usuario, $dates_interval);
+        $tracking_current_semestrer = get_tracking_current_semesterV2('monitor', $person->id_usuario, $dates_interval);
         $counting_trackings = filter_trackings_by_review($tracking_current_semestrer);
         $new_counting[0]+= $counting_trackings[0];
         $new_counting[1]+= $counting_trackings[1];
@@ -399,7 +382,7 @@ function calculate_specific_counting($user_kind, $person, $dates_interval, $inst
     else
     if ($user_kind == 'PROFESIONAL') {
         foreach($person as $key => $monitor) {
-            $tracking_current_semestrer = get_tracking_current_semester('monitor', $monitor->id_usuario, $dates_interval);
+            $tracking_current_semestrer = get_tracking_current_semesterV2('monitor', $monitor->id_usuario, $dates_interval);
             $counting_trackings = filter_trackings_by_review($tracking_current_semestrer);
             $new_counting[0]+= $counting_trackings[0];
             $new_counting[1]+= $counting_trackings[1];

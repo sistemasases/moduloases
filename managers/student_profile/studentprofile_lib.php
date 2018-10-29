@@ -26,34 +26,16 @@
 require_once(dirname(__FILE__). '/../../../../config.php');
 require_once $CFG->dirroot.'/blocks/ases/managers/lib/student_lib.php';
 require_once $CFG->dirroot.'/blocks/ases/managers/dphpforms/dphpforms_forms_core.php';
+require_once $CFG->dirroot.'/blocks/ases/managers/dphpforms/v2/dphpforms_lib.php';
 require_once $CFG->dirroot.'/blocks/ases/managers/dphpforms/dphpforms_records_finder.php';
 require_once $CFG->dirroot.'/blocks/ases/managers/dphpforms/dphpforms_get_record.php';
 require_once $CFG->dirroot.'/blocks/ases/managers/periods_management/periods_lib.php';
 
 require_once("$CFG->libdir/formslib.php");
-
-
 require_once($CFG->dirroot.'/user/edit_form.php');
 require_once($CFG->dirroot.'/user/editlib.php');
 require_once($CFG->dirroot.'/user/profile/lib.php');
 require_once($CFG->dirroot.'/user/lib.php');
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 /**
  * Gets all reasons a student quit or delay studies
@@ -86,34 +68,34 @@ function update_user_image_profile($mdl_user_id, $php_file) {
     global $CFG, $DB, $PAGE;
     $personalcontext = context_user::instance($mdl_user_id);
 
-$PAGE->set_context($personalcontext);
+    $PAGE->set_context($personalcontext);
 
-// Prepare the editor and create form.
-$editoroptions = array(
-    'maxfiles'   => EDITOR_UNLIMITED_FILES,
-    'maxbytes'   => $CFG->maxbytes,
-    'trusttext'  => false,
-    'forcehttps' => false,
-    'context'    => $personalcontext
-);
-$user = $DB->get_record('user', array('id' => $mdl_user_id));
+    // Prepare the editor and create form.
+    $editoroptions = array(
+        'maxfiles'   => EDITOR_UNLIMITED_FILES,
+        'maxbytes'   => $CFG->maxbytes,
+        'trusttext'  => false,
+        'forcehttps' => false,
+        'context'    => $personalcontext
+    );
+    $user = $DB->get_record('user', array('id' => $mdl_user_id));
 
-$user = file_prepare_standard_editor($user, 'description', $editoroptions, $personalcontext, 'user', 'profile', 0);
-// Prepare filemanager draft area.
-$draftitemid = 0;
+    $user = file_prepare_standard_editor($user, 'description', $editoroptions, $personalcontext, 'user', 'profile', 0);
+    // Prepare filemanager draft area.
+    $draftitemid = 0;
 
-$filemanagercontext = $editoroptions['context'];
-$filemanageroptions = array('maxbytes'       => $CFG->maxbytes,
-                             'subdirs'        => 0,
-                             'maxfiles'       => 1,
-                             'accepted_types' => 'web_image');
-file_prepare_draft_area($draftitemid, $filemanagercontext->id, 'user', 'newicon', 0, $filemanageroptions);
-$user->imagefile = $draftitemid;
-// Create form.
-$userform = new user_edit_form('', array(
-    'editoroptions' => $editoroptions,
-    'filemanageroptions' => $filemanageroptions,
-    'user' => $user));
+    $filemanagercontext = $editoroptions['context'];
+    $filemanageroptions = array('maxbytes'       => $CFG->maxbytes,
+                                'subdirs'        => 0,
+                                'maxfiles'       => 1,
+                                'accepted_types' => 'web_image');
+    file_prepare_draft_area($draftitemid, $filemanagercontext->id, 'user', 'newicon', 0, $filemanageroptions);
+    $user->imagefile = $draftitemid;
+    // Create form.
+    $userform = new user_edit_form('', array(
+        'editoroptions' => $editoroptions,
+        'filemanageroptions' => $filemanageroptions,
+        'user' => $user));
 
     print_r($userform->get_data());
 }
@@ -522,7 +504,87 @@ function get_trackings_student($id_ases, $tracking_type, $id_instance){
 
     return $tracking_array;
 }
- 
+
+function get_tracking_current_semesterV2($criterio,$student_id, $semester_id,$intervals=null){
+
+    $fecha_inicio = null;
+    $fecha_fin = null;
+
+    if( $intervals ){
+
+        $fecha_inicio = getdate(strtotime($intervals[0]));
+        $fecha_fin = getdate(strtotime($intervals[1]));
+
+    }else{
+
+        $interval = get_semester_interval($semester_id);
+        $fecha_inicio = getdate(strtotime($interval->fecha_inicio));
+        $fecha_fin = getdate(strtotime($interval->fecha_fin));
+    }
+
+    $mon_tmp = $fecha_inicio["mon"];
+    $day_tmp = $fecha_inicio["mday"];
+    if( $mon_tmp < 10 ){
+        $mon_tmp = "0" . $mon_tmp;
+    }
+    if( $day_tmp < 10 ){
+        $day_tmp = "0" . $day_tmp;
+    }
+
+    $fecha_inicio_str = $fecha_inicio["year"]."-".$mon_tmp."-".$day_tmp;
+
+    $mon_tmp = $fecha_fin["mon"];
+    $day_tmp = $fecha_fin["mday"];
+    if( $mon_tmp < 10 ){
+        $mon_tmp = "0" . $mon_tmp;
+    }
+    if( $day_tmp < 10 ){
+        $day_tmp = "0" . $day_tmp;
+    }
+
+    $fecha_fin_str = $fecha_fin["year"]."-".$mon_tmp."-".$day_tmp;
+
+    //$student [monitor or student]
+    $trackings = null;
+    
+    if( $criterio == 'student' ){
+
+        $xQuery = new stdClass();
+        $xQuery->form = "seguimiento_pares";
+        $xQuery->filterFields = [["id_estudiante",[[$student_id,"="]], false],
+                                 ["fecha",[[$fecha_inicio_str,">="],[$fecha_fin_str,"<="]], false],
+                                 ["revisado_profesional",[["%%","LIKE"]], false],
+                                 ["revisado_practicante",[["%%","LIKE"]], false]
+                                ];
+        $xQuery->orderFields = [["fecha","DESC"]];
+        $xQuery->orderByDatabaseRecordDate = false; 
+        $xQuery->recordStatus = [ "!deleted" ];
+        $xQuery->selectedFields = [ ]; 
+
+        $trackings = dphpformsV2_find_records( $xQuery );
+
+   }elseif( $criterio == 'monitor' ){
+        
+        $xQuery = new stdClass();
+        $xQuery->form = "seguimiento_pares";
+        $xQuery->filterFields = [["id_creado_por",[[$student_id,"="]], false],
+                                 ["fecha",[[$fecha_inicio_str,">="],[$fecha_fin_str,"<="]], false],
+                                 ["revisado_profesional",[["%%","LIKE"]], false],
+                                 ["revisado_practicante",[["%%","LIKE"]], false]
+                                ];
+        $xQuery->orderFields = [["fecha","DESC"]];
+        $xQuery->orderByDatabaseRecordDate = false; 
+        $xQuery->recordStatus = [ "!deleted" ];
+        $xQuery->selectedFields = [  ]; 
+
+        $trackings = dphpformsV2_find_records( $xQuery );
+
+    } 
+    
+    return $trackings;
+
+}
+
 function get_tracking_current_semester($criterio,$student_id, $semester_id,$intervals=null){
 
 

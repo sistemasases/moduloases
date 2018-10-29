@@ -8,7 +8,10 @@ class Gender {
      * @return array Array where the keys are the Gender option and the values are a readable word representing the gender
      */
     public static  function get_options() {
-        return array(Gender::FEMALE => 'Mujer', Gender::MALE => 'Hombre');
+        return array(
+            Gender::MALE => 'Masculino',
+            Gender::FEMALE => 'Femenino'
+        );
     }
 }
 
