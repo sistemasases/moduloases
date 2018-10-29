@@ -145,3 +145,83 @@ $usuario_record_9->id = 7865;
 $usuario_record_9->num_doc = '9999999999';
 $usuario_record_9->num_doc_ini = '9999999999';
 $DB->update_record('talentospilos_usuario', $usuario_record_9);
+
+
+/** Modificaciones relacionadas al estudiante: CORTES CASTILLO IVAN ALEXANDER */
+
+//Actualización registro en ICETEX
+$icetex_record_10 = new StdClass;
+$icetex_record_10->id = 2158;
+$icetex_record_10->id_estudiante = 47;
+$DB->update_record('talentospilos_res_estudiante', $icetex_record_10);
+
+//Modificación de registro fantasma en talentospilos_usuario
+$usuario_record_10 = new StdClass;
+$usuario_record_10->id = 6984;
+$usuario_record_10->num_doc = '9999999999';
+$usuario_record_10->num_doc_ini = '9999999999';
+$DB->update_record('talentospilos_usuario', $usuario_record_10);
+
+
+/** Modificaciones relacionadas al estudiante: JOJOA MARTINEZ YULIANA CAROLINA */
+
+//Actualización registro en ICETEX
+$icetex_record_11 = new StdClass;
+$icetex_record_11->id = 2172;
+$icetex_record_11->id_estudiante = 88;
+$DB->update_record('talentospilos_res_estudiante', $icetex_record_11);
+
+//Modificación de registro fantasma en talentospilos_usuario
+$usuario_record_11 = new StdClass;
+$usuario_record_11->id = 895;
+$usuario_record_11->num_doc = '9999999999';
+$usuario_record_11->num_doc_ini = '9999999999';
+$DB->update_record('talentospilos_usuario', $usuario_record_11);
+
+
+/** Modificaciones relacionadas al estudiante: ORDONEZ BOLANOS ANDRES CAMILO */
+
+//Actualización registro en ICETEX
+$icetex_record_12 = new StdClass;
+$icetex_record_12->id = 2182;
+$icetex_record_12->id_estudiante = 117;
+$DB->update_record('talentospilos_res_estudiante', $icetex_record_12);
+
+//Modificación de registro fantasma en talentospilos_usuario
+$usuario_record_12 = new StdClass;
+$usuario_record_12->id = 6770;
+$usuario_record_12->num_doc = '9999999999';
+$usuario_record_12->num_doc_ini = '9999999999';
+$DB->update_record('talentospilos_usuario', $usuario_record_12);
+
+
+/** Modificaciones relacionadas al estudiante: MAYA MUNOZ YILI VANESSA */
+
+//Actualización registro en ICETEX
+$icetex_record_13 = new StdClass;
+$icetex_record_13->id = 2126;
+$icetex_record_13->id_estudiante = 103;
+$DB->update_record('talentospilos_res_estudiante', $icetex_record_13);
+
+//Modificación de registro fantasma en talentospilos_usuario
+$usuario_record_13 = new StdClass;
+$usuario_record_13->id = 898;
+$usuario_record_13->num_doc = '9999999999';
+$usuario_record_13->num_doc_ini = '9999999999';
+$DB->update_record('talentospilos_usuario', $usuario_record_13);
+
+
+/** Modificaciones relacionadas al estudiante: TROCHEZ CORREA MARIA EUGENIA */
+
+//Actualización registro en ICETEX
+$icetex_record_14 = new StdClass;
+$icetex_record_14->id = 2145;
+$icetex_record_14->id_estudiante = 173;
+$DB->update_record('talentospilos_res_estudiante', $icetex_record_14);
+
+//Modificación de registro fantasma en talentospilos_usuario
+$usuario_record_14 = new StdClass;
+$usuario_record_14->id = 6845;
+$usuario_record_14->num_doc = '9999999999';
+$usuario_record_14->num_doc_ini = '9999999999';
+$DB->update_record('talentospilos_usuario', $usuario_record_14);
