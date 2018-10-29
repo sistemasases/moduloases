@@ -22,21 +22,24 @@
 
     </div>
 
-    <div class = "row">
+    <div class = "row" id= "form_ficha_inicial" hidden>
         <form>
-                <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 ">
-           
-                        <label for="email">Email address:</label>
-                        <input type="email" class="form-control" id="email">
-    
-                        <div class="row">
-                                <label for="input-dir-res" class="col-xs-3 col-sm-3 col-md-3 col-lg-3 label_fields_general_tab">Dirección residencia</label>
-                                <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9 div_fields_general_tab" id="div-input-dir-res">
-                                    <input type="text" class="input_fields_general_tab" name="direccion_res" id="direccion_res" value="{{res_address}}" maxlength="100" readonly>
-                                </div>
-                            </div>
-               
-    
+            <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 ">
+                    <div class="row ">
+                            <label for="cond_excep" class="col-xs-3 col-sm-3 col-md-3 col-lg-3 label_fields_general_tab">Condición de adquisición </label>
+                            <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 div_cond" id="div_cond_excepcion">
+                                <select id="cond_adquisicion" name = "cond_adquisicion" title = "¿Cuál de las siguientes circunstancias corresponde a la adquisición de discapacidad?" >
+                                        <option  value="0">Enfermedad general</option>
+                                        <option  value="1">Enfermedad general de orden genético</option>
+                                        <option  value="2">Enfermedad general de orden hereditario</option>
+                                        <option  value="3">Accidente</option>
+                                        <option  value="4">Consumo de sustancias psicoactivas</option>
+                                        <option  value="5">Víctima de violencias</option>
+                                        <option  value="6">Víctima de conflicto armado</option>
+                                </select>
+                              </div>
+                              </div>      
+
             </div>
 
         </form>

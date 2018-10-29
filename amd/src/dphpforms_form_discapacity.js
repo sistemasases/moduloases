@@ -23,7 +23,7 @@ define([
     return {
         init: function(){
             $('#btn_ficha_inicial_discapacity').on('click', function() {
-              
+              $("#form_ficha_inicial").show();
             });
         }
 
