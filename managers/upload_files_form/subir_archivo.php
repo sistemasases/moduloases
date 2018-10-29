@@ -381,7 +381,12 @@ if (isset($_FILES['csv_file'])) {
                 array_push($temp_array, $result->id);
 
                 //username is verified
-                $username = substr($data[1], -7) . "-" . $data[2];
+                $username = "";
+                if((strlen($data[1]) == 9 && substr($data[1], 0, 2) == '20') || strlen($data[1]) == 7 ){
+                    $username = substr($data[1], -7) . "-" . $data[2];
+                }else{
+                    $username = $data[1];
+                }
                 $query = "SELECT id FROM {user} WHERE username = '" . $username . "' ;";
                 $result = $DB->get_record_sql($query);
 
