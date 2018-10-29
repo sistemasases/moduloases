@@ -382,7 +382,7 @@ if (isset($_FILES['csv_file'])) {
 
                 //username is verified
                 $username = "";
-                if(strlen($data[1]) == 9 && substr($data[1], 0, 2) == '20'){
+                if((strlen($data[1]) == 9 && substr($data[1], 0, 2) == '20') || strlen($data[1]) == 7 ){
                     $username = substr($data[1], -7) . "-" . $data[2];
                 }else{
                     $username = $data[1];
