@@ -24,7 +24,9 @@
 
     <div class = "row" id= "form_ficha_inicial" hidden>
         <form>
-            <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 ">
+            <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 ">
+                    <h3 class="h-sections-general-tab" id="h-student-info">CARACTERÍSTICAS DE LA DISCAPACIDAD</h3>
+                    <hr class="hr-general-tab-fields">
                     <div class="row ">
                             <label for="cond_excep" class="col-xs-3 col-sm-3 col-md-3 col-lg-3 label_fields_general_tab">Condición de adquisición </label>
                             <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 div_cond" id="div_cond_excepcion">
@@ -38,7 +40,27 @@
                                         <option  value="6">Víctima de conflicto armado</option>
                                 </select>
                               </div>
-                              </div>      
+                              </div>   
+                    <div class="row">
+                            <label for="cond_excep" class="col-xs-3 col-sm-3 col-md-3 col-lg-3 label_fields_general_tab">Diagnótico </label> 
+                            <input type="checkbox" title = "¿Cuenta con diagnóstico de su discapacidad?"  id="diagnostico_disc">
+
+                    </div>
+                    <div class="row">
+                            <label for="cond_excep" class="col-xs-3 col-sm-3 col-md-3 col-lg-3 label_fields_general_tab">Tipo </label> 
+                            <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 div_cond" id="div_cond_excepcion">
+                                    <select id="cond_adquisicion" name = "cond_adquisicion" title = "Seleccione el tipo que corresponde a su discapacidad" >
+                                            <option  value="0">Cognitiva</option>
+                                            <option  value="1">Psicosocial</option>
+                                            <option  value="2">Física</option>
+                                            <option  value="3">Accidente</option>
+                                            <option  value="4">Sensorial</option>
+                                            <option  value="5">Múltiple</option>
+                                            <option  value="6">Víctima de conflicto armado</option>
+                                    </select>
+                                  </div>
+
+                    </div>
 
             </div>
 
