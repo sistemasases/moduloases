@@ -2,3 +2,12 @@
 .est_lt_50 {
     font-weight: bold;
 }
+
+.title {
+    top: 5px !important; width: 50% !important;
+
+}
+
+.count_items {
+    margin-top: 2%;
+}

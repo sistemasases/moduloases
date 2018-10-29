@@ -522,42 +522,63 @@ SELECT distinct  on (id) *
                                                             AND             finalgrade IS NOT NULL) AS a )) AS estudiantes_perdiendo ,
                 (
                      SELECT count(*)
-FROM   (
-       --Usuarios  con mas de el 50% de items perdidos en una materia
-       SELECT     count(finalgrade) filter (WHERE finalgrade < grademax * 0.6 ) AS cantidad_notas_perdidas ,
-                  _mdl_user.*
-       FROM        mdl_grade_grades
-           INNER JOIN  mdl_grade_items
-           ON         mdl_grade_items.id = mdl_grade_grades.itemid
-           INNER JOIN mdl_user AS _mdl_user
-           ON         _mdl_user.id = mdl_grade_grades.userid
-           INNER JOIN  mdl_talentospilos_user_extended
-           ON         _mdl_user.id = mdl_talentospilos_user_extended.id_moodle_user
-           inner join mdl_talentospilos_est_estadoases
-           on mdl_talentospilos_est_estadoases.id_estudiante = mdl_talentospilos_user_extended.id_ases_user
-           inner join mdl_talentospilos_estados_ases
-           on mdl_talentospilos_est_estadoases.id_estado_ases = mdl_talentospilos_estados_ases.id
-           WHERE      mdl_grade_items.courseid = 38740
-           AND        mdl_grade_items.itemtype != 'category'
-           AND        mdl_talentospilos_user_extended.tracking_status = 1
-           AND        mdl_grade_items.itemtype != 'course'
-           and mdl_talentospilos_estados_ases.nombre = 'seguimiento'
-           AND        mdl_grade_grades.finalgrade IS NOT NULL
-           GROUP BY   _mdl_user.id) AS usuarios_y_notas_perdidas
-WHERE  (
-           usuarios_y_notas_perdidas.cantidad_notas_perdidas ) < --usuarios perdiendo la mitad o mas de las notas
-       (
-       --Piso de el 50% de items de un curso
-       SELECT ceil(count(*) * 0.5)
-       FROM   (
-              SELECT DISTINCT ON (mdl_grade_items.id) *
-              FROM             mdl_grade_items
-                  INNER JOIN      mdl_grade_grades
-                  ON              mdl_grade_items.id = mdl_grade_grades.itemid
-                  WHERE           mdl_grade_items.courseid = 38740
-                  AND             mdl_grade_items.itemtype != 'category'
-                  AND             mdl_grade_items.itemtype != 'course'
-                  AND             finalgrade IS NOT NULL) AS a )) AS estudiantes_ganando,
+                       FROM   (
+                                         --Usuarios  con mas de el 50% de items perdidos en una materia
+                                         SELECT     count(finalgrade) filter (WHERE finalgrade < grademax * 0.6 ) AS cantidad_notas_perdidas ,
+                                                    _mdl_user.*,
+                                                    (
+                                                           SELECT count(*)
+                                                           FROM   (
+                                                                                  SELECT DISTINCT ON (mdl_grade_items.id) mdl_grade_items.id
+                                                                                  FROM            {grade_items} mdl_grade_items
+                                                                                  INNER JOIN      {grade_grades} mdl_grade_grades
+                                                                                  ON              mdl_grade_items.id = mdl_grade_grades.itemid
+                                                                                  WHERE           mdl_grade_items.courseid = moodle_course.curso_id
+                                                                                  AND             mdl_grade_items.itemtype != 'category'
+                                                                                  AND             mdl_grade_items.itemtype != 'course'
+                                                                                  AND             finalgrade IS NOT NULL
+                                                                                  EXCEPT
+                                                                                  SELECT     mdl_grade_items.id
+                                                                                  FROM       {grade_items} mdl_grade_items
+                                                                                  INNER JOIN {grade_grades} mdl_grade_grades
+                                                                                  ON         mdl_grade_items.id = mdl_grade_grades.itemid
+                                                                                  INNER JOIN {user} mdl_user
+                                                                                  ON         mdl_grade_grades.userid = mdl_user.id
+                                                                                  WHERE      mdl_grade_items.courseid = moodle_course.curso_id
+                                                                                  AND        mdl_user.id = _mdl_user.id
+                                                                                  AND        mdl_grade_grades.finalgrade IS NOT NULL) AS cantidad_notas_calificadas_y_no_entregadas) AS cantidad_notas_calificadas_y_no_entregadas
+                                         FROM       {grade_grades} mdl_grade_grades
+                                         INNER JOIN {grade_items} mdl_grade_items
+                                         ON         mdl_grade_items.id = mdl_grade_grades.itemid
+                                         INNER JOIN {user} AS _mdl_user
+                                         ON         _mdl_user.id = mdl_grade_grades.userid
+                                         INNER JOIN {talentospilos_user_extended} mdl_talentospilos_user_extended
+                                         ON         _mdl_user.id = mdl_talentospilos_user_extended.id_moodle_user
+                                                     inner join mdl_talentospilos_est_estadoases
+            on mdl_talentospilos_est_estadoases.id_estudiante = mdl_talentospilos_user_extended.id_ases_user
+            inner join mdl_talentospilos_estados_ases
+            on mdl_talentospilos_est_estadoases.id_estado_ases = mdl_talentospilos_estados_ases.id
+                                         WHERE      mdl_grade_items.courseid = moodle_course.curso_id
+                                         AND        mdl_grade_items.itemtype != 'category'
+                                         AND        mdl_talentospilos_user_extended.tracking_status = 1
+                                         AND        mdl_grade_items.itemtype != 'course'
+                                         and mdl_talentospilos_estados_ases.nombre = 'seguimiento'
+                                         AND        mdl_grade_grades.finalgrade IS NOT NULL
+                                         GROUP BY   _mdl_user.id) AS usuarios_y_notas_perdidas
+                       WHERE  (
+                                     usuarios_y_notas_perdidas.cantidad_notas_perdidas + usuarios_y_notas_perdidas.cantidad_notas_calificadas_y_no_entregadas)< --usuarios perdiendo la mitad o mas de las notas
+                              (
+                                     --Piso de el 50% de items de un curso
+                                     SELECT ceil(count(*) * 0.5)
+                                     FROM   (
+                                                            SELECT DISTINCT ON (mdl_grade_items.id) *
+                                                            FROM            {grade_items} mdl_grade_items
+                                                            INNER JOIN      {grade_grades} mdl_grade_grades
+                                                            ON              mdl_grade_items.id = mdl_grade_grades.itemid
+                                                            WHERE           mdl_grade_items.courseid = moodle_course.curso_id
+                                                            AND             mdl_grade_items.itemtype != 'category'
+                                                            AND             mdl_grade_items.itemtype != 'course' 
+                                                            AND             finalgrade IS NOT NULL) AS a )) AS estudiantes_ganando,
                 (
                 select count(*) from (
                           SELECT    distinct  on (mdl_user.id) mdl_user.id

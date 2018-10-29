@@ -203,7 +203,7 @@ function create_menu_options($userid, $blockid, $courseid)
             }
 
             if ($function == 'teachers_reports') {
-                $url = new moodle_url("/blocks/ases/view/teachers_reports.php", array(
+                $url = new moodle_url("/blocks/ases/view/course_and_teacher_report.php", array(
                     'courseid' => $courseid,
                     'instanceid' => $blockid,
                 ));
