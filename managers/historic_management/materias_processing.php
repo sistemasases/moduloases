@@ -107,7 +107,7 @@ if (isset($_FILES['file'])) {
 
                 } else {
                     $isValidRow = false;
-                    array_push($detail_erros, [$line_count, $lc_wrongFile, ($associativeTitles['codigo_estudiante'] + 1), 'codigo_estudiante', 'El campo codigo_estudiante es obligatorio y se encuentra vacio']);
+                    array_push($detail_errors, [$line_count, $lc_wrongFile, ($associativeTitles['codigo_estudiante'] + 1), 'codigo_estudiante', 'El campo codigo_estudiante es obligatorio y se encuentra vacio']);
                 }
 
             } else {
@@ -122,12 +122,12 @@ if (isset($_FILES['file'])) {
                     $id_programa = get_id_program($codigo_programa);
                     if (!$id_programa) {
                         $isValidRow = false;
-                        array_push($detail_erros, [$line_count, $lc_wrongFile, ($associativeTitles['programa'] + 1), 'programa', 'No existe un programa asociado al codigo ' . $codigo_programa]);
+                        array_push($detail_errors, [$line_count, $lc_wrongFile, ($associativeTitles['programa'] + 1), 'programa', 'No existe un programa asociado al codigo ' . $codigo_programa]);
                     }
 
                 } else {
                     $isValidRow = false;
-                    array_push($detail_erros, [$line_count, $lc_wrongFile, ($associativeTitles['programa'] + 1), 'programa', 'El campo programa es obligatorio y se encuentra vacio']);
+                    array_push($detail_errors, [$line_count, $lc_wrongFile, ($associativeTitles['programa'] + 1), 'programa', 'El campo programa es obligatorio y se encuentra vacio']);
                 }
 
             } else {
@@ -142,12 +142,12 @@ if (isset($_FILES['file'])) {
                     $id_semestre = get_id_semester($semestre);
                     if (!$id_semestre) {
                         $isValidRow = false;
-                        array_push($detail_erros, [$line_count, $lc_wrongFile, ($associativeTitles['semestre'] + 1), 'semestre', 'No existe ningun semestre registrado el nombre' . $semestre]);
+                        array_push($detail_errors, [$line_count, $lc_wrongFile, ($associativeTitles['semestre'] + 1), 'semestre', 'No existe ningun semestre registrado el nombre' . $semestre]);
                     }
 
                 } else {
                     $isValidRow = false;
-                    array_push($detail_erros, [$line_count, $lc_wrongFile, ($associativeTitles['semestre'] + 1), 'semestre', 'El campo semestre es obligatorio y se encuentra vacio']);
+                    array_push($detail_errors, [$line_count, $lc_wrongFile, ($associativeTitles['semestre'] + 1), 'semestre', 'El campo semestre es obligatorio y se encuentra vacio']);
                 }
 
             } else {
@@ -160,7 +160,7 @@ if (isset($_FILES['file'])) {
                 $nombre_materia = $data[$associativeTitles['nombre_materia']];
                 if ($nombre_materia === '') {
                     $isValidRow = false;
-                    array_push($detail_erros, [$line_count, $lc_wrongFile, ($associativeTitles['nombre_materia'] + 1), 'nombre_materia', 'El campo nombre_materia es obligatorio y se encuentra vacio']);
+                    array_push($detail_errors, [$line_count, $lc_wrongFile, ($associativeTitles['nombre_materia'] + 1), 'nombre_materia', 'El campo nombre_materia es obligatorio y se encuentra vacio']);
                 }
             } else {
                 throw new MyException('La columna con el campo nombre_materia es obligatoria');
@@ -172,7 +172,7 @@ if (isset($_FILES['file'])) {
                 $codigo_materia = $data[$associativeTitles['codigo_materia']];
                 if ($codigo_materia === '') {
                     $isValidRow = false;
-                    array_push($detail_erros, [$line_count, $lc_wrongFile, ($associativeTitles['codigo_materia'] + 1), 'codigo_materia', 'El campo codigo_materia es obligatorio y se encuentra vacio']);
+                    array_push($detail_errors, [$line_count, $lc_wrongFile, ($associativeTitles['codigo_materia'] + 1), 'codigo_materia', 'El campo codigo_materia es obligatorio y se encuentra vacio']);
                 }
             } else {
                 throw new MyException('La columna con el campo codigo_materia es obligatoria');
@@ -186,12 +186,12 @@ if (isset($_FILES['file'])) {
 
                     if (!is_numeric($creditos)) {
                         $isValidRow = false;
-                        array_push($detail_erros, [$line_count, $lc_wrongFile, ($associativeTitles['creditos'] + 1), 'creditos', 'El campo creditos debe ser de tipo numerico']);
+                        array_push($detail_errors, [$line_count, $lc_wrongFile, ($associativeTitles['creditos'] + 1), 'creditos', 'El campo creditos debe ser de tipo numerico']);
                     }
 
                 } else {
                     $isValidRow = false;
-                    array_push($detail_erros, [$line_count, $lc_wrongFile, ($associativeTitles['creditos'] + 1), 'creditos', 'El campo creditos es obligatorio y se encuentra vacio']);
+                    array_push($detail_errors, [$line_count, $lc_wrongFile, ($associativeTitles['creditos'] + 1), 'creditos', 'El campo creditos es obligatorio y se encuentra vacio']);
                 }
 
             } else {
@@ -210,7 +210,7 @@ if (isset($_FILES['file'])) {
 
                     if($fecha_cancelacion_materia == null){
                         $isValidRow = false;
-                        array_push($detail_erros, [$line_count, $lc_wrongFile, ($associativeTitles['fecha_cancelacion_materia'] + 1), 'fecha_cancelacion_materia', 'El formato de fecha_cancelacion_materia es incorrecto. Recuerde que el formato debe ser dd-mm-yyyy']);    
+                        array_push($detail_errors, [$line_count, $lc_wrongFile, ($associativeTitles['fecha_cancelacion_materia'] + 1), 'fecha_cancelacion_materia', 'El formato de fecha_cancelacion_materia es incorrecto. Recuerde que el formato debe ser dd-mm-yyyy']);    
                     }        
                 }
 
@@ -228,12 +228,12 @@ if (isset($_FILES['file'])) {
 
                         // if (!is_numeric($nota)) {
                         //     $isValidRow = false;
-                        //     array_push($detail_erros, [$line_count, $lc_wrongFile, ($associativeTitles['nota'] + 1), 'nota', 'El campo nota debe ser de tipo numerico']);
+                        //     array_push($detail_errors, [$line_count, $lc_wrongFile, ($associativeTitles['nota'] + 1), 'nota', 'El campo nota debe ser de tipo numerico']);
                         // }
     
                     } else {
                         $isValidRow = false;
-                        array_push($detail_erros, [$line_count, $lc_wrongFile, ($associativeTitles['nota'] + 1), 'nota', 'El campo nota es obligatorio y se encuentra vacio']);
+                        array_push($detail_errors, [$line_count, $lc_wrongFile, ($associativeTitles['nota'] + 1), 'nota', 'El campo nota es obligatorio y se encuentra vacio']);
                     }
                 }
 
@@ -285,7 +285,7 @@ if (isset($_FILES['file'])) {
             $result = update_historic_materias($id_estudiante, $id_programa, $id_semestre, $json_materias);
 
             if (!$result) {
-                array_push($detail_erros, [$line_count, $lc_wrongFile, 'Error al registrar historico', 'Error Servidor', 'Error del server registrando el historico']);
+                array_push($detail_errors, [$line_count, $lc_wrongFile, 'Error al registrar historico', 'Error Servidor', 'Error del server registrando el historico']);
                 array_push($wrong_rows, $data);
                 $lc_wrongFile++;
             }else{
@@ -311,7 +311,7 @@ if (isset($_FILES['file'])) {
 
             $detailsFileHandler = fopen($detailsFilename, 'w');
             fprintf($detailsFileHandler, chr(0xEF) . chr(0xBB) . chr(0xBF)); // darle formato unicode utf-8
-            foreach ($detail_erros as $row) {
+            foreach ($detail_errors as $row) {
                 fputcsv($detailsFileHandler, $row);
             }
             fclose($detailsFileHandler);
