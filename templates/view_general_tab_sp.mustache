@@ -154,7 +154,7 @@
                               <tr>
                                 <th>Nombre completo</th>
                                 <th>Parentesco</th>
-                                <th id="edit_person_vive"hidden>Edición</th>
+                                <th id="edit_person_vive"hidden></th>
                               </tr>
                             </thead>
                             <tbody>
@@ -167,16 +167,13 @@
                 <input class= "btn btn-block" type = "button" id="input_button_add_person" name ="input_button_add_person" value= "Agregar persona"/>
             </div>
             <div class="row">
-                    <label for="vive_con" class="col-xs-3 col-sm-3 col-md-3 col-lg-3 label_fields_general_tab">Vive con</label>
-                    <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3 div_fields_general_tab" id="div-input-vive_con">
-                        <input type="text" class="input_fields_general_tab" name="vive_con" id="vive_con" readonly value="{{vive_con}}" maxlength="100" required />
-                    </div>
+                <div class="col-sm-12">
+                    <label for="observaciones" class="col-md-12">Observaciones</label>
+                    <textarea name="observacion" id="observacion" class="col-sm-12" readonly></textarea>
+                    <textarea name="" id="observaciones_anteriores" class="col-md-12" readonly>{{observations}}</textarea>
                 </div>
-            <div class="col-sm-12">
-                <label for="observaciones" class="col-md-12">Observaciones</label>
-                <textarea name="observacion" id="observacion" class="col-sm-12" readonly></textarea>
-                <textarea name="" id="observaciones_anteriores" class="col-md-12" readonly>{{observations}}</textarea>
-            </div>
+                </div>
+           
         </div>
     </div>
 
