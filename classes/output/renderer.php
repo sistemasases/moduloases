@@ -232,5 +232,8 @@ class renderer extends plugin_renderer_base {
         return parent::render_from_template('block_ases/ases_user_', $data);
     }
 
-
+    public function render_assigned_students_no_trackings_report_page($page){
+        $data = $page->export_for_template($this);
+        return parent::render_from_template('block_ases/assigned_students_no_trackings_report', $data);
+    }
 }
