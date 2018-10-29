@@ -227,10 +227,16 @@ class renderer extends plugin_renderer_base {
         $data = $page->export_for_template($this);
         return parent::render_from_template('block_ases/backup_forms', $data);
     }
-    public function render_ases_user_creation_page($page){
+
+    public function render_progress_bar_component($page){
         $data = $page->export_for_template($this);
-        return parent::render_from_template('block_ases/ases_user_', $data);
+        return parent::render_from_template('block_ases/progress_bar', $data);
     }
+    public function render_course_and_teacher_report_page($page){
+        $data = $page->export_for_template($this);
+        return parent::render_from_template('block_ases/course_and_teacher_report', $data);
+    }
+
 
 
 }
