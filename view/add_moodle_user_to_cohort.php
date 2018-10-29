@@ -44,8 +44,25 @@ require_once("../managers/user_creation_process/user_creation_process_lib.php");
 require_once('../managers/validate_profile_action.php');
 require_once('../managers/menu_options.php');
 
-
 include('../lib.php');
+/**
+ * View lib
+ * @throws coding_exception
+ */
+$PAGE->requires->css('/blocks/ases/style/progress_bar_component.css');
+function multiple_steps() {
+    global $PAGE, $output;
+    $PAGE->requires->js_call_amd('block_ases/progress_bar_component', 'init');
+    $template_data = new stdClass();
+    $template_data->items = \user_creation_process\get_steps(\user_creation_process\ADD_USER_TO_COHORT);
+    $student_profile_page = new \block_ases\output\progress_bar_component($template_data);
+    echo $output->render($student_profile_page);
+}
+
+/**
+ * End view lib
+ */
+
 
 $pagetitle = 'Adición de usuarios ASES a las cohortes';
 $courseid = required_param('courseid', PARAM_INT);
@@ -81,7 +98,7 @@ if ($add_user_to_cohort_form->is_cancelled()) {
     
 } 
 $output = $PAGE->get_renderer('block_ases');
-echo $output->header();
+
 
 $user = $DB->get_record('user', array('username' => $username));
 
@@ -127,7 +144,11 @@ if( $continue && $usuario_aniadido ){
 if ( $user ) {
     \core\notification::info("Editando actualmente al usuario $user->firstname $user->lastname");
 }
+echo $output->header();
 
+if ( $continue ) {
+    multiple_steps();
+}
 
 
 $add_user_to_cohort_form->display();
