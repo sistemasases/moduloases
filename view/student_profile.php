@@ -325,7 +325,7 @@ if ($student_code != 0) {
     //Código temporal hijos
         
     if($ases_student->hijos == null){
-        $record->sons = "0";
+        $record->sons = 0;
     }else{
         $record->sons = $ases_student->hijos;
         
