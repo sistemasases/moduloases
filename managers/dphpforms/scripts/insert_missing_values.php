@@ -26,12 +26,12 @@
 
 // Standard GPL and phpdocs
 
-    require_once(dirname(__FILE__). '/../../../../../config.php');
-    require_once(dirname(__FILE__). '/../../lib/student_lib.php');
+    /*require_once(dirname(__FILE__). '/../../../../../config.php');
+    require_once(dirname(__FILE__). '/../../lib/student_lib.php');*/
 
-    global $DB;
+    //global $DB;
 
-    $fecha_hora_registro = "'2018-08-01'";
+    //$fecha_hora_registro = "'2018-08-01'";
 
     //Missing VALUES{  id_monitor, id_practicante, id_profesional, username  } en seguimiento_pares e inasistencias
 
@@ -44,9 +44,9 @@
     // Records to update id_monitor //
     //////////////////////////////////
 
-    $records_to_update = "SELECT id AS id_formulario_respuestas
+    /*$records_to_update = "SELECT id AS id_formulario_respuestas
     FROM {talentospilos_df_form_resp} 
-    WHERE estado = 1 AND id_formulario = ( SELECT id FROM {talentospilos_df_formularios} WHERE alias = 'seguimiento_pares' AND estado = 1 ) 
+    WHERE id_formulario = ( SELECT id FROM {talentospilos_df_formularios} WHERE alias = 'seguimiento_pares' AND estado = 1 ) 
     
     EXCEPT    
     
@@ -59,7 +59,7 @@
     $records = $DB->get_records_sql( $records_to_update );
 
     print_r( count( $records ) );
-
+*/
     
 
 
