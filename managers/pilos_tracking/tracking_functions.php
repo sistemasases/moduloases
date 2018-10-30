@@ -27,6 +27,7 @@ require_once (dirname(__FILE__) . '/../lib/student_lib.php');
 require_once (dirname(__FILE__) . '/../dphpforms/dphpforms_get_record.php');
 require_once (dirname(__FILE__) . '/../student_profile/studentprofile_lib.php');
 require_once (dirname(__FILE__) . '/../seguimiento_grupal/seguimientogrupal_lib.php');
+require_once (dirname(__FILE__) . '/../dphpforms/v2/dphpforms_lib.php');
 
 /**
  * Get the toggle of the monitor with the follow-ups of each student with the implementation of the new form
@@ -382,6 +383,18 @@ function calculate_specific_counting($user_kind, $person, $dates_interval, $inst
     else
     if ($user_kind == 'PROFESIONAL') {
         foreach($person as $key => $monitor) {
+            $xQuery = new stdClass();
+            $xQuery->form = "seguimiento_pares";
+            $xQuery->filterFields = [["fecha",[[$fecha_inicio_str,">="],[$fecha_fin_str,"<="]], false],
+                                    ["revisado_profesional",[["%%","LIKE"]], false],
+                                    ["revisado_practicante",[["%%","LIKE"]], false]
+                                    ];
+            $xQuery->orderFields = [["fecha","DESC"]];
+            $xQuery->orderByDatabaseRecordDate = false; 
+            $xQuery->recordStatus = [ "!deleted" ];
+            $xQuery->selectedFields = [ ]; 
+
+            //$trackings = dphpformsV2_find_records( $xQuery );
             $tracking_current_semestrer = get_tracking_current_semesterV2('monitor', $monitor->id_usuario, $dates_interval);
             $counting_trackings = filter_trackings_by_review($tracking_current_semestrer);
             $new_counting[0]+= $counting_trackings[0];
