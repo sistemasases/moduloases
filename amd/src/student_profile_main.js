@@ -21,6 +21,24 @@ return {
  init: function(data_init) {
      // Carga una determinada pestaña
 
+    $(document).on('click', '#table_vive_con tbody tr td button', function () {     
+        $(this).parent().parent().remove();
+    });
+
+    /**
+     * Funcion para añadir una nueva fila en la tabla
+     */
+    $( "#input_button_add_person" ).click(function(){
+       
+        let nuevaFila = "";
+        nuevaFila += '<tr><td> <input name="name_person" class="input_fields_general_tab"  type="text"/></td>';
+        nuevaFila += '<td> <input name="parentesco_person" class="input_fields_general_tab"  type="text" /></td>';
+        nuevaFila += '<td> <button type ="button" id="bt_delete_person" title="Eliminar persona" name="btn_delete_person" style="visibility:visible;"> </button></td> </tr>';
+        $( "#table_vive_con" ).find("tbody").append( nuevaFila );
+       
+    });
+     
+
      $('[data-toggle="tooltip"]').tooltip(); 
      
      var parameters = get_url_parameters(document.location.search);
@@ -610,6 +628,9 @@ return {
     var update_or_insert1 = document.getElementById("otro_genero").value ;
     var update_or_insert2 = document.getElementById("otro_act_simultanea").value;
    // var json_personas_incial = document.getElementById("vive_con").value;
+
+   
+
     $('#span-icon-edit').on('click', function(){
         $(this).hide();
         $('#tip-edit').hide();
@@ -624,8 +645,8 @@ return {
         $('#genero').prop('disabled', false);
         $('#cond_excepcion').prop('disabled', false);
         $('#act_simultanea').prop('disabled', false);
+        $('#otro_act_simultanea').prop('disabled',false);
         $('#otro_genero').prop('disabled', false);
-        $('#otro_act_simultanea').prop('disabled', false);
         $('#otro_genero').prop('required', false);
         $('#otro_act_simultanea').prop('required', false);
         $('#estado_civil').prop('disabled', false);
@@ -636,43 +657,9 @@ return {
         $('.input-tracking').prop('disabled', false);
         $('#div_add_persona_vive').show();
         $('#edit_person_vive').show();
-        $("#edit_person_vive").show();
      
-      
-        $(".table_vive_con td").find(':button').each(function(){
-                $(this).on('click' ,function(){
-                    let i = $(this).val();
-                   document.getElementById("table_vive_con").deleteRow(i);
-                });
-            
-        });
-          
-       
-
-    
-       
      
-        $('#input_button_add_person').on('click', function(){
-        /**
-         * Funcion para añadir una nueva columna en la tabla
-         * 
-         */
-                
-                var nuevaFila;
-                nuevaFila+=" <tr><td> <input   name = 'name_person'class= 'input_fields_general_tab'  type='text' value='' /></td>";
-                nuevaFila+="<td> <input   name = 'parentesco_person'class= 'input_fields_general_tab'  type='text' value='' /></td>";
-                nuevaFila+="<td> <button type = 'button' class='bt_delete_person' title='Eliminar persona' name  = 'btn_delete_person' style= 'visibility:visible;' value='0'></button></td> </tr>";
-
-               
-                 $("#table_vive_con").append(nuevaFila);
-                 let pos = 1;
-                 $(".table_vive_con td").find(':button').each(function(){
-                    $(this).attr('value', pos);
-                    pos++
-                       });
-             
-              
-        });
+        
         $('#genero').on('click', function(){
             if((document.getElementById("genero").value) == 0){
                 $("#div_otro_genero").show();
@@ -775,6 +762,12 @@ return {
                 msg.msg = "El campo "+form[field].name+" es obligatorio";
                 return msg;  
                  }
+                 if(form[field].value < 0) {
+                    msg.title = "Error";
+                    msg.status = "error";
+                    msg.msg = "El campo "+form[field].name+" no debe ser negativo";
+                    return msg;  
+                     }
              if(has_letters(form[field].value)){
              msg.title = "Error";
                     msg.status = "error";
