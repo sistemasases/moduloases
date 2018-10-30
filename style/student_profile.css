@@ -41,6 +41,20 @@
     padding-top: 0px;
     padding-bottom: 0px;
 }
+.div_cond{
+    
+    padding-top: 7px;
+    padding-left: 0px;
+    padding-right: 0px;
+}
+.div_select{
+
+    padding-left: 0px;
+    padding-right: 0px;
+}
+.div_otro_gen{
+padding: 0px 0px 0px 0px !important;
+}
 
 .div_fields_general_tab{
     padding: 0px 0px 0px 0px;
@@ -54,9 +68,27 @@
     padding: 0px 0px 0px 0px !important;
     border-radius: 0 0 0px 0px !important;
 }
+.input_fields_general_tab_otro{
+    position: relative !important;
+    height: 30px !important;
+    width: 100% !important;
+    padding: 0px 0px 0px 0px !important;
+    border-radius: 0 0 0px 0px !important;
+    margin-top: 0px;
+}
 
 .label_fields_general_tab{
     text-align: left;
+}
+.table_vive_con{
+    margin-left:  7px;
+    margin-bottom: 0px;
+}
+.bt_delete_person{
+    background-color: red;
+    font-weight: bold;
+    color: #000;
+
 }
 
 #div_input_cc{
@@ -93,6 +125,28 @@
 
 #div-hr{
     padding: 0px 15px 2px 15px;
+}
+#discapacity_tittle{
+    font-size: 22px;
+    text-decoration: underline;
+    text-align: center;
+    padding-bottom: 20px;
+    
+}
+#btn_ficha_inicial_discapacity{
+    background-color:rgb(255, 143, 143);
+    color:black;
+    font-size: 16px;
+}
+#btn_ficha_seguimiento_discapacity{
+    background-color:rgba(255, 119, 119, 0.945);
+    color:black;
+    font-size: 16px;
+}
+#btn_ficha_cierre_discapacity{
+    background-color:rgba(255, 96, 96, 0.904);
+    color:black;
+    font-size: 16px;
 }
 
 .hr-general-fields{
@@ -134,6 +188,13 @@
 #icetex_status{
     padding: 0px 0px 0px 6px;
     height: 100%;
+    position: relative;
+    border-radius: 0 0 0px 0px;
+}
+
+#cond_excep{
+    padding: 0px 0px 0px 6px;
+    height: 5%;
     position: relative;
     border-radius: 0 0 0px 0px;
 }
@@ -245,6 +306,10 @@
 
 .h-sections-general-tab{
     margin-bottom: 0px;
+}
+.h-sections-general-tab2{
+    margin-bottom: 0px;
+    margin-top: 9px;
 }
 
 .div-general-fields>input{

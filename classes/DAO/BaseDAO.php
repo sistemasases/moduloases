@@ -31,8 +31,17 @@ require_once (__DIR__.'/../Errors/AsesError.php');
 require_once(__DIR__.'/../../vendor/autoload.php');
 use Latitude\QueryBuilder\Engine\PostgresEngine;
 use Latitude\QueryBuilder\QueryFactory;
+use function Latitude\QueryBuilder\{express, alias};
 
 $__factory  = new QueryFactory(new PostgresEngine());
+
+function subquery($query, $alias=null) {
+    if( $alias ){
+        return alias(express("( %s )", $query), $alias);
+    }
+    return express("( %s )", $query);
+}
+
 abstract class BaseDAO
 {
 
@@ -448,7 +457,7 @@ abstract class BaseDAO
      * adding brackets to the name, for example {talentospilos_usuario}
      * @return string
      */
-    public function get_table_name_for_moodle() {
+    public static function get_table_name_for_moodle() {
         /* @var BaseDAO $CLASS */
         $CLASS = get_called_class();
         return '{'.$CLASS::get_table_name(). '}';

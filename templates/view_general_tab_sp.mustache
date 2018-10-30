@@ -1,4 +1,5 @@
 {{!-- General tab --}}
+
 <div class="tab-pane active p-t-100" id="general_tab">
     <div class="row">
         <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
@@ -31,6 +32,72 @@
                 </div>
             </div>
 
+            <div class="row">
+                <label for="pais" class="col-xs-3 col-sm-3 col-md-3 col-lg-3 label_fields_general_tab">País de origen </label>
+                <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 div_select" id="div_pais">
+                    <select id="pais" name = "pais" disabled >
+                      {{{options_pais}}}
+                    </select>
+                  </div>
+                  </div>
+
+                  <div class="row ">
+                        <label for="estado_civil" class="col-xs-3 col-sm-3 col-md-3 col-lg-3 label_fields_general_tab">Estado civil </label>
+                        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 div_cond" id="div_estado_civil">
+                            <select id="estado_civil" name = "estado_civil" disabled >
+                              {{{options_estado_civil}}}
+                            </select>
+                          </div>
+                          </div>
+
+           
+            <div class="row ">
+            <label for="cond_excep" class="col-xs-3 col-sm-3 col-md-3 col-lg-3 label_fields_general_tab">Condición de excepción </label>
+            <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 div_cond" id="div_cond_excepcion">
+                <select id="cond_excepcion" name = "cond_excepcion" disabled >
+                  {{{options_cond_excepcion}}}
+                </select>
+              </div>
+              </div>
+
+              <div class="row">
+                <label for="genero" class="col-xs-3 col-sm-3 col-md-3 col-lg-3 label_fields_general_tab">Identidad de género </label>
+                <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 div_select" id="div_genero">
+                    <select id="genero" name = "genero" disabled >
+                      {{{options_genero}}}
+                    </select>
+                  </div>
+                  <label id="lb_otro" style="padding: 5px 0px 0px 0px" class="col-xs-1 col-sm-1 col-md-1 col-lg-1 label_fields_general_tab" hidden>¿Cuál?</label>
+                  <div id="div_otro_genero" class="col-lg-4 col-md-4 col-sm-4 col-xs-4 div_otro_gen" hidden>
+                    <input disabled placeholder="Escriba aquí" value = "{{otro}}" type="text" class="input_fields_general_tab_otro" name="otro_genero" id="otro_genero"  maxlength="100" required />
+                  </div>
+                  </div>
+
+                  <div class="row">
+                        <label for="act_simultanea" class="col-xs-3 col-sm-3 col-md-3 col-lg-3 label_fields_general_tab">Actividad simultánea </label>
+                        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 div_select" id="div_act_simultanea">
+                            <select id="act_simultanea" name = "act_simultanea" disabled >
+                              {{{options_act_simultanea}}}
+                            </select>
+                          </div>
+                          <label id="lb_otro_act" style="padding: 5px 0px 0px 0px" class="col-xs-1 col-sm-1 col-md-1 col-lg-1 label_fields_general_tab" hidden>¿Cuál?</label>
+                          <div id="div_otro_act" class="col-lg-4 col-md-4 col-sm-4 col-xs-4 div_otro_gen" hidden>
+                            <input disabled placeholder="Escriba aquí" value = "{{otro_act}}" type="text" class="input_fields_general_tab_otro" name="otro_act_simultanea" id="otro_act_simultanea"  maxlength="100" required />
+                          </div>
+                          </div>
+
+             
+
+        
+
+            <div class="row">
+                <label for="tiene_hijo" class="col-xs-3 col-sm-3 col-md-3 col-lg-3 label_fields_general_tab">Hijo/s </label>
+                <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9 div_fields_general_tab" id="div-input-tiene_hijo">
+                    <input type="text" class="input_fields_general_tab" name="tiene_hijo" id="tiene_hijo" readonly value="{{sons}}" maxlength="100" required />
+                </div>
+            </div>
+
+
             <h3 class="h-sections-general-tab">INFORMACIÓN DEL ACUDIENTE</h3>
             <hr class="hr-general-tab-fields">
 
@@ -46,6 +113,7 @@
                     <input type="tel" class="input_fields_general_tab" name="tel_acudiente" id="tel_acudiente" value="{{attendant_tel}}" maxlength="15" readonly/>
                 </div>
             </div>
+
             
             <h3 class="h-sections-general-tab">INFORMACIÓN PROFESIONAL Y MONITOR</h3>
             <hr class="hr-general-tab-fields">
@@ -70,13 +138,42 @@
             </div>
         </div>
         <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                <div class="row">
             <iframe class="col-xs-12 col-sm-12 col-md-12 col-lg-12" height="396" frameborder="0" style="border:0" src="https://www.google.com/maps/embed/v1/directions?key=AIzaSyAoE-aPVfruphY4V4BbE8Gdwi93x-5tBTM&origin={{latitude}},{{longitude}}&destination=3.3759493,-76.5355789&mode=transit"
             allowfullscreen> </iframe>
-            <div class="col-sm-12">
-                <label for="observaciones" class="col-md-12">Observaciones</label>
-                <textarea name="observacion" id="observacion" class="col-sm-12" readonly></textarea>
-                <textarea name="" id="observaciones_anteriores" class="col-md-12" readonly>{{observations}}</textarea>
             </div>
+
+           
+            
+                <h3 class="h-sections-general-tab2">PERSONAS CON QUIEN VIVE</h3>
+                    <hr class="hr-general-tab-fields">
+            <div class= "row">
+                  
+                    <table class="table table-hover col-xs-12 col-sm-12 col-md-12 col-lg-12 table_vive_con" id="table_vive_con" name="table_vive_con">
+                            <thead>
+                              <tr>
+                                <th>Nombre completo</th>
+                                <th>Parentesco</th>
+                                <th id="edit_person_vive"hidden></th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                           {{{personas_con_quien_vive}}}
+                            </tbody>
+                          </table>
+
+            </div>
+            <div  class=" row " name = "div_add_persona_vive" id = "div_add_persona_vive" hidden>
+                <input class= "btn btn-block" type = "button" id="input_button_add_person" name ="input_button_add_person" value= "Agregar persona"/>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <label for="observaciones" class="col-md-12">Observaciones</label>
+                    <textarea name="observacion" id="observacion" class="col-sm-12" readonly></textarea>
+                    <textarea name="" id="observaciones_anteriores" class="col-md-12" readonly>{{observations}}</textarea>
+                </div>
+                </div>
+           
         </div>
     </div>
 

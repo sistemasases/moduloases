@@ -37,7 +37,7 @@ function get_pract_of_prof($id_prof,$id_instance){
 
     $current_semester = get_current_semester();
     $id_practicant = get_role_id('practicante_ps');
-    $sql_query="SELECT users.firstname,users.lastname,id_usuario,id_semestre,users.username
+    $sql_query="SELECT id_usuario,users.firstname,users.lastname,id_semestre,users.username
     FROM {talentospilos_user_rol} user_rol
     INNER JOIN {user} users ON user_rol.id_usuario = users.id where user_rol.id_jefe=$id_prof and user_rol.id_rol=$id_practicant->id and user_rol.estado=1 and user_rol.id_semestre=$current_semester->max and user_rol.id_instancia=$id_instance";
 
@@ -56,9 +56,14 @@ function get_monitors_of_pract($id_pract,$id_instance){
 
     $current_semester = get_current_semester();
     $id_monitor = get_role_id('monitor_ps');
-    $sql_query = "SELECT users.firstname,users.lastname,id_usuario,id_semestre,users.username
-    FROM {talentospilos_user_rol} user_rol
-    INNER JOIN {user} users ON user_rol.id_usuario = users.id where user_rol.id_jefe='$id_pract' and user_rol.id_rol='$id_monitor->id' and user_rol.estado=1 and user_rol.id_semestre='$current_semester->max' and user_rol.id_instancia='$id_instance'";
+    $sql_query = "SELECT id_usuario, users.firstname,users.lastname,id_semestre,users.username
+                  FROM {talentospilos_user_rol} AS user_rol
+                  INNER JOIN {user} users ON user_rol.id_usuario = users.id 
+                  WHERE user_rol.id_jefe = '$id_pract' 
+                        AND user_rol.id_rol = '$id_monitor->id' 
+                        AND user_rol.estado = 1 
+                        AND user_rol.id_semestre = '$current_semester->max' 
+                        AND user_rol.id_instancia = '$id_instance'";
 
     $monitors = $DB->get_records_sql($sql_query);
     return $monitors;

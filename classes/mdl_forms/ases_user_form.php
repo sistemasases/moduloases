@@ -37,8 +37,6 @@ require_once(__DIR__.'/../Estamento.php');
 class ases_user_form extends moodleform {
     //Add elements to form
     public function definition() {
-        global $CFG;
-
         $gender_options = Gender::get_options();
         $tipo_doc_options = TipoDocumento::get_options();
         $cidades_options = Municipio::get_options();
@@ -75,7 +73,7 @@ class ases_user_form extends moodleform {
         $mform->setDefault('id_ciudad_ini', $ciudad_por_defecto->id);
         $mform->addRule('id_ciudad_ini', null, 'required');
        
-        $mform->addElement('select', 'sexo', 'Sexo' , $gender_options);
+        $mform->addElement('searchableselector', 'sexo', 'Sexo' , $gender_options);
 
         $mform->addRule('sexo', null, 'required');
 
