@@ -69,7 +69,7 @@
                   </div>
                   <label id="lb_otro" style="padding: 5px 0px 0px 0px" class="col-xs-1 col-sm-1 col-md-1 col-lg-1 label_fields_general_tab" hidden>¿Cuál?</label>
                   <div id="div_otro_genero" class="col-lg-4 col-md-4 col-sm-4 col-xs-4 div_otro_gen" hidden>
-                    <input disabled placeholder="Escriba aquí" value = "{{otro}}" type="text" class="input_fields_general_tab_otro" name="otro_genero" id="otro_genero"  maxlength="100" required />
+                    <input disabled  placeholder="Escriba aquí" value = "{{otro}}" type="text" class="input_fields_general_tab_otro" name="otro_genero" id="otro_genero"  maxlength="100" required />
                   </div>
                   </div>
 
@@ -93,7 +93,7 @@
             <div class="row">
                 <label for="hijos" class="col-xs-3 col-sm-3 col-md-3 col-lg-3 label_fields_general_tab">Cantidad hijo/s </label>
                 <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 div_fields_general_tab" id="div-input-tiene_hijo">
-                    <input type="number" class="input_fields_general_tab" name="hijos" id="hijos" readonly value="{{sons}}" maxlength="100" required />
+                    <input type="number" min = 0 class="input_fields_general_tab" name="hijos" id="hijos" readonly value="{{sons}}" maxlength="100" required />
                 </div>
             </div>
 
@@ -158,9 +158,9 @@
                               </tr>
                             </thead>
                             <tbody>
-                           {{{personas_con_quien_vive}}}
+                                {{{personas_con_quien_vive}}}
                             </tbody>
-                          </table>
+                    </table>
 
             </div>
             <div  class=" row " name = "div_add_persona_vive" id = "div_add_persona_vive" hidden>
