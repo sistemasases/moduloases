@@ -322,17 +322,13 @@ if ($student_code != 0) {
         $record->vive_con = $ases_student->vive_con;}
 
     
-    //Código temporal tiene_hijo
+    //Código temporal hijos
         
-    if($ases_student->tiene_hijo == null){
-        $record->sons = "NO DEFINIDO";
+    if($ases_student->hijos == null){
+        $record->sons = "0";
     }else{
-        if($ases_student->tiene_hijo == false){
-        $record->sons = "NO";
-        }
-        if($ases_student->tiene_hijo == true){
-            $record->sons = "SÍ";
-            }
+        $record->sons = $ases_student->hijos;
+        
         }
 
     //Extraer condición de excepción del usuario, según id registrado

@@ -626,6 +626,8 @@ return {
         $('#act_simultanea').prop('disabled', false);
         $('#otro_genero').prop('disabled', false);
         $('#otro_act_simultanea').prop('disabled', false);
+        $('#otro_genero').prop('required', false);
+        $('#otro_act_simultanea').prop('required', false);
         $('#estado_civil').prop('disabled', false);
         $('#observacion').prop('readonly', false);
         $('.select_statuses_program').prop('disabled', false);
@@ -636,7 +638,7 @@ return {
         $('#edit_person_vive').show();
         $("#edit_person_vive").show();
      
-     
+      
         $(".table_vive_con td").find(':button').each(function(){
                 $(this).on('click' ,function(){
                     let i = $(this).val();
@@ -644,6 +646,8 @@ return {
                 });
             
         });
+          
+       
 
     
        
@@ -749,6 +753,8 @@ return {
             object_function.save_form_edit_profile(form_with_changes, object_function, update_or_insert1, update_or_insert2, data_persons);
             $('#otro_genero').prop('disabled', true);
             $('#otro_act_simultanea').prop('disabled', true);
+            $('#otro_genero').prop('required', false);
+            $('#otro_act_simultanea').prop('required', false);
         }
     });    
  },validate_form: function(form){
@@ -762,6 +768,20 @@ return {
         msg.status = "success";
 
         switch(form[field].name){
+            case "hijos":
+            if(form[field].value == "") {
+                msg.title = "Error";
+                msg.status = "error";
+                msg.msg = "El campo "+form[field].name+" es obligatorio";
+                return msg;  
+                 }
+             if(has_letters(form[field].value)){
+             msg.title = "Error";
+                    msg.status = "error";
+                    msg.msg = "El campo "+form[field].name+" no debe contener letras";
+                    return msg;
+                }   
+            break;
             case "name_person":
            if(form[field].value == "") {
             msg.title = "Error";
