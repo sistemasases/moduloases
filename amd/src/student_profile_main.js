@@ -645,7 +645,8 @@ return {
         $('#genero').prop('disabled', false);
         $('#cond_excepcion').prop('disabled', false);
         $('#act_simultanea').prop('disabled', false);
-       
+        $('#otro_act_simultanea').prop('disabled',false);
+        $('#otro_genero').prop('disabled', false);
         $('#otro_genero').prop('required', false);
         $('#otro_act_simultanea').prop('required', false);
         $('#estado_civil').prop('disabled', false);
@@ -661,12 +662,10 @@ return {
         
         $('#genero').on('click', function(){
             if((document.getElementById("genero").value) == 0){
-                $('#otro_genero').prop('disabled', false);
                 $("#div_otro_genero").show();
                 $('#lb_otro').show();
                 $('#otro_genero').prop('required',true);
             }else {
-                $('#otro_genero').prop('disabled', true);
                 $("#div_otro_genero").hide();  
                 $('#lb_otro').hide();
                 $('#otro_genero').prop('required',false);
@@ -674,12 +673,10 @@ return {
         });
         $('#act_simultanea').on('click', function(){
             if((document.getElementById("act_simultanea").value) == 0){
-                $('#otro_act_simultanea').prop('disabled',false);
                 $("#div_otro_act").show();
                 $('#lb_otro_act').show();
                 $('#otro_act_simultanea').prop('required',true);
             }else {
-                $('#otro_act_simultanea').prop('disabled',true);
                 $("#div_otro_act").hide();  
                 $('#lb_otro_act').hide();
                 $('#otro_act_simultanea').prop('required',false);
@@ -765,6 +762,12 @@ return {
                 msg.msg = "El campo "+form[field].name+" es obligatorio";
                 return msg;  
                  }
+                 if(form[field].value < 0) {
+                    msg.title = "Error";
+                    msg.status = "error";
+                    msg.msg = "El campo "+form[field].name+" no debe ser negativo";
+                    return msg;  
+                     }
              if(has_letters(form[field].value)){
              msg.title = "Error";
                     msg.status = "error";
