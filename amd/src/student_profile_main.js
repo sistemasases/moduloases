@@ -51,12 +51,12 @@ return {
 
      // Manage statuses
      for (var i = 0, len = data_init.length; i < len; i++){
-         $('#select-'+data_init[i].academic_program_id+' option[value='+data_init[i].program_status+']').attr('selected', true);
+         $('#select-'+data_init[i].academic_program_id+data_init[i].username+' option[value='+data_init[i].program_status+']').attr('selected', true);
          if(data_init[i].program_status == "1"){
-             $('#tr-'+data_init[i].id_moodle_user).addClass('is-active');
+             $('#tr-'+data_init[i].id_moodle_user+data_init[i].nombre_usuario).addClass('is-active');
          }
          if(data_init[i].tracking_status == "1"){
-             $('#div_flags_'+data_init[i].academic_program_id).prop('checked', true);
+             $('#div_flags_'+data_init[i].academic_program_id+data_init[i].nombre_usuario).prop('checked', true);
          }
      }
 

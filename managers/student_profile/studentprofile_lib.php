@@ -1101,7 +1101,8 @@ function get_status_program_for_profile($id_ases_user){
 
     global $DB;
 
-    $sql_query = "SELECT user_extended.id_moodle_user, 
+    $sql_query = "SELECT user_extended.id_moodle_user,
+                         SUBSTRING(u.username,1,7) AS codigo_estudiante,
                          academic_program.id AS academic_program_id, 
                          academic_program.cod_univalle, 
                          academic_program.nombre AS nombre_programa, 
@@ -1112,6 +1113,7 @@ function get_status_program_for_profile($id_ases_user){
                   FROM {talentospilos_user_extended} AS user_extended
                        INNER JOIN {talentospilos_programa} AS academic_program ON user_extended.id_academic_program = academic_program.id
                        INNER JOIN {talentospilos_facultad} AS faculty ON academic_program.id_facultad = faculty.id
+                       INNER JOIN {user} AS u ON u.id = user_extended.id_moodle_user 
                   WHERE id_ases_user = $id_ases_user";
     
     $academic_program_student = $DB->get_records_sql($sql_query);
