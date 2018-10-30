@@ -1,6 +1,6 @@
 /**
- * Backup  forms report
- * @module amd/src/historic_academic_reports
+ * Controls discapacity form
+ * @module amd/src/dphpforms_form_discapacity
  * @author Juan Pablo Castro
  * @copyright 2018 Juan Pablo Castro<juan.castro.vasquez@correounivalle.edu.co>
  * @license  http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
