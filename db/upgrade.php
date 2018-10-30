@@ -4,7 +4,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     global $DB;
     $dbman = $DB->get_manager();
     $result = true;
-    if ($oldversion < 2018102216350 ) {
+    if ($oldversion < 2018103010090 ) {
     //     // ************************************************************************************************************
     //     // Actualización que crea la tabla para los campos extendidos de usuario (Tabla: {talentospilos_user_extended})
     //     // Versión: 2018010911179
@@ -2134,11 +2134,18 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
 
 // unset($array_elements,$array_aditional,$new_register, $table);
 // }
-
+// ************************************************************************************************************
+//         // Actualización:
+//         //Se modifica campo de la tabla usuario
+         // Changing type of field hijos on table talentospilos_usuario to int.
+         $table = new xmldb_table('talentospilos_usuario');
+         $field = new xmldb_field('hijos', XMLDB_TYPE_INTEGER, '3', null, null, null, null, 'vive_con');
+ 
+         // Launch change of type for field hijos.
+         $dbman->change_field_type($table, $field);
      
-     
 
-        upgrade_block_savepoint(true, 2018102216350 , 'ases');
+        upgrade_block_savepoint(true, 2018103010090 , 'ases');
     
         return $result;
 
