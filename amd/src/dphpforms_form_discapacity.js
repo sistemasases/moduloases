@@ -22,9 +22,46 @@ define([
 ], function ($, jszip, dataTables, autoFill, buttons, html5, flash, print, bootstrap, sweetalert, jqueryui, select2) {
     return {
         init: function(){
-            $('#btn_ficha_inicial_discapacity').on('click', function() {
+            $("#btn_ficha_inicial_discapacity").on("click", function() {
               $("#form_ficha_inicial").show();
             });
+            $( "#input_add_discapacity" ).on("click", function() {
+       
+                let nuevaFila = "";
+             $( "#table_caracteristica_disc" ).find("tbody").append( nuevaFila );
+               
+            });
+            $("#cond_adquisicion").on("click", function(){
+                if($(this).val()== '0'){
+                    $("#div_otro_cond_adq").show();
+                }else {
+                    $("#div_otro_cond_adq").hide();
+                }
+            });
+            $("#tipo_discapacidad").on("click", function(){
+                if($(this).val()== '0'){
+                    $("#div_otra_discapacidad").show();
+                }else {
+                    $("#div_otra_discapacidad").hide();
+                }
+            });
+        
+            $("#check_diagnostico").on("change",function(){
+                if( $("#check_diagnostico").is(":checked") ) {
+                    $("#div_descripcion_diagnostico").show();
+                }else{
+                    $("#div_descripcion_diagnostico").hide();
+                }
+            });
+            $("#check_certificado_invalidez").on("change",function(){
+                if( $("#check_certificado_invalidez").is(":checked") ) {
+                    $("#div_porcentaje_inv").show();
+                }else{
+                    $("#div_porcentaje_inv").hide();
+                }
+            });
+           
+
         }
 
     };

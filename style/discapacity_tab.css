@@ -1,0 +1,92 @@
+.ficha_discapacity{
+    overflow-y: scroll; 
+    height:600px;
+}
+.label_fields_discapacity_tab{
+    padding-left: 0px;
+    padding-top: 5px;
+    color: black;
+    font-weight: normal;
+}
+.select_discapacity{
+    border-bottom-width: 0px;
+    border-top-width: 0px;
+    border-left-width: 0px;
+    border-right-width: 0px;
+    padding-bottom: 0px;
+    padding-top: 0px;
+    padding-left: 0px;
+    padding-right: 3px;
+}
+.input_fields_discapacity_tab{
+    position: relative !important;
+    height: 22px !important;
+    padding: 0px 0px 0px 0px ;
+    border-radius: 0 0 0px 0px !important;
+}
+
+.h-sections-discapacity-tab{
+    margin-bottom: 5px;
+    margin-top: 5px;
+}
+.row_discapacity{
+    margin-left: 0px;
+}
+#check_certificado_invalidez{
+    margin-right: 20px;
+}
+#div_cond_adquisicion{
+    padding-left: 0px;
+    padding-right: 0px;
+
+
+}
+#div_diagnostico{
+    padding-left: 0px;
+    padding-right: 0px;
+
+
+}
+#otro_cond_adquisicion{
+    margin-top: 5px;
+    height: 30px !important;
+}
+#input_porcentaje_inv{
+    margin-top: 0px;
+    height: 30px !important;
+}
+#otra_discapacidad{
+    margin-top: 5px;
+    height: 30px !important;
+}
+#textarea_diagnostico{
+    overflow-y: scroll; 
+    height:50px;
+    padding-left: 0px;
+    padding-right: 0px;
+}
+#discapacity_tittle{
+    font-size: 22px;
+    text-decoration: underline;
+    text-align: center;
+    padding-bottom: 20px;
+    
+}
+#btn_ficha_inicial_discapacity{
+    background-color:rgb(255, 143, 143);
+    color:black;
+    font-size: 16px;
+}
+#btn_ficha_seguimiento_discapacity{
+    background-color:rgba(255, 119, 119, 0.945);
+    color:black;
+    font-size: 16px;
+}
+#btn_ficha_cierre_discapacity{
+    background-color:rgba(255, 96, 96, 0.904);
+    color:black;
+    font-size: 16px;
+}
+#div_tipo_discapacidad{
+    margin-top: 5px;
+}
