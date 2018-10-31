@@ -37,8 +37,12 @@ $username = optional_param('username', '', PARAM_TEXT);
 $continue = optional_param('continue', false, PARAM_BOOL);
 $output = $PAGE->get_renderer('block_ases');
 
+$PAGE->requires->css('/blocks/ases/style/progress_bar_component.css');
+
+
 $pagetitle = 'Creacion de usuarios ASES';
 $mdl_user = null;
+
 
 if ( $username ) {
     $mdl_user = $DB->get_record('user', array('username'=>$username));
@@ -52,14 +56,18 @@ $actions = authenticate_user_view($USER->id, $blockid);
 if ( !isset($actions->create_ases_user) ) {
     redirect(new moodle_url('/'), "No tienes permiso para acceder a la creación de usuario ASES",1);
 }
+
+$url_params =     array(
+    'courseid' => $courseid,
+    'instanceid' => $blockid,
+    'continue'=>$continue,
+    'username'=>$username);
 $url = new moodle_url("/blocks/ases/view/create_ases_user.php",
-    array(
-        'courseid' => $courseid,
-        'instanceid' => $blockid,
-        'continue'=>$continue,
-        'username'=>$username));
+$url_params
+);
+$PAGE->set_url($url);
 $PAGE->set_title($pagetitle);
-$add_ases_user_form = new ases_user_form($url);
+$add_ases_user_form = new ases_user_form($url_params);
 
 echo $output->header();
 
@@ -77,7 +85,9 @@ if ($add_ases_user_form->is_validated()) {
         }
     }
 }
-
+if ( $continue ) {
+    \user_creation_process\write_steps(\user_creation_process\CREATE_ASES_USER);
+}
 if ( $continue && $ases_user_created ) {
     $url = \user_creation_process\generate_create_ases_update_user_extended_url($blockid, $courseid, $username, $ases_user->num_doc, true);
     redirect($url);
