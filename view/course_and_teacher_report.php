@@ -49,12 +49,19 @@ $blockid = required_param('instanceid', PARAM_INT);
 
 require_login($courseid, false);
 
-$url = new moodle_url("/blocks/ases/view/search_ases_user.php",
+$url = new moodle_url("/blocks/ases/view/course_and_teacher_report.php",
     array(
         'courseid' => $courseid,
-        'instanceid' => $blockid,
-        'next_url'=>$next_url)
+        'instanceid' => $blockid)
 );
+
+
+// Navigation setup
+$coursenode = $PAGE->navigation->find($courseid, navigation_node::TYPE_COURSE);
+$blocknode = navigation_node::create('Reportes por docente',$url, null, 'block', $blockid);
+$coursenode->add_node($blocknode);
+
+
 $PAGE->set_url($url);
 $PAGE->set_title($pagetitle);
 
