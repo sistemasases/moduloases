@@ -21,6 +21,24 @@ return {
  init: function(data_init) {
      // Carga una determinada pestaña
 
+    $(document).on('click', '#table_vive_con tbody tr td button', function () {     
+        $(this).parent().parent().remove();
+    });
+
+    /**
+     * Funcion para añadir una nueva fila en la tabla
+     */
+    $( "#input_button_add_person" ).click(function(){
+       
+        let nuevaFila = "";
+        nuevaFila += '<tr><td> <input name="name_person" class="input_fields_general_tab"  type="text"/></td>';
+        nuevaFila += '<td> <input name="parentesco_person" class="input_fields_general_tab"  type="text" /></td>';
+        nuevaFila += '<td> <button type ="button" id="bt_delete_person" title="Eliminar persona" name="btn_delete_person" style="visibility:visible;"> </button></td> </tr>';
+        $( "#table_vive_con" ).find("tbody").append( nuevaFila );
+       
+    });
+     
+
      $('[data-toggle="tooltip"]').tooltip(); 
      
      var parameters = get_url_parameters(document.location.search);
@@ -216,6 +234,16 @@ return {
 
  },equalize: function(){
      $( document ).ready(function() {
+        if(document.getElementById("genero").value == 0){
+            $('#lb_otro').show();
+            $('#div_otro_genero').show();
+        }
+        if(document.getElementById("act_simultanea").value == 0){
+            $('#lb_otro_act').show();
+            $('#div_otro_act').show();
+        }
+    
+
          var heights = $(".equalize").map(function() {
              return $(this).height();
          }).get(),
@@ -597,7 +625,12 @@ return {
  },edit_profile: function(object_function){
 
     var form_wihtout_changes = $('#ficha_estudiante').serializeArray();
-    
+    var update_or_insert1 = document.getElementById("otro_genero").value ;
+    var update_or_insert2 = document.getElementById("otro_act_simultanea").value;
+   // var json_personas_incial = document.getElementById("vive_con").value;
+
+   
+
     $('#span-icon-edit').on('click', function(){
         $(this).hide();
         $('#tip-edit').hide();
@@ -608,10 +641,47 @@ return {
         $('#tipo_doc').prop('disabled', false);
         $('#num_doc').prop('readonly', false);
         $('#icetex_status').prop('disabled', false);
+        $('#pais').prop('disabled', false);
+        $('#genero').prop('disabled', false);
+        $('#cond_excepcion').prop('disabled', false);
+        $('#act_simultanea').prop('disabled', false);
+        $('#otro_act_simultanea').prop('disabled',false);
+        $('#otro_genero').prop('disabled', false);
+        $('#otro_genero').prop('required', false);
+        $('#otro_act_simultanea').prop('required', false);
+        $('#estado_civil').prop('disabled', false);
         $('#observacion').prop('readonly', false);
         $('.select_statuses_program').prop('disabled', false);
-        $('.input_fields_general_tab').prop('readonly', false);
+        $('.input_fields_general_tab').prop('readonly', false);  
+        $('.bt_delete_person').css("visibility", "visible");
         $('.input-tracking').prop('disabled', false);
+        $('#div_add_persona_vive').show();
+        $('#edit_person_vive').show();
+     
+     
+        
+        $('#genero').on('click', function(){
+            if((document.getElementById("genero").value) == 0){
+                $("#div_otro_genero").show();
+                $('#lb_otro').show();
+                $('#otro_genero').prop('required',true);
+            }else {
+                $("#div_otro_genero").hide();  
+                $('#lb_otro').hide();
+                $('#otro_genero').prop('required',false);
+            }
+        });
+        $('#act_simultanea').on('click', function(){
+            if((document.getElementById("act_simultanea").value) == 0){
+                $("#div_otro_act").show();
+                $('#lb_otro_act').show();
+                $('#otro_act_simultanea').prop('required',true);
+            }else {
+                $("#div_otro_act").hide();  
+                $('#lb_otro_act').hide();
+                $('#otro_act_simultanea').prop('required',false);
+            }
+        });
     });
 
     $('#span-icon-cancel-edit').on('click', {form: form_wihtout_changes}, function(data){
@@ -638,6 +708,7 @@ return {
     $('#span-icon-save-profile').on('click', function(){
         
         var form_with_changes = $('#ficha_estudiante').serializeArray();
+         
 
         var result_validation = object_function.validate_form(form_with_changes);
 
@@ -646,7 +717,31 @@ return {
                  result_validation.msg,
                  result_validation.status);
         }else{
-            object_function.save_form_edit_profile(form_with_changes, object_function);
+              //Recorrer table 
+           var data_persons = [];
+           var objeto;
+           var name_persons = [];
+           var parentesco_persons = [];
+           $(".table_vive_con td").find(':input').each(function(){
+               
+            if($(this).attr('name') == "name_person"){
+           name_persons.push($(this).val());
+            }
+            if($(this).attr('name') == "parentesco_person"){
+           parentesco_persons.push($(this).val());  
+            }
+   
+               });
+            for (var i = 0; i < name_persons.length; i ++){
+                objeto = {name: name_persons[i], parentesco: parentesco_persons[i]};
+                data_persons.push(objeto);
+            }
+            data_persons = JSON.stringify(data_persons);
+            object_function.save_form_edit_profile(form_with_changes, object_function, update_or_insert1, update_or_insert2, data_persons);
+            $('#otro_genero').prop('disabled', true);
+            $('#otro_act_simultanea').prop('disabled', true);
+            $('#otro_genero').prop('required', false);
+            $('#otro_act_simultanea').prop('required', false);
         }
     });    
  },validate_form: function(form){
@@ -660,6 +755,71 @@ return {
         msg.status = "success";
 
         switch(form[field].name){
+            case "hijos":
+            if(form[field].value == "") {
+                msg.title = "Error";
+                msg.status = "error";
+                msg.msg = "El campo "+form[field].name+" es obligatorio";
+                return msg;  
+                 }
+                 if(form[field].value < 0) {
+                    msg.title = "Error";
+                    msg.status = "error";
+                    msg.msg = "El campo "+form[field].name+" no debe ser negativo";
+                    return msg;  
+                     }
+             if(has_letters(form[field].value)){
+             msg.title = "Error";
+                    msg.status = "error";
+                    msg.msg = "El campo "+form[field].name+" no debe contener letras";
+                    return msg;
+                }   
+            break;
+            case "name_person":
+           if(form[field].value == "") {
+            msg.title = "Error";
+            msg.status = "error";
+            msg.msg = "El campo "+form[field].name+" es obligatorio";
+            return msg;  
+             }
+         if(has_numbers(form[field].value)){
+         msg.title = "Error";
+                msg.status = "error";
+                msg.msg = "El campo "+form[field].name+" no debe contener números";
+                return msg;
+            }   
+           
+            break;
+            case "otro_genero":
+
+        if((document.getElementById("otro_genero").value) == "" && $('#otro_genero').attr("required")){
+                msg.title = "Error";
+                msg.status = "error";
+                msg.msg = "El campo "+form[field].name+" es obligatorio";
+                return msg;  
+            }
+        if(has_numbers(form[field].value)){
+             msg.title = "Error";
+                    msg.status = "error";
+                    msg.msg = "El campo "+form[field].name+" no debe contener números";
+                    return msg;
+        }    
+            break;
+            case "otro_act_simultanea":
+
+        if((document.getElementById("otro_act_simultanea").value) == "" && $('#otro_act_simultanea').attr("required")){
+            msg.title = "Error";
+            msg.status = "error";
+            msg.msg = "El campo "+form[field].name+" es obligatorio";
+            return msg;  
+        }
+    if(has_numbers(form[field].value)){
+         msg.title = "Error";
+                msg.status = "error";
+                msg.msg = "El campo "+form[field].name+" no debe contener números";
+                return msg;
+    }  
+            break;
             case "num_doc":
             case "tel_res":
             case "celular":
@@ -684,13 +844,15 @@ return {
     };
 
     return msg;
- },save_form_edit_profile: function(form, object_function){
-
+ },save_form_edit_profile: function(form, object_function, control1, control2, json){
     $.ajax({
         type: "POST",
         data: {
             func: 'save_profile',
-            form: form
+            form: form,
+            option1: control1,
+            option2: control2,
+            vive_con: json
         },
         url: "../managers/student_profile/studentprofile_serverproc.php",
         success: function(msg) {
@@ -700,6 +862,7 @@ return {
                 msg.msg,
                 msg.status
             );
+           
         },
         dataType: "json",
         cache: "false",
@@ -727,16 +890,23 @@ return {
     $('#tipo_doc').prop('disabled', true);
     $('#num_doc').prop('readonly', true);
     $('#icetex_status').prop('disabled', true);
+    $('#genero').prop('disabled', true);
+    $('#cond_excepcion').prop('disabled', true);
+    $('#act_simultanea').prop('disabled', true);
+    $('#estado_civil').prop('disabled', true);
+    $('#pais').prop('disabled', true);
     $('#observacion').prop('readonly', true);
     $('.select_statuses_program').prop('disabled', true);
     $('.input_fields_general_tab').prop('readonly', true);
     $('.input-tracking').prop('disabled', true);
+    $(".bt_delete_person").css("visibility", "hidden");
 
  },revert_changes: function(form){
     // Revertir cualquier cambio después de cancelar la edición
     for(field in form){
         $('#'+form[field].name).val(form[field].value);
     }
+    location.reload(true);
  }
 };
 
