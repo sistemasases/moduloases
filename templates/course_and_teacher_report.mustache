@@ -1,22 +1,33 @@
 
-{{=<% %>=}}
+
 <body name="finalgrade_report">
-<%#data%>
-<%> block_ases/side_menu%>
+{{#data}}
+{{> block_ases/side_menu}}
 
-<div>
-    <div class='title'>
-        <h2>REPORTE DE CURSOS POR PROFESOR</h2>
-    </div>
+<div class="course_and_teacher_report">
+    <h2>REPORTE DE CURSOS POR PROFESOR</h2>
     <div class = "count_items">
-
-
-                <div id="div_table_report">
-
+        <div id="div_table_report">
+            <table id="tableFinalgradesReport" class="table" cellspacing="0" width="100%">
+                <thead> </thead>
+                <tfoot>
+                <tr>
+                   {{#table}}
+                        {{!
+                        Imprime un th por cada columna, necesario para los filtros en el footer de datatables,
+                        ver https://datatables.net/examples/api/multi_filter_select.html, funcionalidad para la cual
+                        se necesita el footer y sus respectivos th
+                         }}
+                       {{#columns}}
+                           <th></th>
+                       {{/columns}}
+                   {{/table}}
+                </tr>
+                </tfoot>
+            </table>
         </div>
     </div>
-
 </div>
 <!-- end wrapper -->
-<%/data%>
+{{/data}}
 </body>

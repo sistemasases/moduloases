@@ -48,14 +48,16 @@ $courseid = required_param('courseid', PARAM_INT);
 $blockid = required_param('instanceid', PARAM_INT);
 
 require_login($courseid, false);
-
+$actions = authenticate_user_view($USER->id, $blockid);
 $url = new moodle_url("/blocks/ases/view/course_and_teacher_report.php",
     array(
         'courseid' => $courseid,
         'instanceid' => $blockid)
 );
 
-
+if (!isset($actions->course_and_teacher_report)) {
+    redirect(new moodle_url('/'), "No tienes permiso para acceder a los reportes por profesor",1, \core\output\notification::NOTIFY_INFO);
+}
 // Navigation setup
 $coursenode = $PAGE->navigation->find($courseid, navigation_node::TYPE_COURSE);
 $blocknode = navigation_node::create('Reportes por docente',$url, null, 'block', $blockid);
@@ -98,9 +100,9 @@ $data->menu = $menu_option;
 
 echo $output->header();
 
-$cursos = get_datatable_array_for_course_teacher_report($blockid);
-
-$paramReport->table = $cursos;
+$course_and_teacher_report_table = get_datatable_array_for_course_teacher_report($blockid);
+$data->table = $course_and_teacher_report_table;
+$paramReport->table = $course_and_teacher_report_table;
 
 $PAGE->requires->js_call_amd('block_ases/course_and_teacher_report', 'load_report', $paramReport);
 $output = $PAGE->get_renderer('block_ases');

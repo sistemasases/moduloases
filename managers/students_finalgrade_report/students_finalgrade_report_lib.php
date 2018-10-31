@@ -372,7 +372,7 @@ function _select_estudiantes_ases_estado() {
  *
  * @property string $curso Codigo del curso seguid de el Nombre completo de el curso moodle
  *  ejemplo: PSICOLOGÍA EDUCATIVA I  402200M
- * @property 'SI'|'NO' $critial String indicando si la materia es critica o no
+ * @property 'SI'|'NO' $critica String indicando si la materia es critica o no
  * @property string $nombre_profesor Nombre completo de el profesor (nombres y apellidos)
  * @property int $estudiantes_sin_ninguna_nota  Estudiantes que no han recibido ninguna nota en el curso, ninguna nota
  *  en una actividad en la cual almenos un estudiante halla recibido nota
@@ -791,14 +791,33 @@ function get_datatable_array_for_course_teacher_report($instance_id) {
 
     $data = array_values(get_reporte_curso_profesores($instance_id));
     array_push($columns, array("title"=>"Curso", "name"=>'curso', "data"=>"curso"));
-    array_push($columns, array("title"=>"Profesor", "name"=>"nombre_profesor", "data"=>"nombre_profesor", "description"=>'Nombre del profesor'));
-    array_push($columns, array("title"=>"Est < 50%", "name"=>"estudiantes_perdiendo", "data"=>"estudiantes_perdiendo", 'description'=>'Estudiantes perdiendo más de la mitad de los items calificados', 'className'=>'est_lt_50'));
+    array_push($columns, array(
+        "title"=>"Profesor",
+        "name"=>"nombre_profesor",
+        "data"=>"nombre_profesor",
+        "description"=>'Nombre del profesor'));
+    array_push($columns, array(
+        "title"=>"Est < 50%",
+        "name"=>"estudiantes_perdiendo",
+        "data"=>"estudiantes_perdiendo",
+        'description'=>'Estudiantes perdiendo más de la mitad de los items calificados',
+        'className'=>'estudiantes_perdiendo'));
     array_push($columns, array("title"=>"Est >=50%", "name"=>"estudiantes_ganando", "data"=>"estudiantes_ganando", "description"=>"Estudiantes ganando más de la mitad de los items calificados"));
     array_push($columns, array("title"=>"Est. sin notas", "name"=>"estudiantes_sin_ninguna_nota", "data"=>"estudiantes_sin_ninguna_nota", "description"=>"Estudiantes sin ningún item calificado"));
     array_push($columns, array("title"=>"Estudiantes", "name"=>"cantidad_estudiantes_ases", "data"=>"cantidad_estudiantes_ases", 'description'=>'Cantidad de estudiantes ASES'));
-    array_push($columns, array("title"=>"Items <br> calificados", "name"=>"items_con_almenos_una_nota", "data"=>"items_con_almenos_una_nota", 'description'=>'Cantidad de items en los cuales almenos un estudiante tiene una nota'));
-    array_push($columns, array("title"=>"Items", "name"=>"cantidad_items", "data"=>"cantidad_items", 'description'=>'Cantidad de items calificables de el curso'));
-    array_push($columns, array("title"=>"Critica", "name"=>"critica", "data"=>"critica", "description"=>'Indica si la materia ha sido marcada como critica por ASES'));
+    array_push($columns, array(
+        "title"=>"Items  calificados",
+        "name"=>"items_con_almenos_una_nota",
+        "data"=>"items_con_almenos_una_nota",
+        'description'=>'Cantidad de items en los cuales almenos un estudiante tiene una nota',
+        'className'=>'items_con_almenos_una_nota'));
+    array_push($columns, array(
+        "title"=>"Cantidad de items",
+        "name"=>"cantidad_items",
+        "data"=>"cantidad_items",
+        'description'=>'Cantidad de items calificables de el curso',
+        'className'=>'cantidad_items'));
+    array_push($columns, array("title"=>"Es critica", "name"=>"critica", "data"=>"critica", "description"=>'Indica si la materia ha sido marcada como critica por ASES'));
 
     $data = array(
         "bsort" => false,

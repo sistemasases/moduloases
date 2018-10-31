@@ -6,6 +6,9 @@
  * @license  http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+/**
+ * @see https://datatables.net/examples/api/multi_filter_select.html
+ */
 define(['jquery', 'block_ases/bootstrap', 'block_ases/jquery.dataTables', 'block_ases/sweetalert2'], function($){
 
     return {
@@ -15,15 +18,65 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/jquery.dataTables', 'block
             });
         },
 
-        load_report: function (data) {
-            $("#div_table_report").html('');
-            $("#div_table_report").fadeIn(1000).append('<table id="tableFinalgradesReport" class="table"' +
-                ' cellspacing="0" width="100%"><thead> </thead></table>');
-            $("#tableFinalgradesReport").DataTable(data);
+        load_report: function (dataTable) {
+            /**
+             * DataTable:
+             * {
+             *     bsort,
+             *     columns,
+             *     data,
+             *     language,
+             *     order
+             * }
+             * Data:
+             * {
+             *     curso,
+             *     nombre_profesor,
+             *     estudiantes_perdiendo,
+             *     estudiantes_ganando,
+             *     estudiantes_sin_ninguna_nota,
+             *     cantidad_estudiantes_ases,
+             *     items_con_almenos_una_nota,
+             *     cantidad_items
+             *     critica,
+             * }
+             */
 
-            // Añadir
+            var table = $("#tableFinalgradesReport").DataTable(
+                {
+                    data: dataTable.data,
+                    bsort: dataTable.bsort,
+                    columns: dataTable.columns,
+                    language: dataTable.language,
+                    order: dataTable.order,
+                    initComplete: function () {
+                        this.api().columns([8/*Columna 'critica'*/]).every( function () {
+                            var column = this;
+
+
+                            var select = $('<select><option value=""></option></select>')
+                                .appendTo( $(column.footer()))
+                                .on( 'change', function () {
+                                    var val = $.fn.dataTable.util.escapeRegex(
+                                        $(this).val()
+                                    );
+
+                                    column
+                                        .search( val ? '^'+val+'$' : '', true, false )
+                                        .draw();
+                                } );
+
+                            column.data().unique().sort().each( function ( d, j ) {
+                                select.append( '<option value="'+d+'">'+d+'</option>' )
+                            } );
+                        } );
+                    }
+                }
+            );
+
+            // Añadir descripción a las columnas
             $("th").each(function(index) {
-                data.columns[index].description? $(this).attr('title', data.columns[index].description): null;
+                dataTable.columns[index].description? $(this).attr('title', dataTable.columns[index].description): null;
 
             });
         },
