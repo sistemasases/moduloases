@@ -8,6 +8,12 @@
     color: black;
     font-weight: normal;
 }
+.label_fields_options_tab{
+    padding-left: 0px;
+    padding-top: 5px;
+    color: black;
+    font-weight: bold;
+}
 .select_discapacity{
     border-bottom-width: 0px;
     border-top-width: 0px;
@@ -19,10 +25,18 @@
     padding-right: 3px;
 }
 .input_fields_discapacity_tab{
+    padding-left: 0px !important;
+    padding-top: 0px;
+    color: black;
+    font-weight: normal;
+}
+.label_fields_discapacity_tab2{
     position: relative !important;
-    height: 22px !important;
-    padding: 0px 0px 0px 0px ;
+    height: 30px !important;
+    padding: 2px 0px 0px 0px ;
     border-radius: 0 0 0px 0px !important;
+    color: black;
+    font-weight: normal;
 }
 
 .h-sections-discapacity-tab{
@@ -31,9 +45,27 @@
 }
 .row_discapacity{
     margin-left: 0px;
+    margin-top: 2px !important;
+}
+.row_discapacity2{
+    margin-left: 0px;
+    margin-bottom: 8px !important;
+}
+.input-discapacity{
+    margin-top: 0px;
+    height: 30px !important;
 }
 #check_certificado_invalidez{
     margin-right: 20px;
+}
+#panel{
+    border-right-width: 1px;
+    border-right-style: solid;
+    padding-right: 20px;
+}
+#div_factor_contexto{
+    padding: 15px 0px 15px 30px !important;
+    margin-right:0px; 
 }
 #div_cond_adquisicion{
     padding-left: 0px;

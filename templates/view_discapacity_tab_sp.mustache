@@ -24,9 +24,10 @@
 
     <div class = "row ficha_discapacity" id= "form_ficha_inicial" hidden>
         <form>
-            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 ">
-                    <h3 class="h-sections-general-tab" id="h-student-info">CARACTERÍSTICAS DE LA DISCAPACIDAD</h3>
-                    <hr class="hr-general-tab-fields">
+            <h3 class="h-sections-general-tab" id="h-student-info">CARACTERÍSTICAS DE LA DISCAPACIDAD</h3>
+            <hr class="hr-general-tab-fields">
+            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 " id="panel">
+                    
                 
                 <div class="row row_discapacity" id="div_cond_adquisicion">
                     <h3 class="h-sections-discapacity-tab"><strong>¿Cuál de las siguientes circunstancias corresponde a la adquisición de discapacidad?</strong></h3> 
@@ -47,19 +48,19 @@
 
                 <div class="row row_discapacity" id = "div_otro_cond_adq" hidden>
                         <label for="lb_otro_cond_adq" class="col-xs-4 col-sm-4 col-md-3 col-lg-3 label_fields_discapacity_tab">¿Cuál condición? </label>
-                        <input class = " col-xs-8 col-sm-8 col-md-9 col-lg-9 input_fields_discapacity_tab" type="text"  placeholder="Escriba otra condición de adquisición" id="otro_cond_adquisicion">        
+                        <input class = " col-xs-8 col-sm-8 col-md-9 col-lg-9 input_fields_discapacity_tab input-discapacity" type="text"  placeholder="Escriba otra condición de adquisición" id="otro_cond_adquisicion">        
                 </div>
 
                 <div class="row row_discapacity" id="div_diagnostico">
                 
                            <h3 class="h-sections-discapacity-tab"><strong>¿Cuenta con un diagnóstico de su discapacidad?</strong></h3> 
-                            <label for="cond_excep" class="col-xs-4 col-sm-4 col-md-3 col-lg-3 label_fields_discapacity_tab">Diagnóstico </label>
+                            <label for="lb_diagnostico" class="col-xs-4 col-sm-4 col-md-3 col-lg-3 label_fields_discapacity_tab">Diagnóstico </label>
                             <input class="col-xs-1 col-sm-1 col-md-1 col-lg-1"type="checkbox" title="¿Cuenta con diagnóstico de su discapacidad?" id="check_diagnostico">
 
                 </div>
                 <div class="row row_discapacity"  id = "div_descripcion_diagnostico" hidden>
                         <label for="lb_otro_cond_adq" class="col-xs-4 col-sm-4 col-md-3 col-lg-3 label_fields_discapacity_tab">Descripción</label>
-                        <textarea  rows="20" cols="43" class = "col-xs-8 col-sm-8 col-md-9 col-lg-9 " id = "textarea_diagnostico"></textarea>       
+                        <textarea  rows="20" cols="40" class = "col-xs-8 col-sm-8 col-md-9 col-lg-9 " id = "textarea_diagnostico"></textarea>       
                 </div>
                         
 
@@ -78,19 +79,360 @@
                 </div>
                 <div class="row row_discapacity" id = "div_otra_discapacidad" hidden>
                         <label for="lb_otra_disc" class="col-xs-4 col-sm-4 col-md-3 col-lg-3 label_fields_discapacity_tab">¿Cuál discapacidad? </label>
-                        <input class = " col-xs-8 col-sm-8 col-md-9 col-lg-9 input_fields_discapacity_tab" type="text"  placeholder="Escriba otro tipo de discapacidad" id="otra_discapacidad">        
+                        <input class = " col-xs-8 col-sm-8 col-md-9 col-lg-9 input_fields_discapacity_tab input-discapacity" type="text"  placeholder="Escriba otro tipo de discapacidad" id="otra_discapacidad">        
                 </div>
                 <div class="row row_discapacity" id="div_certificado_invalidez">
                 
                         <h3 class="h-sections-discapacity-tab"><strong>¿Tiene certificado de invalidez?</strong></h3> 
-                         <label for="cond_excep" class="col-xs-4 col-sm-4 col-md-3 col-lg-3 label_fields_discapacity_tab">Certificado </label>
-                         <input class="col-xs-8 col-sm-8 col-md-1 col-lg-1"type="checkbox" title="¿Cuenta con certificado de invalidez?" id="check_certificado_invalidez">
-                         <div   id = "div_porcentaje_inv" hidden>
-                                <label for="lb_otro_cond_adq" class="col-xs-4 col-sm-4 col-md-3 col-lg-3 label_fields_discapacity_tab">Porcentaje</label>
-                               <input type="number" min="0" max="100" id="input_porcentaje_inv" class="col-xs-8 col-sm-8 col-md-4 col-lg-4 input_fields_discapacity_tab" placeholder="%"/>    
+                         <label for="lb_cert_inv" class="col-xs-4 col-sm-4 col-md-3 col-lg-3 label_fields_discapacity_tab">Certificado </label>
+                         <input class="col-xs-1 col-sm-1 col-md-1 col-lg-1"type="checkbox" title="¿Cuenta con certificado de invalidez?" id="check_certificado_invalidez">
+                         
+                </div>
+                 <div  class="row row_discapacity"  id = "div_porcentaje_inv" hidden>
+                    <label for="lb_otro_cond_adq" class="col-xs-4 col-sm-4 col-md-3 col-lg-3 label_fields_discapacity_tab">Porcentaje</label>
+                   <input type="number" min="0" max="100" id="input_porcentaje_inv" class="col-xs-2 col-sm-2 col-md-2 col-lg-2 input_fields_discapacity_tab" placeholder="%"/>    
+                </div>
+
+                <div class="row row_discapacity" id="div_documentos_soporte">
+                
+                    <h3 class="h-sections-discapacity-tab"><strong>¿Entrega documentos soporte?</strong></h3> 
+                     <label for="lb_doc_soporte" class="col-xs-4 col-sm-4 col-md-3 col-lg-3 label_fields_discapacity_tab">Soporte </label>
+                     <input  disabled class="col-xs-1 col-sm-1 col-md-1 col-lg-1"type="checkbox" title="¿Cuenta con documentos soporte?" id="check_documentos_soporte">
+                     
+                </div>
+                <hr class="hr-general-tab-fields">
+                <div class="row row_discapacity" id="div_dificultad_permanente">
+                
+                        <h3 class="h-sections-discapacity-tab"><strong>¿De las siguientes funciones en cuales presenta usted dificultad permanente?</strong></h3> 
+                        <div class="row row_discapacity">
+                                <label for="lb_func" class="col-xs-5 col-sm-5 col-md-5 col-lg-5 label_fields_options_tab">Funciones</label>
+                                <label for="lb_func" class="col-xs-7 col-sm-7 col-md-7 col-lg-7 label_fields_options_tab" style="padding-left: 15px;">¿Cuál?</label>
                         </div>
-             </div>
+                        <div class="row row_discapacity">
+                            <input class="col-xs-1 col-sm-1 col-md-1 col-lg-1"type="checkbox" title="Visión" id="check_func1">
+                            <label for="lb_func1" class="col-xs-5 col-sm-5 col-md-5 col-lg-5 label_fields_discapacity_tab2">Visión</label>
+                            <input disabled class = " col-xs-6 col-sm-6 col-md-6 col-lg-6 input_fields_discapacity_tab input-discapacity" type="text"  placeholder="Defina la dificultad permanente" id="input_func1">        
+               
+                        </div>
+                        <div class="row row_discapacity">
+                                <input class="col-xs-1 col-sm-1 col-md-1 col-lg-1"type="checkbox" title="Audición" id="check_func2">
+                                <label for="lb_func2" class="col-xs-5 col-sm-5 col-md-5 col-lg-5 label_fields_discapacity_tab2">Audición</label>
+                                <input disabled class = " col-xs-6 col-sm-6 col-md-6 col-lg-6 input_fields_discapacity_tab input-discapacity" type="text"  placeholder="Defina la dificultad permanente" id="input_func2">        
+                   
+                        </div>
+                        <div class="row row_discapacity">
+                                <input class="col-xs-1 col-sm-1 col-md-1 col-lg-1"type="checkbox" title="Voz y habla" id="check_func3">
+                                <label for="lb_func3" class="col-xs-5 col-sm-5 col-md-5 col-lg-5 label_fields_discapacity_tab2">Voz y habla</label>
+                                <input disabled class = " col-xs-6 col-sm-6 col-md-6 col-lg-6 input_fields_discapacity_tab input-discapacity" type="text"  placeholder="Defina la dificultad permanente" id="input_func3">        
+                   
+                        </div>
+                        <div class="row row_discapacity">
+                                <input class="col-xs-1 col-sm-1 col-md-1 col-lg-1"type="checkbox" title="Movimiento de cuerpo o de alguna parte del cuerpo" id="check_func4">
+                                <label for="lb_func4" class="col-xs-5 col-sm-5 col-md-5 col-lg-5 label_fields_discapacity_tab2">Movimiento de cuerpo o de alguna parte del cuerpo</label>
+                                <input disabled class = " col-xs-6 col-sm-6 col-md-6 col-lg-6 input_fields_discapacity_tab input-discapacity" type="text"  placeholder="Defina la dificultad permanente" id="input_func4">        
+                   
+                        </div>
+                        <div class="row row_discapacity">
+                                <input class="col-xs-1 col-sm-1 col-md-1 col-lg-1"type="checkbox" title="Cognición" id="check_func5">
+                                <label for="lb_func5" class="col-xs-5 col-sm-5 col-md-5 col-lg-5 label_fields_discapacity_tab2">Cognición</label>
+                                <input disabled class = " col-xs-6 col-sm-6 col-md-6 col-lg-6 input_fields_discapacity_tab input-discapacity" type="text"  placeholder="Defina la dificultad permanente" id="input_func5">        
+                   
+                        </div>
+                        <div class="row row_discapacity">
+                                <input class="col-xs-1 col-sm-1 col-md-1 col-lg-1"type="checkbox" title="Estado socio-emocional" id="check_func6">
+                                <label for="lb_func6" class="col-xs-5 col-sm-5 col-md-5 col-lg-5 label_fields_discapacity_tab2">Estado socio-emocional</label>
+                                <input disabled class = " col-xs-6 col-sm-6 col-md-6 col-lg-6 input_fields_discapacity_tab input-discapacity" type="text"  placeholder="Defina la dificultad permanente" id="input_func6">        
+                   
+                        </div>
+                        <div class="row row_discapacity">
+                                <input class="col-xs-1 col-sm-1 col-md-1 col-lg-1"type="checkbox" title="Micción, relaciones sexuales, reproducción " id="check_func7">
+                                <label for="lb_func7" class="col-xs-5 col-sm-5 col-md-5 col-lg-5 label_fields_discapacity_tab2">Micción, relaciones sexuales, reproducción </label>
+                                <input disabled class = " col-xs-6 col-sm-6 col-md-6 col-lg-6 input_fields_discapacity_tab input-discapacity" type="text"  placeholder="Defina la dificultad permanente" id="input_func7">        
+                   
+                        </div>
+                        <div class="row row_discapacity">
+                                <input class="col-xs-1 col-sm-1 col-md-1 col-lg-1"type="checkbox" title="Masticación y/o deglución " id="check_func8">
+                                <label for="lb_func8" class="col-xs-5 col-sm-5 col-md-5 col-lg-5 label_fields_discapacity_tab2">Masticación y/o deglución </label>
+                                <input disabled class = " col-xs-6 col-sm-6 col-md-6 col-lg-6 input_fields_discapacity_tab input-discapacity" type="text"  placeholder="Defina la dificultad permanente" id="input_func8">        
+                   
+                        </div>
+                        <div class="row row_discapacity">
+                                <input class="col-xs-1 col-sm-1 col-md-1 col-lg-1"type="checkbox" title="Otra ¿Cuál?" id="check_func9">
+                                <label for="lb_func9" class="col-xs-5 col-sm-5 col-md-5 col-lg-5 label_fields_discapacity_tab2">Otra ¿Cuál?</label>
+                                <input disabled class = " col-xs-6 col-sm-6 col-md-6 col-lg-6 input_fields_discapacity_tab input-discapacity" type="text"  placeholder="Defina la dificultad permanente" id="input_func9">        
+                   
+                        </div>
+                        
+                </div>
+
+                <hr class="hr-general-tab-fields">
+                <div class="row row_discapacity" id="div_cond_salud">
+                
+                        <h3 class="h-sections-discapacity-tab"><strong>¿De los siguientes órganos y/o sistemas, ¿Cuáles presentan alguna condición de salud a tener en cuenta?</strong></h3> 
+                        <div class="row row_discapacity">
+                                <label for="lb_cond" class="col-xs-5 col-sm-5 col-md-5 col-lg-5 label_fields_options_tab">Órganos/Sistemas</label>
+                                <label for="lb_cond" class="col-xs-7 col-sm-7 col-md-7 col-lg-7 label_fields_options_tab" style="padding-left: 15px;">¿Cuál?</label>
+                        </div>
+                        <div class="row row_discapacity">
+                            <input class="col-xs-1 col-sm-1 col-md-1 col-lg-1"type="checkbox" title="Ojos" id="check_cond1">
+                            <label for="lb_cond1" class="col-xs-5 col-sm-5 col-md-5 col-lg-5 label_fields_discapacity_tab2">Ojos</label>
+                            <input disabled class = " col-xs-6 col-sm-6 col-md-6 col-lg-6 input_fields_discapacity_tab input-discapacity" type="text"  placeholder="Defina la condición de salud" id="input_cond1">        
+               
+                        </div>
+                        <div class="row row_discapacity">
+                                <input class="col-xs-1 col-sm-1 col-md-1 col-lg-1"type="checkbox" title="Oídos" id="check_cond2">
+                                <label for="lb_cond2" class="col-xs-5 col-sm-5 col-md-5 col-lg-5 label_fields_discapacity_tab2">Oídos</label>
+                                <input disabled class = " col-xs-6 col-sm-6 col-md-6 col-lg-6 input_fields_discapacity_tab input-discapacity" type="text"  placeholder="Defina la condición de salud" id="input_cond2">        
+                   
+                        </div>
+                        <div class="row row_discapacity">
+                                <input class="col-xs-1 col-sm-1 col-md-1 col-lg-1"type="checkbox" title="Cuerdas vocales, labios, lengua, paladar" id="check_cond3">
+                                <label for="lb_cond3" class="col-xs-5 col-sm-5 col-md-5 col-lg-5 label_fields_discapacity_tab2">Cuerdas vocales, labios, lengua, paladar</label>
+                                <input disabled class = " col-xs-6 col-sm-6 col-md-6 col-lg-6 input_fields_discapacity_tab input-discapacity" type="text"  placeholder="Defina la condición de salud" id="input_cond3">        
+                   
+                        </div>
+                        <div class="row row_discapacity">
+                                <input class="col-xs-1 col-sm-1 col-md-1 col-lg-1"type="checkbox" title="Brazos / manos" id="check_cond4">
+                                <label for="lb_cond4" class="col-xs-5 col-sm-5 col-md-5 col-lg-5 label_fields_discapacity_tab2">Brazos / manos</label>
+                                <input disabled class = " col-xs-6 col-sm-6 col-md-6 col-lg-6 input_fields_discapacity_tab input-discapacity" type="text"  placeholder="Defina la condición de salud" id="input_cond4">        
+                   
+                        </div>
+                        <div class="row row_discapacity">
+                                <input class="col-xs-1 col-sm-1 col-md-1 col-lg-1"type="checkbox" title="Piernas" id="check_cond5">
+                                <label for="lb_cond5" class="col-xs-5 col-sm-5 col-md-5 col-lg-5 label_fields_discapacity_tab2">Piernas</label>
+                                <input disabled class = " col-xs-6 col-sm-6 col-md-6 col-lg-6 input_fields_discapacity_tab input-discapacity" type="text"  placeholder="Defina la condición de salud" id="input_cond5">        
+                   
+                        </div>
+                        <div class="row row_discapacity">
+                                <input class="col-xs-1 col-sm-1 col-md-1 col-lg-1"type="checkbox" title="Piel" id="check_cond6">
+                                <label for="lb_cond6" class="col-xs-5 col-sm-5 col-md-5 col-lg-5 label_fields_discapacity_tab2">Piel</label>
+                                <input disabled class = " col-xs-6 col-sm-6 col-md-6 col-lg-6 input_fields_discapacity_tab input-discapacity" type="text"  placeholder="Defina la condición de salud"id="input_cond6">        
+                   
+                        </div>
+                        <div class="row row_discapacity">
+                                <input class="col-xs-1 col-sm-1 col-md-1 col-lg-1"type="checkbox" title="Cerebro" id="check_cond7">
+                                <label for="lb_cond7" class="col-xs-5 col-sm-5 col-md-5 col-lg-5 label_fields_discapacity_tab2">Cerebro</label>
+                                <input disabled class = " col-xs-6 col-sm-6 col-md-6 col-lg-6 input_fields_discapacity_tab input-discapacity" type="text"  placeholder="Defina la condición de salud" id="input_cond7">        
+                   
+                        </div>
+                        <div class="row row_discapacity">
+                                <input class="col-xs-1 col-sm-1 col-md-1 col-lg-1"type="checkbox" title="Sistema nervioso" id="check_cond8">
+                                <label for="lb_cond8" class="col-xs-5 col-sm-5 col-md-5 col-lg-5 label_fields_discapacity_tab2">Sistema nervioso</label>
+                                <input disabled class = " col-xs-6 col-sm-6 col-md-6 col-lg-6 input_fields_discapacity_tab input-discapacity" type="text"  placeholder="Defina la condición de salud" id="input_cond8">        
+                   
+                        </div>
+                        <div class="row row_discapacity">
+                                <input class="col-xs-1 col-sm-1 col-md-1 col-lg-1"type="checkbox" title="Sistema cardio-respiratorio" id="check_cond9">
+                                <label for="lb_cond9" class="col-xs-5 col-sm-5 col-md-5 col-lg-5 label_fields_discapacity_tab2">Sistema cardio-respiratorio</label>
+                                <input disabled class = " col-xs-6 col-sm-6 col-md-6 col-lg-6 input_fields_discapacity_tab input-discapacity" type="text"  placeholder="Defina la condición de salud" id="input_cond9">        
+                   
+                        </div>
+                        <div class="row row_discapacity">
+                                <input class="col-xs-1 col-sm-1 col-md-1 col-lg-1"type="checkbox" title="Sistema genital, urinario, reproductor" id="check_cond10">
+                                <label for="lb_cond10" class="col-xs-5 col-sm-5 col-md-5 col-lg-5 label_fields_discapacity_tab2">Sistema genital, urinario, reproductor</label>
+                                <input disabled class = " col-xs-6 col-sm-6 col-md-6 col-lg-6 input_fields_discapacity_tab input-discapacity" type="text"  placeholder="Defina la condición de salud" id="input_cond10">        
+                   
+                        </div>
+                        <div class="row row_discapacity">
+                                <input class="col-xs-1 col-sm-1 col-md-1 col-lg-1"type="checkbox" title="Sistema digestivo" id="check_cond11">
+                                <label for="lb_cond11" class="col-xs-5 col-sm-5 col-md-5 col-lg-5 label_fields_discapacity_tab2">Sistema digestivo</label>
+                                <input disabled class = " col-xs-6 col-sm-6 col-md-6 col-lg-6 input_fields_discapacity_tab input-discapacity" type="text"  placeholder="Defina la condición de salud" id="input_cond11">        
+                   
+                        </div>
+                        <div class="row row_discapacity">
+                                <input class="col-xs-1 col-sm-1 col-md-1 col-lg-1"type="checkbox" title="Otro ¿Cuál?" id="check_cond12">
+                                <label for="lb_cond12" class="col-xs-5 col-sm-5 col-md-5 col-lg-5 label_fields_discapacity_tab2">Otro ¿Cuál?</label>
+                                <input disabled class = " col-xs-6 col-sm-6 col-md-6 col-lg-6 input_fields_discapacity_tab input-discapacity" type="text"  placeholder="Defina la condición de salud" id="input_cond12">        
+                   
+                        </div>
+                        
+                </div>
+
+                <hr class="hr-general-tab-fields">
+                <div class="row row_discapacity" id="div_necesidades">
+                
+                        <h3 class="h-sections-discapacity-tab"><strong>Indica en cuales  de estas situaciones usted experimenta una necesidad diferente o una dificultad</strong></h3> 
+                        <div class="row row_discapacity">
+                                <label for="lb_nec" class="col-xs-5 col-sm-5 col-md-5 col-lg-5 label_fields_options_tab">Actividad</label>
+                                <label for="lb_nec" class="col-xs-7 col-sm-7 col-md-7 col-lg-7 label_fields_options_tab" style="padding-left: 15px;">Necesidad o dificultad que presenta</label>
+                        </div>
+                        <div class="row row_discapacity">
+                            <input class="col-xs-1 col-sm-1 col-md-1 col-lg-1"type="checkbox" title="Cursos" id="check_nec1">
+                            <label for="lb_nec1" class="col-xs-5 col-sm-5 col-md-5 col-lg-5 label_fields_discapacity_tab2">Cursos</label>
+                            <input disabled class = " col-xs-6 col-sm-6 col-md-6 col-lg-6 input_fields_discapacity_tab input-discapacity" type="text"  placeholder="Defina la necesidad o dificultad" id="input_nec1">        
+               
+                        </div>
+                        <div class="row row_discapacity">
+                                <input class="col-xs-1 col-sm-1 col-md-1 col-lg-1"type="checkbox" title="Clases magistrales" id="check_nec2">
+                                <label for="lb_nec2" class="col-xs-5 col-sm-5 col-md-5 col-lg-5 label_fields_discapacity_tab2">Clases magistrales</label>
+                                <input disabled class = " col-xs-6 col-sm-6 col-md-6 col-lg-6 input_fields_discapacity_tab input-discapacity" type="text"  placeholder="Defina la necesidad o dificultad"  id="input_nec2">        
+                   
+                        </div>
+                        <div class="row row_discapacity">
+                                <input class="col-xs-1 col-sm-1 col-md-1 col-lg-1"type="checkbox" title="Laboratorios" id="check_nec3">
+                                <label for="lb_nec3" class="col-xs-5 col-sm-5 col-md-5 col-lg-5 label_fields_discapacity_tab2">Laboratorios</label>
+                                <input disabled class = " col-xs-6 col-sm-6 col-md-6 col-lg-6 input_fields_discapacity_tab input-discapacity" type="text"  placeholder="Defina la necesidad o dificultad" id="input_nec3">        
+                   
+                        </div>
+                        <div class="row row_discapacity">
+                                <input class="col-xs-1 col-sm-1 col-md-1 col-lg-1"type="checkbox" title="Continuar secuencias numéricas" id="check_nec4">
+                                <label for="lb_nec4" class="col-xs-5 col-sm-5 col-md-5 col-lg-5 label_fields_discapacity_tab2">Continuar secuencias numéricas</label>
+                                <input disabled class = " col-xs-6 col-sm-6 col-md-6 col-lg-6 input_fields_discapacity_tab input-discapacity" type="text"  placeholder="Defina la necesidad o dificultad"  id="input_nec4">        
+                   
+                        </div>
+                        <div class="row row_discapacity">
+                                <input class="col-xs-1 col-sm-1 col-md-1 col-lg-1"type="checkbox" title="Talleres" id="check_nec5">
+                                <label for="lb_nec5" class="col-xs-5 col-sm-5 col-md-5 col-lg-5 label_fields_discapacity_tab2">Talleres</label>
+                                <input disabled class = " col-xs-6 col-sm-6 col-md-6 col-lg-6 input_fields_discapacity_tab input-discapacity" type="text"  placeholder="Defina la necesidad o dificultad"  id="input_nec5">        
+                   
+                        </div>
+                        <div class="row row_discapacity">
+                                <input class="col-xs-1 col-sm-1 col-md-1 col-lg-1"type="checkbox" title="Conferencias" id="check_nec6">
+                                <label for="lb_nec6" class="col-xs-5 col-sm-5 col-md-5 col-lg-5 label_fields_discapacity_tab2">Conferencias</label>
+                                <input disabled class = " col-xs-6 col-sm-6 col-md-6 col-lg-6 input_fields_discapacity_tab input-discapacity" type="text"  placeholder="Defina la necesidad o dificultad"  id="input_nec6">        
+                   
+                        </div>
+                        <div class="row row_discapacity">
+                                <input class="col-xs-1 col-sm-1 col-md-1 col-lg-1"type="checkbox" title="Prácticas deportivas" id="check_nec7">
+                                <label for="lb_nec7" class="col-xs-5 col-sm-5 col-md-5 col-lg-5 label_fields_discapacity_tab2">Prácticas deportivas</label>
+                                <input disabled class = " col-xs-6 col-sm-6 col-md-6 col-lg-6 input_fields_discapacity_tab input-discapacity" type="text"  placeholder="Defina la necesidad o dificultad"  id="input_nec7">        
+                   
+                        </div>
+                        <div class="row row_discapacity">
+                                <input class="col-xs-1 col-sm-1 col-md-1 col-lg-1"type="checkbox" title="Actividades de ocio" id="check_nec8">
+                                <label for="lb_nec8" class="col-xs-5 col-sm-5 col-md-5 col-lg-5 label_fields_discapacity_tab2">Actividades de ocio</label>
+                                <input disabled class = " col-xs-6 col-sm-6 col-md-6 col-lg-6 input_fields_discapacity_tab input-discapacity" type="text"  placeholder="Defina la necesidad o dificultad"  id="input_nec8">        
+                   
+                        </div>
+                        <div class="row row_discapacity">
+                                <input class="col-xs-1 col-sm-1 col-md-1 col-lg-1"type="checkbox" title="Movilizarse de un lugar a otro" id="check_nec9">
+                                <label for="lb_nec9" class="col-xs-5 col-sm-5 col-md-5 col-lg-5 label_fields_discapacity_tab2">Movilizarse de un lugar a otro</label>
+                                <input disabled class = " col-xs-6 col-sm-6 col-md-6 col-lg-6 input_fields_discapacity_tab input-discapacity" type="text"  placeholder="Defina la necesidad o dificultad"  id="input_nec9">        
+                   
+                        </div>
+                        <div class="row row_discapacity">
+                                <input class="col-xs-1 col-sm-1 col-md-1 col-lg-1"type="checkbox" title="Audiciones, conciertos, teatro o exposiciones" id="check_nec10">
+                                <label for="lb_nec10" class="col-xs-5 col-sm-5 col-md-5 col-lg-5 label_fields_discapacity_tab2">Audiciones, conciertos, teatro o exposiciones</label>
+                                <input disabled class = " col-xs-6 col-sm-6 col-md-6 col-lg-6 input_fields_discapacity_tab input-discapacity" type="text"  placeholder="Defina la necesidad o dificultad"  id="input_nec10">        
+                   
+                        </div>
+                        <div class="row row_discapacity">
+                                <input class="col-xs-1 col-sm-1 col-md-1 col-lg-1"type="checkbox" title="Citas y actividades en los servicios de salud" id="check_nec11">
+                                <label for="lb_nec11" class="col-xs-5 col-sm-5 col-md-5 col-lg-5 label_fields_discapacity_tab2">Citas y actividades en los servicios de salud</label>
+                                <input disabled class = " col-xs-6 col-sm-6 col-md-6 col-lg-6 input_fields_discapacity_tab input-discapacity" type="text"  placeholder="Defina la necesidad o dificultad"  id="input_nec11">        
+                   
+                        </div>
+                        <div class="row row_discapacity">
+                                <input class="col-xs-1 col-sm-1 col-md-1 col-lg-1"type="checkbox" title="Asambleas o actividades gremiales" id="check_nec12">
+                                <label for="lb_nec12" class="col-xs-5 col-sm-5 col-md-5 col-lg-5 label_fields_discapacity_tab2">Asambleas o actividades gremiales</label>
+                                <input disabled class = " col-xs-6 col-sm-6 col-md-6 col-lg-6 input_fields_discapacity_tab input-discapacity" type="text"  placeholder="Defina la necesidad o dificultad"  id="input_nec12">        
+                   
+                        </div>
+                        <div class="row row_discapacity">
+                                <input class="col-xs-1 col-sm-1 col-md-1 col-lg-1"type="checkbox" title="El consumo de alimentos en las cafeterías" id="check_nec13">
+                                <label for="lb_nec13" class="col-xs-5 col-sm-5 col-md-5 col-lg-5 label_fields_discapacity_tab2">El consumo de alimentos en las cafeterías</label>
+                                <input disabled class = " col-xs-6 col-sm-6 col-md-6 col-lg-6 input_fields_discapacity_tab input-discapacity" type="text"  placeholder="Defina la necesidad o dificultad"  id="input_nec13">        
+                   
+                        </div>
+                        <div class="row row_discapacity">
+                                <input class="col-xs-1 col-sm-1 col-md-1 col-lg-1"type="checkbox" title="Tramites académicos, financieros o administrativos" id="check_nec14">
+                                <label for="lb_nec14" class="col-xs-5 col-sm-5 col-md-5 col-lg-5 label_fields_discapacity_tab2">Tramites académicos, financieros o administrativos</label>
+                                <input disabled class = " col-xs-6 col-sm-6 col-md-6 col-lg-6 input_fields_discapacity_tab input-discapacity" type="text"  placeholder="Defina la necesidad o dificultad"  id="input_nec14">        
+                   
+                        </div>
+                        <div class="row row_discapacity">
+                                <input class="col-xs-1 col-sm-1 col-md-1 col-lg-1"type="checkbox" title="Otra ¿Cuál?" id="check_nec15">
+                                <label for="lb_nec15" class="col-xs-5 col-sm-5 col-md-5 col-lg-5 label_fields_discapacity_tab2">Otra ¿Cuál?</label>
+                                <input disabled class = " col-xs-6 col-sm-6 col-md-6 col-lg-6 input_fields_discapacity_tab input-discapacity" type="text"  placeholder="Defina la necesidad o dificultad"  id="input_nec15">        
+                   
+                        </div>
+                        
+                </div>
            
+
+            </div>
+
+            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 ">
+
+                            <div class="row row_discapacity" id="div_factor_impacto">
+                            <h3 class="h-sections-discapacity-tab"><strong>Frente a la limitación de su participación y óptimo desempeño, el factor que más le impacta en los diferentes escenarios de la vida universitaria es/son</strong></h3> 
+
+                            <div class="row row_discapacity">
+                                <input class="col-xs-1 col-sm-1 col-md-1 col-lg-1"type="checkbox" title="Condición de discapacidad" id="check_factor1">
+                                <label for="lb_factor1" class="col-xs-5 col-sm-5 col-md-5 col-lg-5 label_fields_discapacity_tab2">Condición de discapacidad</label>
+                               
+                            </div>
+                            <div class="row row_discapacity">
+                                    <input class="col-xs-1 col-sm-1 col-md-1 col-lg-1"type="checkbox" title="Características del contexto universitario " id="check_factor2">
+                                    <label for="lb_factor2" class="col-xs-5 col-sm-5 col-md-5 col-lg-5 label_fields_discapacity_tab2">Características del contexto universitario </label>
+                                    
+                            </div> 
+
+
+                                 <div hidden class="row row_discapacity" id="div_factor_contexto" title="Características del contexto universitario ">
+                                    <h3 class="h-sections-discapacity-tab"><strong>- Características del contexto universitario. indique cuál(s) de los siguientes factores le genera(n) mayor dificultad</strong></h3> 
+                                   
+                                    <div class="row row_discapacity2">
+                                            <input class="col-xs-1 col-sm-1 col-md-1 col-lg-1"type="checkbox" title=" Ausencia o deficiencia de dispositivos, equipos o ayudas tecnológicas." id="check_factor2_1">
+                                            <label for="lb_factor2_1" class="col-xs-8 col-sm-8 col-md-8 col-lg-8 label_fields_discapacity_tab2">Ausencia o deficiencia de dispositivos, equipos o ayudas tecnológicas.</label>
+                                           
+                                    </div>
+                                    <div class="row row_discapacity2">
+                                            <input class="col-xs-1 col-sm-1 col-md-1 col-lg-1"type="checkbox" title="La ausencia o deficiencia de condiciones de accesibilidad a los espacios físicos." id="check_factor2_2">
+                                            <label for="lb_factor2_2" class="col-xs-8 col-sm-8 col-md-8 col-lg-8 label_fields_discapacity_tab2">La ausencia o deficiencia de condiciones de accesibilidad a los espacios físicos.</label>
+                                           
+                                    </div>
+                                    <div class="row row_discapacity2">
+                                            <input class="col-xs-1 col-sm-1 col-md-1 col-lg-1"type="checkbox" title="La ausencia o deficiencia de condiciones de accesibilidad a los materiales impresos y pagina web de la universidad." id="check_factor2_3">
+                                            <label for="lb_factor2_3" class="col-xs-8 col-sm-8 col-md-8 col-lg-8 label_fields_discapacity_tab2">La ausencia o deficiencia de condiciones de accesibilidad a los materiales impresos y pagina web de la universidad.</label>
+                                           
+                                    </div>
+                                    <div class="row row_discapacity2">
+                                            <input class="col-xs-1 col-sm-1 col-md-1 col-lg-1"type="checkbox" title="La ausencia o deficiencia de personas que apoyen el desarrollo de las actividades.      " id="check_factor2_4">
+                                            <label for="lb_factor2_4" class="col-xs-8 col-sm-8 col-md-8 col-lg-8 label_fields_discapacity_tab2">La ausencia o deficiencia de personas que apoyen el desarrollo de las actividades.      </label>
+                                           
+                                    </div>
+                                    <div class="row row_discapacity2">
+                                            <input class="col-xs-1 col-sm-1 col-md-1 col-lg-1"type="checkbox" title="Las actitudes negativas de las personas que no se disponen a apoyar ." id="check_factor2_5">
+                                            <label for="lb_factor2_5" class="col-xs-8 col-sm-8 col-md-8 col-lg-8 label_fields_discapacity_tab2">Las actitudes negativas de las personas que no se disponen a apoyar.</label>
+                                           
+                                    </div>
+                                    <div class="row row_discapacity2">
+                                            <input class="col-xs-1 col-sm-1 col-md-1 col-lg-1"type="checkbox" title="La ausencia o programas o servicios para personas con discapacidad en la Universidad." id="check_factor2_6">
+                                            <label for="lb_factor2_6" class="col-xs-8 col-sm-8 col-md-8 col-lg-8 label_fields_discapacity_tab2">La ausencia o programas o servicios para personas con discapacidad en la Universidad.</label>
+                                           
+                                    </div>
+                                    <div class="row row_discapacity2">
+                                            <input class="col-xs-1 col-sm-1 col-md-1 col-lg-1"type="checkbox" title="Otros, ¿cuáles?" id="check_factor2_7">
+                                            <label for="lb_factor2_7" class="col-xs-3 col-sm-3 col-md-3 col-lg-3 label_fields_discapacity_tab2">Otros, ¿cuáles?</label>
+                                            <input disabled class = " col-xs-8 col-sm-8 col-md-8 col-lg-8 input_fields_discapacity_tab input-discapacity" type="text"  placeholder="Defina el factor de impacto del contexto"  id="input_factor2_7">        
+                       
+                                    </div>
+                                    
+                                </div> 
+
+
+                            <div class="row row_discapacity">
+                                    <input class="col-xs-1 col-sm-1 col-md-1 col-lg-1"type="checkbox" title="Condición psicoemocional " id="check_factor3">
+                                    <label for="lb_factor3" class="col-xs-5 col-sm-5 col-md-5 col-lg-5 label_fields_discapacity_tab2">Condición psicoemocional </label>
+                                    
+                            </div>       
+                            <div class="row row_discapacity">
+                                    <input class="col-xs-1 col-sm-1 col-md-1 col-lg-1"type="checkbox" title="Otra ¿Cuál?" id="check_factor4">
+                                    <label for="lb_factor4" class="col-xs-3 col-sm-3 col-md-3 col-lg-3 label_fields_discapacity_tab2">Otra ¿Cuál?</label>
+                                    <input disabled class = " col-xs-8 col-sm-8 col-md-8 col-lg-8 input_fields_discapacity_tab input-discapacity" type="text"  placeholder="Defina el factor de impacto"  id="input_factor4">        
+                       
+                            </div>
+                          
+                         
+                    </div>
+
+                    <hr class="hr-general-tab-fields">
+
+                    <div class="row row_discapacity">
+                            <h3 class="h-sections-discapacity-tab"><strong>Desde sus diversidad funcional, las exigencias de cada escenarios de la vida en la Universidad, así como las condiciones con las que cuenta actualmente, indique las posibilidades con las que cuenta para llevar a cabo las siguientes actividades cotidianas</strong></h3> 
+                                   
+                    </div>
 
             </div>
 
