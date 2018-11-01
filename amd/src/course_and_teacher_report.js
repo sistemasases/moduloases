@@ -9,7 +9,7 @@
 /**
  * @see https://datatables.net/examples/api/multi_filter_select.html
  */
-define(['jquery', 'block_ases/bootstrap', 'block_ases/jquery.dataTables', 'block_ases/sweetalert2'], function($){
+define(['jquery', 'block_ases/jquery.dataTables', 'core/notification', ], function($, _, notification){
 
     return {
         init: function () {
@@ -50,12 +50,13 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/jquery.dataTables', 'block
                     language: dataTable.language,
                     order: dataTable.order,
                     initComplete: function () {
+                        console.log(this.api().columns());
                         this.api().columns([8/*Columna 'critica'*/]).every( function () {
                             var column = this;
 
 
                             var select = $('<select><option value=""></option></select>')
-                                .appendTo( $(column.footer()))
+                                .appendTo( $(column.header()))
                                 .on( 'change', function () {
                                     var val = $.fn.dataTable.util.escapeRegex(
                                         $(this).val()
@@ -67,7 +68,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/jquery.dataTables', 'block
                                 } );
 
                             column.data().unique().sort().each( function ( d, j ) {
-                                select.append( '<option value="'+d+'">'+d+'</option>' )
+                                select.append( '<option value="'+d+'">'+d+'</option>' );
                             } );
                         } );
                     }
