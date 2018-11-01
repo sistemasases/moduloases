@@ -1,5 +1,5 @@
 <?php
-namespace datatable;
+namespace jquery_datatable;
 
 
 /**
