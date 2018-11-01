@@ -132,11 +132,11 @@ define(['jquery',
                 });
                 
                 //Filtros sobre estados 
-                $(document).on('change', '.select_filter_statuses', function () {                         
+                $(document).on('change', '.select_filter_statuses', function () {
                     var table = $("#tableResult").DataTable();
                     var colIndex = $(this).parent().index() + 1;
-                    var selectedText = $(this).parent().find(":selected").text();                               
-                    table.columns(colIndex - 1).search(selectedText).draw();
+                    var selectedText = $(this).parent().find(":selected").text();
+                    table.columns(colIndex - 1).search(selectedText? '^'+selectedText+'$': '', true, false).draw();
                 });
 
                 
