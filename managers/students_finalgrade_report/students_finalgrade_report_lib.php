@@ -127,25 +127,7 @@ function get_finalgrade_by_student_and_course($student_id, $course_id){
     return number_format($finalgrade, 1);
 }
 
-/**
- * @param $courseid
- * @return bool
- * @throws dml_exception
- */
-function get_cantidad_items_con_notas($courseid){
-    global $DB;
-    $sql = <<<SQL
-SELECT COUNT(*) FROM (
-    SELECT DISTINCT  ON (mdl_grade_items.id) *
-    from {grade_items} AS mdl_grade_items inner join {grade_grades} AS mdl_grade_grades
-    on mdl_grade_items.id = mdl_grade_grades.itemid
-        WHERE mdl_grade_items.courseid = $courseid
-        and mdl_grade_items.itemtype != 'category'
-        and mdl_grade_items.itemtype != 'course'
-    and finalgrade is not null) AS mdl_grade_items_with_at_least_one_grade
-SQL;
-return $DB->get_record_sql($sql);
-}
+
 
 
 /**
@@ -186,186 +168,9 @@ function get_students_grades($student_id, $course_id){
     return $grades;
 }
 
-/**
- * Class ReporteDocente
- *
- * Dummy class for ReporteDocente
- *
- * @property $cod_materia Codigo de la materia univalle
- * @property $nomber_unidad_academica
- * @property $nombre_profesor
- * @property $numero_items_creados Numero de items creados con notas registradas
- * @property $numero_estudiantes_perdiendo Número de estudiantes ASES que van ganando la materia
- * @property $numero_estudiantes_ganando Número de estudiantes ASES que van perdiendo la materia
- * @property $numero_estudiantes_sin_nota Numero de estudiantes ASES que no tienen nota
- * @property $total_estudiantes_curso Total de estudiantes ASES que están en ese curso
- */
-class ReporteDocente{};
 
 
 
-/**
- * Tablas consultadas: mdl_user, mdl_context, mdl_role_assignments, mdl_course
- * Columnas retornadas: mdl_user_id, mdl_context_id
- *
- * @return SelectQuery
- */
-
-
-
-function _select_user_enrols(): SelectQuery {
-    return BaseDAO::get_factory()
-        ->select(
-            'mdl_cohort_members.cohortid',
-            alias('mdl_enrol.courseid', 'courseid'),
-            alias('mdl_user.id', 'user_id') ,
-            alias('mdl_user.firstname', 'user_name'),
-            alias('mdl_user.lastname', 'user_lastname'),
-            alias(
-                express('substring(mdl_user.username from %s for %s)', param(0), param(8)),
-                'user_code_univalle'
-            ))
-        ->from(alias('{cohort_members}', 'mdl_cohort_members'))
-        ->innerJoin(alias('{cohort}', 'mdl_cohort'), on('mdl_cohort.id' , 'mdl_cohort_members.cohortid'))
-        ->innerJoin(alias('{user_enrolments}','mdl_user_enrolments'), on('mdl_user_enrolments.userid', 'mdl_cohort_members.userid'))
-        ->innerJoin(alias('{user}','mdl_user'), on('mdl_user_enrolments.userid', 'mdl_user.id'))
-        ->innerJoin(alias('{enrol}', 'mdl_enrol'), on('mdl_enrol.id', 'mdl_user_enrolments.enrolid'));
-}
-
-
-
-function _select_mdl_courses() {
-    return BaseDAO::get_factory()
-        ->select(alias('{course}', 'mdl_course'));
-}
-function _select_cantidad_cursos_ases($semestre = null) {
-    if(!$semestre){
-        $semestre_object = get_current_semester();
-        $sem = $semestre_object->nombre;
-        $id_semestre = $semestre_object->max;
-        $año = substr($sem,0,4);
-
-        if(substr($sem,4,1) == 'A'){
-            $semestre = $año.'02';
-        }else if(substr($sem,4,1) == 'B'){
-            $semestre = $año.'08';
-        }
-    }
-    $factory = BaseDAO::get_factory();
-    return $factory
-        ->select(fn('count', literal('*')))
-        ->from(
-            subquery(
-                _select_cursos_ases(),
-                'mdl_courses'
-            )
-        );
-
-}
-
-function _select_moodle_teachers(): SelectQuery {
-    return BaseDAO::get_factory()
-        ->select(
-            literal('mdl_user.*'),
-            alias('mdl_user.id', 'mdl_user_id'),
-            alias('mdl_context.id', 'mdl_context_id'),
-            alias('mdl_role_assignments.id', 'mdl_role_assignments_id'),
-            alias('mdl_course.id', 'mdl_course_id'))
-        ->from(alias('{course}', 'mdl_course'))
-        ->innerJoin(alias('{context}','mdl_context'), on('mdl_context.instanceid','mdl_course.id'))
-        ->innerJoin(alias('{role_assignments}','mdl_role_assignments'), on('mdl_context.id','mdl_role_assignments.contextid'))
-        ->innerJoin(alias('{user}','mdl_user'), on('mdl_role_assignments.userid','mdl_user.id'))
-        ->innerJoin(alias('{enrol}','mdl_enrol'), on('mdl_course.id','mdl_enrol.courseid'))
-        ->innerJoin(alias('{user_enrolments}','mdl_user_enrolments'),
-            on('mdl_enrol.id', 'mdl_user_enrolments.enrolid')->and(
-                on('mdl_user.id', 'mdl_user_enrolments.userid')
-            ))
-        ->where(field('mdl_context.contextlevel')->eq(param(COURSE_CONTEXT_ID)))
-        ->andWhere(field('mdl_role_assignments.roleid')->eq(param(TEACHER_ROLE_ID)));
-}
-
-function _select_cursos_ases_with_teacher($semestre=null)
-{
-    if (!$semestre) {
-        $semestre_object = get_current_semester();
-        $sem = $semestre_object->nombre;
-        $id_semestre = $semestre_object->max;
-        $año = substr($sem, 0, 4);
-
-        if (substr($sem, 4, 1) == 'A') {
-            $semestre = $año . '02';
-        } else if (substr($sem, 4, 1) == 'B') {
-            $semestre = $año . '08';
-        }
-    }
-    return _select_cursos_ases()
-        ->innerJoin(
-            alias('{context}', 'mdl_context'),
-            on('mdl_context.instanceid', 'mdl_course.id'))
-        ->addColumns(literal('mdl_context.*'))
-        ->addColumns('moodle_teachers.firstname','moodle_teachers.lastname', 'moodle_teachers.mdl_context_id', 'mdl_context.id')
-        ->innerJoin(
-            subquery(
-                _select_moodle_teachers(),
-                'moodle_teachers'),
-          on('moodle_teachers.mdl_context_id','mdl_context.id')
-        )->limit(5);
-
-
-}
-function _select_cursos_ases($semestre=null): SelectQuery {
-    if(!$semestre){
-        $semestre_object = get_current_semester();
-        $sem = $semestre_object->nombre;
-        $id_semestre = $semestre_object->max;
-        $año = substr($sem,0,4);
-
-        if(substr($sem,4,1) == 'A'){
-            $semestre = $año.'02';
-        }else if(substr($sem,4,1) == 'B'){
-            $semestre = $año.'08';
-        }
-    }
-
-    $factory = BaseDAO::get_factory();
-    return $factory
-        ->select(
-            literal('DISTINCT ON(mdl_course.fullname) mdl_course.fullname'),
-            'mdl_course.fullname',
-            'mdl_course.shortname',
-            alias('mdl_course.id', 'mdl_course_id'))
-        ->from(alias('{course}','mdl_course'))
-        ->innerJoin(alias('{enrol}','mdl_enrol'), on('mdl_course.id','mdl_enrol.courseid'))
-        ->innerJoin(
-            alias('{user_enrolments}','mdl_user_enrolments'),
-            on ('mdl_user_enrolments.enrolid','mdl_enrol.id'))
-        ->where(
-            criteria(
-                '%s = %s ',
-                express('SUBSTRING(mdl_course.shortname FROM 15 FOR 6)'),
-                param($semestre)))
-        ->andWhere(
-            field('mdl_user_enrolments.userid')
-            ->in(
-                    $factory
-                        ->select('usuarios.mdl_user_id')
-                        ->from(
-                            subquery(
-                                _select_estudiantes_ases_estado()
-                                ->where(field('estados_ases.nombre')->eq(literal("'seguimiento'"))),
-                                'usuarios')
-                        )))
-        ->orderBy('mdl_course.fullname', 'ASC');
-
-}
-
-
-function _select_estudiantes_ases_estado() {
-    return _select_estudiantes_ases()
-        ->innerJoin(alias('{talentospilos_est_estadoases}','est_estadoases'), on('usuario.id','est_estadoases.id_estudiante'))
-        ->innerJoin(alias('{talentospilos_estados_ases}','estados_ases'), on('estados_ases.id','est_estadoases.id_estado_ases'));
-
-}
 
 /**
  * Class ItemReporteCursoProfesores
@@ -658,67 +463,6 @@ SQL;
     return $DB->get_records_sql($sql);
 }
 
-/**
- * Tablas retornadas: user_extended, ases_user, mdl_user
- *
- * Columnas retornadas:
- *  AsesUserExtended::get_column_names()
- *  AsesUser::get_column_names()
- *  firstname
- *  lastname
- *  mdl_user_id
- *
- * @return SelectQuery
- * @throws ErrorException
- */
-function _select_estudiantes_ases(): SelectQuery {
-    $column_names = [];
-    $aditional_column_names = [
-        'mdl_user.firstname',
-        'mdl_user.lastname',
-        alias('mdl_user.id', 'mdl_user_id'),
-        alias('user_extended.id', 'user_extended_id'),
-        alias('usuario.id', 'usuario_id')
-    ];
-    $column_names = array_merge($column_names, AsesUserExtended::get_column_names('user_extended'));
-    $column_names = array_merge($column_names, AsesUser::get_column_names('usuario'));
-    $column_names = array_merge($column_names, $aditional_column_names);
-    return BaseDAO::get_factory()
-        ->select(
-            listing(identifyAll($column_names)))
-        ->from(
-            alias('{user}', 'mdl_user'))
-        ->innerJoin(
-            alias(AsesUserExtended::get_table_name_for_moodle(), 'user_extended'),
-            on('mdl_user.id', 'user_extended.'.AsesUserExtended::ID_MOODLE_USER))
-        ->innerJoin(
-            alias(AsesUser::get_table_name_for_moodle(), 'usuario'),
-            on('user_extended.'.AsesUserExtended::ID_ASES_USER, 'usuario.'.AsesUser::ID))
-        ;
-}
-
-
-/**
- * Return a select containing all the ases cohorts
- *
- * Tables returned:
- *  instancia_cohorte
- *
- * Columns returned:
- * All from talentospilos_inst_cohorte
- *
- * @param $id_instancia Id ASES instance
- * @param string $table_raname
- * @return SelectQuery
- */
-function _select_instancias_cohorte($id_instancia): SelectQuery{
-    $factory = BaseDAO::get_factory();
-    $INSTANCIA_COHORTE = 'inst_cohorte';
-    return $factory
-        ->select()
-        ->from(alias('{talentospilos_inst_cohorte}', $INSTANCIA_COHORTE))
-        ->where(field($INSTANCIA_COHORTE.'.id_instancia')->eq($id_instancia));
-}
 
 /**
  * Return the common language cnofiguration for ASES datatables
@@ -750,22 +494,21 @@ function get_datatable_common_language_config(): array {
 
 function get_datatable_array_for_finalgrade_report($instance_id){
     $columns = array();
-		array_push($columns, array("title"=>"Código del curso", "name"=>"course_code", "data"=>"course_code"));
-		array_push($columns, array("title"=>"Nombre del curso", "name"=>"fullname", "data"=>"fullname"));
-		array_push($columns, array("title"=>"Docente", "name"=>"nombre_profe", "data"=>"nombre_profe"));
-		array_push($columns, array("title"=>"Nombre del estudiante", "name"=>"student_name", "data"=>"student_name"));
-        array_push($columns, array("title"=>"Apellido del estudiante", "name"=>"student_lastname", "data"=>"student_lastname"));
-        array_push($columns, array("title"=>"Notas", "name"=>"grades", "data"=>"grades"));
-        array_push($columns, array("title"=>"Nota final parcial", "name"=>"finalgrade", "data"=>"finalgrade"));
-        $common_language_config = get_datatable_common_language_config();
-		$data = array(
-					"bsort" => false,
-					"columns" => $columns,
-					"data" => get_students_and_finalgrades($instance_id),
-					"language" => $common_language_config,
-					"order"=> array(0, "desc")
-
-                );
+    array_push($columns, array("title"=>"Código del curso", "name"=>"course_code", "data"=>"course_code"));
+    array_push($columns, array("title"=>"Nombre del curso", "name"=>"fullname", "data"=>"fullname"));
+    array_push($columns, array("title"=>"Docente", "name"=>"nombre_profe", "data"=>"nombre_profe"));
+    array_push($columns, array("title"=>"Nombre del estudiante", "name"=>"student_name", "data"=>"student_name"));
+    array_push($columns, array("title"=>"Apellido del estudiante", "name"=>"student_lastname", "data"=>"student_lastname"));
+    array_push($columns, array("title"=>"Notas", "name"=>"grades", "data"=>"grades"));
+    array_push($columns, array("title"=>"Nota final parcial", "name"=>"finalgrade", "data"=>"finalgrade"));
+    $common_language_config = get_datatable_common_language_config();
+    $data = array(
+                "bsort" => false,
+                "columns" => $columns,
+                "data" => get_students_and_finalgrades($instance_id),
+                "language" => $common_language_config,
+                "order"=> array(0, "desc")
+    );
     return $data;
 }
 
