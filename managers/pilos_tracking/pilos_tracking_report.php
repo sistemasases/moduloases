@@ -54,34 +54,26 @@ if (isset($_POST['type']) && $_POST['type'] == "getInfo" && isset($_POST['instan
     }
 
 
-if (isset($_POST['type']) && $_POST['type'] == "user_specific_counting" && isset($_POST['instance']))
-    {
+if (isset($_POST['type']) && $_POST['type'] == "user_specific_counting" && isset($_POST['instance'])){
 
     //Function that obtains the count of the subordinates given the authenticated user number
-
 
     $user = $USER->id;
     $role = get_id_rol_($USER->id, $_POST['instance']);
     $role_name = get_name_rol($role);
     $current_semester = get_current_semester();
-    $array_final=[];
-
+    $array_final = null;
 
     if($role_name == 'profesional_ps'){
-       $array_final =auxiliary_specific_counting("profesional_ps",$user,$current_semester, $_POST['instance']);
-    
+       $array_final = auxiliary_specific_countingV2("profesional_ps",$user,$current_semester, $_POST['instance']);
     }else if($role_name =='practicante_ps'){
-       $array_final =auxiliary_specific_counting("practicante_ps",$user,$current_semester, $_POST['instance']);
-
+       $array_final = auxiliary_specific_countingV2("practicante_ps",$user,$current_semester, $_POST['instance']);
     }else if($role_name =='monitor_ps'){
-       $array_final =auxiliary_specific_counting("monitor_ps",$user,$current_semester, $_POST['instance']);
-
+       $array_final = auxiliary_specific_countingV2("monitor_ps",$user,$current_semester, $_POST['instance']);
     }
 
-
-      echo json_encode($array_final);  
-
-    }
+    echo json_encode($array_final);  
+}
 
 
 if (isset($_POST['type']) && isset($_POST['instance']) && $_POST['type'] == "get_groupal_trackings" && isset($_POST['student_code']))
