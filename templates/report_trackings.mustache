@@ -1,8 +1,8 @@
 {{#data}}
 <div id="dphpforms_role_support" data-info="{{rol}}" style="display:none;"></div>
 {{> block_ases/side_menu}} 
-<div id="loading">
-<img id="loading-image" src="../icon/load.gif" height="162" width="162"><div class="container">
+<!--<div id="loading"><img id="loading-image" src="../icon/load.gif" height="162" width="162">-->
+<div class="container">
 </div>
    <h2>SEGUIMIENTO PILOS</h2>
    <hr/>
@@ -19,11 +19,21 @@
       <div data-spy="scroll" data-target=".navbar" data-offset="50" class="well col-md-12  reporte-seguimiento">
          {{{table_periods}}}
       </div>
-      <div id='loadingmessage'>
       <div class="well col-xs-12 col-sm-12 col-md-10 col-lg-10 col-md-offset-1 equalize text-center" id="div-header-info" style="height: 204.746px;" name="main_counting">
-
-     {{{counting}}}
-    </div>
+        <h2> INFORMACIÓN DE {{human_rol}}</h2><hr>
+        <div class="row">
+          <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+            <strong>Profesional</strong><br />
+            <strong>Fichas:</strong> Revisado : <span id="general_rev_pro">0</span> - No revisado : <span id="general_not_rev_pro">0</span> -  Total : <span id="general_pro_t">0</span><br>
+            <strong>Inasistencias:</strong> Revisado : <span id="general_in_rev_pro">0</span> - No revisado : <span id="general_in_not_rev_pro">0</span> -  Total : <span id="general_in_pro_t">0</span>
+          </div>
+          <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+            <strong>Practicante</strong><br />
+            <strong>Fichas:</strong> Revisado : <span id="general_rev_prac">0</span> - No revisado : <span id="general_not_rev_prac">0</span> -  Total : <span id="general_prac_t">0</span><br>
+            <strong>Inasistencias:</strong> Revisado : <span id="general_in_rev_prac">0</span> - No revisado : <span id="general_in_not_rev_prac">0</span> -  Total : <span id="general_in_prac_t">0</span>
+          </div>
+        </div>
+      </div>
 
     <div data-spy="scroll" data-target=".navbar" data-offset="50" class="well col-md-10 col-md-offset-1 reporte-seguimiento " id="reemplazarToogle" name="reemplazarToogle">
          {{{table}}}
