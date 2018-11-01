@@ -160,7 +160,8 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                 usuario["namerol"] = namerol;
 
 
-                create_specific_counting(usuario);
+                create_specific_counting( usuario );
+                
 
 
 
@@ -398,6 +399,38 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
 
             function create_specific_counting(user){
                 
+                /*$.ajax({
+                    type: "POST",
+                    data: {
+                        type: "user_specific_counting",
+                        user: user,
+                        instance:get_instance(),
+                    },
+                    url: "../managers/pilos_tracking/pilos_tracking_report.php",
+                    async: false,
+                    dataType: "json",
+                    cache: "false",
+                    success: function( msg ) {
+
+                        let obj = msg;
+
+                        $.each( obj, function( index, value ){
+                            $("#counting_"+value.code).html(value.html);
+                        });
+                        generate_general_counting(user);
+                        $("#loading").fadeOut('slow');
+                    },
+                    error: function( msg ) {
+                       swal({
+                            title: "Oops !",
+                            text: "Se presentó un inconveniente al cargar conteo de usuarios",
+                            html: true,
+                            type: 'warning',
+                            confirmButtonColor: "#d51b23"
+                        });
+                    },
+                });*/
+
                 $.ajax({
                     type: "POST",
                     data: {
@@ -407,35 +440,29 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                     },
                     url: "../managers/pilos_tracking/pilos_tracking_report.php",
                     async: false,
-                    success: function(msg
-                        ) {
-
-                    var obj = msg;
-                    $.each( obj, function( index, value ){
-
-                        $("#counting_"+value.code).html(value.html);
-                    });
-                    generate_general_counting(user);
-                    $("#loading").fadeOut('slow');
-
-
-
-
-                    },
                     dataType: "json",
                     cache: "false",
-                    error: function(msg) {
-                       swal({
-                            title: "Oops !",
-                            text: "Se presentó un inconveniente al cargar conteo de usuarios",
-                            html: true,
-                            type: 'warning',
-                            confirmButtonColor: "#d51b23"
-                        });
+                    success: function( data ) {
+
+                        $("#general_rev_pro").html( data.revisado_profesional );
+                        $("#general_rev_prac").html( data.revisado_practicante );
+                        $("#general_not_rev_pro").html( data.not_revisado_profesional );
+                        $("#general_not_rev_prac").html( data.not_revisado_practicante );
+                        $("#general_pro_t").html( data.total_profesional );
+                        $("#general_prac_t").html( data.total_practicante );
+
+                        $("#general_in_rev_pro").html( data.in_revisado_profesional );
+                        $("#general_in_rev_prac").html( data.in_revisado_practicante );
+                        $("#general_in_not_rev_pro").html( data.in_not_revisado_profesional );
+                        $("#general_in_not_rev_prac").html( data.in_not_revisado_practicante );
+                        $("#general_in_pro_t").html( data.in_total_profesional );
+                        $("#general_in_prac_t").html( data.in_total_practicante );
+
                     },
+                    error: function( data ) {},
                 });
 
-                }
+            }
 
 
             function generate_general_counting(user){
