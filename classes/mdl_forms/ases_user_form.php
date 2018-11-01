@@ -26,12 +26,12 @@
 defined('MOODLE_INTERNAL') || die;
 
 require_once($CFG->libdir.'/formslib.php');
-require_once(__DIR__.'/../Gender.php');
-require_once(__DIR__.'/../TipoDocumento.php');
-require_once(__DIR__.'/../AsesUser.php');
-require_once(__DIR__.'/../Municipio.php');
-require_once(__DIR__.'/../Discapacidad.php');
-require_once(__DIR__.'/../Estamento.php');
+require_once(__DIR__ . '/../Gender.php');
+require_once(__DIR__ . '/../TipoDocumento.php');
+require_once(__DIR__ . '/../AsesUser.php');
+require_once(__DIR__ . '/../Municipio.php');
+require_once(__DIR__ . '/../Discapacidad.php');
+require_once(__DIR__ . '/../Estamento.php');
 class ases_user_form extends moodleform {
     //Add elements to form
     public function definition() {

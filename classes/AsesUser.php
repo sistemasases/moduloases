@@ -24,20 +24,20 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 defined('MOODLE_INTERNAL') || die;
-require_once(__DIR__.'/../vendor/autoload.php');
+require_once(__DIR__ . '/../vendor/autoload.php');
 
 use function Latitude\QueryBuilder\{alias, on, listing, identifyAll, field};
 
 
-require_once(__DIR__.'/../managers/user_management/user_management_lib.php');
-require_once(__DIR__.'/DAO/BaseDAO.php');
-require_once(__DIR__.'/Estado.php');
-require_once(__DIR__.'/EstadoAsesRegistro.php');
-require_once(__DIR__.'/EstadoAses.php');
-require_once(__DIR__.'/Discapacidad.php');
-require_once(__DIR__.'/EstadoIcetexRegistro.php');
-require_once(__DIR__.'/EstadoIcetex.php');
-require_once(__DIR__.'/Errors/Factories/DatabaseErrorFactory.php');
+require_once(__DIR__ . '/../managers/user_management/user_management_lib.php');
+require_once(__DIR__ . '/DAO/BaseDAO.php');
+require_once(__DIR__ . '/Estado.php');
+require_once(__DIR__ . '/EstadoAsesRegistro.php');
+require_once(__DIR__ . '/EstadoAses.php');
+require_once(__DIR__ . '/Discapacidad.php');
+require_once(__DIR__ . '/EstadoIcetexRegistro.php');
+require_once(__DIR__ . '/EstadoIcetex.php');
+require_once(__DIR__ . '/Errors/Factories/DatabaseErrorFactory.php');
 
 
 class AsesUser extends BaseDAO  {
