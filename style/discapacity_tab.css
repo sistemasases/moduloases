@@ -38,14 +38,18 @@
     color: black;
     font-weight: normal;
 }
-
+.label_fields_discapacity_tab3{
+    margin-right: 13px;
+    color: black;
+    font-weight: normal;
+}
 .h-sections-discapacity-tab{
     margin-bottom: 5px;
     margin-top: 5px;
 }
 .row_discapacity{
     margin-left: 0px;
-    margin-top: 2px !important;
+    margin-top: 7px !important;
 }
 .row_discapacity2{
     margin-left: 0px;
@@ -54,6 +58,14 @@
 .input-discapacity{
     margin-top: 0px;
     height: 30px !important;
+}
+.range_input{
+    height: 25px !important;
+    width:  60px !important;
+    margin-right: 10px !important;
+    margin-left: 10px !important;
+    padding-left: 0px !important;
+    padding-right: 0px !important;
 }
 #check_certificado_invalidez{
     margin-right: 20px;

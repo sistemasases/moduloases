@@ -64,6 +64,35 @@ define([
                 }     
                       
             });
+
+            $("#div_posibilidades_condiciones input[type=range]").on("change", function(){
+             if($(this).val()==1){
+                $(this).parent().find(":input[type=text]").prop("value","No la puede realizar");
+                
+             }
+             if($(this).val()==2){
+                $(this).parent().find(":input[type=text]").prop("value","Lo hace sin apoyo");
+            }
+            if($(this).val()==3){
+                $(this).parent().find(":input[type=text]").prop("value","Lo hace con apoyo");
+            }
+            });
+
+            $("#check_otra_posibilidad").on("click", function(){
+                if($(this).is(":checked")){
+                    $("#div_otra_actividad").show();
+                    $("#input_otro1").prop("required",true);
+                    $("#input_tipo_otro").prop("required",true);
+                }else{
+                    $("#div_otra_actividad").hide();
+                    $("#input_otro1").prop("value","");
+                    $("#input_posib_otro").prop("value","");
+                    $("#input_tipo_otro").prop("value","");
+                    $("#input_otro1").prop("required",false);
+                    $("#input_tipo_otro").prop("required",false);
+                }
+            });
+
             
             $("#div_cond_salud input").on("change", function(){
                 if($(this).is(":checked")){
@@ -102,6 +131,31 @@ define([
                     $("#otro_cond_adquisicion").prop("required", false);
                 }
             });
+
+            $("#opciones_apoyo input[name=apoyo_principal]").on("change", function(){
+                if($("#input_radio_otro_oa").is(":checked")){
+                    $("#div_otro_apoyo_principal").show();
+                    $("#input_otro_apoyo").prop("required", true);
+                }else{
+                    $("#div_otro_apoyo_principal").hide();
+                    $("#input_otro_apoyo").prop("required", false);
+                    $("#input_otro_apoyo").prop("value", "");
+                }
+            });
+
+            $("#opciones_transporte input[name=desplazamiento]").on("change", function(){
+                if($("#input_radio_otro_ot").is(":checked")){
+                    $("#div_otro_transporte").show();
+                    $("#input_otro_transporte").prop("required", true);
+                }else{
+                    $("#div_otro_transporte").hide();
+                    $("#input_otro_transporte").prop("required", false);
+                    $("#input_otro_transporte").prop("value", "");
+                }
+            });
+
+            
+
             $("#tipo_discapacidad").on("click", function(){
                 if($(this).val()== '0'){
                     $("#div_otra_discapacidad").show();
