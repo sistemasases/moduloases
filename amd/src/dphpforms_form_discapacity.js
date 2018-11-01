@@ -22,6 +22,8 @@ define([
 ], function ($, jszip, dataTables, autoFill, buttons, html5, flash, print, bootstrap, sweetalert, jqueryui, select2) {
     return {
         init: function(){
+           
+
             $("#div_factor_impacto input").on("change",function(){
                 if($("#check_factor2").is(":checked")){
                     //Display other options
@@ -52,7 +54,7 @@ define([
                 }
             });
             
-            $("#div_necesidades input").on("change", function(){
+            $("#div_necesidades input[type=checkbox]").on("change", function(){
                 if($(this).is(":checked")){
                    
                     $(this).parent().find(":input[type=text]").prop("disabled", false);
@@ -94,7 +96,7 @@ define([
             });
 
             
-            $("#div_cond_salud input").on("change", function(){
+            $("#div_cond_salud input[type=checkbox]").on("change", function(){
                 if($(this).is(":checked")){
                     
                     $(this).parent().find(":input[type=text]").prop("disabled", false);
@@ -106,7 +108,7 @@ define([
                 }     
                       
             });
-            $("#div_dificultad_permanente input").on("change", function(){
+            $("#div_dificultad_permanente input[type=checkbox]").on("change", function(){
                 if($(this).is(":checked")){
                     $(this).parent().find(":input[type=text]").prop("disabled", false);
                     $(this).parent().find(":input[type=text]").prop("required", true);
@@ -181,9 +183,58 @@ define([
                 }else{
                     $("#div_porcentaje_inv").hide();
                     $("#input_porcentaje_inv").prop("required", false);
+                    $("#input_porcentaje_inv").prop("value", "");
                 }
             });
-           
+
+            $("#check_org").on("change",function(){
+                if( $("#check_org").is(":checked") ) {
+                    $("#div_organizacion_asociacion").show();
+                    $("#input_org").prop("required", true);
+                }else{
+                    $("#div_organizacion_asociacion").hide();
+                    $("#input_org").prop("required", false);
+                    $("#input_org").prop("value", "");
+                }
+            });
+
+            $("#check_actividades_otros").on("change",function(){
+                if( $("#check_actividades_otros").is(":checked") ) {
+                    $("#div_actividades_otros_desc").show();
+                    $("#input_actividades_otros").prop("required", true);
+                }else{
+                    $("#div_actividades_otros_desc").hide();
+                    $("#input_actividades_otros").prop("required", false);
+                    $("#input_actividades_otros").prop("value", "");
+                }
+            });
+
+            $("#check_apoyo_institu").on("change",function(){
+                if( $("#check_apoyo_institu").is(":checked") ) {
+                    $("#div_institucion_apoyo").show();
+                    $("#input_institucion").prop("required", true);
+                    $("#input_apoyo").prop("required", true);
+                }else{
+                    $("#div_institucion_apoyo").hide();
+                    $("#input_institucion").prop("required", false);
+                    $("#input_institucion").prop("value", "");
+                    $("#input_apoyo").prop("required", false);
+                    $("#input_apoyo").prop("value", "");
+                }
+            });
+            
+            
+            $("#save_ficha_discapacity").on("click", function(){
+                validate_form();
+                  
+              });
+
+
+
+        function validate_form(){
+            
+
+        }      
 
         }
 

@@ -99,6 +99,22 @@
     margin-top: 0px;
     height: 30px !important;
 }
+#input_org{
+    margin-top: 0px;
+    height: 30px !important; 
+}
+#input_actividades_otros{
+    margin-top: 0px;
+    height: 30px !important; 
+}
+#input_apoyo{
+    margin-top: 0px;
+    height: 30px !important; 
+}
+#input_institucion{
+    margin-top: 0px;
+    height: 30px !important; 
+}
 #otra_discapacidad{
     margin-top: 5px;
     height: 30px !important;
