@@ -1,6 +1,8 @@
 <?php
 
 
+use function jquery_datatable\get_datatable_class_column;
+
 require_once (__DIR__.'/../jquery_datatable/jquery_datatable_lib.php');
 
 
@@ -9,6 +11,7 @@ require_once (__DIR__.'/../jquery_datatable/jquery_datatable_lib.php');
  *
  * @property string $curso Codigo del curso seguid de el Nombre completo de el curso moodle
  *  ejemplo: PSICOLOGÍA EDUCATIVA I  402200M
+ * @property int curso_id Id de el curso moodle
  * @property 'SI'|'NO' $critica String indicando si la materia es critica o no
  * @property string $nombre_profesor Nombre completo de el profesor (nombres y apellidos)
  * @property int $estudiantes_sin_ninguna_nota  Estudiantes que no han recibido ninguna nota en el curso, ninguna nota
@@ -45,6 +48,7 @@ function get_reporte_curso_profesores($id_instancia) {
     }
     $sql = <<<SQL
  SELECT DISTINCT ON ( moodle_course.curso_id ) 
+                moodle_course.curso_id,
                 concat_ws(' ',  moodle_course.fullname, substring(moodle_course.shortname from 4 for 7)) as curso,
                 Concat_ws(' ', mdl_user.firstname, mdl_user.lastname) AS nombre_profesor,
                 case
@@ -68,16 +72,16 @@ SELECT distinct  on (id) *
                     (
                     SELECT DISTINCT  ON( mdl_grade_grades.finalgrade) finalgrade
                     FROM            mdl_grade_grades
-             INNER JOIN       mdl_user
+             INNER JOIN      {user} mdl_user
              ON              mdl_user.id = mdl_grade_grades.userid
-             INNER JOIN      mdl_grade_items
+             INNER JOIN      {grade_items} mdl_grade_items
              ON              mdl_grade_items.id = mdl_grade_grades.itemid
-             INNER JOIN       mdl_course
+             INNER JOIN      {course} mdl_course
              ON              mdl_course.id = mdl_grade_items.courseid
              WHERE           mdl_user.id = _mdl_user.id
              AND             mdl_course.id = _mdl_course.id
              ORDER BY        mdl_grade_grades.finalgrade ASC limit 1) AS first_note --if at least one grade is not null the first is this, otherwise the first note is null
-      FROM       mdl_user as _mdl_user
+      FROM       {user} as _mdl_user
       INNER JOIN  mdl_talentospilos_user_extended
       ON         _mdl_user.id = mdl_talentospilos_user_extended.id_moodle_user
       AND        mdl_talentospilos_user_extended.tracking_status = 1
@@ -306,6 +310,7 @@ function get_datatable_for_course_and_teacher_report($instance_id) {
     $est_lt_50_colum_index = 2;
 
     $data = array_values(get_reporte_curso_profesores($instance_id));
+    array_push($columns, get_datatable_class_column());
     array_push($columns, array("title"=>"Curso", "name"=>'curso', "data"=>"curso"));
     array_push($columns, array(
         "title"=>"Profesor",
@@ -327,6 +332,13 @@ function get_datatable_for_course_and_teacher_report($instance_id) {
         "data"=>"items_con_almenos_una_nota",
         'description'=>'Cantidad de items en los cuales almenos un estudiante tiene una nota',
         'className'=>'items_con_almenos_una_nota'));
+    array_push($columns, array(
+        "title"=>"Id del curso moodle",
+        "name"=>"curso_id",
+        "data"=>"curso_id",
+        'description'=>'Id de el curso ',
+        'visible' => 'false',
+        'className'=>'curso_id'));
     array_push($columns, array(
         "title"=>"Cantidad de items",
         "name"=>"cantidad_items",

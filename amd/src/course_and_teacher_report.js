@@ -9,7 +9,7 @@
 /**
  * @see https://datatables.net/examples/api/multi_filter_select.html
  */
-define(['jquery', 'block_ases/jquery.dataTables', 'core/notification', ], function($, _, notification){
+define(['jquery', 'core/notification', 'block_ases/global_grade_book', 'block_ases/jquery.dataTables' ], function($, notification, gg_b){
 
     return {
         init: function () {
@@ -18,8 +18,16 @@ define(['jquery', 'block_ases/jquery.dataTables', 'core/notification', ], functi
             });
         },
 
-        load_report: function (dataTable) {
+        load_report: function (data) {
+            console.log(data);
+            var dataTable = data;
+            var mdl_course_caller_id = data.mdl_course_caller_id;
             /**
+             * Data: {
+             *     dataTable,
+             *     mdl_course_caller_id
+             * }
+             *
              * DataTable:
              * {
              *     bsort,
@@ -28,9 +36,10 @@ define(['jquery', 'block_ases/jquery.dataTables', 'core/notification', ], functi
              *     language,
              *     order
              * }
-             * Data:
+             * DataTable.data[]:
              * {
              *     curso,
+             *     curso_id,
              *     nombre_profesor,
              *     estudiantes_perdiendo,
              *     estudiantes_ganando,
@@ -42,6 +51,18 @@ define(['jquery', 'block_ases/jquery.dataTables', 'core/notification', ], functi
              * }
              */
 
+            var filter_columns = ['critica'];
+            function get_filter_column_indexes(filter_column_names, column_names) {
+                var filter_column_indexes = [];
+                var i;
+                for(i = 0; i < column_names.length; i++) {
+                    if(filter_column_names.includes(column_names[i])) {
+                        filter_column_indexes.push(i);
+                    }
+
+                }
+                return filter_column_indexes;
+            }
             var table = $("#tableFinalgradesReport").DataTable(
                 {
                     data: dataTable.data,
@@ -50,8 +71,9 @@ define(['jquery', 'block_ases/jquery.dataTables', 'core/notification', ], functi
                     language: dataTable.language,
                     order: dataTable.order,
                     initComplete: function () {
-                        console.log(this.api().columns());
-                        this.api().columns([8/*Columna 'critica'*/]).every( function () {
+                        var column_names = dataTable.columns.map(column => column.name? column.name: null);
+                        var filter_column_indexes = get_filter_column_indexes(filter_columns, column_names );
+                            this.api().columns(filter_column_indexes).every( function () {
                             var column = this;
 
 
@@ -74,7 +96,57 @@ define(['jquery', 'block_ases/jquery.dataTables', 'core/notification', ], functi
                     }
                 }
             );
+            function get_course_html( row , callback, tr ) {
+                var data = row.data();
+                // `d` is the original data object for the row
+                var post_info = {
+                    mdl_course_id: data.curso_id,
+                    mdl_course_caller_id: mdl_course_caller_id
+                }
+                $.ajax({
+                        method: "POST",
+                        url: '../managers/course_and_teacher_report/course_and_teacher_report_api.php',
+                        data: post_info,
+                        dataType: 'html'
+                    }
+                ).fail(
+                    function (response) {
+                        console.log(response);
+                        notification.alert('Error, debe informar a un programador, adjunte esta información', response.responseText, 'Aceptar');
+                        tr.removeClass('shown');
+                    }
+                ).done(
+                    function (response) {
 
+                        console.log('postinfo', post_info);
+                        console.log('grades_table:', response);
+                        callback(row, response);
+                    }
+                );
+            }
+
+            $('#tableFinalgradesReport tbody').on('click', 'td.details-control', function () {
+                var tr = $(this).closest('tr');
+                var row = table.row( tr );
+
+                if ( row.child.isShown() ) {
+                    // This row is already open - close it
+                    row.child.hide();
+                    tr.removeClass('shown');
+                }
+                else {
+                    // Open this row
+                    var callback = (row, data_html) => {
+                        row.child( data_html ).show();
+                        /* Fix styles for ases table*/
+                        //gg_b.read_only_view_styles();
+                    };
+                    get_course_html(row, callback, tr);
+                    /* Fix styles and view for grades loaded */
+
+                    tr.addClass('shown');
+                }
+            } );
             // Añadir descripción a las columnas
             $("th").each(function(index) {
                 dataTable.columns[index].description? $(this).attr('title', dataTable.columns[index].description): null;

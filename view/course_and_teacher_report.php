@@ -46,7 +46,7 @@ include "../managers/menu_options.php";
 $pagetitle = 'Reporte de curso y profesor';
 $courseid = required_param('courseid', PARAM_INT);
 $blockid = required_param('instanceid', PARAM_INT);
-
+error_reporting(E_ALL);
 require_login($courseid, false);
 $actions = authenticate_user_view($USER->id, $blockid);
 $url = new moodle_url("/blocks/ases/view/course_and_teacher_report.php",
@@ -102,7 +102,8 @@ echo $output->header();
 
 $course_and_teacher_report_table = get_datatable_for_course_and_teacher_report($blockid);
 $data->table = $course_and_teacher_report_table;
-$paramReport->table = $course_and_teacher_report_table;
+$paramReport->dataTable = $course_and_teacher_report_table;
+$paramReport->mdl_course_caller_id = $courseid;
 
 $PAGE->requires->js_call_amd('block_ases/course_and_teacher_report', 'load_report', $paramReport);
 $output = $PAGE->get_renderer('block_ases');

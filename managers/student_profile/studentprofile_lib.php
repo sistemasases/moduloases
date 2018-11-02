@@ -132,7 +132,7 @@ function update_user_image_profile($mdl_user_id, $php_file) {
  * @return moodle_url
  */
 function get_student_profile_url($courseid, $instanceid, $student_code): moodle_url {
-    return new moodle_url('/blocks/ases/student_profile.php',
+    return new moodle_url('/blocks/ases/view/student_profile.php',
         array(
             'courseid' => $courseid,
             'instanceid'=> $instanceid,
