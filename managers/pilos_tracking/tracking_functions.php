@@ -27,6 +27,7 @@ require_once (dirname(__FILE__) . '/../lib/student_lib.php');
 require_once (dirname(__FILE__) . '/../dphpforms/dphpforms_get_record.php');
 require_once (dirname(__FILE__) . '/../student_profile/studentprofile_lib.php');
 require_once (dirname(__FILE__) . '/../seguimiento_grupal/seguimientogrupal_lib.php');
+require_once (dirname(__FILE__) . '/../dphpforms/v2/dphpforms_lib.php');
 
 /**
  * Get the toggle of the monitor with the follow-ups of each student with the implementation of the new form
@@ -318,8 +319,7 @@ function filter_trackings_by_review($peer_tracking_v2)
  *
  */
 
-function auxiliary_specific_counting($user_kind, $user_id, $semester, $instance)
-{
+function auxiliary_specific_counting($user_kind, $user_id, $semester, $instance){
     $array_final = array();
     if ($user_kind == 'profesional_ps') {
         $practicant_of_prof = get_pract_of_prof($user_id, $instance);
@@ -329,14 +329,10 @@ function auxiliary_specific_counting($user_kind, $user_id, $semester, $instance)
             $profesional_counting = calculate_specific_counting('PROFESIONAL', $monitors_of_pract, $semester->max, $instance);
             $counting_advice = new stdClass();
             $counting_advice->code = $practicant->username;
-
-            // $counting_advice->html="<h6><p class='text-right'><strong class='subpanel'>RP :</strong><label class='review_prof'>".$profesional_counting[0]."</label> - <strong class='subpanel'> N RP: </strong><label class='not_review_prof'>".$profesional_counting[1]."</label> - <strong class='subpanel'>TOTAL:</strong><label class='total_prof'>".($profesional_counting[0]+$profesional_counting[1])."</label></p><p class='text-right'><strong class='subpanel'>Rp :</strong><label class='review_pract'>".$profesional_counting[2]."</label> - <strong class='subpanel'> N Rp: </strong><label class='not_review_pract'>".$profesional_counting[3]."</label> - <strong class='subpanel'>TOTAL:</strong><label class='total_pract'>".($profesional_counting[2]+$profesional_counting[3])."</label></p></h6>";
-
+            $counting_advice->html="<h6><p class='text-right'><strong class='subpanel'>RP :</strong><label class='review_prof'>".$profesional_counting[0]."</label> - <strong class='subpanel'> N RP: </strong><label class='not_review_prof'>".$profesional_counting[1]."</label> - <strong class='subpanel'>TOTAL:</strong><label class='total_prof'>".($profesional_counting[0]+$profesional_counting[1])."</label></p><p class='text-right'><strong class='subpanel'>Rp :</strong><label class='review_pract'>".$profesional_counting[2]."</label> - <strong class='subpanel'> N Rp: </strong><label class='not_review_pract'>".$profesional_counting[3]."</label> - <strong class='subpanel'>TOTAL:</strong><label class='total_pract'>".($profesional_counting[2]+$profesional_counting[3])."</label></p></h6>";
             array_push($array_final, $counting_advice);
         }
-    }
-    else
-    if ($user_kind == 'practicante_ps') {
+    }else if ($user_kind == 'practicante_ps') {
         $monitors_of_pract = get_monitors_of_pract($user_id, $instance);
         foreach($monitors_of_pract as $monitor) {
             $monitor_id = $monitor->id_usuario;
@@ -347,7 +343,286 @@ function auxiliary_specific_counting($user_kind, $user_id, $semester, $instance)
             array_push($array_final, $counting_advice);
         }
     }
+    return $array_final;
+}
 
+function auxiliary_specific_countingV2($user_kind, $user_id, $semester, $instance){
+
+    $fecha_inicio = null;
+    $fecha_fin = null;
+
+    $interval = get_semester_interval($semester->max);
+    $fecha_inicio = getdate(strtotime($interval->fecha_inicio));
+    $fecha_fin = getdate(strtotime($interval->fecha_fin));
+
+    $mon_tmp = $fecha_inicio["mon"];
+    $day_tmp = $fecha_inicio["mday"];
+    if( $mon_tmp < 10 ){
+        $mon_tmp = "0" . $mon_tmp;
+    }
+    if( $day_tmp < 10 ){
+        $day_tmp = "0" . $day_tmp;
+    }
+
+    $fecha_inicio_str = $fecha_inicio["year"]."-".$mon_tmp."-".$day_tmp;
+
+    $mon_tmp = $fecha_fin["mon"];
+    $day_tmp = $fecha_fin["mday"];
+    if( $mon_tmp < 10 ){
+        $mon_tmp = "0" . $mon_tmp;
+    }
+    if( $day_tmp < 10 ){
+        $day_tmp = "0" . $day_tmp;
+    }
+
+    $fecha_fin_str = $fecha_fin["year"]."-".$mon_tmp."-".$day_tmp;
+
+    $array_final = array();
+    if ($user_kind == 'profesional_ps') {
+
+        $xQuery = new stdClass();
+        $xQuery->form = "seguimiento_pares";
+        $xQuery->filterFields = [["fecha",[[$fecha_inicio_str,">="],[$fecha_fin_str,"<="]], false],
+                                 ["revisado_profesional",[["%%","LIKE"]], false],
+                                 ["revisado_practicante",[["%%","LIKE"]], false],
+                                 ["id_profesional",[[$user_id,"="]], false]
+                                ];
+        $xQuery->orderFields = [["fecha","DESC"]];
+        $xQuery->orderByDatabaseRecordDate = true; 
+        $xQuery->recordStatus = [ "!deleted" ];
+        $xQuery->selectedFields = []; 
+
+        $trackings = dphpformsV2_find_records( $xQuery );
+
+        $rev_pro = 0;
+        $not_rev_pro = 0;
+        $rev_prac = 0;
+        $not_rev_prac = 0;
+    
+        foreach( $trackings as $track ){
+            if( $track["revisado_profesional"] == 0 ){
+                $rev_pro++;
+            }else{
+                $not_rev_pro++;
+            }
+            if( $track["revisado_practicante"] == 0 ){
+                $rev_prac++;
+            }else{
+                $not_rev_prac++;
+            }
+        }
+
+        $xQuery = new stdClass();
+        $xQuery->form = "inasistencia";
+        $xQuery->filterFields = [["fecha",[[$fecha_inicio_str,">="],[$fecha_fin_str,"<="]], false],
+                                 ["revisado_profesional",[["%%","LIKE"]], false],
+                                 ["revisado_practicante",[["%%","LIKE"]], false],
+                                 ["id_profesional",[[$user_id,"="]], false]
+                                ];
+        $xQuery->orderFields = [["fecha","DESC"]];
+        $xQuery->orderByDatabaseRecordDate = true; 
+        $xQuery->recordStatus = [ "!deleted" ];
+        $xQuery->selectedFields = []; 
+
+        $in_trackings = dphpformsV2_find_records( $xQuery );
+
+        $in_rev_pro = 0;
+        $in_not_rev_pro = 0;
+        $in_rev_prac = 0;
+        $in_not_rev_prac = 0;
+    
+        foreach( $in_trackings as $track ){
+            if( $track["in_revisado_profesional"] == 0 ){
+                $in_rev_pro++;
+            }else{
+                $in_not_rev_pro++;
+            }
+            if( $track["in_revisado_practicante"] == 0 ){
+                $in_rev_prac++;
+            }else{
+                $in_not_rev_prac++;
+            }
+        }
+
+        $count['revisado_profesional'] = $rev_pro;
+        $count['not_revisado_profesional'] = $not_rev_pro;
+        $count['total_profesional'] = $rev_pro + $not_rev_pro;
+        $count['revisado_practicante'] = $rev_prac;
+        $count['not_revisado_practicante'] = $not_rev_prac;
+        $count['total_practicante'] = $rev_prac + $not_rev_prac;
+
+        $count['in_revisado_profesional'] = $in_rev_pro;
+        $count['in_not_revisado_profesional'] = $in_not_rev_pro;
+        $count['in_total_profesional'] = $in_rev_pro + $in_not_rev_pro;
+        $count['in_revisado_practicante'] = $in_rev_prac;
+        $count['in_not_revisado_practicante'] = $in_not_rev_prac;
+        $count['in_total_practicante'] = $in_rev_prac + $in_not_rev_prac;
+
+        return $count;
+
+    }else if ($user_kind == 'practicante_ps') {
+        
+        $xQuery = new stdClass();
+        $xQuery->form = "seguimiento_pares";
+        $xQuery->filterFields = [["fecha",[[$fecha_inicio_str,">="],[$fecha_fin_str,"<="]], false],
+                                 ["revisado_profesional",[["%%","LIKE"]], false],
+                                 ["revisado_practicante",[["%%","LIKE"]], false],
+                                 ["id_practicante",[[$user_id,"="]], false]
+                                ];
+        $xQuery->orderFields = [["fecha","DESC"]];
+        $xQuery->orderByDatabaseRecordDate = false; 
+        $xQuery->recordStatus = [ "!deleted" ];
+        $xQuery->selectedFields = []; 
+
+        $trackings = dphpformsV2_find_records( $xQuery );
+
+        $rev_pro = 0;
+        $not_rev_pro = 0;
+        $rev_prac = 0;
+        $not_rev_prac = 0;
+    
+        foreach( $trackings as $track ){
+            if( $track["revisado_profesional"] == 0 ){
+                $rev_pro++;
+            }else{
+                $not_rev_pro++;
+            }
+            if( $track["revisado_practicante"] == 0 ){
+                $rev_prac++;
+            }else{
+                $not_rev_prac++;
+            }
+        }
+
+        $xQuery = new stdClass();
+        $xQuery->form = "inasistencia";
+        $xQuery->filterFields = [["fecha",[[$fecha_inicio_str,">="],[$fecha_fin_str,"<="]], false],
+                                 ["in_revisado_profesional",[["%%","LIKE"]], false],
+                                 ["in_revisado_profesional",[["%%","LIKE"]], false],
+                                 ["id_practicante",[[$user_id,"="]], false]
+                                ];
+        $xQuery->orderFields = [["fecha","DESC"]];
+        $xQuery->orderByDatabaseRecordDate = true; 
+        $xQuery->recordStatus = [ "!deleted" ];
+        $xQuery->selectedFields = []; 
+
+        $in_trackings = dphpformsV2_find_records( $xQuery );
+
+        $in_rev_pro = 0;
+        $in_not_rev_pro = 0;
+        $in_rev_prac = 0;
+        $in_not_rev_prac = 0;
+    
+        foreach( $in_trackings as $track ){
+            if( $track["in_revisado_profesional"] == 0 ){
+                $in_rev_pro++;
+            }else{
+                $in_not_rev_pro++;
+            }
+            if( $track["in_revisado_practicante"] == 0 ){
+                $in_rev_prac++;
+            }else{
+                $in_not_rev_prac++;
+            }
+        }
+
+        $count['revisado_profesional'] = $rev_pro;
+        $count['not_revisado_profesional'] = $not_rev_pro;
+        $count['total_profesional'] = $rev_pro + $not_rev_pro;
+        $count['revisado_practicante'] = $rev_prac;
+        $count['not_revisado_practicante'] = $not_rev_prac;
+        $count['total_practicante'] = $rev_prac + $not_rev_prac;
+
+        $count['in_revisado_profesional'] = $in_rev_pro;
+        $count['in_not_revisado_profesional'] = $in_not_rev_pro;
+        $count['in_total_profesional'] = $in_rev_pro + $in_not_rev_pro;
+        $count['in_revisado_practicante'] = $in_rev_prac;
+        $count['in_not_revisado_practicante'] = $in_not_rev_prac;
+        $count['in_total_practicante'] = $in_rev_prac + $in_not_rev_prac;
+
+        return $count;
+    }else if ($user_kind == 'monitor_ps') {
+        
+        $xQuery = new stdClass();
+        $xQuery->form = "seguimiento_pares";
+        $xQuery->filterFields = [["fecha",[[$fecha_inicio_str,">="],[$fecha_fin_str,"<="]], false],
+                                 ["revisado_profesional",[["%%","LIKE"]], false],
+                                 ["revisado_practicante",[["%%","LIKE"]], false],
+                                 ["id_monitor",[[$user_id,"="]], false]
+                                ];
+        $xQuery->orderFields = [["fecha","DESC"]];
+        $xQuery->orderByDatabaseRecordDate = false; 
+        $xQuery->recordStatus = [ "!deleted" ];
+        $xQuery->selectedFields = []; 
+
+        $trackings = dphpformsV2_find_records( $xQuery );
+
+        $rev_pro = 0;
+        $not_rev_pro = 0;
+        $rev_prac = 0;
+        $not_rev_prac = 0;
+    
+        foreach( $trackings as $track ){
+            if( $track["revisado_profesional"] == 0 ){
+                $rev_pro++;
+            }else{
+                $not_rev_pro++;
+            }
+            if( $track["revisado_practicante"] == 0 ){
+                $rev_prac++;
+            }else{
+                $not_rev_prac++;
+            }
+        }
+
+        $xQuery = new stdClass();
+        $xQuery->form = "inasistencia";
+        $xQuery->filterFields = [["fecha",[[$fecha_inicio_str,">="],[$fecha_fin_str,"<="]], false],
+                                 ["in_revisado_profesional",[["%%","LIKE"]], false],
+                                 ["in_revisado_profesional",[["%%","LIKE"]], false],
+                                 ["id_practicante",[[$user_id,"="]], false]
+                                ];
+        $xQuery->orderFields = [["fecha","DESC"]];
+        $xQuery->orderByDatabaseRecordDate = true; 
+        $xQuery->recordStatus = [ "!deleted" ];
+        $xQuery->selectedFields = []; 
+
+        $in_trackings = dphpformsV2_find_records( $xQuery );
+
+        $in_rev_pro = 0;
+        $in_not_rev_pro = 0;
+        $in_rev_prac = 0;
+        $in_not_rev_prac = 0;
+    
+        foreach( $in_trackings as $track ){
+            if( $track["in_revisado_profesional"] == 0 ){
+                $in_rev_pro++;
+            }else{
+                $in_not_rev_pro++;
+            }
+            if( $track["in_revisado_practicante"] == 0 ){
+                $in_rev_prac++;
+            }else{
+                $in_not_rev_prac++;
+            }
+        }
+
+        $count['revisado_profesional'] = $rev_pro;
+        $count['not_revisado_profesional'] = $not_rev_pro;
+        $count['total_profesional'] = $rev_pro + $not_rev_pro;
+        $count['revisado_practicante'] = $rev_prac;
+        $count['not_revisado_practicante'] = $not_rev_prac;
+        $count['total_practicante'] = $rev_prac + $not_rev_prac;
+
+        $count['in_revisado_profesional'] = $in_rev_pro;
+        $count['in_not_revisado_profesional'] = $in_not_rev_pro;
+        $count['in_total_profesional'] = $in_rev_pro + $in_not_rev_pro;
+        $count['in_revisado_practicante'] = $in_rev_prac;
+        $count['in_not_revisado_practicante'] = $in_not_rev_prac;
+        $count['in_total_practicante'] = $in_rev_prac + $in_not_rev_prac;
+
+        return $count;
+    }
     return $array_final;
 }
 
@@ -382,6 +657,18 @@ function calculate_specific_counting($user_kind, $person, $dates_interval, $inst
     else
     if ($user_kind == 'PROFESIONAL') {
         foreach($person as $key => $monitor) {
+            $xQuery = new stdClass();
+            $xQuery->form = "seguimiento_pares";
+            $xQuery->filterFields = [["fecha",[[$fecha_inicio_str,">="],[$fecha_fin_str,"<="]], false],
+                                    ["revisado_profesional",[["%%","LIKE"]], false],
+                                    ["revisado_practicante",[["%%","LIKE"]], false]
+                                    ];
+            $xQuery->orderFields = [["fecha","DESC"]];
+            $xQuery->orderByDatabaseRecordDate = false; 
+            $xQuery->recordStatus = [ "!deleted" ];
+            $xQuery->selectedFields = [ ]; 
+
+            //$trackings = dphpformsV2_find_records( $xQuery );
             $tracking_current_semestrer = get_tracking_current_semesterV2('monitor', $monitor->id_usuario, $dates_interval);
             $counting_trackings = filter_trackings_by_review($tracking_current_semestrer);
             $new_counting[0]+= $counting_trackings[0];

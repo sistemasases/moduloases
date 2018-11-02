@@ -125,7 +125,7 @@ if($usernamerole=='monitor_ps'){
     $tracking_current_semestrer=get_tracking_current_semester('monitor',$monitor_id, $intervalo_fechas[2]);
     $counting_trackings=filter_trackings_by_review($tracking_current_semestrer);
     $counting=create_counting_advice('MONITOR',$counting_trackings);
-
+    $data->human_rol = "MONITOR";
 
     // Get peer trackings that a monitor has done and show it in a toggle.
     $students_by_monitor=get_students_of_monitor($monitor_id,$blockid);
@@ -144,6 +144,7 @@ if($usernamerole=='monitor_ps'){
     $practicant_id =$USER->id;
     $monitors_of_pract = get_monitors_of_pract($practicant_id,$blockid);
     $table.=render_practicant_new_form($monitors_of_pract,$blockid);
+    $data->human_rol = "PRACTICANTE";
   
 
 
@@ -155,7 +156,7 @@ if($usernamerole=='monitor_ps'){
     $professional_id=$USER->id;
     $practicant_of_prof=get_pract_of_prof($professional_id,$blockid);
     $table.=render_professional_new_form($practicant_of_prof,$blockid);
-   
+    $data->human_rol = "PROFESIONAL";
 
 
 }elseif($usernamerole=='sistemas'){
@@ -169,6 +170,7 @@ if($usernamerole=='monitor_ps'){
 
     //Sorts People 'select'
     $table_periods.=get_people_select($people);
+    $data->human_rol = "SISTEMAS";
 
 }
 $table_permissions=show_according_permissions($table,$actions);
@@ -178,7 +180,6 @@ $data->rol = $usernamerole;
 
 $data->table_periods =$table_periods;
 $data->table=$table_permissions;
-$data->counting=$counting;
 
 $PAGE->requires->css('/blocks/ases/style/jqueryui.css', true);
 $PAGE->requires->css('/blocks/ases/style/styles_pilos.css', true);
