@@ -541,6 +541,87 @@ function auxiliary_specific_countingV2($user_kind, $user_id, $semester, $instanc
         $count['in_total_practicante'] = $in_rev_prac + $in_not_rev_prac;
 
         return $count;
+    }else if ($user_kind == 'monitor_ps') {
+        
+        $xQuery = new stdClass();
+        $xQuery->form = "seguimiento_pares";
+        $xQuery->filterFields = [["fecha",[[$fecha_inicio_str,">="],[$fecha_fin_str,"<="]], false],
+                                 ["revisado_profesional",[["%%","LIKE"]], false],
+                                 ["revisado_practicante",[["%%","LIKE"]], false],
+                                 ["id_monitor",[[$user_id,"="]], false]
+                                ];
+        $xQuery->orderFields = [["fecha","DESC"]];
+        $xQuery->orderByDatabaseRecordDate = false; 
+        $xQuery->recordStatus = [ "!deleted" ];
+        $xQuery->selectedFields = []; 
+
+        $trackings = dphpformsV2_find_records( $xQuery );
+
+        $rev_pro = 0;
+        $not_rev_pro = 0;
+        $rev_prac = 0;
+        $not_rev_prac = 0;
+    
+        foreach( $trackings as $track ){
+            if( $track["revisado_profesional"] == 0 ){
+                $rev_pro++;
+            }else{
+                $not_rev_pro++;
+            }
+            if( $track["revisado_practicante"] == 0 ){
+                $rev_prac++;
+            }else{
+                $not_rev_prac++;
+            }
+        }
+
+        $xQuery = new stdClass();
+        $xQuery->form = "inasistencia";
+        $xQuery->filterFields = [["fecha",[[$fecha_inicio_str,">="],[$fecha_fin_str,"<="]], false],
+                                 ["in_revisado_profesional",[["%%","LIKE"]], false],
+                                 ["in_revisado_profesional",[["%%","LIKE"]], false],
+                                 ["id_practicante",[[$user_id,"="]], false]
+                                ];
+        $xQuery->orderFields = [["fecha","DESC"]];
+        $xQuery->orderByDatabaseRecordDate = true; 
+        $xQuery->recordStatus = [ "!deleted" ];
+        $xQuery->selectedFields = []; 
+
+        $in_trackings = dphpformsV2_find_records( $xQuery );
+
+        $in_rev_pro = 0;
+        $in_not_rev_pro = 0;
+        $in_rev_prac = 0;
+        $in_not_rev_prac = 0;
+    
+        foreach( $in_trackings as $track ){
+            if( $track["in_revisado_profesional"] == 0 ){
+                $in_rev_pro++;
+            }else{
+                $in_not_rev_pro++;
+            }
+            if( $track["in_revisado_practicante"] == 0 ){
+                $in_rev_prac++;
+            }else{
+                $in_not_rev_prac++;
+            }
+        }
+
+        $count['revisado_profesional'] = $rev_pro;
+        $count['not_revisado_profesional'] = $not_rev_pro;
+        $count['total_profesional'] = $rev_pro + $not_rev_pro;
+        $count['revisado_practicante'] = $rev_prac;
+        $count['not_revisado_practicante'] = $not_rev_prac;
+        $count['total_practicante'] = $rev_prac + $not_rev_prac;
+
+        $count['in_revisado_profesional'] = $in_rev_pro;
+        $count['in_not_revisado_profesional'] = $in_not_rev_pro;
+        $count['in_total_profesional'] = $in_rev_pro + $in_not_rev_pro;
+        $count['in_revisado_practicante'] = $in_rev_prac;
+        $count['in_not_revisado_practicante'] = $in_not_rev_prac;
+        $count['in_total_practicante'] = $in_rev_prac + $in_not_rev_prac;
+
+        return $count;
     }
     return $array_final;
 }

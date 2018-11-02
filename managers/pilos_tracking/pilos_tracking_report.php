@@ -111,8 +111,7 @@ if (isset($_POST['type']) && isset($_POST['instance']) && $_POST['type'] == "get
 
 };
 
-if (isset($_POST['type']) && isset($_POST['instance']) && $_POST['type'] == "get_monitors_of_practicant" && isset($_POST['monitor_code']))
-    {
+if (isset($_POST['type']) && isset($_POST['instance']) && $_POST['type'] == "get_monitors_of_practicant" && isset($_POST['monitor_code'])){
 
     // Get Monitors of practicant
 
@@ -123,9 +122,8 @@ if (isset($_POST['type']) && isset($_POST['instance']) && $_POST['type'] == "get
     $array_groupal_trackings_dphpforms = get_tracking_grupal_monitor_current_semester($monitor_id->id, $current_semester->max);
     $array.= render_groupal_tracks_monitor_new_form($array_groupal_trackings_dphpforms, $monitor_id->id);
 
-
     echo json_encode($array);
-    }
+}
 
 if (isset($_POST['type']) && isset($_POST['instance']) && $_POST['type'] == "get_practicants_of_professional" && isset($_POST['practicant_code']))
     {
