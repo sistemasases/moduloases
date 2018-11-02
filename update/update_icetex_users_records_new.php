@@ -120,52 +120,91 @@ $icetex_record_19->id_estudiante = 488;
 $DB->update_record('talentospilos_res_estudiante', $icetex_record_19);
 
 $icetex_record_20 = new StdClass;
-$icetex_record_20->id = 658;
-$icetex_record_20->id_estudiante = 91;
+$icetex_record_20->id = 61;
+$icetex_record_20->id_estudiante = 150;
 $DB->update_record('talentospilos_res_estudiante', $icetex_record_20);
 
 $icetex_record_21 = new StdClass;
-$icetex_record_21->id = 658;
-$icetex_record_21->id_estudiante = 91;
+$icetex_record_21->id = 928;
+$icetex_record_21->id_estudiante = 88;
 $DB->update_record('talentospilos_res_estudiante', $icetex_record_21);
 
 $icetex_record_22 = new StdClass;
-$icetex_record_22->id = 658;
-$icetex_record_22->id_estudiante = 91;
+$icetex_record_22->id = 919;
+$icetex_record_22->id_estudiante = 156;
 $DB->update_record('talentospilos_res_estudiante', $icetex_record_22);
 
 $icetex_record_23 = new StdClass;
-$icetex_record_23->id = 658;
+$icetex_record_23->id = 916;
 $icetex_record_23->id_estudiante = 91;
 $DB->update_record('talentospilos_res_estudiante', $icetex_record_23);
 
 $icetex_record_24 = new StdClass;
-$icetex_record_24->id = 658;
-$icetex_record_24->id_estudiante = 91;
+$icetex_record_24->id = 915;
+$icetex_record_24->id_estudiante = 173;
 $DB->update_record('talentospilos_res_estudiante', $icetex_record_24);
 
 $icetex_record_25 = new StdClass;
-$icetex_record_25->id = 658;
-$icetex_record_25->id_estudiante = 91;
+$icetex_record_25->id = 737;
+$icetex_record_25->id_estudiante = 150;
 $DB->update_record('talentospilos_res_estudiante', $icetex_record_25);
 
 $icetex_record_26 = new StdClass;
-$icetex_record_26->id = 658;
-$icetex_record_26->id_estudiante = 91;
+$icetex_record_26->id = 1579;
+$icetex_record_26->id_estudiante = 138;
 $DB->update_record('talentospilos_res_estudiante', $icetex_record_26);
 
 $icetex_record_27 = new StdClass;
-$icetex_record_27->id = 658;
-$icetex_record_27->id_estudiante = 91;
+$icetex_record_27->id = 218;
+$icetex_record_27->id_estudiante = 173;
 $DB->update_record('talentospilos_res_estudiante', $icetex_record_27);
 
 $icetex_record_28 = new StdClass;
-$icetex_record_28->id = 658;
-$icetex_record_28->id_estudiante = 91;
+$icetex_record_28->id = 220;
+$icetex_record_28->id_estudiante = 117;
 $DB->update_record('talentospilos_res_estudiante', $icetex_record_28);
 
 $icetex_record_29 = new StdClass;
-$icetex_record_29->id = 658;
-$icetex_record_29->id_estudiante = 91;
+$icetex_record_29->id = 224;
+$icetex_record_29->id_estudiante = 156;
 $DB->update_record('talentospilos_res_estudiante', $icetex_record_29);
 
+$icetex_record_30 = new StdClass;
+$icetex_record_30->id = 231;
+$icetex_record_30->id_estudiante = 88;
+$DB->update_record('talentospilos_res_estudiante', $icetex_record_30);
+
+$icetex_record_31 = new StdClass;
+$icetex_record_31->id = 299;
+$icetex_record_31->id_estudiante = 138;
+$DB->update_record('talentospilos_res_estudiante', $icetex_record_31);
+
+$icetex_record_32 = new StdClass;
+$icetex_record_32->id = 422;
+$icetex_record_32->id_estudiante = 173;
+$DB->update_record('talentospilos_res_estudiante', $icetex_record_32);
+
+$icetex_record_33 = new StdClass;
+$icetex_record_33->id = 432;
+$icetex_record_33->id_estudiante = 138;
+$DB->update_record('talentospilos_res_estudiante', $icetex_record_33);
+
+$icetex_record_34 = new StdClass;
+$icetex_record_34->id = 1667;
+$icetex_record_34->id_estudiante = 528;
+$DB->update_record('talentospilos_res_estudiante', $icetex_record_34);
+
+$icetex_record_35 = new StdClass;
+$icetex_record_35->id = 414;
+$icetex_record_35->id_estudiante = 117;
+$DB->update_record('talentospilos_res_estudiante', $icetex_record_35);
+
+$icetex_record_36 = new StdClass;
+$icetex_record_36->id = 477;
+$icetex_record_36->id_estudiante = 150;
+$DB->update_record('talentospilos_res_estudiante', $icetex_record_36);
+
+$icetex_record_37 = new StdClass;
+$icetex_record_37->id = 494;
+$icetex_record_37->id_estudiante = 156;
+$DB->update_record('talentospilos_res_estudiante', $icetex_record_37);
