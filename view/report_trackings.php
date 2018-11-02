@@ -127,7 +127,6 @@ if($usernamerole=='monitor_ps'){
     $counting=create_counting_advice('MONITOR',$counting_trackings);
     $data->human_rol = "MONITOR";
 
-
     // Get peer trackings that a monitor has done and show it in a toggle.
     $students_by_monitor=get_students_of_monitor($monitor_id,$blockid);
     $table.=render_monitor_new_form($students_by_monitor);
