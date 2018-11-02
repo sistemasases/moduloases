@@ -160,7 +160,8 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                 usuario["namerol"] = namerol;
 
 
-                create_specific_counting(usuario);
+                create_specific_counting( usuario );
+                
 
 
 
@@ -397,7 +398,7 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
 
 
             function create_specific_counting(user){
-                
+
                 $.ajax({
                     type: "POST",
                     data: {
@@ -407,88 +408,30 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                     },
                     url: "../managers/pilos_tracking/pilos_tracking_report.php",
                     async: false,
-                    success: function(msg
-                        ) {
-
-                    var obj = msg;
-                    $.each( obj, function( index, value ){
-
-                        $("#counting_"+value.code).html(value.html);
-                    });
-                    generate_general_counting(user);
-                    $("#loading").fadeOut('slow');
-
-
-
-
-                    },
                     dataType: "json",
                     cache: "false",
-                    error: function(msg) {
-                       swal({
-                            title: "Oops !",
-                            text: "Se presentó un inconveniente al cargar conteo de usuarios",
-                            html: true,
-                            type: 'warning',
-                            confirmButtonColor: "#d51b23"
-                        });
+                    success: function( data ) {
+
+                        $("#general_rev_pro").html( data.revisado_profesional );
+                        $("#general_rev_prac").html( data.revisado_practicante );
+                        $("#general_not_rev_pro").html( data.not_revisado_profesional );
+                        $("#general_not_rev_prac").html( data.not_revisado_practicante );
+                        $("#general_pro_t").html( data.total_profesional );
+                        $("#general_prac_t").html( data.total_practicante );
+
+                        $("#general_in_rev_pro").html( data.in_revisado_profesional );
+                        $("#general_in_rev_prac").html( data.in_revisado_practicante );
+                        $("#general_in_not_rev_pro").html( data.in_not_revisado_profesional );
+                        $("#general_in_not_rev_prac").html( data.in_not_revisado_practicante );
+                        $("#general_in_pro_t").html( data.in_total_profesional );
+                        $("#general_in_prac_t").html( data.in_total_practicante );
+
                     },
+                    error: function( data ) {},
                 });
 
-                }
+            }
 
-
-            function generate_general_counting(user){
-
-                    var review_prof=0;
-                    var not_review_prof=0;
-                    var review_pract=0;
-                    var not_review_pract=0;
-                    var role;
-
-                    $(".review_prof").each(function( index,value ) {
-                        review_prof+=parseInt($(this).text(),10);
-                  });
-
-                    $(".not_review_prof").each(function( index,value ) {
-                        not_review_prof+=parseInt($(this).text(),10);
-                  });
-                    $(".review_pract").each(function( index,value ) {
-                        review_pract+=parseInt($(this).text(),10);
-                  });
-
-                    $(".not_review_pract").each(function( index,value ) {
-                        not_review_pract+=parseInt($(this).text(),10);
-                  });
-
-                if(user["namerol"]=='profesional_ps'){
-
-                  role="PROFESIONAL";  
-                }else if(user["namerol"]=='practicante_ps'){
-
-                role="PRACTICANTE";
-
-                }else if(user["namerol"]=='monitor_ps'){
-                role="MONITOR";
-
-                }else if(user["namerol"]=='sistemas'){
-                role="SISTEMAS";
-                }
-
-                advice="";
-                advice+='<h2> INFORMACIÓN DE  '+role+'</h2><hr>';
-                advice+='<div class="row">';
-                advice+='<div class="col-sm-6">';
-                advice+='<strong>Profesional</strong><br>';
-                advice+='Revisado :'+review_prof+' - No revisado : '+not_review_prof+' -  Total :'+(review_prof+not_review_prof)+'</div>';
-                advice+='<div class="col-sm-6">';
-                advice+='<strong>Practicante</strong><br>';
-                advice+='Revisado :'+review_pract+' - No revisado : '+not_review_pract+' -  Total :'+(review_pract+not_review_pract)+'</div></div>';
-
-                $("#div-header-info").html(advice);
-
-
-                }
 
                 function generate_attendance_table(students){
 
@@ -682,16 +625,15 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                         instance:get_instance(),
                     },
                     url: "../managers/pilos_tracking/pilos_tracking_report.php",
-                    async: false,
-                    success: function(msg
-                        ) {
-                    $(monitor_id + " > div").empty();
-                    $(monitor_id + " > div").append(msg);
-                    student_load();
-                    groupal_tracking_load();
-                    },
+                    async: true,
                     dataType: "json",
                     cache: "false",
+                    success: function(msg ) {
+                        $(monitor_id + " > div").empty();
+                        $(monitor_id + " > div").append(msg);
+                        student_load();
+                        groupal_tracking_load();
+                    },
                     error: function(msg) {
                        swal({
                             title: "Oops !",
@@ -868,9 +810,6 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
 
                                 if (msg == "") {
                                     $('#reemplazarToogle').html('<label> No se encontraron registros </label>');
-
-
-
                                 } else {
                                     $('#reemplazarToogle').html(msg);
                                     student_load();
@@ -879,10 +818,6 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                                     groupal_tracking_load();
                                 }
                                 $(".well.col-md-10.col-md-offset-1.reporte-seguimiento.oculto").slideDown("slow");
-
-
-
-
                             },
                             dataType: "text",
                             cache: "false",
