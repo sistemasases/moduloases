@@ -398,38 +398,6 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
 
 
             function create_specific_counting(user){
-                
-                /*$.ajax({
-                    type: "POST",
-                    data: {
-                        type: "user_specific_counting",
-                        user: user,
-                        instance:get_instance(),
-                    },
-                    url: "../managers/pilos_tracking/pilos_tracking_report.php",
-                    async: false,
-                    dataType: "json",
-                    cache: "false",
-                    success: function( msg ) {
-
-                        let obj = msg;
-
-                        $.each( obj, function( index, value ){
-                            $("#counting_"+value.code).html(value.html);
-                        });
-                        generate_general_counting(user);
-                        $("#loading").fadeOut('slow');
-                    },
-                    error: function( msg ) {
-                       swal({
-                            title: "Oops !",
-                            text: "Se presentó un inconveniente al cargar conteo de usuarios",
-                            html: true,
-                            type: 'warning',
-                            confirmButtonColor: "#d51b23"
-                        });
-                    },
-                });*/
 
                 $.ajax({
                     type: "POST",
@@ -464,58 +432,6 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
 
             }
 
-
-            function generate_general_counting(user){
-
-                    var review_prof=0;
-                    var not_review_prof=0;
-                    var review_pract=0;
-                    var not_review_pract=0;
-                    var role;
-
-                    $(".review_prof").each(function( index,value ) {
-                        review_prof+=parseInt($(this).text(),10);
-                  });
-
-                    $(".not_review_prof").each(function( index,value ) {
-                        not_review_prof+=parseInt($(this).text(),10);
-                  });
-                    $(".review_pract").each(function( index,value ) {
-                        review_pract+=parseInt($(this).text(),10);
-                  });
-
-                    $(".not_review_pract").each(function( index,value ) {
-                        not_review_pract+=parseInt($(this).text(),10);
-                  });
-
-                if(user["namerol"]=='profesional_ps'){
-
-                  role="PROFESIONAL";  
-                }else if(user["namerol"]=='practicante_ps'){
-
-                role="PRACTICANTE";
-
-                }else if(user["namerol"]=='monitor_ps'){
-                role="MONITOR";
-
-                }else if(user["namerol"]=='sistemas'){
-                role="SISTEMAS";
-                }
-
-                advice="";
-                advice+='<h2> INFORMACIÓN DE  '+role+'</h2><hr>';
-                advice+='<div class="row">';
-                advice+='<div class="col-sm-6">';
-                advice+='<strong>Profesional</strong><br>';
-                advice+='Revisado :'+review_prof+' - No revisado : '+not_review_prof+' -  Total :'+(review_prof+not_review_prof)+'</div>';
-                advice+='<div class="col-sm-6">';
-                advice+='<strong>Practicante</strong><br>';
-                advice+='Revisado :'+review_pract+' - No revisado : '+not_review_pract+' -  Total :'+(review_pract+not_review_pract)+'</div></div>';
-
-                $("#div-header-info").html(advice);
-
-
-                }
 
                 function generate_attendance_table(students){
 
@@ -709,16 +625,15 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                         instance:get_instance(),
                     },
                     url: "../managers/pilos_tracking/pilos_tracking_report.php",
-                    async: false,
-                    success: function(msg
-                        ) {
-                    $(monitor_id + " > div").empty();
-                    $(monitor_id + " > div").append(msg);
-                    student_load();
-                    groupal_tracking_load();
-                    },
+                    async: true,
                     dataType: "json",
                     cache: "false",
+                    success: function(msg ) {
+                        $(monitor_id + " > div").empty();
+                        $(monitor_id + " > div").append(msg);
+                        student_load();
+                        groupal_tracking_load();
+                    },
                     error: function(msg) {
                        swal({
                             title: "Oops !",
@@ -895,9 +810,6 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
 
                                 if (msg == "") {
                                     $('#reemplazarToogle').html('<label> No se encontraron registros </label>');
-
-
-
                                 } else {
                                     $('#reemplazarToogle').html(msg);
                                     student_load();
@@ -906,10 +818,6 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                                     groupal_tracking_load();
                                 }
                                 $(".well.col-md-10.col-md-offset-1.reporte-seguimiento.oculto").slideDown("slow");
-
-
-
-
                             },
                             dataType: "text",
                             cache: "false",
