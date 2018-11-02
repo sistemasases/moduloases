@@ -40,7 +40,7 @@
  */
 require_once __DIR__ . '/../../../config.php';
 include "../classes/output/renderer.php";
-include '../managers/students_finalgrade_report/students_finalgrade_report_lib.php';
+require_once (__DIR__.'/../managers/course_and_teacher_report/course_and_teacher_report_lib.php');
 include '../classes/output/course_and_teacher_report_page.php';
 include "../managers/menu_options.php";
 $pagetitle = 'Reporte de curso y profesor';
@@ -100,7 +100,7 @@ $data->menu = $menu_option;
 
 echo $output->header();
 
-$course_and_teacher_report_table = get_datatable_array_for_course_teacher_report($blockid);
+$course_and_teacher_report_table = get_datatable_for_course_and_teacher_report($blockid);
 $data->table = $course_and_teacher_report_table;
 $paramReport->table = $course_and_teacher_report_table;
 
