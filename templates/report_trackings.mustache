@@ -2,11 +2,13 @@
 <div id="dphpforms_role_support" data-info="{{rol}}" style="display:none;"></div>
 {{> block_ases/side_menu}} 
 <!--<div id="loading"><img id="loading-image" src="../icon/load.gif" height="162" width="162">-->
-<div class="container">
-</div>
-   <h2>SEGUIMIENTO PILOS</h2>
-   {{{message}}}
-</div>
+<div class="container-fluid">
+  <div class="row">
+      <div id="title-report-trackings-view" class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+          <h2>SEGUIMIENTO PILOS</h2>
+          {{{message}}}
+      </div>
+  </div>
 <form>
    {{#data}}
    <div class="row">
@@ -15,8 +17,12 @@
       <div data-spy="scroll" data-target=".navbar" data-offset="50" class="well col-xs-12 col-sm-12 col-md-12 col-lg-12 reporte-seguimiento">
          {{{table_periods}}}
       </div>
-      <div class="well col-xs-12 col-sm-12 col-md-10 col-lg-10 col-md-offset-1 equalize text-center" id="div-header-info" name="main_counting">
-        <h2> INFORMACIÓN DE {{human_rol}}</h2><hr>
+      <div class="well col-xs-10 col-sm-10 col-md-10 col-lg-10 col-xs-offset-1 col-sm-offset-1 col-md-offset-1 col-lg-offset-1  equalize text-center" 
+           id="div-header-info" name="main_counting">
+        <div id="title-informacion-de">
+            <h2> INFORMACIÓN DE {{human_rol}}</h2>
+        </div>
+        <hr style="margin:5px;border-color:rgb(207, 207, 207);">
 
         <div class="row">
 
@@ -34,13 +40,18 @@
         </div>
 
       </div>
-      <div data-spy="scroll" data-target=".navbar" data-offset="50" class="well col-md-10 col-md-offset-1 reporte-seguimiento " id="reemplazarToogle" name="reemplazarToogle">
+      <div data-spy="scroll" data-target=".navbar" data-offset="50" 
+           class="well col-xs-10 col-sm-10 col-md-10 col-lg-10 col-xs-offset-1 col-sm-offset-1 col-md-offset-1 col-lg-offset-1 reporte-seguimiento " 
+           id="reemplazarToogle" name="reemplazarToogle">
+
           {{{table}}}
+
       </div>
     {{/view_trackings_rt}}
    {{/data}}
   </div>
 </form>
+</div>
 
   <!-- MODALES DE SEGUIMIENTO -->
   <div class="mymodal" id="modal_v2_peer_tracking" name="modal_v2_pares">
