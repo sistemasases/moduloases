@@ -5,6 +5,6 @@
     box-shadow: 0px 0px 1px #000;
 }
 
-#title-informacion-de > h2{
-    margin: 0px;
+#title-informacion-de{
+    font-size: 1.6em;
 }
