@@ -268,8 +268,7 @@ define([
                if($("#check_certificado_invalidez").is(":checked")){
                 porcentaje_invalidez = $("#input_porcentaje_inv").val(); 
                  }
-                alert(porcentaje_invalidez);
-                //validate_form();
+              
 
                 //-------------------------------------------------------------------------------
 
@@ -327,7 +326,8 @@ define([
                 
                  //Variables de las opciones de varias respuestas
                  var key_func_dp, key_dif_dp, funcion_name, dificult_name, key_org_cs, key_cond_cs, organo_name, condicion_name,
-                        key_nec_ns, key_sit_ns, key_factor_fi, factor_name, key_otro_factor_fi, otro_factor_name; 
+                        key_nec_ns, key_sit_ns, key_factor_fi, factor_name, key_otro_factor_fi, otro_factor_name, key_contexto_fc, 
+                        key_otro_factor_fc, factor_contexto_name, otro_factor_contexto_name; 
                  //Traer factores de impacto
                  $("#div_factor_impacto").find(":input[type=checkbox]").each( function(){
                     
@@ -336,20 +336,19 @@ define([
                         factor_name   = $(this).attr("title");
 
                         json_factores_impacto = {key_factor: key_factor_fi, escenario: factor_name};
-                        if(factor_name == "Otra ¿Cuál?"){
+                        if(factor_name == "Otra ¿Cuál?" || factor_name == "Otros, ¿cuáles?" ){
                             //Traer otro factor de impacto
                             otro_factor_name    = $(this).parent().find(":input[type=text]").val();
                             key_otro_factor_fi  = $(this).parent().find("input[type=text]").attr("id");
                             json_factores_impacto.key_otro_factor  = key_otro_factor_fi;
                             json_factores_impacto.otro_factor      = otro_factor_name;
-                            
 
                         }
-                        if(factor_name == "Características del contexto universitario"){
-                            //Traer factores del contexto universitario
-                            json_factores_impacto.div_factor_contexto = get_caracteristicas();
+                        // if(factor_name == "Características del contexto universitario"){
+                        //     //Traer factores del contexto universitario
+                        //     //json_factores_impacto.factor_contexto = get_caracteristicas();
 
-                        }
+                        // }
                        
                         array_factor_impacto.push(json_factores_impacto);
                     }
@@ -359,6 +358,10 @@ define([
                 console.log(array_factor_impacto);
          
                 //-------------------------------------------------------------------------------
+
+
+
+                //validate_form();
                   
               });
 
@@ -372,15 +375,23 @@ define([
             var json_factor_contexto; 
             var array_caracteristicas = [];
             $("#div_factor_contexto").find(":input[type=checkbox]").each(function(){
-                var key_cc = $(this).parent().attr("id");
-                var factor_contexto_name = $(this).attr("title");
-                json_factor_contexto = {id: key_cc, escenario: factor_contexto_name};
-                if(factor_contexto_name == "Otros, ¿cuáles?"){
-                            //Traer otro factor de impacto de contexto
-                            var otro_factor_name  =$(this).parent().find(":input[type=text]").val();
-                            json_factor_contexto.otro_factor_contexto  = otro_factor_name;
 
+                if($(this).is(":checked")){
+
+                    key_contexto_fc      = $(this).attr("id");
+                    factor_contexto_name = $(this).attr("title");
+                    json_factor_contexto     = {key_contexto: key_contexto_fc, contexto: factor_contexto_name};
+                    if(factor_contexto_name == "Otros, ¿cuáles?"){
+                                //Traer otro factor de impacto de contexto
+                                otro_factor_contexto_name  = $(this).parent().find(":input[type=text]").val();
+                                key_otro_factor_contexto   = $(this).parent().find(":input[type=text]").attr("id");
+                                json_factor_contexto.key_otro_factor_contexto = key_otro_factor_contexto;
+                                json_factor_contexto.otro_factor_contexto     = otro_factor_contexto_name;
+                                
+                    }
+                    array_caracteristicas.push(json_factor_contexto);
                 }
+                
             });
             return array_caracteristicas;
         }
