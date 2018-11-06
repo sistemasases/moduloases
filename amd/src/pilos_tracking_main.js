@@ -572,7 +572,7 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                         instance:get_instance(),
                     },
                     url: "../managers/pilos_tracking/pilos_tracking_report.php",
-                    async: false,
+                    async: true,
                     success: function(msg
                         ) {
                     $(practicant_id + " > div").empty();
