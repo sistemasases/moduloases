@@ -125,8 +125,7 @@ if (isset($_POST['type']) && isset($_POST['instance']) && $_POST['type'] == "get
     echo json_encode($array);
 }
 
-if (isset($_POST['type']) && isset($_POST['instance']) && $_POST['type'] == "get_practicants_of_professional" && isset($_POST['practicant_code']))
-    {
+if (isset($_POST['type']) && isset($_POST['instance']) && $_POST['type'] == "get_practicants_of_professional" && isset($_POST['practicant_code'])){
 
     // Get practicant of professional
 
@@ -140,7 +139,7 @@ if (isset($_POST['type']) && isset($_POST['instance']) && $_POST['type'] == "get
     $msg->counting= auxiliary_specific_counting("practicante_ps",$practicant_id->id,$current_semester, $_POST['instance']);
 
     echo json_encode($msg);
-    }
+}
 
 if (isset($_POST['type']) && $_POST['type'] == "update_people" && isset($_POST['id']) && isset($_POST['instance']))
     {
