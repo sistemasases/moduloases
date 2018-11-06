@@ -21,7 +21,7 @@ return {
  init: function(data_init) {
     //Validar si en las cohortes hay una condición de excepción
     $("#cohorts_table tbody").find("td").each( function(){
-     if($(this).text().includes("Condición de Excepción") != -1  ){
+     if($(this).text().indexOf("Condición de Excepción") != -1  ){
         var alias = $("#cond_excepcion_alias").text().trim();
         var proptitle = $("#cond_excepcion_name").text().trim();
          $(this).append("-");
