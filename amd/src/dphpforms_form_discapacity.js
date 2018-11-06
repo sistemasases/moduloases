@@ -231,9 +231,11 @@ define([
                 let id_ases = $("#id_ases").val();
                 //Traer valores de campos para validar campos
                 let val_cond_adquisicion, text_cond_adquisicion, otra_cond_adquisicion, descripcion_diagnostico, val_tipo_disc, text_tipo_disc, otro_tipo_disc,
-                    porcentaje_invalidez, json_dif_permanente, json_cond_salud, json_necesidad, json_factor_impacto;
+                    porcentaje_invalidez, json_dif_permanente, json_cond_salud, json_necesidad, json_factores_impacto;
                 let array_dif_perm = [], array_cond_salud = [], array_necesidades = [], array_factor_impacto = [];
                 var json_detalle = {};
+
+               
                 
                 //Traer condicion de adquisicion
                 val_cond_adquisicion = $("#cond_adquisicion").val();
@@ -267,17 +269,20 @@ define([
                 porcentaje_invalidez = $("#input_porcentaje_inv").val(); 
                  }
                 alert(porcentaje_invalidez);
-                validate_form();
+                //validate_form();
 
                 //-------------------------------------------------------------------------------
+
 
                 //Traer dificultades permanentes
                 $("#div_dificultad_permanente").find(":input[type=checkbox]").each( function(){
                     
                     if($(this).is(":checked")){
-                        var funcion_name = $(this).attr("title");
-                        var dificult_name  =$(this).parent().find(":input[type=text]").val();
-                        json_dif_permanente = {funcion: funcion_name, dificultad: dificult_name };
+                        key_func_dp    = $(this).attr("id");
+                        funcion_name   = $(this).attr("title");
+                        dificult_name  =$(this).parent().find(":input[type=text]").val();
+                        key_dif_dp     = $(this).parent().find(":input[type=text]").attr("id");
+                        json_dif_permanente = {key_funcion: key_func_dp, funcion: funcion_name, key_dificultad: key_dif_dp,dificultad: dificult_name };
                         array_dif_perm.push(json_dif_permanente);
                     }
                    
@@ -289,9 +294,12 @@ define([
                 $("#div_cond_salud").find(":input[type=checkbox]").each( function(){
                     
                     if($(this).is(":checked")){
-                        var organo_name = $(this).attr("title");
-                        var condicion_name  =$(this).parent().find(":input[type=text]").val();
-                        json_cond_salud = {organo: organo_name, condicion: condicion_name };
+                        key_org_cs      = $(this).attr("id");
+                        organo_name     = $(this).attr("title");
+                        condicion_name  =$(this).parent().find(":input[type=text]").val();
+                        key_cond_cs     = $(this).parent().find(":input[type=text]").attr("id");
+
+                        json_cond_salud = {key_organo: key_org_cs, organo: organo_name, key_condicion: key_cond_cs , condicion: condicion_name };
                         array_cond_salud.push(json_cond_salud);
                     }
                    
@@ -299,29 +307,56 @@ define([
               
                 //-------------------------------------------------------------------------------
 
+                 //Traer necesidades situaciones
+                 $("#div_necesidades").find(":input[type=checkbox]").each( function(){
+                    
+                    if($(this).is(":checked")){
+                        key_sit_ns      = $(this).attr("id");
+                        situacion_name  = $(this).attr("title");
+                        necesidad_name  = $(this).parent().find(":input[type=text]").val();
+                        key_nec_ns      = $(this).parent().find(":input[type=text]").attr("id");
+
+                        json_necesidad = {key_situacion: key_sit_ns, situacion: situacion_name, key_necesidad: key_nec_ns, necesidad: necesidad_name };
+                        array_necesidades.push(json_necesidad);
+                    }
+                   
+                });
+              
+                //-------------------------------------------------------------------------------
+
                 
+                 //Variables de las opciones de varias respuestas
+                 var key_func_dp, key_dif_dp, funcion_name, dificult_name, key_org_cs, key_cond_cs, organo_name, condicion_name,
+                        key_nec_ns, key_sit_ns, key_factor_fi, factor_name, key_otro_factor_fi, otro_factor_name; 
                  //Traer factores de impacto
                  $("#div_factor_impacto").find(":input[type=checkbox]").each( function(){
                     
                     if($(this).is(":checked")){
-                        var factor_name = $(this).attr("title");
-                        json_necesidad = {escenario: factor_name};
+                        key_factor_fi = $(this).attr("id");
+                        factor_name   = $(this).attr("title");
+
+                        json_factores_impacto = {key_factor: key_factor_fi, escenario: factor_name};
                         if(factor_name == "Otra ¿Cuál?"){
                             //Traer otro factor de impacto
-                            var otro_factor_name  =$(this).parent().find(":input[type=text]").val();
-                            json_necesidad.otro_factor  = otro_factor_name;
+                            otro_factor_name    = $(this).parent().find(":input[type=text]").val();
+                            key_otro_factor_fi  = $(this).parent().find("input[type=text]").attr("id");
+                            json_factores_impacto.key_otro_factor  = key_otro_factor_fi;
+                            json_factores_impacto.otro_factor      = otro_factor_name;
+                            
 
                         }
                         if(factor_name == "Características del contexto universitario"){
                             //Traer factores del contexto universitario
+                            json_factores_impacto.div_factor_contexto = get_caracteristicas();
+
                         }
                        
-                        array_necesidades.push(json_necesidad);
+                        array_factor_impacto.push(json_factores_impacto);
                     }
                     
                    
                 });
-                console.log(array_necesidades);
+                console.log(array_factor_impacto);
          
                 //-------------------------------------------------------------------------------
                   
@@ -332,6 +367,23 @@ define([
         function validate_form(){
             
         }      
+
+        function get_caracteristicas(){
+            var json_factor_contexto; 
+            var array_caracteristicas = [];
+            $("#div_factor_contexto").find(":input[type=checkbox]").each(function(){
+                var key_cc = $(this).parent().attr("id");
+                var factor_contexto_name = $(this).attr("title");
+                json_factor_contexto = {id: key_cc, escenario: factor_contexto_name};
+                if(factor_contexto_name == "Otros, ¿cuáles?"){
+                            //Traer otro factor de impacto de contexto
+                            var otro_factor_name  =$(this).parent().find(":input[type=text]").val();
+                            json_factor_contexto.otro_factor_contexto  = otro_factor_name;
+
+                }
+            });
+            return array_caracteristicas;
+        }
 
         }
 
