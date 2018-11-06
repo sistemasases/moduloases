@@ -232,7 +232,7 @@ define([
 
 
         function validate_form(){
-            
+            alert("Guardar");
 
         }      
 
