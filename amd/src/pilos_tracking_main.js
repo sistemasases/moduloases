@@ -398,7 +398,7 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
 
 
             function create_specific_counting(user){
-
+                
                 $.ajax({
                     type: "POST",
                     data: {
@@ -411,6 +411,8 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                     dataType: "json",
                     cache: "false",
                     success: function( data ) {
+
+                        
 
                         $("#general_rev_pro").html( data.revisado_profesional );
                         $("#general_rev_prac").html( data.revisado_practicante );
