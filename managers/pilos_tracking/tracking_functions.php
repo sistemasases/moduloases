@@ -918,8 +918,8 @@ function show_according_permissions(&$table, $actions)
 function get_period_select($periods)
 {
     $table = "";
-    $table.= '<div class="container"><form class="form-inline">';
-    $table.= '<div class="form-group"><label for="persona">Periodo</label><select class="form-control" id="periodos">';
+    $table.= '<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3 col-xs-offset-1 col-sm-offset-1 col-md-offset-1 col-lg-offset-1">';
+    $table.= '<label for="persona">Periodo</label><select class="form-control" id="periodos">';
     foreach($periods as $period) {
         $table.= '<option value="' . $period->id . '">' . $period->nombre . '</option>';
     }
