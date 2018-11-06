@@ -126,28 +126,8 @@ padding: 0px 0px 0px 0px !important;
 #div-hr{
     padding: 0px 15px 2px 15px;
 }
-#discapacity_tittle{
-    font-size: 22px;
-    text-decoration: underline;
-    text-align: center;
-    padding-bottom: 20px;
-    
-}
-#btn_ficha_inicial_discapacity{
-    background-color:rgb(255, 143, 143);
-    color:black;
-    font-size: 16px;
-}
-#btn_ficha_seguimiento_discapacity{
-    background-color:rgba(255, 119, 119, 0.945);
-    color:black;
-    font-size: 16px;
-}
-#btn_ficha_cierre_discapacity{
-    background-color:rgba(255, 96, 96, 0.904);
-    color:black;
-    font-size: 16px;
-}
+
+
 
 .hr-general-fields{
     margin-top: 10px;
