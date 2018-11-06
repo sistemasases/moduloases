@@ -4,22 +4,6 @@ require_once(dirname(__FILE__). '/../../../config.php');
 
 global $DB;
 
-//Modificación de registro fantasma en talentospilos_usuario
-$usuario_record_1 = new StdClass;
-$usuario_record_1->id = 6699;
-$usuario_record_1->num_doc = '9999999949';
-$usuario_record_1->num_doc_ini = '9999999949';
-$DB->update_record('talentospilos_usuario', $usuario_record_1);
-
-
-//Modificación de registro fantasma en talentospilos_usuario
-$usuario_record_2 = new StdClass;
-$usuario_record_2->id = 6753;
-$usuario_record_2->num_doc = '9999999939';
-$usuario_record_2->num_doc_ini = '9999999939';
-$DB->update_record('talentospilos_usuario', $usuario_record_2);
-
-
 /**
  * Actualización de registros en tabla talentospilos_res_estudiante 
  */
@@ -208,3 +192,18 @@ $icetex_record_37 = new StdClass;
 $icetex_record_37->id = 494;
 $icetex_record_37->id_estudiante = 156;
 $DB->update_record('talentospilos_res_estudiante', $icetex_record_37);
+
+//Modificación de registro fantasma en talentospilos_usuario
+$usuario_record_1 = new StdClass;
+$usuario_record_1->id = 6699;
+$usuario_record_1->num_doc = '9999999949';
+$usuario_record_1->num_doc_ini = '9999999949';
+$DB->update_record('talentospilos_usuario', $usuario_record_1);
+
+
+//Modificación de registro fantasma en talentospilos_usuario
+$usuario_record_2 = new StdClass;
+$usuario_record_2->id = 6753;
+$usuario_record_2->num_doc = '9999999939';
+$usuario_record_2->num_doc_ini = '9999999939';
+$DB->update_record('talentospilos_usuario', $usuario_record_2);
