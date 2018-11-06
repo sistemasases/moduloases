@@ -918,8 +918,8 @@ function show_according_permissions(&$table, $actions)
 function get_period_select($periods)
 {
     $table = "";
-    $table.= '<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3 col-xs-offset-1 col-sm-offset-1 col-md-offset-1 col-lg-offset-1">';
-    $table.= '<label for="persona">Periodo</label><select class="form-control" id="periodos">';
+    $table.= '<div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 form-group">';
+    $table.= '<label for="periodos">Periodo</label><select class="form-control" id="periodos">';
     foreach($periods as $period) {
         $table.= '<option value="' . $period->id . '">' . $period->nombre . '</option>';
     }
@@ -938,14 +938,19 @@ function get_period_select($periods)
 
 function get_people_select($people)
 {
-    $table = "";
-    $table.= '<div class="form-group"><label for="persona">Persona</label><select class="form-control" id="personas">';
+    $table = '<div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 form-group">';
+    $table.= '<label for="persona">Persona</label>';
+    $table.= '<select class="form-control" id="personas">';
     foreach($people as $person) {
         $table.= '<option value="' . $person->id_usuario . '">' . $person->username . " - " . $person->firstname . " " . $person->lastname . '</option>';
     }
+    $table.= '</select>';
+    $table.= '</div>';
 
-    $table.= '</select></div>';
-    $table.= '<span class="btn btn-info" id="consultar_persona" type="button">Consultar</span></form></div>';
+    $table.= '<div id="container-contultar-btn" class="col-xs-12 col-sm-12 col-md-12 col-lg-12">';
+    $table.= '  <span class="btn btn-info" id="consultar_persona" type="button">Consultar</span>';
+    $table.= '</div>';
+
     return $table;
 }
 
