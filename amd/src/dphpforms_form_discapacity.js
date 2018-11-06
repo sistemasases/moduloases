@@ -131,6 +131,7 @@ define([
                 }else {
                     $("#div_otro_cond_adq").hide();
                     $("#otro_cond_adquisicion").prop("required", false);
+                    $("#otro_cond_adquisicion").prop("value", "");
                 }
             });
 
@@ -166,6 +167,7 @@ define([
                 }else {
                     $("#div_otra_discapacidad").hide();
                     $("#otra_discapacidad").prop("required", false);
+                    $("#otra_discapacidad").prop("value", "");
                 }
             });
         
@@ -174,6 +176,7 @@ define([
                     $("#div_descripcion_diagnostico").show();
                 }else{
                     $("#div_descripcion_diagnostico").hide();
+                    $("#textarea_diagnostico").prop("value", "");
                 }
             });
             $("#check_certificado_invalidez").on("change",function(){
@@ -225,15 +228,109 @@ define([
             
             
             $("#save_ficha_discapacity").on("click", function(){
+                let id_ases = $("#id_ases").val();
+                //Traer valores de campos para validar campos
+                let val_cond_adquisicion, text_cond_adquisicion, otra_cond_adquisicion, descripcion_diagnostico, val_tipo_disc, text_tipo_disc, otro_tipo_disc,
+                    porcentaje_invalidez, json_dif_permanente, json_cond_salud, json_necesidad, json_factor_impacto;
+                let array_dif_perm = [], array_cond_salud = [], array_necesidades = [], array_factor_impacto = [];
+                var json_detalle = {};
+                
+                //Traer condicion de adquisicion
+                val_cond_adquisicion = $("#cond_adquisicion").val();
+                text_cond_adquisicion = $("#cond_adquisicion").find(":selected").text();
+                
+                //Validar la opción de otra condicion de adquisicion
+                if(val_cond_adquisicion == 0){
+                    otra_cond_adquisicion = $("#otro_cond_adquisicion").val();
+                }
+                //-------------------------------------------------------------------------------
+
+                //Traer diagnostico 
+                if($("#check_diagnostico").is(":checked")){
+                    descripcion_diagnostico = $("#textarea_diagnostico").val(); 
+                }
+                
+               //-------------------------------------------------------------------------------
+              
+               //Traer tipo de discapacidad 
+                val_tipo_disc = $("#tipo_discapacidad").val();
+                text_tipo_disc = $("#tipo_discapacidad").find(":selected").text();
+
+                //Validar la opción de otro tipo de discapacidad
+                if(val_tipo_disc == 0){
+                    otro_tipo_disc  = $("#otra_discapacidad").val();
+                }
+               //-------------------------------------------------------------------------------
+
+               //Traer certificado invalidez
+               if($("#check_certificado_invalidez").is(":checked")){
+                porcentaje_invalidez = $("#input_porcentaje_inv").val(); 
+                 }
+                alert(porcentaje_invalidez);
                 validate_form();
+
+                //-------------------------------------------------------------------------------
+
+                //Traer dificultades permanentes
+                $("#div_dificultad_permanente").find(":input[type=checkbox]").each( function(){
+                    
+                    if($(this).is(":checked")){
+                        var funcion_name = $(this).attr("title");
+                        var dificult_name  =$(this).parent().find(":input[type=text]").val();
+                        json_dif_permanente = {funcion: funcion_name, dificultad: dificult_name };
+                        array_dif_perm.push(json_dif_permanente);
+                    }
+                   
+                });
+
+                //-------------------------------------------------------------------------------
+
+                //Traer condiciones de salud a tener en cuenta
+                $("#div_cond_salud").find(":input[type=checkbox]").each( function(){
+                    
+                    if($(this).is(":checked")){
+                        var organo_name = $(this).attr("title");
+                        var condicion_name  =$(this).parent().find(":input[type=text]").val();
+                        json_cond_salud = {organo: organo_name, condicion: condicion_name };
+                        array_cond_salud.push(json_cond_salud);
+                    }
+                   
+                });
+              
+                //-------------------------------------------------------------------------------
+
+                
+                 //Traer factores de impacto
+                 $("#div_factor_impacto").find(":input[type=checkbox]").each( function(){
+                    
+                    if($(this).is(":checked")){
+                        var factor_name = $(this).attr("title");
+                        json_necesidad = {escenario: factor_name};
+                        if(factor_name == "Otra ¿Cuál?"){
+                            //Traer otro factor de impacto
+                            var otro_factor_name  =$(this).parent().find(":input[type=text]").val();
+                            json_necesidad.otro_factor  = otro_factor_name;
+
+                        }
+                        if(factor_name == "Características del contexto universitario"){
+                            //Traer factores del contexto universitario
+                        }
+                       
+                        array_necesidades.push(json_necesidad);
+                    }
+                    
+                   
+                });
+                console.log(array_necesidades);
+         
+                //-------------------------------------------------------------------------------
                   
               });
 
 
 
         function validate_form(){
-            alert("Guardar");
-
+            
         }      
 
         }
