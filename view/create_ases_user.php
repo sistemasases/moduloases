@@ -81,7 +81,7 @@ if ($add_ases_user_form->is_validated()) {
     } else {
         /* @var AsesError $error*/
         foreach($ases_user->get_errors() as $error) {
-            \core\notification::error($error->message);
+            \core\notification::error($error->error_message);
         }
     }
 }

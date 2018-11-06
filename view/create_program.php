@@ -58,7 +58,7 @@ if ($program_form->is_submitted() && $program_form->is_validated()) {
 
         /* @var AsesError $error*/
         foreach($program->get_errors() as $error) {
-            \core\notification::error($error->message);
+            \core\notification::error($error->error_message);
         }
     }
 } else {
