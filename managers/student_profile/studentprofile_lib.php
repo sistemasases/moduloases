@@ -123,11 +123,43 @@ function update_user_image_profile($mdl_user_id, $php_file) {
  * @return object --> with CONDICIÓN DE EXCEPCIÓN information
  */
 
+
+/**
+ * Return a moodle url for student profile given a student code by input
+ * @param $courseid
+ * @param $instanceid
+ * @param $student_code
+ * @return moodle_url
+ */
+function get_student_profile_url($courseid, $instanceid, $student_code): moodle_url {
+    return new moodle_url('/blocks/ases/view/student_profile.php',
+        array(
+            'courseid' => $courseid,
+            'instanceid'=> $instanceid,
+            'student_code' => $student_code
+            ));
+}
+
 function  get_cond_excepcion()
 {
     global $DB; 
    $sql_query = "SELECT * FROM {talentospilos_cond_excepcion}";
    return $DB->get_records_sql($sql_query);
+}
+
+
+ /**
+ * Get Condición de excepción segun id
+ *
+ * @see get_cond()
+ * @return object --> with CONDICIÓN DE EXCEPCIÓN information
+ */
+
+function  get_cond($id)
+{
+    global $DB; 
+   $sql_query = "SELECT * FROM {talentospilos_cond_excepcion} WHERE id=$id";
+   return $DB->get_record_sql($sql_query);
 }
 
  /**

@@ -19,7 +19,20 @@
 
 return {
  init: function(data_init) {
+    //Validar si en las cohortes hay una condición de excepción
+    $("#cohorts_table tbody").find("td").each( function(){
+     if($(this).text().trim().substring(0,22) == "Condición de Excepción"){
+        var alias = $("#cond_excepcion_alias").text().trim();
+        var proptitle = $("#cond_excepcion_name").text().trim();
+         $(this).append("-");
+         $(this).append(alias);
+         $(this).attr("title", proptitle);
+     }
+    });
+
+
      // Carga una determinada pestaña
+     
 
     $(document).on('click', '#table_vive_con tbody tr td button', function () {     
         $(this).parent().parent().remove();

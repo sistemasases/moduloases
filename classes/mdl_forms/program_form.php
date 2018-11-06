@@ -25,10 +25,10 @@
 
 defined('MOODLE_INTERNAL') || die;
 require_once($CFG->libdir.'/formslib.php');
-require_once(__DIR__.'/../Programa.php');
-require_once(__DIR__.'/../Sede.php');
-require_once(__DIR__.'/../Facultad.php');
-require_once(__DIR__.'/../Jornada.php');
+require_once(__DIR__ . '/../Programa.php');
+require_once(__DIR__ . '/../Sede.php');
+require_once(__DIR__ . '/../Facultad.php');
+require_once(__DIR__ . '/../Jornada.php');
 class program_form extends moodleform {
 
     public function definition()

@@ -1,6 +1,6 @@
 <?php
-require_once(__DIR__.'/traits/from_std_object_or_array.php');
-require_once(__DIR__.'/DAO/BaseDAO.php');
+require_once(__DIR__ . '/traits/from_std_object_or_array.php');
+require_once(__DIR__ . '/DAO/BaseDAO.php');
 class TipoDocumento extends BaseDAO  {
     const TABLE_NAME = 'talentospilos_tipo_documento';
     const ID = 'id';
