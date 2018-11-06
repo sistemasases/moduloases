@@ -24,20 +24,22 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 defined('MOODLE_INTERNAL') || die;
-require_once(__DIR__.'/../vendor/autoload.php');
+require_once(__DIR__ . '/../vendor/autoload.php');
 
-use function Latitude\QueryBuilder\{alias, on, listing, identifyAll, field};
+use Latitude\QueryBuilder\Query\SelectQuery;
+use function Latitude\QueryBuilder\{alias, on, field, QueryInterface, criteria, identify, identifyAll, listing};
 
 
-require_once(__DIR__.'/../managers/user_management/user_management_lib.php');
-require_once(__DIR__.'/DAO/BaseDAO.php');
-require_once(__DIR__.'/Estado.php');
-require_once(__DIR__.'/EstadoAsesRegistro.php');
-require_once(__DIR__.'/EstadoAses.php');
-require_once(__DIR__.'/Discapacidad.php');
-require_once(__DIR__.'/EstadoIcetexRegistro.php');
-require_once(__DIR__.'/EstadoIcetex.php');
-require_once(__DIR__.'/Errors/Factories/DatabaseErrorFactory.php');
+require_once(__DIR__ . '/../managers/user_management/user_management_lib.php');
+require_once(__DIR__ . '/DAO/BaseDAO.php');
+require_once(__DIR__ . '/Estado.php');
+require_once(__DIR__ . '/EstadoAsesRegistro.php');
+require_once(__DIR__ . '/EstadoAses.php');
+require_once(__DIR__ . '/AsesUserExtended.php');
+require_once(__DIR__ . '/Discapacidad.php');
+require_once(__DIR__ . '/EstadoIcetexRegistro.php');
+require_once(__DIR__ . '/EstadoIcetex.php');
+require_once(__DIR__ . '/Errors/Factories/DatabaseErrorFactory.php');
 
 
 class AsesUser extends BaseDAO  {
@@ -295,8 +297,40 @@ class AsesUser extends BaseDAO  {
             return $OUTPUT->user_picture($mdl_user, array('size'=>200,  'link'=> false));
         }
     }
+
+    public static function _select_ases_users(): SelectQuery {
+        return BaseDAO::get_factory()
+            ->select()
+            ->from(alias(AsesUser::get_table_name_for_moodle(), 'usuario'))
+            ->innerJoin(
+                alias(AsesUserExtended::get_table_name_for_moodle(), 'user_extended'),
+                on('usuario.'.AsesUser::ID, 'user_extended.'.AsesUserExtended::ID_ASES_USER));
+    }
+
+    /**
+     * Select all ases users with tracking status in 1 and estadoases in 'seguimiento'
+     *
+     * # Returned tables:
+     * 1. AsesUser
+     * 2. AsesUserExtended
+     * 3. EstadoAsesRegistro
+     * 4. EstadoAses
+     *
+     * @return SelectQuery
+     */
+    public static function _select_active_ases_users(): SelectQuery {
+        return AsesUser::_select_ases_users()
+            ->innerJoin(
+                alias('{talentospilos_est_estadoases}', 'est_estadoases'),
+                on('est_estadoases.id_estudiante', 'usuario.id'))
+            ->innerJoin(
+                alias('{talentospilos_estados_ases}', 'estados_ases'),
+                on('estados_ases.id', 'est_estadoases.'.EstadoAsesRegistro::ID_ESTADO_ASES))
+            ->where(criteria("%s = 'seguimiento'", identify('estados_ases.nombre')));
+    }
 }
 class AsesUserWithNames extends AsesUser {
+
     public $firstname;
     public $lastname;
     public static  function get_table_name(): string {

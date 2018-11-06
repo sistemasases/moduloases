@@ -27,7 +27,7 @@
  * Facultad class
  * @see table talentospilos_facultad
  */
-require_once(__DIR__.'/../classes/DAO/BaseDAO.php');
+require_once(__DIR__ . '/DAO/BaseDAO.php');
 class Facultad extends BaseDAO {
     const ID = 'id';
     const NOMBRE = 'nombre';

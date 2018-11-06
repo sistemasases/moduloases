@@ -101,14 +101,14 @@ if(isset($_POST['risk_fields'])){
 if(isset($_POST['status_fields'])){
 
     $array_statuses = array(
-        'seguimiento' => '-SEGUIMIENTO',
-        'sinseguimiento' => '-SIN SEGUIMIENTO'
+        'seguimiento' => 'SEGUIMIENTO',
+        'sinseguimiento' => 'SIN SEGUIMIENTO'
     );
 
     foreach($_POST['status_fields'] as $status_field){
 
         $option = "";
-        $option .= "<option value =''></option>";
+        $option .= '<option value=""></option>';
 
         switch($status_field){
 
