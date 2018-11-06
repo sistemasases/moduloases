@@ -5,23 +5,21 @@
 <div class="container">
 </div>
    <h2>SEGUIMIENTO PILOS</h2>
-   <hr/>
    {{{message}}}
 </div>
 <form>
    {{#data}}
    <div class="row">
-      <label class="col-md-offset-12" id="titulo"></label>
-   </div>
-   <div class="row">
 
       {{#view_trackings_rt}}
-      <div data-spy="scroll" data-target=".navbar" data-offset="50" class="well col-md-12  reporte-seguimiento">
+      <div data-spy="scroll" data-target=".navbar" data-offset="50" class="well col-xs-12 col-sm-12 col-md-12 col-lg-12 reporte-seguimiento">
          {{{table_periods}}}
       </div>
-      <div class="well col-xs-12 col-sm-12 col-md-10 col-lg-10 col-md-offset-1 equalize text-center" id="div-header-info" style="height: 204.746px;" name="main_counting">
+      <div class="well col-xs-12 col-sm-12 col-md-10 col-lg-10 col-md-offset-1 equalize text-center" id="div-header-info" name="main_counting">
         <h2> INFORMACIÓN DE {{human_rol}}</h2><hr>
+
         <div class="row">
+
           <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
             <strong>Profesional</strong><br />
             <strong>Fichas:</strong> Revisado : <span id="general_rev_pro">*</span> - No revisado : <span id="general_not_rev_pro">*</span> -  Total : <span id="general_pro_t">*</span><br>
@@ -32,15 +30,16 @@
             <strong>Fichas:</strong> Revisado : <span id="general_rev_prac">*</span> - No revisado : <span id="general_not_rev_prac">*</span> -  Total : <span id="general_prac_t">*</span><br>
             <strong>Inasistencias:</strong> Revisado : <span id="general_in_rev_prac">*</span> - No revisado : <span id="general_in_not_rev_prac">*</span> -  Total : <span id="general_in_prac_t">*</span>
           </div>
+
         </div>
+
       </div>
-
-    <div data-spy="scroll" data-target=".navbar" data-offset="50" class="well col-md-10 col-md-offset-1 reporte-seguimiento " id="reemplazarToogle" name="reemplazarToogle">
-         {{{table}}}
-
-      {{/view_trackings_rt}}
-   </div>
+      <div data-spy="scroll" data-target=".navbar" data-offset="50" class="well col-md-10 col-md-offset-1 reporte-seguimiento " id="reemplazarToogle" name="reemplazarToogle">
+          {{{table}}}
+      </div>
+    {{/view_trackings_rt}}
    {{/data}}
+  </div>
 </form>
 
   <!-- MODALES DE SEGUIMIENTO -->
