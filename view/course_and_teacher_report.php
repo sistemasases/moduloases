@@ -40,44 +40,50 @@
  */
 require_once __DIR__ . '/../../../config.php';
 include "../classes/output/renderer.php";
-include '../managers/students_finalgrade_report/students_finalgrade_report_lib.php';
+require_once (__DIR__.'/../managers/course_and_teacher_report/course_and_teacher_report_lib.php');
 include '../classes/output/course_and_teacher_report_page.php';
 include "../managers/menu_options.php";
 $pagetitle = 'Reporte de curso y profesor';
 $courseid = required_param('courseid', PARAM_INT);
 $blockid = required_param('instanceid', PARAM_INT);
-
+error_reporting(E_ALL);
 require_login($courseid, false);
-
-$url = new moodle_url("/blocks/ases/view/search_ases_user.php",
+$actions = authenticate_user_view($USER->id, $blockid);
+$url = new moodle_url("/blocks/ases/view/course_and_teacher_report.php",
     array(
         'courseid' => $courseid,
-        'instanceid' => $blockid,
-        'next_url'=>$next_url)
+        'instanceid' => $blockid)
 );
+
+if (!isset($actions->course_and_teacher_report)) {
+    redirect(new moodle_url('/'), "No tienes permiso para acceder a los reportes por profesor",1, \core\output\notification::NOTIFY_INFO);
+}
+// Navigation setup
+$coursenode = $PAGE->navigation->find($courseid, navigation_node::TYPE_COURSE);
+$blocknode = navigation_node::create('Reportes por docente',$url, null, 'block', $blockid);
+$coursenode->add_node($blocknode);
+
+
 $PAGE->set_url($url);
 $PAGE->set_title($pagetitle);
 
 $PAGE->requires->css('/blocks/ases/style/styles_pilos.css', true);
-$PAGE->requires->css('/blocks/ases/style/simple-sidebar.css', true);
+$PAGE->requires->css('/blocks/ases/style/bootstrap_pilos.css', true);
+$PAGE->requires->css('/blocks/ases/style/bootstrap_pilos.min.css', true);
+$PAGE->requires->css('/blocks/ases/style/round-about_pilos.css', true);
+$PAGE->requires->css('/blocks/ases/style/sweetalert.css', true);
 $PAGE->requires->css('/blocks/ases/style/forms_pilos.css', true);
-// $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/dataTables.foundation.css', true);
+$PAGE->requires->css('/blocks/ases/style/add_fields.css', true);
+$PAGE->requires->css('/blocks/ases/style/jqueryui.css', true);
+$PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/dataTables.foundation.css', true);
 $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/dataTables.foundation.min.css', true);
-// $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/dataTables.jqueryui.css', true);
+$PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/dataTables.jqueryui.css', true);
 $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/dataTables.jqueryui.min.css', true);
-// $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/jquery.dataTables.css', true);
+$PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/jquery.dataTables.css', true);
 $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/jquery.dataTables.min.css', true);
 $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/jquery.dataTables_themeroller.css', true);
-$PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/dataTables.tableTools.css', true);
-$PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/NewCSSExport/buttons.dataTables.min.css', true);
-// $PAGE->requires->css('/blocks/ases/style/bootstrap_pilos.css', true);
-$PAGE->requires->css('/blocks/ases/style/bootstrap_pilos.min.css', true);
-$PAGE->requires->css('/blocks/ases/style/sweetalert.css', true);
-$PAGE->requires->css('/blocks/ases/style/sweetalert2.css', true);
-$PAGE->requires->css('/blocks/ases/style/round-about_pilos.css', true);
-$PAGE->requires->css('/blocks/ases/style/academic_reports_style.css', true);
+$PAGE->requires->css('/blocks/ases/js/select2/css/select2.css', true);
 $PAGE->requires->css('/blocks/ases/style/side_menu_style.css', true);
-$PAGE->requires->css('/blocks/ases/style/course_and_teacher_report.css', true);
 
 
 
@@ -91,11 +97,19 @@ $data->menu = $menu_option;
 
 echo $output->header();
 
-$cursos = get_datatable_array_for_course_teacher_report($blockid);
+$course_and_teacher_report_table = get_datatable_for_course_and_teacher_report($blockid);
 
-$paramReport->table = $cursos;
+$c_a_t_r_amd_need = new stdClass();
+$c_a_t_r_amd_need->table = $course_and_teacher_report_table;
+$c_a_t_r_amd_need->course_caller_id = $courseid;
+$c_a_t_r_amd_need->instance_id = $blockid;
+$send_to_amd = new stdClass();
 
-$PAGE->requires->js_call_amd('block_ases/course_and_teacher_report', 'load_report', $paramReport);
+$send_to_amd->data = $c_a_t_r_amd_need;
+
+$data->table = $course_and_teacher_report_table;
+
+$PAGE->requires->js_call_amd('block_ases/course_and_teacher_report', 'load_report', $send_to_amd);
 $output = $PAGE->get_renderer('block_ases');
 
 $course_and_teacher_report = new \block_ases\output\course_and_teacher_report_page($data);

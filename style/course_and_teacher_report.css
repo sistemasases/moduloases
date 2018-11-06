@@ -1,13 +1,25 @@
-/* Estilo de la columna de los estudiantes que tienen menos de la mitad de items ganados en un curso*/
-.est_lt_50 {
+/* Estilo de las columnas de la tabla*/
+.estudiantes_perdiendo {
     font-weight: bold;
 }
 
-.title {
-    top: 5px !important; width: 50% !important;
-
+.cantidad_items, .items_con_almenos_una_nota {
+    font-style: italic;
 }
 
+/* Fin */
+.course_and_teacher_report {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 0 1% 0 1% ;
+}
+
+
+.table th {
+    text-align: center;
+}
 .count_items {
     margin-top: 2%;
 }

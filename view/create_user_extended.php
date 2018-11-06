@@ -29,6 +29,7 @@ require_once(__DIR__ . '/../classes/AsesUserExtended.php');
 require_once(__DIR__ . '/../classes/mdl_forms/ases_user_extended_form.php');
 require_once(__DIR__ . '/../classes/AsesUser.php');
 require_once(__DIR__.'/../managers/user_creation_process/user_creation_process_lib.php');
+error_reporting(E_ALL);
 
 $pagetitle = 'Crear usuario extendido ASES';
 $courseid = required_param('courseid', PARAM_INT);
@@ -37,8 +38,14 @@ $username = optional_param('username', null, PARAM_TEXT);
 $num_doc = optional_param('num_doc', null, PARAM_TEXT);
 $continue = optional_param('continue', false, PARAM_BOOL);
 
+$PAGE->requires->css('/blocks/ases/style/progress_bar_component.css');
 
 require_login($courseid, false);
+
+$coursenode = $PAGE->navigation->find($courseid, navigation_node::TYPE_COURSE);
+$blocknode = navigation_node::create('Creación de usuario extendido', null , null, 'block', $blockid);
+$coursenode->add_node($blocknode);
+
 $actions = authenticate_user_view($USER->id, $blockid);
 if ( !isset($actions->create_user_extended )) {
     redirect(new moodle_url('/'), "No tienes permiso para adicionar un usuario extendido ASES",1);
@@ -95,9 +102,15 @@ if($data = $user_extended_form->get_data()) {
     }
 }
 
+
+
 if ( $continue && $user_extended_created ) {
     $url = \user_creation_process\generate_add_user_to_cohort_url($blockid, $courseid, null, true);
     \core\notification::info(html_writer::link($url, 'Para añadir otro usuario de click aquí'));
+}
+
+if ( $continue ) {
+    \user_creation_process\write_steps(\user_creation_process\CREATE_UPDATE_USER);
 }
 
 $user_extended_form->display();

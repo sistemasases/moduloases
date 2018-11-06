@@ -26,9 +26,9 @@
 use function Latitude\QueryBuilder\{alias, on, fn, param};
 
 defined('MOODLE_INTERNAL') || die;
-require_once(__DIR__.'/Errors/Factories/DatabaseErrorFactory.php');
-require_once(__DIR__.'/DAO/BaseDAO.php');
-require_once(__DIR__.'/Sede.php');
+require_once(__DIR__ . '/Errors/Factories/DatabaseErrorFactory.php');
+require_once(__DIR__ . '/DAO/BaseDAO.php');
+require_once(__DIR__ . '/Sede.php');
 
 class Programa extends BaseDAO {
     const ID = 'id';

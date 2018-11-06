@@ -1,5 +1,5 @@
 <?php
-require_once(__DIR__.'/DAO/BaseDAO.php');
+require_once(__DIR__ . '/DAO/BaseDAO.php');
 class Municipio extends BaseDAO  {
     const ID = 'id';
     const NOMBRE = 'nombre';

@@ -241,9 +241,10 @@ if ( $continue ) {
     multiple_steps();
 }
 
-
-$userform->display();
-
+echo html_writer::div(
+$userform->render(),
+'container'
+);
 
 echo $output->footer();
 echo
