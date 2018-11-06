@@ -137,6 +137,19 @@ if ($student_code != 0) {
     $record->age = substr($ases_student->age, 0, 2);
     $record->academic_programs = $academic_programs;
     $record->student_cohorts = $student_cohorts;
+
+    //Traer el nombre de la condición de excepcion del estudiante
+    $record->condition_excepcion_alias = "NO REGISTRA";
+    $record->condition_excepcion = "NO REGISTRA CONDICIÓN DE EXCEPCIÓN EN BASE DE DATOS";
+    $param = $ases_student->id_cond_excepcion;
+    foreach($student_cohorts as $cohort){
+        if(substr($cohort->name, 0, 24) == "Condición de Excepción"  && $param != null ){
+            $condition = get_cond($param);
+            $record->condition_excepcion_alias = $condition->alias;
+            $record->condition_excepcion = $condition->condicion_excepcion;
+        }
+    }
+  
     $record->document_type = $document_type;
 
     array_push($data_init, $academic_programs);
@@ -331,40 +344,6 @@ if ($student_code != 0) {
         
         }
 
-    //Extraer condición de excepción del usuario, según id registrado
-        //TRAE CONDICIONES DE EXCEPCIÓN
-        $cond_excepcion = get_cond_excepcion();
-        $options_cond_excepcion = '';
-    
-        $cond_excepcion_student->id_cond_excep = $ases_student->id_cond_excepcion;
-
-       
-        
-         $i = 0;
-        foreach($cond_excepcion as $array_cond){
-            if($array_cond->alias=='N.A'){
-                $options_cond_excepcion .= "<option title='$array_cond->condicion_excepcion' value='$array_cond->id'>$array_cond->alias</option>";   
-                $pos = $i;
-                break;
-            } 
-        $i++;
-        }
-        //Eliminar condición de excepción agregada en opciones condiciones de excepcion
-        array_splice($cond_excepcion,$pos,1);
-        
-        
-    
-        foreach($cond_excepcion as $cond){
-            if($cond_excepcion_student->id_cond_excep == $cond->id){
-                $options_cond_excepcion .= "<option title='$cond->condicion_excepcion' value='$cond->id' selected='selected'>$cond->alias</option>";
-            }else{
-                $options_cond_excepcion .= "<option title='$cond->condicion_excepcion' value='$cond->id'>$cond->alias</option>";
-            }
-        }
-    
-        $record->options_cond_excepcion = $options_cond_excepcion;
-
-    //---------------------------------------------------------------------------
 
     $record->observations = $ases_student->observacion;
 

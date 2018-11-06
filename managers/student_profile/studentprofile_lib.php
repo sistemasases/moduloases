@@ -147,6 +147,21 @@ function  get_cond_excepcion()
    return $DB->get_records_sql($sql_query);
 }
 
+
+ /**
+ * Get Condición de excepción segun id
+ *
+ * @see get_cond()
+ * @return object --> with CONDICIÓN DE EXCEPCIÓN information
+ */
+
+function  get_cond($id)
+{
+    global $DB; 
+   $sql_query = "SELECT * FROM {talentospilos_cond_excepcion} WHERE id=$id";
+   return $DB->get_record_sql($sql_query);
+}
+
  /**
  * Get estados civiles registrados
  *
