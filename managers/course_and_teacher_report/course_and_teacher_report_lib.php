@@ -288,6 +288,8 @@ INNER JOIN
             on mdl_talentospilos_est_estadoases.id_estado_ases = mdl_talentospilos_estados_ases.id
         where mdl_talentospilos_estados_ases.nombre='seguimiento'
         and mdl_talentospilos_inst_cohorte.id_instancia = $id_instancia
+        AND mdl_talentospilos_user_extended.tracking_status = 1
+        and mdl_role_assignments.roleid = 5
         and substring(mdl_course.shortname from 15 for 6) = '$semestre' ) AS moodle_course
         ON              moodle_course.curso_id = mdl_context.instanceid
         WHERE           mdl_role_assignments.roleid = 3
@@ -307,9 +309,16 @@ function get_datatable_for_course_and_teacher_report($instance_id) {
     $common_language_config = \jquery_datatable\get_datatable_common_language_config();
     $columns = array();
     /* Index of column  'Est < 50' (starting from 0)*/
-    $est_lt_50_colum_index = 2;
+
+    $est_lt_50_colum = array(
+        "title"=>"Est < 50%",
+        "name"=>"estudiantes_perdiendo",
+        "data"=>"estudiantes_perdiendo",
+        'description'=>'Estudiantes perdiendo más de la mitad de los items calificados',
+        'className'=>'estudiantes_perdiendo');
 
     $data = array_values(get_reporte_curso_profesores($instance_id));
+
     array_push($columns, get_datatable_class_column());
     array_push($columns, array("title"=>"Curso", "name"=>'curso', "data"=>"curso"));
     array_push($columns, array(
@@ -317,12 +326,8 @@ function get_datatable_for_course_and_teacher_report($instance_id) {
         "name"=>"nombre_profesor",
         "data"=>"nombre_profesor",
         "description"=>'Nombre del profesor'));
-    array_push($columns, array(
-        "title"=>"Est < 50%",
-        "name"=>"estudiantes_perdiendo",
-        "data"=>"estudiantes_perdiendo",
-        'description'=>'Estudiantes perdiendo más de la mitad de los items calificados',
-        'className'=>'estudiantes_perdiendo'));
+
+    array_push($columns, $est_lt_50_colum);
     array_push($columns, array("title"=>"Est >=50%", "name"=>"estudiantes_ganando", "data"=>"estudiantes_ganando", "description"=>"Estudiantes ganando más de la mitad de los items calificados"));
     array_push($columns, array("title"=>"Est. sin notas", "name"=>"estudiantes_sin_ninguna_nota", "data"=>"estudiantes_sin_ninguna_nota", "description"=>"Estudiantes sin ningún item calificado"));
     array_push($columns, array("title"=>"Estudiantes", "name"=>"cantidad_estudiantes_ases", "data"=>"cantidad_estudiantes_ases", 'description'=>'Cantidad de estudiantes ASES'));
@@ -346,7 +351,9 @@ function get_datatable_for_course_and_teacher_report($instance_id) {
         'description'=>'Cantidad de items calificables de el curso',
         'className'=>'cantidad_items'));
     array_push($columns, array("title"=>"Es critica", "name"=>"critica", "data"=>"critica", "description"=>'Indica si la materia ha sido marcada como critica por ASES'));
-
+    // The previous order of columns may be change, because that we need search the actual index of this column
+    // at execution time
+    $est_lt_50_colum_index = array_search($est_lt_50_colum, $columns);
     $data_table = array(
         "bsort" => false,
         "columns" => $columns,

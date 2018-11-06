@@ -68,25 +68,22 @@ $PAGE->set_url($url);
 $PAGE->set_title($pagetitle);
 
 $PAGE->requires->css('/blocks/ases/style/styles_pilos.css', true);
-$PAGE->requires->css('/blocks/ases/style/simple-sidebar.css', true);
+$PAGE->requires->css('/blocks/ases/style/bootstrap_pilos.css', true);
+$PAGE->requires->css('/blocks/ases/style/bootstrap_pilos.min.css', true);
+$PAGE->requires->css('/blocks/ases/style/round-about_pilos.css', true);
+$PAGE->requires->css('/blocks/ases/style/sweetalert.css', true);
 $PAGE->requires->css('/blocks/ases/style/forms_pilos.css', true);
-// $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/dataTables.foundation.css', true);
+$PAGE->requires->css('/blocks/ases/style/add_fields.css', true);
+$PAGE->requires->css('/blocks/ases/style/jqueryui.css', true);
+$PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/dataTables.foundation.css', true);
 $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/dataTables.foundation.min.css', true);
-// $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/dataTables.jqueryui.css', true);
+$PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/dataTables.jqueryui.css', true);
 $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/dataTables.jqueryui.min.css', true);
-// $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/jquery.dataTables.css', true);
+$PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/jquery.dataTables.css', true);
 $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/jquery.dataTables.min.css', true);
 $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/jquery.dataTables_themeroller.css', true);
-$PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/dataTables.tableTools.css', true);
-$PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/NewCSSExport/buttons.dataTables.min.css', true);
-// $PAGE->requires->css('/blocks/ases/style/bootstrap_pilos.css', true);
-$PAGE->requires->css('/blocks/ases/style/bootstrap_pilos.min.css', true);
-$PAGE->requires->css('/blocks/ases/style/sweetalert.css', true);
-$PAGE->requires->css('/blocks/ases/style/sweetalert2.css', true);
-$PAGE->requires->css('/blocks/ases/style/round-about_pilos.css', true);
-$PAGE->requires->css('/blocks/ases/style/academic_reports_style.css', true);
+$PAGE->requires->css('/blocks/ases/js/select2/css/select2.css', true);
 $PAGE->requires->css('/blocks/ases/style/side_menu_style.css', true);
-$PAGE->requires->css('/blocks/ases/style/course_and_teacher_report.css', true);
 
 
 
@@ -101,11 +98,18 @@ $data->menu = $menu_option;
 echo $output->header();
 
 $course_and_teacher_report_table = get_datatable_for_course_and_teacher_report($blockid);
-$data->table = $course_and_teacher_report_table;
-$paramReport->dataTable = $course_and_teacher_report_table;
-$paramReport->mdl_course_caller_id = $courseid;
 
-$PAGE->requires->js_call_amd('block_ases/course_and_teacher_report', 'load_report', $paramReport);
+$c_a_t_r_amd_need = new stdClass();
+$c_a_t_r_amd_need->table = $course_and_teacher_report_table;
+$c_a_t_r_amd_need->course_caller_id = $courseid;
+$c_a_t_r_amd_need->instance_id = $blockid;
+$send_to_amd = new stdClass();
+
+$send_to_amd->data = $c_a_t_r_amd_need;
+
+$data->table = $course_and_teacher_report_table;
+
+$PAGE->requires->js_call_amd('block_ases/course_and_teacher_report', 'load_report', $send_to_amd);
 $output = $PAGE->get_renderer('block_ases');
 
 $course_and_teacher_report = new \block_ases\output\course_and_teacher_report_page($data);

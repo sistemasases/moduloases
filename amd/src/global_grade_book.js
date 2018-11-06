@@ -10,8 +10,9 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
     return {
         read_only_view_styles: function() {
             /*Hide 'Change to aggregates only' icon in grade report header of moodle*/
-            console.log('hola desde only read', $('.category .action-icon'));
             $('.category .action-icon').hide();
+            /* Disable surname and firstname links */
+            $('#studentheader > a').bind('click', false);
         },
         init: function () {
             var grade;

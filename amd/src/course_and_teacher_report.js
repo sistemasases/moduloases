@@ -19,12 +19,13 @@ define(['jquery', 'core/notification', 'block_ases/global_grade_book', 'block_as
         },
 
         load_report: function (data) {
-            console.log(data);
-            var dataTable = data;
-            var mdl_course_caller_id = data.mdl_course_caller_id;
+            var dataTable = data.table;
+            var course_caller_id = data.course_caller_id;
+            var course_id = data.course_id;
+            var instance_id = data.instance_id;
             /**
              * Data: {
-             *     dataTable,
+             *     table,
              *     mdl_course_caller_id
              * }
              *
@@ -50,7 +51,11 @@ define(['jquery', 'core/notification', 'block_ases/global_grade_book', 'block_as
              *     critica,
              * }
              */
-
+            var grade_table_border_color = '#cccccc';
+            function fix_grades_table_styles() {
+                console.log($('.gradeparent').parent());
+                $('.gradeparent').parent().css('background', grade_table_border_color);
+            }
             var filter_columns = ['critica'];
             function get_filter_column_indexes(filter_column_names, column_names) {
                 var filter_column_indexes = [];
@@ -98,11 +103,14 @@ define(['jquery', 'core/notification', 'block_ases/global_grade_book', 'block_as
             );
             function get_course_html( row , callback, tr ) {
                 var data = row.data();
-                // `d` is the original data object for the row
                 var post_info = {
-                    mdl_course_id: data.curso_id,
-                    mdl_course_caller_id: mdl_course_caller_id
-                }
+                    function: 'grade_table',
+                    params: {
+                        course_id: data.curso_id,
+                        course_caller_id: course_caller_id,
+                        instance_id: instance_id
+                    }
+                };
                 $.ajax({
                         method: "POST",
                         url: '../managers/course_and_teacher_report/course_and_teacher_report_api.php',
@@ -111,20 +119,15 @@ define(['jquery', 'core/notification', 'block_ases/global_grade_book', 'block_as
                     }
                 ).fail(
                     function (response) {
-                        console.log(response);
                         notification.alert('Error, debe informar a un programador, adjunte esta información', response.responseText, 'Aceptar');
                         tr.removeClass('shown');
                     }
                 ).done(
                     function (response) {
-
-                        console.log('postinfo', post_info);
-                        console.log('grades_table:', response);
                         callback(row, response);
                     }
                 );
             }
-
             $('#tableFinalgradesReport tbody').on('click', 'td.details-control', function () {
                 var tr = $(this).closest('tr');
                 var row = table.row( tr );
@@ -139,7 +142,8 @@ define(['jquery', 'core/notification', 'block_ases/global_grade_book', 'block_as
                     var callback = (row, data_html) => {
                         row.child( data_html ).show();
                         /* Fix styles for ases table*/
-                        //gg_b.read_only_view_styles();
+                        gg_b.read_only_view_styles();
+                        fix_grades_table_styles();
                     };
                     get_course_html(row, callback, tr);
                     /* Fix styles and view for grades loaded */
@@ -149,7 +153,9 @@ define(['jquery', 'core/notification', 'block_ases/global_grade_book', 'block_as
             } );
             // Añadir descripción a las columnas
             $("th").each(function(index) {
-                dataTable.columns[index].description? $(this).attr('title', dataTable.columns[index].description): null;
+                if(dataTable.columns[index]) {
+                    dataTable.columns[index].description ? $(this).attr('title', dataTable.columns[index].description) : null;
+                }
 
             });
         },
