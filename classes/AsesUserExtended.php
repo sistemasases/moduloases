@@ -1,5 +1,5 @@
 <?php
-require_once(__DIR__.'/DAO/BaseDAO.php');
+require_once(__DIR__ . '/DAO/BaseDAO.php');
 
 /**
  * Class AsesUserExtended, Relation between moodle user and Ases user, and save the tracking and program status

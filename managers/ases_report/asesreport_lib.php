@@ -551,8 +551,8 @@ function get_ases_report($general_fields=null,
                     $select_clause .= $status_field.", ";
 
                     $sub_query_status .= " LEFT JOIN (SELECT current_ases_status.id_ases_student AS id_ases_student,
-                                                        CASE WHEN historic_ases_statuses.nombre = 'seguimiento' THEN '-SEGUIMIENTO'
-                                                             WHEN historic_ases_statuses.nombre = 'sinseguimiento' THEN '-SIN SEGUIMIENTO'
+                                                        CASE WHEN historic_ases_statuses.nombre = 'seguimiento' THEN 'SEGUIMIENTO'
+                                                             WHEN historic_ases_statuses.nombre = 'sinseguimiento' THEN 'SIN SEGUIMIENTO'
                                                              ELSE 'N.R.' 
                                                         END AS ases_status_student
                                                       FROM

@@ -164,3 +164,19 @@ function generate_create_ases_update_user_extended_url($blockid, $courseid, $use
     return $url;
 }
 
+/**
+ * Write html necesary for the steper
+ *
+ * @param $current_step can be one of the CREATION_STEPS elements
+ * @see CREATION_STEPS
+ * @throws \coding_exception
+ */
+function write_steps($current_step) {
+    global $PAGE, $output;
+    $PAGE->requires->js_call_amd('block_ases/progress_bar_component', 'init');
+    $template_data = new \stdClass();
+    $template_data->items = \user_creation_process\get_steps($current_step);
+    $student_profile_page = new \block_ases\output\progress_bar_component($template_data);
+    echo $output->render($student_profile_page);
+}
+

@@ -1,5 +1,5 @@
 <?php
-require_once(__DIR__.'/DAO/BaseDAO.php');
+require_once(__DIR__ . '/DAO/BaseDAO.php');
 
 class Discapacidad extends BaseDAO {
     const ID ='id';

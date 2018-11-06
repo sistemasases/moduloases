@@ -5,7 +5,7 @@
  * Date: 11/10/18
  * Time: 01:23 PM
  */
-require_once(__DIR__.'/DAO/BaseDAO.php');
+require_once(__DIR__ . '/DAO/BaseDAO.php');
 
 class EstadoIcetex extends BaseDAO {
 
