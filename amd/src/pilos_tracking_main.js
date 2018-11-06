@@ -573,22 +573,22 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                     },
                     url: "../managers/pilos_tracking/pilos_tracking_report.php",
                     async: true,
-                    success: function(msg
-                        ) {
-                    $(practicant_id + " > div").empty();
-                    $(practicant_id + " > div").append(msg.render);
-                    var html = msg.counting;
-
-                    $.each(html,function( index,value ) {
-                        $("#counting_"+value.code).html(value.html);
-                    });
-
-
-                    monitor_load();
-                    groupal_tracking_load();
-                    },
                     dataType: "json",
                     cache: "false",
+                    success: function(msg) {
+
+                        $(practicant_id + " > div").empty();
+                        $(practicant_id + " > div").append(msg.render);
+                        var html = msg.counting;
+
+                        $.each(html,function( index,value ) {
+                            $("#counting_"+value.code).html(value.html);
+                        });
+
+                        monitor_load();
+                        groupal_tracking_load();
+
+                    },
                     error: function(msg) {
                        swal({
                             title: "Oops !",
@@ -911,8 +911,6 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
 
 
                             success: function(msg) {
-
-
 
                                 //In case there are not records
                                 if (msg == "") {
