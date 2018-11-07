@@ -2135,14 +2135,14 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
 // unset($array_elements,$array_aditional,$new_register, $table);
 // }
 // ************************************************************************************************************
-//         // Actualización:
-//         //Se modifica campo de la tabla usuario
-         // Changing type of field hijos on table talentospilos_usuario to int.
-         $table = new xmldb_table('talentospilos_usuario');
-         $field = new xmldb_field('hijos', XMLDB_TYPE_INTEGER, '3', null, null, null, null, 'vive_con');
+// //         // Actualización:
+// //         //Se modifica campo de la tabla usuario
+//          // Changing type of field hijos on table talentospilos_usuario to int.
+//          $table = new xmldb_table('talentospilos_usuario');
+//          $field = new xmldb_field('hijos', XMLDB_TYPE_INTEGER, '3', null, null, null, null, 'vive_con');
  
-         // Launch change of type for field hijos.
-         $dbman->change_field_type($table, $field);
+//          // Launch change of type for field hijos.
+//          $dbman->change_field_type($table, $field);
      
 
         upgrade_block_savepoint(true, 2018103010090 , 'ases');
