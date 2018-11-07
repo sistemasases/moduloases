@@ -31,7 +31,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Create program view
+ * Course and teacher report view
  *
  * @author     Luis Gerardo Manrique Cardona
  * @package    block_ases
@@ -46,7 +46,6 @@ include "../managers/menu_options.php";
 $pagetitle = 'Reporte de curso y profesor';
 $courseid = required_param('courseid', PARAM_INT);
 $blockid = required_param('instanceid', PARAM_INT);
-error_reporting(E_ALL);
 require_login($courseid, false);
 $actions = authenticate_user_view($USER->id, $blockid);
 $url = new moodle_url("/blocks/ases/view/course_and_teacher_report.php",
@@ -67,24 +66,10 @@ $coursenode->add_node($blocknode);
 $PAGE->set_url($url);
 $PAGE->set_title($pagetitle);
 
-$PAGE->requires->css('/blocks/ases/style/styles_pilos.css', true);
-$PAGE->requires->css('/blocks/ases/style/bootstrap_pilos.css', true);
 $PAGE->requires->css('/blocks/ases/style/bootstrap_pilos.min.css', true);
-$PAGE->requires->css('/blocks/ases/style/round-about_pilos.css', true);
-$PAGE->requires->css('/blocks/ases/style/sweetalert.css', true);
-$PAGE->requires->css('/blocks/ases/style/forms_pilos.css', true);
-$PAGE->requires->css('/blocks/ases/style/add_fields.css', true);
-$PAGE->requires->css('/blocks/ases/style/jqueryui.css', true);
-$PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/dataTables.foundation.css', true);
-$PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/dataTables.foundation.min.css', true);
-$PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/dataTables.jqueryui.css', true);
-$PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/dataTables.jqueryui.min.css', true);
-$PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/jquery.dataTables.css', true);
 $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/jquery.dataTables.min.css', true);
-$PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/jquery.dataTables_themeroller.css', true);
-$PAGE->requires->css('/blocks/ases/js/select2/css/select2.css', true);
 $PAGE->requires->css('/blocks/ases/style/side_menu_style.css', true);
-
+$PAGE->requires->css('/blocks/ases/style/course_and_teacher_report.css', true);
 
 
 
@@ -116,21 +101,4 @@ $course_and_teacher_report = new \block_ases\output\course_and_teacher_report_pa
 echo $output->render($course_and_teacher_report);
 
 echo $output->footer();
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ?>
