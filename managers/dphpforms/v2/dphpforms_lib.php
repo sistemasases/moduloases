@@ -238,8 +238,10 @@ echo json_encode( dphpformsV2_find_records( $xQuery ) );*/
         if( count( $query->filterFields ) > 0 ){
             $where_clause = "WHERE ";
             $first_filter_field = true;
+
+            $filter_fields = $query->filterFields;
             
-            foreach( $query->filterFields as $filterField ){
+            foreach( $filter_fields as $filterField ){
 
                 $fieldAlias = $filterField[0];
                 $filterValues = $filterField[1];
@@ -249,7 +251,7 @@ echo json_encode( dphpformsV2_find_records( $xQuery ) );*/
                 $belongs_block_AND = false;
                 
                 if( !$first_filter_field ){
-                    if( $tmpNextFilterField = next($query->filterFields) ){
+                    if( $tmpNextFilterField = next($filter_fields) ){
                         $filter_where .= " OR ";
                     }
                 }else{
