@@ -261,6 +261,7 @@ define([
                 let val_cond_adquisicion, val_apoyo_cotidiano, otro_apoyo_cotidiano,  key_apoyo_cotidiano, key_otro_apoyo_cotidiano,text_cond_adquisicion, otra_cond_adquisicion, 
                     descripcion_diagnostico, val_tipo_disc, text_tipo_disc, otro_tipo_disc, val_transporte, otro_transporte,  key_transporte, key_otro_transporte ,
                     val_participa_asociacion, key_participa_asociacion, val_asoc, key_asoc, porcentaje_invalidez, val_act, key_act, key_realiza_act, val_realiza_act,
+                    val_apoyo_institu, key_apoyo_institu, val_apoyo_tipo, key_apoyo_tipo, val_institu, key_institu, json_apoyo_institu,
                     json_dif_permanente, json_cond_salud, json_necesidad, json_factores_impacto, json_posibilidad, json_apoyo_cotidiano, json_transporte, 
                     json_participa_asoc, json_actividades_otros;
                
@@ -504,9 +505,33 @@ define([
                   }
   
                   //-------------------------------------------------------------------------------
+                  
+
+                  //Traer institucion que apoya (?)
+                
+                  val_apoyo_institu = $("#check_apoyo_institu").is(":checked");
+                  key_apoyo_institu = $("#check_apoyo_institu").attr("id");
+                  json_apoyo_institu     = {key_apoya: key_apoyo_institu, apoyo: val_apoyo_institu};
+  
+                  if(val_apoyo_institu){
+  
+                      val_apoyo_tipo   = $("#input_apoyo").val();
+                      key_apoyo_tipo  =  $("#input_apoyo").attr("id");
+  
+                      json_apoyo_institu.key_apoyo_institu = key_apoyo_tipo;
+                      json_apoyo_institu.apoyo_institu     = val_apoyo_tipo;
+
+                      val_institu   = $("#input_institucion").val();
+                      key_institu  =  $("#input_institucion").attr("id");
+  
+                      json_apoyo_institu.key_institucion = key_institu;
+                      json_apoyo_institu.institucion     = val_institu;
+                  }
+  
+                  //-------------------------------------------------------------------------------
 
                 console.log(json_participa_asoc);
-                console.log(json_actividades_otros);
+                console.log(json_apoyo_institu);
                 
 
 
