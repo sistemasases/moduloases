@@ -580,7 +580,7 @@ function auxiliary_specific_countingV2($user_kind, $user_id, $semester, $instanc
         $xQuery->filterFields = [["in_fecha",[[$fecha_inicio_str,">="],[$fecha_fin_str,"<="]], false],
                                  ["in_revisado_profesional",[["%%","LIKE"]], false],
                                  ["in_revisado_profesional",[["%%","LIKE"]], false],
-                                 ["in_id_practicante",[[$user_id,"="]], false]
+                                 ["id_monitor",[[$user_id,"="]], false]
                                 ];
         $xQuery->orderFields = [["in_fecha","DESC"]];
         $xQuery->orderByDatabaseRecordDate = true; 
