@@ -48,6 +48,7 @@
         array_push($columns, array("title"=>"Monto", "className"=>"dt-body-right", "name"=>"monto_estudiante", "data"=>"monto_estudiante"));
 		array_push($columns, array("title"=>"Estado en el programa".$program_status_options, "name"=>"program_status", "data"=>"program_status"));
 		array_push($columns, array("title"=>"Estado en ICETEX", "name"=>"nombre_estado", "data"=>"nombre_estado"));
+		array_push($columns, array("title"=>"Estado ICETEX y SRA", "name"=>"est_ice_sra", "data"=>"est_ice_sra"));
         array_push($columns, array("title"=>"Fecha de cancelación de semestre", "name"=>"fecha_cancel", "data"=>"fecha_cancel"));
 
 		$data = array(

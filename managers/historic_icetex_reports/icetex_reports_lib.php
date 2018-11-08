@@ -50,7 +50,13 @@ function get_array_students_with_resolution(){
                                 THEN '---'
 						WHEN (res_students.codigo_resolucion IS NOT NULL)
 								THEN res_students.codigo_resolucion
-                    END AS codigo_resolucion
+                    END AS codigo_resolucion,
+                    CASE WHEN (spp_students.program_status = '-ACTIVO' AND status_icetex.nombre_estado LIKE '5%')
+                                THEN 'ACTIVO'
+                        WHEN (spp_students.program_status = '-INACTIVO' OR spp_students.program_status = '---'
+                                OR status_icetex.nombre_estado LIKE '3%' OR status_icetex.nombre_estado IS NULL)
+                                THEN 'INACTIVO'
+                    END AS est_ice_sra
                 FROM
                 (SELECT user_extended.id_ases_user, moodle_user.lastname, moodle_user.firstname, cohorts.idnumber, semestre.id AS id_semestre, semestre.nombre AS nombre_semestre, 
                     usuario.num_doc, moodle_user.username, substring(cohorts.idnumber from 0 for 5) AS cohorte
