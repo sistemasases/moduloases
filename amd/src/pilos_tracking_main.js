@@ -164,8 +164,6 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                 
 
 
-
-
                 // when user is 'practicante' then has permissions
                 if (namerol == "practicante_ps") {
 
@@ -399,6 +397,20 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
 
             function create_specific_counting(user){
                 
+                $("#general_rev_pro").html( "*" );
+                $("#general_rev_prac").html( "*" );
+                $("#general_not_rev_pro").html( "*" );
+                $("#general_not_rev_prac").html( "*" );
+                $("#general_pro_t").html( "*" );
+                $("#general_prac_t").html( "*" );
+
+                $("#general_in_rev_pro").html( "*" );
+                $("#general_in_rev_prac").html( "*" );
+                $("#general_in_not_rev_pro").html( "*" );
+                $("#general_in_not_rev_prac").html( "*" );
+                $("#general_in_pro_t").html( "*" );
+                $("#general_in_prac_t").html( "*" );
+
                 $.ajax({
                     type: "POST",
                     data: {
@@ -407,12 +419,10 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                         instance:get_instance(),
                     },
                     url: "../managers/pilos_tracking/pilos_tracking_report.php",
-                    async: false,
+                    async: true,
                     dataType: "json",
                     cache: "false",
                     success: function( data ) {
-
-                        
 
                         $("#general_rev_pro").html( data.revisado_profesional );
                         $("#general_rev_prac").html( data.revisado_practicante );
@@ -445,8 +455,6 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                             },
                             url: "../../../blocks/ases/managers/pilos_tracking/pilos_tracking_report.php",
                             async: false,
-
-
                             success: function(msg) {
 
                                 if (msg != "") {
@@ -461,10 +469,6 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                                 alert("Error al consultar nombres de los estudiantes pertenecientes a un seguimiento grupal");
                             },
                         });
-
-                    
-
-
                 }
 
 
@@ -900,6 +904,7 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                         $("#reemplazarToogle").hide();
 
                         //Processing in pilos_tracking_report.php
+                        let user_id = id_persona;
                         $.ajax({
                             type: "POST",
                             data: {
@@ -909,9 +914,9 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                                 type: "consulta_sistemas"
                             },
                             url: "../../../blocks/ases/managers/pilos_tracking/pilos_tracking_report.php",
-                            async: false,
-
-
+                            async: true,
+                            dataType: "text",
+                            cache: "false",
                             success: function(msg) {
 
                                 //In case there are not records
@@ -923,6 +928,7 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                                     $("input[name=practicante]").prop('disabled', true);
                                     $("input[name=profesional]").prop('disabled', true);
                                 }
+                                create_specific_counting( user_id );
                                 student_load();
                                 monitor_load();
                                 professional_load();
@@ -930,8 +936,6 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                                 $(".well.col-md-10.col-md-offset-1.reporte-seguimiento.oculto").slideDown("slow");
 
                             },
-                            dataType: "text",
-                            cache: "false",
                             error: function(msg) {
                              swal(
                                  'ERROR!',
