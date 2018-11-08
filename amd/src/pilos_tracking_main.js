@@ -405,12 +405,10 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                         instance:get_instance(),
                     },
                     url: "../managers/pilos_tracking/pilos_tracking_report.php",
-                    async: false,
+                    async: true,
                     dataType: "json",
                     cache: "false",
                     success: function( data ) {
-
-                        
 
                         $("#general_rev_pro").html( data.revisado_profesional );
                         $("#general_rev_prac").html( data.revisado_practicante );
@@ -443,8 +441,6 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                             },
                             url: "../../../blocks/ases/managers/pilos_tracking/pilos_tracking_report.php",
                             async: false,
-
-
                             success: function(msg) {
 
                                 if (msg != "") {
@@ -459,10 +455,6 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                                 alert("Error al consultar nombres de los estudiantes pertenecientes a un seguimiento grupal");
                             },
                         });
-
-                    
-
-
                 }
 
 
