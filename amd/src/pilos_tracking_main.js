@@ -397,6 +397,20 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
 
             function create_specific_counting(user){
                 
+                $("#general_rev_pro").html( "*" );
+                $("#general_rev_prac").html( "*" );
+                $("#general_not_rev_pro").html( "*" );
+                $("#general_not_rev_prac").html( "*" );
+                $("#general_pro_t").html( "*" );
+                $("#general_prac_t").html( "*" );
+
+                $("#general_in_rev_pro").html( "*" );
+                $("#general_in_rev_prac").html( "*" );
+                $("#general_in_not_rev_pro").html( "*" );
+                $("#general_in_not_rev_prac").html( "*" );
+                $("#general_in_pro_t").html( "*" );
+                $("#general_in_prac_t").html( "*" );
+
                 $.ajax({
                     type: "POST",
                     data: {
