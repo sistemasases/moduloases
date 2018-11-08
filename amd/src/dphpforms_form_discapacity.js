@@ -830,9 +830,158 @@ define([
                       }
                   }  
                     break;
-                    
 
+                    case "posibilidad_actividades":
+
+                    let array_pos = json_detalle[i], obj_pos;
+
+                    for(item in array_pos){
+                      //Recorre arreglo de posibilidades en actividades para validar cada una
+                      obj_pos = array_pos[item];
+                      for(op in obj_pos){
+                      if( op == "otra_actividad" || op == "posibilidad" || op == "tipo_apoyo"   ){
+                          if(obj_pos[op]== ""){
+
+                              msg.title = "Posibilidades en actividades";
+                              msg.status = "error";
+                              msg.msg = "El campo "+op+" de la opción '"+ obj_pos["actividad"] +"' es obligatorio";
+                              return msg;  
+                          }
+                          if(has_numbers(obj_pos[op])){
+
+                              msg.title = "Posibilidades en actividades";
+                              msg.status = "error";
+                              msg.msg = "El campo "+op+ " de la opción '"+ obj_pos["actividad"] + "' no debe contener números";
+                              return msg;  
+                          }
+
+                      }
+                      }
+                    }
+                    break;
+
+
+                    case "apoyo_principal_cotidiano":
+
+                    let obj_apoyo= json_detalle[i];
+                    for(op in obj_apoyo){
+                       if(op == "otro_apoyo"){
+                        if(obj_apoyo[op]== ""){
+
+                            msg.title = "Apoyo principal";
+                            msg.status = "error";
+                            msg.msg = "El campo "+op+" de la opción '"+ obj_apoyo["apoyo_cotidiano"]+"' es obligatorio";
+                            return msg;  
+                        }
+                        if(has_numbers(obj_apoyo[op])){
+
+                            msg.title = "Apoyo principal";
+                            msg.status = "error";
+                            msg.msg = "El campo "+op+" de la opción '"+ obj_apoyo["apoyo_cotidiano"]+"' no debe contener números";
+                            return msg;  
+                        }
+
+                       }
+                    }
+
+                    break;
                     
+                    case "medio_transporte":
+
+                    let obj_transporte= json_detalle[i];
+                    for(op in obj_transporte){
+                       if(op == "otro_transporte"){
+                        if(obj_transporte[op]== ""){
+
+                            msg.title = "Medio de transporte";
+                            msg.status = "error";
+                            msg.msg = "El campo "+op+" de la opción '"+ obj_transporte["transporte"]+"' es obligatorio";
+                            return msg;  
+                        }
+                        if(has_numbers(obj_transporte[op])){
+
+                            msg.title = "Medio de transporte";
+                            msg.status = "error";
+                            msg.msg = "El campo "+op+" de la opción '"+ obj_transporte["transporte"]+"' no debe contener números";
+                            return msg;  
+                        }
+
+                       }
+                    }
+                    break;
+
+                    case "participa_asociacion":
+
+                    let obj_asoc= json_detalle[i];
+                    for(op in obj_asoc){
+                        if(op == "asociacion"){
+                         if(obj_asoc[op]== ""){
+ 
+                             msg.title = "Participación en organización/asociación";
+                             msg.status = "error";
+                             msg.msg = "El campo "+op+" es obligatorio";
+                             return msg;  
+                         }
+                         if(has_numbers(obj_asoc[op])){
+ 
+                             msg.title = "Participación en organización/asociación";
+                             msg.status = "error";
+                             msg.msg = "El campo "+op+" no debe contener números";
+                             return msg;  
+                         }
+ 
+                        }
+                     }
+                    break;
+                    
+                    case "actividades_otros":
+
+                    let obj_act= json_detalle[i];
+                    for(op in obj_act){
+                        if(op == "actividad"){
+                         if(obj_act[op]== ""){
+ 
+                             msg.title = "Actividades con otros";
+                             msg.status = "error";
+                             msg.msg = "El campo "+op+" es obligatorio";
+                             return msg;  
+                         }
+                         if(has_numbers(obj_act[op])){
+ 
+                             msg.title = "Actividades con otros";
+                             msg.status = "error";
+                             msg.msg = "El campo "+op+" no debe contener números";
+                             return msg;  
+                         }
+ 
+                        }
+                     }
+
+                    break;
+
+                    case "apoyo_institucion":
+
+                    let obj_inst= json_detalle[i];
+                    for(op in obj_inst){
+                        if(op == "apoyo_institu" || op == "institucion" ){
+                         if(obj_inst[op]== ""){
+ 
+                             msg.title = "Apoyo institución";
+                             msg.status = "error";
+                             msg.msg = "El campo "+op+" es obligatorio";
+                             return msg;  
+                         }
+                         if(has_numbers(obj_inst[op])){
+ 
+                             msg.title = "Apoyo institución";
+                             msg.status = "error";
+                             msg.msg = "El campo "+op+" no debe contener números";
+                             return msg;  
+                         }
+ 
+                        }
+                     }
+                    break;
                 }
             }
 
