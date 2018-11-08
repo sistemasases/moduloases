@@ -202,9 +202,11 @@ define([
             $("#check_diagnostico").on("change",function(){
                 if( $("#check_diagnostico").is(":checked") ) {
                     $("#div_descripcion_diagnostico").show();
+                    $("#textarea_diagnostico").prop("required", true);
                 }else{
                     $("#div_descripcion_diagnostico").hide();
                     $("#textarea_diagnostico").prop("value", "");
+                    $("#textarea_diagnostico").prop("required", false);
                 }
             });
             $("#check_certificado_invalidez").on("change",function(){
@@ -259,52 +261,87 @@ define([
                 let id_ases = $("#id_ases").val();
                 //Traer valores de campos para validar campos
                 let val_cond_adquisicion, val_apoyo_cotidiano, otro_apoyo_cotidiano,  key_apoyo_cotidiano, key_otro_apoyo_cotidiano,text_cond_adquisicion, otra_cond_adquisicion, 
-                    descripcion_diagnostico, val_tipo_disc, text_tipo_disc, otro_tipo_disc, val_transporte, otro_transporte,  key_transporte, key_otro_transporte ,
-                    val_participa_asociacion, key_participa_asociacion, val_asoc, key_asoc, porcentaje_invalidez, val_act, key_act, key_realiza_act, val_realiza_act,
-                    val_apoyo_institu, key_apoyo_institu, val_apoyo_tipo, key_apoyo_tipo, val_institu, key_institu, json_apoyo_institu,
+                    descripcion_diagnostico, val_tipo_disc, text_tipo_disc, otro_tipo_disc, val_transporte, otro_transporte,  key_transporte, key_otro_transporte ,key_otra_condicion_adq,
+                    val_participa_asociacion, key_participa_asociacion, val_asoc, key_asoc, porcentaje_invalidez, val_act, key_act, key_realiza_act, val_realiza_act, key_descripcion, check_diagnostico,
+                    key_check_diagnostico, json_diagnostico,  key_tipo_disc, key_otra_disc,json_tipo_disc,  check_certificado, key_check_certificado, json_certificado, key_porcentaje_inv,
+                    val_apoyo_institu, key_apoyo_institu, val_apoyo_tipo, key_apoyo_tipo, val_institu, key_institu, key_cond_adquisicion, json_condicion_adq, json_apoyo_institu,
                     json_dif_permanente, json_cond_salud, json_necesidad, json_factores_impacto, json_posibilidad, json_apoyo_cotidiano, json_transporte, 
                     json_participa_asoc, json_actividades_otros;
                
-                
-                let array_dif_perm = [], array_cond_salud = [], array_necesidades = [], array_factor_impacto = [], array_posibilidades=[];
+                    //Variables de las opciones de varias respuestas
+                    var key_func_dp, key_dif_dp, funcion_name, dificult_name, key_org_cs, key_cond_cs, organo_name, condicion_name,
+                    key_nec_ns, key_sit_ns, key_factor_fi, factor_name, key_otro_factor_fi, otro_factor_name, key_contexto_fc, 
+                    key_otro_factor_fc, factor_contexto_name, otro_factor_contexto_name, key_act_pa, actividad_name, posibilidad_name,
+                    key_apo_pa, key_apo_pa, tipo_apoyo_name, otra_actividad_key, otra_actividad_name ; 
 
-                var json_detalle = {};
+                    let array_dif_perm = [], array_cond_salud = [], array_necesidades = [], array_factor_impacto = [], array_posibilidades=[];
+
+                    var json_detalle_discapacidad;
+
+                
 
                 //Traer condicion de adquisicion
-                val_cond_adquisicion = $("#cond_adquisicion").val();
+                val_cond_adquisicion  = $("#cond_adquisicion").val();
+                key_cond_adquisicion  = $("#cond_adquisicion").attr("id");
                 text_cond_adquisicion = $("#cond_adquisicion").find(":selected").text();
+
+                json_condicion_adq = {key_condicion: key_cond_adquisicion, condicion: text_cond_adquisicion};
                 
                 //Validar la opción de otra condicion de adquisicion
                 if(val_cond_adquisicion == 0){
-                    otra_cond_adquisicion = $("#otro_cond_adquisicion").val();
+                    key_otra_condicion_adq = $("#otro_cond_adquisicion").attr("id");
+                    otra_cond_adquisicion  = $("#otro_cond_adquisicion").val();
+                    json_condicion_adq.key_otra_condicion = key_otra_condicion_adq;
+                    json_condicion_adq.otra_condicion     = otra_cond_adquisicion;
                 }
                 //-------------------------------------------------------------------------------
 
                 //Traer diagnostico 
-                if($("#check_diagnostico").is(":checked")){
-                    descripcion_diagnostico = $("#textarea_diagnostico").val(); 
+                check_diagnostico     =  $("#check_diagnostico").is(":checked");
+                key_check_diagnostico =  $("#check_diagnostico").attr("id");
+                json_diagnostico      =  {key_diagnostico: key_check_diagnostico, tiene_diagnostico: check_diagnostico};
+                if(check_diagnostico){
+                    descripcion_diagnostico          = $("#textarea_diagnostico").val(); 
+                    key_descripcion                  = $("#textarea_diagnostico").attr("id"); 
+
+                    json_diagnostico.key_descripcion = key_descripcion;
+                    json_diagnostico.descripcion     = descripcion_diagnostico;
                 }
                 
                //-------------------------------------------------------------------------------
-              
+
                //Traer tipo de discapacidad 
-                val_tipo_disc = $("#tipo_discapacidad").val();
-                text_tipo_disc = $("#tipo_discapacidad").find(":selected").text();
+                val_tipo_disc   = $("#tipo_discapacidad").val();
+                key_tipo_disc   = $("#tipo_discapacidad").attr("id");
+                text_tipo_disc  = $("#tipo_discapacidad").find(":selected").text();
+
+                json_tipo_disc  ={key_tipo: key_tipo_disc, tipo_discapacidad: text_tipo_disc};
 
                 //Validar la opción de otro tipo de discapacidad
                 if(val_tipo_disc == 0){
                     otro_tipo_disc  = $("#otra_discapacidad").val();
-                }
-               //-------------------------------------------------------------------------------
+                    key_otra_disc   = $("#otra_discapacidad").attr("id");
 
+                    json_tipo_disc.key_otro_tipo   =  key_otra_disc;
+                    json_tipo_disc.otro_tipo       =  otro_tipo_disc;
+                }
+
+                
+               //-------------------------------------------------------------------------------
                //Traer certificado invalidez
-               if($("#check_certificado_invalidez").is(":checked")){
-                porcentaje_invalidez = $("#input_porcentaje_inv").val(); 
+               check_certificado     =  $("#check_certificado_invalidez").is(":checked");
+               key_check_certificado =  $("#check_diagnostico").attr("id");
+               json_certificado      =  {key_certificado: key_check_certificado, tiene_certificado: check_certificado};
+               if(check_certificado){
+                key_porcentaje_inv              = $("#input_porcentaje_inv").attr("id"); 
+                porcentaje_invalidez            = $("#input_porcentaje_inv").val(); 
+
+                json_certificado.key_porcentaje = key_porcentaje_inv;
+                json_certificado.porcentaje     = porcentaje_invalidez;
                  }
               
 
                 //-------------------------------------------------------------------------------
-
 
                 //Traer dificultades permanentes
                 $("#div_dificultad_permanente").find(":input[type=checkbox]").each( function(){
@@ -336,7 +373,7 @@ define([
                     }
                    
                 });
-              
+
                 //-------------------------------------------------------------------------------
 
                  //Traer necesidades situaciones
@@ -353,11 +390,10 @@ define([
                     }
                    
                 });
-              
+
+
                 //-------------------------------------------------------------------------------
 
-                
-                 
 
                  //Traer factores de impacto
                  $("#div_factor_impacto").find(":input[type=checkbox]").each( function(){
@@ -385,15 +421,10 @@ define([
                     }
                    
                 });
-             
-         
+       
                 //-------------------------------------------------------------------------------
 
-                 //Variables de las opciones de varias respuestas
-                 var key_func_dp, key_dif_dp, funcion_name, dificult_name, key_org_cs, key_cond_cs, organo_name, condicion_name,
-                 key_nec_ns, key_sit_ns, key_factor_fi, factor_name, key_otro_factor_fi, otro_factor_name, key_contexto_fc, 
-                 key_otro_factor_fc, factor_contexto_name, otro_factor_contexto_name, key_act_pa, actividad_name, posibilidad_name,
-                 key_apo_pa, key_apo_pa, tipo_apoyo_name, otra_actividad_key, otra_actividad_name ; 
+                 
 
                 //Traer posibilidades en actividades/condiciones
                 $("#div_posibilidades_condiciones").find(":input[type=checkbox]").each( function(){
@@ -432,7 +463,7 @@ define([
                     }
                    
                 });
-              
+
                 //-------------------------------------------------------------------------------
 
                 //Traer apoyo principal cotidiano
@@ -450,7 +481,6 @@ define([
                     json_apoyo_cotidiano.otro_apoyo     = otro_apoyo_cotidiano;
                 }
 
-
                 //-------------------------------------------------------------------------------
 
                  //Traer medio de transporte
@@ -467,7 +497,7 @@ define([
                      json_transporte.key_otro_transporte = key_otro_transporte;
                      json_transporte.otro_transporte     = otro_transporte;
                  }
- 
+
  
                  //-------------------------------------------------------------------------------
 
@@ -530,20 +560,306 @@ define([
   
                   //-------------------------------------------------------------------------------
 
-                console.log(json_participa_asoc);
-                console.log(json_apoyo_institu);
+
+                                
+                //Crear objeto JSON que representa el detalle de discapacidad
+                        
+                json_detalle_discapacidad = 
+                {
+                    condicion_adquisicion:              json_condicion_adq ,
+                    diagnostico_discapacidad:           json_diagnostico,
+                    tipo_discapacidad:                  json_tipo_disc,
+                    certificado_invalidez:              json_certificado,
+                    dificultad_permanente_funciones:    array_dif_perm,
+                    condicion_salud_organos:            array_cond_salud,
+                    necesidades_situaciones:            array_necesidades,
+                    posibilidad_actividades:            array_posibilidades,
+                    factores_impacto:                   array_factor_impacto,
+                    apoyo_principal_cotidiano:          json_apoyo_cotidiano,
+                    medio_transporte:                   json_transporte,
+                    participa_asociacion:               json_participa_asoc,
+                    actividades_otros:                  json_actividades_otros, 
+                    apoyo_institucion:                  json_apoyo_institu
+                }
+                ;
+
+                //Validar las respuestas obtenidas
+                var result_validation =  validate_form(json_detalle_discapacidad);
+
+                if(result_validation.status == "error"){
+                    swal(result_validation.title,
+                        result_validation.msg,
+                        result_validation.status);
+                }else{
+                    swal("Éxito",
+                        "El formulario fue validado con éxito",
+                        "success");
+                }
+
+                  
+
+                //console.log(json_detalle_discapacidad);
                 
-
-
-                //validate_form();
                   
               });
 
 
 
-        function validate_form(){
-            
-        }      
+        function validate_form(json_detalle){
+
+            var msg = new Object();
+
+            msg.title = "Éxito";
+            msg.msg = "El formulario fue validado con éxito";
+            msg.status = "success";
+
+            for(i in json_detalle){
+                switch(i){
+                    case "condicion_adquisicion":
+                    let obj_cond_adq = json_detalle[i];
+                        for(op in obj_cond_adq){
+                           if(op == "otra_condicion"){
+                            if(obj_cond_adq[op]== ""){
+
+                                msg.title = "Condición de adquisición";
+                                msg.status = "error";
+                                msg.msg = "El campo "+op+" de adquisición es obligatorio";
+                                return msg;  
+                            }
+                            if(has_numbers(obj_cond_adq[op])){
+
+                                msg.title = "Condición de adquisición";
+                                msg.status = "error";
+                                msg.msg = "El campo "+op+" de adquisición no debe contener números";
+                                return msg;  
+                            }
+
+                           }
+                        }
+                    break;
+
+                    case "diagnostico_discapacidad": 
+
+                    let obj_diagnostico = json_detalle[i];
+                    for(op in obj_diagnostico){
+                       if(op == "descripcion"){
+                        if(obj_diagnostico[op]== ""){
+
+                            msg.title = "Diagnóstico de discapacidad";
+                            msg.status = "error";
+                            msg.msg = "El campo "+op+" diagnóstico es obligatorio";
+                            return msg;  
+                        }
+                        if(has_numbers(obj_diagnostico[op])){
+
+                            msg.title = "Diagnóstico de discapacidad";
+                            msg.status = "error";
+                            msg.msg = "El campo "+op+" diagnóstico no debe contener números";
+                            return msg;  
+                        }
+
+                       }
+                    }
+                    break;
+
+                    case "tipo_discapacidad" :
+
+                    let obj_tipo_disc = json_detalle[i];
+                        for(op in obj_tipo_disc){
+                           if(op == "otro_tipo"){
+                            if(obj_tipo_disc[op]== ""){
+
+                                msg.title = "Tipo de discapacidad";
+                                msg.status = "error";
+                                msg.msg = "El campo "+op+" de discapacidad es obligatorio";
+                                return msg;  
+                            }
+                            if(has_numbers(obj_tipo_disc[op])){
+
+                                msg.title = "Tipo de discapacidad";
+                                msg.status = "error";
+                                msg.msg = "El campo "+op+" de discapacidad no debe contener números";
+                                return msg;  
+                            }
+
+                           }
+                        }
+
+                    break;
+
+                    case "certificado_invalidez" :
+
+                    let obj_cert= json_detalle[i];
+                        for(op in obj_cert){
+                           if(op == "porcentaje"){
+                            if(obj_cert[op]== ""){
+
+                                msg.title = "Certificado de invalidez";
+                                msg.status = "error";
+                                msg.msg = "El campo "+op+" es obligatorio y no debe contener letras";
+                                return msg;  
+                            }
+                            if(has_letters(obj_cert[op])){
+
+                                msg.title = "Certificado de invalidez";
+                                msg.status = "error";
+                                msg.msg = "El campo "+op+" no debe contener letras";
+                                return msg;  
+                            }
+
+                           }
+                        }
+
+                    break;
+
+                    case "dificultad_permanente_funciones": 
+
+                    let array_dif = json_detalle[i], obj_dif;
+
+                    for(item in array_dif){
+                        //Recorre arreglo de dificultades permanentes para validar cada una
+                        obj_dif= array_dif[item];
+                        for(op in obj_dif){
+                        if(op == "dificultad"){
+                            if(obj_dif[op]== ""){
+
+                                msg.title = "Dificultades permanentes";
+                                msg.status = "error";
+                                msg.msg = "El campo "+op+" de la opción '"+ obj_dif["funcion"] +"' es obligatorio";
+                                return msg;  
+                            }
+                            if(has_numbers(obj_dif[op])){
+
+                                msg.title = "Dificultades permanentes";
+                                msg.status = "error";
+                                msg.msg = "El campo "+op+ " de la opción '"+ obj_dif["funcion"] + "' no debe contener números";
+                                return msg;  
+                            }
+
+                        }
+                        }
+                    }    
+                     
+                    break;
+
+                    case "condicion_salud_organos": 
+
+                    let array_cond = json_detalle[i], obj_cond;
+
+                    for(item in array_cond){
+                        //Recorre arreglo de condiciones de salud para validar cada una
+                        obj_cond= array_cond[item];
+                        for(op in obj_cond){
+                        if(op == "condicion"){
+                            if(obj_cond[op]== ""){
+
+                                msg.title = "Condiciones de salud";
+                                msg.status = "error";
+                                msg.msg = "El campo "+op+" de la opción '"+ obj_cond["organo"] +"' es obligatorio";
+                                return msg;  
+                            }
+                            if(has_numbers(obj_cond[op])){
+
+                                msg.title = "Condiciones de salud";
+                                msg.status = "error";
+                                msg.msg = "El campo "+op+ " de la opción '"+ obj_cond["organo"] + "' no debe contener números";
+                                return msg;  
+                            }
+
+                        }
+                        }
+                    }    
+                     
+                    break;
+
+                    case "necesidades_situaciones": 
+
+                    let array_nec = json_detalle[i], obj_nec;
+
+                    for(item in array_nec){
+                        //Recorre arreglo de condiciones de salud para validar cada una
+                        obj_nec= array_nec[item];
+                        for(op in obj_nec){
+                        if(op == "necesidad"){
+                            if(obj_nec[op]== ""){
+
+                                msg.title = "Necesidades situaciones";
+                                msg.status = "error";
+                                msg.msg = "El campo "+op+" de la opción '"+ obj_nec["situacion"] +"' es obligatorio";
+                                return msg;  
+                            }
+                            if(has_numbers(obj_nec[op])){
+
+                                msg.title = "Necesidades situaciones";
+                                msg.status = "error";
+                                msg.msg = "El campo "+op+ " de la opción '"+ obj_nec["situacion"] + "' no debe contener números";
+                                return msg;  
+                            }
+
+                        }
+                        }
+                    }    
+                     
+                    break;
+
+                    case "factores_impacto":
+
+                    let array_fact = json_detalle[i], obj_fact;
+
+                    for(item in array_fact){
+                      //Recorre arreglo de factores de impacto para validar cada una
+                      obj_fact= array_fact[item];
+                      for(op in obj_fact){
+                      if(op == "otro_factor"){
+                          if(obj_fact[op]== ""){
+
+                              msg.title = "Factores de impacto";
+                              msg.status = "error";
+                              msg.msg = "El campo "+op+" de la opción '"+ obj_fact["escenario"] +"' es obligatorio";
+                              return msg;  
+                          }
+                          if(has_numbers(obj_fact[op])){
+
+                              msg.title = "Factores de impacto";
+                              msg.status = "error";
+                              msg.msg = "El campo "+op+ " de la opción '"+ obj_fact["escenario"] + "' no debe contener números";
+                              return msg;  
+                          }
+
+                      }
+                      }
+                  }  
+                    break;
+                    
+
+                    
+                }
+            }
+
+            return msg;
+        } 
+                
+        // Funciones para la validación de formularios
+        function has_letters(str) {
+            var letters = "abcdefghyjklmnñopqrstuvwxyz";
+            str = str.toLowerCase();
+            for (i = 0; i < str.length; i++) {
+                if (letters.indexOf(str.charAt(i), 0) != -1) {
+                    return 1;
+                }
+            }
+            return 0;
+        }
+        
+        function has_numbers(str) {
+            var numbers = "0123456789";
+            for (i = 0; i < str.length; i++) {
+                if (numbers.indexOf(str.charAt(i), 0) != -1) {
+                    return 1;
+                }
+            }
+            return 0;
+        }
 
         function get_caracteristicas(){
             var json_factor_contexto; 
