@@ -196,7 +196,7 @@ function pilos_tracking_general_get_count( $user_id, $rol, $fecha_inicio_str, $f
     $xQuery->form = "inasistencia";
     $xQuery->filterFields = [["in_fecha",[[$fecha_inicio_str,">="],[$fecha_fin_str,"<="]], false],
                              ["in_revisado_profesional",[["%%","LIKE"]], false],
-                             ["in_revisado_profesional",[["%%","LIKE"]], false],
+                             ["in_revisado_practicante",[["%%","LIKE"]], false],
                              ["in_$nombre_campo",[[$user_id,"="]], false]
                             ];
     $xQuery->orderFields = [["in_fecha","DESC"]];

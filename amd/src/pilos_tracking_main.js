@@ -23,6 +23,95 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
              ***
              **/
 
+            function put_tracking_count( username, semester_id, instance ){
+                
+                $.ajax({
+                    type: "POST",
+                    data: JSON.stringify( { function:"get_tracking_count", params:[ username, semester_id, instance ] } ),
+                    url: "../managers/pilos_tracking/v2/pilos_tracking_api.php",
+                    dataType: "json",
+                    cache: "false",
+                    success: function( data ) {
+
+                        let counters = data.data_response;
+                        
+                        let fichas_totales = 0;
+                        let fichas_PP = 0;
+                        let fichas_Pp = 0;
+                        let inasistencias_totales = 0;
+                        let inasistencias_PP = 0;
+                        let inasistencias_Pp = 0;
+
+                        for( let i = 0; i < counters.length; i++){
+
+                            fichas_totales = counters[i].count.revisado_profesional + counters[i].count.not_revisado_profesional;
+                            fichas_PP = counters[i].count.not_revisado_profesional;
+                            fichas_Pp = counters[i].count.not_revisado_practicante;
+                            inasistencias_totales = counters[i].count.in_revisado_profesional + counters[i].count.in_not_revisado_profesional;
+                            inasistencias_PP = counters[i].count.in_not_revisado_profesional;
+                            inasistencias_Pp = counters[i].count.in_not_revisado_practicante;
+
+                            let base = '\
+                                <div class="conteo">\
+                                    <div class="row"> \
+                                        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4"> \
+                                            Fichas: '+fichas_totales+'\
+                                        </div>\
+                                        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4"> \
+                                            PP: '+fichas_PP+'\
+                                        </div>\
+                                        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4"> \
+                                            Pp: '+fichas_Pp+'\
+                                        </div>\
+                                    </div>\
+                                    <div class="row"> \
+                                        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4"> \
+                                            Inasistencias: '+inasistencias_totales+'\
+                                        </div>\
+                                        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4"> \
+                                            PP: '+inasistencias_PP+'\
+                                        </div>\
+                                        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4"> \
+                                            Pp: '+inasistencias_Pp+'\
+                                        </div>\
+                                    </div>\
+                                </div>\
+                            ';
+                            
+                            $("#counting_" + counters[i].username).find(".loader").html(
+                                base
+                            );
+
+                            /*$("#general_rev_pro").html( data.revisado_profesional );
+                            $("#general_rev_prac").html( data.revisado_practicante );
+                            $("#general_not_rev_pro").html( data.not_revisado_profesional );
+                            $("#general_not_rev_prac").html( data.not_revisado_practicante );
+                            $("#general_pro_t").html( data.total_profesional );
+                            $("#general_prac_t").html( data.total_practicante );
+
+                            $("#general_in_rev_pro").html( data.in_revisado_profesional );
+                            $("#general_in_rev_prac").html( data.in_revisado_practicante );
+                            $("#general_in_not_rev_pro").html( data.in_not_revisado_profesional );
+                            $("#general_in_not_rev_prac").html( data.in_not_revisado_practicante );
+                            $("#general_in_pro_t").html( data.in_total_profesional );
+                            $("#general_in_prac_t").html( data.in_total_practicante );*/
+
+                        }
+
+                    },
+                    error: function( data ) {
+                        console.log( data );
+                        swal({
+                            title: "Error!",
+                            text: "Se presentó un inconveniente con el practicante seleccionado.",
+                            html: true,
+                            type: 'error',
+                            confirmButtonColor: "#d51b23"
+                        });
+                    },
+                });
+            }
+
 
             $(document).on( "click", ".btn-dphpforms-close", function() {
                 $(this).closest('div[class="mymodal"]').fadeOut(300);
@@ -121,9 +210,6 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                 $(".se-pre-con").fadeOut('slow');
                 $("#reemplazarToogle").fadeIn("slow");
 
-
-
-
                 //Getting information of the logged user such as name, id, email and role
                 $.ajax({
                     type: "POST",
@@ -159,10 +245,7 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                 usuario["name"] = name;
                 usuario["namerol"] = namerol;
 
-
                 create_specific_counting( usuario );
-                
-
 
                 // when user is 'practicante' then has permissions
                 if (namerol == "practicante_ps") {
@@ -170,24 +253,18 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                     consultar_seguimientos_persona(get_instance(), usuario);
                     send_email_new_form(get_instance()); 
 
-
-
                    // when user is 'profesional' then has permissions
                 } else if (namerol == "profesional_ps") {
                     //Starts adding event
-
+                    put_tracking_count( "1144148647", 8, parseInt( get_instance() ) );
                     consultar_seguimientos_persona(get_instance(), usuario);
                     send_email_new_form(get_instance());
-
 
                     // when user is 'monitor' then has permissions
                 } else if (namerol == "monitor_ps") {
 
                     consultar_seguimientos_persona(get_instance(), usuario);
                     send_email_new_form(get_instance());
-
-
-
 
                     // when user is 'sistemas' then has permissions
                 } else if (namerol == "sistemas") {

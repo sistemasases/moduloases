@@ -155,7 +155,7 @@ function render_practicant_new_form($monitors_of_pract, $instance, $period = nul
 
         // If the practicant has monitors with students that show
 
-        $panel.= "<a data-toggle='collapse' class='monitor collapsed btn btn-danger btn-univalle btn-card collapsed' data-parent='#accordion_monitors' style='text-decoration:none' href='#monitor" . $monitor->username . "'>";
+        $panel.= "<a data-toggle='collapse' data-username='$monitor->username' class='monitor collapsed btn btn-danger btn-univalle btn-card collapsed' data-parent='#accordion_monitors' style='text-decoration:none' href='#monitor" . $monitor->username . "'>";
         $panel.= "<div class='panel-heading heading_monitors_tracking'>";
         $panel.= "<div class='row'><div class='col-sm-5'>";
         $panel.= "<h4 class='panel-title'>";
@@ -168,8 +168,8 @@ function render_practicant_new_form($monitors_of_pract, $instance, $period = nul
         $panel.= "<!--<button type='button' class='see_history btn red_button'>
                  <span class='glyphicon glyphicon-time'></span> Ver horas</button>-->";
         $panel.= "</div>";
-        $panel.= "<div class='col-sm-4' id=counting_" . $monitor->username . ">";
-        $panel.= '<div class="loader"></div>';
+        $panel.= "<div class='col-sm-4' id='counting_" . $monitor->username . "'>";
+        $panel.= '<div class="loader">Cargando conteo...</div>';
         $panel.= "</div>";
         $panel.= "<div class='col-sm-1'><span class='glyphicon glyphicon-chevron-left'></span></div>";
         $panel.= "</div>";
@@ -205,7 +205,7 @@ function render_professional_new_form($practicant_of_prof, $instance, $period = 
 
         // If the professional has associate practitioners with monitors that show
 
-        $panel.= "<a data-toggle='collapse' class='practicant collapsed btn btn-danger btn-univalle btn-card collapsed' data-parent='#accordion_practicant' style='text-decoration:none' href='#practicant" . $practicant->username . "'>";
+        $panel.= "<a data-toggle='collapse' data-username='$practicant->username' class='practicant collapsed btn btn-danger btn-univalle btn-card collapsed' data-parent='#accordion_practicant' style='text-decoration:none' href='#practicant" . $practicant->username . "'>";
         $panel.= "<div class='panel-heading heading_practicant_tracking'>";
         $panel.= "<div class='row'><div class='col-sm-5'>";
         $panel.= "<h4 class='panel-title'>";
@@ -215,8 +215,8 @@ function render_professional_new_form($practicant_of_prof, $instance, $period = 
         $panel.= "<span class='glyphicon glyphicon-user subpanel' style='font-size: 20px;'></span> : " . count(get_monitors_of_pract($practicant_id, $instance));
         $panel.= "<br /><span class='glyphicon glyphicon-education subpanel' style='font-size: 20px;'></span> : " . get_quantity_students_by_pract($practicant_id, $instance);
         $panel.= "</div>";
-        $panel.= "<div class='col-sm-5' id=counting_" . $practicant->username . ">";
-        $panel.= '<div class="loader"></div>';
+        $panel.= "<div class='col-sm-5' id='counting_" . $practicant->username . "'>";
+        $panel.= '<div class="loader">Cargando conteo...</div>';
         $panel.= "</div>";
         $panel.= "<div class='col-sm-1'><span class='glyphicon glyphicon-chevron-left'></span></div>";
         $panel.= "</div>";
@@ -498,7 +498,7 @@ function auxiliary_specific_countingV2($user_kind, $user_id, $semester, $instanc
         $xQuery->form = "inasistencia";
         $xQuery->filterFields = [["in_fecha",[[$fecha_inicio_str,">="],[$fecha_fin_str,"<="]], false],
                                  ["in_revisado_profesional",[["%%","LIKE"]], false],
-                                 ["in_revisado_profesional",[["%%","LIKE"]], false],
+                                 ["in_revisado_practicante",[["%%","LIKE"]], false],
                                  ["in_id_practicante",[[$user_id,"="]], false]
                                 ];
         $xQuery->orderFields = [["in_fecha","DESC"]];
