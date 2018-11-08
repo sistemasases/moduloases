@@ -496,12 +496,12 @@ function auxiliary_specific_countingV2($user_kind, $user_id, $semester, $instanc
 
         $xQuery = new stdClass();
         $xQuery->form = "inasistencia";
-        $xQuery->filterFields = [["fecha",[[$fecha_inicio_str,">="],[$fecha_fin_str,"<="]], false],
+        $xQuery->filterFields = [["in_fecha",[[$fecha_inicio_str,">="],[$fecha_fin_str,"<="]], false],
                                  ["in_revisado_profesional",[["%%","LIKE"]], false],
                                  ["in_revisado_profesional",[["%%","LIKE"]], false],
-                                 ["id_practicante",[[$user_id,"="]], false]
+                                 ["in_id_practicante",[[$user_id,"="]], false]
                                 ];
-        $xQuery->orderFields = [["fecha","DESC"]];
+        $xQuery->orderFields = [["in_fecha","DESC"]];
         $xQuery->orderByDatabaseRecordDate = true; 
         $xQuery->recordStatus = [ "!deleted" ];
         $xQuery->selectedFields = []; 
@@ -577,12 +577,12 @@ function auxiliary_specific_countingV2($user_kind, $user_id, $semester, $instanc
 
         $xQuery = new stdClass();
         $xQuery->form = "inasistencia";
-        $xQuery->filterFields = [["fecha",[[$fecha_inicio_str,">="],[$fecha_fin_str,"<="]], false],
+        $xQuery->filterFields = [["in_fecha",[[$fecha_inicio_str,">="],[$fecha_fin_str,"<="]], false],
                                  ["in_revisado_profesional",[["%%","LIKE"]], false],
                                  ["in_revisado_profesional",[["%%","LIKE"]], false],
-                                 ["id_practicante",[[$user_id,"="]], false]
+                                 ["in_id_practicante",[[$user_id,"="]], false]
                                 ];
-        $xQuery->orderFields = [["fecha","DESC"]];
+        $xQuery->orderFields = [["in_fecha","DESC"]];
         $xQuery->orderByDatabaseRecordDate = true; 
         $xQuery->recordStatus = [ "!deleted" ];
         $xQuery->selectedFields = []; 
