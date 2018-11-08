@@ -23,11 +23,16 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
              ***
              **/
 
-            function put_tracking_count( username, semester_id, instance ){
+            function put_tracking_count( username, semester_id, instance, is_student ){
                 
+                let fun = "get_tracking_count";
+                if( is_student ){
+                    fun = "get_tracking_count_student";
+                }
+
                 $.ajax({
                     type: "POST",
-                    data: JSON.stringify( { function:"get_tracking_count", params:[ username, semester_id, instance ] } ),
+                    data: JSON.stringify( { function:fun, params:[ username, semester_id, instance ] } ),
                     url: "../managers/pilos_tracking/v2/pilos_tracking_api.php",
                     dataType: "json",
                     cache: "false",
@@ -55,24 +60,24 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                                 <div class="conteo">\
                                     <div class="row"> \
                                         <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4"> \
-                                            Fichas: '+fichas_totales+'\
+                                            Fichas: <strong>'+fichas_totales+'</strong>\
                                         </div>\
                                         <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4"> \
-                                            PP: '+fichas_PP+'\
+                                            <div class="pend-prof">Pendientes Prof: </div>'+fichas_PP+'\
                                         </div>\
                                         <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4"> \
-                                            Pp: '+fichas_Pp+'\
+                                            <div class="pend-pract">Pendientes pract: </div>'+fichas_Pp+'\
                                         </div>\
                                     </div>\
                                     <div class="row"> \
                                         <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4"> \
-                                            Inasistencias: '+inasistencias_totales+'\
+                                            Inasistencias: <strong>'+inasistencias_totales+'</strong>\
                                         </div>\
                                         <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4"> \
-                                            PP: '+inasistencias_PP+'\
+                                            <div class="pend-prof">Pendientes Prof: </div>'+inasistencias_PP+'\
                                         </div>\
                                         <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4"> \
-                                            Pp: '+inasistencias_Pp+'\
+                                            <div class="pend-pract">Pendientes pract: </div>'+inasistencias_Pp+'\
                                         </div>\
                                     </div>\
                                 </div>\
@@ -81,20 +86,6 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                             $("#counting_" + counters[i].username).find(".loader").html(
                                 base
                             );
-
-                            /*$("#general_rev_pro").html( data.revisado_profesional );
-                            $("#general_rev_prac").html( data.revisado_practicante );
-                            $("#general_not_rev_pro").html( data.not_revisado_profesional );
-                            $("#general_not_rev_prac").html( data.not_revisado_practicante );
-                            $("#general_pro_t").html( data.total_profesional );
-                            $("#general_prac_t").html( data.total_practicante );
-
-                            $("#general_in_rev_pro").html( data.in_revisado_profesional );
-                            $("#general_in_rev_prac").html( data.in_revisado_practicante );
-                            $("#general_in_not_rev_pro").html( data.in_not_revisado_profesional );
-                            $("#general_in_not_rev_prac").html( data.in_not_revisado_practicante );
-                            $("#general_in_pro_t").html( data.in_total_profesional );
-                            $("#general_in_prac_t").html( data.in_total_practicante );*/
 
                         }
 
@@ -209,7 +200,7 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
 
                 $(".se-pre-con").fadeOut('slow');
                 $("#reemplazarToogle").fadeIn("slow");
-
+                let username = "";
                 //Getting information of the logged user such as name, id, email and role
                 $.ajax({
                     type: "POST",
@@ -222,6 +213,7 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                     success: function(msg) {
                         $data = $.parseJSON(msg);
                         name = $data.username;
+                        username = $data.username;
                         id = $data.id;
                         email = $data.email;
                         rol = $data.rol;
@@ -249,20 +241,20 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
 
                 // when user is 'practicante' then has permissions
                 if (namerol == "practicante_ps") {
-
+                    put_tracking_count( username, 8, parseInt( get_instance() ), false );
                     consultar_seguimientos_persona(get_instance(), usuario);
                     send_email_new_form(get_instance()); 
 
                    // when user is 'profesional' then has permissions
                 } else if (namerol == "profesional_ps") {
                     //Starts adding event
-                    put_tracking_count( "1144148647", 8, parseInt( get_instance() ) );
+                    put_tracking_count( username, 8, parseInt( get_instance() ), false );
                     consultar_seguimientos_persona(get_instance(), usuario);
                     send_email_new_form(get_instance());
 
                     // when user is 'monitor' then has permissions
                 } else if (namerol == "monitor_ps") {
-
+                    put_tracking_count( username, 8, parseInt( get_instance() ), true );
                     consultar_seguimientos_persona(get_instance(), usuario);
                     send_email_new_form(get_instance());
 
@@ -664,10 +656,7 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                         $(practicant_id + " > div").append(msg.render);
                         var html = msg.counting;
 
-                        $.each(html,function( index,value ) {
-                            $("#counting_"+value.code).html(value.html);
-                        });
-
+                        put_tracking_count( practicant_code, 8, parseInt( get_instance() ), false );
                         monitor_load();
                         groupal_tracking_load();
 
@@ -714,6 +703,7 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                     success: function(msg ) {
                         $(monitor_id + " > div").empty();
                         $(monitor_id + " > div").append(msg);
+                        put_tracking_count( monitor_code, 8, parseInt( get_instance() ), true );
                         student_load();
                         groupal_tracking_load();
                     },
@@ -792,8 +782,7 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                     },
                     url: "../managers/pilos_tracking/pilos_tracking_report.php",
                     async: false,
-                    success: function(msg
-                        ) {
+                    success: function(msg) {
                     $(student_id + " > div").empty();
                     $(student_id + " > div").append(msg);
                     edit_tracking_new_form();

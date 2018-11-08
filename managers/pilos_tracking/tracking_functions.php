@@ -47,30 +47,35 @@ function render_monitor_new_form($students_by_monitor, $period = null)
         //$student = explode("-", $student->id_estudiante + "-" );
         $ases_student_code = $student->id_estudiante;
         $current_semester = get_current_semester();
-        if ($period == null) {
+        /*if ($period == null) {
             $monitor_trackings = get_tracking_current_semesterV2('student', $ases_student_code, $current_semester->max);
         }
         else {
             $monitor_trackings = get_tracking_current_semesterV2('student', $ases_student_code, $period);
         }
 
-        $monitor_counting = filter_trackings_by_review($monitor_trackings);
+        $monitor_counting = filter_trackings_by_review($monitor_trackings);*/
 
-        $panel.= "<a data-toggle='collapse' class='student collapsed btn btn-danger btn-univalle btn-card collapsed' data-parent='#accordion_students' style='text-decoration:none' href='#student" . $ases_student_code . "'>";
-        $panel.= "<div class='panel-heading heading_students_tracking'>";
-        $panel.= "<h4 class='panel-title'>";
-        $panel.= "$student_code->firstname $student_code->lastname";
-        $panel.= "</h4>"; //End panel-title
-        $panel.= "<div class='row'>
-              <div class='col-sm-11'><h6><p class='text-right'><strong>RP :</strong><label class='review_prof'>" . $monitor_counting[0] . "</label> - <strong> N RP: </strong><label class='not_review_prof'>" . $monitor_counting[1] . "</label> - <strong>TOTAL:</strong><label class='total_prof'>" . ($monitor_counting[0] + $monitor_counting[1]) . "</label></p><p class='text-right'><strong>Rp :</strong><label class='review_pract'>" . $monitor_counting[2] . "</label> - <strong> N Rp: </strong><label class='not_review_pract'>" . $monitor_counting[3] . "</label> - <strong>TOTAL:</strong><label class='total_pract'>" . ($monitor_counting[2] + $monitor_counting[3]) . "</label></p></h6></div>
-             <div class='col-sm-1'><span class='glyphicon glyphicon-chevron-left'></span></div>
-             </div>";
-        $panel.= "</div>"; //End panel-heading
-        $panel.= "</a>";
-        $panel.= "<div id='student$ases_student_code'  class='show collapse_v2 collapse border_rt' role='tabpanel' aria-labelledby='headingstudent$ases_student_code' aria-expanded='true'>";
-        $panel.= "<div class='panel-body'>";
-        $panel.= "</div>"; // End panel-body
-        $panel.= "</div>"; // End collapse
+        $fullname = $student_code->firstname . " " .  $student_code->lastname;
+
+        $panel.= "<a data-toggle='collapse' data-asesid='$ases_student_code' class='student collapsed btn btn-danger btn-univalle btn-card collapsed' data-parent='#accordion_students' style='text-decoration:none' href='#student$ases_student_code'>
+                    <div class='panel-heading heading_students_tracking'>
+                        <div class='row'>
+                            <div class='col-sm-4'>
+                                <h4 class='panel-title'>
+                                    $fullname
+                                </h4>
+                            </div>
+                            <div class='col-sm-7' id='counting_$ases_student_code'>
+                                <div class='loader'>Cargando conteo...</div>
+                            </div>
+                            <div class='col-sm-1'><span class='glyphicon glyphicon-chevron-left'></span></div>
+                        </div>
+                    </div>
+                 </a>
+                 <div id='student$ases_student_code'  class='show collapse_v2 collapse border_rt' role='tabpanel' aria-labelledby='headingstudent$ases_student_code' aria-expanded='true'>
+                    <div class='panel-body'> </div>
+                 </div>";
     }
 
     return $panel;
@@ -164,14 +169,14 @@ function render_practicant_new_form($monitors_of_pract, $instance, $period = nul
         $panel.= "<div class='col-sm-1'>";
         $panel.= "<span class='glyphicon glyphicon-user subpanel' style='font-size: 20px;'></span> : " . count(get_students_of_monitor($monitor_id, $instance));
         $panel.= "</div>";
-        $panel.= "<div class='col-sm-1'>";
-        $panel.= "<!--<button type='button' class='see_history btn red_button'>
-                 <span class='glyphicon glyphicon-time'></span> Ver horas</button>-->";
-        $panel.= "</div>";
+        $panel.= "<!--<div class='col-sm-1'>";
+        $panel.= "<button type='button' class='see_history btn red_button'>
+                 <span class='glyphicon glyphicon-time'></span> Ver horas</button>";
+        $panel.= "</div>-->";
         $panel.= "<div class='col-sm-4' id='counting_" . $monitor->username . "'>";
         $panel.= '<div class="loader">Cargando conteo...</div>';
         $panel.= "</div>";
-        $panel.= "<div class='col-sm-1'><span class='glyphicon glyphicon-chevron-left'></span></div>";
+        $panel.= "<div class='col-sm-1 col-sm-offset-1'><span class='glyphicon glyphicon-chevron-left'></span></div>";
         $panel.= "</div>";
         $panel.= "</div>"; //End panel-heading
         $panel.= "</a>";

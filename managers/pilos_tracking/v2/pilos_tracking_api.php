@@ -56,7 +56,7 @@
 
         // Get **
         // params[0] => instance_id
-        if( $input->function == "get_tracking_count" ){
+        if( $input->function === "get_tracking_count" ){
 
             /**
              * username : String
@@ -79,7 +79,41 @@
                         array(
                             "status_code" => 0,
                             "error_message" => "",
-                            "data_response" => pilos_tracking_get_tracking_count( $input->params[0], $input->params[1], $input->params[2] )
+                            "data_response" => pilos_tracking_get_tracking_count( $input->params[0], $input->params[1], $input->params[2], false )
+                        )
+                    );
+                    
+                }else{
+                    return_with_code( -2 );
+                }
+            }else{
+                return_with_code( -2 );
+            }
+
+        }else if( $input->function === "get_tracking_count_student" ){
+
+            /**
+             * username : String
+             * semester_id : int
+             * instance : int
+             * */
+            
+            if( count( $input->params ) == 3 ){
+
+                // Order of params
+                /**
+                 * username
+                 * semester
+                 * instance
+                 */
+                
+                if( ( $input->params[0] !== "" ) && is_numeric( $input->params[1] ) && is_numeric( $input->params[2] ) ){
+                    
+                    echo json_encode( 
+                        array(
+                            "status_code" => 0,
+                            "error_message" => "",
+                            "data_response" => pilos_tracking_get_tracking_count( $input->params[0], $input->params[1], $input->params[2], true )
                         )
                     );
                     

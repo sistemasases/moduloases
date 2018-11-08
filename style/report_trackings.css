@@ -8,3 +8,8 @@
 #title-informacion-de{
     font-size: 1.6em;
 }
+
+.pend-prof, .pend-pract{
+    font-size:0.8em;
+    display:inline;
+}
