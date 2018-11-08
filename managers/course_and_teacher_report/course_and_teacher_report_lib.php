@@ -3,8 +3,56 @@
 
 use function jquery_datatable\get_datatable_class_column;
 
-require_once (__DIR__.'/../jquery_datatable/jquery_datatable_lib.php');
+require_once (__DIR__ . '/../jquery_datatable/jquery_datatable_lib.php');
+require_once (__DIR__ . '/../../managers/periods_management/periods_lib.php');
+require_once (__DIR__ . '/../../classes/DAO/BaseDAO.php');
 
+require_once (__DIR__ . '/../course/course_lib.php');
+
+require_once(__DIR__.'/../../vendor/autoload.php');
+
+use Latitude\QueryBuilder\Query\SelectQuery;
+use function Latitude\QueryBuilder\{ alias, on, field, QueryInterface, criteria, literal };
+
+
+function _select_ases_courses($semestre, $id_instancia): SelectQuery {
+
+
+    return BaseDAO::get_factory()
+        ->select(
+            literal('DISTINCT ON (mdl_course.id) *')
+        )
+        ->from(alias('{talentospilos_user_extended}', 'user_extended'))
+        ->innerJoin(
+            alias('{user}', 'mdl_user'),
+            on('mdl_user.id', 'user_extended.id_moodle_user'))
+        ->innerJoin(
+            alias('{cohort_members}', 'mdl_cohort_members'),
+            on('mdl_cohort_members.userid', 'mdl_user.id'))
+        ->innerJoin(
+            alias('{talentospilos_inst_cohorte}', 'inst_cohorte'),
+            on('inst_cohorte.id_cohorte', 'mdl_cohort_members.cohortid'))
+        ->innerJoin(
+            alias('{role_assignments}', 'mdl_role_assignments'),
+            on('mdl_role_assignments.userid', 'mdl_user.id'))
+        ->innerJoin(
+            alias('{context}', 'mdl_context'),
+            on('mdl_role_assignments.contextid', 'mdl_context.id'))
+        ->innerJoin(
+            alias('{course}', 'mdl_course'),
+            on('mdl_course.id', 'mdl_context.instanceid'))
+        ->innerJoin(
+            alias('{talentospilos_est_estadoases}', 'est_estadoases'),
+            on('user_extended.id_ases_user', 'est_estadoases.id_estudiante'))
+        ->innerJoin(
+            alias('{talentospilos_estados_ases}', 'estados_ases'),
+            on('est_estadoases.id_estado_ases', 'estados_ases.id'))
+        ->where(field('estados_ases.nombre')->eq('seguimiento'))
+        ->andWhere(field('inst_cohorte.id_instancia')->eq($id_instancia))
+        ->andWhere(field('user_extended.tracking_status')->eq(1))
+        ->andWhere(field('mdl_role_assignments.roleid')->eq(5))
+        ->andWhere(criteria("substring(mdl_course.shortname from 15 for 6) = %s", $semestre));
+}
 
 /**
  * Class ItemReporteCursoProfesores
@@ -46,6 +94,7 @@ function get_reporte_curso_profesores($id_instancia) {
     }else if(substr($sem,4,1) == 'B'){
         $semestre = $año.'08';
     }
+
     $sql = <<<SQL
  SELECT DISTINCT ON ( moodle_course.curso_id ) 
                 moodle_course.curso_id,
@@ -301,11 +350,41 @@ SQL;
 }
 
 /**
+ * Retorna los mismos datos de get_reporte_curso_profesores, pero para los cursos que no tienen profesor
+ *
+ * La cantidad de items, estudiantes sin nota, etc, se rellenan con ceros
+ * @param $instance_id
+ * @param $semester
+ */
+function get_reporte_cursos_sin_profesor($instance_id, $semester): array {
+    $cursos_sin_profesor = array_values(get_ases_courses_without_teachers($instance_id, $semester));
+    $report_items = array();
+    foreach($cursos_sin_profesor as $curso_sin_profesor) {
+        /* @var $report_item ItemReporteCursoProfesores */
+        $report_item = new stdClass();
+        $report_item->cantidad_items = 0;
+        $report_item->estudiantes_ganando = 0;
+        $report_item->estudiantes_perdiendo= 0;
+        $report_item->estudiantes_sin_ninguna_nota = 0;
+        $report_item->curso = $curso_sin_profesor->fullname . 'TODO';
+        $report_item->curso_id= $curso_sin_profesor->id;
+        $report_item->cantidad_estudiantes_ases = 'TODO';
+        $report_item->items_con_almenos_una_nota = 0;
+        $report_item->nombre_profesor = 'No registra';
+
+        array_push($report_items, $report_item);
+    }
+    return $report_items;
+}
+
+/**
  * Return a datatable formated as array with all information needed for course and teacher report by items
  * @param string $instance_id
+ * @param boolean $append_courses_whitout_teachers Append info referetn to courses than have ASES students,
+ *  but has no teacher assigned in moodle.
  * @return array Datatable with indexs: {bsort, columns, data, language, order}
  */
-function get_datatable_for_course_and_teacher_report($instance_id) {
+function get_datatable_for_course_and_teacher_report($instance_id, $append_courses_whitout_teachers= false) {
     $common_language_config = \jquery_datatable\get_datatable_common_language_config();
     $columns = array();
     /* Index of column  'Est < 50' (starting from 0)*/
@@ -328,29 +407,45 @@ function get_datatable_for_course_and_teacher_report($instance_id) {
         "description"=>'Nombre del profesor'));
 
     array_push($columns, $est_lt_50_colum);
-    array_push($columns, array("title"=>"Est >=50%", "name"=>"estudiantes_ganando", "data"=>"estudiantes_ganando", "description"=>"Estudiantes ganando más de la mitad de los items calificados"));
-    array_push($columns, array("title"=>"Est. sin notas", "name"=>"estudiantes_sin_ninguna_nota", "data"=>"estudiantes_sin_ninguna_nota", "description"=>"Estudiantes sin ningún item calificado"));
-    array_push($columns, array("title"=>"Estudiantes", "name"=>"cantidad_estudiantes_ases", "data"=>"cantidad_estudiantes_ases", 'description'=>'Cantidad de estudiantes ASES'));
+
+    array_push($columns, array(
+        "title"=>"Est >=50%",
+        "name"=>"estudiantes_ganando",
+        "data"=>"estudiantes_ganando",
+        "description"=>"Estudiantes ganando más de la mitad de los items calificados"));
+
+    array_push($columns, array(
+        "title"=>"Est. sin notas",
+        "name"=>"estudiantes_sin_ninguna_nota",
+        "data"=>"estudiantes_sin_ninguna_nota",
+        "description"=>"Estudiantes sin ningún item calificado"));
+
+    array_push($columns, array(
+        "title"=>"Estudiantes ASES",
+        "name"=>"cantidad_estudiantes_ases",
+        "data"=>"cantidad_estudiantes_ases",
+        'description'=>'Cantidad de estudiantes ASES'));
+
     array_push($columns, array(
         "title"=>"Items  calificados",
         "name"=>"items_con_almenos_una_nota",
         "data"=>"items_con_almenos_una_nota",
         'description'=>'Cantidad de items en los cuales almenos un estudiante tiene una nota',
         'className'=>'items_con_almenos_una_nota'));
-    array_push($columns, array(
-        "title"=>"Id del curso moodle",
-        "name"=>"curso_id",
-        "data"=>"curso_id",
-        'description'=>'Id de el curso ',
-        'visible' => 'false',
-        'className'=>'curso_id'));
+
     array_push($columns, array(
         "title"=>"Cantidad de items",
         "name"=>"cantidad_items",
         "data"=>"cantidad_items",
         'description'=>'Cantidad de items calificables de el curso',
         'className'=>'cantidad_items'));
-    array_push($columns, array("title"=>"Es critica", "name"=>"critica", "data"=>"critica", "description"=>'Indica si la materia ha sido marcada como critica por ASES'));
+
+    array_push($columns, array(
+        "title"=>"Es critica",
+        "name"=>"critica",
+        "data"=>"critica",
+        "description"=>'Indica si la materia ha sido marcada como critica por ASES'));
+
     // The previous order of columns may be change, because that we need search the actual index of this column
     // at execution time
     $est_lt_50_colum_index = array_search($est_lt_50_colum, $columns);
