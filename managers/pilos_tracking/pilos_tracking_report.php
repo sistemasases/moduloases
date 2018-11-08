@@ -56,10 +56,14 @@ if (isset($_POST['type']) && $_POST['type'] == "getInfo" && isset($_POST['instan
 
 if (isset($_POST['type']) && $_POST['type'] == "user_specific_counting" && isset($_POST['instance'])){
 
-    //Function that obtains the count of the subordinates given the authenticated user number
-
-    $user = $USER->id;
-    $role = get_id_rol_($USER->id, $_POST['instance']);
+    $user = null;
+    if( empty( $_POST['user'] ) ){
+        $user = $USER->id;
+    }else{
+        $user = $_POST['user'];
+    }
+    
+    $role = get_id_rol_($user, $_POST['instance']);
     $role_name = get_name_rol($role);
     $current_semester = get_current_semester();
     $array_final = null;
@@ -71,7 +75,7 @@ if (isset($_POST['type']) && $_POST['type'] == "user_specific_counting" && isset
     }else if($role_name =='monitor_ps'){
        $array_final = auxiliary_specific_countingV2("monitor_ps",$user,$current_semester, $_POST['instance']);
     }
-
+    
     echo json_encode($array_final);  
 }
 

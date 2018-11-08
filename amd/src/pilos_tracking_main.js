@@ -164,8 +164,6 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                 
 
 
-
-
                 // when user is 'practicante' then has permissions
                 if (namerol == "practicante_ps") {
 
@@ -900,6 +898,7 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                         $("#reemplazarToogle").hide();
 
                         //Processing in pilos_tracking_report.php
+                        let user_id = id_persona;
                         $.ajax({
                             type: "POST",
                             data: {
@@ -909,9 +908,9 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                                 type: "consulta_sistemas"
                             },
                             url: "../../../blocks/ases/managers/pilos_tracking/pilos_tracking_report.php",
-                            async: false,
-
-
+                            async: true,
+                            dataType: "text",
+                            cache: "false",
                             success: function(msg) {
 
                                 //In case there are not records
@@ -923,6 +922,7 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                                     $("input[name=practicante]").prop('disabled', true);
                                     $("input[name=profesional]").prop('disabled', true);
                                 }
+                                create_specific_counting( user_id );
                                 student_load();
                                 monitor_load();
                                 professional_load();
@@ -930,8 +930,6 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                                 $(".well.col-md-10.col-md-offset-1.reporte-seguimiento.oculto").slideDown("slow");
 
                             },
-                            dataType: "text",
-                            cache: "false",
                             error: function(msg) {
                              swal(
                                  'ERROR!',
