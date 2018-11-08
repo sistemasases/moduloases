@@ -14,7 +14,7 @@ use function Limonade\route_build;
  * @return array|false Return an array key-value if exist some
  *  param in the route, false otherwise
  * @see https://github.com/sofadesign/limonade
- * @return array|bool|null|string
+ * @return array
  */
 function route_get_params($path_format, $path) {
     /* For get the route params the route method does not matter, also, callback does not matter */
@@ -39,7 +39,7 @@ function route_get_params($path_format, $path) {
             return $arr_comb;
         }
     }
-    return false;
+    return array();
 
 }
 

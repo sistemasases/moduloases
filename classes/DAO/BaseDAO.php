@@ -52,8 +52,6 @@ abstract class BaseDAO extends Validable
     /* @var QueryFactory $_factory*/
     private $_factory;
 
-    const GENERIC_ERRORS_FIELD = 'generic_errors';
-
     const NO_REGISTRA = 'NO REGISTRA';
 
     public function __construct($data = null)
