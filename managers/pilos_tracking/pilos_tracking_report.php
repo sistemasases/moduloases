@@ -69,13 +69,13 @@ if (isset($_POST['type']) && $_POST['type'] == "user_specific_counting" && isset
     $array_final = null;
 
     if($role_name == 'profesional_ps'){
-       $array_final = auxiliary_specific_countingV2("profesional_ps",$user,$current_semester, $_POST['instance']);
+       $array_final = auxiliary_specific_countingV2($role_name,$user,$current_semester, $_POST['instance']);
     }else if($role_name =='practicante_ps'){
-       $array_final = auxiliary_specific_countingV2("practicante_ps",$user,$current_semester, $_POST['instance']);
+       $array_final = auxiliary_specific_countingV2($role_name,$user,$current_semester, $_POST['instance']);
     }else if($role_name =='monitor_ps'){
-       $array_final = auxiliary_specific_countingV2("monitor_ps",$user,$current_semester, $_POST['instance']);
+       $array_final = auxiliary_specific_countingV2($role_name,$user,$current_semester, $_POST['instance']);
     }
-    
+
     echo json_encode($array_final);  
 }
 
