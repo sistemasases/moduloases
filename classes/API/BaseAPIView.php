@@ -1,6 +1,6 @@
 <?php
-require_once(__DIR__ . '/../Errors/Factories/FieldValidationErrorFactory.php');
-
+require_once( __DIR__ . '/../Errors/Factories/FieldValidationErrorFactory.php');
+require_once( __DIR__ . '/../common/Validable.php');
 /**
  * Class BaseAPIView
  * Is validable because the params can be incorrect, and if this is the case,
@@ -12,6 +12,16 @@ abstract class BaseAPIView extends Validable {
      * @var stdClass $params The params sended to php via post
      */
     protected $params;
+    /**
+     * @var array $args The args defined at url
+     *
+     * # Example
+     * Given the url fromat  /user/:id and the requested url /user/5
+     * ```php
+     * $this->assertEqual($args, array('id' => 5);
+     * ```
+     */
+    protected $args;
     /* @var stdClass $url_params The params sended to php via URL (/some?var_a=16&var_b=true)
     protected $url_params;
     /** @var string $response_type Value of header value `Content-Type` */
@@ -19,7 +29,9 @@ abstract class BaseAPIView extends Validable {
     /**
      * Return an array of string with all required param names for this API endpoint
      */
-    function  get_required_params(): array {}
+    function  get_required_params(): array {
+        return array();
+    }
     function valid(): bool {
         $this->clean_errors();
         $valid = true;
@@ -48,10 +60,10 @@ abstract class BaseAPIView extends Validable {
      * Return the API response to the client.
      * If some error is detected, all the errors are sended to the client
      */
-    function execute($params = null, $url_params=null) {
+    function execute($params = null, $args= array()) {
 
         $this->params = (object) $params;
-        $this->url_params= (object) $url_params;
+        $this->args= $args;
         if (!$this->valid()) {
 
             http_response_code(404);
