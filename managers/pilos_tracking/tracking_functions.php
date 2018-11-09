@@ -58,18 +58,18 @@ function render_monitor_new_form($students_by_monitor, $period = null)
 
         $fullname = $student_code->firstname . " " .  $student_code->lastname;
 
-        $panel.= "<a data-toggle='collapse' data-asesid='$ases_student_code' class='student collapsed btn btn-danger btn-univalle btn-card collapsed' data-parent='#accordion_students' style='text-decoration:none' href='#student$ases_student_code'>
+        $panel.= "<a data-toggle='collapse' data-container='student$ases_student_code' data-username='$ases_student_code' data-asesid='$ases_student_code' class='student collapsed btn btn-danger btn-univalle btn-card collapsed' data-parent='#accordion_students' style='text-decoration:none' href='#student$ases_student_code'>
                     <div class='panel-heading heading_students_tracking'>
                         <div class='row'>
-                            <div class='col-sm-4'>
+                            <div class='col-xs-12 col-sm-12 col-md-6 col-lg-6'>
                                 <h4 class='panel-title'>
                                     $fullname
                                 </h4>
                             </div>
-                            <div class='col-sm-7' id='counting_$ases_student_code'>
+                            <div class='col-xs-12 col-sm-12 col-md-5 col-lg-5' id='counting_$ases_student_code'>
                                 <div class='loader'>Cargando conteo...</div>
                             </div>
-                            <div class='col-sm-1'><span class='glyphicon glyphicon-chevron-left'></span></div>
+                            <div class='col-xs-12 col-sm-12 col-md-1 col-lg-1'><span class='open-close-icon glyphicon glyphicon-chevron-left'></span></div>
                         </div>
                     </div>
                  </a>
@@ -94,11 +94,11 @@ function render_monitor_new_form($students_by_monitor, $period = null)
 function aux_create_groupal_toggle($monitor_id)
 {
     $panel = "";
-    $panel.= "<a data-toggle='collapse' class='groupal collapsed btn btn-danger btn-univalle btn-card collapsed' data-parent='#accordion_students' style='text-decoration:none' href='#groupal" . $monitor_id . "'>";
+    $panel.= "<a data-toggle='collapse' data-container='groupal$monitor_id' class='groupal collapsed btn btn-danger btn-univalle btn-card collapsed' data-parent='#accordion_students' style='text-decoration:none' href='#groupal" . $monitor_id . "'>";
     $panel.= "<div class='panel-heading heading_students_tracking'>";
     $panel.= "<h4 class='panel-title'>";
     $panel.= "SEGUIMIENTOS GRUPALES";
-    $panel.= "<span class='glyphicon glyphicon-chevron-left'></span>";
+    $panel.= "<span class='open-close-icon glyphicon glyphicon-chevron-left'></span>";
     $panel.= "</h4>"; //End panel-title
     $panel.= "</div>"; //End panel-heading
     $panel.= "</a>";
@@ -160,27 +160,23 @@ function render_practicant_new_form($monitors_of_pract, $instance, $period = nul
 
         // If the practicant has monitors with students that show
 
-        $panel.= "<a data-toggle='collapse' data-username='$monitor->username' class='monitor collapsed btn btn-danger btn-univalle btn-card collapsed' data-parent='#accordion_monitors' style='text-decoration:none' href='#monitor" . $monitor->username . "'>";
+        $panel.= "<a data-toggle='collapse' data-container='monitor$monitor->username' data-username='$monitor->username' class='monitor collapsed btn btn-danger btn-univalle btn-card collapsed' data-parent='#accordion_monitors' style='text-decoration:none' href='#monitor" . $monitor->username . "'>";
         $panel.= "<div class='panel-heading heading_monitors_tracking'>";
-        $panel.= "<div class='row'><div class='col-sm-5'>";
+        $panel.= "<div class='row'><div class='col-xs-10 col-sm-10 col-md-5 col-lg-5'>";
         $panel.= "<h4 class='panel-title'>";
         $panel.= "$monitor->firstname $monitor->lastname";
         $panel.= "</h4></div>"; //End panel-title
-        $panel.= "<div class='col-sm-1'>";
-        $panel.= "<span class='glyphicon glyphicon-user subpanel' style='font-size: 20px;'></span> : " . count(get_students_of_monitor($monitor_id, $instance));
+        $panel.= "<div class='col-xs-2 col-sm-2 col-md-1 col-lg-1'>";
+        $panel.= "<span class='protected glyphicon glyphicon-user subpanel' style='font-size: 20px;'></span> : " . count(get_students_of_monitor($monitor_id, $instance));
         $panel.= "</div>";
-        $panel.= "<!--<div class='col-sm-1'>";
-        $panel.= "<button type='button' class='see_history btn red_button'>
-                 <span class='glyphicon glyphicon-time'></span> Ver horas</button>";
-        $panel.= "</div>-->";
-        $panel.= "<div class='col-sm-4' id='counting_" . $monitor->username . "'>";
+        $panel.= "<div class='col-xs-12 col-sm-12 col-md-5 col-lg-4' id='counting_" . $monitor->username . "'>";
         $panel.= '<div class="loader">Cargando conteo...</div>';
         $panel.= "</div>";
-        $panel.= "<div class='col-sm-1 col-sm-offset-1'><span class='glyphicon glyphicon-chevron-left'></span></div>";
+        $panel.= "<div class='col-xs-12 col-sm-12 col-md-1 col-lg-1 col-lg-offset-1'><span class='open-close-icon glyphicon glyphicon-chevron-left'></span></div>";
         $panel.= "</div>";
         $panel.= "</div>"; //End panel-heading
         $panel.= "</a>";
-        $panel.= "<div id='monitor$monitor->username'  class='show collapse_v2 collapse border_rt' role='tabpanel' aria-labelledby='headingmonitor$monitor->username' aria-expanded='true'>";
+        $panel.= "<div id='monitor$monitor->username' class='show collapse_v2 collapse border_rt' role='tabpanel' aria-labelledby='headingmonitor$monitor->username' aria-expanded='true'>";
         $panel.= "<div class='panel-body'>";
         $panel.= "</div>"; // End panel-body
         $panel.= "</div>"; // End collapse
@@ -210,20 +206,20 @@ function render_professional_new_form($practicant_of_prof, $instance, $period = 
 
         // If the professional has associate practitioners with monitors that show
 
-        $panel.= "<a data-toggle='collapse' data-username='$practicant->username' class='practicant collapsed btn btn-danger btn-univalle btn-card collapsed' data-parent='#accordion_practicant' style='text-decoration:none' href='#practicant" . $practicant->username . "'>";
+        $panel.= "<a data-toggle='collapse' data-container='practicant$practicant->username' data-username='$practicant->username' class='practicant collapsed btn btn-danger btn-univalle btn-card collapsed' data-parent='#accordion_practicant' style='text-decoration:none' href='#practicant" . $practicant->username . "'>";
         $panel.= "<div class='panel-heading heading_practicant_tracking'>";
-        $panel.= "<div class='row'><div class='col-sm-5'>";
+        $panel.= "<div class='row'><div class='col-xs-10 col-sm-10 col-md-5 col-lg-5'>";
         $panel.= "<h4 class='panel-title'>";
         $panel.= "$practicant->firstname $practicant->lastname";
         $panel.= "</h4></div>"; //End panel-title
-        $panel.= "<div class='col-sm-1'>";
-        $panel.= "<span class='glyphicon glyphicon-user subpanel' style='font-size: 20px;'></span> : " . count(get_monitors_of_pract($practicant_id, $instance));
-        $panel.= "<br /><span class='glyphicon glyphicon-education subpanel' style='font-size: 20px;'></span> : " . get_quantity_students_by_pract($practicant_id, $instance);
+        $panel.= "<div class='col-xs-2 col-sm-2 col-md-1 col-lg-1'>";
+        $panel.= "<span class='protected glyphicon glyphicon-user subpanel' style='font-size: 20px;'></span> : " . count(get_monitors_of_pract($practicant_id, $instance));
+        $panel.= "<br /><span class='protected glyphicon glyphicon-education subpanel' style='font-size: 20px;'></span> : " . get_quantity_students_by_pract($practicant_id, $instance);
         $panel.= "</div>";
-        $panel.= "<div class='col-sm-5' id='counting_" . $practicant->username . "'>";
+        $panel.= "<div class='col-xs-12 col-sm-12 col-md-5 col-lg-4' id='counting_" . $practicant->username . "'>";
         $panel.= '<div class="loader">Cargando conteo...</div>';
         $panel.= "</div>";
-        $panel.= "<div class='col-sm-1'><span class='glyphicon glyphicon-chevron-left'></span></div>";
+        $panel.= "<div class='col-xs-12 col-sm-12 col-md-1 col-lg-1 col-lg-offset-1'><span class='open-close-icon glyphicon glyphicon-chevron-left'></span></div>";
         $panel.= "</div>";
         $panel.= "</div>"; //End panel-heading
         $panel.= "</a>";
