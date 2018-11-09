@@ -29,10 +29,10 @@
 
 require_once(dirname(__FILE__). '/../../../../config.php');
 require_once(dirname(__FILE__).'/discapacity_tab_lib.php');
-// require __DIR__ . '/../vendor/autoload.php';
+require_once(dirname(__FILE__).'/../../vendor/autoload.php');
 
-// use JsonSchema\Validator;
-// use JsonSchema\Constraints\Constraint;
+use JsonSchema\Validator;
+use JsonSchema\Constraints\Constraint;
 
 
 
@@ -43,29 +43,35 @@ if(isset($_POST['func'])){
 
     if($_POST['func'] == 'validate_json'){
 
-        $data = $_POST['json'];
+         $data = $_POST['json'];
          $id_ases = $_POST['ases'];
-        // $data = json_decode('{"firstName":"Hermeto","lastName":"Pascoal"}');
-        //     // Validate
-        // $validator = new Validator;
-        // $validator->validate($data, (object)['$ref' => 'file://' . realpath('schema.json') ],
-        // Constraint::CHECK_MODE_APPLY_DEFAULTS);
-                
+        
+        $data = json_decode($_POST['json']);
+        // Validate
+        $validator = new  Validator;
+       
+        $validator->validate($data, (object)['$ref' => 'file://' . realpath('schema.json') ],
+        Constraint::CHECK_MODE_APPLY_DEFAULTS);
+            
 
-        // if ($validator->isValid()) {
-           $result =  save_detalle_discapacidad($data, $id_ases);
+         if ($validator->isValid()) {
+             echo "Exito";
+         }else {
+             echo "Falló";
+         }
+        //    $result =  save_detalle_discapacidad($data, $id_ases);
 
-            if($result){
-                $msg->title = "Éxito";
-                $msg->status = "success";
-                $msg->msg = "La información se ha almacenado correctamente.";
-                echo json_encode($msg);
-            }else{
-                $msg->title = "Error";
-                $msg->msg = "No se ha actualizado correctamente.";
-                $msg->status = "error";
-                echo json_encode($msg);
-            }
+            // if($result){
+            //     $msg->title = "Éxito";
+            //     $msg->status = "success";
+            //     $msg->msg = "La información se ha almacenado correctamente.";
+            //     echo json_encode($msg);
+            // }else{
+            //     $msg->title = "Error";
+            //     $msg->msg = "No se ha actualizado correctamente.";
+            //     $msg->status = "error";
+            //     echo json_encode($msg);
+            // }
             
             
 

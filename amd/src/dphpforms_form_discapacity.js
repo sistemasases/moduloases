@@ -299,13 +299,15 @@ define([
                 //Traer diagnostico 
                 check_diagnostico     =  $("#check_diagnostico").is(":checked");
                 key_check_diagnostico =  $("#check_diagnostico").attr("id");
-                json_diagnostico      =  {key_diagnostico: key_check_diagnostico, tiene_diagnostico: check_diagnostico};
+                json_diagnostico      =  {key_diagnostico: key_check_diagnostico};
                 if(check_diagnostico){
                     descripcion_diagnostico          = $("#textarea_diagnostico").val(); 
                     key_descripcion                  = $("#textarea_diagnostico").attr("id"); 
-
+                    json_diagnostico.tiene_diagnostico = 1; 
                     json_diagnostico.key_descripcion = key_descripcion;
                     json_diagnostico.descripcion     = descripcion_diagnostico;
+                }else {
+                    json_diagnostico.tiene_diagnostico = 0; 
                 }
                 
                //-------------------------------------------------------------------------------
@@ -330,14 +332,16 @@ define([
                //-------------------------------------------------------------------------------
                //Traer certificado invalidez
                check_certificado     =  $("#check_certificado_invalidez").is(":checked");
-               key_check_certificado =  $("#check_diagnostico").attr("id");
-               json_certificado      =  {key_certificado: key_check_certificado, tiene_certificado: check_certificado};
+               key_check_certificado =  $("#check_certificado_invalidez").attr("id");
+               json_certificado      =  {key_certificado: key_check_certificado};
                if(check_certificado){
-                key_porcentaje_inv              = $("#input_porcentaje_inv").attr("id"); 
-                porcentaje_invalidez            = $("#input_porcentaje_inv").val(); 
-
-                json_certificado.key_porcentaje = key_porcentaje_inv;
-                json_certificado.porcentaje     = porcentaje_invalidez;
+                key_porcentaje_inv                 = $("#input_porcentaje_inv").attr("id"); 
+                porcentaje_invalidez               = $("#input_porcentaje_inv").val(); 
+                json_certificado.tiene_certificado = 1;
+                json_certificado.key_porcentaje    = key_porcentaje_inv;
+                json_certificado.porcentaje        = porcentaje_invalidez;
+                 }else {
+                    json_certificado.tiene_certificado = 0; 
                  }
               
 
@@ -506,7 +510,7 @@ define([
                 
                 val_participa_asociacion = $("#check_org").is(":checked");
                 key_participa_asociacion = $("#check_org").attr("id");
-                json_participa_asoc      = {key_participa: key_participa_asociacion, participa: val_participa_asociacion};
+                json_participa_asoc      = {key_participa: key_participa_asociacion, participa: JSON.stringify(val_participa_asociacion)};
 
                 if(val_participa_asociacion){
 
@@ -523,7 +527,7 @@ define([
                 
                   val_realiza_act = $("#check_actividades_otros").is(":checked");
                   key_realiza_act = $("#check_actividades_otros").attr("id");
-                  json_actividades_otros      = {key_realiza: key_realiza_act, realiza: val_realiza_act};
+                  json_actividades_otros      = {key_realiza: key_realiza_act, realiza: JSON.stringify(val_realiza_act)};
   
                   if(val_realiza_act){
   
@@ -541,7 +545,7 @@ define([
                 
                   val_apoyo_institu = $("#check_apoyo_institu").is(":checked");
                   key_apoyo_institu = $("#check_apoyo_institu").attr("id");
-                  json_apoyo_institu     = {key_apoya: key_apoyo_institu, apoyo: val_apoyo_institu};
+                  json_apoyo_institu     = {key_apoya: key_apoyo_institu, apoyo: JSON.stringify(val_apoyo_institu)};
   
                   if(val_apoyo_institu){
   
@@ -595,9 +599,9 @@ define([
                     //     "El formulario fue validado con éxito",
                     //     "success");
 
-                        var obj = { x:"hola"
-                          };
-                          obj = JSON.stringify(obj);
+                        var obj = json_detalle_discapacidad;
+                         obj = JSON.stringify(obj);
+                        
 
                 let id_ases = $("#id_ases").val();
                 validate_json (obj, id_ases);  
@@ -735,6 +739,13 @@ define([
                                 msg.title = "Certificado de invalidez";
                                 msg.status = "error";
                                 msg.msg = "El campo "+op+" es obligatorio y no debe contener letras";
+                                return msg;  
+                            }
+                            if(obj_cert[op] < 0){
+
+                                msg.title = "Certificado de invalidez";
+                                msg.status = "error";
+                                msg.msg = "El campo "+op+" no debe ser negativo";
                                 return msg;  
                             }
                             if(has_letters(obj_cert[op])){
