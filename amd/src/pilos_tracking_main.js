@@ -2,6 +2,7 @@
  * Management - Tracks (seguimiento de pilos)
  * @module amd/src/pilos_tracking_main 
  * @author Isabella Serna Ramírez <isabella.serna@correounivalle.edu.co>
+ * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
  * @license  http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -10,6 +11,7 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
     return {
         init: function() {
 
+            var collapse_loaded = [];
 
             var rol = 0;
             var id = 0;
@@ -636,6 +638,14 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
             the assigned monitors*/
 
             $('a[class*="practicant"]').click(function() {
+
+                let username = $(this).data("username");
+                if( collapse_loaded.indexOf( username ) == -1){
+                    collapse_loaded.push( username );
+                }else{
+                    return;
+                }
+
                 var practicant_code = $(this).attr('href').split("#practicant")[1];
                 var practicant_id = $(this).attr('href');
                 //Fill container with the information corresponding to the monitor 
@@ -686,6 +696,14 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
             the follow-ups of that date*/
 
             $('a[class*="monitor"]').click(function() {
+
+                let username = $(this).data("username");
+                if( collapse_loaded.indexOf( username ) == -1){
+                    collapse_loaded.push( username );
+                }else{
+                    return;
+                }
+
                 var monitor_code = $(this).attr('href').split("#monitor")[1];
                 var monitor_id = $(this).attr('href');
                 //Fill container with the information corresponding to the monitor 
@@ -770,6 +788,14 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
             the follow-ups of that date*/
 
             $('a[class*="student"]').click(function() {
+
+                let username = $(this).data("username");
+                if( collapse_loaded.indexOf( username ) == -1){
+                    collapse_loaded.push( username );
+                }else{
+                    return;
+                }
+
                 var student_code = $(this).attr('href').split("#student")[1];
                 var student_id = $(this).attr('href');
                 //Fill container with the information corresponding to the trackings of the selected student
