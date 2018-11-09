@@ -38,7 +38,7 @@ require_once $CFG->dirroot.'/blocks/ases/managers/dphpforms/v2/dphpforms_lib.php
  * @return Array 
  */
 
-function pilos_tracking_get_tracking_count( $username, $semester_id, $instance ){
+function pilos_tracking_get_tracking_count( $username, $semester_id, $instance, $is_monitor = false ){
     
     global $DB;
 
@@ -74,24 +74,25 @@ function pilos_tracking_get_tracking_count( $username, $semester_id, $instance )
 
     $fecha_fin_str = $fecha_fin["year"]."-".$mon_tmp."-".$day_tmp;
 
+    $user = null;
+    $user_id = null;
+    $user_rol = null;
 
     //Get user_rol
     $sql_user = "SELECT id FROM {user} WHERE username = '$username'";
     $user = $DB->get_record_sql( $sql_user );
-    
-    $user_id = null;
 
     if( $user ){
         $user_id = $user->id;
+
+        $sql_rol = "SELECT * FROM {talentospilos_user_rol} AS user_rol
+        INNER JOIN {talentospilos_rol} AS rol ON user_rol.id_rol = rol.id
+        WHERE id_usuario = $user_id AND id_semestre = $semester_id AND id_instancia = $instance";
+
+        $user_rol = $DB->get_record_sql( $sql_rol );
     }else{
         return -2;
     }
-
-    $sql_rol = "SELECT * FROM {talentospilos_user_rol} AS user_rol
-    INNER JOIN {talentospilos_rol} AS rol ON user_rol.id_rol = rol.id
-    WHERE id_usuario = $user_id AND id_semestre = $semester_id AND id_instancia = $instance";
-
-    $user_rol = $DB->get_record_sql( $sql_rol );
 
     if( $user_rol ){
 
@@ -136,6 +137,28 @@ function pilos_tracking_get_tracking_count( $username, $semester_id, $instance )
 
             return $to_return;
 
+        }else if( $user_rol->nombre_rol == "monitor_ps" ){
+
+            $sql_mon_stud = "SELECT ME.id_estudiante AS id_ases_estudiante , U.username, ME.id_monitor
+            FROM {talentospilos_monitor_estud} AS ME 
+            INNER JOIN {user} AS U ON ME.id_monitor = U.id
+            WHERE id_monitor = $user_id AND id_semestre = $semester_id AND id_instancia = $instance";
+
+            //List of students
+            $list_users = $DB->get_records_sql( $sql_mon_stud );
+            
+            foreach( $list_users as $user ){
+
+                $count = new stdClass();
+                $count->username = $user->id_ases_estudiante;
+                $count->count = pilos_tracking_general_get_count( $user->id_ases_estudiante, "estudiante_t", $fecha_inicio_str, $fecha_fin_str );
+                
+                array_push( $to_return, $count );
+                
+            }
+
+            return $to_return;
+
         }else{
             return -3;
         }
@@ -158,6 +181,8 @@ function pilos_tracking_general_get_count( $user_id, $rol, $fecha_inicio_str, $f
         $nombre_campo = "id_practicante";
     }else if( $rol == "monitor_ps" ){
         $nombre_campo = "id_monitor";
+    }else if( $rol == "estudiante_t" ){
+        $nombre_campo = "id_estudiante";
     }
 
     $xQuery = new stdClass();
@@ -196,7 +221,7 @@ function pilos_tracking_general_get_count( $user_id, $rol, $fecha_inicio_str, $f
     $xQuery->form = "inasistencia";
     $xQuery->filterFields = [["in_fecha",[[$fecha_inicio_str,">="],[$fecha_fin_str,"<="]], false],
                              ["in_revisado_profesional",[["%%","LIKE"]], false],
-                             ["in_revisado_profesional",[["%%","LIKE"]], false],
+                             ["in_revisado_practicante",[["%%","LIKE"]], false],
                              ["in_$nombre_campo",[[$user_id,"="]], false]
                             ];
     $xQuery->orderFields = [["in_fecha","DESC"]];

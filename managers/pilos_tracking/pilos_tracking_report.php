@@ -140,7 +140,6 @@ if (isset($_POST['type']) && isset($_POST['instance']) && $_POST['type'] == "get
     $array = render_practicant_new_form($monitors_of_pract, $_POST['instance']);
     $msg = new stdClass();
     $msg->render =$array;
-    $msg->counting= auxiliary_specific_counting("practicante_ps",$practicant_id->id,$current_semester, $_POST['instance']);
 
     echo json_encode($msg);
 }
