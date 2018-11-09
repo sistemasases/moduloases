@@ -258,7 +258,7 @@ define([
             
             
             $("#save_ficha_discapacity").on("click", function(){
-                let id_ases = $("#id_ases").val();
+
                 //Traer valores de campos para validar campos
                 let val_cond_adquisicion, val_apoyo_cotidiano, otro_apoyo_cotidiano,  key_apoyo_cotidiano, key_otro_apoyo_cotidiano,text_cond_adquisicion, otra_cond_adquisicion, 
                     descripcion_diagnostico, val_tipo_disc, text_tipo_disc, otro_tipo_disc, val_transporte, otro_transporte,  key_transporte, key_otro_transporte ,key_otra_condicion_adq,
@@ -591,12 +591,20 @@ define([
                         result_validation.msg,
                         result_validation.status);
                 }else{
-                    swal("Éxito",
-                        "El formulario fue validado con éxito",
-                        "success");
-                }
+                    // swal("Éxito",
+                    //     "El formulario fue validado con éxito",
+                    //     "success");
 
-                  
+                        var obj = { x:"hola"
+                          };
+                          obj = JSON.stringify(obj);
+
+                let id_ases = $("#id_ases").val();
+                validate_json (obj, id_ases);  
+                }
+                
+
+                
 
                 //console.log(json_detalle_discapacidad);
                 
@@ -604,6 +612,36 @@ define([
               });
 
 
+        function validate_json(json_data, ases_id){
+            $.ajax({
+                type: "POST",
+                data: {
+                    func: 'validate_json',
+                    json: json_data, 
+                    ases: ases_id
+                },
+                url: "../managers/student_profile/discapacity_tab_api.php",
+                success: function(msg) {
+        
+                    swal(
+                        msg.title,
+                        msg.msg,
+                        msg.status
+                    );
+                   
+                },
+                dataType: "json",
+                cache: "false",
+                error: function(msg) {
+                    swal(
+                        msg.title,
+                        msg.msg,
+                        msg.status
+                    );
+                },
+            });
+
+        }
 
         function validate_form(json_detalle){
 
