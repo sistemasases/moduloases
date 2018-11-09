@@ -53,6 +53,7 @@ $blocknode = navigation_node::create('Permisos Rol',$url, null, 'block', $blocki
 $coursenode->add_node($blocknode);
 $blocknode->make_active();
 
+$PAGE->requires->css('/blocks/ases/style/base_ases.css', true);
 $PAGE->requires->css('/blocks/ases/style/styles_pilos.css', true);
 $PAGE->requires->css('/blocks/ases/style/bootstrap_pilos.css', true);
 $PAGE->requires->css('/blocks/ases/style/bootstrap_pilos.min.css', true);

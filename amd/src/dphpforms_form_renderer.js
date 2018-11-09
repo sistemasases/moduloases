@@ -242,21 +242,24 @@
                     return value;
                 };
 
-                $('.btn.btn-danger.btn-univalle.btn-card').click(function(){
-                    var container = $(this).attr('data-container');
-                    var height = $('#' + container).height();
-
+                $(document).on("click",".btn.btn-danger.btn-univalle.btn-card",function(){
+                    let container = $(this).attr('data-container');
+                    let height = $('#' + container).height();
                     if(height == 0){
-                        $(this).find('span').removeClass('glyphicon-chevron-left');
-                        $(this).find('span').addClass('glyphicon-chevron-down');
+                        $(this).find('span').not(".protected").removeClass('glyphicon-chevron-left');
+                        $(this).find('span').not(".protected").addClass('glyphicon-chevron-down');
+                        $(this).find('.open-close-icon').removeClass('glyphicon-chevron-left');
+                        $(this).find('.open-close-icon').addClass('glyphicon-chevron-down');
                     }else{
                         while(height < 0){
                             height = $('#' + container).height();
                         }
-                        $(this).find('span').removeClass('glyphicon-chevron-down');
-                        $(this).find('span').addClass('glyphicon-chevron-left');
+                        $(this).find('span').not(".protected").removeClass('glyphicon-chevron-down');
+                        $(this).find('span').not(".protected").addClass('glyphicon-chevron-left');
+                        $(this).find('.open-close-icon').removeClass('glyphicon-chevron-down');
+                        $(this).find('.open-close-icon').addClass('glyphicon-chevron-left');
                     }
-                })
+                });
 
                 $('#button_add_v2_track').on('click', function() {
                     
