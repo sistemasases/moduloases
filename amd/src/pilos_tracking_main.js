@@ -245,20 +245,20 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                 // when user is 'practicante' then has permissions
                 if (namerol == "practicante_ps") {
                     put_tracking_count( username, current_semester, parseInt( get_instance() ), false );
-                    consultar_seguimientos_persona(get_instance(), usuario);
+                    consultar_seguimientos_persona(get_instance(), usuario, username);
                     send_email_new_form(get_instance()); 
 
                    // when user is 'profesional' then has permissions
                 } else if (namerol == "profesional_ps") {
                     //Starts adding event
                     put_tracking_count( username, current_semester, parseInt( get_instance() ), false );
-                    consultar_seguimientos_persona(get_instance(), usuario);
+                    consultar_seguimientos_persona(get_instance(), usuario, username);
                     send_email_new_form(get_instance());
 
                     // when user is 'monitor' then has permissions
                 } else if (namerol == "monitor_ps") {
                     put_tracking_count( username, current_semester, parseInt( get_instance() ), true );
-                    consultar_seguimientos_persona(get_instance(), usuario);
+                    consultar_seguimientos_persona(get_instance(), usuario, username);
                     send_email_new_form(get_instance());
 
                     // when user is 'sistemas' then has permissions
@@ -885,9 +885,10 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
              * @desc Obtain track information of a certain user
              * @param {instance} instance current instance
              * @param {object} usuario current user to obtain information
+             * @param {String} username
              * @return {void}
              */
-            function consultar_seguimientos_persona(instance, usuario) {
+            function consultar_seguimientos_persona(instance, usuario, username) {
                 $("#periodos").change(function() {
                     if (namerol != 'sistemas') {
                         var semestre = $("#periodos").val();
@@ -902,11 +903,9 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                                 type: "consulta_sistemas"
                             },
                             url: "../../../blocks/ases/managers/pilos_tracking/pilos_tracking_report.php",
-                            async: false,
-
-
+                            dataType: "text",
+                            cache: "false",
                             success: function(msg) {
-
                                 if (msg == "") {
                                     $('#reemplazarToogle').html('<label> No se encontraron registros </label>');
                                 } else {
@@ -917,9 +916,8 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                                     groupal_tracking_load();
                                 }
                                 $(".well.col-md-10.col-md-offset-1.reporte-seguimiento.oculto").slideDown("slow");
+                                put_tracking_count( username, semestre, parseInt( get_instance() ), false );
                             },
-                            dataType: "text",
-                            cache: "false",
                             error: function(msg) {
                                 swal(
                                  'ERROR!',
@@ -930,13 +928,9 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                         });
                         edit_tracking_new_form();
                         edit_groupal_tracking_new_form();
-
                     }
-
-
                 });
             }
-
 
             /**
              * @method anadirEvento
