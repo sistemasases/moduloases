@@ -115,7 +115,7 @@ $choosen_date =strtotime($intervalo_fechas[0]);
 $new_forms_date =strtotime('2018-01-01 00:00:00');
 
 // Sort periods Select
-$table_periods.=get_period_select($periods);
+$table_periods.=get_period_select($periods, $usernamerole);
 
 if($usernamerole=='monitor_ps'){
 
@@ -161,7 +161,6 @@ if($usernamerole=='monitor_ps'){
 
 
 }elseif($usernamerole=='sistemas'){
-
     //Gets all existent periods and roles containing "_ps"
     $roles = get_rol_ps();
 
