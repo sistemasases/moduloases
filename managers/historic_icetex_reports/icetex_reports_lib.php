@@ -109,32 +109,6 @@ function get_array_students_with_resolution(){
 //print_r(get_array_students_with_resolution());
 
 /**
- * Function that returns the date when an student quitted a program in the semester 
- * 
- * @see get_student_cancel_date($id_student, $id_program, $id_semester)
- * @param $id_student -> id of a student
- * @param $id_program -> id of a program
- * @param $id_semester -> id of the semester
- * @return array
- */
-function get_student_cancel_date($id_student, $id_program, $id_semester){    
-    global $DB;
-
-    $sql_query = "SELECT cancel.fecha_cancelacion FROM {talentospilos_history_academ} AS academ
-    INNER JOIN {talentospilos_history_cancel} cancel ON academ.id = cancel.id_history 
-    WHERE academ.id_estudiante = $id_student AND academ.id_semestre = $id_semester AND academ.id_programa = $id_program";
-
-    $result = $DB->get_record_sql($sql_query);
-
-    if($result == false){
-        return false;
-    }else{
-        $fecha_cancel = $result->fecha_cancelacion;
-        return $fecha_cancel;
-    }    
-}
-
-/**
  * Function that returns a string with the names of all spp cohorts
  * 
  * @see get_all_cohort_names()
