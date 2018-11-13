@@ -181,6 +181,7 @@ $data->rol = $usernamerole;
 $data->table_periods =$table_periods;
 $data->table=$table_permissions;
 
+$PAGE->requires->css('/blocks/ases/style/base_ases.css', true);
 $PAGE->requires->css('/blocks/ases/style/jqueryui.css', true);
 $PAGE->requires->css('/blocks/ases/style/styles_pilos.css', true);
 $PAGE->requires->css('/blocks/ases/style/bootstrap.min.css', true);

@@ -153,9 +153,13 @@ if ($student_code != 0) {
     $record->document_type = $document_type;
 
     array_push($data_init, $academic_programs);
-    
-    // General file (ficha general) information
 
+ 
+
+    // General file (ficha general) information
+    $record->puntaje_icfes       = $ases_student->puntaje_icfes;
+    $record->ingreso       = $ases_student->anio_ingreso;
+    $record->estrato       = $ases_student->estrato;
     $record->res_address = $ases_student->direccion_res;
     $record->init_tel = $ases_student->tel_ini;
     $record->res_tel = $ases_student->tel_res;
@@ -165,14 +169,7 @@ if ($student_code != 0) {
     $record->attendant_tel = $ases_student->tel_acudiente;
     $record->num_doc = $ases_student->num_doc;
     
-    //Código temporal, mientras se define carga de datos
-    //---------------------------------------------------------------------------
-    //Personas con quien vive
-//     <tr>
-//     <td>John</td>
-//     <td>john@example.com</td>
-//   </tr>
-      //Código temporal vive_con
+    
       $personas = '';
       $pos = 1;
     
@@ -249,6 +246,70 @@ if ($student_code != 0) {
 
     $record->options_pais = $options_pais;
 
+
+     //TRAE MUNICIPIOS
+     $municipios= get_municipios();
+     $options_municipios = '';
+ 
+     $municipio_student = $ases_student->id_ciudad_res;
+     //Buscar la posición del municipio CALI
+     $i=0;
+     foreach($municipios as $mun){
+         if($mun->nombre=="CALI"){
+         $posp=$i;
+         $options_municipios .= "<optgroup label='Populares'> <option value='$mun->id'>$mun->nombre</option> </optgroup>" ;   
+         break; }
+         $i++;
+     }
+ 
+     //Eliminar municipio CALI puesto al inicio
+     array_splice($municipios,$posp,1);
+    
+     $options_municipios .= "<optgroup label = 'Otros'>";
+     foreach($municipios as $mun){
+         if($municipio_student == $mun->id){
+             $options_municipios .= "<option value='$mun->id' selected='selected'>$mun->nombre</option>";
+         }else{
+             $options_municipios .= "<option value='$mun->id'>$mun->nombre</option>";
+         }
+     }
+     $options_municipios .= "</optgroup>";   
+ 
+     $record->options_municipio_act = $options_municipios;
+
+
+         //TRAE ETNIAS
+    $etnias= get_etnias();
+    $options_etnia = '';
+    
+
+    $etnia_student = $ases_student->id_etnia;
+  
+   $otro ="";
+   $control = true;
+    foreach($etnias as $etnia){
+        if($etnia_student == $etnia->id){
+            if($etnia->opcion_general == 1){
+            $options_etnia .= "<option value='$etnia->id' selected='selected'>$etnia->etnia</option>";
+            $control = false;}
+            
+            
+        }else{
+            if($etnia->opcion_general == 1){
+            $options_etnia .= "<option value='$etnia->id'>$etnia->etnia</option>";}
+
+        }
+    }
+
+    
+           if($control){$options_etnia .= "<option value='8' selected='selected'>NO DEFINIDO</option>"; } 
+        
+    
+
+
+    $record->options_etnia = $options_etnia;
+
+    
     //TRAE GENEROS
     $generos= get_generos();
     $options_generos = '';
@@ -1499,6 +1560,7 @@ $PAGE->set_context($contextblock);
 $PAGE->set_url($url);
 $PAGE->set_title($title);
 
+$PAGE->requires->css('/blocks/ases/style/base_ases.css', true);
 $PAGE->requires->css('/blocks/ases/style/jqueryui.css', true);
 $PAGE->requires->css('/blocks/ases/style/styles_pilos.css', true);
 $PAGE->requires->css('/blocks/ases/style/bootstrap.min.css', true);
