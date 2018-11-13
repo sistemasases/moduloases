@@ -209,14 +209,29 @@ function save_profile($form){
             if($form[$i]['name']=="pais"){
                 $pais = $form[$i]['value'];
             }
+            if($form[$i]['name'] == 'municipio_act'){
+                $ciudad_res =  $form[$i]['value'];
+            }
             if($form[$i]['name']=="genero"){
                 $genero = $form[$i]['value'];
+            }
+            if($form[$i]['name'] == 'etnia'){
+                $etnia =  $form[$i]['value'];
             }
             if($form[$i]['name']=="otro_genero"){
                 $otro = $form[$i]['value'];
             }
             if($form[$i]['name']== "estado_civil"){
                 $estado_civil = $form[$i]['value'];
+            }
+            if($form[$i]['name']== "ingreso"){
+                $anio_ingreso = $form[$i]['value'];
+            }
+            if($form[$i]['name']== "puntaje_icfes"){
+                $puntaje_icfes = $form[$i]['value'];
+            }
+            if($form[$i]['name']== "estrato"){
+                $estrato = $form[$i]['value'];
             }
             if($form[$i]['name']== "act_simultanea"){
                 $act_sim = $form[$i]['value'];
@@ -286,6 +301,11 @@ function save_profile($form){
         $obj_updatable->id_estado_civil = $estado_civil;
         $obj_updatable->id_cond_excepcion = $cond;
         $obj_updatable->id_pais = $pais;
+        $obj_updatable->id_ciudad_res = $ciudad_res;
+        $obj_updatable->id_etnia      = $etnia;
+        $obj_updatable->estrato = $estrato;
+        $obj_updatable->anio_ingreso = $anio_ingreso;
+        $obj_updatable->puntaje_icfes = $puntaje_icfes;
         //____________________________________________
         $conc_observations = $obj_updatable->observacion."\n".$observations;
 
