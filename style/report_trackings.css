@@ -32,7 +32,7 @@
 #consulta_personas > select,  
 #container-consulta-btn > select{
     display: inline;
-    margin: 0px;
+    margin-bottom: 0px;
 }
 
 #report-tracking-selectors{
