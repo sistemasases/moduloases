@@ -96,7 +96,7 @@ function pilos_tracking_get_tracking_count( $username, $semester_id, $instance, 
 
     if( $user_rol ){
 
-        $sql_pro_prac = "SELECT user_rol.id_usuario, _user.firstname, _user.lastname, user_rol.id_semestre AS id_semestre, CONCAT(_user.firstname, _user.lastname) AS full_name, _user.username
+        $sql_pro_prac = "SELECT user_rol.id_usuario, _user.firstname, _user.lastname, user_rol.id_semestre AS id_semestre, CONCAT(_user.firstname, ' ', _user.lastname) AS full_name, _user.username
         FROM {talentospilos_user_rol} AS user_rol 
         INNER JOIN {user} AS _user ON ( _user.id = user_rol.id_usuario ) 
         WHERE id_jefe = $user_id AND id_semestre = $semester_id AND estado = 1 AND id_instancia = $instance ORDER BY full_name ASC";
