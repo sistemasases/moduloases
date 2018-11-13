@@ -40,8 +40,8 @@
 									</select>";
 		$est_ice_sra_options = "<select>
 									<option value=''></option>
-									<option value='-ACTIVO'>-ACTIVO</option>
-									<option value='-INACTIVO'>-INACTIVO</option>
+									<option value='-ACTIVO'>ACTIVO</option>
+									<option value='-INACTIVO'>INACTIVO</option>
 									</select>";
 		array_push($columns, array("title"=>"Cohorte".$cohort_options, "name"=>"cohorte", "data"=>"cohorte"));
 		array_push($columns, array("title"=>"Código estudiante", "name"=>"codigo", "data"=>"codigo"));
