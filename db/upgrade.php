@@ -4,7 +4,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     global $DB;
     $dbman = $DB->get_manager();
     $result = true;
-    if ($oldversion < 2018103010090 ) {
+    if ($oldversion < 2018111308380 ) {
     //     // ************************************************************************************************************
     //     // Actualización que crea la tabla para los campos extendidos de usuario (Tabla: {talentospilos_user_extended})
     //     // Versión: 2018010911179
@@ -2143,9 +2143,40 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
  
 //          // Launch change of type for field hijos.
 //          $dbman->change_field_type($table, $field);
-     
 
-        upgrade_block_savepoint(true, 2018103010090 , 'ases');
+
+        // ACTUALIZACION BD CAMPOS PESTAÑA GENERAL
+        // AGREGAR CAMPOS A TABLA USUARIO
+
+            // Define field puntaje_icfes to be added to talentospilos_usuario.
+            $table = new xmldb_table('talentospilos_usuario');
+            $field = new xmldb_field('puntaje_icfes', XMLDB_TYPE_INTEGER, '3', null, null, null, null, 'json_detalle');
+
+            // Conditionally launch add field puntaje_icfes.
+            if (!$dbman->field_exists($table, $field)) {
+                $dbman->add_field($table, $field);
+            }
+
+             // Define field estrato to be added to talentospilos_usuario.
+             $table = new xmldb_table('talentospilos_usuario');
+             $field = new xmldb_field('estrato', XMLDB_TYPE_INTEGER, '1', null, null, null, null, 'puntaje_icfes');
+     
+             // Conditionally launch add field estrato.
+             if (!$dbman->field_exists($table, $field)) {
+                 $dbman->add_field($table, $field);
+             }
+
+            // Define field id_etnia to be added to talentospilos_usuario.
+            $table = new xmldb_table('talentospilos_usuario');
+            $field = new xmldb_field('id_etnia', XMLDB_TYPE_INTEGER, '2', null, null, null, null, 'estrato');
+    
+            // Conditionally launch add field id_etnia.
+            if (!$dbman->field_exists($table, $field)) {
+                $dbman->add_field($table, $field);
+            }
+   
+
+        upgrade_block_savepoint(true, 2018111308380 , 'ases');
     
         return $result;
 
