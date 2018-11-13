@@ -4,7 +4,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     global $DB;
     $dbman = $DB->get_manager();
     $result = true;
-    if ($oldversion < 2018111308380 ) {
+    if ($oldversion < 2018111314000 ) {
     //     // ************************************************************************************************************
     //     // Actualización que crea la tabla para los campos extendidos de usuario (Tabla: {talentospilos_user_extended})
     //     // Versión: 2018010911179
@@ -2174,9 +2174,15 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
             if (!$dbman->field_exists($table, $field)) {
                 $dbman->add_field($table, $field);
             }
-   
+            
+        $new_etnia = new StdClass;
+        $new_etnia->etnia = "NO DEFINIDO";
+        $new_etnia->opcion_general = 1;
 
-        upgrade_block_savepoint(true, 2018111308380 , 'ases');
+        $DB->insert_record("talentospilos_etnia", $new_etnia, true);
+
+
+        upgrade_block_savepoint(true, 2018111314000 , 'ases');
     
         return $result;
 
