@@ -42,7 +42,7 @@ function render_monitor_new_form($students_by_monitor, $period = null)
 {
     $panel = "";
     foreach($students_by_monitor as $student) {
-        $student_code = get_user_moodle($student->id_estudiante);
+        $student_code = get_user_moodle($student->id_estudiante);//Get user moodle by ases id
 
         $ases_student_code = $student->id_estudiante;
         $current_semester = get_current_semester();
