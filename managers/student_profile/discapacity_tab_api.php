@@ -55,42 +55,26 @@ if(isset($_POST['func'])){
             
 
          if ($validator->isValid()) {
-             echo "Exito";
+             $data = json_encode($data);
+            $result =  save_detalle_discapacidad($data, $id_ases);
+            if($result){
+                $msg->title = "Éxito";
+                $msg->status = "success";
+               $msg->msg = "La información se ha almacenado correctamente.";
+               echo json_encode($msg);
+           }else{
+               $msg->title = "Error";
+               $msg->msg = "No se ha actualizado correctamente.";
+               $msg->status = "error";
+               echo json_encode($msg);
+           }
          }else {
              echo "Falló";
+            echo "JSON does not validate. Violations:\n";
+           foreach ($validator->getErrors() as $error) {
+          echo sprintf("[%s] %s\n", $error['property'], $error['message']);}
          }
-        //    $result =  save_detalle_discapacidad($data, $id_ases);
-
-            // if($result){
-            //     $msg->title = "Éxito";
-            //     $msg->status = "success";
-            //     $msg->msg = "La información se ha almacenado correctamente.";
-            //     echo json_encode($msg);
-            // }else{
-            //     $msg->title = "Error";
-            //     $msg->msg = "No se ha actualizado correctamente.";
-            //     $msg->status = "error";
-            //     echo json_encode($msg);
-            // }
-            
-            
-
-        //     $msg->title = "Éxito";
-        //     $msg->msg = "Validado con éxito";
-        //     $msg->status = "success";
-        //    echo json_encode ($msg);
-        // } else {
-        //     $msg->title = "Error";
-        //     $msg->msg = "Invalid object";
-        //     $msg->status = "error";
-        //     echo json_encode($msg);
-            // echo "JSON does not validate. Violations:\n";
-            // foreach ($validator->getErrors() as $error) {
-        //     //     echo sprintf("[%s] %s\n", $error['property'], $error['message']);
-        // }
-        //}
-
-   
+         
 
     }else{
         $msg->title = "Error";

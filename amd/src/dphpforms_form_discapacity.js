@@ -336,7 +336,7 @@ define([
                json_certificado      =  {key_certificado: key_check_certificado};
                if(check_certificado){
                 key_porcentaje_inv                 = $("#input_porcentaje_inv").attr("id"); 
-                porcentaje_invalidez               = $("#input_porcentaje_inv").val(); 
+                porcentaje_invalidez               = parseInt($("#input_porcentaje_inv").val()); 
                 json_certificado.tiene_certificado = 1;
                 json_certificado.key_porcentaje    = key_porcentaje_inv;
                 json_certificado.porcentaje        = porcentaje_invalidez;
@@ -510,15 +510,17 @@ define([
                 
                 val_participa_asociacion = $("#check_org").is(":checked");
                 key_participa_asociacion = $("#check_org").attr("id");
-                json_participa_asoc      = {key_participa: key_participa_asociacion, participa: JSON.stringify(val_participa_asociacion)};
+                json_participa_asoc      = {key_participa: key_participa_asociacion};
 
                 if(val_participa_asociacion){
 
                     val_asoc   = $("#input_org").val();
                     key_asoc   =  $("#input_org").attr("id");
-
+                    json_participa_asoc.participa = 1;
                     json_participa_asoc.key_asociacion = key_asoc;
                     json_participa_asoc.asociacion     = val_asoc;
+                }else {
+                    json_participa_asoc.participa = 0;
                 }
 
                 //-------------------------------------------------------------------------------
@@ -527,15 +529,18 @@ define([
                 
                   val_realiza_act = $("#check_actividades_otros").is(":checked");
                   key_realiza_act = $("#check_actividades_otros").attr("id");
-                  json_actividades_otros      = {key_realiza: key_realiza_act, realiza: JSON.stringify(val_realiza_act)};
+                  json_actividades_otros      = {key_realiza: key_realiza_act};
   
                   if(val_realiza_act){
   
                       val_act   = $("#input_actividades_otros").val();
                       key_act   =  $("#input_actividades_otros").attr("id");
   
+                      json_actividades_otros.realiza = 1;
                       json_actividades_otros.key_actividad = key_act;
                       json_actividades_otros.actividad     = val_act;
+                  }else{
+                      json_actividades_otros.realiza = 0;
                   }
   
                   //-------------------------------------------------------------------------------
@@ -545,13 +550,14 @@ define([
                 
                   val_apoyo_institu = $("#check_apoyo_institu").is(":checked");
                   key_apoyo_institu = $("#check_apoyo_institu").attr("id");
-                  json_apoyo_institu     = {key_apoya: key_apoyo_institu, apoyo: JSON.stringify(val_apoyo_institu)};
+                  json_apoyo_institu     = {key_apoya: key_apoyo_institu};
   
                   if(val_apoyo_institu){
   
                       val_apoyo_tipo   = $("#input_apoyo").val();
                       key_apoyo_tipo  =  $("#input_apoyo").attr("id");
-  
+                      
+                      json_apoyo_institu.apoyo = 1;
                       json_apoyo_institu.key_apoyo_institu = key_apoyo_tipo;
                       json_apoyo_institu.apoyo_institu     = val_apoyo_tipo;
 
@@ -560,6 +566,8 @@ define([
   
                       json_apoyo_institu.key_institucion = key_institu;
                       json_apoyo_institu.institucion     = val_institu;
+                  }else {
+                    json_apoyo_institu.apoyo = 0;
                   }
   
                   //-------------------------------------------------------------------------------
@@ -601,6 +609,7 @@ define([
 
                         var obj = json_detalle_discapacidad;
                          obj = JSON.stringify(obj);
+                        
                         
 
                 let id_ases = $("#id_ases").val();
@@ -748,7 +757,7 @@ define([
                                 msg.msg = "El campo "+op+" no debe ser negativo";
                                 return msg;  
                             }
-                            if(has_letters(obj_cert[op])){
+                            if(Number.isNaN(obj_cert[op])){
 
                                 msg.title = "Certificado de invalidez";
                                 msg.status = "error";

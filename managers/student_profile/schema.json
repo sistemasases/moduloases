@@ -113,61 +113,77 @@
         "aditionalProperties": false
       },
       "dificultad_permanente_funciones": {
+        "description": "¿De las siguientes funciones en cuáles presenta usted dificultad permanente?",
         "type": "array",
         "items": {
           "$ref": "#/definitions/dificults"
         },
         "maxItems": 9,
+        "minItems": 0,
         "uniqueItems": true
       },
       "condicion_salud_organos": {
+        "description": "En los siguientes órganos y/o sistemas, ¿Cuáles presenta alguna condición de salud a tener en cuenta?",
         "type": "array",
         "items": {
           "$ref": "#/definitions/conditions",
           "maxItems": 12,
+          "minItems": 0,
           "uniqueItems": true
         }
       },
-      "necesidad_situaciones": {
+      "necesidades_situaciones": {
+        "description": "Indica en cuales de estas situaciones usted experimenta una necesidad diferente o dificultad",
         "type": "array",
         "items": {
           "$ref": "#/definitions/necessities",
           "maxItems": 15,
+          "minItems": 0,
           "uniqueItems": true
         }
       },
-      "factor_impacto": {
+      "factores_impacto": {
+        "description": "Frente a la limitación de su participación y óptimo desempeño, el factor que más le impacta en los diferentes escenarios de la vida universitarias es/son",
         "type": "array",
         "items": {
           "$ref": "#/definitions/factor"
         },
-        "maxItems": 4,
+        "maxItems": 11,
+        "minItems": 0,
         "uniqueItems": true
       },
       "posibilidad_actividades": {
+        "description": "Desde su diversidad funcional, las exigencias de cada escenario de la vida en la Universidad, así como las condiciones con las que cuenta actualmente, indique las posibilidades con las que cuenta para llevar a cabo las siguientes actividades cotidianas:",
         "type": "array",
         "items": {
           "$ref": "#/definitions/possibilities"
         },
         "maxItems": 21,
+        "minItems": 0,
         "uniqueItems": true
       },
-      "apoyo_cotidiano": {
+      "apoyo_principal_cotidiano": {
         "description": "Para realizar actividades cotidianas y académicas en su casa, ¿en quién se apoya?",
         "required": [
-          "id_main_support",
-          "apoyo"
+          "key_apoyo",
+          "apoyo_cotidiano"
         ],
-        "maxProperties": 3,
+        "maxProperties": 4,
         "properties": {
-          "id_main_support": {
-            "type": "number",
+          "key_apoyo": {
+            "type": "string",
             "enum": [
-              1,
-              2,
-              3,
-              4,
-              5
+              "input_radio_oa1",
+              "input_radio_oa2",
+              "input_radio_oa3",
+              "input_radio_oa4",
+              "input_radio_otro_oa"
+            ]
+          },
+          "key_otro_apoyo":{
+            "type": "string",
+            "enum": [
+              "input_otro_apoyo"
             ]
           },
           "apoyo": {
@@ -180,141 +196,47 @@
               "Otro"
             ]
           },
-          "otro_cual": {
+          "otro_apoyo": {
             "type": "string"
           }
         },
         "if": {
           "properties": {
-            "id_main_support": {
+            "key_apoyo": {
               "enum": [
-                5
+                "input_radio_otro_oa"
               ]
             }
           }
         },
         "then": {
           "required": [
-            "otro_cual"
+            "otro_apoyo",
+           "key_otro_apoyo" 
           ]
         }
       },
-      "desplazamiento_universidad": {
-        "type": "array",
-        "items": {
-          "$ref": "#/definitions/displacement"
-        },
-        "maxItems": 4,
-        "uniqueItems": true
-      },
-      "participa_asociacion": {
-        "description": "Participa de alguna organización o asociación con otras personas con discapacidad o con condiciones similares a las que usted experimenta",
+      "medio_transporte": {
+        "description": "Para desplazarse a la universida usted principalmente",
         "required": [
-          "participa"
-        ],
-        "maxProperties": 2,
-        "properties": {
-          "participa": {
-            "type": "boolean"
-          },
-          "asociacion": {
-            "type": "string"
-          }
-        },
-        "if": {
-          "properties": {
-            "participa": {
-              "enum": [
-                true
-              ]
-            }
-          }
-        },
-        "then": {
-          "required": [
-            "asociacion"
-          ]
-        }
-      },
-      "actividades_otros": {
-        "description": "¿Realiza actividades con otras personas con discapacidad?",
-        "required": [
-          "realiza"
-        ],
-        "maxProperties": 2,
-        "properties": {
-          "realiza": {
-            "type": "boolean"
-          },
-          "actividades": {
-            "type": "string"
-          }
-        },
-        "if": {
-          "properties": {
-            "realiza": {
-              "enum": [
-                true
-              ]
-            }
-          }
-        },
-        "then": {
-          "required": [
-            "actividades"
-          ]
-        }
-      },
-      "apoyo_institucion": {
-        "description": "¿Alguna institución le ha proporcionado apoyo por su situación de discapacidad?",
-        "required": [
-          "apoya_institucion"
-        ],
-        "maxProperties": 3,
-        "properties": {
-          "apoya_institucion": {
-            "type": "boolean"
-          },
-          "institucion": {
-            "type": "string"
-          },
-          "tipo_apoyo": {
-            "type": "string"
-          }
-        },
-        "if": {
-          "properties": {
-            "apoya_institucion": {
-              "enum": [
-                true
-              ]
-            }
-          }
-        },
-        "then": {
-          "required": [
-            "institucion",
-            "tipo_apoyo"
-          ]
-        }
-      }
-    },
-    "definitions": {
-      "displacement": {
-        "description": "Para desplazarse a la universida ested:",
-        "required": [
-          "id_transporte",
+          "key_transoporte",
           "transporte"
         ],
-        "maxProperties": 3,
+        "maxProperties": 4,
         "properties": {
-          "id_transporte": {
-            "type": "number",
+          "key_transoporte": {
+            "type": "string",
             "enum": [
-              1,
-              2,
-              3,
-              4
+              "input_radio_ot1",
+              "input_radio_ot2",
+              "input_radio_ot3",
+              "input_radio_otro_ot"
+            ]
+          },
+          "key_otro_transporte":{
+            "type": "string",
+            "enum": [
+              "input_otro_transporte"
             ]
           },
           "transporte": {
@@ -326,59 +248,255 @@
               "Otro"
             ]
           },
-          "otro_cual": {
+          "otro_transporte": {
             "type": "string"
           }
         },
         "if": {
           "properties": {
-            "id_transporte": {
+            "key_transoporte": {
               "enum": [
-                4
+                "input_radio_otro_ot"
               ]
             }
           }
         },
         "then": {
           "required": [
-            "otro_cual"
+            "otro_transporte",
+           "key_otro_transporte" 
           ]
         }
       },
-      "daily_support": {},
-      "possibilities": {
-        "description": "Desde su diversidad funcional, las exigencias de cada escenario de la vida en la Universidad, así como las condiciones con las que cuenta actualmente, indique las posibilidades con las que cuenta para llevar a cabo las siguientes actividades cotidianas:",
+      "participa_asociacion": {
+        "description": "Participa de alguna organización o asociación con otras personas con discapacidad o con condiciones similares a las que usted experimenta",
         "required": [
-          "id_actividad",
+          "key_participa",
+          "participa"
+        ],
+        "maxProperties": 4,
+        "properties": {
+          "participa": {
+            "type": "number",
+            "enum": [0,1]
+          },
+          "key_participa": {
+            "type": "string", 
+            "enum":["check_org"]
+          },
+          "key_asociacion": {
+            "type": "string", 
+            "enum":["input_org"]
+          },
+          "asociacion":{
+            "type":"string"
+          }
+        },
+        "if": {
+          "properties": {
+            "participa": {
+              "enum": [
+                1
+              ]
+            }
+          }
+        },
+        "then": {
+          "required": [
+            "asociacion", "key_asociacion"
+          ]
+        }
+      },
+      "actividades_otros": {
+        "description": "¿Realiza actividades con otras personas con discapacidad?",
+        "required": [
+          "key_realiza",
+          "realiza"
+        ],
+        "maxProperties": 4,
+        "properties": {
+          "realiza": {
+            "type": "number",
+            "enum": [0,1]
+          },
+          "key_realiza": {
+            "type": "string", 
+            "enum":["check_actividades_otros"]
+          },
+          "key_actividad": {
+            "type": "string", 
+            "enum":["input_actividades_otros"]
+          },
+          "actividad":{
+            "type":"string"
+          }
+        },
+        "if": {
+          "properties": {
+            "realiza": {
+              "enum": [
+                1
+              ]
+            }
+          }
+        },
+        "then": {
+          "required": [
+            "actividad", "key_actividad"
+          ]
+        }
+      },
+      "apoyo_institucion": {
+        "description": "¿Alguna institución le ha proporcionado apoyo por su situación de discapacidad?",
+        "required": [
+          "key_apoya",
+          "apoyo"
+        ],
+        "maxProperties": 6,
+        "properties": {
+          "apoyo": {
+            "type": "number",
+            "enum": [0,1]
+          },
+          "key_apoya": {
+            "type": "string", 
+            "enum":["check_apoyo_institu"]
+          },
+          "key_apoyo_institu": {
+            "type": "string", 
+            "enum":["input_apoyo"]
+          },
+          "apoyo_institu":{
+            "type":"string"
+          },
+          "key_institucion": {
+            "type": "string", 
+            "enum":["input_institucion"]
+          },
+          "institucion":{
+            "type":"string"
+          }
+        },
+        "if": {
+          "properties": {
+            "apoyo": {
+              "enum": [
+                1
+              ]
+            }
+          }
+        },
+        "then": {
+          "required": [
+            "key_institucion", "key_apoyo_institu", "institucion", "apoyo_institu"
+          ]
+        }
+    }
+  },
+    "definitions": {
+     
+      "possibilities": {
+       "required": [
+          "key_actividad",
           "actividad",
+          "key_posibilidad",
+          "posibilidad",
+          "key_apoyo",
           "tipo_apoyo"
         ],
-        "maxProperties": 3,
+        "maxProperties": 8,
         "properties": {
-          "id_actividad": {
-            "type": "number",
+          "key_otra_actividad":{
+            "type": "string",
             "enum": [
-              1,
-              2,
-              3,
-              4,
-              5,
-              6,
-              7,
-              8,
-              9,
-              10,
-              11,
-              12,
-              13,
-              14,
-              15,
-              16,
-              17,
-              18,
-              19,
-              20,
-              21
+              "input_otro1"
+            ]
+          },
+          "key_apoyo": {
+            "type": "string",
+            "enum": [
+              "input_tipo1",
+              "input_tipo2",
+              "input_tipo3",
+              "input_tipo4",
+              "input_tipo5",
+              "input_tipo6",
+              "input_tipo7",
+              "input_tipo8",
+              "input_tipo9",
+              "input_tipo10",
+              "input_tipo11",
+              "input_tipo12",
+              "input_tipo13",
+              "input_tipo14",
+              "input_tipo15",
+              "input_tipo16",
+              "input_tipo17",
+              "input_tipo18",
+              "input_tipo19",
+              "input_tipo20",
+              "input_tipo_otro"
+            ]
+          },
+          "key_posibilidad": {
+            "type": "string",
+            "enum": [
+              "input_posib1",
+              "input_posib2",
+              "input_posib3",
+              "input_posib4",
+              "input_posib5",
+              "input_posib6",
+              "input_posib7",
+              "input_posib8",
+              "input_posib9",
+              "input_posib10",
+              "input_posib11",
+              "input_posib12",
+              "input_posib13",
+              "input_posib14",
+              "input_posib15",
+              "input_posib16",
+              "input_posib17",
+              "input_posib18",
+              "input_posib19",
+              "input_posib20",
+              "input_posib_otro"
+            ]
+          },
+          "key_actividad": {
+            "type": "string",
+            "enum": [
+              "check_pos1",
+              "check_pos2",
+              "check_pos3",
+              "check_pos4",
+              "check_pos5",
+              "check_pos6",
+              "check_pos7",
+              "check_pos8",
+              "check_pos9",
+              "check_pos10",
+              "check_pos11",
+              "check_pos12",
+              "check_pos13",
+              "check_pos14",
+              "check_pos15",
+              "check_pos16",
+              "check_pos17",
+              "check_pos18",
+              "check_pos19",
+              "check_pos20",
+              "check_otra_posibilidad"
+            ]
+          }, 
+          "posibilidad": {
+            "type": "string",
+            "enum": [
+              "No la puede realizar",
+              "Lo hace sin apoyo",
+              "Lo hace con apoyo"
+             
             ]
           },
           "actividad": {
@@ -403,80 +521,64 @@
               "Asearse",
               "Vestirse y desvestirse",
               "Consumir alimentos",
-              "Evacuar (micción/deposición)"
+              "Evacuar (micción/deposición)",
+              "Otro, ¿cuál?"
             ]
           },
           "tipo_apoyo": {
             "type": "string"
-          }
-        }
-      },
-      "context": {
-        "description": "Indique cuál/es de los siguientes factores le genera/n mayor dificultad",
-        "required": [
-          "id_contexto",
-          "factor_contexto"
-        ],
-        "maxProperties": 3,
-        "properties": {
-          "id_contexto": {
-            "type": "number",
-            "enum": [
-              1,
-              2,
-              3,
-              4,
-              5,
-              6,
-              7
-            ]
-          },
-          "factor_contexto": {
-            "type": "string",
-            "enum": [
-              "Ausencia o deficiencia de dispositivos, equipos o ayudas tecnológicas",
-              "La ausencia o deficiencia de condiciones de accesibilidad a los materiales impresos y página web de la universidad",
-              "La ausencia o deficiencia de condiciones de accesibilidad a los espacios físicos",
-              "La ausencia o deficiencia de personas que apoyen el desarrollo de las actividades",
-              "Las actitudes negativas de las personas que no se disponen a apoyar",
-              "La ausencia o programas o servicios para personas con discapacidad en la Universidad",
-              "Otros"
-            ]
-          },
-          "otro_contexto": {
+          }, 
+          "otra_actividad":{
             "type": "string"
           }
         },
         "if": {
           "properties": {
-            "id_contexto": {
+            "key_actividad": {
               "enum": [
-                7
+              "check_otra_posibilidad"
               ]
             }
           }
         },
         "then": {
           "required": [
-            "otro_contexto"
+            "key_otra_actividad",
+            "otra_actividad"
           ]
         }
       },
       "factor": {
-        "description": "Frente a la limitación de su participación y óptimo desempeño, el factor que más le impacta en los diferentes escenarios de la vida universitarias es/son",
         "required": [
-          "id_escenario",
+          "key_factor",
           "escenario"
         ],
         "maxProperties": 4,
         "properties": {
-          "id_escenario": {
-            "type": "number",
+          "key_otro_factor":{
+            "type": "string",
             "enum": [
-              1,
-              2,
-              3,
-              4
+              "input_factor2_7",
+              "input_factor4"
+            ]
+          },
+          "otro_factor":{
+            "type": "string"
+          },
+          "key_factor": {
+            "type": "string",
+            "enum": [
+              "check_factor1",
+              "check_factor2",
+              "check_factor2_1",
+              "check_factor2_2",
+              "check_factor2_3",
+              "check_factor2_4",
+              "check_factor2_5",
+              "check_factor2_6",
+              "check_factor2_7",
+              "check_factor3",
+              "check_factor4"
             ]
           },
           "escenario": {
@@ -484,81 +586,82 @@
             "enum": [
               "Condición de discapacidad",
               "Características del contexto universitario",
+              "Ausencia o deficiencia de dispositivos, equipos o ayudas tecnológicas",
+              "La ausencia o deficiencia de condiciones de accesibilidad a los espacios físicos",
+              "La ausencia o deficiencia de condiciones de accesibilidad a los materiales impresos y pagina web de la universidad",
+              "La ausencia o deficiencia de personas que apoyen el desarrollo de las actividades",
+              "Las actitudes negativas de las personas que no se disponen a apoyar",
+              "La ausencia o programas o servicios para personas con discapacidad en la Universidad",
+              "Otros, ¿cuáles?",
               "Condición psicoemocional",
-              "Otro"
+              "Otra ¿Cuál?"
             ]
-          },
-          "contexto": {
-            "type": "array",
-            "items": {
-              "$ref": "#/definitions/context"
-            },
-            "minItems": 1,
-            "maxItems": 7,
-            "uniqueItems": true
-          },
-          "otro_cual": {
-            "type": "string"
           }
         },
         "if": {
           "properties": {
-            "id_escenario": {
+            "key_factor": {
               "enum": [
-                2
+                "check_factor4", "check_factor2_7"
               ]
             }
           }
         },
         "then": {
           "required": [
-            "contexto"
+            "key_otro_factor",
+            "otro_factor"
           ]
-        },
-        "else": {
-          "if": {
-            "properties": {
-              "id_escenario": {
-                "enum": [
-                  4
-                ]
-              }
-            }
-          },
-          "then": {
-            "required": [
-              "otro_cual"
-            ]
-          }
         }
+  
       },
       "necessities": {
-        "description": "Indica en cuales de estas situaciones usted experimenta una necesidad diferente o dificultad",
         "required": [
-          "id_situacion",
+          "key_situacion",
           "situacion",
+          "key_necesidad",
           "necesidad"
         ],
-        "maxProperties": 3,
+        "maxProperties": 4,
         "properties": {
-          "id_situacion": {
-            "type": "number",
+          "key_situacion": {
+            "type": "string",
             "enum": [
-              1,
-              2,
-              3,
-              4,
-              5,
-              6,
-              7,
-              8,
-              9,
-              10,
-              11,
-              12,
-              13,
-              14,
-              15
+              "check_nec1",
+              "check_nec2",
+              "check_nec3",
+              "check_nec4",
+              "check_nec5",
+              "check_nec6",
+              "check_nec7",
+              "check_nec8",
+              "check_nec9",
+              "check_nec10",
+              "check_nec11",
+              "check_nec12",
+              "check_nec13",
+              "check_nec14",
+              "check_nec15"
+            ]
+          },
+          "key_necesidad": {
+            "type": "string",
+            "enum": [
+              "input_nec1",
+              "input_nec2",
+              "input_nec3",
+              "input_nec4",
+              "input_nec5",
+              "input_nec6",
+              "input_nec7",
+              "input_nec8",
+              "input_nec9",
+              "input_nec10",
+              "input_nec11",
+              "input_nec12",
+              "input_nec13",
+              "input_nec14",
+              "input_nec15"
             ]
           },
           "situacion": {
@@ -578,7 +681,7 @@
               "Asambleas o actividades gremiales",
               "El consumo de alimentos en las cafeterías",
               "Tramites académicos, financieros o administrativos",
-              "Otra"
+              "Otra ¿Cuál?"
             ]
           },
           "necesidad": {
@@ -587,29 +690,46 @@
         }
       },
       "conditions": {
-        "description": "En los siguientes órganos y/o sistemas, ¿Cuáles presenta alguna condición de salud a tener en cuenta?",
         "required": [
-          "id_organo",
+          "key_organo",
           "organo",
+          "key_condicion",
           "condicion"
         ],
-        "maxProperties": 3,
+        "maxProperties": 4,
         "properties": {
-          "id_organo": {
-            "type": "number",
+          "key_organo": {
+            "type": "string",
             "enum": [
-              1,
-              2,
-              3,
-              4,
-              5,
-              6,
-              7,
-              8,
-              9,
-              10,
-              11,
-              12
+              "check_cond1",
+              "check_cond2",
+              "check_cond3",
+              "check_cond4",
+              "check_cond5",
+              "check_cond6",
+              "check_cond7",
+              "check_cond8",
+              "check_cond9",
+              "check_cond10",
+              "check_cond11",
+              "check_cond12"
+            ]
+          },
+          "key_condicion": {
+            "type": "string",
+            "enum": [
+              "input_cond1",
+              "input_cond2",
+              "input_cond3",
+              "input_cond4",
+              "input_cond5",
+              "input_cond6",
+              "input_cond7",
+              "input_cond8",
+              "cinput_cond9",
+              "input_cond10",
+              "input_cond11",
+              "input_cond12"
             ]
           },
           "organo": {
@@ -626,7 +746,7 @@
               "Sistema cardio-respiratorio",
               "Sistema genital, urinario, reproductor",
               "Sistema digestivo",
-              "Otro"
+              "Otro ¿Cuál?"
             ]
           },
           "condicion": {
@@ -635,26 +755,40 @@
         }
       },
       "dificults": {
-        "description": "¿De las siguientes funciones en cuáles presenta usted dificultad permanente?",
         "required": [
-          "id_funcion",
+          "key_funcion",
           "funcion",
-          "dificultad"
+          "dificultad",
+          "key_dificultad"
         ],
-        "maxProperties": 3,
+        "maxProperties": 4,
         "properties": {
-          "id_funcion": {
-            "type": "number",
+          "key_funcion": {
+            "type": "string",
             "enum": [
-              1,
-              2,
-              3,
-              4,
-              5,
-              6,
-              7,
-              8,
-              9
+              "check_func1",
+              "check_func2",
+              "check_func3",
+              "check_func4",
+              "check_func5",
+              "check_func6",
+              "check_func7",
+              "check_func8",
+              "check_func9"
+            ]
+          },
+          "key_dificultad": {
+            "type": "string",
+            "enum": [
+              "input_func1",
+              "input_func2",
+              "input_func3",
+              "input_func4",
+              "input_func5",
+              "input_func6",
+              "input_func7",
+              "input_func8",
+              "input_func9"
             ]
           },
           "funcion": {
@@ -668,67 +802,27 @@
               "Estado socio-emocional",
               "Micción, relaciones sexuales, reproducción",
               "Masticación y/o deglución",
-              "Otra"
+              "Otra ¿Cuál?"
             ]
           },
           "dificultad": {
             "type": "string"
           }
         }
-      },
-      "discapacity": {
-        "description": "Representa una especificación de diagnostico de discapacidad del usuario",
-        "required": [
-          "condicion_adquisicion",
-          "diagnostico_discapacidad"
-        ],
-        "maxProperties": 2,
-        "properties": {
-          "condicion_adquisicion": {
-            "description": "¿Cuál de las siguientes circunstancias corresponde a la adquisición de discapacidad?",
-            "type": "object",
-            "maxProperties": 2,
-            "properties": {
-              "id_condicion": {
-                "type": "number"
-              },
-              "respuesta_condicion": {
-                "type": "string"
-              }
-            }
-          },
-          "diagnostico_discapacidad": {
-            "description": "¿Cuenta con diagnóstico de su discapacidad?",
-            "type": "object",
-            "maxProperties": 4,
-            "properties": {
-              "tiene_diagnostico": {
-                "type": "boolean"
-              },
-              "diagnostico": {
-                "type": "string"
-              },
-              "tipo_discapacidad": {
-                "type": "string"
-              },
-              "id_soporte": {
-                "type": "number"
-              }
-            }
-          }
-        }
       }
     },
     "required": [
+      "tipo_discapacidad",
+      "diagnostico_discapacidad",
       "condicion_adquisicion",
       "certificado_invalidez",
       "dificultad_permanente_funciones",
       "condicion_salud_organos",
-      "necesidad_situaciones",
-      "factor_impacto",
+      "necesidades_situaciones",
+      "factores_impacto",
       "posibilidad_actividades",
-      "apoyo_cotidiano",
-      "desplazamiento_universidad",
+      "apoyo_principal_cotidiano",
+      "medio_transporte",
       "participa_asociacion",
       "actividades_otros",
       "apoyo_institucion"
