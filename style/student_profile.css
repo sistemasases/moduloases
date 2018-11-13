@@ -475,7 +475,7 @@
     }
 
     #general_tab{
-        margin-top: -130px;
+        margin-top: -220px;
         margin-bottom: 0px;
     }
 
@@ -529,23 +529,11 @@
     }
 
     #icetex_status{
-        width: 95px;
+        width: 140px;
         margin-top: 10px;
         margin-left: -20px;
         position: relative;
         border-radius: 0 0 0px 0px;
-    }
-
-    .span3 {
-        -webkit-print-color-adjust: exact !important;
-        color-adjust: exact !important;
-        background-image: url("images/LogoUnivalle.png") !important;
-        background-repeat: no-repeat !important;
-        background-size: 434px 65px;
-        height: 65px;
-        width: 434px;
-        padding-bottom: 65px;
-        margin-top: -60px;
     }
 
     #div-instance-icon {
@@ -559,9 +547,19 @@
     }
 
     #second_column_general_tab{
-        padding-top: 0px;
-        margin-top: -510px;
-        display: block;
+        display: none;
+    }
+
+    .span3 {
+        -webkit-print-color-adjust: exact !important;
+        color-adjust: exact !important;
+        background-image: url("images/LogoUnivalle.png") !important;
+        background-repeat: no-repeat !important;
+        background-size: 434px 65px;
+        height: 65px;
+        width: 434px;
+        padding-bottom: 65px;
+        margin-top: -60px;
     }
 
     #academic_tab{
@@ -588,7 +586,7 @@
 
     .select2-container .select2-selection--single {
         height: 40px;
-        width: 120%;
+        width: 135%;
         border-radius: 0 0 0px 0px;
         padding-bottom: 30px;
     }
@@ -632,12 +630,6 @@
 
     ul.nav.nav-tabs>li{
         display: none;
-    }
-
-    ul.nav.nav-tabs>li:nth-child(1){
-        display: block;
-        margin-top: -150px;
-        margin-left: 30px;
     }
 
     ul.breadcrumb>li{
@@ -695,11 +687,21 @@
 
     #div_cohorts{
         margin-top: -30px;
-        margin-bottom: 20px;
+        margin-bottom: 0px;
     }
 
     footer#page-footer {
         display: none;
+    }
+
+    .hr-general-tab-fields {
+        display: none;
+    }
+
+    h3{
+        margin-top: 10px;
+        font-weight: bold;
+        color: #d51b23 !important;
     }
 
   }
