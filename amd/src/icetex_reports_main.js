@@ -102,7 +102,7 @@ define(['jquery',
 			url: "../managers/historic_icetex_reports/icetex_reports_processing.php",
 			success: function(msg){
 				$("#div_res_students").empty();
-				$("#div_res_students").append('<table id="tableResStudents" class="display" cellspacing="0" width="100%"><thead><thead></table>');
+				$("#div_res_students").append('<table id="tableResStudents" class="display" cellspacing="0" width="80%"><thead><thead></table>');
 				var table = $("#tableResStudents").DataTable(msg);
 				$('#tableResStudents').css('cursor', 'pointer');
 				
