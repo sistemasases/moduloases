@@ -104,6 +104,7 @@ $table="";
 $table_periods="";
 
 $periods = get_semesters();
+$semester_id = get_current_semester()->max;
 
 // Getting last semester date range 
 $intervalo_fechas[0] = reset($periods)->fecha_inicio;
@@ -180,6 +181,7 @@ $data->rol = $usernamerole;
 
 $data->table_periods =$table_periods;
 $data->table=$table_permissions;
+$data->semester = $semester_id;
 
 $PAGE->requires->css('/blocks/ases/style/base_ases.css', true);
 $PAGE->requires->css('/blocks/ases/style/jqueryui.css', true);

@@ -18,6 +18,7 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
             var name = "";
             var email = "";
             var namerol = "";
+            var current_semester = parseInt($("#current_ases_semester").data("info"));
 
 
              /**
@@ -243,20 +244,20 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
 
                 // when user is 'practicante' then has permissions
                 if (namerol == "practicante_ps") {
-                    put_tracking_count( username, 8, parseInt( get_instance() ), false );
+                    put_tracking_count( username, current_semester, parseInt( get_instance() ), false );
                     consultar_seguimientos_persona(get_instance(), usuario);
                     send_email_new_form(get_instance()); 
 
                    // when user is 'profesional' then has permissions
                 } else if (namerol == "profesional_ps") {
                     //Starts adding event
-                    put_tracking_count( username, 8, parseInt( get_instance() ), false );
+                    put_tracking_count( username, current_semester, parseInt( get_instance() ), false );
                     consultar_seguimientos_persona(get_instance(), usuario);
                     send_email_new_form(get_instance());
 
                     // when user is 'monitor' then has permissions
                 } else if (namerol == "monitor_ps") {
-                    put_tracking_count( username, 8, parseInt( get_instance() ), true );
+                    put_tracking_count( username, current_semester, parseInt( get_instance() ), true );
                     consultar_seguimientos_persona(get_instance(), usuario);
                     send_email_new_form(get_instance());
 
@@ -666,7 +667,7 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                         $(practicant_id + " > div").append(msg.render);
                         var html = msg.counting;
 
-                        put_tracking_count( practicant_code, 8, parseInt( get_instance() ), false );
+                        put_tracking_count( practicant_code, current_semester, parseInt( get_instance() ), false );
                         monitor_load();
                         groupal_tracking_load();
 
@@ -721,7 +722,7 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                     success: function(msg ) {
                         $(monitor_id + " > div").empty();
                         $(monitor_id + " > div").append(msg);
-                        put_tracking_count( monitor_code, 8, parseInt( get_instance() ), true );
+                        put_tracking_count( monitor_code, current_semester, parseInt( get_instance() ), true );
                         student_load();
                         groupal_tracking_load();
                     },
@@ -1026,7 +1027,7 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                                 professional_load();
                                 groupal_tracking_load();
                                 $(".well.col-md-10.col-md-offset-1.reporte-seguimiento.oculto").slideDown("slow");
-                                put_tracking_count( username, 8, parseInt( get_instance() ), false );
+                                put_tracking_count( username, current_semester, parseInt( get_instance() ), false );
                             },
                             error: function(msg) {
                              swal(
