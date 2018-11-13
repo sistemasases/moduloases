@@ -179,8 +179,7 @@ function get_all_resolutions_codes(){
         $resolutions_options .= "<option value='$resolution->codigo_resolucion'> $resolution->codigo_resolucion</option>";
     }
 
-    $resolutions_options .= "<option value='317582 317583'> RESOLUCIONES </option>
-                            </select>";
+    $resolutions_options .= "</select>";
 
     return $resolutions_options;
 
