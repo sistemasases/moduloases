@@ -150,7 +150,7 @@ if (isset($_POST['type']) && $_POST['type'] == "update_people" && isset($_POST['
     $retorno = get_people_onsemester($_POST['id'], $roles, $_POST['instance']);
     foreach($retorno as $person)
         {
-        $table.= '<option value="' . $person->id_usuario . '">' . $person->username . " - " . $person->firstname . " " . $person->lastname . '</option>';
+        $table.= '<option data-username="'.$person->username.'" value="' . $person->id_usuario . '">' . $person->username . " - " . $person->firstname . " " . $person->lastname . '</option>';
         }
 
     echo $table;

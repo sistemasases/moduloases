@@ -42,20 +42,10 @@ function render_monitor_new_form($students_by_monitor, $period = null)
 {
     $panel = "";
     foreach($students_by_monitor as $student) {
-        $student_code = get_user_moodle($student->id_estudiante);
-        //$student = explode("-", $student_code->username);
-        //$student = explode("-", $student->id_estudiante + "-" );
+        $student_code = get_user_moodle($student->id_estudiante);//Get user moodle by ases id
+
         $ases_student_code = $student->id_estudiante;
         $current_semester = get_current_semester();
-        /*if ($period == null) {
-            $monitor_trackings = get_tracking_current_semesterV2('student', $ases_student_code, $current_semester->max);
-        }
-        else {
-            $monitor_trackings = get_tracking_current_semesterV2('student', $ases_student_code, $period);
-        }
-
-        $monitor_counting = filter_trackings_by_review($monitor_trackings);*/
-
         $fullname = $student_code->firstname . " " .  $student_code->lastname;
 
         $panel.= "<a data-toggle='collapse' data-container='student$ases_student_code' data-username='$ases_student_code' data-asesid='$ases_student_code' class='student collapsed btn btn-danger btn-univalle btn-card collapsed' data-parent='#accordion_students' style='text-decoration:none' href='#student$ases_student_code'>
@@ -912,21 +902,31 @@ function show_according_permissions(&$table, $actions)
  * Gets a select organized by existent periods
  * @see get_period_select($periods)
  * @param $periods ---> existent periods
+ * @param $rol
  * @return string html table
  *
  */
 
-function get_period_select($periods)
-{
+function get_period_select($periods, $rol = null){
+
+    $extra = "";
     $table = "";
-    $table.= '<div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 form-group">';
-    $table.= '<label for="periodos">Periodo</label><select class="form-control" id="periodos">';
+
+    if($rol !== "sistemas"){
+        $extra .= "col-xs-offset-6 col-sm-offset-6 col-md-offset-7 col-lg-offset-7";
+    }
+
+    $table.= '<div id="consulta_periodo" class="form-group col-xs-6 col-sm-6 col-md-5 col-lg-5 '.$extra.'">';
+    $table.= '<label for="periodos">Periodo:&nbsp;</label>';
+    $table .= '<select style="width:80%" class="form-control" id="periodos">';
+
     foreach($periods as $period) {
         $table.= '<option value="' . $period->id . '">' . $period->nombre . '</option>';
     }
 
     $table.= '</select></div>';
     return $table;
+
 }
 
 /**
@@ -937,18 +937,18 @@ function get_period_select($periods)
  *
  */
 
-function get_people_select($people)
-{
-    $table = '<div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 form-group">';
-    $table.= '<label for="persona">Persona</label>';
-    $table.= '<select class="form-control" id="personas">';
+function get_people_select($people){
+    
+    $table = '<div id="consulta_personas" class="form-group col-xs-6 col-sm-6 col-md-5 col-lg-5">';
+    $table.= '<label for="persona" >Persona:&nbsp;</label>';
+    $table.= '<select style="width:80%" class="form-control" id="personas">';
     foreach($people as $person) {
-        $table.= '<option value="' . $person->id_usuario . '">' . $person->username . " - " . $person->firstname . " " . $person->lastname . '</option>';
+        $table.= '<option data-username="' . $person->username . '" value="' . $person->id_usuario . '">' . $person->username . " - " . $person->firstname . " " . $person->lastname . '</option>';
     }
     $table.= '</select>';
     $table.= '</div>';
 
-    $table.= '<div id="container-contultar-btn" class="col-xs-12 col-sm-12 col-md-12 col-lg-12">';
+    $table.= '<div id="container-consulta-btn" class="col-xs-12 col-sm-12 col-md-2 col-lg-2">';
     $table.= '  <span class="btn btn-info" id="consultar_persona" type="button">Consultar</span>';
     $table.= '</div>';
 

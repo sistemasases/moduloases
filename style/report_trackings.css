@@ -1,3 +1,11 @@
+.float-left{
+    float: left;
+}
+
+.float-right{
+    float: right;
+}
+
 #div-header-info{
     background-color: #FFF;
     border-width: 1px;
@@ -12,4 +20,26 @@
 .pend-prof, .pend-pract{
     font-size:0.8em;
     display:inline;
+}
+
+#consulta_periodo, 
+#consulta_personas, 
+#container-consulta-btn, 
+#consulta_periodo > label, 
+#consulta_personas > label,
+#container-consulta-btn > label, 
+#consulta_periodo > select, 
+#consulta_personas > select,  
+#container-consulta-btn > select{
+    display: inline;
+    margin-bottom: 0px;
+}
+
+#report-tracking-selectors{
+    margin: 20px 0px 10px 0px;
+}
+
+#title-report-trackings-view{
+    box-shadow: 0 4px 2px -2px gray;
+    margin-bottom: 2em;
 }

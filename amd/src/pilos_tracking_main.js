@@ -18,6 +18,7 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
             var name = "";
             var email = "";
             var namerol = "";
+            var current_semester = parseInt($("#current_ases_semester").data("info"));
 
 
              /**
@@ -96,7 +97,7 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                         console.log( data );
                         swal({
                             title: "Error!",
-                            text: "Se presentó un inconveniente con el practicante seleccionado.",
+                            text: "",
                             html: true,
                             type: 'error',
                             confirmButtonColor: "#d51b23"
@@ -243,21 +244,21 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
 
                 // when user is 'practicante' then has permissions
                 if (namerol == "practicante_ps") {
-                    put_tracking_count( username, 8, parseInt( get_instance() ), false );
-                    consultar_seguimientos_persona(get_instance(), usuario);
+                    put_tracking_count( username, current_semester, parseInt( get_instance() ), false );
+                    consultar_seguimientos_persona(get_instance(), usuario, username);
                     send_email_new_form(get_instance()); 
 
                    // when user is 'profesional' then has permissions
                 } else if (namerol == "profesional_ps") {
                     //Starts adding event
-                    put_tracking_count( username, 8, parseInt( get_instance() ), false );
-                    consultar_seguimientos_persona(get_instance(), usuario);
+                    put_tracking_count( username, current_semester, parseInt( get_instance() ), false );
+                    consultar_seguimientos_persona(get_instance(), usuario, username);
                     send_email_new_form(get_instance());
 
                     // when user is 'monitor' then has permissions
                 } else if (namerol == "monitor_ps") {
-                    put_tracking_count( username, 8, parseInt( get_instance() ), true );
-                    consultar_seguimientos_persona(get_instance(), usuario);
+                    put_tracking_count( username, current_semester, parseInt( get_instance() ), true );
+                    consultar_seguimientos_persona(get_instance(), usuario, username);
                     send_email_new_form(get_instance());
 
                     // when user is 'sistemas' then has permissions
@@ -666,7 +667,7 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                         $(practicant_id + " > div").append(msg.render);
                         var html = msg.counting;
 
-                        put_tracking_count( practicant_code, 8, parseInt( get_instance() ), false );
+                        put_tracking_count( practicant_code, current_semester, parseInt( get_instance() ), false );
                         monitor_load();
                         groupal_tracking_load();
 
@@ -721,7 +722,7 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                     success: function(msg ) {
                         $(monitor_id + " > div").empty();
                         $(monitor_id + " > div").append(msg);
-                        put_tracking_count( monitor_code, 8, parseInt( get_instance() ), true );
+                        put_tracking_count( monitor_code, current_semester, parseInt( get_instance() ), true );
                         student_load();
                         groupal_tracking_load();
                     },
@@ -884,9 +885,10 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
              * @desc Obtain track information of a certain user
              * @param {instance} instance current instance
              * @param {object} usuario current user to obtain information
+             * @param {String} username
              * @return {void}
              */
-            function consultar_seguimientos_persona(instance, usuario) {
+            function consultar_seguimientos_persona(instance, usuario, username) {
                 $("#periodos").change(function() {
                     if (namerol != 'sistemas') {
                         var semestre = $("#periodos").val();
@@ -901,11 +903,9 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                                 type: "consulta_sistemas"
                             },
                             url: "../../../blocks/ases/managers/pilos_tracking/pilos_tracking_report.php",
-                            async: false,
-
-
+                            dataType: "text",
+                            cache: "false",
                             success: function(msg) {
-
                                 if (msg == "") {
                                     $('#reemplazarToogle').html('<label> No se encontraron registros </label>');
                                 } else {
@@ -916,9 +916,8 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                                     groupal_tracking_load();
                                 }
                                 $(".well.col-md-10.col-md-offset-1.reporte-seguimiento.oculto").slideDown("slow");
+                                put_tracking_count( username, semestre, parseInt( get_instance() ), false );
                             },
-                            dataType: "text",
-                            cache: "false",
                             error: function(msg) {
                                 swal(
                                  'ERROR!',
@@ -929,13 +928,9 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                         });
                         edit_tracking_new_form();
                         edit_groupal_tracking_new_form();
-
                     }
-
-
                 });
             }
-
 
             /**
              * @method anadirEvento
@@ -979,17 +974,19 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
 
                     var id_persona = $("#personas").children(":selected").attr("value");
                     var id_semestre = $("#periodos").children(":selected").attr("value");
-                    var fechas_epoch = [];
-
+                    let username = $("#personas").children(":selected").data("username");
 
                     if (id_persona == undefined) {
+
                         swal({
                             title: "Debe escoger una persona para realizar la consulta",
                             html: true,
                             type: "warning",
                             confirmButtonColor: "#d51b23"
                         });
+
                     } else {
+                        
                         $(".well.col-md-10.col-md-offset-1.reporte-seguimiento.oculto").show();
 
                         $(".se-pre-con").show();
@@ -1006,7 +1003,6 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                                 type: "consulta_sistemas"
                             },
                             url: "../../../blocks/ases/managers/pilos_tracking/pilos_tracking_report.php",
-                            async: true,
                             dataType: "text",
                             cache: "false",
                             success: function(msg) {
@@ -1026,7 +1022,7 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                                 professional_load();
                                 groupal_tracking_load();
                                 $(".well.col-md-10.col-md-offset-1.reporte-seguimiento.oculto").slideDown("slow");
-
+                                put_tracking_count( username, id_semestre, parseInt( get_instance() ), false );
                             },
                             error: function(msg) {
                              swal(
