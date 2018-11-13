@@ -96,7 +96,7 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                         console.log( data );
                         swal({
                             title: "Error!",
-                            text: "Se presentó un inconveniente con el practicante seleccionado.",
+                            text: "",
                             html: true,
                             type: 'error',
                             confirmButtonColor: "#d51b23"
@@ -979,6 +979,7 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
 
                     var id_persona = $("#personas").children(":selected").attr("value");
                     var id_semestre = $("#periodos").children(":selected").attr("value");
+                    let username = $("#personas").children(":selected").data("username");
                     var fechas_epoch = [];
 
 
@@ -1006,7 +1007,6 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                                 type: "consulta_sistemas"
                             },
                             url: "../../../blocks/ases/managers/pilos_tracking/pilos_tracking_report.php",
-                            async: true,
                             dataType: "text",
                             cache: "false",
                             success: function(msg) {
@@ -1026,7 +1026,7 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                                 professional_load();
                                 groupal_tracking_load();
                                 $(".well.col-md-10.col-md-offset-1.reporte-seguimiento.oculto").slideDown("slow");
-
+                                put_tracking_count( username, 8, parseInt( get_instance() ), false );
                             },
                             error: function(msg) {
                              swal(

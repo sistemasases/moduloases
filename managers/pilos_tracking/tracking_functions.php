@@ -943,7 +943,7 @@ function get_people_select($people)
     $table.= '<label for="persona">Persona</label>';
     $table.= '<select class="form-control" id="personas">';
     foreach($people as $person) {
-        $table.= '<option value="' . $person->id_usuario . '">' . $person->username . " - " . $person->firstname . " " . $person->lastname . '</option>';
+        $table.= '<option data-username="' . $person->username . '" value="' . $person->id_usuario . '">' . $person->username . " - " . $person->firstname . " " . $person->lastname . '</option>';
     }
     $table.= '</select>';
     $table.= '</div>';
