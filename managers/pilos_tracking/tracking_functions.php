@@ -902,22 +902,31 @@ function show_according_permissions(&$table, $actions)
  * Gets a select organized by existent periods
  * @see get_period_select($periods)
  * @param $periods ---> existent periods
+ * @param $rol
  * @return string html table
  *
  */
 
-function get_period_select($periods)
-{
+function get_period_select($periods, $rol = null){
+
+    $extra = "";
     $table = "";
-    $table.= '<div id="consulta_periodo" class="form-group col-xs-6 col-sm-6 col-md-5 col-lg-5">';
+
+    if($rol !== "sistemas"){
+        $extra .= "col-xs-offset-6 col-sm-offset-6 col-md-offset-7 col-lg-offset-7";
+    }
+
+    $table.= '<div id="consulta_periodo" class="form-group col-xs-6 col-sm-6 col-md-5 col-lg-5 '.$extra.'">';
     $table.= '<label for="periodos">Periodo:&nbsp;</label>';
     $table .= '<select style="width:80%" class="form-control" id="periodos">';
+
     foreach($periods as $period) {
         $table.= '<option value="' . $period->id . '">' . $period->nombre . '</option>';
     }
 
     $table.= '</select></div>';
     return $table;
+
 }
 
 /**
