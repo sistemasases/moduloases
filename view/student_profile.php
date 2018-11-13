@@ -290,10 +290,10 @@ if ($student_code != 0) {
     foreach($etnias as $etnia){
         if($etnia_student == $etnia->id){
             if($etnia->opcion_general == 1){
-            $options_etnia .= "<option value='$etnia->id' selected='selected'>$etnia->etnia</option>";}
-            else {
-            $control = false;
-            }
+            $options_etnia .= "<option value='$etnia->id' selected='selected'>$etnia->etnia</option>";
+            $control = false;}
+            
+            
         }else{
             if($etnia->opcion_general == 1){
             $options_etnia .= "<option value='$etnia->id'>$etnia->etnia</option>";}
@@ -302,7 +302,7 @@ if ($student_code != 0) {
     }
 
     
-           if($control){$options_etnia .= "<option value='' selected='selected'>NO DEFINIDO</option>"; } 
+           if($control){$options_etnia .= "<option value='8' selected='selected'>NO DEFINIDO</option>"; } 
         
     
 
