@@ -295,6 +295,10 @@ padding: 0px 0px 0px 0px !important;
 .div-general-fields>input{
     border: 1px;
 }
+.div_estrato{
+    border-top: 2px !important;
+    border-bottom: 2px !important;
+}
 
 .span-staff-ps{
     padding-left: 0px;
