@@ -658,6 +658,8 @@ return {
         $('#genero').prop('disabled', false);
         $('#cond_excepcion').prop('disabled', false);
         $('#act_simultanea').prop('disabled', false);
+        $('#etnia').prop('disabled', false);
+        $('#municipio_act').prop('disabled', false);
         $('#otro_act_simultanea').prop('disabled',false);
         $('#otro_genero').prop('disabled', false);
         $('#otro_genero').prop('required', false);
@@ -906,6 +908,8 @@ return {
     $('#genero').prop('disabled', true);
     $('#cond_excepcion').prop('disabled', true);
     $('#act_simultanea').prop('disabled', true);
+    $('#etnia').prop('disabled', true);
+    $('#municipio_act').prop('disabled', true);
     $('#estado_civil').prop('disabled', true);
     $('#pais').prop('disabled', true);
     $('#observacion').prop('readonly', true);
