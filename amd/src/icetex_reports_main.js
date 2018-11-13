@@ -28,15 +28,19 @@ define(['jquery',
 
 			$("#list-resolution-students-panel").on('click', function(){
 				load_report_students_resolution();
-				/*				
-				setTimeout(function(){
-					var table = $("#tableResStudents").DataTable();
-					var col_array = table.columns(7).data().eq(0);;
-					string_to_integer(col_array);
-					var total = col_array.reduce(numSum);
-					$("#table_foot").append(total);				
-				}, 500);
-				*/
+			});
+
+			$(document).on('click', '#tableResStudents tbody tr td', function () {
+				var pagina = "student_profile.php";
+				var table = $("#tableResStudents").DataTable();
+				var colIndex = table.cell(this).index().column;
+
+				if (colIndex >= 1 && colIndex <= 4) {
+					$("#formulario").each(function () {
+						this.reset;
+					});
+					window.open(pagina + location.search + "&student_code=" + table.cell(table.row(this).index(), 1).data(), '_blank');
+				}
 			});
 
 			jQuery.fn.dataTable.Api.register( 'sum()', function ( ) {
@@ -100,7 +104,8 @@ define(['jquery',
 				$("#div_res_students").empty();
 				$("#div_res_students").append('<table id="tableResStudents" class="display" cellspacing="0" width="100%"><thead><thead></table>');
 				var table = $("#tableResStudents").DataTable(msg);
-				$('#div_res_students').css('cursor', 'pointer');
+				$('#tableResStudents').css('cursor', 'pointer');
+				
 			},
 			dataType: "json",
 			cache: false,
@@ -144,7 +149,6 @@ define(['jquery',
 				$("#div_report_summary").empty();
 				$("#div_report_summary").append('<table id="tableSummary" class="display" cellspacing="0" width="100%"><thead><thead><tfoot id="table_summ_foot"><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th></tfoot></table>');
 				var table = $("#tableSummary").DataTable(msg);
-				//var api = this.api(), data;
 				var total_inact_no_res = table.column( 9 ).data().sum();
 				var total_act_res = table.column( 3 ).data().sum();
 				var total_inact_res = table.column( 5 ).data().sum();
