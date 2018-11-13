@@ -975,17 +975,18 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                     var id_persona = $("#personas").children(":selected").attr("value");
                     var id_semestre = $("#periodos").children(":selected").attr("value");
                     let username = $("#personas").children(":selected").data("username");
-                    var fechas_epoch = [];
-
 
                     if (id_persona == undefined) {
+
                         swal({
                             title: "Debe escoger una persona para realizar la consulta",
                             html: true,
                             type: "warning",
                             confirmButtonColor: "#d51b23"
                         });
+
                     } else {
+                        
                         $(".well.col-md-10.col-md-offset-1.reporte-seguimiento.oculto").show();
 
                         $(".se-pre-con").show();
@@ -1021,7 +1022,7 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                                 professional_load();
                                 groupal_tracking_load();
                                 $(".well.col-md-10.col-md-offset-1.reporte-seguimiento.oculto").slideDown("slow");
-                                put_tracking_count( username, current_semester, parseInt( get_instance() ), false );
+                                put_tracking_count( username, id_semestre, parseInt( get_instance() ), false );
                             },
                             error: function(msg) {
                              swal(
