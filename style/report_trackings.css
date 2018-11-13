@@ -32,10 +32,11 @@
 #consulta_personas > select,  
 #container-consulta-btn > select{
     display: inline;
+    margin: 0px;
 }
 
 #report-tracking-selectors{
-    padding-top: 20px;
+    margin: 20px 0px 10px 0px;
 }
 
 #title-report-trackings-view{
