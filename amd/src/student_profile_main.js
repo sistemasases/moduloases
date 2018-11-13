@@ -770,6 +770,66 @@ return {
         msg.status = "success";
 
         switch(form[field].name){
+            case "estrato":
+            if(form[field].value == "") {
+                msg.title = "Error";
+                msg.status = "error";
+                msg.msg = "El campo "+form[field].name+" es obligatorio";
+                return msg;  
+                 }
+
+                 if(form[field].value < 0) {
+                    msg.title = "Error";
+                    msg.status = "error";
+                    msg.msg = "El campo "+form[field].name+" no debe ser negativo";
+                    return msg;  
+                     }
+
+                     if(form[field].value > 6) {
+                        msg.title = "Error";
+                        msg.status = "error";
+                        msg.msg = "El campo año de "+form[field].name+" no debe ser mayor al permitido";
+                        return msg;  
+                         }
+
+                     if(has_letters(form[field].value)){
+                        msg.title = "Error";
+                               msg.status = "error";
+                               msg.msg = "El campo "+form[field].name+" no debe contener letras";
+                               return msg;
+                           }  
+            break;
+            case "ingreso":
+            if(form[field].value == "") {
+                msg.title = "Error";
+                msg.status = "error";
+                msg.msg = "El campo año de "+form[field].name+" es obligatorio";
+                return msg;  
+                 }
+
+                 if(form[field].value < 0) {
+                    msg.title = "Error";
+                    msg.status = "error";
+                    msg.msg = "El campo año de "+form[field].name+" no debe ser negativo";
+                    return msg;  
+                     }
+                     let fecha = new Date ();
+                     let anio = fecha.getFullYear();
+                     
+                     if(form[field].value > anio) {
+                        msg.title = "Error";
+                        msg.status = "error";
+                        msg.msg = "El campo año de "+form[field].name+" no debe ser mayor al actual";
+                        return msg;  
+                         }
+
+                     if(has_letters(form[field].value)){
+                        msg.title = "Error";
+                               msg.status = "error";
+                               msg.msg = "El campo año de "+form[field].name+" no debe contener letras";
+                               return msg;
+                           }  
+            break;
 
             case "puntaje_icfes":
             if(form[field].value == "") {
