@@ -770,6 +770,38 @@ return {
         msg.status = "success";
 
         switch(form[field].name){
+
+            case "puntaje_icfes":
+            if(form[field].value == "") {
+                msg.title = "Error";
+                msg.status = "error";
+                msg.msg = "El campo "+form[field].name+" es obligatorio";
+                return msg;  
+                 }
+
+                 if(form[field].value < 0) {
+                    msg.title = "Error";
+                    msg.status = "error";
+                    msg.msg = "El campo "+form[field].name+" no debe ser negativo";
+                    return msg;  
+                     }
+
+                     if(form[field].value > 500) {
+                        msg.title = "Error";
+                        msg.status = "error";
+                        msg.msg = "El campo "+form[field].name+" no debe ser mayor al permitido";
+                        return msg;  
+                         }
+
+                     if(has_letters(form[field].value)){
+                        msg.title = "Error";
+                               msg.status = "error";
+                               msg.msg = "El campo "+form[field].name+" no debe contener letras";
+                               return msg;
+                           }   
+
+            break;
+
             case "hijos":
             if(form[field].value == "") {
                 msg.title = "Error";
