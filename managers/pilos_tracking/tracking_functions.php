@@ -47,30 +47,35 @@ function render_monitor_new_form($students_by_monitor, $period = null)
         //$student = explode("-", $student->id_estudiante + "-" );
         $ases_student_code = $student->id_estudiante;
         $current_semester = get_current_semester();
-        if ($period == null) {
+        /*if ($period == null) {
             $monitor_trackings = get_tracking_current_semesterV2('student', $ases_student_code, $current_semester->max);
         }
         else {
             $monitor_trackings = get_tracking_current_semesterV2('student', $ases_student_code, $period);
         }
 
-        $monitor_counting = filter_trackings_by_review($monitor_trackings);
+        $monitor_counting = filter_trackings_by_review($monitor_trackings);*/
 
-        $panel.= "<a data-toggle='collapse' class='student collapsed btn btn-danger btn-univalle btn-card collapsed' data-parent='#accordion_students' style='text-decoration:none' href='#student" . $ases_student_code . "'>";
-        $panel.= "<div class='panel-heading heading_students_tracking'>";
-        $panel.= "<h4 class='panel-title'>";
-        $panel.= "$student_code->firstname $student_code->lastname";
-        $panel.= "</h4>"; //End panel-title
-        $panel.= "<div class='row'>
-              <div class='col-sm-11'><h6><p class='text-right'><strong>RP :</strong><label class='review_prof'>" . $monitor_counting[0] . "</label> - <strong> N RP: </strong><label class='not_review_prof'>" . $monitor_counting[1] . "</label> - <strong>TOTAL:</strong><label class='total_prof'>" . ($monitor_counting[0] + $monitor_counting[1]) . "</label></p><p class='text-right'><strong>Rp :</strong><label class='review_pract'>" . $monitor_counting[2] . "</label> - <strong> N Rp: </strong><label class='not_review_pract'>" . $monitor_counting[3] . "</label> - <strong>TOTAL:</strong><label class='total_pract'>" . ($monitor_counting[2] + $monitor_counting[3]) . "</label></p></h6></div>
-             <div class='col-sm-1'><span class='glyphicon glyphicon-chevron-left'></span></div>
-             </div>";
-        $panel.= "</div>"; //End panel-heading
-        $panel.= "</a>";
-        $panel.= "<div id='student$ases_student_code'  class='show collapse_v2 collapse border_rt' role='tabpanel' aria-labelledby='headingstudent$ases_student_code' aria-expanded='true'>";
-        $panel.= "<div class='panel-body'>";
-        $panel.= "</div>"; // End panel-body
-        $panel.= "</div>"; // End collapse
+        $fullname = $student_code->firstname . " " .  $student_code->lastname;
+
+        $panel.= "<a data-toggle='collapse' data-container='student$ases_student_code' data-username='$ases_student_code' data-asesid='$ases_student_code' class='student collapsed btn btn-danger btn-univalle btn-card collapsed' data-parent='#accordion_students' style='text-decoration:none' href='#student$ases_student_code'>
+                    <div class='panel-heading heading_students_tracking'>
+                        <div class='row'>
+                            <div class='col-xs-12 col-sm-12 col-md-6 col-lg-6'>
+                                <h4 class='panel-title'>
+                                    $fullname
+                                </h4>
+                            </div>
+                            <div class='col-xs-12 col-sm-12 col-md-5 col-lg-5' id='counting_$ases_student_code'>
+                                <div class='loader'>Cargando conteo...</div>
+                            </div>
+                            <div class='col-xs-12 col-sm-12 col-md-1 col-lg-1'><span class='open-close-icon glyphicon glyphicon-chevron-left'></span></div>
+                        </div>
+                    </div>
+                 </a>
+                 <div id='student$ases_student_code'  class='show collapse_v2 collapse border_rt' role='tabpanel' aria-labelledby='headingstudent$ases_student_code' aria-expanded='true'>
+                    <div class='panel-body'> </div>
+                 </div>";
     }
 
     return $panel;
@@ -89,11 +94,11 @@ function render_monitor_new_form($students_by_monitor, $period = null)
 function aux_create_groupal_toggle($monitor_id)
 {
     $panel = "";
-    $panel.= "<a data-toggle='collapse' class='groupal collapsed btn btn-danger btn-univalle btn-card collapsed' data-parent='#accordion_students' style='text-decoration:none' href='#groupal" . $monitor_id . "'>";
+    $panel.= "<a data-toggle='collapse' data-container='groupal$monitor_id' class='groupal collapsed btn btn-danger btn-univalle btn-card collapsed' data-parent='#accordion_students' style='text-decoration:none' href='#groupal" . $monitor_id . "'>";
     $panel.= "<div class='panel-heading heading_students_tracking'>";
     $panel.= "<h4 class='panel-title'>";
     $panel.= "SEGUIMIENTOS GRUPALES";
-    $panel.= "<span class='glyphicon glyphicon-chevron-left'></span>";
+    $panel.= "<span class='open-close-icon glyphicon glyphicon-chevron-left'></span>";
     $panel.= "</h4>"; //End panel-title
     $panel.= "</div>"; //End panel-heading
     $panel.= "</a>";
@@ -155,27 +160,23 @@ function render_practicant_new_form($monitors_of_pract, $instance, $period = nul
 
         // If the practicant has monitors with students that show
 
-        $panel.= "<a data-toggle='collapse' class='monitor collapsed btn btn-danger btn-univalle btn-card collapsed' data-parent='#accordion_monitors' style='text-decoration:none' href='#monitor" . $monitor->username . "'>";
+        $panel.= "<a data-toggle='collapse' data-container='monitor$monitor->username' data-username='$monitor->username' class='monitor collapsed btn btn-danger btn-univalle btn-card collapsed' data-parent='#accordion_monitors' style='text-decoration:none' href='#monitor" . $monitor->username . "'>";
         $panel.= "<div class='panel-heading heading_monitors_tracking'>";
-        $panel.= "<div class='row'><div class='col-sm-5'>";
+        $panel.= "<div class='row'><div class='col-xs-10 col-sm-10 col-md-5 col-lg-5'>";
         $panel.= "<h4 class='panel-title'>";
         $panel.= "$monitor->firstname $monitor->lastname";
         $panel.= "</h4></div>"; //End panel-title
-        $panel.= "<div class='col-sm-1'>";
-        $panel.= "<span class='glyphicon glyphicon-user subpanel' style='font-size: 20px;'></span> : " . count(get_students_of_monitor($monitor_id, $instance));
+        $panel.= "<div class='col-xs-2 col-sm-2 col-md-1 col-lg-1'>";
+        $panel.= "<span class='protected glyphicon glyphicon-user subpanel' style='font-size: 20px;'></span> : " . count(get_students_of_monitor($monitor_id, $instance));
         $panel.= "</div>";
-        $panel.= "<div class='col-sm-1'>";
-        $panel.= "<!--<button type='button' class='see_history btn red_button'>
-                 <span class='glyphicon glyphicon-time'></span> Ver horas</button>-->";
+        $panel.= "<div class='col-xs-12 col-sm-12 col-md-5 col-lg-4' id='counting_" . $monitor->username . "'>";
+        $panel.= '<div class="loader">Cargando conteo...</div>';
         $panel.= "</div>";
-        $panel.= "<div class='col-sm-4' id=counting_" . $monitor->username . ">";
-        $panel.= '<div class="loader"></div>';
-        $panel.= "</div>";
-        $panel.= "<div class='col-sm-1'><span class='glyphicon glyphicon-chevron-left'></span></div>";
+        $panel.= "<div class='col-xs-12 col-sm-12 col-md-1 col-lg-1 col-lg-offset-1'><span class='open-close-icon glyphicon glyphicon-chevron-left'></span></div>";
         $panel.= "</div>";
         $panel.= "</div>"; //End panel-heading
         $panel.= "</a>";
-        $panel.= "<div id='monitor$monitor->username'  class='show collapse_v2 collapse border_rt' role='tabpanel' aria-labelledby='headingmonitor$monitor->username' aria-expanded='true'>";
+        $panel.= "<div id='monitor$monitor->username' class='show collapse_v2 collapse border_rt' role='tabpanel' aria-labelledby='headingmonitor$monitor->username' aria-expanded='true'>";
         $panel.= "<div class='panel-body'>";
         $panel.= "</div>"; // End panel-body
         $panel.= "</div>"; // End collapse
@@ -205,20 +206,20 @@ function render_professional_new_form($practicant_of_prof, $instance, $period = 
 
         // If the professional has associate practitioners with monitors that show
 
-        $panel.= "<a data-toggle='collapse' class='practicant collapsed btn btn-danger btn-univalle btn-card collapsed' data-parent='#accordion_practicant' style='text-decoration:none' href='#practicant" . $practicant->username . "'>";
+        $panel.= "<a data-toggle='collapse' data-container='practicant$practicant->username' data-username='$practicant->username' class='practicant collapsed btn btn-danger btn-univalle btn-card collapsed' data-parent='#accordion_practicant' style='text-decoration:none' href='#practicant" . $practicant->username . "'>";
         $panel.= "<div class='panel-heading heading_practicant_tracking'>";
-        $panel.= "<div class='row'><div class='col-sm-5'>";
+        $panel.= "<div class='row'><div class='col-xs-10 col-sm-10 col-md-5 col-lg-5'>";
         $panel.= "<h4 class='panel-title'>";
         $panel.= "$practicant->firstname $practicant->lastname";
         $panel.= "</h4></div>"; //End panel-title
-        $panel.= "<div class='col-sm-1'>";
-        $panel.= "<span class='glyphicon glyphicon-user subpanel' style='font-size: 20px;'></span> : " . count(get_monitors_of_pract($practicant_id, $instance));
-        $panel.= "<br /><span class='glyphicon glyphicon-education subpanel' style='font-size: 20px;'></span> : " . get_quantity_students_by_pract($practicant_id, $instance);
+        $panel.= "<div class='col-xs-2 col-sm-2 col-md-1 col-lg-1'>";
+        $panel.= "<span class='protected glyphicon glyphicon-user subpanel' style='font-size: 20px;'></span> : " . count(get_monitors_of_pract($practicant_id, $instance));
+        $panel.= "<br /><span class='protected glyphicon glyphicon-education subpanel' style='font-size: 20px;'></span> : " . get_quantity_students_by_pract($practicant_id, $instance);
         $panel.= "</div>";
-        $panel.= "<div class='col-sm-5' id=counting_" . $practicant->username . ">";
-        $panel.= '<div class="loader"></div>';
+        $panel.= "<div class='col-xs-12 col-sm-12 col-md-5 col-lg-4' id='counting_" . $practicant->username . "'>";
+        $panel.= '<div class="loader">Cargando conteo...</div>';
         $panel.= "</div>";
-        $panel.= "<div class='col-sm-1'><span class='glyphicon glyphicon-chevron-left'></span></div>";
+        $panel.= "<div class='col-xs-12 col-sm-12 col-md-1 col-lg-1 col-lg-offset-1'><span class='open-close-icon glyphicon glyphicon-chevron-left'></span></div>";
         $panel.= "</div>";
         $panel.= "</div>"; //End panel-heading
         $panel.= "</a>";
@@ -414,12 +415,12 @@ function auxiliary_specific_countingV2($user_kind, $user_id, $semester, $instanc
 
         $xQuery = new stdClass();
         $xQuery->form = "inasistencia";
-        $xQuery->filterFields = [["fecha",[[$fecha_inicio_str,">="],[$fecha_fin_str,"<="]], false],
-                                 ["revisado_profesional",[["%%","LIKE"]], false],
-                                 ["revisado_practicante",[["%%","LIKE"]], false],
-                                 ["id_profesional",[[$user_id,"="]], false]
+        $xQuery->filterFields = [["in_fecha",[[$fecha_inicio_str,">="],[$fecha_fin_str,"<="]], false],
+                                 ["in_revisado_profesional",[["%%","LIKE"]], false],
+                                 ["in_revisado_practicante",[["%%","LIKE"]], false],
+                                 ["in_id_profesional",[[$user_id,"="]], false]
                                 ];
-        $xQuery->orderFields = [["fecha","DESC"]];
+        $xQuery->orderFields = [["in_fecha","DESC"]];
         $xQuery->orderByDatabaseRecordDate = true; 
         $xQuery->recordStatus = [ "!deleted" ];
         $xQuery->selectedFields = []; 
@@ -496,12 +497,12 @@ function auxiliary_specific_countingV2($user_kind, $user_id, $semester, $instanc
 
         $xQuery = new stdClass();
         $xQuery->form = "inasistencia";
-        $xQuery->filterFields = [["fecha",[[$fecha_inicio_str,">="],[$fecha_fin_str,"<="]], false],
+        $xQuery->filterFields = [["in_fecha",[[$fecha_inicio_str,">="],[$fecha_fin_str,"<="]], false],
                                  ["in_revisado_profesional",[["%%","LIKE"]], false],
-                                 ["in_revisado_profesional",[["%%","LIKE"]], false],
-                                 ["id_practicante",[[$user_id,"="]], false]
+                                 ["in_revisado_practicante",[["%%","LIKE"]], false],
+                                 ["in_id_practicante",[[$user_id,"="]], false]
                                 ];
-        $xQuery->orderFields = [["fecha","DESC"]];
+        $xQuery->orderFields = [["in_fecha","DESC"]];
         $xQuery->orderByDatabaseRecordDate = true; 
         $xQuery->recordStatus = [ "!deleted" ];
         $xQuery->selectedFields = []; 
@@ -577,12 +578,12 @@ function auxiliary_specific_countingV2($user_kind, $user_id, $semester, $instanc
 
         $xQuery = new stdClass();
         $xQuery->form = "inasistencia";
-        $xQuery->filterFields = [["fecha",[[$fecha_inicio_str,">="],[$fecha_fin_str,"<="]], false],
+        $xQuery->filterFields = [["in_fecha",[[$fecha_inicio_str,">="],[$fecha_fin_str,"<="]], false],
                                  ["in_revisado_profesional",[["%%","LIKE"]], false],
                                  ["in_revisado_profesional",[["%%","LIKE"]], false],
-                                 ["id_practicante",[[$user_id,"="]], false]
+                                 ["in_id_monitor",[[$user_id,"="]], false]
                                 ];
-        $xQuery->orderFields = [["fecha","DESC"]];
+        $xQuery->orderFields = [["in_fecha","DESC"]];
         $xQuery->orderByDatabaseRecordDate = true; 
         $xQuery->recordStatus = [ "!deleted" ];
         $xQuery->selectedFields = []; 
@@ -918,8 +919,8 @@ function show_according_permissions(&$table, $actions)
 function get_period_select($periods)
 {
     $table = "";
-    $table.= '<div class="container"><form class="form-inline">';
-    $table.= '<div class="form-group"><label for="persona">Periodo</label><select class="form-control" id="periodos">';
+    $table.= '<div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 form-group">';
+    $table.= '<label for="periodos">Periodo</label><select class="form-control" id="periodos">';
     foreach($periods as $period) {
         $table.= '<option value="' . $period->id . '">' . $period->nombre . '</option>';
     }
@@ -938,14 +939,19 @@ function get_period_select($periods)
 
 function get_people_select($people)
 {
-    $table = "";
-    $table.= '<div class="form-group"><label for="persona">Persona</label><select class="form-control" id="personas">';
+    $table = '<div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 form-group">';
+    $table.= '<label for="persona">Persona</label>';
+    $table.= '<select class="form-control" id="personas">';
     foreach($people as $person) {
         $table.= '<option value="' . $person->id_usuario . '">' . $person->username . " - " . $person->firstname . " " . $person->lastname . '</option>';
     }
+    $table.= '</select>';
+    $table.= '</div>';
 
-    $table.= '</select></div>';
-    $table.= '<span class="btn btn-info" id="consultar_persona" type="button">Consultar</span></form></div>';
+    $table.= '<div id="container-contultar-btn" class="col-xs-12 col-sm-12 col-md-12 col-lg-12">';
+    $table.= '  <span class="btn btn-info" id="consultar_persona" type="button">Consultar</span>';
+    $table.= '</div>';
+
     return $table;
 }
 

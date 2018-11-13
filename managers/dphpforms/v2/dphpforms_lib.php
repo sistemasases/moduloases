@@ -238,8 +238,10 @@ echo json_encode( dphpformsV2_find_records( $xQuery ) );*/
         if( count( $query->filterFields ) > 0 ){
             $where_clause = "WHERE ";
             $first_filter_field = true;
+
+            $filter_fields = $query->filterFields;
             
-            foreach( $query->filterFields as $filterField ){
+            foreach( $filter_fields as $filterField ){
 
                 $fieldAlias = $filterField[0];
                 $filterValues = $filterField[1];
@@ -249,7 +251,7 @@ echo json_encode( dphpformsV2_find_records( $xQuery ) );*/
                 $belongs_block_AND = false;
                 
                 if( !$first_filter_field ){
-                    if( $tmpNextFilterField = next($query->filterFields) ){
+                    if( $tmpNextFilterField = next($filter_fields) ){
                         $filter_where .= " OR ";
                     }
                 }else{
@@ -439,10 +441,10 @@ function dphpformsV2_get_fields_form( $form_id, $status = 1 ){
 
     $sql = 
     "SELECT FP.id AS id_formulario_pregunta, FP.id_pregunta, P.enunciado, TC.campo AS tipo_campo, FP.posicion, P.atributos_campo, P.opciones_campo, P.fecha_hora_registro 
-    FROM mdl_talentospilos_df_form_preg AS FP
-    INNER JOIN (SELECT * FROM mdl_talentospilos_df_preguntas )AS P
+    FROM {talentospilos_df_form_preg} AS FP
+    INNER JOIN (SELECT * FROM {talentospilos_df_preguntas} )AS P
     ON FP.id_pregunta = P.id
-    INNER JOIN (SELECT * FROM mdl_talentospilos_df_tipo_campo) AS TC
+    INNER JOIN (SELECT * FROM {talentospilos_df_tipo_campo} ) AS TC
     ON P.tipo_campo = TC.id
     WHERE FP.id_formulario = $form_id
     AND FP.estado = $status

@@ -50,7 +50,14 @@ function get_array_students_with_resolution(){
                                 THEN '---'
 						WHEN (res_students.codigo_resolucion IS NOT NULL)
 								THEN res_students.codigo_resolucion
-                    END AS codigo_resolucion
+                    END AS codigo_resolucion,
+                    CASE WHEN ( (academic_students.fecha_cancel IS NULL AND academic_students.promedio_semestre IS NOT NULL) 
+                                    AND status_icetex.nombre_estado LIKE '5%')
+                                THEN '-ACTIVO'
+                        WHEN (academic_students.promedio_semestre IS NULL OR status_icetex.nombre_estado LIKE '3%' 
+                                    OR status_icetex.nombre_estado IS NULL)
+                                THEN '-INACTIVO'
+                    END AS est_ice_sra
                 FROM
                 (SELECT user_extended.id_ases_user, moodle_user.lastname, moodle_user.firstname, cohorts.idnumber, semestre.id AS id_semestre, semestre.nombre AS nombre_semestre, 
                     usuario.num_doc, moodle_user.username, substring(cohorts.idnumber from 0 for 5) AS cohorte
@@ -100,32 +107,6 @@ function get_array_students_with_resolution(){
 }
 
 //print_r(get_array_students_with_resolution());
-
-/**
- * Function that returns the date when an student quitted a program in the semester 
- * 
- * @see get_student_cancel_date($id_student, $id_program, $id_semester)
- * @param $id_student -> id of a student
- * @param $id_program -> id of a program
- * @param $id_semester -> id of the semester
- * @return array
- */
-function get_student_cancel_date($id_student, $id_program, $id_semester){    
-    global $DB;
-
-    $sql_query = "SELECT cancel.fecha_cancelacion FROM {talentospilos_history_academ} AS academ
-    INNER JOIN {talentospilos_history_cancel} cancel ON academ.id = cancel.id_history 
-    WHERE academ.id_estudiante = $id_student AND academ.id_semestre = $id_semester AND academ.id_programa = $id_program";
-
-    $result = $DB->get_record_sql($sql_query);
-
-    if($result == false){
-        return false;
-    }else{
-        $fecha_cancel = $result->fecha_cancelacion;
-        return $fecha_cancel;
-    }    
-}
 
 /**
  * Function that returns a string with the names of all spp cohorts

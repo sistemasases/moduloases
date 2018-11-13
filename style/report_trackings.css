@@ -1,0 +1,15 @@
+#div-header-info{
+    background-color: #FFF;
+    border-width: 1px;
+    border-radius: 0px;
+    box-shadow: 0px 0px 1px #000;
+}
+
+#title-informacion-de{
+    font-size: 1.6em;
+}
+
+.pend-prof, .pend-pract{
+    font-size:0.8em;
+    display:inline;
+}
