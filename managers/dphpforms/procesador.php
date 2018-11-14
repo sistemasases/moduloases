@@ -107,7 +107,7 @@ if($RECORD_ID){
     $to_warehouse->datos_almacenados = $stored_data;
     $to_warehouse->observaciones = "";
     $to_warehouse->cod_retorno = json_decode($retorno)->status;
-    $to_warehouse->msg_retorno = json_decode($retorno)->message;
+    $to_warehouse->msg_retorno = json_encode(json_decode($retorno)->message);
     $to_warehouse->dts_retorno = json_encode(json_decode($retorno)->data);
     $to_warehouse->navegador = $_SERVER['HTTP_USER_AGENT'];
     $to_warehouse->url_request = $_SERVER['HTTP_REFERER'];
@@ -130,13 +130,30 @@ if($RECORD_ID){
         $to_warehouse->datos_almacenados = $stored_data;
         $to_warehouse->observaciones = "";
         $to_warehouse->cod_retorno = json_decode($retorno)->status;
-        $to_warehouse->msg_retorno = json_decode($retorno)->message;
+        $to_warehouse->msg_retorno = json_encode(json_decode($retorno)->message);
         $to_warehouse->dts_retorno = json_encode(json_decode($retorno)->data);
         $to_warehouse->navegador = $_SERVER['HTTP_USER_AGENT'];
         $to_warehouse->url_request = $_SERVER['HTTP_REFERER'];
 
         $DB->insert_record('talentospilos_df_dwarehouse', $to_warehouse, $returnid=false, $bulk=false);
 
+    }else{
+        $stored_data = "";
+        $to_warehouse = new stdClass();
+        $to_warehouse->id_usuario_moodle = $USER->id;
+        $to_warehouse->accion = "INSERT";
+        $to_warehouse->id_registro_respuesta_form = -1;
+        $to_warehouse->datos_previos = $previous_data;
+        $to_warehouse->datos_enviados = $current_data;
+        $to_warehouse->datos_almacenados = $stored_data;
+        $to_warehouse->observaciones = "";
+        $to_warehouse->cod_retorno = json_decode($retorno)->status;
+        $to_warehouse->msg_retorno = json_encode(json_decode($retorno)->message);
+        $to_warehouse->dts_retorno = json_encode(json_decode($retorno)->data);
+        $to_warehouse->navegador = $_SERVER['HTTP_USER_AGENT'];
+        $to_warehouse->url_request = $_SERVER['HTTP_REFERER'];
+
+        $DB->insert_record('talentospilos_df_dwarehouse', $to_warehouse, $returnid=false, $bulk=false);
     };
    
 };
