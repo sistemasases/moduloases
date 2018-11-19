@@ -301,8 +301,6 @@ if ($student_code != 0) {
         }
     }
 
-    
-           if($control){$options_etnia .= "<option value='8' selected='selected'>NO DEFINIDO</option>"; } 
         
     
 
