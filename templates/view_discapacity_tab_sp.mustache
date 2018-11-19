@@ -8,17 +8,18 @@
 
         </div>
         <div class="row">
-                <div class="btn-group btn-group-justified">
+                <div class="btn-group btn-group-justified" style="padding-bottom: 50px;padding-top: 5px;">
                         <div class="btn-group">
-                                <a class="btn dropdown-toggle" data-toggle="dropdown" href="#" id="btn_ficha_inicial_discapacity">Ficha Inicial
+                                <a class="btn dropdown-toggle"  data-toggle="dropdown" href="#" type="button" id="btn_ficha_inicial_discapacity">Ficha Inicial
                                         <span class="caret"></span>
-                        </a>
+                                </a>
                         <ul class="dropdown-menu">
                                 <li><a id="edit_discapacity_initial" >Edición</a></li>
-                                <li><a id="view_discapacity_initial" >Visualización</a></li>
+                                <li hidden id="li_view_discapacity_initial"><a id="view_discapacity_initial"  >Visualización</a></li>
                         </ul>
                         </div>
 
+                                      
                         <div class="btn-group">
                                 <button type="button" class="btn" id="btn_ficha_seguimiento_discapacity" disabled>Ficha seguimiento</button>
                         </div>
@@ -976,8 +977,7 @@
                                                 </div>
                                         </div>
 
-
-
+                                        <input  disabled  class= "input_fields_discapacity_tab" type="text" id="input_json_saved" value= "{{json_detalle}}"/>
                                 </div>
                         </div>
                         <div class="row">

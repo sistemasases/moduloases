@@ -85,13 +85,13 @@ if(isset($_POST['func'])){
 
     }else{
         $msg->title = "Error";
-        $msg->msg = "No se ha enviado una función.";
+        $msg->msg = "No se ha enviado una función. Informe al área de sistemas.";
         $msg->status = "error";
         echo json_encode($msg);
     }
 }else{
     $msg->title = "Error";
-    $msg->msg = "Error en el servidor.";
+    $msg->msg = "Error en el servidor. Informe al área de sistemas.";
     $msg->status = "error";
     echo json_encode($msg);
 }

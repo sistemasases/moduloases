@@ -22,7 +22,10 @@ define([
 ], function ($, jszip, dataTables, autoFill, buttons, html5, flash, print, bootstrap, sweetalert, jqueryui, select2) {
     return {
         init: function(){
-           
+
+            if($("#input_json_saved").val() != ""){
+                $("#li_view_discapacity_initial").show();
+            }
 
             $("#div_factor_impacto input").on("change",function(){
                 if($("#check_factor2").is(":checked")){
@@ -53,6 +56,10 @@ define([
                     
                 }
             });
+
+            // let tam_button = document.getElementById("btn_ficha_inicial_discapacity").style.width;
+            // alert(tam_button);
+            // $("#edit_discapacity_initial").width(tam_button);
             
             $("#div_necesidades input[type=checkbox]").on("change", function(){
                 if($(this).is(":checked")){
@@ -84,6 +91,7 @@ define([
                 if($(this).is(":checked")){
                     $("#div_otra_actividad").show();
                     $("#input_otro1").prop("required",true);
+                    $("#input_otro1").prop("disabled",false);
                     $("#input_tipo_otro").prop("required",true);
                     $("#input_tipo_otro").prop("disabled",false);
                     $("#clasificacion_otro").prop("disabled", false);
@@ -91,6 +99,7 @@ define([
                 }else{
                     $("#div_otra_actividad").hide();
                     $("#input_otro1").prop("value","");
+                    $("#input_otro1").prop("disabled",true);
                     $("#input_posib_otro").prop("value","");
                     $("#input_tipo_otro").prop("value","");
                     $("#input_otro1").prop("required",false);
@@ -150,24 +159,26 @@ define([
 
             $("#edit_discapacity_initial").on("click", function() {
               $("#form_ficha_inicial").show();
-              obj = document.getElementById('form_ficha_inicial');
-              for (i=0; ele = obj.getElementsByTagName("input")[i]; i++){
-                //   if(ele != "check_diagnostico"){
-                //     ele.disabled = false;
-                //   }
-              }
+              enableForm();  
             });
+
             $("#view_discapacity_initial").on("click", function() {
                 $("#form_ficha_inicial").show();
                 obj = document.getElementById('form_ficha_inicial');
-                for (i=0; ele = obj.getElementsByTagName('input')[i]; i++)
-                  ele.disabled = true;
+                for (i=0; ele = obj.getElementsByTagName('input')[i]; i++){
+                    ele.disabled = true;
+                }
+                let json_saved_register = $("#input_json_saved").val();
+                json_saved_register = JSON.parse(json_saved_register);
+                showFormSaved(json_saved_register);
+                
               });
             
             $("#cond_adquisicion").on("click", function(){
                 if($(this).val()== '0'){
                     $("#div_otro_cond_adq").show();
                     $("#otro_cond_adquisicion").prop("required", true);
+                    enabledInput("div_otro_cond_adq");
                 }else {
                     $("#div_otro_cond_adq").hide();
                     $("#otro_cond_adquisicion").prop("required", false);
@@ -179,6 +190,7 @@ define([
                 if($("#input_radio_otro_oa").is(":checked")){
                     $("#div_otro_apoyo_principal").show();
                     $("#input_otro_apoyo").prop("required", true);
+                    enabledInput("div_otro_apoyo_principal");
                 }else{
                     $("#div_otro_apoyo_principal").hide();
                     $("#input_otro_apoyo").prop("required", false);
@@ -190,6 +202,7 @@ define([
                 if($("#input_radio_otro_ot").is(":checked")){
                     $("#div_otro_transporte").show();
                     $("#input_otro_transporte").prop("required", true);
+                    enabledInput("div_otro_transporte");
                 }else{
                     $("#div_otro_transporte").hide();
                     $("#input_otro_transporte").prop("required", false);
@@ -201,7 +214,7 @@ define([
                 if($(this).val()== '0'){
                     $("#div_otra_discapacidad").show();
                     $("#otra_discapacidad").prop("required", true);
-                    
+                    enabledInput("div_otra_discapacidad");
                 }else {
                     $("#div_otra_discapacidad").hide();
                     $("#otra_discapacidad").prop("required", false);
@@ -223,6 +236,7 @@ define([
                 if( $("#check_certificado_invalidez").is(":checked") ) {
                     $("#div_porcentaje_inv").show();
                     $("#input_porcentaje_inv").prop("required", true);
+                    enabledInput("div_porcentaje_inv");
                 }else{
                     $("#div_porcentaje_inv").hide();
                     $("#input_porcentaje_inv").prop("required", false);
@@ -234,6 +248,7 @@ define([
                 if( $("#check_org").is(":checked") ) {
                     $("#div_organizacion_asociacion").show();
                     $("#input_org").prop("required", true);
+                    enabledInput("div_organizacion_asociacion");
                 }else{
                     $("#div_organizacion_asociacion").hide();
                     $("#input_org").prop("required", false);
@@ -241,10 +256,12 @@ define([
                 }
             });
 
+
             $("#check_actividades_otros").on("change",function(){
                 if( $("#check_actividades_otros").is(":checked") ) {
                     $("#div_actividades_otros_desc").show();
                     $("#input_actividades_otros").prop("required", true);
+                    enabledInput("div_actividades_otros_desc");
                 }else{
                     $("#div_actividades_otros_desc").hide();
                     $("#input_actividades_otros").prop("required", false);
@@ -257,6 +274,7 @@ define([
                     $("#div_institucion_apoyo").show();
                     $("#input_institucion").prop("required", true);
                     $("#input_apoyo").prop("required", true);
+                    enabledInput("div_institucion_apoyo");
                 }else{
                     $("#div_institucion_apoyo").hide();
                     $("#input_institucion").prop("required", false);
@@ -617,7 +635,8 @@ define([
                 obj = JSON.stringify(obj);
                         
                 let id_ases = $("#id_ases").val();
-                validate_json (obj, id_ases);  
+                validate_json (obj, id_ases);
+              
                 }
                 
 
@@ -658,6 +677,7 @@ define([
                     );
                 },
             });
+
 
         }
 
@@ -1066,6 +1086,72 @@ define([
             return msg;
         } 
         
+        function enabledInput(element){
+           $("#"+element).find("input").each( function(){
+                    $(this).prop("disabled", false);
+                });  
+        }
+
+        function enableForm(){
+            $("#form_ficha_inicial").find(":input").not(".input_fields_discapacity_tab").not(".range_input").each( function(){
+            if($(this).attr("id") != "check_documentos_soporte"){
+                $(this).prop("disabled", false);
+            }
+           
+            });  
+        }
+
+        function showFormSaved(json_bd){
+
+            for(i in json_bd){
+                switch(i){
+                    case "condicion_adquisicion":
+
+                    break;
+                    case "diagnostico_discapacidad":
+
+                    break;
+                    case "tipo_discapacidad":
+
+                    break;
+                    case "certificado_invalidez":
+
+                    break;
+                    case "dificultad_permanente_funciones":
+
+                    break;
+                    case "condicion_salud_organos":
+
+                    break;
+                    case "necesidades_situaciones":
+
+                    break;
+                    case "posibilidad_actividades":
+
+                    break;
+                    case "factores_impacto":
+
+                    break;
+                    case "apoyo_principal_cotidiano":
+
+                    break;
+                    case "medio_transporte":
+
+                    break;
+                    case "participa_asociacion":
+
+                    break;
+                    case "actividades_otros":
+
+                    break;
+                    case "apoyo_institucion":
+
+                    break;
+                }
+
+            }
+        }
+
         function has_numbers(str) {
             var numbers = "0123456789";
             for (i = 0; i < str.length; i++) {
