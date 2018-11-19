@@ -171,3 +171,8 @@
     padding-right: 25px;
     padding-left: 10px;
 }
+#id_caret{
+    height: 1px !important;
+    width: 1px !important;
+    
+}

@@ -51,4 +51,17 @@ function save_detalle_discapacidad($json, $id_ases){
 
 }
 
+
+/**
+ * Function return json schema switch id_schema
+ * @see get_schema(id_schema)
+ * @param $id_schema ID JSON SCHEMA
+ * @return Object
+ **/
+function get_schema($id_schema){
+    global $DB;
+    $sql_query = "SELECT * FROM {talentospilos_json_schema} WHERE id = $id_schema";
+    return $DB->get_record_sql($sql_query);
+}
+
 ?>

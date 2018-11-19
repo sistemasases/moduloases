@@ -148,9 +148,21 @@ define([
 
             
 
-            $("#btn_ficha_inicial_discapacity").on("click", function() {
+            $("#edit_discapacity_initial").on("click", function() {
               $("#form_ficha_inicial").show();
+              obj = document.getElementById('form_ficha_inicial');
+              for (i=0; ele = obj.getElementsByTagName("input")[i]; i++){
+                //   if(ele != "check_diagnostico"){
+                //     ele.disabled = false;
+                //   }
+              }
             });
+            $("#view_discapacity_initial").on("click", function() {
+                $("#form_ficha_inicial").show();
+                obj = document.getElementById('form_ficha_inicial');
+                for (i=0; ele = obj.getElementsByTagName('input')[i]; i++)
+                  ele.disabled = true;
+              });
             
             $("#cond_adquisicion").on("click", function(){
                 if($(this).val()== '0'){
@@ -184,8 +196,6 @@ define([
                     $("#input_otro_transporte").prop("value", "");
                 }
             });
-
-            
 
             $("#tipo_discapacidad").on("click", function(){
                 if($(this).val()== '0'){
@@ -603,15 +613,9 @@ define([
                         result_validation.msg,
                         result_validation.status);
                 }else{
-                    // swal("Éxito",
-                    //     "El formulario fue validado con éxito",
-                    //     "success");
-
-                        var obj = json_detalle_discapacidad;
-                         obj = JSON.stringify(obj);
+                var obj = json_detalle_discapacidad;
+                obj = JSON.stringify(obj);
                         
-                        
-
                 let id_ases = $("#id_ases").val();
                 validate_json (obj, id_ases);  
                 }
@@ -631,7 +635,8 @@ define([
                 data: {
                     func: 'validate_json',
                     json: json_data, 
-                    ases: ases_id
+                    ases: ases_id,
+                    id_schema: 1
                 },
                 url: "../managers/student_profile/discapacity_tab_api.php",
                 success: function(msg) {
@@ -922,31 +927,45 @@ define([
                     case "apoyo_principal_cotidiano":
 
                     let obj_apoyo= json_detalle[i];
-                    for(op in obj_apoyo){
-                       if(op == "otro_apoyo"){
-                        if(obj_apoyo[op]== ""){
-
-                            msg.title = "Apoyo principal";
-                            msg.status = "error";
-                            msg.msg = "El campo "+op+" de la opción '"+ obj_apoyo["apoyo_cotidiano"]+"' es obligatorio";
-                            return msg;  
-                        }
-                        if(has_numbers(obj_apoyo[op])){
-
-                            msg.title = "Apoyo principal";
-                            msg.status = "error";
-                            msg.msg = "El campo "+op+" de la opción '"+ obj_apoyo["apoyo_cotidiano"]+"' no debe contener números";
-                            return msg;  
-                        }
-
-                       }
+                    if(JSON.stringify(obj_apoyo)=='{}'){
+                        msg.title = "Apoyo principal";
+                        msg.status = "error";
+                        msg.msg = "El campo apoyo principal es obligatorio";
+                        return msg;  
+                    }else{
+                        for(op in obj_apoyo){
+                            if(op == "otro_apoyo"){
+                             if(obj_apoyo[op]== ""){
+     
+                                 msg.title = "Apoyo principal";
+                                 msg.status = "error";
+                                 msg.msg = "El campo "+op+" de la opción '"+ obj_apoyo["apoyo_cotidiano"]+"' es obligatorio";
+                                 return msg;  
+                             }
+                             if(has_numbers(obj_apoyo[op])){
+     
+                                 msg.title = "Apoyo principal";
+                                 msg.status = "error";
+                                 msg.msg = "El campo "+op+" de la opción '"+ obj_apoyo["apoyo_cotidiano"]+"' no debe contener números";
+                                 return msg;  
+                             }
+     
+                            }
+                         }
+     
                     }
-
+                   
                     break;
                     
                     case "medio_transporte":
 
                     let obj_transporte= json_detalle[i];
+                    if(JSON.stringify(obj_transporte)=='{}'){
+                        msg.title = "Medio de transporte";
+                        msg.status = "error";
+                        msg.msg = "El campo medio de transporte es obligatorio";
+                        return msg;  
+                    }else{
                     for(op in obj_transporte){
                        if(op == "otro_transporte"){
                         if(obj_transporte[op]== ""){
@@ -966,6 +985,7 @@ define([
 
                        }
                     }
+                }
                     break;
 
                     case "participa_asociacion":
@@ -1045,18 +1065,6 @@ define([
 
             return msg;
         } 
-                
-        // Funciones para la validación de formularios
-        function has_letters(str) {
-            var letters = "abcdefghyjklmnñopqrstuvwxyz";
-            str = str.toLowerCase();
-            for (i = 0; i < str.length; i++) {
-                if (letters.indexOf(str.charAt(i), 0) != -1) {
-                    return 1;
-                }
-            }
-            return 0;
-        }
         
         function has_numbers(str) {
             var numbers = "0123456789";

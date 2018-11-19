@@ -10,8 +10,15 @@
         <div class="row">
                 <div class="btn-group btn-group-justified">
                         <div class="btn-group">
-                                <button type="button" class="btn" id="btn_ficha_inicial_discapacity">Ficha Inicial</button>
+                                <a class="btn dropdown-toggle" data-toggle="dropdown" href="#" id="btn_ficha_inicial_discapacity">Ficha Inicial
+                                        <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                                <li><a id="edit_discapacity_initial" >Edición</a></li>
+                                <li><a id="view_discapacity_initial" >Visualización</a></li>
+                        </ul>
                         </div>
+
                         <div class="btn-group">
                                 <button type="button" class="btn" id="btn_ficha_seguimiento_discapacity" disabled>Ficha seguimiento</button>
                         </div>

@@ -43,14 +43,16 @@ if(isset($_POST['func'])){
 
     if($_POST['func'] == 'validate_json'){
 
-         $data = $_POST['json'];
-         $id_ases = $_POST['ases'];
-        
+        $data = $_POST['json'];
+        $id_ases = $_POST['ases'];
+        $id_schema = $_POST['id_schema'];
+        $schema_db = get_schema($id_schema);
         $data = json_decode($_POST['json']);
+        $schema= json_decode($schema_db->json_schema);
         // Validate
         $validator = new  Validator;
        
-        $validator->validate($data, (object)['$ref' => 'file://' . realpath('schema.json') ],
+        $validator->validate($data,  $schema,
         Constraint::CHECK_MODE_APPLY_DEFAULTS);
             
 
@@ -69,10 +71,15 @@ if(isset($_POST['func'])){
                echo json_encode($msg);
            }
          }else {
-             echo "Falló";
-            echo "JSON does not validate. Violations:\n";
-           foreach ($validator->getErrors() as $error) {
-          echo sprintf("[%s] %s\n", $error['property'], $error['message']);}
+            $msg->title = "Error fatal";
+            $msg->msg = "Informe al área de sistemas.";
+            $msg->status = "error";
+            echo json_encode($msg);
+
+        //      echo "Falló";
+        //     echo "JSON does not validate. Violations:\n";
+        //    foreach ($validator->getErrors() as $error) {
+        //   echo sprintf("[%s] %s\n", $error['property'], $error['message']);}
          }
          
 
