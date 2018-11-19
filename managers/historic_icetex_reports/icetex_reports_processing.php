@@ -27,7 +27,7 @@
 	require_once(dirname(__FILE__). '/../../../../config.php');
 	require_once('icetex_reports_lib.php');
 
-	if(isset($_POST['loadR']) && $_POST['loadR'] == 'loadReport'){		
+	if(isset($_POST['loadR']) && $_POST['loadR'] == 'loadReport' && isset($_POST['value'])){		
 		$columns = array();
 		$cohort_options = get_all_cohort_names();
 		$semester_options = get_all_semesters_names();
@@ -59,7 +59,7 @@
 		$data = array(
 					"bsort" => false,
 					"columns" => $columns,
-					"data" => get_array_students_with_resolution(),
+					"data" => get_array_students_with_resolution($_POST['value']),
 					"language" => 
                 	 array(
                     	"search"=> "Buscar:",

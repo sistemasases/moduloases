@@ -27,7 +27,8 @@ define(['jquery',
 			window.JSZip = jszip;
 
 			$("#stu_res_button").on('click', function(){
-				load_report_students_resolution();
+				var check_value = $("#check_no_res").is(':checked');
+				load_report_students_resolution(check_value);
 			});
 
 			$(document).on('click', '#tableResStudents tbody tr td', function () {
@@ -95,10 +96,10 @@ define(['jquery',
 	 * @desc Loads the report of a student with resolution on a table. Current processing on icetex_reports_processing.php
 	 * @return {void}
 	 */
-	function load_report_students_resolution(){
+	function load_report_students_resolution(check_val){
 		$.ajax({
 			type: "POST",
-			data: {loadR: 'loadReport'},
+			data: {loadR: 'loadReport', value: check_val},
 			url: "../managers/historic_icetex_reports/icetex_reports_processing.php",
 			success: function(msg){
 				$("#div_res_students").empty();
