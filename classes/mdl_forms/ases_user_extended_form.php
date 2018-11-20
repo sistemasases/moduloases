@@ -23,10 +23,10 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-require_once($CFG->libdir.'/formslib.php');require_once(__DIR__.'/../AsesUser.php');
-require_once(__DIR__.'/../TrackingStatus.php');
-require_once(__DIR__.'/../EstadoPrograma.php');
-require_once(__DIR__.'/../Programa.php');
+require_once($CFG->libdir.'/formslib.php');require_once(__DIR__ . '/../AsesUser.php');
+require_once(__DIR__ . '/../TrackingStatus.php');
+require_once(__DIR__ . '/../EstadoPrograma.php');
+require_once(__DIR__ . '/../Programa.php');
 
 class AsesUserExtendedFormData {
     public $moodle_user_name;

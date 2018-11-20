@@ -23,12 +23,12 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-use function Latitude\QueryBuilder\{identifyAll, alias, listing, on, fn, param};
+use function Latitude\QueryBuilder\{alias, on, fn, param};
 
 defined('MOODLE_INTERNAL') || die;
-require_once(__DIR__.'/Errors/Factories/DatabaseErrorFactory.php');
-require_once(__DIR__.'/DAO/BaseDAO.php');
-require_once(__DIR__.'/Sede.php');
+require_once(__DIR__ . '/Errors/Factories/DatabaseErrorFactory.php');
+require_once(__DIR__ . '/DAO/BaseDAO.php');
+require_once(__DIR__ . '/Sede.php');
 
 class Programa extends BaseDAO {
     const ID = 'id';
@@ -56,13 +56,6 @@ class Programa extends BaseDAO {
     public static function get_options(): array {
 
         global $DB;
-        $options = array();
-        $campos_select_programa= Programa::get_column_names('programa');
-        $campos_select_sede = [
-            alias('sede.'.Sede::NOMBRE, 'nombre_sede')
-        ];
-        $campos_select = array_merge($campos_select_programa, $campos_select_sede);
-
         $query = Programa::get_factory()
             ->select(
                 'programa.'.Programa::ID,
@@ -71,7 +64,8 @@ class Programa extends BaseDAO {
                         'concat_ws',
                         param(' - '),
                         'programa.'.Programa::NOMBRE,
-                        'programa.'.Programa::JORNADA, 'sede.'.Sede::NOMBRE
+                        'programa.'.Programa::JORNADA,
+                        'sede.'.Sede::NOMBRE
                     ),
                     'option_name'
                 )

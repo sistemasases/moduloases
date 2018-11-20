@@ -27,6 +27,7 @@ require_once (dirname(__FILE__) . '/../lib/student_lib.php');
 require_once (dirname(__FILE__) . '/../dphpforms/dphpforms_get_record.php');
 require_once (dirname(__FILE__) . '/../student_profile/studentprofile_lib.php');
 require_once (dirname(__FILE__) . '/../seguimiento_grupal/seguimientogrupal_lib.php');
+require_once (dirname(__FILE__) . '/../dphpforms/v2/dphpforms_lib.php');
 
 /**
  * Get the toggle of the monitor with the follow-ups of each student with the implementation of the new form
@@ -41,35 +42,30 @@ function render_monitor_new_form($students_by_monitor, $period = null)
 {
     $panel = "";
     foreach($students_by_monitor as $student) {
-        $student_code = get_user_moodle($student->id_estudiante);
-        //$student = explode("-", $student_code->username);
-        //$student = explode("-", $student->id_estudiante + "-" );
+        $student_code = get_user_moodle($student->id_estudiante);//Get user moodle by ases id
+
         $ases_student_code = $student->id_estudiante;
         $current_semester = get_current_semester();
-        if ($period == null) {
-            $monitor_trackings = get_tracking_current_semester('student', $ases_student_code, $current_semester->max);
-        }
-        else {
-            $monitor_trackings = get_tracking_current_semester('student', $ases_student_code, $period);
-        }
+        $fullname = $student_code->firstname . " " .  $student_code->lastname;
 
-        $monitor_counting = filter_trackings_by_review($monitor_trackings);
-
-        $panel.= "<a data-toggle='collapse' class='student collapsed btn btn-danger btn-univalle btn-card collapsed' data-parent='#accordion_students' style='text-decoration:none' href='#student" . $ases_student_code . "'>";
-        $panel.= "<div class='panel-heading heading_students_tracking'>";
-        $panel.= "<h4 class='panel-title'>";
-        $panel.= "$student_code->firstname $student_code->lastname";
-        $panel.= "</h4>"; //End panel-title
-        $panel.= "<div class='row'>
-              <div class='col-sm-11'><h6><p class='text-right'><strong>RP :</strong><label class='review_prof'>" . $monitor_counting[0] . "</label> - <strong> N RP: </strong><label class='not_review_prof'>" . $monitor_counting[1] . "</label> - <strong>TOTAL:</strong><label class='total_prof'>" . ($monitor_counting[0] + $monitor_counting[1]) . "</label></p><p class='text-right'><strong>Rp :</strong><label class='review_pract'>" . $monitor_counting[2] . "</label> - <strong> N Rp: </strong><label class='not_review_pract'>" . $monitor_counting[3] . "</label> - <strong>TOTAL:</strong><label class='total_pract'>" . ($monitor_counting[2] + $monitor_counting[3]) . "</label></p></h6></div>
-             <div class='col-sm-1'><span class='glyphicon glyphicon-chevron-left'></span></div>
-             </div>";
-        $panel.= "</div>"; //End panel-heading
-        $panel.= "</a>";
-        $panel.= "<div id='student$ases_student_code'  class='show collapse_v2 collapse border_rt' role='tabpanel' aria-labelledby='headingstudent$ases_student_code' aria-expanded='true'>";
-        $panel.= "<div class='panel-body'>";
-        $panel.= "</div>"; // End panel-body
-        $panel.= "</div>"; // End collapse
+        $panel.= "<a data-toggle='collapse' data-container='student$ases_student_code' data-username='$ases_student_code' data-asesid='$ases_student_code' class='student collapsed btn btn-danger btn-univalle btn-card collapsed' data-parent='#accordion_students' style='text-decoration:none' href='#student$ases_student_code'>
+                    <div class='panel-heading heading_students_tracking'>
+                        <div class='row'>
+                            <div class='col-xs-12 col-sm-12 col-md-6 col-lg-6'>
+                                <h4 class='panel-title'>
+                                    $fullname
+                                </h4>
+                            </div>
+                            <div class='col-xs-12 col-sm-12 col-md-5 col-lg-5' id='counting_$ases_student_code'>
+                                <div class='loader'>Cargando conteo...</div>
+                            </div>
+                            <div class='col-xs-12 col-sm-12 col-md-1 col-lg-1'><span class='open-close-icon glyphicon glyphicon-chevron-left'></span></div>
+                        </div>
+                    </div>
+                 </a>
+                 <div id='student$ases_student_code'  class='show collapse_v2 collapse border_rt' role='tabpanel' aria-labelledby='headingstudent$ases_student_code' aria-expanded='true'>
+                    <div class='panel-body'> </div>
+                 </div>";
     }
 
     return $panel;
@@ -88,11 +84,11 @@ function render_monitor_new_form($students_by_monitor, $period = null)
 function aux_create_groupal_toggle($monitor_id)
 {
     $panel = "";
-    $panel.= "<a data-toggle='collapse' class='groupal collapsed btn btn-danger btn-univalle btn-card collapsed' data-parent='#accordion_students' style='text-decoration:none' href='#groupal" . $monitor_id . "'>";
+    $panel.= "<a data-toggle='collapse' data-container='groupal$monitor_id' class='groupal collapsed btn btn-danger btn-univalle btn-card collapsed' data-parent='#accordion_students' style='text-decoration:none' href='#groupal" . $monitor_id . "'>";
     $panel.= "<div class='panel-heading heading_students_tracking'>";
     $panel.= "<h4 class='panel-title'>";
     $panel.= "SEGUIMIENTOS GRUPALES";
-    $panel.= "<span class='glyphicon glyphicon-chevron-left'></span>";
+    $panel.= "<span class='open-close-icon glyphicon glyphicon-chevron-left'></span>";
     $panel.= "</h4>"; //End panel-title
     $panel.= "</div>"; //End panel-heading
     $panel.= "</a>";
@@ -154,27 +150,23 @@ function render_practicant_new_form($monitors_of_pract, $instance, $period = nul
 
         // If the practicant has monitors with students that show
 
-        $panel.= "<a data-toggle='collapse' class='monitor collapsed btn btn-danger btn-univalle btn-card collapsed' data-parent='#accordion_monitors' style='text-decoration:none' href='#monitor" . $monitor->username . "'>";
+        $panel.= "<a data-toggle='collapse' data-container='monitor$monitor->username' data-username='$monitor->username' class='monitor collapsed btn btn-danger btn-univalle btn-card collapsed' data-parent='#accordion_monitors' style='text-decoration:none' href='#monitor" . $monitor->username . "'>";
         $panel.= "<div class='panel-heading heading_monitors_tracking'>";
-        $panel.= "<div class='row'><div class='col-sm-5'>";
+        $panel.= "<div class='row'><div class='col-xs-10 col-sm-10 col-md-5 col-lg-5'>";
         $panel.= "<h4 class='panel-title'>";
         $panel.= "$monitor->firstname $monitor->lastname";
         $panel.= "</h4></div>"; //End panel-title
-        $panel.= "<div class='col-sm-1'>";
-        $panel.= "<span class='glyphicon glyphicon-user subpanel' style='font-size: 20px;'></span> : " . count(get_students_of_monitor($monitor_id, $instance));
+        $panel.= "<div class='col-xs-2 col-sm-2 col-md-1 col-lg-1'>";
+        $panel.= "<span class='protected glyphicon glyphicon-user subpanel' style='font-size: 20px;'></span> : " . count(get_students_of_monitor($monitor_id, $instance));
         $panel.= "</div>";
-        $panel.= "<div class='col-sm-1'>";
-        $panel.= "<button type='button' class='see_history btn red_button'>
-                <span class='glyphicon glyphicon-time'></span> Ver horas</button>";
+        $panel.= "<div class='col-xs-12 col-sm-12 col-md-5 col-lg-4' id='counting_" . $monitor->username . "'>";
+        $panel.= '<div class="loader">Cargando conteo...</div>';
         $panel.= "</div>";
-        $panel.= "<div class='col-sm-4' id=counting_" . $monitor->username . ">";
-        $panel.= '<div class="loader"></div>';
-        $panel.= "</div>";
-        $panel.= "<div class='col-sm-1'><span class='glyphicon glyphicon-chevron-left'></span></div>";
+        $panel.= "<div class='col-xs-12 col-sm-12 col-md-1 col-lg-1 col-lg-offset-1'><span class='open-close-icon glyphicon glyphicon-chevron-left'></span></div>";
         $panel.= "</div>";
         $panel.= "</div>"; //End panel-heading
         $panel.= "</a>";
-        $panel.= "<div id='monitor$monitor->username'  class='show collapse_v2 collapse border_rt' role='tabpanel' aria-labelledby='headingmonitor$monitor->username' aria-expanded='true'>";
+        $panel.= "<div id='monitor$monitor->username' class='show collapse_v2 collapse border_rt' role='tabpanel' aria-labelledby='headingmonitor$monitor->username' aria-expanded='true'>";
         $panel.= "<div class='panel-body'>";
         $panel.= "</div>"; // End panel-body
         $panel.= "</div>"; // End collapse
@@ -204,20 +196,20 @@ function render_professional_new_form($practicant_of_prof, $instance, $period = 
 
         // If the professional has associate practitioners with monitors that show
 
-        $panel.= "<a data-toggle='collapse' class='practicant collapsed btn btn-danger btn-univalle btn-card collapsed' data-parent='#accordion_practicant' style='text-decoration:none' href='#practicant" . $practicant->username . "'>";
+        $panel.= "<a data-toggle='collapse' data-container='practicant$practicant->username' data-username='$practicant->username' class='practicant collapsed btn btn-danger btn-univalle btn-card collapsed' data-parent='#accordion_practicant' style='text-decoration:none' href='#practicant" . $practicant->username . "'>";
         $panel.= "<div class='panel-heading heading_practicant_tracking'>";
-        $panel.= "<div class='row'><div class='col-sm-5'>";
+        $panel.= "<div class='row'><div class='col-xs-10 col-sm-10 col-md-5 col-lg-5'>";
         $panel.= "<h4 class='panel-title'>";
         $panel.= "$practicant->firstname $practicant->lastname";
         $panel.= "</h4></div>"; //End panel-title
-        $panel.= "<div class='col-sm-1'>";
-        $panel.= "<span class='glyphicon glyphicon-user subpanel' style='font-size: 20px;'></span> : " . count(get_monitors_of_pract($practicant_id, $instance));
-        $panel.= "<br /><span class='glyphicon glyphicon-education subpanel' style='font-size: 20px;'></span> : " . get_quantity_students_by_pract($practicant_id, $instance);
+        $panel.= "<div class='col-xs-2 col-sm-2 col-md-1 col-lg-1'>";
+        $panel.= "<span class='protected glyphicon glyphicon-user subpanel' style='font-size: 20px;'></span> : " . count(get_monitors_of_pract($practicant_id, $instance));
+        $panel.= "<br /><span class='protected glyphicon glyphicon-education subpanel' style='font-size: 20px;'></span> : " . get_quantity_students_by_pract($practicant_id, $instance);
         $panel.= "</div>";
-        $panel.= "<div class='col-sm-5' id=counting_" . $practicant->username . ">";
-        $panel.= '<div class="loader"></div>';
+        $panel.= "<div class='col-xs-12 col-sm-12 col-md-5 col-lg-4' id='counting_" . $practicant->username . "'>";
+        $panel.= '<div class="loader">Cargando conteo...</div>';
         $panel.= "</div>";
-        $panel.= "<div class='col-sm-1'><span class='glyphicon glyphicon-chevron-left'></span></div>";
+        $panel.= "<div class='col-xs-12 col-sm-12 col-md-1 col-lg-1 col-lg-offset-1'><span class='open-close-icon glyphicon glyphicon-chevron-left'></span></div>";
         $panel.= "</div>";
         $panel.= "</div>"; //End panel-heading
         $panel.= "</a>";
@@ -248,17 +240,27 @@ function render_student_trackings($peer_tracking_v2)
             $year_number = $period;
             foreach($period as $key => $tracking) {
                 $is_reviewed = false;
+                $type = null;
                 foreach($tracking[record][campos] as $key => $review) {
                     if ($review[local_alias] == 'revisado_profesional') {
+                        $type = "ficha";
                         if ($review[respuesta] == 0) {
-                            $form_rendered.= '<div id="dphpforms-peer-record-' . $tracking[record][id_registro] . '" class="card-block dphpforms-peer-record peer-tracking-record-review class-'.$tracking[record][alias].'"  data-record-id="' . $tracking[record][id_registro] . '">Registro:   ' . $tracking[record][alias_key][respuesta] . '</div>';
+                            $form_rendered.= '<div id="dphpforms-peer-record-' . $tracking[record][id_registro] . '" class="card-block dphpforms-peer-record peer-tracking-record-review class-'.$tracking[record][alias].'"  data-record-id="' . $tracking[record][id_registro] . '"><strong>f: </strong>Registro:   ' . $tracking[record][alias_key][respuesta] . '</div>';
+                            $is_reviewed = true;
+                        }
+                    }elseif ($review[local_alias] == 'in_revisado_profesional') {
+                        $type = "inasistencia";
+                        if ($review[respuesta] == 0) {
+                            $form_rendered.= '<div id="dphpforms-peer-record-' . $tracking[record][id_registro] . '" class="card-block dphpforms-peer-record peer-tracking-record-review class-'.$tracking[record][alias].'"  data-record-id="' . $tracking[record][id_registro] . '"><strong>i: </strong>Registro:   ' . $tracking[record][alias_key][respuesta] . '</div>';
                             $is_reviewed = true;
                         }
                     }
                 }
 
-                if (!$is_reviewed) {
-                    $form_rendered.= '<div id="dphpforms-peer-record-' . $tracking[record][id_registro] . '" class="card-block dphpforms-peer-record peer-tracking-record class-'.$tracking[record][alias].'"  data-record-id="' . $tracking[record][id_registro] . '">Registro:   ' . $tracking[record][alias_key][respuesta] . '</div>';
+                if ((!$is_reviewed )&& ($type == "ficha")) {
+                    $form_rendered.= '<div id="dphpforms-peer-record-' . $tracking[record][id_registro] . '" class="card-block dphpforms-peer-record peer-tracking-record class-'.$tracking[record][alias].'"  data-record-id="' . $tracking[record][id_registro] . '"><strong>f: </strong>Registro:   ' . $tracking[record][alias_key][respuesta] . '</div>';
+                }elseif((!$is_reviewed) && ($type == "inasistencia")){
+                    $form_rendered.= '<div id="dphpforms-peer-record-' . $tracking[record][id_registro] . '" class="card-block dphpforms-peer-record peer-tracking-record class-'.$tracking[record][alias].'"  data-record-id="' . $tracking[record][id_registro] . '"><strong>i: </strong>Registro:   ' . $tracking[record][alias_key][respuesta] . '</div>';
                 }
             }
         }
@@ -278,48 +280,31 @@ function render_student_trackings($peer_tracking_v2)
 
 function filter_trackings_by_review($peer_tracking_v2)
 {
-    $array_review_trackings_prof = [];
-    $array_not_review_trackings_prof = [];
-    $array_review_trackings_pract = [];
-    $array_not_review_trackings_pract = [];
-    if ($peer_tracking_v2) {
-        foreach($peer_tracking_v2[0] as $key => $period) {
-            $year_number = $period;
-            foreach($period as $key => $tracking) {
-                $is_reviewed_prof = false;
-                $is_reviewed_pract = false;
-                foreach($tracking[record][campos] as $key => $review) {
-                    if ($review[local_alias] == 'revisado_profesional') {
-                        if ($review[respuesta] == 0) {
-                            array_push($array_review_trackings_prof, $tracking);
-                            $is_reviewed_prof = true;
-                        }
-                    }
 
-                    if ($review[local_alias] == 'revisado_practicante') {
-                        if ($review[respuesta] == 0) {
-                            array_push($array_review_trackings_pract, $tracking);
-                            $is_reviewed_pract = true;
-                        }
-                    }
-                }
+    $rev_pro = 0;
+    $not_rev_pro = 0;
+    $rev_prac = 0;
+    $not_rev_prac = 0;
 
-                if (!$is_reviewed_prof) {
-                    array_push($array_not_review_trackings_prof, $tracking);
-                }
-
-                if (!$is_reviewed_pract) {
-                    array_push($array_not_review_trackings_pract, $tracking);
-                }
-            }
+    foreach( $peer_tracking_v2 as $track ){
+        if( $track["revisado_profesional"] == 0 ){
+            $rev_pro++;
+        }else{
+            $not_rev_pro++;
+        }
+        if( $track["revisado_practicante"] == 0 ){
+            $rev_prac++;
+        }else{
+            $not_rev_prac++;
         }
     }
 
     $counting = [];
-    $counting[0] = count($array_review_trackings_prof);
-    $counting[1] = count($array_not_review_trackings_prof);
-    $counting[2] = count($array_review_trackings_pract);
-    $counting[3] = count($array_not_review_trackings_pract);
+    $counting[0] = $rev_pro;
+    $counting[1] = $not_rev_pro;
+    $counting[2] = $rev_prac;
+    $counting[3] = $not_rev_prac;
+
     return $counting;
 }
 
@@ -335,8 +320,7 @@ function filter_trackings_by_review($peer_tracking_v2)
  *
  */
 
-function auxiliary_specific_counting($user_kind, $user_id, $semester, $instance)
-{
+function auxiliary_specific_counting($user_kind, $user_id, $semester, $instance){
     $array_final = array();
     if ($user_kind == 'profesional_ps') {
         $practicant_of_prof = get_pract_of_prof($user_id, $instance);
@@ -346,14 +330,10 @@ function auxiliary_specific_counting($user_kind, $user_id, $semester, $instance)
             $profesional_counting = calculate_specific_counting('PROFESIONAL', $monitors_of_pract, $semester->max, $instance);
             $counting_advice = new stdClass();
             $counting_advice->code = $practicant->username;
-
-            // $counting_advice->html="<h6><p class='text-right'><strong class='subpanel'>RP :</strong><label class='review_prof'>".$profesional_counting[0]."</label> - <strong class='subpanel'> N RP: </strong><label class='not_review_prof'>".$profesional_counting[1]."</label> - <strong class='subpanel'>TOTAL:</strong><label class='total_prof'>".($profesional_counting[0]+$profesional_counting[1])."</label></p><p class='text-right'><strong class='subpanel'>Rp :</strong><label class='review_pract'>".$profesional_counting[2]."</label> - <strong class='subpanel'> N Rp: </strong><label class='not_review_pract'>".$profesional_counting[3]."</label> - <strong class='subpanel'>TOTAL:</strong><label class='total_pract'>".($profesional_counting[2]+$profesional_counting[3])."</label></p></h6>";
-
+            $counting_advice->html="<h6><p class='text-right'><strong class='subpanel'>RP :</strong><label class='review_prof'>".$profesional_counting[0]."</label> - <strong class='subpanel'> N RP: </strong><label class='not_review_prof'>".$profesional_counting[1]."</label> - <strong class='subpanel'>TOTAL:</strong><label class='total_prof'>".($profesional_counting[0]+$profesional_counting[1])."</label></p><p class='text-right'><strong class='subpanel'>Rp :</strong><label class='review_pract'>".$profesional_counting[2]."</label> - <strong class='subpanel'> N Rp: </strong><label class='not_review_pract'>".$profesional_counting[3]."</label> - <strong class='subpanel'>TOTAL:</strong><label class='total_pract'>".($profesional_counting[2]+$profesional_counting[3])."</label></p></h6>";
             array_push($array_final, $counting_advice);
         }
-    }
-    else
-    if ($user_kind == 'practicante_ps') {
+    }else if ($user_kind == 'practicante_ps') {
         $monitors_of_pract = get_monitors_of_pract($user_id, $instance);
         foreach($monitors_of_pract as $monitor) {
             $monitor_id = $monitor->id_usuario;
@@ -364,7 +344,286 @@ function auxiliary_specific_counting($user_kind, $user_id, $semester, $instance)
             array_push($array_final, $counting_advice);
         }
     }
+    return $array_final;
+}
 
+function auxiliary_specific_countingV2($user_kind, $user_id, $semester, $instance){
+
+    $fecha_inicio = null;
+    $fecha_fin = null;
+
+    $interval = get_semester_interval($semester->max);
+    $fecha_inicio = getdate(strtotime($interval->fecha_inicio));
+    $fecha_fin = getdate(strtotime($interval->fecha_fin));
+
+    $mon_tmp = $fecha_inicio["mon"];
+    $day_tmp = $fecha_inicio["mday"];
+    if( $mon_tmp < 10 ){
+        $mon_tmp = "0" . $mon_tmp;
+    }
+    if( $day_tmp < 10 ){
+        $day_tmp = "0" . $day_tmp;
+    }
+
+    $fecha_inicio_str = $fecha_inicio["year"]."-".$mon_tmp."-".$day_tmp;
+
+    $mon_tmp = $fecha_fin["mon"];
+    $day_tmp = $fecha_fin["mday"];
+    if( $mon_tmp < 10 ){
+        $mon_tmp = "0" . $mon_tmp;
+    }
+    if( $day_tmp < 10 ){
+        $day_tmp = "0" . $day_tmp;
+    }
+
+    $fecha_fin_str = $fecha_fin["year"]."-".$mon_tmp."-".$day_tmp;
+
+    $array_final = array();
+    if ($user_kind == 'profesional_ps') {
+
+        $xQuery = new stdClass();
+        $xQuery->form = "seguimiento_pares";
+        $xQuery->filterFields = [["fecha",[[$fecha_inicio_str,">="],[$fecha_fin_str,"<="]], false],
+                                 ["revisado_profesional",[["%%","LIKE"]], false],
+                                 ["revisado_practicante",[["%%","LIKE"]], false],
+                                 ["id_profesional",[[$user_id,"="]], false]
+                                ];
+        $xQuery->orderFields = [["fecha","DESC"]];
+        $xQuery->orderByDatabaseRecordDate = true; 
+        $xQuery->recordStatus = [ "!deleted" ];
+        $xQuery->selectedFields = []; 
+
+        $trackings = dphpformsV2_find_records( $xQuery );
+
+        $rev_pro = 0;
+        $not_rev_pro = 0;
+        $rev_prac = 0;
+        $not_rev_prac = 0;
+    
+        foreach( $trackings as $track ){
+            if( $track["revisado_profesional"] == 0 ){
+                $rev_pro++;
+            }else{
+                $not_rev_pro++;
+            }
+            if( $track["revisado_practicante"] == 0 ){
+                $rev_prac++;
+            }else{
+                $not_rev_prac++;
+            }
+        }
+
+        $xQuery = new stdClass();
+        $xQuery->form = "inasistencia";
+        $xQuery->filterFields = [["in_fecha",[[$fecha_inicio_str,">="],[$fecha_fin_str,"<="]], false],
+                                 ["in_revisado_profesional",[["%%","LIKE"]], false],
+                                 ["in_revisado_practicante",[["%%","LIKE"]], false],
+                                 ["in_id_profesional",[[$user_id,"="]], false]
+                                ];
+        $xQuery->orderFields = [["in_fecha","DESC"]];
+        $xQuery->orderByDatabaseRecordDate = true; 
+        $xQuery->recordStatus = [ "!deleted" ];
+        $xQuery->selectedFields = []; 
+
+        $in_trackings = dphpformsV2_find_records( $xQuery );
+
+        $in_rev_pro = 0;
+        $in_not_rev_pro = 0;
+        $in_rev_prac = 0;
+        $in_not_rev_prac = 0;
+    
+        foreach( $in_trackings as $track ){
+            if( $track["in_revisado_profesional"] == 0 ){
+                $in_rev_pro++;
+            }else{
+                $in_not_rev_pro++;
+            }
+            if( $track["in_revisado_practicante"] == 0 ){
+                $in_rev_prac++;
+            }else{
+                $in_not_rev_prac++;
+            }
+        }
+
+        $count['revisado_profesional'] = $rev_pro;
+        $count['not_revisado_profesional'] = $not_rev_pro;
+        $count['total_profesional'] = $rev_pro + $not_rev_pro;
+        $count['revisado_practicante'] = $rev_prac;
+        $count['not_revisado_practicante'] = $not_rev_prac;
+        $count['total_practicante'] = $rev_prac + $not_rev_prac;
+
+        $count['in_revisado_profesional'] = $in_rev_pro;
+        $count['in_not_revisado_profesional'] = $in_not_rev_pro;
+        $count['in_total_profesional'] = $in_rev_pro + $in_not_rev_pro;
+        $count['in_revisado_practicante'] = $in_rev_prac;
+        $count['in_not_revisado_practicante'] = $in_not_rev_prac;
+        $count['in_total_practicante'] = $in_rev_prac + $in_not_rev_prac;
+
+        return $count;
+
+    }else if ($user_kind == 'practicante_ps') {
+        
+        $xQuery = new stdClass();
+        $xQuery->form = "seguimiento_pares";
+        $xQuery->filterFields = [["fecha",[[$fecha_inicio_str,">="],[$fecha_fin_str,"<="]], false],
+                                 ["revisado_profesional",[["%%","LIKE"]], false],
+                                 ["revisado_practicante",[["%%","LIKE"]], false],
+                                 ["id_practicante",[[$user_id,"="]], false]
+                                ];
+        $xQuery->orderFields = [["fecha","DESC"]];
+        $xQuery->orderByDatabaseRecordDate = false; 
+        $xQuery->recordStatus = [ "!deleted" ];
+        $xQuery->selectedFields = []; 
+
+        $trackings = dphpformsV2_find_records( $xQuery );
+
+        $rev_pro = 0;
+        $not_rev_pro = 0;
+        $rev_prac = 0;
+        $not_rev_prac = 0;
+    
+        foreach( $trackings as $track ){
+            if( $track["revisado_profesional"] == 0 ){
+                $rev_pro++;
+            }else{
+                $not_rev_pro++;
+            }
+            if( $track["revisado_practicante"] == 0 ){
+                $rev_prac++;
+            }else{
+                $not_rev_prac++;
+            }
+        }
+
+        $xQuery = new stdClass();
+        $xQuery->form = "inasistencia";
+        $xQuery->filterFields = [["in_fecha",[[$fecha_inicio_str,">="],[$fecha_fin_str,"<="]], false],
+                                 ["in_revisado_profesional",[["%%","LIKE"]], false],
+                                 ["in_revisado_practicante",[["%%","LIKE"]], false],
+                                 ["in_id_practicante",[[$user_id,"="]], false]
+                                ];
+        $xQuery->orderFields = [["in_fecha","DESC"]];
+        $xQuery->orderByDatabaseRecordDate = true; 
+        $xQuery->recordStatus = [ "!deleted" ];
+        $xQuery->selectedFields = []; 
+
+        $in_trackings = dphpformsV2_find_records( $xQuery );
+
+        $in_rev_pro = 0;
+        $in_not_rev_pro = 0;
+        $in_rev_prac = 0;
+        $in_not_rev_prac = 0;
+    
+        foreach( $in_trackings as $track ){
+            if( $track["in_revisado_profesional"] == 0 ){
+                $in_rev_pro++;
+            }else{
+                $in_not_rev_pro++;
+            }
+            if( $track["in_revisado_practicante"] == 0 ){
+                $in_rev_prac++;
+            }else{
+                $in_not_rev_prac++;
+            }
+        }
+
+        $count['revisado_profesional'] = $rev_pro;
+        $count['not_revisado_profesional'] = $not_rev_pro;
+        $count['total_profesional'] = $rev_pro + $not_rev_pro;
+        $count['revisado_practicante'] = $rev_prac;
+        $count['not_revisado_practicante'] = $not_rev_prac;
+        $count['total_practicante'] = $rev_prac + $not_rev_prac;
+
+        $count['in_revisado_profesional'] = $in_rev_pro;
+        $count['in_not_revisado_profesional'] = $in_not_rev_pro;
+        $count['in_total_profesional'] = $in_rev_pro + $in_not_rev_pro;
+        $count['in_revisado_practicante'] = $in_rev_prac;
+        $count['in_not_revisado_practicante'] = $in_not_rev_prac;
+        $count['in_total_practicante'] = $in_rev_prac + $in_not_rev_prac;
+
+        return $count;
+    }else if ($user_kind == 'monitor_ps') {
+        
+        $xQuery = new stdClass();
+        $xQuery->form = "seguimiento_pares";
+        $xQuery->filterFields = [["fecha",[[$fecha_inicio_str,">="],[$fecha_fin_str,"<="]], false],
+                                 ["revisado_profesional",[["%%","LIKE"]], false],
+                                 ["revisado_practicante",[["%%","LIKE"]], false],
+                                 ["id_monitor",[[$user_id,"="]], false]
+                                ];
+        $xQuery->orderFields = [["fecha","DESC"]];
+        $xQuery->orderByDatabaseRecordDate = false; 
+        $xQuery->recordStatus = [ "!deleted" ];
+        $xQuery->selectedFields = []; 
+
+        $trackings = dphpformsV2_find_records( $xQuery );
+
+        $rev_pro = 0;
+        $not_rev_pro = 0;
+        $rev_prac = 0;
+        $not_rev_prac = 0;
+    
+        foreach( $trackings as $track ){
+            if( $track["revisado_profesional"] == 0 ){
+                $rev_pro++;
+            }else{
+                $not_rev_pro++;
+            }
+            if( $track["revisado_practicante"] == 0 ){
+                $rev_prac++;
+            }else{
+                $not_rev_prac++;
+            }
+        }
+
+        $xQuery = new stdClass();
+        $xQuery->form = "inasistencia";
+        $xQuery->filterFields = [["in_fecha",[[$fecha_inicio_str,">="],[$fecha_fin_str,"<="]], false],
+                                 ["in_revisado_profesional",[["%%","LIKE"]], false],
+                                 ["in_revisado_profesional",[["%%","LIKE"]], false],
+                                 ["in_id_monitor",[[$user_id,"="]], false]
+                                ];
+        $xQuery->orderFields = [["in_fecha","DESC"]];
+        $xQuery->orderByDatabaseRecordDate = true; 
+        $xQuery->recordStatus = [ "!deleted" ];
+        $xQuery->selectedFields = []; 
+
+        $in_trackings = dphpformsV2_find_records( $xQuery );
+
+        $in_rev_pro = 0;
+        $in_not_rev_pro = 0;
+        $in_rev_prac = 0;
+        $in_not_rev_prac = 0;
+    
+        foreach( $in_trackings as $track ){
+            if( $track["in_revisado_profesional"] == 0 ){
+                $in_rev_pro++;
+            }else{
+                $in_not_rev_pro++;
+            }
+            if( $track["in_revisado_practicante"] == 0 ){
+                $in_rev_prac++;
+            }else{
+                $in_not_rev_prac++;
+            }
+        }
+
+        $count['revisado_profesional'] = $rev_pro;
+        $count['not_revisado_profesional'] = $not_rev_pro;
+        $count['total_profesional'] = $rev_pro + $not_rev_pro;
+        $count['revisado_practicante'] = $rev_prac;
+        $count['not_revisado_practicante'] = $not_rev_prac;
+        $count['total_practicante'] = $rev_prac + $not_rev_prac;
+
+        $count['in_revisado_profesional'] = $in_rev_pro;
+        $count['in_not_revisado_profesional'] = $in_not_rev_pro;
+        $count['in_total_profesional'] = $in_rev_pro + $in_not_rev_pro;
+        $count['in_revisado_practicante'] = $in_rev_prac;
+        $count['in_not_revisado_practicante'] = $in_not_rev_prac;
+        $count['in_total_practicante'] = $in_rev_prac + $in_not_rev_prac;
+
+        return $count;
+    }
     return $array_final;
 }
 
@@ -388,7 +647,7 @@ function calculate_specific_counting($user_kind, $person, $dates_interval, $inst
     $new_counting[2] = 0;
     $new_counting[3] = 0;
     if ($user_kind == 'PRACTICANTE') {
-        $tracking_current_semestrer = get_tracking_current_semester('monitor', $person->id_usuario, $dates_interval);
+        $tracking_current_semestrer = get_tracking_current_semesterV2('monitor', $person->id_usuario, $dates_interval);
         $counting_trackings = filter_trackings_by_review($tracking_current_semestrer);
         $new_counting[0]+= $counting_trackings[0];
         $new_counting[1]+= $counting_trackings[1];
@@ -399,7 +658,19 @@ function calculate_specific_counting($user_kind, $person, $dates_interval, $inst
     else
     if ($user_kind == 'PROFESIONAL') {
         foreach($person as $key => $monitor) {
-            $tracking_current_semestrer = get_tracking_current_semester('monitor', $monitor->id_usuario, $dates_interval);
+            $xQuery = new stdClass();
+            $xQuery->form = "seguimiento_pares";
+            $xQuery->filterFields = [["fecha",[[$fecha_inicio_str,">="],[$fecha_fin_str,"<="]], false],
+                                    ["revisado_profesional",[["%%","LIKE"]], false],
+                                    ["revisado_practicante",[["%%","LIKE"]], false]
+                                    ];
+            $xQuery->orderFields = [["fecha","DESC"]];
+            $xQuery->orderByDatabaseRecordDate = false; 
+            $xQuery->recordStatus = [ "!deleted" ];
+            $xQuery->selectedFields = [ ]; 
+
+            //$trackings = dphpformsV2_find_records( $xQuery );
+            $tracking_current_semestrer = get_tracking_current_semesterV2('monitor', $monitor->id_usuario, $dates_interval);
             $counting_trackings = filter_trackings_by_review($tracking_current_semestrer);
             $new_counting[0]+= $counting_trackings[0];
             $new_counting[1]+= $counting_trackings[1];
@@ -641,21 +912,31 @@ function show_according_permissions(&$table, $actions)
  * Gets a select organized by existent periods
  * @see get_period_select($periods)
  * @param $periods ---> existent periods
+ * @param $rol
  * @return string html table
  *
  */
 
-function get_period_select($periods)
-{
+function get_period_select($periods, $rol = null){
+
+    $extra = "";
     $table = "";
-    $table.= '<div class="container"><form class="form-inline">';
-    $table.= '<div class="form-group"><label for="persona">Periodo</label><select class="form-control" id="periodos">';
+
+    if($rol !== "sistemas"){
+        $extra .= "col-xs-offset-6 col-sm-offset-6 col-md-offset-7 col-lg-offset-7";
+    }
+
+    $table.= '<div id="consulta_periodo" class="form-group col-xs-6 col-sm-6 col-md-5 col-lg-5 '.$extra.'">';
+    $table.= '<label for="periodos">Periodo:&nbsp;</label>';
+    $table .= '<select style="width:80%" class="form-control" id="periodos">';
+
     foreach($periods as $period) {
         $table.= '<option value="' . $period->id . '">' . $period->nombre . '</option>';
     }
 
     $table.= '</select></div>';
     return $table;
+
 }
 
 /**
@@ -666,16 +947,21 @@ function get_period_select($periods)
  *
  */
 
-function get_people_select($people)
-{
-    $table = "";
-    $table.= '<div class="form-group"><label for="persona">Persona</label><select class="form-control" id="personas">';
+function get_people_select($people){
+    
+    $table = '<div id="consulta_personas" class="form-group col-xs-6 col-sm-6 col-md-5 col-lg-5">';
+    $table.= '<label for="persona" >Persona:&nbsp;</label>';
+    $table.= '<select style="width:80%" class="form-control" id="personas">';
     foreach($people as $person) {
-        $table.= '<option value="' . $person->id_usuario . '">' . $person->username . " - " . $person->firstname . " " . $person->lastname . '</option>';
+        $table.= '<option data-username="' . $person->username . '" value="' . $person->id_usuario . '">' . $person->username . " - " . $person->firstname . " " . $person->lastname . '</option>';
     }
+    $table.= '</select>';
+    $table.= '</div>';
 
-    $table.= '</select></div>';
-    $table.= '<span class="btn btn-info" id="consultar_persona" type="button">Consultar</span></form></div>';
+    $table.= '<div id="container-consulta-btn" class="col-xs-12 col-sm-12 col-md-2 col-lg-2">';
+    $table.= '  <span class="btn btn-info" id="consultar_persona" type="button">Consultar</span>';
+    $table.= '</div>';
+
     return $table;
 }
 

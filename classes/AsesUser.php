@@ -24,20 +24,24 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 defined('MOODLE_INTERNAL') || die;
-require_once(__DIR__.'/../vendor/autoload.php');
+require_once(__DIR__ . '/../vendor/autoload.php');
 
-use NilPortugues\Sql\QueryBuilder\Builder\GenericBuilder;
+use Latitude\QueryBuilder\Query\SelectQuery;
+use function Latitude\QueryBuilder\{alias, on, field, QueryInterface, criteria, identify, identifyAll, listing};
 
 
-require_once(__DIR__.'/../managers/user_management/user_management_lib.php');
-require_once(__DIR__.'/DAO/BaseDAO.php');
-require_once(__DIR__.'/Estado.php');
-require_once(__DIR__.'/EstadoAsesRegistro.php');
-require_once(__DIR__.'/EstadoAses.php');
-require_once(__DIR__.'/Discapacidad.php');
-require_once(__DIR__.'/EstadoIcetexRegistro.php');
-require_once(__DIR__.'/EstadoIcetex.php');
-require_once(__DIR__.'/Errors/Factories/DatabaseErrorFactory.php');
+require_once(__DIR__ . '/../managers/user_management/user_management_lib.php');
+require_once(__DIR__ . '/DAO/BaseDAO.php');
+require_once(__DIR__ . '/Estado.php');
+require_once(__DIR__ . '/EstadoAsesRegistro.php');
+require_once(__DIR__ . '/EstadoAses.php');
+require_once(__DIR__ . '/AsesUserExtended.php');
+require_once(__DIR__ . '/Discapacidad.php');
+require_once(__DIR__ . '/EstadoIcetexRegistro.php');
+require_once(__DIR__ . '/EstadoIcetex.php');
+require_once(__DIR__ . '/Errors/Factories/DatabaseErrorFactory.php');
+
+
 class AsesUser extends BaseDAO  {
     const TIPO_DOCUMENTO = 'tipo_doc';
     const TIPO_DOCUMENTO_INICIAL = 'tipo_doc_ini';
@@ -173,23 +177,34 @@ class AsesUser extends BaseDAO  {
     /**
      * Return ases user with names, have the same properties than AsesUser,
      * with two aditional properties: firstname and lastname
-     * @returns array Array with ASES users and names
+     * @param array $conditions Key value array where the keys are the column names and the values
+     * say what value shuld exactly have the database record for was returned, if $conditions is equal to
+     * '''array('id'=>1) this implies where id = 1 in the executed query
+     * @returns array array of  AsesUserWithNames Ases users with names
      */
-    public static function get_ases_users_with_names() {
+    public static function get_ases_users_with_names($conditions = null): array {
         global $DB;
-        $default_column_names = AsesUser::get_column_names();
-        $sql =
-            "
-            SELECT tp_u.id, mdl_user.firstname, mdl_user.lastname, tp_u.num_doc 
-            FROM {talentospilos_user_extended} tp_uext, {user} mdl_user, {talentospilos_usuario} tp_u
-            WHERE
-              mdl_user.id = tp_uext.id_moodle_user
-            AND
-              tp_uext.id_ases_user = tp_u.id
-            AND  
-              tp_u.id = tp_uext.id_ases_user 
-        ";
-        return $DB->get_records_sql($sql);
+        $query = BaseDAO::get_factory()
+            ->select(
+                'mdl_user.firstname',
+                'mdl_user.lastname',
+                listing(identifyAll(AsesUser::get_column_names('ases_user'))))
+            ->from(alias(AsesUser::get_table_name_for_moodle(), 'ases_user'))
+            ->innerJoin(
+                alias(AsesUserExtended::get_table_name_for_moodle(), 'ases_user_ext'),
+                on('ases_user.'.AsesUser::ID, 'ases_user_ext.'.AsesUserExtended::ID_ASES_USER))
+            ->innerJoin(
+                alias('{user}', 'mdl_user'),
+                on('ases_user_ext.'.AsesUserExtended::ID_MOODLE_USER, 'mdl_user.id'));
+        if( $conditions ) {
+            foreach($conditions as $colum_name => $value) {
+                $query->andWhere(field($colum_name)->eq($value));
+            }
+        }
+        $query->compile();
+        $results = $DB->get_records_sql($query->sql());
+        echo $query->sql();die;
+        return AsesUserWithNames::make_objects_from_std_objects_or_arrays($results);
     }
     /**
      * Return Moodle user related to this ases user
@@ -282,6 +297,44 @@ class AsesUser extends BaseDAO  {
             return $OUTPUT->user_picture($mdl_user, array('size'=>200,  'link'=> false));
         }
     }
-}
 
+    public static function _select_ases_users(): SelectQuery {
+        return BaseDAO::get_factory()
+            ->select()
+            ->from(alias(AsesUser::get_table_name_for_moodle(), 'usuario'))
+            ->innerJoin(
+                alias(AsesUserExtended::get_table_name_for_moodle(), 'user_extended'),
+                on('usuario.'.AsesUser::ID, 'user_extended.'.AsesUserExtended::ID_ASES_USER));
+    }
+
+    /**
+     * Select all ases users with tracking status in 1 and estadoases in 'seguimiento'
+     *
+     * # Returned tables:
+     * 1. AsesUser
+     * 2. AsesUserExtended
+     * 3. EstadoAsesRegistro
+     * 4. EstadoAses
+     *
+     * @return SelectQuery
+     */
+    public static function _select_active_ases_users(): SelectQuery {
+        return AsesUser::_select_ases_users()
+            ->innerJoin(
+                alias('{talentospilos_est_estadoases}', 'est_estadoases'),
+                on('est_estadoases.id_estudiante', 'usuario.id'))
+            ->innerJoin(
+                alias('{talentospilos_estados_ases}', 'estados_ases'),
+                on('estados_ases.id', 'est_estadoases.'.EstadoAsesRegistro::ID_ESTADO_ASES))
+            ->where(criteria("%s = 'seguimiento'", identify('estados_ases.nombre')));
+    }
+}
+class AsesUserWithNames extends AsesUser {
+
+    public $firstname;
+    public $lastname;
+    public static  function get_table_name(): string {
+        return '';
+    }
+}
 ?>

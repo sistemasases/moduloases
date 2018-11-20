@@ -37,9 +37,15 @@ function get_pract_of_prof($id_prof,$id_instance){
 
     $current_semester = get_current_semester();
     $id_practicant = get_role_id('practicante_ps');
-    $sql_query="SELECT users.firstname,users.lastname,id_usuario,id_semestre,users.username
+    $sql_query="SELECT id_usuario,users.firstname,users.lastname,id_semestre,users.username, CONCAT(users.firstname, ' ',users.lastname) AS fullname
     FROM {talentospilos_user_rol} user_rol
-    INNER JOIN {user} users ON user_rol.id_usuario = users.id where user_rol.id_jefe=$id_prof and user_rol.id_rol=$id_practicant->id and user_rol.estado=1 and user_rol.id_semestre=$current_semester->max and user_rol.id_instancia=$id_instance";
+    INNER JOIN {user} users ON user_rol.id_usuario = users.id 
+    WHERE user_rol.id_jefe = $id_prof 
+    AND user_rol.id_rol = $id_practicant->id 
+    AND user_rol.estado = 1 
+    AND user_rol.id_semestre = $current_semester->max 
+    AND user_rol.id_instancia = $id_instance
+    ORDER BY fullname ASC";
 
     $practicants = $DB->get_records_sql($sql_query);
     return $practicants;
@@ -56,9 +62,15 @@ function get_monitors_of_pract($id_pract,$id_instance){
 
     $current_semester = get_current_semester();
     $id_monitor = get_role_id('monitor_ps');
-    $sql_query = "SELECT users.firstname,users.lastname,id_usuario,id_semestre,users.username
-    FROM {talentospilos_user_rol} user_rol
-    INNER JOIN {user} users ON user_rol.id_usuario = users.id where user_rol.id_jefe='$id_pract' and user_rol.id_rol='$id_monitor->id' and user_rol.estado=1 and user_rol.id_semestre='$current_semester->max' and user_rol.id_instancia='$id_instance'";
+    $sql_query = "SELECT id_usuario, users.firstname,users.lastname,id_semestre,users.username, CONCAT(users.firstname, ' ', users.lastname) AS fullname
+                  FROM {talentospilos_user_rol} AS user_rol
+                  INNER JOIN {user} users ON user_rol.id_usuario = users.id 
+                  WHERE user_rol.id_jefe = '$id_pract' 
+                        AND user_rol.id_rol = '$id_monitor->id' 
+                        AND user_rol.estado = 1 
+                        AND user_rol.id_semestre = '$current_semester->max' 
+                        AND user_rol.id_instancia = '$id_instance'
+                  ORDER BY fullname ASC";
 
     $monitors = $DB->get_records_sql($sql_query);
     return $monitors;
@@ -102,9 +114,24 @@ function get_students_of_monitor($id_monitor,$id_instance){
    global $DB;
 
     $current_semester = get_current_semester();
-    $sql_query = "select * from {talentospilos_monitor_estud} where id_semestre=$current_semester->max and id_monitor=$id_monitor and id_instancia=$id_instance";
+    $sql_query = 
+    "SELECT ME.id, 
+     ME.id_monitor,
+     ME.id_estudiante, 
+     ME.id_semestre,
+     ME.id_instancia,
+     CONCAT(U.firstname, ' ',U.lastname) AS fullname 
+    FROM {talentospilos_monitor_estud} AS ME
+    INNER JOIN {user} AS U ON U.id = (SELECT id_moodle_user
+                                                  FROM {talentospilos_user_extended} extended
+                                                  WHERE id_ases_user = ME.id_estudiante and tracking_status=1)
+    WHERE ME.id_semestre = $current_semester->max 
+        AND ME.id_monitor = $id_monitor 
+        AND ME.id_instancia = $id_instance
+    ORDER BY fullname ASC";
 
     $students = $DB->get_records_sql($sql_query);
+    
     return $students;
 }
 

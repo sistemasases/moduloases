@@ -29,11 +29,21 @@ defined('MOODLE_INTERNAL') || die;
 require_once (__DIR__.'/../Errors/Factories/FieldValidationErrorFactory.php');
 require_once (__DIR__.'/../Errors/AsesError.php');
 require_once(__DIR__.'/../../vendor/autoload.php');
+require_once (__DIR__.'/../common/Validable.php');
 use Latitude\QueryBuilder\Engine\PostgresEngine;
 use Latitude\QueryBuilder\QueryFactory;
+use function Latitude\QueryBuilder\{express, alias};
 
 $__factory  = new QueryFactory(new PostgresEngine());
-abstract class BaseDAO
+
+function subquery($query, $alias=null) {
+    if( $alias ){
+        return alias(express("( %s )", $query), $alias);
+    }
+    return express("( %s )", $query);
+}
+
+abstract class BaseDAO extends Validable
 {
 
     use from_std_object_or_array;
@@ -45,41 +55,9 @@ abstract class BaseDAO
     const GENERIC_ERRORS_FIELD = 'generic_errors';
 
     const NO_REGISTRA = 'NO REGISTRA';
-    private $_errors = array();
 
-    /**
-     * This variable contains the same errors than $_erros but are agrouped by the class properties, if exist
-     * some error than does not related with a unique class attribute this is stored in $_errors_object['generic_errors']
-     *
-     * Example
-     * The class Foo have two properties, $a and $b, $a is required and $b should be numeric, but
-     * as shown below:
-     *
-     * '''class Foo extends BaseDAO {
-     *  public $a;
-     *  public $b;
-     *
-     *  public function __construct($a, $b) {
-     *      $this->a = $a;
-     *      $this->b = $b;
-     *  }
-     * }'''
-     * If you have an instance '''$fo = new Foo(null, 'some_no_numeric');''' and execute $this->valid()
-     * the $_errors_array should be equal to
-     *'''
-     * array(
-     *  'a' => AsesError(10, 'El campo es requerido'),
-     *  'b' => AsesError(11, 'El campo debe ser numerico')
-     * );
-     *
-     *'''
-     *And you can access this error array via $this->get_errors_array();
-     * @var
-     */
-    private $_errors_object;
     public function __construct($data = null)
     {
-
         if ($data) {
             $this->make_from($data);
 
@@ -97,7 +75,7 @@ abstract class BaseDAO
         $this->valid();
         /* @var AsesError $error*/
         foreach ($this->_errors as $error) {
-            if($error->code == $error_id) {
+            if($error->status_code == $error_id) {
                 return true;
             }
         }
@@ -108,13 +86,6 @@ abstract class BaseDAO
         return get_called_class();
     }
     /**
-     * Clean errors
-     */
-    private function clean_errors() {
-        $this->_errors = array();
-        $this->_errors_object = new \stdClass();
-    }
-    /**
      * Custom validation method, rewrite this if you need make some aditional validation, this method
      * should be called when $this->valid() is called
      *
@@ -123,15 +94,17 @@ abstract class BaseDAO
      * @return bool True if the custom validation has not found any error
      * @see add_error
      */
+
+    public function _custom_validation(): bool {
+        return true;
+    }
+
     /**
      * Check if the current object is valid, and if is not valid add all the errors and make
      * these available by calling get_errors
      * @see get_errors
      * @return bool
      */
-    public function _custom_validation(): bool {
-        return true;
-    }
     public function valid(): bool {
 
         $this->clean_errors();
@@ -177,23 +150,7 @@ abstract class BaseDAO
         return $valid;
     }
 
-    /**
-     * Add an error to the current object,
-     * @param AsesError $error
-     * @param string $fieldname Field (or object property) where the error is found, default is generic
-     * errors field, this means than the error is not related with any object field or means than the error
-     * is related to more than one field at the same time
-     *
-     */
-    public function add_error(AsesError $error, $fieldname = BaseDAO::GENERIC_ERRORS_FIELD ) {
-        array_push($this->_errors, $error);
 
-        if(!isset($this->_errors_object->$fieldname)) {
-            $this->_errors_object->$fieldname = array ($error);
-        } else {
-            array_push($this->_errors_object->$fieldname , $error);
-        }
-    }
     /**
      * Check if all fields of the object than should be numeric are numeric, and return an array with the names
      * of the fields than are invalid, empty array is returned otherwise.
@@ -216,28 +173,6 @@ abstract class BaseDAO
         return $valid;
     }
 
-    /**
-     * Return errors, instances of AsesError if at least one error exists, emtpy array otherwise
-     * @see AsesError
-     * @return array
-     */
-    public function get_errors(): array {
-        return $this->_errors;
-    }
-    /**
-     * Return errors array, AsesError agrouped under the object fields or generic errors,
-     * the errors object have at most the same properties than the object where are the
-     * errors, for example, if you get the errors of the class A and this have the
-     * properties $b and $c, $errors can have $errors->b and $errros->c, if exist
-     * errors on field b or c, and both $errros->c and $errors->b are an array of
-     * AsesError instances
-     * @see $this->_errors_object
-     * @see AsesError
-     * @return object
-     */
-    public function get_errors_object(): object {
-        return $this->_errors_object;
-    }
     /**
      * Overload this function in the child classes if this have numeric
      * fields, otherwise is not necesary this definition
@@ -448,7 +383,7 @@ abstract class BaseDAO
      * adding brackets to the name, for example {talentospilos_usuario}
      * @return string
      */
-    public function get_table_name_for_moodle() {
+    public static function get_table_name_for_moodle() {
         /* @var BaseDAO $CLASS */
         $CLASS = get_called_class();
         return '{'.$CLASS::get_table_name(). '}';

@@ -1,37 +1,58 @@
 {{#data}}
 <div id="dphpforms_role_support" data-info="{{rol}}" style="display:none;"></div>
+<div id="current_ases_semester" data-info="{{semester}}" style="display:none;"></div>
 {{> block_ases/side_menu}} 
-<div id="loading">
-<img id="loading-image" src="../icon/load.gif" height="162" width="162"><div class="container">
-</div>
-   <h2>SEGUIMIENTO PILOS</h2>
-   <hr/>
-   {{{message}}}
-</div>
+<!--<div id="loading"><img id="loading-image" src="../icon/load.gif" height="162" width="162">-->
+<div class="container-fluid">
+  <div class="row">
+      <div id="title-report-trackings-view" class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+          <h2 class="float-left">SEGUIMIENTO PILOS</h2>
+          {{{message}}}
+          <div id="report-tracking-selectors" data-spy="scroll" data-target=".navbar" data-offset="50" class="col-xs-12 col-sm-12 col-md-8 col-lg-8 float-right reporte-seguimiento">
+            {{{table_periods}}}
+          </div>
+      </div>
+  </div>
 <form>
    {{#data}}
    <div class="row">
-      <label class="col-md-offset-12" id="titulo"></label>
-   </div>
-   <div class="row">
 
       {{#view_trackings_rt}}
-      <div data-spy="scroll" data-target=".navbar" data-offset="50" class="well col-md-12  reporte-seguimiento">
-         {{{table_periods}}}
+      <div class="well col-xs-10 col-sm-10 col-md-10 col-lg-10 col-xs-offset-1 col-sm-offset-1 col-md-offset-1 col-lg-offset-1  equalize text-center" 
+           id="div-header-info" name="main_counting">
+        <div id="title-informacion-de">
+            INFORMACIÓN DE {{human_rol}}
+        </div>
+        <hr style="margin:7px; border-color:rgb(207, 207, 207);">
+
+        <div class="row">
+
+          <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+            <strong>Profesional</strong><br />
+            <strong>Fichas:</strong> Revisado : <span id="general_rev_pro">*</span> - No revisado : <span id="general_not_rev_pro">*</span> -  Total : <span id="general_pro_t">*</span><br>
+            <strong>Inasistencias:</strong> Revisado : <span id="general_in_rev_pro">*</span> - No revisado : <span id="general_in_not_rev_pro">*</span> -  Total : <span id="general_in_pro_t">*</span>
+          </div>
+          <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+            <strong>Practicante</strong><br />
+            <strong>Fichas:</strong> Revisado : <span id="general_rev_prac">*</span> - No revisado : <span id="general_not_rev_prac">*</span> -  Total : <span id="general_prac_t">*</span><br>
+            <strong>Inasistencias:</strong> Revisado : <span id="general_in_rev_prac">*</span> - No revisado : <span id="general_in_not_rev_prac">*</span> -  Total : <span id="general_in_prac_t">*</span>
+          </div>
+
+        </div>
+
       </div>
-      <div id='loadingmessage'>
-      <div class="well col-xs-12 col-sm-12 col-md-10 col-lg-10 col-md-offset-1 equalize text-center" id="div-header-info" style="height: 204.746px;" name="main_counting">
+      <div data-spy="scroll" data-target=".navbar" data-offset="50" 
+           class="well col-xs-10 col-sm-10 col-md-10 col-lg-10 col-xs-offset-1 col-sm-offset-1 col-md-offset-1 col-lg-offset-1 reporte-seguimiento " 
+           id="reemplazarToogle" name="reemplazarToogle">
 
-     {{{counting}}}
-    </div>
+          {{{table}}}
 
-    <div data-spy="scroll" data-target=".navbar" data-offset="50" class="well col-md-10 col-md-offset-1 reporte-seguimiento " id="reemplazarToogle" name="reemplazarToogle">
-         {{{table}}}
-
-      {{/view_trackings_rt}}
-   </div>
+      </div>
+    {{/view_trackings_rt}}
    {{/data}}
+  </div>
 </form>
+</div>
 
   <!-- MODALES DE SEGUIMIENTO -->
   <div class="mymodal" id="modal_v2_peer_tracking" name="modal_v2_pares">

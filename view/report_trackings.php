@@ -104,6 +104,7 @@ $table="";
 $table_periods="";
 
 $periods = get_semesters();
+$semester_id = get_current_semester()->max;
 
 // Getting last semester date range 
 $intervalo_fechas[0] = reset($periods)->fecha_inicio;
@@ -114,7 +115,7 @@ $choosen_date =strtotime($intervalo_fechas[0]);
 $new_forms_date =strtotime('2018-01-01 00:00:00');
 
 // Sort periods Select
-$table_periods.=get_period_select($periods);
+$table_periods.=get_period_select($periods, $usernamerole);
 
 if($usernamerole=='monitor_ps'){
 
@@ -125,7 +126,7 @@ if($usernamerole=='monitor_ps'){
     $tracking_current_semestrer=get_tracking_current_semester('monitor',$monitor_id, $intervalo_fechas[2]);
     $counting_trackings=filter_trackings_by_review($tracking_current_semestrer);
     $counting=create_counting_advice('MONITOR',$counting_trackings);
-
+    $data->human_rol = "MONITOR";
 
     // Get peer trackings that a monitor has done and show it in a toggle.
     $students_by_monitor=get_students_of_monitor($monitor_id,$blockid);
@@ -144,6 +145,7 @@ if($usernamerole=='monitor_ps'){
     $practicant_id =$USER->id;
     $monitors_of_pract = get_monitors_of_pract($practicant_id,$blockid);
     $table.=render_practicant_new_form($monitors_of_pract,$blockid);
+    $data->human_rol = "PRACTICANTE";
   
 
 
@@ -155,11 +157,10 @@ if($usernamerole=='monitor_ps'){
     $professional_id=$USER->id;
     $practicant_of_prof=get_pract_of_prof($professional_id,$blockid);
     $table.=render_professional_new_form($practicant_of_prof,$blockid);
-   
+    $data->human_rol = "PROFESIONAL";
 
 
 }elseif($usernamerole=='sistemas'){
-
     //Gets all existent periods and roles containing "_ps"
     $roles = get_rol_ps();
 
@@ -169,6 +170,7 @@ if($usernamerole=='monitor_ps'){
 
     //Sorts People 'select'
     $table_periods.=get_people_select($people);
+    $data->human_rol = "SISTEMAS";
 
 }
 $table_permissions=show_according_permissions($table,$actions);
@@ -178,8 +180,9 @@ $data->rol = $usernamerole;
 
 $data->table_periods =$table_periods;
 $data->table=$table_permissions;
-$data->counting=$counting;
+$data->semester = $semester_id;
 
+$PAGE->requires->css('/blocks/ases/style/base_ases.css', true);
 $PAGE->requires->css('/blocks/ases/style/jqueryui.css', true);
 $PAGE->requires->css('/blocks/ases/style/styles_pilos.css', true);
 $PAGE->requires->css('/blocks/ases/style/bootstrap.min.css', true);
@@ -191,6 +194,7 @@ $PAGE->requires->css('/blocks/ases/style/c3.css', true);
 $PAGE->requires->css('/blocks/ases/style/student_profile_risk_graph.css', true);
 $PAGE->requires->css('/blocks/ases/js/select2/css/select2.css', true);
 $PAGE->requires->css('/blocks/ases/style/side_menu_style.css', true);
+$PAGE->requires->css('/blocks/ases/style/report_trackings.css', true);
 //Pendiente para cambiar el idioma del nombre del archivo junto con la estructura de
 //su nombramiento.
 $PAGE->requires->css('/blocks/ases/style/creadorFormulario.css', true);

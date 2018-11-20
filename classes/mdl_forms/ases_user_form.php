@@ -25,20 +25,16 @@
 
 defined('MOODLE_INTERNAL') || die;
 
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
 require_once($CFG->libdir.'/formslib.php');
-require_once(__DIR__.'/../Gender.php');
-require_once(__DIR__.'/../TipoDocumento.php');
-require_once(__DIR__.'/../AsesUser.php');
-require_once(__DIR__.'/../Municipio.php');
-require_once(__DIR__.'/../Discapacidad.php');
-require_once(__DIR__.'/../Estamento.php');
+require_once(__DIR__ . '/../Gender.php');
+require_once(__DIR__ . '/../TipoDocumento.php');
+require_once(__DIR__ . '/../AsesUser.php');
+require_once(__DIR__ . '/../Municipio.php');
+require_once(__DIR__ . '/../Discapacidad.php');
+require_once(__DIR__ . '/../Estamento.php');
 class ases_user_form extends moodleform {
     //Add elements to form
     public function definition() {
-        global $CFG;
-
         $gender_options = Gender::get_options();
         $tipo_doc_options = TipoDocumento::get_options();
         $cidades_options = Municipio::get_options();
@@ -75,7 +71,7 @@ class ases_user_form extends moodleform {
         $mform->setDefault('id_ciudad_ini', $ciudad_por_defecto->id);
         $mform->addRule('id_ciudad_ini', null, 'required');
        
-        $mform->addElement('select', 'sexo', 'Sexo' , $gender_options);
+        $mform->addElement('searchableselector', 'sexo', 'Sexo' , $gender_options);
 
         $mform->addRule('sexo', null, 'required');
 

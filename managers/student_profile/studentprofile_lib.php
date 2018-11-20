@@ -26,34 +26,16 @@
 require_once(dirname(__FILE__). '/../../../../config.php');
 require_once $CFG->dirroot.'/blocks/ases/managers/lib/student_lib.php';
 require_once $CFG->dirroot.'/blocks/ases/managers/dphpforms/dphpforms_forms_core.php';
+require_once $CFG->dirroot.'/blocks/ases/managers/dphpforms/v2/dphpforms_lib.php';
 require_once $CFG->dirroot.'/blocks/ases/managers/dphpforms/dphpforms_records_finder.php';
 require_once $CFG->dirroot.'/blocks/ases/managers/dphpforms/dphpforms_get_record.php';
 require_once $CFG->dirroot.'/blocks/ases/managers/periods_management/periods_lib.php';
 
 require_once("$CFG->libdir/formslib.php");
-
-
 require_once($CFG->dirroot.'/user/edit_form.php');
 require_once($CFG->dirroot.'/user/editlib.php');
 require_once($CFG->dirroot.'/user/profile/lib.php');
 require_once($CFG->dirroot.'/user/lib.php');
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 /**
  * Gets all reasons a student quit or delay studies
@@ -73,6 +55,9 @@ require_once($CFG->dirroot.'/user/lib.php');
  }
  
 
+
+
+
 /**
  * Update the user image profile from php file by user id
  * @param $mdl_user_id Moodle user ID
@@ -83,34 +68,34 @@ function update_user_image_profile($mdl_user_id, $php_file) {
     global $CFG, $DB, $PAGE;
     $personalcontext = context_user::instance($mdl_user_id);
 
-$PAGE->set_context($personalcontext);
+    $PAGE->set_context($personalcontext);
 
-// Prepare the editor and create form.
-$editoroptions = array(
-    'maxfiles'   => EDITOR_UNLIMITED_FILES,
-    'maxbytes'   => $CFG->maxbytes,
-    'trusttext'  => false,
-    'forcehttps' => false,
-    'context'    => $personalcontext
-);
-$user = $DB->get_record('user', array('id' => $mdl_user_id));
+    // Prepare the editor and create form.
+    $editoroptions = array(
+        'maxfiles'   => EDITOR_UNLIMITED_FILES,
+        'maxbytes'   => $CFG->maxbytes,
+        'trusttext'  => false,
+        'forcehttps' => false,
+        'context'    => $personalcontext
+    );
+    $user = $DB->get_record('user', array('id' => $mdl_user_id));
 
-$user = file_prepare_standard_editor($user, 'description', $editoroptions, $personalcontext, 'user', 'profile', 0);
-// Prepare filemanager draft area.
-$draftitemid = 0;
+    $user = file_prepare_standard_editor($user, 'description', $editoroptions, $personalcontext, 'user', 'profile', 0);
+    // Prepare filemanager draft area.
+    $draftitemid = 0;
 
-$filemanagercontext = $editoroptions['context'];
-$filemanageroptions = array('maxbytes'       => $CFG->maxbytes,
-                             'subdirs'        => 0,
-                             'maxfiles'       => 1,
-                             'accepted_types' => 'web_image');
-file_prepare_draft_area($draftitemid, $filemanagercontext->id, 'user', 'newicon', 0, $filemanageroptions);
-$user->imagefile = $draftitemid;
-// Create form.
-$userform = new user_edit_form('', array(
-    'editoroptions' => $editoroptions,
-    'filemanageroptions' => $filemanageroptions,
-    'user' => $user));
+    $filemanagercontext = $editoroptions['context'];
+    $filemanageroptions = array('maxbytes'       => $CFG->maxbytes,
+                                'subdirs'        => 0,
+                                'maxfiles'       => 1,
+                                'accepted_types' => 'web_image');
+    file_prepare_draft_area($draftitemid, $filemanagercontext->id, 'user', 'newicon', 0, $filemanageroptions);
+    $user->imagefile = $draftitemid;
+    // Create form.
+    $userform = new user_edit_form('', array(
+        'editoroptions' => $editoroptions,
+        'filemanageroptions' => $filemanageroptions,
+        'user' => $user));
 
     print_r($userform->get_data());
 }
@@ -130,6 +115,250 @@ $userform = new user_edit_form('', array(
      
      return $status_ases_array;
  }
+
+ /**
+ * Get Condición de excepción registradas
+ *
+ * @see get_cond_excepcion()
+ * @return object --> with CONDICIÓN DE EXCEPCIÓN information
+ */
+
+
+/**
+ * Return a moodle url for student profile given a student code by input
+ * @param $courseid
+ * @param $instanceid
+ * @param $student_code
+ * @return moodle_url
+ */
+function get_student_profile_url($courseid, $instanceid, $student_code): moodle_url {
+    return new moodle_url('/blocks/ases/view/student_profile.php',
+        array(
+            'courseid' => $courseid,
+            'instanceid'=> $instanceid,
+            'student_code' => $student_code
+            ));
+}
+
+
+
+function  get_cond_excepcion()
+{
+    global $DB; 
+   $sql_query = "SELECT * FROM {talentospilos_cond_excepcion}";
+   return $DB->get_records_sql($sql_query);
+}
+
+
+ /**
+ * Get Condición de excepción segun id
+ *
+ * @see get_cond()
+ * @return object --> with CONDICIÓN DE EXCEPCIÓN information
+ */
+
+function  get_cond($id)
+{
+    global $DB; 
+   $sql_query = "SELECT * FROM {talentospilos_cond_excepcion} WHERE id=$id";
+   return $DB->get_record_sql($sql_query);
+}
+
+ /**
+ * Get estados civiles registrados
+ *
+ * @see get_estados_civiles($id_cond)
+ * @return object --> with ESTADO CIVIL information
+ */
+
+function  get_estados_civiles()
+{
+    global $DB; 
+   $sql_query = "SELECT * FROM {talentospilos_estado_civil}";
+   return $DB->get_records_sql($sql_query);
+}
+/**
+ * Get paises registrados
+ *
+ * @see get_paises()
+ * @return object --> with PAIS information
+ */
+
+function  get_paises()
+{
+    global $DB; 
+   $sql_query = "SELECT * FROM {talentospilos_pais}";
+   return $DB->get_records_sql($sql_query);
+}
+
+/**
+ * Get municipios registrados
+ *
+ * @see get_municipios()
+ * @return object --> with MUNICIPIOS information
+ */
+
+function  get_municipios()
+{
+    global $DB; 
+   $sql_query = "SELECT * FROM {talentospilos_municipio}";
+   return $DB->get_records_sql($sql_query);
+}
+
+
+/**
+ * Update genero
+ *
+ * @see update_record_genero($genero)
+ * @param $genero
+ */
+function update_record_act($act){
+    global $DB;
+    $act_M =strtoupper($act->actividad);
+  
+ if( !$DB->record_exists("talentospilos_act_simultanea",array('actividad'=> $act_M))){
+     $act->actividad  = $act_M;
+    $DB->update_record("talentospilos_act_simultanea", $act);
+ }
+
+}
+
+/**
+ * Insert genero
+ *
+ * @see add_record_genero($genero)
+ * @param $genero
+ */
+function add_record_act($act){
+    global $DB;
+    $act_M =strtoupper($act);
+  
+ if( !$DB->record_exists("talentospilos_act_simultanea",array('actividad'=> $act_M))){
+    $new_act = new stdClass();
+    $new_act->actividad = $act_M;
+    $new_act->opcion_general = 0;
+    $DB->insert_record("talentospilos_act_simultanea", $new_act, true);
+ }
+
+}
+
+/**
+ * Get ID genero del parámetro
+ *
+ * @see get_id_genero()
+ * @param $genero 
+ * @return int --> with id genero
+ */
+
+function get_id_act($act){
+
+    global $DB;
+    $act_M =strtoupper($act);
+    $sql_query = "SELECT id FROM {talentospilos_act_simultanea} WHERE actividad = '$act_M'";
+    $id_act = $DB->get_record_sql($sql_query);
+    $id_act = $id_act->id;
+    return $id_act;
+    
+    }
+
+/**
+ * Update genero
+ *
+ * @see update_record_genero($genero)
+ * @param $genero
+ */
+function update_record_genero($genero){
+    global $DB;
+    $genero_M =strtoupper($genero->genero);
+  
+ if( !$DB->record_exists("talentospilos_identidad_gen",array('genero'=> $genero_M))){
+     $genero->genero  = $genero_M;
+    $DB->update_record("talentospilos_identidad_gen", $genero);
+ }
+
+}
+
+/**
+ * Insert genero
+ *
+ * @see add_record_genero($genero)
+ * @param $genero
+ */
+function add_record_genero($genero){
+    global $DB;
+    $genero_M =strtoupper($genero);
+  
+ if( !$DB->record_exists("talentospilos_identidad_gen",array('genero'=> $genero_M))){
+    $new_genero = new stdClass();
+    $new_genero->genero = $genero_M;
+    $new_genero->opcion_general = 0;
+    $DB->insert_record("talentospilos_identidad_gen", $new_genero, true);
+ }
+
+}
+
+/**
+ * Get ID genero del parámetro
+ *
+ * @see get_id_genero()
+ * @param $genero 
+ * @return int --> with id genero
+ */
+
+function get_id_genero($genero){
+
+    global $DB;
+    $genero_M =strtoupper($genero);
+    $sql_query = "SELECT id FROM {talentospilos_identidad_gen} WHERE genero = '$genero_M'";
+    $id_genero = $DB->get_record_sql($sql_query);
+    $id_genero = $id_genero->id;
+    return $id_genero;
+    
+    }
+
+/**
+ * Get generos registrados
+ *
+ * @see get_generos()
+ * @return object --> with GENERO information
+ */
+
+function  get_generos()
+{
+    global $DB; 
+   $sql_query = "SELECT * FROM {talentospilos_identidad_gen}";
+   return $DB->get_records_sql($sql_query);
+}
+
+/**
+ * Get etnias registrados
+ *
+ * @see get_etnias()
+ * @return object --> with ETNIA information
+ */
+
+function  get_etnias()
+{
+    global $DB; 
+   $sql_query = "SELECT * FROM {talentospilos_etnia}";
+   return $DB->get_records_sql($sql_query);
+}
+
+
+
+/**
+ * Get actividades simultaneas registrados
+ *
+ * @see get_act_simultaneas()
+ * @return object --> with CONDICIÓN DE EXCEPCIÓN information
+ */
+
+function  get_act_simultaneas()
+{
+    global $DB; 
+   $sql_query = "SELECT * FROM {talentospilos_act_simultanea}";
+   return $DB->get_records_sql($sql_query);
+}
  
 /**
  * Gets a set of ICETEX status
@@ -340,7 +569,87 @@ function get_trackings_student($id_ases, $tracking_type, $id_instance){
 
     return $tracking_array;
 }
- 
+
+function get_tracking_current_semesterV2($criterio,$student_id, $semester_id,$intervals=null){
+
+    $fecha_inicio = null;
+    $fecha_fin = null;
+
+    if( $intervals ){
+
+        $fecha_inicio = getdate(strtotime($intervals[0]));
+        $fecha_fin = getdate(strtotime($intervals[1]));
+
+    }else{
+
+        $interval = get_semester_interval($semester_id);
+        $fecha_inicio = getdate(strtotime($interval->fecha_inicio));
+        $fecha_fin = getdate(strtotime($interval->fecha_fin));
+    }
+
+    $mon_tmp = $fecha_inicio["mon"];
+    $day_tmp = $fecha_inicio["mday"];
+    if( $mon_tmp < 10 ){
+        $mon_tmp = "0" . $mon_tmp;
+    }
+    if( $day_tmp < 10 ){
+        $day_tmp = "0" . $day_tmp;
+    }
+
+    $fecha_inicio_str = $fecha_inicio["year"]."-".$mon_tmp."-".$day_tmp;
+
+    $mon_tmp = $fecha_fin["mon"];
+    $day_tmp = $fecha_fin["mday"];
+    if( $mon_tmp < 10 ){
+        $mon_tmp = "0" . $mon_tmp;
+    }
+    if( $day_tmp < 10 ){
+        $day_tmp = "0" . $day_tmp;
+    }
+
+    $fecha_fin_str = $fecha_fin["year"]."-".$mon_tmp."-".$day_tmp;
+
+    //$student [monitor or student]
+    $trackings = null;
+    
+    if( $criterio == 'student' ){
+
+        $xQuery = new stdClass();
+        $xQuery->form = "seguimiento_pares";
+        $xQuery->filterFields = [["id_estudiante",[[$student_id,"="]], false],
+                                 ["fecha",[[$fecha_inicio_str,">="],[$fecha_fin_str,"<="]], false],
+                                 ["revisado_profesional",[["%%","LIKE"]], false],
+                                 ["revisado_practicante",[["%%","LIKE"]], false]
+                                ];
+        $xQuery->orderFields = [["fecha","DESC"]];
+        $xQuery->orderByDatabaseRecordDate = false; 
+        $xQuery->recordStatus = [ "!deleted" ];
+        $xQuery->selectedFields = [ ]; 
+
+        $trackings = dphpformsV2_find_records( $xQuery );
+
+   }elseif( $criterio == 'monitor' ){
+        
+        $xQuery = new stdClass();
+        $xQuery->form = "seguimiento_pares";
+        $xQuery->filterFields = [["id_creado_por",[[$student_id,"="]], false],
+                                 ["fecha",[[$fecha_inicio_str,">="],[$fecha_fin_str,"<="]], false],
+                                 ["revisado_profesional",[["%%","LIKE"]], false],
+                                 ["revisado_practicante",[["%%","LIKE"]], false]
+                                ];
+        $xQuery->orderFields = [["fecha","DESC"]];
+        $xQuery->orderByDatabaseRecordDate = false; 
+        $xQuery->recordStatus = [ "!deleted" ];
+        $xQuery->selectedFields = [  ]; 
+
+        $trackings = dphpformsV2_find_records( $xQuery );
+
+    } 
+    
+    return $trackings;
+
+}
+
 function get_tracking_current_semester($criterio,$student_id, $semester_id,$intervals=null){
 
 

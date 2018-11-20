@@ -26,14 +26,27 @@
 
 require_once(dirname(__FILE__). '/../../../../config.php');
 require_once '../managers/periods_management/periods_lib.php';
+require_once(__DIR__.'/../../vendor/autoload.php');
+require_once (__DIR__.'/../../classes/DAO/BaseDAO.php');
+require_once (__DIR__ . '/../../classes/AsesUserExtended.php');
+require_once (__DIR__.'/../jquery_datatable/jquery_datatable_lib.php');
 
+use jquery_datatable;
+/**
+ * @param $instance_id
+ * @return array
+ * @throws dml_exception
+ */
 
 function get_students_and_finalgrades($instance_id){
     global $DB;
 
     $students_finalgrades_array = array();
 
-    $query = "SELECT DISTINCT row_number() over(), materias_criticas.materiacr_id, substring(courses.shortname from 0 for 14) AS course_code, courses.fullname, 
+    $query =
+        /** @lang SQL */
+        <<<SQL
+SELECT DISTINCT row_number() over(), materias_criticas.materiacr_id, substring(courses.shortname from 0 for 14) AS course_code, courses.fullname, 
                     (SELECT concat_ws(' ',firstname,lastname) AS fullname
                         FROM
                         (SELECT usuario.firstname,
@@ -79,7 +92,8 @@ function get_students_and_finalgrades($instance_id){
                 ON materias_criticas.codigo_materia = SUBSTR(courses.shortname, 4, 7)
                 WHERE SUBSTR(courses.shortname, 15, 4) = '2018') AS materias_criticas
 
-                ON cursos_ases.id_course = materias_criticas.materiacr_id";
+                ON cursos_ases.id_course = materias_criticas.materiacr_id
+SQL;
 
     $records = $DB->get_records_sql($query);
 
@@ -96,9 +110,11 @@ function get_students_and_finalgrades($instance_id){
 }
 
 
+
+
 function get_finalgrade_by_student_and_course($student_id, $course_id){
     global $DB;
-    
+
     $query = "SELECT finalgrade 
                 FROM {grade_grades} AS grades
                 INNER JOIN {grade_items} items ON items.id = grades.itemid
@@ -108,6 +124,26 @@ function get_finalgrade_by_student_and_course($student_id, $course_id){
     $finalgrade = $DB->get_record_sql($query)->finalgrade;
 
     return number_format($finalgrade, 1);
+}
+
+
+
+
+/**
+ * @param $courseid
+ * @return bool
+ * @throws dml_exception
+ */
+function get_cantidad_items($courseid){
+    global $DB;
+    $sql = <<<SQL
+    SELECT COUNT(*)
+    from {grade_items} AS mdl_grade_items 
+        WHERE mdl_grade_items.courseid = $courseid
+        and mdl_grade_items.itemtype != 'course'
+        and mdl_grade_items.itemtype != 'category'
+SQL;
+    return $DB->get_record_sql($sql);
 }
 
 function get_students_grades($student_id, $course_id){
@@ -128,47 +164,31 @@ function get_students_grades($student_id, $course_id){
         $grades.= "$record->it_name : $formatted_grade ";
     }
 
-    return $grades;    
+    return $grades;
 }
+
+
+
+
 
 function get_datatable_array_for_finalgrade_report($instance_id){
     $columns = array();
-		array_push($columns, array("title"=>"Código del curso", "name"=>"course_code", "data"=>"course_code"));
-		array_push($columns, array("title"=>"Nombre del curso", "name"=>"fullname", "data"=>"fullname"));
-		array_push($columns, array("title"=>"Docente", "name"=>"nombre_profe", "data"=>"nombre_profe"));
-		array_push($columns, array("title"=>"Nombre del estudiante", "name"=>"student_name", "data"=>"student_name"));
-        array_push($columns, array("title"=>"Apellido del estudiante", "name"=>"student_lastname", "data"=>"student_lastname"));
-        array_push($columns, array("title"=>"Notas", "name"=>"grades", "data"=>"grades"));
-        array_push($columns, array("title"=>"Nota final parcial", "name"=>"finalgrade", "data"=>"finalgrade"));
-
-		$data = array(
-					"bsort" => false,
-					"columns" => $columns,
-					"data" => get_students_and_finalgrades($instance_id),
-					"language" => 
-                	 array(
-                    	"search"=> "Buscar:",
-                    	"oPaginate" => array(
-                        	"sFirst"=>    "Primero",
-                        	"sLast"=>     "Último",
-                        	"sNext"=>     "Siguiente",
-                        	"sPrevious"=> "Anterior"
-                    		),
-                		"sProcessing"=>     "Procesando...",
-                		"sLengthMenu"=>     "Mostrar _MENU_ registros",
-                    	"sZeroRecords"=>    "No se encontraron resultados",
-                    	"sEmptyTable"=>     "Ningún dato disponible en esta tabla",
-                    	"sInfo"=>           "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
-                    	"sInfoEmpty"=>      "Mostrando registros del 0 al 0 de un total de 0 registros",
-                    	"sInfoFiltered"=>   "(filtrado de un total de _MAX_ registros)",
-                    	"sInfoPostFix"=>    "",
-                    	"sSearch"=>         "Buscar:",
-                    	"sUrl"=>            "",
-                    	"sInfoThousands"=>  ",",
-                    	"sLoadingRecords"=> "Cargando...",
-                 	),
-					"order"=> array(0, "desc")
-
-                );
+    array_push($columns, array("title"=>"Código del curso", "name"=>"course_code", "data"=>"course_code"));
+    array_push($columns, array("title"=>"Nombre del curso", "name"=>"fullname", "data"=>"fullname"));
+    array_push($columns, array("title"=>"Docente", "name"=>"nombre_profe", "data"=>"nombre_profe"));
+    array_push($columns, array("title"=>"Nombre del estudiante", "name"=>"student_name", "data"=>"student_name"));
+    array_push($columns, array("title"=>"Apellido del estudiante", "name"=>"student_lastname", "data"=>"student_lastname"));
+    array_push($columns, array("title"=>"Notas", "name"=>"grades", "data"=>"grades"));
+    array_push($columns, array("title"=>"Nota final parcial", "name"=>"finalgrade", "data"=>"finalgrade"));
+    $common_language_config = \jquery_datatable\get_datatable_common_language_config();
+    $data = array(
+                "bsort" => false,
+                "columns" => $columns,
+                "data" => get_students_and_finalgrades($instance_id),
+                "language" => $common_language_config,
+                "order"=> array(0, "desc")
+    );
     return $data;
 }
+
+
