@@ -493,11 +493,12 @@
 
 
                 function load_record_updater(form_id, record_id){
+                    
                     $('.div').removeClass('regla_incumplida');
-                    $.get( "../managers/dphpforms/dphpforms_forms_core.php?form_id=&record_id="+record_id, function( data ) {
-                            $("#body_editor").html("");
-                            $('#body_editor').append( data );
+                    $("#body_editor").html("");
 
+                    $.get( "../managers/dphpforms/dphpforms_forms_core.php?form_id=&record_id="+record_id, function( data ) {
+                            $('#body_editor').append( data );
 
                             var table = $("#list_grupal_seg_consult").clone().prop('id','list_grupal_seg_consult_1');
                             $('#modal_v2_edit_groupal_tracking').find('form').find('h1').after(table);
