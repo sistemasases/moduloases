@@ -914,7 +914,6 @@ function show_according_permissions(&$table, $actions)
  * @param $periods ---> existent periods
  * @param $rol
  * @return string html table
- *
  */
 
 function get_period_select($periods, $rol = null){

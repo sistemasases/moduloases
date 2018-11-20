@@ -545,11 +545,11 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
 
 
                 function load_record_updater(form_id, record_id){
+                    $("#body_editor").html("");
+                    $("#modal_v2_edit_groupal_tracking").find("#body_editor").html("");   
                     $.get( "../managers/dphpforms/dphpforms_forms_core.php?form_id=&record_id="+record_id, function( data ) {
                          if(form_id =='seguimiento_grupal'){
-
-                            $("#body_editor").html("");
-                            $("#modal_v2_edit_groupal_tracking").find("#body_editor").html("");                            
+                      
                             $("#modal_v2_edit_groupal_tracking").find("#body_editor").append(data);
                             $("#modal_v2_edit_groupal_tracking").find(".btn-dphpforms-univalle").remove();
                             var students = $("#modal_v2_edit_groupal_tracking").find('form').find('.oculto.id_estudiante').find('input').val();
@@ -558,8 +558,7 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
 
 
                          }else{
-                            $("#modal_v2_edit_groupal_tracking").find("#body_editor").html("");                            
-                            $("#body_editor").html("");
+                                                     
                             $('#body_editor').append( data );
                             $(".dphpforms.dphpforms-record.dphpforms-updater").append('<br><br><div class="div-observation col-xs-12 col-sm-12 col-md-12 col-lg-12 comentarios_vida_uni">Observaciones de Practicante/profesional:<br> <textarea id="observation_text" class="form-control " name="observation_text" maxlength="5000"></textarea><br><a id="send_observation" class="btn btn-sm btn-danger btn-dphpforms-univalle btn-dphpforms-send-observation">Enviar observación</a></div>');
                             $('button.btn.btn-sm.btn-danger.btn-dphpforms-univalle').attr('id', 'button');
