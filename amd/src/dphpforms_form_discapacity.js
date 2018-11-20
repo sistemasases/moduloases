@@ -1105,26 +1105,58 @@ define([
 
             for(i in json_bd){
                 switch(i){
+
                     case "condicion_adquisicion":
-
+                    {
+                    let key        = i['key_condicion'],        name       = i['condicion'];
+                    let key_otro   = i['key_otra_condicion'],   val_otro   = i['otra_condicion'];
+                    setOptionSelect(key, name, key_otro, val_otro);
+                    }
                     break;
+
                     case "diagnostico_discapacidad":
+                    {
+                    let key         = i['key_diagnostico'],          val         = i['tiene_diagnostico'];
+                    let key_input   = i['key_descripcion'],          val_input   = i['descripcion'];
 
+                    showOption(key, val, key_input, val_input);
+                    }
                     break;
+
                     case "tipo_discapacidad":
-
+                    {
+                    let key        = i['key_tipo'],          name      = i['tipo_discapacidad'];
+                    let key_otro   = i['key_otro_tipo'],     val_otro  = i['otro_tipo'];
+                    setOptionSelect(key, name, key_otro, val_otro);
+                    }
                     break;
+
                     case "certificado_invalidez":
+                    {
+                    let key         = i['key_certificado'],          val         = i['tiene_certificado'];
+                    let key_input   = i['key_porcentaje'],           val_input   = i['porcentaje'];
 
+                    showOption(key, val, key_input, val_input);
+                    }
                     break;
-                    case "dificultad_permanente_funciones":
 
+                    case "dificultad_permanente_funciones":
+                    {
+                    let array = i['dificultad_permanente_funciones'];
+                    showOptionsMult(array, 'key_funcion', 'funcion', 'key_dificultad', 'dificultad');
+                    }
                     break;
                     case "condicion_salud_organos":
-
+                    {
+                    let array = i['condicion_salud_organos'];
+                    showOptionsMult(array, 'key_organo', 'organo', 'key_condicion', 'condicion');
+                    }
                     break;
                     case "necesidades_situaciones":
-
+                    {
+                    let array = i['necesidades_situaciones'];
+                    showOptionsMult(array, 'key_situacion', 'situacion', 'key_necesidad', 'necesidad');
+                    }
                     break;
                     case "posibilidad_actividades":
 
@@ -1150,6 +1182,49 @@ define([
                 }
 
             }
+        }
+
+        function setOptionSelect(key, name, key_otro, val_otro){
+            let val;
+            $("#"+ key+" option").each(function(){
+
+                if($(this).text() == name){
+                val    =    $(this).attr('value');
+                $("#"+key).val(val);
+
+                if(val == "0"){
+                    //Opción Otra condicion adquisición
+                    $("#"+key_otro).val(val_otro);
+                    $("#"+key_otro).show();
+                }
+                break;
+                } 
+             });
+        }
+
+        function showOption(key,val, key_input, val_input){
+                
+                if(val == 1){
+                    //Fue seleccionada la opción
+                    $("#"+key).attr("selected", true);
+                    $("#"+key_input).val(val_input);
+                    $("#"+key_input).show();
+                }else{
+                    //No fue seleccionada la opción
+                    $("#"+key).attr("selected", false);
+                    $("#"+key_input).val("");
+                    $("#"+key_input).hide();
+                }
+            
+        }
+
+        function showOptionsMult(array, key_select, text_select, key_input, val_input){
+
+            for(obj_json in array){
+                $("#"+obj_json[key_select]).attr("selected", true);
+                $("#"+obj_json[key_input]).val(val_input);
+            }
+
         }
 
         function has_numbers(str) {
