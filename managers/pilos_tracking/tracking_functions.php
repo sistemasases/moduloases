@@ -245,22 +245,22 @@ function render_student_trackings($peer_tracking_v2)
                     if ($review[local_alias] == 'revisado_profesional') {
                         $type = "ficha";
                         if ($review[respuesta] == 0) {
-                            $form_rendered.= '<div id="dphpforms-peer-record-' . $tracking[record][id_registro] . '" class="card-block dphpforms-peer-record peer-tracking-record-review class-'.$tracking[record][alias].'"  data-record-id="' . $tracking[record][id_registro] . '"><strong>f: </strong>Registro:   ' . $tracking[record][alias_key][respuesta] . '</div>';
+                            $form_rendered.= '<div id="dphpforms-peer-record-' . $tracking[record][id_registro] . '" class="card-block dphpforms-peer-record peer-tracking-record-review class-'.$tracking[record][alias].'"  data-record-id="' . $tracking[record][id_registro] . '" title="Asistencia"><strong><i class="fas fa-calendar-o"></i> </strong>Registro:   ' . $tracking[record][alias_key][respuesta] . '</div>';
                             $is_reviewed = true;
                         }
                     }elseif ($review[local_alias] == 'in_revisado_profesional') {
                         $type = "inasistencia";
                         if ($review[respuesta] == 0) {
-                            $form_rendered.= '<div id="dphpforms-peer-record-' . $tracking[record][id_registro] . '" class="card-block dphpforms-peer-record peer-tracking-record-review class-'.$tracking[record][alias].'"  data-record-id="' . $tracking[record][id_registro] . '"><strong>i: </strong>Registro:   ' . $tracking[record][alias_key][respuesta] . '</div>';
+                            $form_rendered.= '<div id="dphpforms-peer-record-' . $tracking[record][id_registro] . '" class="card-block dphpforms-peer-record peer-tracking-record-review class-'.$tracking[record][alias].'"  data-record-id="' . $tracking[record][id_registro] . '" title="Inasistencia"><strong><i class="far fa-calendar-times"></i> </strong>Registro:   ' . $tracking[record][alias_key][respuesta] . '</div>';
                             $is_reviewed = true;
                         }
                     }
                 }
 
                 if ((!$is_reviewed )&& ($type == "ficha")) {
-                    $form_rendered.= '<div id="dphpforms-peer-record-' . $tracking[record][id_registro] . '" class="card-block dphpforms-peer-record peer-tracking-record class-'.$tracking[record][alias].'"  data-record-id="' . $tracking[record][id_registro] . '"><strong>f: </strong>Registro:   ' . $tracking[record][alias_key][respuesta] . '</div>';
+                    $form_rendered.= '<div id="dphpforms-peer-record-' . $tracking[record][id_registro] . '" class="card-block dphpforms-peer-record peer-tracking-record class-'.$tracking[record][alias].'"  data-record-id="' . $tracking[record][id_registro] . '" title="Asistencia"><strong><i class="fas fa-calendar-o"></i> </strong>Registro:   ' . $tracking[record][alias_key][respuesta] . '</div>';
                 }elseif((!$is_reviewed) && ($type == "inasistencia")){
-                    $form_rendered.= '<div id="dphpforms-peer-record-' . $tracking[record][id_registro] . '" class="card-block dphpforms-peer-record peer-tracking-record class-'.$tracking[record][alias].'"  data-record-id="' . $tracking[record][id_registro] . '"><strong>i: </strong>Registro:   ' . $tracking[record][alias_key][respuesta] . '</div>';
+                    $form_rendered.= '<div id="dphpforms-peer-record-' . $tracking[record][id_registro] . '" class="card-block dphpforms-peer-record peer-tracking-record class-'.$tracking[record][alias].'"  data-record-id="' . $tracking[record][id_registro] . '" title="Inasistencia"><strong><i class="far fa-calendar-times"></i> </strong>Registro:   ' . $tracking[record][alias_key][respuesta] . '</div>';
                 }
             }
         }
@@ -914,7 +914,6 @@ function show_according_permissions(&$table, $actions)
  * @param $periods ---> existent periods
  * @param $rol
  * @return string html table
- *
  */
 
 function get_period_select($periods, $rol = null){

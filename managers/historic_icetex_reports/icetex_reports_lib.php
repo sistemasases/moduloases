@@ -32,12 +32,11 @@ require_once(dirname(__FILE__). '/../../../../config.php');
  * @see get_array_students_with_resolution()
  * @return array
  */
-function get_array_students_with_resolution(){
+function get_array_students_with_resolution($no_res_bool){
     global $DB;
 
     $array_historics = array();
-
-        
+    
     $sql_query = "SELECT row_number() over(), spp_students.id_ases_user, spp_students.cohorte, spp_students.num_doc, substring(spp_students.username from 0 for 8) AS codigo, 
                     spp_students.lastname, spp_students.firstname, spp_students.nombre_semestre, res_students.codigo_resolucion,
                     res_students.monto_estudiante, academic_students.fecha_cancel, academic_students.promedio_semestre, status_icetex.nombre_estado,
@@ -96,7 +95,12 @@ function get_array_students_with_resolution(){
                 
                 ON (spp_students.id_ases_user = status_icetex.id_estudiante AND spp_students.id_semestre = status_icetex.id_semestre)";
     
-    $students = $DB->get_records_sql($sql_query);
+    if($no_res_bool === "true"){
+        $students = $DB->get_records_sql($sql_query);
+    }else{
+        $sql_query .= " WHERE res_students.codigo_resolucion IS NOT NULL";
+        $students = $DB->get_records_sql($sql_query);
+    }    
 
     foreach ($students as $student) {
         $student->monto_estudiante = "$".number_format($student->monto_estudiante, 0, ',', '.');
