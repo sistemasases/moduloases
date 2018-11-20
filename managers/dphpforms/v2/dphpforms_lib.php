@@ -441,10 +441,10 @@ function dphpformsV2_get_fields_form( $form_id, $status = 1 ){
 
     $sql = 
     "SELECT FP.id AS id_formulario_pregunta, FP.id_pregunta, P.enunciado, TC.campo AS tipo_campo, FP.posicion, P.atributos_campo, P.opciones_campo, P.fecha_hora_registro 
-    FROM mdl_talentospilos_df_form_preg AS FP
-    INNER JOIN (SELECT * FROM mdl_talentospilos_df_preguntas )AS P
+    FROM {talentospilos_df_form_preg} AS FP
+    INNER JOIN (SELECT * FROM {talentospilos_df_preguntas} )AS P
     ON FP.id_pregunta = P.id
-    INNER JOIN (SELECT * FROM mdl_talentospilos_df_tipo_campo) AS TC
+    INNER JOIN (SELECT * FROM {talentospilos_df_tipo_campo} ) AS TC
     ON P.tipo_campo = TC.id
     WHERE FP.id_formulario = $form_id
     AND FP.estado = $status
