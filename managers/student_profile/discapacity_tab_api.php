@@ -52,8 +52,7 @@ if(isset($_POST['func'])){
         // Validate
         $validator = new  Validator;
        
-        $validator->validate($data,  $schema,
-        Constraint::CHECK_MODE_APPLY_DEFAULTS);
+        $validator->validate($data,  $schema,Constraint::CHECK_MODE_APPLY_DEFAULTS);
             
 
          if ($validator->isValid()) {
@@ -64,6 +63,7 @@ if(isset($_POST['func'])){
                 $msg->status = "success";
                $msg->msg = "La información se ha almacenado correctamente.";
                echo json_encode($msg);
+               
            }else{
                $msg->title = "Error";
                $msg->msg = "No se ha actualizado correctamente.";

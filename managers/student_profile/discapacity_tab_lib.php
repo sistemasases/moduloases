@@ -38,9 +38,14 @@ require_once $CFG->dirroot.'/blocks/ases/managers/lib/lib.php';
 function save_detalle_discapacidad($json, $id_ases){
     global $DB;
 
- 
-    $sql_query = "UPDATE {talentospilos_usuario} SET json_detalle = '$json' WHERE id = $id_ases";
-    $result =  $DB->execute($sql_query);
+    $student = new stdClass ();
+    // $sql_query = "SELECT * FROM {talentospilos_usuario} WHERE id = $id_ases";
+    // $student=  $DB->get_records_sql($sql_query);
+    $student->id = $id_ases;
+    $student->json_detalle = $json;
+    $result = $DB->update_record('talentospilos_usuario', $student);
+    // $sql_query = "UPDATE {talentospilos_usuario} SET json_detalle = '$json' WHERE id = $id_ases";
+    // $result =  $DB->execute($sql_query);
 
     // $student = $DB->get_records_sql($sql_query);
     // $student = (object) $student;

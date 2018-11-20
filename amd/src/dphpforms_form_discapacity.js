@@ -27,6 +27,10 @@ define([
                 $("#li_view_discapacity_initial").show();
             }
 
+            $("#btn_ficha_inicial_discapacity").on("click", function(){
+                
+            });
+
             $("#div_factor_impacto input").on("change",function(){
                 if($("#check_factor2").is(":checked")){
                     //Display other options
@@ -160,18 +164,28 @@ define([
             $("#edit_discapacity_initial").on("click", function() {
               $("#form_ficha_inicial").show();
               enableForm();  
+              let json_saved_register = $("#input_json_saved").val();
+              json_saved_register = JSON.parse(json_saved_register);
+              showFormSaved(json_saved_register);
             });
 
             $("#view_discapacity_initial").on("click", function() {
                 $("#form_ficha_inicial").show();
+                //Disabled inputs 
                 obj = document.getElementById('form_ficha_inicial');
                 for (i=0; ele = obj.getElementsByTagName('input')[i]; i++){
                     ele.disabled = true;
                 }
+                //Disabled select
+                obj = document.getElementById('form_ficha_inicial');
+                for (i=0; ele = obj.getElementsByTagName('select')[i]; i++){
+                    ele.disabled = true;
+                }
+                
                 let json_saved_register = $("#input_json_saved").val();
                 json_saved_register = JSON.parse(json_saved_register);
                 showFormSaved(json_saved_register);
-                
+
               });
             
             $("#cond_adquisicion").on("click", function(){
@@ -636,7 +650,7 @@ define([
                         
                 let id_ases = $("#id_ases").val();
                 validate_json (obj, id_ases);
-              
+                
                 }
                 
 
@@ -665,6 +679,8 @@ define([
                         msg.msg,
                         msg.status
                     );
+
+                    $("#input_json_saved").attr("value", json_data);
                    
                 },
                 dataType: "json",
@@ -1102,66 +1118,125 @@ define([
         }
 
         function showFormSaved(json_bd){
+            let array, key, val, name,  key_otro, val_otro, key_input, val_input, range;
 
             for(i in json_bd){
+
                 switch(i){
 
                     case "condicion_adquisicion":
-                    {
-                    let key        = i['key_condicion'],        name       = i['condicion'];
-                    let key_otro   = i['key_otra_condicion'],   val_otro   = i['otra_condicion'];
+                    
+                    key        = json_bd[i]['key_condicion'];        
+                    name       = json_bd[i]['condicion'];
+                    key_otro   = json_bd[i]['key_otra_condicion'];   
+                    val_otro   = json_bd[i]['otra_condicion'];
+
                     setOptionSelect(key, name, key_otro, val_otro);
-                    }
+                    
                     break;
 
                     case "diagnostico_discapacidad":
-                    {
-                    let key         = i['key_diagnostico'],          val         = i['tiene_diagnostico'];
-                    let key_input   = i['key_descripcion'],          val_input   = i['descripcion'];
-
+                    
+                    key         = json_bd[i]['key_diagnostico'];          
+                    val         = json_bd[i]['tiene_diagnostico'];
+                    key_input   = json_bd[i]['key_descripcion'];          
+                    val_input   = json_bd[i]['descripcion'];
                     showOption(key, val, key_input, val_input);
-                    }
+                    
                     break;
 
                     case "tipo_discapacidad":
-                    {
-                    let key        = i['key_tipo'],          name      = i['tipo_discapacidad'];
-                    let key_otro   = i['key_otro_tipo'],     val_otro  = i['otro_tipo'];
+                    
+                    key        = json_bd[i]['key_tipo'];          
+                    name       = json_bd[i]['tipo_discapacidad'];
+                    key_otro   = json_bd[i]['key_otro_tipo'];     
+                    val_otro   = json_bd[i]['otro_tipo'];
                     setOptionSelect(key, name, key_otro, val_otro);
-                    }
+                    
                     break;
 
                     case "certificado_invalidez":
-                    {
-                    let key         = i['key_certificado'],          val         = i['tiene_certificado'];
-                    let key_input   = i['key_porcentaje'],           val_input   = i['porcentaje'];
+                    
+                    key         = json_bd[i]['key_certificado'];          
+                    val         = json_bd[i]['tiene_certificado'];
+                    key_input   = json_bd[i]['key_porcentaje'];           
+                    val_input   = json_bd[i]['porcentaje'];
 
                     showOption(key, val, key_input, val_input);
-                    }
+                    
                     break;
 
                     case "dificultad_permanente_funciones":
-                    {
-                    let array = i['dificultad_permanente_funciones'];
+                    
+                    array = json_bd[i];
                     showOptionsMult(array, 'key_funcion', 'funcion', 'key_dificultad', 'dificultad');
-                    }
+                    
                     break;
                     case "condicion_salud_organos":
-                    {
-                    let array = i['condicion_salud_organos'];
+                    
+                    array = json_bd[i];
                     showOptionsMult(array, 'key_organo', 'organo', 'key_condicion', 'condicion');
-                    }
+                    
                     break;
                     case "necesidades_situaciones":
-                    {
-                    let array = i['necesidades_situaciones'];
+                    
+                    array = json_bd[i];
                     showOptionsMult(array, 'key_situacion', 'situacion', 'key_necesidad', 'necesidad');
-                    }
+                    
                     break;
                     case "posibilidad_actividades":
 
+                    array = json_bd[i];
+
+                    for(obj_json in array){
+
+                        if(array[obj_json]['key_actividad'] == "check_otra_posibilidad"){
+                            //Desplegar la opcion otro
+                            $("#"+array[obj_json]['key_otra_actividad']).attr("value", array[obj_json]['otra_actividad']);
+                            $("#"+array[obj_json]['key_otra_actividad']).parent().show();
+                        }
+
+                        $("#"+array[obj_json]['key_actividad']).attr("checked", true);
+                        $("#"+array[obj_json]['key_posibilidad']).attr("value", array[obj_json]['posibilidad']);
+                        $("#"+array[obj_json]['key_apoyo']).attr("value", array[obj_json]['tipo_apoyo']);
+                        
+                        if(array[obj_json]['posibilidad'] == "No la puede realizar") {
+                            range = 1;
+                        }else 
+                        {
+                            if(array[obj_json]['posibilidad'] == "Lo hace sin apoyo") {
+                            range = 2;
+                            } else
+                                {
+                                    if(array[obj_json]['posibilidad'] == "Lo hace con apoyo") {
+                                        range = 3;
+                                        } 
+                                }
+                        }
+                        
+                        $("#"+array[obj_json]['key_posibilidad']).siblings(":input[type=range]").attr("value", range);
+                        
+                    }
+
                     break;
                     case "factores_impacto":
+                    
+                    array = json_bd[i];
+                    for(obj_json in array){
+
+                        if(array[obj_json]['key_factor'] == "check_factor4" || array[obj_json]['key_factor'] == "check_factor2_7" ){
+                            //Desplegar la opcion otro
+                            $("#"+array[obj_json]['key_otro_factor']).attr("value", array[obj_json]['otro_factor']);
+                            
+                        }
+                        if(array[obj_json]['key_factor'] == "check_factor2"){
+                            //Desplegar div que contiene opcionwes de contexto
+                            $("#"+array[obj_json]['key_factor']).parent().next().show();
+                        }
+
+                        $("#"+array[obj_json]['key_factor']).attr("checked", true);
+
+                    }
 
                     break;
                     case "apoyo_principal_cotidiano":
@@ -1172,8 +1247,22 @@ define([
                     break;
                     case "participa_asociacion":
 
+                    key         = json_bd[i]['key_participa'];          
+                    val         = json_bd[i]['participa'];
+                    key_input   = json_bd[i]['key_asociacion'];           
+                    val_input   = json_bd[i]['asociacion'];
+
+                    showOption(key, val, key_input, val_input);
+
                     break;
                     case "actividades_otros":
+
+                    key         = json_bd[i]['key_realiza'];          
+                    val         = json_bd[i]['realiza'];
+                    key_input   = json_bd[i]['key_actividad'];           
+                    val_input   = json_bd[i]['actividad'];
+
+                    showOption(key, val, key_input, val_input);
 
                     break;
                     case "apoyo_institucion":
@@ -1194,10 +1283,9 @@ define([
 
                 if(val == "0"){
                     //Opción Otra condicion adquisición
-                    $("#"+key_otro).val(val_otro);
-                    $("#"+key_otro).show();
+                    $("#"+key_otro).attr("value",val_otro);
+                    $("#"+key_otro).parent().show();
                 }
-                break;
                 } 
              });
         }
@@ -1206,23 +1294,25 @@ define([
                 
                 if(val == 1){
                     //Fue seleccionada la opción
-                    $("#"+key).attr("selected", true);
-                    $("#"+key_input).val(val_input);
-                    $("#"+key_input).show();
+                    $("#"+key).attr("checked", true);
+                    $("#"+key_input).prop("value",val_input);
+                    $("#"+key_input).parent().show();
+
                 }else{
                     //No fue seleccionada la opción
-                    $("#"+key).attr("selected", false);
-                    $("#"+key_input).val("");
-                    $("#"+key_input).hide();
+                    $("#"+key).attr("checked", false);
+                    $("#"+key_input).prop("value","");
+                    $("#"+key_input).parent().hide();
                 }
             
         }
 
         function showOptionsMult(array, key_select, text_select, key_input, val_input){
 
+            
             for(obj_json in array){
-                $("#"+obj_json[key_select]).attr("selected", true);
-                $("#"+obj_json[key_input]).val(val_input);
+                $("#"+array[obj_json][key_select]).attr("checked", true);
+                $("#"+array[obj_json][key_input]).attr("value", array[obj_json][val_input]);
             }
 
         }
