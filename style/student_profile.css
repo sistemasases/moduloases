@@ -474,11 +474,6 @@
         visibility: hidden;
     }
 
-    #general_tab{
-        margin-top: -220px;
-        margin-bottom: 0px;
-    }
-
     #estado_civil{
         margin-top: 10px;
         margin-bottom: 10px;
@@ -490,6 +485,7 @@
 
     .row{
         margin-bottom: 15px;
+        border: none !important;
     }
 
     #tipo_doc {
@@ -520,6 +516,7 @@
         margin-left: 35px;
         width: 120px;
         position: absolute;
+        font-size: 12px;
     }
 
     #span-icetex-status{
@@ -544,6 +541,7 @@
         margin-top: -120px;
         margin-bottom: 0px;
         padding-bottom: 0px;
+        border: none !important;
     }
 
     #second_column_general_tab{
@@ -565,6 +563,7 @@
     #academic_tab{
         display: block;
         margin-left: 30px;
+        margin-top: 100px;
     }
 
     .accordion{
@@ -586,7 +585,7 @@
 
     .select2-container .select2-selection--single {
         height: 40px;
-        width: 135%;
+        width: 125%;
         border-radius: 0 0 0px 0px;
         padding-bottom: 30px;
     }
@@ -621,6 +620,7 @@
         margin: 0;
         padding: 0;
         display: inline;
+        border: none !important;
     }
 
     .menulist a.main {
@@ -679,10 +679,11 @@
    
     table {
       text-align: left;
+      border: none;
     }
 
     #div_academic_programs{
-        margin-top: -30px;
+        margin-top: 30px;
     }
 
     #div_cohorts{
@@ -695,13 +696,64 @@
     }
 
     .hr-general-tab-fields {
-        display: none;
+        display: none !important;
+        border: none;
     }
 
     h3{
         margin-top: 10px;
         font-weight: bold;
         color: #d51b23 !important;
+    }
+
+    h4{
+        font-weight: bold;
+        color: #d51b23 !important;
+    }
+
+    .profile-image > img {
+        width: 90%;
+        margin-left: -20px;
+    }
+
+    #student_info{
+        width: 50%;
+        margin-top: -200px;
+        display: block;
+        margin-left: 0px;
+    }
+    
+    #other_info{
+        margin-left: 350px;
+        margin-top: -431px;
+        width: 50%;
+        position: absolute;
+        display: block;
+    }
+
+    hr{
+        display: none !important;
+    }
+
+    #div-hr{
+        color: white !important;
+        border: none !important;
+    }
+
+    .col-md-2 {
+        width: 16.66666667% !important;
+        float: left;
+        position: relative;
+    }
+
+    .col-md-4 {
+        width: 33.33333333% !important;
+        float: left;
+        position: relative;
+    }
+
+    #ficha_estudiante .panel-collapse {
+        padding: 0px;
     }
 
   }
