@@ -31,100 +31,21 @@ require_once (__DIR__ . '/course_and_teacher_report_lib.php');
 require_once (__DIR__ . '/../../classes/API/BaseAPI.php');
 require_once (__DIR__ . '/../../classes/DAO/BaseDAO.php');
 require_once (__DIR__ . '/../../managers/course/course_lib.php');
-require_once(__DIR__ . '/../../vendor/autoload.php');
-use function Latitude\QueryBuilder\{literal, criteria, alias, on, field};
-error_reporting(E_ALL);
-ini_set('display_errors', '1');
+
 $course_and_teacher_api = new BaseAPI;
 $course_and_teacher_api->get(':instance_id', function($data, array $args) {
     $r = new CourseAndTeacherReportView();
     $r->execute($data, $args);
 });
 
-function _select_count_ases_courses($id_instancia = 450299, $semestre = '201808') {
-    return BaseDAO::get_factory()
-    ->select(literal('count(*)'))
-    ->from(
-        subquery(
-            _select_ases_courses('201808', 450299)
-                ->innerJoin(
-                    alias('',''),
-                    on('','')
-                )
-                ->andWhere(field('estados_ases.nombre')->eq('seguimiento'))
-                ->andWhere(field('inst_cohorte.id_instancia')->eq($id_instancia))
-                ->andWhere(field('user_extended.tracking_status')->eq(1))
-                ->andWhere(field('mdl_role_assignments.roleid')->eq(5))
-                ->andWhere(criteria("substring(mdl_course.shortname from 15 for 6) = %s", $semestre))
-                ->addColumns('mdl_course.id'),
-            'some'
-
-        ));
-}
-<<<SQL
-
-where mdl_grade_items.itemtype != 'category'
-  AND mdl_grade_items.itemtype != 'course'
-and mdl_grade_grades.finalgrade is not null
-SQL;
-
-function _select_count_courses_with_at_least_one_item_calif($id_instancia = 450299, $semestre= '201808') {
-    return BaseDAO::get_factory()
-        ->select(literal(' count(mdl_course_id)'))
-        ->from(
-            subquery(
-                _select_ases_courses('201808', 450299)
-                    ->innerJoin(
-                        alias('{grade_items}', 'mdl_grade_items'),
-                        on('mdl_grade_items.courseid', 'mdl_course.id'))
-                    ->innerJoin(
-                        alias('{grade_grades}','mdl_grade_grades'),
-                        on('mdl_grade_grades.itemid','mdl_grade_items.id'))
-                    ->where(field('mdl_grade_items.itemtype')->notEq('course'))
-                    ->andWhere(field('mdl_grade_items.itemtype')->notEq('category'))
-                    ->andWhere(field('mdl_grade_grades.finalgrade')->isNotNull())
-
-
-                    ->andWhere(field('estados_ases.nombre')->eq('seguimiento'))
-                    ->andWhere(field('inst_cohorte.id_instancia')->eq($id_instancia))
-                    ->andWhere(field('user_extended.tracking_status')->eq(1))
-                    ->andWhere(field('mdl_role_assignments.roleid')->eq(5))
-                    ->andWhere(criteria("substring(mdl_course.shortname from 15 for 6) = %s", $semestre))
-                    ->addColumns(alias('mdl_course.id', 'mdl_course_id')),
-                'some'
-
-            ));
-}
-
-function _select_count_courses_with_at_least_one_item($id_instancia = 450299, $semestre= '201808') {
-    return BaseDAO::get_factory()
-        ->select(literal(' count(mdl_course_id)'))
-        ->from(
-            subquery(
-                _select_ases_courses('201808', 450299)
-                    ->innerJoin(
-                        alias('{grade_items}', 'mdl_grade_items'),
-                        on('mdl_grade_items.courseid', 'mdl_course.id'))
-                    ->where(field('mdl_grade_items.itemtype')->notEq('course'))
-                    ->andWhere(field('mdl_grade_items.itemtype')->notEq('category'))
-
-
-                    ->andWhere(field('estados_ases.nombre')->eq('seguimiento'))
-                    ->andWhere(field('inst_cohorte.id_instancia')->eq($id_instancia))
-                    ->andWhere(field('user_extended.tracking_status')->eq(1))
-                    ->andWhere(field('mdl_role_assignments.roleid')->eq(5))
-                    ->andWhere(criteria("substring(mdl_course.shortname from 15 for 6) = %s", $semestre))
-                    ->addColumns(alias('mdl_course.id', 'mdl_course_id')),
-                'some'
-
-            ));
-}
 $course_and_teacher_api->get('sql/courses_without_teacher', function() {
     echo '<pre>';
     print_r(get_reporte_cursos_sin_profesor(450299, '201808'));
     echo '</pre>';
 });
-
+/**
+ * Betha: ases course and teacher summary
+ */
 $course_and_teacher_api->get('sql/ases_courses', function() {
     global $DB;
 
