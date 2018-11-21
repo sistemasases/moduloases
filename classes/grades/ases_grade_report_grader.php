@@ -20,7 +20,8 @@
  *
  */
 defined('MOODLE_INTERNAL') || die;
-require_once(__DIR__ . '/../../managers/student_profile/studentprofile_lib.php');
+require_once (__DIR__ . '/../../classes/AsesUser.php');
+require_once( __DIR__ . '/../../managers/student_profile/studentprofile_lib.php');
 require_once ($CFG->dirroot . '/grade/report/grader/lib.php');
 require_once ($CFG->dirroot . '/grade/lib.php');
 require_once ($CFG->dirroot . '/user/lib.php');
@@ -88,7 +89,7 @@ class ases_grade_report_grader extends grade_report_grader {
                     /* A element */
                     /* @var DOMDocument $document */
 
-                    $doc->loadHTML($cell->text);
+                    $doc->loadHTML('<?xml encoding="utf-8" ?>' . $cell->text);
                     /* @var string $cell_user_profile_link Example: http://localhost/moodle/user/profile.php?id=122098 */
 
                     /**
