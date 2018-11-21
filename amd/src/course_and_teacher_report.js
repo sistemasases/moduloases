@@ -13,8 +13,9 @@ define([
     'jquery',
     'core/notification',
     'block_ases/global_grade_book',
+    'core/templates',
     'block_ases/jquery.dataTables'
-], function($, notification, gg_b){
+], function($, notification, gg_b, templates){
 
     return {
         init: function () {
@@ -39,23 +40,36 @@ define([
                     this.cursos_al_item_calif = cursos_al_item_calif ? cursos_al_item_calif : 0;
                     this.cursos_al_un_item = cursos_al_un_item ? cursos_al_un_item : 0;
                 }
-                ResumeReport.prototype.init = function(data /*DataTable.data[]*/) {
+                ResumeReport.return_critic_and_no_critic_report = function(data) /* return {critic_report: ResumeReport, no_critic_report: ResumeReport} */  {
+                    var no_critic_report = new ResumeReport();
+                    var critic_report = new ResumeReport();
+
                     for( var _i = 0, data_1 = data; _i < data_1.length; _i++) {
                         var report_item = data_1[_i];
                         if(report_item.items_con_almenos_una_nota > 0) {
-                            resume_report.cursos_al_item_calif++;
+                            switch ((report_item.critica)) {
+                                case 'SI': critic_report.cursos_al_item_calif++; break;
+                                case 'NO': no_critic_report.cursos_al_item_calif++; break;
+                            }
                         }
                         if(report_item.cantidad_items > 0) {
-                            resume_report.cursos_al_un_item++;
+                            switch ((report_item.critica)) {
+                                case 'SI': critic_report.cursos_al_un_item++; break;
+                                case 'NO': no_critic_report.cursos_al_un_item++; break;
+                            }
                         }
                         if(report_item.cantidad_estudiantes_ases > 0) {
-                            resume_report.cursos_al_un_est_ases++;
+                            switch ((report_item.critica)) {
+                                case 'SI': critic_report.cursos_al_un_est_ases++; break;
+                                case 'NO': no_critic_report.cursos_al_un_est_ases++; break;
+                            }
                         }
                     }
+                    return {critic_report: critic_report, no_critic_report: no_critic_report};
                 };
                 return ResumeReport;
             }());
-            var resume_report = new ResumeReport();
+            var resume_report = {}/*{critic_report: ResumeReport, no_critic_report: ResumeReport}*/;
             var course_id = data.course_id;
             var instance_id = data.instance_id;
             var grade_table_border_color = '#cccccc';
@@ -161,8 +175,15 @@ define([
 
                 }).done(
                     function (dataTable){
-                    resume_report.init(dataTable.data);
+                    resume_report = ResumeReport.return_critic_and_no_critic_report(dataTable.data);
                     console.log(resume_report);
+                    templates.render('block_ases/course_and_teacher_report_summary', {resume_report: resume_report})
+                        .then(function(html, js) {
+                            console.log(html);
+                            templates.appendNodeContents('.course_and_teacher_report .summary', html, js);
+                        }).fail(function(ex) {
+                            console.log(ex);
+                    });
                     table = $("#tableFinalgradesReport").DataTable(
                         {
                             data: dataTable.data,
