@@ -140,11 +140,28 @@ function get_student_profile_url($courseid, $instanceid, $student_code): moodle_
             ));
 }
 
+
+
 function  get_cond_excepcion()
 {
     global $DB; 
    $sql_query = "SELECT * FROM {talentospilos_cond_excepcion}";
    return $DB->get_records_sql($sql_query);
+}
+
+
+ /**
+ * Get Condición de excepción segun id
+ *
+ * @see get_cond()
+ * @return object --> with CONDICIÓN DE EXCEPCIÓN information
+ */
+
+function  get_cond($id)
+{
+    global $DB; 
+   $sql_query = "SELECT * FROM {talentospilos_cond_excepcion} WHERE id=$id";
+   return $DB->get_record_sql($sql_query);
 }
 
  /**
@@ -173,6 +190,21 @@ function  get_paises()
    $sql_query = "SELECT * FROM {talentospilos_pais}";
    return $DB->get_records_sql($sql_query);
 }
+
+/**
+ * Get municipios registrados
+ *
+ * @see get_municipios()
+ * @return object --> with MUNICIPIOS information
+ */
+
+function  get_municipios()
+{
+    global $DB; 
+   $sql_query = "SELECT * FROM {talentospilos_municipio}";
+   return $DB->get_records_sql($sql_query);
+}
+
 
 /**
  * Update genero
@@ -288,7 +320,7 @@ function get_id_genero($genero){
  * Get generos registrados
  *
  * @see get_generos()
- * @return object --> with CONDICIÓN DE EXCEPCIÓN information
+ * @return object --> with GENERO information
  */
 
 function  get_generos()
@@ -297,6 +329,22 @@ function  get_generos()
    $sql_query = "SELECT * FROM {talentospilos_identidad_gen}";
    return $DB->get_records_sql($sql_query);
 }
+
+/**
+ * Get etnias registrados
+ *
+ * @see get_etnias()
+ * @return object --> with ETNIA information
+ */
+
+function  get_etnias()
+{
+    global $DB; 
+   $sql_query = "SELECT * FROM {talentospilos_etnia}";
+   return $DB->get_records_sql($sql_query);
+}
+
+
 
 /**
  * Get actividades simultaneas registrados

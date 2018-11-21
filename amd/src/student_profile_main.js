@@ -19,7 +19,20 @@
 
 return {
  init: function(data_init) {
+    //Validar si en las cohortes hay una condición de excepción
+    $("#cohorts_table tbody").find("td").each( function(){
+     if($(this).text().indexOf("Condición de Excepción") != -1  ){
+        var alias = $("#cond_excepcion_alias").text().trim();
+        var proptitle = $("#cond_excepcion_name").text().trim();
+         $(this).append("-");
+         $(this).append(alias);
+         $(this).attr("title", proptitle);
+     }
+    });
+
+
      // Carga una determinada pestaña
+     
 
     $(document).on('click', '#table_vive_con tbody tr td button', function () {     
         $(this).parent().parent().remove();
@@ -645,6 +658,8 @@ return {
         $('#genero').prop('disabled', false);
         $('#cond_excepcion').prop('disabled', false);
         $('#act_simultanea').prop('disabled', false);
+        $('#etnia').prop('disabled', false);
+        $('#municipio_act').prop('disabled', false);
         $('#otro_act_simultanea').prop('disabled',false);
         $('#otro_genero').prop('disabled', false);
         $('#otro_genero').prop('required', false);
@@ -755,6 +770,98 @@ return {
         msg.status = "success";
 
         switch(form[field].name){
+            case "estrato":
+            if(form[field].value == "") {
+                msg.title = "Error";
+                msg.status = "error";
+                msg.msg = "El campo "+form[field].name+" es obligatorio";
+                return msg;  
+                 }
+
+                 if(form[field].value < 0) {
+                    msg.title = "Error";
+                    msg.status = "error";
+                    msg.msg = "El campo "+form[field].name+" no debe ser negativo";
+                    return msg;  
+                     }
+
+                     if(form[field].value > 6) {
+                        msg.title = "Error";
+                        msg.status = "error";
+                        msg.msg = "El campo año de "+form[field].name+" no debe ser mayor al permitido";
+                        return msg;  
+                         }
+
+                     if(has_letters(form[field].value)){
+                        msg.title = "Error";
+                               msg.status = "error";
+                               msg.msg = "El campo "+form[field].name+" no debe contener letras";
+                               return msg;
+                           }  
+            break;
+            case "ingreso":
+            if(form[field].value == "") {
+                msg.title = "Error";
+                msg.status = "error";
+                msg.msg = "El campo año de "+form[field].name+" es obligatorio";
+                return msg;  
+                 }
+
+                 if(form[field].value < 0) {
+                    msg.title = "Error";
+                    msg.status = "error";
+                    msg.msg = "El campo año de "+form[field].name+" no debe ser negativo";
+                    return msg;  
+                     }
+                     let fecha = new Date ();
+                     let anio = fecha.getFullYear();
+                     
+                     if(form[field].value > anio) {
+                        msg.title = "Error";
+                        msg.status = "error";
+                        msg.msg = "El campo año de "+form[field].name+" no debe ser mayor al actual";
+                        return msg;  
+                         }
+
+                     if(has_letters(form[field].value)){
+                        msg.title = "Error";
+                               msg.status = "error";
+                               msg.msg = "El campo año de "+form[field].name+" no debe contener letras";
+                               return msg;
+                           }  
+            break;
+
+            case "puntaje_icfes":
+            if(form[field].value == "") {
+                msg.title = "Error";
+                msg.status = "error";
+                msg.msg = "El campo "+form[field].name+" es obligatorio";
+                return msg;  
+                 }
+
+                 if(form[field].value < 0) {
+                    msg.title = "Error";
+                    msg.status = "error";
+                    msg.msg = "El campo "+form[field].name+" no debe ser negativo";
+                    return msg;  
+                     }
+
+                     if(form[field].value > 500) {
+                        msg.title = "Error";
+                        msg.status = "error";
+                        msg.msg = "El campo "+form[field].name+" no debe ser mayor al permitido";
+                        return msg;  
+                         }
+
+                     if(has_letters(form[field].value)){
+                        msg.title = "Error";
+                               msg.status = "error";
+                               msg.msg = "El campo "+form[field].name+" no debe contener letras";
+                               return msg;
+                           }   
+
+            break;
+
             case "hijos":
             if(form[field].value == "") {
                 msg.title = "Error";
@@ -893,6 +1000,8 @@ return {
     $('#genero').prop('disabled', true);
     $('#cond_excepcion').prop('disabled', true);
     $('#act_simultanea').prop('disabled', true);
+    $('#etnia').prop('disabled', true);
+    $('#municipio_act').prop('disabled', true);
     $('#estado_civil').prop('disabled', true);
     $('#pais').prop('disabled', true);
     $('#observacion').prop('readonly', true);

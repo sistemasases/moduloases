@@ -137,12 +137,29 @@ if ($student_code != 0) {
     $record->age = substr($ases_student->age, 0, 2);
     $record->academic_programs = $academic_programs;
     $record->student_cohorts = $student_cohorts;
+
+    //Traer el nombre de la condición de excepcion del estudiante
+    $record->condition_excepcion_alias = "NO REGISTRA";
+    $record->condition_excepcion = "NO REGISTRA CONDICIÓN DE EXCEPCIÓN EN BASE DE DATOS";
+    $param = $ases_student->id_cond_excepcion;
+    foreach($student_cohorts as $cohort){
+        if(substr($cohort->name, 0, 24) == "Condición de Excepción"  && $param != null ){
+            $condition = get_cond($param);
+            $record->condition_excepcion_alias = $condition->alias;
+            $record->condition_excepcion = $condition->condicion_excepcion;
+        }
+    }
+  
     $record->document_type = $document_type;
 
     array_push($data_init, $academic_programs);
-    
-    // General file (ficha general) information
 
+ 
+
+    // General file (ficha general) information
+    $record->puntaje_icfes       = $ases_student->puntaje_icfes;
+    $record->ingreso       = $ases_student->anio_ingreso;
+    $record->estrato       = $ases_student->estrato;
     $record->res_address = $ases_student->direccion_res;
     $record->init_tel = $ases_student->tel_ini;
     $record->res_tel = $ases_student->tel_res;
@@ -152,14 +169,7 @@ if ($student_code != 0) {
     $record->attendant_tel = $ases_student->tel_acudiente;
     $record->num_doc = $ases_student->num_doc;
     
-    //Código temporal, mientras se define carga de datos
-    //---------------------------------------------------------------------------
-    //Personas con quien vive
-//     <tr>
-//     <td>John</td>
-//     <td>john@example.com</td>
-//   </tr>
-      //Código temporal vive_con
+    
       $personas = '';
       $pos = 1;
     
@@ -236,6 +246,68 @@ if ($student_code != 0) {
 
     $record->options_pais = $options_pais;
 
+
+     //TRAE MUNICIPIOS
+     $municipios= get_municipios();
+     $options_municipios = '';
+ 
+     $municipio_student = $ases_student->id_ciudad_res;
+     //Buscar la posición del municipio CALI
+     $i=0;
+     foreach($municipios as $mun){
+         if($mun->nombre=="CALI"){
+         $posp=$i;
+         $options_municipios .= "<optgroup label='Populares'> <option value='$mun->id'>$mun->nombre</option> </optgroup>" ;   
+         break; }
+         $i++;
+     }
+ 
+     //Eliminar municipio CALI puesto al inicio
+     array_splice($municipios,$posp,1);
+    
+     $options_municipios .= "<optgroup label = 'Otros'>";
+     foreach($municipios as $mun){
+         if($municipio_student == $mun->id){
+             $options_municipios .= "<option value='$mun->id' selected='selected'>$mun->nombre</option>";
+         }else{
+             $options_municipios .= "<option value='$mun->id'>$mun->nombre</option>";
+         }
+     }
+     $options_municipios .= "</optgroup>";   
+ 
+     $record->options_municipio_act = $options_municipios;
+
+
+         //TRAE ETNIAS
+    $etnias= get_etnias();
+    $options_etnia = '';
+    
+
+    $etnia_student = $ases_student->id_etnia;
+  
+   $otro ="";
+   $control = true;
+    foreach($etnias as $etnia){
+        if($etnia_student == $etnia->id){
+            if($etnia->opcion_general == 1){
+            $options_etnia .= "<option value='$etnia->id' selected='selected'>$etnia->etnia</option>";
+            $control = false;}
+            
+            
+        }else{
+            if($etnia->opcion_general == 1){
+            $options_etnia .= "<option value='$etnia->id'>$etnia->etnia</option>";}
+
+        }
+    }
+
+        
+    
+
+
+    $record->options_etnia = $options_etnia;
+
+    
     //TRAE GENEROS
     $generos= get_generos();
     $options_generos = '';
@@ -331,40 +403,6 @@ if ($student_code != 0) {
         
         }
 
-    //Extraer condición de excepción del usuario, según id registrado
-        //TRAE CONDICIONES DE EXCEPCIÓN
-        $cond_excepcion = get_cond_excepcion();
-        $options_cond_excepcion = '';
-    
-        $cond_excepcion_student->id_cond_excep = $ases_student->id_cond_excepcion;
-
-       
-        
-         $i = 0;
-        foreach($cond_excepcion as $array_cond){
-            if($array_cond->alias=='N.A'){
-                $options_cond_excepcion .= "<option title='$array_cond->condicion_excepcion' value='$array_cond->id'>$array_cond->alias</option>";   
-                $pos = $i;
-                break;
-            } 
-        $i++;
-        }
-        //Eliminar condición de excepción agregada en opciones condiciones de excepcion
-        array_splice($cond_excepcion,$pos,1);
-        
-        
-    
-        foreach($cond_excepcion as $cond){
-            if($cond_excepcion_student->id_cond_excep == $cond->id){
-                $options_cond_excepcion .= "<option title='$cond->condicion_excepcion' value='$cond->id' selected='selected'>$cond->alias</option>";
-            }else{
-                $options_cond_excepcion .= "<option title='$cond->condicion_excepcion' value='$cond->id'>$cond->alias</option>";
-            }
-        }
-    
-        $record->options_cond_excepcion = $options_cond_excepcion;
-
-    //---------------------------------------------------------------------------
 
     $record->observations = $ases_student->observacion;
 
@@ -1520,6 +1558,7 @@ $PAGE->set_context($contextblock);
 $PAGE->set_url($url);
 $PAGE->set_title($title);
 
+$PAGE->requires->css('/blocks/ases/style/base_ases.css', true);
 $PAGE->requires->css('/blocks/ases/style/jqueryui.css', true);
 $PAGE->requires->css('/blocks/ases/style/styles_pilos.css', true);
 $PAGE->requires->css('/blocks/ases/style/bootstrap.min.css', true);
@@ -1532,6 +1571,7 @@ $PAGE->requires->css('/blocks/ases/style/student_profile_risk_graph.css', true);
 $PAGE->requires->css('/blocks/ases/js/select2/css/select2.css', true);
 $PAGE->requires->css('/blocks/ases/style/side_menu_style.css', true);
 $PAGE->requires->css('/blocks/ases/style/student_profile.css', true);
+$PAGE->requires->css('/blocks/ases/style/discapacity_tab.css', true);
 $PAGE->requires->css('/blocks/ases/style/switch.css', true);
 //Pendiente para cambiar el idioma del nombre del archivo junto con la estructura de
 //su nombramiento.

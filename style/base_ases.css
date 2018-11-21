@@ -1,0 +1,36 @@
+#menu-header {
+    padding-top: 0;
+    padding-bottom: 0;
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+#bug-login {
+    width: auto;
+
+}
+ .row-fluid .span4 {
+    width: 70%;
+}
+
+.row-fluid .offset2:first-child {
+    margin-left: unset;
+}
+
+#header-univalle {
+     height: 0;
+}
+.logo-img {
+     margin-top: 0%;
+}
+#main-navigation h6 {
+    margin: 0;
+    line-height: 2px;
+}
+header#page-header {
+    margin-top: 20px !important;
+}
+
+.span5.offset2{
+    width: auto;
+}

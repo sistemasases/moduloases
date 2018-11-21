@@ -104,6 +104,7 @@ $table="";
 $table_periods="";
 
 $periods = get_semesters();
+$semester_id = get_current_semester()->max;
 
 // Getting last semester date range 
 $intervalo_fechas[0] = reset($periods)->fecha_inicio;
@@ -114,7 +115,7 @@ $choosen_date =strtotime($intervalo_fechas[0]);
 $new_forms_date =strtotime('2018-01-01 00:00:00');
 
 // Sort periods Select
-$table_periods.=get_period_select($periods);
+$table_periods.=get_period_select($periods, $usernamerole);
 
 if($usernamerole=='monitor_ps'){
 
@@ -160,7 +161,6 @@ if($usernamerole=='monitor_ps'){
 
 
 }elseif($usernamerole=='sistemas'){
-
     //Gets all existent periods and roles containing "_ps"
     $roles = get_rol_ps();
 
@@ -180,7 +180,10 @@ $data->rol = $usernamerole;
 
 $data->table_periods =$table_periods;
 $data->table=$table_permissions;
+$data->semester = $semester_id;
 
+
+$PAGE->requires->css('/blocks/ases/style/base_ases.css', true);
 $PAGE->requires->css('/blocks/ases/style/jqueryui.css', true);
 $PAGE->requires->css('/blocks/ases/style/styles_pilos.css', true);
 $PAGE->requires->css('/blocks/ases/style/bootstrap.min.css', true);
@@ -192,6 +195,8 @@ $PAGE->requires->css('/blocks/ases/style/c3.css', true);
 $PAGE->requires->css('/blocks/ases/style/student_profile_risk_graph.css', true);
 $PAGE->requires->css('/blocks/ases/js/select2/css/select2.css', true);
 $PAGE->requires->css('/blocks/ases/style/side_menu_style.css', true);
+$PAGE->requires->css('/blocks/ases/style/report_trackings.css', true);
+$PAGE->requires->css('/blocks/ases/style/fontawesome550.min.css', true);
 //Pendiente para cambiar el idioma del nombre del archivo junto con la estructura de
 //su nombramiento.
 $PAGE->requires->css('/blocks/ases/style/creadorFormulario.css', true);

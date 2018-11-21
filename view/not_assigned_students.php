@@ -102,6 +102,8 @@ $node->make_active();
 // Setup page
 $PAGE->set_title($title);
 $PAGE->set_heading($title);
+
+$PAGE->requires->css('/blocks/ases/style/base_ases.css', true);
 $PAGE->requires->css('/blocks/ases/style/styles_pilos.css', true);
 $PAGE->requires->css('/blocks/ases/style/bootstrap_pilos.css', true);
 $PAGE->requires->css('/blocks/ases/style/bootstrap_pilos.min.css', true);

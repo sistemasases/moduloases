@@ -50,6 +50,7 @@ $coursenode->add_node($blocknode);
 $PAGE->set_url($url);
 $PAGE->set_title($pagetitle);
 
+$PAGE->requires->css('/blocks/ases/style/base_ases.css', true);
 $PAGE->requires->css('/blocks/ases/style/bootstrap_pilos.min.css', true);
 $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/jquery.dataTables.min.css', true);
 $PAGE->requires->css('/blocks/ases/style/jqueryui.css', true);

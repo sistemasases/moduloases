@@ -242,21 +242,24 @@
                     return value;
                 };
 
-                $('.btn.btn-danger.btn-univalle.btn-card').click(function(){
-                    var container = $(this).attr('data-container');
-                    var height = $('#' + container).height();
-
+                $(document).on("click",".btn.btn-danger.btn-univalle.btn-card",function(){
+                    let container = $(this).attr('data-container');
+                    let height = $('#' + container).height();
                     if(height == 0){
-                        $(this).find('span').removeClass('glyphicon-chevron-left');
-                        $(this).find('span').addClass('glyphicon-chevron-down');
+                        $(this).find('span').not(".protected").removeClass('glyphicon-chevron-left');
+                        $(this).find('span').not(".protected").addClass('glyphicon-chevron-down');
+                        $(this).find('.open-close-icon').removeClass('glyphicon-chevron-left');
+                        $(this).find('.open-close-icon').addClass('glyphicon-chevron-down');
                     }else{
                         while(height < 0){
                             height = $('#' + container).height();
                         }
-                        $(this).find('span').removeClass('glyphicon-chevron-down');
-                        $(this).find('span').addClass('glyphicon-chevron-left');
+                        $(this).find('span').not(".protected").removeClass('glyphicon-chevron-down');
+                        $(this).find('span').not(".protected").addClass('glyphicon-chevron-left');
+                        $(this).find('.open-close-icon').removeClass('glyphicon-chevron-down');
+                        $(this).find('.open-close-icon').addClass('glyphicon-chevron-left');
                     }
-                })
+                });
 
                 $('#button_add_v2_track').on('click', function() {
                     
@@ -490,11 +493,12 @@
 
 
                 function load_record_updater(form_id, record_id){
+                    
                     $('.div').removeClass('regla_incumplida');
-                    $.get( "../managers/dphpforms/dphpforms_forms_core.php?form_id=&record_id="+record_id, function( data ) {
-                            $("#body_editor").html("");
-                            $('#body_editor').append( data );
+                    $("#body_editor").html("");
 
+                    $.get( "../managers/dphpforms/dphpforms_forms_core.php?form_id=&record_id="+record_id, function( data ) {
+                            $('#body_editor').append( data );
 
                             var table = $("#list_grupal_seg_consult").clone().prop('id','list_grupal_seg_consult_1');
                             $('#modal_v2_edit_groupal_tracking').find('form').find('h1').after(table);
