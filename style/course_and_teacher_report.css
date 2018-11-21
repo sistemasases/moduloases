@@ -15,7 +15,11 @@
     align-items: center;
     padding: 0 1% 0 1% ;
 }
-
+.summary {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
 
 .table th {
     text-align: center;

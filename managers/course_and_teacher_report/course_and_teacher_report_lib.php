@@ -6,7 +6,6 @@ use function jquery_datatable\get_datatable_class_column;
 require_once (__DIR__ . '/../jquery_datatable/jquery_datatable_lib.php');
 require_once (__DIR__ . '/../../managers/periods_management/periods_lib.php');
 require_once (__DIR__ . '/../../classes/DAO/BaseDAO.php');
-<<<<<<< HEAD
 
 require_once (__DIR__ . '/../course/course_lib.php');
 
@@ -14,8 +13,6 @@ require_once(__DIR__.'/../../vendor/autoload.php');
 
 use Latitude\QueryBuilder\Query\SelectQuery;
 use function Latitude\QueryBuilder\{ alias, on, field, QueryInterface, criteria, literal };
-=======
->>>>>>> 150b3041fd26ffece05ca515f6ebe99583f2fa97
 
 require_once (__DIR__ . '/../course/course_lib.php');
 
