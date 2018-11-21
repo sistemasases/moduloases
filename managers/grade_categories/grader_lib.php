@@ -112,8 +112,6 @@ function get_categories_global_grade_book($id_curso)
     $report = new grade_report_grader($id_curso, $gpr, $context);
     // $tabla = $report->get_grade_table();
     // echo htmlspecialchars($tabla);
-    $report->load_users();
-    $report->load_final_grades();
     return $report->get_grade_table();
 }
 // print_r(get_categorias_curso(3));
