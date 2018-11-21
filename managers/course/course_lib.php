@@ -1,5 +1,90 @@
 <?php
 
+require_once(__DIR__ . '/../../vendor/autoload.php');
+require_once(__DIR__ . '/../../vendor/autoload.php');
+use function Latitude\QueryBuilder\{literal, criteria, alias, on, field};
+
+/**
+ * Betha: ases course and teacher summary
+ */
+function _select_count_ases_courses($id_instancia = 450299, $semestre = '201808') {
+    return BaseDAO::get_factory()
+        ->select(literal('count(*)'))
+        ->from(
+            subquery(
+                _select_ases_courses('201808', 450299)
+                    ->innerJoin(
+                        alias('',''),
+                        on('','')
+                    )
+                    ->andWhere(field('estados_ases.nombre')->eq('seguimiento'))
+                    ->andWhere(field('inst_cohorte.id_instancia')->eq($id_instancia))
+                    ->andWhere(field('user_extended.tracking_status')->eq(1))
+                    ->andWhere(field('mdl_role_assignments.roleid')->eq(5))
+                    ->andWhere(criteria("substring(mdl_course.shortname from 15 for 6) = %s", $semestre))
+                    ->addColumns('mdl_course.id'),
+                'some'
+
+            ));
+}
+
+/**
+ * Betha: ases course and teacher summary
+ */
+function _select_count_courses_with_at_least_one_item_calif($id_instancia = 450299, $semestre= '201808') {
+    return BaseDAO::get_factory()
+        ->select(literal(' count(mdl_course_id)'))
+        ->from(
+            subquery(
+                _select_ases_courses('201808', 450299)
+                    ->innerJoin(
+                        alias('{grade_items}', 'mdl_grade_items'),
+                        on('mdl_grade_items.courseid', 'mdl_course.id'))
+                    ->innerJoin(
+                        alias('{grade_grades}','mdl_grade_grades'),
+                        on('mdl_grade_grades.itemid','mdl_grade_items.id'))
+                    ->where(field('mdl_grade_items.itemtype')->notEq('course'))
+                    ->andWhere(field('mdl_grade_items.itemtype')->notEq('category'))
+                    ->andWhere(field('mdl_grade_grades.finalgrade')->isNotNull())
+
+
+                    ->andWhere(field('estados_ases.nombre')->eq('seguimiento'))
+                    ->andWhere(field('inst_cohorte.id_instancia')->eq($id_instancia))
+                    ->andWhere(field('user_extended.tracking_status')->eq(1))
+                    ->andWhere(field('mdl_role_assignments.roleid')->eq(5))
+                    ->andWhere(criteria("substring(mdl_course.shortname from 15 for 6) = %s", $semestre))
+                    ->addColumns(alias('mdl_course.id', 'mdl_course_id')),
+                'some'
+
+            ));
+}
+/**
+ * Betha: ases course and teacher summary
+ */
+function _select_count_courses_with_at_least_one_item($id_instancia = 450299, $semestre= '201808') {
+    return BaseDAO::get_factory()
+        ->select(literal(' count(mdl_course_id)'))
+        ->from(
+            subquery(
+                _select_ases_courses('201808', 450299)
+                    ->innerJoin(
+                        alias('{grade_items}', 'mdl_grade_items'),
+                        on('mdl_grade_items.courseid', 'mdl_course.id'))
+                    ->where(field('mdl_grade_items.itemtype')->notEq('course'))
+                    ->andWhere(field('mdl_grade_items.itemtype')->notEq('category'))
+
+
+                    ->andWhere(field('estados_ases.nombre')->eq('seguimiento'))
+                    ->andWhere(field('inst_cohorte.id_instancia')->eq($id_instancia))
+                    ->andWhere(field('user_extended.tracking_status')->eq(1))
+                    ->andWhere(field('mdl_role_assignments.roleid')->eq(5))
+                    ->andWhere(criteria("substring(mdl_course.shortname from 15 for 6) = %s", $semestre))
+                    ->addColumns(alias('mdl_course.id', 'mdl_course_id')),
+                'some'
+
+            ));
+}
+
 /**
  * Return all the Ases courses than have not teacher, objects returned have all the properties of table
  * {course}
