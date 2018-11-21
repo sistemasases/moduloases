@@ -25,6 +25,7 @@ define([
 
             if($("#input_json_saved").val() != ""){
                 $("#li_view_discapacity_initial").show();
+                $("#cancel_ficha_discapacity").prop("disabled", false);
             }
 
             $("#btn_ficha_inicial_discapacity").on("click", function(){
@@ -162,6 +163,8 @@ define([
             
 
             $("#edit_discapacity_initial").on("click", function() {
+              $("#btn_ficha_inicial_discapacity").empty();
+              $("#btn_ficha_inicial_discapacity").append('Ficha inicial <span class="caret"></span><strong> (Edición) </strong>');
               $("#form_ficha_inicial").show();
               enableForm();  
               let json_saved_register = $("#input_json_saved").val();
@@ -170,23 +173,12 @@ define([
             });
 
             $("#view_discapacity_initial").on("click", function() {
-                $("#form_ficha_inicial").show();
-                //Disabled inputs 
-                obj = document.getElementById('form_ficha_inicial');
-                for (i=0; ele = obj.getElementsByTagName('input')[i]; i++){
-                    ele.disabled = true;
-                }
-                //Disabled select
-                obj = document.getElementById('form_ficha_inicial');
-                for (i=0; ele = obj.getElementsByTagName('select')[i]; i++){
-                    ele.disabled = true;
-                }
-                
-                let json_saved_register = $("#input_json_saved").val();
-                json_saved_register = JSON.parse(json_saved_register);
-                showFormSaved(json_saved_register);
+                $("#btn_ficha_inicial_discapacity").empty();
+                $("#btn_ficha_inicial_discapacity").append('Ficha inicial <span class="caret"></span> <strong> (Visualización) </strong>');
+                viewFormDisabled();
 
               });
+
             
             $("#cond_adquisicion").on("click", function(){
                 if($(this).val()== '0'){
@@ -298,6 +290,11 @@ define([
                 }
             });
             
+            $("#cancel_ficha_discapacity").on("click", function(){
+
+                viewFormDisabled();
+                
+            });
             
             $("#save_ficha_discapacity").on("click", function(){
 
@@ -696,6 +693,54 @@ define([
 
 
         }
+
+        function viewFormDisabled(){
+                  
+            $("#form_ficha_inicial").show();
+            disabledTag('input');
+            disabledTag('select');
+            disabledTag('textarea');
+            
+            let json_saved_register = $("#input_json_saved").val();
+            json_saved_register = JSON.parse(json_saved_register);
+            cleanAllForm();
+            showFormSaved(json_saved_register);
+          }
+
+          function disabledTag(tag){
+            //Disabled inputs 
+            obj = document.getElementById('form_ficha_inicial');
+            for (i=0; ele = obj.getElementsByTagName(tag)[i]; i++){
+                ele.disabled = true;
+            }
+          }
+
+        function cleanAllForm(){
+            obj = document.getElementById('form_ficha_inicial');
+            for (i=0; ele = obj.getElementsByTagName('input')[i]; i++){
+                if(ele.id != "input_json_saved"){
+                    console.log(ele.type);
+                    if(ele.type == "checkbox"){
+                        ele.checked = false;
+                    }
+                    if(ele.type == "radio"){
+                        ele.checked = false;
+                    }
+                    if(ele.type == "text"){
+                        ele.value = "";
+                    }
+                    if(ele.type == "range"){
+                        ele.value = 2;
+                    }
+                    if(ele.type == "number"){
+                        ele.value = 0;
+                    }
+                
+               
+                
+            }
+        }
+    }
 
         function validate_form(json_detalle){
 
@@ -1192,13 +1237,13 @@ define([
 
                         if(array[obj_json]['key_actividad'] == "check_otra_posibilidad"){
                             //Desplegar la opcion otro
-                            $("#"+array[obj_json]['key_otra_actividad']).attr("value", array[obj_json]['otra_actividad']);
+                            $("#"+array[obj_json]['key_otra_actividad']).val(array[obj_json]['otra_actividad']);
                             $("#"+array[obj_json]['key_otra_actividad']).parent().show();
                         }
 
-                        $("#"+array[obj_json]['key_actividad']).attr("checked", true);
-                        $("#"+array[obj_json]['key_posibilidad']).attr("value", array[obj_json]['posibilidad']);
-                        $("#"+array[obj_json]['key_apoyo']).attr("value", array[obj_json]['tipo_apoyo']);
+                        $("#"+array[obj_json]['key_actividad']).prop("checked", true);
+                        $("#"+array[obj_json]['key_posibilidad']).val(array[obj_json]['posibilidad']);
+                        $("#"+array[obj_json]['key_apoyo']).val(array[obj_json]['tipo_apoyo']);
                         
                         if(array[obj_json]['posibilidad'] == "No la puede realizar") {
                             range = 1;
@@ -1214,7 +1259,7 @@ define([
                                 }
                         }
                         
-                        $("#"+array[obj_json]['key_posibilidad']).siblings(":input[type=range]").attr("value", range);
+                        $("#"+array[obj_json]['key_posibilidad']).siblings(":input[type=range]").val(range);
                         
                     }
 
@@ -1226,7 +1271,7 @@ define([
 
                         if(array[obj_json]['key_factor'] == "check_factor4" || array[obj_json]['key_factor'] == "check_factor2_7" ){
                             //Desplegar la opcion otro
-                            $("#"+array[obj_json]['key_otro_factor']).attr("value", array[obj_json]['otro_factor']);
+                            $("#"+array[obj_json]['key_otro_factor']).val(array[obj_json]['otro_factor']);
                             
                         }
                         if(array[obj_json]['key_factor'] == "check_factor2"){
@@ -1234,15 +1279,49 @@ define([
                             $("#"+array[obj_json]['key_factor']).parent().next().show();
                         }
 
-                        $("#"+array[obj_json]['key_factor']).attr("checked", true);
+                        $("#"+array[obj_json]['key_factor']).prop("checked", true);
 
                     }
 
                     break;
                     case "apoyo_principal_cotidiano":
 
+                    key         = json_bd[i]['key_apoyo'];          
+                    val         = json_bd[i]['apoyo_cotidiano'];
+                    key_input   = json_bd[i]['key_otro_apoyo'];           
+                    val_input   = json_bd[i]['otro_apoyo'];
+
+                    $("#"+key).prop("checked", true);
+
+                    if(key == "input_radio_otro_oa"){
+
+                        $("#"+key_input).val(val_input);
+                        $("#"+key_input).parent().show();
+                    }else{
+
+                        $("#"+key_input).val("");
+                        $("#"+key_input).parent().hide();
+                    }
+
                     break;
                     case "medio_transporte":
+
+                    key         = json_bd[i]['key_transoporte'];          
+                    val         = json_bd[i]['transporte'];
+                    key_input   = json_bd[i]['key_otro_transporte'];           
+                    val_input   = json_bd[i]['otro_transporte'];
+
+                    $("#"+key).prop("checked", true);
+
+                    if(key == "input_radio_otro_ot"){
+
+                        $("#"+key_input).val(val_input);
+                        $("#"+key_input).parent().show();
+                    }else{
+
+                        $("#"+key_input).val("");
+                        $("#"+key_input).parent().hide();
+                    }
 
                     break;
                     case "participa_asociacion":
@@ -1267,6 +1346,32 @@ define([
                     break;
                     case "apoyo_institucion":
 
+                    key         = json_bd[i]['key_apoya'];          
+                    val         = json_bd[i]['apoyo'];
+                    key_input   = json_bd[i]['key_apoyo_institu'];           
+                    val_input   = json_bd[i]['apoyo_institu'];
+                   
+
+                    if(val ==1 ){
+                        //Fue seleccionada la opción
+                        $("#"+key).prop("checked", true);
+                        $("#"+key_input).val(val_input);
+
+                        key_input   = json_bd[i]['key_institucion'];           
+                        val_input   = json_bd[i]['institucion'];
+
+                        $("#"+key_input).val(val_input);
+
+                        $("#"+key_input).parent().parent().show();
+                    }else {
+
+                    //No fue seleccionada la opción
+                    $("#"+key).prop("checked", false);
+                    $("#"+key_input).val("");
+                    $("#"+key_input).parent().parent().hide();
+
+                    }
+
                     break;
                 }
 
@@ -1283,7 +1388,7 @@ define([
 
                 if(val == "0"){
                     //Opción Otra condicion adquisición
-                    $("#"+key_otro).attr("value",val_otro);
+                    $("#"+key_otro).val(val_otro);
                     $("#"+key_otro).parent().show();
                 }
                 } 
@@ -1294,14 +1399,14 @@ define([
                 
                 if(val == 1){
                     //Fue seleccionada la opción
-                    $("#"+key).attr("checked", true);
-                    $("#"+key_input).prop("value",val_input);
+                    $("#"+key).prop("checked", true);
+                    $("#"+key_input).val(val_input);
                     $("#"+key_input).parent().show();
 
                 }else{
                     //No fue seleccionada la opción
-                    $("#"+key).attr("checked", false);
-                    $("#"+key_input).prop("value","");
+                    $("#"+key).prop("checked", false);
+                    $("#"+key_input).val("");
                     $("#"+key_input).parent().hide();
                 }
             
@@ -1311,8 +1416,8 @@ define([
 
             
             for(obj_json in array){
-                $("#"+array[obj_json][key_select]).attr("checked", true);
-                $("#"+array[obj_json][key_input]).attr("value", array[obj_json][val_input]);
+                $("#"+array[obj_json][key_select]).prop("checked", true);
+                $("#"+array[obj_json][key_input]).val( array[obj_json][val_input]);
             }
 
         }
