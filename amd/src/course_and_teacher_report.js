@@ -32,6 +32,7 @@ define([
              * @param cursos_al_un_item Cantidad de cursos ases con almenos un item
              * @constructor
              */
+            $("#tableFinalgradesReport").html('<img class="icon-loading" src="../icon/loading.gif"/>'); // loader image
             var ResumeReport = /* @class */ (function   () {
                 function ResumeReport(cursos_al_un_est_ases,
                                       cursos_al_item_calif,
@@ -43,28 +44,30 @@ define([
                 ResumeReport.return_critic_and_no_critic_report = function(data) /* return {critic_report: ResumeReport, no_critic_report: ResumeReport} */  {
                     var no_critic_report = new ResumeReport();
                     var critic_report = new ResumeReport();
-
+                    var countr=0;
                     for( var _i = 0, data_1 = data; _i < data_1.length; _i++) {
                         var report_item = data_1[_i];
                         if(report_item.items_con_almenos_una_nota > 0) {
-                            switch ((report_item.critica)) {
+                            switch (report_item.critica) {
                                 case 'SI': critic_report.cursos_al_item_calif++; break;
                                 case 'NO': no_critic_report.cursos_al_item_calif++; break;
                             }
                         }
                         if(report_item.cantidad_items > 0) {
-                            switch ((report_item.critica)) {
+                            switch (report_item.critica) {
                                 case 'SI': critic_report.cursos_al_un_item++; break;
                                 case 'NO': no_critic_report.cursos_al_un_item++; break;
                             }
                         }
                         if(report_item.cantidad_estudiantes_ases > 0) {
-                            switch ((report_item.critica)) {
+                            switch (report_item.critica) {
                                 case 'SI': critic_report.cursos_al_un_est_ases++; break;
                                 case 'NO': no_critic_report.cursos_al_un_est_ases++; break;
                             }
                         }
+                        countr ++;
                     }
+                    console.log('countr', countr);
                     return {critic_report: critic_report, no_critic_report: no_critic_report};
                 };
                 return ResumeReport;
@@ -143,6 +146,7 @@ define([
              */
             function add_extra_course_info_controls() {
                 $('#tableFinalgradesReport tbody').on('click', 'td.details-control', function () {
+
                     var tr = $(this).closest('tr');
                     var row = table.row(tr);
 
@@ -153,6 +157,7 @@ define([
                     }
                     else {
                         // Open this row
+                        row.child('<img class="icon-loading" src="../icon/loading.gif"/>').show(); // loader image (is replaced when the data arrive)
                         var callback = (row, data_html) => {
                             row.child(data_html).show();
                             /* Fix styles for ases table*/
@@ -176,13 +181,10 @@ define([
                 }).done(
                     function (dataTable){
                     resume_report = ResumeReport.return_critic_and_no_critic_report(dataTable.data);
-                    console.log(resume_report);
                     templates.render('block_ases/course_and_teacher_report_summary', {resume_report: resume_report})
                         .then(function(html, js) {
-                            console.log(html);
                             templates.appendNodeContents('.course_and_teacher_report .summary', html, js);
                         }).fail(function(ex) {
-                            console.log(ex);
                     });
                     table = $("#tableFinalgradesReport").DataTable(
                         {
