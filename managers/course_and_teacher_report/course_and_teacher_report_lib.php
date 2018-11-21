@@ -14,6 +14,13 @@ require_once(__DIR__.'/../../vendor/autoload.php');
 use Latitude\QueryBuilder\Query\SelectQuery;
 use function Latitude\QueryBuilder\{ alias, on, field, QueryInterface, criteria, literal };
 
+require_once (__DIR__ . '/../course/course_lib.php');
+
+require_once(__DIR__.'/../../vendor/autoload.php');
+
+use Latitude\QueryBuilder\Query\SelectQuery;
+use function Latitude\QueryBuilder\{ alias, on, field, QueryInterface, criteria, literal };
+
 
 function _select_ases_courses($semestre, $id_instancia): SelectQuery {
 

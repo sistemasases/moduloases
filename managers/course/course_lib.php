@@ -1,8 +1,53 @@
 <?php
 
 require_once(__DIR__ . '/../../vendor/autoload.php');
-require_once(__DIR__ . '/../../vendor/autoload.php');
+require_once(__DIR__ . '/../../classes/DAO/BaseDAO.php');
 use function Latitude\QueryBuilder\{literal, criteria, alias, on, field};
+use Latitude\QueryBuilder\Query\SelectQuery;
+
+/**
+ * Betha: ases course and teacher summary
+ */
+
+function _select_ases_courses($semestre, $id_instancia): SelectQuery {
+
+
+    return BaseDAO::get_factory()
+        ->select(
+            literal('DISTINCT ON (mdl_course.id) *')
+        )
+        ->from(alias('{talentospilos_user_extended}', 'user_extended'))
+        ->innerJoin(
+            alias('{user}', 'mdl_user'),
+            on('mdl_user.id', 'user_extended.id_moodle_user'))
+        ->innerJoin(
+            alias('{cohort_members}', 'mdl_cohort_members'),
+            on('mdl_cohort_members.userid', 'mdl_user.id'))
+        ->innerJoin(
+            alias('{talentospilos_inst_cohorte}', 'inst_cohorte'),
+            on('inst_cohorte.id_cohorte', 'mdl_cohort_members.cohortid'))
+        ->innerJoin(
+            alias('{role_assignments}', 'mdl_role_assignments'),
+            on('mdl_role_assignments.userid', 'mdl_user.id'))
+        ->innerJoin(
+            alias('{context}', 'mdl_context'),
+            on('mdl_role_assignments.contextid', 'mdl_context.id'))
+        ->innerJoin(
+            alias('{course}', 'mdl_course'),
+            on('mdl_course.id', 'mdl_context.instanceid'))
+        ->innerJoin(
+            alias('{talentospilos_est_estadoases}', 'est_estadoases'),
+            on('user_extended.id_ases_user', 'est_estadoases.id_estudiante'))
+        ->innerJoin(
+            alias('{talentospilos_estados_ases}', 'estados_ases'),
+            on('est_estadoases.id_estado_ases', 'estados_ases.id'))
+        ->where(field('estados_ases.nombre')->eq('seguimiento'))
+        ->andWhere(field('inst_cohorte.id_instancia')->eq($id_instancia))
+        ->andWhere(field('user_extended.tracking_status')->eq(1))
+        ->andWhere(field('mdl_role_assignments.roleid')->eq(5))
+        ->andWhere(criteria("substring(mdl_course.shortname from 15 for 6) = %s", $semestre));
+}
+
 
 /**
  * Betha: ases course and teacher summary
