@@ -142,6 +142,11 @@
     padding-bottom: 20px;
     
 }
+#h-ficha_discapacity{
+    font-size: 22px;
+    text-align: center;
+    padding-bottom: 20px;
+}
 #btn_ficha_inicial_discapacity{
     background-color:rgb(255, 143, 143);
     color:black;

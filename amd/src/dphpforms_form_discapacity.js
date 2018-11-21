@@ -25,7 +25,7 @@ define([
 
             if($("#input_json_saved").val() != ""){
                 $("#li_view_discapacity_initial").show();
-                $("#cancel_ficha_discapacity").prop("disabled", false);
+                $("#cancel_ficha_discapacity").parent().show();
             }
 
             $("#btn_ficha_inicial_discapacity").on("click", function(){
@@ -170,12 +170,16 @@ define([
               let json_saved_register = $("#input_json_saved").val();
               json_saved_register = JSON.parse(json_saved_register);
               showFormSaved(json_saved_register);
+              $("html, body").animate({scrollTop:650}, 'slow'); 
+              $("#form_ficha_inicial").animate({scrollTop:0}, 'slow');
             });
 
             $("#view_discapacity_initial").on("click", function() {
                 $("#btn_ficha_inicial_discapacity").empty();
                 $("#btn_ficha_inicial_discapacity").append('Ficha inicial <span class="caret"></span> <strong> (Visualización) </strong>');
                 viewFormDisabled();
+                $("html, body").animate({scrollTop:650}, 'slow'); 
+                $("#form_ficha_inicial").animate({scrollTop:0}, 'slow');
 
               });
 
@@ -293,7 +297,8 @@ define([
             $("#cancel_ficha_discapacity").on("click", function(){
 
                 viewFormDisabled();
-                
+                $("html, body").animate({scrollTop:650}, 'slow'); 
+                $("#form_ficha_inicial").animate({scrollTop:0}, 'slow');
             });
             
             $("#save_ficha_discapacity").on("click", function(){
@@ -650,9 +655,9 @@ define([
                 
                 }
                 
-
+                $("html, body").animate({scrollTop:650}, 'slow'); 
+                $("#form_ficha_inicial").animate({scrollTop:0}, 'slow');
                 
-
                 //console.log(json_detalle_discapacidad);
                 
                   
