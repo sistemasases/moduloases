@@ -327,6 +327,21 @@ function dphpforms_update_respuesta($completed_form, $RECORD_ID){
             $processable = $validator_response['status'];
             $Unfulfilled_rules = $validator_response['unfulfilled_ruler'];
 
+            //Validación de las opciones del campo
+            $required_validator = dphpforms_required_validator( $respuestas_obj );
+            
+            if( !($required_validator['status']) ){
+                $retorno = json_encode(
+                    array(
+                        'status' => '-3',
+                        'message' => 'Field cannot be null',
+                        'data' => $required_validator['null_field_id']
+                    )
+                );
+                echo $retorno;
+                return $retorno;
+            }
+
             /*print_r($updated_respuestas);
 
             if($processable){
@@ -475,6 +490,21 @@ function dphpforms_new_store_respuesta($completed_form){
     $validator_response = dphpforms_reglas_validator( $respuestas_obj, $reglas );
     $processable = $validator_response['status'];
     $Unfulfilled_rules = $validator_response['unfulfilled_ruler'];
+
+    //Validación de las opciones del campo
+    $required_validator = dphpforms_required_validator( $respuestas_obj );
+    
+    if( !($required_validator['status']) ){
+        $retorno = json_encode(
+            array(
+                'status' => '-3',
+                'message' => 'Field cannot be null',
+                'data' => $required_validator['null_field_id']
+            )
+        );
+        echo $retorno;
+        return $retorno;
+    }
 
     if($processable){
         //echo "\n¿Procesable?: Sí.\n";
@@ -1034,6 +1064,32 @@ function dphpforms_get_expected_respuestas($form_id){
     ORDER BY posicion";
 
     return array_values($DB->get_records_sql($sql));
+
+}
+
+function dphpforms_required_validator( $respuestas ){
+
+    global $DB;
+
+    foreach( $respuestas as $key => $respuesta ){
+        
+        $sql = "SELECT * FROM {talentospilos_df_preguntas} WHERE id = " . $respuesta->id;
+        $pregunta_obj = $DB->get_record_sql( $sql );
+        $obj_atributos = json_decode( $pregunta_obj->atributos_campo );
+
+        if( ( $obj_atributos->required == "true" ) && (( $respuesta->valor === "" ) || ( $respuesta->valor === "-#$%-" )) ){
+            return array(
+                'status' => false,
+                'null_field_id' => $respuesta->id
+            );
+        }
+
+    }
+
+    return array(
+        'status' => true,
+        'null_field_id' => ''
+    );
 
 }
 
