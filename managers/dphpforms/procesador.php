@@ -342,6 +342,21 @@ function dphpforms_update_respuesta($completed_form, $RECORD_ID){
                 return $retorno;
             }
 
+            //Validación del tipo de campo
+            $regex_validator = dphpforms_regex_validator( $respuestas_obj );
+
+            if( !($regex_validator['status']) ){
+                $retorno = json_encode(
+                    array(
+                        'status' => '-4',
+                        'message' => 'Field does not match with the regular expression',
+                        'data' => $regex_validator['not_regex_match_field_id']
+                    )
+                );
+                echo $retorno;
+                return $retorno;
+            }
+
             /*print_r($updated_respuestas);
 
             if($processable){
@@ -500,6 +515,21 @@ function dphpforms_new_store_respuesta($completed_form){
                 'status' => '-3',
                 'message' => 'Field cannot be null',
                 'data' => $required_validator['null_field_id']
+            )
+        );
+        echo $retorno;
+        return $retorno;
+    }
+
+    //Validación del tipo de campo
+    $regex_validator = dphpforms_regex_validator( $respuestas_obj );
+    
+    if( !($regex_validator['status']) ){
+        $retorno = json_encode(
+            array(
+                'status' => '-4',
+                'message' => 'Field does not match with the regular expression',
+                'data' => $regex_validator['not_regex_match_field_id']
             )
         );
         echo $retorno;
@@ -1089,6 +1119,44 @@ function dphpforms_required_validator( $respuestas ){
     return array(
         'status' => true,
         'null_field_id' => ''
+    );
+
+}
+
+function dphpforms_regex_validator( $respuestas ){
+
+    global $DB;
+
+    foreach( $respuestas as $key => $respuesta ){
+        
+        $sql = "SELECT * FROM {talentospilos_df_preguntas} WHERE id = " . $respuesta->id;
+        $pregunta_obj = $DB->get_record_sql( $sql );
+
+        $sql_type = "SELECT * FROM {talentospilos_df_tipo_campo} WHERE id = " . $pregunta_obj->tipo_campo;
+        $tipo_campo_obj = $DB->get_record_sql( $sql_type );
+
+        $regex = $tipo_campo_obj->expresion_regular;
+
+        if( $regex ){
+
+            if( preg_match( $regex, $respuesta->valor) == 0 ){
+             
+                return array(
+                    'status' => false,
+                    'not_regex_match_field_id' => $respuesta->id,
+                    'human_readable' => $tipo_campo_obj->regex_legible_humanos,
+                    'example' => $tipo_campo_obj->ejemplo
+                );
+            }
+        }
+
+    }
+
+    return array(
+        'status' => true,
+        'not_regex_match_field_id' => '',
+        'human_readable' => '',
+        'example' => ''
     );
 
 }

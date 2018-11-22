@@ -2213,7 +2213,6 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
         $field_time->ejemplo = "05:05";
         $DB->update_record('talentospilos_df_tipo_campo', $field_time);
 
-
         upgrade_block_savepoint(true, 2018112215570 , 'ases');
     
         return $result;
