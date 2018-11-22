@@ -7,4 +7,5 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'Latitude\\QueryBuilder\\' => array($vendorDir . '/latitude/latitude/src'),
+    'JsonSchema\\' => array($vendorDir . '/justinrainbow/json-schema/src/JsonSchema'),
 );

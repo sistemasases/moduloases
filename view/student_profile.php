@@ -168,7 +168,8 @@ if ($student_code != 0) {
     $record->attendant = $ases_student->acudiente;
     $record->attendant_tel = $ases_student->tel_acudiente;
     $record->num_doc = $ases_student->num_doc;
-    
+    $record->json_detalle  =$ases_student->json_detalle;
+  
     
       $personas = '';
       $pos = 1;
