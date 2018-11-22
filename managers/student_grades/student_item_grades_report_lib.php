@@ -25,6 +25,8 @@
 
 require_once (__DIR__ . '/../jquery_datatable/jquery_datatable_lib.php');
 require_once (__DIR__ . '/../../managers/periods_management/periods_lib.php');
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 use jquery_datatable;
 /**
  * Class LosedAndAprovedItemGradesItemReport, model for objects returned at method get_losed_and_aproved_item_grades
@@ -36,6 +38,8 @@ abstract class LosedAndAprovedItemGradesItemReport {
     public $username;
     public $firstname;
     public $lastname;
+    public $mdl_talentospilos_usuario_id;
+    public $mdl_user_id;
     public $num_doc;
 }
 
@@ -67,6 +71,7 @@ select  num_doc, count(*) filter(where not item_ganado) as cantidad_items_perdid
 select
    distinct mdl_user.*, mdl_talentospilos_usuario.num_doc,
             case when (finalgrade < grademax * 0.6 or finalgrade is  null) then false else true end as item_ganado,
+            mdl_user.id as mdl_user_id,
             mdl_talentospilos_usuario.id as mdl_talentospilos_usuario_id, finalgrade, grademax, mdl_grade_items.itemname, mdl_grade_items.id as item_id  ,
             (select count(*) from mdl_grade_grades as mdl_grade_grades_inner
                                     inner join mdl_grade_items as mdl_grade_items_inner
@@ -110,7 +115,45 @@ SQL;
 
 }
 
+function get_user_grade_grades_with_items($user_id, $course_id = null) {
+    global $DB;
+    $sql = <<<SQL
+    SELECT *, mdl_grade_grades.id as grade_id, mdl_grade_items.id as item_id FROM mdl_grade_grades
+    inner join mdl_grade_items
+    where mdl_grade_grades.userid = $user_id
+SQL;
+    if($course_id) {
+        $sql.="and mdl_grade_items.courseid = $course_id";
+    }
+    return $DB->get_records_sql($sql);
+}
 
+abstract class student_item_grades extends grade_grade {
+
+}
+
+/**
+ * Class student_item_grades_with_items
+ * @property $grade_id
+ * @property $item_id
+ */
+abstract class student_item_grades_with_items extends grade_item {
+
+}
+
+/**
+ * Return an array of objects than contains the join of the objects grade item and grade grade
+ * @see mdl_grade_grades
+ * @see mdl_grade_items
+ * @param $student_id int Moodle user id
+ * @param $course_id int Moodle course id
+ * @return student_item_grades_with_items
+ */
+function get_student_item_grades_by_course($student_id, $course_id) {
+    $user_grades_with_items = get_user_grade_grades_with_items($student_id, $course_id);
+    /* @var $user_grade_with_items student_item_grades_with_items */
+    return $user_grade_with_items;
+}
 
 /**
  * Return a datatable formated as array with all information needed for item grades agrouped by students

@@ -41,10 +41,22 @@ require_once (__DIR__ . '/../../../../config.php');
 
 require_once (__DIR__ . '/student_item_grades_report_lib.php');
 require_once (__DIR__ . '/../../classes/API/BaseAPI.php');
+require_once (__DIR__ . '/../../classes/API/BaseAPIView.php');
+
+class StudentGradesInACourseSummaryDatatable extends BaseAPIView {
+    function send_response()
+    {
+        return get_student_item_grades_by_course($this->args['student_id'], $this->agrs['course_id']);
+    }
+}
 
 $student_item_grades_report_api = new BaseAPI;
 $student_item_grades_report_api->get(':instance_id', function($data, array $args) {
     echo json_encode(get_datatable_for_student_grades_report($args['instance_id']));
+});
+$student_item_grades_report_api->get('student_grades/summary/:student_id/:course_id', function($data, array $args) {
+    $view = new StudentGradesInACourseSummaryDatatable();
+    $view->execute($data, $args);
 });
 
 $student_item_grades_report_api->run();
