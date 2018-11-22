@@ -212,7 +212,7 @@ function create_menu_options($userid, $blockid, $courseid)
                 $indexed['Reportes por docente'] = $menu_options;
 
             }
-            if ($function == 'student_grades') {
+            if ($function == 'student_item_grades_report') {
                 $url = new moodle_url("/blocks/ases/view/student_item_grades_report.php", array(
                     'courseid' => $courseid,
                     'instanceid' => $blockid,
