@@ -771,7 +771,6 @@ define([
             obj = document.getElementById('form_ficha_inicial');
             for (i=0; ele = obj.getElementsByTagName('input')[i]; i++){
                 if(ele.id != "input_json_saved"){
-                    console.log(ele.type);
                     if(ele.type == "checkbox"){
                         ele.checked = false;
                     }
