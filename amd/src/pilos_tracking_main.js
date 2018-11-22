@@ -413,14 +413,20 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                                         function(){
                                             if(response['message'] == 'Updated'){
                                                 $('#dphpforms-peer-record-' + $('#dphpforms_record_id').val()).stop().animate({backgroundColor:'rgb(175, 255, 173)'}, 400).animate({backgroundColor:'#f5f5f5'}, 4000);
+                                                let asesid = $('#dphpforms-peer-record-' + $('#dphpforms_record_id').val()).parent().parent().data("asesid");
+                                                console.log(asesid);
+                                                for( let i = 0; i < collapse_loaded.length; i++){ 
+                                                    if ( collapse_loaded[i] === asesid) {
+                                                        collapse_loaded.splice(i, 1); 
+                                                    }
+                                                 }
+                                                $("a[data-username='"+ asesid +"']").trigger("click");
                                             }
                                         }
                                     );
                                     $('.dphpforms-response').trigger("reset");
                                     $('#modal_v2_edit_peer_tracking').fadeOut(300);
                                     $('#modal_v2_peer_tracking').fadeOut(300);
-
-                                    
                                     
                                 }else if(response['status'] == -2){
                                     var mensaje = '';
