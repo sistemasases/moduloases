@@ -657,6 +657,23 @@
 
                                     
                                     
+                                }else if(response['status'] == -3){
+                                    $(formulario).find('button').prop( "disabled", false);
+                                    $(formulario).find('a').attr( "disabled", false);
+                                    var mensaje = '';
+                                    if(response['message'] == 'Field cannot be null'){
+
+                                        var id_form_pregunta = response['data'];
+                                        $('div').removeClass('regla_incumplida');
+                                        $('.div-' + id_form_pregunta).addClass('regla_incumplida');
+                                        
+                                        mensaje  = 'Ups, los campos que se acaban de colorear en rojo no pueden estar vacíos, si no logra ver ningún campo, informe de este incidente.';
+                                    }
+                                    swal(
+                                        'Alerta',
+                                        mensaje,
+                                        'warning'
+                                    );
                                 }else if(response['status'] == -2){
                                     $(formulario).find('button').prop( "disabled", false);
                                     $(formulario).find('a').attr( "disabled", false);
