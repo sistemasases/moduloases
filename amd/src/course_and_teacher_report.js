@@ -78,7 +78,7 @@ define([
             /**
              * Data: {
              *     table,
-             *     course_caller_id,
+             *     course_id,
              *     instance_id
              * }
              *
