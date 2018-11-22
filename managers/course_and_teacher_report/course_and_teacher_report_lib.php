@@ -1,7 +1,6 @@
 <?php
 
 
-use function jquery_datatable\get_datatable_class_column;
 require_once(__DIR__ . '/../../../../config.php');
 require_once (__DIR__ . '/../jquery_datatable/jquery_datatable_lib.php');
 require_once (__DIR__ . '/../../managers/periods_management/periods_lib.php');
@@ -362,7 +361,7 @@ function get_datatable_for_course_and_teacher_report($instance_id, $append_cours
 
     $data = array_values(get_reporte_curso_profesores($instance_id));
 
-    array_push($columns, get_datatable_class_column());
+    array_push($columns, \jquery_datatable\get_datatable_class_column());
     array_push($columns, array(
         "title"=>"Curso",
         "name"=>'curso',
