@@ -9,6 +9,7 @@
         }
     ],
     "require": {
+        "justinrainbow/json-schema": "^5.2",
         "latitude/latitude": "^3.1"
     }
 }
