@@ -2148,38 +2148,38 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
         // ACTUALIZACION BD CAMPOS PESTAÑA GENERAL
         // AGREGAR CAMPOS A TABLA USUARIO
 
-            // Define field puntaje_icfes to be added to talentospilos_usuario.
-            $table = new xmldb_table('talentospilos_usuario');
-            $field = new xmldb_field('puntaje_icfes', XMLDB_TYPE_INTEGER, '3', null, null, null, null, 'json_detalle');
+        //     // Define field puntaje_icfes to be added to talentospilos_usuario.
+        //     $table = new xmldb_table('talentospilos_usuario');
+        //     $field = new xmldb_field('puntaje_icfes', XMLDB_TYPE_INTEGER, '3', null, null, null, null, 'json_detalle');
 
-            // Conditionally launch add field puntaje_icfes.
-            if (!$dbman->field_exists($table, $field)) {
-                $dbman->add_field($table, $field);
-            }
+        //     // Conditionally launch add field puntaje_icfes.
+        //     if (!$dbman->field_exists($table, $field)) {
+        //         $dbman->add_field($table, $field);
+        //     }
 
-             // Define field estrato to be added to talentospilos_usuario.
-             $table = new xmldb_table('talentospilos_usuario');
-             $field = new xmldb_field('estrato', XMLDB_TYPE_INTEGER, '1', null, null, null, null, 'puntaje_icfes');
+        //      // Define field estrato to be added to talentospilos_usuario.
+        //      $table = new xmldb_table('talentospilos_usuario');
+        //      $field = new xmldb_field('estrato', XMLDB_TYPE_INTEGER, '1', null, null, null, null, 'puntaje_icfes');
      
-             // Conditionally launch add field estrato.
-             if (!$dbman->field_exists($table, $field)) {
-                 $dbman->add_field($table, $field);
-             }
+        //      // Conditionally launch add field estrato.
+        //      if (!$dbman->field_exists($table, $field)) {
+        //          $dbman->add_field($table, $field);
+        //      }
 
-            // Define field id_etnia to be added to talentospilos_usuario.
-            $table = new xmldb_table('talentospilos_usuario');
-            $field = new xmldb_field('id_etnia', XMLDB_TYPE_INTEGER, '2', null, null, null, null, 'estrato');
+        //     // Define field id_etnia to be added to talentospilos_usuario.
+        //     $table = new xmldb_table('talentospilos_usuario');
+        //     $field = new xmldb_field('id_etnia', XMLDB_TYPE_INTEGER, '2', null, null, null, null, 'estrato');
     
-            // Conditionally launch add field id_etnia.
-            if (!$dbman->field_exists($table, $field)) {
-                $dbman->add_field($table, $field);
-            }
+        //     // Conditionally launch add field id_etnia.
+        //     if (!$dbman->field_exists($table, $field)) {
+        //         $dbman->add_field($table, $field);
+        //     }
             
-        $new_etnia = new StdClass;
-        $new_etnia->etnia = "NO DEFINIDO";
-        $new_etnia->opcion_general = 1;
+        // $new_etnia = new StdClass;
+        // $new_etnia->etnia = "NO DEFINIDO";
+        // $new_etnia->opcion_general = 1;
 
-        $DB->insert_record("talentospilos_etnia", $new_etnia, true);
+        // $DB->insert_record("talentospilos_etnia", $new_etnia, true);
 
 
         upgrade_block_savepoint(true, 2018111314000 , 'ases');
