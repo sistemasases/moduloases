@@ -237,6 +237,9 @@ class renderer extends plugin_renderer_base {
         return parent::render_from_template('block_ases/course_and_teacher_report', $data);
     }
 
-
+    public function render_student_item_grades_report_page($page){
+        $data = $page->export_for_template($this);
+        return parent::render_from_template('block_ases/student_item_grades_report', $data);
+    }
 
 }
