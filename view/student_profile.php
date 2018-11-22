@@ -284,6 +284,19 @@ if ($student_code != 0) {
     
 
     $etnia_student = $ases_student->id_etnia;
+
+    //Buscar la posición de NO DEFINIDO
+    $i=0;
+    foreach($etnias as $etnia){
+        if($etnia->etnia=="NO DEFINIDO"){
+        $posp=$i;
+        $options_etnia .= " <option value='$etnia->id'>$etnia->etnia</option>" ;   
+        break; }
+        $i++;
+    }
+
+    //Eliminar NO DEFINIDO puesto al inicio
+    array_splice($etnias,$posp,1);
   
    $otro ="";
    $control = true;
