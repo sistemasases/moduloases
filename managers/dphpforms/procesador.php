@@ -321,7 +321,8 @@ function dphpforms_update_respuesta($completed_form, $RECORD_ID){
         if($different_flag){
             
             //La última afectación es si las reglas son válidas
-            $validator_response = dphpforms_reglas_validator(json_decode(json_encode($updated_respuestas)), $reglas);
+            $respuestas_obj = json_decode(json_encode($updated_respuestas));
+            $validator_response = dphpforms_reglas_validator($respuestas_obj, $reglas);
 
             $processable = $validator_response['status'];
             $Unfulfilled_rules = $validator_response['unfulfilled_ruler'];
@@ -470,8 +471,8 @@ function dphpforms_new_store_respuesta($completed_form){
 
     //print_r($all_respuestas);
     //die();
-
-    $validator_response = dphpforms_reglas_validator( json_decode( json_encode($all_respuestas) ), $reglas );
+    $respuestas_obj = json_decode( json_encode($all_respuestas) );
+    $validator_response = dphpforms_reglas_validator( $respuestas_obj, $reglas );
     $processable = $validator_response['status'];
     $Unfulfilled_rules = $validator_response['unfulfilled_ruler'];
 
