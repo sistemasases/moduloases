@@ -29,7 +29,7 @@ define([
             }
 
             $("#btn_ficha_inicial_discapacity").on("click", function(){
-                
+               
             });
 
             $("#div_factor_impacto input").on("change",function(){
@@ -62,9 +62,6 @@ define([
                 }
             });
 
-            // let tam_button = document.getElementById("btn_ficha_inicial_discapacity").style.width;
-            // alert(tam_button);
-            // $("#edit_discapacity_initial").width(tam_button);
             
             $("#div_necesidades input[type=checkbox]").on("change", function(){
                 if($(this).is(":checked")){
@@ -163,6 +160,8 @@ define([
             
 
             $("#edit_discapacity_initial").on("click", function() {
+
+
               $("#btn_ficha_inicial_discapacity").empty();
               $("#btn_ficha_inicial_discapacity").append('Ficha inicial <span class="caret"></span><strong> (Edición) </strong>');
               $("#form_ficha_inicial").show();
@@ -172,6 +171,12 @@ define([
               showFormSaved(json_saved_register);
               $("html, body").animate({scrollTop:650}, 'slow'); 
               $("#form_ficha_inicial").animate({scrollTop:0}, 'slow');
+
+              $("#save_ficha_discapacity").parent().show();
+              $("#cancel_ficha_discapacity").parent().show();
+
+              let contenido = $("#textarea_diagnostico").val(); 
+              document.getElementById("descrip_diagnostico").innerHTML = contenido;
             });
 
             $("#view_discapacity_initial").on("click", function() {
@@ -180,6 +185,12 @@ define([
                 viewFormDisabled();
                 $("html, body").animate({scrollTop:650}, 'slow'); 
                 $("#form_ficha_inicial").animate({scrollTop:0}, 'slow');
+
+                $("#save_ficha_discapacity").parent().hide();
+                $("#cancel_ficha_discapacity").parent().hide();
+
+                let contenido = $("#textarea_diagnostico").val(); 
+                document.getElementById("descrip_diagnostico").innerHTML =  contenido;
 
               });
 
@@ -242,6 +253,13 @@ define([
                     $("#textarea_diagnostico").prop("required", false);
                 }
             });
+
+            $("#textarea_diagnostico").on("change", function(){
+                let contenido = $("#textarea_diagnostico").val(); 
+                document.getElementById("descrip_diagnostico").innerHTML =  contenido;
+             
+            });
+
             $("#check_certificado_invalidez").on("change",function(){
                 if( $("#check_certificado_invalidez").is(":checked") ) {
                     $("#div_porcentaje_inv").show();
@@ -296,9 +314,31 @@ define([
             
             $("#cancel_ficha_discapacity").on("click", function(){
 
-                viewFormDisabled();
-                $("html, body").animate({scrollTop:650}, 'slow'); 
-                $("#form_ficha_inicial").animate({scrollTop:0}, 'slow');
+                swal({
+                    title: "Advertencia",
+                    text: "¿Está seguro(a) que desea revertir los cambios?",
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonText: "Si",
+                    cancelButtonText: "No",
+                    closeOnConfirm: true,
+                },
+                function(isConfirm){
+       
+                    if (isConfirm) {
+                        viewFormDisabled();
+                        $("html, body").animate({scrollTop:650}, 'slow'); 
+                        $("#form_ficha_inicial").animate({scrollTop:0}, 'slow');
+                        $("#btn_ficha_inicial_discapacity").empty();
+                        $("#btn_ficha_inicial_discapacity").append('Ficha inicial <span class="caret"></span> <strong> (Visualización) </strong>');
+                        $("#save_ficha_discapacity").parent().hide();
+                        $("#cancel_ficha_discapacity").parent().hide();
+                        
+                    } 
+                });
+
+                
+
             });
             
             $("#save_ficha_discapacity").on("click", function(){
@@ -654,10 +694,7 @@ define([
                 validate_json (obj, id_ases);
                 
                 }
-                
-                $("html, body").animate({scrollTop:650}, 'slow'); 
-                $("#form_ficha_inicial").animate({scrollTop:0}, 'slow');
-                
+
                 //console.log(json_detalle_discapacidad);
                 
                   
@@ -677,12 +714,21 @@ define([
                 success: function(msg) {
         
                     swal(
-                        msg.title,
-                        msg.msg,
-                        msg.status
+                       { title: msg.title,
+                        text: msg.msg,
+                        type: msg.status
+                       },
+                       function(){
+                        $("html, body").animate({scrollTop:650}, 'slow'); 
+                        $("#form_ficha_inicial").animate({scrollTop:0}, 'slow');
+                       }
+                    
+
                     );
 
+
                     $("#input_json_saved").attr("value", json_data);
+
                    
                 },
                 dataType: "json",
@@ -693,6 +739,7 @@ define([
                         msg.msg,
                         msg.status
                     );
+
                 },
             });
 
@@ -745,6 +792,18 @@ define([
                 
             }
         }
+
+        $("#div_institucion_apoyo").hide();
+        $("#div_actividades_otros_desc").hide();
+        $("#div_organizacion_asociacion").hide();
+        $("#div_otro_transporte").hide();
+        $("#div_otro_apoyo_principal").hide();
+        $("#div_porcentaje_inv").hide();
+        $("#div_otra_discapacidad").hide();
+        $("#div_descripcion_diagnostico").hide();
+        $("#div_otro_cond_adq").hide();
+        
+        
     }
 
         function validate_form(json_detalle){
@@ -838,7 +897,7 @@ define([
 
                                 msg.title = "Certificado de invalidez";
                                 msg.status = "error";
-                                msg.msg = "El campo "+op+" es obligatorio y no debe contener letras";
+                                msg.msg = "El campo "+op+" es obligatorio";
                                 return msg;  
                             }
                             if(obj_cert[op] < 0){
@@ -852,7 +911,7 @@ define([
 
                                 msg.title = "Certificado de invalidez";
                                 msg.status = "error";
-                                msg.msg = "El campo "+op+" no debe contener letras";
+                                msg.msg = "El campo "+op+" debe ser numérico";
                                 return msg;  
                             }
 

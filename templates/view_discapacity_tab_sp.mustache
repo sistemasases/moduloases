@@ -7,14 +7,16 @@
                 </div>
 
         </div>
-        <div class="row">
+        <div class="row" id="buttons_options">
                 <div class="btn-group btn-group-justified" style="padding-bottom: 50px;padding-top: 5px;">
                         <div class="btn-group">
                                 <a class="btn dropdown-toggle"  data-toggle="dropdown" href="#" type="button" id="btn_ficha_inicial_discapacity">Ficha Inicial
                                         <span class="caret"></span>
                                 </a>
                         <ul class="dropdown-menu">
+                                {{#edit_discapacity_initial_form_sp}}
                                 <li><a id="edit_discapacity_initial" >Edición</a></li>
+                                {{/edit_discapacity_initial_form_sp}}
                                 <li hidden id="li_view_discapacity_initial"><a id="view_discapacity_initial"  >Visualización</a></li>
                         </ul>
                         </div>
@@ -76,7 +78,10 @@
                                         <div class="row row_discapacity" id="div_descripcion_diagnostico" hidden>
                                                 <label for="lb_otro_cond_adq" class="col-xs-4 col-sm-4 col-md-3 col-lg-3 label_fields_discapacity_tab">Descripción *</label>
                                                 <textarea rows="20" cols="40" class="col-xs-8 col-sm-8 col-md-9 col-lg-9 " id="textarea_diagnostico" placeholder="Describa el diagnóstico de su discapacidad"></textarea>
+                                                <div id="descrip_diagnostico" class="col-xs-8 col-sm-8 col-md-9 col-lg-9 " ></div>
                                         </div>
+                                       
+                                        
 
 
 
