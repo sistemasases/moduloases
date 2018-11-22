@@ -44,7 +44,6 @@ define([
                 ResumeReport.return_critic_and_no_critic_report = function(data) /* return {critic_report: ResumeReport, no_critic_report: ResumeReport} */  {
                     var no_critic_report = new ResumeReport();
                     var critic_report = new ResumeReport();
-                    var countr=0;
                     for( var _i = 0, data_1 = data; _i < data_1.length; _i++) {
                         var report_item = data_1[_i];
                         if(report_item.items_con_almenos_una_nota > 0) {
@@ -65,9 +64,7 @@ define([
                                 case 'NO': no_critic_report.cursos_al_un_est_ases++; break;
                             }
                         }
-                        countr ++;
                     }
-                    console.log('countr', countr);
                     return {critic_report: critic_report, no_critic_report: no_critic_report};
                 };
                 return ResumeReport;
@@ -130,15 +127,13 @@ define([
                 }
                 return filter_column_indexes;
             }
-            function add_column_description() {
+            function add_column_description(columns) {
                 // Añadir descripción a las columnas
-                $("th").each(function (index) {
-                    if (table.columns[index]) {
-                        table.columns[index].description ? $(this).attr('title', table.columns[index].description) : null;
-                    }
-
-                });
+               $('#tableFinalgradesReport th').each(function(index) {
+                   $(this).attr('title', columns[index].description);
+               });
             }
+
 
             /**
              * Add the controls for extra info in each course, than display the specific student notes
@@ -219,7 +214,7 @@ define([
                             }
                         }
                     );
-                        add_column_description();
+                        add_column_description(dataTable.columns);
                         add_extra_course_info_controls();
                     }
 

@@ -363,7 +363,11 @@ function get_datatable_for_course_and_teacher_report($instance_id, $append_cours
     $data = array_values(get_reporte_curso_profesores($instance_id));
 
     array_push($columns, get_datatable_class_column());
-    array_push($columns, array("title"=>"Curso", "name"=>'curso', "data"=>"curso"));
+    array_push($columns, array(
+        "title"=>"Curso",
+        "name"=>'curso',
+        "data"=>"curso",
+        "description"=>"Nombre, grupo y codigo de el curso"));
     array_push($columns, array(
         "title"=>"Profesor",
         "name"=>"nombre_profesor",
