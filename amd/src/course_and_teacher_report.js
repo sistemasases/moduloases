@@ -175,47 +175,48 @@ define([
 
                 }).done(
                     function (dataTable){
-                    resume_report = ResumeReport.return_critic_and_no_critic_report(dataTable.data);
-                    templates.render('block_ases/course_and_teacher_report_summary', {resume_report: resume_report})
-                        .then(function(html, js) {
-                            templates.appendNodeContents('.course_and_teacher_report .summary', html, js);
-                        }).fail(function(ex) {
-                    });
-                    table = $("#tableFinalgradesReport").DataTable(
-                        {
-                            data: dataTable.data,
-                            bsort: dataTable.bsort,
-                            columns: dataTable.columns,
-                            language: dataTable.language,
-                            order: dataTable.order,
-                            initComplete: function () {
-                                var column_names = dataTable.columns.map(column => column.name ? column.name : null);
-                                var filter_column_indexes = get_filter_column_indexes(filter_columns, column_names);
-                                this.api().columns(filter_column_indexes).every(function () {
-                                    var column = this;
+                        $("#tableFinalgradesReport").html('');
+                        resume_report = ResumeReport.return_critic_and_no_critic_report(dataTable.data);
+                        templates.render('block_ases/course_and_teacher_report_summary', {resume_report: resume_report})
+                            .then(function(html, js) {
+                                templates.appendNodeContents('.course_and_teacher_report .summary', html, js);
+                            }).fail(function(ex) {
+                        });
+                        table = $("#tableFinalgradesReport").DataTable(
+                            {
+                                data: dataTable.data,
+                                bsort: dataTable.bsort,
+                                columns: dataTable.columns,
+                                language: dataTable.language,
+                                order: dataTable.order,
+                                initComplete: function () {
+                                    var column_names = dataTable.columns.map(column => column.name ? column.name : null);
+                                    var filter_column_indexes = get_filter_column_indexes(filter_columns, column_names);
+                                    this.api().columns(filter_column_indexes).every(function () {
+                                        var column = this;
 
 
-                                    var select = $('<select><option value=""></option></select>')
-                                        .appendTo($(column.header()))
-                                        .on('change', function () {
-                                            var val = $.fn.dataTable.util.escapeRegex(
-                                                $(this).val()
-                                            );
+                                        var select = $('<select><option value=""></option></select>')
+                                            .appendTo($(column.header()))
+                                            .on('change', function () {
+                                                var val = $.fn.dataTable.util.escapeRegex(
+                                                    $(this).val()
+                                                );
 
-                                            column
-                                                .search(val ? '^' + val + '$' : '', true, false)
-                                                .draw();
+                                                column
+                                                    .search(val ? '^' + val + '$' : '', true, false)
+                                                    .draw();
+                                            });
+
+                                        column.data().unique().sort().each(function (d, j) {
+                                            select.append('<option value="' + d + '">' + d + '</option>');
                                         });
-
-                                    column.data().unique().sort().each(function (d, j) {
-                                        select.append('<option value="' + d + '">' + d + '</option>');
                                     });
-                                });
+                                }
                             }
-                        }
-                    );
-                        add_column_description(dataTable.columns);
-                        add_extra_course_info_controls();
+                        );
+                            add_column_description(dataTable.columns);
+                            add_extra_course_info_controls();
                     }
 
                     ).fail(
@@ -250,6 +251,7 @@ define([
                     }
                 ).done(
                     function (response) {
+
                         callback(row, response);
                     }
                 );
