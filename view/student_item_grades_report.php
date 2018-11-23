@@ -34,6 +34,7 @@ require_once(__DIR__.'/../classes/output/student_item_grades_report_page.php');
 $courseid = required_param('courseid', PARAM_INT);
 $blockid = required_param('instanceid', PARAM_INT);
 require_login($courseid, false);
+$pagetitle = 'Reporte de notas por items';
 $actions = authenticate_user_view($USER->id, $blockid);
 $url = new moodle_url("/blocks/ases/view/student_item_grades_report.php",
     array(
@@ -41,7 +42,7 @@ $url = new moodle_url("/blocks/ases/view/student_item_grades_report.php",
         'instanceid' => $blockid)
 );
 //print_r($actions);die;
-if (!isset($actions->student_item_grades_report_)) {
+if (!isset($actions->student_item_grades_report)) {
     redirect(new moodle_url('/'), "No tienes permiso para acceder a los reportes de notas de estudiante por items",1, \core\output\notification::NOTIFY_INFO);
 }
 // Navigation setup
@@ -58,7 +59,7 @@ $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/jquery.dataTables.m
 $PAGE->requires->css('/blocks/ases/style/jqueryui.css', true);
 $PAGE->requires->css('/blocks/ases/style/side_menu_style.css', true);
 $PAGE->requires->css('/blocks/ases/style/styles_pilos.css', true);
-
+$PAGE->requires->css('/blocks/ases/style/student_item_grades_report.css', true);
 
 $output = $PAGE->get_renderer('block_ases');
 // Menu items are created
@@ -81,6 +82,8 @@ $data->table = $course_and_teacher_report_table;
 */
 $send_to_amd = new stdClass();
 $data = array('course_id'=>$courseid, 'instance_id'=>$blockid);
+$menu_option = create_menu_options($USER->id, $blockid, $courseid);
+$data['menu'] = $menu_option;
 $send_to_amd->data = $data;
 $PAGE->requires->js_call_amd('block_ases/student_item_grades_report', 'load_report', $send_to_amd);
 $output = $PAGE->get_renderer('block_ases');
