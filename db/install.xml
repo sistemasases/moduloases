@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<XMLDB PATH="blocks/ases/db" VERSION="20181113" COMMENT="XMLDB file for Moodle blocks/configurable_reports"
+<XMLDB PATH="blocks/ases/db" VERSION="20181123" COMMENT="XMLDB file for Moodle blocks/configurable_reports"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
 >
@@ -901,16 +901,17 @@
     <TABLE NAME="talentospilos_economics_data" COMMENT="Contiene los datos económicos que pueda tener un usuario">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
-        <FIELD NAME="estrato" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="prestacion_economica" TYPE="char" LENGTH="200" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="beca" TYPE="char" LENGTH="200" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="ayuda_transporte" TYPE="binary" NOTNULL="true" SEQUENCE="false"/>
-        <FIELD NAME="ayuda_materiales" TYPE="binary" NOTNULL="true" SEQUENCE="false"/>
-        <FIELD NAME="solvencia_econo" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="estrato" TYPE="int" LENGTH="1" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="prestacion_economica" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="beca" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="ayuda_transporte" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="ayuda_materiales" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="solvencia_econo" TYPE="int" LENGTH="1" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="ocupacion_padres" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="nivel_educ_padres" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="situa_laboral_padres" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="expectativas_laborales" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="id_ases_user" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
