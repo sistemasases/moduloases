@@ -4,7 +4,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     global $DB;
     $dbman = $DB->get_manager();
     $result = true;
-    if ($oldversion < 2018111314000 ) {
+    if ($oldversion < 2018112215570 ) {
     //     // ************************************************************************************************************
     //     // Actualización que crea la tabla para los campos extendidos de usuario (Tabla: {talentospilos_user_extended})
     //     // Versión: 2018010911179
@@ -2181,8 +2181,39 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
 
         // $DB->insert_record("talentospilos_etnia", $new_etnia, true);
 
+        // ****************************************************************************************************************//
+        // Actualización: Se registran nuevas columnas para almacenar la expresión regular que valida los tipos de campos. //
+        //  Versión: 2018112215570                                                                                         //
+        // ****************************************************************************************************************//
 
-        upgrade_block_savepoint(true, 2018111314000 , 'ases');
+        $table = new xmldb_table('talentospilos_df_tipo_campo');
+        $field = new xmldb_field('regex_legible_humanos', XMLDB_TYPE_TEXT, null, null, null, null, null, 'expresion_regular');
+             
+        // Conditionally launch add field regex_legible_humanos.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        $field = new xmldb_field('ejemplo', XMLDB_TYPE_TEXT, null, null, null, null, null, 'regex_legible_humanos');
+             
+        // Conditionally launch add field ejemplo.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        $field_date = $DB->get_record('talentospilos_df_tipo_campo', array('campo'=>'DATE'));
+        $field_date->expresion_regular = "/^-?[0-9]+?-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/";
+        $field_date->regex_legible_humanos = "YYYY-MM-DD";
+        $field_date->ejemplo = "2005-05-05";
+        $DB->update_record('talentospilos_df_tipo_campo', $field_date);
+
+        $field_time = $DB->get_record('talentospilos_df_tipo_campo', array('campo'=>'TIME'));
+        $field_time->expresion_regular = "/^([01][0-9]|2[0-3]):([0-5][0-9])$/";
+        $field_time->regex_legible_humanos = "HH:MM";
+        $field_time->ejemplo = "05:05";
+        $DB->update_record('talentospilos_df_tipo_campo', $field_time);
+
+        upgrade_block_savepoint(true, 2018112215570 , 'ases');
     
         return $result;
 

@@ -657,6 +657,57 @@
 
                                     
                                     
+                                }else if(response['status'] == -5){
+                                    $(formulario).find('button').prop( "disabled", false);
+                                    $(formulario).find('a').attr( "disabled", false);
+                                    var mensaje = '';
+                                    if(response['message'] == 'The field is static and can not be changed'){
+
+                                        var id_form_pregunta = response['data'];
+                                        $('div').removeClass('regla_incumplida');
+                                        $('.div-' + id_form_pregunta).addClass('regla_incumplida');
+                                        
+                                        mensaje  = 'Ups!, el campo marcado en rojo está definido como estático y por lo tanto debe mantener el mismo valor, si no logra ver el campo marcado en rojo informe de este incidente.';
+                                    }
+                                    swal(
+                                        'Alerta',
+                                        mensaje,
+                                        'warning'
+                                    );
+                                }else if(response['status'] == -4){
+                                    $(formulario).find('button').prop( "disabled", false);
+                                    $(formulario).find('a').attr( "disabled", false);
+                                    var mensaje = '';
+                                    if(response['message'] == 'Field does not match with the regular expression'){
+
+                                        var id_form_pregunta = response['data']['id'];
+                                        $('div').removeClass('regla_incumplida');
+                                        $('.div-' + id_form_pregunta).addClass('regla_incumplida');
+                                        
+                                        mensaje  = 'Ups!, el campo marcado en rojo no cumple con el patrón esperado('+ response['data']['human_readable'] +'). Ejemplo: ' + response['data']['example'];
+                                    }
+                                    swal(
+                                        'Alerta',
+                                        mensaje,
+                                        'warning'
+                                    );
+                                }else if(response['status'] == -3){
+                                    $(formulario).find('button').prop( "disabled", false);
+                                    $(formulario).find('a').attr( "disabled", false);
+                                    var mensaje = '';
+                                    if(response['message'] == 'Field cannot be null'){
+
+                                        var id_form_pregunta = response['data'];
+                                        $('div').removeClass('regla_incumplida');
+                                        $('.div-' + id_form_pregunta).addClass('regla_incumplida');
+                                        
+                                        mensaje  = 'Ups!, los campos que se acaban de colorear en rojo no pueden estar vacíos, si no logra ver ningún campo, informe de este incidente.';
+                                    }
+                                    swal(
+                                        'Alerta',
+                                        mensaje,
+                                        'warning'
+                                    );
                                 }else if(response['status'] == -2){
                                     $(formulario).find('button').prop( "disabled", false);
                                     $(formulario).find('a').attr( "disabled", false);
@@ -674,7 +725,7 @@
                                         $('.div-' + id_form_pregunta_a).addClass('regla_incumplida');
                                         $('.div-' + id_form_pregunta_b).addClass('regla_incumplida');
                                         
-                                        mensaje  = 'Ups, revise los campos que se acaban de colorear en rojo.';
+                                        mensaje  = 'Ups!, revise los campos que se acaban de colorear en rojo.';
                                     }
                                     swal(
                                         'Alerta',
@@ -685,7 +736,7 @@
                                     console.log(data);
                                     swal(
                                         'ERROR!',
-                                        'Oops!, informe de este error',
+                                        'Ups!, informe de este error',
                                         'error'
                                     );
                                 };
@@ -694,7 +745,7 @@
                                 console.log(data);
                                 swal(
                                     'Error!',
-                                    'Oops!, informe de este error',
+                                    'Ups!, informe de este error',
                                     'error'
                                 );
                                 $(formulario).find('button').prop( "disabled", false);
