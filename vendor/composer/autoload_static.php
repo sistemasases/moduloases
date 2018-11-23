@@ -15,12 +15,20 @@ class ComposerStaticInitba64dff0a17789786aec8dd326d52142
         array (
             'Latitude\\QueryBuilder\\' => 22,
         ),
+        'J' => 
+        array (
+            'JsonSchema\\' => 11,
+        ),
     );
 
     public static $prefixDirsPsr4 = array (
         'Latitude\\QueryBuilder\\' => 
         array (
             0 => __DIR__ . '/..' . '/latitude/latitude/src',
+        ),
+        'JsonSchema\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/justinrainbow/json-schema/src/JsonSchema',
         ),
     );
 

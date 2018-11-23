@@ -90,6 +90,59 @@ function get_id_switch_user($id_user){
 }
 
 /**
+ * Function that load identifier and firstname of one user in mdl_user  and id_moodle_ases in mdl_talentospilos_user_extended switch username sent
+ * @see get_id_switch_user_ases($id_user)
+ * @param $id_user---> username
+ * @return array
+ **/
+function get_id_switch_user_ases($id_user){
+    global $DB;
+    $form_dwarehouse_array = array();
+  if(strlen($id_user)>=7){
+
+    $sql = "SELECT UE.id_ases_user AS cod_user,  U.firstname AS name_user FROM mdl_user AS U
+                INNER JOIN  mdl_talentospilos_user_extended AS UE ON UE.id_moodle_user = U.id
+                        WHERE U.username LIKE '$id_user%'";
+
+    $results = $DB->get_records_sql($sql);
+    foreach ($results as $record) {
+        array_push($form_dwarehouse_array, $record);
+    }
+  
+}
+    return $form_dwarehouse_array;
+
+}
+
+
+/**
+ * Function that load register in mdl_talentospilos_df_preguntas switch id sent
+ * @see get_question_data($id_pregunta)
+ * @param $id_pregunta---> id
+ * @return array
+ **/
+function get_question_data($id_pregunta){
+    global $DB;
+    $pregunta = array();
+
+    $sql = "SELECT   P.opciones_campo AS options_c, TP.campo AS tipo_campo FROM {talentospilos_df_preguntas} AS P
+                 INNER JOIN  {talentospilos_df_tipo_campo} AS TP ON TP.id = P.tipo_campo
+                         WHERE P.id = $id_pregunta";
+
+    $results = $DB->get_records_sql($sql);
+    foreach ($results as $record) {
+        array_push($pregunta, $record);
+    }
+  
+
+    return $pregunta;
+
+}
+
+
+
+
+/**
  * Function that load identifier and firstname of one user in mdl_user switch username sent
  * @see get_id_switch_user($id_user)
  * @param $id_user---> username
@@ -119,4 +172,19 @@ function get_like($cadena, $atributo){
         array_push($form_dwarehouse_array, $record);
     }
     return $form_dwarehouse_array;
+}
+
+
+ /**
+ * Get df_alias register
+ *
+ * @see get_df_alias()
+ * @return array
+ */
+
+function  get_df_alias()
+{
+    global $DB; 
+   $sql_query = "SELECT * FROM {talentospilos_df_alias}";
+   return $DB->get_records_sql($sql_query);
 }

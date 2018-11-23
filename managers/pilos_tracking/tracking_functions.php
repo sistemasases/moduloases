@@ -63,7 +63,7 @@ function render_monitor_new_form($students_by_monitor, $period = null)
                         </div>
                     </div>
                  </a>
-                 <div id='student$ases_student_code'  class='show collapse_v2 collapse border_rt' role='tabpanel' aria-labelledby='headingstudent$ases_student_code' aria-expanded='true'>
+                 <div id='student$ases_student_code' data-username='$ases_student_code' data-asesid='$ases_student_code'  class='show collapse_v2 collapse border_rt' role='tabpanel' aria-labelledby='headingstudent$ases_student_code' aria-expanded='true'>
                     <div class='panel-body'> </div>
                  </div>";
     }
