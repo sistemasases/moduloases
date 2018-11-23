@@ -4,7 +4,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     global $DB;
     $dbman = $DB->get_manager();
     $result = true;
-    if ($oldversion < 2018112315330 ) {
+    if ($oldversion < 2018112316360 ) {
     //     // ************************************************************************************************************
     //     // Actualización que crea la tabla para los campos extendidos de usuario (Tabla: {talentospilos_user_extended})
     //     // Versión: 2018010911179
@@ -2259,7 +2259,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
 
         // Changing type of field estrato on table talentospilos_economics_data to int.
         $table = new xmldb_table('talentospilos_economics_data');
-        $field = new xmldb_field('estrato', XMLDB_TYPE_INTEGER, '1', null, null, null, null, 'id');
+        $field = new xmldb_field('estrato', XMLDB_TYPE_INTEGER, '2', null, null, null, null, 'id');
 
         // Launch change of type for field estrato.
         $dbman->change_field_type($table, $field);
@@ -2284,7 +2284,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
         }
 
 
-        upgrade_block_savepoint(true, 2018112315330 , 'ases');
+        upgrade_block_savepoint(true, 2018112316360 , 'ases');
     
         return $result;
 
