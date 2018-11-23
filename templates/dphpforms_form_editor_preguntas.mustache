@@ -4,17 +4,61 @@
     <div class="container">
         <div class="row">
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 form-group">
-                <h2>Editor de preguntas y permisos</h2>
+                <h2>[ {{#form_info}} {{nombre}} {{/form_info}} ] Gestión de formulario</h2>
                 <hr>
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <ul>
+                        <li><strong>Id: </strong>{{#form_info}} {{id}} {{/form_info}}</li>
+                        <li><strong>Nombre: </strong>{{#form_info}} {{nombre}} {{/form_info}}</li>
+                        <li><strong>Alias: </strong>{{#form_info}} {{alias}} {{/form_info}}</li>
+                        <li><strong>Descripción: </strong>{{#form_info}} {{descripcion}} {{/form_info}}</li>
+                        <li><strong>Método de envio: </strong>{{#form_info}} {{method}} {{/form_info}}</li>
+                        <li><strong>Archivo que recibe: </strong>{{#form_info}} {{action}} {{/form_info}}</li>
+                        <li><strong>Codificación: </strong>{{#form_info}} {{enctype}} {{/form_info}}</li>
+                    </ul>
+                    <hr>
+                </div>
                 <a id="dphpforms-redirect-adm-forms" href="javascript:void(0)" class="btn btn-sm btn-default">Administrar formularios</a>
                 <a id="dphpforms-redirect-adm-alias" href="javascript:void(0)" class="btn btn-sm btn-default">Administrar alias de preguntas</a>
                 <a id="dphpforms-redirect-adm-disparadores" href="javascript:void(0)" class="btn btn-sm btn-default" data-form-id="{{form_id}}">Administrar disparadores</a>
                 <a id="dphpforms-redirect-new-pregu" href="javascript:void(0)" class="btn btn-sm btn-default" data-form-id="{{form_id}}">+ Nueva pregunta</a>
                 <hr>
+                    <h2>Mantenimiento</h2>
+                <hr>
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+                        <select class="form-control" name="" id="">
+                                <option value="" data-id="-1" selected="selected" disabled hidden>Seleccione la pregutna</option>
+                        {{#preguntas_form_v2}}
+                            <option value="" data-id="{{#atributos_campo}}{{id_pregunta}}{{/atributos_campo}}">{{#atributos_campo}}{{local_alias}}{{/atributos_campo}}</option>
+                        {{/preguntas_form_v2}}
+                        </select>
+                    </div>
+                    <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
+                        <select class="form-control" name="" id="">
+                            <option value="" data-id="-1" selected="selected" disabled hidden>Seleccione la acción</option>
+                            <option value="" data-action-id="1" title="Registra respuestas vacías en los registros previos para la pregunta seleccionada">Resolver huerfanos</option>
+                        </select>
+                    </div>
+                    <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
+                        <input type="text" name="" id="mantenimiento-valor-por-defecto" class="form-control" placeholder="Valor por defecto">
+                    </div>
+                    <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
+                        <div>
+                            <input type="checkbox" id="verificacion" name="verificacion">
+                            <label for="verificacion">Confirmar acción</label>
+                        </div>
+                    </div>
+                    <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
+                        <a id="aplicar-accion" href="javascript:void(0)" class="btn btn-danger btn-sm btn-dphpforms btn-dphpforms-univalle">Aplicar acción</a>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="row">
+            <hr>
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <h2>Gestión de preguntas</h2>
                 <hr>
                 <div class="peer_trackings_v2" id="peer_trackings_v2" name="peer_trackings_v2">
                     <div id="accordion_v2">
@@ -125,7 +169,7 @@
                 </div>
                 <hr>
                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                    <h3>Actualizador de posiciones</h3>
+                    <h2>Actualizador de posiciones</h2>
                     <hr>
                     <div class="form-group">
                         <textarea id="ordenamiento" class="form-control" rows="9">{{{json_ordenamiento}}}</textarea>

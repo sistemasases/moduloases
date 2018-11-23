@@ -464,5 +464,34 @@ function dphpformsV2_get_fields_form( $form_id, $status = 1 ){
 
  }
 
+ //dphpformsV2_reverse_new_field_update( 67, "inasistencia", "-1" );
+
+ /**
+  * 
+  */
+  function dphpformsV2_reverse_new_field_update( $id_respuesta, $form_id_alias ){
+
+    global $DB;
+
+    $form_info = dphpformsV2_get_form_info( $form_id_alias, $default_value );
+
+    $records_to_update = "SELECT id AS id_formulario_respuestas
+    FROM {talentospilos_df_form_resp} 
+    WHERE id_formulario = ( SELECT id FROM {talentospilos_df_formularios} WHERE alias = '" . $form_info->alias . "' AND estado = 1 ) 
+    
+    EXCEPT    
+    
+    SELECT FS.id_formulario_respuestas 
+    FROM {talentospilos_df_form_solu} AS FS 
+    INNER JOIN {talentospilos_df_respuestas} AS R 
+    ON FS.id_respuesta = R.id 
+    WHERE R.id_pregunta = $id_respuesta";
+
+    $records = $DB->get_records_sql( $records_to_update );
+
+    print_r( $records );
+
+  }
+
 
 ?>
