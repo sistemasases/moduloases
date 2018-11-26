@@ -22,12 +22,20 @@
  * @copyright  2016 Luis Gerardo Manrique Cardona <luis.manrique@correounivalle.edu.co>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
+require_once (__DIR__ . '/../../../../config.php');
+require_once ($CFG->dirroot . '/lib/grade/grade_item.php');
+require_once ($CFG->dirroot . '/lib/datalib.php');
+require_once ($CFG->dirroot . '/lib/grade/grade_grade.php');
 require_once (__DIR__ . '/../jquery_datatable/jquery_datatable_lib.php');
 require_once (__DIR__ . '/../../managers/periods_management/periods_lib.php');
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
-use jquery_datatable;
+require_once (__DIR__ . '/../../managers/course/course_lib.php');
+
+
+use block_rss_client\output\item;
+use core_analytics\course;
+use function course_lib\getTeacherName;
+use function course_lib\normalize_short_name;
+
 /**
  * Class LosedAndAprovedItemGradesItemReport, model for objects returned at method get_losed_and_aproved_item_grades
  * @see get_losed_and_aproved_item_grades
@@ -45,9 +53,10 @@ abstract class LosedAndAprovedItemGradesItemReport {
 
 /**
  * Return counters of aproved or losed item grades agrouped  by student
+ * @param $id_instancia string|int Instance id for filter the results
  * @param $semestre string Current semester representation (example: 201808, 201804)
  *  if none is given, return the current semester data
- * @param $id_instancia string|int Instance id for filter the results
+ * @returns LosedAndAprovedItemGradesItemReport
  */
 function get_losed_and_aproved_item_grades($id_instancia, $semestre = null) {
 
@@ -63,11 +72,10 @@ function get_losed_and_aproved_item_grades($id_instancia, $semestre = null) {
         }else if(substr($sem,4,1) == 'B'){
             $semestre = $anio.'08';
         }
-
     }
 
     $sql = <<<SQL
-select  num_doc, count(*) filter(where not item_ganado) as cantidad_items_perdidos, count(*) filter (where item_ganado) as cantidad_items_ganados, username, mdl_talentospilos_usuario_id, firstname, lastname   from (
+select  num_doc, count(*) filter(where not item_ganado) as cantidad_items_perdidos, count(*) filter (where item_ganado) as cantidad_items_ganados, username, mdl_user_id, mdl_talentospilos_usuario_id, firstname, lastname   from (
 select
    distinct mdl_user.*, mdl_talentospilos_usuario.num_doc,
             case when (finalgrade < grademax * 0.6 or finalgrade is  null) then false else true end as item_ganado,
@@ -108,22 +116,35 @@ where substring(mdl_course.shortname from 15 for 6) =  '$semestre'
  and mdl_talentospilos_estados_ases.nombre = 'seguimiento'
 ) as notas_estudiante
 where notas_estudiante.calificaciones_item_todos_estudiantes > 0
-group by (username, mdl_talentospilos_usuario_id,  firstname, lastname, num_doc)
+group by (username, mdl_talentospilos_usuario_id, mdl_user_id, firstname, lastname, num_doc)
 ;
 SQL;
     return $DB->get_records_sql($sql);
 
 }
 
-function get_user_grade_grades_with_items($user_id, $course_id = null) {
+function get_user_grade_grades_with_items($user_id, $course_id = null, $only_graded_items = true) {
     global $DB;
     $sql = <<<SQL
     SELECT *, mdl_grade_grades.id as grade_id, mdl_grade_items.id as item_id FROM mdl_grade_grades
     inner join mdl_grade_items
+    on mdl_grade_grades.itemid = mdl_grade_items.id
     where mdl_grade_grades.userid = $user_id
+    and mdl_grade_items.itemtype != 'category'
+    AND  mdl_grade_items.itemtype != 'course'
 SQL;
     if($course_id) {
         $sql.="and mdl_grade_items.courseid = $course_id";
+    }
+    if ($only_graded_items) {
+        $sql.=<<<SQL
+    and mdl_grade_items.id in 
+    (select distinct mdl_grade_items_inner.id from mdl_grade_items as mdl_grade_items_inner
+    inner join mdl_grade_grades
+        on mdl_grade_grades.itemid = mdl_grade_items_inner.id
+    where mdl_grade_items_inner.courseid = mdl_grade_items.courseid
+    and finalgrade is not null)
+SQL;
     }
     return $DB->get_records_sql($sql);
 }
@@ -136,8 +157,10 @@ abstract class student_item_grades extends grade_grade {
  * Class student_item_grades_with_items
  * @property $grade_id
  * @property $item_id
+ * @property $multfactor
+ * @property $itemname
  */
-abstract class student_item_grades_with_items extends grade_item {
+abstract class student_item_grades_with_items extends student_item_grades {
 
 }
 
@@ -147,13 +170,126 @@ abstract class student_item_grades_with_items extends grade_item {
  * @see mdl_grade_items
  * @param $student_id int Moodle user id
  * @param $course_id int Moodle course id
- * @return student_item_grades_with_items
+ * @param $only_graded_items boolean Include only items graded by teacher or all items in a course
+ * @return array Array of student_item_grades_with_items objects
  */
-function get_student_item_grades_by_course($student_id, $course_id) {
-    $user_grades_with_items = get_user_grade_grades_with_items($student_id, $course_id);
-    /* @var $user_grade_with_items student_item_grades_with_items */
-    return $user_grade_with_items;
+function get_student_item_grades_by_course($student_id, $course_id=null, $only_graded_items=true) {
+    $user_grades_with_items = get_user_grade_grades_with_items($student_id, $course_id, $only_graded_items);
+    return $user_grades_with_items;
 }
+
+/**
+ * Class than represent an item in student item grades summary report
+ */
+class ReportStudentItemGradesSummaryItem {
+    /**
+     * Course code in format SEDE-CODE-GROUP
+     * @var $codigo_asignatura string
+     */
+    public $codigo_asignatura;
+    /**
+     * Course fullname
+     * @see mdl_course.fullname
+     * @var $nombre_asignatura string
+     */
+    public $nombre_asignatura;
+    /**
+     * @var $nombre_profesor string Teacher name
+     */
+    public $nombre_profesor;
+    /**
+     * @var $notas string Summary of grades of the current student in a current course
+     *  Example: "Exam(20%): 4.5 - Quiz(10%): 3.0
+     */
+    public $notas;
+    /**
+     * Course final grade if is calculated
+     * @var $nota_final Course final grade
+     */
+    public $nota_final;
+    public function  __construct()
+    {
+        $this->notas = '';
+    }
+}
+
+/**
+ * Return a summary of the student grade in a single readable string,
+ * @param $item student_item_grades_with_items
+ * @param $include_null_finalgraes bool If is true, and the grade has null finalgrade empty string is returned
+ * @return string Example: "Exam(70%): 5.0"" or empty string if include null final grade is false and final grade is false
+ */
+function normalize_grade($item, $decimal_places = 1): string {
+    $finalgrade =  number_format((float) $item->finalgrade, $decimal_places);
+    $formated_final_grade = $finalgrade == 0? 0 : $finalgrade;
+    $formated_mult_factor = number_format((float) $item->multfactor * 100, 0);
+    $formated_mult_factor_str = $formated_mult_factor == 100? '' : "($formated_mult_factor)";
+    $first_word_item_name = explode(' ', $item->itemname)[0];
+    $normalized_grade="$first_word_item_name$formated_mult_factor_str: $formated_final_grade";
+    return $normalized_grade;
+}
+/**
+ * Return a summary of the student grades in a single readable string
+ * @param $item_grades array Array of student_item_grades_with_items
+ * @param $separator string Separator between grades summary
+ * @return string Example: "Exam(20%): 4.5 - Quiz(10%): 3.0 - Exam(70%): 5.0"
+ */
+function normalize_grades($item_grades, $separator=' - '): string {
+
+    $normalized_grades = array_map(
+        function ($item) {
+            return normalize_grade($item);
+        },
+        $item_grades);
+    $normalized_grades_str = implode($separator, $normalized_grades);
+    return $normalized_grades_str;
+}
+
+/**
+ * Return individual element for the report student grades summary
+ *
+ * @param $student_id
+ * @param $course_id
+ * @return mixed
+ * @throws dml_exception
+ */
+function get_student_item_grades_sumary_report_item($student_id, $course_id ) {
+    $course = get_course($course_id, false);
+    $report_item = new ReportStudentItemGradesSummaryItem();
+    $report_item->nombre_asignatura = $course->fullname;
+    $report_item->nombre_profesor = \course_lib\getTeacherName($course_id);
+    $items_and_grades = get_student_item_grades_by_course($student_id, $course_id);
+    $report_item->codigo_asignatura = \course_lib\normalize_short_name($course->shortname);
+    $report_item->notas = normalize_grades($items_and_grades);
+    $report_item->nota_final = \course_lib\get_finalgrade_by_student_and_course($student_id, $course_id);
+    return $report_item;
+
+}
+
+function get_student_item_grades_sumary_report($student_id, $semestre = null) {
+    $report_items = array();
+
+    if(!$semestre) {
+        $semestre_object = get_current_semester();
+        $sem = $semestre_object->nombre;
+        $anio = substr($sem,0,4);
+
+        if(substr($sem,4,1) == 'A'){
+            $semestre = $anio.'02';
+        }else if(substr($sem,4,1) == 'B'){
+            $semestre = $anio.'08';
+        }
+    }
+
+    $student_courses = \course_lib\get_courses_with_grades($student_id, $semestre);
+
+    foreach($student_courses as $student_course) {
+
+        array_push($report_items, get_student_item_grades_sumary_report_item($student_id, $student_course->id_course));
+    }
+    return $report_items;
+}
+
 
 /**
  * Return a datatable formated as array with all information needed for item grades agrouped by students
@@ -170,7 +306,9 @@ function get_datatable_for_student_grades_report($instance_id) {
         "name"=>"cantidad_items_perdidos",
         "data"=>"cantidad_items_perdidos",
         "description"=>"Sumatoria de los items perdidos entre todos los cursos de el estudiante");
-    array_push($columns, \jquery_datatable\get_datatable_class_column());
+    $columnn_detail_data= \jquery_datatable\get_datatable_class_column();
+    $columnn_detail_data['description'] = 'Mostrar información referente a los cursos que el estudiante tiene matriculados en el presente semestre, cursos que almenos tienen una nota registrada';
+    array_push($columns, $columnn_detail_data);
     array_push($columns, array(
         "title"=>"Número de documento",
         "name"=>'num_doc',

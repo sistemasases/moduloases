@@ -11,10 +11,11 @@
  */
 define([
     'jquery',
+    'block_ases/ases_jquery_datatable',
     'core/notification',
     'core/templates',
     'block_ases/jquery.dataTables'
-], function($, notification, templates){
+], function($, ajdt, notification, templates, ){
 
     return {
         init: function () {
@@ -33,15 +34,12 @@ define([
              */
             var table_id = '#tableStudentItemGradesReport';
             $(table_id).html('<img class="icon-loading" src="../icon/loading.gif"/>'); // loader image
-            var course_id = data.course_id;
             var filter_columns = null;
             var instance_id = data.instance_id;
             var grade_table_border_color = '#cccccc';
             var table = null;
             /**
              * Data: {
-             *     table,
-             *     course_id,
              *     instance_id
              * }
              *
@@ -55,21 +53,59 @@ define([
              * }
              * DataTable.data[]:
              * {
-             *     curso,
-             *     curso_id,
-             *     nombre_profesor,
-             *     estudiantes_perdiendo,
-             *     estudiantes_ganando,
-             *     estudiantes_sin_ninguna_nota,
-             *     cantidad_estudiantes_ases,
-             *     items_con_almenos_una_nota,
-             *     cantidad_items
-             *     critica,
+             *     num_doc,
+             *     lastname,
+             *     firstname,
+             *     mdl_user_id,
+             *     cantidad_items_ganados,
+             *     cantidad_items_perdidos
              * }
              *
              *
              */
+            function define_student_courses_detail_datatable(data) {
+                var columns = [
+                    {
+                    title: 'Código',
+                    name: 'codigo_asignatura',
+                    data: 'codigo_asignatura',
+                    description: 'Identificador de la asignatura en formato Sede-Codigo-Grupo'
+                    }  ,
+                    {
+                        title: 'Nombre Asignatura',
+                        name: 'nombre_asignatura',
+                        data: 'nombre_asignatura',
+                        description: 'Nombre completo de la asignatura'
+                    },
+                    {
+                        title: 'Profesor',
+                        name: 'nombre_profesor',
+                        data: 'nombre_profesor',
+                        description: 'Nombre completo de el profesor'
+                    },
+                    {
+                        title: 'Notas',
+                        name: 'notas',
+                        data: 'notas',
+                        description: 'Identificador de la asignatura en formato Sede-Codigo-Grupo'
+                    },
+                    {
+                        title: 'Nota Final',
+                        name: 'nota_final',
+                        data: 'nota_final',
+                        description: 'Nota final de la asignatura calculada con las categorias de notas terminadas'
+                    }
 
+                ];
+                var dataTable = {
+                    data: data,
+                    bsort: 0,
+                    columns: columns,
+                    language: ajdt.common_lang_config(),
+                    order: 0
+                };
+                return dataTable;
+            }
 
             function get_filter_column_indexes(filter_column_names, column_names) {
                 var filter_column_indexes = [];
@@ -89,7 +125,27 @@ define([
                 });
             }
 
+            function get_student_item_grades_explicit(row, tr) {
+                var data = row.data();
+                var student_id = data.mdl_user_id;
+                var url =  '../managers/student_grades/student_item_grades_report_api.php/student_grades/item_summary/' + student_id;
+                $.ajax({
+                    method: 'get',
+                    url: url
+                }).done(function(data) {
+                    var dataTable = define_student_courses_detail_datatable(data);
 
+                    row.child('<table id="student_item_grades_explicit'+student_id+'"></table>').show();
+                    $("#student_item_grades_explicit"+student_id).DataTable(dataTable);
+                    console.log(url);
+                    }
+
+                ).fail(function(err) {
+                    tr.removeClass('shown');
+                    console.log(url);
+                    console.log(err);
+                });
+            }
             /**
              * Add the controls for extra info in each course, than display the specific student notes
              * when the user open the view in the first column buttons
@@ -107,10 +163,11 @@ define([
                     }
                     else {
                         // Open this row
-                        //  row.child('<img class="icon-loading" src="../icon/loading.gif"/>').show(); // loader image (is replaced when the data arrive)
-                        alert('khe');
-                        row.child('<br>').show();
-
+                        row.child('<img class="icon-loading" src="../icon/loading.gif"/>').show(); // loader image (is replaced when the data arrive)
+                        callback = (html, row) => {
+                            row.child(html).show();
+                        };
+                        get_student_item_grades_explicit(row, tr);
                         tr.addClass('shown');
                     }
                 });
