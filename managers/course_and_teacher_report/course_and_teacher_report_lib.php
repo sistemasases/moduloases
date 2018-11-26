@@ -10,14 +10,9 @@ require_once (__DIR__ . '/../course/course_lib.php');
 
 require_once(__DIR__.'/../../vendor/autoload.php');
 
-error_reporting(E_ALL | E_STRICT);   // NOT FOR PRODUCTION SERVERS!
-ini_set('display_errors', '1');         // NOT FOR PRODUCTION SERVERS!
-$CFG->debug = (E_ALL | E_STRICT);   // === DEBUG_DEVELOPER - NOT FOR PRODUCTION SERVERS!
-$CFG->debugdisplay = 1;
 
 use Latitude\QueryBuilder\Query\SelectQuery;
 use function Latitude\QueryBuilder\{ alias, on, field, QueryInterface, criteria, literal };
-error_reporting(E_ALL);
 
 /**
  * Class ItemReporteCursoProfesores
