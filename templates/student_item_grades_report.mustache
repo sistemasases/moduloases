@@ -1,0 +1,40 @@
+
+
+<body name="student_item_grades_report">
+{{#data}}
+    {{> block_ases/side_menu}}
+
+    <div class="course_and_teacher_report container">
+        <div class ="course_and_teacher_report_title">
+            <h2>REPORTE DE ITEMS PERDIDOS Y GANADOS, POR ESTUDIANTE</h2>
+        </div>
+        <small><b>Nota:</b> Al dar click el boton '+' de la tabla, se despliega información referente a los cursos que el estudiante tiene matriculados en el presente semestre, cursos que almenos tienen una nota registrada, los demás no se incluyen en el reporte</small>
+        <div class="summary">
+
+        </div>
+
+        <div class = "count_items">
+            <div id="div_table_report">
+                <table id="tableStudentItemGradesReport" class="table" cellspacing="0" width="100%">
+                    <thead> </thead>
+                    <tfoot>
+                    <tr>
+                        {{#table}}
+                        {{!
+                        Imprime un th por cada columna, necesario para los filtros en el footer de datatables,
+                        ver https://datatables.net/examples/api/multi_filter_select.html, funcionalidad para la cual
+                        se necesita el footer y sus respectivos th
+                         }}
+                            {{#columns}}
+                                <th></th>
+                            {{/columns}}
+                        {{/table}}
+                    </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+    <!-- end wrapper -->
+{{/data}}
+</body>

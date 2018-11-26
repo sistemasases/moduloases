@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -16,47 +15,51 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Course and teacher report view
- *
- * @author     Luis Gerardo Manrique Cardona
- * @package    block_ases
- * @copyright  2018 Luis Gerardo Manrique Cardona <luis.manrique@correounivalle.edu.co>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-require_once (__DIR__ . '/../../../config.php');
-require_once (__DIR__ . '/../classes/output/renderer.php');
-require_once (__DIR__ . '/../classes/output/course_and_teacher_report_page.php');
-require_once (__DIR__ . '/../managers/menu_options.php');
+* Vista de los reportes de notas de estudiantes agrupadas por items
+*
+* @author     Luis Gerardo Manrique Cardona
+* @package    block_ases
+* @copyright  2016 Luis Gerardo Manrique Cardona <luis.manrique@correounivalle.edu.co>
+* @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+*/
 
-$pagetitle = 'Reporte de curso y profesor';
+require_once(__DIR__ . '/../../../config.php');
+require_once('../managers/validate_profile_action.php');
+
+require_once(__DIR__ .'/../classes/mdl_forms/ases_user_form.php');
+require_once(__DIR__.'/../managers/user_creation_process/user_creation_process_lib.php');
+require_once(__DIR__.'/../managers/menu_options.php');
+require_once(__DIR__.'/../managers/student_grades/student_item_grades_report_lib.php');
+require_once(__DIR__.'/../classes/output/student_item_grades_report_page.php');
 $courseid = required_param('courseid', PARAM_INT);
 $blockid = required_param('instanceid', PARAM_INT);
 require_login($courseid, false);
+$pagetitle = 'Reporte de notas por items';
 $actions = authenticate_user_view($USER->id, $blockid);
-$url = new moodle_url("/blocks/ases/view/course_and_teacher_report.php",
+$url = new moodle_url("/blocks/ases/view/student_item_grades_report.php",
     array(
         'courseid' => $courseid,
         'instanceid' => $blockid)
 );
-
-if (!isset($actions->course_and_teacher_report)) {
-    redirect(new moodle_url('/'), "No tienes permiso para acceder a los reportes por profesor",1, \core\output\notification::NOTIFY_INFO);
+//print_r($actions);die;
+if (!isset($actions->student_item_grades_report)) {
+    redirect(new moodle_url('/'), "No tienes permiso para acceder a los reportes de notas de estudiante por items",1, \core\output\notification::NOTIFY_INFO);
 }
 // Navigation setup
 $coursenode = $PAGE->navigation->find($courseid, navigation_node::TYPE_COURSE);
-$blocknode = navigation_node::create('Reportes por docente',$url, null, 'block', $blockid);
+$blocknode = navigation_node::create('Reportes por estudiante',$url, null, 'block', $blockid);
 $coursenode->add_node($blocknode);
 
 $PAGE->set_url($url);
 $PAGE->set_title($pagetitle);
 
+$PAGE->requires->css('/blocks/ases/style/base_ases.css', true);
 $PAGE->requires->css('/blocks/ases/style/bootstrap_pilos.min.css', true);
 $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/jquery.dataTables.min.css', true);
 $PAGE->requires->css('/blocks/ases/style/jqueryui.css', true);
 $PAGE->requires->css('/blocks/ases/style/side_menu_style.css', true);
-$PAGE->requires->css('/blocks/ases/style/course_and_teacher_report.css', true);
 $PAGE->requires->css('/blocks/ases/style/styles_pilos.css', true);
-
+$PAGE->requires->css('/blocks/ases/style/student_item_grades_report.css', true);
 
 $output = $PAGE->get_renderer('block_ases');
 // Menu items are created
@@ -66,7 +69,7 @@ $data->menu = $menu_option;
 
 echo $output->header();
 
-
+/*
 $c_a_t_r_amd_need = new stdClass();
 $c_a_t_r_amd_need->course_id = $courseid;
 $c_a_t_r_amd_need->instance_id = $blockid;
@@ -76,11 +79,17 @@ $send_to_amd->data = $c_a_t_r_amd_need;
 
 $data->table = $course_and_teacher_report_table;
 
-$PAGE->requires->js_call_amd('block_ases/course_and_teacher_report', 'load_report', $send_to_amd);
+*/
+$send_to_amd = new stdClass();
+$data = array('course_id'=>$courseid, 'instance_id'=>$blockid);
+$menu_option = create_menu_options($USER->id, $blockid, $courseid);
+$data['menu'] = $menu_option;
+$send_to_amd->data = $data;
+$PAGE->requires->js_call_amd('block_ases/student_item_grades_report', 'load_report', $send_to_amd);
 $output = $PAGE->get_renderer('block_ases');
 
-$course_and_teacher_report = new \block_ases\output\course_and_teacher_report_page($data);
-echo $output->render($course_and_teacher_report);
+$student_item_grades_report = new \block_ases\output\student_item_grades_report_page($data);
+echo $output->render($student_item_grades_report);
 
 echo $output->footer();
 ?>

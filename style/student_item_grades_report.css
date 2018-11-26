@@ -1,0 +1,5 @@
+.course_and_teacher_report_title {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
