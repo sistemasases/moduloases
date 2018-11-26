@@ -5,7 +5,8 @@ require_once $CFG->libdir.'/gradelib.php';
 require('../../../grade/querylib.php');
 require_once '../../../config.php';
 require_once $CFG->dirroot.'/grade/lib.php';
-require_once $CFG->dirroot.'/grade/report/user/lib.php'; 
+require_once $CFG->dirroot.'/grade/report/user/lib.php';
+require_once '../managers/course/course_lib.php';
 require_once $CFG->dirroot.'/grade/report/grader/lib.php'; 
 require_once $CFG->dirroot.'/grade/lib.php'; 
 require_once ('lib/student_lib.php');
@@ -2203,7 +2204,7 @@ function get_grades_courses_student_semester($id_student, $coursedescripctions){
     
     // print_r($semesters);
     
-    $courses = get_courses_by_student($id_student, $coursedescripctions);
+    $courses = \couse_lib\get_courses_by_student($id_student, $coursedescripctions);
     $array_semesters_courses =  array();
    
     $counter = 0;
@@ -2275,50 +2276,6 @@ function compare_dates($fecha_inicio, $fecha_fin, $fecha_comparar){
     return $semesters_array;
 }
 
-// Test
-//get_semesters_student(getIdFirstSemester(169));
-
-/**
- * Return courses of a student
- *
- * @param username moodle site
- * @return array of courses 
- */
-
-// function get_courses_by_student($id_student, $coursedescripction = false){
-//     //print_r("<br><br>id: ".$id_student."<br>");
-//     global $DB;
-    
-//     $sql_query = "SELECT subcourses.id_course, name_course, tgcategories.fullname, to_timestamp(subcourses.time_created)::DATE AS time_created
-//                   FROM {grade_categories} as tgcategories INNER JOIN
-//                      (SELECT tcourse.id AS id_course, tcourse.fullname AS name_course, tcourse.timecreated AS time_created 
-//                      FROM {user}  AS tuser INNER JOIN {user_enrolments}  AS tenrolments ON tuser.id = tenrolments.userid
-//                           INNER JOIN {enrol}  AS tenrol ON  tenrolments.enrolid = tenrol.id
-//                           INNER JOIN {course}  AS tcourse ON tcourse.id = tenrol.courseid
-//                      WHERE tuser.id = $id_student) AS subcourses
-//                      ON subcourses.id_course = tgcategories.courseid
-//                   ORDER BY subcourses.time_created DESC;";
-//     $result_query = $DB->get_records_sql($sql_query);
-    
-//     if($coursedescripction){
-        
-//         $courses_array = array();
-//         foreach ($result_query as $result){
-            
-//             $result->grade = number_format (grade_get_course_grade($id_student, $result->id_course)->grade,2);
-//             $result->descriptions = getCoursegradelib($result->id_course, $id_student);
-//             array_push($courses_array, $result);
-//         }
-//         return $courses_array;
-        
-//     }else{
-//         //print_r($result_query);
-//         return $result_query;
-//     }
-// }
-
-// //Test
-// //get_courses_by_student(3);
 
  /**
  * Return total of semesters 
