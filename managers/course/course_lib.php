@@ -167,7 +167,9 @@ function get_courses_with_grades($id_student, $semester)
 			INNER JOIN {grade_grades} mdl_grade_grades
 			 ON mdl_grade_grades.itemid = mdl_grade_items.id
 			WHERE enrols.userid = $id_student AND SUBSTRING(curso.shortname FROM 15 FOR 6) = '$semester'
-			 AND mdl_grade_grades.finalgrade is not null";
+			 AND mdl_grade_grades.finalgrade is not null
+			AND   mdl_grade_items.itemtype != 'category'
+             AND   mdl_grade_items.itemtype != 'course'";
 
     $courses = $DB->get_records_sql($query);
     if (!$courses) {
