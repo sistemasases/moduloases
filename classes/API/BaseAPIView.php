@@ -112,6 +112,6 @@ abstract class BaseAPIView extends Validable {
     }
     public function __construct() {
         $this->response_type = 'text/html';
-}
+    }
 
 }
