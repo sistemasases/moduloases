@@ -28,28 +28,105 @@
 require_once(dirname(__FILE__). '/../../../../config.php');
 //require_once $CFG->dirroot.'/blocks/ases/managers/lib/student_lib.php';
 //require_once $CFG->dirroot.'/blocks/ases/managers/lib/lib.php';
-//require_once $CFG->dirroot.'/blocks/ases/managers/periods_management/periods_lib.php'; 
+require_once $CFG->dirroot.'/blocks/ases/managers/periods_management/periods_lib.php'; 
+require_once $CFG->dirroot.'/blocks/ases/managers/dphpforms/v2/dphpforms_lib.php'; 
+
+   
+    
+//$intervalSemester = get_semester_interval($idCurrentSemester);  
+//echo $intervalSemester;
+/**
+ * Function that returns a list of the students with trackings on the current semester
+ * 
+ * @see get_array_students_with_trackings()
+ * @return array
+ */
+
+function get_students_with_trackings(){
+
+    $semestre = get_current_semester();
+    $idMaxSemester = $semestre->max;
+    
+    $intervalSemester = get_semester_interval($idMaxSemester);
+    
+    $list_inicio = explode(" ", $intervalSemester->fecha_inicio);
+    $list_fin = explode(" ", $intervalSemester->fecha_fin);
+    
+    $fecha_inicio = $list_inicio[0];
+    $fecha_fin = $list_fin[0];
+
+    $xQuery = new stdClass();
+    $xQuery->form = "seguimiento_pares"; // Can be alias(String) or idntifier(Number)
+    $xQuery->filterFields = [
+                            ["id_estudiante",[
+                                ["%%", "LIKE"]                                
+                                
+                                ], false],
+                            ["fecha",
+                                [[$fecha_inicio,">="],[$fecha_fin,"<="]]
+                                , false]                        
+                    ];
+    $xQuery->orderFields = [
+                            ["fecha","DESC"]
+                        ];
+
+    $xQuery->orderByDatabaseRecordDate = false; // If true, orderField is ignored. DESC
+    $xQuery->recordStatus = [ "!deleted" ];// options "deleted" or "!deleted", can be both. Empty = both.
+    //No soportado aun
+    $xQuery->selectedFields = [ "id_creado_por", "id_estudiante" ]; // RecordId and BatabaseRecordDate are selected by default.
+
+    $arrayStudents = json_encode( dphpformsV2_find_records( $xQuery ) );
+    
+    return $arrayStudents;    
+}
+
 
 
 /**
  * Function that returns a list of the students with monitor but without tracking
  * 
- * @see get_array_students_wihtout_trackings()
+ * @see get_array_students_without_trackings()
  * @return array
  */
 function get_array_students_without_trackings(){
 
     global $DB;
     
-    $sql_query = "SELECT userm.id, userm.username FROM {user} AS userm
-                INNER JOIN {talentospilos_user_extended} as user_ext  ON user_ext.id_moodle_user= userm.id
-                INNER JOIN (SELECT *,id AS idtalentos FROM {talentospilos_usuario}) AS usuario ON id_ases_user = usuario.id    
-                WHERE        
-	            idtalentos IN (SELECT id_estudiante FROM {talentospilos_monitor_estud} WHERE id_semestre=8)    
-	            AND 
-                idtalentos NOT IN (SELECT id_estudiante FROM {talentospilos_seg_estudiante} AS seg_est
-                                            INNER JOIN {talentospilos_seguimiento} AS seguimiento ON seguimiento.id = seg_est.id_seguimiento
-                                            WHERE TO_TIMESTAMP(seguimiento.fecha) >= (SELECT fecha_inicio FROM {talentospilos_semestre} AS semestre WHERE id='8'))";
+    $semestre = get_current_semester();
+    $idMaxSemester = $semestre->max;
+
+    $sql_query = "SELECT userm.id, userm.username, usuario.num_doc AS cedula, userm.firstname, userm.lastname FROM {user} AS userm
+    INNER JOIN {talentospilos_user_extended} as user_ext  ON user_ext.id_moodle_user= userm.id
+    INNER JOIN  {talentospilos_usuario} AS usuario ON id_ases_user = usuario.id
+    
+    WHERE 
+    usuario.id IN 
+        (SELECT DISTINCT id_estudiante AS id FROM {talentospilos_monitor_estud} AS monitoria WHERE id_semestre=". $idMaxSemester . ")
+        AND 
+            tracking_status = 1
+        AND
+    
+    usuario.id IN
+    (SELECT DISTINCT id_ases_user
+        FROM  {talentospilos_user_extended} extases
+        INNER JOIN {talentospilos_est_estadoases} est_ases
+            ON est_ases.id_estudiante = extases.id_ases_user
+        INNER JOIN {talentospilos_estados_ases} estados_ases
+            ON est_ases.id_estado_ases = estados_ases.id
+        WHERE   estados_ases.nombre = 'seguimiento'                
+                AND est_ases.fecha = 
+                (SELECT max(fecha)
+                FROM {talentospilos_est_estadoases}
+                WHERE id_estudiante = extases.id_ases_user))";
+    
+    $studentsWithTrackings = get_students_with_trackings();
+    $additionalCondition = " AND usuario.id NOT IN (";
+
+    foreach($studentsWithTrackings as $tracking){
+        $additionalCondition .= "'". tracking.id_estudiante . "'";
+    }
+
+    $additionalCondition.= ")";
 
     $students = $DB->get_records_sql($sql_query);    
     $students_to_return = array();

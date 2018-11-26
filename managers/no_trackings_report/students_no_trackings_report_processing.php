@@ -30,11 +30,10 @@
     if(isset($_POST['loadR']) && $_POST['loadR'] == 'loadReport'){
         $columns = array();
 
-        array_push($columns, array("title"=>"ID", "name"=>"id", "data"=>"id"));
         array_push($columns, array("title"=>"Código estudiante", "name"=>"codigo", "data"=>"username"));
-        // array_push($columns, array("title"=>"Cédula", "name"=>"cedula", "data"=>"cedula"));
-        // array_push($columns, array("title"=>"Nombres", "name"=>"firstname", "data"=>"firstname"));
-        // array_push($columns, array("title"=>"Apellidos", "name"=>"lastname", "data"=>"lastname"));
+        array_push($columns, array("title"=>"Cédula", "name"=>"cedula", "data"=>"cedula")); 
+        array_push($columns, array("title"=>"Nombres", "name"=>"firstname", "data"=>"firstname"));
+        array_push($columns, array("title"=>"Apellidos", "name"=>"lastname", "data"=>"lastname"));              
 
         $data = array(
             "bsort" => false,

@@ -26,6 +26,19 @@ define(['jquery',
 			
 			window.JSZip = jszip;
 			load_students_no_trackings_report();
+
+			$(document).on('click', '#tableEstSeguimientos tbody tr td', function () {
+				var pagina = "student_profile.php";
+				var table = $("#tableEstSeguimientos").DataTable();
+				var colIndex = table.cell(this).index().column;
+
+				if (colIndex >= 0 && colIndex <= 3) {
+					$("#formulario").each(function () {
+						this.reset;
+					});
+					window.open(pagina + location.search + "&student_code=" + table.cell(table.row(this).index(), 0).data(), '_blank');
+				}
+			});
 		
 			
 	/**
