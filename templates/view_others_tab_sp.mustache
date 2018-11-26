@@ -17,7 +17,7 @@
 
                         <div class="row_discapacity row" id="div_estrato" >
                                 <label for="lb_estrato" class="col-xs-7 col-sm-7 col-md-7 col-lg-7 label_fields_discapacity_tab">Estrato socio-económico</label>
-                                <input class=" col-xs-5 col-sm-5 col-md-5 col-lg-5 input_fields_discapacity_tab input-discapacity" min= "1" max="21" type="number" placeholder="Estrato"
+                                <input class=" col-xs-3 col-sm-3 col-md-3 col-lg-3 input_fields_discapacity_tab input-discapacity" min= "1" max="6" type="number" placeholder="Estrato"
                                         id="estrato_socio"/>
                         </div>
 
@@ -34,7 +34,7 @@
                                 <div class="row_discapacity row" >
 
                                         <label for="lb_prestacion" class="col-xs-3 col-sm-3 col-md-3 col-lg-3 label_fields_discapacity_tab">¿Cuál?</label>
-                                        <input class=" col-xs-8 col-sm-8 col-md-8 col-lg-8 input-discapacity" type="text" title="Indique cuál prestación"
+                                        <input class=" col-xs-8 col-sm-8 col-md-8 col-lg-8 input-discapacity" type="text" title="Indique cuál prestación" placeholder="Escriba la prestación"
                                         id="input_prestacion_econo"/>
 
                                 </div>
@@ -42,7 +42,7 @@
                                 <div class="row_discapacity row" >
 
                                         <label for="lb_prestacion" class="col-xs-3 col-sm-3 col-md-3 col-lg-3 label_fields_discapacity_tab">Cuánto?</label>
-                                        <input class=" col-xs-8 col-sm-8 col-md-8 col-lg-8 input-discapacity" type="number" title="Indique cuánto"
+                                        <input class=" col-xs-8 col-sm-8 col-md-8 col-lg-8 input-discapacity" type="number" title="Indique cuánto" placeholder="Valor de la prestación"
                                         id="input_cant_prestacion_econo"/>
                                         
                                 </div>
@@ -51,7 +51,7 @@
 
                         <div class="row_discapacity row" id="div_beca" >
                                 <label for="lb_beca" class="col-xs-7 col-sm-7 col-md-7 col-lg-7 label_fields_discapacity_tab">Recibe alguna beca</label>
-                                <input class=" col-xs-1 col-sm-1 col-md-1 col-lg-1" type="checkbox" title="Indique si recibe una beca"
+                                <input class=" col-xs-1 col-sm-1 col-md-1 col-lg-1" type="checkbox" title="Indique si recibe una beca" 
                                         id="check_beca"/>
 
                         </div>
@@ -62,7 +62,7 @@
                                 <div class="row_discapacity row" >
 
                                         <label for="lb_beca" class="col-xs-3 col-sm-3 col-md-3 col-lg-3 label_fields_discapacity_tab">¿Cuál?</label>
-                                        <input class=" col-xs-8 col-sm-8 col-md-8 col-lg-8 input-discapacity" type="text" title="Indique cuál beca"
+                                        <input class=" col-xs-8 col-sm-8 col-md-8 col-lg-8 input-discapacity" type="text" title="Indique cuál beca" placeholder="Escriba la beca" 
                                         id="input_beca"/>
 
                                 </div>
@@ -70,18 +70,136 @@
                                 <div class="row_discapacity row" >
 
                                         <label for="lb_beca" class="col-xs-3 col-sm-3 col-md-3 col-lg-3 label_fields_discapacity_tab">Cuánto?</label>
-                                        <input class=" col-xs-8 col-sm-8 col-md-8 col-lg-8 input-discapacity" type="number" title="Indique cuánto"
+                                        <input class=" col-xs-8 col-sm-8 col-md-8 col-lg-8 input-discapacity" type="number" title="Indique cuánto" placeholder="Valor de la beca"
                                         id="input_cant_beca"/>
                                         
                                 </div>
 
                         </div>
 
+
+
                        
 
                 </div>
+
+                <div class = "col-xs-12 col-sm-12 col-md-4 col-lg-4 ">
+
+                        <div class="row_discapacity row" id="div_transporte" >
+                                <label for="lb_beca" class="col-xs-7 col-sm-7 col-md-7 col-lg-7 label_fields_discapacity_tab">Recibe ayuda para el transporte</label>
+                                <input class=" col-xs-1 col-sm-1 col-md-1 col-lg-1" type="checkbox" title="Indique si recibe ayuda para el transporte" 
+                                                        id="check_transporte"/>
+                
+                        </div>
+                
+                
+                        <div class="row_discapacity row" id="detalle_transporte">
+                
+                                <div class="row_discapacity row" >
+                
+                                        <label for="lb_beca" class="col-xs-3 col-sm-3 col-md-3 col-lg-3 label_fields_discapacity_tab">¿Cuál?</label>
+                                        <input class=" col-xs-8 col-sm-8 col-md-8 col-lg-8 input-discapacity" type="text" title="Indique cuál beca" placeholder="Escriba la ayuda en transporte" 
+                                                        id="input_transporte"/>
+                
+                                </div>
+                
+                                <div class="row_discapacity row" >
+                
+                                        <label for="lb_beca" class="col-xs-3 col-sm-3 col-md-3 col-lg-3 label_fields_discapacity_tab">Cuánto?</label>
+                                        <input class=" col-xs-8 col-sm-8 col-md-8 col-lg-8 input-discapacity" type="number" title="Indique cuánto" placeholder="Valor de la ayuda"
+                                                        id="input_cant_transporte"/>
+                                                        
+                                </div>
+                
+                        </div>
+                
+                        <div class="row_discapacity row" id="div_materiales" >
+                                <label for="lb_beca" class="col-xs-7 col-sm-7 col-md-7 col-lg-7 label_fields_discapacity_tab">Recibe ayuda para financiar materiales</label>
+                                <input class=" col-xs-1 col-sm-1 col-md-1 col-lg-1" type="checkbox" title="Indique si recibe ayuda para financiar materiales" 
+                                                        id="check_materiales"/>
+                
+                        </div>
+                
+                
+                        <div class="row_discapacity row" id="detalle_materiales">
+
+                                <div class="row_discapacity row" >
+                
+                                        <label for="lb_beca" class="col-xs-3 col-sm-3 col-md-3 col-lg-3 label_fields_discapacity_tab">¿Cuál?</label>
+                                        <input class=" col-xs-8 col-sm-8 col-md-8 col-lg-8 input-discapacity" type="text" title="Indique cuál beca" placeholder="Escriba la ayuda en materiales" 
+                                                        id="input_materiales"/>
+                
+                                </div>
+                
+                                <div class="row_discapacity row" >
+                
+                                        <label for="lb_beca" class="col-xs-3 col-sm-3 col-md-3 col-lg-3 label_fields_discapacity_tab">Cuánto?</label>
+                                        <input class=" col-xs-8 col-sm-8 col-md-8 col-lg-8 input-discapacity" type="number" title="Indique cuánto" placeholder="Valor de la ayuda"
+                                                        id="input_cant_materiales"/>
+                                                        
+                                </div>
+                
+                        </div>
+
+                        <div class="row_discapacity row" id="div_solvencia" >
+                                        <label for="lb_solvencia" class="col-xs-7 col-sm-7 col-md-7 col-lg-7 label_fields_discapacity_tab">Solvencia económica</label>
+                                        <input class=" col-xs-1 col-sm-1 col-md-1 col-lg-1" type="checkbox" title="Indique solvencia económica" 
+                                                                id="check_solvencia"/>
+                        
+                        </div>
+
+                        
+
+
+
+                </div>
+
+                <div class = "col-xs-12 col-sm-12 col-md-4 col-lg-4 ">
+
+                <div class="row_discapacity row" id="div_info_padre" >
+                        <h2 class="h-sections-general-tab" id="h-ficha_discapacity">Información del padre (si aplica)</h2>  
+
+                      <div class="row_discapacity row" >
+                
+                                <label for="lb_beca" class="col-xs-3 col-sm-3 col-md-3 col-lg-3 label_fields_discapacity_tab">Nivel educativo (Máximo alcanzado)</label>
+
+                                <select class="col-xs-8 col-sm-8 col-md-8 col-lg-8 select_discapacity" id="select_nivel_padre" name="nivel_padre" title="Indique nivel educativo">
+                                                <option value="Primaria">Primaria</option>
+                                                <option value="Secundaria">Secundaria</option>
+                                                <option value="Técnico">Técnico</option>
+                                                <option value="Tecnológico">Tecnológico</option>
+                                                <option value="Profesional_pregrado">Profesional pregrado</option>
+                                                <option value="Profesional_postgrado">Profesional postgrado</option>
+                                </select>
+                                
+                
+                        </div>
+
+                        <div class="row_discapacity row" >
+                
+                                        <label for="lb_beca" class="col-xs-3 col-sm-3 col-md-3 col-lg-3 label_fields_discapacity_tab">Ocupación/Profesión</label>
+        
+                                        <select class="col-xs-8 col-sm-8 col-md-8 col-lg-8 select_discapacity" id="select_ocupacion_padre" name="nivel_padre" title="Señale a qué categoría pertence la ocupacación o profesión">
+                                                        <option value="Primaria">Primaria</option>
+                                                        <option value="Secundaria">Secundaria</option>
+                                                        <option value="Técnico">Técnico</option>
+                                                        <option value="Tecnológico">Tecnológico</option>
+                                                        <option value="Profesional_pregrado">Profesional pregrado</option>
+                                                        <option value="Profesional_postgrado">Profesional postgrado</option>
+                                        </select>
+                                        
+                        
+                        </div>
+                                
+                </div>
+
+                                
+
+                </div>
+
               </div>
             </div>
+
 
             <div class="panel panel-default" id="health_data">
               <div class="panel-heading">
