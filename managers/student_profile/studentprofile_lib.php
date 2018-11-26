@@ -116,6 +116,23 @@ function update_user_image_profile($mdl_user_id, $php_file) {
      return $status_ases_array;
  }
 
+  /**
+ * Gets true or false if register economics_data exist
+ *
+ * @see get_exist_economics_data()
+ * @return boolean
+ */
+ 
+function get_exist_economics_data($id_ases_user){
+     
+    global $DB;
+    
+    return $DB->record_exists('talentospilos_economics_data',array('id_ases_user'=> $id_ases_user));
+}
+
+ 
+
+
  /**
  * Get Condición de excepción registradas
  *
@@ -190,6 +207,23 @@ function  get_paises()
    $sql_query = "SELECT * FROM {talentospilos_pais}";
    return $DB->get_records_sql($sql_query);
 }
+
+
+/**
+ * Get ocupaciones registradas
+ *
+ * @see get_ocupaciones()
+ * @return object --> with OCUPACION information
+ */
+
+function  get_ocupaciones()
+{
+    global $DB; 
+   $sql_query = "SELECT * FROM {talentospilos_ocupaciones}";
+   return $DB->get_records_sql($sql_query);
+}
+
+
 
 /**
  * Get municipios registrados

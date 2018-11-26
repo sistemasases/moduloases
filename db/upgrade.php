@@ -4,7 +4,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     global $DB;
     $dbman = $DB->get_manager();
     $result = true;
-    if ($oldversion < 2018112612000 ) {
+    if ($oldversion < 2018112614490 ) {
     //     // ************************************************************************************************************
     //     // Actualización que crea la tabla para los campos extendidos de usuario (Tabla: {talentospilos_user_extended})
     //     // Versión: 2018010911179
@@ -2319,7 +2319,8 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
           array("categoria" =>"Agricultores, trabajadores y obreros agropecuarios, forestales y pesqueros", "cantidad"=> 2 ), 
           array("categoria" =>"Oficiales, operarios, artesanos y trabajadores de la industria manufacturera, de la construcción y de la minería", "cantidad"=> 7 ), 
           array("categoria" =>"Operadores de instalaciones, de máquinas y ensambladores", "cantidad"=> 3 ), 
-          array("categoria" =>"Trabajadores no calificados", "cantidad"=> 3 ));
+          array("categoria" =>"Trabajadores no calificados", "cantidad"=> 3 ),
+          array("categoria" =>"Otra ocupación", "cantidad"=> 1 ));
 
           array_push($array_ocupaciones,
             array("ocupacion"=>"FUERZAS MILITARES (EJÉRCITO, ARMADA Y FUERZA AÉREA)", "alias"=>"option_fuerzas_militares"),
@@ -2355,7 +2356,8 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
             array("ocupacion"=>"CONDUCTORES DE VEHÍCULOS Y OPERADORES DE EQUIPOS PESADOS MÓVILES", "alias"=>"option_conduccion"),
             array("ocupacion"=>"TRABAJADORES NO CALIFICADOS DE SERVICIOS (EXCEPTO EL PERSONAL DOMÉSTICO Y AFINES)", "alias"=>"option_no_calificados"),
             array("ocupacion"=>"PERSONAL DOMÉSTICO, ASEADORES, LAVANDEROS, PLANCHADORES Y AFINES" , "alias"=>"option_domestico"),
-            array("ocupacion"=>"OBREROS DE LA MINERÍA, LA CONSTRUCCIÓN, LA INDUSTRIA MANUFACTURERA Y EL TRANSPORTE", "alias"=>"option_obreros_mineria" ));
+            array("ocupacion"=>"OBREROS DE LA MINERIA, LA CONSTRUCCIÓN, LA INDUSTRIA MANUFACTURERA Y EL TRANSPORTE", "alias"=>"option_obreros_mineria" ),
+            array("ocupacion"=>"OTRA OCUPACIÓN" , "alias"=>"option_otro"));
 
             $table='talentospilos_ocupaciones';
             $condition = 'value';
@@ -2366,20 +2368,20 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
                 for($i = 0; $i < $padre["cantidad"]; $i++){
                     
                    
-                    if( !$DB->record_exists($table,array($condition=> $array_ocupaciones[$i]["alias"]))){
+                    if( !$DB->record_exists($table,array($condition=> $array_ocupaciones[0]["alias"]))){
 
-                        $new_register->ocupacion     = $array_ocupaciones[$i]["ocupacion"];
+                        $new_register->ocupacion     = $array_ocupaciones[0]["ocupacion"];
 
-                        if(strlen($array_ocupaciones[$i]["ocupacion"])>20){
+                        if(strlen($array_ocupaciones[0]["ocupacion"])>20){
     
-                            $new_register->alias     = substr($array_ocupaciones[$i]["ocupacion"],0,20);
+                            $new_register->alias     = substr($array_ocupaciones[0]["ocupacion"],0,20);
     
                         }else{
-                            $new_register->alias     = substr($array_ocupaciones[$i]["ocupacion"],0,9); 
+                            $new_register->alias     = substr($array_ocupaciones[0]["ocupacion"],0,9); 
                         }
                          
-                        $new_register->value         = $array_ocupaciones[$i]["alias"];
-                        $new_register->categoria     = $padre["categoria"];
+                        $new_register->value         = $array_ocupaciones[0]["alias"];
+                        $new_register->categoria_padre     = $padre["categoria"];
                         
                         if($DB->insert_record($table, $new_register, true)){
                             
@@ -2391,10 +2393,12 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
                 
 
             }
+
+
                 
 
 
-        upgrade_block_savepoint(true, 2018112612000 , 'ases');
+        upgrade_block_savepoint(true, 2018112614490 , 'ases');
     
         return $result;
 
