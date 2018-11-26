@@ -5,12 +5,13 @@
     }
 
     #div-header-profile{
-        margin-bottom: 10px;
+        margin-bottom: 0px;
         margin-top: 10px;
         display: flex;
         display: -ms-flex;
         display: -webkit-flex;
         align-items: center;
+        padding: 0px 0px 0px 0px;
     }
 
     #div-instance-name{
@@ -465,8 +466,8 @@
 
     header#page-header {
         margin-bottom: 20px;
-        border-bottom: 0px ;
-        margin-top: 60px!important;
+        margin-top: 60px !important;
+        border: none !important;
     }
 
     #mapa{
@@ -477,6 +478,8 @@
     #estado_civil{
         margin-top: 10px;
         margin-bottom: 10px;
+        border-radius: 1px 1px 1px 1px;
+        border-style: solid;
     }
 
     #genero{
@@ -500,7 +503,7 @@
         position: relative;
         width: 100px;
         padding: 6px 0px 0px 5px;
-        margin-left: 20px;
+        margin-left: 30px;
         border-radius: 0 0 0px 0px;
     }
 
@@ -563,7 +566,7 @@
     #academic_tab{
         display: block;
         margin-left: 30px;
-        margin-top: 100px;
+        margin-top: 20px;
     }
 
     .accordion{
@@ -636,6 +639,10 @@
         display: none;
     }
 
+    #nav-linea{
+        border-bottom-width: 0px !important;
+    }
+
     ul.breadcrumb>li:nth-child(3) {
         color: #d51b23 !important;
         font-size: 30px;
@@ -643,6 +650,7 @@
         display: block;
         margin-top: -148px;
         padding-left: 450px;
+        border: none !important;
     }
 
     .breadcrumb>li+li:before {
@@ -679,16 +687,16 @@
    
     table {
       text-align: left;
-      border: none;
     }
 
     #div_academic_programs{
-        margin-top: 30px;
+        margin-top: 5px;
+        margin-bottom: 0px;
     }
 
     #div_cohorts{
-        margin-top: -30px;
-        margin-bottom: 0px;
+        margin-top: -25px !important;
+        margin-bottom: 10px;
     }
 
     footer#page-footer {
@@ -697,7 +705,6 @@
 
     .hr-general-tab-fields {
         display: none !important;
-        border: none;
     }
 
     h3{
@@ -707,6 +714,8 @@
     }
 
     h4{
+        margin-top: 30px !important; 
+        font-size: 20px !important;
         font-weight: bold;
         color: #d51b23 !important;
     }
@@ -718,18 +727,17 @@
 
     #student_info{
         width: 50%;
-        margin-top: -200px;
-        display: block;
-        margin-left: 0px;
+        float: left;
+        position: relative;
+        margin-top: -270px;
     }
 
     
     #other_info{
-        margin-left: 350px;
-        margin-top: -431px;
         width: 50%;
-        position: absolute;
-        display: block;
+        float: left;
+        position: relative;
+        margin-top: -270px;
     }
 
     hr{
@@ -737,24 +745,80 @@
     }
 
     #div-hr{
-        color: white !important;
-        border: none !important;
+        display: none !important;
     }
 
-    .col-md-2 {
+    #academic_tab .col-md-2 {
         width: 16.66666667% !important;
+        height: 20px !important;
         float: left;
         position: relative;
+        padding: 0px 0px 0px 0px;
+        margin: 0px 0px 0px 0px;
+        border: 1px solid black !important;
+        text-align: center !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
     }
 
-    .col-md-4 {
-        width: 33.33333333% !important;
+    #academic_tab .col-md-4 {
+        width: 43.33333333% !important;
+        height: 20px !important;
         float: left;
         position: relative;
+        padding: 0px 0px 0px 0px;
+        margin: 0px 0px 0px 0px;
+        border: 1px solid black !important;
+        text-align: center !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
     }
 
     #ficha_estudiante .panel-collapse {
+        margin-top: -40px !important;
         padding: 0px;
+        border: none !important;
     }
 
+    #municipio_act{
+        width: 80% !important;
+    }
+
+    #etnia{
+        width: 120% !important;
+    }
+
+    .borderless td, .borderless th {
+        border: none !important;
+    }
+
+    .hr-general-fields{
+        border: none !important;
+    }
+
+    #academic_li{
+        display: block !important;
+        position: relative;
+        top: 435px;
+        left: 35px;
+    }
+
+    #academic_li a{
+        font-weight: bold;
+        text-decoration: underline;
+        color: #d51b23 !important;
+        font-size: 28px;
+    }
+
+    #headingOne{
+        margin-bottom: 30px !important;
+    }
+
+    .saltopagina{
+
+        display:block; 
+        page-break-before:always;
+        margin-top: 30px !important;
+
+    }
   }
