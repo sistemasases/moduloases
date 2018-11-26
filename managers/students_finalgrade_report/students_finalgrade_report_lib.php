@@ -26,12 +26,10 @@
 
 require_once(dirname(__FILE__). '/../../../../config.php');
 require_once '../managers/periods_management/periods_lib.php';
-require_once(__DIR__.'/../../vendor/autoload.php');
-require_once (__DIR__.'/../../classes/DAO/BaseDAO.php');
-require_once (__DIR__ . '/../../classes/AsesUserExtended.php');
 require_once (__DIR__.'/../jquery_datatable/jquery_datatable_lib.php');
+require_once (__DIR__ . '/../../managers/course/course_lib.php');
 
-use jquery_datatable;
+use course_lib;
 /**
  * @param $instance_id
  * @return array
@@ -100,7 +98,7 @@ SQL;
     foreach ($records as $record) {
         $student_id = $record->student_id;
         $course_id = $record->materiacr_id;
-        $record->finalgrade = get_finalgrade_by_student_and_course($student_id, $course_id);
+        $record->finalgrade = \course_lib\get_finalgrade_by_student_and_course($student_id, $course_id);
         $record->grades = get_students_grades($student_id, $course_id);
 
         array_push($students_finalgrades_array, $record);

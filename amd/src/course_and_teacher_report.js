@@ -44,7 +44,6 @@ define([
                 ResumeReport.return_critic_and_no_critic_report = function(data) /* return {critic_report: ResumeReport, no_critic_report: ResumeReport} */  {
                     var no_critic_report = new ResumeReport();
                     var critic_report = new ResumeReport();
-                    var countr=0;
                     for( var _i = 0, data_1 = data; _i < data_1.length; _i++) {
                         var report_item = data_1[_i];
                         if(report_item.items_con_almenos_una_nota > 0) {
@@ -65,9 +64,7 @@ define([
                                 case 'NO': no_critic_report.cursos_al_un_est_ases++; break;
                             }
                         }
-                        countr ++;
                     }
-                    console.log('countr', countr);
                     return {critic_report: critic_report, no_critic_report: no_critic_report};
                 };
                 return ResumeReport;
@@ -81,7 +78,7 @@ define([
             /**
              * Data: {
              *     table,
-             *     course_caller_id,
+             *     course_id,
              *     instance_id
              * }
              *
@@ -130,15 +127,13 @@ define([
                 }
                 return filter_column_indexes;
             }
-            function add_column_description() {
+            function add_column_description(columns) {
                 // Añadir descripción a las columnas
-                $("th").each(function (index) {
-                    if (table.columns[index]) {
-                        table.columns[index].description ? $(this).attr('title', table.columns[index].description) : null;
-                    }
-
-                });
+               $('#tableFinalgradesReport th').each(function(index) {
+                   $(this).attr('title', columns[index].description);
+               });
             }
+
 
             /**
              * Add the controls for extra info in each course, than display the specific student notes
@@ -180,47 +175,48 @@ define([
 
                 }).done(
                     function (dataTable){
-                    resume_report = ResumeReport.return_critic_and_no_critic_report(dataTable.data);
-                    templates.render('block_ases/course_and_teacher_report_summary', {resume_report: resume_report})
-                        .then(function(html, js) {
-                            templates.appendNodeContents('.course_and_teacher_report .summary', html, js);
-                        }).fail(function(ex) {
-                    });
-                    table = $("#tableFinalgradesReport").DataTable(
-                        {
-                            data: dataTable.data,
-                            bsort: dataTable.bsort,
-                            columns: dataTable.columns,
-                            language: dataTable.language,
-                            order: dataTable.order,
-                            initComplete: function () {
-                                var column_names = dataTable.columns.map(column => column.name ? column.name : null);
-                                var filter_column_indexes = get_filter_column_indexes(filter_columns, column_names);
-                                this.api().columns(filter_column_indexes).every(function () {
-                                    var column = this;
+                        $("#tableFinalgradesReport").html('');
+                        resume_report = ResumeReport.return_critic_and_no_critic_report(dataTable.data);
+                        templates.render('block_ases/course_and_teacher_report_summary', {resume_report: resume_report})
+                            .then(function(html, js) {
+                                templates.appendNodeContents('.course_and_teacher_report .summary', html, js);
+                            }).fail(function(ex) {
+                        });
+                        table = $("#tableFinalgradesReport").DataTable(
+                            {
+                                data: dataTable.data,
+                                bsort: dataTable.bsort,
+                                columns: dataTable.columns,
+                                language: dataTable.language,
+                                order: dataTable.order,
+                                initComplete: function () {
+                                    var column_names = dataTable.columns.map(column => column.name ? column.name : null);
+                                    var filter_column_indexes = get_filter_column_indexes(filter_columns, column_names);
+                                    this.api().columns(filter_column_indexes).every(function () {
+                                        var column = this;
 
 
-                                    var select = $('<select><option value=""></option></select>')
-                                        .appendTo($(column.header()))
-                                        .on('change', function () {
-                                            var val = $.fn.dataTable.util.escapeRegex(
-                                                $(this).val()
-                                            );
+                                        var select = $('<select><option value=""></option></select>')
+                                            .appendTo($(column.header()))
+                                            .on('change', function () {
+                                                var val = $.fn.dataTable.util.escapeRegex(
+                                                    $(this).val()
+                                                );
 
-                                            column
-                                                .search(val ? '^' + val + '$' : '', true, false)
-                                                .draw();
+                                                column
+                                                    .search(val ? '^' + val + '$' : '', true, false)
+                                                    .draw();
+                                            });
+
+                                        column.data().unique().sort().each(function (d, j) {
+                                            select.append('<option value="' + d + '">' + d + '</option>');
                                         });
-
-                                    column.data().unique().sort().each(function (d, j) {
-                                        select.append('<option value="' + d + '">' + d + '</option>');
                                     });
-                                });
+                                }
                             }
-                        }
-                    );
-                        add_column_description();
-                        add_extra_course_info_controls();
+                        );
+                            add_column_description(dataTable.columns);
+                            add_extra_course_info_controls();
                     }
 
                     ).fail(
@@ -255,6 +251,7 @@ define([
                     }
                 ).done(
                     function (response) {
+
                         callback(row, response);
                     }
                 );
