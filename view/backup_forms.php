@@ -77,6 +77,18 @@ $actions = authenticate_user_view($USER->id, $blockid);
 $data = $actions;
 $data->menu = $menu_option;
 
+//Options select table df_alias
+$alias= get_df_alias();
+$options_df_alias = '';
+
+foreach($alias as $key){
+   
+        $options_df_alias .= "<option value='$key->id_pregunta'>$key->alias</option>";
+    
+}
+
+$data->options_key_select = $options_df_alias;
+
 $PAGE->requires->css('/blocks/ases/style/base_ases.css', true);
 $PAGE->requires->css('/blocks/ases/style/bootstrap.min.css', true);
 $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/dataTables.foundation.css', true);

@@ -3,7 +3,7 @@
 
 abstract class Validable {
 
-
+    const GENERIC_ERRORS_FIELD = 'generic_errors';
     /** @var array Errors array  */
     protected $_errors = array();
 
@@ -75,14 +75,13 @@ abstract class Validable {
      * is related to more than one field at the same time
      *
      */
-    public function add_error(AsesError $error, $fieldname = BaseDAO::GENERIC_ERRORS_FIELD ) {
+    public function add_error(AsesError $error, $fieldname = Validable::GENERIC_ERRORS_FIELD ) {
         array_push($this->_errors, $error);
 
         if(!isset($this->_errors_object->$fieldname)) {
-            $this->_errors_object->$fieldname = array ($error);
-        } else {
-            array_push($this->_errors_object->$fieldname , $error);
+            $this->_errors_object->$fieldname = array ();
         }
+        array_push($this->_errors_object->$fieldname , $error);
     }
 
 

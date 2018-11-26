@@ -62,8 +62,46 @@
              * for this reason, the input param only can be equal in quantity to one.
              * */
             
-            if( count( $input->params ) == 0 ){
+            if( count( $input->params ) == 1 ){
 
+                //Ejemplo: Obtiene todos los seguimientos
+                /*{
+                    "function":"find_records",
+                    "params":[
+                        {
+                            "form":"seguimiento_pares",
+                            "filterFields":[
+                                    ["id_estudiante",[["%%","LIKE"]], false]
+                                ],
+                            "orderFields":[],
+                            "orderByDatabaseRecordDate":false,
+                            "recordStatus":["!deleted"],
+                            "selectedFields":[]
+                            
+                        }
+                    ]
+                    
+                }*/
+
+                //Ejemplo 2: Obtiene todos los seguimientos con el campo 'comentarios_familiar' diferente de vacío.
+                /*{
+                    "function":"find_records",
+                    "params":[
+                        {
+                            "form":"seguimiento_pares",
+                            "filterFields":[
+                                    ["comentarios_familiar",[["","!="]], false]
+                                ],
+                            "orderFields":[],
+                            "orderByDatabaseRecordDate":false,
+                            "recordStatus":["!deleted"],
+                            "selectedFields":[]
+                            
+                        }
+                    ]
+                    
+                }*/
+ 
                 // Validation                
                 if( true ){
                     
@@ -71,7 +109,7 @@
                         array(
                             "status_code" => 0,
                             "error_message" => "",
-                            "data_response" => dphpformsV2_find_records( $Xquery )
+                            "data_response" => dphpformsV2_find_records( $input->params[0] )
                         )
                     );
                     
