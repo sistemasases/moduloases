@@ -34,6 +34,9 @@
         array_push($columns, array("title"=>"Cédula", "name"=>"cedula", "data"=>"cedula")); 
         array_push($columns, array("title"=>"Nombres", "name"=>"firstname", "data"=>"firstname"));
         array_push($columns, array("title"=>"Apellidos", "name"=>"lastname", "data"=>"lastname"));              
+        array_push($columns, array("title"=>"Monitor", "name"=>"monitor_fullname", "data"=>"monitor_fullname"));
+        array_push($columns, array("title"=>"Practicante", "name"=>"trainee_fullname", "data"=>"trainee_fullname"));
+        array_push($columns, array("title"=>"Profesional", "name"=>"professional_fullname", "data"=>"professional_fullname"));
 
         $data = array(
             "bsort" => false,
@@ -86,4 +89,8 @@
         header('Content-Type: application/json');
     echo json_encode($data);
 }
+
+
+    
+
 		
