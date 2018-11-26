@@ -61,7 +61,8 @@ define([
 
             $('#generarFiltro').on('click', function () {
                 var porId = document.getElementById("filtroCodigoUsuario").value;
-                get_id_switch_user(porId);
+                var table = document.getElementById("selectTable").value;
+                get_id_switch_user(porId, table);
 
             });
 
@@ -72,6 +73,27 @@ define([
                 get_like_cadena_in_column(cadena, columna);
 
             });
+
+            $("#typecolumn_select").on("click", function(){
+                if($("#typecolumn_select").val() == "datos_previos" || $("#typecolumn_select").val() == "datos_enviados" || $("#typecolumn_select").val() == "datos_almacenados"){
+                    $("#typekey_select").parent().parent().show();
+                }else{
+                    $("#typekey_select").parent().parent().hide();
+                }
+            });
+
+            $("#typekey_select").on("click", function(){
+                if($("#typecolumn_select").val() == "datos_enviados"){
+                    let cadena_busqueda = '"id":' +'"'+ $(this).val()+'"' + ',"valor":"MODIFIQUE ESTE VALOR"';
+                    $("#filtroLike").val(cadena_busqueda);
+                }
+                if($("#typecolumn_select").val() == "datos_previos" || $("#typecolumn_select").val() == "datos_almacenados"){
+                    get_keys_json($(this).val());
+                    
+                }
+              
+            });
+            
             
             $('.outside').click(function(){
                 var outside = $(this);
@@ -371,12 +393,15 @@ define([
                 });
             }
 
-            function get_id_switch_user(cod_user) {
+            function get_id_switch_user(cod_user, table) {
                 //Realizar la consulta del estudiante según el codigo ingresado
                 //Mostrar los resultados en pantalla
+                let param = [];
+                param.push(cod_user);
+                param.push(table);
                 $.ajax({
                     type: "POST",
-                    data: { loadF: 'get_id_user', params: cod_user },
+                    data: { loadF: 'get_id_user', params: param },
                     url: "../managers/dphpforms/dphpforms_dwarehouse_api.php",
                     success: function (msg) {
                         if (msg.length === 0) {
@@ -391,6 +416,35 @@ define([
                             $("#div_name_user").empty();
                             $("#div_name_user").append('<strong>Nombre: </strong>' + msg[0].name_user);
                         }
+                    },
+                    cache: false,
+                    async: true,
+
+                    failure: function (msg) { alert("No encontrado") }
+                });
+            }
+
+            function get_keys_json(id_pregunta) {
+                //Realizar la consulta de respuesta según id
+                
+                $.ajax({
+                    type: "POST",
+                    data: { loadF: 'get_values', params: id_pregunta },
+                    url: "../managers/dphpforms/dphpforms_dwarehouse_api.php",
+                    success: function (msg) {
+                        if (msg.length === 0) {
+                            swal(
+                                'QUESTION NOT FOUND',
+                                'Oooops! Incorrect code',
+                                'warning'
+                            );
+                        } else {
+                            opciones = msg[0].options_c;
+                            tipo_campo= msg[0].tipo_campo;
+                            let cadena_busqueda = '"respuesta":"MODIFIQUE ESTE VALOR","opciones":' +'"'+opciones+'"' + ',"tipo_campo":'+'"'+tipo_campo+'"'+',"id_pregunta":' +'"'+ $("#typekey_select").val()+'"';
+                             $("#filtroLike").val(cadena_busqueda);
+                        }
+                     
                     },
                     cache: false,
                     async: true,
