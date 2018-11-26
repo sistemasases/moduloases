@@ -279,6 +279,17 @@ function create_menu_options($userid, $blockid, $courseid)
 
             }
 
+            if ($function == 'assigned_students_no_trackings_report') {
+                $url = new moodle_url("/blocks/ases/view/assigned_students_no_trackings_report.php", array(
+                    'courseid' => $courseid,
+                    'instanceid' => $blockid,
+                ));
+
+                $menu_options = '<li><a href= "' . $url . '"> Estudiantes sin seguimientos </a><li>';
+                $indexed['Estudiantes sin seguimientos '] = $menu_options;
+
+            }
+
 
             if ($function == 'backup_forms') {
                 $url = new moodle_url("/blocks/ases/view/backup_forms.php", array(
