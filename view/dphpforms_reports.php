@@ -33,6 +33,7 @@ require_once('../managers/instance_management/instance_lib.php');
 require_once ('../managers/menu_options.php');
 include_once "../managers/dphpforms/dphpforms_reverse_filter.php";
 include_once "../managers/dphpforms/dphpforms_form_updater.php";
+require_once '../managers/menu_options.php';
 include('../lib.php');
 
 
@@ -81,6 +82,8 @@ foreach( $preguntas_form as &$pregunta ){
 }
 
 $record->preguntas = json_encode( $preguntas_form_short );
+$menu_option = create_menu_options($USER->id, $blockid, $courseid);
+$record->menu = $menu_option;
 
 $PAGE->set_context($contextcourse);
 $PAGE->set_context($contextblock);
@@ -101,6 +104,7 @@ $PAGE->requires->css('/blocks/ases/style/side_menu_style.css', true);
 $PAGE->requires->css('/blocks/ases/style/jquery.dataTables.min.css', true);
 $PAGE->requires->css('/blocks/ases/style/buttons.dataTables.min.css', true);
 $PAGE->requires->css('/blocks/ases/style/dphpforms_reports.css', true);
+$PAGE->requires->css('/blocks/ases/style/side_menu_style.css', true);
 
 $PAGE->requires->js_call_amd('block_ases/dphpforms_reports', 'init');
 
