@@ -67,14 +67,79 @@ define([
                     });
     
                     $("#save_economics_data").click(function(){
+                       
+                        //Validar las respuestas obtenidas
                         let respuesta = validateEconomicsData();
-                      
+
+
+                        if(respuesta.status == "error"){
                             swal(respuesta.title,
                                 respuesta.msg,
                                 respuesta.status);
+                        }else{
+                        //Si no hay campos obligatorios vacíos, capturar datos
+
+                        let json_economics_data = getEconomicsData();
+
+                        let id_ases = $("#id_ases").val();
+
+                        }
                       
                       
                     });
+                }
+
+                function getEconomicsData(){
+                    //Crea JSON con todos los datos económicos registrados, así como sus identificadores de tags...
+
+                    let array_economics_data = [];
+                    //Estrato socio economico
+                    let estrato = {
+                        key_input: "#estrato_socioeconomico",
+                        val_input:$("#estrato_socioeconomico").val()
+                    }
+                    array_economics_data.push(estrato);
+
+                    //Prestación o ayuda  económica/beca/transporte/materiales
+                    let objeto_json = {};
+
+                    $("#collapse_econo input[type=checkbox]").not(".check_solvencia").each( function(){
+
+                        objeto_json.key_input = $(this).attr("id");
+
+                        if($(this).is(":checked")){
+
+                            objeto_json.val_input = 1;
+
+                            $(this).parent().next().children().children("input").each( function(){
+                                
+                               
+                                let tipo  = $(this).attr("type");
+
+                                if(tipo == "text"){
+                                    objeto_json.key_input_text = $(this).attr("id");
+                                    objeto_json.val_input_text = $(this).val();
+
+                                }
+
+                                if(tipo == "number"){
+                                    objeto_json.key_input_number = $(this).attr("id");
+                                    objeto_json.val_input_number = $(this).val();
+                                }
+                             
+                                
+                            });
+                          
+                        }else{
+                            objeto_json.val_input = 0;
+                        }
+
+                        array_economics_data.push(objeto_json);
+                        objeto_json = {};
+                    });
+
+                    return array_economics_data;
+
                 }
 
                 function validateEconomicsData(){
@@ -95,7 +160,7 @@ define([
                                 let tipo  = $(this).attr("type");
                                 if(value == ""){
     
-                                msg.title = "Datos econocómicos";
+                                msg.title = "Datos económicos";
                                 msg.status = "error";
                                 msg.msg = "El campo "+op+" es obligatorio";
                                 return msg;  
@@ -103,7 +168,7 @@ define([
                                 }
                                 if(tipo == "text"){
                                     if(has_numbers(value)){
-                                        msg.title = "Datos econocómicos";
+                                        msg.title = "Datos económicos";
                                         msg.status = "error";
                                         msg.msg = "El campo "+op+" no debe contener números";
                                         return msg;  
@@ -111,13 +176,13 @@ define([
                                 }
                                 if(tipo == "number"){
                                     if(Number.isNaN(value)){
-                                        msg.title = "Datos econocómicos";
+                                        msg.title = "Datos económicos";
                                         msg.status = "error";
                                         msg.msg = "El campo "+op+" debe ser numérico";
                                         return msg;  
                                         }
                                         if(value < 0){
-                                            msg.title = "Datos econocómicos";
+                                            msg.title = "Datos económicos";
                                             msg.status = "error";
                                             msg.msg = "El campo "+op+" no debe ser negativo";
                                             return msg;  
@@ -130,15 +195,39 @@ define([
                        
                     });
 
+
+                    if($("#estrato_socioeconomico").val() == ""){
+                        let op    = "estrato_socioeconomico";
+
+                        msg.title = "Datos económicos";
+                        msg.status = "error";
+                        msg.msg = "El campo "+op+" es obligatorio y debe ser número entero";
+                        return msg;  
+                       
+                    }else {
+
+                        let value = $("#estrato_socioeconomico").val();
+                        let op    = "estrato_socioeconomico";
+
+                        if(value < 1 || value > 6 || (value % 1) != 0 ){
+                           
+                            msg.title = "Datos económicos";
+                            msg.status = "error";
+                            msg.msg = "El campo "+op+" corresponde a estratos sociales (Del 1 al 6)";
+                            return msg;  
+                    }
+                    }
+
+
                     if($("#select_ocupacion_madre").val() != "option_ninguna"){
 
                         let value = $("#input_ocupacion_madre").val();
-                        let op    = $("#input_ocupacion_madre").attr("id");
+                        let op    = "input_ocupacion_madre";
 
                         if( value == ""){
                            
 
-                                msg.title = "Datos econocómicos";
+                                msg.title = "Datos económicos";
                                 msg.status = "error";
                                 msg.msg = "El campo "+op+" es obligatorio";
                                 return msg;  
@@ -148,12 +237,12 @@ define([
                     if($("#select_ocupacion_padre").val() != "option_ninguna"){
 
                         let value = $("#input_ocupacion_padre").val();
-                        let op    = $("#input_ocupacion_padre").attr("id");
+                        let op    = "input_ocupacion_padre";
 
                         if( value == ""){
                            
 
-                                msg.title = "Datos econocómicos";
+                                msg.title = "Datos económicos";
                                 msg.status = "error";
                                 msg.msg = "El campo "+op+" es obligatorio";
                                 return msg;  
