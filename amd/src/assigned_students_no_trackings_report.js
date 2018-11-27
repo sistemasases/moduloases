@@ -39,6 +39,14 @@ define(['jquery',
 					window.open(pagina + location.search + "&student_code=" + table.cell(table.row(this).index(), 0).data(), '_blank');
 				}
 			});	
+
+			//Controles para la tabla de estudiantes
+			$(document).on('change', '#tableEstSeguimientos thead tr th select', function () {
+				var table = $("#tableEstSeguimientos").DataTable();
+		
+				var colIndex = $(this).parent().index()+1;				
+				table.columns( colIndex-1 ).search( this.value ).draw();		
+			});
 			
 				
 	/**

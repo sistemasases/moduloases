@@ -30,18 +30,52 @@
     if(isset($_POST['loadR']) && $_POST['loadR'] == 'loadReport'){
         $columns = array();
 
+        $data = get_array_students_without_trackings();
+        $monitores = array();
+        $practicantes = array();
+        $profesionales = array();
+
+        foreach($data as $record){               
+            array_push($monitores, $record->monitor_fullname);
+            array_push($practicantes, $record->trainee_fullname);
+            array_push($profesionales, $record->professional_fullname);
+        }
+
+        $monitores = array_unique($monitores);
+        $practicantes = array_unique($practicantes);
+        $profesionales = array_unique($profesionales);
+
+        $monitores_options = "<select><option value=''></option> 
+                             <option value='---'>---</option>";
+        $practicantes_options = "<select><option value=''></option> 
+                             <option value='---'>---</option>";
+        $profesionales_options = "<select><option value=''></option> 
+                             <option value='---'>---</option>";
+        
+        foreach($monitores as $monitor){
+            $monitores_options .= "<option value='$monitor'> $monitor</option>";
+        }
+
+        foreach($practicantes as $practicante){
+            $practicantes_options .= "<option value='$practicante'> $practicante</option>";
+        }
+        foreach($profesionales as $profesional){
+            $profesionales_options .= "<option value='$profesional'> $profesional</option>";
+        }
+
+        
         array_push($columns, array("title"=>"Código estudiante", "name"=>"codigo", "data"=>"username"));
         array_push($columns, array("title"=>"Cédula", "name"=>"cedula", "data"=>"cedula")); 
         array_push($columns, array("title"=>"Nombres", "name"=>"firstname", "data"=>"firstname"));
         array_push($columns, array("title"=>"Apellidos", "name"=>"lastname", "data"=>"lastname"));              
-        array_push($columns, array("title"=>"Monitor", "name"=>"monitor_fullname", "data"=>"monitor_fullname"));
-        array_push($columns, array("title"=>"Practicante", "name"=>"trainee_fullname", "data"=>"trainee_fullname"));
-        array_push($columns, array("title"=>"Profesional", "name"=>"professional_fullname", "data"=>"professional_fullname"));
+        array_push($columns, array("title"=>"Monitor".$monitores_options, "name"=>"monitor_fullname", "data"=>"monitor_fullname"));
+        array_push($columns, array("title"=>"Practicante".$practicantes_options, "name"=>"trainee_fullname", "data"=>"trainee_fullname"));
+        array_push($columns, array("title"=>"Profesional".$profesionales_options, "name"=>"professional_fullname", "data"=>"professional_fullname"));
 
         $data = array(
             "bsort" => false,
             "columns" => $columns,
-            "data" => get_array_students_without_trackings(),
+            "data" => $data,
             "language" => 
              array(
                 "search"=> "Buscar:",
