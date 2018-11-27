@@ -1,0 +1,5 @@
+#tableEstSeguimientos td {
+    text-decoration: underline;
+    font-weight: bold;
+    cursor: pointer;
+}
