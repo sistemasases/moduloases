@@ -107,9 +107,17 @@
         } else if ($_POST['loadF']== 'get_id_user'){
             //Example of loadF: get_id_user valid: 
             //data: get_id_user   params: cod_user
-            if( count($_POST['params']) == 1 ){
+            if( count($_POST['params']) == 2 ){
                 //Consulta para codigo
-                $data = get_id_switch_user($_POST['params']);
+                $post = $_POST['params'];
+
+                if($post[1] == "talentospilos_user_extended") {
+                    $data = get_id_switch_user_ases($post[0]);
+                }
+                if($post[1]=="user")    {
+                    $data = get_id_switch_user($post[0]);
+                }
+               
                 echo json_encode($data);
 
             }else{    return_with_code( -2 ); }
@@ -127,7 +135,21 @@
             }else{     
                 return_with_code( -2 );
             }
-        } else{
+        } else if( $_POST['loadF'] == "get_values" ){
+            //Example of loadF: get_values valid: 
+            //data: get_values   params: id_pregunta
+          
+            if( count($_POST['params']) == 1 ){
+
+             //Get pregunta data switch id
+
+            $data = get_question_data($_POST['params']);
+            echo json_encode($data);
+                    
+            }else{     
+                return_with_code( -2 );
+            }
+        }else{
             // Function not defined
             return_with_code( -4 );
         }

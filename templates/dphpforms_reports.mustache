@@ -1,5 +1,6 @@
 {{#data}}
 <body>
+    {{> block_ases/side_menu}}
     <div id="dphpforms-reports-preguntas" style="display:none;">{{{preguntas}}}</div>
     <div id="dphpforms-instance-id" data-instance-id="{{dphpforms_instance_id}}" style="display:none;"></div>
     <div class="container">
@@ -38,10 +39,11 @@
                         <input type="date" name="" id="end_date" class="form-control ajuste_fecha">
                     </div>
                 </div> 
-            </div>               
-            <div class="row">
+            </div> 
+                          
+            <!--<div class="row"> -->
                 <!-- Columna de campos base -->
-                <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5">
+                <!--<div class="col-xs-5 col-sm-5 col-md-5 col-lg-5">
                     <fieldset id="base_fields">
                         <legend><input type="checkbox" id="base_fields_check"> Campos base</legend>
                         <div class="col-sm-6 col-md-6">
@@ -82,10 +84,10 @@
                             </div>
                         </div>
                     </fieldset>
-                </div>                    
+                </div>-->              
                 
                 <!-- Columna de Dimensiones -->
-                <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+                <!-- <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
                     <fieldset id="dimensions_fields">
                         <legend><input type="checkbox" id="dimensions_fields_check"> Dimensiones</legend>
                         <fieldset id="comments_fields">                            
@@ -153,9 +155,11 @@
                             </div>
                         </fieldset>
                     </fieldset>
-                </div>                           
-            </div>
-                <div class="row">                                                     
+                </div>   -->                        
+            <!-- </div> -->
+                
+                <div class="row">   
+                    <hr>                            
                     <div class="col-sm-12">
                         <div class="col-sm-2 col-sm-offset-5">
                             <div class="form-group">

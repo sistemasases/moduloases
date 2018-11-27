@@ -15,10 +15,18 @@
     align-items: center;
     padding: 0 1% 0 1% ;
 }
+.summary {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
 
-
-.table th {
+#tableFinalgradesReport th {
     text-align: center;
+}
+/* The inner table, students table should have text align to left*/
+#tableFinalgradesReport table th {
+    text-align: left;
 }
 .count_items {
     margin-top: 2%;

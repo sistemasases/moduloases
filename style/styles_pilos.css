@@ -1371,6 +1371,19 @@ input.no-borde-fondo.tema
   font-size: 16px;
   margin-left: 3px;
 }
+.info_backup{
+        
+  height: 40px !important; 
+  font-size:16px !important;
+}
+
+
+#generarFiltro{
+  width: 170px; 
+  height: 39px;
+  margin-left: 0px; 
+  margin-top: 2px;
+}
 
 .new{
   color: white;

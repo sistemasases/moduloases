@@ -27,6 +27,7 @@ require_once dirname(__FILE__) . '/../../../../config.php';
 require_once $CFG->dirroot . '/grade/querylib.php';
 require_once $CFG->dirroot . '/grade/report/user/lib.php';
 require_once $CFG->dirroot . '/grade/lib.php';
+require_once (__DIR__ . '/../course/course_lib.php');
 
 /**
  * Returns an html wiht courses and grades for a student in the last semester
@@ -52,7 +53,7 @@ function get_grades_courses_student_last_semester($id_student)
         $last_semester = $año . '08';
     }
 
-    $courses = get_courses_by_student($id_student, $last_semester);
+    $courses = \course_lib\get_courses_by_student($id_student, $last_semester);
 
     if (!$courses) {
         $html_courses = "<b>EL ESTUDIANTE NO REGISTRA CURSOS EN EL SEMESTRE ACTUAL</b>";
@@ -97,46 +98,7 @@ function make_html_courses($courses)
     return $html;
 }
 
-/**
- * Return courses and grades for a student in the last semester
- *
- * @see get_courses_by_student($id_student, $last_semester)
- * @param $id_student --> student id
- * @param $last_semester --> last semester string identifier
- * @return array --> filled with stdClass objects representing courses and grades for single student
- */
 
-function get_courses_by_student($id_student, $last_semester)
-{
-
-    global $DB;
-
-    $query = "SELECT DISTINCT curso.id as id_course,
-			                curso.fullname,
-			                curso.shortname,
-			                to_timestamp(curso.timecreated)::DATE AS time_created
-			FROM {course} curso
-			INNER JOIN {enrol} role ON curso.id = role.courseid
-			INNER JOIN {user_enrolments} enrols ON enrols.enrolid = role.id
-			WHERE enrols.userid = $id_student AND SUBSTRING(curso.shortname FROM 15 FOR 6) = '$last_semester'
-            ORDER BY time_created DESC";
-
-    $result_query = $DB->get_records_sql($query);
-    if (!$result_query) {
-        return false;
-    }
-    $courses_array = array();
-    foreach ($result_query as $result) {
-        $result->grade = number_format(grade_get_course_grade($id_student, $result->id_course)->grade, 2);
-        $result->descriptions = getCoursegradelib($result->id_course, $id_student);
-        array_push($courses_array, $result);
-    }
-
-    return $courses_array;
-
-}
-
-//print_r(get_courses_by_student(144,false));
 
 function getCoursegradelib($courseid, $userid)
 {

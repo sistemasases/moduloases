@@ -6,6 +6,7 @@
  * Time: 07:22 PM
  */
 require_once (__DIR__ . '/../Errors/Factories/APIErrorFactory.php');
+require_once (__DIR__ . '/../common/Validable.php');
 require_once (__DIR__ . '/APIFunction.php');
 /**
  * Class BaseAPI
@@ -30,6 +31,7 @@ class BaseAPI  extends Validable {
 
     public function __construct()
     {
+        parent::__construct();
         $this->functions = array();
         $this->resources = array();
         return $this;
@@ -56,6 +58,7 @@ class BaseAPI  extends Validable {
     public function send_errors() {
         http_response_code(404);
         header('Content-Type: application/json');
+
         echo json_encode($this->get_errors_object());
     }
     /**
@@ -82,6 +85,7 @@ class BaseAPI  extends Validable {
         }
         return false;
     }
+
     function get_all_resources_printable() {
         $functions_string = array();
         /** @var APIFunction $function */
@@ -93,29 +97,38 @@ class BaseAPI  extends Validable {
     function run() {
         global $_SERVER;
         $method = $_SERVER['REQUEST_METHOD'];
+        $path_info = $_SERVER['PATH_INFO'];
 
         $this->init_params();
         $target = null;
         $api_view = null;
         $data = null;
-
+        $args = array();
+        /* Infering the function from post data */
         if(isset($this->params->function)) {
             $target =  $this->params->function;
-
             $api_view = $this->find_function($method, $target);
             if(isset($this->params->params)) {
                 $data = $this->params->params;
             }
+        } else { /* Infering the function from PATH_INFO */
+            $target = $path_info;
+            $api_view = $this->find_function($method, $target);
+            $data = $this->params; /* The request body is assumed as a data */
         }
+
         if( $api_view ) {
-             $api_view->execute($data);
+             $args = route_get_params($api_view->path_format,  $path_info);
+             $api_view->execute($data, $args);
         } else {
+
             $this->add_error(
                 APIErrorFactory::resource_not_found(
                     array(
                         'resource'=>$target,
                         'method' => $method,
                         'resources_available'=> $this->get_all_resources_printable())));
+
             $this->send_errors();
         }
 

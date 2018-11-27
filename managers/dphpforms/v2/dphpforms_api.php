@@ -56,14 +56,52 @@
         /* Params: student_ases_id, instance_id, semester_id
         * */
         
-        if( $input->function == "find_records" ){
+        if( $input->function === "find_records" ){
 
             /* In this request is only valid pass like param(Parameters) the instance identificatior, 
              * for this reason, the input param only can be equal in quantity to one.
              * */
             
-            if( count( $input->params ) == 0 ){
+            if( count( $input->params ) == 1 ){
 
+                //Ejemplo: Obtiene todos los seguimientos
+                /*{
+                    "function":"find_records",
+                    "params":[
+                        {
+                            "form":"seguimiento_pares",
+                            "filterFields":[
+                                    ["id_estudiante",[["%%","LIKE"]], false]
+                                ],
+                            "orderFields":[],
+                            "orderByDatabaseRecordDate":false,
+                            "recordStatus":["!deleted"],
+                            "selectedFields":[]
+                            
+                        }
+                    ]
+                    
+                }*/
+
+                //Ejemplo 2: Obtiene todos los seguimientos con el campo 'comentarios_familiar' diferente de vacío.
+                /*{
+                    "function":"find_records",
+                    "params":[
+                        {
+                            "form":"seguimiento_pares",
+                            "filterFields":[
+                                    ["comentarios_familiar",[["","!="]], false]
+                                ],
+                            "orderFields":[],
+                            "orderByDatabaseRecordDate":false,
+                            "recordStatus":["!deleted"],
+                            "selectedFields":[]
+                            
+                        }
+                    ]
+                    
+                }*/
+ 
                 // Validation                
                 if( true ){
                     
@@ -71,7 +109,60 @@
                         array(
                             "status_code" => 0,
                             "error_message" => "",
-                            "data_response" => dphpformsV2_find_records( $Xquery )
+                            "data_response" => dphpformsV2_find_records( $input->params[0] )
+                        )
+                    );
+                    
+                }else{
+                    return_with_code( -2 );
+                }
+            }else{
+                return_with_code( -2 );
+            }
+
+        }else if( $input->function === "get_records_reverse_new_field_update" ){
+
+            /* [0] => id_respuesta (int)
+             * [1] => form_id_alias (int or string)
+             * */
+            
+            if( count( $input->params ) == 2 ){
+ 
+                // Validation                
+                if( is_numeric( $input->params[0] ) ){
+                    
+                    echo json_encode( 
+                        array(
+                            "status_code" => 0,
+                            "error_message" => "",
+                            "data_response" => json_encode( dphpformsV2_get_records_reverse_new_field_update( $input->params[0], $input->params[1] ) )
+                        )
+                    );
+                    
+                }else{
+                    return_with_code( -2 );
+                }
+            }else{
+                return_with_code( -2 );
+            }
+
+        }else if( $input->function === "reverse_new_field_update" ){
+
+            /* [0] => form_id_alias (int)
+             * [1] => id_pregunta (int or string)
+             * [2] => default_value (string)
+             * */
+            
+            if( count( $input->params ) == 3 ){
+ 
+                // Validation                
+                if( is_numeric( $input->params[0] ) ){
+                    
+                    echo json_encode( 
+                        array(
+                            "status_code" => 0,
+                            "error_message" => "",
+                            "data_response" => json_encode( dphpformsV2_reverse_new_field_update( $input->params[0], $input->params[1], $input->params[2] ) )
                         )
                     );
                     

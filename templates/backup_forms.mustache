@@ -3,13 +3,18 @@
   <h2>REPORTE DE BACKUP</h2>
   <hr style="background-color: red; height: 1px; border: 0">
   <div class="row">
-    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
-      <input id="filtroCodigoUsuario" name="idFiltro" type="text" class="form-control" placeholder="Ingrese el código del monitor" style="
-          height: 40px; font-size:16px">
+    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 ">
+      <input class= "info_backup" id="filtroCodigoUsuario" name="idFiltro" type="text" class="form-control" placeholder="Código de usuario"  >
+    </div>
+     <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 " style="padding-left: 25px">
+      <select id="selectTable"  class= "info_backup" title="Seleccione el tipo de consulta">
+          <option value="talentospilos_user_extended" title="Para cualquier estudiante ASES">Id ases</option>
+          <option value="user" title="Para cualquier usuario moodle">Id moodle</option>
+      </select>
     </div>
 
     <div id="div_code_user" class="col-lg-2 col-md-2 col-sm-2 col-xs-2 alert alert-danger div_info_user">
-      <strong>Usuario: </strong> Moodle
+      <strong>Usuario: </strong> Moodle/Ases
     </div>
 
     <div id="div_name_user" class="col-lg-4 col-md-4 col-sm-4 col-xs-4 alert alert-danger div_info_user">
@@ -18,43 +23,58 @@
 
 
     <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
-      <input class="btn-danger" type="button" id="generarFiltro" style=" width: 170px; height: 39px;margin-left: 0px; margin-top: 2px;" value="Buscar">
+      <input class="btn-danger" type="button" id="generarFiltro" value="Buscar">
     </div>
   </div>
 
   <hr>
 
   <div class="row">
+      <label class="col-lg-2 col-md-2 col-sm-2 col-xs-2 info_backup" for="typecolumn_select" style="font-size:14px; padding-top: 10px;">Atributo a consultar</label>
+      <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2" style="padding-left: 0px;padding-right: 0px">
+  
+        <select id="typecolumn_select" name="typecolumn_select" class="info_backup">
+          <option value="id">Id</option>
+          <option value="id_usuario_moodle">Id usuario moodle</option>
+          <option value="accion">Acción</option>
+          <option value="id_registro_respuesta_form">Id respuesta</option>
+          <option value="datos_previos" selected="true">Datos previos</option>
+          <option value="datos_enviados">Datos enviados</option>
+          <option value="datos_almacenados">Datos almacenados</option>
+          <option value="observaciones">Observaciones</option>
+          <option value="cod_retorno">Código retorno</option>
+          <option value="msg_retorno">Mensaje retorno</option>
+          <option value="dts_retorno">Datos retorno</option>
+          <option value="fecha_hora_registro">Fecha y hora</option>
+          <option value="navegador">Navegador</option>
+          <option value="url_request">Url</option>
+        </select>
+      </div>
+      <div hidden>
+          <label class="col-lg-2 col-md-2 col-sm-2 col-xs-2 info_backup" for="typekey_select" style="font-size:14px; padding-top: 10px;">Respuesta a consultar</label>
+
+          <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2" style="padding-left: 0px;padding-right: 0px" >
+      
+              <select id="typekey_select" class="info_backup">
+                  {{{options_key_select}}}
+              </select>
+          </div>
+      </div>
+      
+
+
+    </div>
+
+    <hr>
+  <div class="row">
     <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10">
-      <input id="filtroLike" name="idFiltroLike" type="text" class="form-control" placeholder="Ingrese el texto a consultar" style="
-            height: 40px; font-size:16px">
+      <input id="filtroLike" name="idFiltroLike" type="text" class="form-control info_backup" placeholder="Ingrese el texto a consultar" >
     </div>
     <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
       <input class="btn-danger" type="button" id="load_like" style=" width: 170px; height: 39px;margin-top: 0px;" value="Buscar">
     </div>
   </div>
-  <div class="row">
-    <label class="col-lg-4 col-md-4 col-sm-4 col-xs-4" for="typecolumn_select" style="font-size:14px">Seleccione el atributo a consultar</label>
-    <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8" style="padding-left: 0px;padding-right: 0px">
-
-      <select id="typecolumn_select" name="typecolumn_select">
-        <option value="id">Id</option>
-        <option value="id_usuario_moodle">Id usuario moodle</option>
-        <option value="accion">Acción</option>
-        <option value="id_registro_respuesta_form">Id respuesta</option>
-        <option value="datos_previos" selected="true">Datos previos</option>
-        <option value="datos_enviados">Datos enviados</option>
-        <option value="datos_almacenados">Datos almacenados</option>
-        <option value="observaciones">Observaciones</option>
-        <option value="cod_retorno">Código retorno</option>
-        <option value="msg_retorno">Mensaje retorno</option>
-        <option value="dts_retorno">Datos retorno</option>
-        <option value="fecha_hora_registro">Fecha y hora</option>
-        <option value="navegador">Navegador</option>
-        <option value="url_request">Url</option>
-      </select>
-    </div>
-  </div>
+  
 
 
 

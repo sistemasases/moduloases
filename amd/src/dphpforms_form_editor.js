@@ -447,6 +447,61 @@
                     });
                     
                 });
+
+                $('#cargar-afectaciones').click(function(){
+                    
+                    let pregunta_id = parseInt($("#alias-list option:selected").data("id"));
+                    let form_id = parseInt($("#form-info").data("id"));
+
+                    $.ajax({
+                        method: "POST",
+                        url: "../managers/dphpforms/v2/dphpforms_api.php",
+                        contentType: "application/json",
+                        dataType: "json",
+                        data: JSON.stringify({"function":"get_records_reverse_new_field_update", "params":[ pregunta_id, form_id ]}) ,
+                        success: function( msg ){
+                            $("#salida-afectaciones").text( msg.data_response );
+                        },
+                        error: function( XMLHttpRequest, textStatus, errorThrown ) {
+                            alert('Informe de este error');
+                            console.log( "some error " + textStatus + " " + errorThrown );
+                            console.log( XMLHttpRequest );
+                        }
+                    });
+                });
+
+                $('#aplicar-accion').click(function(){
+                    
+                    let pregunta_id = parseInt($("#alias-list option:selected").data("id"));
+                    let form_id = parseInt($("#form-info").data("id"));
+                    let default_value = $("#mantenimiento-valor-por-defecto").val();
+
+                    $.ajax({
+                        method: "POST",
+                        url: "../managers/dphpforms/v2/dphpforms_api.php",
+                        contentType: "application/json",
+                        dataType: "json",
+                        data: JSON.stringify({"function":"reverse_new_field_update", "params":[ form_id, pregunta_id, default_value ]}) ,
+                        success: function( msg ){
+                            $("#salida-afectaciones").text( msg.data_response );
+                        },
+                        error: function( XMLHttpRequest, textStatus, errorThrown ) {
+                            alert('Informe de este error');
+                            console.log( "some error " + textStatus + " " + errorThrown );
+                            console.log( XMLHttpRequest );
+                        }
+                    });
+                });
+
+                $('#verificacion').change(function () {
+                    console.log( $(this).is(":checked") );
+                    if( $(this).is(":checked") == true ){
+                        $("#aplicar-accion").show();
+                    }else{
+                        $("#aplicar-accion").hide();
+                    };
+                 });
+                    
             }
     };
       

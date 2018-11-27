@@ -720,3 +720,148 @@ FROM
     WHERE membprog.cohortid = 11
             AND (extprog.program_status = 'ACTIVO'
             OR extprog.program_status = '1')) activos_sra
+
+-- Cursos ases sin profesor
+
+
+SELECT DISTINCT
+    On (
+       ases_course.curso_id) *
+from            (
+                select distinct ON (mdl_course.id)
+                       mdl_course.id AS curso_id,
+                       mdl_course.fullname,
+                       mdl_course.shortname
+                FROM            mdl_user
+                                  INNER JOIN      mdl_talentospilos_user_extended
+                                    ON              mdl_user.id = mdl_talentospilos_user_extended.id_moodle_user
+                                  INNER JOIN      mdl_cohort_members
+                                    ON              mdl_cohort_members.userid = mdl_user.id
+                                  INNER JOIN      mdl_talentospilos_inst_cohorte
+                                    ON              mdl_talentospilos_inst_cohorte.id_cohorte = mdl_cohort_members.cohortid
+                                  INNER JOIN      mdl_role_assignments
+                                    ON              mdl_role_assignments.userid = mdl_user.id
+                                  INNER JOIN      mdl_context
+                                    ON              mdl_role_assignments.contextid = mdl_context.id
+                                  INNER JOIN      mdl_course
+                                    ON              mdl_course.id = mdl_context.instanceid
+                                  INNER JOIN      mdl_talentospilos_est_estadoases
+                                    ON              mdl_talentospilos_user_extended.id_ases_user = mdl_talentospilos_est_estadoases.id_estudiante
+                                  INNER JOIN      mdl_talentospilos_estados_ases
+                                    ON              mdl_talentospilos_est_estadoases.id_estado_ases = mdl_talentospilos_estados_ases.id
+                WHERE           mdl_talentospilos_estados_ases.nombre='seguimiento'
+                  AND             mdl_talentospilos_inst_cohorte.id_instancia = 450299
+                  AND             mdl_talentospilos_user_extended.tracking_status = 1
+                  AND             mdl_role_assignments.roleid = 5
+                  AND             SUBSTRING(mdl_course.shortname FROM 15 FOR 6) = '201808' ) AS ases_course
+                  INNER JOIN      mdl_context
+                    ON              mdl_context.instanceid = ases_course.curso_id
+                  INNER JOIN      mdl_role_assignments
+                    ON              mdl_role_assignments.contextid = mdl_context.id
+                  INNER JOIN      mdl_user
+                    ON              mdl_role_assignments.userid = mdl_user.id
+                                      AND             ases_course.curso_id NOT IN
+                                                      (
+                                                      SELECT DISTINCT
+                                                          ON (
+                                                             ases_course.curso_id) ases_course.curso_id
+                                                      FROM            (
+                                                                      SELECT DISTINCT
+                                                                          ON (
+                                                                             mdl_course.id) mdl_course.id AS curso_id,
+                                                                             mdl_course.fullname,
+                                                                             mdl_course.shortname
+                                                                      FROM            mdl_user
+                                                                                        INNER JOIN      mdl_talentospilos_user_extended
+                                                                                          ON              mdl_user.id = mdl_talentospilos_user_extended.id_moodle_user
+                                                                                        INNER JOIN      mdl_cohort_members
+                                                                                          ON              mdl_cohort_members.userid = mdl_user.id
+                                                                                        INNER JOIN      mdl_talentospilos_inst_cohorte
+                                                                                          ON              mdl_talentospilos_inst_cohorte.id_cohorte = mdl_cohort_members.cohortid
+                                                                                        INNER JOIN      mdl_role_assignments
+                                                                                          ON              mdl_role_assignments.userid = mdl_user.id
+                                                                                        INNER JOIN      mdl_context
+                                                                                          ON              mdl_role_assignments.contextid = mdl_context.id
+                                                                                        INNER JOIN      mdl_course
+                                                                                          ON              mdl_course.id = mdl_context.instanceid
+                                                                                        INNER JOIN      mdl_talentospilos_est_estadoases
+                                                                                          ON              mdl_talentospilos_user_extended.id_ases_user = mdl_talentospilos_est_estadoases.id_estudiante
+                                                                                        INNER JOIN      mdl_talentospilos_estados_ases
+                                                                                          ON              mdl_talentospilos_est_estadoases.id_estado_ases = mdl_talentospilos_estados_ases.id
+                                                                      WHERE           mdl_talentospilos_estados_ases.nombre='seguimiento'
+                                                                        AND             mdl_talentospilos_inst_cohorte.id_instancia = 450299
+                                                                        AND             mdl_talentospilos_user_extended.tracking_status = 1
+                                                                        AND             mdl_role_assignments.roleid = 5
+                                                                        AND             SUBSTRING(mdl_course.shortname FROM 15 FOR 6) = '201808' ) AS ases_course
+                                                                        INNER JOIN      mdl_context
+                                                                          ON              mdl_context.instanceid = ases_course.curso_id
+                                                                        INNER JOIN      mdl_role_assignments
+                                                                          ON              mdl_role_assignments.contextid = mdl_context.id
+                                                                        INNER JOIN      mdl_user
+                                                                          ON              mdl_role_assignments.userid = mdl_user.id
+                                                      WHERE           mdl_role_assignments.roleid = 3)
+
+-- estudiantes ases relacionados a items
+select distinct on (mdl_talentospilos_usuario.id) * from mdl_talentospilos_usuario
+                                                           inner join mdl_talentospilos_user_extended
+                                                             on mdl_talentospilos_user_extended.id_ases_user = mdl_talentospilos_usuario.id
+                                                           inner join mdl_role_assignments
+                                                             on mdl_role_assignments.userid = mdl_talentospilos_user_extended.id_moodle_user
+where TO_TIMESTAMP(mdl_role_assignments.timemodified) > to_timestamp('2018-05-01', 'YYYY-MM-d') --current semester role assignments
+  and mdl_role_assignments.roleid =  5 ;-- Student role assignemnts
+
+
+select * from mdl_grade_items
+                inner join mdl_grade_grades
+                  on mdl_grade_items.id = mdl_grade_grades.itemid
+                inner join mdl_user
+                  on mdl_grade_grades.userid = mdl_user.id
+where  mdl_grade_items.itemtype != 'category'
+  AND  mdl_grade_items.itemtype != 'course';
+
+
+select to_timestamp('2018-05-01', 'YYYY-MM-d');
+
+-- Estudiantes ases y cantidad de items perdidos y ganados en el semestre
+select  count(*) filter(where item_ganado = false) as cantidad_items_perdidos, count(*) filter (where item_ganado = true) as cantidad_items_ganados, username, mdl_talentospilos_usuario_id, firstname, lastname , num_doc  from (
+                                                                                                                                                                                                                                 select
+                                                                                                                                                                                                                                     distinct mdl_user.*, mdl_talentospilos_usuario.num_doc,
+                                                                                                                                                                                                                                              case when (finalgrade < grademax * 0.6 or finalgrade is  null) then false else true end as item_ganado,
+                                                                                                                                                                                                                                              mdl_talentospilos_usuario.id as mdl_talentospilos_usuario_id, finalgrade, grademax, mdl_grade_items.itemname, mdl_grade_items.id as item_id  ,
+                                                                                                                                                                                                                                              (select count(*) from mdl_grade_grades as mdl_grade_grades_inner
+                                                                                                                                                                                                                                                                      inner join mdl_grade_items as mdl_grade_items_inner
+                                                                                                                                                                                                                                                                        on mdl_grade_grades_inner.itemid = mdl_grade_items_inner.id
+                                                                                                                                                                                                                                               where mdl_grade_items_inner.courseid = mdl_course.id
+                                                                                                                                                                                                                                                 and mdl_grade_items_inner.id = mdl_grade_items.id
+                                                                                                                                                                                                                                                 and mdl_grade_grades.userid = mdl_user.id
+                                                                                                                                                                                                                                                 and mdl_grade_grades_inner.finalgrade is not null ) as calificaciones_item_todos_estudiantes
+                                                                                                                                                                                                                                 from mdl_talentospilos_usuario
+                                                                                                                                                                                                                                        inner join mdl_talentospilos_user_extended
+                                                                                                                                                                                                                                          on mdl_talentospilos_user_extended.id_ases_user = mdl_talentospilos_usuario.id
+                                                                                                                                                                                                                                        inner join mdl_user
+                                                                                                                                                                                                                                          on mdl_user.id = mdl_talentospilos_user_extended.id_moodle_user
+                                                                                                                                                                                                                                        inner join mdl_cohort_members
+                                                                                                                                                                                                                                          on mdl_cohort_members.userid = mdl_user.id
+                                                                                                                                                                                                                                        inner join mdl_talentospilos_est_estadoases
+                                                                                                                                                                                                                                          on mdl_talentospilos_user_extended.id_ases_user = mdl_talentospilos_est_estadoases.id_estudiante
+                                                                                                                                                                                                                                        inner join mdl_talentospilos_estados_ases
+                                                                                                                                                                                                                                          on mdl_talentospilos_est_estadoases.id_estado_ases = mdl_talentospilos_estados_ases.id
+                                                                                                                                                                                                                                        inner join mdl_grade_grades
+                                                                                                                                                                                                                                          on mdl_grade_grades.userid = mdl_user.id
+                                                                                                                                                                                                                                        inner join mdl_grade_items
+                                                                                                                                                                                                                                          on mdl_grade_items.id = mdl_grade_grades.itemid
+                                                                                                                                                                                                                                        inner join mdl_course
+                                                                                                                                                                                                                                          on mdl_grade_items.courseid= mdl_course.id
+
+                                                                                                                                                                                                                                 where substring(mdl_course.shortname from 15 for 6) = '201808'
+                                                                                                                                                                                                                                   and mdl_cohort_members.cohortid in (
+                                                                                                                                                                                                                                                                      select id from mdl_talentospilos_inst_cohorte where mdl_talentospilos_inst_cohorte.id_instancia = 450299
+                                                                                                                                                                                                                                                                      )
+                                                                                                                                                                                                                                   and mdl_grade_items.itemtype != 'category'
+                                                                                                                                                                                                                                   AND  mdl_grade_items.itemtype != 'course'
+                                                                                                                                                                                                                                   and mdl_talentospilos_user_extended.tracking_status = 1
+                                                                                                                                                                                                                                   and mdl_talentospilos_estados_ases.nombre = 'seguimiento'
+                                                                                                                                                                                                                                 ) as notas_estudiante
+where notas_estudiante.calificaciones_item_todos_estudiantes > 0
+group by (username, mdl_talentospilos_usuario_id,  firstname, lastname, num_doc)
+;

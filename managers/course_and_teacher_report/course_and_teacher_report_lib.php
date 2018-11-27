@@ -1,10 +1,18 @@
 <?php
 
 
-use function jquery_datatable\get_datatable_class_column;
+require_once(__DIR__ . '/../../../../config.php');
+require_once (__DIR__ . '/../jquery_datatable/jquery_datatable_lib.php');
+require_once (__DIR__ . '/../../managers/periods_management/periods_lib.php');
+require_once (__DIR__ . '/../../classes/DAO/BaseDAO.php');
 
-require_once (__DIR__.'/../jquery_datatable/jquery_datatable_lib.php');
+require_once (__DIR__ . '/../course/course_lib.php');
 
+require_once(__DIR__.'/../../vendor/autoload.php');
+
+
+use Latitude\QueryBuilder\Query\SelectQuery;
+use function Latitude\QueryBuilder\{ alias, on, field, QueryInterface, criteria, literal };
 
 /**
  * Class ItemReporteCursoProfesores
@@ -46,6 +54,7 @@ function get_reporte_curso_profesores($id_instancia) {
     }else if(substr($sem,4,1) == 'B'){
         $semestre = $año.'08';
     }
+
     $sql = <<<SQL
  SELECT DISTINCT ON ( moodle_course.curso_id ) 
                 moodle_course.curso_id,
@@ -293,19 +302,47 @@ INNER JOIN
         and substring(mdl_course.shortname from 15 for 6) = '$semestre' ) AS moodle_course
         ON              moodle_course.curso_id = mdl_context.instanceid
         WHERE           mdl_role_assignments.roleid = 3
-
-
 SQL;
 
     return $DB->get_records_sql($sql);
 }
 
 /**
+ * Retorna los mismos datos de get_reporte_curso_profesores, pero para los cursos que no tienen profesor
+ *
+ * La cantidad de items, estudiantes sin nota, etc, se rellenan con ceros
+ * @param $instance_id
+ * @param $semester
+ */
+function get_reporte_cursos_sin_profesor($instance_id, $semester): array {
+    $cursos_sin_profesor = array_values(get_ases_courses_without_teachers($instance_id, $semester));
+    $report_items = array();
+    foreach($cursos_sin_profesor as $curso_sin_profesor) {
+        /* @var $report_item ItemReporteCursoProfesores */
+        $report_item = new stdClass();
+        $report_item->cantidad_items = 0;
+        $report_item->estudiantes_ganando = 0;
+        $report_item->estudiantes_perdiendo= 0;
+        $report_item->estudiantes_sin_ninguna_nota = 0;
+        $report_item->curso = $curso_sin_profesor->fullname . 'TODO';
+        $report_item->curso_id= $curso_sin_profesor->id;
+        $report_item->cantidad_estudiantes_ases = 'TODO';
+        $report_item->items_con_almenos_una_nota = 0;
+        $report_item->nombre_profesor = 'No registra';
+
+        array_push($report_items, $report_item);
+    }
+    return $report_items;
+}
+
+/**
  * Return a datatable formated as array with all information needed for course and teacher report by items
  * @param string $instance_id
+ * @param boolean $append_courses_whitout_teachers Append info referetn to courses than have ASES students,
+ *  but has no teacher assigned in moodle.
  * @return array Datatable with indexs: {bsort, columns, data, language, order}
  */
-function get_datatable_for_course_and_teacher_report($instance_id) {
+function get_datatable_for_course_and_teacher_report($instance_id, $append_courses_whitout_teachers= false) {
     $common_language_config = \jquery_datatable\get_datatable_common_language_config();
     $columns = array();
     /* Index of column  'Est < 50' (starting from 0)*/
@@ -319,8 +356,12 @@ function get_datatable_for_course_and_teacher_report($instance_id) {
 
     $data = array_values(get_reporte_curso_profesores($instance_id));
 
-    array_push($columns, get_datatable_class_column());
-    array_push($columns, array("title"=>"Curso", "name"=>'curso', "data"=>"curso"));
+    array_push($columns, \jquery_datatable\get_datatable_class_column());
+    array_push($columns, array(
+        "title"=>"Curso",
+        "name"=>'curso',
+        "data"=>"curso",
+        "description"=>"Nombre, grupo y codigo de el curso"));
     array_push($columns, array(
         "title"=>"Profesor",
         "name"=>"nombre_profesor",
@@ -328,29 +369,45 @@ function get_datatable_for_course_and_teacher_report($instance_id) {
         "description"=>'Nombre del profesor'));
 
     array_push($columns, $est_lt_50_colum);
-    array_push($columns, array("title"=>"Est >=50%", "name"=>"estudiantes_ganando", "data"=>"estudiantes_ganando", "description"=>"Estudiantes ganando más de la mitad de los items calificados"));
-    array_push($columns, array("title"=>"Est. sin notas", "name"=>"estudiantes_sin_ninguna_nota", "data"=>"estudiantes_sin_ninguna_nota", "description"=>"Estudiantes sin ningún item calificado"));
-    array_push($columns, array("title"=>"Estudiantes", "name"=>"cantidad_estudiantes_ases", "data"=>"cantidad_estudiantes_ases", 'description'=>'Cantidad de estudiantes ASES'));
+
+    array_push($columns, array(
+        "title"=>"Est >=50%",
+        "name"=>"estudiantes_ganando",
+        "data"=>"estudiantes_ganando",
+        "description"=>"Estudiantes ganando más de la mitad de los items calificados"));
+
+    array_push($columns, array(
+        "title"=>"Est. sin notas",
+        "name"=>"estudiantes_sin_ninguna_nota",
+        "data"=>"estudiantes_sin_ninguna_nota",
+        "description"=>"Estudiantes sin ningún item calificado"));
+
+    array_push($columns, array(
+        "title"=>"Estudiantes ASES",
+        "name"=>"cantidad_estudiantes_ases",
+        "data"=>"cantidad_estudiantes_ases",
+        'description'=>'Cantidad de estudiantes ASES'));
+
     array_push($columns, array(
         "title"=>"Items  calificados",
         "name"=>"items_con_almenos_una_nota",
         "data"=>"items_con_almenos_una_nota",
         'description'=>'Cantidad de items en los cuales almenos un estudiante tiene una nota',
         'className'=>'items_con_almenos_una_nota'));
-    array_push($columns, array(
-        "title"=>"Id del curso moodle",
-        "name"=>"curso_id",
-        "data"=>"curso_id",
-        'description'=>'Id de el curso ',
-        'visible' => 'false',
-        'className'=>'curso_id'));
+
     array_push($columns, array(
         "title"=>"Cantidad de items",
         "name"=>"cantidad_items",
         "data"=>"cantidad_items",
         'description'=>'Cantidad de items calificables de el curso',
         'className'=>'cantidad_items'));
-    array_push($columns, array("title"=>"Es critica", "name"=>"critica", "data"=>"critica", "description"=>'Indica si la materia ha sido marcada como critica por ASES'));
+
+    array_push($columns, array(
+        "title"=>"Es critica",
+        "name"=>"critica",
+        "data"=>"critica",
+        "description"=>'Indica si la materia ha sido marcada como critica por ASES'));
+
     // The previous order of columns may be change, because that we need search the actual index of this column
     // at execution time
     $est_lt_50_colum_index = array_search($est_lt_50_colum, $columns);

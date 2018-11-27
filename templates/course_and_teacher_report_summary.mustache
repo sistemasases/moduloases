@@ -1,0 +1,60 @@
+{{#resume_report}}
+<table class="table">
+    <thead>
+    <tr>
+        <h5> Resumen </h5>
+    </tr>
+
+    <tr>
+        <th>
+            Tipo de cursos
+        </th>
+        <th>
+            Cursos con almenos un estudiante ases
+        </th>
+        <th>
+            Cursos con almenos un item
+        </th>
+        <th>
+            Cursos con almenos un item calificado
+        </th>
+    </tr>
+    </thead>
+    <tbody>
+    {{#critic_report}}
+    <tr>
+
+        <td>
+            Cursos criticos
+        </td>
+        <td>
+            {{cursos_al_un_est_ases}}
+        </td>
+        <td>
+            {{cursos_al_un_item}}
+        </td>
+        <td>
+            {{cursos_al_item_calif}}
+        </td>
+
+    </tr>
+    {{/critic_report}}
+    {{#no_critic_report}}
+    <tr>
+        <td>
+            Cursos no criticos
+        </td>
+        <td>
+            {{cursos_al_un_est_ases}}
+        </td>
+        <td>
+            {{cursos_al_un_item}}
+        </td>
+        <td>
+            {{cursos_al_item_calif}}
+        </td>
+    </tr>
+    {{/no_critic_report}}
+    </tbody>
+</table>
+{{/resume_report}}

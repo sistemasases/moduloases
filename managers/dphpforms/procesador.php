@@ -321,10 +321,60 @@ function dphpforms_update_respuesta($completed_form, $RECORD_ID){
         if($different_flag){
             
             //La última afectación es si las reglas son válidas
-            $validator_response = dphpforms_reglas_validator(json_decode(json_encode($updated_respuestas)), $reglas);
+            $respuestas_obj = json_decode(json_encode($updated_respuestas));
+            $validator_response = dphpforms_reglas_validator($respuestas_obj, $reglas);
 
             $processable = $validator_response['status'];
             $Unfulfilled_rules = $validator_response['unfulfilled_ruler'];
+
+            //Validación de las opciones del campo
+            $required_validator = dphpforms_required_validator( $respuestas_obj );
+            
+            if( !($required_validator['status']) ){
+                $retorno = json_encode(
+                    array(
+                        'status' => '-3',
+                        'message' => 'Field cannot be null',
+                        'data' => $required_validator['null_field_id']
+                    )
+                );
+                echo $retorno;
+                return $retorno;
+            }
+
+            //Validación del tipo de campo
+            $regex_validator = dphpforms_regex_validator( $respuestas_obj );
+
+            if( !($regex_validator['status']) ){
+                $retorno = json_encode(
+                    array(
+                        'status' => '-4',
+                        'message' => 'Field does not match with the regular expression',
+                        'data' => [
+                                "id" => $regex_validator['not_regex_match_field_id'],
+                                "human_readable" => $regex_validator['human_readable'],
+                                "example" => $regex_validator['example']
+                            ]
+                    )
+                );
+                echo $retorno;
+                return $retorno;
+            }
+
+            //Validación static
+            $static_validator = dphpforms_static_validator( $respuestas_obj, $RECORD_ID );
+
+            if( !($static_validator['status']) ){
+                $retorno = json_encode(
+                    array(
+                        'status' => '-5',
+                        'message' => 'The field is static and can not be changed',
+                        'data' => $static_validator['static_field_id']
+                    )
+                );
+                echo $retorno;
+                return $retorno;
+            }
 
             /*print_r($updated_respuestas);
 
@@ -470,10 +520,44 @@ function dphpforms_new_store_respuesta($completed_form){
 
     //print_r($all_respuestas);
     //die();
-
-    $validator_response = dphpforms_reglas_validator( json_decode( json_encode($all_respuestas) ), $reglas );
+    $respuestas_obj = json_decode( json_encode($all_respuestas) );
+    $validator_response = dphpforms_reglas_validator( $respuestas_obj, $reglas );
     $processable = $validator_response['status'];
     $Unfulfilled_rules = $validator_response['unfulfilled_ruler'];
+
+    //Validación de las opciones del campo
+    $required_validator = dphpforms_required_validator( $respuestas_obj );
+    
+    if( !($required_validator['status']) ){
+        $retorno = json_encode(
+            array(
+                'status' => '-3',
+                'message' => 'Field cannot be null',
+                'data' => $required_validator['null_field_id']
+            )
+        );
+        echo $retorno;
+        return $retorno;
+    }
+
+    //Validación del tipo de campo
+    $regex_validator = dphpforms_regex_validator( $respuestas_obj );
+    
+    if( !($regex_validator['status']) ){
+        $retorno = json_encode(
+            array(
+                'status' => '-4',
+                'message' => 'Field does not match with the regular expression',
+                'data' => [
+                    "id" => $regex_validator['not_regex_match_field_id'],
+                    "human_readable" => $regex_validator['human_readable'],
+                    "example" => $regex_validator['example']
+                ]
+            )
+        );
+        echo $retorno;
+        return $retorno;
+    }
 
     if($processable){
         //echo "\n¿Procesable?: Sí.\n";
@@ -632,6 +716,7 @@ function dphpforms_update_completed_form( $form_identifier_respuesta, $pregunta_
        return true;
 }
 
+// Copied to dphpformsV2_lib
 function dphpforms_store_form_soluciones($form_id, $respuesta_identifier){
 
     global $DB;
@@ -1033,6 +1118,111 @@ function dphpforms_get_expected_respuestas($form_id){
     ORDER BY posicion";
 
     return array_values($DB->get_records_sql($sql));
+
+}
+
+
+function dphpforms_required_validator( $respuestas ){
+
+    global $DB;
+
+    foreach( $respuestas as $key => $respuesta ){
+        
+        $sql = "SELECT * FROM {talentospilos_df_preguntas} WHERE id = " . $respuesta->id;
+        $pregunta_obj = $DB->get_record_sql( $sql );
+        $obj_atributos = json_decode( $pregunta_obj->atributos_campo );
+
+        if( ( $obj_atributos->required == "true" ) && (( $respuesta->valor === "" ) || ( $respuesta->valor === "-#$%-" )) ){
+            return array(
+                'status' => false,
+                'null_field_id' => $respuesta->id
+            );
+        }
+
+    }
+
+    return array(
+        'status' => true,
+        'null_field_id' => ''
+    );
+
+}
+//Copied to dphpforms_lib
+function dphpforms_regex_validator( $respuestas ){
+
+    global $DB;
+
+    foreach( $respuestas as $key => $respuesta ){
+        
+        $sql = "SELECT * FROM {talentospilos_df_preguntas} WHERE id = " . $respuesta->id;
+        $pregunta_obj = $DB->get_record_sql( $sql );
+
+        $sql_type = "SELECT * FROM {talentospilos_df_tipo_campo} WHERE id = " . $pregunta_obj->tipo_campo;
+        $tipo_campo_obj = $DB->get_record_sql( $sql_type );
+
+        $regex = $tipo_campo_obj->expresion_regular;
+
+        if( $regex ){
+
+            if( preg_match( $regex, $respuesta->valor) == 0 ){
+             
+                return array(
+                    'status' => false,
+                    'not_regex_match_field_id' => $respuesta->id,
+                    'human_readable' => $tipo_campo_obj->regex_legible_humanos,
+                    'example' => $tipo_campo_obj->ejemplo
+                );
+            }
+        }
+
+    }
+
+    return array(
+        'status' => true,
+        'not_regex_match_field_id' => '',
+        'human_readable' => '',
+        'example' => ''
+    );
+
+}
+
+function dphpforms_static_validator( $respuestas, $RECORD_ID ){
+
+    global $DB;
+
+    $respuestas_previas = dphpforms_get_respuestas_form_completed($RECORD_ID);
+
+    foreach( $respuestas as $key => $respuesta ){
+        
+        $sql = "SELECT * FROM {talentospilos_df_preguntas} WHERE id = " . $respuesta->id;
+        $pregunta_obj = $DB->get_record_sql( $sql );
+        $obj_atributos = json_decode( $pregunta_obj->atributos_campo );
+
+        if( property_exists( $obj_atributos, "static" ) ){
+
+            if( $obj_atributos->static == "true" ){
+
+                foreach( $respuestas_previas as $_key => $res_previa ){
+
+                    if( ( $res_previa['id'] == $respuesta->id ) && ( $res_previa['valor'] !== $respuesta->valor ) ){
+                        return array(
+                            'status' => false,
+                            'static_field_id' => $respuesta->id
+                        );
+                    }
+
+                }
+
+            }
+            
+        }
+
+    }
+
+    return array(
+        'status' => true,
+        'null_field_id' => ''
+    );
 
 }
 

@@ -89,7 +89,6 @@ $node->make_active();
 $record = new stdClass;
 $actions = authenticate_user_view($USER->id, $blockid);
 $record = $actions;
-echo $actions->nombre_accion;
 
 $data_init = array();
 
@@ -168,7 +167,8 @@ if ($student_code != 0) {
     $record->attendant = $ases_student->acudiente;
     $record->attendant_tel = $ases_student->tel_acudiente;
     $record->num_doc = $ases_student->num_doc;
-    
+    $record->json_detalle  =$ases_student->json_detalle;
+  
     
       $personas = '';
       $pos = 1;
@@ -284,6 +284,19 @@ if ($student_code != 0) {
     
 
     $etnia_student = $ases_student->id_etnia;
+
+    //Buscar la posición de NO DEFINIDO
+    $i=0;
+    foreach($etnias as $etnia){
+        if($etnia->etnia=="NO DEFINIDO"){
+        $posp=$i;
+        $options_etnia .= " <option value='$etnia->id'>$etnia->etnia</option>" ;   
+        break; }
+        $i++;
+    }
+
+    //Eliminar NO DEFINIDO puesto al inicio
+    array_splice($etnias,$posp,1);
   
    $otro ="";
    $control = true;
@@ -1584,6 +1597,7 @@ $PAGE->requires->js_call_amd('block_ases/geographic_main', 'init');
 $PAGE->requires->js_call_amd('block_ases/dphpforms_form_renderer', 'init');
 $PAGE->requires->js_call_amd('block_ases/dphpforms_form_discapacity', 'init');
 $PAGE->requires->js_call_amd('block_ases/academic_profile_main', 'init');
+
 $output = $PAGE->get_renderer('block_ases');
 
 echo $output->header();

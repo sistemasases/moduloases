@@ -53,7 +53,7 @@ class APIFunction
         $this->http_method = $http_method;
         $this->callable = $callable;
     }
-    public function execute($params=null) {
-        ($this->callable) ( $params);
+    public function execute($params=null, $args = array()) {
+        ($this->callable) ( $params, $args);
     }
 }

@@ -212,7 +212,16 @@ function create_menu_options($userid, $blockid, $courseid)
                 $indexed['Reportes por docente'] = $menu_options;
 
             }
+            if ($function == 'student_item_grades_report') {
+                $url = new moodle_url("/blocks/ases/view/student_item_grades_report.php", array(
+                    'courseid' => $courseid,
+                    'instanceid' => $blockid,
+                ));
 
+                $menu_options = '<li><a href= "' . $url . '"> Reportes por estudiante </a><li>';
+                $indexed['Reportes por estudiante'] = $menu_options;
+
+            }
             if ($function == 'historic_academic_reports') {
                 $url = new moodle_url("/blocks/ases/view/historic_academic_reports.php", array(
                     'courseid' => $courseid,
@@ -232,17 +241,6 @@ function create_menu_options($userid, $blockid, $courseid)
 
                 $menu_options = '<li><a href= "' . $url . '"> Administrador de formularios </a><li>';
                 $indexed['Administrador de formularios'] = $menu_options;
-
-            }
-
-            if ($function == 'students_finalgrade_report') {
-                $url = new moodle_url("/blocks/ases/view/students_finalgrade_report.php", array(
-                    'courseid' => $courseid,
-                    'instanceid' => $blockid,
-                ));
-
-                $menu_options = '<li><a href= "' . $url . '"> Reporte de notas finales </a><li>';
-                $indexed['Reporte de notas finales'] = $menu_options;
 
             }
 
@@ -276,6 +274,17 @@ function create_menu_options($userid, $blockid, $courseid)
 
                 $menu_options = '<li><a href= "' . $url . '"> Gestión de asignaciones </a><li>';
                 $indexed['Gestión de asignaciones'] = $menu_options;
+
+            }
+
+            if ($function == 'assigned_students_no_trackings_report') {
+                $url = new moodle_url("/blocks/ases/view/assigned_students_no_trackings_report.php", array(
+                    'courseid' => $courseid,
+                    'instanceid' => $blockid,
+                ));
+
+                $menu_options = '<li><a href= "' . $url . '"> Estudiantes sin seguimientos </a><li>';
+                $indexed['Estudiantes sin seguimientos '] = $menu_options;
 
             }
 

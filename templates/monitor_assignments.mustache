@@ -1,18 +1,25 @@
 {{#data}}
 <body>
+    {{> block_ases/side_menu}}
     <div id="monitor_assignments_monitor_students" style="display:none;">{{{monitors_students_relationship}}}</div>
     <div id="monitor_assignments_professional_practicant" style="display:none;">{{{professional_practicant_relationship}}}</div>
     <div id="monitor_assignments_practicant_monitor_relationship" style="display:none;">{{{practicant_monitor_relationship}}}</div>
     <div id="monitor_assignments_instance_id" data-instance-id="{{instance_id}}" style="display:none;"></div>
 
-    <div class="container-fluid">
+    <div class="container-fluid container-view-gestion-asignacion">
         <div class="row">
             <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 filters">
                 <span class="column-title">Practicantes</span>
                 <hr class="hr-title">
                 <span>Profesional:&nbsp;</span>
-                <select id="select-professional" data-id="professional_selector" name="">
-                    <option value="" data-id="-1" alt="TODOS">TODOS</option>
+                <select id="select-professional" data-id="professional_selector" name="" {{#not_sistemas}} disabled {{/not_sistemas}} >
+                    {{#not_sistemas}} 
+                    <option value="" data-id="{{#user_logged}}{{id}}{{/user_logged}}" selected="selected">{{#user_logged}}{{fullname}}{{/user_logged}}</option> 
+                    {{/not_sistemas}}
+                    {{^not_sistemas}} 
+                    <option value="" data-id="-1" alt="TODOS" selected="selected">TODOS</option>
+                    {{/not_sistemas}}
+                    
                     {{#professionals}}
                     {{#.}}
                     <option value="" data-id="{{id}}">{{fullname}}</option>
