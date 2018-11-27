@@ -716,6 +716,7 @@ function dphpforms_update_completed_form( $form_identifier_respuesta, $pregunta_
        return true;
 }
 
+// Copied to dphpformsV2_lib
 function dphpforms_store_form_soluciones($form_id, $respuesta_identifier){
 
     global $DB;
@@ -1120,6 +1121,7 @@ function dphpforms_get_expected_respuestas($form_id){
 
 }
 
+
 function dphpforms_required_validator( $respuestas ){
 
     global $DB;
@@ -1145,7 +1147,7 @@ function dphpforms_required_validator( $respuestas ){
     );
 
 }
-
+//Copied to dphpforms_lib
 function dphpforms_regex_validator( $respuestas ){
 
     global $DB;
