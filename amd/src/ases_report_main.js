@@ -23,41 +23,7 @@ define(['jquery',
         return {
             init: function () {
 
-                window.JSZip = jszip;
-                //Control para el botón 'Generar Reporte
-                $("#send_form_btn").on('click', function () {
-                    
-                    createTable();
-
-                    var cohorts = $('#conditions').val();
-
-                    if(cohorts == 'TODOS'){
-                        $('#div-summary-spp').prop('hidden', false);
-                        $('#div-summary-spe').prop('hidden', false);
-                        $('#div-summary-3740').prop('hidden', false);
-                        $('#div-summary-oa').prop('hidden', false);
-                    }else if(cohorts == 'TODOS-SPP' || cohorts.substring(0, 3) == 'SPP'){
-                        $('#div-summary-spp').prop('hidden', false);
-                        $('#div-summary-spe').prop('hidden', true);
-                        $('#div-summary-3740').prop('hidden', true);
-                        $('#div-summary-oa').prop('hidden', true);
-                    }else if(cohorts == 'TODOS-SPE' || cohorts.substring(0, 3) == 'SPE'){
-                        $('#div-summary-spp').prop('hidden', true);
-                        $('#div-summary-spe').prop('hidden', false);
-                        $('#div-summary-3740').prop('hidden', true);
-                        $('#div-summary-oa').prop('hidden', true);
-                    }else if(cohorts == 'TODOS-3740' || cohorts.substring(0, 4) == '3740'){
-                        $('#div-summary-spp').prop('hidden', true);
-                        $('#div-summary-spe').prop('hidden', true);
-                        $('#div-summary-3740').prop('hidden', false);
-                        $('#div-summary-oa').prop('hidden', true);
-                    }else if(cohorts == 'TODOS-OTROS'){
-                        $('#div-summary-spp').prop('hidden', true);
-                        $('#div-summary-spe').prop('hidden', true);
-                        $('#div-summary-3740').prop('hidden', true);
-                        $('#div-summary-oa').prop('hidden', false);
-                    }
-                });
+                window.JSZip = jszip;                
 
                 //Controles para la tabla generada
                 $(document).on('click', '#tableResult tbody tr td', function () {
@@ -76,18 +42,21 @@ define(['jquery',
                 //Controles check all 
                 $('#contact_fields_check').on('change', function () {
                     if ($('#contact_fields_check').prop('checked')) {
-                        $("#contact_fields input[type='checkbox']").prop('checked', true);
+                        $("#contact_fields input[type='checkbox']").prop('checked', true);                       
+                        
                     } else {
                         $("#contact_fields input[type='checkbox']").prop('checked', false);
                     }
+                    updateTable();
                 });
 
                 $('#status_fields_check').on('change', function () {
                     if ($('#status_fields_check').prop('checked')) {
-                        $("input[name='status_fields[]']").prop('checked', true);
+                        $("input[name='status_fields[]']").prop('checked', true);                        
                     } else {
                         $("input[name='status_fields[]']").prop('checked', false);
                     }
+                    updateTable();
                 });
 
                 $('#academic_fields_check').on('change', function () {
@@ -96,7 +65,8 @@ define(['jquery',
                     } else {
                         $("input[name='academic_fields[]']").prop('checked', false);
                     }
-                });
+                    updateTable();
+                });                
 
                 $('#risk_fields_check').on('change', function () {
                     if ($('#risk_fields_check').prop('checked')) {
@@ -104,6 +74,7 @@ define(['jquery',
                     } else {
                         $("input[name='risk_fields[]']").prop('checked', false);
                     }
+                    updateTable();
                 });
 
                 $('#assignment_fields_check').on('change', function () {
@@ -112,9 +83,33 @@ define(['jquery',
                     } else {
                         $("input[name='assignment_fields[]']").prop('checked', false);
                     }
+                    updateTable();
                 });
-                     
+
+                $("#conditions").on('change', function(){
+                    updateTable();
+                });
                 
+                //Controles para checkboxes individuales
+                $("#contact_fields input[type='checkbox']").on('change', function(){
+                    updateTable();
+                });
+
+                $("input[name='status_fields[]']").on('change', function(){
+                    updateTable();
+                });
+
+                $("input[name='academic_fields[]']").on('change', function(){
+                    updateTable();
+                });
+                
+                $("input[name='risk_fields[]']").on('change', function(){
+                    updateTable();
+                });
+                $("input[name='assignment_fields[]']").on('change', function(){
+                    updateTable();
+                });
+
                 //Filtros de riesgos.
                 $(document).on('change', '.select_risk', function () {
                     var table = $("#tableResult").DataTable();
@@ -210,7 +205,39 @@ define(['jquery',
             }
         }
 
+        //Actualización de la tabla 
+        function updateTable(){
+            createTable();
 
+            var cohorts = $('#conditions').val();
+
+            if(cohorts == 'TODOS'){
+                $('#div-summary-spp').prop('hidden', false);
+                $('#div-summary-spe').prop('hidden', false);
+                $('#div-summary-3740').prop('hidden', false);
+                $('#div-summary-oa').prop('hidden', false);
+            }else if(cohorts == 'TODOS-SPP' || cohorts.substring(0, 3) == 'SPP'){
+                $('#div-summary-spp').prop('hidden', false);
+                $('#div-summary-spe').prop('hidden', true);
+                $('#div-summary-3740').prop('hidden', true);
+                $('#div-summary-oa').prop('hidden', true);
+            }else if(cohorts == 'TODOS-SPE' || cohorts.substring(0, 3) == 'SPE'){
+                $('#div-summary-spp').prop('hidden', true);
+                $('#div-summary-spe').prop('hidden', false);
+                $('#div-summary-3740').prop('hidden', true);
+                $('#div-summary-oa').prop('hidden', true);
+            }else if(cohorts == 'TODOS-3740' || cohorts.substring(0, 4) == '3740'){
+                $('#div-summary-spp').prop('hidden', true);
+                $('#div-summary-spe').prop('hidden', true);
+                $('#div-summary-3740').prop('hidden', false);
+                $('#div-summary-oa').prop('hidden', true);
+            }else if(cohorts == 'TODOS-OTROS'){
+                $('#div-summary-spp').prop('hidden', true);
+                $('#div-summary-spe').prop('hidden', true);
+                $('#div-summary-3740').prop('hidden', true);
+                $('#div-summary-oa').prop('hidden', false);
+            }
+        }
 
         // Creación de tabla general
         function createTable() {
