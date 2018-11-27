@@ -51,6 +51,83 @@ define([
                  
                 });
 
+                $("#save_economics_data").click(function(){
+                    let respuesta = validateEconomicsData();
+                  
+                        swal(respuesta.title,
+                            respuesta.msg,
+                            respuesta.status);
+                  
+                  
+                });
+
+                function validateEconomicsData(){
+
+                    var msg = new Object();
+
+                    msg.title = "Éxito";
+                    msg.msg = "El formulario fue validado con éxito";
+                    msg.status = "success";
+
+
+                    $("#collapse_econo input[type=checkbox]").not(".check_solvencia").each( function(){
+                        if($(this).is(":checked")){
+
+                            $(this).parent().next().children().children("input").each( function(){
+                                let value = $(this).val();
+                                let op    = $(this).attr("id");
+                                let tipo  = $(this).attr("type");
+                                if(value == ""){
+    
+                                msg.title = "Datos econocómicos";
+                                msg.status = "error";
+                                msg.msg = "El campo "+op+" es obligatorio";
+                                return msg;  
+    
+                                }
+                                if(tipo == "text"){
+                                    if(has_numbers(value)){
+                                        msg.title = "Datos econocómicos";
+                                        msg.status = "error";
+                                        msg.msg = "El campo "+op+" no debe contener números";
+                                        return msg;  
+                                        }
+                                }
+                                if(tipo == "number"){
+                                    if(Number.isNaN(value)){
+                                        msg.title = "Datos econocómicos";
+                                        msg.status = "error";
+                                        msg.msg = "El campo "+op+" debe ser numérico";
+                                        return msg;  
+                                        }
+                                        if(value < 0){
+                                            msg.title = "Datos econocómicos";
+                                            msg.status = "error";
+                                            msg.msg = "El campo "+op+" no debe ser negativo";
+                                            return msg;  
+                                            }    
+                                }
+                                
+                            });
+                          
+                        }
+                       
+                    });
+
+                    return msg;
+
+                }
+
+                function has_numbers(str) {
+                    var numbers = "0123456789";
+                    for (i = 0; i < str.length; i++) {
+                        if (numbers.indexOf(str.charAt(i), 0) != -1) {
+                            return 1;
+                        }
+                    }
+                    return 0;
+                }
+
             }
      };
 });

@@ -464,5 +464,176 @@ function dphpformsV2_get_fields_form( $form_id, $status = 1 ){
 
  }
 
+ 
+  function dphpformsV2_reverse_new_field_update( $form_id_alias, $id_pregunta, $default_value ){
+
+    global $DB;
+
+    $form_info = dphpformsV2_get_form_info( $form_id_alias );
+
+    $records_to_update = "SELECT id AS id_formulario_respuestas
+    FROM {talentospilos_df_form_resp} 
+    WHERE id_formulario = ( SELECT id FROM {talentospilos_df_formularios} WHERE alias = '" . $form_info->alias . "' AND estado = 1 ) 
+    
+    EXCEPT    
+    
+    SELECT FS.id_formulario_respuestas 
+    FROM {talentospilos_df_form_solu} AS FS 
+    INNER JOIN {talentospilos_df_respuestas} AS R 
+    ON FS.id_respuesta = R.id 
+    WHERE R.id_pregunta = $id_pregunta";
+
+    $records = $DB->get_records_sql( $records_to_update );
+
+    $fails = [];
+    $correct = [];
+
+    foreach( $records as $key => $record ){
+
+        $return = dphpformsv2_store_reverse_rield( $record->id_formulario_respuestas, $id_pregunta, $default_value );
+        if( !$return ){
+            array_push( $fails, $record->id_formulario_respuestas  );
+        }else{
+            array_push( $correct, $record->id_formulario_respuestas  );
+        }
+    }
+
+    $to_return = new stdClass();
+    $to_return->fails = $fails;
+    $to_return->correct = $correct;
+
+    return $to_return;
+
+  }
+
+  function dphpformsV2_get_records_reverse_new_field_update( $id_respuesta, $form_id_alias ){
+
+    global $DB;
+
+    $form_info = dphpformsV2_get_form_info( $form_id_alias );
+
+    $records_to_update = "SELECT id AS id_formulario_respuestas
+    FROM {talentospilos_df_form_resp} 
+    WHERE id_formulario = ( SELECT id FROM {talentospilos_df_formularios} WHERE alias = '" . $form_info->alias . "' AND estado = 1 ) 
+    
+    EXCEPT    
+    
+    SELECT FS.id_formulario_respuestas 
+    FROM {talentospilos_df_form_solu} AS FS 
+    INNER JOIN {talentospilos_df_respuestas} AS R 
+    ON FS.id_respuesta = R.id 
+    WHERE R.id_pregunta = $id_respuesta";
+
+    return $DB->get_records_sql( $records_to_update );
+
+  }
+
+function dphpformsv2_store_reverse_rield( $form_response_id, $id_pregunta, $value ){
+
+    global $DB;
+
+    $sql_form_solu_exist = 
+    "SELECT FU.id FROM {talentospilos_df_form_solu} AS FU
+    INNER JOIN {talentospilos_df_respuestas} AS R ON FU.id_respuesta = R.id
+    WHERE R.id_pregunta = $id_pregunta AND FU.id_formulario_respuestas = $form_response_id";
+
+    //If it does not exist.
+    if( !$DB->get_record_sql( $sql_form_solu_exist ) ){
+ 
+        $respuesta = dphpformsv2_store_respuesta( $id_pregunta, $value );
+        if( $respuesta ){
+            return dphpformsV2_store_form_soluciones( $form_response_id, $respuesta );
+        }else{
+            return null;
+        }
+
+    }
+}
+
+function dphpformsv2_store_respuesta( $id, $value ){
+    
+    global $DB;
+
+    $obj_respuesta = new stdClass();
+    $obj_respuesta->id_pregunta = $id;
+    $obj_respuesta->respuesta = $value;
+
+    $pregunta = dphpformsV2_get_pregunta( $id );
+
+    if( $pregunta ){
+
+        if( dphpformsV2_regex_validator( $id, $value )->status ){
+            $respuesta_identifier = $DB->insert_record('talentospilos_df_respuestas', $obj_respuesta, $returnid=true, $bulk=false);
+            return $respuesta_identifier;
+        }
+        
+    }else{
+        return null;
+    }
+}
+
+function dphpformsV2_regex_validator( $id, $value ){
+
+    global $DB;
+
+    $to_return = new stdClass();
+    $to_return->status = true;
+    $to_return->human_readable = "";
+    $to_return->example =  "";
+
+    $pregunta_obj = dphpformsV2_get_pregunta( $id );
+    $tipo_campo_obj = dphpformsV2_tipo_campo( $pregunta_obj->tipo_campo );
+
+    $regex = $tipo_campo_obj->expresion_regular;
+
+    if( $regex ){
+
+        if( preg_match( $regex, $value ) == 0 ){
+
+            $to_return = new stdClass();
+            $to_return->status = false;
+            $to_return->human_readable = $tipo_campo_obj->regex_legible_humanos;
+            $to_return->example =  $tipo_campo_obj->ejemplo;
+             
+        }
+    }
+
+    return $to_return;
+
+}
+
+function dphpformsV2_get_pregunta( $id ){
+
+    global $DB;
+
+    $sql = "SELECT * FROM {talentospilos_df_preguntas} WHERE id = " . $id;
+    return $DB->get_record_sql( $sql );
+
+}
+
+function dphpformsV2_tipo_campo( $id ){
+
+    global $DB;
+
+    $sql = "SELECT * FROM {talentospilos_df_tipo_campo} WHERE id = " . $id;
+    return $DB->get_record_sql( $sql );
+
+}
+
+function dphpformsV2_store_form_soluciones($form_response_id, $respuesta_identifier){
+
+    global $DB;
+
+    $obj_form_soluciones = new stdClass();
+    $obj_form_soluciones->id_formulario_respuestas = $form_response_id;
+    $obj_form_soluciones->id_respuesta = $respuesta_identifier;
+   
+    $form_solucines_identifier = $DB->insert_record('talentospilos_df_form_solu', $obj_form_soluciones, $returnid=true, $bulk=false);
+    return $form_solucines_identifier;
+
+}
+
+
+  
 
 ?>

@@ -45,7 +45,7 @@
                                                         <div class="row_discapacity row" >
                         
                                                                 <label for="lb_prestacion" class="col-xs-3 col-sm-3 col-md-3 col-lg-3 label_fields_discapacity_tab">Cuánto? *</label>
-                                                                <input class=" col-xs-8 col-sm-8 col-md-8 col-lg-8 input-discapacity" type="number" title="Indique cuánto" placeholder="Valor de la prestación"
+                                                                <input class=" col-xs-8 col-sm-8 col-md-8 col-lg-8 input-discapacity" min = "0" type="number" title="Indique cuánto" placeholder="Valor de la prestación"
                                                                 id="input_cant_prestacion_econo"/>
                                                                 
                                                         </div>
@@ -73,7 +73,7 @@
                                                         <div class="row_discapacity row" >
                         
                                                                 <label for="lb_beca" class="col-xs-3 col-sm-3 col-md-3 col-lg-3 label_fields_discapacity_tab">Cuánto? *</label>
-                                                                <input class=" col-xs-8 col-sm-8 col-md-8 col-lg-8 input-discapacity" type="number" title="Indique cuánto" placeholder="Valor de la beca"
+                                                                <input class=" col-xs-8 col-sm-8 col-md-8 col-lg-8 input-discapacity" min = "0"  type="number" title="Indique cuánto" placeholder="Valor de la beca"
                                                                 id="input_cant_beca"/>
                                                                 
                                                         </div>
@@ -106,7 +106,7 @@
                                                         <div class="row_discapacity row" >
                                         
                                                                 <label for="lb_beca" class="col-xs-3 col-sm-3 col-md-3 col-lg-3 label_fields_discapacity_tab">Cuánto? *</label>
-                                                                <input class=" col-xs-8 col-sm-8 col-md-8 col-lg-8 input-discapacity" type="number" title="Indique cuánto" placeholder="Valor de la ayuda"
+                                                                <input class=" col-xs-8 col-sm-8 col-md-8 col-lg-8 input-discapacity" min = "0"  type="number" title="Indique cuánto" placeholder="Valor de la ayuda"
                                                                                 id="input_cant_transporte"/>
                                                                                 
                                                         </div>
@@ -134,7 +134,7 @@
                                                         <div class="row_discapacity row" >
                                         
                                                                 <label for="lb_beca" class="col-xs-3 col-sm-3 col-md-3 col-lg-3 label_fields_discapacity_tab">Cuánto? *</label>
-                                                                <input class=" col-xs-8 col-sm-8 col-md-8 col-lg-8 input-discapacity" type="number" title="Indique cuánto" placeholder="Valor de la ayuda"
+                                                                <input class=" col-xs-8 col-sm-8 col-md-8 col-lg-8 input-discapacity" min = "0"  type="number" title="Indique cuánto" placeholder="Valor de la ayuda"
                                                                                 id="input_cant_materiales"/>
                                                                                 
                                                         </div>
@@ -285,10 +285,10 @@
                                 <input   disabled  class= "input_fields_discapacity_tab" type="text" id="input_economics_saved" value= "{{economics_data}}"/>
                 </div>
 
-                <div class="row row_discapacity" hidden>
+                <div class="row row_buttons" hidden>
                         <button  type="button" class="btn btn-danger col-xs-12 col-sm-12 col-md-12 col-lg-12" id="save_economics_data">Guardar</button>
                 </div>
-                <div class="row row_discapacity" hidden >
+                <div class="row row_buttons" hidden >
                         <button  type="button" class="btn btn-danger col-xs-12 col-sm-12 col-md-12 col-lg-12" id="edit_economics_data" >Editar</button>
                 </div>
 
