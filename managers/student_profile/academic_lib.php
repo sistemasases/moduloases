@@ -252,6 +252,7 @@ function get_historical_semesters_by_student($id_student)
 function make_html_semesters($semesters)
 {
     $html = "";
+    $first = true;
 
     foreach ($semesters as $semester_name => $semester) {
         foreach ($semester as $registro) {
@@ -341,7 +342,8 @@ function make_html_semesters($semesters)
 
             $descriptions .= "</div>";
 
-            $html .= "  <div class='panel panel-default'>
+            if($first){
+                $html .= "  <div class='panel panel-default'>
                       <div class='panel-heading' id = 'academic'>
                           <h4 class='panel-title'>
                           <a id = 'academic_link' data-toggle='collapse' data-parent='#accordion_academic_historic' href='#register_$semester_name' aria-expanded='false' aria-controls='$semester_name'>
@@ -355,6 +357,27 @@ function make_html_semesters($semesters)
                           </div>
                       </div>
                     </div>  ";
+            } else{
+
+                $html .= "  <div class='panel panel-default'>
+                      <div class='panel-heading' id = 'academic'>
+                          <h4 class='panel-title saltopagina'>
+                          <a id = 'academic_link' data-toggle='collapse' data-parent='#accordion_academic_historic' href='#register_$semester_name' aria-expanded='false' aria-controls='$semester_name'>
+                              Semestre $semester_name
+                          </a>
+                          </h4>
+                      </div>
+                      <div id = 'register_$semester_name' class='panel-collapse collapse'>
+                          <div class = 'panel-body'>
+                              $descriptions
+                          </div>
+                      </div>
+                    </div>  ";
+
+            }
+
+            $first = false;
+
         }
     }
 
