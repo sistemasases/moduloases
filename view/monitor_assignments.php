@@ -30,6 +30,7 @@ require_once $CFG->libdir . '/adminlib.php';
 
 require_once '../managers/monitor_assignments/monitor_assignments_lib.php';
 require_once '../managers/instance_management/instance_lib.php';
+require_once '../managers/menu_options.php';
 
 global $PAGE;
 global $USER;
@@ -53,11 +54,26 @@ if (!consult_instance($blockid)) {
 $contextcourse = context_course::instance($courseid);
 $contextblock = context_block::instance($blockid);
 
+$rol = get_role_ases($USER->id);
+
 $url = new moodle_url("/blocks/ases/view/monitor_assignments.php", array('courseid' => $courseid, 'instanceid' => $blockid));
+$menu_option = create_menu_options($USER->id, $blockid, $courseid);
 
 $record = new stdClass;
 
+$record->not_sistemas = true;
+$record->user_logged = null;
+if ($rol == 'sistemas') {
+    $record->not_sistemas = false;
+}else{
+    $_user = new stdClass();
+    $_user->id = $USER->id;
+    $_user->fullname = $USER->firstname . " " . $USER->lastname;
+    $record->user_logged = $_user;
+}
+$record->user_id = $USER->id;
 $record->instance_id = $blockid;
+$record->menu = $menu_option;
 $record->professionals = array_values( monitor_assignments_get_professionals_by_instance( $blockid ) );
 $record->practitioners = array_values( monitor_assignments_get_practicing_by_instance( $blockid ) );
 $record->monitors = array_values( monitor_assignments_get_monitors_by_instance( $blockid ) );
@@ -88,6 +104,7 @@ $PAGE->requires->css('/blocks/ases/style/sweetalert2.css', true);
 $PAGE->requires->css('/blocks/ases/style/c3.css', true);
 $PAGE->requires->css('/blocks/ases/style/switch.css', true);
 $PAGE->requires->css('/blocks/ases/style/monitor_assignments.css', true);
+$PAGE->requires->css('/blocks/ases/style/side_menu_style.css', true);
 
 $PAGE->requires->js_call_amd('block_ases/monitor_assignments', 'init');
 
