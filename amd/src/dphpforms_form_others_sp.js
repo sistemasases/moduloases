@@ -80,13 +80,57 @@ define([
                         //Si no hay campos obligatorios vacíos, capturar datos
 
                         let json_economics_data = getEconomicsData();
-
+                        json_economics_data = JSON.stringify(json_economics_data);
                         let id_ases = $("#id_ases").val();
+
+                        saveEconomicsData(json_economics_data, id_ases);
 
                         }
                       
                       
                     });
+                }
+                function saveEconomicsData(json_data, ases_id){
+                    $.ajax({
+                        type: "POST",
+                        data: {
+                            func: 'save_economics_data',
+                            json: json_data, 
+                            ases: ases_id
+                        },
+                        url: "../managers/student_profile/discapacity_tab_api.php",
+                        success: function(msg) {
+                
+                            swal(
+                               { title: msg.title,
+                                text: msg.msg,
+                                type: msg.status
+                               },
+                               function(){
+                                $("html, body").animate({scrollTop:650}, 'slow'); 
+                               }
+                            
+        
+                            );
+        
+        
+                            //$("#un_input").attr("value", json_data);
+        
+                           
+                        },
+                        dataType: "json",
+                        cache: "false",
+                        error: function(msg) {
+                            swal(
+                                msg.title,
+                                msg.msg,
+                                msg.status
+                            );
+        
+                        },
+                    });
+        
+        
                 }
 
                 function getEconomicsData(){
@@ -137,6 +181,50 @@ define([
                         array_economics_data.push(objeto_json);
                         objeto_json = {};
                     });
+
+                    //Solvencia económica
+
+                    let solvencia_econo = {
+                        key_input: "#check_solvencia"
+                    };
+                    if($("#check_solvencia").is(":checked") ){
+                        solvencia_econo.val_input = 1;
+                    }else{
+                        solvencia_econo.val_input = 0;
+                    }
+                    array_economics_data.push(solvencia_econo);
+
+                    //Expectativas laborales
+                    let expectativas_lab = {
+                        key_input: "#textarea_expectativas",
+                        val_input: $("#textarea_expectativas").val()
+                    }
+
+                    array_economics_data.push(expectativas_lab);
+
+                    //Info padres
+
+                    let objeto_select = {};
+                    let array_padres  = [];
+
+                    obj = document.getElementById('info_padres');
+                    for (i=0; ele = obj.getElementsByTagName('select')[i]; i++){
+
+                    objeto_select.key_select =   ele.value; 
+                    objeto_select.val_select =   ele.id;
+                    if(ele.id == "select_ocupacion_padre" ||  ele.id == "select_ocupacion_madre"){
+                        if(ele.value != "option_ninguna"){
+                            objeto_select.key_input_select = "#" + $("#"+ele.id).parent().next().children("input").attr("id");
+                            objeto_select.val_input_select = $("#"+ele.id).parent().next().children("input").val();
+                        }
+                    }
+
+                    //Modificar para salvar datos de padre  y madre separados
+                    //Se puede cambiar modelo para caracterizar datos separados
+                    array_economics_data.push(objeto_select);
+                    objeto_select = {};
+                    }
+                    
 
                     return array_economics_data;
 
