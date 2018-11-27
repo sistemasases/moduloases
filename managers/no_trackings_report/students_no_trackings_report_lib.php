@@ -29,12 +29,9 @@ require_once(dirname(__FILE__). '/../../../../config.php');
 require_once $CFG->dirroot.'/blocks/ases/managers/lib/student_lib.php';
 //require_once $CFG->dirroot.'/blocks/ases/managers/lib/lib.php';
 require_once $CFG->dirroot.'/blocks/ases/managers/periods_management/periods_lib.php'; 
-require_once $CFG->dirroot.'/blocks/ases/managers/dphpforms/v2/dphpforms_lib.php'; 
-
-   
+require_once $CFG->dirroot.'/blocks/ases/managers/dphpforms/v2/dphpforms_lib.php';   
     
-//$intervalSemester = get_semester_interval($idCurrentSemester);  
-//echo $intervalSemester;
+
 /**
  * Function that returns a list of the students with trackings on the current semester
  * 
@@ -75,7 +72,7 @@ function get_students_with_trackings(){
     //No soportado aun
     $xQuery->selectedFields = [ "id_creado_por", "id_estudiante" ]; // RecordId and BatabaseRecordDate are selected by default.
 
-    $arrayStudents = json_encode( dphpformsV2_find_records( $xQuery ) );
+    $arrayStudents = dphpformsV2_find_records( $xQuery );
     
     return $arrayStudents;    
 }
@@ -122,11 +119,15 @@ function get_array_students_without_trackings(){
     $studentsWithTrackings = get_students_with_trackings();
     $additionalCondition = " AND usuario.id NOT IN (";
 
-    foreach($studentsWithTrackings as $tracking){
-        $additionalCondition .= "'". tracking.id_estudiante . "'";
-    }
+    foreach($studentsWithTrackings as $tracking){                 
+        $additionalCondition .="'". $tracking[id_estudiante]. "', ";
+    }   
 
     $additionalCondition.= ")";
+    
+    $additionalCondition = str_replace("', )", "')", $additionalCondition);    
+
+    $sql_query .= $additionalCondition;
 
     $students = $DB->get_records_sql($sql_query);    
     $students_to_return = array();
