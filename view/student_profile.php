@@ -89,7 +89,6 @@ $node->make_active();
 $record = new stdClass;
 $actions = authenticate_user_view($USER->id, $blockid);
 $record = $actions;
-echo $actions->nombre_accion;
 
 $data_init = array();
 

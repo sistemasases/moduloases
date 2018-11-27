@@ -209,11 +209,10 @@
                 $("#monitor-name-filter").removeClass("filter-active");
             });
 
-            /*var monitor_assignments_professional_practicant;
             
             $(document).ready(function(){
-                monitor_assignments_professional_practicant = JSON.parse( $("#monitor_assignments_professional_practicant").text() );
-            });*/
+                $("select").trigger( "change" );
+            });
 
             $(document).on( 'click', '.practicant_item', function() {
 
