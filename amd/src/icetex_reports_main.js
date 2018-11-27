@@ -77,7 +77,6 @@ define(['jquery',
 				var table = $("#tableResStudents").DataTable();
 		
 				var colIndex = $(this).parent().index()+1;
-				var selectedText=$(this).parent().find(":selected").text();
 				table.columns( colIndex-1 ).search( this.value ).draw();		
 			});
 
@@ -86,7 +85,6 @@ define(['jquery',
 				var table = $("#tableResolutions").DataTable();
 		
 				var colIndex = $(this).parent().index()+1;
-				var selectedText=$(this).parent().find(":selected").text();
 				table.columns( colIndex-1 ).search( this.value ).draw();		
 			});
 
