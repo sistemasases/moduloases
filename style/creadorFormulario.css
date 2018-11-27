@@ -335,3 +335,7 @@ pre, code {
 .class-inasistencia{
     background-color:#FFF;
 }
+
+#mantenimiento-valor-por-defecto{
+    height: 34px;
+}

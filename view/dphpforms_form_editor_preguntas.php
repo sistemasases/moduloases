@@ -30,8 +30,9 @@ require_once $CFG->libdir . '/adminlib.php';
 
 require_once('../managers/lib/lib.php');
 require_once('../managers/instance_management/instance_lib.php');
-require_once ('../managers/menu_options.php');
-include_once "../managers/dphpforms/dphpforms_form_updater.php";
+require_once('../managers/menu_options.php');
+include_once("../managers/dphpforms/dphpforms_form_updater.php");
+include_once("../managers/dphpforms/v2/dphpforms_lib.php");
 include('../lib.php');
 
 
@@ -65,9 +66,13 @@ $coursenode = $PAGE->navigation->find($courseid, navigation_node::TYPE_COURSE);
 
 $rol = get_role_ases($USER->id);
 
+$form_info = dphpformsV2_get_form_info( $form_id );
+
 $record->preguntas_form = array_values(get_preguntas_form($form_id));
+$record->preguntas_form_v2 = dphpformsV2_get_fields_form( $form_id );
 $record->preguntas_permissions = array_values(get_permisos_form($form_id));
 $record->form_id = $form_id;
+$record->form_info = $form_info;
 $record->json_ordenamiento = get_json_ordenamiento($form_id);
 
 $PAGE->set_context($contextcourse);
