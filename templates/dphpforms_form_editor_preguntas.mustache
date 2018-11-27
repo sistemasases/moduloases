@@ -27,7 +27,7 @@
                     <h2>Mantenimiento</h2>
                 <hr>
                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                    <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+                    <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
                         <select class="form-control" name="" id="alias-list">
                                 <option value="" data-id="-1" selected="selected" disabled hidden>Seleccione la pregutna</option>
                         {{#preguntas_form_v2}}
@@ -36,9 +36,9 @@
                         </select>
                     </div>
                     <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
-                        <select class="form-control" name="" id="">
-                            <option value="" data-id="-1" selected="selected" disabled hidden>Seleccione la acción</option>
-                            <option value="" data-action-id="1" title="Registra respuestas vacías en los registros previos para la pregunta seleccionada">Resolver huerfanos</option>
+                        <select class="form-control" name="" id="" disabled>
+                            <option value="" data-id="-1" disabled hidden>Seleccione la acción</option>
+                            <option value="" data-action-id="1" selected="selected" title="Registra respuestas vacías en los registros previos para la pregunta seleccionada">Resolver huerfanos</option>
                         </select>
                     </div>
                     <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
@@ -48,7 +48,11 @@
                         <a id="cargar-afectaciones" href="javascript:void(0)" class="btn btn-danger btn-sm btn-dphpforms btn-dphpforms-univalle" title="Carga los registros que se verán afectados por la acción">Ver resgistros</a>
                     </div>
                     <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
-                        <a id="aplicar-accion" href="javascript:void(0)" class="btn btn-danger btn-sm btn-dphpforms btn-dphpforms-univalle">Aplicar acción</a>
+                        <input type="checkbox" id="verificacion" name="verificacion">
+                        <label for="verificacion">Verificación</label>
+                    </div>
+                    <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
+                        <a id="aplicar-accion" href="javascript:void(0)" class="btn btn-danger btn-sm btn-dphpforms btn-dphpforms-univalle" style="display:none;">Aplicar acción</a>
                     </div>
                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                         <textarea id="salida-afectaciones" class="form-control" rows="10"></textarea>
