@@ -465,7 +465,7 @@ function dphpformsV2_get_fields_form( $form_id, $status = 1 ){
  }
 
  
-  function dphpformsV2_reverse_new_field_update( $id_respuesta, $form_id_alias ){
+  function dphpformsV2_reverse_new_field_update( $form_id_alias, $id_pregunta, $default_value ){
 
     global $DB;
 
@@ -481,11 +481,28 @@ function dphpformsV2_get_fields_form( $form_id, $status = 1 ){
     FROM {talentospilos_df_form_solu} AS FS 
     INNER JOIN {talentospilos_df_respuestas} AS R 
     ON FS.id_respuesta = R.id 
-    WHERE R.id_pregunta = $id_respuesta";
+    WHERE R.id_pregunta = $id_pregunta";
 
     $records = $DB->get_records_sql( $records_to_update );
 
-    print_r( $records );
+    $fails = [];
+    $correct = [];
+
+    foreach( $records as $key => $record ){
+
+        $return = dphpformsv2_store_reverse_rield( $record->id_formulario_respuestas, $id_pregunta, $default_value );
+        if( !$return ){
+            array_push( $fails, $record->id_formulario_respuestas  );
+        }else{
+            array_push( $correct, $record->id_formulario_respuestas  );
+        }
+    }
+
+    $to_return = new stdClass();
+    $to_return->fails = $fails;
+    $to_return->correct = $correct;
+
+    return $to_return;
 
   }
 
