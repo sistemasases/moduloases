@@ -53,6 +53,8 @@ define(
                     cache: "false",
                     success: function( data ) {
 
+                        loading_indicator.hide();
+
                         let counters = data.data_response;
                         
                         let fichas_totales = 0;
@@ -103,8 +105,6 @@ define(
                             );
 
                         }
-
-                        loading_indicator.hide();
 
                     },
                     error: function( data ) {
@@ -622,12 +622,13 @@ define(
                             async: false,
                             success: function(msg) {
 
+                                loading_indicator.hide();
                                 if (msg != "") {
                                    var table ='<hr style="border-color:red"><div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 estudiantes" id="students"><h3>Estudiantes asistentes:</h3><br>'+msg+'<br>';
                                    $('#modal_v2_edit_groupal_tracking').find('#students').remove(); 
                                    $('#modal_v2_edit_groupal_tracking').find('form').find('h1').after(table);
                                 }
-                                loading_indicator.hide();
+                                
                             },
                             dataType: "text",
                             cache: "false",
@@ -760,6 +761,7 @@ define(
                     cache: "false",
                     success: function(msg) {
 
+                        loading_indicator.hide();
                         $(practicant_id + " > div").empty();
                         $(practicant_id + " > div").append(msg.render);
                         var html = msg.counting;
@@ -768,7 +770,7 @@ define(
                         monitor_load();
                         groupal_tracking_load();
 
-                        loading_indicator.hide();
+                        
 
                     },
                     error: function(msg) {
@@ -821,12 +823,14 @@ define(
                     dataType: "json",
                     cache: "false",
                     success: function(msg ) {
+
+                        loading_indicator.hide();
                         $(monitor_id + " > div").empty();
                         $(monitor_id + " > div").append(msg);
                         put_tracking_count( monitor_code, current_semester, parseInt( get_instance() ), true );
                         student_load();
                         groupal_tracking_load();
-                        loading_indicator.hide();
+                        
                     },
                     error: function(msg) {
                         loading_indicator.hide();
@@ -864,10 +868,12 @@ define(
                     url: "../managers/pilos_tracking/pilos_tracking_report.php",
                     async: false,
                     success: function(msg) {
+
+                        loading_indicator.hide();
                         $(student_id + " > div").empty();
                         $(student_id + " > div").append(msg);
                         edit_groupal_tracking_new_form();
-                        loading_indicator.hide();
+                        
                     },
                     dataType: "json",
                     cache: "false",
@@ -916,11 +922,13 @@ define(
                     url: "../managers/pilos_tracking/pilos_tracking_report.php",
                     async: false,
                     success: function(msg) {
+
+                        loading_indicator.hide();
                         $(student_id + " > div").empty();
                         $(student_id + " > div").append(msg);
                         edit_tracking_new_form();
                         edit_groupal_tracking_new_form();
-                        loading_indicator.hide();
+                        
                     },
                     dataType: "json",
                     cache: "false",
@@ -955,9 +963,10 @@ define(
                     url: "../managers/pilos_tracking/pilos_tracking_report.php",
                     async: false,
                     success: function(msg) {
+                        loading_indicator.hide();
                         var current_url = window.location.href;
                         var next_url = current_url.replace("report_trackings", "tracking_time_control");
-                        loading_indicator.hide();
+                        
                         try{
                         var win = window.open(next_url+"&&monitorid="+msg, '_blank');
                         
@@ -1018,6 +1027,8 @@ define(
                             dataType: "text",
                             cache: "false",
                             success: function(msg) {
+
+                                loading_indicator.hide();
                                 if (msg == "") {
                                     $('#reemplazarToogle').html('<label> No se encontraron registros </label>');
                                 } else {
@@ -1029,7 +1040,7 @@ define(
                                 }
                                 $(".well.col-md-10.col-md-offset-1.reporte-seguimiento.oculto").slideDown("slow");
                                 put_tracking_count( username, semestre, parseInt( get_instance() ), false );
-                                loading_indicator.hide();
+                                
                             },
                             error: function(msg) {
                                 loading_indicator.hide();
@@ -1121,6 +1132,7 @@ define(
                             dataType: "text",
                             cache: "false",
                             success: function(msg) {
+                                loading_indicator.hide();
 
                                 //In case there are not records
                                 if (msg == "") {
@@ -1138,7 +1150,7 @@ define(
                                 groupal_tracking_load();
                                 $(".well.col-md-10.col-md-offset-1.reporte-seguimiento.oculto").slideDown("slow");
                                 put_tracking_count( username, id_semestre, parseInt( get_instance() ), false );
-                                loading_indicator.hide();
+                                
                             },
                             error: function(msg) {
                              loading_indicator.hide();
@@ -1307,6 +1319,7 @@ define(
                         async: false,
                         success: function(msg) {
 
+                            loading_indicator.hide();
 
                             $('#personas').empty();
                             $("#personas").select2({
@@ -1327,8 +1340,6 @@ define(
                                 $('#personas').append(index + msg);
 
                             }
-
-                            loading_indicator.hide();
 
                         },
                         dataType: "text",
