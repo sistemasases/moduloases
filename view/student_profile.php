@@ -1626,6 +1626,7 @@ $PAGE->requires->js_call_amd('block_ases/dphpforms_form_renderer', 'init');
 $PAGE->requires->js_call_amd('block_ases/dphpforms_form_discapacity', 'init');
 $PAGE->requires->js_call_amd('block_ases/dphpforms_form_others_sp', 'init');
 $PAGE->requires->js_call_amd('block_ases/academic_profile_main', 'init');
+
 $output = $PAGE->get_renderer('block_ases');
 
 echo $output->header();

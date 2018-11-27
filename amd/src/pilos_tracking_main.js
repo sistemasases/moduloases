@@ -6,10 +6,20 @@
  * @license  http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ases/jquery.dataTables',  'block_ases/sweetalert', 'block_ases/select2'], function($,Modernizr,bootstrap, datatables, sweetalert, select2) {
+define(
+    ['jquery',
+    'block_ases/Modernizr-v282' ,
+    'block_ases/bootstrap', 
+    'block_ases/jquery.dataTables',  
+    'block_ases/sweetalert', 
+    'block_ases/select2',
+    'block_ases/loading_indicator'
+], function($,Modernizr,bootstrap, datatables, sweetalert, select2, loading_indicator) {
 
     return {
         init: function() {
+
+            
 
             var collapse_loaded = [];
 
@@ -33,6 +43,8 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                     fun = "get_tracking_count_student";
                 }
 
+                loading_indicator.show();
+
                 $.ajax({
                     type: "POST",
                     data: JSON.stringify( { function:fun, params:[ username, semester_id, instance ] } ),
@@ -40,6 +52,8 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                     dataType: "json",
                     cache: "false",
                     success: function( data ) {
+
+                        loading_indicator.hide();
 
                         let counters = data.data_response;
                         
@@ -94,6 +108,7 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
 
                     },
                     error: function( data ) {
+                        loading_indicator.hide();
                         console.log( data );
                         swal({
                             title: "Error!",
@@ -109,8 +124,6 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
 
             $(document).on( "click", ".btn-dphpforms-close", function() {
                 $(this).closest('div[class="mymodal"]').fadeOut(300);
-
-
             });
 
             $('.outside').click(function(){
@@ -205,6 +218,7 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                 $("#reemplazarToogle").fadeIn("slow");
                 let username = "";
                 //Getting information of the logged user such as name, id, email and role
+                loading_indicator.show();
                 $.ajax({
                     type: "POST",
                     data: {
@@ -214,6 +228,7 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                     url: "../../../blocks/ases/managers/pilos_tracking/pilos_tracking_report.php",
                     async: false,
                     success: function(msg) {
+                        loading_indicator.hide();
                         $data = $.parseJSON(msg);
                         name = $data.username;
                         username = $data.username;
@@ -221,10 +236,12 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                         email = $data.email;
                         rol = $data.rol;
                         namerol = $data.name_rol;
+                        
                     },
                     dataType: "text",
                     cache: "false",
                     error: function(msg) {
+                        loading_indicator.hide();
                         swal({
                             title: "error al obtener información del usuario, getInfo.",
                             html: true,
@@ -344,17 +361,19 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                                 "url": window.location.href
                             };
 
-
+                            loading_indicator.show();
                             $.ajax({
                                 type: "POST",
                                 data: JSON.stringify(json_risks),
                                 url: "../managers/pilos_tracking/send_risk_email.php",
                                 success: function(msg) {
                                     console.log(msg);
+                                    loading_indicator.hide();
                                 },
                                 dataType: "text",
                                 cache: "false",
                                 error: function(msg) {
+                                    loading_indicator.hide();
                                     console.log(msg)
                                 }
                             });
@@ -384,7 +403,7 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                         url_processor = '../managers/dphpforms/procesador.php';
                     };
                     var student_code = formulario.find('.id_estudiante').find('input').val();
-
+                    loading_indicator.show();
                     $.ajax({
                         type: 'POST',
                         url: url_processor,
@@ -392,6 +411,7 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                                 dataType: 'json',
 
                         success: function(data) {
+                                loading_indicator.hide();
                                 //var response = JSON.parse(data);
                                 var response = data;
                                 
@@ -516,6 +536,7 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                                 };
                             },
                             error: function(data) {
+                                loading_indicator.hide();
                                 swal(
                                     'Error!',
                                     'Ups!, informe de este error',
@@ -552,6 +573,7 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                 $("#general_in_pro_t").html( "*" );
                 $("#general_in_prac_t").html( "*" );
 
+                loading_indicator.show();
                 $.ajax({
                     type: "POST",
                     data: {
@@ -564,7 +586,7 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                     dataType: "json",
                     cache: "false",
                     success: function( data ) {
-
+                        loading_indicator.hide();
                         $("#general_rev_pro").html( data.revisado_profesional );
                         $("#general_rev_prac").html( data.revisado_practicante );
                         $("#general_not_rev_pro").html( data.not_revisado_profesional );
@@ -578,16 +600,18 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                         $("#general_in_not_rev_prac").html( data.in_not_revisado_practicante );
                         $("#general_in_pro_t").html( data.in_total_profesional );
                         $("#general_in_prac_t").html( data.in_total_practicante );
-
+                        
                     },
-                    error: function( data ) {},
+                    error: function( data ) {
+                        loading_indicator.hide();
+                    },
                 });
 
             }
 
 
                 function generate_attendance_table(students){
-
+                    loading_indicator.show();
                      $.ajax({
                             type: "POST",
                             data: {
@@ -598,16 +622,19 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                             async: false,
                             success: function(msg) {
 
+                                loading_indicator.hide();
                                 if (msg != "") {
                                    var table ='<hr style="border-color:red"><div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 estudiantes" id="students"><h3>Estudiantes asistentes:</h3><br>'+msg+'<br>';
                                    $('#modal_v2_edit_groupal_tracking').find('#students').remove(); 
                                    $('#modal_v2_edit_groupal_tracking').find('form').find('h1').after(table);
                                 }
+                                
                             },
                             dataType: "text",
                             cache: "false",
                             error: function(msg) {
                                 alert("Error al consultar nombres de los estudiantes pertenecientes a un seguimiento grupal");
+                                loading_indicator.hide();
                             },
                         });
                 }
@@ -616,7 +643,9 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                 function load_record_updater(form_id, record_id){
                     $("#body_editor").html("");
                     $("#modal_v2_edit_groupal_tracking").find("#body_editor").html("");   
+                    loading_indicator.show();
                     $.get( "../managers/dphpforms/dphpforms_forms_core.php?form_id=&record_id="+record_id, function( data ) {
+                         loading_indicator.hide();
                          if(form_id =='seguimiento_grupal'){
                       
                             $("#modal_v2_edit_groupal_tracking").find("#body_editor").append(data);
@@ -718,6 +747,7 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                 var practicant_code = $(this).attr('href').split("#practicant")[1];
                 var practicant_id = $(this).attr('href');
                 //Fill container with the information corresponding to the monitor 
+                loading_indicator.show();
                 $.ajax({
                     type: "POST",
                     data: {
@@ -731,6 +761,7 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                     cache: "false",
                     success: function(msg) {
 
+                        loading_indicator.hide();
                         $(practicant_id + " > div").empty();
                         $(practicant_id + " > div").append(msg.render);
                         var html = msg.counting;
@@ -739,8 +770,11 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                         monitor_load();
                         groupal_tracking_load();
 
+                        
+
                     },
                     error: function(msg) {
+                       loading_indicator.hide();
                        swal({
                             title: "Oops !",
                             text: "Se presentó un inconveniente con el practicante seleccionado.",
@@ -776,6 +810,7 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                 var monitor_code = $(this).attr('href').split("#monitor")[1];
                 var monitor_id = $(this).attr('href');
                 //Fill container with the information corresponding to the monitor 
+                loading_indicator.show();
                 $.ajax({
                     type: "POST",
                     data: {
@@ -788,13 +823,17 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                     dataType: "json",
                     cache: "false",
                     success: function(msg ) {
+
+                        loading_indicator.hide();
                         $(monitor_id + " > div").empty();
                         $(monitor_id + " > div").append(msg);
                         put_tracking_count( monitor_code, current_semester, parseInt( get_instance() ), true );
                         student_load();
                         groupal_tracking_load();
+                        
                     },
                     error: function(msg) {
+                        loading_indicator.hide();
                        swal({
                             title: "Oops !",
                             text: "Se presentó un inconveniente con el monitor seleccionado.",
@@ -818,6 +857,7 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                 var student_code = $(this).attr('href').split("#groupal")[1];
                 var student_id = $(this).attr('href');
                 //Fill container with the information corresponding to the trackings of the selected student
+                loading_indicator.show();
                 $.ajax({
                     type: "POST",
                     data: {
@@ -827,15 +867,18 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                     },
                     url: "../managers/pilos_tracking/pilos_tracking_report.php",
                     async: false,
-                    success: function(msg
-                        ) {
-                    $(student_id + " > div").empty();
-                    $(student_id + " > div").append(msg);
-                    edit_groupal_tracking_new_form();
+                    success: function(msg) {
+
+                        loading_indicator.hide();
+                        $(student_id + " > div").empty();
+                        $(student_id + " > div").append(msg);
+                        edit_groupal_tracking_new_form();
+                        
                     },
                     dataType: "json",
                     cache: "false",
                     error: function(msg) {
+                        loading_indicator.hide();
                         swal({
                             title: "Oops !",
                             text: "Se presentó un inconveniente con los seguimientos grupales seleccionados.",
@@ -868,6 +911,7 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                 var student_code = $(this).attr('href').split("#student")[1];
                 var student_id = $(this).attr('href');
                 //Fill container with the information corresponding to the trackings of the selected student
+                loading_indicator.show();
                 $.ajax({
                     type: "POST",
                     data: {
@@ -878,14 +922,18 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                     url: "../managers/pilos_tracking/pilos_tracking_report.php",
                     async: false,
                     success: function(msg) {
-                    $(student_id + " > div").empty();
-                    $(student_id + " > div").append(msg);
-                    edit_tracking_new_form();
-                    edit_groupal_tracking_new_form();
+
+                        loading_indicator.hide();
+                        $(student_id + " > div").empty();
+                        $(student_id + " > div").append(msg);
+                        edit_tracking_new_form();
+                        edit_groupal_tracking_new_form();
+                        
                     },
                     dataType: "json",
                     cache: "false",
                     error: function(msg) {
+                        loading_indicator.hide();
                         swal({
                             title: "Oops !",
                             text: "Se presentó un inconveniente con el estudiante seleccionado.",
@@ -905,7 +953,7 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
 
 
              var element =  $(this).parents().eq(3).attr('href').split("#monitor")[1];
-
+             loading_indicator.show();
             $.ajax({
                     type: "POST",
                     data: {
@@ -915,11 +963,13 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                     url: "../managers/pilos_tracking/pilos_tracking_report.php",
                     async: false,
                     success: function(msg) {
+                        loading_indicator.hide();
                         var current_url = window.location.href;
                         var next_url = current_url.replace("report_trackings", "tracking_time_control");
-
+                        
                         try{
                         var win = window.open(next_url+"&&monitorid="+msg, '_blank');
+                        
                         if (win) {
                             //Browser has allowed it to be opened
                             win.focus();
@@ -927,10 +977,12 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                         }catch(ex){
                             alert("Se ha producido un error al abrir la ventana : "+ex);
                         } 
+                        
                     },
                     dataType: "json",
                     cache: "false",
                     error: function(msg) {
+                        loading_indicator.hide();
                         swal({
                             title: "Oops !",
                             text: "Se presentó un inconveniente al reedirecionar al reporte de horas.",
@@ -961,6 +1013,7 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                     if (namerol != 'sistemas') {
                         var semestre = $("#periodos").val();
                         var id_persona = id;
+                        loading_indicator.show();
                         $.ajax({
                             type: "POST",
                             data: {
@@ -974,6 +1027,8 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                             dataType: "text",
                             cache: "false",
                             success: function(msg) {
+
+                                loading_indicator.hide();
                                 if (msg == "") {
                                     $('#reemplazarToogle').html('<label> No se encontraron registros </label>');
                                 } else {
@@ -985,8 +1040,10 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                                 }
                                 $(".well.col-md-10.col-md-offset-1.reporte-seguimiento.oculto").slideDown("slow");
                                 put_tracking_count( username, semestre, parseInt( get_instance() ), false );
+                                
                             },
                             error: function(msg) {
+                                loading_indicator.hide();
                                 swal(
                                  'ERROR!',
                                  'Oops!, Se presentó un error al consultar seguimientos de personas',
@@ -1062,6 +1119,7 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
 
                         //Processing in pilos_tracking_report.php
                         let user_id = id_persona;
+                        loading_indicator.show();
                         $.ajax({
                             type: "POST",
                             data: {
@@ -1074,6 +1132,7 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                             dataType: "text",
                             cache: "false",
                             success: function(msg) {
+                                loading_indicator.hide();
 
                                 //In case there are not records
                                 if (msg == "") {
@@ -1091,8 +1150,10 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                                 groupal_tracking_load();
                                 $(".well.col-md-10.col-md-offset-1.reporte-seguimiento.oculto").slideDown("slow");
                                 put_tracking_count( username, id_semestre, parseInt( get_instance() ), false );
+                                
                             },
                             error: function(msg) {
+                             loading_indicator.hide();
                              swal(
                                  'ERROR!',
                                  'Oops!, Se presentó un error al cargar seguimientos de personas',
@@ -1166,6 +1227,7 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                         var answer = "";
 
                         //Ajax function to send message
+                        loading_indicator.show();
                         $.ajax({
                             type: "POST",
                             data: {
@@ -1184,7 +1246,7 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                             async: false,
                             success: function(msg) {
                                 //If it was successful...
-
+                                loading_indicator.hide();
                                 if (msg != "Error") {
                                     swal({
                                         title: "Correo enviado",
@@ -1208,6 +1270,7 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                             dataType: "text",
                             cache: "false",
                             error: function(msg) {
+                                loading_indicator.hide();
                                 console.log( "mensaje error : " );
                                 console.log( msg );
                             swal(
@@ -1244,6 +1307,7 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
             function period_consult(instance, namerol) {
                 $("#periodos").change(function() {
                     var chosen_period = $("#periodos").val();
+                    loading_indicator.show();
                     $.ajax({
                         type: "POST",
                         data: {
@@ -1255,6 +1319,7 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                         async: false,
                         success: function(msg) {
 
+                            loading_indicator.hide();
 
                             $('#personas').empty();
                             $("#personas").select2({
@@ -1280,6 +1345,7 @@ define(['jquery','block_ases/Modernizr-v282' ,'block_ases/bootstrap', 'block_ase
                         dataType: "text",
                         cache: "false",
                         error: function(msg) {
+                            loading_indicator.hide();
                             swal(
                                  'ERROR!',
                                  'Oops!, Se presentó un error al cargar personas',
