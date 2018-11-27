@@ -38,9 +38,17 @@ define(['jquery',
 					});
 					window.open(pagina + location.search + "&student_code=" + table.cell(table.row(this).index(), 0).data(), '_blank');
 				}
-			});
+			});	
+
+			//Controles para la tabla de estudiantes
+			$(document).on('change', '#tableEstSeguimientos thead tr th select', function () {
+				var table = $("#tableEstSeguimientos").DataTable();
 		
+				var colIndex = $(this).parent().index()+1;				
+				table.columns( colIndex-1 ).search( this.value ).draw();		
+			});
 			
+				
 	/**
 	 * @method load_students_no_trackings_report
 	 * @desc Loads the report of a student with resolution on a table. Current processing on icetex_reports_processing.php
