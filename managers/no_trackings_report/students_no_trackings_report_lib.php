@@ -26,7 +26,7 @@
 
 
 require_once(dirname(__FILE__). '/../../../../config.php');
-//require_once $CFG->dirroot.'/blocks/ases/managers/lib/student_lib.php';
+require_once $CFG->dirroot.'/blocks/ases/managers/lib/student_lib.php';
 //require_once $CFG->dirroot.'/blocks/ases/managers/lib/lib.php';
 require_once $CFG->dirroot.'/blocks/ases/managers/periods_management/periods_lib.php'; 
 require_once $CFG->dirroot.'/blocks/ases/managers/dphpforms/v2/dphpforms_lib.php'; 
@@ -95,7 +95,7 @@ function get_array_students_without_trackings(){
     $semestre = get_current_semester();
     $idMaxSemester = $semestre->max;
 
-    $sql_query = "SELECT userm.id, userm.username, usuario.num_doc AS cedula, userm.firstname, userm.lastname FROM {user} AS userm
+    $sql_query = "SELECT usuario.id AS id, userm.username, usuario.num_doc AS cedula, userm.firstname, userm.lastname FROM {user} AS userm
     INNER JOIN {talentospilos_user_extended} as user_ext  ON user_ext.id_moodle_user= userm.id
     INNER JOIN  {talentospilos_usuario} AS usuario ON id_ases_user = usuario.id
     
@@ -132,6 +132,32 @@ function get_array_students_without_trackings(){
     $students_to_return = array();
     
     foreach($students as $student){
+        
+        $monitor_object = get_assigned_monitor($student->id);
+        $trainee_object = get_assigned_pract($student->id);
+        $professional_object = get_assigned_professional($student->id);
+
+
+        if ($monitor_object) {
+            $student->monitor_fullname = "$monitor_object->firstname $monitor_object->lastname";
+            $student->id_dphpforms_monitor = '-1';
+        } else {
+            $record->monitor_fullname = "NO REGISTRA";
+        }
+    
+        if ($trainee_object) {
+            $student->trainee_fullname = "$trainee_object->firstname $trainee_object->lastname";
+        } else {
+            $student->trainee_fullname = "NO REGISTRA";
+        }
+        
+        if ($professional_object) {
+            $student->professional_fullname = "$professional_object->firstname $professional_object->lastname";
+        } else {
+            $student->professional_fullname = "NO REGISTRA";
+        }
+
+
         array_push($students_to_return, $student);
     }
 
