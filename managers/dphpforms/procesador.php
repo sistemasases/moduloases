@@ -1120,6 +1120,7 @@ function dphpforms_get_expected_respuestas($form_id){
 
 }
 
+
 function dphpforms_required_validator( $respuestas ){
 
     global $DB;
@@ -1145,7 +1146,7 @@ function dphpforms_required_validator( $respuestas ){
     );
 
 }
-
+//Copied to dphpforms_lib
 function dphpforms_regex_validator( $respuestas ){
 
     global $DB;
