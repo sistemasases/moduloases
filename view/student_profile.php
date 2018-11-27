@@ -234,7 +234,7 @@ if ($student_code != 0) {
 
     $i=0;
 
-
+            $options_ocupaciones .= "<option selected= 'selected' value='option_ninguna' title='NINGUNA DE LAS ANTERIORES'>NINGUNA DE LAS ANTERIORES</option>";
     foreach($ocupaciones as $ocupacion){
             $options_ocupaciones .= "<option value='$ocupacion->value' title='$ocupacion->ocupacion'>$ocupacion->alias...</option>";
     }

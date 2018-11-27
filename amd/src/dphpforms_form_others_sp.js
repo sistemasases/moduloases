@@ -23,43 +23,59 @@ define([
     return {   
             init: function(){
 
-                if($("#input_economics_saved").val() == "0"){
-                    $("#save_economics_data").parent().show();
-                }
-                if($("#input_economics_saved").val() == "1"){
-                    $("#save_economics_data").parent().hide();
-                    $("#edit_economics_data").parent().show();
-                }
+                $("#economics_data").click(function(){
+                    economics_data();
+                });
+                
 
-
-                $("#collapse_econo input[type=checkbox]").not(".check_solvencia").on("change", function(){
-                    if($(this).is(":checked")){
-                        $(this).parent().next().show();
-                        $(this).parent().next().children().children("input").prop("required", true);
-                    }else{
-                        $(this).parent().next().hide();
-                        $(this).parent().next().children().children("input").prop("required", false);
-                        $(this).parent().next().children().children("input").val("");
+                function economics_data(){
+                    if($("#input_economics_saved").val() == "0"){
+                        $("#save_economics_data").parent().show();
                     }
-                   
-                });
-
-                $(".select_ocupacion").on("change", function(){
-                        $(this).parent().next().show();
-                        $(this).parent().next().children("input").prop("required", true);
-                        $(this).parent().next().children("input").val("");
-                 
-                });
-
-                $("#save_economics_data").click(function(){
-                    let respuesta = validateEconomicsData();
-                  
-                        swal(respuesta.title,
-                            respuesta.msg,
-                            respuesta.status);
-                  
-                  
-                });
+                    if($("#input_economics_saved").val() == "1"){
+                        $("#save_economics_data").parent().hide();
+                        $("#edit_economics_data").parent().show();
+                    }
+    
+    
+                    $("#collapse_econo input[type=checkbox]").not(".check_solvencia").on("change", function(){
+                        if($(this).is(":checked")){
+                            $(this).parent().next().show();
+                            $(this).parent().next().children().children("input").prop("required", true);
+                        }else{
+                            $(this).parent().next().hide();
+                            $(this).parent().next().children().children("input").prop("required", false);
+                            $(this).parent().next().children().children("input").val("");
+                        }
+                       
+                    });
+    
+                    $(".select_ocupacion").on("change", function(){
+                        if($(this).val()=="option_ninguna"){
+    
+                            $(this).parent().next().hide();
+                            $(this).parent().next().children("input").prop("required", false);
+                            $(this).parent().next().children("input").val("");
+    
+                        }else{
+    
+                            $(this).parent().next().show();
+                            $(this).parent().next().children("input").prop("required", true);
+                        }
+                            
+                     
+                    });
+    
+                    $("#save_economics_data").click(function(){
+                        let respuesta = validateEconomicsData();
+                      
+                            swal(respuesta.title,
+                                respuesta.msg,
+                                respuesta.status);
+                      
+                      
+                    });
+                }
 
                 function validateEconomicsData(){
 
@@ -113,6 +129,36 @@ define([
                         }
                        
                     });
+
+                    if($("#select_ocupacion_madre").val() != "option_ninguna"){
+
+                        let value = $("#input_ocupacion_madre").val();
+                        let op    = $("#input_ocupacion_madre").attr("id");
+
+                        if( value == ""){
+                           
+
+                                msg.title = "Datos econocómicos";
+                                msg.status = "error";
+                                msg.msg = "El campo "+op+" es obligatorio";
+                                return msg;  
+                        }
+                    }
+
+                    if($("#select_ocupacion_padre").val() != "option_ninguna"){
+
+                        let value = $("#input_ocupacion_padre").val();
+                        let op    = $("#input_ocupacion_padre").attr("id");
+
+                        if( value == ""){
+                           
+
+                                msg.title = "Datos econocómicos";
+                                msg.status = "error";
+                                msg.msg = "El campo "+op+" es obligatorio";
+                                return msg;  
+                        }
+                    }
 
                     return msg;
 
