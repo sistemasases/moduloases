@@ -464,11 +464,7 @@ function dphpformsV2_get_fields_form( $form_id, $status = 1 ){
 
  }
 
- //dphpformsV2_reverse_new_field_update( 67, "inasistencia", "-1" );
-
- /**
-  * 
-  */
+ 
   function dphpformsV2_reverse_new_field_update( $id_respuesta, $form_id_alias ){
 
     global $DB;
@@ -515,6 +511,28 @@ function dphpformsV2_get_fields_form( $form_id, $status = 1 ){
 
   }
 
+function dphpformsv2_store_reverse_rield( $form_response_id, $id_pregunta, $value ){
+
+    global $DB;
+
+    $sql_form_solu_exist = 
+    "SELECT FU.id FROM {talentospilos_df_form_solu} AS FU
+    INNER JOIN {talentospilos_df_respuestas} AS R ON FU.id_respuesta = R.id
+    WHERE R.id_pregunta = $id_pregunta AND FU.id_formulario_respuestas = $form_response_id";
+
+    //If it does not exist.
+    if( !$DB->get_record_sql( $sql_form_solu_exist ) ){
+ 
+        $respuesta = dphpformsv2_store_respuesta( $id_pregunta, $value );
+        if( $respuesta ){
+            return dphpformsV2_store_form_soluciones( $form_response_id, $respuesta );
+        }else{
+            return null;
+        }
+
+    }
+}
+
 function dphpformsv2_store_respuesta( $id, $value ){
     
     global $DB;
@@ -527,7 +545,7 @@ function dphpformsv2_store_respuesta( $id, $value ){
 
     if( $pregunta ){
 
-        if( dphpformsV2_regex_validator( $id, $value ) ){
+        if( dphpformsV2_regex_validator( $id, $value )->status ){
             $respuesta_identifier = $DB->insert_record('talentospilos_df_respuestas', $obj_respuesta, $returnid=true, $bulk=false);
             return $respuesta_identifier;
         }
@@ -536,7 +554,6 @@ function dphpformsv2_store_respuesta( $id, $value ){
         return null;
     }
 }
-
 
 function dphpformsV2_regex_validator( $id, $value ){
 
@@ -570,6 +587,8 @@ function dphpformsV2_regex_validator( $id, $value ){
 
 function dphpformsV2_get_pregunta( $id ){
 
+    global $DB;
+
     $sql = "SELECT * FROM {talentospilos_df_preguntas} WHERE id = " . $id;
     return $DB->get_record_sql( $sql );
 
@@ -577,10 +596,26 @@ function dphpformsV2_get_pregunta( $id ){
 
 function dphpformsV2_tipo_campo( $id ){
 
+    global $DB;
+
     $sql = "SELECT * FROM {talentospilos_df_tipo_campo} WHERE id = " . $id;
     return $DB->get_record_sql( $sql );
 
 }
+
+function dphpformsV2_store_form_soluciones($form_response_id, $respuesta_identifier){
+
+    global $DB;
+
+    $obj_form_soluciones = new stdClass();
+    $obj_form_soluciones->id_formulario_respuestas = $form_response_id;
+    $obj_form_soluciones->id_respuesta = $respuesta_identifier;
+   
+    $form_solucines_identifier = $DB->insert_record('talentospilos_df_form_solu', $obj_form_soluciones, $returnid=true, $bulk=false);
+    return $form_solucines_identifier;
+
+}
+
 
   
 
