@@ -120,6 +120,32 @@
                 return_with_code( -2 );
             }
 
+        }if( $input->function == "get_records_reverse_new_field_update" ){
+
+            /* [0] => id_respuesta (int)
+             * [1] => form_id_alias (int or string)
+             * */
+            
+            if( count( $input->params ) == 2 ){
+ 
+                // Validation                
+                if( is_numeric( $input->params[0] ) ){
+                    
+                    echo json_encode( 
+                        array(
+                            "status_code" => 0,
+                            "error_message" => "",
+                            "data_response" => json_encode( dphpformsV2_get_records_reverse_new_field_update( $input->params[0], $input->params[1] ) )
+                        )
+                    );
+                    
+                }else{
+                    return_with_code( -2 );
+                }
+            }else{
+                return_with_code( -2 );
+            }
+
         }else{
             // Function not defined
             return_with_code( -4 );

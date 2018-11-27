@@ -1,6 +1,7 @@
 {{#data}}
 
 <body>
+    <div id="form-info" data-id="{{#form_info}} {{id}} {{/form_info}}" data-alias="{{#form_info}} {{alias}} {{/form_info}}" style="display:none;"></div>
     <div class="container">
         <div class="row">
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 form-group">
@@ -27,7 +28,7 @@
                 <hr>
                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                     <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
-                        <select class="form-control" name="" id="">
+                        <select class="form-control" name="" id="alias-list">
                                 <option value="" data-id="-1" selected="selected" disabled hidden>Seleccione la pregutna</option>
                         {{#preguntas_form_v2}}
                             <option value="" data-id="{{#atributos_campo}}{{id_pregunta}}{{/atributos_campo}}">{{#atributos_campo}}{{local_alias}}{{/atributos_campo}}</option>
@@ -44,13 +45,13 @@
                         <input type="text" name="" id="mantenimiento-valor-por-defecto" class="form-control" placeholder="Valor por defecto">
                     </div>
                     <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
-                        <div>
-                            <input type="checkbox" id="verificacion" name="verificacion">
-                            <label for="verificacion">Confirmar acción</label>
-                        </div>
+                        <a id="cargar-afectaciones" href="javascript:void(0)" class="btn btn-danger btn-sm btn-dphpforms btn-dphpforms-univalle" title="Carga los registros que se verán afectados por la acción">Ver resgistros</a>
                     </div>
                     <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
                         <a id="aplicar-accion" href="javascript:void(0)" class="btn btn-danger btn-sm btn-dphpforms btn-dphpforms-univalle">Aplicar acción</a>
+                    </div>
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                        <textarea id="salida-afectaciones" class="form-control" rows="10"></textarea>
                     </div>
                 </div>
             </div>
