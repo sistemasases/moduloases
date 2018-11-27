@@ -9,10 +9,14 @@
   * @module block_ases/loading_indicator
   */
 
- define(['jquery', 'block_ases/sweetalert', 'block_ases/jqueryui'], function($, sweetalert, jqueryui ) {
+ define(
+     [
+         'jquery', 
+         'block_ases/sweetalert', 
+         'block_ases/jqueryui'
+        ], 
+         function($, sweetalert, jqueryui ) {
     
-    return {
-        init: function() {
             var div = '\
             <div \
                 class="loading_indicator"\
@@ -23,13 +27,14 @@
                     z-index: 9999;\
                     width: 70px;\
                     height: 70px;\
+                    display:none;\
                 ">\
             </div>\
             ';
 
             var style='\
               .loading_indicator {\
-                border: 16px solid #f3f3f3;\
+                border: 16px solid #bdbdbd;\
                 border-radius: 50%;\
                 border-top: 16px solid red;\
                 width: 100px;\
@@ -47,21 +52,29 @@
               }\
             ';
 
-            function show_loading_indicator(){
-                
-                $("head").append( "<style>" + style + "</style>" );
-                $("body").append( div );
-                $(".loading_indicator").css('z-index', 9999);
+            $("head").append( "<style>" + style + "</style>" );
+            $("body").append( div );
+            $(".loading_indicator").css('z-index', 9999);
 
+            var loading_instances = 0;
+
+            console.log( "Loading indicator initialised" );
+
+            var show_loading_indicator =  function(){
+                loading_instances++;
+                $(".loading_indicator").show();
             }
 
-            function hide_loading_indicator(){
-                
-                $(".loading_indicator").hide();
-                
+            var hide_loading_indicator = function(){
+                loading_instances--;
+                if( loading_instances == 0 ){
+                    $(".loading_indicator").hide();
+                }
             }
 
+            return {
+                show:show_loading_indicator, 
+                hide:hide_loading_indicator
+            }
         }
-    };
-      
-});
+);
