@@ -65,8 +65,42 @@ function save_detalle_discapacidad($json, $id_ases){
 
 function save_economics_data($economics_data){
     global $DB;
-
+   
     $result = $DB->insert_record("talentospilos_economics_data", $economics_data, true);
+    return $result;
+
+}
+
+/**
+ * Function update economics_data register in table talentospilos_economics_data switch user
+ * @see update_economics_data(economics_data, id_ases)
+ * @param $economics_data  valid Object with economics data 
+ * @return boolean
+ **/
+
+function update_economics_data($economics_data, $id_ases){
+    global $DB;
+
+    $sql_query = "SELECT id FROM {talentospilos_economics_data} WHERE id_ases_user = '$id_ases'";
+     $register = $DB->get_record_sql($sql_query);
+   
+    $data = json_decode($economics_data);
+
+    $register_economics_data                            = new  stdClass();
+    $register_economics_data->id                        = $register->id;;
+    $register_economics_data->estrato                   = $data[0]->val_input;
+    $register_economics_data->prestacion_economica      = json_encode($data[1]);
+    $register_economics_data->beca                      = json_encode($data[2]);
+    $register_economics_data->ayuda_transporte          = json_encode($data[3]);
+    $register_economics_data->ayuda_materiales          = json_encode($data[4]);
+    $register_economics_data->solvencia_econo           = $data[5]->val_input;
+    $register_economics_data->ocupacion_padres          = json_encode($data[6]);
+    $register_economics_data->nivel_educ_padres         = json_encode($data[7]);
+    $register_economics_data->situa_laboral_padres      = json_encode($data[8]);
+    $register_economics_data->expectativas_laborales    = json_encode($data[9]);
+    $register_economics_data->id_ases_user              = $id_ases;
+
+    $result = $result = $DB->update_record('talentospilos_economics_data', $register_economics_data);
     return $result;
 
 }

@@ -130,6 +130,27 @@ function get_exist_economics_data($id_ases_user){
     return $DB->record_exists('talentospilos_economics_data',array('id_ases_user'=> $id_ases_user));
 }
 
+  /**
+ * Gets record with student economics_data information
+ *
+ * @see get_economics_data($id_ases)
+ * @param $id_ases id ases student 
+ * @return object
+ */
+ 
+function get_economics_data($id_ases){
+     
+    global $DB;
+
+    $sql_query = "SELECT estrato, prestacion_economica, beca, ayuda_transporte, ayuda_materiales, solvencia_econo, ocupacion_padres, 
+                            nivel_educ_padres, situa_laboral_padres, expectativas_laborales FROM {talentospilos_economics_data} WHERE id_ases_user = '$id_ases'";
+    $register = $DB->get_record_sql($sql_query);
+    
+    return $register;
+
+    
+}
+
  
 
 

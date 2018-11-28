@@ -23,18 +23,15 @@ define([
     return {   
             init: function(){
 
-                $("#economics_data").click(function(){
-                    economics_data();
-                });
+             
                 
-
-                function economics_data(){
                     if($("#input_economics_saved").val() == "0"){
                         $("#save_economics_data").parent().show();
                     }
                     if($("#input_economics_saved").val() == "1"){
                         $("#save_economics_data").parent().hide();
                         $("#edit_economics_data").parent().show();
+                        showSavedEconomicsData();
                     }
     
     
@@ -80,17 +77,217 @@ define([
                         //Si no hay campos obligatorios vacíos, capturar datos
 
                         let json_economics_data = getEconomicsData();
-                        console.log(json_economics_data);
                         json_economics_data = JSON.stringify(json_economics_data);
                         let id_ases = $("#id_ases").val();
 
                         saveEconomicsData(json_economics_data, id_ases);
+                        
 
                         }
-                      
-                      
                     });
+
+                        $("#edit_economics_data").click(function(){
+                       
+                            //Validar las respuestas obtenidas
+                            let respuesta = validateEconomicsData();
+    
+    
+                            if(respuesta.status == "error"){
+                                swal(respuesta.title,
+                                    respuesta.msg,
+                                    respuesta.status);
+                            }else{
+                            //Si no hay campos obligatorios vacíos, capturar datos
+    
+                            let json_economics_data = getEconomicsData();
+                            json_economics_data = JSON.stringify(json_economics_data);
+                            let id_ases = $("#id_ases").val();
+    
+                            editEconomicsData(json_economics_data, id_ases);
+                            
+    
+                            }
+
+
+                    });
+                function showSavedEconomicsData(){
+                    let  key, val,key_input_text, val_input_text, key_input_number, val_input_number, json_interno;
+
+                    let json_economics_data = JSON.parse($("#input_json_economics_saved").val());
+                   //Se debe parsear el JSON interno de: prestacion_economica, beca, ayuda_transporte, ayuda_materiales, ocupacion_padres,
+                   //                                        nivel_educ_padres, situa_laboral_padres, expectativas_laborales
+                   for(i in json_economics_data){
+
+                    switch(i){
+                        case "estrato":
+                        //Estrato
+                        $("#estrato_socioeconomico").val(json_economics_data[i]);
+                        break;
+                        case "prestacion_economica":
+                        //Prestación económica
+                         json_interno   = JSON.parse(json_economics_data[i]);
+                        key                = json_interno['key_input'];          
+                        val                = json_interno['val_input'];
+                        key_input_text     = json_interno['key_input_text'];           
+                        val_input_text     = json_interno['val_input_text'];
+                        key_input_number   = json_interno['key_input_number'];           
+                        val_input_number   = json_interno['val_input_number'];
+
+
+                        showOption(key, val, key_input_text, val_input_text, key_input_number, val_input_number);
+                        break;
+                        case "beca":
+                          //Prestación económica
+                           json_interno   = JSON.parse(json_economics_data[i]);
+                          key                = json_interno['key_input'];          
+                          val                = json_interno['val_input'];
+                          key_input_text     = json_interno['key_input_text'];           
+                          val_input_text     = json_interno['val_input_text'];
+                          key_input_number   = json_interno['key_input_number'];           
+                          val_input_number   = json_interno['val_input_number'];
+  
+                          showOption(key, val, key_input_text, val_input_text, key_input_number, val_input_number);
+                        break;
+                        case "ayuda_transporte":
+                          //Prestación económica
+                          json_interno   = JSON.parse(json_economics_data[i]);
+                          key                = json_interno['key_input'];          
+                          val                = json_interno['val_input'];
+                          key_input_text     = json_interno['key_input_text'];           
+                          val_input_text     = json_interno['val_input_text'];
+                          key_input_number   = json_interno['key_input_number'];           
+                          val_input_number   = json_interno['val_input_number'];
+  
+                          showOption(key, val, key_input_text, val_input_text, key_input_number, val_input_number);
+                        break;
+                        case "ayuda_materiales":
+                          //Prestación económica
+                          json_interno       = JSON.parse(json_economics_data[i]);
+                          key                = json_interno['key_input'];          
+                          val                = json_interno['val_input'];
+                          key_input_text     = json_interno['key_input_text'];           
+                          val_input_text     = json_interno['val_input_text'];
+                          key_input_number   = json_interno['key_input_number'];           
+                          val_input_number   = json_interno['val_input_number'];
+  
+  
+                          showOption(key, val, key_input_text, val_input_text, key_input_number, val_input_number);
+                        break;
+                        case "solvencia_econo":
+                        val                = json_economics_data[i];
+                        if(val == 1){
+                            //Fue seleccionada la opción
+                            $("#check_solvencia").prop("checked", true);
+                        }else{
+                            //No fue seleccionada la opción
+                            $("#check_solvencia").prop("checked", false);
+                        }
+                        break;
+                        case "ocupacion_padres":
+                        json_interno   = JSON.parse(json_economics_data[i]);
+                        for(objeto in json_interno){
+                            if(json_interno[objeto]["val_select"] == "option_ninguna"){
+                                $("#"+json_interno[objeto]["key_select"] ).val(json_interno[objeto]["val_select"]);
+                            }else{
+                                $("#"+json_interno[objeto]["key_select"] ).val(json_interno[objeto]["val_select"]);
+                                $(json_interno[objeto]["key_input_select"] ).val(json_interno[objeto]["val_input_select"]);
+                                $(json_interno[objeto]["key_input_select"] ).parent().show();
+                            }
+                            
+                            
+                        }
+                        break;
+                        case "nivel_educ_padres":
+                        json_interno   = JSON.parse(json_economics_data[i]);
+                        for(objeto in json_interno){
+                     
+                        $("#"+json_interno[objeto]["key_select"] ).val(json_interno[objeto]["val_select"]);
+                   
+                        }
+                        break;
+                        case "situa_laboral_padres":
+                        json_interno   = JSON.parse(json_economics_data[i]);
+                        for(objeto in json_interno){
+                     
+                        $("#"+json_interno[objeto]["key_select"] ).val(json_interno[objeto]["val_select"]);
+                   
+                        }
+                        break;
+                        case "expectativas_laborales":
+                        json_interno   = JSON.parse(json_economics_data[i]);
+                        console.log(json_interno);
+                        $(json_interno["key_input"]).val(json_interno["val_input"]);
+                        break;
+
+                    }
                 }
+                    
+                    
+                }
+
+                function showOption(key, val, key_input_text, val_input_text, key_input_number, val_input_number){
+                
+                    if(val == 1){
+                        //Fue seleccionada la opción
+                        $("#"+key).prop("checked", true);
+                        $("#"+key_input_text).val(val_input_text);
+                        $("#"+key_input_text).parent().parent().show();
+                        $("#"+key_input_number).val(val_input_number);
+    
+                    }else{
+                        //No fue seleccionada la opción
+                        $("#"+key).prop("checked", false);
+                        $("#"+key_input_text).val("");
+                        $("#"+key_input_text).parent().parent().hide();
+                        $("#"+key_input_number).val("");
+                    }
+                
+                }
+
+                function editEconomicsData(json_data, ases_id){
+                $.ajax({
+                    type: "POST",
+                    data: {
+                        func: 'edit_economics_data',
+                        json: json_data, 
+                        ases: ases_id
+                    },
+                    url: "../managers/student_profile/discapacity_tab_api.php",
+                    success: function(msg) {
+            
+                        swal(
+                           { title: msg.title,
+                            text: msg.msg,
+                            type: msg.status
+                           },
+                           function(){
+                            $("html, body").animate({scrollTop:650}, 'slow'); 
+                            $("#input_json_economics_saved").val(json_data);
+                           }
+                        
+    
+                        );
+    
+    
+                        //$("#un_input").attr("value", json_data);
+    
+                       
+                    },
+                    dataType: "json",
+                    cache: "false",
+                    error: function(msg) {
+                        swal(
+                            msg.title,
+                            msg.msg,
+                            msg.status
+                        );
+    
+                    },
+                });
+    
+    
+                }
+                
                 function saveEconomicsData(json_data, ases_id){
                     $.ajax({
                         type: "POST",
@@ -109,6 +306,9 @@ define([
                                },
                                function(){
                                 $("html, body").animate({scrollTop:650}, 'slow'); 
+                                $("#save_economics_data").hide();
+                                $("#edit_economics_data").show();
+                                $("#input_economics_saved").val("1");
                                }
                             
         

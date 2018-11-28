@@ -133,7 +133,8 @@ if ($student_code != 0) {
 
     //Get economics data of student
     if($exist_economics_data = get_exist_economics_data($ases_student->id)){
-        $record->economics_data = "1";
+        $record->economics_data      = "1";
+        $record->economics_data_json = json_encode(get_economics_data($ases_student->id));
     }else{
         $record->economics_data = "0";
     }
