@@ -56,6 +56,23 @@ function save_detalle_discapacidad($json, $id_ases){
 
 }
 
+/**
+ * Function save economics_data in table talentospilos_economics_data
+ * @see save_economics_data(economics_data)
+ * @param $economics_data  valid Object with economics data 
+ * @return boolean
+ **/
+
+function save_economics_data($economics_data){
+    global $DB;
+
+    $result = $DB->insert_record("talentospilos_economics_data", $economics_data, true);
+    return $result;
+
+}
+
+
+
 
 /**
  * Function return json schema switch id_schema

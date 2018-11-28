@@ -80,6 +80,7 @@ define([
                         //Si no hay campos obligatorios vacíos, capturar datos
 
                         let json_economics_data = getEconomicsData();
+                        console.log(json_economics_data);
                         json_economics_data = JSON.stringify(json_economics_data);
                         let id_ases = $("#id_ases").val();
 
@@ -194,36 +195,81 @@ define([
                     }
                     array_economics_data.push(solvencia_econo);
 
+                 
+
+                    //Info padre
+
+                    let objeto_select = {};
+                    let array_nivel_edu  = [];
+                    let array_ocupacion  = [];
+                    let array_situacion_lab  = [];
+
+                    obj = document.getElementById('div_info_padre');
+                    for (i=0; ele = obj.getElementsByTagName('select')[i]; i++){
+
+                    objeto_select.key_select =   ele.id; 
+                    objeto_select.val_select =   ele.value;
+
+                    if(ele.id == "select_nivel_padre" ){
+                        array_nivel_edu.push(objeto_select);
+                    }
+
+                    if(ele.id == "select_ocupacion_padre" ){
+                        if(ele.value != "option_ninguna"){
+                            objeto_select.key_input_select = "#" + $("#"+ele.id).parent().next().children("input").attr("id");
+                            objeto_select.val_input_select = $("#"+ele.id).parent().next().children("input").val();
+                        }
+                        array_ocupacion.push(objeto_select);
+                    }
+                    if(ele.id == "select_situa_padre" ){
+                        array_situacion_lab.push(objeto_select);
+                    }
+
+                    
+                    objeto_select = {};
+                    }
+
+
+                    //Madre
+
+                    obj = document.getElementById('div_info_madre');
+                    for (i=0; ele = obj.getElementsByTagName('select')[i]; i++){
+
+                    objeto_select.key_select =   ele.id;
+                    objeto_select.val_select =   ele.value; 
+
+                  
+                    if(ele.id == "select_nivel_madre" ){
+                        array_nivel_edu.push(objeto_select);
+                    }
+                    if(ele.id == "select_ocupacion_madre" ){
+                        if(ele.value != "option_ninguna"){
+                            objeto_select.key_input_select = "#" + $("#"+ele.id).parent().next().children("input").attr("id");
+                            objeto_select.val_input_select = $("#"+ele.id).parent().next().children("input").val();
+                        }
+                        array_ocupacion.push(objeto_select);
+                    }
+                    if(ele.id == "select_situa_madre" ){
+                        array_situacion_lab.push(objeto_select);
+                    }
+
+                    
+                    objeto_select = {};
+                    }
+
+
+                    array_economics_data.push(array_ocupacion);
+                    array_economics_data.push(array_nivel_edu);
+                    array_economics_data.push(array_situacion_lab);
+
                     //Expectativas laborales
-                    let expectativas_lab = {
+                       let expectativas_lab = {
                         key_input: "#textarea_expectativas",
                         val_input: $("#textarea_expectativas").val()
                     }
 
                     array_economics_data.push(expectativas_lab);
 
-                    //Info padres
-
-                    let objeto_select = {};
-                    let array_padres  = [];
-
-                    obj = document.getElementById('info_padres');
-                    for (i=0; ele = obj.getElementsByTagName('select')[i]; i++){
-
-                    objeto_select.key_select =   ele.value; 
-                    objeto_select.val_select =   ele.id;
-                    if(ele.id == "select_ocupacion_padre" ||  ele.id == "select_ocupacion_madre"){
-                        if(ele.value != "option_ninguna"){
-                            objeto_select.key_input_select = "#" + $("#"+ele.id).parent().next().children("input").attr("id");
-                            objeto_select.val_input_select = $("#"+ele.id).parent().next().children("input").val();
-                        }
-                    }
-
-                    //Modificar para salvar datos de padre  y madre separados
-                    //Se puede cambiar modelo para caracterizar datos separados
-                    array_economics_data.push(objeto_select);
-                    objeto_select = {};
-                    }
                     
 
                     return array_economics_data;
