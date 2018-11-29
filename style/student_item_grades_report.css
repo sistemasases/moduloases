@@ -1,5 +1,60 @@
-.course_and_teacher_report_title {
+.student_item_grades_report {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 0 1% 0 1% ;
+}
+
+
+
+#tableStudentItemGradesReport th{
+    text-align: center;
+}
+/* The inner table, students table should have text align to left*/
+#tableStudentItemGradesReport table th {
+    text-align: left;
+}
+.summary {
     display: flex;
     flex-direction: column;
     align-items: center;
+}
+
+#tableFinalgradesReport th {
+    text-align: center;
+}
+/* The inner table, students table should have text align to left*/
+#tableFinalgradesReport table th {
+    text-align: left;
+}
+.count_items {
+    margin-top: 2%;
+}
+
+#tableStudentItemGradesReport table.dataTable tbody td{
+    background-color: rgb(204, 204, 204)!important;
+}
+/*
+Las columnas (de la 2 a la 5 -- index desde 1) son: numero documento, codigo, apellidos y nombre son links a la ficha estudiante
+*/
+#tableStudentItemGradesReport td:nth-child(2),
+#tableStudentItemGradesReport td:nth-child(3),
+#tableStudentItemGradesReport td:nth-child(4),
+#tableStudentItemGradesReport td:nth-child(5){
+    text-decoration: underline;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+/*
+Resolver los conflictos de estilos para las tablas internas
+*/
+#tableStudentItemGradesReport table.dataTable tbody td:nth-child(2),
+#tableStudentItemGradesReport table.dataTable tbody td:nth-child(3),
+#tableStudentItemGradesReport table.dataTable tbody td:nth-child(4),
+#tableStudentItemGradesReport table.dataTable tbody td:nth-child(5){
+    text-decoration: none;
+    font-weight: normal;
+    cursor: auto;
 }

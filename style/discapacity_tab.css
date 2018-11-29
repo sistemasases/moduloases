@@ -1,5 +1,11 @@
 
 @media screen {
+    #collapse_econo{
+        margin-left: 10px;
+        padding: 5px;
+    }
+  
+
     .ficha_discapacity{
         overflow-y: scroll; 
         overflow-x: hidden;
@@ -13,7 +19,8 @@
         padding-left: 0px;
         padding-top: 5px;
         color: black;
-        font-weight: normal;
+        font-weight: bold;
+        padding-right: 0px;
     }
     .label_fields_options_tab{
         padding-left: 0px;
@@ -61,6 +68,10 @@
     .row_discapacity2{
         margin-left: 0px;
         margin-bottom: 8px !important;
+    }
+    .row_buttons{
+        margin-left: 0px;
+        margin-top: 25px !important;
     }
     .input-discapacity{
         margin-top: 0px;
@@ -134,6 +145,14 @@
     #textarea_diagnostico{
         overflow-y: scroll; 
         height:50px;
+        padding-left: 0px;
+        padding-right: 0px;
+    }
+
+    #textarea_expectativas{
+        overflow-y: scroll; 
+        height:90px;
+        width: 230px;
         padding-left: 0px;
         padding-right: 0px;
     }

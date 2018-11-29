@@ -1,0 +1,40 @@
+{{#resume_report}}
+    <table class="table">
+        <thead>
+        <tr>
+            <h5> Resumen </h5>
+        </tr>
+
+        <tr>
+            <th title="Cantidad de estudiantes con uno o más items perdidos">
+                Estud. con uno o más items perdidos
+            </th>
+            <th title="Cantidad de estudiantes con más items perdidos que ganados">
+                Estud. con más items perdidos que ganados
+            </th>
+            <th title="Porcentaje estudiantes con más items perdidos que ganados">
+                Estud. con más items perdidos que ganados (%)
+            </th>
+            <th>
+                Total estudiantes
+            </th>
+        </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    {{est_items_perdidos}}
+                </td>
+                <td>
+                    {{est_mas_items_perdidos_que_ganados}}
+                </td>
+                <td>
+                    {{est_mas_items_perdidos_que_ganados_porcentaje}}%
+                </td>
+                <td>
+                    {{cantidad_estudiantes}}
+                </td>
+            </tr>
+        </tbody>
+    </table>
+{{/resume_report}}
