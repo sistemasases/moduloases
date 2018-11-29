@@ -224,13 +224,14 @@ class ReportStudentItemGradesSummaryItem {
  * @return string Example: "Exam(70%): 5.0"" or empty string if include null final grade is false and final grade is false
  *
  */
-function normalize_grade($item, $decimal_places = 1, $scale = 5): string {
+function normalize_grade($item, $decimal_places = 2, $scale = 5): string {
     $item_object = grade_item::fetch(array('id'=>$item->id));
     $item_parent_category = $item_object->get_parent_category();
-    $finalgrade =  number_format((float) $item->finalgrade, $decimal_places);
+    $finalgrade =  (float) $item->finalgrade;
     $formated_final_grade = $finalgrade == 0? 0 : $finalgrade;
     $max_grade = $item->rawgrademax;
     $formated_final_grade = $scale * $finalgrade / $max_grade;
+    $formated_final_grade = number_format($formated_final_grade, $decimal_places);
     $formated_agregation_coef = '';
     if (
         $item->itemtype !== 'course' && /* Total course grade, always is 0.0% */
