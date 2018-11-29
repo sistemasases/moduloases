@@ -4,37 +4,40 @@
         <tr>
             <h5> Resumen </h5>
         </tr>
-
         <tr>
-            <th title="Cantidad de estudiantes con uno o más items perdidos">
-                Estud. con uno o más items perdidos
+            <th>
+                Elemento cualificable
             </th>
             <th title="Cantidad de estudiantes con más items perdidos que ganados">
-                Estud. con más items perdidos que ganados
-            </th>
-            <th title="Porcentaje estudiantes con más items perdidos que ganados">
-                Estud. con más items perdidos que ganados (%)
-            </th>
-            <th>
-                Total estudiantes
+                Cantidad
             </th>
         </tr>
         </thead>
         <tbody>
-            <tr>
-                <td>
-                    {{est_items_perdidos}}
-                </td>
-                <td>
-                    {{est_mas_items_perdidos_que_ganados}}
-                </td>
-                <td>
-                    {{est_mas_items_perdidos_que_ganados_porcentaje}}%
-                </td>
-                <td>
-                    {{cantidad_estudiantes}}
-                </td>
-            </tr>
+        <tr>
+            <td title="Cantidad de estudiantes con uno o más items perdidos">
+                Estud. con uno o más items perdidos
+            </td>
+            <td>
+                {{est_items_perdidos}}
+            </td>
+        </tr>
+        <tr>
+            <td title="Cantidad de estudiantes con uno o más items perdidos">
+                Estud. con más items perdidos que ganados
+            </td>
+            <td>
+                {{est_mas_items_perdidos_que_ganados}}
+            </td>
+        </tr>
+        <tr>
+            <td title="Total de estudiantes ASES matriculados en cursos de el campus virtual, cursos los cuales tienen almenos una nota">
+                Total estudiantes ASES matriculados en cursos con calificaciones
+            </td>
+            <td>
+                {{cantidad_estudiantes}}
+            </td>
+        </tr>
         </tbody>
     </table>
 {{/resume_report}}

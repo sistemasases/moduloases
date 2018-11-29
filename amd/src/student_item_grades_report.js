@@ -30,27 +30,17 @@ define([
              * @param est_items_perdidos number  Cantidad de estudiantes con uno o más items perdidos
              * @param est_mas_items_perdidos_que_ganados number Estudiantes con más items perdidos que ganados
              * @param cantidad_estudiantes number Cantidad de estudiantes
-             * @param est_mas_items_perdidos_que_ganados_porcentaje number Porcentaje de estudiatnes con más items perdidos
              *  que ganados con respecto al total de estudiantes
              * @constructor
              */
             var ResumeReport = /* @class */  (function() {
-                function ResumeReport(est_items_perdidos, est_mas_items_perdidos_que_ganados, cantidad_estudiantes, est_mas_items_perdidos_que_ganados_porcentaje) {
+                function ResumeReport(est_items_perdidos, est_mas_items_perdidos_que_ganados, cantidad_estudiantes) {
                     this.est_items_perdidos = est_items_perdidos? est_items_perdidos: 0;
                     this.cantidad_estudiantes = cantidad_estudiantes? cantidad_estudiantes: 0;
                     this.est_mas_items_perdidos_que_ganados =
                         est_mas_items_perdidos_que_ganados? est_mas_items_perdidos_que_ganados : 0;
-                    this.est_mas_items_perdidos_que_ganados_porcentaje = est_mas_items_perdidos_que_ganados_porcentaje ?
-                        est_mas_items_perdidos_que_ganados_porcentaje: 0;
-
                 }
 
-                ResumeReport.prototype.actualizar_porcentaje_est_mas_items_per_que_gan = function (decimal_values) {
-                    var decimal_values_ = decimal_values? decimal_values: 0;
-                    this.est_mas_items_perdidos_que_ganados_porcentaje =
-                        this.est_mas_items_perdidos_que_ganados * 100 / this.cantidad_estudiantes;
-                   this.est_mas_items_perdidos_que_ganados_porcentaje =  this.est_mas_items_perdidos_que_ganados_porcentaje.toFixed(decimal_values_);
-                };
                 /**
                  * Return the total resume report from data given
                  * @param data array Data instances
@@ -67,7 +57,6 @@ define([
                             resumeReport.est_mas_items_perdidos_que_ganados++;
                         }
                     }
-                    resumeReport.actualizar_porcentaje_est_mas_items_per_que_gan();
                     return resumeReport;
                 };
                 return ResumeReport;
@@ -80,7 +69,9 @@ define([
                 /* Las columnas (de la 1 a la 4 -- index desde 0) son: numero documento, codigo,
                  apellidos y nombre son links a la ficha estudiante*/
                 if (colIndex>=1 && colIndex <=4 ) {
-                    location.href = pagina + location.search + "&student_code=" + table.cell(table.row(this).index(), 0).data().codigo;
+                    var url = pagina + location.search + "&student_code=" + table.cell(table.row(this).index(), 0).data().codigo;
+                    var win = window.open(url, '_blank');
+                    win.focus();
                 }
             });
 
