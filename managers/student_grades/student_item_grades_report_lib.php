@@ -218,13 +218,19 @@ class ReportStudentItemGradesSummaryItem {
  * Return a summary of the student grade in a single readable string,
  * @param $item student_item_grades_with_items
  * @param $include_null_finalgraes bool If is true, and the grade has null finalgrade empty string is returned
+ * @param $scale int The grade can be in base 5 or 100 or other number, $scale var say whats the format for the grade
+ *  example: if the scale is 100, the grade is 5 and the max grade is 5, the grade is converted to 100
+ *  Is 5 by default
  * @return string Example: "Exam(70%): 5.0"" or empty string if include null final grade is false and final grade is false
+ *
  */
-function normalize_grade($item, $decimal_places = 1): string {
+function normalize_grade($item, $decimal_places = 1, $scale = 5): string {
     $item_object = grade_item::fetch(array('id'=>$item->id));
     $item_parent_category = $item_object->get_parent_category();
     $finalgrade =  number_format((float) $item->finalgrade, $decimal_places);
     $formated_final_grade = $finalgrade == 0? 0 : $finalgrade;
+    $max_grade = $item->rawgrademax;
+    $formated_final_grade = $scale * $finalgrade / $max_grade;
     $formated_agregation_coef = '';
     if (
         $item->itemtype !== 'course' && /* Total course grade, always is 0.0% */
