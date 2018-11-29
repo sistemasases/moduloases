@@ -105,11 +105,10 @@ from mdl_talentospilos_usuario
         on mdl_grade_items.id = mdl_grade_grades.itemid
       inner join mdl_course
         on mdl_grade_items.courseid= mdl_course.id
-
+    inner join mdl_talentospilos_inst_cohorte
+    on mdl_talentospilos_inst_cohorte.id_cohorte = mdl_cohort_members.cohortid
 where substring(mdl_course.shortname from 15 for 6) =  '$semestre'
-  and mdl_cohort_members.cohortid in (
-    select id from mdl_talentospilos_inst_cohorte where mdl_talentospilos_inst_cohorte.id_instancia = $id_instancia
-    )
+and mdl_talentospilos_inst_cohorte.id_instancia = $id_instancia
  and mdl_grade_items.itemtype != 'category'
  AND  mdl_grade_items.itemtype != 'course'
  and mdl_talentospilos_user_extended.tracking_status = 1
