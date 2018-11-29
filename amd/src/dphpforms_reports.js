@@ -27,10 +27,14 @@ define([
     return {
         init: function() {
 
+            var isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
+            if( !isChrome ){
+                $("#container-control").find('*').prop('disabled', true);
+                $("#container-msg-chrome").fadeIn(300);
+            }
+
             window.JSZip = jszip;            
             var id_semester = null;
-            
-
 
             function render_datatable( records ){
                 var dataForms = process_data( records );   
@@ -441,8 +445,7 @@ define([
                                     id:"00", 
                                     local_alias:"student_lastname",
                                     respuesta: String(data.data_response.student.lastname)
-                                };        
-                                
+                                };       
                             },
                             failure: function(errMsg) {
                                 console.log(errMsg);
@@ -463,10 +466,10 @@ define([
                         delete report[x][Object.keys(report[x]).length - 1];
                         delete report[x][Object.keys(report[x]).length - 1];
                         delete report[x][Object.keys(report[x]).length - 1];
-
-                        $("#progress-custom").find("div").width( (( 100 / report_size ) * (x+1)).toFixed( 0 ) + "%" );
-                        $("#progress-custom").find("div").html( (( 100 / report_size ) * (x+1)).toFixed( 0 ) + "%" );
-                        $("#progress-custom").find("div").attr( "aria-valuenow", (( 100 / report_size ) * (x+1)).toFixed( 0 ) );
+                       
+                        $("#progress-custom").find("div").width( (( 100 / report_size ) * ( x + 1 )).toFixed( 0 ) + "%" );
+                        $("#progress-custom").find("div").html( (( 100 / report_size ) * ( x + 1 )).toFixed( 0 ) + "%" );
+                        $("#progress-custom").find("div").attr( "aria-valuenow", (( 100 / report_size ) * ( x + 1 )).toFixed( 0 ) ); 
 
                     }
 
@@ -474,7 +477,7 @@ define([
                     $("#message").removeClass("alert alert-info");
                     $("#message").addClass("alert alert-success");
                     $("#message").html( "<strong>Info!</strong>  Reporte generado." );
-                    $("#progress_group").addClass("hidden");
+                    //$("#progress_group").addClass("hidden");
                     
                     return report;
                 }else{
@@ -483,7 +486,7 @@ define([
                     $("#message").removeClass("alert alert-info");
                     $("#message").addClass("alert alert-success");
                     $("#message").html( "<strong>Info!</strong>  Reporte generado." );
-                    $("#progress_group").addClass("hidden");
+                    //$("#progress_group").addClass("hidden");
 
                     return report;
                 }
@@ -600,7 +603,7 @@ define([
                         $("#progress_group").removeClass("hidden");
                         $("#message").removeClass("alert alert-success");
                         $("#message").addClass("alert alert-info");
-                        $('#message').html( "<strong>Info!</strong> Se está generando el reporte, esto puede tardar un par de minutos dependiendo de su conexión a internet, capacidad del ordenador y rapidez del campus virtual." );
+                        $('#message').html( "<strong>Info!</strong> Se está generando el reporte, esto puede tardar un par de minutos dependiendo de su conexión a internet, capacidad del ordenador, intervalo de tiempo seleccionado y rapidez del campus virtual." );
                         
                         $.get( '../managers/dphpforms/dphpforms_reverse_filter.php?id_pregunta=seguimiento_pares_fecha&cast=date&criterio={"criteria":[{"operator":">=","value":"'+start_date+'"},{"operator":"<=","value":"'+end_date+'"}]}', function( data ) {
                         
@@ -637,9 +640,12 @@ define([
                                         $("#progress-download").find("div").attr( "aria-valuenow", (( 100 / count_records ) * progress).toFixed( 0 ) );
                                         if( progress == count_records ){
                                             $("#progress-download").find("div").addClass("progress-bar-success");
-                                            var tight_records = custom_actions( completed_records, "seguimiento_pares" );
-                                            //render_datatable( tight_records );
-                                            downloadCSV( tight_records );
+                                            setTimeout(function(){
+                                                var tight_records = custom_actions( completed_records, "seguimiento_pares" );
+                                                downloadCSV( tight_records );
+                                                //render_datatable( tight_records );
+                                            },10);
+                                            
                                         };
                                         
                                     }).fail(function(err) {
