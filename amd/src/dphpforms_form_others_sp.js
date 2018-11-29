@@ -1,5 +1,5 @@
 /**
- * Controls discapacity form
+ * Controls others form
  * @module amd/src/dphpforms_form_others_sp
  * @author Juan Pablo Castro
  * @copyright 2018 Juan Pablo Castro<juan.castro.vasquez@correounivalle.edu.co>
