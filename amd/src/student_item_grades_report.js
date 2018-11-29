@@ -25,6 +25,17 @@ define([
         },
 
         load_report: function (data) {
+
+            /** go to ficha general on click **/
+            $(document).on('click', '#tableStudentItemGradesReport tbody tr td', function () {
+                var pagina = "student_profile.php";
+                var table = $("#tableStudentItemGradesReport").DataTable();
+                var colIndex = table.cell(this).index().column;
+                /*Las columnas (de la 1 a la 4 -- index desde 0) son: numero documento, codigo, apellidos y nombre son links a la ficha estudiante*/
+                if (colIndex>=1 && colIndex <=4 ) {
+                    location.href = pagina + location.search + "&student_code=" + table.cell(table.row(this).index(), 0).data().codigo;
+                }
+            });
             /**
              * Class Resume Report
              * @param cursos_al_un_est_ases Cantidad cursos con almenos un estudiante ases matriculado
