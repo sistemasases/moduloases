@@ -12,6 +12,15 @@
                 <hr>
             </div>
         </div>
+        <div id="container-msg-chrome" style="display:none;" class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <div id="msg-chrome">
+                    <img src="../templates/chrome_logo.png" alt="">
+                    Oops!, la generación de reportes por el momento funciona únicamente bajo <a href="https://www.google.com/intl/es_ALL/chrome/" target="_blank"> Google Chrome</a>.
+                </div>
+                <hr>
+            </div>
+        </div>
         <!--<div class="row">
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                 <span><strong>Filtro:</strong>&nbsp;</span>
@@ -26,7 +35,7 @@
                 <hr>
             </div>
         </div>-->
-        <div class="row">
+        <div id="container-control" class="row">
 
             <div class="row">
                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
@@ -170,23 +179,22 @@
                 </div>
                 <div class="row">
                     <div id="progress_group" class="form-group" style="display:none;">
-                        <hr>
-                        <!--<span><strong>Progreso:</strong></span>-->                  
+                        <hr>           
                         <div class="col-sm-6 col-md-6">
-                        <h3>Descargando datos:</h3>
-                        <div id="progress-download" class="progress">
-                            <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width:0%">
-                            0%
+                            <h3>Descargando datos:</h3>
+                            <div id="progress-download" class="progress">
+                                <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width:0%">
+                                0%
+                                </div>
                             </div>
                         </div>
-                        </div>
                         <div class="col-sm-6 col-md-6">
-                        <h3>Generando CSV:</h3>
-                        <div id="progress-custom" class="progress">
-                            <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width:0%">
-                            0%
+                            <h3>Generando CSV( Puede tardar un tiempo ):</h3>
+                            <div id="progress-custom" class="progress">
+                                <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width:0%">
+                                0%
+                                </div>
                             </div>
-
                         </div>
                     </div>
                 </div>
