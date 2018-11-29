@@ -3,3 +3,7 @@
     flex-direction: column;
     align-items: center;
 }
+
+#tableStudentItemGradesReport table.dataTable tbody td{
+    background-color: rgb(204, 204, 204)!important;
+}
