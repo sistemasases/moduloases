@@ -1,7 +1,35 @@
-.course_and_teacher_report_title {
+.student_item_grades_report {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 0 1% 0 1% ;
+}
+
+
+
+#tableStudentItemGradesReport th{
+    text-align: center;
+}
+/* The inner table, students table should have text align to left*/
+#tableStudentItemGradesReport table th {
+    text-align: left;
+}
+.summary {
     display: flex;
     flex-direction: column;
     align-items: center;
+}
+
+#tableFinalgradesReport th {
+    text-align: center;
+}
+/* The inner table, students table should have text align to left*/
+#tableFinalgradesReport table th {
+    text-align: left;
+}
+.count_items {
+    margin-top: 2%;
 }
 
 #tableStudentItemGradesReport table.dataTable tbody td{
