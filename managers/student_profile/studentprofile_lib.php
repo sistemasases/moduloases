@@ -151,15 +151,40 @@ function get_economics_data($id_ases){
     
 }
 
- 
-
-
- /**
- * Get Condición de excepción registradas
+   /**
+ * Gets true or false if register health_data exist
  *
- * @see get_cond_excepcion()
- * @return object --> with CONDICIÓN DE EXCEPCIÓN information
+ * @see get_exist_health_data()
+ * @return boolean
  */
+ 
+function get_exist_health_data($id_ases_user){
+     
+    global $DB;
+    
+    return $DB->record_exists('talentospilos_health_data',array('id_ases_user'=> $id_ases_user));
+}
+
+  /**
+ * Gets record with student health_data information
+ *
+ * @see get_health_data($id_ases)
+ * @param $id_ases id ases student 
+ * @return object
+ */
+ 
+function get_health_data($id_ases){
+     
+    global $DB;
+
+    $sql_query = "SELECT regimen_salud, servicio_salud_vinculado, servicios_usados FROM {talentospilos_health_data} WHERE id_ases_user = '$id_ases'";
+    $register = $DB->get_record_sql($sql_query);
+    
+    return $register;
+
+    
+}
+
 
 
 /**
@@ -178,6 +203,13 @@ function get_student_profile_url($courseid, $instanceid, $student_code): moodle_
             ));
 }
 
+
+ /**
+ * Get Condición de excepción registradas
+ *
+ * @see get_cond_excepcion()
+ * @return object --> with CONDICIÓN DE EXCEPCIÓN information
+ */
 
 
 function  get_cond_excepcion()

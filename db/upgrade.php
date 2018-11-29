@@ -4,7 +4,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     global $DB;
     $dbman = $DB->get_manager();
     $result = true;
-    if ($oldversion < 2018112614490 ) {
+    if ($oldversion < 2018112911010 ) {
     //     // ************************************************************************************************************
     //     // Actualización que crea la tabla para los campos extendidos de usuario (Tabla: {talentospilos_user_extended})
     //     // Versión: 2018010911179
@@ -2186,32 +2186,32 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
         //  Versión: 2018112215570                                                                                         //
         // ****************************************************************************************************************//
 
-        $table = new xmldb_table('talentospilos_df_tipo_campo');
-        $field = new xmldb_field('regex_legible_humanos', XMLDB_TYPE_TEXT, null, null, null, null, null, 'expresion_regular');
+        // $table = new xmldb_table('talentospilos_df_tipo_campo');
+        // $field = new xmldb_field('regex_legible_humanos', XMLDB_TYPE_TEXT, null, null, null, null, null, 'expresion_regular');
              
-        // Conditionally launch add field regex_legible_humanos.
-        if (!$dbman->field_exists($table, $field)) {
-            $dbman->add_field($table, $field);
-        }
+        // // Conditionally launch add field regex_legible_humanos.
+        // if (!$dbman->field_exists($table, $field)) {
+        //     $dbman->add_field($table, $field);
+        // }
 
-        $field = new xmldb_field('ejemplo', XMLDB_TYPE_TEXT, null, null, null, null, null, 'regex_legible_humanos');
+        // $field = new xmldb_field('ejemplo', XMLDB_TYPE_TEXT, null, null, null, null, null, 'regex_legible_humanos');
              
-        // Conditionally launch add field ejemplo.
-        if (!$dbman->field_exists($table, $field)) {
-            $dbman->add_field($table, $field);
-        }
+        // // Conditionally launch add field ejemplo.
+        // if (!$dbman->field_exists($table, $field)) {
+        //     $dbman->add_field($table, $field);
+        // }
 
-        $field_date = $DB->get_record('talentospilos_df_tipo_campo', array('campo'=>'DATE'));
-        $field_date->expresion_regular = "/^-?[0-9]+?-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/";
-        $field_date->regex_legible_humanos = "YYYY-MM-DD";
-        $field_date->ejemplo = "2005-05-05";
-        $DB->update_record('talentospilos_df_tipo_campo', $field_date);
+        // $field_date = $DB->get_record('talentospilos_df_tipo_campo', array('campo'=>'DATE'));
+        // $field_date->expresion_regular = "/^-?[0-9]+?-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/";
+        // $field_date->regex_legible_humanos = "YYYY-MM-DD";
+        // $field_date->ejemplo = "2005-05-05";
+        // $DB->update_record('talentospilos_df_tipo_campo', $field_date);
 
-        $field_time = $DB->get_record('talentospilos_df_tipo_campo', array('campo'=>'TIME'));
-        $field_time->expresion_regular = "/^([01][0-9]|2[0-3]):([0-5][0-9])$/";
-        $field_time->regex_legible_humanos = "HH:MM";
-        $field_time->ejemplo = "05:05";
-        $DB->update_record('talentospilos_df_tipo_campo', $field_time);
+        // $field_time = $DB->get_record('talentospilos_df_tipo_campo', array('campo'=>'TIME'));
+        // $field_time->expresion_regular = "/^([01][0-9]|2[0-3]):([0-5][0-9])$/";
+        // $field_time->regex_legible_humanos = "HH:MM";
+        // $field_time->ejemplo = "05:05";
+        // $DB->update_record('talentospilos_df_tipo_campo', $field_time);
 
 
          // ****************************************************************************************************************//
@@ -2266,7 +2266,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
 
         //Solvencia económica
 
-             // Changing type of field solvencia_econo on table talentospilos_economics_data to int.
+        // Changing type of field solvencia_econo on table talentospilos_economics_data to int.
         $table = new xmldb_table('talentospilos_economics_data');
         $field = new xmldb_field('solvencia_econo', XMLDB_TYPE_INTEGER, '1', null, null, null, null, 'ayuda_materiales');
 
@@ -2395,10 +2395,34 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
             }
 
 
+
+        // ****************************************************************************************************************//
+        // Actualización: Se agrega tabla de datos de salud health_data  //
+        //  Versión: 2018112911000                                                                                         //
+        // ****************************************************************************************************************//
+
+           // Define table talentospilos_health_data to be created.
+           $table = new xmldb_table('talentospilos_health_data');
+
+           // Adding fields to table talentospilos_health_data.
+           $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+           $table->add_field('regimen_salud', XMLDB_TYPE_TEXT, null, null, null, null, null);
+           $table->add_field('servicio_salud_vinculado', XMLDB_TYPE_TEXT, null, null, null, null, null);
+           $table->add_field('servicios_usados', XMLDB_TYPE_TEXT, null, null, null, null, null);
+           $table->add_field('id_ases_user', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+   
+           // Adding keys to table talentospilos_health_data.
+           $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+   
+           // Conditionally launch create table for talentospilos_health_data.
+           if (!$dbman->table_exists($table)) {
+               $dbman->create_table($table);
+           }
+   
                 
 
 
-        upgrade_block_savepoint(true, 2018112614490 , 'ases');
+        upgrade_block_savepoint(true, 2018112911010 , 'ases');
     
         return $result;
 

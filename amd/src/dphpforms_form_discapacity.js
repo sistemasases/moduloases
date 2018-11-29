@@ -167,7 +167,9 @@ define([
               $("#form_ficha_inicial").show();
               enableForm();  
               let json_saved_register = $("#input_json_saved").val();
-              json_saved_register = JSON.parse(json_saved_register);
+              if(json_saved_register != ""){
+                json_saved_register = JSON.parse(json_saved_register);
+              }
               showFormSaved(json_saved_register);
               $("html, body").animate({scrollTop:650}, 'slow'); 
               $("#form_ficha_inicial").animate({scrollTop:0}, 'slow');
@@ -177,6 +179,7 @@ define([
 
               let contenido = $("#textarea_diagnostico").val(); 
               document.getElementById("descrip_diagnostico").innerHTML = contenido;
+             
             });
 
             $("#view_discapacity_initial").on("click", function() {

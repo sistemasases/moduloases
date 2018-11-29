@@ -132,11 +132,19 @@ if ($student_code != 0) {
     $document_type = get_document_types_for_profile($ases_student->id);
 
     //Get economics data of student
-    if($exist_economics_data = get_exist_economics_data($ases_student->id)){
+    if(get_exist_economics_data($ases_student->id)){
         $record->economics_data      = "1";
         $record->economics_data_json = json_encode(get_economics_data($ases_student->id));
     }else{
         $record->economics_data = "0";
+    }
+
+     //Get health data of student
+     if(get_exist_health_data($ases_student->id)){
+        $record->health_data      = "1";
+        $record->health_data_json = json_encode(get_health_data($ases_student->id));
+    }else{
+        $record->health_data = "0";
     }
 
 
@@ -177,7 +185,7 @@ if ($student_code != 0) {
     $record->attendant = $ases_student->acudiente;
     $record->attendant_tel = $ases_student->tel_acudiente;
     $record->num_doc = $ases_student->num_doc;
-    $record->json_detalle  =$ases_student->json_detalle;
+    $record->json_detalle_discapacity  =$ases_student->json_detalle;
     
   
     

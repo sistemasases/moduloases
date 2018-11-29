@@ -23,7 +23,84 @@ define([
     return {   
             init: function(){
 
-             
+                //Servicio Salud
+                    $("#save_health").click(function(){
+                       
+                    //Validar las respuestas obtenidas
+                    let respuesta = validateHealthData();
+
+
+                        if(respuesta.status == "error"){
+                            swal(respuesta.title,
+                                respuesta.msg,
+                                respuesta.status);
+                        }else{
+                        //Si no hay campos obligatorios vacíos, capturar datos
+
+                        // let json_economics_data = getEconomicsData();
+                        // json_economics_data = JSON.stringify(json_economics_data);
+                        // let id_ases = $("#id_ases").val();
+
+                        // saveEconomicsData(json_economics_data, id_ases);
+                        
+
+                        }
+                    });
+
+                    if($("#input_health_saved").val() == "0"){
+                    $("#save_health").parent().show();
+                    }
+                    if($("#input_health_saved").val() == "1"){
+                    $("#save_health").parent().hide();
+                    $("#edit_health").parent().show();
+                    //showSavedHealthData();
+                    }
+
+                    $("#check_servicio_otro").click(function(){
+                        if($(this).is(":checked")){
+                            $("#servicio_otro_cual").parent().show();
+                            $("#servicio_otro_cual").prop("required", true);
+                        }else{
+                            $("#servicio_otro_cual").parent().hide();
+                            $("#servicio_otro_cual").prop("required", false);
+                            $("#servicio_otro_cual").val("");
+                        }
+                    });
+
+                    $(".servicio_salud").click(function(){
+
+                        if($(this).val()=="input_radio_eps"){
+
+                            $("#input_detalle_servicio").attr("title", "Escriba EPS");
+                            $("#input_detalle_servicio").attr("placeholder", "¿Cuál EPS?");
+                            $("#input_detalle_servicio").attr("type", "text");
+    
+                        }else if ($(this).val()=="input_radio_sisben"){
+
+                            $("#input_detalle_servicio").attr("title", "Escriba Nivel");
+                            $("#input_detalle_servicio").attr("placeholder", "¿Cuál Nivel?");
+                            $("#input_detalle_servicio").attr("type", "number");
+                            $("#input_detalle_servicio").attr("min", "1");
+                            $("#input_detalle_servicio").attr("max", "3");
+
+                        }else if ($(this).val()=="input_radio_otro_servicio"){
+
+                            $("#input_detalle_servicio").attr("title", "Escriba otro servicio");
+                            $("#input_detalle_servicio").attr("placeholder", "¿Cuál servicio de salud?");
+                            $("#input_detalle_servicio").attr("type", "text");
+    
+                        }
+
+
+                        $("#input_detalle_servicio").parent().show();
+                        $("#input_detalle_servicio").attr("required", true);
+                        $("#input_detalle_servicio").val("");
+                    
+
+                    });
+
+
+                    //Datos económicos
                 
                     if($("#input_economics_saved").val() == "0"){
                         $("#save_economics_data").parent().show();
@@ -58,6 +135,8 @@ define([
     
                             $(this).parent().next().show();
                             $(this).parent().next().children("input").prop("required", true);
+                            let select = document.getElementById($(this).attr("id"));
+                            $(this).attr("title", select.options[select.selectedIndex].title);
                         }
                             
                      
@@ -190,6 +269,7 @@ define([
                                 $("#"+json_interno[objeto]["key_select"] ).val(json_interno[objeto]["val_select"]);
                             }else{
                                 $("#"+json_interno[objeto]["key_select"] ).val(json_interno[objeto]["val_select"]);
+                                $("#"+json_interno[objeto]["key_select"] ).attr("title", json_interno[objeto]["title_select"] );
                                 $(json_interno[objeto]["key_input_select"] ).val(json_interno[objeto]["val_input_select"]);
                                 $(json_interno[objeto]["key_input_select"] ).parent().show();
                             }
@@ -215,7 +295,6 @@ define([
                         break;
                         case "expectativas_laborales":
                         json_interno   = JSON.parse(json_economics_data[i]);
-                        console.log(json_interno);
                         $(json_interno["key_input"]).val(json_interno["val_input"]);
                         break;
 
@@ -416,8 +495,9 @@ define([
 
                     if(ele.id == "select_ocupacion_padre" ){
                         if(ele.value != "option_ninguna"){
-                            objeto_select.key_input_select = "#" + $("#"+ele.id).parent().next().children("input").attr("id");
-                            objeto_select.val_input_select = $("#"+ele.id).parent().next().children("input").val();
+                            objeto_select.key_input_select  = "#" + $("#"+ele.id).parent().next().children("input").attr("id");
+                            objeto_select.val_input_select  = $("#"+ele.id).parent().next().children("input").val();
+                            objeto_select.title_select= ele.title; 
                         }
                         array_ocupacion.push(objeto_select);
                     }
@@ -444,8 +524,9 @@ define([
                     }
                     if(ele.id == "select_ocupacion_madre" ){
                         if(ele.value != "option_ninguna"){
-                            objeto_select.key_input_select = "#" + $("#"+ele.id).parent().next().children("input").attr("id");
-                            objeto_select.val_input_select = $("#"+ele.id).parent().next().children("input").val();
+                            objeto_select.key_input_select  = "#" + $("#"+ele.id).parent().next().children("input").attr("id");
+                            objeto_select.val_input_select  = $("#"+ele.id).parent().next().children("input").val();
+                            objeto_select.title_select= ele.title; 
                         }
                         array_ocupacion.push(objeto_select);
                     }
@@ -473,6 +554,132 @@ define([
                     
 
                     return array_economics_data;
+
+                }
+
+                function validateHealthData(){
+
+                    var msg = new Object();
+
+                    msg.title  = "Éxito";
+                    msg.msg    = "El formulario fue validado con éxito";
+                    msg.status = "success";
+
+                    //Servicios 
+                        if($("#check_servicio_otro").is(":checked")){
+                          
+                            let value   =  $("#servicio_otro_cual").val();
+                            let op      =  "Otro servicio";
+
+                            if(value == ""){
+                                msg.title  = "Datos de servicios de salud";
+                                msg.status = "error";
+                                msg.msg    = "El campo "+op+" es obligatorio";
+                                return msg;  
+                            }
+                             
+                            if(has_numbers(value)){
+                                msg.title  = "Datos de servicios de salud";
+                                msg.status = "error";
+                                msg.msg    = "El campo "+op+" no debe contener números";
+                                return msg;  
+                            }
+                         
+                        }
+                    
+                    //Regimen de salud    
+                     let radio_regimen =   $("#opciones_regimen_salud").find(":input[type=radio]:checked").val();
+                     if(radio_regimen == undefined){
+
+                        let op     =  "Régimen de salud";
+                        msg.title  = "Datos de servicios de salud";
+                        msg.status = "error";
+                        msg.msg    = "El campo "+op+" es obligatorio";
+                        return msg;  
+                     }
+                    //Servicio de salud  
+                    let radio_serv =   $("#opciones_servicio_salud").find(":input[type=radio]:checked").val();
+                    if(radio_serv != undefined){
+
+                        let detalle_servicio = $("#input_detalle_servicio").val();
+                        let op;
+                        
+                        switch(radio_serv){
+                            case "input_radio_eps":
+                            //Validar campo de texto para EPS
+                            op     =  "¿Cuál EPS?";
+
+                            if(detalle_servicio == ""){
+
+                                msg.title  = "Datos de servicios de salud";
+                                msg.status = "error";
+                                msg.msg    = "El campo "+op+" es obligatorio";
+                                return msg;  
+                            }
+                            if(has_numbers(detalle_servicio)){
+
+                                msg.title  = "Datos de servicios de salud";
+                                msg.status = "error";
+                                msg.msg    = "El campo "+op+" no debe contener números";
+                                return msg;  
+
+                            }
+
+                            break;
+                            case "input_radio_sisben":
+                            //Validar campo de texto para Nivel
+                            op     =  "¿Cuál Nivel?";
+
+                            if(detalle_servicio == ""){
+
+                                msg.title  = "Datos de servicios de salud";
+                                msg.status = "error";
+                                msg.msg    = "El campo "+op+" es obligatorio y numérico";
+                                return msg;  
+                            }
+                            if(detalle_servicio < 1 || detalle_servicio > 3){
+
+                                msg.title  = "Datos de servicios de salud";
+                                msg.status = "error";
+                                msg.msg    = "El campo "+op+" corresponde a niveles válidos de SISBEN (1,2,3)";
+                                return msg;  
+
+                            }
+                            break;
+                            case "input_radio_otro_servicio":
+                            //Validar campo de texto para Otro, ¿cuál?
+
+                            op     =  "¿Cuál servicio de salud?";
+
+                            if(detalle_servicio == ""){
+
+                                msg.title  = "Datos de servicios de salud";
+                                msg.status = "error";
+                                msg.msg    = "El campo "+op+" es obligatorio";
+                                return msg;  
+                            }
+                            if(has_numbers(detalle_servicio)){
+
+                                msg.title  = "Datos de servicios de salud";
+                                msg.status = "error";
+                                msg.msg    = "El campo "+op+" no debe contener números";
+                                return msg;  
+
+                            }
+
+                            break;
+                        }
+
+                     }else{
+
+                        let op     =  "Servicio de salud";
+                        msg.title  = "Datos de servicios de salud";
+                        msg.status = "error";
+                        msg.msg    = "El campo "+op+" es obligatorio";
+                        return msg;  
+                     }
+                    
+                    return msg;
 
                 }
 
