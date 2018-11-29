@@ -44,6 +44,7 @@ define([
                 ResumeReport.return_critic_and_no_critic_report = function(data) /* return {critic_report: ResumeReport, no_critic_report: ResumeReport} */  {
                     var no_critic_report = new ResumeReport();
                     var critic_report = new ResumeReport();
+                    var total_report = new ResumeReport();
                     for( var _i = 0, data_1 = data; _i < data_1.length; _i++) {
                         var report_item = data_1[_i];
                         if(report_item.items_con_almenos_una_nota > 0) {
@@ -65,11 +66,19 @@ define([
                             }
                         }
                     }
-                    return {critic_report: critic_report, no_critic_report: no_critic_report};
+                    total_report = ResumeReport.return_total_report(critic_report , no_critic_report);
+                    return {critic_report: critic_report, no_critic_report: no_critic_report, total_report: total_report};
+                };
+                ResumeReport.return_total_report = function(critic_report, no_critic_report) {
+                  var total_report = new ResumeReport();
+                  total_report.cursos_al_item_calif = critic_report.cursos_al_item_calif + no_critic_report.cursos_al_item_calif;
+                    total_report.cursos_al_un_est_ases = critic_report.cursos_al_un_est_ases + no_critic_report.cursos_al_un_est_ases;
+                    total_report.cursos_al_un_item = critic_report.cursos_al_un_item + no_critic_report.cursos_al_un_item;
+                    return total_report;
                 };
                 return ResumeReport;
             }());
-            var resume_report = {}/*{critic_report: ResumeReport, no_critic_report: ResumeReport}*/;
+            var resume_report = {}/*{critic_report: ResumeReport, no_critic_report: ResumeReport, total_report: ResumeReport }*/;
             var course_id = data.course_id;
             var instance_id = data.instance_id;
             var grade_table_border_color = '#cccccc';
@@ -177,6 +186,7 @@ define([
                     function (dataTable){
                         $("#tableFinalgradesReport").html('');
                         resume_report = ResumeReport.return_critic_and_no_critic_report(dataTable.data);
+
                         templates.render('block_ases/course_and_teacher_report_summary', {resume_report: resume_report})
                             .then(function(html, js) {
                                 templates.appendNodeContents('.course_and_teacher_report .summary', html, js);

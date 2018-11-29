@@ -75,7 +75,7 @@ function get_losed_and_aproved_item_grades($id_instancia, $semestre = null) {
     }
 
     $sql = <<<SQL
-select  num_doc, count(*) filter(where not item_ganado) as cantidad_items_perdidos, count(*) filter (where item_ganado) as cantidad_items_ganados, username, mdl_user_id, mdl_talentospilos_usuario_id, firstname, lastname   from (
+select  num_doc, username as codigo, count(*) filter(where not item_ganado) as cantidad_items_perdidos, count(*) filter (where item_ganado) as cantidad_items_ganados, username, mdl_user_id, mdl_talentospilos_usuario_id, firstname, lastname   from (
 select
    distinct mdl_user.*, mdl_talentospilos_usuario.num_doc,
             case when (finalgrade < grademax * 0.6 or finalgrade is  null) then false else true end as item_ganado,
@@ -105,11 +105,10 @@ from mdl_talentospilos_usuario
         on mdl_grade_items.id = mdl_grade_grades.itemid
       inner join mdl_course
         on mdl_grade_items.courseid= mdl_course.id
-
+    inner join mdl_talentospilos_inst_cohorte
+    on mdl_talentospilos_inst_cohorte.id_cohorte = mdl_cohort_members.cohortid
 where substring(mdl_course.shortname from 15 for 6) =  '$semestre'
-  and mdl_cohort_members.cohortid in (
-    select id from mdl_talentospilos_inst_cohorte where mdl_talentospilos_inst_cohorte.id_instancia = $id_instancia
-    )
+and mdl_talentospilos_inst_cohorte.id_instancia = $id_instancia
  and mdl_grade_items.itemtype != 'category'
  AND  mdl_grade_items.itemtype != 'course'
  and mdl_talentospilos_user_extended.tracking_status = 1
@@ -314,6 +313,11 @@ function get_datatable_for_student_grades_report($instance_id) {
         "name"=>'num_doc',
         "data"=>"num_doc",
         "description"=>"Número de docuento de el estudiante"));
+    array_push($columns, array(
+        "title"=>"Código",
+        "name"=>'codigo',
+        "data"=>"codigo",
+        "description"=>"Código de el estudiante seguido de su programa"));
     array_push($columns, array(
         "title"=>"Apellidos",
         "name"=>"lastname",
