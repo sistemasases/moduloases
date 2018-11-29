@@ -120,6 +120,7 @@ if ($student_code != 0) {
     $id_user_moodle = get_id_user_moodle($ases_student->id);
     $id_user_moodle_ = $id_user_moodle;
 
+
     $user_moodle = get_moodle_user($id_user_moodle);
     
     
@@ -129,6 +130,23 @@ if ($student_code != 0) {
     $status_ases_array = get_ases_status($ases_student->id, $blockid);
 
     $document_type = get_document_types_for_profile($ases_student->id);
+
+    //Get economics data of student
+    if(get_exist_economics_data($ases_student->id)){
+        $record->economics_data      = "1";
+        $record->economics_data_json = json_encode(get_economics_data($ases_student->id));
+    }else{
+        $record->economics_data = "0";
+    }
+
+     //Get health data of student
+     if(get_exist_health_data($ases_student->id)){
+        $record->health_data      = "1";
+        $record->health_data_json = json_encode(get_health_data($ases_student->id));
+    }else{
+        $record->health_data = "0";
+    }
+
 
     $record->id_moodle = $id_user_moodle;
     $record->id_ases = $student_id;
@@ -167,7 +185,8 @@ if ($student_code != 0) {
     $record->attendant = $ases_student->acudiente;
     $record->attendant_tel = $ases_student->tel_acudiente;
     $record->num_doc = $ases_student->num_doc;
-    $record->json_detalle  =$ases_student->json_detalle;
+    $record->json_detalle_discapacity  =$ases_student->json_detalle;
+    
   
     
       $personas = '';
@@ -214,6 +233,23 @@ if ($student_code != 0) {
     }
 
     $record->options_estado_civil = $options_estado_civil;
+
+
+
+     //TRAE OCUPACIONES
+    $ocupaciones= get_ocupaciones();
+    $options_ocupaciones= '';
+
+    $i=0;
+
+            $options_ocupaciones .= "<option selected= 'selected' value='option_ninguna' title='NINGUNA DE LAS ANTERIORES'>NINGUNA DE LAS ANTERIORES</option>";
+    foreach($ocupaciones as $ocupacion){
+            $options_ocupaciones .= "<option value='$ocupacion->value' title='$ocupacion->ocupacion'>$ocupacion->alias...</option>";
+    }
+
+    $record->ocupaciones = $options_ocupaciones;
+
+
 
 
     //TRAE PAISES
@@ -1596,6 +1632,7 @@ $PAGE->requires->js_call_amd('block_ases/student_profile_main', 'equalize');
 $PAGE->requires->js_call_amd('block_ases/geographic_main', 'init');
 $PAGE->requires->js_call_amd('block_ases/dphpforms_form_renderer', 'init');
 $PAGE->requires->js_call_amd('block_ases/dphpforms_form_discapacity', 'init');
+$PAGE->requires->js_call_amd('block_ases/dphpforms_form_others_sp', 'init');
 $PAGE->requires->js_call_amd('block_ases/academic_profile_main', 'init');
 
 $output = $PAGE->get_renderer('block_ases');
