@@ -58,6 +58,7 @@ define([
              *     firstname,
              *     mdl_user_id,
              *     cantidad_items_ganados,
+             *     codigo,
              *     cantidad_items_perdidos
              * }
              *

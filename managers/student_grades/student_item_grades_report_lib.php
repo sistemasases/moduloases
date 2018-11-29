@@ -75,7 +75,7 @@ function get_losed_and_aproved_item_grades($id_instancia, $semestre = null) {
     }
 
     $sql = <<<SQL
-select  num_doc, count(*) filter(where not item_ganado) as cantidad_items_perdidos, count(*) filter (where item_ganado) as cantidad_items_ganados, username, mdl_user_id, mdl_talentospilos_usuario_id, firstname, lastname   from (
+select  num_doc, username as codigo, count(*) filter(where not item_ganado) as cantidad_items_perdidos, count(*) filter (where item_ganado) as cantidad_items_ganados, username, mdl_user_id, mdl_talentospilos_usuario_id, firstname, lastname   from (
 select
    distinct mdl_user.*, mdl_talentospilos_usuario.num_doc,
             case when (finalgrade < grademax * 0.6 or finalgrade is  null) then false else true end as item_ganado,
@@ -313,6 +313,11 @@ function get_datatable_for_student_grades_report($instance_id) {
         "name"=>'num_doc',
         "data"=>"num_doc",
         "description"=>"Número de docuento de el estudiante"));
+    array_push($columns, array(
+        "title"=>"Código",
+        "name"=>'codigo',
+        "data"=>"codigo",
+        "description"=>"Código de el estudiante seguido de su programa"));
     array_push($columns, array(
         "title"=>"Apellidos",
         "name"=>"lastname",
