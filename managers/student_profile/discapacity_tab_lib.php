@@ -56,6 +56,54 @@ function save_detalle_discapacidad($json, $id_ases){
 
 }
 
+
+
+
+/**
+ * Function save health_data in table talentospilos_health_data
+ * @see save_health_data(economics_data)
+ * @param $health_data  valid Object with health data 
+ * @return boolean
+ **/
+
+function save_health_data($health_data){
+    global $DB;
+   
+    $result = $DB->insert_record("talentospilos_health_data", $health_data, true);
+    return $result;
+
+}
+
+/**
+ * Function update health_data register in table talentospilos_health_data switch user
+ * @see update_health_data(health_data, id_ases)
+ * @param $health_data  valid Object with health data 
+ * @param $id_ases      user id
+ * @return boolean
+ **/
+
+function update_health_data($health_data, $id_ases){
+    global $DB;
+
+    $sql_query = "SELECT id FROM {talentospilos_health_data} WHERE id_ases_user = '$id_ases'";
+    $register = $DB->get_record_sql($sql_query);
+   
+    $data = json_decode($health_data);
+
+    $register_health_data                               = new  stdClass();
+    $register_health_data->id                           = $register->id;;
+    $register_health_data->regimen_salud                = json_encode($data[0]);
+    $register_health_data->servicio_salud_vinculado     = json_encode($data[1]);
+    $register_health_data->servicios_usados             = json_encode($data[2]);
+    $register_health_data->id_ases_user                 = $id_ases;
+
+    $result = $result = $DB->update_record('talentospilos_health_data', $register_health_data);
+    return $result;
+
+}
+
+
+
 /**
  * Function save economics_data in table talentospilos_economics_data
  * @see save_economics_data(economics_data)
@@ -75,6 +123,7 @@ function save_economics_data($economics_data){
  * Function update economics_data register in table talentospilos_economics_data switch user
  * @see update_economics_data(economics_data, id_ases)
  * @param $economics_data  valid Object with economics data 
+ * @param $id_ases      user id
  * @return boolean
  **/
 

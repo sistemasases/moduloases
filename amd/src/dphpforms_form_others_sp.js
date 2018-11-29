@@ -22,9 +22,36 @@ define([
 ], function ($, jszip, dataTables, autoFill, buttons, html5, flash, print, bootstrap, sweetalert, jqueryui, select2) {
     return {   
             init: function(){
+                var id_ases = $("#id_ases").val();
 
                 //Servicio Salud
-                    $("#save_health").click(function(){
+
+
+                $("#edit_health_data").click(function(){
+                       
+                    //Validar las respuestas obtenidas
+                    let respuesta = validateHealthData();
+
+
+                    if(respuesta.status == "error"){
+                        swal(respuesta.title,
+                            respuesta.msg,
+                            respuesta.status);
+                    }else{
+                    //Si no hay campos obligatorios vacíos, capturar datos
+
+                    let json_health_data = getHealthData();
+                    json_health_data = JSON.stringify(json_health_data);
+
+                    editHealthData(json_health_data, id_ases);
+                    
+
+                    }
+
+
+                 });
+
+                    $("#save_health_data").click(function(){
                        
                     //Validar las respuestas obtenidas
                     let respuesta = validateHealthData();
@@ -37,23 +64,22 @@ define([
                         }else{
                         //Si no hay campos obligatorios vacíos, capturar datos
 
-                        // let json_economics_data = getEconomicsData();
-                        // json_economics_data = JSON.stringify(json_economics_data);
-                        // let id_ases = $("#id_ases").val();
-
-                        // saveEconomicsData(json_economics_data, id_ases);
+                        let json_health_data = getHealthData();
+                        json_health_data = JSON.stringify(json_health_data);
+                        
+                        saveHealthData(json_health_data, id_ases);
                         
 
                         }
                     });
 
                     if($("#input_health_saved").val() == "0"){
-                    $("#save_health").parent().show();
+                    $("#save_health_data").parent().show();
                     }
                     if($("#input_health_saved").val() == "1"){
-                    $("#save_health").parent().hide();
-                    $("#edit_health").parent().show();
-                    //showSavedHealthData();
+                    $("#save_health_data").parent().hide();
+                    $("#edit_health_data").parent().show();
+                    showSavedHealthData();
                     }
 
                     $("#check_servicio_otro").click(function(){
@@ -157,7 +183,7 @@ define([
 
                         let json_economics_data = getEconomicsData();
                         json_economics_data = JSON.stringify(json_economics_data);
-                        let id_ases = $("#id_ases").val();
+                   
 
                         saveEconomicsData(json_economics_data, id_ases);
                         
@@ -180,7 +206,6 @@ define([
     
                             let json_economics_data = getEconomicsData();
                             json_economics_data = JSON.stringify(json_economics_data);
-                            let id_ases = $("#id_ases").val();
     
                             editEconomicsData(json_economics_data, id_ases);
                             
@@ -189,6 +214,9 @@ define([
 
 
                     });
+
+                //DATOS ECONÓMICOS FUNCIONES    
+
                 function showSavedEconomicsData(){
                     let  key, val,key_input_text, val_input_text, key_input_number, val_input_number, json_interno;
 
@@ -216,7 +244,7 @@ define([
                         showOption(key, val, key_input_text, val_input_text, key_input_number, val_input_number);
                         break;
                         case "beca":
-                          //Prestación económica
+                          //Ayuda beca
                            json_interno   = JSON.parse(json_economics_data[i]);
                           key                = json_interno['key_input'];          
                           val                = json_interno['val_input'];
@@ -228,7 +256,7 @@ define([
                           showOption(key, val, key_input_text, val_input_text, key_input_number, val_input_number);
                         break;
                         case "ayuda_transporte":
-                          //Prestación económica
+                          //Ayuda transporte
                           json_interno   = JSON.parse(json_economics_data[i]);
                           key                = json_interno['key_input'];          
                           val                = json_interno['val_input'];
@@ -240,7 +268,7 @@ define([
                           showOption(key, val, key_input_text, val_input_text, key_input_number, val_input_number);
                         break;
                         case "ayuda_materiales":
-                          //Prestación económica
+                          //Ayuda materiales
                           json_interno       = JSON.parse(json_economics_data[i]);
                           key                = json_interno['key_input'];          
                           val                = json_interno['val_input'];
@@ -253,6 +281,7 @@ define([
                           showOption(key, val, key_input_text, val_input_text, key_input_number, val_input_number);
                         break;
                         case "solvencia_econo":
+                        //Solvencia económica
                         val                = json_economics_data[i];
                         if(val == 1){
                             //Fue seleccionada la opción
@@ -263,6 +292,7 @@ define([
                         }
                         break;
                         case "ocupacion_padres":
+                        //Ocupación actual de padres
                         json_interno   = JSON.parse(json_economics_data[i]);
                         for(objeto in json_interno){
                             if(json_interno[objeto]["val_select"] == "option_ninguna"){
@@ -278,6 +308,7 @@ define([
                         }
                         break;
                         case "nivel_educ_padres":
+                        //Nivel educativo de padres
                         json_interno   = JSON.parse(json_economics_data[i]);
                         for(objeto in json_interno){
                      
@@ -286,6 +317,7 @@ define([
                         }
                         break;
                         case "situa_laboral_padres":
+                        //Situacion laboral de padres
                         json_interno   = JSON.parse(json_economics_data[i]);
                         for(objeto in json_interno){
                      
@@ -294,6 +326,7 @@ define([
                         }
                         break;
                         case "expectativas_laborales":
+                        //Expectativas laborales
                         json_interno   = JSON.parse(json_economics_data[i]);
                         $(json_interno["key_input"]).val(json_interno["val_input"]);
                         break;
@@ -302,25 +335,6 @@ define([
                 }
                     
                     
-                }
-
-                function showOption(key, val, key_input_text, val_input_text, key_input_number, val_input_number){
-                
-                    if(val == 1){
-                        //Fue seleccionada la opción
-                        $("#"+key).prop("checked", true);
-                        $("#"+key_input_text).val(val_input_text);
-                        $("#"+key_input_text).parent().parent().show();
-                        $("#"+key_input_number).val(val_input_number);
-    
-                    }else{
-                        //No fue seleccionada la opción
-                        $("#"+key).prop("checked", false);
-                        $("#"+key_input_text).val("");
-                        $("#"+key_input_text).parent().parent().hide();
-                        $("#"+key_input_number).val("");
-                    }
-                
                 }
 
                 function editEconomicsData(json_data, ases_id){
@@ -340,7 +354,7 @@ define([
                             type: msg.status
                            },
                            function(){
-                            $("html, body").animate({scrollTop:650}, 'slow'); 
+                            $("html, body").animate({scrollTop:700}, 'slow'); 
                             $("#input_json_economics_saved").val(json_data);
                            }
                         
@@ -384,9 +398,9 @@ define([
                                 type: msg.status
                                },
                                function(){
-                                $("html, body").animate({scrollTop:650}, 'slow'); 
-                                $("#save_economics_data").hide();
-                                $("#edit_economics_data").show();
+                                $("html, body").animate({scrollTop:700}, 'slow'); 
+                                $("#save_economics_data").parent().hide();
+                                $("#edit_economics_data").parent().show();
                                 $("#input_economics_saved").val("1");
                                }
                             
@@ -557,6 +571,359 @@ define([
 
                 }
 
+                function validateEconomicsData(){
+
+                    var msg = new Object();
+
+                    msg.title = "Éxito";
+                    msg.msg = "El formulario fue validado con éxito";
+                    msg.status = "success";
+
+
+                    $("#collapse_econo input[type=checkbox]").not(".check_solvencia").each( function(){
+                        if($(this).is(":checked")){
+
+                            $(this).parent().next().children().children("input").each( function(){
+                                let value = $(this).val();
+                                let op    = $(this).attr("id");
+                                let tipo  = $(this).attr("type");
+                                if(value == ""){
+    
+                                msg.title = "Datos económicos";
+                                msg.status = "error";
+                                msg.msg = "El campo "+op+" es obligatorio";
+                                return msg;  
+    
+                                }
+                                if(tipo == "text"){
+                                    if(has_numbers(value)){
+                                        msg.title = "Datos económicos";
+                                        msg.status = "error";
+                                        msg.msg = "El campo "+op+" no debe contener números";
+                                        return msg;  
+                                        }
+                                }
+                                if(tipo == "number"){
+                                    if(Number.isNaN(value)){
+                                        msg.title = "Datos económicos";
+                                        msg.status = "error";
+                                        msg.msg = "El campo "+op+" debe ser numérico";
+                                        return msg;  
+                                        }
+                                        if(value < 0){
+                                            msg.title = "Datos económicos";
+                                            msg.status = "error";
+                                            msg.msg = "El campo "+op+" no debe ser negativo";
+                                            return msg;  
+                                            }    
+                                }
+                                
+                            });
+                          
+                        }
+                       
+                    });
+
+
+                    if($("#estrato_socioeconomico").val() == ""){
+                        let op    = "estrato_socioeconomico";
+
+                        msg.title = "Datos económicos";
+                        msg.status = "error";
+                        msg.msg = "El campo "+op+" es obligatorio y debe ser número entero";
+                        return msg;  
+                       
+                    }else {
+
+                        let value = $("#estrato_socioeconomico").val();
+                        let op    = "estrato_socioeconomico";
+
+                        if(value < 1 || value > 6 || (value % 1) != 0 ){
+                           
+                            msg.title = "Datos económicos";
+                            msg.status = "error";
+                            msg.msg = "El campo "+op+" corresponde a estratos sociales (Del 1 al 6)";
+                            return msg;  
+                    }
+                    }
+
+
+                    if($("#select_ocupacion_madre").val() != "option_ninguna"){
+
+                        let value = $("#input_ocupacion_madre").val();
+                        let op    = "input_ocupacion_madre";
+
+                        if( value == ""){
+                           
+
+                                msg.title = "Datos económicos";
+                                msg.status = "error";
+                                msg.msg = "El campo "+op+" es obligatorio";
+                                return msg;  
+                        }
+                    }
+
+                    if($("#select_ocupacion_padre").val() != "option_ninguna"){
+
+                        let value = $("#input_ocupacion_padre").val();
+                        let op    = "input_ocupacion_padre";
+
+                        if( value == ""){
+                           
+
+                                msg.title = "Datos económicos";
+                                msg.status = "error";
+                                msg.msg = "El campo "+op+" es obligatorio";
+                                return msg;  
+                        }
+                    }
+
+                    return msg;
+
+                }
+
+                //DATOS SERVICIO SALUD FUNCIONES
+
+                function showSavedHealthData(){
+                    let  key, val,key_input_text, val_input_text, json_interno;
+
+                    let json_health_data = JSON.parse($("#input_json_health_saved").val());
+                   //Se debe parsear el JSON interno de cada opcion
+                   for(i in json_health_data){
+
+                    switch(i){
+                        case "regimen_salud":
+                        //Regimen de salud 
+                        json_interno   = JSON.parse(json_health_data[i]);
+                        $("#"+json_interno["key_input"]).prop("checked", true);;
+                        break;
+                
+                        case "servicio_salud_vinculado":
+                          //Servicio de salud vinculado
+                          json_interno   = JSON.parse(json_health_data[i]);
+                          key                = json_interno['key_input'];          
+                          key_input_text     = json_interno['key_input_text'];           
+                          val_input_text     = json_interno['val_input_text'];
+
+                            //Fue seleccionada la opción
+                            $("#"+key).prop("checked", true);
+                            $("#"+key_input_text).val(val_input_text);
+                            $("#"+key_input_text).parent().show();
+                            if(key == "input_radio_sisben"){
+                                $("#"+key_input_text).attr("title", "Escriba Nivel");
+                                $("#"+key_input_text).attr("type", "number");
+                                $("#"+key_input_text).attr("min", "1");
+                                $("#"+key_input_text).attr("max", "3");
+                            }
+                            if(key=="input_radio_eps"){
+
+                                $("#"+key_input_text).attr("title", "Escriba EPS");
+                                $("#"+key_input_text).attr("placeholder", "¿Cuál EPS?");
+                                $("#"+key_input_text).attr("type", "text");
+        
+                            }else if (key =="input_radio_otro_servicio"){
+    
+                                $("#"+key_input_text).attr("title", "Escriba otro servicio");
+                                $("#"+key_input_text).attr("placeholder", "¿Cuál servicio de salud?");
+                                $("#"+key_input_text).attr("type", "text");
+        
+                            }
+
+                        break;
+                        case "servicios_usados":
+                        //Servicios de salud usados
+
+                        json_interno   = JSON.parse(json_health_data[i]);
+                        for(objeto in json_interno){
+                            if(json_interno[objeto]["val_input"] == 1 ){
+                                //Fue seleccionado 
+                                $("#"+json_interno[objeto]["key_input"]).prop("checked", true);
+                                if(json_interno[objeto]["key_input"] == "check_servicio_otro"){
+                                     //Mostrar el campo de Otro servicio
+                                     $("#"+json_interno[objeto]["key_input_text"]).val(json_interno[objeto]["val_input_text"]);
+                                     $("#"+json_interno[objeto]["key_input_text"]).parent().show();
+
+                                }
+                                 
+                                
+                            }else {
+                                //No fue seleccionado 
+                                $("#"+json_interno[objeto]["key_input"]).prop("checked", false);
+
+                                if(json_interno[objeto]["key_input"] == "check_servicio_otro"){
+                                    //Ocultar el campo de Otro servicio
+                                    $("#servicio_otro_cual").val("");
+                                    $("#servicio_otro_cual").parent().hide();
+                                }
+                            }
+                            
+                            
+                            
+                        }
+                        break;
+                       
+
+                    }
+                }
+                    
+                    
+                }
+
+                function editHealthData(json_data, ases_id){
+                    $.ajax({
+                        type: "POST",
+                        data: {
+                            func: 'edit_health_data',
+                            json: json_data, 
+                            ases: ases_id
+                        },
+                        url: "../managers/student_profile/discapacity_tab_api.php",
+                        success: function(msg) {
+                
+                            swal(
+                               { title: msg.title,
+                                text: msg.msg,
+                                type: msg.status
+                               },
+                               function(){
+                                $("html, body").animate({scrollTop:820}, 'slow'); 
+                                $("#input_json_health_saved").val(json_data);
+                               }
+                            
+        
+                            );
+        
+        
+                            //$("#un_input").attr("value", json_data);
+        
+                           
+                        },
+                        dataType: "json",
+                        cache: "false",
+                        error: function(msg) {
+                            swal(
+                                msg.title,
+                                msg.msg,
+                                msg.status
+                            );
+        
+                        },
+                    });
+        
+        
+                    }
+
+                function saveHealthData(json_data, ases_id){
+                    $.ajax({
+                        type: "POST",
+                        data: {
+                            func: 'save_health_data',
+                            json: json_data, 
+                            ases: ases_id
+                        },
+                        url: "../managers/student_profile/discapacity_tab_api.php",
+                        success: function(msg) {
+                
+                            swal(
+                               { title: msg.title,
+                                text: msg.msg,
+                                type: msg.status
+                               },
+                               function(){
+                                $("html, body").animate({scrollTop:820}, 'slow'); 
+                                $("#save_health_data").parent().hide();
+                                $("#edit_health_data").parent().show();
+                                $("#input_health_saved").val("1");
+                               }
+                            
+        
+                            );
+        
+        
+                            //$("#un_input").attr("value", json_data);
+        
+                           
+                        },
+                        dataType: "json",
+                        cache: "false",
+                        error: function(msg) {
+                            swal(
+                                msg.title,
+                                msg.msg,
+                                msg.status
+                            );
+        
+                        },
+                    });
+        
+        
+                }
+
+                function getHealthData(){
+
+                    //Crea JSON con todos los datos económicos registrados, así como sus identificadores de tags...
+
+                    let array_health_data = [];
+                   
+                    //Regimen de salud
+                    let val_regimen = $("#opciones_regimen_salud").find(":input[type=radio]:checked").val();
+                    let key_regimen = $("#opciones_regimen_salud").find(":input[type=radio]:checked").attr("id");
+
+                    let regimen_salud = {key_input: key_regimen,
+                                         val_input: val_regimen
+                    };
+
+                    //Servicio de salud (EPS, SISBEN, OTRO)
+                    let val_serv_radio    = $("#opciones_servicio_salud").find(":input[type=radio]:checked").val();
+                    let key_serv_radio    = $("#opciones_servicio_salud").find(":input[type=radio]:checked").attr("id");
+                    let val_serv_text     = $("#input_detalle_servicio").val();
+                    let key_serv_text     = "input_detalle_servicio";
+
+                    let servicio_salud= {key_input: key_serv_radio,
+                                         val_input: val_serv_radio,
+                                         val_input_text: val_serv_text,
+                                         key_input_text: key_serv_text
+                    };
+
+                    //Servicios de salud usados
+                    
+                    let array_servicios = [];
+                    let objeto_json     = {};
+
+                    $("#options_services input[type=checkbox]").each( function(){
+
+                        objeto_json.key_input = $(this).attr("id");
+
+                        if($(this).is(":checked")){
+
+                            objeto_json.val_input = 1;
+
+                            if(objeto_json.key_input == "check_servicio_otro"){
+                                
+                                    objeto_json.key_input_text = "servicio_otro_cual";
+                                    objeto_json.val_input_text = $("#servicio_otro_cual").val();
+                            }
+                          
+                        }else{
+                            objeto_json.val_input = 0;
+                        }
+
+                        array_servicios.push(objeto_json);
+                        objeto_json = {};
+                    });
+
+
+
+                    array_health_data.push(regimen_salud);
+                    array_health_data.push(servicio_salud);
+                    array_health_data.push(array_servicios);
+
+                    
+
+                    return array_health_data;
+
+                }
+
                 function validateHealthData(){
 
                     var msg = new Object();
@@ -683,115 +1050,24 @@ define([
 
                 }
 
-                function validateEconomicsData(){
-
-                    var msg = new Object();
-
-                    msg.title = "Éxito";
-                    msg.msg = "El formulario fue validado con éxito";
-                    msg.status = "success";
-
-
-                    $("#collapse_econo input[type=checkbox]").not(".check_solvencia").each( function(){
-                        if($(this).is(":checked")){
-
-                            $(this).parent().next().children().children("input").each( function(){
-                                let value = $(this).val();
-                                let op    = $(this).attr("id");
-                                let tipo  = $(this).attr("type");
-                                if(value == ""){
+              
+                function showOption(key, val, key_input_text, val_input_text, key_input_number, val_input_number){
+                
+                    if(val == 1){
+                        //Fue seleccionada la opción
+                        $("#"+key).prop("checked", true);
+                        $("#"+key_input_text).val(val_input_text);
+                        $("#"+key_input_text).parent().parent().show();
+                        $("#"+key_input_number).val(val_input_number);
     
-                                msg.title = "Datos económicos";
-                                msg.status = "error";
-                                msg.msg = "El campo "+op+" es obligatorio";
-                                return msg;  
-    
-                                }
-                                if(tipo == "text"){
-                                    if(has_numbers(value)){
-                                        msg.title = "Datos económicos";
-                                        msg.status = "error";
-                                        msg.msg = "El campo "+op+" no debe contener números";
-                                        return msg;  
-                                        }
-                                }
-                                if(tipo == "number"){
-                                    if(Number.isNaN(value)){
-                                        msg.title = "Datos económicos";
-                                        msg.status = "error";
-                                        msg.msg = "El campo "+op+" debe ser numérico";
-                                        return msg;  
-                                        }
-                                        if(value < 0){
-                                            msg.title = "Datos económicos";
-                                            msg.status = "error";
-                                            msg.msg = "El campo "+op+" no debe ser negativo";
-                                            return msg;  
-                                            }    
-                                }
-                                
-                            });
-                          
-                        }
-                       
-                    });
-
-
-                    if($("#estrato_socioeconomico").val() == ""){
-                        let op    = "estrato_socioeconomico";
-
-                        msg.title = "Datos económicos";
-                        msg.status = "error";
-                        msg.msg = "El campo "+op+" es obligatorio y debe ser número entero";
-                        return msg;  
-                       
-                    }else {
-
-                        let value = $("#estrato_socioeconomico").val();
-                        let op    = "estrato_socioeconomico";
-
-                        if(value < 1 || value > 6 || (value % 1) != 0 ){
-                           
-                            msg.title = "Datos económicos";
-                            msg.status = "error";
-                            msg.msg = "El campo "+op+" corresponde a estratos sociales (Del 1 al 6)";
-                            return msg;  
+                    }else{
+                        //No fue seleccionada la opción
+                        $("#"+key).prop("checked", false);
+                        $("#"+key_input_text).val("");
+                        $("#"+key_input_text).parent().parent().hide();
+                        $("#"+key_input_number).val("");
                     }
-                    }
-
-
-                    if($("#select_ocupacion_madre").val() != "option_ninguna"){
-
-                        let value = $("#input_ocupacion_madre").val();
-                        let op    = "input_ocupacion_madre";
-
-                        if( value == ""){
-                           
-
-                                msg.title = "Datos económicos";
-                                msg.status = "error";
-                                msg.msg = "El campo "+op+" es obligatorio";
-                                return msg;  
-                        }
-                    }
-
-                    if($("#select_ocupacion_padre").val() != "option_ninguna"){
-
-                        let value = $("#input_ocupacion_padre").val();
-                        let op    = "input_ocupacion_padre";
-
-                        if( value == ""){
-                           
-
-                                msg.title = "Datos económicos";
-                                msg.status = "error";
-                                msg.msg = "El campo "+op+" es obligatorio";
-                                return msg;  
-                        }
-                    }
-
-                    return msg;
-
+                
                 }
 
                 function has_numbers(str) {

@@ -143,7 +143,60 @@ if(isset($_POST['func'])){
            }
  
 
-    }
+    }    else if ($_POST['func'] == 'save_health_data') {
+
+        $id_ases = $_POST['ases'];
+
+        $register_health_data                   = new  stdClass();
+       
+
+        $data = json_decode($_POST['json']);
+
+            $register_health_data->regimen_salud             = json_encode($data[0]);
+            $register_health_data->servicio_salud_vinculado  = json_encode($data[1]);
+            $register_health_data->servicios_usados          = json_encode($data[2]);
+            $register_health_data->id_ases_user              = $id_ases;
+
+            $result =  save_health_data($register_health_data);
+            if($result){
+                $msg->title = "Éxito";
+                $msg->status = "success";
+               $msg->msg = "La información se ha almacenado correctamente.";
+               echo json_encode($msg);
+               
+           }else{
+               $msg->title = "Error";
+               $msg->msg = "No se ha guardado correctamente.";
+               $msg->status = "error";
+               echo json_encode($msg);
+           }
+ 
+
+    }  else if ($_POST['func'] == 'edit_health_data') {
+
+        //Actualizar registro en BD. 
+
+
+        $id_ases = $_POST['ases'];
+        $data = $_POST['json'];
+
+            $result =       update_health_data($data, $id_ases);
+            if($result){
+                $msg->title = "Éxito";
+                $msg->status = "success";
+               $msg->msg = "La información se ha actualizado correctamente.";
+               echo json_encode($msg);
+               
+           }else{
+               $msg->title = "Error";
+               $msg->msg = "No se ha actualizado correctamente.";
+               $msg->status = "error";
+               echo json_encode($msg);
+           }
+ 
+
+    } 
+
     else{
         $msg->title = "Error";
         $msg->msg = "No se ha enviado una función. Informe al área de sistemas.";
