@@ -153,11 +153,13 @@ abstract class student_item_grades extends grade_grade {
 }
 
 /**
- * Class student_item_grades_with_items
+ * Class student_item_grades_with_items, Object than have all the properties of grade_grades and
+ *  grade_items, additional to the defined properties in this class via class php docs comments
  * @property $grade_id
  * @property $item_id
  * @property $multfactor
  * @property $itemname
+ * @property $itemtype
  */
 abstract class student_item_grades_with_items extends student_item_grades {
 
@@ -219,10 +221,19 @@ class ReportStudentItemGradesSummaryItem {
  * @return string Example: "Exam(70%): 5.0"" or empty string if include null final grade is false and final grade is false
  */
 function normalize_grade($item, $decimal_places = 1): string {
+    $item_object = grade_item::fetch(array('id'=>$item->id));
+    $item_parent_category = $item_object->get_parent_category();
     $finalgrade =  number_format((float) $item->finalgrade, $decimal_places);
     $formated_final_grade = $finalgrade == 0? 0 : $finalgrade;
-    $formated_mult_factor = number_format((float) $item->multfactor * 100, 0);
-    $formated_mult_factor_str = $formated_mult_factor == 100? '' : "($formated_mult_factor)";
+    $formated_agregation_coef = '';
+    if (
+        $item->itemtype !== 'course' && /* Total course grade, always is 0.0% */
+        $item->aggregationcoef != 0 &&
+        $item_parent_category->aggregation == 10) { // if agregation is Weighted mean of grades
+        $agregationcoef = number_format((float)$item->aggregationcoef, 2, '.', '');
+        $formated_agregation_coef  = "$agregationcoef%";
+    }
+    $formated_mult_factor_str = $formated_agregation_coef == '' ? '' : "($formated_agregation_coef)";
     $first_word_item_name = explode(' ', $item->itemname)[0];
     $normalized_grade="$first_word_item_name$formated_mult_factor_str: $formated_final_grade";
     return $normalized_grade;
