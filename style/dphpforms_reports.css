@@ -23,3 +23,16 @@ input[type='checkbox'] {
 table#dphpform_datatable {
     table-layout:fixed;
 }
+
+#msg-chrome{
+    background-color: rgb(228, 228, 228);
+    border: 1px solid black;
+    border-radius: 3px;
+    padding: 0.5em;
+}
+
+#msg-chrome > img{
+    width: 3%;
+    height: auto;
+    margin-right: 5px;
+}
