@@ -116,12 +116,75 @@ function update_user_image_profile($mdl_user_id, $php_file) {
      return $status_ases_array;
  }
 
- /**
- * Get Condición de excepción registradas
+  /**
+ * Gets true or false if register economics_data exist
  *
- * @see get_cond_excepcion()
- * @return object --> with CONDICIÓN DE EXCEPCIÓN information
+ * @see get_exist_economics_data()
+ * @return boolean
  */
+ 
+function get_exist_economics_data($id_ases_user){
+     
+    global $DB;
+    
+    return $DB->record_exists('talentospilos_economics_data',array('id_ases_user'=> $id_ases_user));
+}
+
+  /**
+ * Gets record with student economics_data information
+ *
+ * @see get_economics_data($id_ases)
+ * @param $id_ases id ases student 
+ * @return object
+ */
+ 
+function get_economics_data($id_ases){
+     
+    global $DB;
+
+    $sql_query = "SELECT estrato, prestacion_economica, beca, ayuda_transporte, ayuda_materiales, solvencia_econo, ocupacion_padres, 
+                            nivel_educ_padres, situa_laboral_padres, expectativas_laborales FROM {talentospilos_economics_data} WHERE id_ases_user = '$id_ases'";
+    $register = $DB->get_record_sql($sql_query);
+    
+    return $register;
+
+    
+}
+
+   /**
+ * Gets true or false if register health_data exist
+ *
+ * @see get_exist_health_data()
+ * @return boolean
+ */
+ 
+function get_exist_health_data($id_ases_user){
+     
+    global $DB;
+    
+    return $DB->record_exists('talentospilos_health_data',array('id_ases_user'=> $id_ases_user));
+}
+
+  /**
+ * Gets record with student health_data information
+ *
+ * @see get_health_data($id_ases)
+ * @param $id_ases id ases student 
+ * @return object
+ */
+ 
+function get_health_data($id_ases){
+     
+    global $DB;
+
+    $sql_query = "SELECT regimen_salud, servicio_salud_vinculado, servicios_usados FROM {talentospilos_health_data} WHERE id_ases_user = '$id_ases'";
+    $register = $DB->get_record_sql($sql_query);
+    
+    return $register;
+
+    
+}
+
 
 
 /**
@@ -140,6 +203,13 @@ function get_student_profile_url($courseid, $instanceid, $student_code): moodle_
             ));
 }
 
+
+ /**
+ * Get Condición de excepción registradas
+ *
+ * @see get_cond_excepcion()
+ * @return object --> with CONDICIÓN DE EXCEPCIÓN information
+ */
 
 
 function  get_cond_excepcion()
@@ -190,6 +260,23 @@ function  get_paises()
    $sql_query = "SELECT * FROM {talentospilos_pais}";
    return $DB->get_records_sql($sql_query);
 }
+
+
+/**
+ * Get ocupaciones registradas
+ *
+ * @see get_ocupaciones()
+ * @return object --> with OCUPACION information
+ */
+
+function  get_ocupaciones()
+{
+    global $DB; 
+   $sql_query = "SELECT * FROM {talentospilos_ocupaciones}";
+   return $DB->get_records_sql($sql_query);
+}
+
+
 
 /**
  * Get municipios registrados
