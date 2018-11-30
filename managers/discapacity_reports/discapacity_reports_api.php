@@ -36,10 +36,9 @@
         //loadF can be: loadForms, get_form, get_id_user
         
         if(  $_POST['load'] ==  "loadTableDiscapacityReports"  ){
-            //Example of loadF: loadForms valid: 
-            //data: loadForms does not require params
-            //Example of loadF: get_like valid: 
-            //data: get_like require cadena and atributo params
+            //Example of load: loadTableDiscapacityReports valid: 
+            //data: loadTableDiscapacityReports does not require params
+            //Create DataTable 
 
 
            $retorno = get_list_discapacity_reports();
@@ -139,7 +138,30 @@
             echo json_encode($data);
 
 
-        }else{
+        }else if( $_POST['load'] == "get_others_data_discapacity" ){
+            //Example of loadF: get_form valid: 
+            //data: get_form   params: id_form
+          
+            if( count($_POST['params']) == 1 ){
+
+             //Get json_detalle discapacity data switch id
+
+             $data         = get_detalle_discapacity($_POST['params']);
+             $objeto_modal = new stdClass();
+             $json_detalle = json_decode($data);
+             $objeto_modal->cant_dificultad_permanente_funciones =  count($json_detalle->dificultad_permanente_funciones);
+             $objeto_modal->cant_condicion_salud_organos         =  count($json_detalle->condicion_salud_organos);
+             $objeto_modal->cant_necesidades_situaciones         =  count($json_detalle->necesidades_situaciones);
+             $objeto_modal->cant_factores_impacto                =  count($json_detalle->factores_impacto);
+             $objeto_modal->cant_posibilidad_actividades         =  count($json_detalle->posibilidad_actividades);
+
+            echo json_encode($objeto_modal);
+                    
+            }else{     
+                return_with_code( -2 );
+            }
+        }
+        else{
             // Function not defined
             return_with_code( -4 );
         }

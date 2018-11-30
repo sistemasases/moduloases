@@ -225,6 +225,22 @@ function get_students_hd(){
     return $result;
   
  }
+
+ /**
+ * Function that load discapacity data switch num_doc 
+ * @see get_detalle_discapacity($id_form)
+ * @param $id_form---> num_doc user
+ * @return string
+ **/
+
+function get_detalle_discapacity($id_form){
+    global $DB;
+				
+    $sql = "SELECT talentospilos_usuario.json_detalle FROM {talentospilos_usuario} AS talentospilos_usuario WHERE talentospilos_usuario.num_doc = '$id_form'  ";
+
+    $results = $DB->get_record_sql($sql);
+    return $results->json_detalle;
+}
  
 
 ?>
