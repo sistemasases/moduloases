@@ -175,7 +175,10 @@ define([
               $("#form_ficha_inicial").animate({scrollTop:0}, 'slow');
 
               $("#save_ficha_discapacity").parent().show();
-              $("#cancel_ficha_discapacity").parent().show();
+              if($("#input_json_saved").val() !== ""){
+                $("#cancel_ficha_discapacity").parent().show();
+              }
+              
 
               let contenido = $("#textarea_diagnostico").val(); 
               document.getElementById("descrip_diagnostico").innerHTML = contenido;
