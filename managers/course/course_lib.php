@@ -326,7 +326,7 @@ SQL;
  * @return string Final grade in a course if exist
  * @throws \dml_exception
  */
-function get_finalgrade_by_student_and_course($student_id, $course_id){
+function get_finalgrade_by_student_and_course($student_id, $course_id, $num_decimals = 2){
     global $DB;
     $query = "SELECT finalgrade 
                 FROM {grade_grades} AS grades
@@ -336,7 +336,7 @@ function get_finalgrade_by_student_and_course($student_id, $course_id){
 
     $finalgrade = $DB->get_record_sql($query)->finalgrade;
 
-    return number_format($finalgrade, 1);
+    return number_format($finalgrade, $num_decimals);
 }
 
 /**
