@@ -29,6 +29,7 @@ require_once($CFG->libdir.'/adminlib.php');
 require_once ('../managers/validate_profile_action.php');
 require_once ('../managers/menu_options.php');
 require_once '../managers/user_management/user_lib.php';
+require_once '../managers/discapacity_reports/discapacity_reports_lib.php';
 require_once '../managers/instance_management/instance_lib.php';
 require_once '../managers/dateValidator.php';
 require_once '../managers/permissions_management/permissions_lib.php';
@@ -76,6 +77,69 @@ $actions = authenticate_user_view($USER->id, $blockid);
 $data = $actions;
 $data->menu = $menu_option;
 
+//Cantidad de estudiantes de la cohorte DISC2018B sin un registro de detalle de discapacidad
+$data->cantidad_sin_detalle_disc = get_cant_sin_detalle();
+
+//Listar estudiantes sin registro de detalle de discapacidad
+$students_without_discapacity_data = '' ; 
+if($data->cantidad_sin_detalle_disc == 0){
+    $students_without_discapacity_data .= "No hay estudiantes sin detalle de discapacidad";
+}else{
+    $students_without_discapacity_data .= "<div class = 'row'> <div class = 'col-lg-4 col-md-4 col-sm-4 col-xs-4'><strong>Identificación</strong></div> ";
+    $students_without_discapacity_data .= "<div class = 'col-lg-8 col-md-8 col-sm-8 col-xs-8'><strong>Nombre completo</strong></div>   </div>";
+    $estudiantes_sin_datos_discapacidad = get_students_dd();
+    foreach($estudiantes_sin_datos_discapacidad as $student){
+        $name =  $student->firstname_student ." ". $student->lastname_student;
+        $students_without_discapacity_data .= "<div class = 'row'> <div class = 'col-lg-4 col-md-4 col-sm-4 col-xs-4'>$student->num_doc</div>";
+        $students_without_discapacity_data .= " <div class = 'col-lg-8 col-md-8 col-sm-8 col-xs-8'>$name</div> </div>";
+    }
+    
+}
+
+$data->students_without_discapacity_data = $students_without_discapacity_data;
+
+//Cantidad de estudiantes de la cohorte DISC2018B sin un registro de datos económicos
+$data->cantidad_sin_economics_data = get_cant_sin_economics_data();
+
+//Listar estudiantes sin registro económico
+$students_without_economics_data = '' ; 
+if($data->cantidad_sin_economics_data == 0){
+    $students_without_economics_data .= "No hay estudiantes sin datos económicos";
+}else{
+    $students_without_economics_data .= "<div class = 'row'> <div class = 'col-lg-4 col-md-4 col-sm-4 col-xs-4'><strong>Identificación</strong></div> ";
+    $students_without_economics_data .= "<div class = 'col-lg-8 col-md-8 col-sm-8 col-xs-8'><strong>Nombre completo</strong></div>   </div>";
+    $estudiantes_sin_datos_economicos = get_students_ed();
+    foreach($estudiantes_sin_datos_economicos as $student){
+        $name =  $student->firstname_student ." ". $student->lastname_student;
+        $students_without_economics_data .= "<div class = 'row'> <div class = 'col-lg-4 col-md-4 col-sm-4 col-xs-4'>$student->num_doc</div>";
+        $students_without_economics_data .= " <div class = 'col-lg-8 col-md-8 col-sm-8 col-xs-8'>$name</div> </div>";
+    }
+    
+}
+
+$data->students_without_economics_data = $students_without_economics_data;
+
+
+//Cantidad de estudiantes de la cohorte DISC2018B sin un registro de datos de servicio de salud
+$data->cantidad_sin_health_data = get_cant_sin_health_data();
+
+//Listar estudiantes sin registro de servicio de salud
+$students_without_health_data = '' ; 
+if($data->cantidad_sin_health_data == 0){
+    $students_without_health_data .= "No hay estudiantes sin datos económicos";
+}else{
+    $students_without_health_data .= "<div class = 'row'> <div class = 'col-lg-4 col-md-4 col-sm-4 col-xs-4'><strong>Identificación</strong></div> ";
+    $students_without_health_data .= "<div class = 'col-lg-8 col-md-8 col-sm-8 col-xs-8'><strong>Nombre completo</strong></div>   </div>";
+    $estudiantes_sin_datos_salud = get_students_hd();
+    foreach($estudiantes_sin_datos_salud as $student){
+        $name =  $student->firstname_student ." ". $student->lastname_student;
+        $students_without_health_data .= "<div class = 'row'> <div class = 'col-lg-4 col-md-4 col-sm-4 col-xs-4'>$student->num_doc</div>";
+        $students_without_health_data .= " <div class = 'col-lg-8 col-md-8 col-sm-8 col-xs-8'>$name</div> </div>";
+    }
+    
+}
+
+$data->students_without_health_data = $students_without_health_data;
 
 
 $PAGE->requires->css('/blocks/ases/style/base_ases.css', true);
@@ -91,6 +155,7 @@ $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/jquery.dataTables.m
 $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/jquery.dataTables_themeroller.css', true);
 $PAGE->requires->css('/blocks/ases/style/side_menu_style.css', true);
 $PAGE->requires->css('/blocks/ases/style/styles_pilos.css', true);
+$PAGE->requires->css('/blocks/ases/style/discapacity_tab.css', true);
 $PAGE->requires->css('/blocks/ases/style/creadorFormulario.css', true);
 $PAGE->requires->css('/blocks/ases/js/select2/css/select2.css', true);
 $PAGE->requires->css('/blocks/ases/style/beautify-json.css', true);

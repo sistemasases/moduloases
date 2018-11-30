@@ -23,7 +23,27 @@ define([
 ], function ($, jszip, dataTables, autoFill, buttons, html5, flash, print, bootstrap, sweetalert, jqueryui, select2) {
     return {
         init: function () {
+            $(".bt_students_data").click(function(){
 
+
+                var icon = $(this).children("span");
+
+                if (icon.hasClass('glyphicon-chevron-right')) {
+                    icon.removeClass("glyphicon-chevron-right");
+                    icon.addClass("glyphicon-chevron-down");
+                } else {
+                    icon.addClass("glyphicon-chevron-right");
+                    icon.removeClass("glyphicon-chevron-down");
+                }
+
+                var target = $($(this).data('target'));
+                if (target.css('display') != "none") {
+                    target.hide(300);
+                } else {
+                    target.show(300);
+                }
+
+            });
 
         $(document).ready(function () {
                 $.ajax({

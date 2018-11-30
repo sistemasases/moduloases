@@ -3,6 +3,42 @@
   <h2>REPORTES DISCAPACIDAD E INCLUSIÓN</h2>
   <hr style="background-color: red; height: 1px; border: 0">
 
+  <div class="row" >
+      <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 ">
+            <button class="btn btn-primary bt_students_data" type="button" data-toggle="collapse" data-target="#collapseStudentsDiscapacity" aria-expanded="false" aria-controls="collapseStudentsDiscapacity" id="bt_students_discapacity">
+                <span class="glyphicon glyphicon-chevron-right icon-group-cohort"></span> Estudiantes sin detalle de discapacidad: <strong>{{{cantidad_sin_detalle_disc}}}</strong>
+            </button>
+                
+            <div class="collapse" id="collapseStudentsDiscapacity">
+                {{{students_without_discapacity_data}}}
+            </div>
+
+      </div>
+
+      <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 " >
+            <button class="btn btn-primary bt_students_data" type="button" data-toggle="collapse" data-target="#collapseStudentsEconmics" aria-expanded="false" aria-controls="collapseStudentsEconmics" id="bt_students_economics">
+                <span class="glyphicon glyphicon-chevron-right icon-group-cohort"></span> Estudiantes sin datos económicos: <strong>{{{cantidad_sin_economics_data}}}</strong>
+            </button>
+                
+            <div class="collapse" id="collapseStudentsEconmics">
+                    {{{students_without_economics_data}}}
+            </div>
+
+      </div>
+
+      <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 " >
+            <button class="btn btn-primary bt_students_data" type="button" data-toggle="collapse" data-target="#collapseStudentsHealth" aria-expanded="false" aria-controls="collapseStudentsHealth" id="bt_students_health">
+                <span class="glyphicon glyphicon-chevron-right icon-group-cohort"></span> Estudiantes sin datos de servicio de salud: <strong>{{{cantidad_sin_health_data}}}</strong>
+            </button>
+                
+            <div class="collapse" id="collapseStudentsHealth">
+                    {{{students_without_health_data}}}
+            </div>
+
+      </div>
+        
+  </div>
+
   <div class="row">
         <h2>Cacracterísticas de la discapacidad</h2>
     <div id="div_table_discapacity_reports">

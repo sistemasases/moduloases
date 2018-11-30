@@ -52,4 +52,179 @@ function get_list_discapacity_reports(){
 
 }
 
+/**
+ * Function get count users without json_detalle in talentospilos_usuario who are members of DISC2018B cohort
+ * @see get_cant_sin_detalle()
+ * @return int
+ **/
+
+ function get_cant_sin_detalle(){
+    global $DB;
+
+    $sql = "SELECT COUNT(*) AS cant FROM (SELECT  talentospilos_usuario.num_doc FROM {cohort} AS cohort 
+    INNER JOIN {cohort_members} AS cohort_members ON cohort_members.cohortid = cohort.id
+        INNER JOIN {user} AS _user ON _user.id = cohort_members.userid
+            INNER JOIN {talentospilos_user_extended} AS talentospilos_user_extended ON talentospilos_user_extended.tracking_status = 1 AND talentospilos_user_extended.id_moodle_user = _user.id
+                INNER JOIN {talentospilos_usuario} AS talentospilos_usuario ON talentospilos_usuario.id =  talentospilos_user_extended.id_ases_user AND talentospilos_usuario.json_detalle IS NULL
+                    WHERE cohort.idnumber = 'DISC2018B') AS total";
+
+    $result = $DB->get_record_sql($sql);
+    return $result->cant;
+  
+ }
+
+ /**
+ * Function get users without json_detalle  who are members of DISC2018B cohort
+ * @see get_students_dd()
+ * @return array
+ **/
+
+function get_students_dd(){
+    global $DB;
+
+    $sql = "SELECT  talentospilos_usuario.num_doc , _user.firstname AS firstname_student, _user.lastname AS lastname_student FROM {cohort} AS cohort 
+    INNER JOIN {cohort_members} AS cohort_members ON cohort_members.cohortid = cohort.id
+        INNER JOIN {user} AS _user ON _user.id = cohort_members.userid
+            INNER JOIN {talentospilos_user_extended} AS talentospilos_user_extended ON talentospilos_user_extended.tracking_status = 1 AND talentospilos_user_extended.id_moodle_user = _user.id
+                INNER JOIN {talentospilos_usuario} AS talentospilos_usuario ON talentospilos_usuario.id =  talentospilos_user_extended.id_ases_user AND talentospilos_usuario.json_detalle IS NULL
+                    WHERE cohort.idnumber = 'DISC2018B'";
+
+    $result = $DB->get_records_sql($sql);
+    return $result;
+  
+ }
+
+ /**
+ * Function get count users without economics data  who are members of DISC2018B cohort
+ * @see get_cant_sin_economics_data()
+ * @return int
+ **/
+
+function get_cant_sin_economics_data(){
+    global $DB;
+
+    $sql = "SELECT COUNT(*) AS cant FROM (SELECT  talentospilos_usuario.num_doc
+    FROM {cohort} AS cohort 
+        INNER JOIN {cohort_members} AS cohort_members ON cohort_members.cohortid = cohort.id
+            INNER JOIN {user} AS _user ON _user.id = cohort_members.userid
+            INNER JOIN {talentospilos_user_extended} AS talentospilos_user_extended ON talentospilos_user_extended.tracking_status = 1 AND 												talentospilos_user_extended.id_moodle_user = _user.id
+                INNER JOIN {talentospilos_usuario} AS talentospilos_usuario ON talentospilos_usuario.id =  talentospilos_user_extended.id_ases_user 
+                            WHERE cohort.idnumber = 'DISC2018B' 
+    EXCEPT
+
+    SELECT  talentospilos_usuario.num_doc
+    FROM {cohort} AS cohort 
+        INNER JOIN {cohort_members} AS cohort_members ON cohort_members.cohortid = cohort.id
+            INNER JOIN {user} AS _user ON _user.id = cohort_members.userid
+            INNER JOIN {talentospilos_user_extended} AS talentospilos_user_extended ON talentospilos_user_extended.tracking_status = 1 AND 												talentospilos_user_extended.id_moodle_user = _user.id
+                INNER JOIN {talentospilos_usuario} AS talentospilos_usuario ON talentospilos_usuario.id =  talentospilos_user_extended.id_ases_user 
+                    INNER JOIN {talentospilos_economics_data} AS talentospilos_economics_data ON talentospilos_economics_data.id_ases_user = 																		talentospilos_usuario.id
+                
+            WHERE cohort.idnumber = 'DISC2018B') AS total";
+
+    $result = $DB->get_record_sql($sql);
+    return $result->cant;
+  
+ }
+
+ /**
+ * Function get users without economics data who are members of DISC2018B cohort
+ * @see get_students_ed()
+ * @return array
+ **/
+
+function get_students_ed(){
+    global $DB;
+
+    $sql = "SELECT  talentospilos_usuario.num_doc, _user.firstname AS firstname_student, _user.lastname AS lastname_student
+    FROM {cohort} AS cohort 
+        INNER JOIN {cohort_members} AS cohort_members ON cohort_members.cohortid = cohort.id
+            INNER JOIN {user} AS _user ON _user.id = cohort_members.userid
+            INNER JOIN {talentospilos_user_extended} AS talentospilos_user_extended ON talentospilos_user_extended.tracking_status = 1 AND 												talentospilos_user_extended.id_moodle_user = _user.id
+                INNER JOIN {talentospilos_usuario} AS talentospilos_usuario ON talentospilos_usuario.id =  talentospilos_user_extended.id_ases_user 
+                            WHERE cohort.idnumber = 'DISC2018B' 
+    EXCEPT
+
+    SELECT  talentospilos_usuario.num_doc, _user.firstname AS firstname_student, _user.lastname AS lastname_student
+    FROM {cohort} AS cohort 
+        INNER JOIN {cohort_members} AS cohort_members ON cohort_members.cohortid = cohort.id
+            INNER JOIN {user} AS _user ON _user.id = cohort_members.userid
+            INNER JOIN {talentospilos_user_extended} AS talentospilos_user_extended ON talentospilos_user_extended.tracking_status = 1 AND 												talentospilos_user_extended.id_moodle_user = _user.id
+                INNER JOIN {talentospilos_usuario} AS talentospilos_usuario ON talentospilos_usuario.id =  talentospilos_user_extended.id_ases_user 
+                    INNER JOIN {talentospilos_economics_data} AS talentospilos_economics_data ON talentospilos_economics_data.id_ases_user = 																		talentospilos_usuario.id
+                
+            WHERE cohort.idnumber = 'DISC2018B' ";
+
+    $result = $DB->get_records_sql($sql);
+    return $result;
+  
+ }
+
+/**
+ * Function get count users without health data  who are members of DISC2018B cohort
+ * @see get_cant_sin_health_data()
+ * @return int
+ **/
+
+function get_cant_sin_health_data(){
+    global $DB;
+
+    $sql = "SELECT COUNT(*) AS cant FROM (SELECT  talentospilos_usuario.num_doc
+    FROM {cohort} AS cohort 
+        INNER JOIN {cohort_members} AS cohort_members ON cohort_members.cohortid = cohort.id
+            INNER JOIN {user} AS _user ON _user.id = cohort_members.userid
+            INNER JOIN {talentospilos_user_extended} AS talentospilos_user_extended ON talentospilos_user_extended.tracking_status = 1 AND 												talentospilos_user_extended.id_moodle_user = _user.id
+                INNER JOIN {talentospilos_usuario} AS talentospilos_usuario ON talentospilos_usuario.id =  talentospilos_user_extended.id_ases_user 
+                            WHERE cohort.idnumber = 'DISC2018B' 
+    EXCEPT
+
+    SELECT  talentospilos_usuario.num_doc
+    FROM {cohort} AS cohort 
+        INNER JOIN {cohort_members} AS cohort_members ON cohort_members.cohortid = cohort.id
+            INNER JOIN {user} AS _user ON _user.id = cohort_members.userid
+            INNER JOIN {talentospilos_user_extended} AS talentospilos_user_extended ON talentospilos_user_extended.tracking_status = 1 AND 												talentospilos_user_extended.id_moodle_user = _user.id
+                INNER JOIN {talentospilos_usuario} AS talentospilos_usuario ON talentospilos_usuario.id =  talentospilos_user_extended.id_ases_user 
+                    INNER JOIN {talentospilos_health_data} AS talentospilos_health_data ON talentospilos_health_data.id_ases_user = 																		talentospilos_usuario.id
+                
+            WHERE cohort.idnumber = 'DISC2018B') AS total";
+
+    $result = $DB->get_record_sql($sql);
+    return $result->cant;
+  
+ }
+
+ /**
+ * Function get users without health data who are members of DISC2018B cohort
+ * @see get_students_hd()
+ * @return array
+ **/
+
+function get_students_hd(){
+    global $DB;
+
+    $sql = "SELECT  talentospilos_usuario.num_doc, _user.firstname AS firstname_student, _user.lastname AS lastname_student
+    FROM {cohort} AS cohort 
+        INNER JOIN {cohort_members} AS cohort_members ON cohort_members.cohortid = cohort.id
+            INNER JOIN {user} AS _user ON _user.id = cohort_members.userid
+            INNER JOIN {talentospilos_user_extended} AS talentospilos_user_extended ON talentospilos_user_extended.tracking_status = 1 AND 												talentospilos_user_extended.id_moodle_user = _user.id
+                INNER JOIN {talentospilos_usuario} AS talentospilos_usuario ON talentospilos_usuario.id =  talentospilos_user_extended.id_ases_user 
+                            WHERE cohort.idnumber = 'DISC2018B' 
+    EXCEPT
+
+    SELECT  talentospilos_usuario.num_doc, _user.firstname AS firstname_student, _user.lastname AS lastname_student
+    FROM {cohort} AS cohort 
+        INNER JOIN {cohort_members} AS cohort_members ON cohort_members.cohortid = cohort.id
+            INNER JOIN {user} AS _user ON _user.id = cohort_members.userid
+            INNER JOIN {talentospilos_user_extended} AS talentospilos_user_extended ON talentospilos_user_extended.tracking_status = 1 AND 												talentospilos_user_extended.id_moodle_user = _user.id
+                INNER JOIN {talentospilos_usuario} AS talentospilos_usuario ON talentospilos_usuario.id =  talentospilos_user_extended.id_ases_user 
+                    INNER JOIN {talentospilos_health_data} AS talentospilos_health_data ON talentospilos_health_data.id_ases_user = 																		talentospilos_usuario.id
+                
+            WHERE cohort.idnumber = 'DISC2018B' ";
+
+    $result = $DB->get_records_sql($sql);
+    return $result;
+  
+ }
+ 
+
 ?>
