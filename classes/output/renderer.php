@@ -246,4 +246,9 @@ class renderer extends plugin_renderer_base {
         $data = $page->export_for_template($this);
         return parent::render_from_template('block_ases/assigned_students_no_trackings_report', $data);
     }
+
+    public function render_discapacity_reports_page($page){
+        $data = $page->export_for_template($this);
+        return parent::render_from_template('block_ases/discapacity_reports', $data);
+    }
 }
