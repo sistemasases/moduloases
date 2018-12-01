@@ -6,7 +6,9 @@
 .cantidad_items, .items_con_almenos_una_nota {
     font-style: italic;
 }
-
+.shown {
+    background-color: #CCCCCC!important;
+}
 /* Fin */
 .course_and_teacher_report {
     display: flex;

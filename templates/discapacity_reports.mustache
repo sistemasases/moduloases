@@ -1,0 +1,83 @@
+{{#data}} {{> block_ases/side_menu}} {{#discapacity_reports_dr}}
+<div class="container">
+  <h2>REPORTES DISCAPACIDAD E INCLUSIÓN</h2>
+  <hr style="background-color: red; height: 1px; border: 0">
+
+  <div class="row" >
+      <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 ">
+            <button class="btn btn-primary bt_students_data" type="button" data-toggle="collapse" data-target="#collapseStudentsDiscapacity" aria-expanded="false" aria-controls="collapseStudentsDiscapacity" id="bt_students_discapacity">
+                <span class="glyphicon glyphicon-chevron-right icon-group-cohort"></span> Estudiantes sin detalle de discapacidad: <strong>{{{cantidad_sin_detalle_disc}}}</strong>
+            </button>
+                
+            <div class="collapse" id="collapseStudentsDiscapacity">
+                {{{students_without_discapacity_data}}}
+            </div>
+
+      </div>
+
+      <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 " >
+            <button class="btn btn-primary bt_students_data" type="button" data-toggle="collapse" data-target="#collapseStudentsEconmics" aria-expanded="false" aria-controls="collapseStudentsEconmics" id="bt_students_economics">
+                <span class="glyphicon glyphicon-chevron-right icon-group-cohort"></span> Estudiantes sin datos económicos: <strong>{{{cantidad_sin_economics_data}}}</strong>
+            </button>
+                
+            <div class="collapse" id="collapseStudentsEconmics">
+                    {{{students_without_economics_data}}}
+            </div>
+
+      </div>
+
+      <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 " >
+            <button class="btn btn-primary bt_students_data" type="button" data-toggle="collapse" data-target="#collapseStudentsHealth" aria-expanded="false" aria-controls="collapseStudentsHealth" id="bt_students_health">
+                <span class="glyphicon glyphicon-chevron-right icon-group-cohort"></span> Estudiantes sin datos de servicio de salud: <strong>{{{cantidad_sin_health_data}}}</strong>
+            </button>
+                
+            <div class="collapse" id="collapseStudentsHealth">
+                    {{{students_without_health_data}}}
+            </div>
+
+      </div>
+        
+  </div>
+
+  <div class="row">
+        <h2>Características de la discapacidad</h2>
+    <div id="div_table_discapacity_reports">
+    </div>
+  </div>
+
+ 
+  <div class="mymodal" id="modal_JSON" name="modal_JSON">
+        <div class="outside"></div>
+        <div class="mymodal-content">
+    
+          <div class="mymodal-header col-sm-12">
+            <div class="col-sm-11">
+              <h4 class="" id="myModalLabel">
+                <h2>Reporte por cantidades registradas</h2>
+              </h4>
+            </div>
+            <div class="col-sm-1">
+              <span id="mymodal-v2-close" class="mymodal-close" aria-hidden="true">&times;</span>
+            </div>
+          </div>
+          <div class="mymodal-body mymodal-body_v2 col-sm-12">
+            <div class="row">
+              <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <div id="div_JSONform">
+                </div>
+              </div>
+            </div>
+            <hr style="background-color: red; height: 1px; border: 0">
+            <button id="btn-close-modal" class=" btn-danger-close  btn-block"> Cerrar </button>
+          </div>
+          <div class="mymodal-footer" style="text-align: center">
+            .
+    
+          </div>
+        </div>
+      </div>
+
+  {{/discapacity_reports_dr}}
+  <!--end panel-group-->
+  {{/data}}
+</div>

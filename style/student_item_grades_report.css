@@ -5,8 +5,13 @@
     align-items: center;
     padding: 0 1% 0 1% ;
 }
+.nota_2 {
+    align-self: flex-start;
+}
 
-
+.shown {
+    background-color: #CCCCCC!important;
+}
 
 #tableStudentItemGradesReport th{
     text-align: center;
