@@ -37,11 +37,13 @@ function get_list_discapacity_reports(){
     global $DB;
     $array_detalles = array();
  
-    $sql = "SELECT  usuario.num_doc AS num_doc_act, _user.firstname AS name_estudiante, _user.lastname AS lastname_estudiante, usuario.json_detalle AS detalle_disc
-	                FROM {talentospilos_usuario} AS usuario
-		                INNER JOIN   {talentospilos_user_extended}  AS user_extended ON user_extended.id_ases_user = usuario.id
-			                INNER JOIN {user} AS _user ON _user.id = user_extended.id_moodle_user
-                                WHERE usuario.json_detalle IS NOT NULL;";
+    $sql = "SELECT  talentospilos_usuario.num_doc AS num_doc_act, _user.firstname AS name_estudiante, _user.lastname AS lastname_estudiante, talentospilos_usuario.json_detalle AS detalle_disc
+                FROM mdl_cohort AS cohort 
+                        INNER JOIN mdl_cohort_members AS cohort_members ON cohort_members.cohortid = cohort.id
+                            INNER JOIN mdl_user AS _user ON _user.id = cohort_members.userid
+                                INNER JOIN mdl_talentospilos_user_extended AS talentospilos_user_extended ON talentospilos_user_extended.tracking_status = 1 AND talentospilos_user_extended.id_moodle_user = _user.id
+                                     INNER JOIN mdl_talentospilos_usuario AS talentospilos_usuario ON talentospilos_usuario.id =  talentospilos_user_extended.id_ases_user AND talentospilos_usuario.json_detalle IS NOT NULL
+                            WHERE cohort.idnumber = 'DISC2018B'";
                                 
     $results = $DB->get_records_sql($sql);
 
@@ -107,7 +109,7 @@ function get_cant_sin_economics_data(){
     FROM {cohort} AS cohort 
         INNER JOIN {cohort_members} AS cohort_members ON cohort_members.cohortid = cohort.id
             INNER JOIN {user} AS _user ON _user.id = cohort_members.userid
-            INNER JOIN {talentospilos_user_extended} AS talentospilos_user_extended ON talentospilos_user_extended.tracking_status = 1 AND 												talentospilos_user_extended.id_moodle_user = _user.id
+            INNER JOIN {talentospilos_user_extended} AS talentospilos_user_extended ON talentospilos_user_extended.tracking_status = 1 AND 	talentospilos_user_extended.id_moodle_user = _user.id
                 INNER JOIN {talentospilos_usuario} AS talentospilos_usuario ON talentospilos_usuario.id =  talentospilos_user_extended.id_ases_user 
                             WHERE cohort.idnumber = 'DISC2018B' 
     EXCEPT
@@ -116,9 +118,9 @@ function get_cant_sin_economics_data(){
     FROM {cohort} AS cohort 
         INNER JOIN {cohort_members} AS cohort_members ON cohort_members.cohortid = cohort.id
             INNER JOIN {user} AS _user ON _user.id = cohort_members.userid
-            INNER JOIN {talentospilos_user_extended} AS talentospilos_user_extended ON talentospilos_user_extended.tracking_status = 1 AND 												talentospilos_user_extended.id_moodle_user = _user.id
+            INNER JOIN {talentospilos_user_extended} AS talentospilos_user_extended ON talentospilos_user_extended.tracking_status = 1 AND 	talentospilos_user_extended.id_moodle_user = _user.id
                 INNER JOIN {talentospilos_usuario} AS talentospilos_usuario ON talentospilos_usuario.id =  talentospilos_user_extended.id_ases_user 
-                    INNER JOIN {talentospilos_economics_data} AS talentospilos_economics_data ON talentospilos_economics_data.id_ases_user = 																		talentospilos_usuario.id
+                    INNER JOIN {talentospilos_economics_data} AS talentospilos_economics_data ON talentospilos_economics_data.id_ases_user =	talentospilos_usuario.id
                 
             WHERE cohort.idnumber = 'DISC2018B') AS total";
 
@@ -140,7 +142,7 @@ function get_students_ed(){
     FROM {cohort} AS cohort 
         INNER JOIN {cohort_members} AS cohort_members ON cohort_members.cohortid = cohort.id
             INNER JOIN {user} AS _user ON _user.id = cohort_members.userid
-            INNER JOIN {talentospilos_user_extended} AS talentospilos_user_extended ON talentospilos_user_extended.tracking_status = 1 AND 												talentospilos_user_extended.id_moodle_user = _user.id
+            INNER JOIN {talentospilos_user_extended} AS talentospilos_user_extended ON talentospilos_user_extended.tracking_status = 1 AND 	talentospilos_user_extended.id_moodle_user = _user.id
                 INNER JOIN {talentospilos_usuario} AS talentospilos_usuario ON talentospilos_usuario.id =  talentospilos_user_extended.id_ases_user 
                             WHERE cohort.idnumber = 'DISC2018B' 
     EXCEPT
@@ -149,9 +151,9 @@ function get_students_ed(){
     FROM {cohort} AS cohort 
         INNER JOIN {cohort_members} AS cohort_members ON cohort_members.cohortid = cohort.id
             INNER JOIN {user} AS _user ON _user.id = cohort_members.userid
-            INNER JOIN {talentospilos_user_extended} AS talentospilos_user_extended ON talentospilos_user_extended.tracking_status = 1 AND 												talentospilos_user_extended.id_moodle_user = _user.id
+            INNER JOIN {talentospilos_user_extended} AS talentospilos_user_extended ON talentospilos_user_extended.tracking_status = 1 AND talentospilos_user_extended.id_moodle_user = _user.id
                 INNER JOIN {talentospilos_usuario} AS talentospilos_usuario ON talentospilos_usuario.id =  talentospilos_user_extended.id_ases_user 
-                    INNER JOIN {talentospilos_economics_data} AS talentospilos_economics_data ON talentospilos_economics_data.id_ases_user = 																		talentospilos_usuario.id
+                    INNER JOIN {talentospilos_economics_data} AS talentospilos_economics_data ON talentospilos_economics_data.id_ases_user = talentospilos_usuario.id
                 
             WHERE cohort.idnumber = 'DISC2018B' ";
 
@@ -173,7 +175,7 @@ function get_cant_sin_health_data(){
     FROM {cohort} AS cohort 
         INNER JOIN {cohort_members} AS cohort_members ON cohort_members.cohortid = cohort.id
             INNER JOIN {user} AS _user ON _user.id = cohort_members.userid
-            INNER JOIN {talentospilos_user_extended} AS talentospilos_user_extended ON talentospilos_user_extended.tracking_status = 1 AND 												talentospilos_user_extended.id_moodle_user = _user.id
+            INNER JOIN {talentospilos_user_extended} AS talentospilos_user_extended ON talentospilos_user_extended.tracking_status = 1 AND	talentospilos_user_extended.id_moodle_user = _user.id
                 INNER JOIN {talentospilos_usuario} AS talentospilos_usuario ON talentospilos_usuario.id =  talentospilos_user_extended.id_ases_user 
                             WHERE cohort.idnumber = 'DISC2018B' 
     EXCEPT
@@ -182,9 +184,9 @@ function get_cant_sin_health_data(){
     FROM {cohort} AS cohort 
         INNER JOIN {cohort_members} AS cohort_members ON cohort_members.cohortid = cohort.id
             INNER JOIN {user} AS _user ON _user.id = cohort_members.userid
-            INNER JOIN {talentospilos_user_extended} AS talentospilos_user_extended ON talentospilos_user_extended.tracking_status = 1 AND 												talentospilos_user_extended.id_moodle_user = _user.id
+            INNER JOIN {talentospilos_user_extended} AS talentospilos_user_extended ON talentospilos_user_extended.tracking_status = 1 AND 	talentospilos_user_extended.id_moodle_user = _user.id
                 INNER JOIN {talentospilos_usuario} AS talentospilos_usuario ON talentospilos_usuario.id =  talentospilos_user_extended.id_ases_user 
-                    INNER JOIN {talentospilos_health_data} AS talentospilos_health_data ON talentospilos_health_data.id_ases_user = 																		talentospilos_usuario.id
+                    INNER JOIN {talentospilos_health_data} AS talentospilos_health_data ON talentospilos_health_data.id_ases_user = 	talentospilos_usuario.id
                 
             WHERE cohort.idnumber = 'DISC2018B') AS total";
 
@@ -206,7 +208,7 @@ function get_students_hd(){
     FROM {cohort} AS cohort 
         INNER JOIN {cohort_members} AS cohort_members ON cohort_members.cohortid = cohort.id
             INNER JOIN {user} AS _user ON _user.id = cohort_members.userid
-            INNER JOIN {talentospilos_user_extended} AS talentospilos_user_extended ON talentospilos_user_extended.tracking_status = 1 AND 												talentospilos_user_extended.id_moodle_user = _user.id
+            INNER JOIN {talentospilos_user_extended} AS talentospilos_user_extended ON talentospilos_user_extended.tracking_status = 1 AND 		talentospilos_user_extended.id_moodle_user = _user.id
                 INNER JOIN {talentospilos_usuario} AS talentospilos_usuario ON talentospilos_usuario.id =  talentospilos_user_extended.id_ases_user 
                             WHERE cohort.idnumber = 'DISC2018B' 
     EXCEPT
@@ -215,9 +217,9 @@ function get_students_hd(){
     FROM {cohort} AS cohort 
         INNER JOIN {cohort_members} AS cohort_members ON cohort_members.cohortid = cohort.id
             INNER JOIN {user} AS _user ON _user.id = cohort_members.userid
-            INNER JOIN {talentospilos_user_extended} AS talentospilos_user_extended ON talentospilos_user_extended.tracking_status = 1 AND 												talentospilos_user_extended.id_moodle_user = _user.id
+            INNER JOIN {talentospilos_user_extended} AS talentospilos_user_extended ON talentospilos_user_extended.tracking_status = 1 AND 	talentospilos_user_extended.id_moodle_user = _user.id
                 INNER JOIN {talentospilos_usuario} AS talentospilos_usuario ON talentospilos_usuario.id =  talentospilos_user_extended.id_ases_user 
-                    INNER JOIN {talentospilos_health_data} AS talentospilos_health_data ON talentospilos_health_data.id_ases_user = 																		talentospilos_usuario.id
+                    INNER JOIN {talentospilos_health_data} AS talentospilos_health_data ON talentospilos_health_data.id_ases_user = 	talentospilos_usuario.id
                 
             WHERE cohort.idnumber = 'DISC2018B' ";
 
@@ -240,6 +242,66 @@ function get_detalle_discapacity($id_form){
 
     $results = $DB->get_record_sql($sql);
     return $results->json_detalle;
+}
+
+
+ /**
+ * Function that load discapacity data switch num_doc 
+ * @see get_detalle_discapacity($id_form)
+ * @param $id_form---> num_doc user
+ * @return string
+ **/
+
+function get_data_to_grapich(){
+
+    global $DB;
+    $array_detalles = array();
+ 
+    $sql = "SELECT  talentospilos_usuario.json_detalle AS detalle_disc FROM mdl_cohort AS cohort 
+                        INNER JOIN mdl_cohort_members AS cohort_members ON cohort_members.cohortid = cohort.id
+                            INNER JOIN mdl_user AS _user ON _user.id = cohort_members.userid
+                                INNER JOIN mdl_talentospilos_user_extended AS talentospilos_user_extended ON talentospilos_user_extended.tracking_status = 1 AND talentospilos_user_extended.id_moodle_user = _user.id
+                                     INNER JOIN mdl_talentospilos_usuario AS talentospilos_usuario ON talentospilos_usuario.id =  talentospilos_user_extended.id_ases_user AND talentospilos_usuario.json_detalle IS NOT NULL
+                            WHERE cohort.idnumber = 'DISC2018B'";
+                                
+    $results = $DB->get_records_sql($sql);
+
+    $cognitiva = 0;
+    $psicosocial = 0;    
+    $fisica = 0;
+    $sensorial = 0;   
+    $multiple = 0;
+    $otra = 0;   
+
+    foreach ($results as $record) {
+        $tipo_discapacidad_register = json_decode($record->detalle_disc);
+        $tipo                       = $tipo_discapacidad_register->tipo_discapacidad->tipo_discapacidad;
+        switch($tipo){
+        case "Cognitiva": 
+        $cognitiva ++;
+        break;    
+        case "Psicosocial": 
+        $psicosocial ++;
+        break;   
+        case "Física": 
+        $fisica ++;
+        break;   
+        case "Sensorial": 
+        $sensorial ++;
+        break;   
+        case "Múltiple": 
+        $multiple ++;
+        break;   
+        case "Otra": 
+        $otra ++;
+        break;   
+        }
+    }
+    array_push($array_detalles, $cognitiva, $psicosocial, $fisica, $sensorial, $multiple, $otra);
+
+   return $array_detalles;
+
+
 }
  
 
