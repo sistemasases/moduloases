@@ -55,27 +55,33 @@ function get_students_with_trackings(){
     $fecha_inicio = $list_inicio[0];
     $fecha_fin = $list_fin[0];
 
-    $xQuery = new stdClass();
-    $xQuery->form = "seguimiento_pares"; // Can be alias(String) or idntifier(Number)
-    $xQuery->filterFields = [
-                            ["id_estudiante",[
-                                ["%%", "LIKE"]                                
-                                
-                                ], false],
-                            ["fecha",
-                                [[$fecha_inicio,">="],[$fecha_fin,"<="]]
-                                , false]                        
-                    ];
-    $xQuery->orderFields = [
-                            ["fecha","DESC"]
+    $estudiantes = [];
+
+    //foreach $resultado as $key => $record
+
+        
+        
+        $xQuery = new stdClass();
+        $xQuery->form = "seguimiento_pares"; // Can be alias(String) or idntifier(Number)
+        //$record->id_estudiante
+        $xQuery->filterFields = [
+                                ["id_estudiante",[
+                                    ["%%", "LIKE"]                                
+                                    
+                                    ], false],
+                                ["fecha",
+                                    [[$fecha_inicio,">="],[$fecha_fin,"<="]]
+                                    , false]                        
                         ];
+        $xQuery->orderFields = [
+                                ["fecha","DESC"]
+                            ];
 
-    $xQuery->orderByDatabaseRecordDate = false; // If true, orderField is ignored. DESC
-    $xQuery->recordStatus = [ "!deleted" ];// options "deleted" or "!deleted", can be both. Empty = both.
-    //No soportado aun
-    $xQuery->selectedFields = [ "id_creado_por", "id_estudiante" ]; // RecordId and BatabaseRecordDate are selected by default.
+        $xQuery->orderByDatabaseRecordDate = false; // If true, orderField is ignored. DESC
+        $xQuery->recordStatus = [ "!deleted" ];// options "deleted" or "!deleted", can be both. Empty = both.
+        $xQuery->selectedFields = []; // RecordId and BatabaseRecordDate are selected by default.
 
-    $arrayStudents = dphpformsV2_find_n_count_records( $xQuery );
+        $arrayStudents = dphpformsV2_find_n_count_records( $xQuery );
     
     return $arrayStudents;    
 }
