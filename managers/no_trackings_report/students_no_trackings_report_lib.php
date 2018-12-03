@@ -30,6 +30,7 @@ require_once $CFG->dirroot.'/blocks/ases/managers/lib/student_lib.php';
 //require_once $CFG->dirroot.'/blocks/ases/managers/lib/lib.php';
 require_once $CFG->dirroot.'/blocks/ases/managers/periods_management/periods_lib.php'; 
 require_once $CFG->dirroot.'/blocks/ases/managers/dphpforms/v2/dphpforms_lib.php';   
+require_once $CFG->dirroot.'/blocks/ases/managers/monitor_assignments/monitor_assignments_lib.php'; 
     
 
 /**
@@ -40,6 +41,8 @@ require_once $CFG->dirroot.'/blocks/ases/managers/dphpforms/v2/dphpforms_lib.php
  */
 
 function get_students_with_trackings(){
+
+    //monitor_assignments_get_monitors_students_relationship_by_instance_n_semester( $instance_id, $semester_id );
 
     $semestre = get_current_semester();
     $idMaxSemester = $semestre->max;
@@ -72,7 +75,7 @@ function get_students_with_trackings(){
     //No soportado aun
     $xQuery->selectedFields = [ "id_creado_por", "id_estudiante" ]; // RecordId and BatabaseRecordDate are selected by default.
 
-    $arrayStudents = dphpformsV2_find_records( $xQuery );
+    $arrayStudents = dphpformsV2_find_n_count_records( $xQuery );
     
     return $arrayStudents;    
 }
