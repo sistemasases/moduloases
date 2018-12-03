@@ -139,7 +139,7 @@
 
 
         }else if( $_POST['load'] == "get_others_data_discapacity" ){
-            //Example of loadF: get_form valid: 
+            //Example of load: get_form valid: 
             //data: get_form   params: id_form
           
             if( count($_POST['params']) == 1 ){
@@ -160,7 +160,21 @@
             }else{     
                 return_with_code( -2 );
             }
+        }else if( $_POST['load'] == "getDataGraphic" ){
+            //Example of load: getDataGraphic valid: 
+            //data: get_form   params: NOT
+         
+
+             //Get array with data to  graphic
+
+             $data         = get_data_to_grapich();
+          
+
+            echo json_encode($data);
+            
         }
+
+        
         else{
             // Function not defined
             return_with_code( -4 );
