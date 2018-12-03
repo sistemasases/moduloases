@@ -372,6 +372,29 @@ function monitor_assignments_get_monitors_students_relationship_by_instance( $in
 }
 
 /**
+ * Función retorna todas las relaciones monitor-estudiante de un semestre indicado por instancia
+ * @author Jeison Cardona Gómez. <jeison.cardona@correounivalle.edu.co>
+ * @param int $instance_id Instance id.
+ * @return Array (
+ *      stdClass()
+ *          ->id_monitor
+ *          ->id_estudiante
+ * )
+ */
+
+function monitor_assignments_get_monitors_students_relationship_by_instance_n_semester( $instance_id, $semester_id ){
+
+    global $DB;
+
+    $sql = "SELECT id, id_monitor, id_estudiante 
+    FROM {talentospilos_monitor_estud} 
+    WHERE id_semestre = ". $semester_id ." AND id_instancia = $instance_id";
+  
+    return $DB->get_records_sql( $sql );;
+
+}
+
+/**
  * Función que retorna todas las relaciones profesional-practicante del semestre actual en una instancia
  * @author Jeison Cardona Gómez. <jeison.cardona@correounivalle.edu.co>
  * @param int $instance_id Instance id.

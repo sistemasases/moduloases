@@ -295,10 +295,23 @@ function create_menu_options($userid, $blockid, $courseid)
                     'instanceid' => $blockid,
                 ));
 
-                $menu_options = '<li><a href= "' . $url . '">Reporte backup<span class="badge badge-secondary">New</span> </a><li>';
+                $menu_options = '<li><a href= "' . $url . '">Reporte backup </a><li>';
 
                 
                 $indexed['Reporte backup'] = $menu_options;
+
+            }
+
+            if ($function == 'discapacity_reports') {
+                $url = new moodle_url("/blocks/ases/view/discapacity_reports.php", array(
+                    'courseid' => $courseid,
+                    'instanceid' => $blockid,
+                ));
+
+                $menu_options = '<li><a href= "' . $url . '">Reporte discapacidad e inclusión<span class="badge badge-secondary">New</span> </a><li>';
+
+                
+                $indexed['Reporte discapacidad e inclusión'] = $menu_options;
 
             }
 
