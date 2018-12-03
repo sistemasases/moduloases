@@ -1596,7 +1596,7 @@ $record->monitor_id = $stud_mon_prac_prof->monitor->id;
 $record->practicing_id = $stud_mon_prac_prof->practicing->id;
 $record->professional_id = $stud_mon_prac_prof->professional->id;
 
-//student_lib_get_full_risk_status( $record->ases_student_code );
+//print_r( student_lib_get_full_risk_status( $record->ases_student_code ) );
 
 //Menu items are created
 $menu_option = create_menu_options($USER->id, $blockid, $courseid);

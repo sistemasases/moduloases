@@ -596,6 +596,8 @@ function get_student_monitor($id_ases_user, $id_semester, $id_instance)
 
 function student_lib_get_full_risk_status( $ases_id ){
 
+    $NUMBER_OF_DIMENSIONS = 5;
+
     $xQuery = new stdClass();
     $xQuery->form = "seguimiento_pares";
     $xQuery->filterFields = [ 
@@ -613,8 +615,6 @@ function student_lib_get_full_risk_status( $ases_id ){
     $xQuery->selectedFields = [ ]; 
 
     $records = dphpformsV2_find_records( $xQuery );
-    $semesters = periods_management_get_all_semesters();
-
     
     $first_full_status_risk = [
         "individual" => -1,
@@ -624,7 +624,55 @@ function student_lib_get_full_risk_status( $ases_id ){
         "vida_uni" => -1
     ];
 
+    $get_semester = function( $start_date ){
+
+        $semesters = periods_management_get_all_semesters();
+
+        foreach ($semesters as $key => $semester) {
+            $start_date_semester  = strtotime( $semester->fecha_inicio );
+            $end_date_semester  = strtotime( $semester->fecha_fin );
+            
+            if( ( $start_date >= $start_date_semester ) && ( $start_date <= $end_date_semester ) ){
+                return [
+                    "id" => $semester->id,
+                    "start_time" => $start_date_semester,
+                    "end_time" => $end_date_semester,
+                    "start_date" => $semester->fecha_inicio,
+                    "end_date" => $semester->fecha_fin
+                ];
+            }
+        }
+    };
+
+    $get_next_semesters = function( $start_date ){
+
+        $semesters = periods_management_get_all_semesters();
+        $to_return = [];
+
+        foreach ($semesters as $key => $semester) {
+            $start_date_semester  = strtotime( $semester->fecha_inicio );
+            $end_date_semester  = strtotime( $semester->fecha_fin );
+            
+            if( $start_date < $start_date_semester ){
+                array_push( 
+                    $to_return,
+                    [
+                        "id" => $semester->id,
+                        "start_time" => $start_date_semester,
+                        "end_time" => $end_date_semester,
+                        "start_date" => $semester->fecha_inicio,
+                        "end_date" => $semester->fecha_fin
+                    ]
+                );
+            }
+        }
+
+        return $to_return;
+    };
+
     if( $records ){
+
+        $first_semester = $get_semester( strtotime( $records[0]["fecha"] ) );
 
         $first_full_status_risk["individual"] = $records[0]["puntuacion_riesgo_individual"];
         $first_full_status_risk["familiar"] = $records[0]["puntuacion_riesgo_familiar"];
@@ -632,29 +680,21 @@ function student_lib_get_full_risk_status( $ases_id ){
         $first_full_status_risk["economico"] = $records[0]["puntuacion_riesgo_economico"];
         $first_full_status_risk["vida_uni"] = $records[0]["puntuacion_vida_uni"];
 
-        /*$start_date = strtotime( $records[0]["fecha"] ); // Ordered by fecha ASC
 
-        $get_interval_first_semester = function( $start_date, $obj_semesters ){
-
-            foreach ($obj_semesters as $key => $semester) {
-                $start_date_semester  = strtotime( $semester->fecha_inicio );
-                $end_date_semester  = strtotime( $semester->fecha_fin );
-                
-                if( ( $start_date >= $start_date_semester ) && ( $start_date <= $end_date_semester ) ){
-                    return [
-                        "start_date" => $start_date_semester,
-                        "end_date" => $end_date_semester
-                    ];
-                }
-            }
-        };
-
-        $interval_first_semester = $get_interval_first_semester($start_date, $semesters );
-
+        $next_semesters = $get_next_semesters( strtotime( $records[0]["fecha"] ) );
+        
         $checked = 0;
+        $last_record = -1;
+        $first_full_status_risk["semester_info"] = $first_semester;
+        
         foreach( $records as $key => $record ){
-
-            if( strtotime( $record["fecha"] ) > $interval_first_semester["end_date"] ){
+            
+            if( !(
+                    ( strtotime( $record["fecha"] ) >= $first_semester["start_time"] ) && 
+                    ( strtotime( $record["fecha"] ) <= $first_semester["end_time"] )
+                )
+            ){
+                $last_record = $key - 1;
                 break;
             }
             
@@ -678,13 +718,77 @@ function student_lib_get_full_risk_status( $ases_id ){
                 $first_full_status_risk["vida_uni"] = $record["puntuacion_vida_uni"];
                 $checked++;
             }
-    
-            if( $checked == count( $first_full_status_risk ) ){
+            
+            if( $checked == count( $NUMBER_OF_DIMENSIONS ) ){
+                $last_record = $key;
                 break;
             }
-        }*/
-    
-        //print_r( $first_full_status_risk );
+        }
+        
+        $other_semesters = [];
+        array_push( $other_semesters, $first_full_status_risk );
+
+        //Prev::$last_record = -1; //Las position
+        foreach( $next_semesters as $semester_key => $semester ){
+            
+            $checked = 0;
+            $full_status_risk = [
+                "individual" => -1,
+                "familiar" => -1,
+                "academico" => -1,
+                "economico" => -1,
+                "vida_uni" => -1
+            ];
+            $full_status_risk["semester_info"] = $semester;
+            
+            foreach( $records as $record_key => $record ){
+                
+                if( $last_record < $record_key ){
+                    continue;
+                }
+                
+                if( !(
+                        ( strtotime( $record["fecha"] ) >= $semester["start_time"] ) && 
+                        ( strtotime( $record["fecha"] ) <= $semester["end_time"] )
+                    )
+                ){
+                    $last_record = $key - 1;
+                    break;
+                }
+
+                if( ( $full_status_risk["individual"] === -1 ) && ( $record["puntuacion_riesgo_individual"] !== "-#$%-" ) ){
+                    $full_status_risk["individual"] = $record["puntuacion_riesgo_individual"];
+                    $checked++;
+                }
+                if( ( $full_status_risk["familiar"] === -1 ) && ( $record["puntuacion_riesgo_familiar"] !== "-#$%-" ) ){
+                    $full_status_risk["familiar"] = $record["puntuacion_riesgo_familiar"];
+                    $checked++;
+                }
+                if( ( $full_status_risk["academico"] === -1 ) && ( $record["puntuacion_riesgo_academico"] !== "-#$%-" ) ){
+                    $full_status_risk["academico"] = $record["puntuacion_riesgo_academico"];
+                    $checked++;
+                }
+                if( ( $full_status_risk["economico"] === -1 ) && ( $record["puntuacion_riesgo_economico"] !== "-#$%-" ) ){
+                    $full_status_risk["economico"] = $record["puntuacion_riesgo_economico"];
+                    $checked++;
+                }
+                if( ( $full_status_risk["vida_uni"] === -1 ) && ( $record["puntuacion_vida_uni"] !== "-#$%-" ) ){
+                    $full_status_risk["vida_uni"] = $record["puntuacion_vida_uni"];
+                    $checked++;
+                }
+        
+                if( $checked == count( $NUMBER_OF_DIMENSIONS ) ){
+                    $last_record = $key;
+                    break;
+                }
+
+            }
+
+            array_push( $other_semesters, $full_status_risk );
+
+        }
+
+        return $other_semesters;
 
     }else{
         return null;
