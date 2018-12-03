@@ -30,7 +30,7 @@
     if(isset($_POST['loadR']) && $_POST['loadR'] == 'loadReport'){
         $columns = array();
 
-        $data = get_array_students_without_trackings();
+        $data = get_array_students_without_trackings();        
         $monitores = array();
         $practicantes = array();
         $profesionales = array();

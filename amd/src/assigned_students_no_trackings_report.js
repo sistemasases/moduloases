@@ -40,7 +40,7 @@ define(['jquery',
 				}
 			});	
 
-			//Controles para la tabla de estudiantes
+			// Controles para la tabla de estudiantes
 			$(document).on('change', '#tableEstSeguimientos thead tr th select', function () {
 				var table = $("#tableEstSeguimientos").DataTable();
 		
@@ -55,14 +55,15 @@ define(['jquery',
 	 * @return {void}
 	 */
 	function load_students_no_trackings_report(){
+		$("#div_table").html('<img class="icon-loading" src="../icon/loading.gif"/>');
 		$.ajax({
 			type: "POST",
 			data: {loadR: 'loadReport'},
 			url: "../managers/no_trackings_report/students_no_trackings_report_processing.php",
-			success: function(msg){				
-				console.log(msg);
-				var table = $("#tableEstSeguimientos").DataTable(msg);
-				console.log(table);
+			success: function(msg){												
+				$("#div_table").html('');
+				$("#div_table").fadeIn(1000).append('<table id="tableEstSeguimientos" class="display" cellspacing="0" width="100%"><thead> </thead></table>');
+				$("#tableEstSeguimientos").DataTable(msg);
 				$('#dataTables_scrollBody').css('cursor', 'pointer');
 			},
 			dataType: "json",
