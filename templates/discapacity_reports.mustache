@@ -1,12 +1,12 @@
 {{#data}} {{> block_ases/side_menu}} {{#discapacity_reports_dr}}
 <div class="container">
-  <h2>REPORTES DISCAPACIDAD E INCLUSIÓN</h2>
-  <hr style="background-color: red; height: 1px; border: 0">
+  <h2 id = "encabezado_reportes">REPORTES DISCAPACIDAD E INCLUSIÓN</h2>
+
 
   <div class="row" >
       <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 ">
             <button class="btn btn-primary bt_students_data" type="button" data-toggle="collapse" data-target="#collapseStudentsDiscapacity" aria-expanded="false" aria-controls="collapseStudentsDiscapacity" id="bt_students_discapacity">
-                <span class="glyphicon glyphicon-chevron-right icon-group-cohort"></span> Estudiantes sin detalle de discapacidad: <strong>{{{cantidad_sin_detalle_disc}}}</strong>
+                <span class="glyphicon glyphicon-chevron-right icon-group-cohort"></span> Estudiantes sin datos relativos a discapacidad: <strong>{{{cantidad_sin_detalle_disc}}}</strong>
             </button>
                 
             <div class="collapse" id="collapseStudentsDiscapacity">
@@ -17,7 +17,7 @@
 
       <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 " >
             <button class="btn btn-primary bt_students_data" type="button" data-toggle="collapse" data-target="#collapseStudentsEconmics" aria-expanded="false" aria-controls="collapseStudentsEconmics" id="bt_students_economics">
-                <span class="glyphicon glyphicon-chevron-right icon-group-cohort"></span> Estudiantes sin datos económicos: <strong>{{{cantidad_sin_economics_data}}}</strong>
+                <span class="glyphicon glyphicon-chevron-right icon-group-cohort"></span> Estudiantes sin datos económicos registrados: <strong>{{{cantidad_sin_economics_data}}}</strong>
             </button>
                 
             <div class="collapse" id="collapseStudentsEconmics">
@@ -38,11 +38,18 @@
       </div>
         
   </div>
+  <hr style="background-color: red; height: 1px; border: 0">
 
-  <div class="row">
-        <h2>Características de la discapacidad</h2>
+  <div class="row" >
+        <h2>Características de la discapacidad por estudiante</h2>
     <div id="div_table_discapacity_reports">
     </div>
+  </div>
+
+  <hr style="background-color: red; height: 1px; border: 0">
+
+  <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12  col-md-offset-2  col-lg-offset-2">
+    <canvas id="grafica_tipos" ></canvas>
   </div>
 
  
@@ -53,7 +60,7 @@
           <div class="mymodal-header col-sm-12">
             <div class="col-sm-11">
               <h4 class="" id="myModalLabel">
-                <h2>Reporte por cantidades registradas</h2>
+                <h2 id = "h2_titulo_modal">Reporte cuantitativo del estudiante </h2>
               </h4>
             </div>
             <div class="col-sm-1">
