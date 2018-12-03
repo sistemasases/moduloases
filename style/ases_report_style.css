@@ -33,14 +33,6 @@
     margin: 0px 0px 5px 0px;;
 }
 
-hr {
-    height: 2px;
-    background-color:#555;
-    margin-top: 20px;
-    margin-bottom: 20px;
-    width: 75%;
-}
-
 .panel-heading-summary{
     cursor: pointer;
     background-color: #d6e9c6;

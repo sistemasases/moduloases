@@ -19,10 +19,13 @@ define([
     'block_ases/bootstrap',
     'block_ases/sweetalert',
     'block_ases/jqueryui',
-    'block_ases/select2'
-], function ($, jszip, dataTables, autoFill, buttons, html5, flash, print, bootstrap, sweetalert, jqueryui, select2) {
+    'block_ases/select2', 
+    'block_ases/Chart',
+    'block_ases/loading_indicator'
+], function ($, jszip, dataTables, autoFill, buttons, html5, flash, print, bootstrap, sweetalert, jqueryui, select2, Chart, loading_indicator) {
     return {
         init: function () {
+            loading_indicator.show();
             $(".bt_students_data").click(function(){
 
 
@@ -68,7 +71,11 @@ define([
                         $("#div_table_discapacity_reports").append('<table id="tableDiscapacityReports" class="display" cellspacing="0" width="100%"><thead><thead></table>');
                         var table = $("#tableDiscapacityReports").DataTable(msg);
                         $('#div_table_discapacity_reports').css('cursor', 'pointer');
+                        loading_indicator.hide();
 
+                    },
+                    error: function(msg){
+                        loading_indicator.hide();
                     },
                     dataType: "json",
                     cache: false,
@@ -76,9 +83,9 @@ define([
 
                     failure: function (msg) { }
                 });
+                get_data_to_graphic();
 
-
-            });
+        });
 
             function get_others_data_discapacity(id){
                 //Get one form switch id
@@ -90,10 +97,7 @@ define([
                     cache: false,
                     async: true,
                     success: function (msg) {
-                
-                        //Items of JSON are decode
-                        console.log(msg);
-                      
+
                         create_modal(msg);
                     },
                     failure: function (msg) { }
@@ -143,7 +147,73 @@ define([
                 
             });
 
+            function get_data_to_graphic(){
+                $.ajax({
+
+                    type: "POST",
+                    data: { load: 'getDataGraphic' },
+                    url: "../managers/discapacity_reports/discapacity_reports_api.php",
+                    success: function (msg) {
+                        console.log(msg);
+                        create_graphic_discapacity(msg);
+
+                    },
+                    dataType: "json",
+                    cache: false,
+                    async: true,
+
+                    failure: function (msg) { }
+                });
+            }
+
+            function create_graphic_discapacity(data_get){
+                var ctx = document.getElementById('grafica_tipos').getContext('2d');
+                var data = {
+                    labels: ["Cognitiva","Psicosocial","Física","Sensorial","Múltiple", "Otra"],
+                    datasets: [{
+                        label: 'Número de estudiantes por tipo de discapacidad',
+                        data: data_get,
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.2)',
+                            'rgba(54, 162, 235, 0.2)',
+                            'rgba(255, 206, 86, 0.2)',
+                            'rgba(75, 192, 192, 0.2)',
+                            'rgba(153, 102, 255, 0.2)',
+                            'rgba(255, 159, 64, 0.2)'
+                        ],
+                        borderColor: [
+                            'rgba(255,99,132,1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(255, 206, 86, 1)',
+                            'rgba(75, 192, 192, 1)',
+                            'rgba(153, 102, 255, 1)',
+                            'rgba(255, 159, 64, 1)'
+                        ],
+                        borderWidth: 2
+                    }]
+                }
             
+                var chart_options = {
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero:true
+                            }
+                        }]
+                    }
+                };
+            
+                var radar_chart = new Chart(ctx, {
+                    type: 'bar',
+                    data: data,
+                    options: chart_options
+                }
+                   
+                 
+
+            );
+
+            } 
 
 }
 
