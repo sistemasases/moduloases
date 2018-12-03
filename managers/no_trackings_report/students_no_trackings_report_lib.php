@@ -30,8 +30,14 @@ require_once $CFG->dirroot.'/blocks/ases/managers/lib/student_lib.php';
 //require_once $CFG->dirroot.'/blocks/ases/managers/lib/lib.php';
 require_once $CFG->dirroot.'/blocks/ases/managers/periods_management/periods_lib.php'; 
 require_once $CFG->dirroot.'/blocks/ases/managers/dphpforms/v2/dphpforms_lib.php';   
-    
+require_once $CFG->dirroot.'/blocks/ases/managers/monitor_assignments/monitor_assignments_lib.php'; 
 
+// $semestre = get_current_semester();
+// $idMaxSemester = $semestre->max;
+// $monitorias = json_encode(monitor_assignments_get_monitors_students_relationship_by_instance_n_semester( 450299, $idMaxSemester ));
+// echo $monitorias;
+
+//get_array_students_without_trackings();
 /**
  * Function that returns a list of the students with trackings on the current semester
  * 
@@ -39,10 +45,12 @@ require_once $CFG->dirroot.'/blocks/ases/managers/dphpforms/v2/dphpforms_lib.php
  * @return array
  */
 
-function get_students_with_trackings(){
+function get_students_without_trackings(){      
 
     $semestre = get_current_semester();
     $idMaxSemester = $semestre->max;
+
+    $monitorias = monitor_assignments_get_monitors_students_relationship_by_instance_n_semester( 450299, $idMaxSemester );
     
     $intervalSemester = get_semester_interval($idMaxSemester);
     
@@ -52,29 +60,60 @@ function get_students_with_trackings(){
     $fecha_inicio = $list_inicio[0];
     $fecha_fin = $list_fin[0];
 
-    $xQuery = new stdClass();
-    $xQuery->form = "seguimiento_pares"; // Can be alias(String) or idntifier(Number)
-    $xQuery->filterFields = [
-                            ["id_estudiante",[
-                                ["%%", "LIKE"]                                
-                                
-                                ], false],
-                            ["fecha",
-                                [[$fecha_inicio,">="],[$fecha_fin,"<="]]
-                                , false]                        
-                    ];
-    $xQuery->orderFields = [
-                            ["fecha","DESC"]
+    $estudiantes = array();
+
+    foreach ($monitorias as $monitoria){     
+        
+        $xQuery = new stdClass();
+        $xQuery->form = "seguimiento_pares"; // Can be alias(String) or idntifier(Number)        
+        $xQuery->filterFields = [
+                                ["id_estudiante",[
+                                    [$monitoria->id_estudiante, "="]                                
+                                    
+                                    ], false],
+                                ["fecha",
+                                    [[$fecha_inicio,">="],[$fecha_fin,"<="]]
+                                    , false]                        
                         ];
+        $xQuery->orderFields = [
+                                ["fecha","DESC"]
+                            ];
 
-    $xQuery->orderByDatabaseRecordDate = false; // If true, orderField is ignored. DESC
-    $xQuery->recordStatus = [ "!deleted" ];// options "deleted" or "!deleted", can be both. Empty = both.
-    //No soportado aun
-    $xQuery->selectedFields = [ "id_creado_por", "id_estudiante" ]; // RecordId and BatabaseRecordDate are selected by default.
+        $xQuery->orderByDatabaseRecordDate = false; // If true, orderField is ignored. DESC
+        $xQuery->recordStatus = [ "!deleted" ];// options "deleted" or "!deleted", can be both. Empty = both.
+        $xQuery->selectedFields = []; // RecordId and BatabaseRecordDate are selected by default.
 
-    $arrayStudents = dphpformsV2_find_records( $xQuery );
-    
-    return $arrayStudents;    
+        $countRegistersSeguimientos = dphpformsV2_find_n_count_records( $xQuery ); 
+        
+        
+        //$xQuery = new stdClass();
+        $xQuery->form = "inasistencia"; // Can be alias(String) or idntifier(Number)        
+        $xQuery->filterFields = [
+                                ["in_id_estudiante",[
+                                    [$monitoria->id_estudiante, "="]                                
+                                    
+                                    ], false],
+                                ["in_fecha",
+                                    [[$fecha_inicio,">="],[$fecha_fin,"<="]]
+                                    , false]                        
+                        ];
+        $xQuery->orderFields = [
+                                ["in_fecha","DESC"]
+                            ];
+
+        $xQuery->orderByDatabaseRecordDate = false; // If true, orderField is ignored. DESC
+        $xQuery->recordStatus = [ "!deleted" ];// options "deleted" or "!deleted", can be both. Empty = both.
+        $xQuery->selectedFields = []; // RecordId and BatabaseRecordDate are selected by default.
+
+        $countRegistersInasistencias = dphpformsV2_find_n_count_records( $xQuery );
+        
+        if($countRegistersSeguimientos == 0 && $countRegistersInasistencias == 0){
+            $estudiante = (object) array ('id_estudiante' => $monitoria->id_estudiante, 'cantidad_seguimientos' => $countRegistersSeguimientos, 'cantidad_inasistencias' => $countRegistersInasistencias);
+            array_push($estudiantes, $estudiante);
+        }                
+    }
+    //echo json_encode($estudiantes);
+    return json_encode($estudiantes);
 }
 
 
@@ -87,40 +126,20 @@ function get_students_with_trackings(){
  */
 function get_array_students_without_trackings(){
 
-    global $DB;
-    
-    $semestre = get_current_semester();
-    $idMaxSemester = $semestre->max;
+    global $DB;   
 
     $sql_query = "SELECT usuario.id AS id, userm.username, usuario.num_doc AS cedula, userm.firstname, userm.lastname FROM {user} AS userm
     INNER JOIN {talentospilos_user_extended} as user_ext  ON user_ext.id_moodle_user= userm.id
     INNER JOIN  {talentospilos_usuario} AS usuario ON id_ases_user = usuario.id
     
     WHERE 
-    usuario.id IN 
-        (SELECT DISTINCT id_estudiante AS id FROM {talentospilos_monitor_estud} AS monitoria WHERE id_semestre=". $idMaxSemester . ")
-        AND 
-            tracking_status = 1
-        AND
+    usuario.id IN (";    
     
-    usuario.id IN
-    (SELECT DISTINCT id_ases_user
-        FROM  {talentospilos_user_extended} extases
-        INNER JOIN {talentospilos_est_estadoases} est_ases
-            ON est_ases.id_estudiante = extases.id_ases_user
-        INNER JOIN {talentospilos_estados_ases} estados_ases
-            ON est_ases.id_estado_ases = estados_ases.id
-        WHERE   estados_ases.nombre = 'seguimiento'                
-                AND est_ases.fecha = 
-                (SELECT max(fecha)
-                FROM {talentospilos_est_estadoases}
-                WHERE id_estudiante = extases.id_ases_user))";
-    
-    $studentsWithTrackings = get_students_with_trackings();
-    $additionalCondition = " AND usuario.id NOT IN (";
+    $studentsWithoutTrackings = json_decode(get_students_without_trackings(), true);
+    $additionalCondition = "";
 
-    foreach($studentsWithTrackings as $tracking){                 
-        $additionalCondition .="'". $tracking[id_estudiante]. "', ";
+    foreach($studentsWithoutTrackings as $tracking){                 
+        $additionalCondition .="'". $tracking['id_estudiante']. "', ";
     }   
 
     $additionalCondition.= ")";
@@ -128,8 +147,18 @@ function get_array_students_without_trackings(){
     $additionalCondition = str_replace("', )", "')", $additionalCondition);    
 
     $sql_query .= $additionalCondition;
+    //echo $sql_query;
+    
+    $students = $DB->get_records_sql($sql_query);      
+    
+    // $students_to_return = array();
 
-    $students = $DB->get_records_sql($sql_query);    
+    // foreach($students as $student){
+    //     array_push($students_to_return, $student);
+    // }
+    
+    // return $students_to_return;
+    
     $students_to_return = array();
     
     foreach($students as $student){
@@ -162,5 +191,5 @@ function get_array_students_without_trackings(){
         array_push($students_to_return, $student);
     }
 
-    return $students_to_return;
+    return ($students_to_return);
 }
