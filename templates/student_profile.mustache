@@ -832,7 +832,7 @@
   <div class="mymodal-content">
     <div class="mymodal-header col-sm-12">
       <div class="col-sm-11">
-        <h4 class="" id="myModalLabel">Histórico de riesgo para el periodo: {{{nombrePeriodoSeguimiento}}}</h4>
+        <h4 class="" id="myModalLabel">Histórico de riesgo</h4>
       </div>
       <div class="col-sm-1">
         <span id="mymodal-riesgo-close" class="mymodal-close" aria-hidden="true">&times;</span>
@@ -869,8 +869,6 @@
   </div>
 </div>
 <!-- End modal retiro-->
-<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.0/Chart.min.js"></script>-->
-<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.0/Chart.bundle.min.js"></script>-->
 <span style="display:none;" id="datos">{ "informacion":[ {"dimension":"individual", "datos":[ {{#datosSeguimientoEstudianteIndividual}}
   {{#datos}} {"fecha":"{{fecha}}","color":"{{color}}","riesgo":"{{riesgo}}", "end":"false"}, {{/datos}} {{/datosSeguimientoEstudianteIndividual}}
   {"end":"true"} ]}, {"dimension":"familiar", "datos":[ {{#datosSeguimientoEstudianteFamiliar}} {{#datos}} {"fecha":"{{fecha}}","color":"{{color}}","riesgo":"{{riesgo}}",
