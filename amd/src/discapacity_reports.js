@@ -154,7 +154,7 @@ define([
                     data: { load: 'getDataGraphic' },
                     url: "../managers/discapacity_reports/discapacity_reports_api.php",
                     success: function (msg) {
-                        console.log(msg);
+                        //console.log(msg);
                         create_graphic_discapacity(msg);
 
                     },
