@@ -32,6 +32,8 @@ require_once $CFG->dirroot.'/blocks/ases/managers/periods_management/periods_lib
 require_once $CFG->dirroot.'/blocks/ases/managers/dphpforms/v2/dphpforms_lib.php';   
 require_once $CFG->dirroot.'/blocks/ases/managers/monitor_assignments/monitor_assignments_lib.php'; 
 
+//get_students_with_non_attendance_trackings();
+
 /**
  * Function that returns a list of the students with pair trackings on the current semester
  * 
@@ -136,15 +138,15 @@ function get_array_students_without_trackings(){
 
     $sql_query = "SELECT usuario.id AS id, userm.username, usuario.num_doc AS cedula, userm.firstname, userm.lastname FROM {user} AS userm
     INNER JOIN {talentospilos_user_extended} as user_ext  ON user_ext.id_moodle_user= userm.id
-    INNER JOIN  {talentospilos_usuario} AS usuario ON id_ases_user = usuario.id
-    
-    WHERE 
-    usuario.id NOT IN (";    
+    INNER JOIN  {talentospilos_usuario} AS usuario ON id_ases_user = usuario.id";    
     
     //Condition to get the students who don't have pair trackings on the current semester
 
-    $studentsWithTrackings = json_decode(get_students_with_trackings(), true);
-    $tracked_students_condition = "";    
+
+    $studentsWithTrackings = json_decode(get_students_with_trackings(), true);    
+
+    $tracked_students_condition = " WHERE 
+    usuario.id NOT IN (";    
 
     foreach($studentsWithTrackings as $tracking){                 
         $tracked_students_condition .="'". $tracking['id_estudiante']. "', ";
@@ -152,21 +154,26 @@ function get_array_students_without_trackings(){
 
     $tracked_students_condition.= ")";    
     $tracked_students_condition = str_replace("', )", "')", $tracked_students_condition);    
-    $sql_query .= $tracked_students_condition;
+    $sql_query .= $tracked_students_condition;   
+    
 
-    //Condition to get the students who don't have non attendance trackings on the current semester
+    //Condition to get the students who don't have non attendance trackings on the current semester    
+    
+    $studentsAttendanceTrackings = json_decode(get_students_with_non_attendance_trackings(), true);
 
-    // $studentsAttendanceTrackings = json_decode(get_students_with_non_attendance_trackings(), true);
-    // $tracked_att_students_condition = " AND usuario.id NOT IN (";    
+    if(count($studentsAttendanceTrackings) != 0){
 
-    // foreach($studentsAttendanceTrackings as $attTracking){                 
-    //     $tracked_att_students_condition .="'". $attTracking['id_estudiante']. "', ";
-    // }   
+        $tracked_att_students_condition = " AND usuario.id NOT IN (";    
 
-    // $tracked_att_students_condition.= ")";    
-    // $tracked_att_students_condition = str_replace("', )", "') ", $tracked_att_students_condition);    
-    // $sql_query .= $tracked_att_students_condition;    
+        foreach($studentsAttendanceTrackings as $attTracking){                 
+            $tracked_att_students_condition .="'". $attTracking['in_id_estudiante']. "', ";
+        }   
 
+        $tracked_att_students_condition.= ")";    
+        $tracked_att_students_condition = str_replace("', )", "') ", $tracked_att_students_condition);    
+        $sql_query .= $tracked_att_students_condition;        
+    }
+    
     //Condition to get the students who do have a monitor assigned on the current semester
     $monitorias_condition = " AND usuario.id IN (";
 
