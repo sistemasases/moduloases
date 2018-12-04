@@ -594,6 +594,11 @@ function get_student_monitor($id_ases_user, $id_semester, $id_instance)
     return $id_monitor;
 }
 
+/**
+ * Function that return the history of risk levels of a student.
+ * @param int Student ases code
+ * @return array list of stdClass with the end risk level of a set of semesters.
+ */
 function student_lib_get_full_risk_status( $ases_id ){
 
     $NUMBER_OF_DIMENSIONS = 5;
@@ -614,6 +619,7 @@ function student_lib_get_full_risk_status( $ases_id ){
     $xQuery->recordStatus = [ "!deleted" ];
     $xQuery->selectedFields = [ ]; 
 
+    //Trackings of a student
     $records = dphpformsV2_find_records( $xQuery );
     
     $first_full_status_risk = [
@@ -624,15 +630,22 @@ function student_lib_get_full_risk_status( $ases_id ){
         "vida_uni" => -1
     ];
 
-    $get_semester = function( $start_date ){
+    /**
+     * Function that returns the semester that in its interval contains a given time.
+     * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
+     * @param time
+     * @return array Semester information
+     */
+    $get_semester = function( $_date ){
 
         $semesters = periods_management_get_all_semesters();
 
         foreach ($semesters as $key => $semester) {
+
             $start_date_semester  = strtotime( $semester->fecha_inicio );
             $end_date_semester  = strtotime( $semester->fecha_fin );
             
-            if( ( $start_date >= $start_date_semester ) && ( $start_date <= $end_date_semester ) ){
+            if( ( $_date >= $start_date_semester ) && ( $_date <= $end_date_semester ) ){
                 return [
                     "id" => $semester->id,
                     "start_time" => $start_date_semester,
@@ -644,7 +657,14 @@ function student_lib_get_full_risk_status( $ases_id ){
         }
     };
 
-    $get_next_semesters = function( $start_date ){
+    /**
+     * Function that return the next semesters to the semester that in its interval contains
+     * a given time.
+     * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
+     * @param time
+     * @return array Array of next semesters information
+     */
+    $get_next_semesters = function( $_date ){
 
         $semesters = periods_management_get_all_semesters();
         $to_return = [];
@@ -653,7 +673,7 @@ function student_lib_get_full_risk_status( $ases_id ){
             $start_date_semester  = strtotime( $semester->fecha_inicio );
             $end_date_semester  = strtotime( $semester->fecha_fin );
             
-            if( $start_date < $start_date_semester ){
+            if( $_date < $start_date_semester ){
                 array_push( 
                     $to_return,
                     [
@@ -680,6 +700,10 @@ function student_lib_get_full_risk_status( $ases_id ){
 
     if( $records ){
 
+        /* count( $records ) - 1 
+         * It is used because the records are ordered in a DESC way, then the last record is the
+         * first one respect to the date.
+         * */
         $first_semester = $get_semester( strtotime( $records[count( $records ) - 1]["fecha"] ) );
 
         $first_full_status_risk["individual"] = $get_risk_value( $records[count( $records ) - 1]["puntuacion_riesgo_individual"] );
@@ -697,7 +721,7 @@ function student_lib_get_full_risk_status( $ases_id ){
         foreach ($next_semesters as $key => $row) {
             $items[$key]  = $row["id"];
         }
-
+        
         array_multisort($items, SORT_DESC, $next_semesters);
 
         foreach( $next_semesters as $semester_key => $semester ){
