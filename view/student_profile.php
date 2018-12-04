@@ -1607,17 +1607,18 @@ $generate_risk_entries = function( $risk_status ){
     $first_entry = [];
     foreach( $DIMENSIONS_KEY as $key => $dimension ){
         $risk_value = $risk_status["start_risk_lvl_fist_semester"][$dimension];
-        if( $risk_value !== -1 ){
-            $first_entry[$dimension] = [
-                "id_seguimiento" => -1,
-                "datos" => [
-                    "fecha" => date('Y-M-d', $risk_status["start_risk_lvl_fist_semester"]["semester_info"]["start_time"] ),
-                    "color" => $get_risk_lvl_color( $risk_status["start_risk_lvl_fist_semester"][$dimension] ),
-                    "riesgo" => $risk_value,
-                    "end" => false
-                ]
-            ];
+        if( $risk_value === -1 ){
+            $risk_value = 0;
         }
+        $first_entry[$dimension] = [
+            "id_seguimiento" => -1,
+            "datos" => [
+                "fecha" => date('Y-M-d', $risk_status["start_risk_lvl_fist_semester"]["semester_info"]["start_time"] ),
+                "color" => $get_risk_lvl_color( $risk_status["start_risk_lvl_fist_semester"][$dimension] ),
+                "riesgo" => $risk_value,
+                "end" => false
+            ]
+        ];
     }
 
     $other_entries = [];
@@ -1627,17 +1628,18 @@ $generate_risk_entries = function( $risk_status ){
         $entry = [];
         foreach( $DIMENSIONS_KEY as $_key => $dimension ){
             $risk_value = $semester_risk[$dimension];
-            if( $risk_value !== -1 ){
-                $entry[$dimension] = [
-                    "id_seguimiento" => -1,
-                    "datos" => [
-                        "fecha" => date('Y-M-d', $semester_risk["semester_info"]["end_time"] ),
-                        "color" => $get_risk_lvl_color( $semester_risk[$dimension] ),
-                        "riesgo" => $semester_risk[$dimension],
-                        "end" => false
-                    ]
-                ];
+            if( $risk_value === -1 ){
+                $risk_value = 0;
             }
+            $entry[$dimension] = [
+                "id_seguimiento" => -1,
+                "datos" => [
+                    "fecha" => date('Y-M-d', $semester_risk["semester_info"]["end_time"] ),
+                    "color" => $get_risk_lvl_color( $semester_risk[$dimension] ),
+                    "riesgo" => $risk_value,
+                    "end" => false
+                ]
+            ];
         }
         array_push( $other_entries, $entry );
     }
