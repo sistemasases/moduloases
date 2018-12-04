@@ -95,13 +95,14 @@ define(['jquery',
 	 * @return {void}
 	 */
 	function load_report_students_resolution(check_val){
+		$("#div_res_students").html('<img class="icon-loading" src="../icon/loading.gif"/>');
 		$.ajax({
 			type: "POST",
 			data: {loadR: 'loadReport', value: check_val},
 			url: "../managers/historic_icetex_reports/icetex_reports_processing.php",
 			success: function(msg){
 				$("#div_res_students").empty();
-				$("#div_res_students").append('<table id="tableResStudents" class="display" cellspacing="0" width="80%"><thead><thead></table>');
+				$("#div_res_students").fadeIn(1000).append('<table id="tableResStudents" class="display" cellspacing="0" width="80%"><thead><thead></table>');
 				var table = $("#tableResStudents").DataTable(msg);
 				$('#tableResStudents').css('cursor', 'pointer');
 				
@@ -120,13 +121,14 @@ define(['jquery',
 	 * @return {void}
 	 */
 	function load_resolutions(){
+		$("#div_resolutions").html('<img class="icon-loading" src="../icon/loading.gif"/>');
 		$.ajax({
 			type: "POST",
 			data: {resR: 'resReport'},
 			url: "../managers/historic_icetex_reports/resolution_reports_processing.php",
 			success: function(msg){
 				$("#div_resolutions").empty();
-				$("#div_resolutions").append('<table id="tableResolutions" class="display" cellspacing="0" width="100%"><thead><thead></table>');
+				$("#div_resolutions").fadeIn(1000).append('<table id="tableResolutions" class="display" cellspacing="0" width="100%"><thead><thead></table>');
 				var table = $("#tableResolutions").DataTable(msg);
 				$('#div_resolutions').css('cursor', 'pointer');			
 			},
@@ -140,13 +142,14 @@ define(['jquery',
 	}
 
 	function load_summary_report(cohort_name){
+		$("#div_report_summary").html('<img class="icon-loading" src="../icon/loading.gif"/>');
 		$.ajax({
 			type: "POST",
 			data: {summ: 'summaryR', cohor: cohort_name},
 			url: "../managers/historic_icetex_reports/summary_report_processing.php",
 			success: function(msg){
 				$("#div_report_summary").empty();
-				$("#div_report_summary").append('<table id="tableSummary" class="display" cellspacing="0" width="100%"><thead><thead><tfoot id="table_summ_foot"><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th></tfoot></table>');
+				$("#div_report_summary").fadeIn(1000).append('<table id="tableSummary" class="display" cellspacing="0" width="100%"><thead><thead><tfoot id="table_summ_foot"><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th></tfoot></table>');
 				var table = $("#tableSummary").DataTable(msg);
 				var total_inact_no_res = table.column( 9 ).data().sum();
 				var total_act_res = table.column( 3 ).data().sum();
