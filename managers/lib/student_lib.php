@@ -19,15 +19,19 @@
  *
  * @author     Iader E. García Gómez
  * @author     Camilo José Cruz Rivera
+ * @author     Jeison Cardona Gómez
  * @package    block_ases
  * @copyright  2017 Iader E. García <iadergg@gmail.com>
  * @copyright  2017 Camilo José Cruz Rivera <cruz.camilo@correounivalle.edu.co>
+ * @copyright  2018 Jeison Cardona Gómez <jeison.cardona@correounivalle.edu.co>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 require_once dirname(__FILE__) . '/../../../../config.php';
 
 require_once $CFG->dirroot.'/blocks/ases/managers/lib/lib.php';
+require_once $CFG->dirroot.'/blocks/ases/managers/dphpforms/v2/dphpforms_lib.php';
+
 
 /**
  * Obtains an user object given user id from {talentospilos_usuario} table
@@ -589,3 +593,197 @@ function get_student_monitor($id_ases_user, $id_semester, $id_instance)
 
     return $id_monitor;
 }
+
+/**
+ * Function that return the history of risk levels of a student.
+ * @param int Student ases code
+ * @return array list of stdClass with the end risk level of a set of semesters.
+ */
+function student_lib_get_full_risk_status( $ases_id ){
+
+    $NUMBER_OF_DIMENSIONS = 5;
+
+    $xQuery = new stdClass();
+    $xQuery->form = "seguimiento_pares";
+    $xQuery->filterFields = [ 
+                                ["id_estudiante",[ [ $ases_id,"=" ] ], false],
+                                ["fecha",[ ["%%","LIKE"] ] , false],
+                                ["puntuacion_riesgo_individual",[ ["%%","LIKE"] ] , false],
+                                ["puntuacion_riesgo_familiar",[ ["%%","LIKE"] ] , false],
+                                ["puntuacion_riesgo_academico",[ ["%%","LIKE"] ] , false],
+                                ["puntuacion_riesgo_economico",[ ["%%","LIKE"] ] , false],
+                                ["puntuacion_vida_uni",[ ["%%","LIKE"] ] , false]
+                            ];
+    $xQuery->orderFields = [ ["fecha","DESC"] ];
+    $xQuery->orderByDatabaseRecordDate = false;
+    $xQuery->recordStatus = [ "!deleted" ];
+    $xQuery->selectedFields = [ ]; 
+
+    //Trackings of a student
+    $records = dphpformsV2_find_records( $xQuery );
+    
+    $first_full_status_risk = [
+        "individual" => -1,
+        "familiar" => -1,
+        "academico" => -1,
+        "economico" => -1,
+        "vida_uni" => -1
+    ];
+
+    /**
+     * Function that returns the semester that in its interval contains a given time.
+     * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
+     * @param time
+     * @return array Semester information
+     */
+    $get_semester = function( $_date ){
+
+        $semesters = periods_management_get_all_semesters();
+
+        foreach ($semesters as $key => $semester) {
+
+            $start_date_semester  = strtotime( $semester->fecha_inicio );
+            $end_date_semester  = strtotime( $semester->fecha_fin );
+            
+            if( ( $_date >= $start_date_semester ) && ( $_date <= $end_date_semester ) ){
+                return [
+                    "id" => $semester->id,
+                    "start_time" => $start_date_semester,
+                    "end_time" => $end_date_semester,
+                    "start_date" => $semester->fecha_inicio,
+                    "end_date" => $semester->fecha_fin
+                ];
+            }
+        }
+    };
+
+    /**
+     * Function that return the next semesters to the semester that in its interval contains
+     * a given time.
+     * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
+     * @param time
+     * @return array Array of next semesters information
+     */
+    $get_next_semesters = function( $_date ){
+
+        $semesters = periods_management_get_all_semesters();
+        $to_return = [];
+
+        foreach ($semesters as $key => $semester) {
+            $start_date_semester  = strtotime( $semester->fecha_inicio );
+            $end_date_semester  = strtotime( $semester->fecha_fin );
+            
+            if( $_date < $start_date_semester ){
+                array_push( 
+                    $to_return,
+                    [
+                        "id" => $semester->id,
+                        "start_time" => $start_date_semester,
+                        "end_time" => $end_date_semester,
+                        "start_date" => $semester->fecha_inicio,
+                        "end_date" => $semester->fecha_fin
+                    ]
+                );
+            }
+        }
+
+        return $to_return;
+    };
+
+    $get_risk_value = function( $risk_value ){
+        if( $risk_value !== "-#$%-" ){
+            return $risk_value;
+        }else{
+            return -1;
+        }
+    };
+
+    if( $records ){
+
+        /* count( $records ) - 1 
+         * It is used because the records are ordered in a DESC way, then the last record is the
+         * first one respect to the date.
+         * */
+        $first_semester = $get_semester( strtotime( $records[count( $records ) - 1]["fecha"] ) );
+
+        $first_full_status_risk["individual"] = $get_risk_value( $records[count( $records ) - 1]["puntuacion_riesgo_individual"] );
+        $first_full_status_risk["familiar"] = $get_risk_value( $records[count( $records ) - 1]["puntuacion_riesgo_familiar"] );
+        $first_full_status_risk["academico"] = $get_risk_value( $records[count( $records ) - 1]["puntuacion_riesgo_academico"] );
+        $first_full_status_risk["economico"] = $get_risk_value( $records[count( $records ) - 1]["puntuacion_riesgo_economico"] );
+        $first_full_status_risk["vida_uni"] = $get_risk_value( $records[count( $records ) - 1]["puntuacion_vida_uni"] );
+        $first_full_status_risk["semester_info"] = $first_semester;
+
+        $next_semesters = $get_next_semesters( strtotime( $records[count( $records ) - 1]["fecha"] ) );
+        array_push( $next_semesters, $first_semester );
+        
+        $other_semesters = [];
+        $items = null;
+        foreach ($next_semesters as $key => $row) {
+            $items[$key]  = $row["id"];
+        }
+        
+        array_multisort($items, SORT_DESC, $next_semesters);
+
+        foreach( $next_semesters as $semester_key => $semester ){
+            
+            $checked = 0;
+            $full_status_risk = [
+                "individual" => -1,
+                "familiar" => -1,
+                "academico" => -1,
+                "economico" => -1,
+                "vida_uni" => -1
+            ];
+            $full_status_risk["semester_info"] = $semester;
+
+            foreach( $records as $record_key => $record ){
+                
+                
+                if( ( strtotime( $record["fecha"] ) >= $semester["start_time"] ) && 
+                    ( strtotime( $record["fecha"] ) <= $semester["end_time"] )
+                ){  
+                    
+                    if( ( $full_status_risk["individual"] === -1 ) && ( $record["puntuacion_riesgo_individual"] !== "-#$%-" ) ){
+                        $full_status_risk["individual"] = $record["puntuacion_riesgo_individual"];
+                        $checked++;
+                    }
+                    if( ( $full_status_risk["familiar"] === -1 ) && ( $record["puntuacion_riesgo_familiar"] !== "-#$%-" ) ){
+                        $full_status_risk["familiar"] = $record["puntuacion_riesgo_familiar"];
+                        $checked++;
+                    }
+                    if( ( $full_status_risk["academico"] === -1 ) && ( $record["puntuacion_riesgo_academico"] !== "-#$%-" ) ){
+                        $full_status_risk["academico"] = $record["puntuacion_riesgo_academico"];
+                        $checked++;
+                    }
+                    if( ( $full_status_risk["economico"] === -1 ) && ( $record["puntuacion_riesgo_economico"] !== "-#$%-" ) ){
+                        $full_status_risk["economico"] = $record["puntuacion_riesgo_economico"];
+                        $checked++;
+                    }
+                    if( ( $full_status_risk["vida_uni"] === -1 ) && ( $record["puntuacion_vida_uni"] !== "-#$%-" ) ){
+                        $full_status_risk["vida_uni"] = $record["puntuacion_vida_uni"];
+                        $checked++;
+                    }
+            
+                    if( $checked == $NUMBER_OF_DIMENSIONS ){
+                        break;
+                    }
+                }
+
+            }
+
+            array_push( $other_semesters, $full_status_risk );
+
+        }
+
+        $other_semesters = array_reverse( $other_semesters );
+
+        return [
+            "start_risk_lvl_fist_semester" => $first_full_status_risk,
+            "end_risk_lvl_semesters" => $other_semesters
+        ];
+
+    }else{
+        return null;
+    }
+
+};

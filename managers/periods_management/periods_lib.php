@@ -19,15 +19,17 @@
  * Estrategia ASES
  *
  * @author     Juan Pablo Moreno Muñoz
+ * @author     Jeison Cardona Gómez
  * @package    block_ases
  * @copyright  2017 Juan Pablo Moreno Muñoz <moreno.juan@correounivalle.edu.co>
+ * @copyright  2018 Jeison Cardona Gómez <jeison.cardona@correounivalle.edu.co>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 require_once(dirname(__FILE__). '/../../../../config.php');
 
  /**
- * Functions that returns the current semester in a given interval
+ * Function that returns the current semester in a given interval
  * 
  * @see get_current_semester_byinterval($fecha_inicio,$fecha_fin)
  * @param $fecha_inicio ---> starting date
@@ -45,7 +47,7 @@ require_once(dirname(__FILE__). '/../../../../config.php');
  }
 
  /**
- * Functions that returns the current semester in a given approximate interval
+ * Function that returns the current semester in a given approximate interval
  * @author Jeison Cardona Gómez <jeison.cardona@correounivalle.edu.co>
  * @param string $start_date With postgres fortmat YYYY-MM-DD
  * @param string $end_date With postgres fortmat YYYY-MM-DD
@@ -57,7 +59,7 @@ function periods_management_get_current_semester_by_apprx_interval( $start_date,
     global $DB;
 
     $sql = "SELECT id 
-                    FROM mdl_talentospilos_semestre 
+                    FROM {talentospilos_semestre} 
                     WHERE fecha_inicio <= '$start_date' 
                     AND fecha_fin >= '$end_date'";
 
@@ -86,8 +88,6 @@ function periods_management_get_current_semester_by_apprx_interval( $start_date,
      $current_semester = $DB->get_record_sql($sql_query);
      return $current_semester;
  }
-
- //print_r(substr(get_current_semester()->nombre, 0, 4));
 
  /**
  * Function that returns the interval that represents a semester by its ID
@@ -268,4 +268,19 @@ function periods_management_get_current_semester_by_apprx_interval( $start_date,
         return false;
 
     }
+}
+
+ /**
+ * Functions that returns all stored semesters
+ * @author Jeison Cardona Gómez <jeison.cardona@correounivalle.edu.co>
+ * @return array
+ */
+
+function periods_management_get_all_semesters(){
+     
+    global $DB;
+    $sql = "SELECT * FROM {talentospilos_semestre}";
+
+    return $DB->get_records_sql( $sql );
+
 }
