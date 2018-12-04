@@ -141,7 +141,7 @@ define([
                   }, function(isConfirm) {
                     if (isConfirm) {
                         $(outside).parent('.mymodal').fadeOut(300);
-                        console.log( $(this).parent('.mymodal') );
+                        //console.log( $(this).parent('.mymodal') );
                     }
                   });
                 
@@ -154,7 +154,7 @@ define([
                     data: { load: 'getDataGraphic' },
                     url: "../managers/discapacity_reports/discapacity_reports_api.php",
                     success: function (msg) {
-                        console.log(msg);
+                        //console.log(msg);
                         create_graphic_discapacity(msg);
 
                     },
@@ -171,7 +171,6 @@ define([
                 var data = {
                     labels: ["Cognitiva","Psicosocial","Física","Sensorial","Múltiple", "Otra"],
                     datasets: [{
-                        label: 'Número de estudiantes por tipo de discapacidad',
                         data: data_get,
                         backgroundColor: [
                             'rgba(255, 99, 132, 0.2)',
@@ -189,22 +188,27 @@ define([
                             'rgba(153, 102, 255, 1)',
                             'rgba(255, 159, 64, 1)'
                         ],
-                        borderWidth: 2
+                        borderWidth: 3
                     }]
                 }
             
                 var chart_options = {
-                    scales: {
-                        yAxes: [{
-                            ticks: {
-                                beginAtZero:true
-                            }
-                        }]
+                     
+                    title: {
+                        display: true,
+                        text: 'Número de estudiantes por tipo de discapacidad'
+                      },
+                    starAngle: 0,
+                    animation: {
+                        animateRotate: true,
+                        animateScale: true
                     }
                 };
+
+                Chart.defaults.polarArea.animation.animateScale = false;
             
                 var radar_chart = new Chart(ctx, {
-                    type: 'bar',
+                    type: 'pie',
                     data: data,
                     options: chart_options
                 }

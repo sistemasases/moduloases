@@ -256,15 +256,19 @@ function get_data_to_grapich(){
 
     global $DB;
     $array_detalles = array();
+    $array_records  = array();
  
-    $sql = "SELECT  talentospilos_usuario.json_detalle AS detalle_disc FROM mdl_cohort AS cohort 
-                        INNER JOIN mdl_cohort_members AS cohort_members ON cohort_members.cohortid = cohort.id
-                            INNER JOIN mdl_user AS _user ON _user.id = cohort_members.userid
-                                INNER JOIN mdl_talentospilos_user_extended AS talentospilos_user_extended ON talentospilos_user_extended.tracking_status = 1 AND talentospilos_user_extended.id_moodle_user = _user.id
-                                     INNER JOIN mdl_talentospilos_usuario AS talentospilos_usuario ON talentospilos_usuario.id =  talentospilos_user_extended.id_ases_user AND talentospilos_usuario.json_detalle IS NOT NULL
-                            WHERE cohort.idnumber = 'DISC2018B'";
+    $sql = "SELECT  talentospilos_usuario.num_doc AS num_doc_act,  talentospilos_usuario.json_detalle AS detalle_disc FROM {cohort} AS cohort 
+            INNER JOIN {cohort_members} AS cohort_members ON cohort_members.cohortid = cohort.id
+                INNER JOIN {user} AS _user ON _user.id = cohort_members.userid
+                    INNER JOIN {talentospilos_user_extended} AS talentospilos_user_extended ON talentospilos_user_extended.tracking_status = 1 
+                                                                        AND talentospilos_user_extended.id_moodle_user = _user.id
+                         INNER JOIN {talentospilos_usuario} AS talentospilos_usuario ON talentospilos_usuario.id =  talentospilos_user_extended.id_ases_user 
+                                                                        AND talentospilos_usuario.json_detalle IS NOT NULL
+                WHERE cohort.idnumber = 'DISC2018B'";
                                 
     $results = $DB->get_records_sql($sql);
+
 
     $cognitiva = 0;
     $psicosocial = 0;    
@@ -272,6 +276,7 @@ function get_data_to_grapich(){
     $sensorial = 0;   
     $multiple = 0;
     $otra = 0;   
+    
 
     foreach ($results as $record) {
         $tipo_discapacidad_register = json_decode($record->detalle_disc);
@@ -297,7 +302,9 @@ function get_data_to_grapich(){
         break;   
         }
     }
+    $cant = count($results);
     array_push($array_detalles, $cognitiva, $psicosocial, $fisica, $sensorial, $multiple, $otra);
+    
 
    return $array_detalles;
 
