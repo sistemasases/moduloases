@@ -609,7 +609,7 @@ function student_lib_get_full_risk_status( $ases_id ){
                                 ["puntuacion_riesgo_economico",[ ["%%","LIKE"] ] , false],
                                 ["puntuacion_vida_uni",[ ["%%","LIKE"] ] , false]
                             ];
-    $xQuery->orderFields = [ ["fecha","ASC"] ];
+    $xQuery->orderFields = [ ["fecha","DESC"] ];
     $xQuery->orderByDatabaseRecordDate = false;
     $xQuery->recordStatus = [ "!deleted" ];
     $xQuery->selectedFields = [ ]; 
@@ -670,65 +670,36 @@ function student_lib_get_full_risk_status( $ases_id ){
         return $to_return;
     };
 
+    $get_risk_value = function( $risk_value ){
+        if( $risk_value !== "-#$%-" ){
+            return $risk_value;
+        }else{
+            return -1;
+        }
+    };
+
     if( $records ){
 
-        $first_semester = $get_semester( strtotime( $records[0]["fecha"] ) );
+        $first_semester = $get_semester( strtotime( $records[count( $records ) - 1]["fecha"] ) );
 
-        $first_full_status_risk["individual"] = $records[0]["puntuacion_riesgo_individual"];
-        $first_full_status_risk["familiar"] = $records[0]["puntuacion_riesgo_familiar"];
-        $first_full_status_risk["academico"] = $records[0]["puntuacion_riesgo_academico"];
-        $first_full_status_risk["economico"] = $records[0]["puntuacion_riesgo_economico"];
-        $first_full_status_risk["vida_uni"] = $records[0]["puntuacion_vida_uni"];
-
-
-        $next_semesters = $get_next_semesters( strtotime( $records[0]["fecha"] ) );
-        
-        $checked = 0;
-        $last_record = -1;
+        $first_full_status_risk["individual"] = $get_risk_value( $records[count( $records ) - 1]["puntuacion_riesgo_individual"] );
+        $first_full_status_risk["familiar"] = $get_risk_value( $records[count( $records ) - 1]["puntuacion_riesgo_familiar"] );
+        $first_full_status_risk["academico"] = $get_risk_value( $records[count( $records ) - 1]["puntuacion_riesgo_academico"] );
+        $first_full_status_risk["economico"] = $get_risk_value( $records[count( $records ) - 1]["puntuacion_riesgo_economico"] );
+        $first_full_status_risk["vida_uni"] = $get_risk_value( $records[count( $records ) - 1]["puntuacion_vida_uni"] );
         $first_full_status_risk["semester_info"] = $first_semester;
-        
-        foreach( $records as $key => $record ){
-            
-            if( !(
-                    ( strtotime( $record["fecha"] ) >= $first_semester["start_time"] ) && 
-                    ( strtotime( $record["fecha"] ) <= $first_semester["end_time"] )
-                )
-            ){
-                $last_record = $key - 1;
-                break;
-            }
-            
-            if( ( $first_full_status_risk["individual"] === -1 ) && ( $record["puntuacion_riesgo_individual"] !== "-#$%-" ) ){
-                $first_full_status_risk["individual"] = $record["puntuacion_riesgo_individual"];
-                $checked++;
-            }
-            if( ( $first_full_status_risk["familiar"] === -1 ) && ( $record["puntuacion_riesgo_familiar"] !== "-#$%-" ) ){
-                $first_full_status_risk["familiar"] = $record["puntuacion_riesgo_familiar"];
-                $checked++;
-            }
-            if( ( $first_full_status_risk["academico"] === -1 ) && ( $record["puntuacion_riesgo_academico"] !== "-#$%-" ) ){
-                $first_full_status_risk["academico"] = $record["puntuacion_riesgo_academico"];
-                $checked++;
-            }
-            if( ( $first_full_status_risk["economico"] === -1 ) && ( $record["puntuacion_riesgo_economico"] !== "-#$%-" ) ){
-                $first_full_status_risk["economico"] = $record["puntuacion_riesgo_economico"];
-                $checked++;
-            }
-            if( ( $first_full_status_risk["vida_uni"] === -1 ) && ( $record["puntuacion_vida_uni"] !== "-#$%-" ) ){
-                $first_full_status_risk["vida_uni"] = $record["puntuacion_vida_uni"];
-                $checked++;
-            }
-            
-            if( $checked == count( $NUMBER_OF_DIMENSIONS ) ){
-                $last_record = $key;
-                break;
-            }
-        }
+
+        $next_semesters = $get_next_semesters( strtotime( $records[count( $records ) - 1]["fecha"] ) );
+        array_push( $next_semesters, $first_semester );
         
         $other_semesters = [];
-        array_push( $other_semesters, $first_full_status_risk );
+        $items = null;
+        foreach ($next_semesters as $key => $row) {
+            $items[$key]  = $row["id"];
+        }
 
-        //Prev::$last_record = -1; //Las position
+        array_multisort($items, SORT_DESC, $next_semesters);
+
         foreach( $next_semesters as $semester_key => $semester ){
             
             $checked = 0;
@@ -740,46 +711,38 @@ function student_lib_get_full_risk_status( $ases_id ){
                 "vida_uni" => -1
             ];
             $full_status_risk["semester_info"] = $semester;
-            
+
             foreach( $records as $record_key => $record ){
                 
-                if( $last_record < $record_key ){
-                    continue;
-                }
                 
-                if( !(
-                        ( strtotime( $record["fecha"] ) >= $semester["start_time"] ) && 
-                        ( strtotime( $record["fecha"] ) <= $semester["end_time"] )
-                    )
-                ){
-                    $last_record = $key - 1;
-                    break;
-                }
-
-                if( ( $full_status_risk["individual"] === -1 ) && ( $record["puntuacion_riesgo_individual"] !== "-#$%-" ) ){
-                    $full_status_risk["individual"] = $record["puntuacion_riesgo_individual"];
-                    $checked++;
-                }
-                if( ( $full_status_risk["familiar"] === -1 ) && ( $record["puntuacion_riesgo_familiar"] !== "-#$%-" ) ){
-                    $full_status_risk["familiar"] = $record["puntuacion_riesgo_familiar"];
-                    $checked++;
-                }
-                if( ( $full_status_risk["academico"] === -1 ) && ( $record["puntuacion_riesgo_academico"] !== "-#$%-" ) ){
-                    $full_status_risk["academico"] = $record["puntuacion_riesgo_academico"];
-                    $checked++;
-                }
-                if( ( $full_status_risk["economico"] === -1 ) && ( $record["puntuacion_riesgo_economico"] !== "-#$%-" ) ){
-                    $full_status_risk["economico"] = $record["puntuacion_riesgo_economico"];
-                    $checked++;
-                }
-                if( ( $full_status_risk["vida_uni"] === -1 ) && ( $record["puntuacion_vida_uni"] !== "-#$%-" ) ){
-                    $full_status_risk["vida_uni"] = $record["puntuacion_vida_uni"];
-                    $checked++;
-                }
-        
-                if( $checked == count( $NUMBER_OF_DIMENSIONS ) ){
-                    $last_record = $key;
-                    break;
+                if( ( strtotime( $record["fecha"] ) >= $semester["start_time"] ) && 
+                    ( strtotime( $record["fecha"] ) <= $semester["end_time"] )
+                ){  
+                    
+                    if( ( $full_status_risk["individual"] === -1 ) && ( $record["puntuacion_riesgo_individual"] !== "-#$%-" ) ){
+                        $full_status_risk["individual"] = $record["puntuacion_riesgo_individual"];
+                        $checked++;
+                    }
+                    if( ( $full_status_risk["familiar"] === -1 ) && ( $record["puntuacion_riesgo_familiar"] !== "-#$%-" ) ){
+                        $full_status_risk["familiar"] = $record["puntuacion_riesgo_familiar"];
+                        $checked++;
+                    }
+                    if( ( $full_status_risk["academico"] === -1 ) && ( $record["puntuacion_riesgo_academico"] !== "-#$%-" ) ){
+                        $full_status_risk["academico"] = $record["puntuacion_riesgo_academico"];
+                        $checked++;
+                    }
+                    if( ( $full_status_risk["economico"] === -1 ) && ( $record["puntuacion_riesgo_economico"] !== "-#$%-" ) ){
+                        $full_status_risk["economico"] = $record["puntuacion_riesgo_economico"];
+                        $checked++;
+                    }
+                    if( ( $full_status_risk["vida_uni"] === -1 ) && ( $record["puntuacion_vida_uni"] !== "-#$%-" ) ){
+                        $full_status_risk["vida_uni"] = $record["puntuacion_vida_uni"];
+                        $checked++;
+                    }
+            
+                    if( $checked == $NUMBER_OF_DIMENSIONS ){
+                        break;
+                    }
                 }
 
             }
@@ -788,7 +751,12 @@ function student_lib_get_full_risk_status( $ases_id ){
 
         }
 
-        return $other_semesters;
+        $other_semesters = array_reverse( $other_semesters );
+
+        return [
+            "start_risk_lvl_fist_semester" => $first_full_status_risk,
+            "end_risk_lvl_semesters" => $other_semesters
+        ];
 
     }else{
         return null;
