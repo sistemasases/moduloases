@@ -648,6 +648,7 @@ function student_lib_get_full_risk_status( $ases_id ){
             if( ( $_date >= $start_date_semester ) && ( $_date <= $end_date_semester ) ){
                 return [
                     "id" => $semester->id,
+                    "name" => $semester->nombre,
                     "start_time" => $start_date_semester,
                     "end_time" => $end_date_semester,
                     "start_date" => $semester->fecha_inicio,
@@ -678,6 +679,7 @@ function student_lib_get_full_risk_status( $ases_id ){
                     $to_return,
                     [
                         "id" => $semester->id,
+                        "name" => $semester->nombre,
                         "start_time" => $start_date_semester,
                         "end_time" => $end_date_semester,
                         "start_date" => $semester->fecha_inicio,
