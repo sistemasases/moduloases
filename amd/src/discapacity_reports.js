@@ -196,7 +196,8 @@ define([
                      
                     title: {
                         display: true,
-                        text: 'Número de estudiantes por tipo de discapacidad'
+                        text: 'Número de estudiantes por tipo de discapacidad',
+                        fontSize: 30
                       },
                     starAngle: 0,
                     animation: {
