@@ -95,19 +95,38 @@ function create_resolution($num_resolution, $semester_id, $date, $total_amount){
 
     global $DB;
 
-    $newResolution = new stdClass();
-    $newResolution->codigo_resolucion = $num_resolution;
-    $newResolution->id_semestre = $semester_id;
-    $newResolution->fecha_resolucion = strtotime($date);
-    $newResolution->monto_total = $total_amount;
+    $result = validate_resolution_register($num_resolution);
 
-    $insert = $DB->insert_record('talentospilos_res_icetex', $newResolution, true);
+    if(!$result) {
+        $newResolution = new stdClass();
+        $newResolution->codigo_resolucion = $num_resolution;
+        $newResolution->id_semestre = $semester_id;
+        $newResolution->fecha_resolucion = strtotime($date);
+        $newResolution->monto_total = $total_amount;
 
-    return $insert;
+        $insert = $DB->insert_record('talentospilos_res_icetex', $newResolution, true);
+
+        return $insert;
+
+    }else{        
+        return $result;
+    }   
 
 }
 
 //print_r(create_resolution("0000000000", strtotime("2018-01-01"), 1000000));
+
+function validate_resolution_register($num_resolution){
+    global $DB;
+
+    $sql_query = "SELECT id FROM {talentospilos_res_icetex} WHERE codigo_resolucion = '$num_resolution'";
+
+    $id_resolution = $DB->get_record_sql($sql_query)->id;
+
+    return $id_resolution;
+}
+
+//print_r(validate_resolution_register('10618482'));
 
 /**
  * Function that creates a historic register given the student identification, the number of the resolution, the name of the semester and the amount of money per student
@@ -146,9 +165,6 @@ function update_resolution_credit_note($id_resolution, $credit_note){
     global $DB;
 
     $upd_cred_note = false;
-
-
-    //$id_resolution = get_resolution_id_by_number($res_code);
     
     $object_resolution = new stdClass();
     $object_resolution->id = $id_resolution;
@@ -166,6 +182,26 @@ function update_resolution_credit_note($id_resolution, $credit_note){
 }
 
 //print_r(update_resolution_credit_note(10, 'Hey'));
+
+function update_resolution_amount_students($id_resolution, $amount_students){
+    global $DB;
+
+    $upd_am_stud = false;
+    
+    $object_resolution = new stdClass();
+    $object_resolution->id = $id_resolution;
+    $object_resolution->cantidad_estudiantes = $amount_students;
+
+    $update = $DB->update_record('talentospilos_res_icetex', $object_resolution);
+
+    if($update){
+        $upd_am_stud = true;
+    }else{
+        $upd_am_stud = false;
+    }
+
+    return $upd_am_stud;
+}
 
 /**
  * Returns the id of the icetex_status given its name

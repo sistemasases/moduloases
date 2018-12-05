@@ -97,20 +97,10 @@ if (isset($_FILES['file'])) {
             if (!is_null($associativeTitles['codigo_resolucion'])) {
 
                 $codigo_resolucion = $data[$associativeTitles['codigo_resolucion']];
-                if ($codigo_resolucion != '') {
-
-                    $id_resolucion = get_resolution_id_by_number($codigo_resolucion);
-
-                    if ($id_resolucion != false) {
-                        $isValidRow = false;
-                        array_push($detail_errors, [$line_count, $lc_wrongFile, ($associativeTitles['codigo_resolucion'] + 1), 'codigo_resolucion', 'Ya existe una resolución asociada al código: ' . $codigo_resolucion]);
-                    }
-
-                } else {
+                if ($codigo_resolucion == '') {
                     $isValidRow = false;
                     array_push($detail_errors, [$line_count, $lc_wrongFile, ($associativeTitles['codigo_resolucion'] + 1), 'codigo_resolucion', 'El campo codigo_resolucion es obligatorio y se encuentra vacio']);
                 }
-
             } else {
                 throw new MyException('La columna con el campo codigo_resolucion es obligatoria');
             }
@@ -177,6 +167,15 @@ if (isset($_FILES['file'])) {
                 }
             }
 
+            $has_amount_students = false;
+            //validate cantidad_estudiantes
+            if (!is_null($associativeTitles['cantidad_estudiantes'])) {
+                $amount_students = $data[$associativeTitles['cantidad_estudiantes']];
+                if ($amount_students != "" and $amount_students != 'undefined') {
+                    $has_amount_students = true;                    
+                }
+            }
+
             //FINALIZACION DE VALIDACIONES. CARGA O ACTUALIZACIÓN
             if (!$isValidRow) {
                 $lc_wrongFile++;
@@ -198,12 +197,22 @@ if (isset($_FILES['file'])) {
                     if ($has_credit_note) {
                      $insert_credit_note = update_resolution_credit_note($id_resolution, $credit_note);
                      
-                         if (!$insert_credit_note) {
-                             array_push($detail_erros, [$line_count, $lc_wrongFile, 'Error al nota crédito', 'Error Servidor', 'Error del server registrando la nota crédito']);
-                             array_push($wrong_rows, $data);
-                             $lc_wrongFile++;
-                         }
-                     }
+                        if (!$insert_credit_note) {
+                            array_push($detail_erros, [$line_count, $lc_wrongFile, 'Error al nota crédito', 'Error Servidor', 'Error del server registrando la nota crédito']);
+                            array_push($wrong_rows, $data);
+                            $lc_wrongFile++;
+                        }
+                    }
+
+                    if ($has_amount_students) {
+                        $insert_amount_students = update_resolution_amount_students($id_resolution, $amount_students);
+
+                        if(!$insert_amount_students) {
+                            array_push($detail_erros, [$line_count, $lc_wrongFile, 'Error al registrar cantidad de estudiantes', 'Error Servidor', 'Error del server registrando la cantidad de estudiantes']);
+                            array_push($wrong_rows, $data);
+                            $lc_wrongFile++;
+                        }
+                    }
                 }
             }
 
