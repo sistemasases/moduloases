@@ -34,6 +34,7 @@
 		array_push($columns, array("title"=>"Semestre", "name"=>"nombre", "data"=>"nombre"));
 		array_push($columns, array("title"=>"Nota crédito", "name"=>"nota_credito", "data"=>"nota_credito"));
 		array_push($columns, array("title"=>"Total", "className"=>"dt-body-right", "name"=>"monto_total", "data"=>"monto_total"));
+		array_push($columns, array("title"=>"Total estudiantes", "name"=>"cantidad_estudiantes", "data"=>"cantidad_estudiantes"));
 		array_push($columns, array("title"=>"Total monto estudiantes", "className"=>"dt-body-right", "name"=>"monto_sum_estudiantes", "data"=>"monto_sum_estudiantes"));
 		array_push($columns, array("title"=>"Diferencia", "className"=>"dt-body-right","name"=>"monto_diferencia", "data"=>"monto_diferencia"));
 
