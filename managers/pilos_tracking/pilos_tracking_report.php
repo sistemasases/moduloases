@@ -212,12 +212,16 @@ if(isset($_POST['monitor'])&&isset($_POST['type'])&&$_POST['type']=='redirect_tr
    echo  get_user_by_username($username_monitor)->id;
 }    
 
+
+// param $_POST['date'] is obsolete.
 if (isset($_POST['type']) && $_POST['type'] == "send_email_to_user" && isset($_POST['message_to_send']) && isset($_POST['tracking_type']) && isset($_POST['monitor_code']) && isset($_POST['date']))
     {
+
     /*
     La linea siguiente no se adiciona a el if previo, con el
     fin de evitar problemas con otros script que hagan uso del mĆ©todo.
     */
+    
     $place = $_POST['place'];
     $tracking_type = $_POST['tracking_type'];
     if ($_POST['form'] == 'new_form')
@@ -234,7 +238,7 @@ if (isset($_POST['type']) && $_POST['type'] == "send_email_to_user" && isset($_P
             $monitor_code = get_student_monitor($id_ases_student, $_POST['semester'], $_POST['instance']);
             $practicant_code = get_boss_of_monitor_by_semester($monitor_code, $_POST['semester'], $_POST['instance']);
             $profesional_code = get_boss_of_monitor_by_semester($practicant_code->id_jefe, $_POST['semester'], $_POST['instance']);
-            echo send_email_to_user($_POST['tracking_type'], $monitor_code, $practicant_code->id_jefe, $profesional_code->id_jefe, $_POST['date'], $id_moodle_student->firstname . " " . $id_moodle_student->lastname, $_POST['message_to_send'], $place);
+            echo send_email_to_user($_POST['tracking_type'], $monitor_code, $practicant_code->id_jefe, $profesional_code->id_jefe, date("Y-m-d H:i:s"), $id_moodle_student->firstname . " " . $id_moodle_student->lastname, $_POST['message_to_send'], $place);
         }
     }
 

@@ -372,6 +372,17 @@ echo json_encode( dphpformsV2_find_records( $xQuery ) );*/
 
  }
 
+ function dphpformsV2_find_n_count_records( $query ){
+
+    $response = dphpformsV2_find_records( $query );
+    if( $response["status_code"] !== -1 ){
+        return count( $response );
+    }else{
+        return -1;
+    }
+
+ }
+
  /**
  * Function that return the basic dynamic form information.
  * @author Jeison Cardona Gómez. <jeison.cardona@correounivalle.edu.co>

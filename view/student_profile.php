@@ -19,8 +19,10 @@
  * ASES
  *
  * @author     Iader E. García G.
+ * @author     Jeison Cardona Gómez
  * @package    block_ases
  * @copyright  2016 Iader E. García <iadergg@gmail.com>
+ * @copyright  2018 Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -1474,15 +1476,6 @@ if ($student_code != 0) {
     array_push( $risk_familiar_dimension, array( 'end' => 'true' ) );
     array_push( $risk_uni_life_dimension, array( 'end' => 'true' ) );
 
-    //die();
-
-    // Mustache doesn't allow advanced conditional control, information detachment occurs here
-    /*$seguimientosEstudianteIndividual = obtenerDatosSeguimientoFormateados($idEstudiante, 'individual', $periodoactual);
-    $seguimientosEstudianteFamiliar = obtenerDatosSeguimientoFormateados($idEstudiante, 'familiar', $periodoactual);
-    $seguimientosEstudianteAcademico = obtenerDatosSeguimientoFormateados($idEstudiante, 'academico', $periodoactual);
-    $seguimientosEstudianteEconomicor = obtenerDatosSeguimientoFormateados($idEstudiante, 'economico', $periodoactual);
-    $seguimientosVidaUniversitaria = obtenerDatosSeguimientoFormateados($idEstudiante, 'vida_universitaria', $periodoactual);*/
-
     $seguimientosEstudianteIndividual = $risk_individual_dimension;
     $seguimientosEstudianteFamiliar = $risk_familiar_dimension;
     $seguimientosEstudianteAcademico = $risk_academic_dimension;
@@ -1595,6 +1588,89 @@ $stud_mon_prac_prof = user_management_get_stud_mon_prac_prof( $record->ases_stud
 $record->monitor_id = $stud_mon_prac_prof->monitor->id;
 $record->practicing_id = $stud_mon_prac_prof->practicing->id;
 $record->professional_id = $stud_mon_prac_prof->professional->id;
+
+$generate_risk_entries = function( $risk_status ){
+
+    $DIMENSIONS_KEY = ["individual", "familiar", "academico", "economico", "vida_uni"];
+
+    $get_risk_lvl_color = function( $risk_lvl ){
+        $colors = [
+            1 => "green",
+            2 => "orange",
+            3 => "red",
+            -1 => ""
+        ];
+        return $colors[ $risk_lvl ];
+    };
+
+
+    $first_entry = [];
+    foreach( $DIMENSIONS_KEY as $key => $dimension ){
+        $risk_value = $risk_status["start_risk_lvl_fist_semester"][$dimension];
+        if( $risk_value === -1 ){
+            $risk_value = 0;
+        }
+        $first_entry[$dimension] = [
+            "id_seguimiento" => -1,
+            "datos" => [
+                //"fecha" => date('Y-M-d', $risk_status["start_risk_lvl_fist_semester"]["semester_info"]["start_time"] ),
+                "fecha" => "Inicial",
+                "color" => $get_risk_lvl_color( $risk_status["start_risk_lvl_fist_semester"][$dimension] ),
+                "riesgo" => $risk_value,
+                "end" => false
+            ]
+        ];
+    }
+
+    $other_entries = [];
+    $other_risk_semesters = array_reverse( $risk_status["end_risk_lvl_semesters"] );
+    array_shift ( $other_risk_semesters ); // Current semester must be not included
+    foreach( $other_risk_semesters as $key => $semester_risk ){
+        $entry = [];
+        foreach( $DIMENSIONS_KEY as $_key => $dimension ){
+            $risk_value = $semester_risk[$dimension];
+            if( $risk_value === -1 ){
+                $risk_value = 0;
+            }
+            $entry[$dimension] = [
+                "id_seguimiento" => -1,
+                "datos" => [
+                    //"fecha" => date('Y-M-d', $semester_risk["semester_info"]["end_time"] ),
+                    "fecha" => $semester_risk["semester_info"]["name"],
+                    "color" => $get_risk_lvl_color( $semester_risk[$dimension] ),
+                    "riesgo" => $risk_value,
+                    "end" => false
+                ]
+            ];
+        }
+        array_push( $other_entries, $entry );
+    }
+
+    return [
+        "first" =>  $first_entry,
+        "others" => $other_entries
+    ];
+    
+};
+
+$historical_risk_lvl = student_lib_get_full_risk_status( $record->ases_student_code );
+$risk_entries = $generate_risk_entries( $historical_risk_lvl );
+
+foreach( $risk_entries["others"] as $key => $entry ){
+
+    array_unshift( $record->datosSeguimientoEstudianteIndividual, $entry["individual"] );
+    array_unshift( $record->datosSeguimientoEstudianteFamiliar, $entry["familiar"] );
+    array_unshift( $record->datosSeguimientoEstudianteAcademico, $entry["academico"] );
+    array_unshift( $record->datosSeguimientoEstudianteEconomico, $entry["economico"] );
+    array_unshift( $record->datosSeguimientoEstudianteVidaUniversitaria, $entry["vida_uni"] );
+
+}
+
+array_unshift( $record->datosSeguimientoEstudianteIndividual, $risk_entries["first"]["individual"] );
+array_unshift( $record->datosSeguimientoEstudianteFamiliar, $risk_entries["first"]["familiar"] );
+array_unshift( $record->datosSeguimientoEstudianteAcademico, $risk_entries["first"]["academico"] );
+array_unshift( $record->datosSeguimientoEstudianteEconomico, $risk_entries["first"]["economico"] );
+array_unshift( $record->datosSeguimientoEstudianteVidaUniversitaria, $risk_entries["first"]["vida_uni"] );
 
 
 //Menu items are created

@@ -1184,6 +1184,7 @@ define(
             function send_email_new_form(instance){
 
                 $('body').on('click', '#send_observation', function() {
+                   
                     var form = $("form").serializeArray(),dataObj = {};
 
 
@@ -1198,7 +1199,7 @@ define(
 
                     if (text.val() == "") {
                         swal({
-                            title: "Para enviar una observación debe llenar el campo correspondiente",
+                            title: "Para enviar una observación debe llenar el campo correspondiente.",
                             html: true,
                             type: "error",
                             confirmButtonColor: "#d51b23"
@@ -1207,18 +1208,18 @@ define(
                         // Gets text message and monitor id to send the email
                         var tracking_type = 'individual';
                         var monitor_code = $('.id_creado_por').find('input').val();
-                        if(monitor_code == ""){
+                        if(monitor_code == undefined){
                             monitor_code = $('.in_id_creado_por').find('input').val();
                             tracking_type = 'individual_inasistencia';
                         }
                         var date = $('.fecha').find('input').val();
-                        if(date == ""){
+                        if(date == undefined){
                             date = $('.in_fecha').find('input').val();
                         }
                         var message_to_send = text.val();
                         var semester=$("#periodos").val();
                         var place = $('.lugar').find('input').val();
-                        if(place == ""){
+                        if(place == undefined){
                             place = $('.in_lugar').find('input').val();
                         }
 

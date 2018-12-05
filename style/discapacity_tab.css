@@ -1,5 +1,25 @@
 
 @media screen {
+    #encabezado_reportes{
+        margin-bottom: 20px;
+        box-shadow: 0 4px 2px -2px gray;
+    }
+
+
+
+    .bt_students_data{
+        background-color: rgba(250, 210, 210, 0.945) !important;
+        color:rgb(255, 91, 91) !important;
+        font-size: 16 px !important;
+        font-family: "Lato", sans-serif !important;
+        border-radius: 70px 0px 83px 0px !important;
+        -moz-border-radius: 70px 0px 83px 0px !important;
+        -webkit-border-radius: 70px 0px 83px 0px !important;
+        border: 0px solid #000000 !important;
+    }
+
+
+    
     #collapse_econo{
         margin-left: 10px;
         padding: 5px;
