@@ -222,8 +222,8 @@ function get_resolutions_for_report(){
 
     $sql_query = "SELECT DISTINCT res_ice.id, res_ice.codigo_resolucion, semestre.nombre, 
                                 res_ice.nota_credito, res_ice.monto_total, res_ice.cantidad_estudiantes 
-                    FROM mdl_talentospilos_res_icetex AS res_ice
-                    INNER JOIN mdl_talentospilos_semestre semestre ON semestre.id = res_ice.id_semestre";
+                    FROM {talentospilos_res_icetex} AS res_ice
+                    INNER JOIN {talentospilos_semestre} semestre ON semestre.id = res_ice.id_semestre";
 
     $resolutions = $DB->get_records_sql($sql_query);
     
