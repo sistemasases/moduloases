@@ -218,14 +218,16 @@ function unassign_cohort($idnumber_cohort, $id_instance){
 /**
  * Función que genera el select de html y lo retorna para las cohortes de una instancia en particular
  * @param string $instance_id
+ * @param
  * @return string Html base de el select a mostrar
  */
 
-function get_html_cohorts_select($instance_id) {
+function get_html_cohorts_select($instance_id, $name='conditions[]', $id='conditions', $class = 'form-control') {
     $cohorts = load_cohorts_by_instance($instance_id);
     $info_instance = get_info_instance($instance_id);
-    $cohorts_select = '';
+    $cohorts_select = "<select name=\"$name\" id=\"$id\" class=\"$class\">" ;
     $cohorts_select.='<option value="TODOS">Todas las cohortes</option>';
+
 
     if($info_instance->id_number == 'ases'){
 
@@ -234,7 +236,6 @@ function get_html_cohorts_select($instance_id) {
             ['id'=>'3740', 'name'=>'Ingeniería Topográfica'],
             ['id'=>'OTROS', 'name'=>'Otros ASES']);
 
-        $cohorts_select = '';
         $cohorts_select.='<option value="TODOS">Todas las cohortes</option>';
 
         foreach($cohorts_groups as $cohort_group){
@@ -255,6 +256,8 @@ function get_html_cohorts_select($instance_id) {
             $cohorts_select.= "<option value='$ch->idnumber'>$ch->name</option>";
         }
     }
+
+    $cohorts_select.='</select>';
     return $cohorts_select;
 }
 
