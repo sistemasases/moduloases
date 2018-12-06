@@ -74,8 +74,6 @@ $send_to_amd = new stdClass();
 
 $send_to_amd->data = $c_a_t_r_amd_need;
 
-$data->table = $course_and_teacher_report_table;
-
 $PAGE->requires->js_call_amd('block_ases/course_and_teacher_report', 'load_report', $send_to_amd);
 $output = $PAGE->get_renderer('block_ases');
 
