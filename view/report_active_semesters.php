@@ -25,24 +25,43 @@
  */
 
 require_once (__DIR__ . '/../../../config.php');
+require_once (__DIR__ . '/../managers/student/student_lib.php');
+require_once (__DIR__ . '/../classes/Semestre.php');
+require_once (__DIR__ . '/../managers/instance_management/instance_lib.php');
+require_once (__DIR__ . '/../classes/output/report_active_semesters_page.php');
+$pagetitle = 'Adición de usuarios ASES a las cohortes';
+$courseid = required_param('courseid', PARAM_INT);
+$blockid = required_param('instanceid', PARAM_INT);
+require_login($courseid, false);
+$url = new moodle_url('/blocks/ases/view/report_active_semesters.php',
+    array(
+        'courseid' => $courseid,
+        'instanceid' => $blockid
+    ));
+$output = $PAGE->get_renderer('block_ases');
 
+
+// Navigation setup
+$pagetitle = 'Reporte de semestres activos';
+$coursenode = $PAGE->navigation->find($courseid, navigation_node::TYPE_COURSE);
+$blocknode = navigation_node::create($pagetitle, $url, null, 'block', $blockid);
+$coursenode->add_node($blocknode);
+
+$PAGE->set_url($url);
+$PAGE->set_title($pagetitle);
+
+echo $output->header();
+$data = new stdClass();
+$data->cohorts_select = get_html_cohorts_select($blockid);
+
+$report_active_semesters_page = new \block_ases\output\report_active_semesters_page($data);
+
+echo $output->render($report_active_semesters_page);
 
 echo '<pre>';
-$sql = <<<SQL
-select mdl_cohort_members.id as mdl_cohort_members_id, username as codigo, firstname, lastname, mdl_talentospilos_semestre.nombre as mdl_talentospilos_semestre_nombre from mdl_talentospilos_history_academ
-    inner join mdl_talentospilos_semestre
-    on mdl_talentospilos_semestre.id = mdl_talentospilos_history_academ.id_semestre
-inner join mdl_talentospilos_user_extended
-on mdl_talentospilos_user_extended.id_ases_user = mdl_talentospilos_history_academ.id_estudiante
-inner join mdl_user
-on mdl_user.id = mdl_talentospilos_user_extended.id_moodle_user
-inner join mdl_cohort_members
-    on mdl_cohort_members.userid = mdl_user.id
-inner join mdl_talentospilos_inst_cohorte
-    on mdl_cohort_members.cohortid = mdl_talentospilos_inst_cohorte.id_cohorte
-inner join mdl_cohort
-    on mdl_cohort.id = mdl_talentospilos_inst_cohorte.id_cohorte
-SQL;
+$cohorts = load_cohorts_by_instance($blockid);
 
-print_r($DB->get_records_sql($sql));
+print_r(Semestre::get_semesters_later_than('2016-01-01', -1));
+
+//print_r(\student_lib\get_active_semesters());
 echo '</pre>';
