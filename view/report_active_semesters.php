@@ -28,7 +28,7 @@ require_once (__DIR__ . '/../../../config.php');
 require_once (__DIR__ . '/../managers/student/student_lib.php');
 require_once (__DIR__ . '/../classes/Semestre.php');
 require_once (__DIR__ . '/../managers/instance_management/instance_lib.php');
-require_once (__DIR__ . '/../classes/output/report_active_semesters_page.php');
+require_once (__DIR__ . '/../managers/menu_options.php');
 $pagetitle = 'Adición de usuarios ASES a las cohortes';
 $courseid = required_param('courseid', PARAM_INT);
 $blockid = required_param('instanceid', PARAM_INT);
@@ -39,6 +39,10 @@ $url = new moodle_url('/blocks/ases/view/report_active_semesters.php',
         'instanceid' => $blockid
     ));
 $output = $PAGE->get_renderer('block_ases');
+
+$PAGE->requires->css('/blocks/ases/style/report_active_semesters.css', true);
+$PAGE->requires->css('/blocks/ases/style/side_menu_style.css', true);
+$PAGE->requires->css('/blocks/ases/style/bootstrap_pilos.min.css', true);
 
 
 // Navigation setup
@@ -52,16 +56,13 @@ $PAGE->set_title($pagetitle);
 
 echo $output->header();
 $data = new stdClass();
-$data->cohorts_select = get_html_cohorts_select($blockid);
-
+$data->cohorts_select = get_html_cohorts_select($blockid, false, 'cohorts', 'cohorts');
+$menu_option = create_menu_options($USER->id, $blockid, $courseid);
+$data->menu = $menu_option;
 $report_active_semesters_page = new \block_ases\output\report_active_semesters_page($data);
 
 echo $output->render($report_active_semesters_page);
 
-echo '<pre>';
-$cohorts = load_cohorts_by_instance($blockid);
-
-print_r(Semestre::get_semesters_later_than('2016-01-01', -1));
-
-//print_r(\student_lib\get_active_semesters());
-echo '</pre>';
+$send_to_amd = array('id_cohort'=>$blockid);
+$PAGE->requires->js_call_amd('block_ases/report_active_semesters', 'init', $send_to_amd);
+echo $output->footer();

@@ -18,10 +18,9 @@ require_once (__DIR__ . '/../../../../config.php');
 require_once (__DIR__ . '/report_active_semesters_lib.php');
 require_once (__DIR__ . '/../../classes/API/BaseAPI.php');
 require_once (__DIR__ . '/../../classes/DAO/BaseDAO.php');
-require_once (__DIR__ . '/../../managers/course/course_lib.php');
 
 $report_active_semesters_api = new BaseAPI;
-$report_active_semesters_api->get(':cohort_id', function($data, array $args) {
-    $r = new CourseAndTeacherReportView();
+$report_active_semesters_api->get('data_table', function($data, array $args) {
+    $r = get_report_active_semesters_datatable($data->id_instance, $data->cohort_id);
     $r->execute($data, $args);
 });

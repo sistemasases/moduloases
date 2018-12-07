@@ -1,3 +1,26 @@
 {{#data}}
-    {{{cohorts_select}}}
+    {{> block_ases/side_menu}}
+    <div class="content">
+        <div class="cohort_select_region">
+            <label > Seleccione la cohorte: </label>
+            {{{cohorts_select}}}
+        </div>
+        <div class="report_active_semesters container">
+            <h2>REPORTE DE SEMESTRES ACTIVOS POR ESTUDIANTE</h2>
+
+            <div class="summary">
+
+            </div>
+
+            <div class = "active_semesters">
+                <div id="div_table_report">
+                    <table id="tableActiveSemesters" class="table" cellspacing="0" width="100%">
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
 {{/data}}
