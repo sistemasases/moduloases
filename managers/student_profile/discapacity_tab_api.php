@@ -51,7 +51,7 @@ if(isset($_POST['func'])){
         $schema= json_decode($schema_db->json_schema);
         // Validate
         $validator = new  Validator;
-       
+
         $validator->validate($data,  $schema,Constraint::CHECK_MODE_APPLY_DEFAULTS);
             
 
