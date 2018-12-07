@@ -50,15 +50,7 @@ function create_menu_options($userid, $blockid, $courseid)
 
         foreach ($functions as $function) {
 
-            if ($function == 'academic_reports') {
-                $url = new moodle_url("/blocks/ases/view/academic_reports.php", array(
-                    'courseid' => $courseid,
-                    'instanceid' => $blockid,
-                ));
 
-                $menu_options = '<li><a href= "'. $url .'"> Reportes académicos </a><li>';
-                $indexed['Reportes académicos'] = $menu_options;
-            }
 
             if ($function == 'ases_report') {
                 $url = new moodle_url("/blocks/ases/view/ases_report.php", array(
