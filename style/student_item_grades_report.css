@@ -63,3 +63,8 @@ Resolver los conflictos de estilos para las tablas internas
     font-weight: normal;
     cursor: auto;
 }
+
+.dataTables_wrapper /*Div de la casilla donde reside la tabla  interna de notas*/
+table {
+    width: 90%;
+}
