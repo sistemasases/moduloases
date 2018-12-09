@@ -15,6 +15,8 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace student_lib;
+use function array_search;
+
 /**
 * Student lib
 *
@@ -26,6 +28,7 @@ namespace student_lib;
 
 /**
  * Return the active semesters by all students in ASES
+ * @param string|int $id_instance
  * ### Fields returned
  * - mdl_cohort_members_id
  * - mdl_talentospilos_usuario_id
@@ -44,13 +47,15 @@ namespace student_lib;
  * - mdl_cohort
  * - mdl_cohort_members
  * @throws \dml_exception
+ * @return array Key value array
  */
-function get_active_semesters_db() {
+function get_active_semesters_db($id_instance) {
     global $DB;
     $sql = <<<SQL
 select
        mdl_talentospilos_history_academ.id AS mdl_talentospilos_history_academ_id ,
        mdl_cohort_members.id as mdl_cohort_members_id,
+       mdl_talentospilos_usuario.num_doc, 
        mdl_talentospilos_usuario.id as mdl_talentospilos_usuario_id,
        username as codigo,
        firstname,
@@ -72,6 +77,7 @@ from mdl_talentospilos_history_academ
     inner join mdl_cohort
       on mdl_cohort.id = mdl_talentospilos_inst_cohorte.id_cohorte
      where mdl_talentospilos_history_academ.id not in (select id_history from mdl_talentospilos_history_cancel)
+and mdl_talentospilos_inst_cohorte.id_instancia = $id_instance
 SQL;
     return $DB->get_records_sql($sql);
 }
@@ -81,16 +87,18 @@ class ActiveSemestersReportField {
     public $codigo;
     public $nombre;
     public $talentos_usuario_id;
+    public $num_doc;
 /**
  * @var array $semestres_activos Array of string than identify the active semesters of a student
  *  Example: [2016A, 2016B ...]
  */
     public $semestres_activos;
-    public function __construct($codigo, $nombre, $talentos_usuario_id, $semestres_activos = array())
+    public function __construct($codigo, $nombre, $talentos_usuario_id, $num_doc, $semestres_activos = array())
     {
         $this->codigo = $codigo;
         $this->talentos_usuario_id = $talentos_usuario_id;
         $this->nombre = $nombre;
+        $this->num_doc = $num_doc;
         $this->semestres_activos = $semestres_activos;
     }
     /**
@@ -98,7 +106,14 @@ class ActiveSemestersReportField {
      * @param string $active_semester
      */
     public function add_active_semester($active_semester) {
-        array_push($this->semestres_activos, $active_semester);
+        if(!array_search($active_semester, $this->semestres_activos)){
+            array_push($this->semestres_activos, $active_semester);
+        }
+
+    }
+
+    public function have_active_semester($semester): bool {
+        return !!array_search($semester, $this->semestres_activos);
     }
 }
 
@@ -107,22 +122,20 @@ class ActiveSemestersReportField {
  * @return array Array of ActiveSemestersReportField
  */
 
-function get_active_semesters() {
+function get_active_semesters($id_instance) {
     $active_semesters_report_fields = array();
-    $students_with_active_semesters  = get_active_semesters_db();
+    $students_with_active_semesters  = get_active_semesters_db($id_instance);
     foreach ($students_with_active_semesters as $students_with_active_semester) {
         $talentos_usuario_id = $students_with_active_semester->mdl_talentospilos_usuario_id;
+        $num_doc = $students_with_active_semester->num_doc;
         $nombre_semestre =  $students_with_active_semester->mdl_talentospilos_semestre_nombre;
-        if($talentos_usuario_id==325) {
-            echo 'kkk ' . $students_with_active_semester->mdl_talentospilos_semestre_nombre;
-        }
         if(array_key_exists($talentos_usuario_id, $active_semesters_report_fields)) {
             /** @var  $active_semesters_report_field ActiveSemestersReportField*/
             $active_semesters_report_fields[$talentos_usuario_id]->add_active_semester($nombre_semestre);
         } else {
             $codigo = $students_with_active_semester->codigo;
             $nombre = $students_with_active_semester->firstname . ' ' . $students_with_active_semester->lastname;
-            $active_semesters_report_field = new ActiveSemestersReportField($codigo, $nombre, $talentos_usuario_id);
+            $active_semesters_report_field = new ActiveSemestersReportField($codigo, $nombre, $talentos_usuario_id,  $num_doc);
             $active_semesters_report_field->add_active_semester($nombre_semestre);
             $active_semesters_report_fields[$talentos_usuario_id]  = $active_semesters_report_field;
         }
