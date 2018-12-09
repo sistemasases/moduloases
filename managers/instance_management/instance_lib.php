@@ -25,9 +25,8 @@
  */
 
 require_once(dirname(__FILE__). '/../../../../config.php');
+require_once(__DIR__. "/../cohort/cohort_lib.php");
 
-// require_once("../user_management/user_lib.php");
-// require_once("../periods_management/periods_lib.php");
 
 /**
  * Returns an instance given its id
@@ -148,38 +147,7 @@ function assign_permissions($role_name, $fun_name){
     return $result_query;
  }
 
- /**
- * Función retorna las cohortes asignadas a una instancia
- * 
- * @see load_cohorts_by_instance()
- * @param id_instance  ---> ID instancia
- * @return stdClass Array
- */
 
- function load_cohorts_by_instance($id_instance){
-
-    global $DB;
-
-    $result_to_return = array();
-
-    $sql_query = "SELECT t_cohort.name, t_cohort.idnumber
-                  FROM {talentospilos_inst_cohorte} AS instance_cohort
-                  INNER JOIN {cohort} AS t_cohort ON t_cohort.id = instance_cohort.id_cohorte
-                  WHERE id_instancia = $id_instance
-                  ORDER BY t_cohort.name ASC";
-    
-    $result_query = $DB->get_records_sql($sql_query);
-
-    foreach($result_query as $cohort){
-        $controls_html = "";
-        $controls_html .= "<span class='unassigned_cohort glyphicon glyphicon-remove' id='$cohort->idnumber'"; 
-        $controls_html .= "style='color:red'></span>";
-        $cohort->controls_column = $controls_html;
-        array_push($result_to_return, $cohort);
-    }
-
-    return $result_to_return;
- }
 
 /**
  * Función que deshace la asignación de una cohorte sobre una instancia
@@ -218,17 +186,14 @@ function unassign_cohort($idnumber_cohort, $id_instance){
 /**
  * Función que genera el select de html y lo retorna para las cohortes de una instancia en particular
  * @param string $instance_id
- * @param
+ * @param bool $include_todos Include todos for subcategories or not
  * @return string Html base de el select a mostrar
  */
 
-function get_html_cohorts_select($instance_id, $name='conditions[]', $id='conditions', $class = 'form-control') {
-    $cohorts = load_cohorts_by_instance($instance_id);
+function get_html_cohorts_select($instance_id,$include_todos=true,  $name='conditions[]', $id='conditions', $class = 'form-control' ) {
+    $cohorts = \cohort_lib\load_cohorts_by_instance($instance_id);
     $info_instance = get_info_instance($instance_id);
     $cohorts_select = "<select name=\"$name\" id=\"$id\" class=\"$class\">" ;
-    $cohorts_select.='<option value="TODOS">Todas las cohortes</option>';
-
-
     if($info_instance->id_number == 'ases'){
 
         $cohorts_groups = array(['id'=>'SPP', 'name'=>'Ser Pilo Paga'],
@@ -236,11 +201,15 @@ function get_html_cohorts_select($instance_id, $name='conditions[]', $id='condit
             ['id'=>'3740', 'name'=>'Ingeniería Topográfica'],
             ['id'=>'OTROS', 'name'=>'Otros ASES']);
 
-        $cohorts_select.='<option value="TODOS">Todas las cohortes</option>';
+        if($include_todos) {
+            $cohorts_select.='<option value="TODOS">Todas las cohortes</option>';
+        }
 
         foreach($cohorts_groups as $cohort_group){
             $cohorts_select.="<optgroup label='".$cohort_group['name']."'>";
-            $cohorts_select .= "<option value='TODOS-".$cohort_group['id']."'>Todos ".$cohort_group['id']."</option>";
+            if($include_todos) {
+                $cohorts_select .= "<option value='TODOS-".$cohort_group['id']."'>Todos ".$cohort_group['id']."</option>";
+            }
 
             foreach($cohorts as $ch){
                 if(substr($ch->idnumber, 0, 3) == substr($cohort_group['id'], 0, 3)){
