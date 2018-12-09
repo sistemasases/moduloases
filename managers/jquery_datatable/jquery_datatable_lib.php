@@ -43,3 +43,19 @@ function get_datatable_common_language_config(): array {
         "sLoadingRecords"=> "Cargando...",
     );
 }
+
+class Column {
+    public $title;
+    public $name;
+    public $data;
+    public $description;
+    public $className;
+    public function __construct($title, $name=null, $data=null, $description=null, $className=null)
+    {
+        $this->title = $title;
+        $this->data = $data? $data: $title;
+        $this->description = $description? $description: $title;
+        $this->className = $className? $className: $title;
+        $this->name = $name? $name: $title;
+    }
+}
