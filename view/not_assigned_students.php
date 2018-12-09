@@ -34,7 +34,7 @@ require_once('../managers/student_profile/studentprofile_lib.php');
 require_once('../managers/permissions_management/permissions_lib.php');
 require_once('../managers/validate_profile_action.php');
 require_once('../managers/menu_options.php');
-
+require_once('../managers/cohort/cohort_lib.php');
 include('../lib.php');
 
 global $PAGE;
@@ -56,7 +56,7 @@ if (!consult_instance($blockid)) {
 }
 require_login($courseid, false);
 
-$cohorts = load_cohorts_by_instance($blockid);
+$cohorts = \cohort_lib\load_cohorts_by_instance($blockid);
 
 // Menu items are created
 $menu_option = create_menu_options($USER->id, $blockid, $courseid);
