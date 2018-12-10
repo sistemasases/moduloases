@@ -42,11 +42,12 @@ $url = new moodle_url('/blocks/ases/view/report_active_semesters.php',
     ));
 $output = $PAGE->get_renderer('block_ases');
 $PAGE->requires->css('/blocks/ases/style/base_ases.css', true);
-$PAGE->requires->css('/blocks/ases/style/report_active_semesters.css', true);
-$PAGE->requires->css('/blocks/ases/style/side_menu_style.css', true);
 $PAGE->requires->css('/blocks/ases/style/bootstrap_pilos.min.css', true);
 $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/jquery.dataTables.min.css', true);
+$PAGE->requires->css('/blocks/ases/style/jqueryui.css', true);
+$PAGE->requires->css('/blocks/ases/style/side_menu_style.css', true);
 $PAGE->requires->css('/blocks/ases/style/styles_pilos.css', true);
+$PAGE->requires->css('/blocks/ases/style/report_active_semesters.css', true);
 
 $actions = authenticate_user_view($USER->id, $blockid);
 
