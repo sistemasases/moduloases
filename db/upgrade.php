@@ -4,11 +4,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     global $DB;
     $dbman = $DB->get_manager();
     $result = true;
-<<<<<<< HEAD
-    if ($oldversion < 2018121013300 ) {
-=======
     if ($oldversion < 2018121014080 ) {
->>>>>>> e662a175c61a0ec4b1c5e500c2ba1e369bf7ee3e
     //     // ************************************************************************************************************
     //     // Actualización que crea la tabla para los campos extendidos de usuario (Tabla: {talentospilos_user_extended})
     //     // Versión: 2018010911179
@@ -2527,9 +2523,6 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
 
 
 
-<<<<<<< HEAD
-        upgrade_block_savepoint(true, 2018121013300 , 'ases');
-=======
         // Define field recorder to be added to talentospilos_riesg_usuario.
         $table = new xmldb_table('talentospilos_riesg_usuario');
         $field = new xmldb_field('recorder', XMLDB_TYPE_TEXT, null, null, null, null, null, 'calificacion_riesgo');
@@ -2561,7 +2554,6 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
         }
 
         upgrade_block_savepoint(true, 2018121014080 , 'ases');
->>>>>>> e662a175c61a0ec4b1c5e500c2ba1e369bf7ee3e
     
         return $result;
 
