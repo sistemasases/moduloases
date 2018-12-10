@@ -33,7 +33,7 @@ require_once('../managers/student_profile/studentprofile_lib.php');
 require_once('../managers/permissions_management/permissions_lib.php');
 require_once('../managers/validate_profile_action.php');
 require_once('../managers/menu_options.php');
-
+require_once(__DIR__.'/../managers/cohort/cohort_lib.php');
 include('../lib.php');
 global $PAGE;
 
@@ -54,42 +54,10 @@ if(!consult_instance($blockid)){
 
 require_login($courseid, false);
 
-$info_instance = get_info_instance($blockid);
-$cohorts = load_cohorts_by_instance($blockid);
 
-$cohorts_select = '';
-$cohorts_select.='<option value="TODOS">Todas las cohortes</option>';
 
-if($info_instance->id_number == 'ases'){
 
-    $cohorts_groups = array(['id'=>'SPP', 'name'=>'Ser Pilo Paga'], 
-                            ['id'=>'SPE', 'name'=>'Condición de Excepción'],
-                            ['id'=>'3740', 'name'=>'Ingeniería Topográfica'],
-                            ['id'=>'OTROS', 'name'=>'Otros ASES']);
-
-    $risks = get_riesgos();
-
-    $cohorts_select = '';
-    $cohorts_select.='<option value="TODOS">Todas las cohortes</option>';
-
-    foreach($cohorts_groups as $cohort_group){
-        $cohorts_select.="<optgroup label='".$cohort_group['name']."'>";
-        $cohorts_select .= "<option value='TODOS-".$cohort_group['id']."'>Todos ".$cohort_group['id']."</option>";
-
-        foreach($cohorts as $ch){
-            if(substr($ch->idnumber, 0, 3) == substr($cohort_group['id'], 0, 3)){
-                $cohorts_select.= "<option value='$ch->idnumber'>$ch->name</option>";
-            }
-        }
-
-        $cohorts_select.="</optgroup>";
-    }
-
-}else{
-    foreach($cohorts as $ch){
-        $cohorts_select.= "<option value='$ch->idnumber'>$ch->name</option>";
-    }
-}
+$cohorts_select = \cohort_lib\get_html_cohorts_select($blockid);
 
 //se crean los elementos del menu
 $menu_option = create_menu_options($id_current_user, $blockid, $courseid);

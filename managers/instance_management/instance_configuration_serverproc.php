@@ -27,7 +27,7 @@ require_once(dirname(__FILE__). '/../../../../config.php');
 require_once('instance_lib.php');
 require_once("../user_management/user_lib.php");
 require_once("../periods_management/periods_lib.php");
-
+require_once(__DIR__ . "/../cohort/cohort_lib.php");
 if(isset($_POST['function'])){
     
     switch($_POST['function']){
@@ -103,7 +103,7 @@ function load_cohorts_assigned($id_instance){
 
     $msg_to_return = new stdClass();
 
-    $array_cohorts = load_cohorts_by_instance($id_instance);
+    $array_cohorts = \cohort_lib\load_cohorts_by_instance($id_instance);
 
     if(count($array_cohorts) == 0){
         $msg_to_return->status = 0;

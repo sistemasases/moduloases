@@ -144,7 +144,9 @@ define([
                 var dataTable = {
                     data: data,
                     bsort: 0,
+                    paging: false,
                     columns: columns,
+                    searching: false,
                     language: ajdt.common_lang_config(),
                     order: 0
                 };
@@ -179,14 +181,12 @@ define([
                 }).done(function(data) {
                     var dataTable = define_student_courses_detail_datatable(data);
 
-                    row.child('<table id="student_item_grades_explicit'+student_id+'"></table>').show();
+                    row.child('<table align="center" id="student_item_grades_explicit'+student_id+'"></table>').show();
                     $("#student_item_grades_explicit"+student_id).DataTable(dataTable);
-                    console.log(url);
                     }
 
                 ).fail(function(err) {
                     tr.removeClass('shown');
-                    console.log(url);
                     console.log(err);
                 });
             }
@@ -236,6 +236,7 @@ define([
                             {
                                 data: dataTable.data,
                                 bsort: dataTable.bsort,
+
                                 columns: dataTable.columns,
                                 language: dataTable.language,
                                 order: dataTable.order,
@@ -285,7 +286,7 @@ define([
 
 
 
-        },
+        }
 
     };
 
