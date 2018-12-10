@@ -89,7 +89,6 @@ $url = new moodle_url('/blocks/ases/view/add_moodle_user_to_cohort.php',
         'continue'=>$continue,
         'user_created'=>$user_created
     ));
-require_login($courseid, false);
 
 $add_user_to_cohort_form = new add_user_to_cohort_form($url,  array('username'=>$username));
 

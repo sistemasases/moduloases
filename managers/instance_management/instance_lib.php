@@ -25,9 +25,8 @@
  */
 
 require_once(dirname(__FILE__). '/../../../../config.php');
+require_once(__DIR__. "/../cohort/cohort_lib.php");
 
-// require_once("../user_management/user_lib.php");
-// require_once("../periods_management/periods_lib.php");
 
 /**
  * Returns an instance given its id
@@ -148,38 +147,7 @@ function assign_permissions($role_name, $fun_name){
     return $result_query;
  }
 
- /**
- * Función retorna las cohortes asignadas a una instancia
- * 
- * @see load_cohorts_by_instance()
- * @param id_instance  ---> ID instancia
- * @return stdClass Array
- */
 
- function load_cohorts_by_instance($id_instance){
-
-    global $DB;
-
-    $result_to_return = array();
-
-    $sql_query = "SELECT t_cohort.name, t_cohort.idnumber
-                  FROM {talentospilos_inst_cohorte} AS instance_cohort
-                  INNER JOIN {cohort} AS t_cohort ON t_cohort.id = instance_cohort.id_cohorte
-                  WHERE id_instancia = $id_instance
-                  ORDER BY t_cohort.name ASC";
-    
-    $result_query = $DB->get_records_sql($sql_query);
-
-    foreach($result_query as $cohort){
-        $controls_html = "";
-        $controls_html .= "<span class='unassigned_cohort glyphicon glyphicon-remove' id='$cohort->idnumber'"; 
-        $controls_html .= "style='color:red'></span>";
-        $cohort->controls_column = $controls_html;
-        array_push($result_to_return, $cohort);
-    }
-
-    return $result_to_return;
- }
 
 /**
  * Función que deshace la asignación de una cohorte sobre una instancia
@@ -213,6 +181,8 @@ function unassign_cohort($idnumber_cohort, $id_instance){
 
     return $result;
 }
+
+
 
 /**
  * Función que recupera la información de una instancia determinada
