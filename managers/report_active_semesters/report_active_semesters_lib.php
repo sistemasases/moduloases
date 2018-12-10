@@ -67,16 +67,18 @@ function _students_and_active_semesters_to_rows($semester_names, $students_and_a
 function get_report_active_semesters_datatable($id_instance, $ases_cohort_id) {
 
     $semester_names = _get_semesters_names_after_cohort($id_instance, $ases_cohort_id);
-    $students_and_active_semesters = get_active_semesters($id_instance);
+    $students_and_active_semesters = get_active_semesters($id_instance, $ases_cohort_id);
+
     $common_language_config = \jquery_datatable\get_datatable_common_language_config();
     $columns = array();
     $nombre_column =  new Column('nombre', 'Nombre', null, 'Nombre de el estudiante');
     $data = _students_and_active_semesters_to_rows($semester_names, $students_and_active_semesters);
+
     array_push($columns,
-        new Column('codigo', 'Código', null, 'Código de el estudiante'));
+        new Column('codigo','Código' , null, 'Código de el estudiante'));
     array_push($columns, $nombre_column  );
     array_push($columns,
-        new Column('num_doc', 'Número de documento', null, 'Número de documento'));
+        new Column('num_doc', 'Número de documento',  null, 'Número de documento'));
     foreach($semester_names as $semester_name) {
         array_push($columns, new \jquery_datatable\Column($semester_name));
     }

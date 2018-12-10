@@ -50,12 +50,12 @@ class Column {
     public $data;
     public $description;
     public $className;
-    public function __construct($title, $name=null, $data=null, $description=null, $className=null)
+    public function __construct($name, $title = null, $data=null, $description=null, $className=null)
     {
-        $this->title = $title;
-        $this->data = $data? $data: $title;
-        $this->description = $description? $description: $title;
-        $this->className = $className? $className: $title;
-        $this->name = $name? $name: $title;
+        $this->name = $name;
+        $this->data = $data? $data: $name;
+        $this->description = $description? $description: $name;
+        $this->className = $className? $className: $name;
+        $this->title = $title? $title: $name;
     }
 }
