@@ -1,12 +1,27 @@
 .content {
     display: flex;
+    margin-top: 20px;
     flex-direction: column;
 }
 
 .cohort_select_region {
     align-self: flex-end;
 }
+.report_active_semesters .head {
+    display: flex;
+    flex-direction: row;
+}
+.report_active_semesters {
+    display: flex;
+    flex-direction: column;
+}
+.active_semesters {
+    margin-top: 50px;
+}
 
+.report_active_semesters .spacer {
+    flex-grow: 1;
+}
 td.no_active_semester {
-    background-color: gray;
+    background-color: #5aafad;
 }
