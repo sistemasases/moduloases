@@ -50,7 +50,7 @@ $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/jquery.dataTables.m
 $actions = authenticate_user_view($USER->id, $blockid);
 
 if (!isset($actions->report_active_semesters)) {
-    redirect(new moodle_url('/'), "No tienes permiso para acceder a los reportes por profesor",1, \core\output\notification::NOTIFY_INFO);
+    redirect(new moodle_url('/'), "No tienes permiso para acceder a los reportes de semestres activos",1, \core\output\notification::NOTIFY_INFO);
 }
 
 // Navigation setup
