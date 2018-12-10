@@ -1371,6 +1371,15 @@ input.no-borde-fondo.tema
   font-size: 16px;
   margin-left: 3px;
 }
+.encabezado{
+  margin-bottom: 20px;
+  box-shadow: 0 4px 2px -2px gray;
+}
+
+.table_logs{
+  margin-left: 20px;
+  margin-right: 20px;
+}
 .info_backup{
         
   height: 40px !important; 

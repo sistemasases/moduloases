@@ -44,6 +44,25 @@ define([
                     failure: function (msg) { }
                 });
 
+                $.ajax({
+
+                    type: "POST",
+                    data: { loadF: 'loadGeneralLogs' },
+                    url: "../managers/dphpforms/dphpforms_dwarehouse_api.php",
+                    success: function (msg) {
+                        $("#div_table_general_logs").empty();
+                        $("#div_table_general_logs").append('<table id="tableBackupGeneralLogs" class="display" cellspacing="0" width="100%"><thead><thead></table>');
+                        var table = $("#tableBackupGeneralLogs").DataTable(msg);
+                        $('#div_table_general_logs').css('cursor', 'pointer');
+
+                    },
+                    dataType: "json",
+                    cache: false,
+                    async: true,
+
+                    failure: function (msg) { }
+                });
+
             });
 
             $(document).on('click', '#tableBackupForms tbody tr td', function () {

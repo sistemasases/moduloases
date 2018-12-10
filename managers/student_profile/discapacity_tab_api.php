@@ -56,10 +56,10 @@ if(isset($_POST['func'])){
         $moodle_user   =  $USER->id;
         $data_prev     =  $_POST['json_prev'];
         $data_env      =  $_POST['json'];
-        $eventoid      = getIdEventLogs('edit_discapacity_initial_form_sp');
+        $eventoid      =  getIdEventLogs('edit_discapacity_initial_form_sp');
         $navegador     =  $_SERVER['HTTP_USER_AGENT'];
-        $instanceid    = required_param('instanceid', PARAM_INT);
-        $id_ases       = $_POST['ases'];
+        $url           =  $_SERVER['HTTP_REFERER'];
+        $id_ases       =  $_POST['ases'];
 
         // Validate
         $validator = new  Validator;
@@ -87,7 +87,7 @@ if(isset($_POST['func'])){
                 $new_log->datos_enviados     = $data_env;
                 $new_log->datos_almacenados  = $data_alm;
                 $new_log->id_evento          = $eventoid->id;
-                $new_log->instanceid         = $instanceid;
+                $new_log->url                = $url;
                 $new_log->id_ases_user       = $id_ases;
                 $new_log->navegador          = $navegador;
                 $new_log->title_retorno      = $msg->title;
@@ -115,7 +115,7 @@ if(isset($_POST['func'])){
                $new_log->datos_enviados     = $data_env;
                $new_log->datos_almacenados  = $data_alm;
                $new_log->id_evento          = $eventoid->id;
-               $new_log->instanceid         = $instanceid;
+               $new_log->url                = $url;
                $new_log->id_ases_user       = $id_ases;
                $new_log->navegador          = $navegador;
                $new_log->title_retorno      = $msg->title;
@@ -141,8 +141,8 @@ if(isset($_POST['func'])){
 
     }
     else if ($_POST['func'] == 'save_economics_data') {
-        $id_ases = $_POST['ases'];
 
+            $id_ases = $_POST['ases'];
 
             $register_economics_data                   = new  stdClass();
        
@@ -165,10 +165,9 @@ if(isset($_POST['func'])){
             $moodle_user   =  $USER->id;
             $data_prev     =  $_POST['json_prev'];
             $data_env      =  $_POST['json'];
-            $eventoid      = getIdEventLogs('save_economics_tab_sp');
+            $eventoid      =  getIdEventLogs('save_economics_tab_sp');
             $navegador     =  $_SERVER['HTTP_USER_AGENT'];
-            $instanceid    = required_param('instanceid', PARAM_INT);
-            $id_ases       = $_POST['ases'];
+            $url           =  $_SERVER['HTTP_REFERER'];
 
             $result =  save_economics_data($register_economics_data);
             if($result){
@@ -188,7 +187,7 @@ if(isset($_POST['func'])){
                $new_log->datos_enviados     = $data_env;
                $new_log->datos_almacenados  = $data_alm;
                $new_log->id_evento          = $eventoid->id;
-               $new_log->instanceid         = $instanceid;
+               $new_log->url                = $url;
                $new_log->id_ases_user       = $id_ases;
                $new_log->navegador          = $navegador;
                $new_log->title_retorno      = $msg->title;
@@ -216,7 +215,7 @@ if(isset($_POST['func'])){
                $new_log->datos_enviados     = $data_env;
                $new_log->datos_almacenados  = $data_alm;
                $new_log->id_evento          = $eventoid->id;
-               $new_log->instanceid         = $instanceid;
+               $new_log->url                = $url;
                $new_log->id_ases_user       = $id_ases;
                $new_log->navegador          = $navegador;
                $new_log->title_retorno      = $msg->title;
@@ -239,10 +238,10 @@ if(isset($_POST['func'])){
             $moodle_user   =  $USER->id;
             $data_prev     =  $_POST['json_prev'];
             $data_env      =  $data;
-            $eventoid      = getIdEventLogs('edit_economics_tab_sp');
+            $eventoid      =  getIdEventLogs('edit_economics_tab_sp');
             $navegador     =  $_SERVER['HTTP_USER_AGENT'];
-            //$instanceid    = required_param('instanceid', PARAM_INT);
-            $id_ases       = $_POST['ases'];
+            $url           =  $_SERVER['HTTP_REFERER'];
+            
 
             $result =       update_economics_data($data, $id_ases);
             if($result){
@@ -261,7 +260,7 @@ if(isset($_POST['func'])){
                 $new_log->datos_enviados     = $data_env;
                 $new_log->datos_almacenados  = $data;
                 $new_log->id_evento          = $eventoid->id;
-                $new_log->instanceid         = 12;
+                $new_log->url                = $url;
                 $new_log->id_ases_user       = $id_ases;
                 $new_log->navegador          = $navegador;
                 $new_log->title_retorno      = $msg->title;
@@ -288,7 +287,7 @@ if(isset($_POST['func'])){
                     $new_log->datos_enviados     = $data_env;
                     $new_log->datos_almacenados  = $data_alm;
                     $new_log->id_evento          = $eventoid->id;
-                    $new_log->instanceid         = $instanceid;
+                    $new_log->url                = $url;
                     $new_log->id_ases_user       = $id_ases;
                     $new_log->navegador          = $navegador;
                     $new_log->title_retorno      = $msg->title;
@@ -303,29 +302,79 @@ if(isset($_POST['func'])){
 
     }    else if ($_POST['func'] == 'save_health_data') {
 
-        $id_ases = $_POST['ases'];
+            $id_ases = $_POST['ases'];
 
-        $register_health_data                   = new  stdClass();
+            $register_health_data                   = new  stdClass();
        
 
-        $data = json_decode($_POST['json']);
+             $data = json_decode($_POST['json']);
 
             $register_health_data->regimen_salud             = json_encode($data[0]);
             $register_health_data->servicio_salud_vinculado  = json_encode($data[1]);
             $register_health_data->servicios_usados          = json_encode($data[2]);
             $register_health_data->id_ases_user              = $id_ases;
 
+              //General  data to logs
+              $moodle_user   =  $USER->id;
+              $data_prev     =  $_POST['json_prev'];
+              $data_env      =  $_POST['json'];
+              $eventoid      =  getIdEventLogs('save_salud_tab_sp');
+              $navegador     =  $_SERVER['HTTP_USER_AGENT'];
+              $url           =  $_SERVER['HTTP_REFERER'];
+
             $result =  save_health_data($register_health_data);
             if($result){
                 $msg->title = "Éxito";
                 $msg->status = "success";
-               $msg->msg = "La información se ha almacenado correctamente.";
+                $msg->msg = "La información se ha almacenado correctamente.";
+
+                 //Particular data to logs
+                 $data_alm    = $data_env;
+
+                 //Object to log
+  
+                 $new_log = new stdClass();
+                 $new_log->id_moodle_user     = $moodle_user;
+                 $new_log->datos_previos      = $data_prev;
+                 $new_log->datos_enviados     = $data_env;
+                 $new_log->datos_almacenados  = $data_alm;
+                 $new_log->id_evento          = $eventoid->id;
+                 $new_log->url                = $url;
+                 $new_log->id_ases_user       = $id_ases;
+                 $new_log->navegador          = $navegador;
+                 $new_log->title_retorno      = $msg->title;
+                 $new_log->msg_retorno        = $msg->status;
+                 $new_log->status_retorno     = $msg->msg;
+  
+                 $DB->insert_record('talentospilos_general_logs', $new_log, $returnid=false, $bulk=false);
+
                echo json_encode($msg);
                
            }else{
                $msg->title = "Error";
                $msg->msg = "No se ha guardado correctamente.";
                $msg->status = "error";
+
+                 //Particular data to logs
+                 $data_alm    = "";
+
+                 //Object to log
+  
+                 $new_log = new stdClass();
+                 $new_log->id_moodle_user     = $moodle_user;
+                 $new_log->datos_previos      = $data_prev;
+                 $new_log->datos_enviados     = $data_env;
+                 $new_log->datos_almacenados  = $data_alm;
+                 $new_log->id_evento          = $eventoid->id;
+                 $new_log->url                = $url;
+                 $new_log->id_ases_user       = $id_ases;
+                 $new_log->navegador          = $navegador;
+                 $new_log->title_retorno      = $msg->title;
+                 $new_log->msg_retorno        = $msg->status;
+                 $new_log->status_retorno     = $msg->msg;
+  
+                 $DB->insert_record('talentospilos_general_logs', $new_log, $returnid=false, $bulk=false);
+
                echo json_encode($msg);
            }
  
@@ -335,20 +384,68 @@ if(isset($_POST['func'])){
         //Actualizar registro en BD. 
 
 
-        $id_ases = $_POST['ases'];
-        $data = $_POST['json'];
+            $id_ases = $_POST['ases'];
+            $data = $_POST['json'];
+
+            //General  data to logs
+            $moodle_user   =  $USER->id;
+            $data_prev     =  $_POST['json_prev'];
+            $data_env      =  $data;
+            $eventoid      =  getIdEventLogs('edit_salud_tab_sp');
+            $navegador     =  $_SERVER['HTTP_USER_AGENT'];
+            $url           =  $_SERVER['HTTP_REFERER'];
 
             $result =       update_health_data($data, $id_ases);
             if($result){
                 $msg->title = "Éxito";
                 $msg->status = "success";
                $msg->msg = "La información se ha actualizado correctamente.";
+
+                //Particular data to logs
+                $data_alm    = $data_env;
+
+                //Object to log
+ 
+                $new_log = new stdClass();
+                $new_log->id_moodle_user     = $moodle_user;
+                $new_log->datos_previos      = $data_prev;
+                $new_log->datos_enviados     = $data_env;
+                $new_log->datos_almacenados  = $data_alm;
+                $new_log->id_evento          = $eventoid->id;
+                $new_log->url                = $url;
+                $new_log->id_ases_user       = $id_ases;
+                $new_log->navegador          = $navegador;
+                $new_log->title_retorno      = $msg->title;
+                $new_log->msg_retorno        = $msg->status;
+                $new_log->status_retorno     = $msg->msg;
+ 
+                $DB->insert_record('talentospilos_general_logs', $new_log, $returnid=false, $bulk=false);
                echo json_encode($msg);
                
            }else{
                $msg->title = "Error";
                $msg->msg = "No se ha actualizado correctamente.";
                $msg->status = "error";
+
+               //Particular data to logs
+               $data_alm    = "";
+
+               //Object to log
+
+               $new_log = new stdClass();
+               $new_log->id_moodle_user     = $moodle_user;
+               $new_log->datos_previos      = $data_prev;
+               $new_log->datos_enviados     = $data_env;
+               $new_log->datos_almacenados  = $data_alm;
+               $new_log->id_evento          = $eventoid->id;
+               $new_log->url                = $url;
+               $new_log->id_ases_user       = $id_ases;
+               $new_log->navegador          = $navegador;
+               $new_log->title_retorno      = $msg->title;
+               $new_log->msg_retorno        = $msg->status;
+               $new_log->status_retorno     = $msg->msg;
+
+               $DB->insert_record('talentospilos_general_logs', $new_log, $returnid=false, $bulk=false);
                echo json_encode($msg);
            }
  

@@ -4,7 +4,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     global $DB;
     $dbman = $DB->get_manager();
     $result = true;
-    if ($oldversion < 2018121012010 ) {
+    if ($oldversion < 2018121013300 ) {
     //     // ************************************************************************************************************
     //     // Actualización que crea la tabla para los campos extendidos de usuario (Tabla: {talentospilos_user_extended})
     //     // Versión: 2018010911179
@@ -2436,7 +2436,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
              $table->add_field('datos_almacenados', XMLDB_TYPE_TEXT, null, null, null, null, null);
              $table->add_field('fecha_hora_registro', XMLDB_TYPE_DATETIME, null, null, XMLDB_NOTNULL, null, "now()", null);
              $table->add_field('id_evento', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
-             $table->add_field('instanceid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+             $table->add_field('url', XMLDB_TYPE_TEXT, null, null, null, null, null);
              $table->add_field('id_ases_user', XMLDB_TYPE_INTEGER, '10', null, null, null, null);
              $table->add_field('navegador', XMLDB_TYPE_TEXT, null, null, null, null, null);
              $table->add_field('title_retorno', XMLDB_TYPE_CHAR, '200', null, null, null, null);
@@ -2518,7 +2518,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
 
 
 
-        upgrade_block_savepoint(true, 2018121012010 , 'ases');
+        upgrade_block_savepoint(true, 2018121013300 , 'ases');
     
         return $result;
 

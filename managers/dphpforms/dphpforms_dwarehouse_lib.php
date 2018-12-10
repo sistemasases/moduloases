@@ -46,6 +46,31 @@ function get_list_form(){
     }
    return $forms_dwarehouse_array;
 }
+
+/**
+ * Function load all registers of mdl_talentospilos_general_logs
+ * @return array
+ **/
+
+function get_list_general_logs(){
+    global $DB;
+    $forms_dwarehouse_array = array();
+ 
+    $sql = "SELECT talentospilos_general_logs.id AS id , talentospilos_general_logs.id_moodle_user,
+                 _user.username AS username_ases_student, _user.firstname AS firstname, _user.lastname AS lastname,
+                 talentospilos_events_to_logs.name_event AS name_event,  talentospilos_general_logs.fecha_hora_registro AS fecha_act 
+	            FROM  {talentospilos_general_logs}  AS talentospilos_general_logs
+	                INNER JOIN {talentospilos_events_to_logs} AS talentospilos_events_to_logs  ON talentospilos_events_to_logs.id = talentospilos_general_logs.id_evento
+	                    INNER JOIN {talentospilos_user_extended} AS talentospilos_user_extended ON talentospilos_user_extended.id_ases_user = talentospilos_general_logs.id_ases_user AND talentospilos_user_extended.tracking_status = 1
+		                    INNER JOIN {user} AS _user ON _user.id = talentospilos_user_extended.id_moodle_user";
+    $results = $DB->get_records_sql($sql);
+
+    foreach ($results as $record) {
+        array_push($forms_dwarehouse_array, $record);
+    }
+   return $forms_dwarehouse_array;
+}
+
 /**
  * Function that load a form switch id_form sent
  * @see get_form_switch_id($id_form)
