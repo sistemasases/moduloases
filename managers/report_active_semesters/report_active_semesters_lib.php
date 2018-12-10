@@ -16,7 +16,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 require_once (__DIR__ . '/../student/student_lib.php');
 require_once (__DIR__ . '/../jquery_datatable/jquery_datatable_lib.php');
-
+require_once (__DIR__ . '/../../managers/cohort/cohort_lib.php');
 use jquery_datatable\Column;
 use student_lib\ActiveSemestersReportField;
 use function student_lib\get_active_semesters;

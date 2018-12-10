@@ -18,9 +18,14 @@ require_once (__DIR__ . '/../../../../config.php');
 require_once (__DIR__ . '/report_active_semesters_lib.php');
 require_once (__DIR__ . '/../../classes/API/BaseAPI.php');
 require_once (__DIR__ . '/../../classes/DAO/BaseDAO.php');
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 
-$report_active_semesters_api = new BaseAPI;
-$report_active_semesters_api->get('data_table', function($data, array $args) {
-    $r = get_report_active_semesters_datatable($data->id_instance, $data->cohort_id);
-    $r->execute($data, $args);
+$report_active_semesters_api = new BaseAPI();
+$report_active_semesters_api->post('data_table', function($data, array $args) {
+    $data = (object) $data;
+    $r = get_report_active_semesters_datatable($data->instance_id, $data->cohort_id);
+
+    print_r(json_encode($r));
 });
+$report_active_semesters_api->run();

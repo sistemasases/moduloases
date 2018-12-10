@@ -29,6 +29,7 @@ require_once (__DIR__ . '/../managers/student/student_lib.php');
 require_once (__DIR__ . '/../classes/Semestre.php');
 require_once (__DIR__ . '/../managers/instance_management/instance_lib.php');
 require_once (__DIR__ . '/../managers/menu_options.php');
+require_once (__DIR__ . '/../classes/output/report_active_semesters_page.php');
 $pagetitle = 'Adición de usuarios ASES a las cohortes';
 $courseid = required_param('courseid', PARAM_INT);
 $blockid = required_param('instanceid', PARAM_INT);
@@ -63,6 +64,7 @@ $report_active_semesters_page = new \block_ases\output\report_active_semesters_p
 
 echo $output->render($report_active_semesters_page);
 
-$send_to_amd = array('id_cohort'=>$blockid);
+$send_to_amd = new stdClass();
+$send_to_amd->data = array('instance_id'=>$blockid);
 $PAGE->requires->js_call_amd('block_ases/report_active_semesters', 'init', $send_to_amd);
 echo $output->footer();

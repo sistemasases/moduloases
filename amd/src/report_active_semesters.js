@@ -19,8 +19,8 @@ define([
 
     return {
         init: function (data) {
-            console.log('khe');
             var instance_id = data.instance_id;
+            console.log(instance_id);
             var table = null;
             /**
              * Data: {
@@ -46,7 +46,9 @@ define([
              */
 
             function init_datatable () {
-                var cohort_id = $('#cohorts option:selected').text();
+                var cohort_id = $('#cohorts option:selected').val();
+
+                var url = '../managers/report_active_semesters/report_active_semesters_api.php/' + instance_id;
                 var post_info = {
                     function: 'data_table',
                     params: {
@@ -54,12 +56,12 @@ define([
                         cohort_id: cohort_id
                     }
                 };
+                console.log(post_info);
                 $.ajax({
-                    method: "GET",
-                    url: '../managers/report_active_semesters/report_active_semesters_api.php/' + instance_id,
+                    method: "POST",
+                    url: url,
                     data: post_info,
                     dataType: 'json'
-
                 }).done(
                     function (dataTable){
                         console.log(dataTable);
