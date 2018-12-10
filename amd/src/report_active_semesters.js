@@ -65,7 +65,6 @@ define([
                     function (dataTable){
                         dataTable.rowCallback =  function(row, data, index) {
                             var column_names = Object.keys(data);
-                            console.log(column_names);
                             $(column_names).each(
                                 function (index_, value) {
                                     if (data[value] === "NO") {
