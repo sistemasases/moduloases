@@ -4,7 +4,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     global $DB;
     $dbman = $DB->get_manager();
     $result = true;
-    if ($oldversion < 2018121011520 ) {
+    if ($oldversion < 2018121014080 ) {
     //     // ************************************************************************************************************
     //     // Actualización que crea la tabla para los campos extendidos de usuario (Tabla: {talentospilos_user_extended})
     //     // Versión: 2018010911179
@@ -2422,7 +2422,8 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
                 
         // *****************************************************************************************//
         //  Actualización: Se agrega la columna recorder para diferenciar quién registra el riesgo  //
-        //  Versión: 2018112911000                                                                  //
+        //  y la tabla talentospilos_incidencias para la gestión de incidencias.                    //
+        //  Versión: 2018121014080                                                                  //
         // *****************************************************************************************//
 
 
@@ -2435,9 +2436,28 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
             $dbman->add_field($table, $field);
         }
 
+        // Define table talentospilos_incidencias to be created.
+        $table = new xmldb_table('talentospilos_incidencias');
 
+        // Adding fields to table talentospilos_incidencias.
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        $table->add_field('id_usuario_registra', XMLDB_TYPE_INTEGER, '20', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('id_usuario_cierra', XMLDB_TYPE_INTEGER, '20', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('estados', XMLDB_TYPE_TEXT, null, null, null, null, null);
+        $table->add_field('info_sistema', XMLDB_TYPE_TEXT, null, null, null, null, null);
+        $table->add_field('comentarios', XMLDB_TYPE_TEXT, null, null, null, null, null);
+        $table->add_field('cerrada', XMLDB_TYPE_INTEGER, '20', null, XMLDB_NOTNULL, null, '0');
+        $table->add_field('fecha_hora_registro', XMLDB_TYPE_DATETIME, null, null, XMLDB_NOTNULL, null, "now()");
 
-        upgrade_block_savepoint(true, 2018121011520 , 'ases');
+        // Adding keys to table talentospilos_incidencias.
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+
+        // Conditionally launch create table for talentospilos_incidencias.
+        if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
+        }
+
+        upgrade_block_savepoint(true, 2018121014080 , 'ases');
     
         return $result;
 
