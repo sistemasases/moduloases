@@ -4,7 +4,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     global $DB;
     $dbman = $DB->get_manager();
     $result = true;
-    if ($oldversion < 2018121014080 ) {
+    if ($oldversion < 2018121017080 ) {
     //     // ************************************************************************************************************
     //     // Actualización que crea la tabla para los campos extendidos de usuario (Tabla: {talentospilos_user_extended})
     //     // Versión: 2018010911179
@@ -2553,7 +2553,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
             $dbman->create_table($table);
         }
 
-        upgrade_block_savepoint(true, 2018121014080 , 'ases');
+        upgrade_block_savepoint(true, 2018121017080 , 'ases');
     
         return $result;
 
