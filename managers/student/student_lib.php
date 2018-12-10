@@ -49,7 +49,7 @@ use function array_search;
  * @throws \dml_exception
  * @return array Key value array
  */
-function get_active_semesters_db($id_instance) {
+function get_active_semesters_db($id_instance, $ases_cohort_id) {
     global $DB;
     $sql = <<<SQL
 select
@@ -78,6 +78,7 @@ from mdl_talentospilos_history_academ
       on mdl_cohort.id = mdl_talentospilos_inst_cohorte.id_cohorte
      where mdl_talentospilos_history_academ.id not in (select id_history from mdl_talentospilos_history_cancel)
 and mdl_talentospilos_inst_cohorte.id_instancia = $id_instance
+and mdl_cohort.idnumber = '$ases_cohort_id'
 SQL;
     return $DB->get_records_sql($sql);
 }
@@ -106,14 +107,18 @@ class ActiveSemestersReportField {
      * @param string $active_semester
      */
     public function add_active_semester($active_semester) {
-        if(!array_search($active_semester, $this->semestres_activos)){
+        if(false === array_search($active_semester, $this->semestres_activos)){
             array_push($this->semestres_activos, $active_semester);
         }
 
     }
 
     public function have_active_semester($semester): bool {
-        return !!array_search($semester, $this->semestres_activos);
+       if(array_search($semester, $this->semestres_activos) === false) {
+           return false;
+       }
+       return true;
+
     }
 }
 
@@ -122,9 +127,9 @@ class ActiveSemestersReportField {
  * @return array Array of ActiveSemestersReportField
  */
 
-function get_active_semesters($id_instance) {
+function get_active_semesters($id_instance, $cohort_id) {
     $active_semesters_report_fields = array();
-    $students_with_active_semesters  = get_active_semesters_db($id_instance);
+    $students_with_active_semesters  = get_active_semesters_db($id_instance, $cohort_id);
     foreach ($students_with_active_semesters as $students_with_active_semester) {
         $talentos_usuario_id = $students_with_active_semester->mdl_talentospilos_usuario_id;
         $num_doc = $students_with_active_semester->num_doc;
