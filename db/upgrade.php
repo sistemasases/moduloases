@@ -2442,7 +2442,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
         // Adding fields to table talentospilos_incidencias.
         $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
         $table->add_field('id_usuario_registra', XMLDB_TYPE_INTEGER, '20', null, XMLDB_NOTNULL, null, null);
-        $table->add_field('id_usuario_cierra', XMLDB_TYPE_INTEGER, '20', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('id_usuario_cierra', XMLDB_TYPE_INTEGER, '20', null, null, null, null);
         $table->add_field('estados', XMLDB_TYPE_TEXT, null, null, null, null, null);
         $table->add_field('info_sistema', XMLDB_TYPE_TEXT, null, null, null, null, null);
         $table->add_field('comentarios', XMLDB_TYPE_TEXT, null, null, null, null, null);
