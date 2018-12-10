@@ -95,6 +95,7 @@ function create_menu_options($userid, $blockid, $courseid)
 
             }
 
+
             if ($function == 'instance_configuration') {
                 $url = new moodle_url("/blocks/ases/view/instance_configuration.php", array(
                     'courseid' => $courseid,
@@ -212,6 +213,16 @@ function create_menu_options($userid, $blockid, $courseid)
 
                 $menu_options = '<li><a href= "' . $url . '"> Reportes por estudiante </a><li>';
                 $indexed['Reportes por estudiante'] = $menu_options;
+
+            }
+            if ($function == 'report_active_semesters') {
+                $url = new moodle_url("/blocks/ases/view/report_active_semesters.php", array(
+                    'courseid' => $courseid,
+                    'instanceid' => $blockid,
+                ));
+
+                $menu_options = '<li><a href= "' . $url . '"> Reporte de semestres activos </a><li>';
+                $indexed['Reporte de semestres activos'] = $menu_options;
 
             }
             if ($function == 'historic_academic_reports') {
