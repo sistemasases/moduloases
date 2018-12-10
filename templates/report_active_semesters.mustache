@@ -1,22 +1,25 @@
 {{#data}}
     {{> block_ases/side_menu}}
-    <div class="content">
-        <div class="cohort_select_region">
-            <label > Seleccione la cohorte: </label>
-            {{{cohorts_select}}}
-        </div>
-        <div class="report_active_semesters container">
-            <h2>REPORTE DE SEMESTRES ACTIVOS POR ESTUDIANTE</h2>
+    <div class="content container">
 
-            <div class="summary">
-
+        <div class="report_active_semesters ">
+            <div class="head">
+                <h2 class="report_title" >REPORTE DE ESTUDIANTES ACTIVOS EN SRA POR SEMESTRE</h2>
+                <span class="spacer"></span>
+                <div class="cohort_select_region">
+                    <label > Seleccione la cohorte: </label>
+                    {{{cohorts_select}}}
+                </div>
             </div>
 
             <div class = "active_semesters">
+                {{! El contenido de el div div_table_report se elimina desde js cada que el select de cohortes cambia de
+                 valor, por tanto no adicione contenido estatico dentro de este div}}
                 <div id="div_table_report">
                     <table id="tableActiveSemesters" class="table" cellspacing="0" width="100%">
                     </table>
                 </div>
+                <small>*Si ASES no posee información de semestre culminado en el sistema SIRA de un estudiante, entonces este estudiante no será mostrado en el informe</small>
             </div>
         </div>
     </div>
