@@ -30,6 +30,7 @@ require_once (__DIR__ . '/../classes/Semestre.php');
 require_once (__DIR__ . '/../managers/instance_management/instance_lib.php');
 require_once (__DIR__ . '/../managers/menu_options.php');
 require_once (__DIR__ . '/../classes/output/report_active_semesters_page.php');
+require_once (__DIR__ . '/../managers/cohort/cohort_lib.php');
 $pagetitle = 'Adición de usuarios ASES a las cohortes';
 $courseid = required_param('courseid', PARAM_INT);
 $blockid = required_param('instanceid', PARAM_INT);
@@ -44,7 +45,13 @@ $output = $PAGE->get_renderer('block_ases');
 $PAGE->requires->css('/blocks/ases/style/report_active_semesters.css', true);
 $PAGE->requires->css('/blocks/ases/style/side_menu_style.css', true);
 $PAGE->requires->css('/blocks/ases/style/bootstrap_pilos.min.css', true);
+$PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/jquery.dataTables.min.css', true);
 
+$actions = authenticate_user_view($USER->id, $blockid);
+
+if (!isset($actions->report_active_semesters)) {
+    redirect(new moodle_url('/'), "No tienes permiso para acceder a los reportes por profesor",1, \core\output\notification::NOTIFY_INFO);
+}
 
 // Navigation setup
 $pagetitle = 'Reporte de semestres activos';
@@ -57,7 +64,7 @@ $PAGE->set_title($pagetitle);
 
 echo $output->header();
 $data = new stdClass();
-$data->cohorts_select = get_html_cohorts_select($blockid, false, 'cohorts', 'cohorts');
+$data->cohorts_select = \cohort_lib\get_html_cohorts_select($blockid, false, 'cohorts', 'cohorts');
 $menu_option = create_menu_options($USER->id, $blockid, $courseid);
 $data->menu = $menu_option;
 $report_active_semesters_page = new \block_ases\output\report_active_semesters_page($data);

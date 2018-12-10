@@ -33,7 +33,7 @@ require_once('../managers/student_profile/studentprofile_lib.php');
 require_once('../managers/permissions_management/permissions_lib.php');
 require_once('../managers/validate_profile_action.php');
 require_once('../managers/menu_options.php');
-
+require_once(__DIR__.'/../managers/cohort/cohort_lib.php');
 include('../lib.php');
 global $PAGE;
 
@@ -57,7 +57,7 @@ require_login($courseid, false);
 
 
 
-$cohorts_select = get_html_cohorts_select($blockid);
+$cohorts_select = \cohort_lib\get_html_cohorts_select($blockid);
 
 //se crean los elementos del menu
 $menu_option = create_menu_options($id_current_user, $blockid, $courseid);

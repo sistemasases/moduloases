@@ -33,6 +33,7 @@
  * @throws \dml_exception
  */
 namespace cohort_lib;
+require_once(__DIR__.'/../instance_management/instance_lib.php');
 use function substr;
 
 function load_cohorts_by_instance($id_instance){
@@ -86,4 +87,51 @@ function get_date_string_from_mdl_cohort_id_number($mdl_cohort_id_number) {
     $month = $period_string === 'B'? '06': '01';
     $year = substr_replace($year_and_period ,"", -1);
     return $year.'-'.$month.'-01';
+}
+
+/**
+ * Función que genera el select de html y lo retorna para las cohortes de una instancia en particular
+ * @param string $instance_id
+ * @param bool $include_todos Include todos for subcategories or not
+ * @return string Html base de el select a mostrar
+ */
+
+function get_html_cohorts_select($instance_id,$include_todos=true,  $name='conditions[]', $id='conditions', $class = 'form-control' ) {
+    $cohorts = load_cohorts_by_instance($instance_id);
+    $info_instance = \get_info_instance($instance_id);
+    $cohorts_select = "<select name=\"$name\" id=\"$id\" class=\"$class\">" ;
+    if($info_instance->id_number == 'ases'){
+
+        $cohorts_groups = array(['id'=>'SPP', 'name'=>'Ser Pilo Paga'],
+            ['id'=>'SPE', 'name'=>'Condición de Excepción'],
+            ['id'=>'3740', 'name'=>'Ingeniería Topográfica'],
+            ['id'=>'OTROS', 'name'=>'Otros ASES']);
+
+        if($include_todos) {
+            $cohorts_select.='<option value="TODOS">Todas las cohortes</option>';
+        }
+
+        foreach($cohorts_groups as $cohort_group){
+            $cohorts_select.="<optgroup label='".$cohort_group['name']."'>";
+            if($include_todos) {
+                $cohorts_select .= "<option value='TODOS-".$cohort_group['id']."'>Todos ".$cohort_group['id']."</option>";
+            }
+
+            foreach($cohorts as $ch){
+                if(substr($ch->idnumber, 0, 3) == substr($cohort_group['id'], 0, 3)){
+                    $cohorts_select.= "<option value='$ch->idnumber'>$ch->name</option>";
+                }
+            }
+
+            $cohorts_select.="</optgroup>";
+        }
+
+    }else{
+        foreach($cohorts as $ch){
+            $cohorts_select.= "<option value='$ch->idnumber'>$ch->name</option>";
+        }
+    }
+
+    $cohorts_select.='</select>';
+    return $cohorts_select;
 }
