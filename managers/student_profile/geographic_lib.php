@@ -136,6 +136,7 @@ function save_geographic_info($id_ases, $latitude, $longitude, $neighborhood, $g
         $data_object_risk->id_usuario = (int)$id_ases;
         $data_object_risk->id_riesgo = (int)$id_risk;
         $data_object_risk->calificacion_riesgo = (int)$geographic_risk;
+        $data_object_risk->recorder = "other";
 
         $result_geographic_risk = $DB->update_record('talentospilos_riesg_usuario', $data_object_risk);
 
@@ -145,6 +146,7 @@ function save_geographic_info($id_ases, $latitude, $longitude, $neighborhood, $g
         $data_object_risk->id_usuario = (int)$id_ases;
         $data_object_risk->id_riesgo = (int)$id_risk;
         $data_object_risk->calificacion_riesgo = (int)$geographic_risk;
+        $data_object_risk->recorder = "other";
 
         $result_geographic_risk = $DB->insert_record('talentospilos_riesg_usuario', $data_object_risk, true);
     }

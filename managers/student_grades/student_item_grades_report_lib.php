@@ -270,7 +270,7 @@ function normalize_grades($item_grades, $separator=' - '): string {
  * @return mixed
  * @throws dml_exception
  */
-function get_student_item_grades_sumary_report_item($student_id, $course_id ) {
+function get_student_item_grades_sumary_report_item($student_id, $course_id) {
     $course = get_course($course_id, false);
     $report_item = new ReportStudentItemGradesSummaryItem();
     $report_item->nombre_asignatura = $course->fullname;
@@ -311,9 +311,10 @@ function get_student_item_grades_sumary_report($student_id, $semestre = null) {
 /**
  * Return a datatable formated as array with all information needed for item grades agrouped by students
  * @param string $instance_id
+ * @param bool $paging See https://datatables.net/reference/option/paging
  * @return array Datatable with indexs: {bsort, columns, data, language, order}
  */
-function get_datatable_for_student_grades_report($instance_id) {
+function get_datatable_for_student_grades_report($instance_id, $paging = false) {
 
     $common_language_config = \jquery_datatable\get_datatable_common_language_config();
     $columns = array();
@@ -359,6 +360,7 @@ function get_datatable_for_student_grades_report($instance_id) {
     $data_table = array(
         "bsort" => false,
         "columns" => $columns,
+        "paging" => $paging,
         "data" => $data,
         "language" => $common_language_config,
         "order"=> array($columna_items_perdidos_index, "desc")

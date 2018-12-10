@@ -948,12 +948,14 @@ function update_last_user_risk( $ases_student_code, $record_id ){
             $previous_record_risk = $DB->get_record_sql( "SELECT * FROM {talentospilos_riesg_usuario} WHERE id_usuario = '$ases_user_id' AND id_riesgo = '$risk->id'" );
             if( $previous_record_risk ){
                 $previous_record_risk->calificacion_riesgo = $individual_risk_lvl;
+                $previous_record_risk->recorder = "dphpforms";
                 $DB->update_record( 'talentospilos_riesg_usuario', $previous_record_risk, $bulk=false );
             }else{
                 $new_user_risk = new stdClass();
                 $new_user_risk->id_usuario = $ases_user_id;
                 $new_user_risk->id_riesgo = $risk->id;
                 $new_user_risk->calificacion_riesgo = $individual_risk_lvl;
+                $new_user_risk->recorder = "dphpforms";
                 $DB->insert_record( 'talentospilos_riesg_usuario', $new_user_risk, $returnid=false, $bulk=false );
             }
 
@@ -962,12 +964,14 @@ function update_last_user_risk( $ases_student_code, $record_id ){
             $previous_record_risk = $DB->get_record_sql( "SELECT * FROM {talentospilos_riesg_usuario} WHERE id_usuario = '$ases_user_id' AND id_riesgo = '$risk->id'" );
             if( $previous_record_risk ){
                 $previous_record_risk->calificacion_riesgo = $familiar_risk_lvl;
+                $previous_record_risk->recorder = "dphpforms";
                 $DB->update_record( 'talentospilos_riesg_usuario', $previous_record_risk, $bulk=false );
             }else{
                 $new_user_risk = new stdClass();
                 $new_user_risk->id_usuario = $ases_user_id;
                 $new_user_risk->id_riesgo = $risk->id;
                 $new_user_risk->calificacion_riesgo = $familiar_risk_lvl;
+                $new_user_risk->recorder = "dphpforms";
                 $DB->insert_record( 'talentospilos_riesg_usuario', $new_user_risk, $returnid=false, $bulk=false );
             }
 
@@ -976,12 +980,14 @@ function update_last_user_risk( $ases_student_code, $record_id ){
             $previous_record_risk = $DB->get_record_sql( "SELECT * FROM {talentospilos_riesg_usuario} WHERE id_usuario = '$ases_user_id' AND id_riesgo = '$risk->id'" );
             if( $previous_record_risk ){
                 $previous_record_risk->calificacion_riesgo = $academico_risk_lvl;
+                $previous_record_risk->recorder = "dphpforms";
                 $DB->update_record( 'talentospilos_riesg_usuario', $previous_record_risk, $bulk=false );
             }else{
                 $new_user_risk = new stdClass();
                 $new_user_risk->id_usuario = $ases_user_id;
                 $new_user_risk->id_riesgo = $risk->id;
                 $new_user_risk->calificacion_riesgo = $academico_risk_lvl;
+                $new_user_risk->recorder = "dphpforms";
                 $DB->insert_record( 'talentospilos_riesg_usuario', $new_user_risk, $returnid=false, $bulk=false );
             }
 
@@ -990,12 +996,14 @@ function update_last_user_risk( $ases_student_code, $record_id ){
             $previous_record_risk = $DB->get_record_sql( "SELECT * FROM {talentospilos_riesg_usuario} WHERE id_usuario = '$ases_user_id' AND id_riesgo = '$risk->id'" );
             if( $previous_record_risk ){
                 $previous_record_risk->calificacion_riesgo = $economico_risk_lvl;
+                $previous_record_risk->recorder = "dphpforms";
                 $DB->update_record( 'talentospilos_riesg_usuario', $previous_record_risk, $bulk=false );
             }else{
                 $new_user_risk = new stdClass();
                 $new_user_risk->id_usuario = $ases_user_id;
                 $new_user_risk->id_riesgo = $risk->id;
                 $new_user_risk->calificacion_riesgo = $economico_risk_lvl;
+                $new_user_risk->recorder = "dphpforms";
                 $DB->insert_record( 'talentospilos_riesg_usuario', $new_user_risk, $returnid=false, $bulk=false );
             }
 
@@ -1004,6 +1012,7 @@ function update_last_user_risk( $ases_student_code, $record_id ){
             $previous_record_risk = $DB->get_record_sql( "SELECT * FROM {talentospilos_riesg_usuario} WHERE id_usuario = '$ases_user_id' AND id_riesgo = '$risk->id'" );
             if( $previous_record_risk ){
                 $previous_record_risk->calificacion_riesgo = $vida_universitaria_risk_lvl;
+                $previous_record_risk->recorder = "dphpforms";
                 $DB->update_record( 'talentospilos_riesg_usuario', $previous_record_risk, $bulk=false );
             }else{
                 
@@ -1011,6 +1020,7 @@ function update_last_user_risk( $ases_student_code, $record_id ){
                 $new_user_risk->id_usuario = $ases_user_id;
                 $new_user_risk->id_riesgo = $risk->id;
                 $new_user_risk->calificacion_riesgo = $vida_universitaria_risk_lvl;
+                $previous_renew_user_riskcord_risk->recorder = "dphpforms";
                 $DB->insert_record( 'talentospilos_riesg_usuario', $new_user_risk, $returnid=false, $bulk=false );
             }
 
@@ -1018,14 +1028,21 @@ function update_last_user_risk( $ases_student_code, $record_id ){
 
             $previous_record_risk = $DB->get_record_sql( "SELECT * FROM {talentospilos_riesg_usuario} WHERE id_usuario = '$ases_user_id' AND id_riesgo = '$risk->id'" );
             if( $previous_record_risk ){
-                $previous_record_risk->calificacion_riesgo = $geo_risk_lvl;
-                $DB->update_record( 'talentospilos_riesg_usuario', $previous_record_risk, $bulk=false );
+
+                if( ($previous_record_risk->recorder === "dphpforms") || ($previous_record_risk->recorder == null)  ){
+
+                    $previous_record_risk->calificacion_riesgo = $geo_risk_lvl;
+                    $DB->update_record( 'talentospilos_riesg_usuario', $previous_record_risk, $bulk=false );
+
+                }
+
             }else{
                 
                 $new_user_risk = new stdClass();
                 $new_user_risk->id_usuario = $ases_user_id;
                 $new_user_risk->id_riesgo = $risk->id;
                 $new_user_risk->calificacion_riesgo = $geo_risk_lvl;
+                $new_user_risk->recorder = "dphpforms";
                 $DB->insert_record( 'talentospilos_riesg_usuario', $new_user_risk, $returnid=false, $bulk=false );
             } 
         }
