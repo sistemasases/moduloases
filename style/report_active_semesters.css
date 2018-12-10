@@ -6,3 +6,7 @@
 .cohort_select_region {
     align-self: flex-end;
 }
+
+td.no_active_semester {
+    background-color: gray;
+}

@@ -20,7 +20,6 @@ define([
     return {
         init: function (data) {
             var instance_id = data.instance_id;
-            console.log(instance_id);
             var table = null;
             /**
              * Data: {
@@ -44,10 +43,11 @@ define([
              * }
              *
              */
+            /**
+             * All cells than have as data 'NO' should have distinct class
+             */
 
-            function init_datatable () {
-                var cohort_id = $('#cohorts option:selected').val();
-
+            function init_datatable (cohort_id) {
                 var url = '../managers/report_active_semesters/report_active_semesters_api.php/' + instance_id;
                 var post_info = {
                     function: 'data_table',
@@ -56,7 +56,6 @@ define([
                         cohort_id: cohort_id
                     }
                 };
-                console.log(post_info);
                 $.ajax({
                     method: "POST",
                     url: url,
@@ -64,27 +63,40 @@ define([
                     dataType: 'json'
                 }).done(
                     function (dataTable){
-                        console.log(dataTable);
-                        $("#tableActiveSemesters").html('');
+                        dataTable.rowCallback =  function(row, data, index) {
+                            var column_names = Object.keys(data);
+                            console.log(column_names);
+                            $(column_names).each(
+                                function (index_, value) {
+                                    if (data[value] === "NO") {
+                                        $("td." + value , row).addClass("no_active_semester");
+                                    }
+                                }
+                            );
+                        };
+
+                        if ( $.fn.dataTable.isDataTable( '#tableActiveSemesters' ) ) {
+                            $("#div_table_report").html('');
+                            $("#div_table_report").fadeIn(1000).append('<table id="tableActiveSemesters" class="table" cellspacing="0" width="100%"></table>');
+
+                        }
                         table = $("#tableActiveSemesters").DataTable(
-                            {
-                                data: dataTable.data,
-                                bsort: dataTable.bsort,
-                                columns: dataTable.columns,
-                                language: dataTable.language,
-                                order: dataTable.order
-                            }
+                            dataTable
                         );
                     }
 
                 ).fail(
                     function(error) {
-                        console.log(error);
                     }
                 );
 
             }
-            init_datatable();
+            $('#cohorts').change(function() {
+                var cohort_id = $('#cohorts option:selected').val();
+                init_datatable(cohort_id);
+            });
+            var cohort_id = $('#cohorts option:selected').val();
+            init_datatable(cohort_id);
 
 
 
