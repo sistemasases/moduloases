@@ -708,11 +708,13 @@ define([
 
 
         function validate_json(json_data, ases_id){
+            let json_prev = $("#input_json_saved").val();
             $.ajax({
                 type: "POST",
                 data: {
                     func: 'validate_json',
                     json: json_data, 
+                    json_prev: json_prev,
                     ases: ases_id,
                     id_schema: 1
                 },

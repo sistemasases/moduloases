@@ -338,11 +338,13 @@ define([
                 }
 
                 function editEconomicsData(json_data, ases_id){
+                    let json_prev = $("#input_json_economics_saved").val();
                 $.ajax({
                     type: "POST",
                     data: {
                         func: 'edit_economics_data',
                         json: json_data, 
+                        json_prev: json_prev,
                         ases: ases_id
                     },
                     url: "../managers/student_profile/discapacity_tab_api.php",

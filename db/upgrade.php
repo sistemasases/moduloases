@@ -4,7 +4,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     global $DB;
     $dbman = $DB->get_manager();
     $result = true;
-    if ($oldversion < 2018120716300 ) {
+    if ($oldversion < 2018121012010 ) {
     //     // ************************************************************************************************************
     //     // Actualización que crea la tabla para los campos extendidos de usuario (Tabla: {talentospilos_user_extended})
     //     // Versión: 2018010911179
@@ -2434,7 +2434,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
              $table->add_field('datos_previos', XMLDB_TYPE_TEXT, null, null, null, null, null);
              $table->add_field('datos_enviados', XMLDB_TYPE_TEXT, null, null, null, null, null);
              $table->add_field('datos_almacenados', XMLDB_TYPE_TEXT, null, null, null, null, null);
-             $table->add_field('fecha_registro', XMLDB_TYPE_TEXT, null, null, XMLDB_NOTNULL, null, null);
+             $table->add_field('fecha_hora_registro', XMLDB_TYPE_DATETIME, null, null, XMLDB_NOTNULL, null, "now()", null);
              $table->add_field('id_evento', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
              $table->add_field('instanceid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
              $table->add_field('id_ases_user', XMLDB_TYPE_INTEGER, '10', null, null, null, null);
@@ -2457,9 +2457,9 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
 
         // Adding fields to table talentospilos_events_to_logs.
         $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
-        $table->add_field('name', XMLDB_TYPE_CHAR, '200', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('name_event', XMLDB_TYPE_CHAR, '200', null, XMLDB_NOTNULL, null, null);
         $table->add_field('description', XMLDB_TYPE_TEXT, null, null, XMLDB_NOTNULL, null, null);
-        $table->add_field('funcionalidad', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('funcionalidad', XMLDB_TYPE_CHAR, '200', null, XMLDB_NOTNULL, null, null);
 
         // Adding keys to table talentospilos_events_to_logs.
         $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
@@ -2471,10 +2471,54 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
 
         //Cargar eventos aplicables a acciones de student_profile asociados al desarrollo de Discapacidad
 
-        // $event = new stdClass();
-        // $event->name = ""
+        $event = new stdClass();
+        $event->name_event          = 'edit_discapacity_initial_form_sp';
+        $event->description   = "Edición de las características de discapacidad de un estudiante en la ficha de percepción de discapacidad.";
+        $event->funcionalidad = 'student_profile';
 
-        upgrade_block_savepoint(true, 2018120716300 , 'ases');
+        if( !$DB->record_exists('talentospilos_events_to_logs',array('name_event'=> $event->name_event))){
+            $DB->insert_record('talentospilos_events_to_logs', $event, true);
+        }
+
+        $event = new stdClass();
+        $event->name_event          = 'edit_economics_tab_sp';
+        $event->description   = "Edición de los datos económicos de un estudiante en la ficha de percepción de discapacidad.";
+        $event->funcionalidad = 'student_profile';
+
+        if( !$DB->record_exists('talentospilos_events_to_logs',array('name_event'=> $event->name_event))){
+            $DB->insert_record('talentospilos_events_to_logs', $event, true);
+        }
+
+        $event = new stdClass();
+        $event->name_event          = 'edit_salud_tab_sp';
+        $event->description   = "Edición de los datos de servicio de salud de un estudiante en la ficha de percepción de discapacidad.";
+        $event->funcionalidad = 'student_profile';
+
+        if( !$DB->record_exists('talentospilos_events_to_logs',array('name_event'=> $event->name_event))){
+            $DB->insert_record('talentospilos_events_to_logs', $event, true);
+        }
+
+        $event = new stdClass();
+        $event->name_event          = 'save_economics_tab_sp';
+        $event->description   = "Registro inicial de los datos económicos de un estudiante en la ficha de percepción de discapacidad.";
+        $event->funcionalidad = 'student_profile';
+
+        if( !$DB->record_exists('talentospilos_events_to_logs',array('name_event'=> $event->name_event))){
+            $DB->insert_record('talentospilos_events_to_logs', $event, true);
+        }
+
+        $event = new stdClass();
+        $event->name_event          = 'save_salud_tab_sp';
+        $event->description   = "Registro inicial de los datos de servicio de salud de un estudiante en la ficha de percepción de discapacidad.";
+        $event->funcionalidad = 'student_profile';
+
+        if( !$DB->record_exists('talentospilos_events_to_logs',array('name_event'=> $event->name_event))){
+            $DB->insert_record('talentospilos_events_to_logs', $event, true);
+        }
+
+
+
+        upgrade_block_savepoint(true, 2018121012010 , 'ases');
     
         return $result;
 
