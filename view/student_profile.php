@@ -1702,6 +1702,7 @@ $PAGE->requires->css('/blocks/ases/style/switch.css', true);
 //su nombramiento.
 $PAGE->requires->css('/blocks/ases/style/creadorFormulario.css', true);
 
+$PAGE->requires->js_call_amd('block_ases/ases_incident_system', 'init');
 $PAGE->requires->js_call_amd('block_ases/student_profile_main', 'init', $data_init);
 $PAGE->requires->js_call_amd('block_ases/student_profile_main', 'equalize');
 
