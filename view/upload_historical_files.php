@@ -93,7 +93,8 @@ $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/jquery.dataTables_t
 $PAGE->requires->css('/blocks/ases/style/side_menu_style.css', true);
 
 $PAGE->requires->js_call_amd('block_ases/upload_history_main','init');
-
+//JS file needed to highlight the menu item of the current page
+$PAGE->requires->js_call_amd('block_ases/side_menu_main', 'init');
 
 
 $PAGE->set_url($url);
