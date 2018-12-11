@@ -135,6 +135,21 @@
                             $("#inc_text").fadeOut(700); 
                         }, 3000);
 
+                        $.ajax({
+                            method: "POST",
+                            url: "../managers/incident_manager/incident_api.php",
+                            contentType: "application/json",
+                            dataType: "json",
+                            data: JSON.stringify({"function":"get_logged_user_incidents", "params":[]}) ,
+                            success: function( msg ){
+                                console.log(msg);
+                            },
+                            error: function( XMLHttpRequest, textStatus, errorThrown ) {
+                                console.log( "some error " + textStatus + " " + errorThrown );
+                                console.log( XMLHttpRequest );
+                            }
+                        });
+
                     });
 
                     $(document).on("click","#ases_incident_system_box", function(){
@@ -175,7 +190,6 @@
                                 }
                             },
                             error: function( XMLHttpRequest, textStatus, errorThrown ) {
-                                alert('Informe de este error');
                                 console.log( "some error " + textStatus + " " + errorThrown );
                                 console.log( XMLHttpRequest );
                             }

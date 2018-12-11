@@ -47,4 +47,27 @@ function incident_create_incident( $user_id, $details, $system_info ){
 };
 
 
+function incident_get_user_incidents( $user_id ){
+    
+    global $DB;
+
+    if( !$user_id ){
+        return null;
+    }
+
+    $sql = "SELECT * 
+    FROM {talentospilos_incidencias} 
+    WHERE id_usuario_registra = '$user_id'
+    ORDER BY fecha_hora_registro DESC";
+
+    return $DB->get_records_sql( $sql );
+}
+
+function incident_get_logged_user_incidents(){
+
+    global $USER;
+
+    return incident_get_user_incidents( $USER->id );
+}
+
 ?>
