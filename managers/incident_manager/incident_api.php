@@ -70,15 +70,27 @@
                  * system_info
                  */
                 
-                if( is_numeric( $input->params[0] ) ){
+                if( true ){
                     
-                    echo json_encode( 
-                        array(
-                            "status_code" => 0,
-                            "error_message" => "",
-                            "data_response" => incident_create_incident( $USER->id, $input->params[0], $input->params[1] )
-                        )
-                    );
+                    $ticket_id = incident_create_incident( $USER->id, $input->params[0], $input->params[1] );
+
+                    if( $ticket_id ){
+                        echo json_encode( 
+                            array(
+                                "status_code" => 0,
+                                "error_message" => "",
+                                "data_response" => $ticket_id
+                            )
+                        );
+                    }else{
+                        echo json_encode( 
+                            array(
+                                "status_code" => -6,
+                                "error_message" => "",
+                                "data_response" => "-1"
+                            )
+                        );
+                    }                    
                     
                 }else{
                     return_with_code( -2 );

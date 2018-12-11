@@ -24,7 +24,7 @@
                 padding: 0.5em;\
                 color:white;\
                 cursor:pointer;\
-                background-color:red;\
+                background-color:#d51b23;\
                 position: fixed;\
                 bottom: 0px;\
                 left: 0px;\
@@ -37,14 +37,14 @@
                 left: 0px;\
                 z-index: 9999;\
                 height: 400px;\
-                border:1px solid red;\
+                border:1px solid #d51b23;\
                 width: 400px;\
                 background-color:white;\
                 display:none;\
             }\
             .inc_header{\
                 height: 30px;\
-                background-color:red;\
+                background-color:#d51b23;\
                 padding: 0.5em;\
                 color:white;\
             }\
@@ -62,7 +62,7 @@
                 width: 100%;\
             }\
             #inc_registrar{\
-                background-color:red;\
+                background-color:#d51b23;\
                 color:white;\
                 padding: 0.3em;\
                 float:right;\
@@ -151,6 +151,35 @@
 
                         let system_info = $("html").html();
                         let detail = $("#inc_detail").val();
+
+                        $.ajax({
+                            method: "POST",
+                            url: "../managers/incident_manager/incident_api.php",
+                            contentType: "application/json",
+                            dataType: "json",
+                            data: JSON.stringify({"function":"create_incident", "params":[ detail, system_info ]}) ,
+                            success: function( msg ){
+                                console.log(msg);
+                                if( msg['status_code'] === 0 ){
+                                    swal(
+                                        'Éxito!',
+                                        'Se ha registrado correctamente la incidencia, ticket #20' + msg['data_response'],
+                                        'success'
+                                    );
+                                }else{
+                                    swal(
+                                        'Error!',
+                                        'Oops!: ' + msg.data_response,
+                                        'error'
+                                    );
+                                }
+                            },
+                            error: function( XMLHttpRequest, textStatus, errorThrown ) {
+                                alert('Informe de este error');
+                                console.log( "some error " + textStatus + " " + errorThrown );
+                                console.log( XMLHttpRequest );
+                            }
+                        });
 
                     });
 
