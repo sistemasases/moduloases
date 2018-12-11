@@ -32,17 +32,42 @@ function incident_create_incident( $user_id, $details, $system_info ){
     $obj_incident = new stdClass();
     $obj_incident->id_usuario_registra = (int) $user_id;
     $obj_incident->id_usuario_cierra = null;
-    $obj_incident->estados = '[ { "order":"0", "status":"waiting" } ]';
+    $obj_incident->estados = '[ { "change_order":"0", "status":"waiting" } ]';
     $obj_incident->info_sistema = $system_info;
-    $obj_incident->comentarios = [ 
+    $obj_incident->comentarios = json_encode([ 
         [ 
-            "order" => 0,
+            "message_number" => 0,
             "user_id" => $user_id,
             "message" => $details
         ]
-     ];
+     ]);
      $obj_incident->cerrada = 0;
+
+     return $DB->insert_record( 'talentospilos_incidencias', $obj_incident, $returnid=true, $bulk=false);
 };
 
+
+function incident_get_user_incidents( $user_id ){
+    
+    global $DB;
+
+    if( !$user_id ){
+        return null;
+    }
+
+    $sql = "SELECT * 
+    FROM {talentospilos_incidencias} 
+    WHERE id_usuario_registra = '$user_id'
+    ORDER BY fecha_hora_registro DESC";
+
+    return $DB->get_records_sql( $sql );
+}
+
+function incident_get_logged_user_incidents(){
+
+    global $USER;
+
+    return incident_get_user_incidents( $USER->id );
+}
 
 ?>
