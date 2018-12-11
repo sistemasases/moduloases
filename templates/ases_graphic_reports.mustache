@@ -1,0 +1,26 @@
+<body name="hola">
+  <!-- Testing -->
+  {{#data}}
+  {{> block_ases/side_menu}}
+  <div class="container">
+    {{{message}}}
+    <form role="form" id="form_general_report">
+    <div class="row">
+        <div class="col-sm-8">
+            <h2>REPORTE GENERAL GRÁFICO DE ESTUDIANTES</h2>
+            <h5>Por favor seleccione los campos a incluir en el reporte</h5>
+        </div>
+        <div class="col-sm-4" id="div_cohorts">
+            <label for="">Cohorte:  </label>
+                {{{cohorts_checks}}}
+        </div>
+        <hr class="col-sm-12" />
+    </div>
+    </form> 
+    {{#status_report_agr}}  
+    {{> block_ases/agr_view_status_report}}      
+    {{/status_report_agr}}
+    
+  {{/data}}
+
+</body>
