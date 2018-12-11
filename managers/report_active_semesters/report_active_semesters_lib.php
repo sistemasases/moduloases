@@ -64,7 +64,12 @@ function _students_and_active_semesters_to_rows($semester_names, $students_and_a
     return $rows;
 }
 
-function get_report_active_semesters_datatable($id_instance, $ases_cohort_id) {
+/**
+ * @param $id_instance
+ * @param $ases_cohort_id
+ * @return array Array with items dataTable and semesters, where semesters are array of string with semester names
+ */
+function get_report_active_semesters_report($id_instance, $ases_cohort_id) {
 
     $semester_names = _get_semesters_names_after_cohort($id_instance, $ases_cohort_id);
     $students_and_active_semesters = get_active_semesters($id_instance, $ases_cohort_id);
@@ -88,10 +93,11 @@ function get_report_active_semesters_datatable($id_instance, $ases_cohort_id) {
         "columns" => $columns,
         "data" => $data,
         "language" => $common_language_config,
+        "semesters" => $semester_names,
         "order"=> array($nombre_index_column, "desc")
 
     );
-    return $data_table;
+    return array('dataTable'=>$data_table, 'semesters'=>$semester_names);
 }
 
 function _get_ases_cohorts_inner_mdl_cohorts($id_instance, $ases_cohort_id) {
