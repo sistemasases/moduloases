@@ -32,16 +32,18 @@ function incident_create_incident( $user_id, $details, $system_info ){
     $obj_incident = new stdClass();
     $obj_incident->id_usuario_registra = (int) $user_id;
     $obj_incident->id_usuario_cierra = null;
-    $obj_incident->estados = '[ { "order":"0", "status":"waiting" } ]';
+    $obj_incident->estados = '[ { "change_order":"0", "status":"waiting" } ]';
     $obj_incident->info_sistema = $system_info;
     $obj_incident->comentarios = [ 
         [ 
-            "order" => 0,
+            "message_number" => 0,
             "user_id" => $user_id,
             "message" => $details
         ]
      ];
      $obj_incident->cerrada = 0;
+
+     return $DB->insert_record( 'talentospilos_incidencias', $obj_incident, $returnid=true, $bulk=false);
 };
 
 
