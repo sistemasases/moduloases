@@ -4,7 +4,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     global $DB;
     $dbman = $DB->get_manager();
     $result = true;
-    if ($oldversion < 2018121017080 ) {
+    if ($oldversion < 2018121116300 ) {
     //     // ************************************************************************************************************
     //     // Actualización que crea la tabla para los campos extendidos de usuario (Tabla: {talentospilos_user_extended})
     //     // Versión: 2018010911179
@@ -2430,31 +2430,35 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
         //  Versión: 2018121014080                                                                  //
         // *****************************************************************************************//
 
-             // Define table talentospilos_general_logs to be created.
-             $table = new xmldb_table('talentospilos_general_logs');
+          
+        // Define table talentospilos_general_logs to be created.
+        $table = new xmldb_table('talentospilos_general_logs');
 
-             // Adding fields to table talentospilos_general_logs.
-             $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
-             $table->add_field('id_moodle_user', XMLDB_TYPE_INTEGER, '20', null, XMLDB_NOTNULL, null, null);
-             $table->add_field('datos_previos', XMLDB_TYPE_TEXT, null, null, null, null, null);
-             $table->add_field('datos_enviados', XMLDB_TYPE_TEXT, null, null, null, null, null);
-             $table->add_field('datos_almacenados', XMLDB_TYPE_TEXT, null, null, null, null, null);
-             $table->add_field('fecha_hora_registro', XMLDB_TYPE_DATETIME, null, null, XMLDB_NOTNULL, null, "now()", null);
-             $table->add_field('id_evento', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
-             $table->add_field('url', XMLDB_TYPE_TEXT, null, null, null, null, null);
-             $table->add_field('id_ases_user', XMLDB_TYPE_INTEGER, '10', null, null, null, null);
-             $table->add_field('navegador', XMLDB_TYPE_TEXT, null, null, null, null, null);
-             $table->add_field('title_retorno', XMLDB_TYPE_CHAR, '200', null, null, null, null);
-             $table->add_field('msg_retorno', XMLDB_TYPE_CHAR, '200', null, null, null, null);
-             $table->add_field('status_retorno', XMLDB_TYPE_CHAR, '200', null, null, null, null);
-     
-             // Adding keys to table talentospilos_general_logs.
-             $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
-     
-             // Conditionally launch create table for talentospilos_general_logs.
-             if (!$dbman->table_exists($table)) {
-                 $dbman->create_table($table);
-             }
+        // Adding fields to table talentospilos_general_logs.
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        $table->add_field('id_moodle_user', XMLDB_TYPE_INTEGER, '20', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('datos_previos', XMLDB_TYPE_TEXT, null, null, null, null, null);
+        $table->add_field('datos_enviados', XMLDB_TYPE_TEXT, null, null, null, null, null);
+        $table->add_field('datos_almacenados', XMLDB_TYPE_TEXT, null, null, null, null, null);
+        $table->add_field('fecha_registro', XMLDB_TYPE_DATETIME, null, null, XMLDB_NOTNULL, null, "now()");
+        $table->add_field('id_evento', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('instanceid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('id_ases_user', XMLDB_TYPE_INTEGER, '10', null, null, null, null);
+        $table->add_field('navegador', XMLDB_TYPE_TEXT, null, null, null, null, null);
+        $table->add_field('title_retorno', XMLDB_TYPE_CHAR, '200', null, null, null, null);
+        $table->add_field('msg_retorno', XMLDB_TYPE_CHAR, '200', null, null, null, null);
+        $table->add_field('status_retorno', XMLDB_TYPE_CHAR, '200', null, null, null, null);
+        $table->add_field('url', XMLDB_TYPE_TEXT, null, null, null, null, null);
+        $table->add_field('courseid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+
+        // Adding keys to table talentospilos_general_logs.
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+
+        // Conditionally launch create table for talentospilos_general_logs.
+        if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
+        }
+
 
 
                   // Define table talentospilos_events_to_logs to be created.
@@ -2522,7 +2526,6 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
         }
 
 
-
         // Define field recorder to be added to talentospilos_riesg_usuario.
         $table = new xmldb_table('talentospilos_riesg_usuario');
         $field = new xmldb_field('recorder', XMLDB_TYPE_TEXT, null, null, null, null, null, 'calificacion_riesgo');
@@ -2553,7 +2556,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
             $dbman->create_table($table);
         }
 
-        upgrade_block_savepoint(true, 2018121017080 , 'ases');
+        upgrade_block_savepoint(true, 2018121116300 , 'ases');
     
         return $result;
 

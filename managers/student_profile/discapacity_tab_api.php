@@ -37,6 +37,7 @@ use JsonSchema\Constraints\Constraint;
 
 global $DB;
 global $USER;
+global $COURSE;
 
 
 $msg_error = new stdClass();
@@ -394,6 +395,9 @@ if(isset($_POST['func'])){
             $eventoid      =  getIdEventLogs('edit_salud_tab_sp');
             $navegador     =  $_SERVER['HTTP_USER_AGENT'];
             $url           =  $_SERVER['HTTP_REFERER'];
+            //REVISAR CAMBIOS
+            $instanceid    =  00000;
+            $courseid      =  $COURSE->id;
 
             $result =       update_health_data($data, $id_ases);
             if($result){
@@ -418,6 +422,8 @@ if(isset($_POST['func'])){
                 $new_log->title_retorno      = $msg->title;
                 $new_log->msg_retorno        = $msg->status;
                 $new_log->status_retorno     = $msg->msg;
+                $new_log->instanceid         = $instanceid;
+                $new_log->courseid           = $courseid;
  
                 $DB->insert_record('talentospilos_general_logs', $new_log, $returnid=false, $bulk=false);
                echo json_encode($msg);
