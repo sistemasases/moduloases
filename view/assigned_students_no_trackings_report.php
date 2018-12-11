@@ -64,6 +64,7 @@ $data = new stdClass;
 // Evaluates if user role has permissions assigned on this view
 $actions = authenticate_user_view($USER->id, $blockid);
 $data = $actions;
+$data->menu = $menu_option;
 
 //Navegation set up
 $coursenode = $PAGE->navigation->find($courseid, navigation_node::TYPE_COURSE);
