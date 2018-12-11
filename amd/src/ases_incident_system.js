@@ -102,6 +102,8 @@
                     <div id="old_inc">\
                         <span><strong>Incidencias previas</strong></span>\
                     </div>\
+                    <div id="old_inc_body">\
+                    </div>\
                     <hr style="margin:5px;">\
                 </div>\
             </div>\
@@ -131,24 +133,33 @@
 
                     $(document).ready(function(){
 
-                        setInterval(function(){ 
-                            $("#inc_text").fadeOut(700); 
-                        }, 3000);
-
                         $.ajax({
                             method: "POST",
                             url: "../managers/incident_manager/incident_api.php",
                             contentType: "application/json",
                             dataType: "json",
                             data: JSON.stringify({"function":"get_logged_user_incidents", "params":[]}) ,
-                            success: function( msg ){
-                                console.log(msg);
+                            success: function( response ){
+                                //console.log(response);
+                                let inc_list = "";
+                                response.data_response.forEach(function(element){
+                                    inc_list  += '\
+                                    <div class="inc_item col-xs-12 col-sm-12 col-md-12 col-lg-12">\
+                                        T#20'+element.id+'\
+                                    </div>\
+                                    ';
+                                });
+                                $("#old_inc_body").append( inc_list );
                             },
                             error: function( XMLHttpRequest, textStatus, errorThrown ) {
                                 console.log( "some error " + textStatus + " " + errorThrown );
                                 console.log( XMLHttpRequest );
                             }
                         });
+
+                        setInterval(function(){ 
+                            $("#inc_text").fadeOut(700); 
+                        }, 3000);
 
                     });
 
@@ -173,18 +184,18 @@
                             contentType: "application/json",
                             dataType: "json",
                             data: JSON.stringify({"function":"create_incident", "params":[ detail, system_info ]}) ,
-                            success: function( msg ){
-                                console.log(msg);
-                                if( msg['status_code'] === 0 ){
+                            success: function( response ){
+                                console.log(response);
+                                if( response.status_code === 0 ){
                                     swal(
                                         'Éxito!',
-                                        'Se ha registrado correctamente la incidencia, ticket #20' + msg['data_response'],
+                                        'Se ha registrado correctamente la incidencia, ticket #20' + response.data_response,
                                         'success'
                                     );
                                 }else{
                                     swal(
                                         'Error!',
-                                        'Oops!: ' + msg.data_response,
+                                        'Oops!: ' + response.data_response,
                                         'error'
                                     );
                                 }
