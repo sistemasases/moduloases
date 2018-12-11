@@ -62,6 +62,8 @@ $cohorts_select = \cohort_lib\get_html_cohorts_select($blockid);
 //se crean los elementos del menu
 $menu_option = create_menu_options($id_current_user, $blockid, $courseid);
 
+
+$risks = get_riesgos();
 $risks_table='';
 
 
