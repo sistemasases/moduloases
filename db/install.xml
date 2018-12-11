@@ -970,6 +970,32 @@
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
       </KEYS>
     </TABLE>
+    <TABLE NAME="talentospilos_general_logs" COMMENT="Almacena el historial de modificaciones realizadas en un proceso determinado">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="id_moodle_user" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="false" COMMENT="Identificador del usuario que realiza las modificaciones"/>
+        <FIELD NAME="datos_previos" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Datos previos a la modificación"/>
+        <FIELD NAME="datos_enviados" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Datos enviados para la modificación"/>
+        <FIELD NAME="datos_almacenados" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Datos almacenados en la base de datos en la modificación"/>
+        <FIELD NAME="fecha_registro" TYPE="text" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="id_evento" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Corresponde a la acción realizada sobre una funcionalidad."/>
+        <FIELD NAME="instanceid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Corresponde a la instancia en la que se realiza la modificación."/>
+        <FIELD NAME="id_ases_user" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="Pertenece al usuario ases sobre el cual se realiza la modificación. Si aplica."/>
+        <FIELD NAME="navegador" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="title_retorno" TYPE="char" LENGTH="200" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="msg_retorno" TYPE="char" LENGTH="200" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="status_retorno" TYPE="char" LENGTH="200" NOTNULL="false" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="talentospilos_events_to_logs" COMMENT="Almacena los eventos que se realizan en una modificación de alguna funcionalidad. ">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="name" TYPE="char" LENGTH="200" NOTNULL="true" SEQUENCE="false" COMMENT="Nombre de evento"/>
+        <FIELD NAME="description" TYPE="text" NOTNULL="true" SEQUENCE="false" COMMENT="Lo que hace el evento"/>
+        <FIELD NAME="funcionalidad" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Corresponde a una funcionalidad existente en mdl_talentospilos_funcionalidad"/>
     <TABLE NAME="talentospilos_incidencias" COMMENT="Tabla para el registro de incidencias del plugin.">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>

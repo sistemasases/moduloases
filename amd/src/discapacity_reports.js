@@ -203,7 +203,9 @@ define([
                     animation: {
                         animateRotate: true,
                         animateScale: true
-                    }
+                    },
+                    showTooltips: true,
+                    showPercentages: true
                 };
 
                 Chart.defaults.polarArea.animation.animateScale = false;

@@ -338,11 +338,13 @@ define([
                 }
 
                 function editEconomicsData(json_data, ases_id){
+                    let json_prev = $("#input_json_economics_saved").val();
                 $.ajax({
                     type: "POST",
                     data: {
                         func: 'edit_economics_data',
                         json: json_data, 
+                        json_prev: json_prev,
                         ases: ases_id
                     },
                     url: "../managers/student_profile/discapacity_tab_api.php",
@@ -355,7 +357,8 @@ define([
                            },
                            function(){
                             $("html, body").animate({scrollTop:700}, 'slow'); 
-                            $("#input_json_economics_saved").val(json_data);
+                            $("#input_economics_saved").attr("value", "1");
+                            $("#input_json_economics_saved").attr("value", json_data);
                            }
                         
     
@@ -382,11 +385,13 @@ define([
                 }
                 
                 function saveEconomicsData(json_data, ases_id){
+                    let json_prev = $("#input_json_economics_saved").val();
                     $.ajax({
                         type: "POST",
                         data: {
                             func: 'save_economics_data',
                             json: json_data, 
+                            json_prev: json_prev,
                             ases: ases_id
                         },
                         url: "../managers/student_profile/discapacity_tab_api.php",
@@ -401,7 +406,8 @@ define([
                                 $("html, body").animate({scrollTop:700}, 'slow'); 
                                 $("#save_economics_data").parent().hide();
                                 $("#edit_economics_data").parent().show();
-                                $("#input_economics_saved").val("1");
+                                $("#input_economics_saved").attr("value", "1");
+                                $("#input_json_economics_saved").attr("value", json_data);
                                }
                             
         
@@ -770,11 +776,13 @@ define([
                 }
 
                 function editHealthData(json_data, ases_id){
+                    let json_prev = $("#input_json_health_saved").val(); 
                     $.ajax({
                         type: "POST",
                         data: {
                             func: 'edit_health_data',
                             json: json_data, 
+                            json_prev: json_prev,
                             ases: ases_id
                         },
                         url: "../managers/student_profile/discapacity_tab_api.php",
@@ -787,7 +795,8 @@ define([
                                },
                                function(){
                                 $("html, body").animate({scrollTop:820}, 'slow'); 
-                                $("#input_json_health_saved").val(json_data);
+                                $("#input_health_saved").attr("value","1");
+                                $("#input_json_health_saved").attr("value",json_data);
                                }
                             
         
@@ -814,11 +823,13 @@ define([
                     }
 
                 function saveHealthData(json_data, ases_id){
+                    let json_prev = $("#input_json_health_saved").val();
                     $.ajax({
                         type: "POST",
                         data: {
                             func: 'save_health_data',
                             json: json_data, 
+                            json_prev: json_prev,
                             ases: ases_id
                         },
                         url: "../managers/student_profile/discapacity_tab_api.php",
@@ -833,7 +844,8 @@ define([
                                 $("html, body").animate({scrollTop:820}, 'slow'); 
                                 $("#save_health_data").parent().hide();
                                 $("#edit_health_data").parent().show();
-                                $("#input_health_saved").val("1");
+                                $("#input_health_saved").attr("value","1");
+                                $("#input_json_health_saved").attr("value",json_data);
                                }
                             
         

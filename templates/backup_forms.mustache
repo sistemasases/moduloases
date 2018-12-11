@@ -1,7 +1,7 @@
  {{#data}} {{> block_ases/side_menu}} {{#backup_forms_bf}}
 <div class="container">
-  <h2>REPORTE DE BACKUP</h2>
-  <hr style="background-color: red; height: 1px; border: 0">
+  <h2 class="encabezado">REPORTE DE BACKUP</h2>
+
   <div class="row">
     <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 ">
       <input class= "info_backup" id="filtroCodigoUsuario" name="idFiltro" type="text" class="form-control" placeholder="Código de usuario"  >
@@ -74,15 +74,43 @@
       <input class="btn-danger" type="button" id="load_like" style=" width: 170px; height: 39px;margin-top: 0px;" value="Buscar">
     </div>
   </div>
-  
-
-
 
   <hr style="background-color: red; height: 1px; border: 0">
-  <div class="row">
-    <div id="div_table_forms">
+
+  <div class="panel panel-default" id="dwarehouse">
+    <div class="panel-heading">
+      <h4 class="panel-title">
+        <a data-toggle="collapse" href="#collapse_dwarehouse">
+              Reporte dwarehouse</a>
+      </h4>
+    </div>
+    <div id="collapse_dwarehouse" class="panel-collapse collapse">
+
+      <div class="row table_logs">
+        <div id="div_table_forms">
+        </div>
+      </div>
+            
     </div>
   </div>
+
+  <div class="panel panel-default" id="dwarehouse">
+      <div class="panel-heading">
+        <h4 class="panel-title">
+          <a data-toggle="collapse" href="#collapse_general_logs">
+                Reporte general logs</a>
+        </h4>
+      </div>
+      <div id="collapse_general_logs" class="panel-collapse collapse">
+        
+      <div class="row table_logs">
+        <div id="div_table_general_logs">
+        </div>
+      </div>
+
+      </div>
+    </div>
+  
 
 
   <div class="mymodal" id="modal_JSON" name="modal_JSON">
