@@ -54,7 +54,39 @@
 
     if( isset($input->function) && isset($input->params) ){
 
-        if( $input->function == "*" ){
+        if( $input->function == "create_incident" ){
+
+            /**
+             * details
+             * system_info
+             */
+            
+            if( count( $input->params ) == 2 ){
+
+                // Order of params
+                /**
+                 * user_id (moolde)
+                 * details
+                 * system_info
+                 */
+                
+                if( is_numeric( $input->params[0] ) ){
+                    
+                    echo json_encode( 
+                        array(
+                            "status_code" => 0,
+                            "error_message" => "",
+                            "data_response" => incident_create_incident( $USER->id, $input->params[0], $input->params[1] )
+                        )
+                    );
+                    
+                }else{
+                    return_with_code( -2 );
+                }
+
+            }else{
+                return_with_code( -2 );
+            }
 
         }else{
             // Function not defined
