@@ -72,6 +72,17 @@
                 background-color:whitesmoke;\
                 color:black;\
             }\
+            .inc_item{\
+                \
+            }\
+            .inc_item > i{\
+                float:left;\
+                margin-right:0.3em;\
+            }\
+            #old_inc_body{\
+                overflow-y: auto;\
+                height:130px;\
+            }\
           ';
 
             let div_ases_incident_system_box = '\
@@ -95,6 +106,7 @@
                     </div>\
                     <div id="new_inc">\
                         <span><strong>Registro de nueva incidencia</strong></span>\
+                        <input id="inc_title" class="form-control" placeholder="Título corto" type="text">\
                         <textarea id="inc_detail" class="form-control" name="" placeholder="Descripción detallada de la incidencia" cols="" rows="3"></textarea>\
                         <a id="inc_registrar" href="javascript:void(0)">Registrar</a>\
                     </div>\
@@ -102,6 +114,7 @@
                     <div id="old_inc">\
                         <span><strong>Incidencias previas</strong></span>\
                     </div>\
+                    <hr style="margin:5px;">\
                     <div id="old_inc_body">\
                     </div>\
                     <hr style="margin:5px;">\
@@ -131,8 +144,7 @@
            return {
                 init: function(){
 
-                    $(document).ready(function(){
-
+                    function loadIncidents(){
                         $.ajax({
                             method: "POST",
                             url: "../managers/incident_manager/incident_api.php",
@@ -143,12 +155,46 @@
                                 //console.log(response);
                                 let inc_list = "";
                                 response.data_response.forEach(function(element){
+
+                                    let status_color = {
+                                        solved:"#239f07",
+                                        waiting:"#ff9a00"
+                                    };
+
+                                    let status = JSON.parse( element.estados );
+                                    let last_status = {
+                                        change_order:-1,
+                                        status:""
+                                    };
+
+                                    status.forEach(function(e){
+                                        if( last_status.change_order < parseInt(e.change_order) ){
+                                            last_status = e;
+                                        }
+                                    });
+
+                                    let title = null;
+                                    let comments = JSON.parse( element.comentarios );
+
+                                    comments.forEach(function(e){
+                                        if( parseInt( e.message_number ) == 0 ){
+                                            title = e.message.title;
+                                            return;
+                                        }
+                                    });
+
+                                    console.log( last_status );
+
                                     inc_list  += '\
                                     <div class="inc_item col-xs-12 col-sm-12 col-md-12 col-lg-12">\
-                                        T#20'+element.id+'\
+                                        <i style="color:' + status_color[last_status.status] + '" class="glyphicon glyphicon-record" title="' + last_status.status + '"></i>\
+                                        <div class="">\
+                                            #20' + element.id + ' - ' + title + '\
+                                        </div>\
                                     </div>\
                                     ';
                                 });
+                                $("#old_inc_body").html( "" );
                                 $("#old_inc_body").append( inc_list );
                             },
                             error: function( XMLHttpRequest, textStatus, errorThrown ) {
@@ -156,6 +202,11 @@
                                 console.log( XMLHttpRequest );
                             }
                         });
+                    }
+
+                    $(document).ready(function(){
+
+                        loadIncidents();
 
                         setInterval(function(){ 
                             $("#inc_text").fadeOut(700); 
@@ -176,7 +227,10 @@
                     $(document).on("click", "#inc_registrar", function(){
 
                         let system_info = $("html").html();
-                        let detail = $("#inc_detail").val();
+                        let detail = {
+                            title:$("#inc_title").val(),
+                            commentary:$("#inc_detail").val()
+                        };
 
                         $.ajax({
                             method: "POST",
@@ -192,6 +246,7 @@
                                         'Se ha registrado correctamente la incidencia, ticket #20' + response.data_response,
                                         'success'
                                     );
+                                    loadIncidents();
                                 }else{
                                     swal(
                                         'Error!',
