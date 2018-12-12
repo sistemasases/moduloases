@@ -166,7 +166,6 @@
 
 .ajuste-btn, .ajuste-btn:focus{
     height: 30px !important;
-    paddint: 0px !important;
     background-color: #d51b23 !important;
     border-color: #d43f3a !important;
     border-radius: 0px;
