@@ -211,8 +211,8 @@ function create_menu_options($userid, $blockid, $courseid)
                     'instanceid' => $blockid,
                 ));
 
-                $menu_options = '<li><a href= "' . $url . '"> Reportes por estudiante </a><li>';
-                $indexed['Reportes por estudiante'] = $menu_options;
+                $menu_options = '<li><a href= "' . $url . '"> Reportes notas por items </a><li>';
+                $indexed['Reportes notas por items'] = $menu_options;
 
             }
             if ($function == 'report_active_semesters') {
@@ -221,8 +221,8 @@ function create_menu_options($userid, $blockid, $courseid)
                     'instanceid' => $blockid,
                 ));
 
-                $menu_options = '<li><a href= "' . $url . '"> Reporte de semestres activos </a><li>';
-                $indexed['Reporte de semestres activos'] = $menu_options;
+                $menu_options = '<li><a href= "' . $url . '"> Reporte deserción </a><li>';
+                $indexed['Reporte deserción'] = $menu_options;
 
             }
             if ($function == 'historic_academic_reports') {
