@@ -15,22 +15,12 @@
                         <h3>Lista de incidencias</h3>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="inc_item col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                        Ticket #15
+                <div class="inc_item_container row">
+                    {{#incidents}}
+                    <div class="inc_item {{#cerrada}}inc_item_closed{{/cerrada}}{{^cerrada}}inc_item_open{{/cerrada}} col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                        Ticket #{{id}} - {{title}}
                     </div>
-                    <div class="inc_item col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                        Ticket #16
-                    </div>
-                    <div class="inc_item col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                        Ticket #17
-                    </div>
-                    <div class="inc_item col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                        Ticket #18
-                    </div>
-                    <div class="inc_item col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                        Ticket #19
-                    </div>
+                    {{/incidents}}
                 </div>
             </div>
             <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9">
@@ -40,7 +30,13 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <div class="inc_title col-xs-12 col-sm-12 col-md-12 col-lg-12">
+
+                    </div>
+                    <div class="inc_detail col-xs-12 col-sm-12 col-md-12 col-lg-12">
+
+                    </div>
+                    <div class="inc_message col-xs-12 col-sm-12 col-md-12 col-lg-12">
 
                     </div>
                 </div>

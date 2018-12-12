@@ -1,3 +1,30 @@
 .inc_item{
-    
+    padding: 0.3em;
+    font-size: 1.1em;
+    cursor: pointer;
+    margin-bottom: 3px;
+}
+
+.inc_item:hover{
+    background-color: whitesmoke;
+}
+
+.inc_item_closed{
+    background-color: #d8d8d8;
+    border-bottom: 2px solid #d8d8d8;
+}
+.inc_item_closed:hover{
+    border-bottom: 2px solid gray;
+}
+
+.inc_item_open{
+    border-bottom: 2px solid #d8d8d8;
+}
+.inc_item_open:hover{
+    border-bottom: 2px solid #d8d8d8;
+}
+
+.inc_item_container{
+    overflow-y: auto;
+    height: 400px;
 }
