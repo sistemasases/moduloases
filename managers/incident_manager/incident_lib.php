@@ -142,4 +142,19 @@ function incident_get_all_incidents(){
     return $records;
 }
 
+function incident_get_incident( $id ){
+    
+    global $DB;
+
+    if( !is_numeric( $id ) ){
+        return null;
+    }
+
+    $sql = "SELECT * 
+    FROM {talentospilos_incidencias}
+    WHERE id = '$id";
+
+    return $DB->get_record_sql( $sql );
+}
+
 ?>
