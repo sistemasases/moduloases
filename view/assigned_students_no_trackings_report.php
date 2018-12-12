@@ -98,8 +98,6 @@ $PAGE->requires->css('/blocks/ases/style/side_menu_style.css', true);
 $PAGE->requires->css('/blocks/ases/style/assigned_students_no_trackings_report.css', true);
 
 $PAGE->requires->js_call_amd('block_ases/assigned_students_no_trackings_report', 'init');
-//JS file needed to highlight the menu item of the current page
-$PAGE->requires->js_call_amd('block_ases/side_menu_main', 'init');
 
 $output = $PAGE->get_renderer('block_ases');
 $no_trackings_report = new \block_ases\output\assigned_students_no_trackings_report_page($data);
