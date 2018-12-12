@@ -54,7 +54,7 @@ define([
             var CODIGO_COLUMN = 'codigo';
             var NOMBRE_COLUMN= 'nombre';
             var NUM_DOC_COLUMN = 'num_doc';
-            var tfoot_first_row_title_prefix = 'Total activos SRA';
+            var tfoot_first_row_title_prefix = 'Total activos';
             var known_columns = [CODIGO_COLUMN, NOMBRE_COLUMN, NUM_DOC_COLUMN];
             /** go to ficha general on click **/
             $(document).on('click', '#tableActiveSemesters tbody tr td', function () {
@@ -75,7 +75,14 @@ define([
              * correspond to one semester (see semesters)
              */
             var ResumeReport = (function () {
-               function ResumeReport(semesters) {
+                /**
+                 * Constructor
+                 * @param semesters {array} Semester names
+                 * @param total_students {number} Students quantity
+                 * @constructor
+                 */
+               function ResumeReport(semesters, total_students) {
+                   this.total_students = total_students? total_students: 0;
                    semesters.forEach((value) => {
                         this[value] = 0;
                    });
@@ -102,12 +109,12 @@ define([
                 }
                 return filter_column_indexes;
             }
-            function init_tfoot_from_report(resume_report /* Resume Report */, semesters, cohort_name) {
-                /* Init first cell of tfoot*/
-                $('#tableActiveSemesters tfoot th')[0].textContent= tfoot_first_row_title_prefix + ' ' + cohort_name;
-                /* In column name, and num_doc nothing should be was showed*/
-                $('#tableActiveSemesters tfoot th.'+NOMBRE_COLUMN).html('');
-                $('#tableActiveSemesters tfoot th.'+NUM_DOC_COLUMN).html('');
+            function init_tfoot_from_report(resume_report /* Resume Report */, semesters, cohort_id) {
+                /* All the cells of tfoot should have no text at start*/
+                $('#tableActiveSemesters tfoot th').html('');
+                /* Add the first cell of tfoot title */
+                $('#tableActiveSemesters tfoot th')[0].textContent= tfoot_first_row_title_prefix + ' ' + cohort_id;
+                /* Add the total active students in each semester at tfoot */
                 semesters.forEach(function(semester) {
                     $('#tableActiveSemesters tfoot th.'+semester).html(resume_report[semester]);
                 });
@@ -124,7 +131,7 @@ define([
                 /* Check tan all the knowed columns are in the given columns*/
                 return columns.filter(value => -1 !== known_columns.indexOf(value)).length === known_columns.length;
             }
-            function init_datatable (cohort_id, cohort_name) {
+            function init_datatable (cohort_id) {
                 var url = '../managers/report_active_semesters/report_active_semesters_api.php/' + instance_id;
                 var post_info = {
                     function: 'data_table',
@@ -143,9 +150,9 @@ define([
                         var dataTable = dataFromApi.dataTable;
                         semesters = dataFromApi.semesters;
                         var column_names = dataTable.columns.map( column => column.name );
-                        resume_report = new ResumeReport(semesters);
+                        var total_students = dataTable.data.length;
+                        resume_report = new ResumeReport(semesters, total_students);
                         resume_report.init_from_data(dataTable.data, semesters);
-                        console.log(resume_report['2015A']);
                         /* Put a class to each cell than have the 'SI' value, see
                         * https://datatables.net/reference/option/rowCallback */
                         dataTable.rowCallback =  function(row, data, index) {
@@ -198,7 +205,7 @@ define([
                             $('<tfoot/>').append( $("#tableActiveSemesters thead tr").clone() )
                         );
                         /* Init resume in tfoot*/
-                        init_tfoot_from_report(resume_report, semesters, cohort_name);
+                        init_tfoot_from_report(resume_report, semesters, cohort_id);
                         if(!validate_known_columns(column_names, known_columns)) {
                             console.error(' Las columnas dadas no coinciden con las columnas conocidas.',
                                 'columnas daads:', column_names,
@@ -216,14 +223,12 @@ define([
             /*After each cohort select change, the table should be updated*/
             $('#cohorts').change(function() {
                 var cohort_id = $('#cohorts option:selected').val();
-                var cohort_name = $('#cohorts option:selected').text();
-                $('#tableActiveSemesters tfoot th')[0].textContent= tfoot_first_row_title_prefix + ' ' + cohort_name;
-                init_datatable(cohort_id, cohort_name);
+                $('#tableActiveSemesters tfoot th')[0].textContent= tfoot_first_row_title_prefix + ' ' + cohort_id;
+                init_datatable(cohort_id);
             });
             /* First table init */
             var cohort_id = $('#cohorts option:selected').val();
-            var cohort_name = $('#cohorts option:selected').text();
-            init_datatable(cohort_id, cohort_name);
+            init_datatable(cohort_id);
 
 
 
