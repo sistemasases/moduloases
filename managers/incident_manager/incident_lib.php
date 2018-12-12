@@ -29,6 +29,10 @@ function incident_create_incident( $user_id, $details, $system_info ){
 
     global $DB;
 
+    if( !$DB->get_record_sql( "SELECT id FROM {user} WHERE id = '$user_id'" ) ){
+        return null;
+    }
+
     $obj_incident = new stdClass();
     $obj_incident->id_usuario_registra = (int) $user_id;
     $obj_incident->id_usuario_cierra = null;
@@ -51,13 +55,13 @@ function incident_get_user_incidents( $user_id ){
     
     global $DB;
 
-    if( !$user_id ){
+    if( !$user_id || !$DB->get_record_sql( "SELECT id FROM {user} WHERE id = '$user_id'" ) ){
         return null;
     }
 
     $sql = "SELECT * 
     FROM {talentospilos_incidencias} 
-    WHERE id_usuario_registra = '$user_id'
+    WHERE id_usuario_registra = '$user_id' AND cerrada = 0
     ORDER BY fecha_hora_registro DESC";
 
     return $DB->get_records_sql( $sql );
@@ -68,6 +72,40 @@ function incident_get_logged_user_incidents(){
     global $USER;
 
     return incident_get_user_incidents( $USER->id );
+}
+
+function incident_close_incident( $id, $closed_by_user_id ){
+    
+    global $DB;
+    
+    if( !$id || !$closed_by_user_id || !$DB->get_record_sql( "SELECT id FROM {user} WHERE id = '$closed_by_user_id'" ) ){
+        return null;
+    }
+  
+    $sql = "SELECT * 
+    FROM {talentospilos_incidencias} 
+    WHERE id = '$id'";
+
+    $record = $DB->get_record_sql( $sql );
+    
+    if( $record ){
+
+        $record->id_usuario_cierra = $closed_by_user_id;
+        $record->cerrada = 1;
+        return $DB->update_record( 'talentospilos_incidencias', $record, $bulk=false );
+
+    }else{
+        return null;
+    }
+
+}
+
+function incident_close_logged_user_incident( $id ){
+
+    global $USER;
+
+    return incident_close_incident( $id, $USER->id );
+
 }
 
 ?>
