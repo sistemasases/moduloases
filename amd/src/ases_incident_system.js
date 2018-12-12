@@ -140,23 +140,11 @@
    
            console.log( "ases_incident_system loaded" );
 
-           const getCircularReplacer = () => {
-            const seen = new WeakSet();
-            return (key, value) => {
-              if (typeof value === "object" && value !== null) {
-                if (seen.has(value)) {
-                  return;
-                }
-                seen.add(value);
-              }
-              return value;
-            };
-          };
-
            return {
                 init: function(){
 
                     function loadIncidents(){
+                        li.show();
                         $.ajax({
                             method: "POST",
                             url: "../managers/incident_manager/incident_api.php",
@@ -164,7 +152,7 @@
                             dataType: "json",
                             data: JSON.stringify({"function":"get_logged_user_incidents", "params":[]}) ,
                             success: function( response ){
-                                //console.log(response);
+                                li.hide();
                                 let inc_list = "";
                                 response.data_response.forEach(function(element){
 
@@ -186,11 +174,13 @@
                                     });
 
                                     let title = null;
+                                    let detail = null;
                                     let comments = JSON.parse( element.comentarios );
 
                                     comments.forEach(function(e){
                                         if( parseInt( e.message_number ) == 0 ){
                                             title = e.message.title;
+                                            detail = e.message.commentary;
                                             return;
                                         }
                                     });
@@ -206,7 +196,7 @@
                                     <div class="inc_item col-xs-12 col-sm-12 col-md-12 col-lg-12">\
                                         <i class="status-icon glyphicon glyphicon-record" style="color:' + status_color[last_status.status] + '" title="' + last_status.status + '"></i>\
                                         '+ close_icon +'\
-                                        <div class="item-title">#' + element.id + ' - ' + title + '</div>\
+                                        <div class="item-title" data-id="' + element.id + '" data-title="' + title + '" data-detail="' + detail + '">#' + element.id + ' - ' + title + '</div>\
                                     </div>\
                                     ';
                                 });
@@ -214,6 +204,7 @@
                                 $("#old_inc_body").append( inc_list );
                             },
                             error: function( XMLHttpRequest, textStatus, errorThrown ) {
+                                li.hide();
                                 console.log( "some error " + textStatus + " " + errorThrown );
                                 console.log( XMLHttpRequest );
                             }
@@ -240,6 +231,21 @@
                         $("#ases_incident_system_box").show(100);
                     });
 
+                    $(document).on("click",".item-title", function(){
+
+                        let ticket_id = $(this).data("id");
+                        let _title = $(this).data("title");
+                        let detail = $(this).data("detail");
+
+                        swal({
+                            html:true,
+                            title: 'Ticket #' + ticket_id,
+                            text: '<span style="font-size:1.5em;">'+ _title +'</span><br><br>\
+                                   <strong>Detalle:</strong>'+ detail +'<br>',
+                            type: 'info'
+                          });
+                    });
+
                     $(document).on("click",".remove-icon", function(){
                         
                         let incident_id = $(this).data('id');
@@ -253,6 +259,7 @@
                             confirmButtonText: 'Sí, cerrar!'
                           }, function(isConfirm) {
                             if (isConfirm) {
+                                li.show();
                                 $.ajax({
                                     method: "POST",
                                     url: "../managers/incident_manager/incident_api.php",
@@ -260,6 +267,7 @@
                                     dataType: "json",
                                     data: JSON.stringify({"function":"close_logged_user_incident", "params":[ incident_id ]}) ,
                                     success: function( response ){
+                                        li.hide();
                                         loadIncidents();
                                         if( response.status_code === 0 ){
                                             swal(
@@ -276,6 +284,7 @@
                                         }
                                     },
                                     error: function( XMLHttpRequest, textStatus, errorThrown ) {
+                                        li.hide();
                                         console.log( "some error " + textStatus + " " + errorThrown );
                                         console.log( XMLHttpRequest );
                                     }
@@ -294,6 +303,7 @@
                         };
 
                         if( (detail.title != "") && (detail.commentary != "") ){
+                            li.show();
                             $.ajax({
                                 method: "POST",
                                 url: "../managers/incident_manager/incident_api.php",
@@ -301,11 +311,11 @@
                                 dataType: "json",
                                 data: JSON.stringify({"function":"create_incident", "params":[ detail, system_info ]}) ,
                                 success: function( response ){
-                                    console.log(response);
+                                    li.hide();
                                     if( response.status_code === 0 ){
                                         swal(
                                             'Éxito!',
-                                            'Se ha registrado correctamente la incidencia, ticket #20' + response.data_response,
+                                            'Se ha registrado correctamente la incidencia, ticket #' + response.data_response,
                                             'success'
                                         );
                                         loadIncidents();
@@ -318,6 +328,7 @@
                                     }
                                 },
                                 error: function( XMLHttpRequest, textStatus, errorThrown ) {
+                                    li.hide();
                                     console.log( "some error " + textStatus + " " + errorThrown );
                                     console.log( XMLHttpRequest );
                                 }
