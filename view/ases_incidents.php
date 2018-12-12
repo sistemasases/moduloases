@@ -86,7 +86,7 @@ $PAGE->requires->css('/blocks/ases/js/select2/css/select2.css', true);
 $PAGE->requires->css('/blocks/ases/style/side_menu_style.css', true);
 $PAGE->requires->css('/blocks/ases/style/ases_incidents.css', true);
 
-//$PAGE->requires->js_call_amd('block_ases/ases_incident_manager', 'init');
+$PAGE->requires->js_call_amd('block_ases/ases_incident_manager', 'init');
 
 $output = $PAGE->get_renderer('block_ases');
 
