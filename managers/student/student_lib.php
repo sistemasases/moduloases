@@ -32,6 +32,7 @@ use function array_search;
  * ### Fields returned
  * - mdl_cohort_members_id
  * - mdl_talentospilos_usuario_id
+ * - cancela: posible values: 'SI', 'NO'
  * - codigo -- Alias for mdl_user.username
  * - mdl_user.firstname
  * - mdl_talentospilos_history_academ_id
@@ -56,6 +57,8 @@ select
        mdl_talentospilos_history_academ.id AS mdl_talentospilos_history_academ_id ,
        mdl_cohort_members.id as mdl_cohort_members_id,
        mdl_talentospilos_usuario.num_doc, 
+              (case when mdl_talentospilos_history_academ.id   in (select id_history from mdl_talentospilos_history_cancel)
+                        then 'SI' else 'NO' end) as cencela,
        mdl_talentospilos_usuario.id as mdl_talentospilos_usuario_id,
        username as codigo,
        firstname,
@@ -76,8 +79,7 @@ from mdl_talentospilos_history_academ
       on mdl_cohort_members.cohortid = mdl_talentospilos_inst_cohorte.id_cohorte
     inner join mdl_cohort
       on mdl_cohort.id = mdl_talentospilos_inst_cohorte.id_cohorte
-     where mdl_talentospilos_history_academ.id not in (select id_history from mdl_talentospilos_history_cancel)
-and mdl_talentospilos_inst_cohorte.id_instancia = $id_instance
+     where mdl_talentospilos_inst_cohorte.id_instancia = $id_instance
 and mdl_cohort.idnumber = '$ases_cohort_id'
 SQL;
     return $DB->get_records_sql($sql);
@@ -128,20 +130,28 @@ class ActiveSemestersReportField {
  */
 
 function get_active_semesters($id_instance, $cohort_id) {
+    $semester_is_canceled ='SI';
     $active_semesters_report_fields = array();
     $students_with_active_semesters  = get_active_semesters_db($id_instance, $cohort_id);
     foreach ($students_with_active_semesters as $students_with_active_semester) {
         $talentos_usuario_id = $students_with_active_semester->mdl_talentospilos_usuario_id;
         $num_doc = $students_with_active_semester->num_doc;
         $nombre_semestre =  $students_with_active_semester->mdl_talentospilos_semestre_nombre;
+        $cancel_semester = $students_with_active_semester->cancela;
+
         if(array_key_exists($talentos_usuario_id, $active_semesters_report_fields)) {
             /** @var  $active_semesters_report_field ActiveSemestersReportField*/
-            $active_semesters_report_fields[$talentos_usuario_id]->add_active_semester($nombre_semestre);
+            if( !($cancel_semester === $semester_is_canceled)) {
+                $active_semesters_report_fields[$talentos_usuario_id]->add_active_semester($nombre_semestre);
+            }
+
         } else {
             $codigo = $students_with_active_semester->codigo;
             $nombre = $students_with_active_semester->firstname . ' ' . $students_with_active_semester->lastname;
             $active_semesters_report_field = new ActiveSemestersReportField($codigo, $nombre, $talentos_usuario_id,  $num_doc);
-            $active_semesters_report_field->add_active_semester($nombre_semestre);
+            if( !($cancel_semester === $semester_is_canceled)) {
+                $active_semesters_report_field->add_active_semester($nombre_semestre);
+            }
             $active_semesters_report_fields[$talentos_usuario_id]  = $active_semesters_report_field;
         }
     }
