@@ -23,7 +23,6 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 require_once(dirname(__FILE__). '/../../../../config.php');
-require_once $CFG->dirroot.'/blocks/ases/managers/incident_manager/incident_lib.php';
 
 function incident_create_incident( $user_id, $details, $system_info ){
 
@@ -123,15 +122,24 @@ function incident_close_logged_user_incident( $id ){
 
 }
 
-function incident_get_all_incidents( ){
+function incident_get_all_incidents(){
     
     global $DB;
 
     $sql = "SELECT * 
     FROM {talentospilos_incidencias}
     ORDER BY cerrada ASC, fecha_hora_registro DESC";
+    
+    $records = $DB->get_records_sql( $sql );
+    foreach( $records as $key => $record ){
 
-    return $DB->get_records_sql( $sql );
+        $info = json_decode( $record->comentarios )[0];
+
+        $record->title = $info->message->title;
+        $record->detail = $info->message->commentary;
+    }
+
+    return $records;
 }
 
 ?>
