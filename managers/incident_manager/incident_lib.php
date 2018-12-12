@@ -29,10 +29,14 @@ function incident_create_incident( $user_id, $details, $system_info ){
 
     global $DB;
 
+    if( !$DB->get_record_sql( "SELECT id FROM {user} WHERE id = '$user_id'" ) ){
+        return null;
+    }
+
     $obj_incident = new stdClass();
     $obj_incident->id_usuario_registra = (int) $user_id;
     $obj_incident->id_usuario_cierra = null;
-    $obj_incident->estados = '[ { "change_order":"0", "status":"waiting" } ]';
+    $obj_incident->estados = '[{"change_order":0,"status":"waiting"}]';
     $obj_incident->info_sistema = $system_info;
     $obj_incident->comentarios = json_encode([ 
         [ 
@@ -51,7 +55,7 @@ function incident_get_user_incidents( $user_id ){
     
     global $DB;
 
-    if( !$user_id ){
+    if( !$user_id || !$DB->get_record_sql( "SELECT id FROM {user} WHERE id = '$user_id'" ) ){
         return null;
     }
 
@@ -68,6 +72,55 @@ function incident_get_logged_user_incidents(){
     global $USER;
 
     return incident_get_user_incidents( $USER->id );
+}
+
+function incident_close_incident( $id, $closed_by_user_id ){
+    
+    global $DB;
+    
+    if( !$id || !$closed_by_user_id || !$DB->get_record_sql( "SELECT id FROM {user} WHERE id = '$closed_by_user_id'" ) ){
+        return null;
+    }
+  
+    $sql = "SELECT * 
+    FROM {talentospilos_incidencias} 
+    WHERE id = '$id'";
+
+    $record = $DB->get_record_sql( $sql );
+    
+    if( $record ){
+
+        $status = json_decode( $record->estados );
+        $new_status = new stdClass();
+        $new_status->change_order = -1;
+        $new_status->status = "solved";
+        
+        foreach( $status as $key => $element ){
+            if( $new_status->change_order <= $element->change_order ){
+                $new_status->change_order = $element->change_order;
+            }
+        }
+        $new_status->change_order++;
+
+        array_push( $status, $new_status );
+
+        $record->estados = json_encode( $status );
+        $record->id_usuario_cierra = $closed_by_user_id;
+        $record->cerrada = 1;
+        return $DB->update_record( 'talentospilos_incidencias', $record, $bulk=false );
+
+    }else{
+        return null;
+    }
+
+}
+
+function incident_close_logged_user_incident( $id ){
+
+    global $USER;
+
+    return incident_close_incident( $id, $USER->id );
+
 }
 
 ?>
