@@ -23,5 +23,5 @@
     flex-grow: 1;
 }
 td.no_active_semester {
-    background-color: #5aafad;
+    background-color: #5aafad!important;
 }

@@ -136,7 +136,7 @@ define([
                             $(semesters).each(
                                 function (index_, value) {
                                     if (data[value] === "SI") {
-                                        $("td." + value , row).addClass("no_active_semester");
+                                        $("td." + value , row).addClass("active_semester");
                                     }
                                 }
                             );
