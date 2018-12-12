@@ -22,6 +22,17 @@
 .report_active_semesters .spacer {
     flex-grow: 1;
 }
-td.no_active_semester {
-    background-color: #5aafad;
+/*
+Las columnas (de la 1 a la 3 -- index desde 1) son: codigo, nombre y numero documento, estos son links a la ficha estudiante
+*/
+#tableActiveSemesters td:nth-child(1),
+#tableActiveSemesters td:nth-child(2),
+#tableActiveSemesters td:nth-child(3){
+    text-decoration: underline;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+td.active_semester {
+    background-color: #5aafad!important;
 }

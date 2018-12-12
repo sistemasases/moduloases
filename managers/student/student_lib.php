@@ -32,6 +32,9 @@ use function array_search;
  * ### Fields returned
  * - mdl_cohort_members_id
  * - mdl_talentospilos_usuario_id
+ * - cancela: bool
+ * - tracking_status,
+ * - cambio_carrera: bool
  * - codigo -- Alias for mdl_user.username
  * - mdl_user.firstname
  * - mdl_talentospilos_history_academ_id
@@ -55,8 +58,15 @@ function get_active_semesters_db($id_instance, $ases_cohort_id) {
 select
        mdl_talentospilos_history_academ.id AS mdl_talentospilos_history_academ_id ,
        mdl_cohort_members.id as mdl_cohort_members_id,
-       mdl_talentospilos_usuario.num_doc, 
-       mdl_talentospilos_usuario.id as mdl_talentospilos_usuario_id,
+       tracking_status,
+       mdl_talentospilos_usuario_outer.num_doc, 
+              (case when mdl_talentospilos_history_academ.id   in (select id_history from mdl_talentospilos_history_cancel)
+                        then 'SI' else 'NO' end) as cancela,
+             (case when 
+             (select count(*) from mdl_talentospilos_user_extended 
+             where mdl_talentospilos_user_extended.id_ases_user = mdl_talentospilos_usuario_outer.id) > 1
+                        then 'SI'  else 'NO' end) as cambio_carrera,
+       mdl_talentospilos_usuario_outer.id as mdl_talentospilos_usuario_id,
        username as codigo,
        firstname,
        lastname,
@@ -68,16 +78,15 @@ from mdl_talentospilos_history_academ
       on mdl_talentospilos_user_extended.id_ases_user = mdl_talentospilos_history_academ.id_estudiante
     inner join mdl_user
       on mdl_user.id = mdl_talentospilos_user_extended.id_moodle_user
-    inner join mdl_talentospilos_usuario
-      on mdl_talentospilos_usuario.id = mdl_talentospilos_user_extended.id_ases_user
+    inner join mdl_talentospilos_usuario as  mdl_talentospilos_usuario_outer
+      on mdl_talentospilos_usuario_outer.id = mdl_talentospilos_user_extended.id_ases_user
     inner join mdl_cohort_members
       on mdl_cohort_members.userid = mdl_user.id
     inner join mdl_talentospilos_inst_cohorte
       on mdl_cohort_members.cohortid = mdl_talentospilos_inst_cohorte.id_cohorte
     inner join mdl_cohort
       on mdl_cohort.id = mdl_talentospilos_inst_cohorte.id_cohorte
-     where mdl_talentospilos_history_academ.id not in (select id_history from mdl_talentospilos_history_cancel)
-and mdl_talentospilos_inst_cohorte.id_instancia = $id_instance
+     where mdl_talentospilos_inst_cohorte.id_instancia = $id_instance
 and mdl_cohort.idnumber = '$ases_cohort_id'
 SQL;
     return $DB->get_records_sql($sql);
@@ -89,19 +98,26 @@ class ActiveSemestersReportField {
     public $nombre;
     public $talentos_usuario_id;
     public $num_doc;
+    public $ases_user_id;
+    public $cambio_carrera;
 /**
  * @var array $semestres_activos Array of string than identify the active semesters of a student
  *  Example: [2016A, 2016B ...]
  */
     public $semestres_activos;
-    public function __construct($codigo, $nombre, $talentos_usuario_id, $num_doc, $semestres_activos = array())
+    public function __construct($codigo, $nombre, $talentos_usuario_id, $num_doc, $ases_user_id, $cambio_carrera = false, $semestres_activos = array())
     {
         $this->codigo = $codigo;
         $this->talentos_usuario_id = $talentos_usuario_id;
         $this->nombre = $nombre;
+        $this->ases_user_id = $ases_user_id;
+        $this->cambio_carrera = $cambio_carrera;
         $this->num_doc = $num_doc;
         $this->semestres_activos = $semestres_activos;
     }
+
+
+
     /**
      * Add active semester to current report
      * @param string $active_semester
@@ -128,20 +144,30 @@ class ActiveSemestersReportField {
  */
 
 function get_active_semesters($id_instance, $cohort_id) {
+    $semester_is_canceled = 'SI';
     $active_semesters_report_fields = array();
     $students_with_active_semesters  = get_active_semesters_db($id_instance, $cohort_id);
     foreach ($students_with_active_semesters as $students_with_active_semester) {
         $talentos_usuario_id = $students_with_active_semester->mdl_talentospilos_usuario_id;
         $num_doc = $students_with_active_semester->num_doc;
         $nombre_semestre =  $students_with_active_semester->mdl_talentospilos_semestre_nombre;
+        $cancel_semester = $students_with_active_semester->cancela;
+        $cambio_carrera = $students_with_active_semester->cambio_carrera;
+        $ases_user_id = $students_with_active_semester->mdl_talentospilos_usuario_id;
         if(array_key_exists($talentos_usuario_id, $active_semesters_report_fields)) {
-            /** @var  $active_semesters_report_field ActiveSemestersReportField*/
-            $active_semesters_report_fields[$talentos_usuario_id]->add_active_semester($nombre_semestre);
+
+            if( !($cancel_semester === $semester_is_canceled)) {
+                /** @var  $active_semesters_report_fields[$talentos_usuario_id] ActiveSemestersReportField*/
+                $active_semesters_report_fields[$talentos_usuario_id]->add_active_semester($nombre_semestre);
+            }
+
         } else {
             $codigo = $students_with_active_semester->codigo;
             $nombre = $students_with_active_semester->firstname . ' ' . $students_with_active_semester->lastname;
-            $active_semesters_report_field = new ActiveSemestersReportField($codigo, $nombre, $talentos_usuario_id,  $num_doc);
-            $active_semesters_report_field->add_active_semester($nombre_semestre);
+            $active_semesters_report_field = new ActiveSemestersReportField($codigo, $nombre, $talentos_usuario_id,  $num_doc, $ases_user_id, $cambio_carrera);
+            if( !($cancel_semester === $semester_is_canceled)) {
+                $active_semesters_report_field->add_active_semester($nombre_semestre);
+            }
             $active_semesters_report_fields[$talentos_usuario_id]  = $active_semesters_report_field;
         }
     }

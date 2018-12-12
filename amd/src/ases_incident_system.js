@@ -15,9 +15,10 @@
     [
         'jquery', 
         'block_ases/sweetalert', 
-        'block_ases/jqueryui'
+        'block_ases/jqueryui',
+        'block_ases/loading_indicator'
        ], 
-        function($, sweetalert, jqueryui ) {
+        function($, sweetalert, jqueryui, li ) {
 
             let style='\
             #ases_incident_system_box {\
@@ -72,6 +73,27 @@
                 background-color:whitesmoke;\
                 color:black;\
             }\
+            .inc_item{\
+                cursor:pointer;\
+            }\
+            .inc_item > .status-icon{\
+                float:left;\
+                margin-right:0.3em;\
+            }\
+            .inc_item > .remove-icon{\
+                float:right;\
+                color:gray\
+            }\
+            .inc_item > .remove-icon:hover{\
+                color:black\
+            }\
+            .inc_item:hover{\
+                background-color:whitesmoke;\
+            }\
+            #old_inc_body{\
+                overflow-y: auto;\
+                height:130px;\
+            }\
           ';
 
             let div_ases_incident_system_box = '\
@@ -95,13 +117,16 @@
                     </div>\
                     <div id="new_inc">\
                         <span><strong>Registro de nueva incidencia</strong></span>\
-                        <textarea id="inc_detail" class="form-control" name="" placeholder="Descripción detallada de la incidencia" cols="" rows="3"></textarea>\
+                        <hr style="margin:5px;">\
+                        <input id="inc_title" class="form-control" placeholder="Título corto" type="text">\
+                        <textarea id="inc_detail" class="form-control" name="" placeholder="Descripción detallada de la incidencia" cols="" rows="2"></textarea>\
                         <a id="inc_registrar" href="javascript:void(0)">Registrar</a>\
                     </div>\
                     <hr style="margin-bottom:5px;margin-top:50px;">\
                     <div id="old_inc">\
                         <span><strong>Incidencias previas</strong></span>\
                     </div>\
+                    <hr style="margin:5px;">\
                     <div id="old_inc_body">\
                     </div>\
                     <hr style="margin:5px;">\
@@ -115,24 +140,11 @@
    
            console.log( "ases_incident_system loaded" );
 
-           const getCircularReplacer = () => {
-            const seen = new WeakSet();
-            return (key, value) => {
-              if (typeof value === "object" && value !== null) {
-                if (seen.has(value)) {
-                  return;
-                }
-                seen.add(value);
-              }
-              return value;
-            };
-          };
-
            return {
                 init: function(){
 
-                    $(document).ready(function(){
-
+                    function loadIncidents(){
+                        li.show();
                         $.ajax({
                             method: "POST",
                             url: "../managers/incident_manager/incident_api.php",
@@ -140,22 +152,69 @@
                             dataType: "json",
                             data: JSON.stringify({"function":"get_logged_user_incidents", "params":[]}) ,
                             success: function( response ){
-                                //console.log(response);
+                                li.hide();
                                 let inc_list = "";
                                 response.data_response.forEach(function(element){
+
+                                    let status_color = {
+                                        solved:"#239f07",
+                                        waiting:"#ff9a00",
+                                        closed:"#000"
+                                    };
+
+                                    let status = JSON.parse( element.estados );
+                                    let last_status = {
+                                        change_order:-1,
+                                        status:""
+                                    };
+
+                                    status.forEach(function(e){
+                                        if( last_status.change_order < parseInt(e.change_order) ){
+                                            last_status = e;
+                                        }
+                                    });
+
+                                    let title = null;
+                                    let detail = null;
+                                    let comments = JSON.parse( element.comentarios );
+
+                                    comments.forEach(function(e){
+                                        if( parseInt( e.message_number ) == 0 ){
+                                            title = e.message.title;
+                                            detail = e.message.commentary;
+                                            return;
+                                        }
+                                    });
+
+
+                                    let close_icon = '';
+
+                                    if( last_status.status != "solved" ){
+                                        close_icon = '<i class="remove-icon glyphicon glyphicon-remove-sign" data-id="' + element.id + '" title="Eliminar"></i>';
+                                    }
+
                                     inc_list  += '\
                                     <div class="inc_item col-xs-12 col-sm-12 col-md-12 col-lg-12">\
-                                        T#20'+element.id+'\
+                                        <i class="status-icon glyphicon glyphicon-record" style="color:' + status_color[last_status.status] + '" title="' + last_status.status + '"></i>\
+                                        '+ close_icon +'\
+                                        <div class="item-title" data-id="' + element.id + '" data-title="' + title + '" data-detail="' + detail + '">#' + element.id + ' - ' + title + '</div>\
                                     </div>\
                                     ';
                                 });
+                                $("#old_inc_body").html( "" );
                                 $("#old_inc_body").append( inc_list );
                             },
                             error: function( XMLHttpRequest, textStatus, errorThrown ) {
+                                li.hide();
                                 console.log( "some error " + textStatus + " " + errorThrown );
                                 console.log( XMLHttpRequest );
                             }
                         });
+                    }
+
+                    $(document).ready(function(){
+
+                        loadIncidents();
 
                         setInterval(function(){ 
                             $("#inc_text").fadeOut(700); 
@@ -173,38 +232,115 @@
                         $("#ases_incident_system_box").show(100);
                     });
 
+                    $(document).on("click",".item-title", function(){
+
+                        let ticket_id = $(this).data("id");
+                        let _title = $(this).data("title");
+                        let detail = $(this).data("detail");
+
+                        swal({
+                            html:true,
+                            title: 'Ticket #' + ticket_id,
+                            text: '<span style="font-size:1.5em;">'+ _title +'</span><br><br>\
+                                   <strong>Detalle:</strong>'+ detail +'<br>',
+                            type: 'info'
+                          });
+                    });
+
+                    $(document).on("click",".remove-icon", function(){
+                        
+                        let incident_id = $(this).data('id');
+
+                        swal({
+                            html:true,
+                            title: 'Confirmación',
+                            text: "<strong>Nota importante!</strong>: Está cerrando una incidencia que aun no está resuelta.",
+                            type: 'warning',
+                            showCancelButton: true,
+                            confirmButtonText: 'Sí, cerrar!'
+                          }, function(isConfirm) {
+                            if (isConfirm) {
+                                li.show();
+                                $.ajax({
+                                    method: "POST",
+                                    url: "../managers/incident_manager/incident_api.php",
+                                    contentType: "application/json",
+                                    dataType: "json",
+                                    data: JSON.stringify({"function":"close_logged_user_incident", "params":[ incident_id ]}) ,
+                                    success: function( response ){
+                                        li.hide();
+                                        loadIncidents();
+                                        if( response.status_code === 0 ){
+                                            swal(
+                                                'Éxito!',
+                                                'Se ha cerrado correctamente la incidencia',
+                                                'success'
+                                            );
+                                        }else{
+                                            swal(
+                                                'Error!',
+                                                'Oops!: Al parece no existe la incidencia',
+                                                'error'
+                                            );
+                                        }
+                                    },
+                                    error: function( XMLHttpRequest, textStatus, errorThrown ) {
+                                        li.hide();
+                                        console.log( "some error " + textStatus + " " + errorThrown );
+                                        console.log( XMLHttpRequest );
+                                    }
+                                });
+                            }
+                        });
+
+                    });
+
                     $(document).on("click", "#inc_registrar", function(){
 
                         let system_info = $("html").html();
-                        let detail = $("#inc_detail").val();
+                        let detail = {
+                            title:$("#inc_title").val(),
+                            commentary:$("#inc_detail").val()
+                        };
 
-                        $.ajax({
-                            method: "POST",
-                            url: "../managers/incident_manager/incident_api.php",
-                            contentType: "application/json",
-                            dataType: "json",
-                            data: JSON.stringify({"function":"create_incident", "params":[ detail, system_info ]}) ,
-                            success: function( response ){
-                                console.log(response);
-                                if( response.status_code === 0 ){
-                                    swal(
-                                        'Éxito!',
-                                        'Se ha registrado correctamente la incidencia, ticket #20' + response.data_response,
-                                        'success'
-                                    );
-                                }else{
-                                    swal(
-                                        'Error!',
-                                        'Oops!: ' + response.data_response,
-                                        'error'
-                                    );
+                        if( (detail.title != "") && (detail.commentary != "") ){
+                            li.show();
+                            $.ajax({
+                                method: "POST",
+                                url: "../managers/incident_manager/incident_api.php",
+                                contentType: "application/json",
+                                dataType: "json",
+                                data: JSON.stringify({"function":"create_incident", "params":[ detail, system_info ]}) ,
+                                success: function( response ){
+                                    li.hide();
+                                    if( response.status_code === 0 ){
+                                        swal(
+                                            'Éxito!',
+                                            'Se ha registrado correctamente la incidencia, ticket #' + response.data_response,
+                                            'success'
+                                        );
+                                        loadIncidents();
+                                    }else{
+                                        swal(
+                                            'Error!',
+                                            'Oops!: ' + response.data_response,
+                                            'error'
+                                        );
+                                    }
+                                },
+                                error: function( XMLHttpRequest, textStatus, errorThrown ) {
+                                    li.hide();
+                                    console.log( "some error " + textStatus + " " + errorThrown );
+                                    console.log( XMLHttpRequest );
                                 }
-                            },
-                            error: function( XMLHttpRequest, textStatus, errorThrown ) {
-                                console.log( "some error " + textStatus + " " + errorThrown );
-                                console.log( XMLHttpRequest );
-                            }
-                        });
+                            });
+                        }else{
+                            swal(
+                                'Oops!',
+                                'Verifica que tanto el título como la descripción no estén vacíos.',
+                                'warning'
+                            );
+                        }
 
                     });
 

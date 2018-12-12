@@ -94,8 +94,6 @@ $PAGE->requires->css('/blocks/ases/style/side_menu_style.css', true);
 
 $PAGE->requires->js_call_amd('block_ases/upload_history_main','init');
 
-
-
 $PAGE->set_url($url);
 $PAGE->set_title($title);
 
