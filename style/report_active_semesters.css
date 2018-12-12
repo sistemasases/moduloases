@@ -22,6 +22,6 @@
 .report_active_semesters .spacer {
     flex-grow: 1;
 }
-td.no_active_semester {
+td.active_semester {
     background-color: #5aafad!important;
 }
