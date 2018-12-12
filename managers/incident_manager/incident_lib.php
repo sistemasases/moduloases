@@ -152,7 +152,7 @@ function incident_get_incident( $id ){
 
     $sql = "SELECT * 
     FROM {talentospilos_incidencias}
-    WHERE id = '$id";
+    WHERE id = '$id'";
 
     return $DB->get_record_sql( $sql );
 }
