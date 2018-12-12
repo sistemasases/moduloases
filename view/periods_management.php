@@ -106,8 +106,6 @@ $PAGE->requires->css('/blocks/ases/js/select2/css/select2.css', true);
 $PAGE->requires->css('/blocks/ases/style/side_menu_style.css', true);
 
 $PAGE->requires->js_call_amd('block_ases/periods_management_main', 'init');
-//JS file needed to highlight the menu item of the current page
-$PAGE->requires->js_call_amd('block_ases/side_menu_main', 'init');
 
 $output = $PAGE->get_renderer('block_ases');
 $index_page = new \block_ases\output\periods_management_page($data);
