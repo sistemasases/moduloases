@@ -8,36 +8,36 @@
                 <h2>Gestión de incidencias</h2>
             </div>
         </div>
-        <div class="row">
+        <div id="incidents_container" class="row">
             <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
-                <div class="row">
-                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                        <h3>Lista de incidencias</h3>
-                    </div>
+                <div class="title_list row">
+                    Lista de incidencias
+                    <hr>
                 </div>
                 <div class="inc_item_container row">
                     {{#incidents}}
-                    <div class="inc_item {{#cerrada}}inc_item_closed{{/cerrada}}{{^cerrada}}inc_item_open{{/cerrada}} col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <div data-id="{{id}}" class="inc_item {{#cerrada}}inc_item_closed{{/cerrada}}{{^cerrada}}inc_item_open{{/cerrada}} col-xs-12 col-sm-12 col-md-12 col-lg-12">
                         Ticket #{{id}} - {{title}}
                     </div>
                     {{/incidents}}
                 </div>
             </div>
             <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9">
-                <div class="row">
-                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                        <h3>Administración de incidencia</h3>
-                    </div>
-                </div>
-                <div class="row">
+                <div class="detail_container row">
                     <div class="inc_title col-xs-12 col-sm-12 col-md-12 col-lg-12">
-
+                        <div id="empty">
+                            Seleccione una incidencia
+                        </div>
                     </div>
                     <div class="inc_detail col-xs-12 col-sm-12 col-md-12 col-lg-12">
 
                     </div>
-                    <div class="inc_message col-xs-12 col-sm-12 col-md-12 col-lg-12">
-
+                    <div class="inc_opc">
+                        <a id="close_incident" data-id="-1" href="javascript:void(0)" class="btn btn-md btn-marcar-resuelta">Marcar como resuelta</a>
+                    </div>
+                    <div style="display:none;" class="inc_preview col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                        <h3><strong>Html capturado (Scripts inhabilitados):</strong></h3><hr style="margin:5px">
+                        <div class="preview col-xs-12 col-sm-12 col-md-12 col-lg-12"></div>
                     </div>
                 </div>
             </div>
