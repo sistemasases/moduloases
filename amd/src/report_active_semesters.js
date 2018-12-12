@@ -42,6 +42,7 @@ define([
              * {
              *     num_doc,
              *     codigo,
+             *     ases_user_id,
              *     nombre,
              *     [active_semesters]: [semesters codes, example: [2016A, 2016B ...]],
              * }
@@ -55,6 +56,20 @@ define([
             var NUM_DOC_COLUMN = 'num_doc';
             var tfoot_first_row_title_prefix = 'Total activos SRA';
             var known_columns = [CODIGO_COLUMN, NOMBRE_COLUMN, NUM_DOC_COLUMN];
+            /** go to ficha general on click **/
+            $(document).on('click', '#tableActiveSemesters tbody tr td', function () {
+                var pagina = "student_profile.php";
+                var table = $("#tableActiveSemesters").DataTable();
+                var colIndex = table.cell(this).index().column;
+                /* Las columnas (de la 0 a la 2 -- index desde 0) son: codigo, nombre,
+                 y numero de documento, estos son links a la ficha estudiante*/
+                if (colIndex>=0 && colIndex <=2) {
+                    var url = pagina + location.search + "&student_code=" + table.cell(table.row(this).index(), 0).data();
+                    var win = window.open(url, '_blank');
+                    win.focus();
+                }
+            });
+
             var semesters = []; /* Array of strings with the semesters names, ej. ['2015A', '2015B'...]*/
             /** Resume of active semester of all students, of course each property of this object
              * correspond to one semester (see semesters)

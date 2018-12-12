@@ -54,6 +54,7 @@ function _student_and_active_semesters_to_row($semester_names, $student_and_acti
     $row['num_doc'] = $student_and_active_semesters->num_doc;
     $row['nombre'] = $student_and_active_semesters->nombre;
     $row['codigo'] = $student_and_active_semesters->codigo;
+    $row['ases_user_id'] = $student_and_active_semesters->ases_user_id;
     return $row;
 }
 function _students_and_active_semesters_to_rows($semester_names, $students_and_active_semesters) {

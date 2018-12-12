@@ -91,16 +91,18 @@ class ActiveSemestersReportField {
     public $nombre;
     public $talentos_usuario_id;
     public $num_doc;
+    public $ases_user_id;
 /**
  * @var array $semestres_activos Array of string than identify the active semesters of a student
  *  Example: [2016A, 2016B ...]
  */
     public $semestres_activos;
-    public function __construct($codigo, $nombre, $talentos_usuario_id, $num_doc, $semestres_activos = array())
+    public function __construct($codigo, $nombre, $talentos_usuario_id, $num_doc, $ases_user_id, $semestres_activos = array())
     {
         $this->codigo = $codigo;
         $this->talentos_usuario_id = $talentos_usuario_id;
         $this->nombre = $nombre;
+        $this->ases_user_id = $ases_user_id;
         $this->num_doc = $num_doc;
         $this->semestres_activos = $semestres_activos;
     }
@@ -138,7 +140,7 @@ function get_active_semesters($id_instance, $cohort_id) {
         $num_doc = $students_with_active_semester->num_doc;
         $nombre_semestre =  $students_with_active_semester->mdl_talentospilos_semestre_nombre;
         $cancel_semester = $students_with_active_semester->cancela;
-
+        $ases_user_id = $students_with_active_semester->mdl_talentospilos_usuario_id;
         if(array_key_exists($talentos_usuario_id, $active_semesters_report_fields)) {
             /** @var  $active_semesters_report_field ActiveSemestersReportField*/
             if( !($cancel_semester === $semester_is_canceled)) {
@@ -148,7 +150,7 @@ function get_active_semesters($id_instance, $cohort_id) {
         } else {
             $codigo = $students_with_active_semester->codigo;
             $nombre = $students_with_active_semester->firstname . ' ' . $students_with_active_semester->lastname;
-            $active_semesters_report_field = new ActiveSemestersReportField($codigo, $nombre, $talentos_usuario_id,  $num_doc);
+            $active_semesters_report_field = new ActiveSemestersReportField($codigo, $nombre, $talentos_usuario_id,  $num_doc, $ases_user_id);
             if( !($cancel_semester === $semester_is_canceled)) {
                 $active_semesters_report_field->add_active_semester($nombre_semestre);
             }
