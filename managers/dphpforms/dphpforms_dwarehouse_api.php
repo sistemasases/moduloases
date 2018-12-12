@@ -120,7 +120,7 @@
             array_push($columns, array("title"=>"Fecha", "name"=>"fecha_act", "data"=>"fecha_act" ));
 
             if($_POST['loadF']=="loadGeneralLogs"){$retorno = get_list_general_logs();}
-                else if($_POST['loadF']=="get_like"){$retorno=get_like($_POST['cadena'],$_POST['atributo']);}
+                //else if($_POST['loadF']=="get_like_general_logs"){$retorno=get_like($_POST['cadena'],$_POST['atributo']);}
     
             $data = array(
                         "bsort" => false,
@@ -199,13 +199,27 @@
 
              //Get form data switch id form
 
-             $data = get_form_switch_id($_POST['params']);
+             $data = get_form_switch_id($_POST['params'], '{talentospilos_df_dwarehouse}' );
                     echo json_encode($data);
                     
             }else{     
                 return_with_code( -2 );
             }
-        } else if( $_POST['loadF'] == "get_values" ){
+        } else if( $_POST['loadF'] == "get_form_general_logs" ){
+            //Example of loadF: get_form_general_logs valid: 
+            //data: get_form_general_logs   params: id_form
+          
+            if( count($_POST['params']) == 1 ){
+
+             //Get form data switch id form
+
+             $data = get_form_switch_id($_POST['params'], '{talentospilos_general_logs}' );
+                    echo json_encode($data);
+                    
+            }else{     
+                return_with_code( -2 );
+            }
+        }else if( $_POST['loadF'] == "get_values" ){
             //Example of loadF: get_values valid: 
             //data: get_values   params: id_pregunta
           

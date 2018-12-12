@@ -58,7 +58,7 @@ function get_list_general_logs(){
  
     $sql = "SELECT talentospilos_general_logs.id AS id , talentospilos_general_logs.id_moodle_user,
                  _user.username AS username_ases_student, _user.firstname AS firstname, _user.lastname AS lastname,
-                 talentospilos_events_to_logs.name_event AS name_event,  talentospilos_general_logs.fecha_hora_registro AS fecha_act 
+                 talentospilos_events_to_logs.name_event AS name_event,  talentospilos_general_logs.fecha_registro AS fecha_act 
 	            FROM  {talentospilos_general_logs}  AS talentospilos_general_logs
 	                INNER JOIN {talentospilos_events_to_logs} AS talentospilos_events_to_logs  ON talentospilos_events_to_logs.id = talentospilos_general_logs.id_evento
 	                    INNER JOIN {talentospilos_user_extended} AS talentospilos_user_extended ON talentospilos_user_extended.id_ases_user = talentospilos_general_logs.id_ases_user AND talentospilos_user_extended.tracking_status = 1
@@ -78,12 +78,12 @@ function get_list_general_logs(){
  * @return array
  **/
 
-function get_form_switch_id($id_form){
+function get_form_switch_id($id_form, $table){
     global $DB;
   //id_usuario_moodle AS id_user, accion AS name_action, datos_previos AS datos_previos, datos_enviados AS datos_enviados, datos_almacenados AS datos_almacenados, 
 //  fecha_hora_registro AS fecha_form
 				
-    $sql = "SELECT * FROM {talentospilos_df_dwarehouse} AS dwarehouse WHERE dwarehouse.id = $id_form  ";
+    $sql = "SELECT * FROM $table AS dwarehouse WHERE dwarehouse.id = $id_form  ";
 
     $results = $DB->get_records_sql($sql);
   /*  foreach ($results as $record) {

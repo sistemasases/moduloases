@@ -61,6 +61,8 @@ if(isset($_POST['func'])){
         $navegador     =  $_SERVER['HTTP_USER_AGENT'];
         $url           =  $_SERVER['HTTP_REFERER'];
         $id_ases       =  $_POST['ases'];
+        $instanceid    =  $_POST['instanceid'];
+        $courseid      =  $COURSE->id;
 
         // Validate
         $validator = new  Validator;
@@ -94,6 +96,8 @@ if(isset($_POST['func'])){
                 $new_log->title_retorno      = $msg->title;
                 $new_log->msg_retorno        = $msg->status;
                 $new_log->status_retorno     = $msg->msg;
+                $new_log->instanceid         = $instanceid;
+                $new_log->courseid           = $courseid;
 
                 $DB->insert_record('talentospilos_general_logs', $new_log, $returnid=false, $bulk=false);
 
@@ -122,6 +126,8 @@ if(isset($_POST['func'])){
                $new_log->title_retorno      = $msg->title;
                $new_log->msg_retorno        = $msg->status;
                $new_log->status_retorno     = $msg->msg;
+               $new_log->instanceid         = $instanceid;
+               $new_log->courseid           = $courseid;
 
                $DB->insert_record('talentospilos_general_logs', $new_log, $returnid=false, $bulk=false);
 
@@ -169,6 +175,8 @@ if(isset($_POST['func'])){
             $eventoid      =  getIdEventLogs('save_economics_tab_sp');
             $navegador     =  $_SERVER['HTTP_USER_AGENT'];
             $url           =  $_SERVER['HTTP_REFERER'];
+            $instanceid    =  $_POST['instanceid'];
+            $courseid      =  $COURSE->id;
 
             $result =  save_economics_data($register_economics_data);
             if($result){
@@ -194,6 +202,8 @@ if(isset($_POST['func'])){
                $new_log->title_retorno      = $msg->title;
                $new_log->msg_retorno        = $msg->status;
                $new_log->status_retorno     = $msg->msg;
+               $new_log->instanceid         = $instanceid;
+               $new_log->courseid           = $courseid;
 
                $DB->insert_record('talentospilos_general_logs', $new_log, $returnid=false, $bulk=false);
 
@@ -222,6 +232,8 @@ if(isset($_POST['func'])){
                $new_log->title_retorno      = $msg->title;
                $new_log->msg_retorno        = $msg->status;
                $new_log->status_retorno     = $msg->msg;
+               $new_log->instanceid         = $instanceid;
+               $new_log->courseid           = $courseid;
 
                $DB->insert_record('talentospilos_general_logs', $new_log, $returnid=false, $bulk=false);
                echo json_encode($msg);
@@ -242,6 +254,8 @@ if(isset($_POST['func'])){
             $eventoid      =  getIdEventLogs('edit_economics_tab_sp');
             $navegador     =  $_SERVER['HTTP_USER_AGENT'];
             $url           =  $_SERVER['HTTP_REFERER'];
+            $instanceid    =  $_POST['instanceid'];
+            $courseid      =  $COURSE->id;
             
 
             $result =       update_economics_data($data, $id_ases);
@@ -267,6 +281,8 @@ if(isset($_POST['func'])){
                 $new_log->title_retorno      = $msg->title;
                 $new_log->msg_retorno        = $msg->status;
                 $new_log->status_retorno     = $msg->msg;
+                $new_log->instanceid         = $instanceid;
+                $new_log->courseid           = $courseid;
  
                 $DB->insert_record('talentospilos_general_logs', $new_log, true);
 
@@ -294,6 +310,8 @@ if(isset($_POST['func'])){
                     $new_log->title_retorno      = $msg->title;
                     $new_log->msg_retorno        = $msg->status;
                     $new_log->status_retorno     = $msg->msg;
+                    $new_log->instanceid         = $instanceid;
+                    $new_log->courseid           = $courseid;
      
                     $DB->insert_record('talentospilos_general_logs', $new_log, $returnid=false, $bulk=false);
 
@@ -322,6 +340,8 @@ if(isset($_POST['func'])){
               $eventoid      =  getIdEventLogs('save_salud_tab_sp');
               $navegador     =  $_SERVER['HTTP_USER_AGENT'];
               $url           =  $_SERVER['HTTP_REFERER'];
+              $instanceid    =  $_POST['instanceid'];
+              $courseid      =  $COURSE->id;
 
             $result =  save_health_data($register_health_data);
             if($result){
@@ -346,6 +366,8 @@ if(isset($_POST['func'])){
                  $new_log->title_retorno      = $msg->title;
                  $new_log->msg_retorno        = $msg->status;
                  $new_log->status_retorno     = $msg->msg;
+                 $new_log->instanceid         = $instanceid;
+                 $new_log->courseid           = $courseid;
   
                  $DB->insert_record('talentospilos_general_logs', $new_log, $returnid=false, $bulk=false);
 
@@ -373,6 +395,8 @@ if(isset($_POST['func'])){
                  $new_log->title_retorno      = $msg->title;
                  $new_log->msg_retorno        = $msg->status;
                  $new_log->status_retorno     = $msg->msg;
+                 $new_log->instanceid         = $instanceid;
+                 $new_log->courseid           = $courseid;
   
                  $DB->insert_record('talentospilos_general_logs', $new_log, $returnid=false, $bulk=false);
 
@@ -395,8 +419,7 @@ if(isset($_POST['func'])){
             $eventoid      =  getIdEventLogs('edit_salud_tab_sp');
             $navegador     =  $_SERVER['HTTP_USER_AGENT'];
             $url           =  $_SERVER['HTTP_REFERER'];
-            //REVISAR CAMBIOS
-            $instanceid    =  00000;
+            $instanceid    =  $_POST['instanceid'];
             $courseid      =  $COURSE->id;
 
             $result =       update_health_data($data, $id_ases);
@@ -450,6 +473,8 @@ if(isset($_POST['func'])){
                $new_log->title_retorno      = $msg->title;
                $new_log->msg_retorno        = $msg->status;
                $new_log->status_retorno     = $msg->msg;
+               $new_log->instanceid         = $instanceid;
+               $new_log->courseid           = $courseid;
 
                $DB->insert_record('talentospilos_general_logs', $new_log, $returnid=false, $bulk=false);
                echo json_encode($msg);

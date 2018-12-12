@@ -345,6 +345,7 @@ define([
                         func: 'edit_economics_data',
                         json: json_data, 
                         json_prev: json_prev,
+                        instanceid: getIdinstancia(),
                         ases: ases_id
                     },
                     url: "../managers/student_profile/discapacity_tab_api.php",
@@ -392,6 +393,7 @@ define([
                             func: 'save_economics_data',
                             json: json_data, 
                             json_prev: json_prev,
+                            instanceid: getIdinstancia(),
                             ases: ases_id
                         },
                         url: "../managers/student_profile/discapacity_tab_api.php",
@@ -783,6 +785,7 @@ define([
                             func: 'edit_health_data',
                             json: json_data, 
                             json_prev: json_prev,
+                            instanceid: getIdinstancia(),
                             ases: ases_id
                         },
                         url: "../managers/student_profile/discapacity_tab_api.php",
@@ -830,6 +833,7 @@ define([
                             func: 'save_health_data',
                             json: json_data, 
                             json_prev: json_prev,
+                            instanceid: getIdinstancia(),
                             ases: ases_id
                         },
                         url: "../managers/student_profile/discapacity_tab_api.php",
@@ -1087,6 +1091,18 @@ define([
                     for (i = 0; i < str.length; i++) {
                         if (numbers.indexOf(str.charAt(i), 0) != -1) {
                             return 1;
+                        }
+                    }
+                    return 0;
+                }
+
+                function getIdinstancia() {
+                    var urlParameters = location.search.split('&');
+        
+                    for (x in urlParameters) {
+                        if (urlParameters[x].indexOf('instanceid') >= 0) {
+                            var intanceparameter = urlParameters[x].split('=');
+                            return intanceparameter[1];
                         }
                     }
                     return 0;

@@ -66,14 +66,26 @@ define([
             });
 
             $(document).on('click', '#tableBackupForms tbody tr td', function () {
-                var valores = "";
+                let valores = "";
 
                 // Obtenemos la primer columna de la fila seleccionada
                 // seleccionada
                valores =  $(this).parents("tr").find("td:first").html();
                  
                // alert(valores);
-                get_only_form(valores);
+                get_only_form('get_form',valores);
+
+            });
+
+            $(document).on('click', '#tableBackupGeneralLogs tbody tr td', function () {
+                let valores = "";
+
+                // Obtenemos la primer columna de la fila seleccionada
+                // seleccionada
+               valores =  $(this).parents("tr").find("td:first").html();
+                 
+               // alert(valores);
+                get_only_form('get_form_general_logs',valores);
 
             });
 
@@ -412,6 +424,8 @@ define([
                 });
             }
 
+      
+
             function get_id_switch_user(cod_user, table) {
                 //Realizar la consulta del estudiante según el codigo ingresado
                 //Mostrar los resultados en pantalla
@@ -472,27 +486,26 @@ define([
                 });
             }
 
-
-            function get_only_form(id_form) {
+            
+            function get_only_form(func, id_form) {
                 //Get one form switch id
                 $.ajax({
                     type: "POST",
-                    data: { loadF: 'get_form', params: id_form },
+                    data: { loadF: func, params: id_form },
                     url: "../managers/dphpforms/dphpforms_dwarehouse_api.php",
                     dataType: "json",
                     cache: false,
                     async: true,
                     success: function (msg) {
-                        //msg.datos_previos = JSON.stringify(msg.datos_previos);
-                       
-                        // console.log(msg[id_form].datos_previos);
+                  
                         //Items of JSON are encode
-                        if(msg[id_form].datos_previos != "" ){
-                        msg[id_form].datos_previos = JSON.parse(msg[id_form].datos_previos);}
+                            if(msg[id_form].datos_previos != "" ){
+                            msg[id_form].datos_previos = JSON.parse(msg[id_form].datos_previos);}
                         if( msg[id_form].datos_enviados != "" ){
-                        msg[id_form].datos_enviados = JSON.parse(msg[id_form].datos_enviados);}
-                        if( msg[id_form].datos_almacenados != ""){
-                        msg[id_form].datos_almacenados = JSON.parse(msg[id_form].datos_almacenados);}
+                            msg[id_form].datos_enviados = JSON.parse(msg[id_form].datos_enviados);}
+                            if( msg[id_form].datos_almacenados != ""){
+                            msg[id_form].datos_almacenados = JSON.parse(msg[id_form].datos_almacenados);}
+                       
                         create_beautifyJSON(msg);
                     },
                     failure: function (msg) { }
