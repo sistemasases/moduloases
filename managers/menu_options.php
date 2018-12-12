@@ -318,6 +318,17 @@ function create_menu_options($userid, $blockid, $courseid)
 
             }
 
+            if ($function == 'incidents_manager') {
+                $url = new moodle_url("/blocks/ases/view/ases_incidents.php", array(
+                    'courseid' => $courseid,
+                    'instanceid' => $blockid,
+                ));
+
+                $menu_options = '<li><a href= "' . $url . '">Gestión de incidencias </a><li>';
+                $indexed['Gestión de incidencias'] = $menu_options;
+
+            }
+
 
         }
 
