@@ -158,7 +158,8 @@
 
                                     let status_color = {
                                         solved:"#239f07",
-                                        waiting:"#ff9a00"
+                                        waiting:"#ff9a00",
+                                        closed:"#000"
                                     };
 
                                     let status = JSON.parse( element.estados );

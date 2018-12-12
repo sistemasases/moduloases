@@ -36,7 +36,7 @@ function incident_create_incident( $user_id, $details, $system_info ){
     $obj_incident = new stdClass();
     $obj_incident->id_usuario_registra = (int) $user_id;
     $obj_incident->id_usuario_cierra = null;
-    $obj_incident->estados = '[ { "change_order":"0", "status":"waiting" } ]';
+    $obj_incident->estados = '[{"change_order":0,"status":"waiting"}]';
     $obj_incident->info_sistema = $system_info;
     $obj_incident->comentarios = json_encode([ 
         [ 
@@ -61,7 +61,7 @@ function incident_get_user_incidents( $user_id ){
 
     $sql = "SELECT * 
     FROM {talentospilos_incidencias} 
-    WHERE id_usuario_registra = '$user_id' AND cerrada = 0
+    WHERE id_usuario_registra = '$user_id'
     ORDER BY fecha_hora_registro DESC";
 
     return $DB->get_records_sql( $sql );
@@ -90,6 +90,21 @@ function incident_close_incident( $id, $closed_by_user_id ){
     
     if( $record ){
 
+        $status = json_decode( $record->estados );
+        $new_status = new stdClass();
+        $new_status->change_order = -1;
+        $new_status->status = "solved";
+        
+        foreach( $status as $key => $element ){
+            if( $new_status->change_order <= $element->change_order ){
+                $new_status->change_order = $element->change_order;
+            }
+        }
+        $new_status->change_order++;
+
+        array_push( $status, $new_status );
+
+        $record->estados = json_encode( $status );
         $record->id_usuario_cierra = $closed_by_user_id;
         $record->cerrada = 1;
         return $DB->update_record( 'talentospilos_incidencias', $record, $bulk=false );
