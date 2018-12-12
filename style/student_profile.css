@@ -1,5 +1,10 @@
 @media screen{
 
+    #mapa{
+        height: 396px !important;
+        width: 100% !important;
+    }
+
     #div-header-info{
         background: #D4D4D4;
     }

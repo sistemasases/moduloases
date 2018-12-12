@@ -642,7 +642,7 @@ return {
     var update_or_insert2 = document.getElementById("otro_act_simultanea").value;
    // var json_personas_incial = document.getElementById("vive_con").value;
 
-   
+    var marker;
 
     $('#span-icon-edit').on('click', function(){
         $(this).hide();
@@ -672,8 +672,78 @@ return {
         $('.input-tracking').prop('disabled', false);
         $('#div_add_persona_vive').show();
         $('#edit_person_vive').show();
-     
-     
+
+        document.getElementById('mapa').innerHTML = "";
+
+        var latitude = $('#latitude').val();
+        var longitude = $('#longitude').val();
+        var id_ases = $('#id_ases').val();
+        var neighborhood = $('#select_neighborhood').val();
+        var geographic_risk = $('#select_geographic_risk').val();
+
+        console.log("Latitude: " + parseFloat(latitude) + " Longitude: " + parseFloat(longitude));
+
+        var map;
+        var geocoder;
+        var infoWindow;
+        
+            var latLng = new google.maps.LatLng(3.3759493, -76.5355789);
+            var opciones = {
+                center: latLng,
+                zoom: 11
+            };
+            var map = new google.maps.Map(document.getElementById('mapa'), opciones);
+
+            var initial_marker = new google.maps.Marker({
+                position: {
+                    lat: 3.3759493,
+                    lng: -76.5355789
+                },
+                map: map,
+                title: 'Universidad del Valle'
+            });
+
+            marker = new google.maps.Marker({
+                position: {
+                    lat: parseFloat(latitude),
+                    lng: parseFloat(longitude)
+                },
+                map: map
+            });
+            
+            geocoder = new google.maps.Geocoder();
+            infowindow = new google.maps.InfoWindow();
+
+            google.maps.event.addListener(map, 'click', function(event) {
+                geocoder.geocode({
+                        'latLng': event.latLng
+                    },
+                    function(results, status) {
+                        if (status == google.maps.GeocoderStatus.OK) {
+                            if (results[0]) {
+                                console.log(results[0].formatted_address);
+                                console.log(results[0].geometry.location);
+                                if (marker) {
+                                    marker.setPosition(event.latLng);
+                                } else {
+                                    marker = new google.maps.Marker({
+                                        position: event.latLng,
+                                        map: map
+                                    });
+                                }
+                                infowindow.setContent(results[0].formatted_address + '<br/> Coordenadas: ' + results[0].geometry.location);
+                                infowindow.open(map, marker);
+
+                                
+                            } else {
+                                console.log("No se encontraron resultados");
+                            }
+                        } else {
+                            console.log("Geocodificación  ha fallado debido a: " + status);
+                        }
+                    });
+            });
+
         
         $('#genero').on('click', function(){
             if((document.getElementById("genero").value) == 0){
@@ -752,7 +822,7 @@ return {
                 data_persons.push(objeto);
             }
             data_persons = JSON.stringify(data_persons);
-            object_function.save_form_edit_profile(form_with_changes, object_function, update_or_insert1, update_or_insert2, data_persons);
+            object_function.save_form_edit_profile(form_with_changes, object_function, update_or_insert1, update_or_insert2, data_persons, marker);
             $('#otro_genero').prop('disabled', true);
             $('#otro_act_simultanea').prop('disabled', true);
             $('#otro_genero').prop('required', false);
@@ -935,7 +1005,7 @@ return {
     };
 
     return msg;
- },save_form_edit_profile: function(form, object_function, control1, control2, json){
+ },save_form_edit_profile: function(form, object_function, control1, control2, json, marker){
     $.ajax({
         type: "POST",
         data: {
@@ -963,6 +1033,39 @@ return {
                 msg.msg,
                 msg.status
             );
+        },
+    });
+
+    var id_ases = $('#id_ases').val();
+    var neighborhood = $('#select_neighborhood').val();
+    var geographic_risk = $('#select_geographic_risk').val();
+
+    $.ajax({
+        type: "POST",
+        data: {
+            func: 'save_geographic_info',
+            id_ases: id_ases,
+            latitude: marker.position.lat,
+            longitude: marker.position.lng,
+            neighborhood: neighborhood,
+            geographic_risk: geographic_risk
+        },
+        url: "../managers/student_profile/geographic_serverproc.php",
+        success: function(msg) {
+
+            swal(
+                msg.title,
+                msg.text,
+                msg.type);
+        },
+        dataType: "json",
+        cache: "false",
+        error: function(msg) {
+            
+            swal(
+                msg.title,
+                msg.text,
+                msg.type);
         },
     });
 
