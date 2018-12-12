@@ -154,7 +154,11 @@ function incident_get_incident( $id ){
     FROM {talentospilos_incidencias}
     WHERE id = '$id'";
 
-    return $DB->get_record_sql( $sql );
+    $record = $DB->get_record_sql( $sql );
+
+    $record->usuario_registra = $DB->get_record_sql( "SELECT id, username, firstname, lastname FROM {user} WHERE id = '$record->id_usuario_registra'" );
+
+    return $record;
 }
 
 ?>
