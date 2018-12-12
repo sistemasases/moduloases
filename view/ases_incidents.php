@@ -31,8 +31,7 @@ require_once $CFG->libdir . '/adminlib.php';
 require_once('../managers/lib/lib.php');
 require_once('../managers/instance_management/instance_lib.php');
 require_once('../managers/menu_options.php');
-include_once("../managers/incidents_manager/incident_lib.php");
-require_once('../managers/menu_options.php');
+include_once("../managers/incident_manager/incident_lib.php");
 include('../lib.php');
 
 
@@ -64,7 +63,8 @@ $coursenode = $PAGE->navigation->find($courseid, navigation_node::TYPE_COURSE);
 
 $rol = get_role_ases($USER->id);
 
-//$record->form_id = $form_id;
+$record->incidents = array_values(incident_get_all_incidents());
+
 $menu_option = create_menu_options($USER->id, $blockid, $courseid);
 $record->menu = $menu_option;
 
@@ -86,7 +86,7 @@ $PAGE->requires->css('/blocks/ases/js/select2/css/select2.css', true);
 $PAGE->requires->css('/blocks/ases/style/side_menu_style.css', true);
 $PAGE->requires->css('/blocks/ases/style/ases_incidents.css', true);
 
-$PAGE->requires->js_call_amd('block_ases/ases_incident_manager', 'init');
+//$PAGE->requires->js_call_amd('block_ases/ases_incident_manager', 'init');
 
 $output = $PAGE->get_renderer('block_ases');
 
