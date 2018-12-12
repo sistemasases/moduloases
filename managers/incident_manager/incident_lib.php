@@ -62,7 +62,7 @@ function incident_get_user_incidents( $user_id ){
     $sql = "SELECT * 
     FROM {talentospilos_incidencias} 
     WHERE id_usuario_registra = '$user_id'
-    ORDER BY fecha_hora_registro DESC";
+    ORDER BY cerrada ASC, fecha_hora_registro DESC";
 
     return $DB->get_records_sql( $sql );
 }
@@ -121,6 +121,17 @@ function incident_close_logged_user_incident( $id ){
 
     return incident_close_incident( $id, $USER->id );
 
+}
+
+function incident_get_all_incidents( ){
+    
+    global $DB;
+
+    $sql = "SELECT * 
+    FROM {talentospilos_incidencias}
+    ORDER BY cerrada ASC, fecha_hora_registro DESC";
+
+    return $DB->get_records_sql( $sql );
 }
 
 ?>
