@@ -30,10 +30,9 @@ require_once $CFG->libdir . '/adminlib.php';
 
 require_once('../managers/lib/lib.php');
 require_once('../managers/instance_management/instance_lib.php');
-require_once ('../managers/menu_options.php');
-include_once "../managers/dphpforms/dphpforms_reverse_filter.php";
-include_once "../managers/dphpforms/dphpforms_form_updater.php";
-require_once '../managers/menu_options.php';
+require_once('../managers/menu_options.php');
+include_once("../managers/dphpforms/dphpforms_reverse_filter.php");
+include_once("../managers/dphpforms/dphpforms_form_updater.php");
 include('../lib.php');
 
 
