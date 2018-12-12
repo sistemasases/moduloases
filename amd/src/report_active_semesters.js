@@ -53,6 +53,7 @@ define([
             var CODIGO_COLUMN = 'codigo';
             var NOMBRE_COLUMN= 'nombre';
             var NUM_DOC_COLUMN = 'num_doc';
+            var tfoot_first_row_title_prefix = 'Total activos SRA';
             var known_columns = [CODIGO_COLUMN, NOMBRE_COLUMN, NUM_DOC_COLUMN];
             var semesters = []; /* Array of strings with the semesters names, ej. ['2015A', '2015B'...]*/
             /** Resume of active semester of all students, of course each property of this object
@@ -86,9 +87,9 @@ define([
                 }
                 return filter_column_indexes;
             }
-            function init_tfoot_from_report(resume_report /* Resume Report */, semesters) {
+            function init_tfoot_from_report(resume_report /* Resume Report */, semesters, cohort_name) {
                 /* Init first cell of tfoot*/
-                $('#tableActiveSemesters tfoot th')[0].textContent='Total activos SRA';
+                $('#tableActiveSemesters tfoot th')[0].textContent= tfoot_first_row_title_prefix + ' ' + cohort_name;
                 /* In column name, and num_doc nothing should be was showed*/
                 $('#tableActiveSemesters tfoot th.'+NOMBRE_COLUMN).html('');
                 $('#tableActiveSemesters tfoot th.'+NUM_DOC_COLUMN).html('');
@@ -108,7 +109,7 @@ define([
                 /* Check tan all the knowed columns are in the given columns*/
                 return columns.filter(value => -1 !== known_columns.indexOf(value)).length === known_columns.length;
             }
-            function init_datatable (cohort_id) {
+            function init_datatable (cohort_id, cohort_name) {
                 var url = '../managers/report_active_semesters/report_active_semesters_api.php/' + instance_id;
                 var post_info = {
                     function: 'data_table',
@@ -182,7 +183,7 @@ define([
                             $('<tfoot/>').append( $("#tableActiveSemesters thead tr").clone() )
                         );
                         /* Init resume in tfoot*/
-                        init_tfoot_from_report(resume_report, semesters);
+                        init_tfoot_from_report(resume_report, semesters, cohort_name);
                         if(!validate_known_columns(column_names, known_columns)) {
                             console.error(' Las columnas dadas no coinciden con las columnas conocidas.',
                                 'columnas daads:', column_names,
@@ -200,11 +201,14 @@ define([
             /*After each cohort select change, the table should be updated*/
             $('#cohorts').change(function() {
                 var cohort_id = $('#cohorts option:selected').val();
-                init_datatable(cohort_id);
+                var cohort_name = $('#cohorts option:selected').text();
+                $('#tableActiveSemesters tfoot th')[0].textContent= tfoot_first_row_title_prefix + ' ' + cohort_name;
+                init_datatable(cohort_id, cohort_name);
             });
             /* First table init */
             var cohort_id = $('#cohorts option:selected').val();
-            init_datatable(cohort_id);
+            var cohort_name = $('#cohorts option:selected').text();
+            init_datatable(cohort_id, cohort_name);
 
 
 
