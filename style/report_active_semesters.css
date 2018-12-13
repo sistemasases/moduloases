@@ -22,6 +22,10 @@
 .report_active_semesters .spacer {
     flex-grow: 1;
 }
+.active_semesters {
+
+    display: none; /*At start, the info of active semesters is not displayed, only javascript when the data is retrieved can show the info*/
+}
 /*
 Las columnas (de la 1 a la 3 -- index desde 1) son: codigo, nombre y numero documento, estos son links a la ficha estudiante
 */
@@ -32,7 +36,9 @@ Las columnas (de la 1 a la 3 -- index desde 1) son: codigo, nombre y numero docu
     font-weight: bold;
     cursor: pointer;
 }
-
+.active_semesters_graphs {
+    margin-top: 50px;
+}
 td.active_semester {
     background-color: #5aafad!important;
 }

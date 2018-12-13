@@ -28,6 +28,9 @@ use function array_search;
 
 /**
  * Return the active semesters by all students in ASES
+ *
+ * For each student and semester, one row is returned.
+ *
  * @param string|int $id_instance
  * ### Fields returned
  * - mdl_cohort_members_id
@@ -42,15 +45,14 @@ use function array_search;
  * - mdl_talentospilos_semestre_nombre -- Alias for mdl_talentospilos_semsetre.nombre
  *
  * ### Tables joined
- * - mdl_talentospilos_semestre_nombre
  * - mdl_talentospilos_semestre
- * - mdl_talentospilos_user_extended
  * - mdl_talentospilos_user_extended
  * - mdl_user
  * - mdl_cohort
  * - mdl_cohort_members
  * @throws \dml_exception
- * @return array Key value array
+ * @return array Key value array where the key is mdl_talentospilos_history_academ.id and the values are the founded
+ *  registries
  */
 function get_active_semesters_db($id_instance, $ases_cohort_id) {
     global $DB;
@@ -88,6 +90,7 @@ from mdl_talentospilos_history_academ
       on mdl_cohort.id = mdl_talentospilos_inst_cohorte.id_cohorte
      where mdl_talentospilos_inst_cohorte.id_instancia = $id_instance
 and mdl_cohort.idnumber = '$ases_cohort_id'
+order by codigo desc
 SQL;
     return $DB->get_records_sql($sql);
 }
@@ -102,7 +105,7 @@ class ActiveSemestersReportField {
     public $cambio_carrera;
 /**
  * @var array $semestres_activos Array of string than identify the active semesters of a student
- *  Example: [2016A, 2016B ...]
+ *  Example: ['2016A', '2016B' ...]
  */
     public $semestres_activos;
     public function __construct($codigo, $nombre, $talentos_usuario_id, $num_doc, $ases_user_id, $cambio_carrera = false, $semestres_activos = array())
@@ -128,6 +131,12 @@ class ActiveSemestersReportField {
         }
 
     }
+    public function set_codigo($codigo, $tracking_status = 1) {
+        if( $tracking_status == 1 && $codigo != $this->codigo) {
+            echo $this->codigo. ' '. $codigo . ' ' . $this->nombre;
+            $this->codigo = $codigo;
+        }
+    }
 
     public function have_active_semester($semester): bool {
        if(array_search($semester, $this->semestres_activos) === false) {
@@ -139,7 +148,7 @@ class ActiveSemestersReportField {
 }
 
 /**
- * Return the semesters when a list of all ases students was active
+ * Return the semesters with a list of all ASES students was active
  * @return array Array of ActiveSemestersReportField
  */
 
@@ -151,6 +160,8 @@ function get_active_semesters($id_instance, $cohort_id) {
         $talentos_usuario_id = $students_with_active_semester->mdl_talentospilos_usuario_id;
         $num_doc = $students_with_active_semester->num_doc;
         $nombre_semestre =  $students_with_active_semester->mdl_talentospilos_semestre_nombre;
+        $tracking_status = $students_with_active_semester->tracking_status;
+        $codigo = $students_with_active_semester->codigo;
         $cancel_semester = $students_with_active_semester->cancela;
         $cambio_carrera = $students_with_active_semester->cambio_carrera;
         $ases_user_id = $students_with_active_semester->mdl_talentospilos_usuario_id;
@@ -159,10 +170,12 @@ function get_active_semesters($id_instance, $cohort_id) {
             if( !($cancel_semester === $semester_is_canceled)) {
                 /** @var  $active_semesters_report_fields[$talentos_usuario_id] ActiveSemestersReportField*/
                 $active_semesters_report_fields[$talentos_usuario_id]->add_active_semester($nombre_semestre);
+                /* If the current registry have other code and have active tracking status the code is updated  */
+
             }
+            $active_semesters_report_fields[$talentos_usuario_id]->set_codigo($codigo, $tracking_status);
 
         } else {
-            $codigo = $students_with_active_semester->codigo;
             $nombre = $students_with_active_semester->firstname . ' ' . $students_with_active_semester->lastname;
             $active_semesters_report_field = new ActiveSemestersReportField($codigo, $nombre, $talentos_usuario_id,  $num_doc, $ases_user_id, $cambio_carrera);
             if( !($cancel_semester === $semester_is_canceled)) {
