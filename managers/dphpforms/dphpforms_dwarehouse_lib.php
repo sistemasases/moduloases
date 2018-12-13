@@ -59,15 +59,15 @@ function dwarehouse_get_simple( $username, $is_student ){
     global $DB;
     $user_id = null;
     $results = null;
-    //$forms_dwarehouse_array = array();
+    $forms_dwarehouse_array = array();
 
     $_is_student = false;
 
-    if($is_student === "true"){
+    if($is_student == "true"){
         $_is_student = true;
     }
 
-    if( $is_student ){
+    if( $_is_student ){
 
         $sql = "SELECT UE.id_ases_user AS id FROM {user} AS U
         INNER JOIN  mdl_talentospilos_user_extended AS UE ON UE.id_moodle_user = U.id
@@ -82,8 +82,9 @@ function dwarehouse_get_simple( $username, $is_student ){
 
         $user_id = $DB->get_record_sql($sql);
     }
-    
-    if( $user && !$_is_student ){
+
+
+    if( $user_id && !$_is_student ){
 
         $sql = "SELECT id AS id, 
             id_usuario_moodle AS id_user,  
@@ -92,16 +93,16 @@ function dwarehouse_get_simple( $username, $is_student ){
             fecha_hora_registro AS fecha_act,  
             navegador AS nav
             FROM {talentospilos_df_dwarehouse} AS dwarehouse
-            WHERE id_usuario_moodle = '$user->id'
+            WHERE id_usuario_moodle = '$user_id->id'
             ORDER BY fecha_hora_registro DESC";
 
         $results = $DB->get_records_sql($sql);
 
-    }if( $user && $_is_student ){
+    }else if( $user_id && $_is_student ){
 
         $alias_pregunta = "seguimiento_pares_id_estudiante";
-        $alias_obj = $DB->get_record_sql( "SELECT * FROM {talentospilos_df_alias} WHERE alias = '$alias_pregunta" ); 
-        $criteria = '"id":"' + $$alias_obj->id_pregunta + '","valor":"' + $user->id + '"';
+        $alias_obj = $DB->get_record_sql( "SELECT * FROM {talentospilos_df_alias} WHERE alias = '$alias_pregunta'" ); 
+        $criteria = '"id":"' . $alias_obj->id_pregunta . '","valor":"' . $user_id->id . '"';
 
         $sql = "SELECT id AS id, 
             id_usuario_moodle AS id_user,  
@@ -118,11 +119,12 @@ function dwarehouse_get_simple( $username, $is_student ){
     }else{
         return [];
     }
-    /*foreach ($results as $record) {
+
+    foreach ($results as $record) {
         array_push($forms_dwarehouse_array, $record);
     }
-    return $forms_dwarehouse_array;*/
-    return $results;
+
+    return $forms_dwarehouse_array;
 }
 
 /**
