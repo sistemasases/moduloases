@@ -39,10 +39,15 @@ global $PAGE;
 global $USER;
 
 $incident_id = required_param('incident_id', PARAM_INT);
-
 $incident = incident_get_incident( $incident_id );
 
-print_r( '<script>alert("Esto corresponde a una captura, no es una redirección a una vista específica del sistema. Clicks sobre botones pueden tener efectos sobre el sistema, explore con cuidado.")</script>' );
-print_r( $incident->info_sistema );
+if( $incident ){
+    print_r( '<script>alert("Esto corresponde a una captura, no es una redirección a una vista específica del sistema. Clicks sobre botones pueden tener efectos sobre el sistema, explore con cuidado.")</script>' );
+    print_r( $incident->info_sistema );
+}else{
+    print_r( '<h1>No se encontró el recurso solicitado.</h1>' );
+}
+
+
 
 ?>
