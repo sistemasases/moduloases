@@ -159,8 +159,14 @@ function incident_get_incident( $id ){
     if( $record ){
 
         $record->usuario_registra = $DB->get_record_sql( "SELECT id, username, firstname, lastname FROM {user} WHERE id = '$record->id_usuario_registra'" );
-        return $record;
+        $record->usuario_cierra = null;
+
+        if( $record->cerrada == 1 ){
+            $record->usuario_cierra = $DB->get_record_sql( "SELECT id, username, firstname, lastname FROM {user} WHERE id = '$record->id_usuario_cierra'" );
+        }
         
+        return $record;
+
     }else{
         return null;
     }
