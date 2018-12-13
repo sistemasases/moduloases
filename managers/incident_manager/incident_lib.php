@@ -156,9 +156,16 @@ function incident_get_incident( $id ){
 
     $record = $DB->get_record_sql( $sql );
 
-    $record->usuario_registra = $DB->get_record_sql( "SELECT id, username, firstname, lastname FROM {user} WHERE id = '$record->id_usuario_registra'" );
+    if( $record ){
 
-    return $record;
+        $record->usuario_registra = $DB->get_record_sql( "SELECT id, username, firstname, lastname FROM {user} WHERE id = '$record->id_usuario_registra'" );
+        return $record;
+        
+    }else{
+        return null;
+    }
+
+
 }
 
 ?>
