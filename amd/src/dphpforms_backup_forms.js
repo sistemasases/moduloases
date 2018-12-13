@@ -24,6 +24,30 @@ define([
         init: function () {
 
             window.JSZip = jszip;
+
+            $(document).on( "mousedown", ".slider.round", function(e){
+
+                let status = $(this).data("status");
+
+                if( status == "off" ){
+                    
+                    $(this).data("status", "on");
+                    $("#busqueda-simplificada").hide();
+                    $("#busqueda-avanzada").show();
+
+                }else{
+
+                    $(this).data("status", "off");
+                    $("#busqueda-avanzada").hide();
+                    $("#busqueda-simplificada").show();
+
+                }   
+            } );
+
+            $(document).on( "click", "#generarFiltroSimplificado", function(){
+
+            });
+
             $(document).ready(function () {
                 $.ajax({
 
