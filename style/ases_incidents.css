@@ -29,32 +29,16 @@
 }
 
 .detail_container{
-    height: 400px;
     padding: 1em;
 }
 
 .inc_item_container{
     overflow-y: auto;
-    height: 600px;
+    height: 400px;
 }
 
 .inc_preview{
     height: 100%;
-}
-
-.preview{
-    overflow-x: auto;
-    overflow-y: auto;
-    height: 100%;
-    border:3px solid rgb(110, 110, 110);
-}
-
-.inc_detail{
-    font-size: 1.3em;
-}
-
-.title_list{
-    font-size: 1.3em;
 }
 
 #empty{
@@ -90,4 +74,18 @@
     border-radius: 0px;
     border-top-right-radius: 2px !important;
     border-bottom-right-radius: 2px !important;
+}
+
+.hr-univalle{
+    border-color: #d51b23;
+}
+
+.opened_by, .record_datetime, 
+.inc_detail, .title_list,
+.closed_by, .inc_preview{
+    font-size: 1.3em;
+}
+
+.inc_detail{
+    margin-top: 1.2em;
 }

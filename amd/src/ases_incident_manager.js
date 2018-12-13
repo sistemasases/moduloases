@@ -50,18 +50,29 @@
                                 li.hide();
 
                                 let comentarios = JSON.parse(JSON.parse(response.data_response).comentarios);
-                                let info_sistema = JSON.parse(response.data_response).info_sistema.replace(/<script[^>]*>/gi, "&lt;script&rt;").replace(/<\/script[^>]*>/gi, "&lt;/script&rt;");
-                                let user = JSON.parse(response.data_response).usuario_registra;
+                                let opened_by = JSON.parse(response.data_response).usuario_registra;
+                                let closed_by = JSON.parse(response.data_response).usuario_cierra;
                                 let title = comentarios[0].message.title;
                                 let detail = comentarios[0].message.commentary;
+                                let cerrada = JSON.parse(response.data_response).cerrada;
+                                let datetime = JSON.parse(response.data_response).fecha_hora_registro;
 
-                                $(".inc_title").html( "<h2>Ticket #" + incident_id + " - " + title + "</h2>" );
-                                $(".inc_detail").html( "<p>Detalle: " + detail + "</p>" );
-                                $(".opened_by").html( "<strong>Usuario:</strong> " + user.firstname + " " + user.lastname + " - " + user.username );
-                                $(".preview").html( "<html>" + info_sistema + "</html>" );
+                                $(".inc_detail").html( "<strong>Detalle: </strong>" + detail );
+                                $(".opened_by").html( "<strong>Abierta por:</strong> " + opened_by.firstname + " " + opened_by.lastname + " - " + opened_by.username );
+                                $(".inc_preview").find("a").attr( "href", "ases_incidents_preview.php?incident_id=" + incident_id );
+                                $(".record_datetime").html( "<strong>Fecha y hora:</strong> " + datetime );
                                 $("#close_incident").attr("data-id", incident_id);
                                 $(".inc_preview").show();
-                                $(".inc_opc").show();
+
+                                if( cerrada != 1 ){
+                                    $(".inc_title").html( "<h2>Ticket #" + incident_id + " - " + title + "</h2>" );
+                                    $(".inc_opc").show();
+                                }else{
+                                    $(".inc_opc").hide();
+                                    $(".inc_title").html( "<h2>Ticket #" + incident_id + " [Cerrada] - " + title + "</h2>" );
+                                    $(".closed_by").html( "<strong>Cerrada por:</strong> " + closed_by.firstname + " " + closed_by.lastname );
+                                }
+                                
                             },
                             error: function( XMLHttpRequest, textStatus, errorThrown ) {
                                 li.hide();

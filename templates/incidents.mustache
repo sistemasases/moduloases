@@ -4,9 +4,8 @@
     
     <div class="container">
         <div class="row">
-            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                <h2>Gestión de incidencias</h2>
-            </div>
+            <h2>Gestión de incidencias</h2>
+            <hr class="hr-univalle">
         </div>
         <div id="incidents_container" class="row">
             <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
@@ -32,15 +31,20 @@
                     <div class="opened_by col-xs-12 col-sm-12 col-md-12 col-lg-12">
                         
                     </div>
+                    <div class="closed_by col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                        
+                    </div>
+                    <div class="record_datetime col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                        
+                    </div>
                     <div class="inc_detail col-xs-12 col-sm-12 col-md-12 col-lg-12">
 
                     </div>
+                    <div style="display:none;" class="inc_preview col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                        <strong>Html capturado de la incidencia:</strong> [<a href="ases_incidents_preview.php?incident_id=" target="_blank" rel="noopener noreferrer"> Ver </a>].
+                    </div>
                     <div class="inc_opc">
                         <a id="close_incident" data-id="-1" href="javascript:void(0)" class="btn btn-md btn-marcar-resuelta">Marcar como resuelta</a>
-                    </div>
-                    <div style="display:none;" class="inc_preview col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                        <h3><strong>Html capturado (Scripts inhabilitados):</strong></h3><hr style="margin:5px">
-                        <div class="preview col-xs-12 col-sm-12 col-md-12 col-lg-12"></div>
                     </div>
                 </div>
             </div>
