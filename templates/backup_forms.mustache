@@ -1,80 +1,114 @@
  {{#data}} {{> block_ases/side_menu}} {{#backup_forms_bf}}
 <div class="container">
-  <h2>REPORTE DE BACKUP</h2>
-  <hr style="background-color: red; height: 1px; border: 0">
-  <div class="row">
-    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 ">
-      <input class= "info_backup" id="filtroCodigoUsuario" name="idFiltro" type="text" class="form-control" placeholder="Código de usuario"  >
-    </div>
-     <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 " style="padding-left: 25px">
-      <select id="selectTable"  class= "info_backup" title="Seleccione el tipo de consulta">
-          <option value="talentospilos_user_extended" title="Para cualquier estudiante ASES">Id ases</option>
-          <option value="user" title="Para cualquier usuario moodle">Id moodle</option>
-      </select>
-    </div>
-
-    <div id="div_code_user" class="col-lg-2 col-md-2 col-sm-2 col-xs-2 alert alert-danger div_info_user">
-      <strong>Usuario: </strong> Moodle/Ases
-    </div>
-
-    <div id="div_name_user" class="col-lg-4 col-md-4 col-sm-4 col-xs-4 alert alert-danger div_info_user">
-      <strong> Nombre: </strong> Nombre
-    </div>
-
-
-    <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
-      <input class="btn-danger" type="button" id="generarFiltro" value="Buscar">
-    </div>
+  <h2 id="title-view">REPORTE DE BACKUP</h2>
+  <div id="toogle-selector">
+    Simplificado
+    <label class="switch">
+      <input type="checkbox">
+      <span class="slider round"></span>
+    </label>
+    Avanzado
   </div>
+  <hr style="background-color: red; height: 1px; border: 0">
+  <div id="busqueda-simplificada" class="row">
 
-  <hr>
+    <div class="col-xs-5 col-sm-5 col-md-5 col-lg-3">
+      <div class="form-group">
+          <label for="criteria_select">Buscar por:</label>
+          <select id="criteria_select" name="criteria_select" class="info_backup" style="width: 100%;">
+              <option value="id">Estudiante</option>
+              <option value="id_usuario_moodle">Monitor</option>
+              <option value="accion">Practicante</option>
+              <option value="id_registro_respuesta_form">Profesional</option>
+            </select>
+      </div>
+    </div>
+    <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+      <div class="form-group">
+          <label for="">Código/Username:</label>
+          <input name="cod_user" class="form-control info_backup" type="text">
+      </div>
+    </div>
+    <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 col-xs-offset-4 col-sm-offset-4 col-md-offset-4 col-lg-offset-4">
+      <label for="" style="color:white;">.</label><br>
+      <input class="btn-danger btn-generar-filtro" type="button" id="generarFiltroSimplificado" value="Buscar">
+    </div>
 
-  <div class="row">
-      <label class="col-lg-2 col-md-2 col-sm-2 col-xs-2 info_backup" for="typecolumn_select" style="font-size:14px; padding-top: 10px;">Atributo a consultar</label>
-      <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2" style="padding-left: 0px;padding-right: 0px">
-  
-        <select id="typecolumn_select" name="typecolumn_select" class="info_backup">
-          <option value="id">Id</option>
-          <option value="id_usuario_moodle">Id usuario moodle</option>
-          <option value="accion">Acción</option>
-          <option value="id_registro_respuesta_form">Id respuesta</option>
-          <option value="datos_previos" selected="true">Datos previos</option>
-          <option value="datos_enviados">Datos enviados</option>
-          <option value="datos_almacenados">Datos almacenados</option>
-          <option value="observaciones">Observaciones</option>
-          <option value="cod_retorno">Código retorno</option>
-          <option value="msg_retorno">Mensaje retorno</option>
-          <option value="dts_retorno">Datos retorno</option>
-          <option value="fecha_hora_registro">Fecha y hora</option>
-          <option value="navegador">Navegador</option>
-          <option value="url_request">Url</option>
+  </div>
+  <div id="busqueda-avanzada" style="display:none;" class="row">
+    <div class="row">
+      <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 ">
+        <input class= "info_backup" id="filtroCodigoUsuario" name="idFiltro" type="text" class="form-control" placeholder="Código de usuario"  >
+      </div>
+       <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 " style="padding-left: 25px">
+        <select id="selectTable"  class= "info_backup" title="Seleccione el tipo de consulta">
+            <option value="talentospilos_user_extended" title="Para cualquier estudiante ASES">Id ases</option>
+            <option value="user" title="Para cualquier usuario moodle">Id moodle</option>
         </select>
       </div>
-      <div hidden>
-          <label class="col-lg-2 col-md-2 col-sm-2 col-xs-2 info_backup" for="typekey_select" style="font-size:14px; padding-top: 10px;">Respuesta a consultar</label>
-
-          <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2" style="padding-left: 0px;padding-right: 0px" >
-      
-              <select id="typekey_select" class="info_backup">
-                  {{{options_key_select}}}
-              </select>
-          </div>
+  
+      <div id="div_code_user" class="col-lg-2 col-md-2 col-sm-2 col-xs-2 alert alert-danger div_info_user">
+        <strong>Usuario: </strong> Moodle/Ases
       </div>
-      
-
-
+  
+      <div id="div_name_user" class="col-lg-4 col-md-4 col-sm-4 col-xs-4 alert alert-danger div_info_user">
+        <strong> Nombre: </strong> Nombre
+      </div>
+  
+  
+      <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
+        <input class="btn-danger" type="button" id="generarFiltro" value="Buscar">
+      </div>
     </div>
-
+  
     <hr>
-  <div class="row">
-    <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10">
-      <input id="filtroLike" name="idFiltroLike" type="text" class="form-control info_backup" placeholder="Ingrese el texto a consultar" >
-    </div>
-    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
-      <input class="btn-danger" type="button" id="load_like" style=" width: 170px; height: 39px;margin-top: 0px;" value="Buscar">
+  
+    <div class="row">
+        <label class="col-lg-2 col-md-2 col-sm-2 col-xs-2 info_backup" for="typecolumn_select" style="font-size:14px; padding-top: 10px;">Atributo a consultar</label>
+        <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2" style="padding-left: 0px;padding-right: 0px">
+    
+          <select id="typecolumn_select" name="typecolumn_select" class="info_backup">
+            <option value="id">Id</option>
+            <option value="id_usuario_moodle">Id usuario moodle</option>
+            <option value="accion">Acción</option>
+            <option value="id_registro_respuesta_form">Id respuesta</option>
+            <option value="datos_previos" selected="true">Datos previos</option>
+            <option value="datos_enviados">Datos enviados</option>
+            <option value="datos_almacenados">Datos almacenados</option>
+            <option value="observaciones">Observaciones</option>
+            <option value="cod_retorno">Código retorno</option>
+            <option value="msg_retorno">Mensaje retorno</option>
+            <option value="dts_retorno">Datos retorno</option>
+            <option value="fecha_hora_registro">Fecha y hora</option>
+            <option value="navegador">Navegador</option>
+            <option value="url_request">Url</option>
+          </select>
+        </div>
+        <div hidden>
+            <label class="col-lg-2 col-md-2 col-sm-2 col-xs-2 info_backup" for="typekey_select" style="font-size:14px; padding-top: 10px;">Respuesta a consultar</label>
+  
+            <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2" style="padding-left: 0px;padding-right: 0px" >
+        
+                <select id="typekey_select" class="info_backup">
+                    {{{options_key_select}}}
+                </select>
+            </div>
+        </div>
+        
+  
+  
+      </div>
+  
+      <hr>
+    <div class="row">
+      <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10">
+        <input id="filtroLike" name="idFiltroLike" type="text" class="form-control info_backup" placeholder="Ingrese el texto a consultar" >
+      </div>
+      <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+        <input class="btn-danger" type="button" id="load_like" style=" width: 170px; height: 39px;margin-top: 0px;" value="Buscar">
+      </div>
     </div>
   </div>
-  
 
 
 
