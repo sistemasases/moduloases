@@ -61,6 +61,12 @@ function dwarehouse_get_simple( $username, $is_student ){
     $results = null;
     //$forms_dwarehouse_array = array();
 
+    $_is_student = false;
+
+    if($is_student === "true"){
+        $_is_student = true;
+    }
+
     if( $is_student ){
 
         $sql = "SELECT UE.id_ases_user AS id FROM {user} AS U
@@ -77,7 +83,7 @@ function dwarehouse_get_simple( $username, $is_student ){
         $user_id = $DB->get_record_sql($sql);
     }
     
-    if( $user && !$is_student ){
+    if( $user && !$_is_student ){
 
         $sql = "SELECT id AS id, 
             id_usuario_moodle AS id_user,  
@@ -91,7 +97,7 @@ function dwarehouse_get_simple( $username, $is_student ){
 
         $results = $DB->get_records_sql($sql);
 
-    }if( $user && $is_student ){
+    }if( $user && $_is_student ){
 
         $alias_pregunta = "seguimiento_pares_id_estudiante";
         $alias_obj = $DB->get_record_sql( "SELECT * FROM {talentospilos_df_alias} WHERE alias = '$alias_pregunta" ); 
