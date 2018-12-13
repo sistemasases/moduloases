@@ -18,19 +18,78 @@ define([
     'block_ases/bootstrap',
     'block_ases/sweetalert',
     'block_ases/jqueryui',
-    'block_ases/select2'
-], function ($, jszip, dataTables, autoFill, buttons, html5, flash, print, bootstrap, sweetalert, jqueryui, select2) {
+    'block_ases/select2',
+    'block_ases/loading_indicator'
+], function ($, jszip, dataTables, autoFill, buttons, html5, flash, print, bootstrap, sweetalert, jqueryui, select2, li) {
     return {
         init: function () {
 
             window.JSZip = jszip;
+
+            $(document).on( "mousedown", ".slider.round", function(e){
+
+                let status = $(this).data("status");
+
+                if( status == "off" ){
+                    
+                    $(this).data("status", "on");
+                    $("#busqueda-simplificada").hide();
+                    $("#busqueda-avanzada").show();
+
+                }else{
+
+                    $(this).data("status", "off");
+                    $("#busqueda-avanzada").hide();
+                    $("#busqueda-simplificada").show();
+
+                }   
+            } );
+
+            $(document).on( "click", "#generarFiltroSimplificado", function(){
+
+                let _username = $("#simple_cod_user").val();
+                let _is_student = $( "#simple_criteria_select option:selected" ).val();
+                
+                li.show();
+                $.ajax({
+                    type: "POST",
+                    data: { loadF: 'get_records_simple', username:_username, is_student: _is_student},
+                    url: "../managers/dphpforms/dphpforms_dwarehouse_api.php",
+                    cache: false,
+                    async: true,
+                    success: function (msg) {
+                        li.hide();
+                        if (msg.length === 0) {
+                            swal(
+                                'ATTRIBUTE NOT FOUND',
+                                'Oooops! Zero results',
+                                'warning'
+                            );
+                        } else {
+                          //Filtrar data table
+                          $("#div_table_forms").empty();
+                          $("#div_table_forms").append('<table id="tableBackupForms" class="display" cellspacing="0" width="100%"><thead><thead></table>');
+                          var table = $("#tableBackupForms").DataTable(msg);
+                          $('#div_table_forms').css('cursor', 'pointer');
+                        }
+                    },
+                    failure: function (msg) { 
+                        li.hide();
+                        alert("No encontrado");
+                     }
+                });
+
+            });
+
             $(document).ready(function () {
+                li.show();
                 $.ajax({
 
                     type: "POST",
                     data: { loadF: 'loadForms' },
                     url: "../managers/dphpforms/dphpforms_dwarehouse_api.php",
                     success: function (msg) {
+                        li.hide();
                         $("#div_table_forms").empty();
                         $("#div_table_forms").append('<table id="tableBackupForms" class="display" cellspacing="0" width="100%"><thead><thead></table>');
                         var table = $("#tableBackupForms").DataTable(msg);
@@ -41,7 +100,7 @@ define([
                     cache: false,
                     async: true,
 
-                    failure: function (msg) { }
+                    failure: function (msg) { li.hide(); }
                 });
 
             });
@@ -367,11 +426,13 @@ define([
             function get_like_cadena_in_column(cad, column){
                 //Realiza la consulta del atributo según la cadena enviada, y el atributo seleccionado
                 //Muestra los resultados en pantalla en el Data Table
+                li.show();
                 $.ajax({
                     type: "POST",
                     data: { loadF: 'get_like', cadena:cad, atributo: column},
                     url: "../managers/dphpforms/dphpforms_dwarehouse_api.php",
                     success: function (msg) {
+                        li.hide();
                         if (msg.length === 0) {
                             swal(
                                 'ATTRIBUTE NOT FOUND',
@@ -389,7 +450,10 @@ define([
                     cache: false,
                     async: true,
 
-                    failure: function (msg) { alert("No encontrado") }
+                    failure: function (msg) { 
+                        li.hide();
+                        alert("No encontrado");
+                     }
                 });
             }
 
@@ -399,11 +463,13 @@ define([
                 let param = [];
                 param.push(cod_user);
                 param.push(table);
+                li.show();
                 $.ajax({
                     type: "POST",
                     data: { loadF: 'get_id_user', params: param },
                     url: "../managers/dphpforms/dphpforms_dwarehouse_api.php",
                     success: function (msg) {
+                        li.hide();
                         if (msg.length === 0) {
                             swal(
                                 'USER NOT FOUND',
@@ -420,18 +486,22 @@ define([
                     cache: false,
                     async: true,
 
-                    failure: function (msg) { alert("No encontrado") }
+                    failure: function (msg) { 
+                        li.hide();
+                        alert("No encontrado");
+                     }
                 });
             }
 
             function get_keys_json(id_pregunta) {
                 //Realizar la consulta de respuesta según id
-                
+                li.show();
                 $.ajax({
                     type: "POST",
                     data: { loadF: 'get_values', params: id_pregunta },
                     url: "../managers/dphpforms/dphpforms_dwarehouse_api.php",
                     success: function (msg) {
+                        li.hide();
                         if (msg.length === 0) {
                             swal(
                                 'QUESTION NOT FOUND',
@@ -449,13 +519,17 @@ define([
                     cache: false,
                     async: true,
 
-                    failure: function (msg) { alert("No encontrado") }
+                    failure: function (msg) { 
+                        li.hide();
+                        alert("No encontrado");
+                     }
                 });
             }
 
 
             function get_only_form(id_form) {
                 //Get one form switch id
+                li.show();
                 $.ajax({
                     type: "POST",
                     data: { loadF: 'get_form', params: id_form },
@@ -464,6 +538,7 @@ define([
                     cache: false,
                     async: true,
                     success: function (msg) {
+                        li.hide();
                         //msg.datos_previos = JSON.stringify(msg.datos_previos);
                        
                         // console.log(msg[id_form].datos_previos);
@@ -476,7 +551,7 @@ define([
                         msg[id_form].datos_almacenados = JSON.parse(msg[id_form].datos_almacenados);}
                         create_beautifyJSON(msg);
                     },
-                    failure: function (msg) { }
+                    failure: function (msg) { li.hide(); }
                 });
             }
 
