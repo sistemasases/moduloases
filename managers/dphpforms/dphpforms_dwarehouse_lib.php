@@ -104,7 +104,11 @@ function dwarehouse_get_simple( $username, $is_student ){
         $alias_obj = $DB->get_record_sql( "SELECT * FROM {talentospilos_df_alias} WHERE alias = '$alias_pregunta'" ); 
         $criteria = '"id":"' . $alias_obj->id_pregunta . '","valor":"' . $user_id->id . '"';
 
-        $sql = "SELECT id AS id, 
+        $alias_pregunta = "inasistencia_id_estudiante";
+        $alias_obj = $DB->get_record_sql( "SELECT * FROM {talentospilos_df_alias} WHERE alias = '$alias_pregunta'" ); 
+        $in_criteria = '"id":"' . $alias_obj->id_pregunta . '","valor":"' . $user_id->id . '"';
+
+        $sql = "SELECT DISTINCT * FROM (SELECT id AS id, 
             id_usuario_moodle AS id_user,  
             accion AS name_accion, 
             id_registro_respuesta_form AS id_respuesta, 
@@ -112,7 +116,18 @@ function dwarehouse_get_simple( $username, $is_student ){
             navegador AS nav
             FROM {talentospilos_df_dwarehouse} AS dwarehouse 
             WHERE datos_enviados LIKE '%$criteria%'
-            ORDER BY fecha_hora_registro DESC";
+
+            UNION
+
+            SELECT id AS id, 
+            id_usuario_moodle AS id_user,  
+            accion AS name_accion, 
+            id_registro_respuesta_form AS id_respuesta, 
+            fecha_hora_registro AS fecha_act,  
+            navegador AS nav
+            FROM {talentospilos_df_dwarehouse} AS dwarehouse 
+            WHERE datos_enviados LIKE '%$in_criteria%') AS SQ
+            ORDER BY SQ.fecha_act DESC";
 
         $results = $DB->get_records_sql($sql);
 
