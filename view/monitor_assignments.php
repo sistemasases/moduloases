@@ -108,6 +108,9 @@ $PAGE->requires->css('/blocks/ases/style/side_menu_style.css', true);
 
 $PAGE->requires->js_call_amd('block_ases/monitor_assignments', 'init');
 
+$PAGE->requires->js_call_amd('block_ases/ases_incident_system', 'init');
+$PAGE->requires->js_call_amd('block_ases/side_menu_main', 'init');
+
 $output = $PAGE->get_renderer('block_ases');
 
 
