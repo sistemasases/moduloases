@@ -5,6 +5,8 @@ require_once(dirname(__FILE__).'/../lib/lib.php');
 require_once(dirname(__FILE__).'/../lib/student_lib.php');
 require_once(dirname(__FILE__).'/../user_management/user_lib.php');
 
+//echo json_encode(getGraficPrograma("TODOS"));
+
 /**
  * Función que recupera riesgos 
  *
@@ -719,7 +721,7 @@ function get_ases_report($general_fields=null,
                                          ";
     }
 
-    if(property_exists($actions, 'search_all_students_ar')){
+    if(property_exists($actions, 'search_all_students_ar') || property_exists($actions, 'status_report_agr')){
         
         $sql_query = $select_clause.$from_clause.$subquery_cohort.$sub_query_status.$sub_query_academic.$sub_query_assignment_fields;
         $result_query = $DB->get_records_sql($sql_query);

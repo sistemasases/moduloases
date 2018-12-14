@@ -15,11 +15,20 @@
                 {{{cohorts_checks}}}
         </div>
         <hr class="col-sm-12" />
-    </div>
-    </form> 
-    {{#status_report_agr}}  
-    {{> block_ases/agr_view_status_report}}      
-    {{/status_report_agr}}
+    </div>    
+    <div class="panel-group">
+        {{#status_report_agr}}  
+        {{> block_ases/agr_view_status_report}}
+        <div class="row">
+            <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
+                <div class="chart-container">
+                    <canvas id="grafica_tipos" ></canvas>
+                </div>
+            </div>                
+        </div>      
+        {{/status_report_agr}}
+    </div>    
+  <div>  
     
   {{/data}}
 
