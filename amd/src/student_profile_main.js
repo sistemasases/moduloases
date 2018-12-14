@@ -30,6 +30,20 @@ return {
      }
     });
 
+    // Agrega iframe para Google Maps
+    var ciudad_est = document.getElementById('municipio_act').value;
+    var latitude = $('#latitude').val();
+    var longitude = $('#longitude').val();
+    if(ciudad_est == 1079){
+
+        document.getElementById('mapa').innerHTML = "<iframe class='col-xs-12 col-sm-12 col-md-12 col-lg-12' height='396' frameborder='0' style='border:0' src='https://www.google.com/maps/embed/v1/directions?key=AIzaSyAoE-aPVfruphY4V4BbE8Gdwi93x-5tBTM&origin=" + latitude + "," + longitude + "&destination=3.3759493,-76.5355789&mode=transit' allowfullscreen></iframe>";
+    
+    } else{
+
+        document.getElementById('mapa').innerHTML = "<iframe class='col-xs-12 col-sm-12 col-md-12 col-lg-12' height='396' frameborder='0' style='border:0' src='https://www.google.com/maps/embed/v1/directions?key=AIzaSyAoE-aPVfruphY4V4BbE8Gdwi93x-5tBTM&origin=" + latitude + "," + longitude + "&destination=3.3759493,-76.5355789&mode=driving' allowfullscreen></iframe>";
+    }
+    
+
 
      // Carga una determinada pestaña
      
@@ -681,8 +695,6 @@ return {
         var neighborhood = $('#select_neighborhood').val();
         var geographic_risk = $('#select_geographic_risk').val();
 
-        console.log("Latitude: " + parseFloat(latitude) + " Longitude: " + parseFloat(longitude));
-
         var map;
         var geocoder;
         var infoWindow;
@@ -690,7 +702,7 @@ return {
             var latLng = new google.maps.LatLng(3.3759493, -76.5355789);
             var opciones = {
                 center: latLng,
-                zoom: 11
+                zoom: 14
             };
             var map = new google.maps.Map(document.getElementById('mapa'), opciones);
 
@@ -703,6 +715,10 @@ return {
                 title: 'Universidad del Valle'
             });
 
+            var new_infowindow = new google.maps.InfoWindow();
+            new_infowindow.setContent("Universidad del Valle");
+            new_infowindow.open(map, initial_marker);
+
             marker = new google.maps.Marker({
                 position: {
                     lat: parseFloat(latitude),
@@ -714,6 +730,9 @@ return {
             geocoder = new google.maps.Geocoder();
             infowindow = new google.maps.InfoWindow();
 
+            infowindow.setContent("Residencia Estudiante");
+            infowindow.open(map, marker);
+
             google.maps.event.addListener(map, 'click', function(event) {
                 geocoder.geocode({
                         'latLng': event.latLng
@@ -721,8 +740,6 @@ return {
                     function(results, status) {
                         if (status == google.maps.GeocoderStatus.OK) {
                             if (results[0]) {
-                                console.log(results[0].formatted_address);
-                                console.log(results[0].geometry.location);
                                 if (marker) {
                                     marker.setPosition(event.latLng);
                                 } else {
@@ -733,8 +750,6 @@ return {
                                 }
                                 infowindow.setContent(results[0].formatted_address + '<br/> Coordenadas: ' + results[0].geometry.location);
                                 infowindow.open(map, marker);
-
-                                
                             } else {
                                 console.log("No se encontraron resultados");
                             }
@@ -743,7 +758,6 @@ return {
                         }
                     });
             });
-
         
         $('#genero').on('click', function(){
             if((document.getElementById("genero").value) == 0){
@@ -1006,6 +1020,7 @@ return {
 
     return msg;
  },save_form_edit_profile: function(form, object_function, control1, control2, json, marker){
+   
     $.ajax({
         type: "POST",
         data: {
@@ -1039,14 +1054,16 @@ return {
     var id_ases = $('#id_ases').val();
     var neighborhood = $('#select_neighborhood').val();
     var geographic_risk = $('#select_geographic_risk').val();
+    var latitude = marker.getPosition().lat();
+    var longitude = marker.getPosition().lng();
 
     $.ajax({
         type: "POST",
         data: {
             func: 'save_geographic_info',
             id_ases: id_ases,
-            latitude: marker.position.lat,
-            longitude: marker.position.lng,
+            latitude: latitude,
+            longitude: longitude,
             neighborhood: neighborhood,
             geographic_risk: geographic_risk
         },
@@ -1068,6 +1085,8 @@ return {
                 msg.type);
         },
     });
+
+    document.getElementById('mapa').innerHTML = "<iframe class='col-xs-12 col-sm-12 col-md-12 col-lg-12' height='396' frameborder='0' style='border:0' src='https://www.google.com/maps/embed/v1/directions?key=AIzaSyAoE-aPVfruphY4V4BbE8Gdwi93x-5tBTM&origin=" + latitude + "," + longitude + "&destination=3.3759493,-76.5355789&mode=transit' allowfullscreen></iframe>";
 
     object_function.cancel_edition();
 
