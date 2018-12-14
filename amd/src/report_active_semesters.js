@@ -12,8 +12,9 @@
 define([
     'jquery',
     'block_ases/Chart',
+    'block_ases/loading_indicator',
     'block_ases/jquery.dataTables'
-], function($, Chart){
+], function($, Chart, loading_indicator){
 
     return {
         init: function (data) {
@@ -76,7 +77,6 @@ define([
             var PercentageResumeReport = (function () {
                 function PercentageResumeReport(resume_report /* instance of ResumeReport */, semesters /* Array of strings */) {
                     var total_students = resume_report.total_students;
-                    console.log(resume_report);
                     semesters.forEach(semester => {
                             var student_cancel = total_students - resume_report[semester];
                             this[semester] = student_cancel * 100 / total_students;
@@ -214,6 +214,7 @@ define([
 
             function init_datatable (cohort_id) {
                 var url = '../managers/report_active_semesters/report_active_semesters_api.php/' + instance_id;
+                loading_indicator.show();
                 var post_info = {
                     function: 'data_table',
                     params: {
@@ -228,8 +229,7 @@ define([
                     dataType: 'json'
                 }).done(
                     function (dataFromApi /*instance of DataFromAPI*/){
-
-                        console.log(dataFromApi);
+                        loading_indicator.hide();
                         var dataTable = dataFromApi.dataTable;
                         $('#download_percentage_desertion').css("display", "inline"); //Show the hidden download button
                         semesters = dataFromApi.semesters;
@@ -304,7 +304,7 @@ define([
 
                 ).fail(
                     function(error) {
-                        console.log(error.responseText);
+                        loading_indicator.hide();
                     }
                 );
 
