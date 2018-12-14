@@ -114,7 +114,77 @@
             echo json_encode($data);
 
 
-        }else if ($_POST['loadF']== 'get_id_user'){
+        } else if(  $_POST['loadF'] ==  "loadGeneralLogs" || $_POST['loadF']=="get_like_general_logs" ){
+            //Example of loadF: loadGeneralLogs valid: 
+            //data: loadGeneralLogs does not require params
+            //Example of loadF: get_like_general_logs valid: 
+            //data: get_like_general_logs require cadena and atributo params
+
+            $columns = array();
+            array_push($columns, array("title"=>"Logid", "name"=>"id_form", "data"=>"id"));
+            array_push($columns, array("title"=>"Hecho por", "name"=>"id_user_moodle", "data"=>"id_moodle_user"));
+            array_push($columns, array("title"=>"Hecho a", "name"=>"ases_user", "data"=>"username_ases_student"));
+            array_push($columns, array("title"=>"Nombre (s)", "name"=>"firstname", "data"=>"firstname" ));
+            array_push($columns, array("title"=>"Apellido (s)", "name"=>"lastname", "data"=>"lastname" ));
+            array_push($columns, array("title"=>"Evento", "name"=>"name_event", "data"=>"name_event"));
+            array_push($columns, array("title"=>"Fecha", "name"=>"fecha_act", "data"=>"fecha_act" ));
+
+            if($_POST['loadF']=="loadGeneralLogs"){$retorno = get_list_general_logs();}
+                //else if($_POST['loadF']=="get_like_general_logs"){$retorno=get_like($_POST['cadena'],$_POST['atributo']);}
+    
+            $data = array(
+                        "bsort" => false,
+                        "columns" => $columns,
+                         "data" =>$retorno,
+                        "language" => 
+                         array(
+                            "search"=> "Buscar:",
+                            "oPaginate" => array(
+                                "sFirst"=>    "Primero",
+                                "sLast"=>     "Último",
+                                "sNext"=>     "Siguiente",
+                                "sPrevious"=> "Anterior"
+                                ),
+                            "sProcessing"=>     "Procesando...",
+                            "sLengthMenu"=>     "Mostrar _MENU_ registros",
+                            "sZeroRecords"=>    "No se encontraron resultados",
+                            "sEmptyTable"=>     "Ningún dato disponible en esta tabla",
+                            "sInfo"=>           "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+                            "sInfoEmpty"=>      "Mostrando registros del 0 al 0 de un total de 0 registros",
+                            "sInfoFiltered"=>   "(filtrado de un total de _MAX_ registros)",
+                            "sInfoPostFix"=>    "",
+                            "sSearch"=>         "Buscar:",
+                            "sUrl"=>            "",
+                            "sInfoThousands"=>  ",",
+                            "sLoadingRecords"=> "Cargando...",
+                         ),
+                        "order"=> array(0, "desc"),
+                        "dom"=>'lifrtpB',
+    
+                        "buttons"=>array(
+                            array(
+                                "extend"=>'print',
+                                "text"=>'Imprimir'
+                            ),
+                            array(
+                                "extend"=>'csvHtml5',
+                                "text"=>'CSV'
+                            ),
+                            array(
+                                "extend" => "excel",
+                                                "text" => 'Excel',
+                                                "className" => 'buttons-excel',
+                                                "filename" => 'Export excel',
+                                                "extension" => '.xls'
+                            )
+                        )
+    
+                    );
+               
+            echo json_encode($data);
+
+
+        } else if ($_POST['loadF']== 'get_id_user'){
             //Example of loadF: get_id_user valid: 
             //data: get_id_user   params: cod_user
             if( count($_POST['params']) == 2 ){
@@ -139,8 +209,36 @@
 
              //Get form data switch id form
 
-             $data = get_form_switch_id($_POST['params']);
+             $data = get_form_switch_id($_POST['params'], '{talentospilos_df_dwarehouse}' );
                     echo json_encode($data);
+                    
+            }else{     
+                return_with_code( -2 );
+            }
+        } else if( $_POST['loadF'] == "get_form_general_logs" ){
+            //Example of loadF: get_form_general_logs valid: 
+            //data: get_form_general_logs   params: id_form
+          
+            if( count($_POST['params']) == 1 ){
+
+             //Get form data switch id form
+
+             $data = get_form_switch_id($_POST['params'], '{talentospilos_general_logs}' );
+                    echo json_encode($data);
+                    
+            }else{     
+                return_with_code( -2 );
+            }
+        }else if( $_POST['loadF'] == "get_values" ){
+            //Example of loadF: get_values valid: 
+            //data: get_values   params: id_pregunta
+          
+            if( count($_POST['params']) == 1 ){
+
+             //Get pregunta data switch id
+
+            $data = get_question_data($_POST['params']);
+            echo json_encode($data);
                     
             }else{     
                 return_with_code( -2 );
