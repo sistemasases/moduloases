@@ -184,6 +184,13 @@ function get_form_switch_id($id_form, $table){
   /*  foreach ($results as $record) {
         array_push($form_dwarehouse_array, $record);
     }*/
+    if($table=="{talentospilos_general_logs}"){
+        $array_results = $results[$id_form];
+        $sql = "SELECT name_event FROM {talentospilos_events_to_logs} AS events WHERE events.id = $array_results->id_evento  ";
+        $event = $DB->get_record_sql($sql);
+        
+        array_push($results, $event);
+    }
    
     return $results;
 }

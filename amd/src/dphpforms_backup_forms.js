@@ -577,7 +577,6 @@ define([
                        
                         // console.log(msg[id_form].datos_previos);
                         //Items of JSON are encode
-                        
 
                         //msg is an Object to beautifier
                         //The goal is that any sent object will be embellished, so msg will be modified.
@@ -589,18 +588,24 @@ define([
                                 msg[id_form].datos_previos = data_prev;
                                 }
                                 if(func ==  "get_form_general_logs"){
-                                    if(Array.isArray(data_prev)){
+                                    if(msg[id_form + 1]== "edit_economics_tab_sp" || msg[id_form + 1]== "edit_salud_tab_sp"){
+                                        //Modified to JSON economics and health data
+                                        if(Array.isArray(data_prev)){
                                         
-                                        msg[id_form].datos_previos =  data_prev;
-                                    }else{
-                                        let array_data_prev = Array();
-                                        for(data in data_prev){
-                                            let key_data_prev = {};
-                                            key_data_prev[data] = JSON.parse(data_prev[data]);
-                                            array_data_prev.push(key_data_prev );
-                                        }
-                                        msg[id_form].datos_previos =  array_data_prev;
-                                    }                             
+                                            msg[id_form].datos_previos =  data_prev;
+                                        }else{
+                                            let array_data_prev = Array();
+                                            for(data in data_prev){
+                                                let key_data_prev = {};
+                                                key_data_prev[data] = JSON.parse(data_prev[data]);
+                                                array_data_prev.push(key_data_prev );
+                                            }
+                                            msg[id_form].datos_previos =  array_data_prev;
+                                        } 
+                                    }else if(msg[id_form + 1]== "edit_discapacity_initial_form_sp" ){
+                                        msg[id_form].datos_previos = data_prev;
+                                    }
+                                                            
                                 }
 
                         }
