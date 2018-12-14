@@ -54,6 +54,21 @@ require_once($CFG->dirroot.'/user/lib.php');
      return $reasons_array;
  }
  
+ /**
+ * Get id switch event name 
+ *
+ * @see  getIdEventLogs()
+ * @return int id event
+ */
+
+ function getIdEventLogs($eventname){
+
+    global $DB;
+    $sql_query = "SELECT id FROM {talentospilos_events_to_logs}  WHERE name_event = '$eventname'";
+    return $DB->get_record_sql($sql_query);
+
+ }
+ 
 
 
 

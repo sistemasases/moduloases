@@ -18,6 +18,12 @@
         border: 0px solid #000000 !important;
     }
 
+    .students_data{
+        overflow-y: scroll; 
+        overflow-x: hidden;
+        height: 150px !important;
+    }
+
 
     
     #collapse_econo{
