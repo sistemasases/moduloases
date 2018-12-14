@@ -12,8 +12,9 @@
 define([
     'jquery',
     'block_ases/Chart',
+    'block_ases/loading_indicator',
     'block_ases/jquery.dataTables'
-], function($, Chart){
+], function($, Chart, loading_indicator){
 
     return {
         init: function (data) {
@@ -214,6 +215,7 @@ define([
 
             function init_datatable (cohort_id) {
                 var url = '../managers/report_active_semesters/report_active_semesters_api.php/' + instance_id;
+                loading_indicator.show();
                 var post_info = {
                     function: 'data_table',
                     params: {
@@ -228,7 +230,7 @@ define([
                     dataType: 'json'
                 }).done(
                     function (dataFromApi /*instance of DataFromAPI*/){
-
+                        loading_indicator.hide();
                         console.log(dataFromApi);
                         var dataTable = dataFromApi.dataTable;
                         $('#download_percentage_desertion').css("display", "inline"); //Show the hidden download button
@@ -304,6 +306,7 @@ define([
 
                 ).fail(
                     function(error) {
+                        loading_indicator.hide();
                         console.log(error.responseText);
                     }
                 );
