@@ -96,17 +96,6 @@ $data_init = array();
 
 $rol = get_role_ases($USER->id);
 $html_profile_image = "";
-/**
- * @param int $mdl_user Moodle user ID
- * @return string  $html_profile_image Standard $OUPUT profile image html
- */
-function getHtmlProfileImage($mdl_user_id): string {
-    global $DB, $OUTPUT;
-    $html_profile_image = "";
-    $mdl_user =   user_management_get_full_moodle_user ($mdl_user_id);
-    $html_profile_image = $OUTPUT->user_picture($mdl_user, array('size'=>200, 'link'=> false));
-    return $html_profile_image;
-}
 $id_user_moodle_ = null;
 $ases_student = null;
 if ($student_code != 0) {
