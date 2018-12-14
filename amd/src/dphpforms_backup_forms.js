@@ -577,8 +577,12 @@ define([
                        
                         // console.log(msg[id_form].datos_previos);
                         //Items of JSON are encode
-                       console.log(msg[id_form].datos_previos);
-                       
+                        
+
+                        //msg is an Object to beautifier
+                        //The goal is that any sent object will be embellished, so msg will be modified.
+                        //For this, check your JSON structure
+                       //Modify msg
                             if(msg[id_form].datos_previos != "" ){
                                 let data_prev = JSON.parse(msg[id_form].datos_previos);
                                 if(func == "get_form"){
@@ -606,6 +610,8 @@ define([
                             msg[id_form].datos_enviados = JSON.parse(msg[id_form].datos_enviados);}
                             if( msg[id_form].datos_almacenados != ""){
                             msg[id_form].datos_almacenados = JSON.parse(msg[id_form].datos_almacenados);}
+
+                        // End modify msg    
                        
                         create_beautifyJSON(msg);
                     },
