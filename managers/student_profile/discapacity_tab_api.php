@@ -62,7 +62,7 @@ if(isset($_POST['func'])){
         $url           =  $_SERVER['HTTP_REFERER'];
         $id_ases       =  $_POST['ases'];
         $instanceid    =  $_POST['instanceid'];
-        $courseid      =  $COURSE->id;
+        $courseid      =  $_POST['courseid'];
 
         // Validate
         $validator = new  Validator;
@@ -176,7 +176,7 @@ if(isset($_POST['func'])){
             $navegador     =  $_SERVER['HTTP_USER_AGENT'];
             $url           =  $_SERVER['HTTP_REFERER'];
             $instanceid    =  $_POST['instanceid'];
-            $courseid      =  $COURSE->id;
+            $courseid      =  $_POST['courseid'];
 
             $result =  save_economics_data($register_economics_data);
             if($result){
@@ -255,7 +255,7 @@ if(isset($_POST['func'])){
             $navegador     =  $_SERVER['HTTP_USER_AGENT'];
             $url           =  $_SERVER['HTTP_REFERER'];
             $instanceid    =  $_POST['instanceid'];
-            $courseid      =  $COURSE->id;
+            $courseid      =  $_POST['courseid'];
             
 
             $result =       update_economics_data($data, $id_ases);
@@ -341,7 +341,7 @@ if(isset($_POST['func'])){
               $navegador     =  $_SERVER['HTTP_USER_AGENT'];
               $url           =  $_SERVER['HTTP_REFERER'];
               $instanceid    =  $_POST['instanceid'];
-              $courseid      =  $COURSE->id;
+              $courseid      =  $_POST['courseid'];
 
             $result =  save_health_data($register_health_data);
             if($result){
@@ -420,7 +420,7 @@ if(isset($_POST['func'])){
             $navegador     =  $_SERVER['HTTP_USER_AGENT'];
             $url           =  $_SERVER['HTTP_REFERER'];
             $instanceid    =  $_POST['instanceid'];
-            $courseid      =  $COURSE->id;
+            $courseid      =  $_POST['courseid'];
 
             $result =       update_health_data($data, $id_ases);
             if($result){

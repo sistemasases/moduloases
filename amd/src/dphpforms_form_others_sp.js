@@ -346,6 +346,7 @@ define([
                         json: json_data, 
                         json_prev: json_prev,
                         instanceid: getIdinstancia(),
+                        courseid: getIdcourse(),
                         ases: ases_id
                     },
                     url: "../managers/student_profile/discapacity_tab_api.php",
@@ -394,6 +395,7 @@ define([
                             json: json_data, 
                             json_prev: json_prev,
                             instanceid: getIdinstancia(),
+                            courseid: getIdcourse(),
                             ases: ases_id
                         },
                         url: "../managers/student_profile/discapacity_tab_api.php",
@@ -786,6 +788,7 @@ define([
                             json: json_data, 
                             json_prev: json_prev,
                             instanceid: getIdinstancia(),
+                            courseid: getIdcourse(),
                             ases: ases_id
                         },
                         url: "../managers/student_profile/discapacity_tab_api.php",
@@ -834,6 +837,7 @@ define([
                             json: json_data, 
                             json_prev: json_prev,
                             instanceid: getIdinstancia(),
+                            courseid: getIdcourse(),
                             ases: ases_id
                         },
                         url: "../managers/student_profile/discapacity_tab_api.php",
@@ -1101,6 +1105,18 @@ define([
         
                     for (x in urlParameters) {
                         if (urlParameters[x].indexOf('instanceid') >= 0) {
+                            var intanceparameter = urlParameters[x].split('=');
+                            return intanceparameter[1];
+                        }
+                    }
+                    return 0;
+                }
+
+                function getIdcourse() {
+                    var urlParameters = location.search.split('&');
+        
+                    for (x in urlParameters) {
+                        if (urlParameters[x].indexOf('courseid') >= 0) {
                             var intanceparameter = urlParameters[x].split('=');
                             return intanceparameter[1];
                         }
