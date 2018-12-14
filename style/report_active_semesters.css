@@ -21,6 +21,18 @@
 
 .report_active_semesters .spacer {
     flex-grow: 1;
+    flex-direction: column;
+}
+.active_semesters {
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#download_percentage_desertion {
+    display: none; /* at start of page load, all elements are not shown, when
+    js is loaded the content and displayed, this element should be displayed*/
 }
 /*
 Las columnas (de la 1 a la 3 -- index desde 1) son: codigo, nombre y numero documento, estos son links a la ficha estudiante
@@ -32,7 +44,14 @@ Las columnas (de la 1 a la 3 -- index desde 1) son: codigo, nombre y numero docu
     font-weight: bold;
     cursor: pointer;
 }
-
+.active_semesters_graphs {
+    flex: 0 0 50%;
+    width: 70%;
+    margin-top: 50px;
+}
+.active_semesters_chart{
+    align-self: center;
+}
 td.active_semester {
     background-color: #5aafad!important;
 }
