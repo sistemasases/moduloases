@@ -77,7 +77,6 @@ define([
             var PercentageResumeReport = (function () {
                 function PercentageResumeReport(resume_report /* instance of ResumeReport */, semesters /* Array of strings */) {
                     var total_students = resume_report.total_students;
-                    console.log(resume_report);
                     semesters.forEach(semester => {
                             var student_cancel = total_students - resume_report[semester];
                             this[semester] = student_cancel * 100 / total_students;
@@ -231,7 +230,6 @@ define([
                 }).done(
                     function (dataFromApi /*instance of DataFromAPI*/){
                         loading_indicator.hide();
-                        console.log(dataFromApi);
                         var dataTable = dataFromApi.dataTable;
                         $('#download_percentage_desertion').css("display", "inline"); //Show the hidden download button
                         semesters = dataFromApi.semesters;
@@ -307,7 +305,6 @@ define([
                 ).fail(
                     function(error) {
                         loading_indicator.hide();
-                        console.log(error.responseText);
                     }
                 );
 
