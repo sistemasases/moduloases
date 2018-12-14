@@ -31,19 +31,18 @@ require_once $CFG->libdir . '/adminlib.php';
 require_once('../managers/lib/lib.php');
 require_once('../managers/instance_management/instance_lib.php');
 require_once('../managers/menu_options.php');
-include_once("../managers/dphpforms/dphpforms_reverse_filter.php");
-include_once("../managers/dphpforms/dphpforms_form_updater.php");
+include_once("../managers/incident_manager/incident_lib.php");
 include('../lib.php');
 
 
 global $PAGE;
 global $USER;
 
-include "../classes/output/dphpforms_reports_page.php";
+include "../classes/output/incidents_page.php";
 include "../classes/output/renderer.php";
 
-$title = "Generador de reportes";
-$pagetitle = $title;
+$title = "Gestión de incidencias";
+
 $courseid = required_param('courseid', PARAM_INT);
 $blockid = required_param('instanceid', PARAM_INT);
 
@@ -58,29 +57,14 @@ if (!consult_instance($blockid)) {
 $contextcourse = context_course::instance($courseid);
 $contextblock = context_block::instance($blockid);
 
-$url = new moodle_url("/blocks/ases/view/dphpforms_form_builder.php", array('courseid' => $courseid, 'instanceid' => $blockid));
+$url = new moodle_url("/blocks/ases/view/ases_incidents.php", array('courseid' => $courseid, 'instanceid' => $blockid));
 
 $coursenode = $PAGE->navigation->find($courseid, navigation_node::TYPE_COURSE);
 
 $rol = get_role_ases($USER->id);
 
-// dphpforms_form_updater.php->get_alias()
-$record->alias_preguntas_globales = array_values(get_alias());
-$preguntas_form = array_values(get_preguntas_form("seguimiento_pares"));
+$record->incidents = array_values(incident_get_all_incidents());
 
-$record->dphpforms_instance_id = $blockid;
-
-$preguntas_form_short = array();
-foreach( $preguntas_form as &$pregunta ){
-    array_push( $preguntas_form_short, array(
-            'id' => $pregunta->id,
-            'enunciado' => $pregunta->enunciado,
-            'local_alias' => json_decode($pregunta->atributos_campo)->local_alias
-        ) 
-    );
-}
-
-$record->preguntas = json_encode( $preguntas_form_short );
 $menu_option = create_menu_options($USER->id, $blockid, $courseid);
 $record->menu = $menu_option;
 
@@ -100,19 +84,14 @@ $PAGE->requires->css('/blocks/ases/style/forms_pilos.css', true);
 $PAGE->requires->css('/blocks/ases/style/c3.css', true);
 $PAGE->requires->css('/blocks/ases/js/select2/css/select2.css', true);
 $PAGE->requires->css('/blocks/ases/style/side_menu_style.css', true);
-$PAGE->requires->css('/blocks/ases/style/jquery.dataTables.min.css', true);
-$PAGE->requires->css('/blocks/ases/style/buttons.dataTables.min.css', true);
-$PAGE->requires->css('/blocks/ases/style/dphpforms_reports.css', true);
-$PAGE->requires->css('/blocks/ases/style/side_menu_style.css', true);
+$PAGE->requires->css('/blocks/ases/style/ases_incidents.css', true);
 
-$PAGE->requires->js_call_amd('block_ases/dphpforms_reports', 'init');
-
-$PAGE->requires->js_call_amd('block_ases/ases_incident_system', 'init');
+$PAGE->requires->js_call_amd('block_ases/ases_incident_manager', 'init');
 $PAGE->requires->js_call_amd('block_ases/side_menu_main', 'init');
 
 $output = $PAGE->get_renderer('block_ases');
 
 echo $output->header();
-$dphpforms_reports_page = new \block_ases\output\dphpforms_reports_page($record);
-echo $output->render($dphpforms_reports_page);
+$incidents_page = new \block_ases\output\incidents_page($record);
+echo $output->render($incidents_page);
 echo $output->footer();
