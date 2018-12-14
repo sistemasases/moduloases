@@ -231,7 +231,7 @@ define([
 
                         console.log(dataFromApi);
                         var dataTable = dataFromApi.dataTable;
-                        $('.active_semesters').css("display", "block");
+                        $('#download_percentage_desertion').css("display", "inline"); //Show the hidden download button
                         semesters = dataFromApi.semesters;
                         var column_names = dataTable.columns.map( column => column.name );
                         var total_students = dataTable.data.length;
@@ -304,7 +304,7 @@ define([
 
                 ).fail(
                     function(error) {
-                        console.log(error);
+                        console.log(error.responseText);
                     }
                 );
 

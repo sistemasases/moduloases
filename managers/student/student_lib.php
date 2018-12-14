@@ -13,10 +13,9 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
-
 namespace student_lib;
 use function array_search;
-
+require_once (__DIR__ . '/../../managers/periods_management/periods_lib.php');
 /**
 * Student lib
 *
@@ -56,6 +55,27 @@ use function array_search;
  */
 function get_active_semesters_db($id_instance, $ases_cohort_id) {
     global $DB;
+    $cohort_sql_conditions = '';
+    $get_all_cohorts = false;
+    $get_cohort_group = false;
+    $cohort_prefix = \cohort_lib\get_cohort_name_prefix($ases_cohort_id);
+    if(\cohort_lib\is_todos_cohort($ases_cohort_id)) {
+        if($ases_cohort_id === \cohort_lib\TODOS_PREFIX) {
+            $get_all_cohorts = true;
+        } else {
+            $get_cohort_group = true;
+        }
+    }
+    if($get_all_cohorts) {
+        $cohort_sql_conditions = '';
+    }
+    if($get_cohort_group) {
+        $cohort_sql_conditions = " and mdl_cohort.idnumber like '$cohort_prefix%'";
+    }
+    if(!$get_cohort_group && !$get_all_cohorts) {
+        $cohort_sql_conditions = "and mdl_cohort.idnumber = '$ases_cohort_id'";
+    }
+
     $sql = <<<SQL
 select
        mdl_talentospilos_history_academ.id AS mdl_talentospilos_history_academ_id ,
@@ -89,7 +109,7 @@ from mdl_talentospilos_history_academ
     inner join mdl_cohort
       on mdl_cohort.id = mdl_talentospilos_inst_cohorte.id_cohorte
      where mdl_talentospilos_inst_cohorte.id_instancia = $id_instance
-and mdl_cohort.idnumber = '$ases_cohort_id'
+    $cohort_sql_conditions
 order by codigo desc
 SQL;
     return $DB->get_records_sql($sql);
@@ -149,11 +169,17 @@ class ActiveSemestersReportField {
 
 /**
  * Return the semesters with a list of all ASES students was active
+ * @param $id_instance
+ * @param $cohort_id
+ * @param $include_current_semester bool If is true, the current semester is included in the graph
  * @return array Array of ActiveSemestersReportField
+ * @throws \dml_exception
  */
 
-function get_active_semesters($id_instance, $cohort_id) {
+function get_active_semesters($id_instance, $cohort_id, $include_current_semester = false) {
     $semester_is_canceled = 'SI';
+    $current_semester = \get_current_semester();
+    $current_semester_name = $current_semester->nombre;
     $active_semesters_report_fields = array();
     $students_with_active_semesters  = get_active_semesters_db($id_instance, $cohort_id);
     foreach ($students_with_active_semesters as $students_with_active_semester) {
@@ -165,6 +191,9 @@ function get_active_semesters($id_instance, $cohort_id) {
         $cancel_semester = $students_with_active_semester->cancela;
         $cambio_carrera = $students_with_active_semester->cambio_carrera;
         $ases_user_id = $students_with_active_semester->mdl_talentospilos_usuario_id;
+        if(!$include_current_semester && $nombre_semestre === $current_semester_name) {
+            break;
+        }
         if(array_key_exists($talentos_usuario_id, $active_semesters_report_fields)) {
 
             if( !($cancel_semester === $semester_is_canceled)) {
