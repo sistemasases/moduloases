@@ -62,6 +62,7 @@ $cohorts_select = \cohort_lib\get_html_cohorts_select($blockid);
 //se crean los elementos del menu
 $menu_option = create_menu_options($id_current_user, $blockid, $courseid);
 
+$risks = get_riesgos();
 $risks_table='';
 
 
@@ -84,7 +85,7 @@ foreach($actions as $act){
 $data->menu = $menu_option;
 $data->risks_checks = $risks_table;
 $data->cohorts_checks = $cohorts_select;
-$data->status_ases = $estados_ases;
+//$data->status_ases = $estados_ases;
 $contextcourse = context_course::instance($courseid);
 $contextblock =  context_block::instance($blockid);
 
