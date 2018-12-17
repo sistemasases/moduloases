@@ -303,8 +303,17 @@ function  get_ocupaciones()
 function  get_municipios()
 {
     global $DB; 
-   $sql_query = "SELECT * FROM {talentospilos_municipio}";
-   return $DB->get_records_sql($sql_query);
+    $array_departamentos = array ();
+    $sql_query_dpto = "SELECT id, nombre FROM {talentospilos_departamento}";
+    $departamentos  = $DB->get_records_sql($sql_query_dpto);
+    foreach($departamentos as $departamento){
+        $sql_query = "SELECT  id, nombre   FROM {talentospilos_municipio} WHERE cod_depto = $departamento->id";
+        $municipios = $DB->get_records_sql($sql_query);
+        $array_departamentos[$departamento->nombre] =  $municipios;
+    }
+   
+       
+   return $array_departamentos;
 }
 
 

@@ -275,32 +275,54 @@ if ($student_code != 0) {
 
 
      //TRAE MUNICIPIOS
-     $municipios= get_municipios();
-     $options_municipios = '';
+    $municipios= get_municipios();
+    $municipio_student = $ases_student->id_ciudad_res;
+
+    $options_municipios = '';
+
+    $options_municipios .= "<optgroup label='Populares'> <option value='1'>NO DEFINIDO</option> </optgroup>" ;   
+
+    foreach($municipios as $municipio){
+        $key = key($municipios);
+        $options_municipios .= "<optgroup label = '$key'>";
+
+        foreach($municipio as $mun){
+            if($municipio_student == $mun->id){
+                $options_municipios .= "<option value='$mun->id' selected='selected'>$mun->nombre</option>";
+            }else{
+                $options_municipios .= "<option value='$mun->id'>$mun->nombre</option>";
+            }
+        }
+
+        next($municipios);
+
+        $options_municipios .= "</optgroup>";   
+    }
+    //  $options_municipios = '';
  
-     $municipio_student = $ases_student->id_ciudad_res;
-     //Buscar la posición del municipio CALI
-     $i=0;
-     foreach($municipios as $mun){
-         if($mun->nombre=="CALI"){
-         $posp=$i;
-         $options_municipios .= "<optgroup label='Populares'> <option value='$mun->id'>$mun->nombre</option> </optgroup>" ;   
-         break; }
-         $i++;
-     }
+    //  $municipio_student = $ases_student->id_ciudad_res;
+    //  //Buscar la posición del municipio CALI
+    //  $i=0;
+    //  foreach($municipios as $mun){
+    //      if($mun->nombre=="CALI"){
+    //      $posp=$i;
+    //      $options_municipios .= "<optgroup label='Populares'> <option value='$mun->id'>$mun->nombre</option> </optgroup>" ;   
+    //      break; }
+    //      $i++;
+    //  }
  
      //Eliminar municipio CALI puesto al inicio
-     array_splice($municipios,$posp,1);
+    //  array_splice($municipios,$posp,1);
     
-     $options_municipios .= "<optgroup label = 'Otros'>";
-     foreach($municipios as $mun){
-         if($municipio_student == $mun->id){
-             $options_municipios .= "<option value='$mun->id' selected='selected'>$mun->nombre</option>";
-         }else{
-             $options_municipios .= "<option value='$mun->id'>$mun->nombre</option>";
-         }
-     }
-     $options_municipios .= "</optgroup>";   
+    //  $options_municipios .= "<optgroup label = 'Otros'>";
+    //  foreach($municipios as $mun){
+    //      if($municipio_student == $mun->id){
+    //          $options_municipios .= "<option value='$mun->id' selected='selected'>$mun->nombre</option>";
+    //      }else{
+    //          $options_municipios .= "<option value='$mun->id'>$mun->nombre</option>";
+    //      }
+    //  }
+    //  $options_municipios .= "</optgroup>";   
  
      $record->options_municipio_act = $options_municipios;
 

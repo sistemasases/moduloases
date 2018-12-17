@@ -47,7 +47,7 @@
                                                 </h3>
                                                 <label for="lb_cond_adquisicion" class="col-xs-4 col-sm-4 col-md-3 col-lg-3 label_fields_discapacity_tab">Adquisición por </label>
 
-                                                <select class="col-xs-8 col-sm-8 col-md-9 col-lg-9 select_discapacity" id="cond_adquisicion" name="cond_adquisicion" title="¿Cuál de las siguientes circunstancias corresponde a la adquisición de discapacidad?">
+                                                <select class="col-xs-8 col-sm-8 col-md-9 col-lg-9 select_discapacity" id="cond_adquisicion" name="cond_adquisicion" title="¿Cuál de las siguientes circunstancias corresponde a la adquisición de discapacidad?" multiple>
                                                         <option value="1" name="condicion_adq">Enfermedad general</option>
                                                         <option value="2" name="condicion_adq">Enfermedad general de orden genético</option>
                                                         <option value="3" name="condicion_adq">Enfermedad general de orden hereditario</option>
@@ -87,7 +87,7 @@
 
                                         <div class="row row_discapacity" id="div_tipo_discapacidad">
                                                 <label for="lb_tipo_disc" class="col-xs-4 col-sm-4 col-md-3 col-lg-3 label_fields_discapacity_tab">Tipo </label>
-                                                <select class="col-xs-8 col-sm-8 col-md-9 col-lg-9 select_discapacity" id="tipo_discapacidad" name="tipo_discapacidad" title="¿Cuál de los siguientes tipos corresponde a su discapacidad?">
+                                                <select multiple class="col-xs-8 col-sm-8 col-md-9 col-lg-9 select_discapacity" id="tipo_discapacidad" name="tipo_discapacidad" title="¿Cuál de los siguientes tipos corresponde a su discapacidad?">
                                                         <option value="1">Cognitiva</option>
                                                         <option value="2">Psicosocial</option>
                                                         <option value="3">Física</option>
@@ -520,10 +520,7 @@
 
                                         <div class="row row_discapacity" id="div_posibilidades_condiciones">
                                                 <h3 class="h-sections-discapacity-tab">
-                                                        <strong>Desde su diversidad funcional, las exigencias de cada escenarios de la vida en
-                                                                la Universidad, así como las condiciones con las que cuenta actualmente,
-                                                                indique las posibilidades con las que cuenta para llevar a cabo las siguientes
-                                                                actividades cotidianas</strong>
+                                                        <strong>De acuerdo a su desempeño para las actividades de la vida diaria y académica indique las posibilidades con las que cuenta para llevar a cabo las siguientes actividades:</strong>
                                                 </h3>
                                                 <div class="row row_discapacity">
                                                         <label for="lb_act_1" class="col-xs-4 col-sm-4 col-md-4 col-lg-4 label_fields_options_tab">Actividad</label>
@@ -534,14 +531,15 @@
                                                         <input class="col-xs-1 col-sm-1 col-md-1 col-lg-1"  type="checkbox" title="Leer y/o comprender textos escritos impresos" id="check_pos1"/>
                                                         <label for="lb_act1" class="col-xs-3 col-sm-3 col-md-3 col-lg-3 label_fields_discapacity_tab2">Leer y/o comprender textos escritos impresos</label>
 
+
                                                         <div>
                                                                 <input disabled required class="col-xs-2 col-sm-2 col-md-2 col-lg-2 range_input" title="Indique las posibilidades con las que cuenta" type="range"
                                                                         id="clasificacion1" min="1" max="3" />
-                                                                <input disabled class=" col-xs-3 col-sm-3 col-md-3 col-lg-3 input_fields_discapacity_tab input-discapacity" type="text" placeholder="Clasificación"
+                                                                <input disabled class=" col-xs-2 col-sm-2 col-md-2 col-lg-2 input_fields_discapacity_tab input-discapacity" type="text" placeholder="Clasificación"
                                                                         id="input_posib1" />
 
                                                         </div>
-                                                        <input disabled required class=" col-xs-3 col-sm-3 col-md-3 col-lg-3 input_fields_discapacity_tab input-discapacity" type="text" placeholder="Indique tipo apoyo"
+                                                        <input disabled required class=" col-xs-4 col-sm-4 col-md-4 col-lg-4 input_fields_discapacity_tab input-discapacity" type="text" placeholder="Indique tipo apoyo"
                                                                 id="input_tipo1"  name= "input_apoyo"/>
 
                                                 </div>
@@ -552,11 +550,11 @@
                                                         <div>
                                                                 <input  disabled required class="col-xs-2 col-sm-2 col-md-2 col-lg-2 range_input" title="Indique las posibilidades con las que cuenta" type="range"
                                                                         id="clasificacion2" min="1" max="3" />
-                                                                <input disabled class=" col-xs-3 col-sm-3 col-md-3 col-lg-3 input_fields_discapacity_tab input-discapacity" type="text" placeholder="Clasificación"
+                                                                <input disabled class=" col-xs-2 col-sm-2 col-md-2 col-lg-2 input_fields_discapacity_tab input-discapacity" type="text" placeholder="Clasificación"
                                                                         id="input_posib2"/>
 
                                                         </div>
-                                                        <input disabled required class=" col-xs-3 col-sm-3 col-md-3 col-lg-3 input_fields_discapacity_tab input-discapacity" type="text" placeholder="Indique tipo apoyo"
+                                                        <input disabled required class=" col-xs-4 col-sm-4 col-md-4 col-lg-4 input_fields_discapacity_tab input-discapacity" type="text" placeholder="Indique tipo apoyo"
                                                                 id="input_tipo2" name= "input_apoyo"/>
 
                                                 </div>
@@ -567,11 +565,11 @@
                                                         <div>
                                                                 <input disabled required class="col-xs-2 col-sm-2 col-md-2 col-lg-2 range_input" title="Indique las posibilidades con las que cuenta" type="range"
                                                                         id="clasificacion3" min="1" max="3" />
-                                                                <input disabled class=" col-xs-3 col-sm-3 col-md-3 col-lg-3 input_fields_discapacity_tab input-discapacity" type="text" placeholder="Clasificación"
+                                                                <input disabled class=" col-xs-2 col-sm-2 col-md-2 col-lg-2 input_fields_discapacity_tab input-discapacity" type="text" placeholder="Clasificación"
                                                                         id="input_posib3" />
 
                                                         </div>
-                                                        <input disabled required class=" col-xs-3 col-sm-3 col-md-3 col-lg-3 input_fields_discapacity_tab input-discapacity" type="text" placeholder="Indique tipo apoyo"
+                                                        <input disabled required class=" col-xs-4 col-sm-4 col-md-4 col-lg-4 input_fields_discapacity_tab input-discapacity" type="text" placeholder="Indique tipo apoyo"
                                                                 id="input_tipo3" name= "input_apoyo"/>
 
                                                 </div>
@@ -583,11 +581,11 @@
                                                         <div>
                                                                 <input disabled required class="col-xs-2 col-sm-2 col-md-2 col-lg-2 range_input" title="Indique las posibilidades con las que cuenta" type="range"
                                                                         id="clasificacion4" min="1" max="3" />
-                                                                <input disabled class=" col-xs-3 col-sm-3 col-md-3 col-lg-3 input_fields_discapacity_tab input-discapacity" type="text" placeholder="Clasificación"
+                                                                <input disabled class=" col-xs-2 col-sm-2 col-md-2 col-lg-2 input_fields_discapacity_tab input-discapacity" type="text" placeholder="Clasificación"
                                                                         id="input_posib4"/>
 
                                                         </div>
-                                                        <input  disabled required class=" col-xs-3 col-sm-3 col-md-3 col-lg-3 input_fields_discapacity_tab input-discapacity" type="text" placeholder="Indique tipo apoyo"
+                                                        <input  disabled required class="  col-xs-4 col-sm-4 col-md-4 col-lg-4 input_fields_discapacity_tab input-discapacity" type="text" placeholder="Indique tipo apoyo"
                                                                 id="input_tipo4" name= "input_apoyo"/>
 
                                                 </div>
@@ -598,11 +596,11 @@
                                                         <div>
                                                                 <input disabled required class="col-xs-2 col-sm-2 col-md-2 col-lg-2 range_input" title="Indique las posibilidades con las que cuenta" type="range"
                                                                         id="clasificacion5" min="1" max="3" />
-                                                                <input disabled class=" col-xs-3 col-sm-3 col-md-3 col-lg-3 input_fields_discapacity_tab input-discapacity" type="text" placeholder="Clasificación"
+                                                                <input disabled class="col-xs-2 col-sm-2 col-md-2 col-lg-2  input_fields_discapacity_tab input-discapacity" type="text" placeholder="Clasificación"
                                                                         id="input_posib5" />
 
                                                         </div>
-                                                        <input disabled required class=" col-xs-3 col-sm-3 col-md-3 col-lg-3 input_fields_discapacity_tab input-discapacity" type="text" placeholder="Indique tipo apoyo"
+                                                        <input disabled required class="  col-xs-4 col-sm-4 col-md-4 col-lg-4 input_fields_discapacity_tab input-discapacity" type="text" placeholder="Indique tipo apoyo"
                                                                 id="input_tipo5" name= "input_apoyo"/>
 
                                                 </div>
@@ -613,11 +611,11 @@
                                                         <div>
                                                                 <input disabled required class="col-xs-2 col-sm-2 col-md-2 col-lg-2 range_input" title="Indique las posibilidades con las que cuenta" type="range"
                                                                         id="clasificacion6" min="1" max="3" />
-                                                                <input disabled class=" col-xs-3 col-sm-3 col-md-3 col-lg-3 input_fields_discapacity_tab input-discapacity" type="text" placeholder="Clasificación"
+                                                                <input disabled class="col-xs-2 col-sm-2 col-md-2 col-lg-2 input_fields_discapacity_tab input-discapacity" type="text" placeholder="Clasificación"
                                                                         id="input_posib6"/>
 
                                                         </div>
-                                                        <input disabled required class=" col-xs-3 col-sm-3 col-md-3 col-lg-3 input_fields_discapacity_tab input-discapacity" type="text" placeholder="Indique tipo apoyo"
+                                                        <input disabled required class=" col-xs-4 col-sm-4 col-md-4 col-lg-4 input_fields_discapacity_tab input-discapacity" type="text" placeholder="Indique tipo apoyo"
                                                                 id="input_tipo6" name= "input_apoyo"/>
 
                                                 </div>
@@ -629,11 +627,11 @@
                                                         <div>
                                                                 <input disabled required class="col-xs-2 col-sm-2 col-md-2 col-lg-2 range_input" title="Indique las posibilidades con las que cuenta" type="range"
                                                                         id="clasificacion7" min="1" max="3" />
-                                                                <input disabled class=" col-xs-3 col-sm-3 col-md-3 col-lg-3 input_fields_discapacity_tab input-discapacity" type="text" placeholder="Clasificación"
+                                                                <input disabled class=" col-xs-2 col-sm-2 col-md-2 col-lg-2  input_fields_discapacity_tab input-discapacity" type="text" placeholder="Clasificación"
                                                                         id="input_posib7"/>
 
                                                         </div>
-                                                        <input disabled required class=" col-xs-3 col-sm-3 col-md-3 col-lg-3 input_fields_discapacity_tab input-discapacity" type="text" placeholder="Indique tipo apoyo"
+                                                        <input disabled required class=" col-xs-4 col-sm-4 col-md-4 col-lg-4 input_fields_discapacity_tab input-discapacity" type="text" placeholder="Indique tipo apoyo"
                                                                 id="input_tipo7" name= "input_apoyo"/>
 
                                                 </div>
@@ -644,11 +642,11 @@
                                                         <div>
                                                                 <input disabled required class="col-xs-2 col-sm-2 col-md-2 col-lg-2 range_input" title="Indique las posibilidades con las que cuenta" type="range"
                                                                         id="clasificacion8" min="1" max="3" />
-                                                                <input disabled class=" col-xs-3 col-sm-3 col-md-3 col-lg-3 input_fields_discapacity_tab input-discapacity" type="text" placeholder="Clasificación"
+                                                                <input disabled class=" col-xs-2 col-sm-2 col-md-2 col-lg-2 input_fields_discapacity_tab input-discapacity" type="text" placeholder="Clasificación"
                                                                         id="input_posib8"/>
 
                                                         </div>
-                                                        <input disabled required class=" col-xs-3 col-sm-3 col-md-3 col-lg-3 input_fields_discapacity_tab input-discapacity" type="text" placeholder="Indique tipo apoyo"
+                                                        <input disabled required class=" col-xs-4 col-sm-4 col-md-4 col-lg-4 input_fields_discapacity_tab input-discapacity" type="text" placeholder="Indique tipo apoyo"
                                                                 id="input_tipo8" name= "input_apoyo"/>
 
                                                 </div>
@@ -659,11 +657,11 @@
                                                         <div>
                                                                 <input disabled required class="col-xs-2 col-sm-2 col-md-2 col-lg-2 range_input" title="Indique las posibilidades con las que cuenta" type="range"
                                                                         id="clasificacion9" min="1" max="3" />
-                                                                <input disabled class=" col-xs-3 col-sm-3 col-md-3 col-lg-3 input_fields_discapacity_tab input-discapacity" type="text" placeholder="Clasificación"
+                                                                <input disabled class="col-xs-2 col-sm-2 col-md-2 col-lg-2  input_fields_discapacity_tab input-discapacity" type="text" placeholder="Clasificación"
                                                                         id="input_posib9"/>
 
                                                         </div>
-                                                        <input disabled required class=" col-xs-3 col-sm-3 col-md-3 col-lg-3 input_fields_discapacity_tab input-discapacity" type="text" placeholder="Indique tipo apoyo"
+                                                        <input disabled required class="  col-xs-4 col-sm-4 col-md-4 col-lg-4 input_fields_discapacity_tab input-discapacity" type="text" placeholder="Indique tipo apoyo"
                                                                 id="input_tipo9" name= "input_apoyo"/>
 
                                                 </div>
@@ -675,11 +673,11 @@
                                                         <div>
                                                                 <input disabled required class="col-xs-2 col-sm-2 col-md-2 col-lg-2 range_input" title="Indique las posibilidades con las que cuenta" type="range"
                                                                         id="clasificacion10" min="1" max="3" />
-                                                                <input disabled class=" col-xs-3 col-sm-3 col-md-3 col-lg-3 input_fields_discapacity_tab input-discapacity" type="text" placeholder="Clasificación"
+                                                                <input disabled class=" col-xs-2 col-sm-2 col-md-2 col-lg-2  input_fields_discapacity_tab input-discapacity" type="text" placeholder="Clasificación"
                                                                         id="input_posib10"/>
 
                                                         </div>
-                                                        <input disabled required class=" col-xs-3 col-sm-3 col-md-3 col-lg-3 input_fields_discapacity_tab input-discapacity" type="text" placeholder="Indique tipo apoyo"
+                                                        <input disabled required class="  col-xs-4 col-sm-4 col-md-4 col-lg-4 input_fields_discapacity_tab input-discapacity" type="text" placeholder="Indique tipo apoyo"
                                                                 id="input_tipo10" name= "input_apoyo"/>
 
                                                 </div>
@@ -690,11 +688,11 @@
                                                         <div>
                                                                 <input disabled required class="col-xs-2 col-sm-2 col-md-2 col-lg-2 range_input" title="Indique las posibilidades con las que cuenta" type="range"
                                                                         id="clasificacion11" min="1" max="3" />
-                                                                <input disabled class=" col-xs-3 col-sm-3 col-md-3 col-lg-3 input_fields_discapacity_tab input-discapacity" type="text" placeholder="Clasificación"
+                                                                <input disabled class="col-xs-2 col-sm-2 col-md-2 col-lg-2  input_fields_discapacity_tab input-discapacity" type="text" placeholder="Clasificación"
                                                                         id="input_posib11"/>
 
                                                         </div>
-                                                        <input disabled required class=" col-xs-3 col-sm-3 col-md-3 col-lg-3 input_fields_discapacity_tab input-discapacity" type="text" placeholder="Indique tipo apoyo"
+                                                        <input disabled required class=" col-xs-4 col-sm-4 col-md-4 col-lg-4 input_fields_discapacity_tab input-discapacity" type="text" placeholder="Indique tipo apoyo"
                                                                 id="input_tipo11" name= "input_apoyo"/>
 
                                                 </div>
@@ -706,11 +704,11 @@
                                                         <div>
                                                                 <input  disabled required class="col-xs-2 col-sm-2 col-md-2 col-lg-2 range_input" title="Indique las posibilidades con las que cuenta" type="range"
                                                                         id="clasificacion12" min="1" max="3" />
-                                                                <input disabled class=" col-xs-3 col-sm-3 col-md-3 col-lg-3 input_fields_discapacity_tab input-discapacity" type="text" placeholder="Clasificación"
+                                                                <input disabled class="col-xs-2 col-sm-2 col-md-2 col-lg-2  input_fields_discapacity_tab input-discapacity" type="text" placeholder="Clasificación"
                                                                         id="input_posib12"/>
 
                                                         </div>
-                                                        <input disabled required class=" col-xs-3 col-sm-3 col-md-3 col-lg-3 input_fields_discapacity_tab input-discapacity" type="text" placeholder="Indique tipo apoyo"
+                                                        <input disabled required class=" col-xs-4 col-sm-4 col-md-4 col-lg-4 input_fields_discapacity_tab input-discapacity" type="text" placeholder="Indique tipo apoyo"
                                                                 id="input_tipo12" name= "input_apoyo"/>
 
                                                 </div>
@@ -722,11 +720,11 @@
                                                         <div>
                                                                 <input  disabled required class="col-xs-2 col-sm-2 col-md-2 col-lg-2 range_input" title="Indique las posibilidades con las que cuenta" type="range"
                                                                         id="clasificacion13" min="1" max="3" />
-                                                                <input disabled class=" col-xs-3 col-sm-3 col-md-3 col-lg-3 input_fields_discapacity_tab input-discapacity" type="text" placeholder="Clasificación"
+                                                                <input disabled class="col-xs-2 col-sm-2 col-md-2 col-lg-2  input_fields_discapacity_tab input-discapacity" type="text" placeholder="Clasificación"
                                                                         id="input_posib13"/>
 
                                                         </div>
-                                                        <input  disabled required class=" col-xs-3 col-sm-3 col-md-3 col-lg-3 input_fields_discapacity_tab input-discapacity" type="text" placeholder="Indique tipo apoyo"
+                                                        <input  disabled required class=" col-xs-4 col-sm-4 col-md-4 col-lg-4 input_fields_discapacity_tab input-discapacity" type="text" placeholder="Indique tipo apoyo"
                                                                 id="input_tipo13" name= "input_apoyo"/>
 
                                                 </div>
@@ -738,11 +736,11 @@
                                                         <div>
                                                                 <input  disabled required class="col-xs-2 col-sm-2 col-md-2 col-lg-2 range_input" title="Indique las posibilidades con las que cuenta" type="range"
                                                                         id="clasificacion14" min="1" max="3" />
-                                                                <input disabled class=" col-xs-3 col-sm-3 col-md-3 col-lg-3 input_fields_discapacity_tab input-discapacity" type="text" placeholder="Clasificación"
+                                                                <input disabled class="col-xs-2 col-sm-2 col-md-2 col-lg-2  input_fields_discapacity_tab input-discapacity" type="text" placeholder="Clasificación"
                                                                         id="input_posib14"/>
 
                                                         </div>
-                                                        <input  disabled required class=" col-xs-3 col-sm-3 col-md-3 col-lg-3 input_fields_discapacity_tab input-discapacity" type="text" placeholder="Indique tipo apoyo"
+                                                        <input  disabled required class=" col-xs-4 col-sm-4 col-md-4 col-lg-4 input_fields_discapacity_tab input-discapacity" type="text" placeholder="Indique tipo apoyo"
                                                                 id="input_tipo14" name= "input_apoyo"/>
 
                                                 </div>
@@ -754,11 +752,11 @@
                                                         <div>
                                                                 <input  disabled required class="col-xs-2 col-sm-2 col-md-2 col-lg-2 range_input" title="Indique las posibilidades con las que cuenta" type="range"
                                                                         id="clasificacion15" min="1" max="3" />
-                                                                <input disabled class=" col-xs-3 col-sm-3 col-md-3 col-lg-3 input_fields_discapacity_tab input-discapacity" type="text" placeholder="Clasificación"
+                                                                <input disabled class="col-xs-2 col-sm-2 col-md-2 col-lg-2  col-lg-3 input_fields_discapacity_tab input-discapacity" type="text" placeholder="Clasificación"
                                                                         id="input_posib15"/>
 
                                                         </div>
-                                                        <input  disabled required class=" col-xs-3 col-sm-3 col-md-3 col-lg-3 input_fields_discapacity_tab input-discapacity" type="text" placeholder="Indique tipo apoyo"
+                                                        <input  disabled required class=" col-xs-4 col-sm-4 col-md-4 col-lg-4 input_fields_discapacity_tab input-discapacity" type="text" placeholder="Indique tipo apoyo"
                                                                 id="input_tipo15" name= "input_apoyo"/>
 
                                                 </div>
@@ -770,11 +768,11 @@
                                                         <div>
                                                                 <input  disabled required class="col-xs-2 col-sm-2 col-md-2 col-lg-2 range_input" title="Indique las posibilidades con las que cuenta" type="range"
                                                                         id="clasificacion16" min="1" max="3" />
-                                                                <input disabled class=" col-xs-3 col-sm-3 col-md-3 col-lg-3 input_fields_discapacity_tab input-discapacity" type="text" placeholder="Clasificación"
+                                                                <input disabled class=" col-xs-2 col-sm-2 col-md-2 col-lg-2  input_fields_discapacity_tab input-discapacity" type="text" placeholder="Clasificación"
                                                                         id="input_posib16"/>
 
                                                         </div>
-                                                        <input  disabled required class=" col-xs-3 col-sm-3 col-md-3 col-lg-3 input_fields_discapacity_tab input-discapacity" type="text" placeholder="Indique tipo apoyo"
+                                                        <input  disabled required class=" col-xs-4 col-sm-4 col-md-4 col-lg-4 input_fields_discapacity_tab input-discapacity" type="text" placeholder="Indique tipo apoyo"
                                                                 id="input_tipo16" name= "input_apoyo"/>
 
                                                 </div>
@@ -786,11 +784,11 @@
                                                         <div>
                                                                 <input  disabled required class="col-xs-2 col-sm-2 col-md-2 col-lg-2 range_input" title="Indique las posibilidades con las que cuenta" type="range"
                                                                         id="clasificacion17" min="1" max="3" />
-                                                                <input disabled class=" col-xs-3 col-sm-3 col-md-3 col-lg-3 input_fields_discapacity_tab input-discapacity" type="text" placeholder="Clasificación"
+                                                                <input disabled class=" col-xs-2 col-sm-2 col-md-2 col-lg-2  input_fields_discapacity_tab input-discapacity" type="text" placeholder="Clasificación"
                                                                         id="input_posib17"/>
 
                                                         </div>
-                                                        <input  disabled required class=" col-xs-3 col-sm-3 col-md-3 col-lg-3 input_fields_discapacity_tab input-discapacity" type="text" placeholder="Indique tipo apoyo"
+                                                        <input  disabled required class=" col-xs-4 col-sm-4 col-md-4 col-lg-4 input_fields_discapacity_tab input-discapacity" type="text" placeholder="Indique tipo apoyo"
                                                                 id="input_tipo17" name= "input_apoyo"/>
 
                                                 </div>
@@ -802,11 +800,11 @@
                                                         <div>
                                                                 <input  disabled required class="col-xs-2 col-sm-2 col-md-2 col-lg-2 range_input" title="Indique las posibilidades con las que cuenta" type="range"
                                                                         id="clasificacion18" min="1" max="3" />
-                                                                <input disabled class=" col-xs-3 col-sm-3 col-md-3 col-lg-3 input_fields_discapacity_tab input-discapacity" type="text" placeholder="Clasificación"
+                                                                <input disabled class=" col-xs-2 col-sm-2 col-md-2 col-lg-2  input_fields_discapacity_tab input-discapacity" type="text" placeholder="Clasificación"
                                                                         id="input_posib18"/>
 
                                                         </div>
-                                                        <input  disabled required class=" col-xs-3 col-sm-3 col-md-3 col-lg-3 input_fields_discapacity_tab input-discapacity" type="text" placeholder="Indique tipo apoyo"
+                                                        <input  disabled required class=" col-xs-4 col-sm-4 col-md-4 col-lg-4 input_fields_discapacity_tab input-discapacity" type="text" placeholder="Indique tipo apoyo"
                                                                 id="input_tipo18" name= "input_apoyo"/>
 
                                                 </div>
@@ -818,11 +816,11 @@
                                                         <div>
                                                                 <input  disabled required class="col-xs-2 col-sm-2 col-md-2 col-lg-2 range_input" title="Indique las posibilidades con las que cuenta" type="range"
                                                                         id="clasificacion19" min="1" max="3" />
-                                                                <input disabled class=" col-xs-3 col-sm-3 col-md-3 col-lg-3 input_fields_discapacity_tab input-discapacity" type="text" placeholder="Clasificación"
+                                                                <input disabled class=" col-xs-2 col-sm-2 col-md-2 col-lg-2  input_fields_discapacity_tab input-discapacity" type="text" placeholder="Clasificación"
                                                                         id="input_posib19"/>
 
                                                         </div>
-                                                        <input  disabled required class=" col-xs-3 col-sm-3 col-md-3 col-lg-3 input_fields_discapacity_tab input-discapacity" type="text" placeholder="Indique tipo apoyo"
+                                                        <input  disabled required class=" col-xs-4 col-sm-4 col-md-4 col-lg-4 input_fields_discapacity_tab input-discapacity" type="text" placeholder="Indique tipo apoyo"
                                                                 id="input_tipo19" name= "input_apoyo"/>
 
                                                 </div>
@@ -834,11 +832,11 @@
                                                         <div>
                                                                 <input  disabled required class="col-xs-2 col-sm-2 col-md-2 col-lg-2 range_input" title="Indique las posibilidades con las que cuenta" type="range"
                                                                         id="clasificacion20" min="1" max="3" />
-                                                                <input disabled class=" col-xs-3 col-sm-3 col-md-3 col-lg-3 input_fields_discapacity_tab input-discapacity" type="text" placeholder="Clasificación"
+                                                                <input disabled class=" col-xs-2 col-sm-2 col-md-2 col-lg-2  input_fields_discapacity_tab input-discapacity" type="text" placeholder="Clasificación"
                                                                         id="input_posib20"/>
 
                                                         </div>
-                                                        <input  disabled required class=" col-xs-3 col-sm-3 col-md-3 col-lg-3 input_fields_discapacity_tab input-discapacity" type="text" placeholder="Indique tipo apoyo"
+                                                        <input  disabled required class=" col-xs-4 col-sm-4 col-md-4 col-lg-4 input_fields_discapacity_tab input-discapacity" type="text" placeholder="Indique tipo apoyo"
                                                                 id="input_tipo20" name= "input_apoyo"/>
 
                                                 </div>
@@ -855,11 +853,11 @@
                                                         <div>
                                                                 <input  disabled required class="col-xs-2 col-sm-2 col-md-2 col-lg-2 range_input" title="Indique las posibilidades con las que cuenta" type="range"
                                                                         id="clasificacion_otro" min="1" max="3" />
-                                                                <input disabled class=" col-xs-3 col-sm-3 col-md-3 col-lg-3 input_fields_discapacity_tab input-discapacity" type="text" placeholder="Clasificación"
+                                                                <input disabled class=" col-xs-2 col-sm-2 col-md-2 col-lg-2  input_fields_discapacity_tab input-discapacity" type="text" placeholder="Clasificación"
                                                                         id="input_posib_otro"/>
 
                                                         </div>
-                                                        <input   disabled required class=" col-xs-3 col-sm-3 col-md-3 col-lg-3 input_fields_discapacity_tab input-discapacity" type="text" placeholder="Indique tipo apoyo"
+                                                        <input   disabled required class=" col-xs-4 col-sm-4 col-md-4 col-lg-4 input_fields_discapacity_tab input-discapacity" type="text" placeholder="Indique tipo apoyo"
                                                                 id="input_tipo_otro" name= "input_apoyo"/>
 
                                                 </div>
@@ -996,3 +994,4 @@
 
         </div>
 </div>
+        

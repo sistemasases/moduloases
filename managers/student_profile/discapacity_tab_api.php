@@ -51,8 +51,8 @@ if(isset($_POST['func'])){
         $id_schema = $_POST['id_schema'];
         $schema_db = get_schema($id_schema);
         $data = json_decode($_POST['json']);
-        $schema= json_decode($schema_db->json_schema);
-
+        //$schema= json_decode($schema_db->json_schema);
+        $schema = (object)['$ref' => 'file://' . realpath('schema_json_discapacity.json')];
         //General  data to logs
         $moodle_user   =  $USER->id;
         $data_prev     =  $_POST['json_prev'];
@@ -67,12 +67,15 @@ if(isset($_POST['func'])){
         // Validate
         $validator = new  Validator;
 
-        $validator->validate($data,  $schema,Constraint::CHECK_MODE_APPLY_DEFAULTS);
+        $validator->validate($data, $schema,Constraint::CHECK_MODE_APPLY_DEFAULTS);
             
 
          if ($validator->isValid()) {
              $data = json_encode($data);
             $result =  save_detalle_discapacidad($data, $id_ases);
+            $msg->title  = "Éxito";
+            $msg->status = "success";
+            $msg->msg    = "La información se ha almacenado correctamente.";
             if($result){
                 
                 $msg->title  = "Éxito";
@@ -134,7 +137,7 @@ if(isset($_POST['func'])){
                echo json_encode($msg);
            }
          }else {
-            $msg->title = "Error fatal";
+            $msg->title = "Error fatal en Schema";
             $msg->msg = "Informe al área de sistemas.";
             $msg->status = "error";
             echo json_encode($msg);

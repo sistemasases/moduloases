@@ -132,7 +132,9 @@
         padding-left: 0px;
         padding-right: 0px;
     
-    
+    }
+    #cond_adquisicion{
+        height: 160px !important;
     }
     #div_diagnostico{
         padding-left: 0px;
@@ -212,6 +214,9 @@
     #div_tipo_discapacidad{
         margin-top: 5px;
     }
+    #tipo_discapacidad{
+        height: 110px !important;
+    }
     
     #panel1{
         padding-right: 20px;
@@ -234,6 +239,11 @@
 }
 
 @media print{
+
+    #tipo_discapacidad{
+        height: 110px !important;
+    }
+    
     #form_ficha_inicial{
        overflow-x: hidden;
        margin-right: -20px;
@@ -259,6 +269,9 @@
     }
     #otro_cond_adquisicion{
         width: 150px;
+    }
+    #cond_adquisicion{
+        height: 160px !important;
     }
     #otra_discapacidad{
         width: 150px;
