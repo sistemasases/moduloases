@@ -19,8 +19,14 @@
                     <table id="tableActiveSemesters" class="table" cellspacing="0" width="100%">
                     </table>
                 </div>
-                <small>*Si ASES no posee información de semestre culminado en el sistema SIRA de un estudiante, entonces este estudiante no será mostrado en el informe</small>
+                <small>*Si ASES no posee información de almenos un semestre culminado (cancelado o no) en el sistema SIRA de un estudiante, entonces este estudiante no será incluido en el informe</small>
+
+                <div class="active_semesters_graphs" >
+                    <canvas id="active_semesters_chart" width="400" height="400"></canvas>
+                    <a id="download_percentage_desertion" class="btn btn-primary" download="percentage_desertion.png">Descargar Grafica</a>
+                </div>
             </div>
+
         </div>
     </div>
 
