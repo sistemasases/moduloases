@@ -44,6 +44,8 @@
                                 <div id="collapseOne{{year}}B" class="collapse show collapse_v2" role="tabpanel" aria-labelledby="headingOne{{year}}B">
                                     {{#per_b}}
                                     <div id="dphpforms-peer-record-{{#record}}{{id_registro}}{{/record}}" class="card-block dphpforms-peer-record peer-tracking-record class-{{#record}}{{alias}}{{/record}}" data-record-id="{{#record}}{{id_registro}}{{/record}}">
+                                        {{#record}} {{#custom_extra}} {{#seguimiento_pares}}<strong><i class="fas fa-calendar-o"></i> </strong>{{/seguimiento_pares}} {{/custom_extra}} {{/record}}
+                                        {{#record}} {{#custom_extra}} {{#inasistencia}}<strong><i class="far fa-calendar-times"></i></strong>{{/inasistencia}} {{/custom_extra}} {{/record}}
                                         Registro: {{#record}} {{#alias_key}} {{respuesta}} {{/alias_key}} {{/record}}
                                     </div>
                                     {{/per_b}}
@@ -64,6 +66,8 @@
                                 <div id="collapseOne{{year}}A" class="collapse show collapse_v2" role="tabpanel" aria-labelledby="headingOne{{year}}A">
                                     {{#per_a}}
                                     <div id="dphpforms-peer-record-{{#record}}{{id_registro}}{{/record}}" class="card-block dphpforms-peer-record peer-tracking-record class-{{#record}}{{alias}}{{/record}}" data-record-id="{{#record}}{{id_registro}}{{/record}}">
+                                        {{#record}} {{#custom_extra}} {{#seguimiento_pares}}<strong><i class="fas fa-calendar-o"></i> </strong>{{/seguimiento_pares}} {{/custom_extra}} {{/record}}
+                                        {{#record}} {{#custom_extra}} {{#inasistencia}}<strong><i class="far fa-calendar-times"></i></strong>{{/inasistencia}} {{/custom_extra}} {{/record}}
                                         Registro: {{#record}} {{#alias_key}} {{respuesta}} {{/alias_key}} {{/record}}
                                     </div>
                                     {{/per_a}}
