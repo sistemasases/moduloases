@@ -70,3 +70,8 @@
     padding-left: 1em;
   }
 
+  #modal_JSON > .mymodal-content{
+    width: 80%;
+    padding: 0px;
+}
+
