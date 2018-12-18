@@ -420,16 +420,12 @@ function dphpforms_update_respuesta($completed_form, $RECORD_ID){
                 echo 'PROCESABLE';
             }else{
                 echo 'NO PROCESABLE';
-            }
-
-            die();*/
+            }*/
            
             if($processable){
 
                 //echo 'REGLAS OK, PENDIENTE';
                 $updated_respuestas = json_decode(json_encode($updated_respuestas));
-                //print_r($updated_respuestas);
-                //die();
                 foreach($updated_respuestas as &$r){
 
                     $updated = dphpforms_update_completed_form($RECORD_ID, $r->id, $r->valor);
@@ -556,8 +552,6 @@ function dphpforms_new_store_respuesta($completed_form){
         }
     }
 
-    //print_r($all_respuestas);
-    //die();
     $respuestas_obj = json_decode( json_encode($all_respuestas) );
     $validator_response = dphpforms_reglas_validator( $respuestas_obj, $reglas );
     $processable = $validator_response['status'];
