@@ -100,7 +100,7 @@ if($RECORD_ID){
     $to_warehouse = new stdClass();
     $to_warehouse->id_usuario_moodle = $USER->id;
     $to_warehouse->accion = "PRE-UPDATE";
-    $to_warehouse->id_registro_respuesta_form = -1;
+    $to_warehouse->id_registro_respuesta_form = $RECORD_ID;
     $to_warehouse->datos_previos = "";
     $to_warehouse->datos_enviados = $current_data;
     $to_warehouse->datos_almacenados = "";
