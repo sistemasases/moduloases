@@ -626,7 +626,38 @@
                                     });
                                     var mensaje = '';
                                     if(response['message'] == 'Stored'){
-                                        mensaje = 'Almacenado';
+                                        mensaje = 'Almacenado, se va a descargar una copia de seguridad, por favor consérvela, informar si no se genera la copia.';
+                                        let record_id = response['data'];
+                                        let record = null;
+                                        let record_raw = null;
+                                        $.ajax({
+                                            url: "../managers/dphpforms/dphpforms_get_record.php?record_id=" + record_id,
+                                            dataType: 'json',
+                                            async:false,
+                                            success: function(data){
+                                                record_raw = data;
+                                                record = JSON.stringify(data);
+                                            }
+                                        });
+
+                                        let filename = $("#dphpforms_fullname").data("info") + " - " + record_raw.record.alias + " - Fecha " + record_raw.record.fecha_hora_registro + ".json";
+
+                                        var file = new Blob([record], {type: ".json"});
+                                        if (window.navigator.msSaveOrOpenBlob) // IE10+
+                                            window.navigator.msSaveOrOpenBlob(file, filename);
+                                        else { // Others
+                                            var a = document.createElement("a"),
+                                            url = URL.createObjectURL(file);
+                                            a.href = url;
+                                            a.download = filename;
+                                            document.body.appendChild(a);
+                                            a.click();
+                                            setTimeout(function() {
+                                                document.body.removeChild(a);
+                                                window.URL.revokeObjectURL(url);  
+                                            }, 0); 
+                                        }
+
                                     }else if(response['message'] == 'Updated'){
                                         mensaje = 'Actualizado';
                                     }
