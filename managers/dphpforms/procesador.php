@@ -105,7 +105,7 @@ if($RECORD_ID){
     $to_warehouse->datos_enviados = $current_data;
     $to_warehouse->datos_almacenados = "";
     $to_warehouse->observaciones = "preparation for update";
-    $to_warehouse->cod_retorno = -1;
+    $to_warehouse->cod_retorno = 0;
     $to_warehouse->msg_retorno = "";
     $to_warehouse->dts_retorno = "";
     $to_warehouse->navegador = $_SERVER['HTTP_USER_AGENT'];
@@ -147,7 +147,7 @@ if($RECORD_ID){
     $to_warehouse->datos_enviados = $current_data;
     $to_warehouse->datos_almacenados = "";
     $to_warehouse->observaciones = "preparation for insertion";
-    $to_warehouse->cod_retorno = -1;
+    $to_warehouse->cod_retorno = 0;
     $to_warehouse->msg_retorno = "";
     $to_warehouse->dts_retorno = "";
     $to_warehouse->navegador = $_SERVER['HTTP_USER_AGENT'];
