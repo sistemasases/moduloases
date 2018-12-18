@@ -1579,7 +1579,11 @@ $_user_image_edit_form->set_data($toform);
 $record->update_profile_image_form = $_user_image_edit_form->render(null);
 /** End of Update user image  */
 $record->ases_student_code = $dphpforms_ases_user;
-$record->student_username = user_management_get_moodle_user_with_tracking_status_1( $dphpforms_ases_user )->username;
+
+$moodle_user = user_management_get_moodle_user_with_tracking_status_1( $dphpforms_ases_user );
+
+$record->student_username = $moodle_user->username;
+$record->student_fullname = $moodle_user->firstname . " " . $moodle_user->lastname;
 $record->instance = $blockid;
 $record->html_profile_image = $html_profile_image;
 

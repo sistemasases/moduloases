@@ -22,6 +22,9 @@
  * @copyright  2018 Camilo José Cruz Rivera <cruz.camilo@correounivalle.edu.co>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
+use core_user\search\user;
+
 require_once dirname(__FILE__) . '/../../../../config.php';
 require_once '../MyException.php';
 require_once 'massmanagement_lib.php';

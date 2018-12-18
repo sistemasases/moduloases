@@ -93,8 +93,27 @@
 
 if($RECORD_ID){
 
-    $previous_data = dphpforms_get_record($RECORD_ID, null);
     $current_data = $form_JSON;
+
+    //log of preparation for update
+    $stored_data = "";
+    $to_warehouse = new stdClass();
+    $to_warehouse->id_usuario_moodle = $USER->id;
+    $to_warehouse->accion = "PRE-UPDATE";
+    $to_warehouse->id_registro_respuesta_form = $RECORD_ID;
+    $to_warehouse->datos_previos = "";
+    $to_warehouse->datos_enviados = $current_data;
+    $to_warehouse->datos_almacenados = "";
+    $to_warehouse->observaciones = "preparation for update";
+    $to_warehouse->cod_retorno = 0;
+    $to_warehouse->msg_retorno = "";
+    $to_warehouse->dts_retorno = "";
+    $to_warehouse->navegador = $_SERVER['HTTP_USER_AGENT'];
+    $to_warehouse->url_request = $_SERVER['HTTP_REFERER'];
+    $DB->insert_record('talentospilos_df_dwarehouse', $to_warehouse, $returnid=false, $bulk=false);
+    //end log of preparation for update
+
+    $previous_data = dphpforms_get_record($RECORD_ID, null);
     $retorno = dphpforms_update_respuesta($form_JSON, $RECORD_ID);
     $stored_data = dphpforms_get_record($RECORD_ID, null);
 
@@ -117,6 +136,25 @@ if($RECORD_ID){
 }else{
     $previous_data = "";
     $current_data = $form_JSON;
+
+    //log of preparation for insert
+    $stored_data = "";
+    $to_warehouse = new stdClass();
+    $to_warehouse->id_usuario_moodle = $USER->id;
+    $to_warehouse->accion = "PRE-INSERT";
+    $to_warehouse->id_registro_respuesta_form = -1;
+    $to_warehouse->datos_previos = "";
+    $to_warehouse->datos_enviados = $current_data;
+    $to_warehouse->datos_almacenados = "";
+    $to_warehouse->observaciones = "preparation for insertion";
+    $to_warehouse->cod_retorno = 0;
+    $to_warehouse->msg_retorno = "";
+    $to_warehouse->dts_retorno = "";
+    $to_warehouse->navegador = $_SERVER['HTTP_USER_AGENT'];
+    $to_warehouse->url_request = $_SERVER['HTTP_REFERER'];
+    $DB->insert_record('talentospilos_df_dwarehouse', $to_warehouse, $returnid=false, $bulk=false);
+    //end log of preparation for insert
+
     $retorno = dphpforms_new_store_respuesta($form_JSON);
     if( json_decode($retorno)->status == '0' ){
 
@@ -382,16 +420,12 @@ function dphpforms_update_respuesta($completed_form, $RECORD_ID){
                 echo 'PROCESABLE';
             }else{
                 echo 'NO PROCESABLE';
-            }
-
-            die();*/
+            }*/
            
             if($processable){
 
                 //echo 'REGLAS OK, PENDIENTE';
                 $updated_respuestas = json_decode(json_encode($updated_respuestas));
-                //print_r($updated_respuestas);
-                //die();
                 foreach($updated_respuestas as &$r){
 
                     $updated = dphpforms_update_completed_form($RECORD_ID, $r->id, $r->valor);
@@ -518,8 +552,6 @@ function dphpforms_new_store_respuesta($completed_form){
         }
     }
 
-    //print_r($all_respuestas);
-    //die();
     $respuestas_obj = json_decode( json_encode($all_respuestas) );
     $validator_response = dphpforms_reglas_validator( $respuestas_obj, $reglas );
     $processable = $validator_response['status'];
