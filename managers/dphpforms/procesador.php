@@ -93,8 +93,27 @@
 
 if($RECORD_ID){
 
-    $previous_data = dphpforms_get_record($RECORD_ID, null);
     $current_data = $form_JSON;
+
+    //log of preparation for update
+    $stored_data = "";
+    $to_warehouse = new stdClass();
+    $to_warehouse->id_usuario_moodle = $USER->id;
+    $to_warehouse->accion = "PRE-UPDATE";
+    $to_warehouse->id_registro_respuesta_form = -1;
+    $to_warehouse->datos_previos = "";
+    $to_warehouse->datos_enviados = $current_data;
+    $to_warehouse->datos_almacenados = "";
+    $to_warehouse->observaciones = "preparation for update";
+    $to_warehouse->cod_retorno = -1;
+    $to_warehouse->msg_retorno = "";
+    $to_warehouse->dts_retorno = "";
+    $to_warehouse->navegador = $_SERVER['HTTP_USER_AGENT'];
+    $to_warehouse->url_request = $_SERVER['HTTP_REFERER'];
+    $DB->insert_record('talentospilos_df_dwarehouse', $to_warehouse, $returnid=false, $bulk=false);
+    //end log of preparation for update
+
+    $previous_data = dphpforms_get_record($RECORD_ID, null);
     $retorno = dphpforms_update_respuesta($form_JSON, $RECORD_ID);
     $stored_data = dphpforms_get_record($RECORD_ID, null);
 
@@ -117,6 +136,25 @@ if($RECORD_ID){
 }else{
     $previous_data = "";
     $current_data = $form_JSON;
+
+    //log of preparation for insert
+    $stored_data = "";
+    $to_warehouse = new stdClass();
+    $to_warehouse->id_usuario_moodle = $USER->id;
+    $to_warehouse->accion = "PRE-INSERT";
+    $to_warehouse->id_registro_respuesta_form = -1;
+    $to_warehouse->datos_previos = "";
+    $to_warehouse->datos_enviados = $current_data;
+    $to_warehouse->datos_almacenados = "";
+    $to_warehouse->observaciones = "preparation for insertion";
+    $to_warehouse->cod_retorno = -1;
+    $to_warehouse->msg_retorno = "";
+    $to_warehouse->dts_retorno = "";
+    $to_warehouse->navegador = $_SERVER['HTTP_USER_AGENT'];
+    $to_warehouse->url_request = $_SERVER['HTTP_REFERER'];
+    $DB->insert_record('talentospilos_df_dwarehouse', $to_warehouse, $returnid=false, $bulk=false);
+    //end log of preparation for insert
+
     $retorno = dphpforms_new_store_respuesta($form_JSON);
     if( json_decode($retorno)->status == '0' ){
 
