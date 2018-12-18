@@ -142,14 +142,17 @@ define([
                 if($(this).is(":checked")){
                     $(this).parent().find(":input[type=range]").prop("disabled", false);
                     $(this).parent().find(":input[type=range]").prop("required", true);
+                    $(this).parent().find(":input[type=range]").next().val("Sin apoyo");
                     $(this).parent().find(":input[name=input_apoyo]").prop("disabled", false);
                     $(this).parent().find(":input[name=input_apoyo]").prop("required", true);
+                    $(this).parent().find(":input[name=input_apoyo]").val("NO REGISTRA.");
 
                     
                 }else{
                     $(this).parent().find(":input[type=range]").prop("value", null);
                     $(this).parent().find(":input[type=range]").prop("disabled", true);
                     $(this).parent().find(":input[type=range]").prop("required", false);
+                    $(this).parent().find(":input[type=range]").next().val("");
                     $(this).parent().find(":input[name=input_apoyo]").prop("disabled", true);
                     $(this).parent().find(":input[name=input_apoyo]").prop("required", false);
                     $(this).parent().find(":input[type=text]").prop("value", "");
@@ -1304,7 +1307,19 @@ define([
                     name       = json_bd[i]['tipo_discapacidad'];
                     key_otro   = json_bd[i]['key_otro_tipo'];     
                     val_otro   = json_bd[i]['otro_tipo'];
-                    setOptionSelect(key, name, key_otro, val_otro);
+
+                    if(Array.isArray(name)){
+                        for (condicion in name){
+                            setOptionSelect(key,name[condicion] , key_otro, val_otro);
+                        }
+                          
+                    }else{
+                            setOptionSelect(key, name, key_otro, val_otro);
+                    }
+                    $("#cond_adquisicion").find(":selected").each(function() {
+                        $(this).css("background","lightslategrey" );
+                    });
+                    
                     
                     break;
 

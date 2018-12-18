@@ -605,14 +605,7 @@ define([
                                 return msg;  
     
                                 }
-                                if(tipo == "text"){
-                                    if(has_numbers(value)){
-                                        msg.title = "Datos económicos";
-                                        msg.status = "error";
-                                        msg.msg = "El campo "+op+" no debe contener números";
-                                        return msg;  
-                                        }
-                                }
+                              
                                 if(tipo == "number"){
                                     if(Number.isNaN(value)){
                                         msg.title = "Datos económicos";

@@ -575,9 +575,9 @@
   "posibilidad": {
       "type": "string",
       "enum": [
-          "No la puede realizar",
-          "Lo hace sin apoyo",
-          "Lo hace con apoyo"
+          "No realiza",
+          "Sin apoyo",
+          "Con apoyo"
       ]
   },
   "actividad": {
@@ -587,9 +587,9 @@
           "Leer los textos escritos e imágenes en pantalla",
           "Copia al dictado",
           "Transcripción de textos escritos",
-          "Producción de textos manuales escritos",
-          "Producción de textos escritos en pantalla",
-          "Escribir y/o elaborar",
+          "Escritura y redacción de textos manuales escritos",
+          "Escritura y redacción de textos escritos en pantalla",
+          "Escribir y/o redactar",
           "Elaborar conceptos o ideas",
           "Escuchar",
           "Expresarse oralmente",

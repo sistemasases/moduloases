@@ -73,9 +73,7 @@ if(isset($_POST['func'])){
          if ($validator->isValid()) {
              $data = json_encode($data);
             $result =  save_detalle_discapacidad($data, $id_ases);
-            $msg->title  = "Éxito";
-            $msg->status = "success";
-            $msg->msg    = "La información se ha almacenado correctamente.";
+
             if($result){
                 
                 $msg->title  = "Éxito";
@@ -107,7 +105,7 @@ if(isset($_POST['func'])){
                echo json_encode($msg);
                
            }else{
-               $msg->title = "Error";
+               $msg->title = "Error en el servidor";
                $msg->msg = "No se ha actualizado correctamente.";
                $msg->status = "error";
 
@@ -137,7 +135,7 @@ if(isset($_POST['func'])){
                echo json_encode($msg);
            }
          }else {
-            $msg->title = "Error fatal en Schema";
+            $msg->title = "Error fatal validando Schema JSON";
             $msg->msg = "Informe al área de sistemas.";
             $msg->status = "error";
             echo json_encode($msg);
