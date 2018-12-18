@@ -43,6 +43,25 @@
         global $USER;
 
         if(!is_numeric( $record_id )){
+
+            //log of preparation for delete
+            $current_data = $record_id;
+            $to_warehouse = new stdClass();
+            $to_warehouse->id_usuario_moodle = $USER->id;
+            $to_warehouse->accion = "PRE-DELETE";
+            $to_warehouse->id_registro_respuesta_form = -1;
+            $to_warehouse->datos_previos = "";
+            $to_warehouse->datos_enviados = $current_data;
+            $to_warehouse->datos_almacenados = "";
+            $to_warehouse->observaciones = "preparation for delete";
+            $to_warehouse->cod_retorno = -1;
+            $to_warehouse->msg_retorno = "Invalid record id";
+            $to_warehouse->dts_retorno = "";
+            $to_warehouse->navegador = $_SERVER['HTTP_USER_AGENT'];
+            $to_warehouse->url_request = $_SERVER['HTTP_REFERER'];
+            $DB->insert_record('talentospilos_df_dwarehouse', $to_warehouse, $returnid=false, $bulk=false);
+            //end log of preparation for delete
+
             return json_encode(
                 array(
                     'status' => '-1',
@@ -52,14 +71,33 @@
             );
         }
 
+         //log of preparation for delete
+         $current_data = $record_id;
+         $to_warehouse = new stdClass();
+         $to_warehouse->id_usuario_moodle = $USER->id;
+         $to_warehouse->accion = "PRE-DELETE";
+         $to_warehouse->id_registro_respuesta_form = $record_id;
+         $to_warehouse->datos_previos = "";
+         $to_warehouse->datos_enviados = $current_data;
+         $to_warehouse->datos_almacenados = "";
+         $to_warehouse->observaciones = "preparation for delete";
+         $to_warehouse->cod_retorno = 0;
+         $to_warehouse->msg_retorno = "";
+         $to_warehouse->dts_retorno = "";
+         $to_warehouse->navegador = $_SERVER['HTTP_USER_AGENT'];
+         $to_warehouse->url_request = $_SERVER['HTTP_REFERER'];
+         $DB->insert_record('talentospilos_df_dwarehouse', $to_warehouse, $returnid=false, $bulk=false);
+         //end log of preparation for delete
+
         $sql = "SELECT * FROM {talentospilos_df_form_resp} WHERE id = '$record_id' AND estado = '1'";
         $result = $DB->get_record_sql($sql);
+
         
         if($result){
 
             $previous_data = dphpforms_get_record($record_id, null);
             $current_data = null;
-            
+
             $deleted_record = new stdClass();
             $deleted_record->id = $result->id;
             $deleted_record->id_formulario = $result->id_formulario; 
@@ -98,6 +136,24 @@
             return $retorno;
             
         }else{
+
+            
+            $current_data = $record_id;
+            $to_warehouse = new stdClass();
+            $to_warehouse->id_usuario_moodle = $USER->id;
+            $to_warehouse->accion = "DELETE";
+            $to_warehouse->id_registro_respuesta_form = $record_id;
+            $to_warehouse->datos_previos = "";
+            $to_warehouse->datos_enviados = $current_data;
+            $to_warehouse->datos_almacenados = "";
+            $to_warehouse->observaciones = "";
+            $to_warehouse->cod_retorno = -1;
+            $to_warehouse->msg_retorno = "Record does not exist";
+            $to_warehouse->dts_retorno = "";
+            $to_warehouse->navegador = $_SERVER['HTTP_USER_AGENT'];
+            $to_warehouse->url_request = $_SERVER['HTTP_REFERER'];
+            $DB->insert_record('talentospilos_df_dwarehouse', $to_warehouse, $returnid=false, $bulk=false);
+
             return json_encode(
                 array(
                     'status' => '-1',
