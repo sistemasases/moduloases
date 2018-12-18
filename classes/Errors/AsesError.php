@@ -13,7 +13,7 @@ class AsesError {
      * Standard array than contains all than you want for aditional info
      * about error, ONLY USE on exceptional cases
      */
-    private $data_response;
+    public $data_response;
     /**
      * Error constructor
      * @param int $code Error code
