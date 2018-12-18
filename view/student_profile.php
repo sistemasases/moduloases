@@ -735,18 +735,41 @@ if ($student_code != 0) {
 
     $array_tracking_date = array();
 
+    //Here can be added metadata.
     foreach ($array_detail_peer_trackings_dphpforms as &$peer_tracking) {
+
+        $alias = $peer_tracking->record->alias;
+        $peer_tracking->custom_extra->$alias = true;
+        $peer_tracking->custom_extra->rev_pro = false;
+
+
         foreach ($peer_tracking->record->campos as &$tracking) {
             if ($tracking->local_alias == 'fecha') {
                 array_push($array_tracking_date, strtotime($tracking->respuesta));
             };
+            if ($tracking->local_alias == 'revisado_profesional') {
+                if( $tracking->respuesta === "0" ){
+                    $peer_tracking->custom_extra->rev_pro = true;
+                }
+            };
         };
+
     };
 
     foreach ($array_detail_inasistencia_peer_trackings_dphpforms as &$inasistencia_peer_tracking) {
+
+        $alias = $inasistencia_peer_tracking->record->alias;
+        $inasistencia_peer_tracking->custom_extra->$alias = true;
+        $inasistencia_peer_tracking->custom_extra->rev_pro = false;
+
         foreach ($inasistencia_peer_tracking->record->campos as &$tracking) {
             if ($tracking->local_alias == 'in_fecha') {
                 array_push($array_tracking_date, strtotime($tracking->respuesta));
+            };
+            if ($tracking->local_alias == 'in_revisado_profesional') {
+                if( $tracking->respuesta === "0" ){
+                    $inasistencia_peer_tracking->custom_extra->rev_pro = true;
+                }
             };
         };
     };
