@@ -5,6 +5,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     $dbman = $DB->get_manager();
     $result = true;
     if ($oldversion < 2018121914150 ) {
+      
     //     // ************************************************************************************************************
     //     // Actualización que crea la tabla para los campos extendidos de usuario (Tabla: {talentospilos_user_extended})
     //     // Versión: 2018010911179
@@ -2576,8 +2577,16 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
             $dbman->add_field($table, $field);
         }
 
-        upgrade_block_savepoint(true, 2018121914150, 'ases');
+        
+        // Changing nullability of field id_usuario_cierra on table talentospilos_incidencias to null.
+        $table = new xmldb_table('talentospilos_incidencias');
+        $field = new xmldb_field('id_usuario_cierra', XMLDB_TYPE_INTEGER, '20', null, null, null, null, 'id_usuario_registra');
+
+        // Launch change of nullability for field id_usuario_cierra.
+        $dbman->change_field_notnull($table, $field);
+
     
+        upgrade_block_savepoint(true, 2018121914150, 'ases');
         return $result;
 
     }
