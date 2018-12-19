@@ -887,13 +887,6 @@ define([
                             msg.msg = "El campo "+op+" diagnóstico es obligatorio";
                             return msg;  
                         }
-                        if(has_numbers(obj_diagnostico[op])){
-
-                            msg.title = "Diagnóstico de discapacidad";
-                            msg.status = "error";
-                            msg.msg = "El campo "+op+" diagnóstico no debe contener números";
-                            return msg;  
-                        }
 
                        }
                     }
@@ -972,13 +965,6 @@ define([
                                 msg.msg = "El campo "+op+" de la opción '"+ obj_dif["funcion"] +"' es obligatorio";
                                 return msg;  
                             }
-                            if(has_numbers(obj_dif[op])){
-
-                                msg.title = "Dificultades permanentes";
-                                msg.status = "error";
-                                msg.msg = "El campo "+op+ " de la opción '"+ obj_dif["funcion"] + "' no debe contener números";
-                                return msg;  
-                            }
 
                         }
                         }
@@ -1002,14 +988,7 @@ define([
                                 msg.msg = "El campo "+op+" de la opción '"+ obj_cond["organo"] +"' es obligatorio";
                                 return msg;  
                             }
-                            if(has_numbers(obj_cond[op])){
-
-                                msg.title = "Condiciones de salud";
-                                msg.status = "error";
-                                msg.msg = "El campo "+op+ " de la opción '"+ obj_cond["organo"] + "' no debe contener números";
-                                return msg;  
-                            }
-
+                 
                         }
                         }
                     }    
@@ -1032,14 +1011,7 @@ define([
                                 msg.msg = "El campo "+op+" de la opción '"+ obj_nec["situacion"] +"' es obligatorio";
                                 return msg;  
                             }
-                            if(has_numbers(obj_nec[op])){
-
-                                msg.title = "Necesidades situaciones";
-                                msg.status = "error";
-                                msg.msg = "El campo "+op+ " de la opción '"+ obj_nec["situacion"] + "' no debe contener números";
-                                return msg;  
-                            }
-
+                   
                         }
                         }
                     }    
@@ -1060,13 +1032,6 @@ define([
                               msg.title = "Factores de impacto";
                               msg.status = "error";
                               msg.msg = "El campo "+op+" de la opción '"+ obj_fact["escenario"] +"' es obligatorio";
-                              return msg;  
-                          }
-                          if(has_numbers(obj_fact[op])){
-
-                              msg.title = "Factores de impacto";
-                              msg.status = "error";
-                              msg.msg = "El campo "+op+ " de la opción '"+ obj_fact["escenario"] + "' no debe contener números";
                               return msg;  
                           }
 
@@ -1091,14 +1056,7 @@ define([
                               msg.msg = "El campo "+op+" de la opción '"+ obj_pos["actividad"] +"' es obligatorio";
                               return msg;  
                           }
-                          if(has_numbers(obj_pos[op])){
-
-                              msg.title = "Posibilidades en actividades";
-                              msg.status = "error";
-                              msg.msg = "El campo "+op+ " de la opción '"+ obj_pos["actividad"] + "' no debe contener números";
-                              return msg;  
-                          }
-
+           
                       }
                       }
                     }
@@ -1123,14 +1081,7 @@ define([
                                  msg.msg = "El campo "+op+" de la opción '"+ obj_apoyo["apoyo_cotidiano"]+"' es obligatorio";
                                  return msg;  
                              }
-                             if(has_numbers(obj_apoyo[op])){
-     
-                                 msg.title = "Apoyo principal";
-                                 msg.status = "error";
-                                 msg.msg = "El campo "+op+" de la opción '"+ obj_apoyo["apoyo_cotidiano"]+"' no debe contener números";
-                                 return msg;  
-                             }
-     
+                      
                             }
                          }
      
@@ -1156,13 +1107,6 @@ define([
                             msg.msg = "El campo "+op+" de la opción '"+ obj_transporte["transporte"]+"' es obligatorio";
                             return msg;  
                         }
-                        if(has_numbers(obj_transporte[op])){
-
-                            msg.title = "Medio de transporte";
-                            msg.status = "error";
-                            msg.msg = "El campo "+op+" de la opción '"+ obj_transporte["transporte"]+"' no debe contener números";
-                            return msg;  
-                        }
 
                        }
                     }
@@ -1181,14 +1125,7 @@ define([
                              msg.msg = "El campo "+op+" es obligatorio";
                              return msg;  
                          }
-                         if(has_numbers(obj_asoc[op])){
- 
-                             msg.title = "Participación en organización/asociación";
-                             msg.status = "error";
-                             msg.msg = "El campo "+op+" no debe contener números";
-                             return msg;  
-                         }
- 
+                    
                         }
                      }
                     break;
@@ -1205,14 +1142,6 @@ define([
                              msg.msg = "El campo "+op+" es obligatorio";
                              return msg;  
                          }
-                         if(has_numbers(obj_act[op])){
- 
-                             msg.title = "Actividades con otros";
-                             msg.status = "error";
-                             msg.msg = "El campo "+op+" no debe contener números";
-                             return msg;  
-                         }
- 
                         }
                      }
 
@@ -1230,14 +1159,6 @@ define([
                              msg.msg = "El campo "+op+" es obligatorio";
                              return msg;  
                          }
-                         if(has_numbers(obj_inst[op])){
- 
-                             msg.title = "Apoyo institución";
-                             msg.status = "error";
-                             msg.msg = "El campo "+op+" no debe contener números";
-                             return msg;  
-                         }
- 
                         }
                      }
                     break;
