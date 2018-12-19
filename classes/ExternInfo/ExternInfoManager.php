@@ -76,7 +76,7 @@ abstract class ExternInfoManager extends Validable {
         if($this->objects) {
             foreach($this->objects as $key=>$object) {
                 if(!$object->valid()){
-                    $this->object_errors[$key] = $object->get_errors();
+                    $this->object_errors[$key] = $object->get_errors_object();
                     $valid = false;
                 }
             }
