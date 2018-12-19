@@ -1096,36 +1096,6 @@ return {
         var id_ases = $('#id_ases').val();
         var neighborhood = $('#select_neighborhood').val();
         var geographic_risk = $('#select_geographic_risk').val();
-        
-
-        $.ajax({
-            type: "POST",
-            data: {
-                func: 'save_geographic_info',
-                id_ases: id_ases,
-                latitude: latitude,
-                longitude: longitude,
-                neighborhood: neighborhood,
-                geographic_risk: geographic_risk
-            },
-            url: "../managers/student_profile/geographic_serverproc.php",
-            success: function(msg) {
-
-                swal(
-                    msg.title,
-                    msg.text,
-                    msg.type);
-            },
-            dataType: "json",
-            cache: "false",
-            error: function(msg) {
-                
-                swal(
-                    msg.title,
-                    msg.text,
-                    msg.type);
-            },
-        });
 
        var directionsService = new google.maps.DirectionsService();
 
@@ -1152,13 +1122,41 @@ return {
 
         directionsService.route(second_request, function(response, status) {
           
-               console.log(response);
-               // Display the distance:
-               console.log(response.routes[0].legs[0].distance.value + " meters");
+            var duration = response.routes[0].legs[0].distance.value;
   
-               // Display the duration:
-               console.log(response.routes[0].legs[0].duration.value + " seconds");
-  
+            var distance = response.routes[0].legs[0].duration.value;
+
+            $.ajax({
+                type: "POST",
+                data: {
+                    func: 'save_geographic_info',
+                    id_ases: id_ases,
+                    latitude: latitude,
+                    longitude: longitude,
+                    neighborhood: neighborhood,
+                    geographic_risk: geographic_risk,
+                    duration: duration,
+                    distance: distance
+                },
+                url: "../managers/student_profile/geographic_serverproc.php",
+                success: function(msg) {
+    
+                    swal(
+                        msg.title,
+                        msg.text,
+                        msg.type);
+                },
+                dataType: "json",
+                cache: "false",
+                error: function(msg) {
+                    
+                    swal(
+                        msg.title,
+                        msg.text,
+                        msg.type);
+                },
+            });
+      
          });
     }
 
