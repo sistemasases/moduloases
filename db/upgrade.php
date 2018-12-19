@@ -4,7 +4,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     global $DB;
     $dbman = $DB->get_manager();
     $result = true;
-    if ($oldversion < 2018121116300 ) {
+    if ($oldversion < 2018121914150 ) {
     //     // ************************************************************************************************************
     //     // Actualización que crea la tabla para los campos extendidos de usuario (Tabla: {talentospilos_user_extended})
     //     // Versión: 2018010911179
@@ -2556,7 +2556,27 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
             $dbman->create_table($table);
         }
 
-        upgrade_block_savepoint(true, 2018121116300 , 'ases');
+        //Add duration field to demographic table
+
+        // Define field duracion to be added to talentospilos_demografia.
+        $table = new xmldb_table('talentospilos_demografia');
+        $field = new xmldb_field('duracion', XMLDB_TYPE_FLOAT, '10', null, null, null, null, 'barrio');
+
+        // Conditionally launch add field duracion.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Define field distancia to be added to talentospilos_demografia.
+        $table = new xmldb_table('talentospilos_demografia');
+        $field = new xmldb_field('distancia', XMLDB_TYPE_FLOAT, '10', null, null, null, null, 'duracion');
+
+        // Conditionally launch add field distancia.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        upgrade_block_savepoint(true, 2018121914150, 'ases');
     
         return $result;
 
