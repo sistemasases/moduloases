@@ -44,8 +44,8 @@ class EstadoAsesCSV extends Validable {
         /* @var $field_validators EstadoAsesCSV */
         $field_validators = new stdClass();
         $field_validators->estado_ases = [FieldValidators::required()];
-        $field_validators->estado_icetex = [FieldValidators::required()];
-        $field_validators->tracking_status = [FieldValidators::required()];
+        $field_validators->estado_icetex = [FieldValidators::required(), FieldValidators::numeric()];
+        $field_validators->tracking_status = [FieldValidators::required(), FieldValidators::numeric()];
         $field_validators->motivo_ases = [FieldValidators::required()];
         $field_validators->motivo_icetex = [FieldValidators::required()];
         $field_validators->estado_programa= [FieldValidators::required()];

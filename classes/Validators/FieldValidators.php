@@ -8,12 +8,15 @@
 
 class FieldValidators
 {
-    public static function numeric() {
+    public static function numeric(string $custom_message = null) {
         return
-            function($value, $field_name = '') {
+            function($value, $field_name = '') use ($custom_message) {
                 if(is_numeric($value)) {
                     return true;
                 } else {
+                    if($custom_message !== null) {
+                        return $custom_message;
+                    }
                     return "Field $field_name should be numeric";
                 }
             };

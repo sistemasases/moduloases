@@ -185,7 +185,9 @@
                                      */
                                     $('td.'+ property_name , row).addClass('error');
                                     console.log(data.errors[property_name][0].error_message);
-                                    $('td.'+ property_name , row).prop('title', data.errors[property_name][0].error_message);
+                                    var error_names = data.errors[property_name].map(error => error.error_message);
+                                    var error_names_concat = error_names.join();
+                                    $('td.'+ property_name , row).prop('title', error_names_concat);
                                 });
                             }
                         }
