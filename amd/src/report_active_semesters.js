@@ -13,7 +13,12 @@ define([
     'jquery',
     'block_ases/Chart',
     'block_ases/loading_indicator',
-    'block_ases/jquery.dataTables'
+    'block_ases/jquery.dataTables',
+    'block_ases/dataTables.autoFill',
+    'block_ases/dataTables.buttons',
+    'block_ases/buttons.html5',
+    'block_ases/buttons.flash',
+    'block_ases/buttons.print'
 ], function($, Chart, loading_indicator){
 
     return {
@@ -53,7 +58,8 @@ define([
             var CODIGO_COLUMN = 'codigo';
             var NOMBRE_COLUMN= 'nombre';
             var NUM_DOC_COLUMN = 'num_doc';
-            var tfoot_first_row_title_prefix = 'Total activos';
+            var tfoot_total_active_title_prefix = 'Total activos';
+            var tfoot_total_inactive_title_prefix = 'Total inactivos';
             var known_columns = [CODIGO_COLUMN, NOMBRE_COLUMN, NUM_DOC_COLUMN];
             /** go to ficha general on click **/
             $(document).on('click', '#tableActiveSemesters tbody tr td', function () {
@@ -126,10 +132,12 @@ define([
                 /* All the cells of tfoot should have no text at start*/
                 $('#tableActiveSemesters tfoot th').html('');
                 /* Add the first cell of tfoot title */
-                $('#tableActiveSemesters tfoot th')[0].textContent= tfoot_first_row_title_prefix + ' ' + cohort_id;
+                $('#tableActiveSemesters tfoot tr.total_active th')[0].textContent= tfoot_total_active_title_prefix + ' ' + cohort_id;
+                $('#tableActiveSemesters tfoot tr.total_inactive th')[0].textContent = tfoot_total_inactive_title_prefix + ' ' + cohort_id;
                 /* Add the total active students in each semester at tfoot */
                 semesters.forEach(function(semester) {
-                    $('#tableActiveSemesters tfoot th.'+semester).html(resume_report[semester]);
+                    $('#tableActiveSemesters tfoot tr.total_active th.'+semester).html(resume_report[semester]); //active students
+                    $('#tableActiveSemesters tfoot tr.total_inactive th.'+semester).html(resume_report.total_students - resume_report[semester]); //inactive students
                 });
             }
             var resume_report /* ResumeReport */ = null; // null initialized for now
@@ -256,7 +264,10 @@ define([
                             /*Add filter to column headers*/
                             var column_names = dataTable.columns.map(column => column.name ? column.name : null);
                             /* Indexes of the semester columns */
-                            var filter_column_indexes = get_filter_column_indexes(semesters, column_names);
+                            /*Filter columns*/
+                            var filter_column_names = semesters;
+                            filter_column_names.push('cambio_carrera');
+                            var filter_column_indexes = get_filter_column_indexes(filter_column_names, column_names);
                             this.api().columns(filter_column_indexes).every(function () {
                                 var column = this;
 
@@ -288,10 +299,14 @@ define([
                         table = $("#tableActiveSemesters").DataTable(
                             dataTable
                         );
-                        /*Append a t foot with a clone of thead*/
+                        /*Append a t foot with a clone of thead for the totals*/
                         $("#tableActiveSemesters").append(
-                            $('<tfoot/>').append( $("#tableActiveSemesters thead tr").clone() )
+                            $('<tfoot/>').append( $("#tableActiveSemesters thead tr").clone().addClass('total_active') ) //total active
                         );
+                        $("#tableActiveSemesters").append(
+                            $('<tfoot/>').append( $("#tableActiveSemesters thead tr").clone().addClass('total_inactive') )//total inactive
+                        );
+
                         /* Init resume in tfoot*/
                         init_tfoot_from_report(resume_report, semesters, cohort_id);
                         if(!validate_known_columns(column_names, known_columns)) {
@@ -312,7 +327,7 @@ define([
             /*After each cohort select change, the table should be updated*/
             $('#cohorts').change(function() {
                 var cohort_id = $('#cohorts option:selected').val();
-                $('#tableActiveSemesters tfoot th')[0].textContent= tfoot_first_row_title_prefix + ' ' + cohort_id;
+                $('#tableActiveSemesters tfoot th')[0].textContent= tfoot_total_active_title_prefix + ' ' + cohort_id;
                 init_datatable(cohort_id);
             });
             /* First table init */
