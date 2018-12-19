@@ -35,7 +35,11 @@
 namespace cohort_lib;
 require_once(__DIR__.'/../instance_management/instance_lib.php');
 use function substr;
-
+/**
+ * Prefix for group of cohorts, for example:
+ * TODOS_PREFIX.'-SPP' are all cohorts in ser pilo paga
+ */
+const TODOS_PREFIX = 'TODOS';
 function load_cohorts_by_instance($id_instance){
 
     global $DB;
@@ -88,6 +92,102 @@ function get_date_string_from_mdl_cohort_id_number($mdl_cohort_id_number) {
     $year = substr_replace($year_and_period ,"", -1);
     return $year.'-'.$month.'-01';
 }
+function valid_cohort_id_number($cohort_id_number) {
+    return preg_match(get_cohort_id_number_regex(), $cohort_id_number) === 1;
+}
+function get_cohort_id_number_regex() {
+    return '/.{4}[0-9]{4}[AB]/';
+}
+/**
+ * Return the cohort prefix from a cohort name
+ *
+ * For example, if 'SPP32017A' is given, the return value is 'SPP', if 'TODOS_PREFIX-SPP' is given
+ * 'SPP' is returned, if 'TODOS' is given, 'TODOS' is returned
+ * @param $cohort_name string  Can be a cohort name or TODOS_PREFIX-COHORT_PREFIX
+ * @return string Cohort name prefix if cohort
+ */
+function get_cohort_name_prefix($cohort_name) {
+    if(is_todos_cohort($cohort_name)){
+        if(TODOS_PREFIX === $cohort_name) {
+            return $cohort_name;
+        }
+        $values = explode('-', $cohort_name);
+        return $values[1];
+    } else {
+        return substr($cohort_name, 0, 3);
+    }
+}
+
+/**
+ *
+ * Return the first cohort of a cohort group, first with respect to creation order
+ *
+ * ## Fields returned
+ * - mdl_cohort.*
+ *
+ * ## Tables joined
+ * - mdl_cohort
+ * - mdl_talentospilos_inst_cohorte
+ * @param string $cohort_group_name Should be a name for cohort group with TODOS prefix
+ * @return bool|mixed If the name is not for cohort group return false, return mdl_cohort instance otherwise
+ * @see is_todos_cohort()
+ * @throws \dml_exception
+ */
+function get_first_cohort_for_cohort_group(string $cohort_group_name) {
+    global $DB;
+    if(!is_todos_cohort($cohort_group_name)) {
+        return false;
+    }
+    $sql_where_for_cohorts = '';
+    $cohort_group_prefix = get_cohort_name_prefix($cohort_group_name);
+    if($cohort_group_prefix === TODOS_PREFIX) {
+        $sql_where_for_cohorts = '';
+    } else {
+        $sql_where_for_cohorts = "where mdl_cohort.idnumber like '$cohort_group_prefix%'";
+    }
+    $sql = <<<SQL
+    select mdl_cohort.* from mdl_cohort
+      inner join mdl_talentospilos_inst_cohorte
+on mdl_talentospilos_inst_cohorte.id_cohorte = mdl_cohort.id
+    $sql_where_for_cohorts
+    order by mdl_cohort.id
+SQL;
+    $cohorts_ =  $DB->get_records_sql($sql);
+    $cohorts = array_values($cohorts_);
+    $valid_cohorts = array_filter($cohorts, function($cohort) {
+        return valid_cohort_id_number($cohort->idnumber);
+    });
+    $cohort_sort_by_date = function ($cohort_a, $cohort_b) {
+        $cohort_a_time_str = get_date_string_from_mdl_cohort_id_number($cohort_a->idnumber);
+        $cohort_b_time_str = get_date_string_from_mdl_cohort_id_number($cohort_b->idnumber);
+
+        return strtotime($cohort_a_time_str) - strtotime($cohort_b_time_str);
+    };
+    usort($valid_cohorts, $cohort_sort_by_date);
+    $first_cohort_id = $valid_cohorts[0]->id;
+   return $cohorts_[$first_cohort_id];
+}
+/**
+ * Check if the value of cohort is a cohort id or a todos cohort
+ * Example: if $cohort_value is TODOS-SPP return true, basicaly
+ * return true if the $cohort_value start in TODOS
+ * @param $cohort_value string Can be a cohort name or TODOS-* value
+ * @return bool
+ */
+function is_todos_cohort($cohort_value): bool {
+    $todos_cohort_prefix = \cohort_lib\TODOS_PREFIX;
+    return substr($cohort_value, 0, strlen($todos_cohort_prefix)) === $todos_cohort_prefix;
+}
+/**
+ * Return the cohort groups knowed
+ * @return array Example: [['id'=>'SPP', 'name'=>'Ser Pilo Paga']...]
+ */
+function get_cohort_groups() {
+    return array(['id'=>'SPP', 'name'=>'Ser Pilo Paga'],
+        ['id'=>'SPE', 'name'=>'Condición de Excepción'],
+        ['id'=>'3740', 'name'=>'Ingeniería Topográfica'],
+        ['id'=>'OTROS', 'name'=>'Otros ASES']);
+}
 
 /**
  * Función que genera el select de html y lo retorna para las cohortes de una instancia en particular
@@ -102,10 +202,7 @@ function get_html_cohorts_select($instance_id,$include_todos=true,  $name='condi
     $cohorts_select = "<select name=\"$name\" id=\"$id\" class=\"$class\">" ;
     if($info_instance->id_number == 'ases'){
 
-        $cohorts_groups = array(['id'=>'SPP', 'name'=>'Ser Pilo Paga'],
-            ['id'=>'SPE', 'name'=>'Condición de Excepción'],
-            ['id'=>'3740', 'name'=>'Ingeniería Topográfica'],
-            ['id'=>'OTROS', 'name'=>'Otros ASES']);
+        $cohorts_groups = get_cohort_groups();
 
         if($include_todos) {
             $cohorts_select.='<option value="TODOS">Todas las cohortes</option>';

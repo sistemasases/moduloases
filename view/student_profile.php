@@ -96,17 +96,6 @@ $data_init = array();
 
 $rol = get_role_ases($USER->id);
 $html_profile_image = "";
-/**
- * @param int $mdl_user Moodle user ID
- * @return string  $html_profile_image Standard $OUPUT profile image html
- */
-function getHtmlProfileImage($mdl_user_id): string {
-    global $DB, $OUTPUT;
-    $html_profile_image = "";
-    $mdl_user =   user_management_get_full_moodle_user ($mdl_user_id);
-    $html_profile_image = $OUTPUT->user_picture($mdl_user, array('size'=>200, 'link'=> false));
-    return $html_profile_image;
-}
 $id_user_moodle_ = null;
 $ases_student = null;
 if ($student_code != 0) {
@@ -746,18 +735,41 @@ if ($student_code != 0) {
 
     $array_tracking_date = array();
 
+    //Here can be added metadata.
     foreach ($array_detail_peer_trackings_dphpforms as &$peer_tracking) {
+
+        $alias = $peer_tracking->record->alias;
+        $peer_tracking->custom_extra->$alias = true;
+        $peer_tracking->custom_extra->rev_pro = false;
+
+
         foreach ($peer_tracking->record->campos as &$tracking) {
             if ($tracking->local_alias == 'fecha') {
                 array_push($array_tracking_date, strtotime($tracking->respuesta));
             };
+            if ($tracking->local_alias == 'revisado_profesional') {
+                if( $tracking->respuesta === "0" ){
+                    $peer_tracking->custom_extra->rev_pro = true;
+                }
+            };
         };
+
     };
 
     foreach ($array_detail_inasistencia_peer_trackings_dphpforms as &$inasistencia_peer_tracking) {
+
+        $alias = $inasistencia_peer_tracking->record->alias;
+        $inasistencia_peer_tracking->custom_extra->$alias = true;
+        $inasistencia_peer_tracking->custom_extra->rev_pro = false;
+
         foreach ($inasistencia_peer_tracking->record->campos as &$tracking) {
             if ($tracking->local_alias == 'in_fecha') {
                 array_push($array_tracking_date, strtotime($tracking->respuesta));
+            };
+            if ($tracking->local_alias == 'in_revisado_profesional') {
+                if( $tracking->respuesta === "0" ){
+                    $inasistencia_peer_tracking->custom_extra->rev_pro = true;
+                }
             };
         };
     };
@@ -1568,7 +1580,11 @@ $_user_image_edit_form->set_data($toform);
 $record->update_profile_image_form = $_user_image_edit_form->render(null);
 /** End of Update user image  */
 $record->ases_student_code = $dphpforms_ases_user;
-$record->student_username = user_management_get_moodle_user_with_tracking_status_1( $dphpforms_ases_user )->username;
+
+$moodle_user = user_management_get_moodle_user_with_tracking_status_1( $dphpforms_ases_user );
+
+$record->student_username = $moodle_user->username;
+$record->student_fullname = $moodle_user->firstname . " " . $moodle_user->lastname;
 $record->instance = $blockid;
 $record->html_profile_image = $html_profile_image;
 
@@ -1698,11 +1714,12 @@ $PAGE->requires->css('/blocks/ases/style/side_menu_style.css', true);
 $PAGE->requires->css('/blocks/ases/style/student_profile.css', true);
 $PAGE->requires->css('/blocks/ases/style/discapacity_tab.css', true);
 $PAGE->requires->css('/blocks/ases/style/switch.css', true);
+$PAGE->requires->css('/blocks/ases/style/fontawesome550.min.css', true);
 //Pendiente para cambiar el idioma del nombre del archivo junto con la estructura de
 //su nombramiento.
 $PAGE->requires->css('/blocks/ases/style/creadorFormulario.css', true);
 
-//$PAGE->requires->js_call_amd('block_ases/ases_incident_system', 'init');
+$PAGE->requires->js_call_amd('block_ases/ases_incident_system', 'init');
 $PAGE->requires->js_call_amd('block_ases/student_profile_main', 'init', $data_init);
 $PAGE->requires->js_call_amd('block_ases/student_profile_main', 'equalize');
 

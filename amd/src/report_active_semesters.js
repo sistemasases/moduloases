@@ -11,11 +11,15 @@
  */
 define([
     'jquery',
-    'core/notification',
-    'block_ases/global_grade_book',
-    'core/templates',
-    'block_ases/jquery.dataTables'
-], function($, notification, gg_b, templates){
+    'block_ases/Chart',
+    'block_ases/loading_indicator',
+    'block_ases/jquery.dataTables',
+    'block_ases/dataTables.autoFill',
+    'block_ases/dataTables.buttons',
+    'block_ases/buttons.html5',
+    'block_ases/buttons.flash',
+    'block_ases/buttons.print'
+], function($, Chart, loading_indicator){
 
     return {
         init: function (data) {
@@ -54,7 +58,8 @@ define([
             var CODIGO_COLUMN = 'codigo';
             var NOMBRE_COLUMN= 'nombre';
             var NUM_DOC_COLUMN = 'num_doc';
-            var tfoot_first_row_title_prefix = 'Total activos';
+            var tfoot_total_active_title_prefix = 'Total activos';
+            var tfoot_total_inactive_title_prefix = 'Total inactivos';
             var known_columns = [CODIGO_COLUMN, NOMBRE_COLUMN, NUM_DOC_COLUMN];
             /** go to ficha general on click **/
             $(document).on('click', '#tableActiveSemesters tbody tr td', function () {
@@ -74,6 +79,20 @@ define([
             /** Resume of active semester of all students, of course each property of this object
              * correspond to one semester (see semesters)
              */
+
+            var PercentageResumeReport = (function () {
+                function PercentageResumeReport(resume_report /* instance of ResumeReport */, semesters /* Array of strings */) {
+                    var total_students = resume_report.total_students;
+                    semesters.forEach(semester => {
+                            var student_cancel = total_students - resume_report[semester];
+                            this[semester] = student_cancel * 100 / total_students;
+                        }
+
+                    );
+                };
+                return PercentageResumeReport;
+            }());
+
             var ResumeReport = (function () {
                 /**
                  * Constructor
@@ -113,13 +132,16 @@ define([
                 /* All the cells of tfoot should have no text at start*/
                 $('#tableActiveSemesters tfoot th').html('');
                 /* Add the first cell of tfoot title */
-                $('#tableActiveSemesters tfoot th')[0].textContent= tfoot_first_row_title_prefix + ' ' + cohort_id;
+                $('#tableActiveSemesters tfoot tr.total_active th')[0].textContent= tfoot_total_active_title_prefix + ' ' + cohort_id;
+                $('#tableActiveSemesters tfoot tr.total_inactive th')[0].textContent = tfoot_total_inactive_title_prefix + ' ' + cohort_id;
                 /* Add the total active students in each semester at tfoot */
                 semesters.forEach(function(semester) {
-                    $('#tableActiveSemesters tfoot th.'+semester).html(resume_report[semester]);
+                    $('#tableActiveSemesters tfoot tr.total_active th.'+semester).html(resume_report[semester]); //active students
+                    $('#tableActiveSemesters tfoot tr.total_inactive th.'+semester).html(resume_report.total_students - resume_report[semester]); //inactive students
                 });
             }
-            var resume_report /* ResumeReport */ = null; // I no initialized for now
+            var resume_report /* ResumeReport */ = null; // null initialized for now
+            var percentage_resume_report /* PercentageResumeReport */ = null; // null initialized for now
 
             /**
              * Validate the given columns with a known columns
@@ -131,8 +153,76 @@ define([
                 /* Check tan all the knowed columns are in the given columns*/
                 return columns.filter(value => -1 !== known_columns.indexOf(value)).length === known_columns.length;
             }
+
+            function init_download_percentage_desertion_element() {
+                var graph_image_url =  document.getElementById('active_semesters_chart').toDataURL();
+                $('#download_percentage_desertion').click(function() {
+                   $(this).attr('href', graph_image_url);
+                });
+            }
+            function init_graph(semesters, percentage_resume_report, callback /*PercentageResumeReport*/) {
+                var data = [];
+                semesters.forEach(semester => {
+                   data.push(percentage_resume_report[semester]);
+                });
+                var config = {
+                    type: 'line',
+                    data: {
+                        labels: semesters,
+                        datasets: [{
+                            label: 'Porcentaje de estudiantes inactivos durante el periodo',
+                            backgroundColor: 'red',
+                            borderColor: 'red',
+                            data: data,
+                            fill: false,
+                        }]
+                    },
+                    options: {
+                        animation: {
+                            onComplete: function(){
+                                callback();
+                            }
+                         },
+                        responsive: true,
+                        title: {
+                            display: true,
+                            text: 'Reporte deserción'
+                        },
+                        tooltips: {
+                            mode: 'index',
+                            intersect: false,
+                        },
+                        hover: {
+                            mode: 'nearest',
+                            intersect: true
+                        },
+                        scales: {
+                            xAxes: [{
+                                display: true,
+                                scaleLabel: {
+                                    display: true,
+                                    labelString: 'Periodo'
+                                }
+                            }],
+                            yAxes: [{
+                                display: true,
+                                scaleLabel: {
+                                    display: true,
+                                    labelString: 'Porcentaje'
+                                }
+                            }]
+                        }
+                    }
+                };
+                var active_semesters_chart_element = document.getElementById('active_semesters_chart');
+                var ctx = active_semesters_chart_element.getContext('2d');
+                window.myLine = new Chart(ctx, config);
+
+            }
+
             function init_datatable (cohort_id) {
                 var url = '../managers/report_active_semesters/report_active_semesters_api.php/' + instance_id;
+                loading_indicator.show();
                 var post_info = {
                     function: 'data_table',
                     params: {
@@ -147,12 +237,18 @@ define([
                     dataType: 'json'
                 }).done(
                     function (dataFromApi /*instance of DataFromAPI*/){
+                        loading_indicator.hide();
                         var dataTable = dataFromApi.dataTable;
+                        $('#download_percentage_desertion').css("display", "inline"); //Show the hidden download button
                         semesters = dataFromApi.semesters;
                         var column_names = dataTable.columns.map( column => column.name );
                         var total_students = dataTable.data.length;
                         resume_report = new ResumeReport(semesters, total_students);
                         resume_report.init_from_data(dataTable.data, semesters);
+                        percentage_resume_report = new PercentageResumeReport(resume_report, semesters);
+
+                        /*Init graph*/
+                        init_graph(semesters, percentage_resume_report, init_download_percentage_desertion_element);
                         /* Put a class to each cell than have the 'SI' value, see
                         * https://datatables.net/reference/option/rowCallback */
                         dataTable.rowCallback =  function(row, data, index) {
@@ -168,7 +264,10 @@ define([
                             /*Add filter to column headers*/
                             var column_names = dataTable.columns.map(column => column.name ? column.name : null);
                             /* Indexes of the semester columns */
-                            var filter_column_indexes = get_filter_column_indexes(semesters, column_names);
+                            /*Filter columns*/
+                            var filter_column_names = semesters;
+                            filter_column_names.push('cambio_carrera');
+                            var filter_column_indexes = get_filter_column_indexes(filter_column_names, column_names);
                             this.api().columns(filter_column_indexes).every(function () {
                                 var column = this;
 
@@ -200,10 +299,14 @@ define([
                         table = $("#tableActiveSemesters").DataTable(
                             dataTable
                         );
-                        /*Append a t foot with a clone of thead*/
+                        /*Append a t foot with a clone of thead for the totals*/
                         $("#tableActiveSemesters").append(
-                            $('<tfoot/>').append( $("#tableActiveSemesters thead tr").clone() )
+                            $('<tfoot/>').append( $("#tableActiveSemesters thead tr").clone().addClass('total_active') ) //total active
                         );
+                        $("#tableActiveSemesters").append(
+                            $('<tfoot/>').append( $("#tableActiveSemesters thead tr").clone().addClass('total_inactive') )//total inactive
+                        );
+
                         /* Init resume in tfoot*/
                         init_tfoot_from_report(resume_report, semesters, cohort_id);
                         if(!validate_known_columns(column_names, known_columns)) {
@@ -216,6 +319,7 @@ define([
 
                 ).fail(
                     function(error) {
+                        loading_indicator.hide();
                     }
                 );
 
@@ -223,7 +327,7 @@ define([
             /*After each cohort select change, the table should be updated*/
             $('#cohorts').change(function() {
                 var cohort_id = $('#cohorts option:selected').val();
-                $('#tableActiveSemesters tfoot th')[0].textContent= tfoot_first_row_title_prefix + ' ' + cohort_id;
+                $('#tableActiveSemesters tfoot th')[0].textContent= tfoot_total_active_title_prefix + ' ' + cohort_id;
                 init_datatable(cohort_id);
             });
             /* First table init */

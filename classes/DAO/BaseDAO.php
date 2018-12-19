@@ -83,19 +83,7 @@ abstract class BaseDAO extends Validable
     public static function get_class_name(): string {
         return get_called_class();
     }
-    /**
-     * Custom validation method, rewrite this if you need make some aditional validation, this method
-     * should be called when $this->valid() is called
-     *
-     * You also should add the errors using the method $this->add_error()
-     *
-     * @return bool True if the custom validation has not found any error
-     * @see add_error
-     */
 
-    public function _custom_validation(): bool {
-        return true;
-    }
 
     /**
      * Check if the current object is valid, and if is not valid add all the errors and make
