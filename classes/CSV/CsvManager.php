@@ -43,20 +43,29 @@ trait CsvManager {
     }
     /**
      * Create instances of type $this->$class_or_class_name based on contents of $file
+     * If the columns are no compatible with the class, null is returned
      * @param php file $file Csv file where each row is returned as class instance
+     * @throws ErrorException If $this->class_or_class_name does not exist
      * @return array of $class_or_class_name instances
      */
     public function create_instances_from_csv($file) {
         $this->validate_caller_csv();
+
         if(!Csv::csv_compatible_with_class($file, $this->class_or_class_name)) {
-            $this->add_error(CsvManagerErrorFactory::csv_and_class_have_distinct_properties(array('class'=>$this->class_or_class_name)));
-            return ;
+            $object_properties = \reflection\get_properties($this->class_or_class_name);
+            $file_headers = Csv::csv_get_headers($file);
+            $this->add_error(CsvManagerErrorFactory::csv_and_class_have_distinct_properties(array(
+                'class'=>$this->class_or_class_name,
+                'object_properties'=>$object_properties,
+                'file_headers'=>$file_headers)));
+
+            return null;
         }
         $std_objects = Csv::csv_file_to_std_objects($file);
         if(!class_exists($this->class_or_class_name)) {
             $error = CsvManagerErrorFactory::csv_manager_class_does_not_exist(array('std_objects' => $std_objects, 'class'=>$class));
             $this->add_error ($error);
-            return;
+            return null;
         }
         $instances = array_map(
             function($std_object) {

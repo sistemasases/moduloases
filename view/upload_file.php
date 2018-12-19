@@ -101,6 +101,32 @@
                         }
                     });
         });
+    /**
+     * Load preview datatable
+     * En caso de que el csv tenga mas o menos propiedades de las esperadas
+     * se debe mostrar una previsualización de los datos dados y cuales son las
+     * columnas que sobran o las que faltan
+     */
+    function load_preview(data_table, error) {
+        var correct_column_names = error.data_response.object_properties;
+        var given_column_names = error.data_response.file_headers;
+        console.log(correct_column_names, given_column_names);
+        myTable = $('#example').DataTable(data_table);
+        var missing_columns = correct_column_names.filter( element => given_column_names.indexOf(element)<0);
+        var extra_columns = given_column_names.filter (element =>{
+            return correct_column_names.indexOf(element)<= -1 ;
+        });
+        missing_columns.forEach(column => {
+           $('.'+column).css('background-color', '#cccccc');
+
+        });
+        extra_columns.forEach(column => {
+
+            $('.'+column).css('background-color', 'red');
+
+        });
+        console.log(extra_columns, missing_columns);
+    }
     $('#send-file').click(
 
         function () {
@@ -114,8 +140,14 @@
                 //contentType: 'multipart/form-data',
                 processData: false,
                 type: 'POST',
-                error: function(error) {
-                  console.log(error);
+                error: function(response) {
+                    console.log(response);
+                  var error_object = JSON.parse(response.responseText);
+                    console.log(error_object);
+                  var datatable_preview = error_object.datatable_preview;
+                  var error_messages = error_object.object_errors.generic_errors.map(error=> error.error_message);
+                    load_preview(datatable_preview, error_object.object_errors.generic_errors[0]);
+                  alert(error_messages.join() +  ' En la consola encontrara mas info.');
                 },
                 success: function(response){
                     console.log(response);

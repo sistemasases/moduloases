@@ -63,7 +63,7 @@ class Csv {
         $headers = Csv::csv_get_headers($csv_file);
         $headers_to_property_names = Csv::csv_headers_to_property_names($headers);
         $class_or_classname_properties = \reflection\get_properties($class_or_classname);
-        return $class_or_classname_properties == $headers_to_property_names;
+        return is_array(array_diff($class_or_classname_properties ,$headers_to_property_names));
     }
     /**
      * Return array of objects based in a file with csv file format

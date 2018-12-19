@@ -64,8 +64,9 @@ class EstadoAsesCSV extends Validable {
 
         $estado_ases = EstadoAses::get_by(array(EstadoAses::NOMBRE=>$this->estado_ases));
         if(!$estado_ases) {
+            $field = 'estado_ases';
             $this->add_error(new AsesError(-1, 'El estado ases debe ser *SEGUIMIENTO* o *SIN SEGUMIENTO*',
-                array('field'=>'estado_ases')));
+                array('field'=>$field)), $field);
             $valid = false;
         }
         return $valid;

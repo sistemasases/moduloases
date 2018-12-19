@@ -165,4 +165,12 @@ class Column {
         return $data_table_columns;
 
     }
+    public static function get_columns_from_names(array $names ): array {
+        $datatable_columns = [];
+        foreach($names as $name) {
+            $json_column = new Column($name);
+            array_push($datatable_columns, $json_column);
+        }
+        return $datatable_columns;
+    }
 }
