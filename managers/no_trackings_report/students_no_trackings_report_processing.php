@@ -30,7 +30,7 @@
     if(isset($_POST['loadR']) && $_POST['loadR'] == 'loadReport'){
         $columns = array();
 
-        $data = get_array_students_without_trackings();        
+        $data = get_array_students_with_trackings_count();        
         $monitores = array();
         $practicantes = array();
         $profesionales = array();
@@ -68,6 +68,7 @@
         array_push($columns, array("title"=>"Cédula", "name"=>"cedula", "data"=>"cedula")); 
         array_push($columns, array("title"=>"Nombres", "name"=>"firstname", "data"=>"firstname"));
         array_push($columns, array("title"=>"Apellidos", "name"=>"lastname", "data"=>"lastname"));              
+        array_push($columns, array("title"=>"Cantidad de fichas", "name"=>"cantidad_seguimientos", "data"=>"cantidad_fichas"));
         array_push($columns, array("title"=>"Monitor".$monitores_options, "name"=>"monitor_fullname", "data"=>"monitor_fullname"));
         array_push($columns, array("title"=>"Practicante".$practicantes_options, "name"=>"trainee_fullname", "data"=>"trainee_fullname"));
         array_push($columns, array("title"=>"Profesional".$profesionales_options, "name"=>"professional_fullname", "data"=>"professional_fullname"));

@@ -27,12 +27,76 @@
 
 require_once(dirname(__FILE__). '/../../../../config.php');
 require_once $CFG->dirroot.'/blocks/ases/managers/lib/student_lib.php';
-//require_once $CFG->dirroot.'/blocks/ases/managers/lib/lib.php';
 require_once $CFG->dirroot.'/blocks/ases/managers/periods_management/periods_lib.php'; 
 require_once $CFG->dirroot.'/blocks/ases/managers/dphpforms/v2/dphpforms_lib.php';   
 require_once $CFG->dirroot.'/blocks/ases/managers/monitor_assignments/monitor_assignments_lib.php'; 
 
-//get_students_with_non_attendance_trackings();
+/**
+ * 
+ */
+
+function students_no_trackings_get_students_count_trackings(){      
+
+    $id_semester = get_current_semester()->max;
+    $interval_semester = get_semester_interval($id_semester);
+    
+    $list_inicio = explode(" ", $interval_semester->fecha_inicio);
+    $list_fin = explode(" ", $interval_semester->fecha_fin);
+    
+    $start_date = $list_inicio[0];
+    $end_date = $list_fin[0];
+    
+    $xQuery = new stdClass();
+    $xQuery->form = "seguimiento_pares"; 
+    $xQuery->filterFields = [
+                                ["id_estudiante",[["%%", "LIKE"]], false],
+                                ["fecha",[[$start_date,">="],[$end_date,"<="]], false]                        
+                            ];
+    $xQuery->orderFields = [["fecha","DESC"]];
+    $xQuery->orderByDatabaseRecordDate = false; 
+    $xQuery->recordStatus = [ "!deleted" ];
+    $xQuery->selectedFields = []; 
+
+    $trackings = dphpformsV2_find_records( $xQuery );
+    $count = [];
+
+    foreach( $trackings as $key => $tracking ){
+
+        if( !array_key_exists ( $tracking['id_estudiante'] , $count ) ){
+            $count[ $tracking['id_estudiante'] ] = 1;
+        }else{
+            $count[ $tracking['id_estudiante'] ]++;
+        }
+
+    }
+
+    $xQuery = new stdClass();
+    $xQuery->form = "inasistencia"; 
+    $xQuery->filterFields = [
+                                ["in_id_estudiante",[["%%", "LIKE"]], false],
+                                ["in_fecha",[[$start_date,">="],[$end_date,"<="]], false]                        
+                            ];
+    $xQuery->orderFields = [["in_fecha","DESC"]];
+    $xQuery->orderByDatabaseRecordDate = false; 
+    $xQuery->recordStatus = [ "!deleted" ];
+    $xQuery->selectedFields = []; 
+
+    $trackings = dphpformsV2_find_records( $xQuery );
+
+    foreach( $trackings as $key => $tracking ){
+
+        if( !array_key_exists ( $tracking['in_id_estudiante'] , $count ) ){
+            $count[ $tracking['in_id_estudiante'] ] = 1;
+        }else{
+            $count[ $tracking['in_id_estudiante'] ]++;
+        }
+
+    }
+
+    return $count;
+}
+
+students_no_trackings_get_students_count_trackings();
 
 /**
  * Function that returns a list of the students with pair trackings on the current semester
@@ -128,7 +192,7 @@ function get_students_with_non_attendance_trackings(){
  * @see get_array_students_without_trackings()
  * @return array
  */
-function get_array_students_without_trackings(){
+function get_array_students_with_trackings_count(){
 
     global $DB;   
 
@@ -196,6 +260,7 @@ function get_array_students_without_trackings(){
         $monitor_object = get_assigned_monitor($student->id);
         $trainee_object = get_assigned_pract($student->id);
         $professional_object = get_assigned_professional($student->id);
+        $student->cantidad_fichas = 0;
 
 
         if ($monitor_object) {
@@ -221,5 +286,70 @@ function get_array_students_without_trackings(){
         array_push($students_to_return, $student);
     }
 
-    return ($students_to_return);
+    // users with trackings
+    $student_count_trackings = students_no_trackings_get_students_count_trackings();
+
+    $sql_query = "SELECT usuario.id AS id, userm.username, usuario.num_doc AS cedula, userm.firstname, userm.lastname FROM {user} AS userm
+    INNER JOIN {talentospilos_user_extended} as user_ext  ON user_ext.id_moodle_user= userm.id
+    INNER JOIN  {talentospilos_usuario} AS usuario ON id_ases_user = usuario.id";   
+
+    $where = " WHERE ";
+    
+    foreach( $student_count_trackings as $key => $student ){
+         
+        $where .= "usuario.id = " . $key;
+        if( next( $student_count_trackings ) ){
+            $where .= " OR ";
+        }
+
+    }
+
+    $sql_query .= $where;
+
+    $students_with_trackings = $DB->get_records_sql( $sql_query );
+
+    foreach($students_with_trackings as $student){
+        
+
+        $with_monitor = false;
+
+        foreach( $monitorias as $key => $monitoria  ){
+            if( $monitoria->id_estudiante == $student->id ){
+                $with_monitor = true;
+                break;
+            }
+        };
+
+        if( !$with_monitor ){
+            continue;
+        }
+
+        $monitor_object = get_assigned_monitor($student->id);
+        $trainee_object = get_assigned_pract($student->id);
+        $professional_object = get_assigned_professional($student->id);
+        $student->cantidad_fichas = $student_count_trackings[ $student->id ];
+
+        if ($monitor_object) {
+            $student->monitor_fullname = "$monitor_object->firstname $monitor_object->lastname";
+            $student->id_dphpforms_monitor = '-1';
+        } else {
+            $record->monitor_fullname = "NO REGISTRA";
+        }
+    
+        if ($trainee_object) {
+            $student->trainee_fullname = "$trainee_object->firstname $trainee_object->lastname";
+        } else {
+            $student->trainee_fullname = "NO REGISTRA";
+        }
+        
+        if ($professional_object) {
+            $student->professional_fullname = "$professional_object->firstname $professional_object->lastname";
+        } else {
+            $student->professional_fullname = "NO REGISTRA";
+        }
+
+
+        array_push($students_to_return, $student);
+    }
+    return $students_to_return;
 }
