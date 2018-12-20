@@ -741,6 +741,7 @@ if ($student_code != 0) {
         $alias = $peer_tracking->record->alias;
         $peer_tracking->custom_extra->$alias = true;
         $peer_tracking->custom_extra->rev_pro = false;
+        $peer_tracking->custom_extra->rev_pract = false;
 
 
         foreach ($peer_tracking->record->campos as &$tracking) {
@@ -752,6 +753,11 @@ if ($student_code != 0) {
                     $peer_tracking->custom_extra->rev_pro = true;
                 }
             };
+            if ($tracking->local_alias == 'revisado_practicante') {
+                if( $tracking->respuesta === "0" ){
+                    $peer_tracking->custom_extra->rev_pract = true;
+                }
+            };
         };
 
     };
@@ -761,6 +767,7 @@ if ($student_code != 0) {
         $alias = $inasistencia_peer_tracking->record->alias;
         $inasistencia_peer_tracking->custom_extra->$alias = true;
         $inasistencia_peer_tracking->custom_extra->rev_pro = false;
+        $inasistencia_peer_tracking->custom_extra->rev_pract = false;
 
         foreach ($inasistencia_peer_tracking->record->campos as &$tracking) {
             if ($tracking->local_alias == 'in_fecha') {
@@ -769,6 +776,11 @@ if ($student_code != 0) {
             if ($tracking->local_alias == 'in_revisado_profesional') {
                 if( $tracking->respuesta === "0" ){
                     $inasistencia_peer_tracking->custom_extra->rev_pro = true;
+                }
+            };
+            if ($tracking->local_alias == 'in_revisado_practicante') {
+                if( $tracking->respuesta === "0" ){
+                    $inasistencia_peer_tracking->custom_extra->rev_pract = true;
                 }
             };
         };
