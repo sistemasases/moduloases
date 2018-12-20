@@ -41,10 +41,12 @@ if(isset($_POST['func'])){
         $longitude = $_POST['longitude'];
         $neighborhood = $_POST['neighborhood'];
         $geographic_risk = $_POST['geographic_risk'];
+        $duration = $_POST['duration'];
+        $distance = $_POST['distance'];
 
         $msg = new stdClass();
 
-        $result_save_info = save_geographic_info($id_ases, $latitude, $longitude, $neighborhood, $geographic_risk);
+        $result_save_info = save_geographic_info($id_ases, $latitude, $longitude, $neighborhood, $geographic_risk, $duration, $distance);
         
         if($result_save_info){
             $msg->title = 'Éxito';
