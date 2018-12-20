@@ -240,28 +240,47 @@ function render_student_trackings($peer_tracking_v2)
             $year_number = $period;
             foreach($period as $key => $tracking) {
                 $is_reviewed = false;
+                $rev_pract = false;
                 $type = null;
+                $icon_rev_pract = '';
                 foreach($tracking[record][campos] as $key => $review) {
                     if ($review[local_alias] == 'revisado_profesional') {
                         $type = "ficha";
-                        if ($review[respuesta] == 0) {
-                            $form_rendered.= '<div id="dphpforms-peer-record-' . $tracking[record][id_registro] . '" class="card-block dphpforms-peer-record peer-tracking-record-review class-'.$tracking[record][alias].'"  data-record-id="' . $tracking[record][id_registro] . '" title="Asistencia"><strong><i class="fas fa-calendar-o"></i> </strong>Registro:   ' . $tracking[record][alias_key][respuesta] . '</div>';
+                        if ($review[respuesta] === "0") {
+                            $form_rendered.= '<div id="dphpforms-peer-record-' . $tracking[record][id_registro] . '" class="card-block dphpforms-peer-record peer-tracking-record-review class-'.$tracking[record][alias].'"  data-record-id="' . $tracking[record][id_registro] . '" title="Asistencia"><strong><i class="fas fa-calendar-o"></i> </strong>Registro:   ' . $tracking[record][alias_key][respuesta] . '{{icon_rev_pract}}</div>';
                             $is_reviewed = true;
                         }
                     }elseif ($review[local_alias] == 'in_revisado_profesional') {
                         $type = "inasistencia";
-                        if ($review[respuesta] == 0) {
-                            $form_rendered.= '<div id="dphpforms-peer-record-' . $tracking[record][id_registro] . '" class="card-block dphpforms-peer-record peer-tracking-record-review class-'.$tracking[record][alias].'"  data-record-id="' . $tracking[record][id_registro] . '" title="Inasistencia"><strong><i class="far fa-calendar-times"></i> </strong>Registro:   ' . $tracking[record][alias_key][respuesta] . '</div>';
+                        if ($review[respuesta] === "0") {
+                            $form_rendered.= '<div id="dphpforms-peer-record-' . $tracking[record][id_registro] . '" class="card-block dphpforms-peer-record peer-tracking-record-review class-'.$tracking[record][alias].'"  data-record-id="' . $tracking[record][id_registro] . '" title="Inasistencia"><strong><i class="far fa-calendar-times"></i> </strong>Registro:   ' . $tracking[record][alias_key][respuesta] . '{{icon_rev_pract}}</div>';
                             $is_reviewed = true;
+                        }
+                    }
+
+                    if ($review[local_alias] == 'revisado_practicante') {
+                        if ($review[respuesta] === "0") {
+                            $rev_pract = true;
+                        }
+                    }elseif ($review[local_alias] == 'in_revisado_practicante'){
+                        if ($review[respuesta] === "0") {
+                            $rev_pract = true;
                         }
                     }
                 }
 
                 if ((!$is_reviewed )&& ($type == "ficha")) {
-                    $form_rendered.= '<div id="dphpforms-peer-record-' . $tracking[record][id_registro] . '" class="card-block dphpforms-peer-record peer-tracking-record class-'.$tracking[record][alias].'"  data-record-id="' . $tracking[record][id_registro] . '" title="Asistencia"><strong><i class="fas fa-calendar-o"></i> </strong>Registro:   ' . $tracking[record][alias_key][respuesta] . '</div>';
+                    $form_rendered.= '<div id="dphpforms-peer-record-' . $tracking[record][id_registro] . '" class="card-block dphpforms-peer-record peer-tracking-record class-'.$tracking[record][alias].'"  data-record-id="' . $tracking[record][id_registro] . '" title="Asistencia"><strong><i class="fas fa-calendar-o"></i> </strong>Registro:   ' . $tracking[record][alias_key][respuesta] . '{{icon_rev_pract}}</div>';
                 }elseif((!$is_reviewed) && ($type == "inasistencia")){
-                    $form_rendered.= '<div id="dphpforms-peer-record-' . $tracking[record][id_registro] . '" class="card-block dphpforms-peer-record peer-tracking-record class-'.$tracking[record][alias].'"  data-record-id="' . $tracking[record][id_registro] . '" title="Inasistencia"><strong><i class="far fa-calendar-times"></i> </strong>Registro:   ' . $tracking[record][alias_key][respuesta] . '</div>';
+                    $form_rendered.= '<div id="dphpforms-peer-record-' . $tracking[record][id_registro] . '" class="card-block dphpforms-peer-record peer-tracking-record class-'.$tracking[record][alias].'"  data-record-id="' . $tracking[record][id_registro] . '" title="Inasistencia"><strong><i class="far fa-calendar-times"></i> </strong>Registro:   ' . $tracking[record][alias_key][respuesta] . '{{icon_rev_pract}}</div>';
                 }
+
+                if( $rev_pract ){
+                    $form_rendered = str_replace("{{icon_rev_pract}}", '<i title="Revisado practicante" style="float:right" class="fas fa-check"></i>', $form_rendered );
+                }else{
+                    $form_rendered = str_replace("{{icon_rev_pract}}", '', $form_rendered );
+                }
+
             }
         }
     }
