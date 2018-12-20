@@ -46,7 +46,7 @@ if(isset($_POST['func'])){
 
         $msg = new stdClass();
 
-        $result_save_info = save_geographic_info($id_ases, $latitude, $longitude, $neighborhood, $geographic_risk, duration, distance);
+        $result_save_info = save_geographic_info($id_ases, $latitude, $longitude, $neighborhood, $geographic_risk, $duration, $distance);
         
         if($result_save_info){
             $msg->title = 'Éxito';

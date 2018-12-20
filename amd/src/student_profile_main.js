@@ -1096,35 +1096,38 @@ return {
         var id_ases = $('#id_ases').val();
         var neighborhood = $('#select_neighborhood').val();
         var geographic_risk = $('#select_geographic_risk').val();
+        var ciudad_act = document.getElementById("municipio_act").value;
 
        var directionsService = new google.maps.DirectionsService();
 
        var second_request;
 
-        if(ciudad == 1079){
+        if(ciudad_act == 1079){
+
+            document.getElementById('mapa').innerHTML = "<iframe class='col-xs-12 col-sm-12 col-md-12 col-lg-12' height='396' frameborder='0' style='border:0' src='https://www.google.com/maps/embed/v1/directions?key=AIzaSyAoE-aPVfruphY4V4BbE8Gdwi93x-5tBTM&origin=" + latitude + "," + longitude + "&destination=3.3759493,-76.5355789&mode=transit' allowfullscreen></iframe>";
 
             second_request = {
                 origin: {lat: latitude, lng: longitude}, 
                 destination: {lat: 3.3759493, lng: -76.5355789},
                 travelMode: 'TRANSIT'
             };
-            document.getElementById('mapa').innerHTML = "<iframe class='col-xs-12 col-sm-12 col-md-12 col-lg-12' height='396' frameborder='0' style='border:0' src='https://www.google.com/maps/embed/v1/directions?key=AIzaSyAoE-aPVfruphY4V4BbE8Gdwi93x-5tBTM&origin=" + latitude + "," + longitude + "&destination=3.3759493,-76.5355789&mode=transit' allowfullscreen></iframe>";
-
+            
         } else{
+
+            document.getElementById('mapa').innerHTML = "<iframe class='col-xs-12 col-sm-12 col-md-12 col-lg-12' height='396' frameborder='0' style='border:0' src='https://www.google.com/maps/embed/v1/directions?key=AIzaSyAoE-aPVfruphY4V4BbE8Gdwi93x-5tBTM&origin=" + latitude + "," + longitude + "&destination=3.3759493,-76.5355789&mode=driving' allowfullscreen></iframe>";
 
             second_request = {
                 origin: {lat: latitude, lng: longitude}, 
                 destination: {lat: 3.3759493, lng: -76.5355789},
                 travelMode: 'DRIVING'
             };
-            document.getElementById('mapa').innerHTML = "<iframe class='col-xs-12 col-sm-12 col-md-12 col-lg-12' height='396' frameborder='0' style='border:0' src='https://www.google.com/maps/embed/v1/directions?key=AIzaSyAoE-aPVfruphY4V4BbE8Gdwi93x-5tBTM&origin=" + latitude + "," + longitude + "&destination=3.3759493,-76.5355789&mode=driving' allowfullscreen></iframe>";
         }
 
         directionsService.route(second_request, function(response, status) {
           
-            var duration = response.routes[0].legs[0].distance.value;
+            var distance = response.routes[0].legs[0].distance.value;
   
-            var distance = response.routes[0].legs[0].duration.value;
+            var duration = response.routes[0].legs[0].duration.value;
 
             $.ajax({
                 type: "POST",
@@ -1141,23 +1144,26 @@ return {
                 url: "../managers/student_profile/geographic_serverproc.php",
                 success: function(msg) {
     
-                    swal(
-                        msg.title,
-                        msg.text,
-                        msg.type);
+                    console.log(msg);
+                    //swal(
+                    //    msg.title,
+                    //    msg.text,
+                    //    msg.type);
                 },
                 dataType: "json",
                 cache: "false",
                 error: function(msg) {
                     
-                    swal(
-                        msg.title,
-                        msg.text,
-                        msg.type);
+                    console.log(msg);
+                    //swal(
+                    //    msg.title,
+                    //    msg.text,
+                    //    msg.type);
                 },
             });
       
          });
+
     }
 
     object_function.cancel_edition();
