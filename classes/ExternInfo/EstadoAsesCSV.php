@@ -49,7 +49,7 @@ class EstadoAsesCSV extends Validable {
         $field_validators->motivo_ases = [FieldValidators::required()];
         $field_validators->motivo_icetex = [FieldValidators::required()];
         $field_validators->estado_programa= [FieldValidators::required()];
-        $field_validators->username= [FieldValidators::required()];
+        $field_validators->username = [FieldValidators::required()];
 
         $this->set_field_validators($field_validators);
     }
@@ -63,9 +63,15 @@ class EstadoAsesCSV extends Validable {
         $valid = $this->valid_fields();
 
         $estado_ases = EstadoAses::get_by(array(EstadoAses::NOMBRE=>$this->estado_ases));
+
         if(!$estado_ases) {
+            $estados_ases_names = array_map(function($estado_ases) {
+                return $estado_ases->nombre;
+            },
+                EstadoAses::get_all(null, 'nombre'));
+            $estado_ases_names_string = implode(', ', $estados_ases_names);
             $field = 'estado_ases';
-            $this->add_error(new AsesError(-1, 'El estado ases debe ser *SEGUIMIENTO* o *SIN SEGUMIENTO*',
+            $this->add_error(new AsesError(-1, "El estado ases debe ser uno de los siguientes: $estado_ases_names_string",
                 array('field'=>$field)), $field);
             $valid = false;
         }

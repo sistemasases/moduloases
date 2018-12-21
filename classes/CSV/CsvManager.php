@@ -76,7 +76,9 @@ trait CsvManager {
         return $instances;
 
     }
-
+    public function custom_header_mapping() {
+        
+    }
     /**
      * If your csv manager have column names than does not match perfectly with the object than you want return,
      * you can make an alternative column mapping with respect to object properties names

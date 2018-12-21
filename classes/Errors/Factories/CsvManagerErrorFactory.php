@@ -23,6 +23,20 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+/**
+ * Class data_csv_and_class_have_distinct_properties
+ * @property $object_properties array array of string with the property names
+ * @property $csv_headers array array of string whit csv headers
+ */
+class data_csv_and_class_have_distinct_properties {
+    public $object_properties;
+    public $csv_headers;
+    public function __construct($object_properties, $csv_headers)
+    {
+        $this->csv_headers = $csv_headers;
+        $this->object_properties = $object_properties;
+    }
+}
 require_once ( __DIR__ . '/../AsesError.php');
 class CsvManagerErrorFactory {
     public static $CSV_MANAGER_CLASS_DOES_NOT_EXIST = 41;
@@ -31,8 +45,33 @@ class CsvManagerErrorFactory {
     public static function  csv_manager_class_does_not_exist ($data=null) {
         return new AsesError(CsvManagerErrorFactory::$CSV_MANAGER_CLASS_DOES_NOT_EXIST, 'La clase que se ha instanciado en el csv manager no existe', $data);
     }
-    public static function  csv_and_class_have_distinct_properties($data=null) {
-        return new AsesError(CsvManagerErrorFactory::$CSV_AND_CLASS_HAVE_DISTINCT_PROPERTIES, 'El CSV ingresado no tiene propiedades validas para con la clase a la que intenta asignarle los valores', $data);
+
+    /**
+     * @param null $data data_csv_and_class_have_distinct_properties
+     * @param null $custom_message
+     * @param bool $verbose_message
+     * @return AsesError
+     */
+    public static function  csv_and_class_have_distinct_properties($data=null, $custom_message = null, $verbose_message = false) {
+        /** @var $data data_csv_and_class_have_distinct_properties */
+        $data = (object) $data;
+        $message = $custom_message? $custom_message: 'El CSV ingresado no tiene propiedades validas para con la clase a la que intenta asignarle los valores';
+        $object_properties = null;
+        $csv_headers = null;
+        if($verbose_message){
+            if(isset($data->object_properties)) {
+                $object_properties = $data->object_properties;
+            }
+            if(isset($data->csv_headers)) {
+                $csv_headers = $data->csv_headers;
+            }
+            $object_properties_names = implode(', ', $object_properties);
+            $csv_headers_names = implode(', ', $csv_headers);
+            $message.= " Propiedades esperadas: [$object_properties_names]. ";
+            $message.= "Headers dados: [$csv_headers_names]";
+        }
+
+        return new AsesError(CsvManagerErrorFactory::$CSV_AND_CLASS_HAVE_DISTINCT_PROPERTIES, $message, $data);
     }
 
     /**

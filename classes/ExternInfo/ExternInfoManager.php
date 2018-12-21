@@ -32,7 +32,6 @@ abstract class ExternInfoManager extends Validable {
     public function execute() {
 
         if(!$this->valid()) {
-
             print_r($this->send_errors());
         } else {
 
@@ -130,15 +129,26 @@ abstract class ExternInfoManager extends Validable {
         return $this->load_data_from_file() || $this->load_data_from_ajax();
     }
     private function validate_file_data(): bool {
+
         global $_FILES;
         /* Validate file extension */
         if(!isset($_FILES[$this->_file_name])) {
             return false;
         }
         $file_name = $_FILES[$this->_file_name]['name'];
-
+        $this->_file = file($_FILES[$this->_file_name]['tmp_name']);
         if( pathinfo($file_name, PATHINFO_EXTENSION) != $this->_file_extension) {
             $this->add_error(CsvManagerErrorFactory::csv_extension_invalid());
+            return false;
+        }
+        if(! Csv::csv_compatible_with_class($this->_file, $this->class_or_class_name)) {
+            $csv_headers = CSV::csv_get_headers($this->_file);
+            $class_properties = \reflection\get_properties($this->class_or_class_name);
+            $this->add_error(CsvManagerErrorFactory::csv_and_class_have_distinct_properties(
+                new data_csv_and_class_have_distinct_properties($class_properties, $csv_headers),
+                'El csv tiene campos incorrectos',
+                true
+            ));
             return false;
         }
         return true;
@@ -162,14 +172,23 @@ abstract class ExternInfoManager extends Validable {
         echo json_encode($response);
     }
     private function validate_ajax_data(): bool {
-        if(!isset($POST['data'])) {
-            $this->add_error(new AsesError('-1', 'Los datos deben ser enviados en un atributo "data" via ajax'));
+        if($this->loaded_data_with_ajax()) {
+            if(isset($POST['data'])) {
+                $this->add_error(new AsesError('-1', 'Los datos deben ser enviados en un atributo "data" via ajax'));
+                return true;
+            }
+        } else {
             return false;
         }
-        return true;
     }
     private function validate_data_sources(): bool {
-        return $this->validate_file_data() || $this->validate_ajax_data();
+        if($this->validate_file_data() ) {
+            return true;
+        }
+       if( $this->validate_ajax_data()){
+           return true;
+       }
+       return false;
     }
     public function valid(): bool
     {

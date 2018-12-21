@@ -263,19 +263,32 @@ abstract class BaseDAO extends Validable
     public function make_from($std_object) {
         \reflection\assign_properties_to($std_object, $this);
     }
-    public  static function get_all() {
+
+    /**
+     * Get all elements from database converted to object instances
+     *
+     * **If only some fields are returned, the objects returned are stdObjects, no object instances**
+     *
+     * @param array $conditions optional array $fieldname=>requestedvalue with AND in between
+     * @param string $sort an order to sort the results in (optional, a valid SQL ORDER BY parameter).
+     * @param string $fields a comma separated list of fields to return (optional, by default
+     *   all fields are returned). The first field will be used as key for the
+     *   array so must be a unique field such as 'id'.
+     * @return array An array of Objects indexed by first column.
+     * @throws dml_exception A DML specific exception is thrown for any errors.
+     */
+    public  static function get_all(array $conditions = null, $fields = '*', $sort = null) {
         global $DB;
         /* @var BaseDAO $CLASS */
         $CLASS = get_called_class();
         $nombre_tabla = $CLASS::get_table_name() ;
-        $sql = 
-        "
-        SELECT * FROM {".$nombre_tabla."}
-        ";
-      
-        $objects_array = $DB->get_records_sql($sql);
-        $objects = $CLASS::make_objects_from_std_objects_or_arrays($objects_array);
-        return $objects;
+        $objects_array = $DB->get_records($nombre_tabla, $conditions, $sort, $fields);
+        if($fields==='*'){
+            $objects = $CLASS::make_objects_from_std_objects_or_arrays($objects_array);
+            return $objects;
+
+        }
+        return $objects_array;
     }
 
     /**
