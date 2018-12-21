@@ -9,7 +9,15 @@
   * @module block_ases/dphpforms_form_builder
   */
 
-  define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/jqueryui','block_ases/select2'], function($, bootstrap, sweetalert, jqueryui, select2) {
+  define(
+      [
+          'jquery', 
+          'block_ases/bootstrap', 
+          'block_ases/sweetalert', 
+          'block_ases/jqueryui',
+          'block_ases/select2',
+          'block_ases/loading_indicator'
+        ], function($, bootstrap, sweetalert, jqueryui, select2, loading_indicator) {
     
     return {
         init: function() {
@@ -477,8 +485,9 @@
                     
                     $('.div').removeClass('regla_incumplida');
                     $("#body_editor").html("");
-
+                    loading_indicator.show();
                     $.get( "../managers/dphpforms/dphpforms_forms_core.php?form_id=&record_id="+record_id, function( data ) {
+                            loading_indicator.hide();
                             $('#body_editor').append( data );
 
                             var table = $("#list_grupal_seg_consult").clone().prop('id','list_grupal_seg_consult_1');
@@ -589,6 +598,7 @@
                     $(formulario).find('button').prop( "disabled", true );
                     $(formulario).find('a').attr("disabled", true);
                     console.log(formulario);
+                    loading_indicator.show();
                     $.ajax({
                         type: 'POST',
                         url: url_processor,
@@ -597,7 +607,7 @@
                         contentType: false,
                         processData: false,
                         success: function(data) {
-                                
+                                loading_indicator.hide();
                                 console.log( data );
                                 var response = JSON.parse(data);
                                 
@@ -752,6 +762,7 @@
                                 };
                             },
                             error: function(data) {
+                                loading_indicator.hide();
                                 console.log(data);
                                 swal(
                                     'Error!',
@@ -777,7 +788,9 @@
                       }, function(isConfirm) {
                         if (isConfirm) {
                             var record_id = $('.btn-dphpforms-delete-record').attr('data-record-id');
+                            loading_indicator.show();
                             $.get( "../managers/dphpforms/dphpforms_delete_record.php?record_id="+record_id, function( data ) {
+                                loading_indicator.hide();
                                 var response = data;
                                 if(response['status'] == 0){
                                     console.log( response );
