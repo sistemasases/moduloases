@@ -650,13 +650,13 @@
                                         }
 
                                     }else if(response['message'] == 'Updated'){
-                                        mensaje = 'Actualizado';
+                                        mensaje = 'Actualizado, las fechas e íconos se actualizarán al recargar la página. ';
                                     }
                                     check_risks_tracking();
                                     check_risks_geo_tracking();
                                     swal(
                                         {title:'Información',
-                                        text: mensaje + ", las fechas e íconos se actualizarán al recargar la página.",
+                                        text: mensaje,
                                         type: 'success'},
                                         function(){
                                             if(response['message'] == 'Updated'){
