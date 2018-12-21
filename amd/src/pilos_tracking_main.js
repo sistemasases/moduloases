@@ -269,7 +269,7 @@ define(
             });
 
 
-            function edit_tracking_new_form(){
+            /*function edit_tracking_new_form(){
             // Controles para editar formulario de pares
             $('.dphpforms-peer-record').on('click', function(){
                 var id_tracking = $(this).attr('data-record-id');
@@ -286,7 +286,7 @@ define(
                 load_record_updater('seguimiento_grupal', id_tracking);
                $('#modal_v2_edit_groupal_tracking').fadeIn(300);
 
-            });}
+            });}*/
 
 
             function check_risks_tracking( flag, student_code ){
@@ -593,7 +593,7 @@ define(
             }
 
 
-                function generate_attendance_table(students){
+                /*function generate_attendance_table(students){
                     loading_indicator.show();
                      $.ajax({
                             type: "POST",
@@ -620,12 +620,12 @@ define(
                                 loading_indicator.hide();
                             },
                         });
-                }
+                }*/
 
 
-                function load_record_updater(form_id, record_id){
+                /*function load_record_updater(form_id, record_id){
+                    $('.div').removeClass('regla_incumplida');
                     $("#body_editor").html("");
-                    $("#modal_v2_edit_groupal_tracking").find("#body_editor").html("");   
                     loading_indicator.show();
                     $.get( "../managers/dphpforms/dphpforms_forms_core.php?form_id=&record_id="+record_id, function( data ) {
                          loading_indicator.hide();
@@ -696,7 +696,7 @@ define(
                             $("#permissions_informationr").html("");
 
                     });
-                }
+                }*/
 
 
 
@@ -855,7 +855,7 @@ define(
                         loading_indicator.hide();
                         $(student_id + " > div").empty();
                         $(student_id + " > div").append(msg);
-                        edit_groupal_tracking_new_form();
+                        //edit_groupal_tracking_new_form();
                         
                     },
                     dataType: "json",
@@ -909,8 +909,8 @@ define(
                         loading_indicator.hide();
                         $(student_id + " > div").empty();
                         $(student_id + " > div").append(msg);
-                        edit_tracking_new_form();
-                        edit_groupal_tracking_new_form();
+                        //edit_tracking_new_form();
+                        //edit_groupal_tracking_new_form();
                         
                     },
                     dataType: "json",
@@ -1034,8 +1034,8 @@ define(
                                 );
                             },
                         });
-                        edit_tracking_new_form();
-                        edit_groupal_tracking_new_form();
+                        //edit_tracking_new_form();
+                        //edit_groupal_tracking_new_form();
                     }
                 });
             }
@@ -1148,8 +1148,8 @@ define(
                                $("#reemplazarToogle").fadeIn();
                             }
                         });
-                        edit_tracking_new_form();
-                        edit_groupal_tracking_new_form();
+                        //edit_tracking_new_form();
+                        //edit_groupal_tracking_new_form();
 
                     }
 
