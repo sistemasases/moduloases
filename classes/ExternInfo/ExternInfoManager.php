@@ -30,15 +30,21 @@ abstract class ExternInfoManager extends Validable {
         return $this->object_errors;
     }
     public function execute() {
+
         if(!$this->valid()) {
 
-
-            http_response_code(404);
             print_r($this->send_errors());
         } else {
-            $this->load_data();
-            http_response_code(200);
-            print_r($this->send_response());
+
+            if($this->load_data() === true) {
+
+                http_response_code(200);
+                print_r($this->send_response());
+
+            } else {
+
+                $this->send_errors();
+            }
         }
     }
     /**
@@ -51,22 +57,42 @@ abstract class ExternInfoManager extends Validable {
     abstract function send_response();
     /**
      * If the load data fails return false, return true and init $this->>objects otherwise
+     * @throws ErrorException If $this->class_or_classname does not exist
      * @return bool
      */
-    private function load_data_from_file() {
+    private function load_data_from_file($load_invalid_data = false) {
         global $_FILES;
         $this->_file = file($_FILES[$this->_file_name]['tmp_name']);
         if($this->loaded_data_with_file()) {
-            $this->objects = $this->create_instances_from_csv($this->_file);
-            return true;
+            if($load_invalid_data === true) {
+                $std_objects = Csv::csv_file_to_std_objects($this->_file);
+                $objects = \reflection\make_from_std_object($std_objects, $this->class_or_class_name, true);
+                if(!is_array($objects)){
+                    $objects = array($objects);
+                }
+                $this->objects = $objects;
+                return false;
+
+            }
+            $objects = $this->create_instances_from_csv($this->_file);
+
+            if($objects !== null) {
+                $this->objects = $objects;
+
+                return true;
+            } else {
+                /* At this point the error was added by create_instances_from_csv method */
+                return false;
+            }
         }
         return false;
     }
-    private function load_data_from_ajax() {
+    private function load_data_from_ajax($load_invalid_data) {
         if($this->loaded_data_with_ajax()) {
             $this->objects = $this->create_instances_from_post();
+            return true;
         }
-         return true;
+         return false;
     }
     public function _custom_validation(): bool
     {
@@ -76,7 +102,7 @@ abstract class ExternInfoManager extends Validable {
         if($this->objects) {
             foreach($this->objects as $key=>$object) {
                 if(!$object->valid()){
-                    $this->object_errors[$key] = $object->get_errors();
+                    $this->object_errors[$key] = $object->get_errors_object();
                     $valid = false;
                 }
             }
@@ -98,6 +124,7 @@ abstract class ExternInfoManager extends Validable {
      * If some error exist return false and make available the errors
      * @see Validable
      * @return bool
+     * @throws ErrorException If $this->class_or_classname is not found
      */
     private function load_data() {
         return $this->load_data_from_file() || $this->load_data_from_ajax();
@@ -116,10 +143,23 @@ abstract class ExternInfoManager extends Validable {
         }
         return true;
     }
+
+    /**
+     *
+     */
+    private function load_invalid_data() {
+    $this->load_data_from_file(true) && $this->load_data_from_ajax(true);
+    }
     public function send_errors() {
         http_response_code(404);
-
-        echo json_encode($this->get_errors_object());
+        $response = new stdClass();
+        $response->object_errors = $this->get_errors_object();
+        $this->load_invalid_data();
+        $column_names = \reflection\get_properties($this->class_or_class_name);
+        $datatable_columns = \jquery_datatable\Column::get_columns_from_names($column_names);
+        $json_datatable = new \jquery_datatable\DataTable($this->get_objects(), $datatable_columns);
+        $response->datatable_preview = $json_datatable;
+        echo json_encode($response);
     }
     private function validate_ajax_data(): bool {
         if(!isset($POST['data'])) {
@@ -154,7 +194,7 @@ abstract class ExternInfoManager extends Validable {
     return false;
     }
     private function loaded_data_with_ajax(): bool {
-        if($_POST){
+        if(isset($_POST['data'])){
             return true;
         }
         return false;

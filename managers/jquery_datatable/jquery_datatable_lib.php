@@ -125,7 +125,6 @@ class Column {
         $title = Column::get_column_title_from_property_name($property_name);
         return new Column($data, $title);
     }
-
     /**
      * Return jquery datatable columns than extract the data from formated
      * object, based in a object instance or in a class. Only public properties
@@ -137,7 +136,7 @@ class Column {
      * @return array<Column> columns for jquery datatable than should print the information
      *  than contain instances of object or class given as an input
      */
-    public static function get_JSON_columns($class_name_or_object) {
+    public static function get_columns($class_name_or_object ) {
         $object = null;
         $object_properties = null;
         $sourceProperties = null;
@@ -162,7 +161,16 @@ class Column {
                 array_push($data_table_columns, $json_column);
             }
         }
+
         return $data_table_columns;
 
+    }
+    public static function get_columns_from_names(array $names ): array {
+        $datatable_columns = [];
+        foreach($names as $name) {
+            $json_column = new Column($name);
+            array_push($datatable_columns, $json_column);
+        }
+        return $datatable_columns;
     }
 }
