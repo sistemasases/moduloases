@@ -1,10 +1,15 @@
 <?php
+error_reporting(E_ALL | E_STRICT);   // NOT FOR PRODUCTION SERVERS!
+ini_set('display_errors', '1');         // NOT FOR PRODUCTION SERVERS!
+require_once(__DIR__ . '/../../../../config.php');
 require_once(__DIR__.'/../common/Validable.php');
 require_once(__DIR__.'/../common/Renderable.php');
-require_once(__DIR__.'/../../managers/query.php');
 require_once (__DIR__ .'/../traits/validate_object_fields.php');
 require_once (__DIR__ . '/../Validators/FieldValidators.php');
 require_once (__DIR__ . '/../../classes/EstadoAses.php');
+require_once (__DIR__ . '/../../managers/user_management/user_lib.php');
+//
+
 /**
  * EstadoAses object
  * Clase encargada de mapear la informcion dada en la carga masiva de usuarios
@@ -49,7 +54,7 @@ class EstadoAsesCSV extends Validable {
         $field_validators->motivo_ases = [FieldValidators::required()];
         $field_validators->motivo_icetex = [FieldValidators::required()];
         $field_validators->estado_programa= [FieldValidators::required()];
-        $field_validators->username= [FieldValidators::required()];
+        $field_validators->username = [FieldValidators::regex(get_username_moodle_regex(), 'El nombre de usuario debe ser con formato similar a "1327951-3744"')];
 
         $this->set_field_validators($field_validators);
     }
@@ -61,11 +66,16 @@ class EstadoAsesCSV extends Validable {
     public function _custom_validation(): bool
     {
         $valid = $this->valid_fields();
-
         $estado_ases = EstadoAses::get_by(array(EstadoAses::NOMBRE=>$this->estado_ases));
+        /* @var $estado_ases EstadoAses */
         if(!$estado_ases) {
+            $estados_ases_names = array_map(function($estado_ases) {
+                return $estado_ases->nombre;
+            },
+                EstadoAses::get_all(null, 'nombre'));
+            $estado_ases_names_string = implode(', ', $estados_ases_names);
             $field = 'estado_ases';
-            $this->add_error(new AsesError(-1, 'El estado ases debe ser *SEGUIMIENTO* o *SIN SEGUMIENTO*',
+            $this->add_error(new AsesError(-1, "El estado ases debe ser uno de los siguientes: $estado_ases_names_string",
                 array('field'=>$field)), $field);
             $valid = false;
         }

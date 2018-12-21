@@ -22,7 +22,7 @@ class EstadoAsesEIManager extends ExternInfoManager {
 
         $sample_std_object = $this->get_objects()[0];
 
-        $datatable_columns = \jquery_datatable\Column::get_columns($sample_std_object);
+        $datatable_columns = \jquery_datatable\Column::get_columns($sample_std_object, $this->custom_column_mapping());
         $json_datatable = new \jquery_datatable\DataTable($this->get_objects(), $datatable_columns);
         $response = new \stdClass();
         $response->jquery_datatable = $json_datatable;
@@ -36,6 +36,13 @@ class EstadoAsesEIManager extends ExternInfoManager {
 
         return $arrayEncoded;
     }
+    public function custom_column_mapping() {
+        return array(
+            'Nombre Usuario' => 'username'
+        );
+        return array();
+    }
+
 }
 
 

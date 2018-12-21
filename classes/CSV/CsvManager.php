@@ -48,12 +48,12 @@ trait CsvManager {
      * @throws ErrorException If $this->class_or_class_name does not exist
      * @return array of $class_or_class_name instances
      */
-    public function create_instances_from_csv($file) {
-        $this->validate_caller_csv();
+    public function create_instances_from_csv($file, $custom_mapings) {
+        $this->validate_caller_csv($custom_mapings);
 
-        if(!Csv::csv_compatible_with_class($file, $this->class_or_class_name)) {
+        if(!Csv::csv_compatible_with_class($file, $this->class_or_class_name, $this->custom_column_mapping())) {
             $object_properties = \reflection\get_properties($this->class_or_class_name);
-            $file_headers = Csv::csv_get_headers($file);
+            $file_headers = Csv::get_real_headers($file, $custom_mapings );
             $this->add_error(CsvManagerErrorFactory::csv_and_class_have_distinct_properties(array(
                 'class'=>$this->class_or_class_name,
                 'object_properties'=>$object_properties,
@@ -61,7 +61,7 @@ trait CsvManager {
 
             return null;
         }
-        $std_objects = Csv::csv_file_to_std_objects($file);
+        $std_objects = Csv::csv_file_to_std_objects($file, $custom_mapings);
         if(!class_exists($this->class_or_class_name)) {
             $error = CsvManagerErrorFactory::csv_manager_class_does_not_exist(array('std_objects' => $std_objects, 'class'=>$class));
             $this->add_error ($error);
@@ -76,7 +76,9 @@ trait CsvManager {
         return $instances;
 
     }
-
+    public function custom_header_mapping() {
+        
+    }
     /**
      * If your csv manager have column names than does not match perfectly with the object than you want return,
      * you can make an alternative column mapping with respect to object properties names
@@ -88,9 +90,9 @@ trait CsvManager {
      *
      * If you not need custom column mapping is not necesary overload this method
      *
-     * @return false|array
+     * @return null|array
      */
     public function custom_column_mapping() {
-        return false;
+        return null;
     }
 }

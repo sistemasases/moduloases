@@ -123,7 +123,7 @@ function make_from_std_object($stdObj_or_array, $class, $allow_non_equal_objects
    
     if (!$allow_non_equal_objects && !\reflection\valid_std_object($stdObj_or_array, $class)) {
         
-        throw new \Exception("The new object does not have the same properties than the class '$class'");
+        throw new \Exception("The object does not have the same properties than the class '$class'");
     } else {
         
         return \reflection\__cast($class, $stdObj_or_array);
