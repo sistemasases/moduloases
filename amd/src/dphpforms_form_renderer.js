@@ -488,7 +488,28 @@
                     loading_indicator.show();
                     $.get( "../managers/dphpforms/dphpforms_forms_core.php?form_id=&record_id="+record_id, function( data ) {
                             loading_indicator.hide();
-                            $('#body_editor').append( data );
+
+                            if(form_id =='seguimiento_grupal'){
+                      
+                                $("#modal_v2_edit_groupal_tracking").find("#body_editor").append(data);
+                                $("#modal_v2_edit_groupal_tracking").find(".btn-dphpforms-univalle").remove();
+                                var students = $("#modal_v2_edit_groupal_tracking").find('form').find('.oculto.id_estudiante').find('input').val();
+    
+                                generate_attendance_table(students);
+    
+    
+                             }else{
+                                                         
+                                $('#body_editor').append( data );
+
+                                var role_support = $('#dphpforms_role_support').attr('data-info');
+                                if( ( role_support == "sistemas" ) || ( role_support == "profesional_ps" ) ){
+                                  // $(".dphpforms.dphpforms-record.dphpforms-updater").append('<br><br><div class="div-observation col-xs-12 col-sm-12 col-md-12 col-lg-12 comentarios_vida_uni">Observaciones de Practicante/profesional:<br> <textarea id="observation_text" class="form-control " name="observation_text" maxlength="5000"></textarea><br><a id="send_observation" class="btn btn-sm btn-danger btn-dphpforms-univalle btn-dphpforms-send-observation">Enviar observación</a></div>');
+                                }
+                                
+                                $('button.btn.btn-sm.btn-danger.btn-dphpforms-univalle').attr('id', 'button');
+                                
+                             }
 
                             var table = $("#list_grupal_seg_consult").clone().prop('id','list_grupal_seg_consult_1');
                             $('#modal_v2_edit_groupal_tracking').find('form').find('h1').after(table);
@@ -824,6 +845,35 @@
                         }
                       });
                 });
+
+                function generate_attendance_table(students){
+                    loading_indicator.show();
+                     $.ajax({
+                            type: "POST",
+                            data: {
+                                students: students,
+                                type: "consult_students_name"
+                            },
+                            url: "../../../blocks/ases/managers/pilos_tracking/pilos_tracking_report.php",
+                            async: false,
+                            success: function(msg) {
+
+                                loading_indicator.hide();
+                                if (msg != "") {
+                                   var table ='<hr style="border-color:red"><div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 estudiantes" id="students"><h3>Estudiantes asistentes:</h3><br>'+msg+'<br>';
+                                   $('#modal_v2_edit_groupal_tracking').find('#students').remove(); 
+                                   $('#modal_v2_edit_groupal_tracking').find('form').find('h1').after(table);
+                                }
+                                
+                            },
+                            dataType: "text",
+                            cache: "false",
+                            error: function(msg) {
+                                alert("Error al consultar nombres de los estudiantes pertenecientes a un seguimiento grupal");
+                                loading_indicator.hide();
+                            },
+                        });
+                }
             }
     };
 });

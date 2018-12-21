@@ -593,7 +593,7 @@ define(
             }
 
 
-                function generate_attendance_table(students){
+                /*function generate_attendance_table(students){
                     loading_indicator.show();
                      $.ajax({
                             type: "POST",
@@ -620,12 +620,12 @@ define(
                                 loading_indicator.hide();
                             },
                         });
-                }
+                }*/
 
 
-                function load_record_updater(form_id, record_id){
+                /*function load_record_updater(form_id, record_id){
+                    $('.div').removeClass('regla_incumplida');
                     $("#body_editor").html("");
-                    $("#modal_v2_edit_groupal_tracking").find("#body_editor").html("");   
                     loading_indicator.show();
                     $.get( "../managers/dphpforms/dphpforms_forms_core.php?form_id=&record_id="+record_id, function( data ) {
                          loading_indicator.hide();
@@ -696,7 +696,7 @@ define(
                             $("#permissions_informationr").html("");
 
                     });
-                }
+                }*/
 
 
 
