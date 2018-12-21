@@ -339,3 +339,7 @@ pre, code {
 #mantenimiento-valor-por-defecto{
     height: 34px;
 }
+
+.dphpforms_response_recorder_buttons{
+    text-align: center;
+}

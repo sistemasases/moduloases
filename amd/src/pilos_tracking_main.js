@@ -164,17 +164,6 @@ define(
                         $('.btn-dphpforms-update').remove();
                     };    
 
-                    var count_buttons_dphpforms = $('.dphpforms-record .btn-dphpforms-univalle').length;
-                    if( count_buttons_dphpforms == 1 ){
-                        $('.dphpforms-record .btn-dphpforms-univalle:eq(0)').css( { 'margin-left' : ( ($('.dphpforms-updater').width()/2) - ( $('.dphpforms-record .btn-dphpforms-close').outerWidth() /2) ) + 'px'  } );
-                    }else if( count_buttons_dphpforms == 2 ){
-                        $('.dphpforms-record .btn-dphpforms-univalle:eq(0)').css( { 'margin-left' : ( ($('.dphpforms-updater').width()/2) - 72 ) + 'px'  } );
-                    }else if( count_buttons_dphpforms == 3 ){
-                        $('.dphpforms-record .btn-dphpforms-univalle:eq(0)').css( { 'margin-left' : ( ($('.dphpforms-updater').width()/2) - 72 - 30) + 'px'  } );
-                    }else if( count_buttons_dphpforms == 4 ){
-                        $('.dphpforms-record .btn-dphpforms-univalle:eq(0)').css( { 'margin-left' : ( ($('.dphpforms-updater').width()/2) - 72 - 30) + 'px'  } );
-                    }
-                
                 }else if( (form == 'seguimiento_pares' )&&( action == 'insert' )){
 
                 }else if( (form == 'seguimiento_pares')&&( action == 'update' ) ){
@@ -190,13 +179,6 @@ define(
                     if( rev_prac ){
                         $('.btn-dphpforms-delete-record').remove();
                     };
-
-                    var count_buttons_dphpforms = $('.dphpforms-record .btn-dphpforms-univalle').length;
-                    if( (count_buttons_dphpforms == 3 )||(count_buttons_dphpforms == 2 ) ){
-                        $('.dphpforms-record .btn-dphpforms-close').css( { 'margin-left' : ( ($('.dphpforms-updater').width()/2) - 30 ) + 'px'  } );
-                    }else if( count_buttons_dphpforms == 4 ){
-                        $('.dphpforms-record .btn-dphpforms-univalle:eq(0)').css( { 'margin-left' : ( ($('.dphpforms-updater').width()/2) - 72 - 30 ) + 'px'  } );
-                    }
 
                 }else if( (form == 'seguimiento_geografico_')&&( action == 'insert' ) ){
                 
@@ -393,7 +375,9 @@ define(
                     return value;
                 }; 
 
-           $(document).on('click', '.dphpforms > #button' , function(evt) {
+          //OBSOLETO
+           /*$(document).on('click', '.dphpforms > #button' , function(evt) {
+           
                     evt.preventDefault();
                     $( ':disabled' ).prop( 'disabled', false);
                     var formData = new FormData();
@@ -546,9 +530,8 @@ define(
                             
                      });
                 
-                     
                 });
-
+            */
 
 
 
