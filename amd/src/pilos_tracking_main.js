@@ -1083,6 +1083,7 @@ define(
                     var id_persona = $("#personas").children(":selected").attr("value");
                     var id_semestre = $("#periodos").children(":selected").attr("value");
                     let username = $("#personas").children(":selected").data("username");
+                    collapse_loaded = [];
 
                     if (id_persona == undefined) {
 
