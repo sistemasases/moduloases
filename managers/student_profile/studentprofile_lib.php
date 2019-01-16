@@ -636,6 +636,7 @@ function update_status_ases($current_status, $new_status, $instance_id, $code_st
     return $result;
 }
  
+
 /**
  * Gets every track of a student given his id, track type and instance associated to the track and the student
  *
@@ -670,6 +671,130 @@ function get_trackings_student($id_ases, $tracking_type, $id_instance){
     $tracking_array = $DB->get_records_sql($sql_query);
 
     return $tracking_array;
+}
+
+function get_tracking_current_semesterV3($criterio,$student_id, $semester_id,$intervals=null){
+
+    $fecha_inicio = null;
+    $fecha_fin = null;
+
+    if( $intervals ){
+
+        $fecha_inicio = getdate(strtotime($intervals[0]));
+        $fecha_fin = getdate(strtotime($intervals[1]));
+
+    }else{
+
+        $interval = get_semester_interval($semester_id);
+        $fecha_inicio = getdate(strtotime($interval->fecha_inicio));
+        $fecha_fin = getdate(strtotime($interval->fecha_fin));
+    }
+
+    $mon_tmp = $fecha_inicio["mon"];
+    $day_tmp = $fecha_inicio["mday"];
+    if( $mon_tmp < 10 ){
+        $mon_tmp = "0" . $mon_tmp;
+    }
+    if( $day_tmp < 10 ){
+        $day_tmp = "0" . $day_tmp;
+    }
+
+    $fecha_inicio_str = $fecha_inicio["year"]."-".$mon_tmp."-".$day_tmp;
+
+    $mon_tmp = $fecha_fin["mon"];
+    $day_tmp = $fecha_fin["mday"];
+    if( $mon_tmp < 10 ){
+        $mon_tmp = "0" . $mon_tmp;
+    }
+    if( $day_tmp < 10 ){
+        $day_tmp = "0" . $day_tmp;
+    }
+
+    $fecha_fin_str = $fecha_fin["year"]."-".$mon_tmp."-".$day_tmp;
+
+    //$student [monitor or student]
+    $all_trackings = null;
+    
+    if( $criterio == 'student' ){
+
+        $xQuery = new stdClass();
+        $xQuery->form = "seguimiento_pares";
+        $xQuery->filterFields = [["id_estudiante",[[$student_id,"="]], false],
+                                 ["fecha",[[$fecha_inicio_str,">="],[$fecha_fin_str,"<="]], false],
+                                 ["revisado_profesional",[["%%","LIKE"]], false],
+                                 ["revisado_practicante",[["%%","LIKE"]], false]
+                                ];
+        $xQuery->orderFields = [["fecha","DESC"]];
+        $xQuery->orderByDatabaseRecordDate = false; 
+        $xQuery->recordStatus = [ "!deleted" ];
+        $xQuery->asFields = [ [ [ function( $_this ){ return "seguimiento_pares"; } ] , 'alias_form' ] ];
+
+        $trackings = dphpformsV2_find_records( $xQuery );
+
+        $xQuery = new stdClass();
+        $xQuery->form = "inasistencia";
+        $xQuery->filterFields = [["in_id_estudiante",[[$student_id,"="]], false],
+                                 ["in_fecha",[[$fecha_inicio_str,">="],[$fecha_fin_str,"<="]], false],
+                                 ["in_revisado_profesional",[["%%","LIKE"]], false],
+                                 ["in_revisado_practicante",[["%%","LIKE"]], false]
+                                ];
+        $xQuery->orderFields = [["in_fecha","DESC"]];
+        $xQuery->orderByDatabaseRecordDate = false; 
+        $xQuery->recordStatus = [ "!deleted" ];
+        $xQuery->asFields = [ [ 'in_fecha', 'fecha' ], [ [ function( $_this ){ return "inasistencia"; } ] , 'alias_form' ] ];
+
+        $in_trackings = dphpformsV2_find_records( $xQuery );
+        
+        $all_trackings = array_merge( $trackings, $in_trackings );
+
+        $fecha = array();
+        foreach ($all_trackings as $key => $tracking){
+            $fecha[$key] =  strtotime( $tracking['fecha'] );
+        }
+        array_multisort($fecha, SORT_DESC, $all_trackings);
+
+   }elseif( $criterio == 'monitor' ){
+        
+        $xQuery = new stdClass();
+        $xQuery->form = "seguimiento_pares";
+        $xQuery->filterFields = [["id_creado_por",[[$student_id,"="]], false],
+                                 ["fecha",[[$fecha_inicio_str,">="],[$fecha_fin_str,"<="]], false],
+                                 ["revisado_profesional",[["%%","LIKE"]], false],
+                                 ["revisado_practicante",[["%%","LIKE"]], false]
+                                ];
+        $xQuery->orderFields = [["fecha","DESC"]];
+        $xQuery->orderByDatabaseRecordDate = false; 
+        $xQuery->recordStatus = [ "!deleted" ];
+        $xQuery->asFields = [ [ [ function( $_this ){ return "seguimiento_pares"; } ] , 'alias_form' ] ];
+
+        $trackings = dphpformsV2_find_records( $xQuery );
+
+        $xQuery = new stdClass();
+        $xQuery->form = "inasistencia";
+        $xQuery->filterFields = [["in_id_creado_por",[[$student_id,"="]], false],
+                                 ["in_fecha",[[$fecha_inicio_str,">="],[$fecha_fin_str,"<="]], false],
+                                 ["in_revisado_profesional",[["%%","LIKE"]], false],
+                                 ["in_revisado_practicante",[["%%","LIKE"]], false]
+                                ];
+        $xQuery->orderFields = [["in_fecha","DESC"]];
+        $xQuery->orderByDatabaseRecordDate = false; 
+        $xQuery->recordStatus = [ "!deleted" ];
+        $xQuery->asFields = [ [ 'in_fecha', 'fecha' ], [ [ function( $_this ){ return "inasistencia"; } ] , 'alias_form' ] ];
+
+        $in_trackings = dphpformsV2_find_records( $xQuery );
+
+        $all_trackings = array_merge( $trackings, $in_trackings );
+
+        $fecha = array();
+        foreach ($all_trackings as $key => $tracking){
+            $fecha[$key] =  strtotime( $tracking['fecha'] );
+        }
+        array_multisort($fecha, SORT_DESC, $all_trackings);
+
+    } 
+
+    return $all_trackings;
+
 }
 
 function get_tracking_current_semesterV2($criterio,$student_id, $semester_id,$intervals=null){
