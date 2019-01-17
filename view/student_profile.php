@@ -935,9 +935,9 @@ if ($student_code != 0) {
     $array_periodos = array();
     for ($x = 0; $x < count($seguimientos_array['index']); $x++) {
         array_push($array_periodos, $seguimientos_array[ $seguimientos_array['index'][$x] ]);
-    }*/
+    }
     
-    /*$record->peer_tracking_v2 = array(
+    $record->peer_tracking_v2 = array(
         'index' => $seguimientos_array['index'],
         'periodos' => $array_periodos,
     );*/
@@ -951,49 +951,53 @@ if ($student_code != 0) {
         if( strtotime( $period->fecha_inicio ) >= $new_forms_date ){
 
             $trackings = get_tracking_current_semesterV3('student', $dphpforms_ases_user, $period->id);
-            $peer_tracking['period_name'] = $period->nombre;
+            if( count( $trackings ) > 0 ){
 
-            //Here can be added metadata.
-            foreach ($trackings as &$tracking) {
+                $peer_tracking['period_name'] = $period->nombre;
+                $tracking_modified = [];
+                 //Here can be added metadata.
+                foreach ($trackings as $key => $tracking) {
 
-                $tracking['custom_extra'][$tracking['alias_form']] = true;
-                $tracking['custom_extra']['rev_pro'] = false;
-                $tracking['custom_extra']['rev_pract'] = false;
+                    $tracking['custom_extra'][$tracking['alias_form']] = true;
+                    $tracking['custom_extra']['rev_pro'] = false;
+                    $tracking['custom_extra']['rev_pract'] = false;
 
-                if ( array_key_exists("revisado_profesional", $tracking) ) {
-                    if( $tracking['revisado_profesional'] === "0" ){
-                        $tracking['custom_extra']['rev_pro'] = true;
-                    }
+                    if ( array_key_exists("revisado_profesional", $tracking) ) {
+                        if( $tracking['revisado_profesional'] === "0" ){
+                            $tracking['custom_extra']['rev_pro'] = true;
+                        }
+                    };
+                    if ( array_key_exists("revisado_practicante", $tracking) ) {
+                        if( $tracking['revisado_practicante'] === "0" ){
+                            $tracking['custom_extra']['rev_pract'] = true;
+                        }
+                    };
+                    if ( array_key_exists("in_revisado_profesional", $tracking) ) {
+                        if( $tracking['in_revisado_profesional'] === "0" ){
+                            $tracking['custom_extra']['rev_pro'] = true;
+                        }
+                    };
+                    if ( array_key_exists("in_revisado_practicante", $tracking) ) {
+                        if( $tracking['in_revisado_practicante'] === "0" ){
+                            $tracking['custom_extra']['rev_pract'] = true;
+                        }
+                    };
+
+                    //Using reference fail
+                    array_push( $tracking_modified, $tracking );
+
                 };
-                if ( array_key_exists("revisado_practicante", $tracking) ) {
-                    if( $tracking['revisado_practicante'] === "0" ){
-                        $tracking['custom_extra']['rev_pract'] = true;
-                    }
-                };
-                if ( array_key_exists("in_revisado_profesional", $tracking) ) {
-                    if( $tracking['in_revisado_profesional'] === "0" ){
-                        $tracking['custom_extra']['rev_pro'] = true;
-                    }
-                };
-                if ( array_key_exists("in_revisado_practicante", $tracking) ) {
-                    if( $tracking['in_revisado_practicante'] === "0" ){
-                        $tracking['custom_extra']['rev_pract'] = true;
-                    }
-                };
 
-            };
+                $peer_tracking['trackings'] = $tracking_modified;
 
-            $peer_tracking['trackings'] = $trackings;
-
-            array_push( $peer_tracking_v3, $peer_tracking );
+                array_push( $peer_tracking_v3, $peer_tracking );
+            }
 
         }
 
     }
 
-    $record->peer_tracking_v3 = array_reverse( $peer_tracking_v3 );
-    //print_r($record->peer_tracking_v3);
-    
+    $record->peer_tracking_v3 =  array_reverse( $peer_tracking_v3 );
 
     $enum_risk = array();
     array_push($enum_risk, "");
