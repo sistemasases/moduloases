@@ -117,7 +117,8 @@ if ($student_code != 0) {
     
     
     $html_profile_image = AsesUser::get_HTML_img_profile_image($contextblock->id, $ases_student->id);
-    $academic_programs = get_status_program_for_profile($student_id);
+    //$academic_programs = get_status_program_for_profile($student_id);
+    $academic_programs   = get_status_program_for_profile_aditional($student_id);
     $student_cohorts = get_cohorts_by_student($id_user_moodle);
     $status_ases_array = get_ases_status($ases_student->id, $blockid);
 
@@ -144,6 +145,17 @@ if ($student_code != 0) {
     $record->id_ases = $student_id;
     $record->email_moodle = $user_moodle->email_moodle;
     $record->age = substr($ases_student->age, 0, 2);
+    foreach ($academic_programs as $program){
+        if($program->tracking_status == 1){
+            $sede = $program->nombre_sede;
+            $cod_programa = $program->cod_univalle;
+            $nombre_programa = $program->nombre_programa;
+            $program->nombre_sede = "<b>".$sede."</b>";
+            $program->cod_univalle = "<b>".$cod_programa."</b>";
+            $program->nombre_programa = "<b>".$nombre_programa."</b>";
+            break;
+        }
+    }
     $record->academic_programs = $academic_programs;
     $record->student_cohorts = $student_cohorts;
 
@@ -685,6 +697,7 @@ if ($student_code != 0) {
 
     foreach ($academic_programs as $program) {
         if($program->tracking_status == 1){
+            
             $academic_program_id = $program->academic_program_id;
             break;
         }

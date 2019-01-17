@@ -1619,6 +1619,65 @@ function get_status_program_for_profile($id_ases_user){
     return $array_result;
 }
 
+
+/**
+ * Retorna el conjunto de estados para ser puestos en la ficha general del estudiante
+ *
+ * @see get_status_program_for_profile_aditional($username)
+ * @return object array with academic program statuses
+ */
+function get_status_program_for_profile_aditional($id_ases_user){
+
+    global $DB;
+
+    $sql_query = "SELECT user_extended.id_moodle_user, 
+                         academic_program.id AS academic_program_id, 
+                         academic_program.cod_univalle, 
+                         academic_program.nombre AS nombre_programa, 
+                         academic_program.jornada, 
+                         sede.nombre AS nombre_sede,
+                         faculty.nombre AS nombre_facultad,
+                         user_extended.program_status, 
+                         user_extended.tracking_status
+                  FROM {talentospilos_user_extended} AS user_extended
+                       INNER JOIN {talentospilos_programa} AS academic_program ON user_extended.id_academic_program = academic_program.id
+                       INNER JOIN {talentospilos_facultad} AS faculty ON academic_program.id_facultad = faculty.id
+                       INNER JOIN {talentospilos_sede}     AS sede    ON academic_program.id_sede = sede.id     
+                  WHERE id_ases_user = $id_ases_user";
+    
+    $academic_program_student = $DB->get_records_sql($sql_query);
+
+    $sql_query = "SELECT *
+                  FROM {talentospilos_estad_programa}";
+    
+    $academic_program_statuses = $DB->get_records_sql($sql_query);
+
+    $array_result = array();
+
+    foreach($academic_program_student as $academic_program){
+
+        $array_statuses = array();
+
+        foreach($academic_program_statuses as $status){
+            
+            if($status->id == $academic_program->program_status){
+            
+                $status->selected = 'selected';
+            }else{
+                unset($status->selected);
+            }
+            array_push($array_statuses, $status);
+        }
+
+        $academic_program->statuses = $array_statuses; 
+
+        array_push($array_result, $academic_program);
+    }
+
+    return $array_result;
+}
+
+
 /**
  * Retorna el conjunto de posibles tipos de documento de identidad para un estudiante en particular
  * marcando cual figura en su registro en la tabla talentospilos_usuario asociado al campo num_doc
