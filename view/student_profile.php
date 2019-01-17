@@ -58,6 +58,7 @@ global $USER;
 include "../classes/output/student_profile_page.php";
 include "../classes/output/renderer.php";
 
+$new_forms_date =strtotime('2018-01-01 00:00:00');
 
 // Set up the page.
 $title = "Ficha estudiante";
@@ -726,7 +727,7 @@ if ($student_code != 0) {
 
     $dphpforms_ases_user = get_ases_user_by_code( $student_code )->id;
 
-    // Pares
+    /*// Pares
     $array_peer_trackings_dphpforms = dphpforms_find_records('seguimiento_pares', 'seguimiento_pares_id_estudiante', $dphpforms_ases_user, 'DESC');
     $array_peer_trackings_dphpforms = json_decode($array_peer_trackings_dphpforms);
 
@@ -948,10 +949,68 @@ if ($student_code != 0) {
     for ($x = 0; $x < count($seguimientos_array['index']); $x++) {
         array_push($array_periodos, $seguimientos_array[ $seguimientos_array['index'][$x] ]);
     }
+    
     $record->peer_tracking_v2 = array(
         'index' => $seguimientos_array['index'],
         'periodos' => $array_periodos,
-    );
+    );*/
+
+    //PeerTracking V3
+    //dphpforms start
+    $peer_tracking_v3 = [];
+    $periods = periods_management_get_all_semesters();
+    foreach( $periods as $key => $period ){
+
+        if( strtotime( $period->fecha_inicio ) >= $new_forms_date ){
+
+            $trackings = get_tracking_current_semesterV3('student', $dphpforms_ases_user, $period->id);
+            if( count( $trackings ) > 0 ){
+
+                $peer_tracking['period_name'] = $period->nombre;
+                $tracking_modified = [];
+                 //Here can be added metadata.
+                foreach ($trackings as $key => $tracking) {
+
+                    $tracking['custom_extra'][$tracking['alias_form']] = true;
+                    $tracking['custom_extra']['rev_pro'] = false;
+                    $tracking['custom_extra']['rev_pract'] = false;
+
+                    if ( array_key_exists("revisado_profesional", $tracking) ) {
+                        if( $tracking['revisado_profesional'] === "0" ){
+                            $tracking['custom_extra']['rev_pro'] = true;
+                        }
+                    };
+                    if ( array_key_exists("revisado_practicante", $tracking) ) {
+                        if( $tracking['revisado_practicante'] === "0" ){
+                            $tracking['custom_extra']['rev_pract'] = true;
+                        }
+                    };
+                    if ( array_key_exists("in_revisado_profesional", $tracking) ) {
+                        if( $tracking['in_revisado_profesional'] === "0" ){
+                            $tracking['custom_extra']['rev_pro'] = true;
+                        }
+                    };
+                    if ( array_key_exists("in_revisado_practicante", $tracking) ) {
+                        if( $tracking['in_revisado_practicante'] === "0" ){
+                            $tracking['custom_extra']['rev_pract'] = true;
+                        }
+                    };
+
+                    //Using reference fail
+                    array_push( $tracking_modified, $tracking );
+
+                };
+
+                $peer_tracking['trackings'] = $tracking_modified;
+
+                array_push( $peer_tracking_v3, $peer_tracking );
+            }
+
+        }
+
+    }
+
+    $record->peer_tracking_v3 =  array_reverse( $peer_tracking_v3 );
 
     $enum_risk = array();
     array_push($enum_risk, "");

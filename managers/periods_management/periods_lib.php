@@ -273,7 +273,7 @@ function periods_management_get_current_semester_by_apprx_interval( $start_date,
 }
 
  /**
- * Functions that returns all stored semesters
+ * Functions that returns all stored semesters.
  * @author Jeison Cardona Gómez <jeison.cardona@correounivalle.edu.co>
  * @return array
  */
