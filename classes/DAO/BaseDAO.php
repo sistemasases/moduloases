@@ -303,7 +303,7 @@ abstract class BaseDAO extends Validable
      * @example $conditions =  array('username'=> 'Camilo', 'lastname'=> 'Cifuentes')
      * @example $conditions = array(AsesUser::USER_NAME => 'Camilo', AsesUser::LAST_NAME => 'Cifuentes')
      * @see https://docs.moodle.org/dev/Data_manipulation_API
-     * @return false|object Object instance if exists in database, empty array if does not exist
+     * @return false|Municipio Object instance if exists in database, empty array if does not exist
      * @throws dml_exception
      * @throws ErrorException If the given conditions specify invalid column names throws an error
      *

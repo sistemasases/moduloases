@@ -56,19 +56,30 @@ class CsvManagerErrorFactory {
         /** @var $data data_csv_and_class_have_distinct_properties */
         $data = (object) $data;
         $message = $custom_message? $custom_message: 'El CSV ingresado no tiene propiedades validas para con la clase a la que intenta asignarle los valores';
-        $object_properties = null;
-        $csv_headers = null;
+        $object_properties = [];
+        $csv_headers = [];
         if($verbose_message){
             if(isset($data->object_properties)) {
-                $object_properties = $data->object_properties;
+                $object_properties =  $data->object_properties;
+                $object_properties_names = implode(', ', $object_properties);
+                $message.= " Propiedades esperadas: [$object_properties_names]. ";
+
+
             }
             if(isset($data->csv_headers)) {
                 $csv_headers = $data->csv_headers;
+                $csv_headers_names = implode(', ', $csv_headers);
+                $message.= "Headers dados: [$csv_headers_names]";
             }
-            $object_properties_names = implode(', ', $object_properties);
-            $csv_headers_names = implode(', ', $csv_headers);
-            $message.= " Propiedades esperadas: [$object_properties_names]. ";
-            $message.= "Headers dados: [$csv_headers_names]";
+            if(isset($data->object_properties) && isset($data->csv_headers)) {
+                $csv_headers_missing = array_diff($object_properties, $csv_headers);
+                $csv_headers_leftovers = array_diff($csv_headers, $object_properties);
+                $csv_headers_missing_names = implode(', ', $csv_headers_missing);
+                $csv_headers_leftovers = implode (', ', $csv_headers_leftovers);
+                $message.= " Headers faltantes: [$csv_headers_missing_names]. ";
+                $message.= " Headers sobrantes: [$csv_headers_leftovers]. ";
+            }
+
         }
 
         return new AsesError(CsvManagerErrorFactory::$CSV_AND_CLASS_HAVE_DISTINCT_PROPERTIES, $message, $data);

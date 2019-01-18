@@ -57,12 +57,18 @@ class DataTable {
      * @link https://datatables.net/reference/option/columns
      */
     public $columns;
+    /**
+     * @var $buttons array
+     * @see https://datatables.net/extensions/buttons/
+     */
+    public $buttons;
     public $responsive = true;
     public $sPaginationType = "full_numbers";
 
-    public function __construct($data=[], $columns=[]) {
+    public function __construct($data=[], $columns=[], $buttons=[]) {
         $this->data = $data;
         $this->columns = $columns;
+        $this->buttons = $buttons;
     }
 }
 

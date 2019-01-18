@@ -11,6 +11,7 @@ abstract class ExternInfoManager extends Validable {
      */
     public $class_or_class_name;
     private $objects;
+    private $initial_objects;
     /**
      * Key value array where the keys are the object position in $objects array and the values
      * are the errors of this object
@@ -23,11 +24,21 @@ abstract class ExternInfoManager extends Validable {
     public function __construct($class_or_class_name) {
         $this->class_or_class_name = $class_or_class_name;
     }
+
+    /**
+     * Save data to persistent data system
+     */
+    public function persist_data() {
+
+    }
     public function get_objects() {
         return $this->objects;
     }
     public function get_object_errors() {
         return $this->object_errors;
+    }
+    public function get_initial_objects() {
+        return $this->initial_objects;
     }
     public function execute() {
 
@@ -36,6 +47,7 @@ abstract class ExternInfoManager extends Validable {
         } else {
 
             if($this->load_data() === true) {
+                $this->persist_data();
 
                 http_response_code(200);
                 print_r($this->send_response());
@@ -47,7 +59,22 @@ abstract class ExternInfoManager extends Validable {
         }
     }
 
-
+    /**
+     * @return array
+     * @throws ErrorException
+     */
+    public function get_real_expected_headers() {
+        $custom_mapping = $this->custom_column_mapping();
+        $object_properties = \reflection\get_properties($this->class_or_class_name);
+        if(!$custom_mapping) {
+            return $object_properties;
+        } else {
+            $custom_mapping_ = array_flip($custom_mapping);
+            $object_properties = array_combine($object_properties, $object_properties);// the header names are now the keys and the values of array
+            $headers_ = array_replace($object_properties, $custom_mapping_); //replace the values with the real mappings
+            return array_values($headers_);
+        }
+    }
 
     /**
      * Overwrite this method for return the response, only if the method `valid()` return true
@@ -73,6 +100,7 @@ abstract class ExternInfoManager extends Validable {
                     $objects = array($objects);
                 }
                 $this->objects = $objects;
+                $this->initial_objects = $objects;
                 return false;
 
             }
@@ -80,7 +108,7 @@ abstract class ExternInfoManager extends Validable {
 
             if($objects !== null) {
                 $this->objects = $objects;
-
+                $this->initial_objects = $objects;
                 return true;
             } else {
                 /* At this point the error was added by create_instances_from_csv method */
@@ -92,6 +120,7 @@ abstract class ExternInfoManager extends Validable {
     private function load_data_from_ajax($load_invalid_data = false) {
         if($this->loaded_data_with_ajax()) {
             $this->objects = $this->create_instances_from_post();
+            $this->initial_objects = $this->objects;
             return true;
         }
          return false;
@@ -151,29 +180,51 @@ abstract class ExternInfoManager extends Validable {
 
             if(!Csv::csv_compaitble_with_custom_mapping($this->_file, $custom_mapping)) {
 
-                $mapping_supposed_headers = array_keys($custom_mapping);
+                $real_supposed_headers = $this->get_real_expected_headers();
                 $given_headers = Csv::csv_get_headers($this->_file);
-                $mapping_supposed_headers_string = implode(', ', $mapping_supposed_headers);
+                $real_supposed_headers_string = implode(', ', $real_supposed_headers);
                 $given_headers_string = implode(', ', $given_headers);
-
-                $this->add_error(new AsesError(
+                $headers_missing = array_diff($real_supposed_headers, $given_headers);
+                $headers_missing_string = implode(', ', $headers_missing);
+                $headers_leftovers = array_diff($given_headers, $real_supposed_headers);
+                $headers_leftovers_string = implode(', ', $headers_leftovers);
+                /*$this->add_error(new AsesError(
                     -1,
-                    "El mapeo actual no es compatible con el csv ingresado. El mapeo actual supone que los campos son [$mapping_supposed_headers_string], y los headers reales de el archivo son [$given_headers_string]"));
 
+                    "El mapeo actual no es compatible con el csv ingresado. 
+                    El mapeo actual supone que los campos son 
+                    [$real_supposed_headers_string], 
+                    y los headers reales de el archivo son 
+                    [$given_headers_string].
+                    Headers faltantes: $headers_missing_string. 
+                    Headers sobratnes: $headers_leftovers_string.",
+                    new data_csv_and_class_have_distinct_properties($real_supposed_headers, $given_headers)));*/
+                $this->add_error(CsvManagerErrorFactory::csv_and_class_have_distinct_properties(
+                    new data_csv_and_class_have_distinct_properties($real_supposed_headers, $given_headers),
+                    "El mapeo actual no es compatible con el csv ingresado. 
+                    El mapeo actual supone que los campos son 
+                    [$real_supposed_headers_string], 
+                    y los headers reales de el archivo son 
+                    [$given_headers_string].
+                    Headers faltantes: $headers_missing_string. 
+                    Headers sobratnes: $headers_leftovers_string.",
+                    true
+                ));
                 return false;
             }
-        }
+        } else {
 
-        if(! Csv::csv_compatible_with_class($this->_file, $this->class_or_class_name, $this->custom_column_mapping())) {
-            $csv_headers = CSV::csv_get_headers($this->_file);
-            $class_properties = \reflection\get_properties($this->class_or_class_name);
+            if (!Csv::csv_compatible_with_class($this->_file, $this->class_or_class_name, $this->custom_column_mapping())) {
+                $csv_headers = CSV::csv_get_headers($this->_file);
+                $class_properties = \reflection\get_properties($this->class_or_class_name);
 
-            $this->add_error(CsvManagerErrorFactory::csv_and_class_have_distinct_properties(
-                new data_csv_and_class_have_distinct_properties($class_properties, $csv_headers),
-                'El csv tiene campos incorrectos',
-                true
-            ));
-            return false;
+                $this->add_error(CsvManagerErrorFactory::csv_and_class_have_distinct_properties(
+                    new data_csv_and_class_have_distinct_properties($class_properties, $csv_headers),
+                    'El csv tiene campos incorrectos.',
+                    true
+                ));
+                return false;
+            }
         }
         return true;
     }
@@ -190,16 +241,23 @@ abstract class ExternInfoManager extends Validable {
         $response->object_errors = $this->get_errors_object();
         $this->load_invalid_data();
         $column_names = \reflection\get_properties($this->class_or_class_name);
-        $datatable_columns = \jquery_datatable\Column::get_columns_from_names($column_names);
-        $json_datatable = new \jquery_datatable\DataTable($this->get_objects(), $datatable_columns);
+        $datatable_columns = \jquery_datatable\Column::get_columns_from_names($this->get_real_expected_headers());
+        $json_datatable = new \jquery_datatable\DataTable(array(), $datatable_columns,
+            [array(
+                "extend"=>'csvHtml5',
+                "text"=>'CSV'
+            )]);
         $response->datatable_preview = $json_datatable;
         echo json_encode($response);
     }
     private function validate_ajax_data(): bool {
+        global $_POST;
         if($this->loaded_data_with_ajax()) {
-            if(isset($POST['data'])) {
-                $this->add_error(new AsesError('-1', 'Los datos deben ser enviados en un atributo "data" via ajax'));
+            if(isset($_POST['data'])) {
                 return true;
+            } else {
+                $this->add_error(new AsesError('-1', 'Los datos deben ser enviados en un atributo "data" via ajax'));
+                return false;
             }
         } else {
             return false;

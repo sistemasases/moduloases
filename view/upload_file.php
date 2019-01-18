@@ -9,6 +9,8 @@ $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/jquery.dataTables.m
 
 $PAGE->requires->js_call_amd('block_ases/massive_upload', 'init');
 $output = $PAGE->get_renderer('block_ases');
+$PAGE->requires->css('/blocks/ases/style/jquery.dataTables.min.css', true);
+$PAGE->requires->css('/blocks/ases/style/buttons.dataTables.min.css', true);
 echo $output->header();
 \core\notification::info('Tip: pase con el mouse sobre los campos que tengan error para ver el detalle');
 \core\notification::info('Tip: Si el archivo tiene errores, puede corregirlos y resubir el archivo, podra enviarlo de nuevo');

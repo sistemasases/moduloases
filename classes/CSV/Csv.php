@@ -52,19 +52,29 @@ class Csv {
         $headers = $rows[0];
         return $headers;
     }
+
+    /**
+     * Return the
+     * @param $csv_file
+     * @param null $custom_mapping
+     * @return array
+     */
     public static function get_real_headers($csv_file, $custom_mapping = null) {
         $headers = Csv::csv_get_headers($csv_file);
         if(!$custom_mapping) {
             return $headers;
         } else {
+
             $headers = array_combine($headers, $headers);// the header names are now the keys and the values of array
+
             $headers_ = array_replace($headers, $custom_mapping); //replace the values with the real mappings
+
             return array_values($headers_);
         }
     }
-    public static function csv_compaitble_with_custom_mapping($csv_file, $custom_mapping) {
-        $headers = Csv::csv_get_headers($csv_file);
-        $custom_mapping_original_headers = array_keys($custom_mapping);
+    public static function csv_compaitble_with_custom_mapping($csv_file, $custom_mapping = null) {
+        $headers = Csv::get_real_headers($csv_file, $custom_mapping);
+        $custom_mapping_original_headers = array_values($custom_mapping);
         return empty(array_diff($custom_mapping_original_headers, $headers))    ;
     }
     /**

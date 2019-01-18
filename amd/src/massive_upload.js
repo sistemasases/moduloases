@@ -9,8 +9,12 @@ define([
         'jquery',
         'core/notification',
         'core/templates',
-        'block_ases/jquery.dataTables'
-    ], function($, notification, templates) {
+    'block_ases/jquery.dataTables',
+    'block_ases/dataTables.buttons',
+    'block_ases/buttons.html5',
+    'block_ases/buttons.flash',
+    'block_ases/buttons.print',
+    ], function($, notification, templates, dataTables, autoFill, buttons, html5, flash, print) {
         return {
             init: function () {
 
@@ -60,6 +64,7 @@ define([
                             type: 'POST',
                             success: function (response) {
                                 console.log(response);
+
                             }
                         }).done(function (data, textStatus, jqXHR) {
                             if (console && console.log) {
@@ -70,6 +75,7 @@ define([
                             .fail(function (jqXHR, textStatus, errorThrown) {
                                 if (console && console.log) {
                                     console.log("La solicitud a fallado: " + textStatus);
+                                    console.log(jqXHR);
                                 }
                             });
                     });
@@ -85,8 +91,8 @@ define([
                  */
                 function load_preview(data_table, error) {
                     var correct_column_names = error.data_response.object_properties;
-                    var given_column_names = error.data_response.csv_headers;
-                    console.log(correct_column_names, given_column_names);
+                    var given_column_names = error.data_response.file_headers;
+                    console.log(error);
                     myTable = $('#example').DataTable(data_table);
                     var missing_columns = correct_column_names.filter(element => given_column_names.indexOf(element) < 0);
                     var extra_columns = given_column_names.filter(element => {
@@ -117,17 +123,23 @@ define([
                             processData: false,
                             type: 'POST',
                             error: function (response) {
+                                if (myTable) {
+                                    myTable.destroy();
+                                }
                                 console.log(response);
+                                $('#user-notifications .alert-error').remove();
                                 var error_object = JSON.parse(response.responseText);
                                 console.log(error_object);
                                 var datatable_preview = error_object.datatable_preview;
                                 var error_messages = error_object.object_errors.generic_errors.map(error => error.error_message);
                                 load_preview(datatable_preview, error_object.object_errors.generic_errors[0]);
-                                notification.addNotification({
-                                    message: error_messages
-                                        .join(', ') + ' En la consola encontrara mas info.',
-                                    type: 'error'
+                                error_messages.forEach((error_message) => {
+                                    var l = notification.addNotification({
+                                        message: error_message,
+                                        type: 'error'
+                                    });
                                 });
+
                             },
                             success: function (response) {
                                 console.log(response);
@@ -195,9 +207,9 @@ define([
                                                  * @see https://datatables.net/reference/option/rowCallback
                                                  */
                                                 $('td.' + property_name, row).addClass('error');
-                                                console.log(data.errors[property_name][0].error_message);
                                                 var error_names = data.errors[property_name].map(error => error.error_message);
-                                                var error_names_concat = error_names.join();
+                                                var error_names_concat = error_names.join('; ');
+                                                /* Se añaden los mensajes de los errores al title de el campo en la tabla*/
                                                 $('td.' + property_name, row).prop('title', error_names_concat);
                                             });
                                         }
@@ -244,6 +256,7 @@ define([
                                 } else {
                                     for (var error of response.errors) {
                                         console.log(error);
+
                                     }
                                 }
 

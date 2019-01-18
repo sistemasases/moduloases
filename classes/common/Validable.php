@@ -67,6 +67,7 @@ abstract class Validable {
      * @return bool
      */
     public function valid(): bool {
+        $this->clean();
         $this->clean_errors();
         return $this->_custom_validation();
     }
@@ -75,6 +76,15 @@ abstract class Validable {
         $this->_errors_object = new stdClass();
     }
 
+    /**
+     * This function is executed before the validation.
+     * It is expected that this function modifies the values of
+     * the object itself by way of cleaning, for example by trimming
+     * each property of the object, or by converting certain fields into camelcase.
+     */
+    public function clean() {
+
+    }
     /**
      * Clean errors
      */
