@@ -138,7 +138,25 @@ function get_report_active_semesters($id_instance, $ases_cohort_id, $include_cur
         "data" => $data,
         "language" => $common_language_config,
         "semesters" => $semester_names,
-        "order"=> array($nombre_index_column, "desc")
+        "order"=> array($nombre_index_column, "desc"),
+        "dom"=>'lifrtpB',
+        "buttons"=>array(
+            array(
+                "extend"=>'print',
+                "text"=>'Imprimir'
+            ),
+            array(
+                "extend"=>'csvHtml5',
+                "text"=>'CSV'
+            ),
+            array(
+                "extend" => "excel",
+                "text" => 'Excel',
+                "className" => 'buttons-excel',
+                "filename" => 'Export excel',
+                "extension" => '.xls'
+            )
+        )
 
     );
     return array('dataTable'=>$data_table, 'semesters'=>$semester_names);

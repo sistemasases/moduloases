@@ -117,7 +117,7 @@ function load_geographic_info($id_ases){
  * @return integer --> 1 if everything were saved, 0 otherwise
  */
 
-function save_geographic_info($id_ases, $latitude, $longitude, $neighborhood, $geographic_risk){
+function save_geographic_info($id_ases, $latitude, $longitude, $neighborhood, $geographic_risk, $duration, $distance){
 
     global $DB;
 
@@ -158,6 +158,8 @@ function save_geographic_info($id_ases, $latitude, $longitude, $neighborhood, $g
         $data_object->latitud = $latitude;
         $data_object->longitud = $longitude;
         $data_object->barrio = $neighborhood;
+        $data_object->duracion = $duration;
+        $data_object->distancia = $distance;
     
         $result_geographic_info = $DB->update_record('talentospilos_demografia', $data_object);
 
@@ -167,6 +169,8 @@ function save_geographic_info($id_ases, $latitude, $longitude, $neighborhood, $g
         $data_object->latitud = $latitude;
         $data_object->longitud = $longitude;
         $data_object->barrio = $neighborhood;
+        $data_object->duracion = $duration;
+        $data_object->distancia = $distance;
 
         $result_geographic_info = $DB->insert_record('talentospilos_demografia', $data_object, true);
     }

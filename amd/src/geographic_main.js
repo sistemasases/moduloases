@@ -39,8 +39,41 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
                 var longitude = $('#longitude').val();
                 var neighborhood = $('#select_neighborhood').val();
                 var geographic_risk = $('#select_geographic_risk').val();
+                var ciudad = document.getElementById("municipio_act");
+                var duration = 0;
+                var distance = 0;
 
-                save_geographic_info(id_ases, latitude, longitude, neighborhood, geographic_risk);
+                var directionsService = new google.maps.DirectionsService();
+
+                var second_request;
+
+                if(ciudad == 1079){
+
+                    second_request = {
+                        origin: {lat: latitude, lng: longitude}, 
+                        destination: {lat: 3.3759493, lng: -76.5355789},
+                        travelMode: 'TRANSIT'
+                    };
+                } else{
+
+                    second_request = {
+                        origin: {lat: latitude, lng: longitude}, 
+                        destination: {lat: 3.3759493, lng: -76.5355789},
+                        travelMode: 'DRIVING'
+                    };
+                }
+
+                directionsService.route(second_request, function(response, status) {
+                
+                    distance = response.routes[0].legs[0].distance.value;
+        
+                    duration = response.routes[0].legs[0].duration.value;
+        
+                });
+
+                console.log("Distance: " + distance + " Duration: " + duration);
+
+                save_geographic_info(id_ases, latitude, longitude, neighborhood, geographic_risk, duration, distance);
 
             });
 
@@ -79,7 +112,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
      * @param {id} neighborhood neighborhood name
      * @param {id} geographic_risk geographic risk according to the neighborhood
      */
-    function save_geographic_info(id_ases, latitude, longitude, neighborhood, geographic_risk){
+    function save_geographic_info(id_ases, latitude, longitude, neighborhood, geographic_risk, duration, distance){
 
         $.ajax({
             type: "POST",
@@ -89,7 +122,9 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
                 latitude: latitude,
                 longitude: longitude,
                 neighborhood: neighborhood,
-                geographic_risk: geographic_risk
+                geographic_risk: geographic_risk,
+                duration: duration,
+                distance: distance
             },
             url: "../managers/student_profile/geographic_serverproc.php",
             success: function(msg) {
