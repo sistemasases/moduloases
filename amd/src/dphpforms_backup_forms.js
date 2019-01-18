@@ -632,6 +632,19 @@ define([
                     collapsible: true,
                     color: true
                 });
+
+                let dwarehouse_record_id = Object.keys(param)[0];
+                let obj = param[ dwarehouse_record_id ];
+
+                if(obj.id_registro_respuesta_form != -1 ){
+                    $(".dphpforms-peer-record").attr( 'data-record-id',  obj.id_registro_respuesta_form );
+                    $(".dphpforms-restore").attr( 'data-record-id',  dwarehouse_record_id );
+                }else{
+                    $(".dphpforms-peer-record").attr( 'disabled',  true );
+                    $(".dphpforms-restore").attr( 'disabled',  true );
+                }
+
+                
                 $('#modal_JSON').fadeIn(300);
             }
 
