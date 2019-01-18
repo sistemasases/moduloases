@@ -356,16 +356,20 @@
                 
                 // Controles para editar formulario de pares
                 $(document).on('click', ".dphpforms-peer-record", function(){
-                    var id_tracking = $(this).attr('data-record-id');
-                    load_record_updater('seguimiento_pares', id_tracking);
-                    $('#modal_v2_edit_peer_tracking').fadeIn(300);
+                    if( !$(this).attr("disabled") ){
+                        var id_tracking = $(this).attr('data-record-id');
+                        load_record_updater('seguimiento_pares', id_tracking);
+                        $('#modal_v2_edit_peer_tracking').fadeIn(300);
+                    }                    
                 });
 
                 // Controles para editar formulario grupal
                 $(document).on('click', '.dphpforms-groupal-record', function(){
-                    var id_tracking = $(this).attr('data-record-id');
-                    load_record_updater('seguimiento_grupal', id_tracking);
-                    $('#modal_v2_edit_groupal_tracking').fadeIn(300);
+                    if( !$(this).attr("disabled") ){
+                        var id_tracking = $(this).attr('data-record-id');
+                        load_record_updater('seguimiento_grupal', id_tracking);
+                        $('#modal_v2_edit_groupal_tracking').fadeIn(300);
+                    }
                 });
 
 
