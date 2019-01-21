@@ -1,0 +1,65 @@
+.general_modal {
+    position: fixed;
+    z-index: 2;
+    left: 0;
+    top: 0;
+    margin-top: 0px;
+    width: 100%;
+    height: 100%;
+    background-color: #00000066;
+    overflow: scroll;
+    font-size: 1em;
+}
+.general_modal > .general_modal_content {
+    background-color: white;
+    margin: 15% auto;
+    border: 1px solid #888;
+    width: 80%;
+    box-sizing: border-box;
+    font-size: 1em;
+}
+.general_modal > .general_modal_content > .general_modal_outside {
+    width: calc( 100% - 20px );
+    height: 100%;
+    position: fixed;
+    margin-right: 20px;
+}
+.general_modal > .general_modal_content > .general_modal_header {
+    padding: 10px 10px 5px 10px;
+    background-color: #D8D8D8;
+    font-size: 1em;
+}
+.general_modal > .general_modal_content > .general_modal_header:after {
+    content: " ";
+    display: block; 
+    clear: both;
+}
+.general_modal > .general_modal_content > .general_modal_header > .general_modal_label {
+    float: left;
+    font-size: 1.3em;
+}
+.general_modal > .general_modal_content > .general_modal_header > .general_modal_close {
+    float: right;
+    width: 1.3em;
+    height: 1.3em;
+    opacity: 0.3;
+    cursor: pointer;
+}
+.general_modal > .general_modal_content > .general_modal_header > .general_modal_close:hover {
+    opacity: 1;
+}
+.general_modal > .general_modal_content > .general_modal_header > .general_modal_close:before, 
+.general_modal > .general_modal_content > .general_modal_header > .general_modal_close:after {
+  position: absolute;
+  margin-left: 0.615em;
+  content: ' ';
+  height: 1.3em;
+  width: 2px;
+  background-color: #333;
+}
+.general_modal > .general_modal_content > .general_modal_header > .general_modal_close:before {
+  transform: rotate(45deg);
+}
+.general_modal > .general_modal_content > .general_modal_header > .general_modal_close:after {
+  transform: rotate(-45deg);
+}
