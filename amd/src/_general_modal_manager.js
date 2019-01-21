@@ -20,7 +20,6 @@ define([
 
     let template_location = "../templates/_general_modal_manager.mustache";
     let css_location = "../style/_general_modal_manager.css";
-    let global_animation_selected = null;
     
     $('head').append('<link rel="stylesheet" href="' + css_location + '" type="text/css" />');
 
@@ -36,9 +35,7 @@ define([
             animation_selected = default_animation;
         };
 
-        global_animation_selected = animation_selected;
-
-        switch ( global_animation_selected ) {
+        switch ( animation_selected ) {
             case "fadein":
                 $( modal_selector ).fadeIn( animation_time );
                 break;
@@ -48,6 +45,7 @@ define([
         };        
         
     };
+    
 
     let generate_modal = function( selector_class_name, m_title, m_body, m_class = "", callback = function(){} ){
         
@@ -68,8 +66,6 @@ define([
                 $("body").append( html_modal );
 
                 $(".general_modal_close").unbind();
-
-                
 
                 callback();
             },
