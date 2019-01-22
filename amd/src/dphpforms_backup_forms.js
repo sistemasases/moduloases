@@ -184,6 +184,26 @@ define([
                 }
               
             });
+
+            $(".dphpforms-restore").on("click", function(){
+                if( !$(this).attr("disabled") ){
+                    let dwarehouse_record_id_to_restore  = $(this).attr("data-record-id");
+                    restore_delete_dphpforms_record(dwarehouse_record_id_to_restore);
+                   
+                }        
+            });
+
+            $(".dphpforms-compare").on("click", function(){
+                if( !$(this).attr("disabled") ){
+                    let datos_previos_para_modal, datos_almacenados_para_modal, json_to_compare;
+                    json_to_compare  =  JSON.parse($("#json_record_dwarehouse_selected").val());
+                    console.log(json_to_compare);
+                    //Create html to modal using json_to_compare
+                    let html_content = '<strong>MODAL</strong>';
+                    gmm.generate_modal("modal_to_compare", "Comparación de estados", html_content);
+        
+                }  
+            });
             
             
             $('.outside').click(function(){
@@ -623,10 +643,10 @@ define([
             function create_beautifyJSON(param) {
                 //Show beautifyJSON in modal
                 $("#div_JSONform").empty();
-               var json = JSON.stringify(param);
+               var json1 = JSON.stringify(param);
                //json[0].
               //var json = JSON.parse(param);
-                $("#div_JSONform").append(json);
+                $("#div_JSONform").append(json1);
                 $('#div_JSONform').beautifyJSON({
                     type: "flexible",
                     hoverable: true,
@@ -636,18 +656,88 @@ define([
 
                 let dwarehouse_record_id = Object.keys(param)[0];
                 let obj = param[ dwarehouse_record_id ];
+                
+                $("#json_record_dwarehouse_selected").attr("value",JSON.stringify(obj));
 
                 if(obj.id_registro_respuesta_form != -1 ){
-                    $(".dphpforms-peer-record").attr( 'data-record-id',  obj.id_registro_respuesta_form );
-                    $(".dphpforms-restore").attr( 'data-record-id',  dwarehouse_record_id );
-                    $(".dphpforms-peer-record").attr( 'disabled',  false );
-                    $(".dphpforms-restore").attr( 'disabled',  false );
-                }else{
-                    $(".dphpforms-peer-record").attr( 'disabled',  true );
-                    $(".dphpforms-restore").attr( 'disabled',  true );
+                    // $(".dphpforms-peer-record").attr( 'data-record-id',  obj.id_registro_respuesta_form );
+                    // $(".dphpforms-restore").attr( 'data-record-id',  dwarehouse_record_id );
+                    // $(".dphpforms-peer-record").attr( 'disabled',  false );
+                    // $(".dphpforms-restore").attr( 'disabled',  false );
+
+                    if(obj.accion != "INSERT" && obj.accion != "UPDATE" && obj.accion != "RESTORE"){
+                        $(".dphpforms-peer-record").attr( 'data-record-id',  obj.id_registro_respuesta_form );
+                        $(".dphpforms-restore").attr( 'data-record-id',  dwarehouse_record_id );
+                        $(".dphpforms-compare").attr( 'data-record-id',  dwarehouse_record_id );
+                        $(".dphpforms-peer-record").attr( 'disabled',  false );
+                        $(".dphpforms-restore").attr( 'disabled',  false );
+                        $(".dphpforms-compare").attr( 'disabled',  true );
+                    }else { 
+                        $(".dphpforms-peer-record").attr( 'data-record-id',  obj.id_registro_respuesta_form );
+                        $(".dphpforms-peer-record").attr( 'disabled',  false );
+                        $(".dphpforms-restore").attr( 'disabled',  true );
+                        $(".dphpforms-compare").attr( 'disabled',  false );
+                    }
+
+                }else { 
+                            $(".dphpforms-peer-record").attr( 'disabled',  true );
+                            $(".dphpforms-restore").attr( 'disabled',  true );
+                            $(".dphpforms-compare").attr( 'disabled',  true );
                 }
 
+                //    if(obj.id_registro_respuesta_form == -1 || obj.accion == "INSERT"){
+                //     $(".dphpforms-peer-record").attr( 'disabled',  true );
+                //     $(".dphpforms-restore").attr( 'disabled',  true );
+                    
+                // }else { 
+                //     $(".dphpforms-peer-record").attr( 'data-record-id',  obj.id_registro_respuesta_form );
+                //     $(".dphpforms-restore").attr( 'data-record-id',  dwarehouse_record_id );
+                //     $(".dphpforms-peer-record").attr( 'disabled',  false );
+                //     $(".dphpforms-restore").attr( 'disabled',  false );
+
+                    
+                // }
+
                 $('#modal_JSON').fadeIn(300);
+            }
+
+            function restore_delete_dphpforms_record(dwarehouse_id_form_to_restore){
+
+                li.show();
+                $.ajax({
+                    type: "POST",
+                    data: { loadF: 'restore_dwarehouse_record', params: dwarehouse_id_form_to_restore },
+                    url: "../managers/dphpforms/dphpforms_dwarehouse_api.php",
+                    success: function (msg) {
+                        
+                        li.hide();
+                        if (!msg) {
+                            swal(
+                                'NOT RESTORED SUCCESSFULLY',
+                                'Oooops! Error',
+                                'warning'
+                            );
+                        } else {
+                            swal(
+                                'RESTORED SUCCESSFULLY',
+                                'SUCCESS',
+                                'success'
+                            );
+                        }
+                    },
+                    cache: false,
+                    async: true,
+
+                    error: function (msg) { 
+                        li.hide();
+                         swal(
+                            'SYSTEM ERROR',
+                            'Report to Systems office',
+                            'error'
+                        );
+                     }
+                });
+
             }
 
 

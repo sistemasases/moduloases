@@ -201,7 +201,7 @@
                 echo json_encode($data);
 
             }else{    return_with_code( -2 ); }
-        }else if( $_POST['loadF'] == "get_form" ){
+        } else if( $_POST['loadF'] == "get_form" ){
             //Example of loadF: get_form valid: 
             //data: get_form   params: id_form
           
@@ -229,7 +229,7 @@
             }else{     
                 return_with_code( -2 );
             }
-        }else if( $_POST['loadF'] == "get_values" ){
+        } else if( $_POST['loadF'] == "get_values" ){
             //Example of loadF: get_values valid: 
             //data: get_values   params: id_pregunta
           
@@ -239,6 +239,32 @@
 
             $data = get_question_data($_POST['params']);
             echo json_encode($data);
+                    
+            }else{     
+                return_with_code( -2 );
+            }
+        } else if( $_POST['loadF'] == "restore_dwarehouse_record" ){
+            //Example of loadF: restore_dwarehouse_record valid: 
+            //data: restore_dwarehouse_record   params: dwarehouse_id_form_to_restore
+          
+            if( count($_POST['params']) == 1 ){
+
+            //Get 'registro_respuesta_form' 	FROM table mdl_talentospilos_df_dwarehouse switch params
+            $registro_respuesta_form = get_registro_respuesta_form($_POST['params']);
+            
+            //Update 'estado' on record id loaded from mdl_talentospilos_df_form_resp
+            $data = update_record_talentospilos_df_form_resp($registro_respuesta_form->id_registro_respuesta_form);
+         
+            if ($data){
+                //Create new register into mdl_talentospilos_df_dwarehouse to RESTORE
+                echo json_encode(log_to_restore_into_dwarehouse($registro_respuesta_form));
+
+            }else{
+                echo json_encode($data);
+            }
+
+
+            
                     
             }else{     
                 return_with_code( -2 );
