@@ -1333,8 +1333,6 @@ if ($student_code != 0) {
     $idEstudiante = $student_id;
 
     //$seguimientos_array
-    //
-    echo '<br>';
     $current_year = date('Y', strtotime($periodoactual['fecha_inicio']));
     $initial_month = date('m', strtotime($periodoactual['fecha_inicio']));
     $final_month = date('m', strtotime($periodoactual['fecha_fin']));
@@ -1614,6 +1612,7 @@ if ($student_code != 0) {
     }
 
     $record->form_seguimientos_geograficos = dphpforms_render_recorder('seguimiento_geografico', $rol);
+    $record->geo_tracking =  dphpforms_render_recorder('seguimiento_geografico', $rol);
     if ($record->form_seguimientos_geograficos == '') {
         $record->form_seguimientos_geograficos = "<strong><h3>Oops!: No se ha encontrado un formulario con el alias: <code>seguimientos_geograficos</code>.</h3></strong>";
     }
@@ -1621,9 +1620,15 @@ if ($student_code != 0) {
     if($seguimiento_geografico){
         $record->actualizar_seguimiento_geografico = true;
         $record->id_seguimiento_geografico = array_values( $seguimiento_geografico )[0]->id_registro;
+        $record->geo_tracking =  dphpforms_render_updater('seguimiento_geografico', $record->id_seguimiento_geografico, $rol);
     }else{
         $record->registro_seguimiento_geografico = true;
     }
+
+    //geo_tracking 
+    /**
+     * {{{fix_mustache_bug}}}{{{geo_tracking}}}
+     */
 
 } else {
 
@@ -1775,8 +1780,9 @@ array_unshift( $record->datosSeguimientoEstudianteVidaUniversitaria, $risk_entri
 
 //Menu items are created
 $menu_option = create_menu_options($USER->id, $blockid, $courseid);
-
 $record->menu = $menu_option;
+
+$record->fix_mustache_bug = '<form style="display:none;"></form>';
 
 $PAGE->set_context($contextcourse);
 $PAGE->set_context($contextblock);
