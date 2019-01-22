@@ -40,6 +40,11 @@ li:hover{
     float: right;
 }
 
+.header-hr-dphpforms, 
+.footer-hr-dphpforms{
+    border-color: red;
+}
+
 pre, code {
     white-space: pre-line;
 }
