@@ -25,6 +25,10 @@ define([
     return {
         init: function () {
 
+            let css_location = "../style/_grid_modal_json_backup_dwarehouse.css";
+    
+            $('head').append('<link rel="stylesheet" href="' + css_location + '" type="text/css" />');
+
             window.JSZip = jszip;
 
             $(document).on( "mousedown", ".slider.round", function(e){
@@ -195,11 +199,55 @@ define([
 
             $(".dphpforms-compare").on("click", function(){
                 if( !$(this).attr("disabled") ){
-                    let datos_previos_para_modal, datos_almacenados_para_modal, json_to_compare;
+                    let datos_previos_para_modal, datos_almacenados_para_modal, json_to_compare, user_monitor, accion_record, date_record, url_request ;
                     json_to_compare  =  JSON.parse($("#json_record_dwarehouse_selected").val());
+
                     console.log(json_to_compare);
+
                     //Create html to modal using json_to_compare
-                    let html_content = '<strong>MODAL</strong>';
+                    //Info general
+                    user_monitor  = json_to_compare.id_usuario_moodle;
+                    accion_record = json_to_compare.accion; 
+                    date_record   = json_to_compare.fecha_hora_registro;
+                    url_request   = json_to_compare.url_request;
+
+                    //Iterar sobre el json de datos previos para generar html
+                    let html_json_prev_content;
+                    datos_previos_para_modal = json_to_compare.datos_previos;
+                    if(datos_previos_para_modal == "" || datos_previos_para_modal == null){
+
+                        html_json_prev_content = '<div class = "detalle_json_data_prev"> No hay datos previos </div>';
+                   
+                    }else{
+
+                        datos_previos_para_modal = datos_previos_para_modal.record;
+
+                        html_json_prev_content = '<div class = "detalle_json_data_prev"> ';
+                        html_json_prev_content +='<div class="data_estado_json"> Alias formulario:        ' + datos_previos_para_modal.alias + '</div>';
+                        html_json_prev_content += '                       </div>';
+                    }
+                   
+
+                    datos_almacenados_para_modal = json_to_compare.datos_almacenados;
+
+                    let html_content = '<div class="grid_dphpforms_compare">';
+                    html_content += '<div class="general_info_record_dwarehouse"> ';
+                    html_content += '<div class= "title_data">Información del registro </div>';
+                    html_content += '<div class="data_general">  Realizado por:        ' + user_monitor + '</div>';
+                    html_content += '<div class="data_general">  Acción del registro:  ' + accion_record + '</div>';
+                    html_content += '<div class="data_general">  Fecha:                ' + date_record + '</div>';
+                    html_content += '<div class="data_general">  <a href='+url_request+'>Ir a ficha del estudiante</a> </div>';
+                    html_content += '                            </div>';
+                    html_content += '<div class="json_data_prev">';
+                    html_content += '<div class= "title_data">Datos previos </div>';
+                    html_content += html_json_prev_content;
+                    html_content += '                            </div>';
+                    html_content += '<div class="json_data_alm">';
+                    html_content += '<div class= "title_data">Datos almacenados </div>';
+                    html_content += '                            </div>';
+                    html_content += '<div class="buttons_actions">Item 4</div>';
+                    html_content += '</div>';
+                    html_content += '<hr style="background-color: red; height: 1px; border: 0">';
                     gmm.generate_modal("modal_to_compare", "Comparación de estados", html_content);
         
                 }  

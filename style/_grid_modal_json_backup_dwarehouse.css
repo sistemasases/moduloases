@@ -1,0 +1,62 @@
+.grid_dphpforms_compare {
+    display:grid;
+    grid-template-areas: "head head"
+                         "menu main"
+                         "foot foot";
+    grid-row-gap: 20px;
+  }
+
+  .grid_dphpforms_compare > .general_info_record_dwarehouse { 
+    grid-area:head; 
+    background: white
+ }
+  .grid_dphpforms_compare > .json_data_prev { 
+    grid-area:menu; 
+    background: white; 
+    margin: 0px 2px 0px 0px; 
+ }
+  .grid_dphpforms_compare > .json_data_alm { 
+    grid-area:main; 
+    background:white;
+    margin: 0px 2px 0px 0px; 
+ }
+  .grid_dphpforms_compare > .buttons_actions { 
+    grid-area:foot; 
+    background:white
+ }
+
+  .grid_dphpforms_compare > .general_info_record_dwarehouse > .data_general{
+    border-left: 6px solid red;
+    margin: 0px 0px 1px 0px;
+    background-color: rgb(251, 246, 246);
+    font-size: 16px;
+
+  }
+
+  .grid_dphpforms_compare > .general_info_record_dwarehouse > .title_data{
+    margin: 0px 0px 5px 0px;
+    background-color: rgb(251, 246, 246);
+    font-size: 24px;
+    box-shadow: 5px 11px 10px -1px rgba(40,28,28,0.1);
+  }
+
+  .grid_dphpforms_compare > .json_data_prev > .title_data{
+    margin: 0px 0px 5px 0px;
+    background-color: rgb(251, 246, 246);
+    font-size: 24px;
+    box-shadow: 5px 11px 10px -1px rgba(40,28,28,0.1);
+  }
+
+  .grid_dphpforms_compare > .json_data_alm > .title_data{
+    margin: 0px 0px 5px 0px;
+    background-color: rgb(251, 246, 246);
+    font-size: 24px;
+    box-shadow: 5px 11px 10px -1px rgba(40,28,28,0.1);
+  }
+
+  .grid_dphpforms_compare > .json_data_prev > .detalle_json_data_prev > .data_estado_json{
+    border: 1px solid black;
+    margin: 0px 0px 1px 0px;
+    background-color: rgb(251, 246, 246);
+    font-size: 16px;
+  }
