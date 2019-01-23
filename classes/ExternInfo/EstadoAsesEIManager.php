@@ -9,34 +9,51 @@ require_once(__DIR__.'/EstadoAsesCSV.php');
 require_once(__DIR__.'/../AsesUser.php');
 require_once(__DIR__.'/../../managers/jquery_datatable/jquery_datatable_lib.php');
 require_once(__DIR__.'/../../managers/lib/reflection.php');
-require_once(__DIR__.'/../../managers/user_management/user_lib.php');
+require_once(__DIR__.'/../../managers/cohort/cohort_lib.php');
 class EstadoAsesEIManager extends ExternInfoManager {
     public function __construct() {
         parent::__construct( EstadoAsesCSV::get_class_name());
     }
 
     public function persist_data() {
+        global $DB;
         $data = $this->get_objects();
-        /* @var $item EstadoAsesCSV */
-        foreach ($data as $item) {
+        /* @var $item_ EstadoAsesCSV */
+        foreach ($data as $item_) {
+
+            if(!$item_->valid()) {
+
+                return false;
+            }
+            /** @var $item EstadoAsesCSV */
+            $item = $item_;
+            EstadoAsesCSV::clean($item);
+            EstadoAsesCSV::pre_save($item);
+            print_r($item->firstname);die;
             $username = generate_username($item->codigo, $item->programa);
+            $id_moodle_user = null;
             /* Creación de usuario moodle si no existe*/
             if(!core_user::get_user_by_username($username)) {
-               /*user_create_user(
-                   array(
-                       'username'=>$username,
-                       'confirmed'=>'1',
-                       'password'=>'suputamadre',
-                       'lang'=>'es',
-                       'mnethostid'=>3,
-                       'email'=> $item->email,
-                       'firsname'=> $item->firsname,
-                       )
-               );*/
+             $id_moodle_user = user_create_user(
+                  array(
+                      'username'=>$username,
+                      'confirmed'=>'1',
+                      'password'=>'suputamadre',
+                      'lang'=>'es',
+                      'mnethostid'=>3,
+                      'email'=> $item->email,
+                      'firstname'=> $item->firstname,
+                      'lastname'=> $item->lastname,
+                      )
+              );
+            } else {
+                $id_moodle_user = core_user::get_user_by_username($username);
             }
+            /* Añadir el usuario a la cohorte dada */
+            \cohort_lib\cohort_add_user_to_cohort(1, $id_moodle_user);
             /* Create ases user if not exist */
             if(!AsesUser::exists(array(AsesUser::NUMERO_DOCUMENTO=>$item->documento))) {
-               /* $ases_user = new AsesUser();
+                $ases_user = new AsesUser();
                 $ases_user->num_doc = $item->documento;
                 $ases_user->estado_ases = 1;
                 $ases_user->estado = $item->estado;
@@ -64,12 +81,8 @@ class EstadoAsesEIManager extends ExternInfoManager {
                 $ases_user->direccion_res = $item->direccion_residencia;
                 $ases_user->dir_ini = $item->direccion_procedencia;
                 $ases_user->colegio = $item->colegio;
-                try {
-                    $ases_user->save();
-                } catch (Exception $e) {
-                    print_r($e);
-                }
-*/
+                //$ases_user->save();
+
              }
              if(!AsesUserExtended::exist_by_username($username)) {
                 // echo "nel mijo";

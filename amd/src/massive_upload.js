@@ -21,6 +21,14 @@ define([
                 var myTable = null;
                 var initial_object_properties = null;
 
+
+                /**
+                 * Pinta los errores individuales genericos de los objetos.
+                 * Los errores genericos de los objetos son todos aquellos que estan relacionados a más de un
+                 * atributo de este, como incumplimiento de llaves compuestas, etc
+                 * Los demás errores que esten relacionados solo a un atributo de el objeto se pintara
+                 * en la tabla jquery al pasar el raton sobre este.
+                 */
                 /**
                  * Actually, jquery datatables data function returns an object with more
                  * than is neccesary for get real data, this function extract the real data

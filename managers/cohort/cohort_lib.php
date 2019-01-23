@@ -34,6 +34,9 @@
  */
 namespace cohort_lib;
 require_once(__DIR__.'/../instance_management/instance_lib.php');
+require_once (__DIR__.'/../../../../config.php');
+require_once($CFG->dirroot.'/cohort/lib.php');
+use mod_questionnaire\response\boolean;
 use function substr;
 /**
  * Prefix for group of cohorts, for example:
@@ -65,6 +68,55 @@ function load_cohorts_by_instance($id_instance){
     return $result_to_return;
 }
 
+/**
+ * Add user to cohort
+ * *This not validate than the cohort or the user exist, please validate this yourself, this method not fails
+ *  if the given data is bad, but false is returned without information about what false*
+ * @param $cohort mixed|int|string If int or string is given, cohort id is assumed, if mixed is given is asumed than have 'id' property
+ * @param $user mixed|int|string if mixed is given is asumed than have 'id' property,
+ *  if string is given, assumed than username is given, if int is give, assumed than is given an id of mdl_user
+ * @return bool
+ * @throws \dml_exception
+ */
+function cohort_add_user_to_cohort($cohort, $user) {
+    $cohort_id = -1;
+    $user_id = -1;
+    $user_name = null;
+    if(is_array($cohort) || is_object($cohort) ) {
+        $cohort = (object) $cohort;
+        if(isset($cohort->id)) {
+            $cohort_id = $cohort->id;
+        } else {
+            return false;
+        }
+    } elseif( is_string($cohort) || is_numeric($cohort)) {
+        $cohort_id = $cohort;
+    } else {
+        return false;
+    }
+    if(is_array($user) || is_object($user) ) {
+        $user = (object) $user;
+        if(isset($user->id)) {
+            $user_id = $user->id;
+        } else {
+            return false;
+        }
+    } elseif( is_string($user)) {
+        $user_name = $user;
+        $user = \core_user::get_user_by_username($user_name);
+        if($user) {
+           $user_id = $user->id;
+        } else {
+            return false;
+        }
+    } elseif ( is_numeric($user)) {
+        $user_id = $user;
+    } else {
+        return false;
+    }
+    return cohort_add_member($cohort_id, $user_id);
+
+}
 /**
  * Return string than represents the start date in the given semester.
  *

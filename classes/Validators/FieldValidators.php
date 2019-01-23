@@ -21,7 +21,19 @@ class FieldValidators
                 }
             };
     }
+    public static function one_of(array $options, string $custom_message = null) {
+        return
+            function ($value, $field_name = '') use ($options, $custom_message) {
+            foreach($options as $option) {
+                if($value === $option) {
+                    return true;
+                }
+            }
+                $options_string = implode(', ', $options);
+                return $custom_message? $custom_message: "El campo $field_name debe tomar uno de los siguientes valores: [$options_string]";
+            };
 
+    }
     /**
      * Check if the field have one of the given sizes
      * @param array $sizes

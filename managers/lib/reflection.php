@@ -82,6 +82,9 @@ function get_properties($stdObj_or_class){
          return array_keys(get_class_vars($stdObj_or_class));
      }        
     } else {
+        if(is_array($stdObj_or_class)) {
+            $stdObj_or_class = (object) $stdObj_or_class;
+        }
         return array_keys(get_object_vars($stdObj_or_class));
     }
 }
