@@ -748,10 +748,7 @@ function dphpformsV2_store_form_soluciones($form_response_id, $respuesta_identif
 
 // Example
 /*$initial_config = '{
-    "main_form_classes" : [
-        "col-xs-12",
-        "col-sm-12"
-    ],
+    "main_form_classes" : "col-xs-12 col-sm-12",
     "initial_values" : [
         {
             "alias" : "lugar",
@@ -760,6 +757,18 @@ function dphpformsV2_store_form_soluciones($form_response_id, $respuesta_identif
         {
             "alias" : "objetivos",
             "default_value" : "Objetivos de prueba"
+        }
+    ],
+    "aditional_buttons" : [
+        {
+            "alias" : "button_AB1",
+            "text" : "AB1",
+            "main_classes" : "class_A class_B"
+        },
+        {
+            "alias" : "button_AB2",
+            "text" : "BC",
+            "main_classes" : "class_A class_B"
         }
     ]
 }';
@@ -788,7 +797,7 @@ function dphpformsV2_generate_html_recorder( $id_form, $rol_, $initial_config = 
     $form_name_formatted = $form_info->alias . "_" . $form_info->id;
 
     $html ='
-        <form id="'. $form_name_formatted .'" method="'. $form_info->method .'" action="'. $form_info->action .'" class="dphpforms dphpforms-response">
+        <form id="'. $form_name_formatted .'" method="'. $form_info->method .'" action="'. $form_info->action .'" class="dphpforms dphpforms-response ">
             <h1>'.$form_info->nombre.'</h1><hr class="header-hr-dphpforms">
             <input name="id" value="'. $form_info->id .'" style="display:none;">
     ';
@@ -1058,29 +1067,46 @@ function dphpformsV2_generate_html_recorder( $id_form, $rol_, $initial_config = 
         }
 
     }
-    $html = $html .  ' <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" style="padding:0px;"> 
-                            <hr class="footer-hr-dphpforms">
-                        </div>
-                        <div class="dphpforms_response_recorder_buttons">
-                            <button type="submit" class="btn btn-sm btn-danger btn-dphpforms-univalle btn-dphpforms-sendform">
-                                Registrar
-                            </button> 
-                            <a href="javascript:void(0);" class="btn btn-sm btn-danger btn-dphpforms-univalle btn-dphpforms-close">
-                                Cerrar
-                            </a>
-                        </div>' . "\n";
-    $html = $html .  ' </form>' . "\n";
+
+    //Aditional buttons config. 
+    //Example
+    /*[
+        {
+            "alias" : "button_AB1",
+            "text" : "AB1",
+            "main_classes" : "class_A class_B"
+        }
+    ]*/
+    $html_aditional_buttons = "";
+
+    if( $initial_config ){
+        if( property_exists($initial_config, 'aditional_buttons') ){
+
+            $buttons = $initial_config->aditional_buttons;
+        
+            foreach( $buttons as $key => $button ){
+
+                $alias = $button->alias;
+                $text = $button->text;
+                $main_classes = $button->main_classes;
+
+                $html_aditional_buttons .= '<input type="button" class="button btn-dphpforms btn-dphpforms-'. $alias .'" value="'.$text.'" />';
+            }
+
+        }
+    }
+
+    $html = $html .  ' 
+        <hr class="footer-hr-dphpforms">
+        <div class="dphpforms_response_recorder_buttons">
+            <button type="submit" class="btn-dphpforms btn-dphpforms-sendform">Registrar</button>
+            '.$html_aditional_buttons.'
+        </div>
+    </form>';
 
     return $html;
 
 }
-
-function dphpformsV2_geenrate_html_fields( $type, $id, $statement, $main_classes, $input_classes, $local_alais ){
-
-    //
-    
-}
-
   
 
 ?>
