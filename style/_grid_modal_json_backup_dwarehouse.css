@@ -13,12 +13,12 @@
   .grid_dphpforms_compare > .json_data_prev { 
     grid-area:menu; 
     background: white; 
-    margin: 0px 2px 0px 0px; 
+    margin: 10px 20px 10px 30px;
  }
   .grid_dphpforms_compare > .json_data_alm { 
     grid-area:main; 
     background:white;
-    margin: 0px 2px 0px 0px; 
+    margin: 10px 30px 10px 20px;
  }
   .grid_dphpforms_compare > .buttons_actions { 
     grid-area:foot; 
@@ -27,7 +27,7 @@
 
   .grid_dphpforms_compare > .general_info_record_dwarehouse > .data_general{
     border-left: 6px solid red;
-    margin: 0px 0px 1px 0px;
+    margin: 10px 20px 10px 30px;
     background-color: rgb(251, 246, 246);
     font-size: 16px;
 
@@ -54,9 +54,32 @@
     box-shadow: 5px 11px 10px -1px rgba(40,28,28,0.1);
   }
 
-  .grid_dphpforms_compare > .json_data_prev > .detalle_json_data_prev > .data_estado_json{
+  .grid_dphpforms_compare > .json_data_prev  > .data_estado_json{
     border: 1px solid black;
-    margin: 0px 0px 1px 0px;
+    margin: 0px 0px 0px 0px;
     background-color: rgb(251, 246, 246);
     font-size: 16px;
+    padding: 0px 0px 0px 3px;
   }
+
+  .grid_dphpforms_compare > .json_data_alm  > .data_estado_json{
+    border: 1px solid black;
+    margin: 0px 0px 0px 0px;
+    background-color: rgb(251, 246, 246);
+    font-size: 16px;
+    padding: 0px 0px 0px 3px;
+  }
+
+  .grid_dphpforms_compare > .json_data_alm  > .data_estado_json > .data_estado_json_different{
+    border-left: 6px solid red;
+    margin: 0px 0px 0px 0px;
+    background-color: rgb(255, 211, 211);
+    font-size: 16px;
+  } 
+
+  .grid_dphpforms_compare > .json_data_prev > .data_estado_json > .data_estado_json_different{
+    border-left: 6px solid red;
+    margin: 0px 0px 0px 0px;
+    background-color: rgb(255, 211, 211);
+    font-size: 16px;
+  } 
