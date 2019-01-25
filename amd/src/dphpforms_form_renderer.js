@@ -717,6 +717,7 @@
                                     $("#modal_v2_peer_tracking").scrollTo('.div-' + id_form_pregunta, {duration:1500, offset:-150});
                                     $("#modal_primer_acercamiento").scrollTo('.div-' + id_form_pregunta, {duration:1500, offset:-150});
                                     $("#modal_seguimiento_geografico").scrollTo('.div-' + id_form_pregunta, {duration:1500, offset:-150});
+                                    $("#modal_v2_groupal_tracking").scrollTo('.div-' + id_form_pregunta, {duration:1500, offset:-150});
                                     swal(
                                         'Alerta',
                                         mensaje,
@@ -739,6 +740,7 @@
                                     $("#modal_v2_peer_tracking").scrollTo('.div-' + id_form_pregunta, {duration:1500, offset:-150});
                                     $("#modal_primer_acercamiento").scrollTo('.div-' + id_form_pregunta, {duration:1500, offset:-150});
                                     $("#modal_seguimiento_geografico").scrollTo('.div-' + id_form_pregunta, {duration:1500, offset:-150});
+                                    $("#modal_v2_groupal_tracking").scrollTo('.div-' + id_form_pregunta, {duration:1500, offset:-150});
                                     swal(
                                         'Alerta',
                                         mensaje,
@@ -760,6 +762,7 @@
                                     $("#modal_v2_peer_tracking").scrollTo('.div-' + id_form_pregunta, {duration:1500, offset:-150});
                                     $("#modal_primer_acercamiento").scrollTo('.div-' + id_form_pregunta, {duration:1500, offset:-150});
                                     $("#modal_seguimiento_geografico").scrollTo('.div-' + id_form_pregunta, {duration:1500, offset:-150});
+                                    $("#modal_v2_groupal_tracking").scrollTo('.div-' + id_form_pregunta, {duration:1500, offset:-150});
                                     swal(
                                         'Alerta',
                                         mensaje,
@@ -781,6 +784,7 @@
                                     $("#modal_v2_peer_tracking").scrollTo('.div-' + id_form_pregunta, {duration:1500, offset:-150});
                                     $("#modal_primer_acercamiento").scrollTo('.div-' + id_form_pregunta, {duration:1500, offset:-150});
                                     $("#modal_seguimiento_geografico").scrollTo('.div-' + id_form_pregunta, {duration:1500, offset:-150});
+                                    $("#modal_v2_groupal_tracking").scrollTo('.div-' + id_form_pregunta, {duration:1500, offset:-150});
                                     swal(
                                         'Alerta',
                                         mensaje,
@@ -809,6 +813,7 @@
                                     $("#modal_v2_peer_tracking").scrollTo('.div-' + id_form_pregunta_a, {duration:1500, offset:-150});
                                     $("#modal_primer_acercamiento").scrollTo('.div-' + id_form_pregunta_a, {duration:1500, offset:-150});
                                     $("#modal_seguimiento_geografico").scrollTo('.div-' + id_form_pregunta_a, {duration:1500, offset:-150});
+                                    $("#modal_v2_groupal_tracking").scrollTo('.div-' + id_form_pregunta_a, {duration:1500, offset:-150});
                                     swal(
                                         'Alerta',
                                         mensaje,
