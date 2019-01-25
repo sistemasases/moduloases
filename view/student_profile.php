@@ -1620,7 +1620,7 @@ if ($student_code != 0) {
     if($seguimiento_geografico){
         $record->actualizar_seguimiento_geografico = true;
         $record->id_seguimiento_geografico = array_values( $seguimiento_geografico )[0]->id_registro;
-        $record->geo_tracking =  dphpforms_render_updater('seguimiento_geografico', $record->id_seguimiento_geografico, $rol);
+        //$record->geo_tracking =  dphpforms_render_updater('seguimiento_geografico', $rol, $record->id_seguimiento_geografico);
     }else{
         $record->registro_seguimiento_geografico = true;
     }
