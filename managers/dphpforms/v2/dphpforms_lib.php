@@ -1078,21 +1078,12 @@ function dphpformsV2_generate_html_recorder( $id_form, $rol_, $initial_config = 
         }
     ]*/
     $html_aditional_buttons = "";
-
     if( $initial_config ){
         if( property_exists($initial_config, 'aditional_buttons') ){
-
             $buttons = $initial_config->aditional_buttons;
-        
             foreach( $buttons as $key => $button ){
-
-                $alias = $button->alias;
-                $text = $button->text;
-                $main_classes = $button->main_classes;
-
-                $html_aditional_buttons .= '<input type="button" class="button btn-dphpforms btn-dphpforms-'. $alias .'" value="'.$text.'" />';
+                $html_aditional_buttons .= dphpformsV2_generate_html_button( $alias, $text, $main_classes );
             }
-
         }
     }
 
@@ -1106,6 +1097,10 @@ function dphpformsV2_generate_html_recorder( $id_form, $rol_, $initial_config = 
 
     return $html;
 
+}
+
+function dphpformsV2_generate_html_button( $alias, $text, $main_classes ){
+    return '<input type="button" class="button btn-dphpforms btn-dphpforms-'. $alias .' '. $main_classes .'" value="'.$text.'" />';
 }
   
 
