@@ -295,9 +295,7 @@ define([
                 // json_b se asume como el JSON que ha cambiado
                 // json_a se asume como el JSON con el que se compara el json_b
                 // Ejemplo:  json_b = {"alias":"un_alias"} , json_a = {"alias":"otro_alias"}
-                console.log(json_a);
-                console.log(json_b);
-
+           
                 let html_campos_b, html_campos_a, length_json_a, count_json_a;
                 length_json_a = json_a.length;
                 html_campos_b = '';
