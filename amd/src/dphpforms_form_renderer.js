@@ -713,7 +713,10 @@
                                         
                                         mensaje  = 'Ups!, el campo marcado en rojo tiene una fecha por fuera del siguiente rango: ' + response['data']['min'] + " hasta " + response['data']['max'];
                                     }
+                                    $("#modal_v2_edit_peer_tracking").scrollTo('.div-' + id_form_pregunta, {duration:1500, offset:-150});
                                     $("#modal_v2_peer_tracking").scrollTo('.div-' + id_form_pregunta, {duration:1500, offset:-150});
+                                    $("#modal_primer_acercamiento").scrollTo('.div-' + id_form_pregunta, {duration:1500, offset:-150});
+                                    $("#modal_seguimiento_geografico").scrollTo('.div-' + id_form_pregunta, {duration:1500, offset:-150});
                                     swal(
                                         'Alerta',
                                         mensaje,
@@ -732,7 +735,10 @@
                                         
                                         mensaje  = 'Ups!, el campo marcado en rojo está definido como estático y por lo tanto debe mantener el mismo valor, si no logra ver el campo marcado en rojo informe de este incidente.';
                                     }
+                                    $("#modal_v2_edit_peer_tracking").scrollTo('.div-' + id_form_pregunta, {duration:1500, offset:-150});
                                     $("#modal_v2_peer_tracking").scrollTo('.div-' + id_form_pregunta, {duration:1500, offset:-150});
+                                    $("#modal_primer_acercamiento").scrollTo('.div-' + id_form_pregunta, {duration:1500, offset:-150});
+                                    $("#modal_seguimiento_geografico").scrollTo('.div-' + id_form_pregunta, {duration:1500, offset:-150});
                                     swal(
                                         'Alerta',
                                         mensaje,
@@ -750,7 +756,10 @@
                                         
                                         mensaje  = 'Ups!, el campo marcado en rojo no cumple con el patrón esperado('+ response['data']['human_readable'] +'). Ejemplo: ' + response['data']['example'];
                                     }
+                                    $("#modal_v2_edit_peer_tracking").scrollTo('.div-' + id_form_pregunta, {duration:1500, offset:-150});
                                     $("#modal_v2_peer_tracking").scrollTo('.div-' + id_form_pregunta, {duration:1500, offset:-150});
+                                    $("#modal_primer_acercamiento").scrollTo('.div-' + id_form_pregunta, {duration:1500, offset:-150});
+                                    $("#modal_seguimiento_geografico").scrollTo('.div-' + id_form_pregunta, {duration:1500, offset:-150});
                                     swal(
                                         'Alerta',
                                         mensaje,
@@ -768,7 +777,10 @@
                                         
                                         mensaje  = 'Ups!, los campos que se acaban de colorear en rojo no pueden estar vacíos, si no logra ver ningún campo, informe de este incidente.';
                                     }
+                                    $("#modal_v2_edit_peer_tracking").scrollTo('.div-' + id_form_pregunta, {duration:1500, offset:-150});
                                     $("#modal_v2_peer_tracking").scrollTo('.div-' + id_form_pregunta, {duration:1500, offset:-150});
+                                    $("#modal_primer_acercamiento").scrollTo('.div-' + id_form_pregunta, {duration:1500, offset:-150});
+                                    $("#modal_seguimiento_geografico").scrollTo('.div-' + id_form_pregunta, {duration:1500, offset:-150});
                                     swal(
                                         'Alerta',
                                         mensaje,
@@ -793,7 +805,10 @@
                                         
                                         mensaje  = 'Ups!, revise los campos que se acaban de colorear en rojo.';
                                     }
+                                    $("#modal_v2_edit_peer_tracking").scrollTo('.div-' + id_form_pregunta_a, {duration:1500, offset:-150});
                                     $("#modal_v2_peer_tracking").scrollTo('.div-' + id_form_pregunta_a, {duration:1500, offset:-150});
+                                    $("#modal_primer_acercamiento").scrollTo('.div-' + id_form_pregunta_a, {duration:1500, offset:-150});
+                                    $("#modal_seguimiento_geografico").scrollTo('.div-' + id_form_pregunta_a, {duration:1500, offset:-150});
                                     swal(
                                         'Alerta',
                                         mensaje,
