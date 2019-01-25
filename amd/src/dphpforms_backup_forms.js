@@ -271,6 +271,7 @@ define([
                     html_content += '<div class="data_general">  Fecha:                ' + date_record + '</div>';
                     html_content += '<div class="data_general">  <a href='+url_request+'>Ir a ficha del estudiante</a> </div>';
                     html_content += '                            </div>';
+                    html_content += '<div class = "json_data_compare">';
                     html_content += '<div class="json_data_prev">';
                     html_content += '<div class= "title_data">Datos previos </div>';
                     html_content += html_json_prev_content;
@@ -279,6 +280,7 @@ define([
                     html_content += '<div class= "title_data">Datos almacenados </div>';
                     html_content += html_json_alm_content;
                     html_content += '                            </div>';
+                    html_content += '                                    </div>';
                     html_content += '<div class="buttons_actions">Item 4</div>';
                     html_content += '</div>';
                     html_content += '<hr style="background-color: red; height: 1px; border: 0">';
@@ -300,25 +302,21 @@ define([
                 length_json_a = json_a.length;
                 html_campos_b = '';
                 html_campos_a = '';
-                console.log(length_json_a);
                 for (campo_b in json_b){
                     count_json_a = 0;
-                    console.log(json_b[campo_b]);
                     //Para cada campo_b registrado en el JSON, comparar con cada campo_a
                     for(campo_a in json_a){
                         count_json_a ++;
-                        console.log(json_a[campo_a]);
-                        console.log(json_b[campo_b].local_alias + "----"+ json_a[campo_a].local_alias);
-                        console.log(json_b[campo_b].respuesta + "----"+ json_a[campo_a].respuesta);
+                  
                         if(json_b[campo_b].local_alias == json_a[campo_a].local_alias){
-                            
+                            //Encuentra el campo igual, y compara si son o no diferentes sus respuestas
                             if(json_b[campo_b].respuesta == json_a[campo_a].respuesta){
                                 //Html para campos iguales
-                                html_campos_a += '<div class="data_estado_json">  <div >Alias: '+ json_a[campo_a].local_alias + '  </div> ';
-                                html_campos_a += '<div >Respuesta: '+ json_a[campo_a].respuesta + '  </div> </div>';
+                                html_campos_a += '<div class="data_estado_json">  <div class="data_estado_json_similar">Alias: '+ json_a[campo_a].local_alias + '  </div> ';
+                                html_campos_a += '<div class="data_estado_json_similar">Respuesta: '+ json_a[campo_a].respuesta + '  </div> </div>';
 
-                                html_campos_b += '<div class="data_estado_json">  <div >Alias: '+ json_b[campo_b].local_alias + '  </div> ';
-                                html_campos_b += '<div >Respuesta: '+ json_b[campo_b].respuesta + '  </div> </div>';
+                                html_campos_b += '<div class="data_estado_json">  <div class="data_estado_json_similar">Alias: '+ json_b[campo_b].local_alias + '  </div> ';
+                                html_campos_b += '<div class="data_estado_json_similar">Respuesta: '+ json_b[campo_b].respuesta + '  </div> </div>';
                             }else{
                                  //Html para campos diferentes 
                                 html_campos_a += '<div class="data_estado_json">  <div class = "data_estado_json_different" >Alias: '+ json_a[campo_a].local_alias + '  </div> ';
@@ -330,18 +328,17 @@ define([
                             }
 
                             break;
-                        }else {
-                            if(count_json_a == (length_json_a - 1)){
+                        }else if(count_json_a == length_json_a){
                                 //No hay el campo_b en el json_a
 
-                                html_campos_a += '<div class="data_estado_json">  <div class = "data_estado_json_different" >Alias: No registra</div> ';
-                                html_campos_a += '<div class = "data_estado_json_different" >Respuesta: No registra</div> </div>';
+                                html_campos_a += '<div class="data_estado_json">  <div class = "data_estado_json_different" >Alias: No registra en esta versión</div> ';
+                                html_campos_a += '<div class = "data_estado_json_different" >Respuesta: No registra en esta versión</div> </div>';
 
                                 html_campos_b += '<div class="data_estado_json">  <div class = "data_estado_json_different">Alias: '+ json_b[campo_b].local_alias + '  </div> ';
                                 html_campos_b += '<div class = "data_estado_json_different">Respuesta: '+ json_b[campo_b].respuesta + '  </div> </div>';
                             }
 
-                        }
+                        
                     }
                    
                 }
@@ -349,50 +346,7 @@ define([
                 return [html_campos_a, html_campos_b];
             }
 
-            function equal(a, b, options) {
-                var aValue, bValue,                                 // Define variables
-                    aType = typeof a,                               // Get value types
-                    bType = typeof b;
-                options = options || {};                            // Optional parameter
-                if (a === b) {                                      // Strict comparison
-                    return equal.VALUE_AND_TYPE;                    // Equal value and type
-                }
-                /* jshint -W116 */
-                if (options.nonStrict && a == b) {                  // Non strict comparison (optional)
-                    return equal.VALUE;                             // Equal value (different type)
-                }
-                /* jshint +W116 */
-                if (aType === 'undefined' ||                        // undefined and null are always different than other values
-                    bType === 'undefined' ||
-                    a === null ||
-                    b === null)
-                {
-                    return equal.NOT_EQUAL;
-                }
-                if (aType === 'number' &&                           // Special case: Not is a Number (NaN !== NaN)
-                    bType === 'number' &&
-                    isNaN(a) &&
-                    isNaN(b))
-                {
-                    return equal.VALUE_AND_TYPE;
-                }
-                if (typeof a.valueOf === 'function' &&              // valueOf() is a function in both values
-                    typeof b.valueOf === 'function')
-                {
-                    aValue = a.valueOf();                           // Get valueOf()
-                    bValue = b.valueOf();
-                    if (aValue !== a || bValue !== b) {             // The valueOf's return is different that the base value
-                        if (aValue === bValue) {                    // The valueOf's return is the same for both values
-                            if (a.constructor === b.constructor) {  // It's the same constructor and as result is the same type
-                                return equal.VALUE_AND_TYPE;
-                            } else {
-                                return equal.VALUE;                 // Equal value (different type)
-                            }
-                        }
-                    }
-                }
-                return equal.NOT_EQUAL;                             // Not equal
-            }
+     
            
 
             function generate_html_json(json){
