@@ -21,20 +21,7 @@
   float: left;
  }
 
-  .grid_dphpforms_compare > .json_data_compare > .json_data_prev { 
 
-    background: white; 
-    margin: 10px 0px 10px 30px;
-    width: 45%;
-    float: left;
- }
-  .grid_dphpforms_compare > .json_data_compare > .json_data_alm { 
-    grid-area:main; 
-    background:white;
-    margin: 10px 0px 10px 0px;
-    width: 45%;
-    float: left;
- }
   .grid_dphpforms_compare > .buttons_actions { 
     grid-area:foot; 
     background:white
