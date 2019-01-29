@@ -19,8 +19,9 @@ define([
     'block_ases/sweetalert',
     'block_ases/jqueryui',
     'block_ases/select2',
-    'block_ases/loading_indicator'
-], function ($, jszip, dataTables, autoFill, buttons, html5, flash, print, bootstrap, sweetalert, jqueryui, select2, li) {
+    'block_ases/loading_indicator',
+    'block_ases/_general_modal_manager'
+], function ($, jszip, dataTables, autoFill, buttons, html5, flash, print, bootstrap, sweetalert, jqueryui, select2, li, gmm) {
     return {
         init: function () {
 
@@ -632,6 +633,20 @@ define([
                     collapsible: true,
                     color: true
                 });
+
+                let dwarehouse_record_id = Object.keys(param)[0];
+                let obj = param[ dwarehouse_record_id ];
+
+                if(obj.id_registro_respuesta_form != -1 ){
+                    $(".dphpforms-peer-record").attr( 'data-record-id',  obj.id_registro_respuesta_form );
+                    $(".dphpforms-restore").attr( 'data-record-id',  dwarehouse_record_id );
+                    $(".dphpforms-peer-record").attr( 'disabled',  false );
+                    $(".dphpforms-restore").attr( 'disabled',  false );
+                }else{
+                    $(".dphpforms-peer-record").attr( 'disabled',  true );
+                    $(".dphpforms-restore").attr( 'disabled',  true );
+                }
+
                 $('#modal_JSON').fadeIn(300);
             }
 
@@ -639,11 +654,10 @@ define([
             $('.mymodal-close').click(function () {
                 $("#modal_JSON").hide();
             });
+
             $('.btn-danger-close').click(function () {
                 $("#modal_JSON").hide();
             });
-
-
         }
 
     };
