@@ -16,8 +16,9 @@
           'block_ases/sweetalert', 
           'block_ases/jqueryui',
           'block_ases/select2',
-          'block_ases/loading_indicator'
-        ], function($, bootstrap, sweetalert, jqueryui, select2, loading_indicator) {
+          'block_ases/loading_indicator',
+          'block_ases/jquery.scrollTo'
+        ], function($, bootstrap, sweetalert, jqueryui, select2, loading_indicator, JQS) {
     
     return {
         init: function() {
@@ -622,7 +623,6 @@
                     }
                     $(formulario).find('button').prop( "disabled", true );
                     $(formulario).find('a').attr("disabled", true);
-                    console.log(formulario);
                     loading_indicator.show();
                     $.ajax({
                         type: 'POST',
@@ -633,7 +633,6 @@
                         processData: false,
                         success: function(data) {
                                 loading_indicator.hide();
-                                console.log( data );
                                 var response = JSON.parse(data);
                                 
                                 if(response['status'] == 0){
@@ -702,6 +701,29 @@
                                     $(formulario).find('button').prop( "disabled", false);
                                     $(formulario).find('a').attr( "disabled", false);
                                     
+                                }else if(response['status'] == -6){
+                                    $(formulario).find('button').prop( "disabled", false);
+                                    $(formulario).find('a').attr( "disabled", false);
+                                    var mensaje = '';
+                                    if(response['message'] == 'The value of the field is out of range'){
+
+                                        var id_form_pregunta = response['data']['id'];
+                                        $('div').removeClass('regla_incumplida');
+                                        $('.div-' + id_form_pregunta).addClass('regla_incumplida');
+                                        
+                                        mensaje  = 'Ups!, el campo marcado en rojo tiene una fecha por fuera del siguiente rango: ' + response['data']['min'] + " hasta " + response['data']['max'];
+                                    }
+                                    $("#modal_v2_edit_peer_tracking").scrollTo('.div-' + id_form_pregunta, {duration:1500, offset:-150});
+                                    $("#modal_v2_peer_tracking").scrollTo('.div-' + id_form_pregunta, {duration:1500, offset:-150});
+                                    $("#modal_primer_acercamiento").scrollTo('.div-' + id_form_pregunta, {duration:1500, offset:-150});
+                                    $("#modal_seguimiento_geografico").scrollTo('.div-' + id_form_pregunta, {duration:1500, offset:-150});
+                                    $("#modal_v2_groupal_tracking").scrollTo('.div-' + id_form_pregunta, {duration:1500, offset:-150});
+                                    swal(
+                                        'Alerta',
+                                        mensaje,
+                                        'warning'
+                                    );
+                                    
                                 }else if(response['status'] == -5){
                                     $(formulario).find('button').prop( "disabled", false);
                                     $(formulario).find('a').attr( "disabled", false);
@@ -714,6 +736,11 @@
                                         
                                         mensaje  = 'Ups!, el campo marcado en rojo está definido como estático y por lo tanto debe mantener el mismo valor, si no logra ver el campo marcado en rojo informe de este incidente.';
                                     }
+                                    $("#modal_v2_edit_peer_tracking").scrollTo('.div-' + id_form_pregunta, {duration:1500, offset:-150});
+                                    $("#modal_v2_peer_tracking").scrollTo('.div-' + id_form_pregunta, {duration:1500, offset:-150});
+                                    $("#modal_primer_acercamiento").scrollTo('.div-' + id_form_pregunta, {duration:1500, offset:-150});
+                                    $("#modal_seguimiento_geografico").scrollTo('.div-' + id_form_pregunta, {duration:1500, offset:-150});
+                                    $("#modal_v2_groupal_tracking").scrollTo('.div-' + id_form_pregunta, {duration:1500, offset:-150});
                                     swal(
                                         'Alerta',
                                         mensaje,
@@ -731,6 +758,11 @@
                                         
                                         mensaje  = 'Ups!, el campo marcado en rojo no cumple con el patrón esperado('+ response['data']['human_readable'] +'). Ejemplo: ' + response['data']['example'];
                                     }
+                                    $("#modal_v2_edit_peer_tracking").scrollTo('.div-' + id_form_pregunta, {duration:1500, offset:-150});
+                                    $("#modal_v2_peer_tracking").scrollTo('.div-' + id_form_pregunta, {duration:1500, offset:-150});
+                                    $("#modal_primer_acercamiento").scrollTo('.div-' + id_form_pregunta, {duration:1500, offset:-150});
+                                    $("#modal_seguimiento_geografico").scrollTo('.div-' + id_form_pregunta, {duration:1500, offset:-150});
+                                    $("#modal_v2_groupal_tracking").scrollTo('.div-' + id_form_pregunta, {duration:1500, offset:-150});
                                     swal(
                                         'Alerta',
                                         mensaje,
@@ -748,6 +780,11 @@
                                         
                                         mensaje  = 'Ups!, los campos que se acaban de colorear en rojo no pueden estar vacíos, si no logra ver ningún campo, informe de este incidente.';
                                     }
+                                    $("#modal_v2_edit_peer_tracking").scrollTo('.div-' + id_form_pregunta, {duration:1500, offset:-150});
+                                    $("#modal_v2_peer_tracking").scrollTo('.div-' + id_form_pregunta, {duration:1500, offset:-150});
+                                    $("#modal_primer_acercamiento").scrollTo('.div-' + id_form_pregunta, {duration:1500, offset:-150});
+                                    $("#modal_seguimiento_geografico").scrollTo('.div-' + id_form_pregunta, {duration:1500, offset:-150});
+                                    $("#modal_v2_groupal_tracking").scrollTo('.div-' + id_form_pregunta, {duration:1500, offset:-150});
                                     swal(
                                         'Alerta',
                                         mensaje,
@@ -772,6 +809,11 @@
                                         
                                         mensaje  = 'Ups!, revise los campos que se acaban de colorear en rojo.';
                                     }
+                                    $("#modal_v2_edit_peer_tracking").scrollTo('.div-' + id_form_pregunta_a, {duration:1500, offset:-150});
+                                    $("#modal_v2_peer_tracking").scrollTo('.div-' + id_form_pregunta_a, {duration:1500, offset:-150});
+                                    $("#modal_primer_acercamiento").scrollTo('.div-' + id_form_pregunta_a, {duration:1500, offset:-150});
+                                    $("#modal_seguimiento_geografico").scrollTo('.div-' + id_form_pregunta_a, {duration:1500, offset:-150});
+                                    $("#modal_v2_groupal_tracking").scrollTo('.div-' + id_form_pregunta_a, {duration:1500, offset:-150});
                                     swal(
                                         'Alerta',
                                         mensaje,
