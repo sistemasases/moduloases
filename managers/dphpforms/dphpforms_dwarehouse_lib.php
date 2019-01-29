@@ -260,6 +260,56 @@ function get_question_data($id_pregunta){
 }
 
 
+/**
+ * Function that load record id_registro_respuesta_form according to record id sent
+ * @see get_registro_respuesta_form($id_dwarehouse_record)
+ * @param $id_dwarehouse_record---> id dwarehouse record
+ * @return int
+ **/
+function get_registro_respuesta_form($id_dwarehouse_record){
+    global $DB;
+    $pregunta = array();
+
+    $sql = "SELECT * FROM {talentospilos_df_dwarehouse}  WHERE id = $id_dwarehouse_record";
+
+    $result = $DB->get_record_sql($sql);
+
+    return $result;
+
+}
+
+/**
+ * Function that update record from   talentospilos_df_form_resp acordging to id sent
+ * @see update_record_talentospilos_df_form_resp($id_dwarehouse_record)
+ * @param $id_registro_respuesta_form---> id talentospilos_df_form_resp record
+ * @return boolean
+ **/
+function update_record_talentospilos_df_form_resp($id_registro_respuesta_form){
+
+    global $DB;
+
+    $sql_query = "UPDATE {talentospilos_df_form_resp} SET estado = 1 WHERE id = $id_registro_respuesta_form";  
+    
+    return  $DB->execute($sql_query);
+
+}
+
+/**
+ * Insert record  into  talentospilos_df_dwarehouse
+ * @see log_to_restore_into_dwarehouse($id_dwarehouse_record)
+ * @param $registro_respuesta_form---> id talentospilos_df_form_resp record
+ * @return boolean
+ **/
+function log_to_restore_into_dwarehouse($registro_respuesta_form){
+
+    global $DB;
+    $new_log = new stdClass();
+    $new_log = $registro_respuesta_form;
+    $new_log->accion = "RESTORE";
+    
+    return  $DB->insert_record('talentospilos_df_dwarehouse', $new_log, $returnid=false, $bulk=false);
+
+}
 
 
 /**
