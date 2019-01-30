@@ -218,13 +218,13 @@ define([
                     datos_previos_para_modal = json_to_compare.datos_previos;
                     if(datos_previos_para_modal == "" || datos_previos_para_modal == null){
 
-                        html_json_prev_content = '<div class = "data_estado_json"> No hay datos previos </div>';
+                        html_json_prev_content = '<div class = "data_estado_json text_json"> No hay datos previos </div>';
                    
                     }else{
 
                         datos_previos_para_modal = datos_previos_para_modal.record;
 
-                        html_json_prev_content ='<div class="data_estado_json"> Alias formulario:        ' + datos_previos_para_modal.alias + '</div>';
+                        html_json_prev_content ='<div class="data_estado_json text_json"> Alias formulario:        ' + datos_previos_para_modal.alias + '</div>';
                     }
 
                     //Iterar sobre el json de datos almacenados para generar html
@@ -232,16 +232,16 @@ define([
 
                        if(datos_almacenados_para_modal == "" || datos_almacenados_para_modal == null){
    
-                        html_json_alm_content = '<div class = "data_estado_json"> No hay datos almacenados </div>';
+                        html_json_alm_content = '<div class = "data_estado_json text_json"> No hay datos almacenados </div>';
                       
                        }else{
    
                         datos_almacenados_para_modal = datos_almacenados_para_modal.record;
    
-                           html_json_alm_content ='<div class="data_estado_json"> Alias formulario:        ' + datos_almacenados_para_modal.alias + '</div>';
+                           html_json_alm_content ='<div class="data_estado_json text_json"> Alias formulario:        ' + datos_almacenados_para_modal.alias + '</div>';
                        }
 
-                       html_json_content += '<div class="contenedor" style=" width: 75%;  margin: 0 auto; display:flex;">'+ html_json_prev_content + html_json_alm_content + '</div>';
+                       html_json_content += '<div class="contenedor" >'+ html_json_prev_content + html_json_alm_content + '</div>';
 
 
                     //Generar html de los campos de ambos json
@@ -266,15 +266,15 @@ define([
                     let html_content = '<div class="grid_dphpforms_compare">';
                     html_content += '<div class="general_info_record_dwarehouse"> ';
                     html_content += '<div class= "title_data">Información del registro </div>';
-                    html_content += '<div class="data_general">  Realizado por:        ' + user_monitor + '</div>';
-                    html_content += '<div class="data_general">  Acción del registro:  ' + accion_record + '</div>';
-                    html_content += '<div class="data_general">  Fecha:                ' + date_record + '</div>';
-                    html_content += '<div class="data_general">  <a href="'+url_request+'">Ir a ficha del estudiante</a> </div>';
+                    html_content += '<div class="data_general text_json">  Realizado por:        ' + user_monitor + '</div>';
+                    html_content += '<div class="data_general text_json">  Acción del registro: <strong style= "font-size: 18px;"> ' + accion_record + '</strong></div>';
+                    html_content += '<div class="data_general text_json">  Fecha:                ' + date_record + '</div>';
+                    html_content += '<a id="ficha_estudiant" data-student-code= "'+getStudentCode(url_request)+'"class="data_general text_json"> Ir a ficha del estudiante </a>';
                     html_content += '                            </div>';
                     html_content += '<div class = "json_data_compare">';
-                    html_content += '<div class="contenedor" style=" width: 75%;  margin: 0 auto; display:flex;">';
-                    html_content += '<div class="title_data"> Datos previos</div>';
-                    html_content += '<div class="title_data"> Datos almacenados</div>';
+                    html_content += '<div class="contenedor" >';
+                    html_content += '<div class="title_data text_json"> Datos previos</div>';
+                    html_content += '<div class="title_data text_json"> Datos almacenados</div>';
                     html_content += '</div>';
                     html_content += html_json_content;
                     html_content += '                                    </div>';
@@ -286,6 +286,28 @@ define([
         
                 }  
             });
+
+            $(document).on('click', "#ficha_estudiante", function () {
+                var pagina = "student_profile.php";
+
+               
+                    $("#formulario").each(function () {
+                        this.reset;
+                    });
+                    location.href = pagina + location.search + "&student_code=" + $(this).attr("data-student-code");
+            });
+
+            function getStudentCode(url_request) {
+                var urlParameters = url_request.split('&');
+    
+                for (x in urlParameters) {
+                    if (urlParameters[x].indexOf('student_code') >= 0) {
+                        var intanceparameter = urlParameters[x].split('=');
+                        return intanceparameter[1];
+                    }
+                }
+                return 0;
+            }
              
             
             $('.outside').click(function(){
@@ -715,6 +737,7 @@ define([
                             msg[id_form].datos_almacenados = JSON.parse(msg[id_form].datos_almacenados);}
 
                         // End modify msg    
+                        $("#ficha_estudiante").attr("data-student-code", msg[id_form].url_request);
                        
                         create_beautifyJSON(msg);
                     },
@@ -753,7 +776,7 @@ define([
                         $(".dphpforms-restore").attr( 'data-record-id',  dwarehouse_record_id );
                         $(".dphpforms-peer-record").attr( 'disabled',  false );
                         $(".dphpforms-restore").attr( 'disabled',  false );
-                        //$(".dphpforms-compare").attr( 'disabled',  true );
+                        $(".dphpforms-compare").attr( 'disabled',  false );
                     }else { 
 
                         $(".dphpforms-peer-record").attr( 'data-record-id',  obj.id_registro_respuesta_form );
@@ -849,18 +872,18 @@ define([
                             //Encuentra el campo igual, y compara si son o no diferentes sus respuestas
                             if(json_b[campo_b].respuesta == json_a[campo_a].respuesta){
                                 //Html para campos iguales
-                                html_campos_a += '<div data-id-pregunta='+json_a[campo_a].id_pregunta+' data-id-relacion-form-pregunta='+json_a[campo_a].id_relacion_form_pregunta+'  class="data_estado_json data_estado_json_similar" style="border: 1px solid green !important;">  <div>Alias: '+ json_a[campo_a].local_alias + '  </div> ';
-                                html_campos_a += '<div>Respuesta: '+ json_a[campo_a].respuesta + '  </div> </div>';
+                                html_campos_a += '<div data-id-pregunta='+json_a[campo_a].id_pregunta+' data-id-relacion-form-pregunta='+json_a[campo_a].id_relacion_form_pregunta+'  class="data_estado_json data_estado_json_similar" style="border: 1px solid green !important;">  <div class = "text_json">Alias: '+ json_a[campo_a].local_alias + '  </div> ';
+                                html_campos_a += '<div class = "text_json">Respuesta: '+ json_a[campo_a].respuesta + '  </div> </div>';
 
-                                html_campos_b += '<div data-id-pregunta='+json_b[campo_b].id_pregunta+' data-id-relacion-form-pregunta='+json_b[campo_b].id_relacion_form_pregunta+' class="data_estado_json data_estado_json_similar" style="border: 1px solid green !important;">  <div>Alias: '+ json_b[campo_b].local_alias + '  </div> ';
-                                html_campos_b += '<div>Respuesta: '+ json_b[campo_b].respuesta + '  </div> </div>';
+                                html_campos_b += '<div data-id-pregunta='+json_b[campo_b].id_pregunta+' data-id-relacion-form-pregunta='+json_b[campo_b].id_relacion_form_pregunta+' class="data_estado_json data_estado_json_similar" style="border: 1px solid green !important;">  <div class = "text_json">Alias: '+ json_b[campo_b].local_alias + '  </div> ';
+                                html_campos_b += '<div class = "text_json">Respuesta: '+ json_b[campo_b].respuesta + '  </div> </div>';
                             }else{
                                  //Html para campos diferentes 
-                                html_campos_a += '<div data-id-pregunta='+json_a[campo_a].id_pregunta+' data-id-relacion-form-pregunta='+json_a[campo_a].id_relacion_form_pregunta+'  class="data_estado_json data_estado_json_different" style="border: 1px solid red !important;">  <div >Alias: '+ json_a[campo_a].local_alias + '  </div> ';
-                                html_campos_a += '<div class = "data_estado_json_different" >Respuesta: '+ json_a[campo_a].respuesta + '  </div> </div>';
+                                html_campos_a += '<div data-id-pregunta='+json_a[campo_a].id_pregunta+' data-id-relacion-form-pregunta='+json_a[campo_a].id_relacion_form_pregunta+'  class="data_estado_json data_estado_json_different" style="border: 1px solid red !important;">  <div class = "text_json" >Alias: '+ json_a[campo_a].local_alias + '  </div> ';
+                                html_campos_a += '<div class = "text_json data_estado_json_different" >Respuesta: '+ json_a[campo_a].respuesta + '  </div> </div>';
 
-                                html_campos_b += '<div  data-id-pregunta='+json_b[campo_b].id_pregunta+' data-id-relacion-form-pregunta='+json_b[campo_b].id_relacion_form_pregunta+' class="data_estado_json data_estado_json_different" style="border: 1px solid red !important;">  <div >Alias: '+ json_b[campo_b].local_alias + '  </div> ';
-                                html_campos_b += '<div class = "data_estado_json_different">Respuesta: '+ json_b[campo_b].respuesta + '  </div> </div>';
+                                html_campos_b += '<div  data-id-pregunta='+json_b[campo_b].id_pregunta+' data-id-relacion-form-pregunta='+json_b[campo_b].id_relacion_form_pregunta+' class="data_estado_json data_estado_json_different" style="border: 1px solid red !important;">  <div class = "text_json" >Alias: '+ json_b[campo_b].local_alias + '  </div> ';
+                                html_campos_b += '<div class = "text_json data_estado_json_different">Respuesta: '+ json_b[campo_b].respuesta + '  </div> </div>';
 
                             }
 
@@ -868,16 +891,16 @@ define([
                         }else if(count_json_a == length_json_a){
                                 //No hay el campo_b en el json_a
 
-                                html_campos_a += '<div data-id-pregunta='+json_b[campo_b].id_pregunta+' data-id-relacion-form-pregunta='+json_b[campo_b].id_relacion_form_pregunta+'  class="data_estado_json data_estado_json_different" style="border: 1px solid red !important;">  <div >Alias: No registra en esta versión</div> ';
-                                html_campos_a += '<div>Respuesta: No registra en esta versión</div> </div>';
+                                html_campos_a += '<div data-id-pregunta='+json_b[campo_b].id_pregunta+' data-id-relacion-form-pregunta='+json_b[campo_b].id_relacion_form_pregunta+'  class="data_estado_json data_estado_json_different" style="border: 1px solid red !important;">  <div class = "text_json" >Alias: No registra en esta versión</div> ';
+                                html_campos_a += '<div  class = "text_json">Respuesta: No registra en esta versión</div> </div>';
 
-                                html_campos_b += '<div  data-id-pregunta='+json_b[campo_b].id_pregunta+' data-id-relacion-form-pregunta='+json_b[campo_b].id_relacion_form_pregunta+' class="data_estado_json data_estado_json_different" style="border: 1px solid red !important;">  <div>Alias: '+ json_b[campo_b].local_alias + '  </div> ';
-                                html_campos_b += '<div >Respuesta: '+ json_b[campo_b].respuesta + '  </div> </div>';
+                                html_campos_b += '<div  data-id-pregunta='+json_b[campo_b].id_pregunta+' data-id-relacion-form-pregunta='+json_b[campo_b].id_relacion_form_pregunta+' class="data_estado_json data_estado_json_different" style="border: 1px solid red !important;">  <div class = "text_json">Alias: '+ json_b[campo_b].local_alias + '  </div> ';
+                                html_campos_b += '<div  class = "text_json">Respuesta: '+ json_b[campo_b].respuesta + '  </div> </div>';
                             }
 
                         
                     }
-                    html_general_campos += '<div class="contenedor" style=" width: 75%;  margin: 0 auto; display:flex;">' + html_campos_a + html_campos_b + '</div>';
+                    html_general_campos += '<div class="contenedor" >' + html_campos_a + html_campos_b + '</div>';
                     html_campos_a = '';
                     html_campos_b = '';
                    
@@ -890,7 +913,7 @@ define([
                 let html_to_keys = '';
 
                 for(campo in json){
-                    html_to_keys += '<div class="contenedor" style=" width: 75%;  margin: 0 auto; display:flex;">';
+                    html_to_keys += '<div class="contenedor" >';
                     html_to_keys += '<div data-id-pregunta='+json[campo].id_pregunta+' data-id-relacion-form-pregunta='+json[campo].id_relacion_form_pregunta+'  class="data_estado_json data_estado_json_different" style="border: 1px solid red !important;">  <div >Alias: No registra en esta versión</div> ';
                     html_to_keys += '<div>Respuesta: No registra en esta versión</div> </div>';
                     html_to_keys += '<div data-id-pregunta='+json[campo].id_pregunta+' data-id-relacion-form-pregunta='+json[campo].id_relacion_form_pregunta+'  class="data_estado_json data_estado_json_similar" style="border: 1px solid green !important;">  <div>Alias: '+ json[campo].local_alias + '  </div> ';
