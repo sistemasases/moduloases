@@ -15,38 +15,40 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Sede class definition
+ * Talentos Pilos
  *
  * @author     Luis Gerardo Manrique Cardona
  * @package    block_ases
- * @copyright  2016 Luis Gerardo Manrique Cardona <luis.manrique@correounivalle.edu.co>
+ * @copyright  2018 Luis Gerardo Manrique Cardona <luis.manrqiue@correounivalle.edu.co>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-require_once(__DIR__ . '/DAO/BaseDAO.php');
 
-class Sede extends BaseDAO {
+// Standard GPL and phpdocs
+namespace block_ases\output;
 
-    const ID = 'id';
-    const ID_CIUDAD = 'id_ciudad';
-    const NOMBRE = 'nombre';
-    const COD_UNIVALLE = 'cod_univalle';
+use renderable;
+use renderer_base;
+use templatable;
+use stdClass;
 
-    public $id;
-    public $id_ciudad;
-    public $cod_univalle;
-    public $nombre;
-    public static function get_table_name(): string {
-        return 'talentospilos_sede';
+class massive_upload_component implements renderable, templatable
+{
+    /** @var string $sometext Some text to show how to pass data to a template. */
+    var $data = null;
+
+    public function __construct($data) {
+        $this->data = $data;
     }
+
     /**
-     * Obtener las Sedes en un array clave valor (principalmente para uso de select en formularios)
-     * donde las llaves son el id de la sede y los valores son los nombres de la sede
-     * @see
-     * @return array Array
+     * Export this data so it can be used as the context for a mustache template.
+     *
+     * @return stdClass
      */
-    public static function get_options() {
-        $fields = Sede::ID.','.Sede::NOMBRE;
-        return parent::_get_options($fields, Sede::NOMBRE);
+    public function export_for_template(renderer_base $output) {
+        $data = new stdClass();
+        $data->data = $this->data;
+        return $data;
     }
 }

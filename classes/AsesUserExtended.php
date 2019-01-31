@@ -1,6 +1,6 @@
 <?php
 require_once(__DIR__ . '/DAO/BaseDAO.php');
-
+require_once(__DIR__ . '/TrackingStatus.php');
 /**
  * Class AsesUserExtended, Relation between moodle user and Ases user, and save the tracking and program status
  * of the student
@@ -20,6 +20,12 @@ class AsesUserExtended extends BaseDAO {
     public $id_academic_program;
     public $tracking_status;
     public $program_status;
+    public function __construct($data = null)
+    {
+        parent::__construct($data);
+        $this->tracking_status = 1;
+        $this->program_status = 1;
+    }
 
     public static function get_numeric_fields(): array  {
         return array (
@@ -30,10 +36,20 @@ class AsesUserExtended extends BaseDAO {
             AsesUserExtended::PROGRAM_STATUS
         );
     }
+    public static function exist_by_username($mdl_user_name) {
+        global $DB;
+        $sql = <<<SQL
+        select * from {user} mdl_user inner join {talentospilos_user_extended} mdl_talentospilos_user_extended
+        on mdl_talentospilos_user_extended.id_moodle_user = mdl_user.id
+        where username = '$mdl_user_name'
+SQL;
 
+        $DB->record_exists_sql($sql);
+    }
     public  static function get_table_name(): string {
         return AsesUserExtended::TABLE_NAME;
     }
+
     /**
      * Check if exists some registry at table user extended by ases user id
      * @param string  ases_user_id Id of ases user
