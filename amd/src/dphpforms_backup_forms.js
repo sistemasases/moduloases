@@ -19,10 +19,15 @@ define([
     'block_ases/sweetalert',
     'block_ases/jqueryui',
     'block_ases/select2',
-    'block_ases/loading_indicator'
-], function ($, jszip, dataTables, autoFill, buttons, html5, flash, print, bootstrap, sweetalert, jqueryui, select2, li) {
+    'block_ases/loading_indicator',
+    'block_ases/_general_modal_manager'
+], function ($, jszip, dataTables, autoFill, buttons, html5, flash, print, bootstrap, sweetalert, jqueryui, select2, li, gmm) {
     return {
         init: function () {
+
+            let css_location = "../style/_grid_modal_json_backup_dwarehouse.css";
+    
+            $('head').append('<link rel="stylesheet" href="' + css_location + '" type="text/css" />');
 
             window.JSZip = jszip;
 
@@ -183,7 +188,105 @@ define([
                 }
               
             });
-            
+
+            $(".dphpforms-restore").on("click", function(){
+                if( !$(this).attr("disabled") ){
+                    let dwarehouse_record_id_to_restore  = $(this).attr("data-record-id");
+                    restore_delete_dphpforms_record(dwarehouse_record_id_to_restore);
+                   
+                }        
+            });
+
+            $(".dphpforms-compare").on("click", function(){
+                if( !$(this).attr("disabled") ){
+                    let datos_previos_para_modal, datos_almacenados_para_modal, json_to_compare, user_monitor, accion_record, date_record, url_request ;
+                    json_to_compare  =  JSON.parse($("#json_record_dwarehouse_selected").val());
+
+
+                    //Create html to modal using json_to_compare
+                    //Info general
+                    user_monitor  = json_to_compare.id_usuario_moodle;
+                    accion_record = json_to_compare.accion; 
+                    date_record   = json_to_compare.fecha_hora_registro;
+                    url_request   = json_to_compare.url_request;
+
+                    //**************************************************************************************************************************************************************************** */
+
+                    //Iterar sobre el json de datos previos para generar html
+                    let html_json_prev_content, html_json_content = '', html_json_alm_content;
+
+                    datos_previos_para_modal = json_to_compare.datos_previos;
+                    if(datos_previos_para_modal == "" || datos_previos_para_modal == null){
+
+                        html_json_prev_content = '<div class = "data_estado_json"> No hay datos previos </div>';
+                   
+                    }else{
+
+                        datos_previos_para_modal = datos_previos_para_modal.record;
+
+                        html_json_prev_content ='<div class="data_estado_json"> Alias formulario:        ' + datos_previos_para_modal.alias + '</div>';
+                    }
+
+                    //Iterar sobre el json de datos almacenados para generar html
+                       datos_almacenados_para_modal = json_to_compare.datos_almacenados;
+
+                       if(datos_almacenados_para_modal == "" || datos_almacenados_para_modal == null){
+   
+                        html_json_alm_content = '<div class = "data_estado_json"> No hay datos almacenados </div>';
+                      
+                       }else{
+   
+                        datos_almacenados_para_modal = datos_almacenados_para_modal.record;
+   
+                           html_json_alm_content ='<div class="data_estado_json"> Alias formulario:        ' + datos_almacenados_para_modal.alias + '</div>';
+                       }
+
+                       html_json_content += '<div class="contenedor" style=" width: 75%;  margin: 0 auto; display:flex;">'+ html_json_prev_content + html_json_alm_content + '</div>';
+
+
+                    //Generar html de los campos de ambos json
+                    if((datos_previos_para_modal != "" ) && (datos_almacenados_para_modal != "")){
+                        //Puede comparar ambos json y generar html
+                        let html_result_compare_json = compare_json(datos_previos_para_modal.campos, datos_almacenados_para_modal.campos);
+                        html_json_content += html_result_compare_json;
+                    }else{
+                        //Ambos, o uno de los dos JSON no tiene información. No es necesario comparar, pero sí generar el html del que tiene información
+                        if(datos_previos_para_modal != "" ){
+                            //Generar html de datos previos
+                            html_json_content += generate_html_json(datos_previos_para_modal.campos);
+                        }else if (datos_almacenados_para_modal != "" ){
+                            //Generar html de datos almacenados
+                            html_json_content += generate_html_json(datos_almacenados_para_modal.campos);
+                        }
+                    }
+                    
+                   
+                    //**************************************************************************************************************************************************************************** */
+
+                    let html_content = '<div class="grid_dphpforms_compare">';
+                    html_content += '<div class="general_info_record_dwarehouse"> ';
+                    html_content += '<div class= "title_data">Información del registro </div>';
+                    html_content += '<div class="data_general">  Realizado por:        ' + user_monitor + '</div>';
+                    html_content += '<div class="data_general">  Acción del registro:  ' + accion_record + '</div>';
+                    html_content += '<div class="data_general">  Fecha:                ' + date_record + '</div>';
+                    html_content += '<div class="data_general">  <a href="'+url_request+'">Ir a ficha del estudiante</a> </div>';
+                    html_content += '                            </div>';
+                    html_content += '<div class = "json_data_compare">';
+                    html_content += '<div class="contenedor" style=" width: 75%;  margin: 0 auto; display:flex;">';
+                    html_content += '<div class="title_data"> Datos previos</div>';
+                    html_content += '<div class="title_data"> Datos almacenados</div>';
+                    html_content += '</div>';
+                    html_content += html_json_content;
+                    html_content += '                                    </div>';
+                    html_content += '</div>';
+                    html_content += '<hr style="background-color: red; height: 1px; border: 0">';
+
+                    //Crear JSON con general_modal_manager
+                    gmm.generate_modal("modal_to_compare", "Comparación de estados", html_content);
+        
+                }  
+            });
+             
             
             $('.outside').click(function(){
                 var outside = $(this);
@@ -622,28 +725,189 @@ define([
             function create_beautifyJSON(param) {
                 //Show beautifyJSON in modal
                 $("#div_JSONform").empty();
-               var json = JSON.stringify(param);
+               var json1 = JSON.stringify(param);
                //json[0].
               //var json = JSON.parse(param);
-                $("#div_JSONform").append(json);
+                $("#div_JSONform").append(json1);
                 $('#div_JSONform').beautifyJSON({
                     type: "flexible",
                     hoverable: true,
                     collapsible: true,
                     color: true
                 });
+
+                let dwarehouse_record_id = Object.keys(param)[0];
+                let obj = param[ dwarehouse_record_id ];
+                
+                $("#json_record_dwarehouse_selected").attr("value",JSON.stringify(obj));
+
+                if(obj.id_registro_respuesta_form != -1 ){
+                    // $(".dphpforms-peer-record").attr( 'data-record-id',  obj.id_registro_respuesta_form );
+                    // $(".dphpforms-restore").attr( 'data-record-id',  dwarehouse_record_id );
+                    // $(".dphpforms-peer-record").attr( 'disabled',  false );
+                    // $(".dphpforms-restore").attr( 'disabled',  false );
+
+                    if(obj.accion != "INSERT" && obj.accion != "UPDATE" && obj.accion != "RESTORE"){
+                        //Si accion es DELETE
+                        $(".dphpforms-peer-record").attr( 'data-record-id',  obj.id_registro_respuesta_form );
+                        $(".dphpforms-restore").attr( 'data-record-id',  dwarehouse_record_id );
+                        $(".dphpforms-peer-record").attr( 'disabled',  false );
+                        $(".dphpforms-restore").attr( 'disabled',  false );
+                        //$(".dphpforms-compare").attr( 'disabled',  true );
+                    }else { 
+
+                        $(".dphpforms-peer-record").attr( 'data-record-id',  obj.id_registro_respuesta_form );
+                        $(".dphpforms-peer-record").attr( 'disabled',  false );
+                        $(".dphpforms-restore").attr( 'disabled',  true );
+                        $(".dphpforms-compare").attr( 'disabled',  false );
+
+                        // if(obj.accion=="INSERT" || obj.accion=="RESTORE"){
+                        //     $(".dphpforms-compare").attr( 'disabled',  true );
+                        // }
+
+                       
+                    }
+
+                }else { 
+                            $(".dphpforms-peer-record").attr( 'disabled',  true );
+                            $(".dphpforms-restore").attr( 'disabled',  true );
+                            $(".dphpforms-compare").attr( 'disabled',  true );
+                }
+
+                //    if(obj.id_registro_respuesta_form == -1 || obj.accion == "INSERT"){
+                //     $(".dphpforms-peer-record").attr( 'disabled',  true );
+                //     $(".dphpforms-restore").attr( 'disabled',  true );
+                    
+                // }else { 
+                //     $(".dphpforms-peer-record").attr( 'data-record-id',  obj.id_registro_respuesta_form );
+                //     $(".dphpforms-restore").attr( 'data-record-id',  dwarehouse_record_id );
+                //     $(".dphpforms-peer-record").attr( 'disabled',  false );
+                //     $(".dphpforms-restore").attr( 'disabled',  false );
+
+                    
+                // }
+
                 $('#modal_JSON').fadeIn(300);
             }
 
+            function restore_delete_dphpforms_record(dwarehouse_id_form_to_restore){
+
+                li.show();
+                $.ajax({
+                    type: "POST",
+                    data: { loadF: 'restore_dwarehouse_record', params: dwarehouse_id_form_to_restore },
+                    url: "../managers/dphpforms/dphpforms_dwarehouse_api.php",
+                    success: function (msg) {
+                        
+                        li.hide();
+                        if (!msg) {
+                            swal(
+                                'NOT RESTORED SUCCESSFULLY',
+                                'Oooops! Error',
+                                'warning'
+                            );
+                        } else {
+                            swal(
+                                'RESTORED SUCCESSFULLY',
+                                'SUCCESS',
+                                'success'
+                            );
+                        }
+                    },
+                    cache: false,
+                    async: true,
+
+                    error: function (msg) { 
+                        li.hide();
+                         swal(
+                            'SYSTEM ERROR',
+                            'Report to Systems office',
+                            'error'
+                        );
+                     }
+                });
+
+            }
+
+            function compare_json(json_a, json_b){
+                // json_b se asume como el JSON que ha cambiado
+                // json_a se asume como el JSON con el que se compara el json_b
+                // Ejemplo:  json_b = {"alias":"un_alias"} , json_a = {"alias":"otro_alias"}
+           
+                let html_campos_b, html_campos_a, length_json_a, count_json_a, html_general_campos;
+                html_general_campos = '';
+                length_json_a = json_a.length;
+                html_campos_b = '';
+                html_campos_a = '';
+                for (campo_b in json_b){
+                    count_json_a = 0;
+                    //Para cada campo_b registrado en el JSON, comparar con cada campo_a
+                    for(campo_a in json_a){
+                        count_json_a ++;
+                  
+                        if(json_b[campo_b].local_alias == json_a[campo_a].local_alias){
+                            //Encuentra el campo igual, y compara si son o no diferentes sus respuestas
+                            if(json_b[campo_b].respuesta == json_a[campo_a].respuesta){
+                                //Html para campos iguales
+                                html_campos_a += '<div data-id-pregunta='+json_a[campo_a].id_pregunta+' data-id-relacion-form-pregunta='+json_a[campo_a].id_relacion_form_pregunta+'  class="data_estado_json data_estado_json_similar" style="border: 1px solid green !important;">  <div>Alias: '+ json_a[campo_a].local_alias + '  </div> ';
+                                html_campos_a += '<div>Respuesta: '+ json_a[campo_a].respuesta + '  </div> </div>';
+
+                                html_campos_b += '<div data-id-pregunta='+json_b[campo_b].id_pregunta+' data-id-relacion-form-pregunta='+json_b[campo_b].id_relacion_form_pregunta+' class="data_estado_json data_estado_json_similar" style="border: 1px solid green !important;">  <div>Alias: '+ json_b[campo_b].local_alias + '  </div> ';
+                                html_campos_b += '<div>Respuesta: '+ json_b[campo_b].respuesta + '  </div> </div>';
+                            }else{
+                                 //Html para campos diferentes 
+                                html_campos_a += '<div data-id-pregunta='+json_a[campo_a].id_pregunta+' data-id-relacion-form-pregunta='+json_a[campo_a].id_relacion_form_pregunta+'  class="data_estado_json data_estado_json_different" style="border: 1px solid red !important;">  <div >Alias: '+ json_a[campo_a].local_alias + '  </div> ';
+                                html_campos_a += '<div class = "data_estado_json_different" >Respuesta: '+ json_a[campo_a].respuesta + '  </div> </div>';
+
+                                html_campos_b += '<div  data-id-pregunta='+json_b[campo_b].id_pregunta+' data-id-relacion-form-pregunta='+json_b[campo_b].id_relacion_form_pregunta+' class="data_estado_json data_estado_json_different" style="border: 1px solid red !important;">  <div >Alias: '+ json_b[campo_b].local_alias + '  </div> ';
+                                html_campos_b += '<div class = "data_estado_json_different">Respuesta: '+ json_b[campo_b].respuesta + '  </div> </div>';
+
+                            }
+
+                            break;
+                        }else if(count_json_a == length_json_a){
+                                //No hay el campo_b en el json_a
+
+                                html_campos_a += '<div data-id-pregunta='+json_b[campo_b].id_pregunta+' data-id-relacion-form-pregunta='+json_b[campo_b].id_relacion_form_pregunta+'  class="data_estado_json data_estado_json_different" style="border: 1px solid red !important;">  <div >Alias: No registra en esta versión</div> ';
+                                html_campos_a += '<div>Respuesta: No registra en esta versión</div> </div>';
+
+                                html_campos_b += '<div  data-id-pregunta='+json_b[campo_b].id_pregunta+' data-id-relacion-form-pregunta='+json_b[campo_b].id_relacion_form_pregunta+' class="data_estado_json data_estado_json_different" style="border: 1px solid red !important;">  <div>Alias: '+ json_b[campo_b].local_alias + '  </div> ';
+                                html_campos_b += '<div >Respuesta: '+ json_b[campo_b].respuesta + '  </div> </div>';
+                            }
+
+                        
+                    }
+                    html_general_campos += '<div class="contenedor" style=" width: 75%;  margin: 0 auto; display:flex;">' + html_campos_a + html_campos_b + '</div>';
+                    html_campos_a = '';
+                    html_campos_b = '';
+                   
+                }
+
+                return html_general_campos;
+            }
+
+            function generate_html_json(json){
+                let html_to_keys = '';
+
+                for(campo in json){
+                    html_to_keys += '<div class="contenedor" style=" width: 75%;  margin: 0 auto; display:flex;">';
+                    html_to_keys += '<div data-id-pregunta='+json[campo].id_pregunta+' data-id-relacion-form-pregunta='+json[campo].id_relacion_form_pregunta+'  class="data_estado_json data_estado_json_different" style="border: 1px solid red !important;">  <div >Alias: No registra en esta versión</div> ';
+                    html_to_keys += '<div>Respuesta: No registra en esta versión</div> </div>';
+                    html_to_keys += '<div data-id-pregunta='+json[campo].id_pregunta+' data-id-relacion-form-pregunta='+json[campo].id_relacion_form_pregunta+'  class="data_estado_json data_estado_json_similar" style="border: 1px solid green !important;">  <div>Alias: '+ json[campo].local_alias + '  </div> ';
+                    html_to_keys += '<div>Respuesta: '+ json[campo].respuesta + '  </div> </div>';
+                    html_to_keys += '</div>';
+                }
+
+                return html_to_keys;
+            }
 
             $('.mymodal-close').click(function () {
                 $("#modal_JSON").hide();
             });
+
             $('.btn-danger-close').click(function () {
                 $("#modal_JSON").hide();
             });
-
-
         }
 
     };

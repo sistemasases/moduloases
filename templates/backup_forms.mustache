@@ -156,14 +156,21 @@
       <div class="mymodal-header col-sm-12">
         <div class="col-sm-11">
           <h4 class="" id="myModalLabel">
-            <h2>REPORTE DE BACKUP</h2>
+            <h2>Visualización avanzada de registro</h2>
           </h4>
         </div>
-        <div class="col-sm-1">
+        <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1">
           <span id="mymodal-v2-close" class="mymodal-close" aria-hidden="true">&times;</span>
         </div>
       </div>
       <div class="mymodal-body mymodal-body_v2 col-sm-12">
+        <div class="row">
+          <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" hidden>
+            <a href="javascript:void(0)" class="btn btn-default btn-sm dphpforms-peer-record" data-record-id="-1">Mostrar</a>
+            <a href="javascript:void(0)" class="btn btn-default btn-sm dphpforms-restore" data-record-id="-1">Restaurar</a>
+            <a href="javascript:void(0)" class="btn btn-default btn-sm dphpforms-compare" data-record-id="-1">Comparar estados</a>
+          </div>
+        </div>
         <div class="row">
           <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <div id="div_JSONform">
@@ -175,9 +182,38 @@
       </div>
       <div class="mymodal-footer" style="text-align: center">
         .
-
       </div>
     </div>
+  </div>
+  
+
+  <div class="mymodal" id="modal_v2_edit_peer_tracking" name="modal_edit_v2_pares">
+    <div class="outside"></div>
+    <div class="mymodal-content">
+      <div class="mymodal-header col-sm-12">
+        <div class="col-sm-11">
+          <h4 class="" id="myModalLabel">Visualización/Edición</h4>
+        </div>
+        <div class="col-sm-1">
+          <span id="mymodal-v2-close" class="mymodal-close" aria-hidden="true">&times;</span>
+        </div>
+      </div>
+      <div class="mymodal-body mymodal-body_v2 col-sm-12">
+        <div class="row">
+          <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            <div id="body_editor"></div>
+          </div>
+        </div>
+      </div>
+      <div class="mymodal-footer">
+        .
+      </div>
+    </div>
+  </div>
+
+
+  <div hidden="true">
+    <input id="json_record_dwarehouse_selected" type="text" disabled = "true">
   </div>
 
   {{/backup_forms_bf}}

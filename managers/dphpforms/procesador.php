@@ -414,6 +414,27 @@ function dphpforms_update_respuesta($completed_form, $RECORD_ID){
                 return $retorno;
             }
 
+            //No aplica para actualizaciones.
+            //Validación de intervalos definidos
+
+           /* $interval_validator = dphpforms_date_interval_validator( $respuestas_obj );
+            
+            if( !($interval_validator['status']) ){
+                $retorno = json_encode(
+                    array(
+                        'status' => '-6',
+                        'message' => 'The value of the field is out of range',
+                        'data' => [
+                            "id" => $interval_validator['field_out_of_interval_id'],
+                            "max" => $interval_validator['max'],
+                            "min" => $interval_validator['min']
+                        ]
+                    )
+                );
+                echo $retorno;
+                return $retorno;
+            }*/
+
             /*print_r($updated_respuestas);
 
             if($processable){
@@ -584,6 +605,26 @@ function dphpforms_new_store_respuesta($completed_form){
                     "id" => $regex_validator['not_regex_match_field_id'],
                     "human_readable" => $regex_validator['human_readable'],
                     "example" => $regex_validator['example']
+                ]
+            )
+        );
+        echo $retorno;
+        return $retorno;
+    }
+
+    //Validación de intervalos definidos
+
+    $interval_validator = dphpforms_date_interval_validator( $respuestas_obj );
+    
+    if( !($interval_validator['status']) ){
+        $retorno = json_encode(
+            array(
+                'status' => '-6',
+                'message' => 'The value of the field is out of range',
+                'data' => [
+                    "id" => $interval_validator['field_out_of_interval_id'],
+                    "max" => $interval_validator['max'],
+                    "min" => $interval_validator['min']
                 ]
             )
         );
@@ -1254,6 +1295,113 @@ function dphpforms_static_validator( $respuestas, $RECORD_ID ){
     return array(
         'status' => true,
         'null_field_id' => ''
+    );
+
+}
+
+function dphpforms_date_interval_validator( $respuestas ){
+
+    global $DB;
+
+    foreach( $respuestas as $key => $respuesta ){
+        
+        $sql = "SELECT * 
+        FROM {talentospilos_df_preguntas} AS P 
+        INNER JOIN {talentospilos_df_tipo_campo} AS TC
+        ON P.tipo_campo = TC.id 
+        WHERE P.id = " . $respuesta->id;
+
+        $pregunta_obj = $DB->get_record_sql( $sql );
+        $field_type = $pregunta_obj->campo;
+
+        if( $field_type === "DATE" ){
+            
+            $obj_atributos = json_decode( $pregunta_obj->atributos_campo );
+
+            $max = null;
+            $min = null;
+
+            $today = new DateTime('now');
+            $t_time = strtotime( $today->format('Y-m-d') );
+
+            if(property_exists($obj_atributos, 'max')){
+                
+                $attr_max = $obj_atributos->max;
+                if( $attr_max === "today()" ){
+                    $max = $t_time;
+                }else{
+                    $max = strtotime( $attr_max );
+                }
+            }
+
+            if(property_exists($obj_atributos, 'min')){
+                
+                $attr_min = $obj_atributos->min;
+                if( $attr_min === "today()" ){
+                    $min = $t_time;
+                }else{
+                    $min = strtotime( $attr_min );
+                }
+            }
+
+            if( $respuesta->valor == "" && $obj_atributos->required == "true" ){
+                return array(
+                    'status' => false,
+                    'field_out_of_interval_id' => $respuesta->id,
+                    'max' => date( 'Y-m-d', $max ),
+                    'min' => date( 'Y-m-d', $min )
+                );
+            }
+            
+            if( $respuesta->valor != "" ){
+                
+                $valid_interval = false;
+                $response = strtotime( $respuesta->valor );
+
+                if( $max && $min ){
+
+                    if( ($min <= $response) && ($response <= $max) ){
+                        $valid_interval = true;
+                    }
+
+                }else if( $max && !$min ){
+
+                    if( $response <= $max ){
+                        $valid_interval = true;
+                    }
+
+                }else if( !$max && $min ){
+
+                    if( $min <= $response ){
+                        $valid_interval = true;
+                    }
+
+                }else if( !$max && !$min ){
+
+                    $valid_interval = true;
+                    
+                }
+
+                if( !$valid_interval ){
+
+                    return array(
+                        'status' => false,
+                        'field_out_of_interval_id' => $respuesta->id,
+                        'max' => date( 'Y-m-d', $max ),
+                        'min' => date( 'Y-m-d', $min )
+                    );
+
+                }
+            }
+        }
+
+    }
+
+    return array(
+        'status' => true,
+        'field_out_of_interval_id' => '',
+        'max' => null,
+        'min' => null
     );
 
 }
