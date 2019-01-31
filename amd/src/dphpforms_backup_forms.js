@@ -199,7 +199,7 @@ define([
 
             $(".dphpforms-compare").on("click", function(){
                 if( !$(this).attr("disabled") ){
-                    let datos_previos_para_modal, datos_almacenados_para_modal, json_to_compare, user_monitor, accion_record, date_record, url_request ;
+                    let datos_previos_para_modal, datos_almacenados_para_modal, json_to_compare, user_monitor, accion_record, date_record, url_request, tipo_formulario;
                     json_to_compare  =  JSON.parse($("#json_record_dwarehouse_selected").val());
 
 
@@ -211,7 +211,7 @@ define([
                     url_request   = json_to_compare.url_request;
 
                     //**************************************************************************************************************************************************************************** */
-
+                    //GENERACIÓN DE HTML DE DATOS PREVIOS Y ALMACENADOS
                     //Iterar sobre el json de datos previos para generar html
                     let html_json_prev_content, html_json_content = '', html_json_alm_content;
 
@@ -259,6 +259,21 @@ define([
                             html_json_content += generate_html_json(datos_almacenados_para_modal.campos);
                         }
                     }
+
+                    //GENERACIÓN DE HTML DE URL(S) QUE DIRIGEN A FICHA DE ESTUDIANTE(S)
+                    let url_to_ficha = '';
+                    tipo_formulario = getTipoFormulario(json_to_compare.id_registro_respuesta_form);
+                    tipo_formulario = tipo_formulario.responseJSON;
+                    tipo_formulario = tipo_formulario.tipo_formulario;
+                    console.log(tipo_formulario);
+                    if(accion_record == "UPDATE"){
+                        //url_to_ficha += '<a id="ficha_estudiante" href="" class="data_general text_json"> Ir a ficha del estudiante </a>';
+                        // if(){
+
+                        // }
+                    }
+                    
+                    
                     
                    
                     //**************************************************************************************************************************************************************************** */
@@ -269,7 +284,7 @@ define([
                     html_content += '<div class="data_general text_json">  Realizado por:        ' + user_monitor + '</div>';
                     html_content += '<div class="data_general text_json">  Acción del registro: <strong style= "font-size: 18px;"> ' + accion_record + '</strong></div>';
                     html_content += '<div class="data_general text_json">  Fecha:                ' + date_record + '</div>';
-                    html_content += '<a id="ficha_estudiant" data-student-code= "'+getStudentCode(url_request)+'"class="data_general text_json"> Ir a ficha del estudiante </a>';
+                    html_content += url_to_ficha;
                     html_content += '                            </div>';
                     html_content += '<div class = "json_data_compare">';
                     html_content += '<div class="contenedor" >';
@@ -287,27 +302,6 @@ define([
                 }  
             });
 
-            $(document).on('click', "#ficha_estudiante", function () {
-                var pagina = "student_profile.php";
-
-               
-                    $("#formulario").each(function () {
-                        this.reset;
-                    });
-                    location.href = pagina + location.search + "&student_code=" + $(this).attr("data-student-code");
-            });
-
-            function getStudentCode(url_request) {
-                var urlParameters = url_request.split('&');
-    
-                for (x in urlParameters) {
-                    if (urlParameters[x].indexOf('student_code') >= 0) {
-                        var intanceparameter = urlParameters[x].split('=');
-                        return intanceparameter[1];
-                    }
-                }
-                return 0;
-            }
              
             
             $('.outside').click(function(){
@@ -613,8 +607,6 @@ define([
                 });
             }
 
-      
-
             function get_id_switch_user(cod_user, table) {
                 //Realizar la consulta del estudiante según el codigo ingresado
                 //Mostrar los resultados en pantalla
@@ -683,8 +675,7 @@ define([
                      }
                 });
             }
-
-            
+    
             function get_only_form(func, id_form) {
                 //Get one form switch id
                 li.show();
@@ -719,9 +710,10 @@ define([
                                         msg[id_form].datos_previos =  data_prev;
                                     }else{
                                         let array_data_prev = Array();
+
                                         for(data in data_prev){
                                             let key_data_prev = {};
-                                            key_data_prev[data] = JSON.parse(data_prev[data]);
+                                            key_data_prev[data] = data_prev[data];
                                             array_data_prev.push(key_data_prev );
                                         }
                                         msg[id_form].datos_previos =  array_data_prev;
@@ -737,7 +729,6 @@ define([
                             msg[id_form].datos_almacenados = JSON.parse(msg[id_form].datos_almacenados);}
 
                         // End modify msg    
-                        $("#ficha_estudiante").attr("data-student-code", msg[id_form].url_request);
                        
                         create_beautifyJSON(msg);
                     },
@@ -923,6 +914,40 @@ define([
 
                 return html_to_keys;
             }
+
+            function getTipoFormulario(id_registro_respuesta_form) {
+               
+                let tipo_formulario;
+
+                $.ajax({
+                    type: "POST",
+                    data: { loadF: 'get_tipo_form', params: id_registro_respuesta_form },
+                    url: "../managers/dphpforms/dphpforms_dwarehouse_api.php",
+                    success: function (msg) {
+
+                        if (msg.length === 0) {
+                            swal(
+                                'FORM NOT FOUND',
+                                'Oooops! Form '+id_registro_respuesta_form+' is not defined',
+                                'warning'
+                            );
+                        } else {
+                        }
+                        
+                    },
+                    cache: false,
+                    async: true,
+
+                    error: function (msg) { 
+                        alert("No encontrado");
+                     }
+                });
+
+               
+
+            }
+
+      
 
             $('.mymodal-close').click(function () {
                 $("#modal_JSON").hide();

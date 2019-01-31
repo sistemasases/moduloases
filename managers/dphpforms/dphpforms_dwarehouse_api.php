@@ -269,6 +269,21 @@
             }else{     
                 return_with_code( -2 );
             }
+        } else if( $_POST['loadF'] == "get_tipo_form" ){
+            //Example of loadF: get_tipo_form valid: 
+            //data: get_tipo_form   params: id_registro_respuesta_form
+          
+            if( count($_POST['params']) == 1 ){
+
+            //Get 'tipo_form' 	FROM table mdl_talentospilos_df_formularios switch params
+
+            $data = get_tipo_form($_POST['params']);
+         
+            echo json_encode($data);
+                    
+            }else{     
+                return_with_code( -2 );
+            }
         }else{
             // Function not defined
             return_with_code( -4 );

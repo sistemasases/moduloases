@@ -358,3 +358,19 @@ function  get_df_alias()
    $sql_query = "SELECT * FROM {talentospilos_df_alias}";
    return $DB->get_records_sql($sql_query);
 }
+
+ /**
+ * Get tipo_form 
+ *
+ * @see get_tipo_form(id_registro_respuesta_form)
+ * @return string
+ */
+
+function  get_tipo_form($id_registro_respuesta_form)
+{
+    global $DB; 
+   $sql_query = "SELECT df_formularios.alias AS tipo_formulario FROM {talentospilos_df_form_resp} AS df_form_resp 
+                         INNER JOIN {talentospilos_df_formularios} AS df_formularios ON df_formularios.id = df_form_resp.id_formulario
+                                WHERE df_form_resp.id = '$id_registro_respuesta_form' ";
+   return $DB->get_record_sql($sql_query);
+}
