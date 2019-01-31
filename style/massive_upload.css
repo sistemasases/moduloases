@@ -4,3 +4,20 @@ tr.error {
 td.error {
     background-color: #2b8b0b !important;
 }
+
+
+.massive_upload .head {
+    display: flex;
+    flex-direction: row;
+}
+
+.massive_upload .cohort_select_region {
+    align-self: end;
+}
+.massive_upload .title {
+    flex-grow: 2;
+}
+.massive_upload {
+    margin-top: 50px;
+}
+

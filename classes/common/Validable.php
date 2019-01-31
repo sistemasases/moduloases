@@ -92,13 +92,16 @@ abstract class Validable {
     }
     /**
      * Add an error to the current object,
-     * @param AsesError $error
+     * @param AsesError|string $error
      * @param string $fieldname Field (or object property) where the error is found, default is generic
      * errors field, this means than the error is not related with any object field or means than the error
      * is related to more than one field at the same time
      *
      */
-    public function add_error(AsesError $error, $fieldname = Validable::GENERIC_ERRORS_FIELD ) {
+    public function add_error($error, $fieldname = Validable::GENERIC_ERRORS_FIELD, $error_data = null ) {
+        if(is_string($error)) {
+            $error = new AsesError(-1, $error, $error_data);
+        }
         array_push($this->_errors, $error);
 
         if(!isset($this->_errors_object->$fieldname)) {

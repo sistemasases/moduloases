@@ -16,8 +16,11 @@ define([
     'block_ases/buttons.print',
     ], function($, notification, templates, dataTables, autoFill, buttons, html5, flash, print) {
         return {
-            init: function () {
-
+            /**
+             * @param data contiene el id de la instancia
+             */
+            init: function (data) {
+                var id_curso = data.id_curso;
                 var myTable = null;
                 var initial_object_properties = null;
 
@@ -67,7 +70,7 @@ define([
                         var data = getTableData(myTable, initial_object_properties);
                         console.log(data);
                         $.ajax({
-                            url: 'receive_csv.php',
+                            url: 'receive_csv.php/estado_ases/',
                             data: {data: data},
                             type: 'POST',
                             success: function (response) {
@@ -98,31 +101,36 @@ define([
                  * columnas que sobran o las que faltan
                  */
                 function load_preview(data_table, error) {
-                    var correct_column_names = error.data_response.object_properties;
-                    var given_column_names = error.data_response.file_headers;
-                    console.log(error);
                     myTable = $('#example').DataTable(data_table);
-                    var missing_columns = correct_column_names.filter(element => given_column_names.indexOf(element) < 0);
-                    var extra_columns = given_column_names.filter(element => {
-                        return correct_column_names.indexOf(element) <= -1;
-                    });
-                    missing_columns.forEach(column => {
-                        $('.' + column).css('background-color', '#cccccc');
 
-                    });
-                    extra_columns.forEach(column => {
+                    if(error.data_response && error.data_response.object_properties && error.data_response.file_headers) {
+                        var correct_column_names = error.data_response.object_properties;
+                        var given_column_names = error.data_response.file_headers;
+                        console.log(error);
+                        var missing_columns = correct_column_names.filter(element => given_column_names.indexOf(element) < 0);
+                        var extra_columns = given_column_names.filter(element => {
+                            return correct_column_names.indexOf(element) <= -1;
+                        });
+                        missing_columns.forEach(column => {
+                            $('.' + column).css('background-color', '#cccccc');
 
-                        $('.' + column).css('background-color', 'red');
+                        });
+                        extra_columns.forEach(column => {
 
-                    });
-                    console.log(extra_columns, missing_columns);
+                            $('.' + column).css('background-color', 'red');
+
+                        });
+                        console.log(extra_columns, missing_columns);
+                    }
                 }
 
                 $('#send-file').click(
                     function () {
                         var data = new FormData($(this).closest("form").get(0));
+                        var cohort_id = $('#cohorts').val();
+
                         $.ajax({
-                            url: 'receive_csv.php',
+                            url: 'receive_csv.php/estado_ases/'+cohort_id + '/' + id_curso,
                             data: data,
                             cache: false,
                             contentType: false,
@@ -140,6 +148,7 @@ define([
                                 console.log(error_object);
                                 var datatable_preview = error_object.datatable_preview;
                                 var error_messages = error_object.object_errors.generic_errors.map(error => error.error_message);
+
                                 load_preview(datatable_preview, error_object.object_errors.generic_errors[0]);
                                 error_messages.forEach((error_message) => {
                                     var l = notification.addNotification({

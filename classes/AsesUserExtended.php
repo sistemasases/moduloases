@@ -1,6 +1,6 @@
 <?php
 require_once(__DIR__ . '/DAO/BaseDAO.php');
-
+require_once(__DIR__ . '/TrackingStatus.php');
 /**
  * Class AsesUserExtended, Relation between moodle user and Ases user, and save the tracking and program status
  * of the student
@@ -20,6 +20,12 @@ class AsesUserExtended extends BaseDAO {
     public $id_academic_program;
     public $tracking_status;
     public $program_status;
+    public function __construct($data = null)
+    {
+        parent::__construct($data);
+        $this->tracking_status = 1;
+        $this->program_status = 1;
+    }
 
     public static function get_numeric_fields(): array  {
         return array (

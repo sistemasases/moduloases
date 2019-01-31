@@ -7,35 +7,46 @@ require_once($CFG->dirroot.'/user/lib.php');
 require_once(__DIR__.'/ExternInfoManager.php');
 require_once(__DIR__.'/EstadoAsesCSV.php');
 require_once(__DIR__.'/../AsesUser.php');
+require_once(__DIR__.'/../Programa.php');
+
 require_once(__DIR__.'/../../managers/jquery_datatable/jquery_datatable_lib.php');
 require_once(__DIR__.'/../../managers/lib/reflection.php');
 require_once(__DIR__.'/../../managers/cohort/cohort_lib.php');
 class EstadoAsesEIManager extends ExternInfoManager {
-    public function __construct() {
+
+    public $cohort_id;
+    public $instance_id;
+    public function __construct($cohort_id, $instance_id) {
         parent::__construct( EstadoAsesCSV::get_class_name());
+        $this->cohort_id = $cohort_id;
+        $this->instance_id = $instance_id;
     }
 
+    /**
+     * @return bool
+     * @throws ErrorException
+     * @throws dml_exception
+     * @throws moodle_exception
+     */
     public function persist_data() {
-        global $DB;
         $data = $this->get_objects();
         /* @var $item_ EstadoAsesCSV */
         foreach ($data as $item_) {
-
-            if(!$item_->valid()) {
-
+            $item = clone $item_;
+            if(!$item->valid()) {
                 return false;
             }
             /** @var $item EstadoAsesCSV */
-            $item = $item_;
-            EstadoAsesCSV::clean($item);
+
             EstadoAsesCSV::pre_save($item);
-            print_r($item->firstname);die;
+
             $username = generate_username($item->codigo, $item->programa);
             $id_moodle_user = null;
+            $id_ases_user = null;
             /* Creación de usuario moodle si no existe*/
             if(!core_user::get_user_by_username($username)) {
              $id_moodle_user = user_create_user(
-                  array(
+                 (object) array(
                       'username'=>$username,
                       'confirmed'=>'1',
                       'password'=>'suputamadre',
@@ -47,49 +58,43 @@ class EstadoAsesEIManager extends ExternInfoManager {
                       )
               );
             } else {
-                $id_moodle_user = core_user::get_user_by_username($username);
+                $moodle_user = core_user::get_user_by_username($username);
+                $id_moodle_user = $moodle_user->id;
             }
             /* Añadir el usuario a la cohorte dada */
-            \cohort_lib\cohort_add_user_to_cohort(1, $id_moodle_user);
+            /** @var $cohort \cohort_lib\Cohort */
+            $cohorts = \cohort_lib\get_cohorts(array(\cohort_lib\ID_NUMBER=>$this->cohort_id));
+            $cohort = $cohorts[0]; // El id number de una corte es unico, por lo que esto es posible,
+            // además, en la validación se varifico que esta existiera
+            $added_to_cohort = \cohort_lib\cohort_add_user_to_cohort($cohort->id, $id_moodle_user);
+            if(!$added_to_cohort) {
+                $item->add_error("El usuario no ha podido añadirse a la cohorte por una razon inesperada");
+                return false;
+            }
             /* Create ases user if not exist */
             if(!AsesUser::exists(array(AsesUser::NUMERO_DOCUMENTO=>$item->documento))) {
-                $ases_user = new AsesUser();
-                $ases_user->num_doc = $item->documento;
-                $ases_user->estado_ases = 1;
-                $ases_user->estado = $item->estado;
-                $ases_user->emailpilos = $item->email;
-                $ases_user->celular = $item->celular;
-                $ases_user->tel_ini = $item->telefono_procedencia;
-                $ases_user->tel_acudiente = $item->telefono_acudiente;
-                $ases_user->tel_res = $item->telefonos_residencia;
-                $ases_user->tipo_doc_ini = $item->tipo_documento_ingreso;
-                $ases_user->tipo_doc = $item->tipo_documento;
-                $ases_user->sexo = $item->sexo;
-                $ases_user->acudiente = $item->acudiente;
-                $ases_user->observacion = $item->observaciones;
-                $ases_user->num_doc_ini = $item->documento_ingreso;
-                $ases_user->ayuda_disc = $item->ayuda_discapacidad;
-                $ases_user->id_discapacidad = $item->discapacidad;
-                $ases_user->id_ciudad_res = $item->ciudad_residencia;
-                $ases_user->id_ciudad_ini = $item->ciudad_procedencia;
-                $ases_user->id_ciudad_nac = $item->lugar_nacimiento;
-                $ases_user->fecha_nac = $item->fecha_nacimiento;
-                $ases_user->grupo = $item->grupo;
-                $ases_user->barrio_ini = $item->barrio_procedencia;
-                $ases_user->barrio_res = $item->barrio_residencia;
-                $ases_user->estamento = $item->estamento;
-                $ases_user->direccion_res = $item->direccion_residencia;
-                $ases_user->dir_ini = $item->direccion_procedencia;
-                $ases_user->colegio = $item->colegio;
-                //$ases_user->save();
+                $ases_user = EstadoAsesCSV::extract_ases_user($item);
+                if($ases_user->valid()) {
+                    $id_ases_user = $ases_user->save();
+                }
+             }else {
+                $ases_user = AsesUser::get_by(array(AsesUser::NUMERO_DOCUMENTO=>$item->documento));
+                $id_ases_user= $ases_user->id;
+            }
+             if(!AsesUserExtended::exists(array(AsesUserExtended::ID_MOODLE_USER=>$id_moodle_user, AsesUserExtended::ID_ASES_USER=>$id_ases_user))) {
+                $academic_program = Programa::get_by(array(Programa::CODIGO_UNIVALLE=>$item->programa, Programa::ID_SEDE=>$item->sede));
+                $id_academic_program = $academic_program->id;
+                $ases_user_extended = new AsesUserExtended();
+                $ases_user_extended->id_ases_user = $id_ases_user;
+                $ases_user_extended->id_moodle_user = $id_moodle_user;
+                $ases_user_extended->id_academic_program = $id_academic_program;
 
-             }
-             if(!AsesUserExtended::exist_by_username($username)) {
-                // echo "nel mijo";
-
+                AsesUserExtended::disable_all_tracking_status($id_ases_user);
+                $ases_user_extended->save();
              }
 
         }
+        return true;
     }
     /**
      * In this case, a datatable is returned
@@ -114,6 +119,19 @@ class EstadoAsesEIManager extends ExternInfoManager {
 
         return $arrayEncoded;
     }
+    public function valid(): bool
+    {
+        $valid = parent::valid(); // TODO: Change the autogenerated stub
+
+        if($this->cohort_id && \cohort_lib\exists(array('idnumber'=>$this->cohort_id))) {
+
+        } else {
+            $this->add_error(new AsesError(-1 , 'La cohorte ingresada, o la instancia son incorrectas'));
+            $valid = false;
+        }
+        return $valid;
+    }
+
     public function custom_column_mapping() {
 
         return array(
