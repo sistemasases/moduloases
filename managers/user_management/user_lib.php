@@ -170,7 +170,18 @@ function generate_username($student_code, $program_code) {
  *  If the code is invalid, or firstname or lastname is empty, false is returned
  */
 function get_user_password($code , $firsname, $lastname): string {
-
+    switch(strlen($code)) {
+        case 9: $code = substr($code, 2, 9); break;
+        case 7:  break;
+        default: return false;
+    }
+    if(is_null($firsname) || is_numeric($firsname) || $firsname = '') {
+        return false;
+    }
+    if(is_null($lastname) || is_numeric($lastname) || $lastname = '') {
+        return false;
+    }
+    return strtoupper($firsname[0]). $code . strtoupper($lastname[0]);
 }
 
 /**

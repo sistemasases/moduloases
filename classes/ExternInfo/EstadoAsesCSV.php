@@ -177,7 +177,7 @@ class EstadoAsesCSV extends Validable {
                  al momento de recibir los datos para efectos de ejecución de el guardado.")];
         $field_validators->programa = [FieldValidators::required(), FieldValidators::string_size(4)];
         $field_validators->codigo = [FieldValidators::required(), FieldValidators::string_size_one_of([7,9]), FieldValidators::numeric()];
-
+        $field_validators->sexo = [FieldValidators::one_of(['F', 'M'])];
         $this->set_field_validators($field_validators);
     }
     public static function clean(EstadoAsesCSV &$estadoAsesCSV) {
@@ -274,7 +274,6 @@ class EstadoAsesCSV extends Validable {
             $estadoAsesCSV->firstname = strtoupper($estadoAsesCSV->firstname);
             $estadoAsesCSV->lastname= strtoupper($estadoAsesCSV->lastname);
         }
-
     }
 
     /**
@@ -322,13 +321,13 @@ class EstadoAsesCSV extends Validable {
         );
         $tipos_documento_names = array_unique($tipos_documento_names);
         $tipos_documento_names_string = implode (', ', $tipos_documento_names);
-        if(!array_search($this->tipo_documento, $tipos_documento_names)) {
+        if(!in_array($this->tipo_documento, $tipos_documento_names)) {
             $this->add_error(new AsesError(-1, "El tipo documento $this->tipo_documento no existe en la tabla tipo_documento. Puede tomar uno de los siguientes valores: [$tipos_documento_names_string]. Alternativamente, dichos valores pueden ir acompañados de puntos, espacios o comas, dichos valores serán removidos antes de guardar la información en la base de datos. Ejemplos: 'C.C', 'T.I... , 'T.I.', 'C... C.'",
                 array('field' => 'tipo_documento')), 'tipo_documento');
             $valid = false;
         }
 
-        if(!array_search($this->tipo_documento_ingreso, $tipos_documento_names)) {
+        if(!in_array($this->tipo_documento_ingreso, $tipos_documento_names)) {
             $this->add_error(new AsesError(-1, "El tipo documento ingreso $this->tipo_documento_ingreso no existe en la tabla tipo_documento. Puede tomar uno de los siguientes valores: [$tipos_documento_names_string]' . Alternativamente, dichos valores pueden ir acompañados de puntos, espacios o comas, dichos valores serán removidos antes de guardar la información en la base de datos. Ejemplos: 'C.C', 'T.I... , 'T.I.', 'C... C.'",
                 array('field' => 'tipo_documento_ingreso')), 'tipo_documento_ingreso');
             $valid = false;
@@ -336,6 +335,7 @@ class EstadoAsesCSV extends Validable {
 
         return $valid;
     }
+
 
     /**
      * @return bool

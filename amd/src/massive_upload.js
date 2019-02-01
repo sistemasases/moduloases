@@ -147,15 +147,18 @@ define([
                                 var error_object = JSON.parse(response.responseText);
                                 console.log(error_object);
                                 var datatable_preview = error_object.datatable_preview;
-                                var error_messages = error_object.object_errors.generic_errors.map(error => error.error_message);
+                                if( error_object.object_errors && error_object.object_errors.generic_errors ) {
+                                    var error_messages = error_object.object_errors.generic_errors.map(error => error.error_message);
 
-                                load_preview(datatable_preview, error_object.object_errors.generic_errors[0]);
-                                error_messages.forEach((error_message) => {
-                                    var l = notification.addNotification({
-                                        message: error_message,
-                                        type: 'error'
+                                    load_preview(datatable_preview, error_object.object_errors.generic_errors[0]);
+                                    error_messages.forEach((error_message) => {
+                                        var l = notification.addNotification({
+                                            message: error_message,
+                                            type: 'error'
+                                        });
                                     });
-                                });
+                                }
+
 
                             },
                             success: function (response) {
@@ -165,6 +168,7 @@ define([
                                     myTable.destroy();
                                 }
                                 response = JSON.parse(response);
+
                                 /**
                                  * Se guardan las propiedades iniciales de los objetos cuando llegan de el servidor
                                  * Estas son importantes ya que para gestion de la información en la tabla, los datos
@@ -172,7 +176,7 @@ define([
                                  */
                                 initial_object_properties = response.initial_object_properties;
                                 errors = response.object_errors;
-
+                                console.log(errors);
 
                                 var jquery_datatable = response.jquery_datatable;
                                 /* Se añade el error de cada objeto a si mismo. Estos errores vienen en  response.object_errors,
@@ -184,7 +188,7 @@ define([
                                 /* Cada elemento data de la tabla debe tener una propiedad llamada index para que la columna
                                 * de indices para las filas pueda existir*/
                                 jquery_datatable.data.forEach((element, index) => {
-                                    element['index'] = index;
+                                    element.index = index;
                                 });
                                 /**
                                  * Se añade la propiedad que indicara si el objeto tine o no errores, para que la columna
@@ -193,9 +197,9 @@ define([
                                 jquery_datatable.data.forEach((element, index) => {
                                     console.log(index);
                                     if (errors[index]) {
-                                        element['error'] = 'SI';
+                                        element.error = 'SI';
                                     } else {
-                                        element['error'] = 'NO';
+                                        element.error = 'NO';
                                     }
 
                                 });

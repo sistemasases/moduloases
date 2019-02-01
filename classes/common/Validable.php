@@ -27,6 +27,11 @@
 abstract class Validable {
 
     const GENERIC_ERRORS_FIELD = 'generic_errors';
+    /**
+     * @var array Array of strings whith the warning messages
+     */
+    protected $_warnings = array();
+
     /** @var array Errors array  */
     protected $_errors = array();
 
@@ -74,6 +79,10 @@ abstract class Validable {
     {
         $this->_errors_object = new stdClass();
     }
+
+    public function add_warning($message_warning, $object_key) {
+        array_push($this->_warnings, $message_warning);
+    }
     /**
      * Clean errors
      */
@@ -99,15 +108,16 @@ abstract class Validable {
      *
      */
     public function add_error($error, $fieldname = Validable::GENERIC_ERRORS_FIELD, $error_data = null ) {
+        $error_ = $error;
         if(is_string($error)) {
-            $error = new AsesError(-1, $error, $error_data);
+            $error_ = new AsesError(-1, $error, $error_data);
         }
         array_push($this->_errors, $error);
 
         if(!isset($this->_errors_object->$fieldname)) {
             $this->_errors_object->$fieldname = array ();
         }
-        array_push($this->_errors_object->$fieldname , $error);
+        array_push($this->_errors_object->$fieldname , $error_);
     }
 
 
@@ -124,6 +134,10 @@ abstract class Validable {
      */
     public function get_errors_object() {
         return $this->_errors_object;
+    }
+
+    public function get_warnings() {
+        return $this->_warnings;
     }
     /**
      * Custom validation method, rewrite this if you need make some aditional validation, this method

@@ -12,6 +12,63 @@ abstract class ExternInfoManager extends Validable {
     public $class_or_class_name;
     private $objects;
     private $initial_objects;
+
+    /**
+     * A list of messages describing the
+     * success events related to each object in data
+     *
+     * Keys are the index of the object in $objects
+     *
+     * For example, we are saving AsesUsers, and we are saving the
+     * icetex state and program state of the **first** object
+     * in $this->objects, next to save the AsesUser, in the case
+     * than the icetex state (in another table with foreign
+     * key to ases users) is successfully saved, $success_log can be equal to
+     * ```php
+     * array(0=>['The ases user icetex status was successfully saved to talentospilos_est_est_icetex']);
+     * ```
+     * If also the user program status is successfully saved , $success_log can be equal to
+     * ```php
+     * array(0=>[
+     *      'The ases user icetex status was successfully saved to talentospilos_est_est_icetex' table,
+     *      'The ases user program status was successfully saved to 'talentospilos_estad_programa' table'
+     *      ]);
+     * ```
+     * ### If the event is an error, should be saved using **add_error** function, not to success_log
+     * ### If the event not is an error, but is a little abnormal, you should add this to **add_warning** function
+     * not to success_log
+     * @var $steps array;
+     *
+     */
+    private $success_log;
+    /**
+     * A list of messages describing the
+     * warnings related to each object in data
+     *
+     * Keys are the index of the object in $objects
+     *
+     * For example, we are updating AsesUsers, and we are saving the data
+     * icetex state and program state of the **first** object
+     * in $this->objects, next to save the AsesUser, in the case
+     * than the icetex state (in another table with foreign
+     * key to ases users) is equal to the state for was saved, $object_warnings can be equal to
+     * ```php
+     * array(0=>['The icetex state does not have any changes. Jumping to next update step.']);
+     * ```
+     * If also the user program status is equal to the new program status, $object_warnings can be equal to
+     * ```php
+     * array(0=>[
+     *      'The icetex state does not have any changes. Jumping to next update step.' table,
+     *      'The program state does not have any changes.' table'
+     *      ]);
+     * ```
+     * ### If the event is an error, should be saved using **add_error** function, not to object_warnings
+     * ### If the event not is an error, but is absolutely normal, you should add this to **add_success_log_event** function
+     * not to object_warnings
+     * @var $object_warnings array;
+     *
+     */
+    private $object_warnings;
     /**
      * Key value array where the keys are the object position in $objects array and the values
      * are the errors of this object
@@ -43,6 +100,17 @@ abstract class ExternInfoManager extends Validable {
     }
 
     /**
+     * Add an object warning, the object is identified by its key in $this->objects
+     * @param string $warning
+     * @param $object_key
+     */
+    public function add_object_warning(string $warning, $object_key) {
+        if(!isset($this->object_warnings[$object_key])) {
+            $this->object_warnings[$object_key] = array();
+        }
+        array_push( $this->object_warnings[$object_key], $warning);
+    }
+    /**
      * @throws ErrorException
      * @throws Throwable
      * @throws coding_exception
@@ -51,14 +119,17 @@ abstract class ExternInfoManager extends Validable {
     public function execute() {
         global $DB;
         if(!$this->valid()) {
+
             print_r($this->send_errors());
         } else {
 
             if($this->load_data() === true) {
+
                 $transaction = $DB->start_delegated_transaction();
                 try {
                     $this->persist_data();
                 } catch(Exception $e) {
+                    http_response_code(200);
                     print_r($e);
                     $DB->rollback_delegated_transaction($transaction, $e);
                 }
@@ -72,7 +143,16 @@ abstract class ExternInfoManager extends Validable {
             }
         }
     }
-
+    public function add_success_log_event(string $event, $object_key ) {
+        if(!isset($this->success_log[$object_key])) {
+        } else {
+            $this->success_log[$object_key] = array();
+        }
+        array_push($this->success_log[$object_key], $event);
+    }
+    public function get_success_log_events() {
+        return $this->success_log;
+    }
     /**
      * @return array
      * @throws ErrorException
@@ -105,6 +185,7 @@ abstract class ExternInfoManager extends Validable {
      */
     private function load_data_from_file($load_invalid_data = false) {
         global $_FILES;
+
         $this->_file = file($_FILES[$this->_file_name]['tmp_name']);
         if($this->loaded_data_with_file()) {
             if($load_invalid_data === true) {
@@ -130,6 +211,7 @@ abstract class ExternInfoManager extends Validable {
                 return false;
             }
         }
+
         return false;
     }
     private function load_data_from_ajax($load_invalid_data = false) {
@@ -178,8 +260,20 @@ abstract class ExternInfoManager extends Validable {
     private function validate_file_data(): bool {
 
         global $_FILES;
-        /* Validate file extension */
+
+        /* Check if a file is uploaded */
         if(!isset($_FILES[$this->_file_name])) {
+            $this->add_error(
+                "No se han subido ficheros. Recuerde que el nombre de este es $this->_file_name, si esta subiendolo por medio de un formulario html recuerde poner ese nombre como propiedad 'name' en el input tipo file.",
+                Validable::GENERIC_ERRORS_FIELD);
+            return false;
+        }
+        if(isset($_FILES['fileToUpload']['error']) && $_FILES['fileToUpload']['error'] != '' && $_FILES['fileToUpload']['error'] !== 0) {
+            $error_code = $_FILES['fileToUpload']['error'];
+            $this->add_error(
+                "Existe un problema con el fichero, el codigo de error es $error_code. Visite http://php.net/manual/es/features.file-upload.errors.php",
+                Validable::GENERIC_ERRORS_FIELD);
+
             return false;
         }
         $file_name = $_FILES[$this->_file_name]['name'];
@@ -302,10 +396,13 @@ abstract class ExternInfoManager extends Validable {
         return 'Custom implementation not found';
     }
     private function loaded_data_with_file(): bool {
-    if(file_exists($_FILES['fileToUpload']['tmp_name']) || is_uploaded_file($_FILES['fileToUpload']['tmp_name'])) {
-        return true;
-    }
-    return false;
+
+        if(file_exists($_FILES['fileToUpload']['tmp_name']) || is_uploaded_file($_FILES['fileToUpload']['tmp_name'])) {
+
+
+            return true;
+        }
+        return false;
     }
     private function loaded_data_with_ajax(): bool {
         if(isset($_POST['data'])){

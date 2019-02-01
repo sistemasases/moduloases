@@ -31,9 +31,11 @@ class EstadoAsesEIManager extends ExternInfoManager {
     public function persist_data() {
         $data = $this->get_objects();
         /* @var $item_ EstadoAsesCSV */
-        foreach ($data as $item_) {
+        foreach ($data as $key => $item_) {
             $item = clone $item_;
+
             if(!$item->valid()) {
+
                 return false;
             }
             /** @var $item EstadoAsesCSV */
@@ -44,12 +46,14 @@ class EstadoAsesEIManager extends ExternInfoManager {
             $id_moodle_user = null;
             $id_ases_user = null;
             /* Creación de usuario moodle si no existe*/
+
             if(!core_user::get_user_by_username($username)) {
+
              $id_moodle_user = user_create_user(
                  (object) array(
                       'username'=>$username,
                       'confirmed'=>'1',
-                      'password'=>'suputamadre',
+                      'password'=> get_user_password($item->codigo, $item->firstname, $item->lastname),
                       'lang'=>'es',
                       'mnethostid'=>3,
                       'email'=> $item->email,
@@ -57,8 +61,10 @@ class EstadoAsesEIManager extends ExternInfoManager {
                       'lastname'=> $item->lastname,
                       )
               );
+                $this->add_success_log_event("El usuario moodle fue creado con nombre de usuario $username y contraseña por defecto", $key);
             } else {
                 $moodle_user = core_user::get_user_by_username($username);
+                $this->add_warning("El usuario moodle con username $username ya existia", $key);
                 $id_moodle_user = $moodle_user->id;
             }
             /* Añadir el usuario a la cohorte dada */
@@ -68,7 +74,11 @@ class EstadoAsesEIManager extends ExternInfoManager {
             // además, en la validación se varifico que esta existiera
             $added_to_cohort = \cohort_lib\cohort_add_user_to_cohort($cohort->id, $id_moodle_user);
             if(!$added_to_cohort) {
-                $item->add_error("El usuario no ha podido añadirse a la cohorte por una razon inesperada");
+                $this->add_error(new AsesError(
+                    -1,
+                    "El usuario con codigo $item->codigo no ha podido añadirse a la cohorte con id_number $this->cohort_id por una razon inesperada
+                    Revisa que el codigo y el programa esten bien, y que el id_number de la cohorte este registrado en mdl_cohort"));
+
                 return false;
             }
             /* Create ases user if not exist */
@@ -76,8 +86,11 @@ class EstadoAsesEIManager extends ExternInfoManager {
                 $ases_user = EstadoAsesCSV::extract_ases_user($item);
                 if($ases_user->valid()) {
                     $id_ases_user = $ases_user->save();
+                    $this->add_success_log_event("El usuario con número de documento $item->documento se ha creado.", $key);
                 }
              }else {
+                $this->add_warning("El usuario con número de documento $item->documento ya existia en la tabla usuarios ases", $key);
+
                 $ases_user = AsesUser::get_by(array(AsesUser::NUMERO_DOCUMENTO=>$item->documento));
                 $id_ases_user= $ases_user->id;
             }

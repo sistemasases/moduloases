@@ -66,6 +66,14 @@ class AsesUser extends BaseDAO  {
     public $fecha_nac;
     public $id_ciudad_nac; // see Municipio
     public $sexo; // see Gender
+    /**
+     * Deprecated, is replaced with estado_icetex, estado_programa and tracking_status
+     *
+     * Is no longer used after 01/01/2017
+     *
+     * The default value
+     * @var string
+     */
     public $estado; 
     public $id_discapacidad;
     public $ayuda_disc;

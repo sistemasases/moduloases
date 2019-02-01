@@ -1,0 +1,53 @@
+{{!
+    @author     Luis Gerardo Manrique Cardona
+    @package    block_ases
+    @copyright  2018 Luis Gerardo Manrique Cardona <luis.manrique@correounivalle.edu.co>
+    @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+}}
+{{!
+   @template ases/massive_upload_generic_errors
+
+   Massive upload template for generic object errors.
+
+   The purpose of this template is to render the generic errors of each object.
+   The specific field errors are not shown here.
+   @see classes/common/Validable->object_errors
+   @see classes/Errors/AsesError
+
+   Classes required for JS:
+   * none
+
+   Data attributes required for JS:
+   * none
+
+   Context variables required for this template:
+   * A list of objects than can have or not generic errors.
+   * If the list is empty or the objects does not have generic errors, nothing is rendered.
+
+   Example context (json):
+       {
+           "data": [
+               { "index": 1, "generic_errors": AsesError[], "propertyx": "valuex" ...}
+               { "index": 2, "generic_errors": AsesError[], "propertyx": "valuex" ...}
+               { "index": 2, "generic_errors": null, "propertyx": "valuex" ...}
+           ]
+       }
+
+ }}
+{{#data}}
+    <h3> Errores </h3>
+    <table>
+        <tr>
+            <th>Linea</th>
+            <th>Mensaje error</th>
+            <th>Datos JSON adjuntos</th>
+        </tr>
+    {{#generic_errors}}
+        <tr>
+            <td>{{linea}}</td>
+            <td>{{error_message}}</td>
+            <td>{{data_response}}</td>
+        </tr>
+    {{/generic_errors}}
+    <table>
+{{/data}}

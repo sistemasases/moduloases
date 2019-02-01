@@ -24,7 +24,6 @@ $report_active_semesters_api = new BaseAPI();
 $report_active_semesters_api->post('data_table', function($data, array $args) {
     $data = (object) $data;
     $data_to_return = get_report_active_semesters($data->instance_id, $data->cohort_id);
-
     print_r(json_encode($data_to_return));
 });
 $report_active_semesters_api->run();
