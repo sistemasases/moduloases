@@ -52,6 +52,31 @@ class Csv {
         $headers = $rows[0];
         return $headers;
     }
+
+    /**
+     * Return the
+     * @param $csv_file
+     * @param null $custom_mapping
+     * @return array
+     */
+    public static function get_real_headers($csv_file, $custom_mapping = null) {
+        $headers = Csv::csv_get_headers($csv_file);
+        if(!$custom_mapping) {
+            return $headers;
+        } else {
+
+            $headers = array_combine($headers, $headers);// the header names are now the keys and the values of array
+
+            $headers_ = array_replace($headers, $custom_mapping); //replace the values with the real mappings
+
+            return array_values($headers_);
+        }
+    }
+    public static function csv_compaitble_with_custom_mapping($csv_file, $custom_mapping = null) {
+        $headers = Csv::get_real_headers($csv_file, $custom_mapping);
+        $custom_mapping_original_headers = array_values($custom_mapping);
+        return empty(array_diff($custom_mapping_original_headers, $headers))    ;
+    }
     /**
      * Check if an input CSV file have header names compatible with the properties
      * of a given class or classname
@@ -59,29 +84,38 @@ class Csv {
      * @return bool If the headers are equal to the property names of class
      * @throws ErrorException
      */
-    public static function csv_compatible_with_class($csv_file, $class_or_classname) {
-        $headers = Csv::csv_get_headers($csv_file);
+
+    public static function csv_compatible_with_class($csv_file, $class_or_classname, $custom_mapping = null) {
+        $headers = Csv::get_real_headers($csv_file, $custom_mapping);
+
         $headers_to_property_names = Csv::csv_headers_to_property_names($headers);
         $class_or_classname_properties = \reflection\get_properties($class_or_classname);
-        return $class_or_classname_properties == $headers_to_property_names;
+        return count(array_diff($class_or_classname_properties ,$headers_to_property_names))===0;
     }
     /**
      * Return array of objects based in a file with csv file format
      * Should have headers at the first row
      * @param file $csv_file
+     * @param $custom_mapping array Key value array, this allow csvs files to have alternative headers,
+     *  not is necessary than have the same properties
+     *  If your Csv have the headers: **['User name' , 'first_name']**
+     *  And your object have the properties: **['user_name', 'first_name']** then, the custom mapping should be
+     * **array('User name' => 'user_name')**;
+     *  Nothe than not is neccesary map the first name property
      * @return array of stdObjects
      */
-    public static function csv_file_to_std_objects($csv_file) {
+    public static function csv_file_to_std_objects($csv_file, $custom_mapping = null) {
         $rows = array_map('str_getcsv', $csv_file);
         $std_objects = [];
         $array_objects = [];
-        $headers = $rows[0];
+        $headers = Csv::get_real_headers($csv_file, $custom_mapping);
         $property_names =   CSV::csv_headers_to_property_names($headers);
+        /* Replace the property names of csv with its mappings in the object*/
         array_shift($rows); // delete headers
         foreach ($rows as $row) {
             $array_object = [];
-            for($i = 0; $i < count($property_names); $i++) {
-                $array_object[$property_names[$i]] = $row[$i];
+            foreach($property_names as $index=>$property_name) {
+                $array_object[$property_name] = isset($row[$index])? $row[$index]: null;
 
             }
             array_push($std_objects, (object) $array_object);

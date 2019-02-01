@@ -2,6 +2,9 @@
 namespace jquery_datatable;
 
 
+use function array_fill_keys;
+use function array_search;
+
 /**
  * Return the column for datatables for detail data, in other words, the column with '+' symbol in
  * the datatable
@@ -54,12 +57,18 @@ class DataTable {
      * @link https://datatables.net/reference/option/columns
      */
     public $columns;
+    /**
+     * @var $buttons array
+     * @see https://datatables.net/extensions/buttons/
+     */
+    public $buttons;
     public $responsive = true;
     public $sPaginationType = "full_numbers";
 
-    public function __construct($data=[], $columns=[]) {
+    public function __construct($data=[], $columns=[], $buttons=[]) {
         $this->data = $data;
         $this->columns = $columns;
+        $this->buttons = $buttons;
     }
 }
 
@@ -125,7 +134,6 @@ class Column {
         $title = Column::get_column_title_from_property_name($property_name);
         return new Column($data, $title);
     }
-
     /**
      * Return jquery datatable columns than extract the data from formated
      * object, based in a object instance or in a class. Only public properties
@@ -134,10 +142,12 @@ class Column {
      * @see Column
      * @param string|object instance $class_name_or_object Data structure for extract JSON columns,
      *  that are generated based in object or class properties
+     * @param $custom_column_names array Key value array where the keys are the object property name
+     * and the value is the custom column name
      * @return array<Column> columns for jquery datatable than should print the information
      *  than contain instances of object or class given as an input
      */
-    public static function get_JSON_columns($class_name_or_object) {
+    public static function get_columns($class_name_or_object, $custom_column_titles = array() ) {
         $object = null;
         $object_properties = null;
         $sourceProperties = null;
@@ -158,11 +168,25 @@ class Column {
             /* Only public properties should be converted to table columns*/
             if($object_property->isPublic()) {
                 $object_property_name = $object_property->name;
+                $custom_title = array_search($object_property_name, $custom_column_titles);
                 $json_column = Column::get_column_from_property_name($object_property_name);
+                if($custom_title) {
+                    $json_column->title = $custom_title;
+
+                }
                 array_push($data_table_columns, $json_column);
             }
         }
+
         return $data_table_columns;
 
+    }
+    public static function get_columns_from_names(array $names ): array {
+        $datatable_columns = [];
+        foreach($names as $name) {
+            $json_column = new Column($name);
+            array_push($datatable_columns, $json_column);
+        }
+        return $datatable_columns;
     }
 }

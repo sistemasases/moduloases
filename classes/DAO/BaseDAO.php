@@ -193,15 +193,24 @@ abstract class BaseDAO extends Validable
      */
     public function save() {
         global $DB;
-        $CLASS = get_called_class();
         $this->format();
+        $CLASS = get_called_class();
         $safety_save_object = $this->__delete_not_null_fields_than_have_predefined_values_in_db($CLASS, $this);
-        $record_id =  $DB->insert_record($CLASS::get_table_name(), $safety_save_object );
+        $record_id =  $DB->insert_record($this->get_table_name(), $safety_save_object );
         if(property_exists($this, 'id')) {
             $this->id = $record_id;
         }
         return $record_id;
     }
+    public function update() {
+        global $DB;
+        if(!property_exists($this, 'id')) {
+               return false;
+        } else {
+            return $DB->update_record($this->get_table_name(), $this );
+        }
+    }
+
     /**
      * Check if object have null properties, and create a new object than does not have
      * the null propesties than the database have predefined values for
@@ -263,19 +272,32 @@ abstract class BaseDAO extends Validable
     public function make_from($std_object) {
         \reflection\assign_properties_to($std_object, $this);
     }
-    public  static function get_all() {
+
+    /**
+     * Get all elements from database converted to object instances
+     *
+     * **If only some fields are returned, the objects returned are stdObjects, no object instances**
+     *
+     * @param array $conditions optional array $fieldname=>requestedvalue with AND in between
+     * @param string $sort an order to sort the results in (optional, a valid SQL ORDER BY parameter).
+     * @param string $fields a comma separated list of fields to return (optional, by default
+     *   all fields are returned). The first field will be used as key for the
+     *   array so must be a unique field such as 'id'.
+     * @return array An array of Objects indexed by first column.
+     * @throws dml_exception A DML specific exception is thrown for any errors.
+     */
+    public  static function get_all(array $conditions = null, $fields = '*', $sort = null) {
         global $DB;
         /* @var BaseDAO $CLASS */
         $CLASS = get_called_class();
         $nombre_tabla = $CLASS::get_table_name() ;
-        $sql = 
-        "
-        SELECT * FROM {".$nombre_tabla."}
-        ";
-      
-        $objects_array = $DB->get_records_sql($sql);
-        $objects = $CLASS::make_objects_from_std_objects_or_arrays($objects_array);
-        return $objects;
+        $objects_array = $DB->get_records($nombre_tabla, $conditions, $sort, $fields);
+        if($fields==='*'){
+            $objects = $CLASS::make_objects_from_std_objects_or_arrays($objects_array);
+            return $objects;
+
+        }
+        return $objects_array;
     }
 
     /**
@@ -290,7 +312,7 @@ abstract class BaseDAO extends Validable
      * @example $conditions =  array('username'=> 'Camilo', 'lastname'=> 'Cifuentes')
      * @example $conditions = array(AsesUser::USER_NAME => 'Camilo', AsesUser::LAST_NAME => 'Cifuentes')
      * @see https://docs.moodle.org/dev/Data_manipulation_API
-     * @return false|object Object instance if exists in database, empty array if does not exist
+     * @return false|Programa Object instance if exists in database, empty array if does not exist
      * @throws dml_exception
      * @throws ErrorException If the given conditions specify invalid column names throws an error
      *
