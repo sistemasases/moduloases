@@ -1,7 +1,7 @@
 {{#data}}
 <body>
     {{> block_ases/side_menu}}
-    
+    <div id="extras" data-url-base="{{url_base}}"></div>
     <div class="container">
         <div class="row">
             <h2>Gestión de incidencias</h2>
@@ -40,8 +40,11 @@
                     <div class="inc_detail col-xs-12 col-sm-12 col-md-12 col-lg-12">
 
                     </div>
+                    <div class="send_message col-xs-12 col-sm-12 col-md-12 col-lg-12">
+
+                    </div>
                     <div style="display:none;" class="inc_preview col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                        <strong>Html capturado de la incidencia:</strong> [<a href="ases_incidents_preview.php?incident_id=" target="_blank" rel="noopener noreferrer"> Ver </a>].
+                        <strong>HTML capturado de la incidencia:</strong> [<a href="ases_incidents_preview.php?incident_id=" target="_blank" rel="noopener noreferrer"> Ver </a>].
                     </div>
                     <div class="inc_opc">
                         <a id="close_incident" data-id="-1" href="javascript:void(0)" class="btn btn-md btn-marcar-resuelta">Marcar como resuelta</a>

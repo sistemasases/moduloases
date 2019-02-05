@@ -73,12 +73,12 @@ class cohort_lib {
     }
 
     /**
-    * Return all moodle cohorts filtered by id_instance 
+    * Return all moodle cohorts related to ases instances
     * @return array $cohorts Cohorts filtered by id_instance, empty array if does not exists
     * @example [stdObj {id, contextid, idnumber, name}] 
     * @see {@link https://docs.moodle.org/35/en/Cohorts}
     */
-    public static function get_cohorts()
+    public static function get_ases_cohorts()
     {
         global $DB;
 
@@ -100,7 +100,7 @@ class cohort_lib {
      * @example Return type is array with the form ('cohortId'->cohortName...)
      */
     public static function get_options() {
-        $ases_cohorts = cohort_lib::get_cohorts();
+        $ases_cohorts = cohort_lib::get_ases_cohorts();
         $ases_cohorts_options = [];
         foreach($ases_cohorts as $ases_cohort) {
             $ases_cohorts_options[$ases_cohort->id] = $ases_cohort->name;

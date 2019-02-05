@@ -132,6 +132,48 @@ function get_boss_users($id_rol, $idinstancia)
 }
 
 /**
+ * Return the username for a given student code and program code
+ *
+ * @param $student_code string|number Can be with '20' prefix or without this.
+ *  Examples: 201327951, 1327951
+ *  Should have size 7 or 9
+ * @param $program_code number|string Should be numeric and have four characters
+ *  Example: 3743
+ * @return  null|string If the given inputs are invalid, null is returned,
+ *  the moodle user name is returned otherwise
+ * @see get_username_moodle_regex() The username returned is compatible with that regex
+ */
+function generate_username($student_code, $program_code) {
+    $student_code_ = $student_code;
+    switch(strlen((string) $student_code)) {
+        case 7:
+            break;
+        case 9:
+            $student_code_ = substr($student_code, 2, strlen($student_code));
+            break;
+        default:
+            return null;
+
+    }
+    if(strlen((string) $program_code) !== 4) {
+        return null;
+    }
+    return "$student_code_-$program_code";
+}
+
+/**
+ * Return the user password
+ * @param $code string|int
+ * @param $firsname string
+ * @param $lastname string
+ * @return string The password in format $passwd = FIRST_LETTER_OF_FIRSTNAME_IN_UPPER.SHORT_CODE.FIRST_LETTER_OF_LASTNAME_IN_UPPER
+ *  If the code is invalid, or firstname or lastname is empty, false is returned
+ */
+function get_user_password($code , $firsname, $lastname): string {
+
+}
+
+/**
  * Function than gets the regex used by Univalle for the moodle usernames
  *
  * Current format is in the form 1327951-3794
