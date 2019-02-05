@@ -26,39 +26,39 @@ define([
         init: function () {
 
             let css_location = "../style/_grid_modal_json_backup_dwarehouse.css";
-    
+
             $('head').append('<link rel="stylesheet" href="' + css_location + '" type="text/css" />');
 
             window.JSZip = jszip;
 
-            $(document).on( "mousedown", ".slider.round", function(e){
+            $(document).on("mousedown", ".slider.round", function (e) {
 
                 let status = $(this).data("status");
 
-                if( status == "off" ){
-                    
+                if (status == "off") {
+
                     $(this).data("status", "on");
                     $("#busqueda-simplificada").hide();
                     $("#busqueda-avanzada").show();
 
-                }else{
+                } else {
 
                     $(this).data("status", "off");
                     $("#busqueda-avanzada").hide();
                     $("#busqueda-simplificada").show();
 
-                }   
-            } );
+                }
+            });
 
-            $(document).on( "click", "#generarFiltroSimplificado", function(){
+            $(document).on("click", "#generarFiltroSimplificado", function () {
 
                 let _username = $("#simple_cod_user").val();
-                let _is_student = $( "#simple_criteria_select option:selected" ).val();
-                
+                let _is_student = $("#simple_criteria_select option:selected").val();
+
                 li.show();
                 $.ajax({
                     type: "POST",
-                    data: { loadF: 'get_records_simple', username:_username, is_student: _is_student},
+                    data: { loadF: 'get_records_simple', username: _username, is_student: _is_student },
                     url: "../managers/dphpforms/dphpforms_dwarehouse_api.php",
                     cache: false,
                     async: true,
@@ -71,17 +71,17 @@ define([
                                 'warning'
                             );
                         } else {
-                          //Filtrar data table
-                          $("#div_table_forms").empty();
-                          $("#div_table_forms").append('<table id="tableBackupForms" class="display" cellspacing="0" width="100%"><thead><thead></table>');
-                          var table = $("#tableBackupForms").DataTable(msg);
-                          $('#div_table_forms').css('cursor', 'pointer');
+                            //Filtrar data table
+                            $("#div_table_forms").empty();
+                            $("#div_table_forms").append('<table id="tableBackupForms" class="display" cellspacing="0" width="100%"><thead><thead></table>');
+                            var table = $("#tableBackupForms").DataTable(msg);
+                            $('#div_table_forms').css('cursor', 'pointer');
                         }
                     },
-                    failure: function (msg) { 
+                    failure: function (msg) {
                         li.hide();
                         alert("No encontrado");
-                     }
+                    }
                 });
 
             });
@@ -134,10 +134,10 @@ define([
 
                 // Obtenemos la primer columna de la fila seleccionada
                 // seleccionada
-               valores =  $(this).parents("tr").find("td:first").html();
-                 
-               // alert(valores);
-                get_only_form('get_form',valores);
+                valores = $(this).parents("tr").find("td:first").html();
+
+                // alert(valores);
+                get_only_form('get_form', valores);
 
             });
 
@@ -146,10 +146,10 @@ define([
 
                 // Obtenemos la primer columna de la fila seleccionada
                 // seleccionada
-               valores =  $(this).parents("tr").find("td:first").html();
-                 
-               // alert(valores);
-                get_only_form('get_form_general_logs',valores);
+                valores = $(this).parents("tr").find("td:first").html();
+
+                // alert(valores);
+                get_only_form('get_form_general_logs', valores);
 
             });
 
@@ -169,46 +169,46 @@ define([
 
             });
 
-            $("#typecolumn_select").on("click", function(){
-                if($("#typecolumn_select").val() == "datos_previos" || $("#typecolumn_select").val() == "datos_enviados" || $("#typecolumn_select").val() == "datos_almacenados"){
+            $("#typecolumn_select").on("click", function () {
+                if ($("#typecolumn_select").val() == "datos_previos" || $("#typecolumn_select").val() == "datos_enviados" || $("#typecolumn_select").val() == "datos_almacenados") {
                     $("#typekey_select").parent().parent().show();
-                }else{
+                } else {
                     $("#typekey_select").parent().parent().hide();
                 }
             });
 
-            $("#typekey_select").on("click", function(){
-                if($("#typecolumn_select").val() == "datos_enviados"){
-                    let cadena_busqueda = '"id":' +'"'+ $(this).val()+'"' + ',"valor":"MODIFIQUE ESTE VALOR"';
+            $("#typekey_select").on("click", function () {
+                if ($("#typecolumn_select").val() == "datos_enviados") {
+                    let cadena_busqueda = '"id":' + '"' + $(this).val() + '"' + ',"valor":"MODIFIQUE ESTE VALOR"';
                     $("#filtroLike").val(cadena_busqueda);
                 }
-                if($("#typecolumn_select").val() == "datos_previos" || $("#typecolumn_select").val() == "datos_almacenados"){
+                if ($("#typecolumn_select").val() == "datos_previos" || $("#typecolumn_select").val() == "datos_almacenados") {
                     get_keys_json($(this).val());
-                    
+
                 }
-              
+
             });
 
-            $(".dphpforms-restore").on("click", function(){
-                if( !$(this).attr("disabled") ){
-                    let dwarehouse_record_id_to_restore  = $(this).attr("data-record-id");
+            $(".dphpforms-restore").on("click", function () {
+                if (!$(this).attr("disabled") && ($(this).attr("data-estado") == 1)) {
+                    let dwarehouse_record_id_to_restore = $(this).attr("data-record-id");
                     restore_delete_dphpforms_record(dwarehouse_record_id_to_restore);
-                   
-                }        
+
+                }
             });
 
-            $(".dphpforms-compare").on("click", function(){
-                if( !$(this).attr("disabled") ){
-                    let datos_previos_para_modal, datos_almacenados_para_modal, json_to_compare, user_monitor, accion_record, date_record, url_request, tipo_formulario;
-                    json_to_compare  =  JSON.parse($("#json_record_dwarehouse_selected").val());
+            $(".dphpforms-compare").on("click", function () {
+                if (!$(this).attr("disabled")) {
+                    let datos_previos_para_modal, datos_almacenados_para_modal, json_to_compare, user_monitor, accion_record, date_record, url_request;
+                    json_to_compare = JSON.parse($("#json_record_dwarehouse_selected").val());
 
 
                     //Create html to modal using json_to_compare
                     //Info general
-                    user_monitor  = json_to_compare.id_usuario_moodle;
-                    accion_record = json_to_compare.accion; 
-                    date_record   = json_to_compare.fecha_hora_registro;
-                    url_request   = json_to_compare.url_request;
+                    user_monitor = json_to_compare.id_usuario_moodle;
+                    accion_record = json_to_compare.accion;
+                    date_record = json_to_compare.fecha_hora_registro;
+                    url_request = json_to_compare.url_request;
 
                     //**************************************************************************************************************************************************************************** */
                     //GENERACIÓN DE HTML DE DATOS PREVIOS Y ALMACENADOS
@@ -216,66 +216,52 @@ define([
                     let html_json_prev_content, html_json_content = '', html_json_alm_content;
 
                     datos_previos_para_modal = json_to_compare.datos_previos;
-                    if(datos_previos_para_modal == "" || datos_previos_para_modal == null){
+                    if (datos_previos_para_modal == "" || datos_previos_para_modal == null) {
 
                         html_json_prev_content = '<div class = "data_estado_json text_json"> No hay datos previos </div>';
-                   
-                    }else{
+
+                    } else {
 
                         datos_previos_para_modal = datos_previos_para_modal.record;
 
-                        html_json_prev_content ='<div class="data_estado_json text_json"> Alias formulario:        ' + datos_previos_para_modal.alias + '</div>';
+                        html_json_prev_content = '<div class="data_estado_json text_json"> Alias formulario:        ' + datos_previos_para_modal.alias + '</div>';
                     }
 
                     //Iterar sobre el json de datos almacenados para generar html
-                       datos_almacenados_para_modal = json_to_compare.datos_almacenados;
+                    datos_almacenados_para_modal = json_to_compare.datos_almacenados;
 
-                       if(datos_almacenados_para_modal == "" || datos_almacenados_para_modal == null){
-   
+                    if (datos_almacenados_para_modal == "" || datos_almacenados_para_modal == null) {
+
                         html_json_alm_content = '<div class = "data_estado_json text_json"> No hay datos almacenados </div>';
-                      
-                       }else{
-   
-                        datos_almacenados_para_modal = datos_almacenados_para_modal.record;
-   
-                           html_json_alm_content ='<div class="data_estado_json text_json"> Alias formulario:        ' + datos_almacenados_para_modal.alias + '</div>';
-                       }
 
-                       html_json_content += '<div class="contenedor" >'+ html_json_prev_content + html_json_alm_content + '</div>';
+                    } else {
+
+                        datos_almacenados_para_modal = datos_almacenados_para_modal.record;
+
+                        html_json_alm_content = '<div class="data_estado_json text_json"> Alias formulario:        ' + datos_almacenados_para_modal.alias + '</div>';
+                    }
+
+                    html_json_content += '<div class="contenedor" >' + html_json_prev_content + html_json_alm_content + '</div>';
 
 
                     //Generar html de los campos de ambos json
-                    if((datos_previos_para_modal != "" ) && (datos_almacenados_para_modal != "")){
+                    if ((datos_previos_para_modal != "") && (datos_almacenados_para_modal != "")) {
                         //Puede comparar ambos json y generar html
                         let html_result_compare_json = compare_json(datos_previos_para_modal.campos, datos_almacenados_para_modal.campos);
                         html_json_content += html_result_compare_json;
-                    }else{
+                    } else {
                         //Ambos, o uno de los dos JSON no tiene información. No es necesario comparar, pero sí generar el html del que tiene información
-                        if(datos_previos_para_modal != "" ){
+                        if (datos_previos_para_modal != "") {
                             //Generar html de datos previos
                             html_json_content += generate_html_json(datos_previos_para_modal.campos);
-                        }else if (datos_almacenados_para_modal != "" ){
+                        } else if (datos_almacenados_para_modal != "") {
                             //Generar html de datos almacenados
                             html_json_content += generate_html_json(datos_almacenados_para_modal.campos);
                         }
                     }
 
-                    //GENERACIÓN DE HTML DE URL(S) QUE DIRIGEN A FICHA DE ESTUDIANTE(S)
-                    let url_to_ficha = '';
-                    tipo_formulario = getTipoFormulario(json_to_compare.id_registro_respuesta_form);
-                    tipo_formulario = tipo_formulario.responseJSON;
-                    tipo_formulario = tipo_formulario.tipo_formulario;
-                    console.log(tipo_formulario);
-                    if(accion_record == "UPDATE"){
-                        //url_to_ficha += '<a id="ficha_estudiante" href="" class="data_general text_json"> Ir a ficha del estudiante </a>';
-                        // if(){
 
-                        // }
-                    }
-                    
-                    
-                    
-                   
+
                     //**************************************************************************************************************************************************************************** */
 
                     let html_content = '<div class="grid_dphpforms_compare">';
@@ -284,7 +270,7 @@ define([
                     html_content += '<div class="data_general text_json">  Realizado por:        ' + user_monitor + '</div>';
                     html_content += '<div class="data_general text_json">  Acción del registro: <strong style= "font-size: 18px;"> ' + accion_record + '</strong></div>';
                     html_content += '<div class="data_general text_json">  Fecha:                ' + date_record + '</div>';
-                    html_content += url_to_ficha;
+                    html_content += '<div class="url_students"> <a href="javascript:void(0)" >Restaurar</a></div>';
                     html_content += '                            </div>';
                     html_content += '<div class = "json_data_compare">';
                     html_content += '<div class="contenedor" >';
@@ -298,13 +284,18 @@ define([
 
                     //Crear JSON con general_modal_manager
                     gmm.generate_modal("modal_to_compare", "Comparación de estados", html_content);
-        
-                }  
+
+                    //GENERACIÓN DE HTML DE URL(S) QUE DIRIGEN A FICHA DE ESTUDIANTE(S)
+
+                    getTipoFormulario(json_to_compare.id_registro_respuesta_form, accion_record, json_to_compare);
+
+
+                }
             });
 
-             
-            
-            $('.outside').click(function(){
+
+
+            $('.outside').click(function () {
                 var outside = $(this);
                 swal({
                     title: 'Confirmación de salida',
@@ -312,16 +303,17 @@ define([
                     type: 'warning',
                     showCancelButton: true,
                     confirmButtonText: 'Salir'
-                  }, function(isConfirm) {
+                }, function (isConfirm) {
                     if (isConfirm) {
                         $(outside).parent('.mymodal').fadeOut(300);
-                        console.log( $(this).parent('.mymodal') );
+                        console.log($(this).parent('.mymodal'));
                     }
-                  });
-                
+                });
+
             });
 
             (function ($) {
+
                 $.fn.beautifyJSON = function (options) {
                     var defaults = {
                         type: "strict",
@@ -573,13 +565,96 @@ define([
             }(jQuery));
 
 
-            function get_like_cadena_in_column(cad, column){
+            function getIdEstudianteFromRecordDwarehouse(dt_alm, dt_prev, local_alias, accion_record, alias_formulario) {
+
+                //Function return ['-9'] if it does not find the data, or there are inconsistencies
+
+                let campos_alm, campos_prev, retorno_id = ['-9'];
+                //  console.log(dt_alm);
+                //  console.log(dt_prev);
+
+
+                let auxiliar_id_estudiante_prev = '-11', auxiliar_id_estudiante_alm = '-10';
+
+
+                if (accion_record === "DELETE" || accion_record === "RESTORE" || accion_record === "UPDATE") {
+                    dt_alm = dt_alm.record;
+                    dt_prev = dt_prev.record;
+                    campos_alm = dt_alm.campos;
+                    campos_prev = dt_prev.campos;
+
+                    //Buscar 
+                    for (campo in campos_alm) {
+                        if (campos_alm[campo].local_alias === local_alias) {
+                            auxiliar_id_estudiante_alm = campos_alm[campo].respuesta;
+                            break;
+                        }
+                    }
+
+                    for (campo in campos_prev) {
+                        if (campos_prev[campo].local_alias === local_alias) {
+                            auxiliar_id_estudiante_prev = campos_prev[campo].respuesta;
+                            break;
+                        }
+                    }
+
+                    if (auxiliar_id_estudiante_alm === auxiliar_id_estudiante_prev) {
+
+                        if (alias_formulario !== "seguimiento_grupal") {
+                            //Tienen id_ases, trae id_ases del registro
+                            retorno_id = [auxiliar_id_estudiante_alm, auxiliar_id_estudiante_prev];
+                        } else {
+                            //Traer arreglo de códigos
+                            retorno_id = campos_alm[campo].respuesta;
+                            retorno_id = retorno_id.split(",");
+                        }
+
+                    } else {
+                        retorno_id = ['-9'];
+                    }
+
+                } else if (accion_record === "INSERT") {
+                    dt_alm = dt_alm.record;
+                    campos_alm = dt_alm.campos;
+
+                    for (campo in campos_alm) {
+                        if (campos_alm[campo].local_alias === local_alias) {
+
+                            if (alias_formulario !== "seguimiento_grupal") {
+                                //Tienen id_ases, trae id_ases del registro
+                                retorno_id = [campos_alm[campo].respuesta];
+                            } else {
+                                //Traer arreglo de códigos
+                                retorno_id = campos_alm[campo].respuesta;
+                                retorno_id = retorno_id.split(",");
+                            }
+
+                            break;
+                        }
+                    }
+
+                } else {
+                    retorno_id = ['-9'];
+                    // swal(
+                    //     'DATA ERROR',
+                    //     'Oooops! Not supported',
+                    //     'warning'
+                    // );
+                }
+
+
+
+
+                return retorno_id;
+            }
+
+            function get_like_cadena_in_column(cad, column) {
                 //Realiza la consulta del atributo según la cadena enviada, y el atributo seleccionado
                 //Muestra los resultados en pantalla en el Data Table
                 li.show();
                 $.ajax({
                     type: "POST",
-                    data: { loadF: 'get_like', cadena:cad, atributo: column},
+                    data: { loadF: 'get_like', cadena: cad, atributo: column },
                     url: "../managers/dphpforms/dphpforms_dwarehouse_api.php",
                     success: function (msg) {
                         li.hide();
@@ -590,20 +665,20 @@ define([
                                 'warning'
                             );
                         } else {
-                          //Filtrar data table
-                          $("#div_table_forms").empty();
-                          $("#div_table_forms").append('<table id="tableBackupForms" class="display" cellspacing="0" width="100%"><thead><thead></table>');
-                          var table = $("#tableBackupForms").DataTable(msg);
-                          $('#div_table_forms').css('cursor', 'pointer');
+                            //Filtrar data table
+                            $("#div_table_forms").empty();
+                            $("#div_table_forms").append('<table id="tableBackupForms" class="display" cellspacing="0" width="100%"><thead><thead></table>');
+                            var table = $("#tableBackupForms").DataTable(msg);
+                            $('#div_table_forms').css('cursor', 'pointer');
                         }
                     },
                     cache: false,
                     async: true,
 
-                    failure: function (msg) { 
+                    failure: function (msg) {
                         li.hide();
                         alert("No encontrado");
-                     }
+                    }
                 });
             }
 
@@ -636,10 +711,10 @@ define([
                     cache: false,
                     async: true,
 
-                    failure: function (msg) { 
+                    failure: function (msg) {
                         li.hide();
                         alert("No encontrado");
-                     }
+                    }
                 });
             }
 
@@ -660,22 +735,22 @@ define([
                             );
                         } else {
                             opciones = msg[0].options_c;
-                            tipo_campo= msg[0].tipo_campo;
-                            let cadena_busqueda = '"respuesta":"MODIFIQUE ESTE VALOR","opciones":' +'"'+opciones+'"' + ',"tipo_campo":'+'"'+tipo_campo+'"'+',"id_pregunta":' +'"'+ $("#typekey_select").val()+'"';
-                             $("#filtroLike").val(cadena_busqueda);
+                            tipo_campo = msg[0].tipo_campo;
+                            let cadena_busqueda = '"respuesta":"MODIFIQUE ESTE VALOR","opciones":' + '"' + opciones + '"' + ',"tipo_campo":' + '"' + tipo_campo + '"' + ',"id_pregunta":' + '"' + $("#typekey_select").val() + '"';
+                            $("#filtroLike").val(cadena_busqueda);
                         }
-                     
+
                     },
                     cache: false,
                     async: true,
 
-                    failure: function (msg) { 
+                    failure: function (msg) {
                         li.hide();
                         alert("No encontrado");
-                     }
+                    }
                 });
             }
-    
+
             function get_only_form(func, id_form) {
                 //Get one form switch id
                 li.show();
@@ -687,49 +762,51 @@ define([
                     cache: false,
                     async: true,
                     success: function (msg) {
-                  
+
                         li.hide();
                         //msg.datos_previos = JSON.stringify(msg.datos_previos);
-                       
+
                         // console.log(msg[id_form].datos_previos);
                         //Items of JSON are encode
-                        
+
 
                         //msg is an Object to beautifier
                         //The goal is that any sent object will be embellished, so msg will be modified.
                         //For this, check your JSON structure
-                       //Modify msg
-                            if(msg[id_form].datos_previos != "" ){
-                                let data_prev = JSON.parse(msg[id_form].datos_previos);
-                                if(func == "get_form"){
+                        //Modify msg
+                        if (msg[id_form].datos_previos != "") {
+                            let data_prev = JSON.parse(msg[id_form].datos_previos);
+                            if (func == "get_form") {
                                 msg[id_form].datos_previos = data_prev;
-                                }
-                                if(func ==  "get_form_general_logs"){
-                                    if(Array.isArray(data_prev)){
-                                        
-                                        msg[id_form].datos_previos =  data_prev;
-                                    }else{
-                                        let array_data_prev = Array();
+                            }
+                            if (func == "get_form_general_logs") {
+                                if (Array.isArray(data_prev)) {
 
-                                        for(data in data_prev){
-                                            let key_data_prev = {};
-                                            key_data_prev[data] = data_prev[data];
-                                            array_data_prev.push(key_data_prev );
-                                        }
-                                        msg[id_form].datos_previos =  array_data_prev;
-                                    }                             
+                                    msg[id_form].datos_previos = data_prev;
+                                } else {
+                                    let array_data_prev = Array();
+
+                                    for (data in data_prev) {
+                                        let key_data_prev = {};
+                                        key_data_prev[data] = data_prev[data];
+                                        array_data_prev.push(key_data_prev);
+                                    }
+                                    msg[id_form].datos_previos = array_data_prev;
                                 }
+                            }
 
                         }
-                     
-                          
-                            if( msg[id_form].datos_enviados != "" ){
-                            msg[id_form].datos_enviados = JSON.parse(msg[id_form].datos_enviados);}
-                            if( msg[id_form].datos_almacenados != ""){
-                            msg[id_form].datos_almacenados = JSON.parse(msg[id_form].datos_almacenados);}
+
+
+                        if (msg[id_form].datos_enviados != "") {
+                            msg[id_form].datos_enviados = JSON.parse(msg[id_form].datos_enviados);
+                        }
+                        if (msg[id_form].datos_almacenados != "") {
+                            msg[id_form].datos_almacenados = JSON.parse(msg[id_form].datos_almacenados);
+                        }
 
                         // End modify msg    
-                       
+
                         create_beautifyJSON(msg);
                     },
                     failure: function (msg) { li.hide(); }
@@ -739,9 +816,9 @@ define([
             function create_beautifyJSON(param) {
                 //Show beautifyJSON in modal
                 $("#div_JSONform").empty();
-               var json1 = JSON.stringify(param);
-               //json[0].
-              //var json = JSON.parse(param);
+                var json1 = JSON.stringify(param);
+                //json[0].
+                //var json = JSON.parse(param);
                 $("#div_JSONform").append(json1);
                 $('#div_JSONform').beautifyJSON({
                     type: "flexible",
@@ -751,60 +828,78 @@ define([
                 });
 
                 let dwarehouse_record_id = Object.keys(param)[0];
-                let obj = param[ dwarehouse_record_id ];
-                
-                $("#json_record_dwarehouse_selected").attr("value",JSON.stringify(obj));
+                let obj = param[dwarehouse_record_id];
 
-                if(obj.id_registro_respuesta_form != -1 ){
+                $("#json_record_dwarehouse_selected").attr("value", JSON.stringify(obj));
+
+                if (obj.id_registro_respuesta_form != -1) {
                     // $(".dphpforms-peer-record").attr( 'data-record-id',  obj.id_registro_respuesta_form );
                     // $(".dphpforms-restore").attr( 'data-record-id',  dwarehouse_record_id );
                     // $(".dphpforms-peer-record").attr( 'disabled',  false );
                     // $(".dphpforms-restore").attr( 'disabled',  false );
 
-                    if(obj.accion != "INSERT" && obj.accion != "UPDATE" && obj.accion != "RESTORE"){
+                    if (obj.accion == "DELETE") {
                         //Si accion es DELETE
-                        $(".dphpforms-peer-record").attr( 'data-record-id',  obj.id_registro_respuesta_form );
-                        $(".dphpforms-restore").attr( 'data-record-id',  dwarehouse_record_id );
-                        $(".dphpforms-peer-record").attr( 'disabled',  false );
-                        $(".dphpforms-restore").attr( 'disabled',  false );
-                        $(".dphpforms-compare").attr( 'disabled',  false );
-                    }else { 
+                        $(".dphpforms-peer-record").attr('data-record-id', obj.id_registro_respuesta_form);
+                        $(".dphpforms-restore").attr('data-record-id', dwarehouse_record_id);
+                        $(".dphpforms-restore").attr('data-estado', 1);
+                        $(".dphpforms-peer-record").attr('disabled', false);
+                        $(".dphpforms-restore").attr('disabled', false);
+                        $(".dphpforms-compare").attr('disabled', false);
+                        $(".dphpforms-peer-record").hide();
+                        $(".dphpforms-restore").show();
+                        $(".dphpforms-compare").show();
 
-                        $(".dphpforms-peer-record").attr( 'data-record-id',  obj.id_registro_respuesta_form );
-                        $(".dphpforms-peer-record").attr( 'disabled',  false );
-                        $(".dphpforms-restore").attr( 'disabled',  true );
-                        $(".dphpforms-compare").attr( 'disabled',  false );
+                    } else if (obj.accion == "INSERT" || obj.accion == "UPDATE" || obj.accion == "RESTORE") {
+
+                        $(".dphpforms-peer-record").attr('data-record-id', obj.id_registro_respuesta_form);
+                        $(".dphpforms-peer-record").attr('disabled', false);
+                        $(".dphpforms-restore").attr('disabled', true);
+                        $(".dphpforms-compare").attr('disabled', false);
+                        $(".dphpforms-peer-record").hide();
+                        $(".dphpforms-restore").show();
+                        $(".dphpforms-compare").show();
 
                         // if(obj.accion=="INSERT" || obj.accion=="RESTORE"){
                         //     $(".dphpforms-compare").attr( 'disabled',  true );
                         // }
 
-                       
+
+                    } else {
+                        $(".dphpforms-peer-record").attr('disabled', true);
+                        $(".dphpforms-restore").attr('disabled', true);
+                        $(".dphpforms-compare").attr('disabled', true);
+                        $(".dphpforms-peer-record").hide();
+                        $(".dphpforms-restore").hide();
+                        $(".dphpforms-compare").hide();
                     }
 
-                }else { 
-                            $(".dphpforms-peer-record").attr( 'disabled',  true );
-                            $(".dphpforms-restore").attr( 'disabled',  true );
-                            $(".dphpforms-compare").attr( 'disabled',  true );
+                } else {
+                    $(".dphpforms-peer-record").attr('disabled', true);
+                    $(".dphpforms-restore").attr('disabled', true);
+                    $(".dphpforms-compare").attr('disabled', true);
+                    $(".dphpforms-peer-record").hide();
+                    $(".dphpforms-restore").hide();
+                    $(".dphpforms-compare").hide();
                 }
 
                 //    if(obj.id_registro_respuesta_form == -1 || obj.accion == "INSERT"){
                 //     $(".dphpforms-peer-record").attr( 'disabled',  true );
                 //     $(".dphpforms-restore").attr( 'disabled',  true );
-                    
+
                 // }else { 
                 //     $(".dphpforms-peer-record").attr( 'data-record-id',  obj.id_registro_respuesta_form );
                 //     $(".dphpforms-restore").attr( 'data-record-id',  dwarehouse_record_id );
                 //     $(".dphpforms-peer-record").attr( 'disabled',  false );
                 //     $(".dphpforms-restore").attr( 'disabled',  false );
 
-                    
+
                 // }
 
                 $('#modal_JSON').fadeIn(300);
             }
 
-            function restore_delete_dphpforms_record(dwarehouse_id_form_to_restore){
+            function restore_delete_dphpforms_record(dwarehouse_id_form_to_restore) {
 
                 li.show();
                 $.ajax({
@@ -812,7 +907,7 @@ define([
                     data: { loadF: 'restore_dwarehouse_record', params: dwarehouse_id_form_to_restore },
                     url: "../managers/dphpforms/dphpforms_dwarehouse_api.php",
                     success: function (msg) {
-                        
+
                         li.hide();
                         if (!msg) {
                             swal(
@@ -831,123 +926,157 @@ define([
                     cache: false,
                     async: true,
 
-                    error: function (msg) { 
+                    error: function (msg) {
                         li.hide();
-                         swal(
+                        swal(
                             'SYSTEM ERROR',
                             'Report to Systems office',
                             'error'
                         );
-                     }
+                    }
                 });
 
             }
 
-            function compare_json(json_a, json_b){
+            function compare_json(json_a, json_b) {
                 // json_b se asume como el JSON que ha cambiado
                 // json_a se asume como el JSON con el que se compara el json_b
                 // Ejemplo:  json_b = {"alias":"un_alias"} , json_a = {"alias":"otro_alias"}
-           
+
                 let html_campos_b, html_campos_a, length_json_a, count_json_a, html_general_campos;
                 html_general_campos = '';
                 length_json_a = json_a.length;
                 html_campos_b = '';
                 html_campos_a = '';
-                for (campo_b in json_b){
+                for (campo_b in json_b) {
                     count_json_a = 0;
                     //Para cada campo_b registrado en el JSON, comparar con cada campo_a
-                    for(campo_a in json_a){
-                        count_json_a ++;
-                  
-                        if(json_b[campo_b].local_alias == json_a[campo_a].local_alias){
+                    for (campo_a in json_a) {
+                        count_json_a++;
+
+                        if (json_b[campo_b].local_alias == json_a[campo_a].local_alias) {
                             //Encuentra el campo igual, y compara si son o no diferentes sus respuestas
-                            if(json_b[campo_b].respuesta == json_a[campo_a].respuesta){
+                            if (json_b[campo_b].respuesta == json_a[campo_a].respuesta) {
                                 //Html para campos iguales
-                                html_campos_a += '<div data-id-pregunta='+json_a[campo_a].id_pregunta+' data-id-relacion-form-pregunta='+json_a[campo_a].id_relacion_form_pregunta+'  class="data_estado_json data_estado_json_similar" style="border: 1px solid green !important;">  <div class = "text_json">Alias: '+ json_a[campo_a].local_alias + '  </div> ';
-                                html_campos_a += '<div class = "text_json">Respuesta: '+ json_a[campo_a].respuesta + '  </div> </div>';
+                                html_campos_a += '<div data-id-pregunta=' + json_a[campo_a].id_pregunta + ' data-id-relacion-form-pregunta=' + json_a[campo_a].id_relacion_form_pregunta + '  class="data_estado_json data_estado_json_similar" style="border: 1px solid green !important;">  <div class = "text_json">Alias: ' + json_a[campo_a].local_alias + '  </div> ';
+                                html_campos_a += '<div class = "text_json">Respuesta: ' + json_a[campo_a].respuesta + '  </div> </div>';
 
-                                html_campos_b += '<div data-id-pregunta='+json_b[campo_b].id_pregunta+' data-id-relacion-form-pregunta='+json_b[campo_b].id_relacion_form_pregunta+' class="data_estado_json data_estado_json_similar" style="border: 1px solid green !important;">  <div class = "text_json">Alias: '+ json_b[campo_b].local_alias + '  </div> ';
-                                html_campos_b += '<div class = "text_json">Respuesta: '+ json_b[campo_b].respuesta + '  </div> </div>';
-                            }else{
-                                 //Html para campos diferentes 
-                                html_campos_a += '<div data-id-pregunta='+json_a[campo_a].id_pregunta+' data-id-relacion-form-pregunta='+json_a[campo_a].id_relacion_form_pregunta+'  class="data_estado_json data_estado_json_different" style="border: 1px solid red !important;">  <div class = "text_json" >Alias: '+ json_a[campo_a].local_alias + '  </div> ';
-                                html_campos_a += '<div class = "text_json data_estado_json_different" >Respuesta: '+ json_a[campo_a].respuesta + '  </div> </div>';
+                                html_campos_b += '<div data-id-pregunta=' + json_b[campo_b].id_pregunta + ' data-id-relacion-form-pregunta=' + json_b[campo_b].id_relacion_form_pregunta + ' class="data_estado_json data_estado_json_similar" style="border: 1px solid green !important;">  <div class = "text_json">Alias: ' + json_b[campo_b].local_alias + '  </div> ';
+                                html_campos_b += '<div class = "text_json">Respuesta: ' + json_b[campo_b].respuesta + '  </div> </div>';
+                            } else {
+                                //Html para campos diferentes 
+                                html_campos_a += '<div data-id-pregunta=' + json_a[campo_a].id_pregunta + ' data-id-relacion-form-pregunta=' + json_a[campo_a].id_relacion_form_pregunta + '  class="data_estado_json data_estado_json_different" style="border: 1px solid red !important;">  <div class = "text_json" >Alias: ' + json_a[campo_a].local_alias + '  </div> ';
+                                html_campos_a += '<div class = "text_json data_estado_json_different" >Respuesta: ' + json_a[campo_a].respuesta + '  </div> </div>';
 
-                                html_campos_b += '<div  data-id-pregunta='+json_b[campo_b].id_pregunta+' data-id-relacion-form-pregunta='+json_b[campo_b].id_relacion_form_pregunta+' class="data_estado_json data_estado_json_different" style="border: 1px solid red !important;">  <div class = "text_json" >Alias: '+ json_b[campo_b].local_alias + '  </div> ';
-                                html_campos_b += '<div class = "text_json data_estado_json_different">Respuesta: '+ json_b[campo_b].respuesta + '  </div> </div>';
+                                html_campos_b += '<div  data-id-pregunta=' + json_b[campo_b].id_pregunta + ' data-id-relacion-form-pregunta=' + json_b[campo_b].id_relacion_form_pregunta + ' class="data_estado_json data_estado_json_different" style="border: 1px solid red !important;">  <div class = "text_json" >Alias: ' + json_b[campo_b].local_alias + '  </div> ';
+                                html_campos_b += '<div class = "text_json data_estado_json_different">Respuesta: ' + json_b[campo_b].respuesta + '  </div> </div>';
 
                             }
 
                             break;
-                        }else if(count_json_a == length_json_a){
-                                //No hay el campo_b en el json_a
+                        } else if (count_json_a == length_json_a) {
+                            //No hay el campo_b en el json_a
 
-                                html_campos_a += '<div data-id-pregunta='+json_b[campo_b].id_pregunta+' data-id-relacion-form-pregunta='+json_b[campo_b].id_relacion_form_pregunta+'  class="data_estado_json data_estado_json_different" style="border: 1px solid red !important;">  <div class = "text_json" >Alias: No registra en esta versión</div> ';
-                                html_campos_a += '<div  class = "text_json">Respuesta: No registra en esta versión</div> </div>';
+                            html_campos_a += '<div data-id-pregunta=' + json_b[campo_b].id_pregunta + ' data-id-relacion-form-pregunta=' + json_b[campo_b].id_relacion_form_pregunta + '  class="data_estado_json data_estado_json_different" style="border: 1px solid red !important;">  <div class = "text_json" >Alias: No registra en esta versión</div> ';
+                            html_campos_a += '<div  class = "text_json">Respuesta: No registra en esta versión</div> </div>';
 
-                                html_campos_b += '<div  data-id-pregunta='+json_b[campo_b].id_pregunta+' data-id-relacion-form-pregunta='+json_b[campo_b].id_relacion_form_pregunta+' class="data_estado_json data_estado_json_different" style="border: 1px solid red !important;">  <div class = "text_json">Alias: '+ json_b[campo_b].local_alias + '  </div> ';
-                                html_campos_b += '<div  class = "text_json">Respuesta: '+ json_b[campo_b].respuesta + '  </div> </div>';
-                            }
+                            html_campos_b += '<div  data-id-pregunta=' + json_b[campo_b].id_pregunta + ' data-id-relacion-form-pregunta=' + json_b[campo_b].id_relacion_form_pregunta + ' class="data_estado_json data_estado_json_different" style="border: 1px solid red !important;">  <div class = "text_json">Alias: ' + json_b[campo_b].local_alias + '  </div> ';
+                            html_campos_b += '<div  class = "text_json">Respuesta: ' + json_b[campo_b].respuesta + '  </div> </div>';
+                        }
 
-                        
+
                     }
                     html_general_campos += '<div class="contenedor" >' + html_campos_a + html_campos_b + '</div>';
                     html_campos_a = '';
                     html_campos_b = '';
-                   
+
                 }
 
                 return html_general_campos;
             }
 
-            function generate_html_json(json){
+            function generate_html_json(json) {
                 let html_to_keys = '';
 
-                for(campo in json){
+                for (campo in json) {
                     html_to_keys += '<div class="contenedor" >';
-                    html_to_keys += '<div data-id-pregunta='+json[campo].id_pregunta+' data-id-relacion-form-pregunta='+json[campo].id_relacion_form_pregunta+'  class="data_estado_json data_estado_json_different" style="border: 1px solid red !important;">  <div >Alias: No registra en esta versión</div> ';
+                    html_to_keys += '<div data-id-pregunta=' + json[campo].id_pregunta + ' data-id-relacion-form-pregunta=' + json[campo].id_relacion_form_pregunta + '  class="data_estado_json data_estado_json_different" style="border: 1px solid red !important;">  <div >Alias: No registra en esta versión</div> ';
                     html_to_keys += '<div>Respuesta: No registra en esta versión</div> </div>';
-                    html_to_keys += '<div data-id-pregunta='+json[campo].id_pregunta+' data-id-relacion-form-pregunta='+json[campo].id_relacion_form_pregunta+'  class="data_estado_json data_estado_json_similar" style="border: 1px solid green !important;">  <div>Alias: '+ json[campo].local_alias + '  </div> ';
-                    html_to_keys += '<div>Respuesta: '+ json[campo].respuesta + '  </div> </div>';
+                    html_to_keys += '<div data-id-pregunta=' + json[campo].id_pregunta + ' data-id-relacion-form-pregunta=' + json[campo].id_relacion_form_pregunta + '  class="data_estado_json data_estado_json_similar" style="border: 1px solid green !important;">  <div>Alias: ' + json[campo].local_alias + '  </div> ';
+                    html_to_keys += '<div>Respuesta: ' + json[campo].respuesta + '  </div> </div>';
                     html_to_keys += '</div>';
                 }
 
                 return html_to_keys;
             }
 
-            function getTipoFormulario(id_registro_respuesta_form) {
-               
-                let tipo_formulario;
+            function getTipoFormulario(id_registro_respuesta_form, accion_record, record_dwarehouse) {
+
 
                 $.ajax({
                     type: "POST",
                     data: { loadF: 'get_tipo_form', params: id_registro_respuesta_form },
                     url: "../managers/dphpforms/dphpforms_dwarehouse_api.php",
+                    cache: false,
                     success: function (msg) {
 
-                        if (msg.length === 0) {
-                            swal(
-                                'FORM NOT FOUND',
-                                'Oooops! Form '+id_registro_respuesta_form+' is not defined',
-                                'warning'
-                            );
-                        } else {
-                        }
-                        
-                    },
-                    cache: false,
-                    async: true,
+                        let alias_formulario = msg.tipo_formulario, local_alias_campo, html_enlaces = '';
 
-                    error: function (msg) { 
-                        alert("No encontrado");
-                     }
+                        switch (alias_formulario) {
+                            case "seguimiento_pares":
+                                local_alias_campo = "id_estudiante";
+                                break;
+                            case "primer_acercamiento":
+                                local_alias_campo = "pa_id_estudiante";
+                                break;
+                            case "seguimiento_geografico":
+                                local_alias_campo = "seg_geo_id_estudiante";
+                                break;
+                            case "seguimiento_grupal":
+                                local_alias_campo = "id_estudiante";
+                                break;
+                            case "inasistencia":
+                                local_alias_campo = "in_id_estudiante";
+                                break;
+                        }
+
+
+                        value_id_estudiante = getIdEstudianteFromRecordDwarehouse(record_dwarehouse.datos_almacenados, record_dwarehouse.datos_previos, local_alias_campo, accion_record, alias_formulario);
+
+
+
+                        if (value_id_estudiante[0] !== '-9') {
+                            for (id in value_id_estudiante) {
+                                html_enlaces += '<a href="javascript:void(0)" class="data_general text_json" >' + value_id_estudiante[id] + ' </a>';
+                            }
+
+
+                        } else {
+
+                            html_enlaces = '<strong>Enlace(s) no disponible(s)</strong>';
+
+                        }
+
+                        $(".url_students").empty();
+                        $(".url_students").append(html_enlaces);
+                        // callback_create_html_url(alias_formulario, local_alias_campo, accion_record, record_dwarehouse);
+                    },
+
+                    error: function (msg) {
+                        swal(
+                            'TYPE FORM NOT FOUND',
+                            'Oooops! Is not a valid form',
+                            'warning'
+                        );
+
+                    }
                 });
 
-               
+
 
             }
 
-      
+
 
             $('.mymodal-close').click(function () {
                 $("#modal_JSON").hide();
