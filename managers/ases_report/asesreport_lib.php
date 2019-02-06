@@ -126,7 +126,7 @@ function getGraficPrograma($cohorte){
                   AS sub INNER JOIN {talentospilos_programa} AS programa ON (cast(programa.id as text) = sub.codcarrera) 
                   GROUP BY programa.nombre";
     
-    
+     
     // consulta con la parte de los cohortes
     $query = "SELECT programa.nombre,COUNT(programa.nombre)
                   FROM (SELECT DISTINCT data.userid AS userid,data.data AS codcarrera,miembros.cohortid,cohort.name FROM {talentospilos_usuario} AS usuarios_talentos           
