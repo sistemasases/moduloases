@@ -1,6 +1,7 @@
 <?php
-require_once(__DIR__ . '/DAO/BaseDAO.php');
-require_once(__DIR__ . '/TrackingStatus.php');
+require_once (__DIR__ . '/DAO/BaseDAO.php');
+require_once (__DIR__ . '/TrackingStatus.php');
+require_once (__DIR__ . '/../managers/lib/student_lib.php');
 /**
  * Class AsesUserExtended, Relation between moodle user and Ases user, and save the tracking and program status
  * of the student
@@ -36,29 +37,36 @@ class AsesUserExtended extends BaseDAO {
             AsesUserExtended::PROGRAM_STATUS
         );
     }
-    public static function exist_by_username($mdl_user_name) {
-        global $DB;
-        $sql = <<<SQL
-        select * from {user} mdl_user inner join {talentospilos_user_extended} mdl_talentospilos_user_extended
-        on mdl_talentospilos_user_extended.id_moodle_user = mdl_user.id
-        where username = '$mdl_user_name'
-SQL;
 
-        $DB->record_exists_sql($sql);
-    }
     public  static function get_table_name(): string {
         return AsesUserExtended::TABLE_NAME;
     }
 
     /**
-     * Check if exists some registry at table user extended by ases user id
-     * @param string  ases_user_id Id of ases user
-     * @return bool True if exist some registry false otherwise
-     * @throws dml_exception A DML specific exception is thrown for any errors.
+     * Get the programs in which the user has records
+     * @return array Array of Programas
+     * @throws dml_exception
      */
-    public static function check_if_exists_by_ases_user_id($ases_user_id): bool {
-        global $DB;
-        return $DB->record_exists( AsesUserExtended::TABLE_NAME, array(AsesUserExtended::ID_ASES_USER=> $ases_user_id) );
+    public function get_programs() {
+        return AsesUserExtended::get_programs_by_ases_user_id($this->id_ases_user);
+    }
+    /**
+     * Retorna los programas en los cuales el usuario
+     * tiene tracking status 1 en user extended
+     * @param $id_ases_user
+     * @return array
+     * @throws dml_exception
+     */
+    public static function get_actie_programs_by_ases_user_id($id_ases_user) {
+
+        $programs_std_obj = get_student_active_programs_by_ases_user_id($id_ases_user);
+        return Programa::make_objects_from_std_objects_or_arrays($programs_std_obj);
+    }
+
+    public static function get_programs_by_ases_user_id($id_ases_user) {
+
+        $programs_std_obj = get_student_programs_by_ases_user_id($id_ases_user);
+        return Programa::make_objects_from_std_objects_or_arrays($programs_std_obj);
     }
     /**
      * Return the ASES user id from generic input
@@ -78,20 +86,7 @@ SQL;
 
         return $id_user;
     }
-    /**
-     * Check if the user have one or more active tracking status
-     * @param string|int|AsesUser $id_ases_user_or_ases_user Id of ases user or ases user instance
-     * @return bool
-     */
-    public static function have_active_tracking_status($id_ases_user_or_ases_user) {
-        global $DB;
-        $type = gettype($id_ases_user_or_ases_user);
-        $id_user = AsesUserExtended::get_ases_user_id_from_generic_input($id_ases_user_or_ases_user);
-        return $DB->record_exists(AsesUserExtended::TABLE_NAME, array(
-            AsesUserExtended::ID_ASES_USER=> $id_user,
-            AsesUserExtended::TRACKING_STATUS=> TrackingStatus::ACTIVE ));
 
-    }
     /**
      * Set all tracking status of ASES user to innactive
      * @param string|int|AsesUser $id_ases_user_or_ases_user Id of ases user or ases user instance
@@ -108,13 +103,12 @@ SQL;
         $id_ases_user_column = AsesUserExtended::ID_ASES_USER;
 
         $id_user = AsesUserExtended::get_ases_user_id_from_generic_input($id_ases_user_or_ases_user);
-        $sql = "UPDATE {talentospilos_user_extended} SET $tracking_status_column = $tracking_status_inactive
+        $sql = <<<SQL
+        UPDATE {$table_name} SET $tracking_status_column = $tracking_status_inactive
         WHERE  $id_ases_user_column = '$id_user'
-        ";
-        if($DB->execute($sql)) {
-            return true;
-        }
-        return false;
+        
+SQL;
+        return $DB->execute($sql);
     }
 }
 ?>

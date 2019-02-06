@@ -4,6 +4,7 @@ use jquery_datatable\Column;
 use jquery_datatable\DataTable;
 require_once(__DIR__.'/../../../../config.php');
 require_once($CFG->dirroot.'/user/lib.php');
+require_once($CFG->dirroot.'/cohort/lib.php');
 require_once(__DIR__.'/ExternInfoManager.php');
 require_once(__DIR__.'/EstadoAsesCSV.php');
 require_once(__DIR__.'/../AsesUser.php');
@@ -44,6 +45,7 @@ class EstadoAsesEIManager extends ExternInfoManager {
 
             $username = generate_username($item->codigo, $item->programa);
             $id_moodle_user = null;
+
             $id_ases_user = null;
             /* Creación de usuario moodle si no existe*/
 
@@ -64,22 +66,41 @@ class EstadoAsesEIManager extends ExternInfoManager {
                 $this->add_success_log_event("El usuario moodle fue creado con nombre de usuario $username y contraseña por defecto", $key);
             } else {
                 $moodle_user = core_user::get_user_by_username($username);
-                $this->add_warning("El usuario moodle con username $username ya existia", $key);
+
+                $this->add_object_warning("El usuario moodle con username $username ya existia", $key);
+               // print_r($this->get_object_warnings());
                 $id_moodle_user = $moodle_user->id;
             }
             /* Añadir el usuario a la cohorte dada */
             /** @var $cohort \cohort_lib\Cohort */
             $cohorts = \cohort_lib\get_cohorts(array(\cohort_lib\ID_NUMBER=>$this->cohort_id));
-            $cohort = $cohorts[0]; // El id number de una corte es unico, por lo que esto es posible,
-            // además, en la validación se varifico que esta existiera
-            $added_to_cohort = \cohort_lib\cohort_add_user_to_cohort($cohort->id, $id_moodle_user);
-            if(!$added_to_cohort) {
-                $this->add_error(new AsesError(
-                    -1,
-                    "El usuario con codigo $item->codigo no ha podido añadirse a la cohorte con id_number $this->cohort_id por una razon inesperada
+            $cohort = $cohorts[0]; /** El id number de una corte es unico, por lo que esto es posible,
+                                       además, en la validación se verifico que esta existiera*/
+            if( cohort_is_member($cohort->id, $id_moodle_user) ) {
+                /** No hace falta añadir un mensaje warning ya que más abajo se advierte si el usuario existia en alguna cohorte
+                 * incluida la cohorte en la que se desea adicionar actualmente al usuario
+                 */
+            } else {
+                $added_to_cohort = \cohort_lib\cohort_add_user_to_cohort($cohort->id, $id_moodle_user);
+                if(!$added_to_cohort) {
+                    $this->add_error(new AsesError(
+                        -1,
+                        "El usuario con codigo $item->codigo no ha podido añadirse a la cohorte con id_number $this->cohort_id por una razon inesperada
                     Revisa que el codigo y el programa esten bien, y que el id_number de la cohorte este registrado en mdl_cohort"));
 
-                return false;
+                    return false;
+                }
+            }
+            if($student_cohorts = get_cohorts_by_student($id_moodle_user)) {
+                $cohort_names = array_map(
+
+                    function($cohort) {
+                        /** @var $cohort \cohort_lib\Cohort */
+                        return $cohort->name;
+                    }
+                    , $student_cohorts);
+                $cohort_names_string = implode(', ', $cohort_names);
+                $this->add_object_warning("El estudiante ya estaba en la(s) cohorte(s) [$cohort_names_string]", $key);
             }
             /* Create ases user if not exist */
             if(!AsesUser::exists(array(AsesUser::NUMERO_DOCUMENTO=>$item->documento))) {
@@ -89,10 +110,18 @@ class EstadoAsesEIManager extends ExternInfoManager {
                     $this->add_success_log_event("El usuario con número de documento $item->documento se ha creado.", $key);
                 }
              }else {
-                $this->add_warning("El usuario con número de documento $item->documento ya existia en la tabla usuarios ases", $key);
+                $this->add_object_warning("El usuario con número de documento $item->documento ya existia en la tabla usuarios ases.", $key);
 
                 $ases_user = AsesUser::get_by(array(AsesUser::NUMERO_DOCUMENTO=>$item->documento));
                 $id_ases_user= $ases_user->id;
+            }
+            if(AsesUserExtended::exists(array(AsesUserExtended::ID_ASES_USER=>$id_ases_user))) {
+                $programs = AsesUserExtended::get_actie_programs_by_ases_user_id($id_ases_user);
+                $program_names = array_column($programs, Programa::NOMBRE);
+                $program_names_string = implode($program_names);
+                $this->add_object_warning(
+                    "El usuario tenia tracking status 1 en el (los) programa(s) [$program_names_string]. Estos se pasarán a tracking status 0.",
+                    $key);
             }
              if(!AsesUserExtended::exists(array(AsesUserExtended::ID_MOODLE_USER=>$id_moodle_user, AsesUserExtended::ID_ASES_USER=>$id_ases_user))) {
                 $academic_program = Programa::get_by(array(Programa::CODIGO_UNIVALLE=>$item->programa, Programa::ID_SEDE=>$item->sede));
@@ -105,7 +134,6 @@ class EstadoAsesEIManager extends ExternInfoManager {
                 AsesUserExtended::disable_all_tracking_status($id_ases_user);
                 $ases_user_extended->save();
              }
-
         }
         return true;
     }
@@ -125,8 +153,10 @@ class EstadoAsesEIManager extends ExternInfoManager {
         $response->data = $this->get_initial_objects();
         $response->error = !$this->valid();
         $response->errors = $this->get_errors();
-        $response->initial_object_properties = count($response->data)>=1?  \reflection\get_properties($response->data[0]): [];
+        $response->initial_object_properties = count($response->data)>=1?  \reflection\get_properties($response->data[0][0]): [];
         $response->object_errors = $this->get_object_errors();
+        $response->object_warnings = $this->get_object_warnings();
+        $response->success_log_events = $this->get_success_log_events();
         $arrayEncoded = json_encode($response);
 
 

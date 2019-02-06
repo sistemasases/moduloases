@@ -81,6 +81,8 @@ abstract class ExternInfoManager extends Validable {
     public function __construct($class_or_class_name) {
         parent::__construct();
         $this->class_or_class_name = $class_or_class_name;
+        $this->success_log = array();
+        $this->object_warnings = array();
     }
 
     /**
@@ -107,8 +109,13 @@ abstract class ExternInfoManager extends Validable {
     public function add_object_warning(string $warning, $object_key) {
         if(!isset($this->object_warnings[$object_key])) {
             $this->object_warnings[$object_key] = array();
+
         }
         array_push( $this->object_warnings[$object_key], $warning);
+
+    }
+    public function get_object_warnings() {
+        return $this->object_warnings;
     }
     /**
      * @throws ErrorException
@@ -348,6 +355,8 @@ abstract class ExternInfoManager extends Validable {
         http_response_code(404);
         $response = new stdClass();
         $response->object_errors = $this->get_errors_object();
+        $response->object_warnings = $this->get_object_warnings();
+        $response->success_log_events = $this->get_success_log_events();
         $this->load_invalid_data();
         $column_names = \reflection\get_properties($this->class_or_class_name);
         $datatable_columns = \jquery_datatable\Column::get_columns_from_names($this->get_real_expected_headers());

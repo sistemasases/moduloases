@@ -163,11 +163,11 @@ define([
                             },
                             success: function (response) {
                                 console.log(response);
-
                                 if (myTable) {
                                     myTable.destroy();
                                 }
                                 response = JSON.parse(response);
+                                console.log(response);
 
                                 /**
                                  * Se guardan las propiedades iniciales de los objetos cuando llegan de el servidor
@@ -211,12 +211,40 @@ define([
                                     "data": 'index',
                                     "targets": 0
                                 });
-                                /*Se añade la columna que llevara los indices de las filas en orden (1,2,3,4,5...)*/
+                                /**
+                                 * Se añade la columna que llevara el echo de si el
+                                 * dato tiene error o no, puede tomar los valores 'SI' o 'NO'
+                                 */
                                 jquery_datatable.columns.push({
                                     "name": 'error',
                                     "title": 'Error',
                                     "data": 'error'
                                 });
+                                /**
+                                 * Se añade la columna que llevara los warnings
+                                 * ej.'El usuario moodle ya existia, El usuario ya estaba en la cohorte dada'.
+                                 */
+                                jquery_datatable.columns.push({
+                                    "name": 'warnings',
+                                    "title": 'Warnings',
+                                    "data": 'warnings'
+                                });
+                                /**
+                                 * Se añade la columna que llevara los logs de el objeto
+                                 * ej.'El usuario moodle se ha creado, El usuario ha sido añadido a la cohorte dada'.
+                                 */
+                                jquery_datatable.columns.push({
+                                    "name": 'logs',
+                                    "title": 'Logs',
+                                    "data": 'logs'
+                                });
+                                /*Se añade la columna que llevara los logs  */
+                                jquery_datatable.columns.push({
+                                    "name": 'warnings',
+                                    "title": 'Warnings',
+                                    "data": 'warnings'
+                                });
+
                                 /* Se añade la función que modificara la vista de cada fila a la tabla*/
                                 jquery_datatable.rowCallback = function (row, data) {
                                     if (data.error === "SI") {
