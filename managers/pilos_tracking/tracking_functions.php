@@ -668,7 +668,7 @@ function auxiliary_specific_countingV2($user_kind, $user_id, $semester, $instanc
         $xquery_inasistencia_filterFields = [
             ["in_fecha",[[$fecha_inicio_str,">="],[$fecha_fin_str,"<="]], false],
             ["in_revisado_profesional",[["%%","LIKE"]], false],
-            ["in_revisado_profesional",[["%%","LIKE"]], false]
+            ["in_revisado_practicante",[["%%","LIKE"]], false]
         ];
 
         foreach( $students_from_monitor as $key => $student ){
