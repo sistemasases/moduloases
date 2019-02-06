@@ -17,17 +17,21 @@
  * Estrategia ASES
  *
  * @author     Isabella Serna Ramirez
+ * @author     Jeison Cardona Gómez
  * @package    block_ases
  * @copyright  2017 Isabella Serna RamĆ­rez <isabella.serna@correounivalle.edu.co>
+ * @copyright  2019 Jeison Cardona Gómez <jeison.cardona@correounivalle.edu.co>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-require_once ('pilos_tracking_lib.php');
-require_once (dirname(__FILE__) . '/../lib/student_lib.php');
-require_once (dirname(__FILE__) . '/../dphpforms/dphpforms_get_record.php');
-require_once (dirname(__FILE__) . '/../student_profile/studentprofile_lib.php');
-require_once (dirname(__FILE__) . '/../seguimiento_grupal/seguimientogrupal_lib.php');
-require_once (dirname(__FILE__) . '/../dphpforms/v2/dphpforms_lib.php');
+require_once( 'pilos_tracking_lib.php' );
+require_once( dirname(__FILE__) . '/../lib/student_lib.php' );
+require_once( dirname(__FILE__) . '/../dphpforms/dphpforms_get_record.php' );
+require_once( dirname(__FILE__) . '/../student_profile/studentprofile_lib.php' );
+require_once( dirname(__FILE__) . '/../seguimiento_grupal/seguimientogrupal_lib.php' );
+require_once( dirname(__FILE__) . '/../dphpforms/v2/dphpforms_lib.php' );
+require_once( dirname(__FILE__) . '/../monitor_assignments/monitor_assignments_lib.php' );
+
 
 /**
  * Get the toggle of the monitor with the follow-ups of each student with the implementation of the new form
@@ -423,6 +427,7 @@ function auxiliary_specific_countingV2($user_kind, $user_id, $semester, $instanc
     $fecha_inicio = null;
     $fecha_fin = null;
 
+    $semester_id = $semester->max;
     $interval = get_semester_interval($semester->max);
     $fecha_inicio = getdate(strtotime($interval->fecha_inicio));
     $fecha_fin = getdate(strtotime($interval->fecha_fin));
@@ -614,21 +619,32 @@ function auxiliary_specific_countingV2($user_kind, $user_id, $semester, $instanc
 
         return $count;
     }else if ($user_kind == 'monitor_ps') {
+
+        //Get assignments
+        $students_from_monitor = monitor_assignments_get_students_from_monitor( $instance, $user_id , $semester_id );
+
+        $xquery_seguimiento_pares_filterFields = [
+            ["fecha",[[$fecha_inicio_str,">="],[$fecha_fin_str,"<="]], false],
+            ["revisado_profesional",[["%%","LIKE"]], false],
+            ["revisado_practicante",[["%%","LIKE"]], false]
+        ];
+
+        foreach( $students_from_monitor as $key => $student ){
+            array_push( $xquery_seguimiento_pares_filterFields, ["id_estudiante", [[ $student->id, "=" ]], false ] );
+        }
+
+        array_push( $xquery_seguimiento_pares_filterFields, ["id_monitor",[["%%","LIKE"]], false] );
         
         $xQuery = new stdClass();
         $xQuery->form = "seguimiento_pares";
-        $xQuery->filterFields = [["fecha",[[$fecha_inicio_str,">="],[$fecha_fin_str,"<="]], false],
-                                 ["revisado_profesional",[["%%","LIKE"]], false],
-                                 ["revisado_practicante",[["%%","LIKE"]], false],
-                                 ["id_monitor",[[$user_id,"="]], false]
-                                ];
+        $xQuery->filterFields = $xquery_seguimiento_pares_filterFields;
         $xQuery->orderFields = [["fecha","DESC"]];
         $xQuery->orderByDatabaseRecordDate = false; 
         $xQuery->recordStatus = [ "!deleted" ];
         $xQuery->selectedFields = []; 
-
+        
         $trackings = dphpformsV2_find_records( $xQuery );
-
+        
         $rev_pro = 0;
         $not_rev_pro = 0;
         $rev_prac = 0;
@@ -647,20 +663,30 @@ function auxiliary_specific_countingV2($user_kind, $user_id, $semester, $instanc
             }
         }
 
+        //'Inasistencia' counting
+        
+        $xquery_inasistencia_filterFields = [
+            ["in_fecha",[[$fecha_inicio_str,">="],[$fecha_fin_str,"<="]], false],
+            ["in_revisado_profesional",[["%%","LIKE"]], false],
+            ["in_revisado_profesional",[["%%","LIKE"]], false]
+        ];
+
+        foreach( $students_from_monitor as $key => $student ){
+            array_push( $xquery_inasistencia_filterFields, ["in_id_estudiante", [[ $student->id, "=" ]], false ] );
+        }
+
+        array_push( $xquery_inasistencia_filterFields, ["in_id_monitor",[["%%","LIKE"]], false] );
+
         $xQuery = new stdClass();
         $xQuery->form = "inasistencia";
-        $xQuery->filterFields = [["in_fecha",[[$fecha_inicio_str,">="],[$fecha_fin_str,"<="]], false],
-                                 ["in_revisado_profesional",[["%%","LIKE"]], false],
-                                 ["in_revisado_profesional",[["%%","LIKE"]], false],
-                                 ["in_id_monitor",[[$user_id,"="]], false]
-                                ];
+        $xQuery->filterFields = $xquery_inasistencia_filterFields;
         $xQuery->orderFields = [["in_fecha","DESC"]];
         $xQuery->orderByDatabaseRecordDate = true; 
         $xQuery->recordStatus = [ "!deleted" ];
         $xQuery->selectedFields = []; 
 
         $in_trackings = dphpformsV2_find_records( $xQuery );
-
+        
         $in_rev_pro = 0;
         $in_not_rev_pro = 0;
         $in_rev_prac = 0;
