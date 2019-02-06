@@ -68,6 +68,8 @@ $record->incidents = array_values(incident_get_all_incidents());
 $menu_option = create_menu_options($USER->id, $blockid, $courseid);
 $record->menu = $menu_option;
 
+$record->url_base = $CFG->wwwroot;
+
 $PAGE->set_context($contextcourse);
 $PAGE->set_context($contextblock);
 $PAGE->set_url($url);

@@ -1,0 +1,83 @@
+.grid_dphpforms_compare {
+    display:grid;
+    grid-template-areas: "head head"
+                         "menu menu"
+                         "foot foot";
+    grid-row-gap: 20px;
+  }
+
+  .grid_dphpforms_compare > .general_info_record_dwarehouse { 
+    grid-area:head; 
+    background: white;
+    width: 100%;
+    float: left;
+    
+ }
+
+ .grid_dphpforms_compare > .json_data_compare{
+  grid-area:menu; 
+  background: white; 
+  width: 100%;
+  float: left;
+ }
+
+
+  .grid_dphpforms_compare > .buttons_actions { 
+    grid-area:foot; 
+    background:white
+ }
+
+  .grid_dphpforms_compare > .general_info_record_dwarehouse > .data_general{
+    border-left: 6px solid red;
+    margin: 10px 20px 10px 30px;
+    background-color: rgb(251, 246, 246);
+    font-size: 16px;
+
+  }
+
+  .grid_dphpforms_compare > .general_info_record_dwarehouse > .title_data{
+    margin: 0px 0px 5px 0px;
+    background-color: rgb(251, 246, 246);
+    font-size: 24px;
+    box-shadow: 5px 11px 10px -1px rgba(40,28,28,0.1);
+  }
+
+  .grid_dphpforms_compare > .json_data_compare > .contenedor > .title_data{
+    margin: 0px 0px 5px 0px;
+    background-color: rgb(251, 246, 246);
+    font-size: 24px;
+    box-shadow: 5px 11px 10px -1px rgba(40,28,28,0.1);
+    float: left;
+    padding: 0px 10px 0px 10px;
+    width: 70%;
+  }
+
+  .grid_dphpforms_compare > .json_data_compare > .contenedor  > .data_estado_json{
+    border: 1px solid black;
+    margin: 0px 0px 0px 0px;
+    background-color: rgb(251, 246, 246);
+    font-size: 16px;
+    padding: 0px 0px 0px 3px;
+    float: left;
+    width: 70%;
+  }
+
+  .grid_dphpforms_compare > .json_data_compare > .contenedor  > .data_estado_json_different{
+    border-right: 6px solid red;
+    background: rgba(247, 185, 185, 0.5) !important;
+ 
+  }
+
+  .grid_dphpforms_compare > .json_data_compare > .contenedor  > .data_estado_json_similar{
+    background: rgba(199,255,224,0.6);
+ 
+  }
+
+ 
+  .grid_dphpforms_compare > .json_data_compare > .contenedor  > .data_estado_json   > .data_estado_json_similar{
+    margin: 0px 0px 0px 0px;
+    font-size: 16px;
+    padding: 0px 0px 0px 3px;
+    background: rgba(199,255,224,0.6);
+ 
+  }

@@ -28,6 +28,7 @@ require_once $CFG->dirroot.'/blocks/ases/managers/user_management/user_lib.php';
 require_once $CFG->dirroot.'/blocks/ases/managers/ases_report/asesreport_lib.php';
 require_once $CFG->dirroot.'/blocks/ases/managers/lib/lib.php';
 require_once $CFG->dirroot.'/blocks/ases/managers/dphpforms/v2/dphpforms_lib.php';
+require_once $CFG->dirroot.'/blocks/ases/managers/monitor_assignments/monitor_assignments_lib.php';
 
 /**
  * ..
@@ -172,26 +173,91 @@ function pilos_tracking_get_tracking_count( $username, $semester_id, $instance, 
 
 
 function pilos_tracking_general_get_count( $user_id, $rol, $fecha_inicio_str, $fecha_fin_str ){
-    
-    $nombre_campo = "";
- 
+    $instance = 450299;
+    $semester_id = 8;
+    $student_list_ids = [];
+    $xquery_seguimiento_pares_filterFields = [
+        ["fecha",[[$fecha_inicio_str,">="],[$fecha_fin_str,"<="]], false],
+        ["revisado_profesional",[["%%","LIKE"]], false],
+        ["revisado_practicante",[["%%","LIKE"]], false]
+    ];
+    $xquery_inasistencia_filterFields = [
+        ["in_fecha",[[$fecha_inicio_str,">="],[$fecha_fin_str,"<="]], false],
+        ["in_revisado_profesional",[["%%","LIKE"]], false],
+        ["in_revisado_practicante",[["%%","LIKE"]], false]
+    ];
+
     if( $rol == "profesional_ps" ){
-        $nombre_campo = "id_profesional";
+        
+        $practicant_from_profesional = monitor_assignments_get_practicants_from_professional( $instance, $user_id , $semester_id );
+        foreach( $practicant_from_profesional as $key__ => $pract ){
+            $monitors_from_practicant = monitor_assignments_get_monitors_from_practicant( $instance, $pract->id , $semester_id );
+            foreach( $monitors_from_practicant as $key_ => $monitor ){
+                $students_from_monitor = monitor_assignments_get_students_from_monitor( $instance, $monitor->id , $semester_id );
+                foreach( $students_from_monitor as $key => $student ){
+                    array_push( $student_list_ids, $student );
+                }
+            }
+        }
+
+        //Pares
+        foreach( $student_list_ids as $key => $student ){
+            array_push( $xquery_seguimiento_pares_filterFields, ["id_estudiante", [[ $student->id, "=" ]], false ] );
+        }
+        array_push( $xquery_seguimiento_pares_filterFields, ["id_profesional",[["%%","LIKE"]], false] );
+
+        //Inasistencia
+        foreach( $student_list_ids as $key => $student ){
+            array_push( $xquery_inasistencia_filterFields, ["in_id_estudiante", [[ $student->id, "=" ]], false ] );
+        }
+        array_push( $xquery_inasistencia_filterFields, ["in_id_profesional",[["%%","LIKE"]], false] );
+        
     }else if( $rol == "practicante_ps" ){
-        $nombre_campo = "id_practicante";
+        
+        $monitors_from_practicant = monitor_assignments_get_monitors_from_practicant( $instance, $user_id , $semester_id );
+        foreach( $monitors_from_practicant as $key_ => $monitor ){
+            $students_from_monitor = monitor_assignments_get_students_from_monitor( $instance, $monitor->id , $semester_id );
+            foreach( $students_from_monitor as $key => $student ){
+                array_push( $student_list_ids, $student );
+            }
+        }
+
+        //Pares
+        foreach( $student_list_ids as $key => $student ){
+            array_push( $xquery_seguimiento_pares_filterFields, ["id_estudiante", [[ $student->id, "=" ]], false ] );
+        }
+        array_push( $xquery_seguimiento_pares_filterFields, ["id_practicante",[["%%","LIKE"]], false] );
+
+        //Inasistencia
+        foreach( $student_list_ids as $key => $student ){
+            array_push( $xquery_inasistencia_filterFields, ["in_id_estudiante", [[ $student->id, "=" ]], false ] );
+        }
+        array_push( $xquery_inasistencia_filterFields, ["in_id_practicante",[["%%","LIKE"]], false] );
+
     }else if( $rol == "monitor_ps" ){
-        $nombre_campo = "id_monitor";
+
+        $students_from_monitor = monitor_assignments_get_students_from_monitor( $instance, $user_id , $semester_id );
+        //Pares
+        foreach( $students_from_monitor as $key => $student ){
+            array_push( $xquery_seguimiento_pares_filterFields, ["id_estudiante", [[ $student->id, "=" ]], false ] );
+        }
+        array_push( $xquery_seguimiento_pares_filterFields, ["id_monitor",[["%%","LIKE"]], false] );
+        //Inasistencia
+        foreach( $students_from_monitor as $key => $student ){
+            array_push( $xquery_inasistencia_filterFields, ["in_id_estudiante", [[ $student->id, "=" ]], false ] );
+        }
+        array_push( $xquery_inasistencia_filterFields, ["in_id_monitor",[["%%","LIKE"]], false] );
+
     }else if( $rol == "estudiante_t" ){
-        $nombre_campo = "id_estudiante";
+
+        array_push( $xquery_seguimiento_pares_filterFields, ["id_estudiante",[[$user_id,"="]], false] );
+        array_push( $xquery_inasistencia_filterFields, ["in_id_estudiante",[[$user_id,"="]], false] );
+
     }
 
     $xQuery = new stdClass();
     $xQuery->form = "seguimiento_pares";
-    $xQuery->filterFields = [["fecha",[[$fecha_inicio_str,">="],[$fecha_fin_str,"<="]], false],
-                             ["revisado_profesional",[["%%","LIKE"]], false],
-                             ["revisado_practicante",[["%%","LIKE"]], false],
-                             [$nombre_campo,[[$user_id,"="]], false]
-                            ];
+    $xQuery->filterFields = $xquery_seguimiento_pares_filterFields;
     $xQuery->orderFields = [["fecha","DESC"]];
     $xQuery->orderByDatabaseRecordDate = true; 
     $xQuery->recordStatus = [ "!deleted" ];
@@ -219,11 +285,7 @@ function pilos_tracking_general_get_count( $user_id, $rol, $fecha_inicio_str, $f
 
     $xQuery = new stdClass();
     $xQuery->form = "inasistencia";
-    $xQuery->filterFields = [["in_fecha",[[$fecha_inicio_str,">="],[$fecha_fin_str,"<="]], false],
-                             ["in_revisado_profesional",[["%%","LIKE"]], false],
-                             ["in_revisado_practicante",[["%%","LIKE"]], false],
-                             ["in_$nombre_campo",[[$user_id,"="]], false]
-                            ];
+    $xQuery->filterFields = $xquery_inasistencia_filterFields;
     $xQuery->orderFields = [["in_fecha","DESC"]];
     $xQuery->orderByDatabaseRecordDate = true; 
     $xQuery->recordStatus = [ "!deleted" ];

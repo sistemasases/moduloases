@@ -49,9 +49,8 @@ trait JsonManager {
      * Create instances from $POST['data']
      */
     public function create_instances_from_post(){
-        global $POST;
-        $instances = array();
-        $objects = $POST['data'];
+        global $_POST;
+        $objects = $_POST['data'];
         return $this->create_instances_from_objects($objects);
     }
     public function create_instances_from_objects($objects) {

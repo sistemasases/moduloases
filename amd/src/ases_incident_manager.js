@@ -49,6 +49,8 @@
                             success: function( response ){
                                 li.hide();
 
+                                let url_base = $("#extras").data('url-base');
+
                                 let comentarios = JSON.parse(JSON.parse(response.data_response).comentarios);
                                 let opened_by = JSON.parse(response.data_response).usuario_registra;
                                 let closed_by = JSON.parse(response.data_response).usuario_cierra;
@@ -62,6 +64,7 @@
                                 $(".inc_preview").find("a").attr( "href", "ases_incidents_preview.php?incident_id=" + incident_id );
                                 $(".record_datetime").html( "<strong>Fecha y hora:</strong> " + datetime );
                                 $("#close_incident").attr("data-id", incident_id);
+                                $(".send_message").html( '<strong>Mensajes: </strong> [ <a target="_blank" rel="noopener noreferrer" href="' + url_base + "/message/index.php?id=" + opened_by.id + '">Ir al chat con el usuario</a> ].' );
                                 $(".inc_preview").show();
 
                                 if( cerrada != 1 ){

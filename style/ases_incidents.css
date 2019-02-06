@@ -82,7 +82,8 @@
 
 .opened_by, .record_datetime, 
 .inc_detail, .title_list,
-.closed_by, .inc_preview{
+.closed_by, .inc_preview,
+.send_message{
     font-size: 1.3em;
 }
 
