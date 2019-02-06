@@ -849,7 +849,7 @@ function calculate_specific_counting($user_kind, $person, $dates_interval, $inst
 function create_counting_advice($user_kind, $result)
 {
     $advice = "";
-    $advice.= '<h2> INFORMACIÓN DE  ' . $user_kind . '</h2><hr>';
+    $advice.= '<h2> INFORMACIÓN:  ' . $user_kind . '</h2><hr>';
     $advice.= '<div class="row">';
     $advice.= '<div class="col-sm-6">';
     $advice.= '<strong>Profesional</strong><br />';
