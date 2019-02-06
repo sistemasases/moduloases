@@ -21,183 +21,34 @@ define(['jquery',
     'block_ases/jqueryui',
     'block_ases/select2', 
     'block_ases/Chart',
-    'block_ases/loading_indicator'
+    'block_ases/loading_indicator',
+    'block_ases/chartjs_plugin_datalabels'
 ],
-    function ($, jszip, pdfmake, dataTables, autoFill, buttons, html5, flash, print, bootstrap, sweetalert, jqueryui, select2, Chart, loading_indicator) {
+    function ($, jszip, pdfmake, dataTables, autoFill, buttons, html5, flash, print, bootstrap, sweetalert, jqueryui, select2, Chart, loading_indicator, chartjs_plugin_datalabels) {
         return {
             init: function () {
 
-                window.JSZip = jszip;                       
-
-                //Controles para la tabla generada
-                $(document).on('click', '#tableResult tbody tr td', function () {
-                    var pagina = "student_profile.php";
-                    var table = $("#tableResult").DataTable();
-                    var colIndex = table.cell(this).index().column;
-
-                    if (colIndex <= 2) {
-                        $("#formulario").data_getach(function () {
-                            this.reset;
-                        });
-                        location.href = pagina + location.search + "&student_code=" + table.cell(table.row(this).index(), 0).data();
-                    }
-                });
+                window.JSZip = jszip;        
                 
-
-                //Controles check all 
-                $('#contact_fields_check').on('change', function () {
-                    if ($('#contact_fields_check').prop('checked')) {
-                        $("#contact_fields input[type='checkbox']").prop('checked', true);                       
-                        
-                    } else {
-                        $("#contact_fields input[type='checkbox']").prop('checked', false);
-                    }
-                    updateTable();
-                });
-
-                $('#status_fields_check').on('change', function () {
-                    if ($('#status_fields_check').prop('checked')) {
-                        $("input[name='status_fields[]']").prop('checked', true);                        
-                    } else {
-                        $("input[name='status_fields[]']").prop('checked', false);
-                    }
-                    updateTable();
-                });
-
-                $('#academic_fields_check').on('change', function () {
-                    if ($('#academic_fields_check').prop('checked')) {
-                        $("input[name='academic_fields[]']").prop('checked', true);
-                    } else {
-                        $("input[name='academic_fields[]']").prop('checked', false);
-                    }
-                    updateTable();
-                });                
-
-                $('#risk_fields_check').on('change', function () {
-                    if ($('#risk_fields_check').prop('checked')) {
-                        $("input[name='risk_fields[]']").prop('checked', true);
-                    } else {
-                        $("input[name='risk_fields[]']").prop('checked', false);
-                    }
-                    updateTable();
-                });
-
-                $('#assignment_fields_check').on('change', function () {
-                    if ($('#assignment_fields_check').prop('checked')) {
-                        $("input[name='assignment_fields[]']").prop('checked', true);
-                    } else {
-                        $("input[name='assignment_fields[]']").prop('checked', false);
-                    }
-                    updateTable();
-                });
-
                 $("#conditions").on('change', function(){
-                    updateTable();
-                });
-                
-                //Controles para checkboxes individuales
-                $("#contact_fields input[type='checkbox']").on('change', function(){
-                    updateTable();
-                });
-
-                $("input[name='status_fields[]']").on('change', function(){
-                    updateTable();
-                });
-
-                $("input[name='academic_fields[]']").on('change', function(){
-                    updateTable();
-                });
-                
-                $("input[name='risk_fields[]']").on('change', function(){
-                    updateTable();
-                });
-                $("input[name='assignment_fields[]']").on('change', function(){
-                    updateTable();
-                });
-
-                //Filtros de riesgos.
-                $(document).on('change', '.select_risk', function () {
-                    var table = $("#tableResult").DataTable();
-                    var colIndex = $(this).parent().index() + 1;
-                    var selectedText = $(this).parent().find(":selected").text();
-                    table.columns(colIndex - 1).search(this.value).draw();
-                });
-
-                //Filtros sobre asignaciones socioeducativas
-                $(document).on('change', '.filter_assignments', function () {
-                    var table = $("#tableResult").DataTable();
-                    var colIndex = $(this).parent().index() + 1;
-                    var selectedText = $(this).parent().find(":selected").text();
-                    table.columns(colIndex - 1).search(this.value).draw();
-                });
-                
-                //Filtros sobre estados 
-                $(document).on('change', '.select_filter_statuses', function () {
-                    var table = $("#tableResult").DataTable();
-                    var colIndex = $(this).parent().index() + 1;
-                    var selectedText = $(this).parent().find(":selected").text();
-                    table.columns(colIndex - 1).search(selectedText? '^'+selectedText+'$': '', true, false).draw();
-                });
-
-                
-                //Controles sobre el resumen de estudiantes
-                $(document).on('click', '.summary-title', function(){
-
-                    // Icono de la lista
-                    var icon = $($(this).data('icon'));
-
-                    if(icon.hasClass('glyphicon-chevron-right')){
-                        icon.removeClass("glyphicon-chevron-right");
-                        icon.addClass("glyphicon-chevron-down");
-                    }else{
-                        icon.addClass("glyphicon-chevron-right");
-                        icon.removeClass("glyphicon-chevron-down");
-                    }                   
-
-                    var target = $($(this).data('target')); 
-                    if(target.css('display') != "none"){
-                        target.hide(300);
-                    }else{
-                        target.show(300);
-                    }
-                });
-
-                $('.panel-heading-summary').on('click', function(){
-
-                    var icon = $(this).find('.icon-group-cohort');
-
-                    if(icon.hasClass('glyphicon-chevron-right')){
-                        icon.removeClass("glyphicon-chevron-right");
-                        icon.addClass("glyphicon-chevron-down");
-                    }else{
-                        icon.addClass("glyphicon-chevron-right");
-                        icon.removeClass("glyphicon-chevron-down");
-                    }
-
-                    var target = $($(this).data('target')); 
-                    if(target.css('display') != "none"){
-                        target.hide(300);
-                    }else{
-                        target.show(300);
-                    }
-
-                });
+                    //updateTable();
+                });                                            
 
                 $("#list-students-status-panel").on('click', function(){
-                    updateTable();
-                    get_data_to_graphic();							
-                });                
+                    //updateTable();                    
+                    get_data_to_graphic();                   					
+                });          
+                
+                
+                
 
             },
             load_defaults_students: function (data) {
 
-                $("#div_table").html('');
-                $("#div_table").fadeIn(1000).append('<table id="tableResult" class="stripe row-border order-column" cellspacing="0" width="100%"><thead> </thead></table>');
-                //console.log(data);
-                $("#tableResult").DataTable(data);
-
-            },
-            create_table: function () {
+                // $("#div_table").html('');
+                // $("#div_table").fadeIn(1000).append('<table id="tableResult" class="stripe row-border order-column" cellspacing="0" width="100%"><thead> </thead></table>');
+                // //console.log(data);
+                // $("#tableResult").DataTable(data);
 
             },
             get_id_instance: function () {
@@ -218,20 +69,21 @@ define(['jquery',
             $.ajax({
 
                 type: "POST",
-                data: { type: 'carrera', cohort: "TODOS" },
+                data: { type: 'carrera', cohort: $('#conditions').val() },
                 url: "../managers/ases_report/asesreport_graphics_processing.php",
                 success: function (msg) {
                     var results = Object.keys(msg).map(function(k) { return msg[k] });                   
                     var programas = [];
                     var cantidades = [];  
-                    var nombrePrograma ='';                 
+                    var nombrePrograma ='';                                     
                     
                     results.sort(function(prog1, prog2,) {
                         return prog2.count - prog1.count;
                     });
-
+                    var data = [];
                     for(var x in results){
                         nombrePrograma = results[x].nombre;
+                        cantidadPrograma = results[x].count;
                         if(nombrePrograma !== 'PLAN TALENTOS PILOS'){                                                        
 
                             if(nombrePrograma === 'LICENCIATURA EN EDUCACIÓN BÁSICA CON ÉNFASIS EN CIENCIAS NATURALES Y EDUCACIÓN AMBIENTAL'){
@@ -243,11 +95,14 @@ define(['jquery',
                             }
 
                             programas.push(nombrePrograma);
-                            cantidades.push(results[x].count);
+                            cantidades.push(cantidadPrograma);
+
+                            data.push({programa: nombrePrograma, cantidad: cantidadPrograma})
                         }                     
                     }                    
                     creategraphicProgramas(programas, cantidades);
-
+                    console.log(data);
+                    createTable(data);
                 },
                 dataType: "json",
                 cache: false,
@@ -255,6 +110,48 @@ define(['jquery',
 
                 failure: function (msg) { }
             });
+        }
+
+        function createTable(data){
+            console.log(data);
+
+            var table = $("#div_table").DataTable(
+                { 
+                    "retrieve": true,                          
+                    "bsort" : false,
+                    "data" : data,                         
+                    "columns" : [
+                        {
+                            "title" : "Programa", 
+                            "name" : "programa", 
+                            "data" : "programa",
+                        },
+                        {
+                            "title" : "Cantidad de estudiantes", 
+                            "name" : "cantidad", 
+                            "data" : "cantidad"
+                        }],
+                    "dom":"lifrtpB",
+                    "buttons" : [
+                        {
+                            "extend" : "print",
+                            "text" : 'Imprimir'
+                        },{
+                            "extend" : "csv",
+                            "text" : 'CSV'
+                        },{
+                            "extend" : "excel",
+                            "text" : 'Excel',
+                            "className" : 'buttons-excel',
+                            "filename" : 'Export excel',
+                            "extension" : '.xls'
+                        }   
+                    ]                           
+                }
+            );
+            table.draw();
+
+
         }
 
         function creategraphicProgramas(programas, cantidades){
@@ -285,7 +182,6 @@ define(['jquery',
                 }]
             }        
             
-            Chart.defaults.polarArea.animation.animateScale = false;
         
             var radar_chart = new Chart(ctx, {               
                 type: 'horizontalBar',
@@ -317,7 +213,14 @@ define(['jquery',
                             barPercentage: 1.0
                         }]                       
                     },
-                    maintainAspectRatio: false                    
+                    maintainAspectRatio: false,
+                    plugins: {
+                        datalabels: {
+                           display: true,
+                           align: 'center',
+                           anchor: 'center'
+                        }
+                     }                    
 				}
             }
             );
@@ -325,7 +228,7 @@ define(['jquery',
 
         //Actualización de la tabla 
         function updateTable(){
-            createTable();
+            //createTable();
 
             var cohorts = $('#conditions').val();
 
@@ -365,51 +268,10 @@ define(['jquery',
             dataString.push({
                 name: 'instance_id',
                 value: getIdinstancia()
-            });
+            });            
+            
 
-            $("#div_table").html('<img class="icon-loading" src="../icon/loading.gif"/>');
-            $.ajax({
-                type: "POST",
-                data: dataString,
-                url: "../managers/ases_report/asesreport_server_processing.php",
-                success: function (msg) {
-                    $("#div_table").html('');
-                    $("#div_table").fadeIn(1000).append('<table id="tableResult" class="display" cellspacing="0" width="100%"><thead> </thead></table>');
-
-                    $("#tableResult").DataTable(msg);
-
-                    $('#tableResult tr').each(function () {
-                        $.each(this.cells, function () {
-                            if ($(this).html() == 'Bajo') {
-                                $(this).addClass('riesgo_bajo');
-                            } else if ($(this).html() == 'Medio') {
-                                $(this).addClass('riesgo_medio');
-                            } else if ($(this).html() == 'Alto') {
-                                $(this).addClass('riesgo_alto');
-                            }
-                        });
-                    });
-
-                    $('#tableResult').bind("DOMSubtreeModified", function () {
-                        $('#tableResult tr').each(function () {
-                            $.each(this.cells, function () {
-                                if ($(this).html() == 'Bajo') {
-                                    $(this).addClass('riesgo_bajo');
-                                } else if ($(this).html() == 'Medio') {
-                                    $(this).addClass('riesgo_medio');
-                                } else if ($(this).html() == 'Alto') {
-                                    $(this).addClass('riesgo_alto');
-                                }
-                            });
-                        });
-                    });
-                },
-                dataType: "json",
-                cache: "false",
-                error: function (msg) {
-                    alert("Error al conectar con el servidor")
-                },
-            });
+           
         }
 
         function getIdinstancia() {
