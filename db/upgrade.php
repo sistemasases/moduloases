@@ -2457,7 +2457,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
             $dbman->create_table($table);
         }
 
-        upgrade_block_savepoint(true, 2018121014080 , 'ases');
+        upgrade_block_savepoint(true, 2018121914150 , 'ases');
     
         return $result;
 

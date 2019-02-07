@@ -101,7 +101,6 @@ define(['jquery',
                         }                     
                     }                    
                     creategraphicProgramas(programas, cantidades);
-                    console.log(data);
                     createTable(data);
                 },
                 dataType: "json",
@@ -115,7 +114,7 @@ define(['jquery',
         function createTable(data){
             console.log(data);
 
-            var table = $("#div_table").DataTable(
+            var table = $("#table_programs").DataTable(
                 { 
                     "retrieve": true,                          
                     "bsort" : false,
@@ -157,9 +156,10 @@ define(['jquery',
         function creategraphicProgramas(programas, cantidades){
             $('.chart-container').css('height', '1300px');
             $('.chart-container').css('width', '1100px');
+            
             var backgroundColors = [];
-            var borderColors = [];
-
+            var borderColors = [];            
+            
             for(var i=0; i<programas.length; i++){
                 if(i%2 == 0){
                     backgroundColors.push('rgba(255, 99, 132, 0.2)');
@@ -229,7 +229,6 @@ define(['jquery',
         //Actualización de la tabla 
         function updateTable(){
             //createTable();
-
             var cohorts = $('#conditions').val();
 
             if(cohorts == 'TODOS'){
@@ -259,23 +258,10 @@ define(['jquery',
                 $('#div-summary-oa').prop('hidden', false);
             }
         }
-
-        // Creación de tabla general
-        function createTable() {
-
-            var dataString = $('#form_general_report').serializeArray();
-
-            dataString.push({
-                name: 'instance_id',
-                value: getIdinstancia()
-            });            
-            
-
-           
-        }
+        
 
         function getIdinstancia() {
-            var urlParameters = location.search.split('&');
+            var urlParameters = location.search.split('&');           
 
             for (x in urlParameters) {
                 if (urlParameters[x].indexOf('instanceid') >= 0) {
