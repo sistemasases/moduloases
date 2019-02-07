@@ -245,16 +245,16 @@ define([
 
 
                     //Generar html de los campos de ambos json
-                    if ((datos_previos_para_modal != "") && (datos_almacenados_para_modal != "")) {
+                    if ((datos_previos_para_modal != "" && datos_previos_para_modal != null ) && (datos_almacenados_para_modal != "" && datos_almacenados_para_modal != null)) {
                         //Puede comparar ambos json y generar html
                         let html_result_compare_json = compare_json(datos_previos_para_modal.campos, datos_almacenados_para_modal.campos);
                         html_json_content += html_result_compare_json;
                     } else {
                         //Ambos, o uno de los dos JSON no tiene información. No es necesario comparar, pero sí generar el html del que tiene información
-                        if (datos_previos_para_modal != "") {
+                        if (datos_previos_para_modal != "" && datos_previos_para_modal != null ) {
                             //Generar html de datos previos
                             html_json_content += generate_html_json(datos_previos_para_modal.campos);
-                        } else if (datos_almacenados_para_modal != "") {
+                        } else if (datos_almacenados_para_modal != "" && datos_almacenados_para_modal != null)  {
                             //Generar html de datos almacenados
                             html_json_content += generate_html_json(datos_almacenados_para_modal.campos);
                         }
@@ -270,7 +270,7 @@ define([
                     html_content += '<div class="data_general text_json">  Realizado por:        ' + user_monitor + '</div>';
                     html_content += '<div class="data_general text_json">  Acción del registro: <strong style= "font-size: 18px;"> ' + accion_record + '</strong></div>';
                     html_content += '<div class="data_general text_json">  Fecha:                ' + date_record + '</div>';
-                    html_content += '<div class="url_students"> <a href="javascript:void(0)" >Restaurar</a></div>';
+                    html_content += '<div class="url_students"> </div>';
                     html_content += '                            </div>';
                     html_content += '<div class = "json_data_compare">';
                     html_content += '<div class="contenedor" >';
@@ -564,89 +564,6 @@ define([
                 }
             }(jQuery));
 
-
-            function getIdEstudianteFromRecordDwarehouse(dt_alm, dt_prev, local_alias, accion_record, alias_formulario) {
-
-                //Function return ['-9'] if it does not find the data, or there are inconsistencies
-
-                let campos_alm, campos_prev, retorno_id = ['-9'];
-                //  console.log(dt_alm);
-                //  console.log(dt_prev);
-
-
-                let auxiliar_id_estudiante_prev = '-11', auxiliar_id_estudiante_alm = '-10';
-
-
-                if (accion_record === "DELETE" || accion_record === "RESTORE" || accion_record === "UPDATE") {
-                    dt_alm = dt_alm.record;
-                    dt_prev = dt_prev.record;
-                    campos_alm = dt_alm.campos;
-                    campos_prev = dt_prev.campos;
-
-                    //Buscar 
-                    for (campo in campos_alm) {
-                        if (campos_alm[campo].local_alias === local_alias) {
-                            auxiliar_id_estudiante_alm = campos_alm[campo].respuesta;
-                            break;
-                        }
-                    }
-
-                    for (campo in campos_prev) {
-                        if (campos_prev[campo].local_alias === local_alias) {
-                            auxiliar_id_estudiante_prev = campos_prev[campo].respuesta;
-                            break;
-                        }
-                    }
-
-                    if (auxiliar_id_estudiante_alm === auxiliar_id_estudiante_prev) {
-
-                        if (alias_formulario !== "seguimiento_grupal") {
-                            //Tienen id_ases, trae id_ases del registro
-                            retorno_id = [auxiliar_id_estudiante_alm, auxiliar_id_estudiante_prev];
-                        } else {
-                            //Traer arreglo de códigos
-                            retorno_id = campos_alm[campo].respuesta;
-                            retorno_id = retorno_id.split(",");
-                        }
-
-                    } else {
-                        retorno_id = ['-9'];
-                    }
-
-                } else if (accion_record === "INSERT") {
-                    dt_alm = dt_alm.record;
-                    campos_alm = dt_alm.campos;
-
-                    for (campo in campos_alm) {
-                        if (campos_alm[campo].local_alias === local_alias) {
-
-                            if (alias_formulario !== "seguimiento_grupal") {
-                                //Tienen id_ases, trae id_ases del registro
-                                retorno_id = [campos_alm[campo].respuesta];
-                            } else {
-                                //Traer arreglo de códigos
-                                retorno_id = campos_alm[campo].respuesta;
-                                retorno_id = retorno_id.split(",");
-                            }
-
-                            break;
-                        }
-                    }
-
-                } else {
-                    retorno_id = ['-9'];
-                    // swal(
-                    //     'DATA ERROR',
-                    //     'Oooops! Not supported',
-                    //     'warning'
-                    // );
-                }
-
-
-
-
-                return retorno_id;
-            }
 
             function get_like_cadena_in_column(cad, column) {
                 //Realiza la consulta del atributo según la cadena enviada, y el atributo seleccionado
@@ -1012,53 +929,37 @@ define([
 
             function getTipoFormulario(id_registro_respuesta_form, accion_record, record_dwarehouse) {
 
+                let param = [];
+                param.push(id_registro_respuesta_form);
+                param.push(accion_record);
+                param.push(JSON.stringify(record_dwarehouse));
+
 
                 $.ajax({
                     type: "POST",
-                    data: { loadF: 'get_tipo_form', params: id_registro_respuesta_form },
+                    data: { loadF: 'get_student_code_to_url', params: param},
                     url: "../managers/dphpforms/dphpforms_dwarehouse_api.php",
                     cache: false,
                     success: function (msg) {
 
                         let alias_formulario = msg.tipo_formulario, local_alias_campo, html_enlaces = '';
 
-                        switch (alias_formulario) {
-                            case "seguimiento_pares":
-                                local_alias_campo = "id_estudiante";
-                                break;
-                            case "primer_acercamiento":
-                                local_alias_campo = "pa_id_estudiante";
-                                break;
-                            case "seguimiento_geografico":
-                                local_alias_campo = "seg_geo_id_estudiante";
-                                break;
-                            case "seguimiento_grupal":
-                                local_alias_campo = "id_estudiante";
-                                break;
-                            case "inasistencia":
-                                local_alias_campo = "in_id_estudiante";
-                                break;
-                        }
+        console.log(msg)
+
+                        // if (value_id_estudiante[0] !== '-9') {
+                        //     for (id in value_id_estudiante) {
+                        //         html_enlaces += '<a href="javascript:void(0)" class="data_general text_json" >' + value_code_student[id] + ' </a>';
+                        //     }
 
 
-                        value_id_estudiante = getIdEstudianteFromRecordDwarehouse(record_dwarehouse.datos_almacenados, record_dwarehouse.datos_previos, local_alias_campo, accion_record, alias_formulario);
+                        // } else {
 
+                        //     html_enlaces = '<strong>Enlace(s) no disponible(s)</strong>';
 
+                        // }
 
-                        if (value_id_estudiante[0] !== '-9') {
-                            for (id in value_id_estudiante) {
-                                html_enlaces += '<a href="javascript:void(0)" class="data_general text_json" >' + value_id_estudiante[id] + ' </a>';
-                            }
-
-
-                        } else {
-
-                            html_enlaces = '<strong>Enlace(s) no disponible(s)</strong>';
-
-                        }
-
-                        $(".url_students").empty();
-                        $(".url_students").append(html_enlaces);
+                        // $(".url_students").empty();
+                        // $(".url_students").append(html_enlaces);
                         // callback_create_html_url(alias_formulario, local_alias_campo, accion_record, record_dwarehouse);
                     },
 

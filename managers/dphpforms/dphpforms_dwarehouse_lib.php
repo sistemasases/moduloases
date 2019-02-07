@@ -305,7 +305,7 @@ function log_to_restore_into_dwarehouse($registro_respuesta_form){
     global $DB;
     $new_log = new stdClass();
     $new_log = $registro_respuesta_form;
-    $new_log->accion = "RESTORE";
+    $new_log->accion = 'RESTORE';
     
     return  $DB->insert_record('talentospilos_df_dwarehouse', $new_log, $returnid=false, $bulk=false);
 
@@ -373,4 +373,99 @@ function  get_tipo_form($id_registro_respuesta_form)
                          INNER JOIN {talentospilos_df_formularios} AS df_formularios ON df_formularios.id = df_form_resp.id_formulario
                                 WHERE df_form_resp.id = '$id_registro_respuesta_form' ";
    return $DB->get_record_sql($sql_query);
+}
+
+ /**
+ * getIdEstudianteFromRecordDwarehouse
+ *
+ * @see getIdEstudianteFromRecordDwarehouse($dt_alm, $dt_prev,  $local_alias, $accion_record, $alias_formulario);
+ * @param object $dt_alm Representa datos almacenados  del registro que llega.
+ * @param object $dt_prev Representa datos previos  del registro que llega.
+ * @param string $local_alias Local alias del campo a consultar. Depende del tipo de formulario.
+ * @param string $accion_record Accion registrada en el log.
+ * @param string $alias_formulario Tipo de formulario.
+ * @return array 
+ */
+
+function getIdStudentFromRecordDwarehouse($dt_alm, $dt_prev, $local_alias, $accion_record, $alias_formulario) {
+
+    //Function return ['-9'] if it does not find the data, or there are inconsistencies
+
+    $retorno_id = ['-9'];
+    $auxiliar_id_estudiante_prev = '-11';
+    $auxiliar_id_estudiante_alm = '-10';
+
+
+
+    if ( $accion_record == 'RESTORE' || $accion_record == 'DELETE' || $accion_record == 'UPDATE') {
+        $dt_alm = $dt_alm->record;
+        $dt_prev = $dt_prev->record;
+        $campos_alm = $dt_alm->campos;
+        $campos_prev = $dt_prev->campos;
+
+
+        //Buscar 
+        foreach ($campos_alm as $campo) {
+            if ($campo->local_alias == $local_alias) {
+                $auxiliar_id_estudiante_alm = $campo->respuesta;
+                break;
+            }
+        }
+
+        foreach ($campos_prev as $campos) {
+            if ($campo->local_alias == $local_alias) {
+                $auxiliar_id_estudiante_prev = $campo->respuesta;
+                break;
+            }
+        }
+
+        if ($auxiliar_id_estudiante_alm == $auxiliar_id_estudiante_prev) {
+
+            if ($alias_formulario->tipo_formulario != "seguimiento_grupal" ) {
+                //Tienen id_ases, trae id_ases del registro
+                $retorno_id = [$auxiliar_id_estudiante_alm];
+            } else {
+                //Traer arreglo de códigos
+                $retorno_id = $campo->respuesta;
+                $retorno_id = explode(",",$retorno_id);
+            }
+
+        } else {
+            $retorno_id = ['-9'];
+        }
+
+    } else if ($accion_record == 'INSERT') {
+        $dt_alm = $dt_alm->record;
+        $campos_alm = $dt_alm->campos;
+
+        foreach ($campos_alm as $campo) {
+            if ($campo->local_alias == $local_alias) {
+
+                if ($alias_formulario->tipo_formulario  != "seguimiento_grupal" ) {
+                    //Tienen id_ases, trae id_ases del registro
+                    
+                    $retorno_id = [$campo->respuesta];
+                    
+                } else {
+                    //Traer arreglo de códigos
+                    $retorno_id = $campo->respuesta;
+                    $retorno_id = explode(",",$retorno_id);
+                }
+
+                break;
+            }
+        }
+
+
+    } else {
+        $retorno_id = ['-9'];
+        // swal(
+        //     'DATA ERROR',
+        //     'Oooops! Not supported',
+        //     'warning'
+        // );
+    }
+
+
+    return $retorno_id;
 }
