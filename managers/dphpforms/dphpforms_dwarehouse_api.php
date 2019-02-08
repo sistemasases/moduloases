@@ -312,10 +312,16 @@
 
             if( $alias_formulario != "seguimiento_grupal" && $local_alias_campo != "indefinido"){
                 //Buscar por id ases retornado de value_student_id el usuario moodle con tracking status 1, retornar username
+                //Traer datos para url. Dentro del método llamado existe otro método a utilizar
+                $student_data = getDataToUrl($value_student_id);
 
             }else if( $alias_formulario == "seguimiento_grupal" && $local_alias_campo != "indefinido"){
-                //Buscar cada por codigo de value_student_id  el usuario moodle con tracking status 1, retornar username
+                //Buscar cada uno por codigo de value_student_id  el usuario moodle con tracking status 1, retornar username
+                //Primer paso: Traer id ases correspondiente a cada username de value_student_id
+                $id_ases_students = getIdAsesByUsernames($value_student_id);
 
+                //Segundo paso: Traer datos para url. Dentro del método llamado existe otro método a utilizar
+                $student_data     = getDataToUrl($id_ases_students);
             }else
             {
                 return_with_code(-6);

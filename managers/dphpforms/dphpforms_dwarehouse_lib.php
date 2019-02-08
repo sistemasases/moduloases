@@ -375,6 +375,82 @@ function  get_tipo_form($id_registro_respuesta_form)
    return $DB->get_record_sql($sql_query);
 }
 
+
+/**
+ * Function that load username and firstname data switch id_ases
+ * @see getDataToUrlByIdAses($id_ases_student)
+ * @param $id_ases_student---> id_ases_user
+ * @return array
+ **/
+
+function  getDataToUrlByIdAses($id_ases_student)
+{
+    global $DB; 
+   $sql_query = "SELECT _user.username, _user.firstname FROM mdl_talentospilos_user_extended AS talentospilos_user_extended
+                        INNER JOIN mdl_user AS _user ON talentospilos_user_extended.id_moodle_user = _user.id
+                                WHERE talentospilos_user_extended.id_ases_user = '$id_ases_student' AND talentospilos_user_extended.tracking_status = 1";
+   return $DB->get_records_sql($sql_query);
+}
+
+/**
+ * Function that load username and firstname data switch id_ases
+ * @see getDataToUrlByIdAses($id_ases_student)
+ * @param $id_ases_student---> id_ases_user
+ * @return array
+ **/
+
+function  getIdAses($username)
+{
+    global $DB; 
+   $sql_query = "SELECT _user.username, _user.firstname FROM mdl_talentospilos_user_extended AS talentospilos_user_extended
+                        INNER JOIN mdl_user AS _user ON talentospilos_user_extended.id_moodle_user = _user.id
+                                WHERE talentospilos_user_extended.id_ases_user = '$id_ases_student' AND talentospilos_user_extended.tracking_status = 1";
+   return $DB->get_records_sql($sql_query);
+}
+
+/**
+ * Iterate array to operate with data
+ * @see getDataToUrl($students)
+ * @param $students---> id_ases_user 
+ * @return array Students data to url
+ **/
+
+function getDataToUrl($students){
+
+    $array_students = [];
+    foreach ($students as $student){
+        //Se reciben los id_ases a buscar.
+        //Se realiza la busquedad por cada id_ases recibido 
+       array_push($array_students, getDataToUrlByIdAses($student));
+    }
+
+    return $array_students;
+}
+
+/**
+ * Function that get id_ases_user for each student in array param
+ * @see getIdAsesByUsernames($username_students)
+ * @param $username_students---> array with username students 
+ * @return array
+ **/
+
+function  getIdAsesByUsernames($username_students)
+{    
+    $array_id_ases_students= [];
+    //Iterate array to operate with data
+    foreach($username_students as $username){
+
+        //Traer id ases que corresponde a cada username
+        $id_ases_user_switch_username = getIdAses($username);
+        array_push($array_id_ases_students, $id_ases_user_switch_username);
+    }
+
+    //Retornar array con id_ases de cada estudiante del arreglo recidibo
+
+    return $array_id_ases_students;
+}
+
+
  /**
  * getIdEstudianteFromRecordDwarehouse
  *
