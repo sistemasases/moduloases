@@ -327,7 +327,7 @@
                 return_with_code(-6);
             }
          
-           echo json_encode($username_student_to_url);
+           echo json_encode($student_data);
                     
             }else{     
                 return_with_code( -2 );

@@ -287,7 +287,7 @@ define([
 
                     //GENERACIÓN DE HTML DE URL(S) QUE DIRIGEN A FICHA DE ESTUDIANTE(S)
 
-                    getTipoFormulario(json_to_compare.id_registro_respuesta_form, accion_record, json_to_compare);
+                    getStudentsCodeToUrl(json_to_compare.id_registro_respuesta_form, accion_record, json_to_compare);
 
 
                 }
@@ -927,7 +927,7 @@ define([
                 return html_to_keys;
             }
 
-            function getTipoFormulario(id_registro_respuesta_form, accion_record, record_dwarehouse) {
+            function getStudentsCodeToUrl(id_registro_respuesta_form, accion_record, record_dwarehouse) {
 
                 let param = [];
                 param.push(id_registro_respuesta_form);
@@ -944,7 +944,17 @@ define([
 
                         let alias_formulario = msg.tipo_formulario, local_alias_campo, html_enlaces = '';
 
-        console.log(msg)
+                         console.log(msg)
+                         if (msg.length === 0) {
+                            html_enlaces = '<strong>Enlace(s) no disponible(s)</strong>';
+                            $(".url_students").empty();
+                            $(".url_students").append(html_enlaces);
+                        } else {
+                            html_enlaces = 'Enlaces';
+                            $(".url_students").empty();
+                            $(".url_students").append(html_enlaces);
+                       
+                        }
 
                         // if (value_id_estudiante[0] !== '-9') {
                         //     for (id in value_id_estudiante) {

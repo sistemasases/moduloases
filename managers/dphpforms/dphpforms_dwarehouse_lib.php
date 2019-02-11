@@ -399,12 +399,11 @@ function  getDataToUrlByIdAses($id_ases_student)
  * @return array
  **/
 
-function  getIdAses($username)
-{
+function  getIdAses($username){
     global $DB; 
-   $sql_query = "SELECT _user.username, _user.firstname FROM mdl_talentospilos_user_extended AS talentospilos_user_extended
-                        INNER JOIN mdl_user AS _user ON talentospilos_user_extended.id_moodle_user = _user.id
-                                WHERE talentospilos_user_extended.id_ases_user = '$id_ases_student' AND talentospilos_user_extended.tracking_status = 1";
+   $sql_query = "SELECT talentospilos_user_extended.id_ases_user AS id_ases_user FROM {user} AS _user 
+                     INNER JOIN {talentospilos_user_extended} AS talentospilos_user_extended ON _user.id = talentospilos_user_extended.id_moodle_user
+                         WHERE _user.username  LIKE '$username%'";
    return $DB->get_records_sql($sql_query);
 }
 
@@ -421,7 +420,11 @@ function getDataToUrl($students){
     foreach ($students as $student){
         //Se reciben los id_ases a buscar.
         //Se realiza la busquedad por cada id_ases recibido 
-       array_push($array_students, getDataToUrlByIdAses($student));
+        $data = getDataToUrlByIdAses($student);
+        if(count($data) != 0){
+            array_push($array_students, $data );
+        }
+      
     }
 
     return $array_students;
@@ -442,7 +445,7 @@ function  getIdAsesByUsernames($username_students)
 
         //Traer id ases que corresponde a cada username
         $id_ases_user_switch_username = getIdAses($username);
-        array_push($array_id_ases_students, $id_ases_user_switch_username);
+        array_push($array_id_ases_students, $id_ases_user_switch_username->id_ases_user);
     }
 
     //Retornar array con id_ases de cada estudiante del arreglo recidibo
