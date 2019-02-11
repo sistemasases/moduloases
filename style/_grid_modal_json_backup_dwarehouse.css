@@ -28,7 +28,7 @@
  }
 
   .grid_dphpforms_compare > .general_info_record_dwarehouse > .data_general{
-    border-left: 6px solid red;
+    border-left: 6px solid red !important;
     margin: 10px 20px 10px 30px;
     background-color: rgb(251, 246, 246);
     font-size: 16px;

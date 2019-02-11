@@ -270,7 +270,7 @@ define([
                     html_content += '<div class="data_general text_json">  Realizado por:        ' + user_monitor + '</div>';
                     html_content += '<div class="data_general text_json">  Acción del registro: <strong style= "font-size: 18px;"> ' + accion_record + '</strong></div>';
                     html_content += '<div class="data_general text_json">  Fecha:                ' + date_record + '</div>';
-                    html_content += '<div class="url_students"> </div>';
+                    html_content += '<div class="url_students data_general text_json"> </div>';
                     html_content += '                            </div>';
                     html_content += '<div class = "json_data_compare">';
                     html_content += '<div class="contenedor" >';
@@ -942,15 +942,26 @@ define([
                     cache: false,
                     success: function (msg) {
 
-                        let alias_formulario = msg.tipo_formulario, local_alias_campo, html_enlaces = '';
+                        let html_enlaces = '', student_code, name_student, student;
+                        let dwarehouse_record_id ;
 
-                         console.log(msg)
                          if (msg.length === 0) {
                             html_enlaces = '<strong>Enlace(s) no disponible(s)</strong>';
                             $(".url_students").empty();
                             $(".url_students").append(html_enlaces);
                         } else {
-                            html_enlaces = 'Enlaces';
+
+                            for(student_data in msg){
+
+                                
+                                student = msg[student_data];
+                                dwarehouse_record_id = Object.keys(student)[0];
+                              
+                                student_code = student[dwarehouse_record_id].username;
+                                name_student = student[dwarehouse_record_id].firstname + ' ' +student[dwarehouse_record_id].lastname;
+                                html_enlaces = '<a href="https://campusvirtual.univalle.edu.co/moodle/blocks/ases/view/student_profile.php?courseid=25643&instanceid=450299&student_code='+ student_code+'">'+name_student+'</a>';
+                            }
+                            
                             $(".url_students").empty();
                             $(".url_students").append(html_enlaces);
                        

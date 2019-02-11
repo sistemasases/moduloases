@@ -386,7 +386,7 @@ function  get_tipo_form($id_registro_respuesta_form)
 function  getDataToUrlByIdAses($id_ases_student)
 {
     global $DB; 
-   $sql_query = "SELECT _user.username, _user.firstname FROM mdl_talentospilos_user_extended AS talentospilos_user_extended
+   $sql_query = "SELECT _user.username, _user.firstname , _user.lastname  FROM mdl_talentospilos_user_extended AS talentospilos_user_extended
                         INNER JOIN mdl_user AS _user ON talentospilos_user_extended.id_moodle_user = _user.id
                                 WHERE talentospilos_user_extended.id_ases_user = '$id_ases_student' AND talentospilos_user_extended.tracking_status = 1";
    return $DB->get_records_sql($sql_query);
