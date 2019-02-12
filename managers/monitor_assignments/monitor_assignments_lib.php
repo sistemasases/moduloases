@@ -777,8 +777,6 @@ function monitor_assignments_get_last_student_assignment( $id_ases, $instance_id
 
     $mon_est_relationship = $DB->get_record_sql( $sql_relationship );
 
-    //print_r($mon_est_relationship );die();
-
     if( $mon_est_relationship ){
 
         $monitor_id = $mon_est_relationship->id_monitor;
