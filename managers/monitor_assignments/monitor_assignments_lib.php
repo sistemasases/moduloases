@@ -759,7 +759,7 @@ function monitor_assignments_get_practicants_from_professional( $instance_id, $p
 /**
  * 
  */
-function monitor_assignments_get_student_assignment( $id_ases, $instance_id ){
+function monitor_assignments_get_last_student_assignment( $id_ases, $instance_id ){
 
     global $DB;
     $to_return = [
