@@ -756,4 +756,89 @@ function monitor_assignments_get_practicants_from_professional( $instance_id, $p
     return array_values( $practicants );
 }
 
+/**
+ * 
+ */
+function monitor_assignments_get_student_assignment( $id_ases, $instance_id ){
+
+    global $DB;
+    $to_return = [
+        "monitor_obj" => null,
+        "pract_obj" => null,
+        "prof_obj" => null
+    ];
+
+    $sql_relationship = "SELECT id, id_monitor, id_estudiante, id_instancia, id_semestre 
+    FROM {talentospilos_monitor_estud} 
+    WHERE id_estudiante = '$id_ases'
+    AND id_instancia = '$instance_id'
+    ORDER BY id_semestre DESC
+    LIMIT 1";
+
+    $mon_est_relationship = $DB->get_record_sql( $sql_relationship );
+
+    //print_r($mon_est_relationship );die();
+
+    if( $mon_est_relationship ){
+
+        $monitor_id = $mon_est_relationship->id_monitor;
+        $semester_id = $mon_est_relationship->id_semestre;
+
+        $sql_monitor = "SELECT id, username, firstname, lastname 
+        FROM {user} 
+        WHERE id  = '$monitor_id'";
+
+        $monitor_obj = $DB->get_record_sql( $sql_monitor );
+        $to_return['monitor_obj'] =  $monitor_obj;
+        
+        $sql_relationship = "SELECT * 
+        FROM {talentospilos_user_rol}
+        WHERE id_usuario = '$monitor_id'
+        AND id_semestre = '$semester_id'
+        AND id_instancia = '$instance_id'";
+
+        $mon_pract_relationship = $DB->get_record_sql( $sql_relationship );
+        
+        if( $mon_pract_relationship ){
+
+            $pract_id = $mon_pract_relationship->id_jefe;
+
+            $sql_practicant = "SELECT id, username, firstname, lastname 
+            FROM {user} 
+            WHERE id  = '$pract_id'";
+
+            $pract_obj = $DB->get_record_sql( $sql_practicant );
+            $to_return['pract_obj'] =  $pract_obj;
+
+            $sql_relationship = "SELECT * 
+            FROM {talentospilos_user_rol}
+            WHERE id_usuario = '$pract_id'
+            AND id_semestre = '$semester_id'
+            AND id_instancia = '$instance_id'";
+
+            $pract_prof_relationship = $DB->get_record_sql( $sql_relationship );
+            
+            if( $pract_prof_relationship ){
+
+                $prof_id = $pract_prof_relationship->id_jefe;
+                
+                $sql_professional = "SELECT id, username, firstname, lastname 
+                FROM {user} 
+                WHERE id  = '$prof_id'";
+
+                $prof_obj = $DB->get_record_sql( $sql_professional );
+                $to_return['prof_obj'] =  $prof_obj;
+
+            }
+
+        }
+
+        
+    }
+
+    return $to_return;
+
+}
+
+
 ?>
