@@ -6,8 +6,46 @@
  * Time: 05:08 PM
  */
 
+
 class FieldValidators
 {
+    private static  function validateDate($date, $format = 'Y-m-d H:i:s')
+    {
+        $d = DateTime::createFromFormat($format, $date);
+        return $d && $d->format($format) == $date;
+    }
+
+    /**
+     * Validate the date format, can be only one format or an array of possible formats
+     *
+     *
+     * @param $format_or_formats string|array Examples: 'Y-m-d', ['Y-m-d', 'Y/m/d', 'd-m-Y']
+     * @return Closure
+     */
+    public static function date_format($format_or_formats, string $custom_message = null) {
+        return
+            function($value, $field_name= '') use ($format_or_formats, $custom_message) {
+            $error_message_prefix = "El campo $field_name debe tener ";
+                if(is_string($format_or_formats)) {
+                    if(!FieldValidators::validateDate($value, $format_or_formats)) {
+                        return $custom_message? $custom_message : $error_message_prefix." el formato $format_or_formats";
+                    } else {
+                        return true;
+                    }
+                } elseif(is_array($format_or_formats)) {
+                    foreach($format_or_formats as $format) {
+
+                        if(FieldValidators::validateDate($value, $format)) {
+                           return true;
+                        }
+                    }
+                    $formats_string = implode(', ', $format_or_formats);
+                    return $custom_message?  $custom_message: $error_message_prefix." uno de los formatos $formats_string";
+                } else {
+                    return "Ha ingresado un valor incorrecto para el validador, ejemplo de formatos esperados: 'Y-m-d', ['Y-m-d', 'Y/m/d', 'd-m-Y']. Formato ingresado: $format_or_formats";
+                }
+            };
+    }
     public static function numeric(string $custom_message = null) {
         return
             function($value, $field_name = '') use ($custom_message) {

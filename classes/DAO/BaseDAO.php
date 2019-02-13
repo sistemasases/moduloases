@@ -57,8 +57,8 @@ abstract class BaseDAO extends Validable
     public function __construct($data = null)
     {
         if ($data) {
-            $this->make_from($data);
 
+            $this->make_from($data);
         }
     }
     public function _get_factory(): QueryFactory {
@@ -104,6 +104,11 @@ abstract class BaseDAO extends Validable
 
             return false;
         }
+        /* If at least one field than should be not null is null */
+        if( !$this->validate_not_null_fields() ) {
+
+            return false;
+        }
         if( !$this->_custom_validation()) {
             return  false;
         }
@@ -121,21 +126,37 @@ abstract class BaseDAO extends Validable
     private function validate_required_fields(): bool {
         $valid = true;
         $required_fields = $this->get_required_fields();
-        $required_field_is_empty_error = FieldValidationErrorFactory::required_field_is_empty();
+
         foreach($required_fields as $required_field) {
             if(!property_exists($this, $required_field)) {
-                $this->add_error($required_field_is_empty_error, $required_field);
+                $this->add_error(FieldValidationErrorFactory::required_field_is_empty(array('field'=>$required_field)), $required_field);
                 $valid = false;
                 continue;
             } else if($this->{$required_field} == '') {
-                $this->add_error($required_field_is_empty_error, $required_field);
+                $this->add_error(FieldValidationErrorFactory::required_field_is_empty(array('field'=>$required_field)), $required_field);
                 $valid = false;
                 continue;
             }
         }
         return $valid;
     }
+    private function validate_not_null_fields(): bool {
+        $valid = true;
+        $required_fields = $this->get_not_null_fields();
 
+        foreach($required_fields as $required_field) {
+            if(!property_exists($this, $required_field)) {
+                $this->add_error(FieldValidationErrorFactory::not_null_field(array('field'=>$required_field)), $required_field);
+                $valid = false;
+                continue;
+            } else if($this->{$required_field} === null) {
+                $this->add_error(FieldValidationErrorFactory::not_null_field(array('field'=>$required_field)), $required_field);
+                $valid = false;
+                continue;
+            }
+        }
+        return $valid;
+    }
 
     /**
      * Check if all fields of the object than should be numeric are numeric, and return an array with the names
@@ -171,6 +192,19 @@ abstract class BaseDAO extends Validable
     public static function get_numeric_fields(): array {
         return array();
     }
+    /**
+     * Overload this function in the child classes if this have not null fields
+     * fields, otherwise is not necesary this definition
+     *
+     * Return the object attributes than should be not null fields, if the class
+     * does not have any numeric attributes return empty array
+     * @return array Array of string than represents the column names where
+     * the column is type int, double or bigint and the current value is not
+     */
+    public function get_not_null_fields(): array {
+        return array();
+    }
+
 
     /**
      * Overload this function in the child classes if this have required
@@ -312,7 +346,7 @@ abstract class BaseDAO extends Validable
      * @example $conditions =  array('username'=> 'Camilo', 'lastname'=> 'Cifuentes')
      * @example $conditions = array(AsesUser::USER_NAME => 'Camilo', AsesUser::LAST_NAME => 'Cifuentes')
      * @see https://docs.moodle.org/dev/Data_manipulation_API
-     * @return false|Programa Object instance if exists in database, empty array if does not exist
+     * @return false|Object Object instance if exists in database, empty array if does not exist
      * @throws dml_exception
      * @throws ErrorException If the given conditions specify invalid column names throws an error
      *

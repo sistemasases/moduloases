@@ -57,6 +57,7 @@ class Semestre extends BaseDAO
      * @throws dml_exception
      */
     static function get_semesters_later_than($date, $number_of_semesters=-1, $unix_time = false, $date_format = 'Y-m-d') {
+
         global $DB;
         $date_ = $date;
         if(!($number_of_semesters == -1 || $number_of_semesters>=1)) {

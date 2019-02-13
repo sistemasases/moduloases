@@ -10,8 +10,7 @@ require_once (__DIR__ . '/../../classes/grades/ases_grade_report_grader.php');
  * @property string $course_caller_id Id of the course where the report is generated
  * @property int $page
  */
-error_reporting(E_ALL);
-ini_set('display_errors', '1');
+
 class _params {}
 
 

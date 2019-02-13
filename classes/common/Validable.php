@@ -88,9 +88,18 @@ abstract class Validable {
     /**
      * Return errors, instances of AsesError if at least one error exists, emtpy array otherwise
      * @see AsesError
+     * @param $prefix_message string Prefix message than is append to the all error messages
      * @return array
      */
-    public function get_errors(): array {
+    public function get_errors($prefix_message = null): array {
+        if( $prefix_message ) {
+            $errors = $this->_errors;
+            /** @var $error AsesError */
+            foreach($errors as $error) {
+                $error->error_message = $prefix_message.' '.$error->error_message;
+            }
+            return $errors;
+        }
         return $this->_errors;
     }
     /**

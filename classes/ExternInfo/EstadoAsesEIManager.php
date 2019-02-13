@@ -13,8 +13,9 @@ require_once(__DIR__.'/../Programa.php');
 require_once(__DIR__.'/../../managers/jquery_datatable/jquery_datatable_lib.php');
 require_once(__DIR__.'/../../managers/lib/reflection.php');
 require_once(__DIR__.'/../../managers/cohort/cohort_lib.php');
-class EstadoAsesEIManager extends ExternInfoManager {
+require_once(__DIR__ . '/../../managers/user_management/user_lib.php');
 
+class EstadoAsesEIManager extends ExternInfoManager {
     public $cohort_id;
     public $instance_id;
     public function __construct($cohort_id, $instance_id) {
@@ -31,38 +32,24 @@ class EstadoAsesEIManager extends ExternInfoManager {
      */
     public function persist_data() {
         $data = $this->get_objects();
-        /* @var $item_ EstadoAsesCSV */
-        foreach ($data as $key => $item_) {
-            $item = clone $item_;
+        /* @var $item EstadoAsesCSV */
 
+        foreach ($data as $key => $item) {
             if(!$item->valid()) {
 
                 return false;
             }
-            /** @var $item EstadoAsesCSV */
-
-            EstadoAsesCSV::pre_save($item);
-
-            $username = generate_username($item->codigo, $item->programa);
             $id_moodle_user = null;
-
             $id_ases_user = null;
+
+
             /* Creación de usuario moodle si no existe*/
 
-            if(!core_user::get_user_by_username($username)) {
 
-             $id_moodle_user = user_create_user(
-                 (object) array(
-                      'username'=>$username,
-                      'confirmed'=>'1',
-                      'password'=> get_user_password($item->codigo, $item->firstname, $item->lastname),
-                      'lang'=>'es',
-                      'mnethostid'=>3,
-                      'email'=> $item->email,
-                      'firstname'=> $item->firstname,
-                      'lastname'=> $item->lastname,
-                      )
-              );
+            $moodle_user = $item->get_moodle_user();
+            $username = $moodle_user['username'];
+            if(!core_user::get_user_by_username($username)) {
+                $id_moodle_user = user_create_user((object)$moodle_user);
                 $this->add_success_log_event("El usuario moodle fue creado con nombre de usuario $username y contraseña por defecto", $key);
             } else {
                 $moodle_user = core_user::get_user_by_username($username);
@@ -71,7 +58,11 @@ class EstadoAsesEIManager extends ExternInfoManager {
                // print_r($this->get_object_warnings());
                 $id_moodle_user = $moodle_user->id;
             }
+
+
             /* Añadir el usuario a la cohorte dada */
+
+
             /** @var $cohort \cohort_lib\Cohort */
             $cohorts = \cohort_lib\get_cohorts(array(\cohort_lib\ID_NUMBER=>$this->cohort_id));
             $cohort = $cohorts[0]; /** El id number de una corte es unico, por lo que esto es posible,
@@ -92,30 +83,30 @@ class EstadoAsesEIManager extends ExternInfoManager {
                 }
             }
             if($student_cohorts = get_cohorts_by_student($id_moodle_user)) {
-                $cohort_names = array_map(
-
-                    function($cohort) {
-                        /** @var $cohort \cohort_lib\Cohort */
-                        return $cohort->name;
-                    }
-                    , $student_cohorts);
+                $cohort_names = array_column($student_cohorts, 'name');
                 $cohort_names_string = implode(', ', $cohort_names);
                 $this->add_object_warning("El estudiante ya estaba en la(s) cohorte(s) [$cohort_names_string]", $key);
             }
             /* Create ases user if not exist */
-            if(!AsesUser::exists(array(AsesUser::NUMERO_DOCUMENTO=>$item->documento))) {
+            if(!AsesUser::exists_by_num_docs($item->documento)) {
+
                 $ases_user = EstadoAsesCSV::extract_ases_user($item);
                 if($ases_user->valid()) {
                     $id_ases_user = $ases_user->save();
                     $this->add_success_log_event("El usuario con número de documento $item->documento se ha creado.", $key);
                 }
-             }else {
-                $this->add_object_warning("El usuario con número de documento $item->documento ya existia en la tabla usuarios ases.", $key);
-
+             } else {
+                $this->add_object_warning("El usuario con número de documento $item->documento ya existia en la tabla usuarios ases, sea por documento inicial o por documento actual", $key);
                 $ases_user = AsesUser::get_by(array(AsesUser::NUMERO_DOCUMENTO=>$item->documento));
                 $id_ases_user= $ases_user->id;
             }
             if(AsesUserExtended::exists(array(AsesUserExtended::ID_ASES_USER=>$id_ases_user))) {
+                $possible_moodle_users_related = user_moodle_get_by_code($item->codigo);
+                if( !empty ($possible_moodle_users_related)) {
+                    if(count($possible_moodle_users_related) === 1) {
+
+                    }
+                }
                 $programs = AsesUserExtended::get_actie_programs_by_ases_user_id($id_ases_user);
                 $program_names = array_column($programs, Programa::NOMBRE);
                 $program_names_string = implode($program_names);
@@ -124,44 +115,14 @@ class EstadoAsesEIManager extends ExternInfoManager {
                     $key);
             }
              if(!AsesUserExtended::exists(array(AsesUserExtended::ID_MOODLE_USER=>$id_moodle_user, AsesUserExtended::ID_ASES_USER=>$id_ases_user))) {
-                $academic_program = Programa::get_by(array(Programa::CODIGO_UNIVALLE=>$item->programa, Programa::ID_SEDE=>$item->sede));
-                $id_academic_program = $academic_program->id;
-                $ases_user_extended = new AsesUserExtended();
-                $ases_user_extended->id_ases_user = $id_ases_user;
-                $ases_user_extended->id_moodle_user = $id_moodle_user;
-                $ases_user_extended->id_academic_program = $id_academic_program;
-
+                $ases_user_extended = $item->extract_user_extended($id_ases_user, $id_moodle_user);
                 AsesUserExtended::disable_all_tracking_status($id_ases_user);
                 $ases_user_extended->save();
              }
         }
         return true;
     }
-    /**
-     * In this case, a datatable is returned
-     * @throws ErrorException
-     * @return string|void
-     */
-    public function send_response() {
 
-        $sample_std_object = $this->get_objects()[0];
-
-        $datatable_columns = \jquery_datatable\Column::get_columns($sample_std_object, $this->custom_column_mapping());
-        $json_datatable = new \jquery_datatable\DataTable($this->get_objects(), $datatable_columns);
-        $response = new \stdClass();
-        $response->jquery_datatable = $json_datatable;
-        $response->data = $this->get_initial_objects();
-        $response->error = !$this->valid();
-        $response->errors = $this->get_errors();
-        $response->initial_object_properties = count($response->data)>=1?  \reflection\get_properties($response->data[0][0]): [];
-        $response->object_errors = $this->get_object_errors();
-        $response->object_warnings = $this->get_object_warnings();
-        $response->success_log_events = $this->get_success_log_events();
-        $arrayEncoded = json_encode($response);
-
-
-        return $arrayEncoded;
-    }
     public function valid(): bool
     {
         $valid = parent::valid(); // TODO: Change the autogenerated stub

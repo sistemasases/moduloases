@@ -134,6 +134,8 @@ function get_boss_users($id_rol, $idinstancia)
 /**
  * Return the username for a given student code and program code
  *
+ *
+ * **If code of student or program are invalid, null is returned**
  * @param $student_code string|number Can be with '20' prefix or without this.
  *  Examples: 201327951, 1327951
  *  Should have size 7 or 9
@@ -152,15 +154,118 @@ function generate_username($student_code, $program_code) {
             $student_code_ = substr($student_code, 2, strlen($student_code));
             break;
         default:
+
             return null;
 
     }
     if(strlen((string) $program_code) !== 4) {
+
         return null;
     }
     return "$student_code_-$program_code";
 }
 
+/**
+ * Return the short student code without the first two digits,
+ * for example, if the full student code is 201327952, returns
+ * 1327951, if 1327951 is given as input, 1327951 is returned,
+ * if the code does not have size 7 or 9, false is returned
+ * @return int|string|null The short student code if the given code
+ *  is valid, null otherwise
+ */
+
+function user_get_short_code($student_code)
+{
+    switch (strlen((string)$student_code)) {
+        case 7:
+            return $student_code;
+        case 9:
+            return substr($student_code, 2, strlen($student_code));
+            break;
+        default:
+            return null;
+    }
+}
+
+/**
+ * Check if the user code is already registred in moodle
+ * @param $student_code Can be with year first two digits or in short format without they
+ * @return bool
+ * @throws dml_exception
+ */
+function user_moodle_code_repeated($student_code): bool {
+    global $DB;
+    $short_code = user_get_short_code($student_code);
+    $sql = <<<SQL
+    SELECT id from mdl_user
+    where username like '$short_code-%'
+SQL;
+    return $DB->record_exists_sql($sql);
+}
+/**
+ * Return an array of moodle users if exist by student code
+ * @param $student_code Can be with year first two digits or in short format without they
+ * @return array Mdl users
+ * @throws dml_exception
+ */
+function user_moodle_get_by_code($student_code): array {
+    global $DB;
+    $short_code = user_get_short_code($student_code);
+    $sql = <<<SQL
+    SELECT * from mdl_user
+    where username like '$short_code-%'
+SQL;
+    $db_result = $DB->get_records_sql($sql);
+    return array_values($db_result);
+}
+/**
+ * Checkea si el nombre completo ya esta registrado para otro usuario ases
+ * @param $nombre_completo
+ * @return bool
+ * @throws dml_exception
+ * @author Luis Gerardo Manrique Cardona <luis.manrique@correounivalle.edu.co>
+ */
+function user_duplicated_full_name($full_name) {
+    global $DB;
+    $sql = <<<SQL
+    select * from (
+      SELECT concat(mdl_user.firstname, ' ', mdl_user.lastname) as nombre_completo 
+      from {talentospilos_user_extended} mdl_talentospilos_user_extended
+          inner join {user} mdl_user
+                 on mdl_user.id = mdl_talentospilos_user_extended.id_moodle_user
+     ) as r where r.nombre_completo = '$full_name'
+SQL;
+    return $DB->record_exists_sql($sql);
+
+}
+/**
+ * Checkea si el codigo ya esta registrado para otro usuario ases
+ * @param $codigo string|int Codigo de estudiante, puede tener 7 o 9 caracteres
+ * @author Luis Gerardo Manrique Cardona <luis.manrique@correounivalle.edu.co>
+ * @return bool
+ * @throws dml_exception
+ */
+function user_duplicated_student_code($student_code) {
+    global $DB;
+    $short_student_code = user_get_short_code($student_code);
+    $sql = <<<SQL
+    select 1 from mdl_user where username like '$short_student_code-%';
+SQL;
+    return $DB->record_exists_sql($sql);
+}
+/**
+ * Check if the student code is valid
+ * @param $student_code string|int
+ * @author Luis Gerardo Manrique Cardona <luis.manrique@correounivalle.edu.co>
+ * @return bool
+ */
+function user_valid_student_code($student_code) {
+    if(!is_numeric($student_code) && !is_string($student_code)) {
+        return false;
+    }
+    $student_code_length = strlen((string)$student_code);
+    return $student_code_length === 7 || $student_code_length === 9 ;
+}
 /**
  * Return the user password
  * @param $code string|int
@@ -169,7 +274,7 @@ function generate_username($student_code, $program_code) {
  * @return string The password in format $passwd = FIRST_LETTER_OF_FIRSTNAME_IN_UPPER.SHORT_CODE.FIRST_LETTER_OF_LASTNAME_IN_UPPER
  *  If the code is invalid, or firstname or lastname is empty, false is returned
  */
-function get_user_password($code , $firsname, $lastname): string {
+function user_get_password($code , $firsname, $lastname): string {
     switch(strlen($code)) {
         case 9: $code = substr($code, 2, 9); break;
         case 7:  break;
@@ -191,7 +296,7 @@ function get_user_password($code , $firsname, $lastname): string {
  * @return string Regex
  */
 
-function get_username_moodle_regex(): string {
+function user_get_username_moodle_regex(): string {
     return '/[0-9]{7}-[0-9]{4}/';
 }
 
@@ -203,7 +308,7 @@ function get_username_moodle_regex(): string {
  * @return bool True if the moodle username is valid
  */
 function valid_moodle_username(string $username): bool {
-    if( preg_match(get_username_moodle_regex(), $username) == 0) {
+    if( preg_match(user_get_username_moodle_regex(), $username) == 0) {
         return false;
     }
     return true;

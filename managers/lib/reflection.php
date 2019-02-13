@@ -62,7 +62,7 @@ function assign_properties_to($stdObjectOrArrayFrom, $instanceTo) {
         $name = $sourceProperty->getName();
         $value = $sourceProperty->getValue($stdObject);
       
-        if (in_array($name, $shared_properties) && $value != '') {
+        if (in_array($name, $shared_properties) /*&& $value != ''*/) {
             $instanceTo->$name = $value;
         }
       

@@ -96,7 +96,6 @@ class AsesUserExtended extends BaseDAO {
      */
     public static function disable_all_tracking_status($id_ases_user_or_ases_user) {
         global $DB;
-        $table_name = AsesUserExtended::get_table_name();
 
         $tracking_status_column = AsesUserExtended::TRACKING_STATUS;
         $tracking_status_inactive = TrackingStatus::INACTIVE;
@@ -104,7 +103,7 @@ class AsesUserExtended extends BaseDAO {
 
         $id_user = AsesUserExtended::get_ases_user_id_from_generic_input($id_ases_user_or_ases_user);
         $sql = <<<SQL
-        UPDATE {$table_name} SET $tracking_status_column = $tracking_status_inactive
+        UPDATE {talentospilos_user_extended} SET $tracking_status_column = $tracking_status_inactive
         WHERE  $id_ases_user_column = '$id_user'
         
 SQL;

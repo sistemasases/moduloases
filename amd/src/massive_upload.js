@@ -6,9 +6,9 @@
  * @license  http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 define([
-        'jquery',
-        'core/notification',
-        'core/templates',
+    'jquery',
+    'core/notification',
+    'core/templates',
     'block_ases/jquery.dataTables',
     'block_ases/dataTables.buttons',
     'block_ases/buttons.html5',
@@ -20,10 +20,39 @@ define([
              * @param data contiene el id de la instancia
              */
             init: function (data) {
-                var id_curso = data.id_curso;
+                var instance_id = data.instance_id;
                 var myTable = null;
                 var initial_object_properties = null;
+                function errors_object_to_erros(object_errors) {
+                    var errors = [];
+                    Object.keys(object_errors).forEach( key => {
+                        errors = errors.concat(object_errors[key]);
+                    });
 
+                    return errors;
+                }
+                /**
+                 * Message object than contain the warnigns , success logs and errors for a messages table
+                 *
+                 * @property index int From 1 if posible
+                 * @property errors errors object of AsesError[]
+                 * @property warnings string[]
+                 * @property success_logs string[]
+                 * @type {MessagesObject}
+                 */
+                var MessagesObject /* @class */ = (function   () {
+                    function MessagesObject(index,
+                                            errors,
+                                          warnings,
+                                          success_logs) {
+                        this.index = index;
+
+                        this.errors = errors ? errors_object_to_erros(errors) : [];
+                        this.warnings = warnings ? warnings : [];
+                        this.success_logs = success_logs ? success_logs : [];
+                    }
+                    return MessagesObject;
+                }());
 
                 /**
                  * Pinta los errores individuales genericos de los objetos.
@@ -42,10 +71,10 @@ define([
                  * @see https://datatables.net/reference/api/rows().data()
                  */
                 function getTableData(table, initial_object_properties) {
-                    table_data = table.rows().data();
+                    var table_data = table.rows().data();
                     var data_ = [];
                     var data = [];
-                    for (i = 0; i < table_data.length; i++) {
+                    for (var i = 0; i < table_data.length; i++) {
                         data_.push(table_data[i]);
                     }
                     /* Get only the initial object properties (exclude indexes or aditional values added for jquery datatable suport*/
@@ -70,7 +99,7 @@ define([
                         var data = getTableData(myTable, initial_object_properties);
                         console.log(data);
                         $.ajax({
-                            url: 'receive_csv.php/estado_ases/',
+                            url: get_api_url(),
                             data: {data: data},
                             type: 'POST',
                             success: function (response) {
@@ -94,6 +123,16 @@ define([
                     var column = table.column(name);
                     return column.name;
                 }
+                var get_cohort_id = function () {
+                    return $("#cohorts").val();
+                }
+                var get_endpoint_name = function () {
+                    return $("#endpoints").val();
+                };
+                var get_api_url = function() {
+
+                    return 'receive_csv.php/'+ get_endpoint_name() + '/'+get_cohort_id() + '/' + instance_id;
+                };
                 /**
                  * Load preview datatable
                  * En caso de que el csv tenga mas o menos propiedades de las esperadas
@@ -127,10 +166,10 @@ define([
                 $('#send-file').click(
                     function () {
                         var data = new FormData($(this).closest("form").get(0));
-                        var cohort_id = $('#cohorts').val();
+
 
                         $.ajax({
-                            url: 'receive_csv.php/estado_ases/'+cohort_id + '/' + id_curso,
+                            url: get_api_url(),
                             data: data,
                             cache: false,
                             contentType: false,
@@ -175,28 +214,48 @@ define([
                                  * sufren modificaciones estructurales, donde son añadidas algunas propiedades.
                                  */
                                 initial_object_properties = response.initial_object_properties;
-                                errors = response.object_errors;
-                                console.log(errors);
 
+                                var errors = response.object_errors;
+                                var warnings = response.object_warnings;
+                                var data = response.data;
+                                var success_log_events = response.success_log_events;
                                 var jquery_datatable = response.jquery_datatable;
-                                /* Se añade el error de cada objeto a si mismo. Estos errores vienen en  response.object_errors,
-                                * este objeto es un diccionario donde las llaves son las posiciones que un objeto ocupa en
-                                * datatable.data*/
+                                var data_quantity = data.length;
+
+                                var messages = [];
+                                for(var _i = 0; _i < data_quantity; _i++) {
+                                    if (
+                                        (errors[_i] && typeof errors[_i] === 'object' && errors[_i].constructor !== Array)||
+                                        (warnings[_i] && warnings[_i].length > 0) ||
+                                        (success_log_events[_i] && success_log_events[_i].length > 0)
+                                    ) {
+                                        messages.push(new MessagesObject(_i + 1, errors[_i] ? errors[_i] : [], warnings[_i], success_log_events[_i]));
+                                    }
+                                }
+                                /* Se muestran los mensajes*/
+                                templates.render('block_ases/massive_upload_messages', {data: messages} )
+                                    .then((html, js) => {
+                                       templates.appendNodeContents('#messages_area', html, js);
+                                    });
+                                /**
+                                 * Se añade el error de cada objeto a si mismo. Estos errores vienen en  response.object_errors,
+                                 * este objeto es un diccionario donde las llaves son las posiciones que un objeto ocupa en
+                                 * datatable.data
+                                 */
                                 Object.keys(errors).forEach((position, index) => {
                                     jquery_datatable.data[position].errors = errors[position];
                                 });
                                 /* Cada elemento data de la tabla debe tener una propiedad llamada index para que la columna
                                 * de indices para las filas pueda existir*/
                                 jquery_datatable.data.forEach((element, index) => {
-                                    element.index = index;
+                                    element.index = index + 1;
                                 });
                                 /**
                                  * Se añade la propiedad que indicara si el objeto tine o no errores, para que la columna
                                  * 'Errores' pueda existir. Esta información sera eliminada al momento de requerir los datos
                                  */
                                 jquery_datatable.data.forEach((element, index) => {
-                                    console.log(index);
-                                    if (errors[index]) {
+                                    if (errors[index] && (errors[index].length > 0 || errors[index].constructor === Object ))  {
                                         element.error = 'SI';
                                     } else {
                                         element.error = 'NO';
@@ -206,10 +265,9 @@ define([
 
                                 /*Se añade la columna que llevara los indices de las filas en orden (1,2,3,4,5...)*/
                                 jquery_datatable.columns.unshift({
-                                    "searchable": false,
-                                    "orderable": false,
+                                    "name": 'index',
                                     "data": 'index',
-                                    "targets": 0
+                                    "title": 'Linea'
                                 });
                                 /**
                                  * Se añade la columna que llevara el echo de si el
@@ -220,30 +278,7 @@ define([
                                     "title": 'Error',
                                     "data": 'error'
                                 });
-                                /**
-                                 * Se añade la columna que llevara los warnings
-                                 * ej.'El usuario moodle ya existia, El usuario ya estaba en la cohorte dada'.
-                                 */
-                                jquery_datatable.columns.push({
-                                    "name": 'warnings',
-                                    "title": 'Warnings',
-                                    "data": 'warnings'
-                                });
-                                /**
-                                 * Se añade la columna que llevara los logs de el objeto
-                                 * ej.'El usuario moodle se ha creado, El usuario ha sido añadido a la cohorte dada'.
-                                 */
-                                jquery_datatable.columns.push({
-                                    "name": 'logs',
-                                    "title": 'Logs',
-                                    "data": 'logs'
-                                });
-                                /*Se añade la columna que llevara los logs  */
-                                jquery_datatable.columns.push({
-                                    "name": 'warnings',
-                                    "title": 'Warnings',
-                                    "data": 'warnings'
-                                });
+
 
                                 /* Se añade la función que modificara la vista de cada fila a la tabla*/
                                 jquery_datatable.rowCallback = function (row, data) {
@@ -256,6 +291,7 @@ define([
                                                  * @see https://datatables.net/reference/option/rowCallback
                                                  */
                                                 $('td.' + property_name, row).addClass('error');
+                                                console.log( data.errors);
                                                 var error_names = data.errors[property_name].map(error => error.error_message);
                                                 var error_names_concat = error_names.join('; ');
                                                 /* Se añaden los mensajes de los errores al title de el campo en la tabla*/
@@ -264,7 +300,7 @@ define([
                                         }
                                     }
                                 };
-                                jquery_datatable.initComplete = function () {
+                                jquery_datatable.initComplete =/*Se añade el filtro de opciones en la columna error*/ function () {
                                     /*@see https://datatables.net/reference/type/column-selector*/
 
                                     var filter_columns = ['error:name'];
@@ -289,19 +325,9 @@ define([
                                         });
                                     });
                                 };
-                                /* El orden inicial de la tabla se da por su columna de indices de forma asendente*/
-                                jquery_datatable.order = [[1, 'asc']];
+
                                 if (response.errors.length === 0) {
                                     myTable = $('#example').DataTable(jquery_datatable);
-                                    /* Se ordena y inicializa la columna que lleva los indices de las filas */
-                                    myTable.on('order.dt search.dt', function () {
-                                        myTable.column(0, {
-                                            search: 'applied',
-                                            order: 'applied'
-                                        }).nodes().each(function (cell, i) {
-                                            cell.innerHTML = i + 1;
-                                        });
-                                    }).draw();
                                 } else {
                                     for (var error of response.errors) {
                                         console.log(error);

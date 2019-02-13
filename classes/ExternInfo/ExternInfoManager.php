@@ -94,7 +94,30 @@ abstract class ExternInfoManager extends Validable {
     public function get_objects() {
         return $this->objects;
     }
+    public function add_generic_object_errors($object_errors_list, $key) {
+        if(!isset($this->object_errors[$key])) {
+            $this->object_errors[$key] = array();
+        }
+        $this->object_errors[$key]['generic_errors'] =  $object_errors_list;
+    }
+    private function _add_object_errors() {
+
+        /** @var $object Validable*/
+        foreach($this->objects as $key => $object) {
+            if(!isset($this->object_errors[$key])) {
+                $this->object_errors[$key] = array();
+            }
+            if(!$object->valid()) {
+                $this->object_errors[$key] = array_merge( $this->object_errors[$key],  (array)$object->get_errors_object());
+
+
+            }
+        }
+    }
     public function get_object_errors() {
+        /** @var  $object Validable*/
+
+        $this->_add_object_errors();
         return $this->object_errors;
     }
     public function get_initial_objects() {
@@ -136,9 +159,12 @@ abstract class ExternInfoManager extends Validable {
                 try {
                     $this->persist_data();
                 } catch(Exception $e) {
-                    http_response_code(200);
+                    /** @var $e dml_write_exception */
+                    http_response_code(400);
+                    $this->add_error(new AsesError(-1, $e->error, $e));
                     print_r($e);
                     $DB->rollback_delegated_transaction($transaction, $e);
+                    $this->send_errors();
                 }
                 $DB->commit_delegated_transaction($transaction);
                 http_response_code(200);
@@ -152,10 +178,10 @@ abstract class ExternInfoManager extends Validable {
     }
     public function add_success_log_event(string $event, $object_key ) {
         if(!isset($this->success_log[$object_key])) {
-        } else {
             $this->success_log[$object_key] = array();
         }
         array_push($this->success_log[$object_key], $event);
+
     }
     public function get_success_log_events() {
         return $this->success_log;
@@ -184,7 +210,7 @@ abstract class ExternInfoManager extends Validable {
      *
      * ## Send response method should return the response, not echo nor print_r the response
      */
-    abstract function send_response();
+    //abstract function send_response();
     /**
      * If the load data fails return false, return true and init $this->>objects otherwise
      * @throws ErrorException If $this->class_or_classname does not exist
@@ -199,11 +225,10 @@ abstract class ExternInfoManager extends Validable {
                 $std_objects = Csv::csv_file_to_std_objects($this->_file);
                 $objects = \reflection\make_from_std_object($std_objects, $this->class_or_class_name, true);
                 if(!is_array($objects)){
-                    $objects = array($objects);
                     $this->initial_objects = $objects;
                 }
                 $this->objects = $objects;
-                $this->initial_objects = array($objects);
+                $this->initial_objects = $objects;
                 return false;
 
             }
@@ -211,7 +236,7 @@ abstract class ExternInfoManager extends Validable {
 
             if($objects !== null) {
                 $this->objects = $objects;
-                $this->initial_objects = array($objects);
+                $this->initial_objects = $objects;
                 return true;
             } else {
                 /* At this point the error was added by create_instances_from_csv method */
@@ -221,6 +246,29 @@ abstract class ExternInfoManager extends Validable {
 
         return false;
     }
+    /**
+     * In this case, a datatable is returned
+     * @throws ErrorException
+     * @return string
+     */
+    public function send_response() {
+
+        $sample_std_object = $this->get_objects()[0];
+
+        $datatable_columns = \jquery_datatable\Column::get_columns($sample_std_object, $this->custom_column_mapping());
+        $json_datatable = new \jquery_datatable\DataTable($this->get_objects(), $datatable_columns);
+        $response = new \stdClass();
+        $response->jquery_datatable = $json_datatable;
+        $response->data = $this->get_initial_objects();
+        $response->error = !$this->valid();
+        $response->errors = $this->get_errors();
+        $response->initial_object_properties = count($response->data)>=1?  \reflection\get_properties($response->data[0]): [];
+        $response->object_errors = $this->get_object_errors();
+        $response->object_warnings = $this->get_object_warnings();
+        $response->success_log_events = $this->get_success_log_events();
+        $arrayEncoded = json_encode($response);
+        return $arrayEncoded;
+    }
     private function load_data_from_ajax($load_invalid_data = false) {
         if($this->loaded_data_with_ajax()) {
             $this->objects = $this->create_instances_from_post();
@@ -229,21 +277,7 @@ abstract class ExternInfoManager extends Validable {
         }
          return false;
     }
-    public function _custom_validation(): bool
-    {
-        $valid = true;
-        /*Validate each element*/
-        /** @var  $object Validable*/
-        if($this->objects) {
-            foreach($this->objects as $key=>$object) {
-                if(!$object->valid()){
-                    $this->object_errors[$key] = $object->get_errors_object();
-                    $valid = false;
-                }
-            }
-        }
-        return $valid;
-    }
+
     /**
      * If you need process the data given, overwrite this method and make all the logic here
      *
@@ -271,14 +305,19 @@ abstract class ExternInfoManager extends Validable {
         /* Check if a file is uploaded */
         if(!isset($_FILES[$this->_file_name])) {
             $this->add_error(
-                "No se han subido ficheros. Recuerde que el nombre de este es $this->_file_name, si esta subiendolo por medio de un formulario html recuerde poner ese nombre como propiedad 'name' en el input tipo file.",
+                "No se encontraron ficheros en $_FILES . Recuerde que el nombre de este es $this->_file_name, si esta subiendolo por medio de un formulario html recuerde poner ese nombre como propiedad 'name' en el input tipo file.",
                 Validable::GENERIC_ERRORS_FIELD);
             return false;
         }
         if(isset($_FILES['fileToUpload']['error']) && $_FILES['fileToUpload']['error'] != '' && $_FILES['fileToUpload']['error'] !== 0) {
             $error_code = $_FILES['fileToUpload']['error'];
+            $error_message = "Existe un problema con el fichero, el codigo de error es $error_code. Visite http://php.net/manual/es/features.file-upload.errors.php";
+            switch ($error_code) {
+                case 4: $error_message = "No se ha subido ningún archivo";break;
+                default: break;
+            }
             $this->add_error(
-                "Existe un problema con el fichero, el codigo de error es $error_code. Visite http://php.net/manual/es/features.file-upload.errors.php",
+                $error_message,
                 Validable::GENERIC_ERRORS_FIELD);
 
             return false;
@@ -352,6 +391,7 @@ abstract class ExternInfoManager extends Validable {
     $this->load_data_from_file(true) && $this->load_data_from_ajax(true);
     }
     public function send_errors() {
+
         http_response_code(404);
         $response = new stdClass();
         $response->object_errors = $this->get_errors_object();
@@ -390,10 +430,23 @@ abstract class ExternInfoManager extends Validable {
        }
        return false;
     }
+    public function valid_objects(): bool {
+        $valid = true;
+        /** @var  $object Validable*/
+        if($this->objects) {
+            foreach($this->objects as $key=>$object) {
+                if(!$object->valid()){
+                    $valid = false;
+                }
+            }
+        }
+        return $valid;
+    }
     public function valid(): bool
     {
         $valid = parent::valid(); // TODO: Change the autogenerated stub
-        $valid = $valid && $this->validate_data_sources();
+        $valid = $valid && $this->validate_data_sources() && $this->valid_objects();
+        $this->_add_object_errors();
         return $valid;
     }
 
