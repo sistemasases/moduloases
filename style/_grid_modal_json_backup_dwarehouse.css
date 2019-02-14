@@ -101,10 +101,11 @@
     white-space: pre-line;
   }
 
+
+
   .grid_dphpforms_compare > .json_data_compare > .contenedor  > .data_estado_json_different{
     border-right: 6px solid red;
     background: rgba(247, 185, 185, 0.5) !important;
- 
   }
 
   .grid_dphpforms_compare > .json_data_compare > .contenedor  > .data_estado_json_similar{

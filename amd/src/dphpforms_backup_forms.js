@@ -25,11 +25,6 @@ define([
     return {
         init: function () {
 
-            let css_location = "../style/_grid_modal_json_backup_dwarehouse.css";
-
-            $('head').append('<link rel="stylesheet" href="' + css_location + '" type="text/css" />');
-
-            window.JSZip = jszip;
 
             $(document).on("mousedown", ".slider.round", function (e) {
 
