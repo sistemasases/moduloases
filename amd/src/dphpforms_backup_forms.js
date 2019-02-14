@@ -287,7 +287,7 @@ define([
 
                     //GENERACIÓN DE HTML DE URL(S) QUE DIRIGEN A FICHA DE ESTUDIANTE(S)
 
-                    getStudentsCodeToUrl(json_to_compare.id_registro_respuesta_form, accion_record, json_to_compare);
+                    getDataToUrl(json_to_compare.id_registro_respuesta_form, accion_record, json_to_compare);
 
 
                 }
@@ -622,7 +622,7 @@ define([
                             $("#div_code_user").empty();
                             $("#div_code_user").append('<strong>Usuario: </strong>' + msg[0].cod_user);
                             $("#div_name_user").empty();
-                            $("#div_name_user").append('<strong>Nombre: </strong>' + msg[0].name_user);
+                            $("#div_name_user").append( msg[0].name_user + ' '+  msg[0].last_name_user);
                         }
                     },
                     cache: false,
@@ -927,7 +927,7 @@ define([
                 return html_to_keys;
             }
 
-            function getStudentsCodeToUrl(id_registro_respuesta_form, accion_record, record_dwarehouse) {
+            function getDataToUrl(id_registro_respuesta_form, accion_record, record_dwarehouse) {
 
                 let param = [];
                 param.push(id_registro_respuesta_form);
@@ -951,6 +951,8 @@ define([
                             $(".url_students").append(html_enlaces);
                         } else {
 
+                            console.log(msg);
+
                             for(student_data in msg){
 
                                 
@@ -959,7 +961,8 @@ define([
                               
                                 student_code = student[dwarehouse_record_id].username;
                                 name_student = student[dwarehouse_record_id].firstname + ' ' +student[dwarehouse_record_id].lastname;
-                                html_enlaces = '<a href="https://campusvirtual.univalle.edu.co/moodle/blocks/ases/view/student_profile.php?courseid=25643&instanceid=450299&student_code='+ student_code+'">'+name_student+'</a>';
+                                html_enlaces += '<div> Estudiante: <strong>'+name_student+ ' '+student_code+'</strong></div>';
+                               // html_enlaces += '<a href="https://campusvirtual.univalle.edu.co/moodle/blocks/ases/view/student_profile.php?courseid=25643&instanceid=450299&student_code='+ student_code+'">'+name_student+'</a> <br>';
                             }
                             
                             $(".url_students").empty();
@@ -987,7 +990,7 @@ define([
                     error: function (msg) {
                         swal(
                             'TYPE FORM NOT FOUND',
-                            'Oooops! Is not a valid form',
+                            'Oooops! Is not a valid form to create url',
                             'warning'
                         );
 

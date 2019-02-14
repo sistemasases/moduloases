@@ -198,7 +198,7 @@ function get_id_switch_user($id_user){
     global $DB;
     $form_dwarehouse_array = array();
   if(strlen($id_user)>=7){
-    $sql = "SELECT id AS cod_user, firstname AS name_user FROM {user} AS u WHERE u.username LIKE '$id_user%' ";
+    $sql = "SELECT id AS cod_user, firstname AS name_user, lastname AS last_name_user FROM {user} AS u WHERE u.username LIKE '$id_user%' ";
     $results = $DB->get_records_sql($sql);
     foreach ($results as $record) {
         array_push($form_dwarehouse_array, $record);
@@ -220,7 +220,7 @@ function get_id_switch_user_ases($id_user){
     $form_dwarehouse_array = array();
   if(strlen($id_user)>=7){
 
-    $sql = "SELECT UE.id_ases_user AS cod_user,  U.firstname AS name_user FROM {user} AS U
+    $sql = "SELECT UE.id_ases_user AS cod_user,  U.firstname AS name_user, U.lastname AS last_name_user FROM {user} AS U
                 INNER JOIN  mdl_talentospilos_user_extended AS UE ON UE.id_moodle_user = U.id
                         WHERE U.username LIKE '$id_user%'";
 
@@ -404,7 +404,7 @@ function  getIdAses($username){
    $sql_query = "SELECT talentospilos_user_extended.id_ases_user AS id_ases_user FROM {user} AS _user 
                      INNER JOIN {talentospilos_user_extended} AS talentospilos_user_extended ON _user.id = talentospilos_user_extended.id_moodle_user
                          WHERE _user.username  LIKE '$username%'";
-   return $DB->get_records_sql($sql_query);
+   return $DB->get_record_sql($sql_query);
 }
 
 /**

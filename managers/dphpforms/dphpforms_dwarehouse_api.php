@@ -306,28 +306,33 @@
             //Get id_ases or students code switch type form
             $value_student_id = getIdStudentFromRecordDwarehouse($record_dwarehouse->datos_almacenados, $record_dwarehouse->datos_previos, $local_alias_campo, $accion_record, $alias_formulario);
 
-
+           
             //Traer username de estudiante, con el cual está activo en ASES. 
             //La consulta es diferente dependiendo del retorno de getIdStudentFromRecordDwarehouse
 
-            if( $alias_formulario != "seguimiento_grupal" && $local_alias_campo != "indefinido"){
+            if( $alias_formulario->tipo_formulario != "seguimiento_grupal" && $local_alias_campo != "indefinido"){
                 //Buscar por id ases retornado de value_student_id el usuario moodle con tracking status 1, retornar username
                 //Traer datos para url. Dentro del método llamado existe otro método a utilizar
                 $student_data = getDataToUrl($value_student_id);
 
-            }else if( $alias_formulario == "seguimiento_grupal" && $local_alias_campo != "indefinido"){
+            }else  if($alias_formulario->tipo_formulario == "seguimiento_grupal" && $local_alias_campo != "indefinido"){
                 //Buscar cada uno por codigo de value_student_id  el usuario moodle con tracking status 1, retornar username
                 //Primer paso: Traer id ases correspondiente a cada username de value_student_id
+              
                 $id_ases_students = getIdAsesByUsernames($value_student_id);
-
+               
                 //Segundo paso: Traer datos para url. Dentro del método llamado existe otro método a utilizar
-                $student_data     = getDataToUrl($id_ases_students);
+               $student_data     = getDataToUrl($id_ases_students);
+               
             }else
             {
                 return_with_code(-6);
             }
+
+           
+        
          
-           echo json_encode($student_data);
+          echo json_encode($student_data);
                     
             }else{     
                 return_with_code( -2 );
