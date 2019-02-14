@@ -47,6 +47,7 @@ require_once '../managers/dphpforms/dphpforms_forms_core.php';
 require_once '../managers/dphpforms/dphpforms_records_finder.php';
 require_once '../managers/dphpforms/dphpforms_get_record.php';
 require_once '../managers/user_management/user_management_lib.php';
+require_once '../managers/monitor_assignments/monitor_assignments_lib.php';
 require_once '../managers/periods_management/periods_lib.php';
 require_once '../classes/AsesUser.php';
 require_once '../classes/mdl_forms/user_image_form.php';
@@ -512,8 +513,10 @@ if ($student_code != 0) {
     $trainee_object = get_assigned_pract($student_id);
     $professional_object = get_assigned_professional($student_id);
 
+    $flag_with_assignation = false;
 
     if ($monitor_object) {
+        $flag_with_assignation = true;
         $record->monitor_fullname = "$monitor_object->firstname $monitor_object->lastname";
         $record->id_dphpforms_monitor = '-1';
     } else {
@@ -1776,6 +1779,20 @@ array_unshift( $record->datosSeguimientoEstudianteFamiliar, $risk_entries["first
 array_unshift( $record->datosSeguimientoEstudianteAcademico, $risk_entries["first"]["academico"] );
 array_unshift( $record->datosSeguimientoEstudianteEconomico, $risk_entries["first"]["economico"] );
 array_unshift( $record->datosSeguimientoEstudianteVidaUniversitaria, $risk_entries["first"]["vida_uni"] );
+
+
+//Last last student assignment
+
+$record->flag_with_assignation = $flag_with_assignation;
+
+if( $dphpforms_ases_user ){
+    if( !$flag_with_assignation ){
+        $last_assignment = monitor_assignments_get_last_student_assignment( $dphpforms_ases_user, $blockid );
+        $record->last_assignment_monitor = $last_assignment['monitor_obj']->firstname . " " . $last_assignment['monitor_obj']->lastname;
+        $record->last_assignment_practicant = $last_assignment['pract_obj']->firstname . " " . $last_assignment['pract_obj']->lastname;
+        $record->last_assignment_professional = $last_assignment['prof_obj']->firstname . " " . $last_assignment['prof_obj']->lastname;
+    }
+}   
 
 
 //Menu items are created
