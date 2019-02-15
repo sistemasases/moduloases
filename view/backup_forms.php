@@ -106,6 +106,8 @@ $PAGE->requires->css('/blocks/ases/style/creadorFormulario.css', true);
 $PAGE->requires->css('/blocks/ases/js/select2/css/select2.css', true);
 $PAGE->requires->css('/blocks/ases/style/beautify-json.css', true);
 $PAGE->requires->css('/blocks/ases/style/backup_forms.css', true);
+$PAGE->requires->css('/blocks/ases/style/_grid_modal_json_backup_dwarehouse.css', true);
+
 
 $paramReport = new stdClass();
 $paramReport->table = $tableReport;
