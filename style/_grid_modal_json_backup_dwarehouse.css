@@ -28,7 +28,7 @@
  }
 
   .grid_dphpforms_compare > .general_info_record_dwarehouse > .data_general{
-    border-left: 6px solid red;
+    border-left: 6px solid red !important;
     margin: 10px 20px 10px 30px;
     background-color: rgb(251, 246, 246);
     font-size: 16px;
@@ -40,6 +40,12 @@
     background-color: rgb(251, 246, 246);
     font-size: 24px;
     box-shadow: 5px 11px 10px -1px rgba(40,28,28,0.1);
+  }
+
+  .grid_dphpforms_compare > .json_data_compare > .contenedor {
+    width: 80%;  
+    margin: 0 auto;
+    display: flex;
   }
 
   .grid_dphpforms_compare > .json_data_compare > .contenedor > .title_data{
@@ -62,10 +68,44 @@
     width: 70%;
   }
 
+  .grid_dphpforms_compare > .json_data_compare > .contenedor  > .data_estado_json > .text_json{
+    -ms-word-break: break-all;
+    word-break: break-all;
+    word-break: break-word;     /*Sólo WebKit -NO DOCUMENTADO */
+    -ms-hyphens: auto;          /*Guiones para separar en sílabas */
+    -moz-hyphens: auto;         /* depende de lang en <html>     */
+    -webkit-hyphens: auto;
+    hyphens: auto;
+    white-space: pre-line;
+  }
+
+  .grid_dphpforms_compare > .json_data_compare > .contenedor  > .text_json{
+    -ms-word-break: break-all;
+    word-break: break-all;
+    word-break: break-word;     /*Sólo WebKit -NO DOCUMENTADO */
+    -ms-hyphens: auto;          /*Guiones para separar en sílabas */
+    -moz-hyphens: auto;         /* depende de lang en <html>     */
+    -webkit-hyphens: auto;
+    hyphens: auto;
+    white-space: pre-line;
+  }
+
+  .grid_dphpforms_compare > .general_info_record_dwarehouse > .text_json{
+    -ms-word-break: break-all;
+    word-break: break-all;
+    word-break: break-word;     /*Sólo WebKit -NO DOCUMENTADO */
+    -ms-hyphens: auto;          /*Guiones para separar en sílabas */
+    -moz-hyphens: auto;         /* depende de lang en <html>     */
+    -webkit-hyphens: auto;
+    hyphens: auto;
+    white-space: pre-line;
+  }
+
+
+
   .grid_dphpforms_compare > .json_data_compare > .contenedor  > .data_estado_json_different{
     border-right: 6px solid red;
     background: rgba(247, 185, 185, 0.5) !important;
- 
   }
 
   .grid_dphpforms_compare > .json_data_compare > .contenedor  > .data_estado_json_similar{

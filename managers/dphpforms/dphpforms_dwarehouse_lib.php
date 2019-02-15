@@ -198,7 +198,7 @@ function get_id_switch_user($id_user){
     global $DB;
     $form_dwarehouse_array = array();
   if(strlen($id_user)>=7){
-    $sql = "SELECT id AS cod_user, firstname AS name_user FROM {user} AS u WHERE u.username LIKE '$id_user%' ";
+    $sql = "SELECT id AS cod_user, firstname AS name_user, lastname AS last_name_user FROM {user} AS u WHERE u.username LIKE '$id_user%' ";
     $results = $DB->get_records_sql($sql);
     foreach ($results as $record) {
         array_push($form_dwarehouse_array, $record);
@@ -220,7 +220,7 @@ function get_id_switch_user_ases($id_user){
     $form_dwarehouse_array = array();
   if(strlen($id_user)>=7){
 
-    $sql = "SELECT UE.id_ases_user AS cod_user,  U.firstname AS name_user FROM {user} AS U
+    $sql = "SELECT UE.id_ases_user AS cod_user,  U.firstname AS name_user, U.lastname AS last_name_user FROM {user} AS U
                 INNER JOIN  mdl_talentospilos_user_extended AS UE ON UE.id_moodle_user = U.id
                         WHERE U.username LIKE '$id_user%'";
 
@@ -305,7 +305,7 @@ function log_to_restore_into_dwarehouse($registro_respuesta_form){
     global $DB;
     $new_log = new stdClass();
     $new_log = $registro_respuesta_form;
-    $new_log->accion = "RESTORE";
+    $new_log->accion = 'RESTORE';
     
     return  $DB->insert_record('talentospilos_df_dwarehouse', $new_log, $returnid=false, $bulk=false);
 
@@ -357,4 +357,194 @@ function  get_df_alias()
     global $DB; 
    $sql_query = "SELECT * FROM {talentospilos_df_alias}";
    return $DB->get_records_sql($sql_query);
+}
+
+ /**
+ * Get tipo_form 
+ *
+ * @see get_tipo_form(id_registro_respuesta_form)
+ * @return string
+ */
+
+function  get_tipo_form($id_registro_respuesta_form)
+{
+    global $DB; 
+   $sql_query = "SELECT df_formularios.alias AS tipo_formulario FROM {talentospilos_df_form_resp} AS df_form_resp 
+                         INNER JOIN {talentospilos_df_formularios} AS df_formularios ON df_formularios.id = df_form_resp.id_formulario
+                                WHERE df_form_resp.id = '$id_registro_respuesta_form' ";
+   return $DB->get_record_sql($sql_query);
+}
+
+
+/**
+ * Function that load username and firstname data switch id_ases
+ * @see getDataToUrlByIdAses($id_ases_student)
+ * @param $id_ases_student---> id_ases_user
+ * @return array
+ **/
+
+function  getDataToUrlByIdAses($id_ases_student)
+{
+    global $DB; 
+   $sql_query = "SELECT _user.username, _user.firstname , _user.lastname  FROM mdl_talentospilos_user_extended AS talentospilos_user_extended
+                        INNER JOIN mdl_user AS _user ON talentospilos_user_extended.id_moodle_user = _user.id
+                                WHERE talentospilos_user_extended.id_ases_user = '$id_ases_student' AND talentospilos_user_extended.tracking_status = 1";
+   return $DB->get_records_sql($sql_query);
+}
+
+/**
+ * Function that load username and firstname data switch id_ases
+ * @see getDataToUrlByIdAses($id_ases_student)
+ * @param $id_ases_student---> id_ases_user
+ * @return array
+ **/
+
+function  getIdAses($username){
+    global $DB; 
+   $sql_query = "SELECT talentospilos_user_extended.id_ases_user AS id_ases_user FROM {user} AS _user 
+                     INNER JOIN {talentospilos_user_extended} AS talentospilos_user_extended ON _user.id = talentospilos_user_extended.id_moodle_user
+                         WHERE _user.username  LIKE '$username%'";
+   return $DB->get_record_sql($sql_query);
+}
+
+/**
+ * Iterate array to operate with data
+ * @see getDataToUrl($students)
+ * @param $students---> id_ases_user 
+ * @return array Students data to url
+ **/
+
+function getDataToUrl($students){
+
+    $array_students = [];
+    foreach ($students as $student){
+        //Se reciben los id_ases a buscar.
+        //Se realiza la busquedad por cada id_ases recibido 
+        $data = getDataToUrlByIdAses($student);
+        if(count($data) != 0){
+            array_push($array_students, $data );
+        }
+      
+    }
+
+    return $array_students;
+}
+
+/**
+ * Function that get id_ases_user for each student in array param
+ * @see getIdAsesByUsernames($username_students)
+ * @param $username_students---> array with username students 
+ * @return array
+ **/
+
+function  getIdAsesByUsernames($username_students)
+{    
+    $array_id_ases_students= [];
+    //Iterate array to operate with data
+    foreach($username_students as $username){
+
+        //Traer id ases que corresponde a cada username
+        $id_ases_user_switch_username = getIdAses($username);
+        array_push($array_id_ases_students, $id_ases_user_switch_username->id_ases_user);
+    }
+
+    //Retornar array con id_ases de cada estudiante del arreglo recidibo
+
+    return $array_id_ases_students;
+}
+
+
+ /**
+ * getIdEstudianteFromRecordDwarehouse
+ *
+ * @see getIdEstudianteFromRecordDwarehouse($dt_alm, $dt_prev,  $local_alias, $accion_record, $alias_formulario);
+ * @param object $dt_alm Representa datos almacenados  del registro que llega.
+ * @param object $dt_prev Representa datos previos  del registro que llega.
+ * @param string $local_alias Local alias del campo a consultar. Depende del tipo de formulario.
+ * @param string $accion_record Accion registrada en el log.
+ * @param string $alias_formulario Tipo de formulario.
+ * @return array 
+ */
+
+function getIdStudentFromRecordDwarehouse($dt_alm, $dt_prev, $local_alias, $accion_record, $alias_formulario) {
+
+    //Function return ['-9'] if it does not find the data, or there are inconsistencies
+
+    $retorno_id = ['-9'];
+    $auxiliar_id_estudiante_prev = '-11';
+    $auxiliar_id_estudiante_alm = '-10';
+
+
+
+    if ( $accion_record == 'RESTORE' || $accion_record == 'DELETE' || $accion_record == 'UPDATE') {
+        $dt_alm = $dt_alm->record;
+        $dt_prev = $dt_prev->record;
+        $campos_alm = $dt_alm->campos;
+        $campos_prev = $dt_prev->campos;
+
+
+        //Buscar 
+        foreach ($campos_alm as $campo) {
+            if ($campo->local_alias == $local_alias) {
+                $auxiliar_id_estudiante_alm = $campo->respuesta;
+                break;
+            }
+        }
+
+        foreach ($campos_prev as $campos) {
+            if ($campo->local_alias == $local_alias) {
+                $auxiliar_id_estudiante_prev = $campo->respuesta;
+                break;
+            }
+        }
+
+        if ($auxiliar_id_estudiante_alm == $auxiliar_id_estudiante_prev) {
+
+            if ($alias_formulario->tipo_formulario != "seguimiento_grupal" ) {
+                //Tienen id_ases, trae id_ases del registro
+                $retorno_id = [$auxiliar_id_estudiante_alm];
+            } else {
+                //Traer arreglo de códigos
+                $retorno_id = $campo->respuesta;
+                $retorno_id = explode(",",$retorno_id);
+            }
+
+        } else {
+            $retorno_id = ['-9'];
+        }
+
+    } else if ($accion_record == 'INSERT') {
+        $dt_alm = $dt_alm->record;
+        $campos_alm = $dt_alm->campos;
+
+        foreach ($campos_alm as $campo) {
+            if ($campo->local_alias == $local_alias) {
+
+                if ($alias_formulario->tipo_formulario  != "seguimiento_grupal" ) {
+                    //Tienen id_ases, trae id_ases del registro
+                    
+                    $retorno_id = [$campo->respuesta];
+                    
+                } else {
+                    //Traer arreglo de códigos
+                    $retorno_id = $campo->respuesta;
+                    $retorno_id = explode(",",$retorno_id);
+                }
+
+                break;
+            }
+        }
+
+
+    } else {
+        $retorno_id = ['-9'];
+        // swal(
+        //     'DATA ERROR',
+        //     'Oooops! Not supported',
+        //     'warning'
+        // );
+    }
+
+
+    return $retorno_id;
 }
