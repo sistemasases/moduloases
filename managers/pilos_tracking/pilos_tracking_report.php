@@ -233,6 +233,7 @@ if (isset($_POST['type']) && $_POST['type'] == "send_email_to_user" && isset($_P
                 $register = dphpforms_get_record($_POST['id_tracking'], 'in_id_estudiante');
             }
             $date = "";
+            //$id_estudiante = "";
             $json = json_decode($register, true);
             foreach( $json['record']['campos'] as $key => $field ){
                 if( ( $field['local_alias'] == "fecha" ) || ( $field['local_alias'] == "in_fecha" ) ){
