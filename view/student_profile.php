@@ -1794,7 +1794,6 @@ if( $dphpforms_ases_user ){
     }
 }   
 
-
 //Menu items are created
 $menu_option = create_menu_options($USER->id, $blockid, $courseid);
 $record->menu = $menu_option;
