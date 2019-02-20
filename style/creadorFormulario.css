@@ -347,3 +347,8 @@ pre, code {
 .dphpforms_response_recorder_buttons{
     text-align: center;
 }
+
+.special_tracking{
+    border-bottom-width: 2px !important;
+    border-bottom-color: #337ab7 !important;
+}

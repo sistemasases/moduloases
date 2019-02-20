@@ -295,23 +295,36 @@ function render_student_trackings($peer_tracking_v2){
 function render_student_trackingsV2($peer_tracking_v2){
     
     $form_rendered = '';
+    $special_date_interval = [
+        'start' => strtotime( "2019-01-01" ),
+        'end' => strtotime( "2019-04-30" )
+    ];
+    
     if ($peer_tracking_v2) {
         foreach($peer_tracking_v2 as $key => $tracking) {
+            
             $is_reviewed = false;
             $rev_pract = false;
             $type = null;
             $icon_rev_pract = '';
+            $custom_class = "";
+
+            $_fecha = strtotime( $tracking['fecha'] );
+
+            if( ( $_fecha >= $special_date_interval['start'] ) && ( $_fecha <= $special_date_interval['end'] ) ){
+                $custom_class = "special_tracking";
+            }
 
             if ( array_key_exists('revisado_profesional', $tracking) ) {
                 $type = "ficha";
                 if ($tracking['revisado_profesional'] === "0") {
-                    $form_rendered.= '<div id="dphpforms-peer-record-' . $tracking['id_registro'] . '" class="card-block dphpforms-peer-record peer-tracking-record-review class-'.$tracking['alias_form'].'"  data-record-id="' . $tracking['id_registro'] . '" title="Asistencia"><strong><i class="fas fa-calendar-o"></i> </strong>Registro:   ' . $tracking['fecha'] . '{{icon_rev_pract}}</div>';
+                    $form_rendered.= '<div id="dphpforms-peer-record-' . $tracking['id_registro'] . '" class="'.$custom_class.' card-block dphpforms-peer-record peer-tracking-record-review class-'.$tracking['alias_form'].'"  data-record-id="' . $tracking['id_registro'] . '" title="Asistencia"><strong><i class="fas fa-calendar-o"></i> </strong>Registro:   ' . $tracking['fecha'] . '{{icon_rev_pract}}</div>';
                     $is_reviewed = true;
                 }
             }elseif ( array_key_exists('in_revisado_profesional', $tracking) ) {
                 $type = "inasistencia";
                 if ($tracking['in_revisado_profesional'] === "0") {
-                    $form_rendered.= '<div id="dphpforms-peer-record-' . $tracking['id_registro'] . '" class="card-block dphpforms-peer-record peer-tracking-record-review class-'.$tracking['alias_form'].'"  data-record-id="' . $tracking['id_registro'] . '" title="Inasistencia"><strong><i class="far fa-calendar-times"></i> </strong>Registro:   ' . $tracking['fecha'] . '{{icon_rev_pract}}</div>';
+                    $form_rendered.= '<div id="dphpforms-peer-record-' . $tracking['id_registro'] . '" class="'.$custom_class.' card-block dphpforms-peer-record peer-tracking-record-review class-'.$tracking['alias_form'].'"  data-record-id="' . $tracking['id_registro'] . '" title="Inasistencia"><strong><i class="far fa-calendar-times"></i> </strong>Registro:   ' . $tracking['fecha'] . '{{icon_rev_pract}}</div>';
                     $is_reviewed = true;
                 }
             }
@@ -327,9 +340,9 @@ function render_student_trackingsV2($peer_tracking_v2){
             }
 
             if ((!$is_reviewed )&& ($type == "ficha")) {
-                $form_rendered.= '<div id="dphpforms-peer-record-' . $tracking['id_registro'] . '" class="card-block dphpforms-peer-record peer-tracking-record class-'.$tracking['alias_form'].'"  data-record-id="' . $tracking['id_registro'] . '" title="Asistencia"><strong><i class="fas fa-calendar-o"></i> </strong>Registro:   ' . $tracking['fecha'] . '{{icon_rev_pract}}</div>';
+                $form_rendered.= '<div id="dphpforms-peer-record-' . $tracking['id_registro'] . '" class="'.$custom_class.' card-block dphpforms-peer-record peer-tracking-record class-'.$tracking['alias_form'].'"  data-record-id="' . $tracking['id_registro'] . '" title="Asistencia"><strong><i class="fas fa-calendar-o"></i> </strong>Registro:   ' . $tracking['fecha'] . '{{icon_rev_pract}}</div>';
             }elseif((!$is_reviewed) && ($type == "inasistencia")){
-                $form_rendered.= '<div id="dphpforms-peer-record-' . $tracking['id_registro'] . '" class="card-block dphpforms-peer-record peer-tracking-record class-'.$tracking['alias_form'].'"  data-record-id="' . $tracking['id_registro'] . '" title="Inasistencia"><strong><i class="far fa-calendar-times"></i> </strong>Registro:   ' . $tracking['fecha'] . '{{icon_rev_pract}}</div>';
+                $form_rendered.= '<div id="dphpforms-peer-record-' . $tracking['id_registro'] . '" class="'.$custom_class.' card-block dphpforms-peer-record peer-tracking-record class-'.$tracking['alias_form'].'"  data-record-id="' . $tracking['id_registro'] . '" title="Inasistencia"><strong><i class="far fa-calendar-times"></i> </strong>Registro:   ' . $tracking['fecha'] . '{{icon_rev_pract}}</div>';
             }
 
             if( $rev_pract ){
