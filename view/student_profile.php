@@ -734,6 +734,10 @@ if ($student_code != 0) {
     //dphpforms start
     $peer_tracking_v3 = [];
     $periods = periods_management_get_all_semesters();
+    $special_date_interval = [
+        'start' => strtotime( "2019-01-01" ),
+        'end' => strtotime( "2019-04-30" )
+    ];
     foreach( $periods as $key => $period ){
 
         if( strtotime( $period->fecha_inicio ) >= $new_forms_date ){
@@ -745,6 +749,19 @@ if ($student_code != 0) {
                 $tracking_modified = [];
                  //Here can be added metadata.
                 foreach ($trackings as $key => $tracking) {
+
+                    $_fecha = null;
+                    
+                    if ( array_key_exists("fecha", $tracking) ) {
+                        $_fecha = strtotime( $tracking['fecha'] );
+                    }else{
+                        $_fecha = strtotime( $tracking['in_fecha'] );
+                    };
+                    
+
+                    if( ( $_fecha >= $special_date_interval['start'] ) && ( $_fecha <= $special_date_interval['end'] ) ){
+                        $tracking['custom_extra']['special_tracking'] = true;
+                    }
 
                     $tracking['custom_extra'][$tracking['alias_form']] = true;
                     $tracking['custom_extra']['rev_pro'] = false;

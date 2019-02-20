@@ -41,7 +41,7 @@
 
                         <div id="collapseOne{{period_name}}" class="collapse show collapse_v2" role="tabpanel" aria-labelledby="headingOne{{period_name}}">
                             {{#trackings}}
-                            <div id="dphpforms-peer-record-{{id_registro}}" class="card-block dphpforms-peer-record peer-tracking-record class-{{alias_form}} {{#custom_extra}} {{#rev_pro}} peer-tracking-record-review {{/rev_pro}} {{/custom_extra}}" data-record-id="{{id_registro}}">
+                            <div id="dphpforms-peer-record-{{id_registro}}" class="card-block dphpforms-peer-record peer-tracking-record class-{{alias_form}} {{#custom_extra}} {{#rev_pro}} peer-tracking-record-review {{/rev_pro}} {{/custom_extra}} {{#custom_extra}} {{#special_tracking}} special_tracking {{/special_tracking}} {{/custom_extra}}" data-record-id="{{id_registro}}">
                                 {{#custom_extra}} {{#seguimiento_pares}}<strong><i class="fas fa-calendar-o"></i> </strong>{{/seguimiento_pares}} {{/custom_extra}}
                                 {{#custom_extra}} {{#inasistencia}}<strong><i class="far fa-calendar-times"></i></strong>{{/inasistencia}} {{/custom_extra}}
                                 Registro: {{fecha}}
