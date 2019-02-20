@@ -1799,6 +1799,8 @@ $menu_option = create_menu_options($USER->id, $blockid, $courseid);
 $record->menu = $menu_option;
 
 $record->fix_mustache_bug = '<form style="display:none;"></form>';
+$record->courseid = $courseid;
+$record->blockid = $blockid;
 
 $PAGE->set_context($contextcourse);
 $PAGE->set_context($contextblock);
