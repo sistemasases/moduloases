@@ -730,238 +730,14 @@ if ($student_code != 0) {
 
     $dphpforms_ases_user = get_ases_user_by_code( $student_code )->id;
 
-    /*// Pares
-    $array_peer_trackings_dphpforms = dphpforms_find_records('seguimiento_pares', 'seguimiento_pares_id_estudiante', $dphpforms_ases_user, 'DESC');
-    $array_peer_trackings_dphpforms = json_decode($array_peer_trackings_dphpforms);
-
-    // Inasistencia
-    $array_inasistencia_peer_trackings_dphpforms = dphpforms_find_records('inasistencia', 'inasistencia_id_estudiante', $dphpforms_ases_user, 'DESC');
-    $array_inasistencia_peer_trackings_dphpforms = json_decode($array_inasistencia_peer_trackings_dphpforms);
-    
-
-    $array_detail_peer_trackings_dphpforms = array();
-    $array_detail_inasistencia_peer_trackings_dphpforms = array();
-
-    foreach ($array_peer_trackings_dphpforms->results as &$peer_trackings_dphpforms) {
-        array_push($array_detail_peer_trackings_dphpforms, json_decode(dphpforms_get_record($peer_trackings_dphpforms->id_registro, 'fecha')));
-    };
-
-    foreach ($array_inasistencia_peer_trackings_dphpforms->results as &$inasistencia_peer_trackings_dphpforms) {
-        array_push($array_detail_inasistencia_peer_trackings_dphpforms, json_decode(dphpforms_get_record($inasistencia_peer_trackings_dphpforms->id_registro, 'in_fecha')));
-    };
-
-    $array_tracking_date = array();
-
-    //Here can be added metadata.
-    foreach ($array_detail_peer_trackings_dphpforms as &$peer_tracking) {
-
-        $alias = $peer_tracking->record->alias;
-        $peer_tracking->custom_extra->$alias = true;
-        $peer_tracking->custom_extra->rev_pro = false;
-        $peer_tracking->custom_extra->rev_pract = false;
-
-
-        foreach ($peer_tracking->record->campos as &$tracking) {
-            if ($tracking->local_alias == 'fecha') {
-                array_push($array_tracking_date, strtotime($tracking->respuesta));
-            };
-            if ($tracking->local_alias == 'revisado_profesional') {
-                if( $tracking->respuesta === "0" ){
-                    $peer_tracking->custom_extra->rev_pro = true;
-                }
-            };
-            if ($tracking->local_alias == 'revisado_practicante') {
-                if( $tracking->respuesta === "0" ){
-                    $peer_tracking->custom_extra->rev_pract = true;
-                }
-            };
-        };
-
-    };
-
-    foreach ($array_detail_inasistencia_peer_trackings_dphpforms as &$inasistencia_peer_tracking) {
-
-        $alias = $inasistencia_peer_tracking->record->alias;
-        $inasistencia_peer_tracking->custom_extra->$alias = true;
-        $inasistencia_peer_tracking->custom_extra->rev_pro = false;
-        $inasistencia_peer_tracking->custom_extra->rev_pract = false;
-
-        foreach ($inasistencia_peer_tracking->record->campos as &$tracking) {
-            if ($tracking->local_alias == 'in_fecha') {
-                array_push($array_tracking_date, strtotime($tracking->respuesta));
-            };
-            if ($tracking->local_alias == 'in_revisado_profesional') {
-                if( $tracking->respuesta === "0" ){
-                    $inasistencia_peer_tracking->custom_extra->rev_pro = true;
-                }
-            };
-            if ($tracking->local_alias == 'in_revisado_practicante') {
-                if( $tracking->respuesta === "0" ){
-                    $inasistencia_peer_tracking->custom_extra->rev_pract = true;
-                }
-            };
-        };
-    };
-
-    rsort($array_tracking_date);
-
-    $seguimientos_ordenados = new stdClass();
-    $seguimientos_ordenados->index = array();
-    //Inicio de ordenamiento
-    $periodo_a = [1, 2, 3, 4, 5, 6, 7];
-    //periodo_b es el resto de meses;
-    for ($x = 0; $x < count($array_tracking_date); $x++) {
-
-        $string_date = $array_tracking_date[$x];
-        $array_tracking_date[$x] = getdate($array_tracking_date[$x]);
-        $year = $array_tracking_date[$x]['year'];
-
-        if (property_exists($seguimientos_ordenados, $year)) {
-            
-            if (in_array($array_tracking_date[$x]['mon'], $periodo_a)) {
-                // Records where we expect to find
-                for ($y = 0; $y < count($array_detail_peer_trackings_dphpforms); $y++) {
-                    if ($array_detail_peer_trackings_dphpforms[$y]) {
-                        foreach ($array_detail_peer_trackings_dphpforms[$y]->record->campos as &$tracking) {
-                            if ($tracking->local_alias == 'fecha') {
-                                if (strtotime($tracking->respuesta) == $string_date) {
-                                    array_push($seguimientos_ordenados->$year->per_a, $array_detail_peer_trackings_dphpforms[$y]);
-                                    $array_detail_peer_trackings_dphpforms[$y] = null;
-                                    break;
-                                };
-                            };
-                        };
-                    };
-                };
-                // Inasistencia
-                for ($y = 0; $y < count($array_detail_inasistencia_peer_trackings_dphpforms); $y++) {
-                    if ($array_detail_inasistencia_peer_trackings_dphpforms[$y]) {
-                        foreach ($array_detail_inasistencia_peer_trackings_dphpforms[$y]->record->campos as &$tracking) {
-                            if ($tracking->local_alias == 'in_fecha') {
-                                if (strtotime($tracking->respuesta) == $string_date) {
-                                    array_push($seguimientos_ordenados->$year->per_a, $array_detail_inasistencia_peer_trackings_dphpforms[$y]);
-                                    $array_detail_inasistencia_peer_trackings_dphpforms[$y] = null;
-                                    break;
-                                };
-                            };
-                        };
-                    };
-                };
-            } else {
-                for ($y = 0; $y < count($array_detail_peer_trackings_dphpforms); $y++) {
-                    if ($array_detail_peer_trackings_dphpforms[$y]) {
-                        foreach ($array_detail_peer_trackings_dphpforms[$y]->record->campos as &$tracking) {
-                            if ($tracking->local_alias == 'fecha') {
-                                if (strtotime($tracking->respuesta) == $string_date) {
-                                    array_push($seguimientos_ordenados->$year->per_b, $array_detail_peer_trackings_dphpforms[$y]);
-                                    $array_detail_peer_trackings_dphpforms[$y] = null;
-                                    break;
-                                };
-                            };
-                        };
-                    };
-                };
-                // Inasistencia
-                for ($y = 0; $y < count($array_detail_inasistencia_peer_trackings_dphpforms); $y++) {
-                    if ($array_detail_inasistencia_peer_trackings_dphpforms[$y]) {
-                        foreach ($array_detail_inasistencia_peer_trackings_dphpforms[$y]->record->campos as &$tracking) {
-                            if ($tracking->local_alias == 'in_fecha') {
-                                if (strtotime($tracking->respuesta) == $string_date) {
-                                    array_push($seguimientos_ordenados->$year->per_b, $array_detail_inasistencia_peer_trackings_dphpforms[$y]);
-                                    $array_detail_inasistencia_peer_trackings_dphpforms[$y] = null;
-                                    break;
-                                };
-                            };
-                        };
-                    };
-                };
-            };
-        } else {
-            
-            array_push($seguimientos_ordenados->index, $year);
-
-            $seguimientos_ordenados->$year->year = $year;
-            $seguimientos_ordenados->$year->per_a = array();
-            $seguimientos_ordenados->$year->per_b = array();
-
-            $seguimientos_ordenados->$year->year = $year;
-            if (in_array($array_tracking_date[$x]['mon'], $periodo_a)) {
-                for ($y = 0; $y < count($array_detail_peer_trackings_dphpforms); $y++) {
-                    if ($array_detail_peer_trackings_dphpforms[$y]) {
-                        foreach ($array_detail_peer_trackings_dphpforms[$y]->record->campos as &$tracking) {
-                            if ($tracking->local_alias == 'fecha') {
-                                if (strtotime($tracking->respuesta) == $string_date) {
-                                    array_push($seguimientos_ordenados->$year->per_a, $array_detail_peer_trackings_dphpforms[$y]);
-                                    $array_detail_peer_trackings_dphpforms[$y] = null;
-                                    break;
-                                };
-                            };
-                        };
-                    };
-                };
-                // Inasistencia
-                for ($y = 0; $y < count($array_detail_inasistencia_peer_trackings_dphpforms); $y++) {
-                    if ($array_detail_inasistencia_peer_trackings_dphpforms[$y]) {
-                        foreach ($array_detail_inasistencia_peer_trackings_dphpforms[$y]->record->campos as &$tracking) {
-                            if ($tracking->local_alias == 'in_fecha') {
-                                if (strtotime($tracking->respuesta) == $string_date) {
-                                    array_push($seguimientos_ordenados->$year->per_a, $array_detail_inasistencia_peer_trackings_dphpforms[$y]);
-                                    $array_detail_inasistencia_peer_trackings_dphpforms[$y] = null;
-                                    break;
-                                };
-                            };
-                        };
-                    };
-                };
-            } else {
-                for ($y = 0; $y < count($array_detail_peer_trackings_dphpforms); $y++) {
-                    if ($array_detail_peer_trackings_dphpforms[$y]) {
-                        foreach ($array_detail_peer_trackings_dphpforms[$y]->record->campos as &$tracking) {
-                            if ($tracking->local_alias == 'fecha') {
-                                if (strtotime($tracking->respuesta) == $string_date) {
-                                    array_push($seguimientos_ordenados->$year->per_b, $array_detail_peer_trackings_dphpforms[$y]);
-                                    $array_detail_peer_trackings_dphpforms[$y] = null;
-                                    break;
-                                };
-                            };
-                        };
-                    };
-                };
-                // Inasistencia
-                for ($y = 0; $y < count($array_detail_inasistencia_peer_trackings_dphpforms); $y++) {
-                    if ($array_detail_inasistencia_peer_trackings_dphpforms[$y]) {
-                        foreach ($array_detail_inasistencia_peer_trackings_dphpforms[$y]->record->campos as &$tracking) {
-                            if ($tracking->local_alias == 'in_fecha') {
-                                if (strtotime($tracking->respuesta) == $string_date) {
-                                    array_push($seguimientos_ordenados->$year->per_b, $array_detail_inasistencia_peer_trackings_dphpforms[$y]);
-                                    $array_detail_inasistencia_peer_trackings_dphpforms[$y] = null;
-                                    break;
-                                };
-                            };
-                        };
-                    };
-                };
-            };
-        };
-    };
-    //Fin de ordenamiento
-
-    $seguimientos_array = json_decode(json_encode($seguimientos_ordenados), true);
-
-    $array_periodos = array();
-    for ($x = 0; $x < count($seguimientos_array['index']); $x++) {
-        array_push($array_periodos, $seguimientos_array[ $seguimientos_array['index'][$x] ]);
-    }
-    
-    $record->peer_tracking_v2 = array(
-        'index' => $seguimientos_array['index'],
-        'periodos' => $array_periodos,
-    );*/
-
     //PeerTracking V3
     //dphpforms start
     $peer_tracking_v3 = [];
     $periods = periods_management_get_all_semesters();
+    $special_date_interval = [
+        'start' => strtotime( "2019-01-01" ),
+        'end' => strtotime( "2019-04-30" )
+    ];
     foreach( $periods as $key => $period ){
 
         if( strtotime( $period->fecha_inicio ) >= $new_forms_date ){
@@ -973,6 +749,19 @@ if ($student_code != 0) {
                 $tracking_modified = [];
                  //Here can be added metadata.
                 foreach ($trackings as $key => $tracking) {
+
+                    $_fecha = null;
+                    
+                    if ( array_key_exists("fecha", $tracking) ) {
+                        $_fecha = strtotime( $tracking['fecha'] );
+                    }else{
+                        $_fecha = strtotime( $tracking['in_fecha'] );
+                    };
+                    
+
+                    if( ( $_fecha >= $special_date_interval['start'] ) && ( $_fecha <= $special_date_interval['end'] ) ){
+                        $tracking['custom_extra']['special_tracking'] = true;
+                    }
 
                     $tracking['custom_extra'][$tracking['alias_form']] = true;
                     $tracking['custom_extra']['rev_pro'] = false;
