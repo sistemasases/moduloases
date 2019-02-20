@@ -214,7 +214,7 @@ if(isset($_POST['monitor'])&&isset($_POST['type'])&&$_POST['type']=='redirect_tr
 
 
 // param $_POST['date'] is obsolete.
-if (isset($_POST['type']) && $_POST['type'] == "send_email_to_user" && isset($_POST['message_to_send']) && isset($_POST['tracking_type']) && isset($_POST['monitor_code']) && isset($_POST['date']))
+if (isset($_POST['type']) && $_POST['type'] == "send_email_to_user" && isset($_POST['message_to_send']) && isset($_POST['tracking_type']) && isset($_POST['monitor_code']) && isset($_POST['date']) )
     {
 
     /*
@@ -224,6 +224,8 @@ if (isset($_POST['type']) && $_POST['type'] == "send_email_to_user" && isset($_P
     
     $place = $_POST['place'];
     $tracking_type = $_POST['tracking_type'];
+    $instance = $_POST['instance'];
+    $courseid = $_POST['courseid'];
     if ($_POST['form'] == 'new_form')
         {
             $register = null;
@@ -233,7 +235,6 @@ if (isset($_POST['type']) && $_POST['type'] == "send_email_to_user" && isset($_P
                 $register = dphpforms_get_record($_POST['id_tracking'], 'in_id_estudiante');
             }
             $date = "";
-            //$id_estudiante = "";
             $json = json_decode($register, true);
             foreach( $json['record']['campos'] as $key => $field ){
                 if( ( $field['local_alias'] == "fecha" ) || ( $field['local_alias'] == "in_fecha" ) ){
@@ -245,7 +246,19 @@ if (isset($_POST['type']) && $_POST['type'] == "send_email_to_user" && isset($_P
             $monitor_code = get_student_monitor($id_ases_student, $_POST['semester'], $_POST['instance']);
             $practicant_code = get_boss_of_monitor_by_semester($monitor_code, $_POST['semester'], $_POST['instance']);
             $profesional_code = get_boss_of_monitor_by_semester($practicant_code->id_jefe, $_POST['semester'], $_POST['instance']);
-            echo send_email_to_user($_POST['tracking_type'], $monitor_code, $practicant_code->id_jefe, $profesional_code->id_jefe, date("Y-m-d", strtotime($date)), $id_moodle_student->firstname . " " . $id_moodle_student->lastname, $_POST['message_to_send'], $place);
+            echo send_email_to_user(
+                $_POST['tracking_type'], 
+                $monitor_code, 
+                $practicant_code->id_jefe, 
+                $profesional_code->id_jefe, 
+                date("Y-m-d", strtotime($date)), 
+                $id_moodle_student->firstname . " " . $id_moodle_student->lastname, 
+                $_POST['message_to_send'], 
+                $place,
+                $instance,
+                $courseid,
+                $id_ases_student
+            );
         }
     }
 

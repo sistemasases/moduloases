@@ -661,9 +661,11 @@ function get_profesional_practicante($id,$instanceid)
  * @param $place --> //
  * @return Array message information
  */
-function send_email_to_user( $tipoSeg, $codigoEnviarN1, $codigoEnviarN2, $codigoEnviarN3, $fecha, $nombre, $messageText, $place ){
+function send_email_to_user( $tipoSeg, $codigoEnviarN1, $codigoEnviarN2, $codigoEnviarN3, $fecha, $nombre, $messageText, $place, $instance, $courseid, $id_ases_student ){
 
     global $USER;
+    global $DB;
+    global $CFG;
 
     try{
 
@@ -671,8 +673,16 @@ function send_email_to_user( $tipoSeg, $codigoEnviarN1, $codigoEnviarN2, $codigo
     $emailFromUser = new stdClass;
     $messageHtml="";
 
+    $sql_student = "SELECT *
+    FROM {talentospilos_user_extended}
+    WHERE id_ases_user = '$id_ases_student'
+    AND tracking_status = 1";
+
+    $student_extended_obj = $DB->get_record_sql( $sql_student );
 
     $id_user = $USER->id;
+
+    $moodle_user_student = get_full_user( $student_extended_obj->id_moodle_user );
 
     $sending_user = get_full_user($id_user);
     $receiving_user = get_full_user($codigoEnviarN1);
@@ -707,6 +717,13 @@ function send_email_to_user( $tipoSeg, $codigoEnviarN1, $codigoEnviarN2, $codigo
     $emailFromUser->middlename = '';
     $emailFromUser->firstnamephonetic = '';
     $emailFromUser->lastnamephonetic = '';
+
+    //https://campusvirtual.univalle.edu.co/moodle/blocks/ases/view/student_profile.php?courseid=25643&instanceid=450299
+    //'http://127.0.0.1/moodle35'
+
+    $student_username = $moodle_user_student->username;
+
+    $link = $CFG->wwwroot . "/blocks/ases/view/student_profile.php?courseid=$courseid&instanceid=$instance&student_code=$student_username" ;
     
     if($tipoSeg=="individual")
     {
@@ -728,10 +745,10 @@ function send_email_to_user( $tipoSeg, $codigoEnviarN1, $codigoEnviarN2, $codigo
       $messageHtml.="Revisando el seguimiento realizado a los estudiantes $nombre  el dia $fecha, mis comentarios son los siguientes:<br><br>";
     }
     
-    $messageHtml.="<i>".$messageText."</i><br><br>";
+    $messageHtml.="<i>".$messageText."</i><br>";
+    $messageHtml.='Ficha: <a href="'.$link.'">'.$link.'</a><br><br>';
     $messageHtml.="Cordialmente<br>";
     $messageHtml.="$name_prof";
-
 
     $email_result = email_to_user($emailToUser, $emailFromUser->email, $subject, $messageText, $messageHtml, ", ", true);
 

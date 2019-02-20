@@ -182,6 +182,9 @@ $data->table_periods =$table_periods;
 $data->table=$table_permissions;
 $data->semester = $semester_id;
 
+$data->courseid = $courseid;
+$data->blockid = $blockid;
+
 
 $PAGE->requires->css('/blocks/ases/style/base_ases.css', true);
 $PAGE->requires->css('/blocks/ases/style/jqueryui.css', true);

@@ -1207,6 +1207,7 @@ define(
                             place = $('.in_lugar').find('input').val();
                         }
 
+                        let courseid =  $('#dphpforms_block_courseid').data('info');
 
                         //Text area is clear again
                         var answer = "";
@@ -1225,7 +1226,8 @@ define(
                                 message_to_send: message_to_send,
                                 semester:semester,
                                 instance:instance,
-                                place:place
+                                place:place,
+                                courseid:courseid
                             },
                             url: "../../../blocks/ases/managers/pilos_tracking/pilos_tracking_report.php",
                             async: false,
