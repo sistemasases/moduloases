@@ -1,14 +1,15 @@
 <?php
-require_once(dirname(__FILE__). '/../../../config.php');
+require_once (__DIR__ . '/../../../config.php');
+require_once (__DIR__ . '/user_management/user_lib.php');
+require_once (__DIR__ . '/role_management/role_management_lib.php');
+require_once (__DIR__ . '/course/course_lib.php');
 require_once('MyException.php');
 require_once $CFG->libdir.'/gradelib.php';
 require_once('../../../grade/querylib.php');
-require_once '../../../config.php';
 require_once $CFG->dirroot.'/grade/lib.php';
 require_once $CFG->dirroot.'/grade/report/user/lib.php';
-require_once '../managers/course/course_lib.php';
-require_once $CFG->dirroot.'/grade/report/grader/lib.php'; 
-require_once $CFG->dirroot.'/grade/lib.php'; 
+require_once $CFG->dirroot.'/grade/report/grader/lib.php';
+
 require_once ('lib/student_lib.php');
 
 
@@ -367,53 +368,6 @@ function get_permisos_role($idrol,$page){
 }
 //get_permisos_role(221,'role');
 
-/**
- * Función que asigna un rol a un usuario
- *
- * @see assign_role_user($username, $id_role, $state, $semester, $username_boss){
- * @return Integer
- */
- 
- function assign_role_user($username, $role, $state, $semester,$idinstancia, $username_boss = null){
-     
-    global $DB;
-    
-    $sql_query = "SELECT id FROM {user} WHERE username='$username'";
-    $id_user_moodle = $DB->get_record_sql($sql_query);
-     
-    $sql_query = "SELECT id FROM {talentospilos_rol} WHERE nombre_rol='$role';";
-    $id_role = $DB->get_record_sql($sql_query);
-    
-    $id_semester = get_current_semester();
-    
-    if($role == "monitor_ps")
-    {
-        $sql_query = "SELECT * FROM {user} WHERE username='$username_boss'";
-        $id_boss = $DB->get_record_sql($sql_query);    
-    }
-    else{
-        $id_boss = null;
-    }
-        
-    $array = new stdClass;
-    $array->id_rol = $id_role->id;
-    $array->id_usuario = $id_user_moodle->id;
-    $array->estado = $state;
-    $array->id_semestre = $id_semester->max;
-    $array->id_jefe = $id_boss;
-    $array->id_instancia= $idinstancia;
-    
-    //print_r($array);
-    
-    $insert_user_rol = $DB->insert_record('talentospilos_user_rol', $array, false);
-        
-    if($insert_user_rol){
-        return 1;
-    }
-    else{
-        return 2;
-    }
-}
 
 /**
  * Función que elimina un registro grupal tanto en 
@@ -596,30 +550,6 @@ FUNCIONES RELACIONADAS CON EL ROL PROFESIONAL PSICOEDUCATIVO
 *********************************************************************************
 */
 
-/**
- * Función que asigna un tipo de profesional a un usuario con rol profesional psicoeducativo
- *
- * @see assign_professional_user($id_user, $professional)
- * @return Integer
- */
- 
- function assign_professional_user($id_user, $professional){
-    
-    global $DB;
-    
-    $sql_query = "SELECT id FROM {talentospilos_profesional} WHERE nombre_profesional = '$professional'";
-    $id_professional = $DB->get_record_sql($sql_query);
-    
-    $record_professional_type = new stdClass;
-    $record_professional_type->id_usuario = $id_user;
-    $record_professional_type->id_profesional = $id_professional->id;
-    
-    $insert_record = $DB->insert_record('talentospilos_usuario_prof', $record_professional_type, true);
-    
-    return $insert_record;
- }
- 
-//  assign_professional_user(221, 'psicologo');
  
  /**
  * Función que actualiza en l
@@ -663,98 +593,6 @@ FUNCIONES RELACIONADAS CON EL ROL PROFESIONAL PSICOEDUCATIVO
  // Testing
  // update_professional_user(221, 'trabajador_social');
  
-/**
- * Función que administra el rol profesional psicoeducativo
- *
- * @see manage_role_profesional_ps($username, $role, $professional)
- * @return booleano confirmando el éxito de la operación
- */
-
-// function manage_role_profesional_ps($username, $role, $professional, $idinstancia, $state = 1)
-// {
-//     global $DB;
-    
-//     try{
-//         // Select object user
-//         $sql_query = "SELECT * FROM {user} WHERE username ='$username';";
-//         $object_user = $DB->get_record_sql($sql_query);
-
-//         // Current role
-//         pg_query("BEGIN") or die("Could not start transaction\n");
-//         $sql_query = "SELECT id_rol, nombre_rol FROM {talentospilos_user_rol} ur INNER JOIN {talentospilos_rol} r ON r.id = ur.id_rol WHERE id_usuario = ".$object_user->id." AND ur.id_instancia=".$idinstancia." AND  id_semestre = (SELECT max(id) FROM {talentospilos_semestre});";
-//         $id_current_role = $DB->get_record_sql($sql_query);
-//         pg_query("COMMIT") or die("Transaction commit failed\n");
-
-//         $id_current_semester = get_current_semester();
-
-//         if(empty($id_current_role)){
-
-//             // Start db transaction
-//             pg_query("BEGIN") or die("Could not start transaction\n");
-
-//             assign_role_user($username, $role, 1, $id_current_semester->max, $idinstancia, null);
-            
-//             assign_professional_user($object_user->id, $professional);
-            
-//             // End db transaction
-//             pg_query("COMMIT") or die("Transaction commit failed\n");
-        
-//         }
-//         else{
-//             //en la consulta se hace tiene en cuenta el semestre concurrente
-//             $sql_query = "SELECT * FROM {talentospilos_user_rol} userrol INNER JOIN {talentospilos_usuario_prof} userprof 
-//                             ON userrol.id_usuario = userprof.id_usuario INNER JOIN {talentospilos_rol} rol ON rol.id = userrol.id_rol  WHERE userprof.id_usuario = ".$object_user->id." AND userrol.id_semestre=".$id_current_semester->max." AND userrol.id_instancia = ".$idinstancia.";";
-//             $object_user_role = $DB->get_record_sql($sql_query);
-            
-//             if($object_user_role){
-//                 // Incluir el estado
-                
-//                 $sql_query = "SELECT id FROM {talentospilos_profesional} WHERE nombre_profesional = '$professional'";
-//                 $new_id_professional_type = $DB->get_records_sql($sql_query);
-                
-//                 foreach ($new_id_professional_type as $n){
-//                     if($object_user_role->id_profesional != $n->id){
-//                         update_professional_user($object_user->id, $professional);
-//                     }
-//                 }
-                
-//                 //se actualiza el estado en caso de que se hjaya desactivado anteriormente
-//                 update_role_user($username,$role,$idinstancia, $state);
-//                 if($state == 0){
-//                     $whereclause = "id_usuario = ".$object_user->id;
-//                     $DB->delete_records_select('talentospilos_usuario_prof',$whereclause);
-//                 }
-               
-//             }else{
-                
-//                 // caso monitor
-                
-                
-//                 // Start db transaction
-//                 pg_query("BEGIN") or die("Could not start transaction\n");
-                
-//                 if($id_current_role->nombre_rol == 'monitor_ps'){ 
-//                     $whereclause = "id_monitor = ".$object_user->id;
-//                     $DB->delete_records_select('talentospilos_monitor_estud',$whereclause);
-//                 } 
-                
-//                 update_role_user($username, $role,$idinstancia, $state, $id_current_semester->max, null);
-                
-//                 assign_professional_user($object_user->id, $professional);
-                
-//                 // End db transaction
-//                 pg_query("COMMIT") or die("Transaction commit failed\n");
-//             }
-            
-//         }
-//     //print_r(1);
-//     return 1;
-        
-//     }catch(Exception $e){
-//         return "Error al gestionar los permisos profesional ".$e->getMessage();
-//     }
-    
-// }
 
 // Testing
 // manage_role_profesional_ps('1124153-3743', 'profesional_ps', 'terapeuta_ocupacional', 534);
