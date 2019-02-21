@@ -25,6 +25,7 @@
 
 require_once(dirname(__FILE__). '/../../../../config.php');
 require_once $CFG->dirroot.'/blocks/ases/managers/lib/lib.php';
+require_once(dirname(__FILE__). '/../periods_management/periods_lib.php');
 
 /**
  * Function load all registers of mdl_talentospilos_df_dwarehouse
@@ -386,15 +387,35 @@ function  get_tipo_form($id_registro_respuesta_form)
 function  getDataToUrlByIdAses($id_ases_student)
 {
     global $DB; 
-   $sql_query = "SELECT _user.username, _user.firstname , _user.lastname  FROM mdl_talentospilos_user_extended AS talentospilos_user_extended
-                        INNER JOIN mdl_user AS _user ON talentospilos_user_extended.id_moodle_user = _user.id
-                                WHERE talentospilos_user_extended.id_ases_user = '$id_ases_student' AND talentospilos_user_extended.tracking_status = 1";
+
+    $current_semester = get_current_semester()->max;
+
+                $sql_query = "   SELECT url_data.id_instancia AS instanceid, url_data.username, url_data.firstname, url_data.lastname, _context.instanceid AS courseid
+                FROM mdl_context AS _context
+                         INNER JOIN (
+
+                                SELECT * FROM mdl_block_instances AS _block_instances
+
+                                 INNER JOIN (
+
+                                     SELECT * FROM mdl_talentospilos_monitor_estud AS _talentospilos_monitor_estud
+
+                                    INNER JOIN (
+                                            SELECT * FROM mdl_talentospilos_user_extended AS talentospilos_user_extended
+                                                 INNER JOIN mdl_user AS _user ON talentospilos_user_extended.id_moodle_user = _user.id
+                                        
+                ) AS data_student ON _talentospilos_monitor_estud.id_estudiante = data_student.id_ases_user AND _talentospilos_monitor_estud.id_semestre = '$current_semester'
+                ) AS _contexto ON  _block_instances.id = _contexto.id_instancia
+                ) AS url_data ON _context.id = url_data.parentcontextid
+
+                    WHERE url_data.id_ases_user = '$id_ases_student' AND url_data.tracking_status = 1";
+
    return $DB->get_records_sql($sql_query);
 }
 
 /**
- * Function that load username and firstname data switch id_ases
- * @see getDataToUrlByIdAses($id_ases_student)
+ * Function that load id_ases switch username
+ * @see getIdAses($username)
  * @param $id_ases_student---> id_ases_user
  * @return array
  **/
