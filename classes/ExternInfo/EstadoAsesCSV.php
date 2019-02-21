@@ -356,7 +356,7 @@ class EstadoAsesCSV extends Validable {
 
 
     public function validar_discapacidad($glue = ', ') {
-        if($this->discapacidad === '' ) {
+        if($this->discapacidad === '' || $this->discapacidad === BaseDAO::NO_REGISTRA) {
             $this->discapacidad = Discapacidad::ID_DISCAPACIDAD_POR_DEFECTO;
         }
         if(Discapacidad::exists(array(Discapacidad::ID=>$this->discapacidad))) {
@@ -465,9 +465,7 @@ class EstadoAsesCSV extends Validable {
             return true;
         }
     }
-    public static function get_class_name() {
-        return get_called_class();
-    }
+
 
 }
 

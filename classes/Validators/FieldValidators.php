@@ -6,7 +6,7 @@
  * Time: 05:08 PM
  */
 
-
+require_once (__DIR__ . '/../../managers/lib/json.php');
 class FieldValidators
 {
     private static  function validateDate($date, $format = 'Y-m-d H:i:s')
@@ -45,6 +45,16 @@ class FieldValidators
                     return "Ha ingresado un valor incorrecto para el validador, ejemplo de formatos esperados: 'Y-m-d', ['Y-m-d', 'Y/m/d', 'd-m-Y']. Formato ingresado: $format_or_formats";
                 }
             };
+    }
+    public static function json(string $custom_message = null ) {
+        return
+        function ($value='', $field_name = '') use ($custom_message) {
+          if(\json\valid_json($value))   {
+              return true;
+          } else {
+              return $custom_message? $custom_message: "El campo '$field_name' contiene un JSON mal formado";
+          }
+        };
     }
     public static function numeric(string $custom_message = null) {
         return
@@ -130,6 +140,18 @@ class FieldValidators
             }
         };
     }
+    public static function number_between($start, $end, $custom_message = null) {
+        $start = (float) $start;
+        $end = (float) $end;
+        return
+        function ($value, $field_name = '') use ($start, $end, $custom_message) {
+          if(!($value >= $start && $value <= $end )) {
+              return $custom_message? $custom_message:  "El valor de el campo '$field_name' debe estar entre $start y $end";
+          } else {
+              return true;
+          }
+        };
+    }
     public static function regex($regex, $custom_message = null) {
 
         return
@@ -138,12 +160,8 @@ class FieldValidators
                 if(preg_match($regex, $value)) {
                     return true;
                 } else {
+                    return $custom_message? $custom_message: "El campo '$field_name' debe coincidir con la expresión regular '$regex'";
 
-                    if($custom_message) {
-                        return $custom_message;
-                    } else {
-                        return "El campo '$field_name' debe coincidir con la expresión regular '$regex'";
-                    }
                 }
             };
     }

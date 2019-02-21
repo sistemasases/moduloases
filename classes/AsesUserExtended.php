@@ -54,10 +54,12 @@ class AsesUserExtended extends BaseDAO {
      * Retorna los programas en los cuales el usuario
      * tiene tracking status 1 en user extended
      * @param $id_ases_user
-     * @return array
+     * @return array Array with instances of Programa
+     * @see Programa
      * @throws dml_exception
+     * @throws ErrorException
      */
-    public static function get_actie_programs_by_ases_user_id($id_ases_user) {
+    public static function get_active_programs_by_ases_user_id($id_ases_user) {
 
         $programs_std_obj = get_student_active_programs_by_ases_user_id($id_ases_user);
         return Programa::make_objects_from_std_objects_or_arrays($programs_std_obj);
@@ -110,4 +112,3 @@ SQL;
         return $DB->execute($sql);
     }
 }
-?>

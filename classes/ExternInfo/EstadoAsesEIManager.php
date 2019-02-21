@@ -10,8 +10,6 @@ require_once(__DIR__.'/EstadoAsesCSV.php');
 require_once(__DIR__.'/../AsesUser.php');
 require_once(__DIR__.'/../Programa.php');
 
-require_once(__DIR__.'/../../managers/jquery_datatable/jquery_datatable_lib.php');
-require_once(__DIR__.'/../../managers/lib/reflection.php');
 require_once(__DIR__.'/../../managers/cohort/cohort_lib.php');
 require_once(__DIR__ . '/../../managers/user_management/user_lib.php');
 
@@ -19,7 +17,7 @@ class EstadoAsesEIManager extends ExternInfoManager {
     public $cohort_id;
     public $instance_id;
     public function __construct($cohort_id, $instance_id) {
-        parent::__construct( EstadoAsesCSV::get_class_name());
+        parent::__construct( EstadoAsesCSV::class);
         $this->cohort_id = $cohort_id;
         $this->instance_id = $instance_id;
     }
@@ -35,17 +33,9 @@ class EstadoAsesEIManager extends ExternInfoManager {
         /* @var $item EstadoAsesCSV */
 
         foreach ($data as $key => $item) {
-            if(!$item->valid()) {
-
-                return false;
-            }
             $id_moodle_user = null;
             $id_ases_user = null;
-
-
             /* Creación de usuario moodle si no existe*/
-
-
             $moodle_user = $item->get_moodle_user();
             $username = $moodle_user['username'];
             if(!core_user::get_user_by_username($username)) {
@@ -66,7 +56,7 @@ class EstadoAsesEIManager extends ExternInfoManager {
             /** @var $cohort \cohort_lib\Cohort */
             $cohorts = \cohort_lib\get_cohorts(array(\cohort_lib\ID_NUMBER=>$this->cohort_id));
             $cohort = $cohorts[0]; /** El id number de una corte es unico, por lo que esto es posible,
-                                       además, en la validación se verifico que esta existiera*/
+                                       además, en la validación se verifico que esta existiera */
             if( cohort_is_member($cohort->id, $id_moodle_user) ) {
                 /** No hace falta añadir un mensaje warning ya que más abajo se advierte si el usuario existia en alguna cohorte
                  * incluida la cohorte en la que se desea adicionar actualmente al usuario
@@ -88,7 +78,7 @@ class EstadoAsesEIManager extends ExternInfoManager {
                 $this->add_object_warning("El estudiante ya estaba en la(s) cohorte(s) [$cohort_names_string]", $key);
             }
             /* Create ases user if not exist */
-            if(!AsesUser::exists_by_num_docs($item->documento)) {
+            if(!AsesUser::exists_by_num_docs_($item->documento, $item->documento_ingreso)) {
 
                 $ases_user = EstadoAsesCSV::extract_ases_user($item);
                 if($ases_user->valid()) {
@@ -107,7 +97,7 @@ class EstadoAsesEIManager extends ExternInfoManager {
 
                     }
                 }
-                $programs = AsesUserExtended::get_actie_programs_by_ases_user_id($id_ases_user);
+                $programs = AsesUserExtended::get_active_programs_by_ases_user_id($id_ases_user);
                 $program_names = array_column($programs, Programa::NOMBRE);
                 $program_names_string = implode($program_names);
                 $this->add_object_warning(

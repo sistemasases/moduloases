@@ -23,10 +23,11 @@
 * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
 */
 require_once(__DIR__ . '/DAO/BaseDAO.php');
-
+require_once(__DIR__ . '/../managers/query.php');
 class Semestre extends BaseDAO
 {
     public $id;
+    const NOMBRE = 'nombre';
     public $nombre;
     public $fecha_inicio;
     public $fecha_fin;
@@ -54,6 +55,7 @@ class Semestre extends BaseDAO
      *  date format is no needed and discarded for the operations
      * @param string $date_format If the date is in no unix time, the date is formated and validated based in this format
      * @return bool|array
+     * @throws ErrorException
      * @throws dml_exception
      */
     static function get_semesters_later_than($date, $number_of_semesters=-1, $unix_time = false, $date_format = 'Y-m-d') {
@@ -96,5 +98,24 @@ SQL;
         $d = DateTime::createFromFormat($format, $date);
         // The Y ( 4 digits year ) returns TRUE for any integer with any number of digits so changing the comparison from == to === fixes the issue.
         return $d && $d->format($format) === $date;
+    }
+
+    /**
+     * Return the current semester, using the semester name
+     * infered by current date, if current date 2018/1/1
+     * the semester name infered is 2018A and this is the critery for search
+     *
+     * **If the semester is not in the database, null is returned**
+     * @return Semestre|null
+     * @throws ErrorException
+     * @throws dml_exception
+     */
+    static function get_current_semester_by_date() {
+        $current_semester  = get_current_semester_by_date();
+        $semesters =  Semestre::get_by(array(Semestre::NOMBRE => $current_semester));
+        if(is_array($semesters) && count($semesters) > 0) {
+            return $semesters [0];
+        }
+        return null;
     }
 }

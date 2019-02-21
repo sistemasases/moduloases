@@ -4,7 +4,7 @@ require_once (__DIR__ . '/../../../config.php');
 require_once(__DIR__ . '/../classes/CondicionExcepcion.php');
 
 $condicion_excepcion = new CondicionExcepcion();
-$condicion_excepcion->condicion_excepcion = "Condición de excepción V.C";
+$condicion_excepcion->condicion_excepcion = "Víctimas del conflicto político armado (V.C.)";
 $condicion_excepcion->alias = "V.C.";
 try {
     if (CondicionExcepcion::exists(array(CondicionExcepcion::ALIAS => $condicion_excepcion->alias))) {

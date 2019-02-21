@@ -1,6 +1,5 @@
 <?php
-require_once(__DIR__.'/../traits/from_std_object_or_array.php');
-require_once(__DIR__.'/../../managers/lib/reflection.php');
+
 
 // This file is part of Moodle - http://moodle.org/
 //
@@ -25,7 +24,9 @@ require_once(__DIR__.'/../../managers/lib/reflection.php');
  * @copyright  2018 Luis Gerardo Manrique Cardona <luis.manrique@correounivalle.edu.co>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-defined('MOODLE_INTERNAL') || die;
+require_once(__DIR__. '/../../../../config.php');
+require_once(__DIR__.'/../traits/from_std_object_or_array.php');
+require_once(__DIR__.'/../../managers/lib/reflection.php');
 require_once (__DIR__.'/../Errors/Factories/FieldValidationErrorFactory.php');
 require_once (__DIR__.'/../Errors/AsesError.php');
 require_once(__DIR__.'/../../vendor/autoload.php');
@@ -47,11 +48,10 @@ abstract class BaseDAO extends Validable
 {
 
     use from_std_object_or_array;
-
+    const ID = 'id';
 
     /* @var QueryFactory $_factory*/
     private $_factory;
-
     const NO_REGISTRA = 'NO REGISTRA';
 
     public function __construct($data = null)
@@ -80,11 +80,57 @@ abstract class BaseDAO extends Validable
         return false;
     }
 
+    /**
+     * @param array $conditions optional array $fieldname=>requestedvalue with AND in between
+     * @return int The count of records returned from the specified criteria.
+     * @throws dml_exception A DML specific exception is thrown for any errors.
+     */
+    public static function count($conditions=null){
+        global $DB;
+        /** @var  $CLASS BaseDAO */
+        $CLASS = get_called_class();
+        return  $DB->count_records($CLASS->get_class_name(), $conditions);
+    }
     public static function get_class_name(): string {
         return get_called_class();
     }
 
-
+    /**
+     * Get a number of records as an array of objects which match a particular WHERE clause.
+     * Note that the array keys will be the id of the object so you must not rely
+     * on the first item having a key of 0.
+     *
+     * @see
+     * @param $select
+     * @param $params
+     * @param string $sort
+     * @param int $limitfrom
+     * @param int $limitnum
+     * @return array
+     * @throws dml_exception
+     */
+    public static function get_select($select, $params,  $sort='',  $limitfrom=0, $limitnum=0) {
+        global $DB;
+        /** @var  $CLASS BaseDAO */
+        $CLASS = get_called_class();
+        $results =  BaseDAO::db_result_to_class_result(
+            $DB->get_records_select(
+                $CLASS->get_class_name(),
+                $select,
+                $params,
+                $sort,
+                '*',
+                $limitfrom,
+                $limitnum)
+        );
+        return $results;
+    }
+    private static function db_result_to_class_result($db_result) {
+        /** @var  $CLASS BaseDAO */
+        $CLASS = get_called_class();
+        $results = array_values($db_result);
+        return $CLASS->make_objects_from_std_objects_or_arrays($results);
+    }
     /**
      * Check if the current object is valid, and if is not valid add all the errors and make
      * these available by calling get_errors
@@ -337,6 +383,7 @@ abstract class BaseDAO extends Validable
     /**
      * Return object instances from database than satisfy the conditions given
      *
+     *
      * @param $conditions Array key-value than gets the conditions for get the objects
      * @param string $sort an order to sort the results in (optional, a valid SQL ORDER BY parameter).
      *   all fields are returned). The first field will be used as key for the
@@ -370,7 +417,33 @@ abstract class BaseDAO extends Validable
         return false;
 
     }
+    /**
+     * Return one object instance from database than satisfy the conditions given
+     *
+     *
+     * @param $conditions Array key-value than gets the conditions for get the objects
+     * @example $conditions =  array('username'=> 'Camilo', 'lastname'=> 'Cifuentes')
+     * @example $conditions = array(AsesUser::USER_NAME => 'Camilo', AsesUser::LAST_NAME => 'Cifuentes')
+     * @see https://docs.moodle.org/dev/Data_manipulation_API
+     * @return false|Object Object instance if exists in database, empty array if does not exist
+     * @throws dml_exception
+     * @throws ErrorException If the given conditions specify invalid column names throws an error
+     *
+     */
+    public static function get_one_by($conditions) {
+        global $DB;
+        /* @var BaseDAO $CLASS */
+        $CLASS = get_called_class();
+        if(!$CLASS::valid_conditions($conditions)) {
+            throw new ErrorException("The given columns for conditions array are invalid, active debug mode for show de debug backtrace");
+        }
+        $db_record = $DB->get_record($CLASS::get_table_name(), $conditions );
+        if(!$db_record){
+            return false;
+        }
+        return new $CLASS($db_record);
 
+    }
     /**
      * Return all not null fields of the object and than have default value defined
      * in the database
@@ -389,12 +462,28 @@ abstract class BaseDAO extends Validable
      */
     public static function exists($conditions): bool  {
         global $DB;
+        /** @var  $CLASS BaseDAO */
         $CLASS = get_called_class();
         if (!$CLASS::valid_conditions($conditions)) {
             return false;
         }
         $table_name = $CLASS::get_table_name();
         return $DB->record_exists($table_name, $conditions);
+    }
+    /**
+     * Check if object exists in database based in an array of a  given conditions
+     * @param $conditions Array key-value than gets the conditions for get the objects
+     * @example $conditions =  array('username'=> 'Camilo', 'lastname'=> 'Cifuentes')
+     * @example $conditions = array(AsesUser::USER_NAME => 'Camilo', AsesUser::LAST_NAME => 'Cifuentes')
+     * @return bool
+     * @throws dml_exception
+     */
+    public static function exists_select($select, $params = null): bool  {
+        global $DB;
+        /** @var  $CLASS BaseDAO */
+        $CLASS = get_called_class();
+        $table_name = $CLASS::get_table_name();
+        return $DB->record_exists_select($table_name, $select, $params);
     }
 
     /**

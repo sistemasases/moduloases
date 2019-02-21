@@ -6,7 +6,7 @@
  * Time: 02:07 PM
  */
 
-class HistorialAcademico_Notas
+class HistorialAcademico_Materia
 {
 
 }

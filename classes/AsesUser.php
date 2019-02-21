@@ -187,18 +187,47 @@ class AsesUser extends BaseDAO  {
      * @return bool
      * @throws dml_exception
      */
-    public static function exists_by_num_docs_($num_doc, $num_doc_ini) {
+    public static function exists_by_num_docs_($num_doc, $num_doc_ini = null) {
         global $DB;
-        $sql = <<<SQL
-        SELECT * from mdl_talentospilos_usuario
-        where num_doc = $num_doc
-        or num_doc = $num_doc_ini
-        or num_doc_ini = $num_doc_ini
-        or num_doc_ini = $num_doc
-SQL;
-    return $DB->record_exists_sql($sql);
+        if(!$num_doc_ini) {
+            $num_doc_ini = $num_doc;
+        }
+        $sql = AsesUser::get_select_by_num_docs($num_doc, $num_doc_ini);
+        return $DB->record_exists_sql($sql);
     }
 
+    /**
+     * Return the student search by num_doc and num_doc_ini
+     * Is possible than exist more than one user, array is returned
+     * @param $num_doc
+     * @param null $num_doc_ini
+     * @return array
+     * @throws ErrorException
+     * @throws dml_exception
+     */
+    public static function get_by_num_docs($num_doc, $num_doc_ini = null) {
+        global $DB;
+        if(!$num_doc_ini) {
+            $num_doc_ini = $num_doc;
+        }
+        $sql = AsesUser::get_select_by_num_docs($num_doc, $num_doc_ini);
+        $result = $DB->get_records_sql($sql);
+        $result_values = array_values($result);
+        return AsesUser::make_objects_from_std_objects_or_arrays($result_values);
+
+    }
+
+
+    private static function get_select_by_num_docs($num_doc, $num_doc_ini = null) {
+        return <<<SQL
+        SELECT * from mdl_talentospilos_usuario
+        where num_doc = '$num_doc'
+        or num_doc = '$num_doc_ini'
+        or num_doc_ini = '$num_doc_ini'
+        or num_doc_ini = '$num_doc'
+SQL;
+
+    }
     /**
      * Check if a ases user exists by document number and initial document number
      *

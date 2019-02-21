@@ -15,44 +15,98 @@ define([
     'block_ases/buttons.flash',
     'block_ases/buttons.print',
     ], function($, notification, templates, dataTables, autoFill, buttons, html5, flash, print) {
+    var instance_id = 0;
+    function get_datatable_column_index(table, name) {
+        var column = table.column(name);
+        return column.name;
+    }
+    var get_cohort_id = function () {
+        return $("#cohorts").val();
+    }
+    var get_endpoint_name = function () {
+        return $("#endpoints").val();
+    };
+    var get_api_url = function() {
+
+        return 'receive_csv.php/'+ get_endpoint_name() + '/'+get_cohort_id() + '/' + instance_id;
+    };
+
+
+        var reinit_datatable = () => {
+            if($.fn.DataTable.isDataTable("#example")) {
+            $('#example').DataTable().destroy();
+        }
+        };
+    /**
+     * Actually, jquery datatables data function returns an object with more
+     * than is neccesary for get real data, this function extract the real data
+     * from datatables data whitout unnecesary info
+     * @param table Jquery Datatable
+     * @param initial_object_properties array Array of property names
+     * @return array of data
+     * @see https://datatables.net/reference/api/rows().data()
+     */
+    function getTableData(table, initial_object_properties) {
+        var table_data = table.rows().data();
+        var data_ = [];
+        var data = [];
+        for (var i = 0; i < table_data.length; i++) {
+            data_.push(table_data[i]);
+        }
+        /* Get only the initial object properties (exclude indexes or aditional values added for jquery datatable suport*/
+        data_.forEach(element => {
+            var pure_element = {};
+            initial_object_properties.forEach(property => {
+                pure_element[property] = element[property];
+            });
+            data.push(pure_element);
+        });
+        return data;
+    }
+    var errors_object_to_erros =  (object_errors) => {
+        var errors = [];
+        Object.keys(object_errors).forEach( key => {
+            errors = errors.concat(object_errors[key]);
+        });
+
+        return errors;
+    };
+    /**
+     * Message object than contain the warnigns , success logs and errors for a messages table
+     *
+     * @property index int From 1 if posible
+     * @property errors errors object of AsesError[]
+     * @property warnings string[]
+     * @property success_logs string[]
+     * @type {MessagesObject}
+     */
+    var MessagesObject /* @class */ = (function   () {
+
+
+        function MessagesObject(index,
+                                errors,
+                                warnings,
+                                success_logs) {
+            this.index = index;
+
+            this.errors = errors ? errors_object_to_erros(errors) : [];
+            this.warnings = warnings ? warnings : [];
+            this.success_logs = success_logs ? success_logs : [];
+        }
+        return MessagesObject;
+
+
+    }());
+
         return {
             /**
              * @param data contiene el id de la instancia
              */
             init: function (data) {
-                var instance_id = data.instance_id;
+                instance_id = data.instance_id;
                 var myTable = null;
                 var initial_object_properties = null;
-                function errors_object_to_erros(object_errors) {
-                    var errors = [];
-                    Object.keys(object_errors).forEach( key => {
-                        errors = errors.concat(object_errors[key]);
-                    });
 
-                    return errors;
-                }
-                /**
-                 * Message object than contain the warnigns , success logs and errors for a messages table
-                 *
-                 * @property index int From 1 if posible
-                 * @property errors errors object of AsesError[]
-                 * @property warnings string[]
-                 * @property success_logs string[]
-                 * @type {MessagesObject}
-                 */
-                var MessagesObject /* @class */ = (function   () {
-                    function MessagesObject(index,
-                                            errors,
-                                          warnings,
-                                          success_logs) {
-                        this.index = index;
-
-                        this.errors = errors ? errors_object_to_erros(errors) : [];
-                        this.warnings = warnings ? warnings : [];
-                        this.success_logs = success_logs ? success_logs : [];
-                    }
-                    return MessagesObject;
-                }());
 
                 /**
                  * Pinta los errores individuales genericos de los objetos.
@@ -61,32 +115,7 @@ define([
                  * Los demás errores que esten relacionados solo a un atributo de el objeto se pintara
                  * en la tabla jquery al pasar el raton sobre este.
                  */
-                /**
-                 * Actually, jquery datatables data function returns an object with more
-                 * than is neccesary for get real data, this function extract the real data
-                 * from datatables data whitout unnecesary info
-                 * @param table Jquery Datatable
-                 * @param initial_object_properties array Array of property names
-                 * @return array of data
-                 * @see https://datatables.net/reference/api/rows().data()
-                 */
-                function getTableData(table, initial_object_properties) {
-                    var table_data = table.rows().data();
-                    var data_ = [];
-                    var data = [];
-                    for (var i = 0; i < table_data.length; i++) {
-                        data_.push(table_data[i]);
-                    }
-                    /* Get only the initial object properties (exclude indexes or aditional values added for jquery datatable suport*/
-                    data_.forEach(element => {
-                        var pure_element = {};
-                        initial_object_properties.forEach(property => {
-                            pure_element[property] = element[property];
-                        });
-                        data.push(pure_element);
-                    });
-                    return data;
-                }
+
 
                 $("#print-data").click(
                     function () {
@@ -96,6 +125,7 @@ define([
 
                 $("#send-data").click(
                     function () {
+
                         var data = getTableData(myTable, initial_object_properties);
                         console.log(data);
                         $.ajax({
@@ -119,20 +149,7 @@ define([
                                 }
                             });
                     });
-                function get_datatable_column_index(table, name) {
-                    var column = table.column(name);
-                    return column.name;
-                }
-                var get_cohort_id = function () {
-                    return $("#cohorts").val();
-                }
-                var get_endpoint_name = function () {
-                    return $("#endpoints").val();
-                };
-                var get_api_url = function() {
 
-                    return 'receive_csv.php/'+ get_endpoint_name() + '/'+get_cohort_id() + '/' + instance_id;
-                };
                 /**
                  * Load preview datatable
                  * En caso de que el csv tenga mas o menos propiedades de las esperadas
@@ -166,7 +183,7 @@ define([
                 $('#send-file').click(
                     function () {
                         var data = new FormData($(this).closest("form").get(0));
-
+                        reinit_datatable();
 
                         $.ajax({
                             url: get_api_url(),
@@ -174,7 +191,6 @@ define([
                             cache: false,
                             contentType: false,
                             dataType: "html",
-                            //contentType: 'multipart/form-data',
                             processData: false,
                             type: 'POST',
                             error: function (response) {
@@ -232,7 +248,8 @@ define([
                                         messages.push(new MessagesObject(_i + 1, errors[_i] ? errors[_i] : [], warnings[_i], success_log_events[_i]));
                                     }
                                 }
-                                /* Se muestran los mensajes*/
+                                /* Se borran los mensajes previos y se muestran los nuevos*/
+                                $('#messages_area').html('');
                                 templates.render('block_ases/massive_upload_messages', {data: messages} )
                                     .then((html, js) => {
                                        templates.appendNodeContents('#messages_area', html, js);

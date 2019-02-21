@@ -2,7 +2,7 @@
 require_once(dirname(__FILE__). '/../../../config.php');
 require_once('MyException.php');
 require_once $CFG->libdir.'/gradelib.php';
-require('../../../grade/querylib.php');
+require_once('../../../grade/querylib.php');
 require_once '../../../config.php';
 require_once $CFG->dirroot.'/grade/lib.php';
 require_once $CFG->dirroot.'/grade/report/user/lib.php';
@@ -1120,86 +1120,6 @@ function delete_last_register($table_name){
 
 
 /**
- * Función que relaciona a un conjunto de estudiantes con un monitor
- *
- * @see monitor_student_assignment()
- * @return booleano confirmando el éxito de la operación
- */
-function monitor_student_assignment($username_monitor, $array_students, $idinstancia)
-{
-    global $DB;
-    
-    try{
-        $sql_query = "SELECT id FROM {user} WHERE username = '$username_monitor'";
-        $idmonitor = $DB->get_record_sql($sql_query);
-        
-        $first_insertion_sql = "SELECT MAX(id) FROM {talentospilos_monitor_estud};";
-        $first_insertion_id = $DB->get_record_sql($first_insertion_sql);
-        
-        $insert_record = "";
-        $array_errors = array();
-        $hadErrors = false; 
-        
-        foreach($array_students as $student)
-        {
-            
-                //$sql_query = "SELECT id FROM {user} WHERE username= '$student'";
-                //$studentid = $DB->get_record_sql($sql_query);
-                
-                //se obtiene el id en la tabla de {talentospilos_usuario} del estudiante
-                $studentid = get_userById(array('*'),$student);
-                
-                if($studentid){
-                    //se valida si el estudiante ya tiene asignado un monitor
-                    $sql_query = "SELECT u.id as id, username,firstname, lastname FROM {talentospilos_monitor_estud} me INNER JOIN {user} u  ON  u.id = me.id_monitor WHERE me.id_estudiante =".$studentid->idtalentos."";
-                    $hasmonitor = $DB->get_record_sql($sql_query);
-                
-                    if(!$hasmonitor){
-                        $object = new stdClass();
-                        $object->id_monitor = $idmonitor->id;
-                        $object->id_estudiante = $studentid->idtalentos;
-                        $object->id_instancia = $idinstancia;
-              
-                        $insert_record = $DB->insert_record('talentospilos_monitor_estud', $object, true);
-                
-                        if(!$insert_record){
-                            $hadErrors = true; 
-                            array_push($array_errors, "Error al asignar el estudiante ".$student." al monitor (monitor_student_assignment). Operaciòn de asignaciòn del estudiante anulada.");
-                            
-                        }
-                
-                    }elseif($hasmonitor->id != $idmonitor->id){
-                        $hadErrors = true; 
-                        array_push($array_errors,"El estudiante con codigo ".$student." ya tiene asigando el monitor: ".$hasmonitor->username."-".$hasmonitor->firstname."-".$hasmonitor->lastname.". Operaciòn de asignaciòn del estudiante anulada.");
-                    }
-                }else{
-                    $hadErrors = true; 
-                    array_push($array_errors,"El estudiante con codigo '".$student."' no se encontro en la base de datos. Operaciòn de asignaciòn del estudiante anulada.");
-                } 
-        }
-        
-        if(!$hadErrors){
-            return 1;
-        }else{
-            $message = "";
-            foreach ($array_errors as $error){
-                $message .= "*".$error."<br>";
-            }
-            throw new MyException("Rol Actualizado con los siguientes inconvenientes:<br><hr>".$message);
-        }
-        
-    
-    }
-    catch(MyException $ex){
-        return $ex->getMessage();
-    }
-    catch(Exception $e){
-        $error = "Error en la base de datos(monitor_student_assignment).".$e->getMessage();
-        echo $error;
-    }
-}
-
-/**
  * dropStudentofMonitor
  * 
  * Elimina de base de datos la relacion monitor - estudiante
@@ -1579,7 +1499,7 @@ function attendance_by_course($code_student)
  * Función que retorna el semestre actual a partir de la fecha del sistema
  *
  * @see get_current_semester()
- * @return cadena de texto que representa el semestre actual
+ * @return string cadena de texto que representa el semestre actual
  */
 function get_current_semester_by_date()
 {
