@@ -11,15 +11,13 @@
 require_once(__DIR__ . '/../../../../../config.php');
 require_once($CFG->libdir . '/datalib.php');
 require_once (__DIR__ . '/../../../managers/user_management/user_lib.php');
-
 require_once (__DIR__ . '/../../traits/validate_object_fields.php');
 require_once (__DIR__ . '/../../Validators/FieldValidators.php');
-
 require_once (__DIR__ . '/../../../classes/module.php');
-
+require_once (__DIR__ . '/../../../managers/semester/semester_lib.php');
 require_once(__DIR__ .'/../../../vendor/autoload.php');
 use JsonSchema\Validator;
-
+use function semester\get_semester_name_regex;
 
 class HistorialAcademicoEI extends Validable {
 
@@ -203,18 +201,19 @@ class HistorialAcademicoEI extends Validable {
     }
     public function define_field_validators(): stdClass
     {
+        $semester_name_regex = get_semester_name_regex();
         /** @var  $field_validators HistorialAcademicoEI */
         $field_validators = new stdClass();
         $field_validators->json_materias = [FieldValidators::required(), FieldValidators::json()];
         $field_validators->numero_documento = [FieldValidators::required(), FieldValidators::numeric()];
-        $field_validators->nombre_semestre = [FieldValidators::required(), FieldValidators::regex('/^[0-9]{4}[A|B]{1}$/')];
+        $field_validators->nombre_semestre = [FieldValidators::required(), FieldValidators::regex($semester_name_regex)];
         $field_validators->promedio_semestre = [FieldValidators::numeric(), FieldValidators::number_between(0,5)];
         $field_validators->promedio_acumulado = [FieldValidators::numeric(), FieldValidators::number_between(0,5)];
         $field_validators->codigo_programa_univalle = [FieldValidators::required(), FieldValidators::numeric()];
         $field_validators->codigo_univalle =  [FieldValidators::required(), FieldValidators::string_size_one_of([7,9]), FieldValidators::numeric()];
         $field_validators->fecha = [
             FieldValidators::required(),
-            FieldValidators::date_format(['Y-m-d', 'd-m-Y', 'Y/m/d', 'd/m/Y'])];
+            FieldValidators::date_format(['d-m-Y'])];
         $field_validators->cancela = [FieldValidators::required(), FieldValidators::one_of(['SI', 'NO'])];
         return $field_validators;
     }
