@@ -103,6 +103,9 @@ function exists($conditions = array()) {
  * Add user to cohort
  * *This not validate than the cohort or the user exist, please validate this yourself, this method not fails
  *  if the given data is bad, but false is returned without information about what false*
+ *
+ * This method return true also if the user was in the cohort before.
+ *
  * @param $cohort mixed|int|string If int or string is given, cohort id is assumed, if mixed is given is asumed than have 'id' property
  * @param $user mixed|int|string if mixed is given is asumed than have 'id' property,
  *  if string is given, assumed than username is given, if int is give, assumed than is given an id of mdl_user
@@ -146,7 +149,8 @@ function cohort_add_user_to_cohort($cohort, $user) {
         return false;
     }
 
-    return cohort_add_member($cohort_id, $user_id);
+    cohort_add_member($cohort_id, $user_id);
+    return true;
 
 }
 /**

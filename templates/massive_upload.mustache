@@ -4,7 +4,17 @@
     <div class="massive_upload ">
         <div class="head">
             <h2 class="title" >CARGA MASIVA</h2>
+             <div class="select_endpoint">
+                 <label > Seleccione la carga masiva: </label>
 
+                 <select id="endpoints">
+                    {{#endpoints}}
+                    <option value="{{route}}">
+                        {{display_name}}
+                    </option>
+                    {{/endpoints}}
+                </select>
+             </div>
             <div class="cohort_select_region">
                 <label > Seleccione la cohorte: </label>
                 {{{cohorts_select}}}
@@ -12,15 +22,20 @@
         </div>
     {{/data}}
         <form method="post" id="form-send-file" enctype="multipart/form-data" action="receive_csv.php">
-            <input id="hi" type="file" accept=".csv"  name="fileToUpload" id="fileToUpload">
+            <input id="hi" type="file" accept=".csv"  name="fileToUpload" id="fileToUpload" required>
             <button type="button" id="send-file">Enviar</button>
         </form>
-        <button id = "print-data">Print data</button>
-        <button id = "send-data">Send data</button>
-        <table cellpadding="0" cellspacing="0" border="0" class="dataTable table table-striped" id="example">
-        </table>
-        <div class="errors">
+    </div>
+</div>
+<div class = "container-fluid">
+        <!-- button id = "print-data">Print data</button>
+        <button id = "send-data">Send data</button -->
+        <div style="overflow-x: auto;">
+            <table cellpadding="0" cellspacing="0" border="0" class="dataTable table table-striped" id="example">
+            </table>
+        </div>
+
+        <div id="messages_area">
 
         </div>
-    </div>
 </div>

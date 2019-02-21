@@ -5,6 +5,7 @@ require_once (__DIR__ . '/../classes/output/renderer.php');
 require_once (__DIR__ . '/../classes/output/massive_upload_component.php');
 require_once (__DIR__ . '/../managers/menu_options.php');
 require_once (__DIR__ . '/../managers/cohort/cohort_lib.php');
+require_once (__DIR__ . '/../managers/mass_management/endpoints.php');
 
 
 $courseid = required_param('courseid', PARAM_INT);
@@ -19,7 +20,7 @@ $PAGE->requires->css('/blocks/ases/style/buttons.dataTables.min.css', true);
 $PAGE->requires->css('/blocks/ases/style/massive_upload.css');
 
 $data_for_amd = array();
-$data_for_amd['id_curso'] = $courseid;
+$data_for_amd['instance_id'] = $blockid;
 
 $PAGE->requires->js_call_amd('block_ases/massive_upload', 'init', array('data'=>$data_for_amd));
 $output = $PAGE->get_renderer('block_ases');
@@ -33,7 +34,7 @@ $menu_option = create_menu_options($USER->id, $blockid, $courseid);
 $data = array();
 $data['menu'] = $menu_option;
 $data['cohorts_select'] = \cohort_lib\get_html_cohorts_select($blockid, false, 'cohorts', 'cohorts');
-
+$data['endpoints'] = \mass_management\endpoints\get_options();
 $massive_upload_component = new \block_ases\output\massive_upload_component($data);
 echo $output->render($massive_upload_component);
 echo $output->footer();
