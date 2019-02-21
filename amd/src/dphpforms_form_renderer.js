@@ -508,8 +508,12 @@
                                 $('#body_editor').append( data );
 
                                 var role_support = $('#dphpforms_role_support').attr('data-info');
-                                if( ( role_support == "sistemas" ) || ( role_support == "profesional_ps" ) ){
-                                    $(".dphpforms.dphpforms-record.dphpforms-updater").append('<br><br><div class="div-observation col-xs-12 col-sm-12 col-md-12 col-lg-12 comentarios_vida_uni">Observaciones de Practicante/profesional:<br> <textarea id="observation_text" class="form-control " name="observation_text" maxlength="5000"></textarea><br><a id="send_observation" class="btn btn-sm btn-danger btn-dphpforms-univalle btn-dphpforms-send-observation">Enviar observación</a></div>');
+                                let current_view = $("#custom_metadata").data("view-name");
+
+                                if( current_view == "report_trackings" ){
+                                    if( ( role_support == "sistemas" ) || ( role_support == "profesional_ps" ) || ( role_support == "practicante_ps" ) ){
+                                        $(".dphpforms.dphpforms-record.dphpforms-updater").append('<br><br><div class="div-observation col-xs-12 col-sm-12 col-md-12 col-lg-12 comentarios_vida_uni">Observaciones de Practicante/profesional:<br> <textarea id="observation_text" class="form-control " name="observation_text" maxlength="5000"></textarea><br><a id="send_observation" class="btn btn-sm btn-danger btn-dphpforms-univalle btn-dphpforms-send-observation">Enviar observación</a></div>');
+                                    }
                                 }
                                 
                                 $('button.btn.btn-sm.btn-danger.btn-dphpforms-univalle').attr('id', 'button');
