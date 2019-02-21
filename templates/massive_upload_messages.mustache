@@ -1,0 +1,72 @@
+{{!
+    @author     Luis Gerardo Manrique Cardona
+    @package    block_ases
+    @copyright  2018 Luis Gerardo Manrique Cardona <luis.manrique@correounivalle.edu.co>
+    @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+}}
+{{!
+   @template ases/massive_upload_generic_errors
+
+   Massive upload template for generic object messages.
+
+   The purpose of this template is to render the generic errors, warnings
+   and success log events of each object.
+   The specific field errors are not shown here.
+   @see classes/common/Validable->object_errors
+   @see classes/Errors/AsesError
+
+   Classes required for JS:
+   * none
+
+   Data attributes required for JS:
+   * none
+
+   Context variables required for this template:
+   * A list of objects than can have or not generic errors.
+   * If the list is empty or the objects does not have generic errors, nothing is rendered.
+
+   Example context (json):
+       {
+           "data": [
+               { "index": 1, "errors": AsesError[], "warnings": string[], "success_logs": string[]}
+               { "index": 2,  "errors": AsesError[], "warnings": string[], "success_logs": string[]}
+               { "index": 3,  "errors": AsesError[], "warnings": string[], "success_logs": string[]}
+           ]
+       }
+
+ }}
+<h3> Mensajes </h3>
+<table class ="table">
+    <tr>
+        <th>Linea</th>
+        <th>Errores</th>
+        <th>Advertencias</th>
+        <th>Operaciones exitosas</th>
+    </tr>
+{{#data}}
+    <tr>
+        <td>{{index}}</td>
+        <td>
+            <ul>
+            {{#errors}}
+                <li>{{error_message}}</li>
+            {{/errors}}
+            </ul>
+        </td>
+        <td>
+            <ul>
+                {{#warnings}}
+                    <li>{{.}}</li>
+                {{/warnings}}
+            </ul>
+        </td>
+        <td>
+            <ul>
+                {{#success_logs}}
+                    <li>{{.}}</li>
+                {{/success_logs}}
+            </ul>
+        </td>
+    </tr>
+{{/data}}
+</table>

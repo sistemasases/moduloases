@@ -15,9 +15,25 @@ trait validate_object_fields {
         $this->_field_validators = new stdClass();
         $this->define_field_validators();
     }
-    public function define_field_validators() {
 
-        return false;
+    /**
+     * Retorna un std object con la descripción de lo que hace valido a las propiedades
+     * del objeto que usted decida quiere validar.
+     *
+     * Si su clase tiene los campos $id_usuario y $nota por ejemlo, puede pensar en retornar
+     * los validadores siguientes:
+     *```php
+     * $validators = new stdObject();
+     * $validators->id_usuario = [FieldValidators::required(), FieldValidators::numeric()];
+     * $validators->nota = [FieldValidators::required(), FieldValidators::numeric(), FieldValidators::lessThan(5)];
+     * return $validators;
+     * ```
+     * @see FieldValidators
+     * @return stdClass
+     */
+    public function define_field_validators(): stdClass {
+
+        return new stdClass();
     }
     public  function set_field_validators($field_validators) {
         $this->_field_validators = $field_validators;
@@ -26,7 +42,7 @@ trait validate_object_fields {
         return $this->_field_validators;
     }
     public function valid_fields(): bool {
-
+        $this->set_field_validators($this->define_field_validators());
         $valid = true;
 
         if($this->_field_validators){

@@ -23,6 +23,7 @@ define([
 
     return {
         init: function (data) {
+
             var instance_id = data.instance_id;
             var table = null;
             /**
@@ -238,6 +239,7 @@ define([
                 }).done(
                     function (dataFromApi /*instance of DataFromAPI*/){
                         loading_indicator.hide();
+                        console.log(dataFromApi);
                         var dataTable = dataFromApi.dataTable;
                         $('#download_percentage_desertion').css("display", "inline"); //Show the hidden download button
                         semesters = dataFromApi.semesters;

@@ -66,6 +66,14 @@ class AsesUser extends BaseDAO  {
     public $fecha_nac;
     public $id_ciudad_nac; // see Municipio
     public $sexo; // see Gender
+    /**
+     * Deprecated, is replaced with estado_icetex, estado_programa and tracking_status
+     *
+     * Is no longer used after 01/01/2017
+     *
+     * The default value
+     * @var string
+     */
     public $estado; 
     public $id_discapacidad;
     public $ayuda_disc;
@@ -76,6 +84,10 @@ class AsesUser extends BaseDAO  {
     public $emailpilos;
     public $acudiente;
     public $observacion;
+    /**
+     * @var $id_cond_excepcion int
+     */
+    public $id_cond_excepcion;
     public $colegio;
     public $barrio_ini; //Barrio procedencia
     public $barrio_res; //Barrio residencia
@@ -138,6 +150,7 @@ class AsesUser extends BaseDAO  {
         return $this->id;
 
     }
+
     public function _custom_validation(): bool
     {
         $valid = true;
@@ -159,6 +172,80 @@ class AsesUser extends BaseDAO  {
         return parent::_get_options($fields);
     }
 
+    /**
+     * Check if a ases user exists by document number and initial document number
+     *
+     * Check all posible combinations, search by num doc and num doc ini
+     *
+     * where num_doc = $num_doc
+     * or num_doc = $num_doc_ini
+     * or num_doc_ini = $num_doc_ini
+     * or num_doc_ini = $num_doc
+     *
+     * @param $num_doc
+     * @param $num_doc_ini
+     * @return bool
+     * @throws dml_exception
+     */
+    public static function exists_by_num_docs_($num_doc, $num_doc_ini = null) {
+        global $DB;
+        if(!$num_doc_ini) {
+            $num_doc_ini = $num_doc;
+        }
+        $sql = AsesUser::get_select_by_num_docs($num_doc, $num_doc_ini);
+        return $DB->record_exists_sql($sql);
+    }
+
+    /**
+     * Return the student search by num_doc and num_doc_ini
+     * Is possible than exist more than one user, array is returned
+     * @param $num_doc
+     * @param null $num_doc_ini
+     * @return array
+     * @throws ErrorException
+     * @throws dml_exception
+     */
+    public static function get_by_num_docs($num_doc, $num_doc_ini = null) {
+        global $DB;
+        if(!$num_doc_ini) {
+            $num_doc_ini = $num_doc;
+        }
+        $sql = AsesUser::get_select_by_num_docs($num_doc, $num_doc_ini);
+        $result = $DB->get_records_sql($sql);
+        $result_values = array_values($result);
+        return AsesUser::make_objects_from_std_objects_or_arrays($result_values);
+
+    }
+
+
+    private static function get_select_by_num_docs($num_doc, $num_doc_ini = null) {
+        return <<<SQL
+        SELECT * from mdl_talentospilos_usuario
+        where num_doc = '$num_doc'
+        or num_doc = '$num_doc_ini'
+        or num_doc_ini = '$num_doc_ini'
+        or num_doc_ini = '$num_doc'
+SQL;
+
+    }
+    /**
+     * Check if a ases user exists by document number and initial document number
+     *
+     * Check all posible combinations, search by num doc and num doc ini
+     *
+     * where num_doc = $num_doc
+     * or num_doc = $num_doc_ini
+     * or num_doc_ini = $num_doc_ini
+     * or num_doc_ini = $num_doc
+     *
+     * @param $num_doc
+     * @param $num_doc_ini
+     * @return bool
+     * @throws dml_exception
+     */
+    public function exists_by_num_docs() {
+        return AsesUser::exists_by_num_docs_($this->num_doc, $this->num_doc_ini);
+    }
     /**
      * Obtener los usuarios ASES, sus id y sus cedulas contatenadas con los nombres en un array
      * @return array Array donde las llaves son los id de los usuarios ASES y el valor es su número de
@@ -205,6 +292,13 @@ class AsesUser extends BaseDAO  {
         $results = $DB->get_records_sql($query->sql());
         echo $query->sql();die;
         return AsesUserWithNames::make_objects_from_std_objects_or_arrays($results);
+    }
+    public function get_not_null_fields(): array
+    {
+            return array(AsesUser::AYUDA_DISCAPACIDAD);
+    }
+    public static function get_by_code() {
+
     }
     /**
      * Return Moodle user related to this ases user

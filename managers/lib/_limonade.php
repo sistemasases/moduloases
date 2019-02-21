@@ -350,7 +350,7 @@ function run($env = null)
 
     # 1. Set handlers
     # 1.1 Set error handling
-    ini_set('display_errors', 1);
+    /*ini_set('display_errors', 1);*/
     set_error_handler('error_handler_dispatcher', E_ALL ^ E_NOTICE);
 
     # 1.2 Register shutdown function

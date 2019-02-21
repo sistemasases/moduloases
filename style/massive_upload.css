@@ -9,9 +9,11 @@ td.error {
 .massive_upload .head {
     display: flex;
     flex-direction: row;
+    align-items: center;
 }
 
 .massive_upload .cohort_select_region {
+    margin-left: 20px;
     align-self: end;
 }
 .massive_upload .title {

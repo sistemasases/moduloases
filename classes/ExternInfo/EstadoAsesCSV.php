@@ -1,7 +1,7 @@
 <?php
-error_reporting(E_ALL | E_STRICT);   // NOT FOR PRODUCTION SERVERS!
-ini_set('display_errors', '1');         // NOT FOR PRODUCTION SERVERS!
+
 require_once(__DIR__ . '/../../../../config.php');
+require_once($CFG->libdir . '/datalib.php');
 require_once(__DIR__.'/../common/Validable.php');
 require_once(__DIR__.'/../common/Renderable.php');
 require_once (__DIR__ .'/../traits/validate_object_fields.php');
@@ -12,6 +12,7 @@ require_once (__DIR__ . '/../../classes/Programa.php');
 
 require_once (__DIR__ . '/../../classes/Municipio.php');
 require_once (__DIR__ . '/../../classes/TipoDocumento.php');
+require_once (__DIR__ . '/../../classes/Jornada.php');
 require_once (__DIR__ . '/../../classes/Discapacidad.php');
 require_once (__DIR__ . '/../../managers/user_management/user_lib.php');
 //
@@ -81,6 +82,10 @@ class EstadoAsesCSV extends Validable {
      * @var $codigo string|int
      */
     public $codigo;
+    /**
+     * Codigo univalle para el programa, ejemplo: (3743)
+     * @var $programa int Int of leng 4
+     */
     public $programa;
     public $jornada;
     /**
@@ -93,30 +98,51 @@ class EstadoAsesCSV extends Validable {
 
     public function __construct($first_and_last_name_capital_letter = true) {
         parent::__construct();
-        $this->define_field_validators();
         $this->telefonos_residencia = 0;
         $this->telefono_acudiente = 0;
         $this->telefono_procedencia = 0;
+        $this->ciudad_procedencia = 0;
+        $this->ciudad_residencia = 0;
         $this->first_and_last_name_capital_letter = $first_and_last_name_capital_letter;
 
+    }
+
+    /**
+     * @return bool
+     * @throws dml_exception
+     */
+    private function validar_nombres_repetidos(): bool {
+        $nombre_completo = "$this->firstname $this->lastname";
+        if(user_duplicated_full_name($nombre_completo)) {
+            $this->add_error(new AsesError(-1, "El usuario $nombre_completo ya esta registrado en ASES o almenos tiene un homónimo."));
+            return false;
+        } else {
+            return true;
+        }
     }
 
     public function valid(): bool {
         EstadoAsesCSV::clean($this);
         $valid = parent::valid();
         try {
-            $valid_fields = $this->valid_fields();
+            $valid_fields = $this->valid_fields() ;
+            /* De valid fields dependen las otras validaciones, si este falla se retorna */
+            if(!$valid_fields) {
+                return false;
+            }
             $valid_ciudades = $this->validar_ciudades() ;
             $valid_tipos_documento = $this->validar_tipos_documento() ; /* En esta función se alteran datos de $this */
             $valid_discapacidad = $this->validar_discapacidad();
             $valid_sede = $this->validar_sede();
             $valid_programa = $this->validar_programa();
+            $valid_full_name = $this->validar_nombres_repetidos();
             $valid = $valid_ciudades &&
                 $valid_discapacidad &&
                 $valid_tipos_documento &&
                 $valid_fields &&
                 $valid_sede &&
-                $valid_programa;
+                $valid_programa &&
+                $valid_full_name;
         } catch (Exception $e) {
             print_r($e);
             return false;
@@ -134,17 +160,18 @@ class EstadoAsesCSV extends Validable {
         $ases_user->tel_ini = $estadoAsesCSV->telefono_procedencia;
         $ases_user->tel_acudiente = $estadoAsesCSV->telefono_acudiente;
         $ases_user->tel_res = $estadoAsesCSV->telefonos_residencia;
-        $ases_user->tipo_doc_ini = $estadoAsesCSV->tipo_documento_ingreso;
-        $ases_user->tipo_doc = $estadoAsesCSV->tipo_documento;
+        /**
+         * Se extraen los tipos documento tipo_doc_ini y tipo_doc
+         */
+        EstadoAsesCSV::extract_tipos_doc($estadoAsesCSV, $ases_user);
         $ases_user->sexo = $estadoAsesCSV->sexo;
         $ases_user->acudiente = $estadoAsesCSV->acudiente;
         $ases_user->observacion = $estadoAsesCSV->observaciones;
         $ases_user->num_doc_ini = $estadoAsesCSV->documento_ingreso;
         $ases_user->ayuda_disc = $estadoAsesCSV->ayuda_discapacidad;
         $ases_user->id_discapacidad = $estadoAsesCSV->discapacidad;
-        $ases_user->id_ciudad_res = $estadoAsesCSV->ciudad_residencia;
-        $ases_user->id_ciudad_ini = $estadoAsesCSV->ciudad_procedencia;
-        $ases_user->id_ciudad_nac = $estadoAsesCSV->lugar_nacimiento;
+
+        EstadoAsesCSV::extract_ciudades($estadoAsesCSV, $ases_user);
         $ases_user->fecha_nac = $estadoAsesCSV->fecha_nacimiento;
         $ases_user->grupo = $estadoAsesCSV->grupo;
         $ases_user->barrio_ini = $estadoAsesCSV->barrio_procedencia;
@@ -155,7 +182,22 @@ class EstadoAsesCSV extends Validable {
         $ases_user->colegio = $estadoAsesCSV->colegio;
         return $ases_user;
     }
-    public function define_field_validators() {
+    public function extract_user_extended($ases_user_id, $moodle_user_id): AsesUserExtended {
+        $sede = Sede::get_by(array(Sede::COD_UNIVALLE => $this->sede));
+
+        $academic_program = Programa::get_by(array(
+            Programa::CODIGO_UNIVALLE=>$this->programa,
+            Programa::ID_SEDE=>$sede->id,
+            Programa::JORNADA => $this->jornada));
+
+        $id_academic_program = $academic_program->id;
+        $ases_user_extended = new AsesUserExtended();
+        $ases_user_extended->id_ases_user = $ases_user_id;
+        $ases_user_extended->id_moodle_user = $moodle_user_id;
+        $ases_user_extended->id_academic_program = $id_academic_program;
+        return $ases_user_extended;
+    }
+    public function define_field_validators(): stdClass {
 
         /* @var $field_validators EstadoAsesCSV */
         $field_validators = new stdClass();
@@ -165,10 +207,16 @@ class EstadoAsesCSV extends Validable {
             return $tipo_documento->nombre;
         },
             $tipos_documento);
+        $jornada_options = Jornada::get_possible_values();
+        $jornada_options_string = implode (', ', $jornada_options);
         $tipos_documento_names_string = implode (', ', $tipos_documento_names);
         $field_validators->documento = [FieldValidators::required(), FieldValidators::numeric()];
+        $field_validators->firstname = [FieldValidators::required()];
+        $field_validators->ciudad_residencia = [FieldValidators::required()];
+        $field_validators->ciudad_procedencia = [FieldValidators::required()];
+        $field_validators->lastname = [FieldValidators::required()];
         $field_validators->documento_ingreso = [FieldValidators::required(), FieldValidators::numeric()];
-        $field_validators->email = [FieldValidators::email()];
+        $field_validators->email = [FieldValidators::required(), FieldValidators::email()];
         $field_validators->tipo_documento = [
             FieldValidators::required(),
             FieldValidators::one_of($tipos_documento_names,
@@ -177,8 +225,16 @@ class EstadoAsesCSV extends Validable {
                  al momento de recibir los datos para efectos de ejecución de el guardado.")];
         $field_validators->programa = [FieldValidators::required(), FieldValidators::string_size(4)];
         $field_validators->codigo = [FieldValidators::required(), FieldValidators::string_size_one_of([7,9]), FieldValidators::numeric()];
-
-        $this->set_field_validators($field_validators);
+        $field_validators->jornada = [FieldValidators::required(), FieldValidators::one_of(
+            $jornada_options,
+            "La jornada debe tomar uno de los siguientes valores: $jornada_options_string")];
+        $field_validators->fecha_nacimiento = [
+            FieldValidators::required(),
+            FieldValidators::date_format(array('Y-m-d', 'd-m-Y', 'Y/m/d', 'd/m/Y'))];
+        $field_validators->sexo = [FieldValidators::one_of(['F', 'M'])];
+        $field_validators->sede = [FieldValidators::required()];
+        $field_validators->lugar_nacimiento = [FieldValidators::required()];
+        return $field_validators;
     }
     public static function clean(EstadoAsesCSV &$estadoAsesCSV) {
         $estadoAsesCSV->_cleaned = true;
@@ -209,39 +265,41 @@ class EstadoAsesCSV extends Validable {
         $this->tipo_documento_ingreso = preg_replace('/[, 0-9.]*/', '', $this->tipo_documento_ingreso);
 
     }
-    private static  function pre_save_ciudades(EstadoAsesCSV &$estadoAsesCSV) {
+
+
+    private static  function extract_ciudades(EstadoAsesCSV $estadoAsesCSV, AsesUser &$ases_user) {
         /**
          * !!!!!!!Si no hay ningun error, los nombres de las ciudades se reemplazan por sus respectivos ids
          * Municipios (ciudades) en 'NO REGISTRA' deben tomar el valor de el municipio con nombre 'NO DEFINIDO' de la base de datos
          */
         if($estadoAsesCSV->ciudad_procedencia === BaseDAO::NO_REGISTRA) {
-            $estadoAsesCSV->ciudad_procedencia = Municipio::ID_MUNICIPIO_NO_DEFINIDO;
+            $ases_user->id_ciudad_ini= Municipio::ID_MUNICIPIO_NO_DEFINIDO;
         } else {
             $ciudad_procedencia = Municipio::get_by([Municipio::CODIGO_DIVIPOLA=>$estadoAsesCSV->ciudad_procedencia]);
 
-            $estadoAsesCSV->ciudad_procedencia = $ciudad_procedencia->id;
+           $ases_user->id_ciudad_ini = $ciudad_procedencia->id;
 
         }
         if($estadoAsesCSV->ciudad_residencia === BaseDAO::NO_REGISTRA) {
-            $estadoAsesCSV->ciudad_residencia = Municipio::ID_MUNICIPIO_NO_DEFINIDO;
+            $ases_user->id_ciudad_res = Municipio::ID_MUNICIPIO_NO_DEFINIDO;
         } else {
             $ciudad_residencia = Municipio::get_by([Municipio::CODIGO_DIVIPOLA=>$estadoAsesCSV->ciudad_residencia]);
-            $estadoAsesCSV->ciudad_residencia = $ciudad_residencia->id;
+            $ases_user->id_ciudad_res  = $ciudad_residencia->id;
         }
         if($estadoAsesCSV->lugar_nacimiento === BaseDAO::NO_REGISTRA) {
-            $estadoAsesCSV->lugar_nacimiento = Municipio::ID_MUNICIPIO_NO_DEFINIDO;
+            $ases_user->id_ciudad_nac  = Municipio::ID_MUNICIPIO_NO_DEFINIDO;
         } else {
             $lugar_nacimiento = Municipio::get_by([Municipio::CODIGO_DIVIPOLA=>$estadoAsesCSV->lugar_nacimiento]);
-            $estadoAsesCSV->lugar_nacimiento = $lugar_nacimiento->id;
+            $ases_user->id_ciudad_nac = $lugar_nacimiento->id;
         }
     }
 
-    private static function pre_save_tipos_doc(EstadoAsesCSV &$estadoAsesCSV) {
+    private static function extract_tipos_doc(EstadoAsesCSV $estadoAsesCSV, AsesUser &$ases_user) {
         $tipos_documento = TipoDocumento::get_all();
         /* !!!!! Se reemplazan los nombres de los tipos de documento por sus codigos en la BD */
         /** @var $tipo_documento_ingreso_object TipoDocumento */
         $tipo_documento_ingreso_object = array_filter($tipos_documento,
-            function($tipo_documento) use ($estadoAsesCSV){
+            function($tipo_documento) use ($estadoAsesCSV) {
                 /** @var $tipo_documento TipoDocumento */
                 return $tipo_documento->nombre === $estadoAsesCSV->tipo_documento_ingreso;
             });
@@ -263,37 +321,44 @@ class EstadoAsesCSV extends Validable {
         if (is_array($tipo_documento_ingreso_object)) {
             $tipo_documento_ingreso_object = array_shift($tipo_documento_ingreso_object);
         }
-        $estadoAsesCSV->tipo_documento = $tipo_documento_object->id;
-        $estadoAsesCSV->tipo_documento_ingreso = $tipo_documento_ingreso_object->id;
+        $ases_user->tipo_doc= $tipo_documento_object->id;
+        $ases_user->tipo_doc_ini = $tipo_documento_ingreso_object->id;
         return $estadoAsesCSV;
 
     }
-    private static function pre_save_first_and_lastname(EstadoAsesCSV &$estadoAsesCSV) {
-        /* Frist name and lastname in capital letter*/
-        if($estadoAsesCSV->first_and_last_name_capital_letter) {
-            $estadoAsesCSV->firstname = strtoupper($estadoAsesCSV->firstname);
-            $estadoAsesCSV->lastname= strtoupper($estadoAsesCSV->lastname);
-        }
 
+
+    public function get_moodle_user() {
+        $username = generate_username($this->codigo, $this->programa);
+        $password = user_get_password($this->codigo, $this->firstname, $this->lastname);
+        return array(
+            'username'=>$username,
+            'confirmed'=>'1',
+            'password'=> $password,
+            'lang'=>'es',
+            'mnethostid'=>3,
+            'email'=> $this->email,
+            'firstname'=> $this->firstname,
+            'lastname'=> $this->lastname,
+        );
     }
+
 
     /**
      * Dado que la sede subida por csv es Sede::COD_UNIVALLE y se debe guardar en la base de datos
      * el id de la sede correspondiente, este dato se debe cambiar
      */
-    private static function pre_save_sede(EstadoAsesCSV &$estadoAsesCSV) {
+    private static function extract_sede(EstadoAsesCSV &$estadoAsesCSV, AsesUser &$ases_user) {
         $sede = Sede::get_by(array(Sede::COD_UNIVALLE=>$estadoAsesCSV->sede));
-        $estadoAsesCSV->sede = $sede->id;
-    }
-    public static function pre_save(EstadoAsesCSV &$estadoAsesCSV) {
-        EstadoAsesCSV::clean($estadoAsesCSV);
-        EstadoAsesCSV::pre_save_ciudades($estadoAsesCSV);
-        EstadoAsesCSV::pre_save_tipos_doc($estadoAsesCSV);
-        EstadoAsesCSV::pre_save_first_and_lastname($estadoAsesCSV);
-        EstadoAsesCSV::pre_save_sede($estadoAsesCSV);
+        $ases_user->sede = $sede->id;
     }
 
+
+
     public function validar_discapacidad($glue = ', ') {
+        if($this->discapacidad === '' || $this->discapacidad === BaseDAO::NO_REGISTRA) {
+            $this->discapacidad = Discapacidad::ID_DISCAPACIDAD_POR_DEFECTO;
+        }
         if(Discapacidad::exists(array(Discapacidad::ID=>$this->discapacidad))) {
             return true;
         } else {
@@ -322,13 +387,13 @@ class EstadoAsesCSV extends Validable {
         );
         $tipos_documento_names = array_unique($tipos_documento_names);
         $tipos_documento_names_string = implode (', ', $tipos_documento_names);
-        if(!array_search($this->tipo_documento, $tipos_documento_names)) {
+        if(!in_array($this->tipo_documento, $tipos_documento_names)) {
             $this->add_error(new AsesError(-1, "El tipo documento $this->tipo_documento no existe en la tabla tipo_documento. Puede tomar uno de los siguientes valores: [$tipos_documento_names_string]. Alternativamente, dichos valores pueden ir acompañados de puntos, espacios o comas, dichos valores serán removidos antes de guardar la información en la base de datos. Ejemplos: 'C.C', 'T.I... , 'T.I.', 'C... C.'",
                 array('field' => 'tipo_documento')), 'tipo_documento');
             $valid = false;
         }
 
-        if(!array_search($this->tipo_documento_ingreso, $tipos_documento_names)) {
+        if(!in_array($this->tipo_documento_ingreso, $tipos_documento_names)) {
             $this->add_error(new AsesError(-1, "El tipo documento ingreso $this->tipo_documento_ingreso no existe en la tabla tipo_documento. Puede tomar uno de los siguientes valores: [$tipos_documento_names_string]' . Alternativamente, dichos valores pueden ir acompañados de puntos, espacios o comas, dichos valores serán removidos antes de guardar la información en la base de datos. Ejemplos: 'C.C', 'T.I... , 'T.I.', 'C... C.'",
                 array('field' => 'tipo_documento_ingreso')), 'tipo_documento_ingreso');
             $valid = false;
@@ -336,6 +401,7 @@ class EstadoAsesCSV extends Validable {
 
         return $valid;
     }
+
 
     /**
      * @return bool
@@ -379,9 +445,14 @@ class EstadoAsesCSV extends Validable {
         }
         $sede = Sede::get_by(array(Sede::COD_UNIVALLE=>$this->sede));
         $id_sede = $sede->id;
-        if ( !Programa::exists(array(Programa::ID_SEDE=>$id_sede, Programa::CODIGO_UNIVALLE=>$this->programa))) {
-            $this->add_error("El programa '$this->programa'  no existe en la sede con codigo univalle '$this->sede'", 'programa');
+
+        if ( !Programa::exists(array(
+            Programa::ID_SEDE => $id_sede,
+            Programa::CODIGO_UNIVALLE => $this->programa,
+            Programa::JORNADA => $this->jornada))) {
+            $this->add_error("El programa '$this->programa'  no existe en la sede con codigo univalle '$this->sede' y jornada $this->jornada.", 'programa');
             return false;
+
         } else {
             return true;
         }
@@ -394,9 +465,7 @@ class EstadoAsesCSV extends Validable {
             return true;
         }
     }
-    public static function get_class_name() {
-        return get_called_class();
-    }
+
 
 }
 
