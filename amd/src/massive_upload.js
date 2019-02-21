@@ -9,12 +9,13 @@ define([
     'jquery',
     'core/notification',
     'core/templates',
+    'block_ases/ases_jquery_datatable',
     'block_ases/jquery.dataTables',
     'block_ases/dataTables.buttons',
     'block_ases/buttons.html5',
     'block_ases/buttons.flash',
     'block_ases/buttons.print',
-    ], function($, notification, templates, dataTables, autoFill, buttons, html5, flash, print) {
+    ], function($, notification, templates, ases_jquery_datatable, dataTables, autoFill, buttons, html5, flash, print) {
     var instance_id = 0;
     function get_datatable_column_index(table, name) {
         var column = table.column(name);
@@ -22,9 +23,31 @@ define([
     }
     var get_cohort_id = function () {
         return $("#cohorts").val();
-    }
+    };
     var get_endpoint_name = function () {
         return $("#endpoints").val();
+    };
+    var remove_alert_errors = function()  {
+        $('#user-notifications .alert-error').remove();
+    };
+    var add_cell_style_and_errors = function (row, data) {
+        if (data.error === "SI") {
+            $(row).addClass('error');
+            if (data.errors) {
+                Object.keys(data.errors).forEach(property_name => {
+                    /**
+                     * Cada celda que tenga un error debe tener la clase error
+                     * @see https://datatables.net/reference/option/rowCallback
+                     */
+                    $('td.' + property_name, row).addClass('error');
+                    console.log( data.errors);
+                    var error_names = data.errors[property_name].map(error => error.error_message);
+                    var error_names_concat = error_names.join('; ');
+                    /* Se añaden los mensajes de los errores al title de el campo en la tabla*/
+                    $('td.' + property_name, row).prop('title', error_names_concat);
+                });
+            }
+        }
     };
     var get_api_url = function() {
 
@@ -71,6 +94,75 @@ define([
 
         return errors;
     };
+
+    /**
+     * Returned API data structure
+     *
+     * @property data array Array of objects returned based in the CSV registries
+     * @property object_errors array Array with the same length than data, if object_errors in position
+     *  0 is an object, the data[0] item have the errors contained in object_errors[0]
+     *  in data array, if object_errors
+     * @property warnings string[] Indexed as the same of object_errors
+     * @property success_logs string[] Indexed as the same of object_errors
+     * @property jquery_datatable Data table with all the info needed for show the CSV info in a datatable
+     * @property error boolean Var than say if all operation has error or not
+     * @property initial_object_properties string[] Array of all the property names of the objects
+     *  generated from CSV data
+     * @type {ApiData}
+     */
+    var ApiData /* @class */ = (function   () {
+
+
+        function ApiData(data,
+                        object_errors,
+                        object_warnings,
+                        success_logs_events,
+                        jquery_datatable,
+                        error,
+                        initial_object_properties
+        ) {
+            this.data = data;
+            this.object_errors = object_errors? object_errors: [];
+            this.object_warnings = object_warnings ? object_warnings : [];
+            this.success_logs_events = success_logs_events ? success_logs_events : [];
+            this.error = error;
+            this.initial_object_properties = initial_object_properties? initial_object_properties: [];
+        }
+        ApiData.prototype.get_messages = function() {
+            var messages = [];
+            for(var _i = 0; _i < this.data.length; _i++) {
+                if (
+                    (
+                        this.object_errors[_i] && typeof this.object_errors[_i] === 'object' &&
+                        this.object_errors[_i].constructor !== Array) ||
+                    (this.object_warnings[_i] && this.object_warnings[_i].length > 0) ||
+                    (this.success_logs_events[_i] && this.success_logs_events[_i].length > 0)
+                ) {
+                    messages.push(new MessagesObject(
+                        _i + 1,
+                        this.object_errors[_i],
+                        this.object_warnings[_i],
+                        this.success_logs_events[_i])
+                    );
+                }
+            }
+            return messages;
+        };
+        ApiData.get_from_response = function (response) {
+            return new ApiData(
+                response.data,
+                response.object_errors,
+                response.warnings,
+                response.success_logs,
+                response.jquery_datatable,
+                response.error,
+                response.initial_object_properties
+                );
+        };
+        return ApiData;
+
+
+    }());
     /**
      * Message object than contain the warnigns , success logs and errors for a messages table
      *
@@ -198,7 +290,7 @@ define([
                                     myTable.destroy();
                                 }
                                 console.log(response);
-                                $('#user-notifications .alert-error').remove();
+                                remove_alert_errors();
                                 var error_object = JSON.parse(response.responseText);
                                 console.log(error_object);
                                 var datatable_preview = error_object.datatable_preview;
@@ -207,14 +299,12 @@ define([
 
                                     load_preview(datatable_preview, error_object.object_errors.generic_errors[0]);
                                     error_messages.forEach((error_message) => {
-                                        var l = notification.addNotification({
+                                       notification.addNotification({
                                             message: error_message,
                                             type: 'error'
                                         });
                                     });
                                 }
-
-
                             },
                             success: function (response) {
                                 console.log(response);
@@ -230,24 +320,11 @@ define([
                                  * sufren modificaciones estructurales, donde son añadidas algunas propiedades.
                                  */
                                 initial_object_properties = response.initial_object_properties;
-
-                                var errors = response.object_errors;
-                                var warnings = response.object_warnings;
-                                var data = response.data;
-                                var success_log_events = response.success_log_events;
+                                var api_data = ApiData.get_from_response(response);
+                                var errors = api_data.object_errors;
                                 var jquery_datatable = response.jquery_datatable;
-                                var data_quantity = data.length;
 
-                                var messages = [];
-                                for(var _i = 0; _i < data_quantity; _i++) {
-                                    if (
-                                        (errors[_i] && typeof errors[_i] === 'object' && errors[_i].constructor !== Array)||
-                                        (warnings[_i] && warnings[_i].length > 0) ||
-                                        (success_log_events[_i] && success_log_events[_i].length > 0)
-                                    ) {
-                                        messages.push(new MessagesObject(_i + 1, errors[_i] ? errors[_i] : [], warnings[_i], success_log_events[_i]));
-                                    }
-                                }
+                                var messages = api_data.get_messages();
                                 /* Se borran los mensajes previos y se muestran los nuevos*/
                                 $('#messages_area').html('');
                                 templates.render('block_ases/massive_upload_messages', {data: messages} )
@@ -298,50 +375,9 @@ define([
 
 
                                 /* Se añade la función que modificara la vista de cada fila a la tabla*/
-                                jquery_datatable.rowCallback = function (row, data) {
-                                    if (data.error === "SI") {
-                                        $(row).addClass('error');
-                                        if (data.errors) {
-                                            Object.keys(data.errors).forEach(property_name => {
-                                                /**
-                                                 * Cada celda que tenga un error debe tener la clase error
-                                                 * @see https://datatables.net/reference/option/rowCallback
-                                                 */
-                                                $('td.' + property_name, row).addClass('error');
-                                                console.log( data.errors);
-                                                var error_names = data.errors[property_name].map(error => error.error_message);
-                                                var error_names_concat = error_names.join('; ');
-                                                /* Se añaden los mensajes de los errores al title de el campo en la tabla*/
-                                                $('td.' + property_name, row).prop('title', error_names_concat);
-                                            });
-                                        }
-                                    }
-                                };
-                                jquery_datatable.initComplete =/*Se añade el filtro de opciones en la columna error*/ function () {
-                                    /*@see https://datatables.net/reference/type/column-selector*/
-
-                                    var filter_columns = ['error:name'];
-                                    this.api().columns(filter_columns).every(function () {
-                                        var column = this;
-
-
-                                        var select = $('<select><option value=""></option></select>')
-                                            .appendTo($(column.header()))
-                                            .on('change', function () {
-                                                var val = $.fn.dataTable.util.escapeRegex(
-                                                    $(this).val()
-                                                );
-
-                                                column
-                                                    .search(val ? '^' + val + '$' : '', true, false)
-                                                    .draw();
-                                            });
-
-                                        column.data().unique().sort().each(function (d, j) {
-                                            select.append('<option value="' + d + '">' + d + '</option>');
-                                        });
-                                    });
-                                };
+                                jquery_datatable.rowCallback = add_cell_style_and_errors;
+                                /*Se añade el filtro de opciones en la columna error*/
+                                jquery_datatable.initComplete = ases_jquery_datatable.add_column_filters(['error:name']);
 
                                 if (response.errors.length === 0) {
                                     myTable = $('#example').DataTable(jquery_datatable);
