@@ -937,7 +937,7 @@ define([
                     cache: false,
                     success: function (msg) {
 
-                        let html_enlaces = '', student_code, name_student, student;
+                        let html_enlaces = '', student_code, name_student, student, courseid, instanceid;
                         let dwarehouse_record_id ;
 
                          if (msg.length === 0) {
@@ -946,17 +946,37 @@ define([
                             $(".url_students").append(html_enlaces);
                         } else {
 
-                            console.log(msg);
 
                             for(student_data in msg){
 
-                                
+                                   
                                 student = msg[student_data];
                                 dwarehouse_record_id = Object.keys(student)[0];
-                              
+                                
                                 student_code = student[dwarehouse_record_id].username;
                                 name_student = student[dwarehouse_record_id].firstname + ' ' +student[dwarehouse_record_id].lastname;
-                                html_enlaces += '<div> Estudiante: <strong>'+name_student+ ' '+student_code+'</strong></div>';
+                                courseid     = student[dwarehouse_record_id].courseid;
+                                instanceid     = student[dwarehouse_record_id].instanceid;
+                             
+
+                                // let urlHost = location.host;
+                                // let urlPathname = location.pathname.split("/");
+                                // let pathnameResult ="";
+                                let urlFicha;
+                                
+                                // for(x in urlPathname){
+                                //     if(urlPathname[x] == "backup_forms.php"){
+                                //         pathnameResult += "student_profile.php";
+                                //     }else{
+                                //         pathnameResult += urlPathname[x]+"/";
+                                //     }
+                                    
+                                // }
+
+                                urlFicha = "student_profile.php?courseid="+courseid+"&instanceid="+instanceid+"&student_code="+student_code;
+                             
+
+                                html_enlaces += '<div> Estudiante: <a href="'+urlFicha+'"  target="_blank" ><strong>'+name_student+ ' '+student_code+'</strong></a></div>';
                                // html_enlaces += '<a href="https://campusvirtual.univalle.edu.co/moodle/blocks/ases/view/student_profile.php?courseid=25643&instanceid=450299&student_code='+ student_code+'">'+name_student+'</a> <br>';
                             }
                             
