@@ -3,6 +3,7 @@ require_once (__DIR__ . '/../../../config.php');
 require_once (__DIR__ . '/user_management/user_lib.php');
 require_once (__DIR__ . '/role_management/role_management_lib.php');
 require_once (__DIR__ . '/course/course_lib.php');
+require_once (__DIR__ . '/lib/student_lib.php');
 require_once('MyException.php');
 require_once $CFG->libdir.'/gradelib.php';
 require_once $CFG->dirroot.'/grade/querylib.php';
@@ -10,7 +11,6 @@ require_once $CFG->dirroot.'/grade/lib.php';
 require_once $CFG->dirroot.'/grade/report/user/lib.php';
 require_once $CFG->dirroot.'/grade/report/grader/lib.php';
 
-require_once ('lib/student_lib.php');
 
 
 /**
