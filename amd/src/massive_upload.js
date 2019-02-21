@@ -10,12 +10,14 @@ define([
     'core/notification',
     'core/templates',
     'block_ases/ases_jquery_datatable',
+    'core/config',
     'block_ases/jquery.dataTables',
     'block_ases/dataTables.buttons',
     'block_ases/buttons.html5',
     'block_ases/buttons.flash',
     'block_ases/buttons.print',
-    ], function($, notification, templates, ases_jquery_datatable, dataTables, autoFill, buttons, html5, flash, print) {
+
+    ], function($, notification, templates, ases_jquery_datatable, CFG, dataTables, autoFill, buttons, html5, flash, print) {
     var instance_id = 0;
     function get_datatable_column_index(table, name) {
         var column = table.column(name);
@@ -51,7 +53,7 @@ define([
     };
     var get_api_url = function() {
 
-        return 'receive_csv.php/'+ get_endpoint_name() + '/'+get_cohort_id() + '/' + instance_id;
+        return CFG.wwwroot + '/blocks/ases/managers/mass_management/mass_upload_api.php/'+ get_endpoint_name() + '/'+get_cohort_id() + '/' + instance_id;
     };
 
 

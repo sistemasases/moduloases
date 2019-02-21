@@ -2,12 +2,12 @@
 
 error_reporting(E_ALL | E_STRICT);   // NOT FOR PRODUCTION SERVERS!
 ini_set('display_errors', '1');         // NOT FOR PRODUCTION SERVERS!
-require_once(__DIR__. '/../classes/ExternInfo/EstadoAsesEIManager.php');
-require_once(__DIR__. '/../classes/ExternInfo/condicion_exepcion/CondicionExcepcionEIManager.php');
-require_once(__DIR__. '/../classes/ExternInfo/historial_academico/HistorialAcademicoEIManager.php');
+require_once(__DIR__ . '/../../classes/ExternInfo/EstadoAsesEIManager.php');
+require_once(__DIR__ . '/../../classes/ExternInfo/condicion_exepcion/CondicionExcepcionEIManager.php');
+require_once(__DIR__ . '/../../classes/ExternInfo/historial_academico/HistorialAcademicoEIManager.php');
 
-require_once(__DIR__. '/../classes/API/BaseAPI.php');
-require_once(__DIR__.'/../managers/mass_management/endpoints.php');
+require_once(__DIR__ . '/../../classes/API/BaseAPI.php');
+require_once(__DIR__ . '/../../managers/mass_management/endpoints.php');
 $api = new BaseAPI();
 $ases_user_endpoint = \mass_management\endpoints\UPLOAD_ASES_USERS;
 $cond_exepcion_endpoint = \mass_management\endpoints\UPDATE_COND_EXEPCION;
