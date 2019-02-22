@@ -218,3 +218,8 @@
 .container-view-gestion-asignacion{
     margin-top: 1em;
 }
+
+.container-view-gestion-asignacion .download-area{
+    text-align: center;
+    padding-top: 10px;
+}

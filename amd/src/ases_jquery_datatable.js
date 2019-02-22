@@ -13,17 +13,21 @@
 define(['jquery'], function($) {
     /**
      * Function than allows add the column filters in the datatable based in the datatable column data
-     * @param {array} filter_columns Array of strings with the column selector, can be
+     * **This function is appended at initComplete function o fdatatable**
+     * @param {array} column_filter_selectors Array of strings with the column selector, can be
      *  the column name, example: ['username', 'tipo_doc'] adds filter to username and tipo_doc columns
      *  if they exists in the datatable.
      *  **Each element of filter_column can be a column selector**
      *  **Use this function in a initComplete function of the datatable**
+     *  @param dataTable Datatable var for append the column filters
+     *      if is empty, the function for init complete is returned and you should
+     *      add
      *  @see https://datatables.net/reference/option/initComplete
      *  @see https://datatables.net/reference/type/column-selector
      * @function
      */
-    var add_column_filters = function (column_filter_selectors) {
-        return function () {
+    var add_column_filters = function (column_filter_selectors, dataTable) {
+        var init_complete_function =  function () {
             this.api().columns(column_filter_selectors).every(function () {
                 var column = this;
 
@@ -45,6 +49,11 @@ define(['jquery'], function($) {
                 });
             });
         };
+        if(!dataTable) {
+            return init_complete_function;
+        } else {
+            dataTable.initComplete = init_complete_function;
+        }
     };
 
     return {

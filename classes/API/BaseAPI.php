@@ -69,9 +69,11 @@ class BaseAPI  extends Validable {
     private function init_params() {
         global $_POST;
         $this->params = json_decode(file_get_contents('php://input'));
+
         if(!$this->params || !$this->params != '') {
             $this->params = (object)$_POST;
         }
+
     }
     private function find_function($method, $path) {
         if($path[0] != '/') {

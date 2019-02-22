@@ -7,22 +7,96 @@
  
  /**
   * @author Jeison Cardona Gómez <jeison.cardona@correounivalle.edu.co>
+  * @author Luis Gerardo Manrique Cardona <luis.manrique@correounivalle.edu.co>
   * @module block_ases/monitor_assignments
   */
 
- define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/jqueryui','block_ases/select2'], function($, bootstrap, sweetalert, jqueryui, select2) {
-    
+ define([
+     'jquery',
+     'core/config',
+     'block_ases/loading_indicator',
+     'block_ases/bootstrap',
+     'block_ases/sweetalert',
+     'block_ases/jqueryui',
+     'block_ases/select2',
+     'block_ases/jquery.dataTables'
+ ], function($, CFG,  loading_indicator, bootstrap, sweetalert, jqueryui, select2) {
+    var BUTTON_GET_COMPLETE_REPORT_NAME_SELECTOR = '#button-get-complete-report';
+    var GET_COMPLETE_REPORT_NAME_FUNCTION_NAME = 'get_monitor_practicing_and_students_report';
+    var BASE_API_URL = '/blocks/ases/managers/monitor_assignments/monitor_assignments_api.php';
+    var DOWNLOAD_FILE_NAME = "asignaciones_monitor_con_practicantes.csv";
+    var api_url = function () {
+      return  CFG.wwwroot+BASE_API_URL;
+    };
+     /**
+      * Return a Promise with a string, than have the report in CSV format
+      * @author Luis Gerardo Manrique Cardona <luis.manrique@correounivalle.edu.co>
+      * @param instance_id
+      * @param semester_name
+      * @returns Promise<string>
+      */
+    var get_report_monitors_particants_and_students = function (instance_id, semester_name) {
+        var data = {
+
+            function: GET_COMPLETE_REPORT_NAME_FUNCTION_NAME,
+            params: {
+                instance_id: instance_id,
+                semester_name: semester_name
+            }
+        };
+      var data_stringfy = JSON.stringify(data);
+      return $.ajax({
+          url: api_url(),
+          contentType: "application/csv",
+          method: 'POST',
+          data: data_stringfy
+          }
+      );
+    };
+    var get_instance_id = function () {
+        return $("#monitor_assignments_instance_id").data("instance-id");
+    } ;
+     var get_semester_name = function () {
+         return $("#monitor_assignments_instance_id").data("semester-name");
+     } ;
+     /**
+      * Download the report using tricky dom properties.
+      * The download occurs in the same window, not in a emergent window.
+      * @author Luis Gerardo Manrique Cardona <luis.manrique@correounivalle.edu.co>
+      * @param instance_id
+      * @param semester_name
+      * @returns Promise<string>
+      */
+    var download_report_monitors_practicants_and_students = function (instance_id, semester_name) {
+        loading_indicator.show();
+         get_report_monitors_particants_and_students(instance_id, semester_name)
+             .then( report => {
+                 var csvContent = "data:text/csv;charset=utf-8," + report;
+                 var encodedUri = encodeURI(csvContent);
+                 var link = document.createElement("a");
+                 link.setAttribute("href", encodedUri);
+                 link.setAttribute("download", DOWNLOAD_FILE_NAME);
+                 document.body.appendChild(link); // Required for FF
+                 link.click();
+                 loading_indicator.hide();
+             })
+             .catch(error => {
+                 loading_indicator.hide();
+                 console.log(error);
+         });
+
+    };
     return {
         init: function() {
-
+            $(BUTTON_GET_COMPLETE_REPORT_NAME_SELECTOR).click(function () {
+                download_report_monitors_practicants_and_students(get_instance_id(), get_semester_name() );
+            });
             /**
              * 
              * @param {Number} instance_id 
              * @param {Number} data_id monitor identificator
              */
             function load_assigned_students( instance_id, data_id ){
-
-
                 $("#student_assigned").addClass("items_assigned_empty");
                 $("#student_assigned").html("Consultando <span>.</span><span>.</span><span>.</span>");
                 $(".student_item").removeClass("oculto-asignado");
