@@ -126,11 +126,13 @@ define([
             this.data = data;
             this.object_errors = object_errors? object_errors: [];
             this.object_warnings = object_warnings ? object_warnings : [];
+            this.jquery_datatable = jquery_datatable? jquery_datatable: {};
             this.success_logs_events = success_logs_events ? success_logs_events : [];
             this.error = error;
             this.initial_object_properties = initial_object_properties? initial_object_properties: [];
         }
         ApiData.prototype.get_messages = function() {
+            console.log(this);
             var messages = [];
             for(var _i = 0; _i < this.data.length; _i++) {
                 if (
@@ -151,20 +153,53 @@ define([
             return messages;
         };
         ApiData.get_from_response = function (response) {
+            var response_ = JSON.parse(response);
             return new ApiData(
-                response.data,
-                response.object_errors,
-                response.warnings,
-                response.success_logs,
-                response.jquery_datatable,
-                response.error,
-                response.initial_object_properties
+                response_.data,
+                response_.object_errors,
+                response_.object_warnings,
+                response_.success_log_events,
+                response_.jquery_datatable,
+                response_.error,
+                response_.initial_object_properties
                 );
         };
         return ApiData;
 
 
     }());
+    /**
+     * Load preview datatable
+     * En caso de que el csv tenga mas o menos propiedades de las esperadas
+     * se debe mostrar una previsualización de los datos dados y cuales son las
+     * columnas que sobran o las que faltan
+     */
+    var load_preview_on_error = function (data_table, error) {
+        $('#example').DataTable(data_table);
+
+        if(error.data_response && error.data_response.object_properties && error.data_response.file_headers) {
+            var correct_column_names = error.data_response.object_properties;
+            var given_column_names = error.data_response.file_headers;
+            console.log(error);
+            var missing_columns = correct_column_names.filter(element => given_column_names.indexOf(element) < 0);
+            var extra_columns = given_column_names.filter(element => {
+                return correct_column_names.indexOf(element) <= -1;
+            });
+            missing_columns.forEach(column => {
+                $('.' + column).css('background-color', '#cccccc');
+
+            });
+            extra_columns.forEach(column => {
+
+                $('.' + column).css('background-color', 'red');
+
+            });
+            console.log(extra_columns, missing_columns);
+        }
+    }
+    var show_datatable = function(jquery_datatable) {
+        $('#example').DataTable(jquery_datatable);
+    }
     /**
      * Message object than contain the warnigns , success logs and errors for a messages table
      *
@@ -198,82 +233,6 @@ define([
              */
             init: function (data) {
                 instance_id = data.instance_id;
-                var myTable = null;
-                var initial_object_properties = null;
-
-
-                /**
-                 * Pinta los errores individuales genericos de los objetos.
-                 * Los errores genericos de los objetos son todos aquellos que estan relacionados a más de un
-                 * atributo de este, como incumplimiento de llaves compuestas, etc
-                 * Los demás errores que esten relacionados solo a un atributo de el objeto se pintara
-                 * en la tabla jquery al pasar el raton sobre este.
-                 */
-
-
-                $("#print-data").click(
-                    function () {
-                        console.log(getTableData(myTable, initial_object_properties));
-                        console.log(get_datatable_column_index(myTable, 'error'));
-                    });
-
-                $("#send-data").click(
-                    function () {
-
-                        var data = getTableData(myTable, initial_object_properties);
-                        console.log(data);
-                        $.ajax({
-                            url: get_api_url(),
-                            data: {data: data},
-                            type: 'POST',
-                            success: function (response) {
-                                console.log(response);
-
-                            }
-                        }).done(function (data, textStatus, jqXHR) {
-                            if (console && console.log) {
-                                console.log(data);
-                                console.log("La solicitud se ha completado correctamente.");
-                            }
-                        })
-                            .fail(function (jqXHR, textStatus, errorThrown) {
-                                if (console && console.log) {
-                                    console.log("La solicitud a fallado: " + textStatus);
-                                    console.log(jqXHR);
-                                }
-                            });
-                    });
-
-                /**
-                 * Load preview datatable
-                 * En caso de que el csv tenga mas o menos propiedades de las esperadas
-                 * se debe mostrar una previsualización de los datos dados y cuales son las
-                 * columnas que sobran o las que faltan
-                 */
-                function load_preview(data_table, error) {
-                    myTable = $('#example').DataTable(data_table);
-
-                    if(error.data_response && error.data_response.object_properties && error.data_response.file_headers) {
-                        var correct_column_names = error.data_response.object_properties;
-                        var given_column_names = error.data_response.file_headers;
-                        console.log(error);
-                        var missing_columns = correct_column_names.filter(element => given_column_names.indexOf(element) < 0);
-                        var extra_columns = given_column_names.filter(element => {
-                            return correct_column_names.indexOf(element) <= -1;
-                        });
-                        missing_columns.forEach(column => {
-                            $('.' + column).css('background-color', '#cccccc');
-
-                        });
-                        extra_columns.forEach(column => {
-
-                            $('.' + column).css('background-color', 'red');
-
-                        });
-                        console.log(extra_columns, missing_columns);
-                    }
-                }
-
                 $('#send-file').click(
                     function () {
                         var data = new FormData($(this).closest("form").get(0));
@@ -286,52 +245,26 @@ define([
                             contentType: false,
                             dataType: "html",
                             processData: false,
-                            type: 'POST',
-                            error: function (response) {
-                                if (myTable) {
-                                    myTable.destroy();
-                                }
-                                console.log(response);
+                            type: 'POST'
+                        })
+                            .then(response => {
                                 remove_alert_errors();
-                                var error_object = JSON.parse(response.responseText);
-                                console.log(error_object);
-                                var datatable_preview = error_object.datatable_preview;
-                                if( error_object.object_errors && error_object.object_errors.generic_errors ) {
-                                    var error_messages = error_object.object_errors.generic_errors.map(error => error.error_message);
-
-                                    load_preview(datatable_preview, error_object.object_errors.generic_errors[0]);
-                                    error_messages.forEach((error_message) => {
-                                       notification.addNotification({
-                                            message: error_message,
-                                            type: 'error'
-                                        });
-                                    });
-                                }
-                            },
-                            success: function (response) {
-                                console.log(response);
-                                if (myTable) {
-                                    myTable.destroy();
-                                }
-                                response = JSON.parse(response);
-                                console.log(response);
-
                                 /**
                                  * Se guardan las propiedades iniciales de los objetos cuando llegan de el servidor
                                  * Estas son importantes ya que para gestion de la información en la tabla, los datos
                                  * sufren modificaciones estructurales, donde son añadidas algunas propiedades.
                                  */
-                                initial_object_properties = response.initial_object_properties;
                                 var api_data = ApiData.get_from_response(response);
                                 var errors = api_data.object_errors;
-                                var jquery_datatable = response.jquery_datatable;
+                                var jquery_datatable = api_data.jquery_datatable;
 
                                 var messages = api_data.get_messages();
+                                console.log(messages, 'mesasges');
                                 /* Se borran los mensajes previos y se muestran los nuevos*/
-                                $('#messages_area').html('');
+
                                 templates.render('block_ases/massive_upload_messages', {data: messages} )
                                     .then((html, js) => {
-                                       templates.appendNodeContents('#messages_area', html, js);
+                                        templates.appendNodeContents('#messages_area', html, js);
                                     });
                                 /**
                                  * Se añade el error de cada objeto a si mismo. Estos errores vienen en  response.object_errors,
@@ -356,9 +289,7 @@ define([
                                     } else {
                                         element.error = 'NO';
                                     }
-
                                 });
-
                                 /*Se añade la columna que llevara los indices de las filas en orden (1,2,3,4,5...)*/
                                 jquery_datatable.columns.unshift({
                                     "name": 'index',
@@ -374,24 +305,37 @@ define([
                                     "title": 'Error',
                                     "data": 'error'
                                 });
-
-
                                 /* Se añade la función que modificara la vista de cada fila a la tabla*/
                                 jquery_datatable.rowCallback = add_cell_style_and_errors;
                                 /*Se añade el filtro de opciones en la columna error*/
                                 jquery_datatable.initComplete = ases_jquery_datatable.add_column_filters(['error:name']);
 
-                                if (response.errors.length === 0) {
-                                    myTable = $('#example').DataTable(jquery_datatable);
-                                } else {
-                                    for (var error of response.errors) {
-                                        console.log(error);
+                                if (!api_data.error) {
+                                    show_datatable(jquery_datatable );
+                                }
+                            })
+                            .catch(
+                            response  => {
+                                reinit_datatable();
+                                console.log(response);
+                                remove_alert_errors();
+                                var error_object = JSON.parse(response.responseText);
+                                console.log(error_object);
+                                var datatable_preview = error_object.datatable_preview;
+                                if( error_object.object_errors && error_object.object_errors.generic_errors ) {
+                                    var error_messages = error_object.object_errors.generic_errors.map(error => error.error_message);
 
-                                    }
+                                    load_preview_on_error(datatable_preview, error_object.object_errors.generic_errors[0]);
+                                    error_messages.forEach((error_message) => {
+                                        notification.addNotification({
+                                            message: error_message,
+                                            type: 'error'
+                                        });
+                                    });
                                 }
 
                             }
-                        });
+                        );
                     });
             }
         };

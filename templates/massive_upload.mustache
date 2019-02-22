@@ -1,3 +1,9 @@
+{{!
+
+
+
+}}
+
 {{#data}}
 {{> block_ases/side_menu}}
 <div class = "container content">
@@ -9,7 +15,7 @@
 
                  <select id="endpoints">
                     {{#endpoints}}
-                    <option value="{{route}}">
+                    <option value="{{name}}">
                         {{display_name}}
                     </option>
                     {{/endpoints}}
@@ -20,10 +26,10 @@
                 {{{cohorts_select}}}
             </div>
         </div>
-    {{/data}}
-        <form method="post" id="form-send-file" enctype="multipart/form-data" action="receive_csv.php">
+
+        <form method="post" id="form-send-file" enctype="multipart/form-data" >
             <input id="hi" type="file" accept=".csv"  name="fileToUpload" id="fileToUpload" required>
-            <button type="button" id="send-file">Enviar</button>
+            <button class="btn btn-default ajuste-btn"type="button" id="send-file">Enviar</button>
         </form>
     </div>
 </div>
@@ -39,3 +45,11 @@
 
         </div>
 </div>
+{{#js}}
+    /* Selección de una carga masiva, si esta es dada en <data></data>*/
+    require(['jquery'], function($) {
+    console.log('#endpoints option[value="{{selected_upload}}"]');
+    $('#endpoints option[value="{{selected_upload}}"]').prop('selected', true);
+    });
+{{/js}}
+{{/data}}

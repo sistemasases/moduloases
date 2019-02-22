@@ -120,6 +120,27 @@ abstract class ExternInfoManager extends Validable {
                 );
         }
     }
+    /**
+     * Añadir error generico asociado a un objeto guardado en $this->objects,
+     * la $key ingresada debe corresponder a la key que el objeto tiene el $this->objects
+     * @param $object_errors_list array Array de instancais AsesError
+     * @param $key int Posición de el objeto relacionado al error, posición dentro de $this->objects
+     * @return void
+     */
+    public function add_generic_object_error($object_error, $key) {
+        if(!isset($this->object_errors[$key])) {
+            $this->object_errors[$key] = array();
+        }
+        if(!isset($this->object_errors[$key]['generic_errors'])) {
+            $this->object_errors[$key]['generic_errors'] =  [$object_error];
+        } else {
+            $this->object_errors[$key]['generic_errors'] =
+                array_push(
+                    $this->object_errors[$key]['generic_errors'] ,
+                    $object_error
+                );
+        }
+    }
     private function _add_object_errors() {
 
         /** @var $object Validable*/
