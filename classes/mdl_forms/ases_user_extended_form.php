@@ -116,6 +116,14 @@ class ases_user_extended_form extends moodleform {
         $ases_user_extended->id_moodle_user = $DB->get_record('user' , array('username'=> $validated_form_data->moodle_user_name))->id;
         return $ases_user_extended;
     }
+
+    /**
+     * @param array $data
+     * @param array $files
+     * @return array
+     * @throws ErrorException
+     * @throws dml_exception
+     */
     public function validation($data, $files): array {
         global $DB;
         if(count($this->_form->_errors)>0) {
@@ -129,9 +137,14 @@ class ases_user_extended_form extends moodleform {
         }
         $errors = array();
         /* Check if the user have other tracking status active, only validate this if moodle user name is not empty */
-        if($data['moodle_user_name'] &&
+        if( $data['moodle_user_name'] &&
             $data['moodle_user_name'] != '' &&
-            AsesUserExtended::have_active_tracking_status($ases_user_extended->id_ases_user)) {
+            AsesUserExtended::exists(
+                array(
+                    AsesUserExtended::ID_ASES_USER=>$ases_user_extended->id_ases_user,
+                    AsesUserExtended::TRACKING_STATUS=>1)
+            )
+        ) {
             $errors[AsesUserExtended::ID_ASES_USER] = "El usuario ya tiene un seguimiento activo, puede desactivar todos los seguimientos activos y almacenar el actual marcando 'Desactivar seguimientos previos' ";
         }
         /* Check if the moodle user given exists */

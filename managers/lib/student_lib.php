@@ -31,7 +31,7 @@ require_once dirname(__FILE__) . '/../../../../config.php';
 
 require_once $CFG->dirroot.'/blocks/ases/managers/lib/lib.php';
 require_once $CFG->dirroot.'/blocks/ases/managers/dphpforms/v2/dphpforms_lib.php';
-
+require_once (__DIR__. '/../../classes/TrackingStatus.php');
 
 /**
  * Obtains an user object given user id from {talentospilos_usuario} table
@@ -309,29 +309,31 @@ function get_cohort_student($id_student)
 }
 
 /**
- * Gets student cohorts
+ * Gets student cohorts.
+ *
+ * If the student does not have cohorts return false
  *
  * @see get_cohorts_by_student($id_student)
  * @param $id_moodle_student --> ID moodle 
- * @return Array
+ * @return array|false
  */
 function get_cohorts_by_student($id_moodle_student){
 
     global $DB;
 
-    $result_to_return = array();
 
-    $sql_query = "SELECT cohorts.name
+    $sql_query = <<<SQL
+                  SELECT cohorts.*
                   FROM {cohort_members} AS members 
                     INNER JOIN {cohort} AS cohorts ON members.cohortid = cohorts.id
-                  WHERE userid = $id_moodle_student";
+                  WHERE userid = $id_moodle_student
+SQL;
     
     $result_query = $DB->get_records_sql($sql_query);
-
-    foreach($result_query as $result){
-        array_push($result_to_return, $result);
+    $result_to_return = array_values($result_query);
+    if(count($result_query)<=0) {
+        return false;
     }
-
     return $result_to_return;
 }
 
@@ -410,6 +412,49 @@ function get_assigned_pract($id_student)
 
     return $trainee_object;
 }
+
+/**
+ * Return the student programs by ases user id
+ * @param $id_ases_user
+ * @return array
+ * @throws dml_exception
+ */
+function get_student_programs_by_ases_user_id($id_ases_user) {
+    global $DB;
+    $sql = <<<SQL
+      SELECT DISTINCT  mdl_talentospilos_programa.* 
+      FROM {talentospilos_programa} mdl_talentospilos_programa
+      INNER JOIN {talentospilos_user_extended} mdl_talentospilos_user_extended
+      on mdl_talentospilos_user_extended.id_academic_program = mdl_talentospilos_programa.id
+      INNER JOIN {talentospilos_usuario} mdl_talentospilos_usuario
+      ON mdl_talentospilos_user_extended.id_ases_user = mdl_talentospilos_usuario.id
+      WHERE mdl_talentospilos_usuario.id = ?
+SQL;
+    return array_values($DB->get_records_sql($sql, array($id_ases_user)));
+}
+/**
+ * Return the student programs by ases user id.
+ * Only return the programs where tracking status are 1
+ * @param $id_ases_user
+ * @return array
+ * @throws dml_exception
+ */
+function get_student_active_programs_by_ases_user_id($id_ases_user) {
+    global $DB;
+    $tracking_status_active = TrackingStatus::ACTIVE;
+    $sql = <<<SQL
+      SELECT DISTINCT  mdl_talentospilos_programa.* 
+      FROM {talentospilos_programa} mdl_talentospilos_programa
+      INNER JOIN {talentospilos_user_extended} mdl_talentospilos_user_extended
+      on mdl_talentospilos_user_extended.id_academic_program = mdl_talentospilos_programa.id
+      INNER JOIN {talentospilos_usuario} mdl_talentospilos_usuario
+      ON mdl_talentospilos_user_extended.id_ases_user = mdl_talentospilos_usuario.id
+      WHERE mdl_talentospilos_usuario.id = ?
+      AND mdl_talentospilos_user_extended.tracking_status = ?
+SQL;
+    return array_values($DB->get_records_sql($sql, array($id_ases_user, $tracking_status_active)));
+}
+
 
 /**
  * Obtains name, lastname and email from a professional (profesional) assigned to a student, given the student id

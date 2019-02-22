@@ -26,10 +26,16 @@
 use function Latitude\QueryBuilder\{alias, on, fn, param};
 
 defined('MOODLE_INTERNAL') || die;
+require_once(__DIR__ . '/../../../config.php');
+require_once($CFG->libdir . '/datalib.php');
+
 require_once(__DIR__ . '/Errors/Factories/DatabaseErrorFactory.php');
+require_once (__DIR__ . '/../managers/user_management/user_lib.php');
+
 require_once(__DIR__ . '/DAO/BaseDAO.php');
 require_once(__DIR__ . '/Sede.php');
-
+require_once(__DIR__ . '/AsesUser.php');
+require_once(__DIR__ . '/TrackingStatus.php');
 class Programa extends BaseDAO {
     const ID = 'id';
     const NOMBRE = 'nombre';
@@ -98,6 +104,7 @@ class Programa extends BaseDAO {
      * WARNING you should never call this method, call $this->valid(), this will be execute this method
      * @see get_errors
      * @return bool
+     * @throws
      */
     public function _custom_validation(): bool {
         if(!$this->valid_unique_key()) {
@@ -109,6 +116,38 @@ class Programa extends BaseDAO {
 
     }
 
+    /**
+     * Retorna el programas en el que el estudiante tiene seguimiento, el estudiante es deducido
+     * por numero documento, codigo estudiante y codigo programa del estudiante
+     * @param string $num_doc See talentospilos_usuario.num_doc
+     * @param string $student_code Codigo de estudiante univalle, con o sin el prefijo de año ejd. 1327951, 201327951
+     * @param string $student_program_code Codigo programa univalle. ej. 3743
+     * @return Programa|null
+     * @throws
+     */
+    public static function get_by_num_doc_and_student_code(string $num_doc, string $student_code, string $student_program_code) {
+        $moodle_user_name = generate_username($student_code, $student_program_code);
+        $ases_user = AsesUser::get_one_by(array(AsesUser::NUMERO_DOCUMENTO=>$num_doc));
+        if(!$ases_user) {
+            return null;
+        }
+        $moodle_user = core_user::get_user_by_username($moodle_user_name);
+        if(!$moodle_user){
+            return null;
+        }
+        /** @var  AsesUserExtended $ases_user_extended */
+        $ases_user_extended  = AsesUserExtended::get_one_by(
+            array(
+                AsesUserExtended::ID_ASES_USER => $ases_user->id,
+                AsesUserExtended::ID_MOODLE_USER => $moodle_user->id,
+                AsesUserExtended::TRACKING_STATUS => TrackingStatus::ACTIVE
+            ));
+
+        if(!$ases_user_extended) {
+            return null;
+        }
+        return Programa::get_one_by(array(Programa::ID=>$ases_user_extended->id_academic_program));
+    }
     /**
      * Check if the unique constrain (cod_univalle, id_sede, jornada) is not not violated
      * @return bool

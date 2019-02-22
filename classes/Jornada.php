@@ -37,4 +37,12 @@ class Jornada {
             Jornada::VESPERTINA=>Jornada::VESPERTINA
         );
     }
+
+    public static function get_possible_values() {
+        return array(
+            Jornada::VESPERTINA,
+            Jornada::DIURNA,
+            Jornada::NOCTURNA
+        );
+    }
 }

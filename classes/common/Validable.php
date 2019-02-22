@@ -27,6 +27,7 @@
 abstract class Validable {
 
     const GENERIC_ERRORS_FIELD = 'generic_errors';
+
     /** @var array Errors array  */
     protected $_errors = array();
 
@@ -74,6 +75,8 @@ abstract class Validable {
     {
         $this->_errors_object = new stdClass();
     }
+
+
     /**
      * Clean errors
      */
@@ -85,9 +88,18 @@ abstract class Validable {
     /**
      * Return errors, instances of AsesError if at least one error exists, emtpy array otherwise
      * @see AsesError
+     * @param $prefix_message string Prefix message than is append to the all error messages
      * @return array
      */
-    public function get_errors(): array {
+    public function get_errors($prefix_message = null): array {
+        if( $prefix_message ) {
+            $errors = $this->_errors;
+            /** @var $error AsesError */
+            foreach($errors as $error) {
+                $error->error_message = $prefix_message.' '.$error->error_message;
+            }
+            return $errors;
+        }
         return $this->_errors;
     }
     /**
@@ -99,15 +111,16 @@ abstract class Validable {
      *
      */
     public function add_error($error, $fieldname = Validable::GENERIC_ERRORS_FIELD, $error_data = null ) {
+        $error_ = $error;
         if(is_string($error)) {
-            $error = new AsesError(-1, $error, $error_data);
+            $error_ = new AsesError(-1, $error, $error_data);
         }
         array_push($this->_errors, $error);
 
         if(!isset($this->_errors_object->$fieldname)) {
             $this->_errors_object->$fieldname = array ();
         }
-        array_push($this->_errors_object->$fieldname , $error);
+        array_push($this->_errors_object->$fieldname , $error_);
     }
 
 
@@ -125,6 +138,8 @@ abstract class Validable {
     public function get_errors_object() {
         return $this->_errors_object;
     }
+
+
     /**
      * Custom validation method, rewrite this if you need make some aditional validation, this method
      * should be called when $this->valid() is called
