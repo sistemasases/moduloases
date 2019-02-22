@@ -13,13 +13,18 @@ require_once(__DIR__.'/../Programa.php');
 require_once(__DIR__.'/../../managers/cohort/cohort_lib.php');
 require_once(__DIR__ . '/../../managers/user_management/user_lib.php');
 
+/**
+ * Class EstadoAsesEIManager
+ */
 class EstadoAsesEIManager extends ExternInfoManager {
     public $cohort_id;
     public $instance_id;
-    public function __construct($cohort_id, $instance_id) {
+
+    public function __construct($cohort_id, $instance_id, $save = false) {
         parent::__construct( EstadoAsesCSV::class);
         $this->cohort_id = $cohort_id;
         $this->instance_id = $instance_id;
+        $this->save = $save;
     }
 
     /**
@@ -33,9 +38,7 @@ class EstadoAsesEIManager extends ExternInfoManager {
         /* @var $item EstadoAsesCSV */
 
         foreach ($data as $key => $item) {
-            if(!$item->valid()) {
-                return false;
-            }
+
             $id_moodle_user = null;
             $id_ases_user = null;
             /* Creación de usuario moodle si no existe*/
@@ -86,7 +89,7 @@ class EstadoAsesEIManager extends ExternInfoManager {
                 $ases_user = EstadoAsesCSV::extract_ases_user($item);
                 if($ases_user->valid()) {
                     $id_ases_user = $ases_user->save();
-                    $this->add_success_log_event("El usuario con número de documento $item->documento se ha creado.", $key);
+                    $this->add_success_log_event("El usuario ASES con número de documento $item->documento se ha creado.", $key);
                 }
              } else {
                 $this->add_object_warning("El usuario con número de documento $item->documento ya existia en la tabla usuarios ases, sea por documento inicial o por documento actual", $key);

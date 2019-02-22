@@ -19,6 +19,7 @@ define([
 
     ], function($, notification, templates, ases_jquery_datatable, CFG, dataTables, autoFill, buttons, html5, flash, print) {
     var instance_id = 0;
+    var CONTINUE_BUTTON_ID = 'continue-button';
     function get_datatable_column_index(table, name) {
         var column = table.column(name);
         return column.name;
@@ -51,9 +52,8 @@ define([
             }
         }
     };
-    var get_api_url = function() {
-
-        return CFG.wwwroot + '/blocks/ases/managers/mass_management/mass_upload_api.php/'+ get_endpoint_name() + '/'+get_cohort_id() + '/' + instance_id;
+    var get_api_url = function(_continue) {
+        return CFG.wwwroot + '/blocks/ases/managers/mass_management/mass_upload_api.php/'+ get_endpoint_name() + '/'+get_cohort_id() + '/' + instance_id+ '/' + _continue;
     };
 
 
@@ -88,6 +88,9 @@ define([
         });
         return data;
     }
+    var reinit_mesasges_area =  function() {
+        $('#messages_area').html('');
+    };
     var errors_object_to_erros =  (object_errors) => {
         var errors = [];
         Object.keys(object_errors).forEach( key => {
@@ -177,7 +180,7 @@ define([
     var load_preview_on_error = function (data_table, error) {
         $('#example').DataTable(data_table);
 
-        if(error.data_response && error.data_response.object_properties && error.data_response.file_headers) {
+        if (error.data_response && error.data_response.object_properties && error.data_response.file_headers) {
             var correct_column_names = error.data_response.object_properties;
             var given_column_names = error.data_response.file_headers;
             console.log(error);
@@ -196,10 +199,150 @@ define([
             });
             console.log(extra_columns, missing_columns);
         }
-    }
+    };
     var show_datatable = function(jquery_datatable) {
+        jquery_datatable.destroy = true;
         $('#example').DataTable(jquery_datatable);
-    }
+    };
+    var get_send_file_button = function() {
+        return $('#send-file');
+    };
+
+
+    var get_data_form = () => {
+        return new FormData($('#form-send-file').get(0));
+    };
+    var send_data = function (_continue ) {
+
+        var api_url = get_api_url(_continue);
+        var data_form = get_data_form();
+        return $.ajax({
+            url: api_url,
+            data: data_form,
+            cache: false,
+            contentType: false,
+            dataType: "html",
+            processData: false,
+            type: 'POST'
+        });
+    };
+    var add_continue_button = function() {
+        var send_file_button = get_send_file_button();
+        return send_file_button
+            .clone(true)
+            .attr("id", CONTINUE_BUTTON_ID)
+            .html('Continuar')
+            .appendTo('#buttons-section');
+
+    };
+    var send_file = (_continue) => {
+        reinit_datatable();
+
+        send_data(_continue)
+            .then(response => {
+                console.log(response, 'response');
+                remove_alert_errors();
+                reinit_datatable();
+                reinit_mesasges_area();
+                /**
+                 * Se guardan las propiedades iniciales de los objetos cuando llegan de el servidor
+                 * Estas son importantes ya que para gestion de la información en la tabla, los datos
+                 * sufren modificaciones estructurales, donde son añadidas algunas propiedades.
+                 */
+                var api_data = ApiData.get_from_response(response);
+                var errors = api_data.object_errors;
+                var jquery_datatable = api_data.jquery_datatable;
+
+                var messages = api_data.get_messages();
+                console.log(messages, 'mesasges');
+                /* Se borran los mensajes previos y se muestran los nuevos*/
+
+                templates.render('block_ases/massive_upload_messages', {data: messages} )
+                    .then((html, js) => {
+                        templates.appendNodeContents('#messages_area', html, js);
+                    });
+                /**
+                 * Se añade el error de cada objeto a si mismo. Estos errores vienen en  response.object_errors,
+                 * este objeto es un diccionario donde las llaves son las posiciones que un objeto ocupa en
+                 * datatable.data
+                 */
+                Object.keys(errors).forEach((position, index) => {
+                    jquery_datatable.data[position].errors = errors[position];
+                });
+                /* Cada elemento data de la tabla debe tener una propiedad llamada index para que la columna
+                * de indices para las filas pueda existir*/
+                jquery_datatable.data.forEach((element, index) => {
+                    element.index = index + 1;
+                });
+                /**
+                 * Se añade la propiedad que indicara si el objeto tine o no errores, para que la columna
+                 * 'Errores' pueda existir. Esta información sera eliminada al momento de requerir los datos
+                 */
+                jquery_datatable.data.forEach((element, index) => {
+                    if (errors[index] && (errors[index].length > 0 || errors[index].constructor === Object ))  {
+                        element.error = 'SI';
+                    } else {
+                        element.error = 'NO';
+                    }
+                });
+                /*Se añade la columna que llevara los indices de las filas en orden (1,2,3,4,5...)*/
+                jquery_datatable.columns.unshift({
+                    "name": 'index',
+                    "data": 'index',
+                    "title": 'Linea'
+                });
+                /**
+                 * Se añade la columna que llevara el echo de si el
+                 * dato tiene error o no, puede tomar los valores 'SI' o 'NO'
+                 */
+                jquery_datatable.columns.push({
+                    "name": 'error',
+                    "title": 'Error',
+                    "data": 'error'
+                });
+                /* Se añade la función que modificara la vista de cada fila a la tabla*/
+                jquery_datatable.rowCallback = add_cell_style_and_errors;
+                /*Se añade el filtro de opciones en la columna error*/
+                jquery_datatable.initComplete = ases_jquery_datatable.add_column_filters(['error:name']);
+
+                show_datatable(jquery_datatable);
+                if(!api_data.error && !_continue) {
+                    add_continue_button();
+                }
+                if(_continue) {
+                    var send_file_and_save = () =>  send_file(true)
+                    add_continue_button()
+                        .click(send_file_and_save());
+                }
+
+        }).catch(
+            response  => {
+                console.log(response, 'response');
+                remove_alert_errors();
+                reinit_datatable();
+                reinit_mesasges_area();
+                console.log(response);
+                var error_object = JSON.parse(response.responseText);
+                console.log(error_object);
+                var datatable_preview = error_object.datatable_preview;
+                if( error_object.object_errors && error_object.object_errors.generic_errors ) {
+                    var error_messages = error_object.object_errors.generic_errors.map(error => error.error_message);
+                    load_preview_on_error(datatable_preview, error_object.object_errors.generic_errors[0]);
+                    error_messages.forEach((error_message) => {
+                        notification.addNotification({
+                            message: error_message,
+                            type: 'error'
+                        });
+                    });
+                }
+
+            }
+        );
+    };
+    var send_file_wait_for_approval = function(){
+        return send_file(false);
+    };
+
     /**
      * Message object than contain the warnigns , success logs and errors for a messages table
      *
@@ -227,117 +370,15 @@ define([
 
     }());
 
-        return {
-            /**
-             * @param data contiene el id de la instancia
-             */
-            init: function (data) {
-                instance_id = data.instance_id;
-                $('#send-file').click(
-                    function () {
-                        var data = new FormData($(this).closest("form").get(0));
-                        reinit_datatable();
 
-                        $.ajax({
-                            url: get_api_url(),
-                            data: data,
-                            cache: false,
-                            contentType: false,
-                            dataType: "html",
-                            processData: false,
-                            type: 'POST'
-                        })
-                            .then(response => {
-                                remove_alert_errors();
-                                /**
-                                 * Se guardan las propiedades iniciales de los objetos cuando llegan de el servidor
-                                 * Estas son importantes ya que para gestion de la información en la tabla, los datos
-                                 * sufren modificaciones estructurales, donde son añadidas algunas propiedades.
-                                 */
-                                var api_data = ApiData.get_from_response(response);
-                                var errors = api_data.object_errors;
-                                var jquery_datatable = api_data.jquery_datatable;
-
-                                var messages = api_data.get_messages();
-                                console.log(messages, 'mesasges');
-                                /* Se borran los mensajes previos y se muestran los nuevos*/
-
-                                templates.render('block_ases/massive_upload_messages', {data: messages} )
-                                    .then((html, js) => {
-                                        templates.appendNodeContents('#messages_area', html, js);
-                                    });
-                                /**
-                                 * Se añade el error de cada objeto a si mismo. Estos errores vienen en  response.object_errors,
-                                 * este objeto es un diccionario donde las llaves son las posiciones que un objeto ocupa en
-                                 * datatable.data
-                                 */
-                                Object.keys(errors).forEach((position, index) => {
-                                    jquery_datatable.data[position].errors = errors[position];
-                                });
-                                /* Cada elemento data de la tabla debe tener una propiedad llamada index para que la columna
-                                * de indices para las filas pueda existir*/
-                                jquery_datatable.data.forEach((element, index) => {
-                                    element.index = index + 1;
-                                });
-                                /**
-                                 * Se añade la propiedad que indicara si el objeto tine o no errores, para que la columna
-                                 * 'Errores' pueda existir. Esta información sera eliminada al momento de requerir los datos
-                                 */
-                                jquery_datatable.data.forEach((element, index) => {
-                                    if (errors[index] && (errors[index].length > 0 || errors[index].constructor === Object ))  {
-                                        element.error = 'SI';
-                                    } else {
-                                        element.error = 'NO';
-                                    }
-                                });
-                                /*Se añade la columna que llevara los indices de las filas en orden (1,2,3,4,5...)*/
-                                jquery_datatable.columns.unshift({
-                                    "name": 'index',
-                                    "data": 'index',
-                                    "title": 'Linea'
-                                });
-                                /**
-                                 * Se añade la columna que llevara el echo de si el
-                                 * dato tiene error o no, puede tomar los valores 'SI' o 'NO'
-                                 */
-                                jquery_datatable.columns.push({
-                                    "name": 'error',
-                                    "title": 'Error',
-                                    "data": 'error'
-                                });
-                                /* Se añade la función que modificara la vista de cada fila a la tabla*/
-                                jquery_datatable.rowCallback = add_cell_style_and_errors;
-                                /*Se añade el filtro de opciones en la columna error*/
-                                jquery_datatable.initComplete = ases_jquery_datatable.add_column_filters(['error:name']);
-
-                                if (!api_data.error) {
-                                    show_datatable(jquery_datatable );
-                                }
-                            })
-                            .catch(
-                            response  => {
-                                reinit_datatable();
-                                console.log(response);
-                                remove_alert_errors();
-                                var error_object = JSON.parse(response.responseText);
-                                console.log(error_object);
-                                var datatable_preview = error_object.datatable_preview;
-                                if( error_object.object_errors && error_object.object_errors.generic_errors ) {
-                                    var error_messages = error_object.object_errors.generic_errors.map(error => error.error_message);
-
-                                    load_preview_on_error(datatable_preview, error_object.object_errors.generic_errors[0]);
-                                    error_messages.forEach((error_message) => {
-                                        notification.addNotification({
-                                            message: error_message,
-                                            type: 'error'
-                                        });
-                                    });
-                                }
-
-                            }
-                        );
-                    });
-            }
+    return {
+        /**
+         * @param data contiene el id de la instancia
+         */
+        init: function (data) {
+            instance_id = data.instance_id;
+            $('#send-file').click(send_file_wait_for_approval);
+        }
         };
     }
 );

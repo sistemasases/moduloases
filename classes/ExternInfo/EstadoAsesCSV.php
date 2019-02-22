@@ -114,9 +114,9 @@ class EstadoAsesCSV extends Validable {
         }
         if(AsesUser::exists_by_num_docs_($this->documento_ingreso)) {
             $this->add_error("Ya hay un usuario registrado con número de documento o número documento inicial igual a $this->documento_ingreso ");
-
             return false;
         }
+        return true;
     }
     /**
      * @return bool
