@@ -1596,3 +1596,19 @@ footer#page-footer{
 .subpanel{
   color: gray !important;
 }
+
+
+.ajuste-btn, .ajuste-btn:focus{
+    height: 30px !important;
+    background-color: #d51b23 !important;
+    border-color: #d43f3a !important;
+    border-radius: 0px;
+    color: #FFF;
+    border-top-right-radius: 2px !important;
+    border-bottom-right-radius: 2px !important;
+}
+
+.ajuste-btn:hover{
+    background-color: #d43f3a !important;
+    color: #FFF;
+}

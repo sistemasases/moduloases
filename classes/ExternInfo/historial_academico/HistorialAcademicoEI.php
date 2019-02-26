@@ -11,20 +11,19 @@
 require_once(__DIR__ . '/../../../../../config.php');
 require_once($CFG->libdir . '/datalib.php');
 require_once (__DIR__ . '/../../../managers/user_management/user_lib.php');
-
 require_once (__DIR__ . '/../../traits/validate_object_fields.php');
 require_once (__DIR__ . '/../../Validators/FieldValidators.php');
-
 require_once (__DIR__ . '/../../../classes/module.php');
-
+require_once (__DIR__ . '/../../../managers/semester/semester_lib.php');
 require_once(__DIR__ .'/../../../vendor/autoload.php');
 use JsonSchema\Validator;
-
+use function semester\get_semester_name_regex;
 
 class HistorialAcademicoEI extends Validable {
 
     use validate_object_fields;
     /**
+     * @see talentospilos_usuario.num_doc
      * @var $numero_documento string
      */
     public $numero_documento;
@@ -36,6 +35,12 @@ class HistorialAcademicoEI extends Validable {
     public $codigo_programa_univalle;
     public $cancela;
     public $fecha;
+    /**
+     *
+     * @var $nombre_semestre string Ejemplos: ['2019B', '2017A']
+     * @see talentospilos_semestre.nombre
+     */
+    public $nombre_semestre;
     /**
      * @var $promedio string
      */
@@ -55,12 +60,15 @@ class HistorialAcademicoEI extends Validable {
         HistorialAcademicoEI::extract_id_estudiante($historial_academico);
         $historial_academico->json_materias = $this->json_materias;
         HistorialAcademicoEI::extract_programa($historial_academico);
-        $current_semester = Semestre::get_one_by(array(Semestre::NOMBRE=>'2018A'));
-
-        $historial_academico->id_semestre = $current_semester->id;
+        HistorialAcademicoEI::extract_semester_id($historial_academico);
         $historial_academico->promedio_acumulado = $this->promedio_acumulado;
         $historial_academico->promedio_semestre = $this->promedio_semestre;
         return $historial_academico;
+    }
+    private function extract_semester_id(HistorialAcademico &$historialAcademico) {
+        /** @var Semestre $semestre */
+        $semestre = Semestre::get_one_by(array(Semestre::NOMBRE=>$this->nombre_semestre));
+        $historialAcademico->id_semestre = $semestre->id;
     }
     private function extract_programa(HistorialAcademico &$historial_academico){
         /** @var Programa $user_program_active */
@@ -155,8 +163,17 @@ class HistorialAcademicoEI extends Validable {
             return false;
         }
         $valid_program = $this->validate_program();
+        $valid_semester_name = $this->validate_semestre();
         $valid_json_materias = $this->validate_json_materias();
-        return $valid_fields && $valid_json_materias && $parent_valid && $valid_user && $valid_program;
+        return $valid_fields && $valid_json_materias && $parent_valid && $valid_semester_name && $valid_user && $valid_program;
+    }
+    public function validate_semestre() {
+        if(!Semestre::exists(array(Semestre::NOMBRE => $this->nombre_semestre))) {
+            $this->add_error("El semestre con nombre $this->nombre_semestre no existe");
+            return false;
+        } else {
+            return true;
+        }
     }
     public function validate_json_materias() {
 
@@ -184,17 +201,19 @@ class HistorialAcademicoEI extends Validable {
     }
     public function define_field_validators(): stdClass
     {
+        $semester_name_regex = get_semester_name_regex();
         /** @var  $field_validators HistorialAcademicoEI */
         $field_validators = new stdClass();
         $field_validators->json_materias = [FieldValidators::required(), FieldValidators::json()];
         $field_validators->numero_documento = [FieldValidators::required(), FieldValidators::numeric()];
+        $field_validators->nombre_semestre = [FieldValidators::required(), FieldValidators::regex($semester_name_regex)];
         $field_validators->promedio_semestre = [FieldValidators::numeric(), FieldValidators::number_between(0,5)];
         $field_validators->promedio_acumulado = [FieldValidators::numeric(), FieldValidators::number_between(0,5)];
         $field_validators->codigo_programa_univalle = [FieldValidators::required(), FieldValidators::numeric()];
         $field_validators->codigo_univalle =  [FieldValidators::required(), FieldValidators::string_size_one_of([7,9]), FieldValidators::numeric()];
         $field_validators->fecha = [
             FieldValidators::required(),
-            FieldValidators::date_format(['Y-m-d', 'd-m-Y', 'Y/m/d', 'd/m/Y'])];
+            FieldValidators::date_format(['d-m-Y'])];
         $field_validators->cancela = [FieldValidators::required(), FieldValidators::one_of(['SI', 'NO'])];
         return $field_validators;
     }

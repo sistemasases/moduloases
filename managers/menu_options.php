@@ -107,6 +107,16 @@ function create_menu_options($userid, $blockid, $courseid)
 
             }
 
+            if ($function == 'massive_upload') {
+                $url = new moodle_url("/blocks/ases/view/massive_upload.php", array(
+                    'courseid' => $courseid,
+                    'instanceid' => $blockid,
+                ));
+
+                $menu_options = '<li><a href= "' . $url . '"> Carga masiva datatables </a><li>';
+                $indexed['Carga masiva datatables'] = $menu_options;
+
+            }
             if ($function == 'mass_role_management') {
                 $url = new moodle_url("/blocks/ases/view/mass_role_management.php", array(
                     'courseid' => $courseid,

@@ -15,15 +15,15 @@ function get_options() {
     return [
         array(
             'display_name'=>'Usuarios ASES',
-            'route' => UPLOAD_ASES_USERS
+            'name' => UPLOAD_ASES_USERS
         ),
         array(
             'display_name' => 'Actualizar condición excepcion',
-            'route' => UPDATE_COND_EXEPCION
+            'name' => UPDATE_COND_EXEPCION
         ),
         array(
             'display_name' => 'Actualizar historial academico de estudiantes',
-            'route' => UPDATE_ACADEMIC_HISTORY
+            'name' => UPDATE_ACADEMIC_HISTORY
         )
     ];
 }

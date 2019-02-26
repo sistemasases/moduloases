@@ -14,33 +14,30 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-
 /**
- * Course and teacher extern API Views
+ * Semester lib
  *
  * @author     Luis Gerardo Manrique Cardona
  * @package    block_ases
- * @copyright  2018 Luis Gerardo Manrique Cardona <luis.manrique@correounivalle.edu.co>
+ * @copyright  2016 Luis Gerardo Manrique Cardona <luis.manrique@correounivalle.edu.co>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-require_once (__DIR__ . '/../../classes/API/BaseAPIView.php');
-require_once (__DIR__ . '/course_and_teacher_report_lib.php');
-
+namespace semester;
+/**
+ * Get the semester_name regex
+ * @see talentospilos_semestre.nombre
+ * @return string
+ */
+function get_semester_name_regex(): string {
+    return '/^[0-9]{4}[A|B]{1}$/';
+}
 
 /**
- * Class GradesAPI
+ * Check if a given semester name is valid
+ * @param string $semester_name
+ * @see get_semester_name_regex()
+ * @return bool
  */
-class CourseAndTeacherReportView extends BaseAPIView {
-
-    public function __construct()
-    {
-        parent::__construct();
-        $this->response_type = 'application/json';
-    }
-
-    public function send_response()
-    {
-        $course_and_teacher_report_table = get_datatable_for_course_and_teacher_report($this->args['instance_id']);
-        return $course_and_teacher_report_table;
-    }
+function valid_semester_name(string $semester_name ): bool {
+    return preg_match(get_semester_name_regex(), $semester_name);
 }

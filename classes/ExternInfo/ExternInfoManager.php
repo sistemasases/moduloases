@@ -14,7 +14,8 @@ abstract class ExternInfoManager extends Validable {
     public $class_or_class_name;
     private $objects;
     private $initial_objects;
-
+    /** @var $save bool If is true, the data is saved in the database, otherwise, nothing is saved */
+    public $save;
     /**
      * A list of messages describing the
      * success events related to each object in data
@@ -82,6 +83,7 @@ abstract class ExternInfoManager extends Validable {
     private $_file_extension = 'csv';
     public function __construct($class_or_class_name) {
         parent::__construct();
+        $this->save = true;
         $this->class_or_class_name = $class_or_class_name;
         $this->success_log = array();
         $this->object_warnings = array();
@@ -120,6 +122,27 @@ abstract class ExternInfoManager extends Validable {
                 );
         }
     }
+    /**
+     * Añadir error generico asociado a un objeto guardado en $this->objects,
+     * la $key ingresada debe corresponder a la key que el objeto tiene el $this->objects
+     * @param $object_errors_list array Array de instancais AsesError
+     * @param $key int Posición de el objeto relacionado al error, posición dentro de $this->objects
+     * @return void
+     */
+    public function add_generic_object_error($object_error, $key) {
+        if(!isset($this->object_errors[$key])) {
+            $this->object_errors[$key] = array();
+        }
+        if(!isset($this->object_errors[$key]['generic_errors'])) {
+            $this->object_errors[$key]['generic_errors'] =  [$object_error];
+        } else {
+            $this->object_errors[$key]['generic_errors'] =
+                array_push(
+                    $this->object_errors[$key]['generic_errors'] ,
+                    $object_error
+                );
+        }
+    }
     private function _add_object_errors() {
 
         /** @var $object Validable*/
@@ -127,7 +150,7 @@ abstract class ExternInfoManager extends Validable {
             if(!isset($this->object_errors[$key])) {
                 $this->object_errors[$key] = array();
             }
-            if(!$object->valid()) {
+            if(count((array)$object->get_errors_object()) > 0) {
                 $this->object_errors[$key] = array_merge( $this->object_errors[$key],  (array)$object->get_errors_object());
             }
         }
@@ -185,6 +208,7 @@ abstract class ExternInfoManager extends Validable {
                 $transaction = $DB->start_delegated_transaction();
                 try {
                     $this->persist_data();
+
                 } catch(Exception $e) {
                     /**
                      * En este punto, no hace falta devolver la transacción de forma explicita, si almenos
@@ -203,7 +227,10 @@ abstract class ExternInfoManager extends Validable {
                     $this->send_errors();
                     return;
                 }
-                $transaction->allow_commit();
+                if($this->save){
+                    $transaction->allow_commit();
+                }
+
                 http_response_code(200);
                 print_r($this->send_response());
 
@@ -296,7 +323,7 @@ abstract class ExternInfoManager extends Validable {
         $response = new \stdClass();
         $response->jquery_datatable = $json_datatable;
         $response->data = $this->get_initial_objects();
-        $response->error = !$this->valid();
+        $response->error = !$this->has_errors();
         $response->errors = $this->get_errors();
         $response->initial_object_properties = count($response->data)>=1?  \reflection\get_properties($response->data[0]): [];
         $response->object_errors = $this->get_object_errors();
@@ -312,6 +339,9 @@ abstract class ExternInfoManager extends Validable {
             return true;
         }
          return false;
+    }
+    private function has_errors() {
+        return count((array)$this->_errors_object)> 0 || count($this->_errors)> 0;
     }
 
     /**
