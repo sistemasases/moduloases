@@ -1,8 +1,7 @@
 <?php
 namespace jquery_datatable;
+require_once (__DIR__ . '/../../managers/lib/reflection.php');
 
-
-use function array_fill_keys;
 use function array_search;
 
 /**
@@ -47,6 +46,7 @@ function get_datatable_common_language_config(): array {
     );
 }
 class DataTable {
+
     /** Data for DataTable, can be stdClass objects or class instances
      * @link https://datatables.net/reference/option/data
      */
@@ -65,9 +65,14 @@ class DataTable {
     public $responsive = true;
     public $sPaginationType = "full_numbers";
 
-    public function __construct($data=[], $columns=[], $buttons=[]) {
+    public function __construct($data=[], $columns=null, $buttons=[]) {
         $this->data = $data;
-        $this->columns = $columns;
+        if(!$columns) {
+            $this->columns = Column::get_columns($data[0]);
+
+        } else {
+            $this->columns = $columns;
+        }
         $this->buttons = $buttons;
     }
 }
@@ -104,22 +109,8 @@ class Column {
      * @param   string  $property_name  Standard property name, with words separed by underscores or capital letters. examples: userEmail, user_email
      * @return string return standard datatable column title based in property name ej. user_email -> 'User Email'.
      */
-    public static function get_column_title_from_property_name($property_name) {
-        $column_title = '';
-        $separed_words_chain_by_spaces = [];
-        if (strpos($property_name, '_') != false) {
-            $separed_words_chain_by_spaces = preg_replace("/_+/", " ", $property_name);
-            $column_title = ucwords($separed_words_chain_by_spaces);
-        }
-        else if(preg_match("/[A-Z]+/", $property_name)) {
-            $separed_words_chain_by_spaces = preg_replace('/([A-Z])/', ' $1', $property_name);
-            $column_title = ucwords($separed_words_chain_by_spaces);
-        } else {
-            $column_title = ucwords($property_name);
-        }
-        // All words should be in uppercase
-
-        return $column_title;
+    public static function get_column_title_from_property_name(string $property_name): string {
+        return \reflection\property_name_to_description($property_name);
     }
     /**
      * Return column based in standard object property name,
@@ -142,7 +133,7 @@ class Column {
      * @see Column
      * @param string|object instance $class_name_or_object Data structure for extract JSON columns,
      *  that are generated based in object or class properties
-     * @param $custom_column_names array Key value array where the keys are the object property name
+     * @param $custom_column_titles array Key value array where the keys are the object property name
      * and the value is the custom column name
      * @return array<Column> columns for jquery datatable than should print the information
      *  than contain instances of object or class given as an input
@@ -152,6 +143,7 @@ class Column {
         $object_properties = null;
         $sourceProperties = null;
         $data_table_columns = [];
+
         if (is_string($class_name_or_object)) {
             if (class_exists ($class_name_or_object)) {
                 $object = new $class_name_or_object();
@@ -161,6 +153,7 @@ class Column {
         } else {
             $object = $class_name_or_object;
         }
+
         $sourceProperties = new \ReflectionObject($object);
         $object_properties = $sourceProperties->getProperties();
         /* @var $object_property \ReflectionProperty */

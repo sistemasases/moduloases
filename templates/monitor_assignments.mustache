@@ -4,7 +4,13 @@
     <div id="monitor_assignments_monitor_students" style="display:none;">{{{monitors_students_relationship}}}</div>
     <div id="monitor_assignments_professional_practicant" style="display:none;">{{{professional_practicant_relationship}}}</div>
     <div id="monitor_assignments_practicant_monitor_relationship" style="display:none;">{{{practicant_monitor_relationship}}}</div>
-    <div id="monitor_assignments_instance_id" data-instance-id="{{instance_id}}" style="display:none;"></div>
+    <div
+            id="monitor_assignments_instance_id"
+            data-instance-id="{{instance_id}}"
+            data-semester-name="{{semester_name}}"
+            style="display:none;">
+
+    </div>
 
     <div class="container-fluid container-view-gestion-asignacion">
         <div class="row">
@@ -142,6 +148,15 @@
                 {{/students}}
             </div>
         </div>
+        <div class="row download-area">
+            <button
+                    id="button-get-complete-report"
+                    class="btn btn-default ajuste-btn "
+                    title="Descarga la información completa en una hoja de calculo de todos los monitores, sus jefes (practicantes) y los estudiantes asignados">
+                Descargar información
+            </button>
+        </div>
+
     </div>
 
     <!-- Modal -->

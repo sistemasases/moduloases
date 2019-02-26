@@ -88,7 +88,56 @@ function get_properties($stdObj_or_class){
         return array_keys(get_object_vars($stdObj_or_class));
     }
 }
+/**
+ * Return column title based in standard object property name
+ * ej. ('userEmail' ->  'User Email'}.
+ * @param   string  $property_name  Standard property name, with words separed by underscores or capital letters. examples: userEmail, user_email
+ * @return string return standard datatable column title based in property name ej. user_email -> 'User Email'.
+ */
+function property_name_to_description(string $property_name): string {
 
+    if (strpos($property_name, '_') != false) {
+        $separed_words_chain_by_spaces = preg_replace("/_+/", " ", $property_name);
+        $column_title = ucwords($separed_words_chain_by_spaces);
+    }
+    else if(preg_match("/[A-Z]+/", $property_name)) {
+        $separed_words_chain_by_spaces = preg_replace('/([A-Z])/', ' $1', $property_name);
+        $column_title = ucwords($separed_words_chain_by_spaces);
+    } else {
+        $column_title = ucwords($property_name);
+    }
+    // All words should be in uppercase
+
+    return $column_title;
+}
+
+/**
+ * Return the property descriptions infered from property name
+ * @param $element mixed
+ * @see property_name_to_description()
+ * @return array List of descriptions based in element properties or keys
+ * **If $element is a object, only descriptions for public properties are returned
+ */
+function get_object_properties_description($element): array {
+    $object = (object) $element;
+    $object_properties = null;
+    $sourceProperties = null;
+    $descriptions = [];
+
+    $sourceProperties = new \ReflectionObject($object);
+    $object_properties = $sourceProperties->getProperties();
+    /* @var $object_property \ReflectionProperty */
+    foreach($object_properties as $object_property) {
+        /* Only public properties should be converted to table columns*/
+        if($object_property->isPublic()) {
+            $object_property_name = $object_property->name;
+            $description = property_name_to_description($object_property_name);
+            array_push($descriptions, $description);
+        }
+    }
+
+    return $descriptions;
+}
  
 /**
  * Validate std object contrastand it properties with the properties of a given class

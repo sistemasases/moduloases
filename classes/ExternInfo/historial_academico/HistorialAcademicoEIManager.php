@@ -32,7 +32,6 @@ class HistorialAcademicoEIManager extends ExternInfoManager
             $historial_academico_col_id_programa = HistorialAcademico::ID_PROGRAMA;
             $historial_academico_col_id_estudiante= HistorialAcademico::ID_ESTUDIANTE;
             $historial_academico_col_id_semestre= HistorialAcademico::ID_SEMESTRE;
-
             if(HistorialAcademico::exists_select(
                 "
                 $historial_academico_col_id_programa = :id_programa
