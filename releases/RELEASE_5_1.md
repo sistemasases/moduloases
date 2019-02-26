@@ -24,4 +24,13 @@ Ficha estudiante:
 
 # Otros
 
--Se crea gestor de modal estándar.
+- Se crea gestor de modal estándar.
+- Add: Se crea gestor de modal estándar.
+- Add: Se adiciona validación a los campos tipo DATE con los atributos min|max= fecha|today()
+- Add: Se mejora la gestión de errores en los formularios dinámicos.
+- Add: Se adiciona soporte al casteo de columnas en xQuery de formularios dinámicos.
+- Add: Se adiciona el soporte a funciones anónimas en xQuery de formularios dinámicos.
+- Add: Se crea nuevo renderizador para los formularios con soporte a valores iniciales y múltiples botones. 
+- Fix: Se soluciona el envío de observaciones.
+- Fix: Se corrige la carga del campo 'envío de observaciones' para los practicantes.
+- Fix: Se corrige el conteo en el reporte de seguimientos.
