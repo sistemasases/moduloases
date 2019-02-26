@@ -14,6 +14,9 @@
 
 # Vistas modificadas
 
+monitor_assignments
+
+Se añade el boton para la descarga de un informe detallado, con cada asignación practicante-monitor-estudiante en un solo archivo csv
 
 # Otros
 
