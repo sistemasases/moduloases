@@ -12,9 +12,9 @@ require_once (__DIR__ . '/HistorialAcademicoEI.php');
 require_once (__DIR__ . '/../../module.php');
 class HistorialAcademicoEIManager extends ExternInfoManager
 {
-    public function __construct()
+    public function __construct($save)
     {
-        parent::__construct(HistorialAcademicoEI::class);
+        parent::__construct(HistorialAcademicoEI::class, $save);
     }
 
     public function persist_data()
@@ -27,11 +27,14 @@ class HistorialAcademicoEIManager extends ExternInfoManager
             }
             $item = clone $item_;
             HistorialAcademicoEI::clean($item);
+
             /** @var $historial_academico HistorialAcademico */
             $historial_academico = $item->extract_historial_academico();
+
             $historial_academico_col_id_programa = HistorialAcademico::ID_PROGRAMA;
             $historial_academico_col_id_estudiante= HistorialAcademico::ID_ESTUDIANTE;
             $historial_academico_col_id_semestre= HistorialAcademico::ID_SEMESTRE;
+
             if(HistorialAcademico::exists_select(
                 "
                 $historial_academico_col_id_programa = :id_programa
@@ -56,6 +59,7 @@ class HistorialAcademicoEIManager extends ExternInfoManager
 
             }
         }
+
         return true;
     }
     public function custom_column_mapping()

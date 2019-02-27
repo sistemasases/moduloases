@@ -11,9 +11,10 @@ require_once (__DIR__ . '/../../AsesUser.php');
 
 class CondicionExcepcionEIManager extends ExternInfoManager
 {
-    public function __construct()
+    public function __construct($save)
     {
-        parent::__construct(CondicionExcepcionEI::get_class_name());
+        parent::__construct(CondicionExcepcionEI::get_class_name(), $save);
+
     }
     public function persist_data()
     {

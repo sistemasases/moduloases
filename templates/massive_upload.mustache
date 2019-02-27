@@ -24,7 +24,7 @@
              <div class="select_endpoint">
                  <label > Seleccione la carga masiva: </label>
 
-                 <select id="endpoints">
+                 <select id="endpoints" class = "form-control">
                     {{#endpoints}}
                     <option value="{{name}}">
                         {{display_name}}
@@ -42,7 +42,7 @@
             <input id="hi" type="file" accept=".csv"  name="fileToUpload" id="fileToUpload" required>
         </form>
         <div id="buttons-section">
-            <button class="btn btn-default ajuste-btn"type="button" id="send-file">Simular</button>
+            <button title="Simular carga, ningun dato sera almacenado hasta que la carga sea confirmada" class="btn btn-default ajuste-btn"type="button" id="send-file">Simular carga</button>
 
         </div>
     </div>

@@ -12,13 +12,14 @@ define([
     'block_ases/ases_jquery_datatable',
     'core/config',
     'block_ases/sweetalert',
+    'block_ases/loading_indicator',
     'block_ases/jquery.dataTables',
     'block_ases/dataTables.buttons',
     'block_ases/buttons.html5',
     'block_ases/buttons.flash',
     'block_ases/buttons.print',
 
-    ], function($, notification, templates, ases_jquery_datatable, CFG, swal, dataTables, autoFill, buttons, html5, flash, print) {
+    ], function($, notification, templates, ases_jquery_datatable, CFG, swal, load_indicator, dataTables, autoFill, buttons, html5, flash, print) {
     var instance_id = 0;
     var CONTINUE_BUTTON_ID = 'continue-button';
     var CONTINUE_BUTTON_SELECTOR = "#" + CONTINUE_BUTTON_ID;
@@ -34,6 +35,16 @@ define([
     };
     var remove_alert_errors = function()  {
         $('#user-notifications .alert-error').remove();
+    };
+    var string_replace_all = function(string, search, replacement) {
+        return string.replace(new RegExp(search, 'g'), replacement);
+    };
+    var _non_valid_for_js_name__regex = /[ -() \[\].]/;
+    var some_string_to_js_valid_name = function (string) {
+        return string_replace_all(string, _non_valid_for_js_name__regex, '_');
+    };
+    var go_to_top_of_the_page = function() {
+        $('body,html').animate({scrollTop : 0}, 500);
     };
     var add_cell_style_and_errors = function (row, data) {
         if (data.error === "SI") {
@@ -53,6 +64,17 @@ define([
                 });
             }
         }
+    };
+    var show_datatable = function(jquery_datatable) {
+        jquery_datatable.destroy = true;
+        jquery_datatable.autoWidth = false;
+        var table = $('#example');
+
+        if( $.fn.dataTable.isDataTable('#example')) {
+            table.DataTable().destroy();
+
+        }
+        table.DataTable(jquery_datatable);
     };
     var get_api_url = function(_continue) {
 
@@ -102,7 +124,9 @@ define([
 
         return errors;
     };
-
+    var enable_selects = function() {
+        $('select').prop('disabled', false);
+    };
     /**
      * Returned API data structure
      *
@@ -179,34 +203,50 @@ define([
      * En caso de que el csv tenga mas o menos propiedades de las esperadas
      * se debe mostrar una previsualización de los datos dados y cuales son las
      * columnas que sobran o las que faltan
+     * @param data_table Datatable con la estructura inicial, sin datos, de como
+     * debe ir el csv, con sus headers almenos
+     * @param error Primer error encontrado
      */
     var load_preview_on_error = function (data_table, error) {
-        $('#example').DataTable(data_table);
+        data_table.dom =  'Bfrtip';
+        show_datatable(data_table);
 
         if (error.data_response && error.data_response.object_properties && error.data_response.file_headers) {
+
             var correct_column_names = error.data_response.object_properties;
             var given_column_names = error.data_response.file_headers;
-            console.log(error);
-            var missing_columns = correct_column_names.filter(element => given_column_names.indexOf(element) < 0);
-            var extra_columns = given_column_names.filter(element => {
+
+            var missing_columns = [];
+            missing_columns = missing_columns.concat(correct_column_names.filter(element => given_column_names.indexOf(element) < 0));
+            var extra_columns = [];
+            extra_columns = extra_columns.concat(given_column_names.filter(element => {
                 return correct_column_names.indexOf(element) <= -1;
-            });
-            missing_columns.forEach(column => {
-                $('.' + column).css('background-color', '#cccccc');
+            }));
 
-            });
-            extra_columns.forEach(column => {
+            if( missing_columns.length > 0 ) {
+                missing_columns.forEach(column => {
 
-                $('.' + column).css('background-color', 'red');
+                    $('.' + column)
+                        .css('background-color', '#cccccc')
+                        .attr('title', 'Columna faltante');
+                    console.log(column);
+                });
+            }
 
-            });
-            console.log(extra_columns, missing_columns);
+            if( extra_columns.length > 0 ) {
+                extra_columns.forEach(column => {
+                    console.log(column);
+                    $('.' + column)
+                        .css('background-color', 'red')
+                        .attr('title', 'Columna sobrante');
+
+                });
+            }
+
         }
+
     };
-    var show_datatable = function(jquery_datatable) {
-        jquery_datatable.destroy = true;
-        $('#example').DataTable(jquery_datatable);
-    };
+
     var get_send_file_button = function() {
         return $('#send-file');
     };
@@ -219,6 +259,7 @@ define([
 
         var api_url = get_api_url(_continue);
         var data_form = get_data_form();
+        load_indicator.show();
         return $.ajax({
             url: api_url,
             data: data_form,
@@ -227,7 +268,23 @@ define([
             dataType: "html",
             processData: false,
             type: 'POST'
+        }).then( response => {
+            load_indicator.hide();
+            return response;
+        }).catch(response => {
+            load_indicator.hide();
+            go_to_top_of_the_page();
+            swal({
+                title: 'Ocurrio un error',
+                text: "En la sección de notificaciones se muestra la lista de errores, adicionalmente en la consola" +
+                    "se muestra información detallada de los errores y su contexto",
+                type: 'error',
+                closeOnConfirm: true,
+                confirmButtonText: 'Aceptar'
+            });
+            return response;
         });
+
     };
     var remove_continue_button = function () {
       $(CONTINUE_BUTTON_SELECTOR).remove();
@@ -246,12 +303,14 @@ define([
     var send_file_and_save = () =>  {
         swal({
             title: 'Confirmación de guardado',
-            text: "",
+            text: "Una vez acepte almacenar la información, todo lo que se ha mostrado que se guardara" +
+                "va a ser almacenado en la base de datos y no habrá forma de volver a un estado anterior." +
+                "Si da click en cancelar la base de datos no sufrira ningun cambio.",
             type: 'warning',
             closeOnConfirm: true,
             closeOnCancel: true,
             showCancelButton: true,
-            confirmButtonText: 'Almacenar información'
+            confirmButtonText: 'Almacenar información?'
         }, function (isConfirm) {
             if (isConfirm) {
                 remove_continue_button();
@@ -266,6 +325,7 @@ define([
                             showCancelButton: false,
                             confirmButtonText: 'Vale'
                         });
+                        enable_selects();
                     });
 
             }
@@ -273,6 +333,11 @@ define([
 
 
     };
+    var add_nothing_to_save_button = function () {
+        add_continue_button()
+            .html('Nada para guardar')
+            .attr('disabled', true);
+    }
     var send_file = (_continue) => {
         reinit_datatable();
 
@@ -293,9 +358,7 @@ define([
                 var jquery_datatable = api_data.jquery_datatable;
 
                 var messages = api_data.get_messages();
-                console.log(messages, 'mesasges');
-                /* Se borran los mensajes previos y se muestran los nuevos*/
-
+                /* Se muestran los mensajes */
                 templates.render('block_ases/massive_upload_messages', {data: messages} )
                     .then((html, js) => {
                         templates.appendNodeContents('#messages_area', html, js);
@@ -339,7 +402,7 @@ define([
                     "title": 'Error',
                     "data": 'error'
                 });
-                /* Se añade la función que modificara la vista de cada fila a la tabla*/
+                /* Se añade la función que modificara la vista de cada fila a la tabla, si esta tiene errores*/
                 jquery_datatable.rowCallback = add_cell_style_and_errors;
                 /*Se añade el filtro de opciones en la columna error*/
                 jquery_datatable.initComplete = ases_jquery_datatable.add_column_filters(['error:name']);
@@ -347,8 +410,12 @@ define([
                 show_datatable(jquery_datatable);
                 console.log(_continue, 'continue antes de añadir el boton continue');
                 if(!api_data.error && !_continue) {
-                    add_continue_button()
-                        .click(send_file_and_save);
+                    if(api_data.success_logs_events.length === 0) {
+                        add_nothing_to_save_button();
+                    } else {
+                        add_continue_button()
+                            .click(send_file_and_save);
+                    }
                 }
 
         }).catch(
@@ -359,12 +426,14 @@ define([
                 reinit_mesasges_area();
                // console.log(response);
                 var error_object = JSON.parse(response.responseText);
-                console.log(error_object);
+                console.log(error_object, "error object at catch send file");
                 var datatable_preview = error_object.datatable_preview;
                 if( error_object.object_errors && error_object.object_errors.generic_errors ) {
                     var error_messages = error_object.object_errors.generic_errors.map(error => error.error_message);
+
                     load_preview_on_error(datatable_preview, error_object.object_errors.generic_errors[0]);
-                    error_messages.forEach((error_message) => {
+
+                    error_messages.forEach((error_message) => {console.log(error_message);
                         notification.addNotification({
                             message: error_message,
                             type: 'error'
@@ -375,8 +444,11 @@ define([
             }
         );
     };
-    var send_file_wait_for_approval = function(){
+    var disable_selects = function() {
+        $('select').prop('disabled', true);
+    };
 
+    var send_file_wait_for_approval = function(){
         return send_file(false);
     };
 
@@ -415,8 +487,17 @@ define([
          * @param data contiene el id de la instancia
          */
         init: function (data) {
+            $('select').change(()=> {
+                remove_continue_button();
+            });
             instance_id = data.instance_id;
-            $('#send-file').click(send_file_wait_for_approval);
+            $('#send-file').click(()=>{
+                remove_continue_button();
+                send_file_wait_for_approval()
+                    .catch(()=> {
+                        enable_selects();
+                    });
+            });
             move_notifications_area_under_ases_menu();
         }
         };

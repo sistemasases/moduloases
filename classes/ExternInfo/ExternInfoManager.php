@@ -81,11 +81,21 @@ abstract class ExternInfoManager extends Validable {
     private $_file;
     private $_file_name = 'fileToUpload';
     private $_file_extension = 'csv';
-    public function __construct($class_or_class_name) {
+
+    private $dowload_file_name = null;
+
+    /**
+     * ExternInfoManager constructor.
+     * @param $class_or_class_name
+     * @param bool $save If is true, the data is saved to database, otherwise the transaction of all
+     * database changes in extern info constructor is not commited
+     */
+    public function __construct($class_or_class_name, $save) {
         parent::__construct();
         $this->save = true;
         $this->class_or_class_name = $class_or_class_name;
         $this->success_log = array();
+        $this->save = $save;
         $this->object_warnings = array();
     }
 
@@ -194,13 +204,14 @@ abstract class ExternInfoManager extends Validable {
             $valid = $this->valid();
         } catch(dml_read_exception $e) {
             http_response_code(400);
+
             $this->add_error(new AsesError(-1, $e->error, $e));
             $this->send_errors();
             return;
         }
         if(!$valid) {
 
-            print_r($this->send_errors());
+            print_r($this->send_errors()); return;
         } else {
 
             if($this->load_data() === true ) {
@@ -220,7 +231,7 @@ abstract class ExternInfoManager extends Validable {
                      * ya que se deben retornar los errores via API
                      */
                     /** @var $e dml_write_exception */
-
+                    $DB->force_transaction_rollback();
                     http_response_code(400);
 
                     $this->add_error(new AsesError(-1, $e->error, $e));
@@ -229,6 +240,8 @@ abstract class ExternInfoManager extends Validable {
                 }
                 if($this->save){
                     $transaction->allow_commit();
+                } else {
+                    $DB->force_transaction_rollback();
                 }
 
                 http_response_code(200);
@@ -273,7 +286,8 @@ abstract class ExternInfoManager extends Validable {
      *
      * ## Send response method should return the response, not echo nor print_r the response
      */
-    //abstract function send_response();
+
+
     /**
      * If the load data fails return false, return true and init $this->>objects otherwise
      * @throws ErrorException If $this->class_or_classname does not exist
@@ -441,7 +455,6 @@ abstract class ExternInfoManager extends Validable {
             if (!Csv::csv_compatible_with_class($this->_file, $this->class_or_class_name, $this->custom_column_mapping())) {
                 $csv_headers = CSV::csv_get_headers($this->_file);
                 $class_properties = \reflection\get_properties($this->class_or_class_name);
-
                 $this->add_error(CsvManagerErrorFactory::csv_and_class_have_distinct_properties(
                     new data_csv_and_class_have_distinct_properties($class_properties, $csv_headers),
                     'El csv tiene campos incorrectos.',
@@ -472,10 +485,17 @@ abstract class ExternInfoManager extends Validable {
         $json_datatable = new \jquery_datatable\DataTable(array(), $datatable_columns,
             [array(
                 "extend"=>'csvHtml5',
-                "text"=>'CSV'
+                "title"=>$this->get_download_file_name()
             )]);
         $response->datatable_preview = $json_datatable;
         echo json_encode($response);
+    }
+    private function get_download_file_name() {
+        if($this->dowload_file_name) {
+            return $this->dowload_file_name;
+        } else {
+            return $this->class_or_class_name;
+        }
     }
     private function validate_ajax_data(): bool {
         global $_POST;
