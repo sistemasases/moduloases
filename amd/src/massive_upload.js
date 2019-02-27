@@ -11,15 +11,17 @@ define([
     'core/templates',
     'block_ases/ases_jquery_datatable',
     'core/config',
+    'block_ases/sweetalert',
     'block_ases/jquery.dataTables',
     'block_ases/dataTables.buttons',
     'block_ases/buttons.html5',
     'block_ases/buttons.flash',
     'block_ases/buttons.print',
 
-    ], function($, notification, templates, ases_jquery_datatable, CFG, dataTables, autoFill, buttons, html5, flash, print) {
+    ], function($, notification, templates, ases_jquery_datatable, CFG, swal, dataTables, autoFill, buttons, html5, flash, print) {
     var instance_id = 0;
     var CONTINUE_BUTTON_ID = 'continue-button';
+    var CONTINUE_BUTTON_SELECTOR = "#" + CONTINUE_BUTTON_ID;
     function get_datatable_column_index(table, name) {
         var column = table.column(name);
         return column.name;
@@ -53,6 +55,7 @@ define([
         }
     };
     var get_api_url = function(_continue) {
+
         return CFG.wwwroot + '/blocks/ases/managers/mass_management/mass_upload_api.php/'+ get_endpoint_name() + '/'+get_cohort_id() + '/' + instance_id+ '/' + _continue;
     };
 
@@ -226,20 +229,56 @@ define([
             type: 'POST'
         });
     };
+    var remove_continue_button = function () {
+      $(CONTINUE_BUTTON_SELECTOR).remove();
+    };
     var add_continue_button = function() {
         var send_file_button = get_send_file_button();
         return send_file_button
             .clone(true)
+            .off() //importante para no compartir eventos
             .attr("id", CONTINUE_BUTTON_ID)
-            .html('Continuar')
+            .html('Almacenar información')
+            .attr('title', 'Guardar información de forma persistente en la base de datos')
             .appendTo('#buttons-section');
+
+    };
+    var send_file_and_save = () =>  {
+        swal({
+            title: 'Confirmación de guardado',
+            text: "",
+            type: 'warning',
+            closeOnConfirm: true,
+            closeOnCancel: true,
+            showCancelButton: true,
+            confirmButtonText: 'Almacenar información'
+        }, function (isConfirm) {
+            if (isConfirm) {
+                remove_continue_button();
+                send_file(true)
+                    .then( () => {
+                        swal({
+                            title: 'La información se ha guardado correctamente',
+                            text: "",
+                            type: 'success',
+                            closeOnConfirm: true,
+                            closeOnCancel: true,
+                            showCancelButton: false,
+                            confirmButtonText: 'Vale'
+                        });
+                    });
+
+            }
+        });
+
 
     };
     var send_file = (_continue) => {
         reinit_datatable();
 
-        send_data(_continue)
+        return send_data(_continue)
             .then(response => {
+
                 console.log(response, 'response');
                 remove_alert_errors();
                 reinit_datatable();
@@ -306,22 +345,19 @@ define([
                 jquery_datatable.initComplete = ases_jquery_datatable.add_column_filters(['error:name']);
 
                 show_datatable(jquery_datatable);
+                console.log(_continue, 'continue antes de añadir el boton continue');
                 if(!api_data.error && !_continue) {
-                    add_continue_button();
-                }
-                if(_continue) {
-                    var send_file_and_save = () =>  send_file(true)
                     add_continue_button()
-                        .click(send_file_and_save());
+                        .click(send_file_and_save);
                 }
 
         }).catch(
             response  => {
-                console.log(response, 'response');
+                //console.log(response, 'response');
                 remove_alert_errors();
                 reinit_datatable();
                 reinit_mesasges_area();
-                console.log(response);
+               // console.log(response);
                 var error_object = JSON.parse(response.responseText);
                 console.log(error_object);
                 var datatable_preview = error_object.datatable_preview;
@@ -340,6 +376,7 @@ define([
         );
     };
     var send_file_wait_for_approval = function(){
+
         return send_file(false);
     };
 
@@ -369,7 +406,9 @@ define([
 
 
     }());
-
+    var move_notifications_area_under_ases_menu = function () {
+        $("#user-notifications").prependTo($(".massive_upload"));
+    };
 
     return {
         /**
@@ -378,6 +417,7 @@ define([
         init: function (data) {
             instance_id = data.instance_id;
             $('#send-file').click(send_file_wait_for_approval);
+            move_notifications_area_under_ases_menu();
         }
         };
     }

@@ -22,7 +22,9 @@ td.error {
 .massive_upload {
     margin-top: 50px;
 }
-
-.massive_upload #send-file{
+.massive_upload #buttons-section {
     margin-top: 20px;
+}
+.massive_upload #send-file{
+
 }

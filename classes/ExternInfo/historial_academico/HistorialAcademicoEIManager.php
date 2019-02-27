@@ -45,7 +45,6 @@ class HistorialAcademicoEIManager extends ExternInfoManager
                $this->add_generic_object_errors([new AsesError(-1, "El estudiante con número documento $item->numero_documento ya tenia un registro
                de historial academico en este semestre en esta carrea, no se actualiza nada")], $key);
                return false;
-               continue;
             } else {
                 if($historial_academico->valid()) {
                     $historial_academico->save();

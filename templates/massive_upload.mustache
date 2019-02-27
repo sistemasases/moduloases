@@ -8,7 +8,18 @@
 {{> block_ases/side_menu}}
 <div class = "container content">
     <div class="massive_upload ">
+        <div class="alert alert-success alert-dismissible " role="alert">
+            <h4 class="alert-heading">Importante</h4>
+            <p>El proceso esta dividido en dos partes, un primer envio en el cual se emula el proceso completo
+                (incluso se emula el guardado en base de datos) se muestran los mensajes correspondientes y al final,
+                si no hay errores, aparecera un boton <b> Continuar </b> <small>(hasta este punto nada se ha guardado en
+                    la base de datos realmente, ha sido solo una transacción que no se a almacenado)</small>, si da
+                click en continuar entonces realmente la información se guardara en la base de datos</p>
+            <hr>
+            <p class="mb-0">Adicionalmente, los errores se mostraran por consola en caso de necesitar información detallada</p>
+        </div>
         <div class="head">
+
             <h2 class="title" >CARGA MASIVA</h2>
              <div class="select_endpoint">
                  <label > Seleccione la carga masiva: </label>
@@ -31,7 +42,8 @@
             <input id="hi" type="file" accept=".csv"  name="fileToUpload" id="fileToUpload" required>
         </form>
         <div id="buttons-section">
-            <button class="btn btn-default ajuste-btn"type="button" id="send-file">Enviar</button>
+            <button class="btn btn-default ajuste-btn"type="button" id="send-file">Simular</button>
+
         </div>
     </div>
 </div>

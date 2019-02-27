@@ -34,6 +34,7 @@ $cond_exepcion_endpoint = \mass_management\endpoints\UPDATE_COND_EXEPCION;
 $history_academic = \mass_management\endpoints\UPDATE_ACADEMIC_HISTORY;
 $api->post("$ases_user_endpoint/:cohort_id/:instance_id/:save", function($args, $data) {
     $save = $data['save'] === 'true';
+    //sprint_r($data['save']);
     $estado_ases_csv_manager = new EstadoAsesEIManager($data['cohort_id'], $data['instance_id'], $save);
     $estado_ases_csv_manager->execute();
 });

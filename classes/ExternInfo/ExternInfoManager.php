@@ -323,7 +323,9 @@ abstract class ExternInfoManager extends Validable {
         $response = new \stdClass();
         $response->jquery_datatable = $json_datatable;
         $response->data = $this->get_initial_objects();
-        $response->error = !$this->has_errors();
+
+        $response->error = $this->has_errors();
+
         $response->errors = $this->get_errors();
         $response->initial_object_properties = count($response->data)>=1?  \reflection\get_properties($response->data[0]): [];
         $response->object_errors = $this->get_object_errors();
@@ -341,6 +343,7 @@ abstract class ExternInfoManager extends Validable {
          return false;
     }
     private function has_errors() {
+
         return count((array)$this->_errors_object)> 0 || count($this->_errors)> 0;
     }
 
