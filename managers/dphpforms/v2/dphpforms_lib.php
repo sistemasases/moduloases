@@ -1118,6 +1118,7 @@ function dphpformsV2_generate_html_recorder( $id_form, $rol_, $initial_config = 
                     return dphpformsV2_build_exception_message( "<strong>button->alias</strong> cannot be empty" );
                 }
 
+                //Validation of alias string structure.
                 if( !preg_match( '/^[a-z0-9_]+$/', $button->alias )  ){
                     return dphpformsV2_build_exception_message( "<strong>".$button->alias."</strong> is not a valid alias, valid regex [a-z0-9_]+, for instance, alias_1 " );
                 }
@@ -1196,6 +1197,9 @@ function dphpformsV2_generate_html_button( $alias, $text, $main_classes, $allow_
 
 /**
  * Function that allow build and standard error message when the process of rendering cannot be completed.
+ * @author Jeison Cardona Gómez, <jeison.cardona@correounivalle.edu.co>
+ * @param String $reason, cause of exception.
+ * @return String standard exception message.
  */
 function dphpformsV2_build_exception_message( $reason ){
     return "<h1>Error rendering</h1> The form cannot be rendered for the following reason: " . $reason . "."; 
