@@ -746,8 +746,24 @@ function dphpformsV2_store_form_soluciones($form_response_id, $respuesta_identif
 
 }
 
+function dphpformsV2_get_permisos_pregunta( $id_formulario_pregunta ){
+    
+    global $DB;
+    $sql =  "SELECT * FROM {talentospilos_df_per_form_pr} WHERE id_formulario_pregunta = '$id_formulario_pregunta'";
+    $permisos_obj = $DB->get_record_sql( $sql );
+    if( $permisos_obj ){
+        return $permisos_obj->permisos;
+    }else{
+        return null;
+    }
+
+}
+
+
 // Example
-/*$initial_config = '{
+$initial_config = '{
+    "allow_update":true,
+    "allow_delete":true,
     "main_form_classes" : "col-xs-12 col-sm-12",
     "initial_values" : [
         {
@@ -766,14 +782,19 @@ function dphpformsV2_store_form_soluciones($form_response_id, $respuesta_identif
             "main_classes" : "class_A class_B"
         },
         {
-            "alias" : "button_AB2",
-            "text" : "BC",
-            "main_classes" : "class_A class_B"
+            "alias" : "update",
+            "text" : "Actualizar",
+            "main_classes" : ""
+        },
+        {
+            "alias" : "delete",
+            "text" : "Eliminar",
+            "main_classes" : ""
         }
     ]
 }';
 $initial_config = json_decode( $initial_config );
-echo dphpformsV2_generate_html_recorder( 'seguimiento_pares', "sistemas", $initial_config  );*/
+echo dphpformsV2_generate_html_recorder( 'seguimiento_pares', "sistemas", $initial_config  );
 
 function dphpformsV2_generate_html_recorder( $id_form, $rol_, $initial_config = null  ){
 
@@ -829,14 +850,7 @@ function dphpformsV2_generate_html_recorder( $id_form, $rol_, $initial_config = 
         $atributos = json_decode( $statement->atributos_campo );
 
         //Consulta de permisos
-        $sql_permisos = '
-            SELECT * FROM {talentospilos_df_per_form_pr} WHERE id_formulario_pregunta = '.$statement->id_pregunta.'
-        ';
-        
-        $result_permisos = $DB->get_record_sql($sql_permisos);
-
-        $permisos = $result_permisos;
-        $permisos_JSON = json_decode($permisos->permisos);
+        $permisos_JSON = json_decode( dphpformsV2_get_permisos_pregunta( $statement->id_pregunta ) );
         
         foreach ($permisos_JSON as $key => $v_rol) {
 
@@ -1080,9 +1094,42 @@ function dphpformsV2_generate_html_recorder( $id_form, $rol_, $initial_config = 
     $html_aditional_buttons = "";
     if( $initial_config ){
         if( property_exists($initial_config, 'aditional_buttons') ){
+            $new_buttons_aliases = [];
             $buttons = $initial_config->aditional_buttons;
+            $reserved_aliases = [
+                "update",
+                "delete"
+            ];
             foreach( $buttons as $key => $button ){
-                $html_aditional_buttons .= dphpformsV2_generate_html_button( $alias, $text, $main_classes );
+
+                if( is_null( $button->alias ) || ( $button->alias == "" ) ){
+                    return dphpformsV2_make_exception_message( "<strong>button->alias</strong> cannot be empty" );
+                }
+
+                if( !in_array( $button->alias, $new_buttons_aliases ) ){
+
+                    $allow_reserved_alias = false;
+                    
+                    if( in_array( $button->alias, $reserved_aliases ) ){
+                        if( property_exists ($initial_config, 'allow_' . $button->alias ) ){
+                            if( ((array) $initial_config)[ 'allow_' . $button->alias ] ){
+                                $allow_reserved_alias = true;
+                            }
+                        }
+                    }
+                   
+                    array_push( $new_buttons_aliases, $button->alias );
+                    $html_button = dphpformsV2_generate_html_button( $button->alias, $button->text, $button->main_classes, $allow_reserved_alias );
+
+                    if( !$html_button ){
+                        return dphpformsV2_make_exception_message( "<strong>" . $button->alias . "</strong> is an reserved alias and its allow flag is not defined" );
+                    }else{
+                        $html_aditional_buttons .= $html_button;
+                    }
+
+                }else{
+                    return dphpformsV2_make_exception_message( "<strong>" . $button->alias . "</strong> cannot be defined more that one time" );
+                }
             }
         }
     }
@@ -1099,8 +1146,35 @@ function dphpformsV2_generate_html_recorder( $id_form, $rol_, $initial_config = 
 
 }
 
-function dphpformsV2_generate_html_button( $alias, $text, $main_classes ){
-    return '<input type="button" class="button btn-dphpforms btn-dphpforms-'. $alias .' '. $main_classes .'" value="'.$text.'" />';
+/**
+ * Function that generates the html of the buttons.
+ * @author Jeison Cardona Gómez, <jeison.cardona@correounivalle.edu.co>
+ * @param String $alias, this alias will be used as class-identifier, for instance, btn-dphpforms-alias
+ * @param String $text, it is the buttom value.
+ * @param String $main_classes, aditional css classes.
+ * @return String HTML with the buttons tags.
+ */
+
+function dphpformsV2_generate_html_button( $alias, $text, $main_classes, $allow_reserved_alias = false ){
+    
+    $reserved_aliases = [
+        "update",
+        "delete"
+    ];
+
+    if( is_null( $alias ) ){
+        return null;
+    } 
+    
+    if( in_array( $alias, $reserved_aliases ) && !$allow_reserved_alias ){
+        return null;
+    }
+
+    return '<input type="button" class="button btn-dphpforms btn-dphpforms-'. $alias .' '. $main_classes .'" value="'.$text.'" >';
+}
+
+function dphpformsV2_make_exception_message( $reason ){
+    return "<h1>Error rendering</h1> The form cannot be rendered for the following reason: " . $reason . "."; 
 }
   
 
