@@ -94,6 +94,7 @@ function get_array_students_men($period){
     $students = $DB->get_records_sql($sql_query);
 
     foreach($students as $student) {
+        process_student_subject_json($student);
         array_push($array_students, $student);
     }
 
@@ -101,7 +102,17 @@ function get_array_students_men($period){
 }
 
 function process_student_subject_json($student){
-    $json_subjects = $student->json_materias;
+    $json_subjects = json_decode($student->json_materias);
     $student->materias_perdidas = 0;
     $student->materias_canceladas = 0;
+
+    foreach($json_subjects as $materia) {
+        if($materia->nota <= 3.0){
+            $student->materias_perdidas += 1;
+        }
+
+        if($json_subjects->fecha_cancelacion_materia !== ""){
+            $student->materias_canceladas += 1;
+        }
+    }
 }
