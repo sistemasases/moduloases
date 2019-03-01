@@ -773,13 +773,16 @@ $initial_config = '{
         {
             "alias" : "objetivos",
             "default_value" : "Objetivos de prueba"
+        },{
+            "alias" : "id_instancia",
+            "default_value" : "450299"
         }
     ],
     "aditional_buttons" : [
         {
-            "alias" : "button_AB1",
-            "text" : "AB1",
-            "main_classes" : "class_A class_B"
+            "alias" : "extra_button",
+            "text" : "Extra Button",
+            "main_classes" : "e-class e-class-2"
         },
         {
             "alias" : "update",
@@ -1088,12 +1091,16 @@ function dphpformsV2_generate_html_recorder( $id_form, $rol_, $initial_config = 
     if( $initial_config ){
 
         //Aditional buttons section. 
+
         /*Example of a additional button
-        {
-            "alias" : "button_AB1",
-            "text" : "AB1",
-            "main_classes" : "class_A class_B"
-        }*/
+        aditional_buttons: [
+            {
+                "alias" : "send_email",
+                "text" : "Send Email",
+                "main_classes" : "send-email big"
+            },
+            {...}
+        ]*/
         if( property_exists($initial_config, 'aditional_buttons') ){
 
             $buttons = $initial_config->aditional_buttons;
@@ -1108,7 +1115,11 @@ function dphpformsV2_generate_html_recorder( $id_form, $rol_, $initial_config = 
 
                 //Verification of button alias.
                 if( is_null( $button->alias ) || ( $button->alias == "" ) ){
-                    return dphpformsV2_make_exception_message( "<strong>button->alias</strong> cannot be empty" );
+                    return dphpformsV2_build_exception_message( "<strong>button->alias</strong> cannot be empty" );
+                }
+
+                if( !preg_match( '/^[a-z0-9_]+$/', $button->alias )  ){
+                    return dphpformsV2_build_exception_message( "<strong>".$button->alias."</strong> is not a valid alias, valid regex [a-z0-9_]+, for instance, alias_1 " );
                 }
 
                 //Prevent that many buttons with the same identifier can be defined.
@@ -1132,13 +1143,13 @@ function dphpformsV2_generate_html_recorder( $id_form, $rol_, $initial_config = 
 
                     //If return is null means that was defined an invalid alias or was tried to define and reserved alias without flag.
                     if( !$html_button ){
-                        return dphpformsV2_make_exception_message( "<strong>" . $button->alias . "</strong> is an reserved alias and its allow flag is not defined" );
+                        return dphpformsV2_build_exception_message( "<strong>" . $button->alias . "</strong> is an reserved alias and its allow flag is not defined" );
                     }else{
                         $html_aditional_buttons .= $html_button;
                     }
 
                 }else{
-                    return dphpformsV2_make_exception_message( "<strong>" . $button->alias . "</strong> cannot be defined more that one time" );
+                    return dphpformsV2_build_exception_message( "<strong>" . $button->alias . "</strong> cannot be defined more that one time" );
                 }
             }
         }
@@ -1183,7 +1194,10 @@ function dphpformsV2_generate_html_button( $alias, $text, $main_classes, $allow_
     return '<input type="button" class="button btn-dphpforms btn-dphpforms-'. $alias .' '. $main_classes .'" value="'.$text.'" >';
 }
 
-function dphpformsV2_make_exception_message( $reason ){
+/**
+ * Function that allow build and standard error message when the process of rendering cannot be completed.
+ */
+function dphpformsV2_build_exception_message( $reason ){
     return "<h1>Error rendering</h1> The form cannot be rendered for the following reason: " . $reason . "."; 
 }
   
