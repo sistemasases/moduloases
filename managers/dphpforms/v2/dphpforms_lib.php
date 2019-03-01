@@ -1082,45 +1082,55 @@ function dphpformsV2_generate_html_recorder( $id_form, $rol_, $initial_config = 
 
     }
 
-    //Aditional buttons config. 
-    //Example
-    /*[
+    
+    $html_aditional_buttons = "";
+
+    if( $initial_config ){
+
+        //Aditional buttons section. 
+        /*Example of a additional button
         {
             "alias" : "button_AB1",
             "text" : "AB1",
             "main_classes" : "class_A class_B"
-        }
-    ]*/
-    $html_aditional_buttons = "";
-    if( $initial_config ){
+        }*/
         if( property_exists($initial_config, 'aditional_buttons') ){
-            $new_buttons_aliases = [];
+
             $buttons = $initial_config->aditional_buttons;
+            
+            $new_buttons_aliases = [];
             $reserved_aliases = [
                 "update",
                 "delete"
             ];
+
             foreach( $buttons as $key => $button ){
 
+                //Verification of button alias.
                 if( is_null( $button->alias ) || ( $button->alias == "" ) ){
                     return dphpformsV2_make_exception_message( "<strong>button->alias</strong> cannot be empty" );
                 }
 
+                //Prevent that many buttons with the same identifier can be defined.
                 if( !in_array( $button->alias, $new_buttons_aliases ) ){
 
+                    array_push( $new_buttons_aliases, $button->alias );
+
+                    //Validation of reserved aliases.
                     $allow_reserved_alias = false;
-                    
                     if( in_array( $button->alias, $reserved_aliases ) ){
                         if( property_exists ($initial_config, 'allow_' . $button->alias ) ){
+
+                            //Buttons with 'update' or 'delete' as alias, only can be defined with an allow flag.
                             if( ((array) $initial_config)[ 'allow_' . $button->alias ] ){
                                 $allow_reserved_alias = true;
                             }
                         }
                     }
                    
-                    array_push( $new_buttons_aliases, $button->alias );
                     $html_button = dphpformsV2_generate_html_button( $button->alias, $button->text, $button->main_classes, $allow_reserved_alias );
 
+                    //If return is null means that was defined an invalid alias or was tried to define and reserved alias without flag.
                     if( !$html_button ){
                         return dphpformsV2_make_exception_message( "<strong>" . $button->alias . "</strong> is an reserved alias and its allow flag is not defined" );
                     }else{
