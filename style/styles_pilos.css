@@ -305,7 +305,7 @@ input[type=number] {
   color: #333;
   text-decoration: none;
 }
-.editar:active,
+.editar:active
 {
   background-image: none;
   outline: 0;
@@ -1009,7 +1009,7 @@ tr.shown td.details-control {
   padding-right: 0;
 }
 
-a.panel_heading.heading_semester_tracking:-web-kit-any-link{
+a.panel_heading.heading_semester_tracking{
   text-decoration:none;
 }
 
@@ -1609,6 +1609,10 @@ footer#page-footer{
 }
 
 .ajuste-btn:hover{
+    background-color: #d43f3a !important;
+    color: #FFF;
+}
+.ajuste-btn[disabled]{
     background-color: #d43f3a !important;
     color: #FFF;
 }

@@ -40,8 +40,21 @@ $actions = authenticate_user_view($USER->id, $blockid);
 if (!isset($actions->massive_upload)) {
     redirect(new moodle_url('/'), "No tienes permiso para acceder a la carga masiva (versión datatables)",1, \core\output\notification::NOTIFY_INFO);
 }
+$url_params = array(
+    'courseid' => $courseid,
+    'instanceid' => $blockid
+);
+if($selected_upload){
+    $url_params['$selected_upload'] = $selected_upload;
+}
+$url = new moodle_url("/blocks/ases/view/massive_upload.php", $url_params);
+$view_name = 'Carga masiva datatables';
+$PAGE->set_title($view_name);
 
-$PAGE->set_title('Carga masiva datatables');
+$coursenode = $PAGE->navigation->find($courseid, navigation_node::TYPE_COURSE);
+$blocknode = navigation_node::create($view_name,$url, null, 'block', $blockid);
+$coursenode->add_node($blocknode);
+
 $PAGE->requires->css('/blocks/ases/style/bootstrap_pilos.min.css', true);
 
 $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/jquery.dataTables.min.css', true);
@@ -49,6 +62,8 @@ $PAGE->requires->css('/blocks/ases/style/side_menu_style.css', true);
 $PAGE->requires->css('/blocks/ases/style/jquery.dataTables.min.css', true);
 $PAGE->requires->css('/blocks/ases/style/buttons.dataTables.min.css', true);
 $PAGE->requires->css('/blocks/ases/style/styles_pilos.css', true);
+$PAGE->requires->css('/blocks/ases/style/sweetalert.css', true);
+$PAGE->requires->css('/blocks/ases/style/sweetalert2.css', true);
 $PAGE->requires->css('/blocks/ases/style/massive_upload.css');
 
 $data_for_amd = array();

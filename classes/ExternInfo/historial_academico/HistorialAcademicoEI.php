@@ -165,11 +165,12 @@ class HistorialAcademicoEI extends Validable {
         $valid_program = $this->validate_program();
         $valid_semester_name = $this->validate_semestre();
         $valid_json_materias = $this->validate_json_materias();
+
         return $valid_fields && $valid_json_materias && $parent_valid && $valid_semester_name && $valid_user && $valid_program;
     }
     public function validate_semestre() {
         if(!Semestre::exists(array(Semestre::NOMBRE => $this->nombre_semestre))) {
-            $this->add_error("El semestre con nombre $this->nombre_semestre no existe");
+            $this->add_error("El semestre con nombre $this->nombre_semestre no existe", 'nombre_semestre');
             return false;
         } else {
             return true;
@@ -206,11 +207,11 @@ class HistorialAcademicoEI extends Validable {
         $field_validators = new stdClass();
         $field_validators->json_materias = [FieldValidators::required(), FieldValidators::json()];
         $field_validators->numero_documento = [FieldValidators::required(), FieldValidators::numeric()];
-        $field_validators->nombre_semestre = [FieldValidators::required(), FieldValidators::regex($semester_name_regex)];
+        $field_validators->nombre_semestre = [FieldValidators::required()/*, FieldValidators::regex($semester_name_regex)*/];
         $field_validators->promedio_semestre = [FieldValidators::numeric(), FieldValidators::number_between(0,5)];
         $field_validators->promedio_acumulado = [FieldValidators::numeric(), FieldValidators::number_between(0,5)];
         $field_validators->codigo_programa_univalle = [FieldValidators::required(), FieldValidators::numeric()];
-        $field_validators->codigo_univalle =  [FieldValidators::required(), FieldValidators::string_size_one_of([7,9]), FieldValidators::numeric()];
+        $field_validators->codigo_estudiante =  [FieldValidators::required(), FieldValidators::string_size_one_of([7,9]), FieldValidators::numeric()];
         $field_validators->fecha = [
             FieldValidators::required(),
             FieldValidators::date_format(['d-m-Y'])];

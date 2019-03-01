@@ -2,7 +2,9 @@ tr.error {
     background-color: indianred!important;
 }
 td.error {
-    background-color: #2b8b0b !important;
+    background-color: #D51B23 !important;
+    color: #ffffff;
+
 }
 
 
@@ -22,7 +24,9 @@ td.error {
 .massive_upload {
     margin-top: 50px;
 }
-
-.massive_upload #send-file{
+.massive_upload #buttons-section {
     margin-top: 20px;
+}
+.massive_upload #send-file{
+
 }
