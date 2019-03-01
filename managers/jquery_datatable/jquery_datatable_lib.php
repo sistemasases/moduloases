@@ -57,6 +57,7 @@ class DataTable {
      * @link https://datatables.net/reference/option/columns
      */
     public $columns;
+    public $autoWidth;
     /**
      * @var $buttons array
      * @see https://datatables.net/extensions/buttons/
@@ -65,7 +66,7 @@ class DataTable {
     public $responsive = true;
     public $sPaginationType = "full_numbers";
 
-    public function __construct($data=[], $columns=null, $buttons=[]) {
+    public function __construct($data=[], $columns=null, $buttons=[], $autoWidth = true) {
         $this->data = $data;
         if(!$columns) {
             $this->columns = Column::get_columns($data[0]);
@@ -73,6 +74,7 @@ class DataTable {
         } else {
             $this->columns = $columns;
         }
+        $this->autoWidth = $autoWidth;
         $this->buttons = $buttons;
     }
 }
@@ -114,15 +116,22 @@ class Column {
     }
     /**
      * Return column based in standard object property name,
-     * ej. (userEmail -> {data: 'userEmail', title: 'User Email'}).
+     *
      * @param   string  $property_name  Standard property name, with words separed by underscores or capital letters.
      *  examples: userEmail, user_email
-     * @return Column return standard datatable column based in property name ej. (user_email -> {data: 'user_email',
-     *  title: 'User Email'}).
+     * @param $title_in_readable_format bool
+     *  if is given, the column title is not the property name, is a
+     *  redeable format of the column name, ej. (userEmail -> {data: 'userEmail', title: 'User Email'}).
+     * @return Column return standard datatable column based in property name
+     * @see get_column_title_from_property_name
      */
-    public static function get_column_from_property_name($property_name) {
+    public static function get_column_from_property_name($property_name, $title_in_readable_format = false) {
         $data = $property_name;
-        $title = Column::get_column_title_from_property_name($property_name);
+        if($title_in_readable_format) {
+            $title = Column::get_column_title_from_property_name($property_name);
+        } else {
+            $title = $property_name;
+        }
         return new Column($data, $title);
     }
     /**
