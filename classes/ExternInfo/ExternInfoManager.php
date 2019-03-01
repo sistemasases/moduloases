@@ -389,7 +389,7 @@ abstract class ExternInfoManager extends Validable {
         if(!isset($_FILES[$this->_file_name])) {
             $this->add_error(
                 "No se encontraron ficheros en $_FILES . Recuerde que el nombre de este es $this->_file_name, si esta subiendolo por medio de un formulario html recuerde poner ese nombre como propiedad 'name' en el input tipo file.",
-                Validable::GENERIC_ERRORS_FIELD);
+                Validable::GENERIC_ERRORS_FIELD, $_FILES);
             return false;
         }
         if(isset($_FILES['fileToUpload']['error']) && $_FILES['fileToUpload']['error'] != '' && $_FILES['fileToUpload']['error'] !== 0) {
