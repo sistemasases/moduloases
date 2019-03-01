@@ -828,7 +828,6 @@ function dphpformsV2_generate_html_recorder( $id_form, $rol_, $initial_config = 
 
     // Form statements
     $sql = '
-    
         SELECT * FROM {talentospilos_df_tipo_campo} AS TC 
         INNER JOIN (
             SELECT * FROM {talentospilos_df_preguntas} AS P 
@@ -857,7 +856,6 @@ function dphpformsV2_generate_html_recorder( $id_form, $rol_, $initial_config = 
         
         foreach ($permisos_JSON as $key => $v_rol) {
 
-        
             if($v_rol->rol == $ROL){
 
                 $lectura = false;
@@ -1078,6 +1076,7 @@ function dphpformsV2_generate_html_recorder( $id_form, $rol_, $initial_config = 
 
                 }
 
+                //Prevent that a double role definition in the permission generate two blocks of the same question.
                 break;
 
             }
@@ -1166,6 +1165,31 @@ function dphpformsV2_generate_html_recorder( $id_form, $rol_, $initial_config = 
 
     return $html;
 
+}
+
+function dphpformsV2_generate_TEXTFIELD( $id_formulario_pregunta, $field_options, $statement ){
+    
+    $field_attr_class = $field_options[ 'attr_class' ];
+    $field_attr_local_alias = $field_options[ 'attr_local_alias' ];
+    $field_attr_inputclass = $field_options[ 'attr_inputclass' ];
+    $field_attr_max = $field_options[ 'attr_max' ];
+    $field_attr_min = $field_options[ 'attr_min' ];
+    $field_attr_type = $field_options[ 'attr_type' ];
+    $field_attr_placeholder = $field_options[ 'attr_placeholder' ];
+    $field_default_value = $field_options[ 'default_value' ];
+    $field_attr_maxlength = $field_options[ 'attr_maxlength' ];
+    $field_enabled = $field_options[ 'enabled' ];
+    $field_attr_required = $field_options[ 'attr_required' ];
+    
+
+    $html = '
+    <div class="div-'.$id_formulario_pregunta.' '.$field_attr_class.' '.$field_attr_local_alias.'" >' 
+        . $statement . ':<br>
+        <input id="'.$id_formulario_pregunta.'" class="form-control ' . $field_attr_inputclass . '" max="' . $field_attr_max . '"  min="' . $field_attr_min . '" type="'.$field_attr_type.'" placeholder="'.$field_attr_placeholder.'" name="'.$mod_id_formulario_pregunta.'" value="'.$field_default_value.'" maxlength="'.$field_attr_maxlength.'" '.$field_enabled.' '.$field_attr_required.'>
+    </div>';
+
+    return $html;
+    
 }
 
 /**
