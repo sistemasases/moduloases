@@ -120,10 +120,23 @@ function getGraficAge($cohorte){
 function getGraficPrograma($cohorte){
     global $DB;
     
-    $sql_query = "SELECT programa.nombre,COUNT(programa.nombre)
-                  FROM (SELECT DISTINCT data.userid AS userid,data.data AS codcarrera FROM {talentospilos_usuario} AS usuarios_talentos 
-                        INNER JOIN {user_info_data} AS data ON (CAST (usuarios_talentos.id AS varchar) = data.data) WHERE data.fieldid=3)
-                  AS sub INNER JOIN {talentospilos_programa} AS programa ON (cast(programa.id as text) = sub.codcarrera) 
+    $sql_query = "SELECT programa.nombre, COUNT(usuario.id)
+                    FROM mdl_talentospilos_user_extended AS usuario
+                    INNER JOIN mdl_talentospilos_programa AS programa
+                    ON usuario.id_academic_program = programa.id
+                    INNER JOIN
+                    ((SELECT student_ases_status.id_estudiante AS id_ases_student, student_ases_status.id_estado_ases,
+                            MAX(student_ases_status.fecha) AS fecha
+                    FROM mdl_talentospilos_est_estadoases AS student_ases_status
+                    WHERE id_instancia = '450299'
+                    GROUP BY student_ases_status.id_estudiante, student_ases_status.id_estado_ases) AS current_ases_status
+                    INNER JOIN
+                    (SELECT student_ases_status.id_estudiante, 
+                        student_ases_status.fecha, ases_statuses.nombre
+                    FROM mdl_talentospilos_est_estadoases AS student_ases_status
+                        INNER JOIN mdl_talentospilos_estados_ases AS ases_statuses ON ases_statuses.id = student_ases_status.id_estado_ases) AS historic_ases_statuses
+                    ON historic_ases_statuses.id_estudiante = current_ases_status.id_ases_student AND historic_ases_statuses.fecha = current_ases_status.fecha) AS activos_ases
+                    ON activos_ases.id_ases_student = usuario.id_ases_user
                   GROUP BY programa.nombre";
     
      
@@ -211,6 +224,7 @@ function getGraficEstado($cohorte){
                     INNER JOIN {user_info_data} AS dato ON (subconsulta.userid = dato.userid)
              WHERE dato.fieldid = 4 ) AS cont
         GROUP BY data";
+        
     
     //se verifica el cohorte ingresado, de acuerdo al caso se invoca el metodo de moodle con una de las dos
     //consultar armadas anteriormente
