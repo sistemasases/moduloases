@@ -37,8 +37,22 @@ define(['jquery',
                 $("#list-students-status-panel").on('click', function(){
                     //updateTable();                    
                     get_data_to_graphic();                   					
-                });          
+                });   
                 
+                $("#save-btn").click(function() {
+                //     $("#canvas").get(0).toBlob(function(blob) {
+                //        saveAs(blob, "chart_1.png");
+                //    });
+                });  
+
+                $('#status_fields').on('change', function () {
+                    console.log("Cambia");
+                });
+
+                $('#conditions').on('change', function () {
+                    console.log("Cambia");
+                });
+                              
                 
                 
 
@@ -72,10 +86,10 @@ define(['jquery',
                 data: { type: 'carrera', cohort: $('#conditions').val() },
                 url: "../managers/ases_report/asesreport_graphics_processing.php",
                 success: function (msg) {
-                    var results = Object.keys(msg).map(function(k) { return msg[k] });                   
-                    var programas = [];
-                    var cantidades = [];  
-                    var nombrePrograma ='';                                     
+                    var results = Object.keys(msg).map(function(k) { return msg[k] });                    
+                    var programas = []; 
+                    var cantidades = [];   
+                    var nombrePrograma ='';                                      
                     
                     results.sort(function(prog1, prog2,) {
                         return prog2.count - prog1.count;
@@ -84,6 +98,10 @@ define(['jquery',
                     for(var x in results){
                         nombrePrograma = results[x].nombre;
                         cantidadPrograma = results[x].count;
+
+                        nombrePrograma = results[x].nombre;
+                        cantidadPrograma = results[x].count;
+
                         if(nombrePrograma !== 'PLAN TALENTOS PILOS'){                                                        
 
                             if(nombrePrograma === 'LICENCIATURA EN EDUCACIÓN BÁSICA CON ÉNFASIS EN CIENCIAS NATURALES Y EDUCACIÓN AMBIENTAL'){
@@ -92,8 +110,7 @@ define(['jquery',
 
                             if(nombrePrograma === 'LICENCIATURA EN EDUCACIÓN BÁSICA CON ÉNFASIS EN CIENCIAS SOCIALES'){
                                 nombrePrograma = 'LIC. EN EDU. BÁSICA CON ÉNFASIS EN CIENCIAS SOCIALES'
-                            }
-
+                            }                                                                  
                             programas.push(nombrePrograma);
                             cantidades.push(cantidadPrograma);
 
@@ -155,7 +172,7 @@ define(['jquery',
 
         function creategraphicProgramas(programas, cantidades){
             $('.chart-container').css('height', '1300px');
-            $('.chart-container').css('width', '1100px');
+            $('.chart-container').css('width', '100%');
             
             var backgroundColors = [];
             var borderColors = [];            
@@ -163,10 +180,10 @@ define(['jquery',
             for(var i=0; i<programas.length; i++){
                 if(i%2 == 0){
                     backgroundColors.push('rgba(255, 99, 132, 0.2)');
-                    borderColors.push('rgba(255, 99, 132, 1)')
+                    borderColors.push('rgba(255, 99, 132, 1)');
                 }else{
                     backgroundColors.push('rgba(130, 130, 130, 0.2)');
-                    borderColors.push('rgba(130, 130, 130, 1)')
+                    borderColors.push('rgba(130, 130, 130, 1)');
                 }
             }
 
