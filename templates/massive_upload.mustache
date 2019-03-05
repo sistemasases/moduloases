@@ -1,0 +1,69 @@
+{{!
+
+
+
+}}
+
+{{#data}}
+{{> block_ases/side_menu}}
+<div class = "container content">
+    <div class="massive_upload ">
+        <div class="alert alert-success alert-dismissible " role="alert">
+            <h4 class="alert-heading">Importante</h4>
+            <p>El proceso esta dividido en dos partes, un primer envio en el cual se emula el proceso completo
+                (incluso se emula el guardado en base de datos) se muestran los mensajes correspondientes y al final,
+                si no hay errores, aparecera un boton <b> Continuar </b> <small>(hasta este punto nada se ha guardado en
+                    la base de datos realmente, ha sido solo una transacción que no se a almacenado)</small>, si da
+                click en continuar entonces realmente la información se guardara en la base de datos</p>
+            <hr>
+            <p class="mb-0">Adicionalmente, los errores se mostraran por consola en caso de necesitar información detallada</p>
+        </div>
+        <div class="head">
+
+            <h2 class="title" >CARGA MASIVA</h2>
+             <div class="select_endpoint">
+                 <label > Seleccione la carga masiva: </label>
+
+                 <select id="endpoints" class = "form-control">
+                    {{#endpoints}}
+                    <option value="{{name}}">
+                        {{display_name}}
+                    </option>
+                    {{/endpoints}}
+                </select>
+             </div>
+            <div class="cohort_select_region">
+                <label > Seleccione la cohorte: </label>
+                {{{cohorts_select}}}
+            </div>
+        </div>
+
+        <form method="post" id="form-send-file" enctype="multipart/form-data" >
+            <input id="hi" type="file" accept=".csv"  name="fileToUpload" id="fileToUpload" required>
+        </form>
+        <div id="buttons-section">
+            <button title="Simular carga, ningun dato sera almacenado hasta que la carga sea confirmada" class="btn btn-default ajuste-btn"type="button" id="send-file">Simular carga</button>
+
+        </div>
+    </div>
+</div>
+<div class = "container-fluid">
+        <!-- button id = "print-data">Print data</button>
+        <button id = "send-data">Send data</button -->
+        <div style="overflow-x: auto;">
+            <table cellpadding="0" cellspacing="0" border="0" class="dataTable table table-striped" id="example">
+            </table>
+        </div>
+
+        <div id="messages_area">
+
+        </div>
+</div>
+{{#js}}
+    /* Selección de una carga masiva, si esta es dada en <data></data>*/
+    require(['jquery'], function($) {
+    console.log('#endpoints option[value="{{selected_upload}}"]');
+    $('#endpoints option[value="{{selected_upload}}"]').prop('selected', true);
+    });
+{{/js}}
+{{/data}}

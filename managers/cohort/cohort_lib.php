@@ -34,6 +34,14 @@
  */
 namespace cohort_lib;
 require_once(__DIR__.'/../instance_management/instance_lib.php');
+require_once (__DIR__.'/../../../../config.php');
+require_once($CFG->dirroot.'/cohort/lib.php');
+
+const ID_NUMBER = 'idnumber';
+const NAME = 'name';
+const CONTEXT_ID = 'contextid';
+const ID = 'id';
+use mod_questionnaire\response\boolean;
 use function substr;
 /**
  * Prefix for group of cohorts, for example:
@@ -65,6 +73,86 @@ function load_cohorts_by_instance($id_instance){
     return $result_to_return;
 }
 
+/**
+ * Dummy Class for Cohort
+ * @package cohort_lib
+ * @property $idnumber string Examples: ['YUM2018B', 'YUM2018B']
+ * @property $name string
+ * @property $id number
+ * @property $timecreated
+ */
+class Cohort {
+
+}
+/**
+ * Return the cohorts filtred by conditions. An array of Cohorts is returned
+ * @param array $conditions array $fieldname=>requestedvalue with AND in between
+ * @return array
+ * @throws \dml_exception
+ */
+function get_cohorts($conditions = array()) {
+    global $DB;
+    return array_values($DB->get_records('cohort', $conditions));
+}
+
+function exists($conditions = array()) {
+    global $DB;
+    return $DB->record_exists('cohort', $conditions);
+}
+/**
+ * Add user to cohort
+ * *This not validate than the cohort or the user exist, please validate this yourself, this method not fails
+ *  if the given data is bad, but false is returned without information about what false*
+ *
+ * This method return true also if the user was in the cohort before.
+ *
+ * @param $cohort mixed|int|string If int or string is given, cohort id is assumed, if mixed is given is asumed than have 'id' property
+ * @param $user mixed|int|string if mixed is given is asumed than have 'id' property,
+ *  if string is given, assumed than username is given, if int is give, assumed than is given an id of mdl_user
+ * @return bool
+ * @throws \dml_exception
+ */
+function cohort_add_user_to_cohort($cohort, $user) {
+    $cohort_id = -1;
+    $user_id = -1;
+    $user_name = null;
+    if(is_array($cohort) || is_object($cohort) ) {
+        $cohort = (object) $cohort;
+        if(isset($cohort->id)) {
+            $cohort_id = $cohort->id;
+        } else {
+            return false;
+        }
+    } elseif( is_string($cohort) || is_numeric($cohort)) {
+        $cohort_id = $cohort;
+    } else {
+        return false;
+    }
+    if(is_array($user) || is_object($user) ) {
+        $user = (object) $user;
+        if(isset($user->id)) {
+            $user_id = $user->id;
+        } else {
+            return false;
+        }
+    } elseif( ! is_numeric($user) && is_string($user)) {
+        $user_name = $user;
+        $user = \core_user::get_user_by_username($user_name);
+        if($user) {
+           $user_id = $user->id;
+        } else {
+            return false;
+        }
+    } elseif ( is_numeric($user)) {
+        $user_id = $user;
+    } else {
+        return false;
+    }
+
+    cohort_add_member($cohort_id, $user_id);
+    return true;
+
+}
 /**
  * Return string than represents the start date in the given semester.
  *
@@ -196,7 +284,7 @@ function get_cohort_groups() {
  * @return string Html base de el select a mostrar
  */
 
-function get_html_cohorts_select($instance_id,$include_todos=true,  $name='conditions[]', $id='conditions', $class = 'form-control' ) {
+function get_html_cohorts_select($instance_id, $include_todos=true,  $name='conditions[]', $id='conditions', $class = 'form-control' ) {
     $cohorts = load_cohorts_by_instance($instance_id);
     $info_instance = \get_info_instance($instance_id);
     $cohorts_select = "<select name=\"$name\" id=\"$id\" class=\"$class\">" ;

@@ -201,7 +201,7 @@
                 echo json_encode($data);
 
             }else{    return_with_code( -2 ); }
-        }else if( $_POST['loadF'] == "get_form" ){
+        } else if( $_POST['loadF'] == "get_form" ){
             //Example of loadF: get_form valid: 
             //data: get_form   params: id_form
           
@@ -229,7 +229,7 @@
             }else{     
                 return_with_code( -2 );
             }
-        }else if( $_POST['loadF'] == "get_values" ){
+        } else if( $_POST['loadF'] == "get_values" ){
             //Example of loadF: get_values valid: 
             //data: get_values   params: id_pregunta
           
@@ -239,6 +239,100 @@
 
             $data = get_question_data($_POST['params']);
             echo json_encode($data);
+                    
+            }else{     
+                return_with_code( -2 );
+            }
+        } else if( $_POST['loadF'] == "restore_dwarehouse_record" ){
+            //Example of loadF: restore_dwarehouse_record valid: 
+            //data: restore_dwarehouse_record   params: dwarehouse_id_form_to_restore
+          
+            if( count($_POST['params']) == 1 ){
+
+            //Get 'registro_respuesta_form' 	FROM table mdl_talentospilos_df_dwarehouse switch params
+            $registro_respuesta_form = get_registro_respuesta_form($_POST['params']);
+            
+            //Update 'estado' on record id loaded from mdl_talentospilos_df_form_resp
+            $data = update_record_talentospilos_df_form_resp($registro_respuesta_form->id_registro_respuesta_form);
+         
+            if ($data){
+                //Create new register into mdl_talentospilos_df_dwarehouse to RESTORE
+                echo json_encode(log_to_restore_into_dwarehouse($registro_respuesta_form));
+
+            }else{
+                echo json_encode($data);
+            }
+
+
+            
+                    
+            }else{     
+                return_with_code( -2 );
+            }
+        } else if( $_POST['loadF'] == "get_student_code_to_url" ){
+            //Example of loadF: get_tipo_form valid: 
+            //data: get_tipo_form   params: id_registro_respuesta_form
+          
+            if( count($_POST['params']) == 3  ){
+            $params = $_POST['params'];
+
+            //Get 'tipo_form' 	FROM table mdl_talentospilos_df_formularios switch params
+
+            $alias_formulario = get_tipo_form($params[0]);
+            $accion_record     = $params[1];
+            $record_dwarehouse= json_decode($params[2]);
+            $local_alias_campo = "indefinido"; //Se inicializa como "indefinido" por si existe algún formulario al que no se le de soporte o no cumpla con las caracteristicas fundamentales
+
+            //Asigna local_alias del campo con enunciado "id_estudiante", según tipo de formulario.
+            //Si se implementa un nuevo tipo de formulario, consulte el local_alias del campo con enunciado "id_estudiante", y agregue aquí. 
+            switch ($alias_formulario->tipo_formulario) {
+                case "seguimiento_pares":
+                $local_alias_campo = "id_estudiante";
+                    break;
+                case "primer_acercamiento":
+                $local_alias_campo = "pa_id_estudiante";
+                    break;
+                case "seguimiento_geografico":
+                $local_alias_campo = "seg_geo_id_estudiante";
+                    break;
+                case "seguimiento_grupal":
+                $local_alias_campo = "id_estudiante";
+                    break;
+                case "inasistencia":
+                $local_alias_campo = "in_id_estudiante";
+                    break;
+            }
+
+            //Get id_ases or students code switch type form
+            $value_student_id = getIdStudentFromRecordDwarehouse($record_dwarehouse->datos_almacenados, $record_dwarehouse->datos_previos, $local_alias_campo, $accion_record, $alias_formulario);
+
+           
+            //Traer username de estudiante, con el cual está activo en ASES. 
+            //La consulta es diferente dependiendo del retorno de getIdStudentFromRecordDwarehouse
+
+            if( $alias_formulario->tipo_formulario != "seguimiento_grupal" && $local_alias_campo != "indefinido"){
+                //Buscar por id ases retornado de value_student_id el usuario moodle con tracking status 1, retornar username
+                //Traer datos para url. Dentro del método llamado existe otro método a utilizar
+                $student_data = getDataToUrl($value_student_id);
+
+            }else  if($alias_formulario->tipo_formulario == "seguimiento_grupal" && $local_alias_campo != "indefinido"){
+                //Buscar cada uno por codigo de value_student_id  el usuario moodle con tracking status 1, retornar username
+                //Primer paso: Traer id ases correspondiente a cada username de value_student_id
+              
+                $id_ases_students = getIdAsesByUsernames($value_student_id);
+               
+                //Segundo paso: Traer datos para url. Dentro del método llamado existe otro método a utilizar
+               $student_data     = getDataToUrl($id_ases_students);
+               
+            }else
+            {
+                return_with_code(-6);
+            }
+
+           
+        
+         
+          echo json_encode($student_data);
                     
             }else{     
                 return_with_code( -2 );
@@ -302,6 +396,15 @@
                 );
                 break;
             
+            case -6:
+                echo json_encode(
+                    array(
+                        "status_code" => $code,
+                        "error_message" => "Not supported.",
+                        "data_response" => ""
+                    )
+                );
+                break;
             case -99:
                 echo json_encode(
                     array(

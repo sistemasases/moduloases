@@ -17,17 +17,21 @@
  * Estrategia ASES
  *
  * @author     Isabella Serna Ramirez
+ * @author     Jeison Cardona Gómez
  * @package    block_ases
  * @copyright  2017 Isabella Serna RamĆ­rez <isabella.serna@correounivalle.edu.co>
+ * @copyright  2019 Jeison Cardona Gómez <jeison.cardona@correounivalle.edu.co>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-require_once ('pilos_tracking_lib.php');
-require_once (dirname(__FILE__) . '/../lib/student_lib.php');
-require_once (dirname(__FILE__) . '/../dphpforms/dphpforms_get_record.php');
-require_once (dirname(__FILE__) . '/../student_profile/studentprofile_lib.php');
-require_once (dirname(__FILE__) . '/../seguimiento_grupal/seguimientogrupal_lib.php');
-require_once (dirname(__FILE__) . '/../dphpforms/v2/dphpforms_lib.php');
+require_once( 'pilos_tracking_lib.php' );
+require_once( dirname(__FILE__) . '/../lib/student_lib.php' );
+require_once( dirname(__FILE__) . '/../dphpforms/dphpforms_get_record.php' );
+require_once( dirname(__FILE__) . '/../student_profile/studentprofile_lib.php' );
+require_once( dirname(__FILE__) . '/../seguimiento_grupal/seguimientogrupal_lib.php' );
+require_once( dirname(__FILE__) . '/../dphpforms/v2/dphpforms_lib.php' );
+require_once( dirname(__FILE__) . '/../monitor_assignments/monitor_assignments_lib.php' );
+
 
 /**
  * Get the toggle of the monitor with the follow-ups of each student with the implementation of the new form
@@ -232,37 +236,121 @@ function render_professional_new_form($practicant_of_prof, $instance, $period = 
  *
  */
 
-function render_student_trackings($peer_tracking_v2)
-{
+function render_student_trackings($peer_tracking_v2){
+
     $form_rendered = '';
     if ($peer_tracking_v2) {
         foreach($peer_tracking_v2[0] as $key => $period) {
             $year_number = $period;
             foreach($period as $key => $tracking) {
                 $is_reviewed = false;
+                $rev_pract = false;
                 $type = null;
+                $icon_rev_pract = '';
                 foreach($tracking[record][campos] as $key => $review) {
                     if ($review[local_alias] == 'revisado_profesional') {
                         $type = "ficha";
-                        if ($review[respuesta] == 0) {
-                            $form_rendered.= '<div id="dphpforms-peer-record-' . $tracking[record][id_registro] . '" class="card-block dphpforms-peer-record peer-tracking-record-review class-'.$tracking[record][alias].'"  data-record-id="' . $tracking[record][id_registro] . '" title="Asistencia"><strong><i class="fas fa-calendar-o"></i> </strong>Registro:   ' . $tracking[record][alias_key][respuesta] . '</div>';
+                        if ($review[respuesta] === "0") {
+                            $form_rendered.= '<div id="dphpforms-peer-record-' . $tracking[record][id_registro] . '" class="card-block dphpforms-peer-record peer-tracking-record-review class-'.$tracking[record][alias].'"  data-record-id="' . $tracking[record][id_registro] . '" title="Asistencia"><strong><i class="fas fa-calendar-o"></i> </strong>Registro:   ' . $tracking[record][alias_key][respuesta] . '{{icon_rev_pract}}</div>';
                             $is_reviewed = true;
                         }
                     }elseif ($review[local_alias] == 'in_revisado_profesional') {
                         $type = "inasistencia";
-                        if ($review[respuesta] == 0) {
-                            $form_rendered.= '<div id="dphpforms-peer-record-' . $tracking[record][id_registro] . '" class="card-block dphpforms-peer-record peer-tracking-record-review class-'.$tracking[record][alias].'"  data-record-id="' . $tracking[record][id_registro] . '" title="Inasistencia"><strong><i class="far fa-calendar-times"></i> </strong>Registro:   ' . $tracking[record][alias_key][respuesta] . '</div>';
+                        if ($review[respuesta] === "0") {
+                            $form_rendered.= '<div id="dphpforms-peer-record-' . $tracking[record][id_registro] . '" class="card-block dphpforms-peer-record peer-tracking-record-review class-'.$tracking[record][alias].'"  data-record-id="' . $tracking[record][id_registro] . '" title="Inasistencia"><strong><i class="far fa-calendar-times"></i> </strong>Registro:   ' . $tracking[record][alias_key][respuesta] . '{{icon_rev_pract}}</div>';
                             $is_reviewed = true;
+                        }
+                    }
+
+                    if ($review[local_alias] == 'revisado_practicante') {
+                        if ($review[respuesta] === "0") {
+                            $rev_pract = true;
+                        }
+                    }elseif ($review[local_alias] == 'in_revisado_practicante'){
+                        if ($review[respuesta] === "0") {
+                            $rev_pract = true;
                         }
                     }
                 }
 
                 if ((!$is_reviewed )&& ($type == "ficha")) {
-                    $form_rendered.= '<div id="dphpforms-peer-record-' . $tracking[record][id_registro] . '" class="card-block dphpforms-peer-record peer-tracking-record class-'.$tracking[record][alias].'"  data-record-id="' . $tracking[record][id_registro] . '" title="Asistencia"><strong><i class="fas fa-calendar-o"></i> </strong>Registro:   ' . $tracking[record][alias_key][respuesta] . '</div>';
+                    $form_rendered.= '<div id="dphpforms-peer-record-' . $tracking[record][id_registro] . '" class="card-block dphpforms-peer-record peer-tracking-record class-'.$tracking[record][alias].'"  data-record-id="' . $tracking[record][id_registro] . '" title="Asistencia"><strong><i class="fas fa-calendar-o"></i> </strong>Registro:   ' . $tracking[record][alias_key][respuesta] . '{{icon_rev_pract}}</div>';
                 }elseif((!$is_reviewed) && ($type == "inasistencia")){
-                    $form_rendered.= '<div id="dphpforms-peer-record-' . $tracking[record][id_registro] . '" class="card-block dphpforms-peer-record peer-tracking-record class-'.$tracking[record][alias].'"  data-record-id="' . $tracking[record][id_registro] . '" title="Inasistencia"><strong><i class="far fa-calendar-times"></i> </strong>Registro:   ' . $tracking[record][alias_key][respuesta] . '</div>';
+                    $form_rendered.= '<div id="dphpforms-peer-record-' . $tracking[record][id_registro] . '" class="card-block dphpforms-peer-record peer-tracking-record class-'.$tracking[record][alias].'"  data-record-id="' . $tracking[record][id_registro] . '" title="Inasistencia"><strong><i class="far fa-calendar-times"></i> </strong>Registro:   ' . $tracking[record][alias_key][respuesta] . '{{icon_rev_pract}}</div>';
+                }
+
+                if( $rev_pract ){
+                    $form_rendered = str_replace("{{icon_rev_pract}}", '<i title="Revisado practicante" style="float:right" class="fas fa-check"></i>', $form_rendered );
+                }else{
+                    $form_rendered = str_replace("{{icon_rev_pract}}", '', $form_rendered );
+                }
+
+            }
+        }
+    }
+
+    return $form_rendered;
+}
+
+function render_student_trackingsV2($peer_tracking_v2){
+    
+    $form_rendered = '';
+    $special_date_interval = [
+        'start' => strtotime( "2019-01-01" ),
+        'end' => strtotime( "2019-04-30" )
+    ];
+    
+    if ($peer_tracking_v2) {
+        foreach($peer_tracking_v2 as $key => $tracking) {
+            
+            $is_reviewed = false;
+            $rev_pract = false;
+            $type = null;
+            $icon_rev_pract = '';
+            $custom_class = "";
+
+            $_fecha = strtotime( $tracking['fecha'] );
+
+            if( ( $_fecha >= $special_date_interval['start'] ) && ( $_fecha <= $special_date_interval['end'] ) ){
+                $custom_class = "special_tracking";
+            }
+
+            if ( array_key_exists('revisado_profesional', $tracking) ) {
+                $type = "ficha";
+                if ($tracking['revisado_profesional'] === "0") {
+                    $form_rendered.= '<div id="dphpforms-peer-record-' . $tracking['id_registro'] . '" class="'.$custom_class.' card-block dphpforms-peer-record peer-tracking-record-review class-'.$tracking['alias_form'].'"  data-record-id="' . $tracking['id_registro'] . '" title="Asistencia"><strong><i class="fas fa-calendar-o"></i> </strong>Registro:   ' . $tracking['fecha'] . '{{icon_rev_pract}}</div>';
+                    $is_reviewed = true;
+                }
+            }elseif ( array_key_exists('in_revisado_profesional', $tracking) ) {
+                $type = "inasistencia";
+                if ($tracking['in_revisado_profesional'] === "0") {
+                    $form_rendered.= '<div id="dphpforms-peer-record-' . $tracking['id_registro'] . '" class="'.$custom_class.' card-block dphpforms-peer-record peer-tracking-record-review class-'.$tracking['alias_form'].'"  data-record-id="' . $tracking['id_registro'] . '" title="Inasistencia"><strong><i class="far fa-calendar-times"></i> </strong>Registro:   ' . $tracking['fecha'] . '{{icon_rev_pract}}</div>';
+                    $is_reviewed = true;
                 }
             }
+
+            if ( array_key_exists('revisado_practicante', $tracking) ) {
+                if ( $tracking['revisado_practicante'] === "0") {
+                    $rev_pract = true;
+                }
+            }elseif ( array_key_exists('in_revisado_practicante', $tracking) ){
+                if ( $tracking['in_revisado_practicante'] === "0") {
+                    $rev_pract = true;
+                }
+            }
+
+            if ((!$is_reviewed )&& ($type == "ficha")) {
+                $form_rendered.= '<div id="dphpforms-peer-record-' . $tracking['id_registro'] . '" class="'.$custom_class.' card-block dphpforms-peer-record peer-tracking-record class-'.$tracking['alias_form'].'"  data-record-id="' . $tracking['id_registro'] . '" title="Asistencia"><strong><i class="fas fa-calendar-o"></i> </strong>Registro:   ' . $tracking['fecha'] . '{{icon_rev_pract}}</div>';
+            }elseif((!$is_reviewed) && ($type == "inasistencia")){
+                $form_rendered.= '<div id="dphpforms-peer-record-' . $tracking['id_registro'] . '" class="'.$custom_class.' card-block dphpforms-peer-record peer-tracking-record class-'.$tracking['alias_form'].'"  data-record-id="' . $tracking['id_registro'] . '" title="Inasistencia"><strong><i class="far fa-calendar-times"></i> </strong>Registro:   ' . $tracking['fecha'] . '{{icon_rev_pract}}</div>';
+            }
+
+            if( $rev_pract ){
+                $form_rendered = str_replace("{{icon_rev_pract}}", '<i title="Revisado practicante" style="float:right" class="fas fa-check"></i>', $form_rendered );
+            }else{
+                $form_rendered = str_replace("{{icon_rev_pract}}", '', $form_rendered );
+            }
+
         }
     }
 
@@ -352,6 +440,7 @@ function auxiliary_specific_countingV2($user_kind, $user_id, $semester, $instanc
     $fecha_inicio = null;
     $fecha_fin = null;
 
+    $semester_id = $semester->max;
     $interval = get_semester_interval($semester->max);
     $fecha_inicio = getdate(strtotime($interval->fecha_inicio));
     $fecha_fin = getdate(strtotime($interval->fecha_fin));
@@ -381,13 +470,35 @@ function auxiliary_specific_countingV2($user_kind, $user_id, $semester, $instanc
     $array_final = array();
     if ($user_kind == 'profesional_ps') {
 
+
+        //Get assignments
+        $student_list_ids = [];
+        $practicant_from_profesional = monitor_assignments_get_practicants_from_professional( $instance, $user_id , $semester_id );
+        foreach( $practicant_from_profesional as $key__ => $pract ){
+            $monitors_from_practicant = monitor_assignments_get_monitors_from_practicant( $instance, $pract->id , $semester_id );
+            foreach( $monitors_from_practicant as $key_ => $monitor ){
+                $students_from_monitor = monitor_assignments_get_students_from_monitor( $instance, $monitor->id , $semester_id );
+                foreach( $students_from_monitor as $key => $student ){
+                    array_push( $student_list_ids, $student );
+                }
+            }
+        }
+
+        $xquery_seguimiento_pares_filterFields = [
+            ["fecha",[[$fecha_inicio_str,">="],[$fecha_fin_str,"<="]], false],
+            ["revisado_profesional",[["%%","LIKE"]], false],
+            ["revisado_practicante",[["%%","LIKE"]], false]
+        ];
+        foreach( $student_list_ids as $key => $student ){
+            array_push( $xquery_seguimiento_pares_filterFields, ["id_estudiante", [[ $student->id, "=" ]], false ] );
+        }
+        
+        array_push( $xquery_seguimiento_pares_filterFields, ["id_profesional",[["%%","LIKE"]], false] );
+       
+
         $xQuery = new stdClass();
         $xQuery->form = "seguimiento_pares";
-        $xQuery->filterFields = [["fecha",[[$fecha_inicio_str,">="],[$fecha_fin_str,"<="]], false],
-                                 ["revisado_profesional",[["%%","LIKE"]], false],
-                                 ["revisado_practicante",[["%%","LIKE"]], false],
-                                 ["id_profesional",[[$user_id,"="]], false]
-                                ];
+        $xQuery->filterFields = $xquery_seguimiento_pares_filterFields;
         $xQuery->orderFields = [["fecha","DESC"]];
         $xQuery->orderByDatabaseRecordDate = true; 
         $xQuery->recordStatus = [ "!deleted" ];
@@ -413,13 +524,22 @@ function auxiliary_specific_countingV2($user_kind, $user_id, $semester, $instanc
             }
         }
 
+        $xquery_inasistencia_filterFields = [
+            ["in_fecha",[[$fecha_inicio_str,">="],[$fecha_fin_str,"<="]], false],
+            ["in_revisado_profesional",[["%%","LIKE"]], false],
+            ["in_revisado_practicante",[["%%","LIKE"]], false]
+        ];
+
+        foreach( $student_list_ids as $key => $student ){
+            array_push( $xquery_inasistencia_filterFields, ["in_id_estudiante", [[ $student->id, "=" ]], false ] );
+        }
+        
+        array_push( $xquery_inasistencia_filterFields, ["in_id_profesional",[["%%","LIKE"]], false] );
+
+
         $xQuery = new stdClass();
         $xQuery->form = "inasistencia";
-        $xQuery->filterFields = [["in_fecha",[[$fecha_inicio_str,">="],[$fecha_fin_str,"<="]], false],
-                                 ["in_revisado_profesional",[["%%","LIKE"]], false],
-                                 ["in_revisado_practicante",[["%%","LIKE"]], false],
-                                 ["in_id_profesional",[[$user_id,"="]], false]
-                                ];
+        $xQuery->filterFields = $xquery_inasistencia_filterFields;
         $xQuery->orderFields = [["in_fecha","DESC"]];
         $xQuery->orderByDatabaseRecordDate = true; 
         $xQuery->recordStatus = [ "!deleted" ];
@@ -462,14 +582,31 @@ function auxiliary_specific_countingV2($user_kind, $user_id, $semester, $instanc
         return $count;
 
     }else if ($user_kind == 'practicante_ps') {
+
+        //Get assignments
+        $student_list_ids = [];
+        $monitors_from_practicant = monitor_assignments_get_monitors_from_practicant( $instance, $user_id , $semester_id );
+        foreach( $monitors_from_practicant as $key_ => $monitor ){
+            $students_from_monitor = monitor_assignments_get_students_from_monitor( $instance, $monitor->id , $semester_id );
+            foreach( $students_from_monitor as $key => $student ){
+                array_push( $student_list_ids, $student );
+            }
+        }
         
+        $xquery_seguimiento_pares_filterFields = [
+            ["fecha",[[$fecha_inicio_str,">="],[$fecha_fin_str,"<="]], false],
+            ["revisado_profesional",[["%%","LIKE"]], false],
+            ["revisado_practicante",[["%%","LIKE"]], false]
+        ];
+        foreach( $student_list_ids as $key => $student ){
+            array_push( $xquery_seguimiento_pares_filterFields, ["id_estudiante", [[ $student->id, "=" ]], false ] );
+        }
+        
+        array_push( $xquery_seguimiento_pares_filterFields, ["id_practicante",[["%%","LIKE"]], false] );
+
         $xQuery = new stdClass();
         $xQuery->form = "seguimiento_pares";
-        $xQuery->filterFields = [["fecha",[[$fecha_inicio_str,">="],[$fecha_fin_str,"<="]], false],
-                                 ["revisado_profesional",[["%%","LIKE"]], false],
-                                 ["revisado_practicante",[["%%","LIKE"]], false],
-                                 ["id_practicante",[[$user_id,"="]], false]
-                                ];
+        $xQuery->filterFields = $xquery_seguimiento_pares_filterFields;
         $xQuery->orderFields = [["fecha","DESC"]];
         $xQuery->orderByDatabaseRecordDate = false; 
         $xQuery->recordStatus = [ "!deleted" ];
@@ -495,13 +632,21 @@ function auxiliary_specific_countingV2($user_kind, $user_id, $semester, $instanc
             }
         }
 
+        $xquery_inasistencia_filterFields = [
+            ["in_fecha",[[$fecha_inicio_str,">="],[$fecha_fin_str,"<="]], false],
+            ["in_revisado_profesional",[["%%","LIKE"]], false],
+            ["in_revisado_practicante",[["%%","LIKE"]], false]
+        ];
+
+        foreach( $student_list_ids as $key => $student ){
+            array_push( $xquery_inasistencia_filterFields, ["in_id_estudiante", [[ $student->id, "=" ]], false ] );
+        }
+        
+        array_push( $xquery_inasistencia_filterFields, ["in_id_practicante",[["%%","LIKE"]], false] );
+
         $xQuery = new stdClass();
         $xQuery->form = "inasistencia";
-        $xQuery->filterFields = [["in_fecha",[[$fecha_inicio_str,">="],[$fecha_fin_str,"<="]], false],
-                                 ["in_revisado_profesional",[["%%","LIKE"]], false],
-                                 ["in_revisado_practicante",[["%%","LIKE"]], false],
-                                 ["in_id_practicante",[[$user_id,"="]], false]
-                                ];
+        $xQuery->filterFields = $xquery_inasistencia_filterFields;
         $xQuery->orderFields = [["in_fecha","DESC"]];
         $xQuery->orderByDatabaseRecordDate = true; 
         $xQuery->recordStatus = [ "!deleted" ];
@@ -543,21 +688,32 @@ function auxiliary_specific_countingV2($user_kind, $user_id, $semester, $instanc
 
         return $count;
     }else if ($user_kind == 'monitor_ps') {
+
+        //Get assignments
+        $students_from_monitor = monitor_assignments_get_students_from_monitor( $instance, $user_id , $semester_id );
+
+        $xquery_seguimiento_pares_filterFields = [
+            ["fecha",[[$fecha_inicio_str,">="],[$fecha_fin_str,"<="]], false],
+            ["revisado_profesional",[["%%","LIKE"]], false],
+            ["revisado_practicante",[["%%","LIKE"]], false]
+        ];
+
+        foreach( $students_from_monitor as $key => $student ){
+            array_push( $xquery_seguimiento_pares_filterFields, ["id_estudiante", [[ $student->id, "=" ]], false ] );
+        }
+
+        array_push( $xquery_seguimiento_pares_filterFields, ["id_monitor",[["%%","LIKE"]], false] );
         
         $xQuery = new stdClass();
         $xQuery->form = "seguimiento_pares";
-        $xQuery->filterFields = [["fecha",[[$fecha_inicio_str,">="],[$fecha_fin_str,"<="]], false],
-                                 ["revisado_profesional",[["%%","LIKE"]], false],
-                                 ["revisado_practicante",[["%%","LIKE"]], false],
-                                 ["id_monitor",[[$user_id,"="]], false]
-                                ];
+        $xQuery->filterFields = $xquery_seguimiento_pares_filterFields;
         $xQuery->orderFields = [["fecha","DESC"]];
         $xQuery->orderByDatabaseRecordDate = false; 
         $xQuery->recordStatus = [ "!deleted" ];
         $xQuery->selectedFields = []; 
-
+        
         $trackings = dphpformsV2_find_records( $xQuery );
-
+        
         $rev_pro = 0;
         $not_rev_pro = 0;
         $rev_prac = 0;
@@ -576,20 +732,30 @@ function auxiliary_specific_countingV2($user_kind, $user_id, $semester, $instanc
             }
         }
 
+        //'Inasistencia' counting
+        
+        $xquery_inasistencia_filterFields = [
+            ["in_fecha",[[$fecha_inicio_str,">="],[$fecha_fin_str,"<="]], false],
+            ["in_revisado_profesional",[["%%","LIKE"]], false],
+            ["in_revisado_practicante",[["%%","LIKE"]], false]
+        ];
+
+        foreach( $students_from_monitor as $key => $student ){
+            array_push( $xquery_inasistencia_filterFields, ["in_id_estudiante", [[ $student->id, "=" ]], false ] );
+        }
+
+        array_push( $xquery_inasistencia_filterFields, ["in_id_monitor",[["%%","LIKE"]], false] );
+
         $xQuery = new stdClass();
         $xQuery->form = "inasistencia";
-        $xQuery->filterFields = [["in_fecha",[[$fecha_inicio_str,">="],[$fecha_fin_str,"<="]], false],
-                                 ["in_revisado_profesional",[["%%","LIKE"]], false],
-                                 ["in_revisado_profesional",[["%%","LIKE"]], false],
-                                 ["in_id_monitor",[[$user_id,"="]], false]
-                                ];
+        $xQuery->filterFields = $xquery_inasistencia_filterFields;
         $xQuery->orderFields = [["in_fecha","DESC"]];
         $xQuery->orderByDatabaseRecordDate = true; 
         $xQuery->recordStatus = [ "!deleted" ];
         $xQuery->selectedFields = []; 
 
         $in_trackings = dphpformsV2_find_records( $xQuery );
-
+        
         $in_rev_pro = 0;
         $in_not_rev_pro = 0;
         $in_rev_prac = 0;
@@ -696,7 +862,7 @@ function calculate_specific_counting($user_kind, $person, $dates_interval, $inst
 function create_counting_advice($user_kind, $result)
 {
     $advice = "";
-    $advice.= '<h2> INFORMACIÓN DE  ' . $user_kind . '</h2><hr>';
+    $advice.= '<h2> INFORMACIÓN:  ' . $user_kind . '</h2><hr>';
     $advice.= '<div class="row">';
     $advice.= '<div class="col-sm-6">';
     $advice.= '<strong>Profesional</strong><br />';

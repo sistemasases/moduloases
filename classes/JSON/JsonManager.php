@@ -24,7 +24,7 @@
  *
  */
 
-require_once(__DIR__.'/Json.php');
+require_once(__DIR__.'/../../managers/lib/json.php');
 require_once(__DIR__.'/../../managers/lib/reflection.php');
 require_once(__DIR__.'/../Errors/Factories/CsvManagerErrorFactory.php');
 /**
@@ -49,9 +49,8 @@ trait JsonManager {
      * Create instances from $POST['data']
      */
     public function create_instances_from_post(){
-        global $POST;
-        $instances = array();
-        $objects = $POST['data'];
+        global $_POST;
+        $objects = $_POST['data'];
         return $this->create_instances_from_objects($objects);
     }
     public function create_instances_from_objects($objects) {
@@ -89,7 +88,7 @@ trait JsonManager {
      */
     public function create_instances_from_json($string) {
         $this->validate_caller_json();
-        if(!Json::valid_json($string)) {
+        if(!\json\valid_json($string)) {
             $this->add_error(JsonErrorsFactory::json_malformed(array('json_string'=>$string)));
             return null;
         }

@@ -5,6 +5,7 @@ class Municipio extends BaseDAO  {
     const NOMBRE = 'nombre';
     const CODIGO_DIVIPOLA = 'codigodivipola';
     const CODIGO_DEPARTAMETO = 'cod_depto';
+    const ID_MUNICIPIO_NO_DEFINIDO = 1;
     public $id;
     public $codigodivipola;
     public $cod_depto;

@@ -30,8 +30,9 @@ class JsonErrorsFactory {
     static function json_malformed($data=null) {
         return new AsesError(JsonManagerErrorFactory::JSON_MALFORMED, 'El json ingresado esta malformado', $data);
     }
-    public static function  json_and_class_have_distinct_properties($data=null) {
-        return new AsesError(JsonManagerErrorFactory::JSON_AND_CLASS_HAVE_DISTINCT_PROPERTIES, 'El JSON ingresado no tiene propiedades validas para con la clase a la que intenta asignarle los valores', $data);
+    public static function  json_and_class_have_distinct_properties($data=null, $custom_mesasge = null) {
+        $message_ = $custom_mesasge? $custom_mesasge : 'El JSON ingresado no tiene propiedades validas para con la clase a la que intenta asignarle los valores';
+        return new AsesError(JsonManagerErrorFactory::JSON_AND_CLASS_HAVE_DISTINCT_PROPERTIES, $message_, $data);
     }
     public static function  json_should_be_an_array($data=null) {
         return new AsesError(JsonManagerErrorFactory::JSON_SHOULD_BE_AN_ARRAY, 'El JSON ingresado debe ser un array', $data);

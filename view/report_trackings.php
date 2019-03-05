@@ -182,6 +182,9 @@ $data->table_periods =$table_periods;
 $data->table=$table_permissions;
 $data->semester = $semester_id;
 
+$data->courseid = $courseid;
+$data->blockid = $blockid;
+
 
 $PAGE->requires->css('/blocks/ases/style/base_ases.css', true);
 $PAGE->requires->css('/blocks/ases/style/jqueryui.css', true);
@@ -201,9 +204,9 @@ $PAGE->requires->css('/blocks/ases/style/fontawesome550.min.css', true);
 //su nombramiento.
 $PAGE->requires->css('/blocks/ases/style/creadorFormulario.css', true);
 
+$PAGE->requires->js_call_amd('block_ases/dphpforms_form_renderer', 'init');
 $PAGE->requires->js_call_amd('block_ases/pilos_tracking_main','init');
 $PAGE->requires->js_call_amd('block_ases/groupal_tracking','init');
-$PAGE->requires->js_call_amd('block_ases/dphpforms_form_renderer', 'init');
 
 $PAGE->requires->js_call_amd('block_ases/ases_incident_system', 'init');
 $PAGE->requires->js_call_amd('block_ases/side_menu_main', 'init');

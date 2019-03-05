@@ -23,10 +23,15 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 require_once(dirname(__FILE__). '/../../../../config.php');
+require_once(dirname(__FILE__).'/../jquery_datatable/jquery_datatable_lib.php');
 require_once $CFG->dirroot.'/blocks/ases/managers/lib/student_lib.php';
 require_once $CFG->dirroot.'/blocks/ases/managers/user_management/user_lib.php';
 require_once $CFG->dirroot.'/blocks/ases/managers/ases_report/asesreport_lib.php';
 require_once $CFG->dirroot.'/blocks/ases/managers/lib/lib.php';
+
+use jquery_datatable\Datatable;
+
+const ENDPOINT_GET_MONITOR_PRACTICING_AND_STUDENTS_REPORT = 'get_monitor_practicing_and_students_report';
 
 /**
  * Función que renombra para clasificar la función get_professionals_by_instance en otras partes del plugin, el objetivo
@@ -390,7 +395,7 @@ function monitor_assignments_get_monitors_students_relationship_by_instance_n_se
     FROM {talentospilos_monitor_estud} 
     WHERE id_semestre = ". $semester_id ." AND id_instancia = $instance_id";
   
-    return $DB->get_records_sql( $sql );;
+    return $DB->get_records_sql( $sql );
 
 }
 
@@ -429,6 +434,18 @@ function monitor_assignments_get_profesional_practicant_relationship_by_instance
 
     return $DB->get_records_sql( $sql );
 
+}
+
+/**
+ * @param $instance_id  string|number Instance id @see talentospilos_instancia.id_instancia
+ * @param $semester_name string Semester name, examples: [2018B, 2019A]
+ * @throws dml_exception
+ * @return DataTable
+ */
+function monitor_assignments_get_practicants_monitors_and_students_datatable($instance_id, $semester_name): DataTable {
+    $objects = monitor_assignments_get_practicants_monitors_and_students($instance_id, $semester_name);
+    $datatable = new DataTable($objects);
+    return $datatable;
 }
 
 /**
@@ -633,7 +650,7 @@ function monitor_assignments_delete_practicant_monitor_relationship( $instance_i
 
  }
 
- /**
+/**
   * Función que permite transferir las asignaciones de un monitor a otro monitor, en determinada instancia, en el 
   * semestre actual.
   *
@@ -642,7 +659,7 @@ function monitor_assignments_delete_practicant_monitor_relationship( $instance_i
   * @param int $new_monitor_id
   */
 
-  function monitor_assignments_transfer( $instance_id, $old_monitor_id, $new_monitor_id ){
+function monitor_assignments_transfer( $instance_id, $old_monitor_id, $new_monitor_id ){
 
     global $DB;
 
@@ -666,8 +683,280 @@ function monitor_assignments_delete_practicant_monitor_relationship( $instance_i
     }else{
         return null;
     }
+}
 
-  }
+/**
+ * Function that returns a list of students assigned to a specific monitor.
+ * @param int instance_id
+ * @param int monitor_id
+ * @param int semester_id
+ * @return array
+ */
+
+function monitor_assignments_get_students_from_monitor( $instance_id, $monitor_id, $semester_id ){
+    global $DB;
+
+    $sql = "SELECT id_estudiante AS id
+    FROM {talentospilos_monitor_estud} 
+    WHERE id_semestre = '$semester_id' AND id_instancia = '$instance_id' AND id_monitor = '$monitor_id'";
+
+    $students = $DB->get_records_sql( $sql );
+    
+    return array_values( $students );
+}
+
+/**
+ * Function that returns a list of monitors assigned to a specific practicant.
+ * @param int instance_id
+ * @param int practicant_id
+ * @param int semester_id
+ * @return array
+ */
+
+function monitor_assignments_get_monitors_from_practicant( $instance_id, $practicant_id, $semester_id ){
+    global $DB;
+
+    $sql="SELECT user_rol_1.id_usuario AS id
+	  FROM {talentospilos_user_rol} AS user_rol_1
+	  INNER JOIN (
+		SELECT id_usuario
+        	FROM {talentospilos_user_rol} AS user_rol_0
+	 	WHERE id_rol = ( 
+			SELECT id 
+			FROM {talentospilos_rol} 
+			WHERE nombre_rol = 'practicante_ps'
+		)
+	  AND id_instancia = '$instance_id' 
+      AND id_usuario = '$practicant_id'
+      AND id_semestre = '$semester_id'
+      AND estado = 1
+	) AS practicantes_0
+	ON practicantes_0.id_usuario = id_jefe
+    WHERE user_rol_1.id_semestre = '$semester_id'";
+    
+    $monitors = $DB->get_records_sql( $sql );
+
+    return array_values( $monitors );
+}
+
+/**
+ * Class MonitorAndStudentAndPracticant
+ *
+ * Dummy class for describe monitor_assignments_get_boss_and_students instances returned
+ * @see monitor_assignments_get_boss_and_students
+ * @property string $codigo_monitor
+ * @property string $nombre_monitor
+ * @property string $codigo_practicante
+ * @property string $nombre_practicante
+ * @property string $codigo_estudiante
+ * @property string $nombre_estudiante
+ */
+abstract class MonitorAndStudentAndPracticant {
+
+}
+/**
+ * Return monitor join practicante join estudiante_monitor
+ *
+ * ## Returned columns
+ * - row_number
+ * - nombre_usuario_moodle__profesional
+ * - nombre_profesional
+ * - codigo_monitor
+ * - nombre_monitor
+ * - codigo_practicante
+ * - nombre_practicante
+ * - codigo_estudiante
+ * - nombre_estudiante
+ * @param $instance_id  string|number Instance id @see talentospilos_instancia.id_instancia
+ * @author Luis Gerardo Manrqiue Cardona <luis.manrique@corereounivalle.edu.co>
+ * @param $semester_name string Semester name, examples: [2018B, 2019A]
+ * @return array Items are described by MonitorAndStudentAndPracticant
+ * @throws dml_exception
+ */
+function monitor_assignments_get_practicants_monitors_and_students($instance_id, $semester_name ) {
+    global $DB;
+    $sql = <<<SQL
+select distinct
+                row_number() over() as index  ,
+                mdl_user_profesional.username as nombre_usuario_moodle__profesional,
+                concat_ws(' ', mdl_user_profesional.firstname , mdl_user_profesional.lastname)  as nombre_profesional,
+                mdl_user_practicante.username as codigo_practicante,
+                concat_ws(' ', mdl_user_practicante.firstname , mdl_user_practicante.lastname)  as nombre_practicante,
+                mdl_user_monitor.username as codigo_monitor,
+                concat_ws(' ', mdl_user_monitor.firstname , mdl_user_monitor.lastname) as nombre_monitor ,
+                mdl_user_estudiante.username as codigo_estudiante,
+                concat_ws(' ', mdl_user_estudiante.firstname , mdl_user_estudiante.lastname)  as nombre_estudiante
+
+from mdl_user as mdl_user_monitor
+       inner join mdl_talentospilos_user_rol as mdl_talentospilos_user_rol_monitor
+         on mdl_talentospilos_user_rol_monitor.id_usuario  = mdl_user_monitor.id
+       inner join mdl_talentospilos_rol as mdl_talentospilos_rol_monitor
+         on mdl_talentospilos_rol_monitor.id = mdl_talentospilos_user_rol_monitor.id_rol
+       inner join mdl_talentospilos_semestre
+         on mdl_talentospilos_semestre.id  = mdl_talentospilos_user_rol_monitor.id_semestre
+       inner join mdl_talentospilos_instancia
+         on mdl_talentospilos_instancia.id_instancia = mdl_talentospilos_user_rol_monitor.id_instancia
+       inner join mdl_user as mdl_user_practicante
+         on mdl_talentospilos_user_rol_monitor.id_jefe = mdl_user_practicante.id
+       inner join mdl_talentospilos_user_rol as mdl_talentospilos_user_rol_practicante
+              on mdl_talentospilos_user_rol_practicante.id_usuario = mdl_user_practicante.id
+                     and mdl_talentospilos_user_rol_practicante.id_semestre = mdl_talentospilos_semestre.id
+                     and mdl_talentospilos_user_rol_practicante.id_instancia = mdl_talentospilos_instancia.id_instancia
+                     and mdl_talentospilos_user_rol_practicante.id_rol = (select id
+                                                                          from mdl_talentospilos_rol as mdl_talentos_pilos_rol_practicante
+                                                                          where mdl_talentos_pilos_rol_practicante.nombre_rol = 'practicante_ps')
+
+       inner join mdl_user as mdl_user_profesional
+              on mdl_talentospilos_user_rol_practicante.id_jefe = mdl_user_profesional.id
+       inner join mdl_talentospilos_user_rol as mdl_talentospilos_user_rol_profesional
+         on mdl_talentospilos_user_rol_profesional.id_usuario = mdl_user_profesional.id
+                   and mdl_talentospilos_user_rol_profesional.id_semestre = mdl_talentospilos_semestre.id
+                     and mdl_talentospilos_user_rol_profesional.id_instancia = mdl_talentospilos_instancia.id_instancia
+                     and mdl_talentospilos_user_rol_profesional.id_rol = (select id
+                                                                          from mdl_talentospilos_rol as mdl_talentos_pilos_rol_profesional
+                                                                             where mdl_talentos_pilos_rol_profesional.nombre_rol = 'profesional_ps')
+       inner join mdl_talentospilos_monitor_estud
+              on mdl_user_monitor.id = mdl_talentospilos_monitor_estud.id_monitor
+                     and mdl_talentospilos_monitor_estud.id_semestre = mdl_talentospilos_semestre.id
+                     and mdl_talentospilos_monitor_estud.id_instancia = mdl_talentospilos_instancia.id_instancia
+       inner join mdl_talentospilos_usuario as mdl_talentospilos_usuario_estudiante
+         on mdl_talentospilos_usuario_estudiante.id = mdl_talentospilos_monitor_estud.id_estudiante
+       inner join mdl_talentospilos_user_extended as mdl_talentospilos_user_extended_estudiante
+         on mdl_talentospilos_user_extended_estudiante.id_ases_user = mdl_talentospilos_usuario_estudiante.id
+              and mdl_talentospilos_user_extended_estudiante.tracking_status = 1
+       inner join mdl_talentospilos_programa as mdl_talentospilos_programa_estudiante
+         on mdl_talentospilos_programa_estudiante.id = mdl_talentospilos_user_extended_estudiante.id_academic_program
+       inner join mdl_user as mdl_user_estudiante
+         on mdl_talentospilos_user_extended_estudiante.id_moodle_user = mdl_user_estudiante.id
+where
+    mdl_talentospilos_rol_monitor.nombre_rol = 'monitor_ps'
+ and mdl_talentospilos_instancia.id_instancia = :instance_id
+and mdl_talentospilos_semestre.nombre = :semester_name;
+SQL;
+    $monitores_estudiates_y_practicantes = $DB->get_records_sql($sql, array(
+        'instance_id' =>  $instance_id,
+        'semester_name' => $semester_name));
+    return array_values(
+        $monitores_estudiates_y_practicantes
+    );
+
+}
+
+/**
+ * Function that returns a list of practicants assigned to a specific professional.
+ * @param int instance_id
+ * @param int professional_id
+ * @param int semester_id
+ * @return array
+ */
+
+function monitor_assignments_get_practicants_from_professional( $instance_id, $professional_id, $semester_id ){
+    global $DB;
+
+    $sql="SELECT user_rol_1.id_usuario AS id
+	  FROM {talentospilos_user_rol} AS user_rol_1
+	  INNER JOIN (
+		SELECT id_usuario
+        	FROM {talentospilos_user_rol} AS user_rol_0
+	 	WHERE id_rol = ( 
+			SELECT id 
+			FROM {talentospilos_rol} 
+			WHERE nombre_rol = 'profesional_ps'
+		)
+	  AND id_instancia = '$instance_id'
+      AND id_usuario = '$professional_id'
+      AND id_semestre = '$semester_id'
+      AND estado = 1
+	) AS profesionales_0
+	ON profesionales_0.id_usuario = id_jefe
+    WHERE user_rol_1.id_semestre = '$semester_id'";
+    
+    $practicants = $DB->get_records_sql( $sql );
+
+    return array_values( $practicants );
+}
+
+/**
+ * 
+ */
+function monitor_assignments_get_last_student_assignment( $id_ases, $instance_id ){
+
+    global $DB;
+    $to_return = [
+        "monitor_obj" => null,
+        "pract_obj" => null,
+        "prof_obj" => null
+    ];
+
+    $sql_relationship = "SELECT id, id_monitor, id_estudiante, id_instancia, id_semestre 
+    FROM {talentospilos_monitor_estud} 
+    WHERE id_estudiante = '$id_ases'
+    AND id_instancia = '$instance_id'
+    ORDER BY id_semestre DESC
+    LIMIT 1";
+
+    $mon_est_relationship = $DB->get_record_sql( $sql_relationship );
+
+    if( $mon_est_relationship ){
+
+        $monitor_id = $mon_est_relationship->id_monitor;
+        $semester_id = $mon_est_relationship->id_semestre;
+
+        $sql_monitor = "SELECT id, username, firstname, lastname 
+        FROM {user} 
+        WHERE id  = '$monitor_id'";
+
+        $monitor_obj = $DB->get_record_sql( $sql_monitor );
+        $to_return['monitor_obj'] =  $monitor_obj;
+        
+        $sql_relationship = "SELECT * 
+        FROM {talentospilos_user_rol}
+        WHERE id_usuario = '$monitor_id'
+        AND id_semestre = '$semester_id'
+        AND id_instancia = '$instance_id'";
+
+        $mon_pract_relationship = $DB->get_record_sql( $sql_relationship );
+        
+        if( $mon_pract_relationship ){
+
+            $pract_id = $mon_pract_relationship->id_jefe;
+
+            $sql_practicant = "SELECT id, username, firstname, lastname 
+            FROM {user} 
+            WHERE id  = '$pract_id'";
+
+            $pract_obj = $DB->get_record_sql( $sql_practicant );
+            $to_return['pract_obj'] =  $pract_obj;
+
+            $sql_relationship = "SELECT * 
+            FROM {talentospilos_user_rol}
+            WHERE id_usuario = '$pract_id'
+            AND id_semestre = '$semester_id'
+            AND id_instancia = '$instance_id'";
+
+            $pract_prof_relationship = $DB->get_record_sql( $sql_relationship );
+            
+            if( $pract_prof_relationship ){
+
+                $prof_id = $pract_prof_relationship->id_jefe;
+                
+                $sql_professional = "SELECT id, username, firstname, lastname 
+                FROM {user} 
+                WHERE id  = '$prof_id'";
+
+                $prof_obj = $DB->get_record_sql( $sql_professional );
+                $to_return['prof_obj'] =  $prof_obj;
+
+            }
+
+        }
+
+        
+    }
+
+    return $to_return;
+
+}
 
 
 ?>

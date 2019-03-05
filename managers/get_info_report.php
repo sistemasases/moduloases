@@ -1,4 +1,7 @@
 <?php
+
+//Obsolete
+
 require_once('../managers/seguimiento_pilos/seguimientopilos_lib.php');
 
 global $USER;

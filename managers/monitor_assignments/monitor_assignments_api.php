@@ -24,7 +24,8 @@
  */
 
 // Standard GPL and phpdocs
-
+    require_once(dirname(__FILE__). '/../../classes/API/BaseAPI.php');
+    require_once (__DIR__ . '/../lib/csv.php');
     require_once(dirname(__FILE__). '/../../../../config.php');
     require_once(dirname(__FILE__).'/monitor_assignments_lib.php');
 
@@ -33,7 +34,7 @@
     global $USER;
     
     $raw_data = file_get_contents("php://input");
-    
+
     // Validation if the user is logged. 
     if( $USER->id == 0 ){
         return_with_code( -1 );
@@ -310,7 +311,43 @@
                 return_with_code( -2 );
             }
 
-        }else{
+        }else if( $input->function == "get_last_student_assignment" ){
+
+            if( count( $input->params ) == 2 ){
+
+                // Order of params
+                /**
+                 * The id_ases_user value only can be a number.
+                 * The id_instance value only can be a number.
+                 */
+                
+                if( is_numeric( $input->params[0] ) && is_numeric( $input->params[1] ) ){
+                    
+                    echo json_encode( 
+                        array(
+                            "status_code" => 0,
+                            "error_message" => "",
+                            "data_response" =>  monitor_assignments_get_last_student_assignment( $input->params[0], $input->params[1] )
+                        )
+                    );
+                    
+                }else{
+                    return_with_code( -2 );
+                }
+            }else{
+                return_with_code( -2 );
+            }
+
+        } else if ($input->function == ENDPOINT_GET_MONITOR_PRACTICING_AND_STUDENTS_REPORT) {
+                $api = new BaseAPI();
+                $api->post(ENDPOINT_GET_MONITOR_PRACTICING_AND_STUDENTS_REPORT,
+                    function($params, $args) {
+                        $objects = monitor_assignments_get_practicants_monitors_and_students($params->instance_id, $params->semester_name);
+                        \csv\array_to_csv_download($objects);
+
+                    });
+                $api->run();
+        } else{
             // Function not defined
             return_with_code( -4 );
         }

@@ -1,0 +1,32 @@
+tr.error {
+    background-color: indianred!important;
+}
+td.error {
+    background-color: #D51B23 !important;
+    color: #ffffff;
+
+}
+
+
+.massive_upload .head {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.massive_upload .cohort_select_region {
+    margin-left: 20px;
+    align-self: end;
+}
+.massive_upload .title {
+    flex-grow: 2;
+}
+.massive_upload {
+    margin-top: 50px;
+}
+.massive_upload #buttons-section {
+    margin-top: 20px;
+}
+.massive_upload #send-file{
+
+}
