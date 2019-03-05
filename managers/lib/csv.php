@@ -11,7 +11,7 @@ namespace csv;
  * @param string $filename
  * @param string $delimiter
  */
-function array_to_csv_download($array, $filename = "export.csv", $delimiter=";") {
+function array_to_csv_download($array, $filename = "export.csv", $delimiter=",") {
     header('Content-Type: application/csv');
     header('Content-Disposition: attachment; filename="'.$filename.'";');
 

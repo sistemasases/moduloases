@@ -15,12 +15,13 @@
      'jquery',
      'core/config',
      'block_ases/loading_indicator',
+     'block_ases/csv',
      'block_ases/bootstrap',
      'block_ases/sweetalert',
      'block_ases/jqueryui',
      'block_ases/select2',
      'block_ases/jquery.dataTables'
- ], function($, CFG,  loading_indicator, bootstrap, sweetalert, jqueryui, select2) {
+ ], function($, CFG,  loading_indicator, csv, bootstrap, sweetalert, jqueryui, select2) {
     var BUTTON_GET_COMPLETE_REPORT_NAME_SELECTOR = '#button-get-complete-report';
     var GET_COMPLETE_REPORT_NAME_FUNCTION_NAME = 'get_monitor_practicing_and_students_report';
     var BASE_API_URL = '/blocks/ases/managers/monitor_assignments/monitor_assignments_api.php';
@@ -71,13 +72,7 @@
         loading_indicator.show();
          get_report_monitors_particants_and_students(instance_id, semester_name)
              .then( report => {
-                 var csvContent = "data:text/csv;charset=utf-8," + report;
-                 var encodedUri = encodeURI(csvContent);
-                 var link = document.createElement("a");
-                 link.setAttribute("href", encodedUri);
-                 link.setAttribute("download", DOWNLOAD_FILE_NAME);
-                 document.body.appendChild(link); // Required for FF
-                 link.click();
+                 csv.csv_string_to_file_for_download(report, DOWNLOAD_FILE_NAME);
                  loading_indicator.hide();
              })
              .catch(error => {
