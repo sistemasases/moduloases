@@ -761,7 +761,7 @@ function dphpformsV2_get_permisos_pregunta( $id_formulario_pregunta ){
 
 
 // Example
-/*$initial_config = '{
+$initial_config = '{
     "allow_update":true,
     "allow_delete":true,
     "main_form_classes" : "col-xs-12 col-sm-12",
@@ -797,7 +797,7 @@ function dphpformsV2_get_permisos_pregunta( $id_formulario_pregunta ){
     ]
 }';
 $initial_config = json_decode( $initial_config );
-echo dphpformsV2_generate_html_recorder( 'seguimiento_pares', "sistemas", $initial_config  );*/
+echo dphpformsV2_generate_html_recorder( 'seguimiento_pares', "sistemas", $initial_config  );
 
 function dphpformsV2_generate_html_recorder( $id_form, $rol_, $initial_config = null  ){
 
@@ -953,16 +953,25 @@ function dphpformsV2_generate_html_recorder( $id_form, $rol_, $initial_config = 
                         }
                     }
 
-                    if($campo == 'TEXTFIELD'){
-                        $html = $html .  '<div class="div-'.$statement->mod_id_formulario_pregunta.' '.$field_attr_class.' '.$field_attr_local_alias.'" >' . $enunciado . ':<br>';
-                        $html = $html .  ' <input id="'.$statement->mod_id_formulario_pregunta.'" class="form-control ' . $field_attr_inputclass . '" max="' . $field_attr_max . '"  min="' . $field_attr_min . '" type="'.$field_attr_type.'" placeholder="'.$field_attr_placeholder.'" name="'.$statement->mod_id_formulario_pregunta.'" value="'.$field_default_value.'" maxlength="'.$field_attr_maxlength.'" '.$enabled.' '.$field_attr_required.'><br>' . "\n";
-                        $html = $html .  '</div>';
+
+                    $field_options[ 'attr_class' ] = $field_attr_class;
+                    $field_options[ 'attr_local_alias' ] =  $field_attr_local_alias;
+                    $field_options[ 'attr_inputclass' ] = $field_attr_inputclass;
+                    $field_options[ 'attr_max' ] = $field_attr_max;
+                    $field_options[ 'attr_min' ] = $field_attr_min;
+                    $field_options[ 'attr_type' ] = $field_attr_type;
+                    $field_options[ 'attr_placeholder' ] = $field_attr_placeholder;
+                    $field_options[ 'default_value' ] = $field_default_value;
+                    $field_options[ 'attr_maxlength' ] = $field_attr_maxlength;
+                    $field_options[ 'enabled' ] = $enabled;
+                    $field_options[ 'attr_required' ] = $field_attr_required;
+
+                    if($campo == "TEXTFIELD"){
+                        $html .= dphpformsV2_generate_TEXTFIELD( $statement->mod_id_formulario_pregunta, $field_options, $enunciado );
                     }
 
                     if($campo == 'TEXTAREA'){
-                        $html = $html .  '<div class="div-'.$statement->mod_id_formulario_pregunta.' '.$field_attr_class.' '.$field_attr_local_alias.'" >' . $enunciado . ':<br>';
-                        $html = $html .  ' <textarea id="'.$statement->mod_id_formulario_pregunta.'" class="form-control ' . $field_attr_inputclass . '" name="'. $statement->mod_id_formulario_pregunta .'" maxlength="'.$field_attr_maxlength.'" '.$enabled.' '.$field_attr_required.'>'.$field_default_value.'</textarea><br>' . "\n";
-                        $html = $html .  '</div>';
+                        $html .= dphpformsV2_generate_TEXTAREA( $statement->mod_id_formulario_pregunta, $field_options, $enunciado );
                     }
 
                     if($campo == 'DATE'){
@@ -1181,11 +1190,31 @@ function dphpformsV2_generate_TEXTFIELD( $id_formulario_pregunta, $field_options
     $field_enabled = $field_options[ 'enabled' ];
     $field_attr_required = $field_options[ 'attr_required' ];
     
-
     $html = '
     <div class="div-'.$id_formulario_pregunta.' '.$field_attr_class.' '.$field_attr_local_alias.'" >' 
         . $statement . ':<br>
         <input id="'.$id_formulario_pregunta.'" class="form-control ' . $field_attr_inputclass . '" max="' . $field_attr_max . '"  min="' . $field_attr_min . '" type="'.$field_attr_type.'" placeholder="'.$field_attr_placeholder.'" name="'.$mod_id_formulario_pregunta.'" value="'.$field_default_value.'" maxlength="'.$field_attr_maxlength.'" '.$field_enabled.' '.$field_attr_required.'>
+    </div>';
+
+    return $html;
+    
+}
+
+function dphpformsV2_generate_TEXTAREA( $id_formulario_pregunta, $field_options, $statement ){
+
+    $field_attr_class = $field_options[ 'attr_class' ];
+    $field_attr_local_alias = $field_options[ 'attr_local_alias' ];
+    $field_attr_inputclass = $field_options[ 'attr_inputclass' ];
+    $field_attr_placeholder = $field_options[ 'attr_placeholder' ];
+    $field_default_value = $field_options[ 'default_value' ];
+    $field_attr_maxlength = $field_options[ 'attr_maxlength' ];
+    $field_enabled = $field_options[ 'enabled' ];
+    $field_attr_required = $field_options[ 'attr_required' ];
+
+    $html = '
+    <div class="div-'.$id_formulario_pregunta.' '.$field_attr_class.' '.$field_attr_local_alias.'" >' 
+        . $statement . ':<br>
+        <textarea id="'.$id_formulario_pregunta.'" class="form-control ' . $field_attr_inputclass . '" name="'. $id_formulario_pregunta .'" placeholder="'.$field_attr_placeholder.'" maxlength="'.$field_attr_maxlength.'" '.$field_enabled.' '.$field_attr_required.'>'.$field_default_value.'</textarea>
     </div>';
 
     return $html;
