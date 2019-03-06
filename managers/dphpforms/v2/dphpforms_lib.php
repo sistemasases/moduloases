@@ -979,15 +979,11 @@ function dphpformsV2_generate_html_recorder( $id_form, $rol_, $initial_config = 
                     }
                     
                     if($campo == 'DATETIME'){
-                        $html = $html .  '<div class="div-'.$statement->mod_id_formulario_pregunta.' '.$field_attr_class.' '.$field_attr_local_alias.'" >' . $enunciado . ':<br>';
-                        $html = $html .  ' <input id="'.$statement->mod_id_formulario_pregunta.'" class="form-control ' . $field_attr_inputclass . '" value="'.$field_default_value.'" max="' . $field_attr_max . '"  min="' . $field_attr_min . '" type="datetime-local" name="'.$statement->mod_id_formulario_pregunta.'" '.$enabled.' '.$field_attr_required.'><br>' . "\n";
-                        $html = $html .  '</div>';
+                        $html .= dphpformsV2_generate_DATETIME( $statement->mod_id_formulario_pregunta, $field_options, $enunciado );
                     }
 
                     if($campo == 'TIME'){
-                        $html = $html .  '<div class="div-'.$statement->mod_id_formulario_pregunta.' '.$field_attr_class.' '.$field_attr_local_alias.'" >' . $enunciado . ':<br>';
-                        $html = $html .  ' <input id="'.$statement->mod_id_formulario_pregunta.'" class="form-control ' . $field_attr_inputclass . '" value="'.$field_default_value.'" max="' . $field_attr_max . '"  min="' . $field_attr_min . '" type="time" name="'.$statement->mod_id_formulario_pregunta.'" '.$enabled.' '.$field_attr_required.'><br>' . "\n";
-                        $html = $html .  '</div>';
+                        $html .= dphpformsV2_generate_TIME( $statement->mod_id_formulario_pregunta, $field_options, $enunciado );
                     }
 
                     if($campo == 'RADIOBUTTON'){
@@ -1257,6 +1253,29 @@ function dphpformsV2_generate_DATETIME( $id_formulario_pregunta, $field_options,
         <input id="'.$id_formulario_pregunta.'" class="form-control ' . $field_attr_inputclass . '" value="'.$field_default_value.'" max="' . $field_attr_max . '"  min="' . $field_attr_min . '" type="datetime-local" name="'.$id_formulario_pregunta.'" '.$field_enabled.' '.$field_attr_required.'>
     </div>';
 
+    return $html;
+
+}
+
+function dphpformsV2_generate_TIME( $id_formulario_pregunta, $field_options, $statement ){
+
+    $field_attr_class = $field_options[ 'attr_class' ];
+    $field_attr_local_alias = $field_options[ 'attr_local_alias' ];
+    $field_attr_inputclass = $field_options[ 'attr_inputclass' ];
+    $field_attr_max = $field_options[ 'attr_max' ];
+    $field_attr_min = $field_options[ 'attr_min' ];
+    $field_default_value = $field_options[ 'default_value' ];
+    $field_enabled = $field_options[ 'enabled' ];
+    $field_attr_required = $field_options[ 'attr_required' ];
+
+    $html = '
+    <div class="div-'.$id_formulario_pregunta.' '.$field_attr_class.' '.$field_attr_local_alias.'" >' 
+        . $statement . ':<br>
+        <input id="'.$id_formulario_pregunta.'" class="form-control ' . $field_attr_inputclass . '" value="'.$field_default_value.'" max="' . $field_attr_max . '"  min="' . $field_attr_min . '" type="time" name="'.$id_formulario_pregunta.'" '.$field_enabled.' '.$field_attr_required.'>
+    </div>';
+
+    return $html;
+    
 }
 
 /**
