@@ -975,9 +975,7 @@ function dphpformsV2_generate_html_recorder( $id_form, $rol_, $initial_config = 
                     }
 
                     if($campo == 'DATE'){
-                        $html = $html . '<div class="div-'.$statement->mod_id_formulario_pregunta.' '.$field_attr_class.' '.$field_attr_local_alias.'" >' . $enunciado . ':<br>';
-                        $html = $html . ' <input id="'.$statement->mod_id_formulario_pregunta.'" class="form-control ' . $field_attr_inputclass . '" max="' . $field_attr_max . '"  min="' . $field_attr_min . '" type="date" name="'.$statement->mod_id_formulario_pregunta.'" '.$enabled.' '.$field_attr_required.'><br>' . "\n";
-                        $html = $html . '</div>';
+                        $html .= dphpformsV2_generate_DATE( $statement->mod_id_formulario_pregunta, $field_options, $enunciado );
                     }
                     
                     if($campo == 'DATETIME'){
@@ -1220,6 +1218,28 @@ function dphpformsV2_generate_TEXTAREA( $id_formulario_pregunta, $field_options,
     return $html;
     
 }
+
+function dphpformsV2_generate_DATE( $id_formulario_pregunta, $field_options, $statement ){
+
+    $field_attr_class = $field_options[ 'attr_class' ];
+    $field_attr_local_alias = $field_options[ 'attr_local_alias' ];
+    $field_attr_inputclass = $field_options[ 'attr_inputclass' ];
+    $field_attr_max = $field_options[ 'attr_max' ];
+    $field_attr_min = $field_options[ 'attr_min' ];
+    $field_enabled = $field_options[ 'enabled' ];
+    $field_attr_required = $field_options[ 'attr_required' ];
+
+    $html = '
+    <div class="div-'.$id_formulario_pregunta.' '.$field_attr_class.' '.$field_attr_local_alias.'" >' 
+        . $statement . ':<br>
+        <input id="'.$id_formulario_pregunta.'" class="form-control ' . $field_attr_inputclass . '" max="' . $field_attr_max . '"  min="' . $field_attr_min . '" type="date" name="'.$id_formulario_pregunta.'" '.$field_enabled.' '.$field_attr_required.'>
+    </div>';
+
+    return $html;
+
+}
+
+
 
 /**
  * Function that generates the html of the buttons.
