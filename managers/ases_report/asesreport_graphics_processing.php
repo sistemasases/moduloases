@@ -20,10 +20,11 @@ if(isset($_POST['type'])&&$_POST['type']=="edad"&&isset($_POST['cohort'])){
     
 } 
 
-if(isset($_POST['type'])&&$_POST['type']=="carrera"&&isset($_POST['cohort'])){
+if(isset($_POST['type'])&&$_POST['type']=="carrera"&&isset($_POST['cohort'])&&isset($_POST['ases_status'])){
     
     $cohorte =  $_POST['cohort'];
-    $data = getGraficPrograma($cohorte);
+    $ases_status = $_POST['ases_status'];
+    $data = getGraficPrograma($cohorte, $ases_status);
     echo json_encode($data);
     
 } 
