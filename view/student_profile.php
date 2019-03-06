@@ -22,7 +22,7 @@
  * @author     Jeison Cardona Gómez
  * @package    block_ases
  * @copyright  2016 Iader E. García <iadergg@gmail.com>
- * @copyright  2018 Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
+ * @copyright  2019 Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
