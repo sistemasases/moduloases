@@ -45,15 +45,14 @@ define(['jquery',
                 //    });
                 });  
 
-                $('#status_fields').on('change', function () {
-                    console.log("Cambia");
+                $('#status_fields').on('change', function () {                    
+                    get_data_to_graphic();
                 });
+               
 
                 $('#conditions').on('change', function () {
                     console.log("Cambia");
-                });
-                              
-                
+                });                                              
                 
 
             },
@@ -80,10 +79,14 @@ define(['jquery',
         }
 
         function get_data_to_graphic(){
+
+            var ases_status = $("#ases_status").is(":checked") ? 1 : 0;
+            console.log(ases_status);
+
             $.ajax({
 
                 type: "POST",
-                data: { type: 'carrera', cohort: $('#conditions').val() },
+                data: { type: 'carrera', cohort: $('#conditions').val(), ases_status: ases_status },
                 url: "../managers/ases_report/asesreport_graphics_processing.php",
                 success: function (msg) {
                     var results = Object.keys(msg).map(function(k) { return msg[k] });                    
@@ -166,7 +169,6 @@ define(['jquery',
                 }
             );
             table.draw();
-
 
         }
 
