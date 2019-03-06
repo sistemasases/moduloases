@@ -1239,7 +1239,24 @@ function dphpformsV2_generate_DATE( $id_formulario_pregunta, $field_options, $st
 
 }
 
+function dphpformsV2_generate_DATETIME( $id_formulario_pregunta, $field_options, $statement ){
 
+    $field_attr_class = $field_options[ 'attr_class' ];
+    $field_attr_local_alias = $field_options[ 'attr_local_alias' ];
+    $field_attr_inputclass = $field_options[ 'attr_inputclass' ];
+    $field_attr_max = $field_options[ 'attr_max' ];
+    $field_attr_min = $field_options[ 'attr_min' ];
+    $field_default_value = $field_options[ 'default_value' ];
+    $field_enabled = $field_options[ 'enabled' ];
+    $field_attr_required = $field_options[ 'attr_required' ];
+
+    $html = '
+    <div class="div-'.$id_formulario_pregunta.' '.$field_attr_class.' '.$field_attr_local_alias.'" >' 
+        . $statement . ':<br>
+        <input id="'.$id_formulario_pregunta.'" class="form-control ' . $field_attr_inputclass . '" value="'.$field_default_value.'" max="' . $field_attr_max . '"  min="' . $field_attr_min . '" type="datetime-local" name="'.$id_formulario_pregunta.'" '.$field_enabled.' '.$field_attr_required.'>
+    </div>';
+
+}
 
 /**
  * Function that generates the html of the buttons.
