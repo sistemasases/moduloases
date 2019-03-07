@@ -117,7 +117,7 @@ function getGraficAge($cohorte){
  * @param $cohorte
  * @return Array 
  */
-function getGraficPrograma($cohorte, $ases_status){
+function getGraficPrograma($cohorte, $ases_status, $instance_id){
     global $DB;
     
     $sql_query = "SELECT programa.nombre, COUNT(usuario.id)
@@ -136,7 +136,7 @@ function getGraficPrograma($cohorte, $ases_status){
                         ((SELECT student_ases_status.id_estudiante AS id_ases_student, student_ases_status.id_estado_ases,
                                 MAX(student_ases_status.fecha) AS fecha
                         FROM mdl_talentospilos_est_estadoases AS student_ases_status
-                        WHERE id_instancia = '450299'
+                        WHERE id_instancia = $instance_id
                         AND student_ases_status.id_estado_ases = 1
                         GROUP BY student_ases_status.id_estudiante, student_ases_status.id_estado_ases) AS current_ases_status
                         INNER JOIN
