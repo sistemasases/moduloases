@@ -377,7 +377,7 @@ echo json_encode( dphpformsV2_find_records( $xQuery ) );*/
             $id_field = $list_fields_alias_id[ $field_alias ];
             $value_to_comparate = $filterField[1];
             $optional = $filterField[2];
-            $operator = $filterField[3];
+            $operator = @$filterField[3]; //Implementación pendiente AND, OR
             $exist_in_grouped_record = array_key_exists( $field_alias, $grouped_records[$record_id] );
             if( !$exist_in_grouped_record && !$optional ){
                 $record_completed = false;
@@ -796,8 +796,8 @@ function dphpformsV2_get_permisos_pregunta( $id_formulario_pregunta ){
         }
     ]
 }';
-$initial_config = json_decode( $initial_config );*/
-echo dphpformsV2_generate_html_recorder( 'seguimiento_pares', "sistemas", $initial_config  );
+$initial_config = json_decode( $initial_config );
+echo dphpformsV2_generate_html_recorder( 'seguimiento_pares', "sistemas", $initial_config  );*/
 
 function dphpformsV2_generate_html_recorder( $id_form, $rol_, $initial_config = null  ){
 
