@@ -954,36 +954,36 @@ function dphpformsV2_generate_html_recorder( $id_form, $rol_, $initial_config = 
                     }
 
 
-                    $field_options[ 'attr_class' ] = $field_attr_class;
-                    $field_options[ 'attr_local_alias' ] =  $field_attr_local_alias;
-                    $field_options[ 'attr_inputclass' ] = $field_attr_inputclass;
-                    $field_options[ 'attr_max' ] = $field_attr_max;
-                    $field_options[ 'attr_min' ] = $field_attr_min;
-                    $field_options[ 'attr_type' ] = $field_attr_type;
-                    $field_options[ 'attr_placeholder' ] = $field_attr_placeholder;
-                    $field_options[ 'default_value' ] = $field_default_value;
-                    $field_options[ 'attr_maxlength' ] = $field_attr_maxlength;
-                    $field_options[ 'enabled' ] = $enabled;
-                    $field_options[ 'attr_required' ] = $field_attr_required;
+                    $context[ 'attr_class' ] = $field_attr_class;
+                    $context[ 'attr_local_alias' ] =  $field_attr_local_alias;
+                    $context[ 'attr_inputclass' ] = $field_attr_inputclass;
+                    $context[ 'attr_max' ] = $field_attr_max;
+                    $context[ 'attr_min' ] = $field_attr_min;
+                    $context[ 'attr_type' ] = $field_attr_type;
+                    $context[ 'attr_placeholder' ] = $field_attr_placeholder;
+                    $context[ 'default_value' ] = $field_default_value;
+                    $context[ 'attr_maxlength' ] = $field_attr_maxlength;
+                    $context[ 'enabled' ] = $enabled;
+                    $context[ 'attr_required' ] = $field_attr_required;
 
                     if($campo == "TEXTFIELD"){
-                        $html .= dphpformsV2_generate_TEXTFIELD( $statement->mod_id_formulario_pregunta, $field_options, $enunciado );
+                        $html .= dphpformsV2_generate_TEXTFIELD( $statement->mod_id_formulario_pregunta, $context, $enunciado );
                     }
 
                     if($campo == 'TEXTAREA'){
-                        $html .= dphpformsV2_generate_TEXTAREA( $statement->mod_id_formulario_pregunta, $field_options, $enunciado );
+                        $html .= dphpformsV2_generate_TEXTAREA( $statement->mod_id_formulario_pregunta, $context, $enunciado );
                     }
 
                     if($campo == 'DATE'){
-                        $html .= dphpformsV2_generate_DATE( $statement->mod_id_formulario_pregunta, $field_options, $enunciado );
+                        $html .= dphpformsV2_generate_DATE( $statement->mod_id_formulario_pregunta, $context, $enunciado );
                     }
                     
                     if($campo == 'DATETIME'){
-                        $html .= dphpformsV2_generate_DATETIME( $statement->mod_id_formulario_pregunta, $field_options, $enunciado );
+                        $html .= dphpformsV2_generate_DATETIME( $statement->mod_id_formulario_pregunta, $context, $enunciado );
                     }
 
                     if($campo == 'TIME'){
-                        $html .= dphpformsV2_generate_TIME( $statement->mod_id_formulario_pregunta, $field_options, $enunciado );
+                        $html .= dphpformsV2_generate_TIME( $statement->mod_id_formulario_pregunta, $context, $enunciado );
                     }
 
                     if($campo == 'RADIOBUTTON'){
@@ -1170,40 +1170,40 @@ function dphpformsV2_generate_html_recorder( $id_form, $rol_, $initial_config = 
 
 }
 
-function dphpformsV2_generate_TEXTFIELD( $id_formulario_pregunta, $field_options, $statement ){
+function dphpformsV2_generate_TEXTFIELD( $id_formulario_pregunta, $context, $statement ){
     
-    $field_attr_class = $field_options[ 'attr_class' ];
-    $field_attr_local_alias = $field_options[ 'attr_local_alias' ];
-    $field_attr_inputclass = $field_options[ 'attr_inputclass' ];
-    $field_attr_max = $field_options[ 'attr_max' ];
-    $field_attr_min = $field_options[ 'attr_min' ];
-    $field_attr_type = $field_options[ 'attr_type' ];
-    $field_attr_placeholder = $field_options[ 'attr_placeholder' ];
-    $field_default_value = $field_options[ 'default_value' ];
-    $field_attr_maxlength = $field_options[ 'attr_maxlength' ];
-    $field_enabled = $field_options[ 'enabled' ];
-    $field_attr_required = $field_options[ 'attr_required' ];
+    $field_attr_class = $context[ 'attr_class' ];
+    $field_attr_local_alias = $context[ 'attr_local_alias' ];
+    $field_attr_inputclass = $context[ 'attr_inputclass' ];
+    $field_attr_max = $context[ 'attr_max' ];
+    $field_attr_min = $context[ 'attr_min' ];
+    $field_attr_type = $context[ 'attr_type' ];
+    $field_attr_placeholder = $context[ 'attr_placeholder' ];
+    $field_default_value = $context[ 'default_value' ];
+    $field_attr_maxlength = $context[ 'attr_maxlength' ];
+    $field_enabled = $context[ 'enabled' ];
+    $field_attr_required = $context[ 'attr_required' ];
     
     $html = '
     <div class="div-'.$id_formulario_pregunta.' '.$field_attr_class.' '.$field_attr_local_alias.'" >' 
         . $statement . ':<br>
-        <input id="'.$id_formulario_pregunta.'" class="form-control ' . $field_attr_inputclass . '" max="' . $field_attr_max . '"  min="' . $field_attr_min . '" type="'.$field_attr_type.'" placeholder="'.$field_attr_placeholder.'" name="'.$mod_id_formulario_pregunta.'" value="'.$field_default_value.'" maxlength="'.$field_attr_maxlength.'" '.$field_enabled.' '.$field_attr_required.'>
+        <input id="'.$id_formulario_pregunta.'" class="form-control ' . $field_attr_inputclass . '" max="' . $field_attr_max . '"  min="' . $field_attr_min . '" type="'.$field_attr_type.'" placeholder="'.$field_attr_placeholder.'" name="'.$id_formulario_pregunta.'" value="'.$field_default_value.'" maxlength="'.$field_attr_maxlength.'" '.$field_enabled.' '.$field_attr_required.'>
     </div>';
 
     return $html;
     
 }
 
-function dphpformsV2_generate_TEXTAREA( $id_formulario_pregunta, $field_options, $statement ){
+function dphpformsV2_generate_TEXTAREA( $id_formulario_pregunta, $context, $statement ){
 
-    $field_attr_class = $field_options[ 'attr_class' ];
-    $field_attr_local_alias = $field_options[ 'attr_local_alias' ];
-    $field_attr_inputclass = $field_options[ 'attr_inputclass' ];
-    $field_attr_placeholder = $field_options[ 'attr_placeholder' ];
-    $field_default_value = $field_options[ 'default_value' ];
-    $field_attr_maxlength = $field_options[ 'attr_maxlength' ];
-    $field_enabled = $field_options[ 'enabled' ];
-    $field_attr_required = $field_options[ 'attr_required' ];
+    $field_attr_class = $context[ 'attr_class' ];
+    $field_attr_local_alias = $context[ 'attr_local_alias' ];
+    $field_attr_inputclass = $context[ 'attr_inputclass' ];
+    $field_attr_placeholder = $context[ 'attr_placeholder' ];
+    $field_default_value = $context[ 'default_value' ];
+    $field_attr_maxlength = $context[ 'attr_maxlength' ];
+    $field_enabled = $context[ 'enabled' ];
+    $field_attr_required = $context[ 'attr_required' ];
 
     $html = '
     <div class="div-'.$id_formulario_pregunta.' '.$field_attr_class.' '.$field_attr_local_alias.'" >' 
@@ -1215,16 +1215,16 @@ function dphpformsV2_generate_TEXTAREA( $id_formulario_pregunta, $field_options,
     
 }
 
-function dphpformsV2_generate_DATE( $id_formulario_pregunta, $field_options, $statement ){
+function dphpformsV2_generate_DATE( $id_formulario_pregunta, $context, $statement ){
 
-    $field_attr_class = $field_options[ 'attr_class' ];
-    $field_attr_local_alias = $field_options[ 'attr_local_alias' ];
-    $field_attr_inputclass = $field_options[ 'attr_inputclass' ];
-    $field_attr_max = $field_options[ 'attr_max' ];
-    $field_attr_min = $field_options[ 'attr_min' ];
-    $field_default_value = $field_options[ 'default_value' ];
-    $field_enabled = $field_options[ 'enabled' ];
-    $field_attr_required = $field_options[ 'attr_required' ];
+    $field_attr_class = $context[ 'attr_class' ];
+    $field_attr_local_alias = $context[ 'attr_local_alias' ];
+    $field_attr_inputclass = $context[ 'attr_inputclass' ];
+    $field_attr_max = $context[ 'attr_max' ];
+    $field_attr_min = $context[ 'attr_min' ];
+    $field_default_value = $context[ 'default_value' ];
+    $field_enabled = $context[ 'enabled' ];
+    $field_attr_required = $context[ 'attr_required' ];
 
     $html = '
     <div class="div-'.$id_formulario_pregunta.' '.$field_attr_class.' '.$field_attr_local_alias.'" >' 
@@ -1236,16 +1236,16 @@ function dphpformsV2_generate_DATE( $id_formulario_pregunta, $field_options, $st
 
 }
 
-function dphpformsV2_generate_DATETIME( $id_formulario_pregunta, $field_options, $statement ){
+function dphpformsV2_generate_DATETIME( $id_formulario_pregunta, $context, $statement ){
 
-    $field_attr_class = $field_options[ 'attr_class' ];
-    $field_attr_local_alias = $field_options[ 'attr_local_alias' ];
-    $field_attr_inputclass = $field_options[ 'attr_inputclass' ];
-    $field_attr_max = $field_options[ 'attr_max' ];
-    $field_attr_min = $field_options[ 'attr_min' ];
-    $field_default_value = $field_options[ 'default_value' ];
-    $field_enabled = $field_options[ 'enabled' ];
-    $field_attr_required = $field_options[ 'attr_required' ];
+    $field_attr_class = $context[ 'attr_class' ];
+    $field_attr_local_alias = $context[ 'attr_local_alias' ];
+    $field_attr_inputclass = $context[ 'attr_inputclass' ];
+    $field_attr_max = $context[ 'attr_max' ];
+    $field_attr_min = $context[ 'attr_min' ];
+    $field_default_value = $context[ 'default_value' ];
+    $field_enabled = $context[ 'enabled' ];
+    $field_attr_required = $context[ 'attr_required' ];
 
     $html = '
     <div class="div-'.$id_formulario_pregunta.' '.$field_attr_class.' '.$field_attr_local_alias.'" >' 
@@ -1257,16 +1257,16 @@ function dphpformsV2_generate_DATETIME( $id_formulario_pregunta, $field_options,
 
 }
 
-function dphpformsV2_generate_TIME( $id_formulario_pregunta, $field_options, $statement ){
+function dphpformsV2_generate_TIME( $id_formulario_pregunta, $context, $statement ){
 
-    $field_attr_class = $field_options[ 'attr_class' ];
-    $field_attr_local_alias = $field_options[ 'attr_local_alias' ];
-    $field_attr_inputclass = $field_options[ 'attr_inputclass' ];
-    $field_attr_max = $field_options[ 'attr_max' ];
-    $field_attr_min = $field_options[ 'attr_min' ];
-    $field_default_value = $field_options[ 'default_value' ];
-    $field_enabled = $field_options[ 'enabled' ];
-    $field_attr_required = $field_options[ 'attr_required' ];
+    $field_attr_class = $context[ 'attr_class' ];
+    $field_attr_local_alias = $context[ 'attr_local_alias' ];
+    $field_attr_inputclass = $context[ 'attr_inputclass' ];
+    $field_attr_max = $context[ 'attr_max' ];
+    $field_attr_min = $context[ 'attr_min' ];
+    $field_default_value = $context[ 'default_value' ];
+    $field_enabled = $context[ 'enabled' ];
+    $field_attr_required = $context[ 'attr_required' ];
 
     $html = '
     <div class="div-'.$id_formulario_pregunta.' '.$field_attr_class.' '.$field_attr_local_alias.'" >' 
@@ -1275,7 +1275,7 @@ function dphpformsV2_generate_TIME( $id_formulario_pregunta, $field_options, $st
     </div>';
 
     return $html;
-    
+
 }
 
 /**
