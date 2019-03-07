@@ -761,7 +761,7 @@ function dphpformsV2_get_permisos_pregunta( $id_formulario_pregunta ){
 
 
 // Example
-$initial_config = '{
+/*$initial_config = '{
     "allow_update":true,
     "allow_delete":true,
     "main_form_classes" : "col-xs-12 col-sm-12",
@@ -796,7 +796,7 @@ $initial_config = '{
         }
     ]
 }';
-$initial_config = json_decode( $initial_config );
+$initial_config = json_decode( $initial_config );*/
 echo dphpformsV2_generate_html_recorder( 'seguimiento_pares', "sistemas", $initial_config  );
 
 function dphpformsV2_generate_html_recorder( $id_form, $rol_, $initial_config = null  ){
@@ -956,10 +956,8 @@ function dphpformsV2_generate_html_recorder( $id_form, $rol_, $initial_config = 
                     $field_default_value = "";
 
                     //Initial values config
-
                     if( $initial_config ){
                         if( property_exists($initial_config, 'initial_values') ){
-                        
                             $initial_values = $initial_config->initial_values;
                             foreach( $initial_values as &$initial_value ){
                                 if( $initial_value->alias === $field_attr_local_alias ){
@@ -987,32 +985,28 @@ function dphpformsV2_generate_html_recorder( $id_form, $rol_, $initial_config = 
                     $context[ 'attr_group_radio_class' ] = $field_attr_group_radio_class;
                     $context[ 'attr_checkclass' ] = $field_attr_checkclass;
 
-                    if($campo == "TEXTFIELD"){
-                        $html .= dphpformsV2_generate_TEXTFIELD( $statement->mod_id_formulario_pregunta, $context, $enunciado );
-                    }
-
-                    if($campo == 'TEXTAREA'){
-                        $html .= dphpformsV2_generate_TEXTAREA( $statement->mod_id_formulario_pregunta, $context, $enunciado );
-                    }
-
-                    if($campo == 'DATE'){
-                        $html .= dphpformsV2_generate_DATE( $statement->mod_id_formulario_pregunta, $context, $enunciado );
-                    }
-                    
-                    if($campo == 'DATETIME'){
-                        $html .= dphpformsV2_generate_DATETIME( $statement->mod_id_formulario_pregunta, $context, $enunciado );
-                    }
-
-                    if($campo == 'TIME'){
-                        $html .= dphpformsV2_generate_TIME( $statement->mod_id_formulario_pregunta, $context, $enunciado );
-                    }
-
-                    if($campo == 'RADIOBUTTON'){
-                        $html .= dphpformsV2_generate_RADIOBUTTON( $statement->mod_id_formulario_pregunta, $context, $enunciado );                        
-                    }
-
-                    if($campo == 'CHECKBOX'){
-                        $html .= dphpformsV2_generate_CHECKBOX( $statement->mod_id_formulario_pregunta, $context, $enunciado );    
+                    switch ($campo) {
+                        case "TEXTFIELD":
+                            $html .= dphpformsV2_generate_TEXTFIELD( $statement->mod_id_formulario_pregunta, $context, $enunciado );
+                            break;
+                        case "TEXTAREA":
+                            $html .= dphpformsV2_generate_TEXTAREA( $statement->mod_id_formulario_pregunta, $context, $enunciado );
+                            break;
+                        case "DATE":
+                            $html .= dphpformsV2_generate_DATE( $statement->mod_id_formulario_pregunta, $context, $enunciado );
+                            break;
+                        case "DATETIME":
+                            $html .= dphpformsV2_generate_DATETIME( $statement->mod_id_formulario_pregunta, $context, $enunciado );
+                            break;
+                        case "TIME":
+                            $html .= dphpformsV2_generate_TIME( $statement->mod_id_formulario_pregunta, $context, $enunciado );
+                            break;
+                        case "RADIOBUTTON":
+                            $html .= dphpformsV2_generate_RADIOBUTTON( $statement->mod_id_formulario_pregunta, $context, $enunciado );
+                            break;
+                        case "CHECKBOX":
+                            $html .= dphpformsV2_generate_CHECKBOX( $statement->mod_id_formulario_pregunta, $context, $enunciado );
+                            break;
                     }
 
                 }
@@ -1099,7 +1093,7 @@ function dphpformsV2_generate_html_recorder( $id_form, $rol_, $initial_config = 
     $html = $html .  ' 
         <hr class="footer-hr-dphpforms">
         <div class="dphpforms_response_recorder_buttons">
-            <button type="submit" class="btn-dphpforms btn-dphpforms-sendform">Registrar</button>
+            <button data-form-id="'.$form_name_formatted.'" type="submit" class="btn-dphpforms btn-dphpforms-sendform">Registrar</button>
             '.$html_aditional_buttons.'
         </div>
     </form>';
@@ -1319,7 +1313,7 @@ function dphpformsV2_generate_CHECKBOX( $id_formulario_pregunta, $context, $stat
             <label class="' . $option_attr_checkclass . '" ><input type="checkbox" class="' . $field_attr_inputclass . '" name="'. $name_checkbox .'" value="'.$option['valor'].'" '.$enabled.'>'.$option['enunciado'].'</label>
         </div>' . "\n";
     }
-    
+
     $html = $html . '</div>';
 
     return $html;
