@@ -1317,9 +1317,9 @@ function dphpformsV2_generate_CHECKBOX( $id_formulario_pregunta, $context, $stat
 
         $html = $html . '  
             <label class="' . $option_attr_checkclass . '" ><input type="checkbox" class="' . $field_attr_inputclass . '" name="'. $name_checkbox .'" value="'.$option['valor'].'" '.$enabled.'>'.$option['enunciado'].'</label>
-        </div>';
-        $html = $html . '' . "\n";
+        </div>' . "\n";
     }
+    
     $html = $html . '</div>';
 
     return $html;
