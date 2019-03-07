@@ -89,7 +89,7 @@ define(['jquery',
             $.ajax({
 
                 type: "POST",
-                data: { type: 'carrera', cohort: $('#conditions').val(), ases_status: ases_status },
+                data: { type: 'carrera', cohort: $('#conditions').val(), ases_status: ases_status, instance_id: getIdinstancia() },
                 url: "../managers/ases_report/asesreport_graphics_processing.php",
                 success: function (msg) {
                     var results = Object.keys(msg).map(function(k) { return msg[k] });                    
@@ -175,7 +175,7 @@ define(['jquery',
                         ]                           
                     }
                 );
-                table.draw();
+                table_programs.draw();
             }            
             else{
                 table_programs.clear();
