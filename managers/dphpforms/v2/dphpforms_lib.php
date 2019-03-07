@@ -890,6 +890,7 @@ function dphpformsV2_generate_html_recorder( $id_form, $rol_, $initial_config = 
                     $field_attr_radioclass = '';
                     $field_attr_group_radio_class = '';
                     $options = '';
+                    $field_attr_checkclass = '';
 
                     if(property_exists($atributos, 'class')){
                         $field_attr_class = $atributos->class;
@@ -948,6 +949,10 @@ function dphpformsV2_generate_html_recorder( $id_form, $rol_, $initial_config = 
                         $field_attr_group_radio_class = $atributos->groupradioclass;
                     }
 
+                    if(property_exists($atributos, 'checkclass')){
+                        $field_attr_checkclass = $atributos->checkclass;
+                    }
+
                     $field_default_value = "";
 
                     //Initial values config
@@ -980,6 +985,7 @@ function dphpformsV2_generate_html_recorder( $id_form, $rol_, $initial_config = 
                     $context[ 'options' ] = $options;
                     $context[ 'attr_radioclass' ] = $field_attr_radioclass;
                     $context[ 'attr_group_radio_class' ] = $field_attr_group_radio_class;
+                    $context[ 'attr_checkclass' ] = $field_attr_checkclass;
 
                     if($campo == "TEXTFIELD"){
                         $html .= dphpformsV2_generate_TEXTFIELD( $statement->mod_id_formulario_pregunta, $context, $enunciado );
@@ -1006,44 +1012,7 @@ function dphpformsV2_generate_html_recorder( $id_form, $rol_, $initial_config = 
                     }
 
                     if($campo == 'CHECKBOX'){
-                        $opciones = json_decode($statement->opciones_campo);
-                        $array_opciones = (array)$opciones;
-                        $number_opciones = count($array_opciones);
-
-                        $html = $html .  '<div class="div-'.$statement->mod_id_formulario_pregunta.' '.$field_attr_class.' '.$field_attr_local_alias.'" >';
-                        if($enunciado){
-                            $html = $html . '<label>'.$enunciado.'</label>';
-                        }
-
-                        $field_attr_checkclass = '';
-                        if(property_exists($atributos, 'checkclass')){
-                            $field_attr_checkclass = $atributos->checkclass;
-                        }
-
-                        $name_checkbox = $statement->mod_id_formulario_pregunta;
-                        if($number_opciones > 1){
-                            $name_checkbox = $statement->mod_id_formulario_pregunta . '[]';
-                        }
-
-                        for($x = 0; $x < $number_opciones; $x++){
-                            $opcion = (array) $array_opciones[$x];
-                            $html = $html . '<div class="checkbox ' . $field_attr_checkclass . '">' . "\n";
-
-                            $option_attr_checkclass = '';
-                            if(array_key_exists('class', $opcion)){
-                                $option_attr_checkclass = $opcion['class'];
-                            }
-
-                            if($number_opciones == 1){
-                                $html = $html . '   <input type="hidden" name="'. $name_checkbox .'" value="-1">' . "\n";
-                            }
-
-                            $html = $html . '   <label class="' . $option_attr_checkclass . '" ><input type="checkbox" class="' . $field_attr_inputclass . '" name="'. $name_checkbox .'" value="'.$opcion['valor'].'" '.$enabled.'>'.$opcion['enunciado'].'</label>' . "\n";
-                            $html = $html . '</div>';
-                            $html = $html . '' . "\n";
-                        }
-                        $html = $html . '</div>';
-
+                        $html .= dphpformsV2_generate_CHECKBOX( $statement->mod_id_formulario_pregunta, $context, $enunciado );    
                     }
 
                 }
@@ -1279,12 +1248,12 @@ function dphpformsV2_generate_RADIOBUTTON( $id_formulario_pregunta, $context, $s
     $required_temporal = $field_attr_required;
                       
     $html = $html .  '<div class="opcionesRadio ' .  $field_attr_group_radio_class . '" style="margin-bottom:0.4em">';
-    foreach($options as $key => $opcion){
-        $opcion = (array) $opcion;
+    foreach($options as $key => $option){
+        $option = (array) $option;
 
         $html = $html .  '
             <div id="'.$id_formulario_pregunta.'" name="'.$id_formulario_pregunta.'" class="radio ' . $field_attr_radioclass . '">
-                <label><input type="radio" class=" ' . $field_attr_inputclass . '" name="'.$id_formulario_pregunta.'" value="'.$opcion['valor'].'" name="optradio" '.$enabled.'   ' . $required_temporal . '>'.$opcion['enunciado'].'</label>
+                <label><input type="radio" class=" ' . $field_attr_inputclass . '" name="'.$id_formulario_pregunta.'" value="'.$option['valor'].'" name="optradio" '.$enabled.'   ' . $required_temporal . '>'.$option['enunciado'].'</label>
             </div>
         ' . "\n";
         /*
@@ -1302,6 +1271,58 @@ function dphpformsV2_generate_RADIOBUTTON( $id_formulario_pregunta, $context, $s
     
     return $html;
 
+}
+
+function dphpformsV2_generate_CHECKBOX( $id_formulario_pregunta, $context, $statement ){
+
+    $field_attr_class = $context[ 'attr_class' ];
+    $field_attr_local_alias = $context[ 'attr_local_alias' ];
+    $field_attr_inputclass = $context[ 'attr_inputclass' ];
+    $field_attr_max = $context[ 'attr_max' ];
+    $field_attr_min = $context[ 'attr_min' ];
+    $field_attr_type = $context[ 'attr_type' ];
+    $field_attr_placeholder = $context[ 'attr_placeholder' ];
+    $field_default_value = $context[ 'default_value' ];
+    $field_attr_maxlength = $context[ 'attr_maxlength' ];
+    $enabled = $context[ 'enabled' ];
+    $field_attr_required = $context[ 'attr_required' ];
+    $options = $context[ 'options' ];
+    $field_attr_checkclass = $context[ 'attr_checkclass' ];
+
+    $number_options = count($options);
+
+    $html = '<div class="div-'.$id_formulario_pregunta.' '.$field_attr_class.' '.$field_attr_local_alias.'" >';
+
+    if($statement){
+        $html = $html . '<label>'.$statement.'</label>';
+    }
+
+    $name_checkbox = $id_formulario_pregunta;
+    if($number_options > 1){
+        $name_checkbox = $id_formulario_pregunta . '[]';
+    }
+
+    foreach( $options as $key => $option ){
+        $option = (array) $option;
+        $html = $html . '<div class="checkbox ' . $field_attr_checkclass . '">' . "\n";
+
+        $option_attr_checkclass = '';
+        if(array_key_exists('class', $option)){
+            $option_attr_checkclass = $option['class'];
+        }
+
+        if($number_options == 1){
+            $html = $html . '   <input type="hidden" name="'. $name_checkbox .'" value="-1">' . "\n";
+        }
+
+        $html = $html . '  
+            <label class="' . $option_attr_checkclass . '" ><input type="checkbox" class="' . $field_attr_inputclass . '" name="'. $name_checkbox .'" value="'.$option['valor'].'" '.$enabled.'>'.$option['enunciado'].'</label>
+        </div>';
+        $html = $html . '' . "\n";
+    }
+    $html = $html . '</div>';
+
+    return $html;
 }
 
 /**
