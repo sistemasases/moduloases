@@ -24,7 +24,10 @@ define(['jquery',
     'block_ases/loading_indicator',
     'block_ases/chartjs_plugin_datalabels'
 ],
+    
     function ($, jszip, pdfmake, dataTables, autoFill, buttons, html5, flash, print, bootstrap, sweetalert, jqueryui, select2, Chart, loading_indicator, chartjs_plugin_datalabels) {
+        var radar_chart;
+        var table_programs;
         return {
             init: function () {
 
@@ -120,8 +123,10 @@ define(['jquery',
                             data.push({programa: nombrePrograma, cantidad: cantidadPrograma})
                         }                     
                     }                    
+
                     creategraphicProgramas(programas, cantidades);
                     createTable(data);
+                    
                 },
                 dataType: "json",
                 cache: false,
@@ -134,41 +139,49 @@ define(['jquery',
         function createTable(data){
             console.log(data);
 
-            var table = $("#table_programs").DataTable(
-                { 
-                    "retrieve": true,                          
-                    "bsort" : false,
-                    "data" : data,                         
-                    "columns" : [
-                        {
-                            "title" : "Programa", 
-                            "name" : "programa", 
-                            "data" : "programa",
-                        },
-                        {
-                            "title" : "Cantidad de estudiantes", 
-                            "name" : "cantidad", 
-                            "data" : "cantidad"
-                        }],
-                    "dom":"lifrtpB",
-                    "buttons" : [
-                        {
-                            "extend" : "print",
-                            "text" : 'Imprimir'
-                        },{
-                            "extend" : "csv",
-                            "text" : 'CSV'
-                        },{
-                            "extend" : "excel",
-                            "text" : 'Excel',
-                            "className" : 'buttons-excel',
-                            "filename" : 'Export excel',
-                            "extension" : '.xls'
-                        }   
-                    ]                           
-                }
-            );
-            table.draw();
+            if (!table_programs){
+
+                table_programs = $("#table_programs").DataTable(
+                    { 
+                        "retrieve": true,                          
+                        "bsort" : false,
+                        "data" : data,                         
+                        "columns" : [
+                            {
+                                "title" : "Programa", 
+                                "name" : "programa", 
+                                "data" : "programa",
+                            },
+                            {
+                                "title" : "Cantidad de estudiantes", 
+                                "name" : "cantidad", 
+                                "data" : "cantidad"
+                            }],
+                        "dom":"lifrtpB",
+                        "buttons" : [
+                            {
+                                "extend" : "print",
+                                "text" : 'Imprimir'
+                            },{
+                                "extend" : "csv",
+                                "text" : 'CSV'
+                            },{
+                                "extend" : "excel",
+                                "text" : 'Excel',
+                                "className" : 'buttons-excel',
+                                "filename" : 'Export excel',
+                                "extension" : '.xls'
+                            }   
+                        ]                           
+                    }
+                );
+                table.draw();
+            }            
+            else{
+                table_programs.clear();
+                table_programs.rows.add(data);
+                table_programs.draw();
+            }
 
         }
 
@@ -201,48 +214,55 @@ define(['jquery',
                 }]
             }        
             
-        
-            var radar_chart = new Chart(ctx, {               
-                type: 'horizontalBar',
-				data: data,
-				options: {
-					// Elements options apply to all of the options unless overridden in a dataset
-					// In this case, we are setting the border of each horizontal bar to be 2px wide
-					elements: {
-						rectangle: {
-                            borderWidth: 2,                            
-						}
-					},
-					responsive: true,
-					legend: {
-                        position: 'top',
-                        display: false
-					},
-					title: {
-						display: true,
-                        text: 'No. de Estudiantes por Programa',
-                        fontSize: 30
-                    },
-                    scales: {
-                        yAxes: [{
-                            ticks: {
-                                display: true
-                            },
-                            categoryPercentage: 1.0,
-                            barPercentage: 1.0
-                        }]                       
-                    },
-                    maintainAspectRatio: false,
-                    plugins: {
-                        datalabels: {
-                           display: true,
-                           align: 'center',
-                           anchor: 'center'
-                        }
-                     }                    
-				}
+            if(!radar_chart){
+
+                radar_chart = new Chart(ctx, {               
+                    type: 'horizontalBar',
+                    data: data,
+                    options: {
+                        // Elements options apply to all of the options unless overridden in a dataset
+                        // In this case, we are setting the border of each horizontal bar to be 2px wide
+                        elements: {
+                            rectangle: {
+                                borderWidth: 2,                            
+                            }
+                        },
+                        responsive: true,
+                        legend: {
+                            position: 'top',
+                            display: false
+                        },
+                        title: {
+                            display: true,
+                            text: 'No. de Estudiantes por Programa',
+                            fontSize: 30
+                        },
+                        scales: {
+                            yAxes: [{
+                                ticks: {
+                                    display: true
+                                },
+                                categoryPercentage: 1.0,
+                                barPercentage: 1.0
+                            }]                       
+                        },
+                        maintainAspectRatio: false,
+                        plugins: {
+                            datalabels: {
+                               display: true,
+                               align: 'center',
+                               anchor: 'center'
+                            }
+                         }                    
+                    }
+                }
+                );
             }
-            );
+            else{
+                radar_chart["data"] = data;
+                radar_chart.update();
+            }
+
         } 
 
         //Actualización de la tabla 
