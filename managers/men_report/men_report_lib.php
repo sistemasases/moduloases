@@ -25,6 +25,18 @@
  */
 
 require_once(dirname(__FILE__). '/../../../../config.php');
+require_once(__DIR__.'/../../classes/traits/from_std_object_or_array.php');
+require_once(__DIR__.'/../lib/csv.php');
+
+
+class MenReport {
+    use from_std_object_or_array;
+    public $id;
+    public $num_doc;
+    public $tipo_documento_inicial;
+    public $tel_acudiente;
+}
+
 
 function get_array_students_men($period){
     global $DB;
@@ -100,6 +112,16 @@ function get_array_students_men($period){
 
     return $array_students;
 }
+
+function r()
+{
+    \csv\array_to_csv_download(
+        MenReport::make_objects_from_std_objects_or_arrays(get_array_students_men('2017A')),
+        'Reporte Ministerio.csv',
+        ',',
+        ['json_materias']);
+}
+r();
 
 function process_student_subject_json($student){
     $json_subjects = json_decode($student->json_materias);
