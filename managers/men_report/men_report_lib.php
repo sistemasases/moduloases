@@ -31,9 +31,29 @@ require_once(__DIR__.'/../lib/csv.php');
 
 class MenReport {
     use from_std_object_or_array;
-    public $id;
-    public $num_doc;
-    public $tipo_documento_inicial;
+    public $anio;
+    public $semestre;
+    public $id_tipo_documento_actual;
+    public $num_documento_actual;    
+    public $id_tipo_documento_ingreso_spp;
+    public $num_documento_ingreso_spp;
+    public $id_convocatoria;
+    public $ser_pilo_paga_profe;
+    public $pro_consecutivo_uno;
+    public $pro_consecutivo_dos;
+    public $id_municipio_programa;
+    public $id_estado_actual_ies;
+    public $motivo_retiro_o_cancelacion;
+    public $seguimiento;
+    public $id_municipio_residencia;
+    public $residencia_direccion_actual;
+    public $residencia_telefono_actual;
+    public $contacto_celular;
+    public $contacto_mail;
+    public $id_municipio_familia;
+    public $residencia_direccion_familia;
+    public $residencia_telefono_familia;
+    public $contacto_celular_acudiente;
     public $tel_acudiente;
 }
 
@@ -44,11 +64,18 @@ function get_array_students_men($period){
     $array_students = array();
 
     $sql_query = "SELECT row_number() over(),
-                        usuario.id, est_academ.sem_nom, t_doc_ini.nombre AS tipo_documento_inicial, usuario.num_doc_ini, t_doc_act.nombre AS tipo_documento_actual,
-                        usuario.num_doc, prog_academico.snies_prog AS pro_consec_uno, prog_academico.div_mun_programa,
-                        mun_actual.codigodivipola AS div_ciu_actual, 	usuario.direccion_res, usuario.tel_res, usuario.celular, 
-                        usuario.emailpilos, mun_familia.codigodivipola AS div_ciu_familia, 	usuario.dir_ini AS dir_familia, 
-                        usuario.tel_ini AS tel_familia, usuario.tel_acudiente, est_icetex.nombre_estado, est_academ.prom_semestre, est_academ.prom_acumulado,
+                        usuario.id, est_academ.sem_nom, t_doc_ini.nombre AS id_tipo_documento_ingreso_spp, 
+                        usuario.num_doc_ini AS num_documento_actual, t_doc_act.nombre AS id_tipo_documento_actual,
+                        usuario.num_doc, prog_academico.snies_prog AS pro_consecutivo_uno, 
+                        prog_academico.div_mun_programa AS id_municipio_programa, 
+                        user_extended.program_status AS id_estado_actual_ies,
+                        mun_actual.codigodivipola AS id_municipio_residencia, 
+                        usuario.direccion_res AS residencia_direccion_actual, 
+                        usuario.tel_res AS residencia_telefono_actual, usuario.celular AS contacto_celular, 
+                        usuario.emailpilos AS contacto_mail, mun_familia.codigodivipola AS id_municipio_familia, 
+                        usuario.dir_ini AS residencia_direccion_familia, usuario.tel_ini AS residencia_telefono_familia, 
+                        usuario.tel_acudiente AS contacto_celular_acudiente, 
+                        est_icetex.nombre_estado, est_academ.prom_semestre, est_academ.prom_acumulado,
                         est_academ.json_materias, est_academ.cantidad_materias, est_academ.estimulo
                     FROM {talentospilos_usuario} AS usuario
                         INNER JOIN {talentospilos_user_extended} user_extended ON usuario.id = user_extended.id_ases_user
@@ -107,12 +134,17 @@ function get_array_students_men($period){
     $students = array_values($students);
     foreach($students as $student) {
         $semest = $student->sem_nom;
-        $student->año = substr($semest,0,4);
+        $student->anio = substr($semest,0,4);
         if(substr($semest,4,1) == "A"){
             $student->semestre = 1;
         }elseif(substr($semest,4,1) == "B"){
             $student->semestre = 2;
         }
+        $student->id_convocatoria = "";
+        $student->ser_pilo_paga_profe = "";
+        $student->pro_consecutivo_dos = "";
+        $student->motivo_retiro_o_cancelacion = "";
+        $student->seguimiento = "";
         
         process_student_subject_json($student);
         array_push($array_students, $student);
