@@ -213,7 +213,7 @@
                         array(
                             "status_code" => 0,
                             "error_message" => "",
-                            "data_response" => incident_get_ids_open_incidents()
+                            "data_response" => array_values( incident_get_ids_open_incidents() )
                         )
                     );
                         
