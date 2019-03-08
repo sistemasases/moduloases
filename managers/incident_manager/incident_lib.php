@@ -171,6 +171,12 @@ function incident_get_incident( $id ){
         return null;
     }
 
+}
+
+function incident_get_ids_open_incidents(){
+
+    global $DB;
+    return $DB->get_records_sql( "SELECT id FROM {talentospilos_incidencias} WHERE cerrada = 0" );
 
 }
 
