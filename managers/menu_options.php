@@ -334,7 +334,7 @@ function create_menu_options($userid, $blockid, $courseid)
                     'instanceid' => $blockid,
                 ));
 
-                $menu_options = '<li><a href= "' . $url . '">Gestión de incidencias </a><li>';
+                $menu_options = '<li id="menu_incidents_manager"><a class="menu_a" href= "' . $url . '">Gestión de incidencias</a><li>';
                 $indexed['Gestión de incidencias'] = $menu_options;
 
             }
