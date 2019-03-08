@@ -31,7 +31,7 @@ function get_array_students_men($period){
 
     $array_students = array();
 
-    $sql_query = "SELECT
+    $sql_query = "SELECT row_number() over(),
                         usuario.id, est_academ.sem_nom, t_doc_ini.nombre AS tipo_documento_inicial, usuario.num_doc_ini, t_doc_act.nombre AS tipo_documento_actual,
                         usuario.num_doc, prog_academico.snies_prog AS pro_consec_uno, prog_academico.div_mun_programa,
                         mun_actual.codigodivipola AS div_ciu_actual, 	usuario.direccion_res, usuario.tel_res, usuario.celular, 
@@ -92,8 +92,16 @@ function get_array_students_men($period){
     
 
     $students = $DB->get_records_sql($sql_query);
-
+    $students = array_values($students);
     foreach($students as $student) {
+        $semest = $student->sem_nom;
+        $student->año = substr($semest,0,4);
+        if(substr($semest,4,1) == "A"){
+            $student->semestre = 1;
+        }elseif(substr($semest,4,1) == "B"){
+            $student->semestre = 2;
+        }
+        
         process_student_subject_json($student);
         array_push($array_students, $student);
     }
@@ -101,18 +109,22 @@ function get_array_students_men($period){
     return $array_students;
 }
 
+print_r(get_array_students_men('2017A'));
+
 function process_student_subject_json($student){
-    $json_subjects = json_decode($student->json_materias);
     $student->materias_perdidas = 0;
     $student->materias_canceladas = 0;
+    if(isset($student->json_materias)){
+        $json_subjects = json_decode($student->json_materias);    
 
-    foreach($json_subjects as $materia) {
-        if($materia->nota <= 3.0){
-            $student->materias_perdidas += 1;
-        }
+        foreach($json_subjects as $materia) {
+            if($materia->nota < 3.0){
+                $student->materias_perdidas += 1;
+            }
 
-        if($json_subjects->fecha_cancelacion_materia !== ""){
-            $student->materias_canceladas += 1;
+            if($materia->fecha_cancelacion_materia !== ""){
+                $student->materias_canceladas += 1;
+            }
         }
-    }
+    }    
 }
