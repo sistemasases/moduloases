@@ -69,7 +69,12 @@ class MenReport {
     public $apoyo_financiero_spp_profe_tec;
     public $apoyo_financiero_spp_profe_ing;
     public $apoyo_financiero_spp_profe_mov;
-    
+    public $apoyo_financiero_ies_transport;
+    public $apoyo_financier_ies_materiales;
+    public $apoyo_financiero_ies_alimentac;
+    public $apoyo_financiero_ies_vivienda;
+    public $apoyo_academico_ies;
+    public $apoyo_total_financ_invertido;    
 }
 
 
@@ -78,10 +83,10 @@ function get_array_students_men($period){
 
     $array_students = array();
 
-    $sql_query = "SELECT row_number() over(),
-                        usuario.id, est_academ.sem_nom, t_doc_ini.nombre AS id_tipo_documento_ingreso_spp, 
-                        usuario.num_doc_ini AS num_documento_actual, t_doc_act.nombre AS id_tipo_documento_actual,
-                        usuario.num_doc, prog_academico.snies_prog AS pro_consecutivo_uno, 
+    $sql_query = "SELECT row_number() over() AS num_fila,
+                        usuario.id AS usu_id, est_academ.sem_nom, t_doc_ini.nombre AS id_tipo_documento_ingreso_spp, 
+                        usuario.num_doc_ini AS num_documento_ingreso_spp, t_doc_act.nombre AS id_tipo_documento_actual,
+                        usuario.num_doc AS num_documento_actual, prog_academico.snies_prog AS pro_consecutivo_uno, 
                         prog_academico.div_mun_programa AS id_municipio_programa, 
                         user_extended.program_status AS id_estado_actual_ies,
                         mun_actual.codigodivipola AS id_municipio_residencia, 
@@ -149,7 +154,6 @@ function get_array_students_men($period){
     
 
     $students = $DB->get_records_sql($sql_query);
-    $students = array_values($students);
     foreach($students as $student) {
         $semest = $student->sem_nom;
         $student->anio = substr($semest,0,4);
@@ -171,7 +175,12 @@ function get_array_students_men($period){
         $student->apoyo_financiero_spp_profe_tec = "";
         $student->apoyo_financiero_spp_profe_ing = "";
         $student->apoyo_financiero_spp_profe_mov = "";
-
+        $student->apoyo_financiero_ies_transport = "";
+        $student->apoyo_financier_ies_materiales = "";
+        $student->apoyo_financiero_ies_alimentac = "";
+        $student->apoyo_financiero_ies_vivienda = "";
+        $student->apoyo_academico_ies = "";
+        $student->apoyo_total_financ_invertido = "";
         
         process_student_subject_json($student);
         array_push($array_students, $student);
@@ -180,21 +189,12 @@ function get_array_students_men($period){
     return $array_students;
 }
 
-
-function r()
-{
-    \csv\array_to_csv_download(
-        MenReport::make_objects_from_std_objects_or_arrays(get_array_students_men('2017A')),
-        'Reporte Ministerio.csv',
-        ',',
-        ['json_materias']);
-}
-r();
+//print_r(get_array_students_men('2017A'));
 
 
 function process_student_subject_json($student){
-    $student->materias_perdidas = 0;
-    $student->materias_canceladas = 0;
+    $student->num_asignaturas_no_aprobadas = 0;
+    $student->num_asignaturas_canceladas = 0;
     if(isset($student->json_materias)){
         $json_subjects = json_decode($student->json_materias);    
 
@@ -209,3 +209,14 @@ function process_student_subject_json($student){
         }
     }    
 }
+
+
+function r()
+{
+    \csv\array_to_csv_download(
+        MenReport::make_objects_from_std_objects_or_arrays(get_array_students_men('2017A')),
+        'Reporte Ministerio.csv',
+        ',',
+        ['json_materias', 'sem_nom', 'num_fila', 'usu_id']);
+}
+r();
