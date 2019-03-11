@@ -30,10 +30,9 @@ require_once $CFG->libdir . '/adminlib.php';
 
 require_once('../managers/lib/lib.php');
 require_once('../managers/instance_management/instance_lib.php');
-require_once ('../managers/menu_options.php');
-include_once "../managers/dphpforms/dphpforms_reverse_filter.php";
-include_once "../managers/dphpforms/dphpforms_form_updater.php";
-require_once '../managers/menu_options.php';
+require_once('../managers/menu_options.php');
+include_once("../managers/dphpforms/dphpforms_reverse_filter.php");
+include_once("../managers/dphpforms/dphpforms_form_updater.php");
 include('../lib.php');
 
 
@@ -107,6 +106,8 @@ $PAGE->requires->css('/blocks/ases/style/dphpforms_reports.css', true);
 $PAGE->requires->css('/blocks/ases/style/side_menu_style.css', true);
 
 $PAGE->requires->js_call_amd('block_ases/dphpforms_reports', 'init');
+
+$PAGE->requires->js_call_amd('block_ases/ases_incident_system', 'init');
 
 $output = $PAGE->get_renderer('block_ases');
 

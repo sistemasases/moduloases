@@ -164,17 +164,6 @@ define(
                         $('.btn-dphpforms-update').remove();
                     };    
 
-                    var count_buttons_dphpforms = $('.dphpforms-record .btn-dphpforms-univalle').length;
-                    if( count_buttons_dphpforms == 1 ){
-                        $('.dphpforms-record .btn-dphpforms-univalle:eq(0)').css( { 'margin-left' : ( ($('.dphpforms-updater').width()/2) - ( $('.dphpforms-record .btn-dphpforms-close').outerWidth() /2) ) + 'px'  } );
-                    }else if( count_buttons_dphpforms == 2 ){
-                        $('.dphpforms-record .btn-dphpforms-univalle:eq(0)').css( { 'margin-left' : ( ($('.dphpforms-updater').width()/2) - 72 ) + 'px'  } );
-                    }else if( count_buttons_dphpforms == 3 ){
-                        $('.dphpforms-record .btn-dphpforms-univalle:eq(0)').css( { 'margin-left' : ( ($('.dphpforms-updater').width()/2) - 72 - 30) + 'px'  } );
-                    }else if( count_buttons_dphpforms == 4 ){
-                        $('.dphpforms-record .btn-dphpforms-univalle:eq(0)').css( { 'margin-left' : ( ($('.dphpforms-updater').width()/2) - 72 - 30) + 'px'  } );
-                    }
-                
                 }else if( (form == 'seguimiento_pares' )&&( action == 'insert' )){
 
                 }else if( (form == 'seguimiento_pares')&&( action == 'update' ) ){
@@ -190,13 +179,6 @@ define(
                     if( rev_prac ){
                         $('.btn-dphpforms-delete-record').remove();
                     };
-
-                    var count_buttons_dphpforms = $('.dphpforms-record .btn-dphpforms-univalle').length;
-                    if( (count_buttons_dphpforms == 3 )||(count_buttons_dphpforms == 2 ) ){
-                        $('.dphpforms-record .btn-dphpforms-close').css( { 'margin-left' : ( ($('.dphpforms-updater').width()/2) - 30 ) + 'px'  } );
-                    }else if( count_buttons_dphpforms == 4 ){
-                        $('.dphpforms-record .btn-dphpforms-univalle:eq(0)').css( { 'margin-left' : ( ($('.dphpforms-updater').width()/2) - 72 - 30 ) + 'px'  } );
-                    }
 
                 }else if( (form == 'seguimiento_geografico_')&&( action == 'insert' ) ){
                 
@@ -287,7 +269,7 @@ define(
             });
 
 
-            function edit_tracking_new_form(){
+            /*function edit_tracking_new_form(){
             // Controles para editar formulario de pares
             $('.dphpforms-peer-record').on('click', function(){
                 var id_tracking = $(this).attr('data-record-id');
@@ -304,7 +286,7 @@ define(
                 load_record_updater('seguimiento_grupal', id_tracking);
                $('#modal_v2_edit_groupal_tracking').fadeIn(300);
 
-            });}
+            });}*/
 
 
             function check_risks_tracking( flag, student_code ){
@@ -393,7 +375,9 @@ define(
                     return value;
                 }; 
 
-           $(document).on('click', '.dphpforms > #button' , function(evt) {
+          //OBSOLETO
+           /*$(document).on('click', '.dphpforms > #button' , function(evt) {
+           
                     evt.preventDefault();
                     $( ':disabled' ).prop( 'disabled', false);
                     var formData = new FormData();
@@ -546,9 +530,8 @@ define(
                             
                      });
                 
-                     
                 });
-
+            */
 
 
 
@@ -610,7 +593,7 @@ define(
             }
 
 
-                function generate_attendance_table(students){
+                /*function generate_attendance_table(students){
                     loading_indicator.show();
                      $.ajax({
                             type: "POST",
@@ -637,12 +620,12 @@ define(
                                 loading_indicator.hide();
                             },
                         });
-                }
+                }*/
 
 
-                function load_record_updater(form_id, record_id){
+                /*function load_record_updater(form_id, record_id){
+                    $('.div').removeClass('regla_incumplida');
                     $("#body_editor").html("");
-                    $("#modal_v2_edit_groupal_tracking").find("#body_editor").html("");   
                     loading_indicator.show();
                     $.get( "../managers/dphpforms/dphpforms_forms_core.php?form_id=&record_id="+record_id, function( data ) {
                          loading_indicator.hide();
@@ -713,7 +696,7 @@ define(
                             $("#permissions_informationr").html("");
 
                     });
-                }
+                }*/
 
 
 
@@ -872,7 +855,7 @@ define(
                         loading_indicator.hide();
                         $(student_id + " > div").empty();
                         $(student_id + " > div").append(msg);
-                        edit_groupal_tracking_new_form();
+                        //edit_groupal_tracking_new_form();
                         
                     },
                     dataType: "json",
@@ -926,8 +909,8 @@ define(
                         loading_indicator.hide();
                         $(student_id + " > div").empty();
                         $(student_id + " > div").append(msg);
-                        edit_tracking_new_form();
-                        edit_groupal_tracking_new_form();
+                        //edit_tracking_new_form();
+                        //edit_groupal_tracking_new_form();
                         
                     },
                     dataType: "json",
@@ -1051,8 +1034,8 @@ define(
                                 );
                             },
                         });
-                        edit_tracking_new_form();
-                        edit_groupal_tracking_new_form();
+                        //edit_tracking_new_form();
+                        //edit_groupal_tracking_new_form();
                     }
                 });
             }
@@ -1100,6 +1083,7 @@ define(
                     var id_persona = $("#personas").children(":selected").attr("value");
                     var id_semestre = $("#periodos").children(":selected").attr("value");
                     let username = $("#personas").children(":selected").data("username");
+                    collapse_loaded = [];
 
                     if (id_persona == undefined) {
 
@@ -1165,8 +1149,8 @@ define(
                                $("#reemplazarToogle").fadeIn();
                             }
                         });
-                        edit_tracking_new_form();
-                        edit_groupal_tracking_new_form();
+                        //edit_tracking_new_form();
+                        //edit_groupal_tracking_new_form();
 
                     }
 
@@ -1223,6 +1207,7 @@ define(
                             place = $('.in_lugar').find('input').val();
                         }
 
+                        let courseid =  $('#dphpforms_block_courseid').data('info');
 
                         //Text area is clear again
                         var answer = "";
@@ -1241,7 +1226,8 @@ define(
                                 message_to_send: message_to_send,
                                 semester:semester,
                                 instance:instance,
-                                place:place
+                                place:place,
+                                courseid:courseid
                             },
                             url: "../../../blocks/ases/managers/pilos_tracking/pilos_tracking_report.php",
                             async: false,

@@ -1,0 +1,57 @@
+{{#data}}
+<body>
+    {{> block_ases/side_menu}}
+    <div id="extras" data-url-base="{{url_base}}"></div>
+    <div class="container">
+        <div class="row">
+            <h2>Gestión de incidencias</h2>
+            <hr class="hr-univalle">
+        </div>
+        <div id="incidents_container" class="row">
+            <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+                <div class="title_list row">
+                    Lista de incidencias
+                    <hr>
+                </div>
+                <div class="inc_item_container row">
+                    {{#incidents}}
+                    <div data-id="{{id}}" class="inc_item {{#cerrada}}inc_item_closed{{/cerrada}}{{^cerrada}}inc_item_open{{/cerrada}} col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                        Ticket #{{id}} - {{title}}
+                    </div>
+                    {{/incidents}}
+                </div>
+            </div>
+            <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9">
+                <div class="detail_container row">
+                    <div class="inc_title col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                        <div id="empty">
+                            Seleccione una incidencia
+                        </div>
+                    </div>
+                    <div class="opened_by col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                        
+                    </div>
+                    <div class="closed_by col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                        
+                    </div>
+                    <div class="record_datetime col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                        
+                    </div>
+                    <div class="inc_detail col-xs-12 col-sm-12 col-md-12 col-lg-12">
+
+                    </div>
+                    <div class="send_message col-xs-12 col-sm-12 col-md-12 col-lg-12">
+
+                    </div>
+                    <div style="display:none;" class="inc_preview col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                        <strong>HTML capturado de la incidencia:</strong> [<a href="ases_incidents_preview.php?incident_id=" target="_blank" rel="noopener noreferrer"> Ver </a>].
+                    </div>
+                    <div class="inc_opc">
+                        <a id="close_incident" data-id="-1" href="javascript:void(0)" class="btn btn-md btn-marcar-resuelta">Marcar como resuelta</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+{{/data}}

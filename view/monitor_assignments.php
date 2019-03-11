@@ -31,7 +31,7 @@ require_once $CFG->libdir . '/adminlib.php';
 require_once '../managers/monitor_assignments/monitor_assignments_lib.php';
 require_once '../managers/instance_management/instance_lib.php';
 require_once '../managers/menu_options.php';
-
+require_once '../managers/periods_management/periods_lib.php';
 global $PAGE;
 global $USER;
 
@@ -85,7 +85,8 @@ $record->students_faculty = array_values( monitor_assignments_get_students_facul
 $record->monitors_students_relationship = json_encode( array_values( monitor_assignments_get_monitors_students_relationship_by_instance( $blockid ) ) );
 $record->professional_practicant_relationship = json_encode( array_values( monitor_assignments_get_profesional_practicant_relationship_by_instance( $blockid ) ) );
 $record->practicant_monitor_relationship = json_encode( array_values( monitor_assignments_get_practicant_monitor_relationship_by_instance( $blockid ) ) );
-
+$current_semester = get_current_semester();
+$record->semester_name = $current_semester->nombre;
 $coursenode = $PAGE->navigation->find($courseid, navigation_node::TYPE_COURSE);
 $blocknode = navigation_node::create('Asignaciones',$url, null, 'block', $blockid);
 $coursenode->add_node($blocknode);
@@ -105,8 +106,11 @@ $PAGE->requires->css('/blocks/ases/style/c3.css', true);
 $PAGE->requires->css('/blocks/ases/style/switch.css', true);
 $PAGE->requires->css('/blocks/ases/style/monitor_assignments.css', true);
 $PAGE->requires->css('/blocks/ases/style/side_menu_style.css', true);
-
+$PAGE->requires->css('/blocks/ases/style/styles_pilos.css', true);
+$PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/jquery.dataTables.min.css', true);
 $PAGE->requires->js_call_amd('block_ases/monitor_assignments', 'init');
+
+$PAGE->requires->js_call_amd('block_ases/ases_incident_system', 'init');
 
 $output = $PAGE->get_renderer('block_ases');
 

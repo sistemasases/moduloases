@@ -22,7 +22,7 @@
  * @author     Jeison Cardona Gómez
  * @package    block_ases
  * @copyright  2016 Iader E. García <iadergg@gmail.com>
- * @copyright  2018 Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
+ * @copyright  2019 Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -47,6 +47,7 @@ require_once '../managers/dphpforms/dphpforms_forms_core.php';
 require_once '../managers/dphpforms/dphpforms_records_finder.php';
 require_once '../managers/dphpforms/dphpforms_get_record.php';
 require_once '../managers/user_management/user_management_lib.php';
+require_once '../managers/monitor_assignments/monitor_assignments_lib.php';
 require_once '../managers/periods_management/periods_lib.php';
 require_once '../classes/AsesUser.php';
 require_once '../classes/mdl_forms/user_image_form.php';
@@ -58,6 +59,7 @@ global $USER;
 include "../classes/output/student_profile_page.php";
 include "../classes/output/renderer.php";
 
+$new_forms_date =strtotime('2018-01-01 00:00:00');
 
 // Set up the page.
 $title = "Ficha estudiante";
@@ -96,17 +98,6 @@ $data_init = array();
 
 $rol = get_role_ases($USER->id);
 $html_profile_image = "";
-/**
- * @param int $mdl_user Moodle user ID
- * @return string  $html_profile_image Standard $OUPUT profile image html
- */
-function getHtmlProfileImage($mdl_user_id): string {
-    global $DB, $OUTPUT;
-    $html_profile_image = "";
-    $mdl_user =   user_management_get_full_moodle_user ($mdl_user_id);
-    $html_profile_image = $OUTPUT->user_picture($mdl_user, array('size'=>200, 'link'=> false));
-    return $html_profile_image;
-}
 $id_user_moodle_ = null;
 $ases_student = null;
 if ($student_code != 0) {
@@ -127,7 +118,8 @@ if ($student_code != 0) {
     
     
     $html_profile_image = AsesUser::get_HTML_img_profile_image($contextblock->id, $ases_student->id);
-    $academic_programs = get_status_program_for_profile($student_id);
+    //$academic_programs = get_status_program_for_profile($student_id);
+    $academic_programs   = get_status_program_for_profile_aditional($student_id);
     $student_cohorts = get_cohorts_by_student($id_user_moodle);
     $status_ases_array = get_ases_status($ases_student->id, $blockid);
 
@@ -154,6 +146,17 @@ if ($student_code != 0) {
     $record->id_ases = $student_id;
     $record->email_moodle = $user_moodle->email_moodle;
     $record->age = substr($ases_student->age, 0, 2);
+    foreach ($academic_programs as $program){
+        if($program->tracking_status == 1){
+            $sede = $program->nombre_sede;
+            $cod_programa = $program->cod_univalle;
+            $nombre_programa = $program->nombre_programa;
+            $program->nombre_sede = "<b>".$sede."</b>";
+            $program->cod_univalle = "<b>".$cod_programa."</b>";
+            $program->nombre_programa = "<b>".$nombre_programa."</b>";
+            break;
+        }
+    }
     $record->academic_programs = $academic_programs;
     $record->student_cohorts = $student_cohorts;
 
@@ -510,8 +513,10 @@ if ($student_code != 0) {
     $trainee_object = get_assigned_pract($student_id);
     $professional_object = get_assigned_professional($student_id);
 
+    $flag_with_assignation = false;
 
     if ($monitor_object) {
+        $flag_with_assignation = true;
         $record->monitor_fullname = "$monitor_object->firstname $monitor_object->lastname";
         $record->id_dphpforms_monitor = '-1';
     } else {
@@ -695,6 +700,7 @@ if ($student_code != 0) {
 
     foreach ($academic_programs as $program) {
         if($program->tracking_status == 1){
+            
             $academic_program_id = $program->academic_program_id;
             break;
         }
@@ -724,197 +730,79 @@ if ($student_code != 0) {
 
     $dphpforms_ases_user = get_ases_user_by_code( $student_code )->id;
 
-    // Pares
-    $array_peer_trackings_dphpforms = dphpforms_find_records('seguimiento_pares', 'seguimiento_pares_id_estudiante', $dphpforms_ases_user, 'DESC');
-    $array_peer_trackings_dphpforms = json_decode($array_peer_trackings_dphpforms);
+    //PeerTracking V3
+    //dphpforms start
+    $peer_tracking_v3 = [];
+    $periods = periods_management_get_all_semesters();
+    $special_date_interval = [
+        'start' => strtotime( "2019-01-01" ),
+        'end' => strtotime( "2019-04-30" )
+    ];
+    foreach( $periods as $key => $period ){
 
-    // Inasistencia
-    $array_inasistencia_peer_trackings_dphpforms = dphpforms_find_records('inasistencia', 'inasistencia_id_estudiante', $dphpforms_ases_user, 'DESC');
-    $array_inasistencia_peer_trackings_dphpforms = json_decode($array_inasistencia_peer_trackings_dphpforms);
-    
+        if( strtotime( $period->fecha_inicio ) >= $new_forms_date ){
 
-    $array_detail_peer_trackings_dphpforms = array();
-    $array_detail_inasistencia_peer_trackings_dphpforms = array();
+            $trackings = get_tracking_current_semesterV3('student', $dphpforms_ases_user, $period->id);
+            if( count( $trackings ) > 0 ){
 
-    foreach ($array_peer_trackings_dphpforms->results as &$peer_trackings_dphpforms) {
-        array_push($array_detail_peer_trackings_dphpforms, json_decode(dphpforms_get_record($peer_trackings_dphpforms->id_registro, 'fecha')));
-    };
+                $peer_tracking['period_name'] = $period->nombre;
+                $tracking_modified = [];
+                 //Here can be added metadata.
+                foreach ($trackings as $key => $tracking) {
 
-    foreach ($array_inasistencia_peer_trackings_dphpforms->results as &$inasistencia_peer_trackings_dphpforms) {
-        array_push($array_detail_inasistencia_peer_trackings_dphpforms, json_decode(dphpforms_get_record($inasistencia_peer_trackings_dphpforms->id_registro, 'in_fecha')));
-    };
-
-    $array_tracking_date = array();
-
-    foreach ($array_detail_peer_trackings_dphpforms as &$peer_tracking) {
-        foreach ($peer_tracking->record->campos as &$tracking) {
-            if ($tracking->local_alias == 'fecha') {
-                array_push($array_tracking_date, strtotime($tracking->respuesta));
-            };
-        };
-    };
-
-    foreach ($array_detail_inasistencia_peer_trackings_dphpforms as &$inasistencia_peer_tracking) {
-        foreach ($inasistencia_peer_tracking->record->campos as &$tracking) {
-            if ($tracking->local_alias == 'in_fecha') {
-                array_push($array_tracking_date, strtotime($tracking->respuesta));
-            };
-        };
-    };
-
-    rsort($array_tracking_date);
-
-    $seguimientos_ordenados = new stdClass();
-    $seguimientos_ordenados->index = array();
-    //Inicio de ordenamiento
-    $periodo_a = [1, 2, 3, 4, 5, 6, 7];
-    //periodo_b es el resto de meses;
-    for ($x = 0; $x < count($array_tracking_date); $x++) {
-
-        $string_date = $array_tracking_date[$x];
-        $array_tracking_date[$x] = getdate($array_tracking_date[$x]);
-        $year = $array_tracking_date[$x]['year'];
-
-        if (property_exists($seguimientos_ordenados, $year)) {
-            
-            if (in_array($array_tracking_date[$x]['mon'], $periodo_a)) {
-                // Records where we expect to find
-                for ($y = 0; $y < count($array_detail_peer_trackings_dphpforms); $y++) {
-                    if ($array_detail_peer_trackings_dphpforms[$y]) {
-                        foreach ($array_detail_peer_trackings_dphpforms[$y]->record->campos as &$tracking) {
-                            if ($tracking->local_alias == 'fecha') {
-                                if (strtotime($tracking->respuesta) == $string_date) {
-                                    array_push($seguimientos_ordenados->$year->per_a, $array_detail_peer_trackings_dphpforms[$y]);
-                                    $array_detail_peer_trackings_dphpforms[$y] = null;
-                                    break;
-                                };
-                            };
-                        };
+                    $_fecha = null;
+                    
+                    if ( array_key_exists("fecha", $tracking) ) {
+                        $_fecha = strtotime( $tracking['fecha'] );
+                    }else{
+                        $_fecha = strtotime( $tracking['in_fecha'] );
                     };
-                };
-                // Inasistencia
-                for ($y = 0; $y < count($array_detail_inasistencia_peer_trackings_dphpforms); $y++) {
-                    if ($array_detail_inasistencia_peer_trackings_dphpforms[$y]) {
-                        foreach ($array_detail_inasistencia_peer_trackings_dphpforms[$y]->record->campos as &$tracking) {
-                            if ($tracking->local_alias == 'in_fecha') {
-                                if (strtotime($tracking->respuesta) == $string_date) {
-                                    array_push($seguimientos_ordenados->$year->per_a, $array_detail_inasistencia_peer_trackings_dphpforms[$y]);
-                                    $array_detail_inasistencia_peer_trackings_dphpforms[$y] = null;
-                                    break;
-                                };
-                            };
-                        };
-                    };
-                };
-            } else {
-                for ($y = 0; $y < count($array_detail_peer_trackings_dphpforms); $y++) {
-                    if ($array_detail_peer_trackings_dphpforms[$y]) {
-                        foreach ($array_detail_peer_trackings_dphpforms[$y]->record->campos as &$tracking) {
-                            if ($tracking->local_alias == 'fecha') {
-                                if (strtotime($tracking->respuesta) == $string_date) {
-                                    array_push($seguimientos_ordenados->$year->per_b, $array_detail_peer_trackings_dphpforms[$y]);
-                                    $array_detail_peer_trackings_dphpforms[$y] = null;
-                                    break;
-                                };
-                            };
-                        };
-                    };
-                };
-                // Inasistencia
-                for ($y = 0; $y < count($array_detail_inasistencia_peer_trackings_dphpforms); $y++) {
-                    if ($array_detail_inasistencia_peer_trackings_dphpforms[$y]) {
-                        foreach ($array_detail_inasistencia_peer_trackings_dphpforms[$y]->record->campos as &$tracking) {
-                            if ($tracking->local_alias == 'in_fecha') {
-                                if (strtotime($tracking->respuesta) == $string_date) {
-                                    array_push($seguimientos_ordenados->$year->per_b, $array_detail_inasistencia_peer_trackings_dphpforms[$y]);
-                                    $array_detail_inasistencia_peer_trackings_dphpforms[$y] = null;
-                                    break;
-                                };
-                            };
-                        };
-                    };
-                };
-            };
-        } else {
-            
-            array_push($seguimientos_ordenados->index, $year);
+                    
 
-            $seguimientos_ordenados->$year->year = $year;
-            $seguimientos_ordenados->$year->per_a = array();
-            $seguimientos_ordenados->$year->per_b = array();
+                    if( ( $_fecha >= $special_date_interval['start'] ) && ( $_fecha <= $special_date_interval['end'] ) ){
+                        $tracking['custom_extra']['special_tracking'] = true;
+                    }
 
-            $seguimientos_ordenados->$year->year = $year;
-            if (in_array($array_tracking_date[$x]['mon'], $periodo_a)) {
-                for ($y = 0; $y < count($array_detail_peer_trackings_dphpforms); $y++) {
-                    if ($array_detail_peer_trackings_dphpforms[$y]) {
-                        foreach ($array_detail_peer_trackings_dphpforms[$y]->record->campos as &$tracking) {
-                            if ($tracking->local_alias == 'fecha') {
-                                if (strtotime($tracking->respuesta) == $string_date) {
-                                    array_push($seguimientos_ordenados->$year->per_a, $array_detail_peer_trackings_dphpforms[$y]);
-                                    $array_detail_peer_trackings_dphpforms[$y] = null;
-                                    break;
-                                };
-                            };
-                        };
-                    };
-                };
-                // Inasistencia
-                for ($y = 0; $y < count($array_detail_inasistencia_peer_trackings_dphpforms); $y++) {
-                    if ($array_detail_inasistencia_peer_trackings_dphpforms[$y]) {
-                        foreach ($array_detail_inasistencia_peer_trackings_dphpforms[$y]->record->campos as &$tracking) {
-                            if ($tracking->local_alias == 'in_fecha') {
-                                if (strtotime($tracking->respuesta) == $string_date) {
-                                    array_push($seguimientos_ordenados->$year->per_a, $array_detail_inasistencia_peer_trackings_dphpforms[$y]);
-                                    $array_detail_inasistencia_peer_trackings_dphpforms[$y] = null;
-                                    break;
-                                };
-                            };
-                        };
-                    };
-                };
-            } else {
-                for ($y = 0; $y < count($array_detail_peer_trackings_dphpforms); $y++) {
-                    if ($array_detail_peer_trackings_dphpforms[$y]) {
-                        foreach ($array_detail_peer_trackings_dphpforms[$y]->record->campos as &$tracking) {
-                            if ($tracking->local_alias == 'fecha') {
-                                if (strtotime($tracking->respuesta) == $string_date) {
-                                    array_push($seguimientos_ordenados->$year->per_b, $array_detail_peer_trackings_dphpforms[$y]);
-                                    $array_detail_peer_trackings_dphpforms[$y] = null;
-                                    break;
-                                };
-                            };
-                        };
-                    };
-                };
-                // Inasistencia
-                for ($y = 0; $y < count($array_detail_inasistencia_peer_trackings_dphpforms); $y++) {
-                    if ($array_detail_inasistencia_peer_trackings_dphpforms[$y]) {
-                        foreach ($array_detail_inasistencia_peer_trackings_dphpforms[$y]->record->campos as &$tracking) {
-                            if ($tracking->local_alias == 'in_fecha') {
-                                if (strtotime($tracking->respuesta) == $string_date) {
-                                    array_push($seguimientos_ordenados->$year->per_b, $array_detail_inasistencia_peer_trackings_dphpforms[$y]);
-                                    $array_detail_inasistencia_peer_trackings_dphpforms[$y] = null;
-                                    break;
-                                };
-                            };
-                        };
-                    };
-                };
-            };
-        };
-    };
-    //Fin de ordenamiento
+                    $tracking['custom_extra'][$tracking['alias_form']] = true;
+                    $tracking['custom_extra']['rev_pro'] = false;
+                    $tracking['custom_extra']['rev_pract'] = false;
 
-    $seguimientos_array = json_decode(json_encode($seguimientos_ordenados), true);
+                    if ( array_key_exists("revisado_profesional", $tracking) ) {
+                        if( $tracking['revisado_profesional'] === "0" ){
+                            $tracking['custom_extra']['rev_pro'] = true;
+                        }
+                    };
+                    if ( array_key_exists("revisado_practicante", $tracking) ) {
+                        if( $tracking['revisado_practicante'] === "0" ){
+                            $tracking['custom_extra']['rev_pract'] = true;
+                        }
+                    };
+                    if ( array_key_exists("in_revisado_profesional", $tracking) ) {
+                        if( $tracking['in_revisado_profesional'] === "0" ){
+                            $tracking['custom_extra']['rev_pro'] = true;
+                        }
+                    };
+                    if ( array_key_exists("in_revisado_practicante", $tracking) ) {
+                        if( $tracking['in_revisado_practicante'] === "0" ){
+                            $tracking['custom_extra']['rev_pract'] = true;
+                        }
+                    };
 
-    $array_periodos = array();
-    for ($x = 0; $x < count($seguimientos_array['index']); $x++) {
-        array_push($array_periodos, $seguimientos_array[ $seguimientos_array['index'][$x] ]);
+                    //Using reference fail
+                    array_push( $tracking_modified, $tracking );
+
+                };
+
+                $peer_tracking['trackings'] = $tracking_modified;
+
+                array_push( $peer_tracking_v3, $peer_tracking );
+            }
+
+        }
+
     }
-    $record->peer_tracking_v2 = array(
-        'index' => $seguimientos_array['index'],
-        'periodos' => $array_periodos,
-    );
+
+    $record->peer_tracking_v3 =  array_reverse( $peer_tracking_v3 );
 
     $enum_risk = array();
     array_push($enum_risk, "");
@@ -1237,8 +1125,6 @@ if ($student_code != 0) {
     $idEstudiante = $student_id;
 
     //$seguimientos_array
-    //
-    echo '<br>';
     $current_year = date('Y', strtotime($periodoactual['fecha_inicio']));
     $initial_month = date('m', strtotime($periodoactual['fecha_inicio']));
     $final_month = date('m', strtotime($periodoactual['fecha_fin']));
@@ -1518,6 +1404,7 @@ if ($student_code != 0) {
     }
 
     $record->form_seguimientos_geograficos = dphpforms_render_recorder('seguimiento_geografico', $rol);
+    $record->geo_tracking =  dphpforms_render_recorder('seguimiento_geografico', $rol);
     if ($record->form_seguimientos_geograficos == '') {
         $record->form_seguimientos_geograficos = "<strong><h3>Oops!: No se ha encontrado un formulario con el alias: <code>seguimientos_geograficos</code>.</h3></strong>";
     }
@@ -1525,9 +1412,15 @@ if ($student_code != 0) {
     if($seguimiento_geografico){
         $record->actualizar_seguimiento_geografico = true;
         $record->id_seguimiento_geografico = array_values( $seguimiento_geografico )[0]->id_registro;
+        //$record->geo_tracking =  dphpforms_render_updater('seguimiento_geografico', $rol, $record->id_seguimiento_geografico);
     }else{
         $record->registro_seguimiento_geografico = true;
     }
+
+    //geo_tracking 
+    /**
+     * {{{fix_mustache_bug}}}{{{geo_tracking}}}
+     */
 
 } else {
 
@@ -1568,7 +1461,11 @@ $_user_image_edit_form->set_data($toform);
 $record->update_profile_image_form = $_user_image_edit_form->render(null);
 /** End of Update user image  */
 $record->ases_student_code = $dphpforms_ases_user;
-$record->student_username = user_management_get_moodle_user_with_tracking_status_1( $dphpforms_ases_user )->username;
+
+$moodle_user = user_management_get_moodle_user_with_tracking_status_1( $dphpforms_ases_user );
+
+$record->student_username = $moodle_user->username;
+$record->student_fullname = $moodle_user->firstname . " " . $moodle_user->lastname;
 $record->instance = $blockid;
 $record->html_profile_image = $html_profile_image;
 
@@ -1673,10 +1570,26 @@ array_unshift( $record->datosSeguimientoEstudianteEconomico, $risk_entries["firs
 array_unshift( $record->datosSeguimientoEstudianteVidaUniversitaria, $risk_entries["first"]["vida_uni"] );
 
 
+//Last last student assignment
+
+$record->flag_with_assignation = $flag_with_assignation;
+
+if( $dphpforms_ases_user ){
+    if( !$flag_with_assignation ){
+        $last_assignment = monitor_assignments_get_last_student_assignment( $dphpforms_ases_user, $blockid );
+        $record->last_assignment_monitor = $last_assignment['monitor_obj']->firstname . " " . $last_assignment['monitor_obj']->lastname;
+        $record->last_assignment_practicant = $last_assignment['pract_obj']->firstname . " " . $last_assignment['pract_obj']->lastname;
+        $record->last_assignment_professional = $last_assignment['prof_obj']->firstname . " " . $last_assignment['prof_obj']->lastname;
+    }
+}   
+
 //Menu items are created
 $menu_option = create_menu_options($USER->id, $blockid, $courseid);
-
 $record->menu = $menu_option;
+
+$record->fix_mustache_bug = '<form style="display:none;"></form>';
+$record->courseid = $courseid;
+$record->blockid = $blockid;
 
 $PAGE->set_context($contextcourse);
 $PAGE->set_context($contextblock);
@@ -1698,11 +1611,12 @@ $PAGE->requires->css('/blocks/ases/style/side_menu_style.css', true);
 $PAGE->requires->css('/blocks/ases/style/student_profile.css', true);
 $PAGE->requires->css('/blocks/ases/style/discapacity_tab.css', true);
 $PAGE->requires->css('/blocks/ases/style/switch.css', true);
+$PAGE->requires->css('/blocks/ases/style/fontawesome550.min.css', true);
 //Pendiente para cambiar el idioma del nombre del archivo junto con la estructura de
 //su nombramiento.
 $PAGE->requires->css('/blocks/ases/style/creadorFormulario.css', true);
 
-//$PAGE->requires->js_call_amd('block_ases/ases_incident_system', 'init');
+$PAGE->requires->js_call_amd('block_ases/ases_incident_system', 'init');
 $PAGE->requires->js_call_amd('block_ases/student_profile_main', 'init', $data_init);
 $PAGE->requires->js_call_amd('block_ases/student_profile_main', 'equalize');
 

@@ -1,4 +1,12 @@
-{
+{   "__comment": {"general":       "El schema json de discapacidad describe las posibles características que debe tener un registro que utilice este modelo. Es necesario hacer la validación con este schema antes de guardar un registro en la base de datos.",
+                  "ubicacion":     "Este schema se encuentra almacenado en la base de datos tabla talentospilos_json_schema.",
+                  "ubicacion_uso": "El schema se implementa en el archivo discapacity_tab_api.php con la ayuda de una librería externa de php.",
+                  "uso":           "La librería permite validar si un JSON cumple con las características del Schema. En este caso, si un JSON (detalle discapacidad) cumple con el esquema a continuación",
+                  "warning1":      "Evite cambiar el schema. Si es necesario, debe modificarlo de acuerdo al funcionamiento de la herramienta. Tenga en cuenta la validación del front para cambiar el Schema",
+                  "warning2":      "Para modificar el Schema, tenga en cuenta la interfaz. En muchos casos, los enum contienen identificadores de elementos html. Por ello, si los identificadores opcionales no son idénticos, fallará la validación aunque la lógica esté bien.",
+                  "warning3":      "Ejemplo: Si usted agrega un campo de selección múltiple, deberá validar las opciones posibles en la propiedad enum. Si su html tiene elementos con id = 'input_nuevo_campo1', id = 'input_nuevo_campo2', y el Schema, en su característica particular tiene un enum : ['input_nuevo_campo2','input_nuevo_campo'], es posible seleccionar 'input_nuevo_campo1' y fallará la valdiación interna",
+                  "warning4":      "Si modifica en Schema, actualice el mismo en la base de datos. Debe tener en cuenta que el Schema usado para validar en este caso es el de id = 1 en la base da datos",
+                  "importante":    "Evite modificar las características existentes"},
     "title": "Detalle de discapacidad",
     "description": "Un detalle de discapacidad de un usuario",
     "type": "object",

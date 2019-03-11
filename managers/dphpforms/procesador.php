@@ -93,8 +93,27 @@
 
 if($RECORD_ID){
 
-    $previous_data = dphpforms_get_record($RECORD_ID, null);
     $current_data = $form_JSON;
+
+    //log of preparation for update
+    $stored_data = "";
+    $to_warehouse = new stdClass();
+    $to_warehouse->id_usuario_moodle = $USER->id;
+    $to_warehouse->accion = "PRE-UPDATE";
+    $to_warehouse->id_registro_respuesta_form = $RECORD_ID;
+    $to_warehouse->datos_previos = "";
+    $to_warehouse->datos_enviados = $current_data;
+    $to_warehouse->datos_almacenados = "";
+    $to_warehouse->observaciones = "preparation for update";
+    $to_warehouse->cod_retorno = 0;
+    $to_warehouse->msg_retorno = "";
+    $to_warehouse->dts_retorno = "";
+    $to_warehouse->navegador = $_SERVER['HTTP_USER_AGENT'];
+    $to_warehouse->url_request = $_SERVER['HTTP_REFERER'];
+    $DB->insert_record('talentospilos_df_dwarehouse', $to_warehouse, $returnid=false, $bulk=false);
+    //end log of preparation for update
+
+    $previous_data = dphpforms_get_record($RECORD_ID, null);
     $retorno = dphpforms_update_respuesta($form_JSON, $RECORD_ID);
     $stored_data = dphpforms_get_record($RECORD_ID, null);
 
@@ -117,6 +136,25 @@ if($RECORD_ID){
 }else{
     $previous_data = "";
     $current_data = $form_JSON;
+
+    //log of preparation for insert
+    $stored_data = "";
+    $to_warehouse = new stdClass();
+    $to_warehouse->id_usuario_moodle = $USER->id;
+    $to_warehouse->accion = "PRE-INSERT";
+    $to_warehouse->id_registro_respuesta_form = -1;
+    $to_warehouse->datos_previos = "";
+    $to_warehouse->datos_enviados = $current_data;
+    $to_warehouse->datos_almacenados = "";
+    $to_warehouse->observaciones = "preparation for insertion";
+    $to_warehouse->cod_retorno = 0;
+    $to_warehouse->msg_retorno = "";
+    $to_warehouse->dts_retorno = "";
+    $to_warehouse->navegador = $_SERVER['HTTP_USER_AGENT'];
+    $to_warehouse->url_request = $_SERVER['HTTP_REFERER'];
+    $DB->insert_record('talentospilos_df_dwarehouse', $to_warehouse, $returnid=false, $bulk=false);
+    //end log of preparation for insert
+
     $retorno = dphpforms_new_store_respuesta($form_JSON);
     if( json_decode($retorno)->status == '0' ){
 
@@ -376,22 +414,39 @@ function dphpforms_update_respuesta($completed_form, $RECORD_ID){
                 return $retorno;
             }
 
+            //No aplica para actualizaciones.
+            //Validación de intervalos definidos
+
+           /* $interval_validator = dphpforms_date_interval_validator( $respuestas_obj );
+            
+            if( !($interval_validator['status']) ){
+                $retorno = json_encode(
+                    array(
+                        'status' => '-6',
+                        'message' => 'The value of the field is out of range',
+                        'data' => [
+                            "id" => $interval_validator['field_out_of_interval_id'],
+                            "max" => $interval_validator['max'],
+                            "min" => $interval_validator['min']
+                        ]
+                    )
+                );
+                echo $retorno;
+                return $retorno;
+            }*/
+
             /*print_r($updated_respuestas);
 
             if($processable){
                 echo 'PROCESABLE';
             }else{
                 echo 'NO PROCESABLE';
-            }
-
-            die();*/
+            }*/
            
             if($processable){
 
                 //echo 'REGLAS OK, PENDIENTE';
                 $updated_respuestas = json_decode(json_encode($updated_respuestas));
-                //print_r($updated_respuestas);
-                //die();
                 foreach($updated_respuestas as &$r){
 
                     $updated = dphpforms_update_completed_form($RECORD_ID, $r->id, $r->valor);
@@ -518,8 +573,6 @@ function dphpforms_new_store_respuesta($completed_form){
         }
     }
 
-    //print_r($all_respuestas);
-    //die();
     $respuestas_obj = json_decode( json_encode($all_respuestas) );
     $validator_response = dphpforms_reglas_validator( $respuestas_obj, $reglas );
     $processable = $validator_response['status'];
@@ -552,6 +605,26 @@ function dphpforms_new_store_respuesta($completed_form){
                     "id" => $regex_validator['not_regex_match_field_id'],
                     "human_readable" => $regex_validator['human_readable'],
                     "example" => $regex_validator['example']
+                ]
+            )
+        );
+        echo $retorno;
+        return $retorno;
+    }
+
+    //Validación de intervalos definidos
+
+    $interval_validator = dphpforms_date_interval_validator( $respuestas_obj );
+    
+    if( !($interval_validator['status']) ){
+        $retorno = json_encode(
+            array(
+                'status' => '-6',
+                'message' => 'The value of the field is out of range',
+                'data' => [
+                    "id" => $interval_validator['field_out_of_interval_id'],
+                    "max" => $interval_validator['max'],
+                    "min" => $interval_validator['min']
                 ]
             )
         );
@@ -1222,6 +1295,113 @@ function dphpforms_static_validator( $respuestas, $RECORD_ID ){
     return array(
         'status' => true,
         'null_field_id' => ''
+    );
+
+}
+
+function dphpforms_date_interval_validator( $respuestas ){
+
+    global $DB;
+
+    foreach( $respuestas as $key => $respuesta ){
+        
+        $sql = "SELECT * 
+        FROM {talentospilos_df_preguntas} AS P 
+        INNER JOIN {talentospilos_df_tipo_campo} AS TC
+        ON P.tipo_campo = TC.id 
+        WHERE P.id = " . $respuesta->id;
+
+        $pregunta_obj = $DB->get_record_sql( $sql );
+        $field_type = $pregunta_obj->campo;
+
+        if( $field_type === "DATE" ){
+            
+            $obj_atributos = json_decode( $pregunta_obj->atributos_campo );
+
+            $max = null;
+            $min = null;
+
+            $today = new DateTime('now');
+            $t_time = strtotime( $today->format('Y-m-d') );
+
+            if(property_exists($obj_atributos, 'max')){
+                
+                $attr_max = $obj_atributos->max;
+                if( $attr_max === "today()" ){
+                    $max = $t_time;
+                }else{
+                    $max = strtotime( $attr_max );
+                }
+            }
+
+            if(property_exists($obj_atributos, 'min')){
+                
+                $attr_min = $obj_atributos->min;
+                if( $attr_min === "today()" ){
+                    $min = $t_time;
+                }else{
+                    $min = strtotime( $attr_min );
+                }
+            }
+
+            if( $respuesta->valor == "" && $obj_atributos->required == "true" ){
+                return array(
+                    'status' => false,
+                    'field_out_of_interval_id' => $respuesta->id,
+                    'max' => date( 'Y-m-d', $max ),
+                    'min' => date( 'Y-m-d', $min )
+                );
+            }
+            
+            if( $respuesta->valor != "" ){
+                
+                $valid_interval = false;
+                $response = strtotime( $respuesta->valor );
+
+                if( $max && $min ){
+
+                    if( ($min <= $response) && ($response <= $max) ){
+                        $valid_interval = true;
+                    }
+
+                }else if( $max && !$min ){
+
+                    if( $response <= $max ){
+                        $valid_interval = true;
+                    }
+
+                }else if( !$max && $min ){
+
+                    if( $min <= $response ){
+                        $valid_interval = true;
+                    }
+
+                }else if( !$max && !$min ){
+
+                    $valid_interval = true;
+                    
+                }
+
+                if( !$valid_interval ){
+
+                    return array(
+                        'status' => false,
+                        'field_out_of_interval_id' => $respuesta->id,
+                        'max' => date( 'Y-m-d', $max ),
+                        'min' => date( 'Y-m-d', $min )
+                    );
+
+                }
+            }
+        }
+
+    }
+
+    return array(
+        'status' => true,
+        'field_out_of_interval_id' => '',
+        'max' => null,
+        'min' => null
     );
 
 }

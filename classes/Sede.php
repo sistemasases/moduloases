@@ -30,6 +30,7 @@ class Sede extends BaseDAO {
     const ID = 'id';
     const ID_CIUDAD = 'id_ciudad';
     const NOMBRE = 'nombre';
+    const COD_UNIVALLE = 'cod_univalle';
 
     public $id;
     public $id_ciudad;

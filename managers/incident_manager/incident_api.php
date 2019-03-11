@@ -127,6 +127,104 @@
                 return_with_code( -2 );
             }
 
+        }else if( $input->function == "close_logged_user_incident" ){
+
+            /**
+             * incident_id
+             */
+            
+            if( count( $input->params ) == 1 ){
+                
+                if( is_numeric( $input->params[0] ) ){
+
+                    $return = incident_close_logged_user_incident( $input->params[0] );
+
+                    if( $return ){
+                        echo json_encode( 
+                            array(
+                                "status_code" => 0,
+                                "error_message" => "",
+                                "data_response" => $return
+                            )
+                        );
+                    }else{
+                        echo json_encode( 
+                            array(
+                                "status_code" => -6,
+                                "error_message" => "The incident with id " . $input->params[0] . " does not exist.",
+                                "data_response" => ""
+                            )
+                        );
+                    }
+                        
+                }else{
+                    return_with_code( -2 );
+                }
+
+            }else{
+                return_with_code( -2 );
+            }
+
+        }else if( $input->function == "get_incident" ){
+
+            /**
+             * incident_id
+             */
+            
+            if( count( $input->params ) == 1 ){
+                
+                if( is_numeric( $input->params[0] ) ){
+
+                    $return = incident_get_incident( $input->params[0] );
+
+                    if( $return ){
+                        echo json_encode( 
+                            array(
+                                "status_code" => 0,
+                                "error_message" => "",
+                                "data_response" => json_encode( $return )
+                            )
+                        );
+                    }else{
+                        echo json_encode( 
+                            array(
+                                "status_code" => -6,
+                                "error_message" => "The incident with id " . $input->params[0] . " does not exist.",
+                                "data_response" => ""
+                            )
+                        );
+                    }
+                        
+                }else{
+                    return_with_code( -2 );
+                }
+
+            }else{
+                return_with_code( -2 );
+            }
+
+        }else if( $input->function == "get_ids_open_incidents" ){
+            
+            if( count( $input->params ) == 0 ){
+                
+                if( true ){
+
+                    echo json_encode( 
+                        array(
+                            "status_code" => 0,
+                            "error_message" => "",
+                            "data_response" => array_values( incident_get_ids_open_incidents() )
+                        )
+                    );
+                        
+                }else{
+                    return_with_code( -2 );
+                }
+
+            }else{
+                return_with_code( -2 );
+            }
+
         }else{
             // Function not defined
             return_with_code( -4 );

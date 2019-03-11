@@ -19,8 +19,10 @@
  * Ases
  *
  * @author     Iader E. García Gómez
+ * @author     Jeison Cardona Gómez
  * @package    block_generalreports
  * @copyright  2016 Iader E. García <iadergg@gmail.com>
+ * @copyright  2018 Jeison Cardona Gómez <jeison.cardona@correounivalle.edu.co>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -246,6 +248,7 @@ class renderer extends plugin_renderer_base {
         $data = $page->export_for_template($this);
         return parent::render_from_template('block_ases/discapacity_reports', $data);
     }
+
     public function render_report_active_semesters_page($page){
         $data = $page->export_for_template($this);
         return parent::render_from_template('block_ases/report_active_semesters', $data);
@@ -254,5 +257,13 @@ class renderer extends plugin_renderer_base {
     public function render_ases_graphic_reports_page($page){
         $data = $page->export_for_template($this);
         return parent::render_from_template('block_ases/ases_graphic_reports', $data);
+    }
+    public function render_incidents_page($page){
+        $data = $page->export_for_template($this);
+        return parent::render_from_template('block_ases/incidents', $data);
+    }
+    public function render_massive_upload_component($page){
+        $data = $page->export_for_template($this);
+        return parent::render_from_template('block_ases/massive_upload', $data);
     }
 }

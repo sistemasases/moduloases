@@ -110,6 +110,8 @@ function get_categories_global_grade_book($id_curso)
 
     $gpr = new grade_plugin_return(array('type' => 'report', 'plugin' => 'user', 'courseid' => $id_curso));
     $report = new grade_report_grader($id_curso, $gpr, $context);
+    $report->load_users();
+    $report->load_final_grades();
     // $tabla = $report->get_grade_table();
     // echo htmlspecialchars($tabla);
     return $report->get_grade_table();

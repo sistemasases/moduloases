@@ -28,6 +28,7 @@ abstract class BaseAPIView extends Validable {
     public $response_type;
     /**
      * Return an array of string with all required param names for this API endpoint
+     * @returns array Example: ['instance_id', 'semester_name']
      */
     function  get_required_params(): array {
         return array();

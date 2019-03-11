@@ -40,6 +40,11 @@ li:hover{
     float: right;
 }
 
+.header-hr-dphpforms, 
+.footer-hr-dphpforms{
+    border-color: red;
+}
+
 pre, code {
     white-space: pre-line;
 }
@@ -320,9 +325,8 @@ pre, code {
 }
 
 .regla_incumplida{
-    border: 1px solid #D51B23;
-    border-radius: 3px;
-    margin-top: 0.2em;
+    background-color: rgb(231, 177, 179);
+    border-radius: 0px;
 }
 
 /* Finalización de definición de estilos para seguimientos geográficos */
@@ -338,4 +342,13 @@ pre, code {
 
 #mantenimiento-valor-por-defecto{
     height: 34px;
+}
+
+.dphpforms_response_recorder_buttons{
+    text-align: center;
+}
+
+.special_tracking{
+    border-bottom-width: 2px !important;
+    border-bottom-color: #337ab7 !important;
 }

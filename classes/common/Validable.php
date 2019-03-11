@@ -1,9 +1,33 @@
 <?php
 
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
+/**
+ * Validable definition
+ *
+ * @author     Luis Gerardo Manrique Cardona
+ * @package    block_ases
+ * @copyright  2018 Luis Gerardo Manrique Cardona <luis.manrique@correounivalle.edu.co>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 
 abstract class Validable {
 
     const GENERIC_ERRORS_FIELD = 'generic_errors';
+
     /** @var array Errors array  */
     protected $_errors = array();
 
@@ -45,11 +69,13 @@ abstract class Validable {
      */
     public function valid(): bool {
         $this->clean_errors();
+        return $this->_custom_validation();
     }
     public function __construct()
     {
         $this->_errors_object = new stdClass();
     }
+
 
     /**
      * Clean errors
@@ -62,26 +88,39 @@ abstract class Validable {
     /**
      * Return errors, instances of AsesError if at least one error exists, emtpy array otherwise
      * @see AsesError
+     * @param $prefix_message string Prefix message than is append to the all error messages
      * @return array
      */
-    public function get_errors(): array {
+    public function get_errors($prefix_message = null): array {
+        if( $prefix_message ) {
+            $errors = $this->_errors;
+            /** @var $error AsesError */
+            foreach($errors as $error) {
+                $error->error_message = $prefix_message.' '.$error->error_message;
+            }
+            return $errors;
+        }
         return $this->_errors;
     }
     /**
      * Add an error to the current object,
-     * @param AsesError $error
+     * @param AsesError|string $error
      * @param string $fieldname Field (or object property) where the error is found, default is generic
      * errors field, this means than the error is not related with any object field or means than the error
      * is related to more than one field at the same time
      *
      */
-    public function add_error(AsesError $error, $fieldname = Validable::GENERIC_ERRORS_FIELD ) {
+    public function add_error($error, $fieldname = Validable::GENERIC_ERRORS_FIELD, $error_data = null ) {
+        $error_ = $error;
+        if(is_string($error)) {
+            $error_ = new AsesError(-1, $error, $error_data);
+        }
         array_push($this->_errors, $error);
 
         if(!isset($this->_errors_object->$fieldname)) {
             $this->_errors_object->$fieldname = array ();
         }
-        array_push($this->_errors_object->$fieldname , $error);
+        array_push($this->_errors_object->$fieldname , $error_);
     }
 
 
@@ -100,6 +139,20 @@ abstract class Validable {
         return $this->_errors_object;
     }
 
+
+    /**
+     * Custom validation method, rewrite this if you need make some aditional validation, this method
+     * should be called when $this->valid() is called
+     *
+     * You also should add the errors using the method $this->add_error()
+     *
+     * @return bool True if the custom validation has not found any error
+     * @see add_error
+     */
+
+    public function _custom_validation(): bool {
+        return true;
+    }
     /**
      * Get all errors, `_errors` and `_errors_object`, each one as member of a std class
      * `_errors` and `_errors_object` always have the same errors, but in diferent representations

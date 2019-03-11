@@ -356,6 +356,10 @@
                                     $checked = '';
                                     $valor_marcado = "-1";
                                 }
+                                if($valor === ''){
+                                    $checked = '';
+                                    $valor_marcado = "-1";
+                                }
                             }
                             
 
@@ -422,7 +426,20 @@
             }
 
         }
-        $html = $html .  '<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" style="padding:0px;"> <hr style="border-color:red"></div><button type="submit" class="btn btn-sm btn-danger btn-dphpforms-univalle btn-dphpforms-update">Actualizar</button> <a href="javascript:void(0);" data-record-id="'.$RECORD_ID.'" class="btn btn-sm btn-danger btn-dphpforms-univalle btn-dphpforms-delete-record">Eliminar</a> <a href="javascript:void(0);" class="btn btn-sm btn-danger btn-dphpforms-univalle btn-dphpforms-close">Cerrar</a>' . "\n";
+        $html = $html .  '  <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" style="padding:0px;"> 
+                                <hr style="border-color:red">
+                            </div>
+                            <div class="dphpforms_response_recorder_buttons">
+                                <button type="submit" class="btn btn-sm btn-danger btn-dphpforms-univalle btn-dphpforms-update">
+                                    Actualizar
+                                </button> 
+                                <a href="javascript:void(0);" data-record-id="'.$RECORD_ID.'" class="btn btn-sm btn-danger btn-dphpforms-univalle btn-dphpforms-delete-record">
+                                    Eliminar
+                                </a> 
+                                <a href="javascript:void(0);" class="btn btn-sm btn-danger btn-dphpforms-univalle btn-dphpforms-close">
+                                    Cerrar
+                                </a>
+                            </div>' . "\n";
         $html = $html .  ' </form>' . "\n";
 
         //Manejo de disparadores
@@ -586,7 +603,7 @@
                     ){
     
                             //$html = $html .  ' CONDICION PARA RADIO/CHECK ';
-                            if(($condition->{'condicion'} == 'marcado') && (($respuesta_trigger['valor'] !== "-1" )&&($respuesta_trigger['valor'] !== "-#$%-" ))){
+                            if(($condition->{'condicion'} == 'marcado') && (($respuesta_trigger['valor'] !== "-1" )&&($respuesta_trigger['valor'] !== "-#$%-" )&&($respuesta_trigger['valor'] !== '' ))){
                                 //$html = $html .  "Se cumple marcado y con resultado";
                                 $flag_satisfy = true;
                                 //$html = $html .  $respuesta_trigger['valor'];

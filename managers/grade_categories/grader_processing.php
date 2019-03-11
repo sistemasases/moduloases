@@ -30,7 +30,7 @@ require_once 'wizard_lib.php';
 /***  GRADER PROCESSING  ***/
 /***************************/
 if (isset($_POST['user']) && isset($_POST['item']) && isset($_POST['finalgrade']) && isset($_POST['course'])) {
-
+   
     $resp = update_grades_moodle($_POST['user'], $_POST['item'], $_POST['finalgrade'], $_POST['course']);
     echo json_encode($resp);
 

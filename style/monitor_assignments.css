@@ -164,21 +164,6 @@
     height: 30px !important;
 }
 
-.ajuste-btn, .ajuste-btn:focus{
-    height: 30px !important;
-    paddint: 0px !important;
-    background-color: #d51b23 !important;
-    border-color: #d43f3a !important;
-    border-radius: 0px;
-    color: #FFF;
-    border-top-right-radius: 2px !important;
-    border-bottom-right-radius: 2px !important;
-}
-
-.ajuste-btn:hover{
-    background-color: #d43f3a !important;
-    color: #FFF;
-}
 
 .filters{
     text-align: center;
@@ -218,4 +203,9 @@
 
 .container-view-gestion-asignacion{
     margin-top: 1em;
+}
+
+.container-view-gestion-asignacion .download-area{
+    text-align: center;
+    padding-top: 10px;
 }

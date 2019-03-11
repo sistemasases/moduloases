@@ -23,8 +23,8 @@ class RegistryNotFoundData {
 
 class DatabaseErrorFactory extends AsesErrorFactory
 {
-    const UNIQUE_KEY_CONSTRAINT_VIOLATION = 51;
-    const REGISTRY_NOT_FOUND = 52;
+    const UNIQUE_KEY_CONSTRAINT_VIOLATION = 81;
+    const REGISTRY_NOT_FOUND = 82;
     public static function unique_key_constraint_violation($data = null): AsesError {
         return new AsesError(
             DatabaseErrorFactory::UNIQUE_KEY_CONSTRAINT_VIOLATION,

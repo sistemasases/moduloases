@@ -79,7 +79,6 @@ define([
             $(table_id).html('<img class="icon-loading" src="../icon/loading.gif"/>'); // loader image
             var filter_columns = null;
             var instance_id = data.instance_id;
-            var grade_table_border_color = '#cccccc';
             var table = null;
             /**
              * Data: {

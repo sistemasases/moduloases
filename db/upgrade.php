@@ -4,7 +4,8 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     global $DB;
     $dbman = $DB->get_manager();
     $result = true;
-    if ($oldversion < 2018121014080 ) {
+    if ($oldversion < 2018121914150 ) {
+      
     //     // ************************************************************************************************************
     //     // Actualización que crea la tabla para los campos extendidos de usuario (Tabla: {talentospilos_user_extended})
     //     // Versión: 2018010911179
@@ -2221,210 +2222,309 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
 
         //Prestación económica
 
-        // Changing type of field prestacion_economica on table talentospilos_economics_data to text.
-        $table = new xmldb_table('talentospilos_economics_data');
-        $field = new xmldb_field('prestacion_economica', XMLDB_TYPE_TEXT, null, null, null, null, null, 'estrato');
+        // // Changing type of field prestacion_economica on table talentospilos_economics_data to text.
+        // $table = new xmldb_table('talentospilos_economics_data');
+        // $field = new xmldb_field('prestacion_economica', XMLDB_TYPE_TEXT, null, null, null, null, null, 'estrato');
 
-        // Launch change of type for field prestacion_economica.
-        $dbman->change_field_type($table, $field);
+        // // Launch change of type for field prestacion_economica.
+        // $dbman->change_field_type($table, $field);
 
-        //Beca
+        // //Beca
 
-        // Changing type of field beca on table talentospilos_economics_data to text.
-        $table = new xmldb_table('talentospilos_economics_data');
-        $field = new xmldb_field('beca', XMLDB_TYPE_TEXT, null, null, null, null, null, 'prestacion_economica');
+        // // Changing type of field beca on table talentospilos_economics_data to text.
+        // $table = new xmldb_table('talentospilos_economics_data');
+        // $field = new xmldb_field('beca', XMLDB_TYPE_TEXT, null, null, null, null, null, 'prestacion_economica');
       
-        // Launch change of type for field beca.
-        $dbman->change_field_type($table, $field);
+        // // Launch change of type for field beca.
+        // $dbman->change_field_type($table, $field);
       
-        //Ayuda transporte
+        // //Ayuda transporte
 
-        // Changing type of field ayuda_transporte on table talentospilos_economics_data to text.
-        $table = new xmldb_table('talentospilos_economics_data');
-        $field = new xmldb_field('ayuda_transporte', XMLDB_TYPE_TEXT, null, null, null, null, null, 'beca');
+        // // Changing type of field ayuda_transporte on table talentospilos_economics_data to text.
+        // $table = new xmldb_table('talentospilos_economics_data');
+        // $field = new xmldb_field('ayuda_transporte', XMLDB_TYPE_TEXT, null, null, null, null, null, 'beca');
      
-        // Launch change of type for field ayuda_transporte.
-        $dbman->change_field_type($table, $field);
+        // // Launch change of type for field ayuda_transporte.
+        // $dbman->change_field_type($table, $field);
 
-        //Ayuda materiales
+        // //Ayuda materiales
 
-        // Changing type of field ayuda_materiales on table talentospilos_economics_data to text.
-        $table = new xmldb_table('talentospilos_economics_data');
-        $field = new xmldb_field('ayuda_materiales', XMLDB_TYPE_TEXT, null, null, null, null, null, 'ayuda_transporte');
+        // // Changing type of field ayuda_materiales on table talentospilos_economics_data to text.
+        // $table = new xmldb_table('talentospilos_economics_data');
+        // $field = new xmldb_field('ayuda_materiales', XMLDB_TYPE_TEXT, null, null, null, null, null, 'ayuda_transporte');
    
-        // Launch change of type for field ayuda_materiales.
-        $dbman->change_field_type($table, $field);
+        // // Launch change of type for field ayuda_materiales.
+        // $dbman->change_field_type($table, $field);
 
-        //Estrato
+        // //Estrato
 
-        // Changing type of field estrato on table talentospilos_economics_data to int.
-        $table = new xmldb_table('talentospilos_economics_data');
-        $field = new xmldb_field('estrato', XMLDB_TYPE_INTEGER, '1', null, null, null, null, 'id');
+        // // Changing type of field estrato on table talentospilos_economics_data to int.
+        // $table = new xmldb_table('talentospilos_economics_data');
+        // $field = new xmldb_field('estrato', XMLDB_TYPE_INTEGER, '1', null, null, null, null, 'id');
 
-        // Launch change of type for field estrato.
-        $dbman->change_field_type($table, $field);
+        // // Launch change of type for field estrato.
+        // $dbman->change_field_type($table, $field);
 
-        //Solvencia económica
+        // //Solvencia económica
 
-        // Changing type of field solvencia_econo on table talentospilos_economics_data to int.
-        $table = new xmldb_table('talentospilos_economics_data');
-        $field = new xmldb_field('solvencia_econo', XMLDB_TYPE_INTEGER, '1', null, null, null, null, 'ayuda_materiales');
+        // // Changing type of field solvencia_econo on table talentospilos_economics_data to int.
+        // $table = new xmldb_table('talentospilos_economics_data');
+        // $field = new xmldb_field('solvencia_econo', XMLDB_TYPE_INTEGER, '1', null, null, null, null, 'ayuda_materiales');
 
-        // Launch change of type for field solvencia_econo.
-        $dbman->change_field_type($table, $field);
+        // // Launch change of type for field solvencia_econo.
+        // $dbman->change_field_type($table, $field);
 
-        //Agrega campo id_ases_user a tabla talentospilos_economics_data
-                // Define field id_ases_user to be added to talentospilos_economics_data.
-        $table = new xmldb_table('talentospilos_economics_data');
-        $field = new xmldb_field('id_ases_user', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null, 'expectativas_laborales');
+        // //Agrega campo id_ases_user a tabla talentospilos_economics_data
+        //         // Define field id_ases_user to be added to talentospilos_economics_data.
+        // $table = new xmldb_table('talentospilos_economics_data');
+        // $field = new xmldb_field('id_ases_user', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null, 'expectativas_laborales');
 
-        // Conditionally launch add field id_ases_user.
-        if (!$dbman->field_exists($table, $field)) {
-            $dbman->add_field($table, $field);
-        }
+        // // Conditionally launch add field id_ases_user.
+        // if (!$dbman->field_exists($table, $field)) {
+        //     $dbman->add_field($table, $field);
+        // }
 
-         // ****************************************************************************************************************//
-        // Actualización: Se agrega tabla de ocupaciones  //
-        //  Versión: 2018112610360                                                                                         //
-        // ****************************************************************************************************************//
+        //  // ****************************************************************************************************************//
+        // // Actualización: Se agrega tabla de ocupaciones  //
+        // //  Versión: 2018112610360                                                                                         //
+        // // ****************************************************************************************************************//
 
-          // Define table talentospilos_ocupaciones to be created.
-          $table = new xmldb_table('talentospilos_ocupaciones');
+        //   // Define table talentospilos_ocupaciones to be created.
+        //   $table = new xmldb_table('talentospilos_ocupaciones');
 
-          // Adding fields to table talentospilos_ocupaciones.
-          $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
-          $table->add_field('ocupacion', XMLDB_TYPE_TEXT, null, null, null, null, null);
-          $table->add_field('value', XMLDB_TYPE_CHAR, '200', null, null, null, null);
-          $table->add_field('alias', XMLDB_TYPE_CHAR, '200', null, null, null, null);
-          $table->add_field('categoria_padre', XMLDB_TYPE_TEXT, null, null, null, null, null);
+        //   // Adding fields to table talentospilos_ocupaciones.
+        //   $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        //   $table->add_field('ocupacion', XMLDB_TYPE_TEXT, null, null, null, null, null);
+        //   $table->add_field('value', XMLDB_TYPE_CHAR, '200', null, null, null, null);
+        //   $table->add_field('alias', XMLDB_TYPE_CHAR, '200', null, null, null, null);
+        //   $table->add_field('categoria_padre', XMLDB_TYPE_TEXT, null, null, null, null, null);
   
-          // Adding keys to table talentospilos_ocupaciones.
-          $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+        //   // Adding keys to table talentospilos_ocupaciones.
+        //   $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
   
-          // Conditionally launch create table for talentospilos_ocupaciones.
-          if (!$dbman->table_exists($table)) {
-              $dbman->create_table($table);
-          }
+        //   // Conditionally launch create table for talentospilos_ocupaciones.
+        //   if (!$dbman->table_exists($table)) {
+        //       $dbman->create_table($table);
+        //   }
 
-        //Se agregan registros a tabla talentospilos_ocupaciones
-          $array_ocupaciones = array();
-          $array_padres = array();
-          array_push($array_padres,
-          array("categoria" =>"Fuerza Pública", "cantidad"=> 2 ), 
-          array("categoria" =>"Miembros del Poder Ejecutivo, de los cuerpos legislativos y personal directivo de la administración pública y de empresas", "cantidad"=> 4 ),
-          array("categoria" =>"Profesionales universitarios, científicos e intelectuales", "cantidad"=> 4 ), 
-          array("categoria" =>"Técnicos, postsecundarios no universitarios y asistentes", "cantidad"=> 4 ), 
-          array("categoria" =>"Empleados de oficina", "cantidad"=> 2 ), 
-          array("categoria" =>"Trabajadores de los servicios y vendedores", "cantidad"=> 3 ), 
-          array("categoria" =>"Agricultores, trabajadores y obreros agropecuarios, forestales y pesqueros", "cantidad"=> 2 ), 
-          array("categoria" =>"Oficiales, operarios, artesanos y trabajadores de la industria manufacturera, de la construcción y de la minería", "cantidad"=> 7 ), 
-          array("categoria" =>"Operadores de instalaciones, de máquinas y ensambladores", "cantidad"=> 3 ), 
-          array("categoria" =>"Trabajadores no calificados", "cantidad"=> 3 ),
-          array("categoria" =>"Otra ocupación", "cantidad"=> 1 ));
+        // //Se agregan registros a tabla talentospilos_ocupaciones
+        //   $array_ocupaciones = array();
+        //   $array_padres = array();
+        //   array_push($array_padres,
+        //   array("categoria" =>"Fuerza Pública", "cantidad"=> 2 ), 
+        //   array("categoria" =>"Miembros del Poder Ejecutivo, de los cuerpos legislativos y personal directivo de la administración pública y de empresas", "cantidad"=> 4 ),
+        //   array("categoria" =>"Profesionales universitarios, científicos e intelectuales", "cantidad"=> 4 ), 
+        //   array("categoria" =>"Técnicos, postsecundarios no universitarios y asistentes", "cantidad"=> 4 ), 
+        //   array("categoria" =>"Empleados de oficina", "cantidad"=> 2 ), 
+        //   array("categoria" =>"Trabajadores de los servicios y vendedores", "cantidad"=> 3 ), 
+        //   array("categoria" =>"Agricultores, trabajadores y obreros agropecuarios, forestales y pesqueros", "cantidad"=> 2 ), 
+        //   array("categoria" =>"Oficiales, operarios, artesanos y trabajadores de la industria manufacturera, de la construcción y de la minería", "cantidad"=> 7 ), 
+        //   array("categoria" =>"Operadores de instalaciones, de máquinas y ensambladores", "cantidad"=> 3 ), 
+        //   array("categoria" =>"Trabajadores no calificados", "cantidad"=> 3 ),
+        //   array("categoria" =>"Otra ocupación", "cantidad"=> 1 ));
 
-          array_push($array_ocupaciones,
-            array("ocupacion"=>"FUERZAS MILITARES (EJÉRCITO, ARMADA Y FUERZA AÉREA)", "alias"=>"option_fuerzas_militares"),
-            array("ocupacion"=>"POLICÍA NACIONAL", "alias"=>"option_policia"),
-            array("ocupacion"=>"MIEMBROS DEL PODER EJECUTIVO, DE LOS CUERPOS LEGISLATIVOS Y PERSONAL DIRECTIVO DE LA ADMINISTRACIÓN PÚBLICA", "alias"=>"option_poder_ejecutivo"),
-            array("ocupacion"=>"DIRECTORES Y GERENTES GENERALES DE EMPRESAS PRIVADAS", "alias"=>"option_director_gerente"),
-            array("ocupacion"=>"DIRECTORES DE DEPARTAMENTOS PÚBLICOS Y PRIVADOS", "alias"=>"option_director_dpto"),
-            array("ocupacion"=>"COORDINADORES Y SUPERVISORES EN MANDOS MEDIOS DE EMPRESAS PÚBLICAS Y PRIVADAS", "alias"=>"option_coord_sup"),
-            array("ocupacion"=>"PROFESIONALES DE LAS CIENCIAS FÍSICAS, QUÍMICAS, MATEMÁTICAS Y DE LA INGENIERÍA", "alias"=>"option_prof_fis"),
-            array("ocupacion"=>"PROFESIONALES DE LAS CIENCIAS BIOLÓGICAS, LA MEDICINA Y LA SALUD", "alias"=>"option_prof_bio"),
-            array("ocupacion"=>"PROFESIONALES DE LA EDUCACIÓN", "alias"=>"option_prof_edu"),
-            array("ocupacion"=>"OTROS PROFESIONALES CIENTÍFICOS E INTELECTUALES", "alias"=>"option_prof_otros"),
-            array("ocupacion"=>"TÉCNICOS Y POSTSECUNDARIOS NO UNIVERSITARIOS DE LAS CIENCIAS FÍSICAS, QUÍMICAS, LA INGENIERÍA Y AFINES", "alias"=>"option_tec_fis"),
-            array("ocupacion"=>"TÉCNICOS Y POSTSECUNDARIOS NO UNIVERSITARIOS DE LAS CIENCIAS BIOLÓGICAS, LA MEDICINA Y LA SALUD", "alias"=>"option_tec_bio"),
-            array("ocupacion"=>"ASISTENTES DE ENSEÑANZA E INSTRUCTORES DE EDUCACIÓN FORMAL, ESPECIAL Y VOCACIONAL", "alias"=>"option_tec_edu"),
-            array("ocupacion"=>"OTROS TÉCNICOS, POSTSECUNDARIOS NO UNIVERSITARIOS Y ASISTENTES", "alias"=>"option_tec_otros"),
-            array("ocupacion"=>"OFICINISTAS", "alias"=>"option_oficinista"),
-            array("ocupacion"=>"EMPLEADOS DE TRATO DIRECTO CON EL PÚBLICO", "alias"=>"option_trato_publico"),
-            array("ocupacion"=>"TRABAJADORES DE LOS SERVICIOS PERSONALES", "alias"=>"option_serv_personales"),
-            array("ocupacion"=>"PERSONAL DE LOS SERVICIOS DE PROTECCIÓN Y SEGURIDAD", "alias"=>"option_serv_proteccion"),
-            array("ocupacion"=>"MODELOS, VENDEDORES Y DEMOSTRADORES", "alias"=>"option_modelos"),
-            array("ocupacion"=>"AGRICULTORES Y TRABAJADORES FORESTALES, PECUARIOS Y PESQUEROS" , "alias"=>"option_agricultura"),
-            array("ocupacion"=>"OBREROS Y PEONES AGROPECUARIOS, FORESTALES, PESQUEROS Y AFINES", "alias"=>"option_agropecuario"),
-            array("ocupacion"=>"OFICIALES Y OPERARIOS DE LA INDUSTRIA EXTRACTIVA", "alias"=>"option_industria_extractiva"),
-            array("ocupacion"=>"OFICIALES Y OPERARIOS DE LA CONSTRUCCIÓN" , "alias"=>"option_construccion"),
-            array("ocupacion"=>"OPERARIOS DE LA METALURGIA Y AFINES", "alias"=>"option_metalurgia"),
-            array("ocupacion"=>"MECÁNICOS Y AJUSTADORES DE MÁQUINAS Y EQUIPOS", "alias"=>"option_mec_equipos"),
-            array("ocupacion"=>"MECÁNICOS DE PRECISIÓN, OPERARIOS DE LAS ARTES GRÁFICAS Y AFINES", "alias"=>"option_mec_precision"),
-            array("ocupacion"=>"ARTESANOS", "alias"=>"option_artesania"),
-            array("ocupacion"=>"OPERARIOS DE ALIMENTOS, TEXTILES, PIELES, MADERAS Y AFINES", "alias"=>"option_textiles"),
-            array("ocupacion"=>"OPERADORES DE INSTALACIONES FIJAS Y AFINES", "alias"=>"option_instalaciones"),
-            array("ocupacion"=>"OPERADORES DE MÁQUINAS Y ENSAMBLADORES", "alias"=>"option_maquinas"),
-            array("ocupacion"=>"CONDUCTORES DE VEHÍCULOS Y OPERADORES DE EQUIPOS PESADOS MÓVILES", "alias"=>"option_conduccion"),
-            array("ocupacion"=>"TRABAJADORES NO CALIFICADOS DE SERVICIOS (EXCEPTO EL PERSONAL DOMÉSTICO Y AFINES)", "alias"=>"option_no_calificados"),
-            array("ocupacion"=>"PERSONAL DOMÉSTICO, ASEADORES, LAVANDEROS, PLANCHADORES Y AFINES" , "alias"=>"option_domestico"),
-            array("ocupacion"=>"OBREROS DE LA MINERIA, LA CONSTRUCCIÓN, LA INDUSTRIA MANUFACTURERA Y EL TRANSPORTE", "alias"=>"option_obreros_mineria" ),
-            array("ocupacion"=>"OTRA OCUPACIÓN" , "alias"=>"option_otro"));
+        //   array_push($array_ocupaciones,
+        //     array("ocupacion"=>"FUERZAS MILITARES (EJÉRCITO, ARMADA Y FUERZA AÉREA)", "alias"=>"option_fuerzas_militares"),
+        //     array("ocupacion"=>"POLICÍA NACIONAL", "alias"=>"option_policia"),
+        //     array("ocupacion"=>"MIEMBROS DEL PODER EJECUTIVO, DE LOS CUERPOS LEGISLATIVOS Y PERSONAL DIRECTIVO DE LA ADMINISTRACIÓN PÚBLICA", "alias"=>"option_poder_ejecutivo"),
+        //     array("ocupacion"=>"DIRECTORES Y GERENTES GENERALES DE EMPRESAS PRIVADAS", "alias"=>"option_director_gerente"),
+        //     array("ocupacion"=>"DIRECTORES DE DEPARTAMENTOS PÚBLICOS Y PRIVADOS", "alias"=>"option_director_dpto"),
+        //     array("ocupacion"=>"COORDINADORES Y SUPERVISORES EN MANDOS MEDIOS DE EMPRESAS PÚBLICAS Y PRIVADAS", "alias"=>"option_coord_sup"),
+        //     array("ocupacion"=>"PROFESIONALES DE LAS CIENCIAS FÍSICAS, QUÍMICAS, MATEMÁTICAS Y DE LA INGENIERÍA", "alias"=>"option_prof_fis"),
+        //     array("ocupacion"=>"PROFESIONALES DE LAS CIENCIAS BIOLÓGICAS, LA MEDICINA Y LA SALUD", "alias"=>"option_prof_bio"),
+        //     array("ocupacion"=>"PROFESIONALES DE LA EDUCACIÓN", "alias"=>"option_prof_edu"),
+        //     array("ocupacion"=>"OTROS PROFESIONALES CIENTÍFICOS E INTELECTUALES", "alias"=>"option_prof_otros"),
+        //     array("ocupacion"=>"TÉCNICOS Y POSTSECUNDARIOS NO UNIVERSITARIOS DE LAS CIENCIAS FÍSICAS, QUÍMICAS, LA INGENIERÍA Y AFINES", "alias"=>"option_tec_fis"),
+        //     array("ocupacion"=>"TÉCNICOS Y POSTSECUNDARIOS NO UNIVERSITARIOS DE LAS CIENCIAS BIOLÓGICAS, LA MEDICINA Y LA SALUD", "alias"=>"option_tec_bio"),
+        //     array("ocupacion"=>"ASISTENTES DE ENSEÑANZA E INSTRUCTORES DE EDUCACIÓN FORMAL, ESPECIAL Y VOCACIONAL", "alias"=>"option_tec_edu"),
+        //     array("ocupacion"=>"OTROS TÉCNICOS, POSTSECUNDARIOS NO UNIVERSITARIOS Y ASISTENTES", "alias"=>"option_tec_otros"),
+        //     array("ocupacion"=>"OFICINISTAS", "alias"=>"option_oficinista"),
+        //     array("ocupacion"=>"EMPLEADOS DE TRATO DIRECTO CON EL PÚBLICO", "alias"=>"option_trato_publico"),
+        //     array("ocupacion"=>"TRABAJADORES DE LOS SERVICIOS PERSONALES", "alias"=>"option_serv_personales"),
+        //     array("ocupacion"=>"PERSONAL DE LOS SERVICIOS DE PROTECCIÓN Y SEGURIDAD", "alias"=>"option_serv_proteccion"),
+        //     array("ocupacion"=>"MODELOS, VENDEDORES Y DEMOSTRADORES", "alias"=>"option_modelos"),
+        //     array("ocupacion"=>"AGRICULTORES Y TRABAJADORES FORESTALES, PECUARIOS Y PESQUEROS" , "alias"=>"option_agricultura"),
+        //     array("ocupacion"=>"OBREROS Y PEONES AGROPECUARIOS, FORESTALES, PESQUEROS Y AFINES", "alias"=>"option_agropecuario"),
+        //     array("ocupacion"=>"OFICIALES Y OPERARIOS DE LA INDUSTRIA EXTRACTIVA", "alias"=>"option_industria_extractiva"),
+        //     array("ocupacion"=>"OFICIALES Y OPERARIOS DE LA CONSTRUCCIÓN" , "alias"=>"option_construccion"),
+        //     array("ocupacion"=>"OPERARIOS DE LA METALURGIA Y AFINES", "alias"=>"option_metalurgia"),
+        //     array("ocupacion"=>"MECÁNICOS Y AJUSTADORES DE MÁQUINAS Y EQUIPOS", "alias"=>"option_mec_equipos"),
+        //     array("ocupacion"=>"MECÁNICOS DE PRECISIÓN, OPERARIOS DE LAS ARTES GRÁFICAS Y AFINES", "alias"=>"option_mec_precision"),
+        //     array("ocupacion"=>"ARTESANOS", "alias"=>"option_artesania"),
+        //     array("ocupacion"=>"OPERARIOS DE ALIMENTOS, TEXTILES, PIELES, MADERAS Y AFINES", "alias"=>"option_textiles"),
+        //     array("ocupacion"=>"OPERADORES DE INSTALACIONES FIJAS Y AFINES", "alias"=>"option_instalaciones"),
+        //     array("ocupacion"=>"OPERADORES DE MÁQUINAS Y ENSAMBLADORES", "alias"=>"option_maquinas"),
+        //     array("ocupacion"=>"CONDUCTORES DE VEHÍCULOS Y OPERADORES DE EQUIPOS PESADOS MÓVILES", "alias"=>"option_conduccion"),
+        //     array("ocupacion"=>"TRABAJADORES NO CALIFICADOS DE SERVICIOS (EXCEPTO EL PERSONAL DOMÉSTICO Y AFINES)", "alias"=>"option_no_calificados"),
+        //     array("ocupacion"=>"PERSONAL DOMÉSTICO, ASEADORES, LAVANDEROS, PLANCHADORES Y AFINES" , "alias"=>"option_domestico"),
+        //     array("ocupacion"=>"OBREROS DE LA MINERIA, LA CONSTRUCCIÓN, LA INDUSTRIA MANUFACTURERA Y EL TRANSPORTE", "alias"=>"option_obreros_mineria" ),
+        //     array("ocupacion"=>"OTRA OCUPACIÓN" , "alias"=>"option_otro"));
 
-            $table='talentospilos_ocupaciones';
-            $condition = 'value';
-            $new_register = new stdClass();
+        //     $table='talentospilos_ocupaciones';
+        //     $condition = 'value';
+        //     $new_register = new stdClass();
 
-            foreach($array_padres as $padre){
+        //     foreach($array_padres as $padre){
 
-                for($i = 0; $i < $padre["cantidad"]; $i++){
+        //         for($i = 0; $i < $padre["cantidad"]; $i++){
                     
                    
-                    if( !$DB->record_exists($table,array($condition=> $array_ocupaciones[0]["alias"]))){
+        //             if( !$DB->record_exists($table,array($condition=> $array_ocupaciones[0]["alias"]))){
 
-                        $new_register->ocupacion     = $array_ocupaciones[0]["ocupacion"];
+        //                 $new_register->ocupacion     = $array_ocupaciones[0]["ocupacion"];
 
-                        if(strlen($array_ocupaciones[0]["ocupacion"])>20){
+        //                 if(strlen($array_ocupaciones[0]["ocupacion"])>20){
     
-                            $new_register->alias     = substr($array_ocupaciones[0]["ocupacion"],0,20);
+        //                     $new_register->alias     = substr($array_ocupaciones[0]["ocupacion"],0,20);
     
-                        }else{
-                            $new_register->alias     = substr($array_ocupaciones[0]["ocupacion"],0,9); 
-                        }
+        //                 }else{
+        //                     $new_register->alias     = substr($array_ocupaciones[0]["ocupacion"],0,9); 
+        //                 }
                          
-                        $new_register->value         = $array_ocupaciones[0]["alias"];
-                        $new_register->categoria_padre     = $padre["categoria"];
+        //                 $new_register->value         = $array_ocupaciones[0]["alias"];
+        //                 $new_register->categoria_padre     = $padre["categoria"];
                         
-                        if($DB->insert_record($table, $new_register, true)){
+        //                 if($DB->insert_record($table, $new_register, true)){
                             
-                            array_splice($array_ocupaciones,0,1);
-                        }
+        //                     array_splice($array_ocupaciones,0,1);
+        //                 }
                         
-                    }
-                }
+        //             }
+        //         }
                 
 
-            }
+        //     }
 
 
 
-        // ****************************************************************************************************************//
-        // Actualización: Se agrega tabla de datos de salud health_data  //
-        //  Versión: 2018112911000                                                                                         //
-        // ****************************************************************************************************************//
+        // // ****************************************************************************************************************//
+        // // Actualización: Se agrega tabla de datos de salud health_data  //
+        // //  Versión: 2018112911000                                                                                         //
+        // // ****************************************************************************************************************//
 
-           // Define table talentospilos_health_data to be created.
-           $table = new xmldb_table('talentospilos_health_data');
+        //    // Define table talentospilos_health_data to be created.
+        //    $table = new xmldb_table('talentospilos_health_data');
 
-           // Adding fields to table talentospilos_health_data.
-           $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
-           $table->add_field('regimen_salud', XMLDB_TYPE_TEXT, null, null, null, null, null);
-           $table->add_field('servicio_salud_vinculado', XMLDB_TYPE_TEXT, null, null, null, null, null);
-           $table->add_field('servicios_usados', XMLDB_TYPE_TEXT, null, null, null, null, null);
-           $table->add_field('id_ases_user', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        //    // Adding fields to table talentospilos_health_data.
+        //    $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        //    $table->add_field('regimen_salud', XMLDB_TYPE_TEXT, null, null, null, null, null);
+        //    $table->add_field('servicio_salud_vinculado', XMLDB_TYPE_TEXT, null, null, null, null, null);
+        //    $table->add_field('servicios_usados', XMLDB_TYPE_TEXT, null, null, null, null, null);
+        //    $table->add_field('id_ases_user', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
    
-           // Adding keys to table talentospilos_health_data.
-           $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+        //    // Adding keys to table talentospilos_health_data.
+        //    $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
    
-           // Conditionally launch create table for talentospilos_health_data.
-           if (!$dbman->table_exists($table)) {
-               $dbman->create_table($table);
-           }
+        //    // Conditionally launch create table for talentospilos_health_data.
+        //    if (!$dbman->table_exists($table)) {
+        //        $dbman->create_table($table);
+        //    }
    
+        // // ****************************************************************************************************************//
+        // // Actualización: Se agrega tabla de logs generales  y eventos para logs //
+        // //  Versión: 2018120716300                                                                                         //
+        // // ****************************************************************************************************************//
                 
         // *****************************************************************************************//
         //  Actualización: Se agrega la columna recorder para diferenciar quién registra el riesgo  //
         //  y la tabla talentospilos_incidencias para la gestión de incidencias.                    //
         //  Versión: 2018121014080                                                                  //
         // *****************************************************************************************//
+
+          
+        // Define table talentospilos_general_logs to be created.
+        $table = new xmldb_table('talentospilos_general_logs');
+
+        // Adding fields to table talentospilos_general_logs.
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        $table->add_field('id_moodle_user', XMLDB_TYPE_INTEGER, '20', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('datos_previos', XMLDB_TYPE_TEXT, null, null, null, null, null);
+        $table->add_field('datos_enviados', XMLDB_TYPE_TEXT, null, null, null, null, null);
+        $table->add_field('datos_almacenados', XMLDB_TYPE_TEXT, null, null, null, null, null);
+        $table->add_field('fecha_registro', XMLDB_TYPE_DATETIME, null, null, XMLDB_NOTNULL, null, "now()");
+        $table->add_field('id_evento', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('instanceid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('id_ases_user', XMLDB_TYPE_INTEGER, '10', null, null, null, null);
+        $table->add_field('navegador', XMLDB_TYPE_TEXT, null, null, null, null, null);
+        $table->add_field('title_retorno', XMLDB_TYPE_CHAR, '200', null, null, null, null);
+        $table->add_field('msg_retorno', XMLDB_TYPE_CHAR, '200', null, null, null, null);
+        $table->add_field('status_retorno', XMLDB_TYPE_CHAR, '200', null, null, null, null);
+        $table->add_field('url', XMLDB_TYPE_TEXT, null, null, null, null, null);
+        $table->add_field('courseid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+
+        // Adding keys to table talentospilos_general_logs.
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+
+        // Conditionally launch create table for talentospilos_general_logs.
+        if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
+        }
+
+
+
+                  // Define table talentospilos_events_to_logs to be created.
+        $table = new xmldb_table('talentospilos_events_to_logs');
+
+        // Adding fields to table talentospilos_events_to_logs.
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        $table->add_field('name_event', XMLDB_TYPE_CHAR, '200', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('description', XMLDB_TYPE_TEXT, null, null, XMLDB_NOTNULL, null, null);
+        $table->add_field('funcionalidad', XMLDB_TYPE_CHAR, '200', null, XMLDB_NOTNULL, null, null);
+
+        // Adding keys to table talentospilos_events_to_logs.
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+
+        // Conditionally launch create table for talentospilos_events_to_logs.
+        if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
+        }
+
+        //Cargar eventos aplicables a acciones de student_profile asociados al desarrollo de Discapacidad
+
+        $event = new stdClass();
+        $event->name_event          = 'edit_discapacity_initial_form_sp';
+        $event->description   = "Edición de las características de discapacidad de un estudiante en la ficha de percepción de discapacidad.";
+        $event->funcionalidad = 'student_profile';
+
+        if( !$DB->record_exists('talentospilos_events_to_logs',array('name_event'=> $event->name_event))){
+            $DB->insert_record('talentospilos_events_to_logs', $event, true);
+        }
+
+        $event = new stdClass();
+        $event->name_event          = 'edit_economics_tab_sp';
+        $event->description   = "Edición de los datos económicos de un estudiante en la ficha de percepción de discapacidad.";
+        $event->funcionalidad = 'student_profile';
+
+        if( !$DB->record_exists('talentospilos_events_to_logs',array('name_event'=> $event->name_event))){
+            $DB->insert_record('talentospilos_events_to_logs', $event, true);
+        }
+
+        $event = new stdClass();
+        $event->name_event          = 'edit_salud_tab_sp';
+        $event->description   = "Edición de los datos de servicio de salud de un estudiante en la ficha de percepción de discapacidad.";
+        $event->funcionalidad = 'student_profile';
+
+        if( !$DB->record_exists('talentospilos_events_to_logs',array('name_event'=> $event->name_event))){
+            $DB->insert_record('talentospilos_events_to_logs', $event, true);
+        }
+
+        $event = new stdClass();
+        $event->name_event          = 'save_economics_tab_sp';
+        $event->description   = "Registro inicial de los datos económicos de un estudiante en la ficha de percepción de discapacidad.";
+        $event->funcionalidad = 'student_profile';
+
+        if( !$DB->record_exists('talentospilos_events_to_logs',array('name_event'=> $event->name_event))){
+            $DB->insert_record('talentospilos_events_to_logs', $event, true);
+        }
+
+        $event = new stdClass();
+        $event->name_event          = 'save_salud_tab_sp';
+        $event->description   = "Registro inicial de los datos de servicio de salud de un estudiante en la ficha de percepción de discapacidad.";
+        $event->funcionalidad = 'student_profile';
+
+        if( !$DB->record_exists('talentospilos_events_to_logs',array('name_event'=> $event->name_event))){
+            $DB->insert_record('talentospilos_events_to_logs', $event, true);
+        }
 
 
         // Define field recorder to be added to talentospilos_riesg_usuario.
@@ -2457,8 +2557,36 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
             $dbman->create_table($table);
         }
 
-        upgrade_block_savepoint(true, 2018121914150 , 'ases');
+
+        //Add duration field to demographic table
+
+        // Define field duracion to be added to talentospilos_demografia.
+        $table = new xmldb_table('talentospilos_demografia');
+        $field = new xmldb_field('duracion', XMLDB_TYPE_FLOAT, '10', null, null, null, null, 'barrio');
+
+        // Conditionally launch add field duracion.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Define field distancia to be added to talentospilos_demografia.
+        $table = new xmldb_table('talentospilos_demografia');
+        $field = new xmldb_field('distancia', XMLDB_TYPE_FLOAT, '10', null, null, null, null, 'duracion');
+
+        // Conditionally launch add field distancia.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        
+        // Changing nullability of field id_usuario_cierra on table talentospilos_incidencias to null.
+        $table = new xmldb_table('talentospilos_incidencias');
+        $field = new xmldb_field('id_usuario_cierra', XMLDB_TYPE_INTEGER, '20', null, null, null, null, 'id_usuario_registra');
+
+        // Launch change of nullability for field id_usuario_cierra.
+        $dbman->change_field_notnull($table, $field);
     
+        upgrade_block_savepoint(true, 2018121914150, 'ases');
         return $result;
 
     }
