@@ -84,12 +84,13 @@ define(['jquery',
         function get_data_to_graphic(){
 
             var ases_status = $("#ases_status").is(":checked") ? 1 : 0;
+            var icetex_status = $("#icetex_status").is(":checked") ? 1 : 0;
             console.log(ases_status);
 
             $.ajax({
 
                 type: "POST",
-                data: { type: 'carrera', cohort: $('#conditions').val(), ases_status: ases_status, instance_id: getIdinstancia() },
+                data: { type: 'carrera', cohort: $('#conditions').val(), ases_status: ases_status, icetex_status: icetex_status, instance_id: getIdinstancia() },
                 url: "../managers/ases_report/asesreport_graphics_processing.php",
                 success: function (msg) {
                     var results = Object.keys(msg).map(function(k) { return msg[k] });                    

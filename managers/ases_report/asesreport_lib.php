@@ -117,12 +117,12 @@ function getGraficAge($cohorte){
  * @param $cohorte
  * @return Array 
  */
-function getGraficPrograma($cohorte, $ases_status, $instance_id){
+function getGraficPrograma($cohorte, $ases_status, $icetex_status, $instance_id){
     global $DB;
     
     $sql_query = "SELECT programa.nombre, COUNT(usuario.id)
-                    FROM mdl_talentospilos_user_extended AS usuario
-                    INNER JOIN mdl_talentospilos_programa AS programa 
+                    FROM {talentospilos_user_extended} AS usuario
+                    INNER JOIN {talentospilos_programa} AS programa 
                     ON usuario.id_academic_program = programa.id 
                     ";
     
@@ -133,20 +133,31 @@ function getGraficPrograma($cohorte, $ases_status, $instance_id){
         // echo "Entra
         // ";
         $sql_query .= "INNER JOIN
-                        ((SELECT student_ases_status.id_estudiante AS id_ases_student, student_ases_status.id_estado_ases,
+                        (SELECT student_ases_status.id_estudiante AS id_ases_student, student_ases_status.id_estado_ases,
                                 MAX(student_ases_status.fecha) AS fecha
-                        FROM mdl_talentospilos_est_estadoases AS student_ases_status
+                        FROM {talentospilos_est_estadoases} AS student_ases_status
                         WHERE id_instancia = $instance_id
                         AND student_ases_status.id_estado_ases = 1
                         GROUP BY student_ases_status.id_estudiante, student_ases_status.id_estado_ases) AS current_ases_status
-                        INNER JOIN
-                        (SELECT student_ases_status.id_estudiante, 
-                            student_ases_status.fecha, ases_statuses.nombre
-                        FROM mdl_talentospilos_est_estadoases AS student_ases_status
-                            INNER JOIN mdl_talentospilos_estados_ases AS ases_statuses ON ases_statuses.id = student_ases_status.id_estado_ases) AS historic_ases_statuses
-                        ON historic_ases_statuses.id_estudiante = current_ases_status.id_ases_student AND historic_ases_statuses.fecha = current_ases_status.fecha) AS activos_ases
-                        ON activos_ases.id_ases_student = usuario.id_ases_user ";
+                        ON current_ases_status.id_ases_student = usuario.id_ases_user                       
+                        
+                        ";
     }
+
+    if($icetex_status == 1){
+
+        $sql_query .= "INNER JOIN
+                    (SELECT student_icetex_status.id_estudiante AS id_ases_student, student_icetex_status.id_estado_icetex,
+                            MAX(student_icetex_status.fecha) AS fecha
+                    FROM {talentospilos_est_est_icetex} AS student_icetex_status
+                    WHERE student_icetex_status.id_estado_icetex <> 1 AND
+                        student_icetex_status.id_estado_icetex <> 2 AND
+                        student_icetex_status.id_estado_icetex <> 7
+                    GROUP BY student_icetex_status.id_estudiante, student_icetex_status.id_estado_icetex) AS current_icetex_status
+                    ON current_icetex_status.id_ases_student = usuario.id_ases_user
+                    
+                    ";
+    }   
     // echo $sql_query;      
     $sql_query .= "GROUP BY programa.nombre";
     // echo $sql_query; 
