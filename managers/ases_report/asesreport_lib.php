@@ -5,6 +5,8 @@ require_once(dirname(__FILE__).'/../lib/lib.php');
 require_once(dirname(__FILE__).'/../lib/student_lib.php');
 require_once(dirname(__FILE__).'/../user_management/user_lib.php');
 
+//echo json_encode(getGraficPrograma("TODOS", "1"));
+
 /**
  * Función que recupera riesgos 
  *
@@ -115,16 +117,40 @@ function getGraficAge($cohorte){
  * @param $cohorte
  * @return Array 
  */
-function getGraficPrograma($cohorte){
+function getGraficPrograma($cohorte, $ases_status, $instance_id){
     global $DB;
     
-    $sql_query = "SELECT programa.nombre,COUNT(programa.nombre)
-                  FROM (SELECT DISTINCT data.userid AS userid,data.data AS codcarrera FROM {talentospilos_usuario} AS usuarios_talentos 
-                        INNER JOIN {user_info_data} AS data ON (CAST (usuarios_talentos.id AS varchar) = data.data) WHERE data.fieldid=3)
-                  AS sub INNER JOIN {talentospilos_programa} AS programa ON (cast(programa.id as text) = sub.codcarrera) 
-                  GROUP BY programa.nombre";
+    $sql_query = "SELECT programa.nombre, COUNT(usuario.id)
+                    FROM mdl_talentospilos_user_extended AS usuario
+                    INNER JOIN mdl_talentospilos_programa AS programa 
+                    ON usuario.id_academic_program = programa.id 
+                    ";
     
-    
+    // echo "Estado ASES: ".$ases_status."
+    // ";
+
+    if($ases_status == 1){
+        // echo "Entra
+        // ";
+        $sql_query .= "INNER JOIN
+                        ((SELECT student_ases_status.id_estudiante AS id_ases_student, student_ases_status.id_estado_ases,
+                                MAX(student_ases_status.fecha) AS fecha
+                        FROM mdl_talentospilos_est_estadoases AS student_ases_status
+                        WHERE id_instancia = $instance_id
+                        AND student_ases_status.id_estado_ases = 1
+                        GROUP BY student_ases_status.id_estudiante, student_ases_status.id_estado_ases) AS current_ases_status
+                        INNER JOIN
+                        (SELECT student_ases_status.id_estudiante, 
+                            student_ases_status.fecha, ases_statuses.nombre
+                        FROM mdl_talentospilos_est_estadoases AS student_ases_status
+                            INNER JOIN mdl_talentospilos_estados_ases AS ases_statuses ON ases_statuses.id = student_ases_status.id_estado_ases) AS historic_ases_statuses
+                        ON historic_ases_statuses.id_estudiante = current_ases_status.id_ases_student AND historic_ases_statuses.fecha = current_ases_status.fecha) AS activos_ases
+                        ON activos_ases.id_ases_student = usuario.id_ases_user ";
+    }
+    // echo $sql_query;      
+    $sql_query .= "GROUP BY programa.nombre";
+    // echo $sql_query; 
+     
     // consulta con la parte de los cohortes
     $query = "SELECT programa.nombre,COUNT(programa.nombre)
                   FROM (SELECT DISTINCT data.userid AS userid,data.data AS codcarrera,miembros.cohortid,cohort.name FROM {talentospilos_usuario} AS usuarios_talentos           
@@ -209,6 +235,7 @@ function getGraficEstado($cohorte){
                     INNER JOIN {user_info_data} AS dato ON (subconsulta.userid = dato.userid)
              WHERE dato.fieldid = 4 ) AS cont
         GROUP BY data";
+        
     
     //se verifica el cohorte ingresado, de acuerdo al caso se invoca el metodo de moodle con una de las dos
     //consultar armadas anteriormente
@@ -719,7 +746,7 @@ function get_ases_report($general_fields=null,
                                          ";
     }
 
-    if(property_exists($actions, 'search_all_students_ar')){
+    if(property_exists($actions, 'search_all_students_ar') || property_exists($actions, 'status_report_agr')){
         
         $sql_query = $select_clause.$from_clause.$subquery_cohort.$sub_query_status.$sub_query_academic.$sub_query_assignment_fields;
         $result_query = $DB->get_records_sql($sql_query);
