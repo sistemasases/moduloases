@@ -54,7 +54,22 @@ class MenReport {
     public $residencia_direccion_familia;
     public $residencia_telefono_familia;
     public $contacto_celular_acudiente;
-    public $tel_acudiente;
+    public $tipo_discapacidad;
+    public $ayudas_tecnicas_discapacidad;
+    public $matricula_cursada;
+    public $id_renovacion_icetex;
+    public $num_asignaturas_inscritas;
+    public $num_asignaturas_canceladas;
+    public $num_asignaturas_no_aprobadas;
+    public $promedio_academico_per_actual;
+    public $promedio_academico_acumulado;
+    public $reconocimiento;
+    public $id_condicion_alerta;
+    public $apoyo_financiero_icetex;
+    public $apoyo_financiero_spp_profe_tec;
+    public $apoyo_financiero_spp_profe_ing;
+    public $apoyo_financiero_spp_profe_mov;
+    
 }
 
 
@@ -75,8 +90,11 @@ function get_array_students_men($period){
                         usuario.emailpilos AS contacto_mail, mun_familia.codigodivipola AS id_municipio_familia, 
                         usuario.dir_ini AS residencia_direccion_familia, usuario.tel_ini AS residencia_telefono_familia, 
                         usuario.tel_acudiente AS contacto_celular_acudiente, 
-                        est_icetex.nombre_estado, est_academ.prom_semestre, est_academ.prom_acumulado,
-                        est_academ.json_materias, est_academ.cantidad_materias, est_academ.estimulo
+                        est_icetex.nombre_estado AS id_renovacion_icetex,
+                        est_academ.cantidad_materias AS num_asignaturas_inscritas, 
+                        est_academ.prom_semestre AS promedio_academico_per_actual, 
+                        est_academ.prom_acumulado AS promedio_academico_acumulado,
+                        est_academ.json_materias, est_academ.estimulo AS reconocimiento
                     FROM {talentospilos_usuario} AS usuario
                         INNER JOIN {talentospilos_user_extended} user_extended ON usuario.id = user_extended.id_ases_user
                         INNER JOIN {cohort_members} coh_members ON user_extended.id_moodle_user = coh_members.userid
@@ -145,6 +163,15 @@ function get_array_students_men($period){
         $student->pro_consecutivo_dos = "";
         $student->motivo_retiro_o_cancelacion = "";
         $student->seguimiento = "";
+        $student->tipo_discapacidad = "";
+        $student->ayudas_tecnicas_discapacidad = "";
+        $student->matricula_cursada = "";
+        $student->id_condicion_alerta = "";
+        $student->apoyo_financiero_icetex = "";
+        $student->apoyo_financiero_spp_profe_tec = "";
+        $student->apoyo_financiero_spp_profe_ing = "";
+        $student->apoyo_financiero_spp_profe_mov = "";
+
         
         process_student_subject_json($student);
         array_push($array_students, $student);
@@ -173,11 +200,11 @@ function process_student_subject_json($student){
 
         foreach($json_subjects as $materia) {
             if($materia->nota < 3.0){
-                $student->materias_perdidas += 1;
+                $student->num_asignaturas_no_aprobadas += 1;
             }
 
             if($materia->fecha_cancelacion_materia !== ""){
-                $student->materias_canceladas += 1;
+                $student->num_asignaturas_canceladas += 1;
             }
         }
     }    
