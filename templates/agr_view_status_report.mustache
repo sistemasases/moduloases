@@ -1,0 +1,70 @@
+<div class="panel panel-default">
+    <div class="panel panel-default">
+       <div class="panel-heading">
+            <h4 class="panel-title" id="list-students-status-panel">
+                <a data-toggle="collapse" href="#collapse1">Reporte de Programa</a>
+            </h4>
+        <div>
+        <div id="collapse1" class="panel-collapse collapse">
+            <div class="panel-body">
+                <h2>Reporte de Programa</h2>
+            </div>
+            <div class="row">
+                <form role="form" id="form_general_report2">
+                    <div class="col-sm-12">
+
+                        <!-- Columna de campos base -->
+                        <div class="col-sm-12" hidden>
+                            <fieldset id="base_fields">
+                                <legend>Campos base</legend>
+                                <div class="checkbox">
+                                    <input type="checkbox" name="fields[]" value="student_code" onchange="check(this)" onclick="check(this)" checked="checked"> Código
+                                </div>
+                                <div class="checkbox">
+                                    <input type="checkbox" name="fields[]" value="firstname" onchange="check(this)" onclick="check(this)" checked="checked">Nombres
+                                </div>
+                                <div class="checkbox">
+                                    <input type="checkbox" name="fields[]" value="lastname" onchange="check(this)" onclick="check(this)" checked="checked">Apellidos
+                                </div>
+                                <div class="checkbox">
+                                    <input type="checkbox" name="fields[]" value="document_id" onchange="check(this)" onclick="check(this)" checked="checked">Documento
+                                </div>
+                                <div class="checkbox">
+                                    <input type="checkbox" name="fields[]" value="cohort" id="cohort_check" onchange="check(this)" onclick="check(this)" checked="checked">Cohorte
+                                </div>
+                            </fieldset>
+                        </div>
+
+                        <!-- Columna de programa académico -->
+                        <div class="col-sm-3 col-md-3" hidden>
+                            <fieldset id="academic_fields">
+                                <legend><input type="checkbox" id="academic_fields_check" checked="checked"> Académico</legend>
+                                <div class="checkbox">
+                                        <input type="checkbox" name="academic_fields[]" value="program_code" checked="checked"> Código programa académico
+                                    </div>
+                                <div class="checkbox">
+                                    <input type="checkbox" name="academic_fields[]" value="name_program" checked="checked"> Programa académico
+                                </div>
+                                <div class="checkbox">
+                                    <input type="checkbox" name="academic_fields[]" value="faculty" checked="checked"> Facultad
+                                </div>
+                                <div class="checkbox">
+                                    <input type="checkbox" name="academic_fields[]" value="average" checked="checked"> Promedio acumulado
+                                </div>
+                                <div class="checkbox">
+                                    <input type="checkbox" name="academic_fields[]" value="academic_stimuli" checked="checked"> Estimulos
+                                </div>
+                                <div class="checkbox">
+                                    <input type="checkbox" name="academic_fields[]" value="low_academic_performance" checked="checked"> Bajos rendimiento
+                                </div>
+                            </fieldset>
+                        </div>        
+                    </div>        
+                </form>               
+                <div class="col-sm-12" id="div_table">
+                <hr class="col-sm-12" />
+                
+            </div>
+        </div>            
+    </div>
+</div>
