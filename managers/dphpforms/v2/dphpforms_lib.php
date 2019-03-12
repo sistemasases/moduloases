@@ -1123,7 +1123,9 @@ function dphpformsV2_generate_html_recorder( $id_form, $rol_, $initial_config = 
         </div>
     </form>';
 
-    return $html;
+
+
+    return  dphpformsV2_html_minifier( $html );
 
 }
 
@@ -1381,5 +1383,26 @@ function dphpformsV2_build_exception_message( $reason ){
     return "<h1>Error rendering</h1> The form cannot be rendered for the following reason: " . $reason . "."; 
 }
   
+
+function dphpformsV2_html_minifier($buffer) {
+
+    $search = array(
+        '/\>[^\S ]+/s',     // strip whitespaces after tags, except space
+        '/[^\S ]+\</s',     // strip whitespaces before tags, except space
+        '/(\s)+/s',         // shorten multiple whitespace sequences
+        '/<!--(.|\s)*?-->/' // Remove HTML comments
+    );
+
+    $replace = array(
+        '>',
+        '<',
+        '\\1',
+        ''
+    );
+
+    $buffer = preg_replace($search, $replace, $buffer);
+
+    return trim($buffer);
+}
 
 ?>
