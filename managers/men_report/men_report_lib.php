@@ -74,7 +74,11 @@ class MenReport {
     public $apoyo_financiero_ies_alimentac;
     public $apoyo_financiero_ies_vivienda;
     public $apoyo_academico_ies;
-    public $apoyo_total_financ_invertido;    
+    public $apoyo_total_financ_invertido;
+    public $usu_id;
+    public $sem_nom;
+    public $num_fila;
+    public $json_materias;  
 }
 
 
@@ -211,12 +215,11 @@ function process_student_subject_json($student){
 }
 
 
-function r()
-{
+function create_men_report_csv($period){
     \csv\array_to_csv_download(
-        MenReport::make_objects_from_std_objects_or_arrays(get_array_students_men('2017A')),
+        MenReport::make_objects_from_std_objects_or_arrays(get_array_students_men($period)),
         'Reporte Ministerio.csv',
         ',',
         ['json_materias', 'sem_nom', 'num_fila', 'usu_id']);
 }
-r();
+create_men_report_csv('2017A');
