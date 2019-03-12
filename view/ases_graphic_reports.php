@@ -37,11 +37,11 @@ require_once(__DIR__.'/../managers/cohort/cohort_lib.php');
 include('../lib.php');
 global $PAGE;
 
-include("../classes/output/ases_report_page.php");
+include("../classes/output/ases_graphic_reports_page.php");
 include("../classes/output/renderer.php");
 
 // Set up the page.
-$pagetitle = 'Reporte general';
+$pagetitle = 'Reporte general gráfico';
 $courseid = required_param('courseid', PARAM_INT);
 $blockid = required_param('instanceid', PARAM_INT);
 $id_current_user = $USER->id;
@@ -61,7 +61,6 @@ $cohorts_select = \cohort_lib\get_html_cohorts_select($blockid);
 
 //se crean los elementos del menu
 $menu_option = create_menu_options($id_current_user, $blockid, $courseid);
-
 
 $risks = get_riesgos();
 $risks_table='';
@@ -86,11 +85,11 @@ foreach($actions as $act){
 $data->menu = $menu_option;
 $data->risks_checks = $risks_table;
 $data->cohorts_checks = $cohorts_select;
-$data->status_ases = $estados_ases;
+//$data->status_ases = $estados_ases;
 $contextcourse = context_course::instance($courseid);
 $contextblock =  context_block::instance($blockid);
 
-$url = new moodle_url("/blocks/ases/view/ases_report.php",array('courseid' => $courseid, 'instanceid' => $blockid));
+$url = new moodle_url("/blocks/ases/view/ases_graphic_reports.php",array('courseid' => $courseid, 'instanceid' => $blockid));
 
 // ---------------------------------------------
 // Carga por defecto de estudiantes relacionados
@@ -109,7 +108,7 @@ $data->summary_3740_cohorts = get_summary_group_cohorts('3740', $blockid);
 
 // Navigation setup
 $coursenode = $PAGE->navigation->find($courseid, navigation_node::TYPE_COURSE);
-$blocknode = navigation_node::create('Reporte general',$url, null, 'block', $blockid);
+$blocknode = navigation_node::create('Reporte general gráfico',$url, null, 'block', $blockid);
 $coursenode->add_node($blocknode);
 
 $PAGE->requires->css('/blocks/ases/style/base_ases.css', true);
@@ -122,17 +121,17 @@ $PAGE->requires->css('/blocks/ases/style/jquery.dataTables.min.css', true);
 $PAGE->requires->css('/blocks/ases/style/buttons.dataTables.min.css', true);
 $PAGE->requires->css('/blocks/ases/style/side_menu_style.css', true);
 
-$PAGE->requires->js_call_amd('block_ases/ases_report_main','init');
-//$PAGE->requires->js_call_amd('block_ases/ases_report_main','load_defaults_students', $params);
+$PAGE->requires->js_call_amd('block_ases/ases_graphic_reports','init');
+$PAGE->requires->js_call_amd('block_ases/ases_graphic_reports','load_defaults_students', $params);
 
 $PAGE->set_url($url);
 $PAGE->set_title($pagetitle);
 $PAGE->set_heading($pagetitle);
 
 $output = $PAGE->get_renderer('block_ases');
-$ases_report_page = new \block_ases\output\ases_report_page($data);
+$ases_graphic_reports_page = new \block_ases\output\ases_graphic_reports_page($data);
 
 //echo $output->standard_head_html(); 
 echo $output->header();
-echo $output->render($ases_report_page);
+echo $output->render($ases_graphic_reports_page);
 echo $output->footer();
