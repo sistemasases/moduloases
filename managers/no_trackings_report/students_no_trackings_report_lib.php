@@ -96,8 +96,6 @@ function students_no_trackings_get_students_count_trackings(){
     return $count;
 }
 
-students_no_trackings_get_students_count_trackings();
-
 /**
  * Function that returns a list of the students with pair trackings on the current semester
  * 
