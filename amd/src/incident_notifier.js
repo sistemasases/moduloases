@@ -17,24 +17,13 @@
     'block_ases/jscookie'
   ], function($, loading_indicator, sweetalert, Cookies) {
 
+
     let visible = false;
     let current_ids = [];
     let page_title = $("title").text();
     let open_in_other_tab = false;
     let played = false;
 
-    if (Cookies.get('tabs') > 0){
-        open_in_other_tab = true;
-    }else{
-        Cookies.set('tabs', 0);
-        open_in_other_tab = false;
-    };
-
-    Cookies.set('tabs', +Cookies.get('tabs') + 1);
-
-    window.onunload = function () {
-        Cookies.set('tabs', Cookies.get('tabs') - 1);
-    };
 
     $("html").append( '<div id="notification_sound" style="display:none;"></div>' );
 
@@ -64,20 +53,14 @@
     }
 
     function playSound(){
-
-        /*if (Cookies.get('played') === false){
+        if( Cookies.get('beep') == "true" ){
             let filename = 'notification_sound';
             let mp3Source = '<source src="../resources/' + filename + '.mp3" type="audio/mpeg">';
             let oggSource = '<source src="../resources/' + filename + '.ogg" type="audio/ogg">';
             let embedSource = '<embed hidden="true" autostart="true" loop="false" src="../resources/' + filename +'.mp3">';
             document.getElementById("notification_sound").innerHTML='<audio autoplay="autoplay">' + mp3Source + oggSource + embedSource + '</audio>';
-            Cookies.set('played', true);
-        };*/
-        let filename = 'notification_sound';
-        let mp3Source = '<source src="../resources/' + filename + '.mp3" type="audio/mpeg">';
-        let oggSource = '<source src="../resources/' + filename + '.ogg" type="audio/ogg">';
-        let embedSource = '<embed hidden="true" autostart="true" loop="false" src="../resources/' + filename +'.mp3">';
-        document.getElementById("notification_sound").innerHTML='<audio autoplay="autoplay">' + mp3Source + oggSource + embedSource + '</audio>';
+            Cookies.set('beep', "false");
+        }        
       }
 
     console.log( "Incident notifier initialised" );
@@ -110,13 +93,14 @@
                
                 check_incidents(
                     function( data ){
-                        
+                        let beep = false;
                         let number_open_incidents = data.length;
                         add_counter_page( number_open_incidents );
 
                         if( ( number_open_incidents > 0 ) && !visible ){
                             visible = true;
-                            playSound();
+                            beep = true;
+                            Cookies.set('beep', beep);
                             let menu_incidents_manager = $("#menu_incidents_manager").find(".menu_a");
                             menu_incidents_manager.append( ' <span id="incidents_counter" class="badge badge-secondary">' + data.length + '</span>' );
                         }else if( ( number_open_incidents > 0 ) && visible ){
@@ -132,13 +116,19 @@
 
                             if( new_elements ){
                                 current_ids = ids;
-                                playSound();
+                                beep = true;
+                                Cookies.set('beep', beep);
                                 $("#incidents_counter").text( data.length );
                             }
 
 
                         }else if( number_open_incidents === 0 ){
                             $("#incidents_counter").remove();
+                        }
+
+                        if( beep ){
+                            playSound();
+                            beep = false;
                         }
                         
                     }

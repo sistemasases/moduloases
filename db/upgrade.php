@@ -2557,6 +2557,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
             $dbman->create_table($table);
         }
 
+
         //Add duration field to demographic table
 
         // Define field duracion to be added to talentospilos_demografia.
@@ -2584,7 +2585,6 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
 
         // Launch change of nullability for field id_usuario_cierra.
         $dbman->change_field_notnull($table, $field);
-
     
         upgrade_block_savepoint(true, 2018121914150, 'ases');
         return $result;
