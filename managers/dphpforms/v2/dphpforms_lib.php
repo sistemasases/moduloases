@@ -796,7 +796,7 @@ function dphpformsV2_get_permisos_pregunta( $id_formulario_pregunta ){
         }
     ]
 }';*/
-$initial_config = '{
+/*$initial_config = '{
     "allow_update":true,
     "allow_delete":true,
     "main_form_classes" : "col-xs-12 col-sm-12",
@@ -822,7 +822,7 @@ $initial_config = '{
     ]
 }';
 $initial_config = json_decode( $initial_config );
-echo dphpformsV2_generate_html_recorder( 'seguimiento_pares', "sistemas", $initial_config  );
+echo dphpformsV2_generate_html_recorder( 'seguimiento_pares', "sistemas", $initial_config  );*/
 
 function dphpformsV2_generate_html_recorder( $id_form, $rol_, $initial_config = null  ){
 
