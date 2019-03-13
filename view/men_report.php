@@ -27,18 +27,18 @@
 // Standard GPL and phpdocs
 require_once(__DIR__ . '/../../../config.php');
 require_once($CFG->libdir.'/adminlib.php');
-require_once('../managers/periods_management/periods_lib.php');
-require_once ('../managers/permissions_management/permissions_lib.php');
-require_once ('../managers/historic_icetex_reports/icetex_reports_lib.php');
-require_once ('../managers/validate_profile_action.php');
-require_once ('../managers/menu_options.php');
+require_once('../managers/instance_management/instance_lib.php');
+require_once('../managers/permissions_management/permissions_lib.php');
+require_once('../managers/historic_icetex_reports/icetex_reports_lib.php');
+require_once('../managers/validate_profile_action.php');
+require_once('../managers/menu_options.php');
 include("../classes/output/renderer.php");
-include("../classes/output/historical_icetex_reports_page.php");
+include("../classes/output/men_report_page.php");
 
 global $PAGE;
 
 // Variables for setup the page.
-$title = "Reportes de Históricos ICETEX";
+$title = "Reportes Ministerio de Educación";
 $pagetitle = $title;
 $courseid = required_param('courseid', PARAM_INT);
 $blockid = required_param('instanceid', PARAM_INT);
@@ -57,12 +57,16 @@ if(!consult_instance($blockid)){
 // Menu items are created
 $menu_option = create_menu_options($USER->id, $blockid, $courseid);
 
+//Getting all semesters
+$semesters = get_all_semesters_names();
+
 //Creates a class with information that'll be send to template
 $data = new stdClass;
 
 // Evaluates if user role has permissions assigned on this view
 $actions = authenticate_user_view($USER->id, $blockid);
 $data = $actions;
+$data->semesters = $semesters;
 $data->menu = $menu_option;
 
 //Navegation set up
@@ -96,7 +100,7 @@ $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/jquery.dataTables_t
 $PAGE->requires->css('/blocks/ases/js/select2/css/select2.css', true);
 $PAGE->requires->css('/blocks/ases/style/side_menu_style.css', true);
 
-$PAGE->requires->js_call_amd('', 'init');
+//$PAGE->requires->js_call_amd('', 'init');
 
 $output = $PAGE->get_renderer('block_ases');
 $index_page = new \block_ases\output\men_report_page($data);
