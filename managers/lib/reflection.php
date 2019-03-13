@@ -163,7 +163,7 @@ function valid_std_object($obj, $class_name_or_class) {
  * @return class Instance of object based in the properties of stdObj or array of type class
  * @throws \ErrorException if the argument passed is class name and this does not exist
  */
-function make_from_std_object($stdObj_or_array, $class, $allow_non_equal_objects = false) {
+function make_from_std_object($stdObj_or_array, $class, $allow_non_equal_objects = true) {
  
     if(!class_exists($class)) {
         throw new \ErrorException("The class $class does not exist");
