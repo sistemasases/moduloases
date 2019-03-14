@@ -56,9 +56,10 @@ define(['jquery',
 	 */
 	function load_students_no_trackings_report(){
 		$("#div_table").html('<img class="icon-loading" src="../icon/loading.gif"/>');
+		let instance = $("#custom_metadata").data("instance-id");
 		$.ajax({
 			type: "POST",
-			data: JSON.stringify({ "function":"load_report", "params":[ 525391 ] }),
+			data: JSON.stringify({ "function":"load_report", "params":[ instance ] }),
 			url: "../managers/no_trackings_report/student_no_trackings_report_api.php",
 			success: function(msg){												
 				$("#div_table").html('');
