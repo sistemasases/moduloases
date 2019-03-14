@@ -371,8 +371,6 @@ function get_array_students_with_trackings_count( $instance_id ){
     return $students_to_return;
 }
 
-@students_no_trackings_generate_datatable( 450299 );
-
 function students_no_trackings_generate_datatable( $instance_id ){
 
     $columns = array();
