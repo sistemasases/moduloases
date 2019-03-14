@@ -2,7 +2,9 @@
 * Management - View reports
 * @module block_ases/assigned_students_no_trackings_report
 * @author Joan Manuel Tovar Guzmán
+* @author Jeison Cardona Gómez
 * @copyright 2018 Joan Manuel Tovar Guzmán <joan.tovar@correounivalle.edu.co>
+* @copyright 2019 Jeison Cardona Gómez <jeison.cardona@correounivalle.edu.co>
 * @license  http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
 */
 
