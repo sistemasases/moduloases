@@ -25,17 +25,18 @@
  */
 
 
-require_once(dirname(__FILE__). '/../../../../config.php');
-require_once $CFG->dirroot.'/blocks/ases/managers/lib/student_lib.php';
-require_once $CFG->dirroot.'/blocks/ases/managers/periods_management/periods_lib.php'; 
-require_once $CFG->dirroot.'/blocks/ases/managers/dphpforms/v2/dphpforms_lib.php';   
-require_once $CFG->dirroot.'/blocks/ases/managers/monitor_assignments/monitor_assignments_lib.php'; 
+require_once( dirname(__FILE__). '/../../../../config.php' );
+require_once( $CFG->dirroot.'/blocks/ases/managers/lib/student_lib.php' );
+require_once( $CFG->dirroot.'/blocks/ases/managers/periods_management/periods_lib.php' ); 
+require_once( $CFG->dirroot.'/blocks/ases/managers/dphpforms/v2/dphpforms_lib.php' );   
+require_once( $CFG->dirroot.'/blocks/ases/managers/monitor_assignments/monitor_assignments_lib.php' ); 
+require_once( $CFG->dirroot.'/blocks/ases/managers/user_management/user_management_lib.php' ); 
 
 /**
  * 
  */
 
-function students_no_trackings_get_students_count_trackings(){      
+function students_no_trackings_get_students_count_trackings( $instance_id ){      
 
     $id_semester = get_current_semester()->max;
     $interval_semester = get_semester_interval($id_semester);
@@ -50,7 +51,8 @@ function students_no_trackings_get_students_count_trackings(){
     $xQuery->form = "seguimiento_pares"; 
     $xQuery->filterFields = [
                                 ["id_estudiante",[["%%", "LIKE"]], false],
-                                ["fecha",[[$start_date,">="],[$end_date,"<="]], false]                        
+                                ["fecha",[[$start_date,">="],[$end_date,"<="]], false],
+                                ["id_instancia",[[$instance_id, "="]], false]                             
                             ];
     $xQuery->orderFields = [["fecha","DESC"]];
     $xQuery->orderByDatabaseRecordDate = false; 
@@ -74,7 +76,8 @@ function students_no_trackings_get_students_count_trackings(){
     $xQuery->form = "inasistencia"; 
     $xQuery->filterFields = [
                                 ["in_id_estudiante",[["%%", "LIKE"]], false],
-                                ["in_fecha",[[$start_date,">="],[$end_date,"<="]], false]                        
+                                ["in_fecha",[[$start_date,">="],[$end_date,"<="]], false],
+                                ["in_id_instancia",[[$instance_id, "="]],false]                         
                             ];
     $xQuery->orderFields = [["in_fecha","DESC"]];
     $xQuery->orderByDatabaseRecordDate = false; 
@@ -103,7 +106,7 @@ function students_no_trackings_get_students_count_trackings(){
  * @return array
  */
 
-function get_students_with_trackings(){      
+function get_students_with_trackings( $instance_id ){      
 
     $semestre = get_current_semester();
     $idMaxSemester = $semestre->max;   
@@ -118,13 +121,16 @@ function get_students_with_trackings(){
     $xQuery = new stdClass();
     $xQuery->form = "seguimiento_pares"; // Can be alias(String) or idntifier(Number)        
     $xQuery->filterFields = [
-                            ["id_estudiante",[
-                                ["%%", "LIKE"]                                
-                                
-                                ], false],
+                            ["id_estudiante",
+                                [["%%", "LIKE"]], 
+                                false],
                             ["fecha",
-                                [[$fecha_inicio,">="],[$fecha_fin,"<="]]
-                                , false]                        
+                                [[$fecha_inicio,">="],[$fecha_fin,"<="]], 
+                                false],
+                            ["id_instancia",
+                                [[$instance_id, "="]],
+                                false
+                            ]                        
                     ];
     $xQuery->orderFields = [
                             ["fecha","DESC"]
@@ -146,7 +152,7 @@ function get_students_with_trackings(){
  * @return array
  */
 
-function get_students_with_non_attendance_trackings(){ 
+function get_students_with_non_attendance_trackings( $instance_id ){ 
 
     $semestre = get_current_semester();
     $idMaxSemester = $semestre->max;   
@@ -168,7 +174,11 @@ function get_students_with_non_attendance_trackings(){
                                 ], false],
                             ["in_fecha",
                                 [[$fecha_inicio,">="],[$fecha_fin,"<="]]
-                                , false]                        
+                                , false],
+                            ["in_id_instancia",
+                                [[$instance_id, "="]],
+                                false
+                            ]                                    
                     ];
     $xQuery->orderFields = [
                             ["in_fecha","DESC"]
@@ -190,13 +200,13 @@ function get_students_with_non_attendance_trackings(){
  * @see get_array_students_without_trackings()
  * @return array
  */
-function get_array_students_with_trackings_count(){
+function get_array_students_with_trackings_count( $instance_id ){
 
     global $DB;   
 
     $semestre = get_current_semester();
     $idMaxSemester = $semestre->max;
-    $monitorias = monitor_assignments_get_monitors_students_relationship_by_instance_n_semester( 450299, $idMaxSemester );
+    $monitorias = monitor_assignments_get_monitors_students_relationship_by_instance_n_semester( $instance_id, $idMaxSemester );
 
     $sql_query = "SELECT usuario.id AS id, userm.username, usuario.num_doc AS cedula, userm.firstname, userm.lastname FROM {user} AS userm
     INNER JOIN {talentospilos_user_extended} as user_ext  ON user_ext.id_moodle_user= userm.id
@@ -205,7 +215,7 @@ function get_array_students_with_trackings_count(){
     //Condition to get the students who don't have pair trackings on the current semester
 
 
-    $studentsWithTrackings = json_decode(get_students_with_trackings(), true);    
+    $studentsWithTrackings = json_decode(get_students_with_trackings( $instance_id ), true);    
 
     $tracked_students_condition = " WHERE 
     usuario.id NOT IN (";    
@@ -221,7 +231,7 @@ function get_array_students_with_trackings_count(){
 
     //Condition to get the students who don't have non attendance trackings on the current semester    
     
-    $studentsAttendanceTrackings = json_decode(get_students_with_non_attendance_trackings(), true);
+    $studentsAttendanceTrackings = json_decode(get_students_with_non_attendance_trackings( $instance_id ), true);
 
     if(count($studentsAttendanceTrackings) != 0){
 
@@ -246,18 +256,22 @@ function get_array_students_with_trackings_count(){
     $monitorias_condition.= ")";    
     $monitorias_condition = str_replace("', )", "')", $monitorias_condition);    
     $sql_query .= $monitorias_condition;
+
+    $sql_query .= " AND tracking_status = 1 ";
     
     $students = $DB->get_records_sql($sql_query);      
-
     //The monitor, trainee and professional of each student is added to the report
 
     $students_to_return = array();
     
     foreach($students as $student){
         
-        $monitor_object = get_assigned_monitor($student->id);
-        $trainee_object = get_assigned_pract($student->id);
-        $professional_object = get_assigned_professional($student->id);
+        //$monitor_object = get_assigned_monitor($student->id);
+        $tracking_team =  user_management_get_stud_mon_prac_prof( $student->id, $instance_id, $idMaxSemester );
+        $monitor_object = $tracking_team->monitor;
+        $trainee_object = $tracking_team->practicing;
+        $professional_object = $tracking_team->professional;
+       
         $student->cantidad_fichas = 0;
 
 
@@ -285,9 +299,9 @@ function get_array_students_with_trackings_count(){
     }
 
     // users with trackings
-    $student_count_trackings = students_no_trackings_get_students_count_trackings();
+    $student_count_trackings = students_no_trackings_get_students_count_trackings( $instance_id );
 
-    $sql_query = "SELECT usuario.id AS id, userm.username, usuario.num_doc AS cedula, userm.firstname, userm.lastname FROM {user} AS userm
+    $sql_query = "SELECT usuario.id AS id, userm.username, usuario.num_doc AS cedula, userm.firstname, userm.lastname, user_ext.tracking_status FROM {user} AS userm
     INNER JOIN {talentospilos_user_extended} as user_ext  ON user_ext.id_moodle_user= userm.id
     INNER JOIN  {talentospilos_usuario} AS usuario ON id_ases_user = usuario.id";   
 
@@ -303,6 +317,9 @@ function get_array_students_with_trackings_count(){
     }
 
     $sql_query .= $where;
+    $sql_query .= " AND tracking_status = 1";
+
+    $sql_query = "SELECT id, username, cedula, firstname, lastname FROM ( $sql_query ) AS mq WHERE mq.tracking_status = 1";
 
     $students_with_trackings = $DB->get_records_sql( $sql_query );
 
@@ -322,9 +339,11 @@ function get_array_students_with_trackings_count(){
             continue;
         }
 
-        $monitor_object = get_assigned_monitor($student->id);
-        $trainee_object = get_assigned_pract($student->id);
-        $professional_object = get_assigned_professional($student->id);
+        $tracking_team =  user_management_get_stud_mon_prac_prof( $student->id, $instance_id, $idMaxSemester );
+        $monitor_object = $tracking_team->monitor;
+        $trainee_object = $tracking_team->practicing;
+        $professional_object = $tracking_team->professional;
+
         $student->cantidad_fichas = $student_count_trackings[ $student->id ];
 
         if ($monitor_object) {
@@ -352,100 +371,104 @@ function get_array_students_with_trackings_count(){
     return $students_to_return;
 }
 
-function students_no_trackings_generate_datatable(){
+@students_no_trackings_generate_datatable( 450299 );
+
+function students_no_trackings_generate_datatable( $instance_id ){
 
     $columns = array();
 
-        $data = get_array_students_with_trackings_count();        
-        $monitores = array();
-        $practicantes = array();
-        $profesionales = array();
+    $data = get_array_students_with_trackings_count( $instance_id );        
+    $monitores = array();
+    $practicantes = array();
+    $profesionales = array();
 
-        foreach($data as $record){               
-            array_push($monitores, $record->monitor_fullname);
-            array_push($practicantes, $record->trainee_fullname);
-            array_push($profesionales, $record->professional_fullname);
-        }
+    foreach($data as $record){               
+        array_push($monitores, $record->monitor_fullname);
+        array_push($practicantes, $record->trainee_fullname);
+        array_push($profesionales, $record->professional_fullname);
+    }
 
-        $monitores = array_unique($monitores);
-        $practicantes = array_unique($practicantes);
-        $profesionales = array_unique($profesionales);
+    $monitores = array_unique($monitores);
+    $practicantes = array_unique($practicantes);
+    $profesionales = array_unique($profesionales);
 
-        $monitores_options = "<select><option value=''></option> 
+    $monitores_options = "<select><option value=''></option> 
                              <option value='---'>---</option>";
-        $practicantes_options = "<select><option value=''></option> 
+    $practicantes_options = "<select><option value=''></option> 
                              <option value='---'>---</option>";
-        $profesionales_options = "<select><option value=''></option> 
+    $profesionales_options = "<select><option value=''></option> 
                              <option value='---'>---</option>";
         
-        foreach($monitores as $monitor){
-            $monitores_options .= "<option value='$monitor'> $monitor</option>";
-        }
+    foreach($monitores as $monitor){
+        $monitores_options .= "<option value='$monitor'> $monitor</option>";
+    }
 
-        foreach($practicantes as $practicante){
-            $practicantes_options .= "<option value='$practicante'> $practicante</option>";
-        }
-        foreach($profesionales as $profesional){
-            $profesionales_options .= "<option value='$profesional'> $profesional</option>";
-        }
+    foreach($practicantes as $practicante){
+        $practicantes_options .= "<option value='$practicante'> $practicante</option>";
+    }
+    foreach($profesionales as $profesional){
+        $profesionales_options .= "<option value='$profesional'> $profesional</option>";
+    }
 
         
-        array_push($columns, array("title"=>"Código estudiante", "name"=>"codigo", "data"=>"username"));
-        array_push($columns, array("title"=>"Cédula", "name"=>"cedula", "data"=>"cedula")); 
-        array_push($columns, array("title"=>"Nombres", "name"=>"firstname", "data"=>"firstname"));
-        array_push($columns, array("title"=>"Apellidos", "name"=>"lastname", "data"=>"lastname"));              
-        array_push($columns, array("title"=>"Cantidad de fichas", "name"=>"cantidad_seguimientos", "data"=>"cantidad_fichas"));
-        array_push($columns, array("title"=>"Monitor".$monitores_options, "name"=>"monitor_fullname", "data"=>"monitor_fullname"));
-        array_push($columns, array("title"=>"Practicante".$practicantes_options, "name"=>"trainee_fullname", "data"=>"trainee_fullname"));
-        array_push($columns, array("title"=>"Profesional".$profesionales_options, "name"=>"professional_fullname", "data"=>"professional_fullname"));
+    array_push($columns, array("title"=>"Código estudiante", "name"=>"codigo", "data"=>"username"));
+    array_push($columns, array("title"=>"Cédula", "name"=>"cedula", "data"=>"cedula")); 
+    array_push($columns, array("title"=>"Nombres", "name"=>"firstname", "data"=>"firstname"));
+    array_push($columns, array("title"=>"Apellidos", "name"=>"lastname", "data"=>"lastname"));              
+    array_push($columns, array("title"=>"Cantidad de fichas", "name"=>"cantidad_seguimientos", "data"=>"cantidad_fichas"));
+    array_push($columns, array("title"=>"Monitor".$monitores_options, "name"=>"monitor_fullname", "data"=>"monitor_fullname"));
+    array_push($columns, array("title"=>"Practicante".$practicantes_options, "name"=>"trainee_fullname", "data"=>"trainee_fullname"));
+    array_push($columns, array("title"=>"Profesional".$profesionales_options, "name"=>"professional_fullname", "data"=>"professional_fullname"));
 
-        $data = array(
-            "bsort" => false,
-            "columns" => $columns,
-            "data" => $data,
-            "language" => 
-             array(
-                "search"=> "Buscar:",
-                "oPaginate" => array(
-                    "sFirst"=>    "Primero",
-                    "sLast"=>     "Último",
-                    "sNext"=>     "Siguiente",
-                    "sPrevious"=> "Anterior"
-                    ),
-                "sProcessing"=>     "Procesando...",
-                "sLengthMenu"=>     "Mostrar _MENU_ registros",
-                "sZeroRecords"=>    "No se encontraron resultados",
-                "sEmptyTable"=>     "Ningún dato disponible en esta tabla",
-                "sInfo"=>           "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
-                "sInfoEmpty"=>      "Mostrando registros del 0 al 0 de un total de 0 registros",
-                "sInfoFiltered"=>   "(filtrado de un total de _MAX_ registros)",
-                "sInfoPostFix"=>    "",
-                "sSearch"=>         "Buscar:",
-                "sUrl"=>            "",
-                "sInfoThousands"=>  ",",
-                "sLoadingRecords"=> "Cargando...",
-             ),
-            "order"=> array(0, "desc"),
-            "dom"=>'lifrtpB',
+    $data = array(
+        "bsort" => false,
+        "columns" => $columns,
+        "data" => $data,
+        "language" => 
+         array(
+            "search"=> "Buscar:",
+            "oPaginate" => array(
+                "sFirst"=>    "Primero",
+                "sLast"=>     "Último",
+                "sNext"=>     "Siguiente",
+                "sPrevious"=> "Anterior"
+                ),
+            "sProcessing"=>     "Procesando...",
+            "sLengthMenu"=>     "Mostrar _MENU_ registros",
+            "sZeroRecords"=>    "No se encontraron resultados",
+            "sEmptyTable"=>     "Ningún dato disponible en esta tabla",
+            "sInfo"=>           "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+            "sInfoEmpty"=>      "Mostrando registros del 0 al 0 de un total de 0 registros",
+            "sInfoFiltered"=>   "(filtrado de un total de _MAX_ registros)",
+            "sInfoPostFix"=>    "",
+            "sSearch"=>         "Buscar:",
+            "sUrl"=>            "",
+            "sInfoThousands"=>  ",",
+            "sLoadingRecords"=> "Cargando...",
+         ),
+        "order"=> array(0, "desc"),
+        "dom"=>'lifrtpB',
 
-            "buttons"=>array(
-                array(
-                    "extend"=>'print',
-                    "text"=>'Imprimir'
-                ),
-                array(
-                    "extend"=>'csvHtml5',
-                    "text"=>'CSV'
-                ),
-                array(
-                    "extend" => "excel",
-                                    "text" => 'Excel',
-                                    "className" => 'buttons-excel',
-                                    "filename" => 'Export excel',
-                                    "extension" => '.xls'
-                )
+        "buttons"=>array(
+            array(
+                "extend"=>'print',
+                "text"=>'Imprimir'
+            ),
+            array(
+                "extend"=>'csvHtml5',
+                "text"=>'CSV'
+            ),
+            array(
+                "extend" => "excel",
+                                "text" => 'Excel',
+                                "className" => 'buttons-excel',
+                                "filename" => 'Export excel',
+                                "extension" => '.xls'
             )
+        )
 
-        );
+    );
+
+    return $data;
 
 }
