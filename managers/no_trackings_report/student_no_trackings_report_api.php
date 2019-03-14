@@ -18,8 +18,10 @@
  * Trackings count
  *
  * @author     Jeison Cardona Gómez
+ * @author     Joan Manuel Tovar Guzmán
  * @package    block_ases
  * @copyright  2019 Jeison Cardona Gómez <jeison.cardona@correounivalle.edu.co>
+ * @copyright  2018 Joan Manuel Tovar GUzmán <joan.tovar@correounivalle.edu.co>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -49,7 +51,7 @@
     */
 
     // Example of valid input. params = Parameters
-    // { "function":"get_monitors_by_instance", "params":[ instance_id ] }
+    // { "function":"function_name", "params":[ instance_id ] }
 
     if( isset($input->function) && isset($input->params) ){
 
@@ -74,7 +76,7 @@
                         array(
                             "status_code" => 0,
                             "error_message" => "",
-                            "data_response" => ""
+                            "data_response" => @students_no_trackings_generate_datatable( $input->params[0] )
                         )
                     );
                     
