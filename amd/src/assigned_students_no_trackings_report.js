@@ -58,12 +58,12 @@ define(['jquery',
 		$("#div_table").html('<img class="icon-loading" src="../icon/loading.gif"/>');
 		$.ajax({
 			type: "POST",
-			data: {loadR: 'loadReport'},
-			url: "../managers/no_trackings_report/students_no_trackings_report_processing.php",
+			data: JSON.stringify({ "function":"load_report", "params":[ 525391 ] }),
+			url: "../managers/no_trackings_report/student_no_trackings_report_api.php",
 			success: function(msg){												
 				$("#div_table").html('');
 				$("#div_table").fadeIn(1000).append('<table id="tableEstSeguimientos" class="display" cellspacing="0" width="100%"><thead> </thead></table>');
-				$("#tableEstSeguimientos").DataTable(msg);
+				$("#tableEstSeguimientos").DataTable(msg.data_response);
 				$('#dataTables_scrollBody').css('cursor', 'pointer');
 			},
 			dataType: "json",
