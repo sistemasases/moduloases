@@ -797,6 +797,7 @@ function dphpformsV2_get_permisos_pregunta( $id_formulario_pregunta ){
     ]
 }';*/
 $initial_config = '{
+    "allow_register":false,
     "allow_update":true,
     "allow_delete":true,
     "aditional_form_classes" : ["col-xs-12", "col-sm-12", "dphpforms"],
@@ -843,8 +844,20 @@ function dphpformsV2_generate_html_recorder( $id_form, $rol_, $initial_config = 
         return '';
     }
 
-    $aditional_form_classes = "";
+    $form_name_formatted = $form_info->alias . "_" . $form_info->id;
+    $register_button = '<button data-form-id="'.$form_name_formatted.'" type="submit" class="btn-dphpforms btn-dphpforms-sendform">Registrar</button>';
+    $form_action = $form_info->action;
 
+    if( $initial_config ){
+        if( property_exists($initial_config, 'allow_register') ){
+            if( !$initial_config->allow_register ){
+                $register_button = '';
+                $form_action = uniqid();
+            }
+        }
+    }
+
+    $aditional_form_classes = "";
     if( $initial_config ){
         if( property_exists($initial_config, 'aditional_form_classes') ){
             $aditional_form_classes = array_map(
@@ -864,12 +877,11 @@ function dphpformsV2_generate_html_recorder( $id_form, $rol_, $initial_config = 
             $aditional_form_classes = join( $aditional_form_classes, " " );
         }
     }
-
-    $form_name_formatted = $form_info->alias . "_" . $form_info->id;
+    
     $form_uniqid = uniqid("dphpforms_",true);
 
     $html ='
-        <form id="'. $form_name_formatted .'" data-uid="'. $form_uniqid .'" method="'. $form_info->method .'" action="'. $form_info->action .'" class="dphpforms dphpforms-response '.$aditional_form_classes.'">
+        <form id="'. $form_name_formatted .'" data-uid="'. $form_uniqid .'" method="'. $form_info->method .'" action="'. $form_action .'" class="dphpforms dphpforms-response '.$aditional_form_classes.'">
             <h1>'.$form_info->nombre.'</h1><hr class="header-hr-dphpforms">
             <input name="id" value="'. $form_info->id .'" style="display:none;">
     ';
@@ -1137,11 +1149,11 @@ function dphpformsV2_generate_html_recorder( $id_form, $rol_, $initial_config = 
             }
         }
     }
-
+    
     $html = $html .  ' 
         <hr class="footer-hr-dphpforms">
         <div class="dphpforms_response_recorder_buttons">
-            <button data-form-id="'.$form_name_formatted.'" type="submit" class="btn-dphpforms btn-dphpforms-sendform">Registrar</button>
+            '.$register_button.'
             '.$html_aditional_buttons.'
         </div>
     </form>';
