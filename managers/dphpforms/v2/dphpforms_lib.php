@@ -799,7 +799,7 @@ function dphpformsV2_get_permisos_pregunta( $id_formulario_pregunta ){
 $initial_config = '{
     "allow_update":true,
     "allow_delete":true,
-    "main_form_classes" : "col-xs-12 col-sm-12",
+    "aditional_form_classes" : ["col-xs-12", "col-sm-12", "dphpforms"],
     "initial_values" : [
         {
             "alias" : "lugar",
@@ -843,12 +843,33 @@ function dphpformsV2_generate_html_recorder( $id_form, $rol_, $initial_config = 
         return '';
     }
 
-    $form_name_formatted = $form_info->alias . "_" . $form_info->id;
+    $aditional_form_classes = "";
 
+    if( $initial_config ){
+        if( property_exists($initial_config, 'aditional_form_classes') ){
+            $aditional_form_classes = array_map(
+                function($class){
+                    $default_classes = [
+                        "dphpforms",
+                        "dphpforms-response"
+                    ];
+                    if( in_array( $class, $default_classes ) ){
+                        return null;
+                    }else{
+                        return $class;
+                    }
+                },
+                $initial_config->aditional_form_classes
+            );
+            $aditional_form_classes = join( $aditional_form_classes, " " );
+        }
+    }
+
+    $form_name_formatted = $form_info->alias . "_" . $form_info->id;
     $form_uniqid = uniqid("dphpforms_",true);
 
     $html ='
-        <form id="'. $form_name_formatted .'" data-uid="'. $form_uniqid .'" method="'. $form_info->method .'" action="'. $form_info->action .'" class="dphpforms dphpforms-response ">
+        <form id="'. $form_name_formatted .'" data-uid="'. $form_uniqid .'" method="'. $form_info->method .'" action="'. $form_info->action .'" class="dphpforms dphpforms-response '.$aditional_form_classes.'">
             <h1>'.$form_info->nombre.'</h1><hr class="header-hr-dphpforms">
             <input name="id" value="'. $form_info->id .'" style="display:none;">
     ';
