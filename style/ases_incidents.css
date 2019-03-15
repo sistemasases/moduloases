@@ -1,4 +1,5 @@
 #incidents_container{
+    padding: 15px;
     margin-top: 1.5em;
 }
 
@@ -29,7 +30,9 @@
 }
 
 .detail_container{
-    padding: 1em;
+    padding: 2em;
+    margin-left: 1em;
+    background-color: rgb(204, 204, 204);
 }
 
 .inc_item_container{
@@ -88,4 +91,25 @@
 
 .inc_detail{
     margin-top: 1.2em;
+}
+
+
+input[type=text] {
+    height: 34px !important;
+}
+
+#title-ases-incidents-view{
+    box-shadow: 0 4px 2px -2px grey;
+    padding: 20px 15px 10px 15px;
+    width: 100%;
+    min-height: 64px;
+}
+
+#title-ases-incidents-view > h2{
+    margin: 0 !important;
+    float: left;
+}
+
+.new-incident{
+    float: right;
 }
