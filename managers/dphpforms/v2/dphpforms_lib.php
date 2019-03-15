@@ -817,7 +817,7 @@ $initial_config = '{
         {
             "alias" : "extra_button",
             "text" : "Extra Button",
-            "main_classes" : "e-class e-class-2"
+            "classes" : ["e-class", "e-class-2"]
         }
     ]
 }';
@@ -1122,7 +1122,7 @@ function dphpformsV2_generate_html_recorder( $id_form, $rol_, $initial_config = 
                         }
                     }
                    
-                    $html_button = dphpformsV2_generate_html_button( $button->alias, $button->text, $button->main_classes, false );
+                    $html_button = dphpformsV2_generate_html_button( $button->alias, $button->text, $button->classes, false );
 
                     //If return is null means that was defined an invalid alias or was tried to define and reserved alias without flag.
                     if( !$html_button ){
@@ -1374,11 +1374,11 @@ function dphpformsV2_generate_CHECKBOX( $id_formulario_pregunta, $context, $stat
  * @author Jeison Cardona Gómez, <jeison.cardona@correounivalle.edu.co>
  * @param String $alias, this alias will be used as class-identifier, for instance, btn-dphpforms-alias
  * @param String $text, it is the buttom value.
- * @param String $main_classes, aditional css classes.
+ * @param String $classes, aditional css classes.
  * @return String HTML with the buttons tags.
  */
 
-function dphpformsV2_generate_html_button( $alias, $text, $main_classes, $allow_reserved_alias = false ){
+function dphpformsV2_generate_html_button( $alias, $text, $classes, $allow_reserved_alias = false ){
     
     $reserved_aliases = [
         "update",
@@ -1393,7 +1393,29 @@ function dphpformsV2_generate_html_button( $alias, $text, $main_classes, $allow_
         return null;
     }
 
-    return '<input type="button" class="button btn-dphpforms btn-dphpforms-'. $alias .' '. $main_classes .'" value="'.$text.'" >';
+    $aditional_classes = "";
+
+    if( $classes ){
+        $classes = array_map(
+            function($class) use ($alias){
+                $default_classes = [
+                    "button",
+                    "btn-dphpforms",
+                    "btn-dphpforms-" . $alias,
+                ];
+                if( in_array( $class, $default_classes ) ){
+                    return null;
+                }else{
+                    return $class;
+                }
+            },
+            $classes
+        );
+        $aditional_classes = join( $classes, " " );
+    }
+
+
+    return '<input type="button" class="button btn-dphpforms btn-dphpforms-'. $alias .' '. $aditional_classes .'" value="'.$text.'" >';
 }
 
 /**
