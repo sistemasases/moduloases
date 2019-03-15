@@ -19,6 +19,24 @@
         'block_ases/loading_indicator'
        ], 
         function($, sweetalert, jqueryui, li ) {
+
+            function format_date(date) {
+                let month_names = [
+                  "Enero", "Febrero", "Marzo",
+                  "Abril", "Mayo", "Junio", "Julio",
+                  "Agosto", "Septiembre", "Octubre",
+                  "Noviembre", "Diciembre"
+                ];
+              
+                let day = date.getDate();
+                let month_index = date.getMonth();
+                let year = date.getFullYear();
+                let hour = date.getHours();
+                let minutes = date.getMinutes();
+                let seconds = date.getSeconds();
+              
+                return day + '-' + month_names[month_index] + '-' + year + ', ' + hour + ":" + minutes + ":" + seconds;
+            }
    
            console.log( "ases_incident_manager loaded" );
 
@@ -57,7 +75,10 @@
                                 let title = comentarios[0].message.title;
                                 let detail = comentarios[0].message.commentary;
                                 let cerrada = JSON.parse(response.data_response).cerrada;
-                                let datetime = JSON.parse(response.data_response).fecha_hora_registro;
+                                let datetime = format_date(new Date( JSON.parse(response.data_response).fecha_hora_registro * 1000));
+                                
+                                
+                                
 
                                 $(".inc_detail").html( "<strong>Detalle: </strong>" + detail );
                                 $(".opened_by").html( "<strong>Abierta por:</strong> " + opened_by.firstname + " " + opened_by.lastname + " - " + opened_by.username );
