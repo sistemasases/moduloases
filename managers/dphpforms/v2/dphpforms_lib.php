@@ -796,7 +796,7 @@ function dphpformsV2_get_permisos_pregunta( $id_formulario_pregunta ){
         }
     ]
 }';*/
-/*$initial_config = '{
+$initial_config = '{
     "allow_update":true,
     "allow_delete":true,
     "main_form_classes" : "col-xs-12 col-sm-12",
@@ -822,7 +822,7 @@ function dphpformsV2_get_permisos_pregunta( $id_formulario_pregunta ){
     ]
 }';
 $initial_config = json_decode( $initial_config );
-echo dphpformsV2_generate_html_recorder( 'seguimiento_pares', "sistemas", $initial_config  );*/
+echo dphpformsV2_generate_html_recorder( 'seguimiento_pares', "sistemas", $initial_config  );
 
 function dphpformsV2_generate_html_recorder( $id_form, $rol_, $initial_config = null  ){
 
@@ -845,8 +845,10 @@ function dphpformsV2_generate_html_recorder( $id_form, $rol_, $initial_config = 
 
     $form_name_formatted = $form_info->alias . "_" . $form_info->id;
 
+    $form_uniqid = uniqid("dphpforms_",true);
+
     $html ='
-        <form id="'. $form_name_formatted .'" data-uid="'. uniqid("dphpforms_",true) .'" method="'. $form_info->method .'" action="'. $form_info->action .'" class="dphpforms dphpforms-response ">
+        <form id="'. $form_name_formatted .'" data-uid="'. $form_uniqid .'" method="'. $form_info->method .'" action="'. $form_info->action .'" class="dphpforms dphpforms-response ">
             <h1>'.$form_info->nombre.'</h1><hr class="header-hr-dphpforms">
             <input name="id" value="'. $form_info->id .'" style="display:none;">
     ';
@@ -1012,25 +1014,25 @@ function dphpformsV2_generate_html_recorder( $id_form, $rol_, $initial_config = 
 
                     switch ($campo) {
                         case "TEXTFIELD":
-                            $html .= dphpformsV2_generate_TEXTFIELD( $statement->mod_id_formulario_pregunta, $context, $enunciado );
+                            $html .= dphpformsV2_generate_TEXTFIELD( $statement->mod_id_formulario_pregunta, $context, $enunciado, $form_uniqid );
                             break;
                         case "TEXTAREA":
-                            $html .= dphpformsV2_generate_TEXTAREA( $statement->mod_id_formulario_pregunta, $context, $enunciado );
+                            $html .= dphpformsV2_generate_TEXTAREA( $statement->mod_id_formulario_pregunta, $context, $enunciado, $form_uniqid );
                             break;
                         case "DATE":
-                            $html .= dphpformsV2_generate_DATE( $statement->mod_id_formulario_pregunta, $context, $enunciado );
+                            $html .= dphpformsV2_generate_DATE( $statement->mod_id_formulario_pregunta, $context, $enunciado, $form_uniqid );
                             break;
                         case "DATETIME":
-                            $html .= dphpformsV2_generate_DATETIME( $statement->mod_id_formulario_pregunta, $context, $enunciado );
+                            $html .= dphpformsV2_generate_DATETIME( $statement->mod_id_formulario_pregunta, $context, $enunciado, $form_uniqid );
                             break;
                         case "TIME":
-                            $html .= dphpformsV2_generate_TIME( $statement->mod_id_formulario_pregunta, $context, $enunciado );
+                            $html .= dphpformsV2_generate_TIME( $statement->mod_id_formulario_pregunta, $context, $enunciado, $form_uniqid );
                             break;
                         case "RADIOBUTTON":
-                            $html .= dphpformsV2_generate_RADIOBUTTON( $statement->mod_id_formulario_pregunta, $context, $enunciado );
+                            $html .= dphpformsV2_generate_RADIOBUTTON( $statement->mod_id_formulario_pregunta, $context, $enunciado, $form_uniqid );
                             break;
                         case "CHECKBOX":
-                            $html .= dphpformsV2_generate_CHECKBOX( $statement->mod_id_formulario_pregunta, $context, $enunciado );
+                            $html .= dphpformsV2_generate_CHECKBOX( $statement->mod_id_formulario_pregunta, $context, $enunciado, $form_uniqid );
                             break;
                     }
 
@@ -1129,7 +1131,7 @@ function dphpformsV2_generate_html_recorder( $id_form, $rol_, $initial_config = 
 
 }
 
-function dphpformsV2_generate_TEXTFIELD( $id_formulario_pregunta, $context, $statement ){
+function dphpformsV2_generate_TEXTFIELD( $id_formulario_pregunta, $context, $statement, $prefix_uniqid ){
     
     $field_attr_class = $context[ 'attr_class' ];
     $field_attr_local_alias = $context[ 'attr_local_alias' ];
@@ -1144,7 +1146,7 @@ function dphpformsV2_generate_TEXTFIELD( $id_formulario_pregunta, $context, $sta
     $field_attr_required = $context[ 'attr_required' ];
     
     $html = '
-    <div class="div-'.$id_formulario_pregunta.' '.$field_attr_class.' '.$field_attr_local_alias.'" data-uid="'. uniqid("dphpforms_",true) .'" >' 
+    <div class="div-'.$id_formulario_pregunta.' '.$field_attr_class.' '.$field_attr_local_alias.'" data-uid="'. uniqid($prefix_uniqid,true) .'" >' 
         . $statement . ':<br>
         <input id="'.$id_formulario_pregunta.'" class="form-control ' . $field_attr_inputclass . '" max="' . $field_attr_max . '"  min="' . $field_attr_min . '" type="'.$field_attr_type.'" placeholder="'.$field_attr_placeholder.'" name="'.$id_formulario_pregunta.'" value="'.$field_default_value.'" maxlength="'.$field_attr_maxlength.'" '.$field_enabled.' '.$field_attr_required.'>
     </div>';
@@ -1153,7 +1155,7 @@ function dphpformsV2_generate_TEXTFIELD( $id_formulario_pregunta, $context, $sta
     
 }
 
-function dphpformsV2_generate_TEXTAREA( $id_formulario_pregunta, $context, $statement ){
+function dphpformsV2_generate_TEXTAREA( $id_formulario_pregunta, $context, $statement, $prefix_uniqid ){
 
     $field_attr_class = $context[ 'attr_class' ];
     $field_attr_local_alias = $context[ 'attr_local_alias' ];
@@ -1165,7 +1167,7 @@ function dphpformsV2_generate_TEXTAREA( $id_formulario_pregunta, $context, $stat
     $field_attr_required = $context[ 'attr_required' ];
 
     $html = '
-    <div class="div-'.$id_formulario_pregunta.' '.$field_attr_class.' '.$field_attr_local_alias.'" data-uid="'. uniqid("dphpforms_",true) .'" >' 
+    <div class="div-'.$id_formulario_pregunta.' '.$field_attr_class.' '.$field_attr_local_alias.'" data-uid="'. uniqid($prefix_uniqid,true) .'" >' 
         . $statement . ':<br>
         <textarea id="'.$id_formulario_pregunta.'" class="form-control ' . $field_attr_inputclass . '" name="'. $id_formulario_pregunta .'" placeholder="'.$field_attr_placeholder.'" maxlength="'.$field_attr_maxlength.'" '.$field_enabled.' '.$field_attr_required.'>'.$field_default_value.'</textarea>
     </div>';
@@ -1174,7 +1176,7 @@ function dphpformsV2_generate_TEXTAREA( $id_formulario_pregunta, $context, $stat
     
 }
 
-function dphpformsV2_generate_DATE( $id_formulario_pregunta, $context, $statement ){
+function dphpformsV2_generate_DATE( $id_formulario_pregunta, $context, $statement, $prefix_uniqid ){
 
     $field_attr_class = $context[ 'attr_class' ];
     $field_attr_local_alias = $context[ 'attr_local_alias' ];
@@ -1186,7 +1188,7 @@ function dphpformsV2_generate_DATE( $id_formulario_pregunta, $context, $statemen
     $field_attr_required = $context[ 'attr_required' ];
 
     $html = '
-    <div class="div-'.$id_formulario_pregunta.' '.$field_attr_class.' '.$field_attr_local_alias.'" data-uid="'. uniqid("dphpforms_",true) .'" >' 
+    <div class="div-'.$id_formulario_pregunta.' '.$field_attr_class.' '.$field_attr_local_alias.'" data-uid="'. uniqid($prefix_uniqid,true) .'" >' 
         . $statement . ':<br>
         <input id="'.$id_formulario_pregunta.'" class="form-control ' . $field_attr_inputclass . '" value="'.$field_default_value.'" max="' . $field_attr_max . '"  min="' . $field_attr_min . '" type="date" name="'.$id_formulario_pregunta.'" '.$field_enabled.' '.$field_attr_required.'>
     </div>';
@@ -1195,7 +1197,7 @@ function dphpformsV2_generate_DATE( $id_formulario_pregunta, $context, $statemen
 
 }
 
-function dphpformsV2_generate_DATETIME( $id_formulario_pregunta, $context, $statement ){
+function dphpformsV2_generate_DATETIME( $id_formulario_pregunta, $context, $statement, $prefix_uniqid ){
 
     $field_attr_class = $context[ 'attr_class' ];
     $field_attr_local_alias = $context[ 'attr_local_alias' ];
@@ -1207,7 +1209,7 @@ function dphpformsV2_generate_DATETIME( $id_formulario_pregunta, $context, $stat
     $field_attr_required = $context[ 'attr_required' ];
 
     $html = '
-    <div class="div-'.$id_formulario_pregunta.' '.$field_attr_class.' '.$field_attr_local_alias.'" data-uid="'. uniqid("dphpforms_",true) .'" >' 
+    <div class="div-'.$id_formulario_pregunta.' '.$field_attr_class.' '.$field_attr_local_alias.'" data-uid="'. uniqid($prefix_uniqid,true) .'" >' 
         . $statement . ':<br>
         <input id="'.$id_formulario_pregunta.'" class="form-control ' . $field_attr_inputclass . '" value="'.$field_default_value.'" max="' . $field_attr_max . '"  min="' . $field_attr_min . '" type="datetime-local" name="'.$id_formulario_pregunta.'" '.$field_enabled.' '.$field_attr_required.'>
     </div>';
@@ -1216,7 +1218,7 @@ function dphpformsV2_generate_DATETIME( $id_formulario_pregunta, $context, $stat
 
 }
 
-function dphpformsV2_generate_TIME( $id_formulario_pregunta, $context, $statement ){
+function dphpformsV2_generate_TIME( $id_formulario_pregunta, $context, $statement, $prefix_uniqid ){
 
     $field_attr_class = $context[ 'attr_class' ];
     $field_attr_local_alias = $context[ 'attr_local_alias' ];
@@ -1228,7 +1230,7 @@ function dphpformsV2_generate_TIME( $id_formulario_pregunta, $context, $statemen
     $field_attr_required = $context[ 'attr_required' ];
 
     $html = '
-    <div class="div-'.$id_formulario_pregunta.' '.$field_attr_class.' '.$field_attr_local_alias.'" data-uid="'. uniqid("dphpforms_",true) .'" >' 
+    <div class="div-'.$id_formulario_pregunta.' '.$field_attr_class.' '.$field_attr_local_alias.'" data-uid="'. uniqid($prefix_uniqid,true) .'" >' 
         . $statement . ':<br>
         <input id="'.$id_formulario_pregunta.'" class="form-control ' . $field_attr_inputclass . '" value="'.$field_default_value.'" max="' . $field_attr_max . '"  min="' . $field_attr_min . '" type="time" name="'.$id_formulario_pregunta.'" '.$field_enabled.' '.$field_attr_required.'>
     </div>';
@@ -1237,7 +1239,7 @@ function dphpformsV2_generate_TIME( $id_formulario_pregunta, $context, $statemen
 
 }
 
-function dphpformsV2_generate_RADIOBUTTON( $id_formulario_pregunta, $context, $statement ){
+function dphpformsV2_generate_RADIOBUTTON( $id_formulario_pregunta, $context, $statement, $prefix_uniqid ){
 
     $field_attr_class = $context[ 'attr_class' ];
     $field_attr_local_alias = $context[ 'attr_local_alias' ];
@@ -1255,7 +1257,7 @@ function dphpformsV2_generate_RADIOBUTTON( $id_formulario_pregunta, $context, $s
     $field_attr_group_radio_class = $context[ 'attr_group_radio_class' ];
 
     $html = '
-    <div class="div-'.$id_formulario_pregunta.' '.$field_attr_class.' '.$field_attr_local_alias.'" data-uid="'. uniqid("dphpforms_",true) .'" >
+    <div class="div-'.$id_formulario_pregunta.' '.$field_attr_class.' '.$field_attr_local_alias.'" data-uid="'. uniqid($prefix_uniqid,true) .'" >
         <input type="hidden" name="'.$id_formulario_pregunta.'" value="-#$%-">';
 
     if($statement){
@@ -1294,7 +1296,7 @@ function dphpformsV2_generate_RADIOBUTTON( $id_formulario_pregunta, $context, $s
 
 }
 
-function dphpformsV2_generate_CHECKBOX( $id_formulario_pregunta, $context, $statement ){
+function dphpformsV2_generate_CHECKBOX( $id_formulario_pregunta, $context, $statement, $prefix_uniqid ){
 
     $field_attr_class = $context[ 'attr_class' ];
     $field_attr_local_alias = $context[ 'attr_local_alias' ];
@@ -1312,7 +1314,7 @@ function dphpformsV2_generate_CHECKBOX( $id_formulario_pregunta, $context, $stat
 
     $number_options = count($options);
 
-    $html = '<div class="div-'.$id_formulario_pregunta.' '.$field_attr_class.' '.$field_attr_local_alias.'" data-uid="'. uniqid("dphpforms_",true) .'" >';
+    $html = '<div class="div-'.$id_formulario_pregunta.' '.$field_attr_class.' '.$field_attr_local_alias.'" data-uid="'. uniqid($prefix_uniqid,true) .'" >';
 
     if($statement){
         $html = $html . '<label>'.$statement.'</label>';
