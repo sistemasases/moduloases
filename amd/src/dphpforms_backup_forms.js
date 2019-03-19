@@ -278,7 +278,7 @@ define([
                     html_content += '<hr style="background-color: red; height: 1px; border: 0">';
 
                     //Crear JSON con general_modal_manager
-                    gmm.generate_modal("modal_to_compare", "Comparación de estados", html_content);
+                    gmm.generate_modal("modal_to_compare", "Comparación de estados", html_content, null, function(){ gmm.show_modal( ".modal_to_compare" ) });
 
                     //GENERACIÓN DE HTML DE URL(S) QUE DIRIGEN A FICHA DE ESTUDIANTE(S)
 
