@@ -110,6 +110,6 @@ input[type=text] {
     float: left;
 }
 
-.new-incident{
+#new-incident{
     float: right;
 }
