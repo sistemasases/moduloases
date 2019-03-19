@@ -16,9 +16,77 @@
         'jquery', 
         'block_ases/sweetalert', 
         'block_ases/jqueryui',
-        'block_ases/loading_indicator'
+        'block_ases/loading_indicator',
+        'block_ases/_general_modal_manager'
        ], 
-        function($, sweetalert, jqueryui, li ) {
+        function($, sweetalert, jqueryui, li, gmm ) {
+
+            $(document).on( "click", "#new-incident", function(){
+
+                let div_incident_box = '\
+                <div id="incident_box" style="padding:1em; margin-bottom:1.2em;" >\
+                    <input id="new_inc_title" class="form-control" placeholder="Título corto" type="text">\
+                    <textarea id="new_inc_detail" class="form-control" name="" placeholder="Descripción detallada de la incidencia" rows="5"></textarea>\
+                    <a id="new_inc_registrar" class="btn btn-info" style="float:right; margin-top:0.5em;" href="javascript:void(0)">Registrar</a>\
+                </div>\
+            ';
+
+                gmm.generate_modal(
+                    "modal-new-incident", "Registro de incidencia interna", div_incident_box, "modal-body-new-incident",
+                    function(){gmm.show_modal( ".modal-new-incident", 300 )}
+                );
+            });
+
+            $(document).on("click", "#new_inc_registrar", function(){
+
+                let system_info = "<h1>Incidencia interna</h1>";
+                let detail = {
+                    title:$("#new_inc_title").val(),
+                    commentary:$("#new_inc_detail").val()
+                };
+
+                if( (detail.title != "") && (detail.commentary != "") ){
+                    li.show();
+                    $.ajax({
+                        method: "POST",
+                        url: "../managers/incident_manager/incident_api.php",
+                        contentType: "application/json",
+                        dataType: "json",
+                        data: JSON.stringify({"function":"create_incident", "params":[ detail, system_info ]}) ,
+                        success: function( response ){
+                            li.hide();
+                            if( response.status_code === 0 ){
+                                swal(
+                                    {title:'Éxito',
+                                    text: 'Se ha registrado correctamente la incidencia, ticket #' + response.data_response,
+                                    type: 'success'},
+                                    function(){
+                                        location.reload();
+                                    }
+                                );
+                            }else{
+                                swal(
+                                    'Error!',
+                                    'Oops!: ' + response.data_response,
+                                    'error'
+                                );
+                            }
+                        },
+                        error: function( XMLHttpRequest, textStatus, errorThrown ) {
+                            li.hide();
+                            console.log( "some error " + textStatus + " " + errorThrown );
+                            console.log( XMLHttpRequest );
+                        }
+                    });
+                }else{
+                    swal(
+                        'Oops!',
+                        'Verifica que tanto el título como la descripción no estén vacíos.',
+                        'warning'
+                    );
+                }
+
+            });
 
             function format_date(date) {
                 let month_names = [
@@ -76,9 +144,6 @@
                                 let detail = comentarios[0].message.commentary;
                                 let cerrada = JSON.parse(response.data_response).cerrada;
                                 let datetime = format_date(new Date( JSON.parse(response.data_response).fecha_hora_registro * 1000));
-                                
-                                
-                                
 
                                 $(".inc_detail").html( "<strong>Detalle: </strong>" + detail );
                                 $(".opened_by").html( "<strong>Abierta por:</strong> " + opened_by.firstname + " " + opened_by.lastname + " - " + opened_by.username );
@@ -128,9 +193,12 @@
                                         li.hide();
                                         if( response.status_code === 0 ){
                                             swal(
-                                                'Éxito!',
-                                                'Se ha cerrado correctamente la incidencia',
-                                                'success'
+                                                {title:'Éxito',
+                                                text: 'Se ha cerrado correctamente la incidencia',
+                                                type: 'success'},
+                                                function(){
+                                                    location.reload();
+                                                }
                                             );
                                         }else{
                                             swal(
