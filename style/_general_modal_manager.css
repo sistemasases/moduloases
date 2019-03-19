@@ -50,16 +50,19 @@
 }
 .general_modal > .general_modal_content > .general_modal_header > .general_modal_close:before, 
 .general_modal > .general_modal_content > .general_modal_header > .general_modal_close:after {
-  position: absolute;
-  margin-left: 0.615em;
-  content: ' ';
-  height: 1.3em;
-  width: 2px;
-  background-color: #333;
+    position: absolute;
+    margin-left: 0.615em;
+    content: ' ';
+    height: 1.3em;
+    width: 2px;
+    background-color: #333;
 }
 .general_modal > .general_modal_content > .general_modal_header > .general_modal_close:before {
-  transform: rotate(45deg);
+    transform: rotate(45deg);
 }
 .general_modal > .general_modal_content > .general_modal_header > .general_modal_close:after {
-  transform: rotate(-45deg);
+    transform: rotate(-45deg);
+}
+.general_modal > .general_modal_content > .general_modal_footer {
+    color:rgba(0, 0, 0, 0);
 }
