@@ -30,19 +30,21 @@ define([
         let default_animation =     "fadein";
         let input_animation =       animation.toString().toLowerCase();
         let animation_selected =    null;
-
+       
         if( available_animations.indexOf( input_animation ) === -1 ){
             animation_selected = default_animation;
+        }else{
+            animation_selected = input_animation;
         };
 
         switch ( animation_selected ) {
             case "fadein":
-                $( modal_selector ).fadeIn( animation_time );
+                $("body").find( modal_selector ).fadeIn( animation_time );
                 break;
             case "show":
-                $( modal_selector ).show( animation_time );
+                $("body").find( modal_selector ).show( animation_time );
                 break;
-        };        
+        };     
         
     };
     
@@ -53,6 +55,7 @@ define([
             url: template_location,
             data: null,
             dataType: "text",
+            async: false,
             success: function( template ){
 
                 let modal_data = {
@@ -61,12 +64,9 @@ define([
                     general_modal_class: selector_class_name + " " + m_class
                 };
                 
-                let html_modal = mustache.render(  template, modal_data );
-
+                let html_modal = $(mustache.render(  template, modal_data ));
                 $("body").append( html_modal );
-
                 $(".general_modal_close").unbind();
-
                 callback();
             },
             error: function(){
@@ -99,7 +99,9 @@ define([
                 confirmButtonText: 'Salir'
             }, function(isConfirm) {
                 if ( isConfirm ) {
-                    outside.parent(".general_modal").fadeOut(300);
+                    outside.parent(".general_modal").fadeOut(300, function(){
+                        general_modal.remove();
+                    });
                 }
             }
         );
