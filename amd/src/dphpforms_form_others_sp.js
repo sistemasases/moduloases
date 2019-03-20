@@ -349,7 +349,7 @@ define([
                         courseid: getIdcourse(),
                         ases: ases_id
                     },
-                    url: "../managers/student_profile/discapacity_tab_api.php",
+                    url: "../managers/student_profile/others_tab_api.php",
                     success: function(msg) {
             
                         swal(
@@ -398,7 +398,7 @@ define([
                             courseid: getIdcourse(),
                             ases: ases_id
                         },
-                        url: "../managers/student_profile/discapacity_tab_api.php",
+                        url: "../managers/student_profile/others_tab_api.php",
                         success: function(msg) {
                 
                             swal(
@@ -784,7 +784,7 @@ define([
                             courseid: getIdcourse(),
                             ases: ases_id
                         },
-                        url: "../managers/student_profile/discapacity_tab_api.php",
+                        url: "../managers/student_profile/others_tab_api.php",
                         success: function(msg) {
                 
                             swal(
@@ -833,7 +833,7 @@ define([
                             courseid: getIdcourse(),
                             ases: ases_id
                         },
-                        url: "../managers/student_profile/discapacity_tab_api.php",
+                        url: "../managers/student_profile/others_tab_api.php",
                         success: function(msg) {
                 
                             swal(

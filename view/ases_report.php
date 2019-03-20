@@ -86,7 +86,6 @@ foreach($actions as $act){
 $data->menu = $menu_option;
 $data->risks_checks = $risks_table;
 $data->cohorts_checks = $cohorts_select;
-$data->status_ases = $estados_ases;
 $contextcourse = context_course::instance($courseid);
 $contextblock =  context_block::instance($blockid);
 

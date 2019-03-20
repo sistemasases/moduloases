@@ -742,7 +742,7 @@ define([
                     courseid: getIdcourse(),
                     id_schema: 1
                 },
-                url: "../managers/student_profile/discapacity_tab_api.php",
+                url: "../managers/student_profile/others_tab_api.php",
                 success: function(msg) {
         
                     swal(

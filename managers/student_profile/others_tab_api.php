@@ -28,7 +28,7 @@
 
 
 require_once(dirname(__FILE__). '/../../../../config.php');
-require_once(dirname(__FILE__).'/discapacity_tab_lib.php');
+require_once(dirname(__FILE__).'/others_tab_lib.php');
 require_once(dirname(__FILE__).'/../student_profile/studentprofile_lib.php');
 require_once(dirname(__FILE__).'/../../vendor/autoload.php');
 
