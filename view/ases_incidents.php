@@ -61,7 +61,7 @@ $url = new moodle_url("/blocks/ases/view/ases_incidents.php", array('courseid' =
 
 $coursenode = $PAGE->navigation->find($courseid, navigation_node::TYPE_COURSE);
 
-$rol = get_role_ases($USER->id);
+$rol = lib_get_rol_name_ases($USER->id, $blockid);
 
 $record->incidents = array_values(incident_get_all_incidents());
 

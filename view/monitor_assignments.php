@@ -54,7 +54,7 @@ if (!consult_instance($blockid)) {
 $contextcourse = context_course::instance($courseid);
 $contextblock = context_block::instance($blockid);
 
-$rol = get_role_ases($USER->id);
+$rol = lib_get_rol_name_ases($USER->id, $blockid);
 
 $url = new moodle_url("/blocks/ases/view/monitor_assignments.php", array('courseid' => $courseid, 'instanceid' => $blockid));
 $menu_option = create_menu_options($USER->id, $blockid, $courseid);
