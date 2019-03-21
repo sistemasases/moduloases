@@ -22,7 +22,7 @@
  * @author     Jeison Cardona Gómez
  * @package    block_ases
  * @copyright  2017 Juan Pablo Moreno Muñoz <moreno.juan@correounivalle.edu.co>
- * @copyright  2018 Jeison Cardona Gómez <jeison.cardona@correounivalle.edu.co>
+ * @copyright  2019 Jeison Cardona Gómez <jeison.cardona@correounivalle.edu.co>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -78,8 +78,8 @@ function periods_management_get_current_semester_by_apprx_interval( $start_date,
  * ## Fields returned
  * - max: rename for semestre.id
  * - semestre.nombre
- * @see get_current_semester()
- * @return  object that represents the current semester
+ * @deprecated 5.3 No longer used because its return does not comply with the no modification policy, please @see periods_get_current_semester().
+ * @return object that represents the current semester
  */
  
  function get_current_semester(){
@@ -90,6 +90,29 @@ function periods_management_get_current_semester_by_apprx_interval( $start_date,
      $current_semester = $DB->get_record_sql($sql_query);
      return $current_semester;
  }
+
+ /**
+ * Function that returns the current semester.
+ * @author Jeison Cardona Gómez <jeison.cardona@correounivalle.edu.co>.
+ * @return object that represents the current semester.
+ * @return null if are no semesters registered.
+ */
+ 
+function periods_get_current_semester(){
+     
+    global $DB;
+
+    $sql_query = "SELECT id, nombre, fecha_inicio, fecha_fin 
+    FROM {talentospilos_semestre} 
+    WHERE id = (
+        SELECT MAX(id) 
+        FROM {talentospilos_semestre}
+    )";
+    
+    $current_semester = $DB->get_record_sql($sql_query);
+
+    return $current_semester;
+}
 
  /**
  * Function that returns the interval that represents a semester by its ID
