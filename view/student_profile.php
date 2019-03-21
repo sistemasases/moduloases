@@ -20,9 +20,11 @@
  *
  * @author     Iader E. García G.
  * @author     Jeison Cardona Gómez
+ * @author     Juan Pablo Castro
  * @package    block_ases
  * @copyright  2016 Iader E. García <iadergg@gmail.com>
  * @copyright  2019 Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
+ * @copyright  2019 Juan Pablo Castro <juan.castro.vasquez@correounivalle.edu.co>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -141,7 +143,13 @@ if ($student_code != 0) {
         $record->health_data = "0";
     }
 
+    //Get aditional academics existing data
 
+    //Faculty name foreach academic program
+
+    $faculty_name = '';
+
+        
     $record->id_moodle = $id_user_moodle;
     $record->id_ases = $student_id;
     $record->email_moodle = $user_moodle->email_moodle;
@@ -154,9 +162,21 @@ if ($student_code != 0) {
             $program->nombre_sede = "<b>".$sede."</b>";
             $program->cod_univalle = "<b>".$cod_programa."</b>";
             $program->nombre_programa = "<b>".$nombre_programa."</b>";
+
+            $faculty_name .= $program->cod_univalle ."-" .$program->nombre_facultad .  "<br>";
+            $program_time .= $program->cod_univalle ."-" .$program->jornada  . "<br>";
+            $name_program = $program->nombre_programa;
             break;
+        }else {
+            $faculty_name .= $program->cod_univalle ."-" .$program->nombre_facultad .  "<br>";
+            $program_time .= $program->cod_univalle ."-" .$program->jornada  . "<br>";
         }
+
     }
+    $record->name_program = $name_program;
+    $record->faculty_name = $faculty_name;
+    $record->name_program_time = $program_time;
+    $record->name_current_semester = get_current_semester()->nombre;
     $record->academic_programs = $academic_programs;
     $record->student_cohorts = $student_cohorts;
 
