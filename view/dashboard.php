@@ -41,7 +41,7 @@ global $USER;
 include "../classes/output/dashboard_page.php";
 include "../classes/output/renderer.php";
 
-$title = "Dashboard";
+$title = "Panel general";
 $courseid = required_param('courseid', PARAM_INT);
 $instanceid = required_param('instanceid', PARAM_INT);
 
@@ -57,8 +57,6 @@ $contextblock = context_block::instance($instanceid);
 
 $url = new moodle_url("/blocks/ases/view/dashboard.php", array('courseid' => $courseid, 'instanceid' => $instanceid));
 
-$coursenode = $PAGE->navigation->find($courseid, navigation_node::TYPE_COURSE);
-
 $rol = lib_get_rol_name_ases($USER->id, $instanceid);
 $menu_option = create_menu_options($USER->id, $instanceid, $courseid);
 $record->menu = $menu_option;
@@ -68,10 +66,16 @@ $PAGE->set_context($contextblock);
 $PAGE->set_url($url);
 $PAGE->set_title($title);
 
+// Navigation setup
+$coursenode = $PAGE->navigation->find($courseid, navigation_node::TYPE_COURSE);
+$blocknode = navigation_node::create('Panel general',$url, null, 'block', $instanceid);
+$coursenode->add_node($blocknode);
+
+
 $PAGE->requires->css('/blocks/ases/style/base_ases.css', true);
-$PAGE->requires->css('/blocks/ases/style/jqueryui.css', true);
 $PAGE->requires->css('/blocks/ases/style/bootstrap.min.css', true);
 $PAGE->requires->css('/blocks/ases/style/side_menu_style.css', true);
+$PAGE->requires->css('/blocks/ases/style/dashboard.css', true);
 
 $PAGE->requires->js_call_amd('block_ases/dphpforms_reports', 'init');
 $PAGE->requires->js_call_amd('block_ases/ases_incident_system', 'init');
