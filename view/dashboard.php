@@ -43,24 +43,24 @@ include "../classes/output/renderer.php";
 
 $title = "Dashboard";
 $courseid = required_param('courseid', PARAM_INT);
-$blockid = required_param('instanceid', PARAM_INT);
+$instanceid = required_param('instanceid', PARAM_INT);
 
 $record = new stdClass();
 
 require_login($courseid, false);
-if (!consult_instance($blockid)) {
-    header("Location: instanceconfiguration.php?courseid=$courseid&instanceid=$blockid");
+if (!consult_instance($instanceid)) {
+    header("Location: instanceconfiguration.php?courseid=$courseid&instanceid=$instanceid");
 }
 
 $contextcourse = context_course::instance($courseid);
-$contextblock = context_block::instance($blockid);
+$contextblock = context_block::instance($instanceid);
 
-$url = new moodle_url("/blocks/ases/view/dashboard.php", array('courseid' => $courseid, 'instanceid' => $blockid));
+$url = new moodle_url("/blocks/ases/view/dashboard.php", array('courseid' => $courseid, 'instanceid' => $instanceid));
 
 $coursenode = $PAGE->navigation->find($courseid, navigation_node::TYPE_COURSE);
 
-$rol = get_role_ases($USER->id);
-$menu_option = create_menu_options($USER->id, $blockid, $courseid);
+$rol = lib_get_rol_name_ases($USER->id, $instanceid);
+$menu_option = create_menu_options($USER->id, $instanceid, $courseid);
 $record->menu = $menu_option;
 
 $PAGE->set_context($contextcourse);
