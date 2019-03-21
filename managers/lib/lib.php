@@ -171,7 +171,7 @@ function lib_get_rol_name_ases($user_id, $instance_id, $semester_id = null )
     FROM {talentospilos_rol} AS rol 
     INNER JOIN {talentospilos_user_rol} AS uRol 
     ON rol.id = uRol.id_rol 
-    WHERE uRol.id_usuario = '$user_id' AND uRol.id_semestre = '$semester_id' AND id_instancia = '$instance_id'";
+    WHERE uRol.id_usuario = '$user_id' AND uRol.id_semestre = '$semester_id' AND id_instancia = '$instance_id' AND estado = '1'";
     $rol = $DB->get_record_sql($query_role)->nombre_rol;
 
     return $rol;
