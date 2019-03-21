@@ -22,7 +22,7 @@
  * @author     Jeison Cardona Gómez
  * @package    block_ases
  * @copyright  2017 Juan Pablo Moreno Muñoz <moreno.juan@correounivalle.edu.co>
- * @copyright  2018 Jeison Cardona Gómez <jeison.cardona@correounivalle.edu.co>
+ * @copyright  2019 Jeison Cardona Gómez <jeison.cardona@correounivalle.edu.co>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -92,8 +92,10 @@ function periods_management_get_current_semester_by_apprx_interval( $start_date,
  }
 
  /**
- * Function that returns the current semester
- * @return  object that represents the current semester
+ * Function that returns the current semester.
+ * @author Jeison Cardona Gómez <jeison.cardona@correounivalle.edu.co>.
+ * @return object that represents the current semester.
+ * @return null if are no semesters registered.
  */
  
 function periods_get_current_semester(){
@@ -106,7 +108,9 @@ function periods_get_current_semester(){
         SELECT MAX(id) 
         FROM {talentospilos_semestre}
     )";
+    
     $current_semester = $DB->get_record_sql($sql_query);
+
     return $current_semester;
 }
 
