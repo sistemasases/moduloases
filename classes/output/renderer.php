@@ -270,4 +270,8 @@ class renderer extends plugin_renderer_base {
         $data = $page->export_for_template($this);
         return parent::render_from_template('block_ases/dashboard', $data);
     }
+    public function render_plugin_status_page($page){
+        $data = $page->export_for_template($this);
+        return parent::render_from_template('block_ases/plugin_status', $data);
+    }
 }
