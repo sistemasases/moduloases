@@ -30,7 +30,6 @@ require_once $CFG->libdir . '/adminlib.php';
 
 require_once('../managers/lib/lib.php');
 require_once('../managers/menu_options.php');
-include_once("../managers/dashboard/dashboard_lib.php");
 require_once('../managers/instance_management/instance_lib.php');
 include('../lib.php');
 
@@ -38,7 +37,7 @@ include('../lib.php');
 global $PAGE;
 global $USER;
 
-include "../classes/output/dashboard_page.php";
+include "../classes/output/plugin_status_page.php";
 include "../classes/output/renderer.php";
 
 $title = "Estado";
@@ -60,6 +59,7 @@ $url = new moodle_url("/blocks/ases/view/dashboard.php", array('courseid' => $co
 $rol = lib_get_rol_name_ases($USER->id, $instanceid);
 $menu_option = create_menu_options($USER->id, $instanceid, $courseid);
 $record->menu = $menu_option;
+$record->view_title = "View name";
 
 $PAGE->set_context($contextcourse);
 $PAGE->set_context($contextblock);
@@ -75,14 +75,15 @@ $coursenode->add_node($blocknode);
 $PAGE->requires->css('/blocks/ases/style/base_ases.css', true);
 $PAGE->requires->css('/blocks/ases/style/bootstrap.min.css', true);
 $PAGE->requires->css('/blocks/ases/style/side_menu_style.css', true);
+$PAGE->requires->css('/blocks/ases/style/_view.css', true);
 
 $PAGE->requires->js_call_amd('block_ases/ases_incident_system', 'init');
 
 $output = $PAGE->get_renderer('block_ases');
 
 
-$dashboard_page = new \block_ases\output\dashboard_page($record);
+$plugin_status_page = new \block_ases\output\plugin_status_page($record);
 
 echo $output->header();
-echo $output->render($dashboard_page);
+echo $output->render($plugin_status_page);
 echo $output->footer();
