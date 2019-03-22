@@ -103,8 +103,6 @@ $ases_student = null;
 if ($student_code != 0) {
     
     $ases_student = get_ases_user_by_code($student_code);
- 
-    
 
     $student_id = $ases_student->id;
     //echo $student_id ;
@@ -1141,6 +1139,8 @@ if ($student_code != 0) {
     }else{
         $datos_seguimientos_periodo_actual = $seguimientos_array[ $current_year ][ 'per_b' ];
     };
+
+    print_r( $datos_seguimientos_periodo_actual );die();
 
     /*
         In this block, we use the local_alias defined with the field in the dynamic form
