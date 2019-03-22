@@ -1140,8 +1140,6 @@ if ($student_code != 0) {
         $datos_seguimientos_periodo_actual = $seguimientos_array[ $current_year ][ 'per_b' ];
     };
 
-    print_r( $datos_seguimientos_periodo_actual );die();
-
     /*
         In this block, we use the local_alias defined with the field in the dynamic form
         to filter the fields
