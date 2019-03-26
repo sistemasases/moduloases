@@ -98,7 +98,7 @@ $record = $actions;
 
 $data_init = array();
 
-$rol = get_role_ases($USER->id);
+$rol = lib_get_rol_name_ases($USER->id, $blockid);
 $html_profile_image = "";
 $id_user_moodle_ = null;
 $ases_student = null;

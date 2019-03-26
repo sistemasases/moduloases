@@ -22,7 +22,7 @@
  * @author     Jeison Cardona Gómez
  * @package    block_generalreports
  * @copyright  2016 Iader E. García <iadergg@gmail.com>
- * @copyright  2018 Jeison Cardona Gómez <jeison.cardona@correounivalle.edu.co>
+ * @copyright  2019 Jeison Cardona Gómez <jeison.cardona@correounivalle.edu.co>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -265,5 +265,13 @@ class renderer extends plugin_renderer_base {
     public function render_massive_upload_component($page){
         $data = $page->export_for_template($this);
         return parent::render_from_template('block_ases/massive_upload', $data);
+    }
+    public function render_dashboard_page($page){
+        $data = $page->export_for_template($this);
+        return parent::render_from_template('block_ases/dashboard', $data);
+    }
+    public function render_plugin_status_page($page){
+        $data = $page->export_for_template($this);
+        return parent::render_from_template('block_ases/plugin_status', $data);
     }
 }

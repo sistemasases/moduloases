@@ -20,7 +20,7 @@
  *
  * @author     Jeison Cardona Gómez.
  * @package    block_ases
- * @copyright  2018 Jeison Cardona Gómez <jeison.cardona@correounivalle.edu.co>
+ * @copyright  2019 Jeison Cardona Gómez <jeison.cardona@correounivalle.edu.co>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -29,70 +29,61 @@ require_once __DIR__ . '/../../../config.php';
 require_once $CFG->libdir . '/adminlib.php';
 
 require_once('../managers/lib/lib.php');
-require_once('../managers/instance_management/instance_lib.php');
 require_once('../managers/menu_options.php');
-include_once("../managers/incident_manager/incident_lib.php");
+include_once("../managers/dashboard/dashboard_lib.php");
+require_once('../managers/instance_management/instance_lib.php');
 include('../lib.php');
 
 
 global $PAGE;
 global $USER;
 
-include "../classes/output/incidents_page.php";
+include "../classes/output/dashboard_page.php";
 include "../classes/output/renderer.php";
 
-$title = "Gestión de incidencias";
-
+$title = "Panel general";
 $courseid = required_param('courseid', PARAM_INT);
-$blockid = required_param('instanceid', PARAM_INT);
+$instanceid = required_param('instanceid', PARAM_INT);
 
 $record = new stdClass();
 
 require_login($courseid, false);
-
-if (!consult_instance($blockid)) {
-    header("Location: instanceconfiguration.php?courseid=$courseid&instanceid=$blockid");
+if (!consult_instance($instanceid)) {
+    header("Location: instanceconfiguration.php?courseid=$courseid&instanceid=$instanceid");
 }
 
 $contextcourse = context_course::instance($courseid);
-$contextblock = context_block::instance($blockid);
+$contextblock = context_block::instance($instanceid);
 
-$url = new moodle_url("/blocks/ases/view/ases_incidents.php", array('courseid' => $courseid, 'instanceid' => $blockid));
+$url = new moodle_url("/blocks/ases/view/dashboard.php", array('courseid' => $courseid, 'instanceid' => $instanceid));
 
-$coursenode = $PAGE->navigation->find($courseid, navigation_node::TYPE_COURSE);
-
-$rol = lib_get_rol_name_ases($USER->id, $blockid);
-
-$record->incidents = array_values(incident_get_all_incidents());
-
-$menu_option = create_menu_options($USER->id, $blockid, $courseid);
+$rol = lib_get_rol_name_ases($USER->id, $instanceid);
+$menu_option = create_menu_options($USER->id, $instanceid, $courseid);
 $record->menu = $menu_option;
-
-$record->url_base = $CFG->wwwroot;
 
 $PAGE->set_context($contextcourse);
 $PAGE->set_context($contextblock);
 $PAGE->set_url($url);
 $PAGE->set_title($title);
 
-$PAGE->requires->css('/blocks/ases/style/base_ases.css', true);
-$PAGE->requires->css('/blocks/ases/style/jqueryui.css', true);
-$PAGE->requires->css('/blocks/ases/style/styles_pilos.css', true);
-$PAGE->requires->css('/blocks/ases/style/bootstrap.min.css', true);
-$PAGE->requires->css('/blocks/ases/style/sweetalert.css', true);
-$PAGE->requires->css('/blocks/ases/style/sweetalert2.css', true);
-$PAGE->requires->css('/blocks/ases/style/sugerenciaspilos.css', true);
-$PAGE->requires->css('/blocks/ases/style/forms_pilos.css', true);
-$PAGE->requires->css('/blocks/ases/style/c3.css', true);
-$PAGE->requires->css('/blocks/ases/js/select2/css/select2.css', true);
-$PAGE->requires->css('/blocks/ases/style/side_menu_style.css', true);
-$PAGE->requires->css('/blocks/ases/style/ases_incidents.css', true);
+// Navigation setup
+$coursenode = $PAGE->navigation->find($courseid, navigation_node::TYPE_COURSE);
+$blocknode = navigation_node::create('Panel general',$url, null, 'block', $instanceid);
+$coursenode->add_node($blocknode);
 
-$PAGE->requires->js_call_amd('block_ases/ases_incident_manager', 'init');
+
+$PAGE->requires->css('/blocks/ases/style/base_ases.css', true);
+$PAGE->requires->css('/blocks/ases/style/bootstrap.min.css', true);
+$PAGE->requires->css('/blocks/ases/style/side_menu_style.css', true);
+$PAGE->requires->css('/blocks/ases/style/dashboard.css', true);
+
+$PAGE->requires->js_call_amd('block_ases/ases_incident_system', 'init');
 
 $output = $PAGE->get_renderer('block_ases');
 
+
+$dashboard_page = new \block_ases\output\dashboard_page($record);
+
 echo $output->header();
-$incidents_page = new \block_ases\output\incidents_page($record);
-echo $output->render($incidents_page);
+echo $output->render($dashboard_page);
 echo $output->footer();

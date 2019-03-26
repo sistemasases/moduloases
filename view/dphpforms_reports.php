@@ -62,7 +62,7 @@ $url = new moodle_url("/blocks/ases/view/dphpforms_form_builder.php", array('cou
 
 $coursenode = $PAGE->navigation->find($courseid, navigation_node::TYPE_COURSE);
 
-$rol = get_role_ases($USER->id);
+$rol = lib_get_rol_name_ases($USER->id, $blockid);
 
 // dphpforms_form_updater.php->get_alias()
 $record->alias_preguntas_globales = array_values(get_alias());
