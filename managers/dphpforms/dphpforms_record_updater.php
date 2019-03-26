@@ -356,6 +356,10 @@
                                     $checked = '';
                                     $valor_marcado = "-1";
                                 }
+                                if($valor === ''){
+                                    $checked = '';
+                                    $valor_marcado = "-1";
+                                }
                             }
                             
 
@@ -599,7 +603,7 @@
                     ){
     
                             //$html = $html .  ' CONDICION PARA RADIO/CHECK ';
-                            if(($condition->{'condicion'} == 'marcado') && (($respuesta_trigger['valor'] !== "-1" )&&($respuesta_trigger['valor'] !== "-#$%-" ))){
+                            if(($condition->{'condicion'} == 'marcado') && (($respuesta_trigger['valor'] !== "-1" )&&($respuesta_trigger['valor'] !== "-#$%-" )&&($respuesta_trigger['valor'] !== '' ))){
                                 //$html = $html .  "Se cumple marcado y con resultado";
                                 $flag_satisfy = true;
                                 //$html = $html .  $respuesta_trigger['valor'];

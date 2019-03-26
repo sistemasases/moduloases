@@ -377,7 +377,7 @@ echo json_encode( dphpformsV2_find_records( $xQuery ) );*/
             $id_field = $list_fields_alias_id[ $field_alias ];
             $value_to_comparate = $filterField[1];
             $optional = $filterField[2];
-            $operator = $filterField[3];
+            $operator = @$filterField[3]; //Implementación pendiente AND, OR
             $exist_in_grouped_record = array_key_exists( $field_alias, $grouped_records[$record_id] );
             if( !$exist_in_grouped_record && !$optional ){
                 $record_completed = false;
@@ -746,8 +746,24 @@ function dphpformsV2_store_form_soluciones($form_response_id, $respuesta_identif
 
 }
 
+function dphpformsV2_get_permisos_pregunta( $id_formulario_pregunta ){
+    
+    global $DB;
+    $sql =  "SELECT * FROM {talentospilos_df_per_form_pr} WHERE id_formulario_pregunta = '$id_formulario_pregunta'";
+    $permisos_obj = $DB->get_record_sql( $sql );
+    if( $permisos_obj ){
+        return $permisos_obj->permisos;
+    }else{
+        return null;
+    }
+
+}
+
+
 // Example
 /*$initial_config = '{
+    "allow_update":true,
+    "allow_delete":true,
     "main_form_classes" : "col-xs-12 col-sm-12",
     "initial_values" : [
         {
@@ -757,18 +773,52 @@ function dphpformsV2_store_form_soluciones($form_response_id, $respuesta_identif
         {
             "alias" : "objetivos",
             "default_value" : "Objetivos de prueba"
+        },{
+            "alias" : "id_instancia",
+            "default_value" : "450299"
         }
     ],
     "aditional_buttons" : [
         {
-            "alias" : "button_AB1",
-            "text" : "AB1",
-            "main_classes" : "class_A class_B"
+            "alias" : "extra_button",
+            "text" : "Extra Button",
+            "main_classes" : "e-class e-class-2"
         },
         {
-            "alias" : "button_AB2",
-            "text" : "BC",
-            "main_classes" : "class_A class_B"
+            "alias" : "update",
+            "text" : "Actualizar",
+            "main_classes" : ""
+        },
+        {
+            "alias" : "delete",
+            "text" : "Eliminar",
+            "main_classes" : ""
+        }
+    ]
+}';*/
+/*$initial_config = '{
+    "allow_register":false,
+    "allow_update":true,
+    "allow_delete":true,
+    "aditional_form_classes" : ["col-xs-12", "col-sm-12", "dphpforms"],
+    "initial_values" : [
+        {
+            "alias" : "lugar",
+            "default_value" : "Lugar de prueba"
+        },
+        {
+            "alias" : "objetivos",
+            "default_value" : "Objetivos de prueba"
+        },{
+            "alias" : "id_instancia",
+            "default_value" : "450299"
+        }
+    ],
+    "aditional_buttons" : [
+        {
+            "alias" : "extra_button",
+            "text" : "Extra Button",
+            "classes" : ["e-class", "e-class-2"]
         }
     ]
 }';
@@ -795,16 +845,49 @@ function dphpformsV2_generate_html_recorder( $id_form, $rol_, $initial_config = 
     }
 
     $form_name_formatted = $form_info->alias . "_" . $form_info->id;
+    $register_button = '<button data-form-id="'.$form_name_formatted.'" type="submit" class="btn-dphpforms btn-dphpforms-sendform">Registrar</button>';
+    $form_action = $form_info->action;
+
+    if( $initial_config ){
+        if( property_exists($initial_config, 'allow_register') ){
+            if( !$initial_config->allow_register ){
+                $register_button = '';
+                $form_action = uniqid();
+            }
+        }
+    }
+
+    $aditional_form_classes = "";
+    if( $initial_config ){
+        if( property_exists($initial_config, 'aditional_form_classes') ){
+            $aditional_form_classes = array_map(
+                function($class){
+                    $default_classes = [
+                        "dphpforms",
+                        "dphpforms-response"
+                    ];
+                    if( in_array( $class, $default_classes ) ){
+                        return null;
+                    }else{
+                        return $class;
+                    }
+                },
+                $initial_config->aditional_form_classes
+            );
+            $aditional_form_classes = join( $aditional_form_classes, " " );
+        }
+    }
+    
+    $form_uniqid = uniqid("dphpforms_",true);
 
     $html ='
-        <form id="'. $form_name_formatted .'" method="'. $form_info->method .'" action="'. $form_info->action .'" class="dphpforms dphpforms-response ">
+        <form id="'. $form_name_formatted .'" data-uid="'. $form_uniqid .'" method="'. $form_info->method .'" action="'. $form_action .'" class="dphpforms dphpforms-response '.$aditional_form_classes.'">
             <h1>'.$form_info->nombre.'</h1><hr class="header-hr-dphpforms">
             <input name="id" value="'. $form_info->id .'" style="display:none;">
     ';
 
     // Form statements
     $sql = '
-    
         SELECT * FROM {talentospilos_df_tipo_campo} AS TC 
         INNER JOIN (
             SELECT * FROM {talentospilos_df_preguntas} AS P 
@@ -829,18 +912,10 @@ function dphpformsV2_generate_html_recorder( $id_form, $rol_, $initial_config = 
         $atributos = json_decode( $statement->atributos_campo );
 
         //Consulta de permisos
-        $sql_permisos = '
-            SELECT * FROM {talentospilos_df_per_form_pr} WHERE id_formulario_pregunta = '.$statement->id_pregunta.'
-        ';
-        
-        $result_permisos = $DB->get_record_sql($sql_permisos);
-
-        $permisos = $result_permisos;
-        $permisos_JSON = json_decode($permisos->permisos);
+        $permisos_JSON = json_decode( dphpformsV2_get_permisos_pregunta( $statement->id_pregunta ) );
         
         foreach ($permisos_JSON as $key => $v_rol) {
 
-        
             if($v_rol->rol == $ROL){
 
                 $lectura = false;
@@ -872,6 +947,10 @@ function dphpformsV2_generate_html_recorder( $id_form, $rol_, $initial_config = 
                     $field_attr_local_alias = '';
                     $field_attr_max = '';
                     $field_attr_min = '';
+                    $field_attr_radioclass = '';
+                    $field_attr_group_radio_class = '';
+                    $options = '';
+                    $field_attr_checkclass = '';
 
                     if(property_exists($atributos, 'class')){
                         $field_attr_class = $atributos->class;
@@ -922,13 +1001,23 @@ function dphpformsV2_generate_html_recorder( $id_form, $rol_, $initial_config = 
                         }
                     }
 
+                    if(property_exists($atributos, 'radioclass')){
+                        $field_attr_radioclass = $atributos->radioclass;
+                    }
+
+                    if(property_exists($atributos, 'groupradioclass')){
+                        $field_attr_group_radio_class = $atributos->groupradioclass;
+                    }
+
+                    if(property_exists($atributos, 'checkclass')){
+                        $field_attr_checkclass = $atributos->checkclass;
+                    }
+
                     $field_default_value = "";
 
                     //Initial values config
-
                     if( $initial_config ){
                         if( property_exists($initial_config, 'initial_values') ){
-                        
                             $initial_values = $initial_config->initial_values;
                             foreach( $initial_values as &$initial_value ){
                                 if( $initial_value->alias === $field_attr_local_alias ){
@@ -938,129 +1027,51 @@ function dphpformsV2_generate_html_recorder( $id_form, $rol_, $initial_config = 
                         }
                     }
 
-                    if($campo == 'TEXTFIELD'){
-                        $html = $html .  '<div class="div-'.$statement->mod_id_formulario_pregunta.' '.$field_attr_class.' '.$field_attr_local_alias.'" >' . $enunciado . ':<br>';
-                        $html = $html .  ' <input id="'.$statement->mod_id_formulario_pregunta.'" class="form-control ' . $field_attr_inputclass . '" max="' . $field_attr_max . '"  min="' . $field_attr_min . '" type="'.$field_attr_type.'" placeholder="'.$field_attr_placeholder.'" name="'.$statement->mod_id_formulario_pregunta.'" value="'.$field_default_value.'" maxlength="'.$field_attr_maxlength.'" '.$enabled.' '.$field_attr_required.'><br>' . "\n";
-                        $html = $html .  '</div>';
-                    }
+                    $options = json_decode($statement->opciones_campo);
 
-                    if($campo == 'TEXTAREA'){
-                        $html = $html .  '<div class="div-'.$statement->mod_id_formulario_pregunta.' '.$field_attr_class.' '.$field_attr_local_alias.'" >' . $enunciado . ':<br>';
-                        $html = $html .  ' <textarea id="'.$statement->mod_id_formulario_pregunta.'" class="form-control ' . $field_attr_inputclass . '" name="'. $statement->mod_id_formulario_pregunta .'" maxlength="'.$field_attr_maxlength.'" '.$enabled.' '.$field_attr_required.'>'.$field_default_value.'</textarea><br>' . "\n";
-                        $html = $html .  '</div>';
-                    }
+                    $context[ 'attr_class' ] = $field_attr_class;
+                    $context[ 'attr_local_alias' ] =  $field_attr_local_alias;
+                    $context[ 'attr_inputclass' ] = $field_attr_inputclass;
+                    $context[ 'attr_max' ] = $field_attr_max;
+                    $context[ 'attr_min' ] = $field_attr_min;
+                    $context[ 'attr_type' ] = $field_attr_type;
+                    $context[ 'attr_placeholder' ] = $field_attr_placeholder;
+                    $context[ 'default_value' ] = $field_default_value;
+                    $context[ 'attr_maxlength' ] = $field_attr_maxlength;
+                    $context[ 'enabled' ] = $enabled;
+                    $context[ 'attr_required' ] = $field_attr_required;
+                    $context[ 'options' ] = $options;
+                    $context[ 'attr_radioclass' ] = $field_attr_radioclass;
+                    $context[ 'attr_group_radio_class' ] = $field_attr_group_radio_class;
+                    $context[ 'attr_checkclass' ] = $field_attr_checkclass;
 
-                    if($campo == 'DATE'){
-                        $html = $html . '<div class="div-'.$statement->mod_id_formulario_pregunta.' '.$field_attr_class.' '.$field_attr_local_alias.'" >' . $enunciado . ':<br>';
-                        $html = $html . ' <input id="'.$statement->mod_id_formulario_pregunta.'" class="form-control ' . $field_attr_inputclass . '" max="' . $field_attr_max . '"  min="' . $field_attr_min . '" type="date" name="'.$statement->mod_id_formulario_pregunta.'" '.$enabled.' '.$field_attr_required.'><br>' . "\n";
-                        $html = $html . '</div>';
-                    }
-                    
-                    if($campo == 'DATETIME'){
-                        $html = $html .  '<div class="div-'.$statement->mod_id_formulario_pregunta.' '.$field_attr_class.' '.$field_attr_local_alias.'" >' . $enunciado . ':<br>';
-                        $html = $html .  ' <input id="'.$statement->mod_id_formulario_pregunta.'" class="form-control ' . $field_attr_inputclass . '" value="'.$field_default_value.'" max="' . $field_attr_max . '"  min="' . $field_attr_min . '" type="datetime-local" name="'.$statement->mod_id_formulario_pregunta.'" '.$enabled.' '.$field_attr_required.'><br>' . "\n";
-                        $html = $html .  '</div>';
-                    }
-
-                    if($campo == 'TIME'){
-                        $html = $html .  '<div class="div-'.$statement->mod_id_formulario_pregunta.' '.$field_attr_class.' '.$field_attr_local_alias.'" >' . $enunciado . ':<br>';
-                        $html = $html .  ' <input id="'.$statement->mod_id_formulario_pregunta.'" class="form-control ' . $field_attr_inputclass . '" value="'.$field_default_value.'" max="' . $field_attr_max . '"  min="' . $field_attr_min . '" type="time" name="'.$statement->mod_id_formulario_pregunta.'" '.$enabled.' '.$field_attr_required.'><br>' . "\n";
-                        $html = $html .  '</div>';
-                    }
-
-                    if($campo == 'RADIOBUTTON'){
-                        $opciones = json_decode($statement->opciones_campo);
-                        $array_opciones = (array)$opciones;
-                        $number_opciones = count($array_opciones);
-
-                        $html = $html .  '<div class="div-'.$statement->mod_id_formulario_pregunta.' '.$field_attr_class.' '.$field_attr_local_alias.'" >';
-                        $html = $html .  '<input type="hidden" name="'.$statement->mod_id_formulario_pregunta.'" value="-#$%-">';
-                        if($enunciado){
-                            $html = $html . '<label>'.$enunciado.'</label>';
-                        }
-
-                        $field_attr_radioclass = '';
-                        if(property_exists($atributos, 'radioclass')){
-                            $field_attr_radioclass = $atributos->radioclass;
-                        }
-
-                        /*
-                            Se utiliza para controlar el registro de una sola
-                            condición de required para el primer radio.
-                        */
-                        $required_temporal = $field_attr_required;
-
-                        $field_attr_group_radio_class = '';
-                        if(property_exists($atributos, 'groupradioclass')){
-                            $field_attr_group_radio_class = $atributos->groupradioclass;
-                        }
-                                          
-                        $html = $html .  '<div class="opcionesRadio ' .  $field_attr_group_radio_class . '" style="margin-bottom:0.4em">';
-                        for($x = 0; $x < $number_opciones; $x++){
-                            $opcion = (array) $array_opciones[$x];
-
-                            $html = $html .  '
-                                <div id="'.$statement->mod_id_formulario_pregunta.'" name="'.$statement->mod_id_formulario_pregunta.'" class="radio ' . $field_attr_radioclass . '">
-                                    <label><input type="radio" class=" ' . $field_attr_inputclass . '" name="'.$statement->mod_id_formulario_pregunta.'" value="'.$opcion['valor'].'" name="optradio" '.$enabled.'   ' . $required_temporal . '>'.$opcion['enunciado'].'</label>
-                                </div>
-                            ' . "\n";
-                            /*
-                                Si el grupo de radios es requerido y ya se ha puesto esa condición en el 
-                                primer radio, a pesar de que se concatene la variable al input, se limpia después
-                                de pintar el primer radio.
-                            */
-                            if(  $required_temporal != ''  ){
-                                $required_temporal = '';
-                            }
-                        }
-                        $html = $html .  '</div><a href="javascript:void(0);" class="limpiar btn btn-xs btn-default" >Limpiar</a>
-                         </div>
-                        ' . "\n";
-                    }
-
-                    if($campo == 'CHECKBOX'){
-                        $opciones = json_decode($statement->opciones_campo);
-                        $array_opciones = (array)$opciones;
-                        $number_opciones = count($array_opciones);
-
-                        $html = $html .  '<div class="div-'.$statement->mod_id_formulario_pregunta.' '.$field_attr_class.' '.$field_attr_local_alias.'" >';
-                        if($enunciado){
-                            $html = $html . '<label>'.$enunciado.'</label>';
-                        }
-
-                        $field_attr_checkclass = '';
-                        if(property_exists($atributos, 'checkclass')){
-                            $field_attr_checkclass = $atributos->checkclass;
-                        }
-
-                        $name_checkbox = $statement->mod_id_formulario_pregunta;
-                        if($number_opciones > 1){
-                            $name_checkbox = $statement->mod_id_formulario_pregunta . '[]';
-                        }
-
-                        for($x = 0; $x < $number_opciones; $x++){
-                            $opcion = (array) $array_opciones[$x];
-                            $html = $html . '<div class="checkbox ' . $field_attr_checkclass . '">' . "\n";
-
-                            $option_attr_checkclass = '';
-                            if(array_key_exists('class', $opcion)){
-                                $option_attr_checkclass = $opcion['class'];
-                            }
-
-                            if($number_opciones == 1){
-                                $html = $html . '   <input type="hidden" name="'. $name_checkbox .'" value="-1">' . "\n";
-                            }
-
-                            $html = $html . '   <label class="' . $option_attr_checkclass . '" ><input type="checkbox" class="' . $field_attr_inputclass . '" name="'. $name_checkbox .'" value="'.$opcion['valor'].'" '.$enabled.'>'.$opcion['enunciado'].'</label>' . "\n";
-                            $html = $html . '</div>';
-                            $html = $html . '' . "\n";
-                        }
-                        $html = $html . '</div>';
-
+                    switch ($campo) {
+                        case "TEXTFIELD":
+                            $html .= dphpformsV2_generate_TEXTFIELD( $statement->mod_id_formulario_pregunta, $context, $enunciado, $form_uniqid );
+                            break;
+                        case "TEXTAREA":
+                            $html .= dphpformsV2_generate_TEXTAREA( $statement->mod_id_formulario_pregunta, $context, $enunciado, $form_uniqid );
+                            break;
+                        case "DATE":
+                            $html .= dphpformsV2_generate_DATE( $statement->mod_id_formulario_pregunta, $context, $enunciado, $form_uniqid );
+                            break;
+                        case "DATETIME":
+                            $html .= dphpformsV2_generate_DATETIME( $statement->mod_id_formulario_pregunta, $context, $enunciado, $form_uniqid );
+                            break;
+                        case "TIME":
+                            $html .= dphpformsV2_generate_TIME( $statement->mod_id_formulario_pregunta, $context, $enunciado, $form_uniqid );
+                            break;
+                        case "RADIOBUTTON":
+                            $html .= dphpformsV2_generate_RADIOBUTTON( $statement->mod_id_formulario_pregunta, $context, $enunciado, $form_uniqid );
+                            break;
+                        case "CHECKBOX":
+                            $html .= dphpformsV2_generate_CHECKBOX( $statement->mod_id_formulario_pregunta, $context, $enunciado, $form_uniqid );
+                            break;
                     }
 
                 }
 
+                //Prevent that a double role definition in the permission generate two blocks of the same question.
                 break;
 
             }
@@ -1068,40 +1079,387 @@ function dphpformsV2_generate_html_recorder( $id_form, $rol_, $initial_config = 
 
     }
 
-    //Aditional buttons config. 
-    //Example
-    /*[
-        {
-            "alias" : "button_AB1",
-            "text" : "AB1",
-            "main_classes" : "class_A class_B"
-        }
-    ]*/
+    
     $html_aditional_buttons = "";
+
     if( $initial_config ){
+
+        //Aditional buttons section. 
+
+        /*Example of a additional button
+        aditional_buttons: [
+            {
+                "alias" : "send_email",
+                "text" : "Send Email",
+                "main_classes" : "send-email big"
+            },
+            {...}
+        ]*/
         if( property_exists($initial_config, 'aditional_buttons') ){
+
             $buttons = $initial_config->aditional_buttons;
+            
+            $new_buttons_aliases = [];
+            $reserved_aliases = [
+                "update",
+                "delete"
+            ];
+
             foreach( $buttons as $key => $button ){
-                $html_aditional_buttons .= dphpformsV2_generate_html_button( $alias, $text, $main_classes );
+
+                //Verification of button alias.
+                if( is_null( $button->alias ) || ( $button->alias == "" ) ){
+                    return dphpformsV2_build_exception_message( "<strong>button->alias</strong> cannot be empty" );
+                }
+
+                //Validation of alias string structure.
+                if( !preg_match( '/^[a-z0-9_]+$/', $button->alias )  ){
+                    return dphpformsV2_build_exception_message( "<strong>".$button->alias."</strong> is not a valid alias, valid regex [a-z0-9_]+, for instance, alias_1 " );
+                }
+
+                //Prevent that many buttons with the same identifier can be defined.
+                if( !in_array( $button->alias, $new_buttons_aliases ) ){
+
+                    array_push( $new_buttons_aliases, $button->alias );
+
+                    //Validation of reserved aliases.
+                    $allow_reserved_alias = false;
+                    if( in_array( $button->alias, $reserved_aliases ) ){
+                        if( property_exists ($initial_config, 'allow_' . $button->alias ) ){
+
+                            //Buttons with 'update' or 'delete' as alias, only can be defined with an allow flag.
+                            if( ((array) $initial_config)[ 'allow_' . $button->alias ] ){
+                                $allow_reserved_alias = true;
+                            }
+                        }
+                    }
+                   
+                    $html_button = dphpformsV2_generate_html_button( $button->alias, $button->text, $button->classes, false );
+
+                    //If return is null means that was defined an invalid alias or was tried to define and reserved alias without flag.
+                    if( !$html_button ){
+                        return dphpformsV2_build_exception_message( "<strong>" . $button->alias . "</strong> is an reserved alias and its not allowed for recorder" );
+                    }else{
+                        $html_aditional_buttons .= $html_button;
+                    }
+
+                }else{
+                    return dphpformsV2_build_exception_message( "<strong>" . $button->alias . "</strong> cannot be defined more that one time" );
+                }
             }
         }
     }
-
+    
     $html = $html .  ' 
         <hr class="footer-hr-dphpforms">
         <div class="dphpforms_response_recorder_buttons">
-            <button type="submit" class="btn-dphpforms btn-dphpforms-sendform">Registrar</button>
+            '.$register_button.'
             '.$html_aditional_buttons.'
         </div>
     </form>';
+
+
+
+    return  dphpformsV2_html_minifier( $html );
+
+}
+
+function dphpformsV2_generate_TEXTFIELD( $id_formulario_pregunta, $context, $statement, $prefix_uniqid ){
+    
+    $field_attr_class = $context[ 'attr_class' ];
+    $field_attr_local_alias = $context[ 'attr_local_alias' ];
+    $field_attr_inputclass = $context[ 'attr_inputclass' ];
+    $field_attr_max = $context[ 'attr_max' ];
+    $field_attr_min = $context[ 'attr_min' ];
+    $field_attr_type = $context[ 'attr_type' ];
+    $field_attr_placeholder = $context[ 'attr_placeholder' ];
+    $field_default_value = $context[ 'default_value' ];
+    $field_attr_maxlength = $context[ 'attr_maxlength' ];
+    $field_enabled = $context[ 'enabled' ];
+    $field_attr_required = $context[ 'attr_required' ];
+    
+    $html = '
+    <div class="div-'.$id_formulario_pregunta.' '.$field_attr_class.' '.$field_attr_local_alias.'" data-uid="'. uniqid($prefix_uniqid,true) .'" >' 
+        . $statement . ':<br>
+        <input id="'.$id_formulario_pregunta.'" class="form-control ' . $field_attr_inputclass . '" max="' . $field_attr_max . '"  min="' . $field_attr_min . '" type="'.$field_attr_type.'" placeholder="'.$field_attr_placeholder.'" name="'.$id_formulario_pregunta.'" value="'.$field_default_value.'" maxlength="'.$field_attr_maxlength.'" '.$field_enabled.' '.$field_attr_required.'>
+    </div>';
+
+    return $html;
+    
+}
+
+function dphpformsV2_generate_TEXTAREA( $id_formulario_pregunta, $context, $statement, $prefix_uniqid ){
+
+    $field_attr_class = $context[ 'attr_class' ];
+    $field_attr_local_alias = $context[ 'attr_local_alias' ];
+    $field_attr_inputclass = $context[ 'attr_inputclass' ];
+    $field_attr_placeholder = $context[ 'attr_placeholder' ];
+    $field_default_value = $context[ 'default_value' ];
+    $field_attr_maxlength = $context[ 'attr_maxlength' ];
+    $field_enabled = $context[ 'enabled' ];
+    $field_attr_required = $context[ 'attr_required' ];
+
+    $html = '
+    <div class="div-'.$id_formulario_pregunta.' '.$field_attr_class.' '.$field_attr_local_alias.'" data-uid="'. uniqid($prefix_uniqid,true) .'" >' 
+        . $statement . ':<br>
+        <textarea id="'.$id_formulario_pregunta.'" class="form-control ' . $field_attr_inputclass . '" name="'. $id_formulario_pregunta .'" placeholder="'.$field_attr_placeholder.'" maxlength="'.$field_attr_maxlength.'" '.$field_enabled.' '.$field_attr_required.'>'.$field_default_value.'</textarea>
+    </div>';
+
+    return $html;
+    
+}
+
+function dphpformsV2_generate_DATE( $id_formulario_pregunta, $context, $statement, $prefix_uniqid ){
+
+    $field_attr_class = $context[ 'attr_class' ];
+    $field_attr_local_alias = $context[ 'attr_local_alias' ];
+    $field_attr_inputclass = $context[ 'attr_inputclass' ];
+    $field_attr_max = $context[ 'attr_max' ];
+    $field_attr_min = $context[ 'attr_min' ];
+    $field_default_value = $context[ 'default_value' ];
+    $field_enabled = $context[ 'enabled' ];
+    $field_attr_required = $context[ 'attr_required' ];
+
+    $html = '
+    <div class="div-'.$id_formulario_pregunta.' '.$field_attr_class.' '.$field_attr_local_alias.'" data-uid="'. uniqid($prefix_uniqid,true) .'" >' 
+        . $statement . ':<br>
+        <input id="'.$id_formulario_pregunta.'" class="form-control ' . $field_attr_inputclass . '" value="'.$field_default_value.'" max="' . $field_attr_max . '"  min="' . $field_attr_min . '" type="date" name="'.$id_formulario_pregunta.'" '.$field_enabled.' '.$field_attr_required.'>
+    </div>';
 
     return $html;
 
 }
 
-function dphpformsV2_generate_html_button( $alias, $text, $main_classes ){
-    return '<input type="button" class="button btn-dphpforms btn-dphpforms-'. $alias .' '. $main_classes .'" value="'.$text.'" />';
+function dphpformsV2_generate_DATETIME( $id_formulario_pregunta, $context, $statement, $prefix_uniqid ){
+
+    $field_attr_class = $context[ 'attr_class' ];
+    $field_attr_local_alias = $context[ 'attr_local_alias' ];
+    $field_attr_inputclass = $context[ 'attr_inputclass' ];
+    $field_attr_max = $context[ 'attr_max' ];
+    $field_attr_min = $context[ 'attr_min' ];
+    $field_default_value = $context[ 'default_value' ];
+    $field_enabled = $context[ 'enabled' ];
+    $field_attr_required = $context[ 'attr_required' ];
+
+    $html = '
+    <div class="div-'.$id_formulario_pregunta.' '.$field_attr_class.' '.$field_attr_local_alias.'" data-uid="'. uniqid($prefix_uniqid,true) .'" >' 
+        . $statement . ':<br>
+        <input id="'.$id_formulario_pregunta.'" class="form-control ' . $field_attr_inputclass . '" value="'.$field_default_value.'" max="' . $field_attr_max . '"  min="' . $field_attr_min . '" type="datetime-local" name="'.$id_formulario_pregunta.'" '.$field_enabled.' '.$field_attr_required.'>
+    </div>';
+
+    return $html;
+
+}
+
+function dphpformsV2_generate_TIME( $id_formulario_pregunta, $context, $statement, $prefix_uniqid ){
+
+    $field_attr_class = $context[ 'attr_class' ];
+    $field_attr_local_alias = $context[ 'attr_local_alias' ];
+    $field_attr_inputclass = $context[ 'attr_inputclass' ];
+    $field_attr_max = $context[ 'attr_max' ];
+    $field_attr_min = $context[ 'attr_min' ];
+    $field_default_value = $context[ 'default_value' ];
+    $field_enabled = $context[ 'enabled' ];
+    $field_attr_required = $context[ 'attr_required' ];
+
+    $html = '
+    <div class="div-'.$id_formulario_pregunta.' '.$field_attr_class.' '.$field_attr_local_alias.'" data-uid="'. uniqid($prefix_uniqid,true) .'" >' 
+        . $statement . ':<br>
+        <input id="'.$id_formulario_pregunta.'" class="form-control ' . $field_attr_inputclass . '" value="'.$field_default_value.'" max="' . $field_attr_max . '"  min="' . $field_attr_min . '" type="time" name="'.$id_formulario_pregunta.'" '.$field_enabled.' '.$field_attr_required.'>
+    </div>';
+
+    return $html;
+
+}
+
+function dphpformsV2_generate_RADIOBUTTON( $id_formulario_pregunta, $context, $statement, $prefix_uniqid ){
+
+    $field_attr_class = $context[ 'attr_class' ];
+    $field_attr_local_alias = $context[ 'attr_local_alias' ];
+    $field_attr_inputclass = $context[ 'attr_inputclass' ];
+    $field_attr_max = $context[ 'attr_max' ];
+    $field_attr_min = $context[ 'attr_min' ];
+    $field_attr_type = $context[ 'attr_type' ];
+    $field_attr_placeholder = $context[ 'attr_placeholder' ];
+    $field_default_value = $context[ 'default_value' ];
+    $field_attr_maxlength = $context[ 'attr_maxlength' ];
+    $enabled = $context[ 'enabled' ];
+    $field_attr_required = $context[ 'attr_required' ];
+    $options = $context[ 'options' ];
+    $field_attr_radioclass = $context[ 'attr_radioclass' ];
+    $field_attr_group_radio_class = $context[ 'attr_group_radio_class' ];
+
+    $html = '
+    <div class="div-'.$id_formulario_pregunta.' '.$field_attr_class.' '.$field_attr_local_alias.'" data-uid="'. uniqid($prefix_uniqid,true) .'" >
+        <input type="hidden" name="'.$id_formulario_pregunta.'" value="-#$%-">';
+
+    if($statement){
+        $html = $html . '<label>'.$statement.'</label>';
+    }
+
+    /**
+     * Se utiliza para controlar el registro de una sola
+     * condición de required para el primer radio.
+    **/
+    $required_temporal = $field_attr_required;
+                      
+    $html = $html .  '<div class="opcionesRadio ' .  $field_attr_group_radio_class . '" style="margin-bottom:0.4em">';
+    foreach($options as $key => $option){
+        $option = (array) $option;
+
+        $html = $html .  '
+            <div id="'.$id_formulario_pregunta.'" name="'.$id_formulario_pregunta.'" class="radio ' . $field_attr_radioclass . '">
+                <label><input type="radio" class=" ' . $field_attr_inputclass . '" name="'.$id_formulario_pregunta.'" value="'.$option['valor'].'" name="optradio" '.$enabled.'   ' . $required_temporal . '>'.$option['enunciado'].'</label>
+            </div>
+        ' . "\n";
+        /*
+            Si el grupo de radios es requerido y ya se ha puesto esa condición en el 
+            primer radio, a pesar de que se concatene la variable al input, se limpia después
+            de pintar el primer radio.
+        */
+        if(  $required_temporal != ''  ){
+            $required_temporal = '';
+        }
+    }
+    $html = $html .  '</div><a href="javascript:void(0);" class="limpiar btn btn-xs btn-default" >Limpiar</a>
+     </div>
+    ' . "\n";
+    
+    return $html;
+
+}
+
+function dphpformsV2_generate_CHECKBOX( $id_formulario_pregunta, $context, $statement, $prefix_uniqid ){
+
+    $field_attr_class = $context[ 'attr_class' ];
+    $field_attr_local_alias = $context[ 'attr_local_alias' ];
+    $field_attr_inputclass = $context[ 'attr_inputclass' ];
+    $field_attr_max = $context[ 'attr_max' ];
+    $field_attr_min = $context[ 'attr_min' ];
+    $field_attr_type = $context[ 'attr_type' ];
+    $field_attr_placeholder = $context[ 'attr_placeholder' ];
+    $field_default_value = $context[ 'default_value' ];
+    $field_attr_maxlength = $context[ 'attr_maxlength' ];
+    $enabled = $context[ 'enabled' ];
+    $field_attr_required = $context[ 'attr_required' ];
+    $options = $context[ 'options' ];
+    $field_attr_checkclass = $context[ 'attr_checkclass' ];
+
+    $number_options = count($options);
+
+    $html = '<div class="div-'.$id_formulario_pregunta.' '.$field_attr_class.' '.$field_attr_local_alias.'" data-uid="'. uniqid($prefix_uniqid,true) .'" >';
+
+    if($statement){
+        $html = $html . '<label>'.$statement.'</label>';
+    }
+
+    $name_checkbox = $id_formulario_pregunta;
+    if($number_options > 1){
+        $name_checkbox = $id_formulario_pregunta . '[]';
+    }
+
+    foreach( $options as $key => $option ){
+        $option = (array) $option;
+        $html = $html . '<div class="checkbox ' . $field_attr_checkclass . '">' . "\n";
+
+        $option_attr_checkclass = '';
+        if(array_key_exists('class', $option)){
+            $option_attr_checkclass = $option['class'];
+        }
+
+        if($number_options == 1){
+            $html = $html . '   <input type="hidden" name="'. $name_checkbox .'" value="-1">' . "\n";
+        }
+
+        $html = $html . '  
+            <label class="' . $option_attr_checkclass . '" ><input type="checkbox" class="' . $field_attr_inputclass . '" name="'. $name_checkbox .'" value="'.$option['valor'].'" '.$enabled.'>'.$option['enunciado'].'</label>
+        </div>' . "\n";
+    }
+
+    $html = $html . '</div>';
+
+    return $html;
+}
+
+/**
+ * Function that generates the html of the buttons.
+ * @author Jeison Cardona Gómez, <jeison.cardona@correounivalle.edu.co>
+ * @param String $alias, this alias will be used as class-identifier, for instance, btn-dphpforms-alias
+ * @param String $text, it is the buttom value.
+ * @param String $classes, aditional css classes.
+ * @return String HTML with the buttons tags.
+ */
+
+function dphpformsV2_generate_html_button( $alias, $text, $classes, $allow_reserved_alias = false ){
+    
+    $reserved_aliases = [
+        "update",
+        "delete"
+    ];
+
+    if( is_null( $alias ) ){
+        return null;
+    } 
+    
+    if( in_array( $alias, $reserved_aliases ) && !$allow_reserved_alias ){
+        return null;
+    }
+
+    $aditional_classes = "";
+
+    if( $classes ){
+        $classes = array_map(
+            function($class) use ($alias){
+                $default_classes = [
+                    "button",
+                    "btn-dphpforms",
+                    "btn-dphpforms-" . $alias,
+                ];
+                if( in_array( $class, $default_classes ) ){
+                    return null;
+                }else{
+                    return $class;
+                }
+            },
+            $classes
+        );
+        $aditional_classes = join( $classes, " " );
+    }
+
+
+    return '<input type="button" class="button btn-dphpforms btn-dphpforms-'. $alias .' '. $aditional_classes .'" value="'.$text.'" >';
+}
+
+/**
+ * Function that allow build and standard error message when the process of rendering cannot be completed.
+ * @author Jeison Cardona Gómez, <jeison.cardona@correounivalle.edu.co>
+ * @param String $reason, cause of exception.
+ * @return String standard exception message.
+ */
+function dphpformsV2_build_exception_message( $reason ){
+    return "<h1>Error rendering</h1> The form cannot be rendered for the following reason: " . $reason . "."; 
 }
   
+
+function dphpformsV2_html_minifier($buffer) {
+
+    $search = array(
+        '/\>[^\S ]+/s',     // strip whitespaces after tags, except space
+        '/[^\S ]+\</s',     // strip whitespaces before tags, except space
+        '/(\s)+/s',         // shorten multiple whitespace sequences
+        '/<!--(.|\s)*?-->/' // Remove HTML comments
+    );
+
+    $replace = array(
+        '>',
+        '<',
+        '\\1',
+        ''
+    );
+
+    $buffer = preg_replace($search, $replace, $buffer);
+
+    return trim($buffer);
+}
 
 ?>

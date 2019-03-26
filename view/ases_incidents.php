@@ -61,7 +61,7 @@ $url = new moodle_url("/blocks/ases/view/ases_incidents.php", array('courseid' =
 
 $coursenode = $PAGE->navigation->find($courseid, navigation_node::TYPE_COURSE);
 
-$rol = get_role_ases($USER->id);
+$rol = lib_get_rol_name_ases($USER->id, $blockid);
 
 $record->incidents = array_values(incident_get_all_incidents());
 
@@ -89,7 +89,6 @@ $PAGE->requires->css('/blocks/ases/style/side_menu_style.css', true);
 $PAGE->requires->css('/blocks/ases/style/ases_incidents.css', true);
 
 $PAGE->requires->js_call_amd('block_ases/ases_incident_manager', 'init');
-$PAGE->requires->js_call_amd('block_ases/side_menu_main', 'init');
 
 $output = $PAGE->get_renderer('block_ases');
 

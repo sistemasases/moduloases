@@ -1,0 +1,70 @@
+<body name="hola">
+  <!-- Testing -->
+  {{#data}}
+  {{> block_ases/side_menu}}
+  <div class="container">
+    {{{message}}}
+    {{! <form role="form" id="form_general_report"> }}
+    <div class="row">
+        <div class="col-sm-8">
+            <h2>REPORTE GENERAL GRÁFICO DE ESTUDIANTES</h2>
+            <h5>Por favor seleccione los campos a incluir en el reporte</h5>
+        </div>
+        <div class="col-sm-4" id="div_cohorts">
+            <label for="">Cohorte:  </label>
+                {{{cohorts_checks}}}
+        </div>
+        <hr class="col-sm-12" />
+    </div>    
+    <div class="panel-group">
+        {{#program_report_agr}}  
+        
+        <div class="panel panel-default">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title" id="list-students-status-panel">
+                        <a data-toggle="collapse" href="#collapse1">Reporte de Programa</a>
+                    </h4>                    
+                        <div id="collapse1" class="panel-collapse collapse">
+                        <div class="panel-body">
+                        <h2>Reporte de Programa</h2>
+                    <div class="col-sm-12 col-md-12">
+                        <fieldset id="status_fields">
+                            <div class="checkbox">
+                                <input type="checkbox" name="fields[]" value="ases_status" id="ases_status"> ASES                                
+                            </div>
+                            {{! <div class="checkbox">
+                                <input type="checkbox" name="fields[]" value="icetex_status" id="icetex_status"> ICETEX
+                            </div>
+                            <div class="checkbox">
+                                <input type="checkbox" name="fields[]" value="academic_program_status" id="academic_program_status"> Registro Académico
+                            </div> }}
+                        </fieldset>
+                    </div>                    
+                    <hr class="col-sm-12" />
+                    <div class="col-sm-12" id="div_table">
+                    <table id="table_programs" class="table"
+                        cellspacing="0" width="100%"><thead> </thead></table>
+                    <hr class="col-sm-12" />
+                    <div class="row">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <div class="chart-container">
+                                <canvas id="grafica_tipos" ></canvas>
+                            </div>                            
+                        </div>                
+                    </div>
+                    <div class="row">
+                        <button id="save-btn">Guardar Gráfico</button>
+                    </div> 
+                </div>
+            </div>            
+        </div>
+        </div>       
+             
+        {{/program_report_agr}}
+    </div>    
+  <div>  
+    
+  {{/data}}
+
+</body>

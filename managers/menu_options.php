@@ -42,7 +42,7 @@ function create_menu_options($userid, $blockid, $courseid)
     $menu_options = '';
     $menu_return = "";
     $id_role = get_id_rol($userid, $blockid);
-    
+     
     if($id_role != ""){
         $functions = get_functions_by_role_id($id_role);
         
@@ -334,7 +334,7 @@ function create_menu_options($userid, $blockid, $courseid)
                     'instanceid' => $blockid,
                 ));
 
-                $menu_options = '<li><a href= "' . $url . '">Gestión de incidencias </a><li>';
+                $menu_options = '<li id="menu_incidents_manager"><a class="menu_a" href= "' . $url . '">Gestión de incidencias</a><li>';
                 $indexed['Gestión de incidencias'] = $menu_options;
 
             }

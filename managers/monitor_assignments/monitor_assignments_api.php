@@ -25,7 +25,7 @@
 
 // Standard GPL and phpdocs
     require_once(dirname(__FILE__). '/../../classes/API/BaseAPI.php');
-    require_once (__DIR__ . '/../lib/csv.php');
+    require_once(__DIR__ . '/../lib/csv.php');
     require_once(dirname(__FILE__). '/../../../../config.php');
     require_once(dirname(__FILE__).'/monitor_assignments_lib.php');
 

@@ -14,7 +14,7 @@ namespace csv;
  *  Example: if you not want the property names 'hidden_property',
  *  $skip_properties = ['hidden_property']
  */
-function array_to_csv_download($array, $filename = "export.csv", $delimiter=";", $skip_properties=array()) {
+function array_to_csv_download($array, $filename = "export.csv", $delimiter=",", $skip_properties=array()) {
 
     header('Content-Type: application/csv');
     header('Content-Disposition: attachment; filename="'.$filename.'";');

@@ -41,6 +41,28 @@ class Csv {
         }
         return $property_names;
     }
+
+    /**
+     * Return the deduced delimiter for a given file
+     * @param $file file File for deduce de CSV delimiter
+     * @return string
+     */
+    private static function deduce_delimiter($csv_file)
+    {
+        $delimiters = ["\t", ";", "|", ","];
+        $data_1 = null; $data_2 = null;
+        $delimiter = $delimiters[0];
+        $first_row = $csv_file[0];
+        foreach($delimiters as $d) {
+            $data_1 = explode ($d, $first_row);
+            if(sizeof($data_1) > sizeof($data_2)) {
+                $delimiter = sizeof($data_1) > sizeof($data_2) ? $d : $delimiter;
+                $data_2 = $data_1;
+            }
+        }
+
+        return $delimiter;
+    }
     /**
      * Return the headers of an input csv, is suposed than the first row
      * contains the headers
@@ -48,7 +70,11 @@ class Csv {
      * @return array of string
      */
     public static function csv_get_headers($csv_file) {
-        $rows = array_map('str_getcsv', $csv_file);
+        $delimiter = Csv::deduce_delimiter($csv_file);
+        $str_csv_with_delimiter = function ($data) use ($delimiter) {
+            return str_getcsv($data, $delimiter);
+        };
+        $rows = array_map($str_csv_with_delimiter, $csv_file);
         $headers = $rows[0];
         return $headers;
     }
@@ -61,6 +87,7 @@ class Csv {
      */
     public static function get_real_headers($csv_file, $custom_mapping = null) {
         $headers = Csv::csv_get_headers($csv_file);
+
         if(!$custom_mapping) {
             return $headers;
         } else {

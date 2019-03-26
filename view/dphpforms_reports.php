@@ -62,7 +62,7 @@ $url = new moodle_url("/blocks/ases/view/dphpforms_form_builder.php", array('cou
 
 $coursenode = $PAGE->navigation->find($courseid, navigation_node::TYPE_COURSE);
 
-$rol = get_role_ases($USER->id);
+$rol = lib_get_rol_name_ases($USER->id, $blockid);
 
 // dphpforms_form_updater.php->get_alias()
 $record->alias_preguntas_globales = array_values(get_alias());
@@ -108,7 +108,6 @@ $PAGE->requires->css('/blocks/ases/style/side_menu_style.css', true);
 $PAGE->requires->js_call_amd('block_ases/dphpforms_reports', 'init');
 
 $PAGE->requires->js_call_amd('block_ases/ases_incident_system', 'init');
-$PAGE->requires->js_call_amd('block_ases/side_menu_main', 'init');
 
 $output = $PAGE->get_renderer('block_ases');
 

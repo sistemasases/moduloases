@@ -222,4 +222,4 @@ function create_men_report_csv($period){
         ',',
         ['json_materias', 'sem_nom', 'num_fila', 'usu_id']);
 }
-create_men_report_csv('2017A');
+//create_men_report_csv('2017A');

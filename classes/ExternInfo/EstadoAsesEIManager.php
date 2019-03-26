@@ -20,11 +20,10 @@ class EstadoAsesEIManager extends ExternInfoManager {
     public $cohort_id;
     public $instance_id;
 
-    public function __construct($cohort_id, $instance_id, $save = false) {
-        parent::__construct( EstadoAsesCSV::class);
+    public function __construct($cohort_id, $instance_id, $save) {
+        parent::__construct( EstadoAsesCSV::class, $save);
         $this->cohort_id = $cohort_id;
         $this->instance_id = $instance_id;
-        $this->save = $save;
     }
 
     /**
@@ -157,13 +156,6 @@ class EstadoAsesEIManager extends ExternInfoManager {
     public function custom_column_mapping() {
 
         return array(
-            'DirecciOn procedencia' => 'direccion_procedencia',
-            'Barrio procedencia' => 'barrio_procedencia',
-            'Ciudad procedencia' => 'ciudad_procedencia',
-            'Telefono procedencia' => 'telefono_procedencia',
-            'Dirección residencia' => 'direccion_residencia',
-            'Barrio residencia' => 'barrio_residencia',
-            'Estamento (Tipo Colegio)' => 'estamento',
             'Documento' => 'documento'
         );
     }

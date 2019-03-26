@@ -66,6 +66,8 @@ $actions = authenticate_user_view($USER->id, $blockid);
 $data = $actions;
 $data->menu = $menu_option;
 
+$data->instance_id = $blockid;
+
 //Navegation set up
 $coursenode = $PAGE->navigation->find($courseid, navigation_node::TYPE_COURSE);
 $node = $coursenode->add('Reporte Estudiantes sin seguimientos',$url);
