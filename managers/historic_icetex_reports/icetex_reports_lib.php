@@ -157,7 +157,7 @@ function get_all_semesters_names(){
         $semesters_options .= "<option value='$semester->nombre'>$semester->nombre</option>";
     }
 
-    $semesters_options .= "</option>";
+    $semesters_options .= "</select>";
 
     return $semesters_options;
 }

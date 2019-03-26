@@ -100,7 +100,7 @@ $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/jquery.dataTables_t
 $PAGE->requires->css('/blocks/ases/js/select2/css/select2.css', true);
 $PAGE->requires->css('/blocks/ases/style/side_menu_style.css', true);
 
-//$PAGE->requires->js_call_amd('', 'init');
+$PAGE->requires->js_call_amd('block_ases/men_report_main', 'init');
 
 $output = $PAGE->get_renderer('block_ases');
 $index_page = new \block_ases\output\men_report_page($data);

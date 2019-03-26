@@ -11,12 +11,13 @@ define(
     'block_ases/jquery.dataTables',  
     'block_ases/sweetalert', 
     'block_ases/select2',
-    'block_ases/loading_indicator'
-], function($,bootstrap, datatables, sweetalert, select2, loading_indicator) {
+    'block_ases/loading_indicator',
+    'block_ases/csv'
+], function($,bootstrap, datatables, sweetalert, select2, loading_indicator, csv) {
     return {
         init: function () {
             
-            $("#semester-select").onclick( function () {
+            $("#report-men-button").click( function () {
                 var semester = $("#semester-select").val();
 
                 $.ajax({
@@ -24,7 +25,11 @@ define(
                     data: {semestre: semester, function: "create_men_report_csv"},
                     url: "../../../blocks/ases/managers/men_report/men_report_api.php",
                     success: function (msg) {
-
+                        console.log("Holi, soy el msg: ", msg);
+                        csv.csv_string_to_file_for_download(msg, "reporte_men");
+                    },
+                    error: function (msg) {
+                        console.log("Pinshi error: ", msg);
                     }
                 });
 
