@@ -1126,19 +1126,17 @@ if ($student_code != 0) {
     $current_year = date('Y', strtotime($periodoactual['fecha_inicio']));
     $initial_month = date('m', strtotime($periodoactual['fecha_inicio']));
     $final_month = date('m', strtotime($periodoactual['fecha_fin']));
-    
-    $isPeriodA = false;
-    if ( in_array( $initial_month, $periodo_a ) ){
-        $isPeriodA = true;
+   
+    $datos_seguimientos_periodo_actual = null;
+
+    foreach ($record->peer_tracking_v3 as $key => $trackings_by_periods) {
+        if( $trackings_by_periods['period_name'] ==  $periodoactual['nombre_periodo'] ){
+            $datos_seguimientos_periodo_actual = $trackings_by_periods;
+            break;
+        }
     }
 
-    $datos_seguimientos_periodo_actual = array();
-
-    if( $isPeriodA ){
-        $datos_seguimientos_periodo_actual = $seguimientos_array[ $current_year ][ 'per_a' ];
-    }else{
-        $datos_seguimientos_periodo_actual = $seguimientos_array[ $current_year ][ 'per_b' ];
-    };
+    //print_r( $datos_seguimientos_periodo_actual );
 
     /*
         In this block, we use the local_alias defined with the field in the dynamic form
@@ -1147,7 +1145,11 @@ if ($student_code != 0) {
     
     $risks = array();
 
-    for( $x = 0; $x < count( $datos_seguimientos_periodo_actual ); $x++){
+    foreach ($datos_seguimientos_periodo_actual[ 'trackings' ] as $key => $tmp_track ){
+
+        if( !$tmp_track['custom_extra']['seguimiento_pares'] ){
+            continue;
+        }
 
         $risk_date = null;
 
@@ -1156,39 +1158,27 @@ if ($student_code != 0) {
         $economic_dimension_risk_lvl = null;
         $familiar_dimension_risk_lvl = null;
         $universitary_life_risk_lvl = null;
-
-        $tmp_track = $datos_seguimientos_periodo_actual[ $x ][ 'record' ][ 'campos' ];
         
-        for( $y = 0; $y < count( $tmp_track ); $y++ ){
-            
-            if( $tmp_track[ $y ]['local_alias'] == 'fecha' ){
-                $risk_date = date('Y-M-d', strtotime($tmp_track[ $y ]['respuesta'] ));
-            }
-            if( $tmp_track[ $y ]['local_alias'] == 'puntuacion_riesgo_individual' ){
-                if( ($tmp_track[ $y ]['respuesta'] != '-#$%-')&&($tmp_track[ $y ]['respuesta'] != '0') ){
-                    $individual_dimension_risk_lvl = $tmp_track[ $y ]['respuesta'] ;
-                }
-            }
-            if( $tmp_track[ $y ]['local_alias'] == 'puntuacion_riesgo_academico' ){
-                if( ($tmp_track[ $y ]['respuesta'] != '-#$%-')&&($tmp_track[ $y ]['respuesta'] != '0') ){
-                    $academic_dimension_risk_lvl = $tmp_track[ $y ]['respuesta'] ;
-                }
-            }
-            if( $tmp_track[ $y ]['local_alias'] == 'puntuacion_riesgo_economico' ){
-                if( ($tmp_track[ $y ]['respuesta'] != '-#$%-')&&($tmp_track[ $y ]['respuesta'] != '0') ){
-                    $economic_dimension_risk_lvl = $tmp_track[ $y ]['respuesta'] ;
-                }
-            }
-            if( $tmp_track[ $y ]['local_alias'] == 'puntuacion_riesgo_familiar' ){
-                if( ($tmp_track[ $y ]['respuesta'] != '-#$%-')&&($tmp_track[ $y ]['respuesta'] != '0') ){
-                    $familiar_dimension_risk_lvl = $tmp_track[ $y ]['respuesta'] ;
-                }
-            }
-            if( $tmp_track[ $y ]['local_alias'] == 'puntuacion_vida_uni' ){
-                if( ($tmp_track[ $y ]['respuesta'] != '-#$%-')&&($tmp_track[ $y ]['respuesta'] != '0') ){
-                    $universitary_life_risk_lvl = $tmp_track[ $y ]['respuesta'] ;
-                }
-            }
+        $risk_date = $tmp_track['fecha'];
+
+        if( ($tmp_track['puntuacion_riesgo_individual'] != '-#$%-')&&($tmp_track['puntuacion_riesgo_individual'] != '0') ){
+            $individual_dimension_risk_lvl = $tmp_track['puntuacion_riesgo_individual'] ;
+        }
+
+        if( ($tmp_track['puntuacion_riesgo_academico'] != '-#$%-')&&($tmp_track['puntuacion_riesgo_academico'] != '0') ){
+            $academic_dimension_risk_lvl = $tmp_track['puntuacion_riesgo_academico'] ;
+        }
+
+        if( ($tmp_track['puntuacion_riesgo_economico'] != '-#$%-')&&($tmp_track['puntuacion_riesgo_economico'] != '0') ){
+            $economic_dimension_risk_lvl = $tmp_track['puntuacion_riesgo_economico'] ;
+        }
+
+        if( ($tmp_track['puntuacion_riesgo_familiar'] != '-#$%-')&&($tmp_track['puntuacion_riesgo_familiar'] != '0') ){
+            $familiar_dimension_risk_lvl = $tmp_track['puntuacion_riesgo_familiar'] ;
+        }
+
+        if( ($tmp_track['puntuacion_vida_uni'] != '-#$%-')&&($tmp_track['puntuacion_vida_uni'] != '0') ){
+            $universitary_life_risk_lvl = $tmp_track['puntuacion_vida_uni'] ;
         }
 
         $risk_by_dimensions = array();
@@ -1243,7 +1233,7 @@ if ($student_code != 0) {
         $risk_data = array(
             'date' => $risk_date,
             'information' => $risk_by_dimensions,
-            'record_id' => $datos_seguimientos_periodo_actual[ $x ]['record']['id_registro']
+            'record_id' => $tmp_track['id_registro']
         );
 
         array_push( $risks, $risk_data );
