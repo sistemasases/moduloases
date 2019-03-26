@@ -24,9 +24,15 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-	require_once(dirname(__FILE__). '/../../../../config.php');
-    require_once('men_report_lib.php');
-    
-    if(isset($_POST['period'])){
-        create_men_report_csv($_POST['period']);
+    require_once(dirname(__FILE__). '/../../../../config.php');
+    require_once(dirname(__FILE__). '/men_report_lib.php');
+
+    header('Content-Type: application/json');
+
+    $raw_data = file_get_contents("php://input");
+
+    $input = json_decode( $raw_data );
+
+    if(isset($input->semestre) && isset($input->function)){
+        create_men_report_csv($input->semestre);
     }
