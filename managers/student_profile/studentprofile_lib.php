@@ -722,7 +722,12 @@ function get_tracking_current_semesterV3($criterio,$student_id, $semester_id,$in
         $xQuery->filterFields = [["id_estudiante",[[$student_id,"="]], false],
                                  ["fecha",[[$fecha_inicio_str,">="],[$fecha_fin_str,"<="]], false],
                                  ["revisado_profesional",[["%%","LIKE"]], false],
-                                 ["revisado_practicante",[["%%","LIKE"]], false]
+                                 ["revisado_practicante",[["%%","LIKE"]], false],
+                                 ["puntuacion_riesgo_individual",[["%%","LIKE"]], false],
+                                 ["puntuacion_riesgo_academico",[["%%","LIKE"]], false],
+                                 ["puntuacion_riesgo_economico",[["%%","LIKE"]], false],
+                                 ["puntuacion_riesgo_familiar",[["%%","LIKE"]], false],
+                                 ["puntuacion_vida_uni",[["%%","LIKE"]], false]
                                 ];
         $xQuery->orderFields = [["fecha","DESC"]];
         $xQuery->orderByDatabaseRecordDate = false; 
@@ -760,7 +765,12 @@ function get_tracking_current_semesterV3($criterio,$student_id, $semester_id,$in
         $xQuery->filterFields = [["id_creado_por",[[$student_id,"="]], false],
                                  ["fecha",[[$fecha_inicio_str,">="],[$fecha_fin_str,"<="]], false],
                                  ["revisado_profesional",[["%%","LIKE"]], false],
-                                 ["revisado_practicante",[["%%","LIKE"]], false]
+                                 ["revisado_practicante",[["%%","LIKE"]], false],
+                                 ["puntuacion_riesgo_individual",[["%%","LIKE"]], false],
+                                 ["puntuacion_riesgo_academico",[["%%","LIKE"]], false],
+                                 ["puntuacion_riesgo_economico",[["%%","LIKE"]], false],
+                                 ["puntuacion_riesgo_familiar",[["%%","LIKE"]], false],
+                                 ["puntuacion_vida_uni",[["%%","LIKE"]], false]
                                 ];
         $xQuery->orderFields = [["fecha","DESC"]];
         $xQuery->orderByDatabaseRecordDate = false; 
