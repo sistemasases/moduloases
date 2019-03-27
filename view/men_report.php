@@ -58,7 +58,8 @@ if(!consult_instance($blockid)){
 $menu_option = create_menu_options($USER->id, $blockid, $courseid);
 
 //Getting all semesters
-$semesters = get_all_semesters_names();
+$select_semester_id = 'semester-select';
+$semesters = get_all_semesters_names($select_semester_id);
 
 //Creates a class with information that'll be send to template
 $data = new stdClass;

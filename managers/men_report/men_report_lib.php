@@ -216,8 +216,11 @@ function process_student_subject_json($student){
 
 
 function create_men_report_csv($period){
+
+    $students_men = get_array_students_men($period);
+
     \csv\array_to_csv_download(
-        MenReport::make_objects_from_std_objects_or_arrays(get_array_students_men($period)),
+        MenReport::make_objects_from_std_objects_or_arrays($students_men),
         'Reporte Ministerio.csv',
         ',',
         ['json_materias', 'sem_nom', 'num_fila', 'usu_id']);

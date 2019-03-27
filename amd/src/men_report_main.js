@@ -12,28 +12,41 @@ define(
     'block_ases/sweetalert', 
     'block_ases/select2',
     'block_ases/loading_indicator',
+    'core/config',
     'block_ases/csv'
-], function($,bootstrap, datatables, sweetalert, select2, loading_indicator, csv) {
+], function($,bootstrap, datatables, sweetalert, select2, loading_indicator, cfg, csv) {
+        var SEMESTER_SELECT_SELECTOR = '#semester-select';
+        var CSV_NAME = 'report_men.csv';
+        /**
+         * Return the Men Report in csv string described by the class `MenReport` at men_report_lib
+         * @see MenReport
+         * @see men_report_lib
+         * @see men_report_api
+         * @param semester_name Nombre de el semestre, ejemplos: ['2018A', '2019B']
+         * @returns Promise<string>
+         */
+        var get_report_string = function (semester_name) {
+            return  $.ajax({
+                type: "POST",
+                data: JSON.stringify({semestre: semester_name, function: "create_men_report_csv"}),
+                url: "../../../blocks/ases/managers/men_report/men_report_api.php",
+            });
+        };
+        var get_semester_name = function () {
+            return $(SEMESTER_SELECT_SELECTOR).val();
+        };
+        var download_report_csv = function() {
+            get_report_string(get_semester_name())
+                .then(
+                    report_csv_string => {
+                        csv.csv_string_to_file_for_download(report_csv_string, CSV_NAME)
+                    }
+                )
+                .catch(err => console.log(err));
+        };
     return {
         init: function () {
-            
-            $("#report-men-button").click( function () {
-                var semester = $("#semester-select").val();
-
-                $.ajax({
-                    type: "POST",
-                    data: {semestre: semester, function: "create_men_report_csv"},
-                    url: "../../../blocks/ases/managers/men_report/men_report_api.php",
-                    success: function (msg) {
-                        console.log("Holi, soy el msg: ", msg);
-                        csv.csv_string_to_file_for_download(msg, "reporte_men");
-                    },
-                    error: function (msg) {
-                        console.log("Pinshi error: ", msg);
-                    }
-                });
-
-            });
+            $("#report-men-button").click(download_report_csv);
         }
     };    
 });

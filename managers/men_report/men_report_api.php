@@ -32,7 +32,8 @@
     $raw_data = file_get_contents("php://input");
 
     $input = json_decode( $raw_data );
-
     if(isset($input->semestre) && isset($input->function)){
         create_men_report_csv($input->semestre);
+    } else {
+        echo 'kha';die;
     }
