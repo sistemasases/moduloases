@@ -114,11 +114,12 @@ function property_name_to_description(string $property_name): string {
 /**
  * Return the property descriptions infered from property name
  * @param $element mixed
+ * @param $skip_properties array Array of property names for skip in description return
  * @see property_name_to_description()
  * @return array List of descriptions based in element properties or keys
  * **If $element is a object, only descriptions for public properties are returned
  */
-function get_object_properties_description($element): array {
+function get_object_properties_description($element, $skip_properties=array()): array {
     $object = (object) $element;
     $object_properties = null;
     $sourceProperties = null;
@@ -128,9 +129,9 @@ function get_object_properties_description($element): array {
     $object_properties = $sourceProperties->getProperties();
     /* @var $object_property \ReflectionProperty */
     foreach($object_properties as $object_property) {
+        $object_property_name = $object_property->name;
         /* Only public properties should be converted to table columns*/
-        if($object_property->isPublic()) {
-            $object_property_name = $object_property->name;
+        if($object_property->isPublic() && !in_array($object_property_name, $skip_properties)) {
             $description = property_name_to_description($object_property_name);
             array_push($descriptions, $description);
         }
@@ -162,7 +163,7 @@ function valid_std_object($obj, $class_name_or_class) {
  * @return class Instance of object based in the properties of stdObj or array of type class
  * @throws \ErrorException if the argument passed is class name and this does not exist
  */
-function make_from_std_object($stdObj_or_array, $class, $allow_non_equal_objects = false) {
+function make_from_std_object($stdObj_or_array, $class, $allow_non_equal_objects = true) {
  
     if(!class_exists($class)) {
         throw new \ErrorException("The class $class does not exist");

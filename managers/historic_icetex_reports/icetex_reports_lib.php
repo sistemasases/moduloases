@@ -143,10 +143,10 @@ function get_all_cohort_names(){
  * @see get_all_semesters_names()
  * @return string
  */
-function get_all_semesters_names(){
+function get_all_semesters_names($select_id=""){
     global $DB;
 
-    $semesters_options = "<select><option value=''></option>";
+    $semesters_options = "<select id='$select_id'><option value=''></option>";
 
     $sql_query = "SELECT nombre FROM {talentospilos_semestre}";
 
@@ -157,7 +157,7 @@ function get_all_semesters_names(){
         $semesters_options .= "<option value='$semester->nombre'>$semester->nombre</option>";
     }
 
-    $semesters_options .= "</option>";
+    $semesters_options .= "</select>";
 
     return $semesters_options;
 }
