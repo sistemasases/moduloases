@@ -339,6 +339,17 @@ function create_menu_options($userid, $blockid, $courseid)
 
             }
 
+            if ($function == 'men_report') {
+                $url = new moodle_url("/blocks/ases/view/men_report.php", array(
+                    'courseid' => $courseid,
+                    'instanceid' => $blockid,
+                ));
+
+                $menu_options = '<li id="menu_men_report"><a class="menu_a" href= "' . $url . '">Reporte MEN</a><li>';
+                $indexed['Reporte MEN'] = $menu_options;
+
+            }
+
 
         }
 
