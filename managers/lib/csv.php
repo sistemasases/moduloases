@@ -10,19 +10,31 @@ namespace csv;
  * @param $array
  * @param string $filename
  * @param string $delimiter
+ * @param $skip_properties array A list of properties than the csv should not contain
+ *  Example: if you not want the property names 'hidden_property',
+ *  $skip_properties = ['hidden_property']
  */
-function array_to_csv_download($array, $filename = "export.csv", $delimiter=",") {
+function array_to_csv_download($array, $filename = "export.csv", $delimiter=",", $skip_properties=array()) {
+
     header('Content-Type: application/csv');
     header('Content-Disposition: attachment; filename="'.$filename.'";');
-
+    $characters_for_remove = ['\n'];
     // open the "output" stream
     // see http://www.php.net/manual/en/wrappers.php.php#refsect2-wrappers.php-unknown-unknown-unknown-descriptioq
     $f = fopen('php://output', 'w');
     $first_object  = $array[0];
-    $headers = \reflection\get_object_properties_description($first_object);
+    $headers = \reflection\get_object_properties_description($first_object, $skip_properties);
     fputcsv($f, $headers, $delimiter);
     foreach ($array as $line) {
         $line = (array) $line;
+        foreach($skip_properties as $skip_property) {
+            unset($line[$skip_property]);
+        }
+        foreach ($line as $key => $value) {
+            foreach($characters_for_remove as $character_for_remove) {
+                $line[$key] = str_replace($character_for_remove, '', $value);
+            }
+        }
         fputcsv($f, $line, $delimiter);
     }
 }

@@ -1,0 +1,24 @@
+{{#data}}   
+{{> block_ases/side_menu}}
+<div class="container">
+<div class="row">
+   <h2>REPORTE MINISTERIO DE EDUCACIÓN</h2>   
+  <hr/>
+  {{{message}}}
+    {{#create_men_report_mr}}     
+    <div class="col-md-5" id="div-men-report">
+        <div id="div-semester-select">
+            <label id="label-semesters">Semestres: </label>
+            {{{semesters}}}                          
+        </div>
+    </div>
+    
+    <div class="col-md-5">
+        <div id="div-button">
+            <button class="submit" type="button" id="report-men-button">Descargar reporte</button>
+        </div>
+    </div>    
+    {{/create_men_report_mr}}
+</div>
+{{/data}}
+</div>
