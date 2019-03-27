@@ -117,7 +117,7 @@ function getGraficAge($cohorte){
  * @param $cohorte
  * @return Array 
  */
-function getGraficPrograma($cohorte, $ases_status, $icetex_status, $instance_id){
+function getGraficPrograma($cohorte, $ases_status, $icetex_status, $program_status, $instance_id){
     global $DB;
     
     $sql_query = "SELECT programa.nombre, COUNT(usuario.id)
@@ -157,25 +157,54 @@ function getGraficPrograma($cohorte, $ases_status, $icetex_status, $instance_id)
                     ON current_icetex_status.id_ases_student = usuario.id_ases_user
                     
                     ";
-    }   
+    }
+    
+
+    if($program_status == 1){
+
+        $sql_query .= "INNER JOIN
+                    (SELECT DISTINCT id_ases_user
+                    FROM {cohort_members} membprog
+                    INNER JOIN {talentospilos_user_extended} extprog
+                        ON membprog.userid = extprog.id_moodle_user
+                    WHERE extprog.program_status = '1') AS current_program_status
+                    ON current_program_status.id_ases_user = usuario.id_ases_user
+                    ";
+
+    }
+
+    if($cohorte != "TODOS"){
+
+        $condition = "cohorte.idnumber = '$cohorte'";
+
+        if($cohorte == "TODOS-SPP"){
+            $condition = "cohorte.idnumber LIKE 'SPP%'";
+        }
+        else if ($cohorte == "TODOS-SPE"){
+            $condition = "cohorte.idnumber LIKE 'SPE%'";
+        }
+
+        $sql_query .= "INNER JOIN
+                        (SELECT DISTINCT id_ases_user
+                        FROM {cohort_members} membprog
+                        INNER JOIN {talentospilos_user_extended} extprog
+                            ON membprog.userid = extprog.id_moodle_user
+                        INNER JOIN {cohort} cohorte 
+                            ON membprog.cohortid = cohorte.id
+                        WHERE $condition) AS selected_cohort
+                        ON selected_cohort.id_ases_user = usuario.id_ases_user
+
+                        ";
+
+    }
+
+
     // echo $sql_query;      
     $sql_query .= "GROUP BY programa.nombre";
     // echo $sql_query; 
      
-    // consulta con la parte de los cohortes
-    $query = "SELECT programa.nombre,COUNT(programa.nombre)
-                  FROM (SELECT DISTINCT data.userid AS userid,data.data AS codcarrera,miembros.cohortid,cohort.name FROM {talentospilos_usuario} AS usuarios_talentos           
-                  INNER JOIN {user_info_data} AS data ON (CAST (usuarios_talentos.id AS varchar) = data.data) INNER JOIN {cohort_members} AS miembros ON
-                  (data.userid=miembros.userid) INNER JOIN {cohort} AS cohort ON (cohort.id=miembros.cohortid) WHERE data.fieldid = 3 AND cohort.name='$cohorte')
-                  AS sub INNER JOIN {talentospilos_programa} AS programa ON (cast(programa.id as text) = sub.codcarrera) 
-                  GROUP BY programa.nombre;";
-    //se verifica el cohorte ingresado, de acuerdo al caso se invoca el metodo de moodle con una de las dos
-    //consultar armadas anteriormente
-    if($cohorte == "TODOS"){
-        $result = $DB->get_records_sql($sql_query);
-    } else {
-        $result = $DB->get_records_sql($query);
-    }
+    $result = $DB->get_records_sql($sql_query);
+
     return $result;
 }
 

@@ -18,9 +18,9 @@
 /**
  * Ases block
  *
- * @author     Iader E. García Gómez
+ * @author     Joan Manuel Tovar Guzmán
  * @package    block_ases
- * @copyright  2016 Iader E. García <iadergg@gmail.com>
+ * @copyright  2019 Joan M. Tovar <joan.tovar@correounivalle.edu.co>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -122,7 +122,7 @@ $PAGE->requires->css('/blocks/ases/style/buttons.dataTables.min.css', true);
 $PAGE->requires->css('/blocks/ases/style/side_menu_style.css', true);
 
 $PAGE->requires->js_call_amd('block_ases/ases_graphic_reports','init');
-$PAGE->requires->js_call_amd('block_ases/ases_graphic_reports','load_defaults_students', $params);
+//$PAGE->requires->js_call_amd('block_ases/ases_graphic_reports','load_defaults_students', $params);
 
 $PAGE->set_url($url);
 $PAGE->set_title($pagetitle);

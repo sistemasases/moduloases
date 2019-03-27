@@ -55,6 +55,7 @@ define(['jquery',
 
                 $('#conditions').on('change', function () {
                     console.log("Cambia");
+                    get_data_to_graphic();
                 });                                              
                 
 
@@ -85,12 +86,13 @@ define(['jquery',
 
             var ases_status = $("#ases_status").is(":checked") ? 1 : 0;
             var icetex_status = $("#icetex_status").is(":checked") ? 1 : 0;
-            console.log(ases_status);
+            var program_status = $("#academic_program_status").is(":checked") ? 1 : 0;
+            console.log($('#conditions').val());
 
             $.ajax({
 
                 type: "POST",
-                data: { type: 'carrera', cohort: $('#conditions').val(), ases_status: ases_status, icetex_status: icetex_status, instance_id: getIdinstancia() },
+                data: { type: 'carrera', cohort: $('#conditions').val(), ases_status: ases_status, icetex_status: icetex_status, program_status: program_status, instance_id: getIdinstancia() },
                 url: "../managers/ases_report/asesreport_graphics_processing.php",
                 success: function (msg) {
                     var results = Object.keys(msg).map(function(k) { return msg[k] });                    
