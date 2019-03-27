@@ -160,10 +160,10 @@ function get_array_students_men($period){
     $students = $DB->get_records_sql($sql_query);
     foreach($students as $student) {
         $semest = $student->sem_nom;
-        $student->anio = substr($semest,0,4);
-        if(substr($semest,4,1) == "A"){
+        $student->anio = substr($period, 0, 4);
+        if(substr($period, 4, 1) == "A"){
             $student->semestre = 1;
-        }elseif(substr($semest,4,1) == "B"){
+        }elseif(substr($period, 4, 1) == "B"){
             $student->semestre = 2;
         }
         $student->id_convocatoria = "";
