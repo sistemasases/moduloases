@@ -356,7 +356,7 @@ function get_all_student($instance_id)
     $semestre = get_current_semester();
     $id_semestre = $semestre->max;
 
-    $query = "SELECT user_moodle.username, user_moodle.firstname, user_moodle.lastname
+    $query = "SELECT DISTINCT user_moodle.username, user_moodle.firstname, user_moodle.lastname
               FROM {user} AS user_moodle
               INNER JOIN {talentospilos_user_extended} AS user_extended ON user_moodle.id = user_extended.id_moodle_user
               INNER JOIN {cohort_members} AS cohort_members ON cohort_members.userid = user_extended.id_moodle_user

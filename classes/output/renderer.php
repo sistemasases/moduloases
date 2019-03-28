@@ -266,6 +266,12 @@ class renderer extends plugin_renderer_base {
         $data = $page->export_for_template($this);
         return parent::render_from_template('block_ases/massive_upload', $data);
     }
+
+    public function render_men_report_page($page){
+        $data = $page->export_for_template($this);
+        return parent::render_from_template('block_ases/men_report', $data);
+    }
+    
     public function render_dashboard_page($page){
         $data = $page->export_for_template($this);
         return parent::render_from_template('block_ases/dashboard', $data);

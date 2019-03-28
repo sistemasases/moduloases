@@ -373,7 +373,7 @@
 
     #modal_riesgos > .mymodal-content{
         padding: 0px !important;
-
+        width: 80% !important;
     }
 
     #div_graph_radial{
