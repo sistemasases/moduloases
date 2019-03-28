@@ -486,40 +486,88 @@
 
                         <div class="row">
 
-                                       <center><h3 class="h-sections-general-tab h_others" style="margin-top: 10px;">Semestre actual: <strong>{{name_current_semester}}</strong></h3></center> 
-                                                
+                                <div class="row row_discapacity">
+
+                                        <center>
+                                                <h3 class="h-sections-general-tab" style="margin-top: 10px;">Datos académicos adicionales en la Universidad del Valle  |   Semestre actual:
+                                                        <strong>{{name_current_semester}}</strong>
+                                                </h3>
+                                                <hr class="hr-general-tab-fields">
+
+                                        </center>
+
+                                </div>
+
+
                                 <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 ">
                                         <div class="row">
 
-                                                <h3 class="h-sections-general-tab h_others">Facultad por programa</h3>
-                                                <hr class="hr-general-tab-fields"> 
+                                                <h3 class="h-sections-general-tab h_others">Facultad por programa registrado.</h3>
                                                 {{{faculty_name}}}
 
                                         </div>
                                         <div class="row">
 
-                                                <h3 class="h-sections-general-tab h_others" style="margin-top: 10px;">Jornada por programa </h3>
-                                                <hr class="hr-general-tab-fields"> 
+                                                <h3 class="h-sections-general-tab h_others" style="margin-top: 10px;">Jornada por programa registrado.</h3>
                                                 {{{name_program_time}}}
-                                                
+
                                         </div>
                                 </div>
                                 <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 ">
-                                                <div class="row">
-        
-                                                        <h3 class="h-sections-general-tab h_others">Datos del programa actual ({{}})</h3>
-                                                        <hr class="hr-general-tab-fields"> 
-                                                        {{{faculty_name}}}
-        
+                                        <div class="current_program_data">
+
+                                                <h3 class="h-sections-general-tab h_others">Datos del programa actual
+                                                        <strong>({{{name_program}}})</strong>.
+                                                </h3>
+
+                                                <div class="row row_discapacity">
+
+                                                        <label for="lb_current_resolution" class="col-xs-4 col-sm-4 col-md-4 col-lg-4 label_fields_discapacity_tab">Número de resolución:</label>
+                                                        <input required class=" col-xs-5 col-sm-5 col-md-5 col-lg-5 input_fields_discapacity_tab input-discapacity" type="text" placeholder="Resolución de programa"
+                                                                id="current_resolution" />
+
                                                 </div>
-                                                <div class="row">
-        
-                                                        <h3 class="h-sections-general-tab h_others" style="margin-top: 10px;">Jornada por programa </h3>
-                                                        <hr class="hr-general-tab-fields"> 
-                                                        {{{name_program_time}}}
-                                                        
+                                                <div class="row row_discapacity">
+
+                                                        <label for="lb_total_time" class="col-xs-4 col-sm-4 col-md-4 col-lg-4 label_fields_discapacity_tab">Créditos totales:</label>
+                                                        <input required class=" col-xs-5 col-sm-5 col-md-5 col-lg-5 input_fields_discapacity_tab input-discapacity" min="0" type="number" placeholder="Créditos totales de titulación"
+                                                                id="total_time" />
+
                                                 </div>
+
+
                                         </div>
+
+                                </div>
+                        </div>
+
+                        <div class="row">
+                                <center>
+                                        <h3 class="h-sections-general-tab">Datos académicos adicionales en otras instituciones educativas.</h3>
+                                </center>
+                                <hr class="hr-general-tab-fields">
+
+                                <div class="row row_discapacity">
+                                        <h3 class="h-sections-general-tab" style="margin-top: 10px;">Colegio en el que estudió:
+                                                <strong>{{colegio}}</strong>(
+                                                <strong>{{estamento}}</strong>)
+                                        </h3>
+                                </div>
+
+
+                                <div class="row row_discapacity">
+
+                                        <label for="lb_titulo" class="col-xs-3 col-sm-3 col-md-3 col-lg-3 label_fields_discapacity_tab">Título académico obtenido:</label>
+                                        <input required class=" col-xs-6 col-sm-6 col-md-6 col-lg-6 input_fields_discapacity_tab input-discapacity" type="text" placeholder="Título académico obtenido en la institución mencionada anteriormente"
+                                                id="titulo_academico" />
+
+                                </div>
+                                <div class="row row_discapacity">
+                                                <h3 class="h-sections-general-tab h_others">Aspectos que favorecieron el desempeño, avance y graduación.
+                                                        </h3>
+
+                                </div>
+
                         </div>
 
 

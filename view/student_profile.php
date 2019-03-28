@@ -147,7 +147,7 @@ if ($student_code != 0) {
 
     $faculty_name = '';
 
-        
+   
     $record->id_moodle = $id_user_moodle;
     $record->id_ases = $student_id;
     $record->email_moodle = $user_moodle->email_moodle;
@@ -163,7 +163,7 @@ if ($student_code != 0) {
 
             $faculty_name .= $program->cod_univalle ."-" .$program->nombre_facultad .  "<br>";
             $program_time .= $program->cod_univalle ."-" .$program->jornada  . "<br>";
-            $name_program = $program->nombre_programa;
+            $name_program = $program->nombre_programa."-".$program->cod_univalle;
             break;
         }else {
             $faculty_name .= $program->cod_univalle ."-" .$program->nombre_facultad .  "<br>";
@@ -171,6 +171,10 @@ if ($student_code != 0) {
         }
 
     }
+
+    $record->estamento = $ases_student->estamento;    
+    $record->colegio = $ases_student->colegio;   
+
     $record->name_program = $name_program;
     $record->faculty_name = $faculty_name;
     $record->name_program_time = $program_time;
@@ -1640,6 +1644,7 @@ $PAGE->requires->css('/blocks/ases/js/select2/css/select2.css', true);
 $PAGE->requires->css('/blocks/ases/style/side_menu_style.css', true);
 $PAGE->requires->css('/blocks/ases/style/student_profile.css', true);
 $PAGE->requires->css('/blocks/ases/style/discapacity_tab.css', true);
+$PAGE->requires->css('/blocks/ases/style/others_tab.css', true);
 $PAGE->requires->css('/blocks/ases/style/switch.css', true);
 $PAGE->requires->css('/blocks/ases/style/fontawesome550.min.css', true);
 //Pendiente para cambiar el idioma del nombre del archivo junto con la estructura de
