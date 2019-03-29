@@ -83,6 +83,16 @@
         color: black;
         font-weight: normal;
     }
+
+    .label_fields_discapacity_tab4{
+        padding-left: 0px;
+        padding-top: 5px;
+        color: black;
+        font-weight: bold;
+        padding-right: 0px;
+        margin-right: 5px;
+        
+    }
     .h-sections-discapacity-tab{
         margin-bottom: 5px;
         margin-top: 5px;

@@ -4,7 +4,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     global $DB;
     $dbman = $DB->get_manager();
     $result = true;
-    if ($oldversion < 2018121914150 ) {
+    if ($oldversion < 2019032914300 ) {
       
     //     // ************************************************************************************************************
     //     // Actualización que crea la tabla para los campos extendidos de usuario (Tabla: {talentospilos_user_extended})
@@ -2433,160 +2433,185 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
 
           
         // Define table talentospilos_general_logs to be created.
-        $table = new xmldb_table('talentospilos_general_logs');
+        // $table = new xmldb_table('talentospilos_general_logs');
 
-        // Adding fields to table talentospilos_general_logs.
-        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
-        $table->add_field('id_moodle_user', XMLDB_TYPE_INTEGER, '20', null, XMLDB_NOTNULL, null, null);
-        $table->add_field('datos_previos', XMLDB_TYPE_TEXT, null, null, null, null, null);
-        $table->add_field('datos_enviados', XMLDB_TYPE_TEXT, null, null, null, null, null);
-        $table->add_field('datos_almacenados', XMLDB_TYPE_TEXT, null, null, null, null, null);
-        $table->add_field('fecha_registro', XMLDB_TYPE_DATETIME, null, null, XMLDB_NOTNULL, null, "now()");
-        $table->add_field('id_evento', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
-        $table->add_field('instanceid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
-        $table->add_field('id_ases_user', XMLDB_TYPE_INTEGER, '10', null, null, null, null);
-        $table->add_field('navegador', XMLDB_TYPE_TEXT, null, null, null, null, null);
-        $table->add_field('title_retorno', XMLDB_TYPE_CHAR, '200', null, null, null, null);
-        $table->add_field('msg_retorno', XMLDB_TYPE_CHAR, '200', null, null, null, null);
-        $table->add_field('status_retorno', XMLDB_TYPE_CHAR, '200', null, null, null, null);
-        $table->add_field('url', XMLDB_TYPE_TEXT, null, null, null, null, null);
-        $table->add_field('courseid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        // // Adding fields to table talentospilos_general_logs.
+        // $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        // $table->add_field('id_moodle_user', XMLDB_TYPE_INTEGER, '20', null, XMLDB_NOTNULL, null, null);
+        // $table->add_field('datos_previos', XMLDB_TYPE_TEXT, null, null, null, null, null);
+        // $table->add_field('datos_enviados', XMLDB_TYPE_TEXT, null, null, null, null, null);
+        // $table->add_field('datos_almacenados', XMLDB_TYPE_TEXT, null, null, null, null, null);
+        // $table->add_field('fecha_registro', XMLDB_TYPE_DATETIME, null, null, XMLDB_NOTNULL, null, "now()");
+        // $table->add_field('id_evento', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        // $table->add_field('instanceid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        // $table->add_field('id_ases_user', XMLDB_TYPE_INTEGER, '10', null, null, null, null);
+        // $table->add_field('navegador', XMLDB_TYPE_TEXT, null, null, null, null, null);
+        // $table->add_field('title_retorno', XMLDB_TYPE_CHAR, '200', null, null, null, null);
+        // $table->add_field('msg_retorno', XMLDB_TYPE_CHAR, '200', null, null, null, null);
+        // $table->add_field('status_retorno', XMLDB_TYPE_CHAR, '200', null, null, null, null);
+        // $table->add_field('url', XMLDB_TYPE_TEXT, null, null, null, null, null);
+        // $table->add_field('courseid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
 
-        // Adding keys to table talentospilos_general_logs.
-        $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+        // // Adding keys to table talentospilos_general_logs.
+        // $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
 
-        // Conditionally launch create table for talentospilos_general_logs.
-        if (!$dbman->table_exists($table)) {
-            $dbman->create_table($table);
-        }
-
-
-
-                  // Define table talentospilos_events_to_logs to be created.
-        $table = new xmldb_table('talentospilos_events_to_logs');
-
-        // Adding fields to table talentospilos_events_to_logs.
-        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
-        $table->add_field('name_event', XMLDB_TYPE_CHAR, '200', null, XMLDB_NOTNULL, null, null);
-        $table->add_field('description', XMLDB_TYPE_TEXT, null, null, XMLDB_NOTNULL, null, null);
-        $table->add_field('funcionalidad', XMLDB_TYPE_CHAR, '200', null, XMLDB_NOTNULL, null, null);
-
-        // Adding keys to table talentospilos_events_to_logs.
-        $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
-
-        // Conditionally launch create table for talentospilos_events_to_logs.
-        if (!$dbman->table_exists($table)) {
-            $dbman->create_table($table);
-        }
-
-        //Cargar eventos aplicables a acciones de student_profile asociados al desarrollo de Discapacidad
-
-        $event = new stdClass();
-        $event->name_event          = 'edit_discapacity_initial_form_sp';
-        $event->description   = "Edición de las características de discapacidad de un estudiante en la ficha de percepción de discapacidad.";
-        $event->funcionalidad = 'student_profile';
-
-        if( !$DB->record_exists('talentospilos_events_to_logs',array('name_event'=> $event->name_event))){
-            $DB->insert_record('talentospilos_events_to_logs', $event, true);
-        }
-
-        $event = new stdClass();
-        $event->name_event          = 'edit_economics_tab_sp';
-        $event->description   = "Edición de los datos económicos de un estudiante en la ficha de percepción de discapacidad.";
-        $event->funcionalidad = 'student_profile';
-
-        if( !$DB->record_exists('talentospilos_events_to_logs',array('name_event'=> $event->name_event))){
-            $DB->insert_record('talentospilos_events_to_logs', $event, true);
-        }
-
-        $event = new stdClass();
-        $event->name_event          = 'edit_salud_tab_sp';
-        $event->description   = "Edición de los datos de servicio de salud de un estudiante en la ficha de percepción de discapacidad.";
-        $event->funcionalidad = 'student_profile';
-
-        if( !$DB->record_exists('talentospilos_events_to_logs',array('name_event'=> $event->name_event))){
-            $DB->insert_record('talentospilos_events_to_logs', $event, true);
-        }
-
-        $event = new stdClass();
-        $event->name_event          = 'save_economics_tab_sp';
-        $event->description   = "Registro inicial de los datos económicos de un estudiante en la ficha de percepción de discapacidad.";
-        $event->funcionalidad = 'student_profile';
-
-        if( !$DB->record_exists('talentospilos_events_to_logs',array('name_event'=> $event->name_event))){
-            $DB->insert_record('talentospilos_events_to_logs', $event, true);
-        }
-
-        $event = new stdClass();
-        $event->name_event          = 'save_salud_tab_sp';
-        $event->description   = "Registro inicial de los datos de servicio de salud de un estudiante en la ficha de percepción de discapacidad.";
-        $event->funcionalidad = 'student_profile';
-
-        if( !$DB->record_exists('talentospilos_events_to_logs',array('name_event'=> $event->name_event))){
-            $DB->insert_record('talentospilos_events_to_logs', $event, true);
-        }
+        // // Conditionally launch create table for talentospilos_general_logs.
+        // if (!$dbman->table_exists($table)) {
+        //     $dbman->create_table($table);
+        // }
 
 
-        // Define field recorder to be added to talentospilos_riesg_usuario.
-        $table = new xmldb_table('talentospilos_riesg_usuario');
-        $field = new xmldb_field('recorder', XMLDB_TYPE_TEXT, null, null, null, null, null, 'calificacion_riesgo');
 
-        // Conditionally launch add field recorder.
-        if (!$dbman->field_exists($table, $field)) {
-            $dbman->add_field($table, $field);
-        }
+        //           // Define table talentospilos_events_to_logs to be created.
+        // $table = new xmldb_table('talentospilos_events_to_logs');
 
-        // Define table talentospilos_incidencias to be created.
-        $table = new xmldb_table('talentospilos_incidencias');
+        // // Adding fields to table talentospilos_events_to_logs.
+        // $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        // $table->add_field('name_event', XMLDB_TYPE_CHAR, '200', null, XMLDB_NOTNULL, null, null);
+        // $table->add_field('description', XMLDB_TYPE_TEXT, null, null, XMLDB_NOTNULL, null, null);
+        // $table->add_field('funcionalidad', XMLDB_TYPE_CHAR, '200', null, XMLDB_NOTNULL, null, null);
 
-        // Adding fields to table talentospilos_incidencias.
-        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
-        $table->add_field('id_usuario_registra', XMLDB_TYPE_INTEGER, '20', null, XMLDB_NOTNULL, null, null);
-        $table->add_field('id_usuario_cierra', XMLDB_TYPE_INTEGER, '20', null, null, null, null);
-        $table->add_field('estados', XMLDB_TYPE_TEXT, null, null, null, null, null);
-        $table->add_field('info_sistema', XMLDB_TYPE_TEXT, null, null, null, null, null);
-        $table->add_field('comentarios', XMLDB_TYPE_TEXT, null, null, null, null, null);
-        $table->add_field('cerrada', XMLDB_TYPE_INTEGER, '20', null, XMLDB_NOTNULL, null, '0');
-        $table->add_field('fecha_hora_registro', XMLDB_TYPE_DATETIME, null, null, XMLDB_NOTNULL, null, "now()");
+        // // Adding keys to table talentospilos_events_to_logs.
+        // $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
 
-        // Adding keys to table talentospilos_incidencias.
-        $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+        // // Conditionally launch create table for talentospilos_events_to_logs.
+        // if (!$dbman->table_exists($table)) {
+        //     $dbman->create_table($table);
+        // }
 
-        // Conditionally launch create table for talentospilos_incidencias.
-        if (!$dbman->table_exists($table)) {
-            $dbman->create_table($table);
-        }
+        // //Cargar eventos aplicables a acciones de student_profile asociados al desarrollo de Discapacidad
+
+        // $event = new stdClass();
+        // $event->name_event          = 'edit_discapacity_initial_form_sp';
+        // $event->description   = "Edición de las características de discapacidad de un estudiante en la ficha de percepción de discapacidad.";
+        // $event->funcionalidad = 'student_profile';
+
+        // if( !$DB->record_exists('talentospilos_events_to_logs',array('name_event'=> $event->name_event))){
+        //     $DB->insert_record('talentospilos_events_to_logs', $event, true);
+        // }
+
+        // $event = new stdClass();
+        // $event->name_event          = 'edit_economics_tab_sp';
+        // $event->description   = "Edición de los datos económicos de un estudiante en la ficha de percepción de discapacidad.";
+        // $event->funcionalidad = 'student_profile';
+
+        // if( !$DB->record_exists('talentospilos_events_to_logs',array('name_event'=> $event->name_event))){
+        //     $DB->insert_record('talentospilos_events_to_logs', $event, true);
+        // }
+
+        // $event = new stdClass();
+        // $event->name_event          = 'edit_salud_tab_sp';
+        // $event->description   = "Edición de los datos de servicio de salud de un estudiante en la ficha de percepción de discapacidad.";
+        // $event->funcionalidad = 'student_profile';
+
+        // if( !$DB->record_exists('talentospilos_events_to_logs',array('name_event'=> $event->name_event))){
+        //     $DB->insert_record('talentospilos_events_to_logs', $event, true);
+        // }
+
+        // $event = new stdClass();
+        // $event->name_event          = 'save_economics_tab_sp';
+        // $event->description   = "Registro inicial de los datos económicos de un estudiante en la ficha de percepción de discapacidad.";
+        // $event->funcionalidad = 'student_profile';
+
+        // if( !$DB->record_exists('talentospilos_events_to_logs',array('name_event'=> $event->name_event))){
+        //     $DB->insert_record('talentospilos_events_to_logs', $event, true);
+        // }
+
+        // $event = new stdClass();
+        // $event->name_event          = 'save_salud_tab_sp';
+        // $event->description   = "Registro inicial de los datos de servicio de salud de un estudiante en la ficha de percepción de discapacidad.";
+        // $event->funcionalidad = 'student_profile';
+
+        // if( !$DB->record_exists('talentospilos_events_to_logs',array('name_event'=> $event->name_event))){
+        //     $DB->insert_record('talentospilos_events_to_logs', $event, true);
+        // }
 
 
-        //Add duration field to demographic table
+        // // Define field recorder to be added to talentospilos_riesg_usuario.
+        // $table = new xmldb_table('talentospilos_riesg_usuario');
+        // $field = new xmldb_field('recorder', XMLDB_TYPE_TEXT, null, null, null, null, null, 'calificacion_riesgo');
 
-        // Define field duracion to be added to talentospilos_demografia.
-        $table = new xmldb_table('talentospilos_demografia');
-        $field = new xmldb_field('duracion', XMLDB_TYPE_FLOAT, '10', null, null, null, null, 'barrio');
+        // // Conditionally launch add field recorder.
+        // if (!$dbman->field_exists($table, $field)) {
+        //     $dbman->add_field($table, $field);
+        // }
 
-        // Conditionally launch add field duracion.
-        if (!$dbman->field_exists($table, $field)) {
-            $dbman->add_field($table, $field);
-        }
+        // // Define table talentospilos_incidencias to be created.
+        // $table = new xmldb_table('talentospilos_incidencias');
 
-        // Define field distancia to be added to talentospilos_demografia.
-        $table = new xmldb_table('talentospilos_demografia');
-        $field = new xmldb_field('distancia', XMLDB_TYPE_FLOAT, '10', null, null, null, null, 'duracion');
+        // // Adding fields to table talentospilos_incidencias.
+        // $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        // $table->add_field('id_usuario_registra', XMLDB_TYPE_INTEGER, '20', null, XMLDB_NOTNULL, null, null);
+        // $table->add_field('id_usuario_cierra', XMLDB_TYPE_INTEGER, '20', null, null, null, null);
+        // $table->add_field('estados', XMLDB_TYPE_TEXT, null, null, null, null, null);
+        // $table->add_field('info_sistema', XMLDB_TYPE_TEXT, null, null, null, null, null);
+        // $table->add_field('comentarios', XMLDB_TYPE_TEXT, null, null, null, null, null);
+        // $table->add_field('cerrada', XMLDB_TYPE_INTEGER, '20', null, XMLDB_NOTNULL, null, '0');
+        // $table->add_field('fecha_hora_registro', XMLDB_TYPE_DATETIME, null, null, XMLDB_NOTNULL, null, "now()");
 
-        // Conditionally launch add field distancia.
-        if (!$dbman->field_exists($table, $field)) {
-            $dbman->add_field($table, $field);
-        }
+        // // Adding keys to table talentospilos_incidencias.
+        // $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+
+        // // Conditionally launch create table for talentospilos_incidencias.
+        // if (!$dbman->table_exists($table)) {
+        //     $dbman->create_table($table);
+        // }
+
+
+        // //Add duration field to demographic table
+
+        // // Define field duracion to be added to talentospilos_demografia.
+        // $table = new xmldb_table('talentospilos_demografia');
+        // $field = new xmldb_field('duracion', XMLDB_TYPE_FLOAT, '10', null, null, null, null, 'barrio');
+
+        // // Conditionally launch add field duracion.
+        // if (!$dbman->field_exists($table, $field)) {
+        //     $dbman->add_field($table, $field);
+        // }
+
+        // // Define field distancia to be added to talentospilos_demografia.
+        // $table = new xmldb_table('talentospilos_demografia');
+        // $field = new xmldb_field('distancia', XMLDB_TYPE_FLOAT, '10', null, null, null, null, 'duracion');
+
+        // // Conditionally launch add field distancia.
+        // if (!$dbman->field_exists($table, $field)) {
+        //     $dbman->add_field($table, $field);
+        // }
 
         
-        // Changing nullability of field id_usuario_cierra on table talentospilos_incidencias to null.
-        $table = new xmldb_table('talentospilos_incidencias');
-        $field = new xmldb_field('id_usuario_cierra', XMLDB_TYPE_INTEGER, '20', null, null, null, null, 'id_usuario_registra');
+        // // Changing nullability of field id_usuario_cierra on table talentospilos_incidencias to null.
+        // $table = new xmldb_table('talentospilos_incidencias');
+        // $field = new xmldb_field('id_usuario_cierra', XMLDB_TYPE_INTEGER, '20', null, null, null, null, 'id_usuario_registra');
 
-        // Launch change of nullability for field id_usuario_cierra.
-        $dbman->change_field_notnull($table, $field);
+        // // Launch change of nullability for field id_usuario_cierra.
+        // $dbman->change_field_notnull($table, $field);
+
+        // *****************************************************************************************//
+        //  Actualización: Se agrega tabla para datos académicos adicionales                        //
+        //  Versión: 2019032914300                                                                  //
+        // *****************************************************************************************//
     
-        upgrade_block_savepoint(true, 2018121914150, 'ases');
+
+          // Define table talentospilos_academics_data to be created.
+          $table = new xmldb_table('talentospilos_academics_data');
+
+          // Adding fields to table talentospilos_academics_data.
+          $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+          $table->add_field('resolucion_programa', XMLDB_TYPE_TEXT, null, null, null, null, null);
+          $table->add_field('creditos_totaltes', XMLDB_TYPE_INTEGER, '3', null, null, null, null);
+          $table->add_field('otras_instituciones', XMLDB_TYPE_TEXT, null, null, null, null, null);
+          $table->add_field('dificultades', XMLDB_TYPE_TEXT, null, null, null, null, null);
+          $table->add_field('observaciones', XMLDB_TYPE_TEXT, null, null, null, null, null);
+  
+          // Adding keys to table talentospilos_academics_data.
+          $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+  
+          // Conditionally launch create table for talentospilos_academics_data.
+          if (!$dbman->table_exists($table)) {
+              $dbman->create_table($table);
+          }
+
+        upgrade_block_savepoint(true, 2019032914300, 'ases');
         return $result;
 
     }
