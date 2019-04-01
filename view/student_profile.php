@@ -219,10 +219,10 @@ if ($student_code != 0) {
       $personas = '';
       $pos = 1;
     
-        //Extraer json y decodificar
+        //Extraer json y decodificar datos de personas con quien vive
         $objeto_json = json_decode($ases_student->vive_con);
         //Recorrer el objeto json (array) y contruir los tr y td de la tabla
-        foreach($objeto_json as $objeto){
+        foreach($objeto_json as $objeto){ 
            $personas  .= "<tr> <td>  <input   name = 'name_person'class= 'input_fields_general_tab' readonly type='text' value='$objeto->name' /></td>
            <td><input name = 'parentesco_person'  class= 'input_fields_general_tab' readonly type='text' value='$objeto->parentesco' /></td> <td>
            <button type = 'button' class='bt_delete_person' title='Eliminar persona' name  = 'btn_delete_person' style= 'visibility:hidden;' value='$pos'></button></td></tr>";

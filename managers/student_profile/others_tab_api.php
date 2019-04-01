@@ -140,10 +140,10 @@ if(isset($_POST['func'])){
             $msg->status = "error";
             echo json_encode($msg);
 
-        //      echo "Falló";
-        //     echo "JSON does not validate. Violations:\n";
-        //    foreach ($validator->getErrors() as $error) {
-        //   echo sprintf("[%s] %s\n", $error['property'], $error['message']);}
+              echo "Falló";
+             echo "JSON does not validate. Violations:\n";
+            foreach ($validator->getErrors() as $error) {
+           echo sprintf("[%s] %s\n", $error['property'], $error['message']);}
          }
          
 

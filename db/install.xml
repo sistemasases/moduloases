@@ -1024,6 +1024,8 @@
         <FIELD NAME="resolucion_programa" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="creditos_totaltes" TYPE="int" LENGTH="3" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="otras_instituciones" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="dificultades" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="observaciones" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>

@@ -581,30 +581,8 @@
       ]
   },
   "actividad": {
-      "type": "string",
-      "enum": [
-          "Leer y/o comprender textos escritos impresos",
-          "Leer los textos escritos e imágenes en pantalla",
-          "Copia al dictado",
-          "Transcripción de textos escritos",
-          "Escritura y redacción de textos manuales escritos",
-          "Escritura y redacción de textos escritos en pantalla",
-          "Escribir y/o redactar",
-          "Elaborar conceptos o ideas",
-          "Escuchar",
-          "Expresarse oralmente",
-          "Comprender mensajes orales",
-          "Conversar/interactuar",
-          "Relaciones interpersonales",
-          "Desplazarse",
-          "Manipular objetos",
-          "Mantenerse sentado",
-          "Asearse",
-          "Vestirse y desvestirse",
-          "Consumir alimentos",
-          "Evacuar (micción/deposición)",
-          "Otro, ¿cuál?"
-      ]
+      "type": "string"
+
   },
   "tipo_apoyo": {
       "type": "string"

@@ -486,10 +486,10 @@
 
                         <div class="row">
 
-                                <div class="row row_discapacity">
+                                <div class="row row_academics">
 
                                         <center>
-                                                <h3 class="h-sections-general-tab" style="margin-top: 10px;">Datos académicos adicionales en la Universidad del Valle  |   Semestre actual:
+                                                <h3 class="h-sections-general-tab" style="margin-top: 10px;">Datos académicos adicionales en la Universidad del Valle | Semestre actual:
                                                         <strong>{{name_current_semester}}</strong>
                                                 </h3>
                                                 <hr class="hr-general-tab-fields">
@@ -500,16 +500,17 @@
 
 
                                 <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 ">
-                                        <div class="row row_discapacity">
+                                        <div class="row row_academics">
 
                                                 <h3 class="h-sections-general-tab h_others">Facultad por programa registrado.</h3>
-                                                {{{faculty_name}}}
+                                                <hr class="hr-general-tab-fields"> {{{faculty_name}}}
 
                                         </div>
-                                        <div class="row row_discapacity">
+                                        <div class="row row_academics">
 
                                                 <h3 class="h-sections-general-tab h_others" style="margin-top: 10px;">Jornada por programa registrado.</h3>
-                                                {{{name_program_time}}}
+                                                <hr class="hr-general-tab-fields"> {{{name_program_time}}}
+
 
                                         </div>
                                 </div>
@@ -519,19 +520,20 @@
                                                 <h3 class="h-sections-general-tab h_others">Datos del programa actual
                                                         <strong>({{{name_program}}})</strong>.
                                                 </h3>
+                                                <hr class="hr-general-tab-fields">
 
-                                                <div class="row row_discapacity">
+                                                <div class="row row_academics">
 
                                                         <label for="lb_current_resolution" class="col-xs-4 col-sm-4 col-md-4 col-lg-4 label_fields_discapacity_tab">Número de resolución:</label>
                                                         <input required class=" col-xs-5 col-sm-5 col-md-5 col-lg-5 input_fields_discapacity_tab input-discapacity" type="text" placeholder="Resolución de programa"
                                                                 id="current_resolution" value="{{current_resolution}}" />
 
                                                 </div>
-                                                <div class="row row_discapacity">
+                                                <div class="row row_academics">
 
                                                         <label for="lb_total_time" class="col-xs-4 col-sm-4 col-md-4 col-lg-4 label_fields_discapacity_tab">Créditos totales:</label>
                                                         <input required class=" col-xs-5 col-sm-5 col-md-5 col-lg-5 input_fields_discapacity_tab input-discapacity" min="0" type="number" placeholder="Créditos totales de titulación"
-                                                                id="total_time" value="{{total_time}}"/>
+                                                                id="total_time" value="{{total_time}}" />
 
                                                 </div>
 
@@ -541,13 +543,13 @@
                                 </div>
                         </div>
 
-                        <div class="row row_discapacity" style="padding-right: 25px;">
+                        <div class="row row_academics" style="padding-right: 25px;">
                                 <center>
                                         <h3 class="h-sections-general-tab">Datos académicos adicionales en otras instituciones educativas.</h3>
                                 </center>
                                 <hr class="hr-general-tab-fields">
 
-                                <div class="row row_discapacity">
+                                <div class="row row_academics" style="padding-bottom: 10px">
                                         <h3 class="h-sections-general-tab" style="margin-top: 10px;">Colegio en el que estudió:
                                                 <strong>{{colegio}}</strong>(
                                                 <strong>{{estamento}}</strong>)
@@ -555,19 +557,62 @@
                                 </div>
 
 
-                                <div class="row row_discapacity">
+                                <div class="row row_academics">
 
                                         <label for="lb_titulo" class="col-xs-2 col-sm-2 col-md-2 col-lg-2 label_fields_discapacity_tab4">Título académico obtenido:</label>
                                         <input required class=" col-xs-6 col-sm-6 col-md-6 col-lg-6 input_fields_discapacity_tab input-discapacity" type="text" placeholder="Título académico obtenido en la institución mencionada anteriormente"
                                                 id="titulo_academico" />
 
                                 </div>
-                                <div class="row row_discapacity">
-                                                <h3 class="h-sections-general-tab h_others">Aspectos que favorecieron el desempeño, avance y graduación.
-                                                        </h3>
+                                <div class="row row_academics">
+
+                                        {{#save_aditional_academics_tab_sp}}
+
+                                        <div class=" row " name="div_add_institucion" id="div_add_institucion" style="float: right;">
+                                                <input class="btn btn-block" type="button" id="bt_add_institucion" name="bt_add_institucion" title="Agregar institución" />
+                                        </div>
+                                        {{/save_aditional_academics_tab_sp}}
+                                        <div class=" row " name="div_add_institucion" id="div_add_institucion" style="float: right;">
+                                                        <input class="btn btn-block" type="button" id="bt_add_institucion" name="bt_add_institucion" title="Agregar institución" />
+                                                </div>
+                                        <h3 class="h-sections-general-tab h_others">Aspectos que favorecieron el desempeño, avance y graduación.
+                                        </h3>
+
+                                        <hr class="hr-general-tab-fields">
+
+                                        <div>
+
+                                                <table class="table table_aspectos_instituciones" id="table_aspectos_instituciones" name="table_aspectos_instituciones">
+                                                        <thead>
+                                                                <tr>
+                                                                        <th>Institución</th>
+                                                                        <th>Nivel de formación</th>
+                                                                        <th>Apoyos recibidos</th>
+                                                                        <th id="edit_institucion"></th>
+                                                                </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                                {{{info_others_instituciones}}}
+                                                        </tbody>
+                                                </table>
+
+                                        </div>
 
                                 </div>
 
+
+
+                        </div>
+
+                        <div class="row row_academics">
+                                {{#save_aditional_academics_tab_sp}}
+                                <div class="row row_buttons" hidden>
+                                        <button type="button" class="btn btn-danger col-xs-12 col-sm-12 col-md-12 col-lg-12" id="edit_economics_data">Editar</button>
+                                </div>
+                                {{/save_aditional_academics_tab_sp}}
+                                <div class="row row_buttons" style="padding-right: 25px;">
+                                        <button type="button" class="btn btn-danger col-xs-12 col-sm-12 col-md-12 col-lg-12" id="edit_economics_data">Editar</button>
+                                </div>
                         </div>
 
 
