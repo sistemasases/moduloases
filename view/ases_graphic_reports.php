@@ -84,6 +84,7 @@ foreach($actions as $act){
 
 $data->menu = $menu_option;
 $data->risks_checks = $risks_table;
+
 $data->cohorts_checks = $cohorts_select;
 //$data->status_ases = $estados_ases;
 $contextcourse = context_course::instance($courseid);
@@ -112,7 +113,7 @@ $blocknode = navigation_node::create('Reporte general gráfico',$url, null, 'blo
 $coursenode->add_node($blocknode);
 
 $PAGE->requires->css('/blocks/ases/style/base_ases.css', true);
-$PAGE->requires->css('/blocks/ases/style/ases_report_style.css', true);
+$PAGE->requires->css('/blocks/ases/style/ases_graphic_reports_style.css', true);
 $PAGE->requires->css('/blocks/ases/style/styles_pilos.css', true);
 $PAGE->requires->css('/blocks/ases/style/bootstrap_pilos.min.css', true);
 $PAGE->requires->css('/blocks/ases/style/sweetalert.css', true);

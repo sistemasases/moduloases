@@ -126,9 +126,7 @@ function getGraficPrograma($cohorte, $ases_status, $icetex_status, $program_stat
                     ON usuario.id_academic_program = programa.id 
                     ";
     
-    // echo "Estado ASES: ".$ases_status."
-    // ";
-
+    //Se filtra a los estudiantes activos en ASES    
     if($ases_status == 1){
         // echo "Entra
         // ";
@@ -144,6 +142,7 @@ function getGraficPrograma($cohorte, $ases_status, $icetex_status, $program_stat
                         ";
     }
 
+    //Se filtra a los estudiantes activos ICETEX
     if($icetex_status == 1){
 
         $sql_query .= "INNER JOIN
@@ -159,7 +158,7 @@ function getGraficPrograma($cohorte, $ases_status, $icetex_status, $program_stat
                     ";
     }
     
-
+    //Se filtra a los estudiantes activos en su respectivo programa
     if($program_status == 1){
 
         $sql_query .= "INNER JOIN
@@ -173,6 +172,7 @@ function getGraficPrograma($cohorte, $ases_status, $icetex_status, $program_stat
 
     }
 
+    //Si se seleccionó una cohorte específica, se añade el filtro de cohorte a la consulta SQL
     if($cohorte != "TODOS"){
 
         $condition = "cohorte.idnumber = '$cohorte'";
@@ -197,12 +197,9 @@ function getGraficPrograma($cohorte, $ases_status, $icetex_status, $program_stat
                         ";
 
     }
-
-
-    // echo $sql_query;      
+       
     $sql_query .= "GROUP BY programa.nombre";
-    // echo $sql_query; 
-     
+        
     $result = $DB->get_records_sql($sql_query);
 
     return $result;

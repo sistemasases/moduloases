@@ -33,10 +33,7 @@ define(['jquery',
 
                 window.JSZip = jszip;        
                 
-                $("#conditions").on('change', function(){
-                    //updateTable();
-                });                                            
-
+               
                 $("#list-students-status-panel").on('click', function(){
                     //updateTable();                    
                     get_data_to_graphic();                   					
@@ -54,7 +51,6 @@ define(['jquery',
                
 
                 $('#conditions').on('change', function () {
-                    console.log("Cambia");
                     get_data_to_graphic();
                 });                                              
                 
@@ -87,7 +83,6 @@ define(['jquery',
             var ases_status = $("#ases_status").is(":checked") ? 1 : 0;
             var icetex_status = $("#icetex_status").is(":checked") ? 1 : 0;
             var program_status = $("#academic_program_status").is(":checked") ? 1 : 0;
-            console.log($('#conditions').val());
 
             $.ajax({
 
@@ -140,7 +135,6 @@ define(['jquery',
         }
 
         function createTable(data){
-            console.log(data);
 
             if (!table_programs){
 
