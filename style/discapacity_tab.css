@@ -198,6 +198,14 @@
         padding-left: 0px;
         padding-right: 0px;
     }
+
+    .academics_data_textarea{
+        overflow-y: scroll; 
+        height:90px;
+        width: 260px;
+        padding-left: 0px;
+        padding-right: 0px;
+    }
     #discapacity_tittle{
         font-size: 22px;
         text-decoration: underline;

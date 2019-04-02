@@ -166,6 +166,27 @@ function get_economics_data($id_ases){
     
 }
 
+  /**
+ * Gets record with student academics_data information
+ *
+ * @see get_academics_data($id_ases)
+ * @param $id_ases id ases student 
+ * @return object
+ */
+ 
+function get_academics_data($id_ases){
+     
+    global $DB;
+
+    $sql_query = "SELECT * FROM {talentospilos_academics_data} WHERE id_ases_user = '$id_ases'";
+    $register = $DB->get_record_sql($sql_query);
+    
+    return $register;
+
+}
+
+
+
    /**
  * Gets true or false if register health_data exist
  *

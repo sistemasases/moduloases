@@ -1,6 +1,6 @@
 /**
  * Controls others form
- * @module amd/src/dphpforms_form_others_sp
+ * @module amd/src/students_profile_others_tab_sp
  * @author Juan Pablo Castro
  * @copyright 2018 Juan Pablo Castro<juan.castro.vasquez@correounivalle.edu.co>
  * @license  http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -217,6 +217,31 @@ define([
 
             //Aditional academics data
 
+            $("#edit_academics_data").click(function () {
+
+                //Validar las respuestas obtenidas
+                let respuesta = validateAcademicsData();
+
+
+                if (respuesta.status == "error") {
+                    swal(respuesta.title,
+                        respuesta.msg,
+                        respuesta.status);
+                } else {
+                    //Si no hay errores de validación, capturar datos
+
+                    let json_academics_data = getAcademicsData();
+                    console.log(json_academics_data);
+                    json_academics_data = JSON.stringify(json_academics_data);
+
+                    saveAcademicsData(json_academics_data, id_ases);
+
+
+                }
+
+
+            });
+
             //Delete table row
             $(document).on('click', '#table_aspectos_instituciones tbody tr td button', function () {
                 $(this).parent().parent().remove();
@@ -235,6 +260,130 @@ define([
                 $("#table_aspectos_instituciones").find("tbody").append(nuevaFila);
 
             });
+
+            //DATOS ACADÉMICOS ADICIONALES FUNCIONES
+
+            function saveAcademicsData(json_data, ases_id) {
+                let json_prev = $("#input_json_academics_saved").val();
+                $.ajax({
+                    type: "POST",
+                    data: {
+                        func: 'edit_academics_data',
+                        json: json_data,
+                        json_prev: json_prev,
+                        instanceid: getIdinstancia(),
+                        courseid: getIdcourse(),
+                        ases: ases_id
+                    },
+                    url: "../managers/student_profile/others_tab_api.php",
+                    success: function (msg) {
+
+                        swal(
+                            {
+                                title: msg.title,
+                                text: msg.msg,
+                                type: msg.status
+                            },
+                            function () {
+                                $("html, body").animate({ scrollTop: 700 }, 'slow');
+                                $("#input_economics_saved").attr("value", "1");
+                                $("#input_json_economics_saved").attr("value", json_data);
+                            }
+
+
+                        );
+
+
+                        //$("#un_input").attr("value", json_data);
+
+
+                    },
+                    dataType: "json",
+                    cache: "false",
+                    error: function (msg) {
+                        swal(
+                            msg.title,
+                            msg.msg,
+                            msg.status
+                        );
+
+                    },
+                });
+
+
+            }
+
+            function getAcademicsData() {
+                //Crea JSON con todos los datos académicos obtenidos
+
+                let json_academics_data = {}, info_institutions  = [], institution = {}, count = 0;
+
+
+                $(".table_aspectos_instituciones tr").find(':input').each(function(){
+                    
+                    count ++;
+
+                    if($(this).attr("name")=="name_institucion")
+                    institution.name_institution = $(this).val();
+                    if($(this).attr("name")=="nivel_academico_institucion")
+                    institution.academic_level   = $(this).val();
+                    if($(this).attr("name")=="apoyos_institucion")
+                    institution.supports = $(this).val();
+
+                    if(count == 4){
+                        info_institutions.push(institution);
+                        institution = {};
+                        count = 0;
+                    }
+                  
+
+                 });
+
+
+                json_academics_data.current_resolution           = $("#current_resolution").val();
+                json_academics_data.total_time                   = $("#total_time").val();
+                json_academics_data.previous_academic_title      = $("#titulo_academico").val();
+                json_academics_data.others_institutions          = info_institutions;
+                json_academics_data.academics_observations       = $("#textarea_academics_observaciones").val();
+                json_academics_data.academics_dificults          = $("#textarea_academics_dificultades").val();
+
+                return json_academics_data;
+                
+
+            }
+
+            function validateAcademicsData() {
+
+                var msg = new Object();
+
+                msg.title = "Éxito";
+                msg.msg = "El formulario fue validado con éxito";
+                msg.status = "success";
+
+
+                $("#collapse_add_academics input[type=number]").each(function () {
+                  
+                            let value = $(this).val();
+                            let op    = $(this).attr("placeholder");
+                            let id    = $(this).attr("id");
+
+                            if (id == "total_time") {
+
+                            
+                                if(value < 0 || value > 999){
+                                    msg.title = "Datos académicos (créditos totales)";
+                                    msg.status = "error";
+                                    msg.msg = "El campo " + op + " es obligatorio";
+                                    return msg;
+                                }
+                            }
+
+
+                });
+
+                return msg;
+
+            }
 
             //DATOS ECONÓMICOS FUNCIONES    
 
