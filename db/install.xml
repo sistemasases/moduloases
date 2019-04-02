@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<XMLDB PATH="blocks/ases/db" VERSION="20190329" COMMENT="XMLDB file for Moodle blocks/configurable_reports"
+<XMLDB PATH="blocks/ases/db" VERSION="20190402" COMMENT="XMLDB file for Moodle blocks/configurable_reports"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
 >
@@ -1021,11 +1021,13 @@
     <TABLE NAME="talentospilos_academics_data" COMMENT="Contiene los datos académicos adicionales que pueda tener un usuario">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="id_ases_user" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="resolucion_programa" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="creditos_totaltes" TYPE="int" LENGTH="3" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="otras_instituciones" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="dificultades" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="observaciones" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="titulo_academico_colegio" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>

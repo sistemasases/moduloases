@@ -4,7 +4,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     global $DB;
     $dbman = $DB->get_manager();
     $result = true;
-    if ($oldversion < 2019032914300 ) {
+    if ($oldversion < 2019040210300 ) {
       
     //     // ************************************************************************************************************
     //     // Actualización que crea la tabla para los campos extendidos de usuario (Tabla: {talentospilos_user_extended})
@@ -2592,26 +2592,28 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
         // *****************************************************************************************//
     
 
-          // Define table talentospilos_academics_data to be created.
-          $table = new xmldb_table('talentospilos_academics_data');
+           // Define table talentospilos_academics_data to be created.
+        $table = new xmldb_table('talentospilos_academics_data');
 
-          // Adding fields to table talentospilos_academics_data.
-          $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
-          $table->add_field('resolucion_programa', XMLDB_TYPE_TEXT, null, null, null, null, null);
-          $table->add_field('creditos_totaltes', XMLDB_TYPE_INTEGER, '3', null, null, null, null);
-          $table->add_field('otras_instituciones', XMLDB_TYPE_TEXT, null, null, null, null, null);
-          $table->add_field('dificultades', XMLDB_TYPE_TEXT, null, null, null, null, null);
-          $table->add_field('observaciones', XMLDB_TYPE_TEXT, null, null, null, null, null);
-  
-          // Adding keys to table talentospilos_academics_data.
-          $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
-  
-          // Conditionally launch create table for talentospilos_academics_data.
-          if (!$dbman->table_exists($table)) {
-              $dbman->create_table($table);
-          }
+        // Adding fields to table talentospilos_academics_data.
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        $table->add_field('id_ases_user', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('resolucion_programa', XMLDB_TYPE_TEXT, null, null, null, null, null);
+        $table->add_field('creditos_totaltes', XMLDB_TYPE_INTEGER, '3', null, null, null, null);
+        $table->add_field('otras_instituciones', XMLDB_TYPE_TEXT, null, null, null, null, null);
+        $table->add_field('dificultades', XMLDB_TYPE_TEXT, null, null, null, null, null);
+        $table->add_field('observaciones', XMLDB_TYPE_TEXT, null, null, null, null, null);
+        $table->add_field('titulo_academico_colegio', XMLDB_TYPE_TEXT, null, null, null, null, null);
 
-        upgrade_block_savepoint(true, 2019032914300, 'ases');
+        // Adding keys to table talentospilos_academics_data.
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+
+        // Conditionally launch create table for talentospilos_academics_data.
+        if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
+        }
+
+        upgrade_block_savepoint(true, 2019040210300, 'ases');
         return $result;
 
     }
