@@ -18,9 +18,9 @@
 /**
  * Ases block
  *
- * @author     Iader E. García Gómez
+ * @author     Joan Manuel Tovar Guzmán
  * @package    block_ases
- * @copyright  2016 Iader E. García <iadergg@gmail.com>
+ * @copyright  2019 Joan M. Tovar <joan.tovar@correounivalle.edu.co>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -84,6 +84,7 @@ foreach($actions as $act){
 
 $data->menu = $menu_option;
 $data->risks_checks = $risks_table;
+
 $data->cohorts_checks = $cohorts_select;
 //$data->status_ases = $estados_ases;
 $contextcourse = context_course::instance($courseid);
@@ -112,7 +113,7 @@ $blocknode = navigation_node::create('Reporte general gráfico',$url, null, 'blo
 $coursenode->add_node($blocknode);
 
 $PAGE->requires->css('/blocks/ases/style/base_ases.css', true);
-$PAGE->requires->css('/blocks/ases/style/ases_report_style.css', true);
+$PAGE->requires->css('/blocks/ases/style/ases_graphic_reports_style.css', true);
 $PAGE->requires->css('/blocks/ases/style/styles_pilos.css', true);
 $PAGE->requires->css('/blocks/ases/style/bootstrap_pilos.min.css', true);
 $PAGE->requires->css('/blocks/ases/style/sweetalert.css', true);
@@ -122,7 +123,6 @@ $PAGE->requires->css('/blocks/ases/style/buttons.dataTables.min.css', true);
 $PAGE->requires->css('/blocks/ases/style/side_menu_style.css', true);
 
 $PAGE->requires->js_call_amd('block_ases/ases_graphic_reports','init');
-$PAGE->requires->js_call_amd('block_ases/ases_graphic_reports','load_defaults_students', $params);
 
 $PAGE->set_url($url);
 $PAGE->set_title($pagetitle);
