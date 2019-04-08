@@ -40,6 +40,12 @@ function create_menu_options($userid, $blockid, $courseid)
 {
 
     $menu_options = '';
+    $dropdown_close_tags = '</div>
+                            </div>';
+    $academic_options = '<div class="dropdown">
+                            <button class="dropbtn">Académico <i class="fa fa-caret-down"></i>
+                            </button>
+                            <div class="dropdown-content">';
     $menu_return = "";
     $id_role = get_id_rol($userid, $blockid);
      
@@ -178,8 +184,8 @@ function create_menu_options($userid, $blockid, $courseid)
                     'instanceid' => $blockid,
                 ));
 
-                $menu_options = '<li><a href= "' . $url . '"> Ficha de estudiantes </a><li>';
-                $indexed['Ficha de estudiantes'] = $menu_options;
+                $academic_options .= '<a href= "' . $url . '"> Ficha de estudiantes </a>';
+                //$indexed['Ficha de estudiantes'] = $menu_options;
 
             }
 
@@ -363,6 +369,8 @@ function create_menu_options($userid, $blockid, $courseid)
         
     }
 
-    return $menu_return;
+    $academic_options .= $dropdown_close_tags;
+
+    return $academic_options;
 
 }

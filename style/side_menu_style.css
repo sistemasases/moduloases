@@ -2,32 +2,65 @@ body {
     font-family: "Lato", sans-serif;
 }
 
-.top_menu ul {
-    list-style-type: none;
+.top_menu {
     margin: 0;
     padding: 0;
     overflow: hidden;
     background-color: #d51b23;
-    /*position: absolute;*/
-    /*top: -60px;*/
-    left: -115px;
-    /*width: 1500px;*/   
-    margin-top: -10px;
-    
+    left: -115px; 
+    margin-top: -10px;    
 }
 
-#menu_div li {
+.top_menu a {
     float: left;
-}
-
-#menu_div li a {
-    display: block;
     color: white;
     text-align: center;
     padding: 14px 16px;
     text-decoration: none;
 }
 
-#menu_div li a:hover {
+.top_menu a:hover, .dropdown:hover .dropbtn {
     background-color: #b6161e;
+}
+
+.dropdown {
+    float: left;
+    overflow: hidden;
+}
+  
+.dropdown .dropbtn {
+    font-size: 16px;  
+    border: none;
+    outline: none;
+    color: white;
+    padding: 14px 16px;
+    background-color: inherit;
+    font-family: inherit;
+    margin: 0;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #d51b23;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+}
+
+.dropdown-content a {
+    float: none;
+    color: white;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    text-align: left;
+}
+
+.dropdown-content a:hover {
+    background-color: #b6161e;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block !important;
 }
