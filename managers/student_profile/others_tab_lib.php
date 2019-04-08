@@ -57,7 +57,53 @@ function save_detalle_discapacidad($json, $id_ases){
 }
 
 
+/**
+ * Function save health_data in table talentospilos_health_data
+ * @see save_academics_data(academics_data)
+ * @param $academics_data  valid Object with academics data 
+ * @return boolean
+ **/
 
+function save_academics_data($academics_data){
+    global $DB;
+   
+    $result = $DB->insert_record("talentospilos_academics_data", $academics_data, true);
+    return $result;
+
+}
+
+
+/**
+ * Function update academics_data register in table talentospilos_academics_data switch user
+ * @see update_academics_data(academics_data, id_ases)
+ * @param $academics_data  valid Object with academics_data
+ * @param $id_ases      user id
+ * @return boolean
+ **/
+
+function update_academics_data($academics_data, $id_ases){
+    global $DB;
+
+    $sql_query = "SELECT id FROM {talentospilos_academics_data} WHERE id_ases_user = '$id_ases'";
+    $register = $DB->get_record_sql($sql_query);
+   
+    $data = json_decode($academics_data);
+
+    $register_health_data                               = new  stdClass();
+
+    $register_academics_data->id                        = $register->id;
+    $register_academics_data->id_ases_user              = $id_ases;
+    $register_academics_data->resolucion_programa       = $data->current_resolution;
+    $register_academics_data->creditos_totales          = $data->total_time;
+    $register_academics_data->otras_instituciones       = json_encode($data->others_institutions);
+    $register_academics_data->dificultades              = $data->academics_dificults;
+    $register_academics_data->observaciones             = $data->academics_observations;
+    $register_academics_data->titulo_academico_colegio  = $data->previous_academic_title;
+
+    $result = $result = $DB->update_record('talentospilos_academics_data', $register_academics_data);
+    return $result;
+
+}
 
 /**
  * Function save health_data in table talentospilos_health_data

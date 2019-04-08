@@ -78,14 +78,14 @@ define([
 
             $("#div_posibilidades_condiciones input[type=range]").on("change", function(){
              if($(this).val()==1){
-                $(this).parent().find(":input[type=text]").prop("value","No la puede realizar");
+                $(this).parent().find(":input[type=text]").prop("value","No realiza");
                 
              }
              if($(this).val()==2){
-                $(this).parent().find(":input[type=text]").prop("value","Lo hace sin apoyo");
+                $(this).parent().find(":input[type=text]").prop("value","Sin apoyo");
             }
             if($(this).val()==3){
-                $(this).parent().find(":input[type=text]").prop("value","Lo hace con apoyo");
+                $(this).parent().find(":input[type=text]").prop("value","Con apoyo");
             }
             });
 
@@ -142,14 +142,17 @@ define([
                 if($(this).is(":checked")){
                     $(this).parent().find(":input[type=range]").prop("disabled", false);
                     $(this).parent().find(":input[type=range]").prop("required", true);
+                    $(this).parent().find(":input[type=range]").next().val("Sin apoyo");
                     $(this).parent().find(":input[name=input_apoyo]").prop("disabled", false);
                     $(this).parent().find(":input[name=input_apoyo]").prop("required", true);
+                    $(this).parent().find(":input[name=input_apoyo]").val("NO REGISTRA.");
 
                     
                 }else{
                     $(this).parent().find(":input[type=range]").prop("value", null);
                     $(this).parent().find(":input[type=range]").prop("disabled", true);
                     $(this).parent().find(":input[type=range]").prop("required", false);
+                    $(this).parent().find(":input[type=range]").next().val("");
                     $(this).parent().find(":input[name=input_apoyo]").prop("disabled", true);
                     $(this).parent().find(":input[name=input_apoyo]").prop("required", false);
                     $(this).parent().find(":input[type=text]").prop("value", "");
@@ -202,7 +205,8 @@ define([
 
             
             $("#cond_adquisicion").on("click", function(){
-                if($(this).val()== '0'){
+                let resp_adquis = $(this).val();
+                if(resp_adquis.includes("0") ){
                     $("#div_otro_cond_adq").show();
                     $("#otro_cond_adquisicion").prop("required", true);
                     enabledInput("div_otro_cond_adq");
@@ -238,7 +242,8 @@ define([
             });
 
             $("#tipo_discapacidad").on("click", function(){
-                if($(this).val()== '0'){
+                let resp_tipo = $(this).val();
+                if(resp_tipo.includes("0")){
                     $("#div_otra_discapacidad").show();
                     $("#otra_discapacidad").prop("required", true);
                     enabledInput("div_otra_discapacidad");
@@ -350,41 +355,80 @@ define([
             $("#save_ficha_discapacity").on("click", function(){
 
                 //Traer valores de campos para validar campos
-                let val_cond_adquisicion, val_apoyo_cotidiano, otro_apoyo_cotidiano,  key_apoyo_cotidiano, key_otro_apoyo_cotidiano,text_cond_adquisicion, otra_cond_adquisicion, 
-                    descripcion_diagnostico, val_tipo_disc, text_tipo_disc, otro_tipo_disc, val_transporte, otro_transporte,  key_transporte, key_otro_transporte ,key_otra_condicion_adq,
+                let val_cond_adquisicion, val_apoyo_cotidiano, otro_apoyo_cotidiano,  key_apoyo_cotidiano, key_otro_apoyo_cotidiano, otra_cond_adquisicion, 
+                    descripcion_diagnostico, val_tipo_disc, otro_tipo_disc, val_transporte, otro_transporte,  key_transporte, key_otro_transporte ,key_otra_condicion_adq,
                     val_participa_asociacion, key_participa_asociacion, val_asoc, key_asoc, porcentaje_invalidez, val_act, key_act, key_realiza_act, val_realiza_act, key_descripcion, check_diagnostico,
                     key_check_diagnostico, json_diagnostico,  key_tipo_disc, key_otra_disc,json_tipo_disc,  check_certificado, key_check_certificado, json_certificado, key_porcentaje_inv,
                     val_apoyo_institu, key_apoyo_institu, val_apoyo_tipo, key_apoyo_tipo, val_institu, key_institu, key_cond_adquisicion, json_condicion_adq, json_apoyo_institu,
                     json_dif_permanente, json_cond_salud, json_necesidad, json_factores_impacto, json_posibilidad, json_apoyo_cotidiano, json_transporte, 
-                    json_participa_asoc, json_actividades_otros;
+                    json_participa_asoc, json_actividades_otrosm, json_percepcion, key_percepcion_discapacidad = "", descripcion_percepcion;
                
                     //Variables de las opciones de varias respuestas
                     var key_func_dp, key_dif_dp, funcion_name, dificult_name, key_org_cs, key_cond_cs, organo_name, condicion_name,
                     key_nec_ns, key_sit_ns, key_factor_fi, factor_name, key_otro_factor_fi, otro_factor_name, key_contexto_fc, 
                     key_otro_factor_fc, factor_contexto_name, otro_factor_contexto_name, key_act_pa, actividad_name, posibilidad_name,
-                    key_apo_pa, key_apo_pa, tipo_apoyo_name, otra_actividad_key, otra_actividad_name ; 
+                    key_apo_pa, key_apo_pa, tipo_apoyo_name, otra_actividad_key, otra_actividad_name; 
 
                     let array_dif_perm = [], array_cond_salud = [], array_necesidades = [], array_factor_impacto = [], array_posibilidades=[];
 
                     var json_detalle_discapacidad;
 
-                
+                //Traer percepci+on de discapacidad
+                key_percepcion_discapacidad = $("#div_percepcion_estudiante").find(":input[type=radio]:checked").attr("id");
+                descripcion_percepcion      = $("#textarea_percepcion").val(); 
+
+                json_percepcion = {key_percepcion: key_percepcion_discapacidad, descripcion: descripcion_percepcion};
 
                 //Traer condicion de adquisicion
                 val_cond_adquisicion  = $("#cond_adquisicion").val();
                 key_cond_adquisicion  = $("#cond_adquisicion").attr("id");
-                text_cond_adquisicion = $("#cond_adquisicion").find(":selected").text();
+                let text_cond_adquisicion = [];
+                $("#cond_adquisicion").find(":selected").each(function() {
+                    $(this).css("background","lightslategrey" );
+                    text_cond_adquisicion.push( $(this).text());
+                });
+                $("#cond_adquisicion option:not(:selected)").each(function() {
+                    $(this).css("background","white" );
+                });
 
                 json_condicion_adq = {key_condicion: key_cond_adquisicion, condicion: text_cond_adquisicion};
                 
                 //Validar la opción de otra condicion de adquisicion
-                if(val_cond_adquisicion == 0){
+                if(val_cond_adquisicion.includes("0")){
                     key_otra_condicion_adq = $("#otro_cond_adquisicion").attr("id");
                     otra_cond_adquisicion  = $("#otro_cond_adquisicion").val();
                     json_condicion_adq.key_otra_condicion = key_otra_condicion_adq;
                     json_condicion_adq.otra_condicion     = otra_cond_adquisicion;
                 }
+
                 //-------------------------------------------------------------------------------
+
+                       //-------------------------------------------------------------------------------
+
+               //Traer tipo de discapacidad 
+               val_tipo_disc   = $("#tipo_discapacidad").val();
+               key_tipo_disc   = $("#tipo_discapacidad").attr("id");
+
+               let text_tipo_disc = [];
+               $("#tipo_discapacidad").find(":selected").each(function() {
+                   $(this).css("background","lightslategrey" );
+                   text_tipo_disc.push( $(this).text());
+               });
+               $("#tipo_discapacidad option:not(:selected)").each(function() {
+                   $(this).css("background","white" );
+               });
+
+               json_tipo_disc  ={key_tipo: key_tipo_disc, tipo_discapacidad: text_tipo_disc};
+
+               //Validar la opción de otro tipo de discapacidad
+               if(val_tipo_disc.includes("0")){
+                   otro_tipo_disc  = $("#otra_discapacidad").val();
+                   key_otra_disc   = $("#otra_discapacidad").attr("id");
+
+                   json_tipo_disc.key_otro_tipo   =  key_otra_disc;
+                   json_tipo_disc.otro_tipo       =  otro_tipo_disc;
+               }
+
 
                 //Traer diagnostico 
                 check_diagnostico     =  $("#check_diagnostico").is(":checked");
@@ -398,24 +442,6 @@ define([
                     json_diagnostico.descripcion     = descripcion_diagnostico;
                 }else {
                     json_diagnostico.tiene_diagnostico = 0; 
-                }
-                
-               //-------------------------------------------------------------------------------
-
-               //Traer tipo de discapacidad 
-                val_tipo_disc   = $("#tipo_discapacidad").val();
-                key_tipo_disc   = $("#tipo_discapacidad").attr("id");
-                text_tipo_disc  = $("#tipo_discapacidad").find(":selected").text();
-
-                json_tipo_disc  ={key_tipo: key_tipo_disc, tipo_discapacidad: text_tipo_disc};
-
-                //Validar la opción de otro tipo de discapacidad
-                if(val_tipo_disc == 0){
-                    otro_tipo_disc  = $("#otra_discapacidad").val();
-                    key_otra_disc   = $("#otra_discapacidad").attr("id");
-
-                    json_tipo_disc.key_otro_tipo   =  key_otra_disc;
-                    json_tipo_disc.otro_tipo       =  otro_tipo_disc;
                 }
 
                 
@@ -667,7 +693,8 @@ define([
                 //Crear objeto JSON que representa el detalle de discapacidad
                         
                 json_detalle_discapacidad = 
-                {
+                {   
+                    percepcion_discapacidad:            json_percepcion,
                     condicion_adquisicion:              json_condicion_adq ,
                     diagnostico_discapacidad:           json_diagnostico,
                     tipo_discapacidad:                  json_tipo_disc,
@@ -701,7 +728,7 @@ define([
                 
                 }
 
-                //console.log(json_detalle_discapacidad);
+                console.log(json_detalle_discapacidad);
                 
                   
               });
@@ -720,7 +747,7 @@ define([
                     courseid: getIdcourse(),
                     id_schema: 1
                 },
-                url: "../managers/student_profile/discapacity_tab_api.php",
+                url: "../managers/student_profile/others_tab_api.php",
                 success: function(msg) {
         
                     swal(
@@ -759,13 +786,14 @@ define([
         function viewFormDisabled(){
                   
             $("#form_ficha_inicial").show();
+            cleanAllForm();
             disabledTag('input');
             disabledTag('select');
             disabledTag('textarea');
             
             let json_saved_register = $("#input_json_saved").val();
             json_saved_register = JSON.parse(json_saved_register);
-            cleanAllForm();
+            
             showFormSaved(json_saved_register);
           }
 
@@ -778,6 +806,12 @@ define([
           }
 
         function cleanAllForm(){
+
+            $("#cond_adquisicion option").each(function() {
+                $(this).css("background","white" );
+                $(this).prop("selected", false);
+            });
+
             obj = document.getElementById('form_ficha_inicial');
             for (i=0; ele = obj.getElementsByTagName('input')[i]; i++){
                 if(ele.id != "input_json_saved"){
@@ -796,8 +830,6 @@ define([
                     if(ele.type == "number"){
                         ele.value = 0;
                     }
-                
-               
                 
             }
         }
@@ -858,13 +890,6 @@ define([
                             msg.title = "Diagnóstico de discapacidad";
                             msg.status = "error";
                             msg.msg = "El campo "+op+" diagnóstico es obligatorio";
-                            return msg;  
-                        }
-                        if(has_numbers(obj_diagnostico[op])){
-
-                            msg.title = "Diagnóstico de discapacidad";
-                            msg.status = "error";
-                            msg.msg = "El campo "+op+" diagnóstico no debe contener números";
                             return msg;  
                         }
 
@@ -945,13 +970,6 @@ define([
                                 msg.msg = "El campo "+op+" de la opción '"+ obj_dif["funcion"] +"' es obligatorio";
                                 return msg;  
                             }
-                            if(has_numbers(obj_dif[op])){
-
-                                msg.title = "Dificultades permanentes";
-                                msg.status = "error";
-                                msg.msg = "El campo "+op+ " de la opción '"+ obj_dif["funcion"] + "' no debe contener números";
-                                return msg;  
-                            }
 
                         }
                         }
@@ -975,14 +993,7 @@ define([
                                 msg.msg = "El campo "+op+" de la opción '"+ obj_cond["organo"] +"' es obligatorio";
                                 return msg;  
                             }
-                            if(has_numbers(obj_cond[op])){
-
-                                msg.title = "Condiciones de salud";
-                                msg.status = "error";
-                                msg.msg = "El campo "+op+ " de la opción '"+ obj_cond["organo"] + "' no debe contener números";
-                                return msg;  
-                            }
-
+                 
                         }
                         }
                     }    
@@ -1005,14 +1016,7 @@ define([
                                 msg.msg = "El campo "+op+" de la opción '"+ obj_nec["situacion"] +"' es obligatorio";
                                 return msg;  
                             }
-                            if(has_numbers(obj_nec[op])){
-
-                                msg.title = "Necesidades situaciones";
-                                msg.status = "error";
-                                msg.msg = "El campo "+op+ " de la opción '"+ obj_nec["situacion"] + "' no debe contener números";
-                                return msg;  
-                            }
-
+                   
                         }
                         }
                     }    
@@ -1033,13 +1037,6 @@ define([
                               msg.title = "Factores de impacto";
                               msg.status = "error";
                               msg.msg = "El campo "+op+" de la opción '"+ obj_fact["escenario"] +"' es obligatorio";
-                              return msg;  
-                          }
-                          if(has_numbers(obj_fact[op])){
-
-                              msg.title = "Factores de impacto";
-                              msg.status = "error";
-                              msg.msg = "El campo "+op+ " de la opción '"+ obj_fact["escenario"] + "' no debe contener números";
                               return msg;  
                           }
 
@@ -1064,14 +1061,7 @@ define([
                               msg.msg = "El campo "+op+" de la opción '"+ obj_pos["actividad"] +"' es obligatorio";
                               return msg;  
                           }
-                          if(has_numbers(obj_pos[op])){
-
-                              msg.title = "Posibilidades en actividades";
-                              msg.status = "error";
-                              msg.msg = "El campo "+op+ " de la opción '"+ obj_pos["actividad"] + "' no debe contener números";
-                              return msg;  
-                          }
-
+           
                       }
                       }
                     }
@@ -1096,14 +1086,7 @@ define([
                                  msg.msg = "El campo "+op+" de la opción '"+ obj_apoyo["apoyo_cotidiano"]+"' es obligatorio";
                                  return msg;  
                              }
-                             if(has_numbers(obj_apoyo[op])){
-     
-                                 msg.title = "Apoyo principal";
-                                 msg.status = "error";
-                                 msg.msg = "El campo "+op+" de la opción '"+ obj_apoyo["apoyo_cotidiano"]+"' no debe contener números";
-                                 return msg;  
-                             }
-     
+                      
                             }
                          }
      
@@ -1129,13 +1112,6 @@ define([
                             msg.msg = "El campo "+op+" de la opción '"+ obj_transporte["transporte"]+"' es obligatorio";
                             return msg;  
                         }
-                        if(has_numbers(obj_transporte[op])){
-
-                            msg.title = "Medio de transporte";
-                            msg.status = "error";
-                            msg.msg = "El campo "+op+" de la opción '"+ obj_transporte["transporte"]+"' no debe contener números";
-                            return msg;  
-                        }
 
                        }
                     }
@@ -1154,14 +1130,7 @@ define([
                              msg.msg = "El campo "+op+" es obligatorio";
                              return msg;  
                          }
-                         if(has_numbers(obj_asoc[op])){
- 
-                             msg.title = "Participación en organización/asociación";
-                             msg.status = "error";
-                             msg.msg = "El campo "+op+" no debe contener números";
-                             return msg;  
-                         }
- 
+                    
                         }
                      }
                     break;
@@ -1178,14 +1147,6 @@ define([
                              msg.msg = "El campo "+op+" es obligatorio";
                              return msg;  
                          }
-                         if(has_numbers(obj_act[op])){
- 
-                             msg.title = "Actividades con otros";
-                             msg.status = "error";
-                             msg.msg = "El campo "+op+" no debe contener números";
-                             return msg;  
-                         }
- 
                         }
                      }
 
@@ -1203,14 +1164,6 @@ define([
                              msg.msg = "El campo "+op+" es obligatorio";
                              return msg;  
                          }
-                         if(has_numbers(obj_inst[op])){
- 
-                             msg.title = "Apoyo institución";
-                             msg.status = "error";
-                             msg.msg = "El campo "+op+" no debe contener números";
-                             return msg;  
-                         }
- 
                         }
                      }
                     break;
@@ -1242,14 +1195,38 @@ define([
 
                 switch(i){
 
+                    case "percepcion_discapacidad":
+                    key        = json_bd[i]['key_percepcion'];        
+                    val_input       = json_bd[i]['descripcion'];
+
+
+                    if(key != ""){
+                        $("#"+key).prop("checked", true);
+                        $("#"+key_input).val(val_input);
+                    }
+                   
+
+                    break;
+
                     case "condicion_adquisicion":
                     
                     key        = json_bd[i]['key_condicion'];        
                     name       = json_bd[i]['condicion'];
                     key_otro   = json_bd[i]['key_otra_condicion'];   
                     val_otro   = json_bd[i]['otra_condicion'];
-
-                    setOptionSelect(key, name, key_otro, val_otro);
+                    if(Array.isArray(name)){
+                        for (condicion in name){
+                            setOptionSelect(key,name[condicion] , key_otro, val_otro);
+                        }
+                          
+                    }else{
+                            setOptionSelect(key, name, key_otro, val_otro);
+                    }
+                    $("#cond_adquisicion").find(":selected").each(function() {
+                        $(this).css("background","lightslategrey" );
+                    });
+                    
+                    
                     
                     break;
 
@@ -1269,7 +1246,19 @@ define([
                     name       = json_bd[i]['tipo_discapacidad'];
                     key_otro   = json_bd[i]['key_otro_tipo'];     
                     val_otro   = json_bd[i]['otro_tipo'];
-                    setOptionSelect(key, name, key_otro, val_otro);
+
+                    if(Array.isArray(name)){
+                        for (condicion in name){
+                            setOptionSelect(key,name[condicion] , key_otro, val_otro);
+                        }
+                          
+                    }else{
+                            setOptionSelect(key, name, key_otro, val_otro);
+                    }
+                    $("#cond_adquisicion").find(":selected").each(function() {
+                        $(this).css("background","lightslategrey" );
+                    });
+                    
                     
                     break;
 
@@ -1318,15 +1307,15 @@ define([
                         $("#"+array[obj_json]['key_posibilidad']).val(array[obj_json]['posibilidad']);
                         $("#"+array[obj_json]['key_apoyo']).val(array[obj_json]['tipo_apoyo']);
                         
-                        if(array[obj_json]['posibilidad'] == "No la puede realizar") {
+                        if(array[obj_json]['posibilidad'] == "No realiza") {
                             range = 1;
                         }else 
                         {
-                            if(array[obj_json]['posibilidad'] == "Lo hace sin apoyo") {
+                            if(array[obj_json]['posibilidad'] == "Sin apoyo") {
                             range = 2;
                             } else
                                 {
-                                    if(array[obj_json]['posibilidad'] == "Lo hace con apoyo") {
+                                    if(array[obj_json]['posibilidad'] == "Con apoyo") {
                                         range = 3;
                                         } 
                                 }
@@ -1454,11 +1443,12 @@ define([
         function setOptionSelect(key, name, key_otro, val_otro){
             let val;
             $("#"+ key+" option").each(function(){
-
                 if($(this).text() == name){
-                val    =    $(this).attr('value');
-                $("#"+key).val(val);
 
+                 val    =    $(this).attr('value');
+                // $("#"+key).val(val);
+                // $(this).css("background", "grey");
+                $(this).prop("selected", true);
                 if(val == "0"){
                     //Opción Otra condicion adquisición
                     $("#"+key_otro).val(val_otro);
@@ -1466,7 +1456,7 @@ define([
                 }
                 } 
              });
-        }
+       }
 
         function showOption(key,val, key_input, val_input){
                 

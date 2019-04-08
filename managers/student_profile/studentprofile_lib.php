@@ -166,6 +166,40 @@ function get_economics_data($id_ases){
     
 }
 
+  /**
+ * Gets record with student academics_data information
+ *
+ * @see get_academics_data($id_ases)
+ * @param $id_ases id ases student 
+ * @return object
+ */
+ 
+function get_academics_data($id_ases){
+     
+    global $DB;
+
+    $sql_query = "SELECT * FROM {talentospilos_academics_data} WHERE id_ases_user = '$id_ases'";
+    $register = $DB->get_record_sql($sql_query);
+    
+    return $register;
+
+}
+
+
+   /**
+ * Gets true or false if register academics_data exist
+ *
+ * @see get_exist_academics_data()
+ * @return boolean
+ */
+ 
+function get_exist_academics_data($id_ases_user){
+     
+    global $DB;
+    
+    return $DB->record_exists('talentospilos_academics_data',array('id_ases_user'=> $id_ases_user));
+}
+
    /**
  * Gets true or false if register health_data exist
  *
@@ -303,8 +337,17 @@ function  get_ocupaciones()
 function  get_municipios()
 {
     global $DB; 
-   $sql_query = "SELECT * FROM {talentospilos_municipio}";
-   return $DB->get_records_sql($sql_query);
+    $array_departamentos = array ();
+    $sql_query_dpto = "SELECT id, nombre FROM {talentospilos_departamento}";
+    $departamentos  = $DB->get_records_sql($sql_query_dpto);
+    foreach($departamentos as $departamento){
+        $sql_query = "SELECT  id, nombre   FROM {talentospilos_municipio} WHERE cod_depto = $departamento->id";
+        $municipios = $DB->get_records_sql($sql_query);
+        $array_departamentos[$departamento->nombre] =  $municipios;
+    }
+   
+       
+   return $array_departamentos;
 }
 
 

@@ -47,10 +47,13 @@ return {
     
 
      // Carga una determinada pestaña
+
+     //Eliminar fila de una tabla
      
     $(document).on('click', '#table_vive_con tbody tr td button', function () {     
         $(this).parent().parent().remove();
     });
+
 
     /**
      * Funcion para añadir una nueva fila en la tabla
@@ -686,6 +689,7 @@ return {
         $('.input-tracking').prop('disabled', false);
         $('#div_add_persona_vive').show();
         $('#edit_person_vive').show();
+        //$('#edit_institucion').show();
 
         document.getElementById('mapa').innerHTML = "";
 
