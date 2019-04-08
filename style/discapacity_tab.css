@@ -190,6 +190,12 @@
         padding-left: 0px;
         padding-right: 0px;
     }
+    #textarea_percepcion{
+        overflow-y: scroll; 
+        height:50px;
+        padding-left: 0px;
+        padding-right: 0px;
+    }
 
     #textarea_expectativas{
         overflow-y: scroll; 
@@ -322,7 +328,7 @@
     }
     .row_discapacity{
         margin-left: 0px;
-        margin-top: 7px !important;
+        margin-top: 15px !important;
     }
     .row_discapacity2{
         margin-left: 0px;

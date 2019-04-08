@@ -11,6 +11,25 @@
 "description": "Un detalle de discapacidad de un usuario",
 "type": "object",
 "properties": {
+
+"percepcion_discapacidad":{
+    "description": "¿Considera que presenta algún tipo de discapacidad o limitación?",
+    "required": [
+      "key_percepcion",
+      "descripcion"
+    ],
+    "properties": {
+      "key_percepcion": {
+          "type": "string"
+      },
+      "descripcion": {
+          "type": "string"
+      }
+    },
+    "maxProperties": 2,
+    "aditionalProperties": false
+
+},    
 "condicion_adquisicion": {
 "description": "Define la condición de adquisición de la discapacidad",
 "required": [

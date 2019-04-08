@@ -141,6 +141,14 @@ if ($student_code != 0) {
         $record->health_data = "0";
     }
 
+     //Get academics data of student
+     if(get_exist_academics_data($ases_student->id)){
+        $record->academics_data      = "1";
+        $record->academics_data_json = json_encode(get_academics_data($ases_student->id));
+    }else{
+        $record->academics_data = "0";
+    }
+
     //Get aditional academics existing data
 
     $aditional_academics_data = get_academics_data($ases_student->id);

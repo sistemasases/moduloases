@@ -361,19 +361,23 @@ define([
                     key_check_diagnostico, json_diagnostico,  key_tipo_disc, key_otra_disc,json_tipo_disc,  check_certificado, key_check_certificado, json_certificado, key_porcentaje_inv,
                     val_apoyo_institu, key_apoyo_institu, val_apoyo_tipo, key_apoyo_tipo, val_institu, key_institu, key_cond_adquisicion, json_condicion_adq, json_apoyo_institu,
                     json_dif_permanente, json_cond_salud, json_necesidad, json_factores_impacto, json_posibilidad, json_apoyo_cotidiano, json_transporte, 
-                    json_participa_asoc, json_actividades_otros;
+                    json_participa_asoc, json_actividades_otrosm, json_percepcion, key_percepcion_discapacidad = "", descripcion_percepcion;
                
                     //Variables de las opciones de varias respuestas
                     var key_func_dp, key_dif_dp, funcion_name, dificult_name, key_org_cs, key_cond_cs, organo_name, condicion_name,
                     key_nec_ns, key_sit_ns, key_factor_fi, factor_name, key_otro_factor_fi, otro_factor_name, key_contexto_fc, 
                     key_otro_factor_fc, factor_contexto_name, otro_factor_contexto_name, key_act_pa, actividad_name, posibilidad_name,
-                    key_apo_pa, key_apo_pa, tipo_apoyo_name, otra_actividad_key, otra_actividad_name ; 
+                    key_apo_pa, key_apo_pa, tipo_apoyo_name, otra_actividad_key, otra_actividad_name; 
 
                     let array_dif_perm = [], array_cond_salud = [], array_necesidades = [], array_factor_impacto = [], array_posibilidades=[];
 
                     var json_detalle_discapacidad;
 
-                
+                //Traer percepci+on de discapacidad
+                key_percepcion_discapacidad = $("#div_percepcion_estudiante").find(":input[type=radio]:checked").attr("id");
+                descripcion_percepcion      = $("#textarea_percepcion").val(); 
+
+                json_percepcion = {key_percepcion: key_percepcion_discapacidad, descripcion: descripcion_percepcion};
 
                 //Traer condicion de adquisicion
                 val_cond_adquisicion  = $("#cond_adquisicion").val();
@@ -689,7 +693,8 @@ define([
                 //Crear objeto JSON que representa el detalle de discapacidad
                         
                 json_detalle_discapacidad = 
-                {
+                {   
+                    percepcion_discapacidad:            json_percepcion,
                     condicion_adquisicion:              json_condicion_adq ,
                     diagnostico_discapacidad:           json_diagnostico,
                     tipo_discapacidad:                  json_tipo_disc,
@@ -1189,6 +1194,19 @@ define([
             for(i in json_bd){
 
                 switch(i){
+
+                    case "percepcion_discapacidad":
+                    key        = json_bd[i]['key_percepcion'];        
+                    val_input       = json_bd[i]['descripcion'];
+
+
+                    if(key != ""){
+                        $("#"+key).prop("checked", true);
+                        $("#"+key_input).val(val_input);
+                    }
+                   
+
+                    break;
 
                     case "condicion_adquisicion":
                     

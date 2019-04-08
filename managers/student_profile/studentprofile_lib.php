@@ -186,6 +186,19 @@ function get_academics_data($id_ases){
 }
 
 
+   /**
+ * Gets true or false if register academics_data exist
+ *
+ * @see get_exist_academics_data()
+ * @return boolean
+ */
+ 
+function get_exist_academics_data($id_ases_user){
+     
+    global $DB;
+    
+    return $DB->record_exists('talentospilos_academics_data',array('id_ases_user'=> $id_ases_user));
+}
 
    /**
  * Gets true or false if register health_data exist

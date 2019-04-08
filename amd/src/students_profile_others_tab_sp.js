@@ -73,6 +73,7 @@ define([
                 }
             });
 
+
             if ($("#input_health_saved").val() == "0") {
                 $("#save_health_data").parent().show();
             }
@@ -217,7 +218,17 @@ define([
 
             //Aditional academics data
 
-            $("#edit_academics_data").click(function () {
+
+            if ($("#input_academics_saved").val() == "0") {
+                $("#save_academics_data").parent().show();
+            }
+            if ($("#input_academics_saved").val() == "1") {
+                $("#save_academics_data").parent().hide();
+                $("#edit_academics_data").parent().show();
+                //showSavedEconomicsData();-----------------------------------------------------------
+            }
+
+            $("#save_academics_data").click(function () {
 
                 //Validar las respuestas obtenidas
                 let respuesta = validateAcademicsData();
@@ -235,6 +246,32 @@ define([
                     json_academics_data = JSON.stringify(json_academics_data);
 
                     saveAcademicsData(json_academics_data, id_ases);
+
+
+                }
+
+
+            });
+
+
+
+            $("#edit_academics_data").click(function () {
+
+                //Validar las respuestas obtenidas
+                let respuesta = validateAcademicsData();
+
+
+                if (respuesta.status == "error") {
+                    swal(respuesta.title,
+                        respuesta.msg,
+                        respuesta.status);
+                } else {
+                    //Si no hay campos obligatorios vacíos, capturar datos
+
+                    let json_health_data = getAcademicsData();
+                    json_health_data = JSON.stringify(json_health_data);
+
+                    editAcademicsData(json_health_data, id_ases);
 
 
                 }
@@ -263,7 +300,7 @@ define([
 
             //DATOS ACADÉMICOS ADICIONALES FUNCIONES
 
-            function saveAcademicsData(json_data, ases_id) {
+            function editAcademicsData(json_data, ases_id) {
                 let json_prev = $("#input_json_academics_saved").val();
                 $.ajax({
                     type: "POST",
@@ -285,9 +322,61 @@ define([
                                 type: msg.status
                             },
                             function () {
+                                $("html, body").animate({ scrollTop: 820 }, 'slow');
+                                $("#input_academics_saved").attr("value", "1");
+                                $("#input_json_academics_saved").attr("value", json_data);
+                            }
+
+
+                        );
+
+
+                        //$("#un_input").attr("value", json_data);
+
+
+                    },
+                    dataType: "json",
+                    cache: "false",
+                    error: function (msg) {
+                        swal(
+                            msg.title,
+                            msg.msg,
+                            msg.status
+                        );
+
+                    },
+                });
+
+
+            }
+
+            function saveAcademicsData(json_data, ases_id) {
+                let json_prev = $("#input_json_academics_saved").val();
+                $.ajax({
+                    type: "POST",
+                    data: {
+                        func: 'save_academics_data',
+                        json: json_data,
+                        json_prev: json_prev,
+                        instanceid: getIdinstancia(),
+                        courseid: getIdcourse(),
+                        ases: ases_id
+                    },
+                    url: "../managers/student_profile/others_tab_api.php",
+                    success: function (msg) {
+
+                        swal(
+                            {
+                                title: msg.title,
+                                text: msg.msg,
+                                type: msg.status
+                            },
+                            function () {
                                 $("html, body").animate({ scrollTop: 700 }, 'slow');
-                                $("#input_economics_saved").attr("value", "1");
-                                $("#input_json_economics_saved").attr("value", json_data);
+                                $("#save_academics_data").parent().hide();
+                                $("#edit_academics_data").parent().show();
+                                $("#input_academics_saved").attr("value", "1");
+                                $("#input_json_academics_saved").attr("value", json_data);
                             }
 
 

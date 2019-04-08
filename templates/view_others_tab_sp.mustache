@@ -532,8 +532,9 @@
                                                 <div class="row row_academics">
 
                                                         <label for="lb_total_time" class="col-xs-4 col-sm-4 col-md-4 col-lg-4 label_fields_discapacity_tab">Créditos totales:</label>
-                                                        <input required class=" col-xs-5 col-sm-5 col-md-5 col-lg-5 input_fields_discapacity_tab input-discapacity" min="0"  max ="999" type="number" placeholder="Créditos totales de titulación"
-                                                                id="total_time" value="{{total_time}}" />
+                                                        <input required class=" col-xs-5 col-sm-5 col-md-5 col-lg-5 input_fields_discapacity_tab input-discapacity" min="0" max="999" type="number"
+                                                                placeholder="Créditos totales de titulación" id="total_time" value="{{total_time}}"
+                                                        />
 
                                                 </div>
 
@@ -561,21 +562,19 @@
 
                                         <label for="lb_titulo" class="col-xs-2 col-sm-2 col-md-2 col-lg-2 label_fields_discapacity_tab4">Título académico obtenido:</label>
                                         <input required class=" col-xs-6 col-sm-6 col-md-6 col-lg-6 input_fields_discapacity_tab input-discapacity" type="text" placeholder="Título académico obtenido en la anterior institución"
-                                                id="titulo_academico" value="{{previous_academic_title}}"/>
+                                                id="titulo_academico" value="{{previous_academic_title}}" />
 
                                 </div>
-      
+
                                 <div class="row row_academics">
 
-                                        {{#save_aditional_academics_tab_sp}}
+                                        {{#add_institution_academics_tab_sp}}
 
                                         <div class=" row " name="div_add_institucion" id="div_add_institucion" style="float: right;">
                                                 <input class="btn btn-block" type="button" id="bt_add_institucion" name="bt_add_institucion" title="Agregar institución" />
                                         </div>
-                                        {{/save_aditional_academics_tab_sp}}
-                                        <div class=" row " name="div_add_institucion" id="div_add_institucion" style="float: right;">
-                                                        <input class="btn btn-block" type="button" id="bt_add_institucion" name="bt_add_institucion" title="Agregar institución" />
-                                                </div>
+                                        {{/add_institution_academics_tab_sp}}
+
                                         <h3 class="h-sections-general-tab h_others">Resalte aspectos positivos que favorecieron el desempeño, avance y graduación.
                                         </h3>
 
@@ -607,24 +606,28 @@
 
                         <div class="row_academics row" id="academics_observaciones">
 
-                                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 ">
+                                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 ">
 
                                         <div class="row" style="padding-top:5px;">
                                                 <label for="lb_academics_observaciones" class="col-xs-3 col-sm-3 col-md-3 col-lg-3  label_fields_discapacity_tab">Observaciones</label>
                                                 <textarea required rows="10" cols="30" class="academics_data_textarea" id="textarea_academics_observaciones" placeholder="Observaciones adicionales">{{academics_observations}}</textarea>
                                         </div>
-                                        </div>
+                                </div>
 
-                                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
 
                                         <div class="row" style="padding-top:5px;">
                                                 <label for="lb_academics_dificultades" class="col-xs-3 col-sm-3 col-md-3 col-lg-3 label_fields_discapacity_tab">Dificultades</label>
                                                 <textarea required rows="10" cols="30" class=" academics_data_textarea" id="textarea_academics_dificultades" placeholder="Dificultades que presentó">{{academics_dificults}}</textarea>
-                                       
+
                                         </div>
-                                                      
-                                        </div>
-                                    
+
+                                </div>
+
+                        </div>
+
+                        <div hidden>
+                                <input disabled class="input_fields_discapacity_tab" type="text" id="input_academics_saved" value="{{academics_data}}" />
                         </div>
 
                         <div hidden>
@@ -632,14 +635,16 @@
                         </div>
 
                         <div class="row row_academics">
-                                {{#save_aditional_academics_tab_sp}}
+                                {{#edit_aditional_academics_tab_sp}}
                                 <div class="row row_buttons" hidden>
                                         <button type="button" class="btn btn-danger col-xs-12 col-sm-12 col-md-12 col-lg-12" id="edit_academics_data">Editar</button>
                                 </div>
-                                {{/save_aditional_academics_tab_sp}}
-                                <div class="row row_buttons" style="padding-right: 25px;">
-                                        <button type="button" class="btn btn-danger col-xs-12 col-sm-12 col-md-12 col-lg-12" id="edit_academics_data">Editar</button>
+                                {{/edit_aditional_academics_tab_sp}} {{#save_aditional_academics_tab_sp}}
+                                <div class="row row_buttons" hidden>
+                                        <button type="button" class="btn btn-danger col-xs-12 col-sm-12 col-md-12 col-lg-12" id="save_academics_data">Guardar</button>
                                 </div>
+                                {{/save_aditional_academics_tab_sp}}
+
                         </div>
 
 

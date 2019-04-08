@@ -486,84 +486,176 @@ if(isset($_POST['func'])){
 
     } 
     
-    else if ($_POST['func'] == 'edit_academics_data') {
+    else if ($_POST['func'] == 'save_academics_data') {
 
-        //Actualizar registro en BD. 
+        $id_ases = $_POST['ases'];
+
+        $register_academics_data                   = new  stdClass();
+   
+
+         $data = json_decode($_POST['json']);
+
+         //RECORD DATA
+
+        $register_academics_data->id_ases_user              = $id_ases;
+        $register_academics_data->resolucion_programa       = $data->current_resolution;
+        $register_academics_data->creditos_totales          = $data->total_time;
+        $register_academics_data->otras_instituciones       = json_encode($data->others_institutions);
+        $register_academics_data->dificultades              = $data->academics_dificults;
+        $register_academics_data->observaciones             = $data->academics_observations;
+        $register_academics_data->titulo_academico_colegio  = $data->previous_academic_title;
+
+          //General  data to logs
+          $moodle_user   =  $USER->id;
+          $data_prev     =  $_POST['json_prev'];
+          $data_env      =  $_POST['json'];
+          $eventoid      =  getIdEventLogs('save_academics_data_sp');
+          $navegador     =  $_SERVER['HTTP_USER_AGENT'];
+          $url           =  $_SERVER['HTTP_REFERER'];
+          $instanceid    =  $_POST['instanceid'];
+          $courseid      =  $_POST['courseid'];
+
+        $result =  save_academics_data($register_academics_data);
+
+        if($result){
+            $msg->title = "Éxito";
+            $msg->status = "success";
+            $msg->msg = "La información se ha almacenado correctamente.";
+
+             //Particular data to logs
+             $data_alm    = $data_env;
+
+             //Object to log
+
+             $new_log = new stdClass();
+             $new_log->id_moodle_user     = $moodle_user;
+             $new_log->datos_previos      = $data_prev;
+             $new_log->datos_enviados     = $data_env;
+             $new_log->datos_almacenados  = $data_alm;
+             $new_log->id_evento          = $eventoid->id;
+             $new_log->url                = $url;
+             $new_log->id_ases_user       = $id_ases;
+             $new_log->navegador          = $navegador;
+             $new_log->title_retorno      = $msg->title;
+             $new_log->msg_retorno        = $msg->status;
+             $new_log->status_retorno     = $msg->msg;
+             $new_log->instanceid         = $instanceid;
+             $new_log->courseid           = $courseid;
+
+             $DB->insert_record('talentospilos_general_logs', $new_log, $returnid=false, $bulk=false);
+
+           echo json_encode($msg);
+           
+       }else{
+           $msg->title = "Error";
+           $msg->msg = "No se ha guardado correctamente.";
+           $msg->status = "error";
+
+             //Particular data to logs
+             $data_alm    = "";
+
+             //Object to log
+
+             $new_log = new stdClass();
+             $new_log->id_moodle_user     = $moodle_user;
+             $new_log->datos_previos      = $data_prev;
+             $new_log->datos_enviados     = $data_env;
+             $new_log->datos_almacenados  = $data_alm;
+             $new_log->id_evento          = $eventoid->id;
+             $new_log->url                = $url;
+             $new_log->id_ases_user       = $id_ases;
+             $new_log->navegador          = $navegador;
+             $new_log->title_retorno      = $msg->title;
+             $new_log->msg_retorno        = $msg->status;
+             $new_log->status_retorno     = $msg->msg;
+             $new_log->instanceid         = $instanceid;
+             $new_log->courseid           = $courseid;
+
+             $DB->insert_record('talentospilos_general_logs', $new_log, $returnid=false, $bulk=false);
+
+           echo json_encode($msg);
+       }
 
 
-            $id_ases = $_POST['ases'];
-            $data = $_POST['json'];
+}  else if ($_POST['func'] == 'edit_academics_data') {
 
-            //General  data to logs
-            $moodle_user   =  $USER->id;
-            $data_prev     =  $_POST['json_prev'];
-            $data_env      =  $data;
-            $eventoid      =  getIdEventLogs('edit_salud_tab_sp');
-            $navegador     =  $_SERVER['HTTP_USER_AGENT'];
-            $url           =  $_SERVER['HTTP_REFERER'];
-            $instanceid    =  $_POST['instanceid'];
-            $courseid      =  $_POST['courseid'];
+    //Actualizar registro en BD. 
 
-            $result =       update_health_data($data, $id_ases);
-            if($result){
-                $msg->title = "Éxito";
-                $msg->status = "success";
-               $msg->msg = "La información se ha actualizado correctamente.";
 
-                //Particular data to logs
-                $data_alm    = $data_env;
+        $id_ases = $_POST['ases'];
+        $data = $_POST['json'];
 
-                //Object to log
- 
-                $new_log = new stdClass();
-                $new_log->id_moodle_user     = $moodle_user;
-                $new_log->datos_previos      = $data_prev;
-                $new_log->datos_enviados     = $data_env;
-                $new_log->datos_almacenados  = $data_alm;
-                $new_log->id_evento          = $eventoid->id;
-                $new_log->url                = $url;
-                $new_log->id_ases_user       = $id_ases;
-                $new_log->navegador          = $navegador;
-                $new_log->title_retorno      = $msg->title;
-                $new_log->msg_retorno        = $msg->status;
-                $new_log->status_retorno     = $msg->msg;
-                $new_log->instanceid         = $instanceid;
-                $new_log->courseid           = $courseid;
- 
-                $DB->insert_record('talentospilos_general_logs', $new_log, $returnid=false, $bulk=false);
-               echo json_encode($msg);
-               
-           }else{
-               $msg->title = "Error";
-               $msg->msg = "No se ha actualizado correctamente.";
-               $msg->status = "error";
+        //General  data to logs
+        $moodle_user   =  $USER->id;
+        $data_prev     =  $_POST['json_prev'];
+        $data_env      =  $data;
+        $eventoid      =  getIdEventLogs('edit_academics_data_sp');
+        $navegador     =  $_SERVER['HTTP_USER_AGENT'];
+        $url           =  $_SERVER['HTTP_REFERER'];
+        $instanceid    =  $_POST['instanceid'];
+        $courseid      =  $_POST['courseid'];
 
-               //Particular data to logs
-               $data_alm    = "";
+        $result =       update_academics_data($data, $id_ases);
+        if($result){
+            $msg->title = "Éxito";
+            $msg->status = "success";
+           $msg->msg = "La información se ha actualizado correctamente.";
 
-               //Object to log
+            //Particular data to logs
+            $data_alm    = $data_env;
 
-               $new_log = new stdClass();
-               $new_log->id_moodle_user     = $moodle_user;
-               $new_log->datos_previos      = $data_prev;
-               $new_log->datos_enviados     = $data_env;
-               $new_log->datos_almacenados  = $data_alm;
-               $new_log->id_evento          = $eventoid->id;
-               $new_log->url                = $url;
-               $new_log->id_ases_user       = $id_ases;
-               $new_log->navegador          = $navegador;
-               $new_log->title_retorno      = $msg->title;
-               $new_log->msg_retorno        = $msg->status;
-               $new_log->status_retorno     = $msg->msg;
-               $new_log->instanceid         = $instanceid;
-               $new_log->courseid           = $courseid;
+            //Object to log
 
-               $DB->insert_record('talentospilos_general_logs', $new_log, $returnid=false, $bulk=false);
-               echo json_encode($msg);
-           }
- 
+            $new_log = new stdClass();
+            $new_log->id_moodle_user     = $moodle_user;
+            $new_log->datos_previos      = $data_prev;
+            $new_log->datos_enviados     = $data_env;
+            $new_log->datos_almacenados  = $data_alm;
+            $new_log->id_evento          = $eventoid->id;
+            $new_log->url                = $url;
+            $new_log->id_ases_user       = $id_ases;
+            $new_log->navegador          = $navegador;
+            $new_log->title_retorno      = $msg->title;
+            $new_log->msg_retorno        = $msg->status;
+            $new_log->status_retorno     = $msg->msg;
+            $new_log->instanceid         = $instanceid;
+            $new_log->courseid           = $courseid;
 
-    } 
+            $DB->insert_record('talentospilos_general_logs', $new_log, $returnid=false, $bulk=false);
+           echo json_encode($msg);
+           
+       }else{
+           $msg->title = "Error";
+           $msg->msg = "No se ha actualizado correctamente.";
+           $msg->status = "error";
+
+           //Particular data to logs
+           $data_alm    = "";
+
+           //Object to log
+
+           $new_log = new stdClass();
+           $new_log->id_moodle_user     = $moodle_user;
+           $new_log->datos_previos      = $data_prev;
+           $new_log->datos_enviados     = $data_env;
+           $new_log->datos_almacenados  = $data_alm;
+           $new_log->id_evento          = $eventoid->id;
+           $new_log->url                = $url;
+           $new_log->id_ases_user       = $id_ases;
+           $new_log->navegador          = $navegador;
+           $new_log->title_retorno      = $msg->title;
+           $new_log->msg_retorno        = $msg->status;
+           $new_log->status_retorno     = $msg->msg;
+           $new_log->instanceid         = $instanceid;
+           $new_log->courseid           = $courseid;
+
+           $DB->insert_record('talentospilos_general_logs', $new_log, $returnid=false, $bulk=false);
+           echo json_encode($msg);
+       }
+
+
+} 
+  
 
     else{
         $msg->title = "Error";
