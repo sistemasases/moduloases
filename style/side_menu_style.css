@@ -6,7 +6,6 @@
     background-color: #d51b23;
     left: -115px;
     margin-top: -10px;
-    
 }
 
 #menu_div li {
@@ -19,6 +18,7 @@
     text-align: center;
     padding: 14px 16px;
     text-decoration: none;
+    max-height: 48px;
 }
 
 #menu_div li a:hover {
