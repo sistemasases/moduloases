@@ -1,0 +1,42 @@
+.ases-comp-title-view{
+    box-shadow: 0 4px 2px -2px grey;
+    padding: 20px 15px 10px 15px;
+    width: 100%;
+    min-height: 64px;
+}
+
+.ases-comp-title-view > h2{
+    margin: 0 !important;
+    float: left;
+}
+
+.ases-comp-menu{
+    padding: 0px !important;
+}
+
+.ases-comp-menu ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #d51b23;
+    left: -115px;
+    margin-top: -10px;
+    
+}
+
+.ases-comp-menu ul li {
+    float: left;
+}
+
+.ases-comp-menu ul li a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+.ases-comp-menu ul li a:hover {
+    background-color: #b6161e;
+}
