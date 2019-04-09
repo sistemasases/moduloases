@@ -118,8 +118,8 @@
                     <div id="new_inc">\
                         <span><strong>Registro de nueva incidencia</strong></span>\
                         <hr style="margin:5px;">\
-                        <input id="inc_title" class="form-control" placeholder="Título corto" type="text">\
-                        <textarea id="inc_detail" class="form-control" name="" placeholder="Descripción detallada de la incidencia" cols="" rows="2"></textarea>\
+                        <input id="inc_title" class="form-control ases-form-control" placeholder="Título corto" type="text">\
+                        <textarea id="inc_detail" class="form-control ases-form-control" name="" placeholder="Descripción detallada de la incidencia" cols="" rows="2"></textarea>\
                         <a id="inc_registrar" href="javascript:void(0)">Registrar</a>\
                     </div>\
                     <hr style="margin-bottom:5px;margin-top:50px;">\
