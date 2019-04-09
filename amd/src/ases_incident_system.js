@@ -194,7 +194,7 @@
                                     }
 
                                     inc_list  += '\
-                                    <div class="inc_item col-xs-12 col-sm-12 col-md-12 col-lg-12">\
+                                    <div class="inc_item col-xs-12 col-sm-12 col-md-12 col-lg-12 ases-col-xs-12 ases-col-sm-12 ases-col-md-12 ases-col-lg-12">\
                                         <i class="status-icon glyphicon glyphicon-record ases-glyphicon ases-glyphicon-record" style="color:' + status_color[last_status.status] + '" title="' + last_status.status + '"></i>\
                                         '+ close_icon +'\
                                         <div class="item-title" data-id="' + element.id + '" data-title="' + title + '" data-detail="' + detail + '">#' + element.id + ' - ' + title + '</div>\

@@ -75,9 +75,6 @@ $coursenode->add_node($blocknode);
 $PAGE->requires->css('/blocks/ases/style/base_ases.css', true);
 $PAGE->requires->css('/blocks/ases/style/aaspect.min.css', true);
 $PAGE->requires->css('/blocks/ases/style/_view.component.css', true);
-
-$PAGE->requires->js_call_amd('block_ases/ases_incident_system', 'init');
-
 $output = $PAGE->get_renderer('block_ases');
 
 
