@@ -100,7 +100,7 @@
             <div \
                 id="ases_incident_system_box"\
                 title="Reporte de incidencias">\
-                <i id="inc_icon" class="glyphicon glyphicon-wrench"></i>\
+                <i id="inc_icon" class="glyphicon glyphicon-wrench ases-glyphicon ases-glyphicon-wrench"></i>\
                 <span id="inc_text"><strong>Incidencias</strong></span>\
             </div>\
             ';
@@ -108,9 +108,9 @@
             let div_incident_box = '\
             <div id="incident_box" >\
                 <div class="inc_header">\
-                    <i class="glyphicon glyphicon-wrench"></i>\
+                    <i class="glyphicon glyphicon-wrench ases-glyphicon ases-glyphicon-wrench"></i>\
                     <span><strong>Incidencias</strong></span>\
-                    <i id="close_incident_box" class="glyphicon glyphicon-remove"></i>\
+                    <i id="close_incident_box" class="glyphicon glyphicon-remove ases-glyphicon ases-glyphicon-remove"></i>\
                 </div>\
                 <div class="inc_body">\
                     <div id="prev_inc_selector">\
@@ -190,12 +190,12 @@
                                     let close_icon = '';
 
                                     if( last_status.status != "solved" ){
-                                        close_icon = '<i class="remove-icon glyphicon glyphicon-remove-sign" data-id="' + element.id + '" title="Eliminar"></i>';
+                                        close_icon = '<i class="remove-icon glyphicon glyphicon-remove-sign ases-glyphicon ases-glyphicon-remove-sign" data-id="' + element.id + '" title="Eliminar"></i>';
                                     }
 
                                     inc_list  += '\
                                     <div class="inc_item col-xs-12 col-sm-12 col-md-12 col-lg-12">\
-                                        <i class="status-icon glyphicon glyphicon-record" style="color:' + status_color[last_status.status] + '" title="' + last_status.status + '"></i>\
+                                        <i class="status-icon glyphicon glyphicon-record ases-glyphicon ases-glyphicon-record" style="color:' + status_color[last_status.status] + '" title="' + last_status.status + '"></i>\
                                         '+ close_icon +'\
                                         <div class="item-title" data-id="' + element.id + '" data-title="' + title + '" data-detail="' + detail + '">#' + element.id + ' - ' + title + '</div>\
                                     </div>\
