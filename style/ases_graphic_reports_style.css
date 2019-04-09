@@ -1,0 +1,12 @@
+#top_options{
+    text-align: center;
+}
+
+#status_fields{
+    text-align: center;
+}
+
+.checkbox{
+    display:inline-block !important;
+    margin: 1em 2em 0 1em;
+}

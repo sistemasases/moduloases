@@ -20,9 +20,11 @@
  *
  * @author     Iader E. García G.
  * @author     Jeison Cardona Gómez
+ * @author     Juan Pablo Castro
  * @package    block_ases
  * @copyright  2016 Iader E. García <iadergg@gmail.com>
  * @copyright  2019 Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
+ * @copyright  2019 Juan Pablo Castro <juan.castro.vasquez@correounivalle.edu.co>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -139,7 +141,48 @@ if ($student_code != 0) {
         $record->health_data = "0";
     }
 
+     //Get academics data of student
+     if(get_exist_academics_data($ases_student->id)){
+        $record->academics_data      = "1";
+        $record->academics_data_json = json_encode(get_academics_data($ases_student->id));
+    }else{
+        $record->academics_data = "0";
+    }
 
+    //Get aditional academics existing data
+
+    $aditional_academics_data = get_academics_data($ases_student->id);
+
+    $body_table_others_institutions = '';
+  
+      //Extraer json y decodificar datos de otras instituciones del estudiante
+      $objeto_json_institutions = json_decode($aditional_academics_data->otras_instituciones);
+
+      //Recorrer el objeto json (array) y contruir los tr y td de la tabla
+      foreach($objeto_json_institutions as $objeto){ 
+
+        $body_table_others_institutions .= "<tr><td> <input name='name_institucion' class='input_fields_general_tab'  type='text' value='$objeto->name_institution'/></td>
+        <td> <input name='nivel_academico_institucion' class='input_fields_general_tab'  type='text' value='$objeto->academic_level'/></td>
+        <td> <input name='apoyos_institucion' class='input_fields_general_tab'  type='text' value='$objeto->supports'/></td>
+        <td> <button type ='button' id='bt_delete_institucion' title='Eliminar institución' name='btn_delete_institucion' style='visibility:visible;'> </button></td> </tr>";
+    
+      }
+
+
+
+    $record->current_resolution         =$aditional_academics_data->resolucion_programa;
+    $record->total_time                 =$aditional_academics_data->creditos_totales;
+    $record->previous_academic_title    =$aditional_academics_data->titulo_academico_colegio;
+    $record->info_others_institutions   =$body_table_others_institutions;
+    $record->academics_observations     =$aditional_academics_data->observaciones;
+    $record->academics_dificults        =$aditional_academics_data->dificultades;
+    $record->academics_data_json        =json_encode($aditional_academics_data);
+
+    //Faculty name foreach academic program
+
+    $faculty_name = '';
+
+   
     $record->id_moodle = $id_user_moodle;
     $record->id_ases = $student_id;
     $record->email_moodle = $user_moodle->email_moodle;
@@ -152,9 +195,25 @@ if ($student_code != 0) {
             $program->nombre_sede = "<b>".$sede."</b>";
             $program->cod_univalle = "<b>".$cod_programa."</b>";
             $program->nombre_programa = "<b>".$nombre_programa."</b>";
+
+            $faculty_name .= $program->cod_univalle ."-" .$program->nombre_facultad .  "<br>";
+            $program_time .= $program->cod_univalle ."-" .$program->jornada  . "<br>";
+            $name_program = $program->nombre_programa."-".$program->cod_univalle;
             break;
+        }else {
+            $faculty_name .= $program->cod_univalle ."-" .$program->nombre_facultad .  "<br>";
+            $program_time .= $program->cod_univalle ."-" .$program->jornada  . "<br>";
         }
+
     }
+
+    $record->estamento = $ases_student->estamento;    
+    $record->colegio = $ases_student->colegio;   
+
+    $record->name_program = $name_program;
+    $record->faculty_name = $faculty_name;
+    $record->name_program_time = $program_time;
+    $record->name_current_semester = get_current_semester()->nombre;
     $record->academic_programs = $academic_programs;
     $record->student_cohorts = $student_cohorts;
 
@@ -195,10 +254,10 @@ if ($student_code != 0) {
       $personas = '';
       $pos = 1;
     
-        //Extraer json y decodificar
+        //Extraer json y decodificar datos de personas con quien vive
         $objeto_json = json_decode($ases_student->vive_con);
         //Recorrer el objeto json (array) y contruir los tr y td de la tabla
-        foreach($objeto_json as $objeto){
+        foreach($objeto_json as $objeto){ 
            $personas  .= "<tr> <td>  <input   name = 'name_person'class= 'input_fields_general_tab' readonly type='text' value='$objeto->name' /></td>
            <td><input name = 'parentesco_person'  class= 'input_fields_general_tab' readonly type='text' value='$objeto->parentesco' /></td> <td>
            <button type = 'button' class='bt_delete_person' title='Eliminar persona' name  = 'btn_delete_person' style= 'visibility:hidden;' value='$pos'></button></td></tr>";
@@ -287,32 +346,54 @@ if ($student_code != 0) {
 
 
      //TRAE MUNICIPIOS
-     $municipios= get_municipios();
-     $options_municipios = '';
+    $municipios= get_municipios();
+    $municipio_student = $ases_student->id_ciudad_res;
+
+    $options_municipios = '';
+
+    $options_municipios .= "<optgroup label='Populares'> <option value='1'>NO DEFINIDO</option> </optgroup>" ;   
+
+    foreach($municipios as $municipio){
+        $key = key($municipios);
+        $options_municipios .= "<optgroup label = '$key'>";
+
+        foreach($municipio as $mun){
+            if($municipio_student == $mun->id){
+                $options_municipios .= "<option value='$mun->id' selected='selected'>$mun->nombre</option>";
+            }else{
+                $options_municipios .= "<option value='$mun->id'>$mun->nombre</option>";
+            }
+        }
+
+        next($municipios);
+
+        $options_municipios .= "</optgroup>";   
+    }
+    //  $options_municipios = '';
  
-     $municipio_student = $ases_student->id_ciudad_res;
-     //Buscar la posición del municipio CALI
-     $i=0;
-     foreach($municipios as $mun){
-         if($mun->nombre=="CALI"){
-         $posp=$i;
-         $options_municipios .= "<optgroup label='Populares'> <option value='$mun->id'>$mun->nombre</option> </optgroup>" ;   
-         break; }
-         $i++;
-     }
+    //  $municipio_student = $ases_student->id_ciudad_res;
+    //  //Buscar la posición del municipio CALI
+    //  $i=0;
+    //  foreach($municipios as $mun){
+    //      if($mun->nombre=="CALI"){
+    //      $posp=$i;
+    //      $options_municipios .= "<optgroup label='Populares'> <option value='$mun->id'>$mun->nombre</option> </optgroup>" ;   
+    //      break; }
+    //      $i++;
+    //  }
  
      //Eliminar municipio CALI puesto al inicio
-     array_splice($municipios,$posp,1);
+    //  array_splice($municipios,$posp,1);
     
-     $options_municipios .= "<optgroup label = 'Otros'>";
-     foreach($municipios as $mun){
-         if($municipio_student == $mun->id){
-             $options_municipios .= "<option value='$mun->id' selected='selected'>$mun->nombre</option>";
-         }else{
-             $options_municipios .= "<option value='$mun->id'>$mun->nombre</option>";
-         }
-     }
-     $options_municipios .= "</optgroup>";   
+    //  $options_municipios .= "<optgroup label = 'Otros'>";
+    //  foreach($municipios as $mun){
+    //      if($municipio_student == $mun->id){
+    //          $options_municipios .= "<option value='$mun->id' selected='selected'>$mun->nombre</option>";
+    //      }else{
+    //          $options_municipios .= "<option value='$mun->id'>$mun->nombre</option>";
+    //      }
+    //  }
+    //  $options_municipios .= "</optgroup>";   
  
      $record->options_municipio_act = $options_municipios;
 
@@ -1598,6 +1679,7 @@ $PAGE->requires->css('/blocks/ases/js/select2/css/select2.css', true);
 $PAGE->requires->css('/blocks/ases/style/side_menu_style.css', true);
 $PAGE->requires->css('/blocks/ases/style/student_profile.css', true);
 $PAGE->requires->css('/blocks/ases/style/discapacity_tab.css', true);
+$PAGE->requires->css('/blocks/ases/style/others_tab.css', true);
 $PAGE->requires->css('/blocks/ases/style/switch.css', true);
 $PAGE->requires->css('/blocks/ases/style/fontawesome550.min.css', true);
 //Pendiente para cambiar el idioma del nombre del archivo junto con la estructura de
@@ -1611,7 +1693,7 @@ $PAGE->requires->js_call_amd('block_ases/student_profile_main', 'equalize');
 $PAGE->requires->js_call_amd('block_ases/geographic_main', 'init');
 $PAGE->requires->js_call_amd('block_ases/dphpforms_form_renderer', 'init');
 $PAGE->requires->js_call_amd('block_ases/dphpforms_form_discapacity', 'init');
-$PAGE->requires->js_call_amd('block_ases/dphpforms_form_others_sp', 'init');
+$PAGE->requires->js_call_amd('block_ases/students_profile_others_tab_sp', 'init');
 $PAGE->requires->js_call_amd('block_ases/academic_profile_main', 'init');
 
 $output = $PAGE->get_renderer('block_ases');
