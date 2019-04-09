@@ -58,7 +58,7 @@ $url = new moodle_url("/blocks/ases/view/dashboard.php", array('courseid' => $co
 
 $rol = lib_get_rol_name_ases($USER->id, $instanceid);
 $menu_option = create_menu_options($USER->id, $instanceid, $courseid);
-$record->menu = $menu_option;
+$record->view_menu = $menu_option;
 $record->view_title = "Estado";
 
 $PAGE->set_context($contextcourse);
