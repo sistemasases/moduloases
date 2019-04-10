@@ -41,7 +41,7 @@ body {
 
 .dropdown-content {
     display: none;
-    position: fixed;
+    position: absolute;
     background-color: #d51b23;
     min-width: 160px;
     margin-top: 0px;
