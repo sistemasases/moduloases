@@ -75,6 +75,7 @@ $coursenode->add_node($blocknode);
 $PAGE->requires->css('/blocks/ases/style/base_ases.css', true);
 $PAGE->requires->css('/blocks/ases/style/aaspect.min.css', true);
 $PAGE->requires->css('/blocks/ases/style/_view.component.css', true);
+$PAGE->requires->css('/blocks/ases/style/plugin_status.css', true);
 $output = $PAGE->get_renderer('block_ases');
 
 

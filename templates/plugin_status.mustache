@@ -2,7 +2,34 @@
     <div class="ases-container-fluid">
         {{> block_ases/_view.component}}
         <div class="ases-row">
-
+            <div class="ases-col-xs-12 ases-col-sm-12 ases-col-md-12 ases-col-lg-12">
+                <!--
+                        0:Limpieza
+                        1:Inicialización
+                        2:Carga Estuaidntes
+                        3:Otros
+                    -->
+                <div class="first-step step">
+                    <span>
+                        Limpieza
+                    </span>
+                </div>
+                <div class="step step-middle">
+                    <span>
+                        Inicialización
+                    </span>
+                </div>
+                <div class="step step-middle">
+                    <span>
+                        Carga Estuaidntes
+                    </span>
+                </div>
+                <div class="last-step step">
+                    <span>
+                        Otras cargas
+                    </span>
+                </div>
+            </div>
         </div>
     </div>
 {{/data}}
