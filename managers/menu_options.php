@@ -350,6 +350,16 @@ function create_menu_options($userid, $blockid, $courseid)
 
             }
 
+            if ($function == 'ases_graphic_reports') {
+                $url = new moodle_url("/blocks/ases/view/ases_graphic_reports.php", array(
+                    'courseid' => $courseid,
+                    'instanceid' => $blockid,
+                ));
+
+                $menu_options = '<li><a href= "' . $url . '"> Reportes Gráficos </a><li>';
+                $indexed['Reportes Gráficos'] = $menu_options;
+            }
+
 
         }
 

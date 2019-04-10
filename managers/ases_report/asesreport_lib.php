@@ -192,17 +192,25 @@ function getGraficPrograma($cohorte, $ases_status, $icetex_status, $program_stat
                         INNER JOIN {cohort} cohorte 
                             ON membprog.cohortid = cohorte.id
                         WHERE $condition) AS selected_cohort
-                        ON selected_cohort.id_ases_user = usuario.id_ases_user
+                        ON selected_cohort.id_ases_user = usuario.id_ases_user                       
 
                         ";
 
     }
        
-    $sql_query .= "GROUP BY programa.nombre";
+    $sql_query .= "GROUP BY programa.nombre
+                   ORDER BY count DESC";
         
-    $result = $DB->get_records_sql($sql_query);
+    $result_query = $DB->get_records_sql($sql_query);
 
-    return $result;
+    $result_to_return = array();
+
+    foreach($result_query as $result){
+
+        array_push($result_to_return, $result);
+    }
+
+    return $result_to_return;
 }
 
 /**

@@ -26,42 +26,43 @@ define(['jquery',
 ],
     
     function ($, jszip, pdfmake, dataTables, autoFill, buttons, html5, flash, print, bootstrap, sweetalert, jqueryui, select2, Chart, loading_indicator, chartjs_plugin_datalabels) {
-        var radar_chart;
-        var table_programs;
+        
+        var graficas = {}        
         return {
             init: function () {
 
-                window.JSZip = jszip;        
+                window.JSZip = jszip;                                                  
                 
-               
-                $("#list-students-status-panel").on('click', function(){
-                    //updateTable();                    
-                    get_data_to_graphic();                   					
-                });   
-                
-                $("#save-btn").click(function() {
-                //     $("#canvas").get(0).toBlob(function(blob) {
-                //        saveAs(blob, "chart_1.png");
-                //    });
-                });  
-
-                $('#status_fields').on('change', function () {                    
-                    get_data_to_graphic();
+                $("#list-students-programa-panel").on('click', function(){                                   
+                    get_data_to_graphic("programa");
                 });
+
+                $('#status_fields').on('change', function () { 
+                        console.log($("#t_progsrama").length > 0);                        
+                        get_data_to_graphic("programa");               
+                });
+
+                                      
+
+                // $('#status_fields').on('change', function () {                    
+                //     for (i = 0; i < secciones.length; i++) { 
+                        
+                //         if($("#"+secciones[i]).attr("aria-expanded") == true){
+                //             get_data_to_graphic(secciones[i]);
+                //         }
+                //     }
+                // });
                
 
-                $('#conditions').on('change', function () {
-                    get_data_to_graphic();
-                });                                              
+                // $('#conditions').on('change', function () {
+                //     for (i = 0; i < secciones.length; i++) { 
+                        
+                //         if($("#"+secciones[i]).attr("aria-expanded") == true){
+                //             get_data_to_graphic(secciones[i]);
+                //         }
+                //     }
+                // });                      
                 
-
-            },
-            load_defaults_students: function (data) {
-
-                // $("#div_table").html('');
-                // $("#div_table").fadeIn(1000).append('<table id="tableResult" class="stripe row-border order-column" cellspacing="0" width="100%"><thead> </thead></table>');
-                // //console.log(data);
-                // $("#tableResult").DataTable(data);
 
             },
             get_id_instance: function () {
@@ -78,8 +79,9 @@ define(['jquery',
             
         }
 
-        function get_data_to_graphic(){
+        function get_data_to_graphic(type){
 
+            
             var ases_status = $("#ases_status").is(":checked") ? 1 : 0;
             var icetex_status = $("#icetex_status").is(":checked") ? 1 : 0;
             var program_status = $("#academic_program_status").is(":checked") ? 1 : 0;
@@ -87,43 +89,12 @@ define(['jquery',
             $.ajax({
 
                 type: "POST",
-                data: { type: 'carrera', cohort: $('#conditions').val(), ases_status: ases_status, icetex_status: icetex_status, program_status: program_status, instance_id: getIdinstancia() },
+                data: { type: type, cohort: $('#conditions').val(), ases_status: ases_status, icetex_status: icetex_status, program_status: program_status, instance_id: getIdinstancia() },
                 url: "../managers/ases_report/asesreport_graphics_processing.php",
-                success: function (msg) {
-                    var results = Object.keys(msg).map(function(k) { return msg[k] });                    
-                    var programas = []; 
-                    var cantidades = [];   
-                    var nombrePrograma ='';                                      
-                    
-                    results.sort(function(prog1, prog2,) {
-                        return prog2.count - prog1.count;
-                    });
-                    var data = [];
-                    for(var x in results){
-                        nombrePrograma = results[x].nombre;
-                        cantidadPrograma = results[x].count;
+                success: function (msg) {                                   
 
-                        nombrePrograma = results[x].nombre;
-                        cantidadPrograma = results[x].count;
-
-                        if(nombrePrograma !== 'PLAN TALENTOS PILOS'){                                                        
-
-                            if(nombrePrograma === 'LICENCIATURA EN EDUCACIÓN BÁSICA CON ÉNFASIS EN CIENCIAS NATURALES Y EDUCACIÓN AMBIENTAL'){
-                                nombrePrograma = 'LIC. EN EDU. BÁSICA ÉNFASIS EN CIENCIAS NATURALES Y EDU. AMBIENTAL'
-                            }
-
-                            if(nombrePrograma === 'LICENCIATURA EN EDUCACIÓN BÁSICA CON ÉNFASIS EN CIENCIAS SOCIALES'){
-                                nombrePrograma = 'LIC. EN EDU. BÁSICA CON ÉNFASIS EN CIENCIAS SOCIALES'
-                            }                                                                  
-                            programas.push(nombrePrograma);
-                            cantidades.push(cantidadPrograma);
-
-                            data.push({programa: nombrePrograma, cantidad: cantidadPrograma})
-                        }                     
-                    }                    
-
-                    creategraphicProgramas(programas, cantidades);
-                    createTable(data);
+                    creategraphicProgramas(msg.data);
+                    createTable(msg);
                     
                 },
                 dataType: "json",
@@ -134,55 +105,44 @@ define(['jquery',
             });
         }
 
-        function createTable(data){
+        function createTable(msg){
 
-            if (!table_programs){
+            // if(! ($("#t_programa").length > 0) ){
+            $("#div_table_programa").empty();
+            $("#div_table_programa").append('<table id="t_programa" class="table" cellspacing="0" width="100%"><thead> </thead></table>');
+            $("#t_programa").DataTable(msg); 
+        }                       
+                       
+                
 
-                table_programs = $("#table_programs").DataTable(
-                    { 
-                        "retrieve": true,                          
-                        "bsort" : false,
-                        "data" : data,                         
-                        "columns" : [
-                            {
-                                "title" : "Programa", 
-                                "name" : "programa", 
-                                "data" : "programa",
-                            },
-                            {
-                                "title" : "Cantidad de estudiantes", 
-                                "name" : "cantidad", 
-                                "data" : "cantidad"
-                            }],
-                        "dom":"lifrtpB",
-                        "buttons" : [
-                            {
-                                "extend" : "print",
-                                "text" : 'Imprimir'
-                            },{
-                                "extend" : "csv",
-                                "text" : 'CSV'
-                            },{
-                                "extend" : "excel",
-                                "text" : 'Excel',
-                                "className" : 'buttons-excel',
-                                "filename" : 'Export excel',
-                                "extension" : '.xls'
-                            }   
-                        ]                           
+        function creategraphicProgramas(data){
+
+            var programas = [], cantidades = [];
+            
+            for(var x in data){
+                nombrePrograma = data[x].nombre;
+                cantidadPrograma = data[x].count;
+
+                nombrePrograma = data[x].nombre;
+                cantidadPrograma = data[x].count;
+                                                                      
+                if(nombrePrograma !== 'PLAN TALENTOS PILOS'){                                                        
+
+                    if(nombrePrograma === 'LICENCIATURA EN EDUCACIÓN BÁSICA CON ÉNFASIS EN CIENCIAS NATURALES Y EDUCACIÓN AMBIENTAL'){
+                        nombrePrograma = 'LIC. EN EDU. BÁSICA ÉNFASIS EN CIENCIAS NATURALES Y EDU. AMBIENTAL'
                     }
-                );
-                table_programs.draw();
-            }            
-            else{
-                table_programs.clear();
-                table_programs.rows.add(data);
-                table_programs.draw();
-            }
 
-        }
+                    if(nombrePrograma === 'LICENCIATURA EN EDUCACIÓN BÁSICA CON ÉNFASIS EN CIENCIAS SOCIALES'){
+                        nombrePrograma = 'LIC. EN EDU. BÁSICA CON ÉNFASIS EN CIENCIAS SOCIALES'
+                    }                                                                  
+                                                                                    
+                    programas.push(nombrePrograma);
+                    cantidades.push(cantidadPrograma);
+                }                     
+            }                     
+                                
+        
 
-        function creategraphicProgramas(programas, cantidades){
             $('.chart-container').css('height', '1300px');
             $('.chart-container').css('width', '100%');
             
@@ -199,7 +159,7 @@ define(['jquery',
                 }
             }
 
-            var ctx = document.getElementById('grafica_tipos').getContext('2d');
+            var ctx = document.getElementById('grafica_programa').getContext('2d');
             var data = {
                 labels: programas,
                 datasets: [{
@@ -211,9 +171,9 @@ define(['jquery',
                 }]
             }        
             
-            if(!radar_chart){
+            if(!graficas["chart_programa"]){
 
-                radar_chart = new Chart(ctx, {               
+                graficas["chart_programa"] = new Chart(ctx, {               
                     type: 'horizontalBar',
                     data: data,
                     options: {
@@ -256,11 +216,92 @@ define(['jquery',
                 );
             }
             else{
-                radar_chart["data"] = data;
-                radar_chart.update();
+                graficas["chart_programa"]["data"] = data;
+                graficas["chart_programa"].update();
             }
 
-        } 
+        }             
+        
+
+        function createBarGraphic(tipo, labelsGrafica, cantidades){
+
+            $('.chart-container').css('height', '1300px');
+            $('.chart-container').css('width', '100%');
+            
+            var backgroundColors = [];
+            var borderColors = [];            
+            
+            for(var i=0; i<programas.length; i++){
+                if(i%2 == 0){
+                    backgroundColors.push('rgba(255, 99, 132, 0.2)');
+                    borderColors.push('rgba(255, 99, 132, 1)');
+                }else{
+                    backgroundColors.push('rgba(130, 130, 130, 0.2)');
+                    borderColors.push('rgba(130, 130, 130, 1)');
+                }
+            }
+
+            var ctx = document.getElementById("grafica_"+tipo).getContext('2d');
+            var data = {
+                labels: labelsGrafica,
+                datasets: [{
+                    label: "Cantidad de Estudiantes",
+                    data: cantidades,
+                    backgroundColor: backgroundColors,
+				    borderColor: borderColors,                   
+                    borderWidth: 3
+                }]
+            }        
+            
+            if(!graficas["chart_"+tipo]){
+
+                graficas["chart_"+tipo] = new Chart(ctx, {               
+                    type: 'horizontalBar',
+                    data: data,
+                    options: {
+                        // Elements options apply to all of the options unless overridden in a dataset
+                        // In this case, we are setting the border of each horizontal bar to be 2px wide
+                        elements: {
+                            rectangle: {
+                                borderWidth: 2,                            
+                            }
+                        },
+                        responsive: true,
+                        legend: {
+                            position: 'top',
+                            display: false
+                        },
+                        title: {
+                            display: true,
+                            text: 'No. de Estudiantes por'+tipo,
+                            fontSize: 30
+                        },
+                        scales: {
+                            yAxes: [{
+                                ticks: {
+                                    display: true
+                                },
+                                categoryPercentage: 1.0,
+                                barPercentage: 1.0
+                            }]                       
+                        },
+                        maintainAspectRatio: false,
+                        plugins: {
+                            datalabels: {
+                               display: true,
+                               align: 'center',
+                               anchor: 'center'
+                            }
+                         }                    
+                    }
+                }
+                );
+            }
+            else{
+                graficas["chart_"+tipo]["data"] = data;
+                graficas["chart_"+tipo].update();
+            }
+        }
 
         //Actualización de la tabla 
         function updateTable(){
