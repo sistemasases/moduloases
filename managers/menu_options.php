@@ -376,33 +376,41 @@ function create_menu_options($userid, $blockid, $courseid)
         }
 
         //ORDENA
-        ksort($soc_ed_options);
-        foreach ($soc_ed_options as $value) {
-            $soc_ed_dropdown .= $value;
+        if ($admin_options > 0){
+            ksort($admin_options);
+            foreach ($admin_options as $value) {
+                $admin_dropdown .= $value;
+            }
+            $admin_dropdown .= $dropdown_close_tags;
+            $menu_return .= $admin_dropdown;
         }
-        $soc_ed_dropdown .= $dropdown_close_tags;
-        $menu_return .= $soc_ed_dropdown;
+        
+        if ($soc_ed_options > 0) {
+            ksort($soc_ed_options);
+            foreach ($soc_ed_options as $value) {
+                $soc_ed_dropdown .= $value;
+            }
+            $soc_ed_dropdown .= $dropdown_close_tags;
+            $menu_return .= $soc_ed_dropdown;
+        }
 
-        ksort($academic_options);
-        foreach ($academic_options as $value) {
-            $academic_dropdown .= $value;
+        if ($academic_options > 0) {
+            ksort($academic_options);
+            foreach ($academic_options as $value) {
+                $academic_dropdown .= $value;
+            }
+            $academic_dropdown .= $dropdown_close_tags;
+            $menu_return .= $academic_dropdown;
         }
-        $academic_dropdown .= $dropdown_close_tags;
-        $menu_return .= $academic_dropdown;
 
-        ksort($icetex_options);
-        foreach ($icetex_options as $value) {
-            $icetex_men_dropdown .= $value;
-        }
-        $icetex_men_dropdown .= $dropdown_close_tags;
-        $menu_return .= $icetex_men_dropdown;
-
-        ksort($admin_options);
-        foreach ($admin_options as $value) {
-            $admin_dropdown .= $value;
-        }
-        $admin_dropdown .= $dropdown_close_tags;
-        $menu_return .= $admin_dropdown;        
+        if ($icetex_options > 0) {
+            ksort($icetex_options);
+            foreach ($icetex_options as $value) {
+                $icetex_men_dropdown .= $value;
+            }
+            $icetex_men_dropdown .= $dropdown_close_tags;
+            $menu_return .= $icetex_men_dropdown;
+        }        
     }   
 
     return $menu_return;
