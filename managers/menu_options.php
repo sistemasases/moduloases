@@ -343,9 +343,7 @@ function create_menu_options($userid, $blockid, $courseid)
                     'instanceid' => $blockid,
                 ));
 
-                $menu_options = '<li><a href= "' . $url . '">Reporte discapacidad e inclusión<span class="badge badge-secondary">New</span> </a><li>';
-
-                
+                $menu_options = '<li><a href= "' . $url . '">Reporte discapacidad e inclusión<span class="badge badge-secondary">New</span> </a><li>';                
                 $indexed['Reporte discapacidad e inclusión'] = $menu_options;
 
             }
@@ -376,7 +374,7 @@ function create_menu_options($userid, $blockid, $courseid)
         }
 
         //ORDENA
-        if ($admin_options > 0){
+        if (sizeof($admin_options) > 0){
             ksort($admin_options);
             foreach ($admin_options as $value) {
                 $admin_dropdown .= $value;
@@ -385,7 +383,7 @@ function create_menu_options($userid, $blockid, $courseid)
             $menu_return .= $admin_dropdown;
         }
         
-        if ($soc_ed_options > 0) {
+        if (sizeof($soc_ed_options) > 0) {
             ksort($soc_ed_options);
             foreach ($soc_ed_options as $value) {
                 $soc_ed_dropdown .= $value;
@@ -394,7 +392,7 @@ function create_menu_options($userid, $blockid, $courseid)
             $menu_return .= $soc_ed_dropdown;
         }
 
-        if ($academic_options > 0) {
+        if (sizeof($academic_options) > 0) {
             ksort($academic_options);
             foreach ($academic_options as $value) {
                 $academic_dropdown .= $value;
@@ -403,15 +401,15 @@ function create_menu_options($userid, $blockid, $courseid)
             $menu_return .= $academic_dropdown;
         }
 
-        if ($icetex_options > 0) {
+        if (sizeof($icetex_options) > 0) {
             ksort($icetex_options);
             foreach ($icetex_options as $value) {
                 $icetex_men_dropdown .= $value;
             }
             $icetex_men_dropdown .= $dropdown_close_tags;
             $menu_return .= $icetex_men_dropdown;
-        }        
-    }   
+        }
+    }
 
     return $menu_return;
 
