@@ -32,57 +32,10 @@ if(isset($_POST['type'])&&$_POST['type']=="programa"&&isset($_POST['cohort'])&&i
     $columns = array();
 
     array_push($columns, array("title"=>"Programa", "name"=>"nombre", "data"=>"nombre"));
-    array_push($columns, array("title"=>"Cantidad", "name"=>"count", "data"=>"count"));
+    array_push($columns, array("title"=>"Cantidad", "name"=>"cantidad", "data"=>"cantidad"));
 
 
-    $data = array(
-        "bsort" => false,
-        "columns" => $columns,
-        "data" => $result,
-        "language" => 
-         array(
-            "search"=> "Buscar:",
-            "oPaginate" => array(
-                "sFirst"=>    "Primero",
-                "sLast"=>     "Último",
-                "sNext"=>     "Siguiente",
-                "sPrevious"=> "Anterior"
-                ),
-            "sProcessing"=>     "Procesando...",
-            "sLengthMenu"=>     "Mostrar _MENU_ registros",
-            "sZeroRecords"=>    "No se encontraron resultados",
-            "sEmptyTable"=>     "Ningún dato disponible en esta tabla",
-            "sInfo"=>           "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
-            "sInfoEmpty"=>      "Mostrando registros del 0 al 0 de un total de 0 registros",
-            "sInfoFiltered"=>   "(filtrado de un total de _MAX_ registros)",
-            "sInfoPostFix"=>    "",
-            "sSearch"=>         "Buscar:",
-            "sUrl"=>            "",
-            "sInfoThousands"=>  ",",
-            "sLoadingRecords"=> "Cargando...",
-         ),
-        "order"=> array(0, "asc"),
-        "dom"=>'lifrtpB',
-
-        "buttons"=>array(
-            array(
-                "extend"=>'print',
-                "text"=>'Imprimir'
-            ),
-            array(
-                "extend"=>'csvHtml5',
-                "text"=>'CSV'
-            ),
-            array(
-                "extend" => "excel",
-                "text" => 'Excel',
-                "className" => 'buttons-excel',
-                "filename" => 'Export excel',
-                "extension" => '.xls'
-            )
-        )
-
-    );    
+    $data = get_general_table_graphic($columns, $result);
 
     echo json_encode($data);
     

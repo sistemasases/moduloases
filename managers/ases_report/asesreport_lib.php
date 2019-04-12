@@ -120,7 +120,7 @@ function getGraficAge($cohorte){
 function getGraficPrograma($cohorte, $ases_status, $icetex_status, $program_status, $instance_id){
     global $DB;
     
-    $sql_query = "SELECT programa.nombre, COUNT(usuario.id)
+    $sql_query = "SELECT programa.nombre, COUNT(usuario.id) AS cantidad
                     FROM {talentospilos_user_extended} AS usuario
                     INNER JOIN {talentospilos_programa} AS programa 
                     ON usuario.id_academic_program = programa.id 
@@ -199,7 +199,7 @@ function getGraficPrograma($cohorte, $ases_status, $icetex_status, $program_stat
     }
        
     $sql_query .= "GROUP BY programa.nombre
-                   ORDER BY count DESC";
+                   ORDER BY cantidad DESC";
         
     $result_query = $DB->get_records_sql($sql_query);
 
@@ -1379,4 +1379,65 @@ function get_icetex_states(){
 
 //     return $result;
 // }
+
+/**
+ * Función que retorna las propiedades de una tabla para la sección de reportes grágicos
+ * @return Array
+ * 
+ */
+
+ function get_general_table_graphic($columns, $data){
+    $data = array(
+        "bsort" => false,
+        "columns" => $columns,
+        "data" => $data,
+        "language" => 
+         array(
+            "search"=> "Buscar:",
+            "oPaginate" => array(
+                "sFirst"=>    "Primero",
+                "sLast"=>     "Último",
+                "sNext"=>     "Siguiente",
+                "sPrevious"=> "Anterior"
+                ),
+            "sProcessing"=>     "Procesando...",
+            "sLengthMenu"=>     "Mostrar _MENU_ registros",
+            "sZeroRecords"=>    "No se encontraron resultados",
+            "sEmptyTable"=>     "Ningún dato disponible en esta tabla",
+            "sInfo"=>           "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+            "sInfoEmpty"=>      "Mostrando registros del 0 al 0 de un total de 0 registros",
+            "sInfoFiltered"=>   "(filtrado de un total de _MAX_ registros)",
+            "sInfoPostFix"=>    "",
+            "sSearch"=>         "Buscar:",
+            "sUrl"=>            "",
+            "sInfoThousands"=>  ",",
+            "sLoadingRecords"=> "Cargando...",
+         ),
+        "order"=> array(0, "asc"),
+        "dom"=>'lifrtpB',
+
+        "buttons"=>array(
+            array(
+                "extend"=>'print',
+                "text"=>'Imprimir'
+            ),
+            array(
+                "extend"=>'csvHtml5',
+                "text"=>'CSV'
+            ),
+            array(
+                "extend" => "excel",
+                "text" => 'Excel',
+                "className" => 'buttons-excel',
+                "filename" => 'Export excel',
+                "extension" => '.xls'
+            )
+        )
+
+    );
+
+    return $data;
+
+ }
+
 
