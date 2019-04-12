@@ -31,36 +31,36 @@ define(['jquery',
         return {
             init: function () {
 
-                window.JSZip = jszip;                                                  
+                window.JSZip = jszip;  
+                const secciones = ["programa", "facultad"]                                                
                 
                 $("#list-students-programa-panel").on('click', function(){                                   
                     getDataGraphicTable("programa");
                 });
 
-                $('#status_fields').on('change', function () { 
-                    console.log($("#t_progsrama").length > 0);                        
-                    getDataGraphicTable("programa");               
-                });
-                                      
+                $("#list-students-facultad-panel").on('click', function(){
+                    getDataGraphicTable("facultad");
+                });                                       
+                
 
-                // $('#status_fields').on('change', function () {                    
-                //     for (i = 0; i < secciones.length; i++) { 
+                $('#status_fields').on('change', function () {                    
+                    for (i = 0; i < secciones.length; i++) { 
                         
-                //         if($("#"+secciones[i]).attr("aria-expanded") == true){
-                //             get_data_to_graphic(secciones[i]);
-                //         }
-                //     }
-                // });
+                        if($("#"+secciones[i]).length > 0){
+                            getDataGraphicTable(secciones[i]);
+                        }
+                    }
+                });
                
 
-                // $('#conditions').on('change', function () {
-                //     for (i = 0; i < secciones.length; i++) { 
+                $('#conditions').on('change', function () {
+                    for (i = 0; i < secciones.length; i++) { 
                         
-                //         if($("#"+secciones[i]).attr("aria-expanded") == true){
-                //             get_data_to_graphic(secciones[i]);
-                //         }
-                //     }
-                // });                      
+                        if($("#"+secciones[i]).length > 0){
+                            getDataGraphicTable(secciones[i]);
+                        }
+                    }
+                });                      
                 
 
             },
@@ -91,9 +91,16 @@ define(['jquery',
                 url: "../managers/ases_report/asesreport_graphics_processing.php",
                 success: function (msg) {                                   
 
-                    createTable(msg);
-                    createBarGraphic(type, msg.data);
-                    
+                    createTable(type, msg);
+                    //createBarGraphic(type, msg.data);
+                    switch(type){
+                        case 'programa':
+                            createBarGraphic(type, msg.data);
+                            break;
+                        case 'facultad':
+                            createPieDoughnutGraphic(type, msg.data, 'doughnut');
+                            break;
+                    }                   
                 },
                 dataType: "json",
                 cache: false,
@@ -103,10 +110,10 @@ define(['jquery',
             });
         }
 
-        function createTable(msg){
-            $("#div_table_programa").empty();
-            $("#div_table_programa").append('<table id="t_programa" class="table" cellspacing="0" width="100%"><thead> </thead></table>');
-            $("#t_programa").DataTable(msg); 
+        function createTable(type, msg){
+            $("#div_table_"+type).empty();
+            $("#div_table_"+type).append('<table id="t_' + type + '" class="table" cellspacing="0" width="100%"><thead> </thead></table>');
+            $("#t_"+type).DataTable(msg); 
         }                
         
         //Función que se encarga de crear una gráfica de barras teniendo como parámetros:
@@ -138,8 +145,8 @@ define(['jquery',
                 cantidades.push(cantidad);               
             }            
 
-            $('.chart-container').css('height', '1300px');
-            $('.chart-container').css('width', '100%');
+            $('.bar-chart-container').css('height', '1300px');
+            $('.bar-chart-container').css('width', '100%');
             
             //Se asignan los colores de las barras de la gráfica, alternando los colores
             var backgroundColors = [];
@@ -218,7 +225,79 @@ define(['jquery',
                 graficas["chart_"+type]["data"] = data;
                 graficas["chart_"+type].update();
             }
-        }     
+        }
+        
+        function createPieDoughnutGraphic(type, data, type_graphic){
+
+            console.log(data);
+            var atributos = Object.keys(data[0]);
+            var label = atributos[0];
+            var labelCantidad = atributos[1];            
+
+            var labelsGrafica = [], cantidades = [];
+            
+            for(var x in data){
+
+                nombre = data[x][label];
+                cantidad = data[x][labelCantidad];                  
+                                                                                    
+                labelsGrafica.push(nombre);
+                cantidades.push(cantidad);               
+            }  
+
+            var ctx = document.getElementById("grafica_"+type).getContext('2d');
+                var data = {
+                    labels: labelsGrafica,
+                    datasets: [{
+                        label: "Cantidad de Estudiantes",
+                        data: cantidades,
+                        backgroundColor: ["#F56476", "#BFD1E5", "#FFEECF", "#C9A690", "#DF928E", 
+                                          "#CECCCC", "#9191E9", "#99E1D9", "#FFA552", "#BFC8AD"],
+                        borderColor: ["#F56476", "#BFD1E5", "#FFEECF", "#C9A690", "#DF928E", 
+                        "#CECCCC", "#9191E9", "#99E1D9", "#FFA552", "#BFC8AD"],
+                        borderWidth: 1
+                        
+                    }]
+            }
+
+            if(!graficas["chart_"+type]){                
+            
+                var chart_options = {
+                    
+                    title: {
+                        display: true,
+                        text: 'Número de estudiantes por '+type,
+                        fontSize: 30
+                    },
+                    legend: {
+                        display: true
+                    },
+                    starAngle: 0,
+                    animation: {
+                        animateRotate: true,
+                        animateScale: true
+                    },
+                    showTooltips: true,
+                    showPercentages: true
+
+
+                };
+
+                Chart.defaults.polarArea.animation.animateScale = false;
+            
+                graficas["chart_"+type] = new Chart(ctx, {
+                    type: type_graphic,
+                    data: data,
+                    options: chart_options
+                });
+
+            }else{
+                graficas["chart_"+type]["data"] = data;
+                graficas["chart_"+type].update();
+
+            }     
+
+        } 
 
         function getIdinstancia() {
             var urlParameters = location.search.split('&');           

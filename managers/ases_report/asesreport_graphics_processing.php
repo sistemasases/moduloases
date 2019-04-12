@@ -34,6 +34,25 @@ if(isset($_POST['type'])&&$_POST['type']=="programa"&&isset($_POST['cohort'])&&i
     array_push($columns, array("title"=>"Programa", "name"=>"nombre", "data"=>"nombre"));
     array_push($columns, array("title"=>"Cantidad", "name"=>"cantidad", "data"=>"cantidad"));
 
+    $data = get_general_table_graphic($columns, $result);
+
+    echo json_encode($data);
+    
+} 
+
+if(isset($_POST['type'])&&$_POST['type']=="facultad"&&isset($_POST['cohort'])&&isset($_POST['ases_status'])&&isset($_POST['icetex_status'])&&isset($_POST['program_status'])&&isset($_POST['instance_id'])){
+    
+    $cohorte =  $_POST['cohort'];
+    $ases_status = $_POST['ases_status'];
+    $icetex_status = $_POST['icetex_status'];
+    $program_status = $_POST['program_status'];
+    $instance_id = $_POST['instance_id'];    
+    $result = getGraficFacultad($cohorte, $ases_status, $icetex_status, $program_status, $instance_id);
+
+    $columns = array();
+
+    array_push($columns, array("title"=>"Facultad", "name"=>"nombre", "data"=>"nombre"));
+    array_push($columns, array("title"=>"Cantidad", "name"=>"cantidad", "data"=>"cantidad"));
 
     $data = get_general_table_graphic($columns, $result);
 
@@ -41,14 +60,6 @@ if(isset($_POST['type'])&&$_POST['type']=="programa"&&isset($_POST['cohort'])&&i
     
 } 
 
-if(isset($_POST['type'])&&$_POST['type']=="facultad"&&isset($_POST['cohort'])){
-    
-    $cohorte =  $_POST['cohort'];
-    $data = getGraficFacultad($cohorte);
-
-    echo json_encode($data);
-    
-} 
 
 if(isset($_POST['type'])&&$_POST['type']=="estado"&&isset($_POST['cohort'])){
     
