@@ -32,7 +32,7 @@ define(['jquery',
             init: function () {
 
                 window.JSZip = jszip;  
-                const secciones = ["programa", "facultad"]                                                
+                const secciones = ["programa", "facultad", "sexo"]                                                
                 
                 $("#list-students-programa-panel").on('click', function(){                                   
                     getDataGraphicTable("programa");
@@ -41,6 +41,10 @@ define(['jquery',
                 $("#list-students-facultad-panel").on('click', function(){
                     getDataGraphicTable("facultad");
                 });                                       
+
+                $("#list-students-sexo-panel").on('click', function(){
+                    getDataGraphicTable("sexo");
+                }); 
                 
 
                 $('#status_fields').on('change', function () {                    
@@ -99,6 +103,9 @@ define(['jquery',
                             break;
                         case 'facultad':
                             createPieDoughnutGraphic(type, msg.data, 'doughnut');
+                            break;
+                        case 'sexo':
+                            createPieDoughnutGraphic(type, msg.data, 'pie');
                             break;
                     }                   
                 },
@@ -227,19 +234,15 @@ define(['jquery',
             }
         }
         
-        function createPieDoughnutGraphic(type, data, type_graphic){
-
-            console.log(data);
-            var atributos = Object.keys(data[0]);
-            var label = atributos[0];
-            var labelCantidad = atributos[1];            
+        function createPieDoughnutGraphic(type, data, type_graphic){                     
 
             var labelsGrafica = [], cantidades = [];
             
             for(var x in data){
 
-                nombre = data[x][label];
-                cantidad = data[x][labelCantidad];                  
+                nombre = data[x]["nombre"];
+                cantidad = data[x]["cantidad"];               
+                               
                                                                                     
                 labelsGrafica.push(nombre);
                 cantidades.push(cantidad);               
@@ -254,7 +257,7 @@ define(['jquery',
                         backgroundColor: ["#F56476", "#BFD1E5", "#FFEECF", "#C9A690", "#DF928E", 
                                           "#CECCCC", "#9191E9", "#99E1D9", "#FFA552", "#BFC8AD"],
                         borderColor: ["#F56476", "#BFD1E5", "#FFEECF", "#C9A690", "#DF928E", 
-                        "#CECCCC", "#9191E9", "#99E1D9", "#FFA552", "#BFC8AD"],
+                                    "#CECCCC", "#9191E9", "#99E1D9", "#FFA552", "#BFC8AD"],
                         borderWidth: 1
                         
                     }]
