@@ -76,6 +76,9 @@ function get_tracking_grupal_monitor_current_semester($monitor_id, $semester_id)
     $ano_semester  = $fecha_inicio['year'];
    
     $array_peer_trackings_dphpforms = dphpforms_find_records('seguimiento_grupal', 'seguimiento_grupal_id_creado_por', $monitor_id, 'DESC');
+
+    print_r($array_peer_trackings_dphpforms); die();
+
     $array_peer_trackings_dphpforms = json_decode($array_peer_trackings_dphpforms);
     $array_detail_peer_trackings_dphpforms = array();
     foreach ($array_peer_trackings_dphpforms->results as &$peer_trackings_dphpforms) {
