@@ -343,7 +343,12 @@ function user_management_assing_sistemas_role( $semester_id, $instance_id, $user
 
     $sql_query = "SELECT * 
     FROM {talentospilos_user_rol} 
-    WHERE id_rol ='$role->id' AND id_usuario='$user->id' AND id_semestre='$semester->id' AND id_instancia=$instance->id";
+    WHERE 
+        id_rol              = '$role->id' 
+        AND id_usuario      = '$user->id' 
+        AND id_semestre     = '$semester->id' 
+        AND id_instancia    = '$instance->id'
+        AND estado          = '1'";
     
     $exist = $DB->get_record_sql($sql_query);
 
