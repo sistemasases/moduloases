@@ -313,4 +313,53 @@ function user_management_get_crea_stud_mon_prac_prof( $ases_id, $created_by_id, 
     return $to_return;
 }
 
+/**
+ * Function that sets sistemas role to an instance.
+ * @author Jeison Cardona Gómez <jeison.cardona@correounivalle.edu.co>
+ * @param integer $semester_id 
+ * @param integer $instance_id
+ * @param string $username
+*/
+function user_management_assing_sistemas_role( $semester_id, $instance_id, $username = "sistemas1008" ){
+
+    glocal $DB;
+
+    $sql_user           = "SELECT * FROM {user} WHERE username='$username";
+    $sql_instance       = "SELECT * FROM {talentospilos_instancia} WHERE id_instancia = '$instance_id";
+    $sql_role_sistemas  = "SELECT * FROM {talentospilos_rol} where nombre_rol='sistemas'";
+    $sql_semester       = "SELECT * FROM {talentospilos_semestre}";
+
+    $user = $DB->get_record_sql( $sql_user );
+    ( $user ? null : return null );
+
+    $instance = $DB->get_record_sql( $sql_instance );
+    ( $instance ? null : return null );
+
+    $role = $DB->get_record_sql( $sql_role_sistemas );
+    ( $role ? null : return null );
+
+    $semester = $DB->get_record_sql( $sql_semester );
+    ( $semester ? null : return null );
+
+    $sql_query = "SELECT * 
+    FROM {talentospilos_user_rol} 
+    WHERE id_rol ='$role->id' AND id_usuario='$user->id' AND id_semestre='$semester->id' AND id_instancia=$instance->id";
+    
+    $exist = $DB->get_record_sql($sql_query);
+
+    if ( $exist )
+
+        $record->id_rol = $role->id;
+        $record->id_usuario = $user->id;
+        $record->estado = 1;
+        $record->id_semestre= $semester_id->id;
+        $record->id_instancia = $instance->id_instancia;
+        return $DB->insert_record('talentospilos_user_rol', $record, $returnid=true, $bulk=false);
+
+    )else{
+        return false;
+    }
+
+}
+
 ?>
