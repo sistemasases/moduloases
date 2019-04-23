@@ -72,7 +72,7 @@ $data = new stdClass;
 
 $current_semester = get_current_semester();
 $result = get_tracking_grupal_monitor_current_semester($USER->id,$current_semester->max);
-$render_trackings= render_monitor_groupal_trackings($result);
+$render_trackings = render_monitor_groupal_trackings($result);
 
 
 // Evaluates if user role has permissions assigned on this view
