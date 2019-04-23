@@ -42,38 +42,41 @@ function create_menu_options($userid, $blockid, $courseid)
     $menu_options = '';
     $dropdown_close_tags = '</div>
                             </div>';
-    $academic_dropdown = '<div class="dropdown">
+    $academic_dropdown = '<div id="academic_dropdown" class="dropdown">
                             <button class="dropbtn">Académico <i class="fa fa-caret-down"></i>
                             </button>
                             <div class="dropdown-content">';
     $academic_options = array();
-    $reports_dropdown = '<div class="dropdown">
+    $reports_dropdown = '<div id="reports_dropdown" class="dropdown">
                             <button class="dropbtn">Reportes <i class="fa fa-caret-down"></i>
                             </button>
                             <div class="dropdown-content">';
     $reports_options = array();
-    $icetex_men_dropdown = '<div class="dropdown">
+    $icetex_men_dropdown = '<div id="icetex_men_dropdown" class="dropdown">
                             <button class="dropbtn">ICETEX/MEN <i class="fa fa-caret-down"></i>
                             </button>
                             <div class="dropdown-content">';
     $icetex_options = array();                        
-    $soc_ed_dropdown = '<div class="dropdown">
+    $soc_ed_dropdown = '<div id="soc_ed_dropdown" class="dropdown">
                             <button class="dropbtn">Socioeducativo <i class="fa fa-caret-down"></i>
                             </button>
                             <div class="dropdown-content">';
     $soc_ed_options = array();                        
-    $admin_dropdown = '<div class="dropdown">
+    $admin_dropdown = '<div id="admin_dropdown" class="dropdown">
                             <button class="dropbtn">Sistemas <i class="fa fa-caret-down"></i>
                             </button>
-                            <div class="dropdown-content">';
+                            <div class="dropdown-content">'; 
     $admin_options = array();
+    $discapacity_dropdown = '<div id="discapacity_dropdown" class="dropdown">
+                                <button class="dropbtn">Discapacidad <i class="fa fa-caret-down"></i>
+                                </button>
+                                <div class="dropdown-content">';
+    $discapacity_options = array();
     $menu_return = "";
     $id_role = get_id_rol($userid, $blockid);
      
     if($id_role != ""){
-        $functions = get_functions_by_role_id($id_role);
-        
-        $indexed = array();
+        $functions = get_functions_by_role_id($id_role);        
 
         foreach ($functions as $function) {
 
@@ -127,7 +130,7 @@ function create_menu_options($userid, $blockid, $courseid)
                     'instanceid' => $blockid,
                 ));
 
-                $menu_options = '<li><a href= "' . $url . '"> Gestión de instancia </a><li>';
+                $menu_options = '<a id="menu_instance_configuration" href= "' . $url . '"> Gestión de instancia </a>';
                 $admin_options['Gestión de instancia'] = $menu_options;
 
             }
@@ -148,7 +151,7 @@ function create_menu_options($userid, $blockid, $courseid)
                     'instanceid' => $blockid,
                 ));
 
-                $menu_options = '<li><a href= "' . $url . '"> Carga masiva </a><li>';
+                $menu_options = '<a id="menu_mass_role_management" href= "' . $url . '"> Carga masiva </a>';
                 $admin_options['Carga masiva'] = $menu_options;
 
             }
@@ -203,7 +206,7 @@ function create_menu_options($userid, $blockid, $courseid)
                     'instanceid' => $blockid,
                 ));
 
-                $menu_options = '<a href= "' . $url . '"> Ficha de estudiantes </a>';
+                $menu_options = '<a id="menu_student_profile" href= "' . $url . '"> Ficha de estudiantes </a>';
                 $soc_ed_options['Ficha de estudiantes'] = $menu_options;
 
             }
@@ -277,7 +280,7 @@ function create_menu_options($userid, $blockid, $courseid)
                     'instanceid' => $blockid,
                 ));
 
-                $menu_options = '<li><a href= "' . $url . '"> Administrador de formularios </a><li>';
+                $menu_options = '<a id="menu_dphpforms_form_editor" href= "' . $url . '"> Administrador de formularios </a>';
                 $admin_options['Administrador de formularios'] = $menu_options;
 
             }
@@ -288,7 +291,7 @@ function create_menu_options($userid, $blockid, $courseid)
                     'instanceid' => $blockid,
                 ));
 
-                $menu_options = '<li><a href= "' . $url . '"> Estudiantes sin asignar </a><li>';
+                $menu_options = '<a id="menu_not_assigned_students" href= "' . $url . '"> Estudiantes sin asignar </a>';
                 $academic_options['Estudiantes sin asignar'] = $menu_options;
 
             }
@@ -343,8 +346,8 @@ function create_menu_options($userid, $blockid, $courseid)
                     'instanceid' => $blockid,
                 ));
 
-                $menu_options = '<li><a href= "' . $url . '">Reporte discapacidad e inclusión<span class="badge badge-secondary">New</span> </a><li>';                
-                $indexed['Reporte discapacidad e inclusión'] = $menu_options;
+                $menu_options = '<a id="menu_discapacity_reports" href= "' . $url . '">Reporte discapacidad e inclusión<span class="badge badge-secondary">New</span> </a>';
+                $discapacity_options['Reporte discapacidad e inclusión'] = $menu_options;
 
             }
 
@@ -369,7 +372,6 @@ function create_menu_options($userid, $blockid, $courseid)
                 $icetex_options['Reporte MEN'] = $menu_options;
 
             }
-
 
         }
 
@@ -408,6 +410,15 @@ function create_menu_options($userid, $blockid, $courseid)
             }
             $icetex_men_dropdown .= $dropdown_close_tags;
             $menu_return .= $icetex_men_dropdown;
+        }
+
+        if (sizeof($discapacity_options) > 0) {
+            ksort($discapacity_options);
+            foreach ($discapacity_options as $value) {
+                $discapacity_dropdown .= $value;
+            }
+            $discapacity_dropdown .= $dropdown_close_tags;
+            $menu_return .= $discapacity_dropdown;
         }
     }
 
