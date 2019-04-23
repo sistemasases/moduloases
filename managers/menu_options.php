@@ -128,7 +128,7 @@ function create_menu_options($userid, $blockid, $courseid)
                 ));
 
                 $menu_options = '<li><a href= "' . $url . '"> Gestión de instancia </a><li>';
-                $indexed['Gestión de instancia'] = $menu_options;
+                $admin_options['Gestión de instancia'] = $menu_options;
 
             }
 
@@ -149,7 +149,7 @@ function create_menu_options($userid, $blockid, $courseid)
                 ));
 
                 $menu_options = '<li><a href= "' . $url . '"> Carga masiva </a><li>';
-                $indexed['Carga masiva'] = $menu_options;
+                $admin_options['Carga masiva'] = $menu_options;
 
             }
 
@@ -278,7 +278,7 @@ function create_menu_options($userid, $blockid, $courseid)
                 ));
 
                 $menu_options = '<li><a href= "' . $url . '"> Administrador de formularios </a><li>';
-                $indexed['Administrador de formularios'] = $menu_options;
+                $admin_options['Administrador de formularios'] = $menu_options;
 
             }
 
@@ -289,7 +289,7 @@ function create_menu_options($userid, $blockid, $courseid)
                 ));
 
                 $menu_options = '<li><a href= "' . $url . '"> Estudiantes sin asignar </a><li>';
-                $indexed['Estudiantes sin asignar'] = $menu_options;
+                $academic_options['Estudiantes sin asignar'] = $menu_options;
 
             }
 
