@@ -367,4 +367,22 @@ function user_management_assing_sistemas_role( $semester_id, $instance_id, $user
 
 }
 
+/**
+ * Function that sets sistemas role in all instances
+ * @author Jeison Cardona Gómez <jeison.cardona@correounivalle.edu.co>
+ * @param integer $semester_id
+ * @param string $username
+*/
+function user_management_assing_sistemas_role_all( $semester_id, $username = "sistemas1008" ){
+
+    global $DB;
+
+    $sql_instances = "SELECT * FROM {talentospilos_instancia}";
+    $instances = $DB->get_record_sql( $sql_instances );
+    foreach ($instances as $key => $instance) {
+        user_management_assing_sistemas_role( $semester_id, $instance->id, $username );
+    }
+    
+}
+
 ?>
