@@ -22,11 +22,11 @@
  * @copyright  2018 Jeison Cardona Gómez <jeison.cardona@correounivalle.edu.co>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-require_once(dirname(__FILE__). '/../../../../config.php');
-require_once $CFG->dirroot.'/blocks/ases/managers/lib/student_lib.php';
-require_once $CFG->dirroot.'/blocks/ases/managers/user_management/user_lib.php';
-require_once $CFG->dirroot.'/blocks/ases/managers/ases_report/asesreport_lib.php';
-require_once $CFG->dirroot.'/blocks/ases/managers/lib/lib.php';
+require_once( dirname(__FILE__) . '/../../../../config.php' );
+require_once( $CFG->dirroot . '/blocks/ases/managers/lib/student_lib.php' );
+require_once( $CFG->dirroot . '/blocks/ases/managers/user_management/user_lib.php' );
+require_once( $CFG->dirroot . '/blocks/ases/managers/ases_report/asesreport_lib.php' );
+require_once( $CFG->dirroot . '/blocks/ases/managers/lib/lib.php' );
 
 /**
  * Function that return a moodle user. This moodle user is the user
@@ -322,12 +322,12 @@ function user_management_get_crea_stud_mon_prac_prof( $ases_id, $created_by_id, 
 */
 function user_management_assing_sistemas_role( $semester_id, $instance_id, $username = "sistemas1008" ){
 
-    glocal $DB;
+    global $DB;
 
-    $sql_user           = "SELECT * FROM {user} WHERE username ='$username";
-    $sql_instance       = "SELECT * FROM {talentospilos_instancia} WHERE id_instancia = '$instance_id";
-    $sql_role_sistemas  = "SELECT * FROM {talentospilos_rol} where nombre_rol ='sistemas'";
-    $sql_semester       = "SELECT * FROM {talentospilos_semestre}";
+    $sql_user           = "SELECT * FROM {user} WHERE username ='$username'";
+    $sql_instance       = "SELECT * FROM {talentospilos_instancia} WHERE id_instancia = '$instance_id'";
+    $sql_role_sistemas  = "SELECT * FROM {talentospilos_rol} WHERE nombre_rol ='sistemas'";
+    $sql_semester       = "SELECT * FROM {talentospilos_semestre} WHERE id = '$semester_id'";
 
     $user = $DB->get_record_sql( $sql_user );
     $instance = $DB->get_record_sql( $sql_instance );
@@ -344,21 +344,21 @@ function user_management_assing_sistemas_role( $semester_id, $instance_id, $user
         id_rol              = '$role->id' 
         AND id_usuario      = '$user->id' 
         AND id_semestre     = '$semester->id' 
-        AND id_instancia    = '$instance->id'
+        AND id_instancia    = '$instance->id_instancia'
         AND estado          = '1'";
-    
+
     $exist = $DB->get_record_sql($sql_query);
 
-    if ( $exist )
-
+    if ( !$exist ){
+        $record = new stdClass();
         $record->id_rol = $role->id;
         $record->id_usuario = $user->id;
-        $record->estado = 1;
-        $record->id_semestre= $semester_id->id;
+        $record->id_semestre= $semester->id;
         $record->id_instancia = $instance->id_instancia;
+        $record->estado = 1;
         return $DB->insert_record('talentospilos_user_rol', $record, $returnid=true, $bulk=false);
 
-    )else{
+    }else{
         return false;
     }
 
@@ -370,16 +370,17 @@ function user_management_assing_sistemas_role( $semester_id, $instance_id, $user
  * @param integer $semester_id
  * @param string $username
 */
+print_r( user_management_assing_sistemas_role_all( 8, "1325562-3743" ) );
 function user_management_assing_sistemas_role_all( $semester_id, $username = "sistemas1008" ){
 
     global $DB;
 
     $sql_instances = "SELECT * FROM {talentospilos_instancia}";
-    $instances = $DB->get_record_sql( $sql_instances );
+    $instances = $DB->get_records_sql( $sql_instances );
     foreach ($instances as $key => $instance) {
-        user_management_assing_sistemas_role( $semester_id, $instance->id, $username );
+        user_management_assing_sistemas_role( $semester_id, $instance->id_instancia, $username );
     }
-    
+
 }
 
 ?>
