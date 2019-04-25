@@ -315,6 +315,7 @@
 
 
                 $('#button_add_groupal_track').on('click', function() {
+                    $("#modal_v2_edit_groupal_tracking").find("#body_editor").html("");
                     $('div').removeClass('regla_incumplida');
                     $('#modal_v2_groupal_tracking').fadeIn(300);
                     var codigo_monitor = $('#current_user_id').val();
@@ -489,6 +490,7 @@
 
 
                 function load_record_updater(form_id, record_id){
+
                     
                     $('.div').removeClass('regla_incumplida');
                     $("#body_editor").html("");
