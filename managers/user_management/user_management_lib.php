@@ -324,22 +324,19 @@ function user_management_assing_sistemas_role( $semester_id, $instance_id, $user
 
     glocal $DB;
 
-    $sql_user           = "SELECT * FROM {user} WHERE username='$username";
+    $sql_user           = "SELECT * FROM {user} WHERE username ='$username";
     $sql_instance       = "SELECT * FROM {talentospilos_instancia} WHERE id_instancia = '$instance_id";
-    $sql_role_sistemas  = "SELECT * FROM {talentospilos_rol} where nombre_rol='sistemas'";
+    $sql_role_sistemas  = "SELECT * FROM {talentospilos_rol} where nombre_rol ='sistemas'";
     $sql_semester       = "SELECT * FROM {talentospilos_semestre}";
 
     $user = $DB->get_record_sql( $sql_user );
-    ( $user ? null : return null );
-
     $instance = $DB->get_record_sql( $sql_instance );
-    ( $instance ? null : return null );
-
     $role = $DB->get_record_sql( $sql_role_sistemas );
-    ( $role ? null : return null );
-
     $semester = $DB->get_record_sql( $sql_semester );
-    ( $semester ? null : return null );
+
+    if( !( $user && $instance && $role && $semester ) ){
+        return null;
+    }
 
     $sql_query = "SELECT * 
     FROM {talentospilos_user_rol} 
