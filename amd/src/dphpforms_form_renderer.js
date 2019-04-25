@@ -394,7 +394,7 @@
                         if( role_support == "dir_socioeducativo" ){
                             $('.btn-dphpforms-delete-record').remove();
                             $('.btn-dphpforms-update').remove();
-                        };                        
+                        };             
 
                       
                     
@@ -449,7 +449,9 @@
                        $("#modal_v2_edit_groupal_tracking").find('form').find('.oculto.id_estudiante').find('input').val(array_students.slice(0,-1));
                        $("#modal_v2_groupal_tracking").find('form').find('.oculto.id_estudiante').find('input').val(create.slice(0,-1));
 
-                    }else if( (form=='seguimiento_grupal_')&&( action == 'update' ) ){
+                    }else if( (form=='seguimiento_grupal')&&( action == 'update' ) ){
+
+                        $("#modal_v2_edit_groupal_tracking").find(".btn-dphpforms-delete-record").remove();
 
                     }
 
@@ -495,9 +497,9 @@
                             loading_indicator.hide();
 
                             if(form_id =='seguimiento_grupal'){
-                      
+                               
+                                $("#modal_v2_edit_groupal_tracking").find("#body_editor").html("");
                                 $("#modal_v2_edit_groupal_tracking").find("#body_editor").append(data);
-                                $("#modal_v2_edit_groupal_tracking").find(".btn-dphpforms-univalle").remove();
                                 var students = $("#modal_v2_edit_groupal_tracking").find('form').find('.oculto.id_estudiante').find('input').val();
     
                                 generate_attendance_table(students);
@@ -535,7 +537,7 @@
 
                             var rev_prof = $('.dphpforms-record').find('.revisado_profesional').find('.checkbox').find('input[type=checkbox]').prop('checked');
                             var rev_prac = $('.dphpforms-record').find('.revisado_practicante').find('.checkbox').find('input[type=checkbox]').prop('checked');
-                            
+
                             if(rev_prof || rev_prac){
                                 $('.dphpforms-record').find('.btn-dphpforms-delete-record').remove();
                             }
@@ -584,7 +586,10 @@
                             if( is_inasistencia != -1 ){
                                 custom_actions( 'inasistencia', 'update' );
                             };
-                           
+                           var is_inasistencia = data.indexOf('seguimiento_grupal');
+                            if( is_inasistencia != -1 ){
+                                custom_actions( 'seguimiento_grupal', 'update' );
+                            };
                     });
                 }
 
