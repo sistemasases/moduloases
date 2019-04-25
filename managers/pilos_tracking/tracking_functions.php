@@ -125,7 +125,7 @@ function render_groupal_tracks_monitor_new_form($groupal_tracks, $monitor_id, $p
         }
     }
 
-    if (!$groupal_tracks) {
+    if ( $groupal_tracks ) {
         $panel.= aux_create_groupal_toggle($monitor_id);
     }
 
