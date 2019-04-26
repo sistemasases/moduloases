@@ -179,8 +179,8 @@ function getGraficAge($cohorte, $ases_status, $icetex_status, $program_status, $
                 ON usuario.id_ases_user = usuario_ases.id                
                 ";
     
-    #$sub_query = subconsultaGraficReport($ases_status, $icetex_status, $program_status, $cohorte, $instance_id);
-    #$sql_query .= $sub_query;
+    $sub_query = subconsultaGraficReport($ases_status, $icetex_status, $program_status, $cohorte, $instance_id);
+    $sql_query .= $sub_query;
        
     $sql_query .= "GROUP BY nombre
                    ORDER BY nombre ASC";
