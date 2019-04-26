@@ -75,8 +75,30 @@ if(isset($_POST['type'])&&$_POST['type']=="facultad"&&isset($_POST['cohort'])&&i
 
     $columns = array();
 
-    array_push($columns, array("title"=>"Facultad", "name"=>"nombre", "data"=>"nombre"));
+    array_push($columns, array("title"=>"Código", "name"=>"nombre", "data"=>"nombre"));    
     array_push($columns, array("title"=>"Cantidad", "name"=>"cantidad", "data"=>"cantidad"));
+
+    $data = get_general_table_graphic($columns, $result);
+
+    echo json_encode($data);
+    
+} 
+
+
+if(isset($_POST['type'])&&$_POST['type']=="condExcepcion"&&isset($_POST['cohort'])&&isset($_POST['ases_status'])&&isset($_POST['icetex_status'])&&isset($_POST['program_status'])&&isset($_POST['instance_id'])){
+    
+    $cohorte =  $_POST['cohort'];
+    $ases_status = $_POST['ases_status'];
+    $icetex_status = $_POST['icetex_status'];
+    $program_status = $_POST['program_status'];
+    $instance_id = $_POST['instance_id'];    
+    $result = getGraficCondExcepcion($cohorte, $ases_status, $icetex_status, $program_status, $instance_id);
+
+    $columns = array();
+
+    array_push($columns, array("title"=>"Condición de excepción", "name"=>"nombre", "data"=>"nombre"));
+    array_push($columns, array("title"=>"Cantidad", "name"=>"cantidad", "data"=>"cantidad"));        
+    array_push($columns, array("title"=>"Nombre", "name"=>"nombre_largo", "data"=>"nombre_largo"));
 
     $data = get_general_table_graphic($columns, $result);
 

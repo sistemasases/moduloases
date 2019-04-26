@@ -32,7 +32,7 @@ define(['jquery',
             init: function () {
                 window.JSZip = jszip; 
                 window.graficas = {};
-                const secciones = ["programa", "facultad", "sexo", "edad"];                                                
+                const secciones = ["programa", "facultad", "sexo", "edad", "condExcepcion"];                                                
                 
                 $("#list-students-programa-panel").on('click', function(){                                   
                     getDataGraphicTable("programa");
@@ -48,6 +48,10 @@ define(['jquery',
 
                 $("#list-students-edad-panel").on('click', function(){
                     getDataGraphicTable("edad");
+                }); 
+
+                $("#list-students-condExcepcion-panel").on('click', function(){
+                    getDataGraphicTable("condExcepcion");
                 }); 
                 
 
@@ -114,6 +118,9 @@ define(['jquery',
                         case 'sexo':
                             createPieDoughnutGraphic(type, msg.data, 'pie');
                             break;
+                        case 'condExcepcion':
+                            console.log(msg);
+                            createPieDoughnutGraphic(type, msg.data, 'doughnut');
                     }                   
                 },
                 dataType: "json",
@@ -195,6 +202,11 @@ define(['jquery',
             //Se verifica que la gráfica no exista todavía, para crearla de 0
             //Se maneja una convención para los nombres de la gráficas así: chart_<tipoGrafica>, ej: "chart_programa"
             if(!window.graficas["chart_"+type]){
+                
+                var texto = type;
+                if(type ==='condExcepcion'){
+                    texto = 'Condición de Excepción'
+                }
 
                 window.graficas["chart_"+type] = new Chart(ctx, {               
                     type: type_chart,
@@ -214,7 +226,7 @@ define(['jquery',
                         },
                         title: {
                             display: true,
-                            text: 'No. de Estudiantes por '+type,
+                            text: 'Cantidad de Estudiantes por ' + texto,
                             fontSize: 30
                         },
                         scales: {
@@ -273,13 +285,18 @@ define(['jquery',
                     }]
             }
 
-            if(!window.graficas["chart_"+type]){                
+            if(!window.graficas["chart_"+type]){      
+
+                var texto = type;
+                if(type ==='condExcepcion'){
+                    texto = 'Condición de Excepción'
+                }
             
                 var chart_options = {
                     
                     title: {
                         display: true,
-                        text: 'Número de estudiantes por '+type,
+                        text: 'Cantidad de estudiantes por ' + texto,
                         fontSize: 30
                     },
                     legend: {

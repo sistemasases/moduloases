@@ -149,7 +149,33 @@
             </div>    
         </div>        
         {{/age_report_agr}}
-
+        {{#cond_excepcion_report_agr}}              
+        <div class="panel panel-default">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title" id="list-students-condExcepcion-panel">
+                        <a data-toggle="collapse" data-parent="accordion" href="#condExcepcion">Reporte de Condiciones de Excepción</a>
+                    </h4>                    
+                    <div id="condExcepcion" class="panel-collapse collapse">
+                        <div class="panel-body">
+                            <h2>Reporte de Condiciones de Excepción</h2>                                       
+                            <hr class="col-sm-12" />
+                            <div class="col-sm-12" id="div_table_condExcepcion">
+                            </div>
+                            <hr class="col-sm-12" />
+                            <div class="row">
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    <div class="bar-chart-container">
+                                        <canvas id="grafica_condExcepcion" ></canvas>
+                                    </div>                            
+                                </div>                
+                            </div>
+                        </div>
+                    </div>            
+                </div>
+            </div>    
+        </div>        
+        {{/cond_excepcion_report_agr}}
     </div>    
   <div>  
     

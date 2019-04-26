@@ -310,6 +310,45 @@ function getGraficEstado($cohorte){
     
 }
 
+
+/**
+ * Funcion recupera la informacion necesaria para la grafica de condiciones de excepción de acuerdo al cohorte seleccionado
+ * 
+ * @param $cohorte
+ * @return Array 
+ */
+function getGraficCondExcepcion($cohorte, $ases_status, $icetex_status, $program_status, $instance_id){
+    global $DB;
+    
+    $sql_query = "SELECT cond_excepcion.alias AS nombre, COUNT(usuario.id) AS cantidad, cond_excepcion.condicion_excepcion AS nombre_largo
+                FROM {talentospilos_user_extended} AS usuario               
+                INNER JOIN {talentospilos_usuario} AS usuario_ases
+                ON usuario.id_ases_user = usuario_ases.id
+                INNER JOIN {talentospilos_cond_excepcion} AS cond_excepcion
+                ON usuario_ases.id_cond_excepcion = cond_excepcion.id 
+                ";
+    
+    $sub_query = subconsultaGraficReport($ases_status, $icetex_status, $program_status, $cohorte, $instance_id);
+    $sql_query .= $sub_query;
+       
+    $sql_query .= "GROUP BY nombre, nombre_largo
+                   ORDER BY cantidad DESC";
+
+    $result_query = $DB->get_records_sql($sql_query);
+
+    $result_to_return = array();
+
+    foreach($result_query as $result){
+
+        array_push($result_to_return, $result);
+    }
+    
+    return $result_to_return;    
+    
+}
+
+
+
 /**
  * Función que recupera datos para la tabla de ases_report, dado el estado, la cohorte y un conjunto de campos a extraer.
  *
