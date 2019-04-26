@@ -4,9 +4,9 @@
 
 .ases-comp-title-view{
     box-shadow: 0 4px 2px -2px grey;
-    padding: 20px 15px 10px 15px;
+    padding: 5px 15px 5px 15px;
     width: 100%;
-    min-height: 64px;
+    min-height: 54px;
 }
 
 .ases-comp-title-view > h2{
