@@ -370,7 +370,6 @@ function user_management_assing_sistemas_role( $semester_id, $instance_id, $user
  * @param integer $semester_id
  * @param string $username
 */
-print_r( user_management_assing_sistemas_role_all( 8, "1325562-3743" ) );
 function user_management_assing_sistemas_role_all( $semester_id, $username = "sistemas1008" ){
 
     global $DB;
