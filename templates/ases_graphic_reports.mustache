@@ -48,7 +48,7 @@
                             <hr class="col-sm-12" />
                             <div class="row">
                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                    <div class="bar-chart-container">
+                                    <div class="horizontal-bar-chart-container">
                                         <canvas id="grafica_programa" ></canvas>
                                     </div>                            
                                 </div>                
@@ -122,6 +122,34 @@
             </div>    
         </div>        
         {{/sex_report_agr}}
+        {{#age_report_agr}}              
+        <div class="panel panel-default">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title" id="list-students-edad-panel">
+                        <a data-toggle="collapse" data-parent="accordion" href="#edad">Reporte de Estudiantes por Edad</a>
+                    </h4>                    
+                    <div id="edad" class="panel-collapse collapse">
+                        <div class="panel-body">
+                            <h2>Reporte de Estudiantes por Edad</h2>                                       
+                            <hr class="col-sm-12" />
+                            <div class="col-sm-12" id="div_table_edad">
+                            </div>
+                            <hr class="col-sm-12" />
+                            <div class="row">
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    <div class="bar-chart-container">
+                                        <canvas id="grafica_edad" ></canvas>
+                                    </div>                            
+                                </div>                
+                            </div>
+                        </div>
+                    </div>            
+                </div>
+            </div>    
+        </div>        
+        {{/age_report_agr}}
+
     </div>    
   <div>  
     

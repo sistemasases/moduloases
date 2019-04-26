@@ -27,12 +27,12 @@ define(['jquery',
     
     function ($, jszip, pdfmake, dataTables, autoFill, buttons, html5, flash, print, bootstrap, sweetalert, jqueryui, select2, Chart, loading_indicator, chartjs_plugin_datalabels) {
         
-        var graficas = {} //Objeto para guardar las gráficas de manera dinámica
-        return {
+         //Objeto para guardar las gráficas de manera dinámica
+        return {             
             init: function () {
-
-                window.JSZip = jszip;  
-                const secciones = ["programa", "facultad", "sexo"]                                                
+                window.JSZip = jszip; 
+                window.graficas = {};
+                const secciones = ["programa", "facultad", "sexo", "edad"];                                                
                 
                 $("#list-students-programa-panel").on('click', function(){                                   
                     getDataGraphicTable("programa");
@@ -44,6 +44,10 @@ define(['jquery',
 
                 $("#list-students-sexo-panel").on('click', function(){
                     getDataGraphicTable("sexo");
+                }); 
+
+                $("#list-students-edad-panel").on('click', function(){
+                    getDataGraphicTable("edad");
                 }); 
                 
 
@@ -98,8 +102,11 @@ define(['jquery',
                     createTable(type, msg);
                     //createBarGraphic(type, msg.data);
                     switch(type){
-                        case 'programa':
-                            createBarGraphic(type, msg.data);
+                        case 'programa':                        
+                            createBarGraphic(type, msg.data, 'horizontalBar');
+                            break;
+                        case 'edad':                        
+                            createBarGraphic(type, msg.data, 'bar');
                             break;
                         case 'facultad':
                             createPieDoughnutGraphic(type, msg.data, 'doughnut');
@@ -126,7 +133,7 @@ define(['jquery',
         //Función que se encarga de crear una gráfica de barras teniendo como parámetros:
         // type: Tipo de gráfica: programa, edad, facultad...
         // data: Información a mostrarse en la gráfica
-        function createBarGraphic(type, data){
+        function createBarGraphic(type, data, type_chart){
 
             //Se preparan los nombres de los labels a mostrar en la gráfica
             var atributos = Object.keys(data[0]);
@@ -152,7 +159,10 @@ define(['jquery',
                 cantidades.push(cantidad);               
             }            
 
-            $('.bar-chart-container').css('height', '1300px');
+            $('.horizontal-bar-chart-container').css('height', '1300px');
+            $('.horizontal-bar-chart-container').css('width', '100%');
+
+            $('.bar-chart-container').css('height', '800px');
             $('.bar-chart-container').css('width', '100%');
             
             //Se asignan los colores de las barras de la gráfica, alternando los colores
@@ -184,10 +194,10 @@ define(['jquery',
             
             //Se verifica que la gráfica no exista todavía, para crearla de 0
             //Se maneja una convención para los nombres de la gráficas así: chart_<tipoGrafica>, ej: "chart_programa"
-            if(!graficas["chart_"+type]){
+            if(!window.graficas["chart_"+type]){
 
-                graficas["chart_"+type] = new Chart(ctx, {               
-                    type: 'horizontalBar',
+                window.graficas["chart_"+type] = new Chart(ctx, {               
+                    type: type_chart,
                     data: data,
                     options: {
                         // Elements options apply to all of the options unless overridden in a dataset
@@ -229,8 +239,8 @@ define(['jquery',
                 );
             }
             else{ //Si la gráfica ya existe, se modifica la información en ella                
-                graficas["chart_"+type]["data"] = data;
-                graficas["chart_"+type].update();
+                window.graficas["chart_"+type]["data"] = data;
+                window.graficas["chart_"+type].update();
             }
         }
         
@@ -263,7 +273,7 @@ define(['jquery',
                     }]
             }
 
-            if(!graficas["chart_"+type]){                
+            if(!window.graficas["chart_"+type]){                
             
                 var chart_options = {
                     
@@ -288,15 +298,15 @@ define(['jquery',
 
                 Chart.defaults.polarArea.animation.animateScale = false;
             
-                graficas["chart_"+type] = new Chart(ctx, {
+                window.graficas["chart_"+type] = new Chart(ctx, {
                     type: type_graphic,
                     data: data,
                     options: chart_options
                 });
 
             }else{
-                graficas["chart_"+type]["data"] = data;
-                graficas["chart_"+type].update();
+                window.graficas["chart_"+type]["data"] = data;
+                window.graficas["chart_"+type].update();
 
             }     
 

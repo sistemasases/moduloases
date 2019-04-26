@@ -7,6 +7,7 @@ require_once(dirname(__FILE__).'/../user_management/user_lib.php');
 
 //echo json_encode(getGraficPrograma("TODOS", "1"));
 
+
 /**
  * Función que recupera riesgos 
  *
@@ -169,39 +170,31 @@ function getGraficSex($cohorte, $ases_status, $icetex_status, $program_status, $
  * @param $cohorte
  * @return Array 
  */
-function getGraficAge($cohorte){
+function getGraficAge($cohorte, $ases_status, $icetex_status, $program_status, $instance_id){
     global $DB;
-    $arrayRetornar=array();
     
-    $query = "
-        SELECT subconsulta.userid, (now() - subconsulta.fecha_nac)/365 AS age
-            FROM (SELECT data.userid, usuarios_tal.fecha_nac
-                  FROM {talentospilos_usuario} as usuarios_tal 
-                             INNER JOIN {user_info_data} as data ON (cast(usuarios_tal.id AS varchar) = data.data) 
-                  WHERE data.fieldid = 2) as subconsulta 
-                  INNER JOIN {cohort_members} as cohorts ON subconsulta.userid = cohorts.userid
-                  INNER JOIN {cohort} as cohorte ON cohorts.cohortid = cohorte.id
-            WHERE cohorte.name = '$cohorte'";
+    $sql_query = "SELECT EXTRACT(YEAR FROM age(usuario_ases.fecha_nac)) AS nombre, COUNT(usuario.id) AS cantidad
+                FROM {talentospilos_user_extended} AS usuario               
+                INNER JOIN {talentospilos_usuario} AS usuario_ases
+                ON usuario.id_ases_user = usuario_ases.id                
+                ";
     
-    $sql_query = "SELECT id,(now() - fecha_nac)/365 AS age FROM {talentospilos_usuario}";
-    
-    //se verifica el cohorte ingresado, de acuerdo al caso se invoca el metodo de moodle con una de las dos
-    //consultar armadas anteriormente
-    if($cohorte == "TODOS"){
-        $result = $DB->get_records_sql($sql_query);
-    } else {
-        $result = $DB->get_records_sql($query);
+    #$sub_query = subconsultaGraficReport($ases_status, $icetex_status, $program_status, $cohorte, $instance_id);
+    #$sql_query .= $sub_query;
+       
+    $sql_query .= "GROUP BY nombre
+                   ORDER BY nombre ASC";
+
+    $result_query = $DB->get_records_sql($sql_query);
+
+    $result_to_return = array();
+
+    foreach($result_query as $result){
+
+        array_push($result_to_return, $result);
     }
     
-    //ya que el dato recibido es un dato calculado se sabe que la edad son los dos primeros digitos de dicho campo
-    //razon por la cual se accede a cada valor, se extraen los primeros valores y se retorna el arreglo
-    foreach($result as $datoEdad){
-         $años=substr($datoEdad->age,0,2);
-         
-         array_push($arrayRetornar,$años);
-    }
-    
-    return array_count_values($arrayRetornar);
+    return $result_to_return;    
     
 }
 
