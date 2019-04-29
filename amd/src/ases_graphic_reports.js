@@ -104,7 +104,6 @@ define(['jquery',
                 success: function (msg) {                                   
 
                     createTable(type, msg);
-                    //createBarGraphic(type, msg.data);
                     switch(type){
                         case 'programa':                        
                             createBarGraphic(type, msg.data, 'horizontalBar');
@@ -119,7 +118,6 @@ define(['jquery',
                             createPieDoughnutGraphic(type, msg.data, 'pie');
                             break;
                         case 'condExcepcion':
-                            console.log(msg);
                             createPieDoughnutGraphic(type, msg.data, 'doughnut');
                     }                   
                 },
@@ -277,9 +275,9 @@ define(['jquery',
                         label: "Cantidad de Estudiantes",
                         data: cantidades,
                         backgroundColor: ["#F56476", "#BFD1E5", "#FFEECF", "#C9A690", "#DF928E", 
-                                          "#CECCCC", "#9191E9", "#99E1D9", "#FFA552", "#BFC8AD"],
+                                          "#CECCCC", "#9191E9", "#99E1D9", "#FFA552", "#BFC8AD", "#0BAA6B", "#EDD892"],
                         borderColor: ["#F56476", "#BFD1E5", "#FFEECF", "#C9A690", "#DF928E", 
-                                    "#CECCCC", "#9191E9", "#99E1D9", "#FFA552", "#BFC8AD"],
+                                    "#CECCCC", "#9191E9", "#99E1D9", "#FFA552", "#BFC8AD", "#0BAA6B", "#EDD892"],
                         borderWidth: 1
                         
                     }]
@@ -309,8 +307,6 @@ define(['jquery',
                     },
                     showTooltips: true,
                     showPercentages: true
-
-
                 };
 
                 Chart.defaults.polarArea.animation.animateScale = false;

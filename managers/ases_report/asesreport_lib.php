@@ -5,9 +5,6 @@ require_once(dirname(__FILE__).'/../lib/lib.php');
 require_once(dirname(__FILE__).'/../lib/student_lib.php');
 require_once(dirname(__FILE__).'/../user_management/user_lib.php');
 
-//echo json_encode(getGraficPrograma("TODOS", "1"));
-
-
 /**
  * Función que recupera riesgos 
  *
@@ -347,6 +344,47 @@ function getGraficCondExcepcion($cohorte, $ases_status, $icetex_status, $program
     
 }
 
+
+
+/**
+ * Funcion recupera la informacion necesaria para la grafica de riesgos de acuerdo al cohorte seleccionado
+ * 
+ * @param $cohorte
+ * @return Array 
+ */
+function getGraficRiesgos($cohorte, $ases_status, $icetex_status, $program_status, $instance_id){
+    global $DB;
+    
+    $sql_query = "SELECT riesgo.nombre AS nombre_riesgo, COUNT(DISTINCT usuario.id) AS cantidad, riesg_usuario.calificacion_riesgo AS calificacion,
+               CASE WHEN riesg_usuario.calificacion_riesgo = 1  THEN 'Bajo'
+                    WHEN riesg_usuario.calificacion_riesgo = 2  THEN 'Medio'
+                    WHEN riesg_usuario.calificacion_riesgo = 3  THEN 'Alto'
+                END AS calificacion_riesgo
+                FROM {talentospilos_user_extended} AS usuario
+                INNER JOIN {talentospilos_riesg_usuario} AS riesg_usuario
+                ON riesg_usuario.id_usuario = usuario.id_ases_user
+                INNER JOIN {talentospilos_riesgos_ases} AS riesgo
+                ON riesgo.id = riesg_usuario.id_riesgo
+                WHERE riesg_usuario.calificacion_riesgo IN (1,2,3)
+                ";
+    
+    $sub_query = subconsultaGraficReport($ases_status, $icetex_status, $program_status, $cohorte, $instance_id);
+    $sql_query .= $sub_query;
+       
+    $sql_query .= "GROUP BY nombre_riesgo, calificacion_riesgo, calificacion
+                    ORDER BY nombre_riesgo, calificacion";
+    
+    $result_query = $DB->get_records_sql($sql_query);
+    
+    $result_to_return = array();
+
+    foreach($result_query as $result){
+
+        array_push($result_to_return, $result);
+    }
+    
+    return $result_to_return;  
+}
 
 
 /**
