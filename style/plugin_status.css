@@ -83,3 +83,7 @@
   background: #3aac5d;
   color: white
 }
+
+.steps-col{
+  min-height: 90px !important;
+}

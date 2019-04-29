@@ -33,7 +33,6 @@ require_once('../managers/menu_options.php');
 require_once('../managers/instance_management/instance_lib.php');
 include('../lib.php');
 
-
 global $PAGE;
 global $USER;
 
@@ -76,6 +75,8 @@ $PAGE->requires->css('/blocks/ases/style/base_ases.css', true);
 $PAGE->requires->css('/blocks/ases/style/aaspect.min.css', true);
 $PAGE->requires->css('/blocks/ases/style/_view.component.css', true);
 $PAGE->requires->css('/blocks/ases/style/plugin_status.css', true);
+$PAGE->requires->js_call_amd('block_ases/plugin_status', "init");
+
 $output = $PAGE->get_renderer('block_ases');
 
 
