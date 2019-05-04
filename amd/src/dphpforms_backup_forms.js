@@ -1,6 +1,6 @@
 /**
  * Backup  forms report
- * @module amd/src/historic_academic_reports
+ * @module amd/src/dphpforms_backupforms
  * @author Juan Pablo Castro
  * @copyright 2018 Juan Pablo Castro<juan.castro.vasquez@correounivalle.edu.co>
  * @license  http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
