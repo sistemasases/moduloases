@@ -9,9 +9,16 @@
 
 require_once( __DIR__ . "/query_manager/aux_functions.php" );
 
-const FLAG_DAO = "dao_get";
+const FLAG_DAO = "core_db_get";
 const FLAG_MOODLE = "DB";
-const AVAILABLE_MANAGERS = [ "dao", "moodle", "general" ];
+const MANAGER_ALIAS_CORE_DB = "core_db";
+const MANAGER_ALIAS_MOODLE = "moodle";
+const MANAGER_ALIAS_POSTGRES = "postgres";
+const AVAILABLE_MANAGERS = [ 
+	MANAGER_ALIAS_CORE_DB, 
+	MANAGER_ALIAS_MOODLE, 
+	MANAGER_ALIAS_POSTGRES 
+];
 
 /**
  * ...
@@ -22,27 +29,27 @@ const AVAILABLE_MANAGERS = [ "dao", "moodle", "general" ];
  */
 function get_db_manager( $selector = NULL ){
 
-	/*$selector_filter = [
-		'dao' = true,
-		'moodle' = true,
-		'postgres' = true
-	];
+	$selector_filter = [];
+
+	foreach ( AVAILABLE_MANAGERS as $key => $manager) {
+		$selector_filter[$manager] = true;
+	}
 
 	if( !is_null( $selector ) ){
-		if( array_key_exists( $selector[$selector], $selector_filter ) ){
-			$selector[$selector] = true;
+		$selector_filter = [];
+		foreach ( AVAILABLE_MANAGERS as $key => $manager) {
+			$selector_filter[$manager] = false;
 		}
-	}else{
-		$selector_filter = null;
-	}*/
-
+		if( array_key_exists( $selector, $selector_filter ) ){
+			$selector_filter[$selector] = true;
+		}
+	}
 	
-	
-	if(	in_array( FLAG_DAO, get_defined_functions()['user']) ){
-		return function( $query, $extra = NULL, $params = NULL ){
+	if(	in_array( FLAG_DAO, get_defined_functions()['user']) && $selector_filter[ MANAGER_ALIAS_CORE_DB ] ){
+		return function( $query, $params = NULL, $extra = NULL ){
 			$select_filter = _is_select( $query );
 			if( is_null( $select_filter ) ){
-				return null;
+				throw new Exception( "Query cannot be empty." );
 			}else{
 				if( $select_filter ){
 					return dao_select_sql( $query, $params );
@@ -51,33 +58,33 @@ function get_db_manager( $selector = NULL ){
 				}
 			}
 		};
-	}else if( array_key_exists( FLAG_MOODLE, $GLOBALS ) ){
-		return function( $query, $extra = NULL, $params = NULL ){
+	}else if( array_key_exists( FLAG_MOODLE, $GLOBALS ) && $selector_filter[ MANAGER_ALIAS_MOODLE ] ){
+		return function( $query, $params = NULL, $extra = NULL ){
 			$select_filter = _is_select( $query );
 			if( is_null( $select_filter ) ){
-				return null;
+				throw new Exception( "Query cannot be empty." );
 			}else{
 				if( $select_filter ){
-					return $GLOBALS[ FLAG_MOODLE ]->get_records_sql($query, $params);
+					return array_values($GLOBALS[ FLAG_MOODLE ]->get_records_sql($query, $params));
 				}else{
 					return $GLOBALS[ FLAG_MOODLE ]->execute($query, $params);
 				}
 			}
 		};
 	}else{
-		return function( $query, $extra = NULL, $params = NULL ){
+		return function( $query, $params = NULL, $extra = NULL ){
 			if( is_null( $extra ) ){
-				return null;
+				throw new Exception( "extra['db_connection'] does not exist" );
 			}else{
-				if( array_key_exists($extra, "db_connection" ) ){
+				if( array_key_exists( "db_connection", $extra ) ){
 					if( 
-						array_key_exists($extra['db_connection'], "host" ) &&
-						array_key_exists($extra['db_connection'], "port" ) &&
-						array_key_exists($extra['db_connection'], "dbname" ) &&
-						array_key_exists($extra['db_connection'], "user" ) &&
-						array_key_exists($extra['db_connection'], "password" )
+						array_key_exists( "host", $extra['db_connection'] ) &&
+						array_key_exists( "port", $extra['db_connection'] ) &&
+						array_key_exists( "dbname", $extra['db_connection'] ) &&
+						array_key_exists( "user", $extra['db_connection'] ) &&
+						array_key_exists( "password", $extra['db_connection'] )
 					){
-
+						echo $entra;
 						$host = $extra['db_connection']['host'];
 						$port = $extra['db_connection']['port'];
 						$dbname = $extra['db_connection']['dbname'];
@@ -87,8 +94,11 @@ function get_db_manager( $selector = NULL ){
 						$conn_string = "host=".$host." port=".$port." dbname=".$dbname." user=".$user." password=".$password."";
 						$connection = pg_connect( $conn_string );
 
-						pg_query_params( $connection, $query, $params );
-					
+						if( $params ){
+							return pg_fetch_all( pg_query_params( $connection, $query, $params ) );
+						}else{
+							return pg_fetch_all( pg_query( $connection, $query ) );
+						}
 					}
 				}else{
 					return null;
@@ -99,12 +109,7 @@ function get_db_manager( $selector = NULL ){
 
 }
 
-$manager = get_db_manager();
-$result = $manager("SELECT * FROM mdl_user LIMIT 1", NULL, []);
+
+$manager = get_db_manager('moodle');
+$result = $manager("SELECT * FROM mdl_user WHERE id = 73400", NULL, []);
 print_r($result);
-
-/*function exist_extended_validations(){
-
-	$manage
-
-}*/

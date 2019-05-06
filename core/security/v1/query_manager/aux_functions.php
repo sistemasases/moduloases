@@ -27,4 +27,9 @@ function _is_select( $query ){
 
 }
 
+/**
+ * @author Jeison Cardona Gómez <jeison.cardona@correounivalle.edu.co>
+*/
+function _get_list_of_available_managers(){	return AVAILABLE_MANAGERS; };
+
 ?>
