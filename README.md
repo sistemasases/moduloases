@@ -90,14 +90,14 @@ Usamos la siguiente estructura para el versionado:
 
 * **Jeison Cardona Gómez** - [vvbv](https://github.com/vvbv)
 * **Iader E. García Gómez** - [iaderegg](https://github.com/iaderegg)
-* **Luis** - [luchoman08](https://github.com/luchoman08)
+* **Luis Gerardo ;anrique Cardona** - [luchoman08](https://github.com/luchoman08)
 * **Juan Pablo Moreno Muñoz** - [juanpamm](https://github.com/juanpamm)
 * **Camilo José Cruz Rivera** - [cjcruzrivera](https://github.com/cjcruzrivera)
-* **Isabella** - [isabella317](https://github.com/isabella317)
+* **Isabella Serna Ramírez** - [isabella317](https://github.com/isabella317)
 * **Juan Pablo Castro** - [jpcv222](https://github.com/jpcv222)
-* **Joan** - [joanmtg](https://github.com/joanmtg)
+* **Joan Manuel Tovar Guzmán** - [joanmtg](https://github.com/joanmtg)
 * **ASES Dev** - [sistemasases](https://github.com/sistemasases)
-* **Fabio** - [fabioacd](https://github.com/fabioacd)
+* **Fabio Andres Castañeda Duarte** - [fabioacd](https://github.com/fabioacd)
 * **José Alejandro Libreros** - *Documentación* - [josealejolibreros](https://github.com/josealejolibreros)
 * **Diana Melissa Millares** - *Documentación* - [melissamillares](https://github.com/melissamillares)
 
