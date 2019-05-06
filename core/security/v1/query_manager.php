@@ -8,8 +8,9 @@
  */
 
 require_once( __DIR__ . "/query_manager/aux_functions.php" );
-require_once( __DIR__ . "/../../core_db/core_db.php" );
 
+
+const CORE_DB_LOCATION =  __DIR__ . "/../../core_db/core_db.php";
 const FLAG_CORE_DB = "core_db_select_sql";
 const FLAG_MOODLE = "DB";
 const MANAGER_ALIAS_CORE_DB = "core_db";
@@ -20,6 +21,10 @@ const AVAILABLE_MANAGERS = [
 	MANAGER_ALIAS_MOODLE, 
 	MANAGER_ALIAS_POSTGRES 
 ];
+
+if( file_exists ( CORE_DB_LOCATION ) ){
+	require_once( CORE_DB_LOCATION );
+}
 
 /**
  * ...
@@ -45,8 +50,13 @@ function get_db_manager( $selector = NULL ){
 			$selector_filter[$selector] = true;
 		}
 	}
+
+	/**
+	 * Automatic and specific manager selection.
+	*/
 	
 	if(	in_array( FLAG_CORE_DB, get_defined_functions()['user']) && $selector_filter[ MANAGER_ALIAS_CORE_DB ] ){
+
 		return function( $query, $params = NULL, $extra = NULL ){
 			$select_filter = _is_select( $query );
 			if( is_null( $select_filter ) ){
@@ -59,7 +69,9 @@ function get_db_manager( $selector = NULL ){
 				}
 			}
 		};
+
 	}else if( array_key_exists( FLAG_MOODLE, $GLOBALS ) && $selector_filter[ MANAGER_ALIAS_MOODLE ] ){
+
 		return function( $query, $params = NULL, $extra = NULL ){
 			$select_filter = _is_select( $query );
 			if( is_null( $select_filter ) ){
@@ -72,7 +84,9 @@ function get_db_manager( $selector = NULL ){
 				}
 			}
 		};
+
 	}else{
+
 		return function( $query, $params = NULL, $extra = NULL ){
 			if( is_null( $extra ) ){
 				throw new Exception( "extra['db_connection'] does not exist" );
@@ -105,6 +119,7 @@ function get_db_manager( $selector = NULL ){
 				}
 			}
 		};
+
 	}
 
 }
