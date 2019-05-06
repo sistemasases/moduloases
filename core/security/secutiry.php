@@ -10,7 +10,10 @@
 const VERSION = 1; //Current version
 
 require_once( __DIR__ . "/../../../../config.php");
+require_once( __DIR__ . "/../module_loader.php");
 require_once( __DIR__ . "/v" . VERSION . "/entrypoint.php");
+
+print_r( get_list_of_available_modules() );
 
 function secure_call( $function_name, $args = [], $alias ){	return make_call( $function_name, $args ); };
 

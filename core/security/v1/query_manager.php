@@ -7,9 +7,11 @@
  * @license   	http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+module_loader( "core_db" );
+
 require_once( __DIR__ . "/query_manager/aux_functions.php" );
 
-const FLAG_DAO = "core_db_get";
+const FLAG_CORE_DB = "core_db_select_sql";
 const FLAG_MOODLE = "DB";
 const MANAGER_ALIAS_CORE_DB = "core_db";
 const MANAGER_ALIAS_MOODLE = "moodle";
@@ -24,8 +26,26 @@ const AVAILABLE_MANAGERS = [
  * ...
  * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
  * @see _is_select(...)
- * @param string $selector DB-Manager filter, if this param is not null, a specific manager is selected.
+ * @param string $selector DB-Manager filter, if this param is not null, a specífic manager is selected.
  * @return callable function
+ *
+ * @example 
+ *
+ 	$manager = get_db_manager("general");
+	$result = $manager(
+		"SELECT * FROM mdl_user WHERE id = $1",
+		[ "128" ],
+		[
+			"db_connection" => [
+				"host" => "localhost",
+				"port" => "5432",
+				"user" => "user",
+				"dbname" => "moodle35",
+				"password" => "password"
+			]
+		] 
+	);
+ *
  */
 function get_db_manager( $selector = NULL ) {
 
@@ -44,34 +64,43 @@ function get_db_manager( $selector = NULL ) {
 			$selector_filter[$selector] = true;
 		}
 	}
+
+	/**
+	 * Automatic and specific manager selection.
+	*/
 	
-	if(	in_array( FLAG_DAO, get_defined_functions()['user']) && $selector_filter[ MANAGER_ALIAS_CORE_DB ] ){
+	if(	in_array( FLAG_CORE_DB, get_defined_functions()['user']) && $selector_filter[ MANAGER_ALIAS_CORE_DB ] ){
+
 		return function( $query, $params = NULL, $extra = NULL ){
 			$select_filter = _is_select( $query );
 			if( is_null( $select_filter ) ){
 				throw new Exception( "Query cannot be empty." );
 			}else{
 				if( $select_filter ){
-					return dao_select_sql( $query, $params );
+					return json_decode(json_encode( core_db_select_sql( $query, $params ) ), true);
 				}else{
-					return dao_execute( $query, $params );
+					return core_db_execute( $query, $params );
 				}
 			}
 		};
+
 	}else if( array_key_exists( FLAG_MOODLE, $GLOBALS ) && $selector_filter[ MANAGER_ALIAS_MOODLE ] ){
+
 		return function( $query, $params = NULL, $extra = NULL ){
 			$select_filter = _is_select( $query );
 			if( is_null( $select_filter ) ){
 				throw new Exception( "Query cannot be empty." );
 			}else{
 				if( $select_filter ){
-					return array_values($GLOBALS[ FLAG_MOODLE ]->get_records_sql($query, $params));
+					return json_decode(json_encode( array_values( $GLOBALS[ FLAG_MOODLE ]->get_records_sql($query, $params)) ), true);
 				}else{
 					return $GLOBALS[ FLAG_MOODLE ]->execute($query, $params);
 				}
 			}
 		};
+
 	}else{
+
 		return function( $query, $params = NULL, $extra = NULL ){
 			if( is_null( $extra ) ){
 				throw new Exception( "extra['db_connection'] does not exist" );
@@ -84,7 +113,6 @@ function get_db_manager( $selector = NULL ) {
 						array_key_exists( "user", $extra['db_connection'] ) &&
 						array_key_exists( "password", $extra['db_connection'] )
 					){
-						echo $entra;
 						$host = $extra['db_connection']['host'];
 						$port = $extra['db_connection']['port'];
 						$dbname = $extra['db_connection']['dbname'];
@@ -105,6 +133,7 @@ function get_db_manager( $selector = NULL ) {
 				}
 			}
 		};
+
 	}
 
 }

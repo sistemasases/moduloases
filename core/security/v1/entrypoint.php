@@ -10,10 +10,6 @@
 require_once( __DIR__ . "/../../../../../config.php");
 require_once( __DIR__ . "/query_manager.php");
 
-$manager = get_db_manager('general');
-$result = $manager("SELECT * FROM mdl_user WHERE id = $1", [ "128" ]);
-print_r($result);
-
 /*
  *
 */
