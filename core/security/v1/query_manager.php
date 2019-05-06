@@ -7,10 +7,10 @@
  * @license   	http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+module_loader( "core_db" );
+
 require_once( __DIR__ . "/query_manager/aux_functions.php" );
 
-
-const CORE_DB_LOCATION =  __DIR__ . "/../../core_db/core_db.php";
 const FLAG_CORE_DB = "core_db_select_sql";
 const FLAG_MOODLE = "DB";
 const MANAGER_ALIAS_CORE_DB = "core_db";
@@ -21,10 +21,6 @@ const AVAILABLE_MANAGERS = [
 	MANAGER_ALIAS_MOODLE, 
 	MANAGER_ALIAS_POSTGRES 
 ];
-
-if( file_exists ( CORE_DB_LOCATION ) ){
-	require_once( CORE_DB_LOCATION );
-}
 
 /**
  * ...
@@ -81,7 +77,7 @@ function get_db_manager( $selector = NULL ){
 				throw new Exception( "Query cannot be empty." );
 			}else{
 				if( $select_filter ){
-					return core_db_select_sql( $query, $params );
+					return json_decode(json_encode( core_db_select_sql( $query, $params ) ), true);
 				}else{
 					return core_db_execute( $query, $params );
 				}
@@ -96,7 +92,7 @@ function get_db_manager( $selector = NULL ){
 				throw new Exception( "Query cannot be empty." );
 			}else{
 				if( $select_filter ){
-					return array_values( (array) $GLOBALS[ FLAG_MOODLE ]->get_records_sql($query, $params));
+					return json_decode(json_encode( array_values( $GLOBALS[ FLAG_MOODLE ]->get_records_sql($query, $params)) ), true);
 				}else{
 					return $GLOBALS[ FLAG_MOODLE ]->execute($query, $params);
 				}
