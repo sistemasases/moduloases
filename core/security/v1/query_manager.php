@@ -41,7 +41,8 @@ function get_db_manager( $selector = NULL ){
 	
 	if(	in_array( $GLOBALS['flag_dao'], get_defined_functions()['user']) ){
 		return function( $query, $extra = NULL, $params = NULL ){
-			$select_filter = $is_select( $query );
+			//$select_filter = $is_select( $query );
+			$select_filter = true;
 			if( is_null( $select_filter ) ){
 				return null;
 			}else{
@@ -54,7 +55,8 @@ function get_db_manager( $selector = NULL ){
 		};
 	}else if( array_key_exists($GLOBALS['flag_moodle'], $GLOBALS ) ){
 		return function( $query, $extra = NULL, $params = NULL ){
-			$select_filter = $is_select( $query );
+			//$select_filter = $is_select( $query );
+			$select_filter = true;
 			if( is_null( $select_filter ) ){
 				return null;
 			}else{
