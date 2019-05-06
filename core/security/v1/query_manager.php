@@ -32,6 +32,24 @@ if( file_exists ( CORE_DB_LOCATION ) ){
  * @see _is_select(...)
  * @param string $selector DB-Manager filter, if this param is not null, a specífic manager is selected.
  * @return lambda function
+ *
+ * @example 
+ *
+ 	$manager = get_db_manager("general");
+	$result = $manager(
+		"SELECT * FROM mdl_user WHERE id = $1",
+		[ "128" ],
+		[
+			"db_connection" => [
+				"host" => "localhost",
+				"port" => "5432",
+				"user" => "user",
+				"dbname" => "moodle35",
+				"password" => "password"
+			]
+		] 
+	);
+ *
  */
 function get_db_manager( $selector = NULL ){
 
@@ -78,7 +96,7 @@ function get_db_manager( $selector = NULL ){
 				throw new Exception( "Query cannot be empty." );
 			}else{
 				if( $select_filter ){
-					return array_values($GLOBALS[ FLAG_MOODLE ]->get_records_sql($query, $params));
+					return array_values( (array) $GLOBALS[ FLAG_MOODLE ]->get_records_sql($query, $params));
 				}else{
 					return $GLOBALS[ FLAG_MOODLE ]->execute($query, $params);
 				}
