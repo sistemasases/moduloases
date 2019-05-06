@@ -7,9 +7,19 @@
  * @license   	http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$flag_dao = "dao_get";
-$flag_moodle = "DB";
+require_once( __DIR__ . "/query_manager/aux_functions.php" );
 
+const FLAG_DAO = "dao_get";
+const FLAG_MOODLE = "DB";
+const AVAILABLE_MANAGERS = [ "dao", "moodle", "general" ];
+
+/**
+ * ...
+ * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
+ * @see _is_select(...)
+ * @param string $selector DB-Manager filter, if this param is not null, a specífic manager is selected.
+ * @return lambda function
+ */
 function get_db_manager( $selector = NULL ){
 
 	/*$selector_filter = [
@@ -26,23 +36,11 @@ function get_db_manager( $selector = NULL ){
 		$selector_filter = null;
 	}*/
 
-	$is_select = function( $query ){
-		if( $query ){
-			$words = explode(' ',trim($query));
-			if( strtolower($words[0]) == "select" ){
-				return true;
-			}else{
-				return false;
-			}
-		}else{
-			return null;
-		}
-	}
 	
-	if(	in_array( $GLOBALS['flag_dao'], get_defined_functions()['user']) ){
+	
+	if(	in_array( FLAG_DAO, get_defined_functions()['user']) ){
 		return function( $query, $extra = NULL, $params = NULL ){
-			//$select_filter = $is_select( $query );
-			$select_filter = true;
+			$select_filter = _is_select( $query );
 			if( is_null( $select_filter ) ){
 				return null;
 			}else{
@@ -53,17 +51,16 @@ function get_db_manager( $selector = NULL ){
 				}
 			}
 		};
-	}else if( array_key_exists($GLOBALS['flag_moodle'], $GLOBALS ) ){
+	}else if( array_key_exists( FLAG_MOODLE, $GLOBALS ) ){
 		return function( $query, $extra = NULL, $params = NULL ){
-			//$select_filter = $is_select( $query );
-			$select_filter = true;
+			$select_filter = _is_select( $query );
 			if( is_null( $select_filter ) ){
 				return null;
 			}else{
 				if( $select_filter ){
-					return $GLOBALS[$GLOBALS['flag_moodle']]->get_records_sql($query, $params);
+					return $GLOBALS[ FLAG_MOODLE ]->get_records_sql($query, $params);
 				}else{
-					return $GLOBALS[$GLOBALS['flag_moodle']]->execute($query, $params);
+					return $GLOBALS[ FLAG_MOODLE ]->execute($query, $params);
 				}
 			}
 		};
