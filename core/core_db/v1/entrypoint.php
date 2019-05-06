@@ -52,8 +52,8 @@ function select($class_name, array $conditions = null, $fields = '*', $sort = nu
         throw new \ErrorException("The given columns for conditions array are invalid, active debug mode for show de debug backtrace");
     }
     $table_name = normalize_table_name($class_name);
-    $objects_array = $DB->get_records($table_name, $conditions, $sort, $fields, $limitfrom, $limitnum);
-    if($fields==='*'){
+    $objects_array = array_values($DB->get_records($table_name, $conditions, $sort, $fields, $limitfrom, $limitnum));
+    if(in_array($class_name, $talentospilos_classes) && $fields==='*'){
         $objects = _make_objects_from_std_objects_or_arrays($objects_array, $class_name);
         return $objects;
 
@@ -62,7 +62,7 @@ function select($class_name, array $conditions = null, $fields = '*', $sort = nu
 }
 function select_sql($sql, $params = array()) {
     global $DB;
-    return $DB->get_records_sql($sql, $params);
+    return array_values($DB->get_records_sql($sql, $params));
 }
 /**
  * Return one object instance from database than satisfy the conditions given
