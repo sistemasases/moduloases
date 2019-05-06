@@ -1,3 +1,13 @@
+# Módulo Ases
+
+Es un plugin de moodle de tipo bloque, que está diseñado para sistematizar el proceso de seguimiento estudiantil que se realiza dentro de la estrategia ASES. Es una aplicación web que sirve para gestionar la información de la estrategia ASES.
+* Moodle: Moodle es un acrónimo de Ambiente de aprendizaje dinámico modular orientado a objetos.
+
+El Módulo ASES permite:
+* Gestión de usuarios pertenecientes a la estrategia, cada uno con sus respectivos roles.
+* Registrar en detalle todo el proceso socioeducativo que se le hace a los beneficiarios del programa.
+* Realizar reportes con el fin de mostrar información relevante respecto a los seguimientos socioeducativos.
+
 # Instalación
 *Es necesario que la instalación de el plugin se haga una vez restauradas
 las tablas con la información que se tenga hasta el momento, tanto
