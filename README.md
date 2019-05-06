@@ -90,7 +90,7 @@ Usamos la siguiente estructura para el versionado:
 
 * **Jeison Cardona Gómez** - [vvbv](https://github.com/vvbv)
 * **Iader E. García Gómez** - [iaderegg](https://github.com/iaderegg)
-* **Luis Gerardo ;anrique Cardona** - [luchoman08](https://github.com/luchoman08)
+* **Luis Gerardo Manrique Cardona** - [luchoman08](https://github.com/luchoman08)
 * **Juan Pablo Moreno Muñoz** - [juanpamm](https://github.com/juanpamm)
 * **Camilo José Cruz Rivera** - [cjcruzrivera](https://github.com/cjcruzrivera)
 * **Isabella Serna Ramírez** - [isabella317](https://github.com/isabella317)
