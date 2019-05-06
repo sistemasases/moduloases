@@ -7,21 +7,11 @@
  * @license   	http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-
-$version = 1; //Current version
+const VERSION = 1; //Current version
 
 require_once( __DIR__ . "/../../../../config.php");
-require_once( __DIR__ . "/v" . $version . "/entrypoint.php");
+require_once( __DIR__ . "/v" . VERSION . "/entrypoint.php");
 
-function secure_call( $function_name, $args = [] ){ return make_call( $function_name, $args ); };
-//function clear_cache(){	return clear_cache( $function_name, $args ); };
-
-function hello_world( $times = 3 ){ 
-	for ($i = 0 ; $i < $times; $i++) {
-		echo "Hello World!\n";
-	}
-};
-
-secure_call("hello_world");
+function secure_call( $function_name, $args = [], $alias ){	return make_call( $function_name, $args ); };
 
 ?>

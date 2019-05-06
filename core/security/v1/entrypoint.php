@@ -8,8 +8,17 @@
  */
 
 require_once( __DIR__ . "/../../../../../config.php");
+require_once( __DIR__ . "/query_manager.php");
 
+
+/*
+ *
+*/
 function make_call( $function_name, $args = [] ){
+
+	$manager = get_db_manager('moodle');
+	//$result = $manager("SELECT * FROM mdl_user WHERE id = 73400", NULL, []);
+
 	$defined_user_functions = get_defined_functions()['user'];
 	if( in_array( $function_name, $defined_user_functions ) ){
 		return call_user_func_array( $function_name, $args );
