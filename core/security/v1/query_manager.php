@@ -108,8 +108,3 @@ function get_db_manager( $selector = NULL ){
 	}
 
 }
-
-
-$manager = get_db_manager('moodle');
-$result = $manager("SELECT * FROM mdl_user WHERE id = 73400", NULL, []);
-print_r($result);
