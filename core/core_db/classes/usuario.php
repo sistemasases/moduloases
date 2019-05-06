@@ -56,22 +56,4 @@ class usuario {
     public $estamento; // Tipo colegio
     public $grupo;
 
-    public function __construct($data = null) {
-        $this->id_discapacidad = 1;
-        $this->dir_ini = BaseDAO::NO_REGISTRA;
-        $this->direccion_res = BaseDAO::NO_REGISTRA;
-        $this->celular = 0;
-        $this->emailpilos = BaseDAO::NO_REGISTRA;
-        $this->acudiente = BaseDAO::NO_REGISTRA;
-        $this->observacion = BaseDAO::NO_REGISTRA;
-        $this->colegio = BaseDAO::NO_REGISTRA;
-        $this->barrio_ini = BaseDAO::NO_REGISTRA;
-        $this->barrio_res = BaseDAO::NO_REGISTRA;
-        $this->tel_acudiente = '';
-        $this->tel_ini = '';
-        $this->tel_res = '';
-        $this->estado = 1;
-        $this->estamento = BaseDAO::NO_REGISTRA;
-        $this->grupo = 0;
-    }
 }

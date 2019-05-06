@@ -26,24 +26,43 @@ const VERSION=1;
 
 require_once( __DIR__ . "/../../../../config.php");
 require_once( __DIR__ . "/v" . VERSION . "/entrypoint.php");
-use function \core_db\{call_function, execute, select_sql};
+use function \core_db\{call_db_function};
 
 function core_db_select($class_name, array $conditions = null, $fields = '*', $sort = null) {
-    return call_function(\core_db\SELECT, $class_name, $conditions , $fields , $sort);
+    return call_db_function(\core_db\SELECT, $class_name, $conditions , $fields , $sort);
 }
 
+
 function core_db_execute($sql, $params) {
-    return execute($sql, $params);
+    return call_db_function(\core_db\EXECUTE, $sql, $params);
 }
+
+
+function core_db_save($instance, $table_name = null){
+    return call_db_function(\core_db\SAVE,$instance, $table_name);
+}
+
+
+function core_db_update( $instance, $table_name = null) {
+    return call_db_function(\core_db\UPDATE, $instance, $table_name);
+}
+
+
 function core_db_count($class_name, $conditions=null) {
-    return call_function(\core_db\COUNT, $class_name, $conditions);
+    return call_db_function(\core_db\COUNT, $class_name, $conditions);
 }
+
+
 function core_db_select_sql($sql, $params = array()) {
-    return select_sql($sql, $params);
+    return call_db_function(\core_db\SELECT_SQL, $sql, $params);
 }
+
+
 function core_db_exists($class_name, $conditions): bool {
-    return call_function(\core_db\EXISTS, $class_name, $conditions);
+    return call_db_function(\core_db\EXISTS, $class_name, $conditions);
 }
+
+
 function core_db_select_one($class_name, $conditions=[], $fields='*') {
-    return call_function(\core_db\SELECT_ONE, $class_name, $conditions, $fields );
+    return call_db_function(\core_db\SELECT_ONE, $class_name, $conditions, $fields );
 }

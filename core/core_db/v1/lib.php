@@ -62,3 +62,38 @@ function _get_column_names($class_name, string $rename = null ): array {
     return $column_names;
 }
 
+function return_without_empty_properties($object) {
+    $result_object = new \stdClass();
+    foreach ($object as $key => $value) {
+        if ($value) {
+            $result_object->$key = $value;
+        }
+    }
+    return $result_object;
+}
+
+function normalize_table_name($table_name_or_instance, $plugin_tables_prefix): string {
+    global $talentospilos_classes;
+    if(is_string($table_name_or_instance)){
+        $table_name = $table_name_or_instance;
+    } else {
+        $table_name = get_class($table_name_or_instance);
+    }
+    if(in_array($table_name, $talentospilos_classes)) {
+        return $plugin_tables_prefix.'_'.$table_name;
+
+    } else {
+        return $table_name;
+    }
+}
+
+function normalize_class_name($instance_or_class_name) {
+    if (is_string($instance_or_class_name)) {
+       return $instance_or_class_name;
+    } else if(is_object($instance_or_class_name)) {
+        return get_class($instance_or_class_name);
+    } else {
+        throw new ErrorException("Debe ingresar un string o una intancia de clase");
+    }
+}
+
