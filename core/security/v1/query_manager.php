@@ -8,8 +8,9 @@
  */
 
 require_once( __DIR__ . "/query_manager/aux_functions.php" );
+require_once( __DIR__ . "/../../core_db/core_db.php" );
 
-const FLAG_DAO = "core_db_get";
+const FLAG_CORE_DB = "core_db_select_sql";
 const FLAG_MOODLE = "DB";
 const MANAGER_ALIAS_CORE_DB = "core_db";
 const MANAGER_ALIAS_MOODLE = "moodle";
@@ -45,16 +46,16 @@ function get_db_manager( $selector = NULL ){
 		}
 	}
 	
-	if(	in_array( FLAG_DAO, get_defined_functions()['user']) && $selector_filter[ MANAGER_ALIAS_CORE_DB ] ){
+	if(	in_array( FLAG_CORE_DB, get_defined_functions()['user']) && $selector_filter[ MANAGER_ALIAS_CORE_DB ] ){
 		return function( $query, $params = NULL, $extra = NULL ){
 			$select_filter = _is_select( $query );
 			if( is_null( $select_filter ) ){
 				throw new Exception( "Query cannot be empty." );
 			}else{
 				if( $select_filter ){
-					return dao_select_sql( $query, $params );
+					return core_db_select_sql( $query, $params );
 				}else{
-					return dao_execute( $query, $params );
+					return core_db_execute( $query, $params );
 				}
 			}
 		};
@@ -84,7 +85,6 @@ function get_db_manager( $selector = NULL ){
 						array_key_exists( "user", $extra['db_connection'] ) &&
 						array_key_exists( "password", $extra['db_connection'] )
 					){
-						echo $entra;
 						$host = $extra['db_connection']['host'];
 						$port = $extra['db_connection']['port'];
 						$dbname = $extra['db_connection']['dbname'];
