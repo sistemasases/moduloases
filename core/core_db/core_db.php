@@ -26,7 +26,8 @@ const VERSION=1;
 
 require_once( __DIR__ . "/../../../../config.php");
 require_once( __DIR__ . "/v" . VERSION . "/entrypoint.php");
-use function \core_db\{call_function, execute};
+use function \core_db\{call_function, execute, select_sql};
+
 function core_db_select($class_name, array $conditions = null, $fields = '*', $sort = null) {
     return call_function(\core_db\SELECT, $class_name, $conditions , $fields , $sort);
 }
@@ -37,7 +38,9 @@ function core_db_execute($sql, $params) {
 function core_db_count($class_name, $conditions=null) {
     return call_function(\core_db\COUNT, $class_name, $conditions);
 }
-
+function core_db_select_sql($sql, $params = array()) {
+    return select_sql($sql, $params);
+}
 function core_db_exists($class_name, $conditions): bool {
     return call_function(\core_db\EXISTS, $class_name, $conditions);
 }
