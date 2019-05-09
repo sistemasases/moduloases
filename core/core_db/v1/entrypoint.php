@@ -2,11 +2,13 @@
 
 namespace core_db;
 use function call_user_func_array;
-use function get_class;
 use function in_array;
+use function normalize_class_name;
+use function normalize_table_name;
 
 const SELECT = 'select';
 const EXECUTE = 'execute';
+const SELECT_SQL = 'select_sql';
 const SAVE = 'save';
 const COUNT = 'count';
 const OPTIONS = 'options';
@@ -14,20 +16,23 @@ const UPDATE = 'update';
 const EXISTS = 'exists';
 const SELECT_ONE = 'select_one';
 const PLUGIN_TABLES_PREFIX = 'talentospilos';
+
+
 $talentospilos_classes = array(
     'usuario',
     'user_extended',
+    'save',
     'programa'
 );
 $functs_than_need_table_rename = [
     SELECT,
     EXISTS,
     UPDATE,
+    SELECT_ONE,
     COUNT,
     SAVE,
     OPTIONS,
 ];
-require_once (__DIR__.'./../classes/exports.php');
 require_once (__DIR__.'/lib.php');
 /**
  * Get all elements from database converted to object instances
@@ -51,7 +56,7 @@ function select($class_name, array $conditions = null, $fields = '*', $sort = nu
     if(in_array($class_name, $talentospilos_classes) && !_valid_conditions($class_name, $conditions)) {
         throw new \ErrorException("The given columns for conditions array are invalid, active debug mode for show de debug backtrace");
     }
-    $table_name = normalize_table_name($class_name);
+    $table_name = normalize_table_name($class_name, PLUGIN_TABLES_PREFIX);
     $objects_array = array_values($DB->get_records($table_name, $conditions, $sort, $fields, $limitfrom, $limitnum));
     if(in_array($class_name, $talentospilos_classes) && $fields==='*'){
         $objects = _make_objects_from_std_objects_or_arrays($objects_array, $class_name);
@@ -60,10 +65,14 @@ function select($class_name, array $conditions = null, $fields = '*', $sort = nu
     }
     return $objects_array;
 }
+
+
 function select_sql($sql, $params = array()) {
     global $DB;
     return array_values($DB->get_records_sql($sql, $params));
 }
+
+
 /**
  * Return one object instance from database than satisfy the conditions given
  *
@@ -79,7 +88,7 @@ function select_sql($sql, $params = array()) {
  */
 function select_one($class_name, $conditions=[], $fields='*') {
     global $DB, $talentospilos_classes;
-    $table_name = normalize_table_name($class_name);
+    $table_name = normalize_table_name($class_name, PLUGIN_TABLES_PREFIX);
     if(in_array($class_name, $talentospilos_classes) && !_valid_conditions($class_name, $conditions)) {
         throw new \ErrorException("The given columns for conditions array are invalid, active debug mode for show de debug backtrace");
     }
@@ -87,7 +96,9 @@ function select_one($class_name, $conditions=[], $fields='*') {
     if(!$db_record){
         return false;
     }
-    return new $class_name($db_record);
+    $instance = new $class_name();
+    \reflection\assign_properties_to($db_record, $instance);
+    return $instance;
 }
 /**
  * Executes a general sql query. Should be used only when no other method suitable.
@@ -102,6 +113,7 @@ function execute($sql, array $params) {
     return $DB->execute($sql, $params);
 }
 
+
 /**
  * Check if object exists in database based in an array of a  given conditions
  * @param $class_name string Class name to check if record exists
@@ -114,7 +126,7 @@ function execute($sql, array $params) {
 function exists($class_name, $conditions): bool  {
 
     global $DB, $talentospilos_classes;
-    $table_name = normalize_table_name($class_name);
+    $table_name = normalize_table_name($class_name, PLUGIN_TABLES_PREFIX);
     if (in_array($class_name, $talentospilos_classes) && !_valid_conditions($class_name, $conditions)) {
         throw new \ErrorException("Las condiciones dadas no son validas con respecto a la clase $class_name");
     }
@@ -143,7 +155,7 @@ function exists($class_name, $conditions): bool  {
  */
 function options($class_name, $fields='*', $conditions=null, $sort = '', $limitfrom=0, $limitnum=0) {
     global $DB, $talentospilos_classes;
-    $table_name = normalize_table_name($class_name);
+    $table_name = normalize_table_name($class_name, PLUGIN_TABLES_PREFIX);
     if(in_array($class_name, $talentospilos_classes) && $conditions && _valid_conditions($class_name, $conditions)) {
         throw new \ErrorException("The given columns for conditions array are invalid, active debug mode for show de debug backtrace");
     }
@@ -153,28 +165,37 @@ function options($class_name, $fields='*', $conditions=null, $sort = '', $limitf
 
 /**
  * Save object to database
+ * @param $instance object Instance to be saved into database
  * @return false|int id if was sucessfull created return id false otherwise
  * @throws \dml_exception A DML specific exception is thrown for any errors.
  */
-function save($instance) {
+function save(&$instance, $table_name=null) {
     global $DB;
-    $CLASS = get_class($instance);
-    $table_name = normalize_table_name($CLASS);
-    $record_id =  $DB->insert_record($table_name, $instance );
+    if($table_name===null) {
+        $table_name = normalize_class_name($instance);
+    }
+    $table_name = normalize_table_name($table_name, PLUGIN_TABLES_PREFIX);
+    $record_id = $DB->insert_record($table_name, return_without_empty_properties($instance ));
     if(property_exists($instance, 'id')) {
         $instance->id = $record_id;
     }
     return $record_id;
 }
-function update($instance) {
+
+
+function update($instance, $table_name=null) {
     global $DB;
-    $CLASS = get_class($instance);
+    if($table_name===null) {
+        $table_name = normalize_class_name($instance);
+    }
+    $table_name = normalize_table_name($table_name, PLUGIN_TABLES_PREFIX);
     if(!property_exists($instance, 'id')) {
         return false;
     } else {
-        return $DB->update_record($CLASS, $instance);
+        return $DB->update_record($table_name, $instance);
     }
 }
+
 
 /**
  * @param array $conditions optional array $fieldname=>requestedvalue with AND in between
@@ -187,18 +208,13 @@ function count($class_name, $conditions=null) {
 }
 
 
+function call_db_function($func_name, ...$args) {
 
-function normalize_table_name(string $table_name): string {
-    global $talentospilos_classes;
-    if(in_array($table_name, $talentospilos_classes)) {
-        return PLUGIN_TABLES_PREFIX.'_'.$table_name;
+    global $functs_than_need_table_rename, $talentospilos_classes;
+    $class_name = normalize_class_name($args[0]);
+    if(in_array($func_name, $functs_than_need_table_rename) && in_array($class_name, $talentospilos_classes)) {
 
-    } else {
-        return $table_name;
+        require_once (__DIR__."./../classes/".$class_name.".php");
     }
-}
-function call_function($func_name, ...$args) {
-
-    global $functs_than_need_table_rename;
     return call_user_func_array(__NAMESPACE__ . "\\" . $func_name, $args);
 }

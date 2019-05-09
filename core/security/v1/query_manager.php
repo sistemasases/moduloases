@@ -27,7 +27,7 @@ const AVAILABLE_MANAGERS = [
  * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
  * @see _is_select(...)
  * @param string $selector DB-Manager filter, if this param is not null, a specífic manager is selected.
- * @return lambda function
+ * @return callable function
  *
  * @example 
  *
@@ -47,7 +47,7 @@ const AVAILABLE_MANAGERS = [
 	);
  *
  */
-function get_db_manager( $selector = NULL ){
+function get_db_manager( $selector = NULL ) {
 
 	$selector_filter = [];
 
