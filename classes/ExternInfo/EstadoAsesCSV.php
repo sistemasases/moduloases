@@ -191,7 +191,7 @@ class EstadoAsesCSV extends Validable {
         return $ases_user;
     }
     public function extract_user_extended($ases_user_id, $moodle_user_id): AsesUserExtended {
-        $sede = Sede::get_by(array(Sede::COD_UNIVALLE => $this->sede));
+        $sede = Sede::get_by(array(Sede::NOMBRE => $this->sede));
 
         $academic_program = Programa::get_by(array(
             Programa::CODIGO_UNIVALLE=>$this->programa,
@@ -353,11 +353,11 @@ class EstadoAsesCSV extends Validable {
 
 
     /**
-     * Dado que la sede subida por csv es Sede::COD_UNIVALLE y se debe guardar en la base de datos
+     * Dado que la sede subida por csv es Sede::NOMBRE y se debe guardar en la base de datos
      * el id de la sede correspondiente, este dato se debe cambiar
      */
     private static function extract_sede(EstadoAsesCSV &$estadoAsesCSV, AsesUser &$ases_user) {
-        $sede = Sede::get_by(array(Sede::COD_UNIVALLE=>$estadoAsesCSV->sede));
+        $sede = Sede::get_by(array(Sede::NOMBRE=>$estadoAsesCSV->sede));
         $ases_user->sede = $sede->id;
     }
 
@@ -451,7 +451,7 @@ class EstadoAsesCSV extends Validable {
         if(!$this->validar_sede()) {
             return false;
         }
-        $sede = Sede::get_by(array(Sede::COD_UNIVALLE=>$this->sede));
+        $sede = Sede::get_by(array(Sede::NOMBRE=>$this->sede));
         $id_sede = $sede->id;
 
         if ( !Programa::exists(array(
@@ -466,8 +466,10 @@ class EstadoAsesCSV extends Validable {
         }
     }
     private function validar_sede() {
-        if(!Sede::exists(array(Sede::COD_UNIVALLE => $this->sede))) {
-            $this->add_error("La sede con codigo univalle '$this->sede' no existe", 'sede');
+        if(!Sede::exists(array(Sede::NOMBRE => $this->sede))) {
+            $sedes = Sede::get_all();
+            $sedes_names = implode(', ', array_column($sedes, Sede::NOMBRE));
+            $this->add_error("La sede con nombre '$this->sede' no existe, sedes disponibles: [$sedes_names]", 'sede');
             return false;
         } else {
             return true;

@@ -35,10 +35,9 @@ class EstadoAsesEIManager extends ExternInfoManager {
     public function persist_data() {
         $data = $this->get_objects();
         /* @var $item EstadoAsesCSV */
-
         foreach ($data as $key => $item) {
             if(!$item->valid()) {
-                return false;
+                    return false;
             }
             $id_moodle_user = null;
             $id_ases_user = null;
