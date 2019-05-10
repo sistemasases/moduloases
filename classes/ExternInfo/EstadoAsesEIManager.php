@@ -138,7 +138,11 @@ class EstadoAsesEIManager extends ExternInfoManager {
                  AsesUserExtended::ID_ASES_USER=>$id_ases_user,
                  AsesUserExtended::ID_ACADEMIC_PROGRAM=>$ases_user_extended->id_academic_program))) {
                 AsesUserExtended::disable_all_tracking_status($id_ases_user);
-                $ases_user_extended->save();
+                if($ases_user_extended->save()) {
+                    $this->add_success_log_event("El usuario extendido para la persona con documento $item->documento se ha creado", $key);
+                } else {
+                    $this->add_error(new AsesError(-1, "El usuario extendido para el usuario con documento $item->documento no pudo ser creado por un razón illuminati" ));
+                }
              } else {
                  $this->add_object_warning(
                              "El usuario ya tiene un registro en ases user, para el programa [$program_names_string]. Estos se pasarán a tracking status 0.",
