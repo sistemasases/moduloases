@@ -1102,5 +1102,22 @@
         <INDEX NAME="index_roles_alias" UNIQUE="false" FIELDS="alias"/>
       </INDEXES>
     </TABLE>
+    <TABLE NAME="talentospilos_accion_params" COMMENT="Tabla que asocia acciones y parámetros">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="id_accion" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="alias" TYPE="char" LENGTH="60" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="posicion" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="nombre" TYPE="char" LENGTH="60" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="descripcion" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="valor_entrada_permitido" TYPE="text" NOTNULL="true" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="unique_index_accion_params" UNIQUE="true" FIELDS="alias"/>
+      </INDEXES>
+    </TABLE>
   </TABLES>
 </XMLDB>
