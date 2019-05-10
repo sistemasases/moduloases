@@ -1083,5 +1083,24 @@
         <INDEX NAME="index_log_acciones_id_accion" UNIQUE="false" FIELDS="id_accion"/>
       </INDEXES>
     </TABLE>
+    <TABLE NAME="talentospilos_roles" COMMENT="Tabla nueva para la definición de roles en el sistema">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="alias" TYPE="char" LENGTH="60" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="nombre" TYPE="char" LENGTH="60" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="descripcion" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="id_rol_padre" TYPE="int" LENGTH="20" NOTNULL="true" DEFAULT="-1" SEQUENCE="false" COMMENT="Si el identificador es -1, significa que no hereda."/>
+        <FIELD NAME="eliminado" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="fecha_hora_eliminacion" TYPE="int" LENGTH="20" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="id_usuario_eliminador" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="fecha_hora_registro" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="index_roles_alias" UNIQUE="false" FIELDS="alias"/>
+      </INDEXES>
+    </TABLE>
   </TABLES>
 </XMLDB>
