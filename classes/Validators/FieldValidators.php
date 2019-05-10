@@ -9,10 +9,20 @@
 require_once (__DIR__ . '/../../managers/lib/json.php');
 class FieldValidators
 {
-    private static  function validateDate($date, $format = 'Y-m-d H:i:s')
+
+  private static  function validateDate($date, $format_or_formats = 'Y-m-d H:i:s')
     {
-        $d = DateTime::createFromFormat($format, $date);
-        return $d && $d->format($format) == $date;
+        if(!is_array($format_or_formats)) {
+            $d = DateTime::createFromFormat($format_or_formats, $date);
+            return $d && $d->format($format_or_formats) == $date;
+        } else {
+            foreach ($format_or_formats as $format) {
+                $d = DateTime::createFromFormat($format, $date);
+                if($d && $d->format($format) == $date) {
+                    return true;
+                }
+            }
+        }
     }
 
     /**
