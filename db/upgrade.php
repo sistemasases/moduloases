@@ -3550,6 +3550,39 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
         //     $DB->insert_record('talentospilos_events_to_logs', $event, true);
         // }
 
+        //*****************************************************************************************//
+        // Creación de tablas: Se crean tablas necesarias para el sistema de seguridad             //
+        // Versión: 20190510****0                                                                  //
+        //*****************************************************************************************//
+
+        // Define table talentospilos_acciones to be created.
+        $table = new xmldb_table('talentospilos_acciones');
+
+        // Adding fields to table talentospilos_acciones.
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        $table->add_field('alias', XMLDB_TYPE_CHAR, '60', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('nombre', XMLDB_TYPE_CHAR, '60', null, null, null, null);
+        $table->add_field('descripcion', XMLDB_TYPE_TEXT, null, null, null, null, null);
+        $table->add_field('id_tipo_accion', XMLDB_TYPE_INTEGER, '20', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('registra_log', XMLDB_TYPE_INTEGER, '1', null, XMLDB_NOTNULL, null, '0');
+        $table->add_field('eliminado', XMLDB_TYPE_INTEGER, '1', null, XMLDB_NOTNULL, null, '0');
+        $table->add_field('fecha_hora_eliminacion', XMLDB_TYPE_INTEGER, '20', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('id_usuario_eliminador', XMLDB_TYPE_INTEGER, '20', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('fecha_hora_registro', XMLDB_TYPE_INTEGER, '20', null, XMLDB_NOTNULL, null, null);
+
+        // Adding keys to table talentospilos_acciones.
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+
+        // Adding indexes to table talentospilos_acciones.
+        $table->add_index('index_acciones_alias', XMLDB_INDEX_NOTUNIQUE, array('alias'));
+
+        // Conditionally launch create table for talentospilos_acciones.
+        if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
+        }
+
+        
+
         upgrade_block_savepoint(true, 2019040212300, 'ases');
         return $result;
 
