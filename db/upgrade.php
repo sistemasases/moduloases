@@ -3566,9 +3566,9 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
         $table->add_field('id_tipo_accion', XMLDB_TYPE_INTEGER, '20', null, XMLDB_NOTNULL, null, null);
         $table->add_field('registra_log', XMLDB_TYPE_INTEGER, '1', null, XMLDB_NOTNULL, null, '0');
         $table->add_field('eliminado', XMLDB_TYPE_INTEGER, '1', null, XMLDB_NOTNULL, null, '0');
-        $table->add_field('fecha_hora_eliminacion', XMLDB_TYPE_INTEGER, '20', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('fecha_hora_eliminacion', XMLDB_TYPE_DATETIME, null, null, XMLDB_NOTNULL, null, null);
         $table->add_field('id_usuario_eliminador', XMLDB_TYPE_INTEGER, '20', null, XMLDB_NOTNULL, null, null);
-        $table->add_field('fecha_hora_registro', XMLDB_TYPE_INTEGER, '20', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('fecha_hora_registro', XMLDB_TYPE_DATETIME, null, null, XMLDB_NOTNULL, null, "now()");
 
         // Adding keys to table talentospilos_acciones.
         $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
@@ -3581,7 +3581,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
             $dbman->create_table($table);
         }
 
-        
+
 
         upgrade_block_savepoint(true, 2019040212300, 'ases');
         return $result;
