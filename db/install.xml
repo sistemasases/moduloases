@@ -1078,6 +1078,10 @@
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
       </KEYS>
+      <INDEXES>
+        <INDEX NAME="index_log_acciones_id_usuario" UNIQUE="false" FIELDS="id_usuario"/>
+        <INDEX NAME="index_log_acciones_id_accion" UNIQUE="false" FIELDS="id_accion"/>
+      </INDEXES>
     </TABLE>
   </TABLES>
 </XMLDB>

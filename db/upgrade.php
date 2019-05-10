@@ -3614,6 +3614,10 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
         // Adding keys to table talentospilos_log_acciones.
         $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
 
+        // Adding indexes to table talentospilos_log_acciones.
+        $table->add_index('index_log_acciones_id_usuario', XMLDB_INDEX_NOTUNIQUE, array('id_usuario'));
+        $table->add_index('index_log_acciones_id_accion', XMLDB_INDEX_NOTUNIQUE, array('id_accion'));
+
         // Conditionally launch create table for talentospilos_log_acciones.
         if (!$dbman->table_exists($table)) {
             $dbman->create_table($table);
