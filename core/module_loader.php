@@ -28,7 +28,7 @@ function get_list_of_available_modules(){
 	$modules = [];
 	foreach (glob(__DIR__ . '/*' , GLOB_ONLYDIR) as $key => $value) {
 		$arr = explode('/',trim( $value ));
-		array_push( $modules, $arr[ count( $arr ) ] );
+		array_push( $modules, $arr[ count( $arr ) - 1 ] );
 	}
 
 	return $modules;
