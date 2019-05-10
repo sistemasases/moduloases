@@ -107,19 +107,7 @@ class EstadoAsesCSV extends Validable {
 
     }
 
-    /**
-     * @return bool
-     * @throws dml_exception
-     */
-    private function validar_nombres_repetidos(): bool {
-        $nombre_completo = "$this->firstname $this->lastname";
-        if(user_duplicated_full_name($nombre_completo)) {
-            $this->add_error(new AsesError(-1, "El usuario $nombre_completo ya esta registrado en ASES o almenos tiene un homónimo."));
-            return false;
-        } else {
-            return true;
-        }
-    }
+
 
     public function valid(): bool {
         EstadoAsesCSV::clean($this);
@@ -134,14 +122,12 @@ class EstadoAsesCSV extends Validable {
             $valid_discapacidad = $this->validar_discapacidad();
             $valid_sede = $this->validar_sede();
             $valid_programa = $this->validar_programa();
-            $valid_full_name = $this->validar_nombres_repetidos();
             $valid = $valid_ciudades &&
                 $valid_discapacidad &&
                 $valid_tipos_documento &&
                 $valid_fields &&
                 $valid_sede &&
-                $valid_programa &&
-                $valid_full_name;
+                $valid_programa;
         return $valid;
     }
 

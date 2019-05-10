@@ -54,6 +54,13 @@ class EstadoAsesEIManager extends ExternInfoManager {
                // print_r($this->get_object_warnings());
                 $id_moodle_user = $moodle_user->id;
             }
+            /**
+             * Vereficiación de homonimos
+             */
+            $nombre_completo = "$item->firstname $item->lastname";
+            if(user_duplicated_full_name($nombre_completo)) {
+                $this->add_object_warning("El usuario $nombre_completo ya esta registrado en ASES o almenos tiene un homónimo.", $key);
+            }
 
 
             /* Añadir el usuario a la cohorte dada */
