@@ -37,7 +37,9 @@ class EstadoAsesEIManager extends ExternInfoManager {
         /* @var $item EstadoAsesCSV */
 
         foreach ($data as $key => $item) {
-
+            if(!$item->valid()) {
+                return false;
+            }
             $id_moodle_user = null;
             $id_ases_user = null;
             /* Creación de usuario moodle si no existe*/
