@@ -3581,6 +3581,24 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
             $dbman->create_table($table);
         }
 
+        // Define table talentospilos_tipo_accion to be created.
+        $table = new xmldb_table('talentospilos_tipo_accion');
+
+        // Adding fields to table talentospilos_tipo_accion.
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        $table->add_field('alias', XMLDB_TYPE_CHAR, '60', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('descripcion', XMLDB_TYPE_TEXT, null, null, null, null, null);
+
+        // Adding keys to table talentospilos_tipo_accion.
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+
+        // Adding indexes to table talentospilos_tipo_accion.
+        $table->add_index('unique_index_tipo_accion_alias', XMLDB_INDEX_UNIQUE, array('alias'));
+
+        // Conditionally launch create table for talentospilos_tipo_accion.
+        if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
+        }
 
 
         upgrade_block_savepoint(true, 2019040212300, 'ases');
