@@ -107,17 +107,6 @@ class EstadoAsesCSV extends Validable {
 
     }
 
-    public function validar_numeros_documento(): bool {
-        if(AsesUser::exists_by_num_docs_($this->documento)) {
-            $this->add_error("Ya hay un usuario registrado con número de documento o número documento inicial igual a $this->documento ");
-            return false;
-        }
-        if(AsesUser::exists_by_num_docs_($this->documento_ingreso)) {
-            $this->add_error("Ya hay un usuario registrado con número de documento o número documento inicial igual a $this->documento_ingreso ");
-            return false;
-        }
-        return true;
-    }
     /**
      * @return bool
      * @throws dml_exception
@@ -141,7 +130,6 @@ class EstadoAsesCSV extends Validable {
                 return false;
             }
             $valid_ciudades = $this->validar_ciudades();
-            $valid_num_doc = $this->validar_numeros_documento();
             $valid_tipos_documento = $this->validar_tipos_documento() ; /* En esta función se alteran datos de $this */
             $valid_discapacidad = $this->validar_discapacidad();
             $valid_sede = $this->validar_sede();
@@ -149,7 +137,6 @@ class EstadoAsesCSV extends Validable {
             $valid_full_name = $this->validar_nombres_repetidos();
             $valid = $valid_ciudades &&
                 $valid_discapacidad &&
-                $valid_num_doc &&
                 $valid_tipos_documento &&
                 $valid_fields &&
                 $valid_sede &&
