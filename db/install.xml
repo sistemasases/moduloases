@@ -1053,7 +1053,7 @@
         <INDEX NAME="index_acciones_alias" UNIQUE="false" FIELDS="alias"/>
       </INDEXES>
     </TABLE>
-    <TABLE NAME="talentospilos_tipo_accion" COMMENT="Default comment for the table, please edit me">
+    <TABLE NAME="talentospilos_tipos_accion" COMMENT="Default comment for the table, please edit me">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="alias" TYPE="char" LENGTH="60" NOTNULL="true" SEQUENCE="false"/>
