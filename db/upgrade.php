@@ -4,7 +4,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     global $DB;
     $dbman = $DB->get_manager();
     $result = true;
-    if ($oldversion < 2019040212300 ) {
+    if ($oldversion < 2019051021280 ) {
       
     //     // ************************************************************************************************************
     //     // Actualización que crea la tabla para los campos extendidos de usuario (Tabla: {talentospilos_user_extended})
@@ -3552,7 +3552,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
 
         //*****************************************************************************************//
         // Creación de tablas: Se crean tablas necesarias para el sistema de seguridad             //
-        // Versión: 20190510****0                                                                  //
+        // Versión: 2019051021280                                                                  //
         //*****************************************************************************************//
 
         // Define table talentospilos_tipos_accion to be created.
@@ -3764,7 +3764,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
             $dbman->create_table($table);
         }
 
-        upgrade_block_savepoint(true, 2019040212300, 'ases');
+        upgrade_block_savepoint(true, 2019051021280, 'ases');
         return $result;
 
     }
