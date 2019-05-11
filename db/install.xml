@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<XMLDB PATH="blocks/ases/db" VERSION="20190402" COMMENT="XMLDB file for Moodle blocks/configurable_reports"
+<XMLDB PATH="blocks/ases/db" VERSION="20190510" COMMENT="XMLDB file for Moodle blocks/configurable_reports"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
 >
@@ -1031,6 +1031,141 @@
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="talentospilos_acciones" COMMENT="Contiene las acciones del sistema">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="alias" TYPE="char" LENGTH="60" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="nombre" TYPE="char" LENGTH="60" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="descripcion" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="id_tipo_accion" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="registra_log" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="eliminado" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="fecha_hora_eliminacion" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="id_usuario_eliminador" TYPE="int" LENGTH="20" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="fecha_hora_registro" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="fk_acciones_id_tipo_accion" TYPE="foreign" FIELDS="id_tipo_accion" REFTABLE="talentospilos_tipos_accion" REFFIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="index_acciones_alias" UNIQUE="false" FIELDS="alias"/>
+      </INDEXES>
+    </TABLE>
+    <TABLE NAME="talentospilos_tipos_accion" COMMENT="Default comment for the table, please edit me">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="alias" TYPE="char" LENGTH="60" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="descripcion" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="unique_index_tipo_accion_alias" UNIQUE="true" FIELDS="alias"/>
+      </INDEXES>
+    </TABLE>
+    <TABLE NAME="talentospilos_log_acciones" COMMENT="Default comment for the table, please edit me">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="id_usuario" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="id_accion" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="parametros" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="salida" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="fecha_hora_registro" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="fk_log_acciones_id_accion" TYPE="foreign" FIELDS="id_accion" REFTABLE="talentospilos_acciones" REFFIELDS="id"/>
+        <KEY NAME="fk_log_acciones_id_usuario" TYPE="foreign" FIELDS="id_usuario" REFTABLE="user" REFFIELDS="id"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="talentospilos_roles" COMMENT="Tabla nueva para la definición de roles en el sistema">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="alias" TYPE="char" LENGTH="60" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="nombre" TYPE="char" LENGTH="60" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="descripcion" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="id_rol_padre" TYPE="int" LENGTH="20" NOTNULL="true" DEFAULT="-1" SEQUENCE="false" COMMENT="Si el identificador es -1, significa que no hereda."/>
+        <FIELD NAME="eliminado" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="fecha_hora_eliminacion" TYPE="int" LENGTH="20" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="id_usuario_eliminador" TYPE="int" LENGTH="20" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="fecha_hora_registro" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="index_roles_alias" UNIQUE="false" FIELDS="alias"/>
+      </INDEXES>
+    </TABLE>
+    <TABLE NAME="talentospilos_accion_params" COMMENT="Tabla que asocia acciones y parámetros">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="id_accion" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="alias" TYPE="char" LENGTH="60" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="posicion" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="nombre" TYPE="char" LENGTH="60" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="descripcion" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="valor_entrada_permitido" TYPE="text" NOTNULL="true" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="fk_accion_params_id_accion" TYPE="foreign" FIELDS="id_accion" REFTABLE="talentospilos_acciones" REFFIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="unique_index_accion_params" UNIQUE="true" FIELDS="alias"/>
+      </INDEXES>
+    </TABLE>
+    <TABLE NAME="talentospilos_roles_params" COMMENT="Tabla que relaciona roles con parámetros, id_rol y id_accion_params es una llave compuesta manejada en la implementación.">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="id_rol" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="id_accion_params" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="fk_roles_params_id_rol" TYPE="foreign" FIELDS="id_rol" REFTABLE="talentospilos_roles" REFFIELDS="id"/>
+        <KEY NAME="fk_roles_params_id_accion_params" TYPE="foreign" FIELDS="id_accion_params" REFTABLE="talentospilos_accion_params" REFFIELDS="id"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="talentospilos_roles_acciones" COMMENT="Default comment for the table, please edit me">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="id_rol" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="id_accion" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="eliminado" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="fecha_hora_eliminacion" TYPE="int" LENGTH="20" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="id_usuario_eliminador" TYPE="int" LENGTH="20" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="fecha_hora_registro" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="fk_roles_acciones_id_rol" TYPE="foreign" FIELDS="id_rol" REFTABLE="talentospilos_roles" REFFIELDS="id"/>
+        <KEY NAME="fk_roles_acciones_id_accion" TYPE="foreign" FIELDS="id_accion" REFTABLE="talentospilos_acciones" REFFIELDS="id"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="talentospilos_usuario_rol" COMMENT="Tabla nueva para la asignación de roles a usuarios.">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="id_usuario" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="id_rol" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="fecha_hora_inicio" TYPE="int" LENGTH="20" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="fecha_hora_fin" TYPE="int" LENGTH="20" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="intervalo_validez_alternativo" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="usar_intervalo_alternativo" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="singularizador" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="eliminado" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="fecha_hora_eliminacion" TYPE="int" LENGTH="20" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="id_usuario_eliminador" TYPE="int" LENGTH="20" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="fecha_hora_registro" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="fk_usuario_rol_user" TYPE="foreign" FIELDS="id_usuario" REFTABLE="user" REFFIELDS="id"/>
+        <KEY NAME="fk_usuario_rol_roles" TYPE="foreign" FIELDS="id_rol" REFTABLE="talentospilos_roles" REFFIELDS="id"/>
       </KEYS>
     </TABLE>
   </TABLES>
