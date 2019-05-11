@@ -3671,6 +3671,22 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
             $dbman->create_table($table);
         }
 
+        // Define table talentospilos_roles_params to be created.
+        $table = new xmldb_table('talentospilos_roles_params');
+
+        // Adding fields to table talentospilos_roles_params.
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        $table->add_field('id_rol', XMLDB_TYPE_INTEGER, '20', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('id_accion_params', XMLDB_TYPE_INTEGER, '20', null, XMLDB_NOTNULL, null, null);
+
+        // Adding keys to table talentospilos_roles_params.
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+
+        // Conditionally launch create table for talentospilos_roles_params.
+        if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
+        }
+
 
         upgrade_block_savepoint(true, 2019040212300, 'ases');
         return $result;
