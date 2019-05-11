@@ -1048,6 +1048,8 @@
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="fk_acciones_id_tipo_accion" TYPE="foreign" FIELDS="id_tipo_accion" REFTABLE="talentospilos_tipo_accion" REFFIELDS="id"/>
+        <KEY NAME="fk_acciones_id_usuario_eliminador" TYPE="foreign" FIELDS="id_usuario_eliminador" REFTABLE="user" REFFIELDS="id"/>
       </KEYS>
       <INDEXES>
         <INDEX NAME="index_acciones_alias" UNIQUE="false" FIELDS="alias"/>
@@ -1077,11 +1079,9 @@
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="fk_log_acciones_id_accion" TYPE="foreign" FIELDS="id_accion" REFTABLE="talentospilos_acciones" REFFIELDS="id"/>
+        <KEY NAME="fk_log_acciones_id_usuario" TYPE="foreign" FIELDS="id_usuario" REFTABLE="user" REFFIELDS="id"/>
       </KEYS>
-      <INDEXES>
-        <INDEX NAME="index_log_acciones_id_usuario" UNIQUE="false" FIELDS="id_usuario"/>
-        <INDEX NAME="index_log_acciones_id_accion" UNIQUE="false" FIELDS="id_accion"/>
-      </INDEXES>
     </TABLE>
     <TABLE NAME="talentospilos_roles" COMMENT="Tabla nueva para la definición de roles en el sistema">
       <FIELDS>
@@ -1097,6 +1097,7 @@
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="fk_roles_id_usuario_eliminador" TYPE="foreign" FIELDS="id_usuario_eliminador" REFTABLE="user" REFFIELDS="id"/>
       </KEYS>
       <INDEXES>
         <INDEX NAME="index_roles_alias" UNIQUE="false" FIELDS="alias"/>
@@ -1114,6 +1115,7 @@
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="fk_accion_params_id_accion" TYPE="foreign" FIELDS="id_accion" REFTABLE="talentospilos_acciones" REFFIELDS="id"/>
       </KEYS>
       <INDEXES>
         <INDEX NAME="unique_index_accion_params" UNIQUE="true" FIELDS="alias"/>
@@ -1127,6 +1129,8 @@
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="fk_roles_params_id_rol" TYPE="foreign" FIELDS="id_rol" REFTABLE="talentospilos_roles" REFFIELDS="id"/>
+        <KEY NAME="fk_roles_params_id_accion_params" TYPE="foreign" FIELDS="id_accion_params" REFTABLE="talentospilos_accion_params" REFFIELDS="id"/>
       </KEYS>
     </TABLE>
     <TABLE NAME="talentospilos_roles_acciones" COMMENT="Default comment for the table, please edit me">
@@ -1141,6 +1145,9 @@
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="fk_roles_acciones_id_rol" TYPE="foreign" FIELDS="id_rol" REFTABLE="talentospilos_roles" REFFIELDS="id"/>
+        <KEY NAME="fk_roles_acciones_id_accion" TYPE="foreign" FIELDS="id_accion" REFTABLE="talentospilos_acciones" REFFIELDS="id"/>
+        <KEY NAME="fk_roles_acciones_id_usuario_eliminador" TYPE="foreign" FIELDS="id_usuario_eliminador" REFTABLE="user" REFFIELDS="id"/>
       </KEYS>
     </TABLE>
     <TABLE NAME="talentospilos_usuario_rol" COMMENT="Tabla nueva para la asignación de roles a usuarios.">
@@ -1162,6 +1169,7 @@
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
         <KEY NAME="fk_usuario_rol_user" TYPE="foreign" FIELDS="id_usuario" REFTABLE="user" REFFIELDS="id"/>
         <KEY NAME="fk_usuario_rol_roles" TYPE="foreign" FIELDS="id_rol" REFTABLE="talentospilos_roles" REFFIELDS="id"/>
+        <KEY NAME="fk_usuario_rol_id_usuario_eliminador" TYPE="foreign" FIELDS="id_usuario_eliminador" REFTABLE="user" REFFIELDS="id"/>
       </KEYS>
     </TABLE>
   </TABLES>

@@ -3555,32 +3555,6 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
         // Versión: 20190510****0                                                                  //
         //*****************************************************************************************//
 
-        // Define table talentospilos_acciones to be created.
-        $table = new xmldb_table('talentospilos_acciones');
-
-        // Adding fields to table talentospilos_acciones.
-        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
-        $table->add_field('alias', XMLDB_TYPE_CHAR, '60', null, XMLDB_NOTNULL, null, null);
-        $table->add_field('nombre', XMLDB_TYPE_CHAR, '60', null, null, null, null);
-        $table->add_field('descripcion', XMLDB_TYPE_TEXT, null, null, null, null, null);
-        $table->add_field('id_tipo_accion', XMLDB_TYPE_INTEGER, '20', null, XMLDB_NOTNULL, null, null);
-        $table->add_field('registra_log', XMLDB_TYPE_INTEGER, '1', null, XMLDB_NOTNULL, null, '0');
-        $table->add_field('eliminado', XMLDB_TYPE_INTEGER, '1', null, XMLDB_NOTNULL, null, '0');
-        $table->add_field('fecha_hora_eliminacion', XMLDB_TYPE_DATETIME, null, null, XMLDB_NOTNULL, null, null);
-        $table->add_field('id_usuario_eliminador', XMLDB_TYPE_INTEGER, '20', null, XMLDB_NOTNULL, null, null);
-        $table->add_field('fecha_hora_registro', XMLDB_TYPE_DATETIME, null, null, XMLDB_NOTNULL, null, "now()");
-
-        // Adding keys to table talentospilos_acciones.
-        $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
-
-        // Adding indexes to table talentospilos_acciones.
-        $table->add_index('index_acciones_alias', XMLDB_INDEX_NOTUNIQUE, array('alias'));
-
-        // Conditionally launch create table for talentospilos_acciones.
-        if (!$dbman->table_exists($table)) {
-            $dbman->create_table($table);
-        }
-
         // Define table talentospilos_tipos_accion to be created.
         $table = new xmldb_table('talentospilos_tipos_accion');
 
@@ -3600,6 +3574,38 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
             $dbman->create_table($table);
         }
 
+        //-------------------------------------------------------------------------
+
+        // Define table talentospilos_acciones to be created.
+        $table = new xmldb_table('talentospilos_acciones');
+
+        // Adding fields to table talentospilos_acciones.
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        $table->add_field('alias', XMLDB_TYPE_CHAR, '60', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('nombre', XMLDB_TYPE_CHAR, '60', null, null, null, null);
+        $table->add_field('descripcion', XMLDB_TYPE_TEXT, null, null, null, null, null);
+        $table->add_field('id_tipo_accion', XMLDB_TYPE_INTEGER, '20', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('registra_log', XMLDB_TYPE_INTEGER, '1', null, XMLDB_NOTNULL, null, '0');
+        $table->add_field('eliminado', XMLDB_TYPE_INTEGER, '1', null, XMLDB_NOTNULL, null, '0');
+        $table->add_field('fecha_hora_eliminacion', XMLDB_TYPE_DATETIME, null, null, XMLDB_NOTNULL, null, null);
+        $table->add_field('id_usuario_eliminador', XMLDB_TYPE_INTEGER, '20', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('fecha_hora_registro', XMLDB_TYPE_DATETIME, null, null, XMLDB_NOTNULL, null, "now()");
+
+        // Adding keys to table talentospilos_acciones.
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+        $table->add_key('fk_acciones_id_tipo_accion', XMLDB_KEY_FOREIGN, array('id_tipo_accion'), 'talentospilos_tipo_accion', array('id'));
+        $table->add_key('fk_acciones_id_usuario_eliminador', XMLDB_KEY_FOREIGN, array('id_usuario_eliminador'), 'user', array('id'));
+
+        // Adding indexes to table talentospilos_acciones.
+        $table->add_index('index_acciones_alias', XMLDB_INDEX_NOTUNIQUE, array('alias'));
+
+        // Conditionally launch create table for talentospilos_acciones.
+        if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
+        }
+
+        //-------------------------------------------------------------------------
+
         // Define table talentospilos_log_acciones to be created.
         $table = new xmldb_table('talentospilos_log_acciones');
 
@@ -3613,15 +3619,15 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
 
         // Adding keys to table talentospilos_log_acciones.
         $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
-
-        // Adding indexes to table talentospilos_log_acciones.
-        $table->add_index('index_log_acciones_id_usuario', XMLDB_INDEX_NOTUNIQUE, array('id_usuario'));
-        $table->add_index('index_log_acciones_id_accion', XMLDB_INDEX_NOTUNIQUE, array('id_accion'));
+        $table->add_key('fk_log_acciones_id_accion', XMLDB_KEY_FOREIGN, array('id_accion'), 'talentospilos_acciones', array('id'));
+        $table->add_key('fk_log_acciones_id_usuario', XMLDB_KEY_FOREIGN, array('id_usuario'), 'user', array('id'));
 
         // Conditionally launch create table for talentospilos_log_acciones.
         if (!$dbman->table_exists($table)) {
             $dbman->create_table($table);
         }
+
+        //-------------------------------------------------------------------------
 
         // Define table talentospilos_roles to be created.
         $table = new xmldb_table('talentospilos_roles');
@@ -3639,6 +3645,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
 
         // Adding keys to table talentospilos_roles.
         $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+        $table->add_key('fk_roles_id_usuario_eliminador', XMLDB_KEY_FOREIGN, array('id_usuario_eliminador'), 'user', array('id'));
 
         // Adding indexes to table talentospilos_roles.
         $table->add_index('index_roles_alias', XMLDB_INDEX_NOTUNIQUE, array('alias'));
@@ -3647,6 +3654,8 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
         if (!$dbman->table_exists($table)) {
             $dbman->create_table($table);
         }
+
+        //-------------------------------------------------------------------------
 
         // Define table talentospilos_accion_params to be created.
         $table = new xmldb_table('talentospilos_accion_params');
@@ -3662,6 +3671,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
 
         // Adding keys to table talentospilos_accion_params.
         $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+        $table->add_key('fk_accion_params_id_accion', XMLDB_KEY_FOREIGN, array('id_accion'), 'talentospilos_acciones', array('id'));
 
         // Adding indexes to table talentospilos_accion_params.
         $table->add_index('unique_index_accion_params', XMLDB_INDEX_UNIQUE, array('alias'));
@@ -3670,6 +3680,8 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
         if (!$dbman->table_exists($table)) {
             $dbman->create_table($table);
         }
+
+        //-------------------------------------------------------------------------
 
         // Define table talentospilos_roles_params to be created.
         $table = new xmldb_table('talentospilos_roles_params');
@@ -3681,11 +3693,15 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
 
         // Adding keys to table talentospilos_roles_params.
         $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+        $table->add_key('fk_roles_params_id_rol', XMLDB_KEY_FOREIGN, array('id_rol'), 'talentospilos_roles', array('id'));
+        $table->add_key('fk_roles_params_id_accion_params', XMLDB_KEY_FOREIGN, array('id_accion_params'), 'talentospilos_accion_params', array('id'));
 
         // Conditionally launch create table for talentospilos_roles_params.
         if (!$dbman->table_exists($table)) {
             $dbman->create_table($table);
         }
+
+        //-------------------------------------------------------------------------
 
         // Define table talentospilos_roles_acciones to be created.
         $table = new xmldb_table('talentospilos_roles_acciones');
@@ -3701,11 +3717,16 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
 
         // Adding keys to table talentospilos_roles_acciones.
         $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+        $table->add_key('fk_roles_acciones_id_rol', XMLDB_KEY_FOREIGN, array('id_rol'), 'talentospilos_roles', array('id'));
+        $table->add_key('fk_roles_acciones_id_accion', XMLDB_KEY_FOREIGN, array('id_accion'), 'talentospilos_acciones', array('id'));
+        $table->add_key('fk_roles_acciones_id_usuario_eliminador', XMLDB_KEY_FOREIGN, array('id_usuario_eliminador'), 'user', array('id'));
 
         // Conditionally launch create table for talentospilos_roles_acciones.
         if (!$dbman->table_exists($table)) {
             $dbman->create_table($table);
         }
+
+        //-------------------------------------------------------------------------
 
         // Define table talentospilos_usuario_rol to be created.
         $table = new xmldb_table('talentospilos_usuario_rol');
@@ -3728,13 +3749,12 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
         $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
         $table->add_key('fk_usuario_rol_user', XMLDB_KEY_FOREIGN, array('id_usuario'), 'user', array('id'));
         $table->add_key('fk_usuario_rol_roles', XMLDB_KEY_FOREIGN, array('id_rol'), 'talentospilos_roles', array('id'));
+        $table->add_key('fk_usuario_rol_id_usuario_eliminador', XMLDB_KEY_FOREIGN, array('id_usuario_eliminador'), 'user', array('id'));
 
         // Conditionally launch create table for talentospilos_usuario_rol.
         if (!$dbman->table_exists($table)) {
             $dbman->create_table($table);
         }
-
-
 
         upgrade_block_savepoint(true, 2019040212300, 'ases');
         return $result;
