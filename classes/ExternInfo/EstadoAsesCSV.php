@@ -107,30 +107,7 @@ class EstadoAsesCSV extends Validable {
 
     }
 
-    public function validar_numeros_documento(): bool {
-        if(AsesUser::exists_by_num_docs_($this->documento)) {
-            $this->add_error("Ya hay un usuario registrado con número de documento o número documento inicial igual a $this->documento ");
-            return false;
-        }
-        if(AsesUser::exists_by_num_docs_($this->documento_ingreso)) {
-            $this->add_error("Ya hay un usuario registrado con número de documento o número documento inicial igual a $this->documento_ingreso ");
-            return false;
-        }
-        return true;
-    }
-    /**
-     * @return bool
-     * @throws dml_exception
-     */
-    private function validar_nombres_repetidos(): bool {
-        $nombre_completo = "$this->firstname $this->lastname";
-        if(user_duplicated_full_name($nombre_completo)) {
-            $this->add_error(new AsesError(-1, "El usuario $nombre_completo ya esta registrado en ASES o almenos tiene un homónimo."));
-            return false;
-        } else {
-            return true;
-        }
-    }
+
 
     public function valid(): bool {
         EstadoAsesCSV::clean($this);
@@ -141,20 +118,16 @@ class EstadoAsesCSV extends Validable {
                 return false;
             }
             $valid_ciudades = $this->validar_ciudades();
-            $valid_num_doc = $this->validar_numeros_documento();
             $valid_tipos_documento = $this->validar_tipos_documento() ; /* En esta función se alteran datos de $this */
             $valid_discapacidad = $this->validar_discapacidad();
             $valid_sede = $this->validar_sede();
             $valid_programa = $this->validar_programa();
-            $valid_full_name = $this->validar_nombres_repetidos();
             $valid = $valid_ciudades &&
                 $valid_discapacidad &&
-                $valid_num_doc &&
                 $valid_tipos_documento &&
                 $valid_fields &&
                 $valid_sede &&
-                $valid_programa &&
-                $valid_full_name;
+                $valid_programa;
         return $valid;
     }
 
@@ -191,7 +164,7 @@ class EstadoAsesCSV extends Validable {
         return $ases_user;
     }
     public function extract_user_extended($ases_user_id, $moodle_user_id): AsesUserExtended {
-        $sede = Sede::get_by(array(Sede::COD_UNIVALLE => $this->sede));
+        $sede = Sede::get_by(array(Sede::NOMBRE => $this->sede));
 
         $academic_program = Programa::get_by(array(
             Programa::CODIGO_UNIVALLE=>$this->programa,
@@ -353,11 +326,11 @@ class EstadoAsesCSV extends Validable {
 
 
     /**
-     * Dado que la sede subida por csv es Sede::COD_UNIVALLE y se debe guardar en la base de datos
+     * Dado que la sede subida por csv es Sede::NOMBRE y se debe guardar en la base de datos
      * el id de la sede correspondiente, este dato se debe cambiar
      */
     private static function extract_sede(EstadoAsesCSV &$estadoAsesCSV, AsesUser &$ases_user) {
-        $sede = Sede::get_by(array(Sede::COD_UNIVALLE=>$estadoAsesCSV->sede));
+        $sede = Sede::get_by(array(Sede::NOMBRE=>$estadoAsesCSV->sede));
         $ases_user->sede = $sede->id;
     }
 
@@ -451,7 +424,7 @@ class EstadoAsesCSV extends Validable {
         if(!$this->validar_sede()) {
             return false;
         }
-        $sede = Sede::get_by(array(Sede::COD_UNIVALLE=>$this->sede));
+        $sede = Sede::get_by(array(Sede::NOMBRE=>$this->sede));
         $id_sede = $sede->id;
 
         if ( !Programa::exists(array(
@@ -466,8 +439,10 @@ class EstadoAsesCSV extends Validable {
         }
     }
     private function validar_sede() {
-        if(!Sede::exists(array(Sede::COD_UNIVALLE => $this->sede))) {
-            $this->add_error("La sede con codigo univalle '$this->sede' no existe", 'sede');
+        if(!Sede::exists(array(Sede::NOMBRE => $this->sede))) {
+            $sedes = Sede::get_all();
+            $sedes_names = implode(', ', array_column($sedes, Sede::NOMBRE));
+            $this->add_error("La sede con nombre '$this->sede' no existe, sedes disponibles: [$sedes_names]", 'sede');
             return false;
         } else {
             return true;
