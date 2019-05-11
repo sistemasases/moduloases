@@ -47,7 +47,7 @@ const AVAILABLE_MANAGERS = [
 	);
  *
  */
-function get_db_manager( $selector = NULL ) {
+function get_db_manager( $selector = null ) {
 
 	$selector_filter = [];
 
@@ -71,7 +71,7 @@ function get_db_manager( $selector = NULL ) {
 	
 	if(	in_array( FLAG_CORE_DB, get_defined_functions()['user']) && $selector_filter[ MANAGER_ALIAS_CORE_DB ] ){
 
-		return function( $query, $params = NULL, $extra = NULL ){
+		return function( $query, $params = null, $extra = null ){
 			$select_filter = _is_select( $query );
 			if( is_null( $select_filter ) ){
 				throw new Exception( "Query cannot be empty." );
@@ -86,7 +86,7 @@ function get_db_manager( $selector = NULL ) {
 
 	}else if( array_key_exists( FLAG_MOODLE, $GLOBALS ) && $selector_filter[ MANAGER_ALIAS_MOODLE ] ){
 
-		return function( $query, $params = NULL, $extra = NULL ){
+		return function( $query, $params = null, $extra = null ){
 			$select_filter = _is_select( $query );
 			if( is_null( $select_filter ) ){
 				throw new Exception( "Query cannot be empty." );
@@ -101,7 +101,7 @@ function get_db_manager( $selector = NULL ) {
 
 	}else{
 
-		return function( $query, $params = NULL, $extra = NULL ){
+		return function( $query, $params = null, $extra = null ){
 			if( is_null( $extra ) ){
 				throw new Exception( "extra['db_connection'] does not exist" );
 			}else{
