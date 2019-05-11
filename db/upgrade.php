@@ -3707,6 +3707,34 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
             $dbman->create_table($table);
         }
 
+        // Define table talentospilos_usuario_rol to be created.
+        $table = new xmldb_table('talentospilos_usuario_rol');
+
+        // Adding fields to table talentospilos_usuario_rol.
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        $table->add_field('id_usuario', XMLDB_TYPE_INTEGER, '20', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('id_rol', XMLDB_TYPE_INTEGER, '20', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('fecha_hora_inicio', XMLDB_TYPE_INTEGER, '20', null, null, null, null);
+        $table->add_field('fecha_hora_fin', XMLDB_TYPE_INTEGER, '20', null, null, null, null);
+        $table->add_field('intervalo_validez_alternativo', XMLDB_TYPE_TEXT, null, null, null, null, null);
+        $table->add_field('usar_intervalo_alternativo', XMLDB_TYPE_INTEGER, '1', null, XMLDB_NOTNULL, null, '0');
+        $table->add_field('singularizador', XMLDB_TYPE_TEXT, null, null, null, null, null);
+        $table->add_field('eliminado', XMLDB_TYPE_INTEGER, '1', null, XMLDB_NOTNULL, null, '0');
+        $table->add_field('fecha_hora_eliminacion', XMLDB_TYPE_DATETIME, null, null, null, null, null);
+        $table->add_field('id_usuario_eliminador', XMLDB_TYPE_INTEGER, '20', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('fecha_hora_registro', XMLDB_TYPE_DATETIME, null, null, XMLDB_NOTNULL, null, "now()");
+
+        // Adding keys to table talentospilos_usuario_rol.
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+        $table->add_key('fk_usuario_rol_user', XMLDB_KEY_FOREIGN, array('id_usuario'), 'user', array('id'));
+        $table->add_key('fk_usuario_rol_roles', XMLDB_KEY_FOREIGN, array('id_rol'), 'talentospilos_roles', array('id'));
+
+        // Conditionally launch create table for talentospilos_usuario_rol.
+        if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
+        }
+
+
 
         upgrade_block_savepoint(true, 2019040212300, 'ases');
         return $result;

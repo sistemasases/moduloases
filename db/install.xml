@@ -1143,5 +1143,26 @@
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
       </KEYS>
     </TABLE>
+    <TABLE NAME="talentospilos_usuario_rol" COMMENT="Tabla nueva para la asignación de roles a usuarios.">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="id_usuario" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="id_rol" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="fecha_hora_inicio" TYPE="int" LENGTH="20" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="fecha_hora_fin" TYPE="int" LENGTH="20" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="intervalo_validez_alternativo" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="usar_intervalo_alternativo" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="singularizador" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="eliminado" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="fecha_hora_eliminacion" TYPE="int" LENGTH="20" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="id_usuario_eliminador" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="fecha_hora_registro" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="fk_usuario_rol_user" TYPE="foreign" FIELDS="id_usuario" REFTABLE="user" REFFIELDS="id"/>
+        <KEY NAME="fk_usuario_rol_roles" TYPE="foreign" FIELDS="id_rol" REFTABLE="talentospilos_roles" REFFIELDS="id"/>
+      </KEYS>
+    </TABLE>
   </TABLES>
 </XMLDB>
