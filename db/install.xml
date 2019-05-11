@@ -1048,7 +1048,7 @@
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
-        <KEY NAME="fk_acciones_id_tipo_accion" TYPE="foreign" FIELDS="id_tipo_accion" REFTABLE="talentospilos_tipo_accion" REFFIELDS="id"/>
+        <KEY NAME="fk_acciones_id_tipo_accion" TYPE="foreign" FIELDS="id_tipo_accion" REFTABLE="talentospilos_tipos_accion" REFFIELDS="id"/>
         <KEY NAME="fk_acciones_id_usuario_eliminador" TYPE="foreign" FIELDS="id_usuario_eliminador" REFTABLE="user" REFFIELDS="id"/>
       </KEYS>
       <INDEXES>

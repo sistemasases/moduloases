@@ -3572,6 +3572,18 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
         // Conditionally launch create table for talentospilos_tipos_accion.
         if (!$dbman->table_exists($table)) {
             $dbman->create_table($table);
+
+            $tipo_back = new stdClass();
+            $tipo_back->alias = 'back';
+            $tipo_back->descripcion = "Acciones invocadas por la API";
+
+            $tipo_front = new stdClass();
+            $tipo_front->alias = 'front';
+            $tipo_front->descripcion = "Bloques renderizados por el front";
+
+            $DB->insert_record('talentospilos_tipos_accion', $tipo_back, true);
+            $DB->insert_record('talentospilos_tipos_accion', $tipo_front, true);
+
         }
 
         //-------------------------------------------------------------------------
@@ -3593,7 +3605,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
 
         // Adding keys to table talentospilos_acciones.
         $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
-        $table->add_key('fk_acciones_id_tipo_accion', XMLDB_KEY_FOREIGN, array('id_tipo_accion'), 'talentospilos_tipo_accion', array('id'));
+        $table->add_key('fk_acciones_id_tipo_accion', XMLDB_KEY_FOREIGN, array('id_tipo_accion'), 'talentospilos_tipos_accion', array('id'));
         $table->add_key('fk_acciones_id_usuario_eliminador', XMLDB_KEY_FOREIGN, array('id_usuario_eliminador'), 'user', array('id'));
 
         // Adding indexes to table talentospilos_acciones.
