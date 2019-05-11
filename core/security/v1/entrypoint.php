@@ -15,7 +15,7 @@ require_once( __DIR__ . "/query_manager.php");
  *
  * This function requieres a context to execute, an example of this context:
  *
- * array(
+ * $context = array(
  * 	'fun_name' => array( 
  *		'action_alias' => 'one_alias',
  *		'params_alias' => "one_alias"
