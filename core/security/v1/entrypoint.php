@@ -11,12 +11,28 @@ require_once( __DIR__ . "/../../../../../config.php");
 require_once( __DIR__ . "/query_manager.php");
 
 /**
- * @see get_action(...)
+ * Function that processes a secure call request.
+ *
+ * This function requieres a context to execute, an example of this context:
+ *
+ * array(
+ * 	'fun_name' => array( 
+ *		'action_alias' => 'one_alias',
+ *		'params_alias' => "one_alias"
+ *	)
+ * )
+ *
+ * @see get_action($in) in this file.
+ *
  * @author Jeison Cardona Gómez <jeison.cardona@correounivalle.edu.co>
+ * @since 1.0.0
+ *
  * @param string $function_name, Function name.
  * @param array $args, Arguments.
  * @param array $context, Context for execution.
  * @param integer $user_id, User that execute the function.
+ *
+ * @return mixed
  */
 function secure_Call( $function_name, $args = null, $context = null, $user_id = null ){
 
@@ -66,8 +82,14 @@ function secure_Call( $function_name, $args = null, $context = null, $user_id = 
 
 /**
  * Function that returns an action given an id or alias.
+ *
+ * @see get_db_manager() in query_manager.php
+ *
  * @author Jeison Cardona Gómez <jeison.cardona@correounivalle.edu.co>
+ * @since 1.0.0
+ *
  * @param mixed $in, this input param can be and id (Integer)  or alias (String)
+ *
  * @return object|null
 */
 function get_action( $in ){
