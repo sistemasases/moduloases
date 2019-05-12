@@ -15,7 +15,7 @@ require_once( __DIR__ . "/v" . VERSION . "/entrypoint.php");
 
 $PREFIX = $GLOBALS[ 'CFG' ]->prefix;
 
-function core_secure_call( $function_name, $args = null, $context = null, $user_id = null, $curren_time = time(), $singularizations = null ){	
+function core_secure_call( $function_name, $args = null, $context = null, $user_id = null, $curren_time = null, $singularizations = null ){	
 	return secure_Call( $function_name, $args, $context, $user_id ); 
 };
 
