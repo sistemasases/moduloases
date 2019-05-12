@@ -35,10 +35,10 @@ require_once( __DIR__ . "/query_manager.php");
  *
  * @return array
  */
-function secure_Call( $function_name, $args = null, $context = null, $user_id = null, $current_time = null, $singularizations = null ){
+function secure_Call( $function_name, $args = null, $context = null, $user_id = null, $time_context = null, $singularizations = null ){
 
-	if( is_null( $current_time ) ){
-		$current_time = time();
+	if( is_null( $time_context ) ){
+		$time_context = time();
 	}
 
 	//Context validation
@@ -74,7 +74,8 @@ function secure_Call( $function_name, $args = null, $context = null, $user_id = 
 
 				if( _core_security_user_exist( $user_id ) ){
 
-					$user_rol = _core_security_get_user_rol( $user_id, $current_time, $singularizations );
+					$user_rol = _core_security_get_user_rol( $user_id, $time_context, $singularizations );
+					print_r($user_rol);
 					
 				}else{
 					return array(
@@ -176,7 +177,7 @@ function _core_security_user_exist( $user_id ){
  *
  * @return object|null
 */
-function _core_security_get_user_rol( $user_id, $current_time = null, $singularizations = null ){
+function _core_security_get_user_rol( $user_id, $time_context = null, $singularizations = null ){
 
 	$params = [];
 	$tablename = $GLOBALS['PREFIX'] . "talentospilos_usuario_rol";
@@ -185,8 +186,8 @@ function _core_security_get_user_rol( $user_id, $current_time = null, $singulari
 		return false;
 	}
 
-	if( is_null( $current_time ) ){
-		$current_time = time();
+	if( is_null( $time_context ) ){
+		$time_context = time();
 	}
 
 	array_push($params, $user_id);
@@ -195,40 +196,39 @@ function _core_security_get_user_rol( $user_id, $current_time = null, $singulari
 
 	$user_roles = $manager( $query = "SELECT * FROM $tablename WHERE id_usuario = $1 AND eliminado = 0", $params, $extra = null );
 
-	//
-	$solved_user_roles = [];
 
 	foreach ($user_roles as $key => $u_rol) {
+
+		$rol = new stdClass();
+		$rol->id = $u_rol['id'];
+		$rol->rol_id = $u_rol['id_rol'];
 		
 		if( 
 			( $u_rol->usar_intervalo_alternativo == 0 ) && 
 			( !is_null( $u_rol['fecha_hora_inicio'] ) ) && 
 			( !is_null( $u_rol['fecha_hora_fin'] ) )
 		){
-			$rol = new stdClass();
-			$rol->id = $u_rol['id'];
-			$rol->rol_id = $u_rol['id_rol'];
-			$rol->start = $u_rol['fecha_hora_inicio'];
-			$rol->end = $u_rol['fecha_hora_fin'];
-			array_push( $solved_user_roles, $rol );
+			$rol->start = strtotime($u_rol['fecha_hora_inicio']);
+			$rol->end = strtotime($u_rol['fecha_hora_fin']);
 		}else if( 
 			( $u_rol['usar_intervalo_alternativo'] == 1 ) && 
 			( !is_null( $u_rol['usar_intervalo_alternativo'] ) )
 		){
 			$alternative_interval = _core_secutiry_solve_alternative_interval( $u_rol['intervalo_validez_alternativo'] );
 			if( $alternative_interval ){
-				$rol = new stdClass();
-				$rol->id = $u_rol['id'];
-				$rol->rol_id = $u_rol['id_rol'];
-				$rol->start = $alternative_interval['fecha_hora_inicio'];
-				$rol->end = $alternative_interval['fecha_hora_fin'];
-				array_push( $solved_user_roles, $rol );
+				$rol->start = strtotime($alternative_interval['fecha_hora_inicio']);
+				$rol->end = strtotime($alternative_interval['fecha_hora_fin']);
 			}
 		}
 
-	}
+		if( 
+			($time_context >= $rol->start) &&
+			($time_context >= $rol->end)
+		){
+			return $u_rol;
+		}
 
-	return $solved_user_roles;
+	}
 
 }
 
