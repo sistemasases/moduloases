@@ -220,6 +220,8 @@ function _core_security_get_user_rol( $user_id, $current_time = time(), $singula
 
 	}
 
+	print_r($solved_user_roles );
+
 }
 
 /**
