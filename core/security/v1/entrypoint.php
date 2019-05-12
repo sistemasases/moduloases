@@ -243,10 +243,12 @@ function _core_security_get_user_rol( $user_id, $current_time = time(), $singula
 */
 function _core_secutiry_solve_alternative_interval( $alternative_interval_json ){
 
+	$params = [];
+
 	if( 
 		property_exists($alternative_interval_json, 'table_ref') && 
 		property_exists($alternative_interval_json, 'col_name_interval_start') && 
-		property_exists($alternative_interval_json, 'col_name_interval_start')
+		property_exists($alternative_interval_json, 'col_name_interval_end')
 	){
 		if( 
 			property_exists($alternative_interval_json->table_ref, 'name') && 
@@ -259,15 +261,36 @@ function _core_secutiry_solve_alternative_interval( $alternative_interval_json )
 				if( 
 					$alternative_interval_json->table_ref->record_id >= 0
 				){
+					$tablename = $alternative_interval_json->table_ref;
+					$col_name_interval_start = $alternative_interval_json->col_name_interval_start;
+					$col_name_interval_end = $alternative_interval_json->col_name_interval_end;
+					$rid = $alternative_interval_json->table_ref->record_id;
 
+					array_push($params, $rid);
+
+					$manager = get_db_manager();
+
+					$query = 
+					"SELECT 
+						$col_name_interval_start AS fecha_hora_inicio, 
+						$col_name_interval_end AS fecha_hora_fin 
+					FROM $tablename 
+					WHERE id = $1"
+
+					$data = $manager( $query, $params, $extra = null );
+
+					if( count( $data ) == 1 ){
+						return array(
+							'fecha_hora_inicio' => $data[0]['fecha_hora_inicio'],
+							'fecha_hora_fin' => $data[0]['fecha_hora_fin']
+						);
+					}
 				}
 			}
 		}
 	}
 
-	$manager = get_db_manager();
-	$data = $manager( $query = "SELECT * FROM $tablename WHERE id_usuario = $1 AND eliminado = 0", $params, $extra = null );
-
+	return null;
 }
 
 ?>
