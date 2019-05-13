@@ -128,6 +128,65 @@ function secure_Call( $function_name, $args = null, $context = null, $user_id = 
 
 }
 
+function secure_render( &$data, $user_id = null, $singularizations = null, $time_context = null ){
+
+	if( is_null( $time_context ) ){
+		$time_context = time();
+	}
+
+	if( is_null( $user_id ) ){
+		throw new Exception( "User rol cannot be null" ); 
+	}else{
+
+		if( $user_id <= -1 ){
+			return array(
+				'status' => -1,
+				'status_message' => 'invalid user ID',
+				'data_response' => null
+			);
+		}else{
+
+			if( _core_security_user_exist( $user_id ) ){
+
+				$user_rol = _core_security_get_user_rol( $user_id, $time_context, $singularizations );
+
+				if( $user_rol ){
+
+					$actions_type = _core_security_get_actions_types();
+					$type_id = null;
+					foreach ($actions_type as $key => $type) {
+						if( $type['alias'] == "front" ){
+							$type_id = $type['id'];
+							break;
+						}
+					}
+					$actions = _core_security_get_actions( $user_rol['id_rol'], $type_id );
+					foreach ($actions as $key => $action) {
+						$alias_action = $action['alias'];
+						$data->$alias_action = true;
+					}
+
+				}else{
+					return array(
+						'status' => -1,
+						'status_message' => 'forbidden, access is denied',
+						'data_response' => null
+					);
+				}
+
+			}else{
+				return array(
+					'status' => -1,
+					'status_message' => 'invalid user ID',
+					'data_response' => null
+				);
+			}
+
+		}
+
+	}
+}
+
 /**
  * Function that returns an action given an id or alias.
  *
@@ -165,6 +224,75 @@ function _core_security_get_action( $in ){
 	$manager = get_db_manager();
 	$action = $manager( $query = "SELECT * FROM $tablename WHERE $criteria = $1 AND eliminado = 0", $params, $extra = null );
 	return ( count( $action ) == 1 ? $action[0] : null );
+
+}
+
+/**
+ * Function that returns actions given an role_id.
+ *
+ * @see get_db_manager() in query_manager.php
+ *
+ * @author Jeison Cardona Gómez <jeison.cardona@correounivalle.edu.co>
+ * @since 1.0.0
+ *
+ * @param integer $user_id
+ *
+ * @return array
+*/
+function _core_security_get_actions( $role_id, $type = null ){
+
+	global $DB_PREFIX;
+
+	$params = [];
+	$type_filter = null;
+	$tablename = $DB_PREFIX . "talentospilos_roles_acciones";
+	$actions_tablename = $DB_PREFIX . "talentospilos_acciones";
+
+	if( is_numeric($role_id) ){
+		array_push($params, $role_id);
+		if( !is_null( $type ) ){
+			if( is_numeric( $type ) ){
+				$type_filter = "AND id_tipo_accion = $2";
+				array_push($params, $type);
+			}else{
+				return null;
+			}
+		}
+	}else{
+		return null;
+	}
+
+	$manager = get_db_manager();
+	$query = "SELECT * 
+	FROM $actions_tablename AS A 
+	INNER JOIN $tablename AS RA 
+	ON RA.id_accion = A.id 
+	WHERE RA.id_rol = $1 AND RA.eliminado = 0 AND A.eliminado = 0 $type_filter";
+
+	$role_actions = $manager( $query, $params, $extra = null );
+	return ( count( $role_actions ) >= 1 ? $role_actions : null );
+
+}
+
+/**
+ * Function that returns actions types.
+ *
+ * @see get_db_manager() in query_manager.php
+ *
+ * @author Jeison Cardona Gómez <jeison.cardona@correounivalle.edu.co>
+ * @since 1.0.0
+ *
+ * @param integer $user_id
+ *
+ * @return array
+*/
+function _core_security_get_actions_types(){
+
+	global $DB_PREFIX;
+	$tablename = $DB_PREFIX . "talentospilos_tipos_accion";
+
+	$manager = get_db_manager();
+	return $manager( $query = "SELECT * FROM $tablename", $params, $extra = null );
 
 }
 
