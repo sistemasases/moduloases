@@ -7,7 +7,6 @@
  * @license   	http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-require_once( __DIR__ . "/../../../../../config.php");
 require_once( __DIR__ . "/query_manager.php");
 
 /**
@@ -143,9 +142,11 @@ function secure_Call( $function_name, $args = null, $context = null, $user_id = 
 */
 function _core_security_get_action( $in ){
 
+	global $DB_PREFIX;
+
 	$params = [];
 	$criteria = null;
-	$tablename = $GLOBALS['PREFIX'] . "talentospilos_acciones";
+	$tablename = $DB_PREFIX . "talentospilos_acciones";
 
 	if( $in ){
 		if( is_numeric($in) ){
@@ -179,8 +180,10 @@ function _core_security_get_action( $in ){
 */
 function _core_security_user_exist( $user_id ){
 
+	global $DB_PREFIX;
+
 	$params = [];
-	$tablename = $GLOBALS['PREFIX'] . "user";
+	$tablename = $DB_PREFIX . "user";
 
 	if( !is_numeric($user_id) ){
 		return false;
@@ -219,8 +222,10 @@ function _core_security_user_exist( $user_id ){
 */
 function _core_security_get_user_rol( $user_id, $time_context = null, $singularizations = null ){
 
+	global $DB_PREFIX;
+
 	$params = [];
-	$tablename = $GLOBALS['PREFIX'] . "talentospilos_usuario_rol";
+	$tablename = $DB_PREFIX . "talentospilos_usuario_rol";
 
 	if( !is_numeric($user_id) ){
 		return false;
@@ -375,8 +380,10 @@ function _core_secutiry_solve_alternative_interval( $alternative_interval_json )
 */
 function _core_security_can_be_executed( $rol_id, $action_id ){
 
+	global $DB_PREFIX;
+	
 	$params = [];
-	$tablename = $GLOBALS['PREFIX'] . "talentospilos_roles_acciones";
+	$tablename = $DB_PREFIX . "talentospilos_roles_acciones";
 
 	if( !is_numeric($rol_id) && !is_numeric($action_id) ){
 		return false;
@@ -408,8 +415,10 @@ function _core_security_can_be_executed( $rol_id, $action_id ){
 */
 function _core_security_register_log( $user_id, $action_id, $params, $output ){
 
+	global $DB_PREFIX;
+	
 	$params = [];
-	$tablename = $GLOBALS['PREFIX'] . "talentospilos_log_acciones";
+	$tablename = $DB_PREFIX . "talentospilos_log_acciones";
 
 	if( !is_numeric($user_id) && !is_numeric($action_id) ){
 		return false;
