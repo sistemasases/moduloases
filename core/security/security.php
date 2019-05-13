@@ -11,9 +11,10 @@ const VERSION = 1; //Current version.
 
 require_once( __DIR__ . "/../../../../config.php");
 require_once( __DIR__ . "/../module_loader.php");
-require_once( __DIR__ . "/v" . VERSION . "/entrypoint.php");
 
-$PREFIX = $GLOBALS[ 'CFG' ]->prefix;
+global $DB_PREFIX;
+$DB_PREFIX = $GLOBALS[ 'CFG' ]->prefix;
+require_once( __DIR__ . "/v" . VERSION . "/entrypoint.php");
 
 /**
  * Function that given a function name, array of arguments, context, user id, singularizations and time, 
@@ -109,31 +110,8 @@ $PREFIX = $GLOBALS[ 'CFG' ]->prefix;
  * @return mixed
  *
  */
-function core_secure_call( $function_name, $args = null, $context = null, $user_id = null, $singularizations = null, $time_context = null ){	
+function core_secure_call( $function_name, $args = null, $context = null, $user_id = null, $singularizations = null, $time_context = null ){
 	return secure_Call( $function_name, $args, $context, $user_id, $singularizations ); 
 };
-
-/*function hello_world( $in ){
-	$output = [];
-	foreach ($in as $key => $value) {
-		echo "hello world\n";
-		array_push($output, $value);
-	}
-	return $output;
-}
-
-$context = [
-	'hello_world' => [
-		'action_alias' => 'say_hello',
-		'params_alias' => "any"
-	]
-];
-
-$singularizations = array(
-	'singularizador_1' => "99",
-	'singularizador_2' => "55555"
-);
-
-core_secure_call( "hello_world", [[1,2,3]], $context, 73380, $singularizations);*/
 
 ?>
