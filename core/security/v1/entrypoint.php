@@ -35,7 +35,7 @@ require_once( __DIR__ . "/query_manager.php");
  *
  * @return array
  */
-function secure_Call( $function_name, $args = null, $context = null, $user_id = null, $time_context = null, $singularizations = null ){
+function secure_Call( $function_name, $args = null, $context = null, $user_id = null, $singularizations = null, $time_context = null ){
 
 	if( is_null( $time_context ) ){
 		$time_context = time();
@@ -170,10 +170,19 @@ function _core_security_user_exist( $user_id ){
 /**
  * Function that return a rol given an user id.
  *
+ * Singylarizations are extra filters.
+ * Example:
+ * array(
+ * 	'filter_1' => "value",
+ *  'filter_2' => "value"
+ * )
+ *
  * @author Jeison Cardona Gómez <jeison.cardona@correounivalle.edu.co>
  * @since 1.0.0
  *
  * @param integer $user_id
+ * @param integer $time_context
+ * @param array $singularizations
  *
  * @return object|null
 */
@@ -200,8 +209,6 @@ function _core_security_get_user_rol( $user_id, $time_context = null, $singulari
 	foreach ($user_roles as $key => $u_rol) {
 
 		$rol = new stdClass();
-		$rol->id = $u_rol['id'];
-		$rol->rol_id = $u_rol['id_rol'];
 		
 		if( 
 			( $u_rol->usar_intervalo_alternativo == 0 ) && 
@@ -221,15 +228,36 @@ function _core_security_get_user_rol( $user_id, $time_context = null, $singulari
 			}
 		}
 
+		$valid_singularization = true;
+
+		if( !is_null($u_rol['singularizador']) ){
+
+			foreach (json_decode($u_rol['singularizador']) as $key => $db_singularization) {
+				if( array_key_exists($db_singularization->key, $singularizations) ){
+					if( !($db_singularization->value == $singularizations[ $db_singularization->key ]) ){
+						$valid_singularization = false;
+						break;
+					}
+				}else{
+					$valid_singularization = false;
+					break;
+				}
+			}
+
+		}else{
+			$valid_singularization = false;
+		}
+
 		if( 
 			($time_context >= $rol->start) &&
-			($time_context >= $rol->end)
+			($time_context >= $rol->end) && 
+			$valid_singularization
 		){
 			return $u_rol;
 		}
-
 	}
 
+	return null;
 }
 
 /**
