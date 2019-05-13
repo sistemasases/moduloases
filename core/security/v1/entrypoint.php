@@ -205,6 +205,16 @@ function secure_render( &$data, $user_id = null, $singularizations = null, $time
 	}
 }
 
+/**
+ * ...
+ *
+ * @author Jeison Cardona Gómez <jeison.cardona@correounivalle.edu.co>
+ * @since 1.0.0
+ *
+ * @param string $templates_dir, Folder with mustache files.
+ *
+ * @return array
+*/
 function secure_template_checker( $templates_dir ){
 
 	$fileList = glob( $templates_dir . '/*');
