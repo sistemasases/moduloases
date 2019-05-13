@@ -65,45 +65,51 @@ $PREFIX = $GLOBALS[ 'CFG' ]->prefix;
  * User id: 		9999
  * Rol id:			5 (standard member)
  * sigularization:	[	
- *						{"key":"chat_room", "value":"Family"}	
+ *						"chat_room" => "Family"
  *					]	
  *
  * User id: 		9999
  * Rol id:			1 (admin member)
  * sigularization:	[	
- *						{"key":"chat_room", "value":"Sales"}	
+ *						"chat_room" => "Sales"	
  *					]	
  *
- * Powerful example: in this case, the user 9999 have the role 'standard' between in a interval at the day, and 
- * is admin the rest of the time, every day.
+ * Powerful example: in this case, the user 9999 have the role 'standard' between in a interval at the day,  and admin 
+ * the rest of the time, every day. The singularizations keys and values need be defined at the user-role relationship.
  *
  * User id: 		9999
  * Rol id:			1 (standard member)
  * sigularization:	[	
- *						{"key":"start", "value":"00:00"},
- *						{"key":"end", "value":"06:00:00"}	
+ *						"start" => "00:00:00",
+ *						"end" => "06:00:00"	
  *					]
  * User id: 		9999
  * Rol id:			1 (admin member)
  * sigularization:	[	
- *						{"key":"start", "value":"06:00:01"},
- *						{"key":"end", "value":"23:59:59"}		
+ *						"start" => "06:00:01",
+ *						"end" => "23:59:59"			
  *					]
+ *
+ * Time context: The system need determine the "current" role valid, how can be possible be coordinate with many 
+ * time source, for example: database server time, web server time, fixed time, etc. The "current" time need be 
+ * provided, if not is provided, the system determine it with time() function.
  *
  * @author Jeison Cardona Gómez <jeison.cardona@correounivalle.edu.co>
  * @since 1.0.0
+ *
+ * @see secure_Call( ... ) in entrypoint.php
  *
  * @param string $function_name
  * @param array $args
  * @param array $context
  * @param integer $user_id
  * @param array $singularizations
- * @param integer $curren_time
+ * @param integer $time_context
  *
  * @return mixed
  *
  */
-function core_secure_call( $function_name, $args = null, $context = null, $user_id = null, $singularizations = null, $curren_time = null ){	
+function core_secure_call( $function_name, $args = null, $context = null, $user_id = null, $singularizations = null, $time_context = null ){	
 	return secure_Call( $function_name, $args, $context, $user_id, $singularizations ); 
 };
 
