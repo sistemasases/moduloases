@@ -118,4 +118,8 @@ function core_secure_render( &$data, $user_id = null, $singularizations = null, 
 	return secure_render( $data, $user_id, $singularizations, $time_context ); 
 };
 
+function core_secure_template_checker(){
+	secure_template_checker();
+};
+
 ?>

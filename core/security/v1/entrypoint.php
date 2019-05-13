@@ -144,7 +144,7 @@ function secure_Call( $function_name, $args = null, $context = null, $user_id = 
  * @return void
 */
 function secure_render( &$data, $user_id = null, $singularizations = null, $time_context = null ){
-
+	
 	if( is_null( $time_context ) ){
 		$time_context = time();
 	}
@@ -164,7 +164,7 @@ function secure_render( &$data, $user_id = null, $singularizations = null, $time
 			if( _core_security_user_exist( $user_id ) ){
 
 				$user_rol = _core_security_get_user_rol( $user_id, $time_context, $singularizations );
-
+				print_r( $singularizations );
 				if( $user_rol ){
 
 					$actions_type = _core_security_get_actions_types();
@@ -200,6 +200,14 @@ function secure_render( &$data, $user_id = null, $singularizations = null, $time
 		}
 
 	}
+}
+
+function secure_template_checker( $templates_dir ){
+
+	$fileList = glob( $templates_dir . '/*');
+	foreach($fileList as $filename){
+	   echo $filename, '<br>'; 
+}
 }
 
 /**
@@ -423,15 +431,14 @@ function _core_security_get_user_rol( $user_id, $time_context = null, $singulari
 				}
 			}
 
-		}else{
-			$valid_singularization = false;
 		}
 
 		if( 
 			($time_context >= $rol->start) &&
-			($time_context >= $rol->end) && 
+			($time_context <= $rol->end) && 
 			$valid_singularization
 		){
+			
 			return $u_rol;
 		}
 	}
