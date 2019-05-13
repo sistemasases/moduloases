@@ -205,9 +205,29 @@ function secure_render( &$data, $user_id = null, $singularizations = null, $time
 function secure_template_checker( $templates_dir ){
 
 	$fileList = glob( $templates_dir . '/*');
+	$array_tags = [];
 	foreach($fileList as $filename){
-	   echo $filename, '<br>'; 
-}
+	    $template = file_get_contents( $filename );
+	    $positions = _strpos_all( $template, "{{#" . CORE_PREFIX . "_" );
+	    foreach ($positions as $key => $value) {
+	    	$alias_tag = "";
+	    	for( $i = ($value + 2) ; $i < strlen( $template ); $i++ ) { 
+		   		if( ( $template[ $i ] == "{" ) || ( $template[ $i ] == " " ) || ( $template[ $i ] == "#" ) ){
+		   			continue;
+		   		}else if( ( $template[ $i ] != "}" ) && ( $template[ $i ] != " " ) ){
+		   			$alias_tag .= $template[ $i ];
+		   		}else{
+		   			break;
+		   		}
+		    }
+		    if( $alias_tag != "" ){
+		   		array_push($array_tags, $alias_tag);
+		    }
+	    }
+	    
+	}
+	
+	return $array_tags;
 }
 
 /**

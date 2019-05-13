@@ -32,4 +32,15 @@ function _is_select( $query ){
 */
 function _get_list_of_available_managers(){	return AVAILABLE_MANAGERS; };
 
+
+function _strpos_all($haystack, $needle) {
+    $offset = 0;
+    $allpos = array();
+    while (($pos = strpos($haystack, $needle, $offset)) !== FALSE) {
+        $offset   = $pos + 1;
+        $allpos[] = $pos;
+    }
+    return $allpos;
+}
+
 ?>

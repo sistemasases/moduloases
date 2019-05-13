@@ -8,6 +8,7 @@
  */
 
 const VERSION = 1; //Current version.
+const CORE_PREFIX = "view";
 
 require_once( __DIR__ . "/../../../../config.php");
 require_once( __DIR__ . "/../module_loader.php");
@@ -118,8 +119,8 @@ function core_secure_render( &$data, $user_id = null, $singularizations = null, 
 	return secure_render( $data, $user_id, $singularizations, $time_context ); 
 };
 
-function core_secure_template_checker(){
-	secure_template_checker();
+function core_secure_template_checker( $dir ){
+	return secure_template_checker( $dir );
 };
 
 ?>

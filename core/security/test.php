@@ -26,8 +26,10 @@ $singularizations = array(
 
 //print_r( core_secure_call( "hello_world", [5], $context, 73380, $singularizations) );
 
-$data = new stdClass();
-secure_render( $data, 73380, $singularizations);
-print_r( $data );
+//$data = new stdClass();
+//core_secure_render( $data, 73380, null);
+//print_r( $data );
+
+print_r( core_secure_template_checker( __DIR__ . "/../../templates" ) );
 
 ?>
