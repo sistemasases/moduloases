@@ -35,7 +35,7 @@ require_once( __DIR__ . "/query_manager.php");
  *
  * @return array
  */
-function secure_Call( $function_name, $args = null, $context = null, $user_id = null, $time_context = null, $singularizations = null ){
+function secure_Call( $function_name, $args = null, $context = null, $user_id = null, $singularizations = null, $time_context = null ){
 
 	if( is_null( $time_context ) ){
 		$time_context = time();
@@ -54,10 +54,11 @@ function secure_Call( $function_name, $args = null, $context = null, $user_id = 
 	$action = _core_security_get_action( $context[ $function_name ]['action_alias'] );
 
 	if( is_null( $action ) ){
-		// Control de no existencia de acción
-		/**
-		 * En caso de que no exista, se debe registrar en la base de datos
-		*/
+		return array(
+			'status' => -1,
+			'status_message' => 'unregulated action',
+			'data_response' => null
+		);
 	}else{
 
 		if( is_null( $user_id ) ){
@@ -75,7 +76,42 @@ function secure_Call( $function_name, $args = null, $context = null, $user_id = 
 				if( _core_security_user_exist( $user_id ) ){
 
 					$user_rol = _core_security_get_user_rol( $user_id, $time_context, $singularizations );
-					print_r($user_rol);
+
+					if( $user_rol ){
+
+						if( _core_security_can_be_executed( $user_rol['id'], $action['id'] ) ){
+
+							$defined_user_functions = get_defined_functions()['user'];
+
+							if( in_array( $function_name, $defined_user_functions ) ){
+
+								$to_return = call_user_func_array( $function_name, $args );
+
+								if( $action['registra_log'] == 1 ){
+									_core_security_register_log( $user_id, $action['id'], $args, $to_return );
+								}
+
+								return $to_return;
+								
+							}else{
+								throw new Exception( "Function " . $function_name . " was not declared." );
+							}
+
+						}else{
+							return array(
+								'status' => -1,
+								'status_message' => 'forbidden, access is denied',
+								'data_response' => null
+							);
+						}
+
+					}else{
+						return array(
+							'status' => -1,
+							'status_message' => 'forbidden, access is denied',
+							'data_response' => null
+						);
+					}
 					
 				}else{
 					return array(
@@ -86,13 +122,6 @@ function secure_Call( $function_name, $args = null, $context = null, $user_id = 
 				}
 
 			}
-
-			/*$defined_user_functions = get_defined_functions()['user'];
-			if( in_array( $function_name, $defined_user_functions ) ){
-				return call_user_func_array( $function_name, $args );
-			}else{
-				throw new Exception( "Function " . $function_name . " was not declared." );
-			}*/
 
 		}
 
@@ -134,7 +163,7 @@ function _core_security_get_action( $in ){
 
 	$manager = get_db_manager();
 	$action = $manager( $query = "SELECT * FROM $tablename WHERE $criteria = $1 AND eliminado = 0", $params, $extra = null );
-	return ( count( $action ) == 1 ? $action : null );
+	return ( count( $action ) == 1 ? $action[0] : null );
 
 }
 
@@ -170,10 +199,21 @@ function _core_security_user_exist( $user_id ){
 /**
  * Function that return a rol given an user id.
  *
+ * Singylarizations are extra filters.
+ *
+ * Example:
+ *
+ * 	array(
+ * 		'filter_1' => "value",
+ *  	'filter_2' => "value"
+ * 	)
+ *
  * @author Jeison Cardona Gómez <jeison.cardona@correounivalle.edu.co>
  * @since 1.0.0
  *
  * @param integer $user_id
+ * @param integer $time_context
+ * @param array $singularizations
  *
  * @return object|null
 */
@@ -200,8 +240,6 @@ function _core_security_get_user_rol( $user_id, $time_context = null, $singulari
 	foreach ($user_roles as $key => $u_rol) {
 
 		$rol = new stdClass();
-		$rol->id = $u_rol['id'];
-		$rol->rol_id = $u_rol['id_rol'];
 		
 		if( 
 			( $u_rol->usar_intervalo_alternativo == 0 ) && 
@@ -221,15 +259,36 @@ function _core_security_get_user_rol( $user_id, $time_context = null, $singulari
 			}
 		}
 
+		$valid_singularization = true;
+
+		if( !is_null($u_rol['singularizador']) ){
+
+			foreach (json_decode($u_rol['singularizador']) as $key => $db_singularization) {
+				if( array_key_exists($db_singularization->key, $singularizations) ){
+					if( !($db_singularization->value == $singularizations[ $db_singularization->key ]) ){
+						$valid_singularization = false;
+						break;
+					}
+				}else{
+					$valid_singularization = false;
+					break;
+				}
+			}
+
+		}else{
+			$valid_singularization = false;
+		}
+
 		if( 
 			($time_context >= $rol->start) &&
-			($time_context >= $rol->end)
+			($time_context >= $rol->end) && 
+			$valid_singularization
 		){
 			return $u_rol;
 		}
-
 	}
 
+	return null;
 }
 
 /**
@@ -301,6 +360,70 @@ function _core_secutiry_solve_alternative_interval( $alternative_interval_json )
 	}
 
 	return null;
+}
+
+/**
+ * Function that given a rol_id and action_id return if are associated.
+ *
+ * @author Jeison Cardona Gómez <jeison.cardona@correounivalle.edu.co>
+ * @since 1.0.0
+ *
+ * @param integer $rol_id
+ * @param integer $action_id
+ *
+ * @return bool
+*/
+function _core_security_can_be_executed( $rol_id, $action_id ){
+
+	$params = [];
+	$tablename = $GLOBALS['PREFIX'] . "talentospilos_roles_acciones";
+
+	if( !is_numeric($rol_id) && !is_numeric($action_id) ){
+		return false;
+	}
+
+	array_push($params, $rol_id);
+	array_push($params, $action_id);
+
+	$manager = get_db_manager();
+	$query = "SELECT * FROM $tablename WHERE id_rol = $1 AND id_accion = $2 AND eliminado = 0";
+	$rol_action = $manager( $query, $params, $extra = null );
+
+	return ( count( $rol_action ) == 1 ? true : false );
+
+}
+
+/**
+ * Function that insert a new log record.
+ *
+ * @author Jeison Cardona Gómez <jeison.cardona@correounivalle.edu.co>
+ * @since 1.0.0
+ *
+ * @param integer $user_id
+ * @param integer $action_id
+ * @param integer $action_id
+ * @param integer $action_id
+ *
+ * @return void
+*/
+function _core_security_register_log( $user_id, $action_id, $params, $output ){
+
+	$params = [];
+	$tablename = $GLOBALS['PREFIX'] . "talentospilos_log_acciones";
+
+	if( !is_numeric($user_id) && !is_numeric($action_id) ){
+		return false;
+	}
+
+	array_push($params, $user_id);
+	array_push($params, $action_id);
+	array_push($params, json_encode($params));
+	array_push($params, json_encode($output));
+
+	$manager = get_db_manager();
+	$query = "INSERT INTO $tablename (id_usuario, id_accion, parametros, salida) VALUES($1, $2, $3, $4)";
+	$manager( $query, $params, $extra = null );
+
 }
 
 ?>

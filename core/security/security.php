@@ -15,14 +15,17 @@ require_once( __DIR__ . "/v" . VERSION . "/entrypoint.php");
 
 $PREFIX = $GLOBALS[ 'CFG' ]->prefix;
 
-function core_secure_call( $function_name, $args = null, $context = null, $user_id = null, $curren_time = null, $singularizations = null ){	
-	return secure_Call( $function_name, $args, $context, $user_id ); 
+function core_secure_call( $function_name, $args = null, $context = null, $user_id = null, $singularizations = null, $curren_time = null ){	
+	return secure_Call( $function_name, $args, $context, $user_id, $singularizations ); 
 };
 
-function hello_world( $in ){
+/*function hello_world( $in ){
+	$output = [];
 	foreach ($in as $key => $value) {
 		echo "hello world\n";
+		array_push($output, $value);
 	}
+	return $output;
 }
 
 $context = [
@@ -32,6 +35,11 @@ $context = [
 	]
 ];
 
-print_r( core_secure_call( "hello_world", [1], $context, 73380) );
+$singularizations = array(
+	'singularizador_1' => "99",
+	'singularizador_2' => "55555"
+);
+
+core_secure_call( "hello_world", [[1,2,3]], $context, 73380, $singularizations);*/
 
 ?>
