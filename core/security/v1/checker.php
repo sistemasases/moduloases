@@ -8,6 +8,7 @@
  */
 
 require_once( __DIR__ . "/query_manager.php");
+require_once( __DIR__ . "/gets.php");
 
 /**
  * Function that given a rol_id and action_id return if are associated.
@@ -69,6 +70,45 @@ function _core_security_user_exist( $user_id ){
 	$user = $manager( $query = "SELECT * FROM $tablename WHERE id = $1", $params, $extra = null );
 
 	return ( count( $user ) == 1 ? true : false );
+
+}
+
+/**
+ * Function that validate if an user has an specific role.
+ *
+ * @author Jeison Cardona Gómez <jeison.cardona@correounivalle.edu.co>
+ * @since 1.0.0
+ *
+ * @param integer $user_id
+ *
+ * @return bool
+*/
+function _core_security_check_role( $user_id, $role_id, $time_context = null, $singularizations = null ){
+
+
+	$user_role = _core_security_get_user_rol( $user_id, $time_context, $singularizations = null );
+	$asigned_role = _core_security_get_role( $user_role['id_rol'] );
+
+	$role_wanted = _core_security_get_role( $role_id );
+	
+	if( $role_wanted && $asigned_role ){
+
+		$found_role = false;
+		do{
+			$current_role = $asigned_role;
+			if( $role_wanted['id'] == $asigned_role['id'] ){
+				$found_role = true;
+			}
+			if( $current_role['id_rol_padre'] != "-1" ){
+				$asigned_role = _core_security_get_role( $asigned_role['id_rol_padre'] );
+			}
+		}while( $current_role['id_rol_padre'] != "-1" );
+		
+		return $found_role;
+
+	}else{
+		return null;
+	}
 
 }
 
