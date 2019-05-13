@@ -8,7 +8,7 @@
  */
 
 const VERSION = 1; //Current version.
-const CORE_PREFIX = "view";
+const CORE_PREFIX = "core_security";
 
 require_once( __DIR__ . "/../../../../config.php");
 require_once( __DIR__ . "/../module_loader.php");
