@@ -19,7 +19,7 @@ function core_secure_call( $function_name, $args = null, $context = null, $user_
 	return secure_Call( $function_name, $args, $context, $user_id, $singularizations ); 
 };
 
-function hello_world( $in ){
+/*function hello_world( $in ){
 	foreach ($in as $key => $value) {
 		echo "hello world\n";
 	}
@@ -37,6 +37,6 @@ $singularizations = array(
 	'singularizador_2' => "55555"
 );
 
-print_r( core_secure_call( "hello_world", [1], $context, 73380, $singularizations) );
+core_secure_call( "hello_world", [[1,2,3]], $context, 73380, $singularizations);*/
 
 ?>

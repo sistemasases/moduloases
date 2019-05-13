@@ -54,10 +54,11 @@ function secure_Call( $function_name, $args = null, $context = null, $user_id = 
 	$action = _core_security_get_action( $context[ $function_name ]['action_alias'] );
 
 	if( is_null( $action ) ){
-		// Control de no existencia de acción
-		/**
-		 * En caso de que no exista, se debe registrar en la base de datos
-		*/
+		return array(
+			'status' => -1,
+			'status_message' => 'unregulated action',
+			'data_response' => null
+		);
 	}else{
 
 		if( is_null( $user_id ) ){
@@ -75,7 +76,34 @@ function secure_Call( $function_name, $args = null, $context = null, $user_id = 
 				if( _core_security_user_exist( $user_id ) ){
 
 					$user_rol = _core_security_get_user_rol( $user_id, $time_context, $singularizations );
-					print_r($user_rol);
+
+					if( $user_rol ){
+
+						if( _core_security_can_be_executed( $user_rol['id'], $action['id'] ) ){
+
+							$defined_user_functions = get_defined_functions()['user'];
+
+							if( in_array( $function_name, $defined_user_functions ) ){
+								return call_user_func_array( $function_name, $args );
+							}else{
+								throw new Exception( "Function " . $function_name . " was not declared." );
+							}
+
+						}else{
+							return array(
+								'status' => -1,
+								'status_message' => 'forbidden, access is denied',
+								'data_response' => null
+							);
+						}
+
+					}else{
+						return array(
+							'status' => -1,
+							'status_message' => 'forbidden, access is denied',
+							'data_response' => null
+						);
+					}
 					
 				}else{
 					return array(
@@ -86,13 +114,6 @@ function secure_Call( $function_name, $args = null, $context = null, $user_id = 
 				}
 
 			}
-
-			/*$defined_user_functions = get_defined_functions()['user'];
-			if( in_array( $function_name, $defined_user_functions ) ){
-				return call_user_func_array( $function_name, $args );
-			}else{
-				throw new Exception( "Function " . $function_name . " was not declared." );
-			}*/
 
 		}
 
@@ -134,7 +155,7 @@ function _core_security_get_action( $in ){
 
 	$manager = get_db_manager();
 	$action = $manager( $query = "SELECT * FROM $tablename WHERE $criteria = $1 AND eliminado = 0", $params, $extra = null );
-	return ( count( $action ) == 1 ? $action : null );
+	return ( count( $action ) == 1 ? $action[0] : null );
 
 }
 
@@ -171,11 +192,13 @@ function _core_security_user_exist( $user_id ){
  * Function that return a rol given an user id.
  *
  * Singylarizations are extra filters.
+ *
  * Example:
- * array(
- * 	'filter_1' => "value",
- *  'filter_2' => "value"
- * )
+ *
+ * 	array(
+ * 		'filter_1' => "value",
+ *  	'filter_2' => "value"
+ * 	)
  *
  * @author Jeison Cardona Gómez <jeison.cardona@correounivalle.edu.co>
  * @since 1.0.0
@@ -329,6 +352,37 @@ function _core_secutiry_solve_alternative_interval( $alternative_interval_json )
 	}
 
 	return null;
+}
+
+/**
+ * Function that given a rol_id and action_id return if are associated.
+ *
+ * @author Jeison Cardona Gómez <jeison.cardona@correounivalle.edu.co>
+ * @since 1.0.0
+ *
+ * @param integer $rol_id
+ * @param integer $action_id
+ *
+ * @return bool
+*/
+function _core_security_can_be_executed( $rol_id, $action_id ){
+
+	$params = [];
+	$tablename = $GLOBALS['PREFIX'] . "talentospilos_roles_acciones";
+
+	if( !is_numeric($rol_id) && !is_numeric($action_id) ){
+		return false;
+	}
+
+	array_push($params, $rol_id);
+	array_push($params, $action_id);
+
+	$manager = get_db_manager();
+	$query = "SELECT * FROM $tablename WHERE id_rol = $1 AND id_accion = $2 AND eliminado = 0";
+	$rol_action = $manager( $query, $params, $extra = null );
+
+	return ( count( $rol_action ) == 1 ? true : false );
+
 }
 
 ?>
