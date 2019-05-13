@@ -14,7 +14,7 @@
  */
 function module_loader( $module_name ){
 	$interface = __DIR__ . "/".$module_name."/".$module_name.".php" ;
-	if( file_exists( $filename ) ){
+	if( file_exists( $interface ) ){
 		require_once( $interface );
 	}
 }
