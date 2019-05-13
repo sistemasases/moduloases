@@ -8,6 +8,7 @@
  */
 
 const VERSION = 1; //Current version.
+const CORE_PREFIX = "core_security";
 
 require_once( __DIR__ . "/../../../../config.php");
 require_once( __DIR__ . "/../module_loader.php");
@@ -116,6 +117,10 @@ function core_secure_call( $function_name, $args = null, $context = null, $user_
 
 function core_secure_render( &$data, $user_id = null, $singularizations = null, $time_context = null ){
 	return secure_render( $data, $user_id, $singularizations, $time_context ); 
+};
+
+function core_secure_template_checker( $dir ){
+	return secure_template_checker( $dir );
 };
 
 ?>
