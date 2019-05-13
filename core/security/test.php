@@ -25,7 +25,7 @@ $singularizations = array(
 //core_secure_render( $data, 73380, null);
 //print_r( $data );
 
-print_r( core_secure_template_checker( __DIR__ . "/../../templates" ) );
+//print_r( core_secure_template_checker( __DIR__ . "/../../templates" ) );
 
 //print_r(_core_security_check_role( 73380, 4, $time_context = null, $singularizations = null ));
 

@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<sections>
+	<section id="lib">
+	</section>
+	<section id="api">
+		<action>
+			<alias>alias_1</alias>
+		</action>
+		<action>
+			<alias>alias_2</alias>
+		</action>
+		<action>
+			<alias>alias_3</alias>
+		</action>
+	</section>
+</sections>
