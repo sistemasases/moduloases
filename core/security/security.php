@@ -20,9 +20,12 @@ function core_secure_call( $function_name, $args = null, $context = null, $user_
 };
 
 /*function hello_world( $in ){
+	$output = [];
 	foreach ($in as $key => $value) {
 		echo "hello world\n";
+		array_push($output, $value);
 	}
+	return $output;
 }
 
 $context = [

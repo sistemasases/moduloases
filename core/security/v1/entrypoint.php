@@ -84,7 +84,15 @@ function secure_Call( $function_name, $args = null, $context = null, $user_id = 
 							$defined_user_functions = get_defined_functions()['user'];
 
 							if( in_array( $function_name, $defined_user_functions ) ){
-								return call_user_func_array( $function_name, $args );
+
+								$to_return = call_user_func_array( $function_name, $args );
+
+								if( $action['registra_log'] == 1 ){
+									_core_security_register_log( $user_id, $action['id'], $args, $to_return );
+								}
+
+								return $to_return;
+								
 							}else{
 								throw new Exception( "Function " . $function_name . " was not declared." );
 							}
@@ -382,6 +390,39 @@ function _core_security_can_be_executed( $rol_id, $action_id ){
 	$rol_action = $manager( $query, $params, $extra = null );
 
 	return ( count( $rol_action ) == 1 ? true : false );
+
+}
+
+/**
+ * Function that insert a new log record.
+ *
+ * @author Jeison Cardona Gómez <jeison.cardona@correounivalle.edu.co>
+ * @since 1.0.0
+ *
+ * @param integer $user_id
+ * @param integer $action_id
+ * @param integer $action_id
+ * @param integer $action_id
+ *
+ * @return void
+*/
+function _core_security_register_log( $user_id, $action_id, $params, $output ){
+
+	$params = [];
+	$tablename = $GLOBALS['PREFIX'] . "talentospilos_log_acciones";
+
+	if( !is_numeric($user_id) && !is_numeric($action_id) ){
+		return false;
+	}
+
+	array_push($params, $user_id);
+	array_push($params, $action_id);
+	array_push($params, json_encode($params));
+	array_push($params, json_encode($output));
+
+	$manager = get_db_manager();
+	$query = "INSERT INTO $tablename (id_usuario, id_accion, parametros, salida) VALUES($1, $2, $3, $4)";
+	$manager( $query, $params, $extra = null );
 
 }
 
