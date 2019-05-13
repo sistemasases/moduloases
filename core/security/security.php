@@ -8,7 +8,7 @@
  */
 
 const VERSION = 1; //Current version.
-const CORE_PREFIX = "core_security";
+const CORE_PREFIX = "core_secure_render"; // example: {{#core_secure_render_block_to_protect}}
 
 require_once( __DIR__ . "/../../../../config.php");
 require_once( __DIR__ . "/../module_loader.php");

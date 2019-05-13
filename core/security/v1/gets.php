@@ -61,7 +61,7 @@ function _core_security_get_action( $in ){
  *
  * @return array
 */
-function _core_security_get_actions( $role_id, $type = null ){
+function _core_security_get_role_actions( $role_id, $type = null ){
 
 	global $DB_PREFIX;
 
@@ -97,6 +97,41 @@ function _core_security_get_actions( $role_id, $type = null ){
 }
 
 /**
+ * Function that returns actions.
+ *
+ * @see get_db_manager() in query_manager.php
+ *
+ * @author Jeison Cardona Gómez <jeison.cardona@correounivalle.edu.co>
+ * @since 1.0.0
+ *
+ * @param integer $user_id
+ *
+ * @return array
+*/
+function _core_security_get_actions( $type = null ){
+
+	global $DB_PREFIX;
+
+	$type_filter = null;
+	$params = [];
+	$tablename = $DB_PREFIX . "talentospilos_acciones";
+
+	if( !is_null( $type ) ){
+		if( is_numeric( $type ) ){
+			$type_filter = "WHERE id_tipo_accion = $1";
+			array_push($params, $type);
+		}else{
+			return null;
+		}
+	}
+
+	$manager = get_db_manager();
+	$actions = $manager( $query = "SELECT * FROM $tablename $type_filter", $params, $extra = null );
+	return ( count( $actions ) >= 1 ? $actions : null );
+
+}
+
+/**
  * Function that returns actions types.
  *
  * @see get_db_manager() in query_manager.php
@@ -108,13 +143,27 @@ function _core_security_get_actions( $role_id, $type = null ){
  *
  * @return array
 */
-function _core_security_get_actions_types(){
+function _core_security_get_action_type( $alias = null ){
 
 	global $DB_PREFIX;
+	$params = [];
+	$alias_filter = null;
 	$tablename = $DB_PREFIX . "talentospilos_tipos_accion";
 
+	if( !is_null( $alias ) ){
+		if( is_string( $alias ) ){
+			if( $alias != "" ){
+				$alias_filter = "WHERE alias = $1";
+				array_push($params, $alias);
+			}else{
+				return null;
+			}
+		}
+	}
+
 	$manager = get_db_manager();
-	return $manager( $query = "SELECT * FROM $tablename", $params, $extra = null );
+	$type = $manager( $query = "SELECT * FROM $tablename $alias_filter", $params, $extra = null );
+	return ( count( $type ) == 1 ? $type[0] : null );
 
 }
 

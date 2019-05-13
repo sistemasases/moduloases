@@ -167,7 +167,7 @@ function secure_render( &$data, $user_id = null, $singularizations = null, $time
 			if( _core_security_user_exist( $user_id ) ){
 
 				$user_rol = _core_security_get_user_rol( $user_id, $time_context, $singularizations );
-				print_r( $singularizations );
+				
 				if( $user_rol ){
 
 					$actions_type = _core_security_get_actions_types();
@@ -178,7 +178,7 @@ function secure_render( &$data, $user_id = null, $singularizations = null, $time
 							break;
 						}
 					}
-					$actions = _core_security_get_actions( $user_rol['id_rol'], $type_id );
+					$actions = _core_security_get_role_actions( $user_rol['id_rol'], $type_id );
 					foreach ($actions as $key => $action) {
 						$alias_action = $action['alias'];
 						$data->$alias_action = true;
@@ -218,29 +218,50 @@ function secure_render( &$data, $user_id = null, $singularizations = null, $time
 function secure_template_checker( $templates_dir ){
 
 	$fileList = glob( $templates_dir . '/*');
-	$array_tags = [];
+	$unsolved_secure_blocks = [];
+
+	$valid_characters = [
+		'a','b','c','d','e','f','g',
+		'h','i','j','k','l','m','n',
+		'o','p','q','r','s','t','u',
+		'v','w','x','y','z','0','1',
+		'2','3','4','5','6','7','8',
+		'9','_'];
+
+	$actions_type = _core_security_get_action_type( 'front' );
+	$actions = _core_security_get_actions( $actions_type['id'] );
+	$alias_actions = array_map( function($in){ return $in['alias']; }, $actions );
+
 	foreach($fileList as $filename){
+
 	    $template = file_get_contents( $filename );
 	    $positions = _strpos_all( $template, "{{#" . CORE_PREFIX . "_" );
+	    
 	    foreach ($positions as $key => $value) {
+
 	    	$alias_tag = "";
-	    	for( $i = ($value + 2) ; $i < strlen( $template ); $i++ ) { 
-		   		if( ( $template[ $i ] == "{" ) || ( $template[ $i ] == " " ) || ( $template[ $i ] == "#" ) ){
-		   			continue;
-		   		}else if( ( $template[ $i ] != "}" ) && ( $template[ $i ] != " " ) ){
-		   			$alias_tag .= $template[ $i ];
-		   		}else{
-		   			break;
-		   		}
+	    	for( $i = $value ; $i < strlen( $template ); $i++ ) { 
+
+	    		if($template[ $i ] == '}'){
+	    			break;
+	    		}
+
+	    		if( in_array($template[ $i ], $valid_characters) ){
+	    			$alias_tag .= $template[ $i ];
+	    		}
 		    }
 		    if( $alias_tag != "" ){
-		   		array_push($array_tags, $alias_tag);
+
+		    	if( !in_array($alias_tag, $alias_actions) ) {
+		    		array_push($unsolved_secure_blocks, $alias_tag);
+		    	}
+		   		
 		    }
 	    }
 	    
 	}
 	
-	return $array_tags;
+	return $unsolved_secure_blocks;
 }
 
 ?>
