@@ -128,6 +128,21 @@ function secure_Call( $function_name, $args = null, $context = null, $user_id = 
 
 }
 
+/**
+ * ...
+ *
+ * @see get_db_manager() in query_manager.php
+ *
+ * @author Jeison Cardona Gómez <jeison.cardona@correounivalle.edu.co>
+ * @since 1.0.0
+ *
+ * @param object $data, reference to empty stdClass object
+ * @param integer $user_id
+ * @param array $singularizations
+ * @param integer $time_context
+ *
+ * @return void
+*/
 function secure_render( &$data, $user_id = null, $singularizations = null, $time_context = null ){
 
 	if( is_null( $time_context ) ){
