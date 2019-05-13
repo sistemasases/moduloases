@@ -27,8 +27,10 @@ require_once( $CFG->dirroot.'/blocks/ases/managers/lib/lib.php' );
 
 
 //Eliminar usuarios y desmatricular.
-function plugin_status_remove_rol(){
-    
+function plugin_status_remove_users_from_instance( $instance ){
+	//mdl_enrol
+    global $DB;
+
 }
 
 
