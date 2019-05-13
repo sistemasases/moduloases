@@ -24,6 +24,10 @@ $singularizations = array(
 
 
 
-print_r( core_secure_call( "hello_world", [5], $context, 73380, $singularizations) );
+//print_r( core_secure_call( "hello_world", [5], $context, 73380, $singularizations) );
+
+$data = new stdClass();
+secure_render( $data, 73380, $singularizations);
+print_r( $data );
 
 ?>
