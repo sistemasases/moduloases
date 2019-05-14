@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <sections>
-	<section id="lib">
+	<section categoría="lib">
 	</section>
-	<section id="api">
+	<section categoría="api">
 		<action>
 			<alias>alias_1</alias>
 		</action>
