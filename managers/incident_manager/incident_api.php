@@ -203,6 +203,28 @@
                 return_with_code( -2 );
             }
 
+        }else if( $input->function == "get_ids_open_incidents" ){
+            
+            if( count( $input->params ) == 0 ){
+                
+                if( true ){
+
+                    echo json_encode( 
+                        array(
+                            "status_code" => 0,
+                            "error_message" => "",
+                            "data_response" => array_values( incident_get_ids_open_incidents() )
+                        )
+                    );
+                        
+                }else{
+                    return_with_code( -2 );
+                }
+
+            }else{
+                return_with_code( -2 );
+            }
+
         }else{
             // Function not defined
             return_with_code( -4 );

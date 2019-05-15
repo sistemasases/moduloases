@@ -54,7 +54,7 @@ if (!consult_instance($blockid)) {
 $contextcourse = context_course::instance($courseid);
 $contextblock = context_block::instance($blockid);
 
-$rol = get_role_ases($USER->id);
+$rol = lib_get_rol_name_ases($USER->id, $blockid);
 
 $url = new moodle_url("/blocks/ases/view/monitor_assignments.php", array('courseid' => $courseid, 'instanceid' => $blockid));
 $menu_option = create_menu_options($USER->id, $blockid, $courseid);
@@ -111,7 +111,6 @@ $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/jquery.dataTables.m
 $PAGE->requires->js_call_amd('block_ases/monitor_assignments', 'init');
 
 $PAGE->requires->js_call_amd('block_ases/ases_incident_system', 'init');
-$PAGE->requires->js_call_amd('block_ases/side_menu_main', 'init');
 
 $output = $PAGE->get_renderer('block_ases');
 

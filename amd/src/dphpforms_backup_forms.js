@@ -1,6 +1,6 @@
 /**
  * Backup  forms report
- * @module amd/src/historic_academic_reports
+ * @module amd/src/dphpforms_backupforms
  * @author Juan Pablo Castro
  * @copyright 2018 Juan Pablo Castro<juan.castro.vasquez@correounivalle.edu.co>
  * @license  http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -278,7 +278,7 @@ define([
                     html_content += '<hr style="background-color: red; height: 1px; border: 0">';
 
                     //Crear JSON con general_modal_manager
-                    gmm.generate_modal("modal_to_compare", "Comparación de estados", html_content);
+                    gmm.generate_modal("modal_to_compare", "Comparación de estados", html_content, null, function(){ gmm.show_modal( ".modal_to_compare" ) });
 
                     //GENERACIÓN DE HTML DE URL(S) QUE DIRIGEN A FICHA DE ESTUDIANTE(S)
 

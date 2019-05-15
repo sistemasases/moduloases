@@ -1,8 +1,13 @@
 {{#data}}
 {{> block_ases/side_menu}}
 <body>
-    <div id="dphpforms-reports-preguntas" style="display:none;">{{{preguntas}}}</div>
-    <div id="dphpforms-instance-id" data-instance-id="{{dphpforms_instance_id}}" style="display:none;"></div>
+    <div 
+        id="custom_metadata" 
+        data-view-name="assigned_students_no_trackings_report_page" 
+        data-instance-id="{{instance_id}}"
+        style="display:none;"
+        >
+    </div>
     <div class="container">
         <div class="row">
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
@@ -14,7 +19,8 @@
         </div>
         <div class="row">
             <div class="dataTables_scrollBody" style="position: relative; overflow: auto; width: 100%;">
-                <div class="col-sm-12" id="div_table">                 
+                <div class="col-sm-12" id="div_table">    
+                    <img class="icon-loading" src="../icon/loading.gif"/>             
                     <table id="tableEstSeguimientos" class="table"
                     cellspacing="0" width="100%"><thead> </thead></table>
                 </div>

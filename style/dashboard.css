@@ -1,0 +1,10 @@
+#status-bar{
+    width: 100%;
+    text-align: center;
+    background-color: green;
+    color: white;
+}
+
+div{
+   /* border: 1px solid red; */
+}

@@ -35,9 +35,10 @@ class EstadoAsesEIManager extends ExternInfoManager {
     public function persist_data() {
         $data = $this->get_objects();
         /* @var $item EstadoAsesCSV */
-
         foreach ($data as $key => $item) {
-
+            if(!$item->valid()) {
+                    return false;
+            }
             $id_moodle_user = null;
             $id_ases_user = null;
             /* Creación de usuario moodle si no existe*/
@@ -52,6 +53,13 @@ class EstadoAsesEIManager extends ExternInfoManager {
                 $this->add_object_warning("El usuario moodle con username $username ya existia", $key);
                // print_r($this->get_object_warnings());
                 $id_moodle_user = $moodle_user->id;
+            }
+            /**
+             * Vereficiación de homonimos
+             */
+            $nombre_completo = "$item->firstname $item->lastname";
+            if(user_duplicated_full_name($nombre_completo)) {
+                $this->add_object_warning("El usuario $nombre_completo ya esta registrado en ASES o almenos tiene un homónimo.", $key);
             }
 
 
@@ -130,7 +138,11 @@ class EstadoAsesEIManager extends ExternInfoManager {
                  AsesUserExtended::ID_ASES_USER=>$id_ases_user,
                  AsesUserExtended::ID_ACADEMIC_PROGRAM=>$ases_user_extended->id_academic_program))) {
                 AsesUserExtended::disable_all_tracking_status($id_ases_user);
-                $ases_user_extended->save();
+                if($ases_user_extended->save()) {
+                    $this->add_success_log_event("El usuario extendido para la persona con documento $item->documento se ha creado", $key);
+                } else {
+                    $this->add_error(new AsesError(-1, "El usuario extendido para el usuario con documento $item->documento no pudo ser creado por un razón illuminati" ));
+                }
              } else {
                  $this->add_object_warning(
                              "El usuario ya tiene un registro en ases user, para el programa [$program_names_string]. Estos se pasarán a tracking status 0.",

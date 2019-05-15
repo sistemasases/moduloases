@@ -155,9 +155,11 @@ function incident_get_incident( $id ){
     WHERE id = '$id'";
 
     $record = $DB->get_record_sql( $sql );
+    
 
     if( $record ){
 
+        $record->fecha_hora_registro = strtotime($record->fecha_hora_registro);
         $record->usuario_registra = $DB->get_record_sql( "SELECT id, username, firstname, lastname FROM {user} WHERE id = '$record->id_usuario_registra'" );
         $record->usuario_cierra = null;
 
@@ -171,6 +173,12 @@ function incident_get_incident( $id ){
         return null;
     }
 
+}
+
+function incident_get_ids_open_incidents(){
+
+    global $DB;
+    return $DB->get_records_sql( "SELECT id FROM {talentospilos_incidencias} WHERE cerrada = 0" );
 
 }
 

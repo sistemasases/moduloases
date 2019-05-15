@@ -1,10 +1,13 @@
 <div class="top_menu" id="menu_div">
-  <ul>
-    {{{menu}}}
-  </ul>
+  {{{menu}}}
 </div>
 {{#js}}
-  require(['block_ases/side_menu_main'], function(side_menu_main){
-    side_menu_main.init();            
+  require(
+    [
+      'block_ases/side_menu_main',
+      'block_ases/incident_notifier'
+    ], function(side_menu_main, incident_notifier){
+    side_menu_main.init();    
+    incident_notifier.init();        
   });  
 {{/js}}

@@ -83,6 +83,16 @@
         color: black;
         font-weight: normal;
     }
+
+    .label_fields_discapacity_tab4{
+        padding-left: 0px;
+        padding-top: 5px;
+        color: black;
+        font-weight: bold;
+        padding-right: 0px;
+        margin-right: 5px;
+        
+    }
     .h-sections-discapacity-tab{
         margin-bottom: 5px;
         margin-top: 5px;
@@ -90,6 +100,10 @@
     .row_discapacity{
         margin-left: 0px;
         margin-top: 7px !important;
+    }
+
+    .row_academics{
+        margin-left: 0px;
     }
     .row_discapacity2{
         margin-left: 0px;
@@ -132,7 +146,9 @@
         padding-left: 0px;
         padding-right: 0px;
     
-    
+    }
+    #cond_adquisicion{
+        height: 160px !important;
     }
     #div_diagnostico{
         padding-left: 0px;
@@ -174,11 +190,25 @@
         padding-left: 0px;
         padding-right: 0px;
     }
+    #textarea_percepcion{
+        overflow-y: scroll; 
+        height:50px;
+        padding-left: 0px;
+        padding-right: 0px;
+    }
 
     #textarea_expectativas{
         overflow-y: scroll; 
         height:90px;
         width: 230px;
+        padding-left: 0px;
+        padding-right: 0px;
+    }
+
+    .academics_data_textarea{
+        overflow-y: scroll; 
+        height:90px;
+        width: 260px;
         padding-left: 0px;
         padding-right: 0px;
     }
@@ -212,6 +242,9 @@
     #div_tipo_discapacidad{
         margin-top: 5px;
     }
+    #tipo_discapacidad{
+        height: 110px !important;
+    }
     
     #panel1{
         padding-right: 20px;
@@ -234,6 +267,11 @@
 }
 
 @media print{
+
+    #tipo_discapacidad{
+        height: 110px !important;
+    }
+    
     #form_ficha_inicial{
        overflow-x: hidden;
        margin-right: -20px;
@@ -259,6 +297,9 @@
     }
     #otro_cond_adquisicion{
         width: 150px;
+    }
+    #cond_adquisicion{
+        height: 160px !important;
     }
     #otra_discapacidad{
         width: 150px;
@@ -287,7 +328,7 @@
     }
     .row_discapacity{
         margin-left: 0px;
-        margin-top: 7px !important;
+        margin-top: 15px !important;
     }
     .row_discapacity2{
         margin-left: 0px;

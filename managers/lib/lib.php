@@ -130,8 +130,7 @@ function isMonOrPract($USER)
 
 /**
  * Gets an ASES user role given his moodle id
- *
- * @see get_role_ases($id)
+ * @deprecated 5.3 No longer used because is not considering instance_id and a given semester, please @see lib_get_rol_name_ases()
  * @param $id --> user moodle id
  * @return string --> containing user role
  */
@@ -143,6 +142,36 @@ function get_role_ases($id)
     $id_semestre = $semestre->max;
 
     $query_role = "SELECT rol.nombre_rol  FROM {talentospilos_rol} rol INNER JOIN {talentospilos_user_rol} uRol ON rol.id = uRol.id_rol WHERE uRol.id_usuario = $id AND uRol.id_semestre = $id_semestre";
+    $rol = $DB->get_record_sql($query_role)->nombre_rol;
+
+    return $rol;
+}
+
+/**
+ * Function that returns the role name given an user, instance and semester. If 
+ * semester is not indicated, this function will be return the role name in the 
+ * current semester.
+ * 
+ * @author Jeison Cardona Gómez <jeison.cardona@correounivalle.edu.co>
+ * @see periods_get_current_semester() from periods/periods_lib.php
+ * @param integer $user_id, user moodle id.
+ * @param integer $instance_id, plugin instance.
+ * @param integer $semester_id
+ * @return string containing role name
+ */
+function lib_get_rol_name_ases($user_id, $instance_id, $semester_id = null )
+{
+    global $DB;
+
+    if( !$semester_id ){
+        $semester_id = periods_get_current_semester()->id;
+    }
+
+    $query_role = "SELECT rol.nombre_rol  
+    FROM {talentospilos_rol} AS rol 
+    INNER JOIN {talentospilos_user_rol} AS uRol 
+    ON rol.id = uRol.id_rol 
+    WHERE uRol.id_usuario = '$user_id' AND uRol.id_semestre = '$semester_id' AND id_instancia = '$instance_id' AND estado = '1'";
     $rol = $DB->get_record_sql($query_role)->nombre_rol;
 
     return $rol;
@@ -327,7 +356,7 @@ function get_all_student($instance_id)
     $semestre = get_current_semester();
     $id_semestre = $semestre->max;
 
-    $query = "SELECT user_moodle.username, user_moodle.firstname, user_moodle.lastname
+    $query = "SELECT DISTINCT user_moodle.username, user_moodle.firstname, user_moodle.lastname
               FROM {user} AS user_moodle
               INNER JOIN {talentospilos_user_extended} AS user_extended ON user_moodle.id = user_extended.id_moodle_user
               INNER JOIN {cohort_members} AS cohort_members ON cohort_members.userid = user_extended.id_moodle_user
