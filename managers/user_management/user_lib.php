@@ -280,10 +280,10 @@ function user_get_password($code , $firsname, $lastname): string {
         case 7:  break;
         default: return false;
     }
-    if(is_null($firsname) || is_numeric($firsname) || $firsname = '') {
+    if(is_null($firsname) || is_numeric($firsname) || $firsname === '') {
         return false;
     }
-    if(is_null($lastname) || is_numeric($lastname) || $lastname = '') {
+    if(is_null($lastname) || is_numeric($lastname) || $lastname === '') {
         return false;
     }
     return strtoupper($firsname[0]). $code . strtoupper($lastname[0]);
