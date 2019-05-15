@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<configurations>
+	<config config_for="api">
+		<action>
+			<alias>
+				hello_world
+			</alias>
+		</action>
+	</config>
+</configurations>
