@@ -264,4 +264,52 @@ function secure_template_checker( $templates_dir ){
 	return $unsolved_secure_blocks;
 }
 
+/**
+ * ...
+ *
+ * @author Jeison Cardona Gómez <jeison.cardona@correounivalle.edu.co>
+ * @since 1.0.0
+ *
+ * @param string $managers_dir, Folder with managers.
+ *
+ * @return array
+*/
+function secure_call_checker( $managers_dir ){
+
+	$managers = array_filter(glob( $managers_dir . '/*'), 'is_dir');
+	$unsolved_secure_calls = [];
+
+	$valid_characters = [
+		'a','b','c','d','e','f','g',
+		'h','i','j','k','l','m','n',
+		'o','p','q','r','s','t','u',
+		'v','w','x','y','z','0','1',
+		'2','3','4','5','6','7','8',
+		'9','_'];
+
+	$actions_type = _core_security_get_action_type( 'back' );
+	$actions = _core_security_get_actions( $actions_type['id'] );
+	$alias_actions = array_map( function($in){ return $in['alias']; }, $actions );
+
+	foreach($managers as $manager){
+
+		$manager_name = basename( $manager );
+		
+		if( file_exists( $manager . "/" . $manager_name . ".xml" ) ){
+
+			$config_file = simplexml_load_file(
+				$CFG->dirroot . 
+				'/blocks/ases/managers/secure_call_test_manager/secure_call_test_manager.xml'
+			);
+
+			//simplexml_load_file return a mixed ouput.
+			if( $config_file !== false ){
+				
+			}
+
+		}
+
+	}
+}
+
 ?>

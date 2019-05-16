@@ -3,7 +3,14 @@
 	<config config_for="api">
 		<action>
 			<alias>
-				hello_world
+				say_hello
+			</alias>
+		</action>
+	</config>
+	<config config_for="lib">
+		<action>
+			<alias>
+				test
 			</alias>
 		</action>
 	</config>
