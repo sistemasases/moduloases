@@ -33,5 +33,39 @@ function plugin_status_remove_users_from_instance( $instance ){
 
 }
 
+function plugin_status_tmp(){
+	$sql = "SELECT * FROM mdl_course AS C INNER JOIN (
+
+			SELECT * FROM mdl_enrol AS E
+			INNER JOIN mdl_user_enrolments AS UE 
+			ON UE.enrolid = E.id
+			WHERE UE.userid = 73380
+
+			) AS T
+			ON T.courseid = C.id";
+}
+
+function plugin_status_get_ases_instances(){
+
+	global $DB;
+	$sql = "SELECT id FROM {block_instances} WHERE blockname = 'ases'";
+	return $DB->get_records_sql( $sql );
+
+}
+
+function plugin_status_get_courseid_by_instance( $instance ){
+
+	global $DB;
+	$sql = "SELECT instanceid 
+	FROM {context} 
+	WHERE id = (
+		SELECT parentcontextid 
+		FROM {block_instances} 
+		WHERE id = '$instance'
+	)";
+
+	return $DB->get_record_sql( $sql );
+}
+
 
 ?>
