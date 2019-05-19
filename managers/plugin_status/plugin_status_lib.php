@@ -50,7 +50,7 @@ function plugin_status_remove_users_from_instance( $instanceid ){
 
 }
 
-print_r( count(plugin_status_remove_users_from_instance( 450299 )) );
+//print_r( count(plugin_status_remove_users_from_instance( 450299 )) );
 
 function plugin_status_get_ases_instances(){
 
@@ -114,8 +114,21 @@ function _plugin_status_is_sistemas1008( $moodle_user ){
 function plugin_status_get_course_groups( $courseid ){
 
 	global $DB;
-
 	$sql = "SELECT * FROM {groups} WHERE courseid = '$courseid'";
+	return $DB->get_records_sql( $sql );
+
+}
+
+function plugin_status_get_groups_from_user_by_course( $userid, $courseid ){
+
+	global $DB;
+
+	$sql = "SELECT * 
+	FROM {groups} AS G0
+	INNER JOIN {groups_members} GM0
+	ON G0.id = GM0.groupid
+	WHERE 
+		G0.courseid = '$courseid' AND GM0.userid = '$userid'";
 
 	return $DB->get_records_sql( $sql );
 
