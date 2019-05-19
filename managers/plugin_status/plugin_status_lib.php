@@ -111,5 +111,15 @@ function _plugin_status_is_sistemas1008( $moodle_user ){
 	}
 }
 
+function plugin_status_get_course_groups( $courseid ){
+
+	global $DB;
+
+	$sql = "SELECT * FROM {groups} WHERE courseid = '$courseid'";
+
+	return $DB->get_records_sql( $sql );
+
+}
+
 
 ?>
