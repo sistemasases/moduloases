@@ -28,7 +28,7 @@ require_once( $CFG->dirroot.'/blocks/ases/managers/user_management/user_manageme
 
 
 //Eliminar usuarios y desmatricular.
-function plugin_status_remove_users_from_instance( $instanceid ){
+function plugin_status_get_users_data_from_instance( $instanceid ){
 	
     global $DB;
 
@@ -36,21 +36,41 @@ function plugin_status_remove_users_from_instance( $instanceid ){
     $enrol = plugin_status_get_manual_enrol_by_courseid($course_instance->courseid);
     $users = plugin_status_get_user_enrolments($enrol->id);
 
-    $moodle_users = array_filter(
+    $users = array_filter(
     	array_map(
         	function($in){ 
+
         		$user = user_management_get_full_moodle_user($in->userid);
-        		return ( _plugin_status_is_sistemas1008( $user ) ? null : $user ); 
+
+        		$simple_user = new stdClass();
+        		$simple_user->id = $user->id;
+        		$simple_user->firstname = $user->firstname;
+        		$simple_user->lastname = $user->lastname;
+        		$simple_user->username = $user->username;
+
+        		return ( _plugin_status_is_sistemas1008( $user ) ? null : $simple_user ); 
         	}, 
         	$users 
         )
     );
 
-	return $moodle_users;
+
+    $users_with_groups = [];
+    foreach ($users as $key => $user) {
+    	array_push( 
+    		$users_with_groups, 
+    		array(
+    			'user' => $user,
+    			'groups' => plugin_status_get_groups_from_user_by_course( $user->id, $course_instance->courseid )
+    		)
+    	);
+    }
+
+	return $users_with_groups;
 
 }
 
-//print_r( count(plugin_status_remove_users_from_instance( 450299 )) );
+print_r( plugin_status_get_users_data_from_instance( 450299 ) );
 
 function plugin_status_get_ases_instances(){
 
