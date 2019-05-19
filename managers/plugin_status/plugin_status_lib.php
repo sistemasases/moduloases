@@ -28,7 +28,7 @@ require_once( $CFG->dirroot.'/blocks/ases/managers/user_management/user_manageme
 
 
 //Eliminar usuarios y desmatricular.
-function plugin_status_get_users_data_from_instance( $instanceid ){
+function plugin_status_get_users_data_by_instance( $instanceid ){
 	
     global $DB;
 
