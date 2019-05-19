@@ -119,6 +119,9 @@ function plugin_status_get_course_groups( $courseid ){
 
 }
 
+/**
+ * Function that returns given an user and courseid, a list of groups to which belongs
+ */
 function plugin_status_get_groups_from_user_by_course( $userid, $courseid ){
 
 	global $DB;
