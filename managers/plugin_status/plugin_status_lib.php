@@ -32,8 +32,8 @@ function plugin_status_get_users_data_by_instance( $instanceid ){
 	
     global $DB;
 
-    $course_instance = plugin_status_get_courseid_by_instance( $instanceid ); 
-    $enrol = plugin_status_get_manual_enrol_by_courseid($course_instance->courseid);
+    $courseid = plugin_status_get_courseid_by_block_instance( $instanceid ); 
+    $enrol = plugin_status_get_manual_enrol_by_courseid($courseid);
     $users = plugin_status_get_user_enrolments($enrol->id);
 
     $users = array_filter(
@@ -61,7 +61,7 @@ function plugin_status_get_users_data_by_instance( $instanceid ){
     		$users_with_groups, 
     		array(
     			'user' => $user,
-    			'groups' => plugin_status_get_groups_from_user_by_course( $user->id, $course_instance->courseid )
+    			'groups' => plugin_status_get_groups_from_user_by_course( $user->id, $courseid )
     		)
     	);
     }
@@ -70,7 +70,7 @@ function plugin_status_get_users_data_by_instance( $instanceid ){
 
 }
 
-print_r( plugin_status_get_users_data_from_instance( 450299 ) );
+print_r( plugin_status_get_users_data_by_instance( 450299 ) );
 
 function plugin_status_get_ases_instances(){
 
@@ -84,7 +84,7 @@ function plugin_status_get_ases_instances(){
 
 }
 
-function plugin_status_get_courseid_by_instance( $instanceid ){
+function plugin_status_get_courseid_by_block_instance( $instanceid ){
 
 	global $DB;
 
@@ -96,7 +96,9 @@ function plugin_status_get_courseid_by_instance( $instanceid ){
 		WHERE id = '$instanceid'
 	)";
 
-	return $DB->get_record_sql( $sql );
+	$data = $DB->get_record_sql( $sql );
+
+	return ( $data ? $data->courseid : null);
 }
 
 function plugin_status_get_manual_enrol_by_courseid( $courseid ){
