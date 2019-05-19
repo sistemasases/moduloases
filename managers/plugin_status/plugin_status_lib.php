@@ -24,31 +24,37 @@
  */
 require_once( dirname(__FILE__). '/../../../../config.php' );
 require_once( $CFG->dirroot.'/blocks/ases/managers/lib/lib.php' );
+require_once( $CFG->dirroot.'/blocks/ases/managers/user_management/user_management_lib.php' );
 
 
 //Eliminar usuarios y desmatricular.
-function plugin_status_remove_users_from_instance( $instance ){
-	//mdl_enrol
+function plugin_status_remove_users_from_instance( $instanceid ){
+	
     global $DB;
 
+    $course_instance = plugin_status_get_courseid_by_instance( $instanceid ); 
+    $enrol = plugin_status_get_manual_enrol_by_courseid($course_instance->courseid);
+    $users = plugin_status_get_user_enrolments($enrol->id);
+
+    $moodle_users = array_map(
+    	function($in){ 
+    		return user_management_get_full_moodle_user($in->userid); 
+    	}, $users );
+
+	return $users;
+
 }
 
-function plugin_status_tmp(){
-	$sql = "SELECT * FROM mdl_course AS C INNER JOIN (
-
-			SELECT * FROM mdl_enrol AS E
-			INNER JOIN mdl_user_enrolments AS UE 
-			ON UE.enrolid = E.id
-			WHERE UE.userid = 73380
-
-			) AS T
-			ON T.courseid = C.id";
-}
+print_r( count(plugin_status_remove_users_from_instance( 450299 )) );
 
 function plugin_status_get_ases_instances(){
 
 	global $DB;
-	$sql = "SELECT id FROM {block_instances} WHERE blockname = 'ases'";
+
+	$sql = "SELECT id 
+	FROM {block_instances} 
+	WHERE blockname = 'ases'";
+
 	return $DB->get_records_sql( $sql );
 
 }
@@ -56,7 +62,8 @@ function plugin_status_get_ases_instances(){
 function plugin_status_get_courseid_by_instance( $instanceid ){
 
 	global $DB;
-	$sql = "SELECT instanceid 
+
+	$sql = "SELECT instanceid AS courseid
 	FROM {context} 
 	WHERE id = (
 		SELECT parentcontextid 
@@ -70,11 +77,25 @@ function plugin_status_get_courseid_by_instance( $instanceid ){
 function plugin_status_get_manual_enrol_by_courseid( $courseid ){
 
 	global $DB;
+
 	$sql = "SELECT id 
 	FROM {enrol} 
 	WHERE courseid = '$courseid' AND enrol = 'manual'";
 
 	return $DB->get_record_sql( $sql );
+}
+
+function plugin_status_get_user_enrolments( $enrolid ){
+
+	global $DB;
+
+	$sql = "SELECT * 
+	FROM {user_enrolments}
+	WHERE enrolid = '$enrolid'";
+
+
+	return $DB->get_records_sql( $sql );
+
 }
 
 
