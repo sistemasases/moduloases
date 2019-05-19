@@ -81,8 +81,6 @@ function plugin_status_get_users_data_by_instance( $instanceid ){
 
 }
 
-print_r( plugin_status_get_users_data_by_instance( 450299 ) );
-
 function plugin_status_get_ases_instances(){
 
 	global $DB;
