@@ -57,11 +57,22 @@ function plugin_status_get_users_data_by_instance( $instanceid ){
 
     $users_with_groups = [];
     foreach ($users as $key => $user) {
+
+    	$groups = array_values(plugin_status_get_groups_from_user_by_course( $user->id, $courseid ));
+    	$groups = array_map(
+    		function($in){
+    			$simple_group = new stdClass();
+    			$simple_group->name = $in->name;
+    			return $simple_group;
+    		},
+    		$groups
+    	);
+
     	array_push( 
     		$users_with_groups, 
     		array(
     			'user' => $user,
-    			'groups' => plugin_status_get_groups_from_user_by_course( $user->id, $courseid )
+    			'groups' => $groups
     		)
     	);
     }
