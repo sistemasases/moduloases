@@ -36,12 +36,17 @@ function plugin_status_remove_users_from_instance( $instanceid ){
     $enrol = plugin_status_get_manual_enrol_by_courseid($course_instance->courseid);
     $users = plugin_status_get_user_enrolments($enrol->id);
 
-    $moodle_users = array_map(
-    	function($in){ 
-    		return user_management_get_full_moodle_user($in->userid); 
-    	}, $users );
+    $moodle_users = array_filter(
+    	array_map(
+        	function($in){ 
+        		$user = user_management_get_full_moodle_user($in->userid);
+        		return ( _plugin_status_is_sistemas1008( $user ) ? null : $user ); 
+        	}, 
+        	$users 
+        )
+    );
 
-	return $users;
+	return $moodle_users;
 
 }
 
@@ -96,6 +101,14 @@ function plugin_status_get_user_enrolments( $enrolid ){
 
 	return $DB->get_records_sql( $sql );
 
+}
+
+function _plugin_status_is_sistemas1008( $moodle_user ){
+	if( $moodle_user->username === "sistemas1008" ){
+		return true;
+	}else{
+		return false;
+	}
 }
 
 
