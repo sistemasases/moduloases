@@ -53,7 +53,7 @@ function plugin_status_get_ases_instances(){
 
 }
 
-function plugin_status_get_courseid_by_instance( $instance ){
+function plugin_status_get_courseid_by_instance( $instanceid ){
 
 	global $DB;
 	$sql = "SELECT instanceid 
@@ -61,8 +61,18 @@ function plugin_status_get_courseid_by_instance( $instance ){
 	WHERE id = (
 		SELECT parentcontextid 
 		FROM {block_instances} 
-		WHERE id = '$instance'
+		WHERE id = '$instanceid'
 	)";
+
+	return $DB->get_record_sql( $sql );
+}
+
+function plugin_status_get_manual_enrol_by_courseid( $courseid ){
+
+	global $DB;
+	$sql = "SELECT id 
+	FROM {enrol} 
+	WHERE courseid = '$courseid' AND enrol = 'manual'";
 
 	return $DB->get_record_sql( $sql );
 }
