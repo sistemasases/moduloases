@@ -89,3 +89,15 @@
   min-height: 90px !important;
   
 }
+
+
+.user_enrolled .ucontainer{
+  padding: 1em;
+  margin-top: 1em;
+  border: 1px solid #444444;
+  box-shadow: 5px 5px 15px #888888;
+}
+
+.user_enrolled .ucontainer .remove_check{
+  float: right;
+}
