@@ -108,25 +108,26 @@ if(isset($_POST['type'])&&$_POST['type']=="condExcepcion"&&isset($_POST['cohort'
 
 // Gráfica de riesgos: A desarrollar
 
-// if(isset($_POST['type'])&&$_POST['type']=="riesgos"&&isset($_POST['cohort'])&&isset($_POST['ases_status'])&&isset($_POST['icetex_status'])&&isset($_POST['program_status'])&&isset($_POST['instance_id'])){
+if(isset($_POST['type'])&&$_POST['type']=="riesgos"&&isset($_POST['cohort'])&&isset($_POST['ases_status'])&&isset($_POST['icetex_status'])&&isset($_POST['program_status'])&&isset($_POST['instance_id'])){
     
-//     $cohorte =  $_POST['cohort'];
-//     $ases_status = $_POST['ases_status'];
-//     $icetex_status = $_POST['icetex_status'];
-//     $program_status = $_POST['program_status'];
-//     $instance_id = $_POST['instance_id'];    
-//     $result = getGraficRiesgos($cohorte, $ases_status, $icetex_status, $program_status, $instance_id);    
+    $cohorte =  $_POST['cohort'];
+    $ases_status = $_POST['ases_status'];
+    $icetex_status = $_POST['icetex_status'];
+    $program_status = $_POST['program_status'];
+    $instance_id = $_POST['instance_id'];    
+    $result = getGraficRiesgos($cohorte, $ases_status, $icetex_status, $program_status, $instance_id);    
 
-//     // $columns = array();    
+    $columns = array();    
         
-//     // array_push($columns, array("title"=>"Riesgo", "name"=>"nombre", "data"=>"nombre"));
-//     // array_push($columns, array("title"=>"N.R.", "name"=>"cantidad", "data"=>"cantidad"));        
-//     // array_push($columns, array("title"=>"Bajo", "name"=>"nombre_largo", "data"=>"nombre_largo"));
+    array_push($columns, array("title"=>"Riesgo", "name"=>"riesgo", "data"=>"riesgo"));    
+    array_push($columns, array("title"=>"Bajo", "name"=>"bajo", "data"=>"bajo"));
+    array_push($columns, array("title"=>"Medio", "name"=>"medio", "data"=>"medio"));
+    array_push($columns, array("title"=>"Alto", "name"=>"alto", "data"=>"alto"));
 
-//     // $data = get_general_table_graphic($columns, $result);
+    $data = get_general_table_graphic($columns, $result);
 
-//     echo json_encode($result);    
-// } 
+    echo json_encode($data);    
+} 
 
 
 if(isset($_POST['type'])&&$_POST['type']=="estado"&&isset($_POST['cohort'])){

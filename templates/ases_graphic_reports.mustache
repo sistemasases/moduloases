@@ -176,6 +176,33 @@
             </div>    
         </div>        
         {{/cond_excepcion_report_agr}}
+        {{#risks_report_agr}}              
+        <div class="panel panel-default">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title" id="list-students-riesgos-panel">
+                        <a data-toggle="collapse" data-parent="accordion" href="#riesgos">Reporte de Riesgos</a>
+                    </h4>                    
+                    <div id="riesgos" class="panel-collapse collapse">
+                        <div class="panel-body">
+                            <h2>Reporte de Riesgos</h2>                                       
+                            <hr class="col-sm-12" />
+                            <div class="col-sm-12" id="div_table_riesgos">
+                            </div>
+                            <hr class="col-sm-12" />
+                            <div class="row">
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    <div class="risk-chart-container">
+                                        <canvas id="grafica_riesgos" height="200" ></canvas>
+                                    </div>                            
+                                </div>                
+                            </div>
+                        </div>
+                    </div>            
+                </div>
+            </div>    
+        </div>        
+        {{/risks_report_agr}}
     </div>    
   <div>  
     

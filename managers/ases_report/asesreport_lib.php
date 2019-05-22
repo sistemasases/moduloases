@@ -356,32 +356,72 @@ function getGraficRiesgos($cohorte, $ases_status, $icetex_status, $program_statu
     global $DB;
     
     $sql_query = "SELECT riesgo.nombre AS nombre_riesgo, COUNT(DISTINCT usuario.id) AS cantidad, riesg_usuario.calificacion_riesgo AS calificacion,
-               CASE WHEN riesg_usuario.calificacion_riesgo = 1  THEN 'Bajo'
+                CASE WHEN riesg_usuario.calificacion_riesgo = 1  THEN 'Bajo'
                     WHEN riesg_usuario.calificacion_riesgo = 2  THEN 'Medio'
                     WHEN riesg_usuario.calificacion_riesgo = 3  THEN 'Alto'
                 END AS calificacion_riesgo
-                FROM {talentospilos_user_extended} AS usuario
-                INNER JOIN {talentospilos_riesg_usuario} AS riesg_usuario
+                FROM mdl_talentospilos_user_extended AS usuario
+                INNER JOIN mdl_talentospilos_riesg_usuario AS riesg_usuario
                 ON riesg_usuario.id_usuario = usuario.id_ases_user
-                INNER JOIN {talentospilos_riesgos_ases} AS riesgo
-                ON riesgo.id = riesg_usuario.id_riesgo
-                WHERE riesg_usuario.calificacion_riesgo IN (1,2,3)
+                INNER JOIN mdl_talentospilos_riesgos_ases AS riesgo
+                ON riesgo.id = riesg_usuario.id_riesgo             
                 ";
     
-    $sub_query = subconsultaGraficReport($ases_status, $icetex_status, $program_status, $cohorte, $instance_id);
-    $sql_query .= $sub_query;
+    $sub_query = subconsultaGraficReport($ases_status, $icetex_status, $program_status, $cohorte, $instance_id);   
+
+    $sub_query_bajos = $sql_query.$sub_query."WHERE riesg_usuario.calificacion_riesgo = 1
+                                    ";
+    $sub_query_medios = $sql_query.$sub_query."WHERE riesg_usuario.calificacion_riesgo = 2
+                                    ";
+    $sub_query_altos = $sql_query.$sub_query."WHERE riesg_usuario.calificacion_riesgo = 3
+                                    ";    
        
-    $sql_query .= "GROUP BY nombre_riesgo, calificacion_riesgo, calificacion
+    $option_group = "GROUP BY nombre_riesgo, calificacion
                     ORDER BY nombre_riesgo, calificacion";
+
+    $sub_query_bajos .= $option_group;
+    $sub_query_medios .= $option_group;
+    $sub_query_altos .= $option_group;
     
-    $result_query = $DB->get_records_sql($sql_query);
+    $result_query_bajos = $DB->get_records_sql($sub_query_bajos);
+    $result_query_medios = $DB->get_records_sql($sub_query_medios);    
+    $result_query_altos = $DB->get_records_sql($sub_query_altos);
     
     $result_to_return = array();
+    $bajos = array();
+    $medios = array();
+    $altos = array();
 
-    foreach($result_query as $result){
-
-        array_push($result_to_return, $result);
+    foreach($result_query_bajos as $result){
+        array_push($bajos, $result);
     }
+
+    foreach($result_query_medios as $result){
+        array_push($medios, $result);
+    }
+
+    foreach($result_query_altos as $result){
+        array_push($altos, $result);
+    }
+
+    for($i = 0; $i < count($bajos); ++$i) {
+        $riesgo = $bajos[$i]->nombre_riesgo;
+        $riesgo = str_replace("_", " ", $riesgo);
+        $riesgo = ucwords($riesgo);
+
+        if($riesgo === "Academico"){
+            $riesgo = "Académico";
+        }else if($riesgo === "Geografico"){
+            $riesgo = "Geográfico";
+        } else if($riesgo === "Economico"){
+            $riesgo = "Económico";
+        }
+
+        $cantidad_bajo = $bajos[$i]->cantidad;        
+        $cantidad_medio = $medios[$i]->cantidad;        
+        $cantidad_alto = $altos[$i]->cantidad;
+        array_push($result_to_return, (object) array('riesgo' => $riesgo, 'bajo' => $cantidad_bajo, 'medio' => $cantidad_medio, 'alto' => $cantidad_alto));
+    }  
     
     return $result_to_return;  
 }

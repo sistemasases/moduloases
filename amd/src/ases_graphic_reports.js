@@ -32,7 +32,7 @@ define(['jquery',
             init: function () {
                 window.JSZip = jszip; 
                 window.graficas = {};
-                const secciones = ["programa", "facultad", "sexo", "edad", "condExcepcion"];                                                
+                const secciones = ["programa", "facultad", "sexo", "edad", "condExcepcion", "riesgos"];                                                
                 
                 $("#list-students-programa-panel").on('click', function(){                                   
                     getDataGraphicTable("programa");
@@ -53,7 +53,10 @@ define(['jquery',
                 $("#list-students-condExcepcion-panel").on('click', function(){
                     getDataGraphicTable("condExcepcion");
                 }); 
-                
+
+                $("#list-students-riesgos-panel").on('click', function(){
+                    getDataGraphicTable("riesgos");
+                });                 
 
                 $('#status_fields').on('change', function () {                    
                     for (i = 0; i < secciones.length; i++) { 
@@ -119,6 +122,10 @@ define(['jquery',
                             break;
                         case 'condExcepcion':
                             createPieDoughnutGraphic(type, msg.data, 'doughnut');
+                            break;
+                        case 'riesgos':
+                            createRisksGraphic(msg.data)
+                            break;
                     }                   
                 },
                 dataType: "json",
@@ -323,7 +330,101 @@ define(['jquery',
 
             }     
 
-        } 
+        }
+        
+        function createRisksGraphic(data){
+
+            var nombres_riesgos = [];
+            var riesgos_bajos = [];
+            var riesgos_medios = [];
+            var riesgos_altos = [];
+
+            for (riesgo in data){
+                nombres_riesgos.push(data[riesgo]["riesgo"]);
+                riesgos_bajos.push(data[riesgo]["bajo"]);
+                riesgos_medios.push(data[riesgo]["medio"]);
+                riesgos_altos.push(data[riesgo]["alto"]);
+            }         
+            
+            $('.risk-chart-container').css('width', '100%');
+
+            var ctx = document.getElementById("grafica_riesgos").getContext('2d');
+            var data = {
+                labels: nombres_riesgos,
+                datasets: [{
+                    label: "Riesgos bajos",
+                    data: riesgos_bajos,
+                    backgroundColor: "rgba(0, 179, 136, 0.4)",
+				    borderColor: "rgba(0, 179, 136, 1)",                   
+                    borderWidth: 2
+                },
+                {
+                    label: "Riesgos Medios",
+                    data: riesgos_medios,
+                    backgroundColor: "rgba(255, 136, 17, 0.4)",
+				    borderColor: "rgba(255, 136, 17, 1)",                   
+                    borderWidth: 2
+                },
+                {
+                    label: "Riesgos Altos",
+                    data: riesgos_altos,
+                    backgroundColor: "rgba(255, 86, 102, 0.4)",
+				    borderColor: "rgba(255, 86, 102, 1)",                   
+                    borderWidth: 2
+                }
+                ]
+            }
+
+            if(!window.graficas["chart_riesgos"]){                      
+            
+                var chart_options = {
+                    
+                    title: {
+                        display: true,
+                        text: 'Cantidad de registros por riesgos',
+                        fontSize: 25
+                    },
+                    legend: {
+                        display: true,
+                        labels:{
+                            fontSize: 15,
+                            fontStyle: 'bold'
+                        }
+                    },
+                    starAngle: 0,
+                    animation: {
+                        animateRotate: true,
+                        animateScale: true
+                    },
+                    scales: {
+                        xAxes: [{
+                            ticks: {
+                                fontSize: 15,
+                                fontStyle: 'bold'
+                            }
+                        }]
+                    },
+                    showTooltips: true,
+                    showPercentages: true
+                };
+
+                Chart.defaults.polarArea.animation.animateScale = false;
+            
+                window.graficas["chart_riesgos"] = new Chart(ctx, {
+                    type: 'bar',
+                    data: data,
+                    options: chart_options
+                });
+
+            }else{
+                window.graficas["chart_riesgos"]["data"] = data;
+                window.graficas["chart_riesgos"].update();
+
+            }
+
+        }
+        
+
 
         function getIdinstancia() {
             var urlParameters = location.search.split('&');           
