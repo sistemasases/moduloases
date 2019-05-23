@@ -28,9 +28,10 @@
             success: function( data ) {
                 data.data_response.forEach( 
                     function( elem ){
-                        /*var template = $(".toChanceToDataSelector").clone();
-                        template.find(".user_enrolled").find(".ucontainer").find(".fname").html( elem.user.firstname );
-                        template.appendTo( "#plugin_members_container" );*/
+                        var template = $($("#user_enrolled_template").html());
+                        template.find(".ucontainer").find(".fname").text( elem.user.firstname );
+                        template.find(".ucontainer").find(".lname").text( elem.user.lastname );
+                        template.appendTo( "#plugin_members_container" );
                     } 
                 );
             },
