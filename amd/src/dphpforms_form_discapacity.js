@@ -24,7 +24,7 @@ define([
         init: function(){
 
             if($("#input_json_saved").val() != ""){
-                $("#li_view_discapacity_initial").show();
+               // $("#li_view_discapacity_initial").show();
                 $("#cancel_ficha_discapacity").parent().show();
             }
 
@@ -715,6 +715,8 @@ define([
                 //Validar las respuestas obtenidas
                 var result_validation =  validate_form(json_detalle_discapacidad);
 
+                console.log(result_validation);
+
                 if(result_validation.status == "error"){
                     swal(result_validation.title,
                         result_validation.msg,
@@ -728,7 +730,7 @@ define([
                 
                 }
 
-                console.log(json_detalle_discapacidad);
+                //console.log(json_detalle_discapacidad);
                 
                   
               });
@@ -857,6 +859,22 @@ define([
 
             for(i in json_detalle){
                 switch(i){
+                    case "percepcion_discapacidad":
+                    let obj_percepcion= json_detalle[i];
+                    for(op in obj_percepcion){
+                        if(op == "key_percepcion"){
+                         if(obj_percepcion[op] === undefined){
+
+                             msg.title = "Percepción de discapacidad";
+                             msg.status = "error";
+                             msg.msg = "El campo "+op+" de adquisición es obligatorio";
+                             return msg;  
+                         }
+
+                        }
+                     }
+
+                    break;
                     case "condicion_adquisicion":
                     let obj_cond_adq = json_detalle[i];
                         for(op in obj_cond_adq){
@@ -1198,6 +1216,7 @@ define([
                     case "percepcion_discapacidad":
                     key        = json_bd[i]['key_percepcion'];        
                     val_input       = json_bd[i]['descripcion'];
+                    key_input       = "textarea_percepcion";
 
 
                     if(key != ""){
