@@ -24,12 +24,19 @@
                     <div id="home" class="ases-tab-pane ases-fade ases-in ases-tab-active">
                         <h3>TTT</h3>
                         <div id="plugin_members_container" class="ases-row">
+                            <template id="group_name_template">
+                                <span class="gname">Group Name</span>
+                            </template>
                             <template id="user_enrolled_template">
                                 <div class="user_enrolled ases-col-xs-12 ases-col-sm-6 ases-col-md-6 ases-col-lg-4">
-                                    <div class="ucontainer">
+                                    <div class="ucontainer" data-groups="">
                                         <span class="fname">First Name</span>
                                         <span class="lname">Last Name</span>
                                         <input class="remove_check" type="checkbox" name="">
+                                        <hr class="ehr">
+                                        <div class="groups_container">
+                                            
+                                        </div>
                                     </div>
                                 </div>
                             </template>

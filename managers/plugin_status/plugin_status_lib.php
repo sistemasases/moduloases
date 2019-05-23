@@ -127,7 +127,8 @@ function plugin_status_get_user_enrolments( $enrolid ){
 
 	$sql = "SELECT * 
 	FROM {user_enrolments}
-	WHERE enrolid = '$enrolid'";
+	WHERE enrolid = '$enrolid'
+	ORDER BY timecreated ASC";
 
 
 	return $DB->get_records_sql( $sql );

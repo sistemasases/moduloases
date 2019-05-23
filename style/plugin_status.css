@@ -101,3 +101,16 @@
 .user_enrolled .ucontainer .remove_check{
   float: right;
 }
+
+.user_enrolled .ucontainer .ehr{
+  margin: 15px 0px 15px 0px;
+}
+
+.user_enrolled .ucontainer .groups_container .enrolled_group{
+  font-size: 0.8em;
+  padding: 4px;
+  background: #cececece;
+  border-radius: 3px;
+  margin-right: 3px;
+  margin-top: 3px;
+}
