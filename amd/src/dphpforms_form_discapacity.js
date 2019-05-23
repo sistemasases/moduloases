@@ -24,7 +24,7 @@ define([
         init: function(){
 
             if($("#input_json_saved").val() != ""){
-                $("#li_view_discapacity_initial").show();
+               // $("#li_view_discapacity_initial").show();
                 $("#cancel_ficha_discapacity").parent().show();
             }
 
