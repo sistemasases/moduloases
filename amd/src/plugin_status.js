@@ -26,6 +26,9 @@
             dataType: "json",
             cache: "false",
             success: function( data ) {
+
+                let global_filter = [];
+
                 data.data_response.forEach( 
                     function( elem ){
                         let groups = [];
@@ -36,7 +39,11 @@
                         template.find(".ucontainer").attr( "data-groups-number", elem.groups.length );
                         
                         for( let i = 0; i < elem.groups.length; i++ ){
-                            groups.push( elem.groups[i].name );
+                            let group_name = elem.groups[i].name;
+                            groups.push( group_name );
+                            if( !global_filter.includes( group_name ) ){
+                                global_filter.push( group_name );
+                            }
                             template.find(".ucontainer").find(".groups_container").append( '<span class="enrolled_group">' + elem.groups[i].name + '</span>' );
                         }
 
@@ -50,6 +57,8 @@
 
                     } 
                 );
+
+                console.log(global_filter);
             },
             error: function( data ) {
                 console.log( data );
