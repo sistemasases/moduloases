@@ -28,22 +28,24 @@
             success: function( data ) {
                 data.data_response.forEach( 
                     function( elem ){
-
+                        let groups = [];
                         let template = $($("#user_enrolled_template").html());
                         template.find(".ucontainer").find(".fname").text( elem.user.firstname );
                         template.find(".ucontainer").find(".lname").text( elem.user.lastname );
                         template.find(".ucontainer").attr( "data-groups", JSON.stringify(elem.groups) );
                         template.find(".ucontainer").attr( "data-groups-number", elem.groups.length );
-
+                        
                         for( let i = 0; i < elem.groups.length; i++ ){
+                            groups.push( elem.groups[i].name );
                             template.find(".ucontainer").find(".groups_container").append( '<span class="enrolled_group">' + elem.groups[i].name + '</span>' );
                         }
 
                         if( elem.groups.length === 0 ){
+                            groups.push( "N/A" );
                             template.find(".ucontainer").find(".groups_container").append( '<span class="enrolled_group">N/A</span>' );
                         }
-                        
 
+                        template.find(".ucontainer").attr( "data-glist", groups );
                         template.appendTo( "#plugin_members_container" );
 
                     } 
