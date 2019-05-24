@@ -19,8 +19,20 @@
 
         console.log( "Plugin status initialised" );
 
-        loading_indicator.show();
+        $(document).on("click",".mfilter",
+            function(){
+                let filter = $(this);
+                $(".mfilter").removeClass( "filter-selected" );
+                filter.addClass( "filter-selected" );
+                let filter_value = filter.data( "filter" );
+                $(".ucontainer").parent().show();
+                if( filter_value !== "all" ){
+                    $(".ucontainer").not('.ucontainer[data-glist="'+filter_value+'"]').parent().hide();
+                }
+            }
+        );
 
+        loading_indicator.show();
         $.ajax({
             type: "POST",
             data: JSON.stringify( { function:"get_users_data_by_instance", params:[ 450299 ] } ),
@@ -62,9 +74,10 @@
 
                 global_filter.forEach( 
                     function( element ){
-                        $("#step_0_selector").find( "select" ).append( '<option value="' + element + '">' + element + '</option>' );
+                        $("#step_0_selector").append( '<div class="mfilter" data-filter="' + element + '">' + element + '</div>' );
                     } 
                 );
+                $("#step_0_selector").append( '<div class="mfilter filter-selected" data-filter="all">Todos (Con varios grupos)</div>' );
             },
             error: function( data ) {
                 loading_indicator.hide();

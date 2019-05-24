@@ -114,3 +114,20 @@
   margin-right: 3px;
   margin-top: 3px;
 }
+
+.mfilter{
+  cursor:pointer;
+  padding: 4px;
+  background: #cececece;
+  border: 1px solid #cececece;
+  border-radius: 0px;
+  margin-right: 0.5em;
+  margin-top: 3px;
+  float: left;
+}
+
+.filter-selected{
+  border: 1px solid black;
+  background: #7F7F7F;
+  border: 1px solid #cececece;
+}
