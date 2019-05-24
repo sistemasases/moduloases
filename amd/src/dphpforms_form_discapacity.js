@@ -715,7 +715,7 @@ define([
                 //Validar las respuestas obtenidas
                 var result_validation =  validate_form(json_detalle_discapacidad);
 
-                console.log(result_validation);
+                //console.log(result_validation);
 
                 if(result_validation.status == "error"){
                     swal(result_validation.title,
