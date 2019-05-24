@@ -141,5 +141,6 @@
 }
 
 .user-selected{
-  background: #ffcecf;
+  border: 1px solid #ff3030 !important;
+  background: #fff5f5
 }

@@ -41,7 +41,7 @@
                 let filter_value = filter.data( "filter" );
                 $(".ucontainer").parent().show();
                 if( filter_value !== "all" ){
-                    $(".ucontainer").not('.ucontainer[data-glist="'+filter_value+'"]').parent().hide();
+                    $(".ucontainer").not('.ucontainer[data-glist="' + filter_value + '"]').parent().hide();
                 }
             }
         );
