@@ -94,8 +94,9 @@
 .user_enrolled .ucontainer{
   padding: 1em;
   margin-top: 1em;
-  border: 1px solid #444444;
-  box-shadow: 5px 5px 15px #888888;
+  border: 1px solid #e1e1e1;
+  box-shadow: 5px 5px 15px #e1e1e1;
+  cursor: pointer;
 }
 
 .user_enrolled .ucontainer .remove_check{
@@ -105,6 +106,13 @@
 .user_enrolled .ucontainer .ehr{
   margin: 15px 0px 15px 0px;
 }
+
+.user_enrolled .ucontainer .fname,
+.user_enrolled .ucontainer .lname{
+  font-size: 0.9em;
+}
+
+
 
 .user_enrolled .ucontainer .groups_container .enrolled_group{
   font-size: 0.8em;
@@ -130,4 +138,8 @@
   border: 1px solid black;
   background: #7F7F7F;
   border: 1px solid #cececece;
+}
+
+.user-selected{
+  background: #ffcecf;
 }

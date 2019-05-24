@@ -19,8 +19,22 @@
 
         console.log( "Plugin status initialised" );
 
+        $(document).on("click", ".ucontainer", function(){
+            let ucontainer = $(this);
+            let ucontainer_checkbox = $(this).find(".remove_check");
+            if( ucontainer_checkbox.prop("checked") == true ){
+                ucontainer_checkbox.attr("checked", false);
+                ucontainer.removeClass( "user-selected" );
+            }else{
+                ucontainer_checkbox.attr("checked", true);
+                ucontainer.addClass( "user-selected" );
+            };
+        });
+
         $(document).on("click",".mfilter",
             function(){
+                $(".ucontainer").find(".remove_check").attr("checked", false);
+                $(".ucontainer").removeClass( "user-selected" );
                 let filter = $(this);
                 $(".mfilter").removeClass( "filter-selected" );
                 filter.addClass( "filter-selected" );
