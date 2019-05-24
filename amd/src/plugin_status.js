@@ -19,6 +19,13 @@
 
         console.log( "Plugin status initialised" );
 
+        $(document).on("click", ".select-visibles", 
+            function( event ){
+                event.preventDefault();
+
+            }
+        );
+
         $(document).on("click", ".ucontainer", function(){
             let ucontainer = $(this);
             let ucontainer_checkbox = $(this).find(".remove_check");
@@ -76,8 +83,8 @@
                         }
 
                         if( elem.groups.length === 0 ){
-                            groups.push( "N/A" );
-                            template.find(".ucontainer").find(".groups_container").append( '<span class="enrolled_group">N/A</span>' );
+                            groups.push( "Sin grupo" );
+                            template.find(".ucontainer").find(".groups_container").append( '<span class="enrolled_group">Sin grupo</span>' );
                         }
 
                         template.find(".ucontainer").attr( "data-glist", groups );
@@ -85,7 +92,7 @@
 
                     } 
                 );
-
+                global_filter.push( "Sin grupo" );
                 global_filter.forEach( 
                     function( element ){
                         $("#step_0_selector").append( '<div class="mfilter" data-filter="' + element + '">' + element + '</div>' );
