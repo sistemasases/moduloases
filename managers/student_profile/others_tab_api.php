@@ -51,8 +51,8 @@ if(isset($_POST['func'])){
         $id_schema = $_POST['id_schema'];
         $schema_db = get_schema($id_schema);
         $data = json_decode($_POST['json']);
-        //$schema= json_decode($schema_db->json_schema);
-        $schema = (object)['$ref' => 'file://' . realpath('schema_json_discapacity.json')];
+        $schema= json_decode($schema_db->json_schema);
+        //$schema = (object)['$ref' => 'file://' . realpath('schema_json_discapacity.json')];
         //General  data to logs
         $moodle_user   =  $USER->id;
         $data_prev     =  $_POST['json_prev'];
