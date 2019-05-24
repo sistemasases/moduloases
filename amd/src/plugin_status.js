@@ -19,6 +19,8 @@
 
         console.log( "Plugin status initialised" );
 
+        loading_indicator.show();
+
         $.ajax({
             type: "POST",
             data: JSON.stringify( { function:"get_users_data_by_instance", params:[ 450299 ] } ),
@@ -26,7 +28,7 @@
             dataType: "json",
             cache: "false",
             success: function( data ) {
-
+                loading_indicator.hide();
                 let global_filter = [];
 
                 data.data_response.forEach( 
@@ -58,9 +60,14 @@
                     } 
                 );
 
-                console.log(global_filter);
+                global_filter.forEach( 
+                    function( element ){
+                        $("#step_0_selector").find( "select" ).append( '<option value="' + element + '">' + element + '</option>' );
+                    } 
+                );
             },
             error: function( data ) {
+                loading_indicator.hide();
                 console.log( data );
             },
         });
