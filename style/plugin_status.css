@@ -144,3 +144,12 @@
   border: 1px solid #ff3030 !important;
   background: #fff5f5
 }
+
+#plugin_members_actions{
+  margin-top: 1em;
+}
+
+#plugin_members_filter > div > h3,
+#plugin_members_actions > div > h3{
+  margin: 0px;
+}

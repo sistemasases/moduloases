@@ -19,10 +19,36 @@
 
         console.log( "Plugin status initialised" );
 
-        $(document).on("click", ".select-visibles", 
+        $(document).on("click", "#select-visibles", 
             function( event ){
                 event.preventDefault();
+                $(".user_enrolled[data-visible='true']").find(".remove_check").attr("checked", true);
+                $(".user_enrolled[data-visible='true']").find(".ucontainer").addClass( "user-selected" );
+            }
+        );
 
+        $(document).on("click", "#clear-selection", 
+            function( event ){
+                event.preventDefault();
+                $(".user_enrolled").find(".remove_check").attr("checked", false);
+                $(".user_enrolled").find(".ucontainer").removeClass( "user-selected" );
+            }
+        );
+
+        $(document).on("click", "#remove-selected", 
+            function( event ){
+                event.preventDefault();
+                let uid = [];
+                $(".user_enrolled[data-visible='true']")
+                    .find(".ucontainer")
+                    .each( 
+                        function( index ){
+                            if( $(this).find(".remove_check").prop("checked") == true ){
+                                uid.push( $(this).data("id") );
+                            }
+                        } 
+                );
+                console.log(uid);
             }
         );
 
@@ -47,7 +73,9 @@
                 filter.addClass( "filter-selected" );
                 let filter_value = filter.data( "filter" );
                 $(".ucontainer").parent().show();
+                $(".ucontainer").parent().attr("data-visible", true);
                 if( filter_value !== "all" ){
+                    $(".ucontainer").not('.ucontainer[data-glist="' + filter_value + '"]').parent().attr("data-visible", false);
                     $(".ucontainer").not('.ucontainer[data-glist="' + filter_value + '"]').parent().hide();
                 }
             }
@@ -70,6 +98,7 @@
                         let template = $($("#user_enrolled_template").html());
                         template.find(".ucontainer").find(".fname").text( elem.user.firstname );
                         template.find(".ucontainer").find(".lname").text( elem.user.lastname );
+                        template.find(".ucontainer").attr( "data-id", elem.user.id );
                         template.find(".ucontainer").attr( "data-groups", JSON.stringify(elem.groups) );
                         template.find(".ucontainer").attr( "data-groups-number", elem.groups.length );
                         
