@@ -1,3 +1,78 @@
 {{#data}}
-    {{> block_ases/_view}}
+    <div class="ases-container-fluid">
+        {{> block_ases/_view.component}}
+        <div class="ases-row">
+            <div class="ases-col-xs-12 ases-col-sm-12 ases-col-md-12 ases-col-lg-12 steps-col">
+                    <!--
+                        0:Limpieza
+                        1:Inicialización
+                        2:Carga Estudiantes
+                        3:Otros
+                    -->
+                <div class="steps-container">
+                    <ul class="steps-progressbar">
+                        <li data-toggle="ases-pill" data-tab="#home" class="active">Limpieza</li>
+                        <li data-toggle="ases-pill" data-tab="#menu1" class="">Inicialización</li>
+                        <li data-toggle="ases-pill" data-tab="#menu2" class="">Carga de estudiantes</li>
+                        <li data-toggle="ases-pill" data-tab="#menu3" class="">Otros</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="ases-col-xs-12 ases-col-sm-12 ases-col-md-12 ases-col-lg-12">
+                <hr>
+                <div class="ases-tab-content">
+                    <div id="home" class="ases-tab-pane ases-fade ases-in ases-tab-active">
+                        <div id="plugin_members_filter" class="ases-row">
+                            <div class="ases-col-xs-12 ases-col-sm-12 ases-col-md-12 ases-col-lg-12">
+                                <h3>Filtrar por:</h3>
+                                <div id="step_0_selector" >
+                                    
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                        <div id="plugin_members_actions" class="ases-row">
+                            <div class="ases-col-xs-12 ases-col-sm-12 ases-col-md-12 ases-col-lg-12">
+                                <h3>Acciones:</h3>
+                                <a id="select-visibles" href="javascript:void(0)" class="ases-btn ases-btn-default ases-btn-sm">Seleccionar visibles</a>
+                                <a id="clear-selection" href="javascript:void(0)" class="ases-btn ases-btn-default ases-btn-sm">Limpiar selección</a>
+                                <a id="remove-selected" href="javascript:void(0)" class="ases-btn ases-btn-default ases-btn-sm ases-danger">Eliminar seleccionados</a>
+                            </div>
+                        </div>
+                        <hr>
+                        <div id="plugin_members_container" class="ases-row">
+                            <template id="group_name_template">
+                                <span class="gname">Group Name</span>
+                            </template>
+                            <template id="user_enrolled_template">
+                                <div class="user_enrolled ases-col-xs-12 ases-col-sm-6 ases-col-md-6 ases-col-lg-4" data-visible="true">
+                                    <div class="ucontainer" data-groups="">
+                                        <span class="fname">First Name</span>
+                                        <span class="lname">Last Name</span>
+                                        <input class="remove_check" type="checkbox" name="">
+                                        <hr class="ehr">
+                                        <div class="groups_container">
+                                            
+                                        </div>
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                    <div id="menu1" class="ases-tab-pane ases-fade">
+                        <h3>Menu 1</h3>
+                        <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                    </div>
+                    <div id="menu2" class="ases-tab-pane ases-fade">
+                        <h3>Menu 2</h3>
+                        <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam.</p>
+                    </div>
+                    <div id="menu3" class="ases-tab-pane ases-fade">
+                        <h3>Menu 3</h3>
+                        <p>Eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.</p>
+                    </div>
+                </div>  
+            </div>
+        </div>
+    </div>
 {{/data}}
