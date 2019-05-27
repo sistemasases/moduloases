@@ -35,9 +35,9 @@
     $raw_data = file_get_contents("php://input");
     
     // Validation if the user is logged. 
-    if( $USER->id == 0 ){
+    /*if( $USER->id == 0 ){
        return_with_code( -1 );
-    }
+    }*/
 
     $input = json_decode( $raw_data );
 
@@ -50,7 +50,7 @@
     */
 
     // Example of valid input. params = Parameters
-    // { "function":"user_management_get_stud_mon_prac_prof", "params":[ ases_student_code ] }
+    // { "function":"get_***", "params":[ ases_student_code ] }
 
     if( isset($input->function) && isset($input->params) ){
 
@@ -101,8 +101,10 @@
                  * The userids value only can be an array
                  */
                 
-                if( is_numeric( $input->params[0] ), is_array( $input->params[1] ) ){
+                if( is_numeric( $input->params[0] ) && is_array( $input->params[1] ) ){
 
+                    $status_code = NULL;
+                    $error_message = NULL;
 
                     try {
 
