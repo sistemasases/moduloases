@@ -670,6 +670,7 @@ return {
         $('#tip-cancel').show();
         $('#tipo_doc').prop('disabled', false);
         $('#num_doc').prop('readonly', false);
+        $('#email').prop('readonly', false);
         $('#icetex_status').prop('disabled', false);
         $('#pais').prop('disabled', false);
         $('#genero').prop('disabled', false);
@@ -1184,6 +1185,7 @@ return {
     $('#tip-edit').show();
     $('#tipo_doc').prop('disabled', true);
     $('#num_doc').prop('readonly', true);
+    $('#email').prop('readonly', true);
     $('#icetex_status').prop('disabled', true);
     $('#genero').prop('disabled', true);
     $('#cond_excepcion').prop('disabled', true);
