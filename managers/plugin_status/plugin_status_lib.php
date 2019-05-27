@@ -81,9 +81,33 @@ function plugin_status_get_users_data_by_instance( $instanceid ){
 
 }
 
-print_r( plugin_status_remove_users_enrol( 450299, [ 73380 ] ) );
+function plugin_status_remove_users_enrol( $instanceid, $userids ){
 
-function plugin_status_check_users_enrol( $instanceid, $userids  ){
+	global $DB;
+
+	if( plugin_status_check_users_enrol( $instanceid, $userids  ) ){
+		$curseid = plugin_status_get_courseid_by_block_instance( $instanceid );
+		$enrolid = plugin_status_get_manual_enrol_by_courseid( $curseid );
+		foreach ($userids as $key => $uid) {
+
+			$user = user_management_get_full_moodle_user($uid);
+
+			if( !_plugin_status_is_sistemas1008( $user ) ){
+				$sql_query = "DELETE FROM {user_enrolments} WHERE enrolid = '$enrolid->id' AND userid = '$uid'";
+    			$DB->execute($sql_query);
+			}
+
+		}
+
+		return true;
+
+	}else{
+		return null;
+	}
+
+}
+
+function plugin_status_check_users_enrol( $instanceid, $userids ){
 
 	global $DB;
 
