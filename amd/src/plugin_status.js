@@ -38,17 +38,14 @@
         $(document).on("click", "#remove-selected", 
             function( event ){
                 event.preventDefault();
-                let uid = [];
-                $(".user_enrolled[data-visible='true']")
-                    .find(".ucontainer")
-                    .each( 
-                        function( index ){
-                            if( $(this).find(".remove_check").prop("checked") == true ){
-                                uid.push( $(this).data("id") );
-                            }
-                        } 
+                let uenroll_id = [];
+                $(".user_enrolled[data-visible='true']").find(".ucontainer").each( 
+                    function( index ){
+                        if( $(this).find(".remove_check").prop("checked") == true ){
+                            uenroll_id.push( $(this).data("id") );
+                        }
+                    } 
                 );
-                console.log(uid);
             }
         );
 
