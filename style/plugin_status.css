@@ -1,0 +1,155 @@
+.steps-container{
+  margin-top: 1.5em;
+  width: 100%;
+  position: absolute;
+  z-index: 1;
+}
+
+.steps-container ul{
+  list-style-type: none;
+}
+
+.steps-progressbar li{
+  float: left;
+  width: calc(100% / 4);
+  position: relative;
+  text-align: center;
+}
+
+.steps-progressbar li:before{
+  content:"1";
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+}
+
+.steps-progressbar li:before{
+  content:"1";
+  width: 30px;
+  height: 30px;
+  border: 2px solid #bebebe;
+  display: block;
+  margin: 0 auto 10px auto;
+  border-radius: 50%;
+  line-height: 27px;
+  background: white;
+  color: #bebebe;
+  text-align: center;
+  font-weight: bold;
+}
+
+.steps-progressbar{
+  counter-reset: step;
+}
+
+.steps-progressbar li:before{
+  content:counter(step);
+  counter-increment: step;
+  width: 30px;
+  height: 30px;
+  border: 2px solid #bebebe;
+  display: block;
+  margin: 0 auto 10px auto;
+  border-radius: 50%;
+  line-height: 27px;
+  background: white;
+  color: #bebebe;
+  text-align: center;
+  font-weight: bold;
+}
+
+.steps-progressbar li:after{
+  content: '';
+  position: absolute;
+  width:100%;
+  height: 3px;
+  background: #979797;
+  top: 15px;
+  left: -50%;
+  z-index: -1;
+}
+
+.steps-progressbar li:first-child:after{
+  content: none;
+}
+
+
+.steps-progressbar li.active::after{
+  background: #3aac5d;
+}
+
+.steps-progressbar li.active::before{
+  border-color: #3aac5d;
+  background: #3aac5d;
+  color: white
+}
+
+.steps-col{
+
+  min-height: 90px !important;
+  
+}
+
+
+.user_enrolled .ucontainer{
+  padding: 0.7em;
+  margin-top: 1em;
+  border: 1px solid #e1e1e1;
+  box-shadow: 5px 5px 15px #e1e1e1;
+  cursor: pointer;
+}
+
+.user_enrolled .ucontainer .remove_check{
+  float: right;
+}
+
+.user_enrolled .ucontainer .ehr{
+  margin: 10px 0px 10px 0px;
+}
+
+.user_enrolled .ucontainer .fname,
+.user_enrolled .ucontainer .lname{
+  font-size: 0.9em;
+}
+
+
+
+.user_enrolled .ucontainer .groups_container .enrolled_group{
+  font-size: 0.8em;
+  padding: 4px;
+  background: #cececece;
+  border-radius: 3px;
+  margin-right: 3px;
+  margin-top: 3px;
+}
+
+.mfilter{
+  cursor:pointer;
+  padding: 4px;
+  background: #cececece;
+  border: 1px solid #cececece;
+  border-radius: 0px;
+  margin-right: 0.5em;
+  margin-top: 3px;
+  float: left;
+}
+
+.filter-selected{
+  border: 1px solid black;
+  background: #7F7F7F;
+  border: 1px solid #cececece;
+}
+
+.user-selected{
+  border: 1px solid #ff3030 !important;
+  background: #fff5f5
+}
+
+#plugin_members_actions{
+  margin-top: 1em;
+}
+
+#plugin_members_filter > div > h3,
+#plugin_members_actions > div > h3{
+  margin: 0px;
+}
