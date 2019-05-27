@@ -81,11 +81,12 @@ function plugin_status_get_users_data_by_instance( $instanceid ){
 
 }
 
-function plugin_status_remove_users_enrol( $instanceid, $userids ){
+
+function plugin_status_remove_enrolled_users( $instanceid, $userids ){
 
 	global $DB;
 
-	if( plugin_status_check_users_enrol( $instanceid, $userids  ) ){
+	if( plugin_status_check_enrolled_users( $instanceid, $userids  ) ){
 		$curseid = plugin_status_get_courseid_by_block_instance( $instanceid );
 		$enrolid = plugin_status_get_manual_enrol_by_courseid( $curseid );
 		foreach ($userids as $key => $uid) {
@@ -107,12 +108,16 @@ function plugin_status_remove_users_enrol( $instanceid, $userids ){
 
 }
 
-function plugin_status_check_users_enrol( $instanceid, $userids ){
+function plugin_status_check_enrolled_users( $instanceid, $userids ){
 
 	global $DB;
 
+	if( !is_numeric( $instanceid ) ){
+		throw new Exception( $instanceid . " must be an integer", -1 );
+	}
+
 	if( !is_array( $userids ) ){
-		return null;
+		throw new Exception( $uid . " must be an array", -2 );
 	}
 
 	$curseid = plugin_status_get_courseid_by_block_instance( $instanceid );
@@ -124,7 +129,7 @@ function plugin_status_check_users_enrol( $instanceid, $userids ){
 			foreach ($userids as $key => $uid) {
 
 				if( !is_numeric($uid) ){
-					return null;
+					throw new Exception( $uid . " must be an integer", -5 );
 				}
 
 				$sql = "SELECT * 
@@ -134,17 +139,17 @@ function plugin_status_check_users_enrol( $instanceid, $userids ){
 
 				$uenrol = $DB->get_records_sql( $sql );
 				if( !$uenrol ){
-					return false;
+					throw new Exception( $uid . " is not enrolled.", -6 );
 				}
 			}
 			return true;
 
 		}else{
-			return null;
+			throw new Exception( "The course is not associated with a manual enrol id.", -4 );
 		}
 
 	}else{
-		return null;
+		throw new Exception( "Instance " . $instanceid . " is not associated with any course.", -3 );
 	}
 }
 
