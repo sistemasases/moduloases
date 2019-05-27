@@ -92,7 +92,7 @@
 
 
 .user_enrolled .ucontainer{
-  padding: 1em;
+  padding: 0.7em;
   margin-top: 1em;
   border: 1px solid #e1e1e1;
   box-shadow: 5px 5px 15px #e1e1e1;
@@ -104,7 +104,7 @@
 }
 
 .user_enrolled .ucontainer .ehr{
-  margin: 15px 0px 15px 0px;
+  margin: 10px 0px 10px 0px;
 }
 
 .user_enrolled .ucontainer .fname,
