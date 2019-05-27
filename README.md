@@ -22,15 +22,15 @@ El Módulo ASES permite:
 En el módulo ASES se maneja la siguiente estructura:
 
 * Managers: 
-	nombre_manager:
-		- lib
-		- api
-		- classes
+	nombre_manager:  
+		- lib  
+		- api  
+		- classes  
 
 * Core:
 	nombre:	
-		- interfaz
-		- versión:
+		- interfaz  
+		- versión:  
 			- implementación	
 
 ## Instalación

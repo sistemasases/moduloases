@@ -11,7 +11,6 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/jquery.dataTables','block_
 	return {
 
 		init: function() {
-
 			$("#periods").select2({
 			language: {
 
@@ -31,7 +30,6 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/jquery.dataTables','block_
 			$(document).ready(function() {
 				$(".assignment_li").css({ display: 'none' });
 				$(".period_date").datepicker({dateFormat: "yy-mm-dd"});
-
 				$("#search_button").on('click', function() {
 				$("#search_button").prop("disabled", true);
 				searchPeriod();
@@ -62,7 +60,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/jquery.dataTables','block_
 			});
 
 			$("#save-button").on('click', function() {
-				createPeriod();		
+				createPeriod();
 				$("#new_semester_name").val(" ");
 				$("#new_beginning_date").val(" ");
 				$("#new_ending_date").val(" ");
@@ -214,7 +212,6 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/jquery.dataTables','block_
 
 	}
 
-
 	/**
 	 * @method createPeriod
 	 * @desc Creates a period obtaining values from html. Current processing on load_periods_processing.php
@@ -271,30 +268,27 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/jquery.dataTables','block_
 	 * @desc Validates if each field to update is correct (not empty field, date format correct)
 	 * @param {id} semesterId semester id
 	 * @param {string} semesterName semester name
-	 * @param {date} beginningDate Beginning period date
-	 * @param {date} endingDate Ending period date
+	 * @param {string} beginningDateString Beginning period date
+	 * @param {string} endingDateString Ending period date
 	 */
-	function validateFieldsUpdate(semesterId, semesterName, beginningDate, endingDate){
+	function validateFieldsUpdate(semesterId, semesterName, beginningDateString, endingDateString){
 
 		var regexp = /^\d{4}\-(0?[1-9]|1[012])\-(0?[1-9]|[12][0-9]|3[01])$/;
 
-		var validate_begin_date = regexp.exec(beginningDate);
-		var validate_end_date = regexp.exec(endingDate);
+		var begin_regexp_date = regexp.exec(beginningDateString);
+		var end_regexp_date = regexp.exec(endingDateString);
 
-		if(semesterName == "" && beginningDate == "" && endingDate == ""){
+		if(semesterName == "" && beginningDateString == "" && endingDateString == ""){
 			return "Debe llenar todos los campos";
 		}
-		else if(beginningDate == "" || endingDate == ""){
+		else if(beginningDateString == "" || endingDateString == ""){
 			return "Debe introducir la fecha de inicio y fin del período";
 		}
-		else if(validate_begin_date === null){
+		else if(begin_regexp_date === null){
 			return "La fecha de inicio no sigue el patrón yyyy-mm-dd. Ejemplo: 2017-10-20";
 		}
-		else if(validate_end_date === null){
+		else if(end_regexp_date === null){
 			return "La fecha de fin no sigue el patrón yyyy-mm-dd. Ejemplo: 2017-10-20";
-		}
-		else if(beginningDate == endingDate){
-			return "La fecha de inicio y de fin deben ser diferentes";
 		}
 		else if(semesterId == ""){
 			return "Se encontró un problema con el identificador del semestre, vuelva a seleccionar el semestre";
@@ -303,49 +297,59 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/jquery.dataTables','block_
 			return "Debe ingresar el nombre del semestre";
 		}
 		else{
-			return "success";
+			const beginningDate = new Date(beginningDateString);
+			const endingDate = new Date(endingDateString);
+			
+			if(beginningDate >= endingDate){
+				return "La fecha de inicio de semestre debe ser menor a la de finalización";
+			}
+			else{
+				return "success";
+			}
 		}
-
 	}
 	
 	/**
 	 * @method validateFieldsCreate
 	 * @desc Validates if each field to create is correct (not empty field, date format correct)
 	 * @param {string} semesterName Semester name
-	 * @param {date} beginningDate Beginning period date
-	 * @param {date} endingDate Ending period date
+	 * @param {string} beginningDateString Beginning period date
+	 * @param {string} endingDateString Ending period date
 	 */
-	function validateFieldsCreate(semesterName, beginningDate, endingDate){
+	function validateFieldsCreate(semesterName, beginningDateString, endingDateString){
 
 		var regexp = /^\d{4}\-(0?[1-9]|1[012])\-(0?[1-9]|[12][0-9]|3[01])$/;
 
-		var validate_begin_date = regexp.exec(beginningDate);
-		var validate_end_date = regexp.exec(endingDate);
+		var begin_regexp_date = regexp.exec(beginningDateString);
+		var end_regexp_date = regexp.exec(endingDateString);
 
-		if(semesterName == "" && beginningDate == "" && endingDate == ""){
+		if(semesterName == "" && beginningDateString == "" && endingDate == ""){
 			return "Debe llenar todos los campos";
 		}
-		else if(beginningDate == "" || endingDate == ""){
+		else if(beginningDateString == "" || endingDateString == ""){
 			return "Debe introducir la fecha de inicio y fin del período";
 		}
-		else if(validate_begin_date === null){
+		else if(begin_regexp_date === null){
 			return "La fecha de inicio no sigue el patrón yyyy-mm-dd. Ejemplo: 2017-10-20";
 		}
-		else if(validate_end_date === null){
+		else if(end_regexp_date === null){
 			return "La fecha de fin no sigue el patrón yyyy-mm-dd. Ejemplo: 2017-10-20";
-		}
-		else if(beginningDate == endingDate){
-			return "La fecha de inicio y de fin deben ser diferentes";
 		}
 		else if(semesterName == ""){
 			return "Debe ingresar el nombre del semestre";
 		}
 		else{
-			return "success";
+			const beginningDate = new Date(beginningDateString);
+			const endingDate = new Date(endingDateString);
+			
+			if(beginningDate >= endingDate){
+				return "La fecha de inicio de semestre debe ser menor a la de finalización";
+			}
+			else{
+				return "success";
+			}
 		}
-
 	}
-
 }
 
 };
