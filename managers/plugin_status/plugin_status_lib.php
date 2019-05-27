@@ -81,6 +81,49 @@ function plugin_status_get_users_data_by_instance( $instanceid ){
 
 }
 
+print_r( plugin_status_remove_users_enrol( 450299, [ 73380 ] ) );
+
+function plugin_status_check_users_enrol( $instanceid, $userids  ){
+
+	global $DB;
+
+	if( !is_array( $userids ) ){
+		return null;
+	}
+
+	$curseid = plugin_status_get_courseid_by_block_instance( $instanceid );
+	if( $curseid ){
+
+		$enrolid = plugin_status_get_manual_enrol_by_courseid( $curseid );
+		if( $enrolid ){
+
+			foreach ($userids as $key => $uid) {
+
+				if( !is_numeric($uid) ){
+					return null;
+				}
+
+				$sql = "SELECT * 
+				FROM {user_enrolments}
+				WHERE enrolid = '$enrolid->id' AND userid = '$uid'
+				ORDER BY timecreated ASC";
+
+				$uenrol = $DB->get_records_sql( $sql );
+				if( !$uenrol ){
+					return false;
+				}
+			}
+			return true;
+
+		}else{
+			return null;
+		}
+
+	}else{
+		return null;
+	}
+}
+
 function plugin_status_get_ases_instances(){
 
 	global $DB;
@@ -114,7 +157,7 @@ function plugin_status_get_manual_enrol_by_courseid( $courseid ){
 
 	global $DB;
 
-	$sql = "SELECT id 
+	$sql = "SELECT * 
 	FROM {enrol} 
 	WHERE courseid = '$courseid' AND enrol = 'manual'";
 
