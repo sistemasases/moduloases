@@ -859,6 +859,23 @@ return {
         msg.status = "success";
 
         switch(form[field].name){
+
+            case "email":
+
+            let regexemail = /([a-z]+\.)+[a-z]+(@correounivalle.edu.co)/;
+            //console.log(form[field].value);
+            let validate_email = regexemail.test(form[field].value);     
+
+
+            if(!validate_email){
+                msg.title = "Error";
+                msg.status = "error";
+                msg.msg = "El campo "+form[field].name+" no cumple con el formato institucional.";
+                return msg;  
+            }
+
+
+            break;
             case "estrato":
           
 

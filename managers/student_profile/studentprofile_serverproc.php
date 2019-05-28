@@ -239,6 +239,9 @@ function save_profile($form){
             if($form[$i]['name']== "otro_act_simultanea"){
                 $otro_act_sim = $form[$i]['value'];
             }
+            if($form[$i]['name']== "email"){
+                $email = $form[$i]['value'];
+            }
                         
         }
         $obj_updatable = (object) $obj_updatable;
@@ -310,14 +313,27 @@ function save_profile($form){
         $conc_observations = $obj_updatable->observacion."\n".$observations;
 
         $obj_updatable->observacion = $conc_observations;
+
+        //----------------------------------------------
+        //Data object to update record in mdl_user
+        //----------------------------------------------
+
+        $obj_updatable_moodle->id       =  get_moodle_id($id_ases);
+        $obj_updatable_moodle->email    =  $email;
         
         $result = $DB->update_record('talentospilos_usuario', $obj_updatable);
+
+        $result_cv_update = $DB->update_record('user', $obj_updatable_moodle);
         
-        if($result){
+        if($result && $result_cv_update){
             $msg->title = "Éxito";
             $msg->status = "success";
-            $msg->msg = "La información se ha almacenado correctamente";
-        }else{
+            $msg->msg = "Se ha actualizado toda la información.";
+        }
+        else{
+            $msg->title = "Error";
+            $msg->status = "error";
+            $msg->msg = "Error al guardar la información.";
             }
         
         echo json_encode($msg);

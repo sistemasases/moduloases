@@ -541,6 +541,24 @@ function  get_act_simultaneas()
 
     return $icetex_status_student;
  }
+
+  
+ /**
+ * Get moodle user from talentospilos_user_extended
+ *
+ * @see get_moodle_user
+ * @param $ases_id
+ * @return int id_moodle_user
+ */
+ function get_moodle_id($ases_id){
+
+ global $DB;
+
+ $sql_query = "SELECT id_moodle_user FROM {talentospilos_user_extended} WHERE id_ases_user = $ases_id AND tracking_status = 1";
+ $status = $DB->get_record_sql($sql_query)->id_moodle_user;
+ return $status;
+
+}
  
  /**
  * Gets the ASES status for a student
