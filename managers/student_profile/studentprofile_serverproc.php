@@ -323,7 +323,23 @@ function save_profile($form){
         
         $result = $DB->update_record('talentospilos_usuario', $obj_updatable);
 
-        $result_cv_update = $DB->update_record('user', $obj_updatable_moodle);
+        $validate_email = preg_match("/((?:[a-z]+\.)*[a-z]+(?:@correounivalle\.edu\.co))/",$email);
+
+        if (!is_null($validate_email)) {
+
+            if (!($validate_email[0] === $email)) {
+
+                $result_cv_update = false;
+            } else{
+
+                $result_cv_update = $DB->update_record('user', $obj_updatable_moodle);
+            }
+        }else {
+
+            $result_cv_update = false;
+        }
+
+ 
         
         if($result && $result_cv_update){
             $msg->title = "Éxito";
@@ -344,7 +360,7 @@ function save_profile($form){
         $msg->status = "error";
         $msg->msg = "Error al guardar la información. 
                         Posibles Causas: Si usted cambió el número de cedula, es posible que el nuevo número ya exista en la base de datos. 
-                                        Revise los cambios realizados e intentelo de nuevo.";
+                                        Revise los cambios realizados e intentelo de nuevo. El formato del correo institucional puede tener errores.";
 
        echo json_encode($msg);
        
