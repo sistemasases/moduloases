@@ -542,6 +542,43 @@ function  get_act_simultaneas()
     return $icetex_status_student;
  }
 
+   
+ /**
+ * Update moodle user 
+ *
+ * @see update_email_moodle
+ * @param $obj_updatable_moodle
+ * @return bool it is update?
+ */
+
+ function  update_email_moodle($obj_updatable_moodle){
+
+    global $DB;
+
+    preg_match("/((?:[a-z]+\.)*[a-z]+(?:@correounivalle\.edu\.co))/",$obj_updatable_moodle->email  , $array_match);
+
+
+    if (!empty($array_match)) {
+
+        if (strcmp($array_match[0],$obj_updatable_moodle->email) !== 0) {
+   
+            $result_cv_update = false;
+        } else{
+   
+            $result_cv_update = $DB->update_record('user', $obj_updatable_moodle);
+        }
+    }else {
+   
+        $result_cv_update = false;
+    }
+
+    return  $result_cv_update;
+
+ }
+
+
+
+
   
  /**
  * Get moodle user from talentospilos_user_extended

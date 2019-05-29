@@ -319,27 +319,16 @@ function save_profile($form){
         //----------------------------------------------
 
         $obj_updatable_moodle->id       =  get_moodle_id($id_ases);
+
+        //Test: email validation
+        //$email = "insert email test";
+        
         $obj_updatable_moodle->email    =  $email;
         
         $result = $DB->update_record('talentospilos_usuario', $obj_updatable);
+     
+        $result_cv_update = update_email_moodle($obj_updatable_moodle);
 
-        $validate_email = preg_match("/((?:[a-z]+\.)*[a-z]+(?:@correounivalle\.edu\.co))/",$email);
-
-        if (!is_null($validate_email)) {
-
-            if (!($validate_email[0] === $email)) {
-
-                $result_cv_update = false;
-            } else{
-
-                $result_cv_update = $DB->update_record('user', $obj_updatable_moodle);
-            }
-        }else {
-
-            $result_cv_update = false;
-        }
-
- 
         
         if($result && $result_cv_update){
             $msg->title = "Éxito";
@@ -349,7 +338,7 @@ function save_profile($form){
         else{
             $msg->title = "Error";
             $msg->status = "error";
-            $msg->msg = "Error al guardar la información.";
+            $msg->msg = "Error al guardar la información en el servidor.";
             }
         
         echo json_encode($msg);
