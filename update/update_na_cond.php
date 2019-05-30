@@ -5,11 +5,12 @@
  * Date: 25/04/19
  * Time: 04:15 PM
  */
+/*
 require_once (__DIR__ . '/../../../config.php');
 require_once(__DIR__ . '/../classes/CondicionExcepcion.php');
 $alias =  'N.A';
 try{
-    /** @var CondicionExcepcion $condicion_excepcion */
+    //@var CondicionExcepcion $condicion_excepcion
 $condicion_excepcion = CondicionExcepcion::get_one_by(array(CondicionExcepcion::ALIAS=>$alias));
 if(!$condicion_excepcion) {
     echo "No existe una condición de excepción con alias '$alias'";
@@ -30,3 +31,4 @@ if(!$condicion_excepcion) {
        echo "No se ha podido actualizar la condición de excepción";
     }
 }
+*/
