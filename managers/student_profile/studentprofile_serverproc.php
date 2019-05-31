@@ -239,6 +239,9 @@ function save_profile($form){
             if($form[$i]['name']== "otro_act_simultanea"){
                 $otro_act_sim = $form[$i]['value'];
             }
+            if($form[$i]['name']== "email"){
+                $email = $form[$i]['value'];
+            }
                         
         }
         $obj_updatable = (object) $obj_updatable;
@@ -310,14 +313,32 @@ function save_profile($form){
         $conc_observations = $obj_updatable->observacion."\n".$observations;
 
         $obj_updatable->observacion = $conc_observations;
+
+        //----------------------------------------------
+        //Data object to update record in mdl_user
+        //----------------------------------------------
+
+        $obj_updatable_moodle->id       =  get_moodle_id($id_ases);
+
+        //Test: email validation
+        //$email = "insert email test";
+        
+        $obj_updatable_moodle->email    =  $email;
         
         $result = $DB->update_record('talentospilos_usuario', $obj_updatable);
+     
+        $result_cv_update = update_email_moodle($obj_updatable_moodle);
+
         
-        if($result){
+        if($result && $result_cv_update){
             $msg->title = "Éxito";
             $msg->status = "success";
-            $msg->msg = "La información se ha almacenado correctamente";
-        }else{
+            $msg->msg = "Se ha actualizado toda la información.";
+        }
+        else{
+            $msg->title = "Error";
+            $msg->status = "error";
+            $msg->msg = "Error al guardar la información en el servidor.";
             }
         
         echo json_encode($msg);
@@ -328,7 +349,7 @@ function save_profile($form){
         $msg->status = "error";
         $msg->msg = "Error al guardar la información. 
                         Posibles Causas: Si usted cambió el número de cedula, es posible que el nuevo número ya exista en la base de datos. 
-                                        Revise los cambios realizados e intentelo de nuevo.";
+                                        Revise los cambios realizados e intentelo de nuevo. El formato del correo institucional puede tener errores.";
 
        echo json_encode($msg);
        
