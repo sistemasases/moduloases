@@ -446,9 +446,24 @@ if ($student_code != 0) {
     $options_generos = '';
 
     $genero_student->id_identidad_gen = $ases_student->id_identidad_gen;
+
+    //Buscar la posición de la actividad Ninguna
+    $i=0;
+    foreach($generos as $genero){
+        if($genero->genero=="NO DEFINIDO"){
+        $posa=$i;
+        $options_generos .= "<option value='$genero->id'>$genero->genero</option>" ;   
+        break; }
+        $i++;
+    }
+
+    //Eliminar actividad Ninguna puesta al inicio
+    array_splice($generos,$posa,1);
   
    $otro ="";
    $control = true;
+
+   //$options_generos .= "<option selected='selected' disabled='disabled'>NO DEFINIDO</option>";
     foreach($generos as $genero){
         if($genero_student->id_identidad_gen == $genero->id){
             if($genero->opcion_general == 1){
