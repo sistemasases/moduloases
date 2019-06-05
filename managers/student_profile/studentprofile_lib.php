@@ -475,6 +475,22 @@ function  get_generos()
    return $DB->get_records_sql($sql_query);
 }
 
+
+/**
+ * Get opciones de sexo registradas en base de datos
+ *
+ * @see get_sex_options()
+ * @return array --> con opciones sexo
+ */
+
+function  get_sex_options()
+{
+    global $DB; 
+   $sql_query = "SELECT * FROM {talentospilos_sexo}";
+   return $DB->get_records_sql($sql_query);
+}
+
+
 /**
  * Get etnias registrados
  *

@@ -457,7 +457,7 @@ if ($student_code != 0) {
         $i++;
     }
 
-    //Eliminar actividad Ninguna puesta al inicio
+    //Eliminar genero 'NO DEFINIDO' puesto al inicio
     array_splice($generos,$posa,1);
   
    $otro ="";
@@ -489,6 +489,13 @@ if ($student_code != 0) {
 
     $record->options_genero = $options_generos;
     $record->otro = $otro;
+
+    //TRAE OPCIONES DE SEXO
+    
+    $options_sex= get_sex_options();
+    $sex_options = '';
+
+   
 
       //TRAE ACTIVIDADES SIMULTANEAS
       $act_simultaneas= get_act_simultaneas();
