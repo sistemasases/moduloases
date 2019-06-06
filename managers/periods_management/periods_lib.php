@@ -242,54 +242,6 @@ function periods_get_current_semester(){
      return $array_semesters;
 
  }
- const INVALID_SEMESTER_DATES = 0;
- const CANNOT_CREATE_IN_DATABASE = 0;
-
- /**
-  * Function that validates a semester
-  *
-  * @param $name -> name of the semester
-  * @param $beginning_date -> semester's starting date
-  * @param $ending_date -> semester's ending date
-  * @return boolean
-  */
-  
-function validate_semester($name, $beginning_date_string, $ending_date_string, $semester_id) {
-    
-    $regex = "/^\d{4}\-(0?[1-9]|1[012])\-(0?[1-9]|[12][0-9]|3[01])$/";
-
-    if($name == "" || $beginning_date_string == "" || $ending_date_string == ""){
-        return "Debe llenar todos los campos";
-    }
-    else if(preg_match($regex,$beginning_date_string)==0){
-        return "La fecha de inicio no sigue el patrón yyyy-mm-dd. Ejemplo: 2017-10-20";
-    }
-    else if(preg_match($regex,$ending_date_string)==0){
-        return "La fecha de fin no sigue el patrón yyyy-mm-dd. Ejemplo: 2017-10-20";
-    }
-    else if(!$semester_id===undefined){
-        if($semester_id == ""){
-            return "Se encontró un problema con el identificador del semestre, vuelva a seleccionar el semestre";
-        }
-        else{
-            return "success";
-        }
-    }
-    else{
-        $beginning_date = new Date($beginning_date_string);
-        $endingDate = new Date($ending_date_string);
-        
-        if($beginning_date >= $endingDate){
-            return "La fecha de inicio de semestre debe ser menor a la de finalización";
-        }
-        else{
-            return "success";
-        }
-    }
-    
-
-    return true;
-}
 
 /**
  * Function which creates a new semester
@@ -298,24 +250,16 @@ function validate_semester($name, $beginning_date_string, $ending_date_string, $
  * @param $name -> name of the semester
  * @param $beginning_date -> semester's starting date
  * @param $ending_date -> semester's ending date
- * @return number|array If an array is returned, there was an inconsistency on the validation,
- *                      otherwise returns a number (the ID of the new semester)
+ * @return number
  */
 
  function create_semester($name, $beginning_date, $ending_date){
 
      global $DB;
 
-     if(!validate_semester($name, $beginning_date, $ending_date)){
-        return array('status_code'=> INVALID_SEMESTER_DATES,
-                     'Las fechas de los semestres son invalidas',
-                      null);
-     }
-
      $newSemester = new stdClass;
      $newSemester->nombre = $name;
      $newSemester->fecha_inicio = $beginning_date;
-
      $newSemester->fecha_fin = $ending_date;
 
      $insert = $DB->insert_record('talentospilos_semestre', $newSemester, true);
