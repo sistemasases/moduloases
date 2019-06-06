@@ -1,4 +1,5 @@
 <?php
+/*
 
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
@@ -8,9 +9,9 @@ $programa = new Programa();
 $nombre_sede ='CALI';
 $nombre_facultad = 'INSTITUTO DE EDUCACIÓN Y PEDAGOGÍA';
 $programa->nombre = 'LICENCIATURA EN CIENCIAS NATURALES Y EDUCACIÓN AMBIENTAL';
-/** @var Sede $sede */
+//@var Sede $sede
 $sede = Sede::get_one_by(array(Sede::NOMBRE=>$nombre_sede));
-/** @var Facultad $facultad */
+//@var Facultad $facultad
 $facultad = Facultad::get_one_by(array(Facultad::NOMBRE=>$nombre_facultad));
 if(!$sede) die("No existe la sede con nombre $nombre_sede");
 if(!$facultad) die("No existe la facultad con nombre $nombre_facultad");
@@ -25,3 +26,5 @@ if($programa->save()) {
 } else {
     echo "No se ha podido guardar el programa $programa->nombre";
 }
+
+*/
