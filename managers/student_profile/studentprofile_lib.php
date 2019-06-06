@@ -475,6 +475,22 @@ function  get_generos()
    return $DB->get_records_sql($sql_query);
 }
 
+
+/**
+ * Get opciones de sexo registradas en base de datos
+ *
+ * @see get_sex_options()
+ * @return array --> con opciones sexo
+ */
+
+function  get_sex_options()
+{
+    global $DB; 
+   $sql_query = "SELECT * FROM {talentospilos_sexo}";
+   return $DB->get_records_sql($sql_query);
+}
+
+
 /**
  * Get etnias registrados
  *
@@ -546,12 +562,12 @@ function  get_act_simultaneas()
  /**
  * Update moodle user 
  *
- * @see update_email_moodle
+ * @see studentprofile_update_email_moodle
  * @param $obj_updatable_moodle
- * @return bool it is update?
+ * @return bool is update?
  */
 
- function  update_email_moodle($obj_updatable_moodle){
+ function  studentprofile_update_email_moodle($obj_updatable_moodle){
 
     global $DB;
 
@@ -575,8 +591,6 @@ function  get_act_simultaneas()
     return  $result_cv_update;
 
  }
-
-
 
 
   
