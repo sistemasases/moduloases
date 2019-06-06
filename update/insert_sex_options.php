@@ -12,7 +12,7 @@ if(!$DB->record_exists("talentospilos_sexo",array('sexo'=> $new_sex->sexo ))){
         echo "Éxito insertando opción ".$new_sex->sexo;
     }
 }else{
-    echo "Ya existe la opción ".$new_sex->sexo;
+    echo "Ya existe la opción ".$new_sex->sexo . " en la tabla talentospilos_sexo";
 }
 
 
@@ -26,7 +26,7 @@ if(!$DB->record_exists("talentospilos_sexo", array('sexo'=> $new_sex->sexo ))){
         echo "Éxito insertando opción ".$new_sex->sexo;
     }
 }else{
-    echo "Ya existe la opción ".$new_sex->sexo;
+    echo "Ya existe la opción ".$new_sex->sexo . " en la tabla talentospilos_sexo";
 }
 
 
