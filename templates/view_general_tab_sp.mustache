@@ -33,27 +33,6 @@
                     </div>
                 </div>
 
-                <div class="row">
-                    <label for="pais" class="col-xs-3 col-sm-3 col-md-3 col-lg-3 label_fields_general_tab">País de
-                        origen </label>
-                    <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 div_select" id="div_pais">
-                        <select id="pais" name="pais" disabled>
-                            {{{options_pais}}}
-                        </select>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <label for="input-municipio_act" class="col-xs-3 col-sm-3 col-md-3 col-lg-3 label_fields_general_tab">Municipio
-                        actual</label>
-                    <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9 div_fields_general_tab" id="div-input-municipio_act">
-                        <select id="municipio_act" name="municipio_act" disabled>
-                            {{{options_municipio_act}}}
-                        </select>
-                    </div>
-                </div>
-
-
                 <div class="row" style="padding-top: 10px;">
                     <label for="input-dir-res" class="col-xs-3 col-sm-3 col-md-3 col-lg-3 label_fields_general_tab">Dirección
                         residencia</label>
@@ -87,25 +66,58 @@
                     </div>
                 </div>
 
-
-                <div class="row ">
-                    <label for="estado_civil" class="col-xs-3 col-sm-3 col-md-3 col-lg-3 label_fields_general_tab">Estado
-                        civil </label>
-                    <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 div_cond" id="div_estado_civil">
-                        <select id="estado_civil" name="estado_civil" disabled>
-                            {{{options_estado_civil}}}
+                <div class="row">
+                    <label for="pais" class="col-xs-3 col-sm-3 col-md-3 col-lg-3 label_fields_general_tab">País de
+                        origen </label>
+                    <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 div_select" id="div_pais">
+                        <select id="pais" name="pais"  style="width: 105%;" disabled>
+                            {{{options_pais}}}
                         </select>
                     </div>
                 </div>
 
+                <div class="row">
+                    <label for="input-municipio_act" class="col-xs-3 col-sm-3 col-md-3 col-lg-3 label_fields_general_tab">Municipio
+                        actual</label>
+                    <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9 div_fields_general_tab" id="div-input-municipio_act">
+                        <select id="municipio_act" name="municipio_act" disabled style="width: 70%;">
+                            {{{options_municipio_act}}}
+                        </select>
+                    </div>
+                </div>
 
+                <div class="row">
+                    <label for="etnia" class="col-xs-3 col-sm-3 col-md-3 col-lg-3 label_fields_general_tab">Grupo
+                        étnico</label>
+                    <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 div_select" id="div_etnia">
+                        <select id="etnia" name="etnia"  style="width: 157%;" disabled>
+                            {{{options_etnia}}}
+                        </select>
+                    </div>
 
+                </div>
+
+                <div class="row">
+                    <label for="act_simultanea" class="col-xs-3 col-sm-3 col-md-3 col-lg-3 label_fields_general_tab">Actividad
+                        simultánea </label>
+                    <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 div_select" id="div_act_simultanea">
+                        <select id="act_simultanea" name="act_simultanea" disabled style="width: 157%;">
+                            {{{options_act_simultanea}}}
+                        </select>
+                    </div>
+                    <label id="lb_otro_act" style="padding: 5px 0px 0px 0px" class="col-xs-1 col-sm-1 col-md-1 col-lg-1 label_fields_general_tab"
+                        hidden>¿Cuál?</label>
+                    <div id="div_otro_act" class="col-lg-4 col-md-4 col-sm-4 col-xs-4 div_otro_gen" hidden>
+                        <input disabled placeholder="Escriba aquí" value="{{otro_act}}" type="text" class="input_fields_general_tab_otro"
+                            name="otro_act_simultanea" id="otro_act_simultanea" maxlength="100" required />
+                    </div>
+                </div>
 
                 <div class="row">
                     <label for="genero" class="col-xs-3 col-sm-3 col-md-3 col-lg-3 label_fields_general_tab">Identidad
                         de género </label>
                     <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 div_select" id="div_genero">
-                        <select id="genero" name="genero" disabled>
+                        <select id="genero" name="genero"  style="width: 157%;" disabled>
                             {{{options_genero}}}
                         </select>
                     </div>
@@ -120,42 +132,21 @@
                 <div class="row">
                     <label for="lb_sexo" class="col-xs-3 col-sm-3 col-md-3 col-lg-3 label_fields_general_tab">Sexo</label>
                     <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 div_select" id="div_sexo">
-                        <select id="select_sexo" name="sexo" disabled>
+                        <select id="select_sexo" name="sexo"  style="width: 157%;" disabled>
                             {{{sex_options}}}
                         </select>
                     </div>
-
                 </div>
 
-                <div class="row">
-                    <label for="etnia" class="col-xs-3 col-sm-3 col-md-3 col-lg-3 label_fields_general_tab">Grupo
-                        étnico</label>
-                    <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 div_select" id="div_etnia">
-                        <select id="etnia" name="etnia" disabled>
-                            {{{options_etnia}}}
+                <div class="row ">
+                    <label for="estado_civil" class="col-xs-3 col-sm-3 col-md-3 col-lg-3 label_fields_general_tab">Estado
+                        civil </label>
+                    <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 div_cond" id="div_estado_civil">
+                        <select id="estado_civil" name="estado_civil" disabled style="width: 105%;">
+                            {{{options_estado_civil}}}
                         </select>
                     </div>
-
                 </div>
-
-                <div class="row">
-                    <label for="act_simultanea" class="col-xs-3 col-sm-3 col-md-3 col-lg-3 label_fields_general_tab">Actividad
-                        simultánea </label>
-                    <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 div_select" id="div_act_simultanea">
-                        <select id="act_simultanea" name="act_simultanea" disabled>
-                            {{{options_act_simultanea}}}
-                        </select>
-                    </div>
-                    <label id="lb_otro_act" style="padding: 5px 0px 0px 0px" class="col-xs-1 col-sm-1 col-md-1 col-lg-1 label_fields_general_tab"
-                        hidden>¿Cuál?</label>
-                    <div id="div_otro_act" class="col-lg-4 col-md-4 col-sm-4 col-xs-4 div_otro_gen" hidden>
-                        <input disabled placeholder="Escriba aquí" value="{{otro_act}}" type="text" class="input_fields_general_tab_otro"
-                            name="otro_act_simultanea" id="otro_act_simultanea" maxlength="100" required />
-                    </div>
-                </div>
-
-
-
 
 
                 <div class="row">

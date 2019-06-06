@@ -21,7 +21,7 @@ global $DB;
         $new_schema->alias  = 'sex_type_schema';
 
         if($DB->insert_record('talentospilos_json_schema', $new_schema)){
-            echo "Éxito";
+            echo "Éxito insertando schema";
         }
 
         ?>

@@ -674,6 +674,7 @@ define(['jquery',
                     $('#icetex_status').prop('disabled', false);
                     $('#pais').prop('disabled', false);
                     $('#genero').prop('disabled', false);
+                    $('#select_sexo').prop('disabled', false);
                     $('#cond_excepcion').prop('disabled', false);
                     $('#act_simultanea').prop('disabled', false);
                     $('#etnia').prop('disabled', false);
@@ -1219,6 +1220,7 @@ define(['jquery',
                 $('#email').prop('readonly', true);
                 $('#icetex_status').prop('disabled', true);
                 $('#genero').prop('disabled', true);
+                $('#select_sexo').prop('disabled', true);
                 $('#cond_excepcion').prop('disabled', true);
                 $('#act_simultanea').prop('disabled', true);
                 $('#etnia').prop('disabled', true);
