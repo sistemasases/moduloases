@@ -1,8 +1,8 @@
  /**
  * Load and save geographic information
  * @module amd/src/geographic_main
- * @author Iader E. García Gómez
- * @copyright  2016 Iader E. García <iadergg@gmail.com>
+ * @author Jhonier Andrés Calero Rodas
+ * @copyright  2018 Jhonier A. Calero <jhonier.calero@correounivalle.edu.co>
  * @license  http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */ 
 
@@ -21,6 +21,8 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
                 $('#select_geographic_risk').removeAttr('disabled');
                 $('#latitude').removeAttr('disabled');
                 $('#longitude').removeAttr('disabled');
+                $('#geographic_direccion').removeAttr('disabled');
+                $('#geographic_ciudad').removeAttr('disabled');
             });
 
             $('#button_cancel_geographic').on('click', function(){
@@ -30,6 +32,8 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
                 $('#select_geographic_risk').attr('disabled', true);
                 $('#latitude').attr('disabled', true);
                 $('#longitude').attr('disabled', true);
+                $('#geographic_direccion').attr('disabled', true);
+                $('#geographic_ciudad').attr('disabled', true);
             });
 
             //load_geographic_info(id_ases);
@@ -39,7 +43,8 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
                 var longitude = $('#longitude').val();
                 var neighborhood = $('#select_neighborhood').val();
                 var geographic_risk = $('#select_geographic_risk').val();
-                var ciudad = document.getElementById("municipio_act");
+                var address = $('#geographic_direccion').val();
+                var city = $('#municipio_act').val();
                 var duration = 0;
                 var distance = 0;
 
@@ -47,7 +52,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
 
                 var second_request;
 
-                if(ciudad == 1079){
+                if(city == 1079){
 
                     second_request = {
                         origin: {lat: latitude, lng: longitude}, 
@@ -70,10 +75,8 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
                     duration = response.routes[0].legs[0].duration.value;
         
                 });
-
-                console.log("Distance: " + distance + " Duration: " + duration);
-
-                save_geographic_info(id_ases, latitude, longitude, neighborhood, geographic_risk, duration, distance);
+                
+                save_geographic_info(id_ases, latitude, longitude, neighborhood, geographic_risk, duration, distance, address, city);
 
             });
 
@@ -112,8 +115,8 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
      * @param {id} neighborhood neighborhood name
      * @param {id} geographic_risk geographic risk according to the neighborhood
      */
-    function save_geographic_info(id_ases, latitude, longitude, neighborhood, geographic_risk, duration, distance){
-
+    function save_geographic_info(id_ases, latitude, longitude, neighborhood, geographic_risk, duration, distance, address, city){
+        console.log("Ciudad: ", city);
         $.ajax({
             type: "POST",
             data: {
@@ -124,7 +127,9 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
                 neighborhood: neighborhood,
                 geographic_risk: geographic_risk,
                 duration: duration,
-                distance: distance
+                distance: distance,
+                address: address,
+                city: city
             },
             url: "../managers/student_profile/geographic_serverproc.php",
             success: function(msg) {
@@ -140,6 +145,8 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
                 $('#select_geographic_risk').attr('disabled', true);
                 $('#latitude').attr('disabled', true);
                 $('#longitude').attr('disabled', true);
+                $('#geographic_direccion').attr('disabled', true);
+                $('#geographic_ciudad').attr('disabled', true);
             },
             dataType: "json",
             cache: "false",

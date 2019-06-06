@@ -34,7 +34,8 @@ if(isset($_POST['func'])){
         $id_ases = $_POST['id_ases'];
         load_geographic_info($id_ases);
 
-    }else if($_POST['func'] == 'save_geographic_info'){
+    }
+    else if($_POST['func'] == 'save_geographic_info'){
 
         $id_ases = $_POST['id_ases'];
         $latitude = $_POST['latitude'];
@@ -43,18 +44,21 @@ if(isset($_POST['func'])){
         $geographic_risk = $_POST['geographic_risk'];
         $duration = $_POST['duration'];
         $distance = $_POST['distance'];
+        $address = $_POST['address'];
+        $city = $_POST['city'];
 
         $msg = new stdClass();
 
-        $result_save_info = save_geographic_info($id_ases, $latitude, $longitude, $neighborhood, $geographic_risk, $duration, $distance);
-        
+        $result_save_info = save_geographic_info($id_ases, $latitude, $longitude, $neighborhood, $geographic_risk, $duration, $distance, $address, $city);
+
         if($result_save_info){
             $msg->title = 'Éxito';
             $msg->text = "La información geográfica ha sido guardada con éxito";
             $msg->type = "success";
-        }else{
+        }
+        else{
             $msg->title = 'Error';
-            $msg->text = "La información geográfica no ha sido guardada. Intentalo nuevamente.";
+            $msg->text = "La información geográfica no ha sido guardada. Inténtalo nuevamente.";
             $msg->type = "error";
         }
         echo json_encode($msg);

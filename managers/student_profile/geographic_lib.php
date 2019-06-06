@@ -49,7 +49,8 @@ function get_geographic_info($id_ases){
     
     if($risk_grade_object){
         $result->risk = $risk_grade_object->risk;
-    }else{
+    }
+    else{
         $result->risk = 0;
     }
     
@@ -106,7 +107,7 @@ function load_geographic_info($id_ases){
 }
 
 /**
- * Saves grographic information of an ASES student 
+ * Saves geographic information of an ASES student 
  *
  * @see save_geographic_info($id_ases, $latitude, $longitude, $neighborhood, $geographic_risk)
  * @param $id_ases --> ASES student id
@@ -117,7 +118,7 @@ function load_geographic_info($id_ases){
  * @return integer --> 1 if everything were saved, 0 otherwise
  */
 
-function save_geographic_info($id_ases, $latitude, $longitude, $neighborhood, $geographic_risk, $duration, $distance){
+function save_geographic_info($id_ases, $latitude, $longitude, $neighborhood, $geographic_risk, $duration, $distance, $address, $city){
 
     global $DB;
 
@@ -140,7 +141,8 @@ function save_geographic_info($id_ases, $latitude, $longitude, $neighborhood, $g
 
         $result_geographic_risk = $DB->update_record('talentospilos_riesg_usuario', $data_object_risk);
 
-    }else{
+    }
+    else{
         $data_object_risk = new stdClass();
         $data_object_risk->id = (int)$id_register_risk;
         $data_object_risk->id_usuario = (int)$id_ases;
@@ -160,10 +162,14 @@ function save_geographic_info($id_ases, $latitude, $longitude, $neighborhood, $g
         $data_object->barrio = $neighborhood;
         $data_object->duracion = $duration;
         $data_object->distancia = $distance;
+        $data_object->direccion = $address;
+        $data_object->id_ciudad = $city;
+        
     
         $result_geographic_info = $DB->update_record('talentospilos_demografia', $data_object);
 
-    }else{
+    }
+    else{
         $data_object = new stdClass();
         $data_object->id_usuario = $id_ases;
         $data_object->latitud = $latitude;
@@ -171,13 +177,17 @@ function save_geographic_info($id_ases, $latitude, $longitude, $neighborhood, $g
         $data_object->barrio = $neighborhood;
         $data_object->duracion = $duration;
         $data_object->distancia = $distance;
+        $data_object->direccion = $address;
+        $data_object->id_ciudad = $city;
+        
 
         $result_geographic_info = $DB->insert_record('talentospilos_demografia', $data_object, true);
     }
 
     if($result_geographic_info && $result_geographic_risk){
         return 1;
-    }else{
+    }
+    else{
         return 0;
     }    
 }

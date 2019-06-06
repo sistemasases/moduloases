@@ -53,6 +53,52 @@
             </div>
         </div>
     </div>
+    <div class="row">
+        <div class="col-sm-4">
+            <div class="form-group">
+                <label for="geographic_ciudad" class="col-sm-2">Ciudad</label>
+                <div class="col-sm-10">
+                    <select id="geographic_ciudad" name="geographic_ciudad" disabled>
+                        {{{options_municipio_act}}}
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="form-group">
+                <label for="geographic_direccion" class="col-sm-3">Dirección</label>
+                <div class="col-sm-9">
+                    <input type="text" class="form-control" id="geographic_direccion" name="geographic_direccion" value="{{res_address}}" placeholder="Digite dirección" maxlength="100" disabled/>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-4">
+            <div class="form-group">
+                <div class="col-sm-1">
+                    <input type="checkbox" class="form-control" id="label_geographic_vive_lejos" name="label_geographic_vive_lejos" value="0" disabled>
+                </div>
+                <label class="col-sm-4">Vive lejos</label>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="form-group">
+                <div class="col-sm-1">
+                    <input type="checkbox" class="form-control" id="label_geographic_vive_zona_riesgo" name="label_geographic_vive_zona_riesgo" value="0" disabled>
+                </div>
+                <label class="col-sm-4">Vive en zona de riesgo</label>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <label for="geographic_observaciones" class="col-sm-12">Observaciones</label>
+            <div class="col-sm-12">
+                <textarea required rows="10" cols="30" class="form-control" id="geographic_observaciones" placeholder="Observaciones adicionales" style="margin: 0px 84px 0px 0px; width: 1015px; height: 69px;" disabled></textarea>
+            </div>
+        </div>
+    </div>
     {{/view_geographic_config_sp}}
 
     <div class="row">
