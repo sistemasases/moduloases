@@ -26,32 +26,19 @@ require_once(dirname(__FILE__). '/../../../../../config.php');
 
 // -- Dev test block - This block cannot be considerated as documentation.
 /*header('Content-Type: application/json');
-$xQuery = new stdClass();
-$xQuery->form = "seguimiento_pares"; // Can be alias(String) or idntifier(Number)
-$xQuery->filterFields = [
-                         ["id_estudiante",[
-                             ["%%","LIKE"]
-                            ], false],
-                        ["fecha",[
-                             ["%%","LIKE"]
-                            ], false],
-                        ["revisado_practicante",[
-                            ["%%","LIKE"]
-                           ], false],
-                       ["revisado_profesional",[
-                        ["%%","LIKE"]
-                       ], false]
-                   ];
-$xQuery->orderFields = [
-                        ["fecha","DESC"]
-                       ];
-
-$xQuery->orderByDatabaseRecordDate = false; // If true, orderField is ignored. DESC
-$xQuery->recordStatus = [ "!deleted" ];// options "deleted" or "!deleted", can be both. Empty = both.
-$xQuery->asFields = [  [ [ function( $_this ){ return (int) $_this['id_registro'] ; } ], "id_estudiante" ], ["revisado_profesional", "id_estudiante"] ]; 
-//No soportado aun
-$xQuery->selectedFields = [ "id_creado_por", "id_estudiante" ]; // RecordId and BatabaseRecordDate are selected by default.
-
+ /*$xQuery = new stdClass();
+ * $xQuery->form = "seguimiento_pares"; // Can be alias(String) or identifier(Number)
+ * $xQuery->filterFields = [
+ *     ["id_estudiante",[ ["%%","LIKE"]], false],
+ *     ["fecha",[ ["%%","LIKE"] ], false],
+ *     ["revisado_practicante",[ ["%%","LIKE"] ], false],
+ *     ["revisado_profesional",[ ["%%","LIKE"] ], false]
+ * ];
+ * $xQuery->orderFields = [ ["fecha","DESC"] ];
+ * $xQuery->orderByDatabaseRecordDate = false; // If true, 'orderField' is ignored. DESC
+ * $xQuery->recordStatus = [ "!deleted" ]; // options "deleted" or "!deleted", can be both. Empty = both.
+ * $xQuery->asFields = [ [ [ function( $_this ){ return (int) $_this['id_registro'] ; } ], "id_estudiante" ], ["revisado_profesional", "id_estudiante"] ]; 
+ * $xQuery->selectedFields = [ "id_creado_por", "id_estudiante" ]; // Without support.
 echo json_encode( dphpformsV2_find_records( $xQuery ) );*/
 // -- End Dev test block
 
@@ -308,7 +295,7 @@ echo json_encode( dphpformsV2_find_records( $xQuery ) );*/
  * Function that return the basic dynamic form information.
  * @author Jeison Cardona Gómez. <jeison.cardona@correounivalle.edu.co>
  * @param int/$string Alias or identifier 
- * @return stdClass
+ * @return stdClass with id, nombre, alias, descripcion, method, action, enctype, fecha_hora_registro, estado
  */
  function dphpformsV2_get_form_info( $alias_identifier ){
     
@@ -1513,6 +1500,59 @@ function dphpformsV2_validate_xquery( $query ){
         "error_message" => NULL,
         "data_response" => NULL
     ];
+    
+}
+
+  /*$xQuery = new stdClass();
+  $xQuery->form = "seguimiento_pares"; // Can be alias(String) or identifier(Number)
+  $xQuery->filterFields = [
+      ["id_estudiante",[ ["%%","LIKE"]], false],
+      ["fecha",[ ["%%","LIKE"] ], false],
+      ["revisado_practicante",[ ["%%","LIKE"] ], false],
+      ["revisado_profesional",[ ["%%","LIKE"] ], false]
+  ];
+  $xQuery->orderFields = [ ["fecha","DESC"] ];
+  $xQuery->orderByDatabaseRecordDate = false; // If true, 'orderField' is ignored. DESC
+  $xQuery->recordStatus = [ "!deleted" ]; // options "deleted" or "!deleted", can be both. Empty = both.
+  $xQuery->asFields = [ [ "fecha", "id_estudiante_x" ], ["revisado_profesional", "id_estudiante"] ]; 
+  $xQuery->selectedFields = [ "id_creado_por", "id_estudiante" ]; // Without support.
+  
+  echo dphpformsV2_get_json_xquery($xQuery); die();*/
+ 
+
+function dphpformsV2_get_json_xquery( $query ){
+    
+    $validation_data = dphpformsV2_validate_xquery($query);
+    if( $validation_data['status_code'] === -1 ){
+        return null;
+    }
+    
+    $form = dphpformsV2_get_form_info( $query->form );
+    
+    $query_params = [
+        'filterFields',
+        'orderFields',
+        'orderByDatabaseRecordDate',
+        'recordStatus',
+        'asFields',
+        'selectedFields',
+        'selectedFields'
+    ];
+    
+    $_xquery = [
+        'form' => $form->alias,
+    ];
+    
+    foreach ($query_params as $key => $param){
+        $_xquery[$param] = ($query->$param ? $query->$param : []);
+    }
+    
+    //orderByDatabaseRecordDate cannot be an empty array [].
+    if( empty($_xquery['orderByDatabaseRecordDate']) ){
+        $_xquery['orderByDatabaseRecordDate'] = false;
+    }
+    
+    return json_encode( $_xquery );
     
 }
 
