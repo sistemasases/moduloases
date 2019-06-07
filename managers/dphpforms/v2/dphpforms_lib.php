@@ -73,6 +73,20 @@ echo json_encode( dphpformsV2_find_records( $xQuery ) );*/
     if( $validation_status['status_code'] === -1 ){
         return $validation_status;
     }
+    
+    $fields = dphpformsV2_get_fields_form( $form->id );
+    $list_fields_alias = [];
+    $list_fields_alias_id = [];
+    $list_fields_id_alias = [];
+    $list_fields_data_type = [];
+    $list_filter_fields_alias = [];
+        
+    foreach( $fields as $field ){
+        array_push( $list_fields_alias, $field->local_alias );
+        $list_fields_alias_id[$field->local_alias] = $field->id_pregunta;
+        $list_fields_id_alias[$field->id_pregunta] = $field->local_alias;
+        $list_fields_data_type[$field->id_pregunta] = $field->tipo_campo;
+     }
 
      $sql_query = "";
      //Find with where clause
