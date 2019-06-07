@@ -446,9 +446,24 @@ if ($student_code != 0) {
     $options_generos = '';
 
     $genero_student->id_identidad_gen = $ases_student->id_identidad_gen;
+
+    //Buscar la posición de la actividad Ninguna
+    $i=0;
+    foreach($generos as $genero){
+        if($genero->genero=="NO DEFINIDO"){
+        $posa=$i;
+        $options_generos .= "<option value='$genero->id'>$genero->genero</option>" ;   
+        break; }
+        $i++;
+    }
+
+    //Eliminar genero 'NO DEFINIDO' puesto al inicio
+    array_splice($generos,$posa,1);
   
    $otro ="";
    $control = true;
+
+   //$options_generos .= "<option selected='selected' disabled='disabled'>NO DEFINIDO</option>";
     foreach($generos as $genero){
         if($genero_student->id_identidad_gen == $genero->id){
             if($genero->opcion_general == 1){
@@ -474,6 +489,39 @@ if ($student_code != 0) {
 
     $record->options_genero = $options_generos;
     $record->otro = $otro;
+
+    //TRAE OPCIONES DE SEXO
+    
+    $options_sex= get_sex_options();
+    $sex_options = '';
+
+    $option_sex_student = $ases_student->sexo;
+    //Buscar la posición del sexo NO REGISTRA
+    $i=0;
+    foreach($options_sex as $option){
+        if($option->sexo=="NO REGISTRA"){
+        $posa=$i;
+        $sex_options .= "<option value='$option->id'>$option->sexo</option>" ;   
+        break; }
+        $i++;
+    }
+
+    //Eliminar sexo NO REGISTRA puesta al inicio
+    array_splice($options_sex,$posa,1);
+    
+     foreach($options_sex as $option){
+         if($option_sex_student == $option->id){
+
+             $sex_options .= "<option value='$option->id' selected='selected'>$option->sexo</option>";
+         
+         }else{
+
+             $sex_options .= "<option value='$option->id'>$option->sexo</option>";
+ 
+         }
+     }
+
+     $record->sex_options = $sex_options;
 
       //TRAE ACTIVIDADES SIMULTANEAS
       $act_simultaneas= get_act_simultaneas();

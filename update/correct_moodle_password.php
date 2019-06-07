@@ -1,4 +1,5 @@
 <?php
+/*
 require_once (__DIR__ .'/../../../config.php');
 require_once(__DIR__ .'/../managers/user_management/user_lib.php');
 require_once(__DIR__.'/../../../user/lib.php');
@@ -65,3 +66,4 @@ try {
     print_r($e);
 }
 
+*/
