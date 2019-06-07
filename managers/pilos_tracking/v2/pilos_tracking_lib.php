@@ -17,9 +17,9 @@
 /**
  * Ases block
  *
- * @author     Jeison Cardona Gómez
+ * @author     Jeison Cardona G??mez
  * @package    block_ases
- * @copyright  2018 Jeison Cardona Gómez <jeison.cardona@correounivalle.edu.co>
+ * @copyright  2018 Jeison Cardona G??mez <jeison.cardona@correounivalle.edu.co>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 require_once(dirname(__FILE__). '/../../../../../config.php');
@@ -32,7 +32,7 @@ require_once $CFG->dirroot.'/blocks/ases/managers/monitor_assignments/monitor_as
 
 /**
  * ..
- * @author Jeison Cardona Gómez. <jeison.cardona@correounivalle.edu.co>
+ * @author Jeison Cardona G??mez. <jeison.cardona@correounivalle.edu.co>
  * @param String $username
  * @param int $semester_id
  * @param int $instance
@@ -174,7 +174,7 @@ function pilos_tracking_get_tracking_count( $username, $semester_id, $instance, 
 
 function pilos_tracking_general_get_count( $user_id, $rol, $fecha_inicio_str, $fecha_fin_str ){
     $instance = 450299;
-    $semester_id = 8;
+    $semester_id = 9;
     $student_list_ids = [];
     $xquery_seguimiento_pares_filterFields = [
         ["fecha",[[$fecha_inicio_str,">="],[$fecha_fin_str,"<="]], false],
