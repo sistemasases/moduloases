@@ -478,7 +478,8 @@ function  get_generos()
 
 /**
  * Get opciones de sexo registradas en base de datos
- *
+ * 
+ * @author Juan Pablo Castro
  * @see get_sex_options()
  * @return array --> con opciones sexo
  */
