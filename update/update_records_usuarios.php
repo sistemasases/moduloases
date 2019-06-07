@@ -31,11 +31,11 @@ $record_to_update2->num_doc_ini = '9999999909';
 
 $DB->update_record('talentospilos_usuario', $record_to_update2);
 
-$updated_record = $DB->get_record(10052);
-$updated_record1 = $DB->get_record(10053);
-$updated_record2 = $DB->get_record(10054);
+$updated_record = $DB->get_record_sql('SELECT * FROM {talentospilos_usuario} WHERE id=10052');
+$updated_record1 = $DB->get_record_sql('SELECT * FROM {talentospilos_usuario} WHERE id=10053');
+$updated_record2 = $DB->get_record_sql('SELECT * FROM {talentospilos_usuario} WHERE id=10054');
 
-if($updated_record->num_doc == '9999999929' && $updated_record1 == '9999999919' && $updated_record2 == '9999999909'){
+if($updated_record->num_doc == '9999999929' && $updated_record1->num_doc == '9999999919' && $updated_record2->num_doc == '9999999909'){
     echo 'Registros actualizados con éxito';
 }else{
     echo 'Error';
