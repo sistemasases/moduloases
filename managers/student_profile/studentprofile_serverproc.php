@@ -242,6 +242,9 @@ function save_profile($form){
             if($form[$i]['name']== "email"){
                 $email = $form[$i]['value'];
             }
+            if($form[$i]['name']=="sexo"){
+                $sexo = $form[$i]['value'];
+            }
                         
         }
         $obj_updatable = (object) $obj_updatable;
@@ -309,6 +312,7 @@ function save_profile($form){
         $obj_updatable->estrato = $estrato;
         $obj_updatable->anio_ingreso = $anio_ingreso;
         $obj_updatable->puntaje_icfes = $puntaje_icfes;
+        $obj_updatable->sexo = $sexo;
         //____________________________________________
         $conc_observations = $obj_updatable->observacion."\n".$observations;
 
@@ -324,23 +328,24 @@ function save_profile($form){
         //$email = "insert email test";
         
         $obj_updatable_moodle->email    =  $email;
-        
-        $result = $DB->update_record('talentospilos_usuario', $obj_updatable);
-     
-        $result_cv_update = update_email_moodle($obj_updatable_moodle);
 
-        
-        if($result && $result_cv_update){
-            $msg->title = "Éxito";
-            $msg->status = "success";
-            $msg->msg = "Se ha actualizado toda la información.";
-        }
-        else{
-            $msg->title = "Error";
-            $msg->status = "error";
-            $msg->msg = "Error al guardar la información en el servidor.";
+
+            $result = $DB->update_record('talentospilos_usuario', $obj_updatable);
+     
+            $result_cv_update = studentprofile_update_email_moodle($obj_updatable_moodle);
+            
+            if($result && $result_cv_update){
+                $msg->title = "Éxito";
+                $msg->status = "success";
+                $msg->msg = "Se ha actualizado toda la información.";
             }
-        
+            else{
+                $msg->title = "Error";
+                $msg->status = "error";
+                $msg->msg = "Error al guardar la información en el servidor.";
+                }
+            
+     
         echo json_encode($msg);
         
     }catch(Exception $e){
