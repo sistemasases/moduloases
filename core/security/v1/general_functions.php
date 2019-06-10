@@ -116,11 +116,20 @@ function _core_security_register_log( $user_id, $action_id, $params, $output ){
 }
 
 /**
+ * Function that given a XML configuration file route, return a list with its
+ * aliases.
+ * 
+ * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
+ * @since 1.0.0
+ * 
+ * @param string $xml_route Configuration file route
+ * @return array List of aliases in the configuration file
+ * 
  * XML example
  * 
  * <?xml version="1.0"?>
  * <configurations>
- *     <config config_for="api">
+ *     <config config_for="api" manager="security_core">
  *         <action>
  *             <alias>
  *                 say_hello
