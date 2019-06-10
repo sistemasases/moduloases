@@ -119,7 +119,6 @@ function get_cohorts_by_idnumber($id_number){
                         ON selected_cohort.id_ases_user = usuario.id_ases_user                       
 
                         ";
-
     }
     return $sub_query;
  }
@@ -173,7 +172,8 @@ function getGraficAge($cohorte, $ases_status, $icetex_status, $program_status, $
     $sql_query = "SELECT EXTRACT(YEAR FROM age(usuario_ases.fecha_nac)) AS nombre, COUNT(usuario.id) AS cantidad
                 FROM {talentospilos_user_extended} AS usuario               
                 INNER JOIN {talentospilos_usuario} AS usuario_ases
-                ON usuario.id_ases_user = usuario_ases.id                
+                ON usuario.id_ases_user = usuario_ases.id
+                WHERE EXTRACT(YEAR FROM age(usuario_ases.fecha_nac)) > 0                
                 ";
     
     $sub_query = subconsultaGraficReport($ases_status, $icetex_status, $program_status, $cohorte, $instance_id);
@@ -356,41 +356,52 @@ function getGraficRiesgos($cohorte, $ases_status, $icetex_status, $program_statu
     global $DB;
     
     $sql_query = "SELECT riesgo.nombre AS nombre_riesgo, COUNT(DISTINCT usuario.id) AS cantidad, riesg_usuario.calificacion_riesgo AS calificacion,
-                CASE WHEN riesg_usuario.calificacion_riesgo = 1  THEN 'Bajo'
+                CASE WHEN riesg_usuario.calificacion_riesgo = 1 THEN 'Bajo'
                     WHEN riesg_usuario.calificacion_riesgo = 2  THEN 'Medio'
                     WHEN riesg_usuario.calificacion_riesgo = 3  THEN 'Alto'
+                    WHEN riesg_usuario.calificacion_riesgo = 0  THEN 'N.R.'
+                    ELSE 'N.R.'
                 END AS calificacion_riesgo
-                FROM mdl_talentospilos_user_extended AS usuario
-                INNER JOIN mdl_talentospilos_riesg_usuario AS riesg_usuario
+                FROM {talentospilos_user_extended} AS usuario
+                INNER JOIN {talentospilos_riesg_usuario} AS riesg_usuario
                 ON riesg_usuario.id_usuario = usuario.id_ases_user
-                INNER JOIN mdl_talentospilos_riesgos_ases AS riesgo
+                INNER JOIN {talentospilos_riesgos_ases} AS riesgo
                 ON riesgo.id = riesg_usuario.id_riesgo             
                 ";
     
-    $sub_query = subconsultaGraficReport($ases_status, $icetex_status, $program_status, $cohorte, $instance_id);   
-
+    $sub_query = subconsultaGraficReport($ases_status, $icetex_status, $program_status, $cohorte, $instance_id);
+    
+    $sub_query_nr = $sql_query.$sub_query."WHERE riesg_usuario.calificacion_riesgo = 0
+                                    ";
     $sub_query_bajos = $sql_query.$sub_query."WHERE riesg_usuario.calificacion_riesgo = 1
                                     ";
     $sub_query_medios = $sql_query.$sub_query."WHERE riesg_usuario.calificacion_riesgo = 2
                                     ";
-    $sub_query_altos = $sql_query.$sub_query."WHERE riesg_usuario.calificacion_riesgo = 3
+    $sub_query_altos = $sql_query.$sub_query."WHERE riesg_usuario.calificacion_riesgo = 3    
                                     ";    
        
     $option_group = "GROUP BY nombre_riesgo, calificacion
                     ORDER BY nombre_riesgo, calificacion";
 
+    $sub_query_nr .= $option_group;
     $sub_query_bajos .= $option_group;
     $sub_query_medios .= $option_group;
     $sub_query_altos .= $option_group;
     
+    $result_query_nr = $DB->get_records_sql($sub_query_nr);
     $result_query_bajos = $DB->get_records_sql($sub_query_bajos);
     $result_query_medios = $DB->get_records_sql($sub_query_medios);    
     $result_query_altos = $DB->get_records_sql($sub_query_altos);
     
     $result_to_return = array();
+    $no_registra = array();
     $bajos = array();
     $medios = array();
     $altos = array();
+    
+    foreach ($result_query_nr as $result){
+        array_push($no_registra, $result);
+    }
 
     foreach($result_query_bajos as $result){
         array_push($bajos, $result);
@@ -417,10 +428,11 @@ function getGraficRiesgos($cohorte, $ases_status, $icetex_status, $program_statu
             $riesgo = "Económico";
         }
 
+        $cantidad_nr = $no_registra[$i]->cantidad;
         $cantidad_bajo = $bajos[$i]->cantidad;        
         $cantidad_medio = $medios[$i]->cantidad;        
         $cantidad_alto = $altos[$i]->cantidad;
-        array_push($result_to_return, (object) array('riesgo' => $riesgo, 'bajo' => $cantidad_bajo, 'medio' => $cantidad_medio, 'alto' => $cantidad_alto));
+        array_push($result_to_return, (object) array('riesgo' => $riesgo, 'bajo' => $cantidad_bajo, 'medio' => $cantidad_medio, 'alto' => $cantidad_alto, "no_registra" => $cantidad_nr));
     }  
     
     return $result_to_return;  
@@ -615,8 +627,8 @@ function get_ases_report($general_fields=null,
 
     $sub_query_status = "";
     $sub_query_academic = "";
-     $sub_query_risks = "";
-     $sub_query_assignment_fields = "";
+    $sub_query_risks = "";
+    $sub_query_assignment_fields = "";
 
     // Clausula select para los campos generales del reporte ASES
     if($general_fields){

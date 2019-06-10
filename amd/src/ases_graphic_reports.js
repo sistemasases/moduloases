@@ -338,12 +338,14 @@ define(['jquery',
             var riesgos_bajos = [];
             var riesgos_medios = [];
             var riesgos_altos = [];
+            var sin_registro = [];
 
             for (riesgo in data){
                 nombres_riesgos.push(data[riesgo]["riesgo"]);
                 riesgos_bajos.push(data[riesgo]["bajo"]);
                 riesgos_medios.push(data[riesgo]["medio"]);
                 riesgos_altos.push(data[riesgo]["alto"]);
+                sin_registro.push(data[riesgo]["no_registra"]);
             }         
             
             $('.risk-chart-container').css('width', '100%');
@@ -370,6 +372,13 @@ define(['jquery',
                     data: riesgos_altos,
                     backgroundColor: "rgba(255, 86, 102, 0.4)",
 				    borderColor: "rgba(255, 86, 102, 1)",                   
+                    borderWidth: 2
+                },
+                {
+                    label: "N.R.",
+                    data: sin_registro,
+                    backgroundColor: "rgba(132, 133, 134, 0.4)",
+				    borderColor: "rgba(132, 133, 134, 1)",                   
                     borderWidth: 2
                 }
                 ]

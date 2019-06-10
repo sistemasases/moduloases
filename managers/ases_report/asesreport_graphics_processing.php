@@ -123,6 +123,7 @@ if(isset($_POST['type'])&&$_POST['type']=="riesgos"&&isset($_POST['cohort'])&&is
     array_push($columns, array("title"=>"Bajo", "name"=>"bajo", "data"=>"bajo"));
     array_push($columns, array("title"=>"Medio", "name"=>"medio", "data"=>"medio"));
     array_push($columns, array("title"=>"Alto", "name"=>"alto", "data"=>"alto"));
+    array_push($columns, array("title"=>"N.R.", "name"=>"no_registra", "data"=>"no_registra"));
 
     $data = get_general_table_graphic($columns, $result);
 
