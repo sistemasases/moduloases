@@ -86,14 +86,14 @@ function _core_secutiry_solve_alternative_interval( $alternative_interval_json )
  * @author Jeison Cardona Gómez <jeison.cardona@correounivalle.edu.co>
  * @since 1.0.0
  *
- * @param integer $user_id
- * @param integer $action_id
- * @param integer $action_id
- * @param integer $action_id
+ * @param integer $user_id Moodle user ide
+ * @param integer $action_id Secutiry action id
+ * @param integer $call_params Secutiry action call params
+ * @param integer $output Secutiry call return
  *
  * @return void
 */
-function _core_security_register_log( $user_id, $action_id, $params, $output ){
+function _core_security_register_log( $user_id, $action_id, $call_params, $output ){
 
 	global $DB_PREFIX;
 	
@@ -106,7 +106,7 @@ function _core_security_register_log( $user_id, $action_id, $params, $output ){
 
 	array_push($params, $user_id);
 	array_push($params, $action_id);
-	array_push($params, json_encode($params));
+	array_push($params, json_encode($call_params));
 	array_push($params, json_encode($output));
 
 	$manager = get_db_manager();
