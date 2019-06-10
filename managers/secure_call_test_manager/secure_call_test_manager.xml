@@ -6,11 +6,16 @@
 				say_hello
 			</alias>
 		</action>
+                <action>
+			<alias>
+				new_action
+			</alias>
+		</action>
 	</config>
 	<config config_for="lib">
 		<action>
 			<alias>
-				test
+				other_constant
 			</alias>
 		</action>
 	</config>
