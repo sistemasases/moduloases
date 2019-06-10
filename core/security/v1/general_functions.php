@@ -115,4 +115,64 @@ function _core_security_register_log( $user_id, $action_id, $params, $output ){
 
 }
 
+/**
+ * XML example
+ * 
+ * <?xml version="1.0"?>
+ * <configurations>
+ *     <config config_for="api">
+ *         <action>
+ *             <alias>
+ *                 say_hello
+ *             </alias>
+ *         </action>
+ *         <action>
+ *             <alias>
+ *                 say_goodbye
+ *             </alias>
+ *         </action>
+ *     </config>
+ *     <config config_for="file_subffix">
+ *         <action>
+ *             <alias>
+ *                 value
+ *             </alias>
+ *         </action>
+ *    </config>
+ * </configurations>
+ */
+
+function _core_security_get_config_actions( $xml_route ){
+    
+    /** @var object $config SimpleXMLElement with the call 
+     * existence declarations. */
+    $config = simplexml_load_file( $xml_route );
+    
+    /* Needs be checked if false, because simplexml_load_file( ... ) 
+     * has an mixed output.
+     */
+    if( $config !== false ){
+        
+        // At the fun documentation exist an example of this file. 
+        $actions = $config->xpath(
+            "//config[@config_for='api' and @manager='security_core']//action"
+        );
+        
+        return 
+            array_values( // Reset array counter
+                array_filter( // Remove empty values
+                    array_map(
+                        function( $action ){ 
+                            return trim( (string) $action->alias[0] ); 
+                        } , $actions 
+                    )
+                )
+            );
+        
+    }else{
+        throw new Exception( "File $xml_route does not exist.", -1 );
+    }
+    
+}
+
 ?>
