@@ -17,9 +17,9 @@
 /**
  * Ases block
  *
- * @author     Jeison Cardona G??mez
+ * @author     Jeison Cardona Gomez
  * @package    block_ases
- * @copyright  2018 Jeison Cardona G??mez <jeison.cardona@correounivalle.edu.co>
+ * @copyright  2018 Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 require_once(dirname(__FILE__). '/../../../../../config.php');
@@ -32,7 +32,7 @@ require_once $CFG->dirroot.'/blocks/ases/managers/monitor_assignments/monitor_as
 
 /**
  * ..
- * @author Jeison Cardona G??mez. <jeison.cardona@correounivalle.edu.co>
+ * @author Jeison Cardona Gomez. <jeison.cardona@correounivalle.edu.co>
  * @param String $username
  * @param int $semester_id
  * @param int $instance
