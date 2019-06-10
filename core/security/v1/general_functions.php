@@ -183,9 +183,9 @@ function _core_security_get_config_actions( $xml_route ){
                 )
             );
         
-    }else{
-        throw new Exception( "File '$xml_route' does not exist.", -1 );
     }
+    
+    return [];
     
 }
 
