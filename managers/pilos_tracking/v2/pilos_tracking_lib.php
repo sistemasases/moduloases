@@ -113,7 +113,7 @@ function pilos_tracking_get_tracking_count( $username, $semester_id, $instance, 
 
                 $count = new stdClass();
                 $count->username = $user->username;
-                $count->count = pilos_tracking_general_get_count( $user->id_usuario, "practicante_ps", $fecha_inicio_str, $fecha_fin_str );
+                $count->count = pilos_tracking_general_get_count( $user->id_usuario, "practicante_ps", $fecha_inicio_str, $fecha_fin_str, $instance, $semester_id );
                 
                 array_push( $to_return, $count );
                 
@@ -130,7 +130,7 @@ function pilos_tracking_get_tracking_count( $username, $semester_id, $instance, 
 
                 $count = new stdClass();
                 $count->username = $user->username;
-                $count->count = pilos_tracking_general_get_count( $user->id_usuario, "monitor_ps", $fecha_inicio_str, $fecha_fin_str );
+                $count->count = pilos_tracking_general_get_count( $user->id_usuario, "monitor_ps", $fecha_inicio_str, $fecha_fin_str, $instance, $semester_id );
                 
                 array_push( $to_return, $count );
                 
@@ -152,7 +152,7 @@ function pilos_tracking_get_tracking_count( $username, $semester_id, $instance, 
 
                 $count = new stdClass();
                 $count->username = $user->id_ases_estudiante;
-                $count->count = pilos_tracking_general_get_count( $user->id_ases_estudiante, "estudiante_t", $fecha_inicio_str, $fecha_fin_str );
+                $count->count = pilos_tracking_general_get_count( $user->id_ases_estudiante, "estudiante_t", $fecha_inicio_str, $fecha_fin_str, $instance, $semester_id );
                 
                 array_push( $to_return, $count );
                 
@@ -172,9 +172,8 @@ function pilos_tracking_get_tracking_count( $username, $semester_id, $instance, 
 }
 
 
-function pilos_tracking_general_get_count( $user_id, $rol, $fecha_inicio_str, $fecha_fin_str ){
-    $instance = 450299;
-    $semester_id = 9;
+function pilos_tracking_general_get_count( $user_id, $rol, $fecha_inicio_str, $fecha_fin_str, $instance, $semester_id ){
+    
     $student_list_ids = [];
     $xquery_seguimiento_pares_filterFields = [
         ["fecha",[[$fecha_inicio_str,">="],[$fecha_fin_str,"<="]], false],
